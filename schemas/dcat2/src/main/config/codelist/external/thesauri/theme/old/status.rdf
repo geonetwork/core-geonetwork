@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+         xmlns:dcterms="http://purl.org/dc/terms/" xml:base="http://www.semanticweb.org/owl/owlapi/turtle">
+  <skos:ConceptScheme rdf:about="https://registry.geonetwork-opensource.org/dcat/type">
+    <dc:title>The nature or genre of the resource.</dc:title>
+    <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2021-04-15</dcterms:modified>
+    <dcterms:rights xml:lang="en"></dcterms:rights>
+    <dcterms:description xml:lang="en">
+      The value SHOULD be taken from a well governed and broadly recognised controlled vocabulary, such as:
+      * DCMI Type vocabulary [DCTERMS]
+      * [ISO-19115-1] scope codes
+      * Datacite resource types [DataCite]
+      * PARSE.Insight content-types used by re3data.org [RE3DATA-SCHEMA] (see item 15 contentType)
+      * MARC intellectual resource types
+
+      Some members of these controlled vocabularies are not strictly suitable for datasets or data services (e.g. DCMI Type Event, PhysicalObject; [ISO-19115-1] CollectionHardware, CollectionSession, Initiative, Sample, Repository), but might be used in the context of other kinds of catalogs defined in DCAT profiles or applications.
+    </dcterms:description>
+  </skos:ConceptScheme>
+  <skos:Concept rdf:about="https://registry.geonetwork-opensource.org/dcat/type/dataset">
+    <skos:prefLabel xml:lang="en">Dataset</skos:prefLabel>
+    <skos:prefLabel xml:lang="nl">Dataset</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">Dataset</skos:prefLabel>
+    <skos:prefLabel xml:lang="de">Dataset</skos:prefLabel>
+  </skos:Concept>
+  <skos:Concept rdf:about="https://registry.geonetwork-opensource.org/dcat/type/service">
+    <skos:prefLabel xml:lang="en">Service</skos:prefLabel>
+    <skos:prefLabel xml:lang="nl">Service</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">Service</skos:prefLabel>
+    <skos:prefLabel xml:lang="de">Service</skos:prefLabel>
+  </skos:Concept>
+</rdf:RDF>

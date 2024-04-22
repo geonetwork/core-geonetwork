@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+         xmlns:dcterms="http://purl.org/dc/terms/"
+         xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:dc="http://purl.org/dc/elements/1.1/">
+  <skos:ConceptScheme rdf:about="http://purl.org/adms/licencetype/1.0">
+    <dc:title>Licence Type</dc:title>
+    <dcterms:description xml:lang="en">This file specifies the controlled vocabularies defined by ADMS v1.0 as SKOS concept schemes and SKOS concepts.</dcterms:description>
+    <dcterms:abstract xml:lang="en">This file specifies the controlled vocabularies defined by ADMS v1.0 as SKOS concept schemes and SKOS concepts.</dcterms:abstract>
+  </skos:ConceptScheme>
+  <skos:Concept rdf:about="http://purl.org/adms/licencetype/Attribution">
+    <skos:prefLabel xml:lang="en">Attribution</skos:prefLabel>
+    <skos:notation>Attribution</skos:notation>
+    <skos:inScheme rdf:resource="http://purl.org/adms/licencetype/1.1"/>
+    <skos:prefLabel xml:lang="fr">Attribution</skos:prefLabel>
+    <skos:prefLabel xml:lang="es">Atribución</skos:prefLabel>
+    <skos:prefLabel xml:lang="de">Zuschreibung</skos:prefLabel>
+    <skos:prefLabel xml:lang="pl">Atrybucja</skos:prefLabel>
+    <skos:prefLabel xml:lang="nl">Naamsvermelding</skos:prefLabel>
+    <skos:prefLabel xml:lang="it">Attribuzione</skos:prefLabel>
+    <skos:prefLabel xml:lang="da">Attribution</skos:prefLabel>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://purl.org/adms/licencetype/PublicDomain">
+    <skos:prefLabel xml:lang="en">Public domain</skos:prefLabel>
+    <skos:notation>PublicDomain</skos:notation>
+    <skos:inScheme rdf:resource="http://purl.org/adms/licencetype/1.1"/>
+    <skos:prefLabel xml:lang="fr">Domaine public</skos:prefLabel>
+    <skos:prefLabel xml:lang="es">Dominio público</skos:prefLabel>
+    <skos:prefLabel xml:lang="de">Public Domain</skos:prefLabel>
+    <skos:prefLabel xml:lang="pl">Domena publiczna</skos:prefLabel>
+    <skos:prefLabel xml:lang="nl">Publiek domein</skos:prefLabel>
+    <skos:prefLabel xml:lang="it">Di dominio pubblico</skos:prefLabel>
+    <skos:prefLabel xml:lang="da">Public domain</skos:prefLabel>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://purl.org/adms/licencetype/ViralEffect-ShareAlike">
+    <skos:prefLabel xml:lang="en">Viral effect (a.k.a. Share-alike)</skos:prefLabel>
+    <skos:notation>ViralEffect-ShareAlike</skos:notation>
+    <skos:prefLabel xml:lang="fr">Effet viral (alias Share-Alike)</skos:prefLabel>
+    <skos:prefLabel xml:lang="es">Efecto viral (alias Share-alike)</skos:prefLabel>
+    <skos:prefLabel xml:lang="de">Viral-Effekt (alias Share-Alike)</skos:prefLabel>
+    <skos:prefLabel xml:lang="pl">Viral efekt (trznych Share-podobne)</skos:prefLabel>
+    <skos:prefLabel xml:lang="nl">Viraal effect (alias Share-alike)</skos:prefLabel>
+    <skos:prefLabel xml:lang="it">Effetto virale (pseudonimo-Condividi allo stesso modo)</skos:prefLabel>
+    <skos:prefLabel xml:lang="da">Viral effekt (alias Share-alike)</skos:prefLabel>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://purl.org/adms/licencetype/ShareAlike-NotCompatible">
+    <skos:prefLabel xml:lang="en">Share-alike / copyleft - not compatible/interoperable with other copyleft licences</skos:prefLabel>
+    <skos:notation>ShareAlike-NotCompatible</skos:notation>
+    <skos:inScheme rdf:resource="http://purl.org/adms/licencetype/1.1"/>
+    <skos:prefLabel xml:lang="fr">Share-alike / copyleft - pas compatibles / Interopérabilité avec d'autres licences copyleft</skos:prefLabel>
+    <skos:prefLabel xml:lang="es">Compartir igual / copyleft - no compatible / interoperable con otras licencias copyleft</skos:prefLabel>
+    <skos:prefLabel xml:lang="de">Share alike / Copyleft - nicht kompatibel / interoperabel mit anderen Copyleft-Lizenzen</skos:prefLabel>
+    <skos:prefLabel xml:lang="pl">Share Alike / copyleft - nie zgodne / kompatybilne z innych licencji copyleft</skos:prefLabel>
+    <skos:prefLabel xml:lang="nl">Share-alike / copyleft - niet compatibel / interoperabel met andere copyleft-licenties</skos:prefLabel>
+    <skos:prefLabel xml:lang="it">Condividi allo stesso modo / copyleft - non compatibile / interoperabili con altre licenze copyleft</skos:prefLabel>
+    <skos:prefLabel xml:lang="da">Share Alike / copyleft - ikke kompatibel / interoperabel med andre copyleft licenser</skos:prefLabel>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://purl.org/adms/licencetype/ShareAlike-Compatible">
+    <skos:prefLabel xml:lang="en">Share-alike / copyleft on source code or with compatibility exceptions for larger work and interoperability</skos:prefLabel>
+    <skos:notation>ShareAlike-Compatible</skos:notation>
+    <skos:inScheme rdf:resource="http://purl.org/adms/licencetype/1.1"/>
+    <skos:prefLabel xml:lang="fr">Share Alike / copyleft sur le code source ou avec exceptions de compatibilité pour les grands travaux et l'interopérabilité</skos:prefLabel>
+    <skos:prefLabel xml:lang="es">Share Alike / copyleft en el código fuente o con las excepciones de compatibilidad para un trabajo más grande y la interoperabilidad</skos:prefLabel>
+    <skos:prefLabel xml:lang="de">Share Alike / copyleft am Quellcode oder mit der Kompatibilität Ausnahmen für größere Arbeiten und Interoperabilität</skos:prefLabel>
+    <skos:prefLabel xml:lang="pl">Share Alike / copyleft na kodzie źródłowym lub z wyjątkami kompatybilności dla większej pracy i interoperacyjności</skos:prefLabel>
+    <skos:prefLabel xml:lang="nl">Share-alike / copyleft op broncode of met de compatibiliteit uitzonderingen voor groter werk en interoperabiliteit</skos:prefLabel>
+    <skos:prefLabel xml:lang="it">Condividi allo stesso modo / copyleft sul codice sorgente o con eccezioni di compatibilità per la più grande opera e l'interoperabilità</skos:prefLabel>
+    <skos:prefLabel xml:lang="da">Share Alike / copyleft på kildekode eller med kompatibilitet undtagelser for større arbejde og interoperabilitet</skos:prefLabel>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://purl.org/adms/licencetype/NonCommercialUseOnly">
+    <skos:prefLabel xml:lang="en">Non-commercial use only</skos:prefLabel>
+    <skos:notation>NonCommercialUseOnly</skos:notation>
+    <skos:inScheme rdf:resource="http://purl.org/adms/licencetype/1.1"/>
+    <skos:prefLabel xml:lang="fr">A usage non commercial seulement</skos:prefLabel>
+    <skos:prefLabel xml:lang="es">El uso no comercial solamente</skos:prefLabel>
+    <skos:prefLabel xml:lang="de">Nicht-kommerzielle Nutzung</skos:prefLabel>
+    <skos:prefLabel xml:lang="pl">Niekomercyjnego użytku</skos:prefLabel>
+    <skos:prefLabel xml:lang="nl">Niet-commercieel gebruik</skos:prefLabel>
+    <skos:prefLabel xml:lang="it">L'uso non commerciale solo</skos:prefLabel>
+    <skos:prefLabel xml:lang="da">Ikke-kommerciel brug</skos:prefLabel>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://purl.org/adms/licencetype/NoDerivativeWork">
+    <skos:prefLabel xml:lang="en">No derivative work</skos:prefLabel>
+    <skos:notation>NoDerivativeWork</skos:notation>
+    <skos:inScheme rdf:resource="http://purl.org/adms/licencetype/1.1"/>
+    <skos:prefLabel xml:lang="fr">Aucun travail dérivé</skos:prefLabel>
+    <skos:prefLabel xml:lang="es">Sin obra derivada</skos:prefLabel>
+    <skos:prefLabel xml:lang="de">Kein Abwandlung</skos:prefLabel>
+    <skos:prefLabel xml:lang="pl">No praca pochodna</skos:prefLabel>
+    <skos:prefLabel xml:lang="nl">Geen afgeleide werken</skos:prefLabel>
+    <skos:prefLabel xml:lang="it">Non opere derivate</skos:prefLabel>
+    <skos:prefLabel xml:lang="da">Ingen afledt arbejde</skos:prefLabel>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://purl.org/adms/licencetype/RoyaltiesRequired">
+    <skos:prefLabel xml:lang="en">Royalties required</skos:prefLabel>
+    <skos:notation>RoyaltiesRequired</skos:notation>
+    <skos:inScheme rdf:resource="http://purl.org/adms/licencetype/1.1"/>
+    <skos:prefLabel xml:lang="fr">Droits d'auteur requis</skos:prefLabel>
+    <skos:prefLabel xml:lang="es">Las regalías se requiere</skos:prefLabel>
+    <skos:prefLabel xml:lang="de">Lizenzgebühren erforderlich</skos:prefLabel>
+    <skos:prefLabel xml:lang="pl">Należności licencyjne wymagane</skos:prefLabel>
+    <skos:prefLabel xml:lang="nl">Royalty's nodig</skos:prefLabel>
+    <skos:prefLabel xml:lang="it">Royalties richiesta</skos:prefLabel>
+    <skos:prefLabel xml:lang="da">Royalties kræves</skos:prefLabel>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://purl.org/adms/licencetype/ReservedNames-Endorsement-OfficialStatus">
+    <skos:prefLabel xml:lang="en">Reserved names / endorsement / official status</skos:prefLabel>
+    <skos:notation>ReservedNames-Endorsement-OfficialStatus</skos:notation>
+    <skos:inScheme rdf:resource="http://purl.org/adms/licencetype/1.1"/>
+    <skos:prefLabel xml:lang="fr">Noms réservés / Approbation / Statut officiel</skos:prefLabel>
+    <skos:prefLabel xml:lang="es">Nombres reservados / estado de aprobación / oficial</skos:prefLabel>
+    <skos:prefLabel xml:lang="de">Reservierte Namen / Bewilligung / offiziellen Status</skos:prefLabel>
+    <skos:prefLabel xml:lang="pl">Zarezerwowane nazwy / potwierdzenie / oficjalny status</skos:prefLabel>
+    <skos:prefLabel xml:lang="nl">Gereserveerde namen / goedkeuring / officiële status</skos:prefLabel>
+    <skos:prefLabel xml:lang="it">Nomi riservati / approvazione / ufficiale di stato</skos:prefLabel>
+    <skos:prefLabel xml:lang="da">Reserverede navne / påtegning / officiel status</skos:prefLabel>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://purl.org/adms/licencetype/NominalCost">
+    <skos:prefLabel xml:lang="en">Nominal cost</skos:prefLabel>
+    <skos:notation>NominalCost</skos:notation>
+    <skos:inScheme rdf:resource="http://purl.org/adms/licencetype/1.1"/>
+    <skos:prefLabel xml:lang="fr">Coût nominal</skos:prefLabel>
+    <skos:prefLabel xml:lang="es">Costo nominal</skos:prefLabel>
+    <skos:prefLabel xml:lang="de">Nominal Kosten</skos:prefLabel>
+    <skos:prefLabel xml:lang="pl">Nominalny koszt</skos:prefLabel>
+    <skos:prefLabel xml:lang="nl">Nominale kosten</skos:prefLabel>
+    <skos:prefLabel xml:lang="it">Costo nominale</skos:prefLabel>
+    <skos:prefLabel xml:lang="da">Nominel omkostninger</skos:prefLabel>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://purl.org/adms/licencetype/GrantBack">
+    <skos:prefLabel xml:lang="en">Grant back</skos:prefLabel>
+    <skos:notation>GrantBack</skos:notation>
+    <skos:inScheme rdf:resource="http://purl.org/adms/licencetype/1.1"/>
+    <skos:prefLabel xml:lang="fr">Rétrocéder</skos:prefLabel>
+    <skos:prefLabel xml:lang="es">Otorgar atrás</skos:prefLabel>
+    <skos:prefLabel xml:lang="de">Gewähren zurück</skos:prefLabel>
+    <skos:prefLabel xml:lang="pl">Dotacja z powrotem</skos:prefLabel>
+    <skos:prefLabel xml:lang="nl">Grant-back</skos:prefLabel>
+    <skos:prefLabel xml:lang="it">Di retrocessione</skos:prefLabel>
+    <skos:prefLabel xml:lang="da">Grant tilbage</skos:prefLabel>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://purl.org/adms/licencetype/JurisdictionWithinTheEU">
+    <skos:prefLabel xml:lang="en">Jurisdiction within the EU</skos:prefLabel>
+    <skos:notation>JurisdictionWithinTheEU</skos:notation>
+    <skos:inScheme rdf:resource="http://purl.org/adms/licencetype/1.1"/>
+    <skos:prefLabel xml:lang="fr">Compétence dans l'UE</skos:prefLabel>
+    <skos:prefLabel xml:lang="es">Jurisdicción dentro de la UE</skos:prefLabel>
+    <skos:prefLabel xml:lang="de">Gerichtsstand innerhalb der EU</skos:prefLabel>
+    <skos:prefLabel xml:lang="pl">Jurysdykcja w UE</skos:prefLabel>
+    <skos:prefLabel xml:lang="nl">Bevoegdheid binnen de EU</skos:prefLabel>
+    <skos:prefLabel xml:lang="it">Giurisdizione all'interno dell'UE</skos:prefLabel>
+    <skos:prefLabel xml:lang="da">Kompetence inden for EU</skos:prefLabel>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://purl.org/adms/licencetype/OtherRestrictiveClauses">
+    <skos:prefLabel xml:lang="en">Other restrictive clauses</skos:prefLabel>
+    <skos:notation>OtherRestrictiveClauses</skos:notation>
+    <skos:inScheme rdf:resource="http://purl.org/adms/licencetype/1.1"/>
+    <skos:prefLabel xml:lang="fr">Autres clauses restrictives</skos:prefLabel>
+    <skos:prefLabel xml:lang="es">Otras cláusulas restrictivas</skos:prefLabel>
+    <skos:prefLabel xml:lang="de">Andere restriktive Klauseln</skos:prefLabel>
+    <skos:prefLabel xml:lang="pl">Inne klauzule ograniczające</skos:prefLabel>
+    <skos:prefLabel xml:lang="nl">Andere beperkende bepalingen</skos:prefLabel>
+    <skos:prefLabel xml:lang="it">Altre clausole restrittive</skos:prefLabel>
+    <skos:prefLabel xml:lang="da">Andre restriktive klausuler</skos:prefLabel>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://purl.org/adms/licencetype/KnownPatentEncumbrance">
+    <skos:prefLabel xml:lang="en">Known patent encumbrance</skos:prefLabel>
+    <skos:notation>KnownPatentEncumbrance</skos:notation>
+    <skos:inScheme rdf:resource="http://purl.org/adms/licencetype/1.1"/>
+    <skos:prefLabel xml:lang="fr">Charge de brevet connue</skos:prefLabel>
+    <skos:prefLabel xml:lang="es">Conocido patente gravamen</skos:prefLabel>
+    <skos:prefLabel xml:lang="de">Bekannte Patent Belastung</skos:prefLabel>
+    <skos:prefLabel xml:lang="pl">Znany obciążanie patent</skos:prefLabel>
+    <skos:prefLabel xml:lang="nl">Octrooilast bekend</skos:prefLabel>
+    <skos:prefLabel xml:lang="it">Brevetto ingombro conosciuto</skos:prefLabel>
+    <skos:prefLabel xml:lang="da">Kendt patent behæftelse</skos:prefLabel>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://purl.org/adms/licencetype/UnknownIPR">
+    <skos:prefLabel xml:lang="en">Unknown IPR</skos:prefLabel>
+    <skos:notation>UnknownIPR</skos:notation>
+    <skos:inScheme rdf:resource="http://purl.org/adms/licencetype/1.1"/>
+    <skos:prefLabel xml:lang="fr">Droits de propriété intellectuelle inconnus</skos:prefLabel>
+    <skos:prefLabel xml:lang="es">Desconocido derechos de propiedad intelectual</skos:prefLabel>
+    <skos:prefLabel xml:lang="de">Unknown IPR</skos:prefLabel>
+    <skos:prefLabel xml:lang="pl">Unknown IPR</skos:prefLabel>
+    <skos:prefLabel xml:lang="nl">Onbekend Intellectuele Eigendom</skos:prefLabel>
+    <skos:prefLabel xml:lang="it">Sconosciuto IPR</skos:prefLabel>
+    <skos:prefLabel xml:lang="da">Ukendt IPR</skos:prefLabel>
+  </skos:Concept>
+</rdf:RDF>

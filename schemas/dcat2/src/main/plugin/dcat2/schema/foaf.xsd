@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:dct="http://purl.org/dc/terms/"
+           xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+           xmlns:locn="http://www.w3.org/ns/locn#"
+           xmlns:foaf="http://xmlns.com/foaf/0.1/"
+           targetNamespace="http://xmlns.com/foaf/0.1/" elementFormDefault="qualified" attributeFormDefault="qualified">
+  <xs:annotation>
+    <xs:documentation xml:lang="en">
+      FOAF XML Schema (relevant parts for DCAT version 2)
+      http://xmlns.com/foaf/0.1/
+      Modified 2019-10-03
+    </xs:documentation>
+  </xs:annotation>
+  <xs:import namespace="http://purl.org/dc/terms/" schemaLocation="dcterms.xsd"/>
+  <xs:import namespace="http://www.w3.org/1999/02/22-rdf-syntax-ns#" schemaLocation="rdf.xsd"/>
+  <!-- foaf:Document-->
+  <xs:complexType name="Document">
+    <xs:sequence>
+      <xs:element name="Document">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="name" type="rdf:PlainLiteral" minOccurs="0" maxOccurs="unbounded"/>
+          </xs:sequence>
+          <xs:attribute ref="rdf:about"/>
+          <xs:attribute ref="rdf:nodeID"/>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <!-- foaf:Agent-->
+  <xs:complexType name="Agent">
+    <xs:sequence>
+      <xs:element name="Agent">
+        <xs:complexType>
+          <xs:sequence>
+            <!-- mandatory properties for foaf:Agent-->
+            <xs:element ref="foaf:name" minOccurs="1" maxOccurs="1"/>
+            <!-- recommended properties for foaf:Agent-->
+            <xs:element ref="dct:type" minOccurs="0" maxOccurs="1"/>
+            <xs:element ref="foaf:phone" minOccurs="0" maxOccurs="1"/>
+            <xs:element ref="foaf:mbox" minOccurs="1" maxOccurs="1"/>
+          </xs:sequence>
+          <xs:attribute ref="rdf:about"/>
+          <xs:attribute ref="rdf:nodeID"/>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <!-- foaf:Agent-->
+  <xs:element name="primaryTopic" type="rdf:Resource"/>
+  <xs:element name="page" type="rdf:Resource"/>
+  <xs:element name="homepage" type="rdf:Resource"/>
+  <xs:element name="mbox" type="rdf:Resource"/>
+  <xs:element name="phone" type="rdf:Resource"/>
+  <xs:element name="name" type="rdf:PlainLiteral"/>
+</xs:schema>

@@ -48,6 +48,7 @@
     <module>schema-core</module>
     <module>csw-record</module>
     <module>dublin-core</module>
+    <module>dcat2</module>
     <module>iso19110</module>
     <module>iso19139</module>
     <module>iso19115-3.2018</module>

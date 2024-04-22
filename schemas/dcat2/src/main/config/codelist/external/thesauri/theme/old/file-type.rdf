@@ -1,0 +1,1009 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:owl="http://www.w3.org/2002/07/owl#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:atold="http://publications.europa.eu/resource/authority/" xmlns:at="http://publications.europa.eu/ontology/authority/">
+	<skos:ConceptScheme rdf:about="http://publications.europa.eu/resource/authority/file-type" at:table.id="file-type" at:table.version.number="20190220-0">
+		<owl:versionInfo>20190220-0</owl:versionInfo>
+		<rdfs:label xml:lang="en">File types Named Authority List</rdfs:label>
+		<at:prefLabel xml:lang="en">File types Named Authority List</at:prefLabel>
+	</skos:ConceptScheme>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/file-type/ARC">
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/file-type"/>
+		<skos:prefLabel xml:lang="nl">ARC</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">ARC</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">ARC</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">ARC</skos:prefLabel>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/file-type/ARC_GZ">
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/file-type"/>
+		<skos:prefLabel xml:lang="nl">ARC_GZ</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">ARC_GZ</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">ARC_GZ</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">ARC_GZ</skos:prefLabel>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/file-type/ATOM">
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/file-type"/>
+		<skos:prefLabel xml:lang="nl">Atom Feed</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">ATOM</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">ATOM</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">Atom Feed</skos:prefLabel>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/file-type/AZW">
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/file-type"/>
+		<skos:prefLabel xml:lang="nl">Amazon Kindle eBook</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">AZW</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">AZW</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">Amazon Kindle eBook</skos:prefLabel>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/file-type/BIN">
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/file-type"/>
+		<skos:prefLabel xml:lang="nl">Binary Data</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">BIN</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">BIN</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">Binary Data</skos:prefLabel>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/file-type/BITS">
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/file-type"/>
+		<skos:prefLabel xml:lang="nl">BITS</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">BITS</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">BITS</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">BITS</skos:prefLabel>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/file-type/BMP">
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/file-type"/>
+		<skos:prefLabel xml:lang="nl">Bitmap Image File</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">BMP</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">BMP</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">Bitmap Image File</skos:prefLabel>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/file-type/BWF">
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/file-type"/>
+		<skos:prefLabel xml:lang="nl">BWF</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">BWF</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">BWF</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">BWF</skos:prefLabel>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/file-type/CSS">
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/file-type"/>
+		<skos:prefLabel xml:lang="nl">CSS</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">CSS</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">CSS</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">CSS</skos:prefLabel>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/file-type/CSV">
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/file-type"/>
+		<skos:prefLabel xml:lang="nl">CSV</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">CSV</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">CSV</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">CSV</skos:prefLabel>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/file-type/DBF">
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/file-type"/>
+		<skos:prefLabel xml:lang="nl">DBF</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">DBF</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">DBF</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">DBF</skos:prefLabel>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/file-type/DCR">
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/file-type"/>
+		<skos:prefLabel xml:lang="nl">DCR File</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">DCR</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">DCR</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">DCR File</skos:prefLabel>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/file-type/DMP">
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/file-type"/>
+		<skos:prefLabel xml:lang="nl">Oracle Dump</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">DMP</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">DMP</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">Oracle Dump</skos:prefLabel>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/file-type/DOC">
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/file-type"/>
+		<skos:prefLabel xml:lang="nl">Word DOC</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">DOC</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">DOC</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">Word DOC</skos:prefLabel>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/file-type/DOCX">
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/file-type"/>
+		<skos:prefLabel xml:lang="nl">Word DOCX</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">DOCX</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">DOCX</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">Word DOCX</skos:prefLabel>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/file-type/DTD_SGML">
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/file-type"/>
+		<skos:prefLabel xml:lang="nl">SGML DTD</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">DTD_SGML</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">DTD_SGML</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">SGML DTD</skos:prefLabel>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/file-type/DTD_XML">
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/file-type"/>
+		<skos:prefLabel xml:lang="nl">XML DTD</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">DTD_XML</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">DTD_XML</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">XML DTD</skos:prefLabel>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/file-type/E00">
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/file-type"/>
+		<skos:prefLabel xml:lang="nl">E00</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">E00</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">E00</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">E00</skos:prefLabel>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/file-type/ECW">
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/file-type"/>
+		<skos:prefLabel xml:lang="nl">ECW</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">ECW</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">ECW</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">ECW</skos:prefLabel>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/file-type/EPS">
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/file-type"/>
+		<skos:prefLabel xml:lang="nl">Encapsulated Postscript</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">EPS</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">EPS</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">Encapsulated Postscript</skos:prefLabel>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/file-type/EPUB">
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/file-type"/>
+		<skos:prefLabel xml:lang="nl">EPUB</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">EPUB</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">EPUB</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">EPUB</skos:prefLabel>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/file-type/EXE">
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/file-type"/>
+		<skos:prefLabel xml:lang="nl">EXE</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">EXE</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">EXE</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">EXE</skos:prefLabel>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/file-type/FMX2">
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/file-type"/>
+		<skos:prefLabel xml:lang="nl">Formex 2</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">FMX2</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">FMX2</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">Formex 2</skos:prefLabel>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/file-type/FMX3">
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/file-type"/>
+		<skos:prefLabel xml:lang="nl">Formex 3</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">FMX3</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">FMX3</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">Formex 3</skos:prefLabel>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/file-type/FMX4">
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/file-type"/>
+		<skos:prefLabel xml:lang="nl">Formex 4</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">FMX4</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">FMX4</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">Formex 4</skos:prefLabel>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/file-type/GDB">
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/file-type"/>
+		<skos:prefLabel xml:lang="nl">Esri File Geodatabase</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">GDB</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">GDB</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">Esri File Geodatabase</skos:prefLabel>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/file-type/GEOJSON">
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/file-type"/>
+		<skos:prefLabel xml:lang="nl">GEOJSON</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">GEOJSON</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">GEOJSON</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">GEOJSON</skos:prefLabel>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/file-type/GIF">
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/file-type"/>
+		<skos:prefLabel xml:lang="nl">GIF</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">GIF</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">GIF</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">GIF</skos:prefLabel>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/file-type/GML">
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/file-type"/>
+		<skos:prefLabel xml:lang="nl">GML</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">GML</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">GML</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">GML</skos:prefLabel>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/file-type/GMZ">
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/file-type"/>
+		<skos:prefLabel xml:lang="nl">Zipped GML</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">GMZ</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">GMZ</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">Zipped GML</skos:prefLabel>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/file-type/GRID">
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/file-type"/>
+		<skos:prefLabel xml:lang="nl">GRID</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">GRID</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">GRID</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">GRID</skos:prefLabel>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/file-type/GRID_ASCII">
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/file-type"/>
+		<skos:prefLabel xml:lang="nl">Esri ASCII grid</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">GRID_ASCII</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">GRID_ASCII</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">Esri ASCII grid</skos:prefLabel>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/file-type/GZIP">
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/file-type"/>
+		<skos:prefLabel xml:lang="nl">GNU zip</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">GZIP</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">GZIP</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">GNU zip</skos:prefLabel>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/file-type/HDF">
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/file-type"/>
+		<skos:prefLabel xml:lang="nl">HDF</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">HDF</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">HDF</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">HDF</skos:prefLabel>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/file-type/HTML">
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/file-type"/>
+		<skos:prefLabel xml:lang="nl">HTML</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">HTML</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">HTML</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">HTML</skos:prefLabel>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/file-type/HTML_SIMPL">
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/file-type"/>
+		<skos:prefLabel xml:lang="nl">HTML simplified</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">HTML_SIMPL</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">HTML_SIMPL</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">HTML simplified</skos:prefLabel>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/file-type/ICS">
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/file-type"/>
+		<skos:prefLabel xml:lang="nl">ICS</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">ICS</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">ICS</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">ICS</skos:prefLabel>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/file-type/INDD">
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/file-type"/>
+		<skos:prefLabel xml:lang="nl">INDD</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">INDD</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">INDD</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">INDD</skos:prefLabel>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/file-type/ISO">
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/file-type"/>
+		<skos:prefLabel xml:lang="nl">ISO</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">ISO</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">ISO</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">ISO</skos:prefLabel>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/file-type/ISO_ZIP">
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/file-type"/>
+		<skos:prefLabel xml:lang="nl">ISO_ZIP</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">ISO_ZIP</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">ISO_ZIP</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">ISO_ZIP</skos:prefLabel>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/file-type/JATS">
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/file-type"/>
+		<skos:prefLabel xml:lang="nl">JATS</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">JATS</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">JATS</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">JATS</skos:prefLabel>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/file-type/JPEG">
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/file-type"/>
+		<skos:prefLabel xml:lang="nl">JPEG</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">JPEG</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">JPEG</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">JPEG</skos:prefLabel>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/file-type/JPEG2000">
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/file-type"/>
+		<skos:prefLabel xml:lang="nl">JPEG 2000</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">JPEG2000</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">JPEG2000</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">JPEG 2000</skos:prefLabel>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/file-type/JS">
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/file-type"/>
+		<skos:prefLabel xml:lang="nl">JS</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">JS</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">JS</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">JS</skos:prefLabel>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/file-type/JSON">
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/file-type"/>
+		<skos:prefLabel xml:lang="nl">JSON</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">JSON</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">JSON</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">JSON</skos:prefLabel>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/file-type/JSON_LD">
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/file-type"/>
+		<skos:prefLabel xml:lang="nl">JSON-LD</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">JSON_LD</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">JSON_LD</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">JSON-LD</skos:prefLabel>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/file-type/KML">
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/file-type"/>
+		<skos:prefLabel xml:lang="nl">KML</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">KML</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">KML</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">KML</skos:prefLabel>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/file-type/KMZ">
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/file-type"/>
+		<skos:prefLabel xml:lang="nl">KMZ</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">KMZ</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">KMZ</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">KMZ</skos:prefLabel>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/file-type/LAS">
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/file-type"/>
+		<skos:prefLabel xml:lang="nl">LASer file</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">LAS</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">LAS</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">LASer file</skos:prefLabel>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/file-type/LAZ">
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/file-type"/>
+		<skos:prefLabel xml:lang="nl">Compressed LAS file</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">LAZ</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">LAZ</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">Compressed LAS file</skos:prefLabel>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/file-type/MAP_PRVW">
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/file-type"/>
+		<skos:prefLabel xml:lang="nl">ArcGIS Map Preview</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">MAP_PRVW</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">MAP_PRVW</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">ArcGIS Map Preview</skos:prefLabel>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/file-type/MAP_SRVC">
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/file-type"/>
+		<skos:prefLabel xml:lang="nl">ArcGIS Map Service</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">MAP_SRVC</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">MAP_SRVC</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">ArcGIS Map Service</skos:prefLabel>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/file-type/MBOX">
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/file-type"/>
+		<skos:prefLabel xml:lang="nl">MBOX</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">MBOX</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">MBOX</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">MBOX</skos:prefLabel>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/file-type/MDB">
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/file-type"/>
+		<skos:prefLabel xml:lang="nl">MDB</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">MDB</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">MDB</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">MDB</skos:prefLabel>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/file-type/METS">
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/file-type"/>
+		<skos:prefLabel xml:lang="nl">METS XML</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">METS</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">METS</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">METS XML</skos:prefLabel>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/file-type/METS_ZIP">
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/file-type"/>
+		<skos:prefLabel xml:lang="nl">METS package</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">METS_ZIP</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">METS_ZIP</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">METS package</skos:prefLabel>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/file-type/MHTML">
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/file-type"/>
+		<skos:prefLabel xml:lang="nl">MHTML</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">MHTML</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">MHTML</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">MHTML</skos:prefLabel>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/file-type/MOBI">
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/file-type"/>
+		<skos:prefLabel xml:lang="nl">Mobipocket eBook</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">MOBI</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">MOBI</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">Mobipocket eBook</skos:prefLabel>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/file-type/MOP">
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/file-type"/>
+		<skos:prefLabel xml:lang="nl">MOP</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">MOP</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">MOP</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">MOP</skos:prefLabel>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/file-type/MPEG2">
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/file-type"/>
+		<skos:prefLabel xml:lang="nl">MPEG-2</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">MPEG2</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">MPEG2</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">MPEG-2</skos:prefLabel>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/file-type/MPEG4">
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/file-type"/>
+		<skos:prefLabel xml:lang="nl">MPEG-4</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">MPEG4</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">MPEG4</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">MPEG-4</skos:prefLabel>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/file-type/MPEG4_AVC">
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/file-type"/>
+		<skos:prefLabel xml:lang="nl">MPEG-4 AVC</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">MPEG4_AVC</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">MPEG4_AVC</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">MPEG-4 AVC</skos:prefLabel>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/file-type/MRSID">
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/file-type"/>
+		<skos:prefLabel xml:lang="nl">MRSID</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">MRSID</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">MRSID</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">MRSID</skos:prefLabel>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/file-type/MSG_HTTP">
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/file-type"/>
+		<skos:prefLabel xml:lang="nl">HTTP Message</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">MSG_HTTP</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">MSG_HTTP</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">HTTP Message</skos:prefLabel>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/file-type/MXD">
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/file-type"/>
+		<skos:prefLabel xml:lang="nl">MXD</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">MXD</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">MXD</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">MXD</skos:prefLabel>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/file-type/N3">
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/file-type"/>
+		<skos:prefLabel xml:lang="nl">N3</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">N3</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">N3</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">N3</skos:prefLabel>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/file-type/NETCDF">
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/file-type"/>
+		<skos:prefLabel xml:lang="nl">NetCDF</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">NETCDF</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">NETCDF</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">NetCDF</skos:prefLabel>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/file-type/OCTET">
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/file-type"/>
+		<skos:prefLabel xml:lang="nl">Octet Stream</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">OCTET</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">OCTET</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">Octet Stream</skos:prefLabel>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/file-type/ODB">
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/file-type"/>
+		<skos:prefLabel xml:lang="nl">OpenDocument Database</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">ODB</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">ODB</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">OpenDocument Database</skos:prefLabel>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/file-type/ODC">
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/file-type"/>
+		<skos:prefLabel xml:lang="nl">OpenDocument Chart</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">ODC</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">ODC</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">OpenDocument Chart</skos:prefLabel>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/file-type/ODF">
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/file-type"/>
+		<skos:prefLabel xml:lang="nl">ODF</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">ODF</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">ODF</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">ODF</skos:prefLabel>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/file-type/ODG">
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/file-type"/>
+		<skos:prefLabel xml:lang="nl">OpenDocument Image</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">ODG</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">ODG</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">OpenDocument Image</skos:prefLabel>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/file-type/ODS">
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/file-type"/>
+		<skos:prefLabel xml:lang="nl">ODS</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">ODS</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">ODS</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">ODS</skos:prefLabel>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/file-type/ODT">
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/file-type"/>
+		<skos:prefLabel xml:lang="nl">ODT</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">ODT</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">ODT</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">ODT</skos:prefLabel>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/file-type/OP_DATPRO">
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/file-type"/>
+		<skos:prefLabel xml:lang="nl">Provisional data</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">OP_DATPRO</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">OP_DATPRO</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">Provisional data</skos:prefLabel>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/file-type/OVF">
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/file-type"/>
+		<skos:prefLabel xml:lang="nl">OVF</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">OVF</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">OVF</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">OVF</skos:prefLabel>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/file-type/OWL">
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/file-type"/>
+		<skos:prefLabel xml:lang="nl">OWL</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">OWL</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">OWL</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">OWL</skos:prefLabel>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/file-type/PDF">
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/file-type"/>
+		<skos:prefLabel xml:lang="nl">PDF</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">PDF</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">PDF</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">PDF</skos:prefLabel>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/file-type/PDF1X">
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/file-type"/>
+		<skos:prefLabel xml:lang="nl">PDF1X</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">PDF1X</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">PDF1X</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">PDF1X</skos:prefLabel>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/file-type/PDFA1A">
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/file-type"/>
+		<skos:prefLabel xml:lang="nl">PDF/A-1a</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">PDFA1A</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">PDFA1A</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">PDF/A-1a</skos:prefLabel>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/file-type/PDFA1B">
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/file-type"/>
+		<skos:prefLabel xml:lang="nl">PDF/A-1b</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">PDFA1B</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">PDFA1B</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">PDF/A-1b</skos:prefLabel>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/file-type/PDFA2A">
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/file-type"/>
+		<skos:prefLabel xml:lang="nl">PDF/A-2a</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">PDFA2A</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">PDFA2A</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">PDF/A-2a</skos:prefLabel>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/file-type/PDFA2B">
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/file-type"/>
+		<skos:prefLabel xml:lang="nl">PDF/A-2b</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">PDFA2B</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">PDFA2B</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">PDF/A-2b</skos:prefLabel>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/file-type/PDFA3">
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/file-type"/>
+		<skos:prefLabel xml:lang="nl">PDFA-3</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">PDFA3</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">PDFA3</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">PDFA-3</skos:prefLabel>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/file-type/PDFX">
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/file-type"/>
+		<skos:prefLabel xml:lang="nl">PDF/X</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">PDFX</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">PDFX</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">PDF/X</skos:prefLabel>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/file-type/PDFX1A">
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/file-type"/>
+		<skos:prefLabel xml:lang="nl">PDFX1A</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">PDFX1A</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">PDFX1A</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">PDFX1A</skos:prefLabel>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/file-type/PDFX2A">
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/file-type"/>
+		<skos:prefLabel xml:lang="nl">PDFX2A</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">PDFX2A</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">PDFX2A</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">PDFX2A</skos:prefLabel>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/file-type/PDFX4">
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/file-type"/>
+		<skos:prefLabel xml:lang="nl">PDFX4</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">PDFX4</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">PDFX4</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">PDFX4</skos:prefLabel>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/file-type/PL">
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/file-type"/>
+		<skos:prefLabel xml:lang="nl">PL</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">PL</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">PL</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">PL</skos:prefLabel>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/file-type/PNG">
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/file-type"/>
+		<skos:prefLabel xml:lang="nl">PNG</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">PNG</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">PNG</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">PNG</skos:prefLabel>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/file-type/PPS">
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/file-type"/>
+		<skos:prefLabel xml:lang="nl">PowerPoint Slide Show</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">PPS</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">PPS</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">PowerPoint Slide Show</skos:prefLabel>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/file-type/PPSX">
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/file-type"/>
+		<skos:prefLabel xml:lang="nl">PowerPoint PPSX</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">PPSX</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">PPSX</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">PowerPoint PPSX</skos:prefLabel>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/file-type/PPT">
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/file-type"/>
+		<skos:prefLabel xml:lang="nl">PowerPoint PPT</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">PPT</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">PPT</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">PowerPoint PPT</skos:prefLabel>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/file-type/PPTX">
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/file-type"/>
+		<skos:prefLabel xml:lang="nl">PowerPoint PPTX</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">PPTX</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">PPTX</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">PowerPoint PPTX</skos:prefLabel>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/file-type/PS">
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/file-type"/>
+		<skos:prefLabel xml:lang="nl">PS</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">PS</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">PS</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">PS</skos:prefLabel>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/file-type/PSD">
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/file-type"/>
+		<skos:prefLabel xml:lang="nl">PSD</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">PSD</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">PSD</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">PSD</skos:prefLabel>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/file-type/PWP">
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/file-type"/>
+		<skos:prefLabel xml:lang="nl">PWP</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">PWP</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">PWP</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">PWP</skos:prefLabel>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/file-type/QGS">
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/file-type"/>
+		<skos:prefLabel xml:lang="nl">QGS</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">QGS</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">QGS</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">QGS</skos:prefLabel>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/file-type/RAR">
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/file-type"/>
+		<skos:prefLabel xml:lang="nl">RAR</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">RAR</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">RAR</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">RAR</skos:prefLabel>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/file-type/RDF">
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/file-type"/>
+		<skos:prefLabel xml:lang="nl">RDF</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">RDF</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">RDF</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">RDF</skos:prefLabel>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/file-type/RDFA">
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/file-type"/>
+		<skos:prefLabel xml:lang="nl">RDFa</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">RDFA</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">RDFA</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">RDFa</skos:prefLabel>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/file-type/RDF_N_QUADS">
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/file-type"/>
+		<skos:prefLabel xml:lang="nl">RDF N-Quads</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">RDF_N_QUADS</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">RDF_N_QUADS</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">RDF N-Quads</skos:prefLabel>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/file-type/RDF_N_TRIPLES">
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/file-type"/>
+		<skos:prefLabel xml:lang="nl">RDF N-Triples</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">RDF_N_TRIPLES</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">RDF_N_TRIPLES</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">RDF N-Triples</skos:prefLabel>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/file-type/RDF_TRIG">
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/file-type"/>
+		<skos:prefLabel xml:lang="nl">RDF TriG</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">RDF_TRIG</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">RDF_TRIG</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">RDF TriG</skos:prefLabel>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/file-type/RDF_TURTLE">
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/file-type"/>
+		<skos:prefLabel xml:lang="nl">RDF Turtle</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">RDF_TURTLE</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">RDF_TURTLE</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">RDF Turtle</skos:prefLabel>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/file-type/RDF_XML">
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/file-type"/>
+		<skos:prefLabel xml:lang="nl">RDF XML</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">RDF_XML</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">RDF_XML</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">RDF XML</skos:prefLabel>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/file-type/REST">
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/file-type"/>
+		<skos:prefLabel xml:lang="nl">Esri REST</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">REST</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">REST</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">Esri REST</skos:prefLabel>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/file-type/RSS">
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/file-type"/>
+		<skos:prefLabel xml:lang="nl">RSS feed</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">RSS</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">RSS</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">RSS feed</skos:prefLabel>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/file-type/RTF">
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/file-type"/>
+		<skos:prefLabel xml:lang="nl">RTF</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">RTF</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">RTF</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">RTF</skos:prefLabel>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/file-type/SCHEMA_XML">
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/file-type"/>
+		<skos:prefLabel xml:lang="nl">XML schema</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">SCHEMA_XML</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">SCHEMA_XML</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">XML schema</skos:prefLabel>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/file-type/SDMX">
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/file-type"/>
+		<skos:prefLabel xml:lang="nl">SDMX</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">SDMX</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">SDMX</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">SDMX</skos:prefLabel>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/file-type/SGML">
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/file-type"/>
+		<skos:prefLabel xml:lang="nl">SGML</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">SGML</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">SGML</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">SGML</skos:prefLabel>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/file-type/SHP">
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/file-type"/>
+		<skos:prefLabel xml:lang="nl">Esri Shape</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">SHP</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">SHP</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">Esri Shape</skos:prefLabel>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/file-type/SKOS_XML">
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/file-type"/>
+		<skos:prefLabel xml:lang="nl">SKOS</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">SKOS_XML</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">SKOS_XML</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">SKOS</skos:prefLabel>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/file-type/SPARQLQ">
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/file-type"/>
+		<skos:prefLabel xml:lang="nl">SPARQL</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">SPARQLQ</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">SPARQLQ</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">SPARQL</skos:prefLabel>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/file-type/SPARQLQRES">
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/file-type"/>
+		<skos:prefLabel xml:lang="nl">SPARQL results</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">SPARQLQRES</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">SPARQLQRES</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">SPARQL results</skos:prefLabel>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/file-type/SQL">
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/file-type"/>
+		<skos:prefLabel xml:lang="nl">SQL</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">SQL</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">SQL</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">SQL</skos:prefLabel>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/file-type/SVG">
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/file-type"/>
+		<skos:prefLabel xml:lang="nl">SVG</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">SVG</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">SVG</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">SVG</skos:prefLabel>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/file-type/TAB">
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/file-type"/>
+		<skos:prefLabel xml:lang="nl">MapInfo TAB file</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">TAB</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">TAB</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">MapInfo TAB file</skos:prefLabel>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/file-type/TAB_RSTR">
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/file-type"/>
+		<skos:prefLabel xml:lang="nl">MapInfo TAB raster file</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">TAB_RSTR</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">TAB_RSTR</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">MapInfo TAB raster file</skos:prefLabel>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/file-type/TAR">
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/file-type"/>
+		<skos:prefLabel xml:lang="nl">TAR</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">TAR</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">TAR</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">TAR</skos:prefLabel>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/file-type/TAR_GZ">
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/file-type"/>
+		<skos:prefLabel xml:lang="nl">TAR GZ</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">TAR_GZ</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">TAR_GZ</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">TAR GZ</skos:prefLabel>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/file-type/TAR_XZ">
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/file-type"/>
+		<skos:prefLabel xml:lang="nl">TAR XZ</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">TAR_XZ</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">TAR_XZ</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">TAR XZ</skos:prefLabel>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/file-type/TIFF">
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/file-type"/>
+		<skos:prefLabel xml:lang="nl">TIFF</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">TIFF</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">TIFF</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">TIFF</skos:prefLabel>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/file-type/TIFF_FX">
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/file-type"/>
+		<skos:prefLabel xml:lang="nl">TIFF FX</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">TIFF_FX</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">TIFF_FX</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">TIFF FX</skos:prefLabel>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/file-type/TMX">
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/file-type"/>
+		<skos:prefLabel xml:lang="nl">TMX</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">TMX</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">TMX</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">TMX</skos:prefLabel>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/file-type/TSV">
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/file-type"/>
+		<skos:prefLabel xml:lang="nl">TSV</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">TSV</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">TSV</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">TSV</skos:prefLabel>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/file-type/TXT">
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/file-type"/>
+		<skos:prefLabel xml:lang="nl">Plain text</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">TXT</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">TXT</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">Plain text</skos:prefLabel>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/file-type/WARC">
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/file-type"/>
+		<skos:prefLabel xml:lang="nl">WARC</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">WARC</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">WARC</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">WARC</skos:prefLabel>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/file-type/WARC_GZ">
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/file-type"/>
+		<skos:prefLabel xml:lang="nl">WARC GZ</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">WARC_GZ</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">WARC_GZ</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">WARC GZ</skos:prefLabel>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/file-type/WFS_SRVC">
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/file-type"/>
+		<skos:prefLabel xml:lang="nl">WFS</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">WFS_SRVC</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">WFS_SRVC</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">WFS</skos:prefLabel>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/file-type/WMS_SRVC">
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/file-type"/>
+		<skos:prefLabel xml:lang="nl">WMS</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">WMS_SRVC</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">WMS_SRVC</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">WMS</skos:prefLabel>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/file-type/WORLD">
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/file-type"/>
+		<skos:prefLabel xml:lang="nl">World file</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">WORLD</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">WORLD</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">World file</skos:prefLabel>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/file-type/XHTML">
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/file-type"/>
+		<skos:prefLabel xml:lang="nl">XHTML</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">XHTML</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">XHTML</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">XHTML</skos:prefLabel>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/file-type/XHTML_SIMPL">
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/file-type"/>
+		<skos:prefLabel xml:lang="nl">XHTML simplified</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">XHTML_SIMPL</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">XHTML_SIMPL</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">XHTML simplified</skos:prefLabel>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/file-type/XLIFF">
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/file-type"/>
+		<skos:prefLabel xml:lang="nl">XLIFF</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">XLIFF</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">XLIFF</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">XLIFF</skos:prefLabel>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/file-type/XLS">
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/file-type"/>
+		<skos:prefLabel xml:lang="nl">Excel XLS</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">XLS</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">XLS</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">Excel XLS</skos:prefLabel>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/file-type/XLSX">
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/file-type"/>
+		<skos:prefLabel xml:lang="nl">Excel XLSX</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">XLSX</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">XLSX</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">Excel XLSX</skos:prefLabel>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/file-type/XML">
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/file-type"/>
+		<skos:prefLabel xml:lang="nl">XML</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">XML</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">XML</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">XML</skos:prefLabel>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/file-type/XSLFO">
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/file-type"/>
+		<skos:prefLabel xml:lang="nl">XSL-FO</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">XSLFO</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">XSLFO</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">XSL-FO</skos:prefLabel>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/file-type/XSLT">
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/file-type"/>
+		<skos:prefLabel xml:lang="nl">XSLT</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">XSLT</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">XSLT</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">XSLT</skos:prefLabel>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/file-type/XYZ">
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/file-type"/>
+		<skos:prefLabel xml:lang="nl">XYZ Chemical File</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">XYZ</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">XYZ</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">XYZ Chemical File</skos:prefLabel>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/file-type/ZIP">
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/file-type"/>
+		<skos:prefLabel xml:lang="nl">ZIP</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">ZIP</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">ZIP</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">ZIP</skos:prefLabel>
+	</skos:Concept>
+</rdf:RDF>

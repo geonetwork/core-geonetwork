@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF xmlns="http://www.semanticweb.org/owl/owlapi/turtle#" xmlns:owl="http://www.w3.org/2002/07/owl#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:wdrs="http://www.w3.org/2007/05/powder-s#" xmlns:foaf="http://xmlns.com/foaf/0.1/" xmlns:vann="http://purl.org/vocab/vann/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:schema="http://schema.org/" xmlns:xsd="http://www.w3.org/2001/XMLSchema#" xmlns:xhv="http://www.w3.org/1999/xhtml/vocab#" xmlns:cc="http://creativecommons.org/ns#" xml:base="http://www.semanticweb.org/owl/owlapi/turtle">
+	<skos:ConceptScheme rdf:about="http://purl.org/adms/publishertype/1.0">
+		<dc:title>Publisher Type</dc:title>
+		<dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2012-04-13</dcterms:modified>
+		<dcterms:rights xml:lang="en">Copyright (c) 2012 European Union.</dcterms:rights>
+		<dcterms:description xml:lang="en">This file specifies the controlled vocabularies defined by ADMS v1.0 as SKOS concept schemes and SKOS concepts.
+    </dcterms:description>
+		<dcterms:abstract xml:lang="en">This file specifies the controlled vocabularies defined by ADMS v1.0 as SKOS concept schemes and SKOS concepts.
+    </dcterms:abstract>
+		<dcterms:creator rdf:resource="http://stijngoedertier.org"/>
+		<dcterms:license rdf:resource="https://joinup.ec.europa.eu/category/licence/isa-open-metadata-licence-v11"/>
+		<dcterms:conformsTo rdf:resource="https://joinup.ec.europa.eu/elibrary/document/isa-deliverable-process-and-methodology-developing-core-vocabularies"/>
+	</skos:ConceptScheme>
+	<skos:Concept rdf:about="http://purl.org/adms/publishertype/Academia-ScientificOrganisation">
+		<skos:notation>Academia-ScientificOrganisation</skos:notation>
+		<skos:prefLabel xml:lang="en">Academia/Scientific organisation</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://purl.org/adms/publishertype/1.0"/>
+		<skos:prefLabel xml:lang="nl">Academia/Scientific organisation</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Academia/Scientific organisation</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Academia/Scientific organisation</skos:prefLabel>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://purl.org/adms/publishertype/Company">
+		<skos:notation>Company</skos:notation>
+		<skos:prefLabel xml:lang="en">Company</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://purl.org/adms/publishertype/1.0"/>
+		<skos:prefLabel xml:lang="nl">Company</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Company</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Company</skos:prefLabel>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://purl.org/adms/publishertype/IndustryConsortium">
+		<skos:prefLabel xml:lang="en">Industry consortium</skos:prefLabel>
+		<skos:notation>IndustryConsortium</skos:notation>
+		<skos:inScheme rdf:resource="http://purl.org/adms/publishertype/1.0"/>
+		<skos:prefLabel xml:lang="nl">Industry consortium</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Industry consortium</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Industry consortium</skos:prefLabel>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://purl.org/adms/publishertype/LocalAuthority">
+		<skos:notation>LocalAuthority</skos:notation>
+		<skos:prefLabel xml:lang="en">Local Authority</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://purl.org/adms/publishertype/1.0"/>
+		<skos:prefLabel xml:lang="nl">Local Authority</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Local Authority</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Local Authority</skos:prefLabel>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://purl.org/adms/publishertype/NationalAuthority">
+		<skos:prefLabel xml:lang="en">National authority</skos:prefLabel>
+		<skos:notation>NationalAuthority</skos:notation>
+		<skos:inScheme rdf:resource="http://purl.org/adms/publishertype/1.0"/>
+		<skos:prefLabel xml:lang="nl">National authority</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">National authority</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">National authority</skos:prefLabel>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://purl.org/adms/publishertype/NonGovernmentalOrganisation">
+		<skos:prefLabel xml:lang="en">Non-Governmental Organisation</skos:prefLabel>
+		<skos:notation>NonGovernmentalOrganisation</skos:notation>
+		<skos:inScheme rdf:resource="http://purl.org/adms/publishertype/1.0"/>
+		<skos:prefLabel xml:lang="nl">Non-Governmental Organisation</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Non-Governmental Organisation</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Non-Governmental Organisation</skos:prefLabel>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://purl.org/adms/publishertype/NonProfitOrganisation">
+		<skos:prefLabel xml:lang="en">Non-Profit Organisation</skos:prefLabel>
+		<skos:notation>NonProfitOrganisation</skos:notation>
+		<skos:inScheme rdf:resource="http://purl.org/adms/publishertype/1.0"/>
+		<skos:prefLabel xml:lang="nl">Non-Profit Organisation</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Non-Profit Organisation</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Non-Profit Organisation</skos:prefLabel>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://purl.org/adms/publishertype/PrivateIndividual(s)">
+		<skos:prefLabel xml:lang="en">Private Individual(s)</skos:prefLabel>
+		<skos:notation>PrivateIndividual(s)</skos:notation>
+		<skos:inScheme rdf:resource="http://purl.org/adms/publishertype/1.0"/>
+		<skos:prefLabel xml:lang="nl">Private Individual(s)</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Private Individual(s)</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Private Individual(s)</skos:prefLabel>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://purl.org/adms/publishertype/RegionalAuthority">
+		<skos:notation>RegionalAuthority</skos:notation>
+		<skos:prefLabel xml:lang="en">Regional authority</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://purl.org/adms/publishertype/1.0"/>
+		<skos:prefLabel xml:lang="nl">Regional authority</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Regional authority</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Regional authority</skos:prefLabel>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://purl.org/adms/publishertype/StandardisationBody">
+		<skos:prefLabel xml:lang="en">Standardisation body</skos:prefLabel>
+		<skos:notation>StandardisationBody</skos:notation>
+		<skos:inScheme rdf:resource="http://purl.org/adms/publishertype/1.0"/>
+		<skos:prefLabel xml:lang="nl">Standardisation body</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Standardisation body</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Standardisation body</skos:prefLabel>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://purl.org/adms/publishertype/SupraNationalAuthority">
+		<skos:prefLabel xml:lang="en">Supra-national authority</skos:prefLabel>
+		<skos:notation>SupraNationalAuthority</skos:notation>
+		<skos:inScheme rdf:resource="http://purl.org/adms/publishertype/1.0"/>
+		<skos:prefLabel xml:lang="nl">Supra-national authority</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Supra-national authority</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Supra-national authority</skos:prefLabel>
+	</skos:Concept>
+</rdf:RDF>

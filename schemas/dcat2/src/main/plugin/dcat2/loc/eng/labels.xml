@@ -1,0 +1,539 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+  ~ Copyright (C) 2001-2016 Food and Agriculture Organization of the
+  ~ United Nations (FAO-UN), United Nations World Food Programme (WFP)
+  ~ and United Nations Environment Programme (UNEP)
+  ~
+  ~ This program is free software; you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation; either version 2 of the License, or (at
+  ~ your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful, but
+  ~ WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+  ~ General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program; if not, write to the Free Software
+  ~ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
+  ~
+  ~ Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
+  ~ Rome - Italy. email: geonetwork@osgeo.org
+  -->
+
+<labels xmlns:dct="http://purl.org/dc/terms/"
+        xmlns:spdx="http://spdx.org/rdf/terms#"
+        xmlns:owl="http://www.w3.org/2002/07/owl#"
+        xmlns:adms="http://www.w3.org/ns/adms#"
+        xmlns:dcat="http://www.w3.org/ns/dcat#"
+        xmlns:locn="http://www.w3.org/ns/locn#"
+        xmlns:foaf="http://xmlns.com/foaf/0.1/"
+        xmlns:prov="http://www.w3.org/ns/prov#"
+        xmlns:vcard="http://www.w3.org/2006/vcard/ns#"
+        xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+        xmlns:schema="http://schema.org/">
+  <element name="xml:lang">
+    <label>Language code</label>
+  </element>
+  <element name="dcat:spatialResolutionInMeters">
+    <label>Spatial resolution (m)</label>
+    <helper>
+      <option value="0.10">10 cm</option>
+      <option value="0.25">25 cm</option>
+      <option value="0.50">50 cm</option>
+      <option value="1">1 m</option>
+      <option value="30">30 m</option>
+      <option value="100">100 m</option>
+    </helper>
+    <btnLabel>spatial resolution</btnLabel>
+  </element>
+  <element name="dcat:CatalogRecord">
+    <label>Catalog Record</label>
+    <description>Catalog-related information</description>
+  </element>
+  <element name="rdf:about"
+           context="/rdf:RDF/dcat:Dataset/dcat:landingPage/foaf:Document/@rdf:about">
+    <label>Landing page</label>
+    <description></description>
+  </element>
+  <element name="rdf:about"
+           context="/dcat:CatalogRecord/@rdf:about">
+    <label>Record URI</label>
+    <description>Landing page of the record</description>
+  </element>
+  <element name="rdf:about">
+    <label>URI</label>
+    <description></description>
+  </element>
+  <element name="dct:conformsTo">
+    <label>Conforms to</label>
+    <description>An established standard to which the described resource conforms.</description>
+  </element>
+  <element name="dct:Standard">
+    <label>Standard</label>
+    <description>An established standard to which the described resource conforms.
+      This property SHOULD be used to indicate the model, schema, ontology, view or profile that the catalog
+      record metadata conforms to.
+    </description>
+  </element>
+  <element name="foaf:primaryTopic">
+    <label>Resource (Dataset or DataService)</label>
+    <description>The dcat:Resource (dataset or service) described in the record.</description>
+  </element>
+  <element name="dcat:Dataset">
+    <label>Dataset</label>
+    <description>A dataset is a collection of data, published or curated by a single agent.
+      Data comes in many forms including numbers, words, pixels, imagery, sound and other multi-media, and potentially
+      other types, any of which might be collected into a dataset.
+    </description>
+    <btnLabel>dataset</btnLabel>
+  </element>
+  <element name="dct:language">
+    <label>Language</label>
+    <description>A language of the item. This refers to the natural language used for textual metadata (i.e. titles,
+      descriptions, etc) of a cataloged resource (i.e. dataset or service) or the textual values of a dataset
+      distribution
+    </description>
+    <btnLabel>language</btnLabel>
+  </element>
+  <element name="rdf:resource"
+           context="/dcat:CatalogRecord/dct:language/@rdf:resource">
+    <label>Record language</label>
+    <description>A language of the item. This refers to the natural language used for textual metadata (i.e. titles,
+      descriptions, etc) of a cataloged resource (i.e. dataset or service) or the textual values of a dataset
+      distribution
+    </description>
+    <btnLabel>language</btnLabel>
+  </element>
+  <element name="rdf:resource"
+           context="/dcat:Dataset/dct:language/@rdf:resource">
+    <label>Dataset language</label>
+    <description>The language of the dataset.</description>
+    <btnLabel>language</btnLabel>
+  </element>
+  <element name="rdf:resource"
+           context="/dcat:DataService/dct:language/@rdf:resource">
+    <label>Service language</label>
+    <description>The language of the service.</description>
+    <btnLabel>language</btnLabel>
+  </element>
+  <element name="dct:identifier">
+    <label>Identifier</label>
+    <description>A unique identifier of the item.
+    </description>
+    <btnLabel>identifier</btnLabel>
+  </element>
+  <element name="dct:issued">
+    <label>Publication date</label>
+    <description>Date of formal issuance (e.g., publication) of the item.</description>
+  </element>
+  <element name="dct:issued"
+           context="/dcat:CatalogRecord/dct:issued">
+    <label>Publication date</label>
+    <description>Date of formal issuance (e.g., publication) of the record in the catalog.</description>
+    <help><![CDATA[
+    <ul>
+    <li><a href="https://www.w3.org/TR/vocab-dcat-2/#Property:record_listing_date">W3C recommendations</a></li>
+    </ul>
+    ]]></help>
+  </element>
+  <element name="dct:modified">
+    <label>Modification date</label>
+    <description>Most recent date on which the element was changed, updated or modified.</description>
+  </element>
+  <element name="dct:modified"
+           context="/dcat:CatalogRecord/dct:modified">
+    <label>Modification date</label>
+    <description>Most recent date on which the catalog record was changed, updated or modified.</description>
+  </element>
+  <element name="dct:title">
+    <label>Title</label>
+    <description>A name given to the item.</description>
+    <help><![CDATA[
+    <ul>
+    <li><a href="https://www.w3.org/TR/2020/REC-vocab-dcat-2-20200204/#Property:record_title">W3C recommendations</a></li>
+    </ul>
+    ]]></help>
+    <btnLabel>title</btnLabel>
+  </element>
+  <element name="dct:description">
+    <label>Description</label>
+    <description>A free-text account of the record.</description>
+    <btnLabel>description</btnLabel>
+  </element>
+  <element name="dcat:contactPoint">
+    <label>Point of contact</label>
+    <description>Contact information for the cataloged resource.</description>
+    <btnLabel>point of contact</btnLabel>
+  </element>
+  <element name="vcard:Organization">
+    <label>Organization</label>
+    <description> An organization is a single entity, and might represent a business or government, a department or
+      division within a business or government, a club, an association, or the like.
+    </description>
+    <btnLabel>organization</btnLabel>
+  </element>
+  <element name="vcard:fn">
+    <label>Contact name</label>
+    <description></description>
+    <btnLabel>contact name</btnLabel>
+  </element>
+  <element name="vcard:organization-name">
+    <label>Organization name</label>
+    <description></description>
+    <!-- REMOVE ? Possible duplicate with vcard:fn -->
+  </element>
+  <element name="vcard:hasAddress">
+    <label>Address</label>
+    <description>Postal address</description>
+  </element>
+  <element name="vcard:Address">
+    <label>Address</label>
+    <description>Postal address</description>
+    <btnLabel>address</btnLabel>
+  </element>
+  <element name="vcard:street-address">
+    <label>Street</label>
+    <description>Street name and number</description>
+    <btnLabel>street</btnLabel>
+  </element>
+  <element name="vcard:locality">
+    <label>Locality</label>
+    <description>City/Municipality</description>
+    <btnLabel>locality</btnLabel>
+  </element>
+  <element name="vcard:postal-code">
+    <label>Postal code</label>
+    <description>Zip code</description>
+    <btnLabel>postal code</btnLabel>
+  </element>
+  <element name="vcard:country-name">
+    <label>Country</label>
+    <btnLabel>country</btnLabel>
+  </element>
+  <element name="vcard:hasURL">
+    <label>Website</label>
+    <description>Website URL</description>
+    <btnLabel>URL</btnLabel>
+  </element>
+  <element name="vcard:hasTelephone">
+    <label>Phone number</label>
+    <description>Phone number, with country indicator</description>
+    <btnLabel>phone number</btnLabel>
+  </element>
+
+  <element name="dct:creator">
+    <label>Creator</label>
+    <description>The entity responsible for producing the resource.</description>
+  </element>
+  <element name="dct:publisher">
+    <label>Publisher</label>
+    <description>The entity responsible for making the item available.</description>
+  </element>
+  <element name="dct:issued"
+           context="/dcat:Dataset/dct:issued">
+    <label>Release date</label>
+    <description>Date of formal issuance (e.g., publication) of the resource.</description>
+    <help for="reference"><![CDATA[
+    <ul>
+    <li><a target="_blank" href="https://www.w3.org/TR/vocab-dcat-2/#Property:distribution_release_date">
+           W3C recommendations </a>
+    </li>
+    </ul>
+    ]]></help>
+  </element>
+  <element name="dct:modified"
+           context="/dcat:Dataset/dcat:distribution/dcat:Distribution/dct:modified">
+    <label>Update/modification date</label>
+    <description>Most recent date on which the resource was changed, updated or modified.</description>
+    <help for="reference"><![CDATA[
+    <ul>
+    <li><a target="_blank" href="https://www.w3.org/TR/vocab-dcat-2/#Property:distribution_update_date">
+           W3C recommendations </a>
+    </li>
+    </ul>
+    ]]></help>
+  </element>
+
+  <element name="dcat:landingPage">
+    <label>Landing page</label>
+    <description>A Web page that can be navigated to in a Web browser to gain access to the catalog,
+      a dataset, its distributions and/or additional information.
+    </description>
+    <btnLabel></btnLabel>
+  </element>
+  <element name="dct:accessRights">
+    <label>Access Rights</label>
+    <description>Information about who can access the resource or an indication of its security status.</description>
+    <help for="reference"><![CDATA[
+    <ul>
+    <li><a target="_blank" href="https://www.w3.org/TR/vocab-dcat-2/#Property:distribution_access_rights">
+           W3C recommendations </a>
+    </li>
+    </ul>
+    ]]></help>
+    <btnLabel>access rights</btnLabel>
+  </element>
+  <element name="dct:license">
+    <label>License</label>
+    <description>A legal document under which the resource is made available.</description>
+    <help for="reference"><![CDATA[
+    <ul>
+    <li><a target="_blank" href="https://www.w3.org/TR/vocab-dcat-2/#Property:distribution_license">
+           W3C recommendations </a>
+    </li>
+    </ul>
+    ]]></help>
+  </element>
+  <element name="dct:LicenseDocument">
+    <label>License document</label>
+    <description>A legal document giving official permission to do something with a resource.</description>
+  </element>
+  <element name="dct:rights">
+    <label>Rights</label>
+    <description>Information about rights held in and over the distribution.</description>
+    <btnLabel>rights</btnLabel>
+  </element>
+  <element name="dct:RightsStatement">
+    <label>Rights statement</label>
+    <description>A rights statement that concerns how the distribution is accessed.</description>
+  </element>
+  <element name="odrl:hasPolicy">
+    <label>Policy</label>
+    <description>An ODRL conformant policy expressing the rights associated with the resource.</description>
+    <help for="reference"><![CDATA[
+    <ul>
+    <li><a target="_blank" href="https://www.w3.org/TR/vocab-dcat-2/#Property:resource_has_policy">
+           W3C recommendations </a>
+    </li>
+    </ul>
+    ]]></help>
+  </element>
+  <element name="prov:qualifiedAttribution">
+    <label>Qualified attribution</label>
+    <description>Link to an Agent having some form of responsibility for the resource</description>
+    <help for="reference"><![CDATA[
+    <ul>
+    <li><a target="_blank" href="https://www.w3.org/TR/vocab-dcat-2/#Property:resource_qualified_attribution">
+           W3C recommendations</a>
+    </li>
+    </ul>
+    ]]></help>
+    <btnLabel>qualified attribution</btnLabel>
+  </element>
+  <element name="dct:relation">
+    <label>Relation</label>
+    <description>A related resource. Recommended practice is to identify the related resource by means of a URI. If this is not possible
+      or feasible, a string conforming to a formal identification system may be provided.</description>
+    <btnLabel>relation</btnLabel>
+  </element>
+  <element name="dcat:qualifiedRelation">
+    <label>Qualified relation</label>
+    <description>Link to a description of a relationship with another resource</description>
+    <btnLabel>qualified relation</btnLabel>
+  </element>
+  <element name="dct:isReferencedBy">
+    <label>Referenced by</label>
+    <description>A related resource, such as a publication, that references, cites, or otherwise points to the
+      cataloged resource.
+    </description>
+    <help for="reference"><![CDATA[
+    <ul>
+    <li><a target="_blank" href="https://www.w3.org/TR/vocab-dcat-2/#Property:resource_is_referenced_by">
+           W3C recommendations</a>
+    </li>
+    </ul>
+    ]]></help>
+    <btnLabel>ref. by</btnLabel>
+  </element>
+  <element name="dcat:distribution">
+    <label>Distribution</label>
+    <description>An available distribution of the dataset.
+    </description>
+    <btnLabel>distribution</btnLabel>
+  </element>
+  <element name="dcat:Distribution">
+    <label>Distribution</label>
+    <description>A specific representation of a dataset. A dataset might be available in multiple serializations
+      that may differ in various ways, including natural language, media-type or format, schematic organization,
+      temporal and spatial resolution, level of detail or profiles (which might specify any or all of the above).
+    </description>
+  </element>
+  <element name="dcat:accessService">
+    <label>Access service</label>
+    <description>A data service that gives access to the distribution of the dataset
+    </description>
+    <help for="reference"><![CDATA[
+    <ul>
+    <li><a target="_blank" href="https://www.w3.org/TR/vocab-dcat-2/#Property:distribution_access_service">
+           W3C recommendations</a>
+    </li>
+    </ul>
+    ]]></help>
+  </element>
+  <element name="dcat:mediaType">
+    <label>Media type</label>
+    <description>The media type of the distribution as defined by IANA.
+    </description>
+    <help for="reference"><![CDATA[
+    <ul>
+    <li><a target="_blank" href="https://www.w3.org/TR/vocab-dcat-2/#Property:distribution_media_type">
+           W3C recommendations</a>
+    </li>
+    </ul>
+    ]]></help>
+  </element>
+  <element name="dcat:packageFormat">
+    <label>Package format</label>
+    <description>The package format of the distribution in which one or more data files are grouped together, e.g. to
+      enable a set of related files to be downloaded together.
+    </description>
+    <help for="reference"><![CDATA[
+    <ul>
+    <li><a target="_blank" href="https://www.w3.org/TR/vocab-dcat-2/#Property:distribution_packaging_format">
+           W3C recommendations</a>
+    </li>
+    </ul>
+    ]]></help>
+  </element>
+  <element name="dcat:byteSize">
+    <label>Byte size</label>
+    <description>The size of a distribution in bytes.
+    </description>
+  </element>
+  <element name="dcat:compressFormat">
+    <label>Compression format</label>
+    <description>The compression format of the distribution in which the data is contained in a compressed form, e.g.
+      to reduce the size of the downloadable file.
+    </description>
+    <help for="reference"><![CDATA[
+    <ul>
+    <li><a target="_blank" href="https://www.w3.org/TR/vocab-dcat-2/#Property:distribution_compression_format">
+           W3C recommendations</a>
+    </li>
+    </ul>
+    ]]></help>
+  </element>
+  <element name="dcat:temporalResolution">
+    <label>Temporal resolution</label>
+    <description>Minimum time period resolvable in the dataset.
+    </description>
+    <help for="reference"><![CDATA[
+    <ul>
+    <li><a target="_blank" href="https://www.w3.org/TR/vocab-dcat-2/#Property:dataset_temporal_resolution">
+           W3C recommendations</a>
+    </li>
+    </ul>
+    ]]></help>
+    <btnLabel>temporal resolution</btnLabel>
+  </element>
+  <element name="dct:accrualPeriodicity">
+    <label>Accrual periodicity</label>
+    <description>The frequency at which dataset is published.
+    </description>
+    <help for="reference"><![CDATA[
+    <ul>
+    <li><a target="_blank" href="https://www.w3.org/TR/vocab-dcat-2/#Property:dataset_frequency">
+           W3C recommendations</a>
+    </li>
+    </ul>
+    ]]></help>
+  </element>
+  <element name="dct:spatial">
+    <label>Spatial extent</label>
+    <description>The geographical area covered by the dataset.
+    </description>
+    <help for="reference"><![CDATA[
+    <ul>
+    <li><a target="_blank" href="https://www.w3.org/TR/vocab-dcat-2/#Property:dataset_spatial">
+           W3C recommendations</a>
+    </li>
+    </ul>
+    ]]></help>
+    <btnLabel>spatial extent</btnLabel>
+  </element>
+  <element name="dct:temporal">
+    <label>Temporal extent</label>
+    <description>The temporal period that the dataset covers.
+    </description>
+    <help for="reference"><![CDATA[
+    <ul>
+    <li><a target="_blank" href="https://www.w3.org/TR/vocab-dcat-2/#Property:dataset_temporal">
+           W3C recommendations</a>
+    </li>
+    </ul>
+    ]]></help>
+    <btnLabel>temporal extent</btnLabel>
+  </element>
+  <element name="dct:PeriodOfTime">
+    <label>Period of time</label>
+    <description>The covered period of time
+    </description>
+  </element>
+  <element name="schema:startDate">
+    <label>Start</label>
+  </element>
+  <element name="schema:endDate">
+    <label>End</label>
+  </element>
+  <element name="prov:wasGeneratedBy">
+    <label>Generated by (genealogy)</label>
+    <description>An activity that generated, or provides the business context for, the creation of the dataset.
+    </description>
+    <help for="reference"><![CDATA[
+    <ul>
+    <li><a target="_blank" href="https://www.w3.org/TR/vocab-dcat-2/#Property:dataset_was_generated_by">
+           W3C recommendations</a>
+    </li>
+    </ul>
+    ]]></help>
+    <btnLabel>generated by</btnLabel>
+  </element>
+
+
+  <element name="dcat:DataService">
+    <label>Data Service</label>
+    <description>A collection of operations that provides access to one or more datasets or data processing functions.
+    </description>
+    <btnLabel>data service</btnLabel>
+  </element>
+  <element name="dcat:endpointURL">
+    <label>Endpoint URL</label>
+    <description>The root location or primary endpoint of the service (a Web-resolvable IRI).
+    </description>
+    <btnLabel>URL</btnLabel>
+  </element>
+  <element name="dcat:endpointDescription">
+    <label>Endpoint description</label>
+    <description>A description of the services available via the end-points, including their operations, parameters etc.
+    </description>
+    <help for="reference"><![CDATA[
+    <ul>
+    <li><a target="_blank" href="https://www.w3.org/TR/vocab-dcat-2/#Property:data_service_endpoint_description">
+           W3C recommendations</a>
+    </li>
+    </ul>
+    ]]></help>
+    <btnLabel>endpoint description</btnLabel>
+  </element>
+  <element name="dcat:servesDataset">
+    <label>Served datasets</label>
+    <description>A collection of data that this data service can distribute.
+    </description>
+    <btnLabel></btnLabel>
+  </element>
+
+  <element name="dcat:accessURL">
+    <label>Access URL</label>
+    <description></description>
+    <btnLabel></btnLabel>
+  </element>
+
+  <element name="dcat:downloadURL">
+    <label>Download URL</label>
+    <description></description>
+    <btnLabel></btnLabel>
+  </element>
+</labels>

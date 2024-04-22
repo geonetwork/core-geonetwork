@@ -1,0 +1,27 @@
+<assembly xmlns="http://maven.apache.org/ASSEMBLY/2.1.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/ASSEMBLY/2.1.0 http://maven.apache.org/xsd/assembly-2.1.0.xsd">
+  <id>plugin</id>
+  <includeBaseDirectory>false</includeBaseDirectory>
+  <formats>
+    <format>zip</format>
+  </formats>
+  <fileSets>
+    <fileSet>
+      <directory>${project.basedir}/src/main/plugin/dcat2</directory>
+      <outputDirectory>dcat2</outputDirectory>
+    </fileSet>
+  </fileSets>
+  <files>
+    <file>
+      <source>${project.build.directory}/${project.artifactId}-${project.version}.jar</source>
+      <outputDirectory>/</outputDirectory>
+    </file>
+
+    <file>
+      <source>src/assembly/README.txt</source>
+      <outputDirectory>/</outputDirectory>
+      <filtered>true</filtered>
+    </file>
+  </files>
+</assembly>

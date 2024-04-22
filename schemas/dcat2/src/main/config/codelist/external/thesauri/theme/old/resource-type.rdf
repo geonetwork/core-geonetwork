@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:owl="http://www.w3.org/2002/07/owl#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:atold="http://publications.europa.eu/resource/authority/" xmlns:at="http://publications.europa.eu/ontology/authority/">
+  <!-- Scheme -->
+  <skos:ConceptScheme rdf:about="http://publications.europa.eu/resource/authority/resource-type">
+		<owl:versionInfo>20171214-0</owl:versionInfo>
+		<rdfs:label xml:lang="en">Resource types</rdfs:label>
+		<at:prefLabel xml:lang="en">Resource types</at:prefLabel>
+  </skos:ConceptScheme>
+  <!-- Concept list -->
+  <skos:Concept rdf:about="http://publications.europa.eu/resource/authority/resource-type/series">
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/resource-type"/>
+    <skos:prefLabel xml:lang="nl">Reeks verzamelingen ruimtelijke gegevens</skos:prefLabel>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://publications.europa.eu/resource/authority/resource-type/dataset">
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/resource-type"/>
+    <skos:prefLabel xml:lang="nl">Verzameling ruimtelijke gegevens</skos:prefLabel>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://publications.europa.eu/resource/authority/resource-type/service">
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/resource-type"/>
+    <skos:prefLabel xml:lang="nl">Dienst met betrekking tot ruimtelijke gegevens</skos:prefLabel>
+  </skos:Concept>
+</rdf:RDF>

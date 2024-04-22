@@ -1,0 +1,2802 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:owl="http://www.w3.org/2002/07/owl#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:atold="http://publications.europa.eu/resource/authority/" xmlns:at="http://publications.europa.eu/ontology/authority/">
+	<skos:ConceptScheme rdf:about="http://publications.europa.eu/resource/authority/language" at:table.id="language" at:table.version.number="20180725-0">
+		<owl:versionInfo>20180725-0</owl:versionInfo>
+		<rdfs:label xml:lang="en">Language</rdfs:label>
+		<at:prefLabel xml:lang="en">Language</at:prefLabel>
+		<skos:prefLabel xml:lang="en">Language</skos:prefLabel>
+	</skos:ConceptScheme>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/ENG">
+		<skos:prefLabel xml:lang="de">Englisch</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">English</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">anglais</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Engels</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/ADS">
+		<skos:prefLabel xml:lang="de">Adamorobe-Gebärdensprache</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">Adamorobe Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">langue des signes d’Adamorobe</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Adamorobe Sign Language</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/AED">
+		<skos:prefLabel xml:lang="en">Argentine Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">langue des signes argentine</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Argentine Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Argentine Sign Language</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/AEN">
+		<skos:prefLabel xml:lang="en">Armenian Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">langue des signes arménienne</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Armenian Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Armenian Sign Language</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/AFG">
+		<skos:prefLabel xml:lang="en">Afghan Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">langue des signes afghane</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Afghan Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Afghan Sign Language</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/AFR">
+		<skos:prefLabel xml:lang="en">Afrikaans</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Afrikaans</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Afrikaans</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Afrikaans</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/AMH">
+		<skos:prefLabel xml:lang="en">Amharic</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Amharic</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Amharic</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Amharic</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/ARA">
+		<skos:prefLabel xml:lang="de">Arabisch</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">Arabic</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">arabe</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Arabisch</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/ARO">
+		<skos:prefLabel xml:lang="en">Araona</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Araona</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Araona</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Araona</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/ASE">
+		<skos:prefLabel xml:lang="en">American Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">langue des signes américaine</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Amerikaanse Gebarentaal</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">American Sign Language</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/ASF">
+		<skos:prefLabel xml:lang="en">Australian Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">langue des signes australienne</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Australian Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Australian Sign Language</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/ASP">
+		<skos:prefLabel xml:lang="en">Algerian Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">langue des signes algérienne</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Algerian Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Algerian Sign Language</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/ASQ">
+		<skos:prefLabel xml:lang="de">Österreichische Gebärdensprache</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">Austrian Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">langue des signes autrichienne</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Austrian Sign Language</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/ASW">
+		<skos:prefLabel xml:lang="de">Gebärdensprachen der Aborigines</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">Australian Aborigines Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Australian Aborigines Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Australian Aborigines Sign Language</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/AYM">
+		<skos:prefLabel xml:lang="en">Aymara</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Aymara</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Aymara</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Aymara</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/AYO">
+		<skos:prefLabel xml:lang="en">Ayoreo</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Ayoreo</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Ayoreo</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Ayoreo</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/AZE">
+		<skos:prefLabel xml:lang="de">Aserbaidschanisch</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">Azerbaijani</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">azéri</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Azerbeidzjaans</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/BEL">
+		<skos:prefLabel xml:lang="de">Weißrussisch</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">Belarusian</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">biélorusse</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Wit-Russisch</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/BEN">
+		<skos:prefLabel xml:lang="de">Bengalisch</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">Bengali</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">bengalî</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Bengaals</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/BFI">
+		<skos:prefLabel xml:lang="en">British Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">langue des signes britannique</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Britse Gebarentaal</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">British Sign Language</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/BFK">
+		<skos:prefLabel xml:lang="en">Ban Khor Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">langue des signes de Ban Khor</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Ban Khor Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Ban Khor Sign Language</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/BIS">
+		<skos:prefLabel xml:lang="en">Bislama</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Bislama</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Bislama</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Bislama</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/BOD">
+		<skos:prefLabel xml:lang="de">Tibetisch</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">Tibetan</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">tibétain</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Tibetaans</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/BOG">
+		<skos:prefLabel xml:lang="en">Bamako Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">langue des signes de Bamako</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Bamako Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Bamako Sign Language</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/BOS">
+		<skos:prefLabel xml:lang="de">Bosnisch</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">Bosnian</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">bosnien</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Bosnisch</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/BQN">
+		<skos:prefLabel xml:lang="en">Bulgarian Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">langue des signes bulgare</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Bulgarian Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Bulgarian Sign Language</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/BQY">
+		<skos:prefLabel xml:lang="en">Bengkala Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Bengkala Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Bengkala Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Bengkala Sign Language</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/BRE">
+		<skos:prefLabel xml:lang="de">Bretonisch</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">Breton</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">breton</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Bretons</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/BRG">
+		<skos:prefLabel xml:lang="en">Baure</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Baure</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Baure</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Baure</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/BUL">
+		<skos:prefLabel xml:lang="de">Bulgarisch</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">Bulgarian</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">bulgare</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Bulgaars</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/BVL">
+		<skos:prefLabel xml:lang="en">Bolivian Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">langue des signes bolivienne</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Bolivian Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Bolivian Sign Language</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/BZS">
+		<skos:prefLabel xml:lang="en">Brazilian Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">langue des signes brésilienne</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Brazilian Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Brazilian Sign Language</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/CAL">
+		<skos:prefLabel xml:lang="en">Carolinian</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Carolinian</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Carolinian</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Carolinian</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/CAO">
+		<skos:prefLabel xml:lang="en">Chacobo</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Chacobo</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Chacobo</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Chacobo</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/CAS">
+		<skos:prefLabel xml:lang="en">Chimane</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Chimane</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Chimane</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Chimane</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/CAT">
+		<skos:prefLabel xml:lang="de">Katalanisch</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">Catalan</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">catalan</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Catalaans</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/CAV">
+		<skos:prefLabel xml:lang="en">Cavineña</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Cavineña</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Cavineña</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Cavineña</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/CAW">
+		<skos:prefLabel xml:lang="en">Kallawaya</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Kallawaya</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Kallawaya</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Kallawaya</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/CAX">
+		<skos:prefLabel xml:lang="en">Chiquitano</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Chiquitano</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Chiquitano</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Chiquitano</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/CAZ">
+		<skos:prefLabel xml:lang="en">Canichana</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Canichana</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Canichana</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Canichana</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/CDS">
+		<skos:prefLabel xml:lang="en">Chadian Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">langue des signes tchadienne</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Chadian Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Chadian Sign Language</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/CES">
+		<skos:prefLabel xml:lang="de">Tschechisch</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">Czech</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">tchèque</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Tsjechisch</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/CHA">
+		<skos:prefLabel xml:lang="en">Chamorro</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Chamorro</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Chamorro</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Chamorro</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/CHN">
+		<skos:prefLabel xml:lang="en">Chinook jargon</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Chinook jargon</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Chinook jargon</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Chinook jargon</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/CKB">
+		<skos:prefLabel xml:lang="en">Central Kurdish</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Central Kurdish</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Central Kurdish</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Central Kurdish</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/CMN">
+		<skos:prefLabel xml:lang="de">Nordchinesischen Dialekte</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">Mandarin Chinese</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">mandarin</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Mandarijn</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/COR">
+		<skos:prefLabel xml:lang="de">Kornisch</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">Cornish</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">cornique</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Cornisch</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/COS">
+		<skos:prefLabel xml:lang="de">Korsisch</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">Corsican</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">corse</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Corsicaans</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/CRS">
+		<skos:prefLabel xml:lang="en">Seselwa Creole French</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">créole seychellois</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Seselwa Creole French</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Seselwa Creole French</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/CSB">
+		<skos:prefLabel xml:lang="de">Kaschubisch</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">Kashubian</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">kachoube</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Kasjoebisch</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/CSC">
+		<skos:prefLabel xml:lang="de">Katalanische Gebärdensprache</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">Catalan Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">langue des signes catalane</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Catalan Sign Language</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/CSD">
+		<skos:prefLabel xml:lang="en">Chiangmai Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Chiangmai Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Chiangmai Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Chiangmai Sign Language</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/CSE">
+		<skos:prefLabel xml:lang="en">Czech Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">langue des signes tchèque</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Czech Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Czech Sign Language</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/CSF">
+		<skos:prefLabel xml:lang="en">Cuban Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">langue des signes cubaine</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Cuban Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Cuban Sign Language</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/CSG">
+		<skos:prefLabel xml:lang="en">Chilean Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">langue des signes chilienne</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Chilean Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Chilean Sign Language</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/CSL">
+		<skos:prefLabel xml:lang="en">Chinese Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">langue des signes chinoise</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Chinese Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Chinese Sign Language</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/CSN">
+		<skos:prefLabel xml:lang="en">Colombian Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">langue des signes colombienne</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Colombian Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Colombian Sign Language</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/CSQ">
+		<skos:prefLabel xml:lang="en">Croatian Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">langue des signes croate</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Croatian Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Croatian Sign Language</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/CSR">
+		<skos:prefLabel xml:lang="en">Costa Rican Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">langue des signes costaricienne</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Costa Rican Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Costa Rican Sign Language</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/CYB">
+		<skos:prefLabel xml:lang="en">Cayubaba</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Cayubaba</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Cayubaba</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Cayubaba</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/CYM">
+		<skos:prefLabel xml:lang="de">Walisisch</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">Welsh</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">gallois</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Welsh</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/DAN">
+		<skos:prefLabel xml:lang="de">Dänisch</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">Danish</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">danois</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Deens</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/DEU">
+		<skos:prefLabel xml:lang="de">Deutsch</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">German</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">allemand</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Duits</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/DIV">
+		<skos:prefLabel xml:lang="de">Dhivehi</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">Dhivehi</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">divehi</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Divehi</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/DOQ">
+		<skos:prefLabel xml:lang="en">Dominican Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">langue des signes dominicaine</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Dominican Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Dominican Sign Language</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/DSB">
+		<skos:prefLabel xml:lang="de">Niedersorbisch</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">Lower Sorbian</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">bas-sorabe</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Nedersorbisch</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/DSE">
+		<skos:prefLabel xml:lang="en">Dutch Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">langue des signes néerlandaise</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Nederlandse Gebarentaal</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Dutch Sign Language</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/DSL">
+		<skos:prefLabel xml:lang="de">Dänische Gebärdensprache</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">Danish Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">langue des signes danoise</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Danish Sign Language</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/DZO">
+		<skos:prefLabel xml:lang="en">Dzongkha</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Dzongkha</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Dzongkha</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Dzongkha</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/ECS">
+		<skos:prefLabel xml:lang="en">Ecuadorian Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">langue des signes équatorienne</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Ecuadorian Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Ecuadorian Sign Language</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/ELL">
+		<skos:prefLabel xml:lang="de">Griechisch</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">Greek</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">grec</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Grieks</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/EPO">
+		<skos:prefLabel xml:lang="de">Esperanto</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">Esperanto</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">espéranto</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Esperanto</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/ESE">
+		<skos:prefLabel xml:lang="en">Ese Ejja</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Ese Ejja</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Ese Ejja</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Ese Ejja</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/ESL">
+		<skos:prefLabel xml:lang="en">Egyptian Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">langue des signes égyptienne</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Egyptian Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Egyptian Sign Language</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/ESN">
+		<skos:prefLabel xml:lang="en">Salvadoran Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">langue des signes salvadorienne</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Salvadoran Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Salvadoran Sign Language</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/ESO">
+		<skos:prefLabel xml:lang="en">Estonian Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">langue des signes estonienne</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Estonian Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Estonian Sign Language</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/EST">
+		<skos:prefLabel xml:lang="de">Estnisch</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">Estonian</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">estonien</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Estisch</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/ETH">
+		<skos:prefLabel xml:lang="en">Ethiopian Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">langue des signes éthiopienne</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Ethiopian Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Ethiopian Sign Language</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/EUS">
+		<skos:prefLabel xml:lang="de">Baskisch</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">Basque</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">basque</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Baskisch</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/EWE">
+		<skos:prefLabel xml:lang="de">Ewe</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">Ewe</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">éwé</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Ewe</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/FAO">
+		<skos:prefLabel xml:lang="de">Färöisch</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">Faroese</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">féringien</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Faeröers</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/FAS">
+		<skos:prefLabel xml:lang="de">Persisch</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">Persian</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">persan</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Perzisch</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/FCS">
+		<skos:prefLabel xml:lang="en">Quebec Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">langue des signes québécoise</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Quebec Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Quebec Sign Language</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/FIJ">
+		<skos:prefLabel xml:lang="en">Fijian</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Fijian</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Fijian</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Fijian</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/FIL">
+		<skos:prefLabel xml:lang="en">Filipino</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Filipino</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Filipino</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Filipino</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/FIN">
+		<skos:prefLabel xml:lang="de">Finnisch</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">Finnish</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">finnois</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Fins</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/FRA">
+		<skos:prefLabel xml:lang="de">Französisch</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">French</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">français</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Frans</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/FRY">
+		<skos:prefLabel xml:lang="de">Friesisch</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">Frisian</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">frison</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Fries</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/FSE">
+		<skos:prefLabel xml:lang="en">Finnish Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">langue des signes finnoise</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Finnish Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Finnish Sign Language</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/FSL">
+		<skos:prefLabel xml:lang="de">Französische Gebärdensprache</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">French Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">langue des signes française</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">French Sign Language</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/FSS">
+		<skos:prefLabel xml:lang="en">Finland-Swedish Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Finland-Swedish Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Finland-Swedish Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Finland-Swedish Sign Language</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/FUR">
+		<skos:prefLabel xml:lang="de">Furnalnisch</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">Friulan</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">frioulan</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Friulan</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/GLA">
+		<skos:prefLabel xml:lang="de">Schottisch-Gälisch</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">Scottish Gaelic</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">gaélique écossais</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Schots-Gaelisch</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/GLE">
+		<skos:prefLabel xml:lang="de">Irisch</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">Irish</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">irlandais</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Iers</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/GLG">
+		<skos:prefLabel xml:lang="de">Galicisch</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">Galician</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">galicien</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Galicisch</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/GLV">
+		<skos:prefLabel xml:lang="en">Manx</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Manx</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Manx</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Manx</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/GRN">
+		<skos:prefLabel xml:lang="en">Guarani</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Guarani</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Guarani</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Guarani</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/GSE">
+		<skos:prefLabel xml:lang="de">Ghanaische Gebärdensprache</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">Ghanaian Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">langue des signes ghanéenne</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Ghanaian Sign Language</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/GSG">
+		<skos:prefLabel xml:lang="de">Deutsche Gebärdensprache</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">German Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">langue des signes allemande</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">German Sign Language</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/GSM">
+		<skos:prefLabel xml:lang="en">Guatemalan Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">langue des signes guatémaltèque</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Guatemalan Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Guatemalan Sign Language</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/GSS">
+		<skos:prefLabel xml:lang="en">Greek Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">langue des signes grecque</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Greek Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Greek Sign Language</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/GUG">
+		<skos:prefLabel xml:lang="en">Paraguayan Guaraní</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Paraguayan Guaraní</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Paraguayan Guaraní</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Paraguayan Guaraní</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/GUS">
+		<skos:prefLabel xml:lang="en">Guinean Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">langue des signes guinéenne</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Guinean Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Guinean Sign Language</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/GYR">
+		<skos:prefLabel xml:lang="en">Guarayu</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Guarayu</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Guarayu</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Guarayu</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/HAB">
+		<skos:prefLabel xml:lang="en">Hanoi Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">langue des signes de Hanoï</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Hanoi Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Hanoi Sign Language</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/HAF">
+		<skos:prefLabel xml:lang="en">Haiphong Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">langue des signes de Haïphong</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Haiphong Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Haiphong Sign Language</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/HAT">
+		<skos:prefLabel xml:lang="en">Haitian</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">créole haïtien</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Haitian</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Haitian</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/HBS">
+		<skos:prefLabel xml:lang="de">Serbokroatisch</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">Serbo-Croatian</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">serbo-croate</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Servo-Kroatisch</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/HCA">
+		<skos:prefLabel xml:lang="de">Andamanen-Kreol-Hindi</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">Andaman Creole Hindi</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">hindi créole des îles Andaman</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Andamanees creools Hindi</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/HDS">
+		<skos:prefLabel xml:lang="en">Honduran Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">langue des signes hondurienne</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Honduran Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Honduran Sign Language</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/HEB">
+		<skos:prefLabel xml:lang="de">Hebräisch</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">Hebrew</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">hébreu</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Hebreeuws</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/HIF">
+		<skos:prefLabel xml:lang="en">Fiji Hindi</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Fiji Hindi</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Fiji Hindi</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Fiji Hindi</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/HIN">
+		<skos:prefLabel xml:lang="de">Hindi</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">Hindi</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">hindi</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Hindi</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/HKS">
+		<skos:prefLabel xml:lang="en">Hong Kong Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Hong Kong Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Hong Kong Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Hong Kong Sign Language</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/HMO">
+		<skos:prefLabel xml:lang="en">Hiri Motu</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Hiri Motu</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Hiri Motu</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Hiri Motu</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/HOS">
+		<skos:prefLabel xml:lang="en">Ho Chi Minh City Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">langue des signes d'Hô-Chi-Minh-Ville</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Ho Chi Minh City Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Ho Chi Minh City Sign Language</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/HPS">
+		<skos:prefLabel xml:lang="de">Hawaiische Gebärdensprache</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">Hawai'i Pidgin Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Hawai'i Pidgin Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Hawai'i Pidgin Sign Language</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/HRV">
+		<skos:prefLabel xml:lang="de">Kroatisch</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">Croatian</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">croate</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Kroatisch</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/HSB">
+		<skos:prefLabel xml:lang="de">Obersorbisch</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">Upper Sorbian</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">haut-sorabe</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Oppersorbisch</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/HSH">
+		<skos:prefLabel xml:lang="en">Hungarian Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">langue des signes hongroise</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Hungarian Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Hungarian Sign Language</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/HSL">
+		<skos:prefLabel xml:lang="en">Hausa Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">langue des signes haoussa</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Hausa Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Hausa Sign Language</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/HUN">
+		<skos:prefLabel xml:lang="de">Ungarisch</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">Hungarian</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">hongrois</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Hongaars</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/HYE">
+		<skos:prefLabel xml:lang="de">Armenisch</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">Armenian</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">arménien</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Armeens</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/IBO">
+		<skos:prefLabel xml:lang="de">Igbo</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">Igbo</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">igbo</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Igbo</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/ICL">
+		<skos:prefLabel xml:lang="en">Icelandic Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">langue des signes islandaise</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Icelandic Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Icelandic Sign Language</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/IGN">
+		<skos:prefLabel xml:lang="en">Ignaciano</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Ignaciano</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Ignaciano</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Ignaciano</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/INA">
+		<skos:prefLabel xml:lang="de">Interlingua</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">Interlingua</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">interlingua</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Interlingua</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/IND">
+		<skos:prefLabel xml:lang="de">Indonesisch</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">Indonesian</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">indonésien</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Indonesisch</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/INL">
+		<skos:prefLabel xml:lang="en">Indonesian Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">langue des signes indonésienne</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Indonesian Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Indonesian Sign Language</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/INS">
+		<skos:prefLabel xml:lang="en">Indian Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">langue des signes indienne</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Indian Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Indian Sign Language</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/ISE">
+		<skos:prefLabel xml:lang="de">Italienische Gebärdensprache</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">Italian Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">langue des signes italienne</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Italiaanse Gebarentaal</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/ISG">
+		<skos:prefLabel xml:lang="en">Irish Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">langue des signes irlandaise</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Irish Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Irish Sign Language</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/ISL">
+		<skos:prefLabel xml:lang="de">Isländisch</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">Icelandic</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">islandais</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">IJslands</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/ISR">
+		<skos:prefLabel xml:lang="en">Israeli Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">langue des signes israélienne</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Israeli Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Israeli Sign Language</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/ITA">
+		<skos:prefLabel xml:lang="de">Italienisch</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">Italian</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">italien</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Italiaans</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/ITE">
+		<skos:prefLabel xml:lang="en">Itene</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Itene</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Itene</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Itene</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/ITO">
+		<skos:prefLabel xml:lang="en">Itonama</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Itonama</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Itonama</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Itonama</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/JCS">
+		<skos:prefLabel xml:lang="en">Jamaican Country Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">langue des signes jamaïcaine rurale</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Jamaican Country Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Jamaican Country Sign Language</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/JHS">
+		<skos:prefLabel xml:lang="en">Jhankot Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Jhankot Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Jhankot Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Jhankot Sign Language</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/JOS">
+		<skos:prefLabel xml:lang="en">Jordanian Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">langue des signes jordanienne</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Jordanian Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Jordanian Sign Language</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/JPN">
+		<skos:prefLabel xml:lang="de">Japanisch</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">Japanese</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">japonais</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Japans</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/JSL">
+		<skos:prefLabel xml:lang="de">Japanische Gebärdensprache</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">Japanese Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">langue des signes japonaise</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Japanese Sign Language</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/JUS">
+		<skos:prefLabel xml:lang="en">Jumla Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Jumla Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Jumla Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Jumla Sign Language</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/KAL">
+		<skos:prefLabel xml:lang="de">Grönländisch</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">Greenlandic</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">groenlandais</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Groenlands</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/KAT">
+		<skos:prefLabel xml:lang="de">Georgisch</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">Georgian</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">géorgien</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Georgisch</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/KAZ">
+		<skos:prefLabel xml:lang="de">Kasachisch</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">Kazakh</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">kazakh</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Kazachs</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/KGI">
+		<skos:prefLabel xml:lang="en">Selangor Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Selangor Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Selangor Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Selangor Sign Language</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/KHM">
+		<skos:prefLabel xml:lang="de">Khmer</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">Khmer</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">khmer</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Khmer</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/KIN">
+		<skos:prefLabel xml:lang="en">Kinyarwanda</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Kinyarwanda</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Kinyarwanda</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Kinyarwanda</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/KIR">
+		<skos:prefLabel xml:lang="de">Kirgisisch</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">Kyrgyz</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">kirghiz</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Kirgizisch</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/KMR">
+		<skos:prefLabel xml:lang="en">Northern Kurdish</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Northern Kurdish</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Northern Kurdish</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Northern Kurdish</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/KON">
+		<skos:prefLabel xml:lang="en">Kikongo</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">kikongo</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Kikongo</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Kikongo</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/KOR">
+		<skos:prefLabel xml:lang="de">Koreanisch</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">Korean</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">coréen</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Koreaans</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/KUR">
+		<skos:prefLabel xml:lang="de">Kurdisch</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">Kurdish</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">kurde</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Koerdisch</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/KVK">
+		<skos:prefLabel xml:lang="en">Korean Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">langue des signes coréenne</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Korean Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Korean Sign Language</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/KXD">
+		<skos:prefLabel xml:lang="en">Brunei Malay</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Brunei Malay</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Brunei Malay</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Brunei Malay</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/LAO">
+		<skos:prefLabel xml:lang="de">Laotisch</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">Lao</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">lao</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Laotiaans</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/LAT">
+		<skos:prefLabel xml:lang="de">Latein</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">Latin</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">latin</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Latijn</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/LAV">
+		<skos:prefLabel xml:lang="de">Lettisch</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">Latvian</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">letton</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Lets</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/LBS">
+		<skos:prefLabel xml:lang="en">Libyan Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">langue des signes libyenne</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Libyan Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Libyan Sign Language</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/LEC">
+		<skos:prefLabel xml:lang="en">Leco</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Leco</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Leco</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Leco</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/LIN">
+		<skos:prefLabel xml:lang="en">Lingala</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Lingala</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Lingala</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Lingala</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/LIT">
+		<skos:prefLabel xml:lang="de">Litauisch</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">Lithuanian</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">lituanien</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Litouws</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/LLS">
+		<skos:prefLabel xml:lang="en">Lithuanian Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">langue des signes lituanienne</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Lithuanian Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Lithuanian Sign Language</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/LSG">
+		<skos:prefLabel xml:lang="en">Lyons Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">langue des signes lyonnaise</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Lyons Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Lyons Sign Language</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/LSL">
+		<skos:prefLabel xml:lang="en">Latvian Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">langue des signes lettone</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Latvian Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Latvian Sign Language</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/LSO">
+		<skos:prefLabel xml:lang="en">Laotian Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">langue des signes laotienne</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Laotian Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Laotian Sign Language</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/LSP">
+		<skos:prefLabel xml:lang="en">Panamanian Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">langue des signes panaméenne</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Panamanian Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Panamanian Sign Language</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/LST">
+		<skos:prefLabel xml:lang="en">Trinidad and Tobago Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">langue des signes trinidadienne</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Trinidad and Tobago Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Trinidad and Tobago Sign Language</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/LTZ">
+		<skos:prefLabel xml:lang="de">Luxemburgisch</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">Luxembourgish</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">luxembourgeois</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Luxemburgs</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/LUA">
+		<skos:prefLabel xml:lang="en">Luba-Lulua</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">tshiluba</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Luba-Lulua</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Luba-Lulua</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/MAH">
+		<skos:prefLabel xml:lang="en">Marshallese</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Marshallese</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Marshallese</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Marshallese</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/MAN">
+		<skos:prefLabel xml:lang="en">Manding</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Manding</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Manding</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Manding</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/MDL">
+		<skos:prefLabel xml:lang="en">Maltese Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">langue des signes maltaise</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Maltese Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Maltese Sign Language</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/MFS">
+		<skos:prefLabel xml:lang="en">Mexican Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">langue des signes mexicaine</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Mexican Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Mexican Sign Language</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/MIN">
+		<skos:prefLabel xml:lang="de">Minangkabau</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">Minangkabau</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">minangkabau</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Minangkabaus</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/MIS">
+		<skos:prefLabel xml:lang="de">Einzelne andere Sprachen</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">Uncoded languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">langues non codées</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Ongecodeerde talen</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/MKD">
+		<skos:prefLabel xml:lang="de">Mazedonisch</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">Macedonian</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">macédonien</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Macedonisch</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/MLG">
+		<skos:prefLabel xml:lang="de">Malagasy</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">Malagasy</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">malgache</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Malagasi</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/MLT">
+		<skos:prefLabel xml:lang="de">Maltesisch</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">Maltese</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">maltais</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Maltees</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/MNK">
+		<skos:prefLabel xml:lang="de">Mandinka</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">Mandinka</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">mandinka</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Mandinka</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/MON">
+		<skos:prefLabel xml:lang="de">Mongolisch</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">Mongolian</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">mongol</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Mongools</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/MPD">
+		<skos:prefLabel xml:lang="en">Machinere</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Machinere</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Machinere</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Machinere</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/MRE">
+		<skos:prefLabel xml:lang="de">Martha’s Vineyards Gebärdensprache</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">Martha's Vineyard Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Martha's Vineyard Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Martha's Vineyard Sign Language</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/MRI">
+		<skos:prefLabel xml:lang="en">Māori</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Māori</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Māori</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Māori</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/MSD">
+		<skos:prefLabel xml:lang="en">Yucatec Maya Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">langue des signes maya yucatèque</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Yucatec Maya Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Yucatec Maya Sign Language</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/MSR">
+		<skos:prefLabel xml:lang="en">Mongolian Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">langue des signes mongole</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Mongolian Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Mongolian Sign Language</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/MTP">
+		<skos:prefLabel xml:lang="en">Wichí Lhamtés Nocten</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Wichí Lhamtés Nocten</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Wichí Lhamtés Nocten</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Wichí Lhamtés Nocten</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/MUL">
+		<skos:prefLabel xml:lang="de">Mehrere Sprachen</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">Multiple languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">langues multiples</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Meerdere talen</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/MYA">
+		<skos:prefLabel xml:lang="en">Burmese</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Burmese</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Burmese</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Burmese</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/MZC">
+		<skos:prefLabel xml:lang="en">Madagascar Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">langue des signes malgache</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Madagascar Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Madagascar Sign Language</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/MZG">
+		<skos:prefLabel xml:lang="en">Monastic Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">langue des signes monastique</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Monastic Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Monastic Sign Language</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/MZP">
+		<skos:prefLabel xml:lang="en">Movima</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Movima</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Movima</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Movima</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/MZY">
+		<skos:prefLabel xml:lang="en">Mozambican Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">langue des signes mozambicaine</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Mozambican Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Mozambican Sign Language</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/NAU">
+		<skos:prefLabel xml:lang="en">Nauruan</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Nauruan</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Nauruan</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Nauruan</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/NBL">
+		<skos:prefLabel xml:lang="en">Southhern Ndebele</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Southhern Ndebele</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Southhern Ndebele</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Southhern Ndebele</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/NBS">
+		<skos:prefLabel xml:lang="en">Namibian Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">langue des signes namibienne</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Namibian Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Namibian Sign Language</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/NCS">
+		<skos:prefLabel xml:lang="de">Nicaraguanische Gebärdensprache</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">Nicaraguan Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">langue des signes nicaraguayenne</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Nicaraguaanse Gebarentaal</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/NEP">
+		<skos:prefLabel xml:lang="de">Nepali</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">Nepali</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">népalais</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Nepalees</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/NIU">
+		<skos:prefLabel xml:lang="en">Niuean</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Niuean</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Niuean</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Niuean</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/NLD">
+		<skos:prefLabel xml:lang="de">Niederländisch</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">Dutch</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">néerlandais</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Nederlands</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/NNO">
+		<skos:prefLabel xml:lang="en">Norwegian Nynorsk</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Norwegian Nynorsk</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Norwegian Nynorsk</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Norwegian Nynorsk</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/NOB">
+		<skos:prefLabel xml:lang="en">Norwegian Bokmål</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Norwegian Bokmål</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Norwegian Bokmål</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Norwegian Bokmål</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/NOR">
+		<skos:prefLabel xml:lang="de">Norwegisch</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">Norwegian</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">norvégien</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Noors</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/NSI">
+		<skos:prefLabel xml:lang="en">Nigerian Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">langue des signes nigériane</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Nigerian Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Nigerian Sign Language</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/NSL">
+		<skos:prefLabel xml:lang="en">Norwegian Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">langue des signes norvégienne</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Norwegian Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Norwegian Sign Language</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/NSO">
+		<skos:prefLabel xml:lang="en">Northern Sotho</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Northern Sotho</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Northern Sotho</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Northern Sotho</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/NSP">
+		<skos:prefLabel xml:lang="en">Nepalese Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">langue des signes népalaise</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Nepalese Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Nepalese Sign Language</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/NSR">
+		<skos:prefLabel xml:lang="en">Maritime Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">langue des signes maritime</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Maritime Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Maritime Sign Language</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/NYA">
+		<skos:prefLabel xml:lang="en">Chewa</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Chewa</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Chewa</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Chewa</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/NZS">
+		<skos:prefLabel xml:lang="de">Neuseeländische Gebärdensprache</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">New Zealand Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">langue des signes néo-zélandaise</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Nieuw-Zeelandse Gebarentaal</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/OCI">
+		<skos:prefLabel xml:lang="de">Okzitanisch</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">Occitan</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">occitan</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Occitaans</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/OSS">
+		<skos:prefLabel xml:lang="de">Ossetisch</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">Ossetic</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">ossète</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Ossetisch</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/PAN">
+		<skos:prefLabel xml:lang="de">Panjabi</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">Punjabi</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">pendjabi</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Punjabi</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/PAP">
+		<skos:prefLabel xml:lang="en">Papiamento</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Papiamento</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Papiamento</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Papiamento</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/PAU">
+		<skos:prefLabel xml:lang="en">Palauan</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Palauan</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Palauan</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Palauan</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/PCP">
+		<skos:prefLabel xml:lang="en">Pacahuara</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Pacahuara</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Pacahuara</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Pacahuara</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/PIH">
+		<skos:prefLabel xml:lang="en">Pitcairn-Norfolk</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Pitcairn-Norfolk</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Pitcairn-Norfolk</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Pitcairn-Norfolk</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/PKS">
+		<skos:prefLabel xml:lang="en">Pakistan Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">langue des signes pakistanaise</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Pakistan Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Pakistan Sign Language</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/POL">
+		<skos:prefLabel xml:lang="de">Polnisch</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">Polish</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">polonais</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Pools</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/POR">
+		<skos:prefLabel xml:lang="de">Portugiesisch</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">Portuguese</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">portugais</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Portugees</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/PRL">
+		<skos:prefLabel xml:lang="en">Peruvian Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">langue des signes péruvienne</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Peruvian Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Peruvian Sign Language</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/PRS">
+		<skos:prefLabel xml:lang="de">Dari</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">Dari</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">dari</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Dari</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/PRZ">
+		<skos:prefLabel xml:lang="en">Providencia Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">langue des signes de Providencia</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Providencia Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Providencia Sign Language</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/PSC">
+		<skos:prefLabel xml:lang="en">Persian Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">langue des signes perse</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Persian Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Persian Sign Language</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/PSD">
+		<skos:prefLabel xml:lang="en">Plains Indian Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">langue des signes des Indiens des Plaines</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Plains Indian Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Plains Indian Sign Language</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/PSG">
+		<skos:prefLabel xml:lang="en">Penang Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Penang Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Penang Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Penang Sign Language</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/PSL">
+		<skos:prefLabel xml:lang="en">Puerto Rican Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">langue des signes portoricaine</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Puerto Rican Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Puerto Rican Sign Language</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/PSM">
+		<skos:prefLabel xml:lang="en">Pauserna</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Pauserna</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Pauserna</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Pauserna</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/PSO">
+		<skos:prefLabel xml:lang="en">Polish Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">langue des signes polonaise</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Polish Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Polish Sign Language</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/PSP">
+		<skos:prefLabel xml:lang="en">Philippine Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">langue des signes philippine</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Philippine Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Philippine Sign Language</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/PSR">
+		<skos:prefLabel xml:lang="en">Portuguese Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">langue des signes portugaise</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Portuguese Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Portuguese Sign Language</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/PUQ">
+		<skos:prefLabel xml:lang="en">Puquina</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Puquina</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Puquina</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Puquina</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/PUS">
+		<skos:prefLabel xml:lang="de">Paschtunisch</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">Pashto</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">pachto</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Pasjtoe</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/QUE">
+		<skos:prefLabel xml:lang="en">Quechua</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Quechua</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Quechua</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Quechua</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/RAR">
+		<skos:prefLabel xml:lang="en">Rarotongan</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Rarotongan</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Rarotongan</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Rarotongan</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/REY">
+		<skos:prefLabel xml:lang="en">Reyesano</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Reyesano</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Reyesano</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Reyesano</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/RMS">
+		<skos:prefLabel xml:lang="en">Romanian Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">langue des signes roumaine</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Romanian Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Romanian Sign Language</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/ROH">
+		<skos:prefLabel xml:lang="de">Rumantsch</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">Romansh</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">romanche</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Romaans</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/ROM">
+		<skos:prefLabel xml:lang="de">Romani</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">Romani</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">romani</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Romani</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/RON">
+		<skos:prefLabel xml:lang="de">Rumänisch</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">Romanian</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">roumain</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Roemeens</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/RSI">
+		<skos:prefLabel xml:lang="en">Rennellese Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Rennellese Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Rennellese Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Rennellese Sign Language</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/RSL">
+		<skos:prefLabel xml:lang="en">Russian Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">langue des signes russe</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Russian Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Russian Sign Language</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/RUN">
+		<skos:prefLabel xml:lang="en">Kirundi</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Kirundi</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Kirundi</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Kirundi</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/RUS">
+		<skos:prefLabel xml:lang="de">Russisch</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">Russian</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">russe</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Russisch</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/SAG">
+		<skos:prefLabel xml:lang="en">Sango</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">sango</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Sango</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Sango</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/SCO">
+		<skos:prefLabel xml:lang="de">Scots</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">Scots</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">scots</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Schots</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/SDH">
+		<skos:prefLabel xml:lang="en">Southern Kurdish</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Southern Kurdish</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Southern Kurdish</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Southern Kurdish</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/SDL">
+		<skos:prefLabel xml:lang="en">Saudi Arabian Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Saudi Arabian Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Saudi Arabian Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Saudi Arabian Sign Language</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/SFS">
+		<skos:prefLabel xml:lang="en">South African Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">langue des signes sud-africaine</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">South African Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">South African Sign Language</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/SGG">
+		<skos:prefLabel xml:lang="de">Deutschschweizer Gebärdensprache</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">Swiss-German Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Swiss-German Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Swiss-German Sign Language</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/SGX">
+		<skos:prefLabel xml:lang="en">Sierra Leonean Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">langue des signes sierra-léonaise</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Sierra Leonean Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Sierra Leonean Sign Language</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/SIN">
+		<skos:prefLabel xml:lang="de">Singhalesisch</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">Sinhala</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">cingalais</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Singalees</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/SIP">
+		<skos:prefLabel xml:lang="en">Sikkimese</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Sikkimese</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Sikkimese</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Sikkimese</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/SJE">
+		<skos:prefLabel xml:lang="en">Pite Sami</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Pite Sami</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Pite Sami</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Pite Sami</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/SLF">
+		<skos:prefLabel xml:lang="en">Swiss-Italian Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Swiss-Italian Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Swiss-Italian Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Swiss-Italian Sign Language</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/SLK">
+		<skos:prefLabel xml:lang="de">Slowakisch</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">Slovak</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">slovaque</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Slowaaks</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/SLS">
+		<skos:prefLabel xml:lang="en">Singapore Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">langue des signes de Singapour</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Singapore Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Singapore Sign Language</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/SLV">
+		<skos:prefLabel xml:lang="de">Slowenisch</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">Slovenian</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">slovène</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Sloveens</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/SME">
+		<skos:prefLabel xml:lang="de">Nordsamisch</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">Northern Sami</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">same du Nord</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Noord-Samisch</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/SMO">
+		<skos:prefLabel xml:lang="en">Samoan</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Samoan</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Samoan</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Samoan</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/SOM">
+		<skos:prefLabel xml:lang="de">Somali</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">Somali</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">somali</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Somalisch</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/SOT">
+		<skos:prefLabel xml:lang="en">Southern Sotho</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Southern Sotho</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Southern Sotho</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Southern Sotho</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/SPA">
+		<skos:prefLabel xml:lang="de">Spanisch</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">Spanish</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">espagnol</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Spaans</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/SQI">
+		<skos:prefLabel xml:lang="de">Albanisch</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">Albanian</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">albanais</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Albanees</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/SQS">
+		<skos:prefLabel xml:lang="en">Sri Lankan Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">langue des signes sri-lankaise</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Sri Lankan Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Sri Lankan Sign Language</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/SRP">
+		<skos:prefLabel xml:lang="de">Serbisch</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">Serbian</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">serbe</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Servisch</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/SRQ">
+		<skos:prefLabel xml:lang="en">Sirionó</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Sirionó</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Sirionó</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Sirionó</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/SSP">
+		<skos:prefLabel xml:lang="en">Spanish Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">langue des signes espagnole</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Spanish Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Spanish Sign Language</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/SSR">
+		<skos:prefLabel xml:lang="en">Swiss-French Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Swiss-French Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Swiss-French Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Swiss-French Sign Language</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/SSW">
+		<skos:prefLabel xml:lang="en">Swazi</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Swazi</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Swazi</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Swazi</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/SVK">
+		<skos:prefLabel xml:lang="en">Slovakian Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">langue des signes slovaque</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Slovakian Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Slovakian Sign Language</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/SWA">
+		<skos:prefLabel xml:lang="de">Swahili</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">Swahili</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">kiswahili</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Swahili</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/SWB">
+		<skos:prefLabel xml:lang="en">Comorian</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Comorian</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Comorian</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Comorian</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/SWE">
+		<skos:prefLabel xml:lang="de">Schwedisch</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">Swedish</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">suédois</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Zweeds</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/SWL">
+		<skos:prefLabel xml:lang="de">Schwedische Gebärdensprache</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">Swedish Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">langue des signes suédoise</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Swedish Sign Language</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/SYY">
+		<skos:prefLabel xml:lang="de">Al-Sayyid-Beduinen-Gebärdensprache</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">Al-Sayyid Bedouin Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Al-Sayyid Bedouin Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Al-Sayyid Bedouin Sign Language</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/TAM">
+		<skos:prefLabel xml:lang="de">Tamilisch</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">Tamil</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">tamoul</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Tamil</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/TET">
+		<skos:prefLabel xml:lang="en">Tetum</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Tetum</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Tetum</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Tetum</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/TGK">
+		<skos:prefLabel xml:lang="de">Tadschikisch</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">Tajik</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">tadjik</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Tadzjieks</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/THA">
+		<skos:prefLabel xml:lang="de">Thailändisch</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">Thai</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">thaï</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Thai</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/TIR">
+		<skos:prefLabel xml:lang="de">Tigrinya</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">Tigrinya</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">tigrigna</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Tigrinya</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/TKL">
+		<skos:prefLabel xml:lang="en">Tokelauan</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Tokelauan</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Tokelauan</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Tokelauan</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/TNA">
+		<skos:prefLabel xml:lang="en">Tacana</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Tacana</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Tacana</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Tacana</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/TNO">
+		<skos:prefLabel xml:lang="en">Toromono</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Toromono</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Toromono</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Toromono</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/TON">
+		<skos:prefLabel xml:lang="en">Tongan</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Tongan</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Tongan</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Tongan</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/TPI">
+		<skos:prefLabel xml:lang="en">Tok Pisin</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Tok Pisin</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Tok Pisin</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Tok Pisin</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/TPJ">
+		<skos:prefLabel xml:lang="en">Tapieté</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Tapieté</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Tapieté</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Tapieté</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/TRN">
+		<skos:prefLabel xml:lang="en">Trinitario</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Trinitario</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Trinitario</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Trinitario</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/TSE">
+		<skos:prefLabel xml:lang="en">Tunisian Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">langue des signes tunisienne</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Tunisian Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Tunisian Sign Language</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/TSM">
+		<skos:prefLabel xml:lang="de">Türkische Gebärdensprache</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">Turkish Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">langue des signes turque</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Turkish Sign Language</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/TSN">
+		<skos:prefLabel xml:lang="en">Tswana</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Tswana</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Tswana</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Tswana</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/TSO">
+		<skos:prefLabel xml:lang="en">Tsonga</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Tsonga</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Tsonga</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Tsonga</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/TSQ">
+		<skos:prefLabel xml:lang="en">Thai Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">langue des signes thaï</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Thai Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Thai Sign Language</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/TSS">
+		<skos:prefLabel xml:lang="en">Taiwanese Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">langue des signes taïwanaise</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Taiwanese Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Taiwanese Sign Language</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/TSY">
+		<skos:prefLabel xml:lang="en">Tebul Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">langue des signes de Tebul</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Tebul Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Tebul Sign Language</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/TUK">
+		<skos:prefLabel xml:lang="de">Turkmenisch</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">Turkmen</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">turkmène</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Turkmeens</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/TUR">
+		<skos:prefLabel xml:lang="de">Türkisch</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">Turkish</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">turc</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Turks</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/TVL">
+		<skos:prefLabel xml:lang="en">Tuvaluan</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Tuvaluan</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Tuvaluan</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Tuvaluan</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/TZA">
+		<skos:prefLabel xml:lang="en">Tanzanian Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">langue des signes tanzanienne</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Tanzanian Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Tanzanian Sign Language</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/UGN">
+		<skos:prefLabel xml:lang="en">Ugandan Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">langue des signes ougandaise</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Ugandan Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Ugandan Sign Language</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/UGY">
+		<skos:prefLabel xml:lang="en">Uruguayan Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">langue des signes uruguayenne</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Uruguayan Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Uruguayan Sign Language</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/UKL">
+		<skos:prefLabel xml:lang="en">Ukrainian Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">langue des signes ukrainienne</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Ukrainian Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Ukrainian Sign Language</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/UKR">
+		<skos:prefLabel xml:lang="de">Ukrainisch</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">Ukrainian</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">ukrainien</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Oekraïens</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/UKS">
+		<skos:prefLabel xml:lang="en">Urubú-Kaapor Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">langue des signes urubú-ka'apór</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Urubú-Kaapor Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Urubú-Kaapor Sign Language</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/UND">
+		<skos:prefLabel xml:lang="de">Unbekannt</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">Undetermined</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">indéterminé</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Onbepaald</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/URD">
+		<skos:prefLabel xml:lang="de">Urdu</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">Urdu</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">ourdou</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Urdu</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/URE">
+		<skos:prefLabel xml:lang="en">Uru</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Uru</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Uru</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Uru</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/UZB">
+		<skos:prefLabel xml:lang="de">Usbekisch</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">Uzbek</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">ouzbek</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Oezbeeks</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/VEN">
+		<skos:prefLabel xml:lang="en">Venda</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Venda</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Venda</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Venda</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/VIE">
+		<skos:prefLabel xml:lang="de">Vietnamesisch</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">Vietnamese</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">vietnamien</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Vietnamees</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/VLS">
+		<skos:prefLabel xml:lang="de">Flämisch</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">Flemish</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">flamand</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Vlaams</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/VSI">
+		<skos:prefLabel xml:lang="en">Moldovan Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Moldovan Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Moldovan Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Moldovan Sign Language</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/VSL">
+		<skos:prefLabel xml:lang="en">Venezuelan Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">langue des signes vénézuélienne</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Venezuelan Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Venezuelan Sign Language</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/VSV">
+		<skos:prefLabel xml:lang="en">Valencian Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">langue des signes valencienne</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Valencian Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Valencian Sign Language</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/WLN">
+		<skos:prefLabel xml:lang="de">Wallonisch</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">Walloon</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">wallon</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Waals</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/WOL">
+		<skos:prefLabel xml:lang="de">Wolof</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">Wolof</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">wolof</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Wolof</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/XHO">
+		<skos:prefLabel xml:lang="en">Xhosa</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Xhosa</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Xhosa</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Xhosa</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/XKI">
+		<skos:prefLabel xml:lang="en">Kenyan Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">langue des signes kényane</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Kenyan Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Kenyan Sign Language</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/XML">
+		<skos:prefLabel xml:lang="en">Malaysian Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">langue des signes malaisienne</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Malaysian Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Malaysian Sign Language</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/XMS">
+		<skos:prefLabel xml:lang="en">Moroccan Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">langue des signes marocaine</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Moroccan Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Moroccan Sign Language</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/YAA">
+		<skos:prefLabel xml:lang="en">Yaminava</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Yaminava</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Yaminava</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Yaminava</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/YID">
+		<skos:prefLabel xml:lang="de">Jiddisch</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">Yiddish</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">yiddish</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Jiddisch</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/YSL">
+		<skos:prefLabel xml:lang="en">Yugoslavian Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">langue des signes yougoslave</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Yugoslavian Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Yugoslavian Sign Language</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/YUE">
+		<skos:prefLabel xml:lang="en">Yue Chinese</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">cantonais</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Yue Chinese</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Yue Chinese</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/YUQ">
+		<skos:prefLabel xml:lang="en">Yuqui</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Yuqui</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Yuqui</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Yuqui</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/YUZ">
+		<skos:prefLabel xml:lang="en">Yuracare</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Yuracare</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Yuracare</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Yuracare</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/ZHO">
+		<skos:prefLabel xml:lang="de">Chinesisch</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">Chinese</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">chinois</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Chinees</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/ZIB">
+		<skos:prefLabel xml:lang="en">Zimbabwean Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">langue des signes zimbabwéenne</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Zimbabwean Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Zimbabwean Sign Language</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/ZLM">
+		<skos:prefLabel xml:lang="de">Malaiisch</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">Malay</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">malais</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Maleis</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/ZSL">
+		<skos:prefLabel xml:lang="en">Zambian Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">langue des signes zambienne</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Zambian Sign Language</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Zambian Sign Language</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/ZUL">
+		<skos:prefLabel xml:lang="de">Zulu</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">Zulu</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">zoulou</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Zoeloe</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/ZXX">
+		<skos:prefLabel xml:lang="de">Kein linguistischer Inhalt</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">No linguistic content</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">pas de contenu linguistique</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Geen ondertitels</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/AFA">
+		<skos:prefLabel xml:lang="en">Afro-Asiatic languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Afro-Asiatic languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Afro-Asiatic languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Afro-Asiatic languages</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/ALG">
+		<skos:prefLabel xml:lang="en">Algonquian languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Algonquian languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Algonquian languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Algonquian languages</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/APA">
+		<skos:prefLabel xml:lang="en">Apache languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Apache languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Apache languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Apache languages</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/ART">
+		<skos:prefLabel xml:lang="en">Artificial languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Artificial languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Artificial languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Artificial languages</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/ATH">
+		<skos:prefLabel xml:lang="en">Athapascan languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Athapascan languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Athapascan languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Athapascan languages</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/AUS">
+		<skos:prefLabel xml:lang="en">Australian languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Australian languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Australian languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Australian languages</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/BAD">
+		<skos:prefLabel xml:lang="en">Banda languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Banda languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Banda languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Banda languages</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/BAI">
+		<skos:prefLabel xml:lang="en">Bamileke languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Bamileke languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Bamileke languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Bamileke languages</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/BAT">
+		<skos:prefLabel xml:lang="en">Baltic languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Baltic languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Baltic languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Baltic languages</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/BER">
+		<skos:prefLabel xml:lang="en">Berber languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Berber languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Berber languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Berber languages</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/BNT">
+		<skos:prefLabel xml:lang="en">Bantu languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Bantu languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Bantu languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Bantu languages</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/BTK">
+		<skos:prefLabel xml:lang="en">Batak languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Batak languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Batak languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Batak languages</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/CAI">
+		<skos:prefLabel xml:lang="en">Central American Indian languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Central American Indian languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Central American Indian languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Central American Indian languages</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/CAU">
+		<skos:prefLabel xml:lang="en">Caucasian languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Caucasian languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Caucasian languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Caucasian languages</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/CEL">
+		<skos:prefLabel xml:lang="en">Celtic languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Celtic languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Celtic languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Celtic languages</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/CMC">
+		<skos:prefLabel xml:lang="en">Chamic languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Chamic languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Chamic languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Chamic languages</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/CUS">
+		<skos:prefLabel xml:lang="en">Cushitic languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Cushitic languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Cushitic languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Cushitic languages</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/DAY">
+		<skos:prefLabel xml:lang="en">Land Dayak languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Land Dayak languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Land Dayak languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Land Dayak languages</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/DRA">
+		<skos:prefLabel xml:lang="en">Dravidian languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Dravidian languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Dravidian languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Dravidian languages</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/FIU">
+		<skos:prefLabel xml:lang="en">Finno-Ugrian languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Finno-Ugrian languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Finno-Ugrian languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Finno-Ugrian languages</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/GEM">
+		<skos:prefLabel xml:lang="en">Germanic languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Germanic languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Germanic languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Germanic languages</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/IJO">
+		<skos:prefLabel xml:lang="en">Ijo languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Ijo languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Ijo languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Ijo languages</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/INC">
+		<skos:prefLabel xml:lang="en">Indic languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Indic languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Indic languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Indic languages</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/INE">
+		<skos:prefLabel xml:lang="en">Indo-European languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Indo-European languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Indo-European languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Indo-European languages</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/IRA">
+		<skos:prefLabel xml:lang="en">Iranian languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Iranian languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Iranian languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Iranian languages</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/IRO">
+		<skos:prefLabel xml:lang="en">Iroquoian languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Iroquoian languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Iroquoian languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Iroquoian languages</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/KAR">
+		<skos:prefLabel xml:lang="en">Karen languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Karen languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Karen languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Karen languages</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/KHI">
+		<skos:prefLabel xml:lang="en">Khoisan languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Khoisan languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Khoisan languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Khoisan languages</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/KRO">
+		<skos:prefLabel xml:lang="en">Kru languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Kru languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Kru languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Kru languages</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/MAP">
+		<skos:prefLabel xml:lang="en">Austronesian languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Austronesian languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Austronesian languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Austronesian languages</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/MKH">
+		<skos:prefLabel xml:lang="en">Mon-Khmer languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Mon-Khmer languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Mon-Khmer languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Mon-Khmer languages</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/MNO">
+		<skos:prefLabel xml:lang="en">Manobo languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Manobo languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Manobo languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Manobo languages</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/MUN">
+		<skos:prefLabel xml:lang="en">Munda languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Munda languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Munda languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Munda languages</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/MYN">
+		<skos:prefLabel xml:lang="en">Mayan languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Mayan languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Mayan languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Mayan languages</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/NAH">
+		<skos:prefLabel xml:lang="en">Nahuatl languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Nahuatl languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Nahuatl languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Nahuatl languages</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/NAI">
+		<skos:prefLabel xml:lang="en">North American Indian languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">North American Indian languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">North American Indian languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">North American Indian languages</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/NIC">
+		<skos:prefLabel xml:lang="en">Niger-Kordofanian languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Niger-Kordofanian languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Niger-Kordofanian languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Niger-Kordofanian languages</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/NUB">
+		<skos:prefLabel xml:lang="en">Nubian languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Nubian languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Nubian languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Nubian languages</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/OTO">
+		<skos:prefLabel xml:lang="en">Otomian languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Otomian languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Otomian languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Otomian languages</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/PAA">
+		<skos:prefLabel xml:lang="en">Papuan languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Papuan languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Papuan languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Papuan languages</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/PHI">
+		<skos:prefLabel xml:lang="en">Philippine languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Philippine languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Philippine languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Philippine languages</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/PRA">
+		<skos:prefLabel xml:lang="en">Prakrit languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Prakrit languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Prakrit languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Prakrit languages</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/ROA">
+		<skos:prefLabel xml:lang="en">Romance languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Romance languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Romance languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Romance languages</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/SAI">
+		<skos:prefLabel xml:lang="en">South American Indian languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">South American Indian languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">South American Indian languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">South American Indian languages</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/SAL">
+		<skos:prefLabel xml:lang="en">Salishan languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Salishan languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Salishan languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Salishan languages</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/SEM">
+		<skos:prefLabel xml:lang="en">Semitic languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Semitic languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Semitic languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Semitic languages</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/SGN">
+		<skos:prefLabel xml:lang="de">Gebärdensprachen</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">Sign Languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">langues des signes</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Gebarentalen</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/SIO">
+		<skos:prefLabel xml:lang="en">Siouan languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Siouan languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Siouan languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Siouan languages</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/SIT">
+		<skos:prefLabel xml:lang="en">Sino-Tibetan languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Sino-Tibetan languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Sino-Tibetan languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Sino-Tibetan languages</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/SLA">
+		<skos:prefLabel xml:lang="de">Slawische Sprachen</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">Slavic languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">langues slaves</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Slavische talen</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/SMI">
+		<skos:prefLabel xml:lang="en">Sami languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Sami languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Sami languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Sami languages</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/SON">
+		<skos:prefLabel xml:lang="en">Songhai languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Songhai languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Songhai languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Songhai languages</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/SSA">
+		<skos:prefLabel xml:lang="en">Nilo-Saharan languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Nilo-Saharan languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Nilo-Saharan languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Nilo-Saharan languages</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/TAI">
+		<skos:prefLabel xml:lang="en">Tai languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Tai languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Tai languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Tai languages</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/TUP">
+		<skos:prefLabel xml:lang="en">Tupi languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Tupi languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Tupi languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Tupi languages</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/TUT">
+		<skos:prefLabel xml:lang="en">Altaic languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Altaic languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Altaic languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Altaic languages</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/WAK">
+		<skos:prefLabel xml:lang="en">Wakashan languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Wakashan languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Wakashan languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Wakashan languages</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/WEN">
+		<skos:prefLabel xml:lang="en">Sorbian languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Sorbian languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Sorbian languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Sorbian languages</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/YPK">
+		<skos:prefLabel xml:lang="en">Yupik languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Yupik languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Yupik languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Yupik languages</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/ZND">
+		<skos:prefLabel xml:lang="en">Zande languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Zande languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Zande languages</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Zande languages</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/0D0">
+		<skos:prefLabel xml:lang="de">Valencianisch</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">Valencian</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">valencien</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Valenciaans</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/MSA">
+		<skos:prefLabel xml:lang="de">Malaysisch</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">Malaysian</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">malaisien</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Maleisisch</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/0E0">
+		<skos:prefLabel xml:lang="de">Montenegrinisch</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">Montenegrin</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">monténégrin</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Montenegrijns</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/MOL">
+		<skos:prefLabel xml:lang="de">Moldauisch</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">Moldavian</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">moldave</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Moldavisch</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/CNR">
+		<skos:prefLabel xml:lang="de">Montenegrinisch</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">Montenegrin</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">monténégrin</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Montenegrijns</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/language/OP_DATPRO">
+		<skos:prefLabel xml:lang="de">Vorläufige Daten</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">Provisional data</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Données provisoires</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">Voorlopige gegevens</skos:prefLabel>
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/language"/>
+	</skos:Concept>
+</rdf:RDF>

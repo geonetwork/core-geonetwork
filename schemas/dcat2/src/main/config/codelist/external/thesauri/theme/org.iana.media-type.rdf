@@ -1,0 +1,544 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+  <skos:ConceptScheme xmlns:skos="http://www.w3.org/2004/02/skos/core#" rdf:about="https://www.iana.org/assignments/media-types">
+    <dc:title xmlns:dc="http://purl.org/dc/elements/1.1/" xml:lang="en">media types</dc:title>
+    <dc:description xmlns:dc="http://purl.org/dc/elements/1.1/" xml:lang="en">This register contains media types used for governmental data sets. It is a subset of the IANA media types.</dc:description>
+    <dc:title xmlns:dc="http://purl.org/dc/elements/1.1/" xml:lang="de">media types</dc:title>
+    <dc:description xmlns:dc="http://purl.org/dc/elements/1.1/" xml:lang="de">This register contains media types used for governmental data sets. It is a subset of the IANA media types.</dc:description>
+    <dc:title xmlns:dc="http://purl.org/dc/elements/1.1/" xml:lang="fr">media-types</dc:title>
+    <dc:description xmlns:dc="http://purl.org/dc/elements/1.1/" xml:lang="fr">This register contains media types used for governmental data sets. It is a subset of the IANA media types.</dc:description>
+    <dc:title xmlns:dc="http://purl.org/dc/elements/1.1/" xml:lang="nl">media types</dc:title>
+    <dc:description xmlns:dc="http://purl.org/dc/elements/1.1/" xml:lang="nl">This register contains media types used for governmental data sets. It is a subset of the IANA media types.</dc:description>
+    <dcterms:issued xmlns:dcterms="http://purl.org/dc/terms/">2019-04-12T12:45:05</dcterms:issued>
+    <dcterms:modified xmlns:dcterms="http://purl.org/dc/terms/">2019-04-12T12:45:05</dcterms:modified>
+  </skos:ConceptScheme>
+  <skos:Concept xmlns:skos="http://www.w3.org/2004/02/skos/core#" rdf:about="https://www.iana.org/assignments/media-types/application/geopackage+sqlite3">
+    <skos:prefLabel xml:lang="en">application/geopackage+sqlite3</skos:prefLabel>
+    <skos:scopeNote xml:lang="en">This media type shall be used for the following extension(s) : gpkg</skos:scopeNote>
+    <skos:prefLabel xml:lang="de">application/geopackage+sqlite3</skos:prefLabel>
+    <skos:scopeNote xml:lang="de">This media type shall be used for the following extension(s) : gpkg</skos:scopeNote>
+    <skos:prefLabel xml:lang="fr">application/geopackage+sqlite3</skos:prefLabel>
+    <skos:scopeNote xml:lang="fr">Ce media type doit être utilisé pour la/les extension(s) suivante : gpkg</skos:scopeNote>
+    <skos:prefLabel xml:lang="nl">application/geopackage+sqlite3</skos:prefLabel>
+    <skos:scopeNote xml:lang="nl">Dit mediatype wordt gebruikt voor de volgende extensies: gpkg</skos:scopeNote>
+    <skos:inScheme rdf:resource="https://www.iana.org/assignments/media-types" />
+  </skos:Concept>
+  <skos:Concept xmlns:skos="http://www.w3.org/2004/02/skos/core#" rdf:about="https://www.iana.org/assignments/media-types/application/gml+xml">
+    <skos:prefLabel xml:lang="en">application/gml+xml</skos:prefLabel>
+    <skos:scopeNote xml:lang="en">This media type shall be used for the following extension(s) : xml, gml</skos:scopeNote>
+    <skos:prefLabel xml:lang="de">application/gml+xml</skos:prefLabel>
+    <skos:scopeNote xml:lang="de">This media type shall be used for the following extension(s) : xml, gml</skos:scopeNote>
+    <skos:prefLabel xml:lang="fr">application/gml+xml</skos:prefLabel>
+    <skos:scopeNote xml:lang="fr">Ce media type doit être utilisé pour la/les extension(s) suivante : xml, gml</skos:scopeNote>
+    <skos:prefLabel xml:lang="nl">application/gml+xml</skos:prefLabel>
+    <skos:scopeNote xml:lang="nl">Dit mediatype wordt gebruikt voor de volgende extensies: xml, gml</skos:scopeNote>
+    <skos:inScheme rdf:resource="https://www.iana.org/assignments/media-types" />
+  </skos:Concept>
+  <skos:Concept xmlns:skos="http://www.w3.org/2004/02/skos/core#" rdf:about="https://www.iana.org/assignments/media-types/application/vnd.google-earth.kml+xml">
+    <skos:prefLabel xml:lang="en">application/vnd.google-earth.kml+xml</skos:prefLabel>
+    <skos:scopeNote xml:lang="en">This media type shall be used for the following extension(s) : kml</skos:scopeNote>
+    <skos:prefLabel xml:lang="de">application/vnd.google-earth.kml+xml</skos:prefLabel>
+    <skos:scopeNote xml:lang="de">This media type shall be used for the following extension(s) : kml</skos:scopeNote>
+    <skos:prefLabel xml:lang="fr">application/vnd.google-earth.kml+xml</skos:prefLabel>
+    <skos:scopeNote xml:lang="fr">Ce media type doit être utilisé pour la/les extension(s) suivante : kml</skos:scopeNote>
+    <skos:prefLabel xml:lang="nl">application/vnd.google-earth.kml+xml</skos:prefLabel>
+    <skos:scopeNote xml:lang="nl">Dit mediatype wordt gebruikt voor de volgende extensies: kml</skos:scopeNote>
+    <skos:inScheme rdf:resource="https://www.iana.org/assignments/media-types" />
+  </skos:Concept>
+  <skos:Concept xmlns:skos="http://www.w3.org/2004/02/skos/core#" rdf:about="https://www.iana.org/assignments/media-types/application/vnd.google-earth.kmz">
+    <skos:prefLabel xml:lang="en">application/vnd.google-earth.kmz</skos:prefLabel>
+    <skos:scopeNote xml:lang="en">This media type shall be used for the following extension(s) : kmz</skos:scopeNote>
+    <skos:prefLabel xml:lang="de">application/vnd.google-earth.kmz</skos:prefLabel>
+    <skos:scopeNote xml:lang="de">This media type shall be used for the following extension(s) : kmz</skos:scopeNote>
+    <skos:prefLabel xml:lang="fr">application/vnd.google-earth.kmz</skos:prefLabel>
+    <skos:scopeNote xml:lang="fr">Ce media type doit être utilisé pour la/les extension(s) suivante : kmz</skos:scopeNote>
+    <skos:prefLabel xml:lang="nl">application/vnd.google-earth.kmz</skos:prefLabel>
+    <skos:scopeNote xml:lang="nl">Dit mediatype wordt gebruikt voor de volgende extensies: kmz</skos:scopeNote>
+    <skos:inScheme rdf:resource="https://www.iana.org/assignments/media-types" />
+  </skos:Concept>
+  <skos:Concept xmlns:skos="http://www.w3.org/2004/02/skos/core#" rdf:about="https://www.iana.org/assignments/media-types/application/vnd.sqlite3">
+    <skos:prefLabel xml:lang="en">application/vnd.sqlite3</skos:prefLabel>
+    <skos:scopeNote xml:lang="en">This media type shall be used for the following extension(s) : db, sqlite, sqlite3</skos:scopeNote>
+    <skos:prefLabel xml:lang="de">application/vnd.sqlite3</skos:prefLabel>
+    <skos:scopeNote xml:lang="de">This media type shall be used for the following extension(s) : db, sqlite, sqlite3</skos:scopeNote>
+    <skos:prefLabel xml:lang="fr">application/vnd.sqlite3</skos:prefLabel>
+    <skos:scopeNote xml:lang="fr">Ce media type doit être utilisé pour la/les extension(s) suivante : db, sqlite, sqlite3</skos:scopeNote>
+    <skos:prefLabel xml:lang="nl">application/vnd.sqlite3</skos:prefLabel>
+    <skos:scopeNote xml:lang="nl">Dit mediatype wordt gebruikt voor de volgende extensies: db, sqlite, sqlite3</skos:scopeNote>
+    <skos:inScheme rdf:resource="https://www.iana.org/assignments/media-types" />
+  </skos:Concept>
+  <skos:Concept xmlns:skos="http://www.w3.org/2004/02/skos/core#" rdf:about="http://inspire.ec.europa.eu/media-types/application/x-ascii-grid">
+    <skos:prefLabel xml:lang="en">application/x-ascii-grid</skos:prefLabel>
+    <skos:scopeNote xml:lang="en">This media type shall be used for the following extension(s) : asc, grd</skos:scopeNote>
+    <skos:prefLabel xml:lang="de">application/x-ascii-grid</skos:prefLabel>
+    <skos:scopeNote xml:lang="de">This media type shall be used for the following extension(s) : asc, grd</skos:scopeNote>
+    <skos:prefLabel xml:lang="fr">application/x-ascii-grid</skos:prefLabel>
+    <skos:scopeNote xml:lang="fr">Ce media type doit être utilisé pour la/les extension(s) suivante : asc, grd</skos:scopeNote>
+    <skos:prefLabel xml:lang="nl">application/x-ascii-grid</skos:prefLabel>
+    <skos:scopeNote xml:lang="nl">Dit mediatype wordt gebruikt voor de volgende extensies: asc, grd</skos:scopeNote>
+    <skos:inScheme rdf:resource="https://www.iana.org/assignments/media-types" />
+  </skos:Concept>
+  <skos:Concept xmlns:skos="http://www.w3.org/2004/02/skos/core#" rdf:about="http://inspire.ec.europa.eu/media-types/application/x-ecw">
+    <skos:prefLabel xml:lang="en">application/x-ecw</skos:prefLabel>
+    <skos:scopeNote xml:lang="en">This media type shall be used for the following extension(s) : ecw</skos:scopeNote>
+    <skos:prefLabel xml:lang="de">application/x-ecw</skos:prefLabel>
+    <skos:scopeNote xml:lang="de">This media type shall be used for the following extension(s) : ecw</skos:scopeNote>
+    <skos:prefLabel xml:lang="fr">application/x-ecw</skos:prefLabel>
+    <skos:scopeNote xml:lang="fr">Ce media type doit être utilisé pour la/les extension(s) suivante : ecw</skos:scopeNote>
+    <skos:prefLabel xml:lang="nl">application/x-ecw</skos:prefLabel>
+    <skos:scopeNote xml:lang="nl">Dit mediatype wordt gebruikt voor de volgende extensies: ecw</skos:scopeNote>
+    <skos:inScheme rdf:resource="https://www.iana.org/assignments/media-types" />
+  </skos:Concept>
+  <skos:Concept xmlns:skos="http://www.w3.org/2004/02/skos/core#" rdf:about="http://inspire.ec.europa.eu/media-types/application/x-filegdb">
+    <skos:prefLabel xml:lang="en">application/x-filegdb</skos:prefLabel>
+    <skos:scopeNote xml:lang="en">This media type shall be used for the following extension(s) : a zipped gdb file</skos:scopeNote>
+    <skos:prefLabel xml:lang="de">application/x-filegdb</skos:prefLabel>
+    <skos:scopeNote xml:lang="de">This media type shall be used for the following extension(s) : a zipped gdb file</skos:scopeNote>
+    <skos:prefLabel xml:lang="fr">application/x-filegdb</skos:prefLabel>
+    <skos:scopeNote xml:lang="fr">Ce media type doit être utilisé pour la/les extension(s) suivante : un fichier gdb compressé</skos:scopeNote>
+    <skos:prefLabel xml:lang="nl">application/x-filegdb</skos:prefLabel>
+    <skos:scopeNote xml:lang="nl">Dit mediatype wordt gebruikt voor de volgende extensies: a zipped gdb file</skos:scopeNote>
+    <skos:inScheme rdf:resource="https://www.iana.org/assignments/media-types" />
+  </skos:Concept>
+  <skos:Concept xmlns:skos="http://www.w3.org/2004/02/skos/core#" rdf:about="http://inspire.ec.europa.eu/media-types/application/x-gmz">
+    <skos:prefLabel xml:lang="en">application/x-gmz</skos:prefLabel>
+    <skos:scopeNote xml:lang="en">This media type shall be used for the following extension(s) : a zipped gml file</skos:scopeNote>
+    <skos:prefLabel xml:lang="de">application/x-gmz</skos:prefLabel>
+    <skos:scopeNote xml:lang="de">This media type shall be used for the following extension(s) : a zipped gml file</skos:scopeNote>
+    <skos:prefLabel xml:lang="fr">application/x-gmz</skos:prefLabel>
+    <skos:scopeNote xml:lang="fr">Ce media type doit être utilisé pour la/les extension(s) suivante : un fichier gml compressé</skos:scopeNote>
+    <skos:prefLabel xml:lang="nl">application/x-gmz</skos:prefLabel>
+    <skos:scopeNote xml:lang="nl">Dit mediatype wordt gebruikt voor de volgende extensies: a zipped gml file</skos:scopeNote>
+    <skos:inScheme rdf:resource="https://www.iana.org/assignments/media-types" />
+  </skos:Concept>
+  <skos:Concept xmlns:skos="http://www.w3.org/2004/02/skos/core#" rdf:about="http://inspire.ec.europa.eu/media-types/application/x-las">
+    <skos:prefLabel xml:lang="en">application/x-las</skos:prefLabel>
+    <skos:scopeNote xml:lang="en">This media type shall be used for the following extension(s) : las</skos:scopeNote>
+    <skos:prefLabel xml:lang="de">application/x-las</skos:prefLabel>
+    <skos:scopeNote xml:lang="de">This media type shall be used for the following extension(s) : las</skos:scopeNote>
+    <skos:prefLabel xml:lang="fr">application/x-las</skos:prefLabel>
+    <skos:scopeNote xml:lang="fr">Ce media type doit être utilisé pour la/les extension(s) suivante : las</skos:scopeNote>
+    <skos:prefLabel xml:lang="nl">application/x-las</skos:prefLabel>
+    <skos:scopeNote xml:lang="nl">Dit mediatype wordt gebruikt voor de volgende extensies: las</skos:scopeNote>
+    <skos:inScheme rdf:resource="https://www.iana.org/assignments/media-types" />
+  </skos:Concept>
+  <skos:Concept xmlns:skos="http://www.w3.org/2004/02/skos/core#" rdf:about="http://inspire.ec.europa.eu/media-types/application/x-laz">
+    <skos:prefLabel xml:lang="en">application/x-laz</skos:prefLabel>
+    <skos:scopeNote xml:lang="en">This media type shall be used for the following extension(s) : laz</skos:scopeNote>
+    <skos:prefLabel xml:lang="de">application/x-laz</skos:prefLabel>
+    <skos:scopeNote xml:lang="de">This media type shall be used for the following extension(s) : laz</skos:scopeNote>
+    <skos:prefLabel xml:lang="fr">application/x-laz</skos:prefLabel>
+    <skos:scopeNote xml:lang="fr">Ce media type doit être utilisé pour la/les extension(s) suivante : laz</skos:scopeNote>
+    <skos:prefLabel xml:lang="nl">application/x-laz</skos:prefLabel>
+    <skos:scopeNote xml:lang="nl">Dit mediatype wordt gebruikt voor de volgende extensies: laz</skos:scopeNote>
+    <skos:inScheme rdf:resource="https://www.iana.org/assignments/media-types" />
+  </skos:Concept>
+  <skos:Concept xmlns:skos="http://www.w3.org/2004/02/skos/core#" rdf:about="http://inspire.ec.europa.eu/media-types/application/x-oracledump">
+    <skos:prefLabel xml:lang="en">application/x-oracledump</skos:prefLabel>
+    <skos:scopeNote xml:lang="en">This media type shall be used for Oracle dumps. This media type is incomplete as it misses a reference to the specification of the format.</skos:scopeNote>
+    <skos:prefLabel xml:lang="de">application/x-oracledump</skos:prefLabel>
+    <skos:scopeNote xml:lang="de">This media type shall be used for Oracle dumps. This media type is incomplete as it misses a reference to the specification of the format.</skos:scopeNote>
+    <skos:prefLabel xml:lang="fr">application/x-oracledump</skos:prefLabel>
+    <skos:scopeNote xml:lang="fr">Ce media type doit être utilisé pour les dumps Oracle. Ce media type est incomplet car il manque une référence à la spécification du format.</skos:scopeNote>
+    <skos:prefLabel xml:lang="nl">application/x-oracledump</skos:prefLabel>
+    <skos:scopeNote xml:lang="nl">This media type shall be used for Oracle dumps. This media type is incomplete as it misses a reference to the specification of the format.</skos:scopeNote>
+    <skos:inScheme rdf:resource="https://www.iana.org/assignments/media-types" />
+  </skos:Concept>
+  <skos:Concept xmlns:skos="http://www.w3.org/2004/02/skos/core#" rdf:about="http://inspire.ec.europa.eu/media-types/application/x-shapefile">
+    <skos:prefLabel xml:lang="en">application/x-shapefile</skos:prefLabel>
+    <skos:scopeNote xml:lang="en">This media type shall be used for the following extension(s) : a zip file containing at least the shp, shx and dbf files.</skos:scopeNote>
+    <skos:prefLabel xml:lang="de">application/x-shapefile</skos:prefLabel>
+    <skos:scopeNote xml:lang="de">This media type shall be used for the following extension(s) : a zip file containing at least the shp, shx and dbf files.</skos:scopeNote>
+    <skos:prefLabel xml:lang="fr">application/x-shapefile</skos:prefLabel>
+    <skos:scopeNote xml:lang="fr">Ce media type doit être utilisé pour la/les extension(s) suivante : un fichier zip contenant au moins les fichiers shp, shx et dbf.</skos:scopeNote>
+    <skos:prefLabel xml:lang="nl">application/x-shapefile</skos:prefLabel>
+    <skos:scopeNote xml:lang="nl">Dit mediatype wordt gebruikt voor de volgende extensies: a zip file containing at least the shp, shx and dbf files.</skos:scopeNote>
+    <skos:inScheme rdf:resource="https://www.iana.org/assignments/media-types" />
+  </skos:Concept>
+  <skos:Concept xmlns:skos="http://www.w3.org/2004/02/skos/core#" rdf:about="http://inspire.ec.europa.eu/media-types/application/x-tab">
+    <skos:prefLabel xml:lang="en">application/x-tab</skos:prefLabel>
+    <skos:scopeNote xml:lang="en">This media type shall be used for the following extension(s) : a zip file containing at least the tab, dat, map and id files.</skos:scopeNote>
+    <skos:prefLabel xml:lang="de">application/x-tab</skos:prefLabel>
+    <skos:scopeNote xml:lang="de">This media type shall be used for the following extension(s) : a zip file containing at least the tab, dat, map and id files.</skos:scopeNote>
+    <skos:prefLabel xml:lang="fr">application/x-tab</skos:prefLabel>
+    <skos:scopeNote xml:lang="fr">Ce media type doit être utilisé pour la/les extension(s) suivante : un fichier zip contenant au moins les fichiers tab, dat, map et id.</skos:scopeNote>
+    <skos:prefLabel xml:lang="nl">application/x-tab</skos:prefLabel>
+    <skos:scopeNote xml:lang="nl">Dit mediatype wordt gebruikt voor de volgende extensies: a zip file containing at least the tab, dat, map and id files.</skos:scopeNote>
+    <skos:inScheme rdf:resource="https://www.iana.org/assignments/media-types" />
+  </skos:Concept>
+  <skos:Concept xmlns:skos="http://www.w3.org/2004/02/skos/core#" rdf:about="http://inspire.ec.europa.eu/media-types/application/x-tab-raster">
+    <skos:prefLabel xml:lang="en">application/x-tab-raster</skos:prefLabel>
+    <skos:scopeNote xml:lang="en">This media type shall be used for MapInfo Raster TAB format. This media type is incomplete as it misses a reference to the specification of the format.</skos:scopeNote>
+    <skos:prefLabel xml:lang="de">application/x-tab-raster</skos:prefLabel>
+    <skos:scopeNote xml:lang="de">This media type shall be used for MapInfo Raster TAB format. This media type is incomplete as it misses a reference to the specification of the format.</skos:scopeNote>
+    <skos:prefLabel xml:lang="fr">application/x-tab-raster</skos:prefLabel>
+    <skos:scopeNote xml:lang="fr">Ce media type doit être utilisé pour les formats MapInfo Raster TAB. Ce media type est incomplet car il manque une référence à la spécification du format.</skos:scopeNote>
+    <skos:prefLabel xml:lang="nl">application/x-tab-raster</skos:prefLabel>
+    <skos:scopeNote xml:lang="nl">This media type shall be used for MapInfo Raster TAB format. This media type is incomplete as it misses a reference to the specification of the format.</skos:scopeNote>
+    <skos:inScheme rdf:resource="https://www.iana.org/assignments/media-types" />
+  </skos:Concept>
+  <skos:Concept xmlns:skos="http://www.w3.org/2004/02/skos/core#" rdf:about="http://inspire.ec.europa.eu/media-types/application/x-worldfile">
+    <skos:prefLabel xml:lang="en">application/x-worldfile</skos:prefLabel>
+    <skos:scopeNote xml:lang="en">The media type shall be used for world files. The file extension usually depends on the format of the associated image, e.g. jgw for JPEG (2000) oder tfw for TIFF.</skos:scopeNote>
+    <skos:prefLabel xml:lang="de">application/x-worldfile</skos:prefLabel>
+    <skos:scopeNote xml:lang="de">The media type shall be used for world files. The file extension usually depends on the format of the associated image, e.g. jgw for JPEG (2000) oder tfw for TIFF.</skos:scopeNote>
+    <skos:prefLabel xml:lang="fr">application/x-worldfile</skos:prefLabel>
+    <skos:scopeNote xml:lang="fr">Ce media type doit être utilisé pour les world files. L’extension de fichier dépend généralement du format de l’image associée, par exemple jgw pour JPEG (2000) ou tfw pour TIFF.</skos:scopeNote>
+    <skos:prefLabel xml:lang="nl">application/x-worldfile</skos:prefLabel>
+    <skos:scopeNote xml:lang="nl">The media type shall be used for world files. The file extension usually depends on the format of the associated image, e.g. jgw for JPEG (2000) oder tfw for TIFF.</skos:scopeNote>
+    <skos:inScheme rdf:resource="https://www.iana.org/assignments/media-types" />
+  </skos:Concept>
+  <skos:Concept xmlns:skos="http://www.w3.org/2004/02/skos/core#" rdf:about="https://www.iana.org/assignments/media-types/image/jp2">
+    <skos:prefLabel xml:lang="en">image/jp2</skos:prefLabel>
+    <skos:scopeNote xml:lang="en">This media type shall be used for the following extension(s) : jp2, jpg2</skos:scopeNote>
+    <skos:prefLabel xml:lang="de">image/jp2</skos:prefLabel>
+    <skos:scopeNote xml:lang="de">This media type shall be used for the following extension(s) : jp2, jpg2</skos:scopeNote>
+    <skos:prefLabel xml:lang="fr">image/jp2</skos:prefLabel>
+    <skos:scopeNote xml:lang="fr">Ce media type doit être utilisé pour la/les extension(s) suivante : jp2, jpg2</skos:scopeNote>
+    <skos:prefLabel xml:lang="nl">image/jp2</skos:prefLabel>
+    <skos:scopeNote xml:lang="nl">Dit mediatype wordt gebruikt voor de volgende extensies: jp2, jpg2</skos:scopeNote>
+    <skos:inScheme rdf:resource="https://www.iana.org/assignments/media-types" />
+  </skos:Concept>
+  <skos:Concept xmlns:skos="http://www.w3.org/2004/02/skos/core#" rdf:about="https://www.iana.org/assignments/media-types/image/tiff">
+    <skos:prefLabel xml:lang="en">image/tiff</skos:prefLabel>
+    <skos:scopeNote xml:lang="en">This media type shall be used for the following extension(s) : tif</skos:scopeNote>
+    <skos:prefLabel xml:lang="de">image/tiff</skos:prefLabel>
+    <skos:scopeNote xml:lang="de">This media type shall be used for the following extension(s) : tif</skos:scopeNote>
+    <skos:prefLabel xml:lang="fr">image/tiff</skos:prefLabel>
+    <skos:scopeNote xml:lang="fr">Ce media type doit être utilisé pour la/les extension(s) suivante : tif</skos:scopeNote>
+    <skos:prefLabel xml:lang="nl">image/tiff</skos:prefLabel>
+    <skos:scopeNote xml:lang="nl">Dit mediatype wordt gebruikt voor de volgende extensies: tif</skos:scopeNote>
+    <skos:inScheme rdf:resource="https://www.iana.org/assignments/media-types" />
+  </skos:Concept>
+  <skos:Concept xmlns:skos="http://www.w3.org/2004/02/skos/core#" rdf:about="https://www.iana.org/assignments/media-types/text/csv">
+    <skos:prefLabel xml:lang="en">text/csv</skos:prefLabel>
+    <skos:scopeNote xml:lang="en">This media type shall be used for the following extension(s) : csv</skos:scopeNote>
+    <skos:prefLabel xml:lang="de">text/csv</skos:prefLabel>
+    <skos:scopeNote xml:lang="de">This media type shall be used for the following extension(s) : csv</skos:scopeNote>
+    <skos:prefLabel xml:lang="fr">text/csv</skos:prefLabel>
+    <skos:scopeNote xml:lang="fr">Ce media type doit être utilisé pour la/les extension(s) suivante : csv</skos:scopeNote>
+    <skos:prefLabel xml:lang="nl">text/csv</skos:prefLabel>
+    <skos:scopeNote xml:lang="nl">Dit mediatype wordt gebruikt voor de volgende extensies: csv</skos:scopeNote>
+    <skos:inScheme rdf:resource="https://www.iana.org/assignments/media-types" />
+  </skos:Concept>
+  <skos:Concept xmlns:skos="http://www.w3.org/2004/02/skos/core#" rdf:about="https://www.iana.org/assignments/media-types/application/json">
+    <skos:prefLabel xml:lang="en">application/json</skos:prefLabel>
+    <skos:scopeNote xml:lang="en">This media type shall be used for the following extension(s) : json</skos:scopeNote>
+    <skos:prefLabel xml:lang="de">application/json</skos:prefLabel>
+    <skos:scopeNote xml:lang="de">This media type shall be used for the following extension(s) : json</skos:scopeNote>
+    <skos:prefLabel xml:lang="fr">application/json</skos:prefLabel>
+    <skos:scopeNote xml:lang="fr">Ce media type doit être utilisé pour la/les extension(s) suivante : json</skos:scopeNote>
+    <skos:prefLabel xml:lang="nl">application/json</skos:prefLabel>
+    <skos:scopeNote xml:lang="nl">Dit mediatype wordt gebruikt voor de volgende extensies: json</skos:scopeNote>
+    <skos:inScheme rdf:resource="https://www.iana.org/assignments/media-types" />
+  </skos:Concept>
+  <skos:Concept xmlns:skos="http://www.w3.org/2004/02/skos/core#" rdf:about="https://www.iana.org/assignments/media-types/application/pdf">
+    <skos:prefLabel xml:lang="en">application/pdf</skos:prefLabel>
+    <skos:scopeNote xml:lang="en">This media type shall be used for the following extension(s) : pdf</skos:scopeNote>
+    <skos:prefLabel xml:lang="de">application/pdf</skos:prefLabel>
+    <skos:scopeNote xml:lang="de">This media type shall be used for the following extension(s) : pdf</skos:scopeNote>
+    <skos:prefLabel xml:lang="fr">application/pdf</skos:prefLabel>
+    <skos:scopeNote xml:lang="fr">Ce media type doit être utilisé pour la/les extension(s) suivante : pdf</skos:scopeNote>
+    <skos:prefLabel xml:lang="nl">application/pdf</skos:prefLabel>
+    <skos:scopeNote xml:lang="nl">Dit mediatype wordt gebruikt voor de volgende extensies: pdf</skos:scopeNote>
+    <skos:inScheme rdf:resource="https://www.iana.org/assignments/media-types" />
+  </skos:Concept>
+  <skos:Concept xmlns:skos="http://www.w3.org/2004/02/skos/core#" rdf:about="https://www.iana.org/assignments/media-types/application/xml">
+    <skos:prefLabel xml:lang="en">application/xml</skos:prefLabel>
+    <skos:scopeNote xml:lang="en">This media type shall be used for the following extension(s) : xml</skos:scopeNote>
+    <skos:prefLabel xml:lang="de">application/xml</skos:prefLabel>
+    <skos:scopeNote xml:lang="de">This media type shall be used for the following extension(s) : xml</skos:scopeNote>
+    <skos:prefLabel xml:lang="fr">application/xml</skos:prefLabel>
+    <skos:scopeNote xml:lang="fr">Ce media type doit être utilisé pour la/les extension(s) suivante : xml</skos:scopeNote>
+    <skos:prefLabel xml:lang="nl">application/xml</skos:prefLabel>
+    <skos:scopeNote xml:lang="nl">Dit mediatype wordt gebruikt voor de volgende extensies: xml</skos:scopeNote>
+    <skos:inScheme rdf:resource="https://www.iana.org/assignments/media-types" />
+  </skos:Concept>
+  <skos:Concept xmlns:skos="http://www.w3.org/2004/02/skos/core#" rdf:about="https://www.iana.org/assignments/media-types/application/rdf+xml">
+    <skos:prefLabel xml:lang="en">application/rdf+xml</skos:prefLabel>
+    <skos:scopeNote xml:lang="en">This media type shall be used for the following extension(s) : rdf</skos:scopeNote>
+    <skos:prefLabel xml:lang="de">application/rdf+xml</skos:prefLabel>
+    <skos:scopeNote xml:lang="de">This media type shall be used for the following extension(s) : rdf</skos:scopeNote>
+    <skos:prefLabel xml:lang="fr">application/rdf+xml</skos:prefLabel>
+    <skos:scopeNote xml:lang="fr">Ce media type doit être utilisé pour la/les extension(s) suivante : rdf</skos:scopeNote>
+    <skos:prefLabel xml:lang="nl">application/rdf+xml</skos:prefLabel>
+    <skos:scopeNote xml:lang="nl">Dit mediatype wordt gebruikt voor de volgende extensies: rdf</skos:scopeNote>
+    <skos:inScheme rdf:resource="https://www.iana.org/assignments/media-types" />
+  </skos:Concept>
+  <skos:Concept xmlns:skos="http://www.w3.org/2004/02/skos/core#" rdf:about="https://www.iana.org/assignments/media-types/application/rtf">
+    <skos:prefLabel xml:lang="en">application/rtf</skos:prefLabel>
+    <skos:scopeNote xml:lang="en">This media type shall be used for the following extension(s) : rtf</skos:scopeNote>
+    <skos:prefLabel xml:lang="de">application/rtf</skos:prefLabel>
+    <skos:scopeNote xml:lang="de">This media type shall be used for the following extension(s) : rtf</skos:scopeNote>
+    <skos:prefLabel xml:lang="fr">application/rtf</skos:prefLabel>
+    <skos:scopeNote xml:lang="fr">Ce media type doit être utilisé pour la/les extension(s) suivante : rtf</skos:scopeNote>
+    <skos:prefLabel xml:lang="nl">application/rtf</skos:prefLabel>
+    <skos:scopeNote xml:lang="nl">Dit mediatype wordt gebruikt voor de volgende extensies: rtf</skos:scopeNote>
+    <skos:inScheme rdf:resource="https://www.iana.org/assignments/media-types" />
+  </skos:Concept>
+  <skos:Concept xmlns:skos="http://www.w3.org/2004/02/skos/core#" rdf:about="https://www.iana.org/assignments/media-types/application/vnd.ms-excel">
+    <skos:prefLabel xml:lang="en">application/vnd.ms-excel</skos:prefLabel>
+    <skos:scopeNote xml:lang="en">This media type shall be used for the following extension(s) : xls</skos:scopeNote>
+    <skos:prefLabel xml:lang="de">application/vnd.ms-excel</skos:prefLabel>
+    <skos:scopeNote xml:lang="de">This media type shall be used for the following extension(s) : xls</skos:scopeNote>
+    <skos:prefLabel xml:lang="fr">application/vnd.ms-excel</skos:prefLabel>
+    <skos:scopeNote xml:lang="fr">Ce media type doit être utilisé pour la/les extension(s) suivante : xls</skos:scopeNote>
+    <skos:prefLabel xml:lang="nl">application/vnd.ms-excel</skos:prefLabel>
+    <skos:scopeNote xml:lang="nl">Dit mediatype wordt gebruikt voor de volgende extensies: xls</skos:scopeNote>
+    <skos:inScheme rdf:resource="https://www.iana.org/assignments/media-types" />
+  </skos:Concept>
+  <skos:Concept xmlns:skos="http://www.w3.org/2004/02/skos/core#" rdf:about="https://www.iana.org/assignments/media-types/application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
+    <skos:prefLabel xml:lang="en">application/vnd.openxmlformats-officedocument.spreadsheetml.sheet</skos:prefLabel>
+    <skos:scopeNote xml:lang="en">This media type shall be used for the following extension(s) : xlsx</skos:scopeNote>
+    <skos:prefLabel xml:lang="de">application/vnd.openxmlformats-officedocument.spreadsheetml.sheet</skos:prefLabel>
+    <skos:scopeNote xml:lang="de">This media type shall be used for the following extension(s) : xlsx</skos:scopeNote>
+    <skos:prefLabel xml:lang="fr">application/vnd.openxmlformats-officedocument.spreadsheetml.sheet</skos:prefLabel>
+    <skos:scopeNote xml:lang="fr">Ce media type doit être utilisé pour la/les extension(s) suivante : xlsx</skos:scopeNote>
+    <skos:prefLabel xml:lang="nl">application/vnd.openxmlformats-officedocument.spreadsheetml.sheet</skos:prefLabel>
+    <skos:scopeNote xml:lang="nl">Dit mediatype wordt gebruikt voor de volgende extensies: xlsx</skos:scopeNote>
+    <skos:inScheme rdf:resource="https://www.iana.org/assignments/media-types" />
+  </skos:Concept>
+  <skos:Concept xmlns:skos="http://www.w3.org/2004/02/skos/core#" rdf:about="https://www.iana.org/assignments/media-types/application/vnd.ms-powerpoint">
+    <skos:prefLabel xml:lang="en">application/vnd.ms-powerpoint</skos:prefLabel>
+    <skos:scopeNote xml:lang="en">This media type shall be used for the following extension(s) : ppt, pps</skos:scopeNote>
+    <skos:prefLabel xml:lang="de">application/vnd.ms-powerpoint</skos:prefLabel>
+    <skos:scopeNote xml:lang="de">This media type shall be used for the following extension(s) : ppt, pps</skos:scopeNote>
+    <skos:prefLabel xml:lang="fr">application/vnd.ms-powerpoint</skos:prefLabel>
+    <skos:scopeNote xml:lang="fr">Ce media type doit être utilisé pour la/les extension(s) suivante : ppt, pps</skos:scopeNote>
+    <skos:prefLabel xml:lang="nl">application/vnd.ms-powerpoint</skos:prefLabel>
+    <skos:scopeNote xml:lang="nl">Dit mediatype wordt gebruikt voor de volgende extensies: ppt, pps</skos:scopeNote>
+    <skos:inScheme rdf:resource="https://www.iana.org/assignments/media-types" />
+  </skos:Concept>
+  <skos:Concept xmlns:skos="http://www.w3.org/2004/02/skos/core#" rdf:about="https://www.iana.org/assignments/media-types/application/vnd.openxmlformats-officedocument.presentationml.presentation">
+    <skos:prefLabel xml:lang="en">application/vnd.openxmlformats-officedocument.presentationml.presentation</skos:prefLabel>
+    <skos:scopeNote xml:lang="en">This media type shall be used for the following extension(s) : pptx</skos:scopeNote>
+    <skos:prefLabel xml:lang="de">application/vnd.openxmlformats-officedocument.presentationml.presentation</skos:prefLabel>
+    <skos:scopeNote xml:lang="de">This media type shall be used for the following extension(s) : pptx</skos:scopeNote>
+    <skos:prefLabel xml:lang="fr">application/vnd.openxmlformats-officedocument.presentationml.presentation</skos:prefLabel>
+    <skos:scopeNote xml:lang="fr">Ce media type doit être utilisé pour la/les extension(s) suivante : pptx</skos:scopeNote>
+    <skos:prefLabel xml:lang="nl">application/vnd.openxmlformats-officedocument.presentationml.presentation</skos:prefLabel>
+    <skos:scopeNote xml:lang="nl">Dit mediatype wordt gebruikt voor de volgende extensies: pptx</skos:scopeNote>
+    <skos:inScheme rdf:resource="https://www.iana.org/assignments/media-types" />
+  </skos:Concept>
+  <skos:Concept xmlns:skos="http://www.w3.org/2004/02/skos/core#" rdf:about="https://www.iana.org/assignments/media-types/application/msword">
+    <skos:prefLabel xml:lang="en">application/msword</skos:prefLabel>
+    <skos:scopeNote xml:lang="en">This media type shall be used for the following extension(s) : doc</skos:scopeNote>
+    <skos:prefLabel xml:lang="de">application/msword</skos:prefLabel>
+    <skos:scopeNote xml:lang="de">This media type shall be used for the following extension(s) : doc</skos:scopeNote>
+    <skos:prefLabel xml:lang="fr">application/msword</skos:prefLabel>
+    <skos:scopeNote xml:lang="fr">Ce media type doit être utilisé pour la/les extension(s) suivante : doc</skos:scopeNote>
+    <skos:prefLabel xml:lang="nl">application/msword</skos:prefLabel>
+    <skos:scopeNote xml:lang="nl">Dit mediatype wordt gebruikt voor de volgende extensies: doc</skos:scopeNote>
+    <skos:inScheme rdf:resource="https://www.iana.org/assignments/media-types" />
+  </skos:Concept>
+  <skos:Concept xmlns:skos="http://www.w3.org/2004/02/skos/core#" rdf:about="https://www.iana.org/assignments/media-types/application/vnd.openxmlformats-officedocument.wordprocessingml.document">
+    <skos:prefLabel xml:lang="en">application/vnd.openxmlformats-officedocument.wordprocessingml.document</skos:prefLabel>
+    <skos:scopeNote xml:lang="en">This media type shall be used for the following extension(s) : docx</skos:scopeNote>
+    <skos:prefLabel xml:lang="de">application/vnd.openxmlformats-officedocument.wordprocessingml.document</skos:prefLabel>
+    <skos:scopeNote xml:lang="de">This media type shall be used for the following extension(s) : docx</skos:scopeNote>
+    <skos:prefLabel xml:lang="fr">application/vnd.openxmlformats-officedocument.wordprocessingml.document</skos:prefLabel>
+    <skos:scopeNote xml:lang="fr">Ce media type doit être utilisé pour la/les extension(s) suivante : docx</skos:scopeNote>
+    <skos:prefLabel xml:lang="nl">application/vnd.openxmlformats-officedocument.wordprocessingml.document</skos:prefLabel>
+    <skos:scopeNote xml:lang="nl">Dit mediatype wordt gebruikt voor de volgende extensies: docx</skos:scopeNote>
+    <skos:inScheme rdf:resource="https://www.iana.org/assignments/media-types" />
+  </skos:Concept>
+  <skos:Concept xmlns:skos="http://www.w3.org/2004/02/skos/core#" rdf:about="https://www.iana.org/assignments/media-types/application/zip">
+    <skos:prefLabel xml:lang="en">application/zip</skos:prefLabel>
+    <skos:scopeNote xml:lang="en">This media type shall be used for the following extension(s) : zip</skos:scopeNote>
+    <skos:prefLabel xml:lang="de">application/zip</skos:prefLabel>
+    <skos:scopeNote xml:lang="de">This media type shall be used for the following extension(s) : zip</skos:scopeNote>
+    <skos:prefLabel xml:lang="fr">application/zip</skos:prefLabel>
+    <skos:scopeNote xml:lang="fr">Ce media type doit être utilisé pour la/les extension(s) suivante : zip</skos:scopeNote>
+    <skos:prefLabel xml:lang="nl">application/zip</skos:prefLabel>
+    <skos:scopeNote xml:lang="nl">Dit mediatype wordt gebruikt voor de volgende extensies: zip</skos:scopeNote>
+    <skos:inScheme rdf:resource="https://www.iana.org/assignments/media-types" />
+  </skos:Concept>
+  <skos:Concept xmlns:skos="http://www.w3.org/2004/02/skos/core#" rdf:about="https://www.iana.org/assignments/media-types/application/gzip">
+    <skos:prefLabel xml:lang="en">application/gzip</skos:prefLabel>
+    <skos:scopeNote xml:lang="en">This media type shall be used for the following extension(s) : gz</skos:scopeNote>
+    <skos:prefLabel xml:lang="de">application/gzip</skos:prefLabel>
+    <skos:scopeNote xml:lang="de">This media type shall be used for the following extension(s) : gz</skos:scopeNote>
+    <skos:prefLabel xml:lang="fr">application/gzip</skos:prefLabel>
+    <skos:scopeNote xml:lang="fr">Ce media type doit être utilisé pour la/les extension(s) suivante : gz</skos:scopeNote>
+    <skos:prefLabel xml:lang="nl">application/gzip</skos:prefLabel>
+    <skos:scopeNote xml:lang="nl">Dit mediatype wordt gebruikt voor de volgende extensies: gz</skos:scopeNote>
+    <skos:inScheme rdf:resource="https://www.iana.org/assignments/media-types" />
+  </skos:Concept>
+  <skos:Concept xmlns:skos="http://www.w3.org/2004/02/skos/core#" rdf:about="https://www.iana.org/assignments/media-types/application/vnd.rar">
+    <skos:prefLabel xml:lang="en">application/vnd.rar</skos:prefLabel>
+    <skos:scopeNote xml:lang="en">This media type shall be used for the following extension(s) : rar</skos:scopeNote>
+    <skos:prefLabel xml:lang="de">application/vnd.rar</skos:prefLabel>
+    <skos:scopeNote xml:lang="de">This media type shall be used for the following extension(s) : rar</skos:scopeNote>
+    <skos:prefLabel xml:lang="fr">application/vnd.rar</skos:prefLabel>
+    <skos:scopeNote xml:lang="fr">Ce media type doit être utilisé pour la/les extension(s) suivante : rar</skos:scopeNote>
+    <skos:prefLabel xml:lang="nl">application/vnd.rar</skos:prefLabel>
+    <skos:scopeNote xml:lang="nl">Dit mediatype wordt gebruikt voor de volgende extensies: rar</skos:scopeNote>
+    <skos:inScheme rdf:resource="https://www.iana.org/assignments/media-types" />
+  </skos:Concept>
+  <skos:Concept xmlns:skos="http://www.w3.org/2004/02/skos/core#" rdf:about="https://www.iana.org/assignments/media-types/image/png">
+    <skos:prefLabel xml:lang="en">image/png</skos:prefLabel>
+    <skos:scopeNote xml:lang="en">This media type shall be used for the following extension(s) : png</skos:scopeNote>
+    <skos:prefLabel xml:lang="de">image/png</skos:prefLabel>
+    <skos:scopeNote xml:lang="de">This media type shall be used for the following extension(s) : png</skos:scopeNote>
+    <skos:prefLabel xml:lang="fr">image/png</skos:prefLabel>
+    <skos:scopeNote xml:lang="fr">Ce media type doit être utilisé pour la/les extension(s) suivante : png</skos:scopeNote>
+    <skos:prefLabel xml:lang="nl">image/png</skos:prefLabel>
+    <skos:scopeNote xml:lang="nl">Dit mediatype wordt gebruikt voor de volgende extensies: png</skos:scopeNote>
+    <skos:inScheme rdf:resource="https://www.iana.org/assignments/media-types" />
+  </skos:Concept>
+  <skos:Concept xmlns:skos="http://www.w3.org/2004/02/skos/core#" rdf:about="https://www.iana.org/assignments/media-types/image/vnd.dwg">
+    <skos:prefLabel xml:lang="en">image/vnd.dwg</skos:prefLabel>
+    <skos:scopeNote xml:lang="en">This media type shall be used for the following extension(s) : dwg</skos:scopeNote>
+    <skos:prefLabel xml:lang="de">image/vnd.dwg</skos:prefLabel>
+    <skos:scopeNote xml:lang="de">This media type shall be used for the following extension(s) : dwg</skos:scopeNote>
+    <skos:prefLabel xml:lang="fr">image/vnd.dwg</skos:prefLabel>
+    <skos:scopeNote xml:lang="fr">Ce media type doit être utilisé pour la/les extension(s) suivante : dwg</skos:scopeNote>
+    <skos:prefLabel xml:lang="nl">image/vnd.dwg</skos:prefLabel>
+    <skos:scopeNote xml:lang="nl">Dit mediatype wordt gebruikt voor de volgende extensies: dwg</skos:scopeNote>
+    <skos:inScheme rdf:resource="https://www.iana.org/assignments/media-types" />
+  </skos:Concept>
+  <skos:Concept xmlns:skos="http://www.w3.org/2004/02/skos/core#" rdf:about="https://www.iana.org/assignments/media-types/application/geo+json">
+    <skos:prefLabel xml:lang="en">application/geo+json</skos:prefLabel>
+    <skos:scopeNote xml:lang="en">This media type shall be used for the following extension(s) : geojson</skos:scopeNote>
+    <skos:prefLabel xml:lang="de">application/geo+json</skos:prefLabel>
+    <skos:scopeNote xml:lang="de">This media type shall be used for the following extension(s) : geojson</skos:scopeNote>
+    <skos:prefLabel xml:lang="fr">application/geo+json</skos:prefLabel>
+    <skos:scopeNote xml:lang="fr">Ce media type doit être utilisé pour la/les extension(s) suivante : geojson</skos:scopeNote>
+    <skos:prefLabel xml:lang="nl">application/geo+json</skos:prefLabel>
+    <skos:scopeNote xml:lang="nl">Dit mediatype wordt gebruikt voor de volgende extensies: geojson</skos:scopeNote>
+    <skos:inScheme rdf:resource="https://www.iana.org/assignments/media-types" />
+  </skos:Concept>
+  <skos:Concept xmlns:skos="http://www.w3.org/2004/02/skos/core#" rdf:about="https://www.iana.org/assignments/media-types/application/mp4">
+    <skos:prefLabel xml:lang="en">application/mp4</skos:prefLabel>
+    <skos:scopeNote xml:lang="en">This media type shall be used for the following extension(s) : mp4</skos:scopeNote>
+    <skos:prefLabel xml:lang="de">application/mp4</skos:prefLabel>
+    <skos:scopeNote xml:lang="de">This media type shall be used for the following extension(s) : mp4</skos:scopeNote>
+    <skos:prefLabel xml:lang="fr">application/mp4</skos:prefLabel>
+    <skos:scopeNote xml:lang="fr">Ce media type doit être utilisé pour la/les extension(s) suivante : mp4</skos:scopeNote>
+    <skos:prefLabel xml:lang="nl">application/mp4</skos:prefLabel>
+    <skos:scopeNote xml:lang="nl">Dit mediatype wordt gebruikt voor de volgende extensies: mp4</skos:scopeNote>
+    <skos:inScheme rdf:resource="https://www.iana.org/assignments/media-types" />
+  </skos:Concept>
+  <skos:Concept xmlns:skos="http://www.w3.org/2004/02/skos/core#" rdf:about="https://www.iana.org/assignments/media-types/image/vnd.dxf">
+    <skos:prefLabel xml:lang="en">image/vnd.dxf</skos:prefLabel>
+    <skos:scopeNote xml:lang="en">This media type shall be used for the following extension(s) : dxf</skos:scopeNote>
+    <skos:prefLabel xml:lang="de">image/vnd.dxf</skos:prefLabel>
+    <skos:scopeNote xml:lang="de">This media type shall be used for the following extension(s) : dxf</skos:scopeNote>
+    <skos:prefLabel xml:lang="fr">image/vnd.dxf</skos:prefLabel>
+    <skos:scopeNote xml:lang="fr">Ce media type doit être utilisé pour la/les extension(s) suivante : dxf</skos:scopeNote>
+    <skos:prefLabel xml:lang="nl">image/vnd.dxf</skos:prefLabel>
+    <skos:scopeNote xml:lang="nl">Dit mediatype wordt gebruikt voor de volgende extensies: dxf</skos:scopeNote>
+    <skos:inScheme rdf:resource="https://www.iana.org/assignments/media-types" />
+  </skos:Concept>
+  <skos:Concept xmlns:skos="http://www.w3.org/2004/02/skos/core#" rdf:about="https://www.iana.org/assignments/media-types/video/quicktime">
+    <skos:prefLabel xml:lang="en">video/quicktime</skos:prefLabel>
+    <skos:scopeNote xml:lang="en">This media type shall be used for Quicktime files</skos:scopeNote>
+    <skos:prefLabel xml:lang="de">video/quicktime</skos:prefLabel>
+    <skos:scopeNote xml:lang="de">This media type shall be used for Quicktime files</skos:scopeNote>
+    <skos:prefLabel xml:lang="fr">video/quicktime</skos:prefLabel>
+    <skos:scopeNote xml:lang="fr">Ce media type doit être utilisé pour les fichiers Quicktime</skos:scopeNote>
+    <skos:prefLabel xml:lang="nl">video/quicktime</skos:prefLabel>
+    <skos:scopeNote xml:lang="nl">This media type shall be used for Quicktime files</skos:scopeNote>
+    <skos:inScheme rdf:resource="https://www.iana.org/assignments/media-types" />
+  </skos:Concept>
+  <skos:Concept xmlns:skos="http://www.w3.org/2004/02/skos/core#" rdf:about="https://www.iana.org/assignments/media-types/text/turtle">
+    <skos:prefLabel xml:lang="en">text/turtle</skos:prefLabel>
+    <skos:scopeNote xml:lang="en">This media type shall be used for the following extension(s) : ttl</skos:scopeNote>
+    <skos:prefLabel xml:lang="de">text/turtle</skos:prefLabel>
+    <skos:scopeNote xml:lang="de">This media type shall be used for the following extension(s) : ttl</skos:scopeNote>
+    <skos:prefLabel xml:lang="fr">text/turtle</skos:prefLabel>
+    <skos:scopeNote xml:lang="fr">Ce media type doit être utilisé pour la/les extension(s) suivante : ttl</skos:scopeNote>
+    <skos:prefLabel xml:lang="nl">text/turtle</skos:prefLabel>
+    <skos:scopeNote xml:lang="nl">Dit mediatype wordt gebruikt voor de volgende extensies: ttl</skos:scopeNote>
+    <skos:inScheme rdf:resource="https://www.iana.org/assignments/media-types" />
+  </skos:Concept>
+  <skos:Concept xmlns:skos="http://www.w3.org/2004/02/skos/core#" rdf:about="https://www.iana.org/assignments/media-types/text/n3">
+    <skos:prefLabel xml:lang="en">text/n3</skos:prefLabel>
+    <skos:scopeNote xml:lang="en">This media type shall be used for the following extension(s) : n3</skos:scopeNote>
+    <skos:prefLabel xml:lang="de">text/n3</skos:prefLabel>
+    <skos:scopeNote xml:lang="de">This media type shall be used for the following extension(s) : n3</skos:scopeNote>
+    <skos:prefLabel xml:lang="fr">text/n3</skos:prefLabel>
+    <skos:scopeNote xml:lang="fr">Ce media type doit être utilisé pour la/les extension(s) suivante : n3</skos:scopeNote>
+    <skos:prefLabel xml:lang="nl">text/n3</skos:prefLabel>
+    <skos:scopeNote xml:lang="nl">Dit mediatype wordt gebruikt voor de volgende extensies: n3</skos:scopeNote>
+    <skos:inScheme rdf:resource="https://www.iana.org/assignments/media-types" />
+  </skos:Concept>
+  <skos:Concept xmlns:skos="http://www.w3.org/2004/02/skos/core#" rdf:about="https://www.iana.org/assignments/media-types/text/tab-separated-values">
+    <skos:prefLabel xml:lang="en">text/tab-separated-values</skos:prefLabel>
+    <skos:scopeNote xml:lang="en">This media type shall be used for the following extension(s) : tsv</skos:scopeNote>
+    <skos:prefLabel xml:lang="de">text/tab-separated-values</skos:prefLabel>
+    <skos:scopeNote xml:lang="de">This media type shall be used for the following extension(s) : tsv</skos:scopeNote>
+    <skos:prefLabel xml:lang="fr">text/tab-separated-values</skos:prefLabel>
+    <skos:scopeNote xml:lang="fr">Ce media type doit être utilisé pour la/les extension(s) suivante : tsv</skos:scopeNote>
+    <skos:prefLabel xml:lang="nl">text/tab-separated-values</skos:prefLabel>
+    <skos:scopeNote xml:lang="nl">Dit mediatype wordt gebruikt voor de volgende extensies: tsv</skos:scopeNote>
+    <skos:inScheme rdf:resource="https://www.iana.org/assignments/media-types" />
+  </skos:Concept>
+  <skos:Concept xmlns:skos="http://www.w3.org/2004/02/skos/core#" rdf:about="https://www.iana.org/assignments/media-types/text/vcard">
+    <skos:prefLabel xml:lang="en">text/vcard</skos:prefLabel>
+    <skos:scopeNote xml:lang="en">This media type shall be used for the following extension(s) : vcf, vcard</skos:scopeNote>
+    <skos:prefLabel xml:lang="de">text/vcard</skos:prefLabel>
+    <skos:scopeNote xml:lang="de">This media type shall be used for the following extension(s) : vcf, vcard</skos:scopeNote>
+    <skos:prefLabel xml:lang="fr">text/vcard</skos:prefLabel>
+    <skos:scopeNote xml:lang="fr">Ce media type doit être utilisé pour la/les extension(s) suivante : vcf, vcard</skos:scopeNote>
+    <skos:prefLabel xml:lang="nl">text/vcard</skos:prefLabel>
+    <skos:scopeNote xml:lang="nl">Dit mediatype wordt gebruikt voor de volgende extensies: vcf, vcard</skos:scopeNote>
+    <skos:inScheme rdf:resource="https://www.iana.org/assignments/media-types" />
+  </skos:Concept>
+  <skos:Concept xmlns:skos="http://www.w3.org/2004/02/skos/core#" rdf:about="https://www.iana.org/assignments/media-types/text/html">
+    <skos:prefLabel xml:lang="en">text/html</skos:prefLabel>
+    <skos:scopeNote xml:lang="en">This media type shall be used for the following extension(s) : html</skos:scopeNote>
+    <skos:prefLabel xml:lang="de">text/html</skos:prefLabel>
+    <skos:scopeNote xml:lang="de">This media type shall be used for the following extension(s) : html</skos:scopeNote>
+    <skos:prefLabel xml:lang="fr">text/html</skos:prefLabel>
+    <skos:scopeNote xml:lang="fr">Ce media type doit être utilisé pour la/les extension(s) suivante : html</skos:scopeNote>
+    <skos:prefLabel xml:lang="nl">text/html</skos:prefLabel>
+    <skos:scopeNote xml:lang="nl">Dit mediatype wordt gebruikt voor de volgende extensies: html</skos:scopeNote>
+    <skos:inScheme rdf:resource="https://www.iana.org/assignments/media-types" />
+  </skos:Concept>
+  <skos:Concept xmlns:skos="http://www.w3.org/2004/02/skos/core#" rdf:about="https://www.iana.org/assignments/media-types/application/vnd.oasis.opendocument.text">
+    <skos:prefLabel xml:lang="en">application/vnd.oasis.opendocument.text</skos:prefLabel>
+    <skos:scopeNote xml:lang="en">This media type shall be used for the following extension(s) : odt</skos:scopeNote>
+    <skos:prefLabel xml:lang="de">application/vnd.oasis.opendocument.text</skos:prefLabel>
+    <skos:scopeNote xml:lang="de">This media type shall be used for the following extension(s) : odt</skos:scopeNote>
+    <skos:prefLabel xml:lang="fr">application/vnd.oasis.opendocument.text</skos:prefLabel>
+    <skos:scopeNote xml:lang="fr">Ce media type doit être utilisé pour la/les extension(s) suivante : odt</skos:scopeNote>
+    <skos:prefLabel xml:lang="nl">application/vnd.oasis.opendocument.text</skos:prefLabel>
+    <skos:scopeNote xml:lang="nl">Dit mediatype wordt gebruikt voor de volgende extensies: odt</skos:scopeNote>
+    <skos:inScheme rdf:resource="https://www.iana.org/assignments/media-types" />
+  </skos:Concept>
+  <skos:Concept xmlns:skos="http://www.w3.org/2004/02/skos/core#" rdf:about="https://www.iana.org/assignments/media-types/application/vnd.oasis.opendocument.spreadsheet">
+    <skos:prefLabel xml:lang="en">application/vnd.oasis.opendocument.spreadsheet</skos:prefLabel>
+    <skos:scopeNote xml:lang="en">This media type shall be used for the following extension(s) : ods</skos:scopeNote>
+    <skos:prefLabel xml:lang="de">application/vnd.oasis.opendocument.spreadsheet</skos:prefLabel>
+    <skos:scopeNote xml:lang="de">This media type shall be used for the following extension(s) : ods</skos:scopeNote>
+    <skos:prefLabel xml:lang="fr">application/vnd.oasis.opendocument.spreadsheet</skos:prefLabel>
+    <skos:scopeNote xml:lang="fr">Ce media type doit être utilisé pour la/les extension(s) suivante : ods</skos:scopeNote>
+    <skos:prefLabel xml:lang="nl">application/vnd.oasis.opendocument.spreadsheet</skos:prefLabel>
+    <skos:scopeNote xml:lang="nl">Dit mediatype wordt gebruikt voor de volgende extensies: ods</skos:scopeNote>
+    <skos:inScheme rdf:resource="https://www.iana.org/assignments/media-types" />
+  </skos:Concept>
+  <skos:Concept xmlns:skos="http://www.w3.org/2004/02/skos/core#" rdf:about="https://www.iana.org/assignments/media-types/application/vnd.oasis.opendocument.presentation">
+    <skos:prefLabel xml:lang="en">application/vnd.oasis.opendocument.presentation</skos:prefLabel>
+    <skos:scopeNote xml:lang="en">This media type shall be used for the following extension(s) : odp</skos:scopeNote>
+    <skos:prefLabel xml:lang="de">application/vnd.oasis.opendocument.presentation</skos:prefLabel>
+    <skos:scopeNote xml:lang="de">This media type shall be used for the following extension(s) : odp</skos:scopeNote>
+    <skos:prefLabel xml:lang="fr">application/vnd.oasis.opendocument.presentation</skos:prefLabel>
+    <skos:scopeNote xml:lang="fr">Ce media type doit être utilisé pour la/les extension(s) suivante : odp</skos:scopeNote>
+    <skos:prefLabel xml:lang="nl">application/vnd.oasis.opendocument.presentation</skos:prefLabel>
+    <skos:scopeNote xml:lang="nl">Dit mediatype wordt gebruikt voor de volgende extensies: odp</skos:scopeNote>
+    <skos:inScheme rdf:resource="https://www.iana.org/assignments/media-types" />
+  </skos:Concept>
+  <skos:Concept xmlns:skos="http://www.w3.org/2004/02/skos/core#" rdf:about="https://www.iana.org/assignments/media-types/application/vnd.oasis.opendocument.graphics">
+    <skos:prefLabel xml:lang="en">application/vnd.oasis.opendocument.graphics</skos:prefLabel>
+    <skos:scopeNote xml:lang="en">This media type shall be used for the following extension(s) : odg</skos:scopeNote>
+    <skos:prefLabel xml:lang="de">application/vnd.oasis.opendocument.graphics</skos:prefLabel>
+    <skos:scopeNote xml:lang="de">This media type shall be used for the following extension(s) : odg</skos:scopeNote>
+    <skos:prefLabel xml:lang="fr">application/vnd.oasis.opendocument.graphics</skos:prefLabel>
+    <skos:scopeNote xml:lang="fr">Ce media type doit être utilisé pour la/les extension(s) suivante : odg</skos:scopeNote>
+    <skos:prefLabel xml:lang="nl">application/vnd.oasis.opendocument.graphics</skos:prefLabel>
+    <skos:scopeNote xml:lang="nl">Dit mediatype wordt gebruikt voor de volgende extensies: odg</skos:scopeNote>
+    <skos:inScheme rdf:resource="https://www.iana.org/assignments/media-types" />
+  </skos:Concept>
+</rdf:RDF>
+

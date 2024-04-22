@@ -1,0 +1,1395 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF xmlns:owl="http://www.w3.org/2002/07/owl#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+         xmlns:dc="http://purl.org/dc/elements/1.1/"
+         xmlns:atold="http://publications.europa.eu/resource/authority/"
+         xmlns:at="http://publications.europa.eu/ontology/authority/">
+  <skos:ConceptScheme rdf:about="http://publications.europa.eu/resource/authority/frequency" at:table.id="frequency"
+                      at:table.version.number="20190619-0">
+    <owl:versionInfo>20190619-0</owl:versionInfo>
+    <rdfs:label xml:lang="en">Frequency</rdfs:label>
+    <at:prefLabel xml:lang="en">Frequency</at:prefLabel>
+    <skos:prefLabel xml:lang="en">Frequency</skos:prefLabel>
+  </skos:ConceptScheme>
+  <skos:Concept rdf:about="http://publications.europa.eu/resource/authority/frequency/TRIENNIAL" at:deprecated="false">
+    <skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/frequency"/>
+    <at:authority-code>TRIENNIAL</at:authority-code>
+    <at:op-code>TRIENNIAL</at:op-code>
+    <atold:op-code>TRIENNIAL</atold:op-code>
+    <dc:identifier>TRIENNIAL</dc:identifier>
+    <at:start.use>1952-07-25</at:start.use>
+    <skos:prefLabel xml:lang="bg">тригодишен</skos:prefLabel>
+    <skos:prefLabel xml:lang="cs">tříletý</skos:prefLabel>
+    <skos:prefLabel xml:lang="da">treårligt</skos:prefLabel>
+    <skos:prefLabel xml:lang="de">dreijährlich</skos:prefLabel>
+    <skos:prefLabel xml:lang="el">τριετής</skos:prefLabel>
+    <skos:prefLabel xml:lang="en">triennial</skos:prefLabel>
+    <skos:prefLabel xml:lang="et">iga kolme aasta järel</skos:prefLabel>
+    <skos:prefLabel xml:lang="fi">kolmivuotinen</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">triennal</skos:prefLabel>
+    <skos:prefLabel xml:lang="ga">tríbhliantúil</skos:prefLabel>
+    <skos:prefLabel xml:lang="hr">trijenale</skos:prefLabel>
+    <skos:prefLabel xml:lang="hu">háromévenkénti</skos:prefLabel>
+    <skos:prefLabel xml:lang="it">triennale</skos:prefLabel>
+    <skos:prefLabel xml:lang="lv">reizi trīs gados</skos:prefLabel>
+    <skos:prefLabel xml:lang="lt">trimetis</skos:prefLabel>
+    <skos:prefLabel xml:lang="mt">triennali</skos:prefLabel>
+    <skos:prefLabel xml:lang="nl">driejaarlijks</skos:prefLabel>
+    <skos:prefLabel xml:lang="no">hvert tredje år</skos:prefLabel>
+    <skos:prefLabel xml:lang="pl">trzyletni</skos:prefLabel>
+    <skos:prefLabel xml:lang="pt">trienal</skos:prefLabel>
+    <skos:prefLabel xml:lang="ro">trienal</skos:prefLabel>
+    <skos:prefLabel xml:lang="sk">trojročný</skos:prefLabel>
+    <skos:prefLabel xml:lang="sl">trienale</skos:prefLabel>
+    <skos:prefLabel xml:lang="es">trienal</skos:prefLabel>
+    <skos:prefLabel xml:lang="sv">vart tredje år</skos:prefLabel>
+    <skos:altLabel xml:lang="cs">tříletá</skos:altLabel>
+    <skos:altLabel xml:lang="cs">tříleté</skos:altLabel>
+    <skos:altLabel xml:lang="da">treårlig</skos:altLabel>
+    <skos:altLabel xml:lang="de">dreijährliche</skos:altLabel>
+    <skos:altLabel xml:lang="de">dreijährliches</skos:altLabel>
+    <skos:altLabel xml:lang="fr">triennale</skos:altLabel>
+    <skos:altLabel xml:lang="pl">trzyletnia</skos:altLabel>
+    <skos:altLabel xml:lang="pl">trzyletnie</skos:altLabel>
+    <skos:altLabel xml:lang="ro">trienală</skos:altLabel>
+    <skos:altLabel xml:lang="sk">trojročná</skos:altLabel>
+    <skos:altLabel xml:lang="sk">trojročné</skos:altLabel>
+    <skos:exactMatch rdf:resource="http://purl.org/cld/freq/triennial"/>
+    <at:op-mapped-code>
+      <at:MappedCode>
+        <dc:source>PUB</dc:source>
+        <at:affected-table>PUB_FREQ</at:affected-table>
+        <at:legacy-code>D</at:legacy-code>
+      </at:MappedCode>
+    </at:op-mapped-code>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://publications.europa.eu/resource/authority/frequency/BIENNIAL" at:deprecated="false">
+    <skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/frequency"/>
+    <at:authority-code>BIENNIAL</at:authority-code>
+    <at:op-code>BIENNIAL</at:op-code>
+    <atold:op-code>BIENNIAL</atold:op-code>
+    <dc:identifier>BIENNIAL</dc:identifier>
+    <at:start.use>1952-07-25</at:start.use>
+    <skos:prefLabel xml:lang="bg">двегодишен</skos:prefLabel>
+    <skos:prefLabel xml:lang="cs">dvouletý</skos:prefLabel>
+    <skos:prefLabel xml:lang="da">toårigt</skos:prefLabel>
+    <skos:prefLabel xml:lang="de">zweijährlich</skos:prefLabel>
+    <skos:prefLabel xml:lang="el">διετής</skos:prefLabel>
+    <skos:prefLabel xml:lang="en">biennial</skos:prefLabel>
+    <skos:prefLabel xml:lang="et">iga kahe aasta järel</skos:prefLabel>
+    <skos:prefLabel xml:lang="fi">kaksivuotinen</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">biennal</skos:prefLabel>
+    <skos:prefLabel xml:lang="ga">dhébhliantúil</skos:prefLabel>
+    <skos:prefLabel xml:lang="hr">bijenale</skos:prefLabel>
+    <skos:prefLabel xml:lang="hu">kétévenkénti</skos:prefLabel>
+    <skos:prefLabel xml:lang="it">biennale</skos:prefLabel>
+    <skos:prefLabel xml:lang="lv">reizi divos gados</skos:prefLabel>
+    <skos:prefLabel xml:lang="lt">kas dvejus metus</skos:prefLabel>
+    <skos:prefLabel xml:lang="mt">biennali</skos:prefLabel>
+    <skos:prefLabel xml:lang="nl">tweejaarlijks</skos:prefLabel>
+    <skos:prefLabel xml:lang="no">annethvert år</skos:prefLabel>
+    <skos:prefLabel xml:lang="pl">dwuletni</skos:prefLabel>
+    <skos:prefLabel xml:lang="pt">bienal</skos:prefLabel>
+    <skos:prefLabel xml:lang="ro">bienal</skos:prefLabel>
+    <skos:prefLabel xml:lang="sk">dvojročný</skos:prefLabel>
+    <skos:prefLabel xml:lang="sl">bienale</skos:prefLabel>
+    <skos:prefLabel xml:lang="es">bienal</skos:prefLabel>
+    <skos:prefLabel xml:lang="sv">vartannat år</skos:prefLabel>
+    <skos:altLabel xml:lang="cs">dvouletá</skos:altLabel>
+    <skos:altLabel xml:lang="cs">dvouleté</skos:altLabel>
+    <skos:altLabel xml:lang="da">toårig</skos:altLabel>
+    <skos:altLabel xml:lang="de">zweijährliche</skos:altLabel>
+    <skos:altLabel xml:lang="de">zweijährliches</skos:altLabel>
+    <skos:altLabel xml:lang="fr">biennale</skos:altLabel>
+    <skos:altLabel xml:lang="pl">dwuletnia</skos:altLabel>
+    <skos:altLabel xml:lang="pl">dwuletnie</skos:altLabel>
+    <skos:altLabel xml:lang="ro">bienală</skos:altLabel>
+    <skos:altLabel xml:lang="sk">dvojročná</skos:altLabel>
+    <skos:altLabel xml:lang="sk">dvojročné</skos:altLabel>
+    <skos:exactMatch rdf:resource="http://purl.org/cld/freq/biennial"/>
+    <at:op-mapped-code>
+      <at:MappedCode>
+        <dc:source>PUB</dc:source>
+        <at:affected-table>PUB_FREQ</at:affected-table>
+        <at:legacy-code>G</at:legacy-code>
+      </at:MappedCode>
+    </at:op-mapped-code>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://publications.europa.eu/resource/authority/frequency/ANNUAL" at:deprecated="false">
+    <skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/frequency"/>
+    <at:authority-code>ANNUAL</at:authority-code>
+    <at:op-code>ANNUAL</at:op-code>
+    <atold:op-code>ANNUAL</atold:op-code>
+    <dc:identifier>ANNUAL</dc:identifier>
+    <at:start.use>1952-07-25</at:start.use>
+    <skos:prefLabel xml:lang="bg">годишен</skos:prefLabel>
+    <skos:prefLabel xml:lang="cs">roční</skos:prefLabel>
+    <skos:prefLabel xml:lang="da">årligt</skos:prefLabel>
+    <skos:prefLabel xml:lang="de">jährlich</skos:prefLabel>
+    <skos:prefLabel xml:lang="el">ετήσιος</skos:prefLabel>
+    <skos:prefLabel xml:lang="en">annual</skos:prefLabel>
+    <skos:prefLabel xml:lang="et">aastane</skos:prefLabel>
+    <skos:prefLabel xml:lang="fi">vuotuinen</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">annuel</skos:prefLabel>
+    <skos:prefLabel xml:lang="ga">bliantúil</skos:prefLabel>
+    <skos:prefLabel xml:lang="hr">godišnje</skos:prefLabel>
+    <skos:prefLabel xml:lang="hu">évenkénti</skos:prefLabel>
+    <skos:prefLabel xml:lang="it">annuale</skos:prefLabel>
+    <skos:prefLabel xml:lang="lv">reizi gadā</skos:prefLabel>
+    <skos:prefLabel xml:lang="lt">kasmetinis</skos:prefLabel>
+    <skos:prefLabel xml:lang="mt">annwali</skos:prefLabel>
+    <skos:prefLabel xml:lang="nl">jaarlijks</skos:prefLabel>
+    <skos:prefLabel xml:lang="no">årlig</skos:prefLabel>
+    <skos:prefLabel xml:lang="pl">roczny</skos:prefLabel>
+    <skos:prefLabel xml:lang="pt">anual</skos:prefLabel>
+    <skos:prefLabel xml:lang="ro">anual</skos:prefLabel>
+    <skos:prefLabel xml:lang="sk">ročný</skos:prefLabel>
+    <skos:prefLabel xml:lang="sl">letni</skos:prefLabel>
+    <skos:prefLabel xml:lang="es">anual</skos:prefLabel>
+    <skos:prefLabel xml:lang="sv">årlig</skos:prefLabel>
+    <skos:altLabel xml:lang="bg">годишна</skos:altLabel>
+    <skos:altLabel xml:lang="bg">годишно</skos:altLabel>
+    <skos:altLabel xml:lang="da">årlig</skos:altLabel>
+    <skos:altLabel xml:lang="de">jährliche</skos:altLabel>
+    <skos:altLabel xml:lang="de">jährliches</skos:altLabel>
+    <skos:altLabel xml:lang="el">ετήσια</skos:altLabel>
+    <skos:altLabel xml:lang="el">ετήσιο</skos:altLabel>
+    <skos:altLabel xml:lang="fr">annuelle</skos:altLabel>
+    <skos:altLabel xml:lang="pl">roczna</skos:altLabel>
+    <skos:altLabel xml:lang="pl">roczne</skos:altLabel>
+    <skos:altLabel xml:lang="ro">anuală</skos:altLabel>
+    <skos:altLabel xml:lang="sk">ročná</skos:altLabel>
+    <skos:altLabel xml:lang="sk">ročné</skos:altLabel>
+    <skos:altLabel xml:lang="sl">letna</skos:altLabel>
+    <skos:altLabel xml:lang="sl">letno</skos:altLabel>
+    <skos:exactMatch rdf:resource="http://purl.org/cld/freq/annual"/>
+    <at:op-mapped-code>
+      <at:MappedCode>
+        <dc:source>PUB</dc:source>
+        <at:affected-table>PUB_FREQ</at:affected-table>
+        <at:legacy-code>ANN</at:legacy-code>
+      </at:MappedCode>
+    </at:op-mapped-code>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://publications.europa.eu/resource/authority/frequency/ANNUAL_2" at:deprecated="false">
+    <skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/frequency"/>
+    <at:authority-code>ANNUAL_2</at:authority-code>
+    <at:op-code>ANNUAL_2</at:op-code>
+    <atold:op-code>ANNUAL_2</atold:op-code>
+    <dc:identifier>ANNUAL_2</dc:identifier>
+    <at:start.use>1952-07-25</at:start.use>
+    <skos:prefLabel xml:lang="bg">два пъти на година</skos:prefLabel>
+    <skos:prefLabel xml:lang="cs">pololetní</skos:prefLabel>
+    <skos:prefLabel xml:lang="da">halvårligt</skos:prefLabel>
+    <skos:prefLabel xml:lang="de">halbjährlich</skos:prefLabel>
+    <skos:prefLabel xml:lang="el">εξαμηνιαίος</skos:prefLabel>
+    <skos:prefLabel xml:lang="en">semiannual</skos:prefLabel>
+    <skos:prefLabel xml:lang="et">pooleaastane</skos:prefLabel>
+    <skos:prefLabel xml:lang="fi">puolivuotinen</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">semestriel</skos:prefLabel>
+    <skos:prefLabel xml:lang="ga">leathbhliantúil</skos:prefLabel>
+    <skos:prefLabel xml:lang="hr">polugodišnje</skos:prefLabel>
+    <skos:prefLabel xml:lang="hu">félévenkénti</skos:prefLabel>
+    <skos:prefLabel xml:lang="it">semestrale</skos:prefLabel>
+    <skos:prefLabel xml:lang="lv">reizi pusgadā</skos:prefLabel>
+    <skos:prefLabel xml:lang="lt">kas pusę metų</skos:prefLabel>
+    <skos:prefLabel xml:lang="mt">kull sitt xhur</skos:prefLabel>
+    <skos:prefLabel xml:lang="nl">halfjaarlijks</skos:prefLabel>
+    <skos:prefLabel xml:lang="no">halvårlig</skos:prefLabel>
+    <skos:prefLabel xml:lang="pl">półroczny</skos:prefLabel>
+    <skos:prefLabel xml:lang="pt">semianual</skos:prefLabel>
+    <skos:prefLabel xml:lang="ro">semestrial</skos:prefLabel>
+    <skos:prefLabel xml:lang="sk">polročný</skos:prefLabel>
+    <skos:prefLabel xml:lang="sl">polletni</skos:prefLabel>
+    <skos:prefLabel xml:lang="es">semestral</skos:prefLabel>
+    <skos:prefLabel xml:lang="sv">halvårs</skos:prefLabel>
+    <skos:altLabel xml:lang="da">halvårlig</skos:altLabel>
+    <skos:altLabel xml:lang="de">halbjährliche</skos:altLabel>
+    <skos:altLabel xml:lang="de">halbjährliches</skos:altLabel>
+    <skos:altLabel xml:lang="el">εξαμηνιαία</skos:altLabel>
+    <skos:altLabel xml:lang="el">εξαμηνιαίο</skos:altLabel>
+    <skos:altLabel xml:lang="fr">semestrielle</skos:altLabel>
+    <skos:altLabel xml:lang="pl">półroczna</skos:altLabel>
+    <skos:altLabel xml:lang="pl">półroczne</skos:altLabel>
+    <skos:altLabel xml:lang="ro">semestrială</skos:altLabel>
+    <skos:altLabel xml:lang="sk">polročná</skos:altLabel>
+    <skos:altLabel xml:lang="sk">polročné</skos:altLabel>
+    <skos:altLabel xml:lang="sl">polletna</skos:altLabel>
+    <skos:altLabel xml:lang="sl">polletno</skos:altLabel>
+    <skos:exactMatch rdf:resource="http://purl.org/cld/freq/semiannual"/>
+    <at:op-mapped-code>
+      <at:MappedCode>
+        <dc:source>PUB</dc:source>
+        <at:affected-table>PUB_FREQ</at:affected-table>
+        <at:legacy-code>S</at:legacy-code>
+      </at:MappedCode>
+    </at:op-mapped-code>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://publications.europa.eu/resource/authority/frequency/ANNUAL_3" at:deprecated="false">
+    <skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/frequency"/>
+    <at:authority-code>ANNUAL_3</at:authority-code>
+    <at:op-code>ANNUAL_3</at:op-code>
+    <atold:op-code>ANNUAL_3</atold:op-code>
+    <dc:identifier>ANNUAL_3</dc:identifier>
+    <at:start.use>1952-07-25</at:start.use>
+    <skos:prefLabel xml:lang="bg">три пъти на година</skos:prefLabel>
+    <skos:prefLabel xml:lang="cs">třikrát do roka</skos:prefLabel>
+    <skos:prefLabel xml:lang="da">tre gange årligt</skos:prefLabel>
+    <skos:prefLabel xml:lang="de">dreimal im Jahr</skos:prefLabel>
+    <skos:prefLabel xml:lang="el">τετραμηνιαίος</skos:prefLabel>
+    <skos:prefLabel xml:lang="en">three times a year</skos:prefLabel>
+    <skos:prefLabel xml:lang="et">kolm korda aastas</skos:prefLabel>
+    <skos:prefLabel xml:lang="fi">kolme kertaa vuodessa</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">trois fois par an</skos:prefLabel>
+    <skos:prefLabel xml:lang="ga">trí uair sa bhliain</skos:prefLabel>
+    <skos:prefLabel xml:lang="hr">triput godišnje</skos:prefLabel>
+    <skos:prefLabel xml:lang="hu">évente háromszori</skos:prefLabel>
+    <skos:prefLabel xml:lang="it">tre volte all'anno</skos:prefLabel>
+    <skos:prefLabel xml:lang="lv">trīsreiz gadā</skos:prefLabel>
+    <skos:prefLabel xml:lang="lt">tris kartus per metus</skos:prefLabel>
+    <skos:prefLabel xml:lang="mt">tliet darbiet fis-sena</skos:prefLabel>
+    <skos:prefLabel xml:lang="nl">drie keer per jaar</skos:prefLabel>
+    <skos:prefLabel xml:lang="no">tre ganger per år</skos:prefLabel>
+    <skos:prefLabel xml:lang="pl">trzy razy w roku</skos:prefLabel>
+    <skos:prefLabel xml:lang="pt">três vezes por ano</skos:prefLabel>
+    <skos:prefLabel xml:lang="ro">de trei ori pe an</skos:prefLabel>
+    <skos:prefLabel xml:lang="sk">trikrát do roka</skos:prefLabel>
+    <skos:prefLabel xml:lang="sl">trikrat na leto</skos:prefLabel>
+    <skos:prefLabel xml:lang="es">cuatrimestral</skos:prefLabel>
+    <skos:prefLabel xml:lang="sv">tre gånger per år</skos:prefLabel>
+    <skos:altLabel xml:lang="el">τετραμηνιαία</skos:altLabel>
+    <skos:altLabel xml:lang="el">τετραμηνιαίο</skos:altLabel>
+    <skos:exactMatch rdf:resource="http://purl.org/cld/freq/threeTimesAYear"/>
+    <at:op-mapped-code>
+      <at:MappedCode>
+        <dc:source>PUB</dc:source>
+        <at:affected-table>PUB_FREQ</at:affected-table>
+        <at:legacy-code>F</at:legacy-code>
+      </at:MappedCode>
+    </at:op-mapped-code>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://publications.europa.eu/resource/authority/frequency/QUARTERLY" at:deprecated="false">
+    <skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/frequency"/>
+    <at:authority-code>QUARTERLY</at:authority-code>
+    <at:op-code>QUARTERLY</at:op-code>
+    <atold:op-code>QUARTERLY</atold:op-code>
+    <dc:identifier>QUARTERLY</dc:identifier>
+    <at:start.use>1952-07-25</at:start.use>
+    <skos:prefLabel xml:lang="bg">тримесечен</skos:prefLabel>
+    <skos:prefLabel xml:lang="cs">čtvrtletní</skos:prefLabel>
+    <skos:prefLabel xml:lang="da">kvartalsvis</skos:prefLabel>
+    <skos:prefLabel xml:lang="de">vierteljährlich</skos:prefLabel>
+    <skos:prefLabel xml:lang="el">τριμηνιαίος</skos:prefLabel>
+    <skos:prefLabel xml:lang="en">quarterly</skos:prefLabel>
+    <skos:prefLabel xml:lang="et">kvartaalne</skos:prefLabel>
+    <skos:prefLabel xml:lang="fi">vuosineljänsittäin</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">trimestriel</skos:prefLabel>
+    <skos:prefLabel xml:lang="ga">ráitheachán</skos:prefLabel>
+    <skos:prefLabel xml:lang="hr">tromjesečno</skos:prefLabel>
+    <skos:prefLabel xml:lang="hu">negyedévenkénti</skos:prefLabel>
+    <skos:prefLabel xml:lang="it">trimestrale</skos:prefLabel>
+    <skos:prefLabel xml:lang="lv">reizi trīs mēnešos</skos:prefLabel>
+    <skos:prefLabel xml:lang="lt">kas ketvirtį</skos:prefLabel>
+    <skos:prefLabel xml:lang="mt">kull tliet xhur</skos:prefLabel>
+    <skos:prefLabel xml:lang="nl">driemaandelijks</skos:prefLabel>
+    <skos:prefLabel xml:lang="no">kvartalsvis</skos:prefLabel>
+    <skos:prefLabel xml:lang="pl">kwartalnik</skos:prefLabel>
+    <skos:prefLabel xml:lang="pt">trimestral</skos:prefLabel>
+    <skos:prefLabel xml:lang="ro">trimestrial</skos:prefLabel>
+    <skos:prefLabel xml:lang="sk">štvrťročný</skos:prefLabel>
+    <skos:prefLabel xml:lang="sl">četrtletni</skos:prefLabel>
+    <skos:prefLabel xml:lang="es">trimestral</skos:prefLabel>
+    <skos:prefLabel xml:lang="sv">kvartalsvis</skos:prefLabel>
+    <skos:altLabel xml:lang="de">vierteljährliche</skos:altLabel>
+    <skos:altLabel xml:lang="de">vierteljährliches</skos:altLabel>
+    <skos:altLabel xml:lang="el">τριμηνιαία</skos:altLabel>
+    <skos:altLabel xml:lang="el">τριμηνιαίο</skos:altLabel>
+    <skos:altLabel xml:lang="fr">trimestrielle</skos:altLabel>
+    <skos:altLabel xml:lang="ro">trimestrială</skos:altLabel>
+    <skos:altLabel xml:lang="sk">štvrťročná</skos:altLabel>
+    <skos:altLabel xml:lang="sk">štvrťročné</skos:altLabel>
+    <skos:altLabel xml:lang="sl">četrtletna</skos:altLabel>
+    <skos:altLabel xml:lang="sl">četrtletno</skos:altLabel>
+    <skos:exactMatch rdf:resource="http://purl.org/cld/freq/quarterly"/>
+    <at:op-mapped-code>
+      <at:MappedCode>
+        <dc:source>PUB</dc:source>
+        <at:affected-table>PUB_FREQ</at:affected-table>
+        <at:legacy-code>T</at:legacy-code>
+      </at:MappedCode>
+    </at:op-mapped-code>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://publications.europa.eu/resource/authority/frequency/BIMONTHLY" at:deprecated="false">
+    <skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/frequency"/>
+    <at:authority-code>BIMONTHLY</at:authority-code>
+    <at:op-code>BIMONTHLY</at:op-code>
+    <atold:op-code>BIMONTHLY</atold:op-code>
+    <dc:identifier>BIMONTHLY</dc:identifier>
+    <at:start.use>1952-07-25</at:start.use>
+    <skos:prefLabel xml:lang="bg">двухмесечен</skos:prefLabel>
+    <skos:prefLabel xml:lang="cs">dvouměsíční</skos:prefLabel>
+    <skos:prefLabel xml:lang="da">hver anden måned</skos:prefLabel>
+    <skos:prefLabel xml:lang="de">zweimonatlich</skos:prefLabel>
+    <skos:prefLabel xml:lang="el">διμηνιαίος</skos:prefLabel>
+    <skos:prefLabel xml:lang="en">bimonthly</skos:prefLabel>
+    <skos:prefLabel xml:lang="et">kord kahe kuu jooksul</skos:prefLabel>
+    <skos:prefLabel xml:lang="fi">kahdesti kuussa</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">bimestriel</skos:prefLabel>
+    <skos:prefLabel xml:lang="ga">gach dhá mhí</skos:prefLabel>
+    <skos:prefLabel xml:lang="hr">dvomjesečno</skos:prefLabel>
+    <skos:prefLabel xml:lang="hu">kéthavonkénti</skos:prefLabel>
+    <skos:prefLabel xml:lang="it">bimestrale</skos:prefLabel>
+    <skos:prefLabel xml:lang="lv">reizi divos mēnešos</skos:prefLabel>
+    <skos:prefLabel xml:lang="lt">kas du mėnesius</skos:prefLabel>
+    <skos:prefLabel xml:lang="mt">bimensili</skos:prefLabel>
+    <skos:prefLabel xml:lang="nl">tweemaandelijks</skos:prefLabel>
+    <skos:prefLabel xml:lang="no">annenhver måned</skos:prefLabel>
+    <skos:prefLabel xml:lang="pl">dwumiesięcznik</skos:prefLabel>
+    <skos:prefLabel xml:lang="pt">quinzenal</skos:prefLabel>
+    <skos:prefLabel xml:lang="ro">bilunar</skos:prefLabel>
+    <skos:prefLabel xml:lang="sk">dvojmesačný</skos:prefLabel>
+    <skos:prefLabel xml:lang="sl">dvomesečen</skos:prefLabel>
+    <skos:prefLabel xml:lang="es">bimestral</skos:prefLabel>
+    <skos:prefLabel xml:lang="sv">varannan månad</skos:prefLabel>
+    <skos:altLabel xml:lang="de">zweimonatliche</skos:altLabel>
+    <skos:altLabel xml:lang="de">zweimonatliches</skos:altLabel>
+    <skos:altLabel xml:lang="el">διμηνιαία</skos:altLabel>
+    <skos:altLabel xml:lang="el">διμηνιαίο</skos:altLabel>
+    <skos:altLabel xml:lang="fr">bimestrielle</skos:altLabel>
+    <skos:altLabel xml:lang="ro">bilunară</skos:altLabel>
+    <skos:altLabel xml:lang="sk">dvojmesačná</skos:altLabel>
+    <skos:altLabel xml:lang="sk">dvojmesačné</skos:altLabel>
+    <skos:altLabel xml:lang="sl">dvomesečna</skos:altLabel>
+    <skos:altLabel xml:lang="sl">dvomesečno</skos:altLabel>
+    <skos:exactMatch rdf:resource="http://purl.org/cld/freq/bimonthly"/>
+    <at:op-mapped-code>
+      <at:MappedCode>
+        <dc:source>PUB</dc:source>
+        <at:affected-table>PUB_FREQ</at:affected-table>
+        <at:legacy-code>BIM</at:legacy-code>
+      </at:MappedCode>
+    </at:op-mapped-code>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://publications.europa.eu/resource/authority/frequency/MONTHLY" at:deprecated="false">
+    <skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/frequency"/>
+    <at:authority-code>MONTHLY</at:authority-code>
+    <at:op-code>MONTHLY</at:op-code>
+    <atold:op-code>MONTHLY</atold:op-code>
+    <dc:identifier>MONTHLY</dc:identifier>
+    <at:start.use>1952-07-25</at:start.use>
+    <skos:prefLabel xml:lang="bg">месечен</skos:prefLabel>
+    <skos:prefLabel xml:lang="cs">měsíční</skos:prefLabel>
+    <skos:prefLabel xml:lang="da">månedligt</skos:prefLabel>
+    <skos:prefLabel xml:lang="de">monatlich</skos:prefLabel>
+    <skos:prefLabel xml:lang="el">μηνιαίος</skos:prefLabel>
+    <skos:prefLabel xml:lang="en">monthly</skos:prefLabel>
+    <skos:prefLabel xml:lang="et">igakuine</skos:prefLabel>
+    <skos:prefLabel xml:lang="fi">kuukausittainen</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">mensuel</skos:prefLabel>
+    <skos:prefLabel xml:lang="ga">míosúil</skos:prefLabel>
+    <skos:prefLabel xml:lang="hr">mjesečno</skos:prefLabel>
+    <skos:prefLabel xml:lang="hu">havonkénti</skos:prefLabel>
+    <skos:prefLabel xml:lang="it">mensile</skos:prefLabel>
+    <skos:prefLabel xml:lang="lv">reizi mēnesī</skos:prefLabel>
+    <skos:prefLabel xml:lang="lt">kas mėnesį</skos:prefLabel>
+    <skos:prefLabel xml:lang="mt">mensili</skos:prefLabel>
+    <skos:prefLabel xml:lang="nl">maandelijks</skos:prefLabel>
+    <skos:prefLabel xml:lang="no">månedlig</skos:prefLabel>
+    <skos:prefLabel xml:lang="pl">miesięcznik</skos:prefLabel>
+    <skos:prefLabel xml:lang="pt">mensal</skos:prefLabel>
+    <skos:prefLabel xml:lang="ro">lunar</skos:prefLabel>
+    <skos:prefLabel xml:lang="sk">mesačný</skos:prefLabel>
+    <skos:prefLabel xml:lang="sl">mesečen</skos:prefLabel>
+    <skos:prefLabel xml:lang="es">mensual</skos:prefLabel>
+    <skos:prefLabel xml:lang="sv">månatligen</skos:prefLabel>
+    <skos:altLabel xml:lang="da">månedlig</skos:altLabel>
+    <skos:altLabel xml:lang="de">monatliche</skos:altLabel>
+    <skos:altLabel xml:lang="de">monatliches</skos:altLabel>
+    <skos:altLabel xml:lang="el">μηνιαία</skos:altLabel>
+    <skos:altLabel xml:lang="el">μηνιαίο</skos:altLabel>
+    <skos:altLabel xml:lang="fr">mensuelle</skos:altLabel>
+    <skos:altLabel xml:lang="ro">lunară</skos:altLabel>
+    <skos:altLabel xml:lang="sk">mesačná</skos:altLabel>
+    <skos:altLabel xml:lang="sk">mesačné</skos:altLabel>
+    <skos:altLabel xml:lang="sl">mesečna</skos:altLabel>
+    <skos:altLabel xml:lang="sl">mesečno</skos:altLabel>
+    <skos:exactMatch rdf:resource="http://purl.org/cld/freq/monthly"/>
+    <at:op-mapped-code>
+      <at:MappedCode>
+        <dc:source>PUB</dc:source>
+        <at:affected-table>PUB_FREQ</at:affected-table>
+        <at:legacy-code>M</at:legacy-code>
+      </at:MappedCode>
+    </at:op-mapped-code>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://publications.europa.eu/resource/authority/frequency/MONTHLY_2" at:deprecated="false">
+    <skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/frequency"/>
+    <at:authority-code>MONTHLY_2</at:authority-code>
+    <at:op-code>MONTHLY_2</at:op-code>
+    <atold:op-code>MONTHLY_2</atold:op-code>
+    <dc:identifier>MONTHLY_2</dc:identifier>
+    <at:start.use>1952-07-25</at:start.use>
+    <skos:prefLabel xml:lang="bg">на половин месец</skos:prefLabel>
+    <skos:prefLabel xml:lang="cs">dvakrát za měsíc</skos:prefLabel>
+    <skos:prefLabel xml:lang="da">to gange månedligt</skos:prefLabel>
+    <skos:prefLabel xml:lang="de">zweimal im Monat</skos:prefLabel>
+    <skos:prefLabel xml:lang="el">δεκαπενθήμερος</skos:prefLabel>
+    <skos:prefLabel xml:lang="en">semimonthly</skos:prefLabel>
+    <skos:prefLabel xml:lang="et">kaks korda kuus</skos:prefLabel>
+    <skos:prefLabel xml:lang="fi">kaksi kertaa kuukaudessa</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">bimensuel</skos:prefLabel>
+    <skos:prefLabel xml:lang="ga">leath-míosúil</skos:prefLabel>
+    <skos:prefLabel xml:lang="hr">dvaput mjesečno</skos:prefLabel>
+    <skos:prefLabel xml:lang="hu">félhavonkénti</skos:prefLabel>
+    <skos:prefLabel xml:lang="it">bimensile</skos:prefLabel>
+    <skos:prefLabel xml:lang="lv">divreiz mēnesī</skos:prefLabel>
+    <skos:prefLabel xml:lang="lt">dukart per mėnesį</skos:prefLabel>
+    <skos:prefLabel xml:lang="mt">darbtejn fix-xahar</skos:prefLabel>
+    <skos:prefLabel xml:lang="nl">twee keer per maand</skos:prefLabel>
+    <skos:prefLabel xml:lang="no">to ganger i måneden</skos:prefLabel>
+    <skos:prefLabel xml:lang="pl">dwukrotnie w miesiącu</skos:prefLabel>
+    <skos:prefLabel xml:lang="pt">duas vezes por mês</skos:prefLabel>
+    <skos:prefLabel xml:lang="ro">se două ori pe lună</skos:prefLabel>
+    <skos:prefLabel xml:lang="sk">dvakrát mesačne</skos:prefLabel>
+    <skos:prefLabel xml:lang="sl">dvakrat na mesec</skos:prefLabel>
+    <skos:prefLabel xml:lang="es">bimensual</skos:prefLabel>
+    <skos:prefLabel xml:lang="sv">två gånger per månad</skos:prefLabel>
+    <skos:altLabel xml:lang="el">δεκαπενθήμερη</skos:altLabel>
+    <skos:altLabel xml:lang="el">δεκαπενθήμερο</skos:altLabel>
+    <skos:altLabel xml:lang="fr">bimensuelle</skos:altLabel>
+    <skos:exactMatch rdf:resource="http://purl.org/cld/freq/semimonthly"/>
+    <at:op-mapped-code>
+      <at:MappedCode>
+        <dc:source>PUB</dc:source>
+        <at:affected-table>PUB_FREQ</at:affected-table>
+        <at:legacy-code>E</at:legacy-code>
+      </at:MappedCode>
+    </at:op-mapped-code>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://publications.europa.eu/resource/authority/frequency/BIWEEKLY" at:deprecated="false">
+    <skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/frequency"/>
+    <at:authority-code>BIWEEKLY</at:authority-code>
+    <at:op-code>BIWEEKLY</at:op-code>
+    <atold:op-code>BIWEEKLY</atold:op-code>
+    <dc:identifier>BIWEEKLY</dc:identifier>
+    <at:start.use>1952-07-25</at:start.use>
+    <skos:prefLabel xml:lang="bg">на две седмици</skos:prefLabel>
+    <skos:prefLabel xml:lang="cs">čtrnáctidenní</skos:prefLabel>
+    <skos:prefLabel xml:lang="da">hver fjortende dag</skos:prefLabel>
+    <skos:prefLabel xml:lang="de">zweiwöchentlich</skos:prefLabel>
+    <skos:prefLabel xml:lang="el">δισεβδομαδιαίος</skos:prefLabel>
+    <skos:prefLabel xml:lang="en">biweekly</skos:prefLabel>
+    <skos:prefLabel xml:lang="et">kahenädalane</skos:prefLabel>
+    <skos:prefLabel xml:lang="fi">joka toinen viikko</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">tous les quinze jours</skos:prefLabel>
+    <skos:prefLabel xml:lang="ga">gach coicís</skos:prefLabel>
+    <skos:prefLabel xml:lang="hr">polumjesečno</skos:prefLabel>
+    <skos:prefLabel xml:lang="hu">kéthetenkénti</skos:prefLabel>
+    <skos:prefLabel xml:lang="it">quindicinale</skos:prefLabel>
+    <skos:prefLabel xml:lang="lv">reizi divās nedēļās</skos:prefLabel>
+    <skos:prefLabel xml:lang="lt">kas dvi savaites</skos:prefLabel>
+    <skos:prefLabel xml:lang="mt">ta’ kull ħmistax</skos:prefLabel>
+    <skos:prefLabel xml:lang="nl">veertiendaags</skos:prefLabel>
+    <skos:prefLabel xml:lang="no">hver fjortende dag</skos:prefLabel>
+    <skos:prefLabel xml:lang="pl">dwutygodnik</skos:prefLabel>
+    <skos:prefLabel xml:lang="pt">quinzenal</skos:prefLabel>
+    <skos:prefLabel xml:lang="ro">la fiecare două săptămâni</skos:prefLabel>
+    <skos:prefLabel xml:lang="sk">dvojtýždenný</skos:prefLabel>
+    <skos:prefLabel xml:lang="sl">vsakih štirinajst dni</skos:prefLabel>
+    <skos:prefLabel xml:lang="es">quincenal</skos:prefLabel>
+    <skos:prefLabel xml:lang="sv">var fjortonde dag</skos:prefLabel>
+    <skos:altLabel xml:lang="de">zweiwöchentliche</skos:altLabel>
+    <skos:altLabel xml:lang="de">zweiwöchentliches</skos:altLabel>
+    <skos:altLabel xml:lang="el">δισεβδομαδιαία</skos:altLabel>
+    <skos:altLabel xml:lang="el">δισεβδομαδιαίο</skos:altLabel>
+    <skos:altLabel xml:lang="sk">dvojtýždenná</skos:altLabel>
+    <skos:altLabel xml:lang="sk">dvojtýždenné</skos:altLabel>
+    <skos:exactMatch rdf:resource="http://purl.org/cld/freq/biweekly"/>
+    <at:op-mapped-code>
+      <at:MappedCode>
+        <dc:source>PUB</dc:source>
+        <at:affected-table>PUB_FREQ</at:affected-table>
+        <at:legacy-code>SEMIM</at:legacy-code>
+      </at:MappedCode>
+    </at:op-mapped-code>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://publications.europa.eu/resource/authority/frequency/MONTHLY_3" at:deprecated="false">
+    <skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/frequency"/>
+    <at:authority-code>MONTHLY_3</at:authority-code>
+    <at:op-code>MONTHLY_3</at:op-code>
+    <atold:op-code>MONTHLY_3</atold:op-code>
+    <dc:identifier>MONTHLY_3</dc:identifier>
+    <at:start.use>1952-07-25</at:start.use>
+    <skos:prefLabel xml:lang="bg">три пъти месечно</skos:prefLabel>
+    <skos:prefLabel xml:lang="cs">třikrát za měsíc</skos:prefLabel>
+    <skos:prefLabel xml:lang="da">tre gange månedligt</skos:prefLabel>
+    <skos:prefLabel xml:lang="de">dreimal im Monat</skos:prefLabel>
+    <skos:prefLabel xml:lang="el">τρεις φορές τον μήνα</skos:prefLabel>
+    <skos:prefLabel xml:lang="en">three times a month</skos:prefLabel>
+    <skos:prefLabel xml:lang="et">kolm korda kuus</skos:prefLabel>
+    <skos:prefLabel xml:lang="fi">kolme kertaa kuukaudessa</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">trois fois par mois</skos:prefLabel>
+    <skos:prefLabel xml:lang="ga">trí uair sa mhí</skos:prefLabel>
+    <skos:prefLabel xml:lang="hr">triput mjesečno</skos:prefLabel>
+    <skos:prefLabel xml:lang="hu">havonta háromszori</skos:prefLabel>
+    <skos:prefLabel xml:lang="it">tre volte al mese</skos:prefLabel>
+    <skos:prefLabel xml:lang="lv">trīsreiz mēnesī</skos:prefLabel>
+    <skos:prefLabel xml:lang="lt">tris kartus per mėnesį</skos:prefLabel>
+    <skos:prefLabel xml:lang="mt">tliet darbiet fix-xahar</skos:prefLabel>
+    <skos:prefLabel xml:lang="nl">drie keer per maand</skos:prefLabel>
+    <skos:prefLabel xml:lang="no">tre ganger i måneden</skos:prefLabel>
+    <skos:prefLabel xml:lang="pl">trzy razy w miesiącu</skos:prefLabel>
+    <skos:prefLabel xml:lang="pt">três vezes por mês</skos:prefLabel>
+    <skos:prefLabel xml:lang="ro">de trei ori pe lună</skos:prefLabel>
+    <skos:prefLabel xml:lang="sk">trikrát mesačne</skos:prefLabel>
+    <skos:prefLabel xml:lang="sl">trikrat na mesec</skos:prefLabel>
+    <skos:prefLabel xml:lang="es">tres veces por mes</skos:prefLabel>
+    <skos:prefLabel xml:lang="sv">tre gånger per månad</skos:prefLabel>
+    <skos:exactMatch rdf:resource="http://purl.org/cld/freq/threeTimesAMonth"/>
+    <at:op-mapped-code>
+      <at:MappedCode>
+        <dc:source>PUB</dc:source>
+        <at:affected-table>PUB_FREQ</at:affected-table>
+        <at:legacy-code>J</at:legacy-code>
+      </at:MappedCode>
+    </at:op-mapped-code>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://publications.europa.eu/resource/authority/frequency/WEEKLY" at:deprecated="false">
+    <skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/frequency"/>
+    <at:authority-code>WEEKLY</at:authority-code>
+    <at:op-code>WEEKLY</at:op-code>
+    <atold:op-code>WEEKLY</atold:op-code>
+    <dc:identifier>WEEKLY</dc:identifier>
+    <at:start.use>1952-07-25</at:start.use>
+    <skos:prefLabel xml:lang="bg">седмичен</skos:prefLabel>
+    <skos:prefLabel xml:lang="cs">týdenní</skos:prefLabel>
+    <skos:prefLabel xml:lang="da">ugentligt</skos:prefLabel>
+    <skos:prefLabel xml:lang="de">wöchentlich</skos:prefLabel>
+    <skos:prefLabel xml:lang="el">εβδομαδιαίος</skos:prefLabel>
+    <skos:prefLabel xml:lang="en">weekly</skos:prefLabel>
+    <skos:prefLabel xml:lang="et">nädalane</skos:prefLabel>
+    <skos:prefLabel xml:lang="fi">viikoittainen</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">hebdomadaire</skos:prefLabel>
+    <skos:prefLabel xml:lang="ga">in aghaidh na seachtaine</skos:prefLabel>
+    <skos:prefLabel xml:lang="hr">tjedni</skos:prefLabel>
+    <skos:prefLabel xml:lang="hu">hetenkénti</skos:prefLabel>
+    <skos:prefLabel xml:lang="it">settimanale</skos:prefLabel>
+    <skos:prefLabel xml:lang="lv">reizi nedēļā</skos:prefLabel>
+    <skos:prefLabel xml:lang="lt">kas savaitę</skos:prefLabel>
+    <skos:prefLabel xml:lang="mt">kull ġimgħa</skos:prefLabel>
+    <skos:prefLabel xml:lang="nl">wekelijks</skos:prefLabel>
+    <skos:prefLabel xml:lang="no">ukentlig</skos:prefLabel>
+    <skos:prefLabel xml:lang="pl">tygodnik</skos:prefLabel>
+    <skos:prefLabel xml:lang="pt">hebdomadário</skos:prefLabel>
+    <skos:prefLabel xml:lang="ro">săptămânal</skos:prefLabel>
+    <skos:prefLabel xml:lang="sk">týždenný</skos:prefLabel>
+    <skos:prefLabel xml:lang="sl">tedensko</skos:prefLabel>
+    <skos:prefLabel xml:lang="es">semanal</skos:prefLabel>
+    <skos:prefLabel xml:lang="sv">veckovis</skos:prefLabel>
+    <skos:altLabel xml:lang="bg">седмична</skos:altLabel>
+    <skos:altLabel xml:lang="bg">седмично</skos:altLabel>
+    <skos:altLabel xml:lang="da">ugentlig</skos:altLabel>
+    <skos:altLabel xml:lang="de">wöchentliche</skos:altLabel>
+    <skos:altLabel xml:lang="de">wöchentliches</skos:altLabel>
+    <skos:altLabel xml:lang="el">εβδομαδιαία</skos:altLabel>
+    <skos:altLabel xml:lang="el">εβδομαδιαίο</skos:altLabel>
+    <skos:altLabel xml:lang="pt">hebdomadária</skos:altLabel>
+    <skos:altLabel xml:lang="ro">săptămânală</skos:altLabel>
+    <skos:altLabel xml:lang="sk">týždenná</skos:altLabel>
+    <skos:altLabel xml:lang="sk">týždenné</skos:altLabel>
+    <skos:exactMatch rdf:resource="http://purl.org/cld/freq/weekly"/>
+    <at:op-mapped-code>
+      <at:MappedCode>
+        <dc:source>PUB</dc:source>
+        <at:affected-table>PUB_FREQ</at:affected-table>
+        <at:legacy-code>H</at:legacy-code>
+      </at:MappedCode>
+    </at:op-mapped-code>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://publications.europa.eu/resource/authority/frequency/WEEKLY_2" at:deprecated="false">
+    <skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/frequency"/>
+    <at:authority-code>WEEKLY_2</at:authority-code>
+    <at:op-code>WEEKLY_2</at:op-code>
+    <atold:op-code>WEEKLY_2</atold:op-code>
+    <dc:identifier>WEEKLY_2</dc:identifier>
+    <at:start.use>1952-07-25</at:start.use>
+    <skos:prefLabel xml:lang="bg">дваж на седмица</skos:prefLabel>
+    <skos:prefLabel xml:lang="cs">dvakrát týdně</skos:prefLabel>
+    <skos:prefLabel xml:lang="da">to gange ugentligt</skos:prefLabel>
+    <skos:prefLabel xml:lang="de">zweimal in Woche</skos:prefLabel>
+    <skos:prefLabel xml:lang="el">διεβδομαδιαίος</skos:prefLabel>
+    <skos:prefLabel xml:lang="en">semiweekly</skos:prefLabel>
+    <skos:prefLabel xml:lang="et">kaks korda nädalas</skos:prefLabel>
+    <skos:prefLabel xml:lang="fi">kaksi kertaa viikossa</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">bihebdomadaire</skos:prefLabel>
+    <skos:prefLabel xml:lang="ga">dhá uair in aghaidh na seachtaine</skos:prefLabel>
+    <skos:prefLabel xml:lang="hr">dvaput tjedno</skos:prefLabel>
+    <skos:prefLabel xml:lang="hu">hetente kétszeri</skos:prefLabel>
+    <skos:prefLabel xml:lang="it">bisettimanale</skos:prefLabel>
+    <skos:prefLabel xml:lang="lv">divreiz nedēļā</skos:prefLabel>
+    <skos:prefLabel xml:lang="lt">dukart per savaitę</skos:prefLabel>
+    <skos:prefLabel xml:lang="mt">darbtejn fil-ġimgħa</skos:prefLabel>
+    <skos:prefLabel xml:lang="nl">twee keer per week</skos:prefLabel>
+    <skos:prefLabel xml:lang="no">to ganger i uken</skos:prefLabel>
+    <skos:prefLabel xml:lang="pl">dwa razy w tygodniu</skos:prefLabel>
+    <skos:prefLabel xml:lang="pt">duas vezes por semana</skos:prefLabel>
+    <skos:prefLabel xml:lang="ro">de două ori pe săptămână</skos:prefLabel>
+    <skos:prefLabel xml:lang="sk">dvakrát týždenne</skos:prefLabel>
+    <skos:prefLabel xml:lang="sl">dvakrat tedensko</skos:prefLabel>
+    <skos:prefLabel xml:lang="es">bisemanal</skos:prefLabel>
+    <skos:prefLabel xml:lang="sv">två gånge per vecka</skos:prefLabel>
+    <skos:altLabel xml:lang="el">διεβδομαδιαία</skos:altLabel>
+    <skos:altLabel xml:lang="el">διεβδομαδιαίο</skos:altLabel>
+    <skos:exactMatch rdf:resource="http://purl.org/cld/freq/semiweekly"/>
+    <at:op-mapped-code>
+      <at:MappedCode>
+        <dc:source>PUB</dc:source>
+        <at:affected-table>PUB_FREQ</at:affected-table>
+        <at:legacy-code>C</at:legacy-code>
+      </at:MappedCode>
+    </at:op-mapped-code>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://publications.europa.eu/resource/authority/frequency/WEEKLY_3" at:deprecated="false">
+    <skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/frequency"/>
+    <at:authority-code>WEEKLY_3</at:authority-code>
+    <at:op-code>WEEKLY_3</at:op-code>
+    <atold:op-code>WEEKLY_3</atold:op-code>
+    <dc:identifier>WEEKLY_3</dc:identifier>
+    <at:start.use>1952-07-25</at:start.use>
+    <skos:prefLabel xml:lang="bg">три пъти на седмица</skos:prefLabel>
+    <skos:prefLabel xml:lang="cs">třikrát týdně</skos:prefLabel>
+    <skos:prefLabel xml:lang="da">tre gange ugentligt</skos:prefLabel>
+    <skos:prefLabel xml:lang="de">dreimal in Woche</skos:prefLabel>
+    <skos:prefLabel xml:lang="el">τριεβδομαδιαίος</skos:prefLabel>
+    <skos:prefLabel xml:lang="en">three times a week</skos:prefLabel>
+    <skos:prefLabel xml:lang="et">kolm korda nädalas</skos:prefLabel>
+    <skos:prefLabel xml:lang="fi">kolme kertaa viikossa</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">trois fois par semaine</skos:prefLabel>
+    <skos:prefLabel xml:lang="ga">trí uair in aghaidh na seachtaine</skos:prefLabel>
+    <skos:prefLabel xml:lang="hr">triput tjedno</skos:prefLabel>
+    <skos:prefLabel xml:lang="hu">hetente háromszori</skos:prefLabel>
+    <skos:prefLabel xml:lang="it">tre volte a settimana</skos:prefLabel>
+    <skos:prefLabel xml:lang="lv">trīsreiz nedēļā</skos:prefLabel>
+    <skos:prefLabel xml:lang="lt">tris kartus per savaitę</skos:prefLabel>
+    <skos:prefLabel xml:lang="mt">tliet darbiet fil-ġimgħa</skos:prefLabel>
+    <skos:prefLabel xml:lang="nl">drie keer per week</skos:prefLabel>
+    <skos:prefLabel xml:lang="no">tre ganger i uken</skos:prefLabel>
+    <skos:prefLabel xml:lang="pl">trzy razy w tygodniu</skos:prefLabel>
+    <skos:prefLabel xml:lang="pt">três vezes por semana</skos:prefLabel>
+    <skos:prefLabel xml:lang="ro">de trei ori pe săptămână</skos:prefLabel>
+    <skos:prefLabel xml:lang="sk">trikrát týždenne</skos:prefLabel>
+    <skos:prefLabel xml:lang="sl">trikrat tedensko</skos:prefLabel>
+    <skos:prefLabel xml:lang="es">tres veces por semana</skos:prefLabel>
+    <skos:prefLabel xml:lang="sv">tre gånger per vecka</skos:prefLabel>
+    <skos:altLabel xml:lang="el">τριεβδομαδιαία</skos:altLabel>
+    <skos:altLabel xml:lang="el">τριεβδομαδιαίο</skos:altLabel>
+    <skos:exactMatch rdf:resource="http://purl.org/cld/freq/threeTimesAWeek"/>
+    <at:op-mapped-code>
+      <at:MappedCode>
+        <dc:source>PUB</dc:source>
+        <at:affected-table>PUB_FREQ</at:affected-table>
+        <at:legacy-code>I</at:legacy-code>
+      </at:MappedCode>
+    </at:op-mapped-code>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://publications.europa.eu/resource/authority/frequency/DAILY" at:deprecated="false">
+    <skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/frequency"/>
+    <at:authority-code>DAILY</at:authority-code>
+    <at:op-code>DAILY</at:op-code>
+    <atold:op-code>DAILY</atold:op-code>
+    <dc:identifier>DAILY</dc:identifier>
+    <at:start.use>1952-07-25</at:start.use>
+    <skos:prefLabel xml:lang="bg">ежедневен</skos:prefLabel>
+    <skos:prefLabel xml:lang="cs">denní</skos:prefLabel>
+    <skos:prefLabel xml:lang="da">dagligt</skos:prefLabel>
+    <skos:prefLabel xml:lang="de">täglich</skos:prefLabel>
+    <skos:prefLabel xml:lang="el">ημερήσιος</skos:prefLabel>
+    <skos:prefLabel xml:lang="en">daily</skos:prefLabel>
+    <skos:prefLabel xml:lang="et">päevane</skos:prefLabel>
+    <skos:prefLabel xml:lang="fi">päivittäin</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">quotidien</skos:prefLabel>
+    <skos:prefLabel xml:lang="ga">laethúil</skos:prefLabel>
+    <skos:prefLabel xml:lang="hr">dnevni</skos:prefLabel>
+    <skos:prefLabel xml:lang="hu">naponkénti</skos:prefLabel>
+    <skos:prefLabel xml:lang="it">quotidiano</skos:prefLabel>
+    <skos:prefLabel xml:lang="lv">katru dienu</skos:prefLabel>
+    <skos:prefLabel xml:lang="lt">kasdieninis</skos:prefLabel>
+    <skos:prefLabel xml:lang="mt">kuljum</skos:prefLabel>
+    <skos:prefLabel xml:lang="nl">dagelijks</skos:prefLabel>
+    <skos:prefLabel xml:lang="no">daglig</skos:prefLabel>
+    <skos:prefLabel xml:lang="pl">dziennik</skos:prefLabel>
+    <skos:prefLabel xml:lang="pt">diário</skos:prefLabel>
+    <skos:prefLabel xml:lang="ro">zilnic</skos:prefLabel>
+    <skos:prefLabel xml:lang="sk">denný</skos:prefLabel>
+    <skos:prefLabel xml:lang="sl">dnevni</skos:prefLabel>
+    <skos:prefLabel xml:lang="es">diario</skos:prefLabel>
+    <skos:prefLabel xml:lang="sv">dagligen</skos:prefLabel>
+    <skos:altLabel xml:lang="bg">ежедневна</skos:altLabel>
+    <skos:altLabel xml:lang="bg">ежедневно</skos:altLabel>
+    <skos:altLabel xml:lang="da">daglig</skos:altLabel>
+    <skos:altLabel xml:lang="de">tägliche</skos:altLabel>
+    <skos:altLabel xml:lang="de">tägliches</skos:altLabel>
+    <skos:altLabel xml:lang="el">ημερήσια</skos:altLabel>
+    <skos:altLabel xml:lang="el">ημερήσιο</skos:altLabel>
+    <skos:altLabel xml:lang="fr">quotidienne</skos:altLabel>
+    <skos:altLabel xml:lang="it">quotidiana</skos:altLabel>
+    <skos:altLabel xml:lang="lt">kasdieninė</skos:altLabel>
+    <skos:altLabel xml:lang="pt">diária</skos:altLabel>
+    <skos:altLabel xml:lang="ro">zilnică</skos:altLabel>
+    <skos:altLabel xml:lang="sk">denná</skos:altLabel>
+    <skos:altLabel xml:lang="sk">denné</skos:altLabel>
+    <skos:altLabel xml:lang="sl">dnevna</skos:altLabel>
+    <skos:altLabel xml:lang="sl">dnevno</skos:altLabel>
+    <skos:altLabel xml:lang="es">diaria</skos:altLabel>
+    <skos:exactMatch rdf:resource="http://purl.org/cld/freq/daily"/>
+    <at:op-mapped-code>
+      <at:MappedCode>
+        <dc:source>PUB</dc:source>
+        <at:affected-table>PUB_FREQ</at:affected-table>
+        <at:legacy-code>Q</at:legacy-code>
+      </at:MappedCode>
+    </at:op-mapped-code>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://publications.europa.eu/resource/authority/frequency/UPDATE_CONT"
+                at:deprecated="false">
+    <skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/frequency"/>
+    <at:authority-code>UPDATE_CONT</at:authority-code>
+    <at:op-code>UPDATE_CONT</at:op-code>
+    <atold:op-code>UPDATE_CONT</atold:op-code>
+    <dc:identifier>UPDATE_CONT</dc:identifier>
+    <at:start.use>1952-07-25</at:start.use>
+    <skos:prefLabel xml:lang="bg">постоянно се актуализира</skos:prefLabel>
+    <skos:prefLabel xml:lang="cs">průběžně aktualizovaný</skos:prefLabel>
+    <skos:prefLabel xml:lang="da">opdateres løbende</skos:prefLabel>
+    <skos:prefLabel xml:lang="de">ständige Aktualisierung</skos:prefLabel>
+    <skos:prefLabel xml:lang="el">ενημερώνεται συνεχώς</skos:prefLabel>
+    <skos:prefLabel xml:lang="en">continuously updated</skos:prefLabel>
+    <skos:prefLabel xml:lang="et">ajakohastatakse pidevalt</skos:prefLabel>
+    <skos:prefLabel xml:lang="fi">päivitetään jatkuvasti</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">mise à jour continuelle</skos:prefLabel>
+    <skos:prefLabel xml:lang="ga">á leasú chun dáta go leanúnach</skos:prefLabel>
+    <skos:prefLabel xml:lang="hr">stalno ažuriraju</skos:prefLabel>
+    <skos:prefLabel xml:lang="hu">folyamatosan frissített</skos:prefLabel>
+    <skos:prefLabel xml:lang="it">in continuo aggiornamento</skos:prefLabel>
+    <skos:prefLabel xml:lang="lv">pastāvīgi tiek atjaunots</skos:prefLabel>
+    <skos:prefLabel xml:lang="lt">nuolat atnaujinama</skos:prefLabel>
+    <skos:prefLabel xml:lang="mt">kontinwament aġġornata</skos:prefLabel>
+    <skos:prefLabel xml:lang="nl">voortdurend geactualiseerd</skos:prefLabel>
+    <skos:prefLabel xml:lang="no">kontinuerlig oppdatert</skos:prefLabel>
+    <skos:prefLabel xml:lang="pl">stale aktualizowany</skos:prefLabel>
+    <skos:prefLabel xml:lang="pt">continuamente atualizado</skos:prefLabel>
+    <skos:prefLabel xml:lang="ro">actualizare continuă</skos:prefLabel>
+    <skos:prefLabel xml:lang="sk">priebežne aktualizovaný</skos:prefLabel>
+    <skos:prefLabel xml:lang="sl">nenehno posodobljen</skos:prefLabel>
+    <skos:prefLabel xml:lang="es">continuamente actualizado</skos:prefLabel>
+    <skos:prefLabel xml:lang="sv">uppdateras kontinuerligt</skos:prefLabel>
+    <skos:altLabel xml:lang="cs">průběžně aktualizovaná</skos:altLabel>
+    <skos:altLabel xml:lang="cs">průběžně aktualizované</skos:altLabel>
+    <skos:altLabel xml:lang="pl">stale aktualizowana</skos:altLabel>
+    <skos:altLabel xml:lang="pl">stale aktualizowane</skos:altLabel>
+    <skos:altLabel xml:lang="pt">continuamente atualizada</skos:altLabel>
+    <skos:altLabel xml:lang="sk">priebežne aktualizovaná</skos:altLabel>
+    <skos:altLabel xml:lang="sk">priebežne aktualizované</skos:altLabel>
+    <skos:altLabel xml:lang="sl">nenehno posodobljena</skos:altLabel>
+    <skos:altLabel xml:lang="sl">nenehno posodobljeno</skos:altLabel>
+    <skos:altLabel xml:lang="es">continuamente actualizada</skos:altLabel>
+    <at:op-mapped-code>
+      <at:MappedCode>
+        <dc:source>PUB</dc:source>
+        <at:affected-table>PUB_FREQ</at:affected-table>
+        <at:legacy-code>K</at:legacy-code>
+      </at:MappedCode>
+    </at:op-mapped-code>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://publications.europa.eu/resource/authority/frequency/IRREG" at:deprecated="false">
+    <skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/frequency"/>
+    <at:authority-code>IRREG</at:authority-code>
+    <at:op-code>IRREG</at:op-code>
+    <atold:op-code>IRREG</atold:op-code>
+    <dc:identifier>IRREG</dc:identifier>
+    <at:start.use>1952-07-25</at:start.use>
+    <skos:prefLabel xml:lang="bg">неправилен</skos:prefLabel>
+    <skos:prefLabel xml:lang="cs">nepravidelný</skos:prefLabel>
+    <skos:prefLabel xml:lang="da">uregelmæssigt</skos:prefLabel>
+    <skos:prefLabel xml:lang="de">unregelmäßig</skos:prefLabel>
+    <skos:prefLabel xml:lang="el">μη τακτικός</skos:prefLabel>
+    <skos:prefLabel xml:lang="en">irregular</skos:prefLabel>
+    <skos:prefLabel xml:lang="et">ebakorrapärane</skos:prefLabel>
+    <skos:prefLabel xml:lang="fi">epäsäännöllinen</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">irrégulier</skos:prefLabel>
+    <skos:prefLabel xml:lang="ga">neamhrialta</skos:prefLabel>
+    <skos:prefLabel xml:lang="hr">neredovit</skos:prefLabel>
+    <skos:prefLabel xml:lang="hu">rendszertelen</skos:prefLabel>
+    <skos:prefLabel xml:lang="it">irregolare</skos:prefLabel>
+    <skos:prefLabel xml:lang="lv">neregulāri</skos:prefLabel>
+    <skos:prefLabel xml:lang="lt">nereguliarus</skos:prefLabel>
+    <skos:prefLabel xml:lang="mt">irregolari</skos:prefLabel>
+    <skos:prefLabel xml:lang="nl">onregelmatig</skos:prefLabel>
+    <skos:prefLabel xml:lang="no">uregelmessig</skos:prefLabel>
+    <skos:prefLabel xml:lang="pl">nieregularny</skos:prefLabel>
+    <skos:prefLabel xml:lang="pt">irregular</skos:prefLabel>
+    <skos:prefLabel xml:lang="ro">neregulat</skos:prefLabel>
+    <skos:prefLabel xml:lang="sk">nepravidelný</skos:prefLabel>
+    <skos:prefLabel xml:lang="sl">nepravilen</skos:prefLabel>
+    <skos:prefLabel xml:lang="es">irregular</skos:prefLabel>
+    <skos:prefLabel xml:lang="sv">oregelbundet</skos:prefLabel>
+    <skos:altLabel xml:lang="bg">неправилна</skos:altLabel>
+    <skos:altLabel xml:lang="bg">неправилно</skos:altLabel>
+    <skos:altLabel xml:lang="cs">nepravidelná</skos:altLabel>
+    <skos:altLabel xml:lang="cs">nepravidelné</skos:altLabel>
+    <skos:altLabel xml:lang="da">uregelmæssig</skos:altLabel>
+    <skos:altLabel xml:lang="de">unregelmäßige</skos:altLabel>
+    <skos:altLabel xml:lang="de">unregelmäßiges</skos:altLabel>
+    <skos:altLabel xml:lang="el">μη τακτική</skos:altLabel>
+    <skos:altLabel xml:lang="el">μη τακτικό</skos:altLabel>
+    <skos:altLabel xml:lang="fr">irrégulière</skos:altLabel>
+    <skos:altLabel xml:lang="hr">neredovita</skos:altLabel>
+    <skos:altLabel xml:lang="lt">nereguliari</skos:altLabel>
+    <skos:altLabel xml:lang="pl">nieregularna</skos:altLabel>
+    <skos:altLabel xml:lang="pl">nieregularne</skos:altLabel>
+    <skos:altLabel xml:lang="ro">neregulată</skos:altLabel>
+    <skos:altLabel xml:lang="sk">nepravidelná</skos:altLabel>
+    <skos:altLabel xml:lang="sk">nepravidelné</skos:altLabel>
+    <skos:altLabel xml:lang="sl">nepravilna</skos:altLabel>
+    <skos:altLabel xml:lang="sl">nepravilno</skos:altLabel>
+    <skos:altLabel xml:lang="sv">oregelbunden</skos:altLabel>
+    <skos:exactMatch rdf:resource="http://purl.org/cld/freq/irregular"/>
+    <at:op-mapped-code>
+      <at:MappedCode>
+        <dc:source>PUB</dc:source>
+        <at:affected-table>PUB_FREQ</at:affected-table>
+        <at:legacy-code>IRR</at:legacy-code>
+      </at:MappedCode>
+    </at:op-mapped-code>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://publications.europa.eu/resource/authority/frequency/UNKNOWN" at:deprecated="false">
+    <skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/frequency"/>
+    <at:authority-code>UNKNOWN</at:authority-code>
+    <at:op-code>UNKNOWN</at:op-code>
+    <atold:op-code>UNKNOWN</atold:op-code>
+    <dc:identifier>UNKNOWN</dc:identifier>
+    <at:start.use>1952-07-25</at:start.use>
+    <skos:prefLabel xml:lang="bg">непознат</skos:prefLabel>
+    <skos:prefLabel xml:lang="cs">neznámý</skos:prefLabel>
+    <skos:prefLabel xml:lang="da">ubekendt</skos:prefLabel>
+    <skos:prefLabel xml:lang="de">unbekannt</skos:prefLabel>
+    <skos:prefLabel xml:lang="el">άγνωστος</skos:prefLabel>
+    <skos:prefLabel xml:lang="en">unknown</skos:prefLabel>
+    <skos:prefLabel xml:lang="et">tundmatu</skos:prefLabel>
+    <skos:prefLabel xml:lang="fi">tuntematon</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">inconnu</skos:prefLabel>
+    <skos:prefLabel xml:lang="ga">anaithnid</skos:prefLabel>
+    <skos:prefLabel xml:lang="hr">nepoznat</skos:prefLabel>
+    <skos:prefLabel xml:lang="hu">ismeretlen</skos:prefLabel>
+    <skos:prefLabel xml:lang="it">sconosciuto</skos:prefLabel>
+    <skos:prefLabel xml:lang="lv">nav zināms</skos:prefLabel>
+    <skos:prefLabel xml:lang="lt">nežinomas</skos:prefLabel>
+    <skos:prefLabel xml:lang="mt">mhux magħruf</skos:prefLabel>
+    <skos:prefLabel xml:lang="nl">onbekend</skos:prefLabel>
+    <skos:prefLabel xml:lang="no">ukjent</skos:prefLabel>
+    <skos:prefLabel xml:lang="pl">nieznany</skos:prefLabel>
+    <skos:prefLabel xml:lang="pt">desconhecido</skos:prefLabel>
+    <skos:prefLabel xml:lang="ro">necunoscut</skos:prefLabel>
+    <skos:prefLabel xml:lang="sk">neznámy</skos:prefLabel>
+    <skos:prefLabel xml:lang="sl">nepoznan</skos:prefLabel>
+    <skos:prefLabel xml:lang="es">desconocido</skos:prefLabel>
+    <skos:prefLabel xml:lang="sv">obekant</skos:prefLabel>
+    <skos:altLabel xml:lang="bg">непозната</skos:altLabel>
+    <skos:altLabel xml:lang="bg">непознато</skos:altLabel>
+    <skos:altLabel xml:lang="cs">neznámá</skos:altLabel>
+    <skos:altLabel xml:lang="cs">neznámé</skos:altLabel>
+    <skos:altLabel xml:lang="de">unbekannte</skos:altLabel>
+    <skos:altLabel xml:lang="de">unbekanntes</skos:altLabel>
+    <skos:altLabel xml:lang="el">άγνωστη</skos:altLabel>
+    <skos:altLabel xml:lang="fr">inconnue</skos:altLabel>
+    <skos:altLabel xml:lang="hr">nepoznata</skos:altLabel>
+    <skos:altLabel xml:lang="it">sconosciuta</skos:altLabel>
+    <skos:altLabel xml:lang="lt">nežinoma</skos:altLabel>
+    <skos:altLabel xml:lang="pl">nieznana</skos:altLabel>
+    <skos:altLabel xml:lang="pl">nieznane</skos:altLabel>
+    <skos:altLabel xml:lang="pt">desconhecida</skos:altLabel>
+    <skos:altLabel xml:lang="ro">necunoscută</skos:altLabel>
+    <skos:altLabel xml:lang="sk">neznáma</skos:altLabel>
+    <skos:altLabel xml:lang="sk">neznáme</skos:altLabel>
+    <skos:altLabel xml:lang="sl">nepoznana</skos:altLabel>
+    <skos:altLabel xml:lang="sl">nepoznano</skos:altLabel>
+    <skos:altLabel xml:lang="es">desconocida</skos:altLabel>
+    <at:op-mapped-code>
+      <at:MappedCode>
+        <dc:source>PUB</dc:source>
+        <at:affected-table>PUB_FREQ</at:affected-table>
+        <at:legacy-code>U</at:legacy-code>
+      </at:MappedCode>
+    </at:op-mapped-code>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://publications.europa.eu/resource/authority/frequency/OTHER" at:deprecated="false">
+    <skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/frequency"/>
+    <at:authority-code>OTHER</at:authority-code>
+    <at:op-code>OTHER</at:op-code>
+    <atold:op-code>OTHER</atold:op-code>
+    <dc:identifier>OTHER</dc:identifier>
+    <at:start.use>1952-07-25</at:start.use>
+    <skos:prefLabel xml:lang="bg">друг</skos:prefLabel>
+    <skos:prefLabel xml:lang="cs">ostatní</skos:prefLabel>
+    <skos:prefLabel xml:lang="da">andet</skos:prefLabel>
+    <skos:prefLabel xml:lang="de">anderer</skos:prefLabel>
+    <skos:prefLabel xml:lang="el">άλλο</skos:prefLabel>
+    <skos:prefLabel xml:lang="en">other</skos:prefLabel>
+    <skos:prefLabel xml:lang="et">muu</skos:prefLabel>
+    <skos:prefLabel xml:lang="fi">muut</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">autre</skos:prefLabel>
+    <skos:prefLabel xml:lang="ga">eile</skos:prefLabel>
+    <skos:prefLabel xml:lang="hr">drugi</skos:prefLabel>
+    <skos:prefLabel xml:lang="hu">egyéb</skos:prefLabel>
+    <skos:prefLabel xml:lang="it">altro</skos:prefLabel>
+    <skos:prefLabel xml:lang="lv">citi</skos:prefLabel>
+    <skos:prefLabel xml:lang="lt">kitas</skos:prefLabel>
+    <skos:prefLabel xml:lang="mt">oħra</skos:prefLabel>
+    <skos:prefLabel xml:lang="nl">overige</skos:prefLabel>
+    <skos:prefLabel xml:lang="no">annet</skos:prefLabel>
+    <skos:prefLabel xml:lang="pl">inne</skos:prefLabel>
+    <skos:prefLabel xml:lang="pt">outro</skos:prefLabel>
+    <skos:prefLabel xml:lang="ro">altele</skos:prefLabel>
+    <skos:prefLabel xml:lang="sk">ostatné</skos:prefLabel>
+    <skos:prefLabel xml:lang="sl">ostali</skos:prefLabel>
+    <skos:prefLabel xml:lang="es">otro</skos:prefLabel>
+    <skos:prefLabel xml:lang="sv">andra</skos:prefLabel>
+    <skos:altLabel xml:lang="bg">друга</skos:altLabel>
+    <skos:altLabel xml:lang="bg">друго</skos:altLabel>
+    <skos:altLabel xml:lang="da">anden</skos:altLabel>
+    <skos:altLabel xml:lang="de">andere</skos:altLabel>
+    <skos:altLabel xml:lang="de">anderes</skos:altLabel>
+    <skos:altLabel xml:lang="lt">kita</skos:altLabel>
+    <skos:altLabel xml:lang="pt">outra</skos:altLabel>
+    <skos:altLabel xml:lang="sl">ostala</skos:altLabel>
+    <skos:altLabel xml:lang="sl">ostalo</skos:altLabel>
+    <skos:altLabel xml:lang="es">otra</skos:altLabel>
+    <at:op-mapped-code>
+      <at:MappedCode>
+        <dc:source>PUB</dc:source>
+        <at:affected-table>PUB_FREQ</at:affected-table>
+        <at:legacy-code>Z</at:legacy-code>
+      </at:MappedCode>
+    </at:op-mapped-code>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://publications.europa.eu/resource/authority/frequency/DAILY_2" at:deprecated="false">
+    <skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/frequency"/>
+    <at:authority-code>DAILY_2</at:authority-code>
+    <at:op-code>DAILY_2</at:op-code>
+    <atold:op-code>DAILY_2</atold:op-code>
+    <dc:identifier>DAILY_2</dc:identifier>
+    <at:start.use>1952-07-25</at:start.use>
+    <skos:prefLabel xml:lang="bg">два пъти на ден</skos:prefLabel>
+    <skos:prefLabel xml:lang="cs">dvakrát denně</skos:prefLabel>
+    <skos:prefLabel xml:lang="da">to gange om dagen</skos:prefLabel>
+    <skos:prefLabel xml:lang="de">zweimal täglich</skos:prefLabel>
+    <skos:prefLabel xml:lang="el">δύο φορές την ημέρα</skos:prefLabel>
+    <skos:prefLabel xml:lang="en">twice a day</skos:prefLabel>
+    <skos:prefLabel xml:lang="et">kaks korda päevas</skos:prefLabel>
+    <skos:prefLabel xml:lang="fi">kahdesti päivässä</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">deux fois par jour</skos:prefLabel>
+    <skos:prefLabel xml:lang="ga">dhá uair sa lá</skos:prefLabel>
+    <skos:prefLabel xml:lang="hr">dvaput dnevno</skos:prefLabel>
+    <skos:prefLabel xml:lang="hu">naponta kétszeri</skos:prefLabel>
+    <skos:prefLabel xml:lang="it">due volte al giorno</skos:prefLabel>
+    <skos:prefLabel xml:lang="lv">divreiz dienā</skos:prefLabel>
+    <skos:prefLabel xml:lang="lt">dukart per dieną</skos:prefLabel>
+    <skos:prefLabel xml:lang="mt">darbtejn kuljum</skos:prefLabel>
+    <skos:prefLabel xml:lang="nl">tweemaal per dag</skos:prefLabel>
+    <skos:prefLabel xml:lang="no">to ganger per dag</skos:prefLabel>
+    <skos:prefLabel xml:lang="pl">dwa razy dziennie</skos:prefLabel>
+    <skos:prefLabel xml:lang="pt">duas vezes por dia</skos:prefLabel>
+    <skos:prefLabel xml:lang="ro">de două ori pe zi</skos:prefLabel>
+    <skos:prefLabel xml:lang="sk">dvakrát denne</skos:prefLabel>
+    <skos:prefLabel xml:lang="sl">dvakrat dnevno</skos:prefLabel>
+    <skos:prefLabel xml:lang="es">dos veces al día</skos:prefLabel>
+    <skos:prefLabel xml:lang="sv">två gånger per dag</skos:prefLabel>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://publications.europa.eu/resource/authority/frequency/CONT" at:deprecated="false">
+    <skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/frequency"/>
+    <at:authority-code>CONT</at:authority-code>
+    <at:op-code>CONT</at:op-code>
+    <atold:op-code>CONT</atold:op-code>
+    <dc:identifier>CONT</dc:identifier>
+    <at:start.use>1952-07-25</at:start.use>
+    <skos:prefLabel xml:lang="bg">постоянен</skos:prefLabel>
+    <skos:prefLabel xml:lang="cs">průběžný</skos:prefLabel>
+    <skos:prefLabel xml:lang="da">kontinuerligt</skos:prefLabel>
+    <skos:prefLabel xml:lang="de">kontinuierlich</skos:prefLabel>
+    <skos:prefLabel xml:lang="el">συνεχής</skos:prefLabel>
+    <skos:prefLabel xml:lang="en">continuous</skos:prefLabel>
+    <skos:prefLabel xml:lang="et">pidev</skos:prefLabel>
+    <skos:prefLabel xml:lang="fi">jatkuva</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">continuel</skos:prefLabel>
+    <skos:prefLabel xml:lang="ga">leanúnach</skos:prefLabel>
+    <skos:prefLabel xml:lang="hr">stalan</skos:prefLabel>
+    <skos:prefLabel xml:lang="hu">folyamatos</skos:prefLabel>
+    <skos:prefLabel xml:lang="it">continuo</skos:prefLabel>
+    <skos:prefLabel xml:lang="lv">pastāvīgi</skos:prefLabel>
+    <skos:prefLabel xml:lang="lt">nenutrūkstamas</skos:prefLabel>
+    <skos:prefLabel xml:lang="mt">kontinwu</skos:prefLabel>
+    <skos:prefLabel xml:lang="nl">voortdurend</skos:prefLabel>
+    <skos:prefLabel xml:lang="no">kontinuerlig</skos:prefLabel>
+    <skos:prefLabel xml:lang="pl">ciągły</skos:prefLabel>
+    <skos:prefLabel xml:lang="pt">contínuo</skos:prefLabel>
+    <skos:prefLabel xml:lang="ro">continuu</skos:prefLabel>
+    <skos:prefLabel xml:lang="sk">priebežný</skos:prefLabel>
+    <skos:prefLabel xml:lang="sl">nenehen</skos:prefLabel>
+    <skos:prefLabel xml:lang="es">continuo</skos:prefLabel>
+    <skos:prefLabel xml:lang="sv">kontinuerlig</skos:prefLabel>
+    <skos:altLabel xml:lang="bg">постоянна</skos:altLabel>
+    <skos:altLabel xml:lang="bg">постоянно</skos:altLabel>
+    <skos:altLabel xml:lang="cs">průběžná</skos:altLabel>
+    <skos:altLabel xml:lang="cs">průběžné</skos:altLabel>
+    <skos:altLabel xml:lang="da">kontinuerlig</skos:altLabel>
+    <skos:altLabel xml:lang="de">kontinuierliche</skos:altLabel>
+    <skos:altLabel xml:lang="de">kontinuierliches</skos:altLabel>
+    <skos:altLabel xml:lang="el">συνεχές</skos:altLabel>
+    <skos:altLabel xml:lang="fr">continuelle</skos:altLabel>
+    <skos:altLabel xml:lang="hr">stalna</skos:altLabel>
+    <skos:altLabel xml:lang="hr">stalno</skos:altLabel>
+    <skos:altLabel xml:lang="it">continua</skos:altLabel>
+    <skos:altLabel xml:lang="pl">ciągła</skos:altLabel>
+    <skos:altLabel xml:lang="pl">ciągłe</skos:altLabel>
+    <skos:altLabel xml:lang="pt">contínua</skos:altLabel>
+    <skos:altLabel xml:lang="sk">priebežná</skos:altLabel>
+    <skos:altLabel xml:lang="sk">priebežné</skos:altLabel>
+    <skos:altLabel xml:lang="sl">nenehna</skos:altLabel>
+    <skos:altLabel xml:lang="sl">nenehno</skos:altLabel>
+    <skos:altLabel xml:lang="es">continua</skos:altLabel>
+    <skos:exactMatch rdf:resource="http://purl.org/cld/freq/continuous"/>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://publications.europa.eu/resource/authority/frequency/NEVER" at:deprecated="false">
+    <skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/frequency"/>
+    <at:authority-code>NEVER</at:authority-code>
+    <at:op-code>NEVER</at:op-code>
+    <atold:op-code>NEVER</atold:op-code>
+    <dc:identifier>NEVER</dc:identifier>
+    <at:start.use>1952-07-25</at:start.use>
+    <skos:prefLabel xml:lang="bg">никога</skos:prefLabel>
+    <skos:prefLabel xml:lang="cs">nikdy</skos:prefLabel>
+    <skos:prefLabel xml:lang="da">aldrig</skos:prefLabel>
+    <skos:prefLabel xml:lang="de">niemals</skos:prefLabel>
+    <skos:prefLabel xml:lang="el">ποτέ</skos:prefLabel>
+    <skos:prefLabel xml:lang="en">never</skos:prefLabel>
+    <skos:prefLabel xml:lang="et">mitte kunagi</skos:prefLabel>
+    <skos:prefLabel xml:lang="fi">ei koskaan</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">jamais</skos:prefLabel>
+    <skos:prefLabel xml:lang="ga">riamh</skos:prefLabel>
+    <skos:prefLabel xml:lang="hr">nikada</skos:prefLabel>
+    <skos:prefLabel xml:lang="hu">soha</skos:prefLabel>
+    <skos:prefLabel xml:lang="it">mai</skos:prefLabel>
+    <skos:prefLabel xml:lang="lv">nekad</skos:prefLabel>
+    <skos:prefLabel xml:lang="lt">niekada</skos:prefLabel>
+    <skos:prefLabel xml:lang="mt">qatt</skos:prefLabel>
+    <skos:prefLabel xml:lang="nl">nooit</skos:prefLabel>
+    <skos:prefLabel xml:lang="no">aldri</skos:prefLabel>
+    <skos:prefLabel xml:lang="pl">nigdy</skos:prefLabel>
+    <skos:prefLabel xml:lang="pt">nunca</skos:prefLabel>
+    <skos:prefLabel xml:lang="ro">niciodată</skos:prefLabel>
+    <skos:prefLabel xml:lang="sk">nikdy</skos:prefLabel>
+    <skos:prefLabel xml:lang="sl">nikoli</skos:prefLabel>
+    <skos:prefLabel xml:lang="es">nunca</skos:prefLabel>
+    <skos:prefLabel xml:lang="sv">aldrig</skos:prefLabel>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://publications.europa.eu/resource/authority/frequency/QUADRENNIAL"
+                at:deprecated="false">
+    <skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/frequency"/>
+    <at:authority-code>QUADRENNIAL</at:authority-code>
+    <at:op-code>QUADRENNIAL</at:op-code>
+    <atold:op-code>QUADRENNIAL</atold:op-code>
+    <dc:identifier>QUADRENNIAL</dc:identifier>
+    <at:start.use>1952-07-25</at:start.use>
+    <skos:prefLabel xml:lang="bg">на четири години</skos:prefLabel>
+    <skos:prefLabel xml:lang="cs">čtyřletý</skos:prefLabel>
+    <skos:prefLabel xml:lang="da">hvert fjerde år</skos:prefLabel>
+    <skos:prefLabel xml:lang="de">vierjährlich</skos:prefLabel>
+    <skos:prefLabel xml:lang="el">ανά τετραετία</skos:prefLabel>
+    <skos:prefLabel xml:lang="en">quadrennial</skos:prefLabel>
+    <skos:prefLabel xml:lang="et">iga nelja aasta järel</skos:prefLabel>
+    <skos:prefLabel xml:lang="fi">joka neljäs vuosi</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">tous les quatre ans</skos:prefLabel>
+    <skos:prefLabel xml:lang="ga">uair sna ceithre bliana</skos:prefLabel>
+    <skos:prefLabel xml:lang="hr">svake četiri godine</skos:prefLabel>
+    <skos:prefLabel xml:lang="hu">négyévenkénti</skos:prefLabel>
+    <skos:prefLabel xml:lang="it">ogni quattro anni</skos:prefLabel>
+    <skos:prefLabel xml:lang="lv">reizi četros gados</skos:prefLabel>
+    <skos:prefLabel xml:lang="lt">kas ketverius metus</skos:prefLabel>
+    <skos:prefLabel xml:lang="mt">kwadriennali</skos:prefLabel>
+    <skos:prefLabel xml:lang="nl">om de vier jaar</skos:prefLabel>
+    <skos:prefLabel xml:lang="pl">co cztery lata</skos:prefLabel>
+    <skos:prefLabel xml:lang="pt">quadrienal</skos:prefLabel>
+    <skos:prefLabel xml:lang="ro">o dată la patru ani</skos:prefLabel>
+    <skos:prefLabel xml:lang="sk">každé štyri roky</skos:prefLabel>
+    <skos:prefLabel xml:lang="sl">vsaka štiri leta</skos:prefLabel>
+    <skos:prefLabel xml:lang="es">cada cuatro años</skos:prefLabel>
+    <skos:prefLabel xml:lang="sv">vart fjärde år</skos:prefLabel>
+    <skos:altLabel xml:lang="cs">čtyřletá</skos:altLabel>
+    <skos:altLabel xml:lang="cs">čtyřleté</skos:altLabel>
+    <skos:altLabel xml:lang="de">vierjährliche</skos:altLabel>
+    <skos:altLabel xml:lang="de">vierjährliches</skos:altLabel>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://publications.europa.eu/resource/authority/frequency/QUINQUENNIAL"
+                at:deprecated="false">
+    <skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/frequency"/>
+    <at:authority-code>QUINQUENNIAL</at:authority-code>
+    <at:op-code>QUINQUENNIAL</at:op-code>
+    <atold:op-code>QUINQUENNIAL</atold:op-code>
+    <dc:identifier>QUINQUENNIAL</dc:identifier>
+    <at:start.use>1952-07-25</at:start.use>
+    <skos:prefLabel xml:lang="bg">на пет години</skos:prefLabel>
+    <skos:prefLabel xml:lang="cs">pětiletý</skos:prefLabel>
+    <skos:prefLabel xml:lang="da">hvert femte år</skos:prefLabel>
+    <skos:prefLabel xml:lang="de">fünfjährlich</skos:prefLabel>
+    <skos:prefLabel xml:lang="el">ανά πενταετία</skos:prefLabel>
+    <skos:prefLabel xml:lang="en">quinquennial</skos:prefLabel>
+    <skos:prefLabel xml:lang="et">iga viie aasta järel</skos:prefLabel>
+    <skos:prefLabel xml:lang="fi">joka viides vuosi</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">tous les cinq ans</skos:prefLabel>
+    <skos:prefLabel xml:lang="ga">uair sna cúig bliana</skos:prefLabel>
+    <skos:prefLabel xml:lang="hr">svakih pet godina</skos:prefLabel>
+    <skos:prefLabel xml:lang="hu">ötévenkénti</skos:prefLabel>
+    <skos:prefLabel xml:lang="it">ogni cinque anni</skos:prefLabel>
+    <skos:prefLabel xml:lang="lv">reizi piecos gados</skos:prefLabel>
+    <skos:prefLabel xml:lang="lt">kas penkerius metus</skos:prefLabel>
+    <skos:prefLabel xml:lang="mt">kwinkwennali</skos:prefLabel>
+    <skos:prefLabel xml:lang="nl">om de vijf jaar</skos:prefLabel>
+    <skos:prefLabel xml:lang="pl">co pięć lat</skos:prefLabel>
+    <skos:prefLabel xml:lang="pt">quinquenal</skos:prefLabel>
+    <skos:prefLabel xml:lang="ro">o dată la cinci ani</skos:prefLabel>
+    <skos:prefLabel xml:lang="sk">každých päť rokov</skos:prefLabel>
+    <skos:prefLabel xml:lang="sl">vsakih pet let</skos:prefLabel>
+    <skos:prefLabel xml:lang="es">cada cinco años</skos:prefLabel>
+    <skos:prefLabel xml:lang="sv">vart femte år</skos:prefLabel>
+    <skos:altLabel xml:lang="cs">pětiletá</skos:altLabel>
+    <skos:altLabel xml:lang="cs">pětileté</skos:altLabel>
+    <skos:altLabel xml:lang="de">fünfjährliche</skos:altLabel>
+    <skos:altLabel xml:lang="de">fünfjährliches</skos:altLabel>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://publications.europa.eu/resource/authority/frequency/HOURLY" at:deprecated="false">
+    <skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/frequency"/>
+    <at:authority-code>HOURLY</at:authority-code>
+    <at:op-code>HOURLY</at:op-code>
+    <atold:op-code>HOURLY</atold:op-code>
+    <dc:identifier>HOURLY</dc:identifier>
+    <at:start.use>1952-07-25</at:start.use>
+    <skos:prefLabel xml:lang="bg">на всеки час</skos:prefLabel>
+    <skos:prefLabel xml:lang="cs">každou hodinu</skos:prefLabel>
+    <skos:prefLabel xml:lang="da">hver time</skos:prefLabel>
+    <skos:prefLabel xml:lang="de">stündlich</skos:prefLabel>
+    <skos:prefLabel xml:lang="el">ανά ώρα</skos:prefLabel>
+    <skos:prefLabel xml:lang="en">hourly</skos:prefLabel>
+    <skos:prefLabel xml:lang="et">kord tunnis</skos:prefLabel>
+    <skos:prefLabel xml:lang="fi">joka tunti</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">toutes les heures</skos:prefLabel>
+    <skos:prefLabel xml:lang="ga">gach uair an chloig</skos:prefLabel>
+    <skos:prefLabel xml:lang="hr">svaki sat</skos:prefLabel>
+    <skos:prefLabel xml:lang="hu">óránkénti</skos:prefLabel>
+    <skos:prefLabel xml:lang="it">ogni ora</skos:prefLabel>
+    <skos:prefLabel xml:lang="lv">reizi stundā</skos:prefLabel>
+    <skos:prefLabel xml:lang="lt">kas valandą</skos:prefLabel>
+    <skos:prefLabel xml:lang="mt">kull siegħa</skos:prefLabel>
+    <skos:prefLabel xml:lang="nl">om het uur</skos:prefLabel>
+    <skos:prefLabel xml:lang="pl">co godzinę</skos:prefLabel>
+    <skos:prefLabel xml:lang="pt">hora a hora</skos:prefLabel>
+    <skos:prefLabel xml:lang="ro">la fiecare oră</skos:prefLabel>
+    <skos:prefLabel xml:lang="sk">každú hodinu</skos:prefLabel>
+    <skos:prefLabel xml:lang="sl">vsako uro</skos:prefLabel>
+    <skos:prefLabel xml:lang="es">cada hora</skos:prefLabel>
+    <skos:prefLabel xml:lang="sv">en gång i timmen</skos:prefLabel>
+    <skos:altLabel xml:lang="de">stündliche</skos:altLabel>
+    <skos:altLabel xml:lang="de">stündliches</skos:altLabel>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://publications.europa.eu/resource/authority/frequency/DECENNIAL" at:deprecated="false">
+    <skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/frequency"/>
+    <at:authority-code>DECENNIAL</at:authority-code>
+    <at:op-code>DECENNIAL</at:op-code>
+    <atold:op-code>DECENNIAL</atold:op-code>
+    <dc:identifier>DECENNIAL</dc:identifier>
+    <at:start.use>1952-07-25</at:start.use>
+    <skos:prefLabel xml:lang="bg">на десет години</skos:prefLabel>
+    <skos:prefLabel xml:lang="cs">každých 10 let</skos:prefLabel>
+    <skos:prefLabel xml:lang="da">hvert tiende år</skos:prefLabel>
+    <skos:prefLabel xml:lang="de">alle zehn Jahre</skos:prefLabel>
+    <skos:prefLabel xml:lang="el">ανά δέκα έτη</skos:prefLabel>
+    <skos:prefLabel xml:lang="en">decennial</skos:prefLabel>
+    <skos:prefLabel xml:lang="et">iga 10 aasta tagant</skos:prefLabel>
+    <skos:prefLabel xml:lang="fi">joka kymmenes vuosi</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">tous les dix ans</skos:prefLabel>
+    <skos:prefLabel xml:lang="ga">gach deich mbliana</skos:prefLabel>
+    <skos:prefLabel xml:lang="hr">svakih deset godina</skos:prefLabel>
+    <skos:prefLabel xml:lang="hu">tízévenkénti</skos:prefLabel>
+    <skos:prefLabel xml:lang="it">decennale</skos:prefLabel>
+    <skos:prefLabel xml:lang="lv">reizi 10 gados</skos:prefLabel>
+    <skos:prefLabel xml:lang="lt">kas dešimt metų</skos:prefLabel>
+    <skos:prefLabel xml:lang="mt">deċennali</skos:prefLabel>
+    <skos:prefLabel xml:lang="nl">om de tien jaar</skos:prefLabel>
+    <skos:prefLabel xml:lang="pl">co dziesięć lat</skos:prefLabel>
+    <skos:prefLabel xml:lang="pt">de dez em dez anos</skos:prefLabel>
+    <skos:prefLabel xml:lang="ro">la fiecare zece ani</skos:prefLabel>
+    <skos:prefLabel xml:lang="sk">každých desať rokov</skos:prefLabel>
+    <skos:prefLabel xml:lang="sl">vsakih deset let</skos:prefLabel>
+    <skos:prefLabel xml:lang="es">cada diez años</skos:prefLabel>
+    <skos:prefLabel xml:lang="sv">vart 10:e år</skos:prefLabel>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://publications.europa.eu/resource/authority/frequency/BIHOURLY" at:deprecated="false">
+    <skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/frequency"/>
+    <at:authority-code>BIHOURLY</at:authority-code>
+    <at:op-code>BIHOURLY</at:op-code>
+    <atold:op-code>BIHOURLY</atold:op-code>
+    <dc:identifier>BIHOURLY</dc:identifier>
+    <at:start.use>1952-07-25</at:start.use>
+    <skos:prefLabel xml:lang="bg">на два часа</skos:prefLabel>
+    <skos:prefLabel xml:lang="cs">každé 2 hodiny</skos:prefLabel>
+    <skos:prefLabel xml:lang="da">hver anden time</skos:prefLabel>
+    <skos:prefLabel xml:lang="de">alle zwei Stunden</skos:prefLabel>
+    <skos:prefLabel xml:lang="el">ανά δύο ώρες</skos:prefLabel>
+    <skos:prefLabel xml:lang="en">bihourly</skos:prefLabel>
+    <skos:prefLabel xml:lang="et">iga kahe tunni tagant</skos:prefLabel>
+    <skos:prefLabel xml:lang="fi">joka toinen tunti</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">toutes les deux heures</skos:prefLabel>
+    <skos:prefLabel xml:lang="ga">gach dhá uair an chloig</skos:prefLabel>
+    <skos:prefLabel xml:lang="hr">svaka dva sata</skos:prefLabel>
+    <skos:prefLabel xml:lang="hu">kétóránkénti</skos:prefLabel>
+    <skos:prefLabel xml:lang="it">ogni due ore</skos:prefLabel>
+    <skos:prefLabel xml:lang="lv">reizi divās stundās</skos:prefLabel>
+    <skos:prefLabel xml:lang="lt">dvi valandas</skos:prefLabel>
+    <skos:prefLabel xml:lang="mt">kull sagħtejn</skos:prefLabel>
+    <skos:prefLabel xml:lang="nl">om de twee uur</skos:prefLabel>
+    <skos:prefLabel xml:lang="pl">co dwie godziny</skos:prefLabel>
+    <skos:prefLabel xml:lang="pt">de duas em duas horas</skos:prefLabel>
+    <skos:prefLabel xml:lang="ro">la fiecare două ore</skos:prefLabel>
+    <skos:prefLabel xml:lang="sk">každé dve hodiny</skos:prefLabel>
+    <skos:prefLabel xml:lang="sl">vsaki dve uri</skos:prefLabel>
+    <skos:prefLabel xml:lang="es">cada dos horas</skos:prefLabel>
+    <skos:prefLabel xml:lang="sv">varannan timme</skos:prefLabel>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://publications.europa.eu/resource/authority/frequency/TRIHOURLY" at:deprecated="false">
+    <skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/frequency"/>
+    <at:authority-code>TRIHOURLY</at:authority-code>
+    <at:op-code>TRIHOURLY</at:op-code>
+    <atold:op-code>TRIHOURLY</atold:op-code>
+    <dc:identifier>TRIHOURLY</dc:identifier>
+    <at:start.use>1952-07-25</at:start.use>
+    <skos:prefLabel xml:lang="bg">на три часа</skos:prefLabel>
+    <skos:prefLabel xml:lang="cs">každé 3 hodiny</skos:prefLabel>
+    <skos:prefLabel xml:lang="da">hver tredje time</skos:prefLabel>
+    <skos:prefLabel xml:lang="de">alle drei Stunden</skos:prefLabel>
+    <skos:prefLabel xml:lang="el">ανά τρεις ώρες</skos:prefLabel>
+    <skos:prefLabel xml:lang="en">trihourly</skos:prefLabel>
+    <skos:prefLabel xml:lang="et">iga kolme tunni tagant</skos:prefLabel>
+    <skos:prefLabel xml:lang="fi">joka kolmas tunti</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">toutes les trois heures</skos:prefLabel>
+    <skos:prefLabel xml:lang="ga">gach trí uair an chloig</skos:prefLabel>
+    <skos:prefLabel xml:lang="hr">svaka tri sata</skos:prefLabel>
+    <skos:prefLabel xml:lang="hu">háromóránkénti</skos:prefLabel>
+    <skos:prefLabel xml:lang="it">ogni tre ore</skos:prefLabel>
+    <skos:prefLabel xml:lang="lv">reizi trīs stundās</skos:prefLabel>
+    <skos:prefLabel xml:lang="lt">tris valandas</skos:prefLabel>
+    <skos:prefLabel xml:lang="mt">kull tliet sigħat</skos:prefLabel>
+    <skos:prefLabel xml:lang="nl">om de drie uur</skos:prefLabel>
+    <skos:prefLabel xml:lang="pl">co trzy godziny</skos:prefLabel>
+    <skos:prefLabel xml:lang="pt">de três em três horas</skos:prefLabel>
+    <skos:prefLabel xml:lang="ro">la fiecare trei ore</skos:prefLabel>
+    <skos:prefLabel xml:lang="sk">každé tri hodiny</skos:prefLabel>
+    <skos:prefLabel xml:lang="sl">vsake tri ure</skos:prefLabel>
+    <skos:prefLabel xml:lang="es">cada tres horas</skos:prefLabel>
+    <skos:prefLabel xml:lang="sv">var tredje timme</skos:prefLabel>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://publications.europa.eu/resource/authority/frequency/BIDECENNIAL"
+                at:deprecated="false">
+    <skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/frequency"/>
+    <at:authority-code>BIDECENNIAL</at:authority-code>
+    <at:op-code>BIDECENNIAL</at:op-code>
+    <atold:op-code>BIDECENNIAL</atold:op-code>
+    <dc:identifier>BIDECENNIAL</dc:identifier>
+    <at:start.use>1952-07-25</at:start.use>
+    <skos:prefLabel xml:lang="bg">на двадесет години</skos:prefLabel>
+    <skos:prefLabel xml:lang="cs">každých 20 let</skos:prefLabel>
+    <skos:prefLabel xml:lang="da">hvert tyvende år</skos:prefLabel>
+    <skos:prefLabel xml:lang="de">alle zwanzig Jahre</skos:prefLabel>
+    <skos:prefLabel xml:lang="el">ανά είκοσι έτη</skos:prefLabel>
+    <skos:prefLabel xml:lang="en">bidecennial</skos:prefLabel>
+    <skos:prefLabel xml:lang="et">iga 20 aasta tagant</skos:prefLabel>
+    <skos:prefLabel xml:lang="fi">joka kahdeskymmenes vuosi</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">tous les vingt ans</skos:prefLabel>
+    <skos:prefLabel xml:lang="ga">gach fiche bliain</skos:prefLabel>
+    <skos:prefLabel xml:lang="hr">svakih dvadeset godina</skos:prefLabel>
+    <skos:prefLabel xml:lang="hu">húszévenkénti</skos:prefLabel>
+    <skos:prefLabel xml:lang="it">bidecennale</skos:prefLabel>
+    <skos:prefLabel xml:lang="lv">reizi 20 gados</skos:prefLabel>
+    <skos:prefLabel xml:lang="lt">kas dvidešimt metų</skos:prefLabel>
+    <skos:prefLabel xml:lang="mt">bideċennali</skos:prefLabel>
+    <skos:prefLabel xml:lang="nl">om de twintig jaar</skos:prefLabel>
+    <skos:prefLabel xml:lang="pl">co dwadzieścia lat</skos:prefLabel>
+    <skos:prefLabel xml:lang="pt">de vinte em vinte anos</skos:prefLabel>
+    <skos:prefLabel xml:lang="ro">la fiecare douăzeci de ani</skos:prefLabel>
+    <skos:prefLabel xml:lang="sk">každých dvadsať rokov</skos:prefLabel>
+    <skos:prefLabel xml:lang="sl">vsakih dvajset let</skos:prefLabel>
+    <skos:prefLabel xml:lang="es">cada veinte años</skos:prefLabel>
+    <skos:prefLabel xml:lang="sv">vart 20:e år</skos:prefLabel>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://publications.europa.eu/resource/authority/frequency/TRIDECENNIAL"
+                at:deprecated="false">
+    <skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/frequency"/>
+    <at:authority-code>TRIDECENNIAL</at:authority-code>
+    <at:op-code>TRIDECENNIAL</at:op-code>
+    <atold:op-code>TRIDECENNIAL</atold:op-code>
+    <dc:identifier>TRIDECENNIAL</dc:identifier>
+    <at:start.use>1952-07-25</at:start.use>
+    <skos:prefLabel xml:lang="bg">на тридесет години</skos:prefLabel>
+    <skos:prefLabel xml:lang="cs">každých 30 let</skos:prefLabel>
+    <skos:prefLabel xml:lang="da">hvert tredivte år</skos:prefLabel>
+    <skos:prefLabel xml:lang="de">alle dreißig Jahre</skos:prefLabel>
+    <skos:prefLabel xml:lang="el">ανά τριάντα έτη</skos:prefLabel>
+    <skos:prefLabel xml:lang="en">tridecennial</skos:prefLabel>
+    <skos:prefLabel xml:lang="et">iga 30 aasta tagant</skos:prefLabel>
+    <skos:prefLabel xml:lang="fi">joka kolmaskymmenes vuosi</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">tous les trente ans</skos:prefLabel>
+    <skos:prefLabel xml:lang="ga">gach tríocha bliain</skos:prefLabel>
+    <skos:prefLabel xml:lang="hr">svakih trideset godina</skos:prefLabel>
+    <skos:prefLabel xml:lang="hu">harmincévenkénti</skos:prefLabel>
+    <skos:prefLabel xml:lang="it">tridecennale</skos:prefLabel>
+    <skos:prefLabel xml:lang="lv">reizi 30 gados</skos:prefLabel>
+    <skos:prefLabel xml:lang="lt">kas trisdešimt metų</skos:prefLabel>
+    <skos:prefLabel xml:lang="mt">trideċennali</skos:prefLabel>
+    <skos:prefLabel xml:lang="nl">om de dertig jaar</skos:prefLabel>
+    <skos:prefLabel xml:lang="pl">co trzydzieści lat</skos:prefLabel>
+    <skos:prefLabel xml:lang="pt">de trinta em trinta anos</skos:prefLabel>
+    <skos:prefLabel xml:lang="ro">la fiecare treizeci de ani</skos:prefLabel>
+    <skos:prefLabel xml:lang="sk">každých tridsať rokov</skos:prefLabel>
+    <skos:prefLabel xml:lang="sl">vsakih trideset let</skos:prefLabel>
+    <skos:prefLabel xml:lang="es">cada treinta años</skos:prefLabel>
+    <skos:prefLabel xml:lang="sv">vart 30:e år</skos:prefLabel>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://publications.europa.eu/resource/authority/frequency/OP_DATPRO">
+    <skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/frequency"/>
+    <at:op-code>OP_DATPRO</at:op-code>
+    <atold:op-code>OP_DATPRO</atold:op-code>
+    <dc:identifier>OP_DATPRO</dc:identifier>
+    <skos:prefLabel xml:lang="bg">НЕОКОНЧАТЕЛНИ ДАННИ</skos:prefLabel>
+    <skos:prefLabel xml:lang="cs">Předběžné údaje</skos:prefLabel>
+    <skos:prefLabel xml:lang="da">Midlertidige data</skos:prefLabel>
+    <skos:prefLabel xml:lang="de">Vorläufige Daten</skos:prefLabel>
+    <skos:prefLabel xml:lang="en">Provisional data</skos:prefLabel>
+    <skos:prefLabel xml:lang="el">Προσωρινά δεδομένα</skos:prefLabel>
+    <skos:prefLabel xml:lang="es">Datos provisionales</skos:prefLabel>
+    <skos:prefLabel xml:lang="et">Esialgsed andmed</skos:prefLabel>
+    <skos:prefLabel xml:lang="fi">Alustavat tiedot</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">Données provisoires</skos:prefLabel>
+    <skos:prefLabel xml:lang="ga">Sonraí sealadacha</skos:prefLabel>
+    <skos:prefLabel xml:lang="hr">Privremeni podaci</skos:prefLabel>
+    <skos:prefLabel xml:lang="hu">Ideiglenes adatok</skos:prefLabel>
+    <skos:prefLabel xml:lang="it">Dati provvisori</skos:prefLabel>
+    <skos:prefLabel xml:lang="lt">Laikinieji duomenys</skos:prefLabel>
+    <skos:prefLabel xml:lang="lv">Provizoriski dati</skos:prefLabel>
+    <skos:prefLabel xml:lang="mt">Dejta provviżorja</skos:prefLabel>
+    <skos:prefLabel xml:lang="nl">Voorlopige gegevens</skos:prefLabel>
+    <skos:prefLabel xml:lang="pl">Dane tymczasowe</skos:prefLabel>
+    <skos:prefLabel xml:lang="pt">Dados provisórios</skos:prefLabel>
+    <skos:prefLabel xml:lang="ro">Date provizorii</skos:prefLabel>
+    <skos:prefLabel xml:lang="sk">Predbežné údaje</skos:prefLabel>
+    <skos:prefLabel xml:lang="sl">Začasni podatki</skos:prefLabel>
+    <skos:prefLabel xml:lang="sv">Tillfälliga uppgifter</skos:prefLabel>
+  </skos:Concept>
+</rdf:RDF>

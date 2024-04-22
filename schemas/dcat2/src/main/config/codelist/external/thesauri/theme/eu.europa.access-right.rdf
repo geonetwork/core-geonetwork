@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF xmlns:owl="http://www.w3.org/2002/07/owl#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/">
+	<skos:ConceptScheme rdf:about="http://publications.europa.eu/resource/authority/access-right">
+		<owl:versionInfo>20160920-0</owl:versionInfo>
+		<rdfs:label xml:lang="en">Access right Named Authority List</rdfs:label>
+	</skos:ConceptScheme>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/access-right/PUBLIC">
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/access-right"/>
+		<dc:identifier>PUBLIC</dc:identifier>
+		<skos:prefLabel xml:lang="bg">public</skos:prefLabel>
+		<skos:prefLabel xml:lang="cs">public</skos:prefLabel>
+		<skos:prefLabel xml:lang="da">public</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">public</skos:prefLabel>
+		<skos:prefLabel xml:lang="el">public</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">public</skos:prefLabel>
+		<skos:prefLabel xml:lang="et">public</skos:prefLabel>
+		<skos:prefLabel xml:lang="fi">public</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">public</skos:prefLabel>
+		<skos:prefLabel xml:lang="ga">public</skos:prefLabel>
+		<skos:prefLabel xml:lang="hr">public</skos:prefLabel>
+		<skos:prefLabel xml:lang="hu">public</skos:prefLabel>
+		<skos:prefLabel xml:lang="it">public</skos:prefLabel>
+		<skos:prefLabel xml:lang="lv">public</skos:prefLabel>
+		<skos:prefLabel xml:lang="lt">public</skos:prefLabel>
+		<skos:prefLabel xml:lang="mt">public</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">publiek</skos:prefLabel>
+		<skos:prefLabel xml:lang="no">public</skos:prefLabel>
+		<skos:prefLabel xml:lang="pl">public</skos:prefLabel>
+		<skos:prefLabel xml:lang="pt">public</skos:prefLabel>
+		<skos:prefLabel xml:lang="ro">public</skos:prefLabel>
+		<skos:prefLabel xml:lang="sk">public</skos:prefLabel>
+		<skos:prefLabel xml:lang="sl">public</skos:prefLabel>
+		<skos:prefLabel xml:lang="es">public</skos:prefLabel>
+		<skos:prefLabel xml:lang="sv">public</skos:prefLabel>
+	</skos:Concept>
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/access-right/NON_PUBLIC">
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/access-right"/>
+		<dc:identifier>NON_PUBLIC</dc:identifier>
+		<skos:prefLabel xml:lang="bg">not public</skos:prefLabel>
+		<skos:prefLabel xml:lang="cs">not public</skos:prefLabel>
+		<skos:prefLabel xml:lang="da">not public</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">not public</skos:prefLabel>
+		<skos:prefLabel xml:lang="el">not public</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">not public</skos:prefLabel>
+		<skos:prefLabel xml:lang="et">not public</skos:prefLabel>
+		<skos:prefLabel xml:lang="fi">not public</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">not public</skos:prefLabel>
+		<skos:prefLabel xml:lang="ga">not public</skos:prefLabel>
+		<skos:prefLabel xml:lang="hr">not public</skos:prefLabel>
+		<skos:prefLabel xml:lang="hu">not public</skos:prefLabel>
+		<skos:prefLabel xml:lang="it">not public</skos:prefLabel>
+		<skos:prefLabel xml:lang="lv">not public</skos:prefLabel>
+		<skos:prefLabel xml:lang="lt">not public</skos:prefLabel>
+		<skos:prefLabel xml:lang="mt">not public</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">niet publiek</skos:prefLabel>
+		<skos:prefLabel xml:lang="no">not public</skos:prefLabel>
+		<skos:prefLabel xml:lang="pl">not public</skos:prefLabel>
+		<skos:prefLabel xml:lang="pt">not public</skos:prefLabel>
+		<skos:prefLabel xml:lang="ro">not public</skos:prefLabel>
+		<skos:prefLabel xml:lang="sk">not public</skos:prefLabel>
+		<skos:prefLabel xml:lang="sl">not public</skos:prefLabel>
+		<skos:prefLabel xml:lang="es">not public</skos:prefLabel>
+		<skos:prefLabel xml:lang="sv">not public</skos:prefLabel>
+	</skos:Concept>	
+	<skos:Concept rdf:about="http://publications.europa.eu/resource/authority/access-right/RESTRICTED">
+		<skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/access-right"/>
+		<dc:identifier>RESTRICTED</dc:identifier>
+		<skos:prefLabel xml:lang="bg">restricted</skos:prefLabel>
+		<skos:prefLabel xml:lang="cs">restricted</skos:prefLabel>
+		<skos:prefLabel xml:lang="da">restricted</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">restricted</skos:prefLabel>
+		<skos:prefLabel xml:lang="el">restricted</skos:prefLabel>
+		<skos:prefLabel xml:lang="en">restricted</skos:prefLabel>
+		<skos:prefLabel xml:lang="et">restricted</skos:prefLabel>
+		<skos:prefLabel xml:lang="fi">restricted</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">restricted</skos:prefLabel>
+		<skos:prefLabel xml:lang="ga">restricted</skos:prefLabel>
+		<skos:prefLabel xml:lang="hr">restricted</skos:prefLabel>
+		<skos:prefLabel xml:lang="hu">restricted</skos:prefLabel>
+		<skos:prefLabel xml:lang="it">restricted</skos:prefLabel>
+		<skos:prefLabel xml:lang="lv">restricted</skos:prefLabel>
+		<skos:prefLabel xml:lang="lt">restricted</skos:prefLabel>
+		<skos:prefLabel xml:lang="mt">restricted</skos:prefLabel>
+		<skos:prefLabel xml:lang="nl">beperkt</skos:prefLabel>
+		<skos:prefLabel xml:lang="no">restricted</skos:prefLabel>
+		<skos:prefLabel xml:lang="pl">restricted</skos:prefLabel>
+		<skos:prefLabel xml:lang="pt">restricted</skos:prefLabel>
+		<skos:prefLabel xml:lang="ro">restricted</skos:prefLabel>
+		<skos:prefLabel xml:lang="sk">restricted</skos:prefLabel>
+		<skos:prefLabel xml:lang="sl">restricted</skos:prefLabel>
+		<skos:prefLabel xml:lang="es">restricted</skos:prefLabel>
+		<skos:prefLabel xml:lang="sv">restricted</skos:prefLabel>
+	</skos:Concept>	
+	</rdf:RDF>

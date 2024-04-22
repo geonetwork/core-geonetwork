@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <parent>
+    <artifactId>gn-schemas</artifactId>
+    <groupId>org.geonetwork-opensource.schemas</groupId>
+    <version>4.2.5-0</version>
+  </parent>
+  <modelVersion>4.0.0</modelVersion>
+
+  <artifactId>gn-schema-dcat2</artifactId>
+  <name>GeoNetwork schema plugin for DCAT2 standard</name>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.geonetwork-opensource.schemas</groupId>
+      <artifactId>gn-schema-core</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.geonetwork-opensource</groupId>
+      <artifactId>gn-core</artifactId>
+      <version>${project.version}</version>
+      <scope>provided</scope>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <resources>
+      <resource>
+        <directory>src/main/config/codelist/external/thesauri/theme</directory>
+        <targetPath>thesaurus/theme</targetPath>
+      </resource>
+      <resource>
+        <directory>src/main/config/translations</directory>
+        <targetPath>META-INF/catalog/locales</targetPath>
+      </resource>
+      <resource>
+        <directory>src/main/resources</directory>
+      </resource>
+      <resource>
+        <directory>src/main/plugin</directory>
+        <targetPath>plugin</targetPath>
+      </resource>
+    </resources>
+
+
+    <testResources>
+      <testResource>
+        <directory>src/test/resources/org/fao/geonet</directory>
+      </testResource>
+      <testResource>
+        <directory>src/main/plugin/dcat2</directory>
+      </testResource>
+    </testResources>
+
+    <plugins>
+      <plugin>
+        <artifactId>maven-jar-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>test-jar</id>
+            <goals>
+              <goal>test-jar</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
+      <!-- package up plugin folder as a zip -->
+      <plugin>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>plugin-assembly</id>
+            <phase>package</phase>
+            <goals><goal>single</goal></goals>
+            <inherited>false</inherited>
+            <configuration>
+             <appendAssemblyId>false</appendAssemblyId>
+             <descriptors>
+              <descriptor>src/assembly/schema-plugin.xml</descriptor>
+             </descriptors>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+
+  <profiles>
+    <profile>
+      <id>run-static-analysis</id>
+      <activation>
+        <property>
+          <name>!skipTests</name>
+        </property>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>findbugs-maven-plugin</artifactId>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
+</project>

@@ -1,0 +1,433 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:owl="http://www.w3.org/2002/07/owl#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:atold="http://publications.europa.eu/resource/authority/" xmlns:at="http://publications.europa.eu/ontology/authority/">
+  <skos:ConceptScheme rdf:about="http://publications.europa.eu/resource/authority/frequency" at:table.id="frequency" at:table.version.number="20160921-0">
+    <owl:versionInfo>20160921-0</owl:versionInfo>
+    <rdfs:label xml:lang="en">Frequencies Named Authority List</rdfs:label>
+    <at:prefLabel xml:lang="en">Frequencies Named Authority List</at:prefLabel>
+  </skos:ConceptScheme>
+  <skos:Concept rdf:about="http://publications.europa.eu/resource/authority/frequency/TRIENNIAL" at:deprecated="false">
+    <skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/frequency" />
+    <at:authority-code>TRIENNIAL</at:authority-code>
+    <at:op-code>TRIENNIAL</at:op-code>
+    <atold:op-code>TRIENNIAL</atold:op-code>
+    <dc:identifier>TRIENNIAL</dc:identifier>
+    <at:start.use>1952-07-25</at:start.use>
+    <skos:prefLabel xml:lang="de">dreijährlich</skos:prefLabel>
+    <skos:prefLabel xml:lang="en">triennial</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">triennal</skos:prefLabel>
+    <skos:prefLabel xml:lang="nl">driejaarlijks</skos:prefLabel>
+    <skos:exactMatch rdf:resource="http://purl.org/cld/freq/triennial" />
+    <at:op-mapped-code>
+      <at:MappedCode>
+        <dc:source>PUB</dc:source>
+        <at:affected-table>PUB_FREQ</at:affected-table>
+        <at:legacy-code>D</at:legacy-code>
+      </at:MappedCode>
+    </at:op-mapped-code>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://publications.europa.eu/resource/authority/frequency/BIENNIAL" at:deprecated="false">
+    <skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/frequency" />
+    <at:authority-code>BIENNIAL</at:authority-code>
+    <at:op-code>BIENNIAL</at:op-code>
+    <atold:op-code>BIENNIAL</atold:op-code>
+    <dc:identifier>BIENNIAL</dc:identifier>
+    <at:start.use>1952-07-25</at:start.use>
+    <skos:prefLabel xml:lang="de">zweijährlich</skos:prefLabel>
+    <skos:prefLabel xml:lang="en">biennial</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">biennal</skos:prefLabel>
+    <skos:prefLabel xml:lang="nl">tweejaarlijks</skos:prefLabel>
+    <skos:exactMatch rdf:resource="http://purl.org/cld/freq/biennial" />
+    <at:op-mapped-code>
+      <at:MappedCode>
+        <dc:source>PUB</dc:source>
+        <at:affected-table>PUB_FREQ</at:affected-table>
+        <at:legacy-code>G</at:legacy-code>
+      </at:MappedCode>
+    </at:op-mapped-code>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://publications.europa.eu/resource/authority/frequency/ANNUAL" at:deprecated="false">
+    <skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/frequency" />
+    <at:authority-code>ANNUAL</at:authority-code>
+    <at:op-code>ANNUAL</at:op-code>
+    <atold:op-code>ANNUAL</atold:op-code>
+    <dc:identifier>ANNUAL</dc:identifier>
+    <at:start.use>1952-07-25</at:start.use>
+    <skos:prefLabel xml:lang="de">jährlich</skos:prefLabel>
+    <skos:prefLabel xml:lang="en">annual</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">annuel</skos:prefLabel>
+    <skos:prefLabel xml:lang="nl">jaarlijks</skos:prefLabel>
+    <skos:exactMatch rdf:resource="http://purl.org/cld/freq/annual" />
+    <at:op-mapped-code>
+      <at:MappedCode>
+        <dc:source>PUB</dc:source>
+        <at:affected-table>PUB_FREQ</at:affected-table>
+        <at:legacy-code>ANN</at:legacy-code>
+      </at:MappedCode>
+    </at:op-mapped-code>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://publications.europa.eu/resource/authority/frequency/ANNUAL_2" at:deprecated="false">
+    <skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/frequency" />
+    <at:authority-code>ANNUAL_2</at:authority-code>
+    <at:op-code>ANNUAL_2</at:op-code>
+    <atold:op-code>ANNUAL_2</atold:op-code>
+    <dc:identifier>ANNUAL_2</dc:identifier>
+    <at:start.use>1952-07-25</at:start.use>
+    <skos:prefLabel xml:lang="de">halbjährlich</skos:prefLabel>
+    <skos:prefLabel xml:lang="en">semiannual</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">semestriel</skos:prefLabel>
+    <skos:prefLabel xml:lang="nl">halfjaarlijks</skos:prefLabel>
+    <skos:exactMatch rdf:resource="http://purl.org/cld/freq/semiannual" />
+    <at:op-mapped-code>
+      <at:MappedCode>
+        <dc:source>PUB</dc:source>
+        <at:affected-table>PUB_FREQ</at:affected-table>
+        <at:legacy-code>S</at:legacy-code>
+      </at:MappedCode>
+    </at:op-mapped-code>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://publications.europa.eu/resource/authority/frequency/ANNUAL_3" at:deprecated="false">
+    <skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/frequency" />
+    <at:authority-code>ANNUAL_3</at:authority-code>
+    <at:op-code>ANNUAL_3</at:op-code>
+    <atold:op-code>ANNUAL_3</atold:op-code>
+    <dc:identifier>ANNUAL_3</dc:identifier>
+    <at:start.use>1952-07-25</at:start.use>
+    <skos:prefLabel xml:lang="de">dreimal im Jahr</skos:prefLabel>
+    <skos:prefLabel xml:lang="en">three times a year</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">trois fois par an</skos:prefLabel>
+    <skos:prefLabel xml:lang="nl">drie keer per jaar</skos:prefLabel>
+    <skos:exactMatch rdf:resource="http://purl.org/cld/freq/threeTimesAYear" />
+    <at:op-mapped-code>
+      <at:MappedCode>
+        <dc:source>PUB</dc:source>
+        <at:affected-table>PUB_FREQ</at:affected-table>
+        <at:legacy-code>F</at:legacy-code>
+      </at:MappedCode>
+    </at:op-mapped-code>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://publications.europa.eu/resource/authority/frequency/QUARTERLY" at:deprecated="false">
+    <skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/frequency" />
+    <at:authority-code>QUARTERLY</at:authority-code>
+    <at:op-code>QUARTERLY</at:op-code>
+    <atold:op-code>QUARTERLY</atold:op-code>
+    <dc:identifier>QUARTERLY</dc:identifier>
+    <at:start.use>1952-07-25</at:start.use>
+    <skos:prefLabel xml:lang="de">vierteljährlich</skos:prefLabel>
+    <skos:prefLabel xml:lang="en">quarterly</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">trimestriel</skos:prefLabel>
+    <skos:prefLabel xml:lang="nl">driemaandelijks</skos:prefLabel>
+    <skos:exactMatch rdf:resource="http://purl.org/cld/freq/quarterly" />
+    <at:op-mapped-code>
+      <at:MappedCode>
+        <dc:source>PUB</dc:source>
+        <at:affected-table>PUB_FREQ</at:affected-table>
+        <at:legacy-code>T</at:legacy-code>
+      </at:MappedCode>
+    </at:op-mapped-code>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://publications.europa.eu/resource/authority/frequency/BIMONTHLY" at:deprecated="false">
+    <skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/frequency" />
+    <at:authority-code>BIMONTHLY</at:authority-code>
+    <at:op-code>BIMONTHLY</at:op-code>
+    <atold:op-code>BIMONTHLY</atold:op-code>
+    <dc:identifier>BIMONTHLY</dc:identifier>
+    <at:start.use>1952-07-25</at:start.use>
+    <skos:prefLabel xml:lang="de">zweimonatlich</skos:prefLabel>
+    <skos:prefLabel xml:lang="en">bimonthly</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">bimestriel</skos:prefLabel>
+    <skos:prefLabel xml:lang="nl">tweemaandelijks</skos:prefLabel>
+    <skos:exactMatch rdf:resource="http://purl.org/cld/freq/bimonthly" />
+    <at:op-mapped-code>
+      <at:MappedCode>
+        <dc:source>PUB</dc:source>
+        <at:affected-table>PUB_FREQ</at:affected-table>
+        <at:legacy-code>BIM</at:legacy-code>
+      </at:MappedCode>
+    </at:op-mapped-code>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://publications.europa.eu/resource/authority/frequency/MONTHLY" at:deprecated="false">
+    <skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/frequency" />
+    <at:authority-code>MONTHLY</at:authority-code>
+    <at:op-code>MONTHLY</at:op-code>
+    <atold:op-code>MONTHLY</atold:op-code>
+    <dc:identifier>MONTHLY</dc:identifier>
+    <at:start.use>1952-07-25</at:start.use>
+    <skos:prefLabel xml:lang="de">monatlich</skos:prefLabel>
+    <skos:prefLabel xml:lang="en">monthly</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">mensuel</skos:prefLabel>
+    <skos:prefLabel xml:lang="nl">maandelijks</skos:prefLabel>
+    <skos:exactMatch rdf:resource="http://purl.org/cld/freq/monthly" />
+    <at:op-mapped-code>
+      <at:MappedCode>
+        <dc:source>PUB</dc:source>
+        <at:affected-table>PUB_FREQ</at:affected-table>
+        <at:legacy-code>M</at:legacy-code>
+      </at:MappedCode>
+    </at:op-mapped-code>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://publications.europa.eu/resource/authority/frequency/MONTHLY_2" at:deprecated="false">
+    <skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/frequency" />
+    <at:authority-code>MONTHLY_2</at:authority-code>
+    <at:op-code>MONTHLY_2</at:op-code>
+    <atold:op-code>MONTHLY_2</atold:op-code>
+    <dc:identifier>MONTHLY_2</dc:identifier>
+    <at:start.use>1952-07-25</at:start.use>
+    <skos:prefLabel xml:lang="de">zweimal im Monat</skos:prefLabel>
+    <skos:prefLabel xml:lang="en">semimonthly</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">bimensuel</skos:prefLabel>
+    <skos:prefLabel xml:lang="nl">twee keer per maand</skos:prefLabel>
+    <skos:exactMatch rdf:resource="http://purl.org/cld/freq/semimonthly" />
+    <at:op-mapped-code>
+      <at:MappedCode>
+        <dc:source>PUB</dc:source>
+        <at:affected-table>PUB_FREQ</at:affected-table>
+        <at:legacy-code>E</at:legacy-code>
+      </at:MappedCode>
+    </at:op-mapped-code>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://publications.europa.eu/resource/authority/frequency/BIWEEKLY" at:deprecated="false">
+    <skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/frequency" />
+    <at:authority-code>BIWEEKLY</at:authority-code>
+    <at:op-code>BIWEEKLY</at:op-code>
+    <atold:op-code>BIWEEKLY</atold:op-code>
+    <dc:identifier>BIWEEKLY</dc:identifier>
+    <at:start.use>1952-07-25</at:start.use>
+    <skos:prefLabel xml:lang="de">zweiwöchentlich</skos:prefLabel>
+    <skos:prefLabel xml:lang="en">biweekly</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">tous les quinze jours</skos:prefLabel>
+    <skos:prefLabel xml:lang="nl">veertiendaags</skos:prefLabel>
+    <skos:exactMatch rdf:resource="http://purl.org/cld/freq/biweekly" />
+    <at:op-mapped-code>
+      <at:MappedCode>
+        <dc:source>PUB</dc:source>
+        <at:affected-table>PUB_FREQ</at:affected-table>
+        <at:legacy-code>SEMIM</at:legacy-code>
+      </at:MappedCode>
+    </at:op-mapped-code>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://publications.europa.eu/resource/authority/frequency/MONTHLY_3" at:deprecated="false">
+    <skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/frequency" />
+    <at:authority-code>MONTHLY_3</at:authority-code>
+    <at:op-code>MONTHLY_3</at:op-code>
+    <atold:op-code>MONTHLY_3</atold:op-code>
+    <dc:identifier>MONTHLY_3</dc:identifier>
+    <at:start.use>1952-07-25</at:start.use>
+    <skos:prefLabel xml:lang="de">dreimal im Monat</skos:prefLabel>
+    <skos:prefLabel xml:lang="en">three times a month</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">trois fois par mois</skos:prefLabel>
+    <skos:prefLabel xml:lang="nl">drie keer per maand</skos:prefLabel>
+    <skos:exactMatch rdf:resource="http://purl.org/cld/freq/threeTimesAMonth" />
+    <at:op-mapped-code>
+      <at:MappedCode>
+        <dc:source>PUB</dc:source>
+        <at:affected-table>PUB_FREQ</at:affected-table>
+        <at:legacy-code>J</at:legacy-code>
+      </at:MappedCode>
+    </at:op-mapped-code>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://publications.europa.eu/resource/authority/frequency/WEEKLY" at:deprecated="false">
+    <skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/frequency" />
+    <at:authority-code>WEEKLY</at:authority-code>
+    <at:op-code>WEEKLY</at:op-code>
+    <atold:op-code>WEEKLY</atold:op-code>
+    <dc:identifier>WEEKLY</dc:identifier>
+    <at:start.use>1952-07-25</at:start.use>
+    <skos:prefLabel xml:lang="de">wöchentlich</skos:prefLabel>
+    <skos:prefLabel xml:lang="en">weekly</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">hebdomadaire</skos:prefLabel>
+    <skos:prefLabel xml:lang="nl">wekelijks</skos:prefLabel>
+    <skos:exactMatch rdf:resource="http://purl.org/cld/freq/weekly" />
+    <at:op-mapped-code>
+      <at:MappedCode>
+        <dc:source>PUB</dc:source>
+        <at:affected-table>PUB_FREQ</at:affected-table>
+        <at:legacy-code>H</at:legacy-code>
+      </at:MappedCode>
+    </at:op-mapped-code>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://publications.europa.eu/resource/authority/frequency/WEEKLY_2" at:deprecated="false">
+    <skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/frequency" />
+    <at:authority-code>WEEKLY_2</at:authority-code>
+    <at:op-code>WEEKLY_2</at:op-code>
+    <atold:op-code>WEEKLY_2</atold:op-code>
+    <dc:identifier>WEEKLY_2</dc:identifier>
+    <at:start.use>1952-07-25</at:start.use>
+    <skos:prefLabel xml:lang="de">zweimal in Woche</skos:prefLabel>
+    <skos:prefLabel xml:lang="en">semiweekly</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">bihebdomadaire</skos:prefLabel>
+    <skos:prefLabel xml:lang="nl">twee keer per week</skos:prefLabel>
+    <skos:exactMatch rdf:resource="http://purl.org/cld/freq/semiweekly" />
+    <at:op-mapped-code>
+      <at:MappedCode>
+        <dc:source>PUB</dc:source>
+        <at:affected-table>PUB_FREQ</at:affected-table>
+        <at:legacy-code>C</at:legacy-code>
+      </at:MappedCode>
+    </at:op-mapped-code>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://publications.europa.eu/resource/authority/frequency/WEEKLY_3" at:deprecated="false">
+    <skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/frequency" />
+    <at:authority-code>WEEKLY_3</at:authority-code>
+    <at:op-code>WEEKLY_3</at:op-code>
+    <atold:op-code>WEEKLY_3</atold:op-code>
+    <dc:identifier>WEEKLY_3</dc:identifier>
+    <at:start.use>1952-07-25</at:start.use>
+    <skos:prefLabel xml:lang="de">dreimal in Woche</skos:prefLabel>
+    <skos:prefLabel xml:lang="en">three times a week</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">trois fois par semaine</skos:prefLabel>
+    <skos:prefLabel xml:lang="nl">drie keer per week</skos:prefLabel>
+    <skos:exactMatch rdf:resource="http://purl.org/cld/freq/threeTimesAWeek" />
+    <at:op-mapped-code>
+      <at:MappedCode>
+        <dc:source>PUB</dc:source>
+        <at:affected-table>PUB_FREQ</at:affected-table>
+        <at:legacy-code>I</at:legacy-code>
+      </at:MappedCode>
+    </at:op-mapped-code>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://publications.europa.eu/resource/authority/frequency/DAILY" at:deprecated="false">
+    <skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/frequency" />
+    <at:authority-code>DAILY</at:authority-code>
+    <at:op-code>DAILY</at:op-code>
+    <atold:op-code>DAILY</atold:op-code>
+    <dc:identifier>DAILY</dc:identifier>
+    <at:start.use>1952-07-25</at:start.use>
+    <skos:prefLabel xml:lang="de">täglich</skos:prefLabel>
+    <skos:prefLabel xml:lang="en">daily</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">quotidien</skos:prefLabel>
+    <skos:prefLabel xml:lang="nl">dagelijks</skos:prefLabel>
+    <skos:exactMatch rdf:resource="http://purl.org/cld/freq/daily" />
+    <at:op-mapped-code>
+      <at:MappedCode>
+        <dc:source>PUB</dc:source>
+        <at:affected-table>PUB_FREQ</at:affected-table>
+        <at:legacy-code>Q</at:legacy-code>
+      </at:MappedCode>
+    </at:op-mapped-code>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://publications.europa.eu/resource/authority/frequency/UPDATE_CONT" at:deprecated="false">
+    <skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/frequency" />
+    <at:authority-code>UPDATE_CONT</at:authority-code>
+    <at:op-code>UPDATE_CONT</at:op-code>
+    <atold:op-code>UPDATE_CONT</atold:op-code>
+    <dc:identifier>UPDATE_CONT</dc:identifier>
+    <at:start.use>1952-07-25</at:start.use>
+    <skos:prefLabel xml:lang="de">ständige Aktualisierung</skos:prefLabel>
+    <skos:prefLabel xml:lang="en">continuously updated</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">mise à jour continuelle</skos:prefLabel>
+    <skos:prefLabel xml:lang="nl">voortdurend geactualiseerd</skos:prefLabel>
+    <at:op-mapped-code>
+      <at:MappedCode>
+        <dc:source>PUB</dc:source>
+        <at:affected-table>PUB_FREQ</at:affected-table>
+        <at:legacy-code>K</at:legacy-code>
+      </at:MappedCode>
+    </at:op-mapped-code>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://publications.europa.eu/resource/authority/frequency/IRREG" at:deprecated="false">
+    <skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/frequency" />
+    <at:authority-code>IRREG</at:authority-code>
+    <at:op-code>IRREG</at:op-code>
+    <atold:op-code>IRREG</atold:op-code>
+    <dc:identifier>IRREG</dc:identifier>
+    <at:start.use>1952-07-25</at:start.use>
+    <skos:prefLabel xml:lang="de">unregelmäßig</skos:prefLabel>
+    <skos:prefLabel xml:lang="en">irregular</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">irrégulier</skos:prefLabel>
+    <skos:prefLabel xml:lang="nl">onregelmatig</skos:prefLabel>
+    <skos:exactMatch rdf:resource="http://purl.org/cld/freq/irregular" />
+    <at:op-mapped-code>
+      <at:MappedCode>
+        <dc:source>PUB</dc:source>
+        <at:affected-table>PUB_FREQ</at:affected-table>
+        <at:legacy-code>IRR</at:legacy-code>
+      </at:MappedCode>
+    </at:op-mapped-code>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://publications.europa.eu/resource/authority/frequency/UNKNOWN" at:deprecated="false">
+    <skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/frequency" />
+    <at:authority-code>UNKNOWN</at:authority-code>
+    <at:op-code>UNKNOWN</at:op-code>
+    <atold:op-code>UNKNOWN</atold:op-code>
+    <dc:identifier>UNKNOWN</dc:identifier>
+    <at:start.use>1952-07-25</at:start.use>
+    <skos:prefLabel xml:lang="de">unbekannt</skos:prefLabel>
+    <skos:prefLabel xml:lang="en">unknown</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">inconnu</skos:prefLabel>
+    <skos:prefLabel xml:lang="nl">onbekend</skos:prefLabel>
+    <at:op-mapped-code>
+      <at:MappedCode>
+        <dc:source>PUB</dc:source>
+        <at:affected-table>PUB_FREQ</at:affected-table>
+        <at:legacy-code>U</at:legacy-code>
+      </at:MappedCode>
+    </at:op-mapped-code>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://publications.europa.eu/resource/authority/frequency/OTHER" at:deprecated="false">
+    <skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/frequency" />
+    <at:authority-code>OTHER</at:authority-code>
+    <at:op-code>OTHER</at:op-code>
+    <atold:op-code>OTHER</atold:op-code>
+    <dc:identifier>OTHER</dc:identifier>
+    <at:start.use>1952-07-25</at:start.use>
+    <skos:prefLabel xml:lang="de">anderer</skos:prefLabel>
+    <skos:prefLabel xml:lang="en">other</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">autre</skos:prefLabel>
+    <skos:prefLabel xml:lang="nl">overige</skos:prefLabel>
+    <at:op-mapped-code>
+      <at:MappedCode>
+        <dc:source>PUB</dc:source>
+        <at:affected-table>PUB_FREQ</at:affected-table>
+        <at:legacy-code>Z</at:legacy-code>
+      </at:MappedCode>
+    </at:op-mapped-code>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://publications.europa.eu/resource/authority/frequency/DAILY_2" at:deprecated="false">
+    <skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/frequency" />
+    <at:authority-code>DAILY_2</at:authority-code>
+    <at:op-code>DAILY_2</at:op-code>
+    <atold:op-code>DAILY_2</atold:op-code>
+    <dc:identifier>DAILY_2</dc:identifier>
+    <at:start.use>1952-07-25</at:start.use>
+    <skos:prefLabel xml:lang="de">zweimal täglich</skos:prefLabel>
+    <skos:prefLabel xml:lang="en">twice a day</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">deux fois par jour</skos:prefLabel>
+    <skos:prefLabel xml:lang="nl">tweemaal per dag</skos:prefLabel>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://publications.europa.eu/resource/authority/frequency/CONT" at:deprecated="false">
+    <skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/frequency" />
+    <at:authority-code>CONT</at:authority-code>
+    <at:op-code>CONT</at:op-code>
+    <atold:op-code>CONT</atold:op-code>
+    <dc:identifier>CONT</dc:identifier>
+    <at:start.use>1952-07-25</at:start.use>
+    <skos:prefLabel xml:lang="de">kontinuierlich</skos:prefLabel>
+    <skos:prefLabel xml:lang="en">continuous</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">continuel</skos:prefLabel>
+    <skos:prefLabel xml:lang="nl">voortdurend</skos:prefLabel>
+    <skos:exactMatch rdf:resource="http://purl.org/cld/freq/continuous" />
+  </skos:Concept>
+  <skos:Concept rdf:about="http://publications.europa.eu/resource/authority/frequency/NEVER" at:deprecated="false">
+    <skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/frequency" />
+    <at:authority-code>NEVER</at:authority-code>
+    <at:op-code>NEVER</at:op-code>
+    <atold:op-code>NEVER</atold:op-code>
+    <dc:identifier>NEVER</dc:identifier>
+    <at:start.use>1952-07-25</at:start.use>
+    <skos:prefLabel xml:lang="de">niemals</skos:prefLabel>
+    <skos:prefLabel xml:lang="en">never</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">jamais</skos:prefLabel>
+    <skos:prefLabel xml:lang="nl">nooit</skos:prefLabel>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://publications.europa.eu/resource/authority/frequency/OP_DATPRO">
+    <skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/frequency" />
+    <at:op-code>OP_DATPRO</at:op-code>
+    <atold:op-code>OP_DATPRO</atold:op-code>
+    <dc:identifier>OP_DATPRO</dc:identifier>
+    <skos:prefLabel xml:lang="de">Vorläufige Daten</skos:prefLabel>
+    <skos:prefLabel xml:lang="en">Provisional data</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">Données provisoires</skos:prefLabel>
+    <skos:prefLabel xml:lang="nl">Voorlopige gegevens</skos:prefLabel>
+  </skos:Concept>
+</rdf:RDF>
+
