@@ -11,9 +11,6 @@
               encoding="utf-8"
               cdata-section-elements="locn:geometry dcat:bbox"/>
 
-  <xsl:param name="validation" as="xs:string" select="'false'"/>
-  <xsl:param name="isValidating" as="xs:boolean" select="xs:boolean($validation)"/>
-
   <xsl:template name="create-namespaces">
     <xsl:namespace name="rdf" select="'http://www.w3.org/1999/02/22-rdf-syntax-ns#'"/>
     <xsl:namespace name="rdfs" select="'http://www.w3.org/2000/01/rdf-schema#'"/>
