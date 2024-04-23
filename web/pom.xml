@@ -613,11 +613,11 @@
       <artifactId>gn-schema-iso19115-3.2018</artifactId>
       <version>${project.version}</version>
     </dependency>
-    <dependency>
+    <!--<dependency>
       <groupId>org.geonetwork-opensource.schemas</groupId>
       <artifactId>gn-schema-iso19115-3.2018GNSS</artifactId>
       <version>${project.version}</version>
-    </dependency>
+    </dependency>-->
     <dependency>
       <groupId>org.geonetwork-opensource.schemas</groupId>
       <artifactId>gn-schema-dcat2</artifactId>
@@ -1129,13 +1129,13 @@
                       <overWrite>false</overWrite>
                       <outputDirectory>${schema-plugins.dir}</outputDirectory>
                     </artifactItem>
-                    <artifactItem>
+                    <!--<artifactItem>
                       <groupId>org.geonetwork-opensource.schemas</groupId>
                       <artifactId>gn-schema-iso19115-3.2018GNSS</artifactId>
                       <type>zip</type>
                       <overWrite>false</overWrite>
                       <outputDirectory>${schema-plugins.dir}</outputDirectory>
-                    </artifactItem>
+                    </artifactItem>-->
                     <artifactItem>
                       <groupId>org.geonetwork-opensource.schemas</groupId>
                       <artifactId>gn-schema-dcat2</artifactId>
@@ -1212,10 +1212,10 @@
                     in order to be loaded by the application when running mvn jetty:run.
                     -->
 
-                    <resource>
+                    <!--<resource>
                       <directory>${project.basedir}/../schemas/iso19115-3.2018GNSS/src/main/plugin</directory>
                       <targetPath>${basedir}/src/main/webapp/WEB-INF/data/config/schema_plugins</targetPath>
-                    </resource>
+                    </resource>-->
                     <resource>
                       <directory>${project.basedir}/../schemas/dcat2/src/main/plugin</directory>
                       <targetPath>${basedir}/src/main/webapp/WEB-INF/data/config/schema_plugins</targetPath>
