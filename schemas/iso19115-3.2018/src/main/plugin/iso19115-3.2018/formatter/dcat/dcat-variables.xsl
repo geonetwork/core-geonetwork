@@ -60,7 +60,7 @@
                 as="node()*">
     <entry key="dct:creator" as="foaf">author</entry>
     <entry key="dct:publisher" as="foaf">publisher</entry>
-    <entry key="dct:contactPoint" as="vcard">pointOfContact</entry>
+    <entry key="dcat:contactPoint" as="vcard">pointOfContact</entry>
     <entry key="dct:rightsHolder" as="foaf">owner</entry> <!-- TODO: Check if dcat or only in profile -->
     <!-- Others are prov:qualifiedAttribution -->
   </xsl:variable>
