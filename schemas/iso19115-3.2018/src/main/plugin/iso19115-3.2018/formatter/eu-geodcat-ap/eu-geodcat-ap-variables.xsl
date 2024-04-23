@@ -31,7 +31,7 @@
                 as="node()*">
     <entry key="dct:creator" as="foaf">author</entry>
     <entry key="dct:publisher" as="foaf">publisher</entry>
-    <entry key="dct:contactPoint" as="vcard">pointOfContact</entry>
+    <entry key="dcat:contactPoint" as="vcard">pointOfContact</entry>
     <entry key="dct:rightsHolder" as="foaf">owner</entry>
     <entry key="geodcatap:custodian" as="vcard">custodian</entry>
     <entry key="geodcatap:distributor" as="vcard">distributor</entry>

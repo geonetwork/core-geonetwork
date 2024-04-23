@@ -69,13 +69,13 @@
             </dct:conformsTo>
           </rdf:Description>
         </dct:source>
-        <dct:contactPoint>
+        <dcat:contactPoint>
           <rdf:Description>
             <rdf:type rdf:resource="http://www.w3.org/2006/vcard/ns#Organization" />
             <vcard:fn xml:lang="fre">Direction de la gestion des informations territoriales (SPW - Territoire, Logement, Patrimoine, Énergie - Département de l'Aménagement du territoire et de l'Urbanisme - Direction de la gestion des informations territoriales)</vcard:fn>
             <vcard:hasEmail rdf:resource="mailto:donnees.dgo4@spw.wallonie.be" />
           </rdf:Description>
-        </dct:contactPoint>
+        </dcat:contactPoint>
         <dct:conformsTo>
           <dct:Standard rdf:about="http://data.europa.eu/930/" />
         </dct:conformsTo>
@@ -157,13 +157,13 @@
         <foaf:mbox rdf:resource="mailto:helpdesk.carto@spw.wallonie.be" />
       </rdf:Description>
     </dct:publisher>
-    <dct:contactPoint>
+    <dcat:contactPoint>
       <rdf:Description>
         <rdf:type rdf:resource="http://www.w3.org/2006/vcard/ns#Organization" />
         <vcard:fn xml:lang="fre">Helpdesk carto du SPW (SPW - Secrétariat général - SPW Digital - Département de la Géomatique - Direction de l'Intégration des géodonnées)</vcard:fn>
         <vcard:hasEmail rdf:resource="mailto:helpdesk.carto@spw.wallonie.be" />
       </rdf:Description>
-    </dct:contactPoint>
+    </dcat:contactPoint>
     <geodcatap:custodian>
       <rdf:Description>
         <rdf:type rdf:resource="http://www.w3.org/2006/vcard/ns#Organization" />
