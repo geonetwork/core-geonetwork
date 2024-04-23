@@ -76,8 +76,11 @@
                 match="mri:descriptiveKeywords[*/mri:thesaurusName/*/cit:title/*/@xlink:href = $hvdCategoryThesaurusKey]">
     <xsl:for-each select="*/mri:keyword[*/text() != '']">
 
+      <xsl:variable name="category"
+                    as="xs:string?"
+                    select="current()/*/text()"/>
       <xsl:variable name="hvdCategory"
-                    select="$euHvdDataCategories/rdf:RDF/rdf:Description[skos:prefLabel/text() = current()/*/text()]"/>
+                    select="$euHvdDataCategories/rdf:RDF/*[skos:prefLabel/normalize-space(.) = $category]"/>
       <xsl:if test="$hvdCategory">
         <dcatap:hvdCategory>
           <skos:Concept rdf:about="{$hvdCategory/@rdf:about}">
@@ -97,8 +100,11 @@
                 match="mri:descriptiveKeywords[*/mri:thesaurusName/*/cit:title/*/@xlink:href = $hvdApplicableLegislationThesaurusKey]">
     <xsl:for-each select="*/mri:keyword[*/text() != '']">
 
+      <xsl:variable name="legislation"
+                    as="xs:string?"
+                    select="current()/*/text()"/>
       <xsl:variable name="applicableLegislation"
-                    select="$euHvdApplicableLegislation/rdf:RDF/*[skos:prefLabel/text() = current()/*/text()]"/>
+                    select="$euHvdApplicableLegislation/rdf:RDF/*[skos:prefLabel/normalize-space() = $legislation]"/>
       <xsl:if test="$applicableLegislation">
         <dcatap:applicableLegislation rdf:resource="{$applicableLegislation/@rdf:about}">
           <!--<eli:LegalResource>

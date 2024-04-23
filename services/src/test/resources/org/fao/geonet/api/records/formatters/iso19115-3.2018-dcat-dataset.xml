@@ -924,6 +924,9 @@
           <mri:keyword>
             <gco:CharacterString>Mobilité</gco:CharacterString>
           </mri:keyword>
+          <mri:keyword>
+            <gco:CharacterString>Observation de la terre et environnement</gco:CharacterString>
+          </mri:keyword>
           <mri:type>
             <mri:MD_KeywordTypeCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#MD_KeywordTypeCode" codeListValue="theme"/>
           </mri:type>
