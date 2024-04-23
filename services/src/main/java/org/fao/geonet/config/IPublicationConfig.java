@@ -40,10 +40,10 @@ public interface IPublicationConfig {
      *
      * For example, assigning / removing a certain metadata category when the metadata is published / unpublished.
      *
-     * @param serviceContext
-     * @param publicationOption
-     * @param metadataId
-     * @param publish
+     * @param serviceContext            The service context.
+     * @param publicationOption         Publication option selected.
+     * @param metadataId                Metadata internal identifier to process.
+     * @param publish                   Boolean to indicate publish/un-publish.
      * @throws Exception
      */
     default void processMetadata(ServiceContext serviceContext, PublicationOption publicationOption,
