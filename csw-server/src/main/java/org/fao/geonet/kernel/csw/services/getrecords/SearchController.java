@@ -489,7 +489,7 @@ public class SearchController {
             SearchResponse result = searchManager.query(esJsonQuery, new HashSet<>(), startPos - 1, maxRecords, sort);
 
             List<Hit> hits = result.hits().hits();
-            
+
             TotalHits total = result.hits().total();
             long numMatches = total != null ? total.value() : 0;
 
@@ -529,7 +529,7 @@ public class SearchController {
             results.setAttribute("elementSet", setName.toString());
 
 
-            if (numMatches > counter) {
+            if (numMatches > counter + (startPos -1)) {
                 results.setAttribute("nextRecord", Long.toString(counter + startPos));
             } else {
                 results.setAttribute("nextRecord", "0");
