@@ -71,6 +71,7 @@
       $scope.isFilterTagsDisplayed =
         gnGlobalSettings.gnCfg.mods.editor.isFilterTagsDisplayed;
       $scope.modelOptions = angular.copy(gnGlobalSettings.modelOptions);
+
       $scope.defaultSearchObj = {
         permalink: true,
         sortbyValues: gnSearchSettings.sortbyValues,
@@ -82,6 +83,10 @@
           sortBy: "dateStamp",
           sortOrder: "desc",
           isTemplate: ["y", "n"],
+          draft: gnGlobalSettings.gnCfg.mods.editor.workflowSearchRecordTypes || [
+            "n",
+            "e"
+          ],
           resultType: $scope.facetsSummaryType,
           from: 1,
           to: 20
@@ -90,6 +95,10 @@
           sortBy: "dateStamp",
           sortOrder: "desc",
           isTemplate: ["y", "n"],
+          draft: gnGlobalSettings.gnCfg.mods.editor.workflowSearchRecordTypes || [
+            "n",
+            "e"
+          ],
           resultType: $scope.facetsSummaryType,
           from: 1,
           to: 20
