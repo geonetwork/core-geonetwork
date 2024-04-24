@@ -47,13 +47,19 @@ public class EsFilterBuilder {
 
 
             String ownerFilter = "";
+            String groupOwnerFilter = "";
             if (userSession.getUserIdAsInt() > 0) {
                 // OR you are owner
                 ownerFilter = String.format("owner:%d", userSession.getUserIdAsInt());
                 // OR member of groupOwner
-                // TODOES
+                groupOwnerFilter = String.format("groupOwner:(%s)",
+                    // don't use groups 0, 1, -1 as groupOwner
+                    groups.stream().filter(g -> g > 1)
+                        .map(Object::toString)
+                        .collect(Collectors.joining(" OR ")));
+
             }
-            return String.format("(%s %s)", operationFilter, ownerFilter).trim();
+            return String.format("(%s %s %s)", operationFilter, ownerFilter, groupOwnerFilter).trim();
         }
     }
     /**
