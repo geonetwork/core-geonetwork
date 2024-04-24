@@ -688,7 +688,8 @@ public class MetadataEditingApi {
         GeonetworkDataDirectory dataDirectory = applicationContext.getBean(GeonetworkDataDirectory.class);
         Path xslt = dataDirectory.getWebappDir()
             .resolve(isEmbedded ? "xslt/ui-metadata/edit/edit-embedded.xsl" : "xslt/ui-metadata/edit/edit.xsl");
-        Xml.transformXml(root, xslt, response.getOutputStream());
+
+        Xml.transform(root, xslt, response.getOutputStream());
     }
 
     private Element buildResourceDocument(ApplicationContext applicationContext, ServiceContext context,
