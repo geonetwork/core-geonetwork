@@ -13,7 +13,7 @@
 //
 // change the variable to a string pointing towards an image, like 'www.dummy.net/image.png'. When no
 // background image is needed, leave as is (none).
-@gn-background-image: 'https://www.anzlic.gov.au/sites/default/files/images/ANZLICweb_world_nov22.jpg';
+@gn-background-image: none;
 @gn-background-color: @body-bg;
 
 // overwrite color for accessibility
@@ -43,11 +43,11 @@
 
 // bottombar
 @gn-bottombar-height: 50px;
-@gn-bottombar-background: #1A1A1A;
-@gn-bottombar-background-hover: #B4AF39;
-@gn-bottombar-border-color: #B4AF39;
-@gn-bottombar-color: white;
-@gn-bottombar-color-hover: white;
+@gn-bottombar-background: @navbar-default-bg;
+@gn-bottombar-background-hover: @navbar-default-link-hover-bg;
+@gn-bottombar-border-color: @navbar-default-border;
+@gn-bottombar-color: @navbar-default-link-color;
+@gn-bottombar-color-hover: @navbar-default-link-hover-color;
 
 // home page
 //
