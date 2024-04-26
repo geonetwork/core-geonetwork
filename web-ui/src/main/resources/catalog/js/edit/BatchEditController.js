@@ -59,7 +59,7 @@
         hitsperpageValues: gnSearchSettings.hitsperpageValues,
         selectionBucket: "e101",
         params: {
-          sortBy: "dateStamp",
+          sortBy: "changeDate",
           sortOrder: "desc",
           isTemplate: ["y", "n"],
           editable: "true",
