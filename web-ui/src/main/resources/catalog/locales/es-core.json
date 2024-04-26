@@ -184,7 +184,7 @@
     "hitsPerPage": "Entradas por página",
     "chooseRecordsPerPage": "Pulsa para seleccionar el número de entradas por página",
     "sortedBy": "Ordenado por {{field}}",
-    "sortBy-dateStampDesc": "ultimas actualizaciones",
+    "sortBy-changeDateDesc": "ultimas actualizaciones",
     "sortBy-createDateDesc": "nuevos registros",
     "sortBy-resourceTitleObject.default.sort": "title (ascending)",
     "sortBy-resourceTitleObject.default.sortDesc": "title (descending)",
