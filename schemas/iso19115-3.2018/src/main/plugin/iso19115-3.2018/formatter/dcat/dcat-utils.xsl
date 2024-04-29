@@ -80,10 +80,14 @@
     <xsl:param name="nodeName"
                as="xs:string"/>
 
+    <xsl:variable name="date"
+                  as="xs:string?"
+                  select="if (*/text()) then */text() else text()"/>
+
     <xsl:element name="{$nodeName}">
       <xsl:attribute name="rdf:datatype"
-                     select="concat('http://www.w3.org/2001/XMLSchema#date', (if (contains(*/text(), 'T')) then 'Time' else ''))"/>
-      <xsl:value-of select="*/text()"/>
+                     select="concat('http://www.w3.org/2001/XMLSchema#date', (if (contains($date, 'T')) then 'Time' else ''))"/>
+      <xsl:value-of select="$date"/>
     </xsl:element>
   </xsl:template>
 
