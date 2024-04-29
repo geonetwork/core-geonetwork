@@ -34,15 +34,17 @@
     <xsl:param name="nodeName"
                as="xs:string"/>
 
-    <xsl:element name="{$nodeName}">
-      <xsl:attribute name="xml:lang" select="$languages[@default]/@iso3code"/>
-      <xsl:value-of select="*/text()"/>
-    </xsl:element>
+    <xsl:if test="*/text() != ''">
+      <xsl:element name="{$nodeName}">
+        <xsl:attribute name="xml:lang" select="$languages[@default]/@iso3code"/>
+        <xsl:value-of select="*/text()"/>
+      </xsl:element>
+    </xsl:if>
 
     <xsl:variable name="hasDefaultLanguageCharacterString"
                   select="count(gco:CharacterString|gcx:Anchor) > 0"/>
 
-    <xsl:for-each select="lan:PT_FreeText/*/lan:LocalisedCharacterString">
+    <xsl:for-each select="lan:PT_FreeText/*/lan:LocalisedCharacterString[text() != '']">
       <xsl:variable name="translationLanguage"
                     select="@locale"/>
 
