@@ -32,14 +32,14 @@
     a sh:NodeShape ;
     rdfs:label "PeriodOfTime Deprecation properties"@en ;
     sh:property [
-        sh:path schema:endDate ;
-        sh:severity sh:Warning ;
-	sh:message "replace property schema:endDate with dcat:endDate"@en
-    ], [
-        sh:path schema:startDate ;
-        sh:severity sh:Warning ;
-	sh:message "replace property schema:startDate with dcat:startDate"@en
-    ] ;
+          sh:path schema:endDate ;
+          sh:severity sh:Warning ;
+          sh:message "replace property schema:endDate with dcat:endDate"@en
+      ], [
+          sh:path schema:startDate ;
+          sh:severity sh:Warning ;
+          sh:message "replace property schema:startDate with dcat:startDate"@en
+      ] ;
     sh:targetClass dct:PeriodOfTime .
 
 
@@ -56,19 +56,19 @@
     a sh:NodeShape ;
     rdfs:label "Dataset Deprecation properties"@en ;
     sh:property [
-       sh:path dct:hasVersion ;
-        sh:severity sh:Warning ;
-       sh:message  "replace property dct:hasVersion with dcat:hasVersion"@en
+          sh:path dct:hasVersion ;
+          sh:severity sh:Warning ;
+          sh:message  "replace property dct:hasVersion with dcat:hasVersion"@en
 
-    ], [
-       sh:path dct:isVersionOf ;
-        sh:severity sh:Warning ;
-       sh:message "replace dct:isVersionOf with dcat:isVersionOf"@en
-    ], [
-       sh:path owl:versionInfo ;
-        sh:severity sh:Warning ;
-       sh:message "replace owl:versionInfo with dcat:version"@en
-    ];
+      ], [
+          sh:path dct:isVersionOf ;
+          sh:severity sh:Warning ;
+          sh:message "replace dct:isVersionOf with dcat:isVersionOf"@en
+      ], [
+          sh:path owl:versionInfo ;
+          sh:severity sh:Warning ;
+          sh:message "replace owl:versionInfo with dcat:version"@en
+      ];
     sh:targetClass dcat:Dataset .
 
 
@@ -85,9 +85,39 @@
     a sh:NodeShape ;
     rdfs:label "Dataset Deprecation properties"@en ;
     sh:property [
-       sh:path dcat:isVersionOf ;
-       sh:severity sh:Warning ;
-       sh:message "dcat:isVersionOf is an inverse property and should only be used if dcat:hasVersion is present."@en
-    ];
+          sh:path dcat:isVersionOf ;
+          sh:severity sh:Warning ;
+          sh:message "dcat:isVersionOf is an inverse property and should only be used if dcat:hasVersion is present."@en
+      ];
     sh:targetClass dcat:Dataset .
 
+
+
+<http://data.europa.eu/r5r/codelist_imports>
+    rdf:type owl:Ontology ;
+    owl:imports <https://github.com/SEMICeu/ADMS-AP/raw/master/purl.org/ADMS_SKOS_v1.00.rdf> .
+
+
+:StatusRestrictionADMS
+    a sh:NodeShape ;
+    rdfs:comment "Status restriction" ;
+    rdfs:label "Status restriction" ;
+    sh:property [
+          sh:class skos:ConceptScheme ;
+          sh:hasValue <http://purl.org/adms/status/1.0> ;
+          sh:minCount 1 ;
+          sh:nodeKind sh:IRI ;
+          sh:path skos:inScheme
+      ] .
+
+
+:Distribution_ShapeCV
+    a sh:NodeShape ;
+    sh:property [
+          sh:node :StatusRestrictionADMS ;
+          sh:nodeKind sh:IRI ;
+          sh:path adms:status ;
+          sh:description "The codelist of adms:status has changed from DCAT-AP 2.1 to DCAT-AP 3.0.0" ;
+          sh:severity sh:Warning
+      ] ;
+    sh:targetClass dcat:Distribution.

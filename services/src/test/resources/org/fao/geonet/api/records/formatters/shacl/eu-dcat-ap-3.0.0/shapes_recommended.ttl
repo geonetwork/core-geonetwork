@@ -28,36 +28,36 @@
     dct:format <http://publications.europa.eu/resource/authority/file-type/RDF_TURTLE> ;
     dct:conformsTo <https://www.w3.org/TR/shacl> ;
     dct:creator [
-        rdfs:seeAlso <https://www.linkedin.com/in/bert-van-nuffelen-a349634/> ;
-        org:memberOf <https://tenforce.com> ;
-        foaf:homepage <https://www.linkedin.com/in/bert-van-nuffelen-a349634/> ;
-        foaf:name "Bert Van Nuffelen"
-    ], [
-        rdfs:seeAlso <https://www.ails.ece.ntua.gr/people/natasa> ;
-        org:memberOf <https://www.ails.ece.ntua.gr/> ;
-        foaf:homepage <https://www.ails.ece.ntua.gr/people/natasa> ;
-        foaf:name "Natasa Sofou"
-    ], [
-        rdfs:seeAlso <http://eugeniu.costezki.ro#me> ;
-        org:memberOf <http://publications.europa.eu/resource/authority/corporate-body/PUBL> ;
-        foaf:homepage <http://costezki.ro> ;
-        foaf:name "Eugeniu Costetchi"
-    ], [
-        rdfs:seeAlso <http://makxdekkers.com/#me> ;
-        org:memberOf <http://ami-consult.com/#id> ;
-        foaf:homepage <http://makxdekkers.com/> ;
-        foaf:name "Makx Dekkers"
-    ], [
-        rdfs:seeAlso <http://nikosloutas.com/> ;
-        org:memberOf <http://www.pwc.com/gx/en/eu-institutions-services> ;
-        foaf:homepage <http://nikosloutas.com/> ;
-        foaf:name "Nikolaos Loutas"
-    ], [
-        rdfs:seeAlso <http://www.deri.ie/users/vassilios-peristeras/> ;
-        org:memberOf <http://publications.europa.eu/resource/authority/corporate-body/COM> ;
-        foaf:homepage <http://www.deri.ie/users/vassilios-peristeras/> ;
-        foaf:name "Vassilios Peristeras"
-    ] ;
+                       rdfs:seeAlso <https://www.linkedin.com/in/bert-van-nuffelen-a349634/> ;
+                       org:memberOf <https://tenforce.com> ;
+                       foaf:homepage <https://www.linkedin.com/in/bert-van-nuffelen-a349634/> ;
+                       foaf:name "Bert Van Nuffelen"
+                   ], [
+                       rdfs:seeAlso <https://www.ails.ece.ntua.gr/people/natasa> ;
+                       org:memberOf <https://www.ails.ece.ntua.gr/> ;
+                       foaf:homepage <https://www.ails.ece.ntua.gr/people/natasa> ;
+                       foaf:name "Natasa Sofou"
+                   ], [
+                       rdfs:seeAlso <http://eugeniu.costezki.ro#me> ;
+                       org:memberOf <http://publications.europa.eu/resource/authority/corporate-body/PUBL> ;
+                       foaf:homepage <http://costezki.ro> ;
+                       foaf:name "Eugeniu Costetchi"
+                   ], [
+                       rdfs:seeAlso <http://makxdekkers.com/#me> ;
+                       org:memberOf <http://ami-consult.com/#id> ;
+                       foaf:homepage <http://makxdekkers.com/> ;
+                       foaf:name "Makx Dekkers"
+                   ], [
+                       rdfs:seeAlso <http://nikosloutas.com/> ;
+                       org:memberOf <http://www.pwc.com/gx/en/eu-institutions-services> ;
+                       foaf:homepage <http://nikosloutas.com/> ;
+                       foaf:name "Nikolaos Loutas"
+                   ], [
+                       rdfs:seeAlso <http://www.deri.ie/users/vassilios-peristeras/> ;
+                       org:memberOf <http://publications.europa.eu/resource/authority/corporate-body/COM> ;
+                       foaf:homepage <http://www.deri.ie/users/vassilios-peristeras/> ;
+                       foaf:name "Vassilios Peristeras"
+                   ] ;
     dct:license <https://creativecommons.org/licenses/by/4.0> ;
     cc:attributionURL <http://ec.europa.eu/> ;
     dct:modified "2021-12-01"^^xsd:date ;
@@ -68,10 +68,10 @@
     owl:versionInfo "2.1.1" ;
     foaf:homepage <https://joinup.ec.europa.eu/collection/semantic-interoperability-community-semic/solution/dcat-application-profile-data-portals-europe/release/210> ;
     foaf:maker [
-        foaf:mbox <mailto:contact@semic.eu> ;
-        foaf:name "DCAT-AP Working Group" ;
-        foaf:page <https://github.com/SEMICeu/DCAT-AP>, <https://joinup.ec.europa.eu/node/64331>
-    ] .
+                       foaf:mbox <mailto:contact@semic.eu> ;
+                       foaf:name "DCAT-AP Working Group" ;
+                       foaf:page <https://github.com/SEMICeu/DCAT-AP>, <https://joinup.ec.europa.eu/node/64331>
+                   ] .
 
 
 
@@ -85,28 +85,28 @@
     a sh:NodeShape ;
     rdfs:label "Agent"@en ;
     sh:property [
-        sh:minCount 1 ;
-        sh:path dct:type ;
-        sh:severity sh:Warning
-    ] ;
+          sh:minCount 1 ;
+          sh:path dct:type ;
+          sh:severity sh:Warning
+      ] ;
     sh:targetClass foaf:Agent .
 
 :CatalogRecord_Shape
     a sh:NodeShape ;
     rdfs:label "Catalog Record"@en ;
     sh:property [
-        sh:minCount 1 ;
-        sh:path dct:conformsTo ;
-        sh:severity sh:Warning
-    ], [
-        sh:minCount 1 ;
-        sh:path dct:issued ;
-        sh:severity sh:Warning
-    ], [
-        sh:minCount 1 ;
-        sh:path adms:status ;
-        sh:severity sh:Warning
-    ] ;
+          sh:minCount 1 ;
+          sh:path dct:conformsTo ;
+          sh:severity sh:Warning
+      ], [
+          sh:minCount 1 ;
+          sh:path dct:issued ;
+          sh:severity sh:Warning
+      ], [
+          sh:minCount 1 ;
+          sh:path adms:status ;
+          sh:severity sh:Warning
+      ] ;
     sh:targetClass dcat:CatalogRecord .
 
 
@@ -114,116 +114,133 @@
     a sh:NodeShape ;
     rdfs:label "Catalog"@en ;
     sh:property [
-        sh:minCount 1 ;
-        sh:path dct:language ;
-        sh:severity sh:Warning
-    ], [
-        sh:minCount 1 ;
-        sh:path dct:issued ;
-        sh:severity sh:Warning
-    ], [
-        sh:minCount 1 ;
-        sh:path dct:license;
-        sh:severity sh:Warning
-    ], [
-        sh:minCount 1 ;
-        sh:path dct:spatial ;
-        sh:severity sh:Warning
-    ], [
-        sh:minCount 1 ;
-        sh:path dct:modified ;
-        sh:severity sh:Warning
-    ], [
-        sh:minCount 1 ;
-        sh:path dcat:themeTaxonomy ;
-        sh:severity sh:Warning
-    ], [
-        sh:minCount 1 ;
-        sh:path foaf:homepage ;
-        sh:severity sh:Warning
-    ] ;
-	sh:targetClass dcat:Catalog .
-	
+          sh:minCount 1 ;
+          sh:path dct:language ;
+          sh:severity sh:Warning
+      ], [
+          sh:minCount 1 ;
+          sh:path dct:issued ;
+          sh:severity sh:Warning
+      ], [
+          sh:minCount 1 ;
+          sh:path dct:license;
+          sh:severity sh:Warning
+      ], [
+          sh:minCount 1 ;
+          sh:path dct:spatial ;
+          sh:severity sh:Warning
+      ], [
+          sh:minCount 1 ;
+          sh:path dct:modified ;
+          sh:severity sh:Warning
+      ], [
+          sh:minCount 1 ;
+          sh:path dcat:themeTaxonomy ;
+          sh:severity sh:Warning
+      ], [
+          sh:minCount 1 ;
+          sh:path foaf:homepage ;
+          sh:severity sh:Warning
+      ] ;
+    sh:targetClass dcat:Catalog .
+
 :Catalog_Shape2
     a sh:NodeShape ;
     rdfs:label "Catalog"@en ;
     sh:or (
-		[
-			sh:path dcat:dataset ;
-			sh:minCount 1 ;
-		]
-		[
-			sh:path dcat:service ;
-			sh:minCount 1 ;
-		]
-	) ;
-    sh:severity sh:Warning;	
+          [
+              sh:path dcat:dataset ;
+              sh:minCount 1 ;
+          ]
+          [
+              sh:path dcat:service ;
+              sh:minCount 1 ;
+          ]
+      ) ;
+    sh:severity sh:Warning;
     sh:targetClass dcat:Catalog .
-
-
-
-:CategoryScheme_Shape
-    a sh:NodeShape ;
-    rdfs:label "Category Scheme"@en ;
-    sh:targetClass skos:ConceptScheme .
-
-:Category_Shape
-    a sh:NodeShape ;
-    rdfs:label "Category"@en ;
-    sh:targetClass skos:Concept .
-
-:Checksum_Shape
-    a sh:NodeShape ;
-    rdfs:label "Checksum"@en ;
-    sh:targetClass spdx:Checksum .
 
 :DataService_Shape
     a sh:NodeShape ;
     rdfs:label "Data Service"@en ;
     sh:property [
-        sh:minCount 1 ;
-        sh:path dcat:servesDataset ;
-        sh:severity sh:Warning
-    ], [
-        sh:minCount 1 ;
-        sh:path dcat:endpointDescription ;
-        sh:severity sh:Warning
-    ] ;
+          sh:minCount 1 ;
+          sh:path dcat:servesDataset ;
+          sh:severity sh:Warning
+      ], [
+          sh:minCount 1 ;
+          sh:path dcat:endpointDescription ;
+          sh:severity sh:Warning
+      ], [
+          sh:minCount 1 ;
+          sh:path dcat:contactPoint ;
+          sh:severity sh:Warning
+      ], [
+          sh:minCount 1 ;
+          sh:path dct:publisher ;
+          sh:severity sh:Warning
+      ], [
+          sh:minCount 1 ;
+          sh:path dcat:theme ;
+          sh:severity sh:Warning
+      ], [
+          sh:minCount 1 ;
+          sh:path dct:conformsTo ;
+          sh:severity sh:Warning
+      ], [
+          sh:minCount 1 ;
+          sh:path dcat:keyword ;
+          sh:severity sh:Warning
+      ] ;
     sh:targetClass dcat:DataService .
 
 :Dataset_Shape
     a sh:NodeShape ;
     rdfs:label "Dataset"@en ;
     sh:property [
-        sh:minCount 1 ;
-        sh:path dcat:contactPoint ;
-        sh:severity sh:Warning
-    ], [
-        sh:minCount 1 ;
-        sh:path dcat:distribution ;
-        sh:severity sh:Warning
-    ], [
-        sh:minCount 1 ;
-        sh:path dcat:keyword ;
-        sh:severity sh:Warning
-    ], [
-        sh:minCount 1 ;
-        sh:path dct:publisher ;
-        sh:severity sh:Warning
-    ], [
-        sh:minCount 1 ;
-        sh:path dct:spatial ;
-        sh:severity sh:Warning
-    ], [
-        sh:minCount 1 ;
-        sh:path dct:temporal ;
-        sh:severity sh:Warning
-    ], [
-        sh:minCount 1 ;
-        sh:path dcat:theme ;
-        sh:severity sh:Warning
-    ] ;
+          sh:minCount 1 ;
+          sh:path dcat:contactPoint ;
+          sh:severity sh:Warning
+      ], [
+          sh:minCount 1 ;
+          sh:path dcat:distribution ;
+          sh:severity sh:Warning
+      ], [
+          sh:minCount 1 ;
+          sh:path dcat:keyword ;
+          sh:severity sh:Warning
+      ], [
+          sh:minCount 1 ;
+          sh:path dct:publisher ;
+          sh:severity sh:Warning
+      ], [
+          sh:minCount 1 ;
+          sh:path dct:spatial ;
+          sh:severity sh:Warning
+      ], [
+          sh:minCount 1 ;
+          sh:path dct:temporal ;
+          sh:severity sh:Warning
+      ], [
+          sh:minCount 1 ;
+          sh:path dcat:theme ;
+          sh:severity sh:Warning
+      ] ;
     sh:targetClass dcat:Dataset .
+
+:DatasetSeries_Shape
+    a sh:NodeShape ;
+    rdfs:label "Dataset"@en ;
+    sh:property [
+          sh:minCount 1 ;
+          sh:path dcat:contactPoint ;
+          sh:severity sh:Warning
+      ], [
+          sh:minCount 1 ;
+          sh:path dct:publisher ;
+          sh:severity sh:Warning
+      ] ;
+    sh:targetClass dcat:DatasetSeries .
 
 :DateOrDateTimeDataType_Shape
     a sh:NodeShape ;
@@ -231,12 +248,12 @@
     rdfs:label "Date time date disjunction" ;
     sh:message "The values must be data typed as either xsd:date or xsd:dateTime" ;
     sh:or ([
-            sh:datatype xsd:date
-        ]
-        [
-            sh:datatype xsd:dateTime
-        ]
-    ) .
+               sh:datatype xsd:date
+           ]
+           [
+               sh:datatype xsd:dateTime
+           ]
+      ) .
 
 :DcatResource_Shape
     a sh:NodeShape ;
@@ -244,83 +261,76 @@
     rdfs:label "dcat:Resource" ;
     sh:message "The node is either a Catalog, Dataset or a DataService" ;
     sh:or ([
-            sh:class dcat:Catalog
-        ]
-        [
-            sh:class dcat:Dataset
-        ]
-        [
-            sh:class dcat:DataService
-        ]
-    ) .
+               sh:class dcat:Catalog
+           ]
+           [
+               sh:class dcat:Dataset
+           ]
+           [
+               sh:class dcat:DataService
+           ]
+           [
+               sh:class dcat:DatasetSeries
+           ]
+      ) .
 
 :Distribution_Shape
     a sh:NodeShape ;
     rdfs:label "Distribution"@en ;
     sh:property [
-        sh:minCount 1 ;
-        sh:path dct:description ;
-        sh:severity sh:Warning
-    ], [
-        sh:minCount 1 ;
-        sh:path dcatap:availability ;
-        sh:severity sh:Warning
-    ], [
-        sh:minCount 1 ;
-        sh:path dct:format ;
-        sh:severity sh:Warning
-    ], [
-        sh:minCount 1 ;
-        sh:path dct:license ;
-        sh:severity sh:Warning
-    ] ;
+          sh:minCount 1 ;
+          sh:path dct:description ;
+          sh:severity sh:Warning
+      ], [
+          sh:minCount 1 ;
+          sh:path dcatap:availability ;
+          sh:severity sh:Warning
+      ], [
+          sh:minCount 1 ;
+          sh:path dct:format ;
+          sh:severity sh:Warning
+      ], [
+          sh:minCount 1 ;
+          sh:path dct:license ;
+          sh:severity sh:Warning
+      ] ;
     sh:targetClass dcat:Distribution .
-
-:Identifier_Shape
-    a sh:NodeShape ;
-    rdfs:label "Identifier"@en ;
-    sh:targetClass adms:Identifier .
 
 :LicenceDocument_Shape
     a sh:NodeShape ;
     rdfs:label "Licence Document"@en ;
     sh:property [
-        sh:minCount 1 ;
-        sh:path dct:type ;
-        sh:severity sh:Warning
-    ] ;
+          sh:minCount 1 ;
+          sh:path dct:type ;
+          sh:severity sh:Warning
+      ] ;
     sh:targetClass dct:LicenseDocument .
 
 :Location_Shape
     a sh:NodeShape ;
     rdfs:label "Location"@en ;
     sh:property [
-        sh:minCount 1 ;
-        sh:path dcat:bbox ;
-        sh:severity sh:Warning
-    ], [
-        sh:minCount 1 ;
-        sh:path dcat:centroid ;
-        sh:severity sh:Warning
-    ] ;
+          sh:minCount 1 ;
+          sh:path dcat:bbox ;
+          sh:severity sh:Warning
+      ], [
+          sh:minCount 1 ;
+          sh:path dcat:centroid ;
+          sh:severity sh:Warning
+      ] ;
     sh:targetClass dct:Location .
 
 :PeriodOfTime_Shape
     a sh:NodeShape ;
     rdfs:label "PeriodOfTime"@en ;
     sh:property [
-        sh:minCount 1 ;
-        sh:path dcat:endDate ;
-        sh:severity sh:Warning ;
-    ], [
-        sh:minCount 1 ;
-        sh:path dcat:startDate ;
-        sh:severity sh:Warning ;
-    ] ;
+          sh:minCount 1 ;
+          sh:path dcat:endDate ;
+          sh:severity sh:Warning ;
+      ], [
+          sh:minCount 1 ;
+          sh:path dcat:startDate ;
+          sh:severity sh:Warning ;
+      ] ;
     sh:targetClass dct:PeriodOfTime .
-
-:Relationship_Shape
-    a sh:NodeShape ;
-    rdfs:label "Relationship"@en ;
-    sh:targetClass dcat:Relationship .
 
