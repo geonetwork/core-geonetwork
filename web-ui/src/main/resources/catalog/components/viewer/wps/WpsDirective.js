@@ -253,19 +253,23 @@
                   return "time";
                 } else if (scope.isDate(input)) {
                   return "date";
-                } if (scope.isDateTime(input)) {
+                }
+                if (scope.isDateTime(input)) {
                   return "datetime-local";
-                } else
-                return "";
+                } else return "";
               };
               scope.getDateBounds = function (input, isMin) {
                 if (!input) {
                   return;
                 } else if (isMin) {
-                  return input.literalData.allowedValues.valueOrRange[0].minimumValue
-                    .value || "";
+                  return (
+                    input.literalData.allowedValues.valueOrRange[0].minimumValue.value ||
+                    ""
+                  );
                 }
-                return input.literalData.allowedValues.valueOrRange[0].maximumValue.value || "";
+                return (
+                  input.literalData.allowedValues.valueOrRange[0].maximumValue.value || ""
+                );
               };
 
               // get values from wfs filters
