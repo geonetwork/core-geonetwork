@@ -184,7 +184,7 @@
     "hitsPerPage": "Fjöldi færsla á blaðsíðu",
     "chooseRecordsPerPage": "Smelltu til að velja fjölda færsla á hverri síðu",
     "sortedBy": "Raðað eftir {{field}}",
-    "sortBy-dateStampDesc": "last updates",
+    "sortBy-changeDateDesc": "last updates",
     "sortBy-createDateDesc": "new records",
     "sortBy-resourceTitleObject.default.sort": "title (ascending)",
     "sortBy-resourceTitleObject.default.sortDesc": "title (descending)",

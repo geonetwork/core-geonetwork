@@ -1,4 +1,4 @@
-# Updating a set of records using XSLT {#batchupdate_xsl}
+# Update records using XSLT {#batchupdate_xsl}
 
 ## Applying changes {#batch-process-apply}
 

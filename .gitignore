@@ -37,11 +37,15 @@ out/
 package-lock.json
 rebel.xml
 release/jetty/*
-release-build.sh
 schemas/*/doc/*/*.rst
 schematrons/.build
 target/
+
+# build and release
 transifex/transifex-format/
+build/
+web-ui/LICENSE
+web-ui/tx
 
 # web-app, clear using: mvn -f web/pom.xml clean:clean@reset
 

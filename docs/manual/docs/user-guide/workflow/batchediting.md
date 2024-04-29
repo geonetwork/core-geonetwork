@@ -1,4 +1,4 @@
-# Updating a set of records {#batchediting}
+# Update records from edit console {#batchediting}
 
 From the editor board, editors can do batch editing on multiple records.
 

@@ -184,7 +184,7 @@
     "hitsPerPage": "Počet záznamů na stránku",
     "chooseRecordsPerPage": "Kliknutím zvolte počet záznamů na stránku",
     "sortedBy": "Tříděno dle {{field}}",
-    "sortBy-dateStampDesc": "poslední aktualizace",
+    "sortBy-changeDateDesc": "poslední aktualizace",
     "sortBy-createDateDesc": "nové záznamy",
     "sortBy-resourceTitleObject.default.sort": "titul (vzestupně)",
     "sortBy-resourceTitleObject.default.sortDesc": "titul (sestupně)",

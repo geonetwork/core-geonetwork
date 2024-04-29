@@ -2,18 +2,16 @@
 
 GeoNetwork 4.4.3 release is a minor release.
 
-## Migration notes
+## Update notes
 
-### Java
-
-**Version 4.4 only works on Java 11.**
+When updating please review the following actions:
 
 ### Index changes
 
 This version use Elasticsearch version 8 Java client, it is recommended to use an Elasticsearch version 8 server.
 However version 7.15+ and 8+ have been tested.
 
-After update, don't forget to go to admin console --> tools --> Delete index and reindex.
+After updating use **Admin Console > Tools** and use **Delete index and reindex**.
 
 ### Map
 
