@@ -493,10 +493,15 @@
       id="gn-el-{if ($refToDelete) then $refToDelete/@ref else generate-id()}"
       data-gn-field-highlight="">
 
-      <label class="col-sm-2 control-label">
-        <xsl:value-of select="$name"/>&#160;
-      </label>
-      <div class="col-sm-9">
+      <xsl:variable name="hasLabel"
+                    select="normalize-space($name) != ''"
+                    as="xs:boolean"/>
+      <xsl:if test="$hasLabel">
+        <label class="col-sm-2 control-label">
+          <xsl:value-of select="$name"/>&#160;
+        </label>
+      </xsl:if>
+      <div class="{if ($hasLabel) then 'col-sm-9' else 'col-sm-12'}">
         <!-- Create an empty input to contain the data-gn-field-tooltip
         key which is used to check if an element
         is the first element of its kind in the form. The key for a template
@@ -800,7 +805,9 @@
               <xsl:if test="$hasMultipleChoice">
                 <xsl:for-each select="$snippets">
                   <textarea id="{concat($id, @label, '-value')}">
-                    <xsl:value-of select="saxon:serialize(*, 'default-serialize-mode')"/>
+                    <xsl:call-template name="build-snippet">
+                      <xsl:with-param name="snippet" select="*"/>
+                    </xsl:call-template>
                   </textarea>
                 </xsl:for-each>
               </xsl:if>
@@ -814,7 +821,9 @@
                 <xsl:if test="$isMissingLabel != ''">
                   <xsl:attribute name="data-not-set-check" select="$tagId"/>
                 </xsl:if>
-                <xsl:value-of select="saxon:serialize($snippets[1]/*, 'default-serialize-mode')"/>
+                <xsl:call-template name="build-snippet">
+                  <xsl:with-param name="snippet" select="$snippets[1]/*"/>
+                </xsl:call-template>
               </textarea>
             </div>
           </xsl:if>
@@ -828,6 +837,12 @@
         </div>
       </xsl:if>
     </div>
+  </xsl:template>
+
+  <xsl:template name="build-snippet" as="xs:string?">
+    <xsl:param name="snippet" as="node()?"/>
+
+    <xsl:value-of select="replace(saxon:serialize($snippet, 'default-serialize-mode'), '\$\{uuid\}', $metadataUuid)"/>
   </xsl:template>
 
   <!--
