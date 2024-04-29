@@ -12,7 +12,6 @@
                 extension-element-prefixes="saxon"
                 exclude-result-prefixes="#all">
 
-
   <xsl:param name="format"
              select="'html'"/>
 
