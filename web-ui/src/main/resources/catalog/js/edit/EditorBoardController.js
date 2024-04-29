@@ -79,7 +79,7 @@
         filters: gnSearchSettings.filters,
         configId: "editor",
         params: {
-          sortBy: "dateStamp",
+          sortBy: "changeDate",
           sortOrder: "desc",
           isTemplate: ["y", "n"],
           resultType: $scope.facetsSummaryType,
@@ -87,7 +87,7 @@
           to: 20
         },
         defaultParams: {
-          sortBy: "dateStamp",
+          sortBy: "changeDate",
           sortOrder: "desc",
           isTemplate: ["y", "n"],
           resultType: $scope.facetsSummaryType,
