@@ -5,6 +5,7 @@
                 xmlns:cit="http://standards.iso.org/iso/19115/-3/cit/2.0"
                 xmlns:mdb="http://standards.iso.org/iso/19115/-3/mdb/2.0"
                 xmlns:mrl="http://standards.iso.org/iso/19115/-3/mrl/2.0"
+                xmlns:mcc="http://standards.iso.org/iso/19115/-3/mcc/1.0"
                 xmlns:mrd="http://standards.iso.org/iso/19115/-3/mrd/1.0"
                 xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0"
                 xmlns:mco="http://standards.iso.org/iso/19115/-3/mco/1.0"
@@ -96,6 +97,17 @@
   </xsl:template>
 
 
+
+  <xsl:template mode="iso19115-3-to-dcat"
+                match="mdb:identificationInfo/*/mri:graphicOverview[*/mcc:fileName/*/text() != '']">
+    <foaf:page>
+      <foaf:Document rdf:about="{*/mcc:fileName/*/text()}">
+        <xsl:apply-templates mode="iso19115-3-to-dcat"
+                             select="*/mcc:fileDescription[normalize-space(.) != '']"/>
+      </foaf:Document>
+    </foaf:page>
+  </xsl:template>
+
   <!--
   RDF Property:	dcat:distribution
   Definition:	An available distribution of the dataset.
@@ -128,7 +140,9 @@
     <xsl:variable name="pointsToService" select="false()"/>
 
     <xsl:choose>
-      <xsl:when test="$function = ('information', 'search', 'completeMetadata', 'browseGraphic', 'upload', 'emailService')">
+      <xsl:when test="normalize-space($url) = ''"/>
+      <xsl:when test="$function = ('information', 'search', 'completeMetadata', 'browseGraphic', 'upload', 'emailService')
+                      or matches($protocol, 'WWW:LINK.*')">
         <foaf:page>
           <foaf:Document rdf:about="{$url}">
             <xsl:apply-templates mode="iso19115-3-to-dcat"
@@ -195,8 +209,12 @@
             Domain:	dcat:Distribution
             Range:	rdfs:Resource
             Usage note:	dcat:downloadURL SHOULD be used for the URL at which this distribution is available directly, typically through a HTTP Get request
+
+            This protocol list is GeoNetwork specific. It is not part of the ISO 19115-3 standard.
             -->
-            <!-- TODO <dcat:downloadURL rdf:resource="{$url}"/>-->
+            <xsl:if test="matches($protocol, '.*DOWNLOAD.*|DB:.*|FILE:.*')">
+              <dcat:downloadURL rdf:resource="{$url}"/>
+            </xsl:if>
 
 
             <!--
@@ -231,7 +249,8 @@
              Range:	dcat:DataService
              Usage note:	dcat:accessService SHOULD be used to link to a description of a dcat:DataService that can provide access to this distribution.
             -->
-            <xsl:if test="$function = ('download', 'offlineAccess', 'order', 'browsing', 'fileAccess')">
+            <xsl:if test="$function = ('download', 'offlineAccess', 'order', 'browsing', 'fileAccess')
+                          or matches($protocol, 'OGC:WMS|OGC:WFS|OGC:WCS|OGC:WPS|OGC API Features|OGC API Coverages|ESRI:REST')">
               <dcat:accessService>
                 <rdf:Description>
                   <rdf:type rdf:resource="http://www.w3.org/ns/dcat#DataService"/>

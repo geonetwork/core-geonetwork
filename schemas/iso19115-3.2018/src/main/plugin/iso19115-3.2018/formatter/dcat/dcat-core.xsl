@@ -129,6 +129,7 @@
                                   |mdb:identificationInfo/*/mri:extent/*/gex:geographicElement/gex:EX_GeographicDescription
                                   |mdb:identificationInfo/*/mri:extent/*/gex:temporalElement/*/gex:extent
                                   |mdb:distributionInfo//mrd:onLine
+                                  |mdb:identificationInfo/*/mri:graphicOverview
                            "/>
 
       <!-- DataService -->
@@ -149,6 +150,7 @@
                       |mdb:resourceLineage/*/mrl:statement
                       |mrd:onLine/*/cit:name
                       |mrd:onLine/*/cit:description
+                      |mri:graphicOverview/*/mcc:fileDescription
                       ">
     <xsl:variable name="xpath"
                   as="xs:string"
