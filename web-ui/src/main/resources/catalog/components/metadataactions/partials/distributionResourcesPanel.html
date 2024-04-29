@@ -3,14 +3,13 @@
   class="panel panel-default"
   data-ng-class="getClass()"
 >
-  <!-- /.panel-heading -->
   <div class="panel-heading" data-gn-slide-toggle="">
     <i class="fa fa-fw"></i>&nbsp;
     <span data-translate="">distributionPanel</span>
   </div>
 
-  <!-- /.panel-body -->
   <div class="panel-body">
+    <div data-ng-transclude="" class="row"></div>
     <div
       data-gn-distribution-resources-container="md"
       data-mode="mode"
