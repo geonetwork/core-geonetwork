@@ -18,12 +18,6 @@
                 extension-element-prefixes="saxon"
                 exclude-result-prefixes="#all">
 
-  <xsl:output omit-xml-declaration="yes"
-              method="xml"
-              indent="yes"
-              saxon:indent-spaces="2"
-              encoding="UTF-8"/>
-
   <xsl:include href="base.xsl"/>
   <xsl:include href="../../../iso19115-3.2018/formatter/citation/common.xsl"/>
 

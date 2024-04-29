@@ -13,12 +13,6 @@
                 extension-element-prefixes="saxon"
                 exclude-result-prefixes="#all">
 
-  <xsl:output omit-xml-declaration="yes"
-              method="xml"
-              indent="yes"
-              saxon:indent-spaces="2"
-              encoding="UTF-8"/>
-
   <xsl:import href="base.xsl"/>
   <xsl:import href="common.xsl"/>
 
