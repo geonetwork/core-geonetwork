@@ -78,8 +78,8 @@
     <xsl:if test="count(../preceding-sibling::mri:resourceConstraints/*[mco:useConstraints]) = 0">
       <xsl:variable name="useConstraints"
                     as="node()*">
-        <xsl:copy-of select="../../mri:resourceConstraints/*[mco:useConstraints]/mco:otherConstraints"/>
-        <xsl:copy-of select="../../mri:resourceConstraints/*[mco:useConstraints]/mco:useLimitation"/>
+        <xsl:copy-of select="ancestor::mri:resourceConstraints/*[mco:useConstraints]/mco:otherConstraints"/>
+        <xsl:copy-of select="ancestor::mri:resourceConstraints/*[mco:useConstraints]/mco:useLimitation"/>
       </xsl:variable>
       <xsl:for-each select="$useConstraints">
         <xsl:choose>
@@ -87,6 +87,7 @@
             <dct:license>
               <dct:LicenseDocument>
                 <xsl:choose>
+                  <!-- TODO: isMappingResourceConstraintsToEuVocabulary -->
                   <xsl:when test="gcx:Anchor/@xlink:href">
                     <xsl:attribute name="rdf:about" select="gcx:Anchor/@xlink:href"/>
                   </xsl:when>
