@@ -165,7 +165,7 @@
     "linkToParentTitle": "Link een parent metadata record aan de huidige metadata",
     "linkToService": "Link naar een service",
     "linkToServiceTitle": "Link een service aan de huidige metadata",
-    "linkToSibling": "Link naar andere bronnen",
+    "linkToSibling": "Link to records",
     "linkToSiblingTitle": "Link een bron aan de huidige metadata",
     "linkToSource": "Link naar een bron dataset",
     "linkToSourceTitle": "Link een bron dataset aan de huidige metadata",
@@ -446,5 +446,13 @@
     "addOnlinesrc#links": "Links toevoegen",
     "addOnlinesrc#links-help": "eg. web links",
     "addOnlinesrc#quality": "Add quality info",
-    "addOnlinesrc#quality-help": "eg. specification, reports"
+    "addOnlinesrc#quality-help": "eg. specification, reports",
+    "associated-parent": "Parent Metadata",
+    "associated-service": "Service",
+    "associated-dataset": "Dataset",
+    "associated-source": "Bron datasets",
+    "associated-fcats": "Feature catalogus",
+    "associated-siblings": "Gerelateerde records",
+    "associated-hasfeaturecats": "Met behulp van deze feature catalogus",
+    "associatedResourcesPanel": "Gerelateerde records"
 }

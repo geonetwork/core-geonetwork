@@ -174,7 +174,10 @@
             } else {
               query.query = {
                 function_score: {
-                  random_score: { seed: Math.floor(Math.random() * 10000) },
+                  random_score: {
+                    seed: Math.floor(Math.random() * 10000),
+                    field: "uuid"
+                  },
                   query: query.query
                 }
               };
@@ -2242,6 +2245,9 @@
     "$translate",
     function ($translate) {
       return function (workflowStatus) {
+        if (!workflowStatus) {
+          return;
+        }
         var split = workflowStatus.split("-");
         // the status of the record
         var metadataStatus = $translate.instant("status-" + split[0]);

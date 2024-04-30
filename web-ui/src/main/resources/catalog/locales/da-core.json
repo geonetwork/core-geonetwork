@@ -184,7 +184,7 @@
     "hitsPerPage": "Poster per side",
     "chooseRecordsPerPage": "Klik for at vælge antallet af poster pr. side",
     "sortedBy": "Sorteret efter {{field}}",
-    "sortBy-dateStampDesc": "sidst opdateret",
+    "sortBy-changeDateDesc": "sidst opdateret",
     "sortBy-createDateDesc": "Nye metadata",
     "sortBy-resourceTitleObject.default.sort": "titel (stigende)",
     "sortBy-resourceTitleObject.default.sortDesc": "titel (faldende)",

@@ -185,8 +185,18 @@
         delete p.forcedLanguage;
       }
 
-      function addSortBy(params, sortBy, sortOrder) {
+      function addSortBy(params, sortBy, sortOrder, searchState) {
         if (sortBy) {
+          var languageConfig = gnEsLanguageService.getLanguageConfig(
+            params.any,
+            searchState
+          );
+          var searchLanguage =
+            languageConfig.searchLanguage !== "\\*"
+              ? languageConfig.searchLanguage
+              : "lang" + gnGlobalSettings.iso3lang;
+
+          sortBy = sortBy.replace("${searchLang}", searchLanguage);
           sortOrder = sortOrder || "";
           var sort = {},
             orders = sortOrder.split(",", -1);
@@ -197,6 +207,7 @@
               params.sort.push(sort);
             }
           });
+
           params.sort.push("_score");
         }
       }
@@ -473,7 +484,7 @@
           params.size = p.to + 1 - p.from;
         }
 
-        addSortBy(params, p.sortBy, p.sortOrder);
+        addSortBy(params, p.sortBy, p.sortOrder, searchState);
 
         params.query = query;
 
@@ -545,7 +556,12 @@
         // The multi_match will take care of the any filter.
         currentSearch.params.any = undefined;
 
-        addSortBy(params, currentSearch.params.sortBy, currentSearch.params.sortOrder);
+        addSortBy(
+          params,
+          currentSearch.params.sortBy,
+          currentSearch.params.sortOrder,
+          currentSearch
+        );
 
         try {
           params.query.function_score.query.bool.must[0].multi_match.query =

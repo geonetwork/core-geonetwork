@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2024 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -64,26 +64,26 @@ public abstract class MetadataProcessingReport extends ProcessingReport {
     /**
      * The list of record identifiers successfully processed
      */
-    protected Set<Integer> metadata = new HashSet<Integer>();
+    protected Set<Integer> metadata = new HashSet<>();
     /**
      * The list of record identifiers not found (may be deleted)
      */
-    protected Set<Integer> notFound = new HashSet<Integer>();
+    protected Set<Integer> notFound = new HashSet<>();
     /**
      * The list of records identifiers the user who starts the process is not allowed to edit
      */
-    protected Set<Integer> notEditable = new HashSet<Integer>();
+    protected Set<Integer> notEditable = new HashSet<>();
 
     /**
      * The list of records with error and exception details
      */
-    protected Map<Integer, List<Report>> metadataErrors = new HashMap<Integer, List<Report>>();
-    protected Map<Integer, List<InfoReport>> metadataInfos = new HashMap<Integer, List<InfoReport>>();
+    protected Map<Integer, List<Report>> metadataErrors = new HashMap<>();
+    protected Map<Integer, List<InfoReport>> metadataInfos = new HashMap<>();
 
     /**
      * The list of records with error and exception details
      */
-    public MetadataProcessingReport() {
+    protected MetadataProcessingReport() {
         super();
     }
 

@@ -184,7 +184,7 @@
     "hitsPerPage": "Cofnodion fesul tudalen",
     "chooseRecordsPerPage": "Cliciwch i ddewis nifer y cofnodion fesul tudalen",
     "sortedBy": "Trefnwyd yn ôl {{field}}",
-    "sortBy-dateStampDesc": "diweddariadau diwethaf",
+    "sortBy-changeDateDesc": "diweddariadau diwethaf",
     "sortBy-createDateDesc": "cofnodion newydd",
     "sortBy-resourceTitleObject.default.sort": "teitl (esgynnol)",
     "sortBy-resourceTitleObject.default.sortDesc": "teitl (disgynnol)",

@@ -165,7 +165,7 @@
     "linkToParentTitle": "链接父元数据记录到当前的元数据",
     "linkToService": "链接至服务",
     "linkToServiceTitle": "链接服务至当前的元数据",
-    "linkToSibling": "链接到其他资源",
+    "linkToSibling": "Link to records",
     "linkToSiblingTitle": "链接资源至当前元数据",
     "linkToSource": "链接到源数据集",
     "linkToSourceTitle": "链接源数据集到当前的元数据",
@@ -446,5 +446,13 @@
     "addOnlinesrc#links": "添加链接",
     "addOnlinesrc#links-help": "eg. web links",
     "addOnlinesrc#quality": "Add quality info",
-    "addOnlinesrc#quality-help": "eg. specification, reports"
+    "addOnlinesrc#quality-help": "eg. specification, reports",
+    "associated-parent": "父元数据",
+    "associated-service": "服务",
+    "associated-dataset": "数据集",
+    "associated-source": "源数据集",
+    "associated-fcats": "要素目录",
+    "associated-siblings": "相关资源",
+    "associated-hasfeaturecats": "使用此要素目录",
+    "associatedResourcesPanel": "相关资源"
 }

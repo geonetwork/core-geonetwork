@@ -68,24 +68,17 @@
                 >
               </label>
 
-              <!-- Date time -->
-              <div ng-if="isDateTime(input)">
-                <div
+              <div ng-if="isDateFormat(input)">
+                <input
                   ng-repeat="field in getInputsByName(input.identifier.value)"
-                  class="input-daterange input-group input-group-sm"
-                  gn-bootstrap-datepicker="pickerValues"
-                  config="{dateMin: getDateBounds(input, true), dateMax: getDateBounds(input, false)}"
-                  data-date-format="dd-mm-yyyy"
-                >
-                  <input
-                    ng-model="field.value"
-                    data-ng-click="desactivateGeometryTool()"
-                    type="text"
-                    ng-blur="onBlur($event)"
-                    class="input-sm form-control"
-                  />
-                  <span class="input-group-addon" translate>date</span>
-                </div>
+                  ng-model="field.value"
+                  data-ng-click="desactivateGeometryTool()"
+                  type="{{getHtmlInputType(input)}}"
+                  min="{{getDateBounds(input, true)}}"
+                  max="{{getDateBounds(input, false)}}"
+                  ng-blur="onBlur($event)"
+                  class="input-sm form-control"
+                />
               </div>
 
               <div ng-if="isBoolean(input)">
@@ -105,7 +98,9 @@
               </div>
 
               <!-- Basic form field (combo box or text field) -->
-              <div ng-if="::input.literalData && !isDateTime(input) && !isBoolean(input)">
+              <div
+                ng-if="::input.literalData && !isDateFormat(input) && !isBoolean(input)"
+              >
                 <div
                   class="input-group"
                   ng-repeat="field in getInputsByName(input.identifier.value)"
@@ -171,6 +166,12 @@
 
               <!-- Complex input (geometry on map) -->
               <div ng-if="::input.complexData">
+                <select
+                  class="form-control"
+                  data-ng-if="::input.geometryType === null"
+                  data-ng-options="type for type in ['Point', 'LineString', 'Polygon']"
+                  data-ng-model="input.geometryType"
+                ></select>
                 <gn-geometry-tool
                   ng-repeat="field in getInputsByName(input.identifier.value)"
                   allow-reset
@@ -178,8 +179,8 @@
                   output="field.value"
                   output-format="{{ input.outputFormat }}"
                   output-crs="{{ map.getView().getProjection().getCode() }}"
-                  name-type="{{ input.geometryType }}"
-                  geometry-type="{{ input.geometryType }}"
+                  name-type="input.geometryType"
+                  geometry-type="input.geometryType"
                   output-crs="{{ map.getView().getProjection().getCode() }}"
                   output-as-features="true"
                   map="map"
@@ -249,7 +250,7 @@
               <button
                 type="submit"
                 class="btn btn-primary"
-                ng-click="submit()"
+                ng-click="executeWPSProcess()"
                 ng-class="{disabled: running}"
                 ng-show="!hideExecuteButton"
               >
