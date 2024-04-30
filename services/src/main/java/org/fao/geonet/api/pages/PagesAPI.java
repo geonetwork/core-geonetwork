@@ -199,12 +199,12 @@ public class PagesAPI {
                 newPage.setStatus(status);
 
                 if (status == Page.PageStatus.GROUPS && CollectionUtils.isNotEmpty(groups)) {
-                    Set<Group> _groups = new LinkedHashSet<>();
+                    Set<Group> pageGroups = new LinkedHashSet<>();
                     for (String groupName : groups) {
                         Group group = groupRepository.findByName(groupName);
-                        _groups.add(group);
+                        pageGroups.add(group);
                     }
-                    newPage.setGroups(_groups);
+                    newPage.setGroups(pageGroups);
                 }
             }
 
