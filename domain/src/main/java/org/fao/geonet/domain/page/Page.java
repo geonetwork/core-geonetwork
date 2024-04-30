@@ -156,9 +156,9 @@ public class Page extends GeonetEntity implements Serializable {
     }
 
     /**
-     * Get all the user's addresses.
+     * Get all the page's groups.
      *
-     * @return all the user's addresses.
+     * @return all the page's groups.
      */
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST, orphanRemoval = false)
     @JoinTable(name = "spg_page_group", joinColumns = {@JoinColumn(name = "language"), @JoinColumn(name = "linktext")},
