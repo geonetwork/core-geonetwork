@@ -88,7 +88,7 @@
 
   <!-- Ignore some fields displayed in header or in right column -->
   <xsl:template mode="render-field"
-                match="gmd:graphicOverview|gmd:abstract|gmd:title"
+                match="gmd:graphicOverview|gmd:abstract|gmd:identificationInfo/*/gmd:citation/*/gmd:title"
                 priority="2000"/>
 
   <!-- Specific schema rendering -->
@@ -1005,6 +1005,19 @@
                         gmd:obligation[position() > 1]|
                         gmd:pointInPixel[position() > 1]"
                 priority="100"/>
+
+
+  <!-- Use gmd:specification label for the specification title -->
+  <xsl:template mode="render-field"
+                match="gmd:specification/*/gmd:title"
+                priority="100">
+    <dl>
+      <dt><xsl:value-of select="tr:nodeLabel(tr:create($schema, @code), 'gmd:specification', 'gmd:CI_Citation')"/></dt>
+      <dd>
+        <xsl:apply-templates mode="render-value" select="."/>
+      </dd>
+    </dl>
+  </xsl:template>
 
 
   <!-- Link to other metadata records -->
