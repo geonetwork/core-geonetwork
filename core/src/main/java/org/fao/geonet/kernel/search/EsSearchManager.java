@@ -522,6 +522,7 @@ public class EsSearchManager implements ISearchManager {
     static {
         arrayFields = ImmutableSet.<String>builder()
             .add(Geonet.IndexFieldNames.RECORDLINK)
+            .add("geom")
             .add("topic")
             .add("cat")
             .add("keyword")
@@ -631,6 +632,7 @@ public class EsSearchManager implements ISearchManager {
                 || arrayFields.contains(propertyName)
                 || propertyName.endsWith("DateForResource")
                 || propertyName.startsWith("cl_");
+
             if (isArray) {
                 ArrayNode arrayNode = doc.putArray(propertyName);
                 for (Element node : nodeElements) {

@@ -674,7 +674,6 @@
             <xsl:copy-of select="gn-fn-index:add-multilingual-field('extentIdentifier', */gmd:code, $allLanguages)"/>
           </xsl:for-each>
 
-          <!-- TODO: index bounding polygon -->
           <xsl:variable name="bboxes"
                         select=".//gmd:EX_GeographicBoundingBox[
                                 ./gmd:westBoundLongitude/gco:Decimal castable as xs:decimal and
@@ -721,6 +720,10 @@
                 <xsl:choose>
                   <xsl:when test="$e = $w and $s = $n">
                     <location><xsl:value-of select="concat($s, ',', $w)"/></location>
+                    <geom type="object">
+                      <xsl:text>{"type": "Point", "coordinates": </xsl:text>
+                      <xsl:value-of select="concat('[', $w, ',', $s, ']}')"/>
+                    </geom>
                   </xsl:when>
                   <xsl:when
                     test="($e = $w and $s != $n) or ($e != $w and $s = $n)">
