@@ -88,7 +88,7 @@
 
   <!-- Ignore some fields displayed in header or in right column -->
   <xsl:template mode="render-field"
-                match="gmd:graphicOverview|gmd:abstract|gmd:title"
+                match="gmd:graphicOverview|gmd:abstract|gmd:identificationInfo/*/gmd:citation/*/gmd:title"
                 priority="2000"/>
 
   <!-- Specific schema rendering -->
@@ -344,7 +344,7 @@
         <xsl:otherwise>
           <div data-ng-if="showCitation"
                data-gn-metadata-citation="md">
-            
+
           </div>
         </xsl:otherwise>
       </xsl:choose>
@@ -441,7 +441,7 @@
         </xsl:call-template>
       </dt>
       <dd>
-        
+
         <xsl:apply-templates mode="render-value" select="."/>
         <xsl:apply-templates mode="render-value" select="@*"/>
       </dd>
@@ -657,7 +657,7 @@
       <xsl:otherwise>
         <div class="gn-contact">
           <strong>
-            
+
             <xsl:apply-templates mode="render-value"
                                  select="*/gmd:role/*/@codeListValue"/>
           </strong>
@@ -1007,6 +1007,19 @@
                 priority="100"/>
 
 
+  <!-- Use gmd:specification label for the specification title -->
+  <xsl:template mode="render-field"
+                match="gmd:specification/*/gmd:title"
+                priority="100">
+    <dl>
+      <dt><xsl:value-of select="tr:nodeLabel(tr:create($schema, @code), 'gmd:specification', 'gmd:CI_Citation')"/></dt>
+      <dd>
+        <xsl:apply-templates mode="render-value" select="."/>
+      </dd>
+    </dl>
+  </xsl:template>
+
+
   <!-- Link to other metadata records -->
   <xsl:template mode="render-field"
                 match="srv:operatesOn[@uuidref]|gmd:featureCatalogueCitation[@uuidref]|gmd:source[@uuidref]|gmd:aggregateDataSetIdentifier/*/gmd:code[@uuidref]"
@@ -1070,7 +1083,7 @@
           <xsl:value-of select="gn-fn-render:getMetadataTitle(./gco:CharacterString, $langId)"/>
         </a>
       </xsl:if>
-       
+
       <xsl:call-template name="addLineBreaksAndHyperlinks">
         <xsl:with-param name="txt" select="$txt"/>
       </xsl:call-template>
@@ -1086,7 +1099,7 @@
           <xsl:value-of select="gn-fn-render:getMetadataTitle(./gco:CharacterString, $langId)"/>
         </a>
       </xsl:if>
-      
+
       <xsl:apply-templates mode="localised" select=".">
         <xsl:with-param name="langId" select="$langId"/>
       </xsl:apply-templates>
