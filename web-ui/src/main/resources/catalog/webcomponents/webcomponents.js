@@ -45,7 +45,7 @@ customElements.define(
       div.setAttribute("class", "gn-full");
       app.appendChild(div);
 
-      ["gn_search_default.css", "gn_inspire.css"].forEach(function (src) {
+      ["gn_search_default.css", "bootstrap-table.min.css", "gn_inspire.css"].forEach(function (src) {
         var css = document.createElement("link");
         css.setAttribute("href", baseUrl + "/static/" + src);
         css.setAttribute("rel", "stylesheet");
