@@ -67,6 +67,7 @@
       $scope.threadSortReverse = false;
       $scope.threadInfoLoading = false;
       $scope.hasIndexingError = false;
+      $scope.hasIndexingWarning = false;
 
       $scope.indexStatus = null;
       function getIndexStatus() {
@@ -76,19 +77,75 @@
       }
       getIndexStatus();
 
-      function getRecordsWithIndexingErrors() {
+      function getRecords(queryFilter) {
         return $http.post("../api/search/records/_search?bucket=ie", {
-          query: {
-            bool: {
-              must: { terms: { indexingError: [true] } }
-            }
-          },
+          query: queryFilter,
           from: 0,
           size: 0
         });
       }
-      getRecordsWithIndexingErrors().then(function (r) {
+
+      /**
+       * Get the metadata that have indexing errors (including warnings).
+       *
+       * @returns {*}
+       */
+      function getRecordsWithIndexingErrors() {
+        return getRecords({
+          bool: {
+            must: { terms: { indexingError: [true] } }
+          }
+        });
+      }
+
+      /**
+       * Get the metadata that have indexing errors (excluding warnings)
+       *
+       * @returns {*}
+       */
+      function getRecordsWithIndexingErrorsNoWarnings() {
+        return getRecords({
+          bool: {
+            must: [
+              {
+                query_string: {
+                  query: "(-indexingErrorMsg:Warning*)",
+                  default_operator: "AND"
+                }
+              },
+              { terms: { indexingError: [true] } }
+            ]
+          }
+        });
+      }
+
+      getRecordsWithIndexingErrorsNoWarnings().then(function (r) {
         $scope.hasIndexingError = r.data.hits.total.value > 0;
+      });
+
+      /**
+       * Get the metadata that have indexing warnings.
+       *
+       * @returns {*}
+       */
+      function getRecordsWithIndexingWarnings() {
+        return getRecords({
+          bool: {
+            must: [
+              {
+                query_string: {
+                  query: "(+indexingErrorMsg:Warning*)",
+                  default_operator: "AND"
+                }
+              },
+              { terms: { indexingError: [true] } }
+            ]
+          }
+        });
+      }
+
+      getRecordsWithIndexingWarnings().then(function (r) {
+        $scope.hasIndexingWarning = r.data.hits.total.value > 0;
       });
 
       $scope.setThreadSortField = function (field) {
