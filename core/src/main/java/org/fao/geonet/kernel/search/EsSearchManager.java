@@ -584,6 +584,8 @@ public class EsSearchManager implements ISearchManager {
             .add("MD_LegalConstraintsUseLimitationObject")
             .add("MD_SecurityConstraintsUseLimitation")
             .add("MD_SecurityConstraintsUseLimitationObject")
+            .add("MD_SecurityConstraintsUserNote")
+            .add("MD_SecurityConstraintsUserNoteObject")
             .add("overview")
             .add("sourceDescription")
             .add("MD_ConstraintsUseLimitation")
