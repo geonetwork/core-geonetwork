@@ -80,7 +80,7 @@
         filters: gnSearchSettings.filters,
         configId: "editor",
         params: {
-          sortBy: "dateStamp",
+          sortBy: "changeDate",
           sortOrder: "desc",
           isTemplate: ["y", "n"],
           draft: gnGlobalSettings.gnCfg.mods.editor.workflowSearchRecordTypes || [
@@ -92,7 +92,7 @@
           to: 20
         },
         defaultParams: {
-          sortBy: "dateStamp",
+          sortBy: "changeDate",
           sortOrder: "desc",
           isTemplate: ["y", "n"],
           draft: gnGlobalSettings.gnCfg.mods.editor.workflowSearchRecordTypes || [

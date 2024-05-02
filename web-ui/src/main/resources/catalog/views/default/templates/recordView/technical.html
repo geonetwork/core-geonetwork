@@ -22,6 +22,34 @@
     </ul>
   </section>
 
+  <div data-ng-if="mdView.current.record.serviceType" class="gn-margin-bottom flex-row">
+    <span class="badge badge-rounded" title="{{'serviceType' | translate}}">
+      <i class="fa fa-fw fa-cloud"></i>
+    </span>
+    <div>
+      <h3 data-translate="">serviceType</h3>
+      <p>
+        {{mdView.current.record.serviceType}}
+        <span data-ng-if="mdView.current.record.serviceTypeVersion">
+          ({{mdView.current.record.serviceTypeVersion}})</span
+        >
+      </p>
+    </div>
+  </div>
+
+  <div
+    data-ng-if="mdView.current.record.cl_couplingType"
+    class="gn-margin-bottom flex-row"
+  >
+    <span class="badge badge-rounded" title="{{'cl_couplingType' | translate}}">
+      <i class="fa fa-fw fa-cloud"></i>
+    </span>
+    <div data-ng-if="mdView.current.record.cl_couplingType">
+      <h3 data-translate="">cl_couplingType</h3>
+      <p data-ng-repeat="c in mdView.current.record.cl_couplingType">{{c.default}}</p>
+    </div>
+  </div>
+
   <div
     data-ng-if="mdView.current.record.cl_maintenanceAndUpdateFrequency.length > 0"
     class="gn-margin-bottom flex-row"

@@ -18,7 +18,6 @@
   xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0"
   xmlns:gfc="http://standards.iso.org/iso/19110/gfc/1.1"
   xmlns:gmx="http://standards.iso.org/iso/19115/-3/gmx"
-  xmlns:gts="http://www.isotc211.org/2005/gts"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xmlns:gml="http://www.opengis.net/gml/3.2"
   xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -39,7 +38,7 @@
   <!-- Visit all XML tree recursively -->
   <xsl:template mode="mode-iso19115-3.2018"
                 match="mds:*|mcc:*|mri:*|mrs:*|mrc:*|mrd:*|mco:*|msr:*|lan:*|
-                       gcx:*|gex:*|dqm:*|mdq:*|cit:*|srv:*|gml:*|gts:*|gfc:*"
+                       gcx:*|gex:*|dqm:*|mdq:*|cit:*|srv:*|gml:*|gfc:*"
                 priority="2">
     <xsl:param name="schema" select="$schema" required="no"/>
     <xsl:param name="labels" select="$labels" required="no"/>

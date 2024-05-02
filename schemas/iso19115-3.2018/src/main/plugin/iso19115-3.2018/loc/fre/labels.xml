@@ -8814,11 +8814,11 @@ http://www.sandre.eaufrance.fr/?urn=urn:sandre:ensembledonnees:BDCarthage:FXX:::
     <description></description>
   </element>
   <element name="gfc:code">
-    <label>Code</label>
+    <label>Identifiant</label>
     <description></description>
   </element>
   <element name="gfc:isOrdered">
-    <label>Est prdonné</label>
+    <label>Est ordonné</label>
     <description></description>
   </element>
   <element name="gfc:isNavigable">
@@ -8882,7 +8882,7 @@ http://www.sandre.eaufrance.fr/?urn=urn:sandre:ensembledonnees:BDCarthage:FXX:::
     <description></description>
   </element>
   <element name="gfc:memberName">
-    <label>Nom</label>
+    <label>Libellé</label>
     <description></description>
   </element>
   <element name="gfc:FC_Constraint">
