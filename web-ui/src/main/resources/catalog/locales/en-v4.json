@@ -150,7 +150,7 @@
   "isPublishedToAll-false": "Restricted records",
   "dateTypeForStatus": "Date type",
   "dateValueForStatus": "Date",
-  "indexRecordsWithErrors": "Index records with errors",
+  "indexRecordsWithErrors": "Index records with errors / warnings",
   "top10IndexingErrors": "Top 10 indexing errors:",
   "facet-indexingErrorMsg": "Indexing errors",
   "facet-indexingWarningMsg": "Indexing warnings",
