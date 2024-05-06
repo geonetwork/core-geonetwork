@@ -1007,19 +1007,6 @@
                 priority="100"/>
 
 
-  <!-- Use gmd:specification label for the specification title -->
-  <xsl:template mode="render-field"
-                match="gmd:specification/*/gmd:title"
-                priority="100">
-    <dl>
-      <dt><xsl:value-of select="tr:nodeLabel(tr:create($schema, @code), 'gmd:specification', 'gmd:CI_Citation')"/></dt>
-      <dd>
-        <xsl:apply-templates mode="render-value" select="."/>
-      </dd>
-    </dl>
-  </xsl:template>
-
-
   <!-- Link to other metadata records -->
   <xsl:template mode="render-field"
                 match="srv:operatesOn[@uuidref]|gmd:featureCatalogueCitation[@uuidref]|gmd:source[@uuidref]|gmd:aggregateDataSetIdentifier/*/gmd:code[@uuidref]"
