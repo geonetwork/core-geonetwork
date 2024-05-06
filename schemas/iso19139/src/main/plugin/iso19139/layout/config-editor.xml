@@ -424,6 +424,7 @@
   <tableFields>
     <table for="gmd:CI_ResponsibleParty">
       <header>
+        <col/>
         <!-- TODO: Add label from strings.xml / label with context-->
         <col label="gmd:organisationName"/>
         <col label="gmd:individualName"/>
@@ -432,6 +433,7 @@
         <col/>
       </header>
       <row>
+        <col orderControl=".."/>
         <col xpath="gmd:organisationName"/>
         <col xpath="gmd:individualName"/>
         <col xpath="gmd:contactInfo/*/gmd:address/*/gmd:electronicMailAddress"/>
@@ -441,12 +443,14 @@
     </table>
     <table for="gmd:CI_OnlineResource">
       <header>
+        <col/>
         <col label="gmd:protocol"/>
         <col label="gmd:linkage"/>
         <col label="gmd:name"/>
         <col/>
       </header>
       <row>
+        <col orderControl=".."/>
         <col xpath="gmd:protocol"/>
         <col xpath="gmd:linkage"/>
         <col xpath="gmd:name"/>

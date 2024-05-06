@@ -263,12 +263,14 @@ Configure here the list of fields to display using a table. This only applies to
         <tableFields>
           <table for="gmd:CI_OnlineResource">
             <header>
-              <hcol label="gmd:protocol"/>
-              <hcol label="gmd:linkage"/>
-              <hcol label="gmd:name"/>
-              <hcol/>
+              <col/>
+              <col label="gmd:protocol"/>
+              <col label="gmd:linkage"/>
+              <col label="gmd:name"/>
+              <col/>
             </header>
             <row>
+              <col orderControl=".."/>
               <col xpath="gmd:protocol"/>
               <col xpath="gmd:linkage"/>
               <col xpath="gmd:name"/>
@@ -434,6 +436,7 @@ Table column.
             </xs:sequence>
             <xs:attribute name="xpath" type="xs:string" use="optional"/>
             <xs:attribute name="del" type="xs:string" use="optional"/>
+            <xs:attribute name="orderControl" type="xs:string" use="optional"/>
             <xs:attribute name="use" type="xs:string" use="optional"/>
           </xs:complexType>
         </xs:element>
