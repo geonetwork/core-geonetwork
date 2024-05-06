@@ -307,7 +307,9 @@
       }]);
 
       // See jQuery.htmlPrefilter changes: https://jquery.com/upgrade-guide/3.5/
-      jQuery.migrateEnablePatches( "self-closed-tags" );
+      // Uncomment this line to debug issues with self-closed tags and use the debug mode to get jQuery Migrate warning
+      // about the problematic HTML snippet.
+      //jQuery.migrateEnablePatches( "self-closed-tags" );
     </script>
   </xsl:template>
 </xsl:stylesheet>
