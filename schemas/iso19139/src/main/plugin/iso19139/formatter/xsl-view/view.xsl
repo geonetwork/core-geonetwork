@@ -206,9 +206,7 @@
           <xsl:copy-of select="gn-fn-render:extent($metadataUuid)"/>
         </xsl:when>
         <xsl:otherwise>
-          <xsl:apply-templates mode="render-field"
-                               select=".//gmd:EX_GeographicBoundingBox">
-          </xsl:apply-templates>
+          <xsl:copy-of select="gn-fn-render:bboxes(.//gmd:EX_GeographicBoundingBox)"/>
         </xsl:otherwise>
       </xsl:choose>
     </section>
