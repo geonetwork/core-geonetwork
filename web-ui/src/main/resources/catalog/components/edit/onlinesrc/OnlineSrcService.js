@@ -362,6 +362,11 @@
          * @param {string} type of the directive that calls it.
          */
         onOpenPopup: function (type, additionalParams) {
+          if (type === "parent" && additionalParams.fields.associationType) {
+            // In ISO19115-3, parents are usually encoded using the association records
+            // Configured in config/associated-panel/default.json
+            type = "siblings";
+          }
           var fn = openCb[type];
           if (angular.isFunction(fn)) {
             openCb[type](additionalParams);
