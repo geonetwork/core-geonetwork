@@ -414,6 +414,7 @@
   "application/vnd.geo+json": "GeoJSON",
   "application/json": "JSON",
   "shape-zip": "ESRI Shapefile",
+  "scaleLineTool": "Map scale",
   "text/xml; subtype=gml/2.1.2": "GML 2.1.2",
   "text/xml; subtype=gml/3.1.1": "GML 3.1.1",
   "text/xml; subtype=gml/3.2": "GML 3.2",
