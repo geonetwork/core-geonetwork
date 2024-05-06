@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2024 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -91,6 +91,11 @@ import java.util.zip.GZIPOutputStream;
 @Tag(name = "search",
     description = "Proxy for Elasticsearch catalog search operations")
 @Controller
+/**
+ * Proxy from GeoNetwork {@code /{portal}}/api} to Elasticsearch service.
+ *
+ * The portal and privileges are included the search provided by the user.
+ */
 public class EsHTTPProxy {
     public static final String[] _validContentTypes = {
         "application/json", "text/plain"
@@ -126,6 +131,14 @@ public class EsHTTPProxy {
 
     @Value("${es.password}")
     private String password;
+
+    @Value("${es.proxy.headers:content-type,content-encoding,transfer-encoding}")
+    private String[] proxyHeadersAllowedList;
+
+    /**
+     * Ignore list of headers handled by proxy implementation directly.
+     */
+    private String[] proxyHeadersIgnoreList =  {"Content-Length"};
 
     @Autowired
     private EsRestClient client;
@@ -726,39 +739,30 @@ public class EsHTTPProxy {
     private void copyHeadersFromConnectionToResponse(HttpServletResponse response, HttpURLConnection uc, String... ignoreList) {
         Map<String, List<String>> map = uc.getHeaderFields();
         for (String headerName : map.keySet()) {
-
-            if (!isInIgnoreList(headerName, ignoreList)) {
-
-                // concatenate all values from the header
-                List<String> valuesList = map.get(headerName);
-                StringBuilder sBuilder = new StringBuilder();
-                valuesList.forEach(sBuilder::append);
-
-                // add header to HttpServletResponse object
-                if (headerName != null) {
-                    if ("Transfer-Encoding".equalsIgnoreCase(headerName) && "chunked".equalsIgnoreCase(sBuilder.toString())) {
-                        // do not write this header because Tomcat already assembled the chunks itself
-                        continue;
-                    }
-                    response.addHeader(headerName, sBuilder.toString());
-                }
+            if (headerName == null) {
+                continue;
             }
-        }
-    }
+            if (Arrays.stream(ignoreList).anyMatch(headerName::equalsIgnoreCase)) {
+                // Ignore list reflects headers that are handled by ESHTTPProxy directly
+                continue;
+            }
+            if (Arrays.stream(proxyHeadersAllowedList).noneMatch(headerName::equalsIgnoreCase)) {
+                // Allow list is provided as a configuration option and may need to be adjusted
+                // as Elasticsearch API changes over time.
+                continue;
+            }
+            // concatenate all values from the header
+            List<String> valuesList = map.get(headerName);
+            StringBuilder sBuilder = new StringBuilder();
+            valuesList.forEach(sBuilder::append);
 
-    /**
-     * Helper function to detect if a specific header is in a given ignore list
-     *
-     * @return true: in, false: not in
-     */
-    private boolean isInIgnoreList(String headerName, String[] ignoreList) {
-        if (headerName == null) return false;
-
-        for (String headerToIgnore : ignoreList) {
-            if (headerName.equalsIgnoreCase(headerToIgnore))
-                return true;
+            if ("Transfer-Encoding".equalsIgnoreCase(headerName) && "chunked".equalsIgnoreCase(sBuilder.toString())) {
+                // do not write this header + value because Tomcat already assembled the chunks itself
+                continue;
+            }
+            // add header to HttpServletResponse object
+            response.addHeader(headerName, sBuilder.toString());
         }
-        return false;
     }
 
     /**
