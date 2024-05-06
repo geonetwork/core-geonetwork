@@ -4,7 +4,7 @@ volumes:
 
 services:
   geonetwork:
-    image: geonetwork:3.99.0
+    image: geonetwork:latest
     restart: always
     ports:
       - 8080:8080

@@ -165,7 +165,7 @@
     "linkToParentTitle": "Enllaça una metadada pare a l'actual metadada",
     "linkToService": "Enllaça a un servei",
     "linkToServiceTitle": "Enllaça un servei a l'actual metadada",
-    "linkToSibling": "Enllaça a altres recursos",
+    "linkToSibling": "Link to records",
     "linkToSiblingTitle": "Enllaça un altre recurs a l'actual metadada",
     "linkToSource": "Enllaça a un conjunt de dades font",
     "linkToSourceTitle": "Enllaça un conjunt de dades font a l'actual metadada",
@@ -446,5 +446,13 @@
     "addOnlinesrc#links": "Afegir enllaços",
     "addOnlinesrc#links-help": "eg. web links",
     "addOnlinesrc#quality": "Add quality info",
-    "addOnlinesrc#quality-help": "eg. specification, reports"
+    "addOnlinesrc#quality-help": "eg. specification, reports",
+    "associated-parent": "Metadada Pare",
+    "associated-service": "Servei",
+    "associated-dataset": "Conjunt de dades",
+    "associated-source": "Conjuts de dades font",
+    "associated-fcats": "Catàleg d'Objectes Geogràfics",
+    "associated-siblings": "Recursos associats",
+    "associated-hasfeaturecats": "Utilitzant aquest catàleg d'objectes geogràfics",
+    "associatedResourcesPanel": "Recursos associats"
 }

@@ -165,7 +165,7 @@
     "linkToParentTitle": "Collega un record di metadati \"genitore\" ai metadati correnti",
     "linkToService": "Collegamento a un servizio",
     "linkToServiceTitle": "Collega un servizio ai metadati correnti",
-    "linkToSibling": "Collegamento ad altre risorse",
+    "linkToSibling": "Link to records",
     "linkToSiblingTitle": "Collega una risorsa ai metadati correnti",
     "linkToSource": "Collegamento a un dataset di origine",
     "linkToSourceTitle": "Collega un set di dati di origine ai metadati correnti",
@@ -446,5 +446,13 @@
     "addOnlinesrc#links": "Aggiungi collegamenti",
     "addOnlinesrc#links-help": "eg. web links",
     "addOnlinesrc#quality": "Add quality info",
-    "addOnlinesrc#quality-help": "eg. specification, reports"
+    "addOnlinesrc#quality-help": "eg. specification, reports",
+    "associated-parent": "Metadati \"genitore\"",
+    "associated-service": "Servizio",
+    "associated-dataset": "Dataset",
+    "associated-source": "Dataset di origine",
+    "associated-fcats": "Catalogo delle entità",
+    "associated-siblings": "Risorse associate",
+    "associated-hasfeaturecats": "Catalogo di entità in uso",
+    "associatedResourcesPanel": "Risorse associate"
 }
