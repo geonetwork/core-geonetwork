@@ -104,6 +104,10 @@
       $scope.showStatusTopBarFor =
         gnGlobalSettings.gnCfg.mods.recordview.showStatusTopBarFor;
 
+      $scope.showStaticPageMenu =
+        gnGlobalSettings.gnCfg.mods.recordview.showStaticPageMenu;
+
+
       gnConfigService.load().then(function (c) {
         $scope.isRecordHistoryEnabled = gnConfig["metadata.history.enabled"];
         $scope.isPreferGroupLogo = gnConfig["system.metadata.prefergrouplogo"];
