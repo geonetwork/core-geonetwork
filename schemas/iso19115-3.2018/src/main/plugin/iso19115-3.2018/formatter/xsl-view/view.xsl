@@ -230,9 +230,7 @@
             <xsl:copy-of select="gn-fn-render:extent($metadataUuid)"/>
           </xsl:when>
           <xsl:otherwise>
-            <xsl:apply-templates mode="render-field"
-                                 select=".//mdb:identificationInfo/*/mri:extent//gex:EX_GeographicBoundingBox">
-            </xsl:apply-templates>
+            <xsl:copy-of select="gn-fn-render:bboxes(.//mdb:identificationInfo/*/mri:extent//gex:EX_GeographicBoundingBox)"/>
           </xsl:otherwise>
         </xsl:choose>
       </section>
@@ -394,18 +392,6 @@
 
 
   <!-- Most of the elements are ... -->
-  <!-- Most of the elements are ... -->
-  <xsl:template mode="render-field"
-                match="*[gco:CharacterString = '']|*[gco:Integer = '']|
-                       *[gco:Decimal = '']|*[gco:Boolean = '']|
-                       *[gco:Real = '']|*[gco:Measure = '']|*[gco:Length = '']|
-                       *[gco:Distance = '']|*[gco:Angle = '']|*[gco:Scale = '']|
-                       *[gco:Record = '']|*[gco:RecordType = '']|
-                       *[gco:LocalName = '']|*[lan:PT_FreeText = '']|
-                       *[gml:beginPosition = '']|*[gml:endPosition = '']|
-                       gml:description[. != '']|gml:timePosition[. != '']|
-                       *[gco:Date = '']|*[gco:DateTime = '']|*[gco:TM_PeriodDuration = '']"
-                priority="500"/>
   <xsl:template mode="render-field"
                 match="*[gco:CharacterString != '']|*[gcx:Anchor != '']|
                        *[gco:Integer != '']|
@@ -419,7 +405,8 @@
                        *[*/@codeListValue]|*[@codeListValue]|
                        gml:identifier[. != '']|gml:name[. != '']|
                        gml:description[. != '']|gml:timePosition[. != '']|
-                       gml:beginPosition[. != '']|gml:endPosition[. != '']"
+                       gml:beginPosition[. != '']|gml:endPosition[. != '']|
+                       gfc:memberName[. != '']|gfc:typeName[. != '']|gfc:aliases[. != '']"
                 priority="500">
     <xsl:param name="fieldName" select="''" as="xs:string"/>
 
