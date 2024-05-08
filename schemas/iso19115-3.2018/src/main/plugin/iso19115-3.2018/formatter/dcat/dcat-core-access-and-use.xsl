@@ -28,7 +28,15 @@
                 xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
                 xmlns:owl="http://www.w3.org/2002/07/owl#"
                 xmlns:dct="http://purl.org/dc/terms/"
+                xmlns:skos="http://www.w3.org/2004/02/skos/core#"
                 exclude-result-prefixes="#all">
+
+  <xsl:variable name="euLicenses"
+                select="document('vocabularies/licences-skos.rdf')"/>
+
+  <xsl:variable name="isMappingResourceConstraintsToEuVocabulary"
+                as="xs:boolean"
+                select="false()"/>
 
   <!--
   RDF Property:	dcterms:accessRights
@@ -87,9 +95,27 @@
             <dct:license>
               <dct:LicenseDocument>
                 <xsl:choose>
-                  <!-- TODO: isMappingResourceConstraintsToEuVocabulary -->
+                  <!-- TODO: map license To EU Vocabulary isMappingResourceConstraintsToEuVocabulary -->
                   <xsl:when test="gcx:Anchor/@xlink:href">
-                    <xsl:attribute name="rdf:about" select="gcx:Anchor/@xlink:href"/>
+                    <xsl:if test="$isMappingResourceConstraintsToEuVocabulary = true()">
+                      <xsl:variable name="licenseUri" select="replace(gcx:Anchor/@xlink:href,'https?://','')"/>
+                      <xsl:message><xsl:value-of select="$licenseUri"></xsl:value-of></xsl:message>
+                      <xsl:variable name="dcatLicense"
+                                    select="$euLicenses/rdf:RDF/skos:Concept[matches(skos:exactMatch/@rdf:resource,concat('https?://',$licenseUri,'/?'))]"/>
+                      <xsl:message><xsl:copy-of select="$dcatLicense"></xsl:copy-of></xsl:message>
+                      <xsl:if test="$dcatLicense != ''"><!-- If license found in vocabulary -->
+                        <skos:Concept rdf:about="{$dcatLicense/@rdf:about}">
+                          <xsl:copy-of select="$dcatLicense/skos:prefLabel[@xml:lang = $languages/@iso2code] | $dcatLicense/skos:exactMatch"
+                                       copy-namespaces="no"/>
+                        </skos:Concept>
+                      </xsl:if>
+                    </xsl:if>
+
+                    <!-- KEEP License as is-->
+                    <xsl:if test="$isMappingResourceConstraintsToEuVocabulary = false()">
+                      <xsl:message>Keep original license</xsl:message>
+                      <xsl:attribute name="rdf:about" select="gcx:Anchor/@xlink:href"/>
+                    </xsl:if>
                   </xsl:when>
                   <xsl:otherwise>
                     <xsl:call-template name="rdf-localised">
