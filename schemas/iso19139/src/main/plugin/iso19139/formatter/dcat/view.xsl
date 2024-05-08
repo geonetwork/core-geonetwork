@@ -7,6 +7,7 @@
 
   <xsl:import href="../../../iso19115-3.2018/convert/ISO19139/fromISO19139.xsl"/>
   <xsl:import href="../../../iso19115-3.2018/formatter/dcat/dcat-core.xsl"/>
+  <xsl:import href="../dcat/dcat-utils.xsl"/>
 
   <xsl:template match="/">
     <xsl:apply-templates mode="dcat" select="root[gmd:MD_Metadata]|/gmd:MD_Metadata"/>

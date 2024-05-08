@@ -50,11 +50,11 @@ The type of encoding of keywords can be defined using the gear icon (See validat
 
 ![image](img/inspire-keyword-encoding-type.png)
 
-Via the schema plugin form configuration it is an option to configure a thesaurus to be used for a specific `or` element. The thesaures concepts are used to populate an auto complete text field for that element.
+Via the schema plugin form configuration it is an option to configure a thesaurus to be used for a specific `Anchor` element. The thesaures concepts are used to populate an auto complete text field for that element.
 
 ## INSPIRE validation
 
-INSPIRE validation of metadata records is available at [the INSPIRE Validator](https://inspire.ec.europa.eu/validator/about/). It is using [ETF which is an open source testing framework for spatial data and services](https://github.com/etf-validator/etf-webapp). GeoNetwork is able to `te` any record using a service provided by an instance of ETF. To configure remote validation, go to `Admin console` --> `Settings` and set the URL of the validator. The url of the main INSPIRE validator is `https://inspire.ec.europa.eu/validator/`.
+INSPIRE validation of metadata records is available at [the INSPIRE Validator](https://inspire.ec.europa.eu/validator/about/). It is using [ETF which is an open source testing framework for spatial data and services](https://github.com/etf-validator/etf-webapp). GeoNetwork is able to `remote validate` any record using a service provided by an instance of ETF. To configure remote validation, go to `Admin console` --> `Settings` and set the URL of the validator. The url of the main INSPIRE validator is `https://inspire.ec.europa.eu/validator/`.
 
 ![image](img/inspire-configuration.png)
 

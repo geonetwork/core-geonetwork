@@ -184,7 +184,7 @@
     "hitsPerPage": "Records per page",
     "chooseRecordsPerPage": "Click to choose the number of records per page",
     "sortedBy": "Sorted by {{field}}",
-    "sortBy-dateStampDesc": "last updates",
+    "sortBy-changeDateDesc": "last updates",
     "sortBy-createDateDesc": "new records",
     "sortBy-resourceTitleObject.default.sort": "title (ascending)",
     "sortBy-resourceTitleObject.default.sortDesc": "title (descending)",
@@ -551,6 +551,7 @@
     "cancelWorkingCopy": "Cancel working copy",
     "deleteWorkingCopyRecordConfirm": "Do you really want to remove the working copy '{{resourceTitle}}'?",
     "workingCopy": "Working copy",
+    "approvedRecord": "Approved record",
     "onTheWeb": "More online information",
     "pdfReportTocTitle": "Contents",
     "metadataValidated": "Metadata validated.",
@@ -580,5 +581,9 @@
     "reviewerNotAllowedPublish": "Reviewer not allowed to publish the metadata",
     "reviewerNotAllowedUnpublish": "Reviewer not allowed to un-publish the metadata",
     "reviewerNotAllowedPublishUnpublish": "Reviewer not allowed to publish / un-publish the metadata",
-    "missingTitle": "Missing title"
+    "missingTitle": "Missing title",
+    "mapLegend": "Legend",
+    "quality": "Quality",
+    "download": "Download",
+    "links": "Links"
 }

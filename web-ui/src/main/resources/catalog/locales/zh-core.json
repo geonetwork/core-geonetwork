@@ -184,7 +184,7 @@
     "hitsPerPage": "每页记录数",
     "chooseRecordsPerPage": "点击选择每页记录数",
     "sortedBy": "按照{{field}}进行排序",
-    "sortBy-dateStampDesc": "last updates",
+    "sortBy-changeDateDesc": "last updates",
     "sortBy-createDateDesc": "new records",
     "sortBy-resourceTitleObject.default.sort": "title (ascending)",
     "sortBy-resourceTitleObject.default.sortDesc": "title (descending)",
@@ -218,7 +218,10 @@
     "passwordPattern": "Password must contain at least 1 uppercase, 1 lowercase, 1 number and 1 symbol. Symbols include: `~!@#$%^&*()-_=+[]{}\\|;:'\",.<>/?');",
     "passwordOld": "Old password",
     "passwordRepeat": "重复输入密码",
-    "groupNameMaxlength": "Group name can not exceed 32 characters!",
+    "groupNameMaxlength": "Group name can not exceed 255 characters!",
+    "categoryNameMaxlength": "Category name can not exceed 255 characters!",
+    "portalNameMaxlength": "Portal name can not exceed 255 characters!",
+    "portalIdMaxlength": "Portal identifier can not exceed 255 characters!",
     "groupDescriptionMaxlength": "Group description can not exceed 255 characters!",
     "groupEmailMaxlength": "Group email can not exceed 128 characters!",
     "pol": "波兰语",
@@ -577,5 +580,9 @@
     "reviewerNotAllowedPublish": "Reviewer not allowed to publish the metadata",
     "reviewerNotAllowedUnpublish": "Reviewer not allowed to un-publish the metadata",
     "reviewerNotAllowedPublishUnpublish": "Reviewer not allowed to publish / un-publish the metadata",
-    "missingTitle": "Missing title"
+    "missingTitle": "Missing title",
+    "mapLegend": "图例",
+    "quality": "质量",
+    "download": "Download",
+    "links": "链接"
 }

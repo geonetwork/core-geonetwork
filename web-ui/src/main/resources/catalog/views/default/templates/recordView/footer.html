@@ -7,7 +7,7 @@
 <div
   class="row gn-padding-top"
   data-ng-if="isRecordHistoryEnabled
-                 && user.isEditorOrMore()
+                 && user.canViewMetadataHistory()
                  && mdView.current.record.draft != 'y'"
 >
   <div class="col-md-12">
@@ -35,7 +35,7 @@
           <li
             data-ng-repeat="e in mdView.current.record.indexingErrorMsg track by $index"
           >
-            <code> {{e}} </code>
+            <code data-translate="" data-translate-values="e.values">{{e.string}}</code>
           </li>
         </ul>
       </div>

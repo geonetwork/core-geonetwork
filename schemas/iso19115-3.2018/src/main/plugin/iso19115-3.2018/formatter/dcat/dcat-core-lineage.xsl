@@ -44,6 +44,6 @@
   Usage note:
   In case of backward compatibility issues with the previous version of the resource, a textual description of them SHOULD be specified by using this property.
 
-  See dcat-core.
+  See dcat-core (mdb:resourceLineage/*/mrl:statement).
   -->
 </xsl:stylesheet>

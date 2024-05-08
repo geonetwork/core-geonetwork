@@ -107,7 +107,7 @@
 
       /* Default result view template */
       $scope.resultTemplate =
-        gnSearchSettings.resultTemplate || gnSearchSettings.resultViewTpls[0].tplUrl;
+        gnSearchSettings.resultTemplate || gnSearchSettings.resultViewTpls[0];
       /* Default advanced search form template */
       $scope.advancedSearchTemplate =
         gnSearchSettings.advancedSearchTemplate ||
@@ -228,6 +228,19 @@
        */
       $scope.getCatScope = function () {
         return $scope;
+      };
+
+      // Allow to display the typeahead suggestions when writing in the search field
+      $scope.$watch("searchObj.params.any", function (newVal, oldVal) {
+        if (newVal && newVal != oldVal) {
+          $(".gn-form-any > [typeahead-popup]").show();
+        }
+      });
+
+      // Used to hide the typeahead search suggestions when hitting the ENTER key in the search field
+      $scope.hideSearchSuggestions = function () {
+        $(".gn-form-any > [typeahead-popup]").hide();
+        return true;
       };
     }
   ]);

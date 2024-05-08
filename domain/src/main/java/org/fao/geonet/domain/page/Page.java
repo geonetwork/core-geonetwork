@@ -58,12 +58,13 @@ public class Page extends GeonetEntity implements Serializable {
     private PageStatus status;
 
     private String label;
+    private String icon;
 
     public Page() {
 
     }
 
-    public Page(PageIdentity pageIdentity, byte[] data, String link, PageFormat format, List<PageSection> sections, PageStatus status, String label) {
+    public Page(PageIdentity pageIdentity, byte[] data, String link, PageFormat format, List<PageSection> sections, PageStatus status, String label, String icon) {
         super();
         this.pageIdentity = pageIdentity;
         this.data = data;
@@ -72,6 +73,7 @@ public class Page extends GeonetEntity implements Serializable {
         this.sections = sections;
         this.status = status;
         this.label = label;
+        this.icon = icon;
     }
 
     public enum PageStatus {
@@ -139,6 +141,11 @@ public class Page extends GeonetEntity implements Serializable {
         return label;
     }
 
+    @Column
+    public String getIcon() {
+        return icon;
+    }
+
     public void setPageIdentity(PageIdentity pageIdentity) {
         this.pageIdentity = pageIdentity;
     }
@@ -165,6 +172,10 @@ public class Page extends GeonetEntity implements Serializable {
 
     public void setLabel(String label) {
         this.label = label;
+    }
+
+    public void setIcon(String icon) {
+        this.icon = icon;
     }
 
     @Override

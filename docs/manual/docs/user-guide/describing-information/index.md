@@ -2,11 +2,11 @@
 
 This section describes how to catalog resources. First, user needs to choose a standard to use. In general, the following rules apply:
 
--   [Dublin core](https://dublincore.org/) usually used for opendata portal, referencing publication, report, \...
+-   [Dublin core](https://dublincore.org/) usually used for open data portal, referencing publication, report, \...
 -   [ISO 19115/119/139](https://www.iso.org/iso/en/home/store/catalogue_tc/catalogue_detail.htm?csnumber=32557) used for spatial resources (eg. datasets, services, maps)
 -   [ISO 19110](https://www.iso.org/iso/en/iso_catalogue/catalogue_tc/catalogue_detail.htm?csnumber=39965) used for feature attribute table
 
-The editor form provides uploading of data, graphics, documents, pdf files and any other content type. It supports among other:
+The editor form provides uploading of data, graphics, documents, pdf files and any other content type. It supports among others:
 
 -   full standard support
 -   multilingual metadata editing,
@@ -27,4 +27,4 @@ The editor form provides uploading of data, graphics, documents, pdf files and a
 -   [Multilingual editing](multilingual-editing.md)
 -   [Describing resources for the INSPIRE directive](inspire-editing.md)
 
-Based on user profiles (see [Creating user](../../administrator-guide/managing-users-and-groups/creating-user.md)), a dashboard provides easy access to their informations and tasks.
+Based on user profiles (see [Creating user](../../administrator-guide/managing-users-and-groups/creating-user.md)), a dashboard provides easy access to their information and tasks.

@@ -5,6 +5,11 @@
                 xmlns:cit="http://standards.iso.org/iso/19115/-3/cit/2.0"
                 xmlns:mdb="http://standards.iso.org/iso/19115/-3/mdb/2.0"
                 xmlns:mri="http://standards.iso.org/iso/19115/-3/mri/1.0"
+                xmlns:mcc="http://standards.iso.org/iso/19115/-3/mcc/1.0"
+                xmlns:gcx="http://standards.iso.org/iso/19115/-3/gcx/1.0"
+                xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0"
+                xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+                xmlns:xlink="http://www.w3.org/1999/xlink"
                 xmlns:prov="http://www.w3.org/ns/prov#"
                 xmlns:dcat="http://www.w3.org/ns/dcat#"
                 xmlns:geodcatap="http://data.europa.eu/930/"
@@ -13,6 +18,7 @@
                 xmlns:foaf="http://xmlns.com/foaf/0.1/"
                 xmlns:vcard="http://www.w3.org/2006/vcard/ns#"
                 xmlns:org="http://www.w3.org/ns/org#"
+                xmlns:gn-fn-dcat="http://geonetwork-opensource.org/xsl/functions/dcat"
                 exclude-result-prefixes="#all">
 
   <!--
@@ -70,7 +76,15 @@
                 <xsl:call-template name="rdf-contact-foaf"/>
               </prov:agent>
               <dcat:hadRole>
-                <dcat:Role rdf:about="{concat($isoCodeListBaseUri, $role)}"/>
+                <dcat:Role rdf:about="{concat($isoCodeListBaseUri, $role)}">
+                  <!--
+                      Property needs to have at least 1 value
+                      Location:
+                      [Focus node] - [http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#custodian] -
+                      [Result path] - [http://www.w3.org/2004/02/skos/core#prefLabel]
+                  -->
+                  <skos:prefLabel><xsl:value-of select="$role"/></skos:prefLabel>
+                </dcat:Role>
               </dcat:hadRole>
             </prov:Attribution>
           </prov:qualifiedAttribution>
@@ -82,23 +96,50 @@
 
   <xsl:template name="rdf-contact-vcard">
     <rdf:Description>
+      <xsl:call-template name="rdf-object-ref-attribute"/>
+
       <rdf:type rdf:resource="http://www.w3.org/2006/vcard/ns#Organization"/>
       <xsl:for-each select="cit:name">
         <xsl:call-template name="rdf-localised">
           <xsl:with-param name="nodeName" select="'vcard:fn'"/>
         </xsl:call-template>
       </xsl:for-each>
-      <xsl:for-each select="cit:contactInfo/*/cit:address/*/cit:electronicMailAddress">
-        <vcard:hasEmail rdf:resource="mailto:{*/text()}"/>
+      <xsl:for-each select="cit:contactInfo/*/cit:address">
+        <xsl:for-each select="*/cit:electronicMailAddress">
+          <vcard:hasEmail rdf:resource="mailto:{*/text()}"/>
+        </xsl:for-each>
+        <xsl:if test="normalize-space(*/cit:city) != ''">
+          <vcard:hasAddress>
+            <vcard:Address>
+              <xsl:for-each select="*/cit:country">
+                <xsl:call-template name="rdf-localised">
+                  <xsl:with-param name="nodeName" select="'vcard:country-name'"/>
+                </xsl:call-template>
+              </xsl:for-each>
+              <xsl:for-each select="*/cit:city">
+                <xsl:call-template name="rdf-localised">
+                  <xsl:with-param name="nodeName" select="'vcard:locality'"/>
+                </xsl:call-template>
+              </xsl:for-each>
+              <xsl:for-each select="*/cit:postalCode">
+                <xsl:call-template name="rdf-localised">
+                  <xsl:with-param name="nodeName" select="'vcard:postal-code'"/>
+                </xsl:call-template>
+              </xsl:for-each>
+              <xsl:for-each select="*/cit:administrativeArea">
+                <xsl:call-template name="rdf-localised">
+                  <xsl:with-param name="nodeName" select="'vcard:region'"/>
+                </xsl:call-template>
+              </xsl:for-each>
+              <xsl:for-each select="*/cit:deliveryPoint">
+                <xsl:call-template name="rdf-localised">
+                  <xsl:with-param name="nodeName" select="'vcard:street-address'"/>
+                </xsl:call-template>
+              </xsl:for-each>
+            </vcard:Address>
+          </vcard:hasAddress>
+        </xsl:if>
       </xsl:for-each>
-      <!-- TODO: map other properties
-      vcard:hasAddress [ a vcard:Address ;
-          vcard:country-name "Denmark" ;
-          vcard:locality "Copenhagen" ;
-          vcard:postal-code "1050" ;
-          vcard:region "K" ;
-          vcard:street-address "Kongens Nytorv 6" ] ;
-      -->
     </rdf:Description>
   </xsl:template>
 
@@ -106,15 +147,26 @@
   <xsl:template name="rdf-contact-foaf">
     <xsl:variable name="individualName"
                   as="xs:string?"
-                  select="cit:individual/*/cit:name/*/text()"/>
+                  select="(cit:individual/*/cit:name/*/text())[1]"/>
     <xsl:variable name="isindividual"
                   as="xs:boolean"
                   select="$individualName != ''"/>
     <xsl:variable name="organisation"
                   as="node()?"
                   select="cit:name"/>
+    <xsl:variable name="orgReference"
+                  as="xs:string?"
+                  select="gn-fn-dcat:rdf-object-ref(.)"/>
+    <xsl:variable name="reference"
+                  as="xs:string?"
+                  select="if ($isindividual)
+                          then gn-fn-dcat:rdf-object-ref(cit:individual/*)
+                          else $orgReference"/>
 
     <rdf:Description>
+      <xsl:call-template name="rdf-object-ref-attribute">
+        <xsl:with-param name="reference" select="$reference"/>
+      </xsl:call-template>
       <rdf:type rdf:resource="http://xmlns.com/foaf/0.1/{if ($isindividual) then 'Person' else 'Organization'}"/>
       <rdf:type rdf:resource="http://www.w3.org/ns/prov#Agent"/>
 
@@ -124,6 +176,9 @@
           <org:memberOf>
             <xsl:for-each select="$organisation">
               <foaf:Organization>
+                <xsl:call-template name="rdf-object-ref-attribute">
+                  <xsl:with-param name="reference" select="$reference"/>
+                </xsl:call-template>
                 <xsl:call-template name="rdf-localised">
                   <xsl:with-param name="nodeName" select="'foaf:name'"/>
                 </xsl:call-template>

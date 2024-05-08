@@ -5,6 +5,7 @@
                 xmlns:cit="http://standards.iso.org/iso/19115/-3/cit/2.0"
                 xmlns:mdb="http://standards.iso.org/iso/19115/-3/mdb/2.0"
                 xmlns:mrl="http://standards.iso.org/iso/19115/-3/mrl/2.0"
+                xmlns:mcc="http://standards.iso.org/iso/19115/-3/mcc/1.0"
                 xmlns:mrd="http://standards.iso.org/iso/19115/-3/mrd/1.0"
                 xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0"
                 xmlns:mco="http://standards.iso.org/iso/19115/-3/mco/1.0"
@@ -22,10 +23,13 @@
   <!--
   Some information are duplicated from the dataset to the distributions.
   This can be enabled or not here.
+
+  Related discussion:
+  https://github.com/SEMICeu/GeoDCAT-AP/issues/100
   -->
   <xsl:param name="copyDatasetInfoToDistribution"
                 as="xs:string"
-                select="'true'"/>
+                select="'false'"/>
   <xsl:variable name="isCopyingDatasetInfoToDistribution"
                 as="xs:boolean"
                 select="xs:boolean($copyDatasetInfoToDistribution)"/>
@@ -93,6 +97,17 @@
   </xsl:template>
 
 
+
+  <xsl:template mode="iso19115-3-to-dcat"
+                match="mdb:identificationInfo/*/mri:graphicOverview[*/mcc:fileName/*/text() != '']">
+    <foaf:page>
+      <foaf:Document rdf:about="{*/mcc:fileName/*/text()}">
+        <xsl:apply-templates mode="iso19115-3-to-dcat"
+                             select="*/mcc:fileDescription[normalize-space(.) != '']"/>
+      </foaf:Document>
+    </foaf:page>
+  </xsl:template>
+
   <!--
   RDF Property:	dcat:distribution
   Definition:	An available distribution of the dataset.
@@ -125,7 +140,9 @@
     <xsl:variable name="pointsToService" select="false()"/>
 
     <xsl:choose>
-      <xsl:when test="$function = ('information', 'search', 'completeMetadata', 'browseGraphic', 'upload', 'emailService')">
+      <xsl:when test="normalize-space($url) = ''"/>
+      <xsl:when test="$function = ('information', 'search', 'completeMetadata', 'browseGraphic', 'upload', 'emailService')
+                      or matches($protocol, 'WWW:LINK.*')">
         <foaf:page>
           <foaf:Document rdf:about="{$url}">
             <xsl:apply-templates mode="iso19115-3-to-dcat"
@@ -192,8 +209,12 @@
             Domain:	dcat:Distribution
             Range:	rdfs:Resource
             Usage note:	dcat:downloadURL SHOULD be used for the URL at which this distribution is available directly, typically through a HTTP Get request
+
+            This protocol list is GeoNetwork specific. It is not part of the ISO 19115-3 standard.
             -->
-            <!-- TODO <dcat:downloadURL rdf:resource="{$url}"/>-->
+            <xsl:if test="matches($protocol, '.*DOWNLOAD.*|DB:.*|FILE:.*')">
+              <dcat:downloadURL rdf:resource="{$url}"/>
+            </xsl:if>
 
 
             <!--
@@ -203,7 +224,7 @@
             Usage note:
             The checksum is related to the download URL.
 
-            TODO: Not supported
+            TODO: Not supported https://github.com/SEMICeu/GeoDCAT-AP/issues/89
             -->
 
 
@@ -218,7 +239,7 @@
             -->
             <xsl:for-each select="ancestor::mrd:MD_DigitalTransferOptions/mrd:transferSize/*/text()[. castable as xs:double]">
               <!-- Not valid for eu-dcat-ap <dcat:byteSize><xsl:value-of select="concat(., ' MB')"/></dcat:byteSize>-->
-              <dcat:byteSize rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal"><xsl:value-of select="format-number(. * 1048576, '#')"/></dcat:byteSize>
+              <dcat:byteSize rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger"><xsl:value-of select="format-number(. * 1048576, '#')"/></dcat:byteSize>
             </xsl:for-each>
 
 
@@ -228,7 +249,8 @@
              Range:	dcat:DataService
              Usage note:	dcat:accessService SHOULD be used to link to a description of a dcat:DataService that can provide access to this distribution.
             -->
-            <xsl:if test="$function = ('download', 'offlineAccess', 'order', 'browsing', 'fileAccess')">
+            <xsl:if test="$function = ('download', 'offlineAccess', 'order', 'browsing', 'fileAccess')
+                          or matches($protocol, 'OGC:WMS|OGC:WFS|OGC:WCS|OGC:WPS|OGC API Features|OGC API Coverages|ESRI:REST')">
               <dcat:accessService>
                 <rdf:Description>
                   <rdf:type rdf:resource="http://www.w3.org/ns/dcat#DataService"/>
@@ -399,15 +421,20 @@
                   as="xs:string?"
                   select="($formatLabelToUri[lower-case($format) = text()]/@key)[1]"/>
 
+    <xsl:variable name="rangeName"
+                  as="xs:string"
+                  select="if ($elementName = 'dct:format') then 'dct:MediaTypeOrExtent' else 'dct:MediaType'"/>
     <xsl:element name="{$elementName}">
       <xsl:choose>
         <xsl:when test="$formatUri">
-          <dct:MediaType rdf:about="{$formatUri}"/>
+          <xsl:element name="{$rangeName}">
+            <xsl:attribute name="rdf:about" select="$formatUri"/>
+          </xsl:element>
         </xsl:when>
         <xsl:otherwise>
-          <dct:MediaType>
+          <xsl:element name="{$rangeName}">
             <rdfs:label><xsl:value-of select="$format"/></rdfs:label>
-          </dct:MediaType>
+          </xsl:element>
         </xsl:otherwise>
       </xsl:choose>
     </xsl:element>

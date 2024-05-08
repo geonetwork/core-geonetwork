@@ -108,7 +108,7 @@
               }).then(
                 function mySucces(response) {
                   if (angular.isDefined(response.data) && response.data != null) {
-                    scope.checkInBackgroud(response.data);
+                    scope.checkInBackground(response.data);
                   } else {
                     scope.isDownloadingRecord = false;
                     scope.isDownloadedRecord = false;
@@ -165,7 +165,7 @@
                 scope.md = new Metadata(data.metadata[0]);
               });
           }
-          scope.checkInBackgroud = function (token) {
+          scope.checkInBackground = function (token) {
             scope.stop = undefined;
             if (token === "") {
               gnAlertService.addAlert({

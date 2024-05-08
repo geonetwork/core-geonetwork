@@ -98,7 +98,6 @@
   </xsl:template>
 
 
-
   <!--
   RDF Property:	dcterms:accrualPeriodicity
   Definition:	The frequency at which a dataset is published.
@@ -161,12 +160,12 @@
                 match="mri:extent/*/gex:temporalElement/*/gex:extent">
     <dct:temporal>
       <dct:PeriodOfTime>
-        <xsl:for-each select="*/gml:begin/*[gml:timePosition/text() != '']">
+        <xsl:for-each select="*/gml:begin/*[gml:timePosition/text() != '']|*/gml:beginPosition[. != '']">
           <xsl:call-template name="rdf-date">
             <xsl:with-param name="nodeName" select="'dcat:startDate'"/>
           </xsl:call-template>
         </xsl:for-each>
-        <xsl:for-each select="*/gml:end/*[gml:timePosition/text() != '']">
+        <xsl:for-each select="*/gml:end/*[gml:timePosition/text() != '']|*/gml:endPosition[. != '']">
           <xsl:call-template name="rdf-date">
             <xsl:with-param name="nodeName" select="'dcat:endDate'"/>
           </xsl:call-template>

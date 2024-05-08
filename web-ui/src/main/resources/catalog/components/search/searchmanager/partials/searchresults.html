@@ -35,6 +35,7 @@
         data-ng-repeat="md in searchResults.records"
         id="gn-record-{{md.uuid}}"
         href=""
+        style="cursor: pointer"
         data-ng-class="isSelected(md) ? 'active' : ''"
         data-ng-click="onClick(md)"
       >
@@ -52,7 +53,11 @@
           <gn-md-type-widget metadata="md"></gn-md-type-widget>
           {{md.resourceTitle}}
 
-          <a class="pull-right" href="catalog.search#/metadata/{{md.uuid}}">
+          <a
+            class="pull-right"
+            target="_blank"
+            href="catalog.search#/metadata/{{md.uuid}}"
+          >
             <i class="fa fa-eye"></i>
           </a>
         </div>

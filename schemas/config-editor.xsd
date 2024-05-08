@@ -903,6 +903,7 @@ Define if this tab is the default one for the view. Only one tab should be the d
         <xs:annotation>
           <xs:documentation><![CDATA[
 The tab key used in URL parameter to activate that tab. The key is also use for the tab label as defined in ``{schema}/loc/{lang}/strings.xml``.
+It has to be unique for all views. A good practice is to use same prefix for all tabs in the same view.            
             ]]></xs:documentation>
         </xs:annotation>
       </xs:attribute>
@@ -1970,6 +1971,12 @@ An autocompletion list based on a thesaurus.
                 <xs:documentation><![CDATA[
 This field facilitates users in selecting a `subtemplate` (also known as xml-snippet) from the catalogue. Subtemplates are mostly used to store contact details,
 but can also be used to store snippets of xml having Quality reports, Access constraints, CRS definitions, etc.
+
+                  
+`data-insert-modes` can be `text` and/or `xlink` depending on how the subtemplate is encoded. 
+Contact can be forced to be `xlink` but some other type of subtemplates (eg. DQ report) are usually just simple default values 
+that need to be detailed by editors and in that case `text` mode is recommended. For `xlink`, the XLink resolver needs to be enabled in the admin settings.
+
 
 .. code-block:: xml
 

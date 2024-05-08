@@ -36,6 +36,8 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.stereotype.Component;
 
+import java.io.ByteArrayOutputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -209,9 +211,11 @@ public class XsltFormatter implements FormatterImpl {
                 requestParameters.put(key, fparams.webRequest.getParameterMap().get(key));
             }
         }
-        Element transformed = Xml.transform(root, fparams.viewFile, requestParameters);
-        return "textResponse".equals(transformed.getName()) ?
-            transformed.getText() :
-            Xml.getString(transformed);
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        Xml.transform(root, fparams.viewFile, requestParameters, baos);
+        String transformed = baos.toString(StandardCharsets.UTF_8);
+        return transformed.startsWith("<textResponse") ?
+            Xml.loadString(transformed, false).getText() :
+            transformed;
     }
 }

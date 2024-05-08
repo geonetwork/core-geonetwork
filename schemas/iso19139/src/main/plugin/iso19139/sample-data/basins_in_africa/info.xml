@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<info version="1.0">
+  <general>
+    <uuid>da165110-88fd-11da-a88f-000d939bc5d8</uuid>
+    <createDate>2007-07-19T14:45:07</createDate>
+    <changeDate>2007-11-06T12:13:00</changeDate>
+    <schema>iso19139</schema>
+    <isTemplate>false</isTemplate>
+    <format>full</format>
+  </general>
+  <categories>
+    <category name="datasets" />
+    <category name="interactiveResources" />
+    <category name="maps" />
+  </categories>
+  <privileges>
+    <group name="sample">
+      <operation name="view" />
+      <operation name="download" />
+      <operation name="editing" />
+      <operation name="notify" />
+      <operation name="dynamic" />
+      <operation name="featured" />
+    </group>
+    <group name="all">
+      <operation name="view" />
+      <operation name="download" />
+      <operation name="dynamic" />
+      <operation name="featured" />
+    </group>
+    <group name="intranet">
+      <operation name="view" />
+      <operation name="download" />
+      <operation name="dynamic" />
+      <operation name="featured" />
+    </group>
+  </privileges>
+  <public>
+    <file name="thumbnail.gif" changeDate="2007-07-19T15:27:10" />
+    <file name="thumbnail_s.gif" changeDate="2007-07-19T15:01:54" />
+  </public>
+  <private>
+    <file name="basins.zip" changeDate="2007-07-25T11:43:13" />
+  </private>
+</info>
+

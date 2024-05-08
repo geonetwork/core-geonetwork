@@ -45,7 +45,7 @@
         restrict: "E",
         scope: {
           map: "<",
-          geometryType: "@",
+          geometryType: "=",
           output: "=",
           outputFormat: "@",
           outputCrs: "@",
@@ -56,7 +56,7 @@
           inputFormat: "@",
           inputCrs: "@",
           inputErrorHandler: "=",
-          nameType: "@",
+          nameType: "=",
           activeGeometryTool: "="
         },
         templateUrl:
@@ -178,7 +178,12 @@
                   ctrl.drawInteraction.setActive(true);
                 }
               });
-
+              $scope.$watchCollection("ctrl.geometryType", function (n, o) {
+                if (n && n !== o) {
+                  destroy();
+                  ctrl.$onInit();
+                }
+              });
               $scope.$watch(function () {
                 return ctrl.input + ctrl.inputCrs + ctrl.inputFormat;
               }, handleInputUpdate);
@@ -190,12 +195,14 @@
               ctrl.features.clear();
             }
 
-            // cleanup when scope is destroyed
-            $scope.$on("$destroy", function () {
+            function destroy() {
               removeMyFeatures();
               ctrl.map.removeInteraction(ctrl.drawInteraction);
               ctrl.map.removeInteraction(ctrl.modifyInteraction);
-            });
+            }
+
+            // cleanup when scope is destroyed
+            $scope.$on("$destroy", destroy);
 
             // modifies the output value
             function updateOutput(feature, isNew) {

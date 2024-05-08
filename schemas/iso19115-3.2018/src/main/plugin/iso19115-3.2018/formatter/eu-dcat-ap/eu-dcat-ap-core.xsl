@@ -5,6 +5,7 @@
                 xmlns:mdb="http://standards.iso.org/iso/19115/-3/mdb/2.0"
                 xmlns:mcc="http://standards.iso.org/iso/19115/-3/mcc/1.0"
                 xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0"
+                xmlns:mrl="http://standards.iso.org/iso/19115/-3/mrl/2.0"
                 xmlns:mri="http://standards.iso.org/iso/19115/-3/mri/1.0"
                 xmlns:cit="http://standards.iso.org/iso/19115/-3/cit/2.0"
                 xmlns:mco="http://standards.iso.org/iso/19115/-3/mco/1.0"
@@ -16,10 +17,27 @@
   <xsl:import href="../dcat/dcat-core.xsl"/>
   <xsl:import href="eu-dcat-ap-core-dataset.xsl"/>
 
+  <!--
+   If true, all resource constraints are preserved in the output.
+   The first one is a license, others are dct:rights.
+   See iso19115-3-to-dcat-license in dcat-core-access-and-use.xsl
+   -->
   <xsl:variable name="isPreservingAllResourceConstraints"
                 as="xs:boolean"
                 select="false()"/>
 
+  <!--
+  If true, the mapping of resource constraints to the EU DCAT-AP vocabulary is enabled.
+  eg. http://creativecommons.org/licenses/by/4.0/ is replaced by http://publications.europa.eu/resource/authority/licence/CC_BY_4.0
+  -->
+  <xsl:variable name="isMappingResourceConstraintsToEuVocabulary"
+                as="xs:boolean"
+                select="true()"/>
+
+  <!--
+  If true, the ISO resource scope is preserved in the output.
+  See iso19115-3-to-dcat-metadataScope in dcat-core.xsl
+  -->
   <xsl:variable name="isPreservingIsoType"
                 as="xs:boolean"
                 select="false()"/>
@@ -100,6 +118,8 @@
   <xsl:template mode="iso19115-3-to-dcat"
                 match="mdb:MD_Metadata/mdb:defaultLocale/*/lan:characterEncoding/*/@codeListValue"/>
 
+
+
   <!--
   In ISO, license may be described in more than one elements (and could also define license per various scopes).
   EU DCAT-AP restrict it to one.
@@ -113,16 +133,18 @@
    * keep only first.
    * Use dct:license for the first useLimitation and then dct:rights?
   -->
-  <xsl:template mode="iso19115-3-to-dcat"
-                match="mdb:identificationInfo/*/mri:resourceConstraints/*[mco:useConstraints]/mco:otherConstraints
-                      |mdb:identificationInfo/*/mri:resourceConstraints/*[mco:useConstraints]/mco:useLimitation"
-                priority="2">
-    <xsl:variable name="allLicenseStatements"
-                  select="ancestor::mri:resourceConstraints/*[mco:useConstraints]/(mco:otherConstraints|mco:useLimitation)"/>
 
-    <!-- Keep first constraints statement / Ignore others -->
-    <xsl:if test="current()/generate-id() = $allLicenseStatements[1]/generate-id()">
-      <xsl:call-template name="iso19115-3-to-dcat-license"/>
-    </xsl:if>
+
+  <!-- [o]	provenance	Provenance Statement	0..*	A statement about the lineage of a Dataset.
+  In DCAT, adms:versionNotes is used, see dcat/dcat-core-lineage.xsl -->
+  <xsl:template mode="iso19115-3-to-dcat"
+                match="mdb:resourceLineage/*/mrl:statement">
+    <dct:provenance>
+      <dct:ProvenanceStatement>
+        <xsl:call-template name="rdf-localised">
+          <xsl:with-param name="nodeName" select="'dct:description'"/>
+        </xsl:call-template>
+      </dct:ProvenanceStatement>
+    </dct:provenance>
   </xsl:template>
 </xsl:stylesheet>

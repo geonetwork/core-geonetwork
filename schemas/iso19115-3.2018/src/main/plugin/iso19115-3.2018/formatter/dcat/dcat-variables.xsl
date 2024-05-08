@@ -12,6 +12,10 @@
                 as="xs:boolean"
                 select="true()"/>
 
+  <!-- The first resourceConstraints is accessRights,
+  then rights is used for additional constraints information.
+  https://github.com/SEMICeu/GeoDCAT-AP/issues/82
+  -->
   <xsl:variable name="isPreservingAllResourceConstraints"
                 as="xs:boolean"
                 select="true()"/>
@@ -39,6 +43,8 @@
     <entry key="dcat:keyword">mdb:MD_Metadata/mdb:identificationInfo/srv:SV_ServiceIdentification/mri:descriptiveKeywords/mri:MD_Keywords/mri:keyword</entry>
     <entry key="dct:description">mdb:MD_Metadata/mdb:identificationInfo/mri:MD_DataIdentification/mri:abstract</entry>
     <entry key="dct:description">mdb:MD_Metadata/mdb:identificationInfo/srv:SV_ServiceIdentification/mri:abstract</entry>
+    <entry key="dct:description">mdb:MD_Metadata/mdb:identificationInfo/mri:MD_DataIdentification/mri:graphicOverview/mcc:MD_BrowseGraphic/mcc:fileDescription</entry>
+    <entry key="dct:description">mdb:MD_Metadata/mdb:identificationInfo/srv:SV_ServiceIdentification/mri:graphicOverview/mcc:MD_BrowseGraphic/mcc:fileDescription</entry>
     <entry key="dct:description">mdb:MD_Metadata/mdb:distributionInfo/mrd:MD_Distribution/mrd:transferOptions/mrd:MD_DigitalTransferOptions/mrd:onLine/cit:CI_OnlineResource/cit:description</entry>
     <entry key="dct:description">mdb:MD_Metadata/mdb:distributionInfo/mrd:MD_Distribution/mrd:distributor/mrd:MD_Distributor/mrd:distributorTransferOptions/mrd:MD_DigitalTransferOptions/mrd:onLine/cit:CI_OnlineResource/cit:description</entry>
     <entry key="owl:versionInfo">mdb:MD_Metadata/mdb:metadataStandard/cit:CI_Citation/cit:edition</entry>
@@ -56,7 +62,7 @@
                 as="node()*">
     <entry key="dct:creator" as="foaf">author</entry>
     <entry key="dct:publisher" as="foaf">publisher</entry>
-    <entry key="dct:contactPoint" as="vcard">pointOfContact</entry>
+    <entry key="dcat:contactPoint" as="vcard">pointOfContact</entry>
     <entry key="dct:rightsHolder" as="foaf">owner</entry> <!-- TODO: Check if dcat or only in profile -->
     <!-- Others are prov:qualifiedAttribution -->
   </xsl:variable>
@@ -199,5 +205,4 @@
     <entry key="https://publications.europa.eu/resource/authority/file-type/GML">wps</entry>
     <entry key="https://publications.europa.eu/resource/authority/file-type/ZIP">zip</entry>
   </xsl:variable>
-
 </xsl:stylesheet>

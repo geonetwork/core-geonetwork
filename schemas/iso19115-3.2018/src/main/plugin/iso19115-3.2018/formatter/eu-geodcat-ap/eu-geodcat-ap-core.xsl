@@ -5,6 +5,7 @@
                 xmlns:mdb="http://standards.iso.org/iso/19115/-3/mdb/2.0"
                 xmlns:cit="http://standards.iso.org/iso/19115/-3/cit/2.0"
                 xmlns:lan="http://standards.iso.org/iso/19115/-3/lan/1.0"
+                xmlns:mri="http://standards.iso.org/iso/19115/-3/mri/1.0"
                 xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
                 xmlns:dct="http://purl.org/dc/terms/"
                 xmlns:cnt="http://www.w3.org/2011/content#"
@@ -155,7 +156,36 @@
   TODO: ? dct:issued is used in DCAT
   -->
 
-  <!-- TODO: Dataset / ReferenceSystem -->
+  <!-- TODO: Dataset / ReferenceSystem
+   https://github.com/SEMICeu/GeoDCAT-AP/issues/94
+   -->
+
+  <!-- TODO: Distribution
+   +representation technique
+  adms:representationTechnique
+  skos:Concept
+  https://github.com/SEMICeu/GeoDCAT-AP/issues/96
+
+  This property MAY be used to provide more information about the format in which an Distribution is released. This is different from the file format as, for example, a ZIP file (file format) could contain an XML schema (representation technique).
+
+  In GeoDCAT-AP, this property SHOULD be used to express the spatial representation type (grid, vector, tin), by using the URIs of the corresponding code list operated by the INSPIRE Registry [INSPIRE-SRT].
 
 
+  availability
+  Concept
+  0..1
+  An indication how long it is planned to keep the Distribution of the Dataset available.
+  P
+  https://github.com/SEMICeu/GeoDCAT-AP/issues/86
+   -->
+
+
+
+  <!-- TODO: https://github.com/SEMICeu/GeoDCAT-AP/issues/95
+  <xsl:template mode="iso19115-3-to-dcat"
+                match="mri:spatialResolution/*/mri:equivalentScale">
+    <geodcatap:spatialResolutionAsText>
+      ...
+    </geodcatap:spatialResolutionAsText>
+  </xsl:template>-->
 </xsl:stylesheet>

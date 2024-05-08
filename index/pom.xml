@@ -5,7 +5,7 @@
   <parent>
     <artifactId>geonetwork</artifactId>
     <groupId>org.geonetwork-opensource</groupId>
-    <version>4.4.2-SNAPSHOT</version>
+    <version>4.4.5-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <artifactId>gn-index</artifactId>
@@ -33,8 +33,8 @@
       <artifactId>transport</artifactId>
     </dependency>-->
     <dependency>
-      <groupId>org.elasticsearch.client</groupId>
-      <artifactId>elasticsearch-rest-high-level-client</artifactId>
+      <groupId>co.elastic.clients</groupId>
+      <artifactId>elasticsearch-java</artifactId>
     </dependency>
     <dependency>
       <groupId>org.springframework</groupId>

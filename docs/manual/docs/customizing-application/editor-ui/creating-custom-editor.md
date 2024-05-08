@@ -59,7 +59,7 @@ The other option to define a more advanced field type is to catch the element us
 
 ## Grouping element from the standards {#creating-custom-editor-fieldsWithFieldset}
 
-List of elements to be displayed in a fieldset (i.e. boxed element). Those elements usually contain children elements and define major sections in the standard. For example, in ISO19139, `on` and `on` are major sections and should usually be displayed as a group of `on`.
+List of elements to be displayed in a fieldset (i.e. boxed element). Those elements usually contain children elements and define major sections in the standard. For example, in ISO19139, `identification` and `distribution` are major sections and should usually be displayed as a group of `information`.
 
 ``` xml
 <editor>
@@ -127,7 +127,7 @@ A view has a label and defines a specific rendering of the metadata records. A v
   </view>
 ```
 
-The view could be displayed or not according to the metadata record content or the current user session using the `rd` and `fo` attributes.
+The view could be displayed or not according to the metadata record content or the current user session using the `displayIfRecord` and `displayIfServiceInfo` attributes.
 
 Attributes:
 
@@ -334,7 +334,7 @@ e.g. only 2 INSPIRE themes:
 
 ## Adding a section to a tab {#creating-custom-editor-section}
 
-A section is a group of fields. If a `me` attribute is provided, then it will create an HTML fieldset which is collapsible. If no `me` attribute is provided, then it will just render the inner elements. For example, if you need a tab without a root fieldset, just create the mandatory section with no name and then the inner elements.
+A section is a group of fields. If a `name` attribute is provided, then it will create an HTML fieldset which is collapsible. If no `name` attribute is provided, then it will just render the inner elements. For example, if you need a tab without a root fieldset, just create the mandatory section with no name and then the inner elements.
 
 Attributes:
 
@@ -433,13 +433,13 @@ displayIfRecord and displayIfServiceInfo could be combined. An AND operator is u
 
 ## Adding a field {#creating-custom-editor-field}
 
-To display a simple element use the `th` attribute to point to the element to display:
+To display a simple element use the `xpath` attribute to point to the element to display:
 
 ``` xml
 <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:citation/*/gmd:title"/>
 ```
 
-To override a field label use the `me` attribute and define that new label in `{schema}/loc/{lang}/strings.xml`:
+To override a field label use the `name` attribute and define that new label in `{schema}/loc/{lang}/strings.xml`:
 
 ``` xml
 <field name="myTitle"
@@ -455,7 +455,7 @@ To display a complex element which exists in the metadata document:
 
 In this case all children elements are also displayed.
 
-To display a field if it exists in the metadata document or to provide an `dd` button in case it does not exist (specify `in` and `or` attributes):
+To display a field if it exists in the metadata document or to provide an `add` button in case it does not exist (specify `in` and `or` attributes):
 
 ``` xml
 <field name="pointOfContact"
@@ -524,7 +524,7 @@ The element to search in for the geonet child.
 
 -   **del** (Optional)
 
-Relative XPath of the element to remove when the `ve` button is clicked.
+Relative XPath of the element to remove when the `remove` button is clicked.
 
 e.g. If a template field match linkage and allows editing of field URL, the remove control should remove the parent element gmd:onLine.
 
@@ -536,7 +536,7 @@ e.g. If a template field match linkage and allows editing of field URL, the remo
   <template>
 ```
 
-`el` attribute can be used in template mode or not. Example to remove `on` while only editing `or` or `ce`. `or` or `ce` are mandatory, but as the `el` element points to the `on` ancestor, there is no mandatory flag displayed and the remove control removes the `on` element.
+`del` attribute can be used in template mode or not. Example to remove `spatialResolution` while only editing `denominator` or `distance`. `denominator` or `distance` are mandatory, but as the `del` element points to the `spatialResolution` ancestor, there is no mandatory flag displayed and the remove control removes the `spatialResolution` element.
 
 ``` xml
 <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/
@@ -586,9 +586,9 @@ Child elements:
 
 ## Adding a template based field {#creating-custom-editor-template}
 
-A templace configuration for an XML snippet to edit.
+A template configuration for an XML snippet to edit.
 
-A template field is compose of an XML snippet corresponding to the element to edit where values to be edited are identified using {{fields}} notation. Each fields needs to be defined as values from which one input field will be created.
+A template field is composed of an XML snippet corresponding to the element to edit where values to be edited are identified using {{fields}} notation. Each fields needs to be defined as values from which one input field will be created.
 
 This mode is used to hide the complexity of the XML element to edit. eg.
 

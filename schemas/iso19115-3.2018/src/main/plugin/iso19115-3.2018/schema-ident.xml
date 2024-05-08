@@ -149,6 +149,7 @@ Ce schéma est également composé des normes :
                                   */cit:protocol/gco:CharacterString = 'FILE' or
                                   */cit:protocol/gco:CharacterString = 'DB' or
                                   */cit:protocol/gco:CharacterString = 'COPYFILE']"
+            jsonpath="$['link'][?(@.protocol =~ /(DOWNLOAD|FILE|DB|COPYFILE).*?/i)]"
             ifNotOperation="download"/>
 
     <!--
@@ -157,6 +158,7 @@ Ce schéma est également composé des normes :
     TODO: other type of services ?
     -->
     <filter xpath=".//mrd:onLine[starts-with(*/cit:protocol/gco:CharacterString, 'OGC:WMS')]"
+            jsonpath="$['link'][?(@.protocol =~ /OGC:WMS.*?/i)]"
             ifNotOperation="dynamic"/>
   </filters>
 </schema>
