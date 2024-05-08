@@ -85,10 +85,10 @@ public class JwtHeadersTrivialUser {
 
         var tokenValidator = new TokenValidator(config);
         try {
-            var accessToken = userNameHeader.replaceFirst("^Bearer", "");
-            accessToken = accessToken.replaceFirst("^bearer", "");
-            accessToken = accessToken.trim();
-            tokenValidator.validate(accessToken);
+//            var accessToken = userNameHeader.replaceFirst("^Bearer", "");
+//            accessToken = accessToken.replaceFirst("^bearer", "");
+//            accessToken = accessToken.trim();
+            tokenValidator.validate(userNameHeader);
         } catch (Exception e) {
             throw new IOException("JWT Token is invalid", e);
         }
@@ -132,6 +132,9 @@ public class JwtHeadersTrivialUser {
             if (profile != null) {
                 user.profile = Profile.valueOf(profile);
             }
+        }
+        else {
+            user.profile = Profile.RegisteredUser;
         }
 
         //set the profileGroups
