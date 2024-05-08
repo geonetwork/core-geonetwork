@@ -900,7 +900,7 @@
                   imageTile.getImage().src = src;
                 },
                 function (r) {
-                  if (r.status === 414) {
+                  if (r.status && r.status === 414) {
                     // Request URI too large, try POST
                     convertGetMapRequestToPost(src, function (response) {
                       var arrayBufferView = new Uint8Array(response.data);
