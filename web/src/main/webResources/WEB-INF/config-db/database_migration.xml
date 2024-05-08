@@ -381,7 +381,7 @@
     </entry>
     <entry key="4.2.10">
       <list>
-        <value>WEB-INF/classes/setup/sql/migrate/v422/migrate-</value>
+        <value>WEB-INF/classes/setup/sql/migrate/v4210/migrate-</value>
       </list>
     </entry>
   </util:map>
