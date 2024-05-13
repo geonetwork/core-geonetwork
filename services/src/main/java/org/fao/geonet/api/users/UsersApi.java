@@ -38,6 +38,8 @@ import org.fao.geonet.api.users.model.PasswordResetDto;
 import org.fao.geonet.api.users.model.UserDto;
 import org.fao.geonet.api.users.validation.PasswordResetDtoValidator;
 import org.fao.geonet.api.users.validation.UserDtoValidator;
+import org.fao.geonet.auditable.AuditableService;
+import org.fao.geonet.auditable.model.UserAuditable;
 import org.fao.geonet.domain.*;
 import org.fao.geonet.exceptions.UserNotFoundEx;
 import org.fao.geonet.kernel.DataManager;
@@ -115,6 +117,9 @@ public class UsersApi {
 
     @Autowired(required=false)
     SecurityProviderConfiguration securityProviderConfiguration;
+
+    @Autowired
+    AuditableService auditableService;
 
     private BufferedImage pixel;
 
@@ -341,16 +346,27 @@ public class UsersApi {
             }
         }
 
+        Optional<User> userToDelete = userRepository.findById(userIdentifier);
+        List<UserGroup> userGroups = userGroupRepository.findAll(UserGroupSpecs.hasUserId(userIdentifier));
+
         userGroupRepository.deleteAllByIdAttribute(UserGroupId_.userId,
             Arrays.asList(userIdentifier));
 
         userSavedSelectionRepository.deleteAllByUser(userIdentifier);
+
+
 
         try {
             userRepository.deleteById(userIdentifier);
         } catch (org.springframework.dao.EmptyResultDataAccessException ex) {
             throw new UserNotFoundEx(Integer.toString(userIdentifier));
         }
+
+        if (userToDelete.isPresent()) {
+            UserAuditable userAuditable = UserAuditable.build(userToDelete.get(), userGroups);
+            auditableService.auditDelete(userAuditable, session.getUsername());
+        }
+
 
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
@@ -488,6 +504,12 @@ public class UsersApi {
         user = userRepository.save(user);
         setUserGroups(user, groups);
 
+        List<UserGroup> userGroups = userGroupRepository.findAll(UserGroupSpecs
+            .hasUserId(user.getId()));
+
+        UserAuditable userAuditable = UserAuditable.build(user, userGroups);
+        auditableService.auditSave(userAuditable, session.getUsername());
+
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 
@@ -615,6 +637,16 @@ public class UsersApi {
             setUserGroups(user, groups);
         }
 
+        user = userRepository.save(user);
+        setUserGroups(user, groups);
+
+        List<UserGroup> userGroups = userGroupRepository.findAll(UserGroupSpecs
+            .hasUserId(user.getId()));
+        //userAudit.setUserGroups(userGroups);
+
+        UserAuditable userAuditable = UserAuditable.build(user, userGroups);
+        auditableService.auditSave(userAuditable, session.getUsername());
+
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 
@@ -667,8 +699,8 @@ public class UsersApi {
         Profile myProfile = session.getProfile();
         String myUserId = session.getUserId();
 
-        if (!Profile.Administrator.equals(myProfile) 
-            && !Profile.UserAdmin.equals(myProfile) 
+        if (!Profile.Administrator.equals(myProfile)
+            && !Profile.UserAdmin.equals(myProfile)
             && !myUserId.equals(Integer.toString(userIdentifier))) {
             throw new IllegalArgumentException("You don't have rights to do this");
         }

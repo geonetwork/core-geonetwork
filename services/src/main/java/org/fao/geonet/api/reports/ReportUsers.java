@@ -25,7 +25,10 @@ package org.fao.geonet.api.reports;
 
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.csv.CSVPrinter;
+import org.fao.geonet.auditable.AuditableService;
 import org.fao.geonet.domain.*;
+import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.SortUtils;
 import org.fao.geonet.repository.UserGroupRepository;
 import org.fao.geonet.repository.UserRepository;
@@ -72,6 +75,11 @@ public class ReportUsers implements IReport {
      */
     public void create(final ServiceContext context,
                        final PrintWriter writer) throws Exception {
+
+        SettingManager settingManager = context.getBean(SettingManager.class);
+        AuditableService auditableService = context.getBean(AuditableService.class);
+        boolean isUserHistoryEnabled = settingManager.getValueAsBool(Settings.SYSTEM_AUDITABLE_ENABLE, false);
+
         // Initialize CSVPrinter object
         try(CSVPrinter csvFilePrinter = new CSVPrinter(writer, CSV_FORMAT)) {
             // Retrieve users
@@ -91,7 +99,7 @@ public class ReportUsers implements IReport {
             csvFilePrinter.println();
 
             String[] entries = ("Username#Surname#Name#"
-                + "Email#User groups/Profile#Last login date").split("#");
+                + "Email#User groups/Profile#Last login date" + (isUserHistoryEnabled?"#Change history": "")).split("#");
             csvFilePrinter.printRecord(Arrays.asList(entries));
 
             for (User user : records) {
@@ -119,6 +127,13 @@ public class ReportUsers implements IReport {
                 metadataRecord.add(email);
                 metadataRecord.add(userGroupsInfo);
                 metadataRecord.add(lastLoginDate);
+
+                if (isUserHistoryEnabled) {
+                    String userChanges = auditableService.getEntityHistory("user", user.getId());
+                    if (StringUtils.hasLength(userChanges)) {
+                        metadataRecord.add(userChanges);
+                    }
+                }
 
                 csvFilePrinter.printRecord(metadataRecord);
             }

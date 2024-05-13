@@ -743,6 +743,9 @@ INSERT INTO Settings (name, value, datatype, position, internal, editable) VALUE
 
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/banner/enable', 'false', 2, 1920, 'n');
 
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/auditable/enable', 'false', 2, 12010, 'n');
+
+
 
 -- WARNING: Security / Add this settings only if you need to allow admin
 -- users to be able to reset user password. If you have mail server configured
