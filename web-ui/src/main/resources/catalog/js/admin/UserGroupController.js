@@ -310,6 +310,16 @@
                 // TODO
               }
             );
+
+            // Load user changes
+            $http.get("../api/auditable/user/" + u.id).then(
+              function (response) {
+                $scope.userHistory = response.data;
+              },
+              function (response) {
+                // TODO
+              }
+            );
           },
           function (response) {
             // TODO
