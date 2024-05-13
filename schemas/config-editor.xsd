@@ -1094,6 +1094,7 @@ the mandatory section with no name and then the inner elements.
         </xs:element>
         <xs:element ref="action"/>
         <xs:element ref="directive"/>
+        <xs:element ref="select"/>
         <xs:element ref="text"/>
         <xs:element ref="xsl"/>
         <xs:element ref="section"/>
@@ -2528,6 +2529,68 @@ added in the directive panel eg. `text` for guidelines or add `action` to easily
       <xs:sequence>
         <xs:element ref="section"/>
       </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+
+  <xs:element name="select">
+    <xs:annotation>
+      <xs:documentation><![CDATA[
+
+Create a selector on an element to minimize form size when complex elements are repeated.
+For example, a feature catalogue can describe many feature types. Instead of displaying
+all feature types, add a dropdown (or tabs) to select one and edit it.
+
+The selector will add the parameter with the selected value to the form.
+
+Add a dynamic section with a reference to that parameter to build the editor form for the requested element.
+
+.. code-block:: xml
+
+          <section name="gfc:featureType">
+            <select name="Select a feature type"
+                    xpath="/gfc:FC_FeatureCatalogue/gfc:featureType"
+                    parameter="featureType"
+                    value="*/gfc:typeName/gco:LocalName/text()"
+                    layout="dropdown"/>
+
+
+            <field xpath="/gfc:FC_FeatureCatalogue/gfc:featureType[
+                                    */gfc:typeName/gco:LocalName = $p2/featureType
+                                    or (not($p2/featureType) and position() = 1)
+                                    or ($p3 = 'md.format.html')]"
+                     or="featureType"
+                     in="/gfc:FC_FeatureCatalogue"/>
+          </section>
+
+
+`$p2` correspond to the variable `request` and `$p3` to the `service` in the XSL template (see `base-variables.xsl`).
+So if there is no `featureType` parameter, the first feature type will be displayed.
+If the view mode is `md.format.html`, all feature types will be displayed.
+
+      ]]></xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:attribute name="name" use="optional" type="xs:string"/>
+      <xs:attribute name="xpath" use="required" type="xs:string"/>
+      <xs:attribute name="parameter" use="required" type="xs:string"/>
+      <xs:attribute name="value" use="required" type="xs:string"/>
+      <xs:attribute name="icon" use="required" type="xs:string">
+        <xs:annotation>
+          <xs:documentation><![CDATA[Icon display on the dropdown selector.]]>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="layout" use="required">
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:enumeration value="dropdown"/>
+            <xs:enumeration value="tabs"/>
+            <xs:enumeration value="pills"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+      <xs:anyAttribute/>
     </xs:complexType>
   </xs:element>
 </xs:schema>
