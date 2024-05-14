@@ -907,7 +907,7 @@
                   // On CORS error, status is -1.
                   // Check client side if the URI is too large according to default Apache LimitRequestFieldSize
                   // and switch to POST in this case.
-                  var uriTooLarge = r.status === -1 && src.length >= 8190;
+                  var uriTooLarge = (r.status === undefined || r.status === -1) && src.length >= 8190;
 
                   if (r.status === 414 || uriTooLarge) {
                     // Request URI too large, try POST
