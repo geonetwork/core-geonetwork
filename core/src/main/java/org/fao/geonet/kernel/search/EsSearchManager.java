@@ -792,8 +792,8 @@ public class EsSearchManager implements ISearchManager {
         return client.query(defaultIndex, jsonRequest, null, includedFields, from, size);
     }
 
-    public Map<String, String> getFieldsValues(String id, Set<String> fields) throws IOException {
-        return client.getFieldsValues(defaultIndex, id, fields);
+    public Map<String, String> getFieldsValues(String id, Set<String> fields, String language) throws Exception {
+        return client.getFieldsValues(defaultIndex, id, fields, language);
     }
 
 
