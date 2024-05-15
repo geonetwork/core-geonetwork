@@ -53,6 +53,10 @@ import org.fao.geonet.api.API;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
+import org.fao.geonet.languages.FeedbackLanguages;
+import org.fao.geonet.util.LocalizedEmail;
+import org.fao.geonet.util.LocalizedEmailParameter;
+import org.fao.geonet.util.LocalizedEmailComponent;
 import org.fao.geonet.util.MailUtil;
 import org.fao.geonet.utils.Log;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -87,6 +91,9 @@ public class MailApi {
     @Autowired
     SettingManager settingManager;
 
+    @Autowired
+    FeedbackLanguages feedbackLanguages;
+
     @io.swagger.v3.oas.annotations.Operation(summary = "Test mail configuration",
         description = "Send an email to the catalog feedback email.")
     @RequestMapping(value = "/test",
@@ -97,17 +104,34 @@ public class MailApi {
     public ResponseEntity<String> testMailConfiguration(ServletRequest request) throws Exception {
         Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
         ResourceBundle messages = ResourceBundle.getBundle("org.fao.geonet.api.Messages", locale);
+        Locale[] feedbackLocales = feedbackLanguages.getLocales(locale);
 
         String to = settingManager.getValue(Settings.SYSTEM_FEEDBACK_EMAIL);
-        String subject = String.format(messages.getString(
-            "mail_config_test_subject"),
-            settingManager.getSiteName(),
-            to);
-        String message = String.format(messages.getString(
-            "mail_config_test_message"),
-            settingManager.getNodeURL(),
-            settingManager.getNodeURL(),
-            settingManager.getNodeURL());
+
+        LocalizedEmailComponent emailSubjectComponent = new LocalizedEmailComponent(LocalizedEmailComponent.ComponentType.SUBJECT, "mail_config_test_subject", LocalizedEmailComponent.KeyType.MESSAGE_KEY, LocalizedEmailComponent.ReplacementType.POSITIONAL_FORMAT);
+        LocalizedEmailComponent emailMessageComponent = new LocalizedEmailComponent(LocalizedEmailComponent.ComponentType.MESSAGE, "mail_config_test_message", LocalizedEmailComponent.KeyType.MESSAGE_KEY, LocalizedEmailComponent.ReplacementType.POSITIONAL_FORMAT);
+
+        for (Locale feedbackLocale : feedbackLocales) {
+            emailSubjectComponent.addParameters(
+                feedbackLocale,
+                new LocalizedEmailParameter(LocalizedEmailParameter.ParameterType.RAW_VALUE, 1, settingManager.getSiteName()),
+                new LocalizedEmailParameter(LocalizedEmailParameter.ParameterType.RAW_VALUE, 2, to)
+            );
+
+            emailMessageComponent.addParameters(
+                feedbackLocale,
+                new LocalizedEmailParameter(LocalizedEmailParameter.ParameterType.RAW_VALUE, 1, settingManager.getNodeURL()),
+                new LocalizedEmailParameter(LocalizedEmailParameter.ParameterType.RAW_VALUE, 2, settingManager.getNodeURL()),
+                new LocalizedEmailParameter(LocalizedEmailParameter.ParameterType.RAW_VALUE, 3, settingManager.getNodeURL())
+            );
+        }
+
+        LocalizedEmail localizedEmail = new LocalizedEmail(true);
+        localizedEmail.addComponents(emailSubjectComponent, emailMessageComponent);
+
+        String subject = localizedEmail.getParsedSubject(feedbackLocales);
+        String message = localizedEmail.getParsedMessage(feedbackLocales);
+
         try {
             MailUtil.testSendMail(to, subject, null, message, settingManager, to, "");
             return new ResponseEntity<>(String.format(
