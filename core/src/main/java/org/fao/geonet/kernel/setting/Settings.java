@@ -60,6 +60,8 @@ public class Settings {
     public static final String SYSTEM_USERS_IDENTICON = "system/users/identicon";
     public static final String SYSTEM_SEARCHSTATS = "system/searchStats/enable";
     public static final String SYSTEM_FEEDBACK_EMAIL = "system/feedback/email";
+    public static final String SYSTEM_FEEDBACK_LANGUAGES = "system/feedback/languages";
+    public static final String SYSTEM_FEEDBACK_TRANSLATION_FOLLOWS_TEXT = "system/feedback/translationFollowsText";
     public static final String SYSTEM_FEEDBACK_MAILSERVER_HOST = "system/feedback/mailServer/host";
     public static final String SYSTEM_FEEDBACK_MAILSERVER_PORT = "system/feedback/mailServer/port";
     public static final String SYSTEM_FEEDBACK_MAILSERVER_USERNAME = "system/feedback/mailServer/username";
