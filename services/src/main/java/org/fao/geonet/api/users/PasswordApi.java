@@ -36,10 +36,14 @@ import org.fao.geonet.kernel.security.SecurityProviderConfiguration;
 import org.fao.geonet.kernel.security.ldap.LDAPConstants;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
+import org.fao.geonet.languages.FeedbackLanguages;
 import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.util.MailUtil;
 import org.fao.geonet.util.PasswordUtil;
 import org.fao.geonet.util.XslUtil;
+import org.fao.geonet.util.LocalizedEmail;
+import org.fao.geonet.util.LocalizedEmailComponent;
+import org.fao.geonet.util.LocalizedEmailParameter;
 import org.fao.geonet.utils.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -73,6 +77,8 @@ public class PasswordApi {
     UserRepository userRepository;
     @Autowired
     SettingManager sm;
+    @Autowired
+    FeedbackLanguages feedbackLanguages;
 
     @Autowired(required=false)
     SecurityProviderConfiguration securityProviderConfiguration;
@@ -98,6 +104,7 @@ public class PasswordApi {
         throws Exception {
         Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
         ResourceBundle messages = ResourceBundle.getBundle("org.fao.geonet.api.Messages", locale);
+        Locale[] feedbackLocales = feedbackLanguages.getLocales(locale);
 
         if (securityProviderConfiguration != null && !securityProviderConfiguration.isUserProfileUpdateEnabled()) {
             return new ResponseEntity<>(messages.getString("security_provider_unsupported_functionality"), HttpStatus.PRECONDITION_FAILED);
@@ -146,14 +153,29 @@ public class PasswordApi {
         userRepository.save(user);
 
         String adminEmail = sm.getValue(Settings.SYSTEM_FEEDBACK_EMAIL);
-        String subject = String.format(
-            messages.getString("password_change_subject"),
-            sm.getSiteName());
-        String content = String.format(
-            messages.getString("password_change_message"),
-            sm.getSiteName(),
-            adminEmail,
-            sm.getSiteName());
+
+        LocalizedEmailComponent emailSubjectComponent = new LocalizedEmailComponent(LocalizedEmailComponent.ComponentType.SUBJECT, "password_change_subject", LocalizedEmailComponent.KeyType.MESSAGE_KEY, LocalizedEmailComponent.ReplacementType.POSITIONAL_FORMAT);
+        LocalizedEmailComponent emailMessageComponent = new LocalizedEmailComponent(LocalizedEmailComponent.ComponentType.MESSAGE, "password_change_message", LocalizedEmailComponent.KeyType.MESSAGE_KEY, LocalizedEmailComponent.ReplacementType.POSITIONAL_FORMAT);
+
+        for (Locale feedbackLocale : feedbackLocales) {
+            emailSubjectComponent.addParameters(
+                feedbackLocale,
+                new LocalizedEmailParameter(LocalizedEmailParameter.ParameterType.RAW_VALUE, 1, sm.getSiteName())
+            );
+
+            emailMessageComponent.addParameters(
+                feedbackLocale,
+                new LocalizedEmailParameter(LocalizedEmailParameter.ParameterType.RAW_VALUE, 1, sm.getSiteName()),
+                new LocalizedEmailParameter(LocalizedEmailParameter.ParameterType.RAW_VALUE, 2, adminEmail),
+                new LocalizedEmailParameter(LocalizedEmailParameter.ParameterType.RAW_VALUE, 3, sm.getSiteName())
+            );
+        }
+
+        LocalizedEmail localizedEmail = new LocalizedEmail(false);
+        localizedEmail.addComponents(emailSubjectComponent, emailMessageComponent);
+
+        String subject = localizedEmail.getParsedSubject(feedbackLocales);
+        String content = localizedEmail.getParsedMessage(feedbackLocales);
 
         // send change link via email with admin in CC
         if (!MailUtil.sendMail(user.getEmail(),
@@ -189,8 +211,8 @@ public class PasswordApi {
         HttpServletRequest request)
         throws Exception {
         Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
-        String language = locale.getISO3Language();
         ResourceBundle messages = ResourceBundle.getBundle("org.fao.geonet.api.Messages", locale);
+        Locale[] feedbackLocales = feedbackLanguages.getLocales(locale);
 
         if (securityProviderConfiguration != null && !securityProviderConfiguration.isUserProfileUpdateEnabled()) {
             return new ResponseEntity<>(messages.getString("security_provider_unsupported_functionality"), HttpStatus.PRECONDITION_FAILED);
@@ -244,17 +266,31 @@ public class PasswordApi {
         String changeKey = PasswordUtil.encode(serviceContext,
             scrambledPassword + todaysDate);
 
-        String subject = String.format(
-            messages.getString("password_forgotten_subject"),
-            sm.getSiteName(),
-            username);
-        String content = String.format(
-            messages.getString("password_forgotten_message"),
-            sm.getSiteName(),
-            sm.getSiteURL(language),
-            username,
-            changeKey,
-            sm.getSiteName());
+        LocalizedEmailComponent emailSubjectComponent = new LocalizedEmailComponent(LocalizedEmailComponent.ComponentType.SUBJECT, "password_forgotten_subject", LocalizedEmailComponent.KeyType.MESSAGE_KEY, LocalizedEmailComponent.ReplacementType.POSITIONAL_FORMAT);
+        LocalizedEmailComponent emailMessageComponent = new LocalizedEmailComponent(LocalizedEmailComponent.ComponentType.MESSAGE, "password_forgotten_message", LocalizedEmailComponent.KeyType.MESSAGE_KEY, LocalizedEmailComponent.ReplacementType.POSITIONAL_FORMAT);
+
+        for (Locale feedbackLocale : feedbackLocales) {
+            emailSubjectComponent.addParameters(
+                feedbackLocale,
+                new LocalizedEmailParameter(LocalizedEmailParameter.ParameterType.RAW_VALUE, 1, sm.getSiteName()),
+                new LocalizedEmailParameter(LocalizedEmailParameter.ParameterType.RAW_VALUE, 2, username)
+            );
+
+            emailMessageComponent.addParameters(
+                feedbackLocale,
+                new LocalizedEmailParameter(LocalizedEmailParameter.ParameterType.RAW_VALUE, 1, sm.getSiteName()),
+                new LocalizedEmailParameter(LocalizedEmailParameter.ParameterType.RAW_VALUE, 2, sm.getSiteURL(feedbackLocale.getISO3Language())),
+                new LocalizedEmailParameter(LocalizedEmailParameter.ParameterType.RAW_VALUE, 3, username),
+                new LocalizedEmailParameter(LocalizedEmailParameter.ParameterType.RAW_VALUE, 4, changeKey),
+                new LocalizedEmailParameter(LocalizedEmailParameter.ParameterType.RAW_VALUE, 5, sm.getSiteName())
+            );
+        }
+
+        LocalizedEmail localizedEmail = new LocalizedEmail(false);
+        localizedEmail.addComponents(emailSubjectComponent, emailMessageComponent);
+
+        String subject = localizedEmail.getParsedSubject(feedbackLocales);
+        String content = localizedEmail.getParsedMessage(feedbackLocales);
 
         // send change link via email with admin in CC
         if (!MailUtil.sendMail(email,
