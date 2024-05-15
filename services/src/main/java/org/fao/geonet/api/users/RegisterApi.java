@@ -26,7 +26,6 @@ package org.fao.geonet.api.users;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jeeves.server.context.ServiceContext;
-import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
 import org.fao.geonet.api.users.model.UserRegisterDto;
@@ -35,11 +34,11 @@ import org.fao.geonet.domain.*;
 import org.fao.geonet.kernel.security.SecurityProviderConfiguration;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
+import org.fao.geonet.languages.FeedbackLanguages;
 import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.UserGroupRepository;
 import org.fao.geonet.repository.UserRepository;
-import org.fao.geonet.util.MailUtil;
-import org.fao.geonet.util.PasswordUtil;
+import org.fao.geonet.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -52,10 +51,7 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import javax.servlet.http.HttpServletRequest;
 import java.sql.SQLException;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Locale;
-import java.util.ResourceBundle;
+import java.util.*;
 
 @EnableWebMvc
 @Service
@@ -71,6 +67,9 @@ public class RegisterApi {
 
     @Autowired(required=false)
     SecurityProviderConfiguration securityProviderConfiguration;
+
+    @Autowired
+    FeedbackLanguages feedbackLanguages;
 
     @io.swagger.v3.oas.annotations.Operation(summary = "Create user account",
         description = "User is created with a registered user profile. username field is ignored and the email is used as " +
@@ -94,6 +93,7 @@ public class RegisterApi {
 
         Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
         ResourceBundle messages = ResourceBundle.getBundle("org.fao.geonet.api.Messages", locale);
+        Locale[] feedbackLocales = feedbackLanguages.getLocales(locale);
 
         if (securityProviderConfiguration != null && !securityProviderConfiguration.isUserProfileUpdateEnabled()) {
             return new ResponseEntity<>(messages.getString("security_provider_unsupported_functionality"), HttpStatus.PRECONDITION_FAILED);
@@ -180,39 +180,66 @@ public class RegisterApi {
 
 
         String catalogAdminEmail = sm.getValue(Settings.SYSTEM_FEEDBACK_EMAIL);
-        String subject = String.format(
-            messages.getString("register_email_admin_subject"),
-            sm.getSiteName(),
-            user.getEmail(),
-            requestedProfile
-        );
-        String message = String.format(
-            messages.getString("register_email_admin_message"),
-            user.getEmail(),
-            requestedProfile,
-            sm.getNodeURL(),
-            sm.getSiteName()
-        );
-        if (!MailUtil.sendMail(catalogAdminEmail, subject, message, null, sm)) {
+
+        LocalizedEmailComponent emailAdminSubjectComponent = new LocalizedEmailComponent(LocalizedEmailComponent.ComponentType.SUBJECT, "register_email_admin_subject", LocalizedEmailComponent.KeyType.MESSAGE_KEY, LocalizedEmailComponent.ReplacementType.POSITIONAL_FORMAT);
+        LocalizedEmailComponent emailAdminMessageComponent = new LocalizedEmailComponent(LocalizedEmailComponent.ComponentType.MESSAGE, "register_email_admin_message", LocalizedEmailComponent.KeyType.MESSAGE_KEY, LocalizedEmailComponent.ReplacementType.POSITIONAL_FORMAT);
+
+        for (Locale feedbackLocale : feedbackLocales) {
+            emailAdminSubjectComponent.addParameters(
+                feedbackLocale,
+                new LocalizedEmailParameter(LocalizedEmailParameter.ParameterType.RAW_VALUE, 1, sm.getSiteName()),
+                new LocalizedEmailParameter(LocalizedEmailParameter.ParameterType.RAW_VALUE, 2, user.getEmail()),
+                new LocalizedEmailParameter(LocalizedEmailParameter.ParameterType.RAW_VALUE, 3, requestedProfile)
+            );
+
+            emailAdminMessageComponent.addParameters(
+                feedbackLocale,
+                new LocalizedEmailParameter(LocalizedEmailParameter.ParameterType.RAW_VALUE, 1, user.getEmail()),
+                new LocalizedEmailParameter(LocalizedEmailParameter.ParameterType.RAW_VALUE, 2, requestedProfile),
+                new LocalizedEmailParameter(LocalizedEmailParameter.ParameterType.RAW_VALUE, 3, sm.getNodeURL()),
+                new LocalizedEmailParameter(LocalizedEmailParameter.ParameterType.RAW_VALUE, 4, sm.getSiteName())
+            );
+        }
+
+        LocalizedEmail adminLocalizedEmail = new LocalizedEmail(false);
+        adminLocalizedEmail.addComponents(emailAdminSubjectComponent, emailAdminMessageComponent);
+
+        String adminSubject = adminLocalizedEmail.getParsedSubject(feedbackLocales);
+        String adminMessage = adminLocalizedEmail.getParsedMessage(feedbackLocales);
+
+        if (!MailUtil.sendMail(catalogAdminEmail, adminSubject, adminMessage, null, sm)) {
             return new ResponseEntity<>(String.format(
                 messages.getString("mail_error")), HttpStatus.PRECONDITION_FAILED);
         }
 
-        subject = String.format(
-            messages.getString("register_email_subject"),
-            sm.getSiteName(),
-            user.getProfile()
-        );
-        message = String.format(
-            messages.getString("register_email_message"),
-            sm.getSiteName(),
-            user.getUsername(),
-            password,
-            Profile.RegisteredUser,
-            requestedProfile,
-            sm.getNodeURL(),
-            sm.getSiteName()
-        );
+        LocalizedEmailComponent emailSubjectComponent = new LocalizedEmailComponent(LocalizedEmailComponent.ComponentType.SUBJECT, "register_email_subject", LocalizedEmailComponent.KeyType.MESSAGE_KEY, LocalizedEmailComponent.ReplacementType.POSITIONAL_FORMAT);
+        LocalizedEmailComponent emailMessageComponent = new LocalizedEmailComponent(LocalizedEmailComponent.ComponentType.MESSAGE, "register_email_message", LocalizedEmailComponent.KeyType.MESSAGE_KEY, LocalizedEmailComponent.ReplacementType.POSITIONAL_FORMAT);
+
+        for (Locale feedbackLocale : feedbackLocales) {
+            emailSubjectComponent.addParameters(
+                feedbackLocale,
+                new LocalizedEmailParameter(LocalizedEmailParameter.ParameterType.RAW_VALUE, 1, sm.getSiteName()),
+                new LocalizedEmailParameter(LocalizedEmailParameter.ParameterType.RAW_VALUE, 2, user.getProfile())
+            );
+
+            emailMessageComponent.addParameters(
+                feedbackLocale,
+                new LocalizedEmailParameter(LocalizedEmailParameter.ParameterType.RAW_VALUE, 1, sm.getSiteName()),
+                new LocalizedEmailParameter(LocalizedEmailParameter.ParameterType.RAW_VALUE, 2, user.getUsername()),
+                new LocalizedEmailParameter(LocalizedEmailParameter.ParameterType.RAW_VALUE, 3, password),
+                new LocalizedEmailParameter(LocalizedEmailParameter.ParameterType.RAW_VALUE, 4, Profile.RegisteredUser),
+                new LocalizedEmailParameter(LocalizedEmailParameter.ParameterType.RAW_VALUE, 5, requestedProfile),
+                new LocalizedEmailParameter(LocalizedEmailParameter.ParameterType.RAW_VALUE, 6, sm.getNodeURL()),
+                new LocalizedEmailParameter(LocalizedEmailParameter.ParameterType.RAW_VALUE, 7, sm.getSiteName())
+            );
+        }
+
+        LocalizedEmail localizedEmail = new LocalizedEmail(false);
+        localizedEmail.addComponents(emailSubjectComponent, emailMessageComponent);
+
+        String subject = localizedEmail.getParsedSubject(feedbackLocales);
+        String message = localizedEmail.getParsedMessage(feedbackLocales);
+
         if (!MailUtil.sendMail(user.getEmail(), subject, message, null, sm)) {
             return new ResponseEntity<>(String.format(
                 messages.getString("mail_error")), HttpStatus.PRECONDITION_FAILED);
