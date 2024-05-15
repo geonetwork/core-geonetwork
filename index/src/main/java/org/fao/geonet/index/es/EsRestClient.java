@@ -412,8 +412,27 @@ public class EsRestClient implements InitializingBean {
 
     /**
      * Query the index for a specific record and return values for a set of fields.
+     *
+     * @param index  The index to lookup
+     * @param id     The record to lookup
+     * @param fields The fields to lookup
      */
     public Map<String, String> getFieldsValues(String index, String id, Set<String> fields) throws IOException {
+
+        return getFieldsValues(index, id, fields, "default");
+
+    }
+
+    /**
+     * Query the index for a specific record and return values for a set of fields and a specified language for multilingual fields.
+     * If there is no match for the language the default is used.
+     *
+     * @param index  The index to lookup
+     * @param id     The record to lookup
+     * @param fields The fields to lookup
+     * @param language The language code to lookup for multilingual fields.
+     */
+    public Map<String, String> getFieldsValues(String index, String id, Set<String> fields, String language) throws IOException {
         if (!activated) {
             return Collections.emptyMap();
         }
@@ -439,7 +458,13 @@ public class EsRestClient implements InitializingBean {
                     if (o instanceof String) {
                         fieldValues.put(f, (String) o);
                     } else if (o instanceof HashMap && f.endsWith("Object")) {
-                        fieldValues.put(f, (String) ((HashMap) o).get("default"));
+                        HashMap map = (HashMap) o;
+                        String languageKey = "lang" + language;
+                        if (map.containsKey(languageKey)) {
+                            fieldValues.put(f, (String) map.get(languageKey));
+                        } else {
+                            fieldValues.put(f, (String) map.get("default"));
+                        }
                     }
                 });
             } else {

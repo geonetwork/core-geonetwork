@@ -843,8 +843,14 @@ public final class XslUtil {
         try {
             Set<String> fields = new HashSet<>();
             fields.add(fieldname);
-            // TODO: Multilingual fields
-            final Map<String, String> values = searchManager.getFieldsValues(id, fields);
+            final Map<String, String> values;
+
+            if (language != null) {
+                values = searchManager.getFieldsValues(id, fields, language);
+            } else {
+                values = searchManager.getFieldsValues(id, fields);
+            }
+
             return values.get(fieldname);
         } catch (Exception e) {
             e.printStackTrace();
