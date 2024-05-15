@@ -58,6 +58,7 @@ import org.fao.geonet.kernel.search.EsSearchManager;
 import org.fao.geonet.kernel.search.IndexingMode;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
+import org.fao.geonet.languages.FeedbackLanguages;
 import org.fao.geonet.repository.*;
 import org.fao.geonet.util.MetadataPublicationMailNotifier;
 import org.fao.geonet.util.UserUtil;
@@ -117,6 +118,9 @@ public class MetadataWorkflowApi {
 
     @Autowired
     SettingManager settingManager;
+
+    @Autowired
+    FeedbackLanguages feedbackLanguages;
 
     @Autowired
     DataManager dataManager;
@@ -263,7 +267,7 @@ public class MetadataWorkflowApi {
         ServiceContext context = ApiUtils.createServiceContext(request,
             languageUtils.getIso3langCode(request.getLocales()));
 
-        ResourceBundle messages = ApiUtils.getMessagesResourceBundle(request.getLocales());
+        Locale[] feedbackLocales = feedbackLanguages.getLocales(request.getLocale());
 
         checkWorkflowEnabled();
 
@@ -346,7 +350,7 @@ public class MetadataWorkflowApi {
             metadataIndexer.indexMetadata(listOfUpdatedRecords);
 
             if (notifyByEmail && !metadataListToNotifyPublication.isEmpty()) {
-                metadataPublicationMailNotifier.notifyPublication(messages, context.getLanguage(), metadataListToNotifyPublication);
+                metadataPublicationMailNotifier.notifyPublication(feedbackLocales, metadataListToNotifyPublication);
             }
 
         } catch (Exception exception) {
@@ -456,7 +460,7 @@ public class MetadataWorkflowApi {
         AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
         ServiceContext context = ApiUtils.createServiceContext(request,
             languageUtils.getIso3langCode(request.getLocales()));
-        ResourceBundle messages = ApiUtils.getMessagesResourceBundle(request.getLocales());
+        Locale[] feedbackLocales = feedbackLanguages.getLocales(request.getLocale());
 
         boolean isMdWorkflowEnable = settingManager.getValueAsBool(Settings.METADATA_WORKFLOW_ENABLE);
         List<MetadataPublicationNotificationInfo> metadataListToNotifyPublication = new ArrayList<>();
@@ -558,7 +562,7 @@ public class MetadataWorkflowApi {
 
             metadataListToNotifyPublication.add(metadataNotificationInfo);
 
-            metadataPublicationMailNotifier.notifyPublication(messages, context.getLanguage(), metadataListToNotifyPublication);
+            metadataPublicationMailNotifier.notifyPublication(feedbackLocales, metadataListToNotifyPublication);
         }
         return statusUpdate;
     }
