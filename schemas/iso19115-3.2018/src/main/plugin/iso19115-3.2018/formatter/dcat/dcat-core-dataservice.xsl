@@ -20,7 +20,7 @@
   Range:	rdfs:Resource
   -->
   <xsl:template mode="iso19115-3-to-dcat"
-                match="srv:containsOperations/*/srv:connectPoint/*[cit:protocol/*/text() != $endpointDescriptionProtocols]/cit:linkage">
+                match="srv:containsOperations/*/srv:connectPoint/*[not(cit:protocol/*/text() = $endpointDescriptionProtocols)]/cit:linkage">
     <dcat:endpointURL rdf:resource="{normalize-space(gco:CharacterString/text())}"/>
   </xsl:template>
 

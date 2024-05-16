@@ -371,4 +371,7 @@
     <!-- TODO: Add mapping to Datacite https://schema.datacite.org/meta/kernel-4.1/include/datacite-resourceType-v4.1.xsd ?-->
   </xsl:template>
 
+
+  <xsl:template mode="iso19115-3-to-dcat"
+                match="mdb:referenceSystemInfo/*/mrs:referenceSystemIdentifier/*"/>
 </xsl:stylesheet>

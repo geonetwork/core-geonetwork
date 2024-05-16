@@ -1056,6 +1056,12 @@
             <gcx:Anchor xlink:href="https://geoportail.wallonie.be/files/documents/ConditionsSPW/DataSPW-CPU-TypeA.pdf">Les conditions générales d'utilisation s'appliquent et sont étendues par les conditions particulières de
               type A.</gcx:Anchor>
           </mco:otherConstraints>
+          <mco:otherConstraints>
+            <gcx:Anchor xlink:href="https://opensource.org/licenses/BSL-1.0">BSL</gcx:Anchor>
+          </mco:otherConstraints>
+          <mco:otherConstraints>
+            <gco:CharacterString>https://opensource.org/licenses/CATOSL-1.1</gco:CharacterString>
+          </mco:otherConstraints>
         </mco:MD_LegalConstraints>
       </mri:resourceConstraints>
       <mri:resourceConstraints>

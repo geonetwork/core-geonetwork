@@ -148,7 +148,7 @@ public class FormatterApiTest extends AbstractServiceIntegrationTest {
                     }
 
 
-//                    FileUtils.writeStringToFile(new File("/tmp/" + String.format("%s-%s-%s",
+//                    FileUtils.writeStringToFile(new File("/tmp/rdf/" + String.format("%s-%s-%s",
 //                            schema, formatter, checkfile)), actual, StandardCharsets.UTF_8);
 
                     Diff diff = DiffBuilder

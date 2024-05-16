@@ -325,12 +325,18 @@
       <dct:license>
          <dct:LicenseDocument rdf:about="https://geoportail.wallonie.be/files/documents/ConditionsSPW/DataSPW-CGU.pdf"/>
       </dct:license>
-      <dct:rights>
-         <dct:RightsStatement rdf:about="https://geoportail.wallonie.be/files/documents/ConditionsSPW/DataSPW-CGA.pdf"/>
-      </dct:rights>
-      <dct:rights>
-         <dct:RightsStatement rdf:about="https://geoportail.wallonie.be/files/documents/ConditionsSPW/DataSPW-CPU-TypeA.pdf"/>
-      </dct:rights>
+      <dct:license>
+         <dct:LicenseDocument rdf:about="https://geoportail.wallonie.be/files/documents/ConditionsSPW/DataSPW-CGA.pdf"/>
+      </dct:license>
+      <dct:license>
+         <dct:LicenseDocument rdf:about="https://geoportail.wallonie.be/files/documents/ConditionsSPW/DataSPW-CPU-TypeA.pdf"/>
+      </dct:license>
+      <dct:license>
+         <dct:LicenseDocument rdf:about="https://opensource.org/licenses/BSL-1.0"/>
+      </dct:license>
+      <dct:license>
+         <dct:LicenseDocument rdf:about="https://opensource.org/licenses/CATOSL-1.1"/>
+      </dct:license>
       <dct:rights>
          <dct:RightsStatement>
             <dct:description xml:lang="fre">Conditions d'accès et d'utilisation spécifiques</dct:description>
