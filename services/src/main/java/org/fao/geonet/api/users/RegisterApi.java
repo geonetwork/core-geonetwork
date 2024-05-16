@@ -53,6 +53,11 @@ import javax.servlet.http.HttpServletRequest;
 import java.sql.SQLException;
 import java.util.*;
 
+import static org.fao.geonet.util.LocalizedEmailComponent.ComponentType.*;
+import static org.fao.geonet.util.LocalizedEmailComponent.KeyType;
+import static org.fao.geonet.util.LocalizedEmailComponent.ReplacementType.*;
+import static org.fao.geonet.util.LocalizedEmailParameter.ParameterType;
+
 @EnableWebMvc
 @Service
 @RequestMapping(value = {
@@ -181,23 +186,23 @@ public class RegisterApi {
 
         String catalogAdminEmail = sm.getValue(Settings.SYSTEM_FEEDBACK_EMAIL);
 
-        LocalizedEmailComponent emailAdminSubjectComponent = new LocalizedEmailComponent(LocalizedEmailComponent.ComponentType.SUBJECT, "register_email_admin_subject", LocalizedEmailComponent.KeyType.MESSAGE_KEY, LocalizedEmailComponent.ReplacementType.POSITIONAL_FORMAT);
-        LocalizedEmailComponent emailAdminMessageComponent = new LocalizedEmailComponent(LocalizedEmailComponent.ComponentType.MESSAGE, "register_email_admin_message", LocalizedEmailComponent.KeyType.MESSAGE_KEY, LocalizedEmailComponent.ReplacementType.POSITIONAL_FORMAT);
+        LocalizedEmailComponent emailAdminSubjectComponent = new LocalizedEmailComponent(SUBJECT, "register_email_admin_subject", KeyType.MESSAGE_KEY, POSITIONAL_FORMAT);
+        LocalizedEmailComponent emailAdminMessageComponent = new LocalizedEmailComponent(MESSAGE, "register_email_admin_message", KeyType.MESSAGE_KEY, POSITIONAL_FORMAT);
 
         for (Locale feedbackLocale : feedbackLocales) {
             emailAdminSubjectComponent.addParameters(
                 feedbackLocale,
-                new LocalizedEmailParameter(LocalizedEmailParameter.ParameterType.RAW_VALUE, 1, sm.getSiteName()),
-                new LocalizedEmailParameter(LocalizedEmailParameter.ParameterType.RAW_VALUE, 2, user.getEmail()),
-                new LocalizedEmailParameter(LocalizedEmailParameter.ParameterType.RAW_VALUE, 3, requestedProfile)
+                new LocalizedEmailParameter(ParameterType.RAW_VALUE, 1, sm.getSiteName()),
+                new LocalizedEmailParameter(ParameterType.RAW_VALUE, 2, user.getEmail()),
+                new LocalizedEmailParameter(ParameterType.RAW_VALUE, 3, requestedProfile)
             );
 
             emailAdminMessageComponent.addParameters(
                 feedbackLocale,
-                new LocalizedEmailParameter(LocalizedEmailParameter.ParameterType.RAW_VALUE, 1, user.getEmail()),
-                new LocalizedEmailParameter(LocalizedEmailParameter.ParameterType.RAW_VALUE, 2, requestedProfile),
-                new LocalizedEmailParameter(LocalizedEmailParameter.ParameterType.RAW_VALUE, 3, sm.getNodeURL()),
-                new LocalizedEmailParameter(LocalizedEmailParameter.ParameterType.RAW_VALUE, 4, sm.getSiteName())
+                new LocalizedEmailParameter(ParameterType.RAW_VALUE, 1, user.getEmail()),
+                new LocalizedEmailParameter(ParameterType.RAW_VALUE, 2, requestedProfile),
+                new LocalizedEmailParameter(ParameterType.RAW_VALUE, 3, sm.getNodeURL()),
+                new LocalizedEmailParameter(ParameterType.RAW_VALUE, 4, sm.getSiteName())
             );
         }
 
@@ -212,25 +217,25 @@ public class RegisterApi {
                 messages.getString("mail_error")), HttpStatus.PRECONDITION_FAILED);
         }
 
-        LocalizedEmailComponent emailSubjectComponent = new LocalizedEmailComponent(LocalizedEmailComponent.ComponentType.SUBJECT, "register_email_subject", LocalizedEmailComponent.KeyType.MESSAGE_KEY, LocalizedEmailComponent.ReplacementType.POSITIONAL_FORMAT);
-        LocalizedEmailComponent emailMessageComponent = new LocalizedEmailComponent(LocalizedEmailComponent.ComponentType.MESSAGE, "register_email_message", LocalizedEmailComponent.KeyType.MESSAGE_KEY, LocalizedEmailComponent.ReplacementType.POSITIONAL_FORMAT);
+        LocalizedEmailComponent emailSubjectComponent = new LocalizedEmailComponent(SUBJECT, "register_email_subject", KeyType.MESSAGE_KEY, POSITIONAL_FORMAT);
+        LocalizedEmailComponent emailMessageComponent = new LocalizedEmailComponent(MESSAGE, "register_email_message", KeyType.MESSAGE_KEY, POSITIONAL_FORMAT);
 
         for (Locale feedbackLocale : feedbackLocales) {
             emailSubjectComponent.addParameters(
                 feedbackLocale,
-                new LocalizedEmailParameter(LocalizedEmailParameter.ParameterType.RAW_VALUE, 1, sm.getSiteName()),
-                new LocalizedEmailParameter(LocalizedEmailParameter.ParameterType.RAW_VALUE, 2, user.getProfile())
+                new LocalizedEmailParameter(ParameterType.RAW_VALUE, 1, sm.getSiteName()),
+                new LocalizedEmailParameter(ParameterType.RAW_VALUE, 2, user.getProfile())
             );
 
             emailMessageComponent.addParameters(
                 feedbackLocale,
-                new LocalizedEmailParameter(LocalizedEmailParameter.ParameterType.RAW_VALUE, 1, sm.getSiteName()),
-                new LocalizedEmailParameter(LocalizedEmailParameter.ParameterType.RAW_VALUE, 2, user.getUsername()),
-                new LocalizedEmailParameter(LocalizedEmailParameter.ParameterType.RAW_VALUE, 3, password),
-                new LocalizedEmailParameter(LocalizedEmailParameter.ParameterType.RAW_VALUE, 4, Profile.RegisteredUser),
-                new LocalizedEmailParameter(LocalizedEmailParameter.ParameterType.RAW_VALUE, 5, requestedProfile),
-                new LocalizedEmailParameter(LocalizedEmailParameter.ParameterType.RAW_VALUE, 6, sm.getNodeURL()),
-                new LocalizedEmailParameter(LocalizedEmailParameter.ParameterType.RAW_VALUE, 7, sm.getSiteName())
+                new LocalizedEmailParameter(ParameterType.RAW_VALUE, 1, sm.getSiteName()),
+                new LocalizedEmailParameter(ParameterType.RAW_VALUE, 2, user.getUsername()),
+                new LocalizedEmailParameter(ParameterType.RAW_VALUE, 3, password),
+                new LocalizedEmailParameter(ParameterType.RAW_VALUE, 4, Profile.RegisteredUser),
+                new LocalizedEmailParameter(ParameterType.RAW_VALUE, 5, requestedProfile),
+                new LocalizedEmailParameter(ParameterType.RAW_VALUE, 6, sm.getNodeURL()),
+                new LocalizedEmailParameter(ParameterType.RAW_VALUE, 7, sm.getSiteName())
             );
         }
 

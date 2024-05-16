@@ -71,6 +71,10 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.fao.geonet.kernel.setting.Settings.*;
+import static org.fao.geonet.util.LocalizedEmailComponent.ComponentType.*;
+import static org.fao.geonet.util.LocalizedEmailComponent.KeyType;
+import static org.fao.geonet.util.LocalizedEmailComponent.ReplacementType.*;
+import static org.fao.geonet.util.LocalizedEmailParameter.ParameterType;
 
 
 /**
@@ -646,30 +650,30 @@ public class UserFeedbackAPI {
             }
         }
 
-        LocalizedEmailComponent emailSubjectComponent = new LocalizedEmailComponent(LocalizedEmailComponent.ComponentType.SUBJECT, "user_feedback_title", LocalizedEmailComponent.KeyType.MESSAGE_KEY, LocalizedEmailComponent.ReplacementType.POSITIONAL_FORMAT);
-        LocalizedEmailComponent emailMessageComponent = new LocalizedEmailComponent(LocalizedEmailComponent.ComponentType.MESSAGE, "user_feedback_text", LocalizedEmailComponent.KeyType.MESSAGE_KEY, LocalizedEmailComponent.ReplacementType.POSITIONAL_FORMAT);
+        LocalizedEmailComponent emailSubjectComponent = new LocalizedEmailComponent(SUBJECT, "user_feedback_title", KeyType.MESSAGE_KEY, POSITIONAL_FORMAT);
+        LocalizedEmailComponent emailMessageComponent = new LocalizedEmailComponent(MESSAGE, "user_feedback_text", KeyType.MESSAGE_KEY, POSITIONAL_FORMAT);
 
         for (Locale feedbackLocale : feedbackLocales) {
 
             emailSubjectComponent.addParameters(
                 feedbackLocale,
-                new LocalizedEmailParameter(LocalizedEmailParameter.ParameterType.RAW_VALUE, 1, catalogueName),
-                new LocalizedEmailParameter(LocalizedEmailParameter.ParameterType.INDEX_FIELD, 2, "resourceTitleObject", metadataUuid),
-                new LocalizedEmailParameter(LocalizedEmailParameter.ParameterType.MESSAGE_OR_JSON_KEY, 3, subject)
+                new LocalizedEmailParameter(ParameterType.RAW_VALUE, 1, catalogueName),
+                new LocalizedEmailParameter(ParameterType.INDEX_FIELD, 2, "resourceTitleObject", metadataUuid),
+                new LocalizedEmailParameter(ParameterType.MESSAGE_OR_JSON_KEY, 3, subject)
             );
 
             emailMessageComponent.addParameters(
                 feedbackLocale,
-                new LocalizedEmailParameter(LocalizedEmailParameter.ParameterType.RAW_VALUE, 1, name),
-                new LocalizedEmailParameter(LocalizedEmailParameter.ParameterType.RAW_VALUE, 2, org),
-                new LocalizedEmailParameter(LocalizedEmailParameter.ParameterType.RAW_VALUE, 3, function),
-                new LocalizedEmailParameter(LocalizedEmailParameter.ParameterType.RAW_VALUE, 4, email),
-                new LocalizedEmailParameter(LocalizedEmailParameter.ParameterType.RAW_VALUE, 5, phone),
-                new LocalizedEmailParameter(LocalizedEmailParameter.ParameterType.INDEX_FIELD, 6, "resourceTitleObject", metadataUuid),
-                new LocalizedEmailParameter(LocalizedEmailParameter.ParameterType.MESSAGE_OR_JSON_KEY, 7, type),
-                new LocalizedEmailParameter(LocalizedEmailParameter.ParameterType.MESSAGE_OR_JSON_KEY, 8, category),
-                new LocalizedEmailParameter(LocalizedEmailParameter.ParameterType.RAW_VALUE, 9, comments),
-                new LocalizedEmailParameter(LocalizedEmailParameter.ParameterType.RAW_VALUE, 10, metadataUtils.getDefaultUrl(metadataUuid, locale.getISO3Language()))
+                new LocalizedEmailParameter(ParameterType.RAW_VALUE, 1, name),
+                new LocalizedEmailParameter(ParameterType.RAW_VALUE, 2, org),
+                new LocalizedEmailParameter(ParameterType.RAW_VALUE, 3, function),
+                new LocalizedEmailParameter(ParameterType.RAW_VALUE, 4, email),
+                new LocalizedEmailParameter(ParameterType.RAW_VALUE, 5, phone),
+                new LocalizedEmailParameter(ParameterType.INDEX_FIELD, 6, "resourceTitleObject", metadataUuid),
+                new LocalizedEmailParameter(ParameterType.MESSAGE_OR_JSON_KEY, 7, type),
+                new LocalizedEmailParameter(ParameterType.MESSAGE_OR_JSON_KEY, 8, category),
+                new LocalizedEmailParameter(ParameterType.RAW_VALUE, 9, comments),
+                new LocalizedEmailParameter(ParameterType.RAW_VALUE, 10, metadataUtils.getDefaultUrl(metadataUuid, locale.getISO3Language()))
             );
         }
 

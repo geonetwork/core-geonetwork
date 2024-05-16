@@ -47,6 +47,10 @@ package org.fao.geonet.api.tools.mail;
 
 import static org.fao.geonet.api.ApiParams.API_CLASS_TOOLS_OPS;
 import static org.fao.geonet.api.ApiParams.API_CLASS_TOOLS_TAG;
+import static org.fao.geonet.util.LocalizedEmailComponent.ComponentType.*;
+import static org.fao.geonet.util.LocalizedEmailComponent.KeyType;
+import static org.fao.geonet.util.LocalizedEmailComponent.ReplacementType.*;
+import static org.fao.geonet.util.LocalizedEmailParameter.ParameterType;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.fao.geonet.api.API;
@@ -108,21 +112,21 @@ public class MailApi {
 
         String to = settingManager.getValue(Settings.SYSTEM_FEEDBACK_EMAIL);
 
-        LocalizedEmailComponent emailSubjectComponent = new LocalizedEmailComponent(LocalizedEmailComponent.ComponentType.SUBJECT, "mail_config_test_subject", LocalizedEmailComponent.KeyType.MESSAGE_KEY, LocalizedEmailComponent.ReplacementType.POSITIONAL_FORMAT);
-        LocalizedEmailComponent emailMessageComponent = new LocalizedEmailComponent(LocalizedEmailComponent.ComponentType.MESSAGE, "mail_config_test_message", LocalizedEmailComponent.KeyType.MESSAGE_KEY, LocalizedEmailComponent.ReplacementType.POSITIONAL_FORMAT);
+        LocalizedEmailComponent emailSubjectComponent = new LocalizedEmailComponent(SUBJECT, "mail_config_test_subject", KeyType.MESSAGE_KEY, POSITIONAL_FORMAT);
+        LocalizedEmailComponent emailMessageComponent = new LocalizedEmailComponent(MESSAGE, "mail_config_test_message", KeyType.MESSAGE_KEY, POSITIONAL_FORMAT);
 
         for (Locale feedbackLocale : feedbackLocales) {
             emailSubjectComponent.addParameters(
                 feedbackLocale,
-                new LocalizedEmailParameter(LocalizedEmailParameter.ParameterType.RAW_VALUE, 1, settingManager.getSiteName()),
-                new LocalizedEmailParameter(LocalizedEmailParameter.ParameterType.RAW_VALUE, 2, to)
+                new LocalizedEmailParameter(ParameterType.RAW_VALUE, 1, settingManager.getSiteName()),
+                new LocalizedEmailParameter(ParameterType.RAW_VALUE, 2, to)
             );
 
             emailMessageComponent.addParameters(
                 feedbackLocale,
-                new LocalizedEmailParameter(LocalizedEmailParameter.ParameterType.RAW_VALUE, 1, settingManager.getNodeURL()),
-                new LocalizedEmailParameter(LocalizedEmailParameter.ParameterType.RAW_VALUE, 2, settingManager.getNodeURL()),
-                new LocalizedEmailParameter(LocalizedEmailParameter.ParameterType.RAW_VALUE, 3, settingManager.getNodeURL())
+                new LocalizedEmailParameter(ParameterType.RAW_VALUE, 1, settingManager.getNodeURL()),
+                new LocalizedEmailParameter(ParameterType.RAW_VALUE, 2, settingManager.getNodeURL()),
+                new LocalizedEmailParameter(ParameterType.RAW_VALUE, 3, settingManager.getNodeURL())
             );
         }
 

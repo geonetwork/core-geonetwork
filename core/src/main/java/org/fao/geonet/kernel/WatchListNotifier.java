@@ -48,6 +48,10 @@ import org.springframework.scheduling.quartz.QuartzJobBean;
 import java.util.*;
 
 import static org.fao.geonet.kernel.setting.Settings.SYSTEM_USER_LASTNOTIFICATIONDATE;
+import static org.fao.geonet.util.LocalizedEmailComponent.ComponentType.*;
+import static org.fao.geonet.util.LocalizedEmailComponent.KeyType;
+import static org.fao.geonet.util.LocalizedEmailComponent.ReplacementType.*;
+import static org.fao.geonet.util.LocalizedEmailParameter.ParameterType;
 
 /**
  * Task checking on a regular basis the list of records
@@ -183,15 +187,15 @@ public class WatchListNotifier extends QuartzJobBean {
                 String url = updatedRecordPermalink +
                     permalinkApp.replace("{{filter}}", String.join(" or ", updatedRecords));
 
-                LocalizedEmailComponent emailSubjectComponent = new LocalizedEmailComponent(LocalizedEmailComponent.ComponentType.SUBJECT, "user_watchlist_subject", LocalizedEmailComponent.KeyType.MESSAGE_KEY, LocalizedEmailComponent.ReplacementType.POSITIONAL_FORMAT);
-                LocalizedEmailComponent emailMessageComponent = new LocalizedEmailComponent(LocalizedEmailComponent.ComponentType.MESSAGE, "user_watchlist_message", LocalizedEmailComponent.KeyType.MESSAGE_KEY, LocalizedEmailComponent.ReplacementType.POSITIONAL_FORMAT);
+                LocalizedEmailComponent emailSubjectComponent = new LocalizedEmailComponent(SUBJECT, "user_watchlist_subject", KeyType.MESSAGE_KEY, POSITIONAL_FORMAT);
+                LocalizedEmailComponent emailMessageComponent = new LocalizedEmailComponent(MESSAGE, "user_watchlist_message", KeyType.MESSAGE_KEY, POSITIONAL_FORMAT);
 
                 for (Locale feedbackLocale : feedbackLocales) {
 
                     // Build message
                     StringBuffer listOfUpdateMessage = new StringBuffer();
                     for (String record : updatedRecords) {
-                        LocalizedEmailComponent recordMessageComponent = new LocalizedEmailComponent(LocalizedEmailComponent.ComponentType.NESTED, "user_watchlist_message_record", LocalizedEmailComponent.KeyType.MESSAGE_KEY, LocalizedEmailComponent.ReplacementType.NAMED_FORMAT);
+                        LocalizedEmailComponent recordMessageComponent = new LocalizedEmailComponent(NESTED, "user_watchlist_message_record", KeyType.MESSAGE_KEY, NAMED_FORMAT);
                         recordMessageComponent.enableCompileWithIndexFields(record);
                         recordMessageComponent.enableReplaceLinks(true);
                         try {
@@ -205,17 +209,17 @@ public class WatchListNotifier extends QuartzJobBean {
 
                     emailSubjectComponent.addParameters(
                         feedbackLocale,
-                        new LocalizedEmailParameter(LocalizedEmailParameter.ParameterType.RAW_VALUE, 1, settingManager.getSiteName()),
-                        new LocalizedEmailParameter(LocalizedEmailParameter.ParameterType.RAW_VALUE, 2, updatedRecords.size()),
-                        new LocalizedEmailParameter(LocalizedEmailParameter.ParameterType.RAW_VALUE, 3, lastNotificationDate)
+                        new LocalizedEmailParameter(ParameterType.RAW_VALUE, 1, settingManager.getSiteName()),
+                        new LocalizedEmailParameter(ParameterType.RAW_VALUE, 2, updatedRecords.size()),
+                        new LocalizedEmailParameter(ParameterType.RAW_VALUE, 3, lastNotificationDate)
                     );
 
                     emailMessageComponent.addParameters(
                         feedbackLocale,
-                        new LocalizedEmailParameter(LocalizedEmailParameter.ParameterType.RAW_VALUE, 1, listOfUpdateMessage.toString()),
-                        new LocalizedEmailParameter(LocalizedEmailParameter.ParameterType.RAW_VALUE, 2, lastNotificationDate),
-                        new LocalizedEmailParameter(LocalizedEmailParameter.ParameterType.RAW_VALUE, 3, url),
-                        new LocalizedEmailParameter(LocalizedEmailParameter.ParameterType.RAW_VALUE, 4, url)
+                        new LocalizedEmailParameter(ParameterType.RAW_VALUE, 1, listOfUpdateMessage.toString()),
+                        new LocalizedEmailParameter(ParameterType.RAW_VALUE, 2, lastNotificationDate),
+                        new LocalizedEmailParameter(ParameterType.RAW_VALUE, 3, url),
+                        new LocalizedEmailParameter(ParameterType.RAW_VALUE, 4, url)
                         );
 
                 }

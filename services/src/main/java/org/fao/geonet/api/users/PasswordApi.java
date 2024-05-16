@@ -60,6 +60,11 @@ import java.util.Calendar;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
+import static org.fao.geonet.util.LocalizedEmailComponent.ComponentType.*;
+import static org.fao.geonet.util.LocalizedEmailComponent.KeyType;
+import static org.fao.geonet.util.LocalizedEmailComponent.ReplacementType.*;
+import static org.fao.geonet.util.LocalizedEmailParameter.ParameterType;
+
 @EnableWebMvc
 @Service
 @RequestMapping(value = {
@@ -154,20 +159,20 @@ public class PasswordApi {
 
         String adminEmail = sm.getValue(Settings.SYSTEM_FEEDBACK_EMAIL);
 
-        LocalizedEmailComponent emailSubjectComponent = new LocalizedEmailComponent(LocalizedEmailComponent.ComponentType.SUBJECT, "password_change_subject", LocalizedEmailComponent.KeyType.MESSAGE_KEY, LocalizedEmailComponent.ReplacementType.POSITIONAL_FORMAT);
-        LocalizedEmailComponent emailMessageComponent = new LocalizedEmailComponent(LocalizedEmailComponent.ComponentType.MESSAGE, "password_change_message", LocalizedEmailComponent.KeyType.MESSAGE_KEY, LocalizedEmailComponent.ReplacementType.POSITIONAL_FORMAT);
+        LocalizedEmailComponent emailSubjectComponent = new LocalizedEmailComponent(SUBJECT, "password_change_subject", KeyType.MESSAGE_KEY, POSITIONAL_FORMAT);
+        LocalizedEmailComponent emailMessageComponent = new LocalizedEmailComponent(MESSAGE, "password_change_message", KeyType.MESSAGE_KEY, POSITIONAL_FORMAT);
 
         for (Locale feedbackLocale : feedbackLocales) {
             emailSubjectComponent.addParameters(
                 feedbackLocale,
-                new LocalizedEmailParameter(LocalizedEmailParameter.ParameterType.RAW_VALUE, 1, sm.getSiteName())
+                new LocalizedEmailParameter(ParameterType.RAW_VALUE, 1, sm.getSiteName())
             );
 
             emailMessageComponent.addParameters(
                 feedbackLocale,
-                new LocalizedEmailParameter(LocalizedEmailParameter.ParameterType.RAW_VALUE, 1, sm.getSiteName()),
-                new LocalizedEmailParameter(LocalizedEmailParameter.ParameterType.RAW_VALUE, 2, adminEmail),
-                new LocalizedEmailParameter(LocalizedEmailParameter.ParameterType.RAW_VALUE, 3, sm.getSiteName())
+                new LocalizedEmailParameter(ParameterType.RAW_VALUE, 1, sm.getSiteName()),
+                new LocalizedEmailParameter(ParameterType.RAW_VALUE, 2, adminEmail),
+                new LocalizedEmailParameter(ParameterType.RAW_VALUE, 3, sm.getSiteName())
             );
         }
 
@@ -266,23 +271,23 @@ public class PasswordApi {
         String changeKey = PasswordUtil.encode(serviceContext,
             scrambledPassword + todaysDate);
 
-        LocalizedEmailComponent emailSubjectComponent = new LocalizedEmailComponent(LocalizedEmailComponent.ComponentType.SUBJECT, "password_forgotten_subject", LocalizedEmailComponent.KeyType.MESSAGE_KEY, LocalizedEmailComponent.ReplacementType.POSITIONAL_FORMAT);
-        LocalizedEmailComponent emailMessageComponent = new LocalizedEmailComponent(LocalizedEmailComponent.ComponentType.MESSAGE, "password_forgotten_message", LocalizedEmailComponent.KeyType.MESSAGE_KEY, LocalizedEmailComponent.ReplacementType.POSITIONAL_FORMAT);
+        LocalizedEmailComponent emailSubjectComponent = new LocalizedEmailComponent(SUBJECT, "password_forgotten_subject", KeyType.MESSAGE_KEY, POSITIONAL_FORMAT);
+        LocalizedEmailComponent emailMessageComponent = new LocalizedEmailComponent(MESSAGE, "password_forgotten_message", KeyType.MESSAGE_KEY, POSITIONAL_FORMAT);
 
         for (Locale feedbackLocale : feedbackLocales) {
             emailSubjectComponent.addParameters(
                 feedbackLocale,
-                new LocalizedEmailParameter(LocalizedEmailParameter.ParameterType.RAW_VALUE, 1, sm.getSiteName()),
-                new LocalizedEmailParameter(LocalizedEmailParameter.ParameterType.RAW_VALUE, 2, username)
+                new LocalizedEmailParameter(ParameterType.RAW_VALUE, 1, sm.getSiteName()),
+                new LocalizedEmailParameter(ParameterType.RAW_VALUE, 2, username)
             );
 
             emailMessageComponent.addParameters(
                 feedbackLocale,
-                new LocalizedEmailParameter(LocalizedEmailParameter.ParameterType.RAW_VALUE, 1, sm.getSiteName()),
-                new LocalizedEmailParameter(LocalizedEmailParameter.ParameterType.RAW_VALUE, 2, sm.getSiteURL(feedbackLocale.getISO3Language())),
-                new LocalizedEmailParameter(LocalizedEmailParameter.ParameterType.RAW_VALUE, 3, username),
-                new LocalizedEmailParameter(LocalizedEmailParameter.ParameterType.RAW_VALUE, 4, changeKey),
-                new LocalizedEmailParameter(LocalizedEmailParameter.ParameterType.RAW_VALUE, 5, sm.getSiteName())
+                new LocalizedEmailParameter(ParameterType.RAW_VALUE, 1, sm.getSiteName()),
+                new LocalizedEmailParameter(ParameterType.RAW_VALUE, 2, sm.getSiteURL(feedbackLocale.getISO3Language())),
+                new LocalizedEmailParameter(ParameterType.RAW_VALUE, 3, username),
+                new LocalizedEmailParameter(ParameterType.RAW_VALUE, 4, changeKey),
+                new LocalizedEmailParameter(ParameterType.RAW_VALUE, 5, sm.getSiteName())
             );
         }
 

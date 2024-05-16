@@ -28,6 +28,9 @@ import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.languages.FeedbackLanguages;
 import org.fao.geonet.utils.Log;
 
+import static org.fao.geonet.util.LocalizedEmailComponent.ComponentType.*;
+import static org.fao.geonet.util.LocalizedEmailComponent.ComponentType;
+
 import java.util.*;
 
 /**
@@ -35,7 +38,7 @@ import java.util.*;
  */
 public class LocalizedEmail {
     private final Boolean isHtml;
-    private final Map<LocalizedEmailComponent.ComponentType, LocalizedEmailComponent> components;
+    private final Map<ComponentType, LocalizedEmailComponent> components;
     private final String translationFollowsText;
 
     private static final String SUBJECT_DELIMITER = " | ";
@@ -71,7 +74,7 @@ public class LocalizedEmail {
     }
 
     public String getParsedSubject(Locale[] feedbackLocales) {
-        LinkedHashMap<Locale, String> subjects = components.get(LocalizedEmailComponent.ComponentType.SUBJECT).getParsedMessagesMap(feedbackLocales);
+        LinkedHashMap<Locale, String> subjects = components.get(SUBJECT).getParsedMessagesMap(feedbackLocales);
         return String.join(SUBJECT_DELIMITER, subjects.values());
     }
 
@@ -80,12 +83,12 @@ public class LocalizedEmail {
     }
 
     public String getParsedMessage(Locale[] feedbackLocales, Map<String, String> replacements) {
-        LinkedHashMap<Locale, String> messages = components.get(LocalizedEmailComponent.ComponentType.MESSAGE).getParsedMessagesMap(feedbackLocales, true);
+        LinkedHashMap<Locale, String> messages = components.get(MESSAGE).getParsedMessagesMap(feedbackLocales, true);
 
         // Prepend the message with a salutation placeholder if the salutation component is present
-        if (components.containsKey(LocalizedEmailComponent.ComponentType.SALUTATION) && components.get(LocalizedEmailComponent.ComponentType.SALUTATION) != null) {
+        if (components.containsKey(SALUTATION) && components.get(SALUTATION) != null) {
 
-            LinkedHashMap<Locale, String> salutations = components.get(LocalizedEmailComponent.ComponentType.SALUTATION).getParsedMessagesMap(feedbackLocales);
+            LinkedHashMap<Locale, String> salutations = components.get(SALUTATION).getParsedMessagesMap(feedbackLocales);
             LinkedHashMap<Locale, String> messagesWithSalutations = new LinkedHashMap<>();
 
             for (Map.Entry<Locale, String> entry : messages.entrySet()) {

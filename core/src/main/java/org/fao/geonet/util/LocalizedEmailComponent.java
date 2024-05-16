@@ -30,6 +30,8 @@ import org.fao.geonet.kernel.setting.SettingManager;
 import java.text.MessageFormat;
 import java.util.*;
 
+import static org.fao.geonet.util.LocalizedEmailComponent.ReplacementType.*;
+
 /**
  * This class is used to handle email parameters used to format localized email messages
  */
@@ -192,7 +194,7 @@ public class LocalizedEmailComponent {
             }
 
             // If the type of parameters are positional and the new parameters id is not an integer
-            if ((replacementType.equals(ReplacementType.POSITIONAL_FORMAT) || replacementType.equals(ReplacementType.NUMERIC_FORMAT)) && !(newParameter.getId() instanceof Integer)) {
+            if ((replacementType.equals(POSITIONAL_FORMAT) || replacementType.equals(NUMERIC_FORMAT)) && !(newParameter.getId() instanceof Integer)) {
                 throw new IllegalArgumentException("Positional parameter id must be an integer");
             }
 
@@ -272,14 +274,14 @@ public class LocalizedEmailComponent {
         }
 
         // Handle replacements
-        if (replacementType == ReplacementType.POSITIONAL_FORMAT || replacementType == ReplacementType.NUMERIC_FORMAT) {
+        if (replacementType == POSITIONAL_FORMAT || replacementType == NUMERIC_FORMAT) {
 
             Object[] parsedLocaleEmailParameters = parametersForLocale.stream()
                 .sorted(Comparator.comparing(parameter -> (Integer) parameter.getId()))
                 .map(parameter -> parameter.parseValue(locale))
                 .toArray();
 
-            if (replacementType == ReplacementType.POSITIONAL_FORMAT) {
+            if (replacementType == POSITIONAL_FORMAT) {
                 parsedMessage = String.format(parsedMessage, parsedLocaleEmailParameters);
             } else {
                 // Replace the link placeholders with index field placeholder so that it isn't interpreted as a MessageFormat arg
@@ -289,7 +291,7 @@ public class LocalizedEmailComponent {
                 parsedMessage = MessageFormat.format(parsedMessage, parsedLocaleEmailParameters);
             }
 
-        } else if (replacementType == ReplacementType.NAMED_FORMAT) {
+        } else if (replacementType == NAMED_FORMAT) {
 
             for (LocalizedEmailParameter parameter : parametersForLocale) {
                 parsedMessage = parsedMessage.replace(parameter.getId().toString(), parameter.parseValue(locale));

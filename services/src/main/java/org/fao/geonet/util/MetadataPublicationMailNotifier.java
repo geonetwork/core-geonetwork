@@ -41,6 +41,10 @@ import java.util.stream.Collectors;
 
 import static org.fao.geonet.kernel.setting.Settings.SYSTEM_METADATAPRIVS_PUBLICATION_NOTIFICATIONGROUPS;
 import static org.fao.geonet.kernel.setting.Settings.SYSTEM_METADATAPRIVS_PUBLICATION_NOTIFICATIONLEVEL;
+import static org.fao.geonet.util.LocalizedEmailComponent.ComponentType.*;
+import static org.fao.geonet.util.LocalizedEmailComponent.KeyType;
+import static org.fao.geonet.util.LocalizedEmailComponent.ReplacementType.*;
+import static org.fao.geonet.util.LocalizedEmailParameter.ParameterType;
 
 @Component
 public class MetadataPublicationMailNotifier {
@@ -128,14 +132,14 @@ public class MetadataPublicationMailNotifier {
             return;
         }
 
-        LocalizedEmailComponent emailSubjectComponent = new LocalizedEmailComponent(LocalizedEmailComponent.ComponentType.SUBJECT, "metadata_published_subject", LocalizedEmailComponent.KeyType.MESSAGE_KEY, LocalizedEmailComponent.ReplacementType.POSITIONAL_FORMAT);
-        LocalizedEmailComponent emailMessageComponent = new LocalizedEmailComponent(LocalizedEmailComponent.ComponentType.MESSAGE, "metadata_published_text", LocalizedEmailComponent.KeyType.MESSAGE_KEY, LocalizedEmailComponent.ReplacementType.POSITIONAL_FORMAT);
+        LocalizedEmailComponent emailSubjectComponent = new LocalizedEmailComponent(SUBJECT, "metadata_published_subject", KeyType.MESSAGE_KEY, POSITIONAL_FORMAT);
+        LocalizedEmailComponent emailMessageComponent = new LocalizedEmailComponent(MESSAGE, "metadata_published_text", KeyType.MESSAGE_KEY, POSITIONAL_FORMAT);
 
         for (Locale feedbackLocale : feedbackLocales) {
 
             emailSubjectComponent.addParameters(
                 feedbackLocale,
-                new LocalizedEmailParameter(LocalizedEmailParameter.ParameterType.RAW_VALUE, 1, settingManager.getSiteName())
+                new LocalizedEmailParameter(ParameterType.RAW_VALUE, 1, settingManager.getSiteName())
             );
 
             StringBuilder listOfProcessedMetadataMessage = new StringBuilder();
@@ -155,7 +159,7 @@ public class MetadataPublicationMailNotifier {
                     recordMessageKey = "metadata_unpublished_record_text";
                 }
 
-                LocalizedEmailComponent recordMessageComponent = new LocalizedEmailComponent(LocalizedEmailComponent.ComponentType.NESTED, recordMessageKey, LocalizedEmailComponent.KeyType.MESSAGE_KEY, LocalizedEmailComponent.ReplacementType.NAMED_FORMAT);
+                LocalizedEmailComponent recordMessageComponent = new LocalizedEmailComponent(NESTED, recordMessageKey, KeyType.MESSAGE_KEY, NAMED_FORMAT);
                 recordMessageComponent.enableCompileWithIndexFields(metadata.getMetadataUuid());
                 recordMessageComponent.enableReplaceLinks(true);
 
@@ -167,7 +171,7 @@ public class MetadataPublicationMailNotifier {
 
             emailMessageComponent.addParameters(
                 feedbackLocale,
-                new LocalizedEmailParameter(LocalizedEmailParameter.ParameterType.RAW_VALUE, 1, listOfProcessedMetadataMessage.toString())
+                new LocalizedEmailParameter(ParameterType.RAW_VALUE, 1, listOfProcessedMetadataMessage.toString())
             );
         }
 
@@ -190,13 +194,13 @@ public class MetadataPublicationMailNotifier {
 
         ArrayList<LocalizedEmailParameter> parameters = new ArrayList<>();
 
-        parameters.add(new LocalizedEmailParameter(LocalizedEmailParameter.ParameterType.RAW_VALUE, "{{publisherUser}}", metadata.getPublisherUser()));
-        parameters.add(new LocalizedEmailParameter(LocalizedEmailParameter.ParameterType.RAW_VALUE, "{{submitterUser}}", metadata.getSubmitterUser()));
-        parameters.add(new LocalizedEmailParameter(LocalizedEmailParameter.ParameterType.RAW_VALUE, "{{reviewerUser}}", metadata.getReviewerUser()));
-        parameters.add(new LocalizedEmailParameter(LocalizedEmailParameter.ParameterType.RAW_VALUE, "{{timeStamp}}", metadata.getPublicationDateStamp().getDateAndTime()));
+        parameters.add(new LocalizedEmailParameter(ParameterType.RAW_VALUE, "{{publisherUser}}", metadata.getPublisherUser()));
+        parameters.add(new LocalizedEmailParameter(ParameterType.RAW_VALUE, "{{submitterUser}}", metadata.getSubmitterUser()));
+        parameters.add(new LocalizedEmailParameter(ParameterType.RAW_VALUE, "{{reviewerUser}}", metadata.getReviewerUser()));
+        parameters.add(new LocalizedEmailParameter(ParameterType.RAW_VALUE, "{{timeStamp}}", metadata.getPublicationDateStamp().getDateAndTime()));
 
         if (group.isPresent()) {
-            parameters.add(new LocalizedEmailParameter(LocalizedEmailParameter.ParameterType.RAW_VALUE, "{{group}}", group.get().getName()));
+            parameters.add(new LocalizedEmailParameter(ParameterType.RAW_VALUE, "{{group}}", group.get().getName()));
         }
 
         return parameters.toArray(new LocalizedEmailParameter[0]);

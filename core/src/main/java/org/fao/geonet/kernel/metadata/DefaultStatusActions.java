@@ -50,6 +50,10 @@ import org.springframework.context.ApplicationContext;
 import java.util.*;
 
 import static org.fao.geonet.kernel.setting.Settings.SYSTEM_FEEDBACK_EMAIL;
+import static org.fao.geonet.util.LocalizedEmailComponent.ComponentType.*;
+import static org.fao.geonet.util.LocalizedEmailComponent.KeyType;
+import static org.fao.geonet.util.LocalizedEmailComponent.ReplacementType.*;
+import static org.fao.geonet.util.LocalizedEmailParameter.ParameterType;
 
 public class DefaultStatusActions implements StatusActions {
 
@@ -292,35 +296,35 @@ public class DefaultStatusActions implements StatusActions {
             textTemplateKey = "status_change_default_email_text";
         }
 
-        LocalizedEmailComponent emailSubjectComponent = new LocalizedEmailComponent(LocalizedEmailComponent.ComponentType.SUBJECT, subjectTemplateKey, LocalizedEmailComponent.KeyType.MESSAGE_KEY, LocalizedEmailComponent.ReplacementType.NUMERIC_FORMAT);
+        LocalizedEmailComponent emailSubjectComponent = new LocalizedEmailComponent(SUBJECT, subjectTemplateKey, KeyType.MESSAGE_KEY, NUMERIC_FORMAT);
         emailSubjectComponent.enableCompileWithIndexFields(metadata.getUuid());
 
-        LocalizedEmailComponent emailMessageComponent = new LocalizedEmailComponent(LocalizedEmailComponent.ComponentType.MESSAGE, textTemplateKey, LocalizedEmailComponent.KeyType.MESSAGE_KEY, LocalizedEmailComponent.ReplacementType.NUMERIC_FORMAT);
+        LocalizedEmailComponent emailMessageComponent = new LocalizedEmailComponent(MESSAGE, textTemplateKey, KeyType.MESSAGE_KEY, NUMERIC_FORMAT);
         emailMessageComponent.enableCompileWithIndexFields(metadata.getUuid());
         emailMessageComponent.enableReplaceLinks(false);
 
-        LocalizedEmailComponent emailSalutationComponent = new LocalizedEmailComponent(LocalizedEmailComponent.ComponentType.SALUTATION, "{{userName}},\n\n", LocalizedEmailComponent.KeyType.RAW_VALUE, LocalizedEmailComponent.ReplacementType.NONE);
+        LocalizedEmailComponent emailSalutationComponent = new LocalizedEmailComponent(SALUTATION, "{{userName}},\n\n", KeyType.RAW_VALUE, NONE);
 
         for (Locale feedbackLocale : feedbackLocales) {
             // TODO: Refactor to allow custom messages based on the type of status
 
             emailSubjectComponent.addParameters(
                 feedbackLocale,
-                new LocalizedEmailParameter(LocalizedEmailParameter.ParameterType.RAW_VALUE, 1, siteName),
-                new LocalizedEmailParameter(LocalizedEmailParameter.ParameterType.RAW_VALUE, 2, getTranslatedStatusName(status.getStatusValue().getId(), feedbackLocale)),
-                new LocalizedEmailParameter(LocalizedEmailParameter.ParameterType.RAW_VALUE, 3, replyToDescr)
+                new LocalizedEmailParameter(ParameterType.RAW_VALUE, 1, siteName),
+                new LocalizedEmailParameter(ParameterType.RAW_VALUE, 2, getTranslatedStatusName(status.getStatusValue().getId(), feedbackLocale)),
+                new LocalizedEmailParameter(ParameterType.RAW_VALUE, 3, replyToDescr)
             );
 
             emailMessageComponent.addParameters(
                 feedbackLocale,
-                new LocalizedEmailParameter(LocalizedEmailParameter.ParameterType.RAW_VALUE, 1, replyToDescr),
-                new LocalizedEmailParameter(LocalizedEmailParameter.ParameterType.RAW_VALUE, 2, status.getChangeMessage()),
-                new LocalizedEmailParameter(LocalizedEmailParameter.ParameterType.RAW_VALUE, 3, getTranslatedStatusName(status.getStatusValue().getId(), feedbackLocale)),
-                new LocalizedEmailParameter(LocalizedEmailParameter.ParameterType.RAW_VALUE, 4, status.getChangeDate()),
-                new LocalizedEmailParameter(LocalizedEmailParameter.ParameterType.RAW_VALUE, 5, status.getDueDate()),
-                new LocalizedEmailParameter(LocalizedEmailParameter.ParameterType.RAW_VALUE, 6, status.getCloseDate()),
-                new LocalizedEmailParameter(LocalizedEmailParameter.ParameterType.RAW_VALUE, 7, owner == null ? "" : Joiner.on(" ").skipNulls().join(owner.getName(), owner.getSurname())),
-                new LocalizedEmailParameter(LocalizedEmailParameter.ParameterType.RAW_VALUE, 8, metadataUtils.getDefaultUrl(metadata.getUuid(), feedbackLocale.getISO3Language()))
+                new LocalizedEmailParameter(ParameterType.RAW_VALUE, 1, replyToDescr),
+                new LocalizedEmailParameter(ParameterType.RAW_VALUE, 2, status.getChangeMessage()),
+                new LocalizedEmailParameter(ParameterType.RAW_VALUE, 3, getTranslatedStatusName(status.getStatusValue().getId(), feedbackLocale)),
+                new LocalizedEmailParameter(ParameterType.RAW_VALUE, 4, status.getChangeDate()),
+                new LocalizedEmailParameter(ParameterType.RAW_VALUE, 5, status.getDueDate()),
+                new LocalizedEmailParameter(ParameterType.RAW_VALUE, 6, status.getCloseDate()),
+                new LocalizedEmailParameter(ParameterType.RAW_VALUE, 7, owner == null ? "" : Joiner.on(" ").skipNulls().join(owner.getName(), owner.getSurname())),
+                new LocalizedEmailParameter(ParameterType.RAW_VALUE, 8, metadataUtils.getDefaultUrl(metadata.getUuid(), feedbackLocale.getISO3Language()))
             );
         }
 
