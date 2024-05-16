@@ -33,7 +33,10 @@
     <xsl:param name="boundingBoxes" as="node()*"/>
 
     <xsl:variable name="coordinates" as="node()*">
-      <xsl:for-each select="$boundingBoxes">
+      <xsl:for-each select="$boundingBoxes[*:eastBoundLongitude/*:Decimal castable as xs:double
+                                           and *:southBoundLatitude/*:Decimal castable as xs:double
+                                           and *:westBoundLongitude/*:Decimal castable as xs:double
+                                           and *:northBoundLatitude/*:Decimal castable as xs:double]">
         <coords east="{xs:double(*:eastBoundLongitude/*:Decimal)}"
                 south="{xs:double(*:southBoundLatitude/*:Decimal)}"
                 west="{xs:double(*:westBoundLongitude/*:Decimal)}"
