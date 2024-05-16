@@ -1022,7 +1022,7 @@
           "typeName" : "<xsl:value-of select="util:escapeForJson(gfc:FC_FeatureType/gfc:typeName/text())"/>",
           "definition" :"<xsl:value-of select="util:escapeForJson(gfc:FC_FeatureType/gfc:definition/gco:CharacterString/text())"/>",
           "code" :"<xsl:value-of select="util:escapeForJson(gfc:FC_FeatureType/gfc:code/(gco:CharacterString|gcx:Anchor)/text())"/>",
-          "isAbstract" :"<xsl:value-of select="gfc:FC_FeatureType/gfc:isAbstract/gco:CharacterString/text()"/>",
+          "isAbstract" :"<xsl:value-of select="gfc:FC_FeatureType/gfc:isAbstract/gco:Boolean/text()"/>",
           "aliases" : "<xsl:value-of select="util:escapeForJson(gfc:FC_FeatureType/gfc:aliases/gco:CharacterString/text())"/>"
           <!--"inheritsFrom" : "<xsl:value-of select="gfc:FC_FeatureType/gfc:inheritsFrom/*/text()"/>",
           "inheritsTo" : "<xsl:value-of select="gfc:FC_FeatureType/gfc:inheritsTo/*/text()"/>",
