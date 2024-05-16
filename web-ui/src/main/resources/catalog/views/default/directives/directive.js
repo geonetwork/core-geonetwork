@@ -81,12 +81,16 @@
 
   module.directive("gnLinksBtn", [
     "gnTplResultlistLinksbtn",
-    function (gnTplResultlistLinksbtn) {
+    "gnMetadataActions",
+    function (gnTplResultlistLinksbtn, gnMetadataActions) {
       return {
         restrict: "E",
         replace: true,
         scope: true,
-        templateUrl: gnTplResultlistLinksbtn
+        templateUrl: gnTplResultlistLinksbtn,
+        link: function linkFn(scope) {
+          scope.gnMetadataActions = gnMetadataActions;
+        }
       };
     }
   ]);
