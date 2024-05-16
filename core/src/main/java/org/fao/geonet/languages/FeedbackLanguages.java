@@ -27,6 +27,7 @@ import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
+import org.fao.geonet.utils.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.PostConstruct;
@@ -102,12 +103,23 @@ public class FeedbackLanguages {
      * @return True if the locale is valid, false otherwise.
      */
     private boolean isValidLocale(Locale locale) {
+        Boolean isValid;
         try {
-            return locale.getLanguage().equals(Geonet.DEFAULT_LANGUAGE)
+            isValid = locale.getLanguage().equals(Geonet.DEFAULT_LANGUAGE)
                 || ResourceBundle.getBundle("org.fao.geonet.api.Messages", locale).getLocale().getLanguage().equals(locale.getLanguage());
         } catch (MissingResourceException e) {
-            return false;
+            isValid = false;
         }
+        if (!isValid) {
+            String localeLanguage;
+            try {
+                localeLanguage = locale.getISO3Language();
+            } catch (MissingResourceException e) {
+                localeLanguage = locale.getLanguage();
+            }
+            Log.warning(Log.GEONETWORK_MODULE, "Locale '" + localeLanguage + "'  is invalid or missing message bundles. Ensure feedback locales are correct.");
+        }
+        return isValid;
     }
 
     private String getSettingsValue(String settingName) {
