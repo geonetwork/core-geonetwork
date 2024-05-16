@@ -551,8 +551,10 @@
   <!-- Bbox is displayed with an overview and the geom displayed on it
   and the coordinates displayed around -->
   <xsl:template mode="render-field"
-                match="gmd:EX_GeographicBoundingBox[
-          gmd:westBoundLongitude/gco:Decimal != '']">
+                match="gmd:EX_GeographicBoundingBox[gmd:eastBoundLongitude/gco:Decimal castable as xs:double
+                                                   and gmd:southBoundLatitude/gco:Decimal castable as xs:double
+                                                   and gmd:westBoundLongitude/gco:Decimal castable as xs:double
+                                                   and gmd:northBoundLatitude/gco:Decimal castable as xs:double]">
     <xsl:copy-of select="gn-fn-render:bbox(
                             xs:double(gmd:westBoundLongitude/gco:Decimal),
                             xs:double(gmd:southBoundLatitude/gco:Decimal),
@@ -562,6 +564,7 @@
     <br/>
     <br/>
   </xsl:template>
+
 
 
 
