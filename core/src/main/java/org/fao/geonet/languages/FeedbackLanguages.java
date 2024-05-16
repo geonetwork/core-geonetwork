@@ -117,7 +117,7 @@ public class FeedbackLanguages {
             } catch (MissingResourceException e) {
                 localeLanguage = locale.getLanguage();
             }
-            Log.warning(Log.GEONETWORK_MODULE, "Locale '" + localeLanguage + "'  is invalid or missing message bundles. Ensure feedback locales are correct.");
+            Log.warning(Log.GEONETWORK_MODULE + ".feedbacklanguages", "Locale '" + localeLanguage + "'  is invalid or missing message bundles. Ensure feedback locales are correct.");
         }
         return isValid;
     }

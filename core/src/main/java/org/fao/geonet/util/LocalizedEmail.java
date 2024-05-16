@@ -137,7 +137,7 @@ public class LocalizedEmail {
         // If the email is html wrap the content in html and body tags
         if (isHtml) {
             if (emailMessage.contains("<html>") || emailMessage.contains("<body>")) {
-                Log.warning(Log.GEONETWORK_MODULE,"Multilingual emails are unsupported for HTML emails with messages containing <html> or <body> tags. Using first specified locale only.");
+                Log.warning(Log.GEONETWORK_MODULE + ".localizedemail","Multilingual emails are unsupported for HTML emails with messages containing <html> or <body> tags. Reverting to first specified locale.");
                 return messages.get(feedbackLocales[0]);
             }
             emailMessage = "<html><body>" + emailMessage + "</body></html>";
