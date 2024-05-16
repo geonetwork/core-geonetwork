@@ -2726,7 +2726,7 @@
 
   <!-- Generic date data type template -->
 
-  <xsl:template mode="iso19139-to-dcatap" name="DateDataType">
+  <xsl:template name="DateDataType">
     <xsl:param name="date"/>
     <xsl:choose>
       <xsl:when test="string-length($date) = 4">
