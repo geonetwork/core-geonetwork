@@ -1835,13 +1835,25 @@
               .then(function (results) {
                 var layerInfo = results[0];
                 var legendUrl = results[1];
+
+                var layerExtent;
+
+                // Scale the layer extent. See https://github.com/geonetwork/core-geonetwork/issues/8025
+                if (layerInfo.extent) {
+                  layerExtent = [
+                    layerInfo.extent.xmin,
+                    layerInfo.extent.ymin,
+                    layerInfo.extent.xmax,
+                    layerInfo.extent.ymax
+                  ];
+
+                  var geomExtent = ol.geom.Polygon.fromExtent(layerExtent);
+                  geomExtent.scale(1.1);
+                  layerExtent = geomExtent.getExtent();
+                }
+
                 var extent = layerInfo.extent
-                  ? [
-                      layerInfo.extent.xmin,
-                      layerInfo.extent.ymin,
-                      layerInfo.extent.xmax,
-                      layerInfo.extent.ymax
-                    ]
+                  ? layerExtent
                   : map.getView().calculateExtent();
                 if (
                   layerInfo.extent &&

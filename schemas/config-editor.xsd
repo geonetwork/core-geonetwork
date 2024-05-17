@@ -2164,6 +2164,19 @@ An XML snippet with replacement for each key defined in that field.
       </gmd:MD_Format>
     </gmd:distributionFormat>
 
+A snippet can also contains a `${uuid}` placeholder to be replaced when added to the form.
+This can allow to build dynamic snippet based on the current record.
+
+.. code-block:: xml
+
+      <template>
+        <snippet>
+          <mrd:onLine>
+            <cit:CI_OnlineResource>
+              <cit:linkage>
+                <gco:CharacterString>https://geoadata.wallonie.be/dataset/${uuid}</gco:CharacterString>
+              </cit:linkage>
+
 
         ]]></xs:documentation>
     </xs:annotation>
@@ -2362,12 +2375,18 @@ For example, create a table of contact:
 
 Include any custom directive with required attributes.
 
+When using `data-gn-distribution-resources-panel` or `data-gn-associated-resources-panel`
+a section element can be added to the directive to define additional form elements to be
+added in the directive panel eg. `text` for guidelines or add `action` to easily add new elements.
       ]]></xs:documentation>
     </xs:annotation>
     <xs:complexType>
       <xs:attribute ref="displayIfServiceInfo"/>
       <xs:attribute ref="displayIfRecord"/>
       <xs:anyAttribute/>
+      <xs:sequence>
+        <xs:element ref="section"/>
+      </xs:sequence>
     </xs:complexType>
   </xs:element>
 </xs:schema>

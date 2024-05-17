@@ -110,7 +110,8 @@
         <script src="{$uiResourcesPath}lib/closure/base.js?v={$buildNumber}"></script>
 
         <script src="{$uiResourcesPath}lib/base64.js?v={$buildNumber}"></script>
-        <script src="{$uiResourcesPath}lib/jquery-2.2.4.js?v={$buildNumber}"></script>
+        <script src="{$uiResourcesPath}lib/jquery-3.7.1.js?v={$buildNumber}"></script>
+        <script src="{$uiResourcesPath}lib/jquery-migrate-3.4.1.js?v={$buildNumber}"></script>
 
         <script src="{$uiResourcesPath}lib/moment-with-locales.min.js?v={$buildNumber}"></script>
         <script src="{$uiResourcesPath}lib/moment-timezone-with-data-1970-2030.min.js?v={$buildNumber}"></script>
@@ -142,7 +143,7 @@
         <script src="{$uiResourcesPath}lib/tinycolor.js?v={$buildNumber}"></script>
 
         <script src="{$uiResourcesPath}lib/bootstrap.js?v={$buildNumber}"></script>
-        <script src="{$uiResourcesPath}lib/jquery.ext/jquery-ui-slider.min.js?v={$buildNumber}"></script>
+        <script src="{$uiResourcesPath}lib/jquery.ext/jquery-ui-slider-1.13.2.min.js?v={$buildNumber}"></script>
         <script src="{$uiResourcesPath}lib/proj4js-compressed.js?v={$buildNumber}"></script>
 
         <xsl:choose>
@@ -183,9 +184,9 @@
         <script
           src="{$uiResourcesPath}lib/bootstrap.ext/datepicker/bootstrap-datepicker.js?v={$buildNumber}"></script>
         <script
-          src="{$uiResourcesPath}lib/bootstrap.ext/datepicker/bootstrap-datepicker.fr.js?v={$buildNumber}"></script>
+          src="{$uiResourcesPath}lib/bootstrap.ext/datepicker/bootstrap-datepicker.fr.min.js?v={$buildNumber}"></script>
         <script
-          src="{$uiResourcesPath}lib/bootstrap.ext/datepicker/bootstrap-datepicker.nl.js?v={$buildNumber}"></script>
+          src="{$uiResourcesPath}lib/bootstrap.ext/datepicker/bootstrap-datepicker.nl.min.js?v={$buildNumber}"></script>
         <script src="{$uiResourcesPath}lib/bootstrap-table/dist/bootstrap-table.js?v={$buildNumber}"></script>
         <script src="{$uiResourcesPath}lib/bootstrap-table-angular.js?v={$buildNumber}"></script>
         <script src="{$uiResourcesPath}lib/bootstrap-table/src/extensions/export/bootstrap-table-export.js?v={$buildNumber}"></script>
@@ -305,6 +306,11 @@
       <xsl:value-of select="if ($nodeUrl != '') then concat('&quot;', $nodeUrl, '&quot;') else 'null'"/>,
       gnViewerSettings, gnSearchSettings);
       }]);
+
+      // See jQuery.htmlPrefilter changes: https://jquery.com/upgrade-guide/3.5/
+      // Uncomment this line to debug issues with self-closed tags and use the debug mode to get jQuery Migrate warning
+      // about the problematic HTML snippet.
+      //jQuery.migrateEnablePatches( "self-closed-tags" );
     </script>
   </xsl:template>
 </xsl:stylesheet>

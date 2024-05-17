@@ -230,9 +230,7 @@
             <xsl:copy-of select="gn-fn-render:extent($metadataUuid)"/>
           </xsl:when>
           <xsl:otherwise>
-            <xsl:apply-templates mode="render-field"
-                                 select=".//mdb:identificationInfo/*/mri:extent//gex:EX_GeographicBoundingBox">
-            </xsl:apply-templates>
+            <xsl:copy-of select="gn-fn-render:bboxes(.//mdb:identificationInfo/*/mri:extent//gex:EX_GeographicBoundingBox)"/>
           </xsl:otherwise>
         </xsl:choose>
       </section>
@@ -557,8 +555,10 @@
   <!-- Bbox is displayed with an overview and the geom displayed on it
   and the coordinates displayed around -->
   <xsl:template mode="render-field"
-                match="gex:EX_GeographicBoundingBox[
-                            gex:westBoundLongitude/gco:Decimal != '']" priority="100">
+                match="gex:EX_GeographicBoundingBox[gex:eastBoundLongitude/*:Decimal castable as xs:double
+                                                   and gex:southBoundLatitude/*:Decimal castable as xs:double
+                                                   and gex:westBoundLongitude/*:Decimal castable as xs:double
+                                                   and gex:northBoundLatitude/*:Decimal castable as xs:double]" priority="100">
     <xsl:copy-of select="gn-fn-render:bbox(
                             xs:double(gex:westBoundLongitude/gco:Decimal),
                             xs:double(gex:southBoundLatitude/gco:Decimal),

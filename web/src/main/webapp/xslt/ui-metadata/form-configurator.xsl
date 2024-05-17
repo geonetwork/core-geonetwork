@@ -34,6 +34,7 @@
     -->
 
   <xsl:template mode="form-builder" match="directive">
+    <xsl:param name="base" as="node()"/>
 
     <xsl:variable name="isDisplayed"
                   as="xs:boolean"
@@ -43,6 +44,9 @@
     <xsl:if test="$isDisplayed">
       <div>
         <xsl:copy-of select="@*"/>
+        <xsl:apply-templates mode="form-builder" select="*">
+          <xsl:with-param name="base" select="$base"/>
+        </xsl:apply-templates>
       </div>
     </xsl:if>
   </xsl:template>

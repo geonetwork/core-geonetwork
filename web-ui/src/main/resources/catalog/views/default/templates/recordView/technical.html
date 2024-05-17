@@ -12,7 +12,7 @@
           <i
             class="fa fa-fw"
             data-ng-class="{'fa-chevron-right': date.type === 'creation', 'fa-code-fork': date.type === 'superseded','fa-ban': date.type === 'deprecated', 'fa-retweet': date.type === 'revision', 'fa-check': date.type === 'publication', 'fa-calendar': date.type === 'nextUpdate'}"
-          />
+          ></i>
         </div>
         <span>
           <h3 data-translate>{{date.type | translate}}</h3>
@@ -81,7 +81,7 @@
     <div>
       <h3 data-translate="">{{(t.title || key) | translate}}</h3>
 
-      <div data-gn-keyword-badges="mdView.current.record" data-thesaurus="key" />
+      <div data-gn-keyword-badges="mdView.current.record" data-thesaurus="key"></div>
     </div>
   </div>
 </div>
@@ -99,7 +99,7 @@
       <h3 data-translate="">identifier</h3>
       <ul class="gn-comma-list">
         <li data-ng-repeat="i in mdView.current.record.resourceIdentifier">
-          <span data-ng-bind-html="i.code | linky" />
+          <span data-ng-bind-html="i.code | linky"></span>
         </li>
       </ul>
     </div>
@@ -143,7 +143,9 @@
     </div>
   </div>
 
-  <div ng-include="'../../catalog/views/default/templates/recordView/categories.html'" />
+  <div
+    ng-include="'../../catalog/views/default/templates/recordView/categories.html'"
+  ></div>
 
   <div
     data-ng-if="mdView.current.record.cl_classification > 0"

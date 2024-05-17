@@ -71,7 +71,11 @@
   </div>
 </div>
 <!-- /.gn-row-main -->
-<div data-ng-if="showMosaic" data-gn-record-mosaic="-cl_status.key:obsolete" size="9" />
+<div
+  data-ng-if="showMosaic"
+  data-gn-record-mosaic="-cl_status.key:obsolete"
+  size="9"
+></div>
 
 <form
   data-ng-if="showMaps"
@@ -144,7 +148,7 @@
           data-home-facet="homeFacet"
           data-search-info="searchInfo"
           data-agg-config="aggConfig"
-        />
+        ></div>
       </div>
     </div>
     <div data-ng-show="searchInfo.aggregations[homeFacet.lastKey].buckets.length > 0">
@@ -160,7 +164,7 @@
           data-home-facet="homeFacet"
           data-search-info="searchInfo"
           data-agg-config="aggConfig"
-        />
+        ></div>
       </div>
     </div>
   </div>

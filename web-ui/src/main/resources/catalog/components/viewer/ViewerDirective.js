@@ -496,6 +496,10 @@
               setTimeout(function () {
                 scope.map.updateSize();
               }, 300);
+
+              if (gnViewerSettings.mapConfig.disabledTools.scaleLine === false) {
+                scope.map.addControl(new ol.control.ScaleLine());
+              }
             }
           };
         }

@@ -88,7 +88,7 @@
 
   <!-- Ignore some fields displayed in header or in right column -->
   <xsl:template mode="render-field"
-                match="gmd:graphicOverview|gmd:abstract|gmd:title"
+                match="gmd:graphicOverview|gmd:abstract|gmd:identificationInfo/*/gmd:citation/*/gmd:title"
                 priority="2000"/>
 
   <!-- Specific schema rendering -->
@@ -206,9 +206,7 @@
           <xsl:copy-of select="gn-fn-render:extent($metadataUuid)"/>
         </xsl:when>
         <xsl:otherwise>
-          <xsl:apply-templates mode="render-field"
-                               select=".//gmd:EX_GeographicBoundingBox">
-          </xsl:apply-templates>
+          <xsl:copy-of select="gn-fn-render:bboxes(.//gmd:EX_GeographicBoundingBox)"/>
         </xsl:otherwise>
       </xsl:choose>
     </section>
@@ -344,7 +342,7 @@
         <xsl:otherwise>
           <div data-ng-if="showCitation"
                data-gn-metadata-citation="md">
-            
+
           </div>
         </xsl:otherwise>
       </xsl:choose>
@@ -441,7 +439,7 @@
         </xsl:call-template>
       </dt>
       <dd>
-        
+
         <xsl:apply-templates mode="render-value" select="."/>
         <xsl:apply-templates mode="render-value" select="@*"/>
       </dd>
@@ -553,8 +551,10 @@
   <!-- Bbox is displayed with an overview and the geom displayed on it
   and the coordinates displayed around -->
   <xsl:template mode="render-field"
-                match="gmd:EX_GeographicBoundingBox[
-          gmd:westBoundLongitude/gco:Decimal != '']">
+                match="gmd:EX_GeographicBoundingBox[gmd:eastBoundLongitude/gco:Decimal castable as xs:double
+                                                   and gmd:southBoundLatitude/gco:Decimal castable as xs:double
+                                                   and gmd:westBoundLongitude/gco:Decimal castable as xs:double
+                                                   and gmd:northBoundLatitude/gco:Decimal castable as xs:double]">
     <xsl:copy-of select="gn-fn-render:bbox(
                             xs:double(gmd:westBoundLongitude/gco:Decimal),
                             xs:double(gmd:southBoundLatitude/gco:Decimal),
@@ -564,6 +564,7 @@
     <br/>
     <br/>
   </xsl:template>
+
 
 
 
@@ -657,7 +658,7 @@
       <xsl:otherwise>
         <div class="gn-contact">
           <strong>
-            
+
             <xsl:apply-templates mode="render-value"
                                  select="*/gmd:role/*/@codeListValue"/>
           </strong>
@@ -1070,7 +1071,7 @@
           <xsl:value-of select="gn-fn-render:getMetadataTitle(./gco:CharacterString, $langId)"/>
         </a>
       </xsl:if>
-       
+
       <xsl:call-template name="addLineBreaksAndHyperlinks">
         <xsl:with-param name="txt" select="$txt"/>
       </xsl:call-template>
@@ -1086,7 +1087,7 @@
           <xsl:value-of select="gn-fn-render:getMetadataTitle(./gco:CharacterString, $langId)"/>
         </a>
       </xsl:if>
-      
+
       <xsl:apply-templates mode="localised" select=".">
         <xsl:with-param name="langId" select="$langId"/>
       </xsl:apply-templates>
