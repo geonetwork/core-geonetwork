@@ -251,6 +251,7 @@
            */
           scope.displayPublicationOption = function (md, user, pubOption) {
             return (
+              md &&
               md.canReview &&
               md.draft != "y" &&
               md.mdStatus != 3 &&
