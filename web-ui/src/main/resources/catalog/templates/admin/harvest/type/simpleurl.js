@@ -23,14 +23,14 @@ var gnHarvestersimpleurl = {
         "pageSizeParam": "",
         "pageFromParam": "",
         "recordIdPath": "",
-        "toISOConversion": "",
+        "toISOConversion": ""
       },
       "content" : {
         "validate" : "NOVALIDATION",
         "batchEdits" : "",
         "translateContent": false,
         "translateContentLangs": "",
-        "translateContentFields": "",
+        "translateContentFields": ""
       },
       "options" : {
         "every" : "0 0 0 ? * *",

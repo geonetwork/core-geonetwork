@@ -462,6 +462,11 @@ public class Aligner extends BaseAligner<GeonetParams> {
 
         if (log.isDebugEnabled()) log.debug("  - Adding metadata with remote uuid:" + ri.uuid);
 
+        // Translate metadata
+        if (params.isTranslateContent()) {
+            md = translateMetadataContent(context, md, schema);
+        }
+
         try {
             Integer groupIdVal = null;
             if (StringUtils.isNotEmpty(params.getOwnerIdGroup())) {
@@ -742,6 +747,11 @@ public class Aligner extends BaseAligner<GeonetParams> {
                                 Element info, boolean localRating, boolean force) throws Exception {
         String date = localUuids.getChangeDate(ri.uuid);
 
+
+        // Translate metadata
+        if (params.isTranslateContent()) {
+            md = translateMetadataContent(context, md, ri.schema);
+        }
 
         try {
             Integer groupIdVal = null;
