@@ -64,6 +64,7 @@ public class FeedbackLanguages {
         }
 
         supportedLocales = Arrays.stream(systemFeedbackLanguages.split(","))
+            .map(String::trim)
             .map(Locale::new)
             .filter(this::isValidLocale)
             .toArray(Locale[]::new);
