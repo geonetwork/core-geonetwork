@@ -1028,7 +1028,7 @@ public class MetadataWorkflowApi {
                         fields.add(titleField);
                         Optional<Metadata> metadata = metadataRepository.findById(s.getMetadataId());
                         final Map<String, String> values =
-                            searchManager.getFieldsValues(metadata.get().getUuid(), fields);
+                            searchManager.getFieldsValues(metadata.get().getUuid(), fields, language);
                         title = values.get(titleField);
                         titles.put(s.getMetadataId(), title);
                     } catch (Exception e1) {

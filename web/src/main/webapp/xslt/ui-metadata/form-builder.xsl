@@ -444,7 +444,7 @@
        data-gn-click-and-spin="remove({$editInfo/@ref}, {$editInfo/@parent})"
        data-gn-field-highlight-remove="{$editInfo/@ref}"
        title="{{{{'deleteFieldSet' | translate}}}}">
-      <i class="fa fa-times text-danger"/>
+      <i class="fa fa-times text-danger"></i>
     </a>
   </xsl:template>
 
@@ -1482,8 +1482,10 @@
   <xsl:template name="render-form-field-control-move">
     <xsl:param name="elementEditInfo"/>
     <xsl:param name="domeElementToMoveRef" required="no" select="''"/>
+    <xsl:param name="forceDisplay" required="no" as="xs:boolean" select="false()"/>
 
-    <xsl:if test="not($viewConfig/@upAndDownControlHidden)">
+
+    <xsl:if test="not($viewConfig/@upAndDownControlHidden) or $forceDisplay">
       <div class="gn-move">
         <xsl:variable name="elementToMoveRef"
                       select="if ($elementEditInfo) then $elementEditInfo/@ref else ''"/>
@@ -1592,7 +1594,7 @@
         <a class="btn pull-right"
            data-gn-click-and-spin="removeAttribute('{$fieldName}')" data-toggle="tooltip"
            data-placement="top" title="{{{{'deleteField' | translate}}}}">
-          <i class="fa fa-times text-danger"/>
+          <i class="fa fa-times text-danger"></i>
         </a>
       </div>
     </div>
@@ -1726,6 +1728,121 @@
   <row...
 
   -->
+  <xsl:template name="build-table">
+    <xsl:param name="isoType" as="xs:string"/>
+
+    <xsl:variable name="name" select="name()"/>
+    <xsl:variable name="xpath" select="gn-fn-metadata:getXPath(.)"/>
+
+    <xsl:variable name="childName"
+                  select="*[1]/name()"/>
+
+    <xsl:variable name="isEmbeddedMode"
+                  select="@gn:addedObj = 'true'"/>
+    <xsl:variable name="isFirstOfItsKind"
+                  select="preceding-sibling::*[1]/name() != $name"/>
+
+    <xsl:variable name="tableConfig"
+                  select="$editorConfig/editor/tableFields/table[@for = $childName]"/>
+
+    <xsl:variable name="values">
+      <xsl:if test="not($isEmbeddedMode) or ($isEmbeddedMode and $isFirstOfItsKind)">
+        <header>
+          <xsl:for-each select="$tableConfig/header/col">
+            <col>
+              <xsl:copy-of select="@*"/>
+              <xsl:if test="@label">
+                <!-- TODO: column names may comes from strings.xml -->
+                <xsl:value-of select="gn-fn-metadata:getLabel($schema, @label, $labels, '', $isoType, $xpath)/label"/>
+              </xsl:if>
+            </col>
+          </xsl:for-each>
+        </header>
+      </xsl:if>
+      <xsl:for-each select="(.|following-sibling::*[name() = $name])/*[name() = $childName]">
+
+        <xsl:variable name="base"
+                      select="."/>
+        <xsl:for-each select="$tableConfig/row">
+          <row>
+            <xsl:for-each select="col">
+              <col>
+                <xsl:choose>
+                  <xsl:when test="@use != ''">
+                    <xsl:copy-of select="@use|directiveAttributes"/>
+                  </xsl:when>
+                  <xsl:when test="@del != ''">
+                    <xsl:attribute name="remove" select="'true'"/>
+
+                    <saxon:call-template name="{concat('evaluate-', $schema)}">
+                      <xsl:with-param name="base" select="$base"/>
+                      <xsl:with-param name="in"
+                                      select="concat('/', @del, '/gn:element')"/>
+                    </saxon:call-template>
+                  </xsl:when>
+                  <xsl:when test="@orderControl != ''">
+                    <xsl:attribute name="orderControl" select="'true'"/>
+
+                    <saxon:call-template name="{concat('evaluate-', $schema)}">
+                      <xsl:with-param name="base" select="$base"/>
+                      <xsl:with-param name="in"
+                                      select="concat('/', @orderControl, '/gn:element')"/>
+                    </saxon:call-template>
+                  </xsl:when>
+                  <xsl:when test="@xpath != ''">
+                    <saxon:call-template name="{concat('evaluate-', $schema)}">
+                      <xsl:with-param name="base" select="$base"/>
+                      <xsl:with-param name="in"
+                                      select="concat('/', @xpath)"/>
+                    </saxon:call-template>
+                  </xsl:when>
+                </xsl:choose>
+              </col>
+            </xsl:for-each>
+          </row>
+
+          <xsl:for-each select="section[@xpath]">
+            <row>
+              <col colspan="{count(../col)}" type="form" withLabel="true">
+                <xsl:apply-templates mode="form-builder" select=".">
+                  <xsl:with-param name="base" select="$base"/>
+                </xsl:apply-templates>
+              </col>
+            </row>
+          </xsl:for-each>
+        </xsl:for-each>
+      </xsl:for-each>
+    </xsl:variable>
+
+    <!-- Return only the new row in embed mode. -->
+    <xsl:choose>
+      <xsl:when test="$tableConfig/@fieldset = 'false' or ($isEmbeddedMode and not($isFirstOfItsKind))">
+        <xsl:call-template name="render-table">
+          <xsl:with-param name="values" select="$values"/>
+        </xsl:call-template>
+      </xsl:when>
+      <xsl:otherwise>
+
+        <xsl:variable name="tableTitle" select="if (($tableConfig/@label) and (string($strings/*[name() = $tableConfig/@label])))
+              then $strings/*[name() = $tableConfig/@label]
+              else gn-fn-metadata:getLabel($schema, $name, $labels, name(..), $isoType, $xpath)/label" />
+
+        <xsl:call-template name="render-boxed-element">
+          <xsl:with-param name="label"
+                          select="$tableTitle"/>
+          <xsl:with-param name="cls" select="local-name()"/>
+          <xsl:with-param name="subTreeSnippet">
+
+            <xsl:call-template name="render-table">
+              <xsl:with-param name="values" select="$values"/>
+            </xsl:call-template>
+
+          </xsl:with-param>
+        </xsl:call-template>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
   <xsl:template name="render-table">
     <xsl:param name="values" as="node()"/>
     <xsl:param name="addControl" as="node()?"/>
@@ -1776,6 +1893,13 @@
                   <xsl:when test="@remove">
                     <xsl:call-template name="render-form-field-control-remove">
                       <xsl:with-param name="editInfo" select="gn:element"/>
+                    </xsl:call-template>
+                  </xsl:when>
+                  <xsl:when test="@orderControl">
+                    <xsl:call-template name="render-form-field-control-move">
+                      <xsl:with-param name="elementEditInfo" select="gn:element"/>
+                      <xsl:with-param name="domeElementToMoveRef" select="gn:element/@ref"/>
+                      <xsl:with-param name="forceDisplay" select="true()"/>
                     </xsl:call-template>
                   </xsl:when>
                   <!-- Form is inserted directly in the row. -->

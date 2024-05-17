@@ -811,27 +811,10 @@ public class EsSearchManager implements ISearchManager {
         return client.query(defaultIndex, jsonRequest, null, includedFields, from, size);
     }
 
-    /**
-     * Get the values for a set of index fields.
-     *
-     * @param id     The record to lookup
-     * @param fields The fields to lookup
-     */
-    public Map<String, String> getFieldsValues(String id, Set<String> fields) throws IOException {
-        return client.getFieldsValues(defaultIndex, id, fields);
-    }
-
-    /**
-     * Get the values for a set of index fields and a specified language for multilingual fields.
-     * If there is no match for the language the default is used.
-     *
-     * @param id       The record to lookup
-     * @param fields   The fields to lookup
-     * @param language The language code to lookup for multilingual fields.
-     */
-    public Map<String, String> getFieldsValues(String id, Set<String> fields, String language) throws IOException {
+    public Map<String, String> getFieldsValues(String id, Set<String> fields, String language) throws Exception {
         return client.getFieldsValues(defaultIndex, id, fields, language);
     }
+
 
     public void clearIndex() throws Exception {
         client.deleteByQuery(defaultIndex, "*:*");

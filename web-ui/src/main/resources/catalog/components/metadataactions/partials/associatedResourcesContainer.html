@@ -17,7 +17,6 @@
           <span data-translate="">{{ config.label | translate}}</span>
         </a>
       </h2>
-
       <div
         data-ng-init="mainType = relatedResourcesConfig.getType(md, mapUIRelationToApi(config.type));
                          icon = relatedResourcesConfig.getClassIcon(mainType);"
@@ -44,7 +43,7 @@
                 >
                   <i
                     class="fa fa-fw {{icon}} gn-icon-association-{{record.properties.associationType}} gn-icon-initiative-{{record.properties.initiativeType}}"
-                  />
+                  ></i>
                   {{record.resourceTitle}}
                 </a>
                 <a
@@ -54,7 +53,7 @@
                   target="_blank"
                   title="{{record.resourceTitle || record.uuid}}"
                 >
-                  <i class="fa {{icon}}" />
+                  <i class="fa {{icon}}"></i>
                   {{record.resourceTitle || record.uuid}}
                   <i
                     data-ng-if="record.origin === 'remote'"

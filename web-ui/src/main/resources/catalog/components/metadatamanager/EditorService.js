@@ -668,12 +668,12 @@
 
             // For each existing up/down control transfer
             // the hidden class between the two elements.
-            angular.forEach(switchWithElementCtrl, function (ctrl, idx) {
-              var ctrl2 = currentElementCtrl[idx];
-              var ctrlHidden = $(ctrl).hasClass("invisible");
-              var ctrl2Hidden = $(ctrl2).hasClass("invisible");
-              $(ctrl).toggleClass("invisible", ctrl2Hidden);
-              $(ctrl2).toggleClass("invisible", ctrlHidden);
+            angular.forEach(switchWithElementCtrl, function (switchedElement, idx) {
+              var movedElement = currentElementCtrl[idx];
+              var switchHidden = $(switchedElement).hasClass("hidden");
+              var movedHidden = $(movedElement).hasClass("hidden");
+              $(switchedElement).toggleClass("hidden", movedHidden);
+              $(movedElement).toggleClass("hidden", switchHidden);
             });
 
             var hasClass = currentElement.hasClass("gn-extra-field");

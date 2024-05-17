@@ -104,7 +104,7 @@
               data-gn-user-searches-panel="user"
               data-ng-if="isUserSearchesEnabled && user.isConnected()"
             ></div>
-            <div ng-if="searchResults.facets" data-es-facets="searchResults.facets" />
+            <div ng-if="searchResults.facets" data-es-facets="searchResults.facets"></div>
           </div>
           <div class="col-sm-8 col-md-8 col-lg-7">
             <span class="loading fa fa-spinner fa-spin" data-ng-show="searching"></span>
@@ -157,7 +157,7 @@
                 data-task="'batch-etf-inspire'"
                 data-task-status-lbl="'inspireValidation'"
                 data-force-refresh-task="forceRefreshTask"
-              />
+              ></gn-batch-tasks-container>
             </div>
             <div class="row">
               <div
@@ -174,9 +174,8 @@
               class="btn btn-primary btn-block gn-margin-bottom"
               title="{{'addRecord' | translate}}"
             >
-              <i class="fa fa-fw fa-plus" /><span
-                class="hidden-xs hidden-sm hidden-md"
-                data-translate=""
+              <i class="fa fa-fw fa-plus"></i
+              ><span class="hidden-xs hidden-sm hidden-md" data-translate=""
                 >addRecord</span
               >
             </a>
@@ -186,9 +185,8 @@
               class="btn btn-default btn-block gn-margin-bottom"
               title="{{'ImportRecord' | translate}}"
             >
-              <i class="fa fa-fw fa-upload" /><span
-                class="hidden-xs hidden-sm hidden-md"
-                data-translate=""
+              <i class="fa fa-fw fa-upload"></i
+              ><span class="hidden-xs hidden-sm hidden-md" data-translate=""
                 >ImportRecord</span
               >
             </a>
@@ -198,9 +196,8 @@
               title="{{'directoryManager' | translate}}"
               ng-if="user.isEditorOrMore()"
             >
-              <i class="fa fa-fw fa-bookmark" /><span
-                class="hidden-xs hidden-sm hidden-md"
-                data-translate=""
+              <i class="fa fa-fw fa-bookmark"></i
+              ><span class="hidden-xs hidden-sm hidden-md" data-translate=""
                 >directoryManager</span
               >
             </a>
@@ -210,9 +207,8 @@
               title="{{'batchEditing' | translate}}"
               ng-if="user.canBatchEditMetadata()"
             >
-              <i class="fa fa-fw fa-pencil" /><span
-                class="hidden-xs hidden-sm hidden-md"
-                data-translate=""
+              <i class="fa fa-fw fa-pencil"></i
+              ><span class="hidden-xs hidden-sm hidden-md" data-translate=""
                 >batchEditing</span
               >
             </a>
@@ -222,9 +218,8 @@
               title="{{'accessManager' | translate}}"
               ng-if="user.isAdministratorOrMore() && healthCheck.IndexHealthCheck === true"
             >
-              <i class="fa fa-fw fa-lock" /><span
-                class="hidden-xs hidden-sm hidden-md"
-                data-translate=""
+              <i class="fa fa-fw fa-lock"></i
+              ><span class="hidden-xs hidden-sm hidden-md" data-translate=""
                 >accessManager</span
               >
             </a>
