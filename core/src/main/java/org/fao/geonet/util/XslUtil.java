@@ -631,13 +631,19 @@ public final class XslUtil {
         Store store = BeanFactoryAnnotationUtils.qualifiedBeanOfType(ApplicationContextHolder.get().getBeanFactory(), Store.class, "filesystemStore");
 
         if (store != null) {
-            if (store.getResourceManagementExternalProperties() != null && store.getResourceManagementExternalProperties().isFolderEnabled()) {
-                ServiceContext context = ServiceContext.get();
-                return store.getResourceContainerDescription(ServiceContext.get(), metadataUuid, approved);
-            } else {
-                // Return an empty object which should not be used because the folder is not enabled.
-                return new FilesystemStoreResourceContainer(metadataUuid, -1, null, null, null, approved);
+            try {
+                if (store.getResourceManagementExternalProperties() != null && store.getResourceManagementExternalProperties().isFolderEnabled()) {
+                    ServiceContext context = ServiceContext.get();
+                    return store.getResourceContainerDescription(ServiceContext.get(), metadataUuid, approved);
+                } else {
+                    // Return an empty object which should not be used because the folder is not enabled.
+                    return new FilesystemStoreResourceContainer(metadataUuid, -1, null, null, null, approved);
+                }
+            } catch (RuntimeException e) {
+                Log.error(Geonet.RESOURCES, "Could not locate resource in getResourceContainerDescription due to runtime exception", e);
+                return null;
             }
+
         }
         Log.error(Geonet.RESOURCES, "Could not locate a Store bean in getResourceContainerDescription");
         return null;
