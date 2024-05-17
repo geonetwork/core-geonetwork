@@ -444,7 +444,7 @@
        data-gn-click-and-spin="remove({$editInfo/@ref}, {$editInfo/@parent})"
        data-gn-field-highlight-remove="{$editInfo/@ref}"
        title="{{{{'deleteFieldSet' | translate}}}}">
-      <i class="fa fa-times text-danger"/>
+      <i class="fa fa-times text-danger"></i>
     </a>
   </xsl:template>
 
@@ -1592,7 +1592,7 @@
         <a class="btn pull-right"
            data-gn-click-and-spin="removeAttribute('{$fieldName}')" data-toggle="tooltip"
            data-placement="top" title="{{{{'deleteField' | translate}}}}">
-          <i class="fa fa-times text-danger"/>
+          <i class="fa fa-times text-danger"></i>
         </a>
       </div>
     </div>

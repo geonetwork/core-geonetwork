@@ -168,7 +168,7 @@
 
                 <div class="row">
                   <div class="col-md-3 gn-search-facet">
-                    <div data-es-facets="searchResults.facets" />
+                    <div data-es-facets="searchResults.facets"></div>
                   </div>
                   <div class="col-md-9">
                     <span
@@ -234,7 +234,7 @@
                         class="form-control"
                         name="search"
                         data-ng-model="searchAndReplaceField.search"
-                      />
+                      ></textarea>
                     </label>
                     <br />
                     <label>
@@ -243,7 +243,7 @@
                         class="form-control"
                         name="search"
                         data-ng-model="searchAndReplaceField.replacement"
-                      />
+                      ></textarea>
                     </label>
                     <br />
                     <label>
@@ -333,7 +333,7 @@
                     </li>
                   </ul>
 
-                  <div gn-batch-edit-examples-selector="setExample" />
+                  <div gn-batch-edit-examples-selector="setExample"></div>
                 </div>
 
                 <form class="form-horizontal" id="gn-batch-changes">
@@ -429,7 +429,7 @@
                           gn-copy-to-clipboard-button=""
                           data-btn-class="btn btn-default"
                           data-text="{{c}}"
-                        />
+                        ></button>
                       </li>
                     </ul>
                   </div>
@@ -469,7 +469,7 @@
                               data-ng-blur="putChange(field, $event)"
                               data-ng-disabled="field.isDeleted"
                               class="form-control"
-                            />
+                            ></textarea>
                             <input
                               type="text"
                               class="form-control"
@@ -489,7 +489,7 @@
                               data-selected-info="field.value"
                               data-ng-blur="putChange(field, $event)"
                               lang="lang"
-                            />
+                            ></div>
                             <div data-ng-if="field.use === 'data-gn-draw-bbox'">
                               <div
                                 class=""
@@ -671,7 +671,7 @@
                           data-ng-disabled="!canPreview"
                           data-gn-click-and-spin="previewChanges(record._id)"
                         >
-                          <i class="fa fa-play" />
+                          <i class="fa fa-play"></i>
                           <span data-translate="">previewChangesAsXml</span>
                         </button>
                         <button
@@ -757,7 +757,7 @@
                     data-ng-disabled="!canPreview"
                     data-gn-click-and-spin="applyChanges()"
                   >
-                    <i class="fa fa-save" />
+                    <i class="fa fa-save"></i>
                     <span data-translate="">save</span>
                   </button>
                 </div>

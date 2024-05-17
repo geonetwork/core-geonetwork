@@ -12,7 +12,8 @@
       ng-class="{active: p.name == wpsLink.name && p.url == wpsLink.url}"
       title="{{ p.url }}"
     >
-      <i class="fa fa-fw {{p.icon || 'fa-cog'}}" />&nbsp;{{ p.labels[lang]|empty:p.name }}
+      <i class="fa fa-fw {{p.icon || 'fa-cog'}}"></i>&nbsp;{{ p.labels[lang]|empty:p.name
+      }}
     </a>
   </ul>
 </div>
