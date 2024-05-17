@@ -981,14 +981,15 @@
         </xsl:apply-templates>
       </xsl:if>
 
+      
       <xsl:variable name="jsonFeatureTypes">[
         <xsl:for-each select="mdb:contentInfo//gfc:FC_FeatureCatalogue/gfc:featureType">{
 
           "typeName" : "<xsl:value-of select="util:escapeForJson(gfc:FC_FeatureType/gfc:typeName/text())"/>",
-          "definition" :"<xsl:value-of select="util:escapeForJson(gfc:FC_FeatureType/gfc:definition/*/text())"/>",
-          "code" :"<xsl:value-of select="util:escapeForJson(gfc:FC_FeatureType/gfc:code/*/text())"/>",
-          "isAbstract" :"<xsl:value-of select="gfc:FC_FeatureType/gfc:isAbstract/*/text()"/>",
-          "aliases" : "<xsl:value-of select="util:escapeForJson(gfc:FC_FeatureType/gfc:aliases/*/text())"/>"
+          "definition" :"<xsl:value-of select="util:escapeForJson(gfc:FC_FeatureType/gfc:definition/gco:CharacterString/text())"/>",
+          "code" :"<xsl:value-of select="util:escapeForJson(gfc:FC_FeatureType/gfc:code/(gco:CharacterString|gcx:Anchor)/text())"/>",
+          "isAbstract" :"<xsl:value-of select="gfc:FC_FeatureType/gfc:isAbstract/gco:Boolean/text()"/>",
+          "aliases" : "<xsl:value-of select="util:escapeForJson(gfc:FC_FeatureType/gfc:aliases/gco:CharacterString/text())"/>"
           <!--"inheritsFrom" : "<xsl:value-of select="gfc:FC_FeatureType/gfc:inheritsFrom/*/text()"/>",
           "inheritsTo" : "<xsl:value-of select="gfc:FC_FeatureType/gfc:inheritsTo/*/text()"/>",
           "constrainedBy" : "<xsl:value-of select="gfc:FC_FeatureType/gfc:constrainedBy/*/text()"/>",
@@ -1002,11 +1003,11 @@
               <!-- TODO: Add multilingual support-->
               {"name": "<xsl:value-of select="util:escapeForJson(*/gfc:memberName/text())"/>",
               "definition": "<xsl:value-of select="util:escapeForJson(*/gfc:definition/gco:CharacterString/text())"/>",
-              "code": "<xsl:value-of select="util:escapeForJson(*/gfc:code/*/text())"/>",
+              "code": "<xsl:value-of select="util:escapeForJson(*/gfc:code/(gco:CharacterString|gcx:Anchor)/text())"/>",
               "link": "<xsl:value-of select="*/gfc:code/*/@xlink:href"/>",
               "type": "<xsl:value-of select="*/gfc:valueType/gco:TypeName/gco:aName/*/text()"/>"
               <xsl:if test="*/gfc:cardinality">
-                ,"cardinality": "<xsl:value-of select="util:escapeForJson(*/gfc:cardinality/*/text())"/>"
+                ,"cardinality": "<xsl:value-of select="util:escapeForJson(*/gfc:cardinality/(gco:CharacterString|gcx:Anchor)/text())"/>"
               </xsl:if>
               <xsl:variable name="codeList"
                             select="*/gfc:listedValue[normalize-space(*) != '']"/>
@@ -1014,7 +1015,7 @@
                 ,"values": [
                 <xsl:for-each select="$codeList">{
                   "label": "<xsl:value-of select="util:escapeForJson(*/gfc:label/gco:CharacterString/text())"/>",
-                  "code": "<xsl:value-of select="util:escapeForJson(*/gfc:code/*/text())"/>",
+                  "code": "<xsl:value-of select="util:escapeForJson(*/gfc:code/(gco:CharacterString|gcx:Anchor)/text())"/>",
                   "definition": "<xsl:value-of select="util:escapeForJson(*/gfc:definition/gco:CharacterString/text())"/>"}
                   <xsl:if test="position() != last()">,</xsl:if>
                 </xsl:for-each>
