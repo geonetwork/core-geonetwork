@@ -166,7 +166,7 @@
                   data-ng-click="desactivateGeometryTool()"
                   ng-required="$index < input.minOccurs"
                   watch-value-change="true"
-                />
+                ></gn-bbox-input>
               </div>
 
               <!-- Complex input (geometry on map) -->
@@ -184,7 +184,7 @@
                   output-as-features="true"
                   map="map"
                   active-geometry-tool="activeGeometryTool"
-                />
+                ></gn-geometry-tool>
               </div>
 
               <!-- add a new value -->
@@ -193,7 +193,7 @@
                 href
                 ng-click="addInputValueByName(input.identifier.value)"
               >
-                <i class="fa fa-plus" />
+                <i class="fa fa-plus"></i>
                 {{::'insertNewInputValue'|translate}}
               </a>
 
@@ -235,11 +235,11 @@
                       <i
                         class="fa fa-dot-circle-o fa-fw"
                         ng-show="wpsLink.output.identifier == output.identifier.value && wpsLink.output.mimeType == format.mimeType"
-                      />
+                      ></i>
                       <i
                         class="fa fa-circle-o fa-fw"
                         ng-show="wpsLink.output.identifier != output.identifier.value || wpsLink.output.mimeType != format.mimeType"
-                      />
+                      ></i>
                       {{::format.mimeType}}
                     </a>
                   </li>
@@ -284,7 +284,7 @@
                         target="_blank"
                         href="{{::output.reference.href}}"
                       >
-                        <icon class="fa fa-fw fa-download" />
+                        <icon class="fa fa-fw fa-download"></icon>
                         <span data-translate="">Download</span>
                       </a>
                       <a
@@ -293,7 +293,7 @@
                         data-ng-show="wpsLink.output.loadReferenceInMap"
                         data-ng-click="clearGeometry()"
                       >
-                        <icon class="fa fa-fw fa-times" />
+                        <icon class="fa fa-fw fa-times"></icon>
                         <span data-translate="">Clear</span>
                       </a>
                     </div>

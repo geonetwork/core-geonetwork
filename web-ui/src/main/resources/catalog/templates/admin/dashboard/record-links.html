@@ -15,7 +15,7 @@
             data-ng-disabled="!user.isAdministrator()"
             data-gn-click-and-spin="analyzeLinks()"
           >
-            <i class="fa fa-fw fa-cogs" />&nbsp;
+            <i class="fa fa-fw fa-cogs"></i>&nbsp;
             <span data-translate="">analyzeLinks</span>
           </button>
 
@@ -26,7 +26,7 @@
             data-ng-disabled="!user.isAdministrator()"
             data-gn-confirm-click="{{'removeAllLinksAndStatusConfirm' | translate}}"
           >
-            <i class="fa fa-fw fa-times" />&nbsp;
+            <i class="fa fa-fw fa-times"></i>&nbsp;
             <span data-translate="">removeAllLinksAndStatus</span>
           </button>
 
@@ -36,7 +36,7 @@
             title="{{'downloadAsCsv-help' | translate}}"
             data-ng-click="downloadAsCsv()"
           >
-            <i class="fa fa-fw fa-download" />&nbsp;
+            <i class="fa fa-fw fa-download"></i>&nbsp;
             <span data-translate="">downloadAsCsv</span>
           </button>
         </div>
@@ -44,7 +44,7 @@
 
       <div data-ng-if="error" class="row gn-margin-top">
         <div class="alert alert-danger" role="alert">
-          <i class="fa fa-exclamation-triangle fa-fw" />
+          <i class="fa fa-exclamation-triangle fa-fw"></i>
           <span>{{error.description}}</span>
         </div>
       </div>
