@@ -129,7 +129,7 @@ public class LocalizedEmail {
 
         String emailMessage = String.join(messageDelimiter, messages.values());
 
-        // Prepend the message with the translation follows label if there is more than one language specified
+        // Prepend the message with the translation follows text if there is more than one language specified
         if (messages.size() > 1 && !StringUtils.isBlank(translationFollowsText)) {
             emailMessage = translationFollowsText + lineBreak + emailMessage;
         }
