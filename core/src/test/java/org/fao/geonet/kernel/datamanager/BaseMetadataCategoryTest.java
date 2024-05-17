@@ -115,6 +115,9 @@ public class BaseMetadataCategoryTest extends AbstractCoreIntegrationTest {
         md.getSourceInfo().setSourceId("test-faking");
         md.getDataInfo().setSchemaId("isoFake");
 
+        MetadataCategory category = new MetadataCategory();
+        category.setName("test-category");
+        metadataCategoryRepository.save(category);
         mdc = metadataCategoryRepository.findAll().get(0);
     }
 

@@ -124,6 +124,9 @@ public class DataManagerIntegrationTest extends AbstractDataManagerIntegrationTe
         ServiceContext serviceContext = createContextAndLogAsAdmin();
         User principal = serviceContext.getUserSession().getPrincipal();
         Group group = groupRepository.findAll().get(0);
+        MetadataCategory testCategory = new MetadataCategory();
+        testCategory.setName("test-category");
+        metadataCategoryRepository.save(testCategory);
         MetadataCategory category = metadataCategoryRepository.findAll().get(0);
         Source source = sourceRepository.save(new Source().setType(SourceType.portal).setName("GN").setUuid("sourceuuid"));
 
