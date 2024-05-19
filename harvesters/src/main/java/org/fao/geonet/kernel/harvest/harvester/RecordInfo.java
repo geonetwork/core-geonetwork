@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2007 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2024 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -57,12 +57,20 @@ public class RecordInfo {
     //---------------------------------------------------------------------------
     public String isTemplate;
 
+    //---------------------------------------------------------------------------
+
+    public String data;
+
     //-----------------------------------------------------------------------------
     private boolean dateWasNull;
     //---------------------------------------------------------------------------
 
     public RecordInfo(String uuid, String changeDate) {
-        this(uuid, changeDate, null, null);
+        this(uuid, changeDate, null, null, null);
+    }
+
+    public RecordInfo(String uuid, String changeDate, String data) {
+        this(uuid, changeDate, null, null, data);
     }
 
     //---------------------------------------------------------------------------
@@ -72,6 +80,10 @@ public class RecordInfo {
     //---------------------------------------------------------------------------
 
     public RecordInfo(String uuid, String changeDate, String schema, String source) {
+      this(uuid, changeDate, schema, source, null);
+    }
+
+    public RecordInfo(String uuid, String changeDate, String schema, String source, String data) {
         if (changeDate == null) {
             dateWasNull = true;
             changeDate = new ISODate().toString();
@@ -81,6 +93,7 @@ public class RecordInfo {
         this.changeDate = changeDate;
         this.schema = schema;
         this.source = source;
+        this.data = data;
     }
     public RecordInfo(Element record) {
         id = record.getChildText("id");
