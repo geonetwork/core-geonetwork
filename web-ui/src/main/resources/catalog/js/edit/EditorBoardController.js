@@ -147,6 +147,9 @@
     "gnSearchSettings",
     "gnGlobalSettings",
     function ($scope, $rootScope, $route, $location, gnSearchSettings, gnGlobalSettings) {
+      // Cleanup onbeforeunload event
+      window.onbeforeunload = null;
+
       // https://github.com/angular/angular.js/issues/1699#issuecomment-11496428
       var lastRoute = $route.current;
       $scope.$on("$locationChangeSuccess", function (event) {
