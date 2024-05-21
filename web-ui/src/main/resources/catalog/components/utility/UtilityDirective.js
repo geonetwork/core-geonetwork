@@ -2146,11 +2146,11 @@
    * to the parent element (required to highlight
    * element in navbar)
    */
+
   module.directive("gnActiveTbItem", [
     "$location",
-    "gnLangs",
-    "gnConfig",
-    function ($location, gnLangs, gnConfig) {
+    "$filter",
+    function ($location, $filter) {
       return {
         restrict: "A",
         link: function (scope, element, attrs) {
@@ -2158,11 +2158,7 @@
             href,
             isCurrentService = false;
 
-          // Replace lang in link (three character language code i.e. eng, fre)
-          link = link.replace("{{lang}}", gnLangs.getCurrent());
-          // Replace standard ISO lang in link (two character language code i.e. en, fr)
-          link = link.replace("{{isoLang}}", gnLangs.getIso2Lang(gnLangs.getCurrent()));
-          link = link.replace("{{node}}", gnConfig.env.node);
+          link = $filter("setUrlPlaceholder")(link);
 
           // Insert debug mode between service and route
           if (link.indexOf("#") !== -1) {
@@ -2212,16 +2208,25 @@
       };
     }
   ]);
-  module.filter("signInLink", [
-    "$location",
+  module.filter("setUrlPlaceholder", [
     "gnLangs",
     "gnConfig",
-    function ($location, gnLangs, gnConfig) {
+    function (gnLangs, gnConfig) {
+      return function (url) {
+        return url
+          .replace("{{lang}}", gnLangs.getCurrent())
+          .replace("{{isoLang}}", gnLangs.getIso2Lang(gnLangs.getCurrent()))
+          .replace("{{node}}", gnConfig.env.node);
+      };
+    }
+  ]);
+  module.filter("signInLink", [
+    "$location",
+    "$filter",
+    function ($location, $filter) {
       return function (href) {
         href =
-          href
-            .replace("{{lang}}", gnLangs.getCurrent())
-            .replace("{{node}}", gnConfig.env.node) +
+          $filter("setUrlPlaceholder")(href) +
           "?redirect=" +
           encodeURIComponent(window.location.href);
         return href;

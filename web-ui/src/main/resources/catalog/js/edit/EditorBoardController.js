@@ -215,6 +215,7 @@
     "$scope",
     "$location",
     "gnSearchSettings",
+    "gnGlobalSettings",
     "gnUtilityService",
     "$timeout",
     "hotkeys",
@@ -223,11 +224,15 @@
       $scope,
       $location,
       gnSearchSettings,
+      gnGlobalSettings,
       gnUtilityService,
       $timeout,
       hotkeys,
       $translate
     ) {
+      if (!!gnGlobalSettings.gnCfg.mods.global.hotkeys) {
+        return;
+      }
       $timeout(function () {
         hotkeys
           .bindTo($scope)

@@ -66,7 +66,7 @@
     }
   ]);
 
-  module.controller("gnsSearchPopularController", [
+  module.controller("gnsHomeSearchController", [
     "$scope",
     "gnSearchSettings",
     function ($scope, gnSearchSettings) {
@@ -75,33 +75,7 @@
         internal: true,
         filters: gnSearchSettings.filters,
         configId: "home",
-        params: {
-          isTemplate: "n",
-          sortBy: "popularity",
-          sortOrder: "desc",
-          from: 1,
-          to: 12
-        }
-      };
-    }
-  ]);
-
-  module.controller("gnsSearchLatestController", [
-    "$scope",
-    "gnSearchSettings",
-    function ($scope, gnSearchSettings) {
-      $scope.searchObj = {
-        permalink: false,
-        internal: true,
-        filters: gnSearchSettings.filters,
-        configId: "home",
-        params: {
-          isTemplate: "n",
-          sortBy: "createDate",
-          sortOrder: "desc",
-          from: 1,
-          to: 12
-        }
+        params: {}
       };
     }
   ]);
@@ -242,42 +216,53 @@
           "fa-angle-double-left fa-angle-double-right"
         );
       };
-      hotkeys
-        .bindTo($scope)
-        .add({
-          combo: "h",
-          description: $translate.instant("hotkeyHome"),
-          callback: function (event) {
-            $location.path("/home");
-          }
-        })
-        .add({
-          combo: "t",
-          description: $translate.instant("hotkeyFocusToSearch"),
-          callback: function (event) {
-            event.preventDefault();
-            var anyField = $("#gn-any-field");
-            if (anyField) {
-              gnUtilityService.scrollTo();
-              $location.path("/search");
-              anyField.focus();
+
+      if (gnGlobalSettings.gnCfg.mods.global.hotkeys) {
+        hotkeys
+          .bindTo($scope)
+          .add({
+            combo: "h",
+            description: $translate.instant("hotkeyHome"),
+            callback: function (event) {
+              $location.path("/home");
             }
-          }
-        })
-        .add({
-          combo: "m",
-          description: $translate.instant("hotkeyMap"),
-          callback: function (event) {
-            $location.path("/map");
-          }
-        });
+          })
+          .add({
+            combo: "t",
+            description: $translate.instant("hotkeyFocusToSearch"),
+            callback: function (event) {
+              event.preventDefault();
+              var anyField = $("#gn-any-field");
+              if (anyField) {
+                gnUtilityService.scrollTo();
+                $location.path("/search");
+                anyField.focus();
+              }
+            }
+          })
+          .add({
+            combo: "m",
+            description: $translate.instant("hotkeyMap"),
+            callback: function (event) {
+              $location.path("/map");
+            }
+          });
+      }
 
       // TODO: Previous record should be stored on the client side
       $scope.mdView = mdView;
       gnMdView.initMdView();
 
       $scope.goToSearch = function (any) {
-        $location.path("/search").search({ any: any });
+        if (gnGlobalSettings.gnCfg.mods.search.appUrl.indexOf("http") === 0) {
+          location.replace(
+            $filter("setUrlPlaceholder")(gnGlobalSettings.gnCfg.mods.search.appUrl) +
+              "?any=" +
+              any
+          );
+        } else {
+          $location.path("/search").search({ any: any });
+        }
       };
       $scope.canEdit = function (record) {
         // TODO: take catalog config for harvested records
@@ -334,17 +319,12 @@
       $scope.toggleListType = function (type) {
         $scope.type = type;
       };
-
-      $scope.infoTabs = {
-        lastRecords: {
-          title: "lastRecords",
-          titleInfo: "",
-          active: true
-        },
-        preferredRecords: {
-          title: "preferredRecords",
-          titleInfo: "",
-          active: false
+      $scope.getActiveInfoTab = function () {
+        for (var i = 0; i < $scope.gnCfg.mods.home.info.length; i++) {
+          var info = $scope.gnCfg.mods.home.info[i];
+          if (info.active) {
+            return info;
+          }
         }
       };
 
