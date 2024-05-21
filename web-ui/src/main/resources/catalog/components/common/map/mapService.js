@@ -1660,7 +1660,7 @@
                     var _url = url.split("/");
                     _url = _url[0] + "/" + _url[1] + "/" + _url[2] + "/";
                     if (
-                      $.inArray(_url, gnGlobalSettings.requireProxy) >= 0 &&
+                      $.inArray(_url + "#GET", gnGlobalSettings.requireProxy) >= 0 &&
                       url.indexOf(gnGlobalSettings.proxyUrl) != 0
                     ) {
                       capL.useProxy = true;
