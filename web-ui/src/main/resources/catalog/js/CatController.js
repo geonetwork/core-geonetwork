@@ -823,7 +823,8 @@
               graticule: false,
               mousePosition: true,
               syncAllLayers: false,
-              drawVector: false
+              drawVector: false,
+              scaleLine: false
             },
             defaultTool: "layers",
             defaultToolAfterMapLoad: "layers",

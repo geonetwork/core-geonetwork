@@ -37,14 +37,23 @@
   }
   .ol-attribution {
     .gn-attribution();
-    bottom: 1em;
     left: 1em;
+    bottom: 1em;
     button {
       background-color: @brand-primary;
     }
     @media screen and (max-height: 768px) {
       left: auto;
       right: 1em;
+    }
+  }
+
+  .ol-scale-line {
+    bottom: 1em;
+    left: 180px;
+    @media screen and (max-height: 768px) {
+      left: auto;
+      right: 180px;
     }
   }
 
