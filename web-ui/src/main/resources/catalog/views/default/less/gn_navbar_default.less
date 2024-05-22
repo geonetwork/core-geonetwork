@@ -128,6 +128,9 @@
     }
     .gn-logo-link {
       padding: 13px 0 13px 10px;
+      .gn-logo {
+        margin-top: 0;
+      }
     }
     .navbar-collapse {
       background-color: #fff;
@@ -141,6 +144,9 @@
       min-width: 0;
     }
     .dropdown {
+      .dropdown-toggle {
+        font-weight: bold;
+      }
       button.dropdown-toggle {
         display: none;
       }
@@ -153,121 +159,6 @@
         background-color: transparent;
         border: 0;
         box-shadow: none;
-        .gn-menuitem-xs {
-          a {
-            min-width: 0;
-          }
-        }
-      }
-      .username-dropdown {
-        margin-top: 10px;
-      }
-      .navbar-form {
-        width: calc(~"100% + 30px");
-      }
-    }
-    .gn-clear-xs {
-      clear: both;
-    }
-    .gn-menuheader-xs {
-      margin-top: 5px;
-      padding: 15px 0;
-      height: auto;
-      font-size: 16px;
-      font-weight: 400;
-      clear: both;
-      i {
-        display: none;
-      }
-      &:hover {
-        background: none !important;
-        color: @gray-base;
-      }
-    }
-    .gn-menu-xs {
-      padding: 1px;
-      overflow-y: hidden !important;
-      max-height: none;
-      .clearfix();
-      .gn-separator-xs {
-        display: none;
-      }
-      .gn-menuitem-xs {
-        width: calc(~"33% + 2px");
-        height: 64px;
-        text-align: center;
-        border: 1px solid @navbar-default-border;
-        background-color: @body-bg;
-        float: left;
-        margin-left: -1px;
-        margin-top: -1px;
-        a {
-          display: block;
-          padding: 7px 20px !important;
-          height: auto;
-          span {
-            display: block;
-            max-width: 100%;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-          }
-          .fa {
-            display: inline-block;
-            font-size: 22px;
-          }
-          [data-gnv-layer-indicator] {
-            display: none;
-          }
-          &:hover, &:focus {
-            background-color: @dropdown-link-hover-bg !important;
-          }
-        }
-      }
-    }
-    .username-dropdown {
-      .gn-menuitem-xs {
-        width: 50%;
-        height: 46px !important;
-        border: 1px solid @navbar-default-border;
-        background-color: @body-bg;
-        float: left;
-        margin-left: -1px;
-        margin-top: -1px;
-        min-width: 0;
-        img {
-          display: none;
-        }
-        &:hover {
-          border-color: @navbar-default-border;
-          background-color: @dropdown-link-hover-bg !important;
-        }
-      }
-    }
-    .signin-dropdown {
-      .navbar-form {
-        flex-direction: initial;
-        display: block !important;
-        padding: 0;
-        margin: 0;
-        border: 0;
-        .clearfix();
-        // username & password input
-        .form-group-sm {
-          width: 84%;
-          float: left;
-          .form-control {
-            height: 34px;
-            padding: 6px 12px;
-            font-size: 14px;
-          }
-        }
-        // submit button
-        .btn.pull-right {
-          width: 14%;
-          height: 73px;
-          margin-top: -39px;
-        }
       }
     }
     .language-switcher {
@@ -290,6 +181,12 @@
 
 }
 
+@media (max-width: @screen-xs-max) {
+  .container > .navbar-header, .container-fluid > .navbar-header, .container > .navbar-collapse, .container-fluid > .navbar-collapse {
+    margin-left: 0;
+    margin-right: 0;
+  }
+}
 @media (max-width: @grid-float-breakpoint) {
   .navbar-nav {
     margin: 0;

@@ -22,4 +22,19 @@
       background-color: @gn-bottombar-background-hover !important;
     }
   }
+  @media (max-width: @screen-xs-max) {
+    position: relative;
+    height: auto;
+    .navbar-text {
+      padding: 0 15px;
+      font-weight: bold;
+    }
+    .gn-navbar-social {
+      display: flex;
+      flex-flow: wrap;
+      .navbar-text {
+        width: 100%;
+      }
+    }
+  }
 }
