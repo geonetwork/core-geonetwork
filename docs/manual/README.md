@@ -96,34 +96,36 @@ If you are not familiar with python the mkdocs-material website has instructions
    mvn install -Pdefault
    ```
    
-## Deploy
+## Publish Documentation
 
-We use ``mike`` for publishing to https://geonetwork.github.io using `<major>.<minor>` version:
+We use ``mike`` for publishing (from the `gh-pages` branch). Docs are published by the ``.github/workflows/docs.yml`` automation each time pull-request is merged.
 
-1. To deploy docs from the `main` branch to website `gh-pages` branch:
+If you wish to preview using your own `gh-pages` branch:
+
+1. To deploy 4.4 docs as latest from the `main` branch to website `gh-pages` branch:
 
    ```bash
-   mike deploy --push --no-redirect --update-aliases 4.4 latest
+   mike deploy --title "4.4 Latest" --alias-type=copy --update-aliases 4.4 latest
    ```
-    
+
 2. To deploy documentation for a new release:
    
    ```bash
-   mike deploy --push --no-redirect --update-aliases 4.2 stable
+   mike deploy --push --alias-type=copy 4.2 stable
    ```
    
 3. When starting a new branch you can make it the default:
    
    ```bash
-   mike set-default --push 4.2
+   mike set-default --push 4.6
    ```
-   
-   Hint: When starting a new branch update `overview/changelog/` navigation tree also.
+    
+   Hint: When starting a new branch update `overview/changelog/history/index.md` headings for latest, maintenance, stable (for prior branches also).
 
 4. To publish documentation for a maintenance release:
 
    ```bash
-   mike deploy --push --no-redirect --update-aliases 3.12 maintenance
+   mike deploy --push --alias-type=copy 3.12 maintenance
    ```
 
 5. To show published versions:

@@ -147,8 +147,8 @@ nav:
     - overview/authors.md
     - 'Changelog':
       - overview/change-log/index.md
-      - 'Archive':
-        - overview/change-log/archive/index.md
+      - 'Release History':
+        - overview/change-log/history/index.md
         - overview/change-log/version-3.12.12.md
         - overview/change-log/version-3.12.11.md
         - overview/change-log/version-3.12.10.md
