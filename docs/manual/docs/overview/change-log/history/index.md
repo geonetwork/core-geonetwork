@@ -8,7 +8,7 @@ Volunteers wishing to backport security fixes to older versions of GeoNetwork ar
 
 The stable release of GeoNetwork is recommended for production use and for new installations of GeoNetwork.
 
-This series is under active use by our community, with regular improvements, documentation updates, bug reports, fixes, and releases.
+This series is under **active use** by our community, with regular improvements, documentation updates, bug reports, fixes, and releases.
 
 ### 4.2
 
@@ -27,7 +27,7 @@ This series is under active use by our community, with regular improvements, doc
 
 The maintenance release of GeoNetwork provides production systems with essential updates and fixes to allow time to upgrade to the recommended stable release. 
 
-This series is no longer under active development, providing essential fixes, and releases only.
+When available the maintenace series provides **time to upgrade** for our community - limited to providing essential fixes only.
 
 ### No maintenance release
 
