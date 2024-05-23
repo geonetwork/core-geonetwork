@@ -1170,9 +1170,9 @@
 
     <xsl:if test="@uom">
       <!-- Display the unit value only -->
-      <xsl:comment select="'.'"/>&#160; <xsl:value-of select="if (contains(@uom, '#'))
-                                    then concat(., ' ', tokenize(@uom, '#')[2])
-                                    else  concat(., ' ', @uom)"/>
+      &#160;<xsl:value-of select="if (contains(@uom, '#'))
+                                    then tokenize(@uom, '#')[2]
+                                    else @uom"/>
     </xsl:if>
   </xsl:template>
 
