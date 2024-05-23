@@ -1488,7 +1488,6 @@
       require: "ngInclude",
       restrict: "A",
       link: function (scope, el, attrs) {
-        console.log("gnIncludeAndReplace");
         el.replaceWith(el.children());
       }
     };
