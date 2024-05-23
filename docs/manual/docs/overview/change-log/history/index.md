@@ -1,6 +1,6 @@
 # Release History
 
-The GeoNetwork community is not large enough to maintain many active branches of GeoNetwork at one time. Older installations of GeoNetwork may be subject to disclosed security vulnerabilities resulting in our recommendation to update to the supported [stable](http://docs.geonetwork-opensource.org/stable/) or [maintenance](https://docs.geonetwork-opensource.org/maintenance/) series if available.
+The GeoNetwork community is not large enough to maintain many active branches of GeoNetwork at one time. Older installations of GeoNetwork may be subject to disclosed security vulnerabilities resulting in our recommendation to update to the supported [stable](#stable-release) or [maintenance](#maintenance-release) series listed below.
 
 Volunteers wishing to backport security fixes to older versions of GeoNetwork are welcome to do so. Commercial support providers are welcome to do so on behalf of their customers.
 
@@ -8,7 +8,7 @@ Volunteers wishing to backport security fixes to older versions of GeoNetwork ar
 
 The latest release of GeoNetwork is recommended for those enjoying the newest features from the GeoNetwork community. 
 
-This series is under active development by our community, with new features, improvements, documentation updates, bug reports, fixes, and releases.
+This series is under **active development** by our community, with new features, improvements, documentation updates, bug reports, fixes, and releases.
 
 ### 4.4
 
@@ -22,7 +22,7 @@ This series is under active development by our community, with new features, imp
 
 The stable release of GeoNetwork is recommended for production use and for new installations of GeoNetwork.
 
-This series is under active use by our community, with regular improvements, documentation updates, bug reports, fixes, and releases.
+This series is under **active use** by our community, with regular improvements, documentation updates, bug reports, fixes, and releases.
 
 ### 4.2
 
@@ -41,7 +41,7 @@ This series is under active use by our community, with regular improvements, doc
 
 The maintenance release of GeoNetwork provides production systems with essential updates and fixes to allow time to upgrade to the recommended stable release. 
 
-This series is no longer under active development, providing essential fixes, and releases only.
+When available the maintenace series provides **time to upgrade** for our community - limited to providing essential fixes only.
 
 ### No maintenance release
 

@@ -119,7 +119,7 @@ If you wish to preview using your own `gh-pages` branch:
    mike deploy --title "4.4 Latest" --alias-type=copy --update-aliases 4.4 latest
    ```
 
-2. To deploy documentation for a new release:
+2. To deploy documentation for stable release:
    
    ```bash
    mike deploy --push --alias-type=copy 4.2 stable
