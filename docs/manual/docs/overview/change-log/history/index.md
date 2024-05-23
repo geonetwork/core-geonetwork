@@ -1,6 +1,6 @@
 # Release History
 
-The GeoNetwork community is not large enough to maintain many active branches of GeoNetwork at one time. Older installations of GeoNetwork may be subject to disclosed security vulnerabilities resulting in our recommendation to update to the supported [stable](http://docs.geonetwork-opensource.org/stable/) or [maintenance](https://docs.geonetwork-opensource.org/maintenance/) series if available).
+The GeoNetwork community is not large enough to maintain many active branches of GeoNetwork at one time. Older installations of GeoNetwork may be subject to disclosed security vulnerabilities resulting in our recommendation to update to the supported [stable](http://docs.geonetwork-opensource.org/stable/) or [maintenance](https://docs.geonetwork-opensource.org/maintenance/) series if available.
 
 Volunteers wishing to backport security fixes to older versions of GeoNetwork are welcome to do so. Commercial support providers are welcome to do so on behalf of their customers.
 
@@ -12,6 +12,7 @@ This series is under active development by our community, with new features, imp
 
 ### 4.4
 
+-   [Version 4.4.4](../version-4.4.4.md)
 -   [Version 4.4.3](../version-4.4.3.md)
 -   [Version 4.4.2](../version-4.4.2.md)
 -   [Version 4.4.1](../version-4.4.1.md)
