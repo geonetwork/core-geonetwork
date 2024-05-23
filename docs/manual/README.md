@@ -23,6 +23,12 @@ If you are using Python3:
    ```bash
    pip3 install -r requirements.txt
    ```
+   
+   In the future you can update using:
+   
+   ```bash
+   pip3 install -r requirements.txt -U 
+   ```
 
 2. Use ***mkdocs** to preview locally:
 
@@ -55,6 +61,13 @@ If you use a Python virtual environment:
    pip install -r requirements.txt
    ```
    
+   In the future you can update with:
+   
+   ```bash
+   source venv/bin/activate
+   pip3 install -r requirements.txt
+   ```
+   
 2. Use ***mkdocs*** to preview from virtual environment:
 
    ```bash
@@ -63,18 +76,16 @@ If you use a Python virtual environment:
 
 3. Preview: http://localhost:8000
 
-### Docker
-
-If you are not familiar with Python the MkDocs-material website has instructions for Docker:
-
-1. Run MkDocs in Docker environment:
-
+   Preview uses a single version, so expect some warnings from version chooser:
    ```
-   docker pull squidfunk/mkdocs-material
-   docker run --rm -it -p 8000:8000 -v ${PWD}:/docs squidfunk/mkdocs-material
+   "GET /versions.json HTTP/1.1" code 404
    ```
+
+4. Optional: Preview online help:
    
-2. Preview: http://localhost:8000
+   ```bash
+   mkdocs serve --config-file help.yml  
+   ```
 
 ## Maven Integration
 
