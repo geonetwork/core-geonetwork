@@ -1,12 +1,30 @@
-# Archived
+# Release History
 
-The following series of GeoNetwork are no longer in active use and you are encouraged to migrate to a newer version.
-
-The GeoNetwork community is not large enough to maintain many active branches of GeoNetwork at one time. Older installations of GeoNetwork may be subject to disclosed security vulnerabilities resulting in our recommendation to update to the supported [stable](../stable/index.md) (or [maintenance](../maintenance/index.md) series if available).
+The GeoNetwork community is not large enough to maintain many active branches of GeoNetwork at one time. Older installations of GeoNetwork may be subject to disclosed security vulnerabilities resulting in our recommendation to update to the supported [stable](http://docs.geonetwork-opensource.org/stable/) or [maintenance](https://docs.geonetwork-opensource.org/maintenance/) series if available.
 
 Volunteers wishing to backport security fixes to older versions of GeoNetwork are welcome to do so. Commercial support providers are welcome to do so on behalf of their customers.
 
-## 4.2.x
+## Latest Release
+
+The latest release of GeoNetwork is recommended for those enjoying the newest features from the GeoNetwork community. 
+
+This series is under active development by our community, with new features, improvements, documentation updates, bug reports, fixes, and releases.
+
+### 4.4
+
+-   [Version 4.4.4](../version-4.4.4.md)
+-   [Version 4.4.3](../version-4.4.3.md)
+-   [Version 4.4.2](../version-4.4.2.md)
+-   [Version 4.4.1](../version-4.4.1.md)
+-   [Version 4.4.0](../version-4.4.0.md)
+
+## Stable Release
+
+The stable release of GeoNetwork is recommended for production use and for new installations of GeoNetwork.
+
+This series is under active use by our community, with regular improvements, documentation updates, bug reports, fixes, and releases.
+
+### 4.2
 
 - [Version 4.2.9](../version-4.2.9.md)
 - [Version 4.2.8](../version-4.2.8.md)
@@ -19,7 +37,23 @@ Volunteers wishing to backport security fixes to older versions of GeoNetwork ar
 - [Version 4.2.1](../version-4.2.1.md)
 - [Version 4.2.0](../version-4.2.0.md)
 
-## 4.0.x
+## Maintenance Release
+
+The maintenance release of GeoNetwork provides production systems with essential updates and fixes to allow time to upgrade to the recommended stable release. 
+
+This series is no longer under active development, providing essential fixes, and releases only.
+
+### No maintenance release
+
+With the final release of 3.12.12 there is no active maintenance release being provided.
+
+Production systems are advised to update to 4.2 above if they have not already done so.
+
+## Archived Releases
+
+The following series of GeoNetwork are no longer in active use and you are encouraged to migrate to a newer version.
+
+### 4.0
 
 -   [Version 4.0.6](../version-4.0.6.md)
 -   [Version 4.0.5](../version-4.0.5.md)
@@ -31,7 +65,7 @@ Volunteers wishing to backport security fixes to older versions of GeoNetwork ar
 -   [Version 4.0.0 Alpha.2](../version-4.0.0-alpha.2.md)
 -   [Version 4.0.0 Alpha.1](../version-4.0.0-alpha.1.md)
 
-## 3.12.x
+### 3.12
 
 -   [Version 3.12.12](../version-3.12.12.md)
 -   [Version 3.12.11](../version-3.12.11.md)
@@ -47,7 +81,7 @@ Volunteers wishing to backport security fixes to older versions of GeoNetwork ar
 -   [Version 3.12.1](../version-3.12.1.md)
 -   [Version 3.12.0](../version-3.12.0.md)
 
-## 3.10.x
+### 3.10
 
 -   [Version 3.10.10](../version-3.10.10.md)
 -   [Version 3.10.9](../version-3.10.9.md)
@@ -79,18 +113,18 @@ Volunteers wishing to backport security fixes to older versions of GeoNetwork ar
 -   [Version 3.0.1](../version-3.0.1.md)
 -   [Version 3.0.0](../version-3.0.0.md)
 
-## 3.8.x
+### 3.8
 
 -   [Version 3.8.3](../version-3.8.3.md)
 -   [Version 3.8.2](../version-3.8.2.md)
 -   [Version 3.8.1](../version-3.8.1.md)
 -   [Version 3.8.0](../version-3.8.0.md)
 
-## 3.6.x
+### 3.6
 
 -   [Version 3.6.0](../version-3.6.0.md)
 
-## 3.4.x
+### 3.4
 
 -   [Version 3.4.4](../version-3.4.4.md)
 -   [Version 3.4.3](../version-3.4.3.md)
@@ -98,13 +132,13 @@ Volunteers wishing to backport security fixes to older versions of GeoNetwork ar
 -   [Version 3.4.1](../version-3.4.1.md)
 -   [Version 3.4.0](../version-3.4.0.md)
 
-## 3.2.x
+### 3.2
 
 -   [Version 3.2.2](../version-3.2.2.md)
 -   [Version 3.2.1](../version-3.2.1.md)
 -   [Version 3.2.0](../version-3.2.0.md)
 
-## 3.0.x
+### 3.0
 
 -   [Version 3.0.4](../version-3.0.4.md)
 -   [Version 3.0.3](../version-3.0.3.md)
@@ -112,7 +146,7 @@ Volunteers wishing to backport security fixes to older versions of GeoNetwork ar
 -   [Version 3.0.1](../version-3.0.1.md)
 -   [Version 3.0.0](../version-3.0.0.md)
 
-## 2.10.x
+### 2.10
 
 All development has ceased:
 
