@@ -113,40 +113,20 @@ We use ``mike`` for publishing (from the `gh-pages` branch). Docs are published 
 
 If you wish to preview using your own `gh-pages` branch:
 
-1. To deploy 4.4 docs as latest from the `main` branch to website `gh-pages` branch:
-
-   ```bash
-   mike deploy --title "4.4 Latest" --alias-type=copy --update-aliases 4.4 latest
-   ```
-
-2. To deploy documentation for a new release:
+1. To deploy documentation for 3.12 branch:
    
    ```bash
-   mike deploy --push --alias-type=copy 4.2 stable
+   mike deploy --push 3.12 
    ```
    
-3. When starting a new branch you can make it the default:
-   
-   ```bash
-   mike set-default --push 4.6
-   ```
-    
-   Hint: When starting a new branch update `overview/changelog/history/index.md` headings for latest, maintenance, stable (for prior branches also).
-
-4. To publish documentation for a maintenance release:
-
-   ```bash
-   mike deploy --push --alias-type=copy 3.12 maintenance
-   ```
-
-5. To show published versions:
+2. To show published versions:
 
    ```bash
    
    mike list
    ```
 
-6. To preview things locally (uses your local ``gh-pages`` branch):
+3. To preview things locally (uses your local ``gh-pages`` branch):
    
    ```bash
    mike serve
