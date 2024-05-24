@@ -3,6 +3,10 @@
     <span translate>localStorageNotSupported</span>
   </div>
 
+  <div class="alert alert-danger" role="alert" ng-show="processes.length === 0">
+    <span translate>noRecentProcessFound</span>
+  </div>
+
   <ul class="list-group processes-list">
     <a
       href
