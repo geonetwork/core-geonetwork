@@ -87,6 +87,7 @@ extra:
   version:
     provider: mike
     default: stable
+    alias: true
   homepage: https://geonetwork-opensource.org/
   social:
     - icon: fontawesome/brands/github
