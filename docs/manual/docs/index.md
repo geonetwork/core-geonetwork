@@ -5,10 +5,6 @@ hide:
 
 # GeoNetwork 3.12 {#toc}
 
-!!! Warning
-
-    GeoNetwork `3.12.x` is deprecated and not maintained anymore.
-
 Welcome to GeoNetwork. This documentation is organized into specific guides targeting different audience. 
 
 
