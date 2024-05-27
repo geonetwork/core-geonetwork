@@ -285,6 +285,14 @@ public interface Store {
     String delResources(ServiceContext context, String metadataUuid, Boolean approved) throws Exception;
 
     /**
+     * Delete all resources for a metadata
+     *
+     * @param context
+     * @param metadataId The metadata ID
+     */
+    String delResources(ServiceContext context, int metadataId) throws Exception;
+
+    /**
      * Delete a resource from the metadata store
      *
      * @param context

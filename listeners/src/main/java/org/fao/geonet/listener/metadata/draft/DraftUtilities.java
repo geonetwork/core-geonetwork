@@ -146,7 +146,6 @@ public class DraftUtilities {
             Element xmlData = draft.getXmlData(false);
             String changeDate = draft.getDataInfo().getChangeDate().getDateAndTime();
 
-            store.delResources(context, draft.getUuid(), false);
             removeDraft((MetadataDraft) draft);
 
             // Copy contents
@@ -156,6 +155,9 @@ public class DraftUtilities {
                 context.getLanguage(), changeDate, true, IndexingMode.full);
 
             Log.info(Geonet.DATA_MANAGER, "Record updated with draft contents: " + md.getId());
+
+            Log.info(Geonet.DATA_MANAGER, "Cleaning up draft record resources");
+            store.delResources(context, draft.getId());
 
         } catch (Exception e) {
             Log.error(Geonet.DATA_MANAGER, "Error upgrading from draft record with id " + md.getId(), e);

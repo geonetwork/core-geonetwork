@@ -182,8 +182,7 @@ public class S3Store extends AbstractStore {
     }
 
     @Override
-    public String delResources(final ServiceContext context, final String metadataUuid, Boolean approved) throws Exception {
-        int metadataId = canEdit(context, metadataUuid, approved);
+    public String delResources(final ServiceContext context, final int metadataId) throws Exception {
         try {
             final ListObjectsV2Result objects = s3.getClient().listObjectsV2(
                 s3.getBucket(), getMetadataDir(metadataId));
