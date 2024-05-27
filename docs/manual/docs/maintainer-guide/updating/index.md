@@ -81,5 +81,6 @@ Guidance:
 
 * For information on new features and functionality:
   
-   * [Changelog 4.2.x](../../overview/change-log/stable/index.md)
-   * [Changelog 4.0.x](../../overview/change-log/archive/index.md#40x)
+   * [Changelog 4.2](../../overview/change-log/history/index.md#42)
+   * [Changelog 4.0](../../overview/change-log/history/index.md#40]
+   
