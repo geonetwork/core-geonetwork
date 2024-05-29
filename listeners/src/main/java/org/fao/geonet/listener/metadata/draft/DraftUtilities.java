@@ -154,9 +154,9 @@ public class DraftUtilities {
                 xmlData, false, false,
                 context.getLanguage(), changeDate, true, IndexingMode.full);
 
-            Log.info(Geonet.DATA_MANAGER, "Record updated with draft contents: " + md.getId());
+            Log.info(Geonet.DATA_MANAGER, "Record '" + md.getUuid() + "(" +md.getId() +")' update with draft contents from metadata id '" + draft.getId() +"'.");
 
-            Log.info(Geonet.DATA_MANAGER, "Cleaning up draft record resources");
+            Log.info(Geonet.DATA_MANAGER, "Cleaning up draft record resources for metadata '" + draft.getUuid() + "(" +draft.getId() +")'");
             store.delResources(context, draft.getId());
 
         } catch (Exception e) {
