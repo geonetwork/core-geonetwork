@@ -1880,7 +1880,13 @@
 <p><img alt="" src="../img/doi-admin-console.png" /></p>
 <p>A record can be downloaded using the DataCite format from the API using: <a href="http://localhost:8080/geonetwork/srv/api/records/da165110-88fd-11da-a88f-000d939bc5d8/formatters/datacite?output=xml">http://localhost:8080/geonetwork/srv/api/records/da165110-88fd-11da-a88f-000d939bc5d8/formatters/datacite?output=xml</a></p>
 <h2 id="creating-the-doi">Creating the DOI</h2>
-<p>Once configured, DOI can be created using the interface. DOI is created on demand. It means that a user must ask for creation of a DOI. When created, the task is notified by email to the reviewer of the group (by default, can be configured for administrator only using the notification level of the task).</p>
+<p>Once configured, DOI can be created using the interface. DOI is created on demand. It means that a user must ask for creation of a DOI. It can be created by:</p>
+<ul>
+<li>The user who created the metadata.</li>
+<li>A user with Reviewer profile in the metadata group owner.</li>
+<li>A user with Administrator profile.</li>
+</ul>
+<p>When created, the task is notified by email to the reviewer of the group (by default, can be configured for administrator only using the notification level of the task).</p>
 <p><img alt="" src="../img/doi-request-menu.png" /></p>
 <p>The task is assigned to a specific user. An optional due date and comment can be defined:</p>
 <p><img alt="" src="../img/doi-request-popup.png" /></p>
