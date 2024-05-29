@@ -197,9 +197,11 @@ public class DoiServersApi {
                 doiServerDto.getId()
             ));
         } else {
-            doiServerRepository.save(doiServerDto.asDoiServer());
+            DoiServer doiServer = doiServerDto.asDoiServer();
+            doiServerRepository.save(doiServer);
+
+            return new ResponseEntity<>(doiServer.getId(), HttpStatus.CREATED);
         }
-        return new ResponseEntity<>(doiServerDto.getId(), HttpStatus.CREATED);
     }
 
     @io.swagger.v3.oas.annotations.Operation(
@@ -297,7 +299,7 @@ public class DoiServersApi {
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_ADMIN)
     })
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void updateMapserverAuth(
+    public void updateDoiServerAuth(
         @Parameter(
             description = API_PARAM_DOISERVER_IDENTIFIER,
             required = true,
