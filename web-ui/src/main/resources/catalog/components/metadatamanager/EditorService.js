@@ -424,7 +424,7 @@
             version: getInputValue("version"),
             tab: getInputValue("currTab"),
             geoPublisherConfig: angular.fromJson(getInputValue("geoPublisherConfig")),
-            resourceContainerDescription: angular.fromJson(
+            resourceContainerDescription: getInputValue("resourceContainerDescription") ==''? null : angular.fromJson(
               getInputValue("resourceContainerDescription")
             ),
             resourceManagementExternalProperties: angular.fromJson(
