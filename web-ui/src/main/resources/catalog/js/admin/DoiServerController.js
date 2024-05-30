@@ -78,8 +78,10 @@
         });
       }
 
-      $scope.updateDoiServerUrl = function (newUrl) {
+      $scope.updateDoiServerUrl = function (newUrl, urlPrefix) {
         $scope.doiServerSelected.url = newUrl;
+        $scope.doiServerSelected.publicUrl = urlPrefix;
+
         $scope.gnDoiServerEdit.$setDirty();
       };
 
