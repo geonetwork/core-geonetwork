@@ -130,7 +130,7 @@
           },
           {
             type: "doiservers",
-            icon: "fa-globe",
+            icon: "gn-icon-doi",
             label: "manageDoiServers",
             href: "#/settings/doiservers"
           },
