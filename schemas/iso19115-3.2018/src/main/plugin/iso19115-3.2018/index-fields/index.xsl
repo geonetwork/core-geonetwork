@@ -1391,7 +1391,7 @@
                   select="replace(*[1]/cit:role/*/@codeListValue, ' ', '')"
                   as="xs:string?"/>
     <xsl:variable name="logo" select="(.//cit:logo/*/mcc:fileName/*)[1]"/>
-    <xsl:variable name="website" select=".//cit:onlineResource/*/cit:linkage/gco:CharacterString"/>
+    <xsl:variable name="website" select="(.//cit:onlineResource/*/cit:linkage/gco:CharacterString)[1]"/>
     <xsl:variable name="email"
                   select="(.//cit:contactInfo/*/cit:address/*/cit:electronicMailAddress/gco:CharacterString)[1]"/>
     <xsl:variable name="phone"
