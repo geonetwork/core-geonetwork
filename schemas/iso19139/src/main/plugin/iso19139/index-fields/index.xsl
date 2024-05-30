@@ -620,7 +620,7 @@
                           select="gn-fn-index:build-thesaurus-index-field-name($thesaurusId, $thesaurusTitle)"/>
 
             <xsl:variable name="keywords"
-                          select="gmd:keyword[*/normalize-space() != '']"/>
+                          select="current-group()/gmd:keyword[*/normalize-space() != '']"/>
 
             <thesaurus>
               <info type="{$thesaurusType}"
