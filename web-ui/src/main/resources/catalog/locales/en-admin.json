@@ -1503,6 +1503,9 @@
     "doiserver-prefix-help": "Usually looks like 10.xxxx. You will be allowed to register DOI names only under the prefixes that have been assigned to you.",
     "doiserver-publicationGroups": "Publication groups",
     "doiserver-publicationGroups-help": "Select the groups which metadata should be published to the DOI server. If no groups are selected, the server will be provided to publish the metadata that has no other DOI servers related to the metadata owner group.",
+    "doiserver-defaultApiText": "DataCite API",
+    "doiserver-testApiText": "DataCite API test",
+    "doiserver-euApiText": "Publication Office of the European Union",
     "confirmDoiServerDelete": "Are you sure you want to delete this DOI server?"
 }
 

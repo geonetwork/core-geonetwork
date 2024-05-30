@@ -172,24 +172,26 @@
                   <ul class="dropdown-menu dropdown-menu-right">
                     <li>
                       <a
-                        data-ng-click="doiServerSelected.url = 'https://mds.datacite.org'"
-                        title="https://mds.datacite.org"
-                        >DataCite API (https://mds.datacite.org)</a
+                        data-ng-click="updateDoiServerUrl('https://mds.datacite.org')"
+                        title="{{'doiserver-defaultApiText' | translate}}"
+                        data-translate=""
+                        >doiserver-defaultApiText</a
                       >
                     </li>
                     <li>
                       <a
-                        data-ng-click="doiServerSelected.url = 'https://mds.test.datacite.org'"
-                        title="https://mds.test.datacite.org"
-                        >DataCite API test (https://mds.test.datacite.org)</a
+                        data-ng-click="updateDoiServerUrl('https://mds.test.datacite.org')"
+                        title="{{'doiserver-testApiText' | translate}}"
+                        data-translate=""
+                        >doiserver-testApiText</a
                       >
                     </li>
                     <li>
                       <a
-                        data-ng-click="doiServerSelected.url = 'https://ra.publications.europa.eu/servlet/ws/doidata?api=medra.org'"
-                        title="Publication Office of the European Union"
-                        >Publication Office of the European Union
-                        (https://ra.publications.europa.eu/servlet/ws/doidata?api=medra.org)</a
+                        data-ng-click="updateDoiServerUrl('https://ra.publications.europa.eu/servlet/ws/doidata?api=medra.org')"
+                        title="{{'doiserver-euApiText' | translate}}"
+                        data-translate=""
+                        >doiserver-euApiText</a
                       >
                     </li>
                   </ul>
