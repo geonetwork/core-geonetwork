@@ -859,11 +859,9 @@ public final class XslUtil {
         try {
             Set<String> fields = new HashSet<>();
             fields.add(fieldname);
-            // TODO: Multilingual fields
-            final Map<String, String> values = searchManager.getFieldsValues(id, fields);
+            final Map<String, String> values = searchManager.getFieldsValues(id, fields, language);
             return values.get(fieldname);
         } catch (Exception e) {
-            e.printStackTrace();
             Log.error(Geonet.GEONETWORK, "Failed to get index field '" + fieldname + "' value on '" + id + "', caused by " + e.getMessage());
         }
         return "";
