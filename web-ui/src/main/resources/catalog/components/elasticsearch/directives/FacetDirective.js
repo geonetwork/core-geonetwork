@@ -284,8 +284,10 @@
    * @param $scope
    * @constructor
    */
-  var FacetController = function ($scope) {
+  var FacetController = function ($scope, $translate, $filter) {
     this.$scope = $scope;
+    this.$translate = $translate;
+    this.$filter = $filter;
   };
 
   FacetController.prototype.$onInit = function () {
@@ -321,6 +323,14 @@
     return this.searchCtrl.isInSearch(item.path);
   };
 
+  FacetController.prototype.getTooltip = function (item) {
+    if (item.definition) {
+      return this.$translate.instant(item.definition + "-tooltip");
+    } else {
+      return this.$filter("facetTranslator")(item.value);
+    }
+  };
+
   FacetController.prototype.toggleCollapse = function () {
     this.item.collapsed = !this.item.collapsed;
   };
@@ -331,7 +341,7 @@
     this.filter(this.facet, item);
   };
 
-  FacetController.$inject = ["$scope"];
+  FacetController.$inject = ["$scope", "$translate", "$filter"];
 
   module.directive("esFacet", [
     "gnLangs",
