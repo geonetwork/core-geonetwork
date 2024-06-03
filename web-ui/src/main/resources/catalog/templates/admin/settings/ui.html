@@ -99,9 +99,12 @@
       </div>
     </div>
 
-    <div class="panel panel-default" data-ng-show="uiConfigurations">
+    <div
+      class="panel panel-default"
+      data-ng-show="uiConfiguration.configuration !== undefined"
+    >
       <div class="panel-heading">
-        <h1 data-translate="">ui</h1>
+        <h1><span data-translate="">ui</span> <strong>{{uiConfiguration.id}}</strong></h1>
 
         <div data-gn-need-help="user-interface-configuration" class="pull-right"></div>
       </div>

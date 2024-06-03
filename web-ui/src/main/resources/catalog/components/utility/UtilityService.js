@@ -923,4 +923,44 @@
       };
     }
   ]);
+
+  module.provider("gnLanguageService", function () {
+    this.$get = [
+      "$q",
+      "$http",
+      function ($q, $http) {
+        return {
+          getLanguages: function () {
+            var defer = $q.defer();
+            var url = "../api/isolanguages";
+            $http.get(url, { cache: true }).then(
+              function (response) {
+                defer.resolve(response.data);
+              },
+              function (error) {
+                defer.reject(error);
+              }
+            );
+            return defer.promise;
+          },
+
+          getLanguageAutocompleter: function (data) {
+            var source = new Bloodhound({
+              datumTokenizer: Bloodhound.tokenizers.obj.whitespace(
+                "name",
+                "code",
+                "english"
+              ),
+              queryTokenizer: Bloodhound.tokenizers.whitespace,
+              local: data,
+              limit: 30
+            });
+            source.initialize();
+
+            return source;
+          }
+        };
+      }
+    ];
+  });
 })();

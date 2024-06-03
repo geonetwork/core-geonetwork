@@ -153,7 +153,9 @@
 
     // Define a local copy of jQuery
     jQuery = function( selector, context ) {
-
+      if (context == undefined && typeof gnShadowRoot !== 'undefined') {
+        context = gnShadowRoot;
+      }
       // The jQuery object is actually just the init constructor 'enhanced'
       // Need init if jQuery is called (just allow error to be thrown if not included)
       return new jQuery.fn.init( selector, context );
@@ -3961,7 +3963,9 @@
     //    - Node.DOCUMENT_NODE
     //  - Object
     //    - Any
-    return owner.nodeType === 1 || owner.nodeType === 9 || !( +owner.nodeType );
+    // https://github.com/jquery/jquery/issues/4317
+    return owner.nodeType === 1 || owner.nodeType === 9 || (owner.nodeType === 11 && owner.host) || !( +owner.nodeType );
+    // return owner.nodeType === 1 || owner.nodeType === 9 || !( +owner.nodeType );
   };
 
 

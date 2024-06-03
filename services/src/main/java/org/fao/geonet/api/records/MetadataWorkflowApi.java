@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2023 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2024 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -61,7 +61,6 @@ import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.languages.FeedbackLanguages;
 import org.fao.geonet.repository.*;
 import org.fao.geonet.util.MetadataPublicationMailNotifier;
-import org.fao.geonet.util.UserUtil;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
@@ -228,12 +227,13 @@ public class MetadataWorkflowApi {
         HttpServletRequest request) throws Exception {
         AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
         Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
+        ResourceBundle messages = ApiUtils.getMessagesResourceBundle(request.getLocales());
         ServiceContext context = ApiUtils.createServiceContext(request, locale.getISO3Language());
 
         // --- only allow the owner of the record to set its status
         if (!accessManager.isOwner(context, String.valueOf(metadata.getId()))) {
             throw new SecurityException(
-                "Only the owner of the metadata can get the status. User is not the owner of the metadata");
+                messages.getString("api.metadata.status.errorGetStatusNotAllowed"));
         }
 
         MetadataStatus recordStatus = metadataStatus.getStatus(metadata.getId());
@@ -480,7 +480,7 @@ public class MetadataWorkflowApi {
         // --- only allow the owner of the record to set its status
         if (!accessManager.isOwner(context, String.valueOf(metadata.getId()))) {
             throw new SecurityException(
-                "Only the owner of the metadata can set the status of this record. User is not the owner of the metadata.");
+                messages.getString("api.metadata.status.errorSetStatusNotAllowed"));
         }
 
         boolean isAllowedSubmitApproveInvalidMd = settingManager
@@ -530,13 +530,13 @@ public class MetadataWorkflowApi {
 
         if ((status.getStatus() == Integer.parseInt(StatusValue.Status.APPROVED) && notifyByEmail)
             && (this.metadataUtils.isMetadataPublished(metadataIdApproved))) {
-                MetadataPublicationNotificationInfo metadataNotificationInfo = new MetadataPublicationNotificationInfo();
-                metadataNotificationInfo.setMetadataUuid(metadata.getUuid());
-                metadataNotificationInfo.setMetadataId(metadataIdApproved);
-                metadataNotificationInfo.setGroupId(metadata.getSourceInfo().getGroupOwner());
-                metadataNotificationInfo.setPublished(true);
-                metadataNotificationInfo.setPublicationDateStamp(new ISODate());
-                metadataNotificationInfo.setReapproval(metadataIdApproved != metadata.getId());
+            MetadataPublicationNotificationInfo metadataNotificationInfo = new MetadataPublicationNotificationInfo();
+            metadataNotificationInfo.setMetadataUuid(metadata.getUuid());
+            metadataNotificationInfo.setMetadataId(metadataIdApproved);
+            metadataNotificationInfo.setGroupId(metadata.getSourceInfo().getGroupOwner());
+            metadataNotificationInfo.setPublished(true);
+            metadataNotificationInfo.setPublicationDateStamp(new ISODate());
+            metadataNotificationInfo.setReapproval(metadataIdApproved != metadata.getId());
 
 
             // If the metadata workflow is enabled retrieve the submitter and reviewer users information
@@ -928,7 +928,7 @@ public class MetadataWorkflowApi {
             Element mdNoGeonetInfo = metadataUtils.removeMetadataInfo(md);
 
             metadataManager.updateMetadata(context, String.valueOf(metadata.getId()), mdNoGeonetInfo, false, true, context.getLanguage(),
-                null, false, IndexingMode.full);
+                null, true, IndexingMode.full);
             recoveredMetadataId = metadata.getId();
         } else {
             // Recover from delete

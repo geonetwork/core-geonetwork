@@ -966,6 +966,144 @@
     }
   ]);
 
+  /**
+   * @ngdoc directive
+   * @name gn_utility.directive:gnDataPicker
+   * @function
+   *
+   * @description
+   * A generic directive that allows to select values from the provided source (Bloodhound object).
+   *
+   * The selected values are returned as a comma separated string in the 'value' scope property.
+   *
+   * Data model:
+   *   - code: Value to select.
+   *   - name: Label to display.
+   *
+   */
+  module.directive("gnDataPicker", [
+    "$timeout",
+    function ($timeout) {
+      return {
+        restrict: "A",
+        replace: true,
+        transclude: true,
+        templateUrl: "../../catalog/components/utility/partials/dataselector.html",
+        scope: {
+          source: "<",
+          elementId: "@",
+          value: "=",
+          maxTags: "@"
+        },
+        link: function (scope, element, attrs) {
+          scope.prefix = attrs["prefix"] || "";
+          scope.selected = [];
+          scope.initialValues = [];
+          scope.initialised = false;
+
+          var id = "#tagsinput_" + scope.elementId;
+
+          var initTagsInput = function () {
+            $timeout(function () {
+              try {
+                $(id).tagsinput({
+                  itemValue: "code",
+                  itemText: "name",
+                  maxTags: scope.maxTags
+                });
+
+                var source = scope.source;
+
+                scope.$watch("value", function (newValue, oldValue) {
+                  if (
+                    newValue !== oldValue ||
+                    (scope.initialValues.length == 0 && newValue)
+                  ) {
+                    scope.initialValues = newValue.split(",");
+
+                    scope.selected = [];
+                    $(id).tagsinput("removeAll");
+
+                    angular.forEach(scope.initialValues, function (value) {
+                      scope.selected = scope.selected.concat(
+                        _.filter(source.local, ["code", value])
+                      );
+                    });
+
+                    // Add selection to the list of tags
+                    angular.forEach(scope.selected, function (keyword) {
+                      $(id).tagsinput("add", keyword);
+                    });
+                  }
+                });
+
+                function allOrSearchFn(q, sync) {
+                  if (q === "") {
+                    sync(source.all());
+                  } else {
+                    source.search(q, sync);
+                  }
+                }
+
+                var field = $(id).tagsinput("input");
+
+                field
+                  .typeahead(
+                    {
+                      minLength: 0,
+                      highlight: true
+                    },
+                    {
+                      name: "datapicker",
+                      displayKey: "code",
+                      source: allOrSearchFn,
+                      limit: Infinity,
+                      templates: {
+                        suggestion: function (datum) {
+                          return "<p>" + datum.name + " (" + datum.code + ")</p>";
+                        }
+                      }
+                    }
+                  )
+                  .bind(
+                    "typeahead:selected",
+                    $.proxy(function (obj, keyword) {
+                      // Add to tags
+                      this.tagsinput("add", keyword);
+
+                      // Update selection and snippet
+                      angular.copy(this.tagsinput("items"), scope.selected);
+                      scope.value = _.map(scope.selected, "code").join(",");
+
+                      // Clear typeahead
+                      this.tagsinput("input").typeahead("val", "");
+                      field.blur();
+                      field.triggerHandler("input"); // force angular to see changes
+                    }, $(id))
+                  );
+
+                $(id).on("itemRemoved", function () {
+                  angular.copy($(this).tagsinput("items"), scope.selected);
+                  scope.value = _.map(scope.selected, "code").join(",");
+                  field.blur();
+                  field.triggerHandler("input"); // force angular to see changes
+                });
+              } catch (e) {
+                console.warn("No tagsinput for " + id + ", error: " + e.message);
+              }
+            });
+          };
+
+          scope.$watch("source", function (newValue, oldValue) {
+            if (newValue && newValue != oldValue) {
+              initTagsInput();
+            }
+          });
+        }
+      };
+    }
+  ]);
+
   module.directive("gnHumanizeTime", [
     "gnGlobalSettings",
     "gnHumanizeTimeService",
@@ -2146,11 +2284,11 @@
    * to the parent element (required to highlight
    * element in navbar)
    */
+
   module.directive("gnActiveTbItem", [
     "$location",
-    "gnLangs",
-    "gnConfig",
-    function ($location, gnLangs, gnConfig) {
+    "$filter",
+    function ($location, $filter) {
       return {
         restrict: "A",
         link: function (scope, element, attrs) {
@@ -2158,11 +2296,7 @@
             href,
             isCurrentService = false;
 
-          // Replace lang in link (three character language code i.e. eng, fre)
-          link = link.replace("{{lang}}", gnLangs.getCurrent());
-          // Replace standard ISO lang in link (two character language code i.e. en, fr)
-          link = link.replace("{{isoLang}}", gnLangs.getIso2Lang(gnLangs.getCurrent()));
-          link = link.replace("{{node}}", gnConfig.env.node);
+          link = $filter("setUrlPlaceholder")(link);
 
           // Insert debug mode between service and route
           if (link.indexOf("#") !== -1) {
@@ -2212,16 +2346,25 @@
       };
     }
   ]);
-  module.filter("signInLink", [
-    "$location",
+  module.filter("setUrlPlaceholder", [
     "gnLangs",
     "gnConfig",
-    function ($location, gnLangs, gnConfig) {
+    function (gnLangs, gnConfig) {
+      return function (url) {
+        return url
+          .replace("{{lang}}", gnLangs.getCurrent())
+          .replace("{{isoLang}}", gnLangs.getIso2Lang(gnLangs.getCurrent()))
+          .replace("{{node}}", gnConfig.env.node);
+      };
+    }
+  ]);
+  module.filter("signInLink", [
+    "$location",
+    "$filter",
+    function ($location, $filter) {
       return function (href) {
         href =
-          href
-            .replace("{{lang}}", gnLangs.getCurrent())
-            .replace("{{node}}", gnConfig.env.node) +
+          $filter("setUrlPlaceholder")(href) +
           "?redirect=" +
           encodeURIComponent(window.location.href);
         return href;
