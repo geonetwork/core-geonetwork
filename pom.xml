@@ -1322,6 +1322,7 @@
     <module>messaging</module>
     <module>estest</module>
     <module>index</module>
+    <module>translationproviders</module>
   </modules>
 
   <profiles>

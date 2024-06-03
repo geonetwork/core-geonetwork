@@ -17,6 +17,12 @@
     "allowedCategoriesDescriptionHelp": "Categories that can be applied to this group",
     "harvesterBatchEdits": "Batch edits",
     "harvesterBatchEditsHelp": "Batch edits allow to update harvested records. It can be use to add, replace or delete element.",
+    "harvesterTranslateContent": "Translate metadata content",
+    "harvesterTranslateContentHelp": "Allow to use a translation provider to translate the metadata elements.",
+    "harvesterTranslateContentLangs": "Languages to translate the metadata content to",
+    "harvesterTranslateContentLangsHelp": "A list of languages to translate the metadata.",
+    "harvesterTranslateContentFields": "Fields to translate",
+    "harvesterTranslateContentFieldsHelp": "A list of XPATH fields to translate (one per line). For ISO19139 / ISO19115.3-2008 metadata fields should be of type string (gco:CharacterString / gmx:Anchor).",
     "andNodeLogo": " and logo",
     "applyXSLToRecord": "XSL transformation to apply",
     "applyXSLToRecordHelp": "The referenced XSL transform will be applied to each metadata record before it is added to Geonetwork",
@@ -803,6 +809,10 @@
     "system/server/protocol": "Preferred Protocol",
     "system/server/log": "Log level",
     "system/index": "Index options",
+    "system/translation": "Translation service",
+    "system/translation/provider": "Translation service provider",
+    "system/translation/serviceUrl": "Service URL",
+    "system/translation/apiKey": "API Key",
     "metadata/url": "Link to metadata",
     "metadata/url/sitemapDoiFirst": "Use DOI for sitemap URL if present",
     "metadata/url/sitemapLinkUrl": "Sitemap and permalink URL template",
@@ -1478,6 +1488,8 @@
     "es.url": "Elasticsearch server",
     "es.version": "Elasticsearch version",
     "es.index": "Index name",
-    "systemPropertiesProxyConfiguration": "Using http proxy settings in system properties."
+    "systemPropertiesProxyConfiguration": "Using http proxy settings in system properties.",
+    "NoTranslationProvider": "No translation provider",
+    "LibreTranslate": "Libretranslate"
 }
 
