@@ -407,8 +407,8 @@ public class CMISStore extends AbstractStore {
             return String.format("Unable to located metadata '%d' directory '%s' to be removed.", metadataId, folderKey);
         } catch (CmisPermissionDeniedException e) {
             Log.warning(Geonet.RESOURCES,
-                    String.format("Insufficient privileges, unable to remove metadata '%s' directory '%s'.", metadataId, folderKey));
-            return String.format("Insufficient privileges, unable to remove metadata '%s' directory '%s'.", metadataId, folderKey);
+                    String.format("Insufficient privileges, unable to remove metadata '%d' directory '%s'.", metadataId, folderKey));
+            return String.format("Insufficient privileges, unable to remove metadata '%d' directory '%s'.", metadataId, folderKey);
         } catch (CmisConstraintException e) {
             Log.warning(Geonet.RESOURCES,
                     String.format("Unable to remove metadata '%d' directory '%s' due so constraint violation or locks.", metadataId, folderKey));
