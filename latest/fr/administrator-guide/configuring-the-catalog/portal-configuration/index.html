@@ -2147,6 +2147,24 @@
 <p>The list of sub-portal available is at <a href="http://localhost:8080/geonetwork/srv/api/sources">http://localhost:8080/geonetwork/srv/api/sources</a></p>
 <p><img alt="" src="../../../../administrator-guide/configuring-the-catalog/img/portal-list.png" /></p>
 <h2 id="example-of-usage">Example of usage</h2>
+<p>To find the lucene element terms available for filtering you can query a record in your ElasticSearch instance: </p>
+<p><code>POST /gn-records*/_search
+{"query":{"query_string":{"query":"+uuid:\"EXT_DS120344\""}}}</code></p>
+<p>This shows elements such as keywords are grouped together under a "tag" element. A tag element in a multilingual catalogue looks something like this:
+<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>&quot;tag&quot; : [
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>            {
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>              &quot;default&quot; : &quot;BIRDS&quot;,
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>              &quot;langeng&quot; : &quot;BIRDS&quot;
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>            },
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>            {
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>              &quot;default&quot; : &quot;MARINE&quot;,
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>              &quot;langeng&quot; : &quot;MARINE&quot;,
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>              &quot;key&quot; : &quot;https://registry.geonetwork-opensource.org/theme/nrw-keywords/marine-uc&quot;
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>            },
+</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>...
+</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>]
+</span></code></pre></div></p>
+<p>You can use the lucene search <code>+tag.default:"BIRDS"</code> as the filter for a sub-portal.</p>
 <h3 id="creating-an-inspire-directive-sub-portal">Creating an INSPIRE directive sub-portal</h3>
 <p>For the INSPIRE directive, a catalogue administrator needs to publish an entry point providing access only to INSPIRE related records. An INSPIRE sub-portal can be created with a filter on keywords <code>+thesaurusName:"GEMET - INSPIRE themes, version 1.0"</code>.</p>
 <h3 id="creating-a-sub-portal-for-partners">Creating a sub-portal for partners</h3>
@@ -2177,7 +2195,7 @@
 <p>In some situations, you also want to share templates among partners. There are 2 options for this:</p>
 <ul>
 <li>Publish the template in all partner's groups. The main drawback in this case is that if a new group is added, the templates need to be published to that new group.</li>
-<li>Create a dedicated group for shared records eg. <code>sharedGroup</code>. Publish templates in that shared space. Alter the sub-portal filter to match either the partner group or the shared one. <code>+_groupPublished:(oca OR sharedGroup)</code>.</li>
+<li>Create a dedicated group for shared records eg. <code>sharedGroup</code>. Publish templates in that shared space. Alter the sub-portal filter to match either the partner group or the shared one. <code>+groupPublished:(oca OR sharedGroup)</code>.</li>
 </ul>
 
 
