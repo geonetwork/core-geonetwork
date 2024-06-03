@@ -1,6 +1,6 @@
 /*
  * =============================================================================
- * ===	Copyright (C) 2001-2023 Food and Agriculture Organization of the
+ * ===	Copyright (C) 2001-2024 Food and Agriculture Organization of the
  * ===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * ===	and United Nations Environment Programme (UNEP)
  * ===
@@ -50,6 +50,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
+import org.springframework.util.AntPathMatcher;
 import org.springframework.util.StreamUtils;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
@@ -60,6 +61,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.HandlerMapping;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import javax.annotation.PostConstruct;
@@ -255,7 +257,7 @@ public class AttachmentsApi {
 
     @io.swagger.v3.oas.annotations.Operation(summary = "Get a metadata resource")
     // @PreAuthorize("permitAll")
-    @RequestMapping(value = "/{resourceId:.+}", method = RequestMethod.GET)
+    @RequestMapping(value = "/{resourceId}/**", method = RequestMethod.GET)
     @ResponseStatus(value = HttpStatus.OK)
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Record attachment.",
         content = @Content(schema = @Schema(type = "string", format = "binary"))),
@@ -269,8 +271,13 @@ public class AttachmentsApi {
         @Parameter(hidden = true) HttpServletRequest request,
         @Parameter(hidden = true) HttpServletResponse response
     ) throws Exception {
+
+        // To support files in subfolders
+        String resourceIdFile = retrieveResourceFileFromUrl(request);
+
         ServiceContext context = ApiUtils.createServiceContext(request);
-        try (Store.ResourceHolder file = store.getResource(context, metadataUuid, resourceId, approved)) {
+
+        try (Store.ResourceHolder file = store.getResource(context, metadataUuid, resourceIdFile, approved)) {
 
             ApiUtils.canViewRecord(metadataUuid, request);
 
@@ -300,7 +307,7 @@ public class AttachmentsApi {
     @PreAuthorize("hasAuthority('Editor')")
     @ApiResponses(value = {@ApiResponse(responseCode = "201", description = "Attachment visibility updated."),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)})
-    @RequestMapping(value = "/{resourceId:.+}", method = RequestMethod.PATCH, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/{resourceId}/**", method = RequestMethod.PATCH, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.CREATED)
     @ResponseBody
     public MetadataResource patchResource(
@@ -309,13 +316,17 @@ public class AttachmentsApi {
         @Parameter(description = "The visibility", required = true, example = "public") @RequestParam(required = true) MetadataResourceVisibility visibility,
         @Parameter(description = "Use approved version or not", example = "true") @RequestParam(required = false, defaultValue = "false") Boolean approved,
         @Parameter(hidden = true) HttpServletRequest request) throws Exception {
+
+        // To support files in subfolders
+        String resourceIdFile = retrieveResourceFileFromUrl(request);
+
         ServiceContext context = ApiUtils.createServiceContext(request);
-        return store.patchResourceStatus(context, metadataUuid, resourceId, visibility, approved);
+        return store.patchResourceStatus(context, metadataUuid, resourceIdFile, visibility, approved);
     }
 
     @io.swagger.v3.oas.annotations.Operation(summary = "Delete a metadata resource")
     @PreAuthorize("hasAuthority('Editor')")
-    @RequestMapping(value = "/{resourceId:.+}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/{resourceId}/**", method = RequestMethod.DELETE)
     @ApiResponses(value = {@ApiResponse(responseCode = "204", description = "Attachment visibility removed."),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)})
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
@@ -324,8 +335,12 @@ public class AttachmentsApi {
         @Parameter(description = "The resource identifier (ie. filename)", required = true) @PathVariable String resourceId,
         @Parameter(description = "Use approved version or not", example = "true") @RequestParam(required = false, defaultValue = "false") Boolean approved,
         @Parameter(hidden = true) HttpServletRequest request) throws Exception {
+
+        // To support files in subfolders
+        String resourceIdFile = retrieveResourceFileFromUrl(request);
+
         ServiceContext context = ApiUtils.createServiceContext(request);
-        store.delResource(context, metadataUuid, resourceId, approved);
+        store.delResource(context, metadataUuid, resourceIdFile, approved);
 
         String metadataIdString = ApiUtils.getInternalId(metadataUuid, approved);
         if (metadataIdString != null) {
@@ -334,5 +349,10 @@ public class AttachmentsApi {
             new AttachmentDeletedEvent(metadataId, userSession.getUserIdAsInt(), resourceId)
                 .publish(ApplicationContextHolder.get());
         }
+    }
+
+    private String retrieveResourceFileFromUrl(HttpServletRequest request) {
+        return new AntPathMatcher().extractPathWithinPattern(
+            request.getAttribute(HandlerMapping.BEST_MATCHING_PATTERN_ATTRIBUTE).toString(),request.getRequestURI());
     }
 }

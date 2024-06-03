@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2024 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -38,6 +38,7 @@ import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.exception.NotAllowedException;
 import org.fao.geonet.api.records.MetadataUtils;
+import org.fao.geonet.api.records.attachments.Store;
 import org.fao.geonet.api.records.model.Direction;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
 import org.fao.geonet.constants.Geonet;
@@ -54,6 +55,7 @@ import org.fao.geonet.kernel.metadata.StatusActionsFactory;
 import org.fao.geonet.kernel.search.IndexingMode;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
+import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.*;
 import org.fao.geonet.repository.specification.MetadataValidationSpecs;
 import org.fao.geonet.utils.Log;
@@ -73,6 +75,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.sql.SQLException;
 import java.util.*;
@@ -315,13 +318,14 @@ public class MetadataEditingApi {
 
         IndexingMode indexingMode = terminate ? IndexingMode.full : IndexingMode.core;
 
+        Path originalMetadataDataDir = Lib.resource.getMetadataDir(ApplicationContextHolder.get().getBean(GeonetworkDataDirectory.class), metadata.getId());
+
         if (StringUtils.isNotEmpty(data)) {
             Log.trace(Geonet.DATA_MANAGER, " > Updating metadata through data manager");
             Element md = Xml.loadString(data, false);
             String changeDate = null;
             boolean updateDateStamp = !minor;
             boolean ufo = true;
-
 
             dataMan.updateMetadata(context, id, md, withValidationErrors, ufo, context.getLanguage(), changeDate,
                 updateDateStamp, indexingMode);
@@ -346,6 +350,14 @@ public class MetadataEditingApi {
                 new RecordUpdatedEvent(Long.parseLong(id), session.getUserIdAsInt(), xmlBefore, xmlAfter)
                     .publish(applicationContext);
             }
+        }
+
+        // Rename the metadata data folder when required, for example when using a custom folder structure based on
+        // the metadata resource identifier, the folder can change.
+        Path newMetadataDataDir = Lib.resource.getMetadataDir(ApplicationContextHolder.get().getBean(GeonetworkDataDirectory.class), metadata.getId());
+        if (!originalMetadataDataDir.equals(newMetadataDataDir)) {
+            Store store = context.getBean("resourceStore", Store.class);
+            store.renameFolder(originalMetadataDataDir, newMetadataDataDir);
         }
 
         // -----------------------------------------------------------------------
