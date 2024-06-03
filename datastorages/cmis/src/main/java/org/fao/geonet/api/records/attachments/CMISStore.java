@@ -395,8 +395,8 @@ public class CMISStore extends AbstractStore {
             cmisUtils.invalidateFolderCache(folderKey);
 
             Log.info(Geonet.RESOURCES,
-                    String.format("Metadata '%s' directory '%s' removed.", metadataId, folderKey));
-            return String.format("Metadata '%s' directory '%s' removed.", metadataId, folderKey);
+                    String.format("Metadata '%d' directory '%s' removed.", metadataId, folderKey));
+            return String.format("Metadata '%d' directory '%s' removed.", metadataId, folderKey);
         } catch (CmisObjectNotFoundException e) {
             Log.warning(Geonet.RESOURCES,
                     String.format("Unable to located metadata '%s' directory '%s' to be removed.", metadataId, folderKey));
