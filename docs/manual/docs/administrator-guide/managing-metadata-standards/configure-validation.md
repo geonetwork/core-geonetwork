@@ -1,6 +1,6 @@
 # Configuring validation levels {#configure-validation}
 
-Each standard defines validation levels (using schematron - see [Implementing schema plugins](../../customizing-application/implementing-a-schema-plugin.md)). By default, ISO19139 proposes validation using:
+Each standard defines validation levels. By default, ISO19139 proposes validation using:
 
 -   ISO rules
 -   INSPIRE rules (TG v1.3)

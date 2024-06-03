@@ -34,7 +34,7 @@
   </require>
   <declarative name="lib" pathOnDisk="web-ui/src/main/resources">
     <jsSource webappPath="/catalog/lib/modernizr.js" minimize="false"/>
-    <jsSource webappPath="/catalog/lib/jquery-3.7.1.min.js" minimize="false"/>
+    <jsSource webappPath="/catalog/lib/jquery-3.7.1.js" minimize="true"/>
     <jsSource webappPath="/catalog/lib/jquery-migrate-mute.js" minimize="false"/>
     <jsSource webappPath="/catalog/lib/jquery-migrate-3.4.1.js" minimize="false"/>
     <jsSource webappPath="/catalog/lib/moment-with-locales.min.js" minimize="false"/>
@@ -63,7 +63,7 @@
     <jsSource webappPath="/catalog/lib/angular.ext/angular-floatThead.js"/>
     <jsSource webappPath="/catalog/lib/tinycolor.js"/>
     <jsSource webappPath="/catalog/lib/franc-min/franc-min.js"/>
-    <jsSource webappPath="/catalog/lib/style/bootstrap/dist/js/bootstrap.min.js" minimize="false"/>
+    <jsSource webappPath="/catalog/lib/bootstrap.js" minimize="true"/>
     <jsSource webappPath="/catalog/lib/proj4js-compressed.js" minimize="false"/>
     <jsSource webappPath="/catalog/lib/openlayers/ol.js" minimize="false"/>
     <jsSource webappPath="/catalog/lib/d3.v3.min.js" minimize="false"/>
@@ -80,13 +80,13 @@
     <jsSource webappPath="/catalog/lib/bootstrap.ext/tagsinput/bootstrap-tagsinput.min.js"
               minimize="false"/>
     <jsSource webappPath="/catalog/lib/bootstrap.ext/tagsinput/bootstrap-tagsinput-angular.js"/>
-    <jsSource webappPath="/catalog/lib/bootstrap.ext/datepicker/bootstrap-datepicker.min.js" minimize="false"/>
+    <jsSource webappPath="/catalog/lib/bootstrap.ext/datepicker/bootstrap-datepicker.js" minimize="true"/>
     <jsSource webappPath="/catalog/lib/bootstrap.ext/datepicker/bootstrap-datepicker.fr.min.js" minimize="false"/>
     <jsSource webappPath="/catalog/lib/bootstrap.ext/datepicker/bootstrap-datepicker.nl.min.js" minimize="false"/>
     <jsSource webappPath="/catalog/lib/bootstrap-table/dist/bootstrap-table.min.js"
               minimize="false"/>
     <jsSource webappPath="/catalog/lib/bootstrap-table/dist/bootstrap-table-locale-all.min.js"
-            minimize="false"/>
+              minimize="false"/>
     <jsSource webappPath="/catalog/lib/bootstrap-table-angular.js"
               minimize="false"/>
     <jsSource webappPath="/catalog/lib/FileSaver/FileSaver.min.js" minimize="false"/>
@@ -105,7 +105,7 @@
   <!-- Same as previous + olcesium -->
   <declarative name="lib3d" pathOnDisk="web-ui/src/main/resources">
     <jsSource webappPath="/catalog/lib/modernizr.js" minimize="false"/>
-    <jsSource webappPath="/catalog/lib/jquery-3.7.1.min.js" minimize="false"/>
+    <jsSource webappPath="/catalog/lib/jquery-3.7.1.js" minimize="true"/>
     <jsSource webappPath="/catalog/lib/jquery-migrate-mute.js" minimize="false"/>
     <jsSource webappPath="/catalog/lib/jquery-migrate-3.4.1.js" minimize="false"/>
     <jsSource webappPath="/catalog/lib/moment-with-locales.min.js" minimize="false"/>
@@ -135,7 +135,7 @@
     <jsSource webappPath="/catalog/lib/jquery.ext/jquery.floatThead-slim.min.js"/>
     <jsSource webappPath="/catalog/lib/tinycolor.js"/>
     <jsSource webappPath="/catalog/lib/franc-min/franc-min.js"/>
-    <jsSource webappPath="/catalog/lib/style/bootstrap/dist/js/bootstrap.min.js" minimize="false"/>
+    <jsSource webappPath="/catalog/lib/bootstrap.js" minimize="true"/>
     <jsSource webappPath="/catalog/lib/proj4js-compressed.js" minimize="false"/>
     <!-- FIXME in non debug mode, 3D mode does not work when WMS layer is displayed.
          No errors, only block tile loading-->

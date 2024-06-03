@@ -1,0 +1,94 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <title>Embedding GeoNetwork / Search results</title>
+</head>
+<body style="background-color: lightgrey; padding: 20px; font-family: monospace;">
+<h1>Simple search results</h1>
+
+<h2>All records</h2>
+<gn-app portal="srv"
+        config='{
+  "mods": {
+    "global": {"hotkeys": false},
+    "cookieWarning": {"enabled": false},
+    "footer": {"enabled": false},
+    "header": {"enabled": false},
+    "home": {"enabled": false},
+    "map": {"enabled": false},
+    "search": {
+      "filters": [{
+        "query_string": {
+          "query": "*"
+        }
+      }],
+      "sortbyValues": [],
+      "sortBy": "dateStamp#desc",
+      "searchMapPlacement": "none",
+      "hitsperpageValues": [],
+      "searchOptions": {
+        "fullText": false
+      },
+      "facetConfig": {},
+      "resultViewTpls": [{
+        "tplUrl":
+          "../../catalog/components/search/resultsview/partials/viewtemplates/grid.html",
+        "tooltip": "Grid",
+        "icon": "fa-th"
+      }],
+      "isFilterTagsDisplayedInSearch": false,
+      "showBatchDropdown": false
+    }
+  }
+}'></gn-app>
+
+<i>2 webcomponents using Shadow DOM mode can't be included in the same page
+due to angularjs limitation but iframe mode can be used in this case.</i>
+<br/>
+
+<h2>All about Africa</h2>
+<gn-app-frame url="http://localhost:8080/geonetwork" portal="srv"
+        config='{
+  "mods": {
+    "footer": {
+      "enabled": false
+    },
+    "header": {
+      "enabled": false
+    },
+    "home": {
+      "enabled": false
+    },
+    "map": {
+      "enabled": false
+    },
+    "search": {
+      "filters": [{
+        "query_string": {
+          "query": "africa"
+        }
+      }],
+      "sortbyValues": [],
+      "sortBy": "dateStamp#desc",
+      "searchMapPlacement": "none",
+      "hitsperpageValues": [],
+      "searchOptions": {
+        "fullText": false
+      },
+      "facetConfig": {},
+      "resultViewTpls": [{
+        "tplUrl":
+          "../../catalog/components/search/resultsview/partials/viewtemplates/grid.html",
+        "tooltip": "Grid",
+        "icon": "fa-th"
+      }],
+      "isFilterTagsDisplayedInSearch": false,
+      "showBatchDropdown": false
+    }
+  }
+}'></gn-app-frame>
+
+
+<script src="webcomponents.js"></script>
+</body>
+</html>

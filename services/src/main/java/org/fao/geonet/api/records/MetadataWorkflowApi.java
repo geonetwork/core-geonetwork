@@ -924,7 +924,7 @@ public class MetadataWorkflowApi {
             Element mdNoGeonetInfo = metadataUtils.removeMetadataInfo(md);
 
             metadataManager.updateMetadata(context, String.valueOf(metadata.getId()), mdNoGeonetInfo, false, true, context.getLanguage(),
-                null, false, IndexingMode.full);
+                null, true, IndexingMode.full);
             recoveredMetadataId = metadata.getId();
         } else {
             // Recover from delete

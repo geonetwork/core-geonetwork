@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2023 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2024 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -1383,7 +1383,6 @@ public class SchemaManager {
                         " requires max Geonetwork version: " + majorAppVersionSupported + ", current is: " +
                         version + ". Skip load schema.");
                     removes.add(schemaInfo.getKey());
-                    continue;
                 }
             }
 
@@ -1901,7 +1900,7 @@ public class SchemaManager {
         try (DirectoryStream<Path> schemaplugins = Files.newDirectoryStream(schemaPluginDir, xsdFilter)) {
             boolean missingXsdFiles = true;
             for (Path schemaplugin : schemaplugins) {
-                IO.copyDirectoryOrFile(schemaplugin, webAppDirSchemaXSD.resolve(schemaplugin), false);
+                IO.copyDirectoryOrFile(schemaplugin, webAppDirSchemaXSD.resolve(schemaplugin.getFileName()), false);
                 missingXsdFiles = false;
             }
 

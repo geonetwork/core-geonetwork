@@ -99,7 +99,7 @@ Update:
         
 Guidance:
 
-* [Changelog 4.4.x](../../overview/change-log/latest/index.md)
+* [Changelog 4.4](../../overview/change-log/history/index.md#44)
 * No additional guidance provided at this time.
 
 ## Upgrade from GeoNetwork 3.0 to GeoNetwork 4.4
@@ -161,5 +161,6 @@ Guidance:
 
 * For information on new features and functionality:
   
-   * [Changelog 4.4.x](../../overview/change-log/latest/index.md)
-   * [Changelog 4.0.x](../../overview/change-log/archive/index.md#40x)
+   * [Changelog 4.4](../../overview/change-log/history/index.md#44)
+   * [Changelog 4.2](../../overview/change-log/history/index.md#42)
+   * [Changelog 4.0](../../overview/change-log/history/index.md#40)

@@ -416,7 +416,11 @@ public class DoiManager {
             metadataManager.updateMetadata(context, metadata.getId() + "", recordWithoutDoi, false, true,
                 context.getLanguage(), new ISODate().toString(), true, IndexingMode.full);
         } catch (Exception ex) {
-            throw new DoiClientException(ex.getMessage());
+            throw new DoiClientException(String.format(
+                "Error unregistering DOI: %s",
+                ex.getMessage()))
+                .withMessageKey("exception.doi.serverErrorUnregister")
+                .withDescriptionKey("exception.doi.serverErrorUnregister.description", new String[]{ex.getMessage()});
         }
     }
 
@@ -427,8 +431,14 @@ public class DoiManager {
         Path styleSheet = schemaUtils.getSchemaDir(schema).resolve(DOI_ADD_XSL_PROCESS);
         boolean exists = Files.exists(styleSheet);
         if (!exists) {
-            throw new DoiClientException(String.format("To create a DOI, the schema has to defined how to insert a DOI in the record. The schema_plugins/%s/process/%s was not found. Create the XSL transformation.",
-                schema, DOI_ADD_XSL_PROCESS));
+            String message = String.format("To create a DOI, the schema has to defined how to insert a DOI in the record. The schema_plugins/%s/process/%s was not found. Create the XSL transformation.",
+                schema, DOI_ADD_XSL_PROCESS);
+
+            throw new DoiClientException(String.format(
+                "Error creating  DOI: %s",
+                message))
+                .withMessageKey("exception.doi.serverErrorCreate")
+                .withDescriptionKey("exception.doi.serverErrorCreate.description", new String[]{message});
         }
 
         String doiPublicUrl = doiClient.createPublicUrl("");
@@ -446,8 +456,15 @@ public class DoiManager {
         Path styleSheet = schemaUtils.getSchemaDir(schema).resolve(DOI_REMOVE_XSL_PROCESS);
         boolean exists = Files.exists(styleSheet);
         if (!exists) {
-            throw new DoiClientException(String.format("To remove a DOI, the schema has to defined how to remove a DOI in the record. The schema_plugins/%s/process/%s was not found. Create the XSL transformation.",
-                schema, DOI_REMOVE_XSL_PROCESS));
+            String message = String.format("To remove a DOI, the schema has to defined how to remove a DOI in the record. The schema_plugins/%s/process/%s was not found. Create the XSL transformation.",
+                schema, DOI_REMOVE_XSL_PROCESS);
+
+            throw new DoiClientException(String.format(
+                "Error deleting  DOI: %s",
+                message))
+                .withMessageKey("exception.doi.serverErrorDelete")
+                .withDescriptionKey("exception.doi.serverErrorDelete.description", new String[]{message});
+
         }
 
         Map<String, Object> params = new HashMap<>(1);
@@ -467,8 +484,14 @@ public class DoiManager {
             isMedraServer(doiServer) ? DATACITE_MEDRA_XSL_CONVERSION_FILE : DATACITE_XSL_CONVERSION_FILE);
         final boolean exists = Files.exists(styleSheet);
         if (!exists) {
-            throw new DoiClientException(String.format("To create a DOI, the record needs to be converted to the DataCite format (https://schema.datacite.org/). You need to create a formatter for this in schema_plugins/%s/%s. If the standard is a profile of ISO19139, you can simply point to the ISO19139 formatter.",
-                schema, DATACITE_XSL_CONVERSION_FILE));
+            String message = String.format("To create a DOI, the record needs to be converted to the DataCite format (https://schema.datacite.org/). You need to create a formatter for this in schema_plugins/%s/%s. If the standard is a profile of ISO19139, you can simply point to the ISO19139 formatter.",
+                schema, DATACITE_XSL_CONVERSION_FILE);
+
+            throw new DoiClientException(String.format(
+                "Error creating  DOI: %s",
+                message))
+                .withMessageKey("exception.doi.serverErrorCreate")
+                .withDescriptionKey("exception.doi.serverErrorCreate.description", new String[]{message});
         }
 
         Map<String, Object> params = new HashMap<>();
@@ -486,7 +509,10 @@ public class DoiManager {
             emptyUsername ||
             emptyPassword ||
             emptyPrefix) {
-            throw new DoiClientException("DOI server configuration is not complete. Check DOI server and complete the configuration.");
+            throw new DoiClientException("DOI server configuration is not complete. Check the DOI server configuration to complete it.")
+                .withMessageKey("exception.doi.configurationMissing")
+                .withDescriptionKey("exception.doi.configurationMissing.description", new String[]{});
+
         }
     }
 
@@ -506,7 +532,9 @@ public class DoiManager {
             if (doiServer.getPublicationGroups().stream().noneMatch(g -> g.getId() == groupOwner)) {
                 throw new DoiClientException(
                     String.format("DOI server '%s' can not handle the metadata with UUID '%s'.",
-                        doiServer.getName(), metadata.getUuid()));
+                        doiServer.getName(), metadata.getUuid()))
+                    .withMessageKey("exception.doi.serverCanNotHandleRecord")
+                    .withDescriptionKey("exception.doi.serverCanNotHandleRecord.description", new String[]{doiServer.getName(), metadata.getUuid()});
             }
         }
 

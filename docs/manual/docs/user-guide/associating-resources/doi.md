@@ -27,7 +27,13 @@ A record can be downloaded using the DataCite format from the API using: <http:/
 
 ## Creating the DOI
 
-Once configured, DOI can be created using the interface. DOI is created on demand. It means that a user must ask for creation of a DOI. When created, the task is notified by email to the reviewer of the group (by default, can be configured for administrator only using the notification level of the task).
+Once configured, DOI can be created using the interface. DOI is created on demand. It means that a user must ask for creation of a DOI. It can be created by:
+
+- The user who created the metadata.
+- A user with Reviewer profile in the metadata group owner.
+- A user with Administrator profile.
+
+When created, the task is notified by email to the reviewer of the group (by default, can be configured for administrator only using the notification level of the task).
 
 ![](img/doi-request-menu.png)
 
