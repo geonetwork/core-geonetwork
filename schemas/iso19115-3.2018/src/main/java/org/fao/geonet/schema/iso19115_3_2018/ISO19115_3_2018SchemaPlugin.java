@@ -135,6 +135,8 @@ public class ISO19115_3_2018SchemaPlugin
             collectAssociatedResources(metadata, "mdb:parentMetadata");
 
         if (StringUtils.isNotEmpty(parentAssociatedResourceType)) {
+            associatedResources.forEach(parent -> parent.setAssociationType(parentAssociatedResourceType));
+
             try {
                 String XPATH_FOR_PARENT_IN_AGGRGATIONINFO =
                     "*//mri:associatedResource/*" +

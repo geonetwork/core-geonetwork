@@ -874,7 +874,7 @@
                     '" ' +
                     '       class="gn-field-link form-control"/>' +
                     "    </div>" +
-                    '    <div class="col-sm-2"><a class="btn btn-link" title="{{\'resetUrl\' | translate}}" data-ng-click="resetUrl()"><i class="fa fa-times text-danger"/></a></div>' +
+                    '    <div class="col-sm-2"><a class="btn btn-link" title="{{\'resetUrl\' | translate}}" data-ng-click="resetUrl()"><i class="fa fa-times text-danger"></i></a></div>' +
                     "  </div>" +
                     "</div>"
                 );

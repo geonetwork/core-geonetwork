@@ -145,6 +145,12 @@ public class LocalFilesystemHarvester extends AbstractHarvester<HarvestResult, L
 
         String language = context.getLanguage();
 
+        // Translate metadata
+        if (params.isTranslateContent()) {
+            String schema = dataMan.getMetadataSchema(id);
+            xml = aligner.translateMetadataContent(context, xml, schema);
+        }
+
         final AbstractMetadata metadata = metadataManager.updateMetadata(context, id, xml, false, false, language, changeDate,
             true, IndexingMode.none);
 
@@ -190,6 +196,12 @@ public class LocalFilesystemHarvester extends AbstractHarvester<HarvestResult, L
         if (!uuid.equals(xmlUuid)) {
             md = metadataUtils.setUUID(schema, uuid, md);
         }
+
+        // Translate metadata
+        if (params.isTranslateContent()) {
+            md = aligner.translateMetadataContent(context, md, schema);
+        }
+
         metadata.getDataInfo().
             setSchemaId(schema).
             setRoot(xml.getQualifiedName()).

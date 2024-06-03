@@ -1,4 +1,8 @@
 <div ng-repeat="t in ctrl.tasks" class="row" title="{{'Task id: ' + t.id}}">
-  <gn-dashboard-record-links-processes-status task-info="t.records" />
-  <gn-dashboard-record-links-processes-status task-info="t.links" />
+  <gn-dashboard-record-links-processes-status
+    task-info="t.records"
+  ></gn-dashboard-record-links-processes-status>
+  <gn-dashboard-record-links-processes-status
+    task-info="t.links"
+  ></gn-dashboard-record-links-processes-status>
 </div>

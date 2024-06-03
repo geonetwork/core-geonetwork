@@ -88,6 +88,13 @@
 
     <dependency>
       <groupId>${project.groupId}</groupId>
+      <artifactId>gn-translationproviders</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+
+
+    <dependency>
+      <groupId>${project.groupId}</groupId>
       <artifactId>gn-auditable</artifactId>
       <version>${project.version}</version>
     </dependency>

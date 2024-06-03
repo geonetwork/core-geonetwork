@@ -29,7 +29,7 @@
         data-ng-if="ctrl.facet.meta && ctrl.facet.meta.decorator"
         data-es-facet-decorator="ctrl.facet.meta.decorator"
         data-key="ctrl.item.value"
-      />
+      ></span>
       <span class="gn-facet-label flex-shrink text-ellipsis">
         {{::ctrl.item.value | facetTranslator: (ctrl.facet.meta && ctrl.facet.meta.field)
         || ctrl.facet.key | capitalize}}

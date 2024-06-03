@@ -24,6 +24,8 @@
 
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:saxon="http://saxon.sf.net/"
+                xmlns:xs="http://www.w3.org/2001/XMLSchema"
+                xmlns:util="java:org.fao.geonet.util.XslUtil"
                 version="2.0" extension-element-prefixes="saxon"
 >
   <!--
@@ -34,6 +36,10 @@
   <xsl:variable name="isMinorEdit" select="/root/request/minor"/>
 
   <xsl:variable name="showValidationErrors" select="/root/request/showvalidationerrors"/>
+
+  <xsl:variable name="isXlinkEnabled"
+                as="xs:boolean"
+                select="util:getSettingValue('system/xlinkResolver/enable') = 'true'"/>
 
   <!-- Default form field type is text input. -->
   <xsl:variable name="defaultFieldType" select="'text'"/>

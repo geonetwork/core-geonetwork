@@ -16,7 +16,7 @@
     >
     </span>
     <li data-ng-if="items.length > 0" class="gn-related-title">
-      <i class="fa {{icon}}" /> {{('link-' + type) | translate}}
+      <i class="fa {{icon}}"></i> {{('link-' + type) | translate}}
     </li>
     <li data-ng-repeat="md in items | orderBy:getOrderBy">
       <a

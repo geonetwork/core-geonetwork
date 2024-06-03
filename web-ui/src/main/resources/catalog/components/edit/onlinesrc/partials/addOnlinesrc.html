@@ -22,7 +22,7 @@
                 data-ng-model="params.linkType"
                 data-ng-value="c"
               />
-              <i class="{{c.icon}}" />&nbsp; {{c.label | translate}}
+              <i class="{{c.icon}}"></i>&nbsp; {{c.label | translate}}
             </label>
           </div>
 
@@ -39,7 +39,7 @@
                 data-ng-options="option as (option.label | translate) group by (option.group  | translate) for option in (config.types | filter:filterTypeChoices)"
                 data-ng-disabled="!isEditableLinkType"
                 data-ng-model="params.linkType"
-              />
+              ></select>
             </div>
           </div>
 
@@ -214,7 +214,7 @@
                         title="{{'loadCapabilitiesLayers' | translate}}"
                         data-gn-click-and-spin="loadCurrentLink(true)"
                       >
-                        <i class="fa fa-refresh" />
+                        <i class="fa fa-refresh"></i>
                       </button>
                     </span>
                     <span
@@ -395,7 +395,7 @@
                     class="form-control input-sm"
                     placeholder="description"
                     name="description"
-                  />
+                  ></textarea>
                 </div>
                 <div
                   id="gn-addonlinesrc-description-multilingual-row"
@@ -414,7 +414,7 @@
                     class="form-control input-sm"
                     placeholder="description"
                     name="description"
-                  />
+                  ></textarea>
                 </div>
               </div>
               <div
@@ -483,7 +483,7 @@
             <input type="hidden" name="_csrf" value="{{csrf}}" />
             <div class="input-group">
               <span class="input-group-addon">
-                <i class="fa fa-search" />
+                <i class="fa fa-search"></i>
               </span>
               <input
                 class="form-control"
@@ -604,7 +604,7 @@
             data-gn-file-store="gnCurrentEdit.uuid"
             data-select-callback="selectUploadedResource(selected)"
             data-filter="params.linkType.fileStoreFilter || ''"
-          />
+          ></div>
         </div>
       </div>
     </div>
@@ -619,7 +619,7 @@
       ng-disabled="!gnAddLink.$valid"
       data-gn-click-and-spin="addOnlinesrc()"
     >
-      <i class="fa gn-icon-onlinesrc" />
+      <i class="fa gn-icon-onlinesrc"></i>
       <i class="icon-external-link"></i>&nbsp;
       <span data-ng-show="gnAddLink.$valid && isUrlOk">
         {{((isEditing ? 'update' : 'add') + 'Onlinesrc') | translate}}

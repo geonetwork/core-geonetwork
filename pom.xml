@@ -1427,6 +1427,7 @@
     <module>estest</module>
     <module>index</module>
     <module>datastorages</module>
+    <module>translationproviders</module>
     <module>auditable</module>
   </modules>
 

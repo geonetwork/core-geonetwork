@@ -993,6 +993,20 @@
       }
     ],
     "associatedResourcesTypes": [{
+      "type": "parent",
+      "label": "linkToParent",
+      "config": {
+        "fields": {"associationType": "partOfSeamlessDatabase", "initiativeType": "" },
+        "sources": {
+          "metadataStore": {
+            "params": {
+              "isTemplate": "n"
+            }
+          },
+          "remoteurl": {"multiple": true}
+        }
+      }
+    }, {
       "type": "siblings",
       "label": "linkToSibling",
       "config": {

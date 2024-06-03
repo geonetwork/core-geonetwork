@@ -11,7 +11,7 @@
       data-ng-show="t.tplUrl == resultTemplate.tplUrl"
       title="{{t.tooltip | translate}}"
       class="fa {{t.icon}}"
-    />
+    ></i>
     <span class="caret"></span>
   </button>
   <ul class="dropdown-menu">
@@ -20,7 +20,7 @@
       data-ng-hide="t.tplUrl == resultTemplate.tplUrl"
     >
       <a href="" data-ng-click="setResultTemplate(t);" title="{{t.tooltip | translate}}">
-        <i class="fa {{t.icon}}" />&nbsp; {{t.tooltip | translate}}
+        <i class="fa {{t.icon}}"></i>&nbsp; {{t.tooltip | translate}}
       </a>
     </li>
   </ul>

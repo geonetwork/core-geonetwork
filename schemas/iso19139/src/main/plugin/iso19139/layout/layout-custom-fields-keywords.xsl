@@ -220,19 +220,35 @@
                     gmd:keyword//*[@locale = concat('#', $guiLangId)][. != '']/replace(text(), ',', ',,')
                   else gmd:keyword/*[1][. != '']/replace(text(), ',', ',,'), ',')"/>
 
+
         <!-- Define the list of transformation mode available. -->
+        <xsl:variable name="listOfTransformation"
+                      select="if ($thesaurusConfig/@transformations)
+                              then tokenize($thesaurusConfig/@transformations, ',')
+                              else if ($thesaurusList/@defaultTransformation)
+                              then ($thesaurusList/@defaultTransformation)
+                              else ()"
+                      as="xs:string*"/>
+
         <xsl:variable name="transformations"
                       as="xs:string"
-                      select="if ($thesaurusConfig/@transformations != '')
-                              then $thesaurusConfig/@transformations
-                              else 'to-iso19139-keyword,to-iso19139-keyword-with-anchor,to-iso19139-keyword-as-xlink'"/>
+                      select="if (count($listOfTransformation) > 0)
+                              then string-join($listOfTransformation, ',')
+                              else if ($isXlinkEnabled)
+                              then 'to-iso19139-keyword,to-iso19139-keyword-with-anchor,to-iso19139-keyword-as-xlink'
+                              else 'to-iso19139-keyword,to-iso19139-keyword-with-anchor'"/>
 
-        <!-- Get current transformation mode based on XML fragment analysis -->
+        <!-- Current transformation is the editor configuration if only one mode is allowed
+         and if not then the mode is based on the XML fragment analysis -->
         <xsl:variable name="transformation"
-                      select="if (parent::node()/@xlink:href) then 'to-iso19139-keyword-as-xlink'
-          else if (count(gmd:keyword/gmx:Anchor) > 0)
-          then 'to-iso19139-keyword-with-anchor'
-          else 'to-iso19139-keyword'"/>
+                      select="if (count($listOfTransformation) = 1)
+                  then $listOfTransformation[1]
+                  else if (parent::node()/@xlink:href)
+                  then 'to-iso19139-keyword-as-xlink'
+                  else if (count(gmd:keyword/gmx:Anchor) > 0)
+                  then 'to-iso19139-keyword-with-anchor'
+                  else 'to-iso19139-keyword'"/>
+
 
         <xsl:variable name="parentName" select="name(..)"/>
 

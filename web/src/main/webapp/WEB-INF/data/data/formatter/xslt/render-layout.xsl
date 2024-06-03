@@ -419,7 +419,7 @@
     <xsl:if test="$isDisplayed">
       <xsl:variable name="content">
         <xsl:apply-templates mode="render-view"
-                             select="section|field|xsl"/>&#160;
+                             select="section|field|xsl|list"/>&#160;
       </xsl:variable>
 
       <xsl:if test="count($content/*) > 0">
@@ -459,7 +459,7 @@
 
   <!-- Render metadata elements defined by XPath -->
   <xsl:template mode="render-view"
-                match="field[not(template)]">
+                match="field[not(template)]|list[@xpath]">
     <xsl:param name="base" select="$metadata"/>
 
     <!-- Matching nodes -->

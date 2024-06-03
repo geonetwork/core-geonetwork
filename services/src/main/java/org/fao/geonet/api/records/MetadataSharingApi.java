@@ -814,7 +814,10 @@ public class MetadataSharingApi implements ApplicationEventPublisherAware
         metadataManager.save(metadata);
         dataManager.indexMetadata(String.valueOf(metadata.getId()), true);
 
-        new RecordGroupOwnerChangeEvent(metadata.getId(), ApiUtils.getUserSession(request.getSession()).getUserIdAsInt(), ObjectJSONUtils.convertObjectInJsonObject(oldGroup, RecordGroupOwnerChangeEvent.FIELD), ObjectJSONUtils.convertObjectInJsonObject(group, RecordGroupOwnerChangeEvent.FIELD)).publish(appContext);
+        new RecordGroupOwnerChangeEvent(metadata.getId(), 
+                                        ApiUtils.getUserSession(request.getSession()).getUserIdAsInt(), 
+                                        ObjectJSONUtils.convertObjectInJsonObject(oldGroup, RecordGroupOwnerChangeEvent.FIELD), 
+                                        ObjectJSONUtils.convertObjectInJsonObject(group.get(), RecordGroupOwnerChangeEvent.FIELD)).publish(appContext);
     }
 
     @io.swagger.v3.oas.annotations.Operation(

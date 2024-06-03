@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2023 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2024 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -94,14 +94,22 @@ public class BaseDoiClient {
                     url, body, status,
                     httpResponse.getStatusText(), responseBody);
                 Log.info(LOGGER_NAME, message);
-                throw new DoiClientException(message);
+                throw new DoiClientException(String.format(
+                    "Error creating DOI: %s",
+                    message))
+                    .withMessageKey("exception.doi.serverErrorCreate")
+                    .withDescriptionKey("exception.doi.serverErrorCreate.description", new String[]{message});
             } else {
                 Log.info(LOGGER_NAME, String.format(
                     successMessage, url));
             }
         } catch (Exception ex) {
             Log.error(LOGGER_NAME, "   -- Error (exception): " + ex.getMessage(), ex);
-            throw new DoiClientException(ex.getMessage());
+            throw new DoiClientException(String.format(
+                "Error creating DOI: %s",
+                ex.getMessage()))
+                .withMessageKey("exception.doi.serverErrorCreate")
+                .withDescriptionKey("exception.doi.serverErrorCreate.description", new String[]{ex.getMessage()});
 
         } finally {
             if (postMethod != null) {
@@ -139,13 +147,24 @@ public class BaseDoiClient {
             } else {
                 Log.info(LOGGER_NAME, "Retrieve DOI metadata end -- Error: " + httpResponse.getStatusText());
 
-                throw new DoiClientException( httpResponse.getStatusText() +
-                    CharStreams.toString(new InputStreamReader(httpResponse.getBody())));
+                String message = httpResponse.getStatusText() +
+                    CharStreams.toString(new InputStreamReader(httpResponse.getBody()));
+
+                throw new DoiClientException(String.format(
+                    "Error retrieving DOI: %s",
+                    message))
+                    .withMessageKey("exception.doi.serverErrorRetrieve")
+                    .withDescriptionKey("exception.doi.serverErrorRetrieve.description", new String[]{message});
+
             }
 
         } catch (Exception ex) {
             Log.error(LOGGER_NAME, "   -- Error (exception): " + ex.getMessage(), ex);
-            throw new DoiClientException(ex.getMessage());
+            throw new DoiClientException(String.format(
+                "Error retrieving DOI: %s",
+                ex.getMessage()))
+                .withMessageKey("exception.doi.serverErrorRetrieve")
+                .withDescriptionKey("exception.doi.serverErrorRetrieve.description", new String[]{ex.getMessage()});
 
         } finally {
             if (getMethod != null) {

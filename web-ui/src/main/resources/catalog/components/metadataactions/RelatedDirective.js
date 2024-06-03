@@ -197,6 +197,7 @@
     function () {
       return {
         restrict: "A",
+        transclude: true,
         templateUrl: function (elem, attrs) {
           return (
             attrs.template ||
@@ -1299,6 +1300,7 @@
     function (gnCurrentEdit) {
       return {
         restrict: "A",
+        transclude: true,
         templateUrl: function (elem, attrs) {
           return (
             attrs.template ||

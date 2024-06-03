@@ -569,12 +569,14 @@
     a table view force some constraints. -->
     <table for="cit:CI_Responsibility">
       <header>
+        <col/>
         <col label="cit:role"/>
         <col label="cit:CI_Organisation"/>
         <col label="cit:electronicMailAddress"/>
         <col/>
       </header>
       <row>
+        <col orderControl=".."/>
         <col xpath="cit:role"/>
         <col xpath="cit:party/cit:CI_Organisation/cit:name"/>
         <col xpath="cit:party/*/cit:contactInfo/*/cit:address/*/cit:electronicMailAddress"/>
@@ -583,11 +585,14 @@
     </table>
     <table for="gfc:FC_ListedValue">
       <header>
+        <col/>
         <col label="gfc:code"/>
         <col label="gfc:label"/>
         <col label="gfc:definition"/>
+        <col/>
       </header>
       <row>
+        <col orderControl=".."/>
         <col xpath="gfc:code"/>
         <col xpath="gfc:label"/>
         <col xpath="gfc:definition"/>
@@ -596,11 +601,15 @@
     </table>
     <table for="gfc:FC_ListedValue">
       <header>
+        <col/>
         <col label="gfc:code"/>
         <col label="gfc:label"/>
         <col label="gfc:definition"/>
+        <col label="gfc:valueType"/>
+        <col/>
       </header>
       <row>
+        <col orderControl=".."/>
         <col xpath="gfc:code"/>
         <col xpath="gfc:label"/>
         <col xpath="gfc:definition"/>
@@ -711,13 +720,8 @@
         <for name="cit:CI_Organisation"/>
         <for name="gfc:listedValue"/>
       </flatModeExceptions>
-      <thesaurusList>
-        <thesaurus key="external.theme.httpinspireeceuropaeutheme-theme" transformations="to-iso19115-3.2018-keyword-with-anchor"/>
-        <thesaurus key="external.theme.httpinspireeceuropaeumetadatacodelistIACSData-IACSData" transformations="to-iso19115-3.2018-keyword-with-anchor"/>
-        <thesaurus key="external.theme.httpinspireeceuropaeumetadatacodelistSpatialScope-SpatialScope" transformations="to-iso19115-3.2018-keyword-with-anchor"/>
-        <thesaurus key="external.theme.httpinspireeceuropaeumetadatacodelistPriorityDataset-PriorityDataset" transformations="to-iso19115-3.2018-keyword-with-anchor"/>
-        <thesaurus key="external.theme.httpinspireeceuropaeufeatureconcept-featureconcept" transformations="to-iso19115-3.2018-keyword-with-anchor"/>
-      </thesaurusList>
+
+      <thesaurusList defaultTransformation="to-iso19115-3.2018-keyword-with-anchor"/>
     </view>
 
 
@@ -852,13 +856,8 @@
         <section xpath="/mdb:MD_Metadata/mdb:applicationSchemaInfo" or="applicationSchemaInfo"
                  in="/mdb:MD_Metadata"/>
       </tab>
-      <thesaurusList>
-        <thesaurus key="external.theme.httpinspireeceuropaeutheme-theme" transformations="to-iso19115-3.2018-keyword-with-anchor"/>
-        <thesaurus key="external.theme.httpinspireeceuropaeumetadatacodelistIACSData-IACSData" transformations="to-iso19115-3.2018-keyword-with-anchor"/>
-        <thesaurus key="external.theme.httpinspireeceuropaeumetadatacodelistSpatialScope-SpatialScope" transformations="to-iso19115-3.2018-keyword-with-anchor"/>
-        <thesaurus key="external.theme.httpinspireeceuropaeumetadatacodelistPriorityDataset-PriorityDataset" transformations="to-iso19115-3.2018-keyword-with-anchor"/>
-        <thesaurus key="external.theme.httpinspireeceuropaeufeatureconcept-featureconcept" transformations="to-iso19115-3.2018-keyword-with-anchor"/>
-      </thesaurusList>
+
+      <thesaurusList defaultTransformation="to-iso19115-3.2018-keyword-with-anchor"/>
     </view>
     <view name="xml">
       <sidePanel>

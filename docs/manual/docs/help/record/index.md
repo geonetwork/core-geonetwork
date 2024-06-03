@@ -194,7 +194,7 @@ Download the contents of a single record.
     -   A folder containing complete **`metadata.xml`** record, and simplified
         ***`metadata-iso19139.xml`*** record.
     -   ***`index.html`** and **`index.csv`** summary described in
-        the [previous section](#download-from-search-results).
+        the [previous section](../search/index.md#download-from-search-results).
 
     ![](img/export_record_zip.png)
     *Export (ZIP) index.html summary*

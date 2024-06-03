@@ -309,7 +309,7 @@
           action: addEsriRestToMap
         },
         ATOM: {
-          iconClass: "fa-globe",
+          iconClass: "fa-feed",
           label: "download",
           action: openLink
         },

@@ -1,6 +1,6 @@
 <div class="panel panel-default gn-search-user" data-ng-show="isUserSearchPanelEnabled()">
   <div class="panel-heading" data-gn-slide-toggle="true">
-    <i class="fa fa-search" />&nbsp;
+    <i class="fa fa-search"></i>&nbsp;
     <span data-translate="">userSearches</span>
 
     <div class="pull-right">
@@ -49,7 +49,7 @@
           <span
             class="fa fa-fw"
             data-ng-hide="canManageUserSearches() && search.featuredType !== ''"
-          />
+          ></span>
 
           <a data-ng-href="#/{{routeSearch}}?{{search.url}}">
             {{search.names[lang] || search.names['eng'] || ('userSearchNameMissing' |
@@ -97,6 +97,6 @@
       data-first-page-function-name="userSearchesFirstPage"
       data-items="userSearches | filter:userSearchesSearch | orderBy:'label'"
       data-cache="userSearches"
-    />
+    ></span>
   </div>
 </div>

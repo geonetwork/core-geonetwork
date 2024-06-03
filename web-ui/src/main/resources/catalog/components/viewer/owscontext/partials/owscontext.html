@@ -126,7 +126,7 @@
           data-groups="groups"
           data-profile="Editor"
           data-exclude-special-groups="true"
-        />
+        ></div>
       </div>
       <input type="hidden" name="publishedToAll" data-ng-model="mapProps.publishToAll" />
       <div class="btn-group dropup">
@@ -136,7 +136,7 @@
           data-gn-click-and-spin="saveInCatalog($event)"
           title="{{'saveInCatalog'|translate}}"
         >
-          <i class="fa fa-save" />
+          <i class="fa fa-save"></i>
           <span data-translate="">saveMapInCatalogAction</span>
         </button>
         <button
@@ -153,7 +153,7 @@
               data-gn-click-and-spin="saveInCatalog($event, true)"
               href=""
             >
-              <i class="fa fa-lock-open" />
+              <i class="fa fa-lock-open"></i>
               <span data-translate="">saveMapInCatalogActionAndPublish</span>
             </a>
           </li>
@@ -180,7 +180,7 @@
         class="btn btn-default btn-xs pull-right"
         data-ng-click="triggerSearch(); $event.stopPropagation();"
       >
-        <i class="fa fa-refresh" />
+        <i class="fa fa-refresh"></i>
       </a>
     </h4>
     <div data-ng-show="searchResults.records.length == 0">

@@ -6,6 +6,7 @@
 
 
   <!-- Register here the list of process for the schema-->
+<!--  <xsl:include href="process/translate.xsl"/>-->
   <xsl:include href="process/add-extent-from-geokeywords.xsl"/>
   <xsl:include href="process/add-info-from-wms.xsl"/>
   <xsl:include href="process/add-wms-and-legend-from-esrirest.xsl"/>
@@ -20,6 +21,7 @@
   <!--<xsl:include href="process/inspire-add-conformity.xsl"/>-->
 
   <xsl:variable name="processes">
+<!--    <p>translate</p>-->
     <p>add-extent-from-geokeywords</p>
     <p>add-resource-id</p>
     <p>add-contact</p>

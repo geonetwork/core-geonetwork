@@ -404,7 +404,7 @@
           templateUrl: function (elem, attrs) {
             return (
               attrs.template ||
-              "../../catalog/components/search/formfields/" + "partials/sortByCombo.html"
+              "../../catalog/components/search/formfields/partials/sortByCombo.html"
             );
           },
           scope: {
@@ -416,20 +416,21 @@
               angular.extend(scope.params, v);
               searchFormCtrl.triggerSearch(true);
             };
-
-            hotkeys.bindTo(scope).add({
-              combo: "s",
-              description: $translate.instant("hotkeySortBy"),
-              callback: function () {
-                for (var i = 0; i < scope.values.length; i++) {
-                  if (scope.values[i].sortBy === scope.params.sortBy) {
-                    var nextOptions = i === scope.values.length - 1 ? 0 : i + 1;
-                    scope.sortBy(scope.values[nextOptions]);
-                    return;
+            if (gnGlobalSettings.gnCfg.mods.global.hotkeys) {
+              hotkeys.bindTo(scope).add({
+                combo: "s",
+                description: $translate.instant("hotkeySortBy"),
+                callback: function () {
+                  for (var i = 0; i < scope.values.length; i++) {
+                    if (scope.values[i].sortBy === scope.params.sortBy) {
+                      var nextOptions = i === scope.values.length - 1 ? 0 : i + 1;
+                      scope.sortBy(scope.values[nextOptions]);
+                      return;
+                    }
                   }
                 }
-              }
-            });
+              });
+            }
           }
         };
       }

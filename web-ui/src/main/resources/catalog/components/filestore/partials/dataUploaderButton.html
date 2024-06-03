@@ -8,12 +8,12 @@
     class="btn btn-primary btn-block fileinput-button"
     data-ng-class="{disabled: disabled}"
   >
-    <i class="fa fa-fw fa-plus-circle" data-ng-class="{hidden: active()}" />
+    <i class="fa fa-fw fa-plus-circle" data-ng-class="{hidden: active()}"></i>
     <i
       class="fa fa-fw fa-spinner fa-spin"
       data-ng-class="{hidden: !active()}"
       data-file-upload-progress="progress()"
-    />
+    ></i>
     <span>{{btnLabel | translate}}</span>
     <input type="file" name="file" accept="{{fileTypes}}" data-ng-disabled="disabled" />
   </span>
@@ -29,7 +29,7 @@
         data-ng-class="isOverview ? 'gn-icon-thumbnail' : 'fa-file'"
       ></i>
       <span class="width-75">{{file.name}}</span>
-      <i class="btn fa fa-times text-danger" data-ng-click="clear(file)" />
+      <i class="btn fa fa-times text-danger" data-ng-click="clear(file)"></i>
     </li>
   </ul>
 
@@ -39,7 +39,10 @@
       data-file-upload-progress="progress()"
       data-file-upload-done="loadMetadataResources()"
     >
-      <div class="progress-bar progress-bar-success" data-ng-style="{width: num + '%'}" />
+      <div
+        class="progress-bar progress-bar-success"
+        data-ng-style="{width: num + '%'}"
+      ></div>
     </div>
     <div class="progress-extended">&nbsp;</div>
   </div>

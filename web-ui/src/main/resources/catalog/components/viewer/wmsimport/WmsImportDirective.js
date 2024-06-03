@@ -87,7 +87,7 @@
               var url = $scope.url.split("/");
               getCapLayer.useProxy = false;
               url = url[0] + "/" + url[1] + "/" + url[2] + "/";
-              if ($.inArray(url, gnGlobalSettings.requireProxy) >= 0) {
+              if ($.inArray(url + "#GET", gnGlobalSettings.requireProxy) >= 0) {
                 getCapLayer.useProxy = true;
               }
               if ($scope.format == "wms") {
