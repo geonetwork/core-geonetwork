@@ -1089,6 +1089,7 @@ the mandatory section with no name and then the inner elements.
         <xs:element ref="xsl"/>
         <xs:element ref="section"/>
         <xs:element ref="fieldset"/>
+        <xs:element ref="list"/>
       </xs:choice>
       <xs:attribute ref="mode"/>
       <xs:attribute name="name" type="xs:string">
@@ -1157,6 +1158,119 @@ Note: Only sections with forEach support del attribute.
     </xs:unique>
   </xs:element>
 
+
+
+  <xs:element name="list">
+    <xs:annotation>
+      <xs:documentation><![CDATA[
+Adding a list
+-------------
+
+The list can be used to display a list of contact with only organisation name for example.
+This can facilitate building simple form hiding the details of ISO elements. In this case,
+use a contact directory to add new contact makes sense.
+
+This mode can be also more efficient when record contains lots of contacts which in some case
+can create large HTML form which can take time to build, download and render in the browser
+(eg. when having more than 100 contacts in a record). If only `label` are used the form will be faster to render.
+
+eg.
+
+..code-block:: xml
+
+
+        <action type="add"
+                forceLabel="true"
+                addDirective="data-gn-directory-entry-selector"
+                or="pointOfContact"
+                in="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification">
+          <directiveAttributes
+                  data-template-add-action="false"
+                  data-search-action="true"
+                  data-popup-action="true"
+                  data-template-type="contact"
+                  data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~{role}"/>
+        </action>
+
+        <list name="Contact point"
+              xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:pointOfContact[*/gmd:role/*/@codeListValue = 'pointOfContact']"
+              del="."
+              sortBy="gmd:organisationName/gco:CharacterString">
+          <item href="*[1]/@uuid">
+            <label xpath="*/gmd:organisationName/gco:CharacterString/text()"/>
+          </item>
+        </list>
+
+        <list name="Originator"
+              xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:pointOfContact[*/gmd:role/*/@codeListValue = 'originator']"
+              sortBy="gmd:organisationName/gco:CharacterString">
+          <item>
+            <field xpath="*/gmd:organisationName"/>
+          </item>
+        </list>
+        ]]></xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:choice minOccurs="1">
+        <xs:element name="item">
+          <xs:annotation>
+            <xs:documentation><![CDATA[
+              An item in the list.
+              ]]></xs:documentation>
+            </xs:annotation>
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element ref="label"/>
+                <xs:element ref="text"/>
+                <xs:element ref="field"/>
+              </xs:sequence>
+              <xs:attribute name="href" type="xs:string">
+                <xs:annotation>
+                  <xs:documentation>Add a hyperlink on the item</xs:documentation>
+                </xs:annotation>
+              </xs:attribute>
+            </xs:complexType>
+        </xs:element>
+      </xs:choice>
+      <xs:attribute name="name" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>An optional name to override the default one base on field name for the
+            section. The name must be defined in ``{schema}/loc/{lang}/strings.xml``.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="xpath" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The XPath of the element to create list items.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute ref="del"/>
+      <xs:attribute ref="or"/>
+      <xs:attribute ref="in"/>
+      <xs:attribute name="sortBy">
+        <xs:annotation>
+          <xs:documentation>XPath of the element to sort the list by. Must use full name of each nodes eg. gmd:organisationName/gco:CharacterString</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute ref="displayIfRecord"/>
+      <xs:attribute ref="displayIfServiceInfo"/>
+      <xs:attribute name="collapsed" type="xs:boolean" fixed="true">
+        <xs:annotation>
+          <xs:documentation>An optional attribute to collapse the section. If not set the section is expanded.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="collapsible" type="xs:boolean" fixed="false">
+        <xs:annotation>
+          <xs:documentation>An optional attribute to not allow collapse for the section. If not set the section is expandable.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+    </xs:complexType>
+  </xs:element>
+
+
   <xs:attribute name="or" type="xs:string">
     <xs:annotation>
       <xs:documentation>Local name to match if the element does not exist.</xs:documentation>
@@ -1167,6 +1281,46 @@ Note: Only sections with forEach support del attribute.
     <xs:annotation>
       <xs:documentation>XPath of the geonet:child element with the or name to look for. Usually
         points to the parent of last element of the XPath attribute.
+      </xs:documentation>
+    </xs:annotation>
+  </xs:attribute>
+
+  <xs:attribute name="del" type="xs:string">
+    <xs:annotation>
+      <xs:documentation>
+        <![CDATA[
+Relative XPath of the element to remove when the `remove` button is clicked.
+
+e.g. If a template field match linkage and allows editing of field URL,
+the remove control should remove the parent element gmd:onLine.
+
+.. code-block:: xml
+
+    <field name="url"
+           xpath="/gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions
+                    /gmd:MD_DigitalTransferOptions/gmd:onLine/gmd:CI_OnlineResource/gmd:linkage"
+           del="ancestor::gmd:onLine">
+      <template>
+
+`del` attribute can be used in template mode or not. Example to remove
+`spatialResolution` while only editing `denominator` or `distance`. `denominator` or `distance`
+are mandatory, but as the `del` element points to the `spatialResolution`
+ancestor, there is no mandatory flag displayed and the remove control
+removes the `spatialResolution` element.
+
+
+.. code-block:: xml
+
+
+    <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/
+                    */gmd:spatialResolution/*/gmd:distance"
+            del="ancestor::gmd:spatialResolution"/>
+    <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/
+                    */gmd:spatialResolution/
+                      */gmd:equivalentScale/*/gmd:denominator"
+            del="ancestor::gmd:spatialResolution"/>
+
+            ]]>
       </xs:documentation>
     </xs:annotation>
   </xs:attribute>
@@ -1314,45 +1468,7 @@ The local name of the geonet child (i.e. non-existing element) to match.
           <xs:documentation>The element to search in for the geonet child.</xs:documentation>
         </xs:annotation>
       </xs:attribute>
-      <xs:attribute name="del" type="xs:string">
-        <xs:annotation>
-          <xs:documentation>
-            <![CDATA[
-Relative XPath of the element to remove when the `remove` button is clicked.
-
-e.g. If a template field match linkage and allows editing of field URL,
-the remove control should remove the parent element gmd:onLine.
-
-.. code-block:: xml
-
-    <field name="url"
-      xpath="/gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions
-                /gmd:MD_DigitalTransferOptions/gmd:onLine/gmd:CI_OnlineResource/gmd:linkage"
-      del="../..">
-      <template>
-
-`del` attribute can be used in template mode or not. Example to remove
-`spatialResolution` while only editing `denominator` or `distance`. `denominator` or `distance`
-are mandatory, but as the `del` element points to the `spatialResolution`
-ancestor, there is no mandatory flag displayed and the remove control
-removes the `spatialResolution` element.
-
-
-.. code-block:: xml
-
-
-    <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/
-                    */gmd:spatialResolution/*/gmd:distance"
-            del="../.."/>
-    <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/
-                    */gmd:spatialResolution/
-                      */gmd:equivalentScale/*/gmd:denominator"
-            del="../../../.."/>
-
-            ]]>
-          </xs:documentation>
-        </xs:annotation>
-      </xs:attribute>
+      <xs:attribute ref="del"/>
       <xs:attribute name="templateModeOnly" fixed="true" type="xs:boolean">
         <xs:annotation>
           <xs:documentation><![CDATA[
@@ -1369,6 +1485,17 @@ displayed based on the XML template snippet field configuration. Default is fals
         </xs:annotation>
       </xs:attribute>
       <xs:attribute ref="use"/>
+    </xs:complexType>
+  </xs:element>
+
+
+  <xs:element name="label">
+    <xs:complexType>
+      <xs:attribute name="xpath" use="required">
+        <xs:annotation>
+          <xs:documentation>The xpath of the text to display as label. eg. `*/gmd:organisationName/gco:CharacterString/text()`</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
     </xs:complexType>
   </xs:element>
 
