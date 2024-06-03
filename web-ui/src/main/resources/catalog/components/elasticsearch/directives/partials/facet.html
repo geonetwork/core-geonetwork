@@ -32,7 +32,7 @@
       ></span>
       <span class="gn-facet-label flex-shrink text-ellipsis">
         {{::ctrl.item.value | facetTranslator: (ctrl.facet.meta && ctrl.facet.meta.field)
-        || ctrl.facet.key | capitalize}}
+        || ctrl.facet.key}}
       </span>
       <span
         ng-if="ctrl.item.count"
