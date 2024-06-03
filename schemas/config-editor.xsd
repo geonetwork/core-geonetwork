@@ -1004,6 +1004,15 @@ e.g. only 2 INSPIRE themes:
       ]]></xs:documentation>
     </xs:annotation>
     <xs:complexType>
+      <xs:attribute name="defaultTransformation" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation><![CDATA[
+The default encoding for all thesaurus eg. to-iso19139-keyword-with-anchor.
+Conversion are defined in `convert/thesaurus-transformation.xsl`.
+          ]]>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
       <xs:sequence>
         <xs:element name="thesaurus" minOccurs="1" maxOccurs="unbounded">
           <xs:complexType>
@@ -2304,7 +2313,7 @@ This can allow to build dynamic snippet based on the current record.
           <mrd:onLine>
             <cit:CI_OnlineResource>
               <cit:linkage>
-                <gco:CharacterString>https://geoadata.wallonie.be/dataset/${uuid}</gco:CharacterString>
+                <gco:CharacterString>https://geodata.wallonie.be/dataset/${uuid}</gco:CharacterString>
               </cit:linkage>
 
 
