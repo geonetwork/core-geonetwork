@@ -184,7 +184,7 @@
     "hitsPerPage": "Fiches par page",
     "chooseRecordsPerPage": "Choisir le nombre de fiches par page",
     "sortedBy": "Trier par {{field}}",
-    "sortBy-dateStampDesc": "dernières mises à jour",
+    "sortBy-changeDateDesc": "dernières mises à jour",
     "sortBy-createDateDesc": "nouvelles fiches",
     "sortBy-resourceTitleObject.default.sort": "titre (croissant)",
     "sortBy-resourceTitleObject.default.sortDesc": "titre (décroissant)",
@@ -580,5 +580,9 @@
     "reviewerNotAllowedPublish": "Les relecteurs ne sont pas autorisés à publier des fiches.",
     "reviewerNotAllowedUnpublish": "Les relecteurs ne sont pas autorisés à dépublier des fiches",
     "reviewerNotAllowedPublishUnpublish": "Les relecteurs ne sont pas autorisés à publier/dépublier des fiches",
-    "missingTitle": "Titre manquant"
+    "missingTitle": "Titre manquant",
+    "mapLegend": "Légende",
+    "quality": "Qualité",
+    "download": "Téléchargement",
+    "links": "Liens"
 }

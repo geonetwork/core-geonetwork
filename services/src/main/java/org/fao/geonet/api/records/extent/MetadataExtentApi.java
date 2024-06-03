@@ -99,8 +99,8 @@ public class MetadataExtentApi {
     private static final String API_PARAM_WIDTH_DESCRIPTION = "(optional) width of the image that is created. Only one of width and height are permitted";
     private static final String API_PARAM_HEIGHT_DESCRIPTION = "(optional) height of the image that is created. Only one of width and height are permitted";
     private static final String API_PARAM_BG_DESCRIPTION = "(optional) URL for loading a background image for regions or a key that references the namedBackgrounds (configured in config-spring-geonetwork.xml). A WMS GetMap request is the typical example. The URL must be parameterized with the following parameters: minx, maxx, miny, maxy, width, height";
-    private static final String API_PARAM_FILL_DESCRIPTION = "(optional) Fill color with format RED,GREEN,BLUE,ALPHA";
-    private static final String API_PARAM_STROKE_DESCRIPTION = "(optional) Stroke color with format RED,GREEN,BLUE,ALPHA";
+    public static final String API_PARAM_FILL_DESCRIPTION = "(optional) Fill color with format RED,GREEN,BLUE,ALPHA";
+    public static final String API_PARAM_STROKE_DESCRIPTION = "(optional) Stroke color with format RED,GREEN,BLUE,ALPHA";
 
     private static final String EXTENT_XPATH = ".//*[local-name() ='extent']/*/*[local-name() = 'geographicElement']/*";
     private static final String EXTENT_DESCRIPTION_XPATH = "ancestor::*[local-name() = 'EX_Extent']/*[local-name() = 'description']/*/text()";
@@ -139,7 +139,7 @@ public class MetadataExtentApi {
         @Parameter(description = API_PARAM_BG_DESCRIPTION)
         @RequestParam(value = BACKGROUND_PARAM, required = false, defaultValue = "settings") String background,
         @Parameter(description = API_PARAM_FILL_DESCRIPTION)
-        @RequestParam(value = "", required = false, defaultValue = "0,0,0,50")
+        @RequestParam(value = "", required = false, defaultValue = "0,0,0,30")
         String fillColor,
         @Parameter(description = API_PARAM_STROKE_DESCRIPTION)
         @RequestParam(value = "", required = false, defaultValue = "0,0,0,255")
@@ -251,7 +251,7 @@ public class MetadataExtentApi {
         @Parameter(description = API_PARAM_BG_DESCRIPTION)
         @RequestParam(value = BACKGROUND_PARAM, required = false, defaultValue = "settings") String background,
         @Parameter(description = API_PARAM_FILL_DESCRIPTION)
-        @RequestParam(value = "", required = false, defaultValue = "0,0,0,50")
+        @RequestParam(value = "", required = false, defaultValue = "0,0,0,30")
             String fillColor,
         @Parameter(description = API_PARAM_STROKE_DESCRIPTION)
         @RequestParam(value = "", required = false, defaultValue = "0,0,0,255")

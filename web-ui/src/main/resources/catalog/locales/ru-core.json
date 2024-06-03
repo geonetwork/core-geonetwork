@@ -184,7 +184,7 @@
     "hitsPerPage": "Количество записей на странице",
     "chooseRecordsPerPage": "Нажмите, чтобы выбрать количество записей на странице",
     "sortedBy": "Сортировать по {{field}}",
-    "sortBy-dateStampDesc": "последние обновления",
+    "sortBy-changeDateDesc": "последние обновления",
     "sortBy-createDateDesc": "новые записи",
     "sortBy-resourceTitleObject.default.sort": "title (ascending)",
     "sortBy-resourceTitleObject.default.sortDesc": "title (descending)",
@@ -580,5 +580,9 @@
     "reviewerNotAllowedPublish": "Reviewer not allowed to publish the metadata",
     "reviewerNotAllowedUnpublish": "Reviewer not allowed to un-publish the metadata",
     "reviewerNotAllowedPublishUnpublish": "Reviewer not allowed to publish / un-publish the metadata",
-    "missingTitle": "Missing title"
+    "missingTitle": "Missing title",
+    "mapLegend": "Легенда",
+    "quality": "Качество",
+    "download": "Download",
+    "links": "Ссылки"
 }

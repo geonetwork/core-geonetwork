@@ -424,6 +424,7 @@
   <tableFields>
     <table for="gmd:CI_ResponsibleParty">
       <header>
+        <col/>
         <!-- TODO: Add label from strings.xml / label with context-->
         <col label="gmd:organisationName"/>
         <col label="gmd:individualName"/>
@@ -432,6 +433,7 @@
         <col/>
       </header>
       <row>
+        <col orderControl=".."/>
         <col xpath="gmd:organisationName"/>
         <col xpath="gmd:individualName"/>
         <col xpath="gmd:contactInfo/*/gmd:address/*/gmd:electronicMailAddress"/>
@@ -441,12 +443,14 @@
     </table>
     <table for="gmd:CI_OnlineResource">
       <header>
+        <col/>
         <col label="gmd:protocol"/>
         <col label="gmd:linkage"/>
         <col label="gmd:name"/>
         <col/>
       </header>
       <row>
+        <col orderControl=".."/>
         <col xpath="gmd:protocol"/>
         <col xpath="gmd:linkage"/>
         <col xpath="gmd:name"/>
@@ -541,8 +545,7 @@
                                             editActions: ['addOnlinesrc']}]"
         />
 
-        <directive data-gn-onlinesrc-list=""
-                   data-types="parent|dataset|service|source|sibling|associated|fcats"/>
+        <directive data-gn-associated-resources-panel="gnCurrentEdit.metadata" />
 
         <directive gn-geo-publisher=""
                    data-ng-if="gnCurrentEdit.geoPublisherConfig"
@@ -3201,6 +3204,11 @@
     <view name="default" default="true"
           class="gn-label-above-input gn-indent-bluescale">
       <sidePanel>
+        <!-- Simple overview manager + online source manger for other types
+        Limit the max number of overviews with data-number-of-overviews="3" attribute.
+        In the full view, editor can access and manage the file store and
+        thumbnail name and description not supported by the overview manager.
+        -->
         <directive data-gn-need-help="creating-metadata"/>
 
         <directive data-gn-validation-report=""/>
@@ -3225,8 +3233,7 @@
                                             editActions: []}]"
         />
 
-        <directive data-gn-onlinesrc-list=""
-                   data-types="parent|dataset|service|source|sibling|associated|fcats"/>
+        <directive data-gn-associated-resources-panel="gnCurrentEdit.metadata" />
 
         <directive gn-geo-publisher=""
                    data-ng-if="gnCurrentEdit.geoPublisherConfig"
@@ -3361,8 +3368,7 @@
                                             editActions: ['addOnlinesrc']}]"
         />
 
-        <directive data-gn-onlinesrc-list=""
-                   data-types="parent|dataset|service|source|sibling|associated|fcats"/>
+        <directive data-gn-associated-resources-panel="gnCurrentEdit.metadata" />
 
         <directive gn-geo-publisher=""
                    data-ng-if="gnCurrentEdit.geoPublisherConfig"
@@ -3462,8 +3468,7 @@
                                             editActions: ['addOnlinesrc']}]"
         />
 
-        <directive data-gn-onlinesrc-list=""
-                   data-types="parent|dataset|service|source|sibling|associated|fcats"/>
+        <directive data-gn-associated-resources-panel="gnCurrentEdit.metadata" />
 
         <directive gn-geo-publisher=""
                    data-ng-if="gnCurrentEdit.geoPublisherConfig"

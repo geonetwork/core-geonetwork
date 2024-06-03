@@ -79,13 +79,13 @@
 
   <div class="form-group" data-ng-show="itemClass.length > 0 && !isSimple">
     <label class="form-label" data-translate=""> registryChooseItem </label>
-    <i class="fa fa-spinner fa-spin" data-ng-show="loadingCollection" />
+    <i class="fa fa-spinner fa-spin" data-ng-show="loadingCollection"></i>
     <select
       class="form-control"
       data-ng-hide="loadingCollection"
       data-ng-options="i[selectedClass].id as i[selectedClass].label.text for i in itemCollection track by i[selectedClass].id"
       data-ng-model="selectedCollection"
-    />
+    ></select>
   </div>
 
   <input type="hidden" name="registryUrl" value="{{selectedCollection}}" />

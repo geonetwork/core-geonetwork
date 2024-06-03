@@ -174,7 +174,10 @@
             } else {
               query.query = {
                 function_score: {
-                  random_score: { seed: Math.floor(Math.random() * 10000) },
+                  random_score: {
+                    seed: Math.floor(Math.random() * 10000),
+                    field: "uuid"
+                  },
                   query: query.query
                 }
               };
@@ -486,10 +489,12 @@
 
           function setDefault() {
             var defaultThesaurus = attrs["default"];
-            for (var t in scope.regionTypes) {
-              if (scope.regionTypes[t].name === defaultThesaurus) {
-                scope.regionType = scope.regionTypes[t];
-                return;
+            if (defaultThesaurus) {
+              for (var t in scope.regionTypes) {
+                if (scope.regionTypes[t].name === defaultThesaurus) {
+                  scope.regionType = scope.regionTypes[t];
+                  return;
+                }
               }
             }
             scope.regionType = scope.regionTypes[0];
@@ -764,7 +769,15 @@
                   queryTokenizer: Bloodhound.tokenizers.whitespace,
                   limit: 30,
                   remote: {
-                    wildcard: "QUERY",
+                    replace: function (url, query) {
+                      // url parameter will be decoded once by the proxy
+                      // and we have to keep URI component encoded in the API call to the service
+                      // If not, search with " " will fail because invalid URI.
+                      return url.replace(
+                        "QUERY",
+                        encodeURIComponent(encodeURIComponent(query))
+                      );
+                    },
                     url: url,
                     ajax: {
                       beforeSend: function () {
@@ -1347,7 +1360,7 @@
         restrict: "A",
         template:
           "<button title=\"{{'gnToggle' | translate}}\">" +
-          '<i class="fa fa-fw fa-angle-double-up"/>&nbsp;' +
+          '<i class="fa fa-fw fa-angle-double-up"></i>&nbsp;' +
           "</button>",
         link: function linkFn(scope, element, attr) {
           var collapsing = true,
@@ -1396,8 +1409,8 @@
         transclude: true,
         template:
           '<a href=\'#/search?query_string=%7B"{{field}}":%7B"{{::filter | encodeURIComponent}}":true%7D%7D\'>' +
-          '  <i class="fa fa-fw fa-filter"/>' +
-          "  <span>{{(label || 'focusOn') | translate}} <ng-transclude/></span>" +
+          '  <i class="fa fa-fw fa-filter"></i>' +
+          "  <span>{{(label || 'focusOn') | translate}} <ng-transclude></ng-transclude></span>" +
           "</a>",
         scope: {
           field: "@gnSearchFilterLink",
@@ -2271,11 +2284,11 @@
    * to the parent element (required to highlight
    * element in navbar)
    */
+
   module.directive("gnActiveTbItem", [
     "$location",
-    "gnLangs",
-    "gnConfig",
-    function ($location, gnLangs, gnConfig) {
+    "$filter",
+    function ($location, $filter) {
       return {
         restrict: "A",
         link: function (scope, element, attrs) {
@@ -2283,11 +2296,7 @@
             href,
             isCurrentService = false;
 
-          // Replace lang in link (three character language code i.e. eng, fre)
-          link = link.replace("{{lang}}", gnLangs.getCurrent());
-          // Replace standard ISO lang in link (two character language code i.e. en, fr)
-          link = link.replace("{{isoLang}}", gnLangs.getIso2Lang(gnLangs.getCurrent()));
-          link = link.replace("{{node}}", gnConfig.env.node);
+          link = $filter("setUrlPlaceholder")(link);
 
           // Insert debug mode between service and route
           if (link.indexOf("#") !== -1) {
@@ -2337,16 +2346,25 @@
       };
     }
   ]);
-  module.filter("signInLink", [
-    "$location",
+  module.filter("setUrlPlaceholder", [
     "gnLangs",
     "gnConfig",
-    function ($location, gnLangs, gnConfig) {
+    function (gnLangs, gnConfig) {
+      return function (url) {
+        return url
+          .replace("{{lang}}", gnLangs.getCurrent())
+          .replace("{{isoLang}}", gnLangs.getIso2Lang(gnLangs.getCurrent()))
+          .replace("{{node}}", gnConfig.env.node);
+      };
+    }
+  ]);
+  module.filter("signInLink", [
+    "$location",
+    "$filter",
+    function ($location, $filter) {
       return function (href) {
         href =
-          href
-            .replace("{{lang}}", gnLangs.getCurrent())
-            .replace("{{node}}", gnConfig.env.node) +
+          $filter("setUrlPlaceholder")(href) +
           "?redirect=" +
           encodeURIComponent(window.location.href);
         return href;
@@ -2370,6 +2388,9 @@
     "$translate",
     function ($translate) {
       return function (workflowStatus) {
+        if (!workflowStatus) {
+          return;
+        }
         var split = workflowStatus.split("-");
         // the status of the record
         var metadataStatus = $translate.instant("status-" + split[0]);

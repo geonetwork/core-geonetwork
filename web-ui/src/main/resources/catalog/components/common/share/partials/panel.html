@@ -42,7 +42,7 @@
           </th>
           <th data-ng-repeat="key in ::operations">
             <a href="" ng-click="setSorter(key)">
-              <i class="fa {{icons[key] || fa-fw}}" />
+              <i class="fa {{icons[key] || fa-fw}}"></i>
               <span class="hidden-xs">&nbsp;{{('op-' + key) | translate}}&nbsp;</span>
               <i
                 data-ng-if="sorter.predicate == key"

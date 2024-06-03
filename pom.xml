@@ -29,7 +29,7 @@
   <groupId>org.geonetwork-opensource</groupId>
   <artifactId>geonetwork</artifactId>
   <packaging>pom</packaging>
-  <version>4.4.3-SNAPSHOT</version>
+  <version>4.4.5-SNAPSHOT</version>
   <name>GeoNetwork opensource</name>
   <description>GeoNetwork opensource is a standards based, Free and
     Open Source catalog application to manage spatially referenced
@@ -245,12 +245,36 @@
           <artifactId>maven-toolchains-plugin</artifactId>
           <version>3.0.0</version>
         </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-enforcer-plugin</artifactId>
+          <version>3.4.1</version>
+        </plugin>
       </plugins>
     </pluginManagement>
 
     <plugins>
+      <!-- build enviornment -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-enforcer-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>enforce-maven</id>
+            <goals>
+              <goal>enforce</goal>
+            </goals>
+            <configuration>
+              <rules>
+                <requireMavenVersion>
+                  <version>3.8.3</version>
+                </requireMavenVersion>
+              </rules>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
         <configuration>
           <source>11</source>
@@ -269,7 +293,6 @@
 
       <!-- resources -->
       <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-resources-plugin</artifactId>
         <configuration>
           <encoding>UTF-8</encoding>
@@ -295,7 +318,6 @@
         </executions>
       </plugin>
       <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
         <configuration>
           <excludedGroups>org.fao.geonet.repository.AbstractSpringDataTest</excludedGroups>
@@ -1586,7 +1608,7 @@
      request the list of hosts (but JPA cache db queries). -->
     <cors.allowedHosts>*</cors.allowedHosts>
 
-    <jetty.version>9.4.53.v20231009</jetty.version>
+    <jetty.version>9.4.54.v20240208</jetty.version>
     <jetty.file>jetty-distribution-${jetty.version}</jetty.file>
     <jetty.download>https://repo1.maven.org/maven2/org/eclipse/jetty/jetty-distribution/${jetty.version}/${jetty.file}.tar.gz</jetty.download>
 
@@ -1596,11 +1618,11 @@
     <jts.version>1.19.0</jts.version>
     <pg.version>42.6.0</pg.version>
 
-    <spring.version>5.3.31</spring.version>
-    <spring.security.version>5.8.8</spring.security.version>
+    <spring.version>5.3.33</spring.version>
+    <spring.security.version>5.8.11</spring.security.version>
     <spring.jpa.version>2.7.18</spring.jpa.version>
     <springboot.version>2.7.0</springboot.version>
-    <springdoc.version>1.5.13</springdoc.version>
+    <springdoc.version>1.8.0</springdoc.version>
     <hibernate.version>5.6.15.Final</hibernate.version>
 
     <metrics.version>2.2.0</metrics.version>
@@ -1611,7 +1633,7 @@
     <wro.debug>true</wro.debug>
     <fop.version>2.7</fop.version>
     <xmlunit.version>2.1.1</xmlunit.version>
-    <jackson.version>2.15.3</jackson.version>
+    <jackson.version>2.16.2</jackson.version>
     <flying-saucer>9.1.22</flying-saucer>
     <camel.version>2.25.1</camel.version>
     <log4j2.version>2.17.2</log4j2.version>

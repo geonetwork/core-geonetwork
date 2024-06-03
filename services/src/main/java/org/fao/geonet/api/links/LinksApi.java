@@ -1,5 +1,5 @@
 //=============================================================================
-//===   Copyright (C) 2001-2007 Food and Agriculture Organization of the
+//===   Copyright (C) 2001-2024 Food and Agriculture Organization of the
 //===   United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===   and United Nations Environment Programme (UNEP)
 //===
@@ -39,20 +39,20 @@ import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.processing.report.SimpleMetadataProcessingReport;
+import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.Link;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.Profile;
 import org.fao.geonet.exceptions.OperationNotAllowedEx;
 import org.fao.geonet.kernel.AccessManager;
-import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.url.UrlAnalyzer;
 import org.fao.geonet.repository.LinkRepository;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.specification.LinkSpecs;
-import org.jdom.JDOMException;
+import org.fao.geonet.utils.Log;
 import org.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -76,12 +76,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import java.beans.PropertyEditorSupport;
-import java.io.IOException;
 import java.sql.SQLException;
-import java.util.ArrayDeque;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.fao.geonet.api.ApiParams.API_PARAM_RECORD_UUIDS_OR_SELECTION;
@@ -95,6 +91,8 @@ import static org.fao.geonet.api.ApiParams.API_PARAM_RECORD_UUIDS_OR_SELECTION;
 @Tag(name = "links",
     description = "Record link operations")
 public class LinksApi {
+    public static final String LOGGER = Geonet.GEONETWORK + ".api.links";
+
     private static final int NUMBER_OF_SUBSEQUENT_PROCESS_MBEAN_TO_KEEP = 5;
     @Autowired
     protected ApplicationContext appContext;
@@ -104,8 +102,6 @@ public class LinksApi {
     IMetadataUtils metadataUtils;
     @Autowired
     MetadataRepository metadataRepository;
-    @Autowired
-    DataManager dataManager;
     @Autowired
     UrlAnalyzer urlAnalyser;
     @Autowired
@@ -125,7 +121,8 @@ public class LinksApi {
             try {
                 mBeanExporter.registerManagedResource(emptySlot, emptySlot.getObjectName());
             } catch (MalformedObjectNameException e) {
-                e.printStackTrace();
+                Log.error(LOGGER, String.format("Error registering metadata links analysis process '%s'",
+                    settingManager.getSiteId()), e);
             }
         }
     }
@@ -152,22 +149,28 @@ public class LinksApi {
     public Page<Link> getRecordLinks(
         @Parameter(description = "Filter, e.g. \"{url: 'png', lastState: 'ko', records: 'e421'}\", lastState being 'ok'/'ko'/'unknown'", required = false)
         @RequestParam(required = false)
-            LinkFilter filter,
+        LinkFilter filter,
         @Parameter(description = "Optional, filter links to records published in that group.", required = false)
         @RequestParam(required = false)
-            Integer[] groupIdFilter,
+        Integer[] groupIdFilter,
         @Parameter(description = "Optional, filter links to records created in that group.", required = false)
         @RequestParam(required = false)
-            Integer[] groupOwnerIdFilter,
+        Integer[] groupOwnerIdFilter,
+        @Parameter(description = "Optional, filter links to http status.")
+        @RequestParam(required = false)
+        Integer[] httpErrorStatusValueFilter,
+        @Parameter(description = "Optional, filter links excluding harvested metadata.")
+        @RequestParam(required = false, defaultValue = "false")
+        boolean excludeHarvestedMetadataFilter,
         @Parameter(hidden = true)
-            Pageable pageRequest,
+        Pageable pageRequest,
         @Parameter(hidden = true)
-            HttpSession session,
+        HttpSession session,
         @Parameter(hidden = true)
-            HttpServletRequest request) throws Exception {
+        HttpServletRequest request) throws Exception {
 
         final UserSession userSession = ApiUtils.getUserSession(session);
-        return getLinks(filter, groupIdFilter, groupOwnerIdFilter, pageRequest, userSession);
+        return getLinks(filter, groupIdFilter, groupOwnerIdFilter, httpErrorStatusValueFilter, excludeHarvestedMetadataFilter, pageRequest, userSession);
     }
 
     @io.swagger.v3.oas.annotations.Operation(
@@ -200,6 +203,12 @@ public class LinksApi {
         @Parameter(description = "Optional, filter links to records created in that group.", required = false)
         @RequestParam(required = false)
         Integer[] groupOwnerIdFilter,
+        @Parameter(description = "Optional, filter links to http status.")
+        @RequestParam(required = false)
+        Integer[] httpStatusValueFilter,
+        @Parameter(description = "Optional, filter links excluding harvested metadata.")
+        @RequestParam(required = false, defaultValue = "false")
+        boolean excludeHarvestedMetadataFilter,
         @Parameter(hidden = true)
         Pageable pageRequest,
         @Parameter(hidden = true)
@@ -208,24 +217,27 @@ public class LinksApi {
         HttpServletRequest request) throws Exception {
 
         final UserSession userSession = ApiUtils.getUserSession(session);
-        return getLinks(filter, groupIdFilter, groupOwnerIdFilter, pageRequest, userSession);
+        return getLinks(filter, groupIdFilter, groupOwnerIdFilter, httpStatusValueFilter, excludeHarvestedMetadataFilter, pageRequest, userSession);
     }
+
     private Page<Link> getLinks(
         LinkFilter filter,
         Integer[] groupIdFilter,
         Integer[] groupOwnerIdFilter,
+        Integer[] httpStatusValueFilter,
+        boolean excludeHarvestedMetadataFilter,
         Pageable pageRequest,
         UserSession userSession) throws SQLException, JSONException {
         Integer[] editingGroups = null;
         if (userSession.getProfile() != Profile.Administrator) {
             final List<Integer> editingGroupList = AccessManager.getGroups(userSession, Profile.Editor);
-            if (editingGroupList.size() > 0) {
+            if (!editingGroupList.isEmpty()) {
                 editingGroups = editingGroupList.toArray(new Integer[editingGroupList.size()]);
             }
         }
 
-        if (filter == null && (groupIdFilter != null || groupOwnerIdFilter != null || editingGroups != null)) {
-            return linkRepository.findAll(LinkSpecs.filter(null, null, null, groupIdFilter, groupOwnerIdFilter, editingGroups), pageRequest);
+        if (filter == null && (groupIdFilter != null || groupOwnerIdFilter != null || httpStatusValueFilter != null || editingGroups != null || excludeHarvestedMetadataFilter)) {
+            return linkRepository.findAll(LinkSpecs.filter(null, null, null, groupIdFilter, groupOwnerIdFilter, httpStatusValueFilter, excludeHarvestedMetadataFilter, editingGroups), pageRequest);
         }
 
         if (filter != null) {
@@ -251,7 +263,7 @@ public class LinksApi {
                 ).collect(Collectors.toList());
             }
 
-            return linkRepository.findAll(LinkSpecs.filter(url, stateToMatch, associatedRecords, groupIdFilter, groupOwnerIdFilter, editingGroups), pageRequest);
+            return linkRepository.findAll(LinkSpecs.filter(url, stateToMatch, associatedRecords, groupIdFilter, groupOwnerIdFilter, httpStatusValueFilter, excludeHarvestedMetadataFilter, editingGroups), pageRequest);
         } else {
             return linkRepository.findAll(pageRequest);
         }
@@ -273,32 +285,36 @@ public class LinksApi {
             description = "Sorting criteria in the format: property(,asc|desc). " +
                 "Default sort order is ascending. ")
     })
-    @RequestMapping(
+    @GetMapping(
         path = "/csv",
-        method = RequestMethod.GET,
         produces = MediaType.TEXT_PLAIN_VALUE
     )
     @PreAuthorize("isAuthenticated()")
-    @ResponseBody
     public void getRecordLinksAsCsv(
         @Parameter(description = "Filter, e.g. \"{url: 'png', lastState: 'ko', records: 'e421'}\", lastState being 'ok'/'ko'/'unknown'", required = false)
         @RequestParam(required = false)
         LinkFilter filter,
         @Parameter(description = "Optional, filter links to records published in that group.", required = false)
         @RequestParam(required = false)
-            Integer[] groupIdFilter,
+        Integer[] groupIdFilter,
         @Parameter(description = "Optional, filter links to records created in that group.", required = false)
         @RequestParam(required = false)
-            Integer[] groupOwnerIdFilter,
+        Integer[] groupOwnerIdFilter,
+        @Parameter(description = "Optional, filter links to http status.")
+        @RequestParam(required = false)
+        Integer[] httpStatusValueFilter,
+        @Parameter(description = "Optional, filter links excluding harvested metadata.")
+        @RequestParam(required = false, defaultValue = "false")
+        boolean excludeHarvestedMetadataFilter,
         @Parameter(hidden = true)
-            Pageable pageRequest,
+        Pageable pageRequest,
         @Parameter(hidden = true)
-            HttpSession session,
+        HttpSession session,
         @Parameter(hidden = true)
-            HttpServletResponse response) throws Exception {
+        HttpServletResponse response) throws Exception {
         final UserSession userSession = ApiUtils.getUserSession(session);
 
-        final Page<Link> links = getLinks(filter, groupIdFilter, groupOwnerIdFilter, pageRequest, userSession);
+        final Page<Link> links = getLinks(filter, groupIdFilter, groupOwnerIdFilter, httpStatusValueFilter, excludeHarvestedMetadataFilter, pageRequest, userSession);
         response.setHeader("Content-disposition", "attachment; filename=links.csv");
         LinkAnalysisReport.create(links, response.getWriter());
     }
@@ -307,40 +323,38 @@ public class LinksApi {
     @io.swagger.v3.oas.annotations.Operation(
         summary = "Analyze records links",
         description = "One of uuids or bucket parameter is required if not an Administrator. Only records that you can edit will be validated.")
-    @RequestMapping(
+    @PostMapping(
         path = "/analyze",
-        produces = MediaType.APPLICATION_JSON_VALUE,
-        method = RequestMethod.POST)
+        produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAuthority('Editor')")
     @ResponseStatus(HttpStatus.CREATED)
-    @ResponseBody
     public SimpleMetadataProcessingReport analyzeRecordLinks(
         @Parameter(description = API_PARAM_RECORD_UUIDS_OR_SELECTION)
         @RequestParam(required = false)
-            String[] uuids,
+        String[] uuids,
         @Parameter(
             description = ApiParams.API_PARAM_BUCKET_NAME,
             required = false)
         @RequestParam(
             required = false
         )
-            String bucket,
+        String bucket,
         @Parameter(
             description = "Only allowed if Administrator."
         )
         @RequestParam(
             required = false,
             defaultValue = "true")
-            boolean removeFirst,
+        boolean removeFirst,
         @RequestParam(
             required = false,
             defaultValue = "false")
-            boolean analyze,
+        boolean analyze,
         @Parameter(hidden = true)
-            HttpSession httpSession,
+        HttpSession httpSession,
         @Parameter(hidden = true)
-            HttpServletRequest request
-    ) throws IOException, JDOMException {
+        HttpServletRequest request
+    ) {
         MAnalyseProcess registredMAnalyseProcess = getRegistredMAnalyseProcess();
 
         ServiceContext serviceContext = ApiUtils.createServiceContext(request);
@@ -363,12 +377,12 @@ public class LinksApi {
                     if (!metadataUtils.existsMetadataUuid(uuid)) {
                         report.incrementNullRecords();
                     }
-                    for (AbstractMetadata record : metadataRepository.findAllByUuid(uuid)) {
-                        if (!accessManager.canEdit(serviceContext, String.valueOf(record.getId()))) {
-                            report.addNotEditableMetadataId(record.getId());
+                    for (AbstractMetadata metadataRecord : metadataRepository.findAllByUuid(uuid)) {
+                        if (!accessManager.canEdit(serviceContext, String.valueOf(metadataRecord.getId()))) {
+                            report.addNotEditableMetadataId(metadataRecord.getId());
                         } else {
-                            ids.add(record.getId());
-                            report.addMetadataId(record.getId());
+                            ids.add(metadataRecord.getId());
+                            report.addMetadataId(metadataRecord.getId());
                             report.incrementProcessedRecords();
                         }
                     }
@@ -403,18 +417,16 @@ public class LinksApi {
     @io.swagger.v3.oas.annotations.Operation(
         summary = "Analyze one or more links",
         description = "")
-    @RequestMapping(
+    @PostMapping(
         path = "/analyzeurl",
-        produces = MediaType.APPLICATION_JSON_VALUE,
-        method = RequestMethod.POST)
+        produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAuthority('Editor')")
     @ResponseStatus(HttpStatus.CREATED)
-    @ResponseBody
     public void analyzeLinks(
         @Parameter(description = "URL")
         @RequestParam(required = false)
-            String[] url
-    ) throws IOException, JDOMException {
+        String[] url
+    ) {
         MAnalyseProcess registredMAnalyseProcess = getRegistredMAnalyseProcess();
         registredMAnalyseProcess.testLink(Lists.newArrayList(url));
     }
@@ -423,29 +435,26 @@ public class LinksApi {
     @io.swagger.v3.oas.annotations.Operation(
         summary = "Remove all links and status history",
         description = "")
-    @RequestMapping(
-        produces = MediaType.APPLICATION_JSON_VALUE,
-        method = RequestMethod.DELETE)
+    @DeleteMapping(
+        produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.OK)
     @PreAuthorize("hasAuthority('Administrator')")
-    @ResponseBody
-    public ResponseEntity purgeAll() {
+    public ResponseEntity<Void> purgeAll() {
         urlAnalyser.deleteAll();
-        return new ResponseEntity(HttpStatus.NO_CONTENT);
+        cleanupFinishedMAnalyseProcesses();
+        return ResponseEntity.noContent().build();
     }
 
     private MAnalyseProcess getRegistredMAnalyseProcess() {
+        cleanupFinishedMAnalyseProcesses();
+
         MAnalyseProcess mAnalyseProcess = new MAnalyseProcess(
             settingManager.getSiteId(),
             linkRepository,
             metadataRepository,
             urlAnalyser, appContext);
         mBeanExporter.registerManagedResource(mAnalyseProcess, mAnalyseProcess.getObjectName());
-        try {
-            mBeanExporter.unregisterManagedResource(mAnalyseProcesses.removeLast().getObjectName());
-        } catch (MalformedObjectNameException e) {
-            e.printStackTrace();
-        }
+
         mAnalyseProcesses.addFirst(mAnalyseProcess);
         return mAnalyseProcess;
     }
@@ -454,6 +463,7 @@ public class LinksApi {
     public void initBinder(WebDataBinder dataBinder) {
         dataBinder.registerCustomEditor(LinkFilter.class, new PropertyEditorSupport() {
             Object value;
+
             @Override
             public Object getValue() {
                 return value;
@@ -464,6 +474,30 @@ public class LinksApi {
                 value = new Gson().fromJson(text, LinkFilter.class);
             }
         });
+    }
+
+
+    private void cleanupFinishedMAnalyseProcesses() {
+        try {
+            List<SelfNaming> processToRemove = new ArrayList<>();
+
+            mAnalyseProcesses.forEach(p -> {
+                if (!(p instanceof EmptySlot)) {
+                    MAnalyseProcess process = (MAnalyseProcess) p;
+                    if (process.isProcessFinished()) {
+                        processToRemove.add(process);
+                    }
+                }
+            });
+            Iterator<SelfNaming> it = processToRemove.iterator();
+
+            while (it.hasNext()) {
+                mBeanExporter.unregisterManagedResource(it.next().getObjectName());
+            }
+        } catch (MalformedObjectNameException e) {
+            Log.error(LOGGER, String.format("Error unregistering metadata links analysis process '%s'",
+                settingManager.getSiteId()), e);
+        }
     }
 
     private static class LinkFilter {

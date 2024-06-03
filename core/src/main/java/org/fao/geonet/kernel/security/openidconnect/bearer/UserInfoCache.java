@@ -10,19 +10,13 @@ import java.util.Map;
  */
 public class UserInfoCache {
 
-    static Object lockobj = new Object();
+    static final Object lockobj = new Object();
     Map<String, UserInfoCacheItem> cache = new HashMap<>();
 
     public UserInfoCacheItem getItem(String accessKey) {
         synchronized (lockobj) {
-            if (!cache.containsKey(accessKey))
-                return null;
-            UserInfoCacheItem item = cache.get(accessKey);
-            if (item.isExpired()) {
-                cache.remove(accessKey);
-                return null;
-            }
-            return item;
+            cache.entrySet().removeIf(e -> e.getValue().isExpired());
+            return cache.get(accessKey);
         }
     }
 

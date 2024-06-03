@@ -29,7 +29,7 @@
                 xmlns:gex="http://standards.iso.org/iso/19115/-3/gex/1.0"
                 xmlns:gcx="http://standards.iso.org/iso/19115/-3/gcx/1.0"
                 xmlns:lan="http://standards.iso.org/iso/19115/-3/lan/1.0"
-                xmlns:srv="http://standards.iso.org/iso/19115/-3/srv/2.1"
+                xmlns:srv="http://standards.iso.org/iso/19115/-3/srv/2.0"
                 xmlns:mcc="http://standards.iso.org/iso/19115/-3/mcc/1.0"
                 xmlns:mco="http://standards.iso.org/iso/19115/-3/mco/1.0"
                 xmlns:mdb="http://standards.iso.org/iso/19115/-3/mdb/2.0"
@@ -566,7 +566,7 @@
                           select="gn-fn-index:build-thesaurus-index-field-name($thesaurusId, $thesaurusTitle)"/>
 
             <xsl:variable name="keywords"
-                          select="mri:keyword[*/normalize-space() != '']"/>
+                          select="current-group()/mri:keyword[*/normalize-space() != '']"/>
 
             <thesaurus>
               <info type="{$thesaurusType}"
@@ -751,7 +751,6 @@
             <xsl:copy-of select="gn-fn-index:add-multilingual-field('extentDescription', ., $allLanguages)"/>
           </xsl:for-each>
 
-          <!-- TODO: index bounding polygon -->
           <xsl:for-each select=".//gex:EX_GeographicBoundingBox[
                                 ./gex:westBoundLongitude/gco:Decimal castable as xs:decimal and
                                 ./gex:eastBoundLongitude/gco:Decimal castable as xs:decimal and
@@ -769,25 +768,6 @@
             <xsl:variable name="s"
                           select="format-number(./gex:southBoundLatitude/gco:Decimal/text(), $format)"/>
 
-            <!-- Example: ENVELOPE(-10, 20, 15, 10) which is minX, maxX, maxY, minY order
-            http://wiki.apache.org/solr/SolrAdaptersForLuceneSpatial4
-            https://cwiki.apache.org/confluence/display/solr/Spatial+Search
-
-            bbox field type limited to one. TODO
-            <xsl:if test="position() = 1">
-              <bbox>
-                <xsl:text>ENVELOPE(</xsl:text>
-                <xsl:value-of select="$w"/>
-                <xsl:text>,</xsl:text>
-                <xsl:value-of select="$e"/>
-                <xsl:text>,</xsl:text>
-                <xsl:value-of select="$n"/>
-                <xsl:text>,</xsl:text>
-                <xsl:value-of select="$s"/>
-                <xsl:text>)</xsl:text>
-              </field>
-            </xsl:if>
-            -->
             <xsl:choose>
               <xsl:when test="-180 &lt;= number($e) and number($e) &lt;= 180 and
                               -180 &lt;= number($w) and number($w) &lt;= 180 and
@@ -796,6 +776,10 @@
                 <xsl:choose>
                   <xsl:when test="$e = $w and $s = $n">
                     <location><xsl:value-of select="concat($s, ',', $w)"/></location>
+                    <geom type="object">
+                      <xsl:text>{"type": "Point", "coordinates": </xsl:text>
+                      <xsl:value-of select="concat('[', $w, ',', $s, ']}')"/>
+                    </geom>
                   </xsl:when>
                   <xsl:when
                     test="($e = $w and $s != $n) or ($e != $w and $s = $n)">
@@ -928,14 +912,10 @@
               </inspireServiceType>
             </xsl:if>
           </xsl:if>
-          <xsl:if test="following-sibling::srv:serviceTypeVersion">
-            <serviceTypeAndVersion>
-              <xsl:value-of select="concat(
-                        text(),
-                        $separator,
-                        following-sibling::srv:serviceTypeVersion/gco:CharacterString/text())"/>
-            </serviceTypeAndVersion>
-          </xsl:if>
+        </xsl:for-each>
+
+        <xsl:for-each select="srv:serviceTypeVersion">
+          <serviceTypeVersion><xsl:value-of select="gco:CharacterString/text()"/></serviceTypeVersion>
         </xsl:for-each>
       </xsl:for-each>
 
@@ -1035,14 +1015,15 @@
         </xsl:apply-templates>
       </xsl:if>
 
+      
       <xsl:variable name="jsonFeatureTypes">[
         <xsl:for-each select="mdb:contentInfo//gfc:FC_FeatureCatalogue/gfc:featureType">{
 
           "typeName" : "<xsl:value-of select="util:escapeForJson(gfc:FC_FeatureType/gfc:typeName/text())"/>",
-          "definition" :"<xsl:value-of select="util:escapeForJson(gfc:FC_FeatureType/gfc:definition/*/text())"/>",
-          "code" :"<xsl:value-of select="util:escapeForJson(gfc:FC_FeatureType/gfc:code/*/text())"/>",
-          "isAbstract" :"<xsl:value-of select="gfc:FC_FeatureType/gfc:isAbstract/*/text()"/>",
-          "aliases" : "<xsl:value-of select="util:escapeForJson(gfc:FC_FeatureType/gfc:aliases/*/text())"/>"
+          "definition" :"<xsl:value-of select="util:escapeForJson(gfc:FC_FeatureType/gfc:definition/gco:CharacterString/text())"/>",
+          "code" :"<xsl:value-of select="util:escapeForJson(gfc:FC_FeatureType/gfc:code/(gco:CharacterString|gcx:Anchor)/text())"/>",
+          "isAbstract" :"<xsl:value-of select="gfc:FC_FeatureType/gfc:isAbstract/gco:Boolean/text()"/>",
+          "aliases" : "<xsl:value-of select="util:escapeForJson(gfc:FC_FeatureType/gfc:aliases/gco:CharacterString/text())"/>"
           <!--"inheritsFrom" : "<xsl:value-of select="gfc:FC_FeatureType/gfc:inheritsFrom/*/text()"/>",
           "inheritsTo" : "<xsl:value-of select="gfc:FC_FeatureType/gfc:inheritsTo/*/text()"/>",
           "constrainedBy" : "<xsl:value-of select="gfc:FC_FeatureType/gfc:constrainedBy/*/text()"/>",
@@ -1056,11 +1037,11 @@
               <!-- TODO: Add multilingual support-->
               {"name": "<xsl:value-of select="util:escapeForJson(*/gfc:memberName/text())"/>",
               "definition": "<xsl:value-of select="util:escapeForJson(*/gfc:definition/gco:CharacterString/text())"/>",
-              "code": "<xsl:value-of select="util:escapeForJson(*/gfc:code/*/text())"/>",
+              "code": "<xsl:value-of select="util:escapeForJson(*/gfc:code/(gco:CharacterString|gcx:Anchor)/text())"/>",
               "link": "<xsl:value-of select="*/gfc:code/*/@xlink:href"/>",
               "type": "<xsl:value-of select="*/gfc:valueType/gco:TypeName/gco:aName/*/text()"/>"
               <xsl:if test="*/gfc:cardinality">
-                ,"cardinality": "<xsl:value-of select="util:escapeForJson(*/gfc:cardinality/*/text())"/>"
+                ,"cardinality": "<xsl:value-of select="util:escapeForJson(*/gfc:cardinality/(gco:CharacterString|gcx:Anchor)/text())"/>"
               </xsl:if>
               <xsl:variable name="codeList"
                             select="*/gfc:listedValue[normalize-space(*) != '']"/>
@@ -1068,7 +1049,7 @@
                 ,"values": [
                 <xsl:for-each select="$codeList">{
                   "label": "<xsl:value-of select="util:escapeForJson(*/gfc:label/gco:CharacterString/text())"/>",
-                  "code": "<xsl:value-of select="util:escapeForJson(*/gfc:code/*/text())"/>",
+                  "code": "<xsl:value-of select="util:escapeForJson(*/gfc:code/(gco:CharacterString|gcx:Anchor)/text())"/>",
                   "definition": "<xsl:value-of select="util:escapeForJson(*/gfc:definition/gco:CharacterString/text())"/>"}
                   <xsl:if test="position() != last()">,</xsl:if>
                 </xsl:for-each>
@@ -1307,7 +1288,7 @@
               "nilReason": "<xsl:value-of select="../@gco:nilReason"/>",
             </xsl:if>
             "function":"<xsl:value-of select="cit:function/cit:CI_OnLineFunctionCode/@codeListValue"/>",
-            "applicationProfile":"<xsl:value-of select="util:escapeForJson(cit:applicationProfile/gco:CharacterString/text())"/>",
+            "applicationProfile":"<xsl:value-of select="util:escapeForJson(cit:applicationProfile/(gco:CharacterString|gcx:Anchor)/text())"/>",
             "group": <xsl:value-of select="$transferGroup"/>
             }
           </link>
@@ -1410,7 +1391,7 @@
                   select="replace(*[1]/cit:role/*/@codeListValue, ' ', '')"
                   as="xs:string?"/>
     <xsl:variable name="logo" select="(.//cit:logo/*/mcc:fileName/*)[1]"/>
-    <xsl:variable name="website" select=".//cit:onlineResource/*/cit:linkage/gco:CharacterString"/>
+    <xsl:variable name="website" select="(.//cit:onlineResource/*/cit:linkage/gco:CharacterString)[1]"/>
     <xsl:variable name="email"
                   select="(.//cit:contactInfo/*/cit:address/*/cit:electronicMailAddress/gco:CharacterString)[1]"/>
     <xsl:variable name="phone"

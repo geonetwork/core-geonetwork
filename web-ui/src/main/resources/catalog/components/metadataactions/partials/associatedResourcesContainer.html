@@ -1,0 +1,95 @@
+<div data-ng-repeat="config in relatedConfigUI track by $index">
+  <div>
+    <div>
+      <h2 class="onlinesrc-title">
+        <i data-ng-class="onlinesrcService.reload ? 'fa-spin' : ''"></i>
+        <i class="{{::getClass(config.type)}}"></i>&nbsp;
+        <span>{{"associated-" + config.type | translate}}</span>
+
+        <a
+          href=""
+          title="{{(config.type + '-help') | translate}}"
+          class="btn btn-default btn-xs pull-right"
+          data-ng-if="config.allowToAddRelation"
+          data-ng-click="onlinesrcService.onOpenPopup(config.type, config.config)"
+        >
+          <i class="fa fa-fw fa-plus"></i>
+          <span data-translate="">{{ config.label | translate}}</span>
+        </a>
+      </h2>
+      <div
+        data-ng-init="mainType = relatedResourcesConfig.getType(md, mapUIRelationToApi(config.type));
+                         icon = relatedResourcesConfig.getClassIcon(mainType);"
+        data-ng-if="config.relations.length > 0"
+        data-ng-repeat-start="(key, records) in config.relations | groupBy:'[properties.associationType,properties.initiativeType]'"
+      >
+        <strong data-ng-if="key" data-ng-init="keyToken = key.split(',')">
+          {{keyToken[0] | translate}}
+          <span data-ng-if="keyToken[1] !== ''">({{keyToken[1] | translate}})</span>
+        </strong>
+        <ul class="list-group">
+          <li
+            class="list-group-item"
+            data-ng-repeat="record in records | orderBy:'resourceTitle'"
+          >
+            <div class="row">
+              <div class="col-md-11">
+                <a
+                  data-ng-hide="record.remoteUrl"
+                  href=""
+                  title="{{record.resourceTitle}}"
+                  gn-metadata-open="record"
+                  data-app-url="catalog.search"
+                >
+                  <i
+                    class="fa fa-fw {{icon}} gn-icon-association-{{record.properties.associationType}} gn-icon-initiative-{{record.properties.initiativeType}}"
+                  ></i>
+                  {{record.resourceTitle}}
+                </a>
+                <a
+                  data-ng-show="record.remoteUrl"
+                  data-ng-href="{{record.remoteUrl}}"
+                  rel="noopener noreferrer"
+                  target="_blank"
+                  title="{{record.resourceTitle || record.uuid}}"
+                >
+                  <i class="fa {{icon}}"></i>
+                  {{record.resourceTitle || record.uuid}}
+                  <i
+                    data-ng-if="record.origin === 'remote'"
+                    class="fa fa-external-link"
+                    title="{{'remoteRecord' | translate}}"
+                  ></i>
+                </a>
+                <span
+                  data-ng-if="record.properties && record.properties.associationType != ''"
+                >
+                  - {{record.properties.associationType | translate}}
+                </span>
+                <span
+                  data-ng-if="record.properties && record.properties.initiativeType != ''"
+                >
+                  ({{record.properties.initiativeType | translate}})
+                </span>
+              </div>
+              <div class="col-md-1 text-right">
+                <a
+                  href=""
+                  class="onlinesrc-remove"
+                  data-ng-hide="readonly === true"
+                  data-ng-if="::canRemoveLink(record, config.type)"
+                  title="{{'remove' | translate}} {{record.resourceTitle}}"
+                  aria-label="{{'remove' | translate}} {{record.resourceTitle}}"
+                  data-ng-click="remove(record, config.type)"
+                >
+                  <i class="fa fa-times text-danger"></i>
+                </a>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </div>
+      <span data-ng-repeat-end=""></span>
+    </div>
+  </div>
+</div>

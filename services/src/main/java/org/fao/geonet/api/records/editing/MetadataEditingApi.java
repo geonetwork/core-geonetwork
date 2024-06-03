@@ -420,7 +420,7 @@ public class MetadataEditingApi {
 
                         List<MetadataStatus> listOfStatusChange = new ArrayList<>(1);
                         listOfStatusChange.add(metadataStatus);
-                        sa.onStatusChange(listOfStatusChange);
+                        sa.onStatusChange(listOfStatusChange, true);
                     } else {
                         throw new SecurityException(String.format("Only users with editor profile can submit."));
                     }
@@ -442,7 +442,7 @@ public class MetadataEditingApi {
 
                         List<MetadataStatus> listOfStatusChange = new ArrayList<>(1);
                         listOfStatusChange.add(metadataStatus);
-                        sa.onStatusChange(listOfStatusChange);
+                        sa.onStatusChange(listOfStatusChange, true);
                     } else {
                         throw new SecurityException(String.format("Only users with review profile can approve."));
                     }
@@ -688,7 +688,8 @@ public class MetadataEditingApi {
         GeonetworkDataDirectory dataDirectory = applicationContext.getBean(GeonetworkDataDirectory.class);
         Path xslt = dataDirectory.getWebappDir()
             .resolve(isEmbedded ? "xslt/ui-metadata/edit/edit-embedded.xsl" : "xslt/ui-metadata/edit/edit.xsl");
-        Xml.transformXml(root, xslt, response.getOutputStream());
+
+        Xml.transform(root, xslt, response.getOutputStream());
     }
 
     private Element buildResourceDocument(ApplicationContext applicationContext, ServiceContext context,

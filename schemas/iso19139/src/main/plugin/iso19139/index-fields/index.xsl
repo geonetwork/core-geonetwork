@@ -33,6 +33,8 @@
                 xmlns:xlink="http://www.w3.org/1999/xlink"
                 xmlns:gn-fn-index="http://geonetwork-opensource.org/xsl/functions/index"
                 xmlns:index="java:org.fao.geonet.kernel.search.EsSearchManager"
+                xmlns:digestUtils="java:org.apache.commons.codec.digest.DigestUtils"
+                xmlns:exslt="http://exslt.org/common"
                 xmlns:util="java:org.fao.geonet.util.XslUtil"
                 xmlns:date-util="java:org.fao.geonet.utils.DateUtil"
                 xmlns:daobs="http://daobs.org"
@@ -516,7 +518,7 @@
                           select="gn-fn-index:build-thesaurus-index-field-name($thesaurusId, $thesaurusTitle)"/>
 
             <xsl:variable name="keywords"
-                          select="gmd:keyword[*/normalize-space() != '']"/>
+                          select="current-group()/gmd:keyword[*/normalize-space() != '']"/>
 
             <thesaurus>
               <info type="{$thesaurusType}"
@@ -692,7 +694,6 @@
             <xsl:copy-of select="gn-fn-index:add-multilingual-field('extentIdentifier', */gmd:code, $allLanguages)"/>
           </xsl:for-each>
 
-          <!-- TODO: index bounding polygon -->
           <xsl:variable name="bboxes"
                         select=".//gmd:EX_GeographicBoundingBox[
                                 ./gmd:westBoundLongitude/gco:Decimal castable as xs:decimal and
@@ -739,6 +740,10 @@
                 <xsl:choose>
                   <xsl:when test="$e = $w and $s = $n">
                     <location><xsl:value-of select="concat($s, ',', $w)"/></location>
+                    <geom type="object">
+                      <xsl:text>{"type": "Point", "coordinates": </xsl:text>
+                      <xsl:value-of select="concat('[', $w, ',', $s, ']}')"/>
+                    </geom>
                   </xsl:when>
                   <xsl:when
                     test="($e = $w and $s != $n) or ($e != $w and $s = $n)">
@@ -874,14 +879,10 @@
               </inspireServiceType>
             </xsl:if>
           </xsl:if>
-          <xsl:if test="following-sibling::srv:serviceTypeVersion">
-            <serviceTypeAndVersion>
-              <xsl:value-of select="concat(
-                        text(),
-                        $separator,
-                        following-sibling::srv:serviceTypeVersion/gco:CharacterString/text())"/>
-            </serviceTypeAndVersion>
-          </xsl:if>
+        </xsl:for-each>
+
+        <xsl:for-each select="srv:serviceTypeVersion">
+          <serviceTypeVersion><xsl:value-of select="gco:CharacterString/text()"/></serviceTypeVersion>
         </xsl:for-each>
       </xsl:for-each>
 
@@ -1140,6 +1141,8 @@
             <atomfeed><xsl:value-of select="gmd:linkage/gmd:URL"/></atomfeed>
           </xsl:if>
           <link type="object">{
+            "hash": "<xsl:value-of select="digestUtils:md5Hex(string(exslt:node-set(normalize-space(.))))"/>",
+            "idx": <xsl:value-of select="position()"/>,
             "protocol":"<xsl:value-of select="util:escapeForJson((gmd:protocol/*/text())[1])"/>",
             "mimeType":"<xsl:value-of select="if (*/gmx:MimeFileType)
                                               then util:escapeForJson(*/gmx:MimeFileType/@type)
@@ -1161,7 +1164,7 @@
               "nilReason": "<xsl:value-of select="../@gco:nilReason"/>",
             </xsl:if>
             "function":"<xsl:value-of select="gmd:function/gmd:CI_OnLineFunctionCode/@codeListValue"/>",
-            "applicationProfile":"<xsl:value-of select="util:escapeForJson(gmd:applicationProfile/gco:CharacterString/text())"/>",
+            "applicationProfile":"<xsl:value-of select="util:escapeForJson(gmd:applicationProfile/(gco:CharacterString|gmx:Anchor)/text())"/>",
             "group": <xsl:value-of select="$transferGroup"/>
             }
             <!--Link object in Angular used to be
@@ -1332,7 +1335,7 @@
         <xsl:variable name="getRecordByIdId">
           <xsl:if test="@xlink:href != ''">
             <xsl:analyze-string select="@xlink:href"
-                                regex=".*[i|I][d|D]=([_\w\-\.\{{\}}]*).*">
+                                regex=".*[i|I][d|D]=([a-zA-Z0-9\-\.\{{\}}]*).*">
               <xsl:matching-substring>
                 <xsl:value-of select="regex-group(1)"/>
               </xsl:matching-substring>

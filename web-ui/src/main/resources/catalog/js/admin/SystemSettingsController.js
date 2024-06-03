@@ -333,7 +333,7 @@
           var data = response.data;
 
           for (var i = 0; i < data.length; i++) {
-            data[i].configuration == angular.toJson(data[i].configuration);
+            data[i].configuration = angular.fromJson(data[i].configuration || {});
 
             // Select last one updated or created
             if (

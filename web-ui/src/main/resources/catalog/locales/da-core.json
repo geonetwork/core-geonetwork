@@ -184,7 +184,7 @@
     "hitsPerPage": "Poster per side",
     "chooseRecordsPerPage": "Klik for at vælge antallet af poster pr. side",
     "sortedBy": "Sorteret efter {{field}}",
-    "sortBy-dateStampDesc": "sidst opdateret",
+    "sortBy-changeDateDesc": "sidst opdateret",
     "sortBy-createDateDesc": "Nye metadata",
     "sortBy-resourceTitleObject.default.sort": "titel (stigende)",
     "sortBy-resourceTitleObject.default.sortDesc": "titel (faldende)",
@@ -580,5 +580,9 @@
     "reviewerNotAllowedPublish": "Reviewer not allowed to publish the metadata",
     "reviewerNotAllowedUnpublish": "Reviewer not allowed to un-publish the metadata",
     "reviewerNotAllowedPublishUnpublish": "Reviewer not allowed to publish / un-publish the metadata",
-    "missingTitle": "Missing title"
+    "missingTitle": "Missing title",
+    "mapLegend": "Signaturforklaring",
+    "quality": "Kvalitet",
+    "download": "Download",
+    "links": "Links"
 }

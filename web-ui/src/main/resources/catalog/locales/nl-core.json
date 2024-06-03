@@ -184,7 +184,7 @@
     "hitsPerPage": "Resultaten per pagina",
     "chooseRecordsPerPage": "Kies het aantal resultaten per pagina",
     "sortedBy": "Sortering: {{field}}",
-    "sortBy-dateStampDesc": "Laatste wijziging",
+    "sortBy-changeDateDesc": "Laatste wijziging",
     "sortBy-createDateDesc": "Aanmaak datum",
     "sortBy-resourceTitleObject.default.sort": "titel (oplopend)",
     "sortBy-resourceTitleObject.default.sortDesc": "titel (aflopend)",
@@ -580,5 +580,9 @@
     "reviewerNotAllowedPublish": "Reviewer not allowed to publish the metadata",
     "reviewerNotAllowedUnpublish": "Reviewer not allowed to un-publish the metadata",
     "reviewerNotAllowedPublishUnpublish": "Reviewer not allowed to publish / un-publish the metadata",
-    "missingTitle": "Missing title"
+    "missingTitle": "Missing title",
+    "mapLegend": "Legenda",
+    "quality": "Kwaliteit",
+    "download": "Download bestand",
+    "links": "Links"
 }

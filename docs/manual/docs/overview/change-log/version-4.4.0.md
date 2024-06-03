@@ -4,6 +4,8 @@ GeoNetwork 4.4.0 release is a major release.
 
 ## Migration notes
 
+When migrating from 4.2.x series:
+
 ### Java
 
 **Version 4.4 only works on Java 11.**

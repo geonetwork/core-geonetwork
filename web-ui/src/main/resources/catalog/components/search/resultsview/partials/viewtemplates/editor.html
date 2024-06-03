@@ -25,7 +25,7 @@
               <a
                 href=""
                 data-ng-show="md.isTemplate != 's'"
-                data-ng-href="catalog.search#/{{(md.draft == 'y')?'metadraf':'metadata'}}/{{md.uuid}}"
+                data-ng-href="catalog.search#/{{(md.draft == 'y') ? 'metadraf' : 'metadata'}}/{{md.uuid}}"
                 title="{{md.resourceAbstract}}"
                 class="gn-break"
               >
@@ -43,7 +43,7 @@
                 <small data-translate="">updatedOn</small>
                 <small
                   class="text-muted"
-                  data-gn-humanize-time="{{md.dateStamp}}"
+                  data-gn-humanize-time="{{md.changeDate}}"
                   data-from-now=""
                 ></small>
 
@@ -53,8 +53,14 @@
                     class="text-muted gn-status"
                     data-ng-class="{'text-success': md.mdStatus == 2, 'text-warning': md.mdStatus == 4}"
                     data-ng-if="md.mdStatus < 50 && isMdWorkflowEnable"
-                    >{{::md.statusWorkflow | getStatusLabel}}</small
                   >
+                    <span data-ng-if="md.draft === 'e' || md.draft === 'n'"
+                      >{{::md.statusWorkflow | getStatusLabel}}</span
+                    >
+                    <span data-ng-if="md.draft === 'y'"
+                      >{{::'status-' + md.mdStatus | translate}}</span
+                    >
+                  </small>
 
                   <small
                     class="text-muted gn-status"
@@ -68,8 +74,8 @@
             </div>
           </div>
           <gn-draft-validation-widget
-            data-ng-if="md.draft == 'e'"
-            metadata="md"
+            data-ng-if="md.draft == 'e' || md.draft == 'y'"
+            data-metadata="md"
           ></gn-draft-validation-widget>
         </div>
         <div class="col-lg-4 col-md-4 gn-nopadding-right">

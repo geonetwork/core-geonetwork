@@ -184,7 +184,7 @@
     "hitsPerPage": "Antal poster per sida",
     "chooseRecordsPerPage": "Klicka för att välja hur många poster som visas per sida",
     "sortedBy": "Sorterat på {{field}}",
-    "sortBy-dateStampDesc": "senaste uppdateringar",
+    "sortBy-changeDateDesc": "senaste uppdateringar",
     "sortBy-createDateDesc": "nya poster",
     "sortBy-resourceTitleObject.default.sort": "title (ascending)",
     "sortBy-resourceTitleObject.default.sortDesc": "title (descending)",
@@ -580,5 +580,9 @@
     "reviewerNotAllowedPublish": "Reviewer not allowed to publish the metadata",
     "reviewerNotAllowedUnpublish": "Reviewer not allowed to un-publish the metadata",
     "reviewerNotAllowedPublishUnpublish": "Reviewer not allowed to publish / un-publish the metadata",
-    "missingTitle": "Missing title"
+    "missingTitle": "Missing title",
+    "mapLegend": "Legend",
+    "quality": "Kvalitet",
+    "download": "Download",
+    "links": "Länkar"
 }

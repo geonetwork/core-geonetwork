@@ -67,8 +67,7 @@
                                           editActions: ['addOnlinesrc']
                                         }]"/>
 
-        <directive data-gn-onlinesrc-list=""
-                   data-types="parent"/>
+        <directive data-gn-associated-resources-panel="gnCurrentEdit.metadata" />
       </sidePanel>
       <tab id="default" default="true" mode="flat">
         <section xpath="/simpledc"/>
@@ -94,8 +93,7 @@
                                           editActions: ['addOnlinesrc']
                                         }]"/>
 
-        <directive data-gn-onlinesrc-list=""
-                   data-types="parent"/>
+        <directive data-gn-associated-resources-panel="gnCurrentEdit.metadata" />
       </sidePanel>
       <tab id="advanced" default="true">
         <section xpath="/simpledc"/>
@@ -118,8 +116,8 @@
                                           editActions: ['addOnlinesrc']
                                         }]"/>
 
-        <directive data-gn-onlinesrc-list=""
-                   data-types="parent"/>
+        <directive data-gn-associated-resources-panel="gnCurrentEdit.metadata" />
+
       </sidePanel>
       <tab id="xml" default="true"/>
     </view>
