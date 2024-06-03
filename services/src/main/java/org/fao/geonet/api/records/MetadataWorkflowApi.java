@@ -460,6 +460,7 @@ public class MetadataWorkflowApi {
         AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
         ServiceContext context = ApiUtils.createServiceContext(request,
             languageUtils.getIso3langCode(request.getLocales()));
+        ResourceBundle messages = ApiUtils.getMessagesResourceBundle(request.getLocales());
         Locale[] feedbackLocales = feedbackLanguages.getLocales(request.getLocale());
 
         boolean isMdWorkflowEnable = settingManager.getValueAsBool(Settings.METADATA_WORKFLOW_ENABLE);
