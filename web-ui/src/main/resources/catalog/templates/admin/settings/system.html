@@ -166,6 +166,25 @@
                     <!-- According to entry -->
                     <div class="col-sm-7" data-ng-switch="s['name']">
                       <select
+                        data-ng-switch-when="system/translation/provider"
+                        class="form-control"
+                        name="{{s.name}}"
+                        data-ng-model="s.value"
+                        data-ng-change="changeTranslationProvider(s.value)"
+                      >
+                        <option value="" ng-selected="'' == s.value">
+                          {{'NoTranslationProvider' | translate}}
+                        </option>
+                        <option
+                          data-ng-repeat="t in translationProviders"
+                          value="{{t}}"
+                          ng-selected="t === s.value"
+                        >
+                          {{t}}
+                        </option>
+                      </select>
+
+                      <select
                         data-ng-switch-when="metadata/import/userprofile"
                         class="form-control"
                         name="{{s.name}}"
@@ -737,6 +756,26 @@
                         name="{{s.name}}"
                         value="{{s.value}}"
                         data-ng-disabled="!isGroupLocalRatingNotificationLevel"
+                      />
+
+                      <input
+                        data-ng-switch-when="system/translation/serviceUrl"
+                        type="text"
+                        class="form-control"
+                        id="{{s['name']}}"
+                        name="{{s.name}}"
+                        value="{{s.value}}"
+                        data-ng-disabled="!isTranslationProviderSelected"
+                      />
+
+                      <input
+                        data-ng-switch-when="system/translation/apiKey"
+                        type="text"
+                        class="form-control"
+                        id="{{s['name']}}"
+                        name="{{s.name}}"
+                        value="{{s.value}}"
+                        data-ng-disabled="!isTranslationProviderSelected"
                       />
 
                       <!-- Default -->
