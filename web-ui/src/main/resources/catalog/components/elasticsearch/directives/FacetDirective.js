@@ -187,6 +187,23 @@
     }
   ]);
 
+  module.filter("facetTooltip", [
+    "$translate",
+    "$filter",
+    function ($translate, $filter) {
+      return function (item) {
+        if (item.definition) {
+          var key = item.definition + "-tooltip",
+            tooltip = $translate.instant(key);
+          if (tooltip !== key) {
+            return tooltip;
+          }
+        }
+        return $filter("facetTranslator")(item.value);
+      };
+    }
+  ]);
+
   module.filter("facetTranslator", [
     "$translate",
     "$filter",
@@ -321,14 +338,6 @@
 
   FacetController.prototype.isInSearch = function (facet, item) {
     return this.searchCtrl.isInSearch(item.path);
-  };
-
-  FacetController.prototype.getTooltip = function (item) {
-    if (item.definition) {
-      return this.$translate.instant(item.definition + "-tooltip");
-    } else {
-      return this.$filter("facetTranslator")(item.value);
-    }
   };
 
   FacetController.prototype.toggleCollapse = function () {
