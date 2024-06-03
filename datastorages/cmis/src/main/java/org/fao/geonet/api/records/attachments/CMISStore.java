@@ -399,8 +399,8 @@ public class CMISStore extends AbstractStore {
             return String.format("Metadata '%d' directory '%s' removed.", metadataId, folderKey);
         } catch (CmisObjectNotFoundException e) {
             Log.warning(Geonet.RESOURCES,
-                    String.format("Unable to located metadata '%s' directory '%s' to be removed.", metadataId, folderKey));
-            return String.format("Unable to located metadata '%s' directory '%s' to be removed.", metadataId, folderKey);
+                    String.format("Unable to located metadata '%d' directory '%s' to be removed.", metadataId, folderKey));
+            return String.format("Unable to located metadata '%d' directory '%s' to be removed.", metadataId, folderKey);
         } catch (ResourceNotFoundException e) {
             Log.warning(Geonet.RESOURCES,
                 String.format("Unable to located metadata '%s' directory '%s' to be removed.", metadataId, folderKey));
