@@ -3233,7 +3233,7 @@
                                             editActions: []}]"
         />
 
-        <directive data-gn-associated-resources-panel="gnCurrentEdit.metadata" />
+        <directive data-gn-associated-resources-panel="gnCurrentEdit.metadata"/>
 
         <directive gn-geo-publisher=""
                    data-ng-if="gnCurrentEdit.geoPublisherConfig"
@@ -3334,12 +3334,7 @@
                    transformations="to-iso19139-keyword-with-anchor"/>
       </thesaurusList>
       -->
-
-      <thesaurusList>
-        <thesaurus key="external.none.allThesaurus"
-                   fieldset="false"/>
-      </thesaurusList>
-
+      <thesaurusList defaultTransformation="to-iso19139-keyword-with-anchor"/>
     </view>
     <view name="advanced"
           class="gn-label-above-input gn-indent-bluescale">
@@ -3441,6 +3436,8 @@
         <section xpath="/gmd:MD_Metadata/gmd:applicationSchemaInfo" or="applicationSchemaInfo"
                  in="/gmd:MD_Metadata"/>
       </tab>
+
+      <thesaurusList defaultTransformation="to-iso19139-keyword-with-anchor"/>
     </view>
     <view name="xml">
       <sidePanel>

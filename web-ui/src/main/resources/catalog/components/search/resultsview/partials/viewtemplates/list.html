@@ -138,20 +138,18 @@
                             md.inspireThemeUri.length > 0 ? '' : 'invisible'"
         >
           <i
-            class="fa"
             data-ng-repeat="cat in ::md.cat"
+            class="fa text-primary gn-icon-{{cat}}"
             title="{{('cat-' + cat) | translate}}"
             aria-label="{{('cat-' + cat) | translate}}"
           >
-            <span class="fa gn-icon-{{cat}}"></span>
           </i>
           <i
             data-ng-repeat="t in md.inspireThemeUri track by $index"
             data-ng-init="code = t.slice(t.lastIndexOf('/') + 1)"
-            class="fa"
+            class="fa text-primary iti-{{::code}}"
             title="{{::(md.inspireTheme_syn && md.inspireTheme_syn[$index]) || code}}"
           >
-            <span class="fa iti-{{::code}}"></span>
           </i>
           <i
             data-ng-repeat="t in md.cl_topic"

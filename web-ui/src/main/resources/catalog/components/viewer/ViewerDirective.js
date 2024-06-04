@@ -474,7 +474,7 @@
 
                   // handle processes tool
                   if (scope.activeTools.processes && openedTool.url) {
-                    scope.wpsTabs.byUrl = true;
+                    scope.wpsTabs.url = true;
                     scope.selectedWps.url = openedTool.url;
                   }
 
