@@ -158,7 +158,6 @@ public class DraftUtilities {
 
             Log.info(Geonet.DATA_MANAGER, "Cleaning up draft record resources for metadata '" + draft.getUuid() + "(" +draft.getId() +")'");
             store.delResources(context, draft.getId());
-
         } catch (Exception e) {
             Log.error(Geonet.DATA_MANAGER, "Error upgrading from draft record with id " + md.getId(), e);
         }
