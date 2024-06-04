@@ -1,7 +1,7 @@
 <div data-ng-repeat="config in relatedConfigUI track by $index">
   <div>
     <div>
-      <h2 class="onlinesrc-title">
+      <h2 class="onlinesrc-title gn-relation-type-{{config.type}}">
         <i data-ng-class="onlinesrcService.reload ? 'fa-spin' : ''"></i>
         <i class="{{::getClass(config.type)}}"></i>&nbsp;
         <span>{{"associated-" + config.type | translate}}</span>
