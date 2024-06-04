@@ -238,8 +238,7 @@ public class JCloudStore extends AbstractStore {
     }
 
     @Override
-    public String delResources(final ServiceContext context, final String metadataUuid, Boolean approved) throws Exception {
-        int metadataId = canEdit(context, metadataUuid, approved);
+    public String delResources(final ServiceContext context, final int metadataId) throws Exception {
         try {
             ListContainerOptions opts = new ListContainerOptions();
             opts.prefix(getMetadataDir(context, metadataId) + jCloudConfiguration.getFolderDelimiter()).recursive();
