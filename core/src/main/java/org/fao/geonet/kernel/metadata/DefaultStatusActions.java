@@ -286,6 +286,8 @@ public class DefaultStatusActions implements StatusActions {
                     failedToFindASpecificTextTemplate = true;
                 }
             }
+
+            if ((failedToFindASpecificSubjectTemplate) && (failedToFindASpecificTextTemplate)) break;
         }
 
         if (failedToFindASpecificSubjectTemplate) {
