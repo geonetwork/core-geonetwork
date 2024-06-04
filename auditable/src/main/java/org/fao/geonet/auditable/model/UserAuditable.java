@@ -20,6 +20,7 @@
  * Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
  * Rome - Italy. email: geonetwork@osgeo.org
  */
+
 package org.fao.geonet.auditable.model;
 
 import org.fao.geonet.auditable.AuditableEntity;
@@ -30,7 +31,9 @@ import org.javers.core.metamodel.annotation.Id;
 import org.javers.core.metamodel.annotation.TypeName;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @TypeName("User")
 public class UserAuditable extends AuditableEntity {
@@ -40,9 +43,13 @@ public class UserAuditable extends AuditableEntity {
     private String username;
     private String name;
     private String surname;
-    private List<String> emailAddresses;
+    private Set<String> emailAddresses;
     private String organisation;
-    private List<Address> addresses;
+    private String address;
+    private String city;
+    private String state;
+    private String zip;
+    private String country;
     private String kind;
     private List<String> groupsRegisteredUser;
     private List<String> groupsEditor;
@@ -55,6 +62,7 @@ public class UserAuditable extends AuditableEntity {
         this.groupsEditor = new ArrayList<>();
         this.groupsReviewer = new ArrayList<>();
         this.groupsUserAdmin = new ArrayList<>();
+        this.emailAddresses = new HashSet<>();
     }
 
     public int getId() {
@@ -97,11 +105,11 @@ public class UserAuditable extends AuditableEntity {
         this.surname = surname;
     }
 
-    public List<String> getEmailAddresses() {
+    public Set<String> getEmailAddresses() {
         return emailAddresses;
     }
 
-    public void setEmailAddresses(List<String> emailAddresses) {
+    public void setEmailAddresses(Set<String> emailAddresses) {
         this.emailAddresses = emailAddresses;
     }
 
@@ -113,12 +121,44 @@ public class UserAuditable extends AuditableEntity {
         this.organisation = organisation;
     }
 
-    public List<Address> getAddresses() {
-        return addresses;
+    public String getAddress() {
+        return address;
     }
 
-    public void setAddresses(List<Address> addresses) {
-        this.addresses = addresses;
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
+    }
+
+    public String getZip() {
+        return zip;
+    }
+
+    public void setZip(String zip) {
+        this.zip = zip;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
     }
 
     public String getKind() {
@@ -180,6 +220,16 @@ public class UserAuditable extends AuditableEntity {
         userAuditable.setKind(user.getKind());
         userAuditable.setOrganisation(user.getOrganisation());
         userAuditable.setProfile(user.getProfile().name());
+        userAuditable.setEmailAddresses(user.getEmailAddresses());
+        if (!user.getAddresses().isEmpty()) {
+            // A user can have only 1 address defined in the UI.
+            Address userAddress = (Address) user.getAddresses().toArray()[0];
+            userAuditable.setAddress(userAddress.getAddress());
+            userAuditable.setZip(userAddress.getZip());
+            userAuditable.setState(userAddress.getState());
+            userAuditable.setCity(userAddress.getCity());
+            userAuditable.setCountry(userAddress.getCountry());
+        }
         userAuditable.setEnabled(user.isEnabled());
 
         // Groups
