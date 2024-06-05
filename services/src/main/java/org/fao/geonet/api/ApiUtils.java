@@ -119,13 +119,15 @@ public class ApiUtils {
             id = String.valueOf(metadata.getId());
         }
 
-        if (StringUtils.isEmpty(id)) {
+        if (!StringUtils.hasLength(id) && Lib.type.isInteger(id)) {
             //It wasn't a UUID
             id = String.valueOf(metadataUtils.findOne(uuidOrInternalId).getId());
         } else if (Boolean.TRUE.equals(approved)) {
             //It was a UUID, check if draft or approved version
-            id = String.valueOf(ApplicationContextHolder.get().getBean(MetadataRepository.class)
-                .findOneByUuid(uuidOrInternalId).getId());
+            AbstractMetadata approvedMetadata = ApplicationContextHolder.get().getBean(MetadataRepository.class).findOneByUuid(uuidOrInternalId);
+            if (approvedMetadata != null) {
+                id = String.valueOf(approvedMetadata.getId());
+            }
         }
 
         if (StringUtils.isEmpty(id)) {
@@ -295,13 +297,7 @@ public class ApiUtils {
      */
     public static AbstractMetadata canViewRecord(String metadataUuid, boolean approved, HttpServletRequest request) throws Exception {
         String metadataId;
-        if (!approved) {
-            // If the record is not approved then we need to get the id of the record.
-            metadataId = getInternalId(metadataUuid, approved);
-        } else {
-            // Otherwise use the uuid or id that was supplied.
-            metadataId = metadataUuid;
-        }
+        metadataId = getInternalId(metadataUuid, approved);
 
         AbstractMetadata metadata = getRecord(metadataId);
         try {
