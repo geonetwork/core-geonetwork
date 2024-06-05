@@ -150,6 +150,16 @@
             </cit:dateType>
           </cit:CI_Date>
         </mdb:dateInfo>
+        <mdb:dateInfo>
+          <cit:CI_Date>
+            <cit:date>
+              <gco:DateTime><xsl:value-of select="metas/metadata_processed"/></gco:DateTime>
+            </cit:date>
+            <cit:dateType>
+              <cit:CI_DateTypeCode codeList="codeListLocation#CI_DateTypeCode" codeListValue="creation"/>
+            </cit:dateType>
+          </cit:CI_Date>
+        </mdb:dateInfo>
         <mdb:metadataStandard>
           <cit:CI_Citation>
             <cit:title>
