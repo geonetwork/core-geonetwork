@@ -632,13 +632,21 @@
               <keywords>
                 <xsl:for-each select="$keywords">
                   <keyword>
-                    <xsl:variable name="keywordUri"
+                    <xsl:variable name="keywordUriAux"
                                   select="if (gmx:Anchor/@xlink:href[. != ''])
                                           then gmx:Anchor/@xlink:href
                                           else util:getKeywordUri(
                                                 (*/text())[1],
                                                 $thesaurusId,
                                                 $allLanguages/lang[@id = 'default']/@value)"/>
+
+                    <xsl:variable name="keywordUri"
+                                  select="if ($inspireEnable = 'true')
+                                          then gn-fn-index:check-fix-inspire-gemet-key($keywordUriAux)
+                                          else $keywordUriAux"/>
+
+                    <!--<xsl:message><xsl:value-of select="$keywordUri" /></xsl:message>-->
+
                     <xsl:attribute name="uri"
                                    select="$keywordUri"/>
                     <values>

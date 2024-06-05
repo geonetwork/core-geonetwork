@@ -303,9 +303,24 @@
           </xsl:otherwise>
         </xsl:choose>
 
+        <xsl:variable name="inspireEnable" select="util:getSettingValue('system/inspire/enable')" />
+
         <xsl:for-each select="$element//*:Anchor/@xlink:href">
-          <value><xsl:value-of select="concat($doubleQuote, 'link', $doubleQuote, ':',
+          <xsl:choose>
+            <xsl:when test="$fieldName = 'keyword'">
+              <xsl:variable name="keywordLink"
+                            select="if ($inspireEnable = 'true')
+                                then gn-fn-index:check-fix-inspire-gemet-key(.)
+                                else ." />
+
+              <value><xsl:value-of select="concat($doubleQuote, 'link', $doubleQuote, ':',
+                                           $doubleQuote, gn-fn-index:json-escape($keywordLink), $doubleQuote)"/></value>
+            </xsl:when>
+            <xsl:otherwise>
+              <value><xsl:value-of select="concat($doubleQuote, 'link', $doubleQuote, ':',
                                            $doubleQuote, gn-fn-index:json-escape(.), $doubleQuote)"/></value>
+            </xsl:otherwise>
+          </xsl:choose>
         </xsl:for-each>
       </xsl:variable>
 
@@ -485,6 +500,26 @@
       <indexingErrorMsg><xsl:value-of select="."/></indexingErrorMsg>
     </xsl:for-each>
   </xsl:template>
+
+  <!-- Check if it is an INSPIRE GEMET keyword using the old Anchor format:
+
+      https://www.eionet.europa.eu/gemet/en/inspire-themes/XX
+
+      Or the new format with https:
+
+      https://inspire.ec.europa.eu/theme/XX
+
+      In that cases updates the value to the new format official URI value using http:
+
+      http://inspire.ec.europa.eu/theme/XX
+  -->
+  <xsl:function name="gn-fn-index:check-fix-inspire-gemet-key">
+    <xsl:param name="key" as="xs:string"/>
+
+    <xsl:value-of select="if (not(contains($key, 'eionet.europa.eu')) and not(starts-with($key, 'https://inspire.ec.europa.eu/theme/')))
+                          then $key
+                          else concat('http://inspire.ec.europa.eu/theme/', tokenize($key,'/')[last()])" />
+  </xsl:function>
 
   <!--
 
