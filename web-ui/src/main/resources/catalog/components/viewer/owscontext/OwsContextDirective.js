@@ -45,7 +45,7 @@
         filters: [
           {
             query_string: {
-              query: '+resourceType:"map/interactive"'
+              query: '+resourceType:"map-interactive"'
             }
           }
         ],
@@ -208,7 +208,8 @@
             title: "",
             recordAbstract: "",
             group: null,
-            publishToAll: false
+            publishToAll: false,
+            schema: "iso19115-3.2018"
           };
 
           scope.mapProps = angular.extend({}, defaultMapProps);

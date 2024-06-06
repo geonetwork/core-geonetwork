@@ -932,6 +932,7 @@
                     "protocol:OGC:WFS|OGC:WCS|.*DOWNLOAD.*|DB:.*|FILE:.*|OGC API Features|OGC API Coverages",
                   title: "download"
                 },
+                { filter: "protocol:OGC:OWS-C", title: "map" },
                 { filter: "function:legend", title: "mapLegend" },
                 {
                   filter: "function:featureCatalogue",
