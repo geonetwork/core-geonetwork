@@ -481,6 +481,8 @@
     "clickToSelect": "Faceți clic pentru a selecta sau deselecta",
     "filterDataDescription": "Selectați un strat de pe hartă pentru a începe filtrarea caracteristicilor WFS asociate (dacă există). Caracteristicile trebuie să fi fost mai întâi indexate de un administrator.",
     "WPSDescription": "Introduceți o adresă URL a punctului final WPS pentru a începe să utilizați procesul printr-un formular dinamic. Procesele WPS utilizate recent sunt afișate în a doua filă.",
+    "noRecentProcessFound": "No process used recently.",
+    "localStorageNotSupported": "Browser local storage not supported",
     "wpsProcesslist": "Servicii de procesare",
     "wpsProcessurl": "După URL",
     "wpsProcessrecent": "Servicii recente",
