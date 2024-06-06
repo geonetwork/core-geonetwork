@@ -316,4 +316,10 @@
   The default publication options publishes the metadata to the ALL group and the INTRANET group.
   -->
   <bean class="org.fao.geonet.config.DefaultPublicationConfig" name="publicationConfig" />
+
+
+  <bean class="org.fao.geonet.analytics.WebAnalyticsConfiguration" name="webAnalyticsConfiguration">
+    <property name="service" value="\${analytics.web.service}" />
+    <property name="javascriptCode" value="\${analytics.web.jscode}" />
+  </bean>
 </beans>

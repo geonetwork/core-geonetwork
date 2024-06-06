@@ -47,6 +47,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.SystemInfo;
+import org.fao.geonet.analytics.WebAnalyticsConfiguration;
 import org.fao.geonet.api.records.attachments.FilesystemStore;
 import org.fao.geonet.api.records.attachments.FilesystemStoreResourceContainer;
 import org.fao.geonet.api.records.attachments.Store;
@@ -1579,5 +1580,19 @@ public final class XslUtil {
 
     public static String escapeForJson(String value) {
         return StringEscapeUtils.escapeJson(value);
+    }
+  
+    public static String getWebAnalyticsService() {
+        ApplicationContext applicationContext = ApplicationContextHolder.get();
+        WebAnalyticsConfiguration webAnalyticsConfiguration = applicationContext.getBean(WebAnalyticsConfiguration.class);
+
+        return webAnalyticsConfiguration.getService();
+    }
+
+    public static String getWebAnalyticsJavascriptCode() {
+        ApplicationContext applicationContext = ApplicationContextHolder.get();
+        WebAnalyticsConfiguration webAnalyticsConfiguration = applicationContext.getBean(WebAnalyticsConfiguration.class);
+
+        return webAnalyticsConfiguration.getJavascriptCode();
     }
 }

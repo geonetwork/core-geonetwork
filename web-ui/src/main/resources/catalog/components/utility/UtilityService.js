@@ -922,6 +922,24 @@
     }
   ]);
 
+  /**
+   * Service to track links in the web analytics service configured in GeoNetwork.
+   */
+  module.service("gnWebAnalyticsService", [
+    "gnGlobalSettings",
+    function (gnGlobalSettings) {
+      var analyticsService = gnGlobalSettings.webAnalyticsService;
+
+      this.trackLink = function (url, linkType) {
+        // Implement track link for the analytics
+        if (analyticsService === "matomo") {
+          _paq.push(["trackLink", url, linkType]);
+          _paq.push(["trackEvent", "catalogue-actions", linkType, url]);
+        }
+      };
+    }
+  ]);
+
   module.filter("sanitizeHtmlFilter", [
     "$filter",
     "$sanitize",
