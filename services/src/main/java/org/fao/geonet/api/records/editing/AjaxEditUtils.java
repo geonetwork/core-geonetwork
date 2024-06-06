@@ -195,6 +195,7 @@ public class AjaxEditUtils extends EditUtils {
                 ref = ref.substring(1);
                 xmlInputs.put(ref, value);
             } else if (ref.startsWith("P") && ref.endsWith("_xml")) {
+                // P{key}=xpath works with P{key}_xml=XML snippet, see next condition
             } else if (ref.startsWith("P") && !ref.endsWith("_xml")) {
                 // Catch element starting with a P for xpath update mode
                 String snippet = changes.get(ref + "_xml");
