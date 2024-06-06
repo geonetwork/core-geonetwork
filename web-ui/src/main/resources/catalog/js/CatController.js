@@ -819,7 +819,7 @@
             is3DModeAllowed: false,
             singleTileWMS: true,
             isSaveMapInCatalogAllowed: true,
-            isExportMapAsImageEnabled: false,
+            isExportMapAsImageEnabled: true,
             isAccessible: false,
             storage: "sessionStorage",
             bingKey: "",
