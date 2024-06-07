@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2019 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2024 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -39,10 +39,6 @@ import org.springframework.data.jpa.domain.Specification;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
 
 import java.util.Optional;
 
@@ -78,21 +74,19 @@ public class UrlAnalyzer {
         if (schemaPlugin instanceof LinkAwareSchemaPlugin) {
 
             metadataLinkRepository
-                    .findAll(metadatalinksTargetting(md))
-                    .stream()
-                    .forEach(metadatalink -> {
-                        metadatalink.getLink().getRecords().remove(metadatalink);
-                    });
+                .findAll(metadatalinksTargetting(md))
+                .stream()
+                .forEach(metadatalink -> metadatalink.getLink().getRecords().remove(metadatalink));
             entityManager.flush();
             ((LinkAwareSchemaPlugin) schemaPlugin).createLinkStreamer(new ILinkBuilder<Link, AbstractMetadata>() {
 
                 @Override
                 public Link found(String url) {
-                    Link link = linkRepository.findOneByUrl(url);
-                    if (link != null) {
-                        return link;
+                    Optional<Link> linkOptional = linkRepository.findOneByUrl(url);
+                    if (linkOptional.isPresent()) {
+                        return linkOptional.get();
                     } else {
-                        link = new Link();
+                        Link link = new Link();
                         link.setUrl(url);
                         linkRepository.save(link);
                         return link;
@@ -102,7 +96,7 @@ public class UrlAnalyzer {
                 @Override
                 public void persist(Link link, AbstractMetadata metadata) {
                     MetadataLink metadataLink = new MetadataLink();
-                    metadataLink.setMetadataId(new Integer(metadata.getId()));
+                    metadataLink.setMetadataId(metadata.getId());
                     metadataLink.setMetadataUuid(metadata.getUuid());
                     metadataLink.setLink(link);
                     link.getRecords().add(metadataLink);
@@ -115,10 +109,10 @@ public class UrlAnalyzer {
 
     public void purgeMetataLink(Link link) {
         metadataLinkRepository
-                .findAll(metadatalinksTargetting(link))
-                .stream()
-                .filter(metadatalink -> isReferencingAnUnknownMetadata((MetadataLink)metadatalink))
-                .forEach(metadataLinkRepository::delete);
+            .findAll(metadatalinksTargetting(link))
+            .stream()
+            .filter(this::isReferencingAnUnknownMetadata)
+            .forEach(metadataLinkRepository::delete);
         entityManager.flush();
     }
 
@@ -136,21 +130,11 @@ public class UrlAnalyzer {
     }
 
     private Specification<MetadataLink> metadatalinksTargetting(Link link) {
-        return new Specification<MetadataLink>() {
-            @Override
-            public Predicate toPredicate(Root<MetadataLink> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
-                return criteriaBuilder.equal(root.get(MetadataLink_.link).get(Link_.id), link.getId());
-            }
-        };
+        return (root, criteriaQuery, criteriaBuilder) -> criteriaBuilder.equal(root.get(MetadataLink_.link).get(Link_.id), link.getId());
     }
 
     private Specification<MetadataLink> metadatalinksTargetting(AbstractMetadata md) {
-        return new Specification<MetadataLink>() {
-            @Override
-            public Predicate toPredicate(Root<MetadataLink> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
-                return criteriaBuilder.equal(root.get(MetadataLink_.metadataId), md.getId());
-            }
-        };
+        return (root, criteriaQuery, criteriaBuilder) -> criteriaBuilder.equal(root.get(MetadataLink_.metadataId), md.getId());
     }
 
     private boolean isReferencingAnUnknownMetadata(MetadataLink metadatalink) {
@@ -158,6 +142,4 @@ public class UrlAnalyzer {
 
         return !metadata.isPresent();
     }
-
-
 }
