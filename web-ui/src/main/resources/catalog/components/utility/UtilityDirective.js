@@ -1085,7 +1085,7 @@
           '           href=""' +
           '           title="{{::title | translate}}">' +
           '  <i class="fa fa-fw" ' +
-          "   ng-class=\"{'fa-copy': !copied, 'fa-check': copied}\"/>" +
+          "   ng-class=\"{'fa-copy': !copied, 'fa-check': copied}\"></i>" +
           "</a>",
         scope: {
           btnClass: "@",
@@ -2387,7 +2387,7 @@
                   '">' +
                   '<div class="modal-dialog gn-img-modal in">' +
                   '  <button type=button class="btn btn-danger gn-btn-modal-img">' +
-                  '<i class="fa fa-times"/></button>' +
+                  '<i class="fa fa-times"></i></button>' +
                   '  <img src="' +
                   (attr.ngSrc || img.lUrl || img.url || img.id) +
                   '"/>' +
