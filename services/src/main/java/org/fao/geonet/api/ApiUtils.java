@@ -130,7 +130,7 @@ public class ApiUtils {
             }
         }
 
-        if (StringUtils.isEmpty(id)) {
+        if (!StringUtils.hasLength(id)) {
             throw new ResourceNotFoundException(String.format(
                 "Record with UUID '%s' not found in this catalog",
                 uuidOrInternalId));
