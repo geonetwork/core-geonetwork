@@ -448,7 +448,7 @@
           if (config.length === 0) {
             return;
           }
-          
+
           config.forEach(function (c) {
             gnWebAnalyticsService.trackLink(c.url, c.type);
           });
