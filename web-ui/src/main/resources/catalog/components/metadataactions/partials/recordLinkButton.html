@@ -38,5 +38,8 @@
   data-ng-href="{{link.url}}"
 >
   <i class="fa" data-ng-if="iconMode !== 'none'" data-ng-class="icon"></i>
-  <span class="visible-lg-*"> {{::link.title | gnLocalized: lang}} </span>
+  <span class="visible-lg-*">
+    {{::(link.title ? (link.title | gnLocalized: lang) : (service.getLabel(null, type) |
+    translate))}}
+  </span>
 </a>
