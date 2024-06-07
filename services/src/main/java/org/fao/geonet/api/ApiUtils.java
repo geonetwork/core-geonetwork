@@ -119,15 +119,16 @@ public class ApiUtils {
             id = String.valueOf(metadata.getId());
         }
 
-        if (!StringUtils.hasLength(id) && Lib.type.isInteger(id)) {
-            //It wasn't a UUID
-            id = String.valueOf(metadataUtils.findOne(uuidOrInternalId).getId());
+        AbstractMetadata foundMetadata = null;
+        if (!StringUtils.hasLength(id) && Lib.type.isInteger(uuidOrInternalId)) {
+            //It wasn't a UUID so assume it is an internalId which should be a number
+            foundMetadata = metadataUtils.findOne(uuidOrInternalId);
         } else if (Boolean.TRUE.equals(approved)) {
             //It was a UUID, check if draft or approved version
-            AbstractMetadata approvedMetadata = ApplicationContextHolder.get().getBean(MetadataRepository.class).findOneByUuid(uuidOrInternalId);
-            if (approvedMetadata != null) {
-                id = String.valueOf(approvedMetadata.getId());
-            }
+            foundMetadata = ApplicationContextHolder.get().getBean(MetadataRepository.class).findOneByUuid(uuidOrInternalId);
+        }
+        if (foundMetadata != null) {
+            id = String.valueOf(foundMetadata.getId());
         }
 
         if (!StringUtils.hasLength(id)) {
