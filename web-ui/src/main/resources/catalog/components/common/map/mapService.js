@@ -2313,7 +2313,8 @@
                   source: new ol.source.XYZ({
                     url: opt.url
                   }),
-                  title: title || "TMS Layer"
+                  title: title || "TMS Layer",
+                  name: opt.name
                 });
               case "bing_aerial":
                 return new ol.layer.Tile({
