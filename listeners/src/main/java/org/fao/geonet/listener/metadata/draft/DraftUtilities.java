@@ -87,6 +87,7 @@ public class DraftUtilities {
      * @return
      */
     public AbstractMetadata replaceMetadataWithDraft(AbstractMetadata md, AbstractMetadata draft) {
+        Log.info(Geonet.DATA_MANAGER, "Replacing metadata approved record (" + md.getId() + ") with draft record (" + draft.getId() + ")");
         Log.trace(Geonet.DATA_MANAGER, "Found approved record with id " + md.getId());
         Log.trace(Geonet.DATA_MANAGER, "Found draft with id " + draft.getId());
         // Reassign metadata validations
@@ -131,6 +132,7 @@ public class DraftUtilities {
         }
 
         // Reassign file uploads
+        Log.info(Geonet.DATA_MANAGER, "Copying draft record '" + draft.getId()+ "'resources ' to approved record '" + md.getId() +"'");
         draftMetadataUtils.replaceFiles(draft, md);
 
         metadataFileUploadRepository.deleteAll(MetadataFileUploadSpecs.hasMetadataId(md.getId()));
