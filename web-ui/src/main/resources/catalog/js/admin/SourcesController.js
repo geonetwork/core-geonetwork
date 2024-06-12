@@ -133,7 +133,9 @@
           filter: "",
           serviceRecord: null,
           groupOwner: null,
-          listableInHeaderSelector: true
+          listableInHeaderSelector: true,
+          datahubEnabled: false,
+          datahubConfiguration: ""
         };
         // TODO: init labels
       };

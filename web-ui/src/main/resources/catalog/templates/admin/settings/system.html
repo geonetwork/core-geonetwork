@@ -777,6 +777,23 @@
                         data-ng-disabled="!isTranslationProviderSelected"
                       />
 
+                      <input
+                        data-ng-switch-when="geonetwork-ui/datahub/enabled"
+                        type="checkbox"
+                        id="{{s['name']}}"
+                        name="{{s.name}}"
+                        data-ng-model="s.value"
+                        placeholder="{{'datahub.enabled' | translate}}"
+                      />
+                      <textarea
+                        type="text"
+                        rows="10"
+                        class="form-control"
+                        id="{{s['name']}}"
+                        name="{{s.name}}"
+                        data-ng-model="s.value"
+                        placeholder="{{'datahub.configuration' | translate}}"
+                      />
                       <!-- Default -->
                       <input
                         data-ng-switch-default=""
