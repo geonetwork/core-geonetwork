@@ -110,7 +110,7 @@
         <h6 ng-if="layer.get('attribution')" data-translate="">Attribution</h6>
         <p ng-if="layer.get('attribution')"><em>{{layer.get('attribution')}}</em></p>
 
-        <div data-ng-if="::!layer.get('wfs') && layer.get('style').length > 0">
+        <div data-ng-if="::layer.get('style').length > 0">
           <div
             data-gn-layer-styles="layer.get('style')"
             data-gn-layer-styles-on-click="setLayerStyle(layer, style)"
