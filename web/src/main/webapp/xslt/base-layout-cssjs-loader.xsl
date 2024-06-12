@@ -246,6 +246,11 @@
 
     <script type="text/javascript">
       var module = angular.module('<xsl:value-of select="$angularApp"/>');
+
+      module.config(['gnGlobalSettings',
+      function(gnGlobalSettings) {
+      gnGlobalSettings.webAnalyticsService = '<xsl:value-of select="util:getWebAnalyticsService()"/>';
+      }]);
     </script>
 
     <xsl:if test="$angularApp = 'gn_search' or $angularApp = 'gn_login' or $angularApp = 'gn_admin'">
@@ -312,5 +317,16 @@
       // about the problematic HTML snippet.
       //jQuery.migrateEnablePatches( "self-closed-tags" );
     </script>
+  </xsl:template>
+
+
+  <xsl:template name="webAnalytics">
+    <xsl:variable name="webAnalyticsService" select="util:getWebAnalyticsService()" />
+    <xsl:variable name="webAnalyticsCode" select="util:getWebAnalyticsJavascriptCode()" />
+    <xsl:if test="string($webAnalyticsService) and string($webAnalyticsCode)">
+      <script type="text/javascript">
+        <xsl:value-of select="$webAnalyticsCode" />
+      </script>
+    </xsl:if>
   </xsl:template>
 </xsl:stylesheet>

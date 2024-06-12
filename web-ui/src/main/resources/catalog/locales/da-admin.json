@@ -1092,6 +1092,7 @@
     "ui-paginationInfo": "Standard antal poster pr. side",
     "ui-sortbyValues": "Type sorteringsindstillinger",
     "ui-sortBy": "Standard sorter efter valgmulighed",
+    "ui-sortbyValues-help": "For sort fields that can be multilingual, can be used the placeholder ${searchLang}. For example: resourceTitleObject.${searchLang}.keyword, to use the sort field based on the user interface language.",
     "ui-facetsSummaryType": "Type facet",
     "ui-facetsSummaryType-help": "Liste over facetter er defineret i filen config-summary.xml, men brugeren kan vælge et andet sæt facetter. Standard er 'detaljer'. Andre muligheder: 'manager'.",
     "ui-resultViewTpls": "Liste over skabeloner til søgeresultater",

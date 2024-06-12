@@ -1092,6 +1092,7 @@
     "ui-paginationInfo": "페이지당 기본 레코드 수",
     "ui-sortbyValues": "정렬 옵션 유형",
     "ui-sortBy": "기본 정렬 옵션",
+    "ui-sortbyValues-help": "For sort fields that can be multilingual, can be used the placeholder ${searchLang}. For example: resourceTitleObject.${searchLang}.keyword, to use the sort field based on the user interface language.",
     "ui-facetsSummaryType": "패싯 유형",
     "ui-facetsSummaryType-help": "List of facets is defined in the config-summary.xml file but the user can select a different set of facets. Default is 'details'. Other options: 'manager'.",
     "ui-resultViewTpls": "검색 결과에 사용할 템플릿 목록",
