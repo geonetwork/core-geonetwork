@@ -633,6 +633,106 @@
 
   <build>
     <plugins>
+      <!--   DATAHUB INTEGRATION   -->
+
+      <!-- Git clone datahub -->
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+        <version>3.3.0</version>
+        <executions>
+          <execution>
+            <id>sparse-checkout</id>
+            <phase>initialize</phase>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+            <configuration>
+              <executable>sh</executable>
+              <arguments>
+                <argument>${project.basedir}/get-datahub.sh</argument>
+                <argument>${datahub.git.branch}</argument>
+              </arguments>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <!--   Install node & npm -> npm install -> npm run build  -->
+      <plugin>
+        <groupId>com.github.eirslett</groupId>
+        <artifactId>frontend-maven-plugin</artifactId>
+        <version>1.15.0</version>
+        <executions>
+          <execution>
+            <!--   Installing node and npm   -->
+            <id>install-node-and-npm</id>
+            <goals>
+              <goal>install-node-and-npm</goal>
+            </goals>
+            <configuration>
+              <nodeVersion>v20.12.2</nodeVersion>
+              <npmVersion>10.7.0</npmVersion>
+            </configuration>
+          </execution>
+          <!--   Install datahub dependencies   -->
+          <execution>
+            <id>npm-install</id>
+            <goals>
+              <goal>npm</goal>
+            </goals>
+            <configuration>
+              <arguments>install</arguments>
+              <workingDirectory>src/main/datahub</workingDirectory>
+              <installDirectory>${basedir}</installDirectory>
+            </configuration>
+          </execution>
+          <!--   Build datahub app   -->
+          <execution>
+            <id>npm-build</id>
+            <goals>
+              <goal>npm</goal>
+            </goals>
+            <configuration>
+              <environmentVariables>
+                <NX_DAEMON>false</NX_DAEMON>
+              </environmentVariables>
+              <arguments>
+                run nx -- build datahub
+              </arguments>
+              <workingDirectory>src/main/datahub</workingDirectory>
+              <installDirectory>${basedir}</installDirectory>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <!--   Copy of datahub files   -->
+      <plugin>
+        <artifactId>maven-resources-plugin</artifactId>
+        <version>3.1.0</version>
+        <executions>
+          <execution>
+            <id>copy-resources</id>
+            <phase>generate-resources</phase>
+            <goals>
+              <goal>copy-resources</goal>
+            </goals>
+            <configuration>
+              <overwrite>true</overwrite>
+              <encoding>UTF-8</encoding>
+              <outputDirectory>${project.build.directory}/datahub</outputDirectory>
+              <resources>
+                <resource>
+                  <directory>src/main/datahub/dist/apps/datahub</directory>
+                  <filtering>false</filtering>
+                </resource>
+              </resources>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
       <!-- Generate a properties file with the commit hash to be displayed on the admin.console -->
 	    <plugin>
         <groupId>io.github.git-commit-id</groupId>
@@ -1395,6 +1495,7 @@
   </profiles>
 
   <properties>
+    <datahub.git.branch>main</datahub.git.branch>
     <geonetwork.version>${project.version}</geonetwork.version>
     <geonetwork.subversion>SNAPSHOT</geonetwork.subversion>
     <geonetwork.webapp.dir>${basedir}/src/main/webapp</geonetwork.webapp.dir>

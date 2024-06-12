@@ -89,6 +89,9 @@
           pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.config.csw.customelementset.save!?.*"
           access="hasAuthority('Administrator')"/>
 
+        <sec:intercept-url
+          pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/datahub.*"
+          access="permitAll"/>
         <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.harvester.list!?.*"
                            access="hasAuthority('UserAdmin')"/>
         <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.harvester.add!?.*"
@@ -236,7 +239,7 @@
         <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/atom/describe/service!?.*" access="permitAll"/>
         <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/atom/describe/dataset!?.*" access="permitAll"/>
         <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/atom/download/dataset!?.*" access="permitAll"/>
-        
+
         <!-- Metadata identifier templates -->
         <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/metadataIdentifierTemplates!?.*"
                            access="hasAuthority('Editor')"/>
