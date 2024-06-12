@@ -234,6 +234,7 @@
     "register": "Register",
     "rememberMe": "Remember me",
     "requestedProfile": "Requested profile",
+    "requestedGroup": "Requested group",
     "resetPassword": "Reset password",
     "resetPasswordTitle": "Reset {{user}} password.",
     "resetPasswordError": "Error occurred while resetting password",

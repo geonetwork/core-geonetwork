@@ -1,5 +1,5 @@
 //=============================================================================
-//===   Copyright (C) 2001-2021 Food and Agriculture Organization of the
+//===   Copyright (C) 2001-2024 Food and Agriculture Organization of the
 //===   United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===   and United Nations Environment Programme (UNEP)
 //===
@@ -26,7 +26,6 @@ package org.fao.geonet.api.users;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jeeves.server.context.ServiceContext;
-import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
 import org.fao.geonet.api.users.model.UserRegisterDto;
@@ -45,17 +44,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import javax.servlet.http.HttpServletRequest;
-import java.sql.SQLException;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Locale;
-import java.util.ResourceBundle;
+import java.util.*;
 
 @EnableWebMvc
 @Service
@@ -72,12 +68,20 @@ public class RegisterApi {
     @Autowired(required=false)
     SecurityProviderConfiguration securityProviderConfiguration;
 
+    @Autowired
+    GroupRepository groupRepository;
+
+    @Autowired
+    UserGroupRepository userGroupRepository;
+
+    @Autowired
+    SettingManager settingManager;
+
     @io.swagger.v3.oas.annotations.Operation(summary = "Create user account",
         description = "User is created with a registered user profile. username field is ignored and the email is used as " +
             "username. Password is sent by email. Catalog administrator is also notified.")
-    @RequestMapping(
+    @PutMapping(
         value = "/actions/register",
-        method = RequestMethod.PUT,
         produces = MediaType.TEXT_PLAIN_VALUE)
     @ResponseStatus(value = HttpStatus.CREATED)
     @ResponseBody
@@ -101,19 +105,18 @@ public class RegisterApi {
 
         ServiceContext context = ApiUtils.createServiceContext(request);
 
-        SettingManager sm = context.getBean(SettingManager.class);
-        boolean selfRegistrationEnabled = sm.getValueAsBool(Settings.SYSTEM_USERSELFREGISTRATION_ENABLE);
+        boolean selfRegistrationEnabled = settingManager.getValueAsBool(Settings.SYSTEM_USERSELFREGISTRATION_ENABLE);
         if (!selfRegistrationEnabled) {
             return new ResponseEntity<>(String.format(
                 messages.getString("self_registration_disabled")
             ), HttpStatus.PRECONDITION_FAILED);
         }
 
-        boolean recaptchaEnabled = sm.getValueAsBool(Settings.SYSTEM_USERSELFREGISTRATION_RECAPTCHA_ENABLE);
+        boolean recaptchaEnabled = settingManager.getValueAsBool(Settings.SYSTEM_USERSELFREGISTRATION_RECAPTCHA_ENABLE);
 
         if (recaptchaEnabled) {
             boolean validRecaptcha = RecaptchaChecker.verify(userRegisterDto.getCaptcha(),
-                sm.getValue(Settings.SYSTEM_USERSELFREGISTRATION_RECAPTCHA_SECRETKEY));
+                settingManager.getValue(Settings.SYSTEM_USERSELFREGISTRATION_RECAPTCHA_SECRETKEY));
             if (!validRecaptcha) {
                 return new ResponseEntity<>(
                     messages.getString("recaptcha_not_valid"), HttpStatus.PRECONDITION_FAILED);
@@ -144,7 +147,7 @@ public class RegisterApi {
             ), HttpStatus.PRECONDITION_FAILED);
         }
 
-        if (userRepository.findByUsernameIgnoreCase(userRegisterDto.getEmail()).size() != 0) {
+        if (!userRepository.findByUsernameIgnoreCase(userRegisterDto.getEmail()).isEmpty()) {
             // username is ignored and the email is used as username in selfregister
             return new ResponseEntity<>(String.format(
                 messages.getString("user_with_that_username_found"),
@@ -153,15 +156,12 @@ public class RegisterApi {
         }
 
         User user = new User();
-
-        // user.setUsername(userRegisterDto.getUsername());
         user.setName(userRegisterDto.getName());
         user.setSurname(userRegisterDto.getSurname());
         user.setOrganisation(userRegisterDto.getOrganisation());
         user.setProfile(Profile.findProfileIgnoreCase(userRegisterDto.getProfile()));
         user.getAddresses().add(userRegisterDto.getAddress());
         user.getEmailAddresses().add(userRegisterDto.getEmail());
-
 
         String password = User.getRandomPassword();
         user.getSecurity().setPassword(
@@ -172,48 +172,78 @@ public class RegisterApi {
         user.setProfile(Profile.RegisteredUser);
         user = userRepository.save(user);
 
-        Group targetGroup = getGroup(context);
+        Group targetGroup = getGroup();
+
         if (targetGroup != null) {
             UserGroup userGroup = new UserGroup().setUser(user).setGroup(targetGroup).setProfile(Profile.RegisteredUser);
-            context.getBean(UserGroupRepository.class).save(userGroup);
+            userGroupRepository.save(userGroup);
         }
 
-
-        String catalogAdminEmail = sm.getValue(Settings.SYSTEM_FEEDBACK_EMAIL);
+        String catalogAdminEmail = settingManager.getValue(Settings.SYSTEM_FEEDBACK_EMAIL);
         String subject = String.format(
             messages.getString("register_email_admin_subject"),
-            sm.getSiteName(),
+            settingManager.getSiteName(),
             user.getEmail(),
             requestedProfile
         );
-        String message = String.format(
-            messages.getString("register_email_admin_message"),
-            user.getEmail(),
-            requestedProfile,
-            sm.getNodeURL(),
-            sm.getSiteName()
-        );
-        if (!MailUtil.sendMail(catalogAdminEmail, subject, message, null, sm)) {
+        Group requestedGroup = getRequestedGroup(userRegisterDto.getGroup());
+        String message;
+        if (requestedGroup != null) {
+            message = String.format(
+                messages.getString("register_email_group_admin_message"),
+                user.getEmail(),
+                requestedProfile,
+                requestedGroup.getLabelTranslations().get(context.getLanguage()),
+                settingManager.getNodeURL(),
+                settingManager.getSiteName()
+            );
+        } else {
+            message = String.format(
+                messages.getString("register_email_admin_message"),
+                user.getEmail(),
+                requestedProfile,
+                settingManager.getNodeURL(),
+                settingManager.getSiteName()
+            );
+
+        }
+
+        if (Boolean.FALSE.equals(MailUtil.sendMail(catalogAdminEmail, subject, message, null, settingManager))) {
             return new ResponseEntity<>(String.format(
                 messages.getString("mail_error")), HttpStatus.PRECONDITION_FAILED);
         }
 
         subject = String.format(
             messages.getString("register_email_subject"),
-            sm.getSiteName(),
+            settingManager.getSiteName(),
             user.getProfile()
         );
-        message = String.format(
-            messages.getString("register_email_message"),
-            sm.getSiteName(),
-            user.getUsername(),
-            password,
-            Profile.RegisteredUser,
-            requestedProfile,
-            sm.getNodeURL(),
-            sm.getSiteName()
-        );
-        if (!MailUtil.sendMail(user.getEmail(), subject, message, null, sm)) {
+        if (requestedGroup != null) {
+            message = String.format(
+                messages.getString("register_email_group_message"),
+                settingManager.getSiteName(),
+                user.getUsername(),
+                password,
+                Profile.RegisteredUser,
+                requestedProfile,
+                requestedGroup.getLabelTranslations().get(context.getLanguage()),
+                settingManager.getNodeURL(),
+                settingManager.getSiteName()
+            );
+        } else {
+            message = String.format(
+                messages.getString("register_email_message"),
+                settingManager.getSiteName(),
+                user.getUsername(),
+                password,
+                Profile.RegisteredUser,
+                requestedProfile,
+                settingManager.getNodeURL(),
+                settingManager.getSiteName()
+            );
+        }
+
+        if (Boolean.FALSE.equals(MailUtil.sendMail(user.getEmail(), subject, message, null, settingManager))) {
             return new ResponseEntity<>(String.format(
                 messages.getString("mail_error")), HttpStatus.PRECONDITION_FAILED);
         }
@@ -224,8 +254,39 @@ public class RegisterApi {
         ), HttpStatus.CREATED);
     }
 
-    Group getGroup(ServiceContext context) throws SQLException {
-        final GroupRepository bean = context.getBean(GroupRepository.class);
-        return bean.findById(ReservedGroup.guest.getId()).get();
+    /**
+     * Returns the group (GUEST) to assign to the registered user.
+     *
+     * @return
+     */
+    private Group getGroup()  {
+        Optional<Group> targetGroupOpt = groupRepository.findById(ReservedGroup.guest.getId());
+
+        if (targetGroupOpt.isPresent()) {
+            return targetGroupOpt.get();
+        }
+
+        return null;
+    }
+
+    /**
+     * Returns the group requested by the registered user.
+     *
+     * @param requestedGroup    Requested group identifier for the user.
+     * @return
+     */
+    private Group getRequestedGroup(String requestedGroup) {
+        Group targetGroup = null;
+
+        if (StringUtils.hasLength(requestedGroup)) {
+            Optional<Group> targetGroupOpt =  groupRepository.findById(Integer.parseInt(requestedGroup));
+
+            // Don't allow reserved groups
+            if (targetGroupOpt.isPresent() && !targetGroupOpt.get().isReserved()) {
+                targetGroup = targetGroupOpt.get();
+            }
+        }
+
+        return targetGroup;
     }
 }
