@@ -82,6 +82,19 @@
     <url-pattern>/*</url-pattern>
   </filter-mapping>
 
+
+  <!-- Datahub filter -->
+  <filter>
+    <filter-name>datahubFilter</filter-name>
+    <filter-class>org.fao.geonet.web.DatahubFilter</filter-class>
+  </filter>
+
+  <filter-mapping>
+    <filter-name>datahubFilter</filter-name>
+    <url-pattern>/srv/datahub/*</url-pattern>
+  </filter-mapping>
+
+
   <!-- Filter to verify the portal parameter in the URL is a valid portal defined in GeoNetwork.
        If a non-valid value is provided, it redirects to the same URL in the default portal (srv).
   -->
