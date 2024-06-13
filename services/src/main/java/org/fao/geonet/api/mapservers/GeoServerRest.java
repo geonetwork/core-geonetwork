@@ -346,11 +346,14 @@ public class GeoServerRest {
         } else if (file.startsWith("file://")) {
             type = "external";
         }
+        boolean isZip = ".zip".equals(extension);
 
         Log.debug(Geonet.GEOPUBLISH, "Creating datastore " + ds + " in workspace " + ws + " from file " + file);
-        int status = sendREST(GeoServerRest.METHOD_PUT, "/workspaces/" + ws
-                + "/datastores/" + ds + "/" + type + extension, file, null,
-            "text/plain", false);
+        int status = sendREST(GeoServerRest.METHOD_PUT,
+                "/workspaces/" + ws + "/datastores/" + ds + "/" + type + (isZip ? ".shp" : extension),
+                file, null,
+                (isZip ? "application/zip" : "text/plain"),
+                false);
 
         return status == 201;
     }
