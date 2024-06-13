@@ -136,6 +136,7 @@
         email: "",
         organisation: "",
         profile: "RegisteredUser",
+        group: "",
         address: {
           address: "",
           city: "",
@@ -152,6 +153,12 @@
           },
           function (response) {}
         );
+      };
+
+      $scope.updateGroupSelection = function () {
+        if ($scope.userInfo.profile === "Administrator") {
+          $scope.userInfo.group = "";
+        }
       };
 
       $scope.register = function () {

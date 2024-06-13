@@ -70,6 +70,7 @@
               <select
                 name="profile"
                 data-ng-model="userInfo.profile"
+                data-ng-change="updateGroupSelection()"
                 aria-label="{{'requestedProfile' | translate}}"
                 class="form-control"
                 required=""
@@ -85,6 +86,7 @@
               <select
                 name="group"
                 data-ng-model="userInfo.group"
+                data-ng-disabled="userInfo.profile == 'Administrator'"
                 aria-label="{{'requestedGroup' | translate}}"
                 class="form-control"
               >
