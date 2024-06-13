@@ -16,11 +16,15 @@
 
           <fieldset class="pull-left">
             <legend data-translate="">personal</legend>
-            <div class="form-group">
+            <div
+              class="form-group"
+              data-ng-class="gnNewAccount.name.$error.required ? 'has-error' : ''"
+            >
               <label for="inputName" translate="">name</label>
               <input
                 type="text"
                 class="form-control"
+                maxlength="255"
                 aria-label="{{'name' | translate}}"
                 data-ng-model="userInfo.name"
                 id="inputName"
@@ -28,14 +32,18 @@
                 required=""
               />
             </div>
-            <div class="form-group">
-              <label for="inputUsername" translate="">surname</label>
+            <div
+              class="form-group"
+              data-ng-class="gnNewAccount.name.$error.required ? 'has-error' : ''"
+            >
+              <label for="inputSurname" translate="">surname</label>
               <input
                 type="text"
                 class="form-control"
+                maxlength="255"
                 aria-label="{{'surname' | translate}}"
                 data-ng-model="userInfo.surname"
-                id="inputUsername"
+                id="inputSurname"
                 name="surname"
                 required=""
               />
@@ -44,10 +52,12 @@
               class="form-group"
               data-ng-class="gnNewAccount.email.$error.required ? 'has-error' : ''"
             >
-              <label data-translate="">email</label>
+              <label for="inputEmail" data-translate="">email</label>
               <input
                 type="email"
+                id="inputEmail"
                 name="email"
+                maxlength="255"
                 aria-label="{{'email' | translate}}"
                 data-ng-model="userInfo.username"
                 autofocus=""
@@ -56,19 +66,21 @@
               />
             </div>
             <div class="form-group">
-              <label data-translate="">organisation</label>
+              <label for="inputOrg" data-translate="">organisation</label>
               <input
                 type="text"
                 name="org"
+                id="inputOrg"
                 aria-label="{{'organisation' | translate}}"
                 data-ng-model="userInfo.organisation"
                 class="form-control"
               />
             </div>
             <div class="form-group">
-              <label data-translate="">requestedProfile</label>
+              <label for="selectProfile" data-translate="">requestedProfile</label>
               <select
                 name="profile"
+                id="selectProfile"
                 data-ng-model="userInfo.profile"
                 data-ng-change="updateGroupSelection()"
                 aria-label="{{'requestedProfile' | translate}}"
@@ -82,9 +94,10 @@
             </div>
 
             <div class="form-group">
-              <label data-translate="">requestedGroup</label>
+              <label for="selectGroup" data-translate="">requestedGroup</label>
               <select
                 name="group"
+                id="selectGroup"
                 data-ng-model="userInfo.group"
                 data-ng-disabled="userInfo.profile == 'Administrator'"
                 aria-label="{{'requestedGroup' | translate}}"
@@ -102,30 +115,36 @@
             <legend data-translate="">address</legend>
 
             <div class="form-group">
-              <label data-translate="">address</label>
+              <label for="inputAddress" data-translate="">address</label>
               <input
                 type="text"
                 name="address"
+                id="inputAddress"
+                maxlength="255"
                 aria-label="{{'address' | translate}}"
                 data-ng-model="userInfo.address.address"
                 class="form-control"
               />
             </div>
             <div class="form-group">
-              <label data-translate="">zip</label>
+              <label for="inputZip" data-translate="">zip</label>
               <input
                 type="text"
                 name="zip"
+                id="inputZip"
+                maxlength="16"
                 class="form-control"
                 aria-label="{{'zip' | translate}}"
                 data-ng-model="userInfo.address.zip"
               />
             </div>
             <div class="form-group">
-              <label data-translate="">state</label>
+              <label for="inputState" data-translate="">state</label>
               <input
                 type="text"
                 name="state"
+                id="inputState"
+                maxlength="255"
                 class="form-control"
                 aria-label="{{'state' | translate}}"
                 data-ng-model="userInfo.address.state"
@@ -136,17 +155,20 @@
               <input
                 type="text"
                 name="city"
+                maxlength="255"
                 class="form-control"
                 aria-label="{{'city' | translate}}"
                 data-ng-model="userInfo.address.city"
               />
             </div>
             <div class="form-group">
-              <label data-translate="">country</label>
+              <label for="inputCountry" data-translate="">country</label>
               <!-- TODO : Add country list -->
               <input
                 type="text"
                 name="country"
+                id="inputCountry"
+                maxlength="255"
                 class="form-control"
                 aria-label="{{'country' | translate}}"
                 data-ng-model="userInfo.address.country"
