@@ -1,5 +1,5 @@
 //=============================================================================
-//===   Copyright (C) 2001-2021 Food and Agriculture Organization of the
+//===   Copyright (C) 2001-2024 Food and Agriculture Organization of the
 //===   United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===   and United Nations Environment Programme (UNEP)
 //===
@@ -26,11 +26,11 @@ package org.fao.geonet.api.users;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jeeves.server.context.ServiceContext;
-import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
 import org.fao.geonet.api.users.model.UserRegisterDto;
 import org.fao.geonet.api.users.recaptcha.RecaptchaChecker;
+import org.fao.geonet.api.users.validation.UserRegisterDtoValidator;
 import org.fao.geonet.domain.*;
 import org.fao.geonet.kernel.security.SecurityProviderConfiguration;
 import org.fao.geonet.kernel.setting.SettingManager;
@@ -45,17 +45,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import javax.servlet.http.HttpServletRequest;
 import java.sql.SQLException;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Locale;
-import java.util.ResourceBundle;
+import java.util.*;
 
 @EnableWebMvc
 @Service
@@ -71,6 +68,9 @@ public class RegisterApi {
 
     @Autowired(required=false)
     SecurityProviderConfiguration securityProviderConfiguration;
+
+    @Autowired
+    UserRepository userRepository;
 
     @io.swagger.v3.oas.annotations.Operation(summary = "Create user account",
         description = "User is created with a registered user profile. username field is ignored and the email is used as " +
@@ -120,41 +120,30 @@ public class RegisterApi {
             }
         }
 
-        // Validate the user registration
-        if (bindingResult.hasErrors()) {
-            List<ObjectError> errorList = bindingResult.getAllErrors();
+        // Validate userDto data
+        UserRegisterDtoValidator userRegisterDtoValidator = new UserRegisterDtoValidator();
+        userRegisterDtoValidator.validate(userRegisterDto, bindingResult);
+        String errorMessage = ApiUtils.processRequestValidation(bindingResult, messages);
+        if (org.apache.commons.lang.StringUtils.isNotEmpty(errorMessage)) {
+            return new ResponseEntity<>(errorMessage, HttpStatus.PRECONDITION_FAILED);
+        }
 
-            StringBuilder sb = new StringBuilder();
-            Iterator<ObjectError> it = errorList.iterator();
-            while (it.hasNext()) {
-                sb.append(messages.getString(it.next().getDefaultMessage()));
-                if (it.hasNext()) {
-                    sb.append(", ");
-                }
+
+        String emailDomainsAllowed = sm.getValue(Settings.SYSTEM_USERSELFREGISTRATION_EMAIL_DOMAINS);
+        if (StringUtils.hasLength(emailDomainsAllowed)) {
+            List<String> emailDomainsAllowedList = Arrays.asList(emailDomainsAllowed.split(","));
+
+            String userEmailDomain = userRegisterDto.getEmail().split("@")[1];
+
+            if (!emailDomainsAllowedList.contains(userEmailDomain)) {
+                return new ResponseEntity<>(String.format(
+                    messages.getString("self_registration_no_valid_mail")
+                ), HttpStatus.PRECONDITION_FAILED);
             }
-
-            return new ResponseEntity<>(sb.toString(), HttpStatus.PRECONDITION_FAILED);
-        }
-
-        final UserRepository userRepository = context.getBean(UserRepository.class);
-        if (userRepository.findOneByEmail(userRegisterDto.getEmail()) != null) {
-            return new ResponseEntity<>(String.format(
-                messages.getString("user_with_that_email_found"),
-                userRegisterDto.getEmail()
-            ), HttpStatus.PRECONDITION_FAILED);
-        }
-
-        if (userRepository.findByUsernameIgnoreCase(userRegisterDto.getEmail()).size() != 0) {
-            // username is ignored and the email is used as username in selfregister
-            return new ResponseEntity<>(String.format(
-                messages.getString("user_with_that_username_found"),
-                userRegisterDto.getEmail()
-            ), HttpStatus.PRECONDITION_FAILED);
         }
 
         User user = new User();
 
-        // user.setUsername(userRegisterDto.getUsername());
         user.setName(userRegisterDto.getName());
         user.setSurname(userRegisterDto.getSurname());
         user.setOrganisation(userRegisterDto.getOrganisation());
