@@ -357,7 +357,7 @@
                       //an api-error is returned as xml
                       $rootScope.$broadcast("StatusUpdated", {
                         title: $translate.instant("runServiceError"),
-                        error: $(data).find("description").text(),
+                        error: data.description || $(data).find("description").text(),
                         timeout: 0,
                         type: "danger"
                       });
