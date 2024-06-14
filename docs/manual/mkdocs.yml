@@ -150,7 +150,7 @@ nav:
     - 'Changelog':
       - overview/change-log/index.md
       - overview/change-log/version-4.4.5.md
-      - overview/change-log/version-4.2.9.md
+      - overview/change-log/version-4.2.10.md
       - 'Release History':
         - overview/change-log/history/index.md
         - overview/change-log/version-4.4.5.md
@@ -159,6 +159,9 @@ nav:
         - overview/change-log/version-4.4.2.md
         - overview/change-log/version-4.4.1.md
         - overview/change-log/version-4.4.0.md
+      - 'Release History':
+        - overview/change-log/history/index.md
+        - overview/change-log/version-4.2.10.md
         - overview/change-log/version-4.2.9.md
         - overview/change-log/version-4.2.8.md
         - overview/change-log/version-4.2.7.md
