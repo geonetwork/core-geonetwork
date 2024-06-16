@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-           targetNamespace="http://schema.org/" elementFormDefault="qualified"
-           attributeFormDefault="qualified">
-  <xs:import namespace="http://www.w3.org/1999/02/22-rdf-syntax-ns#" schemaLocation="rdf.xsd"/>
-  <!-- individual elements-->
-  <xs:element name="startDate" type="rdf:DateOrDateTimeLiteral"/>
-  <xs:element name="endDate" type="rdf:DateOrDateTimeLiteral"/>
-</xs:schema>
