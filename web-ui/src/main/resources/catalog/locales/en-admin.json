@@ -821,7 +821,7 @@
     "system/site/svnUuid-help": "Subversion repository unique identifier",
     "metadata/vcs": "Version Control System (VCS)",
     "metadata/vcs/enable": "Enable VCS",
-    "metadata/vcs/enable-help": "Once enabled, VCS is using SVN to record metadata changes. This feature is experimental. It is also not operational on NFS filesystem. Once enabled, the application needs a restart.",
+    "metadata/vcs/enable-help": "Once enabled, VCS is using SVN to record metadata changes. This functionality is experimental. It is also not operational on NFS filesystem. Once enabled, the application needs a restart.",
     "system/threadedindexing": "Indexing",
     "system/threadedindexing/maxthreads": "Number of indexing threads",
     "system/userSelfRegistration": "User self-registration",

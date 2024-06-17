@@ -481,6 +481,8 @@
     "clickToSelect": "დააწკაპუნეთ ასარჩევად ან გასაუქმებლად",
     "filterDataDescription": "აირჩიეთ ფენა რუკაზე, რათა დაიწყოთ ასოცირებული WFS ფუნქციების ფილტრაცია (ასეთის არსებობის შემთხვევაში). ფუნქციები ჯერ უნდა იყოს ინდექსირებული ადმინისტრატორის მიერ.",
     "WPSDescription": "შეიყვანეთ WPS საბოლოო წერტილის URL, რომ დაიწყოთ პროცესის გამოყენება დინამიური ფორმის საშუალებით. ახლახან გამოყენებული WPS პროცესები ნაჩვენებია მეორე ჩანართში.",
+    "noRecentProcessFound": "No process used recently.",
+    "localStorageNotSupported": "Browser local storage not supported",
     "wpsProcesslist": "დამუშავების სერვისები",
     "wpsProcessurl": "URL-ით",
     "wpsProcessrecent": "ბოლო სერვისები",
