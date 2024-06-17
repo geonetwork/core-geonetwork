@@ -6,18 +6,20 @@
       <div
         class="col-md-12"
         ng-include="'../../catalog/views/default/templates/recordView/title.html'"
-      />
+      ></div>
     </div>
   </div>
   <div class="col-md-4 gn-md-side">
-    <div ng-include="'../../catalog/views/default/templates/recordView/status.html'" />
+    <div
+      ng-include="'../../catalog/views/default/templates/recordView/status.html'"
+    ></div>
 
     <div gn-record-is-replaced-by="mdView.current.record.uuid"></div>
 
     <div
       class="gn-margin-top"
       ng-include="'../../catalog/views/default/templates/recordView/summary.html'"
-    />
+    ></div>
 
     <div data-gn-data-preview="mdView.current.record"></div>
   </div>
@@ -62,7 +64,9 @@
 
 <div class="row gn-section gn-section-{{mdView.current.record.resourceType[0]}}">
   <div class="col-md-8 gn-record">
-    <div ng-include="'../../catalog/views/default/templates/recordView/downloads.html'" />
+    <div
+      ng-include="'../../catalog/views/default/templates/recordView/downloads.html'"
+    ></div>
   </div>
   <div class="col-md-4 gn-md-side">
     <div
@@ -84,7 +88,7 @@
   <div class="col-md-12 gn-record">
     <div
       ng-include="'../../catalog/views/default/templates/recordView/featurecatalogue.html'"
-    />
+    ></div>
   </div>
 </div>
 
@@ -93,7 +97,7 @@
   <div class="col-md-8 gn-record">
     <div
       ng-include="'../../catalog/views/default/templates/recordView/constraints.html'"
-    />
+    ></div>
   </div>
 </div>
 
@@ -105,23 +109,31 @@
                  || mdView.current.record.supplementalInformation"
 >
   <div class="col-md-8 gn-record">
-    <div ng-include="'../../catalog/views/default/templates/recordView/lineage.html'" />
+    <div
+      ng-include="'../../catalog/views/default/templates/recordView/lineage.html'"
+    ></div>
   </div>
   <div class="gn-md-side">
-    <div ng-include="'../../catalog/views/default/templates/recordView/sources.html'" />
+    <div
+      ng-include="'../../catalog/views/default/templates/recordView/sources.html'"
+    ></div>
   </div>
 </div>
 
 <!-- contact -->
 <div class="row gn-section">
   <div class="col-md-8 gn-record gn-break">
-    <div ng-include="'../../catalog/views/default/templates/recordView/contact.html'" />
+    <div
+      ng-include="'../../catalog/views/default/templates/recordView/contact.html'"
+    ></div>
   </div>
 </div>
 
 <div class="row">
   <div class="col-md-12 gn-record">
-    <div ng-include="'../../catalog/views/default/templates/recordView/related.html'" />
+    <div
+      ng-include="'../../catalog/views/default/templates/recordView/related.html'"
+    ></div>
   </div>
 </div>
 
@@ -131,17 +143,19 @@
   <div class="col-md-8">
     <div
       ng-include="'../../catalog/views/default/templates/recordView/metadatacontact.html'"
-    />
+    ></div>
   </div>
   <div class="col-md-4 gn-md-side">
-    <div ng-include="'../../catalog/views/default/templates/recordView/metadata.html'" />
+    <div
+      ng-include="'../../catalog/views/default/templates/recordView/metadata.html'"
+    ></div>
   </div>
 </div>
 
 <div class="row">
   <div class="col-md-8">
-    <div ng-include="'../../catalog/views/default/templates/recordView/share.html'" />
+    <div ng-include="'../../catalog/views/default/templates/recordView/share.html'"></div>
   </div>
 </div>
 
-<div ng-include="'../../catalog/views/default/templates/recordView/footer.html'" />
+<div ng-include="'../../catalog/views/default/templates/recordView/footer.html'"></div>

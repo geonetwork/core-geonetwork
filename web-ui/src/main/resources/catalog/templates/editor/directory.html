@@ -16,9 +16,9 @@
           class="btn btn-success dropdown-toggle pull-right"
           data-toggle="dropdown"
         >
-          <i class="fa fa-plus" />&nbsp;
+          <i class="fa fa-plus"></i>&nbsp;
           <span translate>addNewDirectoryEntry</span>
-          &nbsp;<i class="caret" />
+          &nbsp;<i class="caret"></i>
         </button>
         <ul class="dropdown-menu pull-right text-left" role="menu">
           <li
@@ -30,25 +30,25 @@
           </li>
           <li ng-repeat="t in templates" ng-repeat-end>
             <a href ng-click="createFromTemplate(t)" class="flex-row flex-start">
-              <div class="flex-spacer" />
-              <i class="fa fa-fw fa-bookmark-o" />
+              <div class="flex-spacer"></div>
+              <i class="fa fa-fw fa-bookmark-o"></i>
               <div class="text-wrap">{{::t.resourceTitle}}</div>
             </a>
           </li>
-          <li class="divider" />
+          <li class="divider"></li>
           <li>
             <a href ng-click="startImporting(false)" class="flex-row flex-start">
-              <div class="flex-spacer" />
-              <i class="fa fa-fw fa-plus" />
+              <div class="flex-spacer"></div>
+              <i class="fa fa-fw fa-plus"></i>
               <div class="text-wrap">{{'directoryEntryFromScratch' | translate}}</div>
             </a>
           </li>
         </ul>
       </h5>
-      <div class="flex-spacer" data-ng-show="user.canCreateTemplate()" />
+      <div class="flex-spacer" data-ng-show="user.canCreateTemplate()"></div>
       <h5 class="btn-group" data-ng-show="user.canCreateTemplate()">
         <button type="button" class="btn btn-success" ng-click="startImporting(true)">
-          <i class="fa fa-plus" />&nbsp;
+          <i class="fa fa-plus"></i>&nbsp;
           <span translate>addNewDirectoryTemplate</span>
         </button>
       </h5>
@@ -71,7 +71,7 @@
               ng-click="selectType(type.name)"
             >
               <strong>
-                <i class="fa {{getTypeIcon(type.name)}}" />
+                <i class="fa {{getTypeIcon(type.name)}}"></i>
                 &nbsp;{{type.name | translate}}
               </strong>
               <span class="badge badge-default badge-pill">{{ type.count }}</span>
@@ -92,7 +92,7 @@
 
         <div class="panel panel-default dynamic-list">
           <div class="panel-heading">
-            <i class="fa fa-list-ul fa-fw" />&nbsp;
+            <i class="fa fa-list-ul fa-fw"></i>&nbsp;
             <ul class="nav nav-pills">
               <li ng-class="{active : !templatesShown()}">
                 <a href ng-click="showTemplates(false)" translate> directoryEntries</a>
@@ -167,7 +167,7 @@
 
             <div ng-show="searching" class="text-center col-xs-12">
               <br /><br />
-              <i class="fa fa-spinner fa-spin" />
+              <i class="fa fa-spinner fa-spin"></i>
               <br /><br /><br />
             </div>
 
@@ -225,7 +225,7 @@
                       class="btn btn-default btn-sm dropdown-toggle"
                       data-toggle="dropdown"
                     >
-                      {{'actions' | translate}} &nbsp;<i class="caret" />
+                      {{'actions' | translate}} &nbsp;<i class="caret"></i>
                     </button>
                     <ul class="dropdown-menu pull-right" role="menu">
                       <li>
@@ -234,12 +234,13 @@
                           data-ng-if="user.canEditRecord(md)"
                           ng-click="startEditing(md)"
                         >
-                          <i class="fa fa-pencil fa-fw" />&nbsp; {{'edit' | translate}}</a
+                          <i class="fa fa-pencil fa-fw"></i>&nbsp; {{'edit' |
+                          translate}}</a
                         >
                       </li>
                       <li>
                         <a href ng-click="copyEntry(md)">
-                          <i class="fa fa-copy fa-fw" />&nbsp; {{'duplicate' |
+                          <i class="fa fa-copy fa-fw"></i>&nbsp; {{'duplicate' |
                           translate}}</a
                         >
                       </li>
@@ -249,7 +250,7 @@
                           data-ng-if="user.canEditRecord(md)"
                           ng-click="startPermissionsEdit(md)"
                         >
-                          <i class="fa fa-key fa-fw" />&nbsp;
+                          <i class="fa fa-key fa-fw"></i>&nbsp;
                           {{'directoryEntryPermissions' | translate}}</a
                         >
                       </li>
@@ -260,7 +261,7 @@
                                        (restrictValidationToAdmin && user.isAdministrator())"
                           ng-click="validateEntry(md)"
                         >
-                          <i class="fa fa-check fa-fw text-success" />&nbsp;
+                          <i class="fa fa-check fa-fw text-success"></i>&nbsp;
                           {{'directoryEntryValidate' | translate}}</a
                         >
                       </li>
@@ -271,7 +272,7 @@
                                        (restrictValidationToAdmin && user.isAdministrator())"
                           ng-click="rejectEntry(md)"
                         >
-                          <i class="fa fa-ban fa-fw text-danger" />&nbsp;
+                          <i class="fa fa-ban fa-fw text-danger"></i>&nbsp;
                           {{'directoryEntryReject' | translate}}</a
                         >
                       </li>
@@ -286,11 +287,13 @@
                     >
                       {{'directoryEntryAssociatedMetadata' | translate}} &nbsp;<i
                         class="caret"
-                      />
+                      ></i>
                     </button>
                     <ul class="dropdown-menu pull-right" role="menu">
                       <li ng-if="md.openAssociatedMD">
-                        <gn-directory-associated-md entry-uuid="md.uuid" />
+                        <gn-directory-associated-md
+                          entry-uuid="md.uuid"
+                        ></gn-directory-associated-md>
                       </li>
                     </ul>
                   </div>
@@ -301,7 +304,7 @@
                     ng-click="delEntry(md)"
                     title="{{'delete' | translate}}"
                   >
-                    <i class="fa fa-times text-danger" />
+                    <i class="fa fa-times text-danger"></i>
                   </button>
                 </div>
 
@@ -328,23 +331,24 @@
                       class="btn btn-default btn-sm dropdown-toggle"
                       data-toggle="dropdown"
                     >
-                      {{'actions' | translate}} &nbsp;<i class="caret" />
+                      {{'actions' | translate}} &nbsp;<i class="caret"></i>
                     </button>
                     <ul class="dropdown-menu pull-right" role="menu">
                       <li>
                         <a href ng-click="startEditing(md)">
-                          <i class="fa fa-pencil fa-fw" />&nbsp; {{'edit' | translate}}</a
+                          <i class="fa fa-pencil fa-fw"></i>&nbsp; {{'edit' |
+                          translate}}</a
                         >
                       </li>
                       <li>
                         <a href ng-click="copyEntry(md)">
-                          <i class="fa fa-copy fa-fw" />&nbsp; {{'duplicate' |
+                          <i class="fa fa-copy fa-fw"></i>&nbsp; {{'duplicate' |
                           translate}}</a
                         >
                       </li>
                       <li>
                         <a href ng-click="startPermissionsEdit(md)">
-                          <i class="fa fa-key fa-fw" />&nbsp;
+                          <i class="fa fa-key fa-fw"></i>&nbsp;
                           {{'directoryEntryPermissions' | translate}}</a
                         >
                       </li>
@@ -356,7 +360,7 @@
                     ng-click="delEntry(md)"
                     title="{{'delete' | translate}}"
                   >
-                    <i class="fa fa-times text-danger" />
+                    <i class="fa fa-times text-danger"></i>
                   </button>
                 </div>
               </li>
@@ -390,8 +394,8 @@
         <gn-md-type-widget metadata="activeEntry"></gn-md-type-widget>
         {{activeEntry.resourceTitle}} &nbsp;
         <a href class="btn btn-default" ng-click="closeEditor()">
-          <i class="fa fa-close" />&nbsp;
-          <span data="translate" ="">cancel</span>
+          <i class="fa fa-close"></i>&nbsp;
+          <span translate>cancel</span>
         </a>
       </p>
 
@@ -418,7 +422,7 @@
               ng-disabled="xml == ''"
               title="{{'importEntry' | translate}}"
             >
-              <i class="fa fa-plus" />&nbsp;
+              <i class="fa fa-plus"></i>&nbsp;
               <span translate> importEntry</span>
             </button>
 
@@ -428,7 +432,7 @@
               ng-click="closeEditor()"
               title="{{'cancel' | translate}}"
             >
-              <i class="fa fa-close" />&nbsp;
+              <i class="fa fa-close"></i>&nbsp;
               <span translate> cancel</span>
             </button>
           </div>
@@ -445,7 +449,7 @@
                 data-ng-model="xml"
                 data-ng-required=""
                 placeholder="<gmd:CI_ResponsibleParty xmlns:gmd= ..."
-              />
+              ></textarea>
             </div>
             <div class="form-group" data-ng-show="groups && groups.length > 1">
               <label class="control-label" data-translate="">inGroup</label>
@@ -457,7 +461,7 @@
                 lang="lang"
                 data-groups="groups"
                 data-exclude-special-groups="true"
-              />
+              ></div>
             </div>
           </form>
         </div>
@@ -487,7 +491,7 @@
               ng-disabled="activeEntry.edit !== true"
               title="{{'directoryEntryPermissions' | translate}}"
             >
-              <i class="fa fa-key" />&nbsp;
+              <i class="fa fa-key"></i>&nbsp;
               <span translate class="hidden-xs hidden-sm hidden-md">
                 directoryEntryPermissions</span
               >
@@ -503,24 +507,24 @@
                 ng-class="{'btn-success': activeEntry.valid == 1, 'btn-danger': activeEntry.valid == 0}"
                 title="{{'isValid' | translate}}"
               >
-                <i class="fa fa-check" ng-show="activeEntry.valid != 0" />
-                <i class="fa fa-ban" ng-show="activeEntry.valid == 0" />
+                <i class="fa fa-check" ng-show="activeEntry.valid != 0"></i>
+                <i class="fa fa-ban" ng-show="activeEntry.valid == 0"></i>
                 <span translate class="hidden-xs hidden-sm hidden-md hidden-lg">
                   isValid</span
                 >
                 &nbsp;
-                <i class="caret" />
+                <i class="caret"></i>
               </button>
               <ul class="dropdown-menu pull-right" role="menu">
                 <li ng-class="{disabled: activeEntry.valid == 1}">
                   <a href ng-click="validateEntry(activeEntry)">
-                    <i class="fa fa-check fa-fw text-success" />&nbsp;
+                    <i class="fa fa-check fa-fw text-success"></i>&nbsp;
                     {{'directoryEntryValidate' | translate}}</a
                   >
                 </li>
                 <li ng-class="{disabled: activeEntry.valid == 0}">
                   <a href ng-click="rejectEntry(activeEntry)">
-                    <i class="fa fa-ban fa-fw text-danger" />&nbsp;
+                    <i class="fa fa-ban fa-fw text-danger"></i>&nbsp;
                     {{'directoryEntryReject' | translate}}</a
                   >
                 </li>
@@ -533,7 +537,7 @@
                 gn-click-and-spin="save(true)"
                 class="btn btn-primary"
               >
-                <i class="fa fa-save" />&nbsp;
+                <i class="fa fa-save"></i>&nbsp;
                 <span translate class="hidden-xs"> save</span>
               </button>
               <button
@@ -570,7 +574,7 @@
               ng-disabled="activeEntry.edit !== true"
               title="{{'closeEditor' | translate}}"
             >
-              <i class="fa fa-save" />&nbsp;
+              <i class="fa fa-save"></i>&nbsp;
               <span translate> closeEditor</span>
             </button>
           </div>
@@ -592,7 +596,9 @@
           <span translate>directoryEntryAssociatedMetadata</span>
         </div>
         <div class="panel-body">
-          <gn-directory-associated-md entry-uuid="activeEntry.uuid" />
+          <gn-directory-associated-md
+            entry-uuid="activeEntry.uuid"
+          ></gn-directory-associated-md>
         </div>
       </div>
     </div>
