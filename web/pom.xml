@@ -635,23 +635,40 @@
     <plugins>
       <!--   DATAHUB INTEGRATION   -->
 
-      <!-- Git clone datahub -->
+      <!-- Git clone geonetwork-ui -->
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>exec-maven-plugin</artifactId>
         <version>3.3.0</version>
         <executions>
           <execution>
-            <id>sparse-checkout</id>
+            <id>delete-existing</id>
             <phase>initialize</phase>
             <goals>
               <goal>exec</goal>
             </goals>
             <configuration>
-              <executable>sh</executable>
+              <executable>rm</executable>
               <arguments>
-                <argument>${project.basedir}/get-datahub.sh</argument>
-                <argument>${datahub.git.branch}</argument>
+                <argument>-rf</argument>
+                <argument>src/main/geonetwork-ui</argument>
+              </arguments>
+            </configuration>
+          </execution>
+          <execution>
+            <id>checkout-geonetwork-ui</id>
+            <phase>initialize</phase>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+            <configuration>
+              <executable>git</executable>
+              <arguments>
+                <argument>clone</argument>
+                <argument>--branch</argument>
+                <argument>${geonetwork-ui.git.branch}</argument>
+                <argument>https://github.com/geonetwork/geonetwork-ui.git</argument>
+                <argument>src/main/geonetwork-ui</argument>
               </arguments>
             </configuration>
           </execution>
@@ -675,15 +692,15 @@
               <npmVersion>10.7.0</npmVersion>
             </configuration>
           </execution>
-          <!--   Install datahub dependencies   -->
+          <!--   Install geonetwork-ui dependencies   -->
           <execution>
             <id>npm-install</id>
             <goals>
               <goal>npm</goal>
             </goals>
             <configuration>
-              <arguments>install</arguments>
-              <workingDirectory>src/main/datahub</workingDirectory>
+              <arguments>ci --loglevel error</arguments>
+              <workingDirectory>src/main/geonetwork-ui</workingDirectory>
               <installDirectory>${basedir}</installDirectory>
             </configuration>
           </execution>
@@ -698,9 +715,9 @@
                 <NX_DAEMON>false</NX_DAEMON>
               </environmentVariables>
               <arguments>
-                run nx -- build datahub
+                run nx -- build datahub --base-href=./
               </arguments>
-              <workingDirectory>src/main/datahub</workingDirectory>
+              <workingDirectory>src/main/geonetwork-ui</workingDirectory>
               <installDirectory>${basedir}</installDirectory>
             </configuration>
           </execution>
@@ -721,10 +738,10 @@
             <configuration>
               <overwrite>true</overwrite>
               <encoding>UTF-8</encoding>
-              <outputDirectory>${project.build.directory}/datahub</outputDirectory>
+              <outputDirectory>${build.webapp.resources}/datahub</outputDirectory>
               <resources>
                 <resource>
-                  <directory>src/main/datahub/dist/apps/datahub</directory>
+                  <directory>src/main/geonetwork-ui/dist/apps/datahub</directory>
                   <filtering>false</filtering>
                 </resource>
               </resources>
@@ -1495,7 +1512,7 @@
   </profiles>
 
   <properties>
-    <datahub.git.branch>main</datahub.git.branch>
+    <geonetwork-ui.git.branch>main</geonetwork-ui.git.branch>
     <geonetwork.version>${project.version}</geonetwork.version>
     <geonetwork.subversion>SNAPSHOT</geonetwork.subversion>
     <geonetwork.webapp.dir>${basedir}/src/main/webapp</geonetwork.webapp.dir>
