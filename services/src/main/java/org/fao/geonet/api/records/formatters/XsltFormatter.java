@@ -213,7 +213,7 @@ public class XsltFormatter implements FormatterImpl {
         }
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         Xml.transform(root, fparams.viewFile, requestParameters, baos);
-        String transformed = baos.toString(StandardCharsets.UTF_8);
+        String transformed = baos.toString(StandardCharsets.UTF_8.toString());
         return transformed.startsWith("<textResponse") ?
             Xml.loadString(transformed, false).getText() :
             transformed;
