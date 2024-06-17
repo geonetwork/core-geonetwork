@@ -30,11 +30,6 @@
   <xsl:include href="../base-layout-cssjs-loader.xsl"/>
   <xsl:include href="../skin/default/skin.xsl"/>
 
-  <xsl:output omit-xml-declaration="yes"
-              method="html"
-              doctype-system="html"
-              indent="yes"
-              encoding="UTF-8"/>
 
   <xsl:template name="render-html">
     <xsl:param name="content"/>

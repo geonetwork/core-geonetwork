@@ -99,7 +99,7 @@
       -->
       <body data-ng-controller="GnCatController" data-ng-class="[isHeaderFixed ? 'gn-header-fixed' : 'gn-header-relative', isLogoInHeader ? 'gn-logo-in-header' : 'gn-logo-in-navbar', isFooterEnabled ? 'gn-show-footer' : 'gn-hide-footer']">
 
-        <div data-gn-alert-manager=""></div>
+        <div data-gn-alert-manager=""/>
 
         <xsl:choose>
           <xsl:when test="ends-with($service, 'nojs')">
