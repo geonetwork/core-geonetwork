@@ -5,12 +5,23 @@ The web module gathers the static resources and configuration files for building
 Before you start check out [software development building](../software_development/BUILDING.md) instructions on setting up Elasticsearch.
 
 1. Run embedded Jetty server:
-   
+
+   ```
+   mvn jetty:run
+   ```
+
+   Optional: Use profile `env-dev` to disable XSLT cache during XSLT development. Edit URL to include ``?debug=true`` to 
+   test user-interface changes.
+ 
    ```
    mvn jetty:run -Penv-dev
    ```
-   
-   The `env-dev` profile above ensures geonetwork runs without a javascript cache allowing testing of changes to `web-ui`.
+
+   Optional: Use profile `ui-dev` to disable JavaScript cache for user-interface development.
+
+   ```
+   mvn jetty:run -Pui-dev
+   ```
 
 2. After a moment, GeoNetwork should be accessible at:
    

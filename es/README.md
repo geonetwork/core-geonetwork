@@ -17,10 +17,10 @@ These configurations should not be used for a production deployment.
 2. Use docker run, leaving 9200 available:
 
    ```
-   docker run -p 9200:9200 -p 9300:9300 \ 
+   docker run -p 9200:9200 -p 9300:9300 \
       -e "discovery.type=single-node" \
       -e "xpack.security.enabled=false" \
-      -e "xpack.security.enrollment.enabled=false" \ 
+      -e "xpack.security.enrollment.enabled=false" \
       docker.elastic.co/elasticsearch/elasticsearch:8.11.3
    ```
 

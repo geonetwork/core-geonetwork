@@ -10,7 +10,7 @@ It is especially good at working with large multi-module projects such as GeoNet
 
 1. Open project in IntelliJ, it will create an `.idea` folder (which is covered by `.gitignore`)
 
-2. Use *File* > *Project Structure* to confirm Java 8 is used
+2. Use *File* > *Project Structure* to confirm Java 11 is used
 
 4. Configuration to make *Maven* tools window easier to follow:
 
@@ -20,12 +20,10 @@ It is especially good at working with large multi-module projects such as GeoNet
    ![configuration](intelij-maven-config.png)
 
 5. Use the *Maven* tools window to:
-   
-   * Enable the `env-dev` profile
+
    * *Toggle "Skip Tests" Mode*
+   * Optional: Enable the `env-dev` profile for xslt development, or `env-ui` for user interface development.
    * *Execute Maven Goal*: `clean install`
-   
-   ![env-dev profile](intelij-maven-env-dev-profile.png)
 
 ## Building
 
@@ -42,18 +40,24 @@ It is especially good at working with large multi-module projects such as GeoNet
 2. Add new *Maven* configuration:
    
    * Working Directory: `core-geonetwork/web`
+     
+     This will be displayed as "gn-web-app" once selected.
 
    * Command Line: `jetty:run`
 
-   * Profiles: `env-dev`
-   
-   ![maven run configuration](intelij-maven-configuration.png)
-   
-3. Add maven goal `proccess-resources` before launch.
+   * Optional: Use of profiles ``env-dev`` for XSLT development, or ``env-ui`` for user-interface development.
+
+   ![maven jetty run configuration](intelij-maven-run.png)
+
+3. Use **Add Run Options** to **Add before launch task**.
+
+   Add a maven goal `proccess-resources` before launch.
    
    ![maven process-resources goal](intelij-maven-resources.png)
 
 4. Run
+
+   ![maven run configuration](intelij-maven-configuration.png)
 
 5. Testing
    
