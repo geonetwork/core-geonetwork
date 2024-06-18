@@ -17,11 +17,11 @@ proxy_path = ""
 # contact_email = "opendata@mycompany.com"
 
 [theme]
-primary_color = "red"
-secondary_color = "blue"
+primary_color = "#c82850"
+secondary_color = "#001638"
 main_color = "#555"
 background_color = "#fdfbff"
-header_background = "var(--color-gray-500)"
+# header_background = "center /cover url(''assets/img/header_bg.webp'')" or "var(--color-gray-500)"
 # header_foreground_color = ''white''
 # thumbnail_placeholder = ''assets/img/my_custom_placeholder.png''
 # main_font = "''My Custom Font'', fallback-font"
