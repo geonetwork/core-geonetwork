@@ -166,6 +166,9 @@ public class Settings {
 
     public static final String MICROSERVICES_ENABLED = "microservices/enabled";
 
+    public static final String GEONETWORK_UI_DATAHUB_CONFIGURATION = "geonetwork-ui/datahub/configuration";
+    public static final String GEONETWORK_UI_DATAHUB_ENABLED = "geonetwork-ui/datahub/enabled";
+
     public static class GNSetting {
         private String name;
         private boolean nullable;
