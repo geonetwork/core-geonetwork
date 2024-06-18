@@ -7,13 +7,18 @@ import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpHeaders;
 import org.apache.log4j.Logger;
 import org.fao.geonet.ApplicationContextHolder;
+import org.fao.geonet.NodeInfo;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.Source;
+import org.fao.geonet.domain.SourceType;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
+import org.fao.geonet.repository.SourceRepository;
 import org.fao.geonet.utils.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 
+import javax.annotation.RegEx;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -49,13 +54,12 @@ public class DatahubFilter implements Filter {
         ServletContext context = req.getServletContext();
 
         String reqPath = req.getPathInfo();
-        if (reqPath == null || !reqPath.startsWith("/srv/datahub")) {
+        if (reqPath == null || !reqPath.matches("^/[a-zA-Z0-9_\\-]+/datahub.*")) {
             chain.doFilter(request, res);
             return;
         }
 
-        SettingManager settingManager = ApplicationContextHolder.get().getBean(SettingManager.class);
-        String isDatahubEnabled = settingManager.getValue(Settings.GEONETWORK_UI_DATAHUB_ENABLED);
+        String isDatahubEnabled = getSettingManager().getValue(Settings.GEONETWORK_UI_DATAHUB_ENABLED);
         if (!isDatahubEnabled.equals("true")) {
             res.setStatus(404);
             return;
@@ -64,8 +68,21 @@ public class DatahubFilter implements Filter {
         // a req path will be "/srv/datahub/bla/bla"
         String[] parts = reqPath.split("/");
         String portalName = parts[1]; // element at i=0 is empty
-        String filePath = Stream.of(parts).skip(2).collect(Collectors.joining("/"));
 
+        SourceRepository sourceRepository = getSourceRepository();
+        Boolean datahubEnabled = false;
+        if (NodeInfo.DEFAULT_NODE.equals(portalName)) {
+            datahubEnabled = getSettingManager().getValue(Settings.GEONETWORK_UI_DATAHUB_ENABLED).equals("true");
+        } else if (sourceRepository.existsByUuidAndType(portalName, SourceType.subportal)) {
+            datahubEnabled = sourceRepository.findOneByUuid(portalName).getDatahubEnabled();
+        }
+
+        if (!datahubEnabled) {
+            res.setStatus(404);
+            return;
+        }
+
+        String filePath = Stream.of(parts).skip(2).collect(Collectors.joining("/"));
         File actualFile = new File(context.getRealPath("/" + filePath));
 
         // fallback to index.html if the file doesn't exist
@@ -109,21 +126,38 @@ public class DatahubFilter implements Filter {
     }
 
     private InputStream readConfiguration(String portalName) {
-        SettingManager settingManager = ApplicationContextHolder.get().getBean(SettingManager.class);
-        String datahubConfiguration = settingManager.getValue(Settings.GEONETWORK_UI_DATAHUB_CONFIGURATION);
+        String configuration = getSettingManager().getValue(Settings.GEONETWORK_UI_DATAHUB_CONFIGURATION);
 
-        Toml toml = new Toml().read(datahubConfiguration);
+        if (!portalName.equals(NodeInfo.DEFAULT_NODE)) {
+            Source portal = getSourceRepository().findOneByUuid(portalName);
+            if (portal != null && !portal.getDatahubConfiguration().isEmpty()) {
+                configuration = portal.getDatahubConfiguration();
+            }
+        }
+
+        Toml toml = new Toml().read(configuration);
         Map<String, Object> tomlMap = toml.toMap();
 
         // Force the "gn4_api_url" field to a value including the portal name
-        tomlMap.put("geonetwork4_api_url", "/geonetwork/" + portalName + "/api");
+        if (!tomlMap.containsKey("global")) {
+            tomlMap.put("global", Map.of());
+        }
+        Map<String, String> globalSection = (Map<String, String>) tomlMap.get("global");
+        globalSection.put("geonetwork4_api_url", "/geonetwork/" + portalName + "/api");
 
         TomlWriter tomlWriter = new TomlWriter();
-        String configuration = tomlWriter.write(tomlMap);
+        configuration = tomlWriter.write(tomlMap);
         return new ByteArrayInputStream(configuration.getBytes());
     }
 
     @Override
     public void destroy() {
+    }
+
+    private SettingManager getSettingManager() {
+        return ApplicationContextHolder.get().getBean(SettingManager.class);
+    }
+    private SourceRepository getSourceRepository() {
+        return ApplicationContextHolder.get().getBean(SourceRepository.class);
     }
 }

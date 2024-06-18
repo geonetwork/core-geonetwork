@@ -327,6 +327,8 @@ public class SourcesApi {
             entity.setGroupOwner(source.getGroupOwner());
             entity.setServiceRecord(source.getServiceRecord());
             entity.setUiConfig(source.getUiConfig());
+            entity.setDatahubEnabled(source.getDatahubEnabled());
+            entity.setDatahubConfiguration(source.getDatahubConfiguration());
             entity.setLogo(source.getLogo());
             entity.setListableInHeaderSelector(source.isListableInHeaderSelector());
             Map<String, String> labelTranslations = source.getLabelTranslations();
