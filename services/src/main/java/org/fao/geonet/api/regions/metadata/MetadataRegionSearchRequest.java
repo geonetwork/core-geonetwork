@@ -29,6 +29,7 @@ import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.api.regions.MetadataRegion;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.kernel.DataManager;
@@ -37,12 +38,13 @@ import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.region.Region;
 import org.fao.geonet.kernel.region.Request;
 import org.fao.geonet.kernel.schema.MetadataSchema;
-import org.fao.geonet.kernel.search.EsSearchManager;
 import org.fao.geonet.kernel.search.spatial.ErrorHandler;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.util.GMLParsers;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
+import org.geotools.api.referencing.crs.CoordinateReferenceSystem;
+import org.geotools.api.referencing.operation.MathTransform;
 import org.geotools.geometry.jts.JTS;
 import org.geotools.referencing.CRS;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
@@ -51,8 +53,6 @@ import org.jdom.Element;
 import org.jdom.Namespace;
 import org.jdom.filter.Filter;
 import org.locationtech.jts.geom.*;
-import org.geotools.api.referencing.crs.CoordinateReferenceSystem;
-import org.geotools.api.referencing.operation.MathTransform;
 
 import java.nio.file.Path;
 import java.util.*;
@@ -279,7 +279,9 @@ public class MetadataRegionSearchRequest extends Request {
             final String mdId = MetadataRegionSearchRequest.Id.create(idParts[0]).getMdId();
 
             if (mdId != null) {
-                final ISODate docChangeDate =  ApplicationContextHolder.get().getBean(EsSearchManager.class).getDocChangeDate(mdId);
+                IMetadataUtils metadataUtils = ApplicationContextHolder.get().getBean(IMetadataUtils.class);
+                AbstractMetadata metadata = metadataUtils.findOne(mdId);
+                final ISODate docChangeDate = metadata.getDataInfo().getChangeDate();
                 if (docChangeDate != null) {
                     return Optional.of(docChangeDate.toDate().getTime());
                 }
