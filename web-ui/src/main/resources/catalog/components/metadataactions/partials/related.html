@@ -202,7 +202,7 @@
           target="_blank"
           title="{{md.resourceTitle}}"
         >
-          {{md.resourceTitle}}
+          {{md.resourceTitle || md.remoteUrl}}
           <i
             data-ng-if="md.origin === 'remote'"
             class="fa fa-external-link"
