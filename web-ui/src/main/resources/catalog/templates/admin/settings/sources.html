@@ -177,6 +177,28 @@
               <span data-translate="">displayInHeaderSwitcher</span>
             </label>
             <p class="help-block" data-translate="">displayInHeaderSwitcher-help</p>
+
+            <label data-translate="">datahubEnabled</label>
+            <input
+              type="checkbox"
+              name="datahubEnabled"
+              id="datahubEnabled"
+              data-ng-model="source.datahubEnabled"
+            />
+            <p class="help-block" data-translate="">sourceDatahubEnabled-help</p>
+
+            <label data-translate="">datahubConfiguration</label>
+            <textarea
+              data-gn-autogrow=""
+              type="text"
+              name="datahubConfiguration"
+              class="form-control"
+              id="datahubConfiguration"
+              data-ng-model="source.datahubConfiguration"
+            >
+{{source.datahubConfiguration}}</textarea
+            >
+            <p class="help-block" data-translate="">sourceDatahubConfiguration-help</p>
           </form>
 
           <div>
