@@ -853,7 +853,7 @@ public final class XslUtil {
             final Map<String, String> values = searchManager.getFieldsValues(id, fields, language);
             return values.get(fieldname);
         } catch (Exception e) {
-            Log.error(Geonet.GEONETWORK, "Failed to get index field '" + fieldname + "' value on '" + id + "', caused by " + e.getMessage());
+            Log.warning(Geonet.GEONETWORK, "Failed to get index field '" + fieldname + "' value on '" + id + "', caused by " + e.getMessage());
         }
         return "";
     }
