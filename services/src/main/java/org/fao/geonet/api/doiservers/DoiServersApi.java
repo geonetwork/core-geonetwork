@@ -237,6 +237,7 @@ public class DoiServersApi {
                 entity.setName(doiServer.getName());
                 entity.setDescription(doiServer.getDescription());
                 entity.setUrl(doiServer.getUrl());
+                entity.setUsername(doiServer.getUsername());
                 entity.setPublicUrl(doiServer.getPublicUrl());
                 entity.setLandingPageTemplate(doiServer.getLandingPageTemplate());
                 entity.setPattern(doiServer.getPattern());
@@ -306,11 +307,6 @@ public class DoiServersApi {
             example = "")
         @PathVariable Integer doiServerId,
         @Parameter(
-            description = "User name",
-            required = true)
-        @RequestParam
-        String username,
-        @Parameter(
             description = "Password",
             required = true)
         @RequestParam
@@ -319,7 +315,6 @@ public class DoiServersApi {
         Optional<DoiServer> existingMapserverOpt = doiServerRepository.findOneById(doiServerId);
         if (existingMapserverOpt.isPresent()) {
             doiServerRepository.update(doiServerId, entity -> {
-                entity.setUsername(username);
                 entity.setPassword(password);
             });
         } else {

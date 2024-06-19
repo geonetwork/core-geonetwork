@@ -212,36 +212,36 @@
             </div>
           </div>
 
-          <div data-ng-show="!isUpdate">
-            <div
-              class="form-group"
-              data-ng-class="gnDoiServerEdit.username.$error.required ||
-                             (gnDoiServerEdit.username.$touched && gnDoiServerEdit.username.$invalid) ? 'has-error' : ''"
+          <div
+            class="form-group"
+            data-ng-class="gnDoiServerEdit.username.$error.required ||
+                           (gnDoiServerEdit.username.$touched && gnDoiServerEdit.username.$invalid) ? 'has-error' : ''"
+          >
+            <label class="control-label col-sm-3" data-translate="" for="username"
+              >doiserver-username</label
             >
-              <label class="control-label col-sm-3" data-translate="" for="username"
-                >doiserver-username</label
+
+            <div class="col-sm-9">
+              <input
+                type="text"
+                class="form-control"
+                required=""
+                id="username"
+                name="username"
+                data-ng-model="doiServerSelected.username"
+              />
+
+              <div
+                class="help-block"
+                data-ng-messages="gnDoiServerEdit.username.$error"
+                data-ng-if="gnDoiServerEdit.username.$touched"
               >
-
-              <div class="col-sm-9">
-                <input
-                  type="text"
-                  class="form-control"
-                  required=""
-                  id="username"
-                  name="username"
-                  data-ng-model="doiServerSelected.username"
-                />
-
-                <div
-                  class="help-block"
-                  data-ng-messages="gnDoiServerEdit.username.$error"
-                  data-ng-if="gnDoiServerEdit.username.$touched"
-                >
-                  <p data-ng-message="required" data-translate="">fieldRequired</p>
-                </div>
+                <p data-ng-message="required" data-translate="">fieldRequired</p>
               </div>
             </div>
+          </div>
 
+          <div data-ng-show="!isUpdate">
             <div
               class="form-group"
               data-ng-class="gnDoiServerEdit.password.$error.required ||
@@ -450,19 +450,6 @@
           <form id="gn-password-reset" class="form-horizontal" name="gnPasswordReset">
             <div class="form-group">
               <input type="hidden" name="_csrf" value="{{csrf}}" />
-              <label class="control-label col-sm-3" data-translate="">username</label>
-
-              <div class="col-sm-9">
-                <input
-                  type="text"
-                  class="form-control"
-                  required=""
-                  data-ng-model="resetUsername"
-                />
-              </div>
-            </div>
-
-            <div class="form-group">
               <label class="control-label col-sm-3" data-translate="">password</label>
 
               <div class="col-sm-9">

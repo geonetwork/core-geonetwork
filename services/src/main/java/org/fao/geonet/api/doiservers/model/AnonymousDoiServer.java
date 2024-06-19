@@ -30,6 +30,7 @@ public class AnonymousDoiServer extends DoiServerDto {
         this
             .setId(doiServer.getId())
             .setName(doiServer.getName())
+            .setUsername(doiServer.getUsername())
             .setDescription(doiServer.getDescription())
             .setUrl(doiServer.getUrl())
             .setLandingPageTemplate(doiServer.getLandingPageTemplate())
@@ -37,11 +38,6 @@ public class AnonymousDoiServer extends DoiServerDto {
             .setPublicUrl(doiServer.getPublicUrl())
             .setPrefix(doiServer.getPrefix())
             .setPublicationGroups(doiServer.getPublicationGroups());
-    }
-
-    @Override
-    public String getUsername() {
-        return "***";
     }
 
     @Override
