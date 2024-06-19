@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2023 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2024 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -85,6 +85,7 @@ public class Settings {
     public static final String SYSTEM_CSW_CAPABILITY_RECORD_UUID = "system/csw/capabilityRecordUuid";
     public static final String SYSTEM_CSW_METADATA_PUBLIC = "system/csw/metadataPublic";
     public static final String SYSTEM_USERSELFREGISTRATION_ENABLE = "system/userSelfRegistration/enable";
+    public static final String SYSTEM_USERSELFREGISTRATION_EMAIL_DOMAINS = "system/userSelfRegistration/domainsAllowed";
     public static final String SYSTEM_USERSELFREGISTRATION_RECAPTCHA_ENABLE = "system/userSelfRegistration/recaptcha/enable";
     public static final String SYSTEM_USERSELFREGISTRATION_RECAPTCHA_PUBLICKEY = "system/userSelfRegistration/recaptcha/publickey";
     public static final String SYSTEM_USERSELFREGISTRATION_RECAPTCHA_SECRETKEY = "system/userSelfRegistration/recaptcha/secretkey";

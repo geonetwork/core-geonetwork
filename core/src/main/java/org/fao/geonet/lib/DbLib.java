@@ -183,7 +183,7 @@ public class DbLib {
      *
      * @param type @return
      */
-    private Path checkFilePath(ServletContext servletContext, Path appPath, Path filePath, String prefix, String type) {
+    private Path checkFilePath(ServletContext servletContext, Path appPath, Path filePath, String prefix, String type) throws IOException {
         Path finalPath;
         finalPath = testPath(filePath.resolve(prefix + type + SQL_EXTENSION));
 
@@ -214,9 +214,10 @@ public class DbLib {
         if (finalPath != null)
             return finalPath;
         else {
-            Log.debug(Geonet.DB, "  No default SQL script found: " + (filePath + "/" + prefix + type + SQL_EXTENSION));
+            String msg = String.format("SQL script not found: %s", filePath + "/" + prefix + type + SQL_EXTENSION);
+            Log.debug(Geonet.DB, msg);
+            throw new IOException(msg);
         }
-        return toPath("");
     }
 
     private Path toPath(String pathString) {

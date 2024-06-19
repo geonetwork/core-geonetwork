@@ -145,6 +145,7 @@
     "gnFacetSorter",
     "gnExternalViewer",
     "gnUrlUtils",
+    "gnWebAnalyticsService",
     "gnAlertService",
     function (
       $scope,
@@ -169,6 +170,7 @@
       gnFacetSorter,
       gnExternalViewer,
       gnUrlUtils,
+      gnWebAnalyticsService,
       gnAlertService
     ) {
       var viewerMap = gnSearchSettings.viewerMap;
@@ -421,6 +423,10 @@
 
       $scope.resultviewFns = {
         addMdLayerToMap: function (link, md) {
+          var config = buildAddToMapConfig(link, md);
+
+          gnWebAnalyticsService.trackLink(config.url, link.protocol);
+
           // This is probably only a service
           // Open the add service layer tab
           var config = buildAddToMapConfig(link, md);
@@ -430,6 +436,56 @@
           $location.path("map").search({
             add: encodeURIComponent(angular.toJson([config]))
           });
+        },
+        addMdWFSLayerToMap: function (link, md) {
+          var url = $filter("gnLocalized")(link.url) || link.url;
+          gnWebAnalyticsService.trackLink(url, link.protocol);
+
+          var isServiceLink =
+            gnSearchSettings.mapProtocols.services.indexOf(link.protocol) > -1;
+
+          var isGetFeatureLink = url.toLowerCase().indexOf("request=getfeature") > -1;
+
+          var featureName;
+          if (isGetFeatureLink) {
+            var name = "typename";
+            var regex = new RegExp("[\\?&]" + name + "=([^&#]*)");
+            var results = regex.exec(url);
+
+            if (results) {
+              featureName = decodeURIComponent(results[1].replace(/\+/g, " "));
+            }
+          } else {
+            featureName = $filter("gnLocalized")(link.title) || link.name;
+          }
+
+          // if an external viewer is defined, use it here
+          if (gnExternalViewer.isEnabled()) {
+            gnExternalViewer.viewService(
+              {
+                id: md ? md.id : null,
+                uuid: md ? md.uuid : null
+              },
+              {
+                type: "wfs",
+                url: url,
+                name: featureName
+              }
+            );
+            return;
+          }
+          if (featureName && (!isServiceLink || isGetFeatureLink)) {
+            gnMap.addWfsFromScratch(
+              gnSearchSettings.viewerMap,
+              url,
+              featureName,
+              false,
+              md
+            );
+          } else {
+            gnMap.addOwsServiceToMap(url, "WFS");
+          }
+          gnSearchLocation.setMap();
         },
         addAllMdLayersToMap: function (layers, md) {
           var config = layers
@@ -442,6 +498,11 @@
           if (config.length === 0) {
             return;
           }
+
+          config.forEach(function (c) {
+            gnWebAnalyticsService.trackLink(c.url, c.type);
+          });
+
           $location.path("map").search({
             add: encodeURIComponent(angular.toJson(config))
           });
