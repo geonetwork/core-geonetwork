@@ -7,9 +7,21 @@ The catalogue support DOI creation using:
 -   [DataCite API](https://support.datacite.org/docs/mds-api-guide).
 -   EU publication office API <https://ra.publications.europa.eu/servlet/ws/doidata?api=medra.org>
 
-Configure the API access point in the `admin console --> settings`:
+Configure the DOI API access point to publish the metadata in the `Admin console --> Settings --> Doi servers`:
 
-![](img/doi-admin-console.png)
+![](img/doi-create-server.png)
+
+Providing the following information:
+
+- `Name`: A descriptive name for the server.
+- `Description`: (Optional) A verbose description of the server.
+- `DataCite API endpoint`: The API url, usually https://mds.datacite.org or https://mds.test.datacite.org for testing.
+- `DataCite username` / `DataCite password`: Credentials required to publish the DOI resources.
+- `Landing page URL template`: The URL to use to register the DOI. A good default for GeoNetwork is http://localhost:8080/geonetwork/srv/resources/records/{{uuid}}. The landing page URL MUST contains the UUID of the record.
+- `Final DOI URL prefix`: (Optional) Keep it empty to use the default https://doi.org prefix. Use https://mds.test.datacite.org/doi when using the test API.
+- `DOI pattern`: Default is `{{uuid}}` but the DOI structure can be customized with database id and/or record group eg. `example-{{groupOwner}}-{{id}}`.
+- `DataCite prefix`: Usually looks like `10.xxxx`. You will be allowed to register DOI names only under the prefixes that have been assigned to you.
+- `Publication groups`: (Optional) Select the groups which metadata should be published to the DOI server. If no groups are selected, the server will be provided to publish the metadata that has no other DOI servers related to the metadata owner group.
 
 A record can be downloaded using the DataCite format from the API using: <http://localhost:8080/geonetwork/srv/api/records/da165110-88fd-11da-a88f-000d939bc5d8/formatters/datacite?output=xml>
 

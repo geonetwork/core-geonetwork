@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2023 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2024 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -48,7 +48,6 @@ import org.fao.geonet.api.site.model.SettingSet;
 import org.fao.geonet.api.site.model.SettingsListResponse;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.doi.client.DoiManager;
 import org.fao.geonet.domain.*;
 import org.fao.geonet.exceptions.OperationAbortedEx;
 import org.fao.geonet.index.Status;
@@ -181,8 +180,6 @@ public class SiteApi {
             context.error(e);
             throw new OperationAbortedEx("Parameters saved but cannot set proxy information: " + e.getMessage());
         }
-        DoiManager doiManager = gc.getBean(DoiManager.class);
-        doiManager.loadConfig();
 
         HarvestManager harvestManager = context.getBean(HarvestManager.class);
         harvestManager.rescheduleActiveHarvesters();

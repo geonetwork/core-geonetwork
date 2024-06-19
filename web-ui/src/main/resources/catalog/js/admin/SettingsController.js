@@ -35,6 +35,7 @@
   goog.require("gn_system_settings_controller");
   goog.require("gn_languages_controller");
   goog.require("gn_static_pages_controller");
+  goog.require("gn_doiserver_controller");
 
   var module = angular.module("gn_settings_controller", [
     "gn_system_settings_controller",
@@ -47,7 +48,8 @@
     "gn_metadata_identifier_templates_controller",
     "gn_cssstyle_settings_controller",
     "gn_scroll_spy",
-    "gn_static_pages_controller"
+    "gn_static_pages_controller",
+    "gn_doiserver_controller"
   ]);
 
   module.controller("GnSettingsController", [
@@ -125,6 +127,12 @@
             icon: "fa-globe",
             label: "manageMapServers",
             href: "#/settings/mapservers"
+          },
+          {
+            type: "doiservers",
+            icon: "gn-icon-doi",
+            label: "manageDoiServers",
+            href: "#/settings/doiservers"
           },
           {
             type: "static-pages",

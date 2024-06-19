@@ -44,10 +44,24 @@
           scope.response = {};
           scope.isUpdate = angular.isDefined(scope.doiUrl);
 
+          scope.doiServers = [];
+          scope.selectedDoiServer = null;
+
+          gnDoiService.getDoiServersForMetadata(scope.uuid).then(function (response) {
+            scope.doiServers = response.data;
+            if (scope.doiServers.length > 0) {
+              scope.selectedDoiServer = scope.doiServers[0].id;
+            }
+          });
+
+          scope.updateDoiServer = function () {
+            scope.response = {};
+          };
+
           scope.check = function () {
             scope.response = {};
             scope.response["check"] = null;
-            return gnDoiService.check(scope.uuid).then(
+            return gnDoiService.check(scope.uuid, scope.selectedDoiServer).then(
               function (r) {
                 scope.response["check"] = r;
                 scope.isUpdate = angular.isDefined(scope.doiUrl);
@@ -60,7 +74,7 @@
           };
 
           scope.create = function () {
-            return gnDoiService.create(scope.uuid).then(
+            return gnDoiService.create(scope.uuid, scope.selectedDoiServer).then(
               function (r) {
                 scope.response["create"] = r;
                 delete scope.response["check"];

@@ -33,11 +33,39 @@
     "$http",
     "gnConfig",
     function ($http, gnConfig) {
-      function check(id) {
-        return $http.get("../api/records/" + id + "/doi/checkPreConditions");
+      /**
+       * Returns a promise to validate a metadata to be published on a DOI server.
+       *
+       * @param id
+       * @param doiServerId
+       * @returns {*}
+       */
+      function check(id, doiServerId) {
+        return $http.get(
+          "../api/records/" + id + "/doi/" + doiServerId + "/checkPreConditions"
+        );
       }
-      function create(id) {
-        return $http.put("../api/records/" + id + "/doi");
+
+      /**
+       * Returns a promise to publish a metadata on a DOI server.
+       *
+       * @param id
+       * @param doiServerId
+       * @returns {*}
+       */
+      function create(id, doiServerId) {
+        return $http.put("../api/records/" + id + "/doi/" + doiServerId);
+      }
+
+      /**
+       * Returns a promise to retrieve the list of DOI servers
+       * where a metadata can be published.
+       *
+       * @param metadataId
+       * @returns {*}
+       */
+      function getDoiServersForMetadata(metadataId) {
+        return $http.get("../api/doiservers/metadata/" + metadataId);
       }
 
       function isDoiApplicableForMetadata(md) {
@@ -73,7 +101,8 @@
         check: check,
         create: create,
         isDoiApplicableForMetadata: isDoiApplicableForMetadata,
-        canPublishDoiForResource: canPublishDoiForResource
+        canPublishDoiForResource: canPublishDoiForResource,
+        getDoiServersForMetadata: getDoiServersForMetadata
       };
     }
   ]);
