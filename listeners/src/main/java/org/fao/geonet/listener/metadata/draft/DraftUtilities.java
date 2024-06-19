@@ -132,7 +132,7 @@ public class DraftUtilities {
         }
 
         // Reassign file uploads
-        Log.info(Geonet.DATA_MANAGER, "Copying draft record '" + draft.getId()+ "'resources ' to approved record '" + md.getId() +"'");
+        Log.info(Geonet.DATA_MANAGER, String.format("Copying draft record '%d' resources to approved record '%d'", draft.getId(), md.getId()));
         draftMetadataUtils.replaceFiles(draft, md);
 
         metadataFileUploadRepository.deleteAll(MetadataFileUploadSpecs.hasMetadataId(md.getId()));
