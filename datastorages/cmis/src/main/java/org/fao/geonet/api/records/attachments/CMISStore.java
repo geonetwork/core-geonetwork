@@ -391,7 +391,7 @@ public class CMISStore extends AbstractStore {
             folderKey = getMetadataDir(context, metadataId);
             final Folder folder = cmisUtils.getFolderCache(folderKey, true);
 
-            Log.info(Geonet.RESOURCES, "Deleting the folder of '" + folderKey + "' and the files within the folder");
+            Log.info(Geonet.RESOURCES, String.format("Deleting the folder of '%s' and the files within the folder", folderKey));
             folder.deleteTree(true, UnfileObject.DELETE, true);
             cmisUtils.invalidateFolderCache(folderKey);
 
