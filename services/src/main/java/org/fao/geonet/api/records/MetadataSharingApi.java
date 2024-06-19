@@ -55,6 +55,7 @@ import org.fao.geonet.kernel.datamanager.*;
 import org.fao.geonet.kernel.search.IndexingMode;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
+import org.fao.geonet.languages.FeedbackLanguages;
 import org.fao.geonet.repository.*;
 import org.fao.geonet.repository.specification.MetadataSpecs;
 import org.fao.geonet.repository.specification.MetadataValidationSpecs;
@@ -100,6 +101,9 @@ public class MetadataSharingApi implements ApplicationEventPublisherAware
 
     @Autowired
     LanguageUtils languageUtils;
+
+    @Autowired
+    FeedbackLanguages feedbackLanguages;
 
     @Autowired
     DataManager dataManager;
@@ -338,7 +342,7 @@ public class MetadataSharingApi implements ApplicationEventPublisherAware
         AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
         ApplicationContext appContext = ApplicationContextHolder.get();
         ServiceContext context = ApiUtils.createServiceContext(request);
-        ResourceBundle messages = ApiUtils.getMessagesResourceBundle(request.getLocales());
+        Locale[] feedbackLocales = feedbackLanguages.getLocales(request.getLocale());
 
         //--- in case of owner, privileges for groups 0,1 and GUEST are disabled
         //--- and are not sent to the server. So we cannot remove them
@@ -362,7 +366,7 @@ public class MetadataSharingApi implements ApplicationEventPublisherAware
         metadataIndexer.indexMetadataPrivileges(metadata.getUuid(), metadata.getId());
 
         if (notifyByEmail && !metadataListToNotifyPublication.isEmpty()) {
-            metadataPublicationMailNotifier.notifyPublication(messages, context.getLanguage(),
+            metadataPublicationMailNotifier.notifyPublication(feedbackLocales,
                 metadataListToNotifyPublication);
         }
     }
@@ -1188,6 +1192,7 @@ public class MetadataSharingApi implements ApplicationEventPublisherAware
         ApplicationContext appContext = ApplicationContextHolder.get();
         ServiceContext context = ApiUtils.createServiceContext(request);
         ResourceBundle messages = ApiUtils.getMessagesResourceBundle(request.getLocales());
+        Locale[] feedbackLocales = feedbackLanguages.getLocales(request.getLocale());
 
         if (!accessManager.hasReviewPermission(context, Integer.toString(metadata.getId()))) {
             throw new Exception(String.format(messages.getString("api.metadata.share.ErrorUserNotAllowedToPublish"),
@@ -1217,7 +1222,7 @@ public class MetadataSharingApi implements ApplicationEventPublisherAware
             publicationOption.get().hasPublicationTo(ReservedGroup.all) &&
             notifyByEmail &&
             !metadataListToNotifyPublication.isEmpty()) {
-            metadataPublicationMailNotifier.notifyPublication(messages, context.getLanguage(),
+            metadataPublicationMailNotifier.notifyPublication(feedbackLocales,
                 metadataListToNotifyPublication);
         }
     }
@@ -1246,7 +1251,7 @@ public class MetadataSharingApi implements ApplicationEventPublisherAware
             final ApplicationContext appContext = ApplicationContextHolder.get();
 
             ServiceContext context = ApiUtils.createServiceContext(request);
-            ResourceBundle messages = ApiUtils.getMessagesResourceBundle(request.getLocales());
+            Locale[] feedbackLocales = feedbackLanguages.getLocales(request.getLocale());
 
             List<String> listOfUpdatedRecords = new ArrayList<>();
             List<MetadataPublicationNotificationInfo> metadataListToNotifyPublication = new ArrayList<>();
@@ -1315,7 +1320,7 @@ public class MetadataSharingApi implements ApplicationEventPublisherAware
             }
 
             if (!metadataListToNotifyPublication.isEmpty()) {
-                metadataPublicationMailNotifier.notifyPublication(messages, context.getLanguage(),
+                metadataPublicationMailNotifier.notifyPublication(feedbackLocales,
                     metadataListToNotifyPublication);
             }
 
