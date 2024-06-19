@@ -38,6 +38,13 @@
           return encodeURIComponent(config.wfsUrl + "#" + config.featureTypeName);
           // config.featureTypeName.replace(':', '\\:');
         },
+        getIndexKey: function (config) {
+          return (config.wfsUrl + "-" + config.featureTypeName)
+            .toLowerCase()
+            .normalize("NFD")
+            .replaceAll(/[^\x00-\x7F]/g, "")
+            .replaceAll(/[^a-zA-Z0-9-_]/g, "");
+        },
         facets: true,
         stats: true,
         excludedFields: [

@@ -1,0 +1,32 @@
+<div data-ng-show="isSupported()">
+  <em>Update record from dataset analysis</em><br />
+  <button
+    type="button"
+    class="btn btn-default btn-xs"
+    title="Preview information retrieved from data analysis"
+    data-ng-click="info()"
+  >
+    <i class="fa fa-fw fa-file" />
+    <span>{{'info' | translate}}</span>
+  </button>
+
+  <button
+    type="button"
+    class="btn btn-default btn-xs"
+    title="Preview record after updates from data analysis"
+    data-ng-click="preview()"
+  >
+    <i class="fa fa-fw fa-eye" />
+    <span>{{'preview' | translate}}</span>
+  </button>
+
+  <button
+    type="button"
+    class="btn btn-default btn-xs"
+    title="Update record with data information"
+    data-ng-click="save()"
+  >
+    <i class="fa fa-fw fa-save" />
+    <span>{{'apply' | translate}}</span>
+  </button>
+</div>
