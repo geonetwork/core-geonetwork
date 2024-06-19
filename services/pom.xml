@@ -48,6 +48,14 @@
       <scope>test</scope>
     </dependency>
 
+
+    <dependency>
+      <groupId>org.jvnet.mock-javamail</groupId>
+      <artifactId>mock-javamail</artifactId>
+      <version>1.9</version>
+      <scope>test</scope>
+    </dependency>
+
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-web</artifactId>
@@ -385,6 +393,17 @@
                 </goals>
               </execution>
             </executions>
+          </plugin>
+
+          <plugin>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <configuration>
+              <systemPropertyVariables>
+                <mail.smtp.class>org.jvnet.mock_javamail.MockTransport</mail.smtp.class>
+                <mail.pop3.class>org.jvnet.mock_javamail.MockStore</mail.pop3.class>
+                <mail.imap.class>org.jvnet.mock_javamail.MockStore</mail.imap.class>
+              </systemPropertyVariables>
+            </configuration>
           </plugin>
         </plugins>
       </build>
