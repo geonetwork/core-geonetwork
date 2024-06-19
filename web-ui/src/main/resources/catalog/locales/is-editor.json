@@ -165,7 +165,7 @@
     "linkToParentTitle": "Tengja foreldra lýsigagna færslu við núgildandi lýsigögn",
     "linkToService": "Tengja við þjónustu",
     "linkToServiceTitle": "Tengja þjónustu við núgildandi lýsigögn",
-    "linkToSibling": "Tengja við önnur gögn",
+    "linkToSibling": "Link to records",
     "linkToSiblingTitle": "Tengja aðföng við núgildandi lýsigögn",
     "linkToSource": "Tengja við uppruna gagnasett",
     "linkToSourceTitle": "Tengja uppruna gagnasett við núgildandi lýsigögn",
@@ -446,5 +446,13 @@
     "addOnlinesrc#links": "Bæta við tenglum",
     "addOnlinesrc#links-help": "eg. web links",
     "addOnlinesrc#quality": "Add quality info",
-    "addOnlinesrc#quality-help": "eg. specification, reports"
+    "addOnlinesrc#quality-help": "eg. specification, reports",
+    "associated-parent": "Foreldra Lýsigögn",
+    "associated-service": "Þjónusta",
+    "associated-dataset": "Gagnasett",
+    "associated-source": "Uppruna gagnasett",
+    "associated-fcats": "Fitjuskrá",
+    "associated-siblings": "Tengd gögn",
+    "associated-hasfeaturecats": "Nota þessa fitjuskrá",
+    "associatedResourcesPanel": "Tengd gögn"
 }

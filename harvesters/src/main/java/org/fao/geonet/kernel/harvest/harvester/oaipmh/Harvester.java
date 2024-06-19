@@ -396,6 +396,11 @@ class Harvester extends BaseAligner<OaiPmhParams> implements IHarvester<HarvestR
             schema = dataMan.autodetectSchema(md);
         }
 
+        // Translate metadata
+        if (params.isTranslateContent()) {
+            md = translateMetadataContent(context, md, schema);
+        }
+
         //
         // insert metadata
         //
@@ -559,6 +564,11 @@ class Harvester extends BaseAligner<OaiPmhParams> implements IHarvester<HarvestR
 
                 schema = dataMan.autodetectSchema(md);
                 updateSchema = true;
+            }
+
+            // Translate metadata
+            if (params.isTranslateContent()) {
+                md = translateMetadataContent(context, md, schema);
             }
 
             //

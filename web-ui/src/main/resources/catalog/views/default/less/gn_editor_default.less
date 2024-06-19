@@ -90,7 +90,7 @@
   }
   .modal-dialog {
     .modal-body {
-      max-height: 85vh;
+      max-height: calc(~"85vh - 30px");
       overflow: auto;
     }
   }
@@ -210,9 +210,6 @@
             padding-right: 15px;
             padding-left: 15px;
           }
-        }
-        .gn-move {
-          display: none;
         }
       }
       .table {

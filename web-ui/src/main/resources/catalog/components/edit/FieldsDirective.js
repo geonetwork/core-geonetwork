@@ -474,7 +474,8 @@
             element.off();
           });
 
-          $(element).click(function () {
+          $(element).click(function (event) {
+            event.stopPropagation();
             gnEditor.move(scope.ref, scope.direction || "down", scope.domelementToMove);
           });
         }

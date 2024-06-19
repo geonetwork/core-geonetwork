@@ -1,24 +1,20 @@
 # Install, configure and start Kibana
 
-## Manual installation
+## Installation options
 
-Download Kibana from https://www.elastic.co/downloads/kibana. For Geonetwork 3.8.x download at least version 7.2.1
+### Docker compose installation (Recommended)
 
-Set Kibana base path and index name in config/kibana.yml:
+1. Use docker compose with the provided [docker-compose.yml](es/docker-compose.yml):
 
-```
-server.basePath: "/geonetwork/dashboards"
-server.rewriteBasePath: false
-```
+   ```
+   cd es
+   docker-compose up
+   ```
 
-Adapt if needed ```elasticsearch.url``` and ```server.host```.
-
-Start Kibana manually:
-
-```
-cd kibana/bin
-./kibana
-```
+3. Check that it is running using your browser:
+   
+   * Elasticsearch: http://localhost:9200
+   * Kabana: http://localhost:5601
 
 ## Maven installation
 
@@ -41,20 +37,26 @@ cd kibana/bin
    mvn exec:exec -Dkb-start
    ```
 
-## Docker compose installation
+## Manual installation
 
-1. Use docer compose with the provided [docker-compose.yml](docker-compose.yml):
+1. Download Kibana 8.14.0 from https://www.elastic.co/downloads/kibana
+
+2. Set Kibana base path and index name in config/kibana.yml:
 
    ```
-   cd es
-   docker-compose up
+   server.basePath: "/geonetwork/dashboards"
+   server.rewriteBasePath: false
    ```
 
-3. Check that it is running using your browser:
-   
-   * Elasticsearch: http://localhost:9200
-   * Kabana: http://localhost:5601
-   
+3. Adapt if needed ```elasticsearch.url``` and ```server.host```.
+
+4. Start Kibana manually:
+
+   ```
+   cd kibana/bin
+   ./kibana
+   ```
+
 ## Import Configuration
 
 1. Kibana should be running from:
@@ -69,16 +71,17 @@ cd kibana/bin
    http://localhost:8080/geonetwork/dashboards
    ```
 
+
 ## Troubleshoot
 
 If it does not start properly, check Kibana log files (eg. it may fail if Elasticsearch version
 is not compatible with Kibana version).
 
-Visit Kibana in a browser using one of the above links and go to 'Saved Objects'. Import export.ndjson from https://github.com/geonetwork/core-geonetwork/blob/4.0.x/es/es-dashboards/data/export.ndjson
+Visit Kibana in a browser using one of the above links and go to 'Saved Objects'. Import export.ndjson from https://github.com/geonetwork/core-geonetwork/blob/main/es/es-dashboards/data/export.ndjson
 
 ### Production Use
 
-Kibana can be installed from the debian files, and 7.3.2 is confirmed as working with Geonetwork 3.8.x.
+Kibana can be installed from the debian files, and Kibana 8.14.0 is confirmed as working with Geonetwork 4.4.x.
 
 Set Kibana to start when the server starts up, using the instructions at https://www.elastic.co/guide/en/kibana/current/start-stop.html
 

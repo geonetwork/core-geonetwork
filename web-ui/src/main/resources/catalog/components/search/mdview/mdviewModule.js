@@ -105,7 +105,7 @@
         gnGlobalSettings.gnCfg.mods.recordview.showStatusTopBarFor;
 
       gnConfigService.load().then(function (c) {
-        $scope.isRecordHistoryEnabled = gnConfig["system.metadata.history.enabled"];
+        $scope.isRecordHistoryEnabled = gnConfig["metadata.history.enabled"];
         $scope.isPreferGroupLogo = gnConfig["system.metadata.prefergrouplogo"];
 
         var statusSystemRating = gnConfig["system.localrating.enable"];

@@ -424,6 +424,7 @@
   <tableFields>
     <table for="gmd:CI_ResponsibleParty">
       <header>
+        <col/>
         <!-- TODO: Add label from strings.xml / label with context-->
         <col label="gmd:organisationName"/>
         <col label="gmd:individualName"/>
@@ -432,6 +433,7 @@
         <col/>
       </header>
       <row>
+        <col orderControl=".."/>
         <col xpath="gmd:organisationName"/>
         <col xpath="gmd:individualName"/>
         <col xpath="gmd:contactInfo/*/gmd:address/*/gmd:electronicMailAddress"/>
@@ -441,12 +443,14 @@
     </table>
     <table for="gmd:CI_OnlineResource">
       <header>
+        <col/>
         <col label="gmd:protocol"/>
         <col label="gmd:linkage"/>
         <col label="gmd:name"/>
         <col/>
       </header>
       <row>
+        <col orderControl=".."/>
         <col xpath="gmd:protocol"/>
         <col xpath="gmd:linkage"/>
         <col xpath="gmd:name"/>
@@ -3229,7 +3233,7 @@
                                             editActions: []}]"
         />
 
-        <directive data-gn-associated-resources-panel="gnCurrentEdit.metadata" />
+        <directive data-gn-associated-resources-panel="gnCurrentEdit.metadata"/>
 
         <directive gn-geo-publisher=""
                    data-ng-if="gnCurrentEdit.geoPublisherConfig"
@@ -3330,12 +3334,7 @@
                    transformations="to-iso19139-keyword-with-anchor"/>
       </thesaurusList>
       -->
-
-      <thesaurusList>
-        <thesaurus key="external.none.allThesaurus"
-                   fieldset="false"/>
-      </thesaurusList>
-
+      <thesaurusList defaultTransformation="to-iso19139-keyword-with-anchor"/>
     </view>
     <view name="advanced"
           class="gn-label-above-input gn-indent-bluescale">
@@ -3437,6 +3436,8 @@
         <section xpath="/gmd:MD_Metadata/gmd:applicationSchemaInfo" or="applicationSchemaInfo"
                  in="/gmd:MD_Metadata"/>
       </tab>
+
+      <thesaurusList defaultTransformation="to-iso19139-keyword-with-anchor"/>
     </view>
     <view name="xml">
       <sidePanel>

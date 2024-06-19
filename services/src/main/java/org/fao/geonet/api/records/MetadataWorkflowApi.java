@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2023 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2024 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -71,6 +71,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -149,6 +150,9 @@ public class MetadataWorkflowApi {
     @Autowired
     MetadataPublicationMailNotifier metadataPublicationMailNotifier;
 
+    @Autowired
+    RoleHierarchy roleHierarchy;
+
     // The restore function currently supports these states
     static final Integer[] supportedRestoreStatuses = {
         Integer.parseInt(StatusValue.Events.RECORDUPDATED),
@@ -219,12 +223,13 @@ public class MetadataWorkflowApi {
         HttpServletRequest request) throws Exception {
         AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
         Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
+        ResourceBundle messages = ApiUtils.getMessagesResourceBundle(request.getLocales());
         ServiceContext context = ApiUtils.createServiceContext(request, locale.getISO3Language());
 
         // --- only allow the owner of the record to set its status
         if (!accessManager.isOwner(context, String.valueOf(metadata.getId()))) {
             throw new SecurityException(
-                "Only the owner of the metadata can get the status. User is not the owner of the metadata");
+                messages.getString("api.metadata.status.errorGetStatusNotAllowed"));
         }
 
         MetadataStatus recordStatus = metadataStatus.getStatus(metadata.getId());
@@ -471,7 +476,7 @@ public class MetadataWorkflowApi {
         // --- only allow the owner of the record to set its status
         if (!accessManager.isOwner(context, String.valueOf(metadata.getId()))) {
             throw new SecurityException(
-                "Only the owner of the metadata can set the status of this record. User is not the owner of the metadata.");
+                messages.getString("api.metadata.status.errorSetStatusNotAllowed"));
         }
 
         boolean isAllowedSubmitApproveInvalidMd = settingManager
@@ -499,7 +504,7 @@ public class MetadataWorkflowApi {
 
         List<MetadataStatus> listOfStatusChange = new ArrayList<>(1);
         listOfStatusChange.add(metadataStatusValue);
-        Map<Integer, StatusChangeType> statusUpdate = sa.onStatusChange(listOfStatusChange);
+        Map<Integer, StatusChangeType> statusUpdate = sa.onStatusChange(listOfStatusChange, false);
 
         int metadataIdApproved = metadata.getId();
 
@@ -521,13 +526,13 @@ public class MetadataWorkflowApi {
 
         if ((status.getStatus() == Integer.parseInt(StatusValue.Status.APPROVED) && notifyByEmail)
             && (this.metadataUtils.isMetadataPublished(metadataIdApproved))) {
-                MetadataPublicationNotificationInfo metadataNotificationInfo = new MetadataPublicationNotificationInfo();
-                metadataNotificationInfo.setMetadataUuid(metadata.getUuid());
-                metadataNotificationInfo.setMetadataId(metadataIdApproved);
-                metadataNotificationInfo.setGroupId(metadata.getSourceInfo().getGroupOwner());
-                metadataNotificationInfo.setPublished(true);
-                metadataNotificationInfo.setPublicationDateStamp(new ISODate());
-                metadataNotificationInfo.setReapproval(metadataIdApproved != metadata.getId());
+            MetadataPublicationNotificationInfo metadataNotificationInfo = new MetadataPublicationNotificationInfo();
+            metadataNotificationInfo.setMetadataUuid(metadata.getUuid());
+            metadataNotificationInfo.setMetadataId(metadataIdApproved);
+            metadataNotificationInfo.setGroupId(metadata.getSourceInfo().getGroupOwner());
+            metadataNotificationInfo.setPublished(true);
+            metadataNotificationInfo.setPublicationDateStamp(new ISODate());
+            metadataNotificationInfo.setReapproval(metadataIdApproved != metadata.getId());
 
 
             // If the metadata workflow is enabled retrieve the submitter and reviewer users information
@@ -635,7 +640,7 @@ public class MetadataWorkflowApi {
     @io.swagger.v3.oas.annotations.Operation(summary = "Search status", description = "")
     @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET, path = "/status/search")
     @ResponseStatus(value = HttpStatus.OK)
-    @PreAuthorize("hasAuthority('Editor')")
+    @PreAuthorize("hasAuthority('RegisteredUser')")
     @ResponseBody
     public List<MetadataStatusResponse> getWorkflowStatusByType(
         @Parameter(description = "One or more types to retrieve (ie. worflow, event, task). Default is all.",
@@ -694,6 +699,9 @@ public class MetadataWorkflowApi {
         ServiceContext context = ApiUtils.createServiceContext(request);
 
         Profile profile = context.getUserSession().getProfile();
+        String allowedProfileLevel = org.apache.commons.lang.StringUtils.defaultIfBlank(settingManager.getValue(Settings.METADATA_HISTORY_ACCESS_LEVEL), Profile.Editor.toString());
+        Profile allowedAccessLevelProfile = Profile.valueOf(allowedProfileLevel);
+
         if (profile != Profile.Administrator) {
             if (CollectionUtils.isEmpty(recordIdentifier) &&
                 CollectionUtils.isEmpty(uuid)) {
@@ -704,7 +712,12 @@ public class MetadataWorkflowApi {
             if (!CollectionUtils.isEmpty(recordIdentifier)) {
                 for (Integer recordId : recordIdentifier) {
                     try {
-                        ApiUtils.canEditRecord(String.valueOf(recordId), request);
+                        if (allowedAccessLevelProfile == Profile.RegisteredUser) {
+                            ApiUtils.canViewRecord(String.valueOf(recordId), request);
+                        } else {
+                            ApiUtils.canEditRecord(String.valueOf(recordId), request);
+                        }
+
                     } catch (SecurityException e) {
                         throw new NotAllowedException(ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT);
                     }
@@ -713,7 +726,12 @@ public class MetadataWorkflowApi {
             if (!CollectionUtils.isEmpty(uuid)) {
                 for (String recordId : uuid) {
                     try {
-                        ApiUtils.canEditRecord(recordId, request);
+                        if (allowedAccessLevelProfile == Profile.RegisteredUser) {
+                            ApiUtils.canViewRecord(recordId, request);
+                        } else {
+                            ApiUtils.canEditRecord(recordId, request);
+                        }
+
                     } catch (SecurityException e) {
                         throw new NotAllowedException(ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT);
                     }
@@ -906,7 +924,7 @@ public class MetadataWorkflowApi {
             Element mdNoGeonetInfo = metadataUtils.removeMetadataInfo(md);
 
             metadataManager.updateMetadata(context, String.valueOf(metadata.getId()), mdNoGeonetInfo, false, true, context.getLanguage(),
-                null, false, IndexingMode.full);
+                null, true, IndexingMode.full);
             recoveredMetadataId = metadata.getId();
         } else {
             // Recover from delete
@@ -1006,7 +1024,7 @@ public class MetadataWorkflowApi {
                         fields.add(titleField);
                         Optional<Metadata> metadata = metadataRepository.findById(s.getMetadataId());
                         final Map<String, String> values =
-                            searchManager.getFieldsValues(metadata.get().getUuid(), fields);
+                            searchManager.getFieldsValues(metadata.get().getUuid(), fields, language);
                         title = values.get(titleField);
                         titles.put(s.getMetadataId(), title);
                     } catch (Exception e1) {
@@ -1308,6 +1326,7 @@ public class MetadataWorkflowApi {
         metadataStatusValue.setPreviousState(previousStatus);
         List<MetadataStatus> listOfStatusChange = new ArrayList<>(1);
         listOfStatusChange.add(metadataStatusValue);
-        sa.onStatusChange(listOfStatusChange);
+        sa.onStatusChange(listOfStatusChange, true);
     }
+
 }

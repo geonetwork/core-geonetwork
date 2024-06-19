@@ -165,7 +165,7 @@
     "linkToParentTitle": "Linkitä ylämetatietodokumentti tähän metatietoon",
     "linkToService": "Linkki palveluun",
     "linkToServiceTitle": "Linkitä palvelu tähän metatietoon",
-    "linkToSibling": "Linkki muihin resursseihin",
+    "linkToSibling": "Link to records",
     "linkToSiblingTitle": "Linkitä resurssi tähän metatietoon",
     "linkToSource": "Linkki lähdeaineistoon",
     "linkToSourceTitle": "Linkitä lähdeaineisto tähän metatietoon",
@@ -446,5 +446,13 @@
     "addOnlinesrc#links": "Lisää linkkejä",
     "addOnlinesrc#links-help": "eg. web links",
     "addOnlinesrc#quality": "Add quality info",
-    "addOnlinesrc#quality-help": "eg. specification, reports"
+    "addOnlinesrc#quality-help": "eg. specification, reports",
+    "associated-parent": "Ylämetatietodokumentti",
+    "associated-service": "Palvelu",
+    "associated-dataset": "Tietoaineisto",
+    "associated-source": "Lähdeaineistot",
+    "associated-fcats": "Kohdeluettelo",
+    "associated-siblings": "Liittyvät resurssit",
+    "associated-hasfeaturecats": "Tätä kohdeluetteloa käyttäen",
+    "associatedResourcesPanel": "Liittyvät resurssit"
 }

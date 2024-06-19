@@ -51,7 +51,7 @@
                 aria-label="{$i18n/selectView}"
                 title="{$i18n/selectView}"
                 aria-expanded="false">
-          <i class="fa fa-eye"></i>
+          <i class="fa fa-fw fa-eye"></i>
           <span class="caret"></span>
         </button>
         <ul class="dropdown-menu" role="menu">

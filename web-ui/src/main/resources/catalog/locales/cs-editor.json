@@ -165,7 +165,7 @@
     "linkToParentTitle": "Propojit nadřazený metadatový záznam s aktuálními metadaty",
     "linkToService": "Propojit se službou",
     "linkToServiceTitle": "Propojit službu s aktuálními metadaty",
-    "linkToSibling": "Propojit s dalšími zdroji",
+    "linkToSibling": "Link to records",
     "linkToSiblingTitle": "Propojit zdroj s aktuálními metadaty",
     "linkToSource": "Propojit se zdrojovou datovou sadou",
     "linkToSourceTitle": "Propojit zdrojovou datovou sadu s aktuálními metadaty",
@@ -446,5 +446,13 @@
     "addOnlinesrc#links": "Přidat odkazy",
     "addOnlinesrc#links-help": "eg. web links",
     "addOnlinesrc#quality": "Add quality info",
-    "addOnlinesrc#quality-help": "eg. specification, reports"
+    "addOnlinesrc#quality-help": "eg. specification, reports",
+    "associated-parent": "Zdrojová metadata",
+    "associated-service": "Služba",
+    "associated-dataset": "Datová sada",
+    "associated-source": "Zdrojové datové sady",
+    "associated-fcats": "Katalog prvků",
+    "associated-siblings": "Přidružené zdroje",
+    "associated-hasfeaturecats": "Tento katalog prvků se právě požívá",
+    "associatedResourcesPanel": "Přidružené zdroje"
 }

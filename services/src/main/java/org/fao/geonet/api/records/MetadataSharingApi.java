@@ -232,7 +232,7 @@ public class MetadataSharingApi implements ApplicationEventPublisherAware
         HttpServletRequest request
     )
         throws Exception {
-
+        ServiceContext serviceContext = ApiUtils.createServiceContext(request);
         UserSession userSession = ApiUtils.getUserSession(request.getSession());
         checkUserProfileToPublishMetadata(userSession);
 
@@ -241,6 +241,12 @@ public class MetadataSharingApi implements ApplicationEventPublisherAware
         }
 
         shareMetadataWithReservedGroup(metadataUuid, true, publicationType, session, request);
+
+        java.util.Optional<PublicationOption> publicationOption = publicationConfig.getPublicationOptionConfiguration(publicationType);
+        if (publicationOption.isPresent()) {
+            AbstractMetadata metadata = ApiUtils.getRecord(metadataUuid);
+            publicationConfig.processMetadata(serviceContext, publicationOption.get(), metadata.getId(), true);
+        }
     }
 
     @io.swagger.v3.oas.annotations.Operation(
@@ -271,7 +277,7 @@ public class MetadataSharingApi implements ApplicationEventPublisherAware
         HttpServletRequest request
     )
         throws Exception {
-
+        ServiceContext serviceContext = ApiUtils.createServiceContext(request);
         UserSession userSession = ApiUtils.getUserSession(request.getSession());
         checkUserProfileToUnpublishMetadata(userSession);
 
@@ -280,6 +286,12 @@ public class MetadataSharingApi implements ApplicationEventPublisherAware
         }
 
         shareMetadataWithReservedGroup(metadataUuid, false, publicationType, session, request);
+
+        java.util.Optional<PublicationOption> publicationOption = publicationConfig.getPublicationOptionConfiguration(publicationType);
+        if (publicationOption.isPresent()) {
+            AbstractMetadata metadata = ApiUtils.getRecord(metadataUuid);
+            publicationConfig.processMetadata(serviceContext, publicationOption.get(), metadata.getId(), false);
+        }
     }
 
     @io.swagger.v3.oas.annotations.Operation(
@@ -385,10 +397,23 @@ public class MetadataSharingApi implements ApplicationEventPublisherAware
         HttpServletRequest request
     )
         throws Exception {
-
+        ServiceContext serviceContext = ApiUtils.createServiceContext(request);
+        String publicationTypeToUse =
+            StringUtils.isNotEmpty(publicationType) ? publicationType : DEFAULT_PUBLICATION_TYPE_NAME;
         SharingParameter sharing = buildSharingForPublicationConfig(true,
-            StringUtils.isNotEmpty(publicationType) ? publicationType : DEFAULT_PUBLICATION_TYPE_NAME);
-        return shareSelection(uuids, bucket, sharing, session, request);
+            publicationTypeToUse);
+        MetadataProcessingReport metadataProcessingReport = shareSelection(uuids, bucket, sharing, session, request);
+
+        java.util.Optional<PublicationOption> publicationOption = publicationConfig.getPublicationOptionConfiguration(publicationTypeToUse);
+        if (publicationOption.isPresent()) {
+            Set<Integer> metadataProcessed = metadataProcessingReport.getMetadata();
+            for(Integer metadataId: metadataProcessed) {
+                publicationConfig.processMetadata(serviceContext, publicationOption.get(),
+                    metadataId, true);
+            }
+        }
+
+        return metadataProcessingReport;
     }
 
     @io.swagger.v3.oas.annotations.Operation(
@@ -421,10 +446,22 @@ public class MetadataSharingApi implements ApplicationEventPublisherAware
         HttpServletRequest request
     )
         throws Exception {
-
+        ServiceContext serviceContext = ApiUtils.createServiceContext(request);
+        String publicationTypeToUse =
+            StringUtils.isNotEmpty(publicationType) ? publicationType : DEFAULT_PUBLICATION_TYPE_NAME;
         SharingParameter sharing = buildSharingForPublicationConfig(false,
-            StringUtils.isNotEmpty(publicationType) ? publicationType : DEFAULT_PUBLICATION_TYPE_NAME);
-        return shareSelection(uuids, bucket, sharing, session, request);
+            publicationTypeToUse);
+        MetadataProcessingReport metadataProcessingReport = shareSelection(uuids, bucket, sharing, session, request);
+
+        java.util.Optional<PublicationOption> publicationOption = publicationConfig.getPublicationOptionConfiguration(publicationTypeToUse);
+        if (publicationOption.isPresent()) {
+            Set<Integer> metadataProcessed = metadataProcessingReport.getMetadata();
+            for(Integer metadataId: metadataProcessed) {
+                publicationConfig.processMetadata(serviceContext, publicationOption.get(),
+                    metadataId, false);
+            }
+        }
+        return metadataProcessingReport;
     }
 
     @io.swagger.v3.oas.annotations.Operation(
@@ -777,7 +814,10 @@ public class MetadataSharingApi implements ApplicationEventPublisherAware
         metadataManager.save(metadata);
         dataManager.indexMetadata(String.valueOf(metadata.getId()), true);
 
-        new RecordGroupOwnerChangeEvent(metadata.getId(), ApiUtils.getUserSession(request.getSession()).getUserIdAsInt(), ObjectJSONUtils.convertObjectInJsonObject(oldGroup, RecordGroupOwnerChangeEvent.FIELD), ObjectJSONUtils.convertObjectInJsonObject(group, RecordGroupOwnerChangeEvent.FIELD)).publish(appContext);
+        new RecordGroupOwnerChangeEvent(metadata.getId(), 
+                                        ApiUtils.getUserSession(request.getSession()).getUserIdAsInt(), 
+                                        ObjectJSONUtils.convertObjectInJsonObject(oldGroup, RecordGroupOwnerChangeEvent.FIELD), 
+                                        ObjectJSONUtils.convertObjectInJsonObject(group.get(), RecordGroupOwnerChangeEvent.FIELD)).publish(appContext);
     }
 
     @io.swagger.v3.oas.annotations.Operation(
@@ -1247,6 +1287,7 @@ public class MetadataSharingApi implements ApplicationEventPublisherAware
 
                                 report.incrementProcessedRecords();
                                 listOfUpdatedRecords.add(String.valueOf(md.getId()));
+                                report.addMetadataId(metadata.getId());
                             } else {
                                 setOperations(sharing, dataManager, context, appContext, metadata, operationMap, privileges,
                                     ApiUtils.getUserSession(session).getUserIdAsInt(), skipAllReservedGroup, report, request,
@@ -1254,6 +1295,7 @@ public class MetadataSharingApi implements ApplicationEventPublisherAware
 
                                 report.incrementProcessedRecords();
                                 listOfUpdatedRecords.add(String.valueOf(metadata.getId()));
+                                report.addMetadataId(metadata.getId());
                             }
 
                         } else {
@@ -1263,6 +1305,7 @@ public class MetadataSharingApi implements ApplicationEventPublisherAware
 
                             report.incrementProcessedRecords();
                             listOfUpdatedRecords.add(String.valueOf(metadata.getId()));
+                            report.addMetadataId(metadata.getId());
                         }
                     } catch (NotAllowedException ex) {
                         report.addMetadataError(metadata, ex.getMessage());

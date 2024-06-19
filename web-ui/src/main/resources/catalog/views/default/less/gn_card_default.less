@@ -176,6 +176,7 @@
   .gn-card-footer {
     padding: 5px 10px 5px 5px;
     height: calc(~"@{gn-card-footer-height} - 2px");
+    display: flex;
     &.panel-footer {
       background: none;
       border-color: transparent;
@@ -204,6 +205,9 @@
     }
     .gn-md-related {
       margin-right: 3px;
+    }
+    .gn-toolbar {
+      flex-grow: 1;
     }
     .gn-md-category {
       margin: 10px 0;
@@ -483,6 +487,7 @@ table.gn-resultview {
   &.gn-info-list-maps {
     .gn-card {
       width: calc(~"(100% / 2) - 20px");
+      padding: 0px;
       .gn-card-body {
         height: calc(~"@{gn-card-height-map} - @{gn-card-header-height} - @{gn-card-footer-height}") !important;
         .gn-img-thumbnail, .gn-md-no-thumbnail {
