@@ -27,7 +27,7 @@
   <parent>
     <artifactId>geonetwork</artifactId>
     <groupId>org.geonetwork-opensource</groupId>
-    <version>4.4.2-SNAPSHOT</version>
+    <version>4.4.6-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
@@ -45,6 +45,14 @@
       <groupId>org.geonetwork-opensource.schemas</groupId>
       <artifactId>gn-schema-iso19115-3.2018</artifactId>
       <version>${project.version}</version>
+      <scope>test</scope>
+    </dependency>
+
+
+    <dependency>
+      <groupId>org.jvnet.mock-javamail</groupId>
+      <artifactId>mock-javamail</artifactId>
+      <version>1.9</version>
       <scope>test</scope>
     </dependency>
 
@@ -85,6 +93,13 @@
       <artifactId>gn-events</artifactId>
       <version>${project.version}</version>
     </dependency>
+
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>gn-translationproviders</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+
 
     <dependency>
       <groupId>org.mockito</groupId>
@@ -130,7 +145,7 @@
     <dependency>
       <groupId>com.jayway.jsonpath</groupId>
       <artifactId>json-path</artifactId>
-      <version>2.4.0</version>
+      <version>2.9.0</version>
     </dependency>
     <dependency>
       <groupId>com.jayway.jsonpath</groupId>
@@ -221,6 +236,14 @@
     <dependency>
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-csv</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>co.elastic.clients</groupId>
+      <artifactId>elasticsearch-java</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>commons-fileupload</groupId>
+      <artifactId>commons-fileupload</artifactId>
     </dependency>
   </dependencies>
   <build>
@@ -375,6 +398,17 @@
                 </goals>
               </execution>
             </executions>
+          </plugin>
+
+          <plugin>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <configuration>
+              <systemPropertyVariables>
+                <mail.smtp.class>org.jvnet.mock_javamail.MockTransport</mail.smtp.class>
+                <mail.pop3.class>org.jvnet.mock_javamail.MockStore</mail.pop3.class>
+                <mail.imap.class>org.jvnet.mock_javamail.MockStore</mail.imap.class>
+              </systemPropertyVariables>
+            </configuration>
           </plugin>
         </plugins>
       </build>

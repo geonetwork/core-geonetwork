@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0" xmlns:mcc="http://standards.iso.org/iso/19115/-3/mcc/1.0" xmlns:mrl="http://standards.iso.org/iso/19115/-3/mrl/2.0" xmlns:srv="http://standards.iso.org/iso/19115/-3/srv/2.1" elementFormDefault="qualified" targetNamespace="http://standards.iso.org/iso/19115/-3/mrl/2.0" version="1.0">
+<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0" xmlns:mcc="http://standards.iso.org/iso/19115/-3/mcc/1.0" xmlns:mrl="http://standards.iso.org/iso/19115/-3/mrl/2.0" xmlns:srv="http://standards.iso.org/iso/19115/-3/srv/2.0" elementFormDefault="qualified" targetNamespace="http://standards.iso.org/iso/19115/-3/mrl/2.0" version="1.0">
   <include schemaLocation="mrl.xsd"/>
   <import namespace="http://standards.iso.org/iso/19115/-3/gco/1.0" schemaLocation="../../../../19115/-3/gco/1.0/gco.xsd"/>
   <import namespace="http://standards.iso.org/iso/19115/-3/mcc/1.0" schemaLocation="../../../../19115/-3/mcc/1.0/mcc.xsd"/>
-  <import namespace="http://standards.iso.org/iso/19115/-3/srv/2.1" schemaLocation="../../../../19115/-3/srv/2.1/srv.xsd"/>
+  <import namespace="http://standards.iso.org/iso/19115/-3/srv/2.0" schemaLocation="../../../../19115/-3/srv/2.0/srv.xsd"/>
   <!--XML Schema document created by ShapeChange - http://shapechange.net/-->
   <element name="LE_Algorithm" substitutionGroup="gco:AbstractObject" type="mrl:LE_Algorithm_Type">
     <annotation>

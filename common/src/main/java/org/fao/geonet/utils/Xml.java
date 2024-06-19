@@ -39,14 +39,7 @@ import org.fao.geonet.exceptions.XSDValidationErrorEx;
 import org.fao.geonet.utils.nio.NioPathAwareEntityResolver;
 import org.fao.geonet.utils.nio.NioPathHolder;
 import org.fao.geonet.utils.nio.PathStreamSource;
-import org.jdom.Attribute;
-import org.jdom.Content;
-import org.jdom.DocType;
-import org.jdom.Document;
-import org.jdom.Element;
-import org.jdom.JDOMException;
-import org.jdom.Namespace;
-import org.jdom.Text;
+import org.jdom.*;
 import org.jdom.filter.ElementFilter;
 import org.jdom.input.SAXBuilder;
 import org.jdom.output.Format;
@@ -64,27 +57,14 @@ import org.xml.sax.SAXException;
 import javax.xml.XMLConstants;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Unmarshaller;
-import javax.xml.transform.Result;
-import javax.xml.transform.Source;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.URIResolver;
+import javax.xml.transform.*;
 import javax.xml.transform.sax.SAXResult;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.ValidatorHandler;
-import java.io.BufferedOutputStream;
-import java.io.ByteArrayInputStream;
-import java.io.DataInputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.PrintStream;
-import java.io.StringReader;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -99,14 +79,7 @@ import java.nio.file.FileSystemNotFoundException;
 import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -403,22 +376,16 @@ public final class Xml {
     /**
      * Transforms an xml tree putting the result to a stream (uses a stylesheet on disk).
      */
+    public static void transform(Element xml, Path styleSheetPath, Map<String, Object> params, OutputStream out) throws Exception {
+        StreamResult resStream = new StreamResult(out);
+        transform(xml, styleSheetPath, resStream, params);
+        out.flush();
+    }
+
     public static void transform(Element xml, Path styleSheetPath, OutputStream out) throws Exception {
-        StreamResult resStream = new StreamResult(out);
-        transform(xml, styleSheetPath, resStream, null);
-        out.flush();
+        transform(xml, styleSheetPath, new HashMap<>(), out);
     }
 
-
-    public static void transformXml(Element xml, Path styleSheetPath, OutputStream out) throws Exception {
-        StreamResult resStream = new StreamResult(out);
-        Map<String, Object> map = new HashMap<>();
-        map.put("geonet-force-xml", "xml");
-        transform(xml, styleSheetPath, resStream, map);
-        out.flush();
-    }
-
-    //--------------------------------------------------------------------------
 
     /**
      * Transforms an xml tree putting the result to a stream  - no parameters.
@@ -484,6 +451,9 @@ public final class Xml {
 
     /**
      * Transforms an xml tree putting the result to a stream with optional parameters.
+     * <p>
+     * Add a geonet-force-xml parameter to force the formatting to be xml.
+     * The preferred method is to define it using xsl:output.
      */
     public static void
     transform(Element xml, Path styleSheetPath, Result result, Map<String, Object> params) throws Exception {
@@ -515,13 +485,13 @@ public final class Xml {
                         t.setParameter(param.getKey(), param.getValue());
                     }
 
-                if (params.containsKey("geonet-force-xml")) {
-                    ((Controller) t).setOutputProperty("indent", "yes");
-                    ((Controller) t).setOutputProperty("method", "xml");
-                    ((Controller) t).setOutputProperty("{http://saxon.sf.net/}indent-spaces", "3");
+                    if (params.containsKey("geonet-force-xml")) {
+                        ((Controller) t).setOutputProperty("indent", "yes");
+                        ((Controller) t).setOutputProperty("method", "xml");
+                        ((Controller) t).setOutputProperty("{http://saxon.sf.net/}indent-spaces", "2");
+                    }
                 }
 
-                }
                 t.transform(srcXml, result);
             }
         }

@@ -23,6 +23,15 @@
 
 package org.fao.geonet.kernel.search;
 
+import co.elastic.clients.elasticsearch._types.ElasticsearchException;
+import co.elastic.clients.elasticsearch._types.SortOptions;
+import co.elastic.clients.elasticsearch.core.*;
+import co.elastic.clients.elasticsearch.core.bulk.BulkOperation;
+import co.elastic.clients.elasticsearch.core.bulk.UpdateOperation;
+import co.elastic.clients.elasticsearch.core.search.Hit;
+import co.elastic.clients.elasticsearch.indices.*;
+import co.elastic.clients.elasticsearch.indices.ExistsRequest;
+import co.elastic.clients.transport.endpoints.BooleanResponse;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -30,38 +39,18 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
-import org.elasticsearch.ElasticsearchParseException;
-import org.elasticsearch.action.ActionListener;
-import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest;
-import org.elasticsearch.action.bulk.BulkRequest;
-import org.elasticsearch.action.bulk.BulkResponse;
-import org.elasticsearch.action.search.SearchResponse;
-import org.elasticsearch.action.support.master.AcknowledgedResponse;
-import org.elasticsearch.action.update.UpdateRequest;
-import org.elasticsearch.action.update.UpdateResponse;
-import org.elasticsearch.client.RequestOptions;
-import org.elasticsearch.client.indices.CreateIndexRequest;
-import org.elasticsearch.client.indices.CreateIndexResponse;
-import org.elasticsearch.client.indices.GetIndexRequest;
-import org.elasticsearch.xcontent.XContentType;
-import org.elasticsearch.index.query.QueryStringQueryBuilder;
-import org.elasticsearch.index.reindex.DeleteByQueryRequest;
-import org.elasticsearch.script.Script;
-import org.elasticsearch.script.ScriptType;
-import org.elasticsearch.search.sort.FieldSortBuilder;
-import org.elasticsearch.search.sort.SortBuilder;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.*;
 import org.fao.geonet.index.es.EsRestClient;
-import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.SelectionManager;
+import org.fao.geonet.kernel.datamanager.IMetadataIndexer;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.search.index.OverviewIndexFieldUpdater;
 import org.fao.geonet.kernel.setting.SettingInfo;
@@ -83,8 +72,6 @@ import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.util.*;
 
-import static org.elasticsearch.rest.RestStatus.CREATED;
-import static org.elasticsearch.rest.RestStatus.OK;
 import static org.fao.geonet.constants.Geonet.IndexFieldNames.IS_TEMPLATE;
 import static org.fao.geonet.kernel.search.IndexFields.INDEXING_ERROR_FIELD;
 import static org.fao.geonet.kernel.search.IndexFields.INDEXING_ERROR_MSG;
@@ -182,10 +169,10 @@ public class EsSearchManager implements ISearchManager {
     }
 
     @Autowired
-    public EsRestClient client;
+    private EsRestClient client;
 
     @Autowired
-    OverviewIndexFieldUpdater overviewFieldUpdater;
+    private OverviewIndexFieldUpdater overviewFieldUpdater;
 
     private int commitInterval = 200;
 
@@ -203,7 +190,7 @@ public class EsSearchManager implements ISearchManager {
         if (!Files.exists(xsltForIndexing)) {
             throw new RuntimeException(String.format(
                 "XSLT for schema indexing does not exist. Create file '%s'.",
-                xsltForIndexing.toString()));
+                xsltForIndexing));
         }
         return xsltForIndexing;
     }
@@ -227,14 +214,22 @@ public class EsSearchManager implements ISearchManager {
         } catch (Exception e) {
             LOGGER.error("Indexing stylesheet contains errors: {} \n  Marking the metadata as _indexingError=1 in index", e.getMessage());
             doc.addContent(new Element(INDEXING_ERROR_FIELD).setText("true"));
-            doc.addContent(new Element(INDEXING_ERROR_MSG).setText("GNIDX-XSL||" + e.getMessage()));
+            doc.addContent(createIndexingErrorMsgElement("indexingErrorMsg-indexingStyleSheetError", "error",
+                Map.of("message", e.getMessage())));
             doc.addContent(new Element(IndexFields.DRAFT).setText("n"));
         }
     }
 
     private void addMoreFields(Element doc, Multimap<String, Object> fields) {
-        fields.entries().forEach(e -> doc.addContent(new Element(e.getKey())
-            .setText(String.valueOf(e.getValue()))));
+        ArrayList<String> objectFields = Lists.newArrayList(INDEXING_ERROR_MSG);
+        fields.entries().forEach(e -> {
+            Element newElement = new Element(e.getKey())
+                .setText(String.valueOf(e.getValue()));
+            if(objectFields.contains(e.getKey())) {
+                newElement.setAttribute("type", "object");
+            }
+            doc.addContent(newElement);
+        });
     }
 
     public Element makeField(String name, String value) {
@@ -250,9 +245,8 @@ public class EsSearchManager implements ISearchManager {
         if (indexList != null) {
             indexList.keySet().forEach(e -> {
                 try {
-                    if (indices.isPresent() ?
-                        indices.get().contains(e) :
-                        true) {
+                    if (!indices.isPresent() ||
+                        indices.get().contains(e)) {
                         createIndex(e, indexList.get(e), dropIndexFirst);
                     }
                 } catch (IOException ex) {
@@ -269,9 +263,12 @@ public class EsSearchManager implements ISearchManager {
     private void createIndex(String indexId, String indexName, boolean dropIndexFirst) throws IOException {
         if (dropIndexFirst) {
             try {
-                DeleteIndexRequest request = new DeleteIndexRequest(indexName);
-                AcknowledgedResponse deleteIndexResponse = client.getClient().indices().delete(request, RequestOptions.DEFAULT);
-                if (deleteIndexResponse.isAcknowledged()) {
+                DeleteIndexRequest deleteIndexRequest = DeleteIndexRequest.of(
+                    b -> b.index(indexName)
+                );
+
+                DeleteIndexResponse deleteIndexResponse = client.getClient().indices().delete(deleteIndexRequest);
+                if (deleteIndexResponse.acknowledged()) {
                     LOGGER.debug("Index '{}' removed.", indexName);
                 }
             } catch (Exception e) {
@@ -281,35 +278,37 @@ public class EsSearchManager implements ISearchManager {
         }
 
         // Check index exist first
-        GetIndexRequest request = new GetIndexRequest(indexName);
+        ExistsRequest existsRequest = ExistsRequest.of(
+            b -> b.index(indexName)
+        );
+
         try {
-            boolean exists = client.getClient().indices().exists(request, RequestOptions.DEFAULT);
-            if (exists && !dropIndexFirst) {
+            BooleanResponse exists = client.getClient().indices().exists(existsRequest);
+            if (exists.value() && !dropIndexFirst) {
                 return;
             }
 
-
-            if (!exists || dropIndexFirst) {
+            if (!exists.value() || dropIndexFirst) {
                 // Check version of the index - how ?
 
                 // Create it if not
                 Path indexConfiguration = dataDirectory.getIndexConfigDir().resolve(indexId + ".json");
                 if (Files.exists(indexConfiguration)) {
-                    String configuration;
+
                     try (InputStream is = Files.newInputStream(indexConfiguration, StandardOpenOption.READ)) {
-                        configuration = IOUtils.toString(is);
-                    }
+                        CreateIndexRequest createIndexRequest = CreateIndexRequest.of(
+                            b -> b.index(indexName).withJson(is)
+                        );
 
-                    CreateIndexRequest createIndexRequest = new CreateIndexRequest(indexName);
-                    createIndexRequest.source(configuration, XContentType.JSON);
-                    CreateIndexResponse createIndexResponse = client.getClient().indices().create(createIndexRequest, RequestOptions.DEFAULT);
+                        CreateIndexResponse createIndexResponse = client.getClient().indices().create(createIndexRequest);
 
-                    if (createIndexResponse.isAcknowledged()) {
-                        LOGGER.debug("Index '{}' created", indexName);
-                    } else {
-                        final String message = String.format("Index '%s' was not created. Error is: %s", indexName, createIndexResponse.toString());
-                        LOGGER.error(message);
-                        throw new IllegalStateException(message);
+                        if (createIndexResponse.acknowledged()) {
+                            LOGGER.debug("Index '{}' created", indexName);
+                        } else {
+                            final String message = String.format("Index '%s' was not created. Error is: %s", indexName, createIndexResponse);
+                            LOGGER.error(message);
+                            throw new IllegalStateException(message);
+                        }
                     }
                 } else {
                     throw new FileNotFoundException(String.format(
@@ -318,7 +317,7 @@ public class EsSearchManager implements ISearchManager {
                         indexName));
                 }
             }
-        } catch (ElasticsearchParseException ex) {
+        } catch (ElasticsearchException ex) {
             LOGGER.error(ex.getMessage(), ex);
             throw new IOException(ex.getMessage());
         } catch (Exception cnce) {
@@ -335,8 +334,14 @@ public class EsSearchManager implements ISearchManager {
 
     public UpdateResponse updateFields(String id, Map<String, Object> fields) throws IOException {
         fields.put(Geonet.IndexFieldNames.INDEXING_DATE, new Date());
-        UpdateRequest updateRequest = new UpdateRequest(defaultIndex, id).doc(fields);
-        return client.getClient().update(updateRequest, RequestOptions.DEFAULT);
+
+        UpdateRequest updateRequest = UpdateRequest.of(
+            b -> b.index(defaultIndex)
+                .id(id)
+                .doc(fields)
+        );
+
+        return client.getClient().update(updateRequest, Void.class);
     }
 
     public BulkResponse updateFields(String id, Multimap<String, Object> fields, Set<String> fieldsToRemove) throws IOException {
@@ -346,36 +351,62 @@ public class EsSearchManager implements ISearchManager {
     }
     public BulkResponse updateFields(String id, Map<String, Object> fieldMap, Set<String> fieldsToRemove) throws IOException {
         fieldMap.put(Geonet.IndexFieldNames.INDEXING_DATE, new Date());
-        BulkRequest bulkrequest = new BulkRequest();
-        StringBuilder script = new StringBuilder();
-        fieldsToRemove.forEach(f ->
-            script.append(String.format("ctx._source.remove('%s');", f)));
 
-        UpdateRequest deleteFieldRequest =
-            new UpdateRequest(defaultIndex, id).script(new Script(ScriptType.INLINE,
-                "painless",
-                script.toString(),
-                Collections.emptyMap()));
-        bulkrequest.add(deleteFieldRequest);
-        UpdateRequest addFieldRequest = new UpdateRequest(defaultIndex, id)
-            .doc(fieldMap);
-        bulkrequest.add(addFieldRequest);
-        return client.getClient().bulk(bulkrequest, RequestOptions.DEFAULT);
+        StringBuilder scriptSource = new StringBuilder();
+        fieldsToRemove.forEach(f ->
+            scriptSource.append(String.format("ctx._source.remove('%s');", f)));
+
+        UpdateOperation deleteFieldsOperation = UpdateOperation.of(
+            b -> b.id(id)
+                .index(defaultIndex)
+                .action(action -> action
+                    .scriptedUpsert(true)
+                    .upsert(Map.of())
+                    .script(script -> script
+                        .inline(inlineScript -> inlineScript
+                            .lang("painless")
+                            .source(scriptSource.toString())
+                        )
+                    )
+                )
+        );
+
+        UpdateOperation addFieldRequestOperation = UpdateOperation.of(
+            b -> b.id(id)
+                .index(defaultIndex)
+                .action(action -> action.doc(fieldMap))
+        );
+
+        List<BulkOperation> bulkOperationList = new ArrayList<>();
+        bulkOperationList.add(BulkOperation.of(b -> b.update(deleteFieldsOperation)));
+        bulkOperationList.add(BulkOperation.of(b -> b.update(addFieldRequestOperation)));
+
+        BulkRequest bulkRequest = BulkRequest.of(
+            b -> b.index(defaultIndex)
+                .operations(bulkOperationList)
+        );
+
+        return client.getClient().bulk(bulkRequest);
     }
 
     public void updateFieldsAsynch(String id, Map<String, Object> fields) {
         fields.put(Geonet.IndexFieldNames.INDEXING_DATE, new Date());
-        UpdateRequest request = new UpdateRequest(defaultIndex, id).doc(fields);
-        ActionListener<UpdateResponse> listener = new ActionListener<UpdateResponse>() {
-            @Override
-            public void onResponse(UpdateResponse updateResponse) {
-            }
 
-            @Override
-            public void onFailure(Exception e) {
-            }
-        };
-        client.getClient().updateAsync(request, RequestOptions.DEFAULT, listener);
+        UpdateRequest updateRequest = UpdateRequest.of(
+            b -> b.index(defaultIndex)
+                .id(id)
+                .doc(fields)
+        );
+
+        client.getAsynchClient()
+            .update(updateRequest, ObjectNode.class)
+            .whenComplete((response, exception) -> {
+                if (exception != null) {
+                    LOGGER.error("Failed to index {}", exception);
+                } else {
+                    LOGGER.info("Updated fields for document {}",  id);
+                }
+            });
     }
 
     public UpdateResponse updateField(String id, String field, Object value) throws Exception {
@@ -440,7 +471,7 @@ public class EsSearchManager implements ISearchManager {
     private void sendDocumentsToIndex() {
         Map<String, String> documents = new HashMap<>(listOfDocumentsToIndex);
         listOfDocumentsToIndex.clear();
-        if (documents.size() > 0) {
+        if (!documents.isEmpty()) {
             try {
                 final BulkResponse bulkItemResponses = client
                     .bulkRequest(defaultIndex, documents);
@@ -458,22 +489,21 @@ public class EsSearchManager implements ISearchManager {
 
     private void checkIndexResponse(BulkResponse bulkItemResponses,
                                     Map<String, String> documents) throws IOException {
-        if (bulkItemResponses.hasFailures()) {
-            Map<String, String> listErrorOfDocumentsToIndex = new HashMap<>(bulkItemResponses.getItems().length);
+        if (bulkItemResponses.errors()) {
+            Map<String, String> listErrorOfDocumentsToIndex = new HashMap<>(bulkItemResponses.items().size());
             List<String> errorDocumentIds = new ArrayList<>();
             // Add information in index that some items were not properly indexed
-            Arrays.stream(bulkItemResponses.getItems()).forEach(e -> {
-                if (e.status() != OK
-                    && e.status() != CREATED) {
-                    errorDocumentIds.add(e.getId());
+            bulkItemResponses.items().forEach(e -> {
+                if (e.error() != null) {
+                    errorDocumentIds.add(e.id());
                     ObjectMapper mapper = new ObjectMapper();
                     ObjectNode docWithErrorInfo = mapper.createObjectNode();
-                    String resourceTitle = String.format("Document #%s", e.getId());
+                    String resourceTitle = String.format("Document #%s", e.id());
                     String id = "";
                     String uuid = "";
                     String isTemplate = "";
 
-                    String failureDoc = documents.get(e.getId());
+                    String failureDoc = documents.get(e.id());
                     try {
                         JsonNode node = mapper.readTree(failureDoc);
                         resourceTitle = node.get("resourceTitleObject").get("default").asText();
@@ -489,25 +519,25 @@ public class EsSearchManager implements ISearchManager {
                     docWithErrorInfo.put(IndexFields.DRAFT, "n");
                     docWithErrorInfo.put(INDEXING_ERROR_FIELD, true);
                     ArrayNode errors = docWithErrorInfo.putArray(INDEXING_ERROR_MSG);
-                    errors.add(e.getFailureMessage());
+                    errors.add(createIndexingErrorMsgObject(e.error().reason(), "error", Map.of()));
                     // TODO: Report the JSON which was causing the error ?
 
                     LOGGER.error("Document with error #{}: {}.",
-                            e.getId(), e.getFailureMessage());
+                        e.id(), e.error().reason());
                     LOGGER.error(failureDoc);
 
                     try {
-                        listErrorOfDocumentsToIndex.put(e.getId(), mapper.writeValueAsString(docWithErrorInfo));
+                        listErrorOfDocumentsToIndex.put(e.id(), mapper.writeValueAsString(docWithErrorInfo));
                     } catch (JsonProcessingException e1) {
                         LOGGER.error("Generated document for the index is not properly formatted. Check document #{}: {}.",
-                                e.getId(), e1.getMessage());
+                            e.id(), e1.getMessage());
                     }
                 }
             });
 
-            if (listErrorOfDocumentsToIndex.size() > 0) {
+            if (!listErrorOfDocumentsToIndex.isEmpty()) {
                 BulkResponse response = client.bulkRequest(defaultIndex, listErrorOfDocumentsToIndex);
-                if (response.status().getStatus() != 201) {
+                if (response.errors()) {
                     LOGGER.error("Failed to save error documents {}.",
                             Arrays.toString(errorDocumentIds.toArray()));
                 }
@@ -522,6 +552,7 @@ public class EsSearchManager implements ISearchManager {
     static {
         arrayFields = ImmutableSet.<String>builder()
             .add(Geonet.IndexFieldNames.RECORDLINK)
+            .add("geom")
             .add("topic")
             .add("cat")
             .add("keyword")
@@ -615,13 +646,13 @@ public class EsSearchManager implements ISearchManager {
         for (Element currentField : fields) {
             String name = currentField.getName();
 
-            // JSON object may be generated in the XSL processing.
-            // In such case an object type attribute is set.
-            boolean isObject = "object".equals(currentField.getAttributeValue("type"));
-
             if (elementNames.contains(name)) {
                 continue;
             }
+
+            // JSON object may be generated in the XSL processing.
+            // In such case an object type attribute is set.
+            boolean isObject = "object".equals(currentField.getAttributeValue("type"));
 
             // Register list of already processed names
             elementNames.add(name);
@@ -633,13 +664,14 @@ public class EsSearchManager implements ISearchManager {
                 || arrayFields.contains(propertyName)
                 || propertyName.endsWith("DateForResource")
                 || propertyName.startsWith("cl_");
+
             if (isArray) {
                 ArrayNode arrayNode = doc.putArray(propertyName);
                 for (Element node : nodeElements) {
                     if (isObject) {
                         try {
                             arrayNode.add(
-                                mapper.readTree(node.getText()));
+                                mapper.readTree(node.getTextNormalize()));
                         } catch (IOException e) {
                             LOGGER.error("Parsing invalid JSON node {} for property {}. Error is: {}",
                                     node.getTextNormalize(), propertyName, e.getMessage());
@@ -653,20 +685,7 @@ public class EsSearchManager implements ISearchManager {
                     }
 
                 }
-                continue;
-            }
-
-            if (name.equals("geom")) {
-                try {
-                    doc.set("geom", mapper.readTree(nodeElements.get(0).getTextNormalize()));
-                } catch (IOException e) {
-                    LOGGER.error("Parsing invalid geometry for JSON node {}. Error is: {}",
-                            nodeElements.get(0).getTextNormalize(), e.getMessage());
-                }
-                continue;
-            }
-
-            if (isObject) {
+            } else if (isObject) {
                 try {
                     doc.set(propertyName,
                         mapper.readTree(
@@ -707,9 +726,9 @@ public class EsSearchManager implements ISearchManager {
     }
 
     @Override
-    public boolean rebuildIndex(ServiceContext context, boolean xlinks,
+    public boolean rebuildIndex(ServiceContext context,
                                 boolean reset, String bucket) throws Exception {
-        DataManager dataMan = context.getBean(DataManager.class);
+        IMetadataIndexer metadataIndexer = context.getBean(IMetadataIndexer.class);
         IMetadataUtils metadataRepository = context.getBean(IMetadataUtils.class);
 
         if (reset) {
@@ -740,7 +759,7 @@ public class EsSearchManager implements ISearchManager {
                 }
             }
             for (String id : listOfIdsToIndex) {
-                dataMan.indexMetadata(id + "", false);
+                metadataIndexer.indexMetadata(id, false, IndexingMode.full);
             }
         } else {
             final Specification<Metadata> metadataSpec =
@@ -750,7 +769,7 @@ public class EsSearchManager implements ISearchManager {
                 Specification.where(metadataSpec)
             );
             for (Integer id : metadataIds) {
-                dataMan.indexMetadata(id + "", false);
+                metadataIndexer.indexMetadata(id + "", false, IndexingMode.full);
             }
         }
         sendDocumentsToIndex();
@@ -765,7 +784,7 @@ public class EsSearchManager implements ISearchManager {
         return client.query(defaultIndex, luceneQuery, filterQuery, new HashSet<>(), new HashMap<>(), startPosition, maxRecords);
     }
 
-    public SearchResponse query(String luceneQuery, String filterQuery, int startPosition, int maxRecords, List<SortBuilder<FieldSortBuilder>> sort) throws Exception {
+    public SearchResponse query(String luceneQuery, String filterQuery, int startPosition, int maxRecords, List<SortOptions> sort) throws Exception {
         return client.query(defaultIndex, luceneQuery, filterQuery, new HashSet<>(), new HashMap<>(), startPosition, maxRecords, sort);
     }
 
@@ -781,7 +800,7 @@ public class EsSearchManager implements ISearchManager {
     }
 
     public SearchResponse query(JsonNode jsonRequest, Set<String> includedFields,
-                                int from, int size, List<SortBuilder<FieldSortBuilder>> sort) throws Exception {
+                                int from, int size, List<SortOptions> sort) throws Exception {
         // TODO: Review postFilterBuilder
         return client.query(defaultIndex, jsonRequest, null, includedFields, new HashMap<>(), from, size, sort);
     }
@@ -792,34 +811,14 @@ public class EsSearchManager implements ISearchManager {
         return client.query(defaultIndex, jsonRequest, null, includedFields, from, size);
     }
 
-    public Map<String, String> getFieldsValues(String id, Set<String> fields) throws IOException {
-        return client.getFieldsValues(defaultIndex, id, fields);
+    public Map<String, String> getFieldsValues(String id, Set<String> fields, String language) throws Exception {
+        return client.getFieldsValues(defaultIndex, id, fields, language);
     }
 
 
     public void clearIndex() throws Exception {
         client.deleteByQuery(defaultIndex, "*:*");
     }
-
-//    public void iterateQuery(SolrQuery params, final Consumer<SolrDocument> callback) throws IOException, SolrServerException {
-//        final MutableLong pos = new MutableLong(0);
-//        final MutableLong last = new MutableLong(1);
-//        while (pos.longValue() < last.longValue()) {
-//            params.setStart(pos.intValue());
-//            client.queryAndStreamResponse(params, new StreamingResponseCallback() {
-//                @Override
-//                public void streamSolrDocument(SolrDocument doc) {
-//                    pos.add(1);
-//                    callback.accept(doc);
-//                }
-//
-//                @Override
-//                public void streamDocListInfo(long numFound, long start, Float maxScore) {
-//                    last.setValue(numFound);
-//                }
-//            });
-//        }
-//    }
 
     static ImmutableSet<String> docsChangeIncludedFields;
 
@@ -841,10 +840,15 @@ public class EsSearchManager implements ISearchManager {
 
             final SearchResponse response = client.query(defaultIndex, "*", null, docsChangeIncludedFields, from, size);
 
-            response.getHits().forEach(r -> docs.put(r.getId(), (String) r.getSourceAsMap().get(Geonet.IndexFieldNames.DATABASE_CHANGE_DATE)));
+            ObjectMapper objectMapper = new ObjectMapper();
+
+            response.hits().hits().forEach(r -> {
+                Hit h = (Hit) r;
+
+                docs.put(h.id(), (String) objectMapper.convertValue(h.source(), Map.class).get(Geonet.IndexFieldNames.DATABASE_CHANGE_DATE));
+            });
         } catch (Exception e) {
-            LOGGER.error("Error while collecting all documents: {}", e.getMessage());
-            e.printStackTrace();
+            LOGGER.error("Error while collecting all documents: {}", e.getMessage(), e);
             throw e;
         }
         return docs;
@@ -858,73 +862,26 @@ public class EsSearchManager implements ISearchManager {
 
         final SearchResponse response = client.query(defaultIndex, "_id:" + mdId, null, docsChangeIncludedFields, from, size);
 
-        if (response.getHits().getTotalHits().value == 1) {
+        if (response.hits().hits().size() == 1) {
+            Hit hit = (Hit) response.hits().hits().get(0);
+            ObjectMapper objectMapper = new ObjectMapper();
+
             String date =
-                (String) response.getHits().getAt(0).getSourceAsMap().get(Geonet.IndexFieldNames.DATABASE_CHANGE_DATE);
+                (String) objectMapper.convertValue(hit.source(), Map.class).get(Geonet.IndexFieldNames.DATABASE_CHANGE_DATE);
             return date != null ? new ISODate(date) : null;
         } else {
             return null;
         }
     }
 
-//    public SolrDocument getDocFieldValue(String query, String... field) throws IOException, SolrServerException {
-//        final SolrQuery params = new SolrQuery(query);
-//        params.setFilterQueries(DOC_TYPE + ":metadata");
-//        params.setFields(field);
-//        QueryResponse response = client.query(params);
-//        final SolrDocumentList results = response.getResults();
-//        if (results.size() == 0) {
-//            return null;
-//        } else {
-//            return results.get(0);
-//        }
-//    }
-//
-//    public SolrDocumentList getDocsFieldValue(String query, String... field) throws IOException, SolrServerException {
-//        final SolrQuery params = new SolrQuery(query);
-//        params.setFilterQueries(DOC_TYPE + ":metadata");
-//        params.setFields(field);
-//        QueryResponse response = client.query(params);
-//        return response.getResults();
-//    }
-//
-//    public List<String> getDocsUuids(String query, Integer rows) throws IOException, SolrServerException {
-//        final SolrQuery solrQuery = new SolrQuery(query == null ? "*:*" : query);
-//        solrQuery.setFilterQueries(DOC_TYPE + ":metadata");
-//        solrQuery.setFields(IndexFields.UUID);
-//        if (rows != null) {
-//            solrQuery.setRows(rows);
-//        }
-//        final List<String> result = new ArrayList<>();
-//        iterateQuery(solrQuery, doc ->
-//            result.add(doc.getFieldValue(IndexFields.UUID).toString()));
-//        return result;
-//    }
-
-    @Override
-    public Set<Integer> getDocsWithXLinks() throws Exception {
-//        final SolrQuery params = new SolrQuery("*:*");
-//        params.setFilterQueries(DOC_TYPE + ":metadata");
-//        params.setFilterQueries(Geonet.IndexFieldNames.HASXLINKS + ":1");
-//        params.setFields(ID);
-//        Set<Integer> result = new HashSet<>();
-//        iterateQuery(params,
-//            doc -> result.add(convertInteger(doc.getFieldValue(ID))));
-        return Collections.emptySet();
-    }
-
     @Override
     public void delete(String txt) throws Exception {
-        DeleteByQueryRequest request = new DeleteByQueryRequest();
-        request.indices(defaultIndex);
-        request.setQuery(new QueryStringQueryBuilder(txt));
-        request.setRefresh(true);
-        client.getClient().deleteByQuery(request, RequestOptions.DEFAULT);
+        client.deleteByQuery(defaultIndex, txt);
     }
 
     @Override
     public void delete(List<Integer> metadataIds) throws Exception {
-        metadataIds.stream().forEach(metadataId -> {
+        metadataIds.forEach(metadataId -> {
             try {
                 this.delete(String.format("+id:%d", metadataId));
             } catch (Exception e) {
@@ -933,22 +890,12 @@ public class EsSearchManager implements ISearchManager {
         });
     }
 
-    @Override
-    public long getNumDocs() throws Exception {
-        return getNumDocs("");
-    }
-
     public long getNumDocs(String query) throws Exception {
         if (StringUtils.isBlank(query)) {
             query = "*:*";
         }
-
-        int from = 0;
-        SettingInfo si = ApplicationContextHolder.get().getBean(SettingInfo.class);
-        int size = Integer.parseInt(si.getSelectionMaxRecords());
-
-        final SearchResponse response = client.query(defaultIndex, query, null, docsChangeIncludedFields, from, size);
-        return response.getHits().getTotalHits().value;
+        return client.query(defaultIndex, query, null, new HashSet<>(), 0, 0)
+            .hits().total().value();
     }
 
     public EsRestClient getClient() {
@@ -981,5 +928,55 @@ public class EsSearchManager implements ISearchManager {
 
     public boolean isIndexing() {
         return listOfDocumentsToIndex.size() > 0;
+    }
+
+    public boolean isIndexWritable(String indexName) throws IOException, ElasticsearchException {
+        String indexBlockRead = "index.blocks.read_only_allow_delete";
+
+        GetIndicesSettingsRequest request = GetIndicesSettingsRequest.of(
+                b -> b.index(indexName)
+                        .name(indexBlockRead)
+        );
+
+        GetIndicesSettingsResponse settings = this.client.getClient()
+                .indices().getSettings(request);
+
+        IndexState indexState = settings.get(indexBlockRead);
+
+        return (indexState != null) && "true".equals(indexState.toString());
+    }
+
+
+    /**
+     * Make a JSON Object that properly represents an indexingErrorMsg, to be used in the index.
+     *
+     * @param type either 'error' or 'warning'
+     * @param string a string that is translatable (see, e.g., en-search.json)
+     * @param values values that replace the placeholders in the `string` parameter
+     * @return a json object that represents an indexingErrorMsg
+     */
+    public ObjectNode createIndexingErrorMsgObject(String string, String type, Map<String, Object> values) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        ObjectNode indexingErrorMsg = objectMapper.createObjectNode();
+        indexingErrorMsg.put("string", string);
+        indexingErrorMsg.put("type", type);
+        ObjectNode valuesObject = objectMapper.createObjectNode();
+        values.forEach((k,v) -> valuesObject.put(k, String.valueOf(v)));
+        indexingErrorMsg.set("values", valuesObject);
+        return indexingErrorMsg;
+    }
+
+    /**
+     * Create an Element that represents an indexingErrorMsg object, to be used in the index.
+     *
+     * @param type either 'error' or 'warning'
+     * @param string a string that is translatable (see, e.g., en-search.json)
+     * @param values values that replace the placeholders in the `string` parameter
+     * @return an Element that represents an indexingErrorMsg
+     */
+    public Element createIndexingErrorMsgElement(String string, String type, Map<String, Object> values) {
+        return new Element(INDEXING_ERROR_MSG)
+            .setText(createIndexingErrorMsgObject(string, type, values).toString())
+            .setAttribute("type", "object");
     }
 }

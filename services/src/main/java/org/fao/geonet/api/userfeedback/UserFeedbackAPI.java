@@ -636,7 +636,7 @@ public class UserFeedbackAPI {
             String[] metadataAddresses = StringUtils.split(metadataEmail, ",");
             for (String metadataAddress : metadataAddresses) {
                 String cleanMetadataAddress = StringUtils.trimToEmpty(metadataAddress);
-                if (cleanMetadataAddress.length() > 0 && md.getData().indexOf(cleanMetadataAddress) > 0) {
+                if (!cleanMetadataAddress.isEmpty() && md.getData().contains(cleanMetadataAddress)) {
                     toAddress.add(cleanMetadataAddress);
                 }
             }

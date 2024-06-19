@@ -170,7 +170,8 @@
         finalParams,
         $scope.searchObj.state,
         $scope.searchObj.configId,
-        $scope.searchObj.filters
+        $scope.searchObj.filters,
+        $scope.resultTemplate && $scope.resultTemplate.source
       );
 
       function buildSearchKey(esParams) {
@@ -194,14 +195,39 @@
       // console.log(dontComputeAggs, $scope.searchResults.searchKey, searchKey);
       $scope.searchResults.searchKey = searchKey;
 
-      // For now, only the list result template renders related records
-      // based on UI config.
-      var template =
-          $scope.resultTemplate && $scope.resultTemplate.endsWith("list.html")
-            ? "grid"
-            : "",
-        templateConfig = gnGlobalSettings.gnCfg.mods.search[template],
-        types = templateConfig && templateConfig.related ? templateConfig.related : [];
+      // In a search, list of related records can be added
+      // to each hits. This is configured depending
+      // on the current result template.
+      function getRelatedTypesForSearch() {
+        if (!$scope.resultTemplate) {
+          return [];
+        }
+        if ($scope.resultTemplate.related) {
+          if (!angular.isArray($scope.resultTemplate.related)) {
+            console.warn(
+              "Search results configuration error / The list of related type for the type " +
+                $scope.resultTemplate.tplUrl +
+                " must be an array. eg. '[\"children\"]'." +
+                " Current configuration is invalid: ",
+              $scope.resultTemplate.related
+            );
+            return [];
+          }
+          return $scope.resultTemplate.related;
+        } else {
+          // Old way of configuring related types (deprecated)
+          // which was not depending on the current template but
+          // only specific case for the list.html.
+          var template =
+              $scope.resultTemplate.tplUrl &&
+              $scope.resultTemplate.tplUrl.endsWith("list.html")
+                ? "grid"
+                : "",
+            templateConfig = gnGlobalSettings.gnCfg.mods.search[template];
+          return templateConfig && templateConfig.related ? templateConfig.related : [];
+        }
+      }
+      var types = getRelatedTypesForSearch();
 
       gnESClient
         .search(
@@ -704,7 +730,7 @@
 
   /**
    * Possible attributes:
-   *  * runSearch: run search inmediately after the  directive is loaded.
+   *  * runSearch: run search immediately after the directive is loaded.
    *  * waitForUser: wait until a user id is available to trigger the search.
    */
   module.directive("ngSearchForm", [

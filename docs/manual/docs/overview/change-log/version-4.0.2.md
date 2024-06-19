@@ -4,7 +4,7 @@ GeoNetwork 4.0.2 release is a minor release but adds a better multilingual suppo
 
 ## Database migration
 
-With the possibility to [restore deleted record](https://github.com/geonetwork/core-geonetwork/pull/4817), catalog maintainer has to update the database with the [following migration SQL script](https://github.com/geonetwork/core-geonetwork/blob/master/web/src/main/webapp/WEB-INF/classes/setup/sql/migrate/v3110/migrate-default.sql#L10-L27).
+With the possibility to [restore deleted records](https://github.com/geonetwork/core-geonetwork/pull/4817), the catalog maintainer has to update the database with the [following migration SQL script](https://github.com/geonetwork/core-geonetwork/blob/master/web/src/main/webapp/WEB-INF/classes/setup/sql/migrate/v3110/migrate-default.sql#L10-L27).
 
 ## Index migration
 
@@ -12,9 +12,9 @@ Index migration is only required if you created custom facets configuration in t
 
 ### Codelist
 
-`t_` is now `l_` and is an object composed of:
+``codelist`` is now ``cl_`` and is an object composed of:
 
-So `et` was:
+characterSet was:
 
 ``` js
 codelist_characterSet: [
@@ -39,13 +39,13 @@ cl_characterSet: [{
 }]
 ```
 
-So if using `xt` in a facet, use ``cl_characterSet.default`` with this new version.
+So if using ``codelist_characterSet_text`` in a facet, use ``cl_characterSet.default`` with this new version.
 
 ### Thesaurus
 
-The `ds` field is now only used for rendering (not for query) to limit the total number of field and avoid some errors on large catalogues.
+The ``allKeywords`` field is now only used for rendering (not for query) to limit the total number of field and avoid some errors on large catalogues.
 
-Use the per thesaurus fields which were named ``thesaurus_geonetwork+external/local+type+thesaurusid`` and are now `id`. The field is also an object composed of:
+Use the per thesaurus fields, which were named ``thesaurus_geonetwork+external/local+type+thesaurusid`` and are now ``th_thesaurusid``. The field is also an object composed of:
 
 ``` js
 thesaurus_geonetworkthesaurusexternalthemeeeatopics: [
@@ -73,11 +73,11 @@ th_eea-topics: [{
 
 ### Topic category
 
-`ic` is renamed to `ic` and has the same structure as a codelist.
+``topic`` is renamed to ``cl_topic`` and has the same structure as a codelist.
 
 ### GeoTag
 
-`ag` is now stored in the ``template field for keyword types](https://github.com/geonetwork/core-geonetwork/pull/5243) ie. [keywordType-place``
+``geotag`` is now stored in the [template field for keyword types](https://github.com/geonetwork/core-geonetwork/pull/5243) ie. ``keywordType-place``
 
 For more details check [Configuring search fields](../../customizing-application/configuring-search-fields.md) and [Configuring faceted search](../../customizing-application/configuring-faceted-search.md).
 

@@ -559,8 +559,6 @@
             name = "{type=osm}";
           } else if (source instanceof ol.source.BingMaps) {
             name = "{type=bing_aerial}";
-          } else if (source instanceof ol.source.Stamen) {
-            name = "{type=stamen,name=" + layer.getSource().get("type") + "}";
           } else if (source instanceof ol.source.WMTS) {
             name = "{type=wmts,name=" + layer.get("name") + "}";
             params.server = [
@@ -601,6 +599,19 @@
                   }
                 ],
                 service: "urn:ogc:serviceType:WMS"
+              }
+            ];
+          } else if (source instanceof ol.source.TileImage) {
+            name = "{type=tms,name=" + layer.get("name") + "}";
+
+            params.server = [
+              {
+                onlineResource: [
+                  {
+                    href: layer.getSource().getUrls()[0]
+                  }
+                ],
+                service: "urn:ogc:serviceType:WMTS"
               }
             ];
           } else {

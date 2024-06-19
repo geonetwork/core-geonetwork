@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2007 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2024 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -50,7 +50,6 @@ import org.jdom.Element;
 import javax.transaction.Transactional;
 import javax.transaction.Transactional.TxType;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -75,7 +74,7 @@ public class Aligner extends BaseAligner<SimpleUrlParams> {
     public HarvestResult getResult() {
         return result;
     }
-    private Map<String, Object> processParams = new HashMap<String, Object>();
+
     private Logger log;
 
     public Aligner(AtomicBoolean cancelMonitor, ServiceContext sc, SimpleUrlParams params, Logger log) throws OperationAbortedEx {
@@ -142,6 +141,7 @@ public class Aligner extends BaseAligner<SimpleUrlParams> {
                         case SKIP:
                             log.debug("Skipping record with uuid " + e.getKey());
                             result.uuidSkipped++;
+                            break;
                         default:
                             break;
                     }
@@ -192,12 +192,12 @@ public class Aligner extends BaseAligner<SimpleUrlParams> {
     }
 
 
-    private void addMetadata(Map.Entry<String, Element> record, String overrideUuidValue) throws Exception {
+    private void addMetadata(Map.Entry<String, Element> recordInfo, String overrideUuidValue) throws Exception {
         if (cancelMonitor.get()) {
             return;
         }
 
-        Element xml = record.getValue();
+        Element xml = recordInfo.getValue();
         if (xml == null) {
             result.unretrievable++;
             return;
@@ -205,19 +205,24 @@ public class Aligner extends BaseAligner<SimpleUrlParams> {
 
         String schema = dataMan.autodetectSchema(xml, null);
         if (schema == null) {
-            log.debug("  - Metadata skipped due to unknown schema. uuid:" + record.getKey());
+            log.debug("  - Metadata skipped due to unknown schema. uuid:" + recordInfo.getKey());
             result.unknownSchema++;
             return;
         }
 
-        String uuid = record.getKey();
+        String uuid = recordInfo.getKey();
         if (overrideUuidValue != null) {
-            log.debug(String.format("  - Overriding UUID %s by %s", record.getKey(), overrideUuidValue));
+            log.debug(String.format("  - Overriding UUID %s by %s", recordInfo.getKey(), overrideUuidValue));
             uuid = overrideUuidValue;
-            xml = dataMan.setUUID(schema, uuid, record.getValue());
+            xml = dataMan.setUUID(schema, uuid, recordInfo.getValue());
         }
 
         applyBatchEdits(uuid, xml, schema, params.getBatchEdits(), context, null);
+
+        // Translate metadata
+        if (params.isTranslateContent()) {
+            xml = translateMetadataContent(context, xml, schema);
+        }
 
         log.debug("  - Adding metadata with uuid:" + uuid + " schema:" + schema);
 
@@ -274,12 +279,12 @@ public class Aligner extends BaseAligner<SimpleUrlParams> {
         final AbstractMetadata metadata = metadataManager.updateMetadata(context, id, md, validate, ufo,
             language, dateModified, true, IndexingMode.none);
 
-        if (force) {
+        if (Boolean.TRUE.equals(force)) {
             //change ownership of metadata to new harvester
             metadata.getHarvestInfo().setUuid(params.getUuid());
             metadata.getSourceInfo().setSourceId(params.getUuid());
 
-            metadataManager.save((Metadata) metadata);
+            metadataManager.save(metadata);
         }
 
         OperationAllowedRepository repository = context.getBean(OperationAllowedRepository.class);

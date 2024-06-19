@@ -59,7 +59,7 @@
         hitsperpageValues: gnSearchSettings.hitsperpageValues,
         selectionBucket: "e101",
         params: {
-          sortBy: "dateStamp",
+          sortBy: "changeDate",
           sortOrder: "desc",
           isTemplate: ["y", "n"],
           editable: "true",
@@ -264,7 +264,7 @@
           icon: "fa-list"
         }
       ];
-      gnSearchSettings.resultTemplate = gnSearchSettings.resultViewTpls[0].tplUrl;
+      gnSearchSettings.resultTemplate = gnSearchSettings.resultViewTpls[0];
 
       // TODO: Improve for other standards
       // Object used by directory directive

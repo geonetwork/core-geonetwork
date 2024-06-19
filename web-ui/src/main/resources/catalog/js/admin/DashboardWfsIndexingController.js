@@ -354,7 +354,7 @@
                         "</span>" +
                         "  </a>" +
                         '  <div class="alert alert-danger small" style="display: none" role="alert"></div>' +
-                        '  <i class="fa fa-spinner fa-spin"/>' +
+                        '  <i class="fa fa-spinner fa-spin"></i>' +
                         "</div>" +
                         "<code>" +
                         row.mdUuid +
@@ -458,18 +458,18 @@
                   return (
                     '<a class="btn btn-xs btn-block btn-default" data-job-key="' +
                     key +
-                    '"><icon class="fa fa-fw fa-calendar"/>' +
+                    '"><icon class="fa fa-fw fa-calendar"></icon>' +
                     labelEdit +
                     "</a>" +
                     '<a class="btn btn-xs btn-block btn-default" data-trigger-job-key="' +
                     key +
-                    '"><icon class="fa fa-fw fa-play text-primary"/>' +
+                    '"><icon class="fa fa-fw fa-play text-primary"></icon>' +
                     labelNow +
                     "</a>" +
                     '<a class="btn btn-xs btn-block btn-default" ' +
                     '   data-delete-key="' +
                     key +
-                    '"><icon class="fa fa-fw fa-times text-danger"/>' +
+                    '"><icon class="fa fa-fw fa-times text-danger"></icon>' +
                     labelDelete +
                     "</a>"
                   );

@@ -44,6 +44,29 @@ The list of sub-portal available is at <http://localhost:8080/geonetwork/srv/api
 
 ## Example of usage
 
+To find the lucene element terms available for filtering you can query a record in your ElasticSearch instance: 
+
+`POST /gn-records*/_search
+{"query":{"query_string":{"query":"+uuid:\"EXT_DS120344\""}}}`
+
+This shows elements such as keywords are grouped together under a "tag" element. A tag element in a multilingual catalogue looks something like this:
+```
+"tag" : [
+            {
+              "default" : "BIRDS",
+              "langeng" : "BIRDS"
+            },
+            {
+              "default" : "MARINE",
+              "langeng" : "MARINE",
+              "key" : "https://registry.geonetwork-opensource.org/theme/nrw-keywords/marine-uc"
+            },
+...
+]
+```
+
+You can use the lucene search `+tag.default:"BIRDS"` as the filter for a sub-portal.
+
 ### Creating an INSPIRE directive sub-portal
 
 For the INSPIRE directive, a catalogue administrator needs to publish an entry point providing access only to INSPIRE related records. An INSPIRE sub-portal can be created with a filter on keywords `+thesaurusName:"GEMET - INSPIRE themes, version 1.0"`.
@@ -84,4 +107,4 @@ If the `publish` operation is removed from `oca` group, then records will not lo
 In some situations, you also want to share templates among partners. There are 2 options for this:
 
 -   Publish the template in all partner's groups. The main drawback in this case is that if a new group is added, the templates need to be published to that new group.
--   Create a dedicated group for shared records eg. `sharedGroup`. Publish templates in that shared space. Alter the sub-portal filter to match either the partner group or the shared one. `+_groupPublished:(oca OR sharedGroup)`.
+-   Create a dedicated group for shared records eg. `sharedGroup`. Publish templates in that shared space. Alter the sub-portal filter to match either the partner group or the shared one. `+groupPublished:(oca OR sharedGroup)`.

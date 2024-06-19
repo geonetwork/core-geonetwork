@@ -97,7 +97,7 @@ public abstract class AbstractStore implements Store {
     }
 
     protected static AccessManager getAccessManager(final ServiceContext context) {
-        return context.getBean(AccessManager.class);
+        return ApplicationContextHolder.get().getBean(AccessManager.class);
     }
 
     public static int getAndCheckMetadataId(String metadataUuid, Boolean approved) throws Exception {
@@ -200,6 +200,12 @@ public abstract class AbstractStore implements Store {
     @Override
     public String delResources(final ServiceContext context, final String metadataUuid) throws Exception {
         return delResources(context, metadataUuid, true);
+    }
+
+    @Override
+    public String delResources(final ServiceContext context, final String metadataUuid, Boolean approved) throws Exception {
+        int metadataId = canEdit(context, metadataUuid, approved);
+        return delResources(context, metadataId);
     }
 
     @Override

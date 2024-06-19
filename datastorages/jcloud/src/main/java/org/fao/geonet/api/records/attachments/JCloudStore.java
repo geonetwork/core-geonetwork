@@ -30,6 +30,7 @@ import static org.jclouds.blobstore.options.PutOptions.Builder.multipart;
 import jeeves.server.context.ServiceContext;
 
 import org.apache.commons.lang.StringUtils;
+import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.MetadataResource;
@@ -237,8 +238,7 @@ public class JCloudStore extends AbstractStore {
     }
 
     @Override
-    public String delResources(final ServiceContext context, final String metadataUuid, Boolean approved) throws Exception {
-        int metadataId = canEdit(context, metadataUuid, approved);
+    public String delResources(final ServiceContext context, final int metadataId) throws Exception {
         try {
             ListContainerOptions opts = new ListContainerOptions();
             opts.prefix(getMetadataDir(context, metadataId) + jCloudConfiguration.getFolderDelimiter()).recursive();
@@ -381,7 +381,7 @@ public class JCloudStore extends AbstractStore {
     }
 
     private GeonetworkDataDirectory getDataDirectory(ServiceContext context) {
-        return context.getBean(GeonetworkDataDirectory.class);
+        return ApplicationContextHolder.get().getBean(GeonetworkDataDirectory.class);
     }
 
     /**

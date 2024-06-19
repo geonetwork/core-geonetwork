@@ -1,7 +1,8 @@
 <div
-  data-ng-if="md.related || md.link"
-  data-gn-related-container="md"
+  data-ng-if="md.link"
+  data-gn-distribution-resources-container="md"
   data-mode="::viewConfig.distributionConfig.layout || ''"
+  data-editable="false"
   data-related-config="::viewConfig.distributionConfig.sections"
 ></div>
 
@@ -10,5 +11,5 @@
   <p
     data-ng-repeat="o in mdView.current.record.orderingInstructions"
     data-ng-bind-html="o | linky | newlines"
-  />
+  ></p>
 </div>

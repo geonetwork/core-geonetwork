@@ -38,4 +38,4 @@ Major changes:
 -   [Admin / Pages / Add support for submenu](https://github.com/geonetwork/core-geonetwork/pull/7138)
 -   [Installation / Database / Add config property to turn off database creation/migration on startup](https://github.com/geonetwork/core-geonetwork/pull/7100)
 
-and more \... see [4.2.5 issues](https://github.com/geonetwork/core-geonetwork/issues?q=is%3Aissue+milestone%3A4.2.5+is%3Aclosed) and [pull requests](https://github.com/geonetwork/core-geonetwork/pulls?page=3&q=is%3Apr+milestone%3A4.2.5+is%3Aclosed) for full details.
+and more \... see [4.2.5 issues](https://github.com/geonetwork/core-geonetwork/issues?q=is%3Aissue+milestone%3A4.2.5+is%3Aclosed) and [pull requests](https://github.com/geonetwork/core-geonetwork/pulls?q=is%3Apr+milestone%3A4.2.5+is%3Aclosed) for full details.

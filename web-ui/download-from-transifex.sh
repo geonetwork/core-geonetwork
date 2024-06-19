@@ -49,23 +49,30 @@ cd ..
 TRANSLATION_DIR=transifex-src/translations/core-geonetwork.
 SRC_DIR=src/main/resources/catalog/locales
 
+
 l=(
-    'es::es'
-    'fr::fr'
+    'az::az'
+    'hy::hy'
+    'ca::ca'
+    'cs::cs_CZ'
+    'cy::cy'
     'da::da_DK'
     'de::de'
+    'es::es'
+    'fi::fi'
+    'fr::fr'
+    'is::is'
     'it::it'
+    'ka::ka'
     'ko::ko'
     'nl::nl'
-    'cs::cs_CZ'
-    'ca::ca'
     'pt::pt_BR'
-    'fi::fi'
-    'is::is'
+    'ro::ro'
     'ru::ru'
-    'zh::zh'
     'sk::sk_SK'
     'sv::sv_SE'
+    'uk::uk'
+    'zh::zh'
 )
 
 for index in "${l[@]}" ; do

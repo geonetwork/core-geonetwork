@@ -143,17 +143,6 @@ public class XmlSerializerIntegrationTest extends AbstractCoreIntegrationTest {
         assertHiddenElements(false, false);
     }
 
-    @SuppressWarnings("unchecked")
-    @Test
-    public void testInternalSelectHidingWithheldNullServiceContext() throws Exception {
-        setSchemaFilters(true, true);
-        Field field = ServiceContext.class.getDeclaredField("THREAD_LOCAL_INSTANCE");
-        field.setAccessible(true);
-        InheritableThreadLocal<ServiceContext> threadLocalInstance = (InheritableThreadLocal<ServiceContext>) field.get(null);
-        threadLocalInstance.set(null);
-        assertHiddenElements(true);
-    }
-
     @Test
     public void testInternalSelectHidingWithheldAdministrator() throws Exception {
         try (Closeable ignored = configureXmlSerializerAndServiceContext(true, false, false)) {

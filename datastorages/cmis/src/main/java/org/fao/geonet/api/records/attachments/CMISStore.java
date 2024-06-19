@@ -385,8 +385,7 @@ public class CMISStore extends AbstractStore {
     }
 
     @Override
-    public String delResources(final ServiceContext context, final String metadataUuid, Boolean approved) throws Exception {
-        int metadataId = canEdit(context, metadataUuid, approved);
+    public String delResources(final ServiceContext context, final int metadataId) throws Exception {
         String folderKey = null;
         try {
             folderKey = getMetadataDir(context, metadataId);
@@ -396,24 +395,24 @@ public class CMISStore extends AbstractStore {
             cmisUtils.invalidateFolderCache(folderKey);
 
             Log.info(Geonet.RESOURCES,
-                    String.format("Metadata '%s(%s)' directory '%s' removed.", metadataUuid, metadataId, folderKey));
-            return String.format("Metadata '%s(%s)' directory '%s' removed.", metadataUuid, metadataId, folderKey);
+                    String.format("Metadata '%d' directory '%s' removed.", metadataId, folderKey));
+            return String.format("Metadata '%d' directory '%s' removed.", metadataId, folderKey);
         } catch (CmisObjectNotFoundException e) {
             Log.warning(Geonet.RESOURCES,
-                    String.format("Unable to located metadata '%s(%s)' directory '%s' to be removed.", metadataUuid, metadataId, folderKey));
-            return String.format("Unable to located metadata '%s(%s)' directory '%s' to be removed.", metadataUuid, metadataId, folderKey);
+                    String.format("Unable to located metadata '%d' directory '%s' to be removed.", metadataId, folderKey));
+            return String.format("Unable to located metadata '%d' directory '%s' to be removed.", metadataId, folderKey);
         } catch (ResourceNotFoundException e) {
             Log.warning(Geonet.RESOURCES,
-                String.format("Unable to located metadata '%s(%s)' directory '%s' to be removed.", metadataUuid, metadataId, folderKey));
-            return String.format("Unable to located metadata '%s(%s)' directory '%s' to be removed.", metadataUuid, metadataId, folderKey);
+                String.format("Unable to located metadata '%d' directory '%s' to be removed.", metadataId, folderKey));
+            return String.format("Unable to located metadata '%d' directory '%s' to be removed.", metadataId, folderKey);
         } catch (CmisPermissionDeniedException e) {
             Log.warning(Geonet.RESOURCES,
-                    String.format("Insufficient privileges, unable to remove metadata '%s(%s)' directory '%s'.", metadataUuid, metadataId, folderKey));
-            return String.format("Insufficient privileges, unable to remove metadata '%s(%s)' directory '%s'.", metadataUuid, metadataId, folderKey);
+                    String.format("Insufficient privileges, unable to remove metadata '%d' directory '%s'.", metadataId, folderKey));
+            return String.format("Insufficient privileges, unable to remove metadata '%d' directory '%s'.", metadataId, folderKey);
         } catch (CmisConstraintException e) {
             Log.warning(Geonet.RESOURCES,
-                    String.format("Unable to remove metadata '%s(%s)' directory '%s' due so constraint violation or locks.", metadataUuid, metadataId, folderKey));
-            return String.format("Unable to remove metadata '%s(%s)' directory '%s' due so constraint violation or locks.", metadataUuid, metadataId, folderKey);
+                    String.format("Unable to remove metadata '%d' directory '%s' due so constraint violation or locks.", metadataId, folderKey));
+            return String.format("Unable to remove metadata '%d' directory '%s' due so constraint violation or locks.", metadataId, folderKey);
         }
     }
 
@@ -617,7 +616,7 @@ public class CMISStore extends AbstractStore {
     }
 
     private GeonetworkDataDirectory getDataDirectory(ServiceContext context) {
-        return context.getBean(GeonetworkDataDirectory.class);
+        return ApplicationContextHolder.get().getBean(GeonetworkDataDirectory.class);
     }
 
     /**
@@ -690,7 +689,7 @@ public class CMISStore extends AbstractStore {
 
             if (metadataResourceExternalManagementPropertiesUrl.contains("{lang}") || metadataResourceExternalManagementPropertiesUrl.contains("{ISO3lang}")) {
                 final IsoLanguagesMapper mapper = ApplicationContextHolder.get().getBean(IsoLanguagesMapper.class);
-                String contextLang = context.getLanguage() == null ? Geonet.DEFAULT_LANGUAGE : context.getLanguage();
+                String contextLang = context==null || context.getLanguage() == null ? Geonet.DEFAULT_LANGUAGE : context.getLanguage();
                 String lang;
                 String iso3Lang;
 

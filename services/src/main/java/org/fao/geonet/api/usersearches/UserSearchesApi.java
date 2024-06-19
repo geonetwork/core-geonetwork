@@ -290,7 +290,7 @@ public class UserSearchesApi {
     @RequestMapping(
         produces = MediaType.APPLICATION_JSON_VALUE,
         method = RequestMethod.PUT)
-    @ResponseStatus(value = HttpStatus.OK)
+    @ResponseStatus(value = HttpStatus.CREATED)
     @PreAuthorize("isAuthenticated()")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "201", description = "User search created.")

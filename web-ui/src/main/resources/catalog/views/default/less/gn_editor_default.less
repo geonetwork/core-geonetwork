@@ -2,7 +2,6 @@
 @import "../../../style/gn_editor.less";
 @import "gn_view.less";
 
-
 .gn-results-editor {
   .gn-status {
     font-weight: 500;
@@ -91,7 +90,7 @@
   }
   .modal-dialog {
     .modal-body {
-      max-height: 85vh;
+      max-height: calc(~"85vh - 30px");
       overflow: auto;
     }
   }
@@ -99,8 +98,11 @@
     // tabs above editor
     .nav {
       min-height: 42px;
+      margin-bottom: @gn-spacing;
     }
-    .nav .open > a, .nav .open > a:hover, .nav .open > a:focus {
+    .nav .open > a,
+    .nav .open > a:hover,
+    .nav .open > a:focus {
       border-color: @panel-default-border;
     }
     div[data-gn-toggle] {
@@ -115,7 +117,12 @@
       font-size: 12px;
       font-weight: bold;
     }
-    input[type=text], input[type=number], select, textarea.form-control, .form-control, .bootstrap-tagsinput {
+    input[type="text"],
+    input[type="number"],
+    select,
+    textarea.form-control,
+    .form-control,
+    .bootstrap-tagsinput {
       border-color: #ddd;
       box-shadow: none;
       outline: 0;
@@ -129,7 +136,8 @@
     .btn {
       border-radius: @gn-border-radius;
     }
-    .input-group-addon, .input-group-btn {
+    .input-group-addon,
+    .input-group-btn {
       width: 0.1%;
     }
     @media (max-width: @screen-xs-max) {
@@ -153,8 +161,8 @@
       background-position: right 50%;
       background-repeat: no-repeat;
       background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAMCAYAAABSgIzaAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyJpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNSBNYWNpbnRvc2giIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6NDZFNDEwNjlGNzFEMTFFMkJEQ0VDRTM1N0RCMzMyMkIiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6NDZFNDEwNkFGNzFEMTFFMkJEQ0VDRTM1N0RCMzMyMkIiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDo0NkU0MTA2N0Y3MUQxMUUyQkRDRUNFMzU3REIzMzIyQiIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDo0NkU0MTA2OEY3MUQxMUUyQkRDRUNFMzU3REIzMzIyQiIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PuGsgwQAAAA5SURBVHjaYvz//z8DOYCJgUxAf42MQIzTk0D/M+KzkRGPoQSdykiKJrBGpOhgJFYTWNEIiEeAAAMAzNENEOH+do8AAAAASUVORK5CYII=);
-      padding: .5em;
-      padding-right: 1.5em
+      padding: 0.5em;
+      padding-right: 1.5em;
     }
     fieldset {
       padding: 0 0 5px 0;
@@ -186,7 +194,8 @@
         content: "\f105";
       }
       table {
-        .col-sm-2, .col-sm-9 {
+        .col-sm-2,
+        .col-sm-9 {
           padding-right: 0;
           padding-left: 0;
         }
@@ -196,13 +205,11 @@
         fieldset {
           margin: 0 0 10px 0;
           padding: 0;
-          .col-sm-2, .col-sm-9 {
+          .col-sm-2,
+          .col-sm-9 {
             padding-right: 15px;
             padding-left: 15px;
           }
-        }
-        .gn-move {
-          display: none;
         }
       }
       .table {
@@ -237,7 +244,8 @@
     }
     // date and time
     [data-gn-date-picker] {
-      .col-sm-9, .col-sm-12 {
+      .col-sm-9,
+      .col-sm-12 {
         padding-left: 2px;
         padding-right: 0;
         @media (max-width: @screen-xs-max) {
@@ -247,7 +255,8 @@
     }
     // default switch
     [data-ng-switch-default] {
-      .col-xs-8, .col-xs-4 {
+      .col-xs-8,
+      .col-xs-4 {
         padding-left: 0;
         padding-right: 0;
       }
@@ -355,12 +364,16 @@
     }
     .gn-control {
       padding-left: 0;
-      .field-tooltip, [data-gn-field-highlight-remove] {
+      .field-tooltip,
+      [data-gn-field-highlight-remove] {
         padding: 6px;
       }
     }
     .gn-multi-field {
-      label.gn-required:after, .gn-required > label:after, label.gn-mandatory:after, .gn-mandatory > label:after {
+      label.gn-required:after,
+      .gn-required > label:after,
+      label.gn-mandatory:after,
+      .gn-mandatory > label:after {
         margin-top: -7px;
       }
       .col-sm-11 {
@@ -407,6 +420,46 @@
       }
     }
   }
+  // for both sidebar and main
+  .onlinesrc-remove {
+    &:hover {
+      text-decoration: none;
+    }
+  }
+  .list-group-item {
+    padding: @gn-spacing;
+  }
+  #gn-editor-distribution-panel {
+    h2 {
+      font-size: 16px;
+    }
+    h3 {
+      display: inline-block;
+      font-size: 15px;
+      margin: @gn-spacing-sm @gn-spacing-sm 0px 0px;
+      a {
+        display: flex;
+      }
+    }
+    .list-group-item {
+      margin-top: -1px;
+    }
+    .alert {
+      margin-bottom: @gn-spacing-sm;
+    }
+    [data-gn-link-icon] {
+      display: inline-block;
+      color: #333;
+      strong {
+        display: flex;
+        .label {
+          display: inline-block;
+        }
+      }
+
+    }
+  }
+
 }
 // map for Editor and Batch Editor
 .gn-drawmap-panel {
@@ -497,7 +550,8 @@ form.gn-editor.gn-label-above-input {
     width: 65%;
   }
   // Cancel offset used in action
-  .col-xs-offset-2, .col-md-offset-2 {
+  .col-xs-offset-2,
+  .col-md-offset-2 {
     margin-left: 0px;
   }
   div.gn-extra-field > label {
@@ -588,31 +642,31 @@ form.gn-editor.gn-indent-bluescale {
 
     fieldset {
       margin: 10px 15px;
-      border-left-color: ~'rgba(@{indent-color-r}, @{indent-color-g}, @{indent-color-b}, .9)';
+      border-left-color: ~"rgba(@{indent-color-r}, @{indent-color-g}, @{indent-color-b}, .9)";
       legend {
         padding-right: 11px;
         font-size: 14px;
-        border-left-color: ~'rgba(@{indent-color-r}, @{indent-color-g}, @{indent-color-b}, .9)';
+        border-left-color: ~"rgba(@{indent-color-r}, @{indent-color-g}, @{indent-color-b}, .9)";
       }
       fieldset {
-        border-left-color: ~'rgba(@{indent-color-r}, @{indent-color-g}, @{indent-color-b}, .7)';
+        border-left-color: ~"rgba(@{indent-color-r}, @{indent-color-g}, @{indent-color-b}, .7)";
         legend {
-          border-left-color: ~'rgba(@{indent-color-r}, @{indent-color-g}, @{indent-color-b}, .7)';
+          border-left-color: ~"rgba(@{indent-color-r}, @{indent-color-g}, @{indent-color-b}, .7)";
         }
         fieldset {
-          border-left-color: ~'rgba(@{indent-color-r}, @{indent-color-g}, @{indent-color-b}, .5)';
+          border-left-color: ~"rgba(@{indent-color-r}, @{indent-color-g}, @{indent-color-b}, .5)";
           legend {
-            border-left-color: ~'rgba(@{indent-color-r}, @{indent-color-g}, @{indent-color-b}, .5)';
+            border-left-color: ~"rgba(@{indent-color-r}, @{indent-color-g}, @{indent-color-b}, .5)";
           }
           fieldset {
-            border-left-color: ~'rgba(@{indent-color-r}, @{indent-color-g}, @{indent-color-b}, .3)';
+            border-left-color: ~"rgba(@{indent-color-r}, @{indent-color-g}, @{indent-color-b}, .3)";
             legend {
-              border-left-color: ~'rgba(@{indent-color-r}, @{indent-color-g}, @{indent-color-b}, .3)';
+              border-left-color: ~"rgba(@{indent-color-r}, @{indent-color-g}, @{indent-color-b}, .3)";
             }
             fieldset {
-              border-left-color: ~'rgba(@{indent-color-r}, @{indent-color-g}, @{indent-color-b}, .1)';
+              border-left-color: ~"rgba(@{indent-color-r}, @{indent-color-g}, @{indent-color-b}, .1)";
               legend {
-                border-left-color: ~'rgba(@{indent-color-r}, @{indent-color-g}, @{indent-color-b}, .1)';
+                border-left-color: ~"rgba(@{indent-color-r}, @{indent-color-g}, @{indent-color-b}, .1)";
               }
             }
           }
@@ -625,7 +679,7 @@ form.gn-editor.gn-indent-bluescale {
 // inspire
 // md type widget (used only in editor for now)
 .fa-inspire {
-  background: url('../catalog/views/default/images/inspire.png');
+  background: url("../catalog/views/default/images/inspire.png");
   background-repeat: no-repeat;
   background-size: 16px 16px;
   width: 16px;
@@ -633,6 +687,5 @@ form.gn-editor.gn-indent-bluescale {
   margin-top: 3px;
   &:before {
     content: "";
-
   }
 }

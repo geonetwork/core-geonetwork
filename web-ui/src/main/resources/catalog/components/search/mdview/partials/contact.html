@@ -12,7 +12,7 @@
           class="col-md-4"
           data-gn-circle-letter-icon="c.organisation"
           data-org-key="c.email | getMailDomain"
-        />
+        ></div>
 
         <div class="col-md-8">
           <div class="gn-contact-card-role">{{c.role | translate}}</div>
@@ -26,7 +26,7 @@
           {{c.organisation}}
         </a>
 
-        <div data-gn-metadata-individual="c" />
+        <div data-gn-metadata-individual="c"></div>
 
         <address data-ng-if="c.address != '' || c.phone != ''">
           <div data-ng-if="c.address != ''">
@@ -34,12 +34,13 @@
             {{c.address}}
           </div>
           <a href="tel:{{c.phone}}" data-ng-if="c.phone != ''">
-            <span data-translate="">call</span> {{c.phone}}
+            <i class="fa fa-fw fa-phone"></i>
+            {{c.phone}}
           </a>
         </address>
 
         <div
-          data-gn-search-filter-link="OrgForResource"
+          data-gn-search-filter-link="OrgForResourceObject.default"
           data-filter="c.organisation"
           data-label="focusOnFrom"
         >
@@ -65,7 +66,7 @@
                 class="col-md-4"
                 data-gn-circle-letter-icon="c.organisation"
                 data-org-key="c.email | getMailDomain"
-              />
+              ></div>
               <div class="col-md-8">
                 <div class="gn-contact-card-org-group">{{c.organisation}}</div>
               </div>
@@ -83,7 +84,7 @@
             {{c.organisation}}
           </a>
 
-          <div data-gn-metadata-individual="c" />
+          <div data-gn-metadata-individual="c"></div>
 
           <address data-ng-if="c.address != '' || c.phone != ''">
             <div data-ng-if="c.address != ''">
@@ -91,12 +92,13 @@
               {{c.address}}
             </div>
             <a href="tel:{{c.phone}}" data-ng-if="c.phone != ''">
-              <span data-translate="">call</span> {{c.phone}}
+              <i class="fa fa-fw fa-phone"></i>
+              {{c.phone}}
             </a>
           </address>
 
           <div
-            data-gn-search-filter-link="OrgForResource"
+            data-gn-search-filter-link="OrgForResourceObject.default"
             data-filter="c.organisation"
             data-label="focusOnFrom"
           >
@@ -121,7 +123,7 @@
           class="col-md-4"
           data-gn-circle-letter-icon="org"
           data-org-key="contactByOrgRole[0].email | getMailDomain"
-        />
+        ></div>
 
         <div class="col-md-8" ng-repeat="c in contactByOrgRole">
           <div class="gn-contact-card-org-group">{{c.organisation}}</div>
@@ -139,7 +141,7 @@
             {{c.organisation}}
           </a>
 
-          <div data-gn-metadata-individual="c" />
+          <div data-gn-metadata-individual="c"></div>
 
           <address data-ng-if="c.address != '' || c.phone != ''">
             <div data-ng-if="c.address != ''">
@@ -147,12 +149,13 @@
               {{c.address}}
             </div>
             <a href="tel:{{c.phone}}" data-ng-if="c.phone != ''">
-              <span data-translate="">call</span> {{c.phone}}
+              <i class="fa fa-fw fa-phone"></i>
+              {{c.phone}}
             </a>
           </address>
 
           <div
-            data-gn-search-filter-link="OrgForResource"
+            data-gn-search-filter-link="OrgForResourceObject.default"
             data-filter="c.organisation"
             data-label="focusOnFrom"
           >
@@ -183,11 +186,12 @@
           </strong>
           <strong data-ng-if="::!c.website"> {{c.organisation}}<br /> </strong>
 
-          <div data-gn-metadata-individual="c" />
+          <div data-gn-metadata-individual="c"></div>
 
           <div data-ng-if="c.address != ''">{{c.address}}</div>
           <a href="tel:{{c.phone}}" data-ng-if="c.phone != ''">
-            <span data-translate="">call</span> {{c.phone}}
+            <i class="fa fa-fw fa-phone"></i>
+            {{c.phone}}
           </a>
         </address>
       </div>
@@ -219,14 +223,15 @@
           <strong data-ng-if="::!c.website"> {{c.organisation}}<br /> </strong>
 
           <span data-ng-repeat="c in contact track by $index">
-            <div data-gn-metadata-individual="c" />
+            <div data-gn-metadata-individual="c"></div>
           </span>
 
           <!-- Address for organisation: display for 1st contact in organisation -->
           <span data-ng-repeat="c in contact | limitTo:1">
             <div data-ng-if="c.address != ''">{{c.address}}</div>
             <a href="tel:{{c.phone}}" data-ng-if="c.phone != ''">
-              <span data-translate="">call</span> {{c.phone}}
+              <i class="fa fa-fw fa-phone"></i>
+              {{c.phone}}
             </a>
           </span>
         </address>
@@ -264,7 +269,7 @@
           >
             {{translateRoles(roles)}}:<br />
             <span data-ng-repeat="c in contactGroupByRole track by $index">
-              <div data-gn-metadata-individual="c" />
+              <div data-gn-metadata-individual="c"></div>
               <span data-ng-if="!$last"><hr /></span>
             </span>
           </li>
