@@ -87,7 +87,7 @@ public class DraftUtilities {
      * @return
      */
     public AbstractMetadata replaceMetadataWithDraft(AbstractMetadata md, AbstractMetadata draft) {
-        Log.info(Geonet.DATA_MANAGER, "Replacing metadata approved record (" + md.getId() + ") with draft record (" + draft.getId() + ")");
+        Log.info(Geonet.DATA_MANAGER, String.format("Replacing metadata approved record (%d) with draft record (%d)", md.getId(), draft.getId()));
         Log.trace(Geonet.DATA_MANAGER, "Found approved record with id " + md.getId());
         Log.trace(Geonet.DATA_MANAGER, "Found draft with id " + draft.getId());
         // Reassign metadata validations
