@@ -91,7 +91,7 @@
           - in the search application if metadaat user feedback is enabled
     -->
     <xsl:choose>
-      <xsl:when test="$isRecaptchaEnabled and ($service = 'new.account' or ($angularApp = 'gn_search' and $metadataUserFeedbackEnabled))">
+      <xsl:when test="$isRecaptchaEnabled and ($service = 'new.account' or ($angularApp = 'gn_search' and $metadataUserFeedbackEnabled)  or ($angularApp = 'gn_contact_us' and $userFeedbackEnabled))">
         <script src="https://www.google.com/recaptcha/api.js"></script>
       </xsl:when>
       <xsl:otherwise>
