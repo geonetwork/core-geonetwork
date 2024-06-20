@@ -362,7 +362,11 @@
          * @param {string} type of the directive that calls it.
          */
         onOpenPopup: function (type, additionalParams) {
-          if (type === "parent" && additionalParams.fields.associationType) {
+          if (
+            type === "parent" &&
+            additionalParams.fields &&
+            additionalParams.fields.associationType
+          ) {
             // In ISO19115-3, parents are usually encoded using the association records
             // Configured in config/associated-panel/default.json
             type = "siblings";
