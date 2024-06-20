@@ -91,6 +91,9 @@ See [Configuring Shibboleth](../managing-users-and-groups/authentication-mode.md
 
 Enable the self registration form. See [User Self-Registration](../managing-users-and-groups/user-self-registration.md).
 
+You can configure optionally re-Captcha, to protect you and your users from spam and abuse. And a list of email domains (separated by commas) 
+that can request an account. If not configured any email address is allowed.
+
 ## User application feedback
 
 Enabling the setting, displays in the application footer a link to a page that allows sending comments about the application.
