@@ -187,6 +187,23 @@
     }
   ]);
 
+  module.filter("facetTooltip", [
+    "$translate",
+    "$filter",
+    function ($translate, $filter) {
+      return function (item) {
+        if (item.definition) {
+          var key = item.definition + "-tooltip",
+            tooltip = $translate.instant(key);
+          if (tooltip !== key) {
+            return tooltip;
+          }
+        }
+        return $filter("facetTranslator")(item.value);
+      };
+    }
+  ]);
+
   module.filter("facetTranslator", [
     "$translate",
     "$filter",
@@ -284,8 +301,10 @@
    * @param $scope
    * @constructor
    */
-  var FacetController = function ($scope) {
+  var FacetController = function ($scope, $translate, $filter) {
     this.$scope = $scope;
+    this.$translate = $translate;
+    this.$filter = $filter;
   };
 
   FacetController.prototype.$onInit = function () {
@@ -331,7 +350,7 @@
     this.filter(this.facet, item);
   };
 
-  FacetController.$inject = ["$scope"];
+  FacetController.$inject = ["$scope", "$translate", "$filter"];
 
   module.directive("esFacet", [
     "gnLangs",

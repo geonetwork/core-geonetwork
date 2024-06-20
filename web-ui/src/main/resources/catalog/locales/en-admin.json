@@ -839,6 +839,8 @@
     "system/userSelfRegistration": "User self-registration",
     "system/userSelfRegistration/enable": "Enable self-registration",
     "system/userSelfRegistration/enable-help": "When enabled, make sure a mail server is also configured.",
+    "system/userSelfRegistration/domainsAllowed": "Email domains allowed",
+    "system/userSelfRegistration/domainsAllowed-help": "Comma separated list of email domains that can request an account. If not configured, any email address is allowed.",
     "system/userSelfRegistration/recaptcha/enable": "Enable re-captcha",
     "system/userSelfRegistration/recaptcha/enable-help": "Enabling re-captcha will protect you and your users from spam and abuse. This is highly recommended when you enable feedback or self-registration. Create your re-captcha key on <a href='https://www.google.com/recaptcha/'>https://www.google.com/recaptcha/</a>",
     "system/userSelfRegistration/recaptcha/publickey": "Re-captcha public key",

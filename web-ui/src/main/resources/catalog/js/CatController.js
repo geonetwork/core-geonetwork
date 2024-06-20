@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2024 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -414,9 +414,9 @@
                 }
               },
               // GEMET configuration for non multilingual catalog
-              "th_gemet_tree.default": {
+              "th_gemet_tree.key": {
                 terms: {
-                  field: "th_gemet_tree.default",
+                  field: "th_gemet_tree.key",
                   size: 100,
                   order: { _key: "asc" },
                   include: "[^^]+^?[^^]+"
@@ -1606,6 +1606,10 @@
 
       $scope.getApplicationInfoVisible = function () {
         return gnGlobalSettings.gnCfg.mods.footer.showApplicationInfoAndLinksInFooter;
+      };
+
+      $scope.getContactusVisible = function () {
+        return gnConfig[gnConfig.key.isFeedbackEnabled];
       };
 
       function detectNode(detector) {
