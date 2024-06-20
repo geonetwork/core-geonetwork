@@ -165,7 +165,7 @@
     "linkToParentTitle": "Länka ett överordnat metadata till aktuellt metadata",
     "linkToService": "Länk till en tjänst",
     "linkToServiceTitle": "Koppla en tjänst till aktivt metadata",
-    "linkToSibling": "Länk till andra resurser",
+    "linkToSibling": "Link to records",
     "linkToSiblingTitle": "Koppla en resurs till aktuellt metadata",
     "linkToSource": "Länk till en källdatamängd",
     "linkToSourceTitle": "Koppla en källdatamängd till aktuellt metadata",
@@ -446,5 +446,13 @@
     "addOnlinesrc#links": "Lägg till länkar",
     "addOnlinesrc#links-help": "eg. web links",
     "addOnlinesrc#quality": "Add quality info",
-    "addOnlinesrc#quality-help": "eg. specification, reports"
+    "addOnlinesrc#quality-help": "eg. specification, reports",
+    "associated-parent": "Parent Metadata",
+    "associated-service": "Tjänst",
+    "associated-dataset": "Datamängd",
+    "associated-source": "Datamängdens källa",
+    "associated-fcats": "Objekttypskatalog",
+    "associated-siblings": "Associerade resurser",
+    "associated-hasfeaturecats": "Using this feature catalog",
+    "associatedResourcesPanel": "Associerade resurser"
 }

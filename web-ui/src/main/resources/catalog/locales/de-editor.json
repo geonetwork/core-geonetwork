@@ -165,7 +165,7 @@
     "linkToParentTitle": "Verbinde einen Eltern-Metadatensatz mit dem aktuellen Metadatensatz",
     "linkToService": "Mit einem Service verlinken",
     "linkToServiceTitle": "Verbinde einen Dienst mit dem aktuellen Metadatensatz",
-    "linkToSibling": "Link zu übergeordnetem Datensatz erstellen",
+    "linkToSibling": "Link to records",
     "linkToSiblingTitle": "Verlinke eine Resource mit dem aktuellen Metadatensatz",
     "linkToSource": "Mit dem Herkunfts-Datensatz verlinken",
     "linkToSourceTitle": "Verlinke einen Ursprungsdatensatz mit dem aktuellen Metadatensatz",
@@ -446,5 +446,13 @@
     "addOnlinesrc#links": "Links hinzufügen",
     "addOnlinesrc#links-help": "z. B. Web-Links",
     "addOnlinesrc#quality": "Qualitätsinformationen hinzufügen",
-    "addOnlinesrc#quality-help": "z. B. Spezifikation, Berichte"
+    "addOnlinesrc#quality-help": "z. B. Spezifikation, Berichte",
+    "associated-parent": "Elternmetadatensatz",
+    "associated-service": "Dienst",
+    "associated-dataset": "Datensatz",
+    "associated-source": "Quellendaten",
+    "associated-fcats": "Objektartenkatalaog",
+    "associated-siblings": "Verlinkte Ressourcen",
+    "associated-hasfeaturecats": "Diesen Feature Katalog gebrauchen",
+    "associatedResourcesPanel": "Verlinkte Ressourcen"
 }

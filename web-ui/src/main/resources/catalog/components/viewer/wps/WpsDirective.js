@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2024 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -192,9 +192,45 @@
                 }
               }
 
-              scope.isDateTime = function (date) {
+              scope.isDateFormat = function (date) {
                 if (date.hasOwnProperty("metadata")) {
                   return date.metadata[0].href === "datetime";
+                }
+                return false;
+              };
+
+              scope.isDateTime = function (date) {
+                if (scope.isDateFormat(date)) {
+                  if (date.hasOwnProperty("literalData")) {
+                    return (
+                      date.literalData.hasOwnProperty("dataType") &&
+                      date.literalData.dataType.value === "dateTime"
+                    );
+                  }
+                }
+                return false;
+              };
+
+              scope.isDate = function (date) {
+                if (scope.isDateFormat(date)) {
+                  if (date.hasOwnProperty("literalData")) {
+                    return (
+                      date.literalData.hasOwnProperty("dataType") &&
+                      date.literalData.dataType.value === "date"
+                    );
+                  }
+                }
+                return false;
+              };
+
+              scope.isTime = function (date) {
+                if (scope.isDateFormat(date)) {
+                  if (date.hasOwnProperty("literalData")) {
+                    return (
+                      date.literalData.hasOwnProperty("dataType") &&
+                      date.literalData.dataType.value === "time"
+                    );
+                  }
                 }
                 return false;
               };
@@ -212,14 +248,28 @@
                 });
               };
 
+              scope.getHtmlInputType = function (input) {
+                if (scope.isTime(input)) {
+                  return "time";
+                } else if (scope.isDate(input)) {
+                  return "date";
+                }
+                if (scope.isDateTime(input)) {
+                  return "datetime-local";
+                } else return "";
+              };
               scope.getDateBounds = function (input, isMin) {
                 if (!input) {
                   return;
                 } else if (isMin) {
-                  return input.literalData.allowedValues.valueOrRange[0].minimumValue
-                    .value;
+                  return (
+                    input.literalData.allowedValues.valueOrRange[0].minimumValue.value ||
+                    ""
+                  );
                 }
-                return input.literalData.allowedValues.valueOrRange[0].maximumValue.value;
+                return (
+                  input.literalData.allowedValues.valueOrRange[0].maximumValue.value || ""
+                );
               };
 
               // get values from wfs filters
@@ -231,7 +281,7 @@
                   scope.wfsLink.name
                 );
 
-                // use filter values in Elasticsearch object state
+                // use filter values in ElasticSearch object state
                 // to overload input
                 if (esObject) {
                   // this will hold wfs filter values
@@ -395,7 +445,7 @@
 
                             scope.getGeomType = function (geom) {
                               if (!geom) {
-                                return;
+                                return null;
                               }
                               var geom_type;
                               geom = geom.toLowerCase();
@@ -646,7 +696,7 @@
             source.clear();
           };
 
-          scope.submit = function () {
+          scope.executeWPSProcess = function () {
             source.clear();
             scope.validation_messages = [];
             scope.exception = undefined;
@@ -674,10 +724,25 @@
               return;
             }
 
-            var inputs = scope.wpsLink.inputs;
+            var inputs = scope.wpsLink.inputs.map(function (input) {
+              // Deep clone to avoid changing the original fields in scope.wpsLink.inputs
+              // from dates to string
+              var inputClone = angular.copy(input);
+              // Process date fields
+              if (inputClone.name === "DATE" && inputClone.value) {
+                inputClone.value = inputClone.value.toISOString().split("T")[0];
+              } else if (inputClone.name === "DATETIME" && inputClone.value) {
+                inputClone.value = inputClone.value.toISOString();
+              } else if (inputClone.name === "TIME" && inputClone.value) {
+                inputClone.value = inputClone.value.toISOString().split("T")[1];
+              }
+
+              return inputClone;
+            });
+
             var output = scope.wpsLink.output;
 
-            updateStatus = function (statusLocation) {
+            var updateStatus = function (statusLocation) {
               gnWpsService.getStatus(statusLocation).then(
                 function (response) {
                   processResponse(response);
@@ -690,7 +755,7 @@
               );
             };
 
-            processResponse = function (response) {
+            var processResponse = function (response) {
               if (response.TYPE_NAME === "OWS_1_1_0.ExceptionReport") {
                 scope.executeState = "finished";
                 scope.running = false;
@@ -956,8 +1021,7 @@
     function (gnWpsService, gnUrlUtils) {
       return {
         restrict: "E",
-        templateUrl:
-          "../../catalog/components/viewer/wps/" + "partials/urldiscovery.html",
+        templateUrl: "../../catalog/components/viewer/wps/partials/urldiscovery.html",
         scope: {
           wpsLink: "="
         },
@@ -1038,40 +1102,46 @@
       return {
         restrict: "E",
         replace: true,
-        templateUrl:
-          "../../catalog/components/viewer/wps/" + "partials/recentprocesses.html",
+        templateUrl: "../../catalog/components/viewer/wps/partials/recentprocesses.html",
         scope: {
-          wpsLink: "="
+          wpsLink: "=",
+          lang: "=?",
+          withRecent: "@?",
+          withList: "@?"
         },
         controllerAs: "ctrl",
         controller: [
           "$scope",
           "$window",
-          function ($scope, $window) {
-            if (!$window.localStorage) {
+          "gnGlobalSettings",
+          function ($scope, $window, gnGlobalSettings) {
+            if ($scope.withRecent === true && !$window.localStorage) {
               $scope.notSupported = true;
               return;
             }
 
-            $scope.processes = [];
-
-            $scope.$watch(
-              function () {
-                return $window.localStorage.getItem("gn-wps-processes-history") || "{}";
-              },
-              function (value) {
-                var wpsHistory = JSON.parse(value);
-                $scope.processes =
+            $scope.processes =
+              $scope.withList == "true"
+                ? gnGlobalSettings.gnCfg.mods.map.listOfServices.wps
+                : [];
+            if ($scope.withRecent == "true") {
+              $scope.$watch(
+                function () {
+                  return $window.localStorage.getItem("gn-wps-processes-history") || "{}";
+                },
+                function (value) {
+                  var wpsHistory = JSON.parse(value);
                   wpsHistory.processes &&
-                  wpsHistory.processes.map(function (p) {
-                    var values = p.split("@");
-                    return {
-                      name: values[0],
-                      url: values[1]
-                    };
-                  });
-              }
-            );
+                    wpsHistory.processes.forEach(function (p) {
+                      var values = p.split("@");
+                      $scope.processes.push({
+                        name: values[0],
+                        url: values[1]
+                      });
+                    });
+                }
+              );
+            }
 
             this.select = function (p) {
               if (!$scope.wpsLink) {

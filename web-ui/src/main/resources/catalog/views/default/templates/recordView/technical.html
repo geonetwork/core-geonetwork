@@ -12,7 +12,7 @@
           <i
             class="fa fa-fw"
             data-ng-class="{'fa-chevron-right': date.type === 'creation', 'fa-code-fork': date.type === 'superseded','fa-ban': date.type === 'deprecated', 'fa-retweet': date.type === 'revision', 'fa-check': date.type === 'publication', 'fa-calendar': date.type === 'nextUpdate'}"
-          />
+          ></i>
         </div>
         <span>
           <h3 data-translate>{{date.type | translate}}</h3>
@@ -21,6 +21,34 @@
       </li>
     </ul>
   </section>
+
+  <div data-ng-if="mdView.current.record.serviceType" class="gn-margin-bottom flex-row">
+    <span class="badge badge-rounded" title="{{'serviceType' | translate}}">
+      <i class="fa fa-fw fa-cloud"></i>
+    </span>
+    <div>
+      <h3 data-translate="">serviceType</h3>
+      <p>
+        {{mdView.current.record.serviceType}}
+        <span data-ng-if="mdView.current.record.serviceTypeVersion">
+          ({{mdView.current.record.serviceTypeVersion}})</span
+        >
+      </p>
+    </div>
+  </div>
+
+  <div
+    data-ng-if="mdView.current.record.cl_couplingType"
+    class="gn-margin-bottom flex-row"
+  >
+    <span class="badge badge-rounded" title="{{'cl_couplingType' | translate}}">
+      <i class="fa fa-fw fa-cloud"></i>
+    </span>
+    <div data-ng-if="mdView.current.record.cl_couplingType">
+      <h3 data-translate="">cl_couplingType</h3>
+      <p data-ng-repeat="c in mdView.current.record.cl_couplingType">{{c.default}}</p>
+    </div>
+  </div>
 
   <div
     data-ng-if="mdView.current.record.cl_maintenanceAndUpdateFrequency.length > 0"
@@ -51,9 +79,9 @@
       <i class="fa fa-fw fa-tags"></i>
     </span>
     <div>
-      <h3 data-translate="">{{(t.title || key) | translate}}</h3>
+      <h3 data-translate="">{{(t.multilingualTitle.default || t.title || key) | translate}}</h3>
 
-      <div data-gn-keyword-badges="mdView.current.record" data-thesaurus="key" />
+      <div data-gn-keyword-badges="mdView.current.record" data-thesaurus="key"></div>
     </div>
   </div>
 </div>
@@ -71,7 +99,7 @@
       <h3 data-translate="">identifier</h3>
       <ul class="gn-comma-list">
         <li data-ng-repeat="i in mdView.current.record.resourceIdentifier">
-          <span data-ng-bind-html="i.code | linky" />
+          <span data-ng-bind-html="i.code | linky"></span>
         </li>
       </ul>
     </div>
@@ -115,7 +143,9 @@
     </div>
   </div>
 
-  <div ng-include="'../../catalog/views/default/templates/recordView/categories.html'" />
+  <div
+    ng-include="'../../catalog/views/default/templates/recordView/categories.html'"
+  ></div>
 
   <div
     data-ng-if="mdView.current.record.cl_classification > 0"

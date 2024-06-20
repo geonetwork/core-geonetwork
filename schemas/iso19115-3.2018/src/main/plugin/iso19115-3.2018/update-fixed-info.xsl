@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
   xmlns:gml="http://www.opengis.net/gml/3.2"
-  xmlns:srv="http://standards.iso.org/iso/19115/-3/srv/2.1"
+  xmlns:srv="http://standards.iso.org/iso/19115/-3/srv/2.0"
   xmlns:gcx="http://standards.iso.org/iso/19115/-3/gcx/1.0"
   xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0"
   xmlns:mdb="http://standards.iso.org/iso/19115/-3/mdb/2.0"
@@ -568,29 +568,6 @@
       <xsl:with-param name="prefix" select="'gml'"/>
     </xsl:call-template>
   </xsl:template>
-
-  <!-- Sextant / Template adding nilReason attribut with withheld value
-  for some protocols. -->
-  <xsl:template match="cit:linkage" priority="10">
-    <xsl:choose>
-      <xsl:when test="
-				contains(lower-case(string(../cit:protocol/gco:CharacterString)), 'db') or
-				contains(lower-case(string(../cit:protocol/gco:CharacterString)), 'copyfile') or
-				contains(lower-case(string(../cit:protocol/gco:CharacterString)), 'file')">
-        <cit:linkage gco:nilReason="withheld">
-          <xsl:apply-templates select="@*"/>
-          <xsl:copy-of select="./*" />
-        </cit:linkage>
-      </xsl:when>
-      <xsl:otherwise>
-        <cit:linkage >
-          <xsl:apply-templates select="@*"/>
-          <xsl:copy-of select="./*" />
-        </cit:linkage>
-      </xsl:otherwise>
-    </xsl:choose>
-  </xsl:template>
-
 
   <xsl:template match="mri:descriptiveKeywords[not(*/mri:thesaurusName)]" priority="10">
     <xsl:variable name="name" select="name()"/>

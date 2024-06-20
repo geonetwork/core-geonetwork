@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2023 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2024 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -60,6 +60,8 @@ public class Settings {
     public static final String SYSTEM_USERS_IDENTICON = "system/users/identicon";
     public static final String SYSTEM_SEARCHSTATS = "system/searchStats/enable";
     public static final String SYSTEM_FEEDBACK_EMAIL = "system/feedback/email";
+    public static final String SYSTEM_FEEDBACK_LANGUAGES = "system/feedback/languages";
+    public static final String SYSTEM_FEEDBACK_TRANSLATION_FOLLOWS_TEXT = "system/feedback/translationFollowsText";
     public static final String SYSTEM_FEEDBACK_MAILSERVER_HOST = "system/feedback/mailServer/host";
     public static final String SYSTEM_FEEDBACK_MAILSERVER_PORT = "system/feedback/mailServer/port";
     public static final String SYSTEM_FEEDBACK_MAILSERVER_USERNAME = "system/feedback/mailServer/username";
@@ -71,7 +73,6 @@ public class Settings {
     public static final String SYSTEM_ENABLE_ALL_THESAURUS = "system/metadata/allThesaurus";
     public static final String SYSTEM_METADATA_THESAURUS_NAMESPACE = "system/metadata/thesaurusNamespace";
     public static final String SYSTEM_METADATA_VALIDATION_REMOVESCHEMALOCATION = "system/metadata/validation/removeSchemaLocation";
-    public static final String SYSTEM_METADATA_HISTORY_ENABLED = "system/metadata/history/enabled";
     public static final GNSetting SYSTEM_SITE_SVNUUID = new GNSetting("system/site/svnUuid", true);
     public static final String SYSTEM_INTRANET_NETWORK = "system/intranet/network";
     public static final String SYSTEM_INTRANET_NETMASK = "system/intranet/netmask";
@@ -84,6 +85,7 @@ public class Settings {
     public static final String SYSTEM_CSW_CAPABILITY_RECORD_UUID = "system/csw/capabilityRecordUuid";
     public static final String SYSTEM_CSW_METADATA_PUBLIC = "system/csw/metadataPublic";
     public static final String SYSTEM_USERSELFREGISTRATION_ENABLE = "system/userSelfRegistration/enable";
+    public static final String SYSTEM_USERSELFREGISTRATION_EMAIL_DOMAINS = "system/userSelfRegistration/domainsAllowed";
     public static final String SYSTEM_USERSELFREGISTRATION_RECAPTCHA_ENABLE = "system/userSelfRegistration/recaptcha/enable";
     public static final String SYSTEM_USERSELFREGISTRATION_RECAPTCHA_PUBLICKEY = "system/userSelfRegistration/recaptcha/publickey";
     public static final String SYSTEM_USERSELFREGISTRATION_RECAPTCHA_SECRETKEY = "system/userSelfRegistration/recaptcha/secretkey";
@@ -139,6 +141,8 @@ public class Settings {
     public static final String METADATA_IMPORT_RESTRICT = "metadata/import/restrict";
     public static final String METADATA_IMPORT_USERPROFILE = "metadata/import/userprofile";
     public static final String METADATA_BATCH_EDITING_ACCESS_LEVEL = "metadata/batchediting/accesslevel";
+    public static final String METADATA_HISTORY_ENABLED = "metadata/history/enabled";
+    public static final String METADATA_HISTORY_ACCESS_LEVEL = "metadata/history/accesslevel";
     public static final String METADATA_PUBLISHED_DELETE_USERPROFILE = "metadata/delete/profilePublishedMetadata";
     public static final String METADATA_PUBLISH_USERPROFILE = "metadata/publication/profilePublishMetadata";
     public static final String METADATA_UNPUBLISH_USERPROFILE = "metadata/publication/profileUnpublishMetadata";
@@ -154,6 +158,9 @@ public class Settings {
     public static final String SYSTEM_SECURITY_PASSWORDENFORCEMENT_USEPATTERN = "system/security/passwordEnforcement/usePattern";
     public static final String SYSTEM_SECURITY_PASSWORDENFORCEMENT_PATTERN = "system/security/passwordEnforcement/pattern";
     public static final String SYSTEM_SECURITY_PASSWORD_ALLOWADMINRESET = "system/security/password/allowAdminReset";
+    public static final String SYSTEM_TRANSLATION_PROVIDER = "system/translation/provider";
+    public static final String SYSTEM_TRANSLATION_SERVICEURL = "system/translation/serviceUrl";
+    public static final String SYSTEM_TRANSLATION_APIKEY = "system/translation/apiKey";
 
     public static final String MICROSERVICES_ENABLED = "microservices/enabled";
 

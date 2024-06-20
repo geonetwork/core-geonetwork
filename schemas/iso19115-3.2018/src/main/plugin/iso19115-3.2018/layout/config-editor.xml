@@ -2,7 +2,7 @@
 <editor xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="../../../../../../config-editor.xsd"
         xmlns:gn="http://www.fao.org/geonetwork"
-        xmlns:srv="http://standards.iso.org/iso/19115/-3/srv/2.1"
+        xmlns:srv="http://standards.iso.org/iso/19115/-3/srv/2.0"
         xmlns:mds="http://standards.iso.org/iso/19115/-3/mds/2.0"
         xmlns:mcc="http://standards.iso.org/iso/19115/-3/mcc/1.0"
         xmlns:mri="http://standards.iso.org/iso/19115/-3/mri/1.0"
@@ -23,7 +23,6 @@
         xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0"
         xmlns:mac="http://standards.iso.org/iso/19115/-3/mac/2.0"
         xmlns:gfc="http://standards.iso.org/iso/19110/gfc/1.1"
-        xmlns:gts="http://www.isotc211.org/2005/gts"
         xmlns:gml="http://www.opengis.net/gml/3.2"
         xmlns:xlink="http://www.w3.org/1999/xlink">
 
@@ -570,12 +569,14 @@
     a table view force some constraints. -->
     <table for="cit:CI_Responsibility">
       <header>
+        <col/>
         <col label="cit:role"/>
         <col label="cit:CI_Organisation"/>
         <col label="cit:electronicMailAddress"/>
         <col/>
       </header>
       <row>
+        <col orderControl=".."/>
         <col xpath="cit:role"/>
         <col xpath="cit:party/cit:CI_Organisation/cit:name"/>
         <col xpath="cit:party/*/cit:contactInfo/*/cit:address/*/cit:electronicMailAddress"/>
@@ -584,11 +585,14 @@
     </table>
     <table for="gfc:FC_ListedValue">
       <header>
+        <col/>
         <col label="gfc:code"/>
         <col label="gfc:label"/>
         <col label="gfc:definition"/>
+        <col/>
       </header>
       <row>
+        <col orderControl=".."/>
         <col xpath="gfc:code"/>
         <col xpath="gfc:label"/>
         <col xpath="gfc:definition"/>
@@ -597,11 +601,15 @@
     </table>
     <table for="gfc:FC_ListedValue">
       <header>
+        <col/>
         <col label="gfc:code"/>
         <col label="gfc:label"/>
         <col label="gfc:definition"/>
+        <col label="gfc:valueType"/>
+        <col/>
       </header>
       <row>
+        <col orderControl=".."/>
         <col xpath="gfc:code"/>
         <col xpath="gfc:label"/>
         <col xpath="gfc:definition"/>
@@ -712,12 +720,8 @@
         <for name="cit:CI_Organisation"/>
         <for name="gfc:listedValue"/>
       </flatModeExceptions>
-      <thesaurusList>
-        <thesaurus key="external.theme.httpinspireeceuropaeutheme-theme" transformations="to-iso19115-3.2018-keyword-with-anchor"/>
-        <thesaurus key="external.theme.httpinspireeceuropaeumetadatacodelistSpatialScope-SpatialScope" transformations="to-iso19115-3.2018-keyword-with-anchor"/>
-        <thesaurus key="external.theme.httpinspireeceuropaeumetadatacodelistPriorityDataset-PriorityDataset" transformations="to-iso19115-3.2018-keyword-with-anchor"/>
-        <thesaurus key="external.theme.httpinspireeceuropaeufeatureconcept-featureconcept" transformations="to-iso19115-3.2018-keyword-with-anchor"/>
-      </thesaurusList>
+
+      <thesaurusList defaultTransformation="to-iso19115-3.2018-keyword-with-anchor"/>
     </view>
 
 
@@ -852,11 +856,8 @@
         <section xpath="/mdb:MD_Metadata/mdb:applicationSchemaInfo" or="applicationSchemaInfo"
                  in="/mdb:MD_Metadata"/>
       </tab>
-      <thesaurusList>
-        <thesaurus key="external.theme.httpinspireeceuropaeutheme-theme" transformations="to-iso19115-3.2018-keyword-with-anchor"/>
-        <thesaurus key="external.theme.httpinspireeceuropaeumetadatacodelistSpatialScope-SpatialScope" transformations="to-iso19115-3.2018-keyword-with-anchor"/>
-        <thesaurus key="external.theme.httpinspireeceuropaeumetadatacodelistPriorityDataset-PriorityDataset" transformations="to-iso19115-3.2018-keyword-with-anchor"/>
-      </thesaurusList>
+
+      <thesaurusList defaultTransformation="to-iso19115-3.2018-keyword-with-anchor"/>
     </view>
     <view name="xml">
       <sidePanel>

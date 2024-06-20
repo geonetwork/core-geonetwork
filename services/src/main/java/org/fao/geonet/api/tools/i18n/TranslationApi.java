@@ -275,7 +275,6 @@ public class TranslationApi {
         }
     }
 
-
     // Class used by getDbTranslations to define schema being returned.
     // Based on https://github.com/swagger-api/swagger-core/issues/3724#issuecomment-718761089
     private class ResponseMapDbTranslations extends HashMap<String, String>
@@ -296,7 +295,7 @@ public class TranslationApi {
                 "{" +
                     "  \"translationKey1\": \"Translated Key One\",\n" +
                     "  \"translationKey2\": \"Translated Key Two\",\n" +
-                    "  \"translationKey3\": \"Translated Key Tree\"\n" +
+                    "  \"translationKey3\": \"Translated Key Three\"\n" +
                     "}")
         }, schema = @Schema(implementation = ResponseMapDbTranslations.class))
     )

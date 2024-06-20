@@ -165,7 +165,7 @@
     "linkToParentTitle": "Associer une fiche parent",
     "linkToService": "Associer un service",
     "linkToServiceTitle": "Associer un service",
-    "linkToSibling": "Autres liens (eg. études, capteurs)",
+    "linkToSibling": "Associer",
     "linkToSiblingTitle": "Associer une ressource (eg. études, capteurs)",
     "linkToSource": "Associer à une donnée source",
     "linkToSourceTitle": "Associer une donnée source utilisée pour créer ce jeu de données",
@@ -446,5 +446,13 @@
     "addOnlinesrc#links": "Ajouter les liens",
     "addOnlinesrc#links-help": "eg. liens web",
     "addOnlinesrc#quality": "Ajouter des informations sur la qualité",
-    "addOnlinesrc#quality-help": "eg. spécifications, rapports"
+    "addOnlinesrc#quality-help": "eg. spécifications, rapports",
+    "associated-parent": "Fiche parent",
+    "associated-service": "Service",
+    "associated-dataset": "Jeu de données",
+    "associated-source": "Données sources",
+    "associated-fcats": "Catalogue d'attributs",
+    "associated-siblings": "Ressources associées",
+    "associated-hasfeaturecats": "Utilisant ce catalogue d'attributs",
+    "associatedResourcesPanel": "Ressources associées"
 }

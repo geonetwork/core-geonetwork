@@ -178,10 +178,11 @@
                     badge = config.getBadgeLabel(mainType, md);
                     icon = config.getClassIcon(mainType);"
   >
-    <h3 data-ng-if="groupSiblingsByType && items.length > 0" class="gn-related-title">
-      <i class="fa fa-fw {{icon}}" />
-      {{type.replace('siblings', '') | translate}}
-    </h3>
+    <h3
+      data-ng-if="groupSiblingsByType && items.length > 0"
+      data-ng-init="keyToken = type.replace('siblings', '').split('-')"
+      data-gn-associated-record-label="{associationType: keyToken[0], initiativeType: keyToken[1]}"
+    ></h3>
 
     <ul class="gn-related-list list-group">
       <li class="list-group-item" data-ng-repeat="md in items | orderBy:getOrderBy">
@@ -201,7 +202,7 @@
           target="_blank"
           title="{{md.resourceTitle}}"
         >
-          {{md.resourceTitle}}
+          {{md.resourceTitle || md.remoteUrl}}
           <i
             data-ng-if="md.origin === 'remote'"
             class="fa fa-external-link"
@@ -220,9 +221,12 @@
                     badge = config.getBadgeLabel(mainType, md);
                     icon = config.getClassIcon(mainType);"
   >
-    <h3 data-ng-if="groupSiblingsByType && items.length > 0">
-      {{type.replace('siblings', '') | translate}}
-    </h3>
+    <h3
+      data-ng-if="groupSiblingsByType && items.length > 0"
+      data-ng-init="keyToken = type.replace('siblings', '').split('-')"
+      data-gn-associated-record-label="{associationType: keyToken[0], initiativeType: keyToken[1]}"
+    ></h3>
+
     <ul class="row list-group gn-info-list">
       <gn-metadata-card
         data-ng-repeat="md in items | orderBy:getOrderBy"
@@ -230,50 +234,6 @@
         md="md"
         formatter-url="formatter.defaultUrl"
       >
-        <span
-          class="gn-card-badge"
-          data-ng-class="{
-            'gn-card-series': type === 'parent',
-            'gn-card-nonGeographicDataset': type === 'nonGeographicDataset',
-            'gn-card-service': type === 'services' || type === 'application',
-            'gn-card-dataset': type !== 'parent' && type !== 'services' && type !== 'application' && type !== 'nonGeographicDataset'
-            }"
-        >
-          <span>
-            <span
-              data-ng-if="!md.properties || (md.properties && md.properties.associationType == '')"
-            >
-              {{(config.getLabel(mainType, type)) | translate}}</span
-            >
-            <span
-              data-ng-if="md.properties && md.properties.associationType"
-              data-ng-show="md.properties && md.properties.associationType"
-              title="{{(config.getLabel(mainType, type)) | translate}}"
-            >
-              {{'associatedTo' | translate}}
-              <b title="{{'associationType' | translate}}">
-                <i
-                  class="fa fa-fw {{icon}} gn-icon-association-{{md.properties.associationType}}"
-                />
-                {{md.properties.associationType | translate}}
-              </b>
-              <span data-ng-if="md.properties && md.properties.initiativeType">
-                >
-                <b title="{{'initiativeType' | translate}}">
-                  <i
-                    class="fa fa-fw {{icon}} gn-icon-initiative-{{md.properties.initiativeType}}"
-                  />
-                  {{md.properties.initiativeType | translate}}
-                </b>
-              </span>
-            </span>
-          </span>
-          <i
-            data-ng-if="md.origin === 'remote'"
-            class="fa fa-fw fa-external-link"
-            title="{{'remoteRecord' | translate}}"
-          ></i>
-        </span>
       </gn-metadata-card>
       <button
         class="btn btn-link"

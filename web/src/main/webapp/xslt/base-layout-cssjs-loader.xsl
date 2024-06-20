@@ -91,7 +91,7 @@
           - in the search application if metadaat user feedback is enabled
     -->
     <xsl:choose>
-      <xsl:when test="$isRecaptchaEnabled and ($service = 'new.account' or ($angularApp = 'gn_search' and $metadataUserFeedbackEnabled))">
+      <xsl:when test="$isRecaptchaEnabled and ($service = 'new.account' or ($angularApp = 'gn_search' and $metadataUserFeedbackEnabled)  or ($angularApp = 'gn_contact_us' and $userFeedbackEnabled))">
         <script src="https://www.google.com/recaptcha/api.js"></script>
       </xsl:when>
       <xsl:otherwise>
@@ -110,7 +110,8 @@
         <script src="{$uiResourcesPath}lib/closure/base.js?v={$buildNumber}"></script>
 
         <script src="{$uiResourcesPath}lib/base64.js?v={$buildNumber}"></script>
-        <script src="{$uiResourcesPath}lib/jquery-2.2.4.js?v={$buildNumber}"></script>
+        <script src="{$uiResourcesPath}lib/jquery-3.7.1.js?v={$buildNumber}"></script>
+        <script src="{$uiResourcesPath}lib/jquery-migrate-3.4.1.js?v={$buildNumber}"></script>
 
         <script src="{$uiResourcesPath}lib/moment-with-locales.min.js?v={$buildNumber}"></script>
         <script src="{$uiResourcesPath}lib/moment-timezone-with-data-1970-2030.min.js?v={$buildNumber}"></script>
@@ -141,8 +142,8 @@
           src="{$uiResourcesPath}lib/angular.ext/colorpicker/angularjs-color-picker.js?v={$buildNumber}"></script>
         <script src="{$uiResourcesPath}lib/tinycolor.js?v={$buildNumber}"></script>
 
-        <script src="{$uiResourcesPath}lib/style/bootstrap/dist/js/bootstrap.js?v={$buildNumber}"></script>
-        <script src="{$uiResourcesPath}lib/jquery.ext/jquery-ui-slider.min.js?v={$buildNumber}"></script>
+        <script src="{$uiResourcesPath}lib/bootstrap.js?v={$buildNumber}"></script>
+        <script src="{$uiResourcesPath}lib/jquery.ext/jquery-ui-slider-1.13.2.min.js?v={$buildNumber}"></script>
         <script src="{$uiResourcesPath}lib/proj4js-compressed.js?v={$buildNumber}"></script>
 
         <xsl:choose>
@@ -183,9 +184,9 @@
         <script
           src="{$uiResourcesPath}lib/bootstrap.ext/datepicker/bootstrap-datepicker.js?v={$buildNumber}"></script>
         <script
-          src="{$uiResourcesPath}lib/bootstrap.ext/datepicker/bootstrap-datepicker.fr.js?v={$buildNumber}"></script>
+          src="{$uiResourcesPath}lib/bootstrap.ext/datepicker/bootstrap-datepicker.fr.min.js?v={$buildNumber}"></script>
         <script
-          src="{$uiResourcesPath}lib/bootstrap.ext/datepicker/bootstrap-datepicker.nl.js?v={$buildNumber}"></script>
+          src="{$uiResourcesPath}lib/bootstrap.ext/datepicker/bootstrap-datepicker.nl.min.js?v={$buildNumber}"></script>
         <script src="{$uiResourcesPath}lib/bootstrap-table/dist/bootstrap-table.js?v={$buildNumber}"></script>
         <script src="{$uiResourcesPath}lib/bootstrap-table-angular.js?v={$buildNumber}"></script>
         <script src="{$uiResourcesPath}lib/bootstrap-table/src/extensions/export/bootstrap-table-export.js?v={$buildNumber}"></script>
@@ -240,9 +241,16 @@
 
     <xsl:variable name="appConfig"
                   select="util:getUiConfiguration(/root/request/ui)"/>
+    <xsl:variable name="urlAppConfig"
+                  select="/root/request/uiconfig"/>
 
     <script type="text/javascript">
       var module = angular.module('<xsl:value-of select="$angularApp"/>');
+
+      module.config(['gnGlobalSettings',
+      function(gnGlobalSettings) {
+      gnGlobalSettings.webAnalyticsService = '<xsl:value-of select="util:getWebAnalyticsService()"/>';
+      }]);
     </script>
 
     <xsl:if test="$angularApp = 'gn_search' or $angularApp = 'gn_login' or $angularApp = 'gn_admin'">
@@ -298,12 +306,27 @@
       cfgModule.config(['gnViewerSettings', 'gnSearchSettings', 'gnGlobalSettings',
       function(gnViewerSettings, gnSearchSettings, gnGlobalSettings) {
       gnGlobalSettings.init(
-      <xsl:value-of select="if ($appConfig != '') then $appConfig else '{}'"/>,
-      // Relative path is safer as even if settings are wrong, the client app works.
+      <xsl:value-of select="if ($urlAppConfig != '') then $urlAppConfig else if ($appConfig != '') then $appConfig else '{}'"/>,
       null,
       <xsl:value-of select="if ($nodeUrl != '') then concat('&quot;', $nodeUrl, '&quot;') else 'null'"/>,
       gnViewerSettings, gnSearchSettings);
       }]);
+
+      // See jQuery.htmlPrefilter changes: https://jquery.com/upgrade-guide/3.5/
+      // Uncomment this line to debug issues with self-closed tags and use the debug mode to get jQuery Migrate warning
+      // about the problematic HTML snippet.
+      //jQuery.migrateEnablePatches( "self-closed-tags" );
     </script>
+  </xsl:template>
+
+
+  <xsl:template name="webAnalytics">
+    <xsl:variable name="webAnalyticsService" select="util:getWebAnalyticsService()" />
+    <xsl:variable name="webAnalyticsCode" select="util:getWebAnalyticsJavascriptCode()" />
+    <xsl:if test="string($webAnalyticsService) and string($webAnalyticsCode)">
+      <script type="text/javascript">
+        <xsl:value-of select="$webAnalyticsCode" />
+      </script>
+    </xsl:if>
   </xsl:template>
 </xsl:stylesheet>

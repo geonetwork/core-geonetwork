@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2024 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -24,8 +24,11 @@ package org.fao.geonet.api.links;
 
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.domain.AbstractMetadata;
+import org.fao.geonet.domain.Link;
+import org.fao.geonet.kernel.url.UrlAnalyzer;
 import org.fao.geonet.repository.LinkRepository;
 import org.fao.geonet.services.AbstractServiceIntegrationTest;
+import org.jdom.Element;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -35,6 +38,8 @@ import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
+
+import java.util.List;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
@@ -51,6 +56,8 @@ public class LinksApiTest extends AbstractServiceIntegrationTest {
     private WebApplicationContext wac;
     @Autowired
     private LinkRepository linkRepository;
+    @Autowired
+    private UrlAnalyzer urlAnalyzer;
 
     private AbstractMetadata md;
     private MockMvc mockMvc;
@@ -67,10 +74,6 @@ public class LinksApiTest extends AbstractServiceIntegrationTest {
         final MockHttpSession httpSession = this.loginAsAdmin();
 
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
-        this.mockMvc.perform(post("/srv/api/records/links/analyze?uuid=" + md.getUuid())
-            .session(httpSession)
-            .accept(MediaType.parseMediaType("application/json")))
-            .andExpect(status().isCreated());
 
         Assert.assertEquals(1, linkRepository.count());
 
@@ -96,5 +99,8 @@ public class LinksApiTest extends AbstractServiceIntegrationTest {
     private void createTestData() throws Exception {
         loginAsAdmin(context);
         this.md = injectMetadataInDb(getSampleMetadataXml(), context, true);
+        Element xmlData = this.md.getXmlData(false);
+
+        urlAnalyzer.processMetadata(xmlData, this.md);
     }
 }

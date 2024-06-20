@@ -39,17 +39,18 @@ theme:
         icon: material/weather-sunny
         name: Switch to light mode
   features:
-    - content.action.view
-    - content.action.edit
-    - content.code.copy
-    - content.tabs.link
-    - navigation.tabs
+    - toc.follow
     - navigation.tracking
+    - navigation.top
+    - navigation.tabs
     - navigation.prune
     - navigation.indexes
-    - toc.follow
-    - navigation.top
     - navigation.footer
+    - header.autohide
+    - content.tabs.link
+    - content.code.copy
+    - content.action.view
+    - content.action.edit
     - announce.dismiss
 
 # Plugins - install using: pip3 install -r requirements.txt
@@ -65,11 +66,11 @@ plugins:
           name: English
           build: true
           default: true
-          site_name: 'GeoNetwork opensource (EN)'
+          site_name: 'GeoNetwork opensource'
         - locale: fr
           name: Français
           build: !ENV [FRENCH,true]
-          site_name: 'GeoNetwork opensource (FR)'
+          site_name: 'GeoNetwork opensource'
           site_description: Catalogue GeoNetwork pour répertorier, rechercher et examiner les enregistrements.
           nav_translations:
             Home: Home
@@ -83,6 +84,7 @@ extra:
   version:
     provider: mike
     default: stable
+    alias: true
   homepage: https://geonetwork-opensource.org/
   social:
     - icon: fontawesome/brands/github
@@ -147,14 +149,19 @@ nav:
     - overview/authors.md
     - 'Changelog':
       - overview/change-log/index.md
-      - 'Latest':
-        - overview/change-log/latest/index.md
+      - overview/change-log/version-4.4.5.md
+      - overview/change-log/version-4.2.10.md
+      - 'Release History':
+        - overview/change-log/history/index.md
+        - overview/change-log/version-4.4.5.md
+        - overview/change-log/version-4.4.4.md
         - overview/change-log/version-4.4.3.md
         - overview/change-log/version-4.4.2.md
         - overview/change-log/version-4.4.1.md
         - overview/change-log/version-4.4.0.md
-      - 'Stable':
-        - overview/change-log/stable/index.md
+      - 'Release History':
+        - overview/change-log/history/index.md
+        - overview/change-log/version-4.2.10.md
         - overview/change-log/version-4.2.9.md
         - overview/change-log/version-4.2.8.md
         - overview/change-log/version-4.2.7.md
@@ -165,8 +172,6 @@ nav:
         - overview/change-log/version-4.2.2.md
         - overview/change-log/version-4.2.1.md
         - overview/change-log/version-4.2.0.md
-      - 'Maintenance':
-        - overview/change-log/maintenance/index.md
         - overview/change-log/version-3.12.12.md
         - overview/change-log/version-3.12.11.md
         - overview/change-log/version-3.12.10.md
@@ -180,8 +185,6 @@ nav:
         - overview/change-log/version-3.12.2.md
         - overview/change-log/version-3.12.1.md
         - overview/change-log/version-3.12.0.md
-      - 'Archive':
-        - overview/change-log/archive/index.md
         - overview/change-log/version-4.0.6.md
         - overview/change-log/version-4.0.5.md
         - overview/change-log/version-4.0.4.md
@@ -246,19 +249,21 @@ nav:
       - user-guide/describing-information/multilingual-editing.md
     - 'Associating Resources':
       - user-guide/associating-resources/index.md
-      - user-guide/associating-resources/cite.md
+      - 'Associating documents':
+        - user-guide/associating-resources/linking-documents.md
+        - user-guide/associating-resources/using-filestore.md
+        - user-guide/associating-resources/linking-thumbnail.md
+        - user-guide/associating-resources/linking-online-resources.md
+      - 'Associating another record':
+        - user-guide/associating-resources/linking-records.md
+        - user-guide/associating-resources/linking-parent.md
+        - user-guide/associating-resources/linking-source.md
+        - user-guide/associating-resources/linking-dataset-or-service.md
+        - user-guide/associating-resources/linking-feature-catalog.md
+        - user-guide/associating-resources/linking-others.md
+        - user-guide/associating-resources/linking-remote-records.md
       - user-guide/associating-resources/doi.md
-      - user-guide/associating-resources/linking-dataset-or-service.md
-      - user-guide/associating-resources/linking-documents.md
-      - user-guide/associating-resources/linking-feature-catalog.md
-      - user-guide/associating-resources/linking-online-resources.md
-      - user-guide/associating-resources/linking-others.md
-      - user-guide/associating-resources/linking-parent.md
-      - user-guide/associating-resources/linking-records.md
-      - user-guide/associating-resources/linking-remote-records.md
-      - user-guide/associating-resources/linking-source.md
-      - user-guide/associating-resources/linking-thumbnail.md
-      - user-guide/associating-resources/using-filestore.md
+      - user-guide/associating-resources/cite.md
     - 'Tag information':
       - user-guide/tag-information/index.md
       - user-guide/tag-information/tagging-with-categories.md
@@ -274,10 +279,11 @@ nav:
       - user-guide/analyzing/metadata.md
     - 'Workflow':
       - user-guide/workflow/index.md
-      - user-guide/workflow/batchediting.md
-      - user-guide/workflow/batchupdate-from-admin.md
-      - user-guide/workflow/batchupdate-xsl.md
-      - user-guide/workflow/batchupdate.md
+      - 'Updating a set of records':
+        - user-guide/workflow/batchupdate/index.md
+        - user-guide/workflow/batchediting.md
+        - user-guide/workflow/batchupdate-from-admin.md
+        - user-guide/workflow/batchupdate-xsl.md
       - user-guide/workflow/geopublication.md
       - user-guide/workflow/life-cycle.md
       - user-guide/workflow/suggestion.md

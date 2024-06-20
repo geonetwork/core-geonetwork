@@ -362,6 +362,15 @@
          * @param {string} type of the directive that calls it.
          */
         onOpenPopup: function (type, additionalParams) {
+          if (
+            type === "parent" &&
+            additionalParams.fields &&
+            additionalParams.fields.associationType
+          ) {
+            // In ISO19115-3, parents are usually encoded using the association records
+            // Configured in config/associated-panel/default.json
+            type = "siblings";
+          }
           var fn = openCb[type];
           if (angular.isFunction(fn)) {
             openCb[type](additionalParams);
@@ -687,17 +696,21 @@
               this,
               setParams("thumbnail-remove", {
                 id: gnCurrentEdit.id,
-                thumbnail_url: thumb.id
+                thumbnail_url: thumb.id,
+                resourceIdx: thumb.idx,
+                resourceHash: thumb.hash
               })
             );
           }
-          // It is an uploaded tumbnail
+          // It is an uploaded thumbnail
           else {
             return runService(
               "removeThumbnail",
               {
                 type: thumb.title === "thumbnail" ? "small" : "large",
                 id: gnCurrentEdit.id,
+                resourceIdx: thumb.idx,
+                resourceHash: thumb.hash,
                 version: gnCurrentEdit.version
               },
               this
@@ -729,6 +742,8 @@
             this,
             setParams("onlinesrc-remove", {
               id: gnCurrentEdit.id,
+              resourceHash: onlinesrc.hash,
+              resourceIdx: onlinesrc.idx,
               url: url,
               name: $filter("gnLocalized")(onlinesrc.title)
             })
