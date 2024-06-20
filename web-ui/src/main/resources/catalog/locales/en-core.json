@@ -126,6 +126,7 @@
     "featureCatalog": "Feature catalog",
     "frequency": "Frequency",
     "feebackSent": "Your message has been sent to the catalog manager.",
+    "feebackSentError": "An error occurred sending your to the catalog manager. Please try again later, contact the service provider, or report this issue.",
     "feedbackNotEnable": "Feedback is not enabled.",
     "filter": "Filter",
     "filterSearch": "Display search options",
