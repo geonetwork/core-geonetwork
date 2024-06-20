@@ -436,7 +436,16 @@
         <xsl:if test="info/@id != ''">
           "id": "<xsl:value-of select="util:escapeForJson(info/@id)"/>",
         </xsl:if>
-        "title": "<xsl:value-of select="util:escapeForJson(info/@title)"/>",
+        <xsl:choose>
+          <xsl:when test="exists(info/multilingualTitle)">
+            "multilingualTitle": {
+              <xsl:value-of select="string-join(info/multilingualTitle/value, ', ')"/>
+            },
+          </xsl:when>
+          <xsl:otherwise>
+            "title": "<xsl:value-of select="util:escapeForJson(info/@title)"/>",
+          </xsl:otherwise>
+        </xsl:choose>
         "theme": "<xsl:value-of select="util:escapeForJson(info/@type)"/>",
         <xsl:if test="info/@uri != ''">
           "link": "<xsl:value-of select="util:escapeForJson(info/@uri)"/>",
