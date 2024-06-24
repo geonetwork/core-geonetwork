@@ -481,6 +481,8 @@
     "clickToSelect": "Սեղմեք՝ ընտրելու կամ չընտրելու համար",
     "filterDataDescription": "Քարտեզի վրա ընտրեք շերտ՝ WFS-ի հետ կապված գործառույթները զտելու համար (եթե այդպիսիք կան): Հատկանիշները նախ պետք է ինդեքսավորվեն ադմինիստրատորի կողմից:",
     "WPSDescription": "Մուտքագրեք WPS վերջնակետի URL՝ գործընթացը դինամիկ ձևի միջոցով սկսելու համար: Վերջերս օգտագործված WPS գործընթացները ցուցադրվում են երկրորդ ներդիրում:",
+    "noRecentProcessFound": "No process used recently.",
+    "localStorageNotSupported": "Browser local storage not supported",
     "wpsProcesslist": "Մշակման ծառայություններ",
     "wpsProcessurl": "Ըստ URL-ի",
     "wpsProcessrecent": "Վերջին ծառայություններ",

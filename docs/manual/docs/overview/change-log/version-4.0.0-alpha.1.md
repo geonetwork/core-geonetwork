@@ -86,10 +86,8 @@ This version is a beta version and needs testing and feedback from the community
 -   Transifex / Support multiple branches translation
 -   Multilingual metadata / Records are indexed and displayed but no logic to display depending on user interface language or search on specific language
 
-<figure>
-<img src="img/3990-es-index-multilingual.png" alt="img/3990-es-index-multilingual.png" />
-<figcaption>Multilingual fields are stored as a JSON object with an optional link if using Anchor.</figcaption>
-</figure>
+![Part of a JSON file for string translations](img/3990-es-index-multilingual.png)
+*Multilingual fields are stored as a JSON object with an optional link if using Anchor.*
 
 -   Indexing / Language specific analyzer (draft configuration made for French)
 -   Indexing / Spatial / Support for bounding polygons

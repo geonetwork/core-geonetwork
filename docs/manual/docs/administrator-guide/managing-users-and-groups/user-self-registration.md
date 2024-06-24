@@ -11,9 +11,12 @@ Click the `Create an account` button and fill out the registration form:
 The fields in this form are self-explanatory except for the following:
 
 -   **Email**: The user's email address. This is mandatory and will be used as the username.
--   **Profile**: By default, self-registered users are given the `Registered User` profile (see previous section). If any other profile is selected:
+-   **Requested profile**: By default, self-registered users are given the `Registered User` profile (see previous section). If any other profile is selected:
     -   the user will still be given the `Registered User` profile
     -   an email will be sent to the Email address nominated in the Feedback section of the 'System Administration' menu, informing them of the request for a more privileged profile
+-   **Requested group**: By default, self-registered users are not assigned to any group. If a group is selected:
+  -   the user will still not be assigned to any group
+  -   an email will be sent to the Email address nominated in the Feedback section of the 'System Administration' menu, informing them of the requested group.
 
 ## What happens when a user self-registers?
 

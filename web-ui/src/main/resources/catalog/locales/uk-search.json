@@ -481,6 +481,8 @@
     "clickToSelect": "Натисніть, щоб вибрати або скасувати вибір",
     "filterDataDescription": "Виберіть шар на карті, щоб почати фільтрацію пов’язаних функцій WFS (якщо такі є). Функції спочатку має бути проіндексовано адміністратором.",
     "WPSDescription": "Введіть URL-адресу кінцевої точки WPS, щоб почати використовувати процес через динамічну форму. Нещодавно використані процеси WPS відображаються на другій вкладці.",
+    "noRecentProcessFound": "No process used recently.",
+    "localStorageNotSupported": "Browser local storage not supported",
     "wpsProcesslist": "Послуги обробки",
     "wpsProcessurl": "За URL-адресою",
     "wpsProcessrecent": "Останні послуги",

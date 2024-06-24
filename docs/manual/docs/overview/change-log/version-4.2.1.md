@@ -36,4 +36,4 @@ Major changes:
 
 -   Library update: [Switch to OpenPDF](https://github.com/geonetwork/core-geonetwork/pull/6343), [Keycloak](https://github.com/geonetwork/core-geonetwork/pull/6531), [Log4j2](https://github.com/geonetwork/core-geonetwork/pull/6397)
 
-and more \... see [4.2.1 issues](https://github.com/geonetwork/core-geonetwork/issues?q=is%3Aissue+milestone%3A4.2.1+is%3Aclosed) and [pull requests](https://github.com/geonetwork/core-geonetwork/pulls?page=3&q=is%3Apr+milestone%3A4.2.1+is%3Aclosed) for full details.
+and more \... see [4.2.1 issues](https://github.com/geonetwork/core-geonetwork/issues?q=is%3Aissue+milestone%3A4.2.1+is%3Aclosed) and [pull requests](https://github.com/geonetwork/core-geonetwork/pulls?q=is%3Apr+milestone%3A4.2.1+is%3Aclosed) for full details.

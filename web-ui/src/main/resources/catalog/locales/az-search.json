@@ -481,6 +481,8 @@
     "clickToSelect": "Seçmək və ya seçimi ləğv etmək üçün klikləyin",
     "filterDataDescription": "Əlaqədar WFS xüsusiyyətlərini filtrləməyə başlamaq üçün xəritədə təbəqə seçin (əgər varsa). Xüsusiyyətlər əvvəlcə administrator tərəfindən indeksləşdirilməlidir.",
     "WPSDescription": "Prosesi dinamik forma vasitəsilə istifadə etməyə başlamaq üçün WPS son nöqtəsi URL daxil edin. Son istifadə olunan WPS prosesləri ikinci tabda göstərilir.",
+    "noRecentProcessFound": "No process used recently.",
+    "localStorageNotSupported": "Browser local storage not supported",
     "wpsProcesslist": "Emal xidmətləri",
     "wpsProcessurl": "URL ilə",
     "wpsProcessrecent": "Son xidmətlər",
