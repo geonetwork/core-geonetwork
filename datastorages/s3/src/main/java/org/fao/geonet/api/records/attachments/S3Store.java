@@ -186,6 +186,8 @@ public class S3Store extends AbstractStore {
         try {
             final ListObjectsV2Result objects = s3.getClient().listObjectsV2(
                 s3.getBucket(), getMetadataDir(metadataId));
+
+            Log.info(Geonet.RESOURCES, String.format("Deleting all files from metadataId '%s'", metadataId));
             for (S3ObjectSummary object: objects.getObjectSummaries()) {
                 s3.getClient().deleteObject(s3.getBucket(), object.getKey());
             }
