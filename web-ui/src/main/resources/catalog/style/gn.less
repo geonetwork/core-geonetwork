@@ -742,12 +742,8 @@ i.fa-times.delete:hover {
 
 .gn-search-page {
   .gn-status {
-    bottom: 9px;
     margin-left: -8px;
     z-index: 98;
-  }
-  [data-search-results] .gn-status {
-    position: absolute;
   }
   [data-search-results] table .gn-status {
     position: unset;
@@ -765,14 +761,15 @@ i.fa-times.delete:hover {
   .gn-workflow-status {
     border: 2px solid @brand-primary;
     display: inline-block;
-    margin-top: 5px;
-    margin-right: 5px;
+    margin-right: 10px;
     border-radius: 0 3px 3px 0;
     padding: 5px 18px;
     background-color: @brand-primary;
     font-weight: 500;
     font-size: 80%;
     color: #fff;
+    flex-grow: 0;
+    align-self: center;
   }
   .gn-status-mdview,
   .gn-workflow-status-mdview {

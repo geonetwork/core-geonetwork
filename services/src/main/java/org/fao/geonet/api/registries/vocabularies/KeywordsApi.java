@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2023 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2024 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -509,7 +509,7 @@ public class KeywordsApi {
         }
 
         Element descKeys;
-        Map<String, String> jsonResponse = new HashMap<>();
+        Map<String, Map<String, String>> jsonResponse = new HashMap<>();
 
         uri = URLDecoder.decode(uri, "UTF-8");
 
@@ -545,10 +545,15 @@ public class KeywordsApi {
             descKeys = new Element("descKeys");
             for (KeywordBean keywordBean : kbList) {
                 if (isJson) {
+
+                    Map<String, String> keywordInfo = new HashMap<>();
+                    keywordInfo.put("label", keywordBean.getDefaultValue());
+                    keywordInfo.put("definition", StringUtils.isNotEmpty(keywordBean.getDefaultDefinition()) ?
+                        keywordBean.getDefaultDefinition() : keywordBean.getDefaultValue());
                     jsonResponse.put(
                         keywordBean.getUriCode(),
                         // Requested lang or the first non empty value
-                        keywordBean.getDefaultValue()
+                        keywordInfo
                     );
                 } else {
                     KeywordsSearcher.toRawElement(descKeys, keywordBean);
@@ -654,10 +659,12 @@ public class KeywordsApi {
         response.setContentType("text/xml");
         response.setHeader("Content-Disposition", "attachment;filename=" + directoryFile.getFileName());
         ServletOutputStream out = response.getOutputStream();
-        BufferedReader reader1 = new BufferedReader(new InputStreamReader(new FileInputStream(directoryFile.toFile()), StandardCharsets.UTF_8));
-        IOUtils.copy(reader1, out);
-        out.flush();
-        out.close();
+        try (BufferedReader reader1 = new BufferedReader(new InputStreamReader(new FileInputStream(directoryFile.toFile()), StandardCharsets.UTF_8))) {
+            IOUtils.copy(reader1, out, StandardCharsets.UTF_8);
+        } finally {
+            out.flush();
+            out.close();
+        }
     }
 
 
@@ -1094,9 +1101,7 @@ public class KeywordsApi {
                 key,
                 Arrays.stream(csvRecord.get(column).split(conceptLinkSeparator))
                     .filter(StringUtils::isNotEmpty)
-                    .map(c -> {
-                        return thesaurusNamespaceUrl + c;
-                    })
+                    .map(c -> thesaurusNamespaceUrl + c)
                     .collect(Collectors.toList())
             );
         }

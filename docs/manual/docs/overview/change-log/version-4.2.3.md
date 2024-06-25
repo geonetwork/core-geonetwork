@@ -21,4 +21,4 @@ Major changes:
 -   [Javascript / Update to AngularJS 1.8.2](https://github.com/geonetwork/core-geonetwork/pull/6693)
 -   [Javascript / WRO4J cache can be built at build time](https://github.com/geonetwork/core-geonetwork/pull/6774)
 
-and more \... see [4.2.3 issues](https://github.com/geonetwork/core-geonetwork/issues?q=is%3Aissue+milestone%3A4.2.3+is%3Aclosed) and [pull requests](https://github.com/geonetwork/core-geonetwork/pulls?page=3&q=is%3Apr+milestone%3A4.2.3+is%3Aclosed) for full details.
+and more \... see [4.2.3 issues](https://github.com/geonetwork/core-geonetwork/issues?q=is%3Aissue+milestone%3A4.2.3+is%3Aclosed) and [pull requests](https://github.com/geonetwork/core-geonetwork/pulls?q=is%3Apr+milestone%3A4.2.3+is%3Aclosed) for full details.

@@ -1,7 +1,7 @@
 <div
   data-ng-repeat="(key, t) in allKeywords"
   data-ng-if="thesaurus && thesaurus.indexOf(key) !== -1"
-  title="{{t.title}}"
+  title="{{t.multilingualTitle.default || t.title}}"
   class="row"
 >
   <div

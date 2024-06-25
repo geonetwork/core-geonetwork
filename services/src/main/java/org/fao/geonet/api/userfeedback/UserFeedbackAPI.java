@@ -51,8 +51,8 @@ import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.userfeedback.RatingCriteriaRepository;
-import org.fao.geonet.util.MailUtil;
-import org.fao.geonet.util.XslUtil;
+import org.fao.geonet.languages.FeedbackLanguages;
+import org.fao.geonet.util.*;
 import org.fao.geonet.utils.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -71,6 +71,10 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.fao.geonet.kernel.setting.Settings.*;
+import static org.fao.geonet.util.LocalizedEmailComponent.ComponentType.*;
+import static org.fao.geonet.util.LocalizedEmailComponent.KeyType;
+import static org.fao.geonet.util.LocalizedEmailComponent.ReplacementType.*;
+import static org.fao.geonet.util.LocalizedEmailParameter.ParameterType;
 
 
 /**
@@ -96,6 +100,9 @@ public class UserFeedbackAPI {
 
     @Autowired
     IMetadataUtils metadataUtils;
+
+    @Autowired
+    FeedbackLanguages feedbackLanguages;
 
     /**
      * Gets rating criteria
@@ -586,7 +593,7 @@ public class UserFeedbackAPI {
             description = "Email subject.",
             required = false
         )
-        @RequestParam(required = false, defaultValue = "User feedback") final String subject,
+        @RequestParam(required = false, defaultValue = "feedback_subject_userFeedback") final String subject,
         @Parameter(
             description = "User function.",
             required = false
@@ -613,6 +620,7 @@ public class UserFeedbackAPI {
 
         Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
         ResourceBundle messages = ResourceBundle.getBundle("org.fao.geonet.api.Messages", locale);
+        Locale[] feedbackLocales = feedbackLanguages.getLocales(locale);
 
         boolean recaptchaEnabled = settingManager.getValueAsBool(Settings.SYSTEM_USERSELFREGISTRATION_RECAPTCHA_ENABLE);
 
@@ -642,17 +650,42 @@ public class UserFeedbackAPI {
             }
         }
 
-        String title = XslUtil.getIndexField(null, metadataUuid, "resourceTitleObject", "");
+        LocalizedEmailComponent emailSubjectComponent = new LocalizedEmailComponent(SUBJECT, "user_feedback_title", KeyType.MESSAGE_KEY, POSITIONAL_FORMAT);
+        LocalizedEmailComponent emailMessageComponent = new LocalizedEmailComponent(MESSAGE, "user_feedback_text", KeyType.MESSAGE_KEY, POSITIONAL_FORMAT);
 
-        MailUtil.sendMail(new ArrayList<>(toAddress),
-            String.format(
-                messages.getString("user_feedback_title"),
-                catalogueName, title, subject),
-            String.format(
-                messages.getString("user_feedback_text"),
-                name, org, function, email, phone, title, type, category, comments,
-                metadataUtils.getDefaultUrl(metadataUuid, locale.getISO3Language())),
-            settingManager);
+        for (Locale feedbackLocale : feedbackLocales) {
+
+            emailSubjectComponent.addParameters(
+                feedbackLocale,
+                new LocalizedEmailParameter(ParameterType.RAW_VALUE, 1, catalogueName),
+                new LocalizedEmailParameter(ParameterType.INDEX_FIELD, 2, "resourceTitleObject", metadataUuid),
+                new LocalizedEmailParameter(ParameterType.MESSAGE_OR_JSON_KEY, 3, subject)
+            );
+
+            emailMessageComponent.addParameters(
+                feedbackLocale,
+                new LocalizedEmailParameter(ParameterType.RAW_VALUE, 1, name),
+                new LocalizedEmailParameter(ParameterType.RAW_VALUE, 2, org),
+                new LocalizedEmailParameter(ParameterType.RAW_VALUE, 3, function),
+                new LocalizedEmailParameter(ParameterType.RAW_VALUE, 4, email),
+                new LocalizedEmailParameter(ParameterType.RAW_VALUE, 5, phone),
+                new LocalizedEmailParameter(ParameterType.INDEX_FIELD, 6, "resourceTitleObject", metadataUuid),
+                new LocalizedEmailParameter(ParameterType.MESSAGE_OR_JSON_KEY, 7, type),
+                new LocalizedEmailParameter(ParameterType.MESSAGE_OR_JSON_KEY, 8, category),
+                new LocalizedEmailParameter(ParameterType.RAW_VALUE, 9, comments),
+                new LocalizedEmailParameter(ParameterType.RAW_VALUE, 10, metadataUtils.getDefaultUrl(metadataUuid, locale.getISO3Language()))
+            );
+        }
+
+        LocalizedEmail localizedEmail = new LocalizedEmail(false);
+        localizedEmail.addComponents(emailSubjectComponent, emailMessageComponent);
+
+        MailUtil.sendMail(
+            new ArrayList<>(toAddress),
+            localizedEmail.getParsedSubject(feedbackLocales),
+            localizedEmail.getParsedMessage(feedbackLocales),
+            settingManager
+        );
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 

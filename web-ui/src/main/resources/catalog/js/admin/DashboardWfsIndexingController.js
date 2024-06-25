@@ -354,7 +354,7 @@
                         "</span>" +
                         "  </a>" +
                         '  <div class="alert alert-danger small" style="display: none" role="alert"></div>' +
-                        '  <i class="fa fa-spinner fa-spin"/>' +
+                        '  <i class="fa fa-spinner fa-spin"></i>' +
                         "</div>" +
                         "<code>" +
                         row.mdUuid +

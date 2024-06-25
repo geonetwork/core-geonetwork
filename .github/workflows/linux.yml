@@ -22,7 +22,7 @@ jobs:
         submodules: 'recursive'
         show-progress: 'false'
     - name: Set up JDK
-      uses: actions/setup-java@v4.1.0
+      uses: actions/setup-java@v4.2.1
       with:
         distribution: 'temurin'
         java-version: ${{ matrix.jdk }}
@@ -55,7 +55,7 @@ jobs:
         submodules: 'recursive'
         show-progress: 'false'
     - name: Set up JDK
-      uses: actions/setup-java@v4.1.0
+      uses: actions/setup-java@v4.2.1
       with:
         distribution: 'temurin'
         java-version: 11

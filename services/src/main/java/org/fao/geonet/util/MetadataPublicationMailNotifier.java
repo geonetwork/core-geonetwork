@@ -41,6 +41,10 @@ import java.util.stream.Collectors;
 
 import static org.fao.geonet.kernel.setting.Settings.SYSTEM_METADATAPRIVS_PUBLICATION_NOTIFICATIONGROUPS;
 import static org.fao.geonet.kernel.setting.Settings.SYSTEM_METADATAPRIVS_PUBLICATION_NOTIFICATIONLEVEL;
+import static org.fao.geonet.util.LocalizedEmailComponent.ComponentType.*;
+import static org.fao.geonet.util.LocalizedEmailComponent.KeyType;
+import static org.fao.geonet.util.LocalizedEmailComponent.ReplacementType.*;
+import static org.fao.geonet.util.LocalizedEmailParameter.ParameterType;
 
 @Component
 public class MetadataPublicationMailNotifier {
@@ -56,12 +60,10 @@ public class MetadataPublicationMailNotifier {
      * Collects the email addresses to be notified based on the metadata publication
      * notification level configured in the settings.
      *
-     * @param messages                        Message bundle with the mail texts.
-     * @param mailLanguage                    Language to use for the mais.
+     * @param feedbackLocales                         Array of locales to be used in email.
      * @param metadataListToNotifyPublication List of notifications to send.
      */
-    public void notifyPublication(ResourceBundle messages,
-                                  String mailLanguage,
+    public void notifyPublication(Locale[] feedbackLocales,
                                   List<MetadataPublicationNotificationInfo> metadataListToNotifyPublication) {
         String notificationSetting = settingManager.getValue(SYSTEM_METADATAPRIVS_PUBLICATION_NOTIFICATIONLEVEL);
         if (StringUtils.isNotEmpty(notificationSetting)) {
@@ -88,7 +90,7 @@ public class MetadataPublicationMailNotifier {
                             .filter(StringUtils::isNotEmpty)
                             .collect(Collectors.toList());
 
-                        sendMailPublicationNotification(messages, mailLanguage, toAddress1, metadataNotificationInfoList);
+                        sendMailPublicationNotification(feedbackLocales, toAddress1, metadataNotificationInfoList);
                     });
 
                 } else {
@@ -117,61 +119,67 @@ public class MetadataPublicationMailNotifier {
 
                     }
 
-                    sendMailPublicationNotification(messages, mailLanguage, toAddress, metadataListToNotifyPublication);
+                    sendMailPublicationNotification(feedbackLocales, toAddress, metadataListToNotifyPublication);
                 }
             }
         }
     }
 
-    private void sendMailPublicationNotification(ResourceBundle messages,
-                                                 String mailLanguage,
+    private void sendMailPublicationNotification(Locale[] feedbackLocales,
                                                  List<String> toAddress,
                                                  List<MetadataPublicationNotificationInfo> metadataListToNotifyPublication) {
         if (toAddress.isEmpty()) {
             return;
         }
 
-        String subject = String.format(
-            messages.getString("metadata_published_subject"),
-            settingManager.getSiteName());
-        String message = messages.getString("metadata_published_text");
+        LocalizedEmailComponent emailSubjectComponent = new LocalizedEmailComponent(SUBJECT, "metadata_published_subject", KeyType.MESSAGE_KEY, POSITIONAL_FORMAT);
+        LocalizedEmailComponent emailMessageComponent = new LocalizedEmailComponent(MESSAGE, "metadata_published_text", KeyType.MESSAGE_KEY, POSITIONAL_FORMAT);
 
-        String linkRecordTemplate = "{{link}}";
-        String linkRecordUrlTemplate = settingManager.getNodeURL() + "api/records/{{index:uuid}}";
+        for (Locale feedbackLocale : feedbackLocales) {
 
-        String recordPublishedMessage = messages.getString("metadata_published_record_text")
-            .replace(linkRecordTemplate, linkRecordUrlTemplate);
-        String recordUnpublishedMessage = messages.getString("metadata_unpublished_record_text")
-            .replace(linkRecordTemplate, linkRecordUrlTemplate);
-        String recordReapprovedPublishedMessage = messages.getString("metadata_approved_published_record_text")
-            .replace(linkRecordTemplate, linkRecordUrlTemplate);
+            emailSubjectComponent.addParameters(
+                feedbackLocale,
+                new LocalizedEmailParameter(ParameterType.RAW_VALUE, 1, settingManager.getSiteName())
+            );
 
+            StringBuilder listOfProcessedMetadataMessage = new StringBuilder();
 
-        StringBuilder listOfProcessedMetadataMessage = new StringBuilder();
+            metadataListToNotifyPublication.forEach(metadata -> {
+                java.util.Optional<Group> group = groupRepository.findById(metadata.getGroupId());
 
-        metadataListToNotifyPublication.forEach(metadata -> {
-            java.util.Optional<Group> group = groupRepository.findById(metadata.getGroupId());
+                String recordMessageKey;
 
-            if (Boolean.TRUE.equals(metadata.getPublished())) {
-                String recordPublishedMessageAux;
-
-                if (!metadata.isReapproval()) {
-                    recordPublishedMessageAux = replaceMessageValues(recordPublishedMessage, metadata, group);
+                if (Boolean.TRUE.equals(metadata.getPublished())) {
+                    if (!metadata.isReapproval()) {
+                        recordMessageKey = "metadata_published_record_text";
+                    } else {
+                        recordMessageKey = "metadata_approved_published_record_text";
+                    }
                 } else {
-                    recordPublishedMessageAux = replaceMessageValues(recordReapprovedPublishedMessage, metadata, group);
+                    recordMessageKey = "metadata_unpublished_record_text";
                 }
 
-                listOfProcessedMetadataMessage.append(
-                    MailUtil.compileMessageWithIndexFields(recordPublishedMessageAux, metadata.getMetadataUuid(), mailLanguage));
-            } else {
-                String recordUnpublishedMessageAux = replaceMessageValues(recordUnpublishedMessage, metadata, group);
+                LocalizedEmailComponent recordMessageComponent = new LocalizedEmailComponent(NESTED, recordMessageKey, KeyType.MESSAGE_KEY, NAMED_FORMAT);
+                recordMessageComponent.enableCompileWithIndexFields(metadata.getMetadataUuid());
+                recordMessageComponent.enableReplaceLinks(true);
 
-                listOfProcessedMetadataMessage.append(
-                    MailUtil.compileMessageWithIndexFields(recordUnpublishedMessageAux, metadata.getMetadataUuid(), mailLanguage));
-            }
-        });
+                recordMessageComponent.addParameters(feedbackLocale, getReplacementParameters(metadata, group));
 
-        String htmlMessage = String.format(message, listOfProcessedMetadataMessage);
+                listOfProcessedMetadataMessage.append(recordMessageComponent.parseMessage(feedbackLocale));
+
+            });
+
+            emailMessageComponent.addParameters(
+                feedbackLocale,
+                new LocalizedEmailParameter(ParameterType.RAW_VALUE, 1, listOfProcessedMetadataMessage.toString())
+            );
+        }
+
+        LocalizedEmail localizedEmail = new LocalizedEmail(true);
+        localizedEmail.addComponents(emailSubjectComponent, emailMessageComponent);
+
+        String subject = localizedEmail.getParsedSubject(feedbackLocales);
+        String htmlMessage = localizedEmail.getParsedMessage(feedbackLocales);
 
         // Send mail to notify about metadata publication / un-publication
         try {
@@ -182,17 +190,19 @@ public class MetadataPublicationMailNotifier {
     }
 
 
-    private String replaceMessageValues(String message, MetadataPublicationNotificationInfo metadata, Optional<Group> group) {
-        String messageAux = message
-            .replace("{{publisherUser}}", metadata.getPublisherUser())
-            .replace("{{submitterUser}}", metadata.getSubmitterUser())
-            .replace("{{reviewerUser}}", metadata.getReviewerUser())
-            .replace("{{timeStamp}}", metadata.getPublicationDateStamp().getDateAndTime());
+    private LocalizedEmailParameter[] getReplacementParameters(MetadataPublicationNotificationInfo metadata, Optional<Group> group) {
+
+        ArrayList<LocalizedEmailParameter> parameters = new ArrayList<>();
+
+        parameters.add(new LocalizedEmailParameter(ParameterType.RAW_VALUE, "{{publisherUser}}", metadata.getPublisherUser()));
+        parameters.add(new LocalizedEmailParameter(ParameterType.RAW_VALUE, "{{submitterUser}}", metadata.getSubmitterUser()));
+        parameters.add(new LocalizedEmailParameter(ParameterType.RAW_VALUE, "{{reviewerUser}}", metadata.getReviewerUser()));
+        parameters.add(new LocalizedEmailParameter(ParameterType.RAW_VALUE, "{{timeStamp}}", metadata.getPublicationDateStamp().getDateAndTime()));
 
         if (group.isPresent()) {
-            messageAux = messageAux.replace("{{group}}", group.get().getName());
+            parameters.add(new LocalizedEmailParameter(ParameterType.RAW_VALUE, "{{group}}", group.get().getName()));
         }
 
-        return messageAux;
+        return parameters.toArray(new LocalizedEmailParameter[0]);
     }
 }

@@ -385,35 +385,35 @@ public class CMISStore extends AbstractStore {
     }
 
     @Override
-    public String delResources(final ServiceContext context, final String metadataUuid, Boolean approved) throws Exception {
-        int metadataId = canEdit(context, metadataUuid, approved);
+    public String delResources(final ServiceContext context, final int metadataId) throws Exception {
         String folderKey = null;
         try {
             folderKey = getMetadataDir(context, metadataId);
             final Folder folder = cmisUtils.getFolderCache(folderKey, true);
 
+            Log.info(Geonet.RESOURCES, String.format("Deleting the folder of '%s' and the files within the folder", folderKey));
             folder.deleteTree(true, UnfileObject.DELETE, true);
             cmisUtils.invalidateFolderCache(folderKey);
 
             Log.info(Geonet.RESOURCES,
-                    String.format("Metadata '%s(%s)' directory '%s' removed.", metadataUuid, metadataId, folderKey));
-            return String.format("Metadata '%s(%s)' directory '%s' removed.", metadataUuid, metadataId, folderKey);
+                    String.format("Metadata '%d' directory '%s' removed.", metadataId, folderKey));
+            return String.format("Metadata '%d' directory '%s' removed.", metadataId, folderKey);
         } catch (CmisObjectNotFoundException e) {
             Log.warning(Geonet.RESOURCES,
-                    String.format("Unable to located metadata '%s(%s)' directory '%s' to be removed.", metadataUuid, metadataId, folderKey));
-            return String.format("Unable to located metadata '%s(%s)' directory '%s' to be removed.", metadataUuid, metadataId, folderKey);
+                    String.format("Unable to located metadata '%d' directory '%s' to be removed.", metadataId, folderKey));
+            return String.format("Unable to located metadata '%d' directory '%s' to be removed.", metadataId, folderKey);
         } catch (ResourceNotFoundException e) {
             Log.warning(Geonet.RESOURCES,
-                String.format("Unable to located metadata '%s(%s)' directory '%s' to be removed.", metadataUuid, metadataId, folderKey));
-            return String.format("Unable to located metadata '%s(%s)' directory '%s' to be removed.", metadataUuid, metadataId, folderKey);
+                String.format("Unable to located metadata '%d' directory '%s' to be removed.", metadataId, folderKey));
+            return String.format("Unable to located metadata '%d' directory '%s' to be removed.", metadataId, folderKey);
         } catch (CmisPermissionDeniedException e) {
             Log.warning(Geonet.RESOURCES,
-                    String.format("Insufficient privileges, unable to remove metadata '%s(%s)' directory '%s'.", metadataUuid, metadataId, folderKey));
-            return String.format("Insufficient privileges, unable to remove metadata '%s(%s)' directory '%s'.", metadataUuid, metadataId, folderKey);
+                    String.format("Insufficient privileges, unable to remove metadata '%d' directory '%s'.", metadataId, folderKey));
+            return String.format("Insufficient privileges, unable to remove metadata '%d' directory '%s'.", metadataId, folderKey);
         } catch (CmisConstraintException e) {
             Log.warning(Geonet.RESOURCES,
-                    String.format("Unable to remove metadata '%s(%s)' directory '%s' due so constraint violation or locks.", metadataUuid, metadataId, folderKey));
-            return String.format("Unable to remove metadata '%s(%s)' directory '%s' due so constraint violation or locks.", metadataUuid, metadataId, folderKey);
+                    String.format("Unable to remove metadata '%d' directory '%s' due so constraint violation or locks.", metadataId, folderKey));
+            return String.format("Unable to remove metadata '%d' directory '%s' due so constraint violation or locks.", metadataId, folderKey);
         }
     }
 
@@ -509,7 +509,9 @@ public class CMISStore extends AbstractStore {
     @Override
     public void copyResources(ServiceContext context, String sourceUuid, String targetUuid, MetadataResourceVisibility metadataResourceVisibility, boolean sourceApproved, boolean targetApproved) throws Exception {
         final int sourceMetadataId = canEdit(context, sourceUuid, metadataResourceVisibility, sourceApproved);
+        final int targetMetadataId = canEdit(context, sourceUuid, metadataResourceVisibility, targetApproved);
         final String sourceResourceTypeDir = getMetadataDir(context, sourceMetadataId) + cmisConfiguration.getFolderDelimiter() + metadataResourceVisibility.toString();
+        final String targetResourceTypeDir = getMetadataDir(context, targetMetadataId) + cmisConfiguration.getFolderDelimiter() + metadataResourceVisibility.toString();
         try {
             Folder sourceParentFolder = cmisUtils.getFolderCache(sourceResourceTypeDir, true);
 
@@ -523,6 +525,8 @@ public class CMISStore extends AbstractStore {
             for (Map.Entry<String, Document> sourceEntry : sourceDocumentMap.entrySet()) {
                 Document sourceDocument = sourceEntry.getValue();
 
+
+                Log.info(Geonet.RESOURCES, String.format("Copying %s to %s" , sourceResourceTypeDir+cmisConfiguration.getFolderDelimiter()+sourceDocument.getName(), targetResourceTypeDir));
                 // Get cmis properties from the source document
                 Map<String, Object> sourceProperties = getProperties(sourceDocument);
                 putResource(context, targetUuid, sourceDocument.getName(), sourceDocument.getContentStream().getStream(), null, metadataResourceVisibility, targetApproved, sourceProperties);

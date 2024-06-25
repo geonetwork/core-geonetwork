@@ -218,8 +218,8 @@
                   " " +
                   $translate.instant("features")
                 );
-              }
-              // locale: getBsTableLang()
+              },
+              locale: getBsTableLang()
             },
             bstConfig
           )

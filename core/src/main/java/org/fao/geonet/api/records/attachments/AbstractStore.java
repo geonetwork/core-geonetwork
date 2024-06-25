@@ -203,6 +203,12 @@ public abstract class AbstractStore implements Store {
     }
 
     @Override
+    public String delResources(final ServiceContext context, final String metadataUuid, Boolean approved) throws Exception {
+        int metadataId = canEdit(context, metadataUuid, approved);
+        return delResources(context, metadataId);
+    }
+
+    @Override
     public String delResource(final ServiceContext context, final String metadataUuid, final String resourceId) throws Exception {
         return delResource(context, metadataUuid, resourceId, true);
     }

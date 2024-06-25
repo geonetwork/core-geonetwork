@@ -54,6 +54,7 @@
     "$filter",
     "gnExternalViewer",
     "gnGlobalSettings",
+    "gnWebAnalyticsService",
     function (
       gnMap,
       gnOwsCapabilities,
@@ -68,7 +69,8 @@
       gnConfig,
       $filter,
       gnExternalViewer,
-      gnGlobalSettings
+      gnGlobalSettings,
+      gnWebAnalyticsService
     ) {
       this.configure = function (options) {
         angular.extend(this.map, options);
@@ -133,55 +135,9 @@
       var addEsriRestToMap =
         gnViewerSettings.resultviewFns && gnViewerSettings.resultviewFns.addMdLayerToMap;
 
-      var addWFSToMap = function (link, md) {
-        var url = $filter("gnLocalized")(link.url) || link.url;
-
-        var isServiceLink =
-          gnSearchSettings.mapProtocols.services.indexOf(link.protocol) > -1;
-
-        var isGetFeatureLink = url.toLowerCase().indexOf("request=getfeature") > -1;
-
-        var featureName;
-        if (isGetFeatureLink) {
-          var name = "typename";
-          var regex = new RegExp("[\\?&]" + name + "=([^&#]*)");
-          var results = regex.exec(url);
-
-          if (results) {
-            featureName = decodeURIComponent(results[1].replace(/\+/g, " "));
-          }
-        } else {
-          featureName = $filter("gnLocalized")(link.title) || link.name;
-        }
-
-        // if an external viewer is defined, use it here
-        if (gnExternalViewer.isEnabled()) {
-          gnExternalViewer.viewService(
-            {
-              id: md ? md.id : null,
-              uuid: md ? md.uuid : null
-            },
-            {
-              type: "wfs",
-              url: url,
-              name: featureName
-            }
-          );
-          return;
-        }
-        if (featureName && (!isServiceLink || isGetFeatureLink)) {
-          gnMap.addWfsFromScratch(
-            gnSearchSettings.viewerMap,
-            url,
-            featureName,
-            false,
-            md
-          );
-        } else {
-          gnMap.addOwsServiceToMap(url, "WFS");
-        }
-        gnSearchLocation.setMap();
-      };
+      var addWFSToMap =
+        gnViewerSettings.resultviewFns &&
+        gnViewerSettings.resultviewFns.addMdWFSLayerToMap;
 
       var addWMTSToMap =
         gnViewerSettings.resultviewFns && gnViewerSettings.resultviewFns.addMdLayerToMap;
@@ -211,6 +167,7 @@
 
       function addMapToMap(record, md) {
         var url = $filter("gnLocalized")(record.url) || record.url;
+        gnWebAnalyticsService.trackLink(url, record.protocol);
         gnOwsContextService.loadContextFromUrl(url, gnSearchSettings.viewerMap);
 
         gnSearchLocation.setMap("legend");
@@ -250,8 +207,12 @@
       var openLink = function (record, link) {
         var url = $filter("gnLocalized")(record.url) || record.url;
         if (url && angular.isString(url) && url.match("^(http|ftp|sftp|\\\\|//)")) {
+          gnWebAnalyticsService.trackLink(url, record.protocol);
+
           return window.open(url, "_blank");
         } else if (url && url.indexOf("www.") == 0) {
+          gnWebAnalyticsService.trackLink("http://" + url, record.protocol);
+
           return window.open("http://" + url, "_blank");
         } else if (
           record.title &&

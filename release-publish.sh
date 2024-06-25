@@ -44,7 +44,7 @@ sftp $sourceforge_username,geonetwork@frs.sourceforge.net << EOT
 cd /home/frs/project/g/ge/geonetwork/GeoNetwork_opensource
 mkdir v${version}
 cd v${version}
-put docs/changes/changes{$version}-0.txt
+put docs/changes/changes${version}-0.txt
 put release/target/GeoNetwork*/geonetwork-bundle*.zip*
 put web/target/geonetwork.war*
 put datastorages/*/target/*.zip
@@ -53,3 +53,4 @@ EOT
 
 # Deploy to osgeo repository (requires credentials in ~/.m2/settings.xml)
 mvn deploy -DskipTests -Drelease
+

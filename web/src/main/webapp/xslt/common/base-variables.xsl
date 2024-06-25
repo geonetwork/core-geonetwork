@@ -168,5 +168,7 @@
                 select="'^OGC:WMS.*'"/>
 
 
+  <xsl:variable name="userFeedbackEnabled" select="$envSystem/userFeedback/enable = 'true'" />
+
   <xsl:variable name="metadataUserFeedbackEnabled" select="$envSystem/localrating/enable = 'advanced'" />
 </xsl:stylesheet>

@@ -601,6 +601,19 @@
                 service: "urn:ogc:serviceType:WMS"
               }
             ];
+          } else if (source instanceof ol.source.TileImage) {
+            name = "{type=tms,name=" + layer.get("name") + "}";
+
+            params.server = [
+              {
+                onlineResource: [
+                  {
+                    href: layer.getSource().getUrls()[0]
+                  }
+                ],
+                service: "urn:ogc:serviceType:WMTS"
+              }
+            ];
           } else {
             return;
           }

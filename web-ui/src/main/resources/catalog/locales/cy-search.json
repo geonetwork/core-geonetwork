@@ -481,6 +481,8 @@
     "clickToSelect": "Cliciwch i ddewis neu ddad-ddewis",
     "filterDataDescription": "Dewiswch haen ar y map i ddechrau hidlo nodweddion cysylltiedig WFS (os oes rhai o gwbl). Mae'n rhaid i nodweddion fod wedi cael eu mynegeio gan weinyddwr yn gyntaf.",
     "WPSDescription": "Rhowch URL terfynbwynt WPS i ddechrau defnyddio'r broses trwy ffurflen ddeinamig. Dangosir prosesau WPS a ddefnyddiwyd yn ddiweddar yn yr ail dab.",
+    "noRecentProcessFound": "No process used recently.",
+    "localStorageNotSupported": "Browser local storage not supported",
     "wpsProcesslist": "Processing services",
     "wpsProcessurl": "By URL",
     "wpsProcessrecent": "Recent services",

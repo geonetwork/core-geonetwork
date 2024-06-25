@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2024 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -27,7 +27,6 @@ import org.fao.geonet.domain.Address;
 /**
  * DTO class for user register information.
  *
- * @author Jose García
  */
 public class UserRegisterDto {
     private String profile;
@@ -38,6 +37,8 @@ public class UserRegisterDto {
     private String organisation;
     private Address address;
     private String captcha;
+
+    private String group;
 
     public String getProfile() {
         return profile;
@@ -103,6 +104,14 @@ public class UserRegisterDto {
         this.captcha = captcha;
     }
 
+    public String getGroup() {
+        return group;
+    }
+
+    public void setGroup(String group) {
+        this.group = group;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -110,6 +119,7 @@ public class UserRegisterDto {
 
         UserRegisterDto that = (UserRegisterDto) o;
 
+        if (group != null ? !group.equals(that.group) : that.group != null) return false;
         if (profile != null ? !profile.equals(that.profile) : that.profile != null) return false;
         if (username != null ? !username.equals(that.username) : that.username != null) return false;
         if (email != null ? !email.equals(that.email) : that.email != null) return false;
@@ -123,6 +133,7 @@ public class UserRegisterDto {
     @Override
     public int hashCode() {
         int result = profile != null ? profile.hashCode() : 0;
+        result = 31 * result + (group != null ? group.hashCode() : 0);
         result = 31 * result + (username != null ? username.hashCode() : 0);
         result = 31 * result + (email != null ? email.hashCode() : 0);
         result = 31 * result + (name != null ? name.hashCode() : 0);

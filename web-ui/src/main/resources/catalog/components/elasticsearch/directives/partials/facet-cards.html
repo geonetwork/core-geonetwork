@@ -12,7 +12,7 @@
     <div class="panel-body">
       <a
         class="clearfix"
-        title="{{::facetValue}}"
+        title="{{::(facet | facetTooltip)}}"
         role="link"
         data-ng-init="response = aggregations[key];
                       decorator = (response.meta && response.meta.decorator) || undefined"

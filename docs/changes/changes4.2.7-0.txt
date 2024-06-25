@@ -1,0 +1,44 @@
+================================================================================
+===
+=== GeoNetwork 4.2.7: List of changes
+===
+================================================================================
+- [BP] i18n / Transifex update. (#7505)
+- [BP] Security / Jolokia update. (#7501)
+- [BP] Don't override proxy configuration when saving the settings, if the http proxy is configured in Java system properties (#7325)
+- [BP] Check http links in documentation (#7496)
+- [BP] Add more db information to the site information page. (#7403)
+- [BP] Update manual links to use https://docs.geonetwork-opensource.org/ (#7487)
+- [BP] Change the structure of the MkDocs assets. Stylesheets and logos are moved to the `overrides` directory (#7429)
+- [BP] Fix url link in full view. bracket ") " could be included in link (#7483)
+- [BP] Batch edit access level for editor role (#7464)
+- [BP] Fixed broken links and formatting in BUILDING.md (#7471)
+- [BP] Editor / Remove extra space on mandatory add action (#7438)
+- [BP] change label to "Access to the catalogue" (#7467)
+- [BP] Remove exception class name from the error message (#6977)
+- [BP] List styling for related records (#7442)
+- [BP] Fix cookies path when deployed on root "/" context (#7446)
+- [BP] Standard / Feature catalogues / Do not index empty codelist value (#7440)
+- Update the links to documentation in the sofware development pages (4.2.x) (#7409)
+- [BP] Fixed typos, formatting and numbering (#7430)
+- [BP]Fix issue with canViewRecord when calling related api (#7373)
+- [BP] Transifex updates (#7432)
+- [BP] Fix exception handling from schematron validation so that it flags the metadata as invalid if there is an exception (#6978)
+- [BP] Rename ElasticSearch to Elasticsearch (#7404)
+- [BP] Sort the portals by label, not by name (identifier) (#7424)
+- [BP] Metadata editor / ISO19115-3.2008 / Filter out metadata templates in the online resources dialog
+- [BP] Fix system info when ES throw errors (#7413)
+- [BP] Remove old password field for admins (#7417)
+- [backport 4.2.x] Add documentation to GitHub workflows (#7415)
+- [BP] Change the url the icon in the homepage is linking to (#7422)
+- [BP] Fixed typos and updated SearchManager to EsSearchManager in core readme (#7418)
+- [BP] Update the CONTRIBUTING guide to detail the steps, before merging the pull requests (#7419)
+- [BP] Transifex updates
+- [BP] Record view / fix double approved parameter in the metadata working copy page, for the buttons in the online resources panel. Related to #7248 (#7402)
+- [BP] Doc / Fix list (#7401)
+- [BP] Fixed typos in code_quality readme (#7407)
+- Remove changelog for latest
+- Use default mike settings to fix interaction between language chooser and versions
+- Correct canical_version to stable
+- Add 3.12.11 changelog and fix the display of the changelogs in the navigation bar (#7397)
+- Doc / 4.4.0 / Add note about datastore changes (#7398)

@@ -101,6 +101,8 @@
           $scope.userToRemind = gnUtilityService.getUrlParameter("username");
           $scope.changeKey = gnUtilityService.getUrlParameter("changeKey");
         }
+
+        $scope.retrieveGroups();
       }
 
       // TODO: https://github.com/angular/angular.js/issues/1460
@@ -134,12 +136,28 @@
         email: "",
         organisation: "",
         profile: "RegisteredUser",
+        group: "",
         address: {
           address: "",
           city: "",
           country: "",
           state: "",
           zip: ""
+        }
+      };
+
+      $scope.retrieveGroups = function () {
+        $http.get("../api/groups").then(
+          function (response) {
+            $scope.groups = response.data;
+          },
+          function (response) {}
+        );
+      };
+
+      $scope.updateGroupSelection = function () {
+        if ($scope.userInfo.profile === "Administrator") {
+          $scope.userInfo.group = "";
         }
       };
 

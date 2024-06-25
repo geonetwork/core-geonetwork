@@ -229,10 +229,10 @@ public class FilesystemStore extends AbstractStore {
     }
 
     @Override
-    public String delResources(ServiceContext context, String metadataUuid, Boolean approved) throws Exception {
-        int metadataId = canEdit(context, metadataUuid, approved);
+    public String delResources(ServiceContext context, int metadataId) throws Exception {
         Path metadataDir = Lib.resource.getMetadataDir(getDataDirectory(context), metadataId);
         try {
+            Log.info(Geonet.RESOURCES, String.format("Deleting all files from metadataId '%d'", metadataId));
             IO.deleteFileOrDirectory(metadataDir, true);
             return String.format("Metadata '%s' directory removed.", metadataId);
         } catch (Exception e) {

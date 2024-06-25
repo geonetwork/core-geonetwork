@@ -35,4 +35,4 @@ Major changes:
 -   [Admin console / Pages manager](https://github.com/geonetwork/core-geonetwork/pull/6788)
 -   [Editor configuration / Add for each support](https://github.com/geonetwork/core-geonetwork/pull/6907)
 
-and more \... see [4.2.4 issues](https://github.com/geonetwork/core-geonetwork/issues?q=is%3Aissue+milestone%3A4.2.4+is%3Aclosed) and [pull requests](https://github.com/geonetwork/core-geonetwork/pulls?page=3&q=is%3Apr+milestone%3A4.2.4+is%3Aclosed) for full details.
+and more \... see [4.2.4 issues](https://github.com/geonetwork/core-geonetwork/issues?q=is%3Aissue+milestone%3A4.2.4+is%3Aclosed) and [pull requests](https://github.com/geonetwork/core-geonetwork/pulls?q=is%3Apr+milestone%3A4.2.4+is%3Aclosed) for full details.
