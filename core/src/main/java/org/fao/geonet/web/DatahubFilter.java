@@ -1,24 +1,17 @@
 package org.fao.geonet.web;
 
-import com.moandjiezana.toml.Toml;
-import com.moandjiezana.toml.TomlWriter;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpHeaders;
 import org.apache.log4j.Logger;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.NodeInfo;
-import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Source;
 import org.fao.geonet.domain.SourceType;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.SourceRepository;
-import org.fao.geonet.utils.Log;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 
-import javax.annotation.RegEx;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -35,7 +28,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
-import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.zip.GZIPOutputStream;
@@ -135,7 +127,7 @@ public class DatahubFilter implements Filter {
             }
         }
 
-        Toml toml = new Toml().read(configuration);
+        /*TomlParseResult toml = Toml.parse(configuration);
         Map<String, Object> tomlMap = toml.toMap();
 
         // Force the "gn4_api_url" field to a value including the portal name
@@ -146,7 +138,11 @@ public class DatahubFilter implements Filter {
         globalSection.put("geonetwork4_api_url", "/geonetwork/" + portalName + "/api");
 
         TomlWriter tomlWriter = new TomlWriter();
-        configuration = tomlWriter.write(tomlMap);
+        configuration = tomlWriter.write(tomlMap);*/
+
+        // remove url & add new one
+        configuration = configuration.replaceAll("\ngeonetwork4_api_url\\s?=.+", "\n")
+                .replace("[global]", "[global]\ngeonetwork4_api_url = \"/geonetwork/" + portalName + "/api\"");
         return new ByteArrayInputStream(configuration.getBytes());
     }
 
