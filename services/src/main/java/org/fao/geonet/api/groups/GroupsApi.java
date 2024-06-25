@@ -31,6 +31,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.exception.ExceptionUtils;
@@ -45,8 +46,10 @@ import org.fao.geonet.api.tools.i18n.LanguageUtils;
 import org.fao.geonet.api.tools.i18n.TranslationPackBuilder;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.*;
+import org.fao.geonet.domain.page.Page;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.repository.*;
+import org.fao.geonet.repository.page.PageRepository;
 import org.fao.geonet.repository.specification.GroupSpecs;
 import org.fao.geonet.repository.specification.MetadataSpecs;
 import org.fao.geonet.repository.specification.OperationAllowedSpecs;
@@ -148,6 +151,9 @@ public class GroupsApi {
 
     @Autowired
     private MetadataRepository metadataRepository;
+
+    @Autowired
+    private PageRepository pageRepository;
 
     private static Resources.ResourceHolder getImage(Resources resources, ServiceContext serviceContext, Group group) throws IOException {
         final Path logosDir = resources.locateLogosDir(serviceContext);
@@ -539,6 +545,21 @@ public class GroupsApi {
                     "Group %s is associated with %d user(s). Add 'force' parameter to remove it or remove users associated with that group first.",
                     group.get().getName(), users.size()
                 ));
+            }
+
+            List<Page> staticPages = pageRepository.findAll();
+
+            for (Page page: staticPages) {
+                if (CollectionUtils.isNotEmpty(page.getGroups())) {
+                    for (Group pageGroup : page.getGroups()) {
+                        if (pageGroup.getId() == groupIdentifier) {
+                            throw new NotAllowedException(String.format(
+                                "Group %s is associated with '%s' static page(s). Please remove the static page(s) associated with that group first.",
+                                group.get().getName(), page.getLabel()
+                            ));
+                        }
+                    }
+                }
             }
 
             groupRepository.deleteById(groupIdentifier);
