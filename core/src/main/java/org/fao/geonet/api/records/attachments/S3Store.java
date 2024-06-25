@@ -34,11 +34,13 @@ import com.amazonaws.services.s3.model.S3ObjectInputStream;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
+import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.MetadataResource;
 import org.fao.geonet.domain.MetadataResourceContainer;
 import org.fao.geonet.domain.MetadataResourceVisibility;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.resources.S3Credentials;
+import org.fao.geonet.utils.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.File;
@@ -186,6 +188,8 @@ public class S3Store extends AbstractStore {
         try {
             final ListObjectsV2Result objects = s3.getClient().listObjectsV2(
                 s3.getBucket(), getMetadataDir(metadataId));
+
+            Log.info(Geonet.RESOURCES, String.format("Deleting all files from metadataId '%s'", metadataId));
             for (S3ObjectSummary object: objects.getObjectSummaries()) {
                 s3.getClient().deleteObject(s3.getBucket(), object.getKey());
             }
