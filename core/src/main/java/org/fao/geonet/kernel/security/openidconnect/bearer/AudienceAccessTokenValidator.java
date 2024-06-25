@@ -54,44 +54,60 @@ public class AudienceAccessTokenValidator implements AccessTokenValidator {
     OIDCConfiguration oidcConfiguration;
 
     /**
+     * If "claim" is a String, then this will return true if claim == expected.
+     * If "claim" is a List, then it will return true if any of the list items == expected
+     *
+     * @param claim    - could be a String or a List<String>
+     * @param expected
+     * @return
+     */
+    public static boolean contains(Object claim, String expected) {
+        if (claim == null || expected == null) {
+            return false;
+        }
+        if (claim instanceof String) {
+            var claimStr = (String) claim;
+            return expected.equals(claimStr);
+        }
+        if (claim instanceof List) {
+            List claims = (List) claim;
+            for (Object o : claims) {
+                if ((o instanceof String) && (o.equals(expected))) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
      * "aud" must be our client id
      * OR "azp" must be our client id (or, if its a list, contain our client id)
      * OR "appid" must be our client id.
      * <p>
      * Otherwise, its a token not for us...
-     *
-     *  This checks that the audience of the JWT access token is us.
-     *  The main attack this tries to prevent is someone getting an access token (i.e. from keycloak or azure) that
-     *  was meant for another application (say a silly calendar app), and then using that token here.  The IDP provider
-     *  (keycloak/azure) will validate the token as "good", but it wasn't generated for us.  This does a check of the
-     *  token that OUR client ID is mentioned (not another app).
+     * <p>
+     * This checks that the audience of the JWT access token is us.
+     * The main attack this tries to prevent is someone getting an access token (i.e. from keycloak or azure) that
+     * was meant for another application (say a silly calendar app), and then using that token here.  The IDP provider
+     * (keycloak/azure) will validate the token as "good", but it wasn't generated for us.  This does a check of the
+     * token that OUR client ID is mentioned (not another app).
      */
     @Override
     public void verifyToken(Map claimsJWT, Map userInfoClaims) throws Exception {
         if ((claimsJWT.get(AUDIENCE_CLAIM_NAME) != null)
-            && claimsJWT.get(AUDIENCE_CLAIM_NAME).equals(oidcConfiguration.getClientId())) {
+            && contains(claimsJWT.get(AUDIENCE_CLAIM_NAME), oidcConfiguration.getClientId())) {
             return;
         }
 
         if ((claimsJWT.get(APPID_CLAIM_NAME) != null)
-            && claimsJWT.get(APPID_CLAIM_NAME).equals(oidcConfiguration.getClientId())) {
+            && contains(claimsJWT.get(APPID_CLAIM_NAME), oidcConfiguration.getClientId())) {
             return; //azure specific
         }
 
         //azp - keycloak
-        Object azp = claimsJWT.get(KEYCLOAK_AUDIENCE_CLAIM_NAME);
-        if (azp != null) {
-            if (azp instanceof String) {
-                if (((String) azp).equals(oidcConfiguration.getClientId()))
-                    return;
-            } else if (azp instanceof List) {
-                List azps = (List) azp;
-                for (Object o : azps) {
-                    if ((o instanceof String) && (o.equals(oidcConfiguration.getClientId()))) {
-                        return;
-                    }
-                }
-            }
+        if (contains(claimsJWT.get(KEYCLOAK_AUDIENCE_CLAIM_NAME), oidcConfiguration.getClientId())) {
+            return;
         }
         throw new Exception("JWT Bearer token - probably not meant for this application");
     }
