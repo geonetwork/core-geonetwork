@@ -15,7 +15,7 @@
           ></i>
         </div>
         <span>
-          <h3 data-translate>{{date.type | translate}}</h3>
+          <h3>{{date.type | translate}}</h3>
           <span data-gn-humanize-time="{{date.date}}"></span>
         </span>
       </li>
@@ -79,9 +79,7 @@
       <i class="fa fa-fw fa-tags"></i>
     </span>
     <div>
-      <h3 data-translate="">
-        {{(t.multilingualTitle.default || t.title || key) | translate}}
-      </h3>
+      <h3>{{(t.multilingualTitle.default || t.title || key) | translate}}</h3>
 
       <div data-gn-keyword-badges="mdView.current.record" data-thesaurus="key"></div>
     </div>
