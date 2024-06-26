@@ -2572,14 +2572,14 @@
     var durationValue = moment.duration(duration);
     timeIntervalValues.push(startDate);
 
-    var nextValue = moment(startDate).add(durationValue).utc().format();
+    var nextValue = moment.utc(startDate).add(durationValue).toISOString();
 
     if (!endDate) {
       timeIntervalValues.push(nextValue);
     } else {
-      while (moment(nextValue).isBefore(moment(endDate))) {
+      while (moment.utc(nextValue).isBefore(moment.utc(endDate))) {
         timeIntervalValues.push(nextValue);
-        nextValue = moment(nextValue).add(durationValue).utc().format();
+        nextValue = moment.utc(nextValue).add(durationValue).toISOString();
       }
     }
 
