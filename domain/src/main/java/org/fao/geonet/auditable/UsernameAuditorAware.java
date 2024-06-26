@@ -23,10 +23,26 @@
 
 package org.fao.geonet.auditable;
 
-public interface IAuditableService {
-    void auditSave(AuditableEntity auditableEntity, String username);
+import org.fao.geonet.domain.User;
+import org.springframework.data.domain.AuditorAware;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 
-    void auditDelete(AuditableEntity auditableEntity, String username);
+import java.util.Optional;
 
-    String getEntityHistory(String entityType, Integer entityIdentifier);
+/**
+ * Extracts the current user used, to store the information in the auditable entities.
+ */
+public class UsernameAuditorAware implements AuditorAware<String> {
+
+    @Override
+    public Optional<String> getCurrentAuditor() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return Optional.empty();
+        }
+
+        return Optional.of(((User) authentication.getPrincipal()).getUsername());
+    }
 }

@@ -20,19 +20,28 @@
  * Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
  * Rome - Italy. email: geonetwork@osgeo.org
  */
+
 package org.fao.geonet.api.auditable;
 
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.fao.geonet.auditable.AuditableService;
+import org.fao.geonet.api.ApiUtils;
+import org.fao.geonet.auditable.BaseAuditableService;
+import org.fao.geonet.auditable.model.RevisionInfo;
+import org.fao.geonet.domain.auditable.AuditableEntity;
+import org.springframework.beans.factory.ListableBeanFactory;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.core.ResolvableType;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Optional;
+import javax.servlet.ServletRequest;
+import java.util.*;
+
 
 @RequestMapping(value = {
     "/{portal}/api/auditable"
@@ -41,26 +50,27 @@ import java.util.Optional;
     description = "Entity auditable operations")
 @RestController("auditable")
 public class AuditableApi {
-    AuditableService auditableService;
 
-    public AuditableApi(AuditableService auditableService) {
-        this.auditableService = auditableService;
+    // Auditable service beans
+    private Map<String, BaseAuditableService<? extends AuditableEntity>> factory = new HashMap<>();
+
+    public AuditableApi(ListableBeanFactory beanFactory) {
+        Collection<BaseAuditableService> auditableServiceBeans = beanFactory.getBeansOfType(BaseAuditableService.class).values();
+        auditableServiceBeans.forEach(filter -> factory.put(filter.getEntityType().toLowerCase(), filter));
     }
 
     @io.swagger.v3.oas.annotations.Operation(
         summary = "Get an entity history",
         description = "")
     @GetMapping(
-        value = "/{entityType}/{entityIdentifier}",
-        produces = {
-            MediaType.TEXT_PLAIN_VALUE
-        })
+        value = "/{entityType}/{entityIdentifier}"
+    )
     @ResponseStatus(HttpStatus.OK)
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Entity history details.")
     })
     @PreAuthorize("hasAuthority('UserAdmin')")
-    public String getEntityHistory(
+    public List<RevisionInfo> getEntityHistory(
         @Parameter(
             description = "Entity type",
             required = true
@@ -72,8 +82,14 @@ public class AuditableApi {
             required = true
         )
         @PathVariable
-        Integer entityIdentifier
-    ) {
-       return auditableService.getEntityHistory(entityType, entityIdentifier);
+        Integer entityIdentifier,
+        @Parameter(hidden = true)
+        ServletRequest request
+        ) {
+        ResourceBundle messages = ApiUtils.getMessagesResourceBundle(request.getLocales());
+
+        BaseAuditableService<? extends AuditableEntity> service = factory.get(entityType);
+
+        return service.getEntityHistory(entityIdentifier);
     }
 }

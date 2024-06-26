@@ -1516,6 +1516,12 @@
     "fieldEmailNotValid": "A valid email address is required",
     "formConfirmExit": "The form has changes, if you exit the changes will be lost. Do you want to exit on the page?",
     "NoTranslationProvider": "No translation provider",
-    "LibreTranslate": "Libretranslate"
+    "LibreTranslate": "Libretranslate",
+    "userHistory": "User history",
+    "userHistoryRevision": "Updated by {{revisionUser}} on {{revisionDate}}:",
+    "userHistoryFieldUpdate": "Field '{{fieldName}}' changed from '{{oldValue}}' to '{{newValue}}'",
+    "userHistoryFieldSet": "Field '{{fieldName}}' set to '{{newValue}}'",
+    "userHistoryFieldUnset": "Field '{{fieldName}}' unset",
+    "noUserHistory": "No user history available"
 }
 
