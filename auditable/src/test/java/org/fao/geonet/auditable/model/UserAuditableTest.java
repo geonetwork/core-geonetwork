@@ -27,7 +27,9 @@ import org.fao.geonet.domain.Group;
 import org.fao.geonet.domain.Profile;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.domain.UserGroup;
+import org.fao.geonet.domain.auditable.UserAuditable;
 import org.junit.Test;
+import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -35,6 +37,7 @@ import java.util.HashSet;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class UserAuditableTest {
 
@@ -76,14 +79,14 @@ public class UserAuditableTest {
         assertEquals(user.getName(), userAuditable.getName());
         assertEquals(user.getSurname(), userAuditable.getSurname());
         assertEquals(user.getUsername(), userAuditable.getUsername());
-        assertEquals(user.getEmailAddresses(), userAuditable.getEmailAddresses());
+        assertEquals(user.getEmailAddresses().toArray()[0], userAuditable.getEmailAddress());
         assertEquals(user.getProfile().toString(), userAuditable.getProfile());
-        assertEquals(0, userAuditable.getGroupsRegisteredUser().size());
-        assertEquals(1, userAuditable.getGroupsEditor().size());
-        assertEquals(1, userAuditable.getGroupsReviewer().size());
-        assertEquals(0, userAuditable.getGroupsUserAdmin().size());
+        assertTrue(!StringUtils.hasLength(userAuditable.getGroupsRegisteredUser()));
+        assertTrue(userAuditable.getGroupsEditor().contains(group.getName()));
+        assertTrue(userAuditable.getGroupsReviewer().contains(group.getName()));
+        assertTrue(!StringUtils.hasLength(userAuditable.getGroupsUserAdmin()));
 
-        assertEquals(group.getName(), userAuditable.getGroupsEditor().get(0));
-        assertEquals(group.getName(), userAuditable.getGroupsReviewer().get(0));
+        assertEquals(group.getName(), userAuditable.getGroupsEditor());
+        assertEquals(group.getName(), userAuditable.getGroupsReviewer());
     }
 }

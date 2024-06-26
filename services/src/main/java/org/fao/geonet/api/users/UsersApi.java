@@ -38,9 +38,9 @@ import org.fao.geonet.api.users.model.PasswordResetDto;
 import org.fao.geonet.api.users.model.UserDto;
 import org.fao.geonet.api.users.validation.PasswordResetDtoValidator;
 import org.fao.geonet.api.users.validation.UserDtoValidator;
-import org.fao.geonet.auditable.AuditableService;
-import org.fao.geonet.auditable.model.UserAuditable;
+import org.fao.geonet.auditable.UserAuditableService;
 import org.fao.geonet.domain.*;
+import org.fao.geonet.domain.auditable.UserAuditable;
 import org.fao.geonet.exceptions.UserNotFoundEx;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
@@ -119,7 +119,7 @@ public class UsersApi {
     SecurityProviderConfiguration securityProviderConfiguration;
 
     @Autowired
-    AuditableService auditableService;
+    UserAuditableService userAuditableService;
 
     private BufferedImage pixel;
 
@@ -364,7 +364,7 @@ public class UsersApi {
 
         if (userToDelete.isPresent()) {
             UserAuditable userAuditable = UserAuditable.build(userToDelete.get(), userGroups);
-            auditableService.auditDelete(userAuditable, session.getUsername());
+            userAuditableService.auditDelete(userAuditable);
         }
 
 
@@ -508,7 +508,7 @@ public class UsersApi {
             .hasUserId(user.getId()));
 
         UserAuditable userAuditable = UserAuditable.build(user, userGroups);
-        auditableService.auditSave(userAuditable, session.getUsername());
+        userAuditableService.auditSave(userAuditable);
 
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
@@ -645,7 +645,7 @@ public class UsersApi {
         //userAudit.setUserGroups(userGroups);
 
         UserAuditable userAuditable = UserAuditable.build(user, userGroups);
-        auditableService.auditSave(userAuditable, session.getUsername());
+        userAuditableService.auditSave(userAuditable);
 
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }

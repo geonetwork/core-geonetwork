@@ -32,14 +32,4 @@
 
   <context:component-scan base-package="org.fao.geonet.api"/>
   <context:component-scan base-package="org.fao.geonet.auditable"/>
-
-  <bean id="javersConfiguration"
-        class=" org.fao.geonet.auditable.configuration.JaversConfiguration" lazy-init="true"/>
-
-  <bean id="connectionProvider"
-        class="org.javers.spring.jpa.JpaHibernateConnectionProvider" />
-
-  <bean id="authorProvider"
-        class="org.javers.spring.auditable.SpringSecurityAuthorProvider" />
-
 </beans>

@@ -21,29 +21,36 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
-package org.fao.geonet.auditable.model;
+package org.fao.geonet.domain.auditable;
 
-import org.fao.geonet.auditable.AuditableEntity;
+import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.domain.Address;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.domain.UserGroup;
-import org.javers.core.metamodel.annotation.Id;
-import org.javers.core.metamodel.annotation.TypeName;
+import org.hibernate.envers.Audited;
 
+import javax.annotation.Nonnull;
+import javax.persistence.*;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
-@TypeName("User")
+/**
+ * An entity to audit the changes for user entities.
+ *
+ * @see org.fao.geonet.domain.User
+ *
+ */
+@Entity
+@Access(AccessType.PROPERTY)
+@Audited(withModifiedFlag=true)
 public class UserAuditable extends AuditableEntity {
-    @Id
+
     private int id;
     private String profile;
     private String username;
     private String name;
     private String surname;
-    private Set<String> emailAddresses;
+    private String emailAddress;
     private String organisation;
     private String address;
     private String city;
@@ -51,20 +58,13 @@ public class UserAuditable extends AuditableEntity {
     private String zip;
     private String country;
     private String kind;
-    private List<String> groupsRegisteredUser;
-    private List<String> groupsEditor;
-    private List<String> groupsReviewer;
-    private List<String> groupsUserAdmin;
+    private String groupsRegisteredUser;
+    private String groupsEditor;
+    private String groupsReviewer;
+    private String groupsUserAdmin;
     private boolean enabled;
 
-    public UserAuditable() {
-        this.groupsRegisteredUser = new ArrayList<>();
-        this.groupsEditor = new ArrayList<>();
-        this.groupsReviewer = new ArrayList<>();
-        this.groupsUserAdmin = new ArrayList<>();
-        this.emailAddresses = new HashSet<>();
-    }
-
+    @Id
     public int getId() {
         return id;
     }
@@ -81,10 +81,12 @@ public class UserAuditable extends AuditableEntity {
         this.profile = profile;
     }
 
+    @Nonnull
     public String getUsername() {
         return username;
     }
 
+    @Nonnull
     public void setUsername(String username) {
         this.username = username;
     }
@@ -105,12 +107,12 @@ public class UserAuditable extends AuditableEntity {
         this.surname = surname;
     }
 
-    public Set<String> getEmailAddresses() {
-        return emailAddresses;
+    public String getEmailAddress() {
+        return emailAddress;
     }
 
-    public void setEmailAddresses(Set<String> emailAddresses) {
-        this.emailAddresses = emailAddresses;
+    public void setEmailAddress(String emailAddresses) {
+        this.emailAddress = emailAddresses;
     }
 
     public String getOrganisation() {
@@ -169,35 +171,35 @@ public class UserAuditable extends AuditableEntity {
         this.kind = kind;
     }
 
-    public List<String> getGroupsRegisteredUser() {
+    public String getGroupsRegisteredUser() {
         return groupsRegisteredUser;
     }
 
-    public void setGroupsRegisteredUser(List<String> groupsRegisteredUser) {
+    public void setGroupsRegisteredUser(String groupsRegisteredUser) {
         this.groupsRegisteredUser = groupsRegisteredUser;
     }
 
-    public List<String> getGroupsEditor() {
+    public String getGroupsEditor() {
         return groupsEditor;
     }
 
-    public void setGroupsEditor(List<String> groupsEditor) {
+    public void setGroupsEditor(String groupsEditor) {
         this.groupsEditor = groupsEditor;
     }
 
-    public List<String> getGroupsReviewer() {
+    public String getGroupsReviewer() {
         return groupsReviewer;
     }
 
-    public void setGroupsReviewer(List<String> groupsReviewer) {
+    public void setGroupsReviewer(String groupsReviewer) {
         this.groupsReviewer = groupsReviewer;
     }
 
-    public List<String> getGroupsUserAdmin() {
+    public String getGroupsUserAdmin() {
         return groupsUserAdmin;
     }
 
-    public void setGroupsUserAdmin(List<String> groupsUserAdmin) {
+    public void setGroupsUserAdmin(String groupsUserAdmin) {
         this.groupsUserAdmin = groupsUserAdmin;
     }
 
@@ -220,7 +222,10 @@ public class UserAuditable extends AuditableEntity {
         userAuditable.setKind(user.getKind());
         userAuditable.setOrganisation(user.getOrganisation());
         userAuditable.setProfile(user.getProfile().name());
-        userAuditable.setEmailAddresses(user.getEmailAddresses());
+        if (!user.getEmailAddresses().isEmpty()) {
+            // A user can have only 1 address defined in the UI.
+            userAuditable.setEmailAddress((String) user.getEmailAddresses().toArray()[0]);
+        }
         if (!user.getAddresses().isEmpty()) {
             // A user can have only 1 address defined in the UI.
             Address userAddress = (Address) user.getAddresses().toArray()[0];
@@ -232,31 +237,36 @@ public class UserAuditable extends AuditableEntity {
         }
         userAuditable.setEnabled(user.isEnabled());
 
+        List<String> groupsRegisteredUserList = new ArrayList<>();
+        List<String> groupsEditorList = new ArrayList<>();
+        List<String> groupsReviewerList = new ArrayList<>();
+        List<String> groupsUserAdminList = new ArrayList<>();
+
         // Groups
         userGroups.stream().forEach(userGroup -> {
             switch (userGroup.getProfile()) {
-                case UserAdmin:
-                    userAuditable.getGroupsUserAdmin().add(userGroup.getGroup().getName());
-                    break;
-                case Reviewer:
-                    userAuditable.getGroupsReviewer().add(userGroup.getGroup().getName());
+                case RegisteredUser:
+                    groupsRegisteredUserList.add(userGroup.getGroup().getName());
                     break;
                 case Editor:
-                    userAuditable.getGroupsEditor().add(userGroup.getGroup().getName());
+                    groupsEditorList.add(userGroup.getGroup().getName());
                     break;
-                case RegisteredUser:
-                    userAuditable.getGroupsRegisteredUser().add(userGroup.getGroup().getName());
+                case Reviewer:
+                    groupsReviewerList.add(userGroup.getGroup().getName());
+                    break;
+                case UserAdmin:
+                    groupsUserAdminList.add(userGroup.getGroup().getName());
                     break;
                 default:
                     break;
             }
         });
 
-        return userAuditable;
-    }
+        userAuditable.setGroupsRegisteredUser(StringUtils.join(groupsRegisteredUserList.toArray(), ","));
+        userAuditable.setGroupsEditor(StringUtils.join(groupsEditorList.toArray(), ","));
+        userAuditable.setGroupsReviewer(StringUtils.join(groupsReviewerList.toArray(), ","));
+        userAuditable.setGroupsUserAdmin(StringUtils.join(groupsUserAdminList.toArray(), ","));
 
-    @Override
-    public String getEntityName() {
-        return "User";
+        return userAuditable;
     }
 }

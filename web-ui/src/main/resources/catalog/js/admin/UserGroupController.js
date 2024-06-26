@@ -27,10 +27,12 @@
   goog.require("gn_dbtranslation");
   goog.require("gn_multiselect");
   goog.require("gn_mdtypewidget");
+  goog.require("gn_auditable");
 
   var module = angular.module("gn_usergroup_controller", [
     "gn_dbtranslation",
     "gn_multiselect",
+    "gn_auditable",
     "gn_mdtypewidget",
     "blueimp.fileupload",
     "ngMessages"
@@ -117,6 +119,7 @@
 
       $scope.isLoadingUsers = false;
       $scope.isLoadingGroups = false;
+      $scope.auditableEnabled = false;
 
       gnConfigService.load().then(function (c) {
         // take the bigger of the two values
@@ -135,6 +138,8 @@
             gnConfig["system.security.passwordEnforcement.pattern"]
           );
         }
+
+        $scope.auditableEnabled = gnConfig["system.auditable.enable"];
       });
 
       // This is to force IE11 NOT to cache json requests

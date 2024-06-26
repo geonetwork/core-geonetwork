@@ -25,7 +25,7 @@ package org.fao.geonet.api.reports;
 
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.csv.CSVPrinter;
-import org.fao.geonet.auditable.AuditableService;
+import org.fao.geonet.auditable.UserAuditableService;
 import org.fao.geonet.domain.*;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
@@ -38,10 +38,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.util.StringUtils;
 
 import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.fao.geonet.api.reports.ReportUtils.CSV_FORMAT;
 
@@ -77,8 +74,11 @@ public class ReportUsers implements IReport {
                        final PrintWriter writer) throws Exception {
 
         SettingManager settingManager = context.getBean(SettingManager.class);
-        AuditableService auditableService = context.getBean(AuditableService.class);
+        UserAuditableService userAuditableService = context.getBean(UserAuditableService.class);
         boolean isUserHistoryEnabled = settingManager.getValueAsBool(Settings.SYSTEM_AUDITABLE_ENABLE, false);
+        String lang = context.getLanguage();
+        ResourceBundle messages = ResourceBundle.getBundle("org.fao.geonet.api.Messages",
+            new Locale(lang));
 
         // Initialize CSVPrinter object
         try(CSVPrinter csvFilePrinter = new CSVPrinter(writer, CSV_FORMAT)) {
@@ -129,7 +129,7 @@ public class ReportUsers implements IReport {
                 metadataRecord.add(lastLoginDate);
 
                 if (isUserHistoryEnabled) {
-                    String userChanges = auditableService.getEntityHistory("user", user.getId());
+                    String userChanges = userAuditableService.getEntityHistoryAsString(user.getId(), messages);
                     if (StringUtils.hasLength(userChanges)) {
                         metadataRecord.add(userChanges);
                     }

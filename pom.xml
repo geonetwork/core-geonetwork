@@ -708,14 +708,6 @@
         <groupId>org.geotools.xsd</groupId>
         <artifactId>gt-xsd-core</artifactId>
         <version>${geotools.version}</version>
-
-        <!-- Conflicts with javers dependency that uses 2.15 version -->
-        <exclusions>
-          <exclusion>
-            <groupId>picocontainer</groupId>
-            <artifactId>picocontainer</artifactId>
-          </exclusion>
-        </exclusions>
       </dependency>
       <dependency>
         <groupId>org.geotools</groupId>
@@ -1169,6 +1161,11 @@
         <version>${spring.jpa.version}</version>
       </dependency>
       <dependency>
+        <groupId>org.springframework.data</groupId>
+        <artifactId>spring-data-envers</artifactId>
+        <version>${spring.jpa.version}</version>
+      </dependency>
+      <dependency>
         <groupId>com.fasterxml.jackson.datatype</groupId>
         <artifactId>jackson-datatype-hibernate5</artifactId>
         <version>${jackson.version}</version>
@@ -1307,19 +1304,6 @@
         <artifactId>json</artifactId>
         <version>20240205</version>
       </dependency>
-
-      <dependency>
-        <groupId>org.javers</groupId>
-        <artifactId>javers-core</artifactId>
-        <version>6.14.0</version>
-      </dependency>
-
-      <dependency>
-        <groupId>org.javers</groupId>
-        <artifactId>javers-spring-jpa</artifactId>
-        <version>6.14.0</version>
-      </dependency>
-
     </dependencies>
   </dependencyManagement>
 

@@ -20,9 +20,25 @@
  * Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
  * Rome - Italy. email: geonetwork@osgeo.org
  */
-package org.fao.geonet.auditable;
 
-public abstract class AuditableEntity {
+(function () {
+  goog.provide("gn_auditable_service");
 
-    public abstract String getEntityName();
-}
+  var module = angular.module("gn_auditable_service", []);
+
+  /**
+   * Service to deal with Auditable entities.
+   */
+  module.service("gnAuditableService", [
+    "$http",
+    function ($http) {
+      function getEntityHistory(entityType, entityId) {
+        return $http.get("../api/auditable/" + entityType + "/" + entityId);
+      }
+
+      return {
+        getEntityHistory: getEntityHistory
+      };
+    }
+  ]);
+})();
