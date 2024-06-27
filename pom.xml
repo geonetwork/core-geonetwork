@@ -1618,8 +1618,8 @@
     <jts.version>1.19.0</jts.version>
     <pg.version>42.7.3</pg.version>
 
-    <spring.version>5.3.33</spring.version>
-    <spring.security.version>5.8.11</spring.security.version>
+    <spring.version>5.3.40</spring.version>
+    <spring.security.version>5.8.14</spring.security.version>
     <spring.jpa.version>2.7.18</spring.jpa.version>
     <springboot.version>2.7.0</springboot.version>
     <springdoc.version>1.8.0</springdoc.version>
