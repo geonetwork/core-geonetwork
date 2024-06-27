@@ -33,7 +33,8 @@
   <jpa:repositories base-package="org.fao.geonet.repository"
                     base-class="org.fao.geonet.repository.GeonetRepositoryImpl"
                     entity-manager-factory-ref="entityManagerFactory"
-                    transaction-manager-ref="transactionManager"/>
+                    transaction-manager-ref="transactionManager"
+                    factory-class="org.springframework.data.envers.repository.support.EnversRevisionRepositoryFactoryBean"/>
 
   <bean id="userNodeIdSetter"
         class="org.fao.geonet.entitylistener.UserNodeIdSetter"/>
@@ -69,4 +70,9 @@
         class="org.springframework.orm.jpa.JpaTransactionManager">
     <property name="entityManagerFactory" ref="entityManagerFactory"/>
   </bean>
+
+  <!-- Extracts the current user used, to store the information in the auditable entities -->
+  <bean id="auditingProvider" class="org.fao.geonet.auditable.UsernameAuditorAware"/>
+
+  <jpa:auditing auditor-aware-ref="auditingProvider" set-dates="true"/>
 </beans>
