@@ -391,7 +391,6 @@ public class CMISStore extends AbstractStore {
             folderKey = getMetadataDir(context, metadataId);
             final Folder folder = cmisUtils.getFolderCache(folderKey, true);
 
-            Log.info(Geonet.RESOURCES, String.format("Deleting the folder of '%s' and the files within the folder", folderKey));
             folder.deleteTree(true, UnfileObject.DELETE, true);
             cmisUtils.invalidateFolderCache(folderKey);
 
@@ -509,9 +508,7 @@ public class CMISStore extends AbstractStore {
     @Override
     public void copyResources(ServiceContext context, String sourceUuid, String targetUuid, MetadataResourceVisibility metadataResourceVisibility, boolean sourceApproved, boolean targetApproved) throws Exception {
         final int sourceMetadataId = canEdit(context, sourceUuid, metadataResourceVisibility, sourceApproved);
-        final int targetMetadataId = canEdit(context, sourceUuid, metadataResourceVisibility, targetApproved);
         final String sourceResourceTypeDir = getMetadataDir(context, sourceMetadataId) + cmisConfiguration.getFolderDelimiter() + metadataResourceVisibility.toString();
-        final String targetResourceTypeDir = getMetadataDir(context, targetMetadataId) + cmisConfiguration.getFolderDelimiter() + metadataResourceVisibility.toString();
         try {
             Folder sourceParentFolder = cmisUtils.getFolderCache(sourceResourceTypeDir, true);
 
@@ -525,8 +522,6 @@ public class CMISStore extends AbstractStore {
             for (Map.Entry<String, Document> sourceEntry : sourceDocumentMap.entrySet()) {
                 Document sourceDocument = sourceEntry.getValue();
 
-
-                Log.info(Geonet.RESOURCES, String.format("Copying %s to %s" , sourceResourceTypeDir+cmisConfiguration.getFolderDelimiter()+sourceDocument.getName(), targetResourceTypeDir));
                 // Get cmis properties from the source document
                 Map<String, Object> sourceProperties = getProperties(sourceDocument);
                 putResource(context, targetUuid, sourceDocument.getName(), sourceDocument.getContentStream().getStream(), null, metadataResourceVisibility, targetApproved, sourceProperties);
