@@ -193,25 +193,27 @@
   </xsl:template>
 
   <xsl:template mode="getExtent" match="gmd:MD_Metadata|*[@gco:isoType = 'gmd:MD_Metadata']">
-    <section class="gn-md-side-extent">
-      <h2>
-        <i class="fa fa-fw fa-map-marker"></i>
-        <span>
-          <xsl:value-of select="$schemaStrings/spatialExtent"/>
-        </span>
-      </h2>
+    <xsl:if test=".//gmd:identificationInfo/*/gmd:extent/*/gmd:geographicElement[gmd:EX_BoundingPolygon or gmd:EX_BoundingPolygon]">
+      <section class="gn-md-side-extent">
+        <h2>
+          <i class="fa fa-fw fa-map-marker"></i>
+          <span>
+            <xsl:value-of select="$schemaStrings/spatialExtent"/>
+          </span>
+        </h2>
 
-      <xsl:choose>
-        <xsl:when test=".//gmd:EX_BoundingPolygon">
-          <xsl:copy-of select="gn-fn-render:extent($metadataUuid)"/>
-        </xsl:when>
-        <xsl:otherwise>
-          <xsl:apply-templates mode="render-field"
-                               select=".//gmd:EX_GeographicBoundingBox">
-          </xsl:apply-templates>
-        </xsl:otherwise>
-      </xsl:choose>
-    </section>
+        <xsl:choose>
+          <xsl:when test=".//gmd:EX_BoundingPolygon">
+            <xsl:copy-of select="gn-fn-render:extent($metadataUuid)"/>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:apply-templates mode="render-field"
+                                 select=".//gmd:EX_GeographicBoundingBox">
+            </xsl:apply-templates>
+          </xsl:otherwise>
+        </xsl:choose>
+      </section>
+    </xsl:if>
   </xsl:template>
 
   <xsl:template mode="getOverviews" match="gmd:MD_Metadata|*[@gco:isoType = 'gmd:MD_Metadata']">
@@ -344,7 +346,7 @@
         <xsl:otherwise>
           <div data-ng-if="showCitation"
                data-gn-metadata-citation="md">
-            
+
           </div>
         </xsl:otherwise>
       </xsl:choose>
@@ -441,7 +443,7 @@
         </xsl:call-template>
       </dt>
       <dd>
-        
+
         <xsl:apply-templates mode="render-value" select="."/>
         <xsl:apply-templates mode="render-value" select="@*"/>
       </dd>
@@ -657,7 +659,7 @@
       <xsl:otherwise>
         <div class="gn-contact">
           <strong>
-            
+
             <xsl:apply-templates mode="render-value"
                                  select="*/gmd:role/*/@codeListValue"/>
           </strong>
@@ -1070,7 +1072,7 @@
           <xsl:value-of select="gn-fn-render:getMetadataTitle(./gco:CharacterString, $langId)"/>
         </a>
       </xsl:if>
-       
+
       <xsl:call-template name="addLineBreaksAndHyperlinks">
         <xsl:with-param name="txt" select="$txt"/>
       </xsl:call-template>
@@ -1086,7 +1088,7 @@
           <xsl:value-of select="gn-fn-render:getMetadataTitle(./gco:CharacterString, $langId)"/>
         </a>
       </xsl:if>
-      
+
       <xsl:apply-templates mode="localised" select=".">
         <xsl:with-param name="langId" select="$langId"/>
       </xsl:apply-templates>
