@@ -26,8 +26,12 @@ package org.fao.geonet.kernel.security.openidconnect.bearer;
 import org.fao.geonet.kernel.security.openidconnect.OIDCConfiguration;
 import org.junit.Test;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class AudienceAccessTokenValidatorTest {
 
@@ -35,20 +39,36 @@ public class AudienceAccessTokenValidatorTest {
     String clientId = "MYCLIENTID";
 
 
-
-
-    public  AudienceAccessTokenValidator   getValidator(){
+    public AudienceAccessTokenValidator getValidator() {
         AudienceAccessTokenValidator validator = new AudienceAccessTokenValidator();
         validator.oidcConfiguration = new OIDCConfiguration();
         validator.oidcConfiguration.setClientId(clientId);
         return validator;
     }
 
+    @Test
+    public void testContainsGood() {
+        assertTrue(AudienceAccessTokenValidator.contains("dave", "dave"));
+        assertTrue(AudienceAccessTokenValidator.contains(Arrays.asList("dave"), "dave"));
+        assertTrue(AudienceAccessTokenValidator.contains(Arrays.asList("dave", "ted"), "dave"));
+        assertTrue(AudienceAccessTokenValidator.contains(Arrays.asList("ted", "dave"), "dave"));
+    }
+
+
+    @Test
+    public void testContainsBad() {
+        assertFalse(AudienceAccessTokenValidator.contains("ted", "dave"));
+        assertFalse(AudienceAccessTokenValidator.contains("", "dave"));
+        assertFalse(AudienceAccessTokenValidator.contains(Arrays.asList(), "dave"));
+        assertFalse(AudienceAccessTokenValidator.contains(Arrays.asList("ted"), "dave"));
+        assertFalse(AudienceAccessTokenValidator.contains(Arrays.asList("pam", "ted"), "dave"));
+    }
+
 
     @Test
     public void testAzureGood() throws Exception {
         Map claims = new HashMap();
-        claims.put("appid",clientId);
+        claims.put("appid", clientId);
 
         AudienceAccessTokenValidator validator = getValidator();
         validator.verifyToken(claims, null);
@@ -57,7 +77,7 @@ public class AudienceAccessTokenValidatorTest {
     @Test
     public void testKeyCloakGood() throws Exception {
         Map claims = new HashMap();
-        claims.put("azp",clientId);
+        claims.put("azp", clientId);
 
         AudienceAccessTokenValidator validator = getValidator();
         validator.verifyToken(claims, null);
@@ -66,7 +86,7 @@ public class AudienceAccessTokenValidatorTest {
     @Test
     public void testSelfCreatedGood() throws Exception {
         Map claims = new HashMap();
-        claims.put("aud",clientId);
+        claims.put("aud", clientId);
 
         AudienceAccessTokenValidator validator = getValidator();
         validator.verifyToken(claims, null);
@@ -75,7 +95,7 @@ public class AudienceAccessTokenValidatorTest {
     @Test(expected = Exception.class)
     public void testBad1() throws Exception {
         Map claims = new HashMap();
-        claims.put("aud","badaud");
+        claims.put("aud", "badaud");
 
         AudienceAccessTokenValidator validator = getValidator();
         validator.verifyToken(claims, null);
@@ -84,7 +104,7 @@ public class AudienceAccessTokenValidatorTest {
     @Test(expected = Exception.class)
     public void testBad2() throws Exception {
         Map claims = new HashMap();
-        claims.put("azp","badaud");
+        claims.put("azp", "badaud");
 
         AudienceAccessTokenValidator validator = getValidator();
         validator.verifyToken(claims, null);
@@ -94,7 +114,7 @@ public class AudienceAccessTokenValidatorTest {
     @Test(expected = Exception.class)
     public void testBad3() throws Exception {
         Map claims = new HashMap();
-        claims.put("appid","badaud");
+        claims.put("appid", "badaud");
 
         AudienceAccessTokenValidator validator = getValidator();
         validator.verifyToken(claims, null);
