@@ -1183,17 +1183,6 @@
             //     group: linkInfos[5] ? parseInt(linkInfos[5]) : undefined,
             //     applicationProfile: linkInfos[6]-->
           </link>
-
-          <xsl:if test="$operatesOnSetByProtocol and normalize-space($protocol) != ''">
-            <xsl:if test="daobs:contains($protocol, 'wms')">
-              <recordOperatedByType>view</recordOperatedByType>
-            </xsl:if>
-            <xsl:if test="daobs:contains($protocol, 'wfs') or
-                          daobs:contains($protocol, 'wcs') or
-                          daobs:contains($protocol, 'download')">
-              <recordOperatedByType>download</recordOperatedByType>
-            </xsl:if>
-          </xsl:if>
         </xsl:for-each>
       </xsl:for-each>
 
