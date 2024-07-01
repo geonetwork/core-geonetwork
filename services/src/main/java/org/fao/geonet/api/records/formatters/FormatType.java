@@ -62,4 +62,21 @@ public enum FormatType {
         }
         return null;
     }
+
+    public static FormatType findByFormatterKey(String formatterId) {
+        if (formatterId == null) {
+            return null;
+        }
+
+        if (formatterId.contains("dcat")) {
+            return FormatType.xml;
+        }
+        for (FormatType c : FormatType.values()) {
+            if (formatterId.contains(c.name())) {
+                return c;
+            }
+        }
+
+        return null;
+    }
 }

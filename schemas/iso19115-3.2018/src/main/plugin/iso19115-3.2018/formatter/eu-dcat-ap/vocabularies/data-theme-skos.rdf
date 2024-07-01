@@ -1,0 +1,546 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:at="http://publications.europa.eu/ontology/authority/"
+         xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+         xmlns:owl="http://www.w3.org/2002/07/owl#"
+         xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+         xmlns:atold="http://publications.europa.eu/resource/authority/"
+         xmlns:dc="http://purl.org/dc/elements/1.1/"
+         xml:base="http://publications.europa.eu/resource/authority/data-theme">
+   <skos:ConceptScheme rdf:about="http://publications.europa.eu/resource/authority/data-theme"
+                       at:table.id="data-theme"
+                       at:table.version.number="20220715-0">
+      <at:prefLabel xml:lang="en">Data theme</at:prefLabel>
+      <rdfs:label xml:lang="en">Data theme</rdfs:label>
+      <owl:versionInfo>20220715-0</owl:versionInfo>
+      <skos:prefLabel xml:lang="en">Data theme</skos:prefLabel>
+   </skos:ConceptScheme>
+   <skos:Concept rdf:about="http://publications.europa.eu/resource/authority/data-theme/AGRI"
+                 at:deprecated="false">
+      <skos:prefLabel xml:lang="bg">Селско стопанство, рибарство, горско стопанство и храни</skos:prefLabel>
+      <skos:prefLabel xml:lang="cs">Zemědělství, rybolov, lesnictví a výživa</skos:prefLabel>
+      <skos:prefLabel xml:lang="da">Landbrug, fiskeri, skovbrug og fødevarer</skos:prefLabel>
+      <skos:prefLabel xml:lang="de">Landwirtschaft, Fischerei, Forstwirtschaft und Nahrungsmittel</skos:prefLabel>
+      <skos:prefLabel xml:lang="el">Γεωργία, αλιεία, δασοκομία και τρόφιμα</skos:prefLabel>
+      <skos:prefLabel xml:lang="en">Agriculture, fisheries, forestry and food</skos:prefLabel>
+      <skos:prefLabel xml:lang="es">Agricultura, pesca, silvicultura y alimentación</skos:prefLabel>
+      <skos:prefLabel xml:lang="et">Põllumajandus, kalandus, metsandus ja toiduained</skos:prefLabel>
+      <skos:prefLabel xml:lang="fi">Maatalous, kalastus, metsätalous ja elintarvikkeet</skos:prefLabel>
+      <skos:prefLabel xml:lang="fr">Agriculture, pêche, sylviculture et alimentation</skos:prefLabel>
+      <skos:prefLabel xml:lang="ga">Talmhaíocht, iascach, foraoiseacht agus bia</skos:prefLabel>
+      <skos:prefLabel xml:lang="hr">Poljoprivreda, ribarstvo, šumarstvo i hrana</skos:prefLabel>
+      <skos:prefLabel xml:lang="hu">Mezőgazdaság, halászat, erdészet és élelmiszer</skos:prefLabel>
+      <skos:prefLabel xml:lang="it">Agricoltura, pesca, silvicoltura e prodotti alimentari</skos:prefLabel>
+      <skos:prefLabel xml:lang="lt">Žemės ūkis, žuvininkystė, miškininkystė ir maistas</skos:prefLabel>
+      <skos:prefLabel xml:lang="lv">Lauksaimniecība, zivsaimniecība, mežsaimniecība un pārtika</skos:prefLabel>
+      <skos:prefLabel xml:lang="mt">Agrikoltura, sajd, forestrija u ikel</skos:prefLabel>
+      <skos:prefLabel xml:lang="nb">Jordbruk, fiskeri, skogbruk og mat</skos:prefLabel>
+      <skos:prefLabel xml:lang="nl">Landbouw, visserij, bosbouw en voeding</skos:prefLabel>
+      <skos:prefLabel xml:lang="nn">Jordbruk, fiskeri, skogbruk og mat</skos:prefLabel>
+      <skos:prefLabel xml:lang="no">Jordbruk, fiskeri, skogbruk og mat</skos:prefLabel>
+      <skos:prefLabel xml:lang="pl">Rolnictwo, rybołówstwo, leśnictwo i żywność</skos:prefLabel>
+      <skos:prefLabel xml:lang="pt">Agricultura, pesca, silvicultura e alimentação</skos:prefLabel>
+      <skos:prefLabel xml:lang="ro">Agricultură, pescuit, silvicultură şi hrană</skos:prefLabel>
+      <skos:prefLabel xml:lang="sk">Poľnohospodárstvo, rybné hospodárstvo, lesníctvo a potravinárstvo</skos:prefLabel>
+      <skos:prefLabel xml:lang="sl">Kmetijstvo, ribištvo, gozdarstvo in prehrana</skos:prefLabel>
+      <skos:prefLabel xml:lang="sv">Jordbruk, fiske, skogsbruk och livsmedel</skos:prefLabel>
+      <at:authority-code>AGRI</at:authority-code>
+      <at:op-code>AGRI</at:op-code>
+      <at:start.use>2015-10-01</at:start.use>
+      <atold:op-code>AGRI</atold:op-code>
+      <dc:identifier>AGRI</dc:identifier>
+      <skos:definition xml:lang="en">This concept identifies datasets covering such domains as agriculture, fisheries, forestry or food. Agriculture is the science and art of cultivating plants and livestock. Fisheries are activities leading to harvesting of fish; may involve capture of wild fish or raising of fish through aquaculture. Forestry is the science and craft of creating, managing, using, conserving and repairing forests, woodlands and associated resources for human and environmental benefits. Food is any substance consumed to provide nutritional support for an organism. Dataset examples: Agricultural and Vegetable Catalogue; The Community Fishing Fleet Register; Pan-European Map of Forest Biomass Increment; Food composition database for nutrient intake: selected vitamins and minerals in selected European countries.</skos:definition>
+      <skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/data-theme"/>
+      <skos:topConceptOf rdf:resource="http://publications.europa.eu/resource/authority/data-theme"/>
+   </skos:Concept>
+   <skos:Concept rdf:about="http://publications.europa.eu/resource/authority/data-theme/ECON"
+                 at:deprecated="false">
+      <skos:prefLabel xml:lang="bg">Икономика и финанси</skos:prefLabel>
+      <skos:prefLabel xml:lang="cs">Hospodářství a finance</skos:prefLabel>
+      <skos:prefLabel xml:lang="da">Økonomi og finanser</skos:prefLabel>
+      <skos:prefLabel xml:lang="de">Wirtschaft und Finanzen</skos:prefLabel>
+      <skos:prefLabel xml:lang="el">Οικονομία και χρηματοοικονομικά θέματα</skos:prefLabel>
+      <skos:prefLabel xml:lang="en">Economy and finance</skos:prefLabel>
+      <skos:prefLabel xml:lang="es">Economía y finanzas</skos:prefLabel>
+      <skos:prefLabel xml:lang="et">Majandus ja rahandus</skos:prefLabel>
+      <skos:prefLabel xml:lang="fi">Talous ja raha-asiat</skos:prefLabel>
+      <skos:prefLabel xml:lang="fr">Économie et finances</skos:prefLabel>
+      <skos:prefLabel xml:lang="ga">Geilleagar agus airgeadas</skos:prefLabel>
+      <skos:prefLabel xml:lang="hr">Ekonomija i financije</skos:prefLabel>
+      <skos:prefLabel xml:lang="hu">Gazdaság és pénzügy</skos:prefLabel>
+      <skos:prefLabel xml:lang="it">Economia e finanze</skos:prefLabel>
+      <skos:prefLabel xml:lang="lt">Ekonomika ir finansai</skos:prefLabel>
+      <skos:prefLabel xml:lang="lv">Ekonomika un finanses</skos:prefLabel>
+      <skos:prefLabel xml:lang="mt">Ekonomija u finanzi</skos:prefLabel>
+      <skos:prefLabel xml:lang="nb">Økonomi og finans</skos:prefLabel>
+      <skos:prefLabel xml:lang="nl">Economie en financiën</skos:prefLabel>
+      <skos:prefLabel xml:lang="nn">Økonomi og finans</skos:prefLabel>
+      <skos:prefLabel xml:lang="no">Økonomi og finans</skos:prefLabel>
+      <skos:prefLabel xml:lang="pl">Gospodarka i finanse</skos:prefLabel>
+      <skos:prefLabel xml:lang="pt">Economia e finanças</skos:prefLabel>
+      <skos:prefLabel xml:lang="ro">Economie şi finanţe</skos:prefLabel>
+      <skos:prefLabel xml:lang="sk">Hospodárstvo a financie</skos:prefLabel>
+      <skos:prefLabel xml:lang="sl">Gospodarstvo in finance</skos:prefLabel>
+      <skos:prefLabel xml:lang="sv">Ekonomi och finans</skos:prefLabel>
+      <at:authority-code>ECON</at:authority-code>
+      <at:op-code>ECON</at:op-code>
+      <at:start.use>2015-10-01</at:start.use>
+      <atold:op-code>ECON</atold:op-code>
+      <dc:identifier>ECON</dc:identifier>
+      <skos:definition xml:lang="en">This concept identifies datasets covering such domains as economy or finance. Economy is the area of the production, distribution and trade, as well as consumption of goods and services by different agents. In its broadest sense, the economy is defined as a social domain that emphasize the practices, discourses and material expressions associated with the production, use, and management of resources. Finance is the study of money and how it is used. Specifically, it deals with the questions of how an individual, company or government acquires the money needed and how they then spend or invest that money. Dataset examples: Tenders Electronic Daily (TED) - public procurement notices from the EU and beyond; General government deficit (-) and surplus (+) - quarterly data.</skos:definition>
+      <skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/data-theme"/>
+      <skos:topConceptOf rdf:resource="http://publications.europa.eu/resource/authority/data-theme"/>
+   </skos:Concept>
+   <skos:Concept rdf:about="http://publications.europa.eu/resource/authority/data-theme/EDUC"
+                 at:deprecated="false">
+      <skos:prefLabel xml:lang="bg">Образование, култура и спорт</skos:prefLabel>
+      <skos:prefLabel xml:lang="cs">Vzdělávání, kultura a sport</skos:prefLabel>
+      <skos:prefLabel xml:lang="da">Uddannelse, kultur og sport</skos:prefLabel>
+      <skos:prefLabel xml:lang="de">Bildung, Kultur und Sport</skos:prefLabel>
+      <skos:prefLabel xml:lang="el">Παιδεία, πολιτιστικά θέματα και αθλητισμός</skos:prefLabel>
+      <skos:prefLabel xml:lang="en">Education, culture and sport</skos:prefLabel>
+      <skos:prefLabel xml:lang="es">Educación, cultura y deportes</skos:prefLabel>
+      <skos:prefLabel xml:lang="et">Haridus, kultuur ja sport</skos:prefLabel>
+      <skos:prefLabel xml:lang="fi">Koulutus, kulttuuri ja urheilu</skos:prefLabel>
+      <skos:prefLabel xml:lang="fr">Éducation, culture et sport</skos:prefLabel>
+      <skos:prefLabel xml:lang="ga">Oideachas, cultúr agus spórt</skos:prefLabel>
+      <skos:prefLabel xml:lang="hr">Obrazovanje, kultura i sport</skos:prefLabel>
+      <skos:prefLabel xml:lang="hu">Oktatás, kultúra és sport</skos:prefLabel>
+      <skos:prefLabel xml:lang="it">Istruzione, cultura e sport</skos:prefLabel>
+      <skos:prefLabel xml:lang="lt">Švietimas, kultūra ir sportas</skos:prefLabel>
+      <skos:prefLabel xml:lang="lv">Izglītība, kultūra un sports</skos:prefLabel>
+      <skos:prefLabel xml:lang="mt">Edukazzjoni, kultura u sport</skos:prefLabel>
+      <skos:prefLabel xml:lang="nb">Utdanning, kultur og sport</skos:prefLabel>
+      <skos:prefLabel xml:lang="nl">Onderwijs, cultuur en sport</skos:prefLabel>
+      <skos:prefLabel xml:lang="nn">Utdanning, kultur og sport</skos:prefLabel>
+      <skos:prefLabel xml:lang="no">Utdanning, kultur og sport</skos:prefLabel>
+      <skos:prefLabel xml:lang="pl">Edukacja, kultura i sport</skos:prefLabel>
+      <skos:prefLabel xml:lang="pt">Educação, cultura e desporto</skos:prefLabel>
+      <skos:prefLabel xml:lang="ro">Educaţie, cultură şi sport</skos:prefLabel>
+      <skos:prefLabel xml:lang="sk">Vzdelávanie, kultúra a šport</skos:prefLabel>
+      <skos:prefLabel xml:lang="sl">Izobraževanje, kultura in šport</skos:prefLabel>
+      <skos:prefLabel xml:lang="sv">Utbildning, kultur och sport</skos:prefLabel>
+      <at:authority-code>EDUC</at:authority-code>
+      <at:op-code>EDUC</at:op-code>
+      <at:start.use>2015-10-01</at:start.use>
+      <atold:op-code>EDUC</atold:op-code>
+      <dc:identifier>EDUC</dc:identifier>
+      <skos:definition xml:lang="en">This concept identifies datasets covering such domains as education, culture or sport. Education is the process of facilitating learning, or the acquisition of knowledge, skills, values, beliefs and habits. Culture encompasses the social behavior and norms found in human societies, as well as the knowledge, beliefs, arts, laws, customs, capabilities and habits of the individuals in these groups. Sport includes all forms of competitive physical activity or games which maintain or improve physical ability and skills while providing enjoyment to participants, and in some cases, entertainment for spectators. Dataset examples: European Skills, Competences, Qualifications and Occupations (ESCO); EU Member States and international human rights obligations; Participation in any cultural or sport activities in the last 12 months by sex, age and educational attainment level.</skos:definition>
+      <skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/data-theme"/>
+      <skos:topConceptOf rdf:resource="http://publications.europa.eu/resource/authority/data-theme"/>
+   </skos:Concept>
+   <skos:Concept rdf:about="http://publications.europa.eu/resource/authority/data-theme/ENER"
+                 at:deprecated="false">
+      <skos:prefLabel xml:lang="bg">Енергетика</skos:prefLabel>
+      <skos:prefLabel xml:lang="cs">Energie</skos:prefLabel>
+      <skos:prefLabel xml:lang="da">Energi</skos:prefLabel>
+      <skos:prefLabel xml:lang="de">Energie</skos:prefLabel>
+      <skos:prefLabel xml:lang="el">Ενέργεια</skos:prefLabel>
+      <skos:prefLabel xml:lang="en">Energy</skos:prefLabel>
+      <skos:prefLabel xml:lang="es">Energía</skos:prefLabel>
+      <skos:prefLabel xml:lang="et">Energeetika</skos:prefLabel>
+      <skos:prefLabel xml:lang="fi">Energia</skos:prefLabel>
+      <skos:prefLabel xml:lang="fr">Énergie</skos:prefLabel>
+      <skos:prefLabel xml:lang="ga">Fuinneamh</skos:prefLabel>
+      <skos:prefLabel xml:lang="hr">Energetika</skos:prefLabel>
+      <skos:prefLabel xml:lang="hu">Energia</skos:prefLabel>
+      <skos:prefLabel xml:lang="it">Energia</skos:prefLabel>
+      <skos:prefLabel xml:lang="lt">Energetika</skos:prefLabel>
+      <skos:prefLabel xml:lang="lv">Enerģētika</skos:prefLabel>
+      <skos:prefLabel xml:lang="mt">Enerġija</skos:prefLabel>
+      <skos:prefLabel xml:lang="nb">Energi</skos:prefLabel>
+      <skos:prefLabel xml:lang="nl">Energie</skos:prefLabel>
+      <skos:prefLabel xml:lang="nn">Energi</skos:prefLabel>
+      <skos:prefLabel xml:lang="no">Energi</skos:prefLabel>
+      <skos:prefLabel xml:lang="pl">Energia</skos:prefLabel>
+      <skos:prefLabel xml:lang="pt">Energia</skos:prefLabel>
+      <skos:prefLabel xml:lang="ro">Energie</skos:prefLabel>
+      <skos:prefLabel xml:lang="sk">Energetika</skos:prefLabel>
+      <skos:prefLabel xml:lang="sl">Energetika</skos:prefLabel>
+      <skos:prefLabel xml:lang="sv">Energi</skos:prefLabel>
+      <at:authority-code>ENER</at:authority-code>
+      <at:op-code>ENER</at:op-code>
+      <at:start.use>2015-10-01</at:start.use>
+      <atold:op-code>ENER</atold:op-code>
+      <dc:identifier>ENER</dc:identifier>
+      <skos:definition xml:lang="en">This concept identifies datasets covering the domain of energy. Energy is the quantitative property that must be transferred to an object in order to perform work on, or to heat, the object. Living organisms require energy to stay alive; human civilisation requires energy to function. Dataset examples: European gas market reports; Electricity prices by type of user.</skos:definition>
+      <skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/data-theme"/>
+      <skos:topConceptOf rdf:resource="http://publications.europa.eu/resource/authority/data-theme"/>
+   </skos:Concept>
+   <skos:Concept rdf:about="http://publications.europa.eu/resource/authority/data-theme/ENVI"
+                 at:deprecated="false">
+      <skos:prefLabel xml:lang="bg">Околна среда</skos:prefLabel>
+      <skos:prefLabel xml:lang="cs">Životní prostředí</skos:prefLabel>
+      <skos:prefLabel xml:lang="da">Miljø</skos:prefLabel>
+      <skos:prefLabel xml:lang="de">Umwelt</skos:prefLabel>
+      <skos:prefLabel xml:lang="el">Περιβάλλον</skos:prefLabel>
+      <skos:prefLabel xml:lang="en">Environment</skos:prefLabel>
+      <skos:prefLabel xml:lang="es">Medio ambiente</skos:prefLabel>
+      <skos:prefLabel xml:lang="et">Keskkond</skos:prefLabel>
+      <skos:prefLabel xml:lang="fi">Ympäristö</skos:prefLabel>
+      <skos:prefLabel xml:lang="fr">Environnement</skos:prefLabel>
+      <skos:prefLabel xml:lang="ga">Comhshaol</skos:prefLabel>
+      <skos:prefLabel xml:lang="hr">Okoliš</skos:prefLabel>
+      <skos:prefLabel xml:lang="hu">Környezet</skos:prefLabel>
+      <skos:prefLabel xml:lang="it">Ambiente</skos:prefLabel>
+      <skos:prefLabel xml:lang="lt">Aplinka</skos:prefLabel>
+      <skos:prefLabel xml:lang="lv">Vide</skos:prefLabel>
+      <skos:prefLabel xml:lang="mt">Ambjent</skos:prefLabel>
+      <skos:prefLabel xml:lang="nb">Miljø</skos:prefLabel>
+      <skos:prefLabel xml:lang="nl">Milieu</skos:prefLabel>
+      <skos:prefLabel xml:lang="nn">Miljø</skos:prefLabel>
+      <skos:prefLabel xml:lang="no">Miljø</skos:prefLabel>
+      <skos:prefLabel xml:lang="pl">Środowisko</skos:prefLabel>
+      <skos:prefLabel xml:lang="pt">Ambiente</skos:prefLabel>
+      <skos:prefLabel xml:lang="ro">Mediu</skos:prefLabel>
+      <skos:prefLabel xml:lang="sk">Životné prostredie</skos:prefLabel>
+      <skos:prefLabel xml:lang="sl">Okolje</skos:prefLabel>
+      <skos:prefLabel xml:lang="sv">Miljö</skos:prefLabel>
+      <at:authority-code>ENVI</at:authority-code>
+      <at:op-code>ENVI</at:op-code>
+      <at:start.use>2015-10-01</at:start.use>
+      <atold:op-code>ENVI</atold:op-code>
+      <dc:identifier>ENVI</dc:identifier>
+      <skos:definition xml:lang="en">This concept identifies datasets covering the domain of environment. The natural environment encompasses the interaction of all living species, climate, weather and natural resources that affect human survival and economic activity. Dataset examples: Attitudes of European citizens towards the environment; Pollutant emissions from transport.</skos:definition>
+      <skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/data-theme"/>
+      <skos:topConceptOf rdf:resource="http://publications.europa.eu/resource/authority/data-theme"/>
+   </skos:Concept>
+   <skos:Concept rdf:about="http://publications.europa.eu/resource/authority/data-theme/GOVE"
+                 at:deprecated="false">
+      <skos:prefLabel xml:lang="bg">Правителство и публичен сектор</skos:prefLabel>
+      <skos:prefLabel xml:lang="cs">Vláda a veřejný sektor</skos:prefLabel>
+      <skos:prefLabel xml:lang="da">Regeringen og den offentlige sektor</skos:prefLabel>
+      <skos:prefLabel xml:lang="de">Regierung und öffentlicher Sektor</skos:prefLabel>
+      <skos:prefLabel xml:lang="el">Κυβέρνηση και δημόσιος τομέας</skos:prefLabel>
+      <skos:prefLabel xml:lang="en">Government and public sector</skos:prefLabel>
+      <skos:prefLabel xml:lang="es">Gobierno y sector público</skos:prefLabel>
+      <skos:prefLabel xml:lang="et">Valitsus ja avalik sektor</skos:prefLabel>
+      <skos:prefLabel xml:lang="fi">Valtioneuvosto ja julkinen sektori</skos:prefLabel>
+      <skos:prefLabel xml:lang="fr">Gouvernement et secteur public</skos:prefLabel>
+      <skos:prefLabel xml:lang="ga">Rialtas agus earnáil phoiblí</skos:prefLabel>
+      <skos:prefLabel xml:lang="hr">Vlada i javni sektor</skos:prefLabel>
+      <skos:prefLabel xml:lang="hu">Kormányzat és közszféra</skos:prefLabel>
+      <skos:prefLabel xml:lang="it">Governo e settore pubblico</skos:prefLabel>
+      <skos:prefLabel xml:lang="lt">Vyriausybė ir viešasis sektorius</skos:prefLabel>
+      <skos:prefLabel xml:lang="lv">Valdība un sabiedriskais sektors</skos:prefLabel>
+      <skos:prefLabel xml:lang="mt">Gvern u settur pubbliku</skos:prefLabel>
+      <skos:prefLabel xml:lang="nb">Forvaltning og offentlig sektor</skos:prefLabel>
+      <skos:prefLabel xml:lang="nl">Overheid en publieke sector</skos:prefLabel>
+      <skos:prefLabel xml:lang="nn">Forvaltning og offentleg sektor</skos:prefLabel>
+      <skos:prefLabel xml:lang="no">Forvaltning og offentlig sektor</skos:prefLabel>
+      <skos:prefLabel xml:lang="pl">Rząd i sektor publiczny</skos:prefLabel>
+      <skos:prefLabel xml:lang="pt">Governo e setor público</skos:prefLabel>
+      <skos:prefLabel xml:lang="ro">Guvern şi sector public</skos:prefLabel>
+      <skos:prefLabel xml:lang="sk">Vláda a verejný sektor</skos:prefLabel>
+      <skos:prefLabel xml:lang="sl">Vlada in javni sektor</skos:prefLabel>
+      <skos:prefLabel xml:lang="sv">Regeringen och den offentliga sektorn</skos:prefLabel>
+      <at:authority-code>GOVE</at:authority-code>
+      <at:op-code>GOVE</at:op-code>
+      <at:start.use>2015-10-01</at:start.use>
+      <atold:op-code>GOVE</atold:op-code>
+      <dc:identifier>GOVE</dc:identifier>
+      <skos:definition xml:lang="en">This concept identifies datasets covering such domains as government or public sector. A government is the system or group of people governing an organised community, often a state. The public sector is the part of the economy composed of both public services and public enterprises. Public sector services and enterprises can be controlled by central government, regional or local authorities. Organisations that are not part of the public sector are either a part of the private sector or voluntary sector. Dataset examples: Candidate countries and potential candidates: Government statistics; Transparency Register.</skos:definition>
+      <skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/data-theme"/>
+      <skos:topConceptOf rdf:resource="http://publications.europa.eu/resource/authority/data-theme"/>
+   </skos:Concept>
+   <skos:Concept rdf:about="http://publications.europa.eu/resource/authority/data-theme/HEAL"
+                 at:deprecated="false">
+      <skos:prefLabel xml:lang="bg">Здраве</skos:prefLabel>
+      <skos:prefLabel xml:lang="cs">Zdraví</skos:prefLabel>
+      <skos:prefLabel xml:lang="da">Sundhed</skos:prefLabel>
+      <skos:prefLabel xml:lang="de">Gesundheit</skos:prefLabel>
+      <skos:prefLabel xml:lang="el">Υγεία</skos:prefLabel>
+      <skos:prefLabel xml:lang="en">Health</skos:prefLabel>
+      <skos:prefLabel xml:lang="es">Salud</skos:prefLabel>
+      <skos:prefLabel xml:lang="et">Tervis</skos:prefLabel>
+      <skos:prefLabel xml:lang="fi">Terveys</skos:prefLabel>
+      <skos:prefLabel xml:lang="fr">Santé</skos:prefLabel>
+      <skos:prefLabel xml:lang="ga">Sláinte</skos:prefLabel>
+      <skos:prefLabel xml:lang="hr">Zdravlje</skos:prefLabel>
+      <skos:prefLabel xml:lang="hu">Egészségügy</skos:prefLabel>
+      <skos:prefLabel xml:lang="it">Salute</skos:prefLabel>
+      <skos:prefLabel xml:lang="lt">Sveikata</skos:prefLabel>
+      <skos:prefLabel xml:lang="lv">Veselība</skos:prefLabel>
+      <skos:prefLabel xml:lang="mt">Saħħa</skos:prefLabel>
+      <skos:prefLabel xml:lang="nb">Helse</skos:prefLabel>
+      <skos:prefLabel xml:lang="nl">Gezondheid</skos:prefLabel>
+      <skos:prefLabel xml:lang="nn">Helse</skos:prefLabel>
+      <skos:prefLabel xml:lang="no">Helse</skos:prefLabel>
+      <skos:prefLabel xml:lang="pl">Zdrowie</skos:prefLabel>
+      <skos:prefLabel xml:lang="pt">Saúde</skos:prefLabel>
+      <skos:prefLabel xml:lang="ro">Sănătate</skos:prefLabel>
+      <skos:prefLabel xml:lang="sk">Zdravotníctvo</skos:prefLabel>
+      <skos:prefLabel xml:lang="sl">Zdravje</skos:prefLabel>
+      <skos:prefLabel xml:lang="sv">Hälsa</skos:prefLabel>
+      <at:authority-code>HEAL</at:authority-code>
+      <at:op-code>HEAL</at:op-code>
+      <at:start.use>2015-10-01</at:start.use>
+      <atold:op-code>HEAL</atold:op-code>
+      <dc:identifier>HEAL</dc:identifier>
+      <skos:definition xml:lang="en">This concept identifies datasets covering the domain of health. Health is a state of physical, mental and social well-being in which disease and infirmity are absent. Dataset examples: COVID-19 Coronavirus data; European Cancer Information System.</skos:definition>
+      <skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/data-theme"/>
+      <skos:topConceptOf rdf:resource="http://publications.europa.eu/resource/authority/data-theme"/>
+   </skos:Concept>
+   <skos:Concept rdf:about="http://publications.europa.eu/resource/authority/data-theme/INTR"
+                 at:deprecated="false">
+      <skos:prefLabel xml:lang="bg">Международни въпроси</skos:prefLabel>
+      <skos:prefLabel xml:lang="cs">Mezinárodní otázky</skos:prefLabel>
+      <skos:prefLabel xml:lang="da">Internationale spørgsmål</skos:prefLabel>
+      <skos:prefLabel xml:lang="de">Internationale Themen</skos:prefLabel>
+      <skos:prefLabel xml:lang="el">Διεθνή θέματα</skos:prefLabel>
+      <skos:prefLabel xml:lang="en">International issues</skos:prefLabel>
+      <skos:prefLabel xml:lang="es">Asuntos internacionales</skos:prefLabel>
+      <skos:prefLabel xml:lang="et">Rahvusvahelised küsimused</skos:prefLabel>
+      <skos:prefLabel xml:lang="fi">Kansainväliset kysymykset</skos:prefLabel>
+      <skos:prefLabel xml:lang="fr">Questions internationales</skos:prefLabel>
+      <skos:prefLabel xml:lang="ga">Saincheisteanna idirnáisiúnta</skos:prefLabel>
+      <skos:prefLabel xml:lang="hr">Međunarodni pitanja</skos:prefLabel>
+      <skos:prefLabel xml:lang="hu">Nemzetközi ügyek</skos:prefLabel>
+      <skos:prefLabel xml:lang="it">Tematiche internazionali</skos:prefLabel>
+      <skos:prefLabel xml:lang="lt">Tarptautiniai klausimai</skos:prefLabel>
+      <skos:prefLabel xml:lang="lv">Starptautiski jautājumi</skos:prefLabel>
+      <skos:prefLabel xml:lang="mt">Kwistjonijiet internazzjonali</skos:prefLabel>
+      <skos:prefLabel xml:lang="nb">Internasjonale temaer</skos:prefLabel>
+      <skos:prefLabel xml:lang="nl">Internationale vraagstukken</skos:prefLabel>
+      <skos:prefLabel xml:lang="nn">Internasjonale tema</skos:prefLabel>
+      <skos:prefLabel xml:lang="no">Internasjonale temaer</skos:prefLabel>
+      <skos:prefLabel xml:lang="pl">Kwestie międzynarodowe</skos:prefLabel>
+      <skos:prefLabel xml:lang="pt">Questões internacionais</skos:prefLabel>
+      <skos:prefLabel xml:lang="ro">Chestiuni internaționale</skos:prefLabel>
+      <skos:prefLabel xml:lang="sk">Medzinárodné otázky</skos:prefLabel>
+      <skos:prefLabel xml:lang="sl">Mednarodna vprašanja</skos:prefLabel>
+      <skos:prefLabel xml:lang="sv">Internationella frågor</skos:prefLabel>
+      <at:authority-code>INTR</at:authority-code>
+      <at:op-code>INTR</at:op-code>
+      <at:start.use>2015-10-01</at:start.use>
+      <atold:op-code>INTR</atold:op-code>
+      <dc:identifier>INTR</dc:identifier>
+      <skos:definition xml:lang="en">This concept identifies datasets covering the domain of international issues. An issue – important topic or problem for debate or discussion – is international when the participants represent at least two countries. Dataset examples: Consolidated list of persons, groups and entities subject to EU financial sanctions; European Commission — DG DEVCO – development and humanitarian assistance to Afghanistan.</skos:definition>
+      <skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/data-theme"/>
+      <skos:topConceptOf rdf:resource="http://publications.europa.eu/resource/authority/data-theme"/>
+   </skos:Concept>
+   <skos:Concept rdf:about="http://publications.europa.eu/resource/authority/data-theme/JUST"
+                 at:deprecated="false">
+      <skos:prefLabel xml:lang="bg">Правосъдие, съдебна система и обществена безопасност</skos:prefLabel>
+      <skos:prefLabel xml:lang="cs">Spravedlnost, právní systém a veřejná bezpečnost</skos:prefLabel>
+      <skos:prefLabel xml:lang="da">Retfærdighed, retssystem og offentlig sikkerhed</skos:prefLabel>
+      <skos:prefLabel xml:lang="de">Justiz, Rechtssystem und öffentliche Sicherheit</skos:prefLabel>
+      <skos:prefLabel xml:lang="el">Δικαιoσύνη, νομικό σύστημα και δημόσια ασφάλεια</skos:prefLabel>
+      <skos:prefLabel xml:lang="en">Justice, legal system and public safety</skos:prefLabel>
+      <skos:prefLabel xml:lang="es">Justicia, sistema judicial y seguridad pública</skos:prefLabel>
+      <skos:prefLabel xml:lang="et">Õigusemõistmine, õigussüsteem ja avalik turvalisus</skos:prefLabel>
+      <skos:prefLabel xml:lang="fi">Oikeus, oikeusjärjestelmä ja yleinen turvallisuus</skos:prefLabel>
+      <skos:prefLabel xml:lang="fr">Justice, système juridique et sécurité publique</skos:prefLabel>
+      <skos:prefLabel xml:lang="ga">Ceartas, córas dlí agus sábháilteacht an phobail</skos:prefLabel>
+      <skos:prefLabel xml:lang="hr">Pravosuđe, pravni sustav i javna sigurnost</skos:prefLabel>
+      <skos:prefLabel xml:lang="hu">Igazságügy, jogrendszer és közbiztonság</skos:prefLabel>
+      <skos:prefLabel xml:lang="it">Giustizia, sistema giuridico e sicurezza pubblica</skos:prefLabel>
+      <skos:prefLabel xml:lang="lt">Teisingumas, teisės sistema ir visuomenės sauga</skos:prefLabel>
+      <skos:prefLabel xml:lang="lv">Tieslietas, tiesību sistēma un sabiedrības drošība</skos:prefLabel>
+      <skos:prefLabel xml:lang="mt">Ġustizzja, sistema legali u sigurtà pubblika</skos:prefLabel>
+      <skos:prefLabel xml:lang="nb">Justis, rettssystem og allmenn sikkerhet</skos:prefLabel>
+      <skos:prefLabel xml:lang="nl">Justitie, rechtsstelsel en openbare veiligheid</skos:prefLabel>
+      <skos:prefLabel xml:lang="nn">Justis, rettssystem og allmenn tryggleik</skos:prefLabel>
+      <skos:prefLabel xml:lang="no">Justis, rettssystem og allmenn sikkerhet</skos:prefLabel>
+      <skos:prefLabel xml:lang="pl">Sprawiedliwość, ustrój sądów i bezpieczeństwo publiczne</skos:prefLabel>
+      <skos:prefLabel xml:lang="pt">Justiça, sistema judiciário e segurança pública</skos:prefLabel>
+      <skos:prefLabel xml:lang="ro">Justiție, sistem juridic și siguranță publică</skos:prefLabel>
+      <skos:prefLabel xml:lang="sk">Spravodlivosť, právny systém a verejná bezpečnosť</skos:prefLabel>
+      <skos:prefLabel xml:lang="sl">Pravosodje, pravni sistem in javna varnost</skos:prefLabel>
+      <skos:prefLabel xml:lang="sv">Rättvisa, rättsliga system och allmän säkerhet</skos:prefLabel>
+      <at:authority-code>JUST</at:authority-code>
+      <at:op-code>JUST</at:op-code>
+      <at:start.use>2015-10-01</at:start.use>
+      <atold:op-code>JUST</atold:op-code>
+      <dc:identifier>JUST</dc:identifier>
+      <skos:definition xml:lang="en">This concept identifies datasets covering such domains as justice, legal system or public safety. Justice includes both the attainment of that which is just and the philosophical discussion of that which is just; here it mainly means the procedural justice as found in the study and application of the law. The contemporary legal systems of the world are generally based on one of four basic systems: civil law, common law, statutory law, religious law or combinations of these. Public safety is the function of governments which ensures the protection of citizens, persons in their territory, organisations and institutions against threats to their well-being – and to the prosperity of their communities. Dataset examples: EU case-law; Information on Member States Law; European Data Protection Supervisor register of processing operations.</skos:definition>
+      <skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/data-theme"/>
+      <skos:topConceptOf rdf:resource="http://publications.europa.eu/resource/authority/data-theme"/>
+   </skos:Concept>
+   <skos:Concept rdf:about="http://publications.europa.eu/resource/authority/data-theme/OP_DATPRO"
+                 at:deprecated="false">
+      <skos:prefLabel xml:lang="bg">Неокончателни данни</skos:prefLabel>
+      <skos:prefLabel xml:lang="cs">Předběžné údaje</skos:prefLabel>
+      <skos:prefLabel xml:lang="da">Midlertidige data</skos:prefLabel>
+      <skos:prefLabel xml:lang="de">Vorläufige Daten</skos:prefLabel>
+      <skos:prefLabel xml:lang="el">Προσωρινά δεδομένα</skos:prefLabel>
+      <skos:prefLabel xml:lang="en">Provisional data</skos:prefLabel>
+      <skos:prefLabel xml:lang="es">Datos provisionales</skos:prefLabel>
+      <skos:prefLabel xml:lang="et">Esialgsed andmed</skos:prefLabel>
+      <skos:prefLabel xml:lang="fi">Alustavat tiedot</skos:prefLabel>
+      <skos:prefLabel xml:lang="fr">Données provisoires</skos:prefLabel>
+      <skos:prefLabel xml:lang="ga">Sonraí sealadacha</skos:prefLabel>
+      <skos:prefLabel xml:lang="hr">Privremeni podaci</skos:prefLabel>
+      <skos:prefLabel xml:lang="hu">Ideiglenes adatok</skos:prefLabel>
+      <skos:prefLabel xml:lang="it">Dati provvisori</skos:prefLabel>
+      <skos:prefLabel xml:lang="lt">Laikinieji duomenys</skos:prefLabel>
+      <skos:prefLabel xml:lang="lv">Provizoriski dati</skos:prefLabel>
+      <skos:prefLabel xml:lang="mt">Dejta provviżorja</skos:prefLabel>
+      <skos:prefLabel xml:lang="nl">Voorlopige gegevens</skos:prefLabel>
+      <skos:prefLabel xml:lang="pl">Dane tymczasowe</skos:prefLabel>
+      <skos:prefLabel xml:lang="pt">Dados provisórios</skos:prefLabel>
+      <skos:prefLabel xml:lang="ro">Date provizorii</skos:prefLabel>
+      <skos:prefLabel xml:lang="sk">Predbežné údaje</skos:prefLabel>
+      <skos:prefLabel xml:lang="sl">Začasni podatki</skos:prefLabel>
+      <skos:prefLabel xml:lang="sv">Tillfälliga uppgifter</skos:prefLabel>
+      <at:authority-code>OP_DATPRO</at:authority-code>
+      <at:op-code>OP_DATPRO</at:op-code>
+      <at:start.use>1952-07-23</at:start.use>
+      <atold:op-code>OP_DATPRO</atold:op-code>
+      <dc:identifier>OP_DATPRO</dc:identifier>
+      <skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/data-theme"/>
+      <skos:topConceptOf rdf:resource="http://publications.europa.eu/resource/authority/data-theme"/>
+   </skos:Concept>
+   <skos:Concept rdf:about="http://publications.europa.eu/resource/authority/data-theme/REGI"
+                 at:deprecated="false">
+      <skos:prefLabel xml:lang="bg">Региони и градове</skos:prefLabel>
+      <skos:prefLabel xml:lang="cs">Regiony a města</skos:prefLabel>
+      <skos:prefLabel xml:lang="da">Regioner og byer</skos:prefLabel>
+      <skos:prefLabel xml:lang="de">Regionen und Städte</skos:prefLabel>
+      <skos:prefLabel xml:lang="el">Περιφέρειες και πόλεις</skos:prefLabel>
+      <skos:prefLabel xml:lang="en">Regions and cities</skos:prefLabel>
+      <skos:prefLabel xml:lang="es">Regiones y ciudades</skos:prefLabel>
+      <skos:prefLabel xml:lang="et">Piirkonnad ja linnad</skos:prefLabel>
+      <skos:prefLabel xml:lang="fi">Alueet ja kaupungit</skos:prefLabel>
+      <skos:prefLabel xml:lang="fr">Régions et villes</skos:prefLabel>
+      <skos:prefLabel xml:lang="ga">Réigiúin agus cathracha</skos:prefLabel>
+      <skos:prefLabel xml:lang="hr">Regije i gradovi</skos:prefLabel>
+      <skos:prefLabel xml:lang="hu">Régiók és városok</skos:prefLabel>
+      <skos:prefLabel xml:lang="it">Regioni e città</skos:prefLabel>
+      <skos:prefLabel xml:lang="lt">Regionai ir miestai</skos:prefLabel>
+      <skos:prefLabel xml:lang="lv">Reģioni un pilsētas</skos:prefLabel>
+      <skos:prefLabel xml:lang="mt">Reġjuni u bliet</skos:prefLabel>
+      <skos:prefLabel xml:lang="nb">Regioner og byer</skos:prefLabel>
+      <skos:prefLabel xml:lang="nl">Regio's en steden</skos:prefLabel>
+      <skos:prefLabel xml:lang="nn">Regionar og byar</skos:prefLabel>
+      <skos:prefLabel xml:lang="no">Regioner og byer</skos:prefLabel>
+      <skos:prefLabel xml:lang="pl">Regiony i miasta</skos:prefLabel>
+      <skos:prefLabel xml:lang="pt">Regiões e cidades</skos:prefLabel>
+      <skos:prefLabel xml:lang="ro">Regiuni şi orașe</skos:prefLabel>
+      <skos:prefLabel xml:lang="sk">Regióny a mestá</skos:prefLabel>
+      <skos:prefLabel xml:lang="sl">Regije in mesta</skos:prefLabel>
+      <skos:prefLabel xml:lang="sv">Regioner och städer</skos:prefLabel>
+      <at:authority-code>REGI</at:authority-code>
+      <at:op-code>REGI</at:op-code>
+      <at:start.use>2015-10-01</at:start.use>
+      <atold:op-code>REGI</atold:op-code>
+      <dc:identifier>REGI</dc:identifier>
+      <skos:definition xml:lang="en">This concept identifies datasets covering such domains as regions or cities. In the field of political geography, regions tend to be based on political units such as sovereign states; subnational units such as administrative regions, provinces, states, counties, townships, territories, etc.; and multinational groupings. A city is a large human settlement. Dataset examples: NUTS - Nomenclature of territorial units for statistics classification; UDP - GDP per capita by metro regions, 2000 - 2060.</skos:definition>
+      <skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/data-theme"/>
+      <skos:topConceptOf rdf:resource="http://publications.europa.eu/resource/authority/data-theme"/>
+   </skos:Concept>
+   <skos:Concept rdf:about="http://publications.europa.eu/resource/authority/data-theme/SOCI"
+                 at:deprecated="false">
+      <skos:prefLabel xml:lang="bg">Население и общество</skos:prefLabel>
+      <skos:prefLabel xml:lang="cs">Populace a společnost</skos:prefLabel>
+      <skos:prefLabel xml:lang="da">Befolkning og samfund</skos:prefLabel>
+      <skos:prefLabel xml:lang="de">Bevölkerung und Gesellschaft</skos:prefLabel>
+      <skos:prefLabel xml:lang="el">Πληθυσμός και κοινωνία</skos:prefLabel>
+      <skos:prefLabel xml:lang="en">Population and society</skos:prefLabel>
+      <skos:prefLabel xml:lang="es">Población y sociedad</skos:prefLabel>
+      <skos:prefLabel xml:lang="et">Elanikkond ja ühiskond</skos:prefLabel>
+      <skos:prefLabel xml:lang="fi">Väestö ja yhteiskunta</skos:prefLabel>
+      <skos:prefLabel xml:lang="fr">Population et société</skos:prefLabel>
+      <skos:prefLabel xml:lang="ga">Daonra agus sochaí</skos:prefLabel>
+      <skos:prefLabel xml:lang="hr">Stanovništvo i društvo</skos:prefLabel>
+      <skos:prefLabel xml:lang="hu">Népesség és társadalom</skos:prefLabel>
+      <skos:prefLabel xml:lang="it">Popolazione e società</skos:prefLabel>
+      <skos:prefLabel xml:lang="lt">Gyventojų skaičius ir visuomenė</skos:prefLabel>
+      <skos:prefLabel xml:lang="lv">Iedzīvotāji un sabiedrība</skos:prefLabel>
+      <skos:prefLabel xml:lang="mt">Popolazzjoni u soċjetà</skos:prefLabel>
+      <skos:prefLabel xml:lang="nb">Befolkning og samfunn</skos:prefLabel>
+      <skos:prefLabel xml:lang="nl">Bevolking en samenleving</skos:prefLabel>
+      <skos:prefLabel xml:lang="nn">Befolkning og samfunn</skos:prefLabel>
+      <skos:prefLabel xml:lang="no">Befolkning og samfunn</skos:prefLabel>
+      <skos:prefLabel xml:lang="pl">Ludność i społeczeństwo</skos:prefLabel>
+      <skos:prefLabel xml:lang="pt">População e sociedade</skos:prefLabel>
+      <skos:prefLabel xml:lang="ro">Populaţie şi societate</skos:prefLabel>
+      <skos:prefLabel xml:lang="sk">Obyvateľstvo a spoločnosť</skos:prefLabel>
+      <skos:prefLabel xml:lang="sl">Prebivalstvo in družba</skos:prefLabel>
+      <skos:prefLabel xml:lang="sv">Befolkning och samhälle</skos:prefLabel>
+      <at:authority-code>SOCI</at:authority-code>
+      <at:op-code>SOCI</at:op-code>
+      <at:start.use>2015-10-01</at:start.use>
+      <atold:op-code>SOCI</atold:op-code>
+      <dc:identifier>SOCI</dc:identifier>
+      <skos:definition xml:lang="en">This concept identifies datasets covering such domains as population or society. Population is a collection of humans and their entire race; it is the number of people in a city or town, region, country or world. A society is a group of individuals involved in persistent social interaction, or a large social group sharing the same spatial or social territory, typically subject to the same political authority and dominant cultural expectations. Dataset examples: Population density by NUTS 2 region; Violence against Women: An EU-wide survey.</skos:definition>
+      <skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/data-theme"/>
+      <skos:topConceptOf rdf:resource="http://publications.europa.eu/resource/authority/data-theme"/>
+   </skos:Concept>
+   <skos:Concept rdf:about="http://publications.europa.eu/resource/authority/data-theme/TECH"
+                 at:deprecated="false">
+      <skos:prefLabel xml:lang="bg">Наука и tехнологии</skos:prefLabel>
+      <skos:prefLabel xml:lang="cs">Věda a technika</skos:prefLabel>
+      <skos:prefLabel xml:lang="da">Videnskab og teknologi</skos:prefLabel>
+      <skos:prefLabel xml:lang="de">Wissenschaft und Technologie</skos:prefLabel>
+      <skos:prefLabel xml:lang="el">Επιστήμη και τεχνολογία</skos:prefLabel>
+      <skos:prefLabel xml:lang="en">Science and technology</skos:prefLabel>
+      <skos:prefLabel xml:lang="es">Ciencia y tecnología</skos:prefLabel>
+      <skos:prefLabel xml:lang="et">Teadus ja tehnoloogia</skos:prefLabel>
+      <skos:prefLabel xml:lang="fi">Tiede ja teknologia</skos:prefLabel>
+      <skos:prefLabel xml:lang="fr">Science et technologie</skos:prefLabel>
+      <skos:prefLabel xml:lang="ga">Eolaíocht agus teicneolaíocht</skos:prefLabel>
+      <skos:prefLabel xml:lang="hr">Znanost i tehnologija</skos:prefLabel>
+      <skos:prefLabel xml:lang="hu">Tudomány és technológia</skos:prefLabel>
+      <skos:prefLabel xml:lang="it">Scienza e tecnologia</skos:prefLabel>
+      <skos:prefLabel xml:lang="lt">Mokslas ir technologijos</skos:prefLabel>
+      <skos:prefLabel xml:lang="lv">Zinātne un tehnoloģija</skos:prefLabel>
+      <skos:prefLabel xml:lang="mt">Xjenza u teknoloġija</skos:prefLabel>
+      <skos:prefLabel xml:lang="nb">Vitenskap og teknologi</skos:prefLabel>
+      <skos:prefLabel xml:lang="nl">Wetenschap en technologie</skos:prefLabel>
+      <skos:prefLabel xml:lang="nn">Vitskap og teknologi</skos:prefLabel>
+      <skos:prefLabel xml:lang="no">Vitenskap og teknologi</skos:prefLabel>
+      <skos:prefLabel xml:lang="pl">Nauka i technologia</skos:prefLabel>
+      <skos:prefLabel xml:lang="pt">Ciência e tecnologia</skos:prefLabel>
+      <skos:prefLabel xml:lang="ro">Ştiinţă şi tehnologie</skos:prefLabel>
+      <skos:prefLabel xml:lang="sk">Veda a technika</skos:prefLabel>
+      <skos:prefLabel xml:lang="sl">Znanost in tehnologija</skos:prefLabel>
+      <skos:prefLabel xml:lang="sv">Vetenskap och teknik</skos:prefLabel>
+      <at:authority-code>TECH</at:authority-code>
+      <at:op-code>TECH</at:op-code>
+      <at:start.use>2015-10-01</at:start.use>
+      <atold:op-code>TECH</atold:op-code>
+      <dc:identifier>TECH</dc:identifier>
+      <skos:definition xml:lang="en">This concept identifies datasets covering such domains as science or technology. Science is a systematic enterprise that builds and organises knowledge in the form of testable explanations and predictions. Modern science is typically divided into three major branches that consist of the natural sciences, which study nature in the broadest sense; the social sciences, which study individuals and societies; and the formal sciences, which study abstract concepts. Technology is the sum of techniques, skills, methods and processes used in the production of goods or services or in the accomplishment of objectives, such as scientific investigation. Dataset examples: CORDIS - EU research projects under Horizon 2020 (2014-2020); Take-up of mobile broadband (subscriptions/100 people).</skos:definition>
+      <skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/data-theme"/>
+      <skos:topConceptOf rdf:resource="http://publications.europa.eu/resource/authority/data-theme"/>
+   </skos:Concept>
+   <skos:Concept rdf:about="http://publications.europa.eu/resource/authority/data-theme/TRAN"
+                 at:deprecated="false">
+      <skos:prefLabel xml:lang="bg">Транспорт</skos:prefLabel>
+      <skos:prefLabel xml:lang="cs">Doprava</skos:prefLabel>
+      <skos:prefLabel xml:lang="da">Transport</skos:prefLabel>
+      <skos:prefLabel xml:lang="de">Verkehr</skos:prefLabel>
+      <skos:prefLabel xml:lang="el">Μεταφορές</skos:prefLabel>
+      <skos:prefLabel xml:lang="en">Transport</skos:prefLabel>
+      <skos:prefLabel xml:lang="es">Transporte</skos:prefLabel>
+      <skos:prefLabel xml:lang="et">Transport</skos:prefLabel>
+      <skos:prefLabel xml:lang="fi">Liikenne</skos:prefLabel>
+      <skos:prefLabel xml:lang="fr">Transports</skos:prefLabel>
+      <skos:prefLabel xml:lang="ga">Iompar</skos:prefLabel>
+      <skos:prefLabel xml:lang="hr">Promet</skos:prefLabel>
+      <skos:prefLabel xml:lang="hu">Közlekedés</skos:prefLabel>
+      <skos:prefLabel xml:lang="it">Trasporti</skos:prefLabel>
+      <skos:prefLabel xml:lang="lt">Transportas</skos:prefLabel>
+      <skos:prefLabel xml:lang="lv">Transports</skos:prefLabel>
+      <skos:prefLabel xml:lang="mt">Trasport</skos:prefLabel>
+      <skos:prefLabel xml:lang="nb">Transport</skos:prefLabel>
+      <skos:prefLabel xml:lang="nl">Vervoer</skos:prefLabel>
+      <skos:prefLabel xml:lang="nn">Transport</skos:prefLabel>
+      <skos:prefLabel xml:lang="no">Transport</skos:prefLabel>
+      <skos:prefLabel xml:lang="pl">Transport</skos:prefLabel>
+      <skos:prefLabel xml:lang="pt">Transportes</skos:prefLabel>
+      <skos:prefLabel xml:lang="ro">Transport</skos:prefLabel>
+      <skos:prefLabel xml:lang="sk">Doprava</skos:prefLabel>
+      <skos:prefLabel xml:lang="sl">Transport</skos:prefLabel>
+      <skos:prefLabel xml:lang="sv">Transport</skos:prefLabel>
+      <at:authority-code>TRAN</at:authority-code>
+      <at:op-code>TRAN</at:op-code>
+      <at:start.use>2015-10-01</at:start.use>
+      <atold:op-code>TRAN</atold:op-code>
+      <dc:identifier>TRAN</dc:identifier>
+      <skos:definition xml:lang="en">This concept identifies datasets covering the domain of transport. Transport is the movement of humans, animals and goods from one location to another. Modes of transport include air, land (rail and road), water, cable, pipeline and space. Dataset examples: Total length of motorways; Airport traffic data by reporting airport and airlines.</skos:definition>
+      <skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/data-theme"/>
+      <skos:topConceptOf rdf:resource="http://publications.europa.eu/resource/authority/data-theme"/>
+   </skos:Concept>
+</rdf:RDF>

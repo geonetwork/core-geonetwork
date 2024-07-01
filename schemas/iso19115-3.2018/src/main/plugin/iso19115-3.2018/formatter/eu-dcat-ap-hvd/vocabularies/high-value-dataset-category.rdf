@@ -1,0 +1,315 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF
+  xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+
+  <rdf:Description rdf:about="http://data.europa.eu/bna/asd487ae75">
+    <startDate xmlns="http://publications.europa.eu/ontology/euvoc#"
+               rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2019-07-06
+    </startDate>
+    <created xmlns="http://purl.org/dc/terms/" rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2023-09-05</created>
+    <issued xmlns="http://purl.org/dc/terms/" rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2023-09-27</issued>
+    <modified xmlns="http://purl.org/dc/terms/" rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2023-09-07
+    </modified>
+    <title xmlns="http://purl.org/dc/terms/" xml:lang="en">High-value dataset categories</title>
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#ConceptScheme"/>
+    <prefLabel xmlns="http://www.w3.org/2004/02/skos/core#" xml:lang="en">High-value dataset categories</prefLabel>
+    <versionInfo xmlns="http://www.w3.org/2002/07/owl#">1.0</versionInfo>
+  </rdf:Description>
+
+  <rdf:Description rdf:about="http://data.europa.eu/bna/c_164e0bf5">
+    <startDate xmlns="http://publications.europa.eu/ontology/euvoc#"
+               rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2019-07-06
+    </startDate>
+    <created xmlns="http://purl.org/dc/terms/" rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2023-09-05</created>
+    <modified xmlns="http://purl.org/dc/terms/" rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2023-09-13
+    </modified>
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+    <prefLabel xmlns="http://www.w3.org/2004/02/skos/core#" xml:lang="bg">Метеорологични данни</prefLabel>
+    <prefLabel xmlns="http://www.w3.org/2004/02/skos/core#" xml:lang="cs">Meteorologie</prefLabel>
+    <prefLabel xmlns="http://www.w3.org/2004/02/skos/core#" xml:lang="da">Meteorologiske data</prefLabel>
+    <prefLabel xmlns="http://www.w3.org/2004/02/skos/core#" xml:lang="de">Meteorologie</prefLabel>
+    <prefLabel xmlns="http://www.w3.org/2004/02/skos/core#" xml:lang="el">Μετεωρολογικές πληροφορίες</prefLabel>
+    <prefLabel xmlns="http://www.w3.org/2004/02/skos/core#" xml:lang="en">Meteorological</prefLabel>
+    <prefLabel xmlns="http://www.w3.org/2004/02/skos/core#" xml:lang="es">Meteorología</prefLabel>
+    <prefLabel xmlns="http://www.w3.org/2004/02/skos/core#" xml:lang="et">Meteoroloogiateave</prefLabel>
+    <prefLabel xmlns="http://www.w3.org/2004/02/skos/core#" xml:lang="fi">Säätiedot</prefLabel>
+    <prefLabel xmlns="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">Météorologiques</prefLabel>
+    <prefLabel xmlns="http://www.w3.org/2004/02/skos/core#" xml:lang="ga">Meitéareolaíoch</prefLabel>
+    <prefLabel xmlns="http://www.w3.org/2004/02/skos/core#" xml:lang="hr">Meteorološki podatci</prefLabel>
+    <prefLabel xmlns="http://www.w3.org/2004/02/skos/core#" xml:lang="hu">Meteorológiai adatok</prefLabel>
+    <prefLabel xmlns="http://www.w3.org/2004/02/skos/core#" xml:lang="it">Dati meteorologici</prefLabel>
+    <prefLabel xmlns="http://www.w3.org/2004/02/skos/core#" xml:lang="lt">Meteorologiniai duomenys</prefLabel>
+    <prefLabel xmlns="http://www.w3.org/2004/02/skos/core#" xml:lang="lv">Meteoroloģijas datu kopas</prefLabel>
+    <prefLabel xmlns="http://www.w3.org/2004/02/skos/core#" xml:lang="mt">Data meteoroloġika</prefLabel>
+    <prefLabel xmlns="http://www.w3.org/2004/02/skos/core#" xml:lang="nl">Meteorologische data</prefLabel>
+    <prefLabel xmlns="http://www.w3.org/2004/02/skos/core#" xml:lang="pl">Dane meteorologiczne</prefLabel>
+    <prefLabel xmlns="http://www.w3.org/2004/02/skos/core#" xml:lang="pt">Meteorológicas</prefLabel>
+    <prefLabel xmlns="http://www.w3.org/2004/02/skos/core#" xml:lang="ro">Domeniul meteorologic</prefLabel>
+    <prefLabel xmlns="http://www.w3.org/2004/02/skos/core#" xml:lang="sk">Meteorológia</prefLabel>
+    <prefLabel xmlns="http://www.w3.org/2004/02/skos/core#" xml:lang="sl">Meteorološki podatki</prefLabel>
+    <prefLabel xmlns="http://www.w3.org/2004/02/skos/core#" xml:lang="sv">Meteorologiska data</prefLabel>
+    <order xmlns="http://publications.europa.eu/ontology/euvoc#"
+           rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">3
+    </order>
+    <definition xmlns="http://www.w3.org/2004/02/skos/core#" xml:lang="en">data sets as described in Commission
+      Implementing Regulation (EU) 2023/138 of 21 December 2022 laying down a list of specific high-value datasets and
+      the arrangements for their publication and re-use, Annex, Section 3
+    </definition>
+    <inScheme xmlns="http://www.w3.org/2004/02/skos/core#" rdf:resource="http://data.europa.eu/bna/asd487ae75"/>
+    <topConceptOf xmlns="http://www.w3.org/2004/02/skos/core#" rdf:resource="http://data.europa.eu/bna/asd487ae75"/>
+  </rdf:Description>
+
+  <rdf:Description rdf:about="http://data.europa.eu/bna/c_a9135398">
+    <startDate xmlns="http://publications.europa.eu/ontology/euvoc#"
+               rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2019-07-06
+    </startDate>
+    <created xmlns="http://purl.org/dc/terms/" rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2023-09-05</created>
+    <modified xmlns="http://purl.org/dc/terms/" rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2023-09-13
+    </modified>
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+    <prefLabel xmlns="http://www.w3.org/2004/02/skos/core#" xml:lang="bg">Дружества и собственост на дружествата
+    </prefLabel>
+    <prefLabel xmlns="http://www.w3.org/2004/02/skos/core#" xml:lang="cs">Společnosti a vlastnictví společností
+    </prefLabel>
+    <prefLabel xmlns="http://www.w3.org/2004/02/skos/core#" xml:lang="da">Virksomheder og virksomhedsejerskab
+    </prefLabel>
+    <prefLabel xmlns="http://www.w3.org/2004/02/skos/core#" xml:lang="de">Unternehmen und Eigentümerschaft von
+      Unternehmen
+    </prefLabel>
+    <prefLabel xmlns="http://www.w3.org/2004/02/skos/core#" xml:lang="el">Εταιρείες και ιδιοκτησιακό καθεστώς
+      εταιρειών
+    </prefLabel>
+    <prefLabel xmlns="http://www.w3.org/2004/02/skos/core#" xml:lang="en">Companies and company ownership</prefLabel>
+    <prefLabel xmlns="http://www.w3.org/2004/02/skos/core#" xml:lang="es">Sociedades y propiedad de sociedades
+    </prefLabel>
+    <prefLabel xmlns="http://www.w3.org/2004/02/skos/core#" xml:lang="et">Äriühingud ja äriühingu omandisuhted
+    </prefLabel>
+    <prefLabel xmlns="http://www.w3.org/2004/02/skos/core#" xml:lang="fi">Yritys- ja yritysten omistustiedot</prefLabel>
+    <prefLabel xmlns="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">Entreprises et propriété d'entreprises
+    </prefLabel>
+    <prefLabel xmlns="http://www.w3.org/2004/02/skos/core#" xml:lang="ga">Cuideachtaí agus úinéireacht cuideachtaí
+    </prefLabel>
+    <prefLabel xmlns="http://www.w3.org/2004/02/skos/core#" xml:lang="hr">Trgovačka društva i vlasništvo nad trgovačkim
+      društvima
+    </prefLabel>
+    <prefLabel xmlns="http://www.w3.org/2004/02/skos/core#" xml:lang="hu">Vállalati és vállalattulajdonosi adatok
+    </prefLabel>
+    <prefLabel xmlns="http://www.w3.org/2004/02/skos/core#" xml:lang="it">Dati relativi alle imprese e alla proprietà
+      delle imprese
+    </prefLabel>
+    <prefLabel xmlns="http://www.w3.org/2004/02/skos/core#" xml:lang="lt">Bendrovės ir bendrovių valdymas nuosavybės
+      teise
+    </prefLabel>
+    <prefLabel xmlns="http://www.w3.org/2004/02/skos/core#" xml:lang="lv">Uzņēmumi un uzņēmumu īpašumtiesības
+    </prefLabel>
+    <prefLabel xmlns="http://www.w3.org/2004/02/skos/core#" xml:lang="mt">Data dwar il-kumpanniji u l-proprjetà
+      tal-kumpanniji
+    </prefLabel>
+    <prefLabel xmlns="http://www.w3.org/2004/02/skos/core#" xml:lang="nl">Bedrijven en eigendom van bedrijven
+    </prefLabel>
+    <prefLabel xmlns="http://www.w3.org/2004/02/skos/core#" xml:lang="pl">Dane dotyczące przedsiębiorstw i ich
+      własności
+    </prefLabel>
+    <prefLabel xmlns="http://www.w3.org/2004/02/skos/core#" xml:lang="pt">Empresas e propriedade de empresas</prefLabel>
+    <prefLabel xmlns="http://www.w3.org/2004/02/skos/core#" xml:lang="ro">Domeniul Societăți și structura de proprietate
+      a societăților
+    </prefLabel>
+    <prefLabel xmlns="http://www.w3.org/2004/02/skos/core#" xml:lang="sk">Spoločnosti a vlastníctvo spoločností
+    </prefLabel>
+    <prefLabel xmlns="http://www.w3.org/2004/02/skos/core#" xml:lang="sl">Družbe in lastništvo družb</prefLabel>
+    <prefLabel xmlns="http://www.w3.org/2004/02/skos/core#" xml:lang="sv">Företag och företagsägande</prefLabel>
+    <order xmlns="http://publications.europa.eu/ontology/euvoc#"
+           rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">5
+    </order>
+    <definition xmlns="http://www.w3.org/2004/02/skos/core#" xml:lang="en">data sets as described in Commission
+      Implementing Regulation (EU) 2023/138 of 21 December 2022 laying down a list of specific high-value datasets and
+      the arrangements for their publication and re-use, Annex, Section 5
+    </definition>
+    <inScheme xmlns="http://www.w3.org/2004/02/skos/core#" rdf:resource="http://data.europa.eu/bna/asd487ae75"/>
+    <topConceptOf xmlns="http://www.w3.org/2004/02/skos/core#" rdf:resource="http://data.europa.eu/bna/asd487ae75"/>
+  </rdf:Description>
+
+  <rdf:Description rdf:about="http://data.europa.eu/bna/c_ac64a52d">
+    <startDate xmlns="http://publications.europa.eu/ontology/euvoc#"
+               rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2019-07-06
+    </startDate>
+    <created xmlns="http://purl.org/dc/terms/" rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2023-09-05</created>
+    <modified xmlns="http://purl.org/dc/terms/" rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2023-09-13
+    </modified>
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+    <prefLabel xmlns="http://www.w3.org/2004/02/skos/core#" xml:lang="bg">Геопространствени данни</prefLabel>
+    <prefLabel xmlns="http://www.w3.org/2004/02/skos/core#" xml:lang="cs">Geoprostorové údaje</prefLabel>
+    <prefLabel xmlns="http://www.w3.org/2004/02/skos/core#" xml:lang="da">Geospatiale data</prefLabel>
+    <prefLabel xmlns="http://www.w3.org/2004/02/skos/core#" xml:lang="de">Georaum</prefLabel>
+    <prefLabel xmlns="http://www.w3.org/2004/02/skos/core#" xml:lang="el">Γεωχωρικές πληροφορίες</prefLabel>
+    <prefLabel xmlns="http://www.w3.org/2004/02/skos/core#" xml:lang="en">Geospatial</prefLabel>
+    <prefLabel xmlns="http://www.w3.org/2004/02/skos/core#" xml:lang="es">Geoespacial</prefLabel>
+    <prefLabel xmlns="http://www.w3.org/2004/02/skos/core#" xml:lang="et">Georuumilised andmed</prefLabel>
+    <prefLabel xmlns="http://www.w3.org/2004/02/skos/core#" xml:lang="fi">Paikkatiedot</prefLabel>
+    <prefLabel xmlns="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">Géospatiales</prefLabel>
+    <prefLabel xmlns="http://www.w3.org/2004/02/skos/core#" xml:lang="ga">Geospásúil</prefLabel>
+    <prefLabel xmlns="http://www.w3.org/2004/02/skos/core#" xml:lang="hr">Geoprostorni podatci</prefLabel>
+    <prefLabel xmlns="http://www.w3.org/2004/02/skos/core#" xml:lang="hu">Térinformatikai adatok</prefLabel>
+    <prefLabel xmlns="http://www.w3.org/2004/02/skos/core#" xml:lang="it">Dati geospaziali</prefLabel>
+    <prefLabel xmlns="http://www.w3.org/2004/02/skos/core#" xml:lang="lt">Geoerdviniai duomenys</prefLabel>
+    <prefLabel xmlns="http://www.w3.org/2004/02/skos/core#" xml:lang="lv">Ģeotelpisko datu kopas</prefLabel>
+    <prefLabel xmlns="http://www.w3.org/2004/02/skos/core#" xml:lang="mt">Data ġeospazjali</prefLabel>
+    <prefLabel xmlns="http://www.w3.org/2004/02/skos/core#" xml:lang="nl">Geospatiale data</prefLabel>
+    <prefLabel xmlns="http://www.w3.org/2004/02/skos/core#" xml:lang="pl">Dane geoprzestrzenne</prefLabel>
+    <prefLabel xmlns="http://www.w3.org/2004/02/skos/core#" xml:lang="pt">Geoespaciais</prefLabel>
+    <prefLabel xmlns="http://www.w3.org/2004/02/skos/core#" xml:lang="ro">Domeniul geospațial</prefLabel>
+    <prefLabel xmlns="http://www.w3.org/2004/02/skos/core#" xml:lang="sk">Geopriestorové údaje</prefLabel>
+    <prefLabel xmlns="http://www.w3.org/2004/02/skos/core#" xml:lang="sl">Geoprostorski podatki</prefLabel>
+    <prefLabel xmlns="http://www.w3.org/2004/02/skos/core#" xml:lang="sv">Geospatiala data</prefLabel>
+    <order xmlns="http://publications.europa.eu/ontology/euvoc#"
+           rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">1
+    </order>
+    <definition xmlns="http://www.w3.org/2004/02/skos/core#" xml:lang="en">data sets as described in Commission
+      Implementing Regulation (EU) 2023/138 of 21 December 2022 laying down a list of specific high-value datasets and
+      the arrangements for their publication and re-use, Annex, Section 1
+    </definition>
+    <inScheme xmlns="http://www.w3.org/2004/02/skos/core#" rdf:resource="http://data.europa.eu/bna/asd487ae75"/>
+    <topConceptOf xmlns="http://www.w3.org/2004/02/skos/core#" rdf:resource="http://data.europa.eu/bna/asd487ae75"/>
+  </rdf:Description>
+
+  <rdf:Description rdf:about="http://data.europa.eu/bna/c_b79e35eb">
+    <startDate xmlns="http://publications.europa.eu/ontology/euvoc#"
+               rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2019-07-06
+    </startDate>
+    <created xmlns="http://purl.org/dc/terms/" rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2023-09-05</created>
+    <modified xmlns="http://purl.org/dc/terms/" rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2023-09-13
+    </modified>
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+    <prefLabel xmlns="http://www.w3.org/2004/02/skos/core#" xml:lang="bg">Мобилност</prefLabel>
+    <prefLabel xmlns="http://www.w3.org/2004/02/skos/core#" xml:lang="cs">Mobilita</prefLabel>
+    <prefLabel xmlns="http://www.w3.org/2004/02/skos/core#" xml:lang="da">Mobilitet</prefLabel>
+    <prefLabel xmlns="http://www.w3.org/2004/02/skos/core#" xml:lang="de">Mobilität</prefLabel>
+    <prefLabel xmlns="http://www.w3.org/2004/02/skos/core#" xml:lang="el">Κινητικότητα</prefLabel>
+    <prefLabel xmlns="http://www.w3.org/2004/02/skos/core#" xml:lang="en">Mobility</prefLabel>
+    <prefLabel xmlns="http://www.w3.org/2004/02/skos/core#" xml:lang="es">Movilidad</prefLabel>
+    <prefLabel xmlns="http://www.w3.org/2004/02/skos/core#" xml:lang="et">Liikuvus</prefLabel>
+    <prefLabel xmlns="http://www.w3.org/2004/02/skos/core#" xml:lang="fi">Liikkuvuustiedot</prefLabel>
+    <prefLabel xmlns="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">Mobilité</prefLabel>
+    <prefLabel xmlns="http://www.w3.org/2004/02/skos/core#" xml:lang="ga">Soghluaisteacht</prefLabel>
+    <prefLabel xmlns="http://www.w3.org/2004/02/skos/core#" xml:lang="hr">Mobilnost</prefLabel>
+    <prefLabel xmlns="http://www.w3.org/2004/02/skos/core#" xml:lang="hu">Mobilitási adatok</prefLabel>
+    <prefLabel xmlns="http://www.w3.org/2004/02/skos/core#" xml:lang="it">Dati relativi alla mobilità</prefLabel>
+    <prefLabel xmlns="http://www.w3.org/2004/02/skos/core#" xml:lang="lt">Judumas</prefLabel>
+    <prefLabel xmlns="http://www.w3.org/2004/02/skos/core#" xml:lang="lv">Mobilitāte</prefLabel>
+    <prefLabel xmlns="http://www.w3.org/2004/02/skos/core#" xml:lang="mt">Data dwar il-mobbiltà</prefLabel>
+    <prefLabel xmlns="http://www.w3.org/2004/02/skos/core#" xml:lang="nl">Mobiliteit</prefLabel>
+    <prefLabel xmlns="http://www.w3.org/2004/02/skos/core#" xml:lang="pl">Dane dotyczące mobilności</prefLabel>
+    <prefLabel xmlns="http://www.w3.org/2004/02/skos/core#" xml:lang="pt">Mobilidade</prefLabel>
+    <prefLabel xmlns="http://www.w3.org/2004/02/skos/core#" xml:lang="ro">Domeniul Mobilitate</prefLabel>
+    <prefLabel xmlns="http://www.w3.org/2004/02/skos/core#" xml:lang="sk">Mobilita</prefLabel>
+    <prefLabel xmlns="http://www.w3.org/2004/02/skos/core#" xml:lang="sl">Mobilnost</prefLabel>
+    <prefLabel xmlns="http://www.w3.org/2004/02/skos/core#" xml:lang="sv">Rörlighet</prefLabel>
+    <order xmlns="http://publications.europa.eu/ontology/euvoc#"
+           rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">6
+    </order>
+    <definition xmlns="http://www.w3.org/2004/02/skos/core#" xml:lang="en">data sets as described in Commission
+      Implementing Regulation (EU) 2023/138 of 21 December 2022 laying down a list of specific high-value datasets and
+      the arrangements for their publication and re-use, Annex, Section 6
+    </definition>
+    <inScheme xmlns="http://www.w3.org/2004/02/skos/core#" rdf:resource="http://data.europa.eu/bna/asd487ae75"/>
+    <topConceptOf xmlns="http://www.w3.org/2004/02/skos/core#" rdf:resource="http://data.europa.eu/bna/asd487ae75"/>
+  </rdf:Description>
+
+  <rdf:Description rdf:about="http://data.europa.eu/bna/c_dd313021">
+    <startDate xmlns="http://publications.europa.eu/ontology/euvoc#"
+               rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2019-07-06
+    </startDate>
+    <created xmlns="http://purl.org/dc/terms/" rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2023-09-05</created>
+    <modified xmlns="http://purl.org/dc/terms/" rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2023-09-13
+    </modified>
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+    <prefLabel xmlns="http://www.w3.org/2004/02/skos/core#" xml:lang="bg">Наблюдение на Земята и околната среда
+    </prefLabel>
+    <prefLabel xmlns="http://www.w3.org/2004/02/skos/core#" xml:lang="cs">Země a životní prostředí</prefLabel>
+    <prefLabel xmlns="http://www.w3.org/2004/02/skos/core#" xml:lang="da">Jordobservation og miljø</prefLabel>
+    <prefLabel xmlns="http://www.w3.org/2004/02/skos/core#" xml:lang="de">Erdbeobachtung und Umwelt</prefLabel>
+    <prefLabel xmlns="http://www.w3.org/2004/02/skos/core#" xml:lang="el">Γεωσκόπηση και περιβάλλον</prefLabel>
+    <prefLabel xmlns="http://www.w3.org/2004/02/skos/core#" xml:lang="en">Earth observation and environment</prefLabel>
+    <prefLabel xmlns="http://www.w3.org/2004/02/skos/core#" xml:lang="es">Observación de la Tierra y medio ambiente
+    </prefLabel>
+    <prefLabel xmlns="http://www.w3.org/2004/02/skos/core#" xml:lang="et">Maa seire ja keskkond</prefLabel>
+    <prefLabel xmlns="http://www.w3.org/2004/02/skos/core#" xml:lang="fi">Maan havainnointi ja ympäristö</prefLabel>
+    <prefLabel xmlns="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">Observation de la terre et environnement
+    </prefLabel>
+    <prefLabel xmlns="http://www.w3.org/2004/02/skos/core#" xml:lang="ga">Faire na cruinne agus an comhshaol</prefLabel>
+    <prefLabel xmlns="http://www.w3.org/2004/02/skos/core#" xml:lang="hr">Promatranje Zemlje i okoliš</prefLabel>
+    <prefLabel xmlns="http://www.w3.org/2004/02/skos/core#" xml:lang="hu">Földmegfigyelési és környezeti adatok
+    </prefLabel>
+    <prefLabel xmlns="http://www.w3.org/2004/02/skos/core#" xml:lang="it">Dati relativi all'osservazione della terra e
+      all'ambiente
+    </prefLabel>
+    <prefLabel xmlns="http://www.w3.org/2004/02/skos/core#" xml:lang="lt">Žemės stebėjimas ir aplinka</prefLabel>
+    <prefLabel xmlns="http://www.w3.org/2004/02/skos/core#" xml:lang="lv">Zemes novērošana un vide</prefLabel>
+    <prefLabel xmlns="http://www.w3.org/2004/02/skos/core#" xml:lang="mt">Data dwar l-osservazzjoni tad-dinja u
+      l-ambjent
+    </prefLabel>
+    <prefLabel xmlns="http://www.w3.org/2004/02/skos/core#" xml:lang="nl">Aardobservatie en milieu</prefLabel>
+    <prefLabel xmlns="http://www.w3.org/2004/02/skos/core#" xml:lang="pl">Dane dotyczące obserwacji Ziemi i środowiska
+    </prefLabel>
+    <prefLabel xmlns="http://www.w3.org/2004/02/skos/core#" xml:lang="pt">Observação da Terra e do ambiente</prefLabel>
+    <prefLabel xmlns="http://www.w3.org/2004/02/skos/core#" xml:lang="ro">Domeniul Observarea Pământului și mediu
+    </prefLabel>
+    <prefLabel xmlns="http://www.w3.org/2004/02/skos/core#" xml:lang="sk">Pozorovanie Zeme a životné prostredie
+    </prefLabel>
+    <prefLabel xmlns="http://www.w3.org/2004/02/skos/core#" xml:lang="sl">Opazovanje zemlje in okolje</prefLabel>
+    <prefLabel xmlns="http://www.w3.org/2004/02/skos/core#" xml:lang="sv">Jordobservation och miljö</prefLabel>
+    <order xmlns="http://publications.europa.eu/ontology/euvoc#"
+           rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">2
+    </order>
+    <definition xmlns="http://www.w3.org/2004/02/skos/core#" xml:lang="en">data sets as described in Commission
+      Implementing Regulation (EU) 2023/138 of 21 December 2022 laying down a list of specific high-value datasets and
+      the arrangements for their publication and re-use, Annex, Section 2
+    </definition>
+    <inScheme xmlns="http://www.w3.org/2004/02/skos/core#" rdf:resource="http://data.europa.eu/bna/asd487ae75"/>
+    <topConceptOf xmlns="http://www.w3.org/2004/02/skos/core#" rdf:resource="http://data.europa.eu/bna/asd487ae75"/>
+  </rdf:Description>
+
+  <rdf:Description rdf:about="http://data.europa.eu/bna/c_e1da4e07">
+    <startDate xmlns="http://publications.europa.eu/ontology/euvoc#"
+               rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2019-07-06
+    </startDate>
+    <created xmlns="http://purl.org/dc/terms/" rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2023-09-05</created>
+    <modified xmlns="http://purl.org/dc/terms/" rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2023-09-13
+    </modified>
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+    <prefLabel xmlns="http://www.w3.org/2004/02/skos/core#" xml:lang="bg">Статистика</prefLabel>
+    <prefLabel xmlns="http://www.w3.org/2004/02/skos/core#" xml:lang="cs">Statistika</prefLabel>
+    <prefLabel xmlns="http://www.w3.org/2004/02/skos/core#" xml:lang="da">Statistik</prefLabel>
+    <prefLabel xmlns="http://www.w3.org/2004/02/skos/core#" xml:lang="de">Statistik</prefLabel>
+    <prefLabel xmlns="http://www.w3.org/2004/02/skos/core#" xml:lang="el">Στατιστικές</prefLabel>
+    <prefLabel xmlns="http://www.w3.org/2004/02/skos/core#" xml:lang="en">Statistics</prefLabel>
+    <prefLabel xmlns="http://www.w3.org/2004/02/skos/core#" xml:lang="es">Estadística</prefLabel>
+    <prefLabel xmlns="http://www.w3.org/2004/02/skos/core#" xml:lang="et">Statistika</prefLabel>
+    <prefLabel xmlns="http://www.w3.org/2004/02/skos/core#" xml:lang="fi">Tilastotiedot</prefLabel>
+    <prefLabel xmlns="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">Statistiques</prefLabel>
+    <prefLabel xmlns="http://www.w3.org/2004/02/skos/core#" xml:lang="ga">Staidreamh</prefLabel>
+    <prefLabel xmlns="http://www.w3.org/2004/02/skos/core#" xml:lang="hr">Statistički podatci</prefLabel>
+    <prefLabel xmlns="http://www.w3.org/2004/02/skos/core#" xml:lang="hu">Statisztikák</prefLabel>
+    <prefLabel xmlns="http://www.w3.org/2004/02/skos/core#" xml:lang="it">Dati statistici</prefLabel>
+    <prefLabel xmlns="http://www.w3.org/2004/02/skos/core#" xml:lang="lt">Statistika</prefLabel>
+    <prefLabel xmlns="http://www.w3.org/2004/02/skos/core#" xml:lang="lv">Statistika</prefLabel>
+    <prefLabel xmlns="http://www.w3.org/2004/02/skos/core#" xml:lang="mt">Data statistika</prefLabel>
+    <prefLabel xmlns="http://www.w3.org/2004/02/skos/core#" xml:lang="nl">Statistiek</prefLabel>
+    <prefLabel xmlns="http://www.w3.org/2004/02/skos/core#" xml:lang="pl">Dane statystyczne</prefLabel>
+    <prefLabel xmlns="http://www.w3.org/2004/02/skos/core#" xml:lang="pt">Estatísticas</prefLabel>
+    <prefLabel xmlns="http://www.w3.org/2004/02/skos/core#" xml:lang="ro">Domeniul statistic</prefLabel>
+    <prefLabel xmlns="http://www.w3.org/2004/02/skos/core#" xml:lang="sk">Štatistika</prefLabel>
+    <prefLabel xmlns="http://www.w3.org/2004/02/skos/core#" xml:lang="sl">Statistični podatki</prefLabel>
+    <prefLabel xmlns="http://www.w3.org/2004/02/skos/core#" xml:lang="sv">Statistik</prefLabel>
+    <order xmlns="http://publications.europa.eu/ontology/euvoc#"
+           rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4
+    </order>
+    <definition xmlns="http://www.w3.org/2004/02/skos/core#" xml:lang="en">data sets as described in Commission
+      Implementing Regulation (EU) 2023/138 of 21 December 2022 laying down a list of specific high-value datasets and
+      the arrangements for their publication and re-use, Annex, Section 4
+    </definition>
+    <inScheme xmlns="http://www.w3.org/2004/02/skos/core#" rdf:resource="http://data.europa.eu/bna/asd487ae75"/>
+    <topConceptOf xmlns="http://www.w3.org/2004/02/skos/core#" rdf:resource="http://data.europa.eu/bna/asd487ae75"/>
+  </rdf:Description>
+
+</rdf:RDF>
