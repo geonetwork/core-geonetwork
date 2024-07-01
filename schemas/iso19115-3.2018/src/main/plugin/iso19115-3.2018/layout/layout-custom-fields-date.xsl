@@ -68,6 +68,10 @@
     <xsl:param name="labels" select="$labels" required="no"/>
     <xsl:param name="overrideLabel" select="''" required="no"/>
 
+    <xsl:variable name="isReadonly"
+                  select="ancestor-or-self::node()[@xlink:href]
+                          or (ancestor::mdb:dateInfo and ../cit:dateType/*/@codeListValue = 'revision')"/>
+
     <xsl:variable name="labelConfig" as="node()?">
       <xsl:choose>
         <xsl:when test="$overrideLabel != ''">
@@ -99,9 +103,9 @@
         <xsl:call-template name="render-codelist-as-select">
           <xsl:with-param name="listOfValues" select="$codelist"/>
           <xsl:with-param name="lang" select="$lang"/>
-          <xsl:with-param name="isDisabled" select="ancestor-or-self::node()[@xlink:href]"/>
           <xsl:with-param name="elementRef" select="../cit:dateType/cit:CI_DateTypeCode/gn:element/@ref"/>
           <xsl:with-param name="isRequired" select="true()"/>
+          <xsl:with-param name="isDisabled" select="$isReadonly"/>
           <xsl:with-param name="hidden" select="false()"/>
           <xsl:with-param name="valueToEdit" select="../cit:dateType/cit:CI_DateTypeCode/@codeListValue"/>
           <xsl:with-param name="name" select="concat(../cit:dateType/cit:CI_DateTypeCode/gn:element/@ref, '_codeListValue')"/>
@@ -120,7 +124,6 @@
              data-element-ref="{concat('_X', gn:element/@ref)}"
              data-hide-time="{if ($viewConfig/@hideTimeInCalendar = 'true') then 'true' else 'false'}">
         </div>
-
 
         <!-- Create form for all existing attribute (not in gn namespace)
          and all non existing attributes not already present. -->
