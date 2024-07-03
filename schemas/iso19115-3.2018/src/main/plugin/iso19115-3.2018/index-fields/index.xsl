@@ -392,13 +392,6 @@
               }</resourceIdentifier>
           </xsl:for-each>
 
-          <xsl:for-each
-            select="cit:presentationForm/cit:CI_PresentationFormCode/@codeListValue[. != '']">
-            <presentationForm>
-              <xsl:value-of select="."/>
-            </presentationForm>
-          </xsl:for-each>
-
           <xsl:for-each select="cit:edition/*">
             <xsl:copy-of select="gn-fn-index:add-field('resourceEdition', .)"/>
           </xsl:for-each>
@@ -703,13 +696,6 @@
                                     else  concat(., ' ', @uom)"/>
             </resolutionDistance>
           </xsl:for-each>
-        </xsl:for-each>
-
-        <xsl:for-each
-          select="mri:spatialRepresentationType/mcc:MD_SpatialRepresentationTypeCode/@codeListValue[. != '']">
-          <spatialRepresentationType>
-            <xsl:value-of select="."/>
-          </spatialRepresentationType>
         </xsl:for-each>
 
         <xsl:for-each select="mri:resourceConstraints/*">
@@ -1298,17 +1284,6 @@
             "group": <xsl:value-of select="$transferGroup"/>
             }
           </link>
-
-          <xsl:if test="$operatesOnSetByProtocol and normalize-space($protocol) != ''">
-            <xsl:if test="daobs:contains($protocol, 'wms')">
-              <recordOperatedByType>view</recordOperatedByType>
-            </xsl:if>
-            <xsl:if test="daobs:contains($protocol, 'wfs') or
-                          daobs:contains($protocol, 'wcs') or
-                          daobs:contains($protocol, 'download')">
-              <recordOperatedByType>download</recordOperatedByType>
-            </xsl:if>
-          </xsl:if>
         </xsl:for-each>
       </xsl:for-each>
 
