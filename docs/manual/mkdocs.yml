@@ -303,6 +303,7 @@ nav:
       - user-guide/harvesting/harvesting-webdav.md
       - user-guide/harvesting/harvesting-wfs-features.md
       - user-guide/harvesting/harvesting-z3950.md
+      - user-guide/harvesting/harvesting-database.md
     - user-guide/export/index.md
     - 'Administration':
       - administrator-guide/index.md
