@@ -311,6 +311,11 @@ class Harvester extends BaseAligner<WebDavParams> implements IHarvester<HarvestR
                 date = rf.getChangeDate();
             }
         }
+
+        if (date == null) {
+            date = new ISODate();
+        }
+
         AbstractMetadata metadata = new Metadata();
         metadata.setUuid(uuid);
         metadata.getDataInfo().
