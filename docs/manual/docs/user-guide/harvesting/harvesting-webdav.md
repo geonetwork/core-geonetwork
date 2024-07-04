@@ -4,6 +4,12 @@ This harvesting type uses the WebDAV (Distributed Authoring and Versioning) prot
 
 ## Adding a WebDAV harvester
 
+To create a WebDAV harvester go to `Admin console` > `Harvesting` and select `Harvest from` > `WebDAV / WAF`:
+
+![](img/add-webdav-harvester.png)
+
+Providing the following information:
+
 -   **Identification**
     -   *Node name and logo*: A unique name for the harvester and optionally a logo to assign to the harvester. 
     -   *Group*: Group which owns the harvested records. Only the catalog administrator or users with the profile `UserAdmin` of this group can manage the harvester.
@@ -19,11 +25,11 @@ This harvesting type uses the WebDAV (Distributed Authoring and Versioning) prot
 
 -   **Configure response processing for webdav**
     -   *Action on UUID collision*: When a harvester finds the same uuid on a record collected by another method (another harvester, importer, dashboard editor,...), should this record be skipped (default), overriden or generate a new UUID?
-    -   *XSL filter name to apply*: (Optional) The XSL filter is applied to each metadata record.
+    -   *XSL filter name to apply*: (Optional) The XSL filter is applied to each metadata record.  The filter is a process which depends on the schema (see the `process` folder of the schemas). 
+    
+        It could be composed of parameter which will be sent to XSL transformation using the following syntax: `anonymizer?protocol=MYLOCALNETWORK:FILEPATH&email=gis@organisation.org&thesaurus=MYORGONLYTHEASURUS`
+    
     -   *Validate records before import*: If checked, the metadata will be validated after retrieval. If the validation does not pass, the metadata will be skipped.
     -   *Category*: (Optional) A GeoNetwork category to assign to each metadata record.
+    
 -   **Privileges** - Assign privileges to harvested metadata.
-
-!!! Notes
-
-    -   The same metadata could be harvested several times by different instances of the WebDAV harvester. This is not good practise because copies of the same metadata record will have a different UUID.
