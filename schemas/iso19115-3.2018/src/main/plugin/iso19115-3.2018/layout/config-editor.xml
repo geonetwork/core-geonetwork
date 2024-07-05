@@ -77,6 +77,8 @@
     <for name="gco:Integer" use="number"/>
     <for name="gco:Real" use="number"/>
     <for name="gco:Angle" use="number"/>
+    <for name="gco:Measure" use="number"/>
+    <for name="gco:Length" use="number"/>
     <for name="gco:Boolean" use="checkbox"/>
 
     <for name="gco:Date" use="data-gn-date-picker"/>
@@ -84,7 +86,6 @@
 
     <for name="gml:duration" use="data-gn-field-duration-div"/>
     <for name="gco:TM_PeriodDuration" use="data-gn-field-duration-div"/>
-    <for name="gml:duration" use="data-gn-field-duration-div"/>
 
     <for name="gmx:FileName/src" use="data-gn-logo-selector"/>
 

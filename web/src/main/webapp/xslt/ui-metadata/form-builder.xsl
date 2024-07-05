@@ -78,6 +78,10 @@
     Rendered hidden in a block below the input. -->
     <xsl:param name="attributesSnippet" required="no"/>
 
+    <!-- Additional field to display next to the field.
+     Usually attributes eg. uom -->
+    <xsl:param name="inputGroup" required="no" as="node()*"/>
+
     <!-- Force displaying attributes even if $isDisplayingAttributes
     global variable is not set to true. This could be useful when the attributes
     are important for the element. eg. gmx:FileName -->
@@ -273,20 +277,39 @@
                 </xsl:if>
               </xsl:when>
               <xsl:otherwise>
-                <xsl:call-template name="render-form-field">
-                  <xsl:with-param name="name" select="$name"/>
-                  <xsl:with-param name="value" select="$value"/>
-                  <xsl:with-param name="type" select="$type"/>
-                  <xsl:with-param name="directiveAttributes" select="$directiveAttributes"/>
-                  <xsl:with-param name="tooltip"
-                                  select="concat($schema, '|', name(.), '|', name(..), '|', $xpath)"/>
-                  <xsl:with-param name="isRequired" select="$isRequired"/>
-                  <xsl:with-param name="isDisabled" select="$isDisabled"/>
-                  <xsl:with-param name="isReadOnly" select="$isReadOnly"/>
-                  <xsl:with-param name="editInfo" select="$editInfo"/>
-                  <xsl:with-param name="parentEditInfo" select="$parentEditInfo"/>
-                  <xsl:with-param name="listOfValues" select="$listOfValues"/>
-                </xsl:call-template>
+                <xsl:variable name="input">
+                  <xsl:call-template name="render-form-field">
+                    <xsl:with-param name="name" select="$name"/>
+                    <xsl:with-param name="value" select="$value"/>
+                    <xsl:with-param name="type" select="$type"/>
+                    <xsl:with-param name="directiveAttributes" select="$directiveAttributes"/>
+                    <xsl:with-param name="tooltip"
+                                    select="concat($schema, '|', name(.), '|', name(..), '|', $xpath)"/>
+                    <xsl:with-param name="isRequired" select="$isRequired"/>
+                    <xsl:with-param name="isDisabled" select="$isDisabled"/>
+                    <xsl:with-param name="isReadOnly" select="$isReadOnly"/>
+                    <xsl:with-param name="editInfo" select="$editInfo"/>
+                    <xsl:with-param name="parentEditInfo" select="$parentEditInfo"/>
+                    <xsl:with-param name="listOfValues" select="$listOfValues"/>
+                  </xsl:call-template>
+                </xsl:variable>
+
+                <xsl:choose>
+                  <xsl:when test="$inputGroup">
+                    <div class="flex-row">
+                      <div class="flex-grow">
+                        <xsl:copy-of select="$input"/>
+                      </div>
+                      <div class="">
+                        <xsl:copy-of select="$inputGroup"/>
+                      </div>
+                    </div>
+                  </xsl:when>
+                  <xsl:otherwise>
+                    <xsl:copy-of select="$input"/>
+                  </xsl:otherwise>
+                </xsl:choose>
+
               </xsl:otherwise>
             </xsl:choose>
 
@@ -1510,6 +1533,7 @@
   <xsl:template mode="render-for-field-for-attribute" match="@*">
     <xsl:param name="ref"/>
     <xsl:param name="class" select="''"/>
+    <xsl:param name="inputOnly" as="xs:boolean" select="false()"/>
 
     <xsl:variable name="attributeName" select="name()"/>
     <xsl:variable name="attributeValue" select="."/>
@@ -1529,75 +1553,95 @@
     <xsl:variable name="fieldName"
                   select="concat('_', $ref, '_', replace($attributeName, ':', 'COLON'))"/>
 
+    <xsl:variable name="label"
+                  as="xs:string"
+                  select="gn-fn-metadata:getLabel($schema, $attributeName, $labels, name(..), '', gn-fn-metadata:getXPath(.))/label"/>
 
-    <div class="form-group {$class} gn-attr-{replace($attributeName, ':', '_')}" id="gn-attr-{$fieldName}">
-      <label class="col-sm-4">
-        <xsl:if test="$attributeName = 'xlink:href'">
-          <i class="fa fa-link fa-fw"/>
-        </xsl:if>
-        <xsl:value-of select="gn-fn-metadata:getLabel($schema, $attributeName, $labels, name(..), '', gn-fn-metadata:getXPath(.))/label"/>
-      </label>
-      <div class="col-sm-7">
-        <xsl:variable name="isDivLevelDirective"
-                      select="$directive = 'data-gn-logo-picker'"/>
-        <xsl:if test="$directive and $isDivLevelDirective">
-          <xsl:attribute name="{$directive}"/>
-          <xsl:copy-of select="$directiveAttributes"/>
-        </xsl:if>
+    <xsl:variable name="input">
+      <xsl:variable name="isDivLevelDirective"
+                    select="$directive = 'data-gn-logo-picker'"/>
+      <xsl:if test="$directive and $isDivLevelDirective">
+        <xsl:attribute name="{$directive}"/>
+        <xsl:copy-of select="$directiveAttributes"/>
+      </xsl:if>
 
-        <xsl:choose>
-          <xsl:when test="$attributeSpec/gn:text">
-            <xsl:variable name="attributeCodeList"
-                          select="gn-fn-metadata:getCodeListValues($schema, $attributeName, $codelists)"/>
+      <xsl:choose>
+        <xsl:when test="$attributeSpec/gn:text">
+          <xsl:variable name="attributeCodeList"
+                        select="gn-fn-metadata:getCodeListValues($schema, $attributeName, $codelists)"/>
 
-            <select class="" name="{$fieldName}">
-              <xsl:if test="$directive and not($isDivLevelDirective)">
-                <xsl:attribute name="{$directive}"/>
-                <xsl:copy-of select="$directiveAttributes"/>
-              </xsl:if>
+          <select class="{$class}" name="{$fieldName}">
+            <xsl:if test="$inputOnly">
+              <xsl:attribute name="title" select="$label"/>
+            </xsl:if>
+            <xsl:if test="$directive and not($isDivLevelDirective)">
+              <xsl:attribute name="{$directive}"/>
+              <xsl:copy-of select="$directiveAttributes"/>
+            </xsl:if>
 
-              <xsl:for-each select="$attributeSpec/gn:text">
-                <xsl:variable name="optionValue" select="@value"/>
+            <xsl:for-each select="$attributeSpec/gn:text">
+              <xsl:variable name="optionValue" select="@value"/>
 
-                <!-- Check if a translation is available for the attribute value -->
-                <xsl:variable name="label"
-                              select="$attributeCodeList/entry[code = $optionValue]/label"/>
+              <!-- Check if a translation is available for the attribute value -->
+              <xsl:variable name="label"
+                            select="$attributeCodeList/entry[code = $optionValue]/label"/>
 
-                <option value="{$optionValue}">
-                  <xsl:if test="$optionValue = $attributeValue">
-                    <xsl:attribute name="selected"/>
-                  </xsl:if>
-                  <xsl:value-of select="if ($label) then $label else $optionValue"/>
-                </option>
-              </xsl:for-each>
+              <option value="{$optionValue}">
+                <xsl:if test="$optionValue = $attributeValue">
+                  <xsl:attribute name="selected"/>
+                </xsl:if>
+                <xsl:value-of select="if ($label) then $label else $optionValue"/>
+              </option>
+            </xsl:for-each>
 
 
-              <xsl:if test="count($attributeSpec/gn:text[@value = $attributeValue]) = 0">
-                <option value="{$attributeValue}" selected="">
-                  <xsl:value-of select="$attributeValue"/>
-                </option>
+            <xsl:if test="count($attributeSpec/gn:text[@value = $attributeValue]) = 0">
+              <option value="{$attributeValue}" selected="">
+                <xsl:value-of select="$attributeValue"/>
+              </option>
 
-              </xsl:if>
-            </select>
-          </xsl:when>
-          <xsl:otherwise>
-            <input type="text" class="" name="{$fieldName}" value="{$attributeValue}">
-              <xsl:if test="$directive and not($isDivLevelDirective)">
-                <xsl:attribute name="{$directive}"/>
-                <xsl:copy-of select="$directiveAttributes"/>
-              </xsl:if>
-            </input>
-          </xsl:otherwise>
-        </xsl:choose>
-      </div>
-      <div class="col-sm-1">
-        <a class="btn pull-right"
-           data-gn-click-and-spin="removeAttribute('{$fieldName}')" data-toggle="tooltip"
-           data-placement="top" title="{{{{'deleteField' | translate}}}}">
-          <i class="fa fa-times text-danger"></i>
-        </a>
-      </div>
-    </div>
+            </xsl:if>
+          </select>
+        </xsl:when>
+        <xsl:otherwise>
+          <input type="text" class="{$class}" name="{$fieldName}" value="{$attributeValue}">
+            <xsl:if test="$inputOnly">
+              <xsl:attribute name="title" select="$label"/>
+            </xsl:if>
+            <xsl:if test="$directive and not($isDivLevelDirective)">
+              <xsl:attribute name="{$directive}"/>
+              <xsl:copy-of select="$directiveAttributes"/>
+            </xsl:if>
+          </input>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+
+    <xsl:choose>
+      <xsl:when test="$inputOnly">
+        <xsl:copy-of select="$input"/>
+      </xsl:when>
+      <xsl:otherwise>
+        <div class="form-group {$class} gn-attr-{replace($attributeName, ':', '_')}" id="gn-attr-{$fieldName}">
+          <label class="col-sm-4">
+            <xsl:if test="$attributeName = 'xlink:href'">
+              <i class="fa fa-link fa-fw"/>
+            </xsl:if>
+            <xsl:value-of select="$label"/>
+          </label>
+          <div class="col-sm-7">
+            <xsl:copy-of select="$input"/>
+          </div>
+          <div class="col-sm-1">
+            <a class="btn pull-right"
+               data-gn-click-and-spin="removeAttribute('{$fieldName}')" data-toggle="tooltip"
+               data-placement="top" title="{{{{'deleteField' | translate}}}}">
+              <i class="fa fa-times text-danger"></i>
+            </a>
+          </div>
+        </div>
+      </xsl:otherwise>
+    </xsl:choose>
   </xsl:template>
 
 
