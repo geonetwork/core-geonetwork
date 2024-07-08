@@ -11,11 +11,11 @@ To create a WebDAV harvester go to `Admin console` > `Harvesting` and select `Ha
 Providing the following information:
 
 -   **Identification**
-    -   *Node name and logo*: A unique name for the harvester and optionally a logo to assign to the harvester. 
+    -   *Node name and logo*: A unique name for the harvester and, optionally, a logo to assign to the harvester. 
     -   *Group*: Group which owns the harvested records. Only the catalog administrator or users with the profile `UserAdmin` of this group can manage the harvester.
     -   *User*: User who owns the harvested records.
 
--   **Schedule**: Scheduling options to execute the harvester. If disabled, the harvester should be executed manually from the harvesters page. If enabled a schedule expression using cron syntax should be configured ([See examples](https://www.quartz-scheduler.org/documentation/quartz-2.1.7/tutorials/crontrigger)). 
+-   **Schedule**: Scheduling options to execute the harvester. If disabled, the harvester must be run manually from the harvester page. If enabled, a scheduling expression using cron syntax should be configured ([See examples](https://www.quartz-scheduler.org/documentation/quartz-2.1.7/tutorials/crontrigger)). 
 
 -   **Configure connection to WebDAV / WAF**
     -   *URL*: The remote URL from which metadata will be harvested. Each file found that has the extension `.xml` is assumed to be a metadata record.
@@ -29,7 +29,10 @@ Providing the following information:
     
         It could be composed of parameter which will be sent to XSL transformation using the following syntax: `anonymizer?protocol=MYLOCALNETWORK:FILEPATH&email=gis@organisation.org&thesaurus=MYORGONLYTHEASURUS`
     
-    -   *Validate records before import*: If checked, the metadata will be validated after retrieval. If the validation does not pass, the metadata will be skipped.
+    -   *Validate records before import*: Defines the criteria to reject metadata that is invalid according to XML structure (XSD) and validation rules (schematron).
+        -   Accept all metadata without validation.
+        -   Accept metadata that are XSD valid.
+        -   Accept metadata that are XSD and schematron valid.
     -   *Category*: (Optional) A GeoNetwork category to assign to each metadata record.
     
 -   **Privileges** - Assign privileges to harvested metadata.
