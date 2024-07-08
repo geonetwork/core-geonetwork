@@ -136,43 +136,43 @@ The script will add the certificate to the JVM keystore, if you run it as follow
 
 ## Harvesting page
 
-To access the harvesting main page you have to be logged in with a profile `Administrator` or `UserAdmin`. From the `Admin console` menu, select the `Harvesting`. The harvesting page will then be displayed.
+To access the harvesting main page you have to be logged in with a profile `Administrator` or `UserAdmin`. From the `Admin console` menu, select the option `Harvesting`.
 
-The page shows a list of the currently defined harvesters with information about the harvesters statuses:
+The page shows a list of the currently defined harvesters with information about the status of the harvesters:
 
 ![](img/harvesters.png)
 
-For each harvester is displayed the following information:
+The following information is shown for each harvester:
 
--   **Last run**: Date when the harvester was executed last time.
--   **Total**: This is the total number of metadata found remotely. Metadata with the same id are considered as one.
--   **Updated**: Number of metadata that are present locally but that needed to be updated because their last change date was different from the remote one.
--   **Unchanged**: Local metadata left unchanged. Their remote last change date did not change.
+-   **Last run**: Date on which the harvester was last run.
+-   **Total**: It is the total number of metadata found remotely. Metadata with the same id are considered as one.
+-   **Updated**: Number of metadata that are present locally but needed to be updated because their last modification date was different from the remote one.
+-   **Unchanged**: Number of local metadata that have not been modified. Its remote last modification date has not changed.
 
-At the bottom of the list of harvesters there are the following buttons:
+At the bottom of the harvester list there are the following buttons:
 
-1. *Harvest from*: Allows to select the type of harvester to create.
+1. *Harvest from*: Allows you to select the type of harvester to create.
 2. *Clone*: Creates a new harvester, using the information of an existing harvester.
 3. *Refresh*: Refreshes the list of harvesters.
 
 ### Adding new harvesters
 
-To add a new harvester click in the `Harvest from` button. A dropdown list is then shown with all the available harvester protocols.
+To add a new harvester, click on the `Harvest from` button. A drop-down list with all available harvesting protocols will appear.
 
 ![](img/add-harvester.png)
 
-You can choose the type of harvest you intend to perform. The supported harvesters and details of what to do next are in the following sections:
+You can choose the type of harvesting you want to do. Supported harvesters and details on what to do next can be found in the following sections.
 
 ### Harvester History {#harvest_history}
 
-Each time a harvester is run, it generates a log file of what was harvested and/or what went wrong (eg. exception report). To view the harvester history, select a harvester in the harvesters list and select the tab `Harvester history` in the harvester page:
+Each time a harvester is run, a log file is generated of what was harvested and/or what went wrong (e.g., an exception report). To view the harvester history, select a harvester in the harvester list and select the `Harvester history` tab on the harvester page:
 
 ![](img/harvester-history.png)
 
-Once the harvest history has been displayed it is possible to download the log file of the harvester execution and delete the harvester history.
+Once the harvester history is displayed, it is possible to download the log file of the harvester run and delete the harvester history.
 
 ### Harvester records
 
-When a harvester is executed, you can view the list of metadata harvested and some statistics about the metadata. Select a harvester in the harvesters list and select the tab `Metadata records` in the harvester page: 
+When a harvester is executed, you can see the list of harvested metadata and some statistics about the metadata. Select a harvester in the list of harvesters and select the `Metadata records` tab on the harvester page:
 
 ![](img/harvester-statistics.png)
