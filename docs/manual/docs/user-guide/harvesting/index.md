@@ -18,7 +18,6 @@ The following sources can be harvested:
 -   [GeoPortal REST Harvesting](harvesting-geoportal.md)
 -   [THREDDS Harvesting](harvesting-thredds.md)
 -   [WFS GetFeature Harvesting](harvesting-wfs-features.md)
--   [Z3950 Harvesting](harvesting-z3950.md)
 
 ## Mechanism overview
 
