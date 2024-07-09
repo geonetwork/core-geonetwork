@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2007 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2024 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -66,18 +66,18 @@ class Harvester implements IHarvester<HarvestResult> {
     // FIXME : Currently switch from POST to GET for testing mainly.
     public static final String PREFERRED_HTTP_METHOD = AbstractHttpRequest.Method.POST.toString();
 
-    private final static String ATTRIB_SEARCHRESULT_MATCHED = "numberOfRecordsMatched";
+    private static final String ATTRIB_SEARCHRESULT_MATCHED = "numberOfRecordsMatched";
 
-    private final static String ATTRIB_SEARCHRESULT_RETURNED = "numberOfRecordsReturned";
+    private static final String ATTRIB_SEARCHRESULT_RETURNED = "numberOfRecordsReturned";
 
-    private final static String ATTRIB_SEARCHRESULT_NEXT = "nextRecord";
+    private static final String ATTRIB_SEARCHRESULT_NEXT = "nextRecord";
 
-    private static int GETRECORDS_REQUEST_MAXRECORDS = 20;
+    private static final int GETRECORDS_REQUEST_MAXRECORDS = 100;
 
-    private static String CONSTRAINT_LANGUAGE_VERSION = "1.1.0";
+    private static final  String CONSTRAINT_LANGUAGE_VERSION = "1.1.0";
 
     //FIXME version should be parametrized
-    private static String GETCAPABILITIES_PARAMETERS = "SERVICE=CSW&REQUEST=GetCapabilities&VERSION=2.0.2";
+    private static final String GETCAPABILITIES_PARAMETERS = "SERVICE=CSW&REQUEST=GetCapabilities&VERSION=2.0.2";
     private final AtomicBoolean cancelMonitor;
 
     private Logger log;
@@ -87,7 +87,7 @@ class Harvester implements IHarvester<HarvestResult> {
     /**
      * Contains a list of accumulated errors during the executing of this harvest.
      */
-    private List<HarvestError> errors = new LinkedList<HarvestError>();
+    private List<HarvestError> errors = new LinkedList<>();
 
 
     public Harvester(AtomicBoolean cancelMonitor, Logger log, ServiceContext context, CswParams params) {
@@ -110,7 +110,7 @@ class Harvester implements IHarvester<HarvestResult> {
 
         boolean error = false;
         HarvestResult result = new HarvestResult();
-    	Set<String> uuids = new HashSet<String>();
+    	Set<String> uuids = new HashSet<>();
         try {
             Aligner aligner = new Aligner(cancelMonitor, context, server, params, log);
             searchAndAlign(server, uuids, aligner, errors);
@@ -219,7 +219,7 @@ class Harvester implements IHarvester<HarvestResult> {
         if (StringUtils.isNotEmpty(params.sortBy)) {
             request.addSortBy(params.sortBy);
         }
-        request.setElementSetName(ElementSetName.SUMMARY);
+        request.setElementSetName(ElementSetName.FULL);
         request.setMaxRecords(GETRECORDS_REQUEST_MAXRECORDS);
         request.setDistribSearch(params.queryScope.equalsIgnoreCase("distributed"));
         request.setHopCount(params.hopCount);
@@ -283,10 +283,10 @@ class Harvester implements IHarvester<HarvestResult> {
             int foundCnt = 0;
 
             log.debug("Extracting all elements in the csw harvesting response");
-            Set<RecordInfo> records = new LinkedHashSet<RecordInfo>();
-            for (Element record : list) {
+            Set<RecordInfo> records = new LinkedHashSet<>();
+            for (Element recordElement : list) {
                 try {
-                    RecordInfo recInfo = getRecordInfo((Element) record.clone());
+                    RecordInfo recInfo = getRecordInfo((Element) recordElement.clone());
 
                     if (recInfo != null) {
                         records.add(recInfo);
@@ -297,7 +297,7 @@ class Harvester implements IHarvester<HarvestResult> {
                     errors.add(new HarvestError(context, ex));
                     log.error("Unable to process record from csw (" + this.params.getName() + ")");
                     log.error("   Record failed: " + foundCnt);
-                    log.debug("   Record: " + ((Element) record).getName());
+                    log.debug("   Record: " + recordElement.getName());
                 }
 
             }
@@ -442,7 +442,7 @@ class Harvester implements IHarvester<HarvestResult> {
         }
     }
 
-    public static ImmutableSet<String> bboxParameters;
+    public static final ImmutableSet<String> bboxParameters;
     static {
         bboxParameters = ImmutableSet.<String>builder()
             .add("bbox-xmin")
@@ -453,8 +453,8 @@ class Harvester implements IHarvester<HarvestResult> {
     }
     private String getFilterConstraint(final Search s) {
         //--- collect queriables
-        ArrayList<Element> queriables = new ArrayList<Element>();
-        Map<String, Double> bboxCoordinates = new HashMap<String, Double>();
+        ArrayList<Element> queriables = new ArrayList<>();
+        Map<String, Double> bboxCoordinates = new HashMap<>();
 
         if (!s.attributesMap.isEmpty()) {
             for (Map.Entry<String, String> entry : s.attributesMap.entrySet()) {
@@ -594,7 +594,7 @@ class Harvester implements IHarvester<HarvestResult> {
             bboxCoordinates.put("bbox-xmax", Double.parseDouble(bboxFilter.getChildText("bbox-xmax")));
             bboxCoordinates.put("bbox-ymax", Double.parseDouble(bboxFilter.getChildText("bbox-ymax")));
 
-            if (cswFilter.getChildren().size() == 0) {
+            if (cswFilter.getChildren().isEmpty()) {
                 cswFilter.addContent(buildBboxFilter(bboxCoordinates));
             } else {
                 Element filterContent = ((Element) cswFilter.getChildren().get(0));
@@ -607,7 +607,7 @@ class Harvester implements IHarvester<HarvestResult> {
             }
         }
 
-        if (cswFilter.getChildren().size() == 0) {
+        if (cswFilter.getChildren().isEmpty()) {
             return StringUtils.EMPTY;
         } else {
             return Xml.getString(cswFilter);
@@ -617,7 +617,7 @@ class Harvester implements IHarvester<HarvestResult> {
     private String getCqlConstraint(List<Element> filters, Element bboxFilter) throws Exception {
         String cqlFilter = "";
 
-        if (filters.size() > 0) {
+        if (!filters.isEmpty()) {
             Path file = context.getAppPath().resolve("xml").resolve("csw").resolve("harvester-csw-cql.xsl");
 
             Element eltFilter = new Element("filters");
@@ -724,7 +724,9 @@ class Harvester implements IHarvester<HarvestResult> {
             if (modified.length() == 0) modified = null;
             if (log.isDebugEnabled())
                 log.debug("getRecordInfo: adding " + identif + " with modification date " + modified);
-            return new RecordInfo(identif, modified);
+
+
+            return new RecordInfo(identif, modified, Xml.getString(record));
         } catch (Exception e) {
             log.warning("Skipped record not in supported format : " + name);
         }
