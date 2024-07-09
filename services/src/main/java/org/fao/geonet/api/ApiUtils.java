@@ -259,11 +259,19 @@ public class ApiUtils {
     }
 
     /**
-     * Check if the current user can edit this record.
+     * Check if the current user can edit this approved record
      */
     public static AbstractMetadata canEditRecord(String metadataUuid, HttpServletRequest request) throws Exception {
+        return canEditRecord(metadataUuid, true, request);
+    }
+
+    /**
+     * Check if the current user can edit this record.
+     */
+    public static AbstractMetadata canEditRecord(String metadataUuid, boolean approved, HttpServletRequest request) throws Exception {
         ApplicationContext appContext = ApplicationContextHolder.get();
-        AbstractMetadata metadata = getRecord(metadataUuid);
+        String metadataId = getInternalId(metadataUuid, approved);
+        AbstractMetadata metadata = getRecord(metadataId);
         AccessManager accessManager = appContext.getBean(AccessManager.class);
         if (!accessManager.canEdit(createServiceContext(request), String.valueOf(metadata.getId()))) {
             throw new SecurityException(String.format(
@@ -297,8 +305,7 @@ public class ApiUtils {
      * Check if the current user can view this record.
      */
     public static AbstractMetadata canViewRecord(String metadataUuid, boolean approved, HttpServletRequest request) throws Exception {
-        String metadataId;
-        metadataId = getInternalId(metadataUuid, approved);
+        String metadataId = getInternalId(metadataUuid, approved);
 
         AbstractMetadata metadata = getRecord(metadataId);
         try {
