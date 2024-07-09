@@ -286,6 +286,10 @@
               deferred.resolve(data);
             },
             function (data) {
+              gnAlertService.addAlert({
+                msg: data.data.message || data.data.description,
+                type: "danger"
+              });
               deferred.reject(data);
             }
           );
