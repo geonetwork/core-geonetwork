@@ -481,6 +481,8 @@
     "clickToSelect": "Klepnutím vyberte nebo zrušte výběr",
     "filterDataDescription": "Vyberte vrstvu na mapě a začněte filtrovat přidružené funkce WFS (pokud existují). Funkce musí být nejprve indexovány správcem.",
     "WPSDescription": "Zadejte adresu URL koncového bodu služby WPS, chcete-li začít proces používat dynamickou formou. Nedávno používané procesy WPS jsou zobrazeny na druhé kartě.",
+    "noRecentProcessFound": "No process used recently.",
+    "localStorageNotSupported": "Browser local storage not supported",
     "wpsProcesslist": "Processing services",
     "wpsProcessurl": "By URL",
     "wpsProcessrecent": "Recent services",

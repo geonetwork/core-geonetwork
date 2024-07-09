@@ -29,12 +29,6 @@
                 priority="2">
     <metadata>
       <xsl:variable name="langId" select="gn-fn-iso19115-3.2018:getLangId(., $lang)"/>
-      <id>
-        <xsl:value-of select="gn:info/id"/>
-      </id>
-      <uuid>
-        <xsl:value-of select="gn:info/uuid"/>
-      </uuid>
       <title>
         <xsl:apply-templates mode="localised"
                              select="mdb:identificationInfo/*/mri:citation/*/cit:title">

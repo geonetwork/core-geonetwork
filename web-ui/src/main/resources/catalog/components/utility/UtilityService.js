@@ -677,7 +677,8 @@
           if (!newNode) {
             newNode = {
               name: group,
-              value: group
+              value: group,
+              definition: group
               //selected: themesInSearch.indexOf(t['@name']) >= 0 ? true : false
             };
             if (!node.nodes) node.nodes = [];
@@ -795,12 +796,19 @@
         if (Object.keys(translationsToLoad[fieldId]).length > 0) {
           loadTranslation(fieldId, meta && meta.thesaurus).then(function (translations) {
             if (angular.isObject(translations)) {
+              var translationToAdd = {};
+              var keys = Object.keys(translations);
+              for (var i = 0; i < keys.length; i++) {
+                translationToAdd[keys[i]] = translations[keys[i]].label;
+                translationToAdd[keys[i] + "-tooltip"] = translations[keys[i]].definition;
+              }
+
               var t = {};
               t[gnLangs.current] = {};
               t[gnLangs.current] = angular.extend(
                 {},
                 gnLangs.provider.translations()[gnLangs.current],
-                translations
+                translationToAdd
               );
               gnLangs.provider.useLoader("inlineLoaderFactory", t);
               $translate.refresh();
@@ -910,6 +918,24 @@
           createNode(tree, g, 0, e);
         });
         return tree;
+      };
+    }
+  ]);
+
+  /**
+   * Service to track links in the web analytics service configured in GeoNetwork.
+   */
+  module.service("gnWebAnalyticsService", [
+    "gnGlobalSettings",
+    function (gnGlobalSettings) {
+      var analyticsService = gnGlobalSettings.webAnalyticsService;
+
+      this.trackLink = function (url, linkType) {
+        // Implement track link for the analytics
+        if (analyticsService === "matomo") {
+          _paq.push(["trackLink", url, linkType]);
+          _paq.push(["trackEvent", "catalogue-actions", linkType, url]);
+        }
       };
     }
   ]);

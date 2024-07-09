@@ -14,7 +14,7 @@
           data-ng-click="onlinesrcService.onOpenPopup(config.type, config.config)"
         >
           <i class="fa fa-fw fa-plus"></i>
-          <span data-translate="">{{ config.label | translate}}</span>
+          <span>{{ config.label | translate}}</span>
         </a>
       </h2>
       <div
@@ -23,9 +23,11 @@
         data-ng-if="config.relations.length > 0"
         data-ng-repeat-start="(key, records) in config.relations | groupBy:'[properties.associationType,properties.initiativeType]'"
       >
-        <strong data-ng-if="key" data-ng-init="keyToken = key.split(',')">
-          {{keyToken[0] | translate}}
-          <span data-ng-if="keyToken[1] !== ''">({{keyToken[1] | translate}})</span>
+        <strong
+          data-ng-if="key && key !== ','"
+          data-ng-init="keyToken = key.split(',')"
+          data-gn-associated-record-label="{associationType: keyToken[0], initiativeType: keyToken[1]}"
+        >
         </strong>
         <ul class="list-group">
           <li
@@ -61,16 +63,6 @@
                     title="{{'remoteRecord' | translate}}"
                   ></i>
                 </a>
-                <span
-                  data-ng-if="record.properties && record.properties.associationType != ''"
-                >
-                  - {{record.properties.associationType | translate}}
-                </span>
-                <span
-                  data-ng-if="record.properties && record.properties.initiativeType != ''"
-                >
-                  ({{record.properties.initiativeType | translate}})
-                </span>
               </div>
               <div class="col-md-1 text-right">
                 <a
