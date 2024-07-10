@@ -23,6 +23,12 @@ If you are using Python3:
    ```bash
    pip3 install -r requirements.txt
    ```
+   
+   In the future you can update using:
+   
+   ```bash
+   pip3 install -r requirements.txt -U 
+   ```
 
 2. Use ***mkdocs** to preview locally:
 
@@ -55,6 +61,13 @@ If you use a Python virtual environment:
    pip install -r requirements.txt
    ```
    
+   In the future you can update with:
+   
+   ```bash
+   source venv/bin/activate
+   pip3 install -r requirements.txt
+   ```
+   
 2. Use ***mkdocs*** to preview from virtual environment:
 
    ```bash
@@ -63,18 +76,16 @@ If you use a Python virtual environment:
 
 3. Preview: http://localhost:8000
 
-### Docker
-
-If you are not familiar with Python the MkDocs-material website has instructions for Docker:
-
-1. Run MkDocs in Docker environment:
-
+   Preview uses a single version, so expect some warnings from version chooser:
    ```
-   docker pull squidfunk/mkdocs-material
-   docker run --rm -it -p 8000:8000 -v ${PWD}:/docs squidfunk/mkdocs-material
+   "GET /versions.json HTTP/1.1" code 404
    ```
+
+4. Optional: Preview online help:
    
-2. Preview: http://localhost:8000
+   ```bash
+   mkdocs serve --config-file help.yml  
+   ```
 
 ## Maven Integration
 
@@ -96,34 +107,36 @@ If you are not familiar with Python the MkDocs-material website has instructions
    mvn install -Pdefault
    ```
    
-## Deploy
+## Publish Documentation
 
-We use ``mike`` for publishing to https://geonetwork.github.io using `<major>.<minor>` version:
+We use ``mike`` for publishing (from the `gh-pages` branch). Docs are published by the ``.github/workflows/docs.yml`` automation each time pull-request is merged.
 
-1. To deploy docs from the `main` branch to website `gh-pages` branch:
+If you wish to preview using your own `gh-pages` branch:
+
+1. To deploy 4.4 docs as latest from the `main` branch to website `gh-pages` branch:
 
    ```bash
-   mike deploy --push --no-redirect --update-aliases 4.4 latest
+   mike deploy --title "4.4 Latest" --alias-type=copy --update-aliases 4.4 latest
    ```
-    
-2. To deploy documentation for a new release:
+
+2. To deploy documentation for stable release:
    
    ```bash
-   mike deploy --push --no-redirect --update-aliases 4.2 stable
+   mike deploy --push --alias-type=copy 4.2 stable
    ```
    
 3. When starting a new branch you can make it the default:
    
    ```bash
-   mike set-default --push 4.2
+   mike set-default --push 4.6
    ```
-   
-   Hint: When starting a new branch update `overview/changelog/` navigation tree also.
+    
+   Hint: When starting a new branch update `overview/changelog/history/index.md` headings for latest, maintenance, stable (for prior branches also).
 
 4. To publish documentation for a maintenance release:
 
    ```bash
-   mike deploy --push --no-redirect --update-aliases 3.12 maintenance
+   mike deploy --push --alias-type=copy 3.12 maintenance
    ```
 
 5. To show published versions:

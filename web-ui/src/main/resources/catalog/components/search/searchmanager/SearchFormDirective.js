@@ -730,7 +730,7 @@
 
   /**
    * Possible attributes:
-   *  * runSearch: run search inmediately after the  directive is loaded.
+   *  * runSearch: run search immediately after the directive is loaded.
    *  * waitForUser: wait until a user id is available to trigger the search.
    */
   module.directive("ngSearchForm", [

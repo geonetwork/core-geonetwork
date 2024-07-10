@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2023 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2024 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -60,6 +60,8 @@ public class Settings {
     public static final String SYSTEM_USERS_IDENTICON = "system/users/identicon";
     public static final String SYSTEM_SEARCHSTATS = "system/searchStats/enable";
     public static final String SYSTEM_FEEDBACK_EMAIL = "system/feedback/email";
+    public static final String SYSTEM_FEEDBACK_LANGUAGES = "system/feedback/languages";
+    public static final String SYSTEM_FEEDBACK_TRANSLATION_FOLLOWS_TEXT = "system/feedback/translationFollowsText";
     public static final String SYSTEM_FEEDBACK_MAILSERVER_HOST = "system/feedback/mailServer/host";
     public static final String SYSTEM_FEEDBACK_MAILSERVER_PORT = "system/feedback/mailServer/port";
     public static final String SYSTEM_FEEDBACK_MAILSERVER_USERNAME = "system/feedback/mailServer/username";
@@ -83,6 +85,7 @@ public class Settings {
     public static final String SYSTEM_CSW_CAPABILITY_RECORD_UUID = "system/csw/capabilityRecordUuid";
     public static final String SYSTEM_CSW_METADATA_PUBLIC = "system/csw/metadataPublic";
     public static final String SYSTEM_USERSELFREGISTRATION_ENABLE = "system/userSelfRegistration/enable";
+    public static final String SYSTEM_USERSELFREGISTRATION_EMAIL_DOMAINS = "system/userSelfRegistration/domainsAllowed";
     public static final String SYSTEM_USERSELFREGISTRATION_RECAPTCHA_ENABLE = "system/userSelfRegistration/recaptcha/enable";
     public static final String SYSTEM_USERSELFREGISTRATION_RECAPTCHA_PUBLICKEY = "system/userSelfRegistration/recaptcha/publickey";
     public static final String SYSTEM_USERSELFREGISTRATION_RECAPTCHA_SECRETKEY = "system/userSelfRegistration/recaptcha/secretkey";
@@ -155,6 +158,9 @@ public class Settings {
     public static final String SYSTEM_SECURITY_PASSWORDENFORCEMENT_USEPATTERN = "system/security/passwordEnforcement/usePattern";
     public static final String SYSTEM_SECURITY_PASSWORDENFORCEMENT_PATTERN = "system/security/passwordEnforcement/pattern";
     public static final String SYSTEM_SECURITY_PASSWORD_ALLOWADMINRESET = "system/security/password/allowAdminReset";
+    public static final String SYSTEM_TRANSLATION_PROVIDER = "system/translation/provider";
+    public static final String SYSTEM_TRANSLATION_SERVICEURL = "system/translation/serviceUrl";
+    public static final String SYSTEM_TRANSLATION_APIKEY = "system/translation/apiKey";
 
     public static final String MICROSERVICES_ENABLED = "microservices/enabled";
 

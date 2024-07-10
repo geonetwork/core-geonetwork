@@ -29,7 +29,7 @@
   <groupId>org.geonetwork-opensource</groupId>
   <artifactId>geonetwork</artifactId>
   <packaging>pom</packaging>
-  <version>4.4.5-SNAPSHOT</version>
+  <version>4.4.6-SNAPSHOT</version>
   <name>GeoNetwork opensource</name>
   <description>GeoNetwork opensource is a standards based, Free and
     Open Source catalog application to manage spatially referenced
@@ -122,7 +122,7 @@
         </plugin>
         <plugin>
           <artifactId>maven-dependency-plugin</artifactId>
-          <version>3.1.2</version>
+          <version>3.7.0</version>
         </plugin>
         <plugin>
           <artifactId>maven-clean-plugin</artifactId>
@@ -890,7 +890,7 @@
       <dependency>
         <groupId>com.google.guava</groupId>
         <artifactId>guava</artifactId>
-        <version>30.0-jre</version>
+        <version>33.2.1-jre</version>
       </dependency>
       <dependency>
         <groupId>com.yammer.metrics</groupId>
@@ -1407,6 +1407,7 @@
     <module>estest</module>
     <module>index</module>
     <module>datastorages</module>
+    <module>translationproviders</module>
   </modules>
 
   <profiles>
@@ -1549,7 +1550,7 @@
     <jetty.port>8080</jetty.port>
     <jetty.stop.port>8090</jetty.stop.port>
 
-    <es.version>8.11.3</es.version>
+    <es.version>8.14.0</es.version>
     <es.platform>linux-x86_64</es.platform>
     <es.installer.extension>tar.gz</es.installer.extension>
     <es.protocol>http</es.protocol>
@@ -1615,7 +1616,7 @@
     of Postgres is used and update pg.version if needed. -->
     <geotools.version>30.0</geotools.version>
     <jts.version>1.19.0</jts.version>
-    <pg.version>42.6.0</pg.version>
+    <pg.version>42.7.3</pg.version>
 
     <spring.version>5.3.33</spring.version>
     <spring.security.version>5.8.11</spring.security.version>
@@ -1631,7 +1632,7 @@
     <wro.version>1.10.1</wro.version>
     <wro.debug>true</wro.debug>
     <fop.version>2.7</fop.version>
-    <xmlunit.version>2.1.1</xmlunit.version>
+    <xmlunit.version>2.10.0</xmlunit.version>
     <jackson.version>2.16.2</jackson.version>
     <flying-saucer>9.1.22</flying-saucer>
     <camel.version>2.25.1</camel.version>

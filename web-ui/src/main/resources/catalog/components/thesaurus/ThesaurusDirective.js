@@ -866,7 +866,7 @@
                 var conceptIdElement = angular.element(
                   '<div class="well well-sm gn-keyword-picker-concept-id row">' +
                     '  <div class="form-group">' +
-                    '    <label class="col-sm-4"><i class="fa fa-link fa-fw"/><span data-translate>URL</span></label>' +
+                    '    <label class="col-sm-4"><i class="fa fa-link fa-fw"></i><span data-translate>URL</span></label>' +
                     '    <div class="col-sm-6"><input ' +
                     inputPropertyName +
                     '="' +
@@ -874,7 +874,7 @@
                     '" ' +
                     '       class="gn-field-link form-control"/>' +
                     "    </div>" +
-                    '    <div class="col-sm-2"><a class="btn btn-link" title="{{\'resetUrl\' | translate}}" data-ng-click="resetUrl()"><i class="fa fa-times text-danger"/></a></div>' +
+                    '    <div class="col-sm-2"><a class="btn btn-link" title="{{\'resetUrl\' | translate}}" data-ng-click="resetUrl()"><i class="fa fa-times text-danger"></i></a></div>' +
                     "  </div>" +
                     "</div>"
                 );

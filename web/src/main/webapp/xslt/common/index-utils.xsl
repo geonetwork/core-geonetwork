@@ -108,7 +108,7 @@
     </xsl:element>
   </xsl:function>
 
-  <xsl:function name="gn-fn-index:build-record-link" as="node()?">
+  <xsl:function name="gn-fn-index:build-record-link" as="node()*">
     <xsl:param name="uuid" as="xs:string"/>
     <xsl:param name="url" as="xs:string?"/>
     <xsl:param name="title" as="xs:string?"/>
@@ -119,7 +119,7 @@
     <xsl:copy-of select="gn-fn-index:build-record-link($uuid, $url, $title, $type, $properties)"/>
   </xsl:function>
 
-  <xsl:function name="gn-fn-index:build-record-link" as="node()?">
+  <xsl:function name="gn-fn-index:build-record-link" as="node()*">
     <xsl:param name="uuid" as="xs:string"/>
     <xsl:param name="url" as="xs:string?"/>
     <xsl:param name="title" as="xs:string?"/>
@@ -153,6 +153,17 @@
       "title": "<xsl:value-of select="util:escapeForJson($recordTitle)"/>",
       "origin": "<xsl:value-of select="normalize-space($origin)"/>"
       }</recordLink>
+    <xsl:variable name="fieldName"
+                  select="concat('recordLink_', $type, string-join($otherProperties//p[@name != '']/concat(@name, @value), '_'))"/>
+    <xsl:element name="{$fieldName}">
+      <xsl:value-of select="util:escapeForJson($recordTitle)"/>
+    </xsl:element>
+    <xsl:element name="{$fieldName}_uuid">
+      <xsl:value-of select="normalize-space($uuid)"/>
+    </xsl:element>
+    <xsl:element name="{$fieldName}_url">
+      <xsl:value-of select="normalize-space($url)"/>
+    </xsl:element>
   </xsl:function>
 
   <!-- Add a multilingual field to the index.
@@ -436,7 +447,16 @@
         <xsl:if test="info/@id != ''">
           "id": "<xsl:value-of select="util:escapeForJson(info/@id)"/>",
         </xsl:if>
-        "title": "<xsl:value-of select="util:escapeForJson(info/@title)"/>",
+        <xsl:choose>
+          <xsl:when test="exists(info/multilingualTitle)">
+            "multilingualTitle": {
+              <xsl:value-of select="string-join(info/multilingualTitle/value, ', ')"/>
+            },
+          </xsl:when>
+          <xsl:otherwise>
+            "title": "<xsl:value-of select="util:escapeForJson(info/@title)"/>",
+          </xsl:otherwise>
+        </xsl:choose>
         "theme": "<xsl:value-of select="util:escapeForJson(info/@type)"/>",
         <xsl:if test="info/@uri != ''">
           "link": "<xsl:value-of select="util:escapeForJson(info/@uri)"/>",

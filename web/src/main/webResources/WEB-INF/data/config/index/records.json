@@ -1048,6 +1048,14 @@
         }
       },
       {
+        "recordLink_": {
+          "match": "recordLink_*",
+          "mapping": {
+            "type": "keyword"
+          }
+        }
+      },
+      {
         "numbers": {
           "match": "*Number",
           "mapping": {
@@ -1092,6 +1100,26 @@
               "langspa": {
                 "type": "keyword",
                 "copy_to": ["any.langspa", "organisationName.langspa"]
+              },
+              "langarm": {
+                "type": "keyword",
+                "copy_to": ["any.langarm", "organisationName.langarm"]
+              },
+              "langaze": {
+                "type": "keyword",
+                "copy_to": ["any.langaze", "organisationName.langaze"]
+              },
+              "langgeo": {
+                "type": "keyword",
+                "copy_to": ["any.langgeo", "organisationName.langgeo"]
+              },
+              "langrum": {
+                "type": "keyword",
+                "copy_to": ["any.langrum", "organisationName.langrum"]
+              },
+              "langukr": {
+                "type": "keyword",
+                "copy_to": ["any.langukr", "organisationName.langukr"]
               },
               "link": {
                 "type": "keyword"
@@ -1211,6 +1239,61 @@
                   }
                 }
               },
+              "langarm": {
+                "type": "text",
+                "analyzer": "armenian",
+                "copy_to": ["any.langarm"],
+                "fields": {
+                  "keyword": {
+                    "type": "keyword",
+                    "ignore_above": ${es.index.ignore_above}
+                  }
+                }
+              },
+              "langaze": {
+                "type": "text",
+                "analyzer": "${es.index.analyzer.default}",
+                "copy_to": ["any.langaze"],
+                "fields": {
+                  "keyword": {
+                    "type": "keyword",
+                    "ignore_above": ${es.index.ignore_above}
+                  }
+                }
+              },
+              "langgeo": {
+                "type": "text",
+                "analyzer": "${es.index.analyzer.default}",
+                "copy_to": ["any.langgeo"],
+                "fields": {
+                  "keyword": {
+                    "type": "keyword",
+                    "ignore_above": ${es.index.ignore_above}
+                  }
+                }
+              },
+              "langrum": {
+                "type": "text",
+                "analyzer": "romanian",
+                "copy_to": ["any.langrum"],
+                  "fields": {
+                  "keyword": {
+                    "type": "keyword",
+                    "ignore_above": ${es.index.ignore_above}
+                  }
+                }
+              },
+              "langukr": {
+                "type": "text",
+                "analyzer": "${es.index.analyzer.default}",
+                "copy_to": ["any.langukr"],
+                "fields": {
+                  "keyword": {
+                    "type": "keyword",
+                    "ignore_above": ${es.index.ignore_above}
+                  }
+                }
+              },
               "langroh": {
                 "type": "text",
                 "analyzer": "${es.index.analyzer.default}",
@@ -1299,15 +1382,11 @@
               },
               "langdut": {
                 "type": "keyword",
-                "copy_to": [
-                  "any.langdut"
-                ]
+                "copy_to": ["any.langdut"]
               },
               "langdan": {
                 "type": "keyword",
-                "copy_to": [
-                  "any.langdan"
-                ]
+                "copy_to": ["any.langdan"]
               },
               "langita": {
                 "type": "keyword",
@@ -1316,6 +1395,26 @@
               "langspa": {
                 "type": "keyword",
                 "copy_to": ["any.langspa"]
+              },
+              "langarm": {
+                "type": "keyword",
+                "copy_to": ["any.langarm"]
+              },
+              "langaze": {
+                "type": "keyword",
+                "copy_to": ["any.langaze"]
+              },
+              "langgeo": {
+                "type": "keyword",
+                "copy_to": ["any.langgeo"]
+              },
+              "langrum": {
+                "type": "keyword",
+                "copy_to": ["any.langrum"]
+              },
+              "langukr": {
+                "type": "keyword",
+                "copy_to": ["any.langukr"]
               },
               "text": {
                 "type": "keyword"
@@ -1506,6 +1605,26 @@
             "type": "text",
             "analyzer": "spanish"
           },
+          "langarm": {
+            "type": "text",
+            "analyzer": "armenian"
+          },
+          "langaze": {
+            "type": "text",
+            "analyzer": "${es.index.analyzer.default}"
+          },
+          "langgeo": {
+            "type": "text",
+            "analyzer": "${es.index.analyzer.default}"
+          },
+          "langrum": {
+            "type": "text",
+            "analyzer": "romanian"
+          },
+          "langukr": {
+            "type": "text",
+            "analyzer": "${es.index.analyzer.default}"
+          },
           "langroh": {
             "type": "text",
             "analyzer": "${es.index.analyzer.default}"
@@ -1536,15 +1655,11 @@
           },
           "langdut": {
             "type": "keyword",
-            "copy_to": [
-              "any.langdut"
-              ]
+            "copy_to": ["any.langdut"]
           },
           "langdan": {
             "type": "keyword",
-            "copy_to": [
-              "any.langdan"
-              ]
+            "copy_to": ["any.langdan"]
           },
           "langita": {
             "type": "keyword",
@@ -1553,6 +1668,26 @@
           "langspa": {
             "type": "keyword",
             "copy_to": ["any.langspa"]
+          },
+          "langarm": {
+            "type": "keyword",
+            "copy_to": ["any.langarm"]
+          },
+          "langaze": {
+            "type": "keyword",
+            "copy_to": ["any.langaze"]
+          },
+          "langgeo": {
+            "type": "keyword",
+            "copy_to": ["any.langgeo"]
+          },
+          "langrum": {
+            "type": "keyword",
+            "copy_to": ["any.langrum"]
+          },
+          "langukr": {
+            "type": "keyword",
+            "copy_to": ["any.langukr"]
           },
           "link": {
             "type": "keyword"
@@ -2093,6 +2228,21 @@
             "type": "keyword"
           },
           "langspa": {
+            "type": "keyword"
+          },
+          "langarm": {
+            "type": "keyword"
+          },
+          "langaze": {
+            "type": "keyword"
+          },
+          "langgeo": {
+            "type": "keyword"
+          },
+          "langrum": {
+            "type": "keyword"
+          },
+          "langukr": {
             "type": "keyword"
           }
         }

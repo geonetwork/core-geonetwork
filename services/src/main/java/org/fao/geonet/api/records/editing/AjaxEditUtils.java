@@ -151,8 +151,12 @@ public class AjaxEditUtils extends EditUtils {
                 continue;
             }
 
-            // Ignore element if ref starts with "P" or "X"
-            if (originalRef.startsWith("X") || originalRef.startsWith("P")) {
+            // No pre processes for ref starting
+            // with "P" (for XPath mode)
+            // or "X" (for XML mode)
+            // or "lang_" (for multilingual fields)
+            // Updates for these refs are handled in next step
+            if (originalRef.startsWith("X") || originalRef.startsWith("P") || originalRef.startsWith("lang_")) {
                 continue;
             }
 
@@ -190,9 +194,8 @@ public class AjaxEditUtils extends EditUtils {
             if (ref.startsWith("X")) {
                 ref = ref.substring(1);
                 xmlInputs.put(ref, value);
-                continue;
             } else if (ref.startsWith("P") && ref.endsWith("_xml")) {
-                continue;
+                // P{key}=xpath works with P{key}_xml=XML snippet, see next condition
             } else if (ref.startsWith("P") && !ref.endsWith("_xml")) {
                 // Catch element starting with a P for xpath update mode
                 String snippet = changes.get(ref + "_xml");
@@ -207,45 +210,42 @@ public class AjaxEditUtils extends EditUtils {
                 } else {
                     Log.warning(Geonet.EDITOR, "No XML snippet or value found for xpath " + value + " and element ref " + ref);
                 }
-                continue;
-            }
-
-            if (updatedLocalizedTextElement(md, schema, ref, value, editLib)) {
-                continue;
-            }
-
-            int at = ref.indexOf('_');
-            if (at != -1) {
-                attribute = ref.substring(at + 1);
-                ref = ref.substring(0, at);
-            }
-
-            Element el = editLib.findElement(md, ref);
-            if (el == null) {
-                Log.error(Geonet.EDITOR, EditLib.MSG_ELEMENT_NOT_FOUND_AT_REF + ref);
-                continue;
-            }
-
-            // Process attribute
-            if (attribute != null) {
-                Pair<Namespace, String> attInfo = parseAttributeName(attribute, EditLib.COLON_SEPARATOR, id, md, editLib);
-                String localname = attInfo.two();
-                Namespace attrNS = attInfo.one();
-                if (el.getAttribute(localname, attrNS) != null) {
-                    el.setAttribute(new Attribute(localname, value, attrNS));
-                }
+            } else if (ref.startsWith("lang_")) {
+                updatedLocalizedTextElement(md, schema, ref, value, editLib);
             } else {
-                // Process element value
-                @SuppressWarnings("unchecked")
-                List<Content> content = el.getContent();
-
-                for (Iterator<Content> iterator = content.iterator(); iterator.hasNext(); ) {
-                    Content content2 = iterator.next();
-                    if (content2 instanceof Text) {
-                        iterator.remove();
-                    }
+                int at = ref.indexOf('_');
+                if (at != -1) {
+                    attribute = ref.substring(at + 1);
+                    ref = ref.substring(0, at);
                 }
-                el.addContent(value);
+
+                Element el = editLib.findElement(md, ref);
+                if (el == null) {
+                    Log.error(Geonet.EDITOR, EditLib.MSG_ELEMENT_NOT_FOUND_AT_REF + ref);
+                    continue;
+                }
+
+                // Process attribute
+                if (attribute != null) {
+                    Pair<Namespace, String> attInfo = parseAttributeName(attribute, EditLib.COLON_SEPARATOR, id, md, editLib);
+                    String localname = attInfo.two();
+                    Namespace attrNS = attInfo.one();
+                    if (el.getAttribute(localname, attrNS) != null) {
+                        el.setAttribute(new Attribute(localname, value, attrNS));
+                    }
+                } else {
+                    // Process element value
+                    @SuppressWarnings("unchecked")
+                    List<Content> content = el.getContent();
+
+                    for (Iterator<Content> iterator = content.iterator(); iterator.hasNext(); ) {
+                        Content content2 = iterator.next();
+                        if (content2 instanceof Text) {
+                            iterator.remove();
+                        }
+                    }
+                    el.addContent(value);
+                }
             }
         }
 
@@ -355,7 +355,6 @@ public class AjaxEditUtils extends EditUtils {
 
         //--- locate the geonet:element and geonet:info elements and clone for
         //--- later re-use
-        Element refEl = (Element) (el.getChild(Edit.RootChild.ELEMENT, Edit.NAMESPACE)).clone();
         Element info = null;
 
         if (md.getChild(Edit.RootChild.INFO, Edit.NAMESPACE) != null) {
@@ -376,6 +375,8 @@ public class AjaxEditUtils extends EditUtils {
                         if (defaultChild != null) {
                             defaultValue = defaultChild.getAttributeValue(Edit.Attribute.Attr.VALUE);
                         }
+                        attributeDef.removeAttribute(Edit.Attribute.Attr.ADD);
+                        attributeDef.setAttribute(new Attribute(Edit.Attribute.Attr.DEL, "true"));
                     }
                 }
 
@@ -383,7 +384,6 @@ public class AjaxEditUtils extends EditUtils {
                 //--- Add new attribute with default value
                 el.setAttribute(new Attribute(attInfo.two(), defaultValue, attInfo.one()));
 
-                // TODO : add attribute should be false and del true after adding an attribute
                 child = el;
             } else {
                 //--- normal element
@@ -409,19 +409,13 @@ public class AjaxEditUtils extends EditUtils {
         }
         //--- now enumerate the new child (if not a simple attribute)
         if (childName == null || !childName.equals("geonet:attribute")) {
-            //--- now add the geonet:element back again to keep ref number
-            el.addContent(refEl);
-
             int iRef = editLib.findMaximumRef(md);
-            editLib.expandElements(schema, child);
             editLib.enumerateTreeStartingAt(child, iRef + 1, Integer.parseInt(ref));
-
-            //--- add editing info to everything from the parent down
-            editLib.expandTree(mds, el);
-
+            editLib.expandTree(mds, child);
         }
         if (info != null) {
-            //--- attach the info element to the child
+            //--- remove and re-attach the info element to the child
+            child.removeChild(Edit.RootChild.INFO, Edit.NAMESPACE);
             child.addContent(info);
         }
 

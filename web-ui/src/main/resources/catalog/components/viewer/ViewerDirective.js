@@ -474,7 +474,7 @@
 
                   // handle processes tool
                   if (scope.activeTools.processes && openedTool.url) {
-                    scope.wpsTabs.byUrl = true;
+                    scope.wpsTabs.url = true;
                     scope.selectedWps.url = openedTool.url;
                   }
 
@@ -514,11 +514,19 @@
       templateUrl: "../../catalog/components/viewer/partials/mouseposition.html",
       controller: [
         "gnViewerSettings",
+        "gnGlobalSettings",
         "hotkeys",
         "gnAlertService",
         "$translate",
         "$scope",
-        function (gnViewerSettings, hotkeys, gnAlertService, $translate, scope) {
+        function (
+          gnViewerSettings,
+          gnGlobalSettings,
+          hotkeys,
+          gnAlertService,
+          $translate,
+          scope
+        ) {
           scope.switchMousePosition = function () {
             scope.displayMousePosition = !scope.displayMousePosition;
           };
@@ -566,25 +574,27 @@
             });
             scope.map.addControl(scope.mousePositionControl);
 
-            hotkeys.bindTo(scope).add({
-              combo: "c",
-              description: $translate.instant("copyMousePosition"),
-              callback: function (event) {
-                if (scope.mousePosition != "") {
-                  navigator.clipboard.writeText(scope.mousePosition).then(function () {
-                    gnAlertService.addAlert(
-                      {
-                        msg: $translate.instant("mousePositionCopiedToClipboard", {
-                          position: scope.mousePosition
-                        }),
-                        type: "success"
-                      },
-                      2
-                    );
-                  });
+            if (gnGlobalSettings.gnCfg.mods.global.hotkeys) {
+              hotkeys.bindTo(scope).add({
+                combo: "c",
+                description: $translate.instant("copyMousePosition"),
+                callback: function (event) {
+                  if (scope.mousePosition != "") {
+                    navigator.clipboard.writeText(scope.mousePosition).then(function () {
+                      gnAlertService.addAlert(
+                        {
+                          msg: $translate.instant("mousePositionCopiedToClipboard", {
+                            position: scope.mousePosition
+                          }),
+                          type: "success"
+                        },
+                        2
+                      );
+                    });
+                  }
                 }
-              }
-            });
+              });
+            }
           }
         }
       ]

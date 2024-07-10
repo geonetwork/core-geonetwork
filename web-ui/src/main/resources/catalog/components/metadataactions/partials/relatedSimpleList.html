@@ -6,7 +6,7 @@
                   icon = config.getClassIcon(mainType);"
 >
   <li data-ng-if="items.length > 0" class="gn-related-title">
-    <i class="fa fa-fw {{icon}}" /> {{('link-' + type) | translate}}
+    <i class="fa fa-fw {{icon}}"></i> {{('link-' + type) | translate}}
   </li>
   <li data-ng-repeat="md in items | orderBy:getOrderBy">
     <a

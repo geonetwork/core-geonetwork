@@ -275,20 +275,28 @@
           );
         } else {
           $rootScope.$broadcast("operationOnSelectionStart");
-          $http.delete("../api/records?" + "bucket=" + bucket).then(
-            function (data) {
-              $rootScope.$broadcast("mdSelectNone");
-              $rootScope.$broadcast("operationOnSelectionStop");
-              $rootScope.$broadcast("search");
-              $timeout(function () {
+          $http
+            .delete("../api/records?" + "bucket=" + bucket)
+            .then(
+              function (data) {
+                $rootScope.$broadcast("mdSelectNone");
                 $rootScope.$broadcast("search");
-              }, 5000);
-              deferred.resolve(data);
-            },
-            function (data) {
-              deferred.reject(data);
-            }
-          );
+                $timeout(function () {
+                  $rootScope.$broadcast("search");
+                }, 5000);
+                deferred.resolve(data);
+              },
+              function (data) {
+                gnAlertService.addAlert({
+                  msg: data.data.message || data.data.description,
+                  type: "danger"
+                });
+                deferred.reject(data);
+              }
+            )
+            .finally(function () {
+              $rootScope.$broadcast("operationOnSelectionStop");
+            });
         }
         return deferred.promise;
       };
@@ -640,8 +648,10 @@
           })
           .then(function (data) {
             $rootScope.$broadcast("inspireMdValidationStop");
-            $rootScope.$broadcast("operationOnSelectionStop");
             $rootScope.$broadcast("search");
+          })
+          .finally(function () {
+            $rootScope.$broadcast("operationOnSelectionStop");
           });
       };
 
@@ -653,8 +663,10 @@
             method: "DELETE"
           })
           .then(function (data) {
-            $rootScope.$broadcast("operationOnSelectionStop");
             $rootScope.$broadcast("search");
+          })
+          .finally(function () {
+            $rootScope.$broadcast("operationOnSelectionStop");
           });
       };
 

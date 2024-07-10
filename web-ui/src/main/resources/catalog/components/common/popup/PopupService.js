@@ -130,7 +130,9 @@
           scopeProvided = angular.isDefined(scope);
         element = $compile(element)(newScope);
 
-        $(document.body).append(element);
+        $(
+          typeof gnShadowRoot !== "undefined" ? gnShadowRoot.childNodes[0] : document.body
+        ).append(element);
         element.modal();
         element.on("hidden.bs.modal", function () {
           $(document.body).removeClass("modal-open");

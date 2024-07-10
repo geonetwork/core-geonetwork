@@ -47,6 +47,7 @@
           "resourceTitle*",
           "resourceAbstract*",
           "draft",
+          "draftId",
           "owner",
           "link",
           "status*",

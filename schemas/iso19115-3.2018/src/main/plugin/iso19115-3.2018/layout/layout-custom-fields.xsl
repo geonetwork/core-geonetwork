@@ -277,7 +277,7 @@
     <xsl:call-template name="render-boxed-element">
       <xsl:with-param name="label"
         select="gn-fn-metadata:getLabel($schema, name(), $labels, name(..), $isoType, $xpath)/label"/>
-      <xsl:with-param name="editInfo" select="gn:element"/>
+      <xsl:with-param name="editInfo" select="../gn:element"/>
       <xsl:with-param name="cls" select="local-name()"/>
       <xsl:with-param name="subTreeSnippet">
         <div gn-draw-bbox="" data-hleft="{gex:westBoundLongitude/gco:Decimal}"
@@ -346,7 +346,9 @@
                         (1 or @gn:addedObj = 'true') and
                         $isFlatMode]"
                 priority="2000">
-    <xsl:call-template name="iso19115-3.2018-table"/>
+    <xsl:call-template name="build-table">
+      <xsl:with-param name="isoType" select="if (../@gco:isoType) then ../@gco:isoType else ''"/>
+    </xsl:call-template>
   </xsl:template>
 
   <!-- Ignore the following -->
@@ -358,132 +360,5 @@
                         $isFlatMode]"
                 priority="2000"/>
 
-  <!-- Define table layout -->
-  <xsl:template name="iso19115-3.2018-table">
-    <xsl:variable name="name" select="name()"/>
-    <xsl:variable name="xpath" select="gn-fn-metadata:getXPath(.)"/>
-    <xsl:variable name="isoType" select="if (../@gco:isoType) then ../@gco:isoType else ''"/>
-
-    <xsl:variable name="childName"
-                  select="*[1]/name()"/>
-
-    <xsl:variable name="isEmbeddedMode"
-                  select="@gn:addedObj = 'true'"/>
-    <xsl:variable name="isFirstOfItsKind"
-                  select="preceding-sibling::*[1]/name() != $name"/>
-
-    <xsl:variable name="tableConfig"
-                  select="$editorConfig/editor/tableFields/table[@for = $childName]"/>
-
-    <xsl:variable name="values">
-      <xsl:if test="not($isEmbeddedMode) or ($isEmbeddedMode and $isFirstOfItsKind)">
-        <header>
-          <xsl:for-each select="$tableConfig/header/col">
-            <col>
-              <xsl:copy-of select="@*"/>
-              <xsl:if test="@label">
-                <!-- TODO: column names may comes from strings.xml -->
-                <xsl:value-of select="gn-fn-metadata:getLabel($schema, @label, $labels, '', $isoType, $xpath)/label"/>
-              </xsl:if>
-            </col>
-          </xsl:for-each>
-        </header>
-      </xsl:if>
-      <xsl:for-each select="(.|following-sibling::*[name() = $name])/*[name() = $childName]">
-
-        <xsl:variable name="base"
-                      select="."/>
-        <xsl:for-each select="$tableConfig/row">
-          <row>
-            <xsl:for-each select="col">
-              <col>
-                <xsl:if test="@use != ''">
-                  <xsl:copy-of select="@use|directiveAttributes"/>
-                </xsl:if>
-                <xsl:if test="@del != ''">
-                  <xsl:attribute name="remove" select="'true'"/>
-
-                  <saxon:call-template name="{concat('evaluate-', $schema)}">
-                    <xsl:with-param name="base" select="$base"/>
-                    <xsl:with-param name="in"
-                                    select="concat('/', @del, '/gn:element')"/>
-                  </saxon:call-template>
-                </xsl:if>
-
-                <xsl:if test="@xpath != ''">
-                  <saxon:call-template name="{concat('evaluate-', $schema)}">
-                    <xsl:with-param name="base" select="$base"/>
-                    <xsl:with-param name="in"
-                                    select="concat('/', @xpath)"/>
-                  </saxon:call-template>
-                </xsl:if>
-              </col>
-            </xsl:for-each>
-          </row>
-
-          <xsl:for-each select="section[@xpath]">
-            <row>
-              <col colspan="{count(../col)}" type="form" withLabel="true">
-                <xsl:apply-templates mode="form-builder" select=".">
-                  <xsl:with-param name="base" select="$base"/>
-                </xsl:apply-templates>
-                <!--<xsl:variable name="nodes">
-
-                <saxon:call-template name="{concat('evaluate-', $schema)}">
-                  <xsl:with-param name="base" select="$base"/>
-                  <xsl:with-param name="in"
-                                  select="concat('/', @xpath)"/>
-                </saxon:call-template>
-                </xsl:variable>
-
-                <xsl:for-each select="$nodes">
-                  <saxon:call-template name="{concat('dispatch-', $schema)}">
-                    <xsl:with-param name="base" select="."/>
-                  </saxon:call-template>
-                </xsl:for-each>
-
-                <xsl:if test="@or and @in">
-                  <saxon:call-template name="{concat('evaluate-', $schema)}">
-                    <xsl:with-param name="base" select="$base"/>
-                    <xsl:with-param name="in"
-                                    select="concat('/../', @in, '/gn:child[@name=''', @or, ''']')"/>
-                  </saxon:call-template>
-                </xsl:if>-->
-              </col>
-            </row>
-          </xsl:for-each>
-        </xsl:for-each>
-      </xsl:for-each>
-    </xsl:variable>
-
-
-    <!-- Return only the new row in embed mode. -->
-    <xsl:choose>
-      <xsl:when test="$tableConfig/@fieldset = 'false' or ($isEmbeddedMode and not($isFirstOfItsKind))">
-        <xsl:call-template name="render-table">
-          <xsl:with-param name="values" select="$values"/>
-        </xsl:call-template>
-      </xsl:when>
-      <xsl:otherwise>
-
-        <xsl:variable name="tableTitle" select="if (($tableConfig/@label) and (string($strings/*[name() = $tableConfig/@label])))
-              then $strings/*[name() = $tableConfig/@label]
-              else gn-fn-metadata:getLabel($schema, $name, $labels, name(..), $isoType, $xpath)/label" />
-
-        <xsl:call-template name="render-boxed-element">
-          <xsl:with-param name="label"
-                          select="$tableTitle"/>
-          <xsl:with-param name="cls" select="local-name()"/>
-          <xsl:with-param name="subTreeSnippet">
-
-            <xsl:call-template name="render-table">
-              <xsl:with-param name="values" select="$values"/>
-            </xsl:call-template>
-
-          </xsl:with-param>
-        </xsl:call-template>
-      </xsl:otherwise>
-    </xsl:choose>
-  </xsl:template>
 
 </xsl:stylesheet>

@@ -193,23 +193,25 @@
   </xsl:template>
 
   <xsl:template mode="getExtent" match="gmd:MD_Metadata|*[@gco:isoType = 'gmd:MD_Metadata']">
-    <section class="gn-md-side-extent">
-      <h2>
-        <i class="fa fa-fw fa-map-marker"></i>
-        <span>
-          <xsl:value-of select="$schemaStrings/spatialExtent"/>
-        </span>
-      </h2>
-
-      <xsl:choose>
-        <xsl:when test=".//gmd:EX_BoundingPolygon">
-          <xsl:copy-of select="gn-fn-render:extent($metadataUuid)"/>
-        </xsl:when>
-        <xsl:otherwise>
-          <xsl:copy-of select="gn-fn-render:bboxes(.//gmd:EX_GeographicBoundingBox)"/>
-        </xsl:otherwise>
-      </xsl:choose>
-    </section>
+    <xsl:if test=".//gmd:identificationInfo/*/gmd:extent/*/gmd:geographicElement[gmd:EX_GeographicBoundingBox or gmd:EX_BoundingPolygon]">
+      <section class="gn-md-side-extent">
+        <h2>
+          <i class="fa fa-fw fa-map-marker"></i>
+          <span>
+            <xsl:value-of select="$schemaStrings/spatialExtent"/>
+          </span>
+        </h2>
+  
+        <xsl:choose>
+          <xsl:when test=".//gmd:EX_BoundingPolygon">
+            <xsl:copy-of select="gn-fn-render:extent($metadataUuid)"/>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:copy-of select="gn-fn-render:bboxes(.//gmd:EX_GeographicBoundingBox)"/>
+          </xsl:otherwise>
+        </xsl:choose>
+      </section>
+    </xsl:if>
   </xsl:template>
 
   <xsl:template mode="getOverviews" match="gmd:MD_Metadata|*[@gco:isoType = 'gmd:MD_Metadata']">
@@ -551,8 +553,10 @@
   <!-- Bbox is displayed with an overview and the geom displayed on it
   and the coordinates displayed around -->
   <xsl:template mode="render-field"
-                match="gmd:EX_GeographicBoundingBox[
-          gmd:westBoundLongitude/gco:Decimal != '']">
+                match="gmd:EX_GeographicBoundingBox[gmd:eastBoundLongitude/gco:Decimal castable as xs:double
+                                                   and gmd:southBoundLatitude/gco:Decimal castable as xs:double
+                                                   and gmd:westBoundLongitude/gco:Decimal castable as xs:double
+                                                   and gmd:northBoundLatitude/gco:Decimal castable as xs:double]">
     <xsl:copy-of select="gn-fn-render:bbox(
                             xs:double(gmd:westBoundLongitude/gco:Decimal),
                             xs:double(gmd:southBoundLatitude/gco:Decimal),
@@ -562,6 +566,7 @@
     <br/>
     <br/>
   </xsl:template>
+
 
 
 
@@ -1150,9 +1155,9 @@
 
         <xsl:if test="@uom">
           <!-- Display the unit value only -->
-          &#160; <xsl:value-of select="if (contains(@uom, '#'))
-                                    then concat(., ' ', tokenize(@uom, '#')[2])
-                                    else  concat(., ' ', @uom)"/>
+          &#160;<xsl:value-of select="if (contains(@uom, '#'))
+                                    then tokenize(@uom, '#')[2]
+                                    else @uom"/>
         </xsl:if>
       </xsl:otherwise>
     </xsl:choose>

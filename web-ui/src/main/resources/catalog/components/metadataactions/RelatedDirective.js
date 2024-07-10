@@ -197,6 +197,7 @@
     function () {
       return {
         restrict: "A",
+        transclude: true,
         templateUrl: function (elem, attrs) {
           return (
             attrs.template ||
@@ -784,14 +785,21 @@
                   scope.relations.siblings = [];
                   siblings
                     .map(function (r) {
-                      return (r.properties && r.properties.initiativeType) || "";
+                      return r.properties
+                        ? r.properties.associationType + "-" + r.properties.initiativeType
+                        : "";
                     })
                     .filter(function (value, index, self) {
                       return self.indexOf(value) === index;
                     })
                     .forEach(function (type) {
                       scope.relations["siblings" + type] = siblings.filter(function (r) {
-                        return r.properties && r.properties.initiativeType === type;
+                        var key = r.properties
+                          ? r.properties.associationType +
+                            "-" +
+                            r.properties.initiativeType
+                          : "";
+                        return key === type;
                       });
                       siblingsCount += scope.relations["siblings" + type].length;
                     });
@@ -1299,6 +1307,7 @@
     function (gnCurrentEdit) {
       return {
         restrict: "A",
+        transclude: true,
         templateUrl: function (elem, attrs) {
           return (
             attrs.template ||

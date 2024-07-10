@@ -15,7 +15,7 @@
         gn-formatter="formatter.defaultUrl"
       >
         <h1>
-          <span class="clamp-2">{{md.resourceTitle}}</span>
+          <span class="clamp-2"> {{md.resourceTitle}} </span>
         </h1>
       </a>
       <a
@@ -26,7 +26,14 @@
         title="{{md.resourceTitle}}"
       >
         <h1>
-          <span class="clamp-2">{{md.resourceTitle || md.remoteUrl}}</span>
+          <span class="clamp-2">
+            {{md.resourceTitle || md.remoteUrl}}
+            <i
+              data-ng-if="md.origin === 'remote'"
+              class="fa fa-external-link"
+              title="{{'remoteRecord' | translate}}"
+            ></i>
+          </span>
         </h1>
       </a>
     </div>
@@ -80,7 +87,7 @@
           </div>
         </div>
       </div>
-      <ng-transclude />
+      <ng-transclude></ng-transclude>
     </div>
   </div>
   <!-- /.gn-card-body -->

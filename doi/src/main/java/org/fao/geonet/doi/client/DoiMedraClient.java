@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2010 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2024 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -58,7 +58,10 @@ public class DoiMedraClient extends BaseDoiClient implements IDoiClient {
 
     @Override
     public String retrieveAllDoi(String doi) throws DoiClientException {
-        throw new DoiClientException(MEDRA_NOT_SUPPORTED_EXCEPTION_MESSAGE);
+        throw new DoiClientException(MEDRA_NOT_SUPPORTED_EXCEPTION_MESSAGE)
+            .withMessageKey("exception.doi.operationNotSupported")
+            .withDescriptionKey("exception.doi.operationNotSupported.description",
+                new String[]{ MEDRA_NOT_SUPPORTED_EXCEPTION_MESSAGE });
     }
 
     /**
