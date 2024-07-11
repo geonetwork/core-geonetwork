@@ -29,7 +29,9 @@ import org.fao.geonet.domain.page.PageIdentity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface PageRepository extends JpaRepository<Page, PageIdentity> {
-    
+
     List<Page> findByPageIdentityLanguage(String language);
+
+    List<Page> findPageByStatus(Page.PageStatus status);
 
 }

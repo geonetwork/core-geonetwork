@@ -31,6 +31,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.exception.ExceptionUtils;
@@ -45,8 +46,10 @@ import org.fao.geonet.api.tools.i18n.LanguageUtils;
 import org.fao.geonet.api.tools.i18n.TranslationPackBuilder;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.*;
+import org.fao.geonet.domain.page.Page;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.repository.*;
+import org.fao.geonet.repository.page.PageRepository;
 import org.fao.geonet.repository.specification.GroupSpecs;
 import org.fao.geonet.repository.specification.MetadataSpecs;
 import org.fao.geonet.repository.specification.OperationAllowedSpecs;
@@ -77,6 +80,7 @@ import java.nio.file.Path;
 import java.nio.file.attribute.FileTime;
 import java.sql.SQLException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static org.springframework.data.jpa.domain.Specification.where;
 
@@ -148,6 +152,9 @@ public class GroupsApi {
 
     @Autowired
     private MetadataRepository metadataRepository;
+
+    @Autowired
+    private PageRepository pageRepository;
 
     private static Resources.ResourceHolder getImage(Resources resources, ServiceContext serviceContext, Group group) throws IOException {
         final Path logosDir = resources.locateLogosDir(serviceContext);
@@ -538,6 +545,19 @@ public class GroupsApi {
                 throw new NotAllowedException(String.format(
                     "Group %s is associated with %d user(s). Add 'force' parameter to remove it or remove users associated with that group first.",
                     group.get().getName(), users.size()
+                ));
+            }
+
+            List<Page> staticPages = pageRepository.findPageByStatus(Page.PageStatus.GROUPS);
+            List<Page> staticPagesAssignedToGroup =
+                staticPages.stream().filter(p ->
+                    !p.getGroups().stream().filter(g -> g.getId() == groupIdentifier).collect(Collectors.toList()).isEmpty())
+                    .collect(Collectors.toList());
+
+            if (!staticPagesAssignedToGroup.isEmpty()) {
+                throw new NotAllowedException(String.format(
+                    "Group %s is associated with '%s' static page(s). Please remove the static page(s) associated with that group first.",
+                    group.get().getName(), staticPagesAssignedToGroup.stream().map(p -> p.getLabel()).collect(Collectors.joining())
                 ));
             }
 
