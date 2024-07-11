@@ -1115,5 +1115,6 @@
                        mcc:MD_Identifier/mcc:description|
                        mrl:LI_Source/mrl:scope|
                        mrl:sourceSpatialResolution|
-                       mdq:derivedElement" priority="2"/>
+                       mdq:derivedElement|
+                       mri:graphicOverview/mcc:MD_BrowseGraphic/mcc:linkage" priority="2"/>
 </xsl:stylesheet>
