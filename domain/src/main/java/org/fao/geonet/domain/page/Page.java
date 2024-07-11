@@ -41,7 +41,7 @@ import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.Lob;
-import javax.persistence.OneToMany;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
 import org.fao.geonet.domain.GeonetEntity;
@@ -160,9 +160,9 @@ public class Page extends GeonetEntity implements Serializable {
      *
      * @return all the page's groups.
      */
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST, orphanRemoval = false)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinTable(name = "spg_page_group", joinColumns = {@JoinColumn(name = "language"), @JoinColumn(name = "linktext")},
-        inverseJoinColumns = {@JoinColumn(name = "groupid", referencedColumnName = "id", unique = true)})
+        inverseJoinColumns = {@JoinColumn(name = "groupid", referencedColumnName = "id", unique = false)})
     public Set<Group> getGroups() {
         return groups;
     }

@@ -80,6 +80,7 @@ import java.nio.file.Path;
 import java.nio.file.attribute.FileTime;
 import java.sql.SQLException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static org.springframework.data.jpa.domain.Specification.where;
 
@@ -547,19 +548,17 @@ public class GroupsApi {
                 ));
             }
 
-            List<Page> staticPages = pageRepository.findAll();
+            List<Page> staticPages = pageRepository.findPageByStatus(Page.PageStatus.GROUPS);
+            List<Page> staticPagesAssignedToGroup =
+                staticPages.stream().filter(p ->
+                    !p.getGroups().stream().filter(g -> g.getId() == groupIdentifier).collect(Collectors.toList()).isEmpty())
+                    .collect(Collectors.toList());
 
-            for (Page page: staticPages) {
-                if (CollectionUtils.isNotEmpty(page.getGroups())) {
-                    for (Group pageGroup : page.getGroups()) {
-                        if (pageGroup.getId() == groupIdentifier) {
-                            throw new NotAllowedException(String.format(
-                                "Group %s is associated with '%s' static page(s). Please remove the static page(s) associated with that group first.",
-                                group.get().getName(), page.getLabel()
-                            ));
-                        }
-                    }
-                }
+            if (!staticPagesAssignedToGroup.isEmpty()) {
+                throw new NotAllowedException(String.format(
+                    "Group %s is associated with '%s' static page(s). Please remove the static page(s) associated with that group first.",
+                    group.get().getName(), staticPagesAssignedToGroup.stream().map(p -> p.getLabel()).collect(Collectors.joining())
+                ));
             }
 
             groupRepository.deleteById(groupIdentifier);
