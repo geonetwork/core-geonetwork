@@ -30,9 +30,11 @@
     "$scope",
     "gnRelatedResources",
     function ($scope, gnRelatedResources) {
-      $scope.resultTemplate =
-        "../../catalog/components/" +
-        "search/resultsview/partials/viewtemplates/grid4maps.html";
+      $scope.resultTemplate = {
+        tplUrl:
+          "../../catalog/components/" +
+          "search/resultsview/partials/viewtemplates/grid4maps.html"
+      };
 
       $scope.loadMap = function (map, md) {
         gnRelatedResources.getAction("MAP")(map, md);
@@ -47,10 +49,11 @@
             }
           }
         ],
+        configId: "recordWithLink",
         hitsperpageValues: 2,
         params: {
           isTemplate: "n",
-          sortBy: "resourceTitleObject.default.keyword",
+          sortBy: "resourceTitleObject.default.sort",
           from: 1,
           to: 2
         }
@@ -243,8 +246,8 @@
                     scope.mapProps = angular.extend({}, defaultMapProps);
                     defer.resolve(response);
                   },
-                  function (data) {
-                    console.warn(data);
+                  function (response) {
+                    console.warn(response);
                     defer.reject(response);
                   }
                 );

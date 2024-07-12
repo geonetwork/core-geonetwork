@@ -287,6 +287,11 @@ class Harvester extends BaseAligner<WebDavParams> implements IHarvester<HarvestR
         if (log.isDebugEnabled())
             log.debug("  - Adding metadata with remote path : " + rf.getPath());
 
+        // Translate metadata
+        if (params.isTranslateContent()) {
+            md = translateMetadataContent(context, md, schema);
+        }
+
         //
         // insert metadata
         //
@@ -351,7 +356,7 @@ class Harvester extends BaseAligner<WebDavParams> implements IHarvester<HarvestR
             try {
                 Integer groupIdVal = null;
                 if (StringUtils.isNotEmpty(params.getOwnerIdGroup())) {
-                    groupIdVal = Integer.parseInt(params.getOwnerIdGroup());
+                    groupIdVal = getGroupOwner();
                 }
 
                 params.getValidate().validate(dataMan, context, md, groupIdVal);
@@ -471,6 +476,10 @@ class Harvester extends BaseAligner<WebDavParams> implements IHarvester<HarvestR
             }
 
 
+            // Translate metadata
+            if (params.isTranslateContent()) {
+                md = translateMetadataContent(context, md, schema);
+            }
 
             //
             // update metadata

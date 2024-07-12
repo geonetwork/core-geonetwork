@@ -1,6 +1,6 @@
 /*
  * =============================================================================
- * ===	Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * ===	Copyright (C) 2001-2023 Food and Agriculture Organization of the
  * ===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * ===	and United Nations Environment Programme (UNEP)
  * ===
@@ -36,7 +36,7 @@ import io.swagger.v3.oas.models.servers.ServerVariable;
 import io.swagger.v3.oas.models.servers.ServerVariables;
 import org.fao.geonet.NodeInfo;
 import org.fao.geonet.kernel.setting.SettingManager;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springdoc.core.SpringDocUtils;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cache.concurrent.ConcurrentMapCacheManager;
@@ -45,13 +45,28 @@ import org.springframework.context.annotation.Configuration;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import static org.fao.geonet.kernel.setting.Settings.SYSTEM_PLATFORM_VERSION;
 
 @Configuration
 @EnableCaching
 @OpenAPIDefinition
-public class OpenApiConfig  {
+public class OpenApiConfig {
+
+    private static OpenAPI openAPI = null;
+
+    private static SettingManager settingManager = null;
+
+    static {
+        // By default, Spring Doc ignores injectable parameters supported by Spring MVC
+        //     https://springdoc.org/faq.html#_what_are_the_ignored_types_in_the_documentation
+        // This includes the following list.
+        //     https://docs.spring.io/spring-framework/docs/5.1.x/spring-framework-reference/web.html#mvc-ann-arguments
+        // As java.util.Map's are uses for JSON input and output values among other types, it is best to remove java.util.Map from this list.
+        // If we want to use java.util.Map as an injectable then we will need to ensure we hide the parameter.
+        SpringDocUtils.getConfig().removeRequestWrapperToIgnore(Map.class);
+    }
 
     @Bean(name = "cacheManager")
     public CacheManager cacheManager() {
@@ -59,11 +74,77 @@ public class OpenApiConfig  {
     }
 
     @Bean
-    @Autowired
-    public OpenAPI OpenApiConfig(SettingManager settingManager) {
-        List<Server> servers = new ArrayList<>();
+    public OpenAPI openApi(final SettingManager settingManager) {
+        return OpenApiConfig.setupOpenApiConfig(settingManager);
+    }
+
+    /**
+     * Setup OpenAPI configuration.
+     *
+     * Using static function so that should the bean be called twice (which it does), it will reuse the same static objects.
+     * During first call, the settingManager may not be properly setup (i.e. initial install) and will return null values for version and host information.
+     * Subsequent calls will update the related OpenAPI information with the settingManager values.
+     *
+     * It is also static so that when we update the object on second call, it will also update the object returned from the first call as they will be
+     * pointing to the same object.
+     *
+     * @param settingManager containing host and version information required.
+     * @return OpenAPI object.
+     */
+    private static OpenAPI setupOpenApiConfig(final SettingManager settingManager) {
+        OpenApiConfig.settingManager = settingManager;
+        if (openAPI == null) {
+            openAPI = new OpenAPI().info(new Info()
+                    .description("This is the description of the GeoNetwork OpenAPI. Use this API to manage your catalog.")
+                    .contact(new Contact()
+                        .email("geonetwork-users@lists.sourceforge.net")
+                        .name("GeoNetwork user mailing list")
+                        .url("https://sourceforge.net/p/geonetwork/mailman/geonetwork-users/")
+                    )
+                    .license(new License()
+                        .name("GPL 2.0")
+                        .url("https://www.gnu.org/licenses/old-licenses/gpl-2.0.html")))
+                .externalDocs(new ExternalDocumentation()
+                    .description("Learn how to access the catalog using the GeoNetwork REST API."));
+
+            setVersionRelatedInfo();
+            setHostRelatedInfo();
+
+        } else if (openAPI.getInfo() != null && openAPI.getInfo().getVersion() == null) {
+            // During initial install, the version will not be set when using the JeevesApplicationContext
+            // But it will be set afterward when creating WebApplicationContext.  So if the version is null but our new version is not null
+            // then lets update data based on the version.
+            setVersionRelatedInfo();
+            // If the version was not set then the hostUrl was also not set correctly so update that as well.
+            setHostRelatedInfo();
+        }
+
+        return openAPI;
+    }
+
+    /**
+     * Update openAPI object with version related information.
+     */
+    private static void setVersionRelatedInfo() {
 
         String version = settingManager.getValue(SYSTEM_PLATFORM_VERSION);
+
+        openAPI.getInfo().setVersion(version);
+        openAPI.getInfo().setTitle(String.format(
+            "GeoNetwork %s OpenAPI Documentation",
+            version));
+    }
+
+    /**
+     * Update openAPI object with host related information.
+     */
+    public static void setHostRelatedInfo() {
+        if (settingManager == null || openAPI == null) {
+            return;
+        }
+
+        List<Server> servers = new ArrayList<>();
+
         String hostUrl = settingManager.getBaseURL().replaceAll("/+$", "");
 
         ServerVariable catalogVariable = new ServerVariable()
@@ -85,24 +166,7 @@ public class OpenApiConfig  {
                 .addServerVariable("portal", portalVariable)
             )
         );
-
-        return new OpenAPI().info(new Info()
-                .title(String.format(
-                    "GeoNetwork %s OpenAPI Documentation",
-                    version))
-                .description("This is the description of the GeoNetwork OpenAPI. Use this API to manage your catalog.")
-                .contact(new Contact()
-                    .email("geonetwork-users@lists.sourceforge.net")
-                    .name("GeoNetwork user mailing list")
-                    .url("https://sourceforge.net/p/geonetwork/mailman/geonetwork-users/")
-                )
-                .version(version)
-                .license(new License()
-                    .name("GPL 2.0")
-                    .url("http://www.gnu.org/licenses/old-licenses/gpl-2.0.html")))
-            .externalDocs(new ExternalDocumentation()
-                .description("Learn how to access the catalog using the GeoNetwork REST API.")
-                .url(String.format("%s/doc/api", hostUrl)))
-            .servers(servers);
+        openAPI.setServers(servers);
+        openAPI.getExternalDocs().setUrl(String.format("%s/doc/api", hostUrl));
     }
 }

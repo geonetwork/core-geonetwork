@@ -1,29 +1,25 @@
-//==============================================================================
-//===
-//===   MetadataSchema
-//===
-//==============================================================================
-//===	Copyright (C) 2001-2007 Food and Agriculture Organization of the
-//===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
-//===	and United Nations Environment Programme (UNEP)
-//===
-//===	This program is free software; you can redistribute it and/or modify
-//===	it under the terms of the GNU General Public License as published by
-//===	the Free Software Foundation; either version 2 of the License, or (at
-//===	your option) any later version.
-//===
-//===	This program is distributed in the hope that it will be useful, but
-//===	WITHOUT ANY WARRANTY; without even the implied warranty of
-//===	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
-//===	General Public License for more details.
-//===
-//===	You should have received a copy of the GNU General Public License
-//===	along with this program; if not, write to the Free Software
-//===	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
-//===
-//===	Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
-//===	Rome - Italy. email: geonetwork@osgeo.org
-//==============================================================================
+/*
+ * Copyright (C) 2001-2023 Food and Agriculture Organization of the
+ * United Nations (FAO-UN), United Nations World Food Programme (WFP)
+ * and United Nations Environment Programme (UNEP)
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or (at
+ * your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
+ *
+ * Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
+ * Rome - Italy. email: geonetwork@osgeo.org
+ */
 
 package org.fao.geonet.kernel.schema;
 
@@ -34,9 +30,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
+import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.Pair;
 import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.domain.Schematron;
 import org.fao.geonet.domain.SchematronCriteria;
@@ -82,15 +78,15 @@ public class MetadataSchema {
     private static final String XSL_FILE_EXTENSION = ".xsl";
     private static final String SCH_FILE_EXTENSION = ".sch";
     private static final String SCHEMATRON_RULE_FILE_PREFIX = "schematron-rules";
-    private Map<String, List<String>> hmElements = new HashMap<String, List<String>>();
-    private Map<String, List<List<String>>> hmRestric = new HashMap<String, List<List<String>>>();
-    private Map<String, MetadataType> hmTypes = new HashMap<String, MetadataType>();
-    private Map<String, List<String>> hmSubs = new HashMap<String, List<String>>();
-    private Map<String, String> hmSubsLink = new HashMap<String, String>();
-    private Map<String, Namespace> hmNameSpaces = new HashMap<String, Namespace>();
-    private Map<String, Namespace> hmPrefixes = new HashMap<String, Namespace>();
-    private Map<String, Pair<String, Element>> hmOperationFilters =
-        new HashMap<String, Pair<String, Element>>();
+    private Map<String, List<String>> hmElements = new HashMap<>();
+    private Map<String, List<List<String>>> hmRestric = new HashMap<>();
+    private Map<String, MetadataType> hmTypes = new HashMap<>();
+    private Map<String, List<String>> hmSubs = new HashMap<>();
+    private Map<String, String> hmSubsLink = new HashMap<>();
+    private Map<String, Namespace> hmNameSpaces = new HashMap<>();
+    private Map<String, Namespace> hmPrefixes = new HashMap<>();
+    private Map<String, MetadataSchemaOperationFilter> hmOperationFilters =
+        new HashMap<>();
     private String schemaName;
     private Path schemaDir;
     private String standardUrl;
@@ -294,8 +290,8 @@ public class MetadataSchema {
         // first just add the subs - because these are for global elements we
         // never have a clash because global elements are all in the same scope
         // and are thus unique
-        if (alSubs != null && alSubs.size() > 0) hmSubs.put(name, alSubs);
-        if (subLink != null && subLink.length() > 0) hmSubsLink.put(name, subLink);
+        if (alSubs != null && !alSubs.isEmpty()) hmSubs.put(name, alSubs);
+        if (subLink != null && StringUtils.isNotBlank(subLink)) hmSubsLink.put(name, subLink);
 
         List<String> exType = hmElements.get(name);
 
@@ -309,7 +305,8 @@ public class MetadataSchema {
 
             // it's not there so add a new list
         } else {
-            hmElements.put(name, exType = new ArrayList<String>());
+            exType = new ArrayList<>();
+            hmElements.put(name, exType);
         }
         exType.add(type);
 
@@ -323,7 +320,8 @@ public class MetadataSchema {
 
             // it's not there so add a new list of lists
         } else {
-            hmRestric.put(restricName, exValues = new ArrayList<List<String>>());
+            exValues = new ArrayList<>();
+            hmRestric.put(restricName, exValues);
         }
         exValues.add(alValues);
     }
@@ -361,7 +359,7 @@ public class MetadataSchema {
      */
     @JsonIgnore
     public List<Namespace> getNamespaces() {
-        List<Namespace> list = new ArrayList<Namespace>(hmNameSpaces.size());
+        List<Namespace> list = new ArrayList<>(hmNameSpaces.size());
         for (Namespace ns : hmNameSpaces.values()) {
             list.add(ns);
         }
@@ -382,12 +380,12 @@ public class MetadataSchema {
     //---------------------------------------------------------------------------
     @JsonIgnore
     public List<Namespace> getSchemaNS() {
-        return new ArrayList<Namespace>(hmPrefixes.values());
+        return new ArrayList<>(hmPrefixes.values());
     }
 
     @JsonProperty(value = "namespaces")
     public Map<String, String> getSchemaNSWithPrefix() {
-        Map<String, String> mapNs = new HashMap<String, String>();
+        Map<String, String> mapNs = new HashMap<>();
         List<Namespace> schemaNsList = getSchemaNS();
 
         for (Namespace ns : schemaNsList) {
@@ -518,7 +516,7 @@ public class MetadataSchema {
         this.schemaRepo.saveAll(updated);
     }
 
-    public void setOperationFilters(Map<String, Pair<String, Element>> operationFilters) {
+    public void setOperationFilters(Map<String, MetadataSchemaOperationFilter> operationFilters) {
         this.hmOperationFilters = operationFilters;
     }
 
@@ -527,8 +525,12 @@ public class MetadataSchema {
      *
      * @return The XPath to select element to filter or null
      */
-    public Pair<String, Element> getOperationFilter(ReservedOperation operation) {
+    public MetadataSchemaOperationFilter getOperationFilter(ReservedOperation operation) {
         return hmOperationFilters.get(operation.name());
+    }
+
+    public MetadataSchemaOperationFilter getOperationFilter(String operation) {
+        return hmOperationFilters.get(operation);
     }
 
     @JsonIgnore

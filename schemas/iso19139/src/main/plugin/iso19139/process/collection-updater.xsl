@@ -80,7 +80,8 @@
          merge="gmd:LanguageCode"/>
     <tag name="gmd:graphicOverview" context="gmd:MD_DataIdentification|srv:SV_ServiceIdentification"
          groupBy="*/gmd:fileName/*/text()"
-         merge="."/>
+         merge="."
+         limit="1"/>
     <tag name="gmd:characterSet" context="gmd:MD_DataIdentification|srv:SV_ServiceIdentification"
          groupBy="gmd:MD_CharacterSetCode/@codeListValue"
          merge="gmd:characterSet"/>
@@ -209,6 +210,36 @@
       <xsl:apply-templates select="*[namespace-uri()!='http://www.isotc211.org/2005/gmd' and
                                      namespace-uri()!='http://www.isotc211.org/2005/srv']"
                            mode="expand"/>
+    </xsl:copy>
+  </xsl:template>
+
+  <xsl:template match="gmd:identificationInfo/*/gmd:citation/*" mode="expand">
+    <xsl:copy>
+      <xsl:copy-of select="@*"/>
+      <xsl:apply-templates select="gmd:title
+                                   |gmd:alternateTitle"
+                           mode="expand"/>
+
+      <xsl:for-each-group select="$existingMembers//gmd:MD_Metadata/gmd:identificationInfo
+            /*/gmd:citation/*/gmd:date[*/gmd:dateType/*/@codeListValue = 'publication']"
+                          group-by="*/gmd:date/gco:*">
+        <xsl:sort select="*/gmd:date/gco:*" order="descending"/>
+
+        <xsl:if test="position() = 1">
+          <xsl:copy-of select="."/>
+        </xsl:if>
+      </xsl:for-each-group>
+
+      <xsl:apply-templates select="gmd:edition
+                                   |gmd:editionDate
+                                   |gmd:identifier
+                                   |gmd:citedResponsibleParty
+                                   |gmd:presentationForm
+                                   |gmd:series
+                                   |gmd:otherCitationDetails
+                                   |gmd:collectiveTitle
+                                   |gmd:ISBN
+                                   |gmd:ISSN" mode="expand"/>
     </xsl:copy>
   </xsl:template>
 

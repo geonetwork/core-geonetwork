@@ -90,9 +90,6 @@ public class LanguagesApi {
         List<Language> list = applicationLanguages.stream().map(l -> {
             Language language = new Language();
             language.setId(l);
-            if (l.equals(defaultLanguage)) {
-                language.setDefaultLanguage(true);
-            }
             return language;
         }).collect(Collectors.toList());
         return list;

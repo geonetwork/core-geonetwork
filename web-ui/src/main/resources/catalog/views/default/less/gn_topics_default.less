@@ -6,7 +6,7 @@
 
 @gn-topic-text: #fff;
 @gn-topic-default: @brand-primary;
-@gn-topic-type: #078A00;
+@gn-topic-type: #078a00;
 @gn-ini-grey: #b2b2b2;
 @gn-ini-red: #ea572d;
 @gn-ini-orange: #f59e00;
@@ -62,6 +62,7 @@
         i {
           color: @gn-topic-text;
           margin-top: 5px;
+          margin-right: 10px;
           // width before the icon is loaded
           min-width: 28px;
         }
@@ -73,7 +74,7 @@
           line-height: 1.3em;
           vertical-align: middle;
           font-weight: normal;
-          word-break: break-all;
+          word-break: break-word;
           border-top-left-radius: 4px;
           border-top-right-radius: 4px;
         }
@@ -85,11 +86,11 @@
   }
 }
 .gn-topic {
-
   .panel {
     background: @gn-topic-default;
     border-color: darken(@gn-topic-default, 10%);
-    &:hover, .panel-footer {
+    &:hover,
+    .panel-footer {
       border-color: darken(@gn-topic-default, 10%);
       background-color: darken(@gn-topic-default, 5%);
     }
@@ -150,7 +151,8 @@
     .panel {
       background: @gn-ini-grey;
       border-color: darken(@gn-ini-grey, 10%);
-      &:hover, .panel-footer {
+      &:hover,
+      .panel-footer {
         background-color: darken(@gn-ini-grey, 5%);
         border-color: darken(@gn-ini-grey, 10%);
       }
@@ -172,7 +174,8 @@
     .panel {
       background: @gn-ini-red;
       border-color: darken(@gn-ini-red, 10%);
-      &:hover, .panel-footer {
+      &:hover,
+      .panel-footer {
         background-color: darken(@gn-ini-red, 5%);
         border-color: darken(@gn-ini-red, 10%);
       }
@@ -196,7 +199,8 @@
     .panel {
       background: @gn-ini-orange;
       border-color: darken(@gn-ini-orange, 10%);
-      &:hover, .panel-footer {
+      &:hover,
+      .panel-footer {
         background-color: darken(@gn-ini-orange, 5%);
         border-color: darken(@gn-ini-orange, 10%);
       }
@@ -218,7 +222,8 @@
     .panel {
       background: @gn-ini-blue;
       border-color: darken(@gn-ini-blue, 10%);
-      &:hover, .panel-footer {
+      &:hover,
+      .panel-footer {
         border-color: darken(@gn-ini-blue, 10%);
         background-color: darken(@gn-ini-blue, 5%);
       }
@@ -238,7 +243,8 @@
     .panel {
       background: @gn-ini-green;
       border-color: darken(@gn-ini-green, 10%);
-      &:hover, .panel-footer {
+      &:hover,
+      .panel-footer {
         border-color: darken(@gn-ini-green, 10%);
         background-color: darken(@gn-ini-green, 5%);
       }
@@ -256,7 +262,8 @@
     .panel {
       background: @gn-ini-brown;
       border-color: darken(@gn-ini-brown, 10%);
-      &:hover, .panel-footer {
+      &:hover,
+      .panel-footer {
         border-color: darken(@gn-ini-brown, 10%);
         background-color: darken(@gn-ini-brown, 5%);
       }

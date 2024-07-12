@@ -1,0 +1,70 @@
+================================================================================
+===
+=== GeoNetwork 4.2.9: List of changes
+===
+================================================================================
+- Fix startup error. Follow up #7456 (#7859)
+- Documentation / GeoNetwork 4.2 doing a release fixes (#7647)
+- [Backport 4.2.x] Extend proxy to manage duplicated parameters (#7854)
+- [Backport 4.2.x] Configuration to restrict the hosts and ports accessible by the http proxy servlet (#7326)
+- [Backport 4.2.x] GeoNetwork harvester / Check if a resource exists to save it, instead of trying to retrieve the file details, to avoid confusing NoSuchFileException exception (#7845)
+- Standards / Formatter / Citation / Pick latest date (#7835)
+- [Backport 4.2.x] INSPIRE / Add testsuite for IACS (#7834)
+- [Backport 4.2.x] Harvester / Localfilesystem / Log properly to harvester log file. (#7833)
+- [Backport 4.2.x] Record view / ISO19139 / ISO19115-3.2008 display the unit part in @uom attribute, not the full url (#7832)
+- Harvesters / Reset harvester history pagination when selecting a harvester (#7831)
+- Trigger metadata unpublish event when removing the privileges to the ALL group in the privileges dialog (#7828)
+- Doc / Editor configuration improvements (#7827)
+- Update lodash to version 4.17.21 (#7825)
+- [Backport 4.2.x] Bump actions/setup-java from 4.0.0 to 4.1.0 (#7814)
+- Record view / Don't add the associated resources in the metadata static page, this page doesn't include JS libs (#7797)
+- [Backport 4.2.x] Decouple metadata user feedback from metadata rating feature  (#7796)
+- [Backport 4.2.x] Fix wrong manual links (#7793)
+- [Backport 4.2.x] Additional ISO19139 German translations (#7788)
+- [Backport 4.2.x] Replace the 'unlock' icon with the 'lock open' icon (#7787)
+- [Backport 4.2.x] Removed @RequestHeader for "Accept" headers as it is not supported by openAPI specification (#7785)
+- Fix missing MetadataStatusResponse and MetadataWorkflowStatusResponse in  open api spec (#7783)
+- Fix SpringDoc duplicate Schema name (#7781)
+- [Backport 4.2.x] Fix duplicate GET operation on /{portal}/api/sources and missing /subportal endpoint (#7780)
+- Spit getRecordAs @RequestMapping into getRecordAsJson and getRecordAsXML in order to fix duplicate operation Id - By having multiple @RequestMapping was causing to create operation id as getRecordAs and getRecordAs_1
+- [Backport 4.2.x] Fix alignment of user enabled checkbox (#7773)
+- [Backport 4.2.x] Fix ISO19139 German labels (#7763)
+- Remove handlebars.js v2.0.0
+- Reports / Fix extract user groups for non-admin users (#7746)
+- Addressing docs glitch #7666 creating-group and authentication-mode
+- Addressing docs glitch #7666 in installing-from-war-file, version-4.0.2 and tutorials/deployment/index
+- addressing docs-glitch in install-guide/configuring-database
+- addressing docs-glitch in search-ui/enrichview and search-ui/loadview
+- addressing docs-glitch in install-guide/map-print-setup
+- addressing docs-glitch in publishing/managing-privileges
+- corrected minor typo in install-guide/map-print-setup
+- Fix conversion errors after switching to MkDocs
+- manual review of mkdocs glitches
+- [Backport 4.2.x] Create a metadata / Add dynamic and download privileges to the users in the same group (#7744)
+- Index / Add danish language. (#7736)
+- [Backport 4.2.x] Documentation / Elasticsearch query endpoint - query samples (#7732)
+- [Backport 4.2.x] Separate docs for _search and _msearch (#7731)
+- Map viewer / Remove Stamen background layers - no longer available (#7730)
+- Use the generated metadata UUID for resource links when importing metadata with the option 'Generate UUID' (#7729)
+- Remove unused jslint-maven-plugin (#7727)
+- [Backport 4.2.x] Bump org.json:json from 20140107 to 20240205 (#7724)
+- [Backport 4.2.x] Github Actions / Bump stCarolas/setup-maven from 4 to 5 (#7720)
+- Enable preemptive for csw requests with credentials (#5497) (#7716)
+- [Backport 4.2.x] Add a role and feature matrix to the GeoNetwork documentation (#7709)
+- Addressing docs translation glitch #7687- fixes creating-custom-editor
+- Addressing docs translation glitch #7687- fixes adding-static-pages and configuring-search-fields
+- [Backport 4.2.x] Bump commons-fileupload from 1.3.3 to 1.5 (#7699)
+- [Backport 4.2.x] Remove empty class SourcesLib and deprecated/unused methods in ResourceLib / Sonarlint improvements (#7694)
+- Update Springdoc so that it supports Map objects in the request parameters. By default injectable parameters are excluded from request parameters. Map is one of those object however it does occur where map objects are supplied as parameters and they should be added to open api spec.  There are currently no cases where a map is injected on purpose into the request parameters. This will fix issues with missing request parameters documentation which are based on Map objects.
+- Fix spring doc for attachment and keyword to better identify files resources being returned. Update attachment api    "Get a metadata resource" should indicate that gets a file resource    Also "Create a new resource" should identify that it consumes any resources Update keywords api    "Download a thesaurus by name" should indicate that gets a file resource
+- Fix springdoc so that enums names are used instead of toString This fixes bug where some apis will not execute correctly from the swagger pager due to the wrong enum value being supplied. i.e. visibility should be using enum values PUBLIC/PRIVATE instead of public/private in formatters/zip api, the format should be SIMPLE/PARTIAL/FULL instead of simple/partial/full
+- Editor / Fix add element attribute (#7685)
+- [Backport 4.2.x] Metadata editor / Fix javascript error in the add thumbnail option when the metadata has 1 WMS layer (#7684)
+- [BP] Search results / Configure related records type depending on template. (#7376)
+- Metadata editor / Fix javascript error when editing a metadata, due to undefined property in gnLinkToMetadata directive (#7682)
+- Fix pdf link issue (#7681)
+- Fix mimetypes on attachments as some were incorrect. (#7675)
+- accidental localhost link in docs
+- Docs / Update copyright year
+- Bump github/codeql-action from 2 to 3 (#7662)
+- Bump advanced-security/maven-dependency-submission-action from 3 to 4 (#7661)

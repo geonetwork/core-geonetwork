@@ -110,40 +110,38 @@ public class LocalXLinksInMetadataIntegrationTest extends AbstractIntegrationTes
         String id = _dataManager.insertMetadata(context, schema, metadata, uuid, owner, groupOwner, source, metadataType, null,
             null, createDate, changeDate, false, IndexingMode.none);
 
-        SpringLocalServiceInvoker mockInvoker = resetAndGetMockInvoker();
-
         String keyword1 = "World";
         Element element1 = new SAXBuilder().build(new StringReader(String.format(responseTemplate, keyword1))).getRootElement();
-        when(mockInvoker.invoke(any(String.class))).thenReturn(element1);
+        when(springLocalServiceInvoker.invoke(any(String.class))).thenReturn(element1);
 
         final String xpath = "*//gmd:descriptiveKeywords//gmd:keyword/gco:CharacterString";
         assertNull(Xml.selectElement(metadata, xpath));
-        verify(mockInvoker, never()).invoke(any(String.class));
+        verify(springLocalServiceInvoker, never()).invoke(any(String.class));
 
         final Element loadedMetadataNoXLinkAttributesNotEdit = _dataManager.getMetadata(context, id, false, false, false);
         assertEqualsText(keyword1, loadedMetadataNoXLinkAttributesNotEdit, xpath, GCO, GMD);
-        verify(mockInvoker, times(1)).invoke(any(String.class));
+        verify(springLocalServiceInvoker, times(1)).invoke(any(String.class));
 
         final Element loadedMetadataKeepXLinkAttributesNotEdit = _dataManager.getMetadata(context, id, false, false, true);
         assertEqualsText(keyword1, loadedMetadataKeepXLinkAttributesNotEdit, xpath, GCO, GMD);
-        verify(mockInvoker, times(2)).invoke(any(String.class));
+        verify(springLocalServiceInvoker, times(2)).invoke(any(String.class));
 
         final Element loadedMetadataNoXLinkAttributesEdit = _dataManager.getMetadata(context, id, false, true, false);
         assertEqualsText(keyword1, loadedMetadataNoXLinkAttributesEdit, xpath, GCO, GMD);
-        verify(mockInvoker, times(3)).invoke(any(String.class));
+        verify(springLocalServiceInvoker, times(3)).invoke(any(String.class));
 
         final Element loadedMetadataKeepXLinkAttributesEdit = _dataManager.getMetadata(context, id, false, true, true);
         assertEqualsText(keyword1, loadedMetadataKeepXLinkAttributesEdit, xpath, GCO, GMD);
-        verify(mockInvoker, times(4)).invoke(any(String.class));
+        verify(springLocalServiceInvoker, times(4)).invoke(any(String.class));
 
         Processor.clearCache();
 
         String keyword2 = "Other Word";
         Element element2 = new SAXBuilder().build(new StringReader(String.format(responseTemplate, keyword2))).getRootElement();
-        when(mockInvoker.invoke(any(String.class))).thenReturn(element2);
+        when(springLocalServiceInvoker.invoke(any(String.class))).thenReturn(element2);
 
         final Element newLoad = _dataManager.getMetadata(context, id, false, true, true);
         assertEqualsText(keyword2, newLoad, xpath, GCO, GMD);
-        verify(mockInvoker, times(5)).invoke(any(String.class));
+        verify(springLocalServiceInvoker, times(5)).invoke(any(String.class));
     }
 }

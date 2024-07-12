@@ -33,6 +33,7 @@ import org.fao.geonet.repository.IsoLanguageRepository;
 import org.fao.geonet.utils.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.BeanFactoryAnnotationUtils;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.context.support.ResourceBundleMessageSource;
 
 import com.google.common.collect.BiMap;
@@ -57,16 +58,16 @@ public class LocaleMessages {
      *
      * @param messageKey message key to use when retrieving the value from the properties file.
      * @param args Argument that may be supplied to the messagekey string
-     * @param locale locale to use when getting the message key
+     * @param locale locale to use when getting the message key. If null then it will default to locale context holder.
      * @param resourceBundleBeanQualifier resource bundle qualifier to use when getting ResourceBundleMessageSource bean
      * @return message
      */
 
     public static String getMessageForLocale(String messageKey, Object[] args, Locale locale, String resourceBundleBeanQualifier) {
-        if (!StringUtils.isEmpty(messageKey) && locale !=null) {
+        if (!StringUtils.isEmpty(messageKey)) {
             ResourceBundleMessageSource resourceBundleMessageSource = getResourceBundleMessageSource(resourceBundleBeanQualifier);
             if (resourceBundleMessageSource != null) {
-                return resourceBundleMessageSource.getMessage(messageKey, args, locale);
+                return resourceBundleMessageSource.getMessage(messageKey, args, locale == null ? LocaleContextHolder.getLocale() : locale);
             }
         }
         // If we could not find the ResourceBundleMessageSource or the messageKey was in an invalid format then lets return the original key as the message.

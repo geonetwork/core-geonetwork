@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2023 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -200,6 +200,7 @@ public class GeonetHttpRequestFactory {
         final HttpClientBuilder builder = HttpClientBuilder.create();
         builder.setRedirectStrategy(new LaxRedirectStrategy());
         builder.disableContentCompression();
+        builder.useSystemProperties();
 
         synchronized (this) {
             if (connectionManager == null) {
@@ -249,40 +250,40 @@ public class GeonetHttpRequestFactory {
 
     private static class AdaptingResponse extends AbstractClientHttpResponse {
 
-        private final CloseableHttpResponse _response;
-        private final CloseableHttpClient _client;
+        private final CloseableHttpResponse response;
+        private final CloseableHttpClient client;
 
         public AdaptingResponse(CloseableHttpClient client, CloseableHttpResponse response) {
-            this._response = response;
-            this._client = client;
+            this.response = response;
+            this.client = client;
         }
 
         @Override
         public int getRawStatusCode() throws IOException {
-            return _response.getStatusLine().getStatusCode();
+            return response.getStatusLine().getStatusCode();
         }
 
         @Override
         public String getStatusText() throws IOException {
-            return _response.getStatusLine().getReasonPhrase();
+            return response.getStatusLine().getReasonPhrase();
         }
 
         @Override
         public void close() {
-            IOUtils.closeQuietly(_response);
-            IOUtils.closeQuietly(_client);
+            IOUtils.closeQuietly(response);
+            IOUtils.closeQuietly(client);
         }
 
         @Override
         public InputStream getBody() throws IOException {
-            return _response.getEntity().getContent();
+            return response.getEntity().getContent();
         }
 
         @Override
         public HttpHeaders getHeaders() {
             final HttpHeaders httpHeaders = new HttpHeaders();
 
-            final Header[] headers = _response.getAllHeaders();
+            final Header[] headers = response.getAllHeaders();
 
             for (Header header : headers) {
                 final HeaderElement[] elements = header.getElements();

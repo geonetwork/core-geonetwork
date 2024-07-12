@@ -1,0 +1,65 @@
+<div>
+  <label class="col-sm-2 control-label">
+    <span data-translate="">selectDOIResource</span>
+  </label>
+
+  <div class="col-sm-10">
+    <div class="list-group fixed gn-nopadding-left gn-nopadding-right">
+      <div class="input-group" id="siblingdd">
+        <span class="input-group-addon">
+          <i class="fa fa-search"></i>
+        </span>
+        <input
+          id="doiapisearch"
+          class="form-control"
+          data-ng-change="search();"
+          data-ng-model="queryValue"
+          data-ng-model-options="{ debounce: 1000 }"
+          data-ng-readonly="isSearching"
+          type="text"
+          autocomplete="off"
+          placeholder="{{'anyPlaceHolder' | translate}}"
+          aria-label="{{'anyPlaceHolder' | translate}}"
+        />
+        <span class="input-group-btn">
+          <button class="btn btn-default" type="button" data-ng-click="clearSearch()">
+            <span class="fa fa-fw fa-times text-danger"></span>
+          </button>
+        </span>
+      </div>
+
+      <i data-ng-show="isSearching" class="fa fa-spinner fa-spin gn-margin-top-sm"></i>
+      <p
+        class="gn-margin-top-sm"
+        data-ng-show="!isSearching && results.length == 0"
+        data-translate=""
+      >
+        zarooResult
+      </p>
+
+      <ul class="list-group gn-nopadding-left gn-nopadding-right">
+        <li
+          data-ng-repeat="md in results"
+          class="list-group-item"
+          data-ng-class="(mode == 'select' && isSelected(md)) ? 'active' : ''"
+        >
+          <div class="d-inline pull-right gn-margin-left-sm">
+            <a target="_blank" href="{{md.remoteUrl}}" rel="noopener noreferrer">
+              <span class="fa fa-eye"></span
+            ></a>
+          </div>
+          <div
+            class="d-inline"
+            style="cursor: pointer"
+            data-ng-click="updateSelection(md, associationType, initiativeType)"
+          >
+            {{md.resourceTitle}}
+            <div data-ng-if="mode == 'add'" class="pull-right">
+              <span class="fa fa-plus"></span>
+            </div>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>

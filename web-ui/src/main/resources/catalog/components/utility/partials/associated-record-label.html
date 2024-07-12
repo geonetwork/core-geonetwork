@@ -1,0 +1,16 @@
+<span data-ng-if="customLabel" title="{{'associationType' | translate}}">
+  <i
+    data-ng-if="type.initiativeType"
+    class="fa fa-fw {{icon}} gn-icon-initiative-{{type.initiativeType}}"
+  ></i>
+  {{customLabel}}
+</span>
+<span data-ng-if="!customLabel" title="{{'associationType' | translate}}">
+  <i class="fa fa-fw {{icon}} gn-icon-association-{{type.associationType}}"></i>
+  {{type.associationType | translate}}
+  <span data-ng-if="type.initiativeType" title="{{'initiativeType' | translate}}"
+    >>
+    <i class="fa fa-fw {{icon}} gn-icon-initiative-{{type.initiativeType}}"></i>
+    {{type.initiativeType | translate}}
+  </span>
+</span>

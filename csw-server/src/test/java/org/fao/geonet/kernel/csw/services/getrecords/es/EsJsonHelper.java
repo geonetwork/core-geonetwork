@@ -31,7 +31,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import java.util.List;
 
 /**
- * Tools to build up ElasticSearch JSON structures via Jackson.
+ * Tools to build up Elasticsearch JSON structures via Jackson.
  *
  * @author bhoefling
  *

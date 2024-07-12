@@ -1,31 +1,74 @@
-<form class="form-horizontal" role="form" id="gn-contact-us-form">
+<form class="form-horizontal" role="form" id="gn-contact-us-form" name="gnContactUsForm">
   <input type="hidden" name="_csrf" value="{{csrf}}" />
-  <div class="form-group">
-    <label class="col-sm-3 control-label" data-translate="">name</label>
+  <div class="form-group gn-required">
+    <label class="col-sm-3 control-label gn-required" data-translate="">name</label>
     <div class="col-sm-9">
-      <input type="text" class="form-control" name="name" data-ng-model="user.name" />
+      <input
+        type="text"
+        class="form-control"
+        name="name"
+        data-ng-required="true"
+        data-ng-model="feedbackModel.name"
+      />
     </div>
   </div>
-  <div class="form-group">
-    <label class="col-sm-3 control-label" data-translate="">email</label>
+  <div class="form-group gn-required">
+    <label class="col-sm-3 control-label gn-required" data-translate="">email</label>
     <div class="col-sm-9">
-      <input type="email" class="form-control" name="email" ata-ng-model="user.email" />
+      <input
+        type="email"
+        class="form-control"
+        name="email"
+        data-ng-required="true"
+        data-ng-model="feedbackModel.email"
+      />
     </div>
   </div>
-  <div class="form-group">
-    <label class="col-sm-3 control-label" data-translate="">organization</label>
+  <div class="form-group gn-required">
+    <label class="col-sm-3 control-label gn-required" data-translate=""
+      >organization</label
+    >
     <div class="col-sm-9">
-      <input type="text" class="form-control" name="org" />
+      <input
+        type="text"
+        class="form-control"
+        name="org"
+        data-ng-required="true"
+        data-ng-model="feedbackModel.org"
+      />
     </div>
   </div>
-  <div class="form-group">
-    <label class="col-sm-3 control-label" data-translate="">comments</label>
+  <div class="form-group gn-required">
+    <label class="col-sm-3 control-label gn-required" data-translate="">comments</label>
     <div class="col-sm-9">
-      <textarea class="form-control" name="comments" data-gn-autogrow="" />
+      <textarea
+        class="form-control"
+        name="comments"
+        data-ng-required="true"
+        data-gn-autogrow=""
+        data-ng-model="feedbackModel.comments"
+      ></textarea>
     </div>
   </div>
-  <button class="btn btn-primary pull-right" data-ng-click="send('#gn-contact-us-form')">
-    <i class="fa fa-envelope" />&nbsp;<span data-translate="">send</span>
+
+  <div class="form-group" data-ng-if="recaptchaEnabled">
+    <div vc-recaptcha class="col-lg-8" theme="'light'" key="recaptchaKey"></div>
+
+    <span
+      class="col-lg-8"
+      style="color: red"
+      data-ng-show="resolveRecaptcha"
+      data-translate=""
+    >
+      resolveCaptcha
+    </span>
+  </div>
+
+  <button
+    class="btn btn-primary pull-right"
+    data-ng-click="send(gnContactUsForm, '#gn-contact-us-form')"
+    data-ng-disabled="!gnContactUsForm.$valid"
+  >
+    <i class="fa fa-envelope"></i>&nbsp;<span data-translate="">send</span>
   </button>
-  <p class="alert alert-info" data-ng-if="success" data-translate="">feebackSent</p>
 </form>

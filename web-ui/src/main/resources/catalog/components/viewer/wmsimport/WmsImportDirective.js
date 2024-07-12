@@ -87,7 +87,7 @@
               var url = $scope.url.split("/");
               getCapLayer.useProxy = false;
               url = url[0] + "/" + url[1] + "/" + url[2] + "/";
-              if ($.inArray(url, gnGlobalSettings.requireProxy) >= 0) {
+              if ($.inArray(url + "#GET", gnGlobalSettings.requireProxy) >= 0) {
                 getCapLayer.useProxy = true;
               }
               if ($scope.format == "wms") {
@@ -170,7 +170,7 @@
             var query = {
               from: 0,
               size: 100,
-              sort: [{ "resourceTitleObject.default.keyword": "asc" }],
+              sort: [{ "resourceTitleObject.default.sort": "asc" }],
               query: {
                 bool: {
                   must: [
@@ -637,8 +637,7 @@
     function () {
       return {
         restrict: "A",
-        templateUrl:
-          "../../catalog/components/viewer/wmsimport/" + "partials/styles.html",
+        templateUrl: "../../catalog/components/viewer/wmsimport/partials/styles.html",
         scope: {
           styles: "=gnLayerStyles",
           onClick: "&gnLayerStylesOnClick",

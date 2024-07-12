@@ -16,7 +16,7 @@
                 xmlns:gcx="http://standards.iso.org/iso/19115/-3/gcx/1.0"
                 xmlns:gex="http://standards.iso.org/iso/19115/-3/gex/1.0"
                 xmlns:lan="http://standards.iso.org/iso/19115/-3/lan/1.0"
-                xmlns:srv="http://standards.iso.org/iso/19115/-3/srv/2.1"
+                xmlns:srv="http://standards.iso.org/iso/19115/-3/srv/2.0"
                 xmlns:mac="http://standards.iso.org/iso/19115/-3/mac/2.0"
                 xmlns:mas="http://standards.iso.org/iso/19115/-3/mas/1.0"
                 xmlns:mcc="http://standards.iso.org/iso/19115/-3/mcc/1.0"
@@ -82,14 +82,14 @@
             </lan:language>
             <lan:characterEncoding>
               <lan:MD_CharacterSetCode codeList="codeListLocation#MD_CharacterSetCode"
-                                       codeListValue=""/>
+                                       codeListValue="utf8"/>
             </lan:characterEncoding>
           </lan:PT_Locale>
         </mdb:defaultLocale>
         <mdb:metadataScope>
           <mdb:MD_MetadataScope>
             <mdb:resourceScope>
-              <mcc:MD_ScopeCode codeList="" codeListValue="{@type}"/>
+              <mcc:MD_ScopeCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#MD_ScopeCode" codeListValue="dataset"/>
             </mdb:resourceScope>
           </mdb:MD_MetadataScope>
         </mdb:metadataScope>

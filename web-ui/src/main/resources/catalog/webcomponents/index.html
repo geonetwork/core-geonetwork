@@ -1,0 +1,58 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Embedding GeoNetwork opensource in third party apps</title>
+    <link rel="stylesheet" href="../lib/style/bootstrap/dist/css/bootstrap.css"/>
+  </head>
+  <body style="background-color: lightgrey; padding: 20px">
+    <h1>Embedding GeoNetwork opensource in third party apps</h1>
+
+    <div class="well">
+      Here are some examples to easily embed GeoNetwork in other HTML pages.
+      Iframe is a standard and easy way to add your catalogue into third party apps.
+      Webcomponent can also be used with some limitations.
+
+      When embedding the application, customize it using the user interface configuration.
+    </div>
+
+    <ul class="list-group">
+      <li class="list-group-item"><a href="test-webcomponent.html">Search app only</a></li>
+      <li class="list-group-item"><a href="test-webcomponent-home.html">Full text search box</a></li>
+      <li class="list-group-item"><a href="test-webcomponent-stats.html">Numbers using facet</a></li>
+      <li class="list-group-item"><a href="test-webcomponent-results.html">Simple search results</a></li>
+      <li class="list-group-item"><a href="test-webcomponent-results-card.html">Simple search results (cards)</a></li>
+      <li class="list-group-item">
+        <a href="test-webcomponent-iframe.html">Search app (as iframe)</a>
+      </li>
+      <li class="list-group-item">
+        <a href="test-webcomponent-bs5.html"
+          >Search app (in a page with bootstrap 5)</a
+        >
+      </li>
+      <li class="list-group-item"><a href="test-webcomponent-map.html">Map viewer only</a></li>
+    </ul>
+
+    <div class="well">
+      Web components can be configured using 2 ways:
+
+      Using a JSON UI configuration in the config attribute:
+      <pre>
+      &lt;gn-app url="http://localhost:8080/geonetwork" portal="srv"
+              config='{"mods": {
+                    "global": {"hotkeys": false},
+                    "home": {"enabled": false},
+                    "footer": {"enabled": false},
+                    "header": {"enabled": false}
+                    }}'&gt;&lt;/gn-app&gt;
+
+      &lt;script src="http://localhost:8080/geonetwork/catalog/webcomponents/webcomponents.js"&gt;&lt;/script&gt;
+      </pre>
+      or using a UI configuration id created in the admin console > UI settings:
+      <pre>
+      &lt;gn-app url="http://localhost:8080/geonetwork" portal="srv"
+              config='odatis'&gt;&lt;/gn-app&gt;
+      &lt;script src="http://localhost:8080/geonetwork/catalog/webcomponents/webcomponents.js"&gt;&lt;/script&gt;
+      </pre>
+    </div>
+  </body>
+</html>

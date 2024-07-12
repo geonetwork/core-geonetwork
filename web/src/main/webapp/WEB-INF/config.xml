@@ -121,10 +121,6 @@
 
   <services package="org.fao.geonet">
 
-    <service name="util.ping">
-      <class name="jeeves.services.Ping"/>
-    </service>
-
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
     <!-- Resources management services                                 -->
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->

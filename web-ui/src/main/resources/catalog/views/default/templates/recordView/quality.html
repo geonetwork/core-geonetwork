@@ -1,29 +1,31 @@
-<h2 data-translate="">specificationConformance</h2>
+<div data-ng-if="mdView.current.record.specificationConformance">
+  <h2 data-translate="">specificationConformance</h2>
 
-<ul class="gn-md-side gn-comma-list">
-  <li
-    class="list-group-ite1m flex-row"
-    data-ng-repeat="c in mdView.current.record.specificationConformance"
-    title="{{c.explanation}}"
-  >
-    <span
-      class="badge badge-rounded"
-      data-ng-class="{
-           'bg-success': c.pass == 'true',
-           '': c.pass == '',
-           'bg-danger': c.pass == 'false'
-           }"
+  <ul class="gn-md-side gn-comma-list">
+    <li
+      class="list-group-ite1m flex-row"
+      data-ng-repeat="c in mdView.current.record.specificationConformance"
+      title="{{c.explanation}}"
     >
-      <i
-        class="fa fa-fw"
+      <span
+        class="badge badge-rounded"
         data-ng-class="{
-           'fa-check': c.pass == 'true',
-           '': c.pass == '',
-           'fa-times': c.pass == 'false'
-           }"
-      ></i>
-    </span>
-    <a data-ng-if="::c.link" data-ng-href="{{c.link}}">{{c.title}}</a>
-    <span data-ng-if="::!c.link">{{c.title}}</span>
-  </li>
-</ul>
+             'bg-success': c.pass == 'true',
+             '': c.pass == '',
+             'bg-danger': c.pass == 'false'
+             }"
+      >
+        <i
+          class="fa fa-fw"
+          data-ng-class="{
+             'fa-check': c.pass == 'true',
+             '': c.pass == '',
+             'fa-times': c.pass == 'false'
+             }"
+        ></i>
+      </span>
+      <a data-ng-if="::c.link" data-ng-href="{{c.link}}">{{c.title}}</a>
+      <span data-ng-if="::!c.link">{{c.title}}</span>
+    </li>
+  </ul>
+</div>

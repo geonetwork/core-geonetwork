@@ -93,5 +93,5 @@
   <bean id="strongEncryptor"
         class="org.jasypt.encryption.pbe.StandardPBEStringEncryptor" />
   <bean id="settingsManager" class="org.fao.geonet.kernel.setting.SettingManager"/>
-
+  <bean id="feedbackLanguages" class="org.fao.geonet.languages.FeedbackLanguages"/>
 </beans>

@@ -36,7 +36,7 @@
       ng-click="ctrl.select(p)"
       ng-class="{active: p.identifier.value == wpsLink.name && url == wpsLink.url}"
     >
-      <i class="fa fa-cog" />&nbsp;{{ p.title.value }}<br />
+      <i class="fa fa-cog"></i>&nbsp;{{ p.title.value }}<br />
       <small class="text-muted">{{ p.identifier.value }}</small>
       <small class="text-muted" ng-show="p.processVersion !== undefined">
         - v. {{ p.processVersion }}</small

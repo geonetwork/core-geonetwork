@@ -39,11 +39,11 @@
         </xsl:variable>
 
         <!-- Render XML in textarea -->
-        <div id="xmleditor"
+        <pre id="xmleditor"
              ui-ace="{{useWrapMode:true,showGutter:true,mode:'xml',onLoad:xmlEditorLoaded,onChange:xmlEditorChange}}">
           <xsl:value-of
             select="saxon:serialize($strippedXml, 'default-indent-mode')"/>
-        </div>
+        </pre>
         <textarea name="data" class="hidden">
         </textarea>
       </xsl:when>

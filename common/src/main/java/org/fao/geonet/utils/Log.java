@@ -24,22 +24,18 @@
 package org.fao.geonet.utils;
 
 
-import org.apache.log4j.Priority;
 import org.apache.log4j.bridge.AppenderWrapper;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.Appender;
+import org.apache.logging.log4j.core.LoggerContext;
 import org.apache.logging.log4j.core.appender.FileAppender;
 import org.apache.logging.log4j.core.appender.RollingFileAppender;
-import org.apache.logging.log4j.core.LoggerContext;
 import org.apache.logging.log4j.core.config.Configuration;
 import org.apache.logging.log4j.core.config.LoggerConfig;
 
 import java.io.File;
-import java.util.Enumeration;
-
-//=============================================================================
 
 /**
  * Jeeves logging integration, defining functional logger categories by module
@@ -106,6 +102,16 @@ public final class Log {
         + ".transformerFactory";
 
     /**
+     * This is the name of the RollingFileAppender in your log4j2.xml configuration file.
+     * <p>
+     * LogConfig uses this name to lookup RollingFileAppender to check configuration in
+     * case a custom log file location has been used.
+     */
+    private static final String FILE_APPENDER_NAME = "File";
+
+    public static final String GEONETWORK_MODULE = "geonetwork";
+
+    /**
      * Default constructor. Builds a Log.
      */
     private Log() {
@@ -115,8 +121,12 @@ public final class Log {
         LogManager.getLogger(module).debug(message);
     }
 
-    public static void debug(String module, Object message, Exception e) {
-        LogManager.getLogger(module).debug(message, e);
+    public static void debug(String module, String message, Object... objects) {
+        LogManager.getLogger(module).debug(message, objects);
+    }
+
+    public static void debug(String module, String message, Throwable throwable) {
+        LogManager.getLogger(module).debug(message, throwable);
     }
 
     public static boolean isDebugEnabled(String module) {
@@ -147,9 +157,14 @@ public final class Log {
         LogManager.getLogger(module).info(message);
     }
 
-    public static void info(String module, Object message, Throwable t) {
-        LogManager.getLogger(module).info(message, t);
+    public static void info(String module, String message, Object... objects) {
+        LogManager.getLogger(module).info(message, objects);
     }
+
+    public static void info(String module, String message, Throwable throwable) {
+        LogManager.getLogger(module).info(message, throwable);
+    }
+
 
     //---------------------------------------------------------------------------
 
@@ -170,6 +185,14 @@ public final class Log {
 
     public static void error(String module, Object message, Throwable t) {
         LogManager.getLogger(module).error(message, t);
+    }
+
+    public static void error(String module, String message, Object... objects) {
+        LogManager.getLogger(module).error(message, objects);
+    }
+
+    public static void error(String module, String message, Throwable throwable) {
+        LogManager.getLogger(module).error(message, throwable);
     }
 
     //---------------------------------------------------------------------------
@@ -215,16 +238,56 @@ public final class Log {
                 Log.debug(module, message);
             }
 
+            @Override
+            public void debug(String message, Throwable throwable) {
+                Log.debug(module, message, throwable);
+            }
+
+            @Override
+            public void debug(String message, Object... object) {
+                Log.debug(module, message, object);
+            }
+
             public void info(String message) {
                 Log.info(module, message);
+            }
+
+            @Override
+            public void info(String message, Throwable throwable) {
+                Log.info(module, message, throwable);
+            }
+
+            @Override
+            public void info(String message, Object... object) {
+                Log.info(module, message, object);
             }
 
             public void warning(String message) {
                 Log.warning(module, message);
             }
 
+            @Override
+            public void warning(String message, Throwable throwable) {
+                Log.warning(module, message, throwable);
+            }
+
+            @Override
+            public void warning(String message, Object... object) {
+
+            }
+
             public void error(String message) {
                 Log.error(module, message);
+            }
+
+            @Override
+            public void error(String message, Throwable throwable) {
+                Log.error(module, message, throwable);
+            }
+
+            @Override
+            public void error(String message, Object... object) {
+                Log.error(module, message, object);
             }
 
             public void fatal(String message) {
@@ -269,7 +332,7 @@ public final class Log {
                     }
                 }
                 LoggerConfig fallbackConfig = configuration.getLoggers().get(fallbackModule);
-                if( fallbackConfig != null) {
+                if (fallbackConfig != null) {
                     for (Appender appender : fallbackConfig.getAppenders().values()) {
                         File file = toLogFile(appender);
                         if (file != null && file.exists()) {
@@ -331,4 +394,62 @@ public final class Log {
         return null;
     }
 
+    public static File getLogfile() {
+        // Appender is supplied by LogUtils based on parsing log4j2.xml file indicated
+        // by database settings
+
+        // First, try the fileappender from the logger named "geonetwork"
+        org.apache.log4j.Appender appender = org.apache.log4j.Logger.getLogger(GEONETWORK_MODULE).getAppender(FILE_APPENDER_NAME);
+        // If still not found, try the one from the logger named "jeeves"
+        if (appender == null) {
+            appender = org.apache.log4j.Logger.getLogger(Log.JEEVES).getAppender(FILE_APPENDER_NAME);
+        }
+        if (appender != null) {
+            if (appender instanceof AppenderWrapper) {
+                AppenderWrapper wrapper = (AppenderWrapper) appender;
+                org.apache.logging.log4j.core.Appender appender2 = wrapper.getAppender();
+
+                if (appender2 instanceof FileAppender) {
+                    FileAppender fileAppender = (FileAppender) appender2;
+                    String logFileName = fileAppender.getFileName();
+                    if (logFileName != null) {
+                        File logFile = new File(logFileName);
+                        if (logFile.exists()) {
+                            return logFile;
+                        }
+                    }
+                }
+                if (appender2 instanceof RollingFileAppender) {
+                    RollingFileAppender fileAppender = (RollingFileAppender) appender2;
+                    String logFileName = fileAppender.getFileName();
+                    if (logFileName != null) {
+                        File logFile = new File(logFileName);
+                        if (logFile.exists()) {
+                            return logFile;
+                        }
+                    }
+                }
+            }
+        }
+        Log.warning(GEONETWORK_MODULE, "Error when getting logger file for the " + "appender named '" + FILE_APPENDER_NAME + "'. "
+            + "Check your log configuration file. "
+            + "A FileAppender or RollingFileAppender is required to return last activity to the user interface."
+            + "Appender file not found.");
+
+        if (System.getProperties().containsKey("log_dir")) {
+            File logDir = new File(System.getProperty("log_dir"));
+            if (logDir.exists() && logDir.isDirectory()) {
+                File logFile = new File(logDir, "logs/geonetwork.log");
+                if (logFile.exists()) {
+                    return logFile;
+                }
+            }
+        } else {
+            File logFile = new File("logs/geonetwork.log");
+            if (logFile.exists()) {
+                return logFile;
+            }
+        }
+        return null; // unavailable
+    }
 }

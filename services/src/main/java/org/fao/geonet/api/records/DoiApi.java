@@ -48,6 +48,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.Map;
 
+import static org.fao.geonet.api.ApiParams.API_CLASS_RECORD_OPS;
 import static org.fao.geonet.api.ApiParams.API_CLASS_RECORD_TAG;
 import static org.fao.geonet.api.ApiParams.API_PARAM_RECORD_UUID;
 
@@ -57,7 +58,8 @@ import static org.fao.geonet.api.ApiParams.API_PARAM_RECORD_UUID;
 @RequestMapping(value = {
     "/{portal}/api/records"
 })
-@Tag(name = API_CLASS_RECORD_TAG)
+@Tag(name = API_CLASS_RECORD_TAG,
+    description = API_CLASS_RECORD_OPS)
 @Controller("doi")
 @PreAuthorize("hasAuthority('Editor')")
 @ReadWriteController

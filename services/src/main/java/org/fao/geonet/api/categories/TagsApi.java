@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2023 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -116,21 +116,30 @@ public class TagsApi {
             throw new IllegalArgumentException(String.format(
                 "A tag with id '%d' already exist", category.getId()
             ));
-        } else {
-            // Populate languages if not already set
-            java.util.List<Language> allLanguages = langRepository.findAll();
-            Map<String, String> labelTranslations = category.getLabelTranslations();
-            for (Language l : allLanguages) {
-                String label = labelTranslations.get(l.getId());
-                category.getLabelTranslations().put(l.getId(),
-                    label == null ? category.getName() : label);
-            }
-            categoryRepository.save(category);
-
-            translationPackBuilder.clearCache();
-
-            return new ResponseEntity(HttpStatus.NO_CONTENT);
         }
+
+        final MetadataCategory existingName = categoryRepository
+            .findOneByName(category.getName());
+        if (existingName != null) {
+            throw new IllegalArgumentException(String.format(
+                "A category with name '%s' already exist.",
+                category.getName()
+            ));
+        }
+
+        // Populate languages if not already set
+        java.util.List<Language> allLanguages = langRepository.findAll();
+        Map<String, String> labelTranslations = category.getLabelTranslations();
+        for (Language l : allLanguages) {
+            String label = labelTranslations.get(l.getId());
+            category.getLabelTranslations().put(l.getId(),
+                label == null ? category.getName() : label);
+        }
+        categoryRepository.save(category);
+
+        translationPackBuilder.clearCache();
+
+        return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 
     @io.swagger.v3.oas.annotations.Operation(

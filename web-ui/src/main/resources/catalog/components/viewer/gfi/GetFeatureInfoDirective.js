@@ -26,7 +26,7 @@
 
   var module = angular.module("gn_gfi_directive", ["angular.filter"]);
 
-  var gfiTemplateURL = "../../catalog/components/viewer/gfi/partials/" + "gfi-popup.html";
+  var gfiTemplateURL = "../../catalog/components/viewer/gfi/partials/gfi-popup.html";
 
   module.value("gfiTemplateURL", gfiTemplateURL);
 
@@ -217,7 +217,13 @@
 
         this.gnFeaturesTableManager.addTable(
           {
-            name: layer.get("label") || layer.get("name"),
+            name:
+              (layer.get("label") || layer.get("name")) +
+              (layer.get("currentStyle")
+                ? " (" +
+                  (layer.get("currentStyle").Title || layer.get("currentStyle").Name) +
+                  ")"
+                : ""),
             type: type
           },
           {

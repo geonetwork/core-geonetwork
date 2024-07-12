@@ -1,6 +1,8 @@
 // GN Styles
-@import "../lib/style/font-awesome/less/font-awesome.less";
-@import "../lib/style/bootstrap/less/variables.less";
+@import "../catalog/lib/style/font-awesome/css/all.css";
+@import "../catalog/lib/style/font-awesome/css/v4-shims.css";
+@import "../catalog/lib/style/font-awesome/css/v4-font-face.css";
+@import "gn_bootstrap.less";
 @import (less) "../lib/ol.css";
 @import (less) "../lib/angular.ext/hotkeys/hotkeys.min.css";
 @import "gn_doc.less";
@@ -9,7 +11,7 @@
 @import "../views/default/less/gn_variables_default.less"; // must be last
 
 @fa-version: "4.4.0";
-@fa-font-path: "../catalog/lib/style/font-awesome/fonts";
+@fa-font-path: "../catalog/lib/style/font-awesome/webfonts";
 
 div[gn-transfer-ownership] * .list-group {
   max-height: 45em;
@@ -219,6 +221,9 @@ a {
   word-wrap: break-word;
   word-break: break-word;
 }
+.gn-break-all {
+  word-break: break-all;
+}
 
 /**
  * Nav bar title may be longer than default
@@ -293,11 +298,9 @@ a {
  * Logo in nav bar can't be big
  */
 .gn-logo {
-  max-height: 24px;
-  margin: -12px 0px 0px 0px;
-  @media (max-width: @screen-md-max) {
-    margin-top: -6px;
-  }
+  max-height: 36px;
+  vertical-align: top;
+  margin: -3px 0px 0px 12px;
   @media (max-width: @screen-xs-max) {
     margin-top: 0;
   }
@@ -487,9 +490,6 @@ div.thumb-small {
 }
 .gn-list-file {
   position: relative;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  overflow: hidden;
   width: 100%;
   text-align: left;
   margin-bottom: 5px !important;
@@ -695,18 +695,18 @@ input[type="file"] {
   left: 5px;
 }
 
-.gn-recordtype-n:before {
-  content: @fa-var-file-text;
-}
-.gn-recordtype-s:before {
-  content: @fa-var-bookmark;
-}
-.gn-recordtype-y:before {
-  content: @fa-var-file-o;
-}
-.gn-recordtype-t:before {
-  content: @fa-var-bookmark-o;
-}
+//.gn-recordtype-n:before {
+//  content: @fa-var-file-text;
+//}
+//.gn-recordtype-s:before {
+//  content: @fa-var-bookmark;
+//}
+//.gn-recordtype-y:before {
+//  content: @fa-var-file-o;
+//}
+//.gn-recordtype-t:before {
+//  content: @fa-var-bookmark-o;
+//}
 
 [data-gn-slide-toggle] {
   padding-left: 20px;
@@ -742,23 +742,34 @@ i.fa-times.delete:hover {
 
 .gn-search-page {
   .gn-status {
-    position: absolute;
-    bottom: 9px;
     margin-left: -8px;
     z-index: 98;
+  }
+  [data-search-results] table .gn-status {
+    position: unset;
+  }
+  .gn-status-container {
+    text-align: right;
+    margin-right: -10px;
+
+    .gn-status {
+      border-radius: 3px;
+      margin-left: 2px;
+    }
   }
   .gn-status,
   .gn-workflow-status {
     border: 2px solid @brand-primary;
     display: inline-block;
-    margin-top: 5px;
-    margin-right: 5px;
+    margin-right: 10px;
     border-radius: 0 3px 3px 0;
     padding: 5px 18px;
     background-color: @brand-primary;
     font-weight: 500;
     font-size: 80%;
     color: #fff;
+    flex-grow: 0;
+    align-self: center;
   }
   .gn-status-mdview,
   .gn-workflow-status-mdview {
@@ -864,6 +875,7 @@ i.fa-times.delete:hover {
   .gn-status-stamp {
     position: absolute;
     margin: 100px;
+    right: 0;
     overflow: hidden;
     transform: rotate(-15deg);
     font-size: 4rem;
@@ -910,6 +922,15 @@ i.fa-times.delete:hover {
     margin-right: -8px;
     bottom: auto;
   }
+  .gn-status-bottomright {
+    position: absolute;
+    left: auto;
+    right: 0;
+    float: right;
+    margin-right: -8px;
+    bottom: 10px;
+    line-height: 1.6em;
+  }
   .gn-status-table {
     position: relative;
     bottom: unset;
@@ -927,6 +948,21 @@ i.fa-times.delete:hover {
   }
   .gn-status-lg {
     font-size: 1.6em;
+  }
+
+  // ----- Keep the text size inside card panels for related metadata
+  .gn-card-heading {
+    .gn-status-md {
+      font-size: inherit !important;
+    }
+    .gn-status-lg {
+      font-size: inherit !important;
+    }
+    .gn-md-title {
+      a {
+        word-break: break-all;
+      }
+    }
   }
 }
 
@@ -1054,7 +1090,8 @@ fieldset[disabled] .radio label {
   }
 }
 
-input.ng-invalid {
+input.ng-invalid,
+select.ng-invalid {
   border-color: #a94442;
 }
 
@@ -1086,29 +1123,6 @@ input.ng-invalid {
   }
 }
 
-/* Highlight updated checkboxes in sharing form */
-.gn-sharing-batch {
-  // remove
-  input.ng-dirty.ng-empty:after {
-    content: "-";
-    padding-left: 20px;
-    margin-top: -20px;
-    color: @brand-danger;
-    font-size: 24px;
-    display: inline-block;
-    font-weight: bold;
-  }
-  // add
-  input.ng-dirty.ng-not-empty:after {
-    content: "+";
-    padding-left: 20px;
-    margin-top: -20px;
-    color: @brand-success;
-    font-size: 24px;
-    display: inline-block;
-    font-weight: bold;
-  }
-}
 [gn-batch-categories] {
   // remove
   input.ng-dirty.ng-empty ~ span {
@@ -1262,7 +1276,7 @@ gn-md-type-inspire-validation-widget {
     vertical-align: middle;
     padding-left: 3px;
     margin: -6px 0px;
-    line-height: 1em;
+    line-height: normal;
     .gn-user-name {
       max-width: 200px;
       display: inline-block;
@@ -1556,6 +1570,9 @@ gn-indexing-task-status {
 }
 .flex-self-center {
   align-self: center;
+}
+.flex-self-right {
+  align-self: end;
 }
 .flex-gap-5 {
   gap: 5px;

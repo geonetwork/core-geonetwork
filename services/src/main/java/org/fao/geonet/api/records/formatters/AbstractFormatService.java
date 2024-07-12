@@ -55,7 +55,7 @@ abstract class AbstractFormatService {
         }
 
         private boolean isViewFileExists(Path file) {
-            return Files.exists(file.resolve(VIEW_GROOVY_FILENAME)) || Files.exists(file.resolve(VIEW_XSL_FILENAME));
+            return Files.exists(file.resolve(VIEW_XSL_FILENAME));
         }
     };
 
@@ -120,11 +120,10 @@ abstract class AbstractFormatService {
             throw new BadParameterEx(paramName, "Format bundle " + xslid + " is not a directory");
         }
 
-        if (!Files.exists(formatDir.resolve(VIEW_XSL_FILENAME)) &&
-            !Files.exists(formatDir.resolve(VIEW_GROOVY_FILENAME))) {
+        if (!Files.exists(formatDir.resolve(VIEW_XSL_FILENAME))) {
             throw new BadParameterEx(paramName,
                 "Format bundle " + xslid + " is not a valid format bundle because it does not have a '" +
-                    VIEW_XSL_FILENAME + "' file or a '" + VIEW_GROOVY_FILENAME + "' file.");
+                    VIEW_XSL_FILENAME + "' file file.");
         }
 
         if (!containsFile(userXslDir, formatDir)) {

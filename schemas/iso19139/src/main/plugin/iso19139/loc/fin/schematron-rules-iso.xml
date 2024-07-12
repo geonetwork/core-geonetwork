@@ -238,6 +238,7 @@
     <div>Koostetulle tietoaineistolle on määriteltävä joko nimi tai tunniste.</div>
   </alert.M23>
   <report.M23>Koostetulle tietoaineistolle on määritelty joko nimi tai tunniste.</report.M23>
+<report.M23-dup>An associated resource is declared multiple time with same association and initiative type.</report.M23-dup>
   <alert.M24>
     <div>Metatiedon kieli on pakollinen tieto.</div>
   </alert.M24>

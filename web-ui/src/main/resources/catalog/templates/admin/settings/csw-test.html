@@ -36,7 +36,7 @@
           </option>
         </select>
 
-        <textarea rows="8" class="form-control" data-ng-model="currentTest" />
+        <textarea rows="8" class="form-control" data-ng-model="currentTest"></textarea>
 
         <br />
         <button
@@ -45,12 +45,16 @@
           data-ng-click="runCSWRequest()"
           data-ng-disabled="currentTest == null || currentTest == ''"
         >
-          <i class="fa fa-play" />
+          <i class="fa fa-play"></i>
           <span data-translate="">runCSWRequest</span>
         </button>
 
         <h4 data-translate="">cswResponse</h4>
-        <textarea rows="20" class="form-control" data-ng-model="currentTestResponse" />
+        <textarea
+          rows="20"
+          class="form-control"
+          data-ng-model="currentTestResponse"
+        ></textarea>
 
         <h4 data-translate="">cswSampleGetRequest</h4>
         <ul>

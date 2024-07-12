@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <!--
-  ~ Copyright (C) 2001-2016 Food and Agriculture Organization of the
+  ~ Copyright (C) 2001-2023 Food and Agriculture Organization of the
   ~ United Nations (FAO-UN), United Nations World Food Programme (WFP)
   ~ and United Nations Environment Programme (UNEP)
   ~
@@ -76,9 +76,10 @@
   <bean id="keycloakPreAuthActionsFilter" class="org.keycloak.adapters.springsecurity.filter.KeycloakPreAuthActionsFilter">
     <constructor-arg ref="userSessionManagement" />
   </bean>
-  <bean id="keycloakPreAuthActionsLoginFilter" class="org.fao.geonet.kernel.security.keycloak.keycloakPreAuthActionsLoginFilter" >
+  <bean id="keycloakPreAuthActionsLoginFilter" class="org.fao.geonet.kernel.security.keycloak.KeycloakPreAuthActionsLoginFilter" >
       <constructor-arg ref="userSessionManagement" />
       <constructor-arg ref="csrfFilter" />
+      <constructor-arg ref="geonetworkCsrfSecurityRequestMatcher" />
   </bean>
   <bean id="keycloakAuthenticationProcessingFilter" class="org.fao.geonet.kernel.security.keycloak.KeycloakAuthenticationProcessingFilter" depends-on="keycloakUtil">
     <constructor-arg name="authenticationManager" ref="authenticationManager" />

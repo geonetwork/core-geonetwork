@@ -32,7 +32,7 @@
       <Filter xmlns="http://www.opengis.net/ogc">
         <PropertyIsLike wildCard="%" singleChar="_" escapeChar="\">
           <PropertyName>AnyText</PropertyName>
-          <Literal>%service%</Literal>
+          <Literal>\%service\%</Literal>
         </PropertyIsLike>
       </Filter>
     </csw:Constraint>

@@ -1,12 +1,12 @@
 <fieldset>
   <legend id="gn-harvest-settings-gn-priviliges-title">
-    <i class="fa fa-fw fa-unlock"></i>
+    <i class="fa fa-fw fa-lock-open"></i>
     <span data-translate="">harvestedRecordPrivileges</span>
   </legend>
 
   <div
     id="gn-harvest-settings-gn-priviliges-ifRecordExistAppendPrivileges"
-    data-ng-show="harvester['@type'] == 'webdav' || harvester['@type'] == 'geonetwork' || harvester['@type'] == 'csw' "
+    data-ng-show="harvester['@type'] == 'webdav' || harvester['@type'] == 'geonetwork' || harvester['@type'] == 'csw' || harvester['@type'] == 'filesystem' "
   >
     <label class="control-label">
       <input type="checkbox" data-ng-model="harvester.ifRecordExistAppendPrivileges" />

@@ -231,15 +231,6 @@
     <Method name="getSupportedExts"/>
   </Match>
   <Match>
-    <Class name="org.fao.geonet.api.records.formatters.groovy.util.AssociatedLink"/>
-    <Bug pattern="EQ_DOESNT_OVERRIDE_EQUALS"/>
-    <Method name="equals"/>
-  </Match>
-  <Match>
-    <Class name="org.fao.geonet.api.records.formatters.groovy.util.LinkType"/>
-    <Bug pattern="URF_UNREAD_PUBLIC_OR_PROTECTED_FIELD"/>
-  </Match>
-  <Match>
     <Class name="org.fao.geonet.api.regions.ListRegionsResponse"/>
     <Bug pattern="URF_UNREAD_FIELD"/>
   </Match>

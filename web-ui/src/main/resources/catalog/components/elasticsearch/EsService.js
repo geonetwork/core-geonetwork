@@ -130,6 +130,29 @@
         keyword: "tag"
       };
 
+      var excludeFields = [
+        "_content_type",
+        "fast",
+        "from",
+        "to",
+        "bucket",
+        "sortBy",
+        "sortOrder",
+        "resultType",
+        "facet.q",
+        "any",
+        "geometry",
+        "query_string",
+        "creationDateFrom",
+        "creationDateTo",
+        "dateFrom",
+        "dateTo",
+        "geom",
+        "relation",
+        "editable",
+        "queryBase"
+      ];
+
       // https://lucene.apache.org/core/3_4_0/queryparsersyntax.html#Escaping%20Special%20Characters
       function escapeSpecialCharacters(luceneQueryString) {
         return luceneQueryString.replace(
@@ -162,8 +185,18 @@
         delete p.forcedLanguage;
       }
 
-      function addSortBy(params, sortBy, sortOrder) {
+      function addSortBy(params, sortBy, sortOrder, searchState) {
         if (sortBy) {
+          var languageConfig = gnEsLanguageService.getLanguageConfig(
+            params.any,
+            searchState
+          );
+          var searchLanguage =
+            languageConfig.searchLanguage !== "\\*"
+              ? languageConfig.searchLanguage
+              : "lang" + gnGlobalSettings.iso3lang;
+
+          sortBy = sortBy.replace("${searchLang}", searchLanguage);
           sortOrder = sortOrder || "";
           var sort = {},
             orders = sortOrder.split(",", -1);
@@ -174,9 +207,35 @@
               params.sort.push(sort);
             }
           });
+
           params.sort.push("_score");
         }
       }
+
+      /**
+       * Configure additional fields to exclude from the search.
+       *
+       * Example usage: in config.js of a view, can inject the service to add extra fields that
+       * need to be stored in the url hash, but should be excluded from the queries.
+       *
+       * module.run([
+       *     ...
+       *     "gnESService",
+       *     function (
+       *       ...
+       *       gnESService
+       *     ) {
+       *
+       *       gnESService.addExcludeField('myCustomField');
+       *       ...
+       *
+       * @param {string} fieldName Field name to exclude from the search query.
+       */
+      this.addExcludeField = function (fieldName) {
+        if (excludeFields.indexOf(fieldName) == -1) {
+          excludeFields.push(fieldName);
+        }
+      };
 
       /**
        * Build all clauses to be added to the Elasticsearch
@@ -189,29 +248,6 @@
        * @param {boolean} titleOnly search in title only
        */
       this.buildQueryClauses = function (queryHook, p, luceneQueryString, state) {
-        var excludeFields = [
-          "_content_type",
-          "fast",
-          "from",
-          "to",
-          "bucket",
-          "sortBy",
-          "sortOrder",
-          "resultType",
-          "facet.q",
-          "any",
-          "geometry",
-          "query_string",
-          "creationDateFrom",
-          "creationDateTo",
-          "dateFrom",
-          "dateTo",
-          "geom",
-          "relation",
-          "editable",
-          "queryBase"
-        ];
-
         state.languageConfig = gnEsLanguageService.getLanguageConfig(p.any, state);
 
         if (p.any || luceneQueryString) {
@@ -391,7 +427,13 @@
         }
       };
 
-      this.generateEsRequest = function (p, searchState, searchConfigId, filters) {
+      this.generateEsRequest = function (
+        p,
+        searchState,
+        searchConfigId,
+        filters,
+        templateSource
+      ) {
         var params = {};
         var luceneQueryString = gnEsLuceneQueryParser.facetsToLuceneQuery(
           searchState.filters
@@ -442,7 +484,7 @@
           params.size = p.to + 1 - p.from;
         }
 
-        addSortBy(params, p.sortBy, p.sortOrder);
+        addSortBy(params, p.sortBy, p.sortOrder, searchState);
 
         params.query = query;
 
@@ -457,7 +499,7 @@
         //   "max_concurrent_group_searches": 4
         // };
         gnESFacet.addFacets(params, searchConfigId, searchState.languageConfig);
-        gnESFacet.addSourceConfiguration(params, searchConfigId);
+        gnESFacet.addSourceConfiguration(params, searchConfigId, templateSource);
 
         return params;
       };
@@ -514,7 +556,12 @@
         // The multi_match will take care of the any filter.
         currentSearch.params.any = undefined;
 
-        addSortBy(params, currentSearch.params.sortBy, currentSearch.params.sortOrder);
+        addSortBy(
+          params,
+          currentSearch.params.sortBy,
+          currentSearch.params.sortOrder,
+          currentSearch
+        );
 
         try {
           params.query.function_score.query.bool.must[0].multi_match.query =

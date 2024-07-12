@@ -32,7 +32,8 @@
     "gn_dbtranslation",
     "gn_multiselect",
     "gn_mdtypewidget",
-    "blueimp.fileupload"
+    "blueimp.fileupload",
+    "ngMessages"
   ]);
 
   /**
@@ -61,7 +62,7 @@
       $scope.searchObj = {
         params: {
           isTemplate: ["y", "n", "s", "t"],
-          sortBy: "resourceTitleObject.default.keyword"
+          sortBy: "resourceTitleObject.default.sort"
         }
       };
 
@@ -118,7 +119,8 @@
       $scope.isLoadingGroups = false;
 
       gnConfigService.load().then(function (c) {
-        $scope.passwordMinLength = Math.min(
+        // take the bigger of the two values
+        $scope.passwordMinLength = Math.max(
           gnConfig["system.security.passwordEnforcement.minLength"],
           6
         );
@@ -276,6 +278,8 @@
         $scope.userUpdated = false;
         $scope.$broadcast("clearResults");
         $scope.userOperation = "editinfo";
+
+        $scope.gnUserEdit.$setPristine();
       };
 
       /**
@@ -294,6 +298,7 @@
             var data = response.data;
 
             $scope.userSelected = data;
+            $scope.gnUserEdit.$setPristine();
             $scope.userIsAdmin = data.profile === "Administrator";
 
             $scope.userIsEnabled = data.enabled;
@@ -301,7 +306,7 @@
             // Load user group and then select user
             $http.get("../api/users/" + u.id + "/groups").then(
               function (response) {
-                $scope.userGroups = response.groups;
+                $scope.userGroups = response.data;
               },
               function (response) {
                 // TODO
@@ -317,7 +322,7 @@
         $scope.$broadcast("resetSearch", {
           isTemplate: ["y", "n", "s", "t"],
           owner: u.id,
-          sortBy: "resourceTitleObject.default.keyword"
+          sortBy: "resourceTitleObject.default.sort"
         });
 
         $scope.userUpdated = false;
@@ -690,10 +695,10 @@
         });
       };
 
-      var createOrModifyGroupError = function (data) {
+      var createOrModifyGroupError = function (response) {
         $rootScope.$broadcast("StatusUpdated", {
           title: $translate.instant("groupUpdateError"),
-          error: data,
+          error: response.data,
           timeout: 0,
           type: "danger"
         });
@@ -790,14 +795,16 @@
         // that breaks the group management.
         // TODO: Use custom controllers for groups and users management
         $scope.groupSelected = angular.copy(g);
+        $scope.gnGroupEdit.$setPristine();
+
         $scope.clear($scope.queue);
         delete $scope.groupSelected.langlabel;
 
         // Retrieve records in that group
         $scope.$broadcast("resetSearch", {
           isTemplate: ["y", "n", "s", "t"],
-          group: g.id,
-          sortBy: "resourceTitleObject.default.keyword"
+          groupOwner: g.id,
+          sortBy: "resourceTitleObject.default.sort"
         });
 
         loadGroupUsers($scope.groupSelected.id);
@@ -847,6 +854,27 @@
       });
 
       return filtered;
+    };
+  });
+
+  /**
+   * Directive to check the password confirmation field
+   * and set the form validation status.
+   */
+  module.directive("gnValidPasswordConfirmation", function () {
+    return {
+      require: "ngModel",
+      link: function (scope, elm, attrs, ctrl) {
+        ctrl.$setValidity("noMatch", true);
+
+        attrs.$observe("gnValidPasswordConfirmation", function (newVal) {
+          if (newVal === "true") {
+            ctrl.$setValidity("noMatch", true);
+          } else {
+            ctrl.$setValidity("noMatch", false);
+          }
+        });
+      }
     };
   });
 })();

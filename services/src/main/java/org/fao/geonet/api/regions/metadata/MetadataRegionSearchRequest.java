@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2024 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -24,14 +24,13 @@
 package org.fao.geonet.api.regions.metadata;
 
 import com.google.common.base.Optional;
-import com.google.common.collect.Lists;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.api.regions.MetadataRegion;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.ISODate;
-import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataSchemaUtils;
@@ -41,10 +40,11 @@ import org.fao.geonet.kernel.region.Request;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.search.spatial.ErrorHandler;
 import org.fao.geonet.lib.Lib;
-import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.util.GMLParsers;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
+import org.geotools.api.referencing.crs.CoordinateReferenceSystem;
+import org.geotools.api.referencing.operation.MathTransform;
 import org.geotools.geometry.jts.JTS;
 import org.geotools.referencing.CRS;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
@@ -53,8 +53,6 @@ import org.jdom.Element;
 import org.jdom.Namespace;
 import org.jdom.filter.Filter;
 import org.locationtech.jts.geom.*;
-import org.opengis.referencing.crs.CoordinateReferenceSystem;
-import org.opengis.referencing.operation.MathTransform;
 
 import java.nio.file.Path;
 import java.util.*;
@@ -97,16 +95,16 @@ public class MetadataRegionSearchRequest extends Request {
         if (label == null && id == null || (id != null && !id.startsWith(PREFIX))) {
             return Collections.emptySet();
         }
-        List<Region> regions = new ArrayList<Region>();
+        List<Region> regions = new ArrayList<>();
         if (label != null) {
             loadAll(regions, Id.create(label));
         } else if (id != null) {
             String[] parts = id.split(":", 3);
             String mdId = parts[1];
-            String id;
+            String identifier;
             if (parts.length > 2) {
-                id = parts[2];
-                loadOnly(regions, Id.create(mdId), id);
+                identifier = parts[2];
+                loadOnly(regions, Id.create(mdId), identifier);
             } else {
                 loadSpatialExtent(regions, Id.create(mdId));
             }
@@ -189,13 +187,13 @@ public class MetadataRegionSearchRequest extends Request {
             }
         }
         return 0;
-    };
+    }
 
     Region parseRegion(Id mdId, Element extentObj) throws Exception {
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
         gc.getBean(DataManager.class).getEditLib().removeEditingInfo(extentObj);
 
-        String id = null;
+        String regionId = null;
         Geometry geometry = null;
         Namespace objNamespace = extentObj.getNamespace();
         if ("polygon".equals(extentObj.getName())) {
@@ -227,9 +225,9 @@ public class MetadataRegionSearchRequest extends Request {
         if (geometry != null) {
             Element element = extentObj.getChild("element", Geonet.Namespaces.GEONET);
             if (element != null) {
-                id = element.getAttributeValue("ref");
+                regionId = element.getAttributeValue("ref");
             }
-            return new MetadataRegion(mdId, id, geometry);
+            return new MetadataRegion(mdId, regionId, geometry);
         } else {
             return null;
         }
@@ -281,8 +279,8 @@ public class MetadataRegionSearchRequest extends Request {
             final String mdId = MetadataRegionSearchRequest.Id.create(idParts[0]).getMdId();
 
             if (mdId != null) {
-                Metadata metadata = ApplicationContextHolder.get().getBean(MetadataRepository.class).findOneById(Integer.valueOf(mdId));
-
+                IMetadataUtils metadataUtils = ApplicationContextHolder.get().getBean(IMetadataUtils.class);
+                AbstractMetadata metadata = metadataUtils.findOne(mdId);
                 final ISODate docChangeDate = metadata.getDataInfo().getChangeDate();
                 if (docChangeDate != null) {
                     return Optional.of(docChangeDate.toDate().getTime());

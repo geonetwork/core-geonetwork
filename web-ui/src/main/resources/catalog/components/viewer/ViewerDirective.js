@@ -107,6 +107,10 @@
                 processes: false
               };
 
+              Object.keys(scope.activeTools).forEach(function (key) {
+                scope.activeTools[key] = gnViewerSettings.mapConfig.defaultTool === key;
+              });
+
               /** optional tabs **/
               scope.disabledTools = gnViewerSettings.mapConfig.disabledTools;
 
@@ -116,10 +120,25 @@
               }
 
               /** wps process tabs */
-              scope.wpsTabs = {
-                byUrl: true,
-                recent: false
-              };
+              function initWpsConfiguration() {
+                var tabs = {};
+                if (!gnViewerSettings.mapConfig.wpsSources) {
+                  gnViewerSettings.mapConfig.wpsSources = ["url", "recent"];
+                }
+                if (
+                  gnViewerSettings.mapConfig.listOfServices.wps &&
+                  gnViewerSettings.mapConfig.listOfServices.wps.length > 0 &&
+                  gnViewerSettings.mapConfig.wpsSources &&
+                  gnViewerSettings.mapConfig.wpsSources.indexOf("list") === -1
+                ) {
+                  gnViewerSettings.mapConfig.wpsSources.unshift("list");
+                }
+                gnViewerSettings.mapConfig.wpsSources.map(function (type, index) {
+                  return (tabs[type] = index === 0);
+                });
+                return tabs;
+              }
+              scope.wpsTabs = initWpsConfiguration();
               scope.selectedWps = {};
 
               scope.zoom = function (map, delta) {
@@ -139,6 +158,15 @@
               // 3D mode is allowed and disabled by default
               scope.is3DModeAllowed = gnViewerSettings.mapConfig.is3DModeAllowed || false;
               scope.is3dEnabled = gnConfig["is3dEnabled"] || false;
+
+              // map accessibility is disabled by default
+              scope.isAccessible = gnViewerSettings.mapConfig.isAccessible || false;
+              // add `tabindex="0"` so the map can get keyboard focus
+              //
+              // more info: https://openlayers.org/en/latest/examples/accessible.html
+              if (scope.isAccessible) {
+                iElement.find("#map").attr("tabindex", 0);
+              }
 
               // By default, sync only background layer
               // between main map and search map
@@ -446,7 +474,7 @@
 
                   // handle processes tool
                   if (scope.activeTools.processes && openedTool.url) {
-                    scope.wpsTabs.byUrl = true;
+                    scope.wpsTabs.url = true;
                     scope.selectedWps.url = openedTool.url;
                   }
 
@@ -468,6 +496,10 @@
               setTimeout(function () {
                 scope.map.updateSize();
               }, 300);
+
+              if (gnViewerSettings.mapConfig.disabledTools.scaleLine === false) {
+                scope.map.addControl(new ol.control.ScaleLine());
+              }
             }
           };
         }
@@ -482,11 +514,19 @@
       templateUrl: "../../catalog/components/viewer/partials/mouseposition.html",
       controller: [
         "gnViewerSettings",
+        "gnGlobalSettings",
         "hotkeys",
         "gnAlertService",
         "$translate",
         "$scope",
-        function (gnViewerSettings, hotkeys, gnAlertService, $translate, scope) {
+        function (
+          gnViewerSettings,
+          gnGlobalSettings,
+          hotkeys,
+          gnAlertService,
+          $translate,
+          scope
+        ) {
           scope.switchMousePosition = function () {
             scope.displayMousePosition = !scope.displayMousePosition;
           };
@@ -534,25 +574,27 @@
             });
             scope.map.addControl(scope.mousePositionControl);
 
-            hotkeys.bindTo(scope).add({
-              combo: "c",
-              description: $translate.instant("copyMousePosition"),
-              callback: function (event) {
-                if (scope.mousePosition != "") {
-                  navigator.clipboard.writeText(scope.mousePosition).then(function () {
-                    gnAlertService.addAlert(
-                      {
-                        msg: $translate.instant("mousePositionCopiedToClipboard", {
-                          position: scope.mousePosition
-                        }),
-                        type: "success"
-                      },
-                      2
-                    );
-                  });
+            if (gnGlobalSettings.gnCfg.mods.global.hotkeys) {
+              hotkeys.bindTo(scope).add({
+                combo: "c",
+                description: $translate.instant("copyMousePosition"),
+                callback: function (event) {
+                  if (scope.mousePosition != "") {
+                    navigator.clipboard.writeText(scope.mousePosition).then(function () {
+                      gnAlertService.addAlert(
+                        {
+                          msg: $translate.instant("mousePositionCopiedToClipboard", {
+                            position: scope.mousePosition
+                          }),
+                          type: "success"
+                        },
+                        2
+                      );
+                    });
+                  }
                 }
-              }
-            });
+              });
+            }
           }
         }
       ]

@@ -24,6 +24,7 @@
 package jeeves.server.sources;
 
 import jeeves.constants.Jeeves;
+import jeeves.server.dispatchers.ServiceManager;
 import jeeves.server.sources.ServiceRequest.InputMethod;
 import jeeves.server.sources.ServiceRequest.OutputMethod;
 import jeeves.server.sources.http.HttpServiceRequest;
@@ -102,9 +103,7 @@ public final class ServiceRequestFactory {
         srvReq.setLanguage(lang);
         srvReq.setService(service);
         srvReq.setJSONOutput(extractJSONFlag(req.getQueryString()));
-        String ip = req.getRemoteAddr();
-        String forwardedFor = req.getHeader("x-forwarded-for");
-        if (forwardedFor != null) ip = forwardedFor;
+        String ip = ServiceManager.getRequestIpAddress(req);
         srvReq.setAddress(ip);
         srvReq.setOutputStream(res.getOutputStream());
 

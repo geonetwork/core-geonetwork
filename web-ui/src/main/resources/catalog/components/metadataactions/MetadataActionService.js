@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2023 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -199,9 +199,13 @@
       this.validateMdLinks = function (bucket) {
         $rootScope.$broadcast("operationOnSelectionStart");
         return gnHttp
-          .callService("../api/records/links?" + "analyze=true&bucket=" + bucket, null, {
-            method: "POST"
-          })
+          .callService(
+            "../api/records/links/analyze?" + "analyze=true&bucket=" + bucket,
+            null,
+            {
+              method: "POST"
+            }
+          )
           .then(function (data) {
             $rootScope.processReport = data.data;
 
@@ -271,22 +275,34 @@
           );
         } else {
           $rootScope.$broadcast("operationOnSelectionStart");
-          $http.delete("../api/records?" + "bucket=" + bucket).then(
-            function (data) {
-              $rootScope.$broadcast("mdSelectNone");
-              $rootScope.$broadcast("operationOnSelectionStop");
-              $rootScope.$broadcast("search");
-              $timeout(function () {
+          $http
+            .delete("../api/records?" + "bucket=" + bucket)
+            .then(
+              function (data) {
+                $rootScope.$broadcast("mdSelectNone");
                 $rootScope.$broadcast("search");
-              }, 5000);
-              deferred.resolve(data);
-            },
-            function (data) {
-              deferred.reject(data);
-            }
-          );
+                $timeout(function () {
+                  $rootScope.$broadcast("search");
+                }, 5000);
+                deferred.resolve(data);
+              },
+              function (data) {
+                gnAlertService.addAlert({
+                  msg: data.data.message || data.data.description,
+                  type: "danger"
+                });
+                deferred.reject(data);
+              }
+            )
+            .finally(function () {
+              $rootScope.$broadcast("operationOnSelectionStop");
+            });
         }
         return deferred.promise;
+      };
+
+      this.cancelWorkingCopy = function (md) {
+        return gnMetadataManager.remove(md.id);
       };
 
       this.getMetadataIdToEdit = function (md) {
@@ -454,9 +470,9 @@
        * @param {string} flag
        * @return {*}
        */
-      this.publish = function (md, bucket, flag, scope) {
+      this.publish = function (md, bucket, flag, scope, publicationType) {
         if (md) {
-          flag = md.isPublished() ? "off" : "on";
+          flag = md.isPublished(publicationType) ? "off" : "on";
         }
 
         scope.isMdWorkflowEnable = gnConfig["metadata.workflow.enable"];
@@ -477,7 +493,8 @@
             angular.isDefined(md) ? md.id : undefined,
             angular.isDefined(md) ? undefined : bucket,
             onOrOff,
-            $rootScope.user
+            $rootScope.user,
+            publicationType.name === "default" ? "" : publicationType.name
           )
           .then(
             function (response) {
@@ -514,7 +531,7 @@
               }
 
               if (md) {
-                md.publish();
+                md.publish(publicationType);
               }
             },
             function (response) {
@@ -631,8 +648,10 @@
           })
           .then(function (data) {
             $rootScope.$broadcast("inspireMdValidationStop");
-            $rootScope.$broadcast("operationOnSelectionStop");
             $rootScope.$broadcast("search");
+          })
+          .finally(function () {
+            $rootScope.$broadcast("operationOnSelectionStop");
           });
       };
 
@@ -644,8 +663,10 @@
             method: "DELETE"
           })
           .then(function (data) {
-            $rootScope.$broadcast("operationOnSelectionStop");
             $rootScope.$broadcast("search");
+          })
+          .finally(function () {
+            $rootScope.$broadcast("operationOnSelectionStop");
           });
       };
 

@@ -24,8 +24,6 @@
 package org.geonetwork.http;
 
 import java.io.IOException;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -40,7 +38,6 @@ import javax.servlet.http.HttpSession;
 import org.apache.commons.lang.StringUtils;
 
 import jeeves.server.UserSession;
-import jeeves.server.dispatchers.ServiceManager;
 import jeeves.server.sources.http.JeevesServlet;
 
 /**
@@ -64,18 +61,20 @@ public class SessionTimeoutCookieFilter implements javax.servlet.Filter {
         if (session != null) {
             long currTime = System.currentTimeMillis();
 
+            String cookiePath = StringUtils.isBlank(httpReq.getContextPath()) ? "/" : httpReq.getContextPath();
+
             Cookie cookie = new Cookie("serverTime", "" + currTime);
-            cookie.setPath(httpReq.getContextPath());
+            cookie.setPath(cookiePath);
             cookie.setSecure(req.getServletContext().getSessionCookieConfig().isSecure());
             httpResp.addCookie(cookie);
 
             UserSession userSession = null;
-            if (session != null) {
-                Object tmp = session.getAttribute(JeevesServlet.USER_SESSION_ATTRIBUTE_KEY);
-                if (tmp instanceof UserSession) {
-                    userSession = (UserSession) tmp;
-                }
+
+            Object tmp = session.getAttribute(JeevesServlet.USER_SESSION_ATTRIBUTE_KEY);
+            if (tmp instanceof UserSession) {
+                userSession = (UserSession) tmp;
             }
+
             // If user is authenticated, then set expiration time
             if (userSession != null && StringUtils.isNotEmpty(userSession.getName())) {
                 long expiryTime = currTime + session.getMaxInactiveInterval() * 1000;
@@ -83,7 +82,7 @@ public class SessionTimeoutCookieFilter implements javax.servlet.Filter {
             } else {
                 cookie = new Cookie("sessionExpiry", "" + currTime);
             }
-            cookie.setPath(httpReq.getContextPath());
+            cookie.setPath(cookiePath);
             cookie.setSecure(req.getServletContext().getSessionCookieConfig().isSecure());
             httpResp.addCookie(cookie);
         }

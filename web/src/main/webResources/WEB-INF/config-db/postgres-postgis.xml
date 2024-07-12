@@ -26,12 +26,11 @@
        default-lazy-init="true"
        xmlns="http://www.springframework.org/schema/beans"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
-  <!--  Postgresql database with postgis extenstion to allow storing spatial index in postgres. -->
-
   <!-- allow loading properties from the tomcat conf directory. If not found the default jdbc.properties will be used. Uncomment to use. -->
   <!-- context:property-placeholder location="file:${catalina.home}/conf/jdbc.properties" ignore-resource-not-found="true" file-encoding="UTF-8" ignore-unresolvable="true" order="0"/-->
 
   <import resource="defaultJdbcDataSource.xml"/>
+
   <bean id="jpaVendorAdapterDatabaseParam" class="java.lang.String">
     <constructor-arg value="POSTGRESQL"/>
   </bean>

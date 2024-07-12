@@ -137,6 +137,15 @@
 
           // Load the config from the textarea containing the helpers
           scope.config = angular.fromJson($("#" + scope.ref + "_config")[0].value);
+          if (scope.mode == "") {
+            scope.config.defaultSelected = {
+              "@value": "",
+              "#text": $translate.instant("recommendedValues"),
+              disabled: true
+            };
+          } else {
+            scope.config.defaultSelected = {};
+          }
 
           // If only one option, convert to an array
           if (!$.isArray(scope.config.option)) {
@@ -144,6 +153,11 @@
           }
           if (angular.isArray(scope.config)) {
             scope.config.option = scope.config;
+          }
+
+          if (scope.mode == "") {
+            // Add on top the recommended values option
+            scope.config.option.unshift(scope.config.defaultSelected);
           }
 
           // Add record formats if any
@@ -180,7 +194,8 @@
           }
 
           // Set the initial value
-          scope.config.selected = {};
+          scope.config.selected = scope.config.defaultSelected;
+
           scope.config.value =
             field.type === "number" ? parseFloat(field.value) : field.value;
           scope.config.layout =

@@ -4,6 +4,6 @@
   data-ng-if="link.lUrl.match('^http|ftp') !== null"
   target="_blank"
 >
-  {{link.lUrl.split('/').pop()}}
+  {{link.lUrl}}
 </a>
 <span data-ng-if="link.lUrl.match('^http|ftp') === null"> {{link.lUrl}} </span>

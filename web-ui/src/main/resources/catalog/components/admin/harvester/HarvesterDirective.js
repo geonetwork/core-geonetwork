@@ -93,6 +93,7 @@
       };
     }
   ]);
+
   /**
    * Display harvester schedule configuration.
    */
@@ -124,6 +125,82 @@
           }
           scope.setSchedule = function (exp) {
             scope.harvester.options.every = exp;
+          };
+        }
+      };
+    }
+  ]);
+
+  /**
+   * Display translation service configuration
+   */
+  module.directive("gnHarvesterTranslateContentConfigurator", [
+    "gnConfig",
+    "gnConfigService",
+    "gnLanguageService",
+    function (gnConfig, gnConfigService, gnLanguageService) {
+      return {
+        restrict: "A",
+        replace: true,
+        scope: {
+          content: "=gnHarvesterTranslateContentConfigurator"
+        },
+        templateUrl: "../../catalog/components/admin/harvester/partials/translate.html",
+        link: function (scope) {
+          scope.xpathExamples = [
+            {
+              xpath:
+                "/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:title",
+              schema: "iso19139"
+            },
+            {
+              xpath:
+                "/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:abstract",
+              schema: "iso19139"
+            },
+            {
+              xpath:
+                "/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:descriptiveKeywords/gmd:MD_Keywords/gmd:keyword",
+              schema: "iso19139"
+            },
+            {
+              xpath:
+                "/mdb:MD_Metadata/mdb:identificationInfo/mri:MD_DataIdentification/mri:citation/cit:CI_Citation/cit:title",
+              schema: "iso19115-3"
+            },
+            {
+              xpath:
+                "/mdb:MD_Metadata/mdb:identificationInfo/mri:MD_DataIdentification/mri:abstract",
+              schema: "iso19115-3"
+            },
+            {
+              xpath:
+                "/mdb:MD_Metadata/mdb:identificationInfo/mri:MD_DataIdentification/mri:descriptiveKeywords/mri:MD_Keywords/mri:keyword",
+              schema: "iso19115-3"
+            }
+          ];
+          scope.translationProviderConfigured = false;
+          gnConfigService.load().then(function (c) {
+            scope.translationProviderConfigured =
+              gnConfig["system.translation.provider"] !== null &&
+              gnConfig["system.translation.provider"] !== "";
+          });
+
+          scope.languageSource = null;
+          gnLanguageService.getLanguages().then(function (data) {
+            angular.forEach(data, function (lang) {
+              lang.english = lang.label.eng;
+              lang.name = lang.label[scope.lang] || lang.english;
+              lang.tokens = [lang.name, lang.code, lang.english];
+            });
+
+            scope.languageSource = gnLanguageService.getLanguageAutocompleter(data);
+          });
+
+          scope.addXpath = function (xpath) {
+            if (scope.content.translateContentFields.indexOf(xpath.xpath) === -1) {
+              scope.content.translateContentFields += "\n" + xpath.xpath;
+            }
           };
         }
       };
@@ -355,12 +432,12 @@
               matches = [];
 
               // regex used to determine if a string contains the substring `q`
-              substrRegex = new RegExp(q, "i");
+              substringRegex = new RegExp(q, "i");
 
               // iterate through the pool of strings and for any string that
               // contains the substring `q`, add it to the `matches` array
               $.each(strs, function (i, str) {
-                if (substrRegex.test(str)) {
+                if (substringRegex.test(str)) {
                   matches.push(str);
                 }
               });
@@ -430,7 +507,7 @@
             }
 
             scope.harvester.filters.push({
-              field: scope.cswCriteriaTranslated[0],
+              field: "",
               operator: "LIKE",
               value: "",
               condition: condition

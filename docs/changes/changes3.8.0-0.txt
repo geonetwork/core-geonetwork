@@ -1,0 +1,442 @@
+================================================================================
+===
+=== GeoNetwork 3.8.0: List of changes
+===
+================================================================================
+- Directory manager / Fix menu appearing below the form
+- Draft copy - As a reviewer or an Editor, it is impossible to open the editor on a record with a draft copy attached to it #3896
+- Editor board / Remove duplicated status information (#3976)
+- Merge pull request #3968 from cmangeat/improve_url_checker_table_layout
+- Updates from transifex.
+- Updates from transifex.
+- Virtual CSW / Misc fix
+- Fix rating issue
+- Update submodule.
+- Record view / Angular view increase popularity.
+- Editor / Using thesaurus on element with same name does not work.
+- Include all blocks in the Admin Scrollspy
+- Order the categories by the translated label for the `advanced search` and `harvester setting`
+- Remove lowercase
+- improve url checker table layout
+- Styling changes for the attribute table for ISO19110
+- Build / Fix missing test jar. (#3961)
+- ISO19115-3 / Update submodule.
+- ISO19110 / Display information on all feature types in default view #3951.
+- Link checker (#3868)
+- Import record / Generate UUID return ResourceNotFoundException
+- Portal / Add portal filter to CSW queries.
+- ES / Update to 7.3.0.
+- Remove duplicated element entries in Dutch labels.xml
+- Fix NullPointerException when server doesn't redirect
+- Set Trusty as distribution for Travis
+- SQL / Migration / Fix column name.
+- Editing / Update-fixed-info applies to template
+- Inspire Validator calls now use directly GeonetHttpRequestFactory instead of the HttpClient in it
+- Privileges / Avoid NPE if status is not yet set
+- Fix for case when query string is an escaped xml string
+- add logo name as header (to be able to use find, if the catalog has many logo's)
+- Record view / Use location when setting a formatter (#3909)
+- Styling improvements to the search toolbar: - uniform colours - no white background for text in dropdown
+- Editor / Anchor support / Improve layout (#3911)
+- API / Doc / Replace portal by default one. (#3934)
+- Fix error when sch:assert/@see attribute contains a URL
+- Modernise and Simplify THREDDS Harvester (#3936)
+- Allow subtemplates to specify uuid and title as attributes on root element (#3937)
+- ISO19139 / INSPIRE / Validation is expecting a specific URL for codelist file. (#3922)
+- ISO19139:2007 (#3920)
+- ISO19139 / CRS / Encode using Anchor.
+- ISO19139 / Format / nilReason is set to unknown when missing (this is an INSPIRE requirement).
+- Use specific oasis catalog for validation
+- UI config / Add option to enable or not saved selections.
+- ISO19110 / Group attributes with corresponding feature type (#3933)
+- Fix NullPointerException in InspireValidatorUtilsTest (#3929)
+- Test / Fix error due to too large UUID
+- Test / Fix missing portal parameter
+- Editor / Validation / INSPIRE / Add support for TG2
+- Metadata status workflow improvements (#3600)
+- Merge pull request #3916 from sppigot/pagingxmlsearchandgeonetharvester
+- Merge pull request #1 from juanluisrp/sppigot-pagingxmlsearchandgeonetharvester
+- Improvements in GeoNetwork type harvester
+- Merge branch 'pagingxmlsearchandgeonetharvester' of https://github.com/sppigot/core-geonetwork into sppigot-pagingxmlsearchandgeonetharvester
+- Editor / Field with autocompletion / Multilingual record / Switching from one to all lang, reset input to the initial value.
+- Search results / Add template to display related record as list instead of dropdown (#3908)
+- Search results / PDF improvements (#3912)
+- Fix comments on ALLOW_UNBOUNDED_QUERIES
+- Add recordsAdded assignment for empty search
+- Merge remote-tracking branch 'upstream/master' into pagingxmlsearchandgeonetharvester
+- Tidy up logic and get XmlSearch to return maxPageSize for harvesters and other services to use Use maxPageSize from XmlSearch in geonetwork harvester Add maxRecords protection to other XmlSearch services
+- Editing / Cancel / Restore the change date as it was before the editing
+- ISO19115-3 / Add import conversion.
+- Settings / INSPIRE validator placeholder update
+- Uniform styling for the status on the search results and metadata page (#3874)
+- Correct tests, restore logic for untouched from/to
+- Make number of records returned consistently equal to max configured records
+- Merge remote-tracking branch 'upstream/master' into pagingxmlsearchandgeonetharvester
+- Add paging geonetwork harvester
+- Merge pull request #3910 from julsbreakdown/deal_with_invalid_bbox_geom_from_md
+- Update web-ui/src/main/resources/catalog/components/common/map/mapService.js
+- feat(bbox) deal with invalid bbox geoms from md
+- ES / Update to 7.2.0.
+- Formatter / Remove microdata  (#3903). Improve JSON-LD mapping.
+- Disable InspireValidatorUtilsTest#testLifeCycle test
+- Editor / Label above mode / Size full width the date component.
+- defined but with valid range should still return boundariesSet as true
+- Use returned value of setSafeBoundaries
+- XmlSearch - following comments from internal review
+- XmlSearch - parameterizing options
+- XmlSearch - fixing from/to parameters sanitization
+- XmlSearch - fixing boundaries calculus
+- XmlSearch - Sanitize user inputs
+- Merge pull request #3899 from geonetwork/fix/formatter/nocacheinit
+- Formatter / Turn off initialization of the cache causing NPE on startup.
+- Merge branch 'master' of https://github.com/geonetwork/core-geonetwork
+- Updates to PR #3530
+- Remove printStackTrace usage and use the logger instead
+- Add gml/3.2 support to metadata polygon indexing This is for iso19115-3.2018 but also for other gml/3.2.x schemas such as apiso
+- Update schema plugin submodule
+- Bring submodule up to latest commit
+- Add iso19115-3.2018 as a mainstream schema
+- Reformat code
+- Merge branch 'cmangeat-optimisation_attempts'
+- Adapt changes to draft
+- Merge branch 'optimisation_attempts' of https://github.com/cmangeat/core-geonetwork into cmangeat-optimisation_attempts
+- Metadata editor - associated panel - allow configuration of required flag for the form fields (#3758)
+- Remove old Docker sub-project. Add reference to new.
+- Housekeeping insert delete api (#3866)
+- Remove double slash
+- Merge pull request #3855 from PascalLike/supportForAnchors
+- fixes loading of wmts, if wmts layer has no style object
+- Fix verticalCRS to display choices in advanced view
+- Fix spelling of Objektartenkatalog
+- Update build plugins and refactor version numbers
+- Update maven plugin versions
+- some improvements for no-js search engines
+- add validation panel to sidepanel in all iso19110 views
+- Changes to the PDF stylesheet. The style of the PDF document is now similar to detail view.
+- Update JDK 8 instructions (#3841)
+- PDF / Print the formatter with the full HTML to get CSS loaded
+- ISO19110 / Populate columns and codelist values from CSV (#3864)
+- Documentation / Test doc page exist and if not redirect to english
+- Documentation / Test doc page exist and if not redirect to english
+- Map / Missing bing key config
+- Updates from transifex.
+- Additional API services updated to use Autowired annotation
+- CSW-T / Update db changedate based on record datestamp.
+- Replace multinode mode by sub portal (#3475)
+- Merge pull request #3873 from geonetwork/develop-is-master
+- Develop branch is master
+- ES / Update to 7.1.1
+- Merge pull request #3592 from geonetwork/draft2018
+- Merge branch 'master' into draft2018
+- Draft / Permalink on a draft does not make sense. Same for create a child of.
+- Draft / Approved record display draft files. Using internal id.
+- Fix typo
+- Change 'Delete' button in working copy (draft) metadata to 'Cancel working copy' to make clear that the published version is not removed when removing the working copy (draft) version
+- Access manager - remove code to handle exception for Reviewers of any of the groups of the owner in 'hasEditPermission' method: code was using user groups of the metadata owner instead that could be not related to the metadata and not checking the current logged user. Original code seem was already fine
+- Draft / Disable menu to set a draft as template or to apply minor edit. Rename button to 'Save draft' so user can make a clear distinction between a record and a draft.
+- Add new CSS variables: - outline for search box - background-color and color for search button
+- Add classes and styles to deal with long harvester names
+- Editor / Keywords / Simple layout in flat mode
+- Metadata editing copy - don't allow delete a published copy if exists an editing copy until removed the editing copy
+- Fix check of metadata owned by a user in Users API
+- Merge branch 'master' into draft2018
+- WMS / Add support for group of layers when searching in capabilities  (#3859)
+- Editor / Associated resources / Online source (#3804)
+- Edit user profile display delete button #3857
+- ISO19139 / Formatter / JSON-LD (#3714)
+- INSPIRE / Validation / Convert non ISO19139 records in order to do remove validation. Schema is supported if an extension of iso19139 or iso19115-3 and provides a formatter nammed iso19139.
+- Editor / Link to dataset / Init uuid correctly, Add support for WFS and ATOM services (#3817)
+- ISO19139 / Add utility function to retrieve list of languages
+- Add thesaurus title as an Anchor when adding iso19139 in Anchor mode
+- Temporal extent in INSPIRE view with template fields and date picker directive produces invalid xml if begin position value is empty #3835
+- Fixes LoggingApi (#3549) (#3551)
+- Validation / Fix for Inspire validator behind a proxy (#3555)
+- Updated Accessibility (#3574)
+- User / Delete / When user own some records and can't be deleted, report records owned by the user in the error message (#3628)
+- Fix metadata text node saving
+- WFS / Download improvements
+- Associated panel / When there is no layer, coupledResource should not be added
+- Editor / Configuration / Add support for `@del` in codelist element
+- Editor - extend template to apply angularjs directives to fields to send 'required' flag. Update directives for topic categories and field duration to use 'required' flag
+- Formatter / XSL / Do not repeat tab as header as it is already displayed in the tab itself
+- Map / Add map or layer from records / Search on focus and info when none found.
+- Add a top margin for a validation list in a datepicker block
+- Metadata editor - validation doesn't show identification info date errors inline #3741
+- Uses function validateUrl in linked-data-checker.xsl process
+- Improvements in transfer ownership dialog usability (#3809)
+- Updates from transifex.
+- Updates from transifex.
+- Don't reset the servicesList got from the settings.
+- Adds aria support to dropdown
+- Shows the list of Preferred OGC services in Add layer dialog
+- gnKeywordPicker doesn't work in template fields #3808
+- Adds an id to add attribute button
+- Uses `system/server/securePort` to build the URL if HTTPS is used.
+- Makes setting `system/server/securePort` public instead of internal
+- Add support for anchor in protocol
+- Select default option in admin UI in pages using tabs
+- Use tranformation parameter in Keyword API service to retrieve a keyword xml snippet - Simplify thesarusus-transformation template and revert Keyword API to use 'transformation' value from http request parameters
+- Use tranformation parameter in Keyword API service to retrieve a keyword xml snippet
+- Fix groupsCombo directive to select first group
+- User searches / Sort list by label. (#3849)
+- Increase the z-index to display the menus over the editor content
+- Metadata editor - associated panel - support tooltips
+- Merge branch 'master' into draft2018
+- Fix link to quartz crontrigger documentation in harvester schedule (#3838)
+- Wro4j / More detailed error when a lib is not found. (#3828)
+- ISO19139 / Default view / Add content info section (#3803)
+- Fix documentation link (#3818)
+- User search / Improve button layout. (#3816)
+- ISO19139 / Schematron / INSPIRE / Translation - Improve french
+- ISO19139 / Schematron / INSPIRE / Translation - Improve french
+- Utility method to retrieve the name (label) for an iso language using it's code for a specific language
+- Do the ownership change on draft
+- Editor / Online resource / Set default label and better multilingual support. (#3650)
+- Harvester / OGC WxS / More valid records and better multilingual support (#3616)
+- Full view/Formatters: Select the metadata-view div that is visible
+- Editor / Helper / Add tags input mode.
+- Use XSL v2
+- ISO19110 / If upper bounds is not set, set the isInfinite to true.
+- Settings / DOI / Move to the bottom
+- Map / WFS download improvements (#3635)
+- Transfert ownership / group owner may be null
+- Editor / Helper & codelist / Add support to displayIf constraint in associated resource panel.
+- Harvester / Avoid to set empty XSL transformation
+- EditLib is created in several parts of the code. But the list of what is being edited should be the same for all of them. FIXME: Make EditLib a bean too to avoid duplicating EditLib.
+- Editor / gnFieldWithPrefixOrSuffix / Local variables in case multiple directives in same form
+- WFS Feature / Zoom to filtered results. (#3701)
+- Schematron / Avoid matching of elements part of the schematron report (#3624)
+- NoJS mode / Improvements (#3735)
+- Facets / Order by label ignore case (and server side only) (#3751)
+- Adding parameter approved to list of files on editor (OnlineSrc)
+- Metadata selection pdf improvements (#3794)
+- Thumbnails working
+- Bug fix: there was no id on cloneFiles draft creation phase
+- Making OnlineSrcService aware of draft
+- Attachments now consider approved and draft versions.
+- Fixing downloads in different forms, the approved parameter was lost (due to bad merge?)
+- Fixes for menubar colours for when custom colours are set in the admin.
+- Associated resources / Clarify links added when linking service and datasets (#3784)
+- Dublin core / Record view / Keywords not displayed (#3781)
+- Adds a setting for disabling humanized dates (#3771)
+- Make the 'draft' message full width. Display the status under the title.
+- Styling for the `Draft` features of GN: - message on top of recordview - re-arranged the elements on a record in the editor dashboard - restyled the `Working copy` message
+- Moving all listeners to same project. Now they are triggered again.
+- Associated resources / Clarify links added when linking service and datasets (#3784)
+- Dublin core / Record view / Keywords not displayed (#3781)
+- We are never going to see a draft on this list, removing unused code.
+- Hiding duplicate option for drafts
+- Fixing icon for mdaction-get mef
+- Unifying http requests
+- Hide ratings for draft/working copy version
+- Add checks to act only if draft is enabled
+- Adding a foreign key on draft table to metadata table. No draft can be orphaned now.
+- As the rest of the calls of updateFixedInfo, consider parentUuid as null
+- Removing commented import
+- Better string for translation
+- Better error messages
+- Removing unused comment
+- Restoring check if there is more than one metadata with the same UUID in case we are dealing with an old database.
+- Fixing concurrent issue when trying to save too quickly after validating.
+- Adding draft validation status to the dashboard editor
+- Adding message if no workflow is enabled
+- Cosmetic / Missing header and format (removing tabs and fix indent). (#3762)
+- Separate some transactions because delaying the commit made the metadata record get stored again on the database.
+- Improving database management: rely more on optimizations on Spring and use less flushes
+- Improving transaction management: do transactions shorter and use a transactioneventlistener
+- Make sure the downloaded ZIP/MEF takes the proper version
+- Make sure download buttons on metadata view download the proper version
+- Integration Tests for draft
+- Improving listeners to keep them synchronized with transaction finish.
+- Adding more tests to the draft
+- Do not show Editing Instance (draft) in search results.
+- Adding more status changes interactions when a record goes through the workflow:
+- More testing and updated integration-tests
+- When publishing a record with workflow enabled, status changes automatically to approve. This shows a warning on the UI.
+- Better UI for displaying draft and non-draft version
+- Fixing Batch/Selection. As it is based on UUID, we have to decide if we should act on record, draft or both. General rule: editing goes to draft. Removing goes to both. Read only goes to record.
+- Draft working with tests. Select buckets still not compatible
+- Make sure Draft is only visible to editors or more
+- Make sure redirection from approved editor to draft editor works with closing the editor (and going back in history)
+- When a Metadata (approved) is removed, remove all related drafts
+- When trying to edit an approved metadata, it redirect the editor to the draft and creates one, if needed
+- Adding the DataManager utilities for draft. Draft is not added yet when editing a metadata, but the app knows how to deal with it
+- Adding Draft type of metadata to domain. Not used yet
+- Dublin core / Abstract should use a textarea input (#3780)
+- Formatter / Add parameter to override language header.
+- "Bug" fix: if adding reviewer profile, add also editor profile.
+- If the group on the shibboleth headers does not exist, create it
+- Improving Shibboleth authentication: now we accept a list of groups and profiles to assign to the user. Also, keys "updateProfile" and "updateGroups" were ignored. Now we can handle authorization safely. Also, key "email" was ignored. Now we can setup an email using shibboleth. Unit Tests added to explore corner cases.
+- Map / Compact layer tree for better readability of large capability document.
+- A11y upgrade for main map and mini map: - more colour contrast for disabled elements - changed toggle button (include text in button for better colour contrast) - changed class for the upload button - added `aria-labels`s
+- Small fixes to the sidebar for `Editor` and `Reviewer`. Changed background colour for active items in the `User` dropdown in the menubar.
+- Fixes typo in stylerurl property.
+- Fix not closing tag.
+- User search / Hide search list if none available
+- Access manager / Intranet group not found when using canDownload/Dynamic
+- ISO19139 / Schematron / Check only http urls
+- User searches / Rename directive.
+- User searches / List of featured search as dropdown.
+- WFS Feature indexer / Tokenized field may contains CDATA
+- Fix migration test for user searches (#3770)
+- Fix user searches unit test (#3769)
+- Option for updating the modified date in batch edits (#3767)
+- Fixes test for additional criteria type
+- Merge pull request #3712 from Delawen/slavemode
+- Adding placeholder on WEB-INF to add slave.properties overriding files easily
+- Merge branch 'MichelGabriel-master-container-width'
+- Merge branch 'master-container-width' of https://github.com/MichelGabriel/core-geonetwork into MichelGabriel-master-container-width
+- User search / Move config to search module. (#3765)
+- Strip long languages to relevant part (#3764)
+- Ignore empty username for SMPT server configuration (#3749)
+- Support gmx:Anchor in extract relations xslt process - refactor
+- Support gmx:Anchor in extract relations xslt process
+- fix pdf generation from full view, flying saucer trouble with float: left
+- in manage record privileges help groups sorter to sort
+- Metadata editor - associated panel doesn't remove error red highlight when filling the url in thumbnail mode #3756
+- Fix JS build.
+- Fixes empty owner select in admin's batch process
+- User custom searches (#3718)
+- Fixes link to XML in editor
+- A11y upgrade for the Search Result and Detail page (#3728)
+- Small styling changes for the alert messages (#3697)
+- A11y upgrade for the header and footer (#3726)
+- Schematron / Add criteria to filter on user main profile. (#3692)
+- Directive to switch from characterString to Anchor and viceversa
+- Update Apache Fop to 2.3 and MapFish print-map to 2.1.4
+- DatabaseMigration tasks doesn't save changes in the database #3732 (#3733)
+- Externalise metadata editor associated resources panel configuration in schemas and display fields in the dialog using the order defined in the configuration file (#3720)
+- Add settings to switch between fluid and fixed width container/layout
+- Migration API - NullPointerException when executing a database migration task #3729 (#3730)
+- Use correct siteURL in sitemap urls (#3723)
+- Renaming slave project
+- Fixes bug in tooltip icon on template fields
+- Added filter function: hide the parent when all children are hidden. An extra change has been made to not show a fieldset when it's empty
+- ISO19139 / Geometry object count is not multilingual
+- Workaround: Admin user is "updated" for common tasks like search or getting records. Do not throw an exception on that case.
+- Adding slave mode. Usage: mvn clean package install -P slave
+- Report about failed schematron executions (#3693)
+- Upgrade jackson dependencies to 2.9.8 (#3687)
+- Upgrade commons-fileupload to 1.3.3 (#3685)
+- Merge pull request #3683 from geonetwork/improvement/search/negativequery
+- ES / Return the synonym found. (#3684)
+- Add maven properties to set Jetty port (#3680)
+- gnMeasure directive removes the value when it's 0 #3689
+- Search / Add support to negative query on any fields
+- improve schema-org mapping (#3565)
+- Merge pull request #3578 from MichelGabriel/master-editor-multifield
+- Merge pull request #3676 from jahow/fix-wms-legendurl
+- Merge pull request #3663 from MichelGabriel/master-menu-item-padding
+- Merge pull request #3452 from PascalLike/fixRemoveButtonInEditor
+- Merge pull request #3433 from PascalLike/fixBackgroundSettings
+- Enable paging (hydra and LDP) and search filters on the /geonetwork/srv/api/0.1/records RDF endpoint #3001
+- Fixes compile error (#3679)
+- (gn) by default, use the first legend url instead of the last
+- Merge pull request #3630 from cmangeat/up_spring_version_to_4_2_6
+- Merge pull request #3220 from pvgenuchten/feature/link-alternative-layer-for-wmts-and-wfs
+- Merge pull request #3579 from MichelGabriel/master-socialbar-in-footer
+- Merge pull request #3506 from pvgenuchten/fix3500-addkml
+- Merge pull request #3627 from jahow/fix-print-error
+- Merge pull request #3671 from MichelGabriel/master-projectionswitcher-ui-change
+- Merge pull request #3643 from Delawen/improve_csw_harvester
+- Editor board / Fix only my record filter affected by location changes. (#3644)
+- Small UI changes (styling like the search box on the map): - projection label shown once - toggle button stays on first row - toggle now has button styling - current projection is highlighted - background color on hover
+- Mail send fails with java.lang.UnsupportedOperationException: Method not yet implemented #3669 (#3670)
+- Extra padding in the menu items
+- The only md status to add to the index is the workflow
+- Merge pull request #3505 from Delawen/fix_wmsInfoFormat
+- Merge pull request #3651 from MichelGabriel/master-admin-settings-layout
+- Small UI improvements for the admin `Settings` and `User Interface` : - better hierarchy of labels and headings - added visual blocks to distinguish between settings/inputs - more padding at the bottom so the `scrollspy` buttons do not overlap
+- Translate true/false values on xslt formatter #3045
+- Transfer ownership / Display report at the end of the process.
+- Removing unused parameters ownerID and groupID
+- Call only commit, not a force in indexing which has some kind of memory leak
+- Unify alert messages to use gnAlertService, related to #3586 (#3588)
+- Editor / Tabled mode / Elements children of an xlink must be disabled.
+- ISO19115-3 / Add thumbnail does not work because of wrong parameter name.
+- ISO19139 / Directory entry API xlink MUST contains languages in the order defined in the record. (#3556)
+- Editor / Missing asterisk on + action when cardinality is 1..n. eg. MD_Metadata/contact.
+- ISO19139 / Avoid XSL error in case of a language is declared more than once in other locale section.
+- Region thesaurus / Macedonia is now North Macedonia since February 2019
+- Force index changes after each record
+- Instead of having everything on memory until the alignment in the end, start alignment as soon as we have a set of records available. Also, move some log info messages to debug to improve cleanliness and speed. Also, improve some error message information.
+- Admin / User / User admin can see all groups (#3641)
+- UI config / Fix test.
+- Add bootstrap classes to link button (#3617)
+- Multiple UI config support (#3458)
+- Align schema version in pom.xml for master (#3619)
+- Editor / Topic Category / Support extension of non ISO19139 standards (#3636)
+- improve scope to schema-org types (#3587)
+- user has to be anonymous or authenticated in order the tests to pass standalone (#3631)
+- Search / Sort can't define direction for default value (#3558)
+- indent xml in xml editor
+- Better documentation on how to use database listeners (#3608)
+- before to retrieve validation report from session, have to set it (#3623)
+- closing output stream seems to make sense (saxon don't close it)
+- up spring to 4.2.6 and remove straight ref to srping-jmx as now part of spring-context
+- Search / Advanced form / Dates not updated when using input directly (#3562)
+- Merge pull request #3605 from josegar74/fix/thesaurus-picker-sort
+- Print / fix tilesize computation in print map service
+- Merge pull request #3610 from PascalLike/meService
+- Added profile and groups info to api/me services
+- optimisation attempt, do not ask saxon for a jdom tree in order to serialize it after, directly write in servlet ouptut
+- Limit the fix to elements with cardinality 0:1
+- Batch actions in editor dashboard or search UI doesn't show the result report #3613
+- Improve visualisation of projection if codespace is undefined (#3609)
+- Keyword picker directive values are not sorted by id when using the related configuration #3604
+- Fix update from empty groups (#3599)
+- Fix build for INSPIRE Atom (#3593)
+- Admin / User / Add info on how to add an avatar. Fix alignement. (#3548)
+- Inspire atom opensearch fixes (#3454)
+- ui - change tt-dropdown-menu to tt-menu (#3590)
+- Makes thesaurus of searchFilterTags configurable (#3571)
+- Editor / Associated resource / Display name and description for OGC resources. This is useful when service is in error, requires auth, .... Also add the possibility to choose a group of layers. Add description in some ISO19115-3 resource types.
+- Editor / Table / Add support to set header class to customize styling. (#3584)
+- Small changes: - improved JS - setting moved to other section in admin - RSS button not hidden anymore
+- Update german translation (#3580)
+- Create rows and columns in a template when all fields/inputs are listed in 1 big colum
+- Update OnlineSrcDirective.js
+- New settings for showing/hiding the social buttons in the footer.
+- Adds a parameter to resetSearch to preserve the geometry
+- Small changes to the history panel styles (#3527)
+- Wrap text on button
+- Improve menu on small screens: - added background (no background when menubar is fixed to the top) - items as buttons (bit larger, better for touch) - use less whitespace (more items on 1 row) - styled the login for smaller screens - add name and logo in upper bar
+- Switch order of `pagination` and `sort oder`
+- Improved responsiveness for the editor board
+- Remove trigger for closing tooltip on mouseout
+- ISO19139 / Other keyword should be displayed in last position in the record view. Reordering JSON.
+- display report olny error in blue when localizing
+- Associated resource / Sibling / Disable button
+- ISO19139 / Multilingual record / Preserve order of languages (#3533)
+- Editor / Associated resource / Protocol might be null and trigger JS error. As a result the url is displayed instead of title.
+- Search form / Avoid today to be incremented on each click on the button
+- Editor / Associated resources / Better support of blank values.
+- Editor / Associated resources / Indicate that association type is mandatory
+- Editor / Associated resource / List WMS layer group having name.
+- Wrong file name for German and CZech lanchage (#3538)
+- Map viewer / Import WMS / Sort service and layers by title.
+- Merge pull request #3522 from josegar74/feature/csw-harvester-distributedsearch-config
+- Merge pull request #3508 from josegar74/fix/proxy-server-update
+- Merge pull request #3513 from josegar74/fix/isodate-year-month-formats
+- Enable the DistributedSearch configuration in CSW harvester UI #3521
+- Support year and year/month date formats in ISODate class #3511
+- System proxy properties not updated when updating the proxy server in the settings #3507
+- Merge pull request #3204 from felixseblanc/feature/update-dependencies/slf4j
+- Merge pull request #3199 from felixseblanc/feature/update-dependencies/json-path
+- Merge pull request #3200 from felixseblanc/feature/update-dependencies/avalon-framework
+- fix for #3500 + partial #2688 add geojson link to map
+- Bug fix: Info Formats for WMS were not correctly selected. Now using plain javascript compatible with all browsers
+- Metadata editor - Create metadata with custom uuid from template gets an autogenerated uuid #3502
+- Update version to 3.6.0 / Fix minor version number in case of migration.
+- DB Migration / Fix wrong filename on schematron rule
+- DB Migration / Fix wrong filename on schematron rule
+- Update version to 3.7.x.
+- Update version to 3.6.0.
+- Release / Version number may contain a x when doing a major version.
+- Update version to 3.6.0.
+- Hide remove button from mandatory fields: fix for children of not madatory fields
+- Fix for background settings
+- fixes #3207, add warning when layer not in capabilities (for wmts and wfs), with option to open service panel to select alternative layer (adding type to warning translation, so it can be used for multiple types). Also fixes bug with url having &.
+- Updated slf4j dependencies
+- Updated avalon-framework dependencies
+- Updated json-path dependencies

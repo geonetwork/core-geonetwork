@@ -50,13 +50,15 @@ import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import java.nio.file.Path;
 
+import static org.fao.geonet.api.ApiParams.API_CLASS_RECORD_OPS;
+import static org.fao.geonet.api.ApiParams.API_CLASS_RECORD_TAG;
 import static org.fao.geonet.api.ApiParams.API_PARAM_RECORD_UUID;
 
 @EnableWebMvc
 @Controller
 @Service
-@Tag(name = "records",
-    description = "Metadata record operations")
+@Tag(name = API_CLASS_RECORD_TAG,
+    description = API_CLASS_RECORD_OPS)
 public class AttachmentsActionsApi {
     private final ApplicationContext appContext = ApplicationContextHolder.get();
     @Autowired
@@ -91,7 +93,7 @@ public class AttachmentsActionsApi {
 
     @io.swagger.v3.oas.annotations.Operation(
         summary = "Create an overview using the map print module",
-        description = "<a href='http://geonetwork-opensource.org/manuals/trunk/eng/users/user-guide/associating-resources/linking-thumbnail.html#generating-a-thumbnail-using-wms-layers'>More info</a>"
+        description = "<a href='https://docs.geonetwork-opensource.org/latest/user-guide/associating-resources/linking-thumbnail/#linking-thumbnail-from-wms'>More info</a>"
         //response = MetadataResource.class)
     )
     @RequestMapping(

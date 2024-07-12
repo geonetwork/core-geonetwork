@@ -91,18 +91,18 @@ public class AtomGetData {
     public Element downloadResource(
         @Parameter(
             description = "spatial_dataset_identifier_code",
-            required = false)
-        @RequestParam(defaultValue = "")
+            required = true)
+        @RequestParam
             String spatial_dataset_identifier_code,
         @Parameter(
             description = "spatial_dataset_identifier_namespace",
-            required = false)
-        @RequestParam(defaultValue = "")
+            required = true)
+        @RequestParam
             String spatial_dataset_identifier_namespace,
         @Parameter(
             description = "crs",
-            required = false)
-        @RequestParam(defaultValue = "")
+            required = true)
+        @RequestParam
             String crs,
         @Parameter(hidden = true)
             HttpServletRequest request,

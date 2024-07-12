@@ -81,10 +81,15 @@
                 if (mapservice !== null) {
                   if (mapservice.useProxy) {
                     // If we need to use the proxy then add it to requireProxy list.
-                    if ($.inArray(url, gnGlobalSettings.requireProxy) === -1) {
+                    if (
+                      $.inArray(
+                        config.url + "#" + config.method,
+                        gnGlobalSettings.requireProxy
+                      ) === -1
+                    ) {
                       var url = config.url.split("/");
                       url = url[0] + "/" + url[1] + "/" + url[2] + "/";
-                      gnGlobalSettings.requireProxy.push(url);
+                      gnGlobalSettings.requireProxy.push(url + "#" + config.method);
                     }
                   } else {
                     // If we are not using a proxy then add the headers.
@@ -113,7 +118,10 @@
                 var url = config.url.split("/");
                 url = url[0] + "/" + url[1] + "/" + url[2] + "/";
 
-                if ($.inArray(url, gnGlobalSettings.requireProxy) !== -1) {
+                if (
+                  $.inArray(url + "#" + config.method, gnGlobalSettings.requireProxy) !==
+                  -1
+                ) {
                   // require proxy
                   config.url = gnGlobalSettings.proxyUrl + encodeURIComponent(config.url);
                 }
@@ -156,8 +164,13 @@
                     var url = config.url.split("/");
                     url = url[0] + "/" + url[1] + "/" + url[2] + "/";
 
-                    if ($.inArray(url, gnGlobalSettings.requireProxy) === -1) {
-                      gnGlobalSettings.requireProxy.push(url);
+                    if (
+                      $.inArray(
+                        url + "#" + config.method,
+                        gnGlobalSettings.requireProxy
+                      ) === -1
+                    ) {
+                      gnGlobalSettings.requireProxy.push(url + "#" + config.method);
                     }
 
                     $injector.invoke([

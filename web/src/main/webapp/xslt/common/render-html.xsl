@@ -30,11 +30,6 @@
   <xsl:include href="../base-layout-cssjs-loader.xsl"/>
   <xsl:include href="../skin/default/skin.xsl"/>
 
-  <xsl:output omit-xml-declaration="yes"
-              method="html"
-              doctype-system="html"
-              indent="yes"
-              encoding="UTF-8"/>
 
   <xsl:template name="render-html">
     <xsl:param name="content"/>
@@ -54,6 +49,7 @@
         <title><xsl:value-of select="if($title != '')
                   then $title
                   else /root/gui/systemConfig/settings/system/site/name"/></title>
+        <base href="{$nodeUrl}eng/catalog.search"/>
         <meta charset="utf-8"/>
 
         <xsl:copy-of select="$meta"/>
@@ -102,6 +98,7 @@
           <xsl:call-template name="footer"/>
         </div>
 
+        <xsl:call-template name="webAnalytics"/>
       </body>
     </html>
   </xsl:template>

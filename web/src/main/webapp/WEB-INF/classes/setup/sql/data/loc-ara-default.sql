@@ -1,4 +1,4 @@
-INSERT INTO Languages (id, name, isinspire, isdefault) VALUES ('ara','العربية', 'n', 'n');
+INSERT INTO Languages (id, name, isinspire) VALUES ('ara','العربية', 'n');
 
 -- Take care to table ID (related to other loc files)
 INSERT INTO CategoriesDes (iddes, langid, label) VALUES (1,'ara','Maps & graphics');

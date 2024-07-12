@@ -55,13 +55,13 @@
               params: {
                 isTemplate: ["y", "n"],
                 any: "",
-                sortBy: "resourceTitleObject.default.keyword",
+                sortBy: "resourceTitleObject.default.sort",
                 xlink: "*"
               },
               internal: true,
               sortbyValues: [
                 {
-                  sortBy: "resourceTitleObject.default.keyword"
+                  sortBy: "resourceTitleObject.default.sort"
                 },
                 {
                   sortBy: "owner"

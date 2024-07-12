@@ -24,11 +24,15 @@
 package org.fao.geonet.api.sources;
 
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
@@ -41,6 +45,7 @@ import org.fao.geonet.repository.SourceRepository;
 import org.fao.geonet.resources.Resources;
 import org.jdom.Element;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -81,14 +86,21 @@ public class SourcesApi {
         summary = "Get all sources",
         description = "Sources are the local catalogue, subportal, external catalogue (when importing MEF files) or harvesters.")
     @RequestMapping(
-        produces = MediaType.APPLICATION_JSON_VALUE,
+        produces = {
+            MediaType.APPLICATION_JSON_VALUE,
+            MediaType.TEXT_HTML_VALUE
+        },
         method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "List of source catalogues.")
+        @ApiResponse(responseCode = "200", description = "List of source catalogues.",
+            content = {
+                @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, array = @ArraySchema(schema = @Schema(implementation = Source.class))),
+                @Content(mediaType = MediaType.TEXT_HTML_VALUE, schema = @Schema(type = "string"))
+            })
     })
     @ResponseBody
-    public List<Source> getSources(
+    public ResponseEntity<?> getSources(
         @Parameter(
             description = "Group owner of the source (only applies to subportal)."
         )
@@ -97,46 +109,40 @@ public class SourcesApi {
             required = false)
         Integer group,
         @Parameter(hidden = true)
-        HttpServletResponse response
+        HttpServletResponse response,
+        @Parameter(hidden = true)
+        HttpServletRequest request
     ) throws Exception {
         setHeaderVaryOnAccept(response);
+        List<Source> sources;
         if (group != null) {
-            return sourceRepository.findByGroupOwner(group);
+            sources = sourceRepository.findByGroupOwner(group);
         } else {
-            return sourceRepository.findAll(SortUtils.createSort(Source_.name));
+            sources = sourceRepository.findAll(SortUtils.createSort(Source_.name));
+        }
+
+        if (sources == null) {
+            return ResponseEntity.notFound().build();
+        }
+        String acceptHeader = StringUtils.isBlank(request.getHeader(HttpHeaders.ACCEPT))?MediaType.APPLICATION_JSON_VALUE:request.getHeader(HttpHeaders.ACCEPT);
+        if (acceptHeader.contains(MediaType.TEXT_HTML_VALUE)) {
+            return ResponseEntity.ok().contentType(MediaType.TEXT_HTML).body(getSourcesAsHtml(sources));
+        } else {
+            return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(sources);
         }
     }
 
-    @io.swagger.v3.oas.annotations.Operation(
-        summary = "Get portal list",
-        description = "List all subportal available.")
-    @RequestMapping(
-        produces = MediaType.TEXT_HTML_VALUE,
-        method = RequestMethod.GET)
-    @ResponseStatus(HttpStatus.OK)
-    @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "List of portals.")
-    })
-    @ResponseBody
-    public void getSubPortals(
-        @Parameter(hidden = true)
-        HttpServletResponse response
-    ) throws Exception {
-        final List<Source> sources = sourceRepository.findAll(SortUtils.createSort(Source_.name));
+    private String getSourcesAsHtml(List<Source> sources) throws Exception {
         Element sourcesList = new Element("sources");
         sources.stream().map(GeonetEntity::asXml).forEach(sourcesList::addContent);
-        response.setContentType(MediaType.TEXT_HTML_VALUE);
-        setHeaderVaryOnAccept(response);
-        response.getWriter().write(
-            new XsltResponseWriter(null, "portal")
+        return new XsltResponseWriter(null, "portal")
                 .withJson("catalog/locales/en-core.json")
                 .withJson("catalog/locales/en-search.json")
                 .withXml(sourcesList)
                 .withParam("cssClass", "gn-portal")
                 .withXsl("xslt/ui-search/portal-list.xsl")
-                .asHtml());
+                .asHtml();
     }
-
 
     @io.swagger.v3.oas.annotations.Operation(
         summary = "Get all sources by type",
@@ -272,7 +278,7 @@ public class SourcesApi {
     @PreAuthorize("hasAuthority('Administrator')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "201", description = "Source deleted."),
+        @ApiResponse(responseCode = "204", description = "Source deleted."),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_ADMIN)
     })
     @ResponseBody

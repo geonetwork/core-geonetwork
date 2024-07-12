@@ -1,0 +1,47 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <title>Embedding GeoNetwork / Search results</title>
+</head>
+<body style="background-color: lightgrey; padding: 20px; font-family: monospace;">
+<h1>Simple search results</h1>
+
+<gn-app portal="srv"
+        config='{
+  "mods": {
+    "global": {"hotkeys": false},
+    "cookieWarning": {"enabled": false},
+    "footer": {"enabled": false},
+    "header": {"enabled": false},
+    "home": {"enabled": false},
+    "map": {"enabled": false},
+    "search": {
+      "filters": [{
+        "query_string": {
+          "query": "*"
+        }
+      }],
+      "sortbyValues": [],
+      "sortBy": "dateStamp#desc",
+      "searchMapPlacement": "none",
+      "hitsperpageValues": [],
+      "searchOptions": {
+        "fullText": false
+      },
+      "facetConfig": {},
+      "resultViewTpls": [{
+        "tplUrl":
+          "../../catalog/components/search/resultsview/partials/viewtemplates/card.html"
+      }],
+      "resultTemplate": "../../catalog/components/search/resultsview/partials/viewtemplates/card.html",
+      "isFilterTagsDisplayedInSearch": false,
+      "showBatchDropdown": false
+    },
+    "recordview": {
+      "appUrl": "http://localhost:8080/geonetwork/srv/eng/catalog.search"
+    }
+  }
+}'></gn-app>
+<script src="webcomponents.js"></script>
+</body>
+</html>

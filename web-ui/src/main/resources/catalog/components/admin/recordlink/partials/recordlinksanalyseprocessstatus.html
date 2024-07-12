@@ -1,10 +1,10 @@
-<div class="panel-body alert-{{taskInfo.class}}">
-  <p>
-    <span class="fa {{taskInfo.icon}}"></span>&nbsp;
-    <span translate translate-values="{ total: taskInfo.total, errors: taskInfo.errors }">
-      {{taskInfo.label}}
-    </span>
-  </p>
+<div class="col-md-4 text-{{taskInfo.class}}">
+  <span class="fa fa-fw {{taskInfo.icon}}"></span>&nbsp;
+  <span translate translate-values="{ total: taskInfo.total, errors: taskInfo.errors }">
+    {{taskInfo.label}}
+  </span>
+</div>
+<div class="col-md-8">
   <div class="progress">
     <div
       class="progress-bar progress-bar-striped progress-bar-{{taskInfo.class}}"

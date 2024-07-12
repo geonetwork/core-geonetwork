@@ -24,8 +24,8 @@
 package org.fao.geonet.harvester.wfsfeatures.worker;
 
 import org.apache.http.client.utils.URIBuilder;
-import org.opengis.feature.type.AttributeDescriptor;
-import org.opengis.temporal.Instant;
+import org.geotools.api.feature.type.AttributeDescriptor;
+import org.geotools.api.temporal.Instant;
 
 
 /**

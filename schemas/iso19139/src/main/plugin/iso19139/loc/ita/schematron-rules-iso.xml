@@ -228,6 +228,7 @@
   </alert.M23>
   <report.M23>Il nome del dataset aggregato o l'identificatore aggregato del dataset documentati.
   </report.M23>
+<report.M23-dup>An associated resource is declared multiple time with same association and initiative type.</report.M23-dup>
   <alert.M24>
     <div>lingua non è presente.</div>
   </alert.M24>

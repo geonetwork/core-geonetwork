@@ -23,7 +23,7 @@
   -->
 
 <editor xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:noNamespaceSchemaLocation="../../config-editor.xsd">
+        xsi:noNamespaceSchemaLocation="../../../../../../config-editor.xsd">
 
   <!-- Form field type configuration. Default is text. -->
   <fields>
@@ -65,11 +65,10 @@
 
   <!-- View configuration -->
   <views>
-    <view name="default">
+    <view name="default" default="true">
       <sidePanel>
         <directive data-gn-need-help="creating-metadata"/>
-        <directive data-gn-onlinesrc-list=""
-                   data-types="hasfeaturecats"/>
+        <directive data-gn-associated-resources-panel="gnCurrentEdit.metadata" />
         <directive data-gn-validation-report=""/>
         <directive data-gn-suggestion-list=""/>
       </sidePanel>

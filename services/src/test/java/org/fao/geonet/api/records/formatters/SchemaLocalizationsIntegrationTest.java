@@ -23,7 +23,7 @@
 
 package org.fao.geonet.api.records.formatters;
 
-import org.fao.geonet.api.records.formatters.groovy.CurrentLanguageHolder;
+import org.fao.geonet.api.records.formatters.CurrentLanguageHolder;
 import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.services.AbstractServiceIntegrationTest;
 import org.junit.Test;

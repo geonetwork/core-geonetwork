@@ -51,7 +51,7 @@
           to: 50,
           type: "service",
           isTemplate: "n",
-          sortBy: "resourceTitleObject.default.keyword",
+          sortBy: "resourceTitleObject.default.sort",
           sortOrder: "asc"
         }
       };
@@ -65,6 +65,8 @@
         source.groupOwner = source.groupOwner || null;
         $scope.source = source;
         $scope.isNew = false;
+
+        $scope.gnSourceForm.$setPristine();
       };
 
       function filterSources() {

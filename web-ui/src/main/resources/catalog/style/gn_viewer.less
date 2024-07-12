@@ -74,6 +74,10 @@
     }
   }
 
+  .gn-map-layer-selected {
+    font-weight: bold !important;
+  }
+
   .wrapper {
     width: 100%;
     height: 100%;
@@ -173,7 +177,7 @@
     right: 1em;
     z-index: 85;
     display: grid;
-    grid-template-columns: 30em 2.8em;
+    grid-template-columns: 34em 2.8em;
     @media (max-width: @screen-xs-max) {
       grid-template-columns: 26em 2.8em;
     }
@@ -272,6 +276,15 @@
         padding: 4px 20px 4px 4px;
         display: block;
         margin-bottom: 0px;
+      }
+      .gn-layer-radio {
+        padding-left: 0px;
+        padding-right: 0px;
+      }
+      .tab-content {
+        background-color: white;
+        padding: 5px;
+        margin: 0px;
       }
     }
     .gn-layer-outofrange > label {
@@ -410,8 +423,19 @@
     h5 {
       margin: 0.2em 0;
     }
+    [data-gn-layer-dimensions] {
+      overflow: unset !important;
+      & > div {
+        margin-top: 5px;
+        margin-bottom: 5px;
+      }
+    }
     [gn-layermanager],
     .gn-layer-tree {
+      .list-group-item.gn-layer-active {
+        background-color: @gray-lighter;
+        border-color: @list-group-border;
+      }
       .gn-layer-ordering {
         margin-right: -10px;
         position: absolute;
@@ -437,7 +461,6 @@
       .dropdown {
         .dropdown-menu {
           min-width: 16em;
-          right: 0;
           left: auto;
         }
         .gn-padding-left {
@@ -1006,14 +1029,28 @@ gn-geometry-tool .btn-group {
   right: auto;
   left: 4px;
   height: auto;
-  padding: 5px;
+  padding: 3px;
   border-radius: 0;
+  border: 1px solid #ccc;
+  text-align: left;
+  white-space: nowrap;
   ul {
     font-size: 1rem;
     padding-left: 0;
-    padding-right: 10px;
+    padding-right: 0px;
+    max-width: 350px;
+    border: 2px solid white;
     li {
       white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: block;
+    }
+    li:hover {
+      display: inline-block;
+      overflow: inherit;
+      text-overflow: inherit;
+      white-space: normal;
     }
   }
 }

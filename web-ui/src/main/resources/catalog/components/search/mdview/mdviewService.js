@@ -90,7 +90,7 @@
         }
 
         // Set the route only if not same as before
-        formatter = gnSearchLocation.getFormatter();
+        var formatter = gnSearchLocation.getFormatter();
 
         gnUtilityService.scrollTo();
 
@@ -114,12 +114,13 @@
             // Configuration to retrieve the results for the aggregations
             var relatedFacetConfig =
               gnGlobalSettings.gnCfg.mods.recordview.relatedFacetConfig;
+            var nbOfRecords = Object.keys(recordsMap).length;
             Object.keys(relatedFacetConfig).map(function (k) {
               relatedFacetConfig[k].aggs = {
                 docs: {
                   top_hits: {
                     // associated stats with UUIDs
-                    size: 100,
+                    size: nbOfRecords,
                     _source: {
                       includes: ["uuid"]
                     }
@@ -158,42 +159,47 @@
                   JSON.stringify(relatedFacetConfig) +
                   "," +
                   '  "from": 0,' +
-                  '  "size": 100,' +
+                  '  "size": ' +
+                  nbOfRecords +
+                  "," +
                   '  "_source": ["uuid"]' +
                   "}";
               }
             });
 
             // Collect stats in main portal as some records may not be visible in subportal
-            $http
-              .post("../../srv/api/search/records/_msearch", body)
-              .then(function (data) {
-                gnMdViewObj.current.record.related = [];
+            if (Object.entries(recordsMap).length !== 0) {
+              $http
+                .post("../../srv/api/search/records/_msearch", body)
+                .then(function (data) {
+                  gnMdViewObj.current.record.related = [];
 
-                Object.keys(relatedRecords).map(function (k) {
-                  relatedRecords[k] &&
-                    relatedRecords[k].map(function (l, i) {
-                      var md = recordsMap[l._id];
-                      relatedRecords[k][i] = md;
-                    });
+                  Object.keys(relatedRecords).map(function (k) {
+                    relatedRecords[k] &&
+                      relatedRecords[k].map(function (l, i) {
+                        var md = recordsMap[l._id];
+                        relatedRecords[k][i] = md;
+                      });
+                  });
+
+                  gnMdViewObj.current.record.related = relatedRecords;
+                  gnMdViewObj.current.record.related.all = Object.values(recordsMap);
+                  gnMdViewObj.current.record.related.uuids = Object.keys(recordsMap);
+
+                  relatedRecordKeysWithValues.forEach(function (key, index) {
+                    gnMdViewObj.current.record.related["aggregations_" + key] =
+                      data.data.responses[index].aggregations;
+                  });
                 });
-
-                gnMdViewObj.current.record.related = relatedRecords;
-                gnMdViewObj.current.record.related.all = Object.values(recordsMap);
-                gnMdViewObj.current.record.related.uuids = Object.keys(recordsMap);
-
-                relatedRecordKeysWithValues.forEach(function (key, index) {
-                  gnMdViewObj.current.record.related["aggregations_" + key] =
-                    data.data.responses[index].aggregations;
-                });
-              });
+            }
           }
         }
 
         // TODO: do not add duplicates
         gnMdViewObj.previousRecords.push(md);
 
-        if (!gnMdViewObj.usingFormatter) {
+        // Don't increase popularity for working copies
+        if (!gnMdViewObj.usingFormatter && md.draft !== "y") {
           $http.post("../api/records/" + md.uuid + "/popularity");
         }
         this.setLocationUuid(md.uuid, formatter);
@@ -338,7 +344,7 @@
                         var metadata = [];
                         metadata.push(new Metadata(r.data.hits.hits[i]));
 
-                        data = { metadata: metadata };
+                        var data = { metadata: metadata };
                         //Keep the search results (gnMdViewObj.records)
                         // that.feedMd(0, undefined, data.metadata);
                         //and the trace of where in the search result we are

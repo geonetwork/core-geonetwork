@@ -32,7 +32,7 @@ import jeeves.server.context.ServiceContext;
 
 import org.geotools.util.factory.Hints;
 import org.geotools.referencing.factory.epsg.FactoryUsingWKT;
-import org.opengis.referencing.operation.CoordinateOperationAuthorityFactory;
+import org.geotools.api.referencing.operation.CoordinateOperationAuthorityFactory;
 
 
 /**

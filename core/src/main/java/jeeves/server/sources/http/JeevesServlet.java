@@ -29,6 +29,7 @@ import jeeves.config.springutil.JeevesDelegatingFilterProxy;
 import jeeves.constants.Jeeves;
 import jeeves.server.JeevesEngine;
 import jeeves.server.UserSession;
+import jeeves.server.dispatchers.ServiceManager;
 import jeeves.server.sources.ServiceRequest;
 import jeeves.server.sources.ServiceRequestFactory;
 
@@ -113,13 +114,7 @@ public class JeevesServlet extends HttpServlet {
     //---------------------------------------------------------------------------
 
     private void execute(HttpServletRequest req, HttpServletResponse res) throws IOException {
-        String ip = req.getRemoteAddr();
-        // if we do have the optional x-forwarded-for request header then
-        // use whatever is in it to record ip address of client
-        String forwardedFor = req.getHeader("x-forwarded-for");
-        if (forwardedFor != null) {
-            ip = forwardedFor;
-        }
+        String ip = ServiceManager.getRequestIpAddress(req);
 
         Log.info(Log.REQUEST, "==========================================================");
         Log.info(Log.REQUEST, "HTML Request (from " + ip + ") : " + req.getRequestURI());

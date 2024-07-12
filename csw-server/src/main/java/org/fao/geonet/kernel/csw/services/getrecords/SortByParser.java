@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2021 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2023 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -23,18 +23,19 @@
 
 package org.fao.geonet.kernel.csw.services.getrecords;
 
+import co.elastic.clients.elasticsearch._types.FieldSort;
+import co.elastic.clients.elasticsearch._types.SortOptions;
+import co.elastic.clients.elasticsearch._types.SortOrder;
 import org.apache.commons.lang.StringUtils;
-import org.elasticsearch.search.sort.FieldSortBuilder;
-import org.elasticsearch.search.sort.SortBuilder;
-import org.elasticsearch.search.sort.SortOrder;
 import org.fao.geonet.csw.common.Csw;
 import org.fao.geonet.kernel.csw.CatalogConfiguration;
 import org.jdom.Element;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
+
+import static co.elastic.clients.elasticsearch._types.SortOptions.*;
 
 public class SortByParser {
 
@@ -44,7 +45,7 @@ public class SortByParser {
     @Autowired
     private CatalogConfiguration _catalogConfig;
 
-    public List<SortBuilder<FieldSortBuilder>> parseSortBy(Element request) {
+    public List<SortOptions> parseSortBy(Element request) {
         Element query = request.getChild("Query", Csw.NAMESPACE_CSW);
         if (query == null) {
             return getDefaultSort();
@@ -55,14 +56,22 @@ public class SortByParser {
             return getDefaultSort();
         }
 
-        List<SortBuilder<FieldSortBuilder>> sortFields = new ArrayList<>();
+        List<SortOptions> sortFields = new ArrayList<>();
         @SuppressWarnings("unchecked")
         List<Element> list = sortBy.getChildren();
         for (Element el : list) {
             String esSortFieldName = getEsSortFieldName(el);
             if (!StringUtils.isEmpty(esSortFieldName)) {
                 SortOrder esSortOrder = getEsSortOrder(el);
-                sortFields.add(new FieldSortBuilder(esSortFieldName).order(esSortOrder));
+
+                SortOptions sortFieldOptions =
+                    new Builder()
+                        .field(new FieldSort.Builder()
+                            .field(esSortFieldName)
+                            .order(esSortOrder).build())
+                        .build();
+
+                sortFields.add(sortFieldOptions);
             }
         }
 
@@ -72,11 +81,13 @@ public class SortByParser {
         return sortFields;
     }
 
-    private List<SortBuilder<FieldSortBuilder>> getDefaultSort() {
-        List<SortBuilder<FieldSortBuilder>> sortFields = new ArrayList<>();
-        FieldSortBuilder defaultSortField =
-            new FieldSortBuilder(_catalogConfig.getDefaultSortField())
-                .order(SortOrder.fromString(_catalogConfig.getDefaultSortOrder()));
+    private List<SortOptions> getDefaultSort() {
+        List<SortOptions> sortFields = new ArrayList<>();
+
+        SortOptions defaultSortField = SortOptions.of(
+            b -> b.field(fb -> fb.field(_catalogConfig.getDefaultSortField())
+                .order(_catalogConfig.getDefaultSortOrder().equals("DESC")?SortOrder.Desc:SortOrder.Asc))
+        );
 
         sortFields.add(defaultSortField);
         return sortFields;
@@ -97,6 +108,6 @@ public class SortByParser {
     private SortOrder getEsSortOrder(Element el) {
         String order = el.getChildText("SortOrder", Csw.NAMESPACE_OGC);
         boolean isDescOrder = "DESC".equals(order);
-        return isDescOrder ? SortOrder.DESC : SortOrder.ASC;
+        return isDescOrder ? SortOrder.Desc : SortOrder.Asc;
     }
 }

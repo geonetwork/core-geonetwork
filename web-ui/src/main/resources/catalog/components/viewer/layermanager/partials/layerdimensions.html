@@ -1,0 +1,154 @@
+<div data-ng-repeat="(dimension, icon) in parameters">
+  <div
+    data-ng-if="dimensions[dimension]"
+    data-ng-init="config = dimensions[dimension]"
+    class="input-group input-group-sm"
+  >
+    <div class="btn-group">
+      <div class="btn-group">
+        <button
+          type="button"
+          class="btn btn-default dropdown-toggle"
+          data-toggle="dropdown"
+          aria-haspopup="true"
+          aria-expanded="false"
+          title="{{config.info}}"
+        >
+          <i class="fa {{icon}}"></i>
+          <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu">
+          <li>
+            <label for="animationInterval">
+              <span data-translate="">animationInterval</span>
+              <strong>{{config.animationInterval}}s</strong>
+            </label>
+
+            <input
+              id="animationInterval"
+              type="range"
+              class="form-control input-sm"
+              data-ng-model="config.animationInterval"
+              min=".5"
+              max="10"
+              step=".5"
+            />
+          </li>
+        </ul>
+      </div>
+      <a
+        class="btn btn-default"
+        data-ng-disabled="config.playing || config.idx <= 0"
+        data-ng-click="setIndex(dimension, 0)"
+        href=""
+      >
+        <i class="fa fa-fw fa-fast-backward"></i>
+      </a>
+      <a
+        class="btn btn-default"
+        data-ng-disabled="config.playing || config.idx <= 0"
+        data-ng-click="previous(dimension)"
+        href=""
+      >
+        <i class="fa fa-fw fa-backward"></i>
+      </a>
+      <div class="btn-group">
+        <button
+          type="button"
+          class="btn btn-default dropdown-toggle"
+          data-toggle="dropdown"
+          aria-haspopup="true"
+          aria-expanded="false"
+        >
+          <span
+            data-ng-if="dimension === 'time'"
+            data-gn-humanize-time="{{config.current}}"
+            >{{config.current}}</span
+          >
+          <span data-ng-if="dimension !== 'time'">{{config.current}}</span>
+          <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu">
+          <li>
+            <input
+              class="form-control input-sm"
+              data-ng-model="config.filter"
+              data-ng-show="config.values.length > 1"
+              autofocus=""
+              placeholder="{{'filter' | translate}}"
+            />
+          </li>
+          <li role="separator" class="divider"></li>
+          <li
+            data-ng-repeat="o in config.values | filter:config.filter track by $index "
+            data-ng-class="{'active': o === config.current}"
+          >
+            <a data-ng-click="setTime(dimension, o)" href="">
+              <span data-ng-if="dimension === 'time'" data-gn-humanize-time="{{o}}"
+                >{{o}}</span
+              >
+              <span data-ng-if="dimension !== 'time'">{{o}}</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+      <a
+        class="btn btn-default"
+        data-ng-disabled="config.playing || config.idx >= config.filteredValues.length - 1"
+        data-ng-click="next(dimension)"
+        href=""
+      >
+        <i class="fa fa-fw fa-forward"></i>
+      </a>
+      <a
+        class="btn btn-default"
+        data-ng-disabled="config.playing || config.idx >= config.filteredValues.length - 1"
+        data-ng-click="setIndex(dimension, config.filteredValues.length - 1)"
+        href=""
+      >
+        <i class="fa fa-fw fa-fast-forward"></i>
+      </a>
+      <a
+        class="btn btn-default"
+        data-ng-if="!config.playing && !config.pause"
+        data-ng-click="play(dimension)"
+        href=""
+      >
+        <i class="fa fa-fw fa-play"></i>
+      </a>
+      <a
+        class="btn btn-default"
+        data-ng-if="config.playing || config.pause"
+        data-ng-click="config.playing ? pause(dimension) : resume(dimension)"
+        href=""
+      >
+        <i class="fa fa-fw fa-pause"></i>
+      </a>
+      <a
+        class="btn btn-default"
+        data-ng-disabled="!config.playing"
+        data-ng-click="stop(dimension)"
+        href=""
+      >
+        <i class="fa fa-fw fa-stop"></i>
+      </a>
+    </div>
+
+    <input
+      type="range"
+      list="tickmarks{{dimension}}"
+      step="1"
+      min="0"
+      max="{{config.filteredValues.length - 1}}"
+      data-ng-change="setIndex(dimension, config.idx)"
+      data-ng-model="config.idx"
+    />
+    <datalist id="tickmarks{{dimension}}">
+      <option
+        data-ng-repeat="o in config.filteredValues track by $index"
+        value="{{$index}}"
+        label="{{o}}"
+      ></option>
+    </datalist>
+  </div>
+</div>

@@ -5,7 +5,7 @@
 >
   <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
     <span data-translate="">terrainProvider</span>&nbsp; {{currentTerrain}}
-    <span class="caret" />
+    <span class="caret"></span>
   </button>
   <ul class="dropdown-menu" role="menu">
     <li data-ng-repeat="layer in terrains">
@@ -13,7 +13,7 @@
         <span
           class="fa"
           data-ng-class="layer == currentTerrain ? 'fa-dot-circle-o' : 'fa-circle-o'"
-        />
+        ></span>
         {{('terrainProvider-' + layer) | translate}}
       </a>
     </li>

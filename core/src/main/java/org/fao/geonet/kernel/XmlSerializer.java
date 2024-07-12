@@ -36,6 +36,7 @@ import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.schema.MetadataSchema;
+import org.fao.geonet.kernel.schema.MetadataSchemaOperationFilter;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.utils.Log;
@@ -53,34 +54,19 @@ import jeeves.xlink.Processor;
  * (id, data, lastChangeDate).
  */
 public abstract class XmlSerializer {
-    private static InheritableThreadLocal<ThreadLocalConfiguration> configThreadLocal = new InheritableThreadLocal<XmlSerializer.ThreadLocalConfiguration>();
-
-    public static ThreadLocalConfiguration getThreadLocal(boolean setIfNotPresent) {
-        ThreadLocalConfiguration config = configThreadLocal.get();
-        if (config == null && setIfNotPresent) {
-            config = new ThreadLocalConfiguration();
-            configThreadLocal.set(config);
-        }
-
-        return config;
-    }
-
-    public static void clearThreadLocal() {
-        configThreadLocal.set(null);
-    }
-
     public static void removeFilteredElement(Element metadata,
-                                             final Pair<String, Element> xPathAndMarkedElement,
+                                             final MetadataSchemaOperationFilter filter,
                                              List<Namespace> namespaces) throws JDOMException {
         // xPathAndMarkedElement seem can be null in some schemas like dublin core
-        if (xPathAndMarkedElement == null) return;
+        if (filter == null) return;
 
-        String xpath = xPathAndMarkedElement.one();
-        Element mark = xPathAndMarkedElement.two();
+        String xpath = filter.getXpath();
+        Element mark = filter.getMarkedElement();
 
         List<?> nodes = Xml.selectNodes(metadata,
             xpath,
             namespaces);
+
         for (Object object : nodes) {
             if (object instanceof Element) {
                 Element element = (Element) object;
@@ -89,13 +75,13 @@ public abstract class XmlSerializer {
 
                     // Remove attributes
                     @SuppressWarnings("unchecked")
-                    List<Attribute> atts = new ArrayList<Attribute>(element.getAttributes());
+                    List<Attribute> atts = new ArrayList<>(element.getAttributes());
                     for (Attribute attribute : atts) {
                         attribute.detach();
                     }
 
                     // Insert attributes or children element of the mark
-                    List<Attribute> markAtts = new ArrayList<Attribute>(mark.getAttributes());
+                    List<Attribute> markAtts = new ArrayList<>(mark.getAttributes());
                     for (Attribute attribute : markAtts) {
                         element.setAttribute((Attribute) attribute.clone());
                     }
@@ -124,7 +110,7 @@ public abstract class XmlSerializer {
             return false;
         }
 
-    String xlR = _settingManager.getValue(Settings.SYSTEM_XLINKRESOLVER_ENABLE);
+        String xlR = _settingManager.getValue(Settings.SYSTEM_XLINKRESOLVER_ENABLE);
         if (xlR != null) {
             boolean isEnabled = xlR.equals("true");
             if (isEnabled) Log.debug(Geonet.DATA_MANAGER, "XLink Resolver enabled.");
@@ -182,33 +168,43 @@ public abstract class XmlSerializer {
             // Check if a filter is defined for this schema
             // for the editing operation ie. user who can not edit
             // will not see those elements.
-            Pair<String, Element> editXpathFilter = mds.getOperationFilter(ReservedOperation.editing);
-            boolean filterEditOperationElements = editXpathFilter != null;
+            MetadataSchemaOperationFilter editFilter = mds.getOperationFilter(ReservedOperation.editing);
+            boolean filterEditOperationElements = editFilter != null;
             List<Namespace> namespaces = mds.getNamespaces();
             if (context != null) {
-                if (editXpathFilter != null) {
+                if (editFilter != null) {
                     boolean canEdit = accessManager.canEdit(context, id);
                     if (canEdit) {
                         filterEditOperationElements = false;
                     }
                 }
-                Pair<String, Element> downloadXpathFilter = mds.getOperationFilter(ReservedOperation.download);
-                if (downloadXpathFilter != null) {
-                    boolean canDownload = accessManager.canDownload(context, id);
-                    if (!canDownload) {
-                        removeFilteredElement(metadataXml, downloadXpathFilter, namespaces);
+
+                MetadataSchemaOperationFilter authenticatedFilter = mds.getOperationFilter("authenticated");
+                if (authenticatedFilter != null) {
+                    boolean isAuthenticated = context.getUserSession().isAuthenticated();
+                    if (!isAuthenticated) {
+                        removeFilteredElement(metadataXml, authenticatedFilter, namespaces);
                     }
                 }
-                Pair<String, Element> dynamicXpathFilter = mds.getOperationFilter(ReservedOperation.dynamic);
-                if (dynamicXpathFilter != null) {
+
+                MetadataSchemaOperationFilter downloadFilter = mds.getOperationFilter(ReservedOperation.download);
+                if (downloadFilter != null) {
+                    boolean canDownload = accessManager.canDownload(context, id);
+                    if (!canDownload) {
+                        removeFilteredElement(metadataXml, downloadFilter, namespaces);
+                    }
+                }
+                MetadataSchemaOperationFilter dynamicFilter = mds.getOperationFilter(ReservedOperation.dynamic);
+                if (dynamicFilter != null) {
                     boolean canDynamic = accessManager.canDynamic(context, id);
                     if (!canDynamic) {
-                        removeFilteredElement(metadataXml, dynamicXpathFilter, namespaces);
+                        removeFilteredElement(metadataXml, dynamicFilter, namespaces);
                     }
                 }
             }
-            if (filterEditOperationElements || (getThreadLocal(false) != null && getThreadLocal(false).forceFilterEditOperation)) {
-                removeFilteredElement(metadataXml, editXpathFilter, namespaces);
+
+            if (filterEditOperationElements) {
+                removeFilteredElement(metadataXml, editFilter, namespaces);
             }
         }
         return metadataXml;
@@ -282,7 +278,7 @@ public abstract class XmlSerializer {
     public abstract void delete(String id, ServiceContext context)
         throws Exception;
 
-	/* API to be overridden by extensions */
+    /* API to be overridden by extensions */
 
     public abstract void update(String id, Element xml,
                                 String changeDate, boolean updateDateStamp, String uuid, ServiceContext context)
@@ -300,16 +296,4 @@ public abstract class XmlSerializer {
 
     public abstract Element selectNoXLinkResolver(String id, boolean isIndexingTask, boolean applyOperationsFilters)
         throws Exception;
-
-    public static class ThreadLocalConfiguration {
-        private boolean forceFilterEditOperation = false;
-
-        public boolean isForceFilterEditOperation() {
-            return forceFilterEditOperation;
-        }
-
-        public void setForceFilterEditOperation(boolean forceFilterEditOperation) {
-            this.forceFilterEditOperation = forceFilterEditOperation;
-        }
-    }
 }

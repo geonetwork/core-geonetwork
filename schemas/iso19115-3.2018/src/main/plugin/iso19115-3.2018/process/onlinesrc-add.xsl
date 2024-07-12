@@ -48,7 +48,7 @@
 
   <xsl:variable name="mainLangId"
                 select="/mdb:MD_Metadata/mdb:defaultLocale/*/@id"
-                as="xs:string"/>
+                as="xs:string?"/>
 
   <xsl:variable name="useOnlyPTFreeText"
                 select="count(//*[lan:PT_FreeText and not(gco:CharacterString|gcx:Anchor)]) > 0"
@@ -268,7 +268,7 @@
 
   <xsl:template name="setProtocol">
     <xsl:choose>
-      <xsl:when test="$mimeTypeStrategy = 'mimeType'">
+      <xsl:when test="$mimeTypeStrategy = 'mimeType' and $mimeType != ''">
         <gcx:MimeFileType type="{$mimeType}">
           <xsl:value-of select="$protocol"/>
         </gcx:MimeFileType>

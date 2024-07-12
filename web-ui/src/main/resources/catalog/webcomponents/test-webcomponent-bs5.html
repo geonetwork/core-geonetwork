@@ -1,0 +1,46 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Embedding GeoNetwork / Search app</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT"
+      crossorigin="anonymous"
+    />
+  </head>
+  <body style="background-color: lightgrey; padding: 20px">
+    <h1>Webcomponent with shadow DOM</h1>
+
+    <i>This page is for testing interactions between Bootstrap 4 and 5 CSS.</i>
+    <button
+      class="btn btn-primary"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#collapseExample"
+      aria-expanded="false"
+      aria-controls="collapseExample"
+    >
+      Bootstrap 5 button (click to display GeoNetwork webcomponent)
+    </button>
+
+    <div class="collapse" id="collapseExample">
+      <div class="card card-body">
+        <gn-app portal="srv"
+                config='{"mods": {
+                  "global": {"hotkeys": false},
+                  "home": {"enabled": false},
+                  "footer": {"enabled": false},
+                  "header": {"enabled": false}
+                  }}'></gn-app>
+      </div>
+    </div>
+
+    <script src="webcomponents.js"></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>

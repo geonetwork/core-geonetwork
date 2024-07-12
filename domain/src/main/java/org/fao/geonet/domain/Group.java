@@ -121,7 +121,7 @@ public class Group extends Localized implements Serializable {
      *
      * @return group name
      */
-    @Column(nullable = false, length = 32)
+    @Column(nullable = false, length = 255)
     public String getName() {
         return _name;
     }
@@ -341,7 +341,7 @@ public class Group extends Localized implements Serializable {
      * Should we use the enableAllowedCategories list on this group? If false, we allow all
      * categories.
      *
-     * @param enableCategoriesRestriction
+     * @param enableAllowedCategories
      * @return this group entity object
      */
     public Group setEnableAllowedCategories(Boolean enableAllowedCategories) {

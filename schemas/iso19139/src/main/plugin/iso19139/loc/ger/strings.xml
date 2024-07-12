@@ -49,17 +49,17 @@
 
   <resource>Resource</resource>
   <xml>XML</xml>
-  <metadata>Metadata</metadata>
-  <identificationInfo>Identification</identificationInfo>
-  <distributionInfo>Distribution</distributionInfo>
-  <dataQualityInfo>Quality</dataQualityInfo>
-  <spatialRepresentationInfo>Spatial rep.</spatialRepresentationInfo>
-  <referenceSystemInfo>Ref. system</referenceSystemInfo>
-  <contentInfo>Content</contentInfo>
-  <portrayalCatalogueInfo>Portrayal</portrayalCatalogueInfo>
-  <metadataConstraints>Md. constraints</metadataConstraints>
-  <metadataMaintenance>Md. maintenance</metadataMaintenance>
-  <applicationSchemaInfo>Schema info</applicationSchemaInfo>
+  <metadata>Metadaten</metadata>
+  <identificationInfo>Basisinfo</identificationInfo>
+  <distributionInfo>Vertrieb</distributionInfo>
+  <dataQualityInfo>Qualität</dataQualityInfo>
+  <spatialRepresentationInfo>Datenstruktur</spatialRepresentationInfo>
+  <referenceSystemInfo>Referenzsystem</referenceSystemInfo>
+  <contentInfo>Dateninhalt</contentInfo>
+  <portrayalCatalogueInfo>Signaturenkatalog</portrayalCatalogueInfo>
+  <metadataConstraints>Metadateneinschränkungen</metadataConstraints>
+  <metadataMaintenance>Metadatenpflege</metadataMaintenance>
+  <applicationSchemaInfo>Datenmodell</applicationSchemaInfo>
   <noThesaurusName>Keywords</noThesaurusName>
   <bboxesSection>Geographic coverage</bboxesSection>
 

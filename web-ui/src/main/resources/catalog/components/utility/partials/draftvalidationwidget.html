@@ -1,20 +1,25 @@
 <a
+  data-ng-show="record"
   href=""
-  data-ng-href="catalog.search#/{{(draft.draft == 'y')?'metadraf':'metadata'}}/{{metadata.uuid}}"
+  data-ng-href="catalog.search#/{{recordIsDraft ? 'metadraf' : 'metadata'}}/{{record.uuid}}"
   class="see-draft-pill"
 >
   <small>
     <small
-      class="valid-status{{draft.valid}} md-type-{{draft.isTemplate}}"
-      title="{{(('draft') | translate)}}: {{(('validStatus-' + draft.valid) | translate)}}"
-      ng-switch="draft.isTemplate"
+      class="valid-status{{record.valid}} md-type-{{record.isTemplate}}"
+      title="{{(title | translate)}}: {{(('validStatus-' + record.valid) | translate)}}"
+      ng-switch="record.isTemplate"
     >
-      <i class="fa fa-fw fa-file" ng-switch-when="y" />
-      <i class="fa fa-fw fa-pencil" ng-switch-when="n" />
-      <i class="fa fa-fw fa-bookmark" ng-switch-when="s" />
-      <i class="fa fa-fw fa-bookmark-o" ng-switch-when="t" />
-      <i class="fa fa-fw fa-question" ng-switch-default />
+      <i class="fa fa-fw fa-file" ng-switch-when="y"></i>
+      <i
+        class="fa fa-fw"
+        data-ng-class="{'fa-pencil':recordIsDraft, 'fa-file-text-o':!recordIsDraft}"
+        ng-switch-when="n"
+      ></i>
+      <i class="fa fa-fw fa-bookmark" ng-switch-when="s"></i>
+      <i class="fa fa-fw fa-bookmark-o" ng-switch-when="t"></i>
+      <i class="fa fa-fw fa-question" ng-switch-default></i>
     </small>
-    <label title="{{'seeDraft' | translate}}">{{(('draft') | translate)}}</label>
+    <label title="{{label | translate}}">{{title | translate}}</label>
   </small>
 </a>

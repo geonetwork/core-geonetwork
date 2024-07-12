@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2021 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2023 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -535,6 +535,7 @@ public final class Geonet {
      */
     public static final class Config {
         public static final String HTMLCACHE_DIR = "htmlCacheDir";
+        public static final String SCHEMAPUBLICATION_DIR = "schemaPublicationDir";
         public static final String INDEX_CONFIG_DIR = "indexConfigDir";
         /**
          * Profiles of languages for autodetection using https://code.google.com/p/language-detection/.
@@ -629,7 +630,7 @@ public final class Geonet {
 
     public static class IndexFieldNames {
         public static final String HASXLINKS = "_hasxlinks";
-        public static final String XLINK = "_xlink";
+        public static final String XLINK = "xlink";
         public static final String ROOT = "_root";
         public static final String SCHEMA = "documentStandard";
         public static final String DATABASE_CREATE_DATE = "createDate";
@@ -660,6 +661,8 @@ public final class Geonet {
         public static final String ANY = "any";
         public static final String LOCALE = "locale";
         public static final String IS_PUBLISHED_TO_ALL = "isPublishedToAll";
+        public static final String IS_PUBLISHED_TO_INTRANET = "isPublishedToIntranet";
+        public static final String IS_PUBLISHED_TO_GUEST = "isPublishedToGuest";
         public static final String FEEDBACKCOUNT = "feedbackCount";
         public static final String DRAFT = "draft";
         public static final String DRAFT_ID = "draftId";
@@ -681,6 +684,7 @@ public final class Geonet {
         public static final String INSPIRE_VALIDATION_DATE = "_inspireValidationDate";
         public static final String STATUS_WORKFLOW = "statusWorkflow";
         public static final String USER_SAVED_COUNT = "userSavedCount";
+        public static final String INDEXING_DATE = "indexingDate";
     }
 
     public static class SearchConfig {

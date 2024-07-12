@@ -5,7 +5,7 @@
                 xmlns:gcx="http://standards.iso.org/iso/19115/-3/gcx/1.0"
                 xmlns:gex="http://standards.iso.org/iso/19115/-3/gex/1.0"
                 xmlns:lan="http://standards.iso.org/iso/19115/-3/lan/1.0"
-                xmlns:srv="http://standards.iso.org/iso/19115/-3/srv/2.1"
+                xmlns:srv="http://standards.iso.org/iso/19115/-3/srv/2.0"
                 xmlns:mac="http://standards.iso.org/iso/19115/-3/mac/2.0"
                 xmlns:mas="http://standards.iso.org/iso/19115/-3/mas/1.0"
                 xmlns:mcc="http://standards.iso.org/iso/19115/-3/mcc/1.0"
@@ -305,9 +305,9 @@
         <xsl:variable name="p" select="normalize-space(cit:protocol/*/text())"/>
         {
         "@type":"DataDownload",
-        "contentUrl": "<xsl:value-of select="gn-fn-index:json-escape(cit:linkage/*/text())" />"
+        "contentUrl": "<xsl:value-of select="util:escapeForJson((cit:linkage/*/text())[1])" />"
         <xsl:if test="cit:protocol">,
-          "encodingFormat": "<xsl:value-of select="gn-fn-index:json-escape(if ($p != '') then $p else cit:protocol/*/@xlink:href)"/>"
+          "encodingFormat": "<xsl:value-of select="util:escapeForJson(if ($p != '') then $p else cit:protocol/*/@xlink:href)"/>"
         </xsl:if>
         <xsl:if test="cit:name">,
           "name": <xsl:apply-templates mode="toJsonLDLocalized" select="cit:name"/>
@@ -426,7 +426,7 @@
                         select="$metadata/gmd:locale/*[concat('#', @id) = $languageId]/gmd:languageCode/*/@codeListValue"/>
           {
           <xsl:value-of select="concat('&quot;@value&quot;: &quot;',
-                              gn-fn-index:json-escape(gmd:LocalisedCharacterString/text()),
+                              util:escapeForJson(gmd:LocalisedCharacterString/text()),
                               '&quot;')"/>,
           <xsl:value-of select="concat('&quot;@language&quot;: &quot;',
                               $languageCode,
@@ -441,14 +441,14 @@
         <xsl:variable name="requestedValue"
                       select="lan:PT_FreeText/*/lan:LocalisedCharacterString[@id = $requestedLanguageId]/text()"/>
         <xsl:value-of select="concat('&quot;',
-                              gn-fn-index:json-escape(
+                              util:escapeForJson(
                                 if ($requestedValue != '') then $requestedValue else (gco:CharacterString|gcx:Anchor)),
                               '&quot;')"/>
       </xsl:when>
       <xsl:otherwise>
         <!-- A simple property value -->
         <xsl:value-of select="concat('&quot;',
-                              gn-fn-index:json-escape(gco:CharacterString|gcx:Anchor),
+                              util:escapeForJson(gco:CharacterString|gcx:Anchor),
                               '&quot;')"/>
       </xsl:otherwise>
     </xsl:choose>

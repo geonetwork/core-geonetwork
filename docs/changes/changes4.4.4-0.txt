@@ -1,0 +1,45 @@
+================================================================================
+===
+=== GeoNetwork 4.4.4-SNAPSHOT: List of changes
+===
+================================================================================
+- documentation navigation update for 4.4.4 release
+- Setup for release of 4.4.4 with gitignore for build scripts
+- Transfix update for 4.4.4 release
+- Fix sql syntax for migrate to 4.4.4 script (#7956)
+- Enforce development environment instructions to Elasticsearch  8.11.3 (#7866)
+- Adjust nav tree for batchupdate options
+- Guidance on use of GeoNetwork 2.0 harvester
+- Update revise use of empty or mostly empty pages
+- Remove q service, used to query in previous versions that used Lucene as the search engine
+- Modify csv search export to escape double-quotes with double-quotes instead of backslash (#7927)
+- Fix harvester URIMapper to handle local metadata (#7946)
+- CSW server / Use portal filter in GetRecordById requests (#7890)
+- CSW / GetRecords / Number of matches is not total match
+- metadata history viewing with user profile level (#7450)
+- Map / WPS / Add support for predefined WPS list (#7842)
+- Hide the typeahead search suggestions when hitting the ENTER key in the search field without selecting a suggested value
+- Standard / ISO19115-3 / Editor / Uom encoding support (#7915)
+- Search / May fail with random_score depending on ES config (#7912)
+- API / Import does not overwrite metadata if any validation status (#7703)
+- Standard / ISO19115-3 / Use anchor encoding for IACS keywords (#7853)
+- Fix issue with saving metadata status causes indexing of metadata which causes issues for db rollbacks (#7514)
+- move email notification at the end of status change transaction (#7864)
+- Upgrade springdoc to 1.7.0 (#7596)
+- Configure harvesters log to avoid application log duplicated in harvester_default.log file. Fixes #7895 (#7896)
+- Fix typo in Messages.properties (#7892)
+- Fix LinksApiTest integration test. Related to changes in #7878 to process the links in a thread
+- [gn]: hibernate troubles with jeeves and persistance manager (harvesting mef) (#6840)
+- Feedback / Fix email to multiple recipients (#7875)
+- Passing key into update/remove process xslt for iso 19139 to fix issue with updating/deleting resources with same url (#7431)
+- Metadata link analysis improvements (#7878)
+- Indexing / Improve geometry indexing and display
+- Editor / GeoNames search failing with space
+- Fill in 4.2.x releases for maintenance page (#7879)
+- Map / Extent API / Background image failure if matrixset is not SRS code
+- Optimise query used to retrieve metadata links results (#7453)
+- Standard / ISO19115-3 / Schema / Move from srv 2.1 to 2.0
+- fix regex for urls where ampersand follows the ID
+- OpenID / Cleaning up cached tokens (#7810)
+- Editor / Associated resources panel improvements (#7669)
+- Update version to 4.4.4-SNAPSHOT

@@ -79,6 +79,7 @@
       $scope.importing = false;
 
       gnConfigService.load().then(function (c) {
+        $scope.isMdWorkflowEnable = gnConfig["metadata.workflow.enable"];
         $scope.params.group = gnConfig["system.metadatacreate.preferredGroup"];
       });
 

@@ -91,14 +91,14 @@
           }
         },
 
-        // As this is a authorized mapservice lets use the authization load function for loading the images/tiles
+        // As this is a authorized mapservice lets use the authorization load function for loading the images/tiles
         authorizationLoadFunction: function (tile, src) {
           var srcUrl = src;
           var mapservice = this.getMapservice(srcUrl);
           if (mapservice !== null) {
             // If we are using a proxy then adjust the url.
             if (mapservice.useProxy) {
-              // Proxy calls should have been handled withtout load function . So it this occures just log a warning and set the proxy url
+              // Proxy calls should have been handled without load function . So it this occurs just log a warning and set the proxy url
               console.log(
                 "Warning: attempting to get Using authorized Map service to get tile/image via proxy - this should have already been handled."
               );
@@ -296,7 +296,6 @@
            * Handled types are:
            *  * `osm`: OSM, no other prop required
            *  * `bing_aerial`: Bing Aerial background, required prop: `key`
-           *  * `stamen`: Stamen layers, required prop: `name`
            *  * `wms`: generic WMS layer, required props: `name`, `url`
            *  * `wmts`: generic WMTS layer, required props: `name`, `url`
            *  * `tms`: generic TMS layer, required prop: `url`
@@ -383,21 +382,6 @@
                       imagerySet: "Aerial"
                     }),
                     title: layerInfo.title || "Bing Aerial"
-                  })
-                );
-                break;
-
-              case "stamen":
-                //We make watercolor the default layer
-                var type = layerInfo.name ? layerInfo.name : "watercolor",
-                  source = new ol.source.Stamen({
-                    layer: type
-                  });
-                source.set("type", type);
-                defer.resolve(
-                  new ol.layer.Tile({
-                    source: source,
-                    title: layerInfo.title || "Stamen"
                   })
                 );
                 break;
@@ -576,7 +560,6 @@
             }
             var projExtent = proj.getExtent();
             if (wkts && wkts.length) {
-              var geometry;
               var geoms = [];
               var format = new ol.format.GeoJSON();
               wkts.forEach(function (wkt) {
@@ -590,31 +573,26 @@
               });
               var geometryCollection = new ol.geom.GeometryCollection(geoms);
               feat.setGeometry(geometryCollection);
-              // // If is composed of one geometry of type point
-              // if (extent.length === 1 &&
-              //     extent[0][0] === extent[0][2] &&
-              //     extent[0][1] === extent[0][3]) {
-              //   geometry = new ol.geom.Point([extent[0][0], extent[0][1]]);
-              // } else {
-              //   // Build multipolygon from the set of bboxes
-              //   geometry = new ol.geom.MultiPolygon([]);
-              //   for (var j = 0; j < extent.length; j++) {
-              //     // TODO: Point will not be supported in multi geometry
-              //     var projectedExtent = ol.proj.transformExtent(extent[j], 'EPSG:4326', proj);
-              //     if (!ol.extent.intersects(projectedExtent, projExtent)) {
-              //       continue;
-              //     }
-              //     var coords = this.getPolygonFromExtent(
-              //       ol.extent.getIntersection(projectedExtent, projExtent)
-              //     );
-              //     geometry.appendPolygon(new ol.geom.Polygon(coords));
-              //   }
-              // }
-              // // no valid bbox was found: clear geometry
-              // if (!geometry.getPolygons().length) {
-              //   geometry = null;
-              // }
-              // feat.setGeometry(geometry);
+
+              if (
+                !gnGlobalSettings.gnCfg.mods.map["map-search"].geodesicExtents &&
+                !proj.isGlobal() &&
+                !feat.getGeometry().isEmpty()
+              ) {
+                var geometry = new ol.geom.MultiPolygon([]);
+
+                var coords = this.getPolygonFromExtent(
+                  ol.extent.getIntersection(feat.getGeometry().getExtent(), projExtent)
+                );
+
+                geometry.appendPolygon(new ol.geom.Polygon(coords));
+                // no valid bbox was found: clear geometry
+                if (!geometry.getPolygons().length) {
+                  geometry = null;
+                }
+                feat = new ol.Feature();
+                feat.setGeometry(geometry);
+              }
             }
             return feat;
           },
@@ -898,7 +876,56 @@
           createOlWMS: function (map, layerParams, layerOptions) {
             var options = layerOptions || {};
 
-            var loadFunction;
+            var convertGetMapRequestToPost = function (url, onLoadCallback) {
+              var p = url.split("?");
+              var action = p[0];
+              var params = p[1].split("&");
+              var data = new FormData();
+              params.map(function (p) {
+                var token = p.split("=");
+                data.append(token[0], decodeURIComponent(token[1]));
+              });
+              $http
+                .post(action, data, {
+                  responseType: "arraybuffer",
+                  transformRequest: angular.identity,
+                  headers: { "Content-Type": undefined }
+                })
+                .then(onLoadCallback);
+            };
+
+            var loadFunction = function (imageTile, src) {
+              $http.head(src).then(
+                function (r) {
+                  imageTile.getImage().src = src;
+                },
+                function (r) {
+                  // Apache may not set CORS header in case of HTTP errors
+                  // This depends on virtual hosts configuration,
+                  // usage of Header always set Access-Control-Allow-Origin "*",
+                  // and virtual host resolution (by server name, ip or wildcard).
+                  // On CORS error, status is -1.
+                  // Check client side if the URI is too large according to default Apache LimitRequestFieldSize
+                  // and switch to POST in this case.
+                  var uriTooLarge =
+                    (r.status === undefined || r.status === -1) && src.length >= 8190;
+
+                  if (r.status === 414 || uriTooLarge) {
+                    // Request URI too large, try POST
+                    convertGetMapRequestToPost(src, function (response) {
+                      var arrayBufferView = new Uint8Array(response.data);
+                      var blob = new Blob([arrayBufferView], { type: "image/png" });
+                      var urlCreator = window.URL || window.webkitURL;
+                      var imageUrl = urlCreator.createObjectURL(blob);
+                      imageTile.getImage().src = imageUrl;
+                    });
+                  } else {
+                    // Other HEAD errors, default to OL image src set
+                    imageTile.getImage().src = src;
+                  }
+                }
+              );
+            };
 
             // If this is an authorized mapservice then we need to adjust the url or add auth headers
             // Only check http url and exclude any urls like data: which should not be changed. Also, there is not need to check prox urls.
@@ -1098,7 +1125,16 @@
               if (style && this.containsStyles(getCapLayer)) {
                 for (var i = 0; i < getCapLayer.Style.length; i++) {
                   var s = getCapLayer.Style[i];
-                  if (s.Name === style.Name) {
+                  var withEqualCompare =
+                    (s.Name.indexOf(":") !== -1 && style.Name.indexOf(":") !== -1) ||
+                    (s.Name.indexOf(":") === -1 && style.Name.indexOf(":") === -1);
+
+                  if (
+                    (withEqualCompare && s.Name === style.Name) ||
+                    (!withEqualCompare &&
+                      s.Name.replace(/.*:(.*)/, "$1") ===
+                        style.Name.replace(/.*:(.*)/, "$1"))
+                  ) {
                     requestedStyle = s;
                     legendUrl = s.LegendURL[0];
                     break;
@@ -1181,6 +1217,7 @@
               if (url.slice(-1) === "?") {
                 url = url.substring(0, url.length - 1);
               }
+
               var layer = this.createOlWMS(map, layerParam, {
                 url: url,
                 label: getCapLayer.Title || getCapLayer.Name,
@@ -1216,11 +1253,21 @@
                     }
                   }
                   if (dimension.name == "time") {
+                    var dimensionValues = [];
+
+                    var dimensionList = dimension.values.split(",");
+
+                    for (var i = 0; i < dimensionList.length; i++) {
+                      var wmsTimeInterval = new WMSTimeInterval(dimensionList[i].trim());
+
+                      dimensionValues = dimensionValues.concat(
+                        wmsTimeInterval.getValues()
+                      );
+                    }
+
                     layer.set("time", {
                       units: dimension.units,
-                      values: dimension.values.split(",").map(function (e) {
-                        return e.trim();
-                      })
+                      values: dimensionValues
                     });
 
                     if (dimension.default) {
@@ -1538,6 +1585,32 @@
           /**
            * @ngdoc method
            * @methodOf gn_map.service:gnMap
+           * @name gnMap#getLinkDescription
+           *
+           * @description
+           * Retrieve description of the link from the metadata
+           * record using the URL and layer name. The description
+           * may override GetCapabilities layer name and can also
+           * be multilingual.
+           */
+          getLinkDescription: function (md, url, name) {
+            if (md) {
+              var link = md.getLinksByFilter(
+                "protocol:OGC:WMS" +
+                  " AND url:" +
+                  url.replace("?", "\\?") +
+                  " AND name:" +
+                  name
+              );
+              if (link.length === 1) {
+                return link[0].description !== "" ? link[0].description : undefined;
+              }
+            }
+          },
+
+          /**
+           * @ngdoc method
+           * @methodOf gn_map.service:gnMap
            * @name gnMap#addWmsFromScratch
            *
            * @description
@@ -1597,7 +1670,7 @@
                     var _url = url.split("/");
                     _url = _url[0] + "/" + _url[1] + "/" + _url[2] + "/";
                     if (
-                      $.inArray(_url, gnGlobalSettings.requireProxy) >= 0 &&
+                      $.inArray(_url + "#GET", gnGlobalSettings.requireProxy) >= 0 &&
                       url.indexOf(gnGlobalSettings.proxyUrl) != 0
                     ) {
                       capL.useProxy = true;
@@ -1612,6 +1685,12 @@
                           if (!createOnly) {
                             map.addLayer(olL);
                           }
+
+                          olL.set(
+                            "layerTitleFromMetadata",
+                            $this.getLinkDescription(olL.get("md"), url, name)
+                          );
+
                           gnWmsQueue.removeFromQueue(
                             url,
                             name,
@@ -1766,13 +1845,25 @@
               .then(function (results) {
                 var layerInfo = results[0];
                 var legendUrl = results[1];
+
+                var layerExtent;
+
+                // Scale the layer extent. See https://github.com/geonetwork/core-geonetwork/issues/8025
+                if (layerInfo.extent) {
+                  layerExtent = [
+                    layerInfo.extent.xmin,
+                    layerInfo.extent.ymin,
+                    layerInfo.extent.xmax,
+                    layerInfo.extent.ymax
+                  ];
+
+                  var geomExtent = ol.geom.Polygon.fromExtent(layerExtent);
+                  geomExtent.scale(1.1);
+                  layerExtent = geomExtent.getExtent();
+                }
+
                 var extent = layerInfo.extent
-                  ? [
-                      layerInfo.extent.xmin,
-                      layerInfo.extent.ymin,
-                      layerInfo.extent.xmax,
-                      layerInfo.extent.ymax
-                    ]
+                  ? layerExtent
                   : map.getView().calculateExtent();
                 if (
                   layerInfo.extent &&
@@ -1907,6 +1998,12 @@
                       if (!createOnly) {
                         map.addLayer(olL);
                       }
+
+                      olL.set(
+                        "layerTitleFromMetadata",
+                        $this.getLinkDescription(olL.get("md"), url, name)
+                      );
+
                       gnWmsQueue.removeFromQueue(url, name, map);
                       defer.resolve(olL);
                     };
@@ -2226,7 +2323,8 @@
                   source: new ol.source.XYZ({
                     url: opt.url
                   }),
-                  title: title || "TMS Layer"
+                  title: title || "TMS Layer",
+                  name: opt.name
                 });
               case "bing_aerial":
                 return new ol.layer.Tile({
@@ -2236,17 +2334,6 @@
                     imagerySet: "Aerial"
                   }),
                   title: title || "Bing Aerial"
-                });
-              case "stamen":
-                //We make watercolor the default layer
-                var type = opt && opt.name ? opt.name : "watercolor",
-                  source = new ol.source.Stamen({
-                    layer: type
-                  });
-                source.set("type", type);
-                return new ol.layer.Tile({
-                  source: source,
-                  title: title || "Stamen"
                 });
 
               case "wmts":
@@ -2390,7 +2477,7 @@
           feedLayerWithRelated: function (layer, linkGroup) {
             var md = layer.get("md");
 
-            if (!linkGroup) {
+            if (!Number.isInteger(linkGroup)) {
               console.warn(
                 "The layer has not been found in any group: " +
                   layer.getSource().getParams().LAYERS
@@ -2456,4 +2543,81 @@
     function (value) {
       return typeof value === "number" && isFinite(value) && Math.floor(value) === value;
     };
+
+  /**
+   * Parses a time interval with the following formats and creates a list of dates for the time interval.
+   *
+   *   DATE
+   *   DATE/DATE
+   *   DATE/PERIOD
+   *   DATE/DATE/PERIOD
+   *
+   * @param value time interval value
+   */
+  function WMSTimeInterval(interval) {
+    this.interval = interval;
+  }
+
+  WMSTimeInterval.prototype._isValidDate = function (value) {
+    return moment(value).isValid();
+  };
+
+  WMSTimeInterval.prototype._isValidDuration = function (value) {
+    return moment.isDuration(moment.duration(value));
+  };
+
+  WMSTimeInterval.prototype._processInterval = function (startDate, endDate, duration) {
+    var timeIntervalValues = [];
+
+    var durationValue = moment.duration(duration);
+    timeIntervalValues.push(startDate);
+
+    var nextValue = moment(startDate).add(durationValue).utc().format();
+
+    if (!endDate) {
+      timeIntervalValues.push(nextValue);
+    } else {
+      while (moment(nextValue).isBefore(moment(endDate))) {
+        timeIntervalValues.push(nextValue);
+        nextValue = moment(nextValue).add(durationValue).utc().format();
+      }
+    }
+
+    return timeIntervalValues;
+  };
+
+  WMSTimeInterval.prototype.getValues = function () {
+    var timeIntervalValues = [];
+    var intervalTokens = this.interval.split("/");
+
+    if (intervalTokens.length == 1 && this._isValidDate(this.interval)) {
+      timeIntervalValues.push(this.interval);
+    } else if (intervalTokens.length == 2) {
+      var isValidStartDate = this._isValidDate(intervalTokens[0]);
+      var isValidEndDate = this._isValidDate(intervalTokens[1]);
+      var isValidDuration = this._isValidDuration(intervalTokens[1]);
+
+      if (isValidStartDate && isValidEndDate) {
+        // DATE/DATE
+        timeIntervalValues = intervalTokens;
+      } else if (isValidStartDate && isValidDuration) {
+        // DATE/PERIOD
+        timeIntervalValues = timeIntervalValues.concat(
+          this._processInterval(intervalTokens[0], undefined, intervalTokens[1])
+        );
+      }
+    } else if (
+      intervalTokens.length == 3 &&
+      this._isValidDate(intervalTokens[0]) &&
+      this._isValidDate(intervalTokens[1]) &&
+      this._isValidDuration(intervalTokens[2])
+    ) {
+      // DATE/DATE/PERIOD
+      timeIntervalValues = timeIntervalValues.concat(
+        this._processInterval(intervalTokens[0], intervalTokens[1], intervalTokens[2])
+      );
+    }
+
+    return timeIntervalValues;
+  };
 })();

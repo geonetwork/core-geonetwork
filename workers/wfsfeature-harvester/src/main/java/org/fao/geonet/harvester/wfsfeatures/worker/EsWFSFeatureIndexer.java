@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2015 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2023 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -23,6 +23,19 @@
 
 package org.fao.geonet.harvester.wfsfeatures.worker;
 
+import co.elastic.clients.elasticsearch._helpers.bulk.BulkIngester;
+import co.elastic.clients.elasticsearch._helpers.bulk.BulkListener;
+import co.elastic.clients.elasticsearch._types.Result;
+import co.elastic.clients.elasticsearch.core.BulkRequest;
+import co.elastic.clients.elasticsearch.core.BulkResponse;
+import co.elastic.clients.elasticsearch.core.IndexRequest;
+import co.elastic.clients.elasticsearch.core.IndexResponse;
+import co.elastic.clients.elasticsearch.core.bulk.BulkOperation;
+import co.elastic.clients.elasticsearch.core.bulk.IndexOperation;
+import co.elastic.clients.json.JsonData;
+import co.elastic.clients.json.JsonpMapper;
+import co.elastic.clients.util.BinaryData;
+import co.elastic.clients.util.ContentType;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -30,21 +43,14 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableMap;
+import jakarta.json.spi.JsonProvider;
 import org.apache.camel.Exchange;
 import org.apache.camel.spring.SpringCamelContext;
 import org.apache.jcs.access.exception.InvalidArgumentException;
-import org.elasticsearch.action.ActionListener;
-import org.elasticsearch.action.bulk.BulkRequest;
-import org.elasticsearch.action.bulk.BulkResponse;
-import org.elasticsearch.action.index.IndexRequest;
-import org.elasticsearch.action.index.IndexResponse;
-import org.elasticsearch.client.RequestOptions;
-import org.elasticsearch.common.xcontent.XContentType;
-import org.elasticsearch.rest.RestStatus;
 import org.fao.geonet.harvester.wfsfeatures.model.WFSHarvesterParameter;
 import org.fao.geonet.index.es.EsRestClient;
 import org.fao.geonet.kernel.search.EsSearchManager;
-import org.geotools.data.DataSourceException;
+import org.geotools.api.data.DataSourceException;
 import org.geotools.data.simple.SimpleFeatureCollection;
 import org.geotools.data.store.ReprojectingFeatureCollection;
 import org.geotools.data.wfs.WFSDataStore;
@@ -58,16 +64,17 @@ import org.locationtech.jts.geom.Geometry;
 import org.locationtech.jts.geom.Point;
 import org.locationtech.jts.geom.PrecisionModel;
 import org.locationtech.jts.precision.GeometryPrecisionReducer;
-import org.opengis.feature.simple.SimpleFeature;
-import org.opengis.geometry.BoundingBox;
-import org.opengis.temporal.Instant;
-import org.opengis.temporal.Position;
+import org.geotools.api.feature.simple.SimpleFeature;
+import org.geotools.api.geometry.BoundingBox;
+import org.geotools.api.temporal.Instant;
+import org.geotools.api.temporal.Position;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
 import java.io.IOException;
+import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -82,8 +89,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static org.elasticsearch.rest.RestStatus.CREATED;
-import static org.elasticsearch.rest.RestStatus.OK;
 
 
 // TODO: GeoServer WFS 1.0.0 in some case return
@@ -252,7 +257,9 @@ public class EsWFSFeatureIndexer {
 
         String url = state.getParameters().getUrl();
         String typeName = state.getParameters().getTypeName();
-        String resolvedTypeName = state.getResolvedTypeName();
+        List<String> resolvedTypeNames = state.getResolvedTypeNames();
+        String strategyId = state.getStrategyId();
+
         Map<String, String> tokenizedFields = state.getParameters().getTokenizedFields();
         WFSDataStore wfs = state.getWfsDatastore();
         Map<String, String> featureAttributes = state.getFields();
@@ -277,175 +284,163 @@ public class EsWFSFeatureIndexer {
             throw new RuntimeException(msg);
         }
 
+        BulkResutHandler brh = new AsyncBulkResutHandler(typeName, url, nbOfFeatures, report, state.getParameters().getMetadataUuid());
+
         try {
             nbOfFeatures = 0;
 
-            final Phaser phaser = new Phaser();
-            BulkResutHandler brh = new AsyncBulkResutHandler(phaser, typeName, url, nbOfFeatures, report, state.getParameters().getMetadataUuid());
-
             long begin = System.currentTimeMillis();
-//            FeatureIterator<SimpleFeature> features = wfs.getFeatureSource(typeName).getFeatures(query).features();
+            String epsg = "urn:ogc:def:crs:OGC:1.3:CRS84";
 
-            SimpleFeatureCollection fc = wfs.getFeatureSource(resolvedTypeName).getFeatures();
-            ReprojectingFeatureCollection rfc = new ReprojectingFeatureCollection(fc, CRS.decode("urn:ogc:def:crs:OGC:1.3:CRS84"));
+            for (String featureType : resolvedTypeNames) {
+                SimpleFeatureCollection fc = wfs.getFeatureSource(featureType).getFeatures();
 
-            FeatureIterator<SimpleFeature> features = rfc.features();
+                ReprojectingFeatureCollection rfc = new ReprojectingFeatureCollection(fc, CRS.decode(epsg));
 
-            try {
-                while (features.hasNext()) {
-                    String featurePointer = String.format("%s#%s", typeName, nbOfFeatures);
-                    try {
-                        SimpleFeature feature = null;
+                FeatureIterator<SimpleFeature> features = rfc.features();
+
+                try {
+                    while (features.hasNext()) {
+                        String featurePointer = String.format("%s#%s", featureType, nbOfFeatures);
                         try {
-                            feature = features.next();
-                            featurePointer = String.format("%s/id:%s", featurePointer, feature.getID());
-                        } catch (Exception e) {
-                            if (e.getCause() instanceof IOException
-                                || e.getCause() instanceof DataSourceException) {
+                            SimpleFeature feature = null;
+                            try {
+                                feature = features.next();
+                                featurePointer = String.format("%s/id:%s", featurePointer, feature.getID());
+                            } catch (Exception e) {
+                                if (e.getCause() instanceof IOException
+                                    || e.getCause() instanceof DataSourceException) {
+                                    String msg = String.format(
+                                        "Error while getting feature %s. Exception is: %s. Harvesting task will be stopped. This is probably a problem with the data source or some network related issues. Try to relaunch it later.",
+                                        featurePointer,
+                                        e.getMessage()
+                                    );
+                                    LOGGER.warn(msg);
+                                    report.put("error_ss", msg);
+                                    break;
+                                }
                                 String msg = String.format(
-                                    "Error while getting feature %s. Exception is: %s. Harvesting task will be stopped. This is probably a problem with the data source or some network related issues. Try to relaunch it later.",
-                                    featurePointer,
-                                    e.getMessage()
+                                    "Error on reading %s. Exception is: %s",
+                                    featurePointer, e.getMessage()
                                 );
                                 LOGGER.warn(msg);
                                 report.put("error_ss", msg);
-                                break;
+                                continue;
                             }
+                            ObjectNode rootNode = protoNode.deepCopy();
+                            titleResolver.setTitle(rootNode, feature);
+                            rootNode.put("featureType", featureType);
+
+                            for (String attributeName : featureAttributes.keySet()) {
+                                Object attributeValue = feature.getAttribute(attributeName);
+                                if (attributeValue == null) {
+
+                                } else if (tokenizedFields != null && tokenizedFields.get(attributeName) != null) {
+                                    String rawValue = (String) attributeValue;
+                                    String value = rawValue.startsWith(CDATA_START) ?
+                                        rawValue.replaceFirst(CDATA_START_REGEX, "").substring(0, rawValue.length() - CDATA_END.length() - CDATA_START.length()) :
+                                        rawValue;
+
+                                    String separator = tokenizedFields.get(attributeName);
+                                    String[] tokens = value.split(separator);
+                                    ArrayNode arrayNode = jacksonMapper.createArrayNode();
+                                    for (String token : tokens) {
+                                        arrayNode.add(token.trim());
+                                    }
+                                    rootNode.putPOJO(getDocumentFieldName(attributeName), arrayNode);
+                                } else if (getDocumentFieldName(attributeName).equals("geom")) {
+                                    Geometry geom = (Geometry) feature.getDefaultGeometry();
+
+                                    if (applyPrecisionModel) {
+                                        if (geom.isValid()) {
+                                            PrecisionModel precisionModel = new PrecisionModel(Math.pow(10, numberOfDecimals - 1));
+                                            geom = GeometryPrecisionReducer.reduce(geom, precisionModel);
+                                            // numberOfDecimals is equal to
+                                            // precisionModel.getMaximumSignificantDigits()
+                                        } else {
+                                            String msg = String.format(
+                                                "Feature %s: Cannot apply precision reducer on invalid geometry. Check the geometry validity. The feature will be indexed but with no geometry.",
+                                                featurePointer);
+                                            LOGGER.warn(msg);
+                                            report.put("error_ss", msg);
+                                            continue;
+                                        }
+                                    }
+
+                                    // An issue here is that GeometryJSON conversion may over simplify
+                                    // the geometry by truncating coordinates based on numberOfDecimals
+                                    // which on default constructor is set to 4. This may lead to
+                                    // invalid geometry and Elasticsearch will fail parsing the GeoJSON
+                                    // with the following type of error:
+                                    // Caused by: org.locationtech.spatial4j.exception.InvalidShapeException:
+                                    // Provided shape has duplicate
+                                    // consecutive coordinates at: (-3.9997, 48.7463, NaN)
+                                    //
+                                    // To avoid this, it may be relevant to apply the reduction model
+                                    // preserving topology.
+                                    String gjson = new GeometryJSON(numberOfDecimals).toString(geom);
+
+                                    JsonNode jsonNode = jacksonMapper.readTree(gjson.getBytes(StandardCharsets.UTF_8));
+                                    rootNode.set(getDocumentFieldName(attributeName), jsonNode);
+
+                                    boolean isPoint = geom instanceof Point;
+                                    if (isPoint) {
+                                        Coordinate point = geom.getCoordinate();
+                                        rootNode.put("location", String.format("%s,%s", point.y, point.x));
+                                    } else {
+                                        report.setPointOnlyForGeomsFalse();
+                                    }
+
+                                    // Populate bbox coordinates to be able to compute
+                                    // global bbox of search results
+                                    final BoundingBox bbox = feature.getBounds();
+                                    rootNode.put("bbox_xmin", bbox.getMinX());
+                                    rootNode.put("bbox_ymin", bbox.getMinY());
+                                    rootNode.put("bbox_xmax", bbox.getMaxX());
+                                    rootNode.put("bbox_ymax", bbox.getMaxY());
+                                } else if (attributeValue instanceof Instant) {
+                                    try {
+                                        Position position = ((DefaultInstant) attributeValue).getPosition();
+
+                                        if (position != null && position.getDate() != null) {
+                                            rootNode.put(getDocumentFieldName(attributeName),
+                                                position.getDate().toInstant().toString());
+                                        }
+                                    } catch (Exception instantException) {
+                                        String msg = String.format(
+                                            "Feature %s: Cannot read attribute %s, value %s. Exception is: %s",
+                                            featurePointer, attributeName, attributeValue, instantException.getMessage());
+                                        LOGGER.warn(msg);
+                                        report.put("error_ss", msg);
+                                    }
+                                } else {
+                                    String value = attributeValue.toString();
+                                    rootNode.put(getDocumentFieldName(attributeName),
+                                        value.startsWith(CDATA_START) ?
+                                            value.replaceFirst(CDATA_START_REGEX, "").substring(0, value.length() - CDATA_END.length() - CDATA_START.length()) :
+                                            value
+
+                                    );
+                                }
+                            }
+
+                            nbOfFeatures ++;
+                            brh.addAction(rootNode, feature);
+
+                        } catch (Exception ex) {
                             String msg = String.format(
-                                "Error on reading %s. Exception is: %s",
-                                featurePointer, e.getMessage()
+                                "Feature %s: Error is: %s",
+                                featurePointer, ex.getMessage()
                             );
                             LOGGER.warn(msg);
                             report.put("error_ss", msg);
-                            continue;
                         }
-                        ObjectNode rootNode = protoNode.deepCopy();
-                        titleResolver.setTitle(rootNode, feature);
-
-                        for (String attributeName : featureAttributes.keySet()) {
-                            Object attributeValue = feature.getAttribute(attributeName);
-                            if (attributeValue == null) {
-
-                            } else if (tokenizedFields != null && tokenizedFields.get(attributeName) != null) {
-                                String rawValue = (String) attributeValue;
-                                String value = rawValue.startsWith(CDATA_START) ?
-                                    rawValue.replaceFirst(CDATA_START_REGEX, "").substring(0, rawValue.length() - CDATA_END.length() - CDATA_START.length()) :
-                                    rawValue;
-
-                                String separator = tokenizedFields.get(attributeName);
-                                String[] tokens = value.split(separator);
-                                ArrayNode arrayNode = jacksonMapper.createArrayNode();
-                                for (String token : tokens) {
-                                    arrayNode.add(token.trim());
-                                }
-                                rootNode.putPOJO(getDocumentFieldName(attributeName), arrayNode);
-                            } else if (getDocumentFieldName(attributeName).equals("geom")) {
-                                Geometry geom = (Geometry) feature.getDefaultGeometry();
-
-                                if (applyPrecisionModel) {
-                                    if (geom.isValid()) {
-                                        PrecisionModel precisionModel = new PrecisionModel(Math.pow(10, numberOfDecimals - 1));
-                                        geom = GeometryPrecisionReducer.reduce(geom, precisionModel);
-                                        // numberOfDecimals is equal to
-                                        // precisionModel.getMaximumSignificantDigits()
-                                    } else {
-                                        String msg = String.format(
-                                            "Feature %s: Cannot apply precision reducer on invalid geometry. Check the geometry validity. The feature will be indexed but with no geometry.",
-                                            featurePointer);
-                                        LOGGER.warn(msg);
-                                        report.put("error_ss", msg);
-                                        break;
-                                    }
-                                }
-
-                                // An issue here is that GeometryJSON conversion may over simplify
-                                // the geometry by truncating coordinates based on numberOfDecimals
-                                // which on default constructor is set to 4. This may lead to
-                                // invalid geometry and Elasticsearch will fail parsing the GeoJSON
-                                // with the following type of error:
-                                // Caused by: org.locationtech.spatial4j.exception.InvalidShapeException:
-                                // Provided shape has duplicate
-                                // consecutive coordinates at: (-3.9997, 48.7463, NaN)
-                                //
-                                // To avoid this, it may be relevant to apply the reduction model
-                                // preserving topology.
-                                String gjson = new GeometryJSON(numberOfDecimals).toString(geom);
-
-                                JsonNode jsonNode = jacksonMapper.readTree(gjson.getBytes(StandardCharsets.UTF_8));
-                                rootNode.put(getDocumentFieldName(attributeName), jsonNode);
-
-                                boolean isPoint = geom instanceof Point;
-                                if (isPoint) {
-                                    Coordinate point = geom.getCoordinate();
-                                    rootNode.put("location", String.format("%s,%s", point.y, point.x));
-                                } else {
-                                    report.setPointOnlyForGeomsFalse();
-                                }
-
-                                // Populate bbox coordinates to be able to compute
-                                // global bbox of search results
-                                final BoundingBox bbox = feature.getBounds();
-                                rootNode.put("bbox_xmin", bbox.getMinX());
-                                rootNode.put("bbox_ymin", bbox.getMinY());
-                                rootNode.put("bbox_xmax", bbox.getMaxX());
-                                rootNode.put("bbox_ymax", bbox.getMaxY());
-                            } else if (attributeValue instanceof Instant) {
-                                try {
-                                    Position position = ((DefaultInstant) attributeValue).getPosition();
-                                    if (position != null && position.getDate() != null) {
-                                        rootNode.put(getDocumentFieldName(attributeName),
-                                            position.getDate().toInstant().toString());
-                                    }
-                                } catch (Exception instantException) {
-                                    String msg = String.format(
-                                        "Feature %s: Cannot read attribute %s, value %s. Exception is: %s",
-                                        featurePointer, attributeName, attributeValue, instantException.getMessage());
-                                    LOGGER.warn(msg);
-                                    report.put("error_ss", msg);
-                                }
-                            } else {
-                                String value = attributeValue.toString();
-                                rootNode.put(getDocumentFieldName(attributeName),
-                                    value.startsWith(CDATA_START) ?
-                                        value.replaceFirst(CDATA_START_REGEX, "").substring(0, value.length() - CDATA_END.length() - CDATA_START.length()) :
-                                        value
-
-                                );
-                            }
-                        }
-
-                        nbOfFeatures++;
-                        brh.addAction(rootNode, feature);
-
-                    } catch (Exception ex) {
-                        String msg = String.format(
-                            "Feature %s: Error is: %s",
-                            featurePointer, ex.getMessage()
-                        );
-                        LOGGER.warn(msg);
-                        report.put("error_ss", msg);
                     }
-
-                    if (brh.getBulkSize() >= featureCommitInterval) {
-                        brh.launchBulk(client);
-                        brh = new AsyncBulkResutHandler(phaser, typeName, url, nbOfFeatures, report, state.getParameters().getMetadataUuid());
-                    }
+                } finally {
+                    features.close();
                 }
-            } finally {
-                features.close();
             }
 
-            if (brh.getBulkSize() > 0) {
-                brh.launchBulk(client);
-            }
-
-            try {
-                if (nbOfFeatures > 0) {
-                    phaser.awaitAdvanceInterruptibly(0, 3, TimeUnit.HOURS);
-                }
-            } catch (TimeoutException e) {
-                throw new Exception("Timeout when awaiting all bulks to be processed.");
-            }
             LOGGER.info("{}: {} features processed in {} ms.", new Object[]{
                 typeName, nbOfFeatures,
                 System.currentTimeMillis() - begin
@@ -457,9 +452,11 @@ public class EsWFSFeatureIndexer {
             LOGGER.error(e.getMessage());
             throw e;
         } finally {
+            brh.close();
             report.saveHarvesterReport();
             future.complete(null);
         }
+
 
         return future;
     }
@@ -511,7 +508,7 @@ public class EsWFSFeatureIndexer {
         private String typeName;
         private boolean pointOnlyForGeoms;
 
-        public Report(String url, String typeName) throws UnsupportedEncodingException {
+        public Report(String url, String typeName) {
             this.typeName = typeName;
             this.url = url;
             pointOnlyForGeoms = true;
@@ -537,18 +534,21 @@ public class EsWFSFeatureIndexer {
         }
 
         public boolean saveHarvesterReport() {
-            IndexRequest request = new IndexRequest(index);
-            request.id(report.get("id").toString());
-            request.source(report);
+            IndexRequest request = IndexRequest.of(
+                b -> b.index(index)
+                    .id(report.get("id").toString())
+                    .document(report)
+            );
+
             try {
-                IndexResponse response = client.getClient().index(request, RequestOptions.DEFAULT);
-                if (response.status() == RestStatus.CREATED || response.status() == RestStatus.OK) {
+                IndexResponse response = client.getClient().index(request);
+                if (response.result() == Result.Created || response.result() == Result.Updated) {
                     LOGGER.info("Report saved for service {} and typename {}. Report id is {}",
                         url, typeName, report.get("id"));
                 } else {
                     LOGGER.info("Failed to save report for {}. Error was '{}'.",
                         typeName,
-                        response.getResult());
+                        response.result());
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -570,71 +570,76 @@ public class EsWFSFeatureIndexer {
 
     abstract class BulkResutHandler {
 
-        protected Phaser phaser;
         protected String typeName;
         private String url;
         protected int firstFeatureIndex;
         private Report report;
         private String metadataUuid;
         protected long begin;
-        protected BulkRequest bulk;
+        protected BulkIngester<String> bulk;
         protected int bulkSize;
         protected int failuresCount;
-        ActionListener<BulkResponse> listener;
+        BulkListener<String> listener;
 
-        public BulkResutHandler(Phaser phaser, String typeName, String url, int firstFeatureIndex, Report report, String metadataUuid) {
-            this.phaser = phaser;
+        public BulkResutHandler(String typeName, String url, int firstFeatureIndex, Report report, String metadataUuid) {
             this.typeName = typeName;
             this.url = url;
             this.firstFeatureIndex = firstFeatureIndex;
             this.report = report;
 
             this.metadataUuid = metadataUuid;
-            this.bulk = new BulkRequest(index);
+
             this.bulkSize = 0;
             this.failuresCount = 0;
-            LOGGER.debug("  {} - Indexing bulk (size {}) starting at {} ...",
-                typeName, featureCommitInterval, firstFeatureIndex);
+            LOGGER.debug("  {} - Indexing with bulk ingester (with maxOperations {}) ...",
+                typeName, featureCommitInterval);
 
-            listener = new ActionListener<BulkResponse>() {
+            listener = new BulkListener<String>() {
                 @Override
-                public void onResponse(BulkResponse bulkResponse) {
+                public void beforeBulk(long executionId, BulkRequest request, List<String> contexts) {
+                }
+
+                @Override
+                public void afterBulk(long executionId, BulkRequest request, List<String> contexts, BulkResponse bulkResponse) {
                     AtomicInteger bulkFailures = new AtomicInteger();
-                    if (bulkResponse.hasFailures()) {
-                        Arrays.stream(bulkResponse.getItems()).forEach(e -> {
-                            if (e.status() != OK
-                                && e.status() != CREATED) {
+                    if (bulkResponse.errors()) {
+                        bulkResponse.items().forEach(e -> {
+                            if (e.status() != 200
+                                && e.status() != 201) {
                                 String msg = String.format(
-                                    "Feature %s: Indexing error. Error is: %s", e.getId(), e.getFailure().toString());
+                                    "Feature %s: Indexing error. Error is: %s", e.id(), e.error().toString());
                                 report.put("error_ss", msg);
                                 LOGGER.warn(msg);
                                 bulkFailures.getAndIncrement();
                             }
                         });
                     }
-                    LOGGER.debug("  {} - Features [{}-{}] indexed in {} ms{}.", new Object[]{
-                        typeName, firstFeatureIndex, firstFeatureIndex + bulkSize,
+                    LOGGER.debug("  {} - {} features indexed in {} ms{}.", typeName, firstFeatureIndex + bulkSize,
                         System.currentTimeMillis() - begin,
-                        bulkResponse.hasFailures() ?
-                            " but with " + bulkFailures + " errors" : ""
-                    });
+                        bulkResponse.errors() ?
+                            " but with " + bulkFailures + " errors" : "");
                     failuresCount = bulkFailures.get();
-                    phaser.arriveAndDeregister();
                 }
 
                 @Override
-                public void onFailure(Exception e) {
+                public void afterBulk(long executionId, BulkRequest request, List<String> contexts, Throwable failure) {
                     String msg = String.format(
-                        "Features [%s-%s] indexed in %s ms but with errors. Exception: %s",
-                        typeName, firstFeatureIndex, bulkSize,
+                        "  %s - %s features indexed in %s ms but with errors. Exception: %s",
+                        typeName, firstFeatureIndex + bulkSize,
                         System.currentTimeMillis() - begin,
-                        e.getMessage()
+                        failure.getMessage()
                     );
                     report.put("error_ss", msg);
                     LOGGER.error(msg);
-                    phaser.arriveAndDeregister();
                 }
             };
+
+            this.bulk = BulkIngester.of(b -> b.client(client.getAsynchClient())
+                .listener(listener)
+                // .maxConcurrentRequests(1)
+                // .flushInterval(10, TimeUnit.SECONDS)
+                .maxOperations(featureCommitInterval));
+
         }
 
         public int getBulkSize() {
@@ -653,29 +658,29 @@ public class EsWFSFeatureIndexer {
             }
 
             String id = String.format("%s#%s#%s", url, typeName, featureId);
-            bulk.add(new IndexRequest(index).id(id)
-                .source(jacksonMapper.writeValueAsString(rootNode), XContentType.JSON));
-//                .routing(ROUTING_KEY));
+            BinaryData data = BinaryData.of(
+                    jacksonMapper.writeValueAsString(rootNode).getBytes(StandardCharsets.UTF_8),
+                    ContentType.APPLICATION_JSON);
+
+            bulk.add(b ->
+                b.index(io -> io
+                    .index(index)
+                    .id(id)
+                    .document(data)), id);
             bulkSize++;
         }
 
-        protected void prepareLaunch() {
-            phaser.register();
-            this.begin = System.currentTimeMillis();
+        public void close() {
+            if (this.bulk != null) {
+                this.bulk.close();
+            }
         }
-
-        abstract public void launchBulk(EsRestClient client) throws Exception;
     }
 
-    // depending on situation, one can expect going up to 1.5 faster using an async result handler (e.g. hudge collection of points)
+    // depending on situation, one can expect going up to 1.5 faster using an async result handler (e.g. huge collection of points)
     class AsyncBulkResutHandler extends BulkResutHandler {
-        public AsyncBulkResutHandler(Phaser phaser, String typeName, String url, int firstFeatureIndex, Report report, String metadataUuid) {
-            super(phaser, typeName, url, firstFeatureIndex, report, metadataUuid);
-        }
-
-        public void launchBulk(EsRestClient client) throws Exception {
-            prepareLaunch();
-            client.getClient().bulkAsync(this.bulk, RequestOptions.DEFAULT, this.listener);
+        public AsyncBulkResutHandler(String typeName, String url, int firstFeatureIndex, Report report, String metadataUuid) {
+            super(typeName, url, firstFeatureIndex, report, metadataUuid);
         }
     }
 
@@ -707,7 +712,7 @@ public class EsWFSFeatureIndexer {
             if (attributeType.equals("geometry")) {
                 featureAttributeToDocumentFieldNames.put(attributeName, "geom");
             } else {
-                boolean isTree = treeFields != null ? treeFields.contains(attributeName) : false;
+                boolean isTree = treeFields != null && treeFields.contains(attributeName);
                 featureAttributeToDocumentFieldNames.put(
                     attributeName,
                     String.join("",

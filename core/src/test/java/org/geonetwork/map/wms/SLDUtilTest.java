@@ -6,7 +6,7 @@ import org.jdom.Element;
 import org.jdom.output.XMLOutputter;
 import org.json.JSONObject;
 import org.junit.Test;
-import org.opengis.filter.Filter;
+import org.geotools.api.filter.Filter;
 import org.xmlunit.builder.DiffBuilder;
 import org.xmlunit.builder.Input;
 import org.xmlunit.diff.DefaultNodeMatcher;

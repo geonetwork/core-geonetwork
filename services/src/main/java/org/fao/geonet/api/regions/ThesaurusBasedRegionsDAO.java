@@ -37,7 +37,7 @@ import org.fao.geonet.kernel.region.RegionsDAO;
 import org.fao.geonet.kernel.region.Request;
 import org.locationtech.jts.geom.Geometry;
 import org.locationtech.jts.geom.GeometryFactory;
-import org.opengis.referencing.crs.CoordinateReferenceSystem;
+import org.geotools.api.referencing.crs.CoordinateReferenceSystem;
 import org.openrdf.model.Value;
 import org.openrdf.sesame.query.QueryResultsTable;
 

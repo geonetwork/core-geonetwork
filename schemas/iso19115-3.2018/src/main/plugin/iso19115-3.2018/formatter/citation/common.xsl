@@ -15,6 +15,19 @@
   <xsl:param name="format"
              select="'html'"/>
 
+  <!-- Who is the creator of the data set?  This can be an individual, a group of individuals, or an organization. -->
+  <xsl:param name="authorRoles"
+                select="'custodian,author'"/>
+  <xsl:variable name="authorRolesList"
+                select="tokenize($authorRoles, ',')"/>
+
+  <!-- What entity is responsible for producing and/or distributing the data set?  Also, is there a physical location associated with the publisher? -->
+  <xsl:param name="publisherRoles"
+                select="'publisher'"/>
+
+  <xsl:variable name="publisherRolesList"
+                select="tokenize($publisherRoles, ',')"/>
+
   <xsl:variable name="formats" as="node()*">
     <format key="html"/>
     <format key="text"/>
@@ -36,20 +49,22 @@
                   select="count(authorsNameAndOrgList/*) > 0"/>
     <xsl:variable name="hasPublisher"
                   select="count(publishersNameAndOrgList/*) > 0"/>
-    <textResponse>
-      <xsl:value-of select="concat(
+    <textResponse><xsl:value-of select="normalize-space(concat(
                                   (if ($hasAuthor)
                                      then string-join(authorsNameAndOrgList/*, ', ')
                                      else ''),
+                                  (if ($hasAuthor)
+                                     then ' '
+                                     else ''),
                                   (if (lastPublicationDate != '')
-                                    then concat(' (', substring(lastPublicationDate, 1, 4), '). ')
+                                    then concat('(', substring(lastPublicationDate, 1, 4), '). ')
                                     else if ($hasAuthor) then '. ' else ''),
-                                  translatedTitle,
+                                  normalize-space(translatedTitle),
                                   '. ',
                                   (if ($hasPublisher)
                                      then concat(string-join(publishersNameAndOrgList/*, ', '), '. ')
                                      else ''),
-                                  if (doiUrl != '') then doiUrl else landingPageUrl)"/>
+                                  if (doiUrl != '') then doiUrl else landingPageUrl))"/>
     </textResponse>
   </xsl:template>
 
@@ -57,12 +72,12 @@
   <xsl:template mode="citation" match="citation[lower-case($format) = 'bibtex']">
     <!-- https://en.wikipedia.org/wiki/BibTeX -->
     <textResponse>@data{<xsl:value-of select="uuid"/>,
-        author = {<xsl:value-of select="string-join(authorsNameAndOrgList/*, ' and ')"/>},
-        publisher = {<xsl:value-of select="string-join(publishersNameAndOrgList/*, ' and ')"/>},
-        title = {<xsl:value-of select="translatedTitle"/>},
-        <xsl:if test="lastPublicationDate != ''">year = {<xsl:value-of select="substring(lastPublicationDate, 1, 4)"/>},</xsl:if>
-        <xsl:if test="doi != ''">doi = {<xsl:value-of select="doi"/>},</xsl:if>
-        url = {<xsl:value-of select="if (doiUrl != '') then doiUrl else landingPageUrl"/>}
+      author = {<xsl:value-of select="normalize-space(string-join(authorsNameAndOrgList/*, ', '))"/>},
+      publisher = {<xsl:value-of select="normalize-space(string-join(publishersNameAndOrgList/*, ', '))"/>},
+      title = {<xsl:value-of select="normalize-space(translatedTitle)"/>},
+      <xsl:if test="lastPublicationDate != ''">year = {<xsl:value-of select="substring(lastPublicationDate, 1, 4)"/>},</xsl:if>
+      <xsl:if test="doi != ''">doi = {<xsl:value-of select="doi"/>},</xsl:if>
+      url = {<xsl:value-of select="if (doiUrl != '') then doiUrl else landingPageUrl"/>}
       }</textResponse>
   </xsl:template>
 
@@ -73,12 +88,12 @@
       <!-- TODO: add support for MAP, DBASE, CTLG, AGGR? -->
       <xsl:text>TY  - </xsl:text><xsl:value-of select="'DATA'"/><xsl:text>&#13;&#10;</xsl:text>
       <xsl:for-each select="authorsNameAndOrgList/*[. != '']">
-        <xsl:text>AU  - </xsl:text><xsl:value-of select="."/><xsl:text>&#13;&#10;</xsl:text>
+        <xsl:text>AU  - </xsl:text><xsl:value-of select="normalize-space(.)"/><xsl:text>&#13;&#10;</xsl:text>
       </xsl:for-each>
-      <xsl:text>TI  - </xsl:text><xsl:value-of select="translatedTitle"/><xsl:text>&#13;&#10;</xsl:text>
+      <xsl:text>TI  - </xsl:text><xsl:value-of select="normalize-space(translatedTitle)"/><xsl:text>&#13;&#10;</xsl:text>
       <!-- TODO: LA, ET -->
       <xsl:for-each select="publishersNameAndOrgList/*[. != '']">
-        <xsl:text>PB  - </xsl:text><xsl:value-of select="."/><xsl:text>&#13;&#10;</xsl:text>
+        <xsl:text>PB  - </xsl:text><xsl:value-of select="normalize-space(.)"/><xsl:text>&#13;&#10;</xsl:text>
       </xsl:for-each>
       <xsl:for-each select="keyword[. != '']">
         <xsl:text>KW  - </xsl:text><xsl:value-of select="."/><xsl:text>&#13;&#10;</xsl:text>
@@ -101,7 +116,7 @@
     <blockquote>
       <div class="row">
         <div class="col-md-3">
-          <i class="fa fa-quote-left pull-right"><xsl:comment select="'icon'"/></i>
+          <i class="fa fa-quote-left pull-right"><xsl:comment/></i>
         </div>
         <div class="col-md-9">
           <p>
@@ -114,23 +129,24 @@
                       else if ($hasAuthor) then '.'
                       else ''"/>
 
-            <div><xsl:copy-of select="translatedTitle/(text()|*)"/>.</div>
+            <span><xsl:copy-of select="translatedTitle/(text()|*)"/>.</span>
 
             <xsl:call-template name="citation-contact">
               <xsl:with-param name="contact" select="publishersNameAndOrgList"/>
             </xsl:call-template>
-            <br/>
+            <br></br>
+
             <xsl:variable name="url"
                           select="if (doiUrl != '') then doiUrl else landingPageUrl"/>
             <a href="{$url}">
               <xsl:value-of select="$url"/>
             </a>
-            <br/>
+            <br></br>
 
             <xsl:if test="additionalCitation != ''">
-              <br/>
+              <br></br>
               <em><xsl:value-of select="$schemaStrings/citationAdditional"/></em>
-              <br/>
+              <br></br>
               <xsl:value-of select="additionalCitation"/>
             </xsl:if>
           </p>
@@ -150,6 +166,7 @@
         </span>
       </xsl:for-each>
       <xsl:if test="position() != last()">, </xsl:if>
+      <xsl:if test="position() = last()">&#160;</xsl:if>
     </xsl:for-each>
   </xsl:template>
 </xsl:stylesheet>

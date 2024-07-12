@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2023 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -23,6 +23,7 @@
 
 package org.fao.geonet.kernel.search;
 
+import co.elastic.clients.elasticsearch._types.ElasticsearchException;
 import com.google.common.collect.Multimap;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.domain.ISODate;
@@ -34,7 +35,6 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 
 /**
  * Base interface for the search (Lucene or Solr).
@@ -65,20 +65,15 @@ public interface ISearchManager {
      * Rebuilds the Lucene index. If xlink or from selection parameters are defined, reindex a
      * subset of record. Otherwise reindex all records.
      *
-     * @param xlinks        Search all docs with XLinks, clear the XLinks cache and index all
-     *                      records found.
      * @param bucket Reindex all records from selection bucket.
      */
     boolean rebuildIndex(ServiceContext context,
-                         boolean xlinks,
                          boolean reset,
                          String bucket) throws Exception;
 
     Map<String, String> getDocsChangeDate() throws Exception;
 
     ISODate getDocChangeDate(String mdId) throws Exception;
-
-    Set<Integer> getDocsWithXLinks() throws Exception;
 
     /**
      * deletes a document.
@@ -90,7 +85,5 @@ public interface ISearchManager {
      */
     void delete(List<Integer> metadataIds) throws Exception;
 
-    long getNumDocs() throws Exception;
-
-    Element makeField(String fieldName, String fieldValue);
+    boolean isIndexWritable(String indexName) throws IOException, ElasticsearchException;
 }

@@ -7,7 +7,7 @@ detach the related service
                 xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0"
                 xmlns:cit="http://standards.iso.org/iso/19115/-3/cit/2.0"
                 xmlns:mrd="http://standards.iso.org/iso/19115/-3/mrd/1.0"
-                xmlns:srv="http://standards.iso.org/iso/19115/-3/srv/2.1"
+                xmlns:srv="http://standards.iso.org/iso/19115/-3/srv/2.0"
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:gn="http://www.fao.org/geonetwork">
   <xsl:param name="uuidref"/>

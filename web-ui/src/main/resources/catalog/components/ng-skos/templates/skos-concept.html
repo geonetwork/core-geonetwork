@@ -6,7 +6,7 @@
         title="{{'moveToTopConcept' | translate}}"
         ng-click="topConcept(concept.thesaurus)"
       >
-        <i class="fa fa-level-up" />
+        <i class="fa fa-level-up"></i>
       </button>
       <button
         class="btn btn-default dropdown-toggle"
@@ -16,7 +16,7 @@
         data-ng-disabled="!concept.previous"
         title="{{'previousKeywords' | translate}}"
       >
-        <i class="fa fa-angle-left" />
+        <i class="fa fa-angle-left"></i>
         <span class="caret"></span>
       </button>
       <ul class="dropdown-menu" role="menu" aria-labelledby="previous">
@@ -34,7 +34,7 @@
       ng-click="addConcept(concept)"
     >
       <span ng-if="prefLabel" skos-label="concept" lang="{{language}}"></span>
-      <i class="fa fa-plus-circle" />
+      <i class="fa fa-plus-circle"></i>
     </button>
     <hr />
   </div>

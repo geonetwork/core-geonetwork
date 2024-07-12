@@ -6,12 +6,12 @@
       id="gn-harvest-settings-selected-id"
       class="col-lg-6 gn-nopadding-left"
       data-gn-harvester-identification="harvesterSelected"
-    />
+    ></div>
     <div
       id="gn-harvest-settings-selected-schedule"
       class="col-lg-6 gn-nopadding-right"
       data-gn-harvester-schedule="harvesterSelected"
-    />
+    ></div>
   </div>
 
   <fieldset id="gn-harvest-settings-simpleurl-basic-row">
@@ -35,14 +35,14 @@
         data-gn-autogrow=""
         class="form-control"
         data-ng-model="harvesterSelected.site.url"
-      />
+      ></textarea>
       <p class="help-block" data-translate="">simpleurl-urlHelp</p>
     </div>
 
     <div
       id="gn-harvest-settings-simpleurl-advanced-authentication-row"
       data-gn-harvester-account="harvesterSelected"
-    />
+    ></div>
 
     <div class="well">
       <span data-translate="">simpleurl-configHelper</span>
@@ -177,7 +177,7 @@
         id="gn-harvest-settings-toISOConversion-list"
         data-gn-import-xsl="harvesterSelected.site.toISOConversion"
         data-mode="btn-group"
-      />
+      ></div>
       <p class="help-block" data-translate="">applyXSLToRecordHelp</p>
     </div>
 
@@ -186,23 +186,27 @@
         <span data-translate="">harvesterBatchEdits</span>
       </label>
 
-      <div gn-batch-edit-examples-selector="addBatchEdits" />
+      <div gn-batch-edit-examples-selector="addBatchEdits"></div>
 
       <div
         id="gn-harvest-settings-csw-advanced-batchEdits-list"
         style="height: 300px"
         ui-ace="{useWrapMode:true, showGutter:true, mode:'json'}"
         data-ng-model="harvesterSelected.content.batchEdits"
-      />
+      ></div>
       <p class="help-block" data-translate="">harvesterBatchEditsHelp</p>
     </div>
+
+    <div
+      data-gn-harvester-translate-content-configurator="harvesterSelected.content"
+    ></div>
 
     <div
       id="gn-harvest-settings-simpleurl-advanced-category-row"
       data-gn-category="harvesterSelected.categories[0]['@id']"
       data-lang="{{lang}}"
       data-label="category"
-    />
+    ></div>
 
     <div id="gn-harvest-settings-simpleurl-advanced-validate-row">
       <label
@@ -214,7 +218,7 @@
       <div
         id="gn-harvest-settings-simpleurl-advanced-validate-list"
         data-gn-harvester-validation="harvesterSelected.content.validate"
-      />
+      ></div>
       <p class="help-block" data-translate="">harvesterValidateHelp</p>
     </div>
   </fieldset>
@@ -223,5 +227,5 @@
     id="gn-harvest-settings-simpleurl-privileges-row"
     data-gn-harvester-privileges="harvesterSelected"
     data-lang="{{lang}}"
-  />
+  ></div>
 </form>

@@ -146,7 +146,7 @@ public class UpdateAllSequenceValueToMax extends DatabaseMigrationTask {
         try (Statement statement = connection.createStatement()) {
             final String tableMaxIdSQL = "SELECT max(" + keyColumnName + ") as NB FROM " + tableName;
 
-            ResultSet tableMaxIdResultSet = statement.executeQuery(tableMaxIdSQL);
+            ResultSet tableMaxIdResultSet = statement.executeQuery(tableMaxIdSQL); //NOSONAR
             long maxId = 0;
             try {
                 if (tableMaxIdResultSet.next()) {

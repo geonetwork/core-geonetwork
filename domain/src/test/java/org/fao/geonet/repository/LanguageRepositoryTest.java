@@ -42,7 +42,6 @@ public class LanguageRepositoryTest extends AbstractSpringDataTest {
         int val = inc.incrementAndGet();
         Language lang = new Language();
         lang.setId("l-" + val);
-        lang.setDefaultLanguage(val % 2 == 0);
         lang.setInspire(val % 2 == 1);
         lang.setName("name" + val);
         return lang;
@@ -59,19 +58,6 @@ public class LanguageRepositoryTest extends AbstractSpringDataTest {
 
         assertEquals(language1, _repo.findById(language1.getId()).get());
         assertEquals(language, _repo.findById(language.getId()).get());
-    }
-
-    @Test
-    public void testFindOneByDefaultLanguage() {
-        Language language = newLanguage();
-        language.setDefaultLanguage(true);
-        language = _repo.save(language);
-
-        Language language1 = newLanguage();
-        language1.setDefaultLanguage(false);
-        _repo.save(language1);
-
-        assertEquals(language, _repo.findOneByDefaultLanguage());
     }
 
     @Test

@@ -1,0 +1,40 @@
+<section class="gn-md-side-social">
+  <h2 data-translate="">shareOn</h2>
+  <div class="btn-group">
+    <a
+      data-ng-href="https://twitter.com/share?url={{socialMediaLink | encodeURIComponent}}"
+      title="{{'shareOnTwitter' | translate}}"
+      target="_blank"
+      class="btn btn-default"
+      ><i class="fa fa-fw fa-twitter"></i
+    ></a>
+    <a
+      data-ng-href="https://www.facebook.com/sharer.php?u={{socialMediaLink | encodeURIComponent}}"
+      title="{{'shareOnFacebook' | translate}}"
+      target="_blank"
+      class="btn btn-default"
+      ><i class="fa fa-fw fa-facebook"></i
+    ></a>
+    <a
+      data-ng-href="http://www.linkedin.com/sharing/share-offsite/?url={{socialMediaLink | encodeURIComponent}}"
+      title="{{'shareOnLinkedIn' | translate}}"
+      target="_blank"
+      class="btn btn-default"
+      ><i class="fa fa-fw fa-linkedin"></i
+    ></a>
+    <a
+      data-ng-href="mailto:?subject={{md.resourceTitle}}&amp;body={{socialMediaLink | encodeURIComponent}}"
+      title="{{'shareByEmail' | translate}}"
+      target="_blank"
+      class="btn btn-default"
+      ><i class="fa fa-fw fa-envelope-o"></i
+    ></a>
+    <a
+      data-ng-click="mdService.getPermalink(md)"
+      href=""
+      title="{{'permalink' | translate}}"
+      class="btn btn-default"
+      ><i class="fa fa-fw fa-link"></i
+    ></a>
+  </div>
+</section>

@@ -30,7 +30,8 @@
     "$rootScope",
     "$http",
     "gnGlobalSettings",
-    function ($rootScope, $http, gnGlobalSettings) {
+    "gnSearchLocation",
+    function ($rootScope, $http, gnGlobalSettings, gnSearchLocation) {
       return {
         restrict: "E",
         require: "^ngSearchForm",
@@ -42,7 +43,12 @@
           scope.user = $rootScope.user;
           scope.optionsConfig = gnGlobalSettings.gnCfg.mods.search.searchOptions;
           scope.init = function () {
-            scope.onlyMyRecord = gnGlobalSettings.gnCfg.mods.editor.isUserRecordsOnly;
+            if (gnSearchLocation.isEditorBoard()) {
+              scope.onlyMyRecord = gnGlobalSettings.gnCfg.mods.editor.isUserRecordsOnly;
+            } else {
+              // For the search page, display the option, but not checked by default
+              scope.onlyMyRecord = false;
+            }
             scope.languageStrategy =
               controller.getLanguageStrategy() ||
               gnGlobalSettings.gnCfg.mods.search.languageStrategy;

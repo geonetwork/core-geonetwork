@@ -24,7 +24,6 @@
 (function () {
   goog.provide("gn_search");
 
-  goog.require("gn_formatter_lib");
   goog.require("gn_map_field_directive");
   goog.require("gn_field_duration_directive");
   goog.require("gn_mdactions");

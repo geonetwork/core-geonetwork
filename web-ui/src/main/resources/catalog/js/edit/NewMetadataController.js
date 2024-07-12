@@ -76,11 +76,12 @@
 
       // A map of icon to use for each types
       var icons = {
-        featureCatalog: "fa-table",
-        service: "fa-cog",
-        map: "fa-map",
-        staticMap: "fa-map",
-        dataset: "fa-file"
+        featureCatalog: "gn-icon-featureCatalog",
+        service: "gn-icon-service",
+        map: "gn-icon-maps",
+        staticMap: "gn-icon-staticMap",
+        dataset: "gn-icon-dataset",
+        series: "gn-icon-series"
       };
 
       var defaultType = "dataset";
@@ -293,7 +294,7 @@
           } else {
             metadataUuid = getSelectedMdIdentifierTemplate().template;
 
-            for (key in $scope.mdIdentifierTemplateTokens) {
+            for (var key in $scope.mdIdentifierTemplateTokens) {
               var labelKey = $scope.mdIdentifierTemplateTokens[key].label;
               metadataUuid = metadataUuid.replace(
                 "{" + labelKey + "}",
@@ -359,7 +360,7 @@
       $scope.updateMdIdentifierTemplateLabel = function () {
         $scope.mdIdSelectedTemplateForLabel = getSelectedMdIdentifierTemplate().template;
 
-        for (key in $scope.mdIdentifierTemplateTokens) {
+        for (var key in $scope.mdIdentifierTemplateTokens) {
           if ($scope.mdIdentifierTemplateTokens[key].value) {
             var labelKey = $scope.mdIdentifierTemplateTokens[key].label;
 
@@ -402,7 +403,7 @@
 
         var fieldsFilled = true;
 
-        for (key in $scope.mdIdentifierTemplateTokens) {
+        for (var key in $scope.mdIdentifierTemplateTokens) {
           if (!$scope.mdIdentifierTemplateTokens[key].value) {
             fieldsFilled = false;
             break;

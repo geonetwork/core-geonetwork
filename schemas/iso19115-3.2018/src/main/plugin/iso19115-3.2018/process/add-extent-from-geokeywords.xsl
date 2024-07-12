@@ -5,7 +5,7 @@
                 xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0"
                 xmlns:gcx="http://standards.iso.org/iso/19115/-3/gcx/1.0"
                 xmlns:gex="http://standards.iso.org/iso/19115/-3/gex/1.0"
-                xmlns:srv="http://standards.iso.org/iso/19115/-3/srv/2.1"
+                xmlns:srv="http://standards.iso.org/iso/19115/-3/srv/2.0"
                 xmlns:mdb="http://standards.iso.org/iso/19115/-3/mdb/2.0"
                 xmlns:mri="http://standards.iso.org/iso/19115/-3/mri/1.0"
                 version="2.0" exclude-result-prefixes="#all">

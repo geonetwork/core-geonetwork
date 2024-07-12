@@ -33,7 +33,7 @@
       this.loadFeaturedUserSearches = function (type, withPortal) {
         var deferred = $q.defer(),
           usersearches = $http.get("../api/usersearches/featured?type=" + type);
-        apiCalls = [usersearches];
+        var apiCalls = [usersearches];
         if (withPortal) {
           apiCalls.push($http.get("../api/sources/subportal"));
         }

@@ -16,6 +16,12 @@
   <xsl:import href="base.xsl"/>
   <xsl:import href="common.xsl"/>
 
+  <xsl:output omit-xml-declaration="yes"
+              method="xml"
+              indent="yes"
+              saxon:indent-spaces="2"
+              encoding="UTF-8"/>
+
   <xsl:variable name="metadata"
                 select="/root/mdb:MD_Metadata"/>
 

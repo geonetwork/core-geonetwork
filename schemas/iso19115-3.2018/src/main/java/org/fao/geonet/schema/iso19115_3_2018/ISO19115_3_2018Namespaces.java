@@ -20,7 +20,7 @@ public class ISO19115_3_2018Namespaces {
                     "http://standards.iso.org/iso/19115/-3/cit/2.0");
     public static final Namespace SRV =
             Namespace.getNamespace("srv",
-                    "http://standards.iso.org/iso/19115/-3/srv/2.1");
+                    "http://standards.iso.org/iso/19115/-3/srv/2.0");
     public static final Namespace GEX =
         Namespace.getNamespace("gex",
             "http://standards.iso.org/iso/19115/-3/gex/1.0");

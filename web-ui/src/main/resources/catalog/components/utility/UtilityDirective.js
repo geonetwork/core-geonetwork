@@ -132,7 +132,10 @@
             hits &&
               hits.map &&
               hits.map(function (h) {
-                var overview = h.overview || (h._source && h._source.overview);
+                var overview =
+                  h.overview ||
+                  (h._source && h._source.overview) ||
+                  (h.fields && h.fields.overview);
                 if (overview) {
                   scope.images = scope.images.concat(overview);
                 }
@@ -171,7 +174,10 @@
             } else {
               query.query = {
                 function_score: {
-                  random_score: { seed: Math.floor(Math.random() * 10000) },
+                  random_score: {
+                    seed: Math.floor(Math.random() * 10000),
+                    field: "uuid"
+                  },
                   query: query.query
                 }
               };
@@ -199,6 +205,194 @@
               e.preventDefault();
             }
           });
+        }
+      };
+    }
+  ]);
+
+  module.directive("gnReadMore", [
+    "$timeout",
+    "$translate",
+    function ($timeout, $translate) {
+      return {
+        restrict: "A",
+        link: function (scope, el, attrs) {
+          var MAX_HEIGHT_LINE = 5,
+            element = el.get(0),
+            toggleButton = undefined,
+            expandLabel = attrs["expandLabel"]
+              ? $translate.instant(attrs["expandLabel"])
+              : "",
+            expandTooltip = attrs["expandTooltip"]
+              ? $translate.instant(attrs["expandTooltip"])
+              : $translate.instant("readMore"),
+            expandedLabel = attrs["expandedLabel"]
+              ? $translate.instant(attrs["expandedLabel"])
+              : "",
+            expandedTooltip = attrs["expandedTooltip"]
+              ? $translate.instant(attrs["expandedTooltip"])
+              : "",
+            expandIcon = attrs["expandIcon"] || "fa-plus-circle",
+            gradient = attrs["gradient"] || false,
+            expandedIcon = attrs["expandedIcon"] || "fa-minus-circle",
+            transparent = "rgba(0, 0, 0, 0)";
+
+          /**
+           * Returns the background style using the parent element color
+           * @param {string} background css value
+           */
+          function getParentBackgroundStyle(parentElement) {
+            var parentBgColor = getComputedStyle(parentElement).backgroundColor;
+            // Background color is not inherited
+            if (parentBgColor === transparent) {
+              return getParentBackgroundStyle(parentElement.parentElement);
+            }
+            var baseColor = "255, 255, 255";
+            var matches = /^rgba?\(([0-9]+, [0-9]+, [0-9]+)/.exec(parentBgColor);
+            if (matches && parentBgColor !== transparent) {
+              baseColor = matches[1];
+            }
+            if (gradient !== false) {
+              return (
+                "linear-gradient(0deg, rgba(" +
+                baseColor +
+                ", 1) 40%, rgba(" +
+                baseColor +
+                ", 0))"
+              );
+            } else {
+              return "rgba(" + baseColor + ")";
+            }
+          }
+
+          /**
+           * @param {HTMLElement} element
+           * @param {number} pxSize
+           */
+          function collapseElement(element, pxSize) {
+            var contentChild = element.querySelector(".gn-collapse-content");
+            contentChild.style.maxHeight = pxSize + "px";
+            contentChild.style.overflowY = "hidden";
+
+            toggleButton.innerHTML =
+              '<span class="fa fa-fw ' + expandIcon + '"></span>' + expandLabel;
+            toggleButton.setAttribute("title", expandTooltip);
+            element.setAttribute("data-collapsed", "");
+            toggleButton.style.background = getParentBackgroundStyle(element);
+            toggleButton.style.left = "0";
+          }
+
+          /**
+           * @param {HTMLElement} element
+           */
+          function expandElement(element) {
+            var contentChild = element.querySelector(".gn-collapse-content");
+            contentChild.style.removeProperty("max-height");
+            contentChild.style.removeProperty("overflow-y");
+
+            toggleButton.innerHTML =
+              '<span class="fa fa-fw ' + expandedIcon + '"></span>' + expandedLabel;
+            toggleButton.setAttribute("title", expandedTooltip);
+            toggleButton.style.removeProperty("left");
+            element.removeAttribute("data-collapsed");
+            toggleButton.style.removeProperty("background");
+          }
+
+          /**
+           * Returns the line height in px
+           * @param {HTMLElement} element
+           */
+          function measureLineHeight(element) {
+            var height = parseInt(
+              getComputedStyle(element).getPropertyValue("line-height"),
+              10
+            );
+            // make sure lineheight is not null;
+            if (!height) {
+              height = 10;
+            }
+            return height;
+          }
+
+          /**
+           * Returns the inner height (without padding) in px
+           * @param {HTMLElement} element
+           */
+          function measureInnerHeight(element) {
+            var height = parseInt(
+              getComputedStyle(element).getPropertyValue("height"),
+              10
+            );
+            var paddingTop = parseInt(
+              getComputedStyle(element).getPropertyValue("padding-top"),
+              10
+            );
+            var paddingBottom = parseInt(
+              getComputedStyle(element).getPropertyValue("padding-bottom"),
+              10
+            );
+            return height - paddingTop - paddingBottom;
+          }
+
+          /**
+           * Creates a toggle button and position it in the parent element
+           * @param {HTMLElement} parentElement
+           */
+          function createToggleButton(parentElement) {
+            toggleButton = document.createElement("a");
+            toggleButton.setAttribute("href", "");
+            toggleButton.classList.add("gn-collapse-toggle");
+            toggleButton.style.display = "block";
+            toggleButton.style.position = "absolute";
+            toggleButton.style.bottom = "0";
+            toggleButton.style.left = "0";
+            toggleButton.style.right = "0";
+            toggleButton.style.paddingRight = "0.5em";
+
+            // get parent background color to determine the gradient
+            toggleButton.style.background = getParentBackgroundStyle(parentElement);
+            parentElement.appendChild(toggleButton);
+          }
+
+          var init = function () {
+            var elHeightPx = measureInnerHeight(element);
+            var lineHeightPx = measureLineHeight(element);
+            var lineNumbers =
+              attrs["lineNumber"] != null
+                ? parseInt(attrs["lineNumber"], 10)
+                : MAX_HEIGHT_LINE;
+            if (elHeightPx < lineHeightPx * (lineNumbers + 1)) {
+              return;
+            }
+            var maxHeightPx = lineHeightPx * (lineNumbers + 1);
+
+            // put the element content in a child div
+            var contentChild = document.createElement("div");
+            contentChild.classList.add("gn-collapse-content");
+            contentChild.innerHTML = element.innerHTML;
+            contentChild.style.paddingBottom = "0";
+            element.innerHTML = "";
+            element.style.position = "relative";
+            element.appendChild(contentChild);
+            if (!getComputedStyle(element).position) {
+              element.style.position = "relative";
+            }
+
+            createToggleButton(element);
+            toggleButton.addEventListener("click", function (event) {
+              if (element.hasAttribute("data-collapsed")) {
+                expandElement(element);
+              } else {
+                collapseElement(element, maxHeightPx);
+              }
+              event.preventDefault();
+            });
+
+            // element is collapsed initially
+            collapseElement(element, maxHeightPx);
+          };
+
+          $timeout(init);
         }
       };
     }
@@ -291,12 +485,16 @@
           var addGeonames = !attrs["disableGeonames"];
           scope.regionTypes = [];
 
+          scope.lang = attrs["lang"];
+
           function setDefault() {
             var defaultThesaurus = attrs["default"];
-            for (t in scope.regionTypes) {
-              if (scope.regionTypes[t].name === defaultThesaurus) {
-                scope.regionType = scope.regionTypes[t];
-                return;
+            if (defaultThesaurus) {
+              for (var t in scope.regionTypes) {
+                if (scope.regionTypes[t].name === defaultThesaurus) {
+                  scope.regionType = scope.regionTypes[t];
+                  return;
+                }
               }
             }
             scope.regionType = scope.regionTypes[0];
@@ -538,13 +736,15 @@
         link: function (scope, element, attrs) {
           if (attrs["gnRegionType"]) {
             gnRegionService.loadList().then(function (data) {
-              for (i = 0; i < data.length; ++i) {
+              for (var i = 0; i < data.length; ++i) {
                 if (attrs["gnRegionType"] == data[i].name) {
                   scope.regionType = data[i];
                 }
               }
             });
           }
+          scope.lang = attrs["lang"];
+
           scope.$watch("regionType", function (val) {
             if (scope.regionType) {
               if (scope.regionType.id == "geonames") {
@@ -569,7 +769,15 @@
                   queryTokenizer: Bloodhound.tokenizers.whitespace,
                   limit: 30,
                   remote: {
-                    wildcard: "QUERY",
+                    replace: function (url, query) {
+                      // url parameter will be decoded once by the proxy
+                      // and we have to keep URI component encoded in the API call to the service
+                      // If not, search with " " will fail because invalid URI.
+                      return url.replace(
+                        "QUERY",
+                        encodeURIComponent(encodeURIComponent(query))
+                      );
+                    },
                     url: url,
                     ajax: {
                       beforeSend: function () {
@@ -709,18 +917,31 @@
                 // Compute default name and add a
                 // tokens element which is used for filter
                 angular.forEach(data, function (lang) {
-                  var defaultName = lang.label["eng"];
-                  lang.name = lang.label[scope.lang] || defaultName;
+                  lang.english = lang.label["eng"];
+                  lang.name = lang.label[scope.lang] || lang.english;
                   lang.code = scope.prefix + lang.code;
-                  lang.tokens = [lang.name, lang.code, defaultName];
+                  lang.tokens = [lang.name, lang.code, lang.english];
                 });
                 var source = new Bloodhound({
-                  datumTokenizer: Bloodhound.tokenizers.obj.whitespace("name"),
+                  datumTokenizer: Bloodhound.tokenizers.obj.whitespace(
+                    "name",
+                    "code",
+                    "english"
+                  ),
                   queryTokenizer: Bloodhound.tokenizers.whitespace,
                   local: data,
                   limit: 30
                 });
                 source.initialize();
+
+                function allOrSearchFn(q, sync) {
+                  if (q === "") {
+                    sync(source.all());
+                  } else {
+                    source.search(q, sync);
+                  }
+                }
+
                 $(element).typeahead(
                   {
                     minLength: 0,
@@ -729,7 +950,7 @@
                   {
                     name: "isoLanguages",
                     displayKey: "code",
-                    source: source.ttAdapter(),
+                    source: allOrSearchFn,
                     templates: {
                       suggestion: function (datum) {
                         return "<p>" + datum.name + " (" + datum.code + ")</p>";
@@ -739,6 +960,144 @@
                 );
               });
             element.unbind("focus");
+          });
+        }
+      };
+    }
+  ]);
+
+  /**
+   * @ngdoc directive
+   * @name gn_utility.directive:gnDataPicker
+   * @function
+   *
+   * @description
+   * A generic directive that allows to select values from the provided source (Bloodhound object).
+   *
+   * The selected values are returned as a comma separated string in the 'value' scope property.
+   *
+   * Data model:
+   *   - code: Value to select.
+   *   - name: Label to display.
+   *
+   */
+  module.directive("gnDataPicker", [
+    "$timeout",
+    function ($timeout) {
+      return {
+        restrict: "A",
+        replace: true,
+        transclude: true,
+        templateUrl: "../../catalog/components/utility/partials/dataselector.html",
+        scope: {
+          source: "<",
+          elementId: "@",
+          value: "=",
+          maxTags: "@"
+        },
+        link: function (scope, element, attrs) {
+          scope.prefix = attrs["prefix"] || "";
+          scope.selected = [];
+          scope.initialValues = [];
+          scope.initialised = false;
+
+          var id = "#tagsinput_" + scope.elementId;
+
+          var initTagsInput = function () {
+            $timeout(function () {
+              try {
+                $(id).tagsinput({
+                  itemValue: "code",
+                  itemText: "name",
+                  maxTags: scope.maxTags
+                });
+
+                var source = scope.source;
+
+                scope.$watch("value", function (newValue, oldValue) {
+                  if (
+                    newValue !== oldValue ||
+                    (scope.initialValues.length == 0 && newValue)
+                  ) {
+                    scope.initialValues = newValue.split(",");
+
+                    scope.selected = [];
+                    $(id).tagsinput("removeAll");
+
+                    angular.forEach(scope.initialValues, function (value) {
+                      scope.selected = scope.selected.concat(
+                        _.filter(source.local, ["code", value])
+                      );
+                    });
+
+                    // Add selection to the list of tags
+                    angular.forEach(scope.selected, function (keyword) {
+                      $(id).tagsinput("add", keyword);
+                    });
+                  }
+                });
+
+                function allOrSearchFn(q, sync) {
+                  if (q === "") {
+                    sync(source.all());
+                  } else {
+                    source.search(q, sync);
+                  }
+                }
+
+                var field = $(id).tagsinput("input");
+
+                field
+                  .typeahead(
+                    {
+                      minLength: 0,
+                      highlight: true
+                    },
+                    {
+                      name: "datapicker",
+                      displayKey: "code",
+                      source: allOrSearchFn,
+                      limit: Infinity,
+                      templates: {
+                        suggestion: function (datum) {
+                          return "<p>" + datum.name + " (" + datum.code + ")</p>";
+                        }
+                      }
+                    }
+                  )
+                  .bind(
+                    "typeahead:selected",
+                    $.proxy(function (obj, keyword) {
+                      // Add to tags
+                      this.tagsinput("add", keyword);
+
+                      // Update selection and snippet
+                      angular.copy(this.tagsinput("items"), scope.selected);
+                      scope.value = _.map(scope.selected, "code").join(",");
+
+                      // Clear typeahead
+                      this.tagsinput("input").typeahead("val", "");
+                      field.blur();
+                      field.triggerHandler("input"); // force angular to see changes
+                    }, $(id))
+                  );
+
+                $(id).on("itemRemoved", function () {
+                  angular.copy($(this).tagsinput("items"), scope.selected);
+                  scope.value = _.map(scope.selected, "code").join(",");
+                  field.blur();
+                  field.triggerHandler("input"); // force angular to see changes
+                });
+              } catch (e) {
+                console.warn("No tagsinput for " + id + ", error: " + e.message);
+              }
+            });
+          };
+
+          scope.$watch("source", function (newValue, oldValue) {
+            if (newValue && newValue != oldValue) {
+              initTagsInput();
+            }
           });
         }
       };
@@ -864,7 +1223,7 @@
           '           href=""' +
           '           title="{{::title | translate}}">' +
           '  <i class="fa fa-fw" ' +
-          "   ng-class=\"{'fa-copy': !copied, 'fa-check': copied}\"/>" +
+          "   ng-class=\"{'fa-copy': !copied, 'fa-check': copied}\"></i>" +
           "</a>",
         scope: {
           btnClass: "@",
@@ -933,7 +1292,7 @@
                 {
                   isTemplate: "n",
                   any: "*QUERY*",
-                  sortBy: "resourceTitleObject.default.keyword"
+                  sortBy: "resourceTitleObject.default.sort"
                 },
                 params
               )
@@ -1001,7 +1360,7 @@
         restrict: "A",
         template:
           "<button title=\"{{'gnToggle' | translate}}\">" +
-          '<i class="fa fa-fw fa-angle-double-up"/>&nbsp;' +
+          '<i class="fa fa-fw fa-angle-double-up"></i>&nbsp;' +
           "</button>",
         link: function linkFn(scope, element, attr) {
           var collapsing = true,
@@ -1050,8 +1409,8 @@
         transclude: true,
         template:
           '<a href=\'#/search?query_string=%7B"{{field}}":%7B"{{::filter | encodeURIComponent}}":true%7D%7D\'>' +
-          '  <i class="fa fa-fw fa-filter"/>' +
-          "  <span>{{(label || 'focusOn') | translate}} <ng-transclude/></span>" +
+          '  <i class="fa fa-fw fa-filter"></i>' +
+          "  <span>{{(label || 'focusOn') | translate}} <ng-transclude></ng-transclude></span>" +
           "</a>",
         scope: {
           field: "@gnSearchFilterLink",
@@ -1063,18 +1422,22 @@
   ]);
 
   module.directive("gnStatusBadge", [
-    function () {
+    "$translate",
+    function ($translate) {
       return {
         restrict: "A",
         replace: true,
-        transclude: true,
-        template:
-          '<div data-ng-if="::md.cl_status.length > 0"' +
-          ' title="{{::md.cl_status[0].key | translate}}"' +
-          ' class="gn-status gn-status-{{::md.cl_status[0].key}}">{{::md.cl_status[0].key | translate}}' +
-          "</div>",
+        templateUrl: "../../catalog/components/utility/partials/statusbadge.html",
         scope: {
           md: "=gnStatusBadge"
+        },
+        link: function (scope, element, attrs) {
+          scope.statusTitle = "";
+          if (scope.md && scope.md.cl_status && scope.md.cl_status.length > 0) {
+            angular.forEach(scope.md.cl_status, function (status) {
+              scope.statusTitle += $translate.instant(status.key) + "\n";
+            });
+          }
         }
       };
     }
@@ -1143,7 +1506,7 @@
           "    </defs>" +
           '    <circle fill="url(\'#image{{imageId}}\')" style="stroke-miterlimit:10;" cx="250" cy="250" r="240"/>' +
           '    <text x="50%" y="50%"' +
-          '          text-anchor="middle" alignment-baseline="central"' +
+          '          text-anchor="middle" alignment-baseline="central" dominant-baseline="central"' +
           "          font-size=\"300\">{{hasIcon ? '' : org.substr(0, 1).toUpperCase()}}</text>" +
           "</svg>",
         scope: {
@@ -1206,7 +1569,7 @@
                 settings.data = JSON.stringify({
                   from: 0,
                   size: 10,
-                  sort: [{ "resourceTitleObject.default.keyword": "asc" }],
+                  sort: [{ "resourceTitleObject.default.sort": "asc" }],
                   query: {
                     bool: {
                       must: {
@@ -1251,7 +1614,22 @@
       };
     }
   ]);
-
+  /**
+   * @ngdoc directive
+   *
+   * @description
+   * Directive to include a template and replace the element with its content.
+   * ng-include always append the content.
+   */
+  module.directive("gnIncludeAndReplace", function () {
+    return {
+      require: "ngInclude",
+      restrict: "A",
+      link: function (scope, el, attrs) {
+        el.replaceWith(el.children());
+      }
+    };
+  });
   /**
    * @ngdoc directive
    * @name gn_utility.directive:gnAutogrow
@@ -1921,11 +2299,11 @@
    * to the parent element (required to highlight
    * element in navbar)
    */
+
   module.directive("gnActiveTbItem", [
     "$location",
-    "gnLangs",
-    "gnConfig",
-    function ($location, gnLangs, gnConfig) {
+    "$filter",
+    function ($location, $filter) {
       return {
         restrict: "A",
         link: function (scope, element, attrs) {
@@ -1933,11 +2311,7 @@
             href,
             isCurrentService = false;
 
-          // Replace lang in link (three character language code i.e. eng, fre)
-          link = link.replace("{{lang}}", gnLangs.getCurrent());
-          // Replace standard ISO lang in link (two character language code i.e. en, fr)
-          link = link.replace("{{isoLang}}", gnLangs.getIso2Lang(gnLangs.getCurrent()));
-          link = link.replace("{{node}}", gnConfig.env.node);
+          link = $filter("setUrlPlaceholder")(link);
 
           // Insert debug mode between service and route
           if (link.indexOf("#") !== -1) {
@@ -1987,16 +2361,25 @@
       };
     }
   ]);
-  module.filter("signInLink", [
-    "$location",
+  module.filter("setUrlPlaceholder", [
     "gnLangs",
     "gnConfig",
-    function ($location, gnLangs, gnConfig) {
+    function (gnLangs, gnConfig) {
+      return function (url) {
+        return url
+          .replace("{{lang}}", gnLangs.getCurrent())
+          .replace("{{isoLang}}", gnLangs.getIso2Lang(gnLangs.getCurrent()))
+          .replace("{{node}}", gnConfig.env.node);
+      };
+    }
+  ]);
+  module.filter("signInLink", [
+    "$location",
+    "$filter",
+    function ($location, $filter) {
       return function (href) {
         href =
-          href
-            .replace("{{lang}}", gnLangs.getCurrent())
-            .replace("{{node}}", gnConfig.env.node) +
+          $filter("setUrlPlaceholder")(href) +
           "?redirect=" +
           encodeURIComponent(window.location.href);
         return href;
@@ -2010,6 +2393,98 @@
       };
     }
   ]);
+  /**
+   * Compute a translated status label for a record, based on the index field
+   * 'statusWorkflow'.
+   * The result can be a single status for records that have no draft,
+   * or a combined label for records with draft.
+   */
+  module.filter("getStatusLabel", [
+    "$translate",
+    function ($translate) {
+      return function (workflowStatus) {
+        if (!workflowStatus) {
+          return;
+        }
+        var split = workflowStatus.split("-");
+        // the status of the record
+        var metadataStatus = $translate.instant("status-" + split[0]);
+        if (split.length === 2) {
+          // if there is a draft status present,
+          // incorporate this into the resulting string
+          var draftStatus = $translate.instant("status-" + split[1]);
+          return $translate.instant("mdStatusWorkflowWithDraft", {
+            metadataStatus: metadataStatus,
+            draftStatus: draftStatus
+          });
+        }
+        return metadataStatus;
+      };
+    }
+  ]);
+
+  /**
+   * Compute a translated status label for an associated record
+   * based on initiative type and association type.
+   *
+   * If association type is crossReference,
+   * then "Cross reference" is used as a label in english.
+   * If an initiative type is provided eg. study,
+   * then "Cross reference (Study)" is returned
+   * If a custom translation is set in the translation file,
+   * eg. "crossReference-study": "Publication"
+   * then "Publication" is returned.
+   */
+  module.filter("getAssociatedRecordLabel", [
+    "$translate",
+    function ($translate) {
+      return function (associationType, initiativeType) {
+        if (!associationType) {
+          return;
+        }
+        var translationKey = associationType + "-" + initiativeType;
+        var translation = $translate.instant(translationKey);
+        if (translationKey === translation) {
+          return (
+            $translate.instant(associationType) +
+            (initiativeType ? " (" + $translate.instant(initiativeType) + ")" : "")
+          );
+        } else {
+          return translation;
+        }
+      };
+    }
+  ]);
+
+  module.directive("gnAssociatedRecordLabel", [
+    "$translate",
+    function ($translate) {
+      return {
+        restrict: "A",
+        scope: {
+          type: "=gnAssociatedRecordLabel"
+        },
+        templateUrl:
+          "../../catalog/components/utility/partials/associated-record-label.html",
+        link: function (scope) {
+          function updateCustomLabel(n, o) {
+            var translationKey =
+              scope.type.associationType + "-" + scope.type.initiativeType;
+            var translation = $translate.instant(translationKey);
+            if (translationKey !== translation) {
+              scope.customLabel = translation;
+            } else {
+              scope.customLabel = undefined;
+            }
+          }
+          scope.icon = "fa-puzzle-piece";
+          scope.$watch("type.associationType", updateCustomLabel);
+          scope.$watch("type.initiativeType", updateCustomLabel);
+        }
+      };
+    }
+  ]);
+
   /**
    * Append size parameter to request a smaller thumbnail.
    */
@@ -2136,9 +2611,9 @@
                   '">' +
                   '<div class="modal-dialog gn-img-modal in">' +
                   '  <button type=button class="btn btn-danger gn-btn-modal-img">' +
-                  '<i class="fa fa-times"/></button>' +
+                  '<i class="fa fa-times"></i></button>' +
                   '  <img src="' +
-                  (img.lUrl || img.url || img.id) +
+                  (attr.ngSrc || img.lUrl || img.url || img.id) +
                   '"/>' +
                   (label != "" ? labelDiv : "") +
                   "</div>" +
@@ -2344,7 +2819,7 @@
         replace: true,
         scope: {
           uuid: "=gnMetadataSelector", // Model property with the metadata uuid selected
-          searchObj: "=", // ElasticSearch search object
+          searchObj: "=", // Elasticsearch search object
           md: "=", // Metadata object selected
           elementName: "@" // Input element name for the uuid control
         },
@@ -2361,6 +2836,41 @@
             scope.md = md;
             scope.uuid = md.uuid;
           };
+        }
+      };
+    }
+  ]);
+
+  module.directive("gnInspireUsageDetails", [
+    "$http",
+    function ($http) {
+      return {
+        restrict: "A",
+        replace: true,
+        scope: {
+          inspireApiUrl: "=gnInspireUsageDetails",
+          inspireApiKey: "=apiKey"
+        },
+        templateUrl: "../../catalog/components/utility/partials/inspireapiusage.html",
+        link: function (scope, element, attrs) {
+          scope.inspireApiUsage = undefined;
+          if (
+            scope.inspireApiUrl &&
+            scope.inspireApiUrl.length > 0 &&
+            scope.inspireApiKey &&
+            scope.inspireApiKey.length > 0
+          ) {
+            $http
+              .get(scope.inspireApiUrl + "/v2/Usages/" + scope.inspireApiKey + "/")
+              .then(
+                function (response) {
+                  scope.inspireApiUsage = response.data;
+                },
+                function (error) {
+                  console.warn("Error while retrieving INSPIRE API quotas: ", error);
+                }
+              );
+          }
         }
       };
     }
@@ -2449,6 +2959,42 @@
         };
 
         updateInputCss();
+      }
+    };
+  });
+
+  module.directive("equalWith", function () {
+    return {
+      require: "ngModel",
+      scope: { equalWith: "&" },
+      link: function (scope, elem, attrs, ngModelCtrl) {
+        ngModelCtrl.$validators.equalWith = function (modelValue) {
+          return modelValue === scope.equalWith();
+        };
+
+        scope.$watch(scope.equalWith, function (value) {
+          ngModelCtrl.$validate();
+        });
+      }
+    };
+  });
+
+  module.directive("confirmOnExit", function () {
+    return {
+      link: function ($scope, elem, attrs) {
+        var message = attrs["confirmMessage"];
+        window.onbeforeunload = function () {
+          if ($scope[attrs["name"]].$dirty) {
+            return message;
+          }
+        };
+        $scope.$on("$locationChangeStart", function (event, next, current) {
+          if ($scope[attrs["name"]].$dirty) {
+            if (!confirm(message)) {
+              event.preventDefault();
+            }
+          }
+        });
       }
     };
   });

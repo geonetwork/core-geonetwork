@@ -25,12 +25,13 @@
           class="fa"
           ng-class="loading ? 'fa-spinner fa-spin' : 'fa-refresh'"
           ng-disabled="loading"
-        />&nbsp;
+        ></i
+        >&nbsp;
         <span translate>refresh</span>
       </button>
       <div class="flex-spacer"></div>
       <button type="button" class="btn btn-primary" ng-click="openScheduleSettings()">
-        <i class="fa fa-plus" />&nbsp;
+        <i class="fa fa-plus"></i>&nbsp;
         <span translate>wfsIndexingNewSchedule</span>
       </button>
     </div>
@@ -42,7 +43,7 @@
     <div class="col-md-12">
       <div ng-if="error" class="row">
         <div class="alert alert-danger" role="alert">
-          <i class="fa fa-exclamation-triangle" />
+          <i class="fa fa-exclamation-triangle"></i>
           <span translate>wfsIndexingRefreshError</span>
           <span>{{error}}</span>
         </div>
@@ -130,7 +131,7 @@
                       class="btn btn-default dropdown-toggle"
                       data-toggle="dropdown"
                     >
-                      <i class="fa fa-clock-o"></i>&nbsp;<span class="caret" />
+                      <i class="fa fa-clock-o"></i>&nbsp;<span class="caret"></span>
                     </button>
                     <ul class="dropdown-menu pull-right">
                       <li ng-repeat="exp in cronExp">
@@ -161,7 +162,7 @@
           </form>
 
           <div class="alert alert-danger" role="alert" ng-if="settingsError">
-            <i class="fa fa-exclamation-triangle" />
+            <i class="fa fa-exclamation-triangle"></i>
             <span translate>wfsIndexingScheduleSettingsError</span>
             <span>{{settingsError}}</span>
           </div>

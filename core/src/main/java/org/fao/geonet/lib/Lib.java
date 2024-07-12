@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2007 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2024 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -24,11 +24,16 @@
 package org.fao.geonet.lib;
 
 public class Lib {
-    public final static ElementLib element = new ElementLib();
-    public final static DbLib db = new DbLib();
-    public final static ResourceLib resource = new ResourceLib();
-    public final static TypeLib type = new TypeLib();
-    public final static NetLib net = new NetLib();
-    public final static SourcesLib sources = new SourcesLib();
-    public final static TextLib text = new TextLib();
+    public static final ElementLib element = new ElementLib();
+    public static final DbLib db = new DbLib();
+    public static final ResourceLib resource = new ResourceLib();
+    public static final TypeLib type = new TypeLib();
+    public static final NetLib net = new NetLib();
+    public static final TextLib text = new TextLib();
+
+    /**
+     * Private constructor to avoid instantiate the class.
+     */
+    private Lib() {
+    }
 }

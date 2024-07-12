@@ -41,7 +41,7 @@ import org.geotools.xsd.Configuration;
 import org.geotools.xsd.Encoder;
 import org.jdom.Element;
 import org.jdom.Namespace;
-import org.opengis.filter.Filter;
+import org.geotools.api.filter.Filter;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

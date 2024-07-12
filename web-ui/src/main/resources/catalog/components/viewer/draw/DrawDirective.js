@@ -244,7 +244,7 @@
            * @param {ol.Feature} feature
            * @return {Object} serialized style
            */
-          getStyleObjFromFeature = function (feature) {
+          var getStyleObjFromFeature = function (feature) {
             var st = feature.get("_style");
             var drawType = feature.get("_type");
             if (angular.isFunction(st)) {

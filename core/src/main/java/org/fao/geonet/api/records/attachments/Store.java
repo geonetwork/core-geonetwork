@@ -278,11 +278,23 @@ public interface Store {
     /**
      * Delete all resources for a metadata
      *
+     * @deprecated it is possible that the metadata draft was deleted during the transaction. Use
+     * String delResources(ServiceContext context, int metadataId) throws Exception; instead.
+     *
      * @param context
      * @param metadataUuid The metadata UUID
      * @param approved   Return the approved version or not
      */
+    @Deprecated
     String delResources(ServiceContext context, String metadataUuid, Boolean approved) throws Exception;
+
+    /**
+     * Delete all resources for a metadata
+     *
+     * @param context
+     * @param metadataId The metadata ID
+     */
+    String delResources(ServiceContext context, int metadataId) throws Exception;
 
     /**
      * Delete a resource from the metadata store

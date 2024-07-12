@@ -47,7 +47,7 @@ import static org.fao.geonet.kernel.schema.MetadataSchema.SCHEMATRON_DIR;
 public class AbstractSchematronValidator {
 
     protected void runSchematron(String lang, Path schemaDir, List<MetadataValidation> validations, Element schemaTronXmlOut,
-                               int metadataId, Element md, ApplicableSchematron applicable) {
+                                 int metadataId, Element md, ApplicableSchematron applicable) {
         final ConfigurableApplicationContext applicationContext = ApplicationContextHolder.get();
         ThesaurusManager thesaurusManager = applicationContext.getBean(ThesaurusManager.class);
 
@@ -61,6 +61,9 @@ public class AbstractSchematronValidator {
         report.setAttribute("dbident", String.valueOf(schematron.getId()), Edit.NAMESPACE);
         report.setAttribute("required", requirement.toString(), Edit.NAMESPACE);
 
+        MetadataValidationStatus metadataValidationStatus = null;
+        int invalidRules = 0;
+        int firedRules = 0;
         try {
             Map<String, Object> params = new HashMap<String, Object>();
             params.put("lang", lang);
@@ -74,28 +77,33 @@ public class AbstractSchematronValidator {
                 // add results to persistent validation information
                 @SuppressWarnings("unchecked")
                 Iterator<Element> i = xmlReport.getDescendants(new ElementFilter("fired-rule", Geonet.Namespaces.SVRL));
-                int firedRules = Iterators.size(i);
+                firedRules = Iterators.size(i);
 
                 i = xmlReport.getDescendants(new ElementFilter("failed-assert", Geonet.Namespaces.SVRL));
-                int invalidRules = Iterators.size(i);
+                invalidRules = Iterators.size(i);
 
-                if (validations != null) {
-                    validations.add(new MetadataValidation().
-                        setId(new MetadataValidationId(metadataId, ruleId)).
-                        setStatus(invalidRules != 0 ? MetadataValidationStatus.INVALID : MetadataValidationStatus.VALID).
-                        setRequired(requirement == SchematronRequirement.REQUIRED).
-                        setNumTests(firedRules).
-                        setNumFailures(invalidRules));
-
-                }
+                metadataValidationStatus = invalidRules != 0 ? MetadataValidationStatus.INVALID : MetadataValidationStatus.VALID;
             }
         } catch (Exception e) {
             Log.error(Geonet.DATA_MANAGER, "WARNING: schematron xslt " + ruleId + " failed", e);
 
             // If an error occurs that prevents to verify schematron rules, add to show in report
             Element errorReport = new Element("schematronVerificationError", Edit.NAMESPACE);
-            errorReport.addContent("Schematron error ocurred, rules could not be verified: " + e.getMessage());
+            errorReport.addContent("Schematron error occurred, rules could not be verified: " + e.getMessage());
             report.addContent(errorReport);
+
+            // As the validation failed due to an exception lets identify the metadata as never validated.
+            metadataValidationStatus = MetadataValidationStatus.NEVER_CALCULATED;
+        } finally {
+            if (metadataValidationStatus != null && validations != null) {
+                validations.add(new MetadataValidation().
+                    setId(new MetadataValidationId(metadataId, ruleId)).
+                    setStatus(metadataValidationStatus).
+                    setRequired(requirement == SchematronRequirement.REQUIRED).
+                    setNumTests(firedRules).
+                    setNumFailures(invalidRules));
+
+            }
         }
 
         // -- append report to main XML report.

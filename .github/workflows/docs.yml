@@ -1,0 +1,41 @@
+name: Documentation
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "docs/manual/**"
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "docs/manual/**"
+  workflow_dispatch:
+
+jobs:
+  deploy-docs:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout GeoNetwork
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Install Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: 3.x
+      - name: mkdocs install
+        run: pip install --upgrade pip && pip install -r docs/manual/requirements.txt
+      - name: git configuration
+        run: git config user.name 'github-actions[bot]' && git config user.email 'github-actions[bot]@users.noreply.github.com'
+      - name: build docs without publishing them
+        if: ${{ github.event_name == 'pull_request' }}
+        working-directory: docs/manual
+        run: |
+          mike deploy --title "4.4" --alias-type=copy --update-aliases 4.4 latest
+      - name: deploy latest docs to gh-pages branch
+        if: ${{ github.event_name != 'pull_request' }}
+        working-directory: docs/manual
+        run: |
+          mike deploy --push --title "4.4" --alias-type=copy --update-aliases 4.4 latest

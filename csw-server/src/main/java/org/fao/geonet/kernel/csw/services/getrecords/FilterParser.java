@@ -34,8 +34,8 @@ import org.fao.geonet.utils.Xml;
 import org.geotools.xsd.Configuration;
 import org.geotools.xsd.Parser;
 import org.jdom.Element;
-import org.opengis.filter.Filter;
-import org.opengis.filter.capability.FilterCapabilities;
+import org.geotools.api.filter.Filter;
+import org.geotools.api.filter.capability.FilterCapabilities;
 import org.xml.sax.SAXException;
 
 public class FilterParser {

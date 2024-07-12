@@ -159,7 +159,7 @@
     <xsl:for-each-group
       select="//gmd:distributionInfo/*/gmd:transferOptions/*/gmd:onLine/gmd:CI_OnlineResource"
       group-by="gmd:linkage/gmd:URL">
-      <dcat:Distribution rdf:about="{iso19139:RecordUri($uuid)}#{encode-for-uri(gmd:protocol/*/text())}-{encode-for-uri(gmd:name/*/text())}">
+      <dcat:Distribution rdf:about="{iso19139:RecordUri($uuid)}#{encode-for-uri(gmd:protocol/*/text())}-{encode-for-uri(gmd:name/(gco:CharacterString|gmx:Anchor)/text())}">
         <!--
           "points to the location of a distribution. This can be a direct download link, a link
           to an HTML page containing a link to the actual data, Feed, Web Service etc.
@@ -170,9 +170,9 @@
         </dcat:accessURL>
         <!-- xpath: gmd:linkage/gmd:URL -->
 
-        <xsl:if test="gmd:name/gco:CharacterString!=''">
+        <xsl:if test="gmd:name/(gco:CharacterString|gmx:Anchor) != ''">
           <dct:title>
-            <xsl:value-of select="gmd:name/gco:CharacterString"/>
+            <xsl:value-of select="gmd:name/(gco:CharacterString|gmx:Anchor)"/>
           </dct:title>
         </xsl:if>
         <!-- xpath: gmd:name/gco:CharacterString -->
@@ -448,7 +448,7 @@
     <!-- xpath: gmd:identificationInfo/*/gmd:resourceConstraints/??? -->
 
     <xsl:for-each select="../../gmd:distributionInfo/*/gmd:transferOptions/*/gmd:onLine">
-      <dcat:distribution rdf:resource="{iso19139:RecordUri($uuid)}#{encode-for-uri(gmd:CI_OnlineResource/gmd:protocol/*/text())}-{encode-for-uri(gmd:CI_OnlineResource/gmd:name/*/text())}"/>
+      <dcat:distribution rdf:resource="{iso19139:RecordUri($uuid)}#{encode-for-uri(gmd:CI_OnlineResource/gmd:protocol/*/text())}-{encode-for-uri(gmd:CI_OnlineResource/gmd:name/(gco:CharacterString|gmx:Anchor)/text())}"/>
     </xsl:for-each>
 
     <!-- xpath: gmd:distributionInfo/*/gmd:transferOptions/*/gmd:onLine/gmd:CI_OnlineResource -->

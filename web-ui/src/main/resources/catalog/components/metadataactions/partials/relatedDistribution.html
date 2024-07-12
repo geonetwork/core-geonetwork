@@ -1,0 +1,278 @@
+<div
+  class="gn-related-resources gn-info-list-blocks"
+  data-ng-if="distributionFound"
+  title="{{::altTitle}}"
+>
+  <h2 data-ng-if="title.indexOf('<') === -1">{{::title}}</h2>
+  <div data-ng-if="title.indexOf('<') === 0" data-ng-bind-html="title"></div>
+
+  <!-- View mode -->
+  <div
+    data-ng-init="mainType = config.getType(r, 'onlines');
+                     badge = config.getBadgeLabel(mainType, r);
+                     icon = config.getClassIcon(mainType);"
+    class="row list-group-item gn-related-item gn-related-onlines gn-relation-type-{{mainType}}"
+    data-ng-repeat="r in distributions | orderBy:getOrderBy"
+    data-ng-if="!editable"
+    gn-popover=""
+  >
+    <div
+      class="gn-related-icon-col col-xs-2 col-sm-2 text-center"
+      data-gn-link-icon="r"
+    ></div>
+    <div class="col-xs-10 col-sm-7" gn-popover-anchor="">
+      <div gn-popover-content="" data-ng-if="!editable">
+        <p class="text-muted">
+          <span
+            data-translate="{{(mainType | lowercase) + 'LinkDetails'}}"
+            data-translate-default=""
+            data-translate-values="{
+                    url:{{r.locUrl | json}},
+                    layer:{{r.locTitle | json}}
+                    }"
+          ></span>
+        </p>
+
+        <div
+          data-ng-if="r.locUrl"
+          data-gn-search-filter-link="linkUrl"
+          data-filter="r.locUrl"
+          data-label="focusOnFrom"
+        >
+          {{r.locUrl}}
+        </div>
+        <br />
+        <div
+          data-ng-if="r.protocol"
+          data-gn-search-filter-link="linkProtocol"
+          data-filter="r.protocol"
+        >
+          {{r.protocol}}
+        </div>
+      </div>
+
+      <!-- Always display title if available -->
+      <h3>
+        <a data-ng-href="{{::r.locUrl}}"> {{::r.locTitle || r.locUrl}} </a>
+      </h3>
+      <!-- Display description if available -->
+      <p
+        data-ng-if="::r.locDescription.length > 0
+                     && r.locDescription !== r.locTitle"
+        title="{{::r.locDescription}}"
+        data-gn-read-more=""
+        data-line-number="3"
+      >
+        {{::r.locDescription | striptags}}
+      </p>
+      <div data-ng-switch on="mainType">
+        <div data-ng-switch-when="WFS">
+          <div
+            data-ng-if="::isLayerProtocol(r)"
+            data-gn-wfs-download=""
+            data-typename="{{::isLayerProtocol(r) ? r.locTitle : ''}}"
+            data-url="{{::r.locUrl}}"
+          ></div>
+        </div>
+
+        <div data-ng-switch-when="ATOM">
+          <div
+            data-gn-atom-download="r.title"
+            data-layer-name="{{r.title | gnLocalized: lang}}"
+            data-url="{{r.locUrl}}"
+            data-md="md"
+          ></div>
+        </div>
+
+        <div data-ng-switch-when="DB">
+          <p class="text-muted">
+            <span
+              data-translate=""
+              data-translate-values="{url:'{{r.locUrl | json}}', layer:'{{r.locTitle | json}}'}"
+            >
+              databaseLayerDetails</span
+            >
+          </p>
+        </div>
+
+        <div data-ng-switch-when="FILE">
+          <p class="text-muted">
+            <span
+              data-translate=""
+              data-translate-values="{url:'{{r.locUrl | json}}', name:'{{r.locTitle | json}}'}"
+            >
+              fileLayerDetails</span
+            >
+            <input
+              class="form-control"
+              type="text"
+              onClick="this.setSelectionRange(0, this.value.length)"
+              value="{{::r.locUrl}}"
+            />
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-xs-12 col-sm-3">
+      <div class="row">
+        <div class="col-md-8 gn-nopadding-left gn-nopadding-right">
+          <div
+            data-gn-record-links-button="[r]"
+            data-type="'onlines'"
+            data-icon-mode="none"
+            data-btn-class="btn btn-default btn-block"
+            data-record="md"
+          ></div>
+        </div>
+        <div class="col-md-4 gn-nopadding-right">
+          <div
+            data-btn-class="btn btn-default btn-sm"
+            gn-copy-to-clipboard-button=""
+            data-text="{{::r.locUrl}}"
+            data-tooltip="copyUrlToClipboard"
+          ></div>
+        </div>
+
+        <button
+          type="button"
+          class="btn btn-default btn-sm btn-block gn-btn-addtoexternal text-wrap"
+          data-ng-if="externalViewerActionEnabled
+                        && (mainType === 'WMS' || mainType === 'WMSSERVICE')"
+          data-ng-click="externalViewerAction(mainType, r, md)"
+          data-translate=""
+        >
+          viewInExternalViewer
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit mode -->
+  <div
+    data-ng-init="mainType = config.getType(r, 'onlines');
+                     badge = config.getBadgeLabel(mainType, r);
+                     icon = config.getClassIcon(mainType);
+                     linkForEdit = convertLinkToEdit(r);"
+    class="row list-group-item gn-related-item gn-related-onlines gn-relation-type-{{mainType}}"
+    data-ng-repeat="r in distributions | orderBy:getOrderBy"
+    data-ng-if="editable"
+  >
+    <div class="flex-row flex-align-center">
+      <!-- Always display title if available -->
+      <h3 class="flex-grow">
+        <a data-ng-href="{{::r.locUrl}}" target="_blank" rel="noreferrer">
+          <span data-gn-link-icon="r" class="gn-margin-right-sm"></span>
+          <span class="gn-break-all">{{::r.locTitle || r.locUrl}}</span>
+        </a>
+      </h3>
+      <!-- Edit & Remove -->
+
+      <div class="text-no-wrap">
+        <a
+          href=""
+          class="onlinesrc-remove gn-margin-right-sm"
+          title="{{'edit' | translate}}"
+          aria-label="{{'edit' | translate}}"
+          data-ng-click="onlinesrcService.onOpenPopup('onlinesrc', linkForEdit)"
+        >
+          <i class="fa fa-pencil"></i>
+        </a>
+
+        <a
+          href=""
+          class="onlinesrc-remove"
+          title="{{'remove' | translate}} {{r.title | gnLocalized: lang}}"
+          aria-label="{{'remove' | translate}} {{r.title | gnLocalized: lang}}"
+          data-gn-confirm-click="{{'removeOnlinesrcConfirm' | translate:{url: r.lUrl} }}"
+          data-gn-click-and-spin="onlinesrcService.removeOnlinesrc(linkForEdit)"
+        >
+          <i class="fa fa-times text-danger"></i>
+        </a>
+      </div>
+    </div>
+
+    <!-- Display description if available -->
+    <p
+      data-ng-if="::r.locDescription.length > 0
+                     && r.locDescription !== r.locTitle"
+      title="{{::r.locDescription}}"
+      data-gn-read-more=""
+      data-line-number="3"
+    >
+      {{::r.locDescription | striptags}}
+    </p>
+
+    <div
+      data-ng-if="canPublishDoiForResource(md, linkForEdit)"
+      data-gn-doi-wizard="md.uuid"
+      data-gn-doi-url="r.locUrl"
+      data-xs-mode="true"
+    ></div>
+
+    <div
+      data-ng-if="r.protocol !== null
+                  && r.protocol.match('OGC:WMS') !== null"
+      data-gn-wfs-filter-facets=""
+      data-manager-only="true"
+      data-wfs-url="{{::r.locUrl}}"
+      data-feature-type-name="{{::r.name}}"
+      data-md="md"
+      data-boot-mode="index"
+    ></div>
+
+    <span
+      data-ng-if="r.protocol === 'OGC:WMS'"
+      data-gn-suggest-button="add-info-from-wms"
+      data-name="suggest-add-info-from-wms"
+      data-target="{{'link#' + r.protocol + '#' + r.locUrl + '#' + r.name}}"
+    ></span>
+    <span
+      data-ng-if="r.protocol === 'OGC:WFS' || r.protocol === 'ESRI:REST'"
+      data-gn-suggest-button="create-featurecatalogue-from-wfs"
+      data-name="suggest-create-featurecatalogue-from-wfs"
+      data-target="{{'link#' + r.protocol + '#' + r.locUrl + '#' + r.name}}"
+    ></span>
+
+    <div data-ng-switch on="mainType">
+      <div data-ng-switch-when="DB">
+        <p class="text-muted">
+          <span
+            data-translate=""
+            data-translate-values="{url:'{{r.locUrl | json}}', layer:'{{r.locTitle | json}}'}"
+          >
+            databaseLayerDetails</span
+          >
+        </p>
+      </div>
+
+      <div data-ng-switch-when="FILE">
+        <p class="text-muted">
+          <span
+            data-translate=""
+            data-translate-values="{url:'{{r.locUrl | json}}', name:'{{r.locTitle | json}}'}"
+          >
+            fileLayerDetails</span
+          >
+          <input
+            class="form-control"
+            type="text"
+            onClick="this.setSelectionRange(0, this.value.length)"
+            value="{{::r.locUrl}}"
+          />
+        </p>
+      </div>
+    </div>
+
+    <button
+      type="button"
+      class="btn btn-default btn-sm btn-block gn-btn-addtoexternal text-wrap"
+      data-ng-if="externalViewerActionEnabled
+                        && (mainType === 'WMS' || mainType === 'WMSSERVICE')"
+      data-ng-click="externalViewerAction(mainType, r, md)"
+      data-translate=""
+    >
+      viewInExternalViewer
+    </button>
+  </div>
+</div>
