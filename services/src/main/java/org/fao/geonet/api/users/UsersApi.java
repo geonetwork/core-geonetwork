@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2021 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2024 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -90,10 +90,10 @@ import static org.springframework.data.jpa.domain.Specification.where;
 @Controller("users")
 public class UsersApi {
     /**
-     * Username pattern with allowed chars. Username may only contain alphanumeric characters or single hyphens,
-     * single at signs or single dots. Cannot begin or end with a hyphen, at sign or dot.
+     * Username pattern with allowed chars: Username may only contain alphanumeric characters or hyphens,
+     * dots or colons or at-arrow (not consecutive). Cannot begin or end with an hyphen, colon or at-arrow.
      */
-    private static final String USERNAME_PATTERN = "^[a-zA-Z0-9]+([-_.@]?[a-zA-Z0-9]+)*$";
+    private static final String USERNAME_PATTERN = "^[a-zA-Z0-9]+([_\\-:.@]{1}[a-zA-Z0-9]+)*$";
 
     @Autowired
     SettingManager settingManager;
