@@ -866,6 +866,9 @@
     "system/xlinkResolver/localXlinkEnable-help": "Local XLinks are using local://<lang>/<service> URL to make references to related sections instead of HTTP URL. Local XLinks are usually faster than HTTP XLinks.",
     "system/xlinkResolver/ignore": "Elements to ignore by XLink resolution",
     "system/xlinkResolver/ignore-help": "Comma separated list of elements to ignore by XLink resolution",
+    "system/auditable": "Audit changes",
+    "system/auditable/enable": "Allow auditing changes",
+    "system/auditable/enable-help": "When enabled, audits changes in users configuration",
     "metadata/workflow": "Metadata workflow",
     "metadata/workflow/automaticUnpublishInvalidMd": "Automatic unpublication of invalid metadata",
     "metadata/workflow/automaticUnpublishInvalidMd-help": " Automatically unpublishes metadata that is edited that becomes not valid according to xsd or schematron rules.",
@@ -1513,6 +1516,12 @@
     "fieldEmailNotValid": "A valid email address is required",
     "formConfirmExit": "The form has changes, if you exit the changes will be lost. Do you want to exit on the page?",
     "NoTranslationProvider": "No translation provider",
-    "LibreTranslate": "Libretranslate"
+    "LibreTranslate": "Libretranslate",
+    "userHistory": "User history",
+    "userHistoryRevision": "Updated by {{revisionUser}} on {{revisionDate}}:",
+    "userHistoryFieldUpdate": "Field '{{fieldName}}' changed from '{{oldValue}}' to '{{newValue}}'",
+    "userHistoryFieldSet": "Field '{{fieldName}}' set to '{{newValue}}'",
+    "userHistoryFieldUnset": "Field '{{fieldName}}' unset",
+    "noUserHistory": "No user history available"
 }
 
