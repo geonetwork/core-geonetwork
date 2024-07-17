@@ -706,6 +706,9 @@ public class MetadataInsertDeleteApi {
         @Parameter(description = "Publish record.", required = false) @RequestParam(required = false, defaultValue = "false") final boolean publishToAll,
         @Parameter(description = API_PARAM_RECORD_UUID_PROCESSING, required = false) @RequestParam(required = false, defaultValue = "NOTHING") final MEFLib.UuidAction uuidProcessing,
         @Parameter(description = API_PARAM_RECORD_GROUP, required = false) @RequestParam(required = false) final String group,
+        @Parameter(description = "Schema", required = false)
+        @RequestParam(required = false, defaultValue = "iso19139")
+        final String schema,
         HttpServletRequest request) throws Exception {
         if (StringUtils.isEmpty(xml) && StringUtils.isEmpty(url)) {
             throw new IllegalArgumentException("A context as XML or a remote URL MUST be provided.");
@@ -716,12 +719,17 @@ public class MetadataInsertDeleteApi {
         }
 
         ServiceContext context = ApiUtils.createServiceContext(request);
-        Path styleSheetWmc = dataDirectory.getXsltConversion("schema:iso19139:convert/fromOGCWMC-OR-OWSC");
+        Path styleSheetWmc = dataDirectory.getXsltConversion(
+                String.format("schema:%s:convert/fromOGCWMC-OR-OWSC",
+                schema));
 
         FilePathChecker.verify(filename);
 
+        String uuid = UUID.randomUUID().toString();
+
         // Convert the context in an ISO19139 records
         Map<String, Object> xslParams = new HashMap<>();
+        xslParams.put("uuid", uuid);
         xslParams.put("viewer_url", viewerUrl);
         xslParams.put("map_url", url);
         xslParams.put("topic", topic);
@@ -747,7 +755,6 @@ public class MetadataInsertDeleteApi {
 
         // 4. Inserts the metadata (does basically the same as the metadata.insert.paste
         // service (see Insert.java)
-        String uuid = UUID.randomUUID().toString();
 
         String date = new ISODate().toString();
         SimpleMetadataProcessingReport report = new SimpleMetadataProcessingReport();
@@ -758,7 +765,7 @@ public class MetadataInsertDeleteApi {
         md.add(transformedMd);
 
         // Import record
-        Importer.importRecord(uuid, uuidProcessing, md, "iso19139", 0, settingManager.getSiteId(),
+        Importer.importRecord(uuid, uuidProcessing, md, schema, 0, settingManager.getSiteId(),
             settingManager.getSiteName(), null, context, id, date, date, group, MetadataType.METADATA);
 
         final Store store = context.getBean("resourceStore", Store.class);
@@ -777,7 +784,7 @@ public class MetadataInsertDeleteApi {
             onlineSrcParams.put("name", filename);
             onlineSrcParams.put("desc", title);
             transformedMd = Xml.transform(transformedMd,
-                schemaManager.getSchemaDir("iso19139").resolve("process").resolve("onlinesrc-add.xsl"),
+                schemaManager.getSchemaDir(schema).resolve("process").resolve("onlinesrc-add.xsl"),
                 onlineSrcParams);
             dataManager.updateMetadata(context, id.get(0), transformedMd, false, true, context.getLanguage(),
                 null, true, IndexingMode.none);
@@ -792,7 +799,7 @@ public class MetadataInsertDeleteApi {
             onlineSrcParams.put("thumbnail_url", settingManager.getNodeURL()
                 + String.format("api/records/%s/attachments/%s", uuid, overviewFilename));
             transformedMd = Xml.transform(transformedMd,
-                schemaManager.getSchemaDir("iso19139").resolve("process").resolve("thumbnail-add.xsl"),
+                schemaManager.getSchemaDir(schema).resolve("process").resolve("thumbnail-add.xsl"),
                 onlineSrcParams);
             dataManager.updateMetadata(context, id.get(0), transformedMd, false, true, context.getLanguage(),
                 null, true, IndexingMode.none);
