@@ -1789,14 +1789,15 @@
                                       select="concat('/', @orderControl, '/gn:element')"/>
                     </saxon:call-template>
                   </xsl:when>
-                  <xsl:when test="@xpath != ''">
-                    <saxon:call-template name="{concat('evaluate-', $schema)}">
-                      <xsl:with-param name="base" select="$base"/>
-                      <xsl:with-param name="in"
-                                      select="concat('/', @xpath)"/>
-                    </saxon:call-template>
-                  </xsl:when>
                 </xsl:choose>
+                
+                <xsl:if test="@xpath != ''">
+                  <saxon:call-template name="{concat('evaluate-', $schema)}">
+                    <xsl:with-param name="base" select="$base"/>
+                    <xsl:with-param name="in"
+                                    select="concat('/', @xpath)"/>
+                  </saxon:call-template>
+                </xsl:if>
               </col>
             </xsl:for-each>
           </row>
