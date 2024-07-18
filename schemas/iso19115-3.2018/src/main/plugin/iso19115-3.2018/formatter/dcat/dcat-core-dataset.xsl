@@ -124,6 +124,7 @@
 
   <xsl:template mode="iso19115-3-to-dcat"
                 match="mdb:identificationInfo/*/mri:resourceMaintenance/*/mmi:maintenanceAndUpdateFrequency">
+
     <xsl:variable name="dcFrequency"
                   as="xs:string?"
                   select="$isoFrequencyToDublinCore[@key = current()/*/@codeListValue]"/>
@@ -133,6 +134,39 @@
                                  then concat($europaPublicationBaseUri, 'frequency/', $dcFrequency)
                                  else concat($isoCodeListBaseUri, */@codeListValue)}"/>
     </dct:accrualPeriodicity>
+  </xsl:template>
+
+
+
+  <xsl:variable name="isoDurationToMobilityDcatApUpdateFrequency"
+                as="node()*">
+    <!--    <entry key="X">https://w3id.org/mobilitydcat-ap/update-frequency/less-than-yearly</entry>-->
+    <entry key="P0Y0M0DT1H0M0S">https://w3id.org/mobilitydcat-ap/update-frequency/1h</entry>
+    <entry key="P0Y0M0DT0H1M0S">https://w3id.org/mobilitydcat-ap/update-frequency/1min</entry>
+    <entry key="P0Y0M0DT0H10M0S">https://w3id.org/mobilitydcat-ap/update-frequency/10min</entry>
+    <entry key="P0Y0M0DT12H0M0S">https://w3id.org/mobilitydcat-ap/update-frequency/12h</entry>
+    <entry key="P0Y0M0DT0H15M0S">https://w3id.org/mobilitydcat-ap/update-frequency/15min</entry>
+    <entry key="P0Y0M0DT2H0M0S">https://w3id.org/mobilitydcat-ap/update-frequency/2h</entry>
+    <entry key="P0Y0M0DT24H0M0S">https://w3id.org/mobilitydcat-ap/update-frequency/24h</entry>
+    <entry key="P0Y0M0DT3H0M0S">https://w3id.org/mobilitydcat-ap/update-frequency/3h</entry>
+    <entry key="P0Y3M0DT0H0M0S">https://w3id.org/mobilitydcat-ap/update-frequency/3-months</entry>
+    <entry key="P0Y0M0DT0H30M0S">https://w3id.org/mobilitydcat-ap/update-frequency/30min</entry>
+    <entry key="P0Y0M0DT0H5M0S">https://w3id.org/mobilitydcat-ap/update-frequency/5min</entry>
+    <entry key="P0Y6M0DT0H0M0S">https://w3id.org/mobilitydcat-ap/update-frequency/6-months</entry>
+  </xsl:variable>
+
+  <xsl:template mode="iso19115-3-to-dcat"
+                match="mdb:identificationInfo/*/mri:resourceMaintenance/*/mmi:userDefinedMaintenanceFrequency">
+
+    <xsl:variable name="dcMobilityFrequency"
+                  as="xs:string?"
+                  select="$isoDurationToMobilityDcatApUpdateFrequency[@key = current()/gco:TM_PeriodDuration]"/>
+
+    <xsl:if test="$dcMobilityFrequency">
+      <dct:accrualPeriodicity>
+        <dct:Frequency rdf:about="{$dcMobilityFrequency}"/>
+      </dct:accrualPeriodicity>
+    </xsl:if>
   </xsl:template>
 
 

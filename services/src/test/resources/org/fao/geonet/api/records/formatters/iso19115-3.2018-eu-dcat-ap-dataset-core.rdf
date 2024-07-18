@@ -545,6 +545,9 @@
         <dct:accrualPeriodicity>
             <dct:Frequency rdf:about="http://publications.europa.eu/resource/authority/frequency/MONTHLY"/>
         </dct:accrualPeriodicity>
+        <dct:accrualPeriodicity>
+            <dct:Frequency rdf:about="https://w3id.org/mobilitydcat-ap/update-frequency/15min"/>
+        </dct:accrualPeriodicity>
         <foaf:page>
             <foaf:Document
                     rdf:about="https://metawal.wallonie.be/geonetwork/srv/api/records/7fe2f305-1302-4297-b67e-792f55acd834/attachments/pds_codt.png">

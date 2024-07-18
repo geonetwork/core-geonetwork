@@ -123,6 +123,7 @@
        -->
       <xsl:apply-templates mode="iso19115-3-to-dcat"
                            select="mdb:identificationInfo/*/mri:resourceMaintenance/*/mmi:maintenanceAndUpdateFrequency
+                                  |mdb:identificationInfo/*/mri:resourceMaintenance/*/mmi:userDefinedMaintenanceFrequency
                                   |mdb:identificationInfo/*/mri:spatialResolution/*/mri:distance
                                   |mdb:identificationInfo/*/mri:temporalResolution/*
                                   |mdb:identificationInfo/*/mri:extent/*/gex:geographicElement/gex:EX_GeographicBoundingBox

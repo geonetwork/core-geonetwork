@@ -533,6 +533,9 @@
             <mmi:MD_MaintenanceFrequencyCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#MD_MaintenanceFrequencyCode"
                                              codeListValue="asNeeded"/>
           </mmi:maintenanceAndUpdateFrequency>
+          <mmi:userDefinedMaintenanceFrequency>
+            <gco:TM_PeriodDuration>P0Y0M0DT0H15M0S</gco:TM_PeriodDuration>
+          </mmi:userDefinedMaintenanceFrequency>
           <mmi:maintenanceNote>
             <gco:CharacterString>L'intégration des nouveaux dossiers, la correction d'erreurs et la suppression des
               dossiers abrogés se font au fur et à mesure de la réception des informations.</gco:CharacterString>
