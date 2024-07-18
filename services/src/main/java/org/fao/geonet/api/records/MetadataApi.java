@@ -427,6 +427,10 @@ public class MetadataApi {
             }
         }
 
+        if (!metadataUtils.isMetadataAvailableInPortal(Integer.parseInt(mdId))) {
+            throw new NotAllowedException(ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW);
+        }
+
         Element xml = withInfo ?
             dataManager.getMetadata(context, mdId, forEditing,
                 withValidationErrors, keepXlinkAttributes) :
