@@ -87,6 +87,7 @@ public class FormatterApiTest extends AbstractServiceIntegrationTest {
         data.add(new String[]{"iso19115-3.2018-dcat-dataset.xml", "dcat", "", "iso19115-3.2018", "dataset-core.rdf"});
         data.add(new String[]{"iso19115-3.2018-dcat-dataset.xml", "eu-dcat-ap", "", "iso19115-3.2018", "dataset-core.rdf"});
         data.add(new String[]{"iso19115-3.2018-dcat-dataset.xml", "eu-geodcat-ap", "", "iso19115-3.2018", "dataset-core.rdf"});
+        data.add(new String[]{"iso19115-3.2018-dcat-dataset.xml", "eu-dcat-ap-mobility", "", "iso19115-3.2018", "dataset-core.rdf"});
         data.add(new String[]{"iso19115-3.2018-dcat-dataset.xml", "eu-dcat-ap-hvd", "", "iso19115-3.2018", "dataset-core.rdf"});
         data.add(new String[]{"iso19115-3.2018-dcat-service.xml", "dcat", "", "iso19115-3.2018", "service-core.rdf"});
 

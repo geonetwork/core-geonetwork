@@ -27,28 +27,23 @@
   Sub-property of:	dcterms:relation
   Domain:	dcat:Dataset
   Range:	dcat:Distribution
+
+  TODO https://mobilitydcat-ap.github.io/mobilityDCAT-AP/releases/index.html#mandatory-properties-for-distribution
   -->
   <xsl:variable name="mobilityThemeThesaurusKey"
                 select="'https://w3id.org/mobilitydcat-ap/mobility-data-standard/1.0.0'"/>
 
-  <xsl:template mode="iso19115-3-to-dcat"
+  <!--<xsl:template mode="iso19115-3-to-dcat"
                 name="iso19115-3-to-dcat-distribution"
                 match="mdb:distributionInfo//mrd:onLine">
-<!--                match="mri:descriptiveKeywords[*/mri:thesaurusName/*/cit:title/*/@xlink:href = $mobilityThemeThesaurusKey]">-->
-
     <dcat:distribution>
       <dcat:Distribution>
-
         <mobilitydcatap:mobilityDataStandard>
           <skos:Concept>
 
           </skos:Concept>
         </mobilitydcatap:mobilityDataStandard>
-
       </dcat:Distribution>
     </dcat:distribution>
-
-  </xsl:template>
-
-
+  </xsl:template>-->
 </xsl:stylesheet>
