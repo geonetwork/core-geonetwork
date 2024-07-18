@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2023 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2024 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -369,6 +369,25 @@ public class DefaultStatusActions implements StatusActions {
                 return new ArrayList<>();
         }
 
+        // If status is DRAFT and previous status is SUBMITTED, which means either:
+        //   - a cancel working copy (from editor) --> should be notified the reviewer.
+        //   - rejection (from reviewer) --> should be notified the editor.
+        // and the notification level is recordUserAuthor or recordProfileReviewer,
+        // then adjust the notification level, depending on the user role
+        if ((status.getStatusValue().getId() == Integer.parseInt(StatusValue.Status.DRAFT)) &&
+            (!StringUtils.isEmpty(status.getPreviousState()) &&
+                (Integer.parseInt(status.getPreviousState()) == Integer.parseInt(StatusValue.Status.SUBMITTED))) &&
+            (notificationLevel.equals(StatusValueNotificationLevel.recordUserAuthor) || (notificationLevel.equals(StatusValueNotificationLevel.recordProfileReviewer)))) {
+            UserRepository userRepository = ApplicationContextHolder.get().getBean(UserRepository.class);
+            Optional<User> user = userRepository.findById(status.getUserId());
+            if (user.isPresent()) {
+                if (user.get().getProfile() == Profile.Editor) {
+                    notificationLevel = StatusValueNotificationLevel.recordProfileReviewer;
+                } else {
+                    notificationLevel = StatusValueNotificationLevel.recordUserAuthor;
+                }
+            }
+        }
         // TODO: Status does not provide batch update
         // So taking care of one record at a time.
         // Currently the code could notify a mix of reviewers
