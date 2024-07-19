@@ -412,7 +412,7 @@
             msg: $translate.instant("layerProtocolNotSupported", {
               type: link.protocol
             }),
-            delay: 20000,
+            delay: 20,
             type: "warning"
           });
           return;
@@ -543,6 +543,12 @@
         ) {
           setTimeout(function () {
             searchMap.updateSize();
+          }, 0);
+        }
+
+        if (gnSearchLocation.isSearch()) {
+          setTimeout(function () {
+            gnAlertService.closeAlerts();
           }, 0);
         }
       });
