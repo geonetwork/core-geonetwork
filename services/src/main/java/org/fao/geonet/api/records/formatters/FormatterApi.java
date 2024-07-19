@@ -255,7 +255,7 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
             language = isoLanguagesMapper.iso639_2T_to_iso639_2B(locale.getISO3Language());
         }
 
-        AbstractMetadata metadata = ApiUtils.canViewRecord(metadataUuid, servletRequest);
+        AbstractMetadata metadata = ApiUtils.canViewRecord(metadataUuid, approved, servletRequest);
 
         if (approved) {
             metadata = ApplicationContextHolder.get().getBean(MetadataRepository.class).findOneByUuid(metadataUuid);
