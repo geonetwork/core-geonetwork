@@ -3,27 +3,21 @@
   version="2.0"
   xmlns:cit="http://standards.iso.org/iso/19115/-3/cit/2.0"
   xmlns:mdb="http://standards.iso.org/iso/19115/-3/mdb/2.0"
-  xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+  xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+  xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+  <xsl:variable name="dateFormat"
+                as="xs:string"
+                select="'[Y0001]-[M01]-[D01]T[H01]:[m01]:[s01][ZN]'"/>
 
   <xsl:template
     match="mdb:MD_Metadata">
-    <xsl:variable name="revisionDate"
-                  select="(mdb:dateInfo/cit:CI_Date
-      [cit:dateType/cit:CI_DateTypeCode/@codeListValue='revision']
-      /cit:date/*)[1]"/>
     <dateStamp>
-      <xsl:choose>
-        <xsl:when test="normalize-space($revisionDate)">
-          <xsl:value-of select="$revisionDate"/>
-        </xsl:when>
-        <xsl:otherwise>
-          <xsl:value-of select="mdb:dateInfo/cit:CI_Date
-            [cit:dateType/cit:CI_DateTypeCode/@codeListValue='creation']
-            /cit:date/*"/>
-          <!-- TODO: Should we handle when no creation nor revision date
-          defined ? -->
-        </xsl:otherwise>
-      </xsl:choose>
+      <xsl:value-of select="(
+        mdb:dateInfo/*[cit:dateType/*/@codeListValue = 'revision']/cit:date/*[. != ''],
+        mdb:dateInfo/*[cit:dateType/*/@codeListValue = 'creation']/cit:date/*[. != ''],
+        format-dateTime(current-dateTime(), $dateFormat)
+      )[1]"/>
     </dateStamp>
   </xsl:template>
 </xsl:stylesheet>
