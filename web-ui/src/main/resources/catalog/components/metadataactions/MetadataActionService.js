@@ -51,6 +51,7 @@
     "$q",
     "$http",
     "gnConfig",
+    "gnLangs",
     function (
       $rootScope,
       $timeout,
@@ -67,7 +68,8 @@
       $translate,
       $q,
       $http,
-      gnConfig
+      gnConfig,
+      gnLangs
     ) {
       var windowName = "geonetwork";
       var windowOption = "";
@@ -154,7 +156,7 @@
           if (params.sortOrder) {
             url += "&sortOrder=" + params.sortOrder;
           }
-          url += "&bucket=" + bucket;
+          url += "&bucket=" + bucket + "&language=" + gnLangs.current;
           location.replace(url);
         } else if (angular.isString(params)) {
           gnMdFormatter.getFormatterUrl(null, null, params).then(function (url) {
@@ -194,7 +196,11 @@
       };
 
       this.exportCSV = function (bucket) {
-        window.open("../api/records/csv" + "?bucket=" + bucket, windowName, windowOption);
+        window.open(
+          "../api/records/csv" + "?bucket=" + bucket + "&language=" + gnLangs.current,
+          windowName,
+          windowOption
+        );
       };
       this.validateMdLinks = function (bucket) {
         $rootScope.$broadcast("operationOnSelectionStart");
