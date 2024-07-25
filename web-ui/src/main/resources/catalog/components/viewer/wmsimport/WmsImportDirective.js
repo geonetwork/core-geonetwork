@@ -105,7 +105,7 @@
                     }),
                     type: "success"
                   },
-                  4
+                  15
                 );
                 gnMap.feedLayerMd(layer);
                 return layer;
