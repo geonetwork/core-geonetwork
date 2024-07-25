@@ -171,6 +171,7 @@
     "gnFacetSorter",
     "gnExternalViewer",
     "gnUrlUtils",
+    "gnAlertService",
     function (
       $scope,
       $location,
@@ -193,7 +194,8 @@
       gnESFacet,
       gnFacetSorter,
       gnExternalViewer,
-      gnUrlUtils
+      gnUrlUtils,
+      gnAlertService
     ) {
       var viewerMap = gnSearchSettings.viewerMap;
       var searchMap = gnSearchSettings.searchMap;
@@ -463,13 +465,22 @@
       setActiveTab();
       $scope.$on("$locationChangeSuccess", setActiveTab);
 
-      $scope.$on("$locationChangeSuccess", function (next, current) {
+      $scope.$on("$locationChangeSuccess", function (event, next, current) {
         if (
           gnSearchLocation.isSearch() &&
           (!angular.isArray(searchMap.getSize()) || searchMap.getSize()[0] < 0)
         ) {
           setTimeout(function () {
             searchMap.updateSize();
+          }, 0);
+        }
+
+        // Changing from the map to search pages, hide alerts
+        var currentUrlHash =
+          current.indexOf("#") > -1 ? current.slice(current.indexOf("#") + 1) : "";
+        if (gnSearchLocation.isMap(currentUrlHash)) {
+          setTimeout(function () {
+            gnAlertService.closeAlerts();
           }, 0);
         }
       });
