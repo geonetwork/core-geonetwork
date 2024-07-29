@@ -73,7 +73,7 @@ public class GetKeywordByIdAsConcept implements Service {
             searcher = new KeywordsSearcher(context, thesaurusMan);
             KeywordBean kb = null;
 
-            kb = searcher.searchById(uri, sThesaurusName, langForThesaurus);
+            kb = searcher.searchById(uri, sThesaurusName, langForThesaurus, "eng");
             if (kb == null) {
                 root = new Element("descKeys");
             } else {
@@ -93,11 +93,11 @@ public class GetKeywordByIdAsConcept implements Service {
                         reqType = KeywordRelation.RELATED;
                     }
 
-                    searcher.searchForRelated(params, reqType, KeywordSort.defaultLabelSorter(SortDirection.DESC), lang);
+                    searcher.searchForRelated(params, reqType, KeywordSort.defaultLabelSorter(SortDirection.DESC), lang, "eng");
                     // build response for each request type
                     Element keywordType = new Element(request);
                     for (KeywordBean kbr : searcher.getResults()) {
-                        keywordType.addContent(kbr.toElement(context.getLanguage()));
+                        keywordType.addContent(kbr.toElement(context.getLanguage(), "eng"));
                     }
                     root.addContent(keywordType);
                 }

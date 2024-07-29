@@ -501,7 +501,12 @@ public class KeywordsApi {
         if (langs == null) {
             langs = context.getLanguage().split(",");
         }
-        String[] iso3langCodes = Arrays.copyOf(langs, langs.length);
+        List<String> langList = new ArrayList<>(List.of(langs));
+        if (!langList.contains("'eng'")) {
+            langList.add("eng");
+        }
+
+        String[] iso3langCodes = langList.toArray(String[]::new);
         for (int i = 0; i < langs.length; i++) {
             if (StringUtils.isNotEmpty(langs[i])) {
                 langs[i] = mapper.iso639_2_to_iso639_1(langs[i], langs[i].substring(0,2));  //default: fra -> fr
@@ -593,12 +598,7 @@ public class KeywordsApi {
 
             Element requestParams = new Element("request");
             for (Map.Entry<String, String> e : allRequestParams.entrySet()) {
-                if (e.getKey().equals("lang")) {
-                    requestParams.addContent(new Element(e.getKey())
-                        .setText(String.join(",", iso3langCodes)));
-                } else {
-                    requestParams.addContent(new Element(e.getKey()).setText(e.getValue()));
-                }
+                requestParams.addContent(new Element(e.getKey()).setText(e.getValue()));
             }
             if (langConversion != null) {
                 requestParams.addContent(langConversion);
