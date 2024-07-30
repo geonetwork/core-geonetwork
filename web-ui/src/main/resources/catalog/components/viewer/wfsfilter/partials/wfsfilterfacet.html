@@ -17,21 +17,19 @@
 
   <div data-ng-show="isWfsAvailable">
     <!--admin buttons-->
+    <!--Facet count-->
+    <h4
+      data-ng-if="isFeaturesIndexed"
+      class="count"
+      data-ng-if="showCount"
+    >
+      {{count | number}}&nbsp;/&nbsp;{{countTotal | number}}&nbsp;<span translate=""
+    >features</span
+    >
+    </h4>
     <div class="btn-group dropup wfs-filter-group">
-      <!--Facet count-->
-      <div
-        class="btn btn-default btn-xs disabled"
-        data-ng-if="isFeaturesIndexed"
-        class="count text-center"
-        data-ng-if="showCount"
-      >
-        {{count | number}}&nbsp;/&nbsp;{{countTotal | number}}&nbsp;<span translate=""
-          >features</span
-        >
-      </div>
-
       <button
-        class="btn btn-default btn-xs"
+        class="btn btn-default"
         data-ng-if="!managerOnly
                           && isFeaturesIndexed
                           && displayTableOnLoad != 'true'"
@@ -41,7 +39,7 @@
         <i class="fa fa-table"></i>
       </button>
       <button
-        class="btn btn-default btn-xs"
+        class="btn btn-default"
         data-ng-disabled="!indexObject.isPointOnly"
         data-ng-if="!managerOnly
                           && isFeaturesIndexed"
@@ -52,7 +50,7 @@
         <i class="fa fa-th-large"></i>
       </button>
       <button
-        class="btn btn-default btn-xs"
+        class="btn btn-default"
         ng-class="{ disabled: !filtersChanged }"
         data-ng-if="!managerOnly && isFeaturesIndexed"
         title="{{::'applyFilter' | translate}}"
@@ -62,7 +60,7 @@
         <i class="fa fa-filter"></i>
       </button>
       <button
-        class="btn btn-default btn-xs"
+        class="btn btn-default"
         title="{{::'refresh' | translate}}"
         data-ng-if="(user.canEditRecord(md)
                       || (user.isAdministrator() && md.isHarvested == 'true'))"
@@ -74,7 +72,7 @@
         data-ng-if="(user.canEditRecord(md)
                       || (user.isAdministrator() && md.isHarvested == 'true'))"
         type="button"
-        class="btn btn-default btn-xs dropdown-toggle"
+        class="btn btn-default dropdown-toggle"
         data-toggle="dropdown"
         aria-haspopup="true"
         aria-expanded="false"
@@ -105,7 +103,7 @@
         data-ng-if="managerOnly"
         title="{{'addToMap' | translate}}"
         data-ng-href="catalog.search#/map?add={{mapAddCmd | encodeURIComponent}}"
-        class="btn btn-default btn-xs"
+        class="btn btn-default"
       >
         <i class="fa fa-globe"></i>
       </a>
@@ -133,43 +131,49 @@
     ></gn-heatmap>
 
     <!-- Search -->
-    <div
-      data-ng-if="!managerOnly && isFeaturesIndexed"
-      class="input-group input-group-sm"
-    >
-      <input
-        class="form-control input-xs"
-        data-ng-keyup="$event.keyCode == 13 && filterFacets()"
-        type="text"
-        placeholder="{{::'anyPlaceHolder' | translate}}"
-        data-ng-model="ctrl.filter.fullTextSearch"
-      />
-      <span class="input-group-btn">
-        <button
-          data-ng-if="!managerOnly && isFeaturesIndexed"
-          data-gn-click-and-spin="resetFacets(false).then(filterWMS)"
-          title="{{'reset' | translate}}"
-          class="btn btn-default btn-xs gn-reset-facets"
-        >
-          <i class="fa fa-fw fa-times"></i>
-        </button>
-        <button
-          data-ng-if="!managerOnly && isFeaturesIndexed"
-          title="{{'featuresInMapExtent' | translate}}"
-          data-ng-click="setFeaturesInMapExtent()"
-          data-ng-class="{'active': featuresInMapExtent}"
-          class="btn btn-default btn-xs"
-        >
-          <i class="fa fa-pencil-square-o fa-fw"></i>
-        </button>
-        <button
-          class="btn btn-default btn-xs"
-          title="{{'search' | translate}}"
-          data-ng-click="filterFacets()"
-        >
-          <i class="fa fa-fw fa-search"></i>
-        </button>
-      </span>
+    <div class="flex-row flex-align-center gn-margin-bottom">
+      <div
+        data-ng-if="!managerOnly && isFeaturesIndexed"
+        class="input-group flex-grow gn-margin-right-sm"
+      >
+        <input
+          class="form-control"
+          data-ng-keyup="$event.keyCode == 13 && filterFacets()"
+          type="text"
+          placeholder="{{::'anyPlaceHolder' | translate}}"
+          data-ng-model="ctrl.filter.fullTextSearch"
+        />
+        <div class="input-group-btn">
+
+            <button
+              data-ng-if="!managerOnly && isFeaturesIndexed"
+              data-gn-click-and-spin="resetFacets(false).then(filterWMS)"
+              title="{{'reset' | translate}}"
+              class="btn btn-default gn-reset-facets"
+            >
+              <i class="fa fa-fw fa-times"></i>
+            </button>
+
+            <button
+              class="btn btn-default"
+              title="{{'search' | translate}}"
+              data-ng-click="filterFacets()"
+            >
+              <i class="fa fa-fw fa-search"></i>
+            </button>
+
+        </div>
+
+      </div>
+      <button
+        data-ng-if="!managerOnly && isFeaturesIndexed"
+        title="{{'featuresInMapExtent' | translate}}"
+        data-ng-click="setFeaturesInMapExtent()"
+        data-ng-class="{'active': featuresInMapExtent}"
+        class="btn btn-default"
+      >
+        <i class="fa fa-pencil-square-o fa-fw"></i>
+      </button>
     </div>
 
     <!-- Facets -->
@@ -185,7 +189,7 @@
           data-ng-class="{'text-primary': isFilterActive(field.name, field)}"
         >
           <span
-            class="fa fa-arrow-circle-right"
+            class="fa fa-chevron-right"
             data-ng-class="{
               'fa-rotate-90': field.expanded,
               'gn-field-empty': !isFilterActive(field.name, field)
@@ -208,7 +212,7 @@
           ></span>
           <input
             type="text"
-            class="form-control input-sm layerfilter"
+            class="form-control layerfilter"
             placeholder="{{ 'filter' | translate }}"
             ng-model="facetFilters[field.name]"
             ng-model-options="{debounce: 300}"
@@ -266,7 +270,7 @@
           data-ng-class="{'text-primary': isFilterActive('geometry')}"
         >
           <span
-            class="fa fa-arrow-circle-right"
+            class="fa fa-chevron-right"
             data-ng-class="{
               'fa-rotate-90': indexObject.geomField.expanded,
               'gn-field-empty': !isFilterActive('geometry')
