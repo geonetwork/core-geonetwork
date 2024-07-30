@@ -341,7 +341,6 @@
     .list-group-item {
       transition: max-height @transition-params;
       padding: 5px 15px;
-      border: 0;
       &:hover,
       &:focus {
         .fa-arrows-alt,
@@ -358,6 +357,11 @@
         .gn-layer-ordering {
           visibility: visible;
         }
+      }
+    }
+    .gn-facet-container {
+      .list-group-item {
+        border: 0;
       }
     }
     .gn-baselayer-switcher-menu {
@@ -842,7 +846,7 @@ gn-features-tables,
   .tab-content {
     background: white;
     min-height: 5em;
-    padding: 0 0 @gn-spacing-lg 0;
+    padding: 0 @gn-spacing-lg;
   }
   .gn-features-table {
     box-shadow: 0 0 4px 2px rgba(0, 0, 0, 0.1);
@@ -915,6 +919,11 @@ gn-features-tables,
 }
 
 .gn-md-view {
+  .tab-content {
+    background: white;
+    min-height: 5em;
+    padding: 0 0 @gn-spacing-lg 0;
+  }
   gn-features-tables {
     position: unset;
     .gn-features-table {
