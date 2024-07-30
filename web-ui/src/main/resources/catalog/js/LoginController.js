@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2024 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -41,14 +41,14 @@
   module.controller('GnLoginController',
       ['$scope', '$http', '$rootScope', '$translate',
        '$location', '$window', '$timeout',
-       'gnUtilityService', 'gnConfig', 'gnGlobalSettings',
+       'gnUtilityService', 'gnConfig', 'gnConfigService', 'gnGlobalSettings',
        'vcRecaptchaService', 'gnUrlUtils', '$q', 'gnLangs',
        function($scope, $http, $rootScope, $translate,
            $location, $window, $timeout,
-               gnUtilityService, gnConfig, gnGlobalSettings,
+               gnUtilityService, gnConfig, gnConfigService, gnGlobalSettings,
                vcRecaptchaService, gnUrlUtils, $q, gnLangs) {
           $scope.formAction = '../../signin#' +
-         $location.path();
+          $location.path();
           $scope.registrationStatus = null;
           $scope.sendPassword = false;
           $scope.password = null;
@@ -56,10 +56,20 @@
           $scope.userToRemind = null;
           $scope.changeKey = null;
 
-          $scope.recaptchaEnabled =
-         gnConfig['system.userSelfRegistration.recaptcha.enable'];
-          $scope.recaptchaKey =
-         gnConfig['system.userSelfRegistration.recaptcha.publickey'];
+          gnConfigService.loadPromise.then(function () {
+            $scope.recaptchaEnabled =
+           gnConfig['system.userSelfRegistration.recaptcha.enable'];
+            $scope.recaptchaKey =
+           gnConfig['system.userSelfRegistration.recaptcha.publickey'];
+
+           // take the bigger of the two values
+           $scope.passwordMinLength =
+             Math.max(gnConfig['system.security.passwordEnforcement.minLength'], 6);
+           $scope.passwordMaxLength =
+             Math.max(gnConfig['system.security.passwordEnforcement.maxLength'], 6);
+           $scope.passwordPattern =
+             gnConfig['system.security.passwordEnforcement.pattern'];
+          });
           $scope.resolveRecaptcha = false;
 
           var redirect = gnUtilityService.getUrlParameter('redirect');
@@ -75,14 +85,6 @@
           $scope.isDisableLoginForm = gnGlobalSettings.isDisableLoginForm;
           $scope.isShowLoginAsLink = gnGlobalSettings.isShowLoginAsLink;
          $scope.isUserProfileUpdateEnabled = gnGlobalSettings.isUserProfileUpdateEnabled;
-
-         // take the bigger of the two values
-         $scope.passwordMinLength =
-           Math.max(gnConfig['system.security.passwordEnforcement.minLength'], 6);
-         $scope.passwordMaxLength =
-           Math.max(gnConfig['system.security.passwordEnforcement.maxLength'], 6);
-         $scope.passwordPattern =
-           gnConfig['system.security.passwordEnforcement.pattern'];
 
           function initForm() {
            if ($window.location.pathname.indexOf('new.password') !== -1) {
@@ -166,6 +168,9 @@
                title: data,
                timeout: 0,
                type: 'danger'});
+             if ($scope.recaptchaEnabled) {
+                vcRecaptchaService.reload();
+             }
            });
          };
          /**

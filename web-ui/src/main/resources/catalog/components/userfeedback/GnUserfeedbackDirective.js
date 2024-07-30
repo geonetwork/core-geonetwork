@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2024 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -266,9 +266,9 @@
 
   module.directive(
     'gnUserfeedbacknew', ['$http', 'gnUserfeedbackService', '$translate', '$q',
-      '$rootScope', 'Metadata', 'vcRecaptchaService', 'gnConfig',
+      '$rootScope', 'Metadata', 'vcRecaptchaService', 'gnConfig', 'gnConfigService',
       function($http, gnUserfeedbackService, $translate, $q,
-               $rootScope, Metadata, vcRecaptchaService, gnConfig) {
+               $rootScope, Metadata, vcRecaptchaService, gnConfig, gnConfigService) {
         return {
           restrict: 'AEC',
           replace: true,
@@ -278,10 +278,12 @@
           templateUrl: '../../catalog/components/' +
           'userfeedback/partials/userfeedbacknew.html',
           link: function(scope) {
-            scope.recaptchaEnabled =
-              gnConfig['system.userSelfRegistration.recaptcha.enable'];
-            scope.recaptchaKey =
-              gnConfig['system.userSelfRegistration.recaptcha.publickey'];
+            gnConfigService.loadPromise.then(function () {
+              scope.recaptchaEnabled =
+                gnConfig['system.userSelfRegistration.recaptcha.enable'];
+              scope.recaptchaKey =
+                gnConfig['system.userSelfRegistration.recaptcha.publickey'];
+            });
             scope.resolveRecaptcha = false;
 
             function initRecord(md) {
