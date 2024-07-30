@@ -1,11 +1,11 @@
-<div data-ng-if="mdView.current.record.lineage">
+<div data-ng-repeat="lineage in mdView.current.record.lineage">
   <h2 data-translate="">lineage</h2>
-  <p data-ng-bind-html="mdView.current.record.lineage | linky | newlines"></p>
+  <p data-ng-bind-html="lineage | linky | newlines"></p>
 </div>
 
-<div data-ng-if="mdView.current.record.sourceDescription">
+<div data-ng-repeat="sourceDescription in mdView.current.record.sourceDescription">
   <h2 data-translate="">sourceDescription</h2>
-  <p data-ng-bind-html="mdView.current.record.sourceDescription | linky | newlines"></p>
+  <p data-ng-bind-html="sourceDescription | linky | newlines"></p>
 </div>
 
 <div data-ng-if="mdView.current.record.supplementalInformation">

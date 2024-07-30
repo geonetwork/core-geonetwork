@@ -603,6 +603,7 @@ public class EsSearchManager implements ISearchManager {
             .add("OrgForResource")
             .add("specificationConformance")
             .add("processSteps")
+            .add("lineage")
             .add("measure")
             .add("resourceProviderOrgForResource")
             .add("resourceVerticalRange")
