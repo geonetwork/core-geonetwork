@@ -125,22 +125,24 @@ public class Xml {
                                                ResultType resultType, String id, String displayLanguage) throws InvalidParameterValueEx {
         Path schemaDir = schemaManager.getSchemaCSWPresentDir(schema);
         Path styleSheet = schemaDir.resolve(outputSchema + "-" + elementSetName + ".xsl");
+        Path styleSheetWithoutElementSet = schemaDir.resolve(outputSchema + ".xsl");
 
-        if (!Files.exists(styleSheet)) {
+        if (!Files.exists(styleSheet) && !Files.exists(styleSheetWithoutElementSet)) {
             throw new InvalidParameterValueEx("OutputSchema",
                 String.format(
-                    "OutputSchema '%s' not supported for metadata with '%s' (%s).\nCorresponding XSL transformation '%s' does not exist for this schema.\nThe record will not be returned in response.",
-                    outputSchema, id, schema, styleSheet.getFileName()));
+                    "OutputSchema '%s' not supported for metadata with '%s' (%s).\nCorresponding XSL transformation '%s' (or '%s') does not exist for this schema.\nThe record will not be returned in response.",
+                    outputSchema, id, schema, styleSheet.getFileName(), styleSheetWithoutElementSet.getFileName()));
         } else {
             Map<String, Object> params = new HashMap<>();
             params.put("lang", displayLanguage);
 
+            Path xslFile = Files.exists(styleSheet) ? styleSheet : styleSheetWithoutElementSet;
             try {
-                result = org.fao.geonet.utils.Xml.transform(result, styleSheet, params);
+                result = org.fao.geonet.utils.Xml.transform(result, xslFile, params);
             } catch (Exception e) {
                 String msg = String.format(
-                    "Error occured while transforming metadata with id '%s' using '%s'.",
-                    id, styleSheet.getFileName());
+                    "Error occurred while transforming metadata with id '%s' using '%s'.",
+                    id, xslFile.getFileName());
                 context.error(msg);
                 context.error("  (C) StackTrace:\n" + Util.getStackTrace(e));
                 throw new InvalidParameterValueEx("OutputSchema", msg);

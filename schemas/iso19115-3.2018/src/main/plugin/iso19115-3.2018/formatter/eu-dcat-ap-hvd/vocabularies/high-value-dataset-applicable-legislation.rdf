@@ -1,0 +1,572 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:dct="http://purl.org/dc/terms/" xmlns:dc="http://purl.org/dc/elements/1.1/"
+         xmlns:skos="http://www.w3.org/2004/02/skos/core#">
+    <skos:ConceptScheme rdf:about="http://data.europa.eu/r5r/applicableLegislation">
+        <dct:title xml:lang="en">High-value dataset applicable legislations</dct:title>
+        <dct:title xml:lang="fr">High-value dataset applicable legislations</dct:title>
+        <dct:description xml:lang="fr">Législation sectorielle qui prescrit la création ou la gestion de la distribution
+            de données HVD
+        </dct:description>
+    </skos:ConceptScheme>
+    <skos:Concept rdf:about="http://data.europa.eu/eli/reg_impl/2023/138/oj">
+        <skos:prefLabel xml:lang="en">2023/138</skos:prefLabel>
+        <skos:prefLabel xml:lang="fr">2023/138</skos:prefLabel>
+        <skos:scopeNote xml:lang="en">Commission Implementing Regulation (EU) 2023/138 of 21 December 2022 laying down a
+            list of specific high-value datasets and the arrangements for their publication and re-use
+        </skos:scopeNote>
+        <skos:scopeNote xml:lang="fr">Règlement d’exécution (UE) 2023/138 de la Commission du 21 décembre 2022
+            établissant une liste d’ensembles de données de forte valeur spécifiques et les modalités de leur
+            publication et de leur réutilisation
+        </skos:scopeNote>
+    </skos:Concept>
+    <skos:Concept rdf:about="http://data.europa.eu/eli/reg/2013/1306/oj">
+        <skos:prefLabel xml:lang="en">1306/2013</skos:prefLabel>
+        <skos:prefLabel xml:lang="fr">1306/2013</skos:prefLabel>
+        <skos:scopeNote xml:lang="en">Regulation (EU) No 1306/2013 of the European Parliament and of the Council of 17
+            December 2013 on the financing, management and monitoring of the common agricultural policy and repealing
+            Council Regulations (EEC) No 352/78, (EC) No 165/94, (EC) No 2799/98, (EC) No 814/2000, (EC) No 1290/2005
+            and (EC) No 485/2008
+        </skos:scopeNote>
+        <skos:scopeNote xml:lang="fr">Règlement (UE) n ° 1306/2013 du Parlement européen et du Conseil du 17 décembre
+            2013 relatif au financement, à la gestion et au suivi de la politique agricole commune et abrogeant les
+            règlements (CEE) n ° 352/78, (CE) n ° 165/94, (CE) n ° 2799/98, (CE) n ° 814/2000, (CE) n ° 1200/2005 et n °
+            485/2008 du Conseil
+        </skos:scopeNote>
+    </skos:Concept>
+    <skos:Concept rdf:about="http://data.europa.eu/eli/dir/2008/50/oj">
+        <skos:prefLabel xml:lang="en">2008/50/EC</skos:prefLabel>
+        <skos:prefLabel xml:lang="fr">2008/50/EC</skos:prefLabel>
+        <skos:scopeNote xml:lang="en">Directive 2008/50/EC of the European Parliament and of the Council of 21 May 2008
+            on ambient air quality and cleaner air for Europe
+        </skos:scopeNote>
+        <skos:scopeNote xml:lang="fr">Directive 2008/50/CE du Parlement européen et du Conseil du 21 mai 2008 concernant
+            la qualité de l’air ambiant et un air pur pour l’Europe
+        </skos:scopeNote>
+    </skos:Concept>
+    <skos:Concept rdf:about="http://data.europa.eu/eli/dir/2004/107/oj">
+        <skos:prefLabel xml:lang="en">2004/107/EC</skos:prefLabel>
+        <skos:prefLabel xml:lang="fr">2004/107/EC</skos:prefLabel>
+        <skos:scopeNote xml:lang="en">Directive 2004/107/EC of the European Parliament and of the Council of 15 December
+            2004 relating to arsenic, cadmium, mercury, nickel and polycyclic aromatic hydrocarbons in ambient air
+        </skos:scopeNote>
+        <skos:scopeNote xml:lang="fr">Directive 2004/107/CE du Parlement européen et du Conseil du 15 décembre 2004
+            concernant l'arsenic, le cadmium, le mercure, le nickel et les hydrocarbures aromatiques polycycliques dans
+            l'air ambiant
+        </skos:scopeNote>
+    </skos:Concept>
+    <skos:Concept rdf:about="http://data.europa.eu/eli/dir/2002/49/oj">
+        <skos:prefLabel xml:lang="en">2002/49/EC</skos:prefLabel>
+        <skos:prefLabel xml:lang="fr">2002/49/EC</skos:prefLabel>
+        <skos:scopeNote xml:lang="en">Directive 2002/49/EC of the European Parliament and of the Council of 25 June 2002
+            relating to the assessment and management of environmental noise - Declaration by the Commission in the
+            Conciliation Committee on the Directive relating to the assessment and management of environmental noise
+        </skos:scopeNote>
+        <skos:scopeNote xml:lang="fr">Directive 2002/49/CE du Parlement européen et du Conseil du 25 juin 2002 relative
+            à l'évaluation et à la gestion du bruit dans l'environnement - Déclaration de la Commission au sein du
+            comité de conciliation concernant la directive relative à l'évaluation et à la gestion du bruit ambiant
+        </skos:scopeNote>
+    </skos:Concept>
+    <skos:Concept rdf:about="http://data.europa.eu/eli/reg/2015/359/oj">
+        <skos:prefLabel xml:lang="en">2015/359</skos:prefLabel>
+        <skos:prefLabel xml:lang="fr">2015/359</skos:prefLabel>
+        <skos:scopeNote xml:lang="en">Commission Regulation (EU) 2015/359 of 4 March 2015 implementing Regulation (EC)
+            No 1338/2008 of the European Parliament and of the Council as regards statistics on healthcare expenditure
+            and financing
+        </skos:scopeNote>
+        <skos:scopeNote xml:lang="fr">Règlement (UE) 2015/359 de la Commission du 4 mars 2015 portant mise en œuvre du
+            règlement (CE) n ° 1338/2008 du Parlement européen et du Conseil en ce qui concerne les statistiques sur les
+            dépenses de santé et leur financement
+        </skos:scopeNote>
+    </skos:Concept>
+    <skos:Concept rdf:about="http://data.europa.eu/eli/dir/1999/31/oj">
+        <skos:prefLabel xml:lang="en">1999/31/EC</skos:prefLabel>
+        <skos:prefLabel xml:lang="fr">1999/31/EC</skos:prefLabel>
+        <skos:scopeNote xml:lang="en">Council Directive 1999/31/EC of 26 April 1999 on the landfill of waste
+        </skos:scopeNote>
+        <skos:scopeNote xml:lang="fr">Directive 1999/31/CE du Conseil du 26 avril 1999 concernant la mise en décharge
+            des déchets
+        </skos:scopeNote>
+    </skos:Concept>
+    <skos:Concept rdf:about="http://data.europa.eu/eli/reg/2002/2150/oj">
+        <skos:prefLabel xml:lang="en">2150/2002</skos:prefLabel>
+        <skos:prefLabel xml:lang="fr">2150/2002</skos:prefLabel>
+        <skos:scopeNote xml:lang="en">Regulation (EC) No 2150/2002 of the European Parliament and of the Council of 25
+            November 2002 on waste statistics
+        </skos:scopeNote>
+        <skos:scopeNote xml:lang="fr">Règlement (CE) n° 2150/2002 du Parlement européen et du Conseil du 25 novembre
+            2002 relatif aux statistiques sur les déchets
+        </skos:scopeNote>
+    </skos:Concept>
+    <skos:Concept rdf:about="http://data.europa.eu/eli/dir/2006/21/oj">
+        <skos:prefLabel xml:lang="en">2006/21/EC</skos:prefLabel>
+        <skos:prefLabel xml:lang="fr">2006/21/EC</skos:prefLabel>
+        <skos:scopeNote xml:lang="en">Directive 2006/21/EC of the European Parliament and of the Council of 15 March
+            2006 on the management of waste from extractive industries and amending Directive 2004/35/EC - Statement by
+            the European Parliament, the Council and the Commission
+        </skos:scopeNote>
+        <skos:scopeNote xml:lang="fr">Directive 2006/21/CE du Parlement européen et du Conseil du 15 mars 2006
+            concernant la gestion des déchets de l'industrie extractive et modifiant la directive 2004/35/CE -
+            Déclaration du Parlement européen, du Conseil et de la Commission
+        </skos:scopeNote>
+    </skos:Concept>
+    <skos:Concept rdf:about="http://data.europa.eu/eli/dir/1986/278/oj">
+        <skos:prefLabel xml:lang="en">86/278/EEC</skos:prefLabel>
+        <skos:prefLabel xml:lang="fr">86/278/EEC</skos:prefLabel>
+        <skos:scopeNote xml:lang="en">Council Directive 86/278/EEC of 12 June 1986 on the protection of the environment,
+            and in particular of the soil, when sewage sludge is used in agriculture
+        </skos:scopeNote>
+        <skos:scopeNote xml:lang="fr">Directive 86/278/CEE du Conseil du 12 juin 1986 relative à la protection de
+            l'environnement et notamment des sols, lors de l'utilisation des boues d'épuration en agriculture
+        </skos:scopeNote>
+    </skos:Concept>
+    <skos:Concept rdf:about="http://data.europa.eu/eli/reg_impl/2019/2180/oj">
+        <skos:prefLabel xml:lang="en">2019/2180</skos:prefLabel>
+        <skos:prefLabel xml:lang="fr">2019/2180</skos:prefLabel>
+        <skos:scopeNote xml:lang="en">Commission Implementing Regulation (EU) 2019/2180 of 16 December 2019 specifying
+            the detailed arrangements and content for the quality reports pursuant to Regulation (EU) 2019/1700 of the
+            European Parliament and of the Council
+        </skos:scopeNote>
+        <skos:scopeNote xml:lang="fr">Règlement d’Exécution (UE) 2019/2180 de la Commission du 16 décembre 2019
+            spécifiant les modalités et le contenu détaillés pour les rapports de qualité au titre du règlement (UE)
+            2019/1700 du Parlement européen et du Conseil
+        </skos:scopeNote>
+    </skos:Concept>
+    <skos:Concept rdf:about="http://data.europa.eu/eli/reg/2019/1021/oj">
+        <skos:prefLabel xml:lang="en">2019/1021</skos:prefLabel>
+        <skos:prefLabel xml:lang="fr">2019/1021</skos:prefLabel>
+        <skos:scopeNote xml:lang="en">Regulation (EU) 2019/1021 of the European Parliament and of the Council of 20 June
+            2019 on persistent organic pollutants (recast)
+        </skos:scopeNote>
+        <skos:scopeNote xml:lang="fr">Règlement (UE) 2019/1021 du Parlement européen et du Conseil du 20 juin 2019
+            concernant les polluants organiques persistants (refonte)
+        </skos:scopeNote>
+    </skos:Concept>
+    <skos:Concept rdf:about="http://data.europa.eu/eli/reco/2014/70/oj">
+        <skos:prefLabel xml:lang="en">2014/70/EU</skos:prefLabel>
+        <skos:prefLabel xml:lang="fr">2014/70/EU</skos:prefLabel>
+        <skos:scopeNote xml:lang="en">2014/70/EU: Commission Recommendation of 22 January 2014 on minimum principles for
+            the exploration and production of hydrocarbons (such as shale gas) using high-volume hydraulic fracturing
+        </skos:scopeNote>
+        <skos:scopeNote xml:lang="fr">2014/70/UE: Recommandation de la Commission du 22 janvier 2014 relative aux
+            principes minimaux applicables à l’exploration et à la production d’hydrocarbures (tels que le gaz de
+            schiste) par fracturation hydraulique à grands volumes
+        </skos:scopeNote>
+    </skos:Concept>
+    <skos:Concept rdf:about="http://data.europa.eu/eli/dir/2006/7/oj">
+        <skos:prefLabel xml:lang="en">2006/7/EC</skos:prefLabel>
+        <skos:prefLabel xml:lang="fr">2006/7/EC</skos:prefLabel>
+        <skos:scopeNote xml:lang="en">Directive 2006/7/EC of the European Parliament and of the Council of 15 February
+            2006 concerning the management of bathing water quality and repealing Directive 76/160/EEC
+        </skos:scopeNote>
+        <skos:scopeNote xml:lang="fr">Directive 2006/7/CE du Parlement européen et du Conseil du 15 février 2006
+            concernant la gestion de la qualité des eaux de baignade et abrogeant la directive 76/160/CEE
+        </skos:scopeNote>
+    </skos:Concept>
+    <skos:Concept rdf:about="http://data.europa.eu/eli/dir/2000/60/oj">
+        <skos:prefLabel xml:lang="en">2000/60/EC</skos:prefLabel>
+        <skos:prefLabel xml:lang="fr">2000/60/EC</skos:prefLabel>
+        <skos:scopeNote xml:lang="en">Directive 2000/60/EC of the European Parliament and of the Council of 23 October
+            2000 establishing a framework for Community action in the field of water policy
+        </skos:scopeNote>
+        <skos:scopeNote xml:lang="fr">Directive 2000/60/CE du Parlement européen et du Conseil du 23 octobre 2000
+            établissant un cadre pour une politique communautaire dans le domaine de l'eau
+        </skos:scopeNote>
+    </skos:Concept>
+    <skos:Concept rdf:about="http://data.europa.eu/eli/reg_impl/2019/2181/oj">
+        <skos:prefLabel xml:lang="en">2019/2181</skos:prefLabel>
+        <skos:prefLabel xml:lang="fr">2019/2181</skos:prefLabel>
+        <skos:scopeNote xml:lang="en">Commission Implementing Regulation (EU) 2019/2181 of 16 December 2019 specifying
+            technical characteristics as regards items common to several datasets pursuant to Regulation (EU) 2019/1700
+            of the European Parliament and of the Council
+        </skos:scopeNote>
+        <skos:scopeNote xml:lang="fr">Règlement d’exécution (UE) 2019/2181 de la Commission du 16 décembre 2019
+            spécifiant les caractéristiques techniques en ce qui concerne les éléments communs à plusieurs ensembles de
+            données au titre du règlement (UE) 2019/1700 du Parlement européen et du Conseil
+        </skos:scopeNote>
+    </skos:Concept>
+    <skos:Concept rdf:about="http://data.europa.eu/eli/dir/2006/118/oj">
+        <skos:prefLabel xml:lang="en">2006/118/EC</skos:prefLabel>
+        <skos:prefLabel xml:lang="fr">2006/118/EC</skos:prefLabel>
+        <skos:scopeNote xml:lang="en">Directive 2006/118/EC of the European Parliament and of the Council of 12 December
+            2006 on the protection of groundwater against pollution and deterioration
+        </skos:scopeNote>
+        <skos:scopeNote xml:lang="fr">Directive 2006/118/CE du Parlement européen et du Conseil du 12 décembre 2006 sur
+            la protection des eaux souterraines contre la pollution et la détérioration
+        </skos:scopeNote>
+    </skos:Concept>
+    <skos:Concept rdf:about="http://data.europa.eu/eli/dir/2008/105/oj">
+        <skos:prefLabel xml:lang="en">2008/105/EC</skos:prefLabel>
+        <skos:prefLabel xml:lang="fr">2008/105/EC</skos:prefLabel>
+        <skos:scopeNote xml:lang="en">Directive 2008/105/EC of the European Parliament and of the Council of 16 December
+            2008 on environmental quality standards in the field of water policy, amending and subsequently repealing
+            Council Directives 82/176/EEC, 83/513/EEC, 84/156/EEC, 84/491/EEC, 86/280/EEC and amending Directive
+            2000/60/EC of the European Parliament and of the Council
+        </skos:scopeNote>
+        <skos:scopeNote xml:lang="fr">Directive 2008/105/CE du Parlement européen et du Conseil du 16 décembre 2008
+            établissant des normes de qualité environnementale dans le domaine de l'eau, modifiant et abrogeant les
+            directives du Conseil 82/176/CEE, 83/513/CEE, 84/156/CEE, 84/491/CEE, 86/280/CEE et modifiant la directive
+            2000/60/CE
+        </skos:scopeNote>
+    </skos:Concept>
+    <skos:Concept rdf:about="http://data.europa.eu/eli/dir/2007/60/oj">
+        <skos:prefLabel xml:lang="en">2007/60/EC</skos:prefLabel>
+        <skos:prefLabel xml:lang="fr">2007/60/EC</skos:prefLabel>
+        <skos:scopeNote xml:lang="en">Directive 2007/60/EC of the European Parliament and of the Council of 23 October
+            2007 on the assessment and management of flood risks
+        </skos:scopeNote>
+        <skos:scopeNote xml:lang="fr">Directive 2007/60/CE du Parlement Européen et du Conseil du 23 octobre 2007
+            relative à l’évaluation et à la gestion des risques d’inondation
+        </skos:scopeNote>
+    </skos:Concept>
+    <skos:Concept rdf:about="http://data.europa.eu/eli/reg_impl/2019/2242/oj">
+        <skos:prefLabel xml:lang="en">2019/2242</skos:prefLabel>
+        <skos:prefLabel xml:lang="fr">2019/2242</skos:prefLabel>
+        <skos:scopeNote xml:lang="en">Commission Implementing Regulation (EU) 2019/2242 of 16 December 2019 specifying
+            the technical items of data sets, establishing the technical formats and specifying the detailed
+            arrangements and content of the quality reports on the organisation of a sample survey in the income and
+            living conditions domain pursuant to Regulation (EU) 2019/1700 of the European Parliament and of the Council
+        </skos:scopeNote>
+        <skos:scopeNote xml:lang="fr">Règlement d’Exécution (UE) 2019/2242 de la Commission du 16 décembre 2019
+            spécifiant les éléments techniques des ensembles de données, établissant les formats techniques et
+            spécifiant les modalités et le contenu détaillés des rapports de qualité concernant l’organisation d’une
+            enquête par sondage dans le domaine du revenu et des conditions de vie au titre du règlement (UE) 2019/1700
+            du Parlement européen et du Conseil
+        </skos:scopeNote>
+    </skos:Concept>
+    <skos:Concept rdf:about="http://data.europa.eu/eli/dir/2008/56/oj">
+        <skos:prefLabel xml:lang="en">2008/56/EC</skos:prefLabel>
+        <skos:prefLabel xml:lang="fr">2008/56/EC</skos:prefLabel>
+        <skos:scopeNote xml:lang="en">Directive 2008/56/EC of the European Parliament and of the Council of 17 June 2008
+            establishing a framework for community action in the field of marine environmental policy (Marine Strategy
+            Framework Directive)
+        </skos:scopeNote>
+        <skos:scopeNote xml:lang="fr">Directive 2008/56/CE du Parlement Européen et du Conseil du 17 juin 2008
+            établissant un cadre d’action communautaire dans le domaine de la politique pour le milieu marin
+            (directive-cadre stratégie pour le milieu marin)
+        </skos:scopeNote>
+    </skos:Concept>
+    <skos:Concept rdf:about="http://data.europa.eu/eli/reg/2016/792/oj">
+        <skos:prefLabel xml:lang="en">2016/792</skos:prefLabel>
+        <skos:prefLabel xml:lang="fr">2016/792</skos:prefLabel>
+        <skos:scopeNote xml:lang="en">Regulation (EU) 2016/792 of the European Parliament and of the Council of 11 May
+            2016 on harmonised indices of consumer prices and the house price index, and repealing Council Regulation
+            (EC) No 2494/95
+        </skos:scopeNote>
+        <skos:scopeNote xml:lang="fr">Règlement (UE) 2016/792 du Parlement européen et du Conseil du 11 mai 2016 relatif
+            aux indices des prix à la consommation harmonisés et à l'indice des prix des logements, et abrogeant le
+            règlement (CE) n° 2494/95 du Conseil
+        </skos:scopeNote>
+    </skos:Concept>
+    <skos:Concept rdf:about="http://data.europa.eu/eli/reg/2013/1260/oj">
+        <skos:prefLabel xml:lang="en">1260/2013</skos:prefLabel>
+        <skos:prefLabel xml:lang="fr">1260/2013</skos:prefLabel>
+        <skos:scopeNote xml:lang="en">Regulation (EU) No 1260/2013 of the European Parliament and of the Council of 20
+            November 2013 on European demographic statistics
+        </skos:scopeNote>
+        <skos:scopeNote xml:lang="fr">Règlement (UE) n ° 1260/2013 du Parlement européen et du Conseil du 20 novembre
+            2013 relatif aux statistiques démographiques européennes
+        </skos:scopeNote>
+    </skos:Concept>
+    <skos:Concept rdf:about="http://data.europa.eu/eli/dir/2005/44/oj">
+        <skos:prefLabel xml:lang="en">2005/44/EC</skos:prefLabel>
+        <skos:prefLabel xml:lang="fr">2005/44/EC</skos:prefLabel>
+        <skos:scopeNote xml:lang="en">Directive 2005/44/EC of the European Parliament and of the Council of 7 September
+            2005 on harmonised river information services (RIS) on inland waterways in the Community
+        </skos:scopeNote>
+        <skos:scopeNote xml:lang="fr">Directive 2005/44/CE du Parlement européen et du Conseil du 7 septembre 2005
+            relative à des services d'information fluviale (SIF) harmonisés sur les voies navigables communautaires
+        </skos:scopeNote>
+    </skos:Concept>
+    <skos:Concept rdf:about="http://data.europa.eu/eli/reg_impl/2020/1197/oj">
+        <skos:prefLabel xml:lang="en">2020/1197</skos:prefLabel>
+        <skos:prefLabel xml:lang="fr">2020/1197</skos:prefLabel>
+        <skos:scopeNote xml:lang="en">Commission Implementing Regulation (EU) 2020/1197 of 30 July 2020 laying down
+            technical specifications and arrangements pursuant to Regulation (EU) 2019/2152 of the European Parliament
+            and of the Council on European business statistics repealing 10 legal acts in the field of business
+            statistics
+        </skos:scopeNote>
+        <skos:scopeNote xml:lang="fr">Règlement d’exécution (UE) 2020/1197 de la Commission du 30 juillet 2020
+            établissant des spécifications techniques et des modalités d’exécution en application du règlement (UE)
+            2019/2152 du Parlement européen et du Conseil relatif aux statistiques européennes d’entreprises, abrogeant
+            dix actes juridiques dans le domaine des statistiques d’entreprises
+        </skos:scopeNote>
+    </skos:Concept>
+    <skos:Concept rdf:about="http://data.europa.eu/eli/reg/2019/2152/oj">
+        <skos:prefLabel xml:lang="en">2019/2152</skos:prefLabel>
+        <skos:prefLabel xml:lang="fr">2019/2152</skos:prefLabel>
+        <skos:scopeNote xml:lang="en">Regulation (EU) 2019/2152 of the European Parliament and of the Council of 27
+            November 2019 on European business statistics, repealing 10 legal acts in the field of business statistics
+        </skos:scopeNote>
+        <skos:scopeNote xml:lang="fr">Règlement (UE) 2019/2152 du Parlement européen et du Conseil du 27 novembre 2019
+            relatif aux statistiques européennes d’entreprises, abrogeant dix actes juridiques dans le domaine des
+            statistiques d’entreprises
+        </skos:scopeNote>
+    </skos:Concept>
+    <skos:Concept rdf:about="http://data.europa.eu/eli/dir/2013/34/oj">
+        <skos:prefLabel xml:lang="en">2013/34/EU</skos:prefLabel>
+        <skos:prefLabel xml:lang="fr">2013/34/EU</skos:prefLabel>
+        <skos:scopeNote xml:lang="en">Directive 2013/34/EU of the European Parliament and of the Council of 26 June 2013
+            on the annual financial statements, consolidated financial statements and related reports of certain types
+            of undertakings, amending Directive 2006/43/EC of the European Parliament and of the Council and repealing
+            Council Directives 78/660/EEC and 83/349/EEC
+        </skos:scopeNote>
+        <skos:scopeNote xml:lang="fr">Directive 2013/34/UE du Parlement européen et du Conseil du 26 juin 2013 relative
+            aux états financiers annuels, aux états financiers consolidés et aux rapports y afférents de certaines
+            formes d'entreprises, modifiant la directive 2006/43/CE du Parlement européen et du Conseil et abrogeant les
+            directives 78/660/CEE et 83/349/CEE du Conseil
+        </skos:scopeNote>
+    </skos:Concept>
+    <skos:Concept rdf:about="http://data.europa.eu/eli/reg/2011/691/oj">
+        <skos:prefLabel xml:lang="en">691/2011</skos:prefLabel>
+        <skos:prefLabel xml:lang="fr">691/2011</skos:prefLabel>
+        <skos:scopeNote xml:lang="en">Regulation (EU) No 691/2011 of the European Parliament and of the Council of 6
+            July 2011 on European environmental economic accounts
+        </skos:scopeNote>
+        <skos:scopeNote xml:lang="fr">Règlement (UE) n ° 691/2011 du Parlement européen et du Conseil du 6 juillet 2011
+            relatif aux comptes économiques européens de l’environnement
+        </skos:scopeNote>
+    </skos:Concept>
+    <skos:Concept rdf:about="http://data.europa.eu/eli/reg/2019/1700/oj">
+        <skos:prefLabel xml:lang="en">2019/1700</skos:prefLabel>
+        <skos:prefLabel xml:lang="fr">2019/1700</skos:prefLabel>
+        <skos:scopeNote xml:lang="en">Regulation (EU) 2019/1700 of the European Parliament and of the Council of 10
+            October 2019 establishing a common framework for European statistics relating to persons and households,
+            based on data at individual level collected from samples, amending Regulations (EC) No 808/2004, (EC) No
+            452/2008 and (EC) No 1338/2008 of the European Parliament and of the Council, and repealing Regulation (EC)
+            No 1177/2003 of the European Parliament and of the Council and Council Regulation (EC) No 577/98
+        </skos:scopeNote>
+        <skos:scopeNote xml:lang="fr">Règlement (UE) 2019/1700 du Parlement européen et du Conseil du 10 octobre 2019
+            établissant un cadre commun pour des statistiques européennes relatives aux personnes et aux ménages fondées
+            sur des données au niveau individuel collectées à partir d’échantillons, modifiant les règlements (CE) no
+            808/2004, (CE) no 452/2008 et (CE) no 1338/2008 du Parlement européen et du Conseil, et abrogeant le
+            règlement (CE) no 1177/2003 du Parlement européen et du Conseil et le règlement (CE) no 577/98 du Conseil
+        </skos:scopeNote>
+    </skos:Concept>
+    <skos:Concept rdf:about="http://data.europa.eu/eli/reg/2013/549/oj">
+        <skos:prefLabel xml:lang="en">549/2013</skos:prefLabel>
+        <skos:prefLabel xml:lang="fr">549/2013</skos:prefLabel>
+        <skos:scopeNote xml:lang="en">Regulation (EU) No 549/2013 of the European Parliament and of the Council of 21
+            May 2013 on the European system of national and regional accounts in the European Union
+        </skos:scopeNote>
+        <skos:scopeNote xml:lang="fr">Règlement (UE) n ° 549/2013 du Parlement européen et du Conseil du 21 mai 2013
+            relatif au système européen des comptes nationaux et régionaux dans l'Union européenne
+        </skos:scopeNote>
+    </skos:Concept>
+    <skos:Concept rdf:about="http://data.europa.eu/eli/dir/2007/2/oj">
+        <skos:prefLabel xml:lang="en">2007/2/EC</skos:prefLabel>
+        <skos:prefLabel xml:lang="fr">2007/2/EC</skos:prefLabel>
+        <skos:scopeNote xml:lang="en">Directive 2007/2/EC of the European Parliament and of the Council of 14 March 2007
+            establishing an Infrastructure for Spatial Information in the European Community (INSPIRE)
+        </skos:scopeNote>
+        <skos:scopeNote xml:lang="fr">Directive 2007/2/CE du Parlement européen et du Conseil du 14 mars 2007
+            établissant une infrastructure d'information géographique dans la Communauté européenne (INSPIRE)
+        </skos:scopeNote>
+    </skos:Concept>
+    <skos:Concept rdf:about="http://data.europa.eu/eli/reg/2018/1999/oj">
+        <skos:prefLabel xml:lang="en">2018/1999</skos:prefLabel>
+        <skos:prefLabel xml:lang="fr">2018/1999</skos:prefLabel>
+        <skos:scopeNote xml:lang="en">Regulation (EU) 2018/1999 of the European Parliament and of the Council of 11
+            December 2018 on the Governance of the Energy Union and Climate Action, amending Regulations (EC) No
+            663/2009 and (EC) No 715/2009 of the European Parliament and of the Council, Directives 94/22/EC, 98/70/EC,
+            2009/31/EC, 2009/73/EC, 2010/31/EU, 2012/27/EU and 2013/30/EU of the European Parliament and of the Council,
+            Council Directives 2009/119/EC and (EU) 2015/652 and repealing Regulation (EU) No 525/2013 of the European
+            Parliament and of the Council
+        </skos:scopeNote>
+        <skos:scopeNote xml:lang="fr">Règlement (UE) 2018/1999 du Parlement européen et du Conseil du 11 décembre 2018
+            sur la gouvernance de l'union de l'énergie et de l'action pour le climat, modifiant les règlements (CE) n°
+            663/2009 et (CE) n° 715/2009 du Parlement européen et du Conseil, les directives 94/22/CE, 98/70/CE,
+            2009/31/CE, 2009/73/CE, 2010/31/UE, 2012/27/UE et 2013/30/UE du Parlement européen et du Conseil, les
+            directives 2009/119/CE et (UE) 2015/652 du Conseil et abrogeant le règlement (UE) n° 525/2013 du Parlement
+            européen et du Conseil
+        </skos:scopeNote>
+    </skos:Concept>
+    <skos:Concept rdf:about="http://data.europa.eu/eli/reg/2009/1005/oj">
+        <skos:prefLabel xml:lang="en">1005/2009</skos:prefLabel>
+        <skos:prefLabel xml:lang="fr">1005/2009</skos:prefLabel>
+        <skos:scopeNote xml:lang="en">Regulation (EC) No 1005/2009 of the European Parliament and of the Council of 16
+            September 2009 on substances that deplete the ozone layer (recast)
+        </skos:scopeNote>
+        <skos:scopeNote xml:lang="fr">Règlement (CE) n o 1005/2009 du Parlement européen et du Conseil du 16 septembre
+            2009 relatif à des substances qui appauvrissent la couche d’ozone (refonte)
+        </skos:scopeNote>
+    </skos:Concept>
+    <skos:Concept rdf:about="http://data.europa.eu/eli/reg/2009/479/oj">
+        <skos:prefLabel xml:lang="en">479/2009</skos:prefLabel>
+        <skos:prefLabel xml:lang="fr">479/2009</skos:prefLabel>
+        <skos:scopeNote xml:lang="en">Council Regulation (EC) No 479/2009 of 25 May 2009 on the application of the
+            Protocol on the excessive deficit procedure annexed to the Treaty establishing the European Community
+            (Codified version)
+        </skos:scopeNote>
+        <skos:scopeNote xml:lang="fr">Règlement (CE) n o 479/2009 du Conseil du 25 mai 2009 relatif à l’application du
+            protocole sur la procédure concernant les déficits excessifs annexé au traité instituant la Communauté
+            européenne (version codifiée)
+        </skos:scopeNote>
+    </skos:Concept>
+    <skos:Concept rdf:about="http://data.europa.eu/eli/reg/2006/166/oj">
+        <skos:prefLabel xml:lang="en">166/2006</skos:prefLabel>
+        <skos:prefLabel xml:lang="fr">166/2006</skos:prefLabel>
+        <skos:scopeNote xml:lang="en">Regulation (EC) No 166/2006 of the European Parliament and of the Council of 18
+            January 2006 concerning the establishment of a European Pollutant Release and Transfer Register and amending
+            Council Directives 91/689/EEC and 96/61/EC
+        </skos:scopeNote>
+        <skos:scopeNote xml:lang="fr">Règlement (CE) n o 166/2006 du Parlement européen et du Conseil du 18 janvier 2006
+            concernant la création d'un registre européen des rejets et des transferts de polluants, et modifiant les
+            directives 91/689/CEE et 96/61/CE du Conseil
+        </skos:scopeNote>
+    </skos:Concept>
+    <skos:Concept rdf:about="http://data.europa.eu/eli/dir/2004/109/oj">
+        <skos:prefLabel xml:lang="en">2004/109/EC</skos:prefLabel>
+        <skos:prefLabel xml:lang="fr">2004/109/EC</skos:prefLabel>
+        <skos:scopeNote xml:lang="en">Directive 2004/109/EC of the European Parliament and of the Council of 15 December
+            2004 on the harmonisation of transparency requirements in relation to information about issuers whose
+            securities are admitted to trading on a regulated market and amending Directive 2001/34/EC
+        </skos:scopeNote>
+        <skos:scopeNote xml:lang="fr">Directive 2004/109/CE du Parlement européen et du Conseil du 15 décembre 2004 sur
+            l'harmonisation des obligations de transparence concernant l'information sur les émetteurs dont les valeurs
+            mobilières sont admises à la négociation sur un marché réglementé et modifiant la directive 2001/34/CE
+        </skos:scopeNote>
+    </skos:Concept>
+    <skos:Concept rdf:about="http://data.europa.eu/eli/reg/2017/852/oj">
+        <skos:prefLabel xml:lang="en">2017/852</skos:prefLabel>
+        <skos:prefLabel xml:lang="fr">2017/852</skos:prefLabel>
+        <skos:scopeNote xml:lang="en">Regulation (EU) 2017/852 of the European Parliament and of the Council of 17 May
+            2017 on mercury, and repealing Regulation (EC) No 1102/2008
+        </skos:scopeNote>
+        <skos:scopeNote xml:lang="fr">Règlement (UE) 2017/852 du Parlement européen et du Conseil du 17 mai 2017 relatif
+            au mercure et abrogeant le règlement (CE) n° 1102/2008
+        </skos:scopeNote>
+    </skos:Concept>
+    <skos:Concept rdf:about="http://data.europa.eu/eli/reg/2008/1338/oj">
+        <skos:prefLabel xml:lang="en">1338/2008</skos:prefLabel>
+        <skos:prefLabel xml:lang="fr">1338/2008</skos:prefLabel>
+        <skos:scopeNote xml:lang="en">Regulation (EC) No 1338/2008 of the European Parliament and of the Council of 16
+            December 2008 on Community statistics on public health and health and safety at work
+        </skos:scopeNote>
+        <skos:scopeNote xml:lang="fr">Règlement (CE) n o 1338/2008 du Parlement européen et du Conseil du 16 décembre
+            2008 relatif aux statistiques communautaires de la santé publique et de la santé et de la sécurité au
+            travail
+        </skos:scopeNote>
+    </skos:Concept>
+    <skos:Concept rdf:about="http://data.europa.eu/eli/dir/2016/2284/oj">
+        <skos:prefLabel xml:lang="en">2016/2284</skos:prefLabel>
+        <skos:prefLabel xml:lang="fr">2016/2284</skos:prefLabel>
+        <skos:scopeNote xml:lang="en">Directive (EU) 2016/2284 of the European Parliament and of the Council of 14
+            December 2016 on the reduction of national emissions of certain atmospheric pollutants, amending Directive
+            2003/35/EC and repealing Directive 2001/81/EC
+        </skos:scopeNote>
+        <skos:scopeNote xml:lang="fr">Directive (EU) 2016/2284 du Parlement européen et du Conseil du 14 décembre 2016
+            concernant la réduction des émissions nationales de certains polluants atmosphériques, modifiant la
+            directive 2003/35/CE et abrogeant la directive 2001/81/CE
+        </skos:scopeNote>
+    </skos:Concept>
+    <skos:Concept rdf:about="http://data.europa.eu/eli/dir/2009/147/oj">
+        <skos:prefLabel xml:lang="en">2009/147/EC</skos:prefLabel>
+        <skos:prefLabel xml:lang="fr">2009/147/EC</skos:prefLabel>
+        <skos:scopeNote xml:lang="en">Directive 2009/147/EC of the European Parliament and of the Council of 30 November
+            2009 on the conservation of wild birds (Codified version)
+        </skos:scopeNote>
+        <skos:scopeNote xml:lang="fr">Directive 2009/147/CE du Parlement européen et du Conseil du 30 novembre 2009
+            concernant la conservation des oiseaux sauvages (Version codifiée)
+        </skos:scopeNote>
+    </skos:Concept>
+    <skos:Concept rdf:about="http://data.europa.eu/eli/reg/2014/1143/oj">
+        <skos:prefLabel xml:lang="en">1143/2014</skos:prefLabel>
+        <skos:prefLabel xml:lang="fr">1143/2014</skos:prefLabel>
+        <skos:scopeNote xml:lang="en">Regulation (EU) No 1143/2014 of the European Parliament and of the Council of 22
+            October 2014 on the prevention and management of the introduction and spread of invasive alien species
+        </skos:scopeNote>
+        <skos:scopeNote xml:lang="fr">Règlement (UE) n ° 1143/2014 du Parlement européen et du Conseil du 22 octobre
+            2014 relatif à la prévention et à la gestion de l'introduction et de la propagation des espèces exotiques
+            envahissantes
+        </skos:scopeNote>
+    </skos:Concept>
+    <skos:Concept rdf:about="http://data.europa.eu/eli/dir/2010/75/oj">
+        <skos:prefLabel xml:lang="en">2010/75/EU</skos:prefLabel>
+        <skos:prefLabel xml:lang="fr">2010/75/EU</skos:prefLabel>
+        <skos:scopeNote xml:lang="en">Directive 2010/75/EU of the European Parliament and of the Council of 24 November
+            2010 on industrial emissions (integrated pollution prevention and control) (recast)
+        </skos:scopeNote>
+        <skos:scopeNote xml:lang="fr">Directive 2010/75/UE du Parlement européen et du Conseil du 24 novembre 2010
+            relative aux émissions industrielles (prévention et réduction intégrées de la pollution) (refonte)
+        </skos:scopeNote>
+    </skos:Concept>
+    <skos:Concept rdf:about="http://data.europa.eu/eli/dir/2012/18/oj">
+        <skos:prefLabel xml:lang="en">2012/18/EU</skos:prefLabel>
+        <skos:prefLabel xml:lang="fr">2012/18/EU</skos:prefLabel>
+        <skos:scopeNote xml:lang="en">Directive 2012/18/EU of the European Parliament and of the Council of 4 July 2012
+            on the control of major-accident hazards involving dangerous substances, amending and subsequently repealing
+            Council Directive 96/82/EC
+        </skos:scopeNote>
+        <skos:scopeNote xml:lang="fr">Directive 2012/18/UE du Parlement européen et du Conseil du 4 juillet 2012
+            concernant la maîtrise des dangers liés aux accidents majeurs impliquant des substances dangereuses,
+            modifiant puis abrogeant la directive 96/82/CE du Conseil
+        </skos:scopeNote>
+    </skos:Concept>
+    <skos:Concept rdf:about="http://data.europa.eu/eli/reg/2021/2116/oj">
+        <skos:prefLabel xml:lang="en">2021/2116/EU</skos:prefLabel>
+        <skos:prefLabel xml:lang="fr">2021/2116/EU</skos:prefLabel>
+        <skos:scopeNote xml:lang="en">Regulation (EU) 2021/2116 of the European Parliament and of the Council of 2
+            December 2021 on the financing, management and monitoring of the common agricultural policy and repealing
+            Regulation (EU) No 1306/2013
+        </skos:scopeNote>
+        <skos:scopeNote xml:lang="fr">Règlement (UE) 2021/2116 du Parlement européen et du Conseil du 2 décembre 2021
+            relatif au financement, à la gestion et au suivi de la politique agricole commune et abrogeant le règlement
+            (UE) no 1306/2013
+        </skos:scopeNote>
+    </skos:Concept>
+    <skos:Concept rdf:about="http://data.europa.eu/eli/reg_del/2022/1172/oj">
+        <skos:prefLabel xml:lang="en">2022/1172/EU</skos:prefLabel>
+        <skos:prefLabel xml:lang="fr">2022/1172/EU</skos:prefLabel>
+        <skos:scopeNote xml:lang="en">Commission Delegated Regulation (EU) 2022/1172 of 4 May 2022 supplementing
+            Regulation (EU) 2021/2116 of the European Parliament and of the Council with regard to the integrated
+            administration and control system in the common agricultural policy and the application and calculation of
+            administrative penalties for conditionality
+        </skos:scopeNote>
+        <skos:scopeNote xml:lang="fr">Règlement délégué (UE) 2022/1172 de la Commission du 4 mai 2022 complétant le
+            règlement (UE) 2021/2116 du Parlement européen et du Conseil en ce qui concerne le système intégré de
+            gestion et de contrôle lié à la politique agricole commune et l’application et le calcul des sanctions
+            administratives en matière de conditionnalité
+        </skos:scopeNote>
+    </skos:Concept>
+    <skos:Concept rdf:about="http://data.europa.eu/eli/dir/1991/271/oj">
+        <skos:prefLabel xml:lang="en">91/271/EEC</skos:prefLabel>
+        <skos:prefLabel xml:lang="fr">91/271/EEC</skos:prefLabel>
+        <skos:scopeNote xml:lang="en">Council Directive 91/271/EEC of 21 May 1991 concerning urban waste-water
+            treatment
+        </skos:scopeNote>
+        <skos:scopeNote xml:lang="fr">Directive 91/271/CEE du Conseil, du 21 mai 1991, relative au traitement des eaux
+            urbaines résiduaires
+        </skos:scopeNote>
+    </skos:Concept>
+    <skos:Concept rdf:about="http://data.europa.eu/eli/dir/1991/676/oj">
+        <skos:prefLabel xml:lang="en">91/676/EEC</skos:prefLabel>
+        <skos:prefLabel xml:lang="fr">91/676/EEC</skos:prefLabel>
+        <skos:scopeNote xml:lang="en">Council Directive 91/676/EEC of 12 December 1991 concerning the protection of
+            waters against pollution caused by nitrates from agricultural sources
+        </skos:scopeNote>
+        <skos:scopeNote xml:lang="fr">Directive 91/676/CEE du Conseil, du 12 décembre 1991, concernant la protection des
+            eaux contre la pollution par les nitrates à partir de sources agricoles
+        </skos:scopeNote>
+    </skos:Concept>
+    <skos:Concept rdf:about="http://data.europa.eu/eli/dir/1992/43/oj">
+        <skos:prefLabel xml:lang="en">92/43/EEC</skos:prefLabel>
+        <skos:prefLabel xml:lang="fr">92/43/EEC</skos:prefLabel>
+        <skos:scopeNote xml:lang="en">Council Directive 92/43/EEC of 21 May 1992 on the conservation of natural habitats
+            and of wild fauna and flora
+        </skos:scopeNote>
+        <skos:scopeNote xml:lang="fr">Directive 92/43/CEE du Conseil, du 21 mai 1992, concernant la conservation des
+            habitats naturels ainsi que de la faune et de la flore sauvages
+        </skos:scopeNote>
+    </skos:Concept>
+    <skos:Concept rdf:about="http://data.europa.eu/eli/dir/2020/2184/oj">
+        <skos:prefLabel xml:lang="en">2020/2184</skos:prefLabel>
+        <skos:prefLabel xml:lang="fr">2020/2184</skos:prefLabel>
+        <skos:scopeNote xml:lang="en">Directive (EU) 2020/2184 of the European Parliament and of the Council of 16
+            December 2020 on the quality of water intended for human consumption (recast)
+        </skos:scopeNote>
+        <skos:scopeNote xml:lang="fr">Directive (UE) 2020/2184 du Parlement européen et du Conseil du 16 décembre 2020
+            relative à la qualité des eaux destinées à la consommation humaine (refonte)
+        </skos:scopeNote>
+    </skos:Concept>
+</rdf:RDF>

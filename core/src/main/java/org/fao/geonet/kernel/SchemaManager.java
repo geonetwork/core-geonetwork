@@ -76,6 +76,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 /**
  * Class that handles all functions relating to metadata schemas. This includes
@@ -106,6 +107,7 @@ public class SchemaManager {
     private static int activeWriters = 0;
     private Map<String, Schema> hmSchemas = new HashMap<>();
     private Map<String, Namespace> hmSchemasTypenames = new HashMap<>();
+    private Map<String, String> cswOutputSchemas = new HashMap<>();
     private String[] fnames = {"labels.xml", "codelists.xml", "strings.xml"};
     private Path schemaPluginsDir;
     private Path schemaPluginsCat;
@@ -958,6 +960,7 @@ public class SchemaManager {
 
         if (mds.getSchemaPlugin() != null && mds.getSchemaPlugin().getCswTypeNames() != null) {
             hmSchemasTypenames.putAll(mds.getSchemaPlugin().getCswTypeNames());
+            cswOutputSchemas.putAll(mds.getSchemaPlugin().getOutputSchemas());
         }
 
         // -- add cached xml files (schema codelists and label files)
@@ -1925,17 +1928,17 @@ public class SchemaManager {
     }
 
     /**
-     * Return the list of namespace URI of all typenames declared in all schema plugins.
+     * Return the list of outputSchema declared in all schema plugins.
+     */
+    public Map<String, String> getOutputSchemas() {
+        return cswOutputSchemas;
+    }
+
+    /**
+     * Return the list of namespace URI of all outputSchema declared in all schema plugins.
      */
     public List<String> getListOfOutputSchemaURI() {
-        Iterator<String> iterator = hmSchemasTypenames.keySet().iterator();
-        List<String> listOfSchemaURI = new ArrayList<>();
-        while (iterator.hasNext()) {
-            String typeLocalName = iterator.next();
-            Namespace ns = hmSchemasTypenames.get(typeLocalName);
-            listOfSchemaURI.add(ns.getURI());
-        }
-        return listOfSchemaURI;
+        return new ArrayList<>(cswOutputSchemas.values());
     }
 
     /**
