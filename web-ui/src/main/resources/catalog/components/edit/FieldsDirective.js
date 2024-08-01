@@ -93,12 +93,12 @@
    *
    * @description
    * Component to edit a measure type field composed
-   * of a numberic value and a unit.
+   * of a numeric value and a unit.
    */
   module.directive("gnMeasure", function () {
     return {
       restrict: "A",
-      templateUrl: "../../catalog/components/edit/partials/" + "measure.html",
+      templateUrl: "../../catalog/components/edit/partials/measure.html",
       scope: {
         uom: "@",
         ref: "@"

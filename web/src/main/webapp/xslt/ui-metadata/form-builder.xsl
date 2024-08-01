@@ -1055,34 +1055,11 @@
                 <xsl:attribute name="data-dom-id" select="$id"/>
                 <xsl:attribute name="data-element-name" select="$qualifiedName"/>
                 <xsl:attribute name="data-element-ref" select="$parentEditInfo/@ref"/>
-                <xsl:choose>
-                  <xsl:when test="$directive/directiveAttributes">
-                    <xsl:for-each select="$directive/directiveAttributes/@*">
-                      <xsl:choose>
-                        <xsl:when test="starts-with(., 'xpath::')">
-                          <xsl:variable name="xpath" select="substring-after(., 'xpath::')"/>
-
-
-                          <xsl:attribute name="{name(.)}">
-                            <saxon:call-template name="{concat('evaluate-', $schema)}">
-                              <xsl:with-param name="base" select="$metadata//*[gn:element/@ref = $parentEditInfo/@ref]"/>
-                              <xsl:with-param name="in"
-                                              select="concat('/../', $xpath)"/>
-                            </saxon:call-template>
-                          </xsl:attribute>
-                        </xsl:when>
-                        <xsl:otherwise>
-                          <xsl:copy-of select="."/>
-                        </xsl:otherwise>
-                      </xsl:choose>
-                    </xsl:for-each>
-                  </xsl:when>
-                  <xsl:otherwise>
-                    <xsl:copy-of
-                      select="gn-fn-metadata:getFieldAddDirectiveAttributes($editorConfig,
-                                    $qualifiedName)"/>
-                  </xsl:otherwise>
-                </xsl:choose>
+                <xsl:call-template name="build-directive-attributes">
+                  <xsl:with-param name="directive" select="$directive"/>
+                  <xsl:with-param name="parentEditInfo" select="$parentEditInfo"/>
+                  <xsl:with-param name="qualifiedName" select="$qualifiedName"/>
+                </xsl:call-template>
                 <xsl:copy-of select="$addActionDom"/>
               </div>
             </xsl:when>
@@ -1094,7 +1071,41 @@
       </div>
     </xsl:if>
     <xsl:call-template name="get-errors-for-child"/>
+  </xsl:template>
 
+
+  <xsl:template name="build-directive-attributes">
+    <xsl:param name="directive" as="node()?"/>
+    <xsl:param name="parentEditInfo" as="node()?"/>
+    <xsl:param name="qualifiedName" as="xs:string?"/>
+    <xsl:choose>
+      <xsl:when test="$directive/directiveAttributes">
+        <xsl:for-each select="$directive/directiveAttributes/@*">
+          <xsl:choose>
+            <xsl:when test="starts-with(., 'xpath::')">
+              <xsl:variable name="xpath" select="substring-after(., 'xpath::')"/>
+
+
+              <xsl:attribute name="{name(.)}">
+                <saxon:call-template name="{concat('evaluate-', $schema)}">
+                  <xsl:with-param name="base" select="$metadata//*[gn:element/@ref = $parentEditInfo/@ref]"/>
+                  <xsl:with-param name="in"
+                                  select="concat('/../', $xpath)"/>
+                </saxon:call-template>
+              </xsl:attribute>
+            </xsl:when>
+            <xsl:otherwise>
+              <xsl:copy-of select="."/>
+            </xsl:otherwise>
+          </xsl:choose>
+        </xsl:for-each>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:copy-of
+          select="gn-fn-metadata:getFieldAddDirectiveAttributes($editorConfig,
+                                    $qualifiedName)"/>
+      </xsl:otherwise>
+    </xsl:choose>
   </xsl:template>
 
   <!-- Create a form field ie. a textarea, an input, a select, ...
@@ -1543,10 +1554,12 @@
                   select="concat(name(..), '/@', name())"/>
     <xsl:variable name="directive"
                   select="gn-fn-metadata:getAttributeFieldType($editorConfig, $attributeKey)"/>
-    <xsl:variable name="directiveAttributes"
+
+    <xsl:variable name="directiveConfig"
                   select="$editorConfig/editor/fields/for[
-                            @name = $attributeKey and @use = $directive]
-                              /directiveAttributes/@*"/>
+                            @name = $attributeKey and @use = $directive]"/>
+    <xsl:variable name="directiveAttributes"
+                  select="$directiveConfig/directiveAttributes/@*"/>
 
     <!-- Form field name escaping ":" which will be invalid character for
     Jeeves request parameters. -->
@@ -1610,7 +1623,11 @@
             </xsl:if>
             <xsl:if test="$directive and not($isDivLevelDirective)">
               <xsl:attribute name="{$directive}"/>
-              <xsl:copy-of select="$directiveAttributes"/>
+              <xsl:call-template name="build-directive-attributes">
+                <xsl:with-param name="directive" select="$directiveConfig"/>
+                <xsl:with-param name="parentEditInfo" select="../gn:element"/>
+                <xsl:with-param name="qualifiedName" select="$attributeKey"/>
+              </xsl:call-template>
             </xsl:if>
           </input>
         </xsl:otherwise>
