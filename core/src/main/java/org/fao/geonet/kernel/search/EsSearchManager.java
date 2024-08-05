@@ -573,6 +573,7 @@ public class EsSearchManager implements ISearchManager {
             .add("status_text")
             .add("coordinateSystem")
             .add("identifier")
+            .add("maintenance")
             .add("responsibleParty")
             .add("mdLanguage")
             .add("otherLanguage")
