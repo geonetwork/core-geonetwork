@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2007 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2024 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -232,7 +232,7 @@ public class Aligner extends BaseAligner<CswParams> {
                 }
 
                 result.totalMetadata++;
-            } catch (Throwable t) {
+            } catch (Exception t) {
                 errors.add(new HarvestError(this.context, t));
                 log.error("Unable to process record from csw (" + this.params.getName() + ")");
                 log.error("   Record failed: " + ri.uuid + ". Error is: " + t.getMessage());
@@ -285,7 +285,6 @@ public class Aligner extends BaseAligner<CswParams> {
         Element md = retrieveMetadata(ri.uuid);
 
         if (md == null) {
-            result.unretrievable++;
             return;
         }
 
@@ -404,7 +403,7 @@ public class Aligner extends BaseAligner<CswParams> {
                     if (StringUtils.isNotEmpty(batchEditParameter.getCondition())) {
                         applyEdit = false;
                         final Object node = Xml.selectSingle(md, batchEditParameter.getCondition(), metadataSchema.getNamespaces());
-                        if (node != null && node instanceof Boolean && (Boolean)node == true) {
+                        if (node instanceof Boolean && Boolean.TRUE.equals(node)) {
                             applyEdit = true;
                         }
                     }
@@ -430,7 +429,7 @@ public class Aligner extends BaseAligner<CswParams> {
         if (date == null && !force) {
             log.debug("  - Skipped metadata managed by another harvesting node. uuid:" + ri.uuid + ", name:" + params.getName());
         } else {
-            if (!force && !ri.isMoreRecentThan(date)) {
+            if (Boolean.TRUE.equals(!force) && !ri.isMoreRecentThan(date)) {
                 log.debug("  - Metadata XML not changed for uuid:" + ri.uuid);
                 result.unchangedMetadata++;
             } else {
@@ -447,7 +446,6 @@ public class Aligner extends BaseAligner<CswParams> {
         Element md = retrieveMetadata(ri.uuid);
 
         if (md == null) {
-            result.unchangedMetadata++;
             return false;
         }
 
@@ -479,8 +477,8 @@ public class Aligner extends BaseAligner<CswParams> {
         String language = context.getLanguage();
         final AbstractMetadata metadata = metadataManager.updateMetadata(context, id, md, validate, ufo, language, ri.changeDate, true, IndexingMode.none);
 
-        if (force || updateSchema) {
-            if (force) {
+        if (Boolean.TRUE.equals(force) || updateSchema) {
+            if (Boolean.TRUE.equals(force)) {
                 //change ownership of metadata to new harvester
                 metadata.getHarvestInfo().setUuid(params.getUuid());
                 metadata.getSourceInfo().setSourceId(params.getUuid());
@@ -500,8 +498,11 @@ public class Aligner extends BaseAligner<CswParams> {
     }
 
     /**
-     * Does CSW GetRecordById request. If validation is requested and the metadata does not
-     * validate, null is returned.
+     * Does CSW GetRecordById request. Returns null on error conditions:
+     *  - If validation is requested and the metadata does not validate.
+     *  - No metadata is retrieved.
+     *  - If metadata resource is duplicated.
+     *  - An exception occurs retrieving the metadata.
      *
      * @param uuid uuid of metadata to request
      * @return metadata the metadata
@@ -524,6 +525,7 @@ public class Aligner extends BaseAligner<CswParams> {
             //--- maybe the metadata has been removed
 
             if (list.isEmpty()) {
+                result.unretrievable++;
                 return null;
             }
 
@@ -544,11 +546,10 @@ public class Aligner extends BaseAligner<CswParams> {
                 return null;
             }
 
-            if (params.rejectDuplicateResource) {
-                if (foundDuplicateForResource(uuid, response)) {
+            if (params.rejectDuplicateResource && (foundDuplicateForResource(uuid, response))) {
                     result.unchangedMetadata++;
                     return null;
-                }
+
             }
 
             return response;
@@ -612,7 +613,7 @@ public class Aligner extends BaseAligner<CswParams> {
                         }
                     }
                 }
-            } catch (Throwable e) {
+            } catch (Exception e) {
                 log.warning("      - Error when searching for resource duplicate " + uuid + ". Error is: " + e.getMessage());
             }
         }
