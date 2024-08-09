@@ -53,15 +53,25 @@ Stylesheet used to remove a reference to a online resource.
   <!-- Remove the gmd:onLine define in url parameter  -->
   <!-- Note: first part of the match needs to match the xsl:for-each select from extract-relations.xsl in order to get the position() to match -->
   <!-- The unique identifier is marked with resourceIdx which is the position index and resourceHash which is hash code of the current node (combination of url, resource name, and description) -->
-  <xsl:template
-    match="*//gmd:MD_DigitalTransferOptions/gmd:onLine
-        [gmd:CI_OnlineResource[gmd:linkage/gmd:URL!=''] and ($resourceIdx = '' or (count(preceding::gmd:onLine) + 1) = xs:integer($resourceIdx))]
-        [($resourceHash != '' or ($url != null and (normalize-space(gmd:CI_OnlineResource/gmd:linkage/gmd:URL) = $url and normalize-space(gmd:CI_OnlineResource/gmd:name/gco:CharacterString) = normalize-space($name)
+  <xsl:template match="//gmd:MD_DigitalTransferOptions/gmd:onLine" priority="2">
+
+    <!-- Calculate the global position of the current gmd:onLine element -->
+    <xsl:variable name="position" select="count(//gmd:MD_DigitalTransferOptions/gmd:onLine[current() >> .]) + 1" />
+
+    <xsl:if test="not(
+                      gmd:CI_OnlineResource[gmd:linkage/gmd:URL != ''] and
+                      ($resourceIdx = '' or $position = xs:integer($resourceIdx)) and
+                      ($resourceHash != '' or ($url != null and (normalize-space(gmd:CI_OnlineResource/gmd:linkage/gmd:URL) = $url and normalize-space(gmd:CI_OnlineResource/gmd:name/gco:CharacterString) = normalize-space($name)
                                                                 or normalize-space(gmd:CI_OnlineResource/gmd:linkage/gmd:URL) = $url and count(gmd:CI_OnlineResource/gmd:name/gmd:PT_FreeText/gmd:textGroup[gmd:LocalisedCharacterString = $name]) > 0
                                                                 or normalize-space(gmd:CI_OnlineResource/gmd:linkage/gmd:URL) = $url and normalize-space(gmd:CI_OnlineResource/gmd:protocol/*) = 'WWW:DOWNLOAD-1.0-http--download'))
                         )
-                        and ($resourceHash = '' or digestUtils:md5Hex(string(exslt:node-set(.))) = $resourceHash)]"
-    priority="2"/>
+                        and ($resourceHash = '' or digestUtils:md5Hex(normalize-space(.)) = $resourceHash)
+                   )">
+      <xsl:copy>
+        <xsl:apply-templates select="@*|node()"/>
+      </xsl:copy>
+    </xsl:if>
+  </xsl:template>
 
   <!-- Do a copy of every node and attribute -->
   <xsl:template match="@*|node()">
