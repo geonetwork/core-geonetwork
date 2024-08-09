@@ -187,18 +187,28 @@ Note: It assumes that it will be adding new items in
   <!-- Updating the gmd:onLine based on update parameters -->
   <!-- Note: first part of the match needs to match the xsl:for-each select from extract-relations.xsl in order to get the position() to match -->
   <!-- The unique identifier is marked with resourceIdx which is the position index and resourceHash which is hash code of the current node (combination of url, resource name, and description) -->
-  <xsl:template
-    match="*//gmd:MD_DigitalTransferOptions/gmd:onLine
-        [gmd:CI_OnlineResource[gmd:linkage/gmd:URL!=''] and ($resourceIdx = '' or position() = xs:integer($resourceIdx))]
-        [($resourceHash != '' or ($updateKey != '' and normalize-space($updateKey) = concat(
+  <!-- Template to match all gmd:onLine elements -->
+  <xsl:template match="//gmd:MD_DigitalTransferOptions/gmd:onLine" priority="2">
+    <!-- Calculate the global position of the current gmd:onLine element -->
+    <xsl:variable name="position" select="count(//gmd:MD_DigitalTransferOptions/gmd:onLine[current() >> .]) + 1" />
+
+    <xsl:choose>
+      <xsl:when test="gmd:CI_OnlineResource[gmd:linkage/gmd:URL != ''] and
+                      ($resourceIdx = '' or $position = xs:integer($resourceIdx)) and
+                      ($resourceHash != '' or ($updateKey != '' and normalize-space($updateKey) = concat(
                           gmd:CI_OnlineResource/gmd:linkage/gmd:URL,
                           gmd:CI_OnlineResource/gmd:protocol/*,
                           gmd:CI_OnlineResource/gmd:name/gco:CharacterString)))
-                     and ($resourceHash = '' or digestUtils:md5Hex(string(exslt:node-set(.))) = $resourceHash)]"
-    priority="2">
-    <xsl:call-template name="createOnlineSrc"/>
+                     and ($resourceHash = '' or digestUtils:md5Hex(normalize-space(.)) = $resourceHash)">
+        <xsl:call-template name="createOnlineSrc"/>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:copy>
+          <xsl:apply-templates select="@*|node()"/>
+        </xsl:copy>
+      </xsl:otherwise>
+    </xsl:choose>
   </xsl:template>
-
 
   <xsl:template name="createOnlineSrc">
     <!-- Add all online source from the target metadata to the
@@ -243,7 +253,7 @@ Note: It assumes that it will be adding new items in
                   </gmd:URL>
                 </gmd:linkage>
                 <gmd:protocol>
-                 <xsl:call-template name="setProtocol"/>
+                  <xsl:call-template name="setProtocol"/>
                 </gmd:protocol>
 
                 <xsl:if test="$applicationProfile != ''">

@@ -33,6 +33,7 @@
                 xmlns:xlink="http://www.w3.org/1999/xlink"
                 xmlns:gn-fn-index="http://geonetwork-opensource.org/xsl/functions/index"
                 xmlns:index="java:org.fao.geonet.kernel.search.EsSearchManager"
+                xmlns:digestUtils="java:org.apache.commons.codec.digest.DigestUtils"
                 xmlns:util="java:org.fao.geonet.util.XslUtil"
                 xmlns:date-util="java:org.fao.geonet.utils.DateUtil"
                 xmlns:daobs="http://daobs.org"
@@ -1027,8 +1028,7 @@
           <xsl:copy-of select="gn-fn-index:add-multilingual-field('orderingInstructions', ., $allLanguages)"/>
         </xsl:for-each>
 
-        <xsl:for-each select="gmd:transferOptions/*/
-                                gmd:onLine/*[gmd:linkage/gmd:URL != '']">
+        <xsl:for-each select=".//gmd:onLine/*[gmd:linkage/gmd:URL != '']">
 
           <xsl:variable name="transferGroup"
                         select="count(ancestor::gmd:transferOptions/preceding-sibling::gmd:transferOptions)"/>
@@ -1052,6 +1052,8 @@
             <atomfeed><xsl:value-of select="gmd:linkage/gmd:URL"/></atomfeed>
           </xsl:if>
           <link type="object">{
+            "hash": "<xsl:value-of select="digestUtils:md5Hex(normalize-space(.))"/>",
+            "idx": <xsl:value-of select="position()"/>,
             "protocol":"<xsl:value-of select="util:escapeForJson((gmd:protocol/*/text())[1])"/>",
             "mimeType":"<xsl:value-of select="if (*/gmx:MimeFileType)
                                               then util:escapeForJson(*/gmx:MimeFileType/@type)
