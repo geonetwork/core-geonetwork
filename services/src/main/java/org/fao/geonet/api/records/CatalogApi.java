@@ -389,8 +389,8 @@ public class CatalogApi {
 
         final SearchResponse searchResponse = searchManager.query(
             String.format(
-                "uuid:(\"%s\") and not draft:\"y\"", // Skip working copies as duplicate UUIDs cause the PDF xslt to fail
-                String.join("\" or \"", uuidList)),
+                "uuid:(\"%s\") AND NOT draft:\"y\"", // Skip working copies as duplicate UUIDs cause the PDF xslt to fail
+                String.join("\" OR \"", uuidList)),
             EsFilterBuilder.buildPermissionsFilter(ApiUtils.createServiceContext(httpRequest)),
             searchFieldsForPdf, 0, maxhits);
 
