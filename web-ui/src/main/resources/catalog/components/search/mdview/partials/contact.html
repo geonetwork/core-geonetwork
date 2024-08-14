@@ -29,6 +29,7 @@
         <div data-gn-metadata-individual="c"></div>
 
         <address data-ng-if="c.address != '' || c.phone != ''">
+          <label class="visible-print" data-translate="">mdAddress</label>
           <div data-ng-if="c.address != ''">
             <i class="fa fa-fw fa-map-marker"></i>
             {{c.address}}
@@ -58,27 +59,24 @@
       gn-popover-dismiss=".content"
     >
       <div gn-popover-anchor>
-<!--        <div class="col-md-12">-->
-          <div class="row" data-ng-repeat="c in cnts | orderBy:'organisation'">
-<!--            <div class="row">-->
-              <div
-                class="col-md-3 gn-nopadding-left"
-                data-gn-circle-letter-icon="c.organisation"
-                data-org-key="c.email | getMailDomain"
-              ></div>
-              <div class="col-md-9">
-                <div class="gn-contact-card-role">{{cnts[0].role | translate}}</div>
-                <div class="gn-contact-card-org-group">{{c.organisation}}</div>
-              </div>
-            </div>
-<!--          </div>-->
-<!--        </div>-->
+        <div class="row" data-ng-repeat="c in cnts | orderBy:'organisation'">
+          <div
+            class="col-md-3 gn-nopadding-left"
+            data-gn-circle-letter-icon="c.organisation"
+            data-org-key="c.email | getMailDomain"
+          ></div>
+          <div class="col-md-9">
+            <div class="gn-contact-card-role">{{cnts[0].role | translate}}</div>
+            <div class="gn-contact-card-org-group">{{c.organisation}}</div>
+          </div>
+        </div>
       </div>
 
       <div gn-popover-content>
         <!--     Removing for now, because if you close open popup
    the title disappear. <h3 class="popover-title">{{cnts[0].role | translate}}</h3>-->
         <div data-ng-repeat="c in cnts | orderBy:'organisation'">
+          <label class="visible-print" data-ng-if="::c.website" data-translate="">mdWebsite</label>
           <a data-ng-href="{{::c.website}}" data-ng-if="::c.website">
             <i class="fa fa-fw fa-link"></i>
             {{c.organisation}}
@@ -87,6 +85,7 @@
           <div data-gn-metadata-individual="c"></div>
 
           <address data-ng-if="c.address != '' || c.phone != ''">
+            <label class="visible-print" data-translate="">mdAddress</label>
             <div data-ng-if="c.address != ''">
               <i class="fa fa-fw fa-map-marker"></i>
               {{c.address}}
@@ -144,6 +143,7 @@
           <div data-gn-metadata-individual="c"></div>
 
           <address data-ng-if="c.address != '' || c.phone != ''">
+            <label class="visible-print" data-translate="">mdAddress</label>
             <div data-ng-if="c.address != ''">
               <i class="fa fa-fw fa-map-marker"></i>
               {{c.address}}
@@ -184,7 +184,6 @@
       <div class="panel-body">
         <img data-ng-if="c.logo" class="gn-source-logo" data-ng-src="{{::c.logo}}" />
         <address>
-
           <div data-ng-if="::c.website">
             <label data-translate="">mdWebsite</label>
             <a data-ng-href="{{::c.website}}">
@@ -209,7 +208,6 @@
             {{c.phone}}
           </a>
         </address>
-
       </div>
     </div>
   </div>
@@ -228,11 +226,9 @@
         </h3>
       </div>
       <div class="panel-body">
-
         <div
           data-ng-repeat="(organisation, contact) in contactByRole | groupBy:'organisation'"
         >
-
           <!-- Logo for organisation: display for 1st contact in organisation -->
           <div data-ng-repeat="c in contact | limitTo:1">
             <img data-ng-if="c.logo" class="gn-source-logo" data-ng-src="{{::c.logo}}" />
@@ -270,7 +266,6 @@
               </div>
             </div>
           </address>
-
         </div>
       </div>
     </div>
@@ -317,7 +312,6 @@
             </ul>
           </div>
         </address>
-
       </div>
     </div>
   </div>
