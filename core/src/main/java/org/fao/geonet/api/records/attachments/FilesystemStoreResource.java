@@ -26,6 +26,7 @@
 package org.fao.geonet.api.records.attachments;
 
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.google.common.net.UrlEscapers;
 import org.fao.geonet.domain.MetadataResource;
 import org.fao.geonet.domain.MetadataResourceExternalManagementProperties;
@@ -42,6 +43,7 @@ public class FilesystemStoreResource implements MetadataResource {
     private final String url;
     private final MetadataResourceVisibility metadataResourceVisibility;
     private final long size;
+    @JsonFormat(pattern="yyyy-MM-dd")
     private final Date lastModification;
     private final int metadataId;
     private final String metadataUuid;

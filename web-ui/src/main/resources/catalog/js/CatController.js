@@ -905,6 +905,7 @@
             // appUrl: "https://sextant.ifremer.fr/Donnees/Catalogue",
             isSocialbarEnabled: true,
             showStatusWatermarkFor: "",
+            showFileStoreLastmodified: false,
             showStatusTopBarFor: "",
             showCitation: {
               enabled: false,

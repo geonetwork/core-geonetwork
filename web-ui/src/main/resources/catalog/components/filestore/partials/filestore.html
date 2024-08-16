@@ -46,7 +46,8 @@
               {{r.id.split('/').splice(2).join('/') | decodeURIComponent}}
             </a>
           </td>
-          <td data-ng-if="r.version.length > 0">{{r.version}}</td>
+          <td data-ng-if="!showFileStoreLastmodified && r.version.length > 0">{{r.version}}</td>
+          <td data-ng-if="showFileStoreLastmodified> 0">{{r.lastModification}}</td>
           <td
             data-ng-if="gnCurrentEdit.resourceManagementExternalProperties.enabled && r.metadataResourceExternalManagementProperties.url.length > 0"
           >

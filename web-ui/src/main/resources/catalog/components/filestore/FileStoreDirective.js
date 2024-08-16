@@ -131,6 +131,7 @@
       }
     ])
     .directive("gnFileStore", [
+      "gnGlobalSettings",
       "gnFileStoreService",
       "gnOnlinesrc",
       "gnCurrentEdit",
@@ -138,6 +139,7 @@
       "$rootScope",
       "$parse",
       function (
+        gnGlobalSettings,
         gnfilestoreService,
         gnOnlinesrc,
         gnCurrentEdit,
@@ -164,6 +166,9 @@
             scope.gnCurrentEdit = gnCurrentEdit;
             scope.selectOptions = { current: undefined };
             scope.metadataResources = [];
+
+            scope.showFileStoreLastmodified = gnGlobalSettings.gnCfg.mods.recordview.showFileStoreLastmodified;
+
 
             scope.setResource = function (r) {
               scope.selectCallback({ selected: r });
