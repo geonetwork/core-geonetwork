@@ -139,6 +139,9 @@
                   scope.mdFeedbackOpen = false;
                 } else {
                   scope.success = false;
+                  if (scope.recaptchaEnabled) {
+                    vcRecaptchaService.reload();
+                  }
                 }
               });
             }

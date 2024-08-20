@@ -77,12 +77,14 @@
         return p.indexOf(this.METADATA) == 0 || p.indexOf(this.DRAFT) == 0;
       };
 
-      this.isMap = function () {
-        return $location.path() == this.MAP;
+      this.isMap = function (path) {
+        var p = path || $location.path();
+        return p == this.MAP;
       };
 
-      this.isHome = function () {
-        return $location.path() == this.HOME;
+      this.isHome = function (path) {
+        var p = path || $location.path();
+        return p == this.HOME;
       };
 
       this.isUndefined = function () {

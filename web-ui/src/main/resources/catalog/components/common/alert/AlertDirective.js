@@ -69,6 +69,12 @@
           }
         }
       };
+
+      this.closeAlerts = function () {
+        if (gnAlertValue.length) {
+          gnAlertValue.splice(0, gnAlertValue.length);
+        }
+      };
     }
   ]);
 

@@ -366,7 +366,7 @@ public class MetadataApi {
         throws Exception {
         AbstractMetadata metadata;
         try {
-            metadata = ApiUtils.canViewRecord(metadataUuid, request);
+            metadata = ApiUtils.canViewRecord(metadataUuid, approved, request);
         } catch (ResourceNotFoundException e) {
             Log.debug(API.LOG_MODULE_NAME, e.getMessage(), e);
             throw e;
