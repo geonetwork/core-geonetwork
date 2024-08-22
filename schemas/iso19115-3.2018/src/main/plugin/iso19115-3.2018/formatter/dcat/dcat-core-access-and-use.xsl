@@ -56,8 +56,8 @@
   Usage note:	Information about licenses and rights MAY be provided for the Resource. See also guidance at 9. License and rights statements.
   -->
   <xsl:template mode="iso19115-3-to-dcat"
-                match="mdb:identificationInfo/*/mri:resourceConstraints/*[mco:accessConstraints]">
-    <xsl:if test="count(../preceding-sibling::mri:resourceConstraints/*[mco:accessConstraints]) = 0">
+                match="mdb:identificationInfo/*/mri:resourceConstraints/*">
+    <xsl:if test="count(../preceding-sibling::mri:resourceConstraints/*) = 0">
       <xsl:for-each select="../../mri:resourceConstraints/*[mco:accessConstraints]/mco:otherConstraints">
         <xsl:if test="position() = 1 or ($isPreservingAllResourceConstraints and position() > 1)">
           <xsl:element name="{if (position() = 1) then 'dct:accessRights' else 'dct:rights'}">
@@ -76,18 +76,11 @@
           </xsl:element>
         </xsl:if>
       </xsl:for-each>
-    </xsl:if>
-  </xsl:template>
 
-
-  <xsl:template mode="iso19115-3-to-dcat"
-                name="iso19115-3-to-dcat-license"
-                match="mdb:identificationInfo/*/mri:resourceConstraints/*[mco:useConstraints]">
-    <xsl:if test="count(../preceding-sibling::mri:resourceConstraints/*[mco:useConstraints]) = 0">
       <xsl:variable name="useConstraints"
                     as="node()*">
-        <xsl:copy-of select="ancestor::mri:resourceConstraints/*[mco:useConstraints]/mco:otherConstraints"/>
-        <xsl:copy-of select="ancestor::mri:resourceConstraints/*[mco:useConstraints]/mco:useLimitation"/>
+        <xsl:copy-of select="../../mri:resourceConstraints/*[mco:useConstraints]/mco:otherConstraints"/>
+        <xsl:copy-of select="../../mri:resourceConstraints/*[mco:useConstraints]/mco:useLimitation"/>
       </xsl:variable>
 
       <xsl:variable name="licensesAndRights" as="node()*">
