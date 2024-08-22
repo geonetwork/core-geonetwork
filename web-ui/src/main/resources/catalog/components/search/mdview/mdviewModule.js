@@ -85,7 +85,7 @@
       $scope.gnMetadataActions = gnMetadataActions;
       $scope.url = location.href;
       $scope.compileScope = $scope.$new();
-      $scope.recordIdentifierRequested = gnSearchLocation.uuid;
+      $scope.recordIdentifierRequested = gnSearchLocation.getUuid();
       $scope.isUserFeedbackEnabled = false;
       $scope.isRatingEnabled = false;
       $scope.showCitation = false;
