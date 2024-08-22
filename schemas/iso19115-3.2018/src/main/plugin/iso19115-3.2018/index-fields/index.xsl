@@ -712,6 +712,22 @@
           </spatialRepresentationType>
         </xsl:for-each>
 
+        <xsl:for-each select="*:resourceMaintenance/*">
+          <maintenance type="object">{
+            "frequency": "<xsl:value-of select="*:maintenanceAndUpdateFrequency/*/@codeListValue"/>"
+            <xsl:for-each select="*:dateOfNextUpdate[*/text() != '']">
+              ,"nextUpdateDate": "<xsl:value-of select="*/text()"/>"
+            </xsl:for-each>
+            <xsl:for-each select="*:userDefinedMaintenanceFrequency[*/text() != '']">
+              ,"userDefinedFrequency": "<xsl:value-of select="*/text()"/>"
+            </xsl:for-each>
+            <xsl:for-each select="*:maintenanceNote[*/text() != '']">
+              ,"noteObject":
+              <xsl:value-of select="gn-fn-index:add-multilingual-field('maintenanceNote', ., $allLanguages, true())"/>
+            </xsl:for-each>
+            }</maintenance>
+        </xsl:for-each>
+
         <xsl:for-each select="mri:resourceConstraints/*">
           <xsl:variable name="fieldPrefix" select="local-name()"/>
 

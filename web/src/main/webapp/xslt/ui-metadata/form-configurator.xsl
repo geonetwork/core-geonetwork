@@ -151,7 +151,7 @@
                   <xsl:variable name="originalNode"
                                 select="gn-fn-metadata:getOriginalNode($metadata, .)"/>
 
-                  <xsl:variable name="refToDelete">
+                  <xsl:variable name="refToDelete" as="node()?">
                     <xsl:call-template name="get-ref-element-to-delete">
                       <xsl:with-param name="node" select="$originalNode"/>
                       <xsl:with-param name="delXpath" select="$del"/>
@@ -159,7 +159,7 @@
                   </xsl:variable>
 
                   <xsl:call-template name="render-form-field-control-remove">
-                    <xsl:with-param name="editInfo" select="gn:element"/>
+                    <xsl:with-param name="editInfo" select="$refToDelete"/>
                   </xsl:call-template>
                 </xsl:if>
               </legend>
@@ -329,7 +329,7 @@
                     select="gn-fn-metadata:check-elementandsession-visibility(
                   $schema, $base, $serviceInfo, @if, @displayIfServiceInfo)"/>
 
-      <!-- 
+      <!--
       <xsl:message> Field: <xsl:value-of select="@name"/></xsl:message>
       <xsl:message>Xpath: <xsl:copy-of select="@xpath"/></xsl:message>
       <xsl:message>TemplateModeOnly: <xsl:value-of select="@templateModeOnly"/></xsl:message>
