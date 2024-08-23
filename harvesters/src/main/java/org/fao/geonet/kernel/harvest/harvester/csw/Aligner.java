@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2007 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2024 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -282,7 +282,7 @@ public class Aligner extends BaseAligner<CswParams> {
             return;
         }
 
-        Element md = retrieveMetadata(ri.uuid);
+        Element md = retrieveMetadata(ri);
 
         if (md == null) {
             result.unretrievable++;
@@ -444,7 +444,7 @@ public class Aligner extends BaseAligner<CswParams> {
     }
     @Transactional(value = TxType.REQUIRES_NEW)
     boolean updatingLocalMetadata(RecordInfo ri, String id, Boolean force) throws Exception {
-        Element md = retrieveMetadata(ri.uuid);
+        Element md = retrieveMetadata(ri);
 
         if (md == null) {
             result.unchangedMetadata++;
@@ -500,36 +500,25 @@ public class Aligner extends BaseAligner<CswParams> {
     }
 
     /**
-     * Does CSW GetRecordById request. If validation is requested and the metadata does not
+     * Returns the metadata xml. If validation is requested and the metadata does not
      * validate, null is returned.
      *
-     * @param uuid uuid of metadata to request
-     * @return metadata the metadata
+     * @param recordInfo metadata information
+     * @return the metadata JDOM Element
      */
-    private Element retrieveMetadata(String uuid) {
+    private Element retrieveMetadata(RecordInfo recordInfo) {
+        String uuid = recordInfo.uuid;
+
         request.clearIds();
         request.addId(uuid);
 
         try {
+            Element xml = Xml.loadString(recordInfo.data, false);
             log.debug("Getting record from : " + request.getHost() + " (uuid:" + uuid + ")");
 
-            Element response = request.execute();
             if (log.isDebugEnabled()) {
-                log.debug("Record got: " + Xml.getString(response) + "\n");
+                log.debug(String.format("Record uuid %s: %s"), uuid, Xml.getString(xml));
             }
-
-            @SuppressWarnings("unchecked")
-            List<Element> list = response.getChildren();
-
-            //--- maybe the metadata has been removed
-
-            if (list.isEmpty()) {
-                return null;
-            }
-
-            response = list.get(0);
-            response = (Element) response.detach();
-
 
             try {
                 Integer groupIdVal = null;
@@ -537,7 +526,7 @@ public class Aligner extends BaseAligner<CswParams> {
                     groupIdVal = getGroupOwner();
                 }
 
-                params.getValidate().validate(dataMan, context, response, groupIdVal);
+                params.getValidate().validate(dataMan, context, xml, groupIdVal);
             } catch (Exception e) {
                 log.info("Ignoring invalid metadata with uuid " + uuid);
                 result.doesNotValidate++;
@@ -545,13 +534,13 @@ public class Aligner extends BaseAligner<CswParams> {
             }
 
             if (params.rejectDuplicateResource) {
-                if (foundDuplicateForResource(uuid, response)) {
+                if (foundDuplicateForResource(uuid, xml)) {
                     result.unchangedMetadata++;
                     return null;
                 }
             }
 
-            return response;
+            return xml;
         } catch (Exception e) {
             log.error("Raised exception while getting record : " + e);
             log.error(e);
