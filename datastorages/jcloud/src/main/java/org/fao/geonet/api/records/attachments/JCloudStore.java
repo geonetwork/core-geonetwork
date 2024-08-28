@@ -243,6 +243,7 @@ public class JCloudStore extends AbstractStore {
             ListContainerOptions opts = new ListContainerOptions();
             opts.prefix(getMetadataDir(context, metadataId) + jCloudConfiguration.getFolderDelimiter()).recursive();
 
+            Log.info(Geonet.RESOURCES, String.format("Deleting all files from metadataId '%s'", metadataId));
             // Page through the data
             String marker = null;
             do {

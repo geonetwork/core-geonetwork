@@ -481,6 +481,8 @@
     "clickToSelect": "Klicka för att välja eller avmarkera",
     "filterDataDescription": "Välj ett lager på kartan för att börja filtrera relaterade WFS-objekt (om sådana finns). Objekten måste först ha indexerats av en administratör.",
     "WPSDescription": "Ange en WPS-slutpunkts-URL för att börja använda processen med dynamisk form. Nyligen använda WPS-processer visas i den andra fliken.",
+    "noRecentProcessFound": "No process used recently.",
+    "localStorageNotSupported": "Browser local storage not supported",
     "wpsProcesslist": "Processing services",
     "wpsProcessurl": "By URL",
     "wpsProcessrecent": "Recent services",

@@ -92,6 +92,11 @@
         padding: 10px;
         vertical-align: middle;
       }
+      .fa-external-link {
+        display: unset !important;
+        font-size: unset !important;
+        padding: unset !important;
+      }
       h1 {
         margin: 0;
         padding: 0 10px 0 0;
@@ -487,6 +492,7 @@ table.gn-resultview {
   &.gn-info-list-maps {
     .gn-card {
       width: calc(~"(100% / 2) - 20px");
+      padding: 0px;
       .gn-card-body {
         height: calc(~"@{gn-card-height-map} - @{gn-card-header-height} - @{gn-card-footer-height}") !important;
         .gn-img-thumbnail, .gn-md-no-thumbnail {
