@@ -2,7 +2,7 @@
 # Visit https://bit.ly/cffinit to generate yours today!
 
 cff-version: 1.2.0
-title: GeoNetwork
+title: GeoNetwork opensource
 message: >-
   If you use this software, please cite it using the
   metadata from this file.
@@ -11,25 +11,45 @@ authors:
   - given-names: François
     family-names: Prunayre
     affiliation: Titellus
-  - given-names: Florent
-    family-names: Gravin
-    affiliation: Camptocamp
-  - given-names: Emanuele
-    family-names: Tajariol
-    affiliation: Camptocamp
   - given-names: Jose
     family-names: García
     affiliation: GeoCat BV
   - given-names: Jeroen
     family-names: Ticheler
-    affiliation: 'GeoCat BV'
+    affiliation: GeoCat BV
     orcid: 'https://orcid.org/0009-0003-3896-0437'
+    email: jeroen.ticheler@geocat.net
+  - given-names: Jody
+    family-names: Garnett
+    affiliation: GeoCat BV
+    email: jody.garnett@geocat.net
+    orcid: 'https://orcid.org/0009-0003-1298-7113'
+  - given-names: Juan Luis
+    family-names: Rodríguez Ponce
+    affiliation: GeoCat BV
+  - given-names: Michel
+    family-names: Gabriel
+    affiliation: GeoCat BV
+  - given-names: Florent
+    family-names: Gravin
+    affiliation: CamptoCamp
+  - given-names: Olivia
+    family-names: Guyot
+    affiliation: CamptoCamp
+  - given-names: Emanuele
+    family-names: Tajariol
+    affiliation: GeoSolutions
+  - given-names: Ian
+    family-names: Wallen
+    affiliation: Fisheries and Oceans Canada (DFO)
   - given-names: Jo
     family-names: Cook
   - given-names: Paul
     family-names: van Genuchten
+    affiliation: ISRIC - World Soil Information
   - given-names: Simon
     family-names: Pigot
+    affiliation: CSIRO Australia
   - name: GeoCat BV
     address: Veenderweg 13
     city: Bennekom
@@ -38,17 +58,22 @@ authors:
     tel: +31 (0) 318 416 664
     website: 'https://www.geocat.net/'
     email: info@geocat.net
-  - name: Camptocamp
-    address:
-      QG Center
-      Rte de la Chaux 4
+  - name: Titellus
+    address: 321 Route de la Mollière
+    city: Saint Pierre de Genebroz
+    country: FR
+    post-code: 73360
+    website: 'https://titellus.net/'
+    email: fx.prunayre@titellus.net
+  - name: CamptoCamp
+    address: QG Center Rte de la Chaux 4
     city: Bussigny
     country: CH
     post-code: 1030
     tel: +41 (21) 619 10 10
     website: 'https://camptocamp.com/'
     email: info@camptocamp.com
-  - name: Open Source Geospatial Foundation
+  - name: Open Source Geospatial Foundation - OSGeo
     address: '9450 SW Gemini Dr. #42523'
     location: Beaverton
     region: Oregon
@@ -56,21 +81,16 @@ authors:
     country: US
     email: info@osgeo.org
     website: 'https://www.osgeo.org/'
-  - given-names: Jody
-    family-names: Garnett
-    affiliation: GeoCat BV
-    email: jody.garnett@gmail.com
-    orcid: 'https://orcid.org/0009-0003-1298-7113'
-  - given-names: Juan Luis
-    family-names: Rodríguez Ponce
-    affiliation: GeoCat BV
 repository-code: 'http://github.com/geonetwork/core-geonetwork'
 url: 'https://geonetwork-opensource.org'
-repository-artifact: 'https://sourceforge.net/projects/geonetwork/files/GeoNetwork_opensource/'
+repository-artifact: >-
+  https://sourceforge.net/projects/geonetwork/files/GeoNetwork_opensource/
 abstract: >-
-  GeoNetwork is a catalog application to manage spatially
-  referenced resources. It provides powerful metadata editing
-  and search functions as well as an interactive web map viewer.
+  GeoNetwork is a catalog application to manage spatial and
+  non-spatial resources. It is compliant with critical
+  international standards from ISO, OGC and INSPIRE. It
+  provides powerful metadata editing and search functions as
+  well as an interactive web map viewer.
 keywords:
   - catalog
   - gis
@@ -78,9 +98,13 @@ keywords:
   - spatial data infrastructure
   - dataspace
   - search
+  - open data
   - standards
   - spatial
   - CSW
+  - OGCAPI Records
+  - DCAT
+  - GeoDCAT-AP
   - Catalog Service
   - OGC
   - open geospatial consortium
