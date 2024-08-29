@@ -588,15 +588,20 @@
         },
         link: function (scope, element, attrs) {
           scope.mdService = gnUtilityService;
-          scope.$watch(scope.md, function (newVal, oldVal) {
-            if (newVal !== null && newVal !== oldVal) {
-              $http
-                .get("../api/records/" + scope.md.getUuid() + "/permalink")
-                .then(function (r) {
-                  scope.socialMediaLink = r.data;
-                });
-            }
-          });
+
+          scope.$watch(
+            "md",
+            function (newVal, oldVal) {
+              if (newVal !== null && newVal !== oldVal) {
+                $http
+                  .get("../api/records/" + scope.md.getUuid() + "/permalink")
+                  .then(function (r) {
+                    scope.socialMediaLink = r.data;
+                  });
+              }
+            },
+            true
+          );
         }
       };
     }
