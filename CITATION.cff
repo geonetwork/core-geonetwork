@@ -19,34 +19,9 @@ authors:
     affiliation: GeoCat BV
     orcid: 'https://orcid.org/0009-0003-3896-0437'
     email: jeroen.ticheler@geocat.net
-  - given-names: Jody
-    family-names: Garnett
-    affiliation: GeoCat BV
-    email: jody.garnett@geocat.net
-    orcid: 'https://orcid.org/0009-0003-1298-7113'
-  - given-names: Juan Luis
-    family-names: Rodríguez Ponce
-    affiliation: GeoCat BV
-  - given-names: Michel
-    family-names: Gabriel
-    affiliation: GeoCat BV
   - given-names: Florent
     family-names: Gravin
     affiliation: CamptoCamp
-  - given-names: Olivia
-    family-names: Guyot
-    affiliation: CamptoCamp
-  - given-names: Emanuele
-    family-names: Tajariol
-    affiliation: GeoSolutions
-  - given-names: Ian
-    family-names: Wallen
-    affiliation: Fisheries and Oceans Canada (DFO)
-  - given-names: Jo
-    family-names: Cook
-  - given-names: Paul
-    family-names: van Genuchten
-    affiliation: ISRIC - World Soil Information
   - given-names: Simon
     family-names: Pigot
     affiliation: CSIRO Australia
