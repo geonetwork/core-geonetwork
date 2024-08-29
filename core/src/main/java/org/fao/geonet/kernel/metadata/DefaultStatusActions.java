@@ -376,7 +376,7 @@ public class DefaultStatusActions implements StatusActions {
         // then adjust the notification level, depending on the user role
         if ((status.getStatusValue().getId() == Integer.parseInt(StatusValue.Status.DRAFT)) &&
             (!StringUtils.isEmpty(status.getPreviousState()) &&
-                (Integer.parseInt(status.getPreviousState()) == Integer.parseInt(StatusValue.Status.SUBMITTED))) &&
+                (status.getPreviousState().equals(StatusValue.Status.SUBMITTED))  &&
             (notificationLevel.equals(StatusValueNotificationLevel.recordUserAuthor) || (notificationLevel.equals(StatusValueNotificationLevel.recordProfileReviewer)))) {
             UserRepository userRepository = ApplicationContextHolder.get().getBean(UserRepository.class);
             Optional<User> user = userRepository.findById(status.getUserId());
