@@ -730,14 +730,6 @@
     <label>Distancia</label>
     <description>Distância da amostra do solo</description>
     <condition>condicional</condition>
-    <helper>
-      <option value="0.10">10 cm</option>
-      <option value="0.25">25 cm</option>
-      <option value="0.50">50 cm</option>
-      <option value="1">1 m</option>
-      <option value="30">30 m</option>
-      <option value="100">100 m</option>
-    </helper>
   </element>
   <!-- ==================================================== -->
   <element name="gmd:distributionFormat">

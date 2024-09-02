@@ -73,19 +73,27 @@
     <for name="mrc:rangeElement" use="textarea"/>
 
     <for name="gco:Distance" use="number"/>
+    <for name="gco:Distance/@uom" use="data-gn-keyword-picker">
+      <directiveAttributes
+        data-thesaurus-key="local.theme.codelist_unit_distance"
+        data-display-definition="true"
+        data-show-hints-on-focus="true"/>
+    </for>
     <for name="gco:Decimal" use="number"/>
     <for name="gco:Integer" use="number"/>
     <for name="gco:Real" use="number"/>
     <for name="gco:Angle" use="number"/>
     <for name="gco:Measure" use="number"/>
-    <for name="gco:Length" use="number"/>
-    <for name="gco:Boolean" use="checkbox"/>
     <for name="gco:Measure/@uom" use="data-gn-keyword-picker">
       <directiveAttributes
         data-thesaurus-key="xpath::../*:dimensionName/*[@codeListValue]/(if (@codeListValue = 'time') then 'local.theme.codelist_unit_time' else 'local.theme.codelist_unit_distance')"
         data-display-definition="true"
         data-show-hints-on-focus="true"/>
     </for>
+    <for name="gco:Length" use="number"/>
+
+    <for name="gco:Boolean" use="checkbox"/>
+
     <for name="gco:Date" use="data-gn-date-picker"/>
     <for name="gco:DateTime" use="data-gn-date-picker"/>
 
