@@ -50,6 +50,7 @@
               {{::s.name}}
               <img
                 class="gn-source-logo"
+                onerror="this.style.display='none'"
                 data-ng-src="{{'../../images/' + (s.type === 'subportal' ? 'harvesting/' +  s.logo : 'logos/' +  s.uuid + '.png')}}"
               />
             </a>
