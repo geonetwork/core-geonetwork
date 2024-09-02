@@ -1143,7 +1143,7 @@
       return {
         copy: function (toCopy) {
           var deferred = $q.defer();
-          if (navigator.clipboard?.writeText) {
+          if (navigator.clipboard && navigator.clipboard.writeText) {
             navigator.clipboard.writeText(toCopy).then(
               function () {
                 deferred.resolve();
@@ -1160,7 +1160,7 @@
         },
         paste: function () {
           var deferred = $q.defer();
-          if (navigator.clipboard?.readText) {
+          if (navigator.clipboard && navigator.clipboard.readText) {
             navigator.clipboard.readText().then(
               function (text) {
                 deferred.resolve(text);
