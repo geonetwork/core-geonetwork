@@ -23,12 +23,27 @@
 
 package org.fao.geonet.api.records;
 
+import co.elastic.clients.json.JsonpUtils;
+import co.elastic.clients.json.jackson.JacksonJsonpMapper;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import jeeves.server.context.ServiceContext;
 import jeeves.services.ReadWriteController;
 import org.apache.commons.io.FileUtils;
@@ -36,11 +51,18 @@ import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
+import static org.fao.geonet.api.ApiParams.API_CLASS_RECORD_OPS;
+import static org.fao.geonet.api.ApiParams.API_CLASS_RECORD_TAG;
+import static org.fao.geonet.api.ApiParams.API_PARAM_RECORD_UUID;
 import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.exception.NotAllowedException;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.api.records.model.related.FCRelatedMetadataItem.FeatureType.AttributeTable;
-import org.fao.geonet.api.records.model.related.*;
+import org.fao.geonet.api.records.model.related.FeatureResponse;
+import org.fao.geonet.api.records.model.related.IListOnlyClassToArray;
+import org.fao.geonet.api.records.model.related.RelatedItemType;
+import org.fao.geonet.api.records.model.related.RelatedMetadataItem;
+import org.fao.geonet.api.records.model.related.RelatedResponse;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.AbstractMetadata;
@@ -51,6 +73,9 @@ import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.mef.MEFLib;
+import static org.fao.geonet.kernel.mef.MEFLib.Version.Constants.MEF_V1_ACCEPT_TYPE;
+import static org.fao.geonet.kernel.mef.MEFLib.Version.Constants.MEF_V2_ACCEPT_TYPE;
+import org.fao.geonet.kernel.search.EsSearchManager;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.utils.Log;
@@ -64,20 +89,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
-import static org.fao.geonet.api.ApiParams.*;
-
-import static org.fao.geonet.kernel.mef.MEFLib.Version.Constants.MEF_V1_ACCEPT_TYPE;
-import static org.fao.geonet.kernel.mef.MEFLib.Version.Constants.MEF_V2_ACCEPT_TYPE;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 @RequestMapping(value = {
     "/{portal}/api/records"
@@ -105,6 +124,9 @@ public class MetadataApi {
 
     @Autowired
     GeonetworkDataDirectory dataDirectory;
+
+    @Autowired
+    EsSearchManager searchManager;
 
     private ApplicationContext context;
 
@@ -242,7 +264,9 @@ public class MetadataApi {
     }
 
 
-    @io.swagger.v3.oas.annotations.Operation(summary = "Get a metadata record as JSON")
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Get XML metadata record as JSON",
+        description = "The XML document is converted to JSON.")
     @RequestMapping(value = "/{metadataUuid}/formatters/json",
         method = RequestMethod.GET,
         produces = MediaType.APPLICATION_JSON_VALUE
@@ -285,6 +309,60 @@ public class MetadataApi {
     )
         throws Exception {
         return getRecordAs(metadataUuid, addSchemaLocation, increasePopularity, withInfo, attachment, approved, response, request, MediaType.APPLICATION_JSON);
+    }
+
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Get a metadata record index document (JSON)",
+        description = "The JSON document is the same as the one returned by the search API."
+    )
+    @RequestMapping(value = "/{metadataUuid}/formatters/json+index",
+        method = RequestMethod.GET,
+        produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Return the record.",
+            content = @Content(schema = @Schema(type = "string", format = "binary"))),
+        @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW)
+    })
+    @ResponseBody
+    public Object getIndexDocument(
+        @Parameter(
+            description = API_PARAM_RECORD_UUID,
+            required = true)
+        @PathVariable
+        String metadataUuid,
+        @Parameter(description = "Download the approved version",
+            required = false)
+        @RequestParam(required = false, defaultValue = "true")
+        boolean approved,
+        HttpServletRequest request
+    )
+        throws Exception {
+
+        AbstractMetadata metadata;
+        try {
+            metadata = ApiUtils.canViewRecord(metadataUuid, approved, request);
+        } catch (ResourceNotFoundException e) {
+            Log.debug(API.LOG_MODULE_NAME, e.getMessage(), e);
+            throw e;
+        } catch (Exception e) {
+            Log.debug(API.LOG_MODULE_NAME, e.getMessage(), e);
+            throw new NotAllowedException(ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW);
+        }
+        ServiceContext context = ApiUtils.createServiceContext(request);
+        try {
+            Lib.resource.checkPrivilege(context,
+                String.valueOf(metadata.getId()),
+                ReservedOperation.view);
+        } catch (Exception e) {
+            Log.debug(API.LOG_MODULE_NAME, e.getMessage(), e);
+            throw new NotAllowedException(ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW);
+        }
+        List hits = searchManager.query(String.format("_id:\"%s\"", metadataUuid), null, 0, 1).hits().hits();
+        if (hits.size() == 1) {
+            return JsonpUtils.toJsonString(hits.get(0), new JacksonJsonpMapper());
+        }
+        return null;
     }
 
     @io.swagger.v3.oas.annotations.Operation(summary = "Get a metadata record as XML")
