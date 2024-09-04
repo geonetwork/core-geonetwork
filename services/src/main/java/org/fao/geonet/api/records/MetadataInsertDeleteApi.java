@@ -27,6 +27,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -206,7 +208,7 @@ public class MetadataInsertDeleteApi {
         + "from the index and then from the database.")
     @RequestMapping(value = "/{metadataUuid}", method = RequestMethod.DELETE)
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "204", description = "Record deleted."),
+        @ApiResponse(responseCode = "204", description = "Record deleted.", content = {@Content(schema = @Schema(hidden = true))}),
         @ApiResponse(responseCode = "401", description = "This template is referenced"),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)
     })
