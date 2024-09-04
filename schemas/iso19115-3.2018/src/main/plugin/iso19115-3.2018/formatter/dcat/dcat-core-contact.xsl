@@ -45,9 +45,13 @@
                   as="node()?"
                   select="$isoContactRoleToDcatCommonNames[. = $role]"/>
 
+    <xsl:variable name="allIndividualOrOrganisationWithoutIndividual"
+                  select="*/cit:party//(cit:CI_Organisation[not(cit:individual)]|cit:CI_Individual)"
+                  as="node()*"/>
+
     <xsl:choose>
       <xsl:when test="$dcatElementConfig">
-        <xsl:for-each-group select="*/cit:party/cit:CI_Organisation" group-by="cit:name">
+        <xsl:for-each-group select="$allIndividualOrOrganisationWithoutIndividual" group-by="cit:name">
           <xsl:element name="{$dcatElementConfig/@key}">
             <xsl:choose>
               <xsl:when test="$dcatElementConfig/@as = 'vcard'">
@@ -69,7 +73,7 @@
           Range: prov:Attribution
           Usage note:	Used to link to an Agent where the nature of the relationship is known but does not match one of the standard [DCTERMS] properties (dcterms:creator, dcterms:publisher). Use dcat:hadRole on the prov:Attribution to capture the responsibility of the Agent with respect to the Resource. See 15.1 Relationships between datasets and agents for usage examples.
         -->
-        <xsl:for-each-group select="*/cit:party/cit:CI_Organisation" group-by="cit:name">
+        <xsl:for-each-group select="$allIndividualOrOrganisationWithoutIndividual" group-by="cit:name">
           <prov:qualifiedAttribution>
             <prov:Attribution>
               <prov:agent>
@@ -95,19 +99,46 @@
 
 
   <xsl:template name="rdf-contact-vcard">
+    <xsl:variable name="isindividual"
+                  as="xs:boolean"
+                  select="local-name() = 'CI_Individual'"/>
+    <xsl:variable name="individualName"
+                  as="xs:string?"
+                  select="if ($isindividual) then cit:name/*/text() else ''"/>
+    <xsl:variable name="organisation"
+                  as="node()?"
+                  select="if ($isindividual) then ancestor::cit:CI_Organisation else ."/>
+
     <rdf:Description>
       <xsl:call-template name="rdf-object-ref-attribute"/>
 
       <rdf:type rdf:resource="http://www.w3.org/2006/vcard/ns#Organization"/>
-      <xsl:for-each select="cit:name">
-        <xsl:call-template name="rdf-localised">
-          <xsl:with-param name="nodeName" select="'vcard:fn'"/>
-        </xsl:call-template>
+      <xsl:if test="$individualName != ''">
+        <vcard:fn><xsl:value-of select="$individualName"/></vcard:fn>
+      </xsl:if>
+      <xsl:for-each select="$organisation/cit:name">
+        <vcard:org>
+          <rdf:Description>
+            <xsl:call-template name="rdf-localised">
+              <xsl:with-param name="nodeName" select="'vcard:organisation-name'"/>
+            </xsl:call-template>
+          </rdf:Description>
+        </vcard:org>
       </xsl:for-each>
-      <xsl:for-each select="cit:contactInfo/*/cit:address">
-        <xsl:for-each select="*/cit:electronicMailAddress">
-          <vcard:hasEmail rdf:resource="mailto:{*/text()}"/>
-        </xsl:for-each>
+
+
+      <xsl:variable name="contactInfo"
+                    as="node()?"
+                    select="if ($isindividual)
+                               then $organisation/cit:contactInfo
+                               else cit:contactInfo"/>
+
+      <!-- Priority on the individual email and fallback on org email-->
+      <xsl:for-each select="(cit:contactInfo/*/cit:address/*/cit:electronicMailAddress, $organisation/cit:contactInfo/*/cit:address/*/cit:electronicMailAddress)[1]">
+        <vcard:hasEmail rdf:resource="mailto:{*/text()}"/>
+      </xsl:for-each>
+
+      <xsl:for-each select="$contactInfo/*/cit:address">
         <xsl:if test="normalize-space(*/cit:city) != ''">
           <vcard:hasAddress>
             <vcard:Address>
@@ -145,23 +176,23 @@
 
 
   <xsl:template name="rdf-contact-foaf">
-    <xsl:variable name="individualName"
-                  as="xs:string?"
-                  select="(cit:individual/*/cit:name/*/text())[1]"/>
     <xsl:variable name="isindividual"
                   as="xs:boolean"
-                  select="$individualName != ''"/>
+                  select="local-name() = 'CI_Individual'"/>
+    <xsl:variable name="individualName"
+                  as="xs:string?"
+                  select="if ($isindividual) then cit:name/*/text() else ''"/>
     <xsl:variable name="organisation"
                   as="node()?"
-                  select="cit:name"/>
+                  select="if ($isindividual) then ancestor::cit:CI_Organisation else ."/>
     <xsl:variable name="orgReference"
                   as="xs:string?"
-                  select="gn-fn-dcat:rdf-object-ref(.)"/>
+                  select="gn-fn-dcat:rdf-object-ref($organisation)"/>
     <xsl:variable name="reference"
                   as="xs:string?"
                   select="if ($isindividual)
-                          then gn-fn-dcat:rdf-object-ref(cit:individual/*)
-                          else $orgReference"/>
+                               then gn-fn-dcat:rdf-object-ref(.)
+                               else $orgReference"/>
 
     <rdf:Description>
       <xsl:call-template name="rdf-object-ref-attribute">
@@ -174,7 +205,7 @@
         <xsl:when test="$isindividual">
           <foaf:name><xsl:value-of select="$individualName"/></foaf:name>
           <org:memberOf>
-            <xsl:for-each select="$organisation">
+            <xsl:for-each select="$organisation/cit:name">
               <foaf:Organization>
                 <xsl:call-template name="rdf-object-ref-attribute">
                   <xsl:with-param name="reference" select="$reference"/>
@@ -187,7 +218,7 @@
           </org:memberOf>
         </xsl:when>
         <xsl:otherwise>
-          <xsl:for-each select="$organisation">
+          <xsl:for-each select="$organisation/cit:name">
             <xsl:call-template name="rdf-localised">
               <xsl:with-param name="nodeName" select="'foaf:name'"/>
             </xsl:call-template>
@@ -195,11 +226,17 @@
         </xsl:otherwise>
       </xsl:choose>
 
+      <xsl:variable name="contactInfo"
+                    as="node()?"
+                    select="if ($isindividual)
+                               then $organisation/cit:contactInfo
+                               else cit:contactInfo"/>
 
-      <xsl:for-each select="cit:contactInfo/*/cit:address/*/cit:electronicMailAddress">
+      <!-- Priority on the individual email and fallback on org email-->
+      <xsl:for-each select="(cit:contactInfo/*/cit:address/*/cit:electronicMailAddress, $organisation/*/cit:address/*/cit:electronicMailAddress)[1]">
         <foaf:mbox rdf:resource="mailto:{*/text()}"/>
       </xsl:for-each>
-      <xsl:for-each select="cit:contactInfo/*/cit:onlineResource/*/cit:linkage">
+      <xsl:for-each select="$contactInfo/*/cit:onlineResource/*/cit:linkage">
         <xsl:call-template name="rdf-localised">
           <xsl:with-param name="nodeName" select="'foaf:workplaceHomepage'"/>
         </xsl:call-template>

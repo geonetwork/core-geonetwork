@@ -1,4 +1,3 @@
-
 <?xml version="1.0" encoding="utf-8"?>
 <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
          xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
@@ -149,7 +148,8 @@
          <rdf:Description>
             <rdf:type rdf:resource="http://xmlns.com/foaf/0.1/Organization"/>
             <rdf:type rdf:resource="http://www.w3.org/ns/prov#Agent"/>
-            <foaf:name xml:lang="fre">Helpdesk carto du SPW (SPW - Secrétariat général - SPW Digital - Département de la Géomatique - Direction de l'Intégration des géodonnées)</foaf:name>
+            <foaf:name xml:lang="fre">Helpdesk carto du SPW (SPW - Secrétariat général - SPW Digital - Département de la
+                  Géomatique - Direction de l'Intégration des géodonnées)</foaf:name>
             <foaf:mbox rdf:resource="mailto:helpdesk.carto@spw.wallonie.be"/>
          </rdf:Description>
       </dct:creator>
@@ -157,14 +157,20 @@
          <rdf:Description>
             <rdf:type rdf:resource="http://xmlns.com/foaf/0.1/Organization"/>
             <rdf:type rdf:resource="http://www.w3.org/ns/prov#Agent"/>
-            <foaf:name xml:lang="fre">Helpdesk carto du SPW (SPW - Secrétariat général - SPW Digital - Département de la Géomatique - Direction de l'Intégration des géodonnées)</foaf:name>
+            <foaf:name xml:lang="fre">Helpdesk carto du SPW (SPW - Secrétariat général - SPW Digital - Département de la
+                  Géomatique - Direction de l'Intégration des géodonnées)</foaf:name>
             <foaf:mbox rdf:resource="mailto:helpdesk.carto@spw.wallonie.be"/>
          </rdf:Description>
       </dct:publisher>
       <dcat:contactPoint>
          <rdf:Description>
             <rdf:type rdf:resource="http://www.w3.org/2006/vcard/ns#Organization"/>
-            <vcard:fn xml:lang="fre">Helpdesk carto du SPW (SPW - Secrétariat général - SPW Digital - Département de la Géomatique - Direction de l'Intégration des géodonnées)</vcard:fn>
+            <vcard:org>
+               <rdf:Description>
+                  <vcard:organisation-name xml:lang="fre">Helpdesk carto du SPW (SPW - Secrétariat général - SPW Digital - Département de la
+                  Géomatique - Direction de l'Intégration des géodonnées)</vcard:organisation-name>
+               </rdf:Description>
+            </vcard:org>
             <vcard:hasEmail rdf:resource="mailto:helpdesk.carto@spw.wallonie.be"/>
          </rdf:Description>
       </dcat:contactPoint>
@@ -177,10 +183,35 @@
                   <foaf:name>Thierry Berthet</foaf:name>
                   <org:memberOf>
                      <foaf:Organization>
-                        <foaf:name xml:lang="fre">Direction du Développement territorial (SPW - Territoire, Logement, Patrimoine, Énergie - Département de l'Aménagement du territoire et de l'Urbanisme - Direction du Développement territorial)</foaf:name>
+                        <foaf:name xml:lang="fre">Direction du Développement territorial (SPW - Territoire, Logement, Patrimoine,
+                  Énergie - Département de l'Aménagement du territoire et de l'Urbanisme - Direction du Développement
+                  territorial)</foaf:name>
                      </foaf:Organization>
                   </org:memberOf>
-                  <foaf:mbox rdf:resource="mailto:developpement.territorial@spw.wallonie.be"/>
+               </rdf:Description>
+            </prov:agent>
+            <dcat:hadRole>
+               <dcat:Role rdf:about="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#custodian">
+                  <skos:prefLabel>custodian</skos:prefLabel>
+               </dcat:Role>
+            </dcat:hadRole>
+         </prov:Attribution>
+      </prov:qualifiedAttribution>
+      <prov:qualifiedAttribution>
+         <prov:Attribution>
+            <prov:agent>
+               <rdf:Description rdf:about="https://orcid.org/jb98765">
+                  <rdf:type rdf:resource="http://xmlns.com/foaf/0.1/Person"/>
+                  <rdf:type rdf:resource="http://www.w3.org/ns/prov#Agent"/>
+                  <foaf:name>Jean Berthet</foaf:name>
+                  <org:memberOf>
+                     <foaf:Organization rdf:about="https://orcid.org/jb98765">
+                        <foaf:name xml:lang="fre">Direction du Développement territorial (SPW - Territoire, Logement, Patrimoine,
+                  Énergie - Département de l'Aménagement du territoire et de l'Urbanisme - Direction du Développement
+                  territorial)</foaf:name>
+                     </foaf:Organization>
+                  </org:memberOf>
+                  <foaf:mbox rdf:resource="mailto:jean.b@spw.org"/>
                </rdf:Description>
             </prov:agent>
             <dcat:hadRole>
@@ -271,12 +302,14 @@
       </dcat:theme>
       <dcat:theme>
          <skos:Concept rdf:about="http://inspire.ec.europa.eu/theme/mf">
-            <skos:prefLabel xml:lang="fre">Caractéristiques géographiques météorologiques</skos:prefLabel>
+            <skos:prefLabel xml:lang="fre">Caractéristiques géographiques
+              météorologiques</skos:prefLabel>
          </skos:Concept>
       </dcat:theme>
       <dcat:theme>
          <skos:Concept rdf:about="http://inspire.ec.europa.eu/theme/of">
-            <skos:prefLabel xml:lang="fre">Caractéristiques géographiques océanographiques</skos:prefLabel>
+            <skos:prefLabel xml:lang="fre">Caractéristiques géographiques
+              océanographiques</skos:prefLabel>
          </skos:Concept>
       </dcat:theme>
       <dcat:theme>
@@ -366,7 +399,8 @@
       <dct:conformsTo>
          <dct:Standard>
             <rdf:type rdf:resource="http://purl.org/dc/terms/Standard"/>
-            <rdfs:label xml:lang="fre">INSPIRE Data Specification on Transport Networks – Technical Guidelines, version 3.2</rdfs:label>
+            <rdfs:label xml:lang="fre">INSPIRE Data Specification on Transport Networks – Technical Guidelines,
+                      version 3.2</rdfs:label>
             <dct:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2014-04-17</dct:issued>
          </dct:Standard>
       </dct:conformsTo>
@@ -478,9 +512,9 @@
       <dct:accrualPeriodicity>
          <dct:Frequency rdf:about="http://publications.europa.eu/resource/authority/frequency/MONTHLY"/>
       </dct:accrualPeriodicity>
-        <dct:accrualPeriodicity>
-            <dct:Frequency rdf:about="https://w3id.org/mobilitydcat-ap/update-frequency/15min"/>
-        </dct:accrualPeriodicity>
+      <dct:accrualPeriodicity>
+         <dct:Frequency rdf:about="https://w3id.org/mobilitydcat-ap/update-frequency/15min"/>
+      </dct:accrualPeriodicity>
       <foaf:page>
          <foaf:Document rdf:about="https://metawal.wallonie.be/geonetwork/srv/api/records/7fe2f305-1302-4297-b67e-792f55acd834/attachments/pds_codt.png">
             <dct:description xml:lang="fre">pds_codt_pic</dct:description>

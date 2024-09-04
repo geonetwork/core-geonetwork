@@ -114,10 +114,14 @@
       <dcat:contactPoint>
          <rdf:Description>
             <rdf:type rdf:resource="http://www.w3.org/2006/vcard/ns#Organization"/>
-            <vcard:fn xml:lang="fre">Helpdesk carto du SPW (SPW - Secrétariat général - SPW Digital - Département de la
+            <vcard:org>
+               <rdf:Description>
+                  <vcard:organisation-name xml:lang="fre">Helpdesk carto du SPW (SPW - Secrétariat général - SPW Digital - Département de la
                   Géomatique - Direction de l'Intégration des géodonnées)
                   
-                </vcard:fn>
+                </vcard:organisation-name>
+               </rdf:Description>
+            </vcard:org>
             <vcard:hasEmail rdf:resource="mailto:helpdesk.carto@spw.wallonie.be"/>
          </rdf:Description>
       </dcat:contactPoint>

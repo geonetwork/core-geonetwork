@@ -22,7 +22,9 @@
  */
 package org.fao.geonet.api.records.formatters;
 
+import java.io.File;
 import jeeves.server.context.ServiceContext;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.jena.graph.Graph;
 import org.apache.jena.rdf.model.Model;
@@ -149,8 +151,8 @@ public class FormatterApiTest extends AbstractServiceIntegrationTest {
                     }
 
 
-//                    FileUtils.writeStringToFile(new File("/tmp/rdf/" + String.format("%s-%s-%s",
-//                            schema, formatter, checkfile)), actual, StandardCharsets.UTF_8);
+//                    FileUtils.writeStringToFile(new File("/tmp/services/src/test/resources/org/fao/geonet/api/records/formatters/" + String.format("%s-%s-%s",
+//                            schema, formatter, checkfile)), actual.replaceFirst("urn:uuid/.*</dct:identifier>", "urn:uuid/{uuid}</dct:identifier>"), StandardCharsets.UTF_8);
 
                     Diff diff = DiffBuilder
                             .compare(Input.fromString(actual))
