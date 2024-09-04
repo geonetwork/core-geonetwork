@@ -43,3 +43,12 @@ The following list provides a few tips:
   be used to mock responses when performing tests.
 
 * Integration tests are disabled by default. Use the `it` maven profile to use them.
+
+## Caveats when using Windows
+
+Some unit tests are designed to expect LF line seperators, which makes them fail on Windows.
+For these Tests to run correctly, you should set up the project in the [WSL](https://learn.microsoft.com/en-us/windows/wsl/install).
+Once you have installed the WSL, make sure to clone the repo into the WSL filesystem and install the correct java and maven.
+
+If you are using IntelliJ, you can also use the WSL filesystem as the project root.
+See the [IntelliJ Docs](https://www.jetbrains.com/help/idea/how-to-use-wsl-development-environment-in-product.html#open-a-project-in-wsl) regarding WSL integration and the [IntelliJ IDE](INTELLIJ.md) instructions for general setup.
