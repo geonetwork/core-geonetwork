@@ -537,6 +537,7 @@
               }
 
               if (md) {
+                gnMetadataManager.updateMdObj(md);
                 md.publish(publicationType);
               }
             },
