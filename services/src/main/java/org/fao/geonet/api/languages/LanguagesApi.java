@@ -24,6 +24,8 @@
 package org.fao.geonet.api.languages;
 
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -185,7 +187,7 @@ public class LanguagesApi {
     @PreAuthorize("hasAuthority('Administrator')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "204", description = "Language translations removed."),
+        @ApiResponse(responseCode = "204", description = "Language translations removed.", content = {@Content(schema = @Schema(hidden = true))}),
         @ApiResponse(responseCode = "404", description = "Resource not found."),
         @ApiResponse(responseCode = "403", description = "Operation not allowed. Only Administrator can access it.")
     })
