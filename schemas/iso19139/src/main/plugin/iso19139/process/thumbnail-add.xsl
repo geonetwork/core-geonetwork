@@ -29,8 +29,7 @@
                 xmlns:geonet="http://www.fao.org/geonetwork"
                 xmlns:xs="http://www.w3.org/2001/XMLSchema"
                 xmlns:digestUtils="java:org.apache.commons.codec.digest.DigestUtils"
-                xmlns:exslt="http://exslt.org/common"
-                exclude-result-prefixes="#all"
+                 exclude-result-prefixes="#all"
                 version="2.0">
 
   <!--
@@ -107,7 +106,7 @@
                            */gmd:fileName/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[@locale = '#DE'],
                            */gmd:fileDescription/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[@locale = '#DE'],
                            */gmd:fileDescription/gco:CharacterString)))
-          and ($resourceHash = '' or digestUtils:md5Hex(string(exslt:node-set(.))) = $resourceHash)]">
+          and ($resourceHash = '' or digestUtils:md5Hex(normalize-space(.)) = $resourceHash)]">
     <xsl:call-template name="fill"/>
   </xsl:template>
 
