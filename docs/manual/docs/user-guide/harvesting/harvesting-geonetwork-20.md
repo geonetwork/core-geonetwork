@@ -1,6 +1,16 @@
 # GeoNetwork 2.0 Harvester {#gn2_harvester}
 
-GeoNetwork 2.1 introduced a new powerful harvesting engine which is not compatible with GeoNetwork version 2.0 based catalogues. Old 2.0 servers can still harvest from 2.1 servers but harvesting metadata from a v2.0 server requires this harvesting type. Due to the fact that GeoNetwork 2.0 was released more than 5 years ago, this harvesting type is deprecated.
+This harvester is required for working with GeoNetwork 2.0. GeoNetwork 2.1 introduced a new powerful harvesting engine which is not compatible with the previous GeoNetwork version 2.0 based catalogues. 
+
+This harvesting type is deprecated as GeoNetwork 2.0 has reached end-of-life.
+
+
+| Harvester                | Harvet from                          |
+| ------------------------ | ------------------------------------ |
+| GeoNetwork 2.0 Harvester | GeoNetwork 2.0 Catalogue             |
+| GeoNetwork 3.x Harvester | GeoNetwork 2.1 and greater           |
+| GeoNetwork 3.x Harvester | GeoNetwork 3.x series                |
+| GeoNetwork 4.x Harvester | GeoNetwork 4.x series                |
 
 ## Adding a GeoNetwork 2.0 Harvester
 
