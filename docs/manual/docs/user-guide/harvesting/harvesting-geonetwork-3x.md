@@ -3,6 +3,12 @@
 GeoNetwork 2.1 introduced a new powerful harvesting engine which is not compatible with GeoNetwork version 2.0 
 based catalogues. To harvest GeoNetwork servers based on versions 2.1 or 3.x requires this harvesting type.
 
+| Harvester                | Harvet from                          |
+| ------------------------ | ------------------------------------ |
+| GeoNetwork 2.0 Harvester | GeoNetwork 2.0 Catalogue             |
+| GeoNetwork 3.x Harvester | GeoNetwork 2.1 and greater           |
+| GeoNetwork 3.x Harvester | GeoNetwork 3.x series                |
+| GeoNetwork 4.x Harvester | GeoNetwork 4.x series                |
 ## Adding a GeoNetwork 2.1-3.x Harvester
 
 Configuration options:
