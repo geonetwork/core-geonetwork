@@ -418,13 +418,13 @@ public class Aligner extends BaseAligner<CswParams> {
             }
         }
     }
-    private void updateMetadata(RecordInfo ri, String id, Boolean force) throws Exception {
+    private void updateMetadata(RecordInfo ri, String id, boolean force) throws Exception {
         String date = localUuids.getChangeDate(ri.uuid);
 
         if (date == null && !force) {
             log.debug("  - Skipped metadata managed by another harvesting node. uuid:" + ri.uuid + ", name:" + params.getName());
         } else {
-            if (Boolean.TRUE.equals(!force) && !ri.isMoreRecentThan(date)) {
+            if (!force && !ri.isMoreRecentThan(date)) {
                 log.debug("  - Metadata XML not changed for uuid:" + ri.uuid);
                 result.unchangedMetadata++;
             } else {
@@ -437,7 +437,7 @@ public class Aligner extends BaseAligner<CswParams> {
         }
     }
     @Transactional(value = TxType.REQUIRES_NEW)
-    boolean updatingLocalMetadata(RecordInfo ri, String id, Boolean force) throws Exception {
+    boolean updatingLocalMetadata(RecordInfo ri, String id, boolean force) throws Exception {
         Element md = retrieveMetadata(ri.uuid);
 
         if (md == null) {
@@ -472,8 +472,8 @@ public class Aligner extends BaseAligner<CswParams> {
         String language = context.getLanguage();
         final AbstractMetadata metadata = metadataManager.updateMetadata(context, id, md, validate, ufo, language, ri.changeDate, true, IndexingMode.none);
 
-        if (Boolean.TRUE.equals(force) || updateSchema) {
-            if (Boolean.TRUE.equals(force)) {
+        if (force || updateSchema) {
+            if (force) {
                 //change ownership of metadata to new harvester
                 metadata.getHarvestInfo().setUuid(params.getUuid());
                 metadata.getSourceInfo().setSourceId(params.getUuid());
