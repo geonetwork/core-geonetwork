@@ -38,7 +38,7 @@
         ng-disabled="(selectRecords.length < 1)"
       >
         <i class="fa gn-icon-{{mode}}"></i>
-        <i class="icon-external-link"></i>&nbsp; {{btn.label}}
+        <i class="icon-external-link"></i>&nbsp; {{btn.label || ('saveLinkToSibling' | translate)}}
       </button>
       <div data-gn-need-help="linking-records" class="pull-right"></div>
     </div>
