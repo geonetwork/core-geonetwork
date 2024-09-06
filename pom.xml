@@ -1438,6 +1438,12 @@
       </modules>
     </profile>
     <profile>
+      <id>jmh</id>
+      <modules>
+        <module>jmh</module>
+      </modules>
+    </profile>
+    <profile>
       <id>macOS</id>
       <activation>
         <os>
