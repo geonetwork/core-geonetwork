@@ -1,6 +1,6 @@
 /*
  * =============================================================================
- * ===	Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * ===	Copyright (C) 2001-2024 Food and Agriculture Organization of the
  * ===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * ===	and United Nations Environment Programme (UNEP)
  * ===
@@ -29,6 +29,7 @@ import static org.jclouds.blobstore.options.PutOptions.Builder.multipart;
 
 import jeeves.server.context.ServiceContext;
 
+import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
@@ -59,15 +60,23 @@ import java.nio.file.Path;
 import java.nio.file.PathMatcher;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 import javax.annotation.Nullable;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class JCloudStore extends AbstractStore {
+
+    // For azure Blob ADSL hdi_isfolder property name used to identify folders
+    private final static String AZURE_BLOB_IS_FOLDER_PROPERTY_NAME="hdi_isfolder";
 
     private Path baseMetadataDir = null;
 
@@ -129,17 +138,29 @@ public class JCloudStore extends AbstractStore {
 
         String versionValue = null;
         if (jCloudConfiguration.isVersioningEnabled()) {
-            versionValue = storageMetadata.getETag();
+            versionValue = storageMetadata.getETag(); // ETAG is cryptic may need some other value?
+        }
+
+        MetadataResourceExternalManagementProperties.ValidationStatus validationStatus = MetadataResourceExternalManagementProperties.ValidationStatus.UNKNOWN;
+        if (!StringUtils.isEmpty(jCloudConfiguration.getExternalResourceManagementValidationStatusPropertyName())) {
+            String validationStatusPropertyName = jCloudConfiguration.getExternalResourceManagementValidationStatusPropertyName();
+            String propertyValue = null;
+            if (storageMetadata.getUserMetadata().containsKey(validationStatusPropertyName)) {
+                propertyValue = storageMetadata.getUserMetadata().get(validationStatusPropertyName);
+            }
+            if (StringUtils.isNotEmpty(propertyValue)) {
+                validationStatus = MetadataResourceExternalManagementProperties.ValidationStatus.fromValue(Integer.parseInt(propertyValue));
+            }
         }
 
         MetadataResourceExternalManagementProperties metadataResourceExternalManagementProperties =
-            getMetadataResourceExternalManagementProperties(context, metadataId, metadataUuid, visibility, resourceId, filename, storageMetadata.getETag(), storageMetadata.getType());
+            getMetadataResourceExternalManagementProperties(context, metadataId, metadataUuid, visibility, resourceId, filename, storageMetadata.getETag(), storageMetadata.getType(), validationStatus);
 
         return new FilesystemStoreResource(metadataUuid, metadataId, filename,
             settingManager.getNodeURL() + "api/records/", visibility, storageMetadata.getSize(), storageMetadata.getLastModified(), versionValue, metadataResourceExternalManagementProperties, approved);
     }
 
-    private static String getFilename(final String key) {
+    protected static String getFilename(final String key) {
         final String[] splittedKey = key.split("/");
         return splittedKey[splittedKey.length - 1];
     }
@@ -152,11 +173,17 @@ public class JCloudStore extends AbstractStore {
         try {
             final Blob object = jCloudConfiguration.getClient().getBlobStore().getBlob(
                 jCloudConfiguration.getContainerName(), getKey(context, metadataUuid, metadataId, visibility, resourceId));
+            if (object == null) {
+                throw new ResourceNotFoundException(
+                    String.format("Metadata resource '%s' not found for metadata '%s'", resourceId, metadataUuid))
+                    .withMessageKey("exception.resourceNotFound.resource", new String[]{resourceId})
+                    .withDescriptionKey("exception.resourceNotFound.resource.description", new String[]{resourceId, metadataUuid});
+            }
             return new ResourceHolderImpl(object, createResourceDescription(context, metadataUuid, visibility, resourceId,
                 object.getMetadata(), metadataId, approved));
         } catch (ContainerNotFoundException e) {
             throw new ResourceNotFoundException(
-                String.format("Metadata resource '%s' not found for metadata '%s'", resourceId, metadataUuid))
+                String.format("Metadata container for resource '%s' not found for metadata '%s'", resourceId, metadataUuid))
                 .withMessageKey("exception.resourceNotFound.resource", new String[]{resourceId})
                 .withDescriptionKey("exception.resourceNotFound.resource.description", new String[]{resourceId, metadataUuid});
         }
@@ -167,7 +194,7 @@ public class JCloudStore extends AbstractStore {
         throw new UnsupportedOperationException("JCloud does not support getResourceInternal.");
     }
 
-    private String getKey(final ServiceContext context, String metadataUuid, int metadataId, MetadataResourceVisibility visibility, String resourceId) {
+    protected String getKey(final ServiceContext context, String metadataUuid, int metadataId, MetadataResourceVisibility visibility, String resourceId) {
         checkResourceId(resourceId);
         final String metadataDir = getMetadataDir(context, metadataId);
         return metadataDir + jCloudConfiguration.getFolderDelimiter() + visibility.toString() + jCloudConfiguration.getFolderDelimiter() + getFilename(metadataUuid, resourceId);
@@ -177,25 +204,94 @@ public class JCloudStore extends AbstractStore {
     public MetadataResource putResource(final ServiceContext context, final String metadataUuid, final String filename,
                                         final InputStream is, @Nullable final Date changeDate, final MetadataResourceVisibility visibility, Boolean approved)
             throws Exception {
+        return putResource(context, metadataUuid, filename, is, changeDate, visibility, approved, null);
+    }
+
+    protected MetadataResource putResource(final ServiceContext context, final String metadataUuid, final String filename,
+                                        final InputStream is, @Nullable final Date changeDate, final MetadataResourceVisibility visibility, Boolean approved, Map<String, String> additionalProperties)
+        throws Exception {
         final int metadataId = canEdit(context, metadataUuid, approved);
         String key = getKey(context, metadataUuid, metadataId, visibility, filename);
 
-        // Todo - jcloud does not seem to allow setting the last modified date. May need to investigate to see if there are other options.
-        //if (changeDate != null) {
-        //    metadata.setLastModified(changeDate);
+        Map<String, String> properties = null;
+
+         try {
+            StorageMetadata storageMetadata = jCloudConfiguration.getClient().getBlobStore().blobMetadata(jCloudConfiguration.getContainerName(), key);
+            if (storageMetadata != null) {
+                properties = storageMetadata.getUserMetadata();
+            }
+        } catch (ContainerNotFoundException ignored) {
+            // ignored
+        }
+
+
+        if (properties == null) {
+            properties = new HashMap<>();
+        }
+
+        addProperties(metadataUuid, properties, changeDate, additionalProperties);
 
         Blob blob = jCloudConfiguration.getClient().getBlobStore().blobBuilder(key)
             .payload(is)
             .contentLength(is.available())
+            .userMetadata(properties)
             .build();
         // Upload the Blob in multiple chunks to supports large files.
         jCloudConfiguration.getClient().getBlobStore().putBlob(jCloudConfiguration.getContainerName(), blob, multipart());
         Blob blobResults = jCloudConfiguration.getClient().getBlobStore().getBlob(jCloudConfiguration.getContainerName(), key);
 
+
         return createResourceDescription(context, metadataUuid, visibility, filename, blobResults.getMetadata(), metadataId, approved);
 
     }
 
+    protected void addProperties(String metadataUuid, Map<String, String> properties, Date changeDate, Map<String, String> additionalProperties) {
+
+        // Add additional properties if exists.
+        if (MapUtils.isNotEmpty(additionalProperties)) {
+            properties.putAll(additionalProperties);
+        }
+
+        // now update metadata uuid and status and change date .
+
+        setMetadataUUID(properties, metadataUuid);
+
+        // JCloud does not allow changing the last modified date.  So the change date will be put in defined changed date field if supplied.
+        setExternalResourceManagementChangedDate(properties, changeDate);
+
+        // If it is a new record so set the default status value property if it does not already exist as an additional property.
+        if (!StringUtils.isEmpty(jCloudConfiguration.getExternalResourceManagementValidationStatusPropertyName()) &&
+            !properties.containsKey(jCloudConfiguration.getExternalResourceManagementValidationStatusPropertyName())) {
+            setExternalManagementResourceValidationStatus(properties, jCloudConfiguration.getValidationStatusDefaultValue());
+        }
+
+    }
+    protected void setMetadataUUID(Map<String, String> properties, String metadataUuid) {
+        // Don't allow users metadata uuid to be supplied as a property so let's overwrite any value that may exist.
+        if (!StringUtils.isEmpty(jCloudConfiguration.getMetadataUUIDPropertyName())) {
+            setProperty(properties, jCloudConfiguration.getMetadataUUIDPropertyName(), metadataUuid);
+        }
+    }
+
+    protected void setExternalResourceManagementChangedDate(Map<String, String> properties, Date changeDate) {
+        // Don't allow change date to be supplied as a property so let's overwrite any value that may exist.
+        if (changeDate != null && !StringUtils.isEmpty(jCloudConfiguration.getExternalResourceManagementChangedDatePropertyName())) {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            properties.put(jCloudConfiguration.getExternalResourceManagementChangedDatePropertyName(), dateFormat.format(changeDate));
+        }
+    }
+
+    protected void setExternalManagementResourceValidationStatus(Map<String, String> properties, MetadataResourceExternalManagementProperties.ValidationStatus status) {
+        if (!StringUtils.isEmpty(jCloudConfiguration.getExternalResourceManagementValidationStatusPropertyName())) {
+            setProperty(properties, jCloudConfiguration.getExternalResourceManagementValidationStatusPropertyName(), String.valueOf(status.getValue()));
+        }
+    }
+
+    protected void setProperty(Map<String, String> properties, String propertyName, String value) {
+        if (!StringUtils.isEmpty(propertyName)) {
+            properties.put(propertyName, value);
+        }
+    }
     @Override
     public MetadataResource patchResourceStatus(final ServiceContext context, final String metadataUuid, final String resourceId,
                                                 final MetadataResourceVisibility visibility, Boolean approved) throws Exception {
@@ -254,7 +350,7 @@ public class JCloudStore extends AbstractStore {
                 PageSet<? extends StorageMetadata> page = jCloudConfiguration.getClient().getBlobStore().list(jCloudConfiguration.getContainerName(), opts);
 
                 for (StorageMetadata storageMetadata : page) {
-                    if (storageMetadata.getType() == StorageType.BLOB) {
+                    if (!isFolder(storageMetadata))  {
                         jCloudConfiguration.getClient().getBlobStore().removeBlob(jCloudConfiguration.getContainerName(), storageMetadata.getName());
                     }
                 }
@@ -275,9 +371,13 @@ public class JCloudStore extends AbstractStore {
 
         for (MetadataResourceVisibility visibility : MetadataResourceVisibility.values()) {
             if (tryDelResource(context, metadataUuid, metadataId, visibility, resourceId)) {
+                Log.info(Geonet.RESOURCES,
+                        String.format("MetadataResource '%s' removed.", resourceId));
                 return String.format("MetadataResource '%s' removed.", resourceId);
             }
         }
+        Log.info(Geonet.RESOURCES,
+                String.format("Unable to remove resource '%s'.", resourceId));
         return String.format("Unable to remove resource '%s'.", resourceId);
     }
 
@@ -286,12 +386,16 @@ public class JCloudStore extends AbstractStore {
                               final String resourceId, Boolean approved) throws Exception {
         int metadataId = canEdit(context, metadataUuid, approved);
         if (tryDelResource(context, metadataUuid, metadataId, visibility, resourceId)) {
+            Log.info(Geonet.RESOURCES,
+                    String.format("MetadataResource '%s' removed.", resourceId));
             return String.format("MetadataResource '%s' removed.", resourceId);
         }
+        Log.info(Geonet.RESOURCES,
+                String.format("Unable to remove resource '%s'.", resourceId));
         return String.format("Unable to remove resource '%s'.", resourceId);
     }
 
-    private boolean tryDelResource(final ServiceContext context, final String metadataUuid, final int metadataId, final MetadataResourceVisibility visibility,
+    protected boolean tryDelResource(final ServiceContext context, final String metadataUuid, final int metadataId, final MetadataResourceVisibility visibility,
                                    final String resourceId) throws Exception {
         final String key = getKey(context, metadataUuid, metadataId, visibility, resourceId);
 
@@ -321,11 +425,22 @@ public class JCloudStore extends AbstractStore {
     }
 
     @Override
-    public MetadataResourceContainer getResourceContainerDescription(ServiceContext context, String metadataUuid, Boolean approved) throws Exception {
-
+    public MetadataResourceContainer getResourceContainerDescription(final ServiceContext context, final String metadataUuid, Boolean approved) throws Exception {
         int metadataId = getAndCheckMetadataId(metadataUuid, approved);
 
-        return new FilesystemStoreResourceContainer(metadataUuid, metadataId, metadataUuid, settingManager.getNodeURL() + "api/records/", approved);
+        final String key = getMetadataDir(context, metadataId);
+
+
+        String folderRoot = jCloudConfiguration.getExternalResourceManagementFolderRoot();
+        if (folderRoot == null) {
+            folderRoot = "";
+        }
+        MetadataResourceExternalManagementProperties metadataResourceExternalManagementProperties =
+            getMetadataResourceExternalManagementProperties(context, metadataId, metadataUuid, null, String.valueOf(metadataId), null, null, StorageType.FOLDER,
+                MetadataResourceExternalManagementProperties.ValidationStatus.UNKNOWN);
+
+        return new FilesystemStoreResourceContainer(metadataUuid, metadataId, metadataUuid,
+            settingManager.getNodeURL() + "api/records/", metadataResourceExternalManagementProperties, approved);
     }
 
     private String getMetadataDir(ServiceContext context, final int metadataId) {
@@ -360,7 +475,7 @@ public class JCloudStore extends AbstractStore {
         }
     }
 
-    private Path getBaseMetadataDir(ServiceContext context, Path metadataFullDir) {
+    protected Path getBaseMetadataDir(ServiceContext context, Path metadataFullDir) {
         //If we not already figured out the base metadata dir then lets figure it out.
         if (baseMetadataDir == null) {
             Path systemFullDir = getDataDirectory(context).getSystemDataDir();
@@ -385,11 +500,17 @@ public class JCloudStore extends AbstractStore {
         return ApplicationContextHolder.get().getBean(GeonetworkDataDirectory.class);
     }
 
+    private boolean isFolder(StorageMetadata storageMetadata) {
+        // For azure Blob ADSL if the type is folder then the storage type will be BLOB and hdi_isfolder=true so we cannot only rely on StorageType.FOLDER
+        return storageMetadata.getType().equals(StorageType.FOLDER) || "true".equals(storageMetadata.getUserMetadata().get(AZURE_BLOB_IS_FOLDER_PROPERTY_NAME));
+    }
+
     /**
      * get external resource management for the supplied resource.
      * Replace the following
+     * {objectId}  type:visibility:metadataId:version:resourceId in base64 encoding
      * {id}  resource id
-     * {type:folder:document} // If the type is folder then type "folder" will be displayed else if document then "document" will be displayed
+     * {type} // If the type is folder then type "folder" will be displayed else if document then "document" will be displayed
      * {uuid}  metadatauuid
      * {metadataid}  metadataid
      * {visibility}  visibility
@@ -409,39 +530,48 @@ public class JCloudStore extends AbstractStore {
                                                     final String resourceId,
                                                     String filename,
                                                     String version,
-                                                    StorageType type
+                                                    StorageType type,
+                                                    MetadataResourceExternalManagementProperties.ValidationStatus validationStatus
     ) {
         String metadataResourceExternalManagementPropertiesUrl = jCloudConfiguration.getExternalResourceManagementUrl();
+        String objectId = getResourceManagementExternalPropertiesObjectId((type == null ? "document" : (StorageType.FOLDER.equals(type) ? "folder" : "document")), visibility, metadataId, version,
+            resourceId);
         if (!StringUtils.isEmpty(metadataResourceExternalManagementPropertiesUrl)) {
+            // {objectid}  objectId // It will be the type:visibility:metadataId:version:resourceId in base64
+            // i.e. folder::100::100                     # Folder in resource 100
+            // i.e. document:public:100:v1:sample.jpg    # public document 100 version v1 name sample.jpg
+            if (metadataResourceExternalManagementPropertiesUrl.contains("{objectid}")) {
+                metadataResourceExternalManagementPropertiesUrl = metadataResourceExternalManagementPropertiesUrl.replaceAll("(\\{objectid\\})", objectId);
+            }
             // {id}  id
             if (metadataResourceExternalManagementPropertiesUrl.contains("{id}")) {
                 metadataResourceExternalManagementPropertiesUrl = metadataResourceExternalManagementPropertiesUrl.replaceAll("(\\{id\\})", resourceId);
             }
-            // {type:folder:document} // If the type is folder then type "folder" will be displayed else if document then "document" will be displayed
-            if (metadataResourceExternalManagementPropertiesUrl.contains("{type:")) {
-                metadataResourceExternalManagementPropertiesUrl = metadataResourceExternalManagementPropertiesUrl.replaceAll("\\{type:([a-zA-Z0-9]*?):([a-zA-Z0-9]*?)\\}",
-                    (type==null?"":(StorageType.FOLDER.equals(type)?"$1":"$2")));
+            // {type} // If the type is folder then type "folder" will be displayed else if document then "document" will be displayed
+            if (metadataResourceExternalManagementPropertiesUrl.contains("{type}")) {
+                metadataResourceExternalManagementPropertiesUrl = metadataResourceExternalManagementPropertiesUrl.replaceAll("(\\{type\\})",
+                    (type == null ? "document" : (StorageType.FOLDER.equals(type) ? "folder" : "document")));
             }
-
-            // {uuid}  metadatauuid
+            // {uuid}  metadata uuid
             if (metadataResourceExternalManagementPropertiesUrl.contains("{uuid}")) {
-                metadataResourceExternalManagementPropertiesUrl = metadataResourceExternalManagementPropertiesUrl.replaceAll("(\\{uuid\\})", (metadataUuid==null?"":metadataUuid));
+                metadataResourceExternalManagementPropertiesUrl = metadataResourceExternalManagementPropertiesUrl.replaceAll("(\\{uuid\\})", (metadataUuid == null ? "" : metadataUuid));
             }
-            // {metadataid}  metadataid
+            // {metadataid}  metadataId
             if (metadataResourceExternalManagementPropertiesUrl.contains("{metadataid}")) {
                 metadataResourceExternalManagementPropertiesUrl = metadataResourceExternalManagementPropertiesUrl.replaceAll("(\\{metadataid\\})", String.valueOf(metadataId));
             }
             //    {visibility}  visibility
             if (metadataResourceExternalManagementPropertiesUrl.contains("{visibility}")) {
-                metadataResourceExternalManagementPropertiesUrl = metadataResourceExternalManagementPropertiesUrl.replaceAll("(\\{visibility\\})", (visibility==null?"":visibility.toString().toLowerCase()));
+                metadataResourceExternalManagementPropertiesUrl =
+                    metadataResourceExternalManagementPropertiesUrl.replaceAll("(\\{visibility\\})", (visibility == null ? "" : visibility.toString().toLowerCase()));
             }
             //    {filename}  filename
             if (metadataResourceExternalManagementPropertiesUrl.contains("{filename}")) {
-                metadataResourceExternalManagementPropertiesUrl = metadataResourceExternalManagementPropertiesUrl.replaceAll("(\\{filename\\})", (filename==null?"":filename));
+                metadataResourceExternalManagementPropertiesUrl = metadataResourceExternalManagementPropertiesUrl.replaceAll("(\\{filename\\})", (filename == null ? "" : filename));
             }
             // {version}  version
             if (metadataResourceExternalManagementPropertiesUrl.contains("{version}")) {
-                metadataResourceExternalManagementPropertiesUrl = metadataResourceExternalManagementPropertiesUrl.replaceAll("(\\{version\\})", (version==null?"":version));
+                metadataResourceExternalManagementPropertiesUrl = metadataResourceExternalManagementPropertiesUrl.replaceAll("(\\{version\\})", (version == null ? "" : version));
             }
 
             if (metadataResourceExternalManagementPropertiesUrl.contains("{lang}") || metadataResourceExternalManagementPropertiesUrl.contains("{ISO3lang}")) {
@@ -469,7 +599,7 @@ public class JCloudStore extends AbstractStore {
         }
 
         MetadataResourceExternalManagementProperties metadataResourceExternalManagementProperties
-                = new MetadataResourceExternalManagementProperties(resourceId, metadataResourceExternalManagementPropertiesUrl, MetadataResourceExternalManagementProperties.ValidationStatus.UNKNOWN);
+                = new MetadataResourceExternalManagementProperties(objectId, metadataResourceExternalManagementPropertiesUrl, validationStatus);
 
         return metadataResourceExternalManagementProperties;
     }
@@ -508,7 +638,7 @@ public class JCloudStore extends AbstractStore {
         };
     }
 
-    private static class ResourceHolderImpl implements ResourceHolder {
+    protected static class ResourceHolderImpl implements ResourceHolder {
         private Path tempFolderPath;
         private Path path;
         private final MetadataResource metadataResource;
