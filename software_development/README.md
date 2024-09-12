@@ -11,12 +11,10 @@ This manual is for developers customizing or developing GeoNetwork:
   * [Building](BUILDING.md)
   * [Testing](TESTING.md)
   * [Eclipse IDE](ECLIPSE.md)
-  * [IntelliJ IDE](INTELLIJ.md).
-  
-  See [Installing from source code](https://docs.geonetwork-opensource.org/latest/install-guide/installing-from-source-code/) (Installation Guide)
+  * [IntelliJ IDE](INTELLIJ.md)
 
-* Writing documentation: see [Documentation Guide](https://docs.geonetwork-opensource.org/latest/devel/docs/) (Contributing Guide).
-* Writing documentation: see [Documentation Guide](https://docs.geonetwork-opensource.org/latest/devel/docs/) (Contributing Guide).
+* Installation: See [Installing from source code](https://docs.geonetwork-opensource.org/latest/install-guide/installing-from-source-code/) (Installation Guide).
+* Writing documentation: See [Working with documentation](https://docs.geonetwork-opensource.org/latest/devel/docs/) (Documentation Guide).
 * Release process: See [Doing a release](https://docs.geonetwork-opensource.org/latest/contributing/doing-a-release/) (Contributing Guide).
 
 If you just want to use the software and are looking for instructions on how to do that,
