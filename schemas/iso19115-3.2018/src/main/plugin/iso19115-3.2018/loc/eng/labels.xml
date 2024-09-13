@@ -1329,6 +1329,10 @@
     <label>Metadata language</label>
     <description iso="true">Designation of the locale language</description>
   </element>
+  <element name="lan:language" id="448.0" context="/mdb:MD_Metadata/mdb:identificationInfo/mri:MD_DataIdentification/mri:defaultLocale/lan:PT_Locale/lan:language">
+    <label>Dataset language</label>
+    <description iso="true">ISO 3 letters code.</description>
+  </element>
   <element name="lan:language" id="448.0" context="/mdb:MD_Metadata/mdb:otherLocale/lan:PT_Locale/lan:language">
     <label>Other language</label>
     <description iso="true">Additional metadata language</description>
