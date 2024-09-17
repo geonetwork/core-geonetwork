@@ -25,7 +25,7 @@
       id="gn-uiconfig-toolbar"
     >
       <div class="row">
-        <div class="col-md-4 gn-nopadding-left">
+        <div class="col-md-6 gn-nopadding-left">
           <label
             for="uiConfigurationList"
             title="{{'uiConfiguration-help' | translate}}"
@@ -40,12 +40,12 @@
           ></select>
         </div>
 
-        <div class="col-md-8 gn-nopadding-left gn-nopadding-right">
+        <div class="col-md-6 gn-nopadding-left gn-nopadding-right">
           <label for="addUiSettings" data-translate="">addUiSettings</label>
 
           <div class="row">
             <!-- add UI config -->
-            <div class="col-lg-6 gn-nopadding-left">
+            <div class="col-md-12 gn-nopadding-left">
               <div class="input-group">
                 <input
                   class="form-control"
@@ -69,8 +69,9 @@
               </div>
             </div>
 
+
             <!-- delete and save-->
-            <div class="col-lg-6 gn-nopadding-left gn-nopadding-right">
+            <div class="col-md-12 gn-nopadding-left gn-nopadding-right">
               <div class="btn-toolbar pull-right">
                 <button
                   type="submit"
@@ -106,7 +107,10 @@
       data-ng-show="uiConfiguration.configuration !== undefined"
     >
       <div class="panel-heading">
-        <h1><span data-translate="" class="gn-margin-right-sm">ui</span> <strong>{{uiConfiguration.id}}</strong></h1>
+        <h1>
+          <span data-translate="" class="gn-margin-right-sm">ui</span>
+          <strong>{{uiConfiguration.id}}</strong>
+        </h1>
 
         <div data-gn-need-help="user-interface-configuration" class="pull-right"></div>
       </div>
