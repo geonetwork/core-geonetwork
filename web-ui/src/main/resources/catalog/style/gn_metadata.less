@@ -634,11 +634,16 @@ ul.container-list {
         padding: 5px;
       }
       @media print {
+        svg {
+          max-width: 75px;
+          margin: 15px;
+        }
         [gn-popover-content] {
           .make-md-column-offset(3);
           padding: 0 @gn-spacing-lg;
           display: block !important;
-          label, a {
+          label,
+          a {
             display: block;
             margin-bottom: @gn-spacing;
           }
