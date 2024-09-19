@@ -251,6 +251,7 @@
                   select="count($elements[not(@xml:lang)]) > 1"/>
 
 
+    <!-- Select the items to be processed depending on whether they are ISO multilingual or not ISO, but multilingual eg. DC or DCAT -->
     <xsl:for-each select="if($languages and count($elements//(*:CharacterString|*:Anchor|*:LocalisedCharacterString)) = 0 ) then $elements[1] else $elements">
       <xsl:variable name="element" select="."/>
       <xsl:variable name="textObject" as="node()*">
