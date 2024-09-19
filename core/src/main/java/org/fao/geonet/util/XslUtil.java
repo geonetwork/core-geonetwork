@@ -1441,7 +1441,13 @@ public final class XslUtil {
         return thesaurus == null ? "" : "geonetwork.thesaurus." + thesaurus.getKey();
     }
     
-    public static String getThesaurusTitleByName(String id) {
+    /**
+     * Retrieve the thesaurus title using the thesaurus key.
+     *
+     * @param id   the thesaurus key
+     * @return the thesaurus title or empty string if the thesaurus doesn't exist.
+     */
+    public static String getThesaurusTitleByKey(String id) {
         ApplicationContext applicationContext = ApplicationContextHolder.get();
         ThesaurusManager thesaurusManager = applicationContext.getBean(ThesaurusManager.class);
         Thesaurus thesaurus = thesaurusManager.getThesaurusByName(id);
