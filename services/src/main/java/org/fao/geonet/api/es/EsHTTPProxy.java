@@ -651,11 +651,17 @@ public class EsHTTPProxy {
                     ObjectNode sourceNode = (ObjectNode) doc.get("_source");
 
                     String metadataSchema = doc.get("_source").get(Geonet.IndexFieldNames.SCHEMA).asText();
-                    MetadataSchema mds = schemaManager.getSchema(metadataSchema);
+                    try {
+                        MetadataSchema mds = schemaManager.getSchema(metadataSchema);
 
-                    // Apply metadata schema filters to remove non-allowed fields
-                    processMetadataSchemaFilters(context, mds, doc);
-
+                        // Apply metadata schema filters to remove non-allowed fields
+                        processMetadataSchemaFilters(context, mds, doc);
+                    } catch (IllegalArgumentException e) {
+                        LOGGER.error("Failed to load metadata schema for {}. Error is: {}",
+                            getSourceString(doc, Geonet.IndexFieldNames.UUID),
+                            e.getMessage()
+                        );
+                    }
                     // Remove fields with privileges info
                     for (ReservedOperation o : ReservedOperation.values()) {
                         sourceNode.remove("op" + o.getId());
