@@ -17,6 +17,10 @@
   <xsl:import href="../dcat/dcat-core.xsl"/>
   <xsl:import href="eu-dcat-ap-core-dataset.xsl"/>
 
+  <xsl:param name="multipleAccrualPeriodicityAllowed"
+             as="xs:string"
+             select="'false'"/>
+
   <!--
    If true, all resource constraints are preserved in the output.
    The first one is a license, others are dct:rights.

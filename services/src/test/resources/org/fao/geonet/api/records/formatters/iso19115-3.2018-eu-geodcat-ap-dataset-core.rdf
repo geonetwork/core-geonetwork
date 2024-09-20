@@ -490,9 +490,9 @@
          </rdf:Description>
       </geodcatap:referenceSystem>
         <geodcatap:topicCategory rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/TopicCategory/planningCadastre"/>
-      
+
         <geodcatap:topicCategory rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/TopicCategory/imageryBaseMapsEarthCover"/>
-      
+
         <geodcatap:topicCategory rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/TopicCategory/location"/>
       <dcat:spatialResolutionInMeters rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.01</dcat:spatialResolutionInMeters>
       <dcat:temporalResolution rdf:datatype="http://www.w3.org/2001/XMLSchema#duration">P0Y2M0DT0H0M0S</dcat:temporalResolution>
@@ -519,9 +519,6 @@
       </dct:temporal>
       <dct:accrualPeriodicity>
          <dct:Frequency rdf:about="http://publications.europa.eu/resource/authority/frequency/MONTHLY"/>
-      </dct:accrualPeriodicity>
-      <dct:accrualPeriodicity>
-         <dct:Frequency rdf:about="https://w3id.org/mobilitydcat-ap/update-frequency/15min"/>
       </dct:accrualPeriodicity>
       <foaf:page>
          <foaf:Document rdf:about="https://metawal.wallonie.be/geonetwork/srv/api/records/7fe2f305-1302-4297-b67e-792f55acd834/attachments/pds_codt.png">

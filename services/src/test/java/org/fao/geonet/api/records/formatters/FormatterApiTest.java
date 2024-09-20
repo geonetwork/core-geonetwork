@@ -88,6 +88,7 @@ public class FormatterApiTest extends AbstractServiceIntegrationTest {
 
         data.add(new String[]{"iso19115-3.2018-dcat-dataset.xml", "dcat", "", "iso19115-3.2018", "dataset-core.rdf"});
         data.add(new String[]{"iso19115-3.2018-dcat-dataset.xml", "eu-dcat-ap", "", "iso19115-3.2018", "dataset-core.rdf"});
+        data.add(new String[]{"iso19115-3.2018-dcat-dataset.xml", "eu-dcat-ap", "?multipleAccrualPeriodicityAllowed=true", "iso19115-3.2018", "dataset-core-multipleAccrualPeriodicityAllowed.rdf"});
         data.add(new String[]{"iso19115-3.2018-dcat-dataset.xml", "eu-geodcat-ap", "", "iso19115-3.2018", "dataset-core.rdf"});
         data.add(new String[]{"iso19115-3.2018-dcat-dataset.xml", "eu-dcat-ap-mobility", "", "iso19115-3.2018", "dataset-core.rdf"});
         data.add(new String[]{"iso19115-3.2018-dcat-dataset.xml", "eu-dcat-ap-hvd", "", "iso19115-3.2018", "dataset-core.rdf"});
@@ -151,7 +152,7 @@ public class FormatterApiTest extends AbstractServiceIntegrationTest {
                     }
 
 
-//                    FileUtils.writeStringToFile(new File("/tmp/services/src/test/resources/org/fao/geonet/api/records/formatters/" + String.format("%s-%s-%s",
+//                    FileUtils.writeStringToFile(new File("/tmp/services/src/test/resources/org/fao/geonet/api/records/formatters/new/" + String.format("%s-%s-%s",
 //                            schema, formatter, checkfile)), actual.replaceFirst("urn:uuid/.*</dct:identifier>", "urn:uuid/{uuid}</dct:identifier>"), StandardCharsets.UTF_8);
 
                     Diff diff = DiffBuilder

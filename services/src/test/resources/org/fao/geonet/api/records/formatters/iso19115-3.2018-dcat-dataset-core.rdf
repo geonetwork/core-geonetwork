@@ -455,6 +455,9 @@
          <dct:Frequency rdf:about="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#asNeeded"/>
       </dct:accrualPeriodicity>
       <dct:accrualPeriodicity>
+         <dct:Frequency rdf:about="https://w3id.org/mobilitydcat-ap/update-frequency/5min"/>
+      </dct:accrualPeriodicity>
+      <dct:accrualPeriodicity>
          <dct:Frequency rdf:about="https://w3id.org/mobilitydcat-ap/update-frequency/15min"/>
       </dct:accrualPeriodicity>
       <foaf:page>

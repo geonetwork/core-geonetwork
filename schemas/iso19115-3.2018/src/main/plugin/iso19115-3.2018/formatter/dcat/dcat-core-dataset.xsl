@@ -79,7 +79,10 @@
         </dcat:spatialResolutionInMeters>
       </xsl:when>
       <xsl:otherwise>
-        <xsl:comment>WARNING: Spatial resolution only supported in meters. <xsl:value-of select="concat(*/text(), ' ', */@uom)"/> is ignored (can be related to unknown unit or no conversion factor or not a decimal value).</xsl:comment>
+        <xsl:comment>WARNING: Spatial resolution only supported in meters.
+          <xsl:value-of select="concat(*/text(), ' ', */@uom)"/> is ignored (can be related to unknown unit or no
+          conversion factor or not a decimal value).
+        </xsl:comment>
       </xsl:otherwise>
     </xsl:choose>
 
@@ -103,6 +106,24 @@
   Definition:	The frequency at which a dataset is published.
   Range:	dcterms:Frequency (A rate at which something recurs)
   Usage note:	The value of dcterms:accrualPeriodicity gives the rate at which the dataset-as-a-whole is updated. This may be complemented by dcat:temporalResolution to give the time between collected data points in a time series.
+
+  Cardinality:
+  * ISO 0..n
+  * DCAT 0..n
+  * DCAT-AP 0..1
+  * Mobility DCAT 1..1 (in ISO either use corresponding period eg. P0Y0M0DT1H0M0S or extend the codelist with the proper vocabulary)
+
+  accrualPeriodicity mapping done using the ISO to Dublin core value mapping
+  but additional checks are done when ISO records extended the codelist and
+  may used the EU Publication Office frequency codes
+  or the Mobility DCAT-AP update frequency codes.
+  Domain specific codelists take priority over the DC or ISO codelists.
+
+  eg.
+  <mmi:MD_MaintenanceFrequencyCode codeListValue="15min"/>
+
+  multipleAccrualPeriodicityAllowed is a parameter that can be set to true to allow multiple accrualPeriodicity values.
+  Default to false for EU formatters. true for DCAT.
   -->
   <xsl:variable name="isoFrequencyToDublinCore"
                 as="node()*">
@@ -122,21 +143,64 @@
     -->
   </xsl:variable>
 
-  <xsl:template mode="iso19115-3-to-dcat"
-                match="mdb:identificationInfo/*/mri:resourceMaintenance/*/mmi:maintenanceAndUpdateFrequency">
 
-    <xsl:variable name="dcFrequency"
-                  as="xs:string?"
-                  select="$isoFrequencyToDublinCore[@key = current()/*/@codeListValue]"/>
+  <!--
+  http://publications.europa.eu/resource/authority/frequency
+  -->
+  <xsl:variable name="euUpdateFrquencyToUri" as="node()*">
+    <entry key="BIDECENNIAL">http://publications.europa.eu/resource/authority/frequency/BIDECENNIAL</entry>
+    <entry key="TRIDECENNIAL">http://publications.europa.eu/resource/authority/frequency/TRIDECENNIAL</entry>
+    <entry key="BIHOURLY">http://publications.europa.eu/resource/authority/frequency/BIHOURLY</entry>
+    <entry key="TRIHOURLY">http://publications.europa.eu/resource/authority/frequency/TRIHOURLY</entry>
+    <entry key="OTHER">http://publications.europa.eu/resource/authority/frequency/OTHER</entry>
+    <entry key="WEEKLY">http://publications.europa.eu/resource/authority/frequency/WEEKLY</entry>
+    <entry key="NOT_PLANNED">http://publications.europa.eu/resource/authority/frequency/NOT_PLANNED</entry>
+    <entry key="AS_NEEDED">http://publications.europa.eu/resource/authority/frequency/AS_NEEDED</entry>
+    <entry key="HOURLY">http://publications.europa.eu/resource/authority/frequency/HOURLY</entry>
+    <entry key="QUADRENNIAL">http://publications.europa.eu/resource/authority/frequency/QUADRENNIAL</entry>
+    <entry key="QUINQUENNIAL">http://publications.europa.eu/resource/authority/frequency/QUINQUENNIAL</entry>
+    <entry key="DECENNIAL">http://publications.europa.eu/resource/authority/frequency/DECENNIAL</entry>
+    <entry key="WEEKLY_2">http://publications.europa.eu/resource/authority/frequency/WEEKLY_2</entry>
+    <entry key="WEEKLY_3">http://publications.europa.eu/resource/authority/frequency/WEEKLY_3</entry>
+    <entry key="UNKNOWN">http://publications.europa.eu/resource/authority/frequency/UNKNOWN</entry>
+    <entry key="UPDATE_CONT">http://publications.europa.eu/resource/authority/frequency/UPDATE_CONT</entry>
+    <entry key="QUARTERLY">http://publications.europa.eu/resource/authority/frequency/QUARTERLY</entry>
+    <entry key="TRIENNIAL">http://publications.europa.eu/resource/authority/frequency/TRIENNIAL</entry>
+    <entry key="NEVER">http://publications.europa.eu/resource/authority/frequency/NEVER</entry>
+    <entry key="OP_DATPRO">http://publications.europa.eu/resource/authority/frequency/OP_DATPRO</entry>
+    <entry key="MONTHLY_2">http://publications.europa.eu/resource/authority/frequency/MONTHLY_2</entry>
+    <entry key="MONTHLY_3">http://publications.europa.eu/resource/authority/frequency/MONTHLY_3</entry>
+    <entry key="IRREG">http://publications.europa.eu/resource/authority/frequency/IRREG</entry>
+    <entry key="MONTHLY">http://publications.europa.eu/resource/authority/frequency/MONTHLY</entry>
+    <entry key="DAILY">http://publications.europa.eu/resource/authority/frequency/DAILY</entry>
+    <entry key="DAILY_2">http://publications.europa.eu/resource/authority/frequency/DAILY_2</entry>
+    <entry key="BIWEEKLY">http://publications.europa.eu/resource/authority/frequency/BIWEEKLY</entry>
+    <entry key="CONT">http://publications.europa.eu/resource/authority/frequency/CONT</entry>
+    <entry key="BIENNIAL">http://publications.europa.eu/resource/authority/frequency/BIENNIAL</entry>
+    <entry key="BIMONTHLY">http://publications.europa.eu/resource/authority/frequency/BIMONTHLY</entry>
+    <entry key="ANNUAL_2">http://publications.europa.eu/resource/authority/frequency/ANNUAL_2</entry>
+    <entry key="ANNUAL_3">http://publications.europa.eu/resource/authority/frequency/ANNUAL_3</entry>
+    <entry key="ANNUAL">http://publications.europa.eu/resource/authority/frequency/ANNUAL</entry>
+  </xsl:variable>
 
-    <dct:accrualPeriodicity>
-      <dct:Frequency rdf:about="{if($dcFrequency)
-                                 then concat($europaPublicationBaseUri, 'frequency/', $dcFrequency)
-                                 else concat($isoCodeListBaseUri, */@codeListValue)}"/>
-    </dct:accrualPeriodicity>
-  </xsl:template>
-
-
+  <!--
+  https://w3id.org/mobilitydcat-ap/update-frequency
+  -->
+  <xsl:variable name="mobilityDcatApUpdateFrequencyToUri"
+                as="node()*">
+    <entry key="1h">https://w3id.org/mobilitydcat-ap/update-frequency/1h</entry>
+    <entry key="1min">https://w3id.org/mobilitydcat-ap/update-frequency/1min</entry>
+    <entry key="10min">https://w3id.org/mobilitydcat-ap/update-frequency/10min</entry>
+    <entry key="12h">https://w3id.org/mobilitydcat-ap/update-frequency/12h</entry>
+    <entry key="15min">https://w3id.org/mobilitydcat-ap/update-frequency/15min</entry>
+    <entry key="2h">https://w3id.org/mobilitydcat-ap/update-frequency/2h</entry>
+    <entry key="24h">https://w3id.org/mobilitydcat-ap/update-frequency/24h</entry>
+    <entry key="3h">https://w3id.org/mobilitydcat-ap/update-frequency/3h</entry>
+    <entry key="3 months">https://w3id.org/mobilitydcat-ap/update-frequency/3-months</entry>
+    <entry key="30min">https://w3id.org/mobilitydcat-ap/update-frequency/30min</entry>
+    <entry key="5min">https://w3id.org/mobilitydcat-ap/update-frequency/5min</entry>
+    <entry key="6 months">https://w3id.org/mobilitydcat-ap/update-frequency/6-months</entry>
+  </xsl:variable>
 
   <xsl:variable name="isoDurationToMobilityDcatApUpdateFrequency"
                 as="node()*">
@@ -155,20 +219,67 @@
     <entry key="P0Y6M0DT0H0M0S">https://w3id.org/mobilitydcat-ap/update-frequency/6-months</entry>
   </xsl:variable>
 
+
+  <xsl:param name="multipleAccrualPeriodicityAllowed"
+             as="xs:string"
+             select="'true'"/>
+  <xsl:variable name="allowMultipleAccrualPeriodicity"
+                as="xs:boolean"
+                select="xs:boolean($multipleAccrualPeriodicityAllowed)"/>
+
   <xsl:template mode="iso19115-3-to-dcat"
-                match="mdb:identificationInfo/*/mri:resourceMaintenance/*/mmi:userDefinedMaintenanceFrequency">
+                match="mdb:identificationInfo/*/mri:resourceMaintenance">
+    <xsl:variable name="isFirstMaintenanceElement"
+                  select="preceding-sibling::*[1]/name() != 'mri:resourceMaintenance'"/>
+    <xsl:if test="$isFirstMaintenanceElement">
+      <xsl:variable name="listOfFrequency"
+                    as="node()*">
+        <xsl:for-each select="../mri:resourceMaintenance/*">
+          <xsl:for-each select="mmi:maintenanceAndUpdateFrequency[*/@codeListValue != '']">
+            <xsl:variable name="dcFrequency"
+                          as="xs:string?"
+                          select="$isoFrequencyToDublinCore[@key = current()/*/@codeListValue]"/>
 
-    <xsl:variable name="dcMobilityFrequency"
-                  as="xs:string?"
-                  select="$isoDurationToMobilityDcatApUpdateFrequency[@key = current()/gco:TM_PeriodDuration]"/>
+            <xsl:variable name="dcatFrequencyUri"
+                          as="xs:string?"
+                          select="$euUpdateFrquencyToUri[@key = current()/*/@codeListValue]"/>
 
-    <xsl:if test="$dcMobilityFrequency">
-      <dct:accrualPeriodicity>
-        <dct:Frequency rdf:about="{$dcMobilityFrequency}"/>
-      </dct:accrualPeriodicity>
+            <xsl:variable name="mobilityDcatApUpdateFrequencyUri"
+                          as="xs:string?"
+                          select="$mobilityDcatApUpdateFrequencyToUri[@key = current()/*/@codeListValue]"/>
+
+            <!-- Domain specific codelists take priority -->
+            <xsl:variable name="dcOrIsoFrequency"
+                          as="xs:string?"
+                          select="if ($mobilityDcatApUpdateFrequencyUri != '' or $dcatFrequencyUri != '') then ''
+                                   else if($dcFrequency)
+                                   then concat($europaPublicationBaseUri, 'frequency/', $dcFrequency)
+                                   else concat($isoCodeListBaseUri, */@codeListValue)"/>
+
+            <xsl:for-each select="($mobilityDcatApUpdateFrequencyUri, $dcatFrequencyUri, $dcOrIsoFrequency[. != ''])">
+              <dct:accrualPeriodicity>
+                <dct:Frequency rdf:about="{current()}"/>
+              </dct:accrualPeriodicity>
+            </xsl:for-each>
+          </xsl:for-each>
+
+          <xsl:for-each select="mmi:userDefinedMaintenanceFrequency">
+            <xsl:variable name="mobilityFrequencyFromPeriod"
+                          as="xs:string?"
+                          select="$isoDurationToMobilityDcatApUpdateFrequency[@key = current()/gco:TM_PeriodDuration]"/>
+
+            <xsl:if test="$mobilityFrequencyFromPeriod">
+              <dct:accrualPeriodicity>
+                <dct:Frequency rdf:about="{$mobilityFrequencyFromPeriod}"/>
+              </dct:accrualPeriodicity>
+            </xsl:if>
+          </xsl:for-each>
+        </xsl:for-each>
+      </xsl:variable>
+
+      <xsl:copy-of select="if ($allowMultipleAccrualPeriodicity) then $listOfFrequency else $listOfFrequency[1]"/>
     </xsl:if>
   </xsl:template>
-
 
   <!--
   RDF Property:	dcat:temporalResolution
@@ -179,7 +290,9 @@
   -->
   <xsl:template mode="iso19115-3-to-dcat"
                 match="mri:temporalResolution/*">
-    <dcat:temporalResolution rdf:datatype="http://www.w3.org/2001/XMLSchema#duration"><xsl:value-of select="text()"/></dcat:temporalResolution>
+    <dcat:temporalResolution rdf:datatype="http://www.w3.org/2001/XMLSchema#duration">
+      <xsl:value-of select="text()"/>
+    </dcat:temporalResolution>
   </xsl:template>
 
 
@@ -219,9 +332,9 @@
   <xsl:template mode="iso19115-3-to-dcat"
                 match="mri:extent/*/gex:geographicElement/gex:EX_GeographicBoundingBox">
     <xsl:variable name="north" select="gex:northBoundLatitude/gco:Decimal"/>
-    <xsl:variable name="east"  select="gex:eastBoundLongitude/gco:Decimal"/>
+    <xsl:variable name="east" select="gex:eastBoundLongitude/gco:Decimal"/>
     <xsl:variable name="south" select="gex:southBoundLatitude/gco:Decimal"/>
-    <xsl:variable name="west"  select="gex:westBoundLongitude/gco:Decimal"/>
+    <xsl:variable name="west" select="gex:westBoundLongitude/gco:Decimal"/>
 
     <xsl:variable name="geojson"
                   as="xs:string"
@@ -235,7 +348,9 @@
     <dct:spatial>
       <rdf:Description>
         <rdf:type rdf:resource="http://purl.org/dc/terms/Location"/>
-        <dcat:bbox rdf:datatype="http://www.opengis.net/ont/geosparql#geoJSONLiteral"><xsl:value-of select="$geojson"/></dcat:bbox>
+        <dcat:bbox rdf:datatype="http://www.opengis.net/ont/geosparql#geoJSONLiteral">
+          <xsl:value-of select="$geojson"/>
+        </dcat:bbox>
       </rdf:Description>
     </dct:spatial>
   </xsl:template>

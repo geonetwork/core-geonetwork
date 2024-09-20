@@ -122,8 +122,7 @@
        * prov:wasGeneratedBy (Could be associated resource of type project?)
        -->
       <xsl:apply-templates mode="iso19115-3-to-dcat"
-                           select="mdb:identificationInfo/*/mri:resourceMaintenance/*/mmi:maintenanceAndUpdateFrequency
-                                  |mdb:identificationInfo/*/mri:resourceMaintenance/*/mmi:userDefinedMaintenanceFrequency
+                           select="mdb:identificationInfo/*/mri:resourceMaintenance
                                   |mdb:identificationInfo/*/mri:spatialResolution/*/mri:distance
                                   |mdb:identificationInfo/*/mri:temporalResolution/*
                                   |mdb:identificationInfo/*/mri:extent/*/gex:geographicElement/gex:EX_GeographicBoundingBox
