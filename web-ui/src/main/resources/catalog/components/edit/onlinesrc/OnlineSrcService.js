@@ -265,9 +265,9 @@
             linksAndRelatedPromises.push(
               $http.get(
                 apiPrefix +
-                  "/related?type=" +
-                  relatedTypes.join("&type=") +
-                  (!isApproved ? "&approved=false" : ""),
+                "/related?type=" +
+                relatedTypes.join("&type=") +
+                (!isApproved ? "&approved=false" : ""),
                 {
                   headers: {
                     Accept: "application/json"
@@ -281,9 +281,9 @@
             linksAndRelatedPromises.push(
               $http.get(
                 apiPrefix +
-                  "/associated?type=" +
-                  associatedTypes.join(",") +
-                  (!isApproved ? "&approved=false" : ""),
+                "/associated?type=" +
+                associatedTypes.join(",") +
+                (!isApproved ? "&approved=false" : ""),
                 {
                   headers: {
                     Accept: "application/json"
@@ -610,8 +610,8 @@
               scopedName: params.remote
                 ? ""
                 : params.name === qParams.name
-                ? ""
-                : qParams.name,
+                  ? ""
+                  : qParams.name,
               uuidref: qParams.uuidDS,
               uuid: qParams.uuidSrv,
               url: qParams.remote ? qParams.url : "",
@@ -932,7 +932,13 @@
     function ($http) {
       return {
         search: function (url, prefix, query) {
-          return $http.get(url + "?prefix=" + prefix + "&query=" + query);
+          return $http.get(
+            url +
+            "?prefix=" +
+            prefix +
+            "&query=" +
+            query.replaceAll("https://doi.org/", "")
+          );
         }
       };
     }
