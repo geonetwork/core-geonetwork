@@ -359,7 +359,10 @@
       n’est pas respectée.
     </help>
     <condition/>
-
+  </element>
+  <element name="gmd:DQ_EvaluationMethodTypeCode">
+    <label>Code du type de méthode d'évaluation</label>
+    <description>Type de méthode d'évaluation d'une mesure de qualité de données identifiée</description>
   </element>
   <element name="gmd:DQ_FormatConsistency" id="114.0">
     <label>Cohérence du format</label>

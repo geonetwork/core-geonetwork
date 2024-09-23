@@ -34,7 +34,6 @@
                 xmlns:gn-fn-index="http://geonetwork-opensource.org/xsl/functions/index"
                 xmlns:index="java:org.fao.geonet.kernel.search.EsSearchManager"
                 xmlns:digestUtils="java:org.apache.commons.codec.digest.DigestUtils"
-                xmlns:exslt="http://exslt.org/common"
                 xmlns:util="java:org.fao.geonet.util.XslUtil"
                 xmlns:date-util="java:org.fao.geonet.utils.DateUtil"
                 xmlns:daobs="http://daobs.org"
@@ -288,14 +287,16 @@
 
             <xsl:choose>
               <xsl:when test="$zuluDateTime != ''">
+                <!-- Store original date information for the resource, instead of $zuluDateTime,
+                     to avoid timezone shifts when used for facet filters -->
                 <xsl:element name="{$dateType}DateForResource">
-                  <xsl:value-of select="$zuluDateTime"/>
+                  <xsl:value-of select="$date"/>
                 </xsl:element>
                 <xsl:element name="{$dateType}YearForResource">
-                  <xsl:value-of select="substring($zuluDateTime, 0, 5)"/>
+                  <xsl:value-of select="substring($date, 0, 5)"/>
                 </xsl:element>
                 <xsl:element name="{$dateType}MonthForResource">
-                  <xsl:value-of select="substring($zuluDateTime, 0, 8)"/>
+                  <xsl:value-of select="substring($date, 0, 8)"/>
                 </xsl:element>
               </xsl:when>
               <xsl:otherwise>
@@ -526,6 +527,12 @@
                     id="{$thesaurusId}"
                     uri="{$thesaurusUri}"
                     title="{$thesaurusTitle}">
+                <xsl:if test="not(starts-with($thesaurusTitle, 'otherKeywords'))">
+                  <multilingualTitle>
+                    <xsl:copy-of select="gn-fn-index:add-multilingual-field('multilingualTitle',
+                            gmd:thesaurusName/*/gmd:title, $allLanguages, false(), true())"/>
+                  </multilingualTitle>
+                </xsl:if>
               </info>
               <keywords>
                 <xsl:for-each select="$keywords">
@@ -650,6 +657,22 @@
           </xsl:for-each>
         </xsl:for-each>
 
+
+        <xsl:for-each select="gmd:resourceMaintenance/*">
+          <maintenance type="object">{
+            "frequency": "<xsl:value-of select="*:maintenanceAndUpdateFrequency/*/@codeListValue"/>"
+            <xsl:for-each select="gmd:dateOfNextUpdate[*/text() != '']">
+              ,"nextUpdateDate": "<xsl:value-of select="*/text()"/>"
+            </xsl:for-each>
+            <xsl:for-each select="gmd:userDefinedMaintenanceFrequency[*/text() != '']">
+              ,"userDefinedFrequency": "<xsl:value-of select="*/text()"/>"
+            </xsl:for-each>
+            <xsl:for-each select="gmd:maintenanceNote[*/text() != '']">
+              ,"noteObject":
+              <xsl:value-of select="gn-fn-index:add-multilingual-field('maintenanceNote', ., $allLanguages, true())"/>
+            </xsl:for-each>
+          }</maintenance>
+        </xsl:for-each>
 
         <xsl:for-each select="gmd:resourceConstraints/*">
           <xsl:variable name="fieldPrefix" select="local-name()"/>
@@ -1116,8 +1139,7 @@
           <xsl:copy-of select="gn-fn-index:add-multilingual-field('orderingInstructions', ., $allLanguages)"/>
         </xsl:for-each>
 
-        <xsl:for-each select="gmd:transferOptions/*/
-                                gmd:onLine/*[gmd:linkage/gmd:URL != '']">
+        <xsl:for-each select=".//gmd:onLine/*[gmd:linkage/gmd:URL != '']">
 
           <xsl:variable name="transferGroup"
                         select="count(ancestor::gmd:transferOptions/preceding-sibling::gmd:transferOptions)"/>
@@ -1141,7 +1163,7 @@
             <atomfeed><xsl:value-of select="gmd:linkage/gmd:URL"/></atomfeed>
           </xsl:if>
           <link type="object">{
-            "hash": "<xsl:value-of select="digestUtils:md5Hex(string(exslt:node-set(normalize-space(.))))"/>",
+            "hash": "<xsl:value-of select="digestUtils:md5Hex(normalize-space(.))"/>",
             "idx": <xsl:value-of select="position()"/>,
             "protocol":"<xsl:value-of select="util:escapeForJson((gmd:protocol/*/text())[1])"/>",
             "mimeType":"<xsl:value-of select="if (*/gmx:MimeFileType)

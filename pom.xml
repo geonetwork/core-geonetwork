@@ -122,7 +122,7 @@
         </plugin>
         <plugin>
           <artifactId>maven-dependency-plugin</artifactId>
-          <version>3.1.2</version>
+          <version>3.7.0</version>
         </plugin>
         <plugin>
           <artifactId>maven-clean-plugin</artifactId>
@@ -1452,6 +1452,21 @@
           <kb.installer.extension>tar.gz</kb.installer.extension>
       </properties>
     </profile>
+    <profile>
+      <id>macOS_aarch64</id>
+      <activation>
+        <os>
+          <family>mac</family>
+          <arch>aarch64</arch>
+        </os>
+      </activation>
+      <properties>
+        <es.platform>darwin-aarch64</es.platform>
+        <kb.executable>kibana.sh</kb.executable>
+        <kb.platform>darwin-aarch64</kb.platform>
+        <kb.installer.extension>tar.gz</kb.installer.extension>
+      </properties>
+    </profile>
      <profile>
        <id>windows</id>
        <activation>
@@ -1550,7 +1565,7 @@
     <jetty.port>8080</jetty.port>
     <jetty.stop.port>8090</jetty.stop.port>
 
-    <es.version>8.11.3</es.version>
+    <es.version>8.14.0</es.version>
     <es.platform>linux-x86_64</es.platform>
     <es.installer.extension>tar.gz</es.installer.extension>
     <es.protocol>http</es.protocol>

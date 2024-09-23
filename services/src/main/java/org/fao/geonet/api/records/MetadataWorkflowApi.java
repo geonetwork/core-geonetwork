@@ -24,6 +24,8 @@
 package org.fao.geonet.api.records;
 
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -58,6 +60,7 @@ import org.fao.geonet.kernel.search.EsSearchManager;
 import org.fao.geonet.kernel.search.IndexingMode;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
+import org.fao.geonet.languages.FeedbackLanguages;
 import org.fao.geonet.repository.*;
 import org.fao.geonet.util.MetadataPublicationMailNotifier;
 import org.fao.geonet.utils.Log;
@@ -116,6 +119,9 @@ public class MetadataWorkflowApi {
 
     @Autowired
     SettingManager settingManager;
+
+    @Autowired
+    FeedbackLanguages feedbackLanguages;
 
     @Autowired
     DataManager dataManager;
@@ -263,7 +269,7 @@ public class MetadataWorkflowApi {
         ServiceContext context = ApiUtils.createServiceContext(request,
             languageUtils.getIso3langCode(request.getLocales()));
 
-        ResourceBundle messages = ApiUtils.getMessagesResourceBundle(request.getLocales());
+        Locale[] feedbackLocales = feedbackLanguages.getLocales(request.getLocale());
 
         checkWorkflowEnabled();
 
@@ -346,7 +352,7 @@ public class MetadataWorkflowApi {
             metadataIndexer.indexMetadata(listOfUpdatedRecords);
 
             if (notifyByEmail && !metadataListToNotifyPublication.isEmpty()) {
-                metadataPublicationMailNotifier.notifyPublication(messages, context.getLanguage(), metadataListToNotifyPublication);
+                metadataPublicationMailNotifier.notifyPublication(feedbackLocales, metadataListToNotifyPublication);
             }
 
         } catch (Exception exception) {
@@ -457,6 +463,7 @@ public class MetadataWorkflowApi {
         ServiceContext context = ApiUtils.createServiceContext(request,
             languageUtils.getIso3langCode(request.getLocales()));
         ResourceBundle messages = ApiUtils.getMessagesResourceBundle(request.getLocales());
+        Locale[] feedbackLocales = feedbackLanguages.getLocales(request.getLocale());
 
         boolean isMdWorkflowEnable = settingManager.getValueAsBool(Settings.METADATA_WORKFLOW_ENABLE);
         List<MetadataPublicationNotificationInfo> metadataListToNotifyPublication = new ArrayList<>();
@@ -558,7 +565,7 @@ public class MetadataWorkflowApi {
 
             metadataListToNotifyPublication.add(metadataNotificationInfo);
 
-            metadataPublicationMailNotifier.notifyPublication(messages, context.getLanguage(), metadataListToNotifyPublication);
+            metadataPublicationMailNotifier.notifyPublication(feedbackLocales, metadataListToNotifyPublication);
         }
         return statusUpdate;
     }
@@ -571,7 +578,7 @@ public class MetadataWorkflowApi {
         method = RequestMethod.PUT
     )
     @PreAuthorize("hasAuthority('Editor')")
-    @ApiResponses(value = {@ApiResponse(responseCode = "204", description = "Task closed."),
+    @ApiResponses(value = {@ApiResponse(responseCode = "204", description = "Task closed.", content = {@Content(schema = @Schema(hidden = true))}),
         @ApiResponse(responseCode = "404", description = "Status not found."),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)})
     @ResponseStatus(HttpStatus.NO_CONTENT)
@@ -599,7 +606,7 @@ public class MetadataWorkflowApi {
     @io.swagger.v3.oas.annotations.Operation(summary = "Delete a record status", description = "")
     @RequestMapping(value = "/{metadataUuid}/status/{statusId:[0-9]+}.{userId:[0-9]+}.{changeDate}", method = RequestMethod.DELETE)
     @PreAuthorize("hasAuthority('Administrator')")
-    @ApiResponses(value = {@ApiResponse(responseCode = "204", description = "Status removed."),
+    @ApiResponses(value = {@ApiResponse(responseCode = "204", description = "Status removed.", content = {@Content(schema = @Schema(hidden = true))}),
         @ApiResponse(responseCode = "404", description = "Status not found."),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_ADMIN)})
     @ResponseStatus(HttpStatus.NO_CONTENT)
@@ -626,7 +633,7 @@ public class MetadataWorkflowApi {
     @io.swagger.v3.oas.annotations.Operation(summary = "Delete all record status", description = "")
     @RequestMapping(value = "/{metadataUuid}/status", method = RequestMethod.DELETE)
     @PreAuthorize("hasAuthority('Administrator')")
-    @ApiResponses(value = {@ApiResponse(responseCode = "204", description = "Status removed."),
+    @ApiResponses(value = {@ApiResponse(responseCode = "204", description = "Status removed.", content = {@Content(schema = @Schema(hidden = true))}),
         @ApiResponse(responseCode = "404", description = "Status not found."),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_ADMIN)})
     @ResponseStatus(HttpStatus.NO_CONTENT)

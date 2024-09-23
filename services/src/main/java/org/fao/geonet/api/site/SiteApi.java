@@ -26,6 +26,8 @@ package org.fao.geonet.api.site;
 import co.elastic.clients.elasticsearch.core.CountRequest;
 import co.elastic.clients.elasticsearch.core.CountResponse;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -36,17 +38,16 @@ import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.xlink.Processor;
 import org.apache.commons.lang3.StringUtils;
-import org.fao.geonet.ApplicationContextHolder;
-import org.fao.geonet.GeonetContext;
-import org.fao.geonet.NodeInfo;
-import org.fao.geonet.SystemInfo;
+import org.fao.geonet.*;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.OpenApiConfig;
+import org.fao.geonet.api.exception.FeatureNotEnabledException;
 import org.fao.geonet.api.exception.NotAllowedException;
 import org.fao.geonet.api.site.model.SettingSet;
 import org.fao.geonet.api.site.model.SettingsListResponse;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
+import org.fao.geonet.api.users.recaptcha.RecaptchaChecker;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.*;
 import org.fao.geonet.exceptions.OperationAbortedEx;
@@ -68,6 +69,7 @@ import org.fao.geonet.lib.ProxyConfiguration;
 import org.fao.geonet.repository.*;
 import org.fao.geonet.repository.specification.MetadataSpecs;
 import org.fao.geonet.resources.Resources;
+import org.fao.geonet.util.MailUtil;
 import org.fao.geonet.utils.FilePathChecker;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.ProxyInfo;
@@ -77,15 +79,10 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.*;
 
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
@@ -99,19 +96,12 @@ import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.ListIterator;
-import java.util.Map;
-import java.util.Optional;
-import java.util.TimeZone;
+import java.util.*;
 
 import static org.apache.commons.fileupload.util.Streams.checkFileName;
 import static org.fao.geonet.api.ApiParams.API_CLASS_CATALOG_TAG;
 import static org.fao.geonet.constants.Geonet.Path.IMPORT_STYLESHEETS_SCHEMA_PREFIX;
+import static org.fao.geonet.kernel.setting.Settings.SYSTEM_FEEDBACK_EMAIL;
 
 /**
  *
@@ -198,7 +188,7 @@ public class SiteApi {
     @ResponseBody
     public SettingsListResponse getSiteOrPortalDescription(
         @Parameter(hidden = true)
-            HttpServletRequest request
+        HttpServletRequest request
     ) throws Exception {
         SettingsListResponse response = new SettingsListResponse();
         response.setSettings(settingManager.getSettings(new String[]{
@@ -264,7 +254,7 @@ public class SiteApi {
         @RequestParam(
             required = false
         )
-            SettingSet[] set,
+        SettingSet[] set,
         @Parameter(
             description = "Setting key",
             required = false
@@ -272,11 +262,11 @@ public class SiteApi {
         @RequestParam(
             required = false
         )
-            String[] key,
+        String[] key,
         @Parameter(
             hidden = true
         )
-            HttpSession httpSession
+        HttpSession httpSession
     ) throws Exception {
         ConfigurableApplicationContext appContext = ApplicationContextHolder.get();
         UserSession session = ApiUtils.getUserSession(httpSession);
@@ -350,7 +340,7 @@ public class SiteApi {
         @RequestParam(
             required = false
         )
-            SettingSet[] set,
+        SettingSet[] set,
         @Parameter(
             description = "Setting key",
             required = false
@@ -358,9 +348,9 @@ public class SiteApi {
         @RequestParam(
             required = false
         )
-            String[] key,
+        String[] key,
         @Parameter(hidden = true)
-            HttpSession httpSession
+        HttpSession httpSession
     ) throws Exception {
         UserSession session = ApiUtils.getUserSession(httpSession);
         Profile profile = session == null ? null : session.getProfile();
@@ -406,13 +396,13 @@ public class SiteApi {
     @PreAuthorize("hasAuthority('Administrator')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "204", description = "Settings saved."),
+        @ApiResponse(responseCode = "204", description = "Settings saved.", content = {@Content(schema = @Schema(hidden = true))}),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_ADMIN)
     })
     public void saveSettings(
         @Parameter(hidden = false)
         @RequestParam
-            Map<String, String> allRequestParams,
+        Map<String, String> allRequestParams,
         HttpServletRequest request
     ) throws Exception {
         ApplicationContext applicationContext = ApplicationContextHolder.get();
@@ -447,7 +437,7 @@ public class SiteApi {
         // Update the system default timezone. If the setting is blank use the timezone user.timezone property from command line or
         // TZ environment variable
         String zoneId = StringUtils.defaultIfBlank(settingManager.getValue(Settings.SYSTEM_SERVER_TIMEZONE, true),
-                SettingManager.DEFAULT_SERVER_TIMEZONE.getId());
+            SettingManager.DEFAULT_SERVER_TIMEZONE.getId());
         TimeZone.setDefault(TimeZone.getTimeZone(zoneId));
 
 
@@ -525,13 +515,13 @@ public class SiteApi {
         method = RequestMethod.PUT)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "204", description = "Staging profile saved."),
+        @ApiResponse(responseCode = "204", description = "Staging profile saved.", content = {@Content(schema = @Schema(hidden = true))}),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_ADMIN)
     })
     @PreAuthorize("hasAuthority('Administrator')")
     public void updateStagingProfile(
         @PathVariable
-            SystemInfo.Staging profile) {
+        SystemInfo.Staging profile) {
         this.info.setStagingProfile(profile.toString());
     }
 
@@ -579,22 +569,22 @@ public class SiteApi {
         @Parameter(description = "Drop and recreate index",
             required = false)
         @RequestParam(required = false, defaultValue = "true")
-            boolean reset,
+        boolean reset,
         @Parameter(description = "Asynchronous mode (only on all records. ie. no selection bucket)",
             required = false)
         @RequestParam(required = false, defaultValue = "false")
-            boolean asynchronous,
+        boolean asynchronous,
         @Parameter(description = "Index. By default only remove record index.",
             required = false)
         @RequestParam(required = false, defaultValue = "records")
-            String[] indices,
+        String[] indices,
         @Parameter(
             description = ApiParams.API_PARAM_BUCKET_NAME,
             required = false)
         @RequestParam(
             required = false
         )
-            String bucket,
+        String bucket,
         HttpServletRequest request
     ) throws Exception {
         ServiceContext context = ApiUtils.createServiceContext(request);
@@ -770,13 +760,13 @@ public class SiteApi {
     @PreAuthorize("hasAuthority('Administrator')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "204", description = "Logo set."),
+        @ApiResponse(responseCode = "204", description = "Logo set.", content = {@Content(schema = @Schema(hidden = true))}),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_USER_ADMIN)
     })
     public void setLogo(
         @Parameter(description = "Logo to use for the catalog")
         @RequestParam("file")
-            String file,
+        String file,
         @Parameter(
             description = "Create favicon too",
             required = false
@@ -785,7 +775,7 @@ public class SiteApi {
             defaultValue = "false",
             required = false
         )
-            boolean asFavicon,
+        boolean asFavicon,
         HttpServletRequest request
 
     ) throws Exception {
@@ -897,5 +887,78 @@ public class SiteApi {
             }
             return list;
         }
+    }
+
+
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Send an email to catalogue administrator with feedback about the application",
+        description = "")
+    @PostMapping(
+        value = "/userfeedback",
+        produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseBody
+    public ResponseEntity<String> sendApplicationUserFeedback(
+        @Parameter(
+            description = "Recaptcha validation key."
+        )
+        @RequestParam(required = false, defaultValue = "") final String recaptcha,
+        @Parameter(
+            description = "User name.",
+            required = true
+        )
+        @RequestParam final String name,
+        @Parameter(
+            description = "User organisation.",
+            required = true
+        )
+        @RequestParam final String org,
+        @Parameter(
+            description = "User email address.",
+            required = true
+        )
+        @RequestParam final String email,
+        @Parameter(
+            description = "A comment or question.",
+            required = true
+        )
+        @RequestParam final String comments,
+        @Parameter(hidden = true) final HttpServletRequest request
+    ) throws Exception {
+        Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
+        ResourceBundle messages = ResourceBundle.getBundle("org.fao.geonet.api.Messages", locale);
+
+        boolean feedbackEnabled = settingManager.getValueAsBool(Settings.SYSTEM_USERFEEDBACK_ENABLE, false);
+        if (!feedbackEnabled) {
+            throw new FeatureNotEnabledException(
+                "Application feedback is not enabled.")
+                .withMessageKey("exception.resourceNotEnabled.applicationFeedback")
+                .withDescriptionKey("exception.resourceNotEnabled.applicationFeedback.description");
+        }
+
+        boolean recaptchaEnabled = settingManager.getValueAsBool(Settings.SYSTEM_USERSELFREGISTRATION_RECAPTCHA_ENABLE);
+
+        if (recaptchaEnabled) {
+            boolean validRecaptcha = RecaptchaChecker.verify(recaptcha,
+                settingManager.getValue(Settings.SYSTEM_USERSELFREGISTRATION_RECAPTCHA_SECRETKEY));
+            if (!validRecaptcha) {
+                return new ResponseEntity<>(
+                    messages.getString("recaptcha_not_valid"), HttpStatus.PRECONDITION_FAILED);
+            }
+        }
+
+        String to = settingManager.getValue(SYSTEM_FEEDBACK_EMAIL);
+
+        Set<String> toAddress = new HashSet<>();
+        toAddress.add(to);
+
+        MailUtil.sendMail(new ArrayList<>(toAddress),
+            messages.getString("site_user_feedback_title"),
+            String.format(
+                messages.getString("site_user_feedback_text"),
+                name, email, org, comments),
+            settingManager);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 }

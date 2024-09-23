@@ -1143,45 +1143,35 @@
       return {
         copy: function (toCopy) {
           var deferred = $q.defer();
-          navigator.permissions.query({ name: "clipboard-write" }).then(
-            function (result) {
-              if (result.state == "granted" || result.state == "prompt") {
-                navigator.clipboard.writeText(toCopy).then(
-                  function () {
-                    deferred.resolve();
-                  },
-                  function (r) {
-                    console.warn(r);
-                    deferred.reject();
-                  }
-                );
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(toCopy).then(
+              function () {
+                deferred.resolve();
+              },
+              function (r) {
+                console.warn(r);
+                deferred.reject();
               }
-            },
-            function () {
-              deferred.reject();
-            }
-          );
+            );
+          } else {
+            deferred.reject();
+          }
           return deferred.promise;
         },
         paste: function () {
           var deferred = $q.defer();
-          navigator.permissions.query({ name: "clipboard-read" }).then(
-            function (result) {
-              if (result.state == "granted" || result.state == "prompt") {
-                navigator.clipboard.readText().then(
-                  function (text) {
-                    deferred.resolve(text);
-                  },
-                  function () {
-                    deferred.reject();
-                  }
-                );
+          if (navigator.clipboard && navigator.clipboard.readText) {
+            navigator.clipboard.readText().then(
+              function (text) {
+                deferred.resolve(text);
+              },
+              function () {
+                deferred.reject();
               }
-            },
-            function () {
-              deferred.reject();
-            }
-          );
+            );
+          } else {
+            deferred.reject();
+          }
           return deferred.promise;
         }
       };
@@ -1614,7 +1604,22 @@
       };
     }
   ]);
-
+  /**
+   * @ngdoc directive
+   *
+   * @description
+   * Directive to include a template and replace the element with its content.
+   * ng-include always append the content.
+   */
+  module.directive("gnIncludeAndReplace", function () {
+    return {
+      require: "ngInclude",
+      restrict: "A",
+      link: function (scope, el, attrs) {
+        el.replaceWith(el.children());
+      }
+    };
+  });
   /**
    * @ngdoc directive
    * @name gn_utility.directive:gnAutogrow
@@ -2407,6 +2412,69 @@
       };
     }
   ]);
+
+  /**
+   * Compute a translated status label for an associated record
+   * based on initiative type and association type.
+   *
+   * If association type is crossReference,
+   * then "Cross reference" is used as a label in english.
+   * If an initiative type is provided eg. study,
+   * then "Cross reference (Study)" is returned
+   * If a custom translation is set in the translation file,
+   * eg. "crossReference-study": "Publication"
+   * then "Publication" is returned.
+   */
+  module.filter("getAssociatedRecordLabel", [
+    "$translate",
+    function ($translate) {
+      return function (associationType, initiativeType) {
+        if (!associationType) {
+          return;
+        }
+        var translationKey = associationType + "-" + initiativeType;
+        var translation = $translate.instant(translationKey);
+        if (translationKey === translation) {
+          return (
+            $translate.instant(associationType) +
+            (initiativeType ? " (" + $translate.instant(initiativeType) + ")" : "")
+          );
+        } else {
+          return translation;
+        }
+      };
+    }
+  ]);
+
+  module.directive("gnAssociatedRecordLabel", [
+    "$translate",
+    function ($translate) {
+      return {
+        restrict: "A",
+        scope: {
+          type: "=gnAssociatedRecordLabel"
+        },
+        templateUrl:
+          "../../catalog/components/utility/partials/associated-record-label.html",
+        link: function (scope) {
+          function updateCustomLabel(n, o) {
+            var translationKey =
+              scope.type.associationType + "-" + scope.type.initiativeType;
+            var translation = $translate.instant(translationKey);
+            if (translationKey !== translation) {
+              scope.customLabel = translation;
+            } else {
+              scope.customLabel = undefined;
+            }
+          }
+          scope.icon = "fa-puzzle-piece";
+          scope.$watch("type.associationType", updateCustomLabel);
+          scope.$watch("type.initiativeType", updateCustomLabel);
+        }
+      };
+    }
+  ]);
+
   /**
    * Append size parameter to request a smaller thumbnail.
    */

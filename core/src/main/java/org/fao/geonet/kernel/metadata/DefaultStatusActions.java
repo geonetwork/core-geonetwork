@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2023 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2024 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -38,15 +38,22 @@ import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.*;
 import org.fao.geonet.repository.specification.GroupSpecs;
+import org.fao.geonet.util.LocalizedEmail;
+import org.fao.geonet.util.LocalizedEmailParameter;
+import org.fao.geonet.util.LocalizedEmailComponent;
+import org.fao.geonet.languages.FeedbackLanguages;
 import org.fao.geonet.util.MailUtil;
 import org.fao.geonet.utils.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 
-import java.text.MessageFormat;
 import java.util.*;
 
 import static org.fao.geonet.kernel.setting.Settings.SYSTEM_FEEDBACK_EMAIL;
+import static org.fao.geonet.util.LocalizedEmailComponent.ComponentType.*;
+import static org.fao.geonet.util.LocalizedEmailComponent.KeyType;
+import static org.fao.geonet.util.LocalizedEmailComponent.ReplacementType.*;
+import static org.fao.geonet.util.LocalizedEmailParameter.ParameterType;
 
 public class DefaultStatusActions implements StatusActions {
 
@@ -240,34 +247,13 @@ public class DefaultStatusActions implements StatusActions {
             return;
         }
 
-        ResourceBundle messages = ResourceBundle.getBundle("org.fao.geonet.api.Messages", new Locale(this.language));
+        ApplicationContext applicationContext = ApplicationContextHolder.get();
+        FeedbackLanguages feedbackLanguages = applicationContext.getBean(FeedbackLanguages.class);
 
-        String translatedStatusName = getTranslatedStatusName(status.getStatusValue().getId());
-        // TODO: Refactor to allow custom messages based on the type of status
-        String subjectTemplate = "";
-        try {
-            subjectTemplate = messages
-                .getString("status_change_" + status.getStatusValue().getName() + "_email_subject");
-        } catch (MissingResourceException e) {
-            subjectTemplate = messages.getString("status_change_default_email_subject");
-        }
-        String subject = MessageFormat.format(subjectTemplate, siteName, translatedStatusName, replyToDescr // Author of the change
-        );
+        Locale[] feedbackLocales = feedbackLanguages.getLocales(new Locale(this.language));
 
         Set<Integer> listOfId = new HashSet<>(1);
         listOfId.add(status.getMetadataId());
-
-        String textTemplate = "";
-        try {
-            textTemplate = messages.getString("status_change_" + status.getStatusValue().getName() + "_email_text");
-        } catch (MissingResourceException e) {
-            textTemplate = messages.getString("status_change_default_email_text");
-        }
-
-        // Replace link in message
-        ApplicationContext applicationContext = ApplicationContextHolder.get();
-        SettingManager sm = applicationContext.getBean(SettingManager.class);
-        textTemplate = textTemplate.replace("{{link}}", sm.getNodeURL()+ "api/records/'{{'index:uuid'}}'");
 
         UserRepository userRepository = context.getBean(UserRepository.class);
         User owner = userRepository.findById(status.getOwner()).orElse(null);
@@ -275,26 +261,92 @@ public class DefaultStatusActions implements StatusActions {
         IMetadataUtils metadataRepository = ApplicationContextHolder.get().getBean(IMetadataUtils.class);
         AbstractMetadata metadata = metadataRepository.findOne(status.getMetadataId());
 
-        String metadataUrl = metadataUtils.getDefaultUrl(metadata.getUuid(), this.language);
+        String subjectTemplateKey = "";
+        String textTemplateKey = "";
+        boolean failedToFindASpecificSubjectTemplate = false;
+        boolean failedToFindASpecificTextTemplate = false;
 
-        String message = MessageFormat.format(textTemplate, replyToDescr, // Author of the change
-            status.getChangeMessage(), translatedStatusName, status.getChangeDate(), status.getDueDate(),
-            status.getCloseDate(),
-            owner == null ? "" : Joiner.on(" ").skipNulls().join(owner.getName(), owner.getSurname()),
-            metadataUrl);
+        for (Locale feedbackLocale: feedbackLocales) {
+            ResourceBundle resourceBundle = ResourceBundle.getBundle("org.fao.geonet.api.Messages", feedbackLocale);
 
-
-        subject = MailUtil.compileMessageWithIndexFields(subject, metadata.getUuid(), this.language);
-        message = MailUtil.compileMessageWithIndexFields(message, metadata.getUuid(), this.language);
-        for (User user : userToNotify) {
-            String salutation = Joiner.on(" ").skipNulls().join(user.getName(), user.getSurname());
-            //If we have a salutation then end it with a ","
-            if (StringUtils.isEmpty(salutation)) {
-                salutation = "";
-            } else {
-                salutation += ",\n\n";
+            if (!failedToFindASpecificSubjectTemplate) {
+                try {
+                    subjectTemplateKey = "status_change_" + status.getStatusValue().getName() + "_email_subject";
+                    resourceBundle.getString(subjectTemplateKey);
+                } catch (MissingResourceException e) {
+                    failedToFindASpecificSubjectTemplate = true;
+                }
             }
-            sendEmail(user.getEmail(), subject, salutation + message);
+
+            if (!failedToFindASpecificTextTemplate) {
+                try {
+                    textTemplateKey = "status_change_" + status.getStatusValue().getName() + "_email_text";
+                    resourceBundle.getString(textTemplateKey);
+                } catch (MissingResourceException e) {
+                    failedToFindASpecificTextTemplate = true;
+                }
+            }
+
+            if ((failedToFindASpecificSubjectTemplate) && (failedToFindASpecificTextTemplate)) break;
+        }
+
+        if (failedToFindASpecificSubjectTemplate) {
+            subjectTemplateKey = "status_change_default_email_subject";
+        }
+
+        if (failedToFindASpecificTextTemplate) {
+            textTemplateKey = "status_change_default_email_text";
+        }
+
+        LocalizedEmailComponent emailSubjectComponent = new LocalizedEmailComponent(SUBJECT, subjectTemplateKey, KeyType.MESSAGE_KEY, NUMERIC_FORMAT);
+        emailSubjectComponent.enableCompileWithIndexFields(metadata.getUuid());
+
+        LocalizedEmailComponent emailMessageComponent = new LocalizedEmailComponent(MESSAGE, textTemplateKey, KeyType.MESSAGE_KEY, NUMERIC_FORMAT);
+        emailMessageComponent.enableCompileWithIndexFields(metadata.getUuid());
+        emailMessageComponent.enableReplaceLinks(false);
+
+        LocalizedEmailComponent emailSalutationComponent = new LocalizedEmailComponent(SALUTATION, "{{userName}},\n\n", KeyType.RAW_VALUE, NONE);
+
+        for (Locale feedbackLocale : feedbackLocales) {
+            // TODO: Refactor to allow custom messages based on the type of status
+
+            emailSubjectComponent.addParameters(
+                feedbackLocale,
+                new LocalizedEmailParameter(ParameterType.RAW_VALUE, 1, siteName),
+                new LocalizedEmailParameter(ParameterType.RAW_VALUE, 2, getTranslatedStatusName(status.getStatusValue().getId(), feedbackLocale)),
+                new LocalizedEmailParameter(ParameterType.RAW_VALUE, 3, replyToDescr)
+            );
+
+            emailMessageComponent.addParameters(
+                feedbackLocale,
+                new LocalizedEmailParameter(ParameterType.RAW_VALUE, 1, replyToDescr),
+                new LocalizedEmailParameter(ParameterType.RAW_VALUE, 2, status.getChangeMessage()),
+                new LocalizedEmailParameter(ParameterType.RAW_VALUE, 3, getTranslatedStatusName(status.getStatusValue().getId(), feedbackLocale)),
+                new LocalizedEmailParameter(ParameterType.RAW_VALUE, 4, status.getChangeDate()),
+                new LocalizedEmailParameter(ParameterType.RAW_VALUE, 5, status.getDueDate()),
+                new LocalizedEmailParameter(ParameterType.RAW_VALUE, 6, status.getCloseDate()),
+                new LocalizedEmailParameter(ParameterType.RAW_VALUE, 7, owner == null ? "" : Joiner.on(" ").skipNulls().join(owner.getName(), owner.getSurname())),
+                new LocalizedEmailParameter(ParameterType.RAW_VALUE, 8, metadataUtils.getDefaultUrl(metadata.getUuid(), feedbackLocale.getISO3Language()))
+            );
+        }
+
+        LocalizedEmail localizedEmail = new LocalizedEmail(false);
+        localizedEmail.addComponents(emailSubjectComponent, emailMessageComponent, emailSalutationComponent);
+
+        String subject = localizedEmail.getParsedSubject(feedbackLocales);
+
+        for (User user : userToNotify) {
+            String userName = Joiner.on(" ").skipNulls().join(user.getName(), user.getSurname());
+            //If we have a userName add the salutation
+            String message;
+            if (StringUtils.isEmpty(userName)) {
+                message = localizedEmail.getParsedMessage(feedbackLocales);
+            } else {
+                Map<String, String> replacements = new HashMap<>();
+                replacements.put("{{userName}}", userName);
+                message = localizedEmail.getParsedMessage(feedbackLocales, replacements);
+            }
+            sendEmail(user.getEmail(), subject, message);
         }
     }
 
@@ -317,6 +369,25 @@ public class DefaultStatusActions implements StatusActions {
                 return new ArrayList<>();
         }
 
+        // If status is DRAFT and previous status is SUBMITTED, which means either:
+        //   - a cancel working copy (from editor) --> should be notified the reviewer.
+        //   - rejection (from reviewer) --> should be notified the editor.
+        // and the notification level is recordUserAuthor or recordProfileReviewer,
+        // then adjust the notification level, depending on the user role
+        if ((status.getStatusValue().getId() == Integer.parseInt(StatusValue.Status.DRAFT)) &&
+            (!StringUtils.isEmpty(status.getPreviousState()) &&
+                (status.getPreviousState().equals(StatusValue.Status.SUBMITTED))) &&
+            (notificationLevel.equals(StatusValueNotificationLevel.recordUserAuthor) || (notificationLevel.equals(StatusValueNotificationLevel.recordProfileReviewer)))) {
+            UserRepository userRepository = ApplicationContextHolder.get().getBean(UserRepository.class);
+            Optional<User> user = userRepository.findById(status.getUserId());
+            if (user.isPresent()) {
+                if (user.get().getProfile() == Profile.Editor) {
+                    notificationLevel = StatusValueNotificationLevel.recordProfileReviewer;
+                } else {
+                    notificationLevel = StatusValueNotificationLevel.recordUserAuthor;
+                }
+            }
+        }
         // TODO: Status does not provide batch update
         // So taking care of one record at a time.
         // Currently the code could notify a mix of reviewers
@@ -408,14 +479,14 @@ public class DefaultStatusActions implements StatusActions {
         }
     }
 
-    private String getTranslatedStatusName(int statusValueId) {
+    private String getTranslatedStatusName(int statusValueId, Locale locale) {
         String translatedStatusName = "";
         StatusValue s = statusValueRepository.findOneById(statusValueId);
         if (s == null) {
             translatedStatusName = statusValueId
                 + " (Status not found in database translation table. Check the content of the StatusValueDes table.)";
         } else {
-            translatedStatusName = s.getLabel(this.language);
+            translatedStatusName = s.getLabel(locale.getISO3Language());
         }
         return translatedStatusName;
     }

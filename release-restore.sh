@@ -33,6 +33,13 @@ currentversion=${projectVersion}
 previousversion=${previousVersionNumber}
 nextversion=${nextVersionNumber}-SNAPSHOT
 
+
+echo "Update version number to ${nextversion} (from ${newversion})."
+echo ""
+echo "After update. Push changes to Git branch ${gitBranch}."
+read -p "Press enter to continue"
+
+
 # Set version number to SNAPSHOT
 ./update-version.sh $newversion $nextversion
 
