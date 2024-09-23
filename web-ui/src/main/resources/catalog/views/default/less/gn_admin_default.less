@@ -515,6 +515,16 @@ ul.gn-resultview li.list-group-item {
         margin-bottom: 10px;
         border-color: #ccc;
       }
+      .col-lg-4, .col-md-6 {
+        @media (max-width: @screen-sm-max) {
+          padding-right: 0 !important;
+        }
+      }
+      .col-md-12, #gn-uiconfig-customize {
+        padding-right: 0 !important;
+        margin-bottom: @gn-spacing;
+      }
+
       // checkbox (Bootstrap 5.2)
       input[type="checkbox"],
       input[type="radio"] {
@@ -656,7 +666,16 @@ ul.gn-resultview li.list-group-item {
         z-index: 901;
       }
       #gn-uiconfig-customize {
-        margin-top: -85px;
+
+        @media (max-width: @screen-md-max) {
+          padding-left: 0 !important;
+        }
+
+        @media (min-width: @screen-lg-min) {
+          margin-top: -85px;
+        }
+
+
         .dropdown-menu {
           padding: 0 !important;
           li {
