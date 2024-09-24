@@ -63,12 +63,11 @@
     data-ng-show="ctrl.currentTable == table"
     ng-repeat="table in ctrl.tables"
   >
-    <div class="pull-left">
-      <strong>
-        <span>{{table.name}}</span>&nbsp; {{table.loader.getCount()}}
-        <span data-translate="">features</span>
-      </strong>
-    </div>
+<!--    <div class="pull-left">-->
+      <h4>
+        <span>{{table.name}}</span>
+      </h4>
+<!--    </div>-->
     <gn-features-table
       gn-features-table-loader="table.loader"
       gn-features-table-loader-map="ctrl.map"
