@@ -122,7 +122,7 @@ public class DoiServerDatabaseMigration extends DatabaseMigrationTask {
 
 
                 try (PreparedStatement delete = connection.prepareStatement(
-                    "DELETE FROM Settings WHERE name LIKE 'system/publication/doi%'")
+                    "DELETE FROM Settings WHERE name LIKE 'system/publication/doi%' and name != 'system/publication/doi/doienabled'")
                 ) {
                     delete.execute();
                 } catch (java.sql.BatchUpdateException e) {
