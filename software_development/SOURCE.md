@@ -15,8 +15,6 @@ cd core-geonetwork
 mvn clean install -DskipTests
 ```
 
-If you are using Windows and want to run unit tests, consider cloning the repo into the WSL as described in the [Testing Documentation](TESTING.md)
-
 ## Submodules
 
 GeoNetwork use submodules, these were initialized by the ``--recursive`` option when cloning the repository.

@@ -5,14 +5,11 @@ JetBrains provide the IntelliJ IDE, a community edition is available [here](http
 This IDE is recommended for excellent Maven integration, and very fast build times. 
 It is especially good at working with large multi-module projects such as GeoNetwork.
 
-If you are running on Windows, it might make sense to set up the project in the WSL to run unit tests.
-See the [Testing Documentation](TESTING.md) for more details.
-
 ## Setting up
 
 1. Open project in IntelliJ, it will create an `.idea` folder (which is covered by `.gitignore`)
 
-2. Use *File* > *Project Structure* to confirm Java 11 is used. If you have cloned the Repo in the WSL filesystem, make sure the WSL version is selected
+2. Use *File* > *Project Structure* to confirm Java 11 is used.
 
 3. Configuration to make *Maven* tools window easier to follow:
 
