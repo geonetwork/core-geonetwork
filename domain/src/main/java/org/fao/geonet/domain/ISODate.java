@@ -40,6 +40,7 @@ import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
+import java.util.regex.Pattern;
 
 /**
  * Represents a date at a given time. Provides methods for representing the date as a string and
@@ -52,6 +53,7 @@ public class ISODate implements Cloneable, Comparable<ISODate>, Serializable, Xm
     @XmlTransient public static final DateTimeFormatter YEAR_MONTH_DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM");
     @XmlTransient public static final DateTimeFormatter YEAR_DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy");
     @XmlTransient public static final DateTimeFormatter YEAR_MONTH_DAYS_DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    @XmlTransient private static final Pattern SIMPLE_SPLIT_PATTERN = Pattern.compile("[-/]");
 
     /**
      * {@code true} if the format is {@code yyyy-mm-dd}.
@@ -370,7 +372,7 @@ public class ISODate implements Cloneable, Comparable<ISODate>, Serializable, Xm
 
     private void parseDate(@Nonnull String isoDate) {
         try {
-            String[] parts = isoDate.split("[-/]");
+            String[] parts = SIMPLE_SPLIT_PATTERN.split(isoDate);
             if ((parts.length == 0) || (parts.length > 3)) {
                 throw new IllegalArgumentException("Invalid ISO date: " + isoDate);
             }
