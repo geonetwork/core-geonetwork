@@ -34,7 +34,7 @@ public class TemplatesUriLocator implements UriLocator {
             final String realPath;
             final String path = uri.substring(URI_PREFIX.length()).replace('\\', '/');
             final ServletContext servletContext = Context.get().getServletContext();
-             if (servletContext != null) {
+            if (servletContext != null) {
                 realPath = servletContext.getRealPath(path);
             } else {
                 realPath = path;
