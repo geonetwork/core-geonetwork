@@ -261,8 +261,8 @@
         templateUrl:
           "../../catalog/components/thesaurus/" + "partials/keywordselector.html",
         link: function (scope, element, attrs) {
-          $compile(element.contents())(scope);
-          // pick up skos browser directive with compiler
+          scope.gnCurrentEdit = gnCurrentEdit;
+          scope.schema = gnCurrentEdit.schema;
 
           scope.max = gnThesaurusService.DEFAULT_NUMBER_OF_RESULTS;
           scope.filter = null;
