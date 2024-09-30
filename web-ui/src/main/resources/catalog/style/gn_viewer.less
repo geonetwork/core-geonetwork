@@ -265,9 +265,6 @@
     }
     li[gn-layermanager-item] {
       .fa-arrows-alt,
-      .gn-layer-ordering {
-        visibility: hidden;
-      }
       input[type="radio"],
       input[type="checkbox"] {
         margin-top: 6px;
@@ -310,6 +307,44 @@
         }
       }
     }
+    .dropdown-left {
+
+      @toggleWidth: 32px;
+      @toggleHeight: 32px;
+
+      .dropdown-toggle {
+        width: @toggleWidth;
+        padding: 5px;
+      }
+      .dropdown-menu {
+        min-width: calc(~"(3 * @{toggleWidth}) + 6px") !important;
+        width: auto;
+        padding: 0;
+        margin: 0;
+        right: @toggleWidth;
+        top: 0;
+        box-shadow: none;
+        border: 0;
+        li {
+          float: left;
+          .btn {
+            width: @toggleWidth;
+            height: @toggleHeight;
+            padding: 5px;
+            margin-right: 2px;
+            border-radius: 3px !important;
+            &[disabled] {
+              color: @btn-link-disabled-color;
+              border-color: @input-bg-disabled;
+            }
+          }
+        }
+
+      }
+
+
+    }
+
     .gn-searchlayer-list {
       margin: 0;
       padding: 0;
@@ -347,8 +382,7 @@
       min-height: 42px;
       &:hover,
       &:focus {
-        .fa-arrows-alt,
-        .gn-layer-ordering {
+        .fa-arrows-alt {
           visibility: visible;
         }
       }
@@ -357,8 +391,7 @@
         margin-bottom: 0;
       }
       &:focus-within {
-        .fa-arrows-alt,
-        .gn-layer-ordering {
+        .fa-arrows-alt {
           visibility: visible;
         }
       }
@@ -438,28 +471,6 @@
       .list-group-item.gn-layer-active {
         background-color: @gray-lighter;
         border-color: @list-group-border;
-      }
-      .gn-layer-ordering {
-        margin-right: -10px;
-        position: absolute;
-        right: 15px;
-        .fa {
-          padding: 0 8px;
-        }
-        &.btn-group-xs {
-          .btn {
-            white-space: nowrap;
-            padding: 4px;
-            opacity: 1;
-            &[disabled] {
-              color: @btn-link-disabled-color;
-              border-color: @input-bg-disabled;
-            }
-            .caret {
-              margin-right: 3px;
-            }
-          }
-        }
       }
       .dropdown {
         .dropdown-menu {
