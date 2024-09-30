@@ -9,12 +9,14 @@
                 xmlns:mri="http://standards.iso.org/iso/19115/-3/mri/1.0"
                 xmlns:cit="http://standards.iso.org/iso/19115/-3/cit/2.0"
                 xmlns:gcx="http://standards.iso.org/iso/19115/-3/gcx/1.0"
+                xmlns:mco="http://standards.iso.org/iso/19115/-3/mco/1.0"
                 xmlns:mmi="http://standards.iso.org/iso/19115/-3/mmi/1.0"
                 xmlns:mrl="http://standards.iso.org/iso/19115/-3/mrl/2.0"
                 xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
                 xmlns:skos="http://www.w3.org/2004/02/skos/core#"
                 xmlns:dcat="http://www.w3.org/ns/dcat#"
                 xmlns:adms="http://www.w3.org/ns/adms#"
+                xmlns:dcatap="http://data.europa.eu/r5r/"
                 xmlns:dct="http://purl.org/dc/terms/"
                 exclude-result-prefixes="#all">
 
@@ -206,6 +208,34 @@
         </xsl:if>
       </rdf:Description>
     </adms:identifier>
+  </xsl:template>
+
+
+
+  <!--
+  applicable legislation	Legal Resource	0..*	The legislation that mandates the creation or management of the Dataset.
+  -->
+  <xsl:template mode="iso19115-3-to-dcat"
+                match="mri:descriptiveKeywords/*/mri:keyword[starts-with(*/@xlink:href, 'http://data.europa.eu/eli')]"
+                priority="20">
+    <dcatap:applicableLegislation rdf:resource="{*/@xlink:href}"/>
+  </xsl:template>
+
+  <xsl:template mode="iso19115-3-to-dcat"
+                match="mri:resourceConstraints/mco:MD_LegalConstraints/mco:reference">
+    <xsl:variable name="href"
+                  select="*/cit:title/*/@xlink:href"/>
+    <xsl:if test="$href">
+      <dcatap:applicableLegislation rdf:resource="{$href}">
+        <!--<eli:LegalResource>
+          <xsl:for-each select="*/cit:title">
+            <xsl:call-template name="rdf-localised">
+              <xsl:with-param name="nodeName" select="'dct:title'"/>
+            </xsl:call-template>
+          </xsl:for-each>
+        </eli:LegalResource>-->
+      </dcatap:applicableLegislation>
+    </xsl:if>
   </xsl:template>
 
 

@@ -5,9 +5,9 @@
                 xmlns:mri="http://standards.iso.org/iso/19115/-3/mri/1.0"
                 xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0"
                 xmlns:gcx="http://standards.iso.org/iso/19115/-3/gcx/1.0"
-                xmlns:xlink="http://www.w3.org/1999/xlink"
                 xmlns:dcat="http://www.w3.org/ns/dcat#"
                 xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+                xmlns:xlink="http://www.w3.org/1999/xlink"
                 exclude-result-prefixes="#all">
 
   <!--

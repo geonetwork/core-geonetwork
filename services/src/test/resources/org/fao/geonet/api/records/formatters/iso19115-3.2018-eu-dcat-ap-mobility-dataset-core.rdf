@@ -359,11 +359,7 @@
       </dcat:theme>
       <dcat:keyword xml:lang="fre">Mobilité</dcat:keyword>
       <dcat:keyword xml:lang="fre">Observation de la terre et environnement</dcat:keyword>
-      <dcat:theme>
-         <skos:Concept rdf:about="http://data.europa.eu/eli/reg/2014/1143/oj">
-            <skos:prefLabel xml:lang="fre">1143/2014</skos:prefLabel>
-         </skos:Concept>
-      </dcat:theme>
+      <dcatap:applicableLegislation rdf:resource="http://data.europa.eu/eli/reg/2014/1143/oj"/>
       <dct:accessRights>
          <dct:RightsStatement rdf:about="http://inspire.ec.europa.eu/metadata-codelist/LimitationsOnPublicAccess/noLimitations"/>
       </dct:accessRights>

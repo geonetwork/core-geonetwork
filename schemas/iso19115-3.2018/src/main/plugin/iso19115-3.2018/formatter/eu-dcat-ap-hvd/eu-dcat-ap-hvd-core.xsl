@@ -19,15 +19,8 @@
   <xsl:variable name="hvdCategoryThesaurusKey"
                 select="'http://data.europa.eu/bna/asd487ae75'"/>
 
-  <xsl:variable name="hvdApplicableLegislationThesaurusKey"
-                select="'http://data.europa.eu/r5r/applicableLegislation'"/>
-
   <xsl:variable name="euHvdDataCategories"
                 select="document('vocabularies/high-value-dataset-category.rdf')"/>
-
-  <xsl:variable name="euHvdApplicableLegislation"
-                select="document('vocabularies/high-value-dataset-applicable-legislation.rdf')"/>
-
 
   <xsl:template mode="iso19115-3-to-dcat-resource"
                 match="mdb:MD_Metadata">
@@ -93,53 +86,16 @@
 
 
   <!--
-  applicable legislation	Legal Resource	1..*	The legislation that mandates the creation or management of the Data Service.	For HVD the value MUST include the ELI http://data.europa.eu/eli/reg_impl/2023/138/oj.
-  As multiple legislations may apply to the resource the maximum cardinality is not limited.		P
+  applicable legislation	Legal Resource	1..*	The legislation that mandates the creation or management of the Data Service.
+  **For HVD the value MUST include the ELI http://data.europa.eu/eli/reg_impl/2023/138/oj.**
+  As multiple legislations may apply to the resource the maximum cardinality is not limited.
+
+  See DCAT-AP
+  applicable legislation	Legal Resource	0..*	The legislation that mandates the creation or management of the Catalog.
+
+  To create valid HVD document, a keyword anchor or a title href of mri:resourceConstraints/mco:MD_LegalConstraints/mco:reference
+  in the ISO record MUST define the ELI http://data.europa.eu/eli/reg_impl/2023/138/oj.
   -->
-  <xsl:template mode="iso19115-3-to-dcat"
-                match="mri:descriptiveKeywords[*/mri:thesaurusName/*/cit:title/*/@xlink:href = $hvdApplicableLegislationThesaurusKey]">
-    <xsl:for-each select="*/mri:keyword[*/text() != '']">
-
-      <xsl:variable name="legislation"
-                    as="xs:string?"
-                    select="current()/*/text()"/>
-      <xsl:variable name="applicableLegislation"
-                    select="$euHvdApplicableLegislation/rdf:RDF/*[skos:prefLabel/normalize-space() = $legislation]"/>
-      <xsl:if test="$applicableLegislation">
-        <dcatap:applicableLegislation rdf:resource="{$applicableLegislation/@rdf:about}">
-          <!--<eli:LegalResource>
-            <xsl:for-each select="$applicableLegislation/skos:prefLabel[@xml:lang = $languages/@iso2code]">
-              <dct:title xml:lang="{@xml:lang}">
-                <xsl:value-of select="."/>
-              </dct:title>
-            </xsl:for-each>
-            <xsl:for-each select="$applicableLegislation/skos:scopeNote[@xml:lang = $languages/@iso2code]">
-              <dct:description xml:lang="{@xml:lang}">
-                <xsl:value-of select="."/>
-              </dct:description>
-            </xsl:for-each>
-          </eli:LegalResource>-->
-        </dcatap:applicableLegislation>
-      </xsl:if>
-    </xsl:for-each>
-  </xsl:template>
-
-  <xsl:template mode="iso19115-3-to-dcat"
-                match="mri:resourceConstraints/mco:MD_LegalConstraints/mco:reference">
-    <xsl:variable name="href"
-                  select="*/cit:title/*/@xlink:href"/>
-    <xsl:if test="$href">
-      <dcatap:applicableLegislation rdf:resource="{$href}">
-        <!--<eli:LegalResource>
-          <xsl:for-each select="*/cit:title">
-            <xsl:call-template name="rdf-localised">
-              <xsl:with-param name="nodeName" select="'dct:title'"/>
-            </xsl:call-template>
-          </xsl:for-each>
-        </eli:LegalResource>-->
-      </dcatap:applicableLegislation>
-    </xsl:if>
-  </xsl:template>
 
 
   <xsl:template mode="iso19115-3-to-dcat"
