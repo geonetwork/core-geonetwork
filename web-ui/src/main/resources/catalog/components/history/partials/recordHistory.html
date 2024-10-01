@@ -4,7 +4,7 @@
     <span data-translate="">recordHistory</span>
   </div>
   <div class="panel-body">
-    <div class="btn-group">
+    <div class="btn-group" data-ng-if="getNumberOfTypes() > 1">
       <label
         data-ng-repeat="(k, v) in filter.types"
         class="btn btn-default"
