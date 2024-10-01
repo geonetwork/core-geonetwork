@@ -24,7 +24,7 @@
       <foaf:isPrimaryTopicOf>
          <rdf:Description>
             <rdf:type rdf:resource="http://www.w3.org/ns/dcat#CatalogRecord"/>
-            <dct:identifier rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">urn:uuid/{uuid}</dct:identifier>
+            <dct:identifier rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">urn:uuid:{uuid}</dct:identifier>
             <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2023-12-08T12:26:19.337626Z</dct:modified>
             <dct:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2019-04-02T12:33:24</dct:issued>
             <dct:title xml:lang="fre">Plan de secteur en vigueur (version coordonnée vectorielle)</dct:title>
