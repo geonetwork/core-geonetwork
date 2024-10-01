@@ -23,26 +23,30 @@
           <button
             type="button"
             class="btn btn-default btn-xs"
-            data-ng-class="showSuccess ? 'active' : ''"
+            data-ng-class="showSuccess ? 'active' : 'inactive'"
             data-ng-click="toggleShowSuccess();$event.stopPropagation();"
             data-ng-show="hasSuccess"
             data-toggle="tooltip"
             data-placement="top"
             title="{{'showHideSuccess' | translate}}"
           >
-            <span class="fa fa-thumbs-up text-success" aria-hidden="true"></span>
+            <span class="text-success" aria-hidden="true"
+              >{{'validationSuccessLabel' | translate | capitalize}}</span
+            >
           </button>
           <button
             type="button"
             class="btn btn-default btn-xs"
-            data-ng-class="showErrors ? 'active' : ''"
+            data-ng-class="showErrors ? 'active' : 'inactive'"
             data-ng-click="toggleShowErrors();$event.stopPropagation();"
             data-ng-show="hasErrors"
             data-toggle="tooltip"
             data-placement="top"
             title="{{'showHideErrors' | translate}}"
           >
-            <span class="fa fa-thumbs-down text-danger" aria-hidden="true"></span>
+            <span class="text-danger" aria-hidden="true"
+              >{{'validationErrorLabel' | translate | capitalize}}</span
+            >
           </button>
         </div>
       </div>
@@ -54,6 +58,22 @@
         data-ng-repeat="type in ruleTypes"
         data-ng-class="'schematron-result-list-' + labelImportanceClass(type)"
       >
+        <!-- No success or failed validation rules to display -->
+        <div
+          data-ng-if="type.error == 0 && type.success = 0"
+          data-gn-slide-toggle="{{initialSectionsClosed}}"
+          class="panel-heading clearfix"
+        >
+          <div class="col-md-9">
+            <h2 class="gn-schematron-title">
+              <span data-ng-if="type.schematronVerificationError">
+                <i class="fa fa-exclamation-triangle fa-fw text-danger"></i>&nbsp;</span
+              >{{(type.label || type.id) | translate}}
+            </h2>
+          </div>
+        </div>
+
+        <!-- Success or failed validation rules to display -->
         <div
           data-gn-slide-toggle="{{initialSectionsClosed}}"
           class="panel-heading clearfix"
@@ -83,10 +103,15 @@
               </ng-pluralize>
             </span>
             <span
-              class="label pull-right"
+              class="label pull-right label-success gn-margin-bottom-sm"
+              data-ng-if="type.total !== '?'"
+              >{{type.success}} {{'validationSuccessLabel' | translate}}</span
+            >
+            <span
+              class="label pull-right gn-margin-bottom-sm"
               data-ng-class="labelImportanceClass(type)"
               data-ng-if="type.total !== '?'"
-              >{{type.success}} / {{type.total}}</span
+              >{{type.error}} {{'validationErrorLabel' | translate}}</span
             >
           </div>
           <div
@@ -107,7 +132,10 @@
           </ul>
         </div>
         <div class="panel-body" data-ng-if="!type.schematronVerificationError">
-          <ul class="list-group" data-ng-repeat="pattern in type.patterns.pattern">
+          <ul
+            class="list-group"
+            data-ng-repeat="pattern in type.patterns.pattern | orderBy: 'type'"
+          >
             <li
               class="list-group-item"
               data-ng-repeat="rule in pattern.rules.rule"
