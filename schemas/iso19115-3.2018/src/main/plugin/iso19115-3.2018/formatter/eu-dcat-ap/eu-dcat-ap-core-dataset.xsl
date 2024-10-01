@@ -178,8 +178,7 @@
     <xsl:call-template name="iso19115-3-to-dcat-resource"/>
 
     <xsl:apply-templates mode="iso19115-3-to-eu-dcat-ap"
-                         select="mdb:identificationInfo/*/mri:citation/*/cit:identifier
-                                |mdb:resourceLineage/*/mrl:source"/>
+                         select="mdb:resourceLineage/*/mrl:source"/>
 
     <xsl:call-template name="rdf-eu-dcat-ap-theme"/>
   </xsl:template>
@@ -187,9 +186,14 @@
 
   <!--
   [o]	other identifier	Identifier	0..*	A secondary identifier of the Dataset, such as MAST/ADS17, DataCite18, DOI19, EZID20 or W3ID21.
+
+  Only the first resource identifier is mapped to dct:identifier (even if more are allowed in DCAT or DCAT-AP)
+  because MobilityDCAT restrict it to 0..1. The other identifiers are mapped to adms:identifier.
+  https://www.w3.org/TR/vocab-adms/#identifier
   -->
-  <xsl:template mode="iso19115-3-to-eu-dcat-ap"
-                match="cit:identifier">
+  <xsl:template mode="iso19115-3-to-dcat"
+                match="mdb:identificationInfo/*/mri:citation/*/cit:identifier[position() > 1]"
+                priority="20">
     <xsl:variable name="code"
                   select="*/mcc:code/*/text()"/>
     <xsl:variable name="codeSpace"
@@ -209,7 +213,6 @@
       </rdf:Description>
     </adms:identifier>
   </xsl:template>
-
 
 
   <!--

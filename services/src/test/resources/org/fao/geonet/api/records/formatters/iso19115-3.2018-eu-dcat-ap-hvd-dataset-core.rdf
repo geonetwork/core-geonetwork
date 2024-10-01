@@ -98,7 +98,13 @@
       <dct:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2023-02-21</dct:issued>
       <dcat:version>1.0</dcat:version>
       <dct:identifier rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">http://geodata.wallonie.be/id/7fe2f305-1302-4297-b67e-792f55acd834</dct:identifier>
-      <dct:identifier rdf:datatype="http://www.w3.org/2001/XMLSchema#string">BE.SPW.INFRASIG.CARTON/DGATLPE__PDS</dct:identifier>
+      <adms:identifier>
+         <rdf:Description>
+            <rdf:type rdf:resource="http://www.w3.org/ns/adms#Identifier"/>
+            <skos:notation>DGATLPE__PDS</skos:notation>
+            <adms:schemaAgency>BE.SPW.INFRASIG.CARTON</adms:schemaAgency>
+         </rdf:Description>
+      </adms:identifier>
       <dct:description xml:lang="fre">Le plan de secteur est un outil réglementaire d'aménagement du territoire et d'urbanisme
           régional wallon constitué de plusieurs couches de données spatiales.
 
@@ -433,20 +439,6 @@
           - une nouvelle zone non destinée à l'urbanisation : zone d'extraction (ZE).</dct:description>
          </dct:ProvenanceStatement>
       </dct:provenance>
-      <adms:identifier>
-         <rdf:Description>
-            <rdf:type rdf:resource="http://www.w3.org/ns/adms#Identifier"/>
-            <skos:notation>7fe2f305-1302-4297-b67e-792f55acd834</skos:notation>
-            <adms:schemaAgency>http://geodata.wallonie.be/id/</adms:schemaAgency>
-         </rdf:Description>
-      </adms:identifier>
-      <adms:identifier>
-         <rdf:Description>
-            <rdf:type rdf:resource="http://www.w3.org/ns/adms#Identifier"/>
-            <skos:notation>DGATLPE__PDS</skos:notation>
-            <adms:schemaAgency>BE.SPW.INFRASIG.CARTON</adms:schemaAgency>
-         </rdf:Description>
-      </adms:identifier>
       <dcat:theme>
          <skos:Concept rdf:about="http://publications.europa.eu/resource/authority/data-theme/AGRI">
             <skos:prefLabel xml:lang="fr">Agriculture, pêche, sylviculture et alimentation</skos:prefLabel>

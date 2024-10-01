@@ -210,6 +210,7 @@
   -->
   <xsl:template mode="iso19115-3-to-dcat"
                 match="mdb:metadataIdentifier
+                      |mdb:identificationInfo/*/mri:citation/*/cit:identifier
                       |cit:identifier">
     <xsl:variable name="code"
                   select="*/mcc:code/*/text()"/>
@@ -221,6 +222,7 @@
                                       (if (ends-with($codeSpace, '/')) then '' else '/'),
                                       $code)
                           else $code"/>
+
     <xsl:variable name="codeType"
                   select="if (matches($codeWithPrefix, '^https?://|urn:'))
                           then 'anyURI' else 'string'"/>
