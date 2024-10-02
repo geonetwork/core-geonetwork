@@ -28,10 +28,10 @@
             data-ng-show="hasSuccess"
             data-toggle="tooltip"
             data-placement="top"
-            title="{{'showHideSuccess' | translate}}"
+            data-ng-attr-title="{{showSuccess ? ('hideSuccess' | translate): ('showSuccess' | translate)}}"
           >
             <span class="text-success" aria-hidden="true"
-              >{{'validationSuccessLabel' | translate | capitalize}}</span
+              >{{'validationSuccessLabel' | translate}}</span
             >
           </button>
           <button
@@ -42,10 +42,10 @@
             data-ng-show="hasErrors"
             data-toggle="tooltip"
             data-placement="top"
-            title="{{'showHideErrors' | translate}}"
+            data-ng-attr-title="{{showErrors ? ('hideErrors' | translate): ('showErrors' | translate)}}"
           >
             <span class="text-danger" aria-hidden="true"
-              >{{'validationErrorLabel' | translate | capitalize}}</span
+              >{{'validationErrorLabel' | translate}}</span
             >
           </button>
         </div>
@@ -60,8 +60,7 @@
       >
         <!-- No success or failed validation rules to display -->
         <div
-          data-ng-if="type.error == 0 && type.success = 0"
-          data-gn-slide-toggle="{{initialSectionsClosed}}"
+          data-ng-if="(type.error == 0 || type.error === '?') && (type.success == 0 || type.success === '?')"
           class="panel-heading clearfix"
         >
           <div class="col-md-9">
@@ -71,10 +70,55 @@
               >{{(type.label || type.id) | translate}}
             </h2>
           </div>
+
+          <div
+            class="col-md-3 gn-nopadding-right"
+            data-ng-if="!type.schematronVerificationError"
+          >
+            <span
+              class="label pull-right col-md-12"
+              data-ng-class="labelImportanceClass(type)"
+              data-ng-if="type.total === '?'"
+            >
+              <ng-pluralize
+                count="type.error"
+                when="{'0': '0 ' + ('error' | translate),
+                            '1': '1 ' +  ('error' | translate),
+                            'other': '{} ' +  ('errors' | translate)}"
+              >
+              </ng-pluralize>
+            </span>
+            <span
+              class="label pull-right label-success gn-margin-bottom-sm col-md-12"
+              data-ng-if="type.total !== '?' && type.success !== '?'"
+            >
+              <ng-pluralize
+                count="type.success"
+                when="{'0': '0 ' + ('success' | translate),
+                            '1': '1 ' +  ('success' | translate),
+                            'other': '{} ' +  ('successes' | translate)}"
+              >
+              </ng-pluralize>
+            </span>
+            <span
+              class="label pull-right gn-margin-bottom-sm col-md-12"
+              data-ng-class="labelImportanceClass(type)"
+              data-ng-if="type.total !== '?' && type.error !== '?'"
+            >
+              <ng-pluralize
+                count="type.error"
+                when="{'0': '0 ' + ('error' | translate),
+                            '1': '1 ' +  ('error' | translate),
+                            'other': '{} ' +  ('errors' | translate)}"
+              >
+              </ng-pluralize>
+            </span>
+          </div>
         </div>
 
         <!-- Success or failed validation rules to display -->
         <div
+          data-ng-if="(type.error != 0 && type.error !== '?') || (type.success != 0 && type.success !== '?')"
           data-gn-slide-toggle="{{initialSectionsClosed}}"
           class="panel-heading clearfix"
         >
@@ -90,7 +134,7 @@
             data-ng-if="!type.schematronVerificationError"
           >
             <span
-              class="label pull-right"
+              class="label pull-right col-md-12"
               data-ng-class="labelImportanceClass(type)"
               data-ng-if="type.total === '?'"
             >
@@ -103,16 +147,30 @@
               </ng-pluralize>
             </span>
             <span
-              class="label pull-right label-success gn-margin-bottom-sm"
-              data-ng-if="type.total !== '?'"
-              >{{type.success}} {{'validationSuccessLabel' | translate}}</span
+              class="label pull-right label-success gn-margin-bottom-sm col-md-12"
+              data-ng-if="type.total !== '?' && type.success !== '?'"
             >
+              <ng-pluralize
+                count="type.success"
+                when="{'0': '0 ' + ('success' | translate),
+                            '1': '1 ' +  ('success' | translate),
+                            'other': '{} ' +  ('successes' | translate)}"
+              >
+              </ng-pluralize>
+            </span>
             <span
-              class="label pull-right gn-margin-bottom-sm"
+              class="label pull-right gn-margin-bottom-sm col-md-12"
               data-ng-class="labelImportanceClass(type)"
-              data-ng-if="type.total !== '?'"
-              >{{type.error}} {{'validationErrorLabel' | translate}}</span
+              data-ng-if="type.total !== '?' && type.error !== '?'"
             >
+              <ng-pluralize
+                count="type.error"
+                when="{'0': '0 ' + ('error' | translate),
+                            '1': '1 ' +  ('error' | translate),
+                            'other': '{} ' +  ('errors' | translate)}"
+              >
+              </ng-pluralize>
+            </span>
           </div>
           <div
             class="col-md-3 gn-nopadding-right"
