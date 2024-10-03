@@ -256,7 +256,8 @@
           // on keyword.
           maxTags: "@",
           thesaurusTitle: "@",
-          browsable: "@"
+          browsable: "@",
+          required: "@"
         },
         templateUrl:
           "../../catalog/components/thesaurus/" + "partials/keywordselector.html",
