@@ -662,6 +662,11 @@
           scope.max = gnThesaurusService.DEFAULT_NUMBER_OF_RESULTS;
           scope.fauxMultilingual = scope.fauxMultilingual === "true"; //default false
           scope.showHintsOnFocus = attrs.showHintsOnFocus === "true"; // displays all the values on focus, default shows only the selected value
+          scope.mockDropdown = attrs.mockDropdown === "true";
+          if (scope.mockDropdown) {
+             // Add a class to the element
+             element.addClass("mock-dropdown");
+          }
 
           // Configuration only required when using the directive in template fields.
           //
