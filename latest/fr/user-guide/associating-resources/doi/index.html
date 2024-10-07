@@ -20,7 +20,7 @@
       
       
       <link rel="icon" href="../../../../assets/images/geonetwork-logo.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.36">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.39">
     
     
       
@@ -28,7 +28,7 @@
       
     
     
-      <link rel="stylesheet" href="../../../../assets/stylesheets/main.06209087.min.css">
+      <link rel="stylesheet" href="../../../../assets/stylesheets/main.8c3ca2c6.min.css">
       
         
         <link rel="stylesheet" href="../../../../assets/stylesheets/palette.06af60db.min.css">
@@ -1876,8 +1876,20 @@
 <li><a href="https://support.datacite.org/docs/mds-api-guide">DataCite API</a>.</li>
 <li>EU publication office API <a href="https://ra.publications.europa.eu/servlet/ws/doidata?api=medra.org">https://ra.publications.europa.eu/servlet/ws/doidata?api=medra.org</a></li>
 </ul>
-<p>Configure the API access point in the <code>admin console --&gt; settings</code>:</p>
-<p><img alt="" src="../../../../user-guide/associating-resources/img/doi-admin-console.png" /></p>
+<p>Configure the DOI API access point to publish the metadata in the <code>Admin console --&gt; Settings --&gt; Doi servers</code>:</p>
+<p><img alt="" src="../../../../user-guide/associating-resources/img/doi-create-server.png" /></p>
+<p>Providing the following information:</p>
+<ul>
+<li><code>Name</code>: A descriptive name for the server.</li>
+<li><code>Description</code>: (Optional) A verbose description of the server.</li>
+<li><code>DataCite API endpoint</code>: The API url, usually https://mds.datacite.org or https://mds.test.datacite.org for testing.</li>
+<li><code>DataCite username</code> / <code>DataCite password</code>: Credentials required to publish the DOI resources.</li>
+<li><code>Landing page URL template</code>: The URL to use to register the DOI. A good default for GeoNetwork is http://localhost:8080/geonetwork/srv/resources/records/{{uuid}}. The landing page URL MUST contains the UUID of the record.</li>
+<li><code>Final DOI URL prefix</code>: (Optional) Keep it empty to use the default https://doi.org prefix. Use https://mds.test.datacite.org/doi when using the test API.</li>
+<li><code>DOI pattern</code>: Default is <code>{{uuid}}</code> but the DOI structure can be customized with database id and/or record group eg. <code>example-{{groupOwner}}-{{id}}</code>.</li>
+<li><code>DataCite prefix</code>: Usually looks like <code>10.xxxx</code>. You will be allowed to register DOI names only under the prefixes that have been assigned to you.</li>
+<li><code>Publication groups</code>: (Optional) Select the groups which metadata should be published to the DOI server. If no groups are selected, the server will be provided to publish the metadata that has no other DOI servers related to the metadata owner group.</li>
+</ul>
 <p>A record can be downloaded using the DataCite format from the API using: <a href="http://localhost:8080/geonetwork/srv/api/records/da165110-88fd-11da-a88f-000d939bc5d8/formatters/datacite?output=xml">http://localhost:8080/geonetwork/srv/api/records/da165110-88fd-11da-a88f-000d939bc5d8/formatters/datacite?output=xml</a></p>
 <h2 id="creating-the-doi">Creating the DOI</h2>
 <p>Once configured, DOI can be created using the interface. DOI is created on demand. It means that a user must ask for creation of a DOI. It can be created by:</p>
@@ -2164,7 +2176,7 @@
     <script id="__config" type="application/json">{"base": "../../../..", "features": ["toc.follow", "navigation.tracking", "navigation.top", "navigation.tabs", "navigation.prune", "navigation.indexes", "navigation.footer", "header.autohide", "content.tabs.link", "content.code.copy", "content.action.view", "content.action.edit", "announce.dismiss"], "search": "../../../../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "Copi\u00e9 dans le presse-papier", "clipboard.copy": "Copier dans le presse-papier", "search.result.more.one": "1 de plus sur cette page", "search.result.more.other": "# de plus sur cette page", "search.result.none": "Aucun document trouv\u00e9", "search.result.one": "1 document trouv\u00e9", "search.result.other": "# documents trouv\u00e9s", "search.result.placeholder": "Taper pour d\u00e9marrer la recherche", "search.result.term.missing": "Non trouv\u00e9", "select.version": "S\u00e9lectionner la version"}, "version": {"alias": true, "default": "stable", "provider": "mike"}}</script>
     
     
-      <script src="../../../../assets/javascripts/bundle.56dfad97.min.js"></script>
+      <script src="../../../../assets/javascripts/bundle.525ec568.min.js"></script>
       
     
   </body>
