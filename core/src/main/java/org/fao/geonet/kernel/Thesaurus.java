@@ -1064,12 +1064,11 @@ public class Thesaurus {
 
         StringBuffer errorMsg = new StringBuffer("Error parsing the thesaurus date value: ");
         errorMsg.append(dateVal);
-        boolean success = false;
 
         for (SimpleDateFormat df : dfList) {
             try {
                 thesaurusDate = df.parse(dateVal);
-                success = true;
+                return thesaurusDate;
             } catch (Exception ex) {
                 // Ignore the exception and try next format
                 errorMsg.append("\n  * with format: ");
@@ -1079,11 +1078,9 @@ public class Thesaurus {
             }
         }
         // Report error if no success
-        if (!success) {
-            errorMsg.append("\nCheck thesaurus date in ");
-            errorMsg.append(this.fname);
-            Log.error(Geonet.THESAURUS_MAN, errorMsg.toString());
-        }
+        errorMsg.append("\nCheck thesaurus date in ");
+        errorMsg.append(this.fname);
+        Log.error(Geonet.THESAURUS_MAN, errorMsg.toString());
         return thesaurusDate;
     }
 
