@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2024 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -30,29 +30,28 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jeeves.server.context.ServiceContext;
 import jeeves.services.ReadWriteController;
-import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
+import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.doi.client.DoiManager;
 import org.fao.geonet.domain.AbstractMetadata;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.fao.geonet.domain.DoiServer;
+import org.fao.geonet.repository.DoiServerRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.Map;
+import java.util.Optional;
 
 import static org.fao.geonet.api.ApiParams.API_CLASS_RECORD_OPS;
 import static org.fao.geonet.api.ApiParams.API_CLASS_RECORD_TAG;
 import static org.fao.geonet.api.ApiParams.API_PARAM_RECORD_UUID;
+import static org.fao.geonet.api.doiservers.DoiServersApi.MSG_DOISERVER_WITH_ID_NOT_FOUND;
 
 /**
  * Handle DOI creation.
@@ -62,19 +61,24 @@ import static org.fao.geonet.api.ApiParams.API_PARAM_RECORD_UUID;
 })
 @Tag(name = API_CLASS_RECORD_TAG,
     description = API_CLASS_RECORD_OPS)
-@Controller("doi")
+@RestController("doi")
 @PreAuthorize("hasAuthority('Editor')")
 @ReadWriteController
 public class DoiApi {
 
-    @Autowired
-    private DoiManager doiManager;
+    private final DoiManager doiManager;
+
+    private final DoiServerRepository doiServerRepository;
+
+    DoiApi(final DoiManager doiManager, final DoiServerRepository doiServerRepository) {
+        this.doiManager = doiManager;
+        this.doiServerRepository = doiServerRepository;
+    }
 
     @io.swagger.v3.oas.annotations.Operation(
         summary = "Check that a record can be submitted to DataCite for DOI creation. " +
             "DataCite requires some fields to be populated.")
-    @RequestMapping(value = "/{metadataUuid}/doi/checkPreConditions",
-        method = RequestMethod.GET,
+    @GetMapping(value = "/{metadataUuid}/doi/{doiServerId}/checkPreConditions",
         produces = {
             MediaType.APPLICATION_JSON_VALUE
         }
@@ -88,27 +92,31 @@ public class DoiApi {
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)
     })
     public
-    @ResponseBody
     ResponseEntity<Map<String, Boolean>> checkDoiStatus(
         @Parameter(
             description = API_PARAM_RECORD_UUID,
             required = true)
         @PathVariable
             String metadataUuid,
+        @Parameter(
+            description = "DOI server identifier",
+            required = true)
+        @PathVariable
+            Integer doiServerId,
         @Parameter(hidden = true)
             HttpServletRequest request
     ) throws Exception {
         AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
         ServiceContext serviceContext = ApiUtils.createServiceContext(request);
 
-        final Map<String, Boolean> reportStatus = doiManager.check(serviceContext, metadata, null);
+        DoiServer doiServer = retrieveDoiServer(doiServerId);
+        final Map<String, Boolean> reportStatus = doiManager.check(serviceContext, doiServer, metadata, null);
         return new ResponseEntity<>(reportStatus, HttpStatus.OK);
     }
 
     @io.swagger.v3.oas.annotations.Operation(
         summary = "Check the DOI URL created based on current configuration and pattern.")
-    @RequestMapping(value = "/{metadataUuid}/doi/checkDoiUrl",
-        method = RequestMethod.GET,
+    @GetMapping(value = "/{metadataUuid}/doi/{doiServerId}/checkDoiUrl",
         produces = {
             MediaType.TEXT_PLAIN_VALUE
         }
@@ -121,26 +129,30 @@ public class DoiApi {
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)
     })
     public
-    @ResponseBody
     ResponseEntity<String> checkDoiUrl(
         @Parameter(
             description = API_PARAM_RECORD_UUID,
             required = true)
         @PathVariable
             String metadataUuid,
+        @Parameter(
+            description = "DOI server identifier",
+            required = true)
+        @PathVariable
+            Integer doiServerId,
         @Parameter(hidden = true)
             HttpServletRequest request
     ) throws Exception {
         AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
 
-        return new ResponseEntity<>(doiManager.checkDoiUrl(metadata), HttpStatus.OK);
+        DoiServer doiServer = retrieveDoiServer(doiServerId);
+        return new ResponseEntity<>(doiManager.checkDoiUrl(doiServer, metadata), HttpStatus.OK);
     }
 
 
     @io.swagger.v3.oas.annotations.Operation(
         summary = "Submit a record to the Datacite metadata store in order to create a DOI.")
-    @RequestMapping(value = "/{metadataUuid}/doi",
-        method = RequestMethod.PUT,
+    @PutMapping(value = "/{metadataUuid}/doi/{doiServerId}",
         produces = {
             MediaType.APPLICATION_JSON_VALUE
         }
@@ -153,13 +165,17 @@ public class DoiApi {
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)
     })
     public
-    @ResponseBody
     ResponseEntity<Map<String, String>> createDoi(
         @Parameter(
             description = API_PARAM_RECORD_UUID,
             required = true)
         @PathVariable
             String metadataUuid,
+        @Parameter(
+            description = "DOI server identifier",
+            required = true)
+        @PathVariable
+            Integer doiServerId,
         @Parameter(hidden = true)
             HttpServletRequest request,
         @Parameter(hidden = true)
@@ -168,7 +184,8 @@ public class DoiApi {
         AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
         ServiceContext serviceContext = ApiUtils.createServiceContext(request);
 
-        Map<String, String> doiInfo = doiManager.register(serviceContext, metadata);
+        DoiServer doiServer = retrieveDoiServer(doiServerId);
+        Map<String, String> doiInfo = doiManager.register(serviceContext, doiServer, metadata);
         return new ResponseEntity<>(doiInfo, HttpStatus.CREATED);
     }
 
@@ -176,8 +193,7 @@ public class DoiApi {
 
     @io.swagger.v3.oas.annotations.Operation(
         summary = "Remove a DOI (this is not recommended, DOI are supposed to be persistent once created. This is mainly here for testing).")
-    @RequestMapping(value = "/{metadataUuid}/doi",
-        method = RequestMethod.DELETE,
+    @DeleteMapping(value = "/{metadataUuid}/doi/{doiServerId}",
         produces = {
             MediaType.APPLICATION_JSON_VALUE
         }
@@ -190,8 +206,7 @@ public class DoiApi {
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_ADMIN)
     })
     public
-    @ResponseBody
-    ResponseEntity unregisterDoi(
+    ResponseEntity<Void> unregisterDoi(
         @Parameter(
             description = API_PARAM_RECORD_UUID,
             required = true)
@@ -199,14 +214,32 @@ public class DoiApi {
             String metadataUuid,
         @Parameter(hidden = true)
             HttpServletRequest request,
+        @Parameter(
+            description = "DOI server identifier",
+            required = true)
+        @PathVariable
+            Integer doiServerId,
         @Parameter(hidden = true)
             HttpSession session
     ) throws Exception {
         AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
         ServiceContext serviceContext = ApiUtils.createServiceContext(request);
 
-        doiManager.unregisterDoi(metadata, serviceContext);
+        DoiServer doiServer = retrieveDoiServer(doiServerId);
+        doiManager.unregisterDoi(doiServer, metadata, serviceContext);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    private DoiServer retrieveDoiServer(Integer doiServerId) throws ResourceNotFoundException {
+        Optional<DoiServer> doiServerOpt = doiServerRepository.findOneById(doiServerId);
+        if (doiServerOpt.isEmpty()) {
+            throw new ResourceNotFoundException(String.format(
+                MSG_DOISERVER_WITH_ID_NOT_FOUND,
+                doiServerId
+            ));
+        }
+
+        return doiServerOpt.get();
     }
 
 //    TODO: At some point we may add support for DOI States management

@@ -49,7 +49,6 @@ import org.fao.geonet.api.site.model.SettingsListResponse;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
 import org.fao.geonet.api.users.recaptcha.RecaptchaChecker;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.doi.client.DoiManager;
 import org.fao.geonet.domain.*;
 import org.fao.geonet.exceptions.OperationAbortedEx;
 import org.fao.geonet.index.Status;
@@ -171,8 +170,6 @@ public class SiteApi {
             context.error(e);
             throw new OperationAbortedEx("Parameters saved but cannot set proxy information: " + e.getMessage());
         }
-        DoiManager doiManager = gc.getBean(DoiManager.class);
-        doiManager.loadConfig();
 
         HarvestManager harvestManager = context.getBean(HarvestManager.class);
         harvestManager.rescheduleActiveHarvesters();
