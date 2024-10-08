@@ -108,7 +108,8 @@ public class WFSHarvesterApi {
         ConfigurableApplicationContext appContext = ApplicationContextHolder.get();
         WFSHarvesterEvent event = new WFSHarvesterEvent(appContext, parameters);
         // TODO: Messages should be node specific eg. srv channel ?
-        jmsMessager.sendMessage(WFSHarvesterRouteBuilder.MESSAGE_HARVEST_WFS_FEATURES, event);
+//        jmsMessager.sendMessage(WFSHarvesterRouteBuilder.MESSAGE_HARVEST_WFS_FEATURES, event);
+        jmsMessager.sendMessage(WFSHarvesterRouteBuilder.MESSAGE_HARVEST_OGR_FEATURES, event);
 
         JSONObject j = new JSONObject();
         j.put("url", parameters.getUrl());

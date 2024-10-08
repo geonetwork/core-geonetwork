@@ -177,6 +177,10 @@
             appProfilePromise,
             wfsIndexJobSavedPromise;
           scope.managerOnly = scope.managerOnly === "true";
+          scope.isDatastoreResource =
+            scope.wfsUrl !== undefined &&
+            scope.wfsUrl.match(".*\\/attachments\\/.*") != null;
+          console.log(scope.isDatastoreResource);
           scope.map = scope.$parent.map;
 
           var map = scope.map;
@@ -268,6 +272,9 @@
             }
 
             function getWfsUrl(mode, layer) {
+              if (scope.isDatastoreResource) {
+                return scope.wfsUrl;
+              }
               if (mode === "scope") {
                 // Use the WFS URL provided
                 return scope.wfsUrl;
@@ -374,6 +381,12 @@
            * @return {HttpPromise} promise
            */
           scope.checkWFSServerUrl = function () {
+            if (scope.isDatastoreResource) {
+              var deferred = $q.defer();
+              scope.isWfsAvailable = true;
+              deferred.resolve();
+              return deferred.promise;
+            }
             var url = scope.url;
             if (url.indexOf("GetCapabilities") === -1) {
               url =
@@ -397,23 +410,27 @@
           };
 
           scope.checkFeatureTypeInWfs = function () {
-            gnWfsService.getCapabilities(scope.url).then(function (capObj) {
-              var featureTypes = scope.featureTypeName.split(","),
-                layersInCapabilities = [];
+            if (!scope.isDatastoreResource) {
+              gnWfsService.getCapabilities(scope.url).then(function (capObj) {
+                var featureTypes = scope.featureTypeName.split(","),
+                  layersInCapabilities = [];
 
-              featureTypes.forEach(function (featureTypeName) {
-                var layer = gnOwsCapabilities.getLayerInfoFromWfsCap(
-                  featureTypeName,
-                  capObj,
-                  scope.uuid
-                );
+                featureTypes.forEach(function (featureTypeName) {
+                  var layer = gnOwsCapabilities.getLayerInfoFromWfsCap(
+                    featureTypeName,
+                    capObj,
+                    scope.uuid
+                  );
 
-                if (layer) {
-                  layersInCapabilities.push(layer);
-                }
+                  if (layer) {
+                    layersInCapabilities.push(layer);
+                  }
+                });
+                scope.isFeatureTypeAvailable = layersInCapabilities.length > 0;
               });
-              scope.isFeatureTypeAvailable = layersInCapabilities.length > 0;
-            });
+            } else {
+              scope.isFeatureTypeAvailable = true;
+            }
           };
 
           /**
