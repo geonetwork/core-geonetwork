@@ -102,12 +102,11 @@
 
     <xsl:param name="isReadOnly" required="no" as="xs:boolean" select="false()"/>
 
-    <!-- Forcing the check for xsd schema for required field -->
-    <xsl:param name="forceXsdSchemaCheck" required="no" as="xs:boolean" select="true()"/>
-
     <xsl:variable name="isMultilingual" select="count($value/values) > 0"/>
 
     <xsl:variable name="isoType" select="if (../@gco:isoType) then ../@gco:isoType else ''"/>
+
+    <xsl:variable name="elementCondition" select="gn-fn-metadata:getLabel($schema, name(), $labels, name(..),$isoType, $xpath)/condition" />
 
     <!-- Required status is defined in parent element for
     some profiles like ISO19139. If not set, the element
@@ -116,12 +115,7 @@
     -->
     <xsl:variable name="isRequired" as="xs:boolean">
       <xsl:choose>
-        <xsl:when
-          test="($forceXsdSchemaCheck and $parentEditInfo and $parentEditInfo/@min = 1 and $parentEditInfo/@max = 1) or
-          (not($parentEditInfo) and $editInfo and $editInfo/@min = 1 and $editInfo/@max = 1)">
-          <xsl:value-of select="true()"/>
-        </xsl:when>
-        <xsl:when test="gn-fn-metadata:getLabel($schema, name(), $labels, name(..),$isoType, $xpath)/condition = 'mandatory'">
+        <xsl:when test="$elementCondition = 'mandatory'">
           <xsl:value-of select="true()"/>
         </xsl:when>
         <xsl:otherwise>
