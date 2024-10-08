@@ -49,8 +49,17 @@ GeoNetwork requires an [Elasticsearch](https://www.elastic.co/products/elasticse
           cd es
           mvn install -Pes-download
           ```
+
+    3. **Modify**: Elasticsearch 8+ has security enabled by default.
+
+         To disable this configuration for development, update the file `elasticsearch-<version>/config/elasticsearch.yml` and MODIFY these EXISTING entries to `false`:
+
+         ```
+         xpack.security.enabled: false
+         xpack.security.enrollment.enabled: false
+         ```
     
-    3. **Start**: Use maven ``exec`` plugin to run Elasticsearch:
+    4. **Start**: Use maven ``exec`` plugin to run Elasticsearch:
     
         ``` shell
         mvn exec:exec -Des-start
