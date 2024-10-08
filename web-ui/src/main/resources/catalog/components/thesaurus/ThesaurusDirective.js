@@ -661,11 +661,10 @@
           scope.orderById = attrs.orderById || "false";
           scope.max = gnThesaurusService.DEFAULT_NUMBER_OF_RESULTS;
           scope.fauxMultilingual = scope.fauxMultilingual === "true"; //default false
-          scope.showHintsOnFocus = attrs.showHintsOnFocus === "true"; // displays all the values on focus, default shows only the selected value
-          scope.mockDropdown = attrs.mockDropdown === "true"; // Adds a caret to the end of the field to mock a dropdown or HTML5 datalist
+          scope.showHintsOnFocus = attrs.showHintsOnFocus === "true"; // displays all the values on focus and adds a dropdown caret icon, default shows only the selected value
 
-          // Add the required mock dropdown class if the attribute is set
-          if (scope.mockDropdown) {
+          // Add the required mock dropdown class if show hints on focus is enabled
+          if (scope.showHintsOnFocus) {
              element.addClass("mock-dropdown");
           }
 
