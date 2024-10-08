@@ -454,5 +454,7 @@
     "associated-fcats": "Feature catalog",
     "associated-siblings": "Associated resources",
     "associated-hasfeaturecats": "Using this feature catalog",
-    "associatedResourcesPanel": "Associated resources"
+    "associatedResourcesPanel": "Associated resources",
+    "validationSuccessLabel": "success",
+    "validationErrorLabel": "errors"
 }
