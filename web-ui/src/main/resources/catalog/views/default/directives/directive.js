@@ -79,6 +79,26 @@
     }
   ]);
 
+  module.directive("gnApplicationBanner", [
+    "gnConfig",
+    "gnConfigService",
+    function (gnConfig, gnConfigService) {
+      return {
+        restrict: "E",
+        replace: true,
+        scope: true,
+        templateUrl:
+          "../../catalog/views/default/directives/partials/applicationBanner.html",
+        link: function linkFn(scope) {
+          gnConfigService.load().then(function (c) {
+            scope.isBannerEnabled = gnConfig["system.banner.enable"];
+            scope.bannerMessage = gnConfig["system.banner.message"];
+          });
+        }
+      };
+    }
+  ]);
+
   module.directive("gnLinksBtn", [
     "gnTplResultlistLinksbtn",
     "gnMetadataActions",
