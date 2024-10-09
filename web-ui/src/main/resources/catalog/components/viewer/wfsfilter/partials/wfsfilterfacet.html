@@ -18,14 +18,10 @@
   <div data-ng-show="isWfsAvailable">
     <!--admin buttons-->
     <!--Facet count-->
-    <h4
-      data-ng-if="isFeaturesIndexed"
-      class="count"
-      data-ng-if="showCount"
-    >
+    <h4 data-ng-if="isFeaturesIndexed" class="count" data-ng-if="showCount">
       {{count | number}}&nbsp;/&nbsp;{{countTotal | number}}&nbsp;<span translate=""
-    >features</span
-    >
+        >features</span
+      >
     </h4>
     <div class="btn-group dropup wfs-filter-group">
       <button
@@ -144,26 +140,23 @@
           data-ng-model="ctrl.filter.fullTextSearch"
         />
         <div class="input-group-btn">
+          <button
+            data-ng-if="!managerOnly && isFeaturesIndexed"
+            data-gn-click-and-spin="resetFacets(false).then(filterWMS)"
+            title="{{'reset' | translate}}"
+            class="btn btn-default gn-reset-facets"
+          >
+            <i class="fa fa-fw fa-times"></i>
+          </button>
 
-            <button
-              data-ng-if="!managerOnly && isFeaturesIndexed"
-              data-gn-click-and-spin="resetFacets(false).then(filterWMS)"
-              title="{{'reset' | translate}}"
-              class="btn btn-default gn-reset-facets"
-            >
-              <i class="fa fa-fw fa-times"></i>
-            </button>
-
-            <button
-              class="btn btn-default"
-              title="{{'search' | translate}}"
-              data-ng-click="filterFacets()"
-            >
-              <i class="fa fa-fw fa-search"></i>
-            </button>
-
+          <button
+            class="btn btn-default"
+            title="{{'search' | translate}}"
+            data-ng-click="filterFacets()"
+          >
+            <i class="fa fa-fw fa-search"></i>
+          </button>
         </div>
-
       </div>
       <button
         data-ng-if="!managerOnly && isFeaturesIndexed"
