@@ -118,6 +118,14 @@
         <xsl:when test="$elementCondition = 'mandatory'">
           <xsl:value-of select="true()"/>
         </xsl:when>
+        <xsl:when test="$elementCondition = 'optional'">
+          <xsl:value-of select="false()"/>
+        </xsl:when>
+        <xsl:when
+          test="($parentEditInfo and $parentEditInfo/@min = 1 and $parentEditInfo/@max = 1) or
+          (not($parentEditInfo) and $editInfo and $editInfo/@min = 1 and $editInfo/@max = 1)">
+          <xsl:value-of select="true()"/>
+        </xsl:when>
         <xsl:otherwise>
           <xsl:value-of select="false()"/>
         </xsl:otherwise>
