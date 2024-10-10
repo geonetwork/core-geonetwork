@@ -1,0 +1,1 @@
+SHACL from https://github.com/SEMICeu/DCAT-AP/tree/gh-pages/releases/3.0.0-draft/html/shacl
