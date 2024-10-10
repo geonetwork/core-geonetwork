@@ -701,15 +701,62 @@ table.gn-data-store {
 }
 
 .gn-batch-editor {
-  .gn-resultview li.list-group-item {
-    margin-bottom: 0px;
-    padding: 4px;
+  .gn-resultview {
+    margin-right: 0;
+    li.list-group-item {
+      border-width: 0 0 1px 0;
+      margin-bottom: 0;
+      padding: 10px 5px;
+    }
   }
   li.gn-batch-editor-info {
     margin-top: 11px;
   }
   [data-ng-search-form] .gn-top-search .gn-form-any {
     max-width: 80vw;
+  }
+  fieldset {
+
+    legend {
+      font-weight: bold;
+    }
+    fieldset {
+      padding: 15px 25px;
+      legend {
+        font-size: 18px;
+        margin-bottom: 0;
+      }
+      .form-group {
+        margin-left: 10px;
+        .clearfix();
+        .list-group {
+          margin-bottom: 0;
+        }
+        &:first-child {
+          margin-top: 10px;
+        }
+        // select spatial extent
+        .gn-drawmap-panel {
+          .col-sm-3, .col-md-8 {
+            width: 100%;
+            padding-left: 0;
+            padding-right: 0;
+          }
+        }
+      }
+    }
+  }
+  [data-gn-slide-toggle] {
+    padding-left: 25px;
+    &:before {
+      content: "\f068";
+      margin-left: -20px;
+    }
+    &.collapsed {
+      &:before {
+        content: "\2b";
+      }
+    }
   }
 }
 

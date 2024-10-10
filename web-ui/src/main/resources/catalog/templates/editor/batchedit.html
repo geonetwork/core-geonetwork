@@ -1,132 +1,125 @@
-<div class="container gn-batch-editor" data-ng-controller="GnSearchController">
+<div class="gn-batch-editor" data-ng-controller="GnSearchController">
   <div class="row">
-    <div class="col-md-12 gn-margin-bottom">
-      <h1 data-translate="">batchediting</h1>
-    </div>
-  </div>
+    <div data-ng-class="fluidEditorLayout ? 'container-fluid' : 'container'">
+      <div class="col-md-12 gn-margin-bottom">
+        <h1 data-translate="">batchediting</h1>
+      </div>
 
-  <div class="row">
-    <div class="col-md-12">
-      <div
-        data-ng-controller="GnBatchEditSearchController"
-        data-ng-search-form=""
-        data-runSearch="true"
-        data-wait-for-user="true"
-      >
-        <ul class="nav nav-tabs">
-          <li
-            role="presentation"
-            data-ng-class="{'active' : selectedStep === 1}"
-            data-ng-click="setStep(1)"
-          >
-            <a href="" data-translate="">chooseASet</a>
-          </li>
-          <li
-            role="presentation"
-            data-ng-class="{'active': selectedStep === 2, 'disabled': searchResults.selectedCount < 1}"
-            data-ng-click="searchResults.selectedCount > 0 && setStep(2)"
-          >
-            <a href="" data-translate="">defineEdits</a>
-          </li>
-          <li
-            role="presentation"
-            data-ng-class="{'active' : selectedStep === 3, 'disabled': searchResults.selectedCount < 1}"
-            data-ng-click="searchResults.selectedCount > 0 && setStep(3)"
-          >
-            <a href="" data-translate="">confirmAndSave</a>
-          </li>
-          <li class="gn-batch-editor-info">
-            {{searchResults.selectedCount}}
-            <span data-translate="">recordsInSelection</span>
-          </li>
-          <li class="pull-right">
-            <div data-gn-need-help="batchediting"></div>
-          </li>
-        </ul>
-        <br />
+      <div class="col-md-12">
+        <div
+          data-ng-controller="GnBatchEditSearchController"
+          data-ng-search-form=""
+          data-runSearch="true"
+          data-wait-for-user="true"
+        >
+          <ul class="nav nav-pills gn-margin-bottom-lg">
+            <li
+              role="presentation"
+              data-ng-class="{'active' : selectedStep === 1}"
+              data-ng-click="setStep(1)"
+            >
+              <a href="" data-translate="">chooseASet</a>
+            </li>
+            <li
+              role="presentation"
+              data-ng-class="{'active': selectedStep === 2, 'disabled': searchResults.selectedCount < 1}"
+              data-ng-click="searchResults.selectedCount > 0 && setStep(2)"
+            >
+              <a href="" data-translate="">defineEdits</a>
+            </li>
+            <li
+              role="presentation"
+              data-ng-class="{'active' : selectedStep === 3, 'disabled': searchResults.selectedCount < 1}"
+              data-ng-click="searchResults.selectedCount > 0 && setStep(3)"
+            >
+              <a href="" data-translate="">confirmAndSave</a>
+            </li>
+            <li class="gn-batch-editor-info gn-margin-left-lg">
+              {{searchResults.selectedCount}}
+              <span data-translate="">recordsInSelection</span>
+            </li>
+            <li class="pull-right">
+              <div data-gn-need-help="batchediting"></div>
+            </li>
+          </ul>
 
-        <div data-ng-class="{'hidden' : selectedStep !== 1}">
-          <div class="panel-body">
+          <div data-ng-class="{'hidden' : selectedStep !== 1}">
             <p class="alert alert-info" data-translate="">chooseASetOfRecordHelp</p>
 
+            <!-- search -->
             <div class="row">
-              <div class="col-sm-12">
+              <div class="col-md-offset-3 col-md-6">
+
+
                 <form class="form-horizontal" role="form">
                   <input type="hidden" name="_csrf" value="{{csrf}}" />
 
-                  <div class="row gn-top-search">
-                    <div class="col-md-3 gn-search-facet">
-                      <div
-                        data-gn-user-searches-panel="user"
-                        data-ng-if="isUserSearchesEnabled && user.isConnected()"
-                      ></div>
-                    </div>
-                    <div class="col-md-6">
-                      <div class="input-group gn-form-any">
-                        <div
-                          data-gn-user-searches-list=""
-                          data-ng-cloak=""
-                          data-mode="button"
-                          class="input-group-btn btn-favorites"
-                        ></div>
-                        <input
-                          type="text"
-                          class="form-control input-lg"
-                          id="gn-any-field"
-                          title="{{'anyFieldTitle' | translate}}"
-                          data-ng-model="searchObj.params.any"
-                          autocomplete="off"
-                          placeholder="{{'anyPlaceHolder' | translate}}"
-                          aria-label="{{'anyPlaceHolder' | translate}}"
-                          data-ng-keyup="$event.keyCode == 13 && hideSearchSuggestions() && triggerSearch()"
-                          data-typeahead="md.label as md.label for md in getAnySuggestions($viewValue, searchObj)"
-                          data-typeahead-template-url="../../catalog/templates/gn-typeahead-match.html"
-                          data-typeahead-loading="anyLoading"
-                          class="form-control"
-                          data-typeahead-min-length="1"
-                          data-typeahead-focus-first="false"
-                          data-typeahead-wait-ms="600"
-                        />
+                  <div class="gn-top-search">
 
-                        <div class="input-group-btn">
-                          <button
-                            type="button"
-                            data-ng-click="resetSearch(searchObj.defaultParams);"
-                            title="{{'ClearTitle' | translate}}"
-                            class="btn btn-default btn-lg btn-reset"
-                          >
-                            <i class="fa fa-times"></i>
-                            <span class="sr-only" data-translate="">ClearTitle</span>
-                          </button>
-                          <button
-                            type="button"
-                            data-ng-click="triggerSearch()"
-                            title="{{'search' | translate}}"
-                            class="btn btn-default btn-lg btn-search"
-                          >
-                            <i class="fa fa-search"></i>
-                            <span class="sr-only" data-translate="">search</span>
-                          </button>
-                          <button
-                            type="button"
-                            class="btn btn-default btn-lg btn-advanced"
-                            title="{{'searchOptions' | translate}}"
-                            data-ng-model="searchObj.advancedMode"
-                            btn-checkbox=""
-                            btn-checkbox-true="1"
-                            btn-checkbox-false="0"
-                          >
-                            <i class="fa fa-fw fa-sliders"></i>
-                            <span class="sr-only" data-translate="">searchOptions</span>
-                          </button>
-                        </div>
-                      </div>
-                      <div data-ng-show="searchObj.advancedMode">
-                        <!--Advanced search form-->
-                        <div data-ng-include="advancedSearchTemplate"></div>
+                    <div class="input-group gn-form-any">
+                      <div
+                        data-gn-user-searches-list=""
+                        data-ng-cloak=""
+                        data-mode="button"
+                        class="input-group-btn btn-favorites"
+                      ></div>
+                      <input
+                        type="text"
+                        class="form-control input-lg"
+                        id="gn-any-field"
+                        title="{{'anyFieldTitle' | translate}}"
+                        data-ng-model="searchObj.params.any"
+                        autocomplete="off"
+                        placeholder="{{'anyPlaceHolder' | translate}}"
+                        aria-label="{{'anyPlaceHolder' | translate}}"
+                        data-ng-keyup="$event.keyCode == 13 && hideSearchSuggestions() && triggerSearch()"
+                        data-typeahead="md.label as md.label for md in getAnySuggestions($viewValue, searchObj)"
+                        data-typeahead-template-url="../../catalog/templates/gn-typeahead-match.html"
+                        data-typeahead-loading="anyLoading"
+                        data-typeahead-min-length="1"
+                        data-typeahead-focus-first="false"
+                        data-typeahead-wait-ms="600"
+                      />
+
+                      <div class="input-group-btn">
+                        <button
+                          type="button"
+                          data-ng-click="resetSearch(searchObj.defaultParams);"
+                          title="{{'ClearTitle' | translate}}"
+                          class="btn btn-default btn-lg btn-reset"
+                        >
+                          <i class="fa fa-times"></i>
+                          <span class="sr-only" data-translate="">ClearTitle</span>
+                        </button>
+                        <button
+                          type="button"
+                          data-ng-click="triggerSearch()"
+                          title="{{'search' | translate}}"
+                          class="btn btn-default btn-lg btn-search"
+                        >
+                          <i class="fa fa-search"></i>
+                          <span class="sr-only" data-translate="">search</span>
+                        </button>
+                        <button
+                          type="button"
+                          class="btn btn-default btn-lg btn-advanced"
+                          title="{{'searchOptions' | translate}}"
+                          data-ng-model="searchObj.advancedMode"
+                          btn-checkbox=""
+                          btn-checkbox-true="1"
+                          btn-checkbox-false="0"
+                        >
+                          <i class="fa fa-fw fa-sliders"></i>
+                          <span class="sr-only" data-translate="">searchOptions</span>
+                        </button>
                       </div>
                     </div>
-                    <div class="col-md-3">
+                    <div data-ng-show="searchObj.advancedMode">
+                      <!--Advanced search form-->
+                      <div data-ng-include="advancedSearchTemplate"></div>
+                    </div>
+
+                    <div>
                       <button
                         type="button"
                         data-ng-disabled="searchResults.selectedCount < 1"
@@ -141,22 +134,38 @@
                     </div>
                   </div>
                 </form>
-                <br />
-                <div class="row" data-ng-show="searchResults.records.length > 0">
-                  <div class="col-md-offset-3 col-md-4 relative">
+              </div>
+            </div>
+
+            <!-- facets & search results -->
+            <div class="row">
+              <!-- facets -->
+              <div class="col-md-3 gn-search-facet">
+                <div
+                  data-gn-user-searches-panel="user"
+                  data-ng-if="isUserSearchesEnabled && user.isConnected()"
+                ></div>
+                <div data-es-facets="searchResults.facets"></div>
+              </div>
+              <!-- search results -->
+              <div class="col-md-9">
+
+                <div class="row gn-row-tools" data-ng-show="searchResults.records.length > 0">
+                  <div class="col-xs-12 col-sm-5 col-md-5 col-lg-4 relative gn-nopadding-left">
                     <div
                       data-gn-selection-widget=""
                       without-action-menu=""
                       data-results="searchResults"
                     ></div>
                   </div>
-                  <div class="col-md-5">
+                  <div class="col-xs-12 col-sm-7 col-md-7 col-lg-4 gn-nopadding-left gn-nopadding-right text-right">
                     <div
                       class="pull-right"
                       data-gn-pagination="paginationInfo"
                       data-hits-values="searchObj.hitsperpageValues"
                     ></div>
-
+                  </div>
+                  <div class="col-xs-12 col-sm-12 col-md-12 col-lg-4 gn-nopadding-right text-right">
                     <div
                       class="pull-right"
                       data-sortby-combo=""
@@ -166,58 +175,55 @@
                   </div>
                 </div>
 
-                <div class="row">
-                  <div class="col-md-3 gn-search-facet">
-                    <div data-es-facets="searchResults.facets"></div>
-                  </div>
-                  <div class="col-md-9">
-                    <span
-                      class="loading fa fa-spinner fa-spin"
-                      data-ng-show="searching"
-                    ></span>
+                <span
+                  class="loading fa fa-spinner fa-spin"
+                  data-ng-show="searching"
+                ></span>
 
-                    <div
-                      class="alert alert-warning"
-                      role="alert"
-                      ng-if="!searching && searchResults.count == 0"
-                    >
-                      <i class="fa fa-frown-o"></i>
-                      <span data-translate="">zarooResult</span>
-                    </div>
+                <div
+                  class="alert alert-warning"
+                  role="alert"
+                  ng-if="!searching && searchResults.count == 0"
+                >
+                  <i class="fa fa-frown-o"></i>
+                  <span data-translate="">zarooResult</span>
+                </div>
 
-                    <div
-                      data-ng-show="searchResults.records.length > 0"
-                      data-gn-results-container=""
-                      data-search-results="searchResults"
-                      data-template-url="resultTemplate"
-                    ></div>
-                  </div>
+                <div
+                  data-ng-show="searchResults.records.length > 0"
+                  data-gn-results-container=""
+                  data-search-results="searchResults"
+                  data-template-url="resultTemplate"
+                ></div>
+              </div>
+            </div>
+
+          </div>
+
+          <div data-ng-class="{'hidden' : selectedStep !== 2}">
+
+            <!-- select edit method -->
+            <div class="row">
+              <div class="col-md-12 gn-margin-bottom-lg">
+                <div class="btn-group" data-toggle="buttons">
+                  <label class="btn btn-default" data-ng-repeat="t in editTypes">
+                    <input
+                      type="radio"
+                      data-ng-model="$parent.editType"
+                      data-ng-click="setType(t.id)"
+                      value="{{t.id}}"
+                      name="editType"
+                    />
+                    <span>
+                      <i class="fa fa-fw {{t.icon}}"></i>
+                      {{t.id | translate}}
+                    </span>
+                  </label>
                 </div>
               </div>
             </div>
-          </div>
-        </div>
 
-        <div data-ng-class="{'hidden' : selectedStep !== 2}">
-          <div class="panel-body">
-            <div class="row">
-              <div class="col-md-12">
-                <label class="radio-inline" data-ng-repeat="t in editTypes">
-                  <input
-                    type="radio"
-                    data-ng-model="$parent.editType"
-                    data-ng-click="setType(t.id)"
-                    value="{{t.id}}"
-                    name="editType"
-                  />
-                  <strong>
-                    <i class="fa fa-fw {{t.icon}}"></i>
-                    {{t.id | translate}}
-                  </strong>
-                </label>
-              </div>
-            </div>
-
+            <!-- method 1: search & replace -->
             <div class="row" data-ng-show="editType === 'searchAndReplace'">
               <div class="col-md-12">
                 <p class="alert alert-info" data-translate="">
@@ -228,27 +234,30 @@
                     <span data-translate="">addSearchAndReplace-help</span>
                   </p>
                   <div class="form-group">
-                    <label>
+                    <label class="width-100">
                       <span data-translate="">searchValue</span>
-                      <textarea
-                        class="form-control"
-                        name="search"
-                        data-ng-model="searchAndReplaceField.search"
-                      ></textarea>
                     </label>
-                    <br />
-                    <label>
+                    <textarea
+                      class="form-control"
+                      name="search"
+                      data-ng-model="searchAndReplaceField.search"
+                    ></textarea>
+                  </div>
+                  <div class="form-group">
+                    <label class="width-100">
                       <span data-translate="">searchReplacement</span>
-                      <textarea
-                        class="form-control"
-                        name="search"
-                        data-ng-model="searchAndReplaceField.replacement"
-                      ></textarea>
                     </label>
-                    <br />
+                    <textarea
+                      class="form-control"
+                      name="search"
+                      data-ng-model="searchAndReplaceField.replacement"
+                    ></textarea>
+                  </div>
+                  <div class="form-group">
                     <label>
                       <span data-translate="">regexpFlags</span>
-                      <div class="input-group">
+                    </label>
+                    <div class="input-group">
                         <input
                           type="text"
                           class="form-control"
@@ -275,11 +284,12 @@
                           </ul>
                         </div>
                       </div>
-                    </label>
                   </div>
                 </div>
               </div>
             </div>
+
+            <!-- method 2 & 3: xpath & form edits -->
             <div
               class="row"
               data-ng-show="editType === 'batchEdits' || editType === 'xpathEdits'"
@@ -336,7 +346,7 @@
                   <div gn-batch-edit-examples-selector="setExample"></div>
                 </div>
 
-                <form class="form-horizontal" id="gn-batch-changes">
+                <form id="gn-batch-changes">
                   <div data-ng-show="editType === 'xpathEdits'">
                     <form class="form-horizontal" name="xpathConfigForm" novalidate="">
                       <input type="hidden" name="_csrf" value="{{csrf}}" />
@@ -582,193 +592,195 @@
               </div>
             </div>
           </div>
-        </div>
 
-        <div data-ng-class="{'hidden' : selectedStep !== 3}">
-          <div class="panel-body">
-            <div class="container">
-              <div class="row">
-                <div
-                  class="col-sm-6"
-                  data-ng-show="editType !== 'searchAndReplace' && changes.length === 0"
-                >
-                  <p class="alert alert-warning" data-translate="">noChangesToApply</p>
-                </div>
-                <div
-                  class="col-sm-6"
-                  data-ng-show="editType !== 'searchAndReplace' && changes.length > 0"
-                >
-                  <h4 data-translate="">changesToApply</h4>
-                  <ul>
-                    <li
-                      data-ng-repeat="change in changes"
-                      title="{{change.value}}"
-                      data-ng-class=""
+          <div data-ng-class="{'hidden' : selectedStep !== 3}">
+
+            <div class="row">
+              <div
+                class="col-md-12"
+                data-ng-show="editType !== 'searchAndReplace' && changes.length === 0"
+              >
+                <p class="alert alert-warning" data-translate="">noChangesToApply</p>
+              </div>
+              <div
+                class="col-md-12"
+                data-ng-show="editType !== 'searchAndReplace' && changes.length > 0"
+              >
+                <h2 data-translate="">changesToApply</h2>
+                <ul>
+                  <li
+                    data-ng-repeat="change in changes"
+                    title="{{change.value}}"
+                    data-ng-class=""
+                  >
+                    {{change.field | translate}}
+                    <span data-ng-show="change.insertMode">
+                      ({{change.insertMode | translate}}) </span
+                    >: {{change.value | limitTo:40}}
+                  </li>
+                </ul>
+              </div>
+
+              <div
+                class="col-md-12"
+                data-ng-show="editType === 'searchAndReplace' && searchAndReplaceChanges[0].search == ''"
+              >
+                <p class="alert alert-warning" data-translate="">
+                  noSearchAndReplaceChangesToApply
+                </p>
+              </div>
+
+              <div
+                class="col-md-12"
+                data-ng-show="editType === 'searchAndReplace' && searchAndReplaceChanges[0].search != ''"
+              >
+                <h4 data-translate="">changesToApply</h4>
+                <ul class="list-group gn-resultview">
+                  <li
+                    data-ng-repeat="change in searchAndReplaceChanges track by $index"
+                    class="list-group-item"
+                  >
+                    {{change.search | limitTo:40}}
+                    <i class="fa fa-fw fa-chevron-right"></i>
+                    {{change.replacement | limitTo:40}}
+                    <span data-ng-if="changes.regexpFlags">
+                      ({{changes.regexpFlags}})</span
                     >
-                      {{change.field | translate}}
-                      <span data-ng-show="change.insertMode">
-                        ({{change.insertMode | translate}}) </span
-                      >: {{change.value | limitTo:40}}
-                    </li>
-                  </ul>
-                </div>
+                  </li>
+                </ul>
+              </div>
 
-                <div
-                  class="col-sm-6"
-                  data-ng-show="editType === 'searchAndReplace' && searchAndReplaceChanges[0].search == ''"
+              <div class="col-md-12" data-ng-hide="selectedRecords.total.value > 0">
+                <p
+                  class="alert alert-warning"
+                  data-ng-show="selectedRecordsCount == 0"
+                  data-translate=""
                 >
-                  <p class="alert alert-warning" data-translate="">
-                    noSearchAndReplaceChangesToApply
-                  </p>
-                </div>
-                <div
-                  class="col-sm-6"
-                  data-ng-show="editType === 'searchAndReplace' && searchAndReplaceChanges[0].search != ''"
+                  selectRecordsToEdit
+                </p>
+                <p
+                  class="alert alert-warning"
+                  data-ng-show="tooManyRecordInSelForSearch"
+                  data-translate=""
+                  data-translate-values="{count: selectedRecordsCount}"
                 >
-                  <h4 data-translate="">changesToApply</h4>
-                  <ul>
-                    <li
-                      data-ng-repeat="change in searchAndReplaceChanges track by $index"
-                      data-ng-class=""
+                  tooManyRecordInSelForSearch
+                </p>
+              </div>
+
+              <div class="col-md-12" data-ng-show="selectedRecords.total.value > 0">
+                <h4 data-translate="">aboutToUpdateTheFollowing</h4>
+                <ul class="list-group gn-resultview">
+                  <li class="list-group-item" data-ng-repeat="record in selectedRecords.hits">
+                    <a data-ng-href="catalog.search#/metadata/{{record._id}}"
+                      >{{record._source.resourceTitleObject.default}}</a
                     >
-                      {{change.search | limitTo:40}}
-                      <i class="fa fa-fw fa-chevron-right"></i>
-                      {{change.replacement | limitTo:40}}
-                      <span data-ng-if="changes.regexpFlags">
-                        ({{changes.regexpFlags}})</span
+
+                    <div class="btn-group btn-group-xs gn-margin-left">
+                      <button
+                        class="btn btn-default"
+                        data-ng-disabled="!canPreview"
+                        data-gn-click-and-spin="previewChanges(record._id)"
                       >
-                    </li>
-                  </ul>
-                </div>
-                <div class="col-sm-6" data-ng-hide="selectedRecords.total.value > 0">
-                  <p
-                    class="alert alert-warning"
-                    data-ng-show="selectedRecordsCount == 0"
-                    data-translate=""
-                  >
-                    selectRecordsToEdit
-                  </p>
-                  <p
-                    class="alert alert-warning"
-                    data-ng-show="tooManyRecordInSelForSearch"
-                    data-translate=""
-                    data-translate-values="{count: selectedRecordsCount}"
-                  >
-                    tooManyRecordInSelForSearch
-                  </p>
-                </div>
-                <div class="col-sm-6" data-ng-show="selectedRecords.total.value > 0">
-                  <h4 data-translate="">aboutToUpdateTheFollowing</h4>
-                  <ul>
-                    <li data-ng-repeat="record in selectedRecords.hits">
-                      <a data-ng-href="catalog.search#/metadata/{{record._id}}"
-                        >{{record._source.resourceTitleObject.default}}</a
+                        <i class="fa fa-play"></i>
+                        <span data-translate="">previewChangesAsXml</span>
+                      </button>
+                      <button
+                        type="button"
+                        class="btn btn-default dropdown-toggle"
+                        data-ng-disabled="!canPreview"
+                        data-toggle="dropdown"
                       >
-
-                      <div class="btn-group">
-                        <button
-                          class="btn btn-link btn-xs"
-                          data-ng-disabled="!canPreview"
-                          data-gn-click-and-spin="previewChanges(record._id)"
-                        >
-                          <i class="fa fa-play"></i>
-                          <span data-translate="">previewChangesAsXml</span>
-                        </button>
-                        <button
-                          type="button"
-                          class="btn btn-link btn-xs dropdown-toggle"
-                          data-ng-disabled="!canPreview"
-                          data-toggle="dropdown"
-                        >
-                          <span class="caret"></span>&nbsp;
-                        </button>
-                        <ul class="dropdown-menu pull-right" role="menu">
-                          <li>
-                            <a
-                              data-gn-click-and-spin="previewChanges(record._id, 'diffhtml')"
-                              href=""
-                              data-translate=""
-                            >
-                              previewChangesAsHtml</a
-                            >
-                          </li>
-                          <li>
-                            <a
-                              data-gn-click-and-spin="previewChanges(record._id, 'diff')"
-                              href=""
-                              data-translate=""
-                            >
-                              previewChangesAsDiff</a
-                            >
-                          </li>
-                          <li>
-                            <a
-                              data-gn-click-and-spin="previewChanges(record._id, 'patch')"
-                              href=""
-                              data-translate=""
-                            >
-                              previewChangesAsPatch</a
-                            >
-                          </li>
-                        </ul>
-                      </div>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-md-12">
-                  <input
-                    type="checkbox"
-                    id="updateDateStamp"
-                    data-ng-model="extraParams.updateDateStamp"
-                  />
-                  <label for="updateDateStamp" data-translate="">updateDateStamp</label>
-                </div>
-              </div>
-
-              <div class="row" data-ng-show="preview">
-                <div class="col-md-11">
-                  <h4 data-translate="">processPreview</h4>
-
-                  <div
-                    data-ng-if="diffType == 'diffhtml'"
-                    data-ng-bind-html="preview"
-                  ></div>
-                  <div
-                    data-ng-if="diffType != 'diffhtml'"
-                    style="height: 500px"
-                    ui-ace="{useWrapMode:true,showGutter:true,mode:'xml'}"
-                    data-ng-model="preview"
-                  ></div>
-                </div>
-              </div>
-              <div class="row" data-ng-show="previewError">
-                <div class="col-md-11">
-                  <div data-gn-batch-report="previewError"></div>
-                </div>
-              </div>
-
-              <br />
-              <div class="row gn-margin-bottom">
-                <div class="col-md-12">
-                  <button
-                    class="btn btn-block btn-primary"
-                    data-ng-disabled="!canPreview"
-                    data-gn-click-and-spin="applyChanges()"
-                  >
-                    <i class="fa fa-save"></i>
-                    <span data-translate="">save</span>
-                  </button>
-                </div>
-              </div>
-
-              <div class="row" data-ng-show="processReport">
-                <div class="col-md-11">
-                  <div data-gn-batch-report="processReport"></div>
-                </div>
+                        <span class="caret"></span>&nbsp;
+                      </button>
+                      <ul class="dropdown-menu pull-right" role="menu">
+                        <li>
+                          <a
+                            data-gn-click-and-spin="previewChanges(record._id, 'diffhtml')"
+                            href=""
+                            data-translate=""
+                          >
+                            previewChangesAsHtml</a
+                          >
+                        </li>
+                        <li>
+                          <a
+                            data-gn-click-and-spin="previewChanges(record._id, 'diff')"
+                            href=""
+                            data-translate=""
+                          >
+                            previewChangesAsDiff</a
+                          >
+                        </li>
+                        <li>
+                          <a
+                            data-gn-click-and-spin="previewChanges(record._id, 'patch')"
+                            href=""
+                            data-translate=""
+                          >
+                            previewChangesAsPatch</a
+                          >
+                        </li>
+                      </ul>
+                    </div>
+                  </li>
+                </ul>
               </div>
             </div>
+
+            <div class="row">
+              <div class="col-md-12">
+                <input
+                  type="checkbox"
+                  id="updateDateStamp"
+                  data-ng-model="extraParams.updateDateStamp"
+                />
+                <label for="updateDateStamp" data-translate="">updateDateStamp</label>
+              </div>
+            </div>
+
+            <div class="row" data-ng-show="preview">
+              <div class="col-md-11">
+                <h4 data-translate="">processPreview</h4>
+
+                <div
+                  data-ng-if="diffType == 'diffhtml'"
+                  data-ng-bind-html="preview"
+                ></div>
+                <div
+                  data-ng-if="diffType != 'diffhtml'"
+                  style="height: 500px"
+                  ui-ace="{useWrapMode:true,showGutter:true,mode:'xml'}"
+                  data-ng-model="preview"
+                ></div>
+              </div>
+            </div>
+            <div class="row" data-ng-show="previewError">
+              <div class="col-md-11">
+                <div data-gn-batch-report="previewError"></div>
+              </div>
+            </div>
+
+            <br />
+            <div class="row gn-margin-bottom">
+              <div class="col-md-12">
+                <button
+                  class="btn btn-success"
+                  data-ng-disabled="!canPreview"
+                  data-gn-click-and-spin="applyChanges()"
+                >
+                  <i class="fa fa-save"></i>
+                  <span data-translate="">save</span>
+                </button>
+              </div>
+            </div>
+
+            <div class="row" data-ng-show="processReport">
+              <div class="col-md-11">
+                <div data-gn-batch-report="processReport"></div>
+              </div>
+            </div>
+
           </div>
         </div>
       </div>
