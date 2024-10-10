@@ -123,6 +123,9 @@
              data-element-name="{name(gco:Date|gco:DateTime)}"
              data-element-ref="{concat('_X', gn:element/@ref)}"
              data-hide-time="{if ($viewConfig/@hideTimeInCalendar = 'true') then 'true' else 'false'}">
+          <xsl:if test="$isReadonly">
+            <xsl:attribute name="data-readonly" select="'true'"/>
+          </xsl:if>
         </div>
 
         <!-- Create form for all existing attribute (not in gn namespace)
