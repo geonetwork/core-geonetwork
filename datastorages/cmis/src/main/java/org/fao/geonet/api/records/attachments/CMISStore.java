@@ -1,6 +1,6 @@
 /*
  * =============================================================================
- * ===	Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * ===	Copyright (C) 2001-2024 Food and Agriculture Organization of the
  * ===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * ===	and United Nations Environment Programme (UNEP)
  * ===
@@ -627,8 +627,10 @@ public class CMISStore extends AbstractStore {
     /**
      * get external resource management for the supplied resource.
      * Replace the following
+     * {objectId}  type:visibility:metadataId:version:resourceId in base64 encoding
      * {id}  resource id
-     * {type:folder:document} // If the type is folder then type "folder" will be displayed else if document then "document" will be displayed
+     * {type:folder:document} // Custom return type based on type. If the type is folder then type "folder" will be displayed else if document then "document" will be displayed
+     * {type} // If the type is folder then type "folder" will be displayed else if document then "document" will be displayed
      * {uuid}  metadatauuid
      * {metadataid}  metadataid
      * {visibility}  visibility
@@ -657,16 +659,27 @@ public class CMISStore extends AbstractStore {
     ) {
         String metadataResourceExternalManagementPropertiesUrl = cmisConfiguration.getExternalResourceManagementUrl();
         if (!StringUtils.isEmpty(metadataResourceExternalManagementPropertiesUrl)) {
+            // {objectid}  objectId // It will be the type:visibility:metadataId:version:resourceId in base64
+            // i.e. folder::100::100                     # Folder in resource 100
+            // i.e. document:public:100:v1:sample.jpg    # public document 100 version v1 name sample.jpg
+            if (metadataResourceExternalManagementPropertiesUrl.contains("{objectid}")) {
+                metadataResourceExternalManagementPropertiesUrl = metadataResourceExternalManagementPropertiesUrl.replaceAll("(\\{objectid\\})",
+                    getResourceManagementExternalPropertiesObjectId((type == null ? "document" : (type instanceof Folder ? "folder" : "document")), visibility, metadataId, version, resourceId));
+            }
             // {id}  id
             if (metadataResourceExternalManagementPropertiesUrl.contains("{id}")) {
                 metadataResourceExternalManagementPropertiesUrl = metadataResourceExternalManagementPropertiesUrl.replaceAll("(\\{id\\})", (resourceId==null?"":resourceId));
             }
-            // {type:folder:document} // If the type is folder then type "folder" will be displayed else if document then "document" will be displayed
+            // {type:folder:document} // Custom return type based on type. If the type is folder then type "folder" will be displayed else if document then "document" will be displayed
             if (metadataResourceExternalManagementPropertiesUrl.contains("{type:")) {
                 metadataResourceExternalManagementPropertiesUrl = metadataResourceExternalManagementPropertiesUrl.replaceAll("\\{type:([a-zA-Z0-9]*?):([a-zA-Z0-9]*?)\\}",
                     (type==null?"":(type instanceof Folder?"$1":"$2")));
             }
-
+            // {type} // If the type is folder then type "folder" will be displayed else if document then "document" will be displayed
+            if (metadataResourceExternalManagementPropertiesUrl.contains("{type}")) {
+                metadataResourceExternalManagementPropertiesUrl = metadataResourceExternalManagementPropertiesUrl.replaceAll("(\\{type\\})",
+                    (type == null ? "document" : (type instanceof Folder ? "folder" : "document")));
+            }
             // {uuid}  metadatauuid
             if (metadataResourceExternalManagementPropertiesUrl.contains("{uuid}")) {
                 metadataResourceExternalManagementPropertiesUrl = metadataResourceExternalManagementPropertiesUrl.replaceAll("(\\{uuid\\})", (metadataUuid==null?"":metadataUuid));

@@ -109,7 +109,7 @@
       data-ng-init="key = h.metadataId + '-' + h.statusId"
     >
       <div
-        data-ng-show="h.statusValue.name == 'doiCreationTask'"
+        data-ng-if="h.statusValue.name == 'doiCreationTask'"
         data-gn-doi-wizard="h.metadataId"
       ></div>
 

@@ -24,6 +24,8 @@
 package org.fao.geonet.api.records.editing;
 
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -532,7 +534,7 @@ public class MetadataEditingApi {
         MediaType.ALL_VALUE}, produces = {MediaType.APPLICATION_XML_VALUE})
     @PreAuthorize("hasAuthority('Editor')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @ApiResponses(value = {@ApiResponse(responseCode = "204", description = "Editing session cancelled."),
+    @ApiResponses(value = {@ApiResponse(responseCode = "204", description = "Editing session cancelled.", content = {@Content(schema = @Schema(hidden = true))}),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)})
     @ResponseBody
     public void cancelEdits(@Parameter(description = API_PARAM_RECORD_UUID, required = true) @PathVariable String metadataUuid,
@@ -614,7 +616,7 @@ public class MetadataEditingApi {
         MediaType.ALL_VALUE}, produces = {MediaType.APPLICATION_XML_VALUE})
     @PreAuthorize("hasAuthority('Editor')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @ApiResponses(value = {@ApiResponse(responseCode = "204", description = "Element removed."),
+    @ApiResponses(value = {@ApiResponse(responseCode = "204", description = "Element removed.", content = {@Content(schema = @Schema(hidden = true))}),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)})
     @ResponseBody
     public void deleteElement(
@@ -638,7 +640,7 @@ public class MetadataEditingApi {
         MediaType.ALL_VALUE}, produces = {MediaType.APPLICATION_XML_VALUE})
     @PreAuthorize("hasAuthority('Editor')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @ApiResponses(value = {@ApiResponse(responseCode = "204", description = "Attribute removed."),
+    @ApiResponses(value = {@ApiResponse(responseCode = "204", description = "Attribute removed.", content = {@Content(schema = @Schema(hidden = true))}),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)})
     @ResponseBody
     public void deleteAttribute(

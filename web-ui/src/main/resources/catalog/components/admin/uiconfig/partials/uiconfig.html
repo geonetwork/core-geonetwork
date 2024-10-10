@@ -3,14 +3,12 @@
     id="gn-uiconfig-customize"
     class="col-lg-6 col-lg-offset-6 gn-nopadding-right height-70-px"
   >
-    <div class="pull-right">
-      <label class="d-block" data-translate="">chooseOptionsToCustomize</label>
-      <select
-        class="form-control"
-        data-ng-options="o.label group by o.group for o in configOptions"
-        data-ng-model="optionsToAdd"
-      ></select>
-    </div>
+    <label class="d-block" data-translate="">chooseOptionsToCustomize</label>
+    <select
+      class="form-control"
+      data-ng-options="o.label group by o.group for o in configOptions"
+      data-ng-model="optionsToAdd"
+    ></select>
   </div>
 
   <p class="help-block" data-translate="">ui/config-help</p>

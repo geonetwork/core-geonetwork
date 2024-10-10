@@ -25,6 +25,8 @@ package org.fao.geonet.api.records;
 
 import com.google.common.base.Optional;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -215,7 +217,7 @@ public class MetadataSharingApi implements ApplicationEventPublisherAware
         method = RequestMethod.PUT
     )
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "204", description = "Settings updated."),
+        @ApiResponse(responseCode = "204", description = "Settings updated.", content = {@Content(schema = @Schema(hidden = true))}),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)
     })
     @PreAuthorize("hasAuthority('Reviewer')")
@@ -260,7 +262,7 @@ public class MetadataSharingApi implements ApplicationEventPublisherAware
         method = RequestMethod.PUT
     )
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "204", description = "Settings updated."),
+        @ApiResponse(responseCode = "204", description = "Settings updated.", content = {@Content(schema = @Schema(hidden = true))}),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)
     })
     @PreAuthorize("hasAuthority('Reviewer')")
@@ -314,7 +316,7 @@ public class MetadataSharingApi implements ApplicationEventPublisherAware
         method = RequestMethod.PUT
     )
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "204", description = "Settings updated."),
+        @ApiResponse(responseCode = "204", description = "Settings updated.", content = {@Content(schema = @Schema(hidden = true))}),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)
     })
     @PreAuthorize("hasAuthority('Editor')")
@@ -775,7 +777,7 @@ public class MetadataSharingApi implements ApplicationEventPublisherAware
         method = RequestMethod.PUT
     )
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "204", description = "Record group updated."),
+        @ApiResponse(responseCode = "204", description = "Record group updated.", content = {@Content(schema = @Schema(hidden = true))}),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)
     })
     @PreAuthorize("hasAuthority('Editor')")
@@ -818,9 +820,9 @@ public class MetadataSharingApi implements ApplicationEventPublisherAware
         metadataManager.save(metadata);
         dataManager.indexMetadata(String.valueOf(metadata.getId()), true);
 
-        new RecordGroupOwnerChangeEvent(metadata.getId(), 
-                                        ApiUtils.getUserSession(request.getSession()).getUserIdAsInt(), 
-                                        ObjectJSONUtils.convertObjectInJsonObject(oldGroup, RecordGroupOwnerChangeEvent.FIELD), 
+        new RecordGroupOwnerChangeEvent(metadata.getId(),
+                                        ApiUtils.getUserSession(request.getSession()).getUserIdAsInt(),
+                                        ObjectJSONUtils.convertObjectInJsonObject(oldGroup, RecordGroupOwnerChangeEvent.FIELD),
                                         ObjectJSONUtils.convertObjectInJsonObject(group.get(), RecordGroupOwnerChangeEvent.FIELD)).publish(appContext);
     }
 

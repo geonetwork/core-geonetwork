@@ -22,6 +22,10 @@
     </ul>
   </section>
 
+  <div
+    ng-include="'../../catalog/views/default/templates/recordView/maintenance.html'"
+  ></div>
+
   <div data-ng-if="mdView.current.record.serviceType" class="gn-margin-bottom flex-row">
     <span class="badge badge-rounded" title="{{'serviceType' | translate}}">
       <i class="fa fa-fw fa-cloud"></i>
@@ -47,21 +51,6 @@
     <div data-ng-if="mdView.current.record.cl_couplingType">
       <h3 data-translate="">cl_couplingType</h3>
       <p data-ng-repeat="c in mdView.current.record.cl_couplingType">{{c.default}}</p>
-    </div>
-  </div>
-
-  <div
-    data-ng-if="mdView.current.record.cl_maintenanceAndUpdateFrequency.length > 0"
-    class="gn-margin-bottom flex-row"
-  >
-    <span class="badge badge-rounded" title="{{'updateFrequency' | translate}}">
-      <i class="fa fa-fw fa-language"></i>
-    </span>
-    <div>
-      <h3 data-translate="">updateFrequency</h3>
-      <p data-ng-repeat="c in mdView.current.record.cl_maintenanceAndUpdateFrequency">
-        {{c.default}}
-      </p>
     </div>
   </div>
 </div>
@@ -133,11 +122,8 @@
     <div>
       <h3 data-translate="">language</h3>
       <ul class="gn-comma-list">
-        <li
-          data-ng-repeat="l in mdView.current.record.resourceLanguage"
-          data-translate=""
-        >
-          {{l}}
+        <li data-ng-repeat="l in mdView.current.record.resourceLanguage">
+          <span data-translate=""> {{l}} </span>
         </li>
       </ul>
     </div>

@@ -151,7 +151,7 @@
       })
       .then(
         function (response) {
-          if (infoFormat && infoFormat.match(/application\/(geo|geo\+)json/i) != null) {
+          if (infoFormat && infoFormat.match(/application\/(geo|geo\+)?json/i) != null) {
             var jsonf = new ol.format.GeoJSON();
             var features = [];
             response.data.features.forEach(function (f) {
