@@ -346,11 +346,14 @@ public class GeoServerRest {
         } else if (file.startsWith("file://")) {
             type = "external";
         }
+        boolean isZip = ".zip".equals(extension);
 
         Log.debug(Geonet.GEOPUBLISH, "Creating datastore " + ds + " in workspace " + ws + " from file " + file);
-        int status = sendREST(GeoServerRest.METHOD_PUT, "/workspaces/" + ws
-                + "/datastores/" + ds + "/" + type + extension, file, null,
-            "text/plain", false);
+        int status = sendREST(GeoServerRest.METHOD_PUT,
+                "/workspaces/" + ws + "/datastores/" + ds + "/" + type + (isZip ? ".shp" : extension),
+                file, null,
+                (isZip ? "application/zip" : "text/plain"),
+                false);
 
         return status == 201;
     }
@@ -473,18 +476,20 @@ public class GeoServerRest {
             }
             if (sldbody.isEmpty() || (!sldbody.isEmpty() && status != 200)) {
                 String info = getLayerInfo(layer);
-                Element layerProperties = Xml.loadString(info, false);
-                String styleName = layerProperties.getChild("defaultStyle")
-                    .getChild("name").getText();
+                if (info != null) {
+                    Element layerProperties = Xml.loadString(info, false);
+                    String styleName = layerProperties.getChild("defaultStyle")
+                        .getChild("name").getText();
 
-                Log.debug(Geonet.GEOPUBLISH, "Getting default style for " + styleName + " to apply to layer " + layer + " in workspace " + ws);
-                /* get the default style (polygon, line, point) from the global styles */
-                status = sendREST(GeoServerRest.METHOD_GET, "/styles/" + styleName
-                    + ".sld?quietOnNotFound=true", null, null, null, true);
+                    Log.debug(Geonet.GEOPUBLISH, "Getting default style for " + styleName + " to apply to layer " + layer + " in workspace " + ws);
+                    /* get the default style (polygon, line, point) from the global styles */
+                    status = sendREST(GeoServerRest.METHOD_GET, "/styles/" + styleName
+                        + ".sld?quietOnNotFound=true", null, null, null, true);
 
-                status = sendREST(GeoServerRest.METHOD_PUT, url + "/" + layer
-                        + "_style", getResponse(), null,
-                    "application/vnd.ogc.sld+xml", true);
+                    status = sendREST(GeoServerRest.METHOD_PUT, url + "/" + layer
+                            + "_style", getResponse(), null,
+                        "application/vnd.ogc.sld+xml", true);
+                }
             }
             checkResponseCode(status);
 
