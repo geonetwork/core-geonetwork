@@ -63,7 +63,7 @@ public class IdentifiersApi {
     @io.swagger.v3.oas.annotations.Operation(
         summary = "Get identifier templates",
         description = "Identifier templates are used to create record UUIDs " +
-            "havind a particular structure. The template will be used " +
+            "having a particular structure. The template will be used " +
             "when user creates a new record. The template identifier to " +
             "use is defined in the administration > settings."
         //       authorizations = {
