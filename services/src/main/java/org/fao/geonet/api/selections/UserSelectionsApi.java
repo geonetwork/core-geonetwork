@@ -23,6 +23,8 @@
 package org.fao.geonet.api.selections;
 
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -160,7 +162,7 @@ public class UserSelectionsApi {
         method = RequestMethod.PUT)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "204", description = "Selection updated."),
+        @ApiResponse(responseCode = "204", description = "Selection updated.", content = {@Content(schema = @Schema(hidden = true))}),
         @ApiResponse(responseCode = "404", description = "Selection not found."),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_USER_ADMIN)
     })
@@ -209,7 +211,7 @@ public class UserSelectionsApi {
         method = RequestMethod.DELETE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "204", description = "Selection removed."),
+        @ApiResponse(responseCode = "204", description = "Selection removed.", content = {@Content(schema = @Schema(hidden = true))}),
         @ApiResponse(responseCode = "404", description = "Selection not found."),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_USER_ADMIN)
     })
@@ -348,7 +350,7 @@ public class UserSelectionsApi {
     public
     @ResponseBody
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "204", description = "Items removed from a set."),
+        @ApiResponse(responseCode = "204", description = "Items removed from a set.", content = {@Content(schema = @Schema(hidden = true))}),
         @ApiResponse(responseCode = "404", description = "Selection or user not found."),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_USER_ADMIN)
     })
