@@ -291,6 +291,8 @@ class Harvester extends BaseAligner<WebDavParams> implements IHarvester<HarvestR
         if (StringUtils.isNotEmpty(params.xslfilter)) {
             md = HarvesterUtil.processMetadata(dataMan.getSchema(schema),
                 md, processName, processParams);
+                
+            schema = dataMan.autodetectSchema(md);
         }
 
         //
