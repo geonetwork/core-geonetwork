@@ -6,6 +6,7 @@
     <health>
       <theme>Santé</theme>
       <theme>Health</theme>
+      <theme>Qualité de Vie</theme>
     </health>
     <environment>
       <theme>Environnement</theme>

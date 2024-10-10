@@ -1,0 +1,381 @@
+{
+  "links": [
+    {
+      "rel": "self",
+      "href": "https://www.odwb.be/api/explore/v2.0/catalog/datasets/collecte-de-sang-centre-de-prelevement-fixes"
+    },
+    {
+      "rel": "datasets",
+      "href": "https://www.odwb.be/api/explore/v2.0/catalog/datasets"
+    },
+    {
+      "rel": "records",
+      "href": "https://www.odwb.be/api/explore/v2.0/catalog/datasets/collecte-de-sang-centre-de-prelevement-fixes/records"
+    },
+    {
+      "rel": "exports",
+      "href": "https://www.odwb.be/api/explore/v2.0/catalog/datasets/collecte-de-sang-centre-de-prelevement-fixes/exports"
+    },
+    {
+      "rel": "facets",
+      "href": "https://www.odwb.be/api/explore/v2.0/catalog/datasets/collecte-de-sang-centre-de-prelevement-fixes/facets"
+    },
+    {
+      "rel": "reuses",
+      "href": "https://www.odwb.be/api/explore/v2.0/catalog/datasets/collecte-de-sang-centre-de-prelevement-fixes/reuses"
+    }
+  ],
+  "dataset": {
+    "visibility": "domain",
+    "dataset_id": "collecte-de-sang-centre-de-prelevement-fixes",
+    "dataset_uid": "da_lac5du",
+    "has_records": true,
+    "features": [
+      "calendar",
+      "geo",
+      "analyze",
+      "timeserie",
+      "custom_view"
+    ],
+    "attachments": [],
+    "alternative_exports": [],
+    "data_visible": true,
+    "fields": [
+      {
+        "name": "identifiant",
+        "description": null,
+        "annotations": {
+
+        },
+        "label": "identifiant",
+        "type": "text"
+      },
+      {
+        "name": "code_collecte",
+        "description": null,
+        "annotations": {
+
+        },
+        "label": "code_collecte",
+        "type": "text"
+      },
+      {
+        "name": "nom",
+        "description": null,
+        "annotations": {
+          "sortable": true
+        },
+        "label": "nom",
+        "type": "text"
+      },
+      {
+        "name": "type_de_collecte",
+        "description": null,
+        "annotations": {
+          "facet": true
+        },
+        "label": "type_de_collecte",
+        "type": "text"
+      },
+      {
+        "name": "description",
+        "description": null,
+        "annotations": {
+
+        },
+        "label": "description",
+        "type": "text"
+      },
+      {
+        "name": "url_source",
+        "description": null,
+        "annotations": {
+
+        },
+        "label": "url_source",
+        "type": "text"
+      },
+      {
+        "name": "latitude",
+        "description": null,
+        "annotations": {
+
+        },
+        "label": "latitude",
+        "type": "text"
+      },
+      {
+        "name": "longitude",
+        "description": null,
+        "annotations": {
+
+        },
+        "label": "longitude",
+        "type": "text"
+      },
+      {
+        "name": "rue",
+        "description": null,
+        "annotations": {
+
+        },
+        "label": "rue",
+        "type": "text"
+      },
+      {
+        "name": "code_postal",
+        "description": null,
+        "annotations": {
+
+        },
+        "label": "code postal",
+        "type": "text"
+      },
+      {
+        "name": "ville",
+        "description": null,
+        "annotations": {
+          "facet": true
+        },
+        "label": "ville",
+        "type": "text"
+      },
+      {
+        "name": "date_collecte",
+        "description": null,
+        "annotations": {
+          "facetsort": "-count",
+          "timeserie_precision": "day"
+        },
+        "label": "date_collecte",
+        "type": "date"
+      },
+      {
+        "name": "horaire_am1",
+        "description": null,
+        "annotations": {
+
+        },
+        "label": "horaire_am1",
+        "type": "text"
+      },
+      {
+        "name": "horaire_am2",
+        "description": null,
+        "annotations": {
+
+        },
+        "label": "horaire_am2",
+        "type": "text"
+      },
+      {
+        "name": "horaire_pm1",
+        "description": null,
+        "annotations": {
+
+        },
+        "label": "horaire_pm1",
+        "type": "text"
+      },
+      {
+        "name": "horaire_pm2",
+        "description": null,
+        "annotations": {
+
+        },
+        "label": "horaire_pm2",
+        "type": "text"
+      },
+      {
+        "name": "collecte_publique",
+        "description": null,
+        "annotations": {
+
+        },
+        "label": "collecte_publique",
+        "type": "text"
+      },
+      {
+        "name": "collecte_avec_rdv",
+        "description": null,
+        "annotations": {
+
+        },
+        "label": "collecte_avec_rdv",
+        "type": "text"
+      },
+      {
+        "name": "statut",
+        "description": null,
+        "annotations": {
+
+        },
+        "label": "statut",
+        "type": "text"
+      },
+      {
+        "name": "infos_complementaires",
+        "description": null,
+        "annotations": {
+
+        },
+        "label": "Infos complémentaires",
+        "type": "text"
+      },
+      {
+        "name": "geopointarcgis",
+        "description": null,
+        "annotations": {
+
+        },
+        "label": "geopointarcgis",
+        "type": "geo_point_2d"
+      },
+      {
+        "name": "commune",
+        "description": null,
+        "annotations": {
+
+        },
+        "label": "commune",
+        "type": "text"
+      },
+      {
+        "name": "province",
+        "description": null,
+        "annotations": {
+
+        },
+        "label": "province",
+        "type": "text"
+      }
+    ],
+    "metas": {
+      "dcat": {
+        "created": null,
+        "issued": null,
+        "creator": null,
+        "contributor": null,
+        "contact_name": "Thomas Paulus 084 32 16 00 pendant les heures d'ouverture.",
+        "contact_email": "sfs.communication@croix-rouge.be",
+        "accrualperiodicity": "daily",
+        "spatial": null,
+        "temporal": null,
+        "granularity": null,
+        "dataquality": "lineage",
+        "publisher_type": [
+          "NonProfitOrganisation"
+        ],
+        "conforms_to": null,
+        "temporal_coverage_start": "2020",
+        "temporal_coverage_end": "2022",
+        "accessRights": null
+      },
+      "semantic": {
+        "rml_mapping": null,
+        "classes": null,
+        "properties": null
+      },
+      "default": {
+        "title": "Tous les lieux de collecte de sang en Région wallonne et à Bruxelles",
+        "description": "\u003Cp\u003E\u003Cfont face=\"Open Sans, sans-serif\"\u003E\u003Cspan style=\"font-size: 12px;\"\u003EToutes les collectes de sang organisées par le Service du Sang de la Croix-Rouge, en Région wallonne et à Bruxelles, y compris les dons de plasma et de plaquettes. \u003C/span\u003E\u003C/font\u003E\u003C/p\u003E\u003Cp\u003E\u003Cfont face=\"Open Sans, sans-serif\"\u003E\u003Cspan style=\"font-size: 12px;\"\u003ERecherchez le lieu de collecte le plus proche de chez vous et prenez rendez-vous si nécessaire.\u003C/span\u003E\u003C/font\u003E\u003Cbr\u003E\u003C/p\u003E",
+        "theme": [
+          "Qualité de Vie"
+        ],
+        "keyword": [
+          "Centre de prélèvement",
+          "Sang",
+          "don de sang",
+          "Croix rouge",
+          "santé",
+          "Collecte"
+        ],
+        "license": "Creative Commons - CC0",
+        "license_url": "http://www.opendefinition.org/licenses/cc-by/",
+        "language": "fr",
+        "metadata_languages": [
+          "fr"
+        ],
+        "timezone": [
+          "Europe/Brussels"
+        ],
+        "modified": "2024-08-29T08:09:20.651000+00:00",
+        "modified_updates_on_metadata_change": true,
+        "modified_updates_on_data_change": true,
+        "data_processed": "2024-08-29T08:09:20.651000+00:00",
+        "metadata_processed": "2024-08-29T08:09:20.896000+00:00",
+        "geographic_reference": [
+          "be_40_03000",
+          "be_40_04000"
+        ],
+        "geographic_reference_auto": false,
+        "territory": [
+          "Région wallonne",
+          "Région de Bruxelles-Capitale"
+        ],
+        "geometry_types": [
+          "Point"
+        ],
+        "bbox": {
+          "type": "Feature",
+          "geometry": {
+            "coordinates": [
+              [
+                [6.17299164645374, 50.8502430282533],
+                [3.97492295131087, 50.8502430282533],
+                [3.97492295131087, 49.9810485122725],
+                [6.17299164645374, 49.9810485122725],
+                [6.17299164645374, 50.8502430282533]
+              ]
+            ],
+            "type": "Polygon"
+          },
+          "properties": {
+
+          }
+        },
+        "publisher": "Croix-rouge de Belgique - Service du sang",
+        "references": "https://www.donneurdesang.be",
+        "records_count": 2355,
+        "attributions": [
+          "National Geographic Institute (NGI-IGN, ngi.be)"
+        ],
+        "source_domain": null,
+        "source_domain_title": null,
+        "source_domain_address": null,
+        "source_dataset": null,
+        "shared_catalog": null,
+        "federated": false,
+        "oauth_scope": null,
+        "parent_domain": null,
+        "update_frequency": null
+      },
+      "inspire": {
+        "theme": null,
+        "type": null,
+        "file_identifier": null,
+        "hierarchy_level": null,
+        "hierarchy_level_name": null,
+        "spatial_resolution": null,
+        "topologic_consistency": null,
+        "contact_individual_name": null,
+        "contact_position": null,
+        "contact_address": null,
+        "contact_email": null,
+        "identification_purpose": null,
+        "extend_description": null,
+        "extend_bounding_box_westbound_longitude": null,
+        "extend_bounding_box_eastbound_longitude": null,
+        "extend_bounding_box_southbound_latitude": null,
+        "extend_bounding_box_northbound_latitude": null
+      },
+      "custom": {
+        "echelon-territorial": [
+          "Régional"
+        ],
+        "high-value-dataset": false,
+        "nom-moissonneur": null
+      }
+    }
+  }
+}
