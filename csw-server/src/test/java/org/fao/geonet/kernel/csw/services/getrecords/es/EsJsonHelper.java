@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2023 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2024 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -61,6 +61,35 @@ public class EsJsonHelper {
         outer.set("match", matchObject);
         return outer;
     }
+
+
+    /**
+     * Returns a structure like
+     *
+     * <pre>
+     *  { "range":
+     *    {
+     *      "gt": "value"
+     *    }
+     * </pre>
+     *
+     * @param property
+     * @param operator
+     * @param matchString
+     * @return
+     */
+    public static ObjectNode range(String property, String operator, String matchString) {
+        final ObjectNode rangeOperatorObject = MAPPER.createObjectNode();
+        rangeOperatorObject.put(operator, matchString);
+
+        final ObjectNode rangeObject = MAPPER.createObjectNode();
+        rangeObject.put(property, rangeOperatorObject);
+
+        final ObjectNode outer = MAPPER.createObjectNode();
+        outer.set("range", rangeObject);
+        return outer;
+    }
+
 
     private static ArrayNode bound(double x, double y) {
         final ArrayNode bound = MAPPER.createArrayNode();
