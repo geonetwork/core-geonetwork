@@ -295,7 +295,7 @@
         <xsl:with-param name="insertRef" select="$theElement/gn:element/@ref"/>
       </xsl:apply-templates>
       <xsl:apply-templates mode="render-for-field-for-attribute"
-                           select="*/@*">
+                           select="*/@*[name() != 'uom']">
         <xsl:with-param name="ref" select="$theElement/gn:element/@ref"/>
         <xsl:with-param name="insertRef" select="$theElement/gn:element/@ref"/>
       </xsl:apply-templates>
@@ -309,6 +309,16 @@
         <xsl:with-param name="ref" select="$theElement/gn:element/@ref"/>
         <xsl:with-param name="insertRef" select="$theElement/gn:element/@ref"/>
       </xsl:apply-templates>
+    </xsl:variable>
+
+    <xsl:variable name="inputGroup" as="node()*">
+      <xsl:for-each select="gco:Measure/@uom|gco:Length/@uom|gco:Distance/@uom|gco:Angle/@uom">
+        <xsl:apply-templates mode="render-for-field-for-attribute"
+                             select=".">
+          <xsl:with-param name="ref" select="$theElement/gn:element/@ref"/>
+          <xsl:with-param name="inputOnly" select="true()"/>
+        </xsl:apply-templates>
+      </xsl:for-each>
     </xsl:variable>
 
 
@@ -355,6 +365,18 @@
                   <xsl:value-of select="$text"/>
                 </value>
               </xsl:when>
+              <xsl:when test="gco:Measure|gco:Length|gco:Distance|gco:Angle">
+                <xsl:variable name="valueNodeLabel"
+                              as="node()?"
+                              select="gn-fn-metadata:getLabel($schema, name(gco:Measure|gco:Length|gco:Distance|gco:Angle), $labels, name(.), $isoType, $xpath)"/>
+                <element>
+                  <xsl:copy-of select="$labelConfig/@*"/>
+                  <label><xsl:value-of select="$labelConfig/label"/>
+                    <xsl:if test="$valueNodeLabel"> (<xsl:value-of select="$valueNodeLabel/label"/>)</xsl:if>
+                  </label>
+                  <xsl:copy-of select="$labelConfig/*[name() != 'label']"/>
+                </element>
+              </xsl:when>
               <xsl:when test="$ptFreeElementDoesNotExist">
                 <value ref="lang_{@id}_{$theElement/parent::node()/gn:element/@ref}"
                        lang="{@id}"></value>
@@ -387,6 +409,7 @@
       <!--<xsl:with-param name="widget"/>
         <xsl:with-param name="widgetParams"/>-->
       <xsl:with-param name="xpath" select="$xpath"/>
+      <xsl:with-param name="inputGroup" select="$inputGroup"/>
       <xsl:with-param name="attributesSnippet" select="$attributes"/>
       <xsl:with-param name="type"
                       select="if ($config and $config/@use != '')
