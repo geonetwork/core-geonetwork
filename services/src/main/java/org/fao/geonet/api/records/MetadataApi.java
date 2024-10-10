@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2023 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2024 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -402,6 +402,13 @@ public class MetadataApi {
             if (increasePopularity) {
                 dataManager.increasePopularity(context, mdId + "");
             }
+        }
+
+        if (!metadataUtils.isMetadataAvailableInPortal(Integer.parseInt(mdId))) {
+            Log.debug(API.LOG_MODULE_NAME, String.format("Metadata with UUID '%s' is not available in the portal", metadataUuid));
+            throw new ResourceNotFoundException(String.format("Metadata with UUID '%s' not found.", metadataUuid))
+                .withMessageKey("exception.resourceNotFound.metadata")
+                .withDescriptionKey("exception.resourceNotFound.metadata.description", new String[]{ metadataUuid });
         }
 
         Element xml = withInfo ?
