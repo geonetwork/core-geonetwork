@@ -65,7 +65,7 @@ public class IdentifiersApi {
         description = "Identifier templates are used to create record UUIDs " +
             "having a particular structure. The template will be used " +
             "when user creates a new record. The identifier template to " +
-            "use is defined in the administration > settings."
+            "use is defined in the admin console > metadata and templates."
         //       authorizations = {
         //           @Authorization(value = "basicAuth")
         //      })
