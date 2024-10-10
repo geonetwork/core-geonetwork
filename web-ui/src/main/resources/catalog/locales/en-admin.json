@@ -880,7 +880,7 @@
     "metadata/workflow/forceValidationOnMdSave-help": "When the metadata is saved force validation check",
     "metadata/import": "Metadata import",
     "metadata/import/restrict": "Restrict import to schemas",
-    "metadata/import/restrict-help": "List of all allowed schemas for metadata to be imported. If the metadata schema is not allowed, then the import is not done. No value means all schemas allowed.",
+    "metadata/import/restrict-help": "Comma separated list of all allowed schemas for metadata to be imported. If the metadata schema is not allowed, then the import is not done. No value means all schemas allowed.",
     "metadata/import/userprofile": "Minimum user profile allowed to import metadata",
     "metadata/import/userprofile-help": "Minimum user profile allowed to import metadata (Editor, Reviewer or Administrator). The default value is Editor.",
     "metadata/delete": "Metadata delete",
