@@ -2,26 +2,43 @@
 
 Metadata can be present in the tables of a relational databases, which are commonly used by many organisations. Putting an OGC Web Feature Service (WFS) over a relational database will allow metadata to be extracted via standard query mechanisms. This harvesting type allows the user to specify a GetFeature query and map information from the features to fragments of metadata that can be linked or copied into a template to create metadata records.
 
-## Adding an OGC WFS GetFeature Harvester
-
 An OGC web feature service (WFS) implements a GetFeature query operation that returns data in the form of features (usually rows from related tables in a relational database). GeoNetwork, acting as a client, can read the GetFeature response and apply a user-supplied XSLT stylesheet to produce metadata fragments that can be linked or copied into a user-supplied template to build metadata records.
 
-The available options are:
+## Adding an OGC WFS GetFeature Harvester
 
--   **Site**
-    -   *Name* - This is a short description of the harvester. It will be shown in the harvesting main page as the name for this WFS GetFeature harvester.
-    -   *Service URL* - The bare URL of the WFS service (no OGC params required)
-    -   *Metadata language* - The language that will be used in the metadata records created by the harvester
+To create a OGC WFS GetFeature harvester go to `Admin console` > `Harvesting` and select `Harvest from` > `OGC WFS GetFeature`:
+
+![](img/add-wfsgetfeature-harvester.png)
+
+Providing the following information:
+
+-   **Identification**
+    -   *Node name and logo*: A unique name for the harvester and, optionally, a logo to assign to the harvester.
+    -   *Group*: Group which owns the harvested records. Only the catalog administrator or users with the profile `UserAdmin` of this group can manage the harvester.
+    -   *User*: User who owns the harvested records.
+
+-   **Schedule**: Scheduling options to execute the harvester. If disabled, the harvester must be run manually from the harvester page. If enabled, a scheduling expression using cron syntax should be configured ([See examples](https://www.quartz-scheduler.org/documentation/quartz-2.1.7/tutorials/crontrigger)).
+
+-   **Configure connection to OGC CSW 2.0.2**
+    -   *Service URL*: The bare URL of the WFS service (no OGC params required).
+    -   *Remote authentication*: If checked, should be provided the credentials for basic HTTP authentication on the WFS server.
     -   *OGC WFS GetFeature Query* - The OGC WFS GetFeature query used to extract features from the WFS.
-    -   *Schema for output metadata records* - choose the metadata schema or profile for the harvested metadata records. Note: only the schemas that have WFS fragment stylesheets will be displayed in the list (see the next option for the location of these stylesheets).
-        -   *Stylesheet to create fragments* - User-supplied stylesheet that transforms the GetFeature response to a metadata fragments document (see below for the format of that document). Stylesheets exist in the WFSToFragments directory which is in the convert directory of the selected output schema. eg. for the iso19139 schema, this directory is `GEONETWORK_DATA_DIR/config/schema_plugins/iso19139/convert/WFSToFragments`.
-        -   *Save large response to disk* - Check this box if you expect the WFS GetFeature response to be large (eg. greater than 10MB). If checked, the GetFeature response will be saved to disk in a temporary file. Each feature will then be extracted from the temporary file and used to create the fragments and metadata records. If not checked, the response will be held in RAM.
-        -   *Create subtemplates* - Check this box if you want the harvested metadata fragments to be saved as subtemplates in the metadata catalog and xlink'd into the metadata template (see next option). If not checked, the fragments will be copied into the metadata template.
-        -   *Template to use to build metadata using fragments* - Choose the metadata template that will be combined with the harvested metadata fragments to create metadata records. This is a standard GeoNetwork metadata template record.
-    -   *Category for records built with linked fragments* - Choose the metadata template that will be combined with the harvested metadata fragments to create metadata records. This is a standard GeoNetwork metadata template record.
--   **Options**
--   **Privileges**
--   **Category for subtemplates** - When fragments are saved to GeoNetwork as subtemplates they will be assigned to the category selected here.
+
+-   **Configure response processing for wfsfeatures**
+    -   *Language*:  The language that will be used in the metadata records created by the harvester.
+    -   *Metadata standard*: The metadata standard to create the metadata. It should be a valid metadata schema installed in GeoNetwork, by default `iso19139`. 
+    -   *Save large response to disk*: Check this box if you expect the WFS GetFeature response to be large (eg. greater than 10MB). If checked, the GetFeature response will be saved to disk in a temporary file. Each feature will then be extracted from the temporary file and used to create the fragments and metadata records. If not checked, the response will be held in RAM.
+    -   *Stylesheet to create fragments*: User-supplied stylesheet that transforms the GetFeature response to a metadata fragments document (see below for the format of that document). Stylesheets exist in the WFSToFragments directory which is in the convert directory of the selected output schema. eg. for the iso19139 schema, this directory is `GEONETWORK_DATA_DIR/config/schema_plugins/iso19139/convert/WFSToFragments`.
+    -   *Create subtemplates*: Check this box if you want the harvested metadata fragments to be saved as subtemplates in the metadata catalog and xlink'd into the metadata template (see next option). If not checked, the fragments will be copied into the metadata template.
+    -   *Select template to combine with fragments*: Choose the metadata template that will be combined with the harvested metadata fragments to create metadata records. This is a standard GeoNetwork metadata template record.
+    -   *Category for directory entries*: (Optional) When fragments are saved to GeoNetwork as subtemplates they will be assigned to the category selected here.
+    -   *Validate records before import*: Defines the criteria to reject metadata that is invalid according to XML structure (XSD) and validation rules (schematron).
+        -   Accept all metadata without validation.
+        -   Accept metadata that are XSD valid.
+        -   Accept metadata that are XSD and schematron valid.
+ 
+-   **Privileges** - Assign privileges to harvested metadata.
+
 
 ## More about turning the GetFeature Response into metadata fragments
 
