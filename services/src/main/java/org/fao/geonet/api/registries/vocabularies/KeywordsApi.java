@@ -502,7 +502,7 @@ public class KeywordsApi {
             langs = context.getLanguage().split(",");
         }
         List<String> langList = new ArrayList<>(List.of(langs));
-        if (!langList.contains("'eng'")) {
+        if (!langList.contains("eng")) {
             langList.add("eng");
         }
 
