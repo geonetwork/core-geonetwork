@@ -20,7 +20,7 @@
       
       
       <link rel="icon" href="../../../assets/images/geonetwork-logo.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.39">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.40">
     
     
       
@@ -1216,6 +1216,27 @@
         
   
   <span class="md-ellipsis">
+    GeoNetwork 2.1-3.X Harvester
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../harvesting-geonetwork-2/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
     GeoNetwork 2.0 Harvester
   </span>
   
@@ -1371,6 +1392,48 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#sample-configurations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Sample configurations
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Sample configurations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sample-configuration-for-opendatasoft" class="md-nav__link">
+    <span class="md-ellipsis">
+      Sample configuration for opendatasoft
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sample-configuration-for-esri" class="md-nav__link">
+    <span class="md-ellipsis">
+      Sample configuration for ESRI
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sample-configuration-for-dkan" class="md-nav__link">
+    <span class="md-ellipsis">
+      Sample configuration for DKAN
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1434,27 +1497,6 @@
   
   <span class="md-ellipsis">
     WFS GetFeature Harvesting
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../harvesting-z3950/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    Z3950 Harvesting
   </span>
   
 
@@ -1882,6 +1924,48 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#sample-configurations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Sample configurations
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Sample configurations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sample-configuration-for-opendatasoft" class="md-nav__link">
+    <span class="md-ellipsis">
+      Sample configuration for opendatasoft
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sample-configuration-for-esri" class="md-nav__link">
+    <span class="md-ellipsis">
+      Sample configuration for ESRI
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sample-configuration-for-dkan" class="md-nav__link">
+    <span class="md-ellipsis">
+      Sample configuration for DKAN
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1916,54 +2000,89 @@
 <h1 id="harvesting-simpleurl-services">Simple URL harvesting (opendata)</h1>
 <p>This harvester connects to a remote server via a simple URL to retrieve metadata records. This allows harvesting opendata catalogs such as opendatasoft, ESRI, DKAN and more.</p>
 <h2 id="adding-a-simple-url-harvester">Adding a simple URL harvester</h2>
+<p>To create a Simple URL harvester go to <code>Admin console</code> &gt; <code>Harvesting</code> and select <code>Harvest from</code> &gt; <code>Simple URL</code>:</p>
+<p><img alt="" src="../img/add-simpleurl-harvester.png" /></p>
+<p>Providing the following information:</p>
 <ul>
 <li>
-<p><strong>Site</strong> - Options about the remote site.</p>
+<p><strong>Identification</strong></p>
 <ul>
-<li><em>Name</em> - This is a short description of the remote site. It will be shown in the harvesting main page as the name for this instance of the harvester.</li>
-<li><em>Service URL</em> - The URL of the server to be harvested. This can include pagination params like <code>?start=0&amp;rows=20</code></li>
-<li><em>loopElement</em> - Propery/element containing a list of the record entries. (Indicated as an absolute path from the document root.) eg. <code>/datasets</code></li>
-<li><em>numberOfRecordPath</em> : Property indicating the total count of record entries. (Indicated as an absolute path from the document root.) eg. <code>/nhits</code></li>
-<li><em>recordIdPath</em> : Property containing the record id. eg. <code>datasetid</code></li>
-<li><em>pageFromParam</em> : Property indicating the first record item on the current "page" eg. <code>start</code></li>
-<li><em>pageSizeParam</em> : Property indicating the number of records containned in the current "page" eg. <code>rows</code></li>
-<li><em>toISOConversion</em> : Name of the conversion schema to use, which must be available as XSL on the GN instance. eg. <code>OPENDATASOFT-to-ISO19115-3-2018</code></li>
+<li><em>Node name and logo</em>: A unique name for the harvester and, optionally, a logo to assign to the harvester.</li>
+<li><em>Group</em>: Group which owns the harvested records. Only the catalog administrator or users with the profile <code>UserAdmin</code> of this group can manage the harvester.</li>
+<li><em>User</em>: User who owns the harvested records.</li>
 </ul>
+</li>
+<li>
+<p><strong>Schedule</strong>: Scheduling options to execute the harvester. If disabled, the harvester must be run manually from the harvester page. If enabled, a scheduling expression using cron syntax should be configured (<a href="https://www.quartz-scheduler.org/documentation/quartz-2.1.7/tutorials/crontrigger">See examples</a>).</p>
+</li>
+<li>
+<p><strong>Configure connection to Simple URL</strong></p>
+<ul>
+<li><em>URL</em> - The URL of the server to be harvested. This can include pagination params like <code>?start=0&amp;rows=20</code></li>
+<li><em>Remote authentication</em>: If checked, should be provided the credentials for basic HTTP authentication on the server.</li>
+<li><em>Element to loop on</em>: Propery/element containing a list of the record entries. (Indicated as an absolute path from the document root.) eg. <code>/datasets</code></li>
+<li><em>Element for the UUID of each record</em> : Property containing the record id. eg. <code>datasetid</code></li>
+<li><em>Pagination parameters</em>: (optional).<ul>
+<li><em>Element for the number of records to collect</em>: Property indicating the total count of record entries. (Indicated as an absolute path from the document root.) eg. <code>/nhits</code></li>
+<li><em>From URL parameter</em>: Property indicating the first record item on the current "page" eg. <code>start</code></li>
+<li><em>Size URL parameter</em>: Property indicating the number of records containned in the current "page" eg. <code>rows</code></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>Configure response processing for Simple URL</strong></p>
+<ul>
+<li>
+<p><em>XSL transformation to apply</em>: Name of the conversion schema to use, which must be available as XSL on the GeoNetwork instance. eg. <code>OPENDATASOFT-to-ISO19115-3-2018</code></p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>GN looks for schemas by name in <a href="https://github.com/geonetwork/core-geonetwork/tree/4.0.x/web/src/main/webapp/xsl/conversion/import">https://github.com/geonetwork/core-geonetwork/tree/4.0.x/web/src/main/webapp/xsl/conversion/import</a>. These schemas might internally include schemas from other locations like <a href="https://github.com/geonetwork/core-geonetwork/tree/4.0.x/schemas/iso19115-3.2018/src/main/plugin/iso19115-3.2018/convert">https://github.com/geonetwork/core-geonetwork/tree/4.0.x/schemas/iso19115-3.2018/src/main/plugin/iso19115-3.2018/convert</a>. To indicate the <code>fromJsonOpenDataSoft</code> schema for example, from the latter location directly in the admin UI the following syntax can be used: <code>schema:iso19115-3.2018:convert/fromJsonOpenDataSoft</code>.</p>
 </div>
-<p><strong>Sample configuration for opendatasoft</strong></p>
-<ul>
-<li><em>loopElement</em> - <code>/datasets</code></li>
-<li><em>numberOfRecordPath</em> : <code>/nhits</code></li>
-<li><em>recordIdPath</em> : <code>datasetid</code></li>
-<li><em>pageFromParam</em> : <code>start</code></li>
-<li><em>pageSizeParam</em> : <code>rows</code></li>
-<li><em>toISOConversion</em> : <code>OPENDATASOFT-to-ISO19115-3-2018</code></li>
+</li>
+<li>
+<p><em>Batch edits</em>: (Optional) Allows to update harvested records, using XPATH syntax. It can be used to add, replace or delete element.</p>
+</li>
+<li><em>Category</em>: (Optional) A GeoNetwork category to assign to each metadata record.</li>
+<li><em>Validate records before import</em>: Defines the criteria to reject metadata that is invalid according to XML structure (XSD) and validation rules (schematron).<ul>
+<li>Accept all metadata without validation.</li>
+<li>Accept metadata that are XSD valid.</li>
+<li>Accept metadata that are XSD and schematron valid.</li>
 </ul>
-<p><strong>Sample configuration for ESRI</strong></p>
-<ul>
-<li><em>loopElement</em> - <code>/dataset</code></li>
-<li><em>numberOfRecordPath</em> : <code>/result/count</code></li>
-<li><em>recordIdPath</em> : <code>landingPage</code></li>
-<li><em>pageFromParam</em> : <code>start</code></li>
-<li><em>pageSizeParam</em> : <code>rows</code></li>
-<li><em>toISOConversion</em> : <code>ESRIDCAT-to-ISO19115-3-2018</code></li>
-</ul>
-<p><strong>Sample configuration for DKAN</strong></p>
-<ul>
-<li><em>loopElement</em> - <code>/result/0</code></li>
-<li><em>numberOfRecordPath</em> : <code>/result/count</code></li>
-<li><em>recordIdPath</em> : <code>id</code></li>
-<li><em>pageFromParam</em> : <code>start</code></li>
-<li><em>pageSizeParam</em> : <code>rows</code></li>
-<li><em>toISOConversion</em> : <code>DKAN-to-ISO19115-3-2018</code></li>
+</li>
 </ul>
 </li>
 <li>
 <p><strong>Privileges</strong> - Assign privileges to harvested metadata.</p>
 </li>
+</ul>
+<h2 id="sample-configurations">Sample configurations</h2>
+<h3 id="sample-configuration-for-opendatasoft">Sample configuration for opendatasoft</h3>
+<ul>
+<li><em>Element to loop on</em> - <code>/datasets</code></li>
+<li><em>Element for the number of records to collect</em> : <code>/nhits</code></li>
+<li><em>Element for the UUID of each record</em> : <code>datasetid</code></li>
+<li><em>From URL parameter</em> : <code>start</code></li>
+<li><em>Size URL parameter</em> : <code>rows</code></li>
+<li><em>XSL transformation to apply</em> : <code>OPENDATASOFT-to-ISO19115-3-2018</code></li>
+</ul>
+<h3 id="sample-configuration-for-esri">Sample configuration for ESRI</h3>
+<ul>
+<li><em>Element to loop on</em> - <code>/dataset</code></li>
+<li><em>Element for the number of records to collect</em> : <code>/result/count</code></li>
+<li><em>Element for the UUID of each record</em> : <code>landingPage</code></li>
+<li><em>From URL parameter</em> : <code>start</code></li>
+<li><em>Size URL parameter</em> : <code>rows</code></li>
+<li><em>XSL transformation to apply</em> : <code>ESRIDCAT-to-ISO19115-3-2018</code></li>
+</ul>
+<h3 id="sample-configuration-for-dkan">Sample configuration for DKAN</h3>
+<ul>
+<li><em>Element to loop on</em> - <code>/result/0</code></li>
+<li><em>Element for the number of records to collect</em> : <code>/result/count</code></li>
+<li><em>Element for the UUID of each record</em> : <code>id</code></li>
+<li><em>From URL parameter</em> : <code>start</code></li>
+<li><em>Size URL parameter</em> : <code>rows</code></li>
+<li><em>XSL transformation to apply</em> : <code>DKAN-to-ISO19115-3-2018</code></li>
 </ul>
 
 

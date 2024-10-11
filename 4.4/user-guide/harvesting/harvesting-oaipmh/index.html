@@ -20,7 +20,7 @@
       
       
       <link rel="icon" href="../../../assets/images/geonetwork-logo.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.39">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.40">
     
     
       
@@ -1216,6 +1216,27 @@
         
   
   <span class="md-ellipsis">
+    GeoNetwork 2.1-3.X Harvester
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../harvesting-geonetwork-2/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
     GeoNetwork 2.0 Harvester
   </span>
   
@@ -1434,27 +1455,6 @@
   
   <span class="md-ellipsis">
     WFS GetFeature Harvesting
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../harvesting-z3950/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    Z3950 Harvesting
   </span>
   
 
@@ -1914,42 +1914,71 @@
 
 
 <h1 id="oaipmh_harvester">OAIPMH Harvesting</h1>
-<p>This is a harvesting protocol that is widely used among libraries. GeoNetwork implements version 2.0 of the protocol.</p>
+<p>This is a harvesting protocol that is widely used among libraries. GeoNetwork implements version 2.0 of the protocol. An OAI-PMH server implements a harvesting protocol that GeoNetwork, acting as a client, can use to harvest metadata.</p>
 <h2 id="adding-an-oai-pmh-harvester">Adding an OAI-PMH harvester</h2>
-<p>An OAI-PMH server implements a harvesting protocol that GeoNetwork, acting as a client, can use to harvest metadata.</p>
-<p>Configuration options:</p>
+<p>To create a OAI-PMH harvester go to <code>Admin console</code> &gt; <code>Harvesting</code> and select <code>Harvest from</code> &gt; <code>OAI/PMH</code>:</p>
+<p><img alt="" src="../img/add-oaipmh-harvester.png" /></p>
+<p>Providing the following information:</p>
 <ul>
-<li><strong>Site</strong> - Options describing the remote site.<ul>
-<li><em>Name</em> - This is a short description of the remote site. It will be shown in the harvesting main page as the name for this instance of the OAIPMH harvester.</li>
-<li><em>URL</em> - The URL of the OAI-PMH server from which metadata will be harvested.</li>
-<li><em>Icon</em> - An icon to assign to harvested metadata. The icon will be used when showing search results.</li>
-<li><em>Use account</em> - Account credentials for basic HTTP authentication on the OAIPMH server.</li>
+<li>
+<p><strong>Identification</strong></p>
+<ul>
+<li><em>Node name and logo</em>: A unique name for the harvester and, optionally, a logo to assign to the harvester.</li>
+<li><em>Group</em>: Group which owns the harvested records. Only the catalog administrator or users with the profile <code>UserAdmin</code> of this group can manage the harvester.</li>
+<li><em>User</em>: User who owns the harvested records.</li>
 </ul>
 </li>
-<li><strong>Search criteria</strong> - This allows you to select metadata records for harvest based on certain criteria:<ul>
-<li><em>From</em> - You can provide a start date here. Any metadata whose last change date is equal to or greater than this date will be harvested. To add or edit a value for this field you need to use the icon alongside the text box. This field is optional so if you don't provide a start date the constraint is dropped. Use the icon to clear the field.</li>
-<li><em>Until</em> - Functions in the same way as the <em>From</em> parameter but adds an end constraint to the last change date search. Any metadata whose last change data is less than or equal to this data will be harvested.</li>
-<li><em>Set</em> - An OAI-PMH server classifies metadata into sets (like categories in GeoNetwork). You can request all metadata records that belong to a set (and any of its subsets) by specifying the name of that set here.</li>
-<li><em>Prefix</em> - 'Prefix' means metadata format. The oai_dc prefix must be supported by all OAI-PMH compliant servers.</li>
-<li>You can use the Add button to add more than one Search Criteria set. Search Criteria sets can be removed by clicking on the small cross at the top left of the set.</li>
-</ul>
+<li>
+<p><strong>Schedule</strong>: Scheduling options to execute the harvester. If disabled, the harvester must be run manually from the harvester page. If enabled, a scheduling expression using cron syntax should be configured (<a href="https://www.quartz-scheduler.org/documentation/quartz-2.1.7/tutorials/crontrigger">See examples</a>).</p>
 </li>
-</ul>
+<li>
+<p><strong>Configure connection to OGC CSW 2.0.2</strong></p>
+<ul>
+<li><em>URL</em>: The URL of the OAI-PMH server from which metadata will be harvested.</li>
+<li><em>Remote authentication</em>: If checked, should be provided the credentials for basic HTTP authentication on the OAIPMH server.</li>
+<li>
+<p><em>Search filter</em>: (Optional) Define the search criteria below to restrict the records to harvest.</p>
+<ul>
+<li><em>From</em>: You can provide a start date here. Any metadata whose last change date is equal to or greater than this date will be harvested. To add or edit a value for this field you need to use the icon alongside the text box. This field is optional so if you don't provide a start date the constraint is dropped. Use the icon to clear the field.</li>
+<li><em>Until</em>: Functions in the same way as the <em>From</em> parameter but adds an end constraint to the last change date search. Any metadata whose last change data is less than or equal to this data will be harvested.</li>
+<li><em>Set</em>: An OAI-PMH server classifies metadata into sets (like categories in GeoNetwork). You can request all metadata records that belong to a set (and any of its subsets) by specifying the name of that set here.</li>
+<li>
+<p><em>Prefix</em>: 'Prefix' means metadata format. The oai_dc prefix must be supported by all OAI-PMH compliant servers.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>the 'OAI provider sets' drop down next to the <em>Set</em> text box and the 'OAI provider prefixes' drop down next to the <em>Prefix</em> textbox are initially blank. After specifying the connection URL, you can press the <strong>Retrieve Info</strong> button, which will connect to the remote OAI-PMH server, retrieve all supported sets and prefixes and fill the drop downs with these values. Selecting a value from either of these drop downs will fill the appropriate text box with the selected value.</p>
+<p>The 'OAI provider sets' drop down next to the <em>Set</em> text box and the 'OAI provider prefixes' drop down next to the <em>Prefix</em> textbox are initially blank. After specifying the connection URL, you can press the <strong>Retrieve Info</strong> button, which will connect to the remote OAI-PMH server, retrieve all supported sets and prefixes and fill the drop downs with these values. Selecting a value from either of these drop downs will fill the appropriate text box with the selected value.</p>
 </div>
 <ul>
-<li><strong>Options</strong> - Scheduling Options.</li>
-<li><strong>Privileges</strong></li>
-<li><strong>Categories</strong></li>
+<li><strong>Configure response processing for oaipmh</strong><ul>
+<li><em>Action on UUID collision</em>: When a harvester finds the same uuid on a record collected by another method (another harvester, importer, dashboard editor,...), should this record be skipped (default), overriden or generate a new UUID?</li>
+<li><em>Validate records before import</em>: Defines the criteria to reject metadata that is invalid according to XML structure (XSD) and validation rules (schematron).<ul>
+<li>Accept all metadata without validation.</li>
+<li>Accept metadata that are XSD valid.</li>
+<li>Accept metadata that are XSD and schematron valid.  </li>
+</ul>
+</li>
+<li><em>XSL transformation to apply</em>: (Optional)  The referenced XSL transform will be applied to each metadata record before it is added to GeoNetwork.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><em>Category</em>: (Optional) A GeoNetwork category to assign to each metadata record.</p>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>Privileges</strong> - Assign privileges to harvested metadata.</p>
+</li>
 </ul>
 <div class="admonition notes">
 <p class="admonition-title">Notes</p>
 <ul>
-<li>if you request the oai_dc output format, GeoNetwork will convert it to Dublin Core format.</li>
-<li>when you edit a previously created OAIPMH harvester instance, both the <em>set</em> and <em>prefix</em> drop down lists will be empty. You have to press the retrieve info button again to connect to the remote server and retrieve set and prefix information.</li>
-<li>the id of the remote server must be a UUID. If not, metadata can be harvested but during hierarchical propagation id clashes could corrupt harvested metadata.</li>
+<li>If you request the oai_dc output format, GeoNetwork will convert it to Dublin Core format.</li>
+<li>When you edit a previously created OAIPMH harvester instance, both the <em>set</em> and <em>prefix</em> drop down lists will be empty. You have to press the retrieve info button again to connect to the remote server and retrieve set and prefix information.</li>
+<li>The id of the remote server must be a UUID. If not, metadata can be harvested but during hierarchical propagation id clashes could corrupt harvested metadata.</li>
 </ul>
 </div>
 

@@ -20,7 +20,7 @@
       
       
       <link rel="icon" href="../../../assets/images/geonetwork-logo.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.39">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.40">
     
     
       
@@ -1265,6 +1265,27 @@
         
   
   <span class="md-ellipsis">
+    GeoNetwork 2.1-3.X Harvester
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../harvesting-geonetwork-2/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
     GeoNetwork 2.0 Harvester
   </span>
   
@@ -1434,27 +1455,6 @@
   
   <span class="md-ellipsis">
     WFS GetFeature Harvesting
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../harvesting-z3950/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    Z3950 Harvesting
   </span>
   
 
@@ -1916,23 +1916,55 @@
 <h1 id="harvesting-csw-services">Harvesting CSW services</h1>
 <p>This harvester will connect to a remote CSW server and retrieve metadata records that match the query parameters specified.</p>
 <h2 id="adding-a-csw-harvester">Adding a CSW harvester</h2>
-<p>The figure above shows the options available:</p>
+<p>To create a CSW harvester go to <code>Admin console</code> &gt; <code>Harvesting</code> and select <code>Harvest from</code> &gt; <code>CSW</code>:</p>
+<p><img alt="" src="../img/add-csw-harvester.png" /></p>
+<p>Providing the following information:</p>
 <ul>
-<li><strong>Site</strong> - Options about the remote site.<ul>
-<li><em>Name</em> - This is a short description of the remote site. It will be shown in the harvesting main page as the name for this instance of the CSW harvester.</li>
-<li><em>Service URL</em> - The URL of the capabilities document of the CSW server to be harvested. eg. <a href="http://geonetwork-site.com/srv/eng/csw?service=CSW&amp;request=GetCabilities&amp;version=2.0.2">http://geonetwork-site.com/srv/eng/csw?service=CSW&amp;request=GetCabilities&amp;version=2.0.2</a>. This document is used to discover the location of the services to call to query and retrieve metadata.</li>
-<li><em>Icon</em> - An icon to assign to harvested metadata. The icon will be used when showing harvested metadata records in the search results.</li>
-<li><em>Use account</em> - Account credentials for basic HTTP authentication on the CSW server.</li>
+<li>
+<p><strong>Identification</strong></p>
+<ul>
+<li><em>Node name and logo</em>: A unique name for the harvester and, optionally, a logo to assign to the harvester.</li>
+<li><em>Group</em>: Group which owns the harvested records. Only the catalog administrator or users with the profile <code>UserAdmin</code> of this group can manage the harvester.</li>
+<li><em>User</em>: User who owns the harvested records.</li>
 </ul>
 </li>
-<li><strong>Search criteria</strong> - Using the Add button, you can add several search criteria. You can query only the fields recognised by the CSW protocol.</li>
-<li><strong>Options</strong> - Scheduling options.</li>
-<li><strong>Options</strong> - Specific harvesting options for this harvester.<ul>
-<li><em>Validate</em> - If checked, the metadata will be validated after retrieval. If the validation does not pass, the metadata will be skipped.</li>
+<li>
+<p><strong>Schedule</strong>: Scheduling options to execute the harvester. If disabled, the harvester must be run manually from the harvester page. If enabled, a scheduling expression using cron syntax should be configured (<a href="https://www.quartz-scheduler.org/documentation/quartz-2.1.7/tutorials/crontrigger">See examples</a>).</p>
+</li>
+<li>
+<p><strong>Configure connection to OGC CSW 2.0.2</strong></p>
+<ul>
+<li><em>Service URL</em>: The URL of the capabilities document of the CSW server to be harvested. eg. <a href="http://geonetwork-site.com/srv/eng/csw?service=CSW&amp;request=GetCabilities&amp;version=2.0.2">http://geonetwork-site.com/srv/eng/csw?service=CSW&amp;request=GetCabilities&amp;version=2.0.2</a>. This document is used to discover the location of the services to call to query and retrieve metadata.</li>
+<li><em>Remote authentication</em>: If checked, should be provided the credentials for basic HTTP authentication on the CSW server.</li>
+<li><em>Search filter</em>: (Optional) Define the search criteria below to restrict the records to harvest.</li>
+<li><em>Search options</em>:<ul>
+<li><em>Sort by</em>: Define sort option to retrieve the results. Sorting by 'identifier:A' means by UUID with alphabetical order. Any CSW queryables can be used in combination with A or D for setting the ordering.</li>
+<li><em>Output Schema</em>: The metadata standard to request the metadata records from the CSW server.</li>
+<li><em>Distributed search</em>: Enables the distributed search in remote server (if the remote server supports it). When this option is enabled, the remote catalog cascades the search to the Federated CSW servers that has configured.</li>
 </ul>
 </li>
-<li><strong>Privileges</strong> - Assign privileges to harvested metadata.</li>
-<li><strong>Categories</strong></li>
+</ul>
+</li>
+<li>
+<p><strong>Configure response processing for CSW</strong></p>
+<ul>
+<li><em>Action on UUID collision</em>: When a harvester finds the same uuid on a record collected by another method (another harvester, importer, dashboard editor,...), should this record be skipped (default), overriden or generate a new UUID?</li>
+<li><em>Validate records before import</em>: Defines the criteria to reject metadata that is invalid according to XML structure (XSD) and validation rules (schematron).<ul>
+<li>Accept all metadata without validation.</li>
+<li>Accept metadata that are XSD valid.</li>
+<li>Accept metadata that are XSD and schematron valid.</li>
+</ul>
+</li>
+<li><em>Check for duplicate resources based on the resource identifier</em>: If checked, ignores metadata with a resource identifier (<code>gmd:identificationInfo/*/gmd:citation/gmd:CI_Citation/gmd:identifier/*/gmd:code/gco:CharacterString</code>) that is assigned to other metadata record in the catalog. It only applies to records in ISO19139 or ISO profiles.</li>
+<li><em>XPath filter</em>: (Optional) When record is retrived from remote server, check an XPath expression to accept or discard the record.</li>
+<li><em>XSL transformation to apply</em>: (Optional)  The referenced XSL transform will be applied to each metadata record before it is added to GeoNetwork.</li>
+<li><em>Batch edits</em>: (Optional) Allows to update harvested records, using XPATH syntax. It can be used to add, replace or delete element.</li>
+<li><em>Category</em>: (Optional) A GeoNetwork category to assign to each metadata record.</li>
+</ul>
+</li>
+<li>
+<p><strong>Privileges</strong> - Assign privileges to harvested metadata.</p>
+</li>
 </ul>
 
 

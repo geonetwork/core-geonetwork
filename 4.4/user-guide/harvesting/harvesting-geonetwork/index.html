@@ -16,15 +16,15 @@
         <link rel="prev" href="../harvesting-filesystem/">
       
       
-        <link rel="next" href="../harvesting-geoportal/">
+        <link rel="next" href="../harvesting-geonetwork-2/">
       
       
       <link rel="icon" href="../../../assets/images/geonetwork-logo.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.39">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.40">
     
     
       
-        <title>GeoNetwork 2.0 Harvester - GeoNetwork opensource</title>
+        <title>GeoNetwork 2.1-3.X Harvester - GeoNetwork opensource</title>
       
     
     
@@ -78,7 +78,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#gn2_harvester" class="md-skip">
+        <a href="#geonetwork-21-3x-harvester" class="md-skip">
           Skip to content
         </a>
       
@@ -125,7 +125,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              GeoNetwork 2.0 Harvester
+              GeoNetwork 2.1-3.X Harvester
             
           </span>
         </div>
@@ -1225,7 +1225,7 @@
           
   
   <span class="md-ellipsis">
-    GeoNetwork 2.0 Harvester
+    GeoNetwork 2.1-3.X Harvester
   </span>
   
 
@@ -1236,7 +1236,7 @@
         
   
   <span class="md-ellipsis">
-    GeoNetwork 2.0 Harvester
+    GeoNetwork 2.1-3.X Harvester
   </span>
   
 
@@ -1258,9 +1258,9 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#upgrading-from-geonetwork-20-guidance" class="md-nav__link">
+  <a href="#adding-a-geonetwork-21-3x-harvester" class="md-nav__link">
     <span class="md-ellipsis">
-      Upgrading from GeoNetwork 2.0 Guidance
+      Adding a GeoNetwork 2.1-3.X harvester
     </span>
   </a>
   
@@ -1270,6 +1270,27 @@
   
 </nav>
       
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../harvesting-geonetwork-2/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    GeoNetwork 2.0 Harvester
+  </span>
+  
+
+      </a>
     </li>
   
 
@@ -1434,27 +1455,6 @@
   
   <span class="md-ellipsis">
     WFS GetFeature Harvesting
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../harvesting-z3950/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    Z3950 Harvesting
   </span>
   
 
@@ -1874,9 +1874,9 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#upgrading-from-geonetwork-20-guidance" class="md-nav__link">
+  <a href="#adding-a-geonetwork-21-3x-harvester" class="md-nav__link">
     <span class="md-ellipsis">
-      Upgrading from GeoNetwork 2.0 Guidance
+      Adding a GeoNetwork 2.1-3.X harvester
     </span>
   </a>
   
@@ -1913,13 +1913,62 @@
   
 
 
-<h1 id="gn2_harvester">GeoNetwork 2.0 Harvester</h1>
-<h2 id="upgrading-from-geonetwork-20-guidance">Upgrading from GeoNetwork 2.0 Guidance</h2>
-<p>GeoNetwork 2.1 introduced a new powerful harvesting engine which is not compatible with GeoNetwork version 2.0 based catalogues.</p>
+<h1 id="geonetwork-21-3x-harvester">GeoNetwork 2.1-3.X Harvester</h1>
+<p>This harvester will connect to a remote GeoNetwork server that uses versions from 2.1-3.X and retrieve metadata records that match the query parameters.</p>
+<h2 id="adding-a-geonetwork-21-3x-harvester">Adding a GeoNetwork 2.1-3.X harvester</h2>
+<p>To create a GeoNetwork 2.1-3.X harvester go to <code>Admin console</code> &gt; <code>Harvesting</code> and select <code>Harvest from</code> &gt; <code>GeoNetwork (from 2.1 to 3.x)</code>:</p>
+<p><img alt="" src="../img/add-geonetwork-3-harvester.png" /></p>
+<p>Providing the following information:</p>
 <ul>
-<li>Harvesting metadata from a v2.0 server requires this harvesting type.</li>
-<li>Old 2.0 servers can still harvest from 2.1 servers</li>
-<li>Due to the fact that GeoNetwork 2.0 is no longer suitable for production use, this harvesting type is deprecated.</li>
+<li>
+<p><strong>Identification</strong></p>
+<ul>
+<li><em>Node name and logo</em>: A unique name for the harvester and, optionally, a logo to assign to the harvester.</li>
+<li><em>Group</em>: Group which owns the harvested records. Only the catalog administrator or users with the profile <code>UserAdmin</code> of this group can manage the harvester.</li>
+<li><em>User</em>: User who owns the harvested records.</li>
+</ul>
+</li>
+<li>
+<p><strong>Schedule</strong>: Scheduling options to execute the harvester. If disabled, the harvester must be run manually from the harvester page. If enabled, a scheduling expression using cron syntax should be configured (<a href="https://www.quartz-scheduler.org/documentation/quartz-2.1.7/tutorials/crontrigger">See examples</a>).</p>
+</li>
+<li>
+<p><strong>Configure connection to GeoNetwork (from 2.1 to 3.x)</strong></p>
+<ul>
+<li><em>Catalog URL</em>: <ul>
+<li>The remote URL of the GeoNetwork server from which metadata will be harvested. The URL should contain the catalog name, for example: http://www.fao.org/geonetwork.</li>
+<li>Additionally, it should be configured the node name, usually the value <code>srv</code>.</li>
+</ul>
+</li>
+<li><em>Search filter</em>: (Optional)  Define the filter to retrieve the remote metadata.</li>
+<li><em>Catalog</em>: (Optional) Select the portal in the remote server to harvest.</li>
+</ul>
+</li>
+<li>
+<p><strong>Configure response processing for GeoNetwork</strong></p>
+<ul>
+<li><em>Action on UUID collision</em>: When a harvester finds the same uuid on a record collected by another method (another harvester, importer, dashboard editor,...), should this record be skipped (default), overriden or generate a new UUID?</li>
+<li><em>Remote authentication</em>: If checked, should be provided the credentials for basic HTTP authentication on the WebDAV/WAF server.</li>
+<li><em>Use full MEF format</em>: If checked, uses MEF format instead of XML to retrieve the remote metadata. Recommended to metadata with files.</li>
+<li><em>Use change date for comparison</em>: If checked, uses change date to detect changes on remote server.</li>
+<li><em>Set category if it exists locally</em>: If checked, uses the category set on the metadata in the remote server also locally (assuming it exists locally). Applies only when using MEF format for the harvesting.</li>
+<li><em>Category</em>: (Optional) A GeoNetwork category to assign to each metadata record.</li>
+<li>
+<p><em>XSL filter name to apply</em>: (Optional) The XSL filter is applied to each metadata record.  The filter is a process which depends on the schema (see the <code>process</code> folder of the schemas).</p>
+<p>It could be composed of parameter which will be sent to XSL transformation using the following syntax: <code>anonymizer?protocol=MYLOCALNETWORK:FILEPATH&amp;email=gis@organisation.org&amp;thesaurus=MYORGONLYTHEASURUS</code></p>
+</li>
+<li>
+<p><em>Validate records before import</em>: Defines the criteria to reject metadata that is invalid according to XML structure (XSD) and validation rules (schematron).</p>
+<ul>
+<li>Accept all metadata without validation.</li>
+<li>Accept metadata that are XSD valid.</li>
+<li>Accept metadata that are XSD and schematron valid.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>Privileges</strong> - Assign privileges to harvested metadata.</p>
+</li>
 </ul>
 
 
@@ -1975,13 +2024,13 @@
         
         
           
-          <a href="../harvesting-geoportal/" class="md-footer__link md-footer__link--next" aria-label="Next: GeoPortal REST Harvesting">
+          <a href="../harvesting-geonetwork-2/" class="md-footer__link md-footer__link--next" aria-label="Next: GeoNetwork 2.0 Harvester">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                GeoPortal REST Harvesting
+                GeoNetwork 2.0 Harvester
               </div>
             </div>
             <div class="md-footer__button md-icon">
