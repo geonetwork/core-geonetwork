@@ -18,7 +18,7 @@ To add a new configuration, such as for a sub-portal (see [Portal configuration]
     Since the settings form is a long form, the `save` button is repeated at the base of the page. In either case, all settings are saved.
 
 
--   **Filter settings**: This search box can be used to filter settings in the form, for example searching for "social" will show only the settings related to the Social Bar.
+-   **Filter settings**: This search box can be used to filter settings in the form, for example searching for "social" will show only the settings related to the Social bar.
 
 ![](img/ui-settings-filter.png)
 
@@ -31,7 +31,7 @@ To add a new configuration, such as for a sub-portal (see [Portal configuration]
 ## Footer {#user-interface-config-footer}
 
 -   **Footer**: Select this checkbox to determine whether the GeoNetwork footer is shown. If not set, no footer will be visible.
--   **Social bar**: Select this check box to show the social bar (links to twitter, facebook, linkedin etc) in the footer.
+-   **Social bar**: Select this check box to show the social media bar in the footer.
 
 ![](img/ui-settings-footer.png)
 
@@ -135,30 +135,30 @@ You can configure each map with different layers and projections.
 
 -   **Map Projection** This is the default projection of the map. Make sure the projection is defined in **Projections to display maps into** below.
 
-![](img/ui-settings-mapprojection.png)
+    ![](img/ui-settings-mapprojection.png)
 
--   **List of map projections to display bounding box coordinates in** This is used in the map when editing a record and defining the bounding box extent. Note that the coordinates will be stored in WGS84 regardless of the projection used to draw them.
+-   **List of map projections to display bounding box coordinates in** This is used in the map when editing a record and defining the bounding box extent. Make sure the listed projections are defined in **Projections to display maps into** below. Note that the coordinates will be stored in WGS84 regardless of the projection used to draw them.
 
-![](img/ui-settings-mapprojectionslist.png)
+    ![](img/ui-settings-mapprojectionslist.png)
 
 -   **Projections to display maps into** This is where the different projections available to the map are defined. All projections will be shown in the `Projection Switcher` tool of the map.
 
-![](img/ui-settings-mapprojection2.png)
+    ![](img/ui-settings-mapprojection2.png)
 
-In order to enable a new projection it must be defined here using the **proj4js** syntax, which can be found at <https://proj4js.io>. Additionally the default bounding box extent, maximum bounding box extent, and allowed resolutions (if required) can be defined.
+    In order to enable a new projection it must be defined here using the **proj4** syntax, which can be found for many EPSG-listed projections at, for example, <https://epsg.io>. Additionall, the default bounding box extent, maximum bounding box extent and allowed resolutions (if required) can be defined.
 
-Ensure that the coordinates inserted are in the correct units for and are local to the projection. A list of resolutions is only relevant if the main map layer has a XYZ source, which does not follow the common tiling pattern.
+    Ensure that the coordinates inserted are in the correct units for the projection and are local to the projection. A list of resolutions is only relevant if the main map layer has a XYZ source that does not follow the common tiling pattern.
 
-Check that this configuration is valid by opening the map.
+    Check that this configuration is valid by opening the map.
 
-![](img/ui-settings-mapprojection3.png)
+    ![](img/ui-settings-mapprojection3.png)
 
-!!! info "Important"
+    !!! info "Important"
 
     If the configuration of a projection is incomplete or invalid, the map may fail to load.
 
 
-If a projection is defined which is not supported by the source of the map layer, the map application will reproject map images at the client side. This may cause unexpected behaviour, such as rotated or distorted labels.
+    If a projection is defined which is not supported by the source of the map layer, the map application will reproject map images at the client side. This may cause unexpected behaviour, such as rotated or distorted labels.
 
 -   **Optional Map Viewer Tools** The checkboxes in this section define the tools available to the user in the right toolbar of the main map. Elements that are not checked are not visible.
 -   **OGC Service to use as a graticule**: This is optional and allows the use of an external service to display the graticule on the map.
@@ -215,7 +215,7 @@ This section defines the configuration for the map shown when editing a record. 
 ## Record View
 
 -   **Record view**:
--   **Show Social bar**: If enabled the social bar (links to facebook, twitter etc) are enabled in record view.
+-   **Show Social bar**: If enabled, the social media bar is enabled in record view.
 
 ## Editor Application
 
@@ -250,7 +250,7 @@ This section defines the configuration for the map shown when editing a record. 
 
 ## JSON Configuration
 
-This section shows the JSON configuration for the currently applied User Interface settings. From here, the json can be saved to a file (by copying and pasting).
+This section shows the JSON configuration for the currently applied User Interface settings. From here, the JSON can be saved to a file (by copying and pasting).
 
 -   **Test client configuration**: Click this button to test the configuration in a new browser tab.
 -   **Reset configuration**: Click this button to reset the configuration back to the default. Note that this will revert any changes you have made in the above page.
