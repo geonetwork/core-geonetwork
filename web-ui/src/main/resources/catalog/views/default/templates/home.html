@@ -121,9 +121,12 @@
     <div data-ng-show="homeFacet.list.length > 0">
       <div class="row" data-ng-show="homeFacet.list.length > 1">
         <h1 class="col-md-12">
-          <span data-translate="">browseBy</span>
+          <span data-translate="" data-ng-if="homeFacet.list.length > 2">browseBy</span>
+          <span data-ng-if="homeFacet.list.length === 2" data-translate="">
+            {{::('facet-' + homeFacet.list[0]) | facetKeyTranslator}}
+          </span>
         </h1>
-        <div class="gn-topic-select col-md-12">
+        <div class="gn-topic-select col-md-12" data-ng-if="homeFacet.list.length > 2">
           <label
             data-ng-repeat="facetKey in homeFacet.list"
             data-ng-init="agg = searchInfo.aggregations[facetKey]"
