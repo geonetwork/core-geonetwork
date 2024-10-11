@@ -51,6 +51,7 @@
           <button
             type="button"
             class="btn btn-default"
+            data-ng-hide="mapserverSelected.id === ''"
             data-ng-click="resetMapServerPassword(mapserverSelected.id)"
           >
             <i class="fa fa-lock"></i>&nbsp;
@@ -134,41 +135,10 @@
                   class="form-control"
                   required=""
                   data-ng-model="mapserverSelected.configurl"
-                  placeholder="http://"
+                  placeholder="http://localhost/geoserver/rest"
                 />
               </div>
             </div>
-
-            <fieldset data-ng-show="operation === 'ADD_NODE'">
-              <legend data-translate="">useAccount</legend>
-
-              <div class="form-group">
-                <label class="control-label col-sm-3" data-translate="">username</label>
-
-                <div class="col-sm-9">
-                  <input
-                    type="text"
-                    class="form-control"
-                    required=""
-                    data-ng-model="mapserverSelected.username"
-                  />
-                </div>
-              </div>
-
-              <div class="form-group">
-                <label class="control-label col-sm-3" data-translate="">password</label>
-
-                <div class="col-sm-9">
-                  <input
-                    type="password"
-                    class="form-control"
-                    required="required"
-                    autocomplete="new-password"
-                    data-ng-model="mapserverSelected.password"
-                  />
-                </div>
-              </div>
-            </fieldset>
 
             <div class="form-group">
               <label class="control-label col-sm-3" data-translate="">workspace</label>
@@ -222,7 +192,7 @@
                   class="form-control"
                   required=""
                   data-ng-model="mapserverSelected.wmsurl"
-                  placeholder="http://"
+                  placeholder="http://localhost/geoserer/wms"
                 />
               </div>
             </div>
@@ -237,7 +207,7 @@
                   class="form-control"
                   required=""
                   data-ng-model="mapserverSelected.wfsurl"
-                  placeholder="http://"
+                  placeholder="http://localhost/geoserver/wfs"
                 />
               </div>
             </div>
@@ -252,7 +222,7 @@
                   class="form-control"
                   required=""
                   data-ng-model="mapserverSelected.wcsurl"
-                  placeholder="http://"
+                  placeholder="http://localhost/geoserver/wcs"
                 />
               </div>
             </div>
