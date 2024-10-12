@@ -469,7 +469,7 @@
         <groupId>org.apache.jena</groupId>
         <artifactId>apache-jena-libs</artifactId>
         <type>pom</type>
-        <version>3.17.0</version>
+        <version>4.8.0</version>
       </dependency>
 
       <!-- PDF stuff: Managed by Mapfish -->
