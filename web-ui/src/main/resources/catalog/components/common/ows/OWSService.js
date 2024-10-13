@@ -582,46 +582,48 @@
             var needles = [];
             var layers = capObj.featureTypeList.featureType;
 
-            for (var i = 0, len = layers.length; i < len; i++) {
-              //check layername
-              if (
-                name == layers[i].name.localPart ||
-                name == layers[i].name.prefix + ":" + layers[i].name.localPart ||
-                name == layers[i].Name
-              ) {
-                needles.push(layers[i]);
-                continue;
-              }
-
-              //check title
-              if (name == layers[i].title || name == layers[i].Title) {
-                needles.push(layers[i]);
-                continue;
-              }
-
-              //check dataset identifer match
-              if (uuid != null) {
-                if (angular.isArray(layers[i].Identifier)) {
-                  angular.forEach(layers[i].Identifier, function (id) {
-                    if (id == uuid) {
-                      needles.push(layers[i]);
-                    }
-                  });
+            if (Array.isArray(layers)) {
+              for (var i = 0, len = layers.length; i < len; i++) {
+                //check layername
+                if (
+                  name == layers[i].name.localPart ||
+                  name == layers[i].name.prefix + ":" + layers[i].name.localPart ||
+                  name == layers[i].Name
+                ) {
+                  needles.push(layers[i]);
+                  continue;
                 }
-              }
 
-              //check uuid from metadata url
-              if (uuid != null) {
-                if (angular.isArray(layers[i].MetadataURL)) {
-                  angular.forEach(layers[i].MetadataURL, function (mdu) {
-                    if (
-                      mdu &&
-                      mdu.OnlineResource &&
-                      mdu.OnlineResource.indexOf(uuid) > 0
-                    ) {
-                      needles.push(layers[i]);
-                    }
-                  });
+                //check title
+                if (name == layers[i].title || name == layers[i].Title) {
+                  needles.push(layers[i]);
+                  continue;
+                }
+
+                //check dataset identifer match
+                if (uuid != null) {
+                  if (angular.isArray(layers[i].Identifier)) {
+                    angular.forEach(layers[i].Identifier, function (id) {
+                      if (id == uuid) {
+                        needles.push(layers[i]);
+                      }
+                    });
+                  }
+                }
+
+                //check uuid from metadata url
+                if (uuid != null) {
+                  if (angular.isArray(layers[i].MetadataURL)) {
+                    angular.forEach(layers[i].MetadataURL, function (mdu) {
+                      if (
+                        mdu &&
+                        mdu.OnlineResource &&
+                        mdu.OnlineResource.indexOf(uuid) > 0
+                      ) {
+                        needles.push(layers[i]);
+                      }
+                    });
+                  }
                 }
               }
             }
