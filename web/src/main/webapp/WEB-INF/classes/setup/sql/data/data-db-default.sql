@@ -742,7 +742,6 @@ INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system
 INSERT INTO Settings (name, value, datatype, position, internal, editable) VALUES ('system/security/passwordEnforcement/pattern', '^((?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*(_|[^\w])).*)$', 0, 12003, 'n', 'n');
 
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/banner/enable', 'false', 2, 1920, 'n');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/banner/message', '', 0, 1921, 'n');
 
 
 -- WARNING: Security / Add this settings only if you need to allow admin

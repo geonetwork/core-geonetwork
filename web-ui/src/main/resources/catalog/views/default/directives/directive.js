@@ -92,7 +92,6 @@
         link: function linkFn(scope) {
           gnConfigService.load().then(function (c) {
             scope.isBannerEnabled = gnConfig["system.banner.enable"];
-            scope.bannerMessage = gnConfig["system.banner.message"];
           });
         }
       };
