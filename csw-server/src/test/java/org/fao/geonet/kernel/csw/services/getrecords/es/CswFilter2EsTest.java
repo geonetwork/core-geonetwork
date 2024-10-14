@@ -381,4 +381,27 @@ class CswFilter2EsTest {
 
         assertEquals(expected, MAPPER.readTree(new StringReader(result)));
     }
+
+
+    @Test
+    void testPropertyIsGreaterThanDateValue() throws IOException {
+
+        // INPUT:
+        final String input =
+                "      <ogc:Filter xmlns:ogc=\"http://www.opengis.net/ogc\">\n" +
+                "        <ogc:PropertyIsGreaterThan>\n" +
+                "          <ogc:PropertyName>Modified</ogc:PropertyName>\n" +
+                "          <ogc:Literal>1910-02-05</ogc:Literal>\n" +
+                "        </ogc:PropertyIsGreaterThan>\n" +
+                "      </ogc:Filter>";
+
+        // EXPECTED:
+        final ObjectNode expected = EsJsonHelper.boolbdr(). //
+            must(array(range("Modified",  "gt", "1910-02-05"))). //
+            filter(queryStringPart()). //
+            bld();
+
+
+        assertFilterEquals(expected, input);
+    }
 }
