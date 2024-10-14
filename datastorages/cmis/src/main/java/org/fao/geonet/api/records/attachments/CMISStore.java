@@ -424,13 +424,9 @@ public class CMISStore extends AbstractStore {
 
         for (MetadataResourceVisibility visibility : MetadataResourceVisibility.values()) {
             if (tryDelResource(context, metadataUuid, metadataId, visibility, resourceId)) {
-                Log.info(Geonet.RESOURCES,
-                        String.format("MetadataResource '%s' removed.", resourceId));
-                return String.format("MetadataResource '%s' removed.", resourceId);
+                return String.format("Metadata resource '%s' removed.", resourceId);
             }
         }
-        Log.info(Geonet.RESOURCES,
-                String.format("Unable to remove resource '%s'.", resourceId));
         return String.format("Unable to remove resource '%s'.", resourceId);
     }
 
@@ -439,12 +435,8 @@ public class CMISStore extends AbstractStore {
                               final String resourceId, Boolean approved) throws Exception {
         int metadataId = canEdit(context, metadataUuid, approved);
         if (tryDelResource(context, metadataUuid, metadataId, visibility, resourceId)) {
-            Log.info(Geonet.RESOURCES,
-                    String.format("MetadataResource '%s' removed.", resourceId));
-            return String.format("MetadataResource '%s' removed.", resourceId);
+            return String.format("Metadata resource '%s' removed.", resourceId);
         }
-        Log.info(Geonet.RESOURCES,
-                String.format("Unable to remove resource '%s'.", resourceId));
         return String.format("Unable to remove resource '%s'.", resourceId);
     }
 
@@ -459,6 +451,8 @@ public class CMISStore extends AbstractStore {
         try {
             final CmisObject object = cmisConfiguration.getClient().getObjectByPath(key, oc);
             object.delete();
+            Log.info(Geonet.RESOURCES,
+                String.format("Resource '%s' removed for metadata %d (%s).", resourceId, metadataId, metadataUuid));
             if (object instanceof Folder) {
                 cmisUtils.invalidateFolderCacheItem(key);
             }
@@ -467,6 +461,8 @@ public class CMISStore extends AbstractStore {
             //CmisPermissionDeniedException when user does not have permissions.
             //CmisConstraintException when there is a lock on the file from a checkout.
         } catch (CmisObjectNotFoundException | CmisPermissionDeniedException | CmisConstraintException e) {
+            Log.info(Geonet.RESOURCES,
+                String.format("Unable to remove resource '%s' for metadata %d (%s). %s", resourceId, metadataId, metadataUuid, e.getMessage()));
             return false;
         }
     }
