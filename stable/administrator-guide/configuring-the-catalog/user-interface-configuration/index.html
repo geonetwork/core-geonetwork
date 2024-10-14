@@ -2489,7 +2489,7 @@
 <p>Since the settings form is a long form, the <code>save</code> button is repeated at the base of the page. In either case, all settings are saved.</p>
 </div>
 <ul>
-<li><strong>Filter settings</strong>: This search box can be used to filter settings in the form, for example searching for "social" will show only the settings related to the Social Bar.</li>
+<li><strong>Filter settings</strong>: This search box can be used to filter settings in the form, for example searching for "social" will show only the settings related to the Social bar.</li>
 </ul>
 <p><img alt="" src="../img/ui-settings-filter.png" /></p>
 <h2 id="general-options">General options</h2>
@@ -2500,7 +2500,7 @@
 <h2 id="user-interface-config-footer">Footer</h2>
 <ul>
 <li><strong>Footer</strong>: Select this checkbox to determine whether the GeoNetwork footer is shown. If not set, no footer will be visible.</li>
-<li><strong>Social bar</strong>: Select this check box to show the social bar (links to twitter, facebook, linkedin etc) in the footer.</li>
+<li><strong>Social bar</strong>: Select this check box to show the social media bar in the footer.</li>
 </ul>
 <p><img alt="" src="../img/ui-settings-footer.png" /></p>
 <h2 id="user-interface-config-toptoolbar">Top Toolbar</h2>
@@ -2592,28 +2592,30 @@
 <p>Default <strong>wms</strong> and <strong>wmts</strong> services can be defined here that will be available by default to the end user. New services can be added using the blue <code>+</code> button below the protocol lists.</p>
 <p>You can configure each map with different layers and projections.</p>
 <ul>
-<li><strong>Map Projection</strong> This is the default projection of the map. Make sure the projection is defined in <strong>Projections to display maps into</strong> below.</li>
-</ul>
+<li>
+<p><strong>Map Projection</strong> This is the default projection of the map. Make sure the projection is defined in <strong>Projections to display maps into</strong> below.</p>
 <p><img alt="" src="../img/ui-settings-mapprojection.png" /></p>
-<ul>
-<li><strong>List of map projections to display bounding box coordinates in</strong> This is used in the map when editing a record and defining the bounding box extent. Note that the coordinates will be stored in WGS84 regardless of the projection used to draw them.</li>
-</ul>
+</li>
+<li>
+<p><strong>List of map projections to display bounding box coordinates in</strong> This is used in the map when editing a record and defining the bounding box extent. Make sure the listed projections are defined in <strong>Projections to display maps into</strong> below. Note that the coordinates will be stored in WGS84 regardless of the projection used to draw them.</p>
 <p><img alt="" src="../img/ui-settings-mapprojectionslist.png" /></p>
-<ul>
-<li><strong>Projections to display maps into</strong> This is where the different projections available to the map are defined. All projections will be shown in the <code>Projection Switcher</code> tool of the map.</li>
-</ul>
+</li>
+<li>
+<p><strong>Projections to display maps into</strong> This is where the different projections available to the map are defined. All projections will be shown in the <code>Projection Switcher</code> tool of the map.</p>
 <p><img alt="" src="../img/ui-settings-mapprojection2.png" /></p>
-<p>In order to enable a new projection it must be defined here using the <strong>proj4js</strong> syntax, which can be found at <a href="https://proj4js.io">https://proj4js.io</a>. Additionally the default bounding box extent, maximum bounding box extent, and allowed resolutions (if required) can be defined.</p>
-<p>Ensure that the coordinates inserted are in the correct units for and are local to the projection. A list of resolutions is only relevant if the main map layer has a XYZ source, which does not follow the common tiling pattern.</p>
+<p>In order to enable a new projection it must be defined here using the <strong>proj4</strong> syntax, which can be found for many EPSG-listed projections at, for example, <a href="https://epsg.io">https://epsg.io</a>. Additionall, the default bounding box extent, maximum bounding box extent and allowed resolutions (if required) can be defined.</p>
+<p>Ensure that the coordinates inserted are in the correct units for the projection and are local to the projection. A list of resolutions is only relevant if the main map layer has a XYZ source that does not follow the common tiling pattern.</p>
 <p>Check that this configuration is valid by opening the map.</p>
 <p><img alt="" src="../img/ui-settings-mapprojection3.png" /></p>
 <div class="admonition info">
 <p class="admonition-title">Important</p>
-<p>If the configuration of a projection is incomplete or invalid, the map may fail to load.</p>
 </div>
+<p>If the configuration of a projection is incomplete or invalid, the map may fail to load.</p>
 <p>If a projection is defined which is not supported by the source of the map layer, the map application will reproject map images at the client side. This may cause unexpected behaviour, such as rotated or distorted labels.</p>
-<ul>
-<li><strong>Optional Map Viewer Tools</strong> The checkboxes in this section define the tools available to the user in the right toolbar of the main map. Elements that are not checked are not visible.</li>
+</li>
+<li>
+<p><strong>Optional Map Viewer Tools</strong> The checkboxes in this section define the tools available to the user in the right toolbar of the main map. Elements that are not checked are not visible.</p>
+</li>
 <li><strong>OGC Service to use as a graticule</strong>: This is optional and allows the use of an external service to display the graticule on the map.</li>
 </ul>
 <h3 id="user-interface-config-viewermap">Viewer Map Configuration</h3>
@@ -2658,7 +2660,7 @@
 <h2 id="record-view">Record View</h2>
 <ul>
 <li><strong>Record view</strong>:</li>
-<li><strong>Show Social bar</strong>: If enabled the social bar (links to facebook, twitter etc) are enabled in record view.</li>
+<li><strong>Show Social bar</strong>: If enabled, the social media bar is enabled in record view.</li>
 </ul>
 <h2 id="editor-application">Editor Application</h2>
 <ul>
@@ -2691,7 +2693,7 @@
 <li><strong>Application URL</strong>: Set the application URL for the search page. In general this should be left as the default.</li>
 </ul>
 <h2 id="json-configuration">JSON Configuration</h2>
-<p>This section shows the JSON configuration for the currently applied User Interface settings. From here, the json can be saved to a file (by copying and pasting).</p>
+<p>This section shows the JSON configuration for the currently applied User Interface settings. From here, the JSON can be saved to a file (by copying and pasting).</p>
 <ul>
 <li><strong>Test client configuration</strong>: Click this button to test the configuration in a new browser tab.</li>
 <li><strong>Reset configuration</strong>: Click this button to reset the configuration back to the default. Note that this will revert any changes you have made in the above page.</li>
