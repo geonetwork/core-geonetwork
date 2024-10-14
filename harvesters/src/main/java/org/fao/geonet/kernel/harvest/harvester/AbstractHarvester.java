@@ -23,6 +23,7 @@
 
 package org.fao.geonet.kernel.harvest.harvester;
 
+import com.google.common.io.Files;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.lang.StringUtils;
@@ -49,11 +50,13 @@ import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.harvest.Common.OperResult;
 import org.fao.geonet.kernel.harvest.Common.Status;
+import org.fao.geonet.kernel.search.EsSearchManager;
 import org.fao.geonet.kernel.setting.HarvesterSettingsManager;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.HarvestHistoryRepository;
+import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.SortUtils;
 import org.fao.geonet.repository.SourceRepository;
 import org.fao.geonet.repository.UserRepository;
@@ -81,6 +84,7 @@ import org.springframework.data.jpa.domain.Specification;
 import java.io.File;
 import java.io.IOException;
 import java.net.UnknownHostException;
+import java.nio.file.FileSystem;
 import java.sql.SQLException;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
@@ -128,6 +132,8 @@ public abstract class AbstractHarvester<T extends HarvestResult, P extends Abstr
     protected DataManager dataMan;
     protected IMetadataManager metadataManager;
     protected IMetadataUtils metadataUtils;
+    protected MetadataRepository metadataRepository;
+    protected EsSearchManager searchManager;
 
     protected P params;
     protected T result;
@@ -169,9 +175,11 @@ public abstract class AbstractHarvester<T extends HarvestResult, P extends Abstr
         this.context = context;
         this.dataMan = context.getBean(DataManager.class);
         this.metadataUtils = context.getBean(IMetadataUtils.class);
+        this.metadataRepository = context.getBean(MetadataRepository.class);
         this.harvesterSettingsManager = context.getBean(HarvesterSettingsManager.class);
         this.settingManager = context.getBean(SettingManager.class);
         this.metadataManager = context.getBean(IMetadataManager.class);
+        this.searchManager = context.getBean(EsSearchManager.class);
     }
 
     public void add(Element node) throws BadInputEx, SQLException {
@@ -271,22 +279,18 @@ public abstract class AbstractHarvester<T extends HarvestResult, P extends Abstr
             if (lock.tryLock(10, TimeUnit.SECONDS)) {
 
                 doUnschedule();
-
-                final IMetadataUtils metadataRepository = context.getBean(IMetadataUtils.class);
+                final IMetadataUtils metadataUtils = context.getBean(IMetadataUtils.class);
                 final SourceRepository sourceRepository = context.getBean(SourceRepository.class);
                 final Resources resources = context.getBean(Resources.class);
 
-                final Specification<? extends AbstractMetadata> ownedByHarvester = Specification.where(MetadataSpecs.hasHarvesterUuid(getParams().getUuid()));
-                Set<String> sources = new HashSet<>();
-                for (Integer metadataId : metadataRepository.findAllIdsBy(ownedByHarvester)) {
-                    sources.add(metadataUtils.findOne(metadataId).getSourceInfo().getSourceId());
-                    metadataManager.deleteMetadata(context, "" + metadataId);
-                }
+                List<String> sources = metadataRepository.findDistinctSourcesByHarvestInfo__uuid(getParams().getUuid());
+                metadataRepository.deleteAllByHarvesterUuid(getParams().getUuid());
+                searchManager.delete(String.format("+harvesterUuid:\"%s\"", getParams().getUuid()));
 
                 // Remove all sources related to the harvestUuid if they are not linked to any record anymore
                 for (String sourceUuid : sources) {
                     Long ownedBySource =
-                        metadataRepository.count(Specification.where(MetadataSpecs.hasSource(sourceUuid)));
+                        metadataUtils.count(Specification.where(MetadataSpecs.hasSource(sourceUuid)));
                     if (ownedBySource == 0
                         && !sourceUuid.equals(params.getUuid())
                         && sourceRepository.existsById(sourceUuid)) {

@@ -41,12 +41,15 @@ import org.fao.geonet.exceptions.OperationAbortedEx;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.HarvestInfoProvider;
+import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.kernel.harvest.Common.OperResult;
 import org.fao.geonet.kernel.harvest.harvester.AbstractHarvester;
 import org.fao.geonet.kernel.harvest.harvester.AbstractParams;
 import org.fao.geonet.kernel.harvest.harvester.HarversterJobListener;
+import org.fao.geonet.kernel.search.EsSearchManager;
 import org.fao.geonet.kernel.setting.HarvesterSettingsManager;
 import org.fao.geonet.repository.HarvestHistoryRepository;
+import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.specification.MetadataSpecs;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
@@ -83,6 +86,8 @@ public class HarvestManagerImpl implements HarvestInfoProvider, HarvestManager {
     private ServiceContext context;
     private boolean readOnly;
     private ConfigurableApplicationContext applicationContext;
+    protected MetadataRepository metadataRepository;
+    protected EsSearchManager searchManager;
     private Map<String, AbstractHarvester> hmHarvesters = new HashMap<>();
     private Map<String, AbstractHarvester> hmHarvestLookup = new HashMap<>();
 
@@ -108,6 +113,8 @@ public class HarvestManagerImpl implements HarvestInfoProvider, HarvestManager {
     public void init(ServiceContext context, boolean isReadOnly) throws Exception {
         this.context = context;
         this.dataMan = context.getBean(DataManager.class);
+        this.metadataRepository = context.getBean(MetadataRepository.class);
+        this.searchManager = context.getBean(EsSearchManager.class);
         this.settingMan = context.getBean(HarvesterSettingsManager.class);
         this.translationPackBuilder = context.getBean(TranslationPackBuilder.class);
 
@@ -689,9 +696,10 @@ public class HarvestManagerImpl implements HarvestInfoProvider, HarvestManager {
         long elapsedTime = System.currentTimeMillis();
 
         String harvesterUUID = ah.getParams().getUuid();
+        int numberOfRecordsRemoved = metadataRepository.countByHarvestInfo_Uuid(harvesterUUID);
+        metadataRepository.deleteAllByHarvesterUuid(harvesterUUID);
+        searchManager.delete(String.format("+harvesterUuid:\"%s\"", harvesterUUID));
 
-        final Specification<Metadata> specification = (Specification<Metadata>) MetadataSpecs.hasHarvesterUuid(harvesterUUID);
-        int numberOfRecordsRemoved = dataMan.batchDeleteMetadataAndUpdateIndex(specification);
         ah.emptyResult();
         elapsedTime = (System.currentTimeMillis() - elapsedTime) / 1000;
 
