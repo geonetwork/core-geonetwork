@@ -203,4 +203,18 @@
     <entry key="https://publications.europa.eu/resource/authority/file-type/GML">wps</entry>
     <entry key="https://publications.europa.eu/resource/authority/file-type/ZIP">zip</entry>
   </xsl:variable>
+
+  <!-- DCAT uses the terminology code, while ISO uses bibliographic code.
+       For some languages like Dutch, French or German the values differ. -->
+  <xsl:variable name="isoToDcatLanguage"
+                as="node()*">
+    <entry key="dut">nld</entry> <!-- Dutch -->
+    <entry key="cze">ces</entry> <!-- Czech -->
+    <entry key="ger">deu</entry> <!-- German -->
+    <entry key="gre">ell</entry> <!-- Greek -->
+    <entry key="fre">fra</entry> <!-- French -->
+    <entry key="rum">ron</entry> <!-- Romanian -->
+    <entry key="slo">slk</entry> <!-- Slovak -->
+    <entry key="ice">isl</entry> <!-- Icelandic-->
+  </xsl:variable>
 </xsl:stylesheet>

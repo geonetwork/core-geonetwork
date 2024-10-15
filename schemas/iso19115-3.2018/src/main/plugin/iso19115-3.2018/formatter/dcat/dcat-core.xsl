@@ -275,9 +275,15 @@
                       |mri:otherLocale
                       |mdb:defaultLocale
                       |mdb:otherLocale">
+    <xsl:variable name="languageValue"
+                  as="xs:string?"
+                  select="if ($isoToDcatLanguage[@key = current()/*/lan:language/*/@codeListValue])
+                          then $isoToDcatLanguage[@key = current()/*/lan:language/*/@codeListValue]
+                          else */lan:language/*/@codeListValue"/>
+
     <dct:language>
       <!-- TO CHECK: In DCAT, maybe we should use another base URI? -->
-      <dct:LinguisticSystem rdf:about="{concat($europaPublicationLanguage, upper-case(*/lan:language/*/@codeListValue))}"/>
+      <dct:LinguisticSystem rdf:about="{concat($europaPublicationLanguage, upper-case($languageValue))}"/>
     </dct:language>
   </xsl:template>
 
