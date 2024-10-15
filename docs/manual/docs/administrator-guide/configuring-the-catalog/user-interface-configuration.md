@@ -60,21 +60,22 @@ To add a new configuration, such as for a sub-portal (see [Portal configuration]
 -   **Search application**: Select this check box to determine whether the search application is visible in the top toolbar. If not set, no link is shown.
 -   **Application URL**: Define the URL for the search application. In the majority of cases this can be left as the default.
 -   **Number of records per page**: Define the options to determine the number of records shown per page of results, and the default.
--   **Type of facet**: Define the set of search facets should be visible in the search page. The default is `details` but `manager` can be used to show the facets more normally used on the editor page.
--   **Default search**: Define a default filter for the search.
+-   **Facet configuration**: See [Configuring faceted search](../../customizing-application/configuring-faceted-search.md)). The configuration are defined using JSON following Elasticsearch API (See <https://www.elastic.co/guide/en/elasticsearch/reference/current/search-aggregations-bucket.html>.
 
 ![](img/ui-settings-searchpage.png)
 
--   **Facet field to display using tabs**: This option creates a tab for each configured facet above the search results. This can be used to further narrow down the search results. The list of facet names can be found at <https://github.com/geonetwork/core-geonetwork/blob/master/web/src/main/webapp/WEB-INF/config-summary.xml#L82>. For example, to include the Topic Category filter above the search results, the administrator would add `topicCat` as the facet field to display.
--   **List of facets**: This can be used to restrict the facets available for searching. For example, adding `topicCat` to this list would restrict the search options to `Topic Category` only. This can be useful for restricting the search options in a sub-portal or external web application. To add additional facets to the list, select the blue `+` button.
+-   **Facet field to display using tabs**: This option creates a tab for each configured facet above the search results. This can be used to further narrow down the search results. 
 -   **Filters**: Define additional search criteria added to all searches and again are used primarily for external applications and sub-portals.
-
-![](img/ui-settings-searchpage2.png)
-
 -   **Type of sort options**: Define the different ways by which a user can sort a set of search results. The **default sort by option** is shown below. Note that to search for example on `title` in alphabetical order it is necessary to set the order to `reverse`.
 -   **List of templates for search results**: This section allows the administrator to configure templates for the layout of the search results. The default is `grid` whereas `list` is the default for the editor board.
 
 ![](img/ui-settings-searchpage3.png)
+
+
+-   **Similar records** or **More like this**: Define the query used to search for similar records that are displayed at the bottom of the record view.
+
+![](img/morelikethisconfig.png)
+
 
 -   **Default template used for search results**: Define the template page for the search. Generally this can be left as the default.
 -   **List of formatter for record view**: Determine the formatter used to display the search results. See [Customizing metadata views](../../customizing-application/creating-custom-view.md) for information on creating a new formatter. To add an additional view, click the blue `+` button below the list and provide a name and a URL.
