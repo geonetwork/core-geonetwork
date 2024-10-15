@@ -54,7 +54,6 @@
     <xsl:variable name="position" select="count(//gmd:graphicOverview[current() >> .]) + 1" />
 
     <xsl:if test="not(
-                      gmd:MD_BrowseGraphic[gmd:fileName/gco:CharacterString != ''] and
                       ($resourceIdx = '' or $position = xs:integer($resourceIdx)) and
                       ($resourceHash != '' or ($thumbnail_url != null and (normalize-space(gmd:MD_BrowseGraphic/gmd:fileName/gco:CharacterString) = normalize-space($thumbnail_url))))
                         and ($resourceHash = '' or digestUtils:md5Hex(normalize-space(.)) = $resourceHash)
