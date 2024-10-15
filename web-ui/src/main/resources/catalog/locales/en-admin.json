@@ -1082,6 +1082,7 @@
     "ui-mod-header": "Top toolbar",
     "ui-mod-footer": "Footer",
     "ui-mod-cookieWarning": "Cookie warning",
+    "ui-mod-directory": "Directory",
     "ui-createPageTpl": "New metadata page layout",
     "ui-createPageTpl-horizontal": "Horizontal",
     "ui-createPageTpl-vertical": "Vertical",
