@@ -122,7 +122,7 @@
       <div class="row" data-ng-show="homeFacet.list.length > 1">
         <h1 class="col-md-12">
           <span data-translate="" data-ng-if="homeFacet.list.length > 2">browseBy</span>
-          <span data-ng-if="homeFacet.list.length === 2" data-translate="">
+          <span data-ng-if="homeFacet.list.length < 3" data-translate="">
             {{::('facet-' + homeFacet.list[0]) | facetKeyTranslator}}
           </span>
         </h1>
