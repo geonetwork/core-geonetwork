@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2024 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -96,6 +96,14 @@ public class GroupsApi {
     public static final String API_PARAM_GROUP_DETAILS = "Group details";
     public static final String API_PARAM_GROUP_IDENTIFIER = "Group identifier";
     public static final String MSG_GROUP_WITH_IDENTIFIER_NOT_FOUND = "Group with identifier '%d' not found";
+
+    /**
+     * Group name pattern with allowed chars: Group name may only contain alphanumeric characters or
+     * hyphens (not consecutive). Cannot begin or end with an hyphen.
+     *
+     */
+    private static final String GROUPNAME_PATTERN = "^[a-zA-Z0-9]+([_\\-]{1}[a-zA-Z0-9]+)*$";
+
     /**
      * API logo note.
      */
@@ -329,6 +337,12 @@ public class GroupsApi {
             ));
         }
 
+        if (!group.getName().matches(GROUPNAME_PATTERN)) {
+            throw new IllegalArgumentException("Group name may only contain alphanumeric characters "
+                + "or single hyphens. Cannot begin or end with a hyphen."
+            );
+        }
+
         // Populate languages if not already set
         java.util.List<Language> allLanguages = langRepository.findAll();
         Map<String, String> labelTranslations = group.getLabelTranslations();
@@ -455,6 +469,12 @@ public class GroupsApi {
                 MSG_GROUP_WITH_IDENTIFIER_NOT_FOUND, groupIdentifier
             ));
         } else {
+            if (!group.getName().matches(GROUPNAME_PATTERN)) {
+                throw new IllegalArgumentException("Group name may only contain alphanumeric characters "
+                    + "or single hyphens. Cannot begin or end with a hyphen."
+                );
+            }
+
             // Rebuild translation pack cache if there are changes in the translations
             boolean clearTranslationPackCache =
                 !existing.get().getLabelTranslations().equals(group.getLabelTranslations());
