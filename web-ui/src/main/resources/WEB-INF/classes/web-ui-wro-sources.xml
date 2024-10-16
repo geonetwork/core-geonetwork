@@ -83,6 +83,26 @@
     <jsSource webappPath="/catalog/lib/bootstrap.ext/datepicker/bootstrap-datepicker.min.js" minimize="false"/>
     <jsSource webappPath="/catalog/lib/bootstrap.ext/datepicker/bootstrap-datepicker.fr.min.js" minimize="false"/>
     <jsSource webappPath="/catalog/lib/bootstrap.ext/datepicker/bootstrap-datepicker.nl.min.js" minimize="false"/>
+    <jsSource webappPath="/catalog/lib/bootstrap.ext/datepicker/bootstrap-datepicker.az.min.js" minimize="false"/>
+    <jsSource webappPath="/catalog/lib/bootstrap.ext/datepicker/bootstrap-datepicker.ca.min.js" minimize="false"/>
+    <jsSource webappPath="/catalog/lib/bootstrap.ext/datepicker/bootstrap-datepicker.cs.min.js" minimize="false"/>
+    <jsSource webappPath="/catalog/lib/bootstrap.ext/datepicker/bootstrap-datepicker.cy.min.js" minimize="false"/>
+    <jsSource webappPath="/catalog/lib/bootstrap.ext/datepicker/bootstrap-datepicker.da.min.js" minimize="false"/>
+    <jsSource webappPath="/catalog/lib/bootstrap.ext/datepicker/bootstrap-datepicker.de.min.js" minimize="false"/>
+    <jsSource webappPath="/catalog/lib/bootstrap.ext/datepicker/bootstrap-datepicker.es.min.js" minimize="false"/>
+    <jsSource webappPath="/catalog/lib/bootstrap.ext/datepicker/bootstrap-datepicker.fi.min.js" minimize="false"/>
+    <jsSource webappPath="/catalog/lib/bootstrap.ext/datepicker/bootstrap-datepicker.hy.min.js" minimize="false"/>
+    <jsSource webappPath="/catalog/lib/bootstrap.ext/datepicker/bootstrap-datepicker.is.min.js" minimize="false"/>
+    <jsSource webappPath="/catalog/lib/bootstrap.ext/datepicker/bootstrap-datepicker.it.min.js" minimize="false"/>
+    <jsSource webappPath="/catalog/lib/bootstrap.ext/datepicker/bootstrap-datepicker.ka.min.js" minimize="false"/>
+    <jsSource webappPath="/catalog/lib/bootstrap.ext/datepicker/bootstrap-datepicker.ko.min.js" minimize="false"/>
+    <jsSource webappPath="/catalog/lib/bootstrap.ext/datepicker/bootstrap-datepicker.pt.min.js" minimize="false"/>
+    <jsSource webappPath="/catalog/lib/bootstrap.ext/datepicker/bootstrap-datepicker.ro.min.js" minimize="false"/>
+    <jsSource webappPath="/catalog/lib/bootstrap.ext/datepicker/bootstrap-datepicker.ru.min.js" minimize="false"/>
+    <jsSource webappPath="/catalog/lib/bootstrap.ext/datepicker/bootstrap-datepicker.sk.min.js" minimize="false"/>
+    <jsSource webappPath="/catalog/lib/bootstrap.ext/datepicker/bootstrap-datepicker.sv.min.js" minimize="false"/>
+    <jsSource webappPath="/catalog/lib/bootstrap.ext/datepicker/bootstrap-datepicker.uk.min.js" minimize="false"/>
+    <jsSource webappPath="/catalog/lib/bootstrap.ext/datepicker/bootstrap-datepicker.zh.min.js" minimize="false"/>
     <jsSource webappPath="/catalog/lib/bootstrap-table/dist/bootstrap-table.min.js"
               minimize="false"/>
     <jsSource webappPath="/catalog/lib/bootstrap-table/dist/bootstrap-table-locale-all.min.js"
@@ -157,6 +177,26 @@
     <jsSource webappPath="/catalog/lib/bootstrap.ext/datepicker/bootstrap-datepicker.js"/>
     <jsSource webappPath="/catalog/lib/bootstrap.ext/datepicker/bootstrap-datepicker.fr.min.js" minimize="false"/>
     <jsSource webappPath="/catalog/lib/bootstrap.ext/datepicker/bootstrap-datepicker.nl.min.js" minimize="false"/>
+    <jsSource webappPath="/catalog/lib/bootstrap.ext/datepicker/bootstrap-datepicker.az.min.js" minimize="false"/>
+    <jsSource webappPath="/catalog/lib/bootstrap.ext/datepicker/bootstrap-datepicker.ca.min.js" minimize="false"/>
+    <jsSource webappPath="/catalog/lib/bootstrap.ext/datepicker/bootstrap-datepicker.cs.min.js" minimize="false"/>
+    <jsSource webappPath="/catalog/lib/bootstrap.ext/datepicker/bootstrap-datepicker.cy.min.js" minimize="false"/>
+    <jsSource webappPath="/catalog/lib/bootstrap.ext/datepicker/bootstrap-datepicker.da.min.js" minimize="false"/>
+    <jsSource webappPath="/catalog/lib/bootstrap.ext/datepicker/bootstrap-datepicker.de.min.js" minimize="false"/>
+    <jsSource webappPath="/catalog/lib/bootstrap.ext/datepicker/bootstrap-datepicker.es.min.js" minimize="false"/>
+    <jsSource webappPath="/catalog/lib/bootstrap.ext/datepicker/bootstrap-datepicker.fi.min.js" minimize="false"/>
+    <jsSource webappPath="/catalog/lib/bootstrap.ext/datepicker/bootstrap-datepicker.hy.min.js" minimize="false"/>
+    <jsSource webappPath="/catalog/lib/bootstrap.ext/datepicker/bootstrap-datepicker.is.min.js" minimize="false"/>
+    <jsSource webappPath="/catalog/lib/bootstrap.ext/datepicker/bootstrap-datepicker.it.min.js" minimize="false"/>
+    <jsSource webappPath="/catalog/lib/bootstrap.ext/datepicker/bootstrap-datepicker.ka.min.js" minimize="false"/>
+    <jsSource webappPath="/catalog/lib/bootstrap.ext/datepicker/bootstrap-datepicker.ko.min.js" minimize="false"/>
+    <jsSource webappPath="/catalog/lib/bootstrap.ext/datepicker/bootstrap-datepicker.pt.min.js" minimize="false"/>
+    <jsSource webappPath="/catalog/lib/bootstrap.ext/datepicker/bootstrap-datepicker.ro.min.js" minimize="false"/>
+    <jsSource webappPath="/catalog/lib/bootstrap.ext/datepicker/bootstrap-datepicker.ru.min.js" minimize="false"/>
+    <jsSource webappPath="/catalog/lib/bootstrap.ext/datepicker/bootstrap-datepicker.sk.min.js" minimize="false"/>
+    <jsSource webappPath="/catalog/lib/bootstrap.ext/datepicker/bootstrap-datepicker.sv.min.js" minimize="false"/>
+    <jsSource webappPath="/catalog/lib/bootstrap.ext/datepicker/bootstrap-datepicker.uk.min.js" minimize="false"/>
+    <jsSource webappPath="/catalog/lib/bootstrap.ext/datepicker/bootstrap-datepicker.zh.min.js" minimize="false"/>
     <jsSource webappPath="/catalog/lib/bootstrap-table/dist/bootstrap-table.min.js"
               minimize="false"/>
     <jsSource webappPath="/catalog/lib/bootstrap-table/dist/bootstrap-table-locale-all.min.js"
