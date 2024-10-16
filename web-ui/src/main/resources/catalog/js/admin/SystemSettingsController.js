@@ -397,7 +397,11 @@
               "../api/ui" + (isUpdate ? "/" + newid : ""),
               {
                 id: newid,
-                configuration: isUpdate ? $scope.uiConfiguration.configuration : null
+                configuration: isUpdate
+                  ? typeof $scope.uiConfiguration.configuration === "string"
+                    ? $scope.uiConfiguration.configuration
+                    : JSON.stringify($scope.uiConfiguration.configuration, null, 2)
+                  : null
               },
               { responseType: "text" }
             )
