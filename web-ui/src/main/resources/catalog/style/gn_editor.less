@@ -715,8 +715,28 @@ table.gn-data-store {
   [data-ng-search-form] .gn-top-search .gn-form-any {
     max-width: 80vw;
   }
-  fieldset {
+  .nav-tabs > li {
+    margin-bottom: -3px;
+  }
+  input[type="radio"] + span {
+    display: block;
+    padding: 10px 15px;
+    border-radius: 4px;
+    margin-right: 5px;
+    font-weight: normal;
+    color: @brand-primary;
+    &:hover {
+      background-color: #ddd;
+      cursor: pointer;
+    }
+  }
 
+  input[type="radio"]:checked + span {
+    background-color: @brand-primary;
+    color: #fff;
+  }
+
+  fieldset {
     legend {
       font-weight: bold;
     }
@@ -737,7 +757,8 @@ table.gn-data-store {
         }
         // select spatial extent
         .gn-drawmap-panel {
-          .col-sm-3, .col-md-8 {
+          .col-sm-3,
+          .col-md-8 {
             width: 100%;
             padding-left: 0;
             padding-right: 0;

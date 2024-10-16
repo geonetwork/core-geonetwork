@@ -12,7 +12,7 @@
           data-runSearch="true"
           data-wait-for-user="true"
         >
-          <ul class="nav nav-pills gn-margin-bottom-lg">
+          <ul class="nav nav-tabs gn-margin-bottom-lg">
             <li
               role="presentation"
               data-ng-class="{'active' : selectedStep === 1}"
@@ -44,18 +44,15 @@
           </ul>
 
           <div data-ng-class="{'hidden' : selectedStep !== 1}">
-            <p class="alert alert-info" data-translate="">chooseASetOfRecordHelp</p>
+            <p class="alert alert-info gn-margin-left-lg gn-margin-right-lg" data-translate="">chooseASetOfRecordHelp</p>
 
             <!-- search -->
             <div class="row">
               <div class="col-md-offset-3 col-md-6">
-
-
                 <form class="form-horizontal" role="form">
                   <input type="hidden" name="_csrf" value="{{csrf}}" />
 
                   <div class="gn-top-search">
-
                     <div class="input-group gn-form-any">
                       <div
                         data-gn-user-searches-list=""
@@ -149,23 +146,43 @@
               </div>
               <!-- search results -->
               <div class="col-md-9">
-
-                <div class="row gn-row-tools" data-ng-show="searchResults.records.length > 0">
-                  <div class="col-xs-12 col-sm-5 col-md-5 col-lg-4 relative gn-nopadding-left">
+                <div
+                  class="row gn-row-tools"
+                  data-ng-show="searchResults.records.length > 0"
+                >
+                  <div
+                    class="
+                      col-xs-12 col-sm-5 col-md-5 col-lg-4
+                      relative
+                      gn-nopadding-left
+                    "
+                  >
                     <div
                       data-gn-selection-widget=""
                       without-action-menu=""
                       data-results="searchResults"
                     ></div>
                   </div>
-                  <div class="col-xs-12 col-sm-7 col-md-7 col-lg-4 gn-nopadding-left gn-nopadding-right text-right">
+                  <div
+                    class="
+                      col-xs-12 col-sm-7 col-md-7 col-lg-4
+                      gn-nopadding-left gn-nopadding-right
+                      text-right
+                    "
+                  >
                     <div
                       class="pull-right"
                       data-gn-pagination="paginationInfo"
                       data-hits-values="searchObj.hitsperpageValues"
                     ></div>
                   </div>
-                  <div class="col-xs-12 col-sm-12 col-md-12 col-lg-4 gn-nopadding-right text-right">
+                  <div
+                    class="
+                      col-xs-12 col-sm-12 col-md-12 col-lg-4
+                      gn-nopadding-right
+                      text-right
+                    "
+                  >
                     <div
                       class="pull-right"
                       data-sortby-combo=""
@@ -197,18 +214,17 @@
                 ></div>
               </div>
             </div>
-
           </div>
 
           <div data-ng-class="{'hidden' : selectedStep !== 2}">
-
             <!-- select edit method -->
             <div class="row">
               <div class="col-md-12 gn-margin-bottom-lg">
-                <div class="btn-group" data-toggle="buttons">
-                  <label class="btn btn-default" data-ng-repeat="t in editTypes">
+                <div>
+                  <label data-ng-repeat="t in editTypes">
                     <input
                       type="radio"
+                      class="sr-only"
                       data-ng-model="$parent.editType"
                       data-ng-click="setType(t.id)"
                       value="{{t.id}}"
@@ -258,32 +274,32 @@
                       <span data-translate="">regexpFlags</span>
                     </label>
                     <div class="input-group">
-                        <input
-                          type="text"
-                          class="form-control"
-                          name="regexpFlags"
-                          data-ng-model="searchAndReplaceField.regexpFlags"
-                        />
-                        <div class="input-group-btn">
-                          <button
-                            type="button"
-                            class="btn btn-default dropdown-toggle"
-                            data-toggle="dropdown"
-                            aria-haspopup="true"
-                            aria-expanded="false"
-                          >
-                            <span class="caret"></span>
-                          </button>
-                          <ul class="dropdown-menu dropdown-menu-right">
-                            <li data-ng-repeat="f in regexpFlags">
-                              <a
-                                data-ng-click="searchAndReplaceField.regexpFlags = searchAndReplaceField.regexpFlags + f"
-                                >{{f}} : {{('regexpFlags-' + f) | translate}}</a
-                              >
-                            </li>
-                          </ul>
-                        </div>
+                      <input
+                        type="text"
+                        class="form-control"
+                        name="regexpFlags"
+                        data-ng-model="searchAndReplaceField.regexpFlags"
+                      />
+                      <div class="input-group-btn">
+                        <button
+                          type="button"
+                          class="btn btn-default dropdown-toggle"
+                          data-toggle="dropdown"
+                          aria-haspopup="true"
+                          aria-expanded="false"
+                        >
+                          <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-right">
+                          <li data-ng-repeat="f in regexpFlags">
+                            <a
+                              data-ng-click="searchAndReplaceField.regexpFlags = searchAndReplaceField.regexpFlags + f"
+                              >{{f}} : {{('regexpFlags-' + f) | translate}}</a
+                            >
+                          </li>
+                        </ul>
                       </div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -594,7 +610,6 @@
           </div>
 
           <div data-ng-class="{'hidden' : selectedStep !== 3}">
-
             <div class="row">
               <div
                 class="col-md-12"
@@ -671,7 +686,10 @@
               <div class="col-md-12" data-ng-show="selectedRecords.total.value > 0">
                 <h4 data-translate="">aboutToUpdateTheFollowing</h4>
                 <ul class="list-group gn-resultview">
-                  <li class="list-group-item" data-ng-repeat="record in selectedRecords.hits">
+                  <li
+                    class="list-group-item"
+                    data-ng-repeat="record in selectedRecords.hits"
+                  >
                     <a data-ng-href="catalog.search#/metadata/{{record._id}}"
                       >{{record._source.resourceTitleObject.default}}</a
                     >
@@ -780,7 +798,6 @@
                 <div data-gn-batch-report="processReport"></div>
               </div>
             </div>
-
           </div>
         </div>
       </div>
