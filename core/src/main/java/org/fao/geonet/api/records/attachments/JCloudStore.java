@@ -356,11 +356,13 @@ public class JCloudStore extends AbstractStore {
                 }
                 marker = page.getNextMarker();
             } while (marker != null);
-            return String.format("Metadata '%s' directory removed.", metadataId);
+            Log.info(Geonet.RESOURCES,
+                String.format("Metadata '%d' directory removed.", metadataId));
+            return String.format("Metadata '%d' directory removed.", metadataId);
         } catch (ContainerNotFoundException e) {
             Log.warning(Geonet.RESOURCES,
-                String.format("Unable to located metadata '%s' directory to be removed.", metadataId));
-            return String.format("Unable to located metadata '%s' directory to be removed.", metadataId);
+                String.format("Unable to located metadata '%d' directory to be removed.", metadataId));
+            return String.format("Unable to located metadata '%d' directory to be removed.", metadataId);
         }
     }
 
@@ -371,13 +373,9 @@ public class JCloudStore extends AbstractStore {
 
         for (MetadataResourceVisibility visibility : MetadataResourceVisibility.values()) {
             if (tryDelResource(context, metadataUuid, metadataId, visibility, resourceId)) {
-                Log.info(Geonet.RESOURCES,
-                        String.format("MetadataResource '%s' removed.", resourceId));
-                return String.format("MetadataResource '%s' removed.", resourceId);
+                return String.format("Metadata resource '%s' removed.", resourceId);
             }
         }
-        Log.info(Geonet.RESOURCES,
-                String.format("Unable to remove resource '%s'.", resourceId));
         return String.format("Unable to remove resource '%s'.", resourceId);
     }
 
@@ -386,12 +384,8 @@ public class JCloudStore extends AbstractStore {
                               final String resourceId, Boolean approved) throws Exception {
         int metadataId = canEdit(context, metadataUuid, approved);
         if (tryDelResource(context, metadataUuid, metadataId, visibility, resourceId)) {
-            Log.info(Geonet.RESOURCES,
-                    String.format("MetadataResource '%s' removed.", resourceId));
-            return String.format("MetadataResource '%s' removed.", resourceId);
+            return String.format("Metadata resource '%s' removed.", resourceId);
         }
-        Log.info(Geonet.RESOURCES,
-                String.format("Unable to remove resource '%s'.", resourceId));
         return String.format("Unable to remove resource '%s'.", resourceId);
     }
 
@@ -401,8 +395,12 @@ public class JCloudStore extends AbstractStore {
 
         if (jCloudConfiguration.getClient().getBlobStore().blobExists(jCloudConfiguration.getContainerName(), key)) {
             jCloudConfiguration.getClient().getBlobStore().removeBlob(jCloudConfiguration.getContainerName(), key);
+            Log.info(Geonet.RESOURCES,
+                String.format("Resource '%s' removed for metadata %d (%s).", resourceId, metadataId, metadataUuid));
             return true;
         }
+        Log.info(Geonet.RESOURCES,
+            String.format("Unable to remove resource '%s' for metadata %d (%s).", resourceId, metadataId, metadataUuid));
         return false;
     }
 
