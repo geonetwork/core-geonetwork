@@ -234,20 +234,26 @@ public class FilesystemStore extends AbstractStore {
         try {
             Log.info(Geonet.RESOURCES, String.format("Deleting all files from metadataId '%d'", metadataId));
             IO.deleteFileOrDirectory(metadataDir, true);
-            return String.format("Metadata '%s' directory removed.", metadataId);
+            Log.info(Geonet.RESOURCES,
+                String.format("Metadata '%d' directory removed.", metadataId));
+            return String.format("Metadata '%d' directory removed.", metadataId);
         } catch (Exception e) {
-            return String.format("Unable to remove metadata '%s' directory.", metadataId);
+            return String.format("Unable to remove metadata '%d' directory.", metadataId);
         }
     }
 
     @Override
     public String delResource(ServiceContext context, String metadataUuid, String resourceId, Boolean approved) throws Exception {
-        canEdit(context, metadataUuid, approved);
+        int metadataId = canEdit(context, metadataUuid, approved);
 
         try (ResourceHolder filePath = getResource(context, metadataUuid, resourceId, approved)) {
             Files.deleteIfExists(filePath.getPath());
-            return String.format("MetadataResource '%s' removed.", resourceId);
+            Log.info(Geonet.RESOURCES,
+                String.format("Resource '%s' removed for metadata %d (%s).", resourceId, metadataId, metadataUuid));
+            return String.format("Metadata resource '%s' removed.", resourceId);
         } catch (IOException e) {
+            Log.warning(Geonet.RESOURCES,
+                String.format("Unable to remove resource '%s' for metadata %d (%s). %s", resourceId, metadataId, metadataUuid, e.getMessage()));
             return String.format("Unable to remove resource '%s'.", resourceId);
         }
     }
@@ -255,12 +261,16 @@ public class FilesystemStore extends AbstractStore {
     @Override
     public String delResource(final ServiceContext context, final String metadataUuid, final MetadataResourceVisibility visibility,
                               final String resourceId, Boolean approved) throws Exception {
-        canEdit(context, metadataUuid, approved);
+        int metadataId = canEdit(context, metadataUuid, approved);
 
         try (ResourceHolder filePath = getResource(context, metadataUuid, visibility, resourceId, approved)) {
             Files.deleteIfExists(filePath.getPath());
-            return String.format("MetadataResource '%s' removed.", resourceId);
+            Log.info(Geonet.RESOURCES,
+                String.format("Resource '%s' removed for metadata %d (%s).", resourceId, metadataId, metadataUuid));
+            return String.format("Metadata resource '%s' removed.", resourceId);
         } catch (IOException e) {
+            Log.warning(Geonet.RESOURCES,
+                String.format("Unable to remove resource '%s' for metadata %d (%s). %s", resourceId, metadataId, metadataUuid, e.getMessage()));
             return String.format("Unable to remove resource '%s'.", resourceId);
         }
     }
