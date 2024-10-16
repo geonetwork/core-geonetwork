@@ -20,7 +20,7 @@
       
       
       <link rel="icon" href="../../../assets/images/geonetwork-logo.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.40">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.41">
     
     
       
@@ -28,7 +28,7 @@
       
     
     
-      <link rel="stylesheet" href="../../../assets/stylesheets/main.8c3ca2c6.min.css">
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.0253249f.min.css">
       
         
         <link rel="stylesheet" href="../../../assets/stylesheets/palette.06af60db.min.css">
@@ -1534,9 +1534,10 @@
 
 
 <h1 id="installing-search-platform">Installing search platform</h1>
-<p>The GeoNetwork search engine is built on top of Elasticsearch. The platform is used to index records and also to analyze WFS data (See <a href="../../user-guide/analyzing/data/">Analyze and visualize data</a> ).</p>
+<p>The GeoNetwork search engine is built on top of Elasticsearch. The platform is used to index records and also to index WFS data (See <a href="../../user-guide/analyzing/data/">Analyze and visualize data</a> ).</p>
 <p>GeoNetwork requires an <a href="https://www.elastic.co/products/elasticsearch">Elasticsearch</a> instance to be installed next to the catalog.</p>
 <h2 id="elasticsearch-compatibility">Elasticsearch compatibility</h2>
+<p>Elasticsearch Java client version: 8.14.3</p>
 <table>
 <thead>
 <tr>
@@ -1546,34 +1547,35 @@
 </thead>
 <tbody>
 <tr>
-<td>Elasticsearch 7.15.x</td>
-<td>minimum</td>
+<td>Elasticsearch 8.14.3</td>
+<td>recommended</td>
 </tr>
 <tr>
-<td>Elasticsearch 8.11.3</td>
-<td>tested</td>
+<td>Elasticsearch 8.14.x</td>
+<td>minimum</td>
 </tr>
 </tbody>
 </table>
+<p>Older version may be supported but are untested.</p>
 <h2 id="installation">Installation</h2>
 <div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">Manual installation</label><label for="__tabbed_1_2">Install using Maven</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <ol>
 <li>
-<p><strong>Download:</strong> Elasticsearch 8.x (<code>8.11.3</code> tested, minimum <code>7.15.x</code>) from <a href="https://www.elastic.co/downloads/elasticsearch">https://www.elastic.co/downloads/elasticsearch</a> and unzip the file.</p>
-<div class="language-shell highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>wget<span class="w"> </span>https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-8.11.3.tar.gz
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>tar<span class="w"> </span>xvfz<span class="w"> </span>elasticsearch-8.11.3.tar.gz
+<p><strong>Download:</strong> Elasticsearch <code>8.14.3</code> from <a href="https://www.elastic.co/downloads/elasticsearch">https://www.elastic.co/downloads/elasticsearch</a> and unzip the file.</p>
+<div class="language-shell highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>wget<span class="w"> </span>https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-8.14.3.tar.gz
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>tar<span class="w"> </span>xvfz<span class="w"> </span>elasticsearch-8.14.3.tar.gz
 </span></code></pre></div>
 </li>
 <li>
 <p><strong>Start</strong>: Manually start Elasticsearch using:</p>
-<div class="language-shell highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>elasticsearch-8.11.3/bin/elasticsearch
+<div class="language-shell highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>elasticsearch-8.14.3/bin/elasticsearch
 </span></code></pre></div>
 </li>
 <li>
 <p><strong>Stop</strong>: Manually stop Elasticsearch using:</p>
-<div class="language-shell highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>elasticsearch-8.11.3/bin/elasticsearch<span class="w"> </span>stop
+<div class="language-shell highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>elasticsearch-8.14.3/bin/elasticsearch<span class="w"> </span>stop
 </span></code></pre></div>
 </li>
 </ol>
@@ -1851,7 +1853,7 @@
     <script id="__config" type="application/json">{"base": "../../..", "features": ["toc.follow", "navigation.tracking", "navigation.top", "navigation.tabs", "navigation.prune", "navigation.indexes", "navigation.footer", "header.autohide", "content.tabs.link", "content.code.copy", "content.action.view", "content.action.edit", "announce.dismiss"], "search": "../../../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "Copi\u00e9 dans le presse-papier", "clipboard.copy": "Copier dans le presse-papier", "search.result.more.one": "1 de plus sur cette page", "search.result.more.other": "# de plus sur cette page", "search.result.none": "Aucun document trouv\u00e9", "search.result.one": "1 document trouv\u00e9", "search.result.other": "# documents trouv\u00e9s", "search.result.placeholder": "Taper pour d\u00e9marrer la recherche", "search.result.term.missing": "Non trouv\u00e9", "select.version": "S\u00e9lectionner la version"}, "version": {"alias": true, "default": "stable", "provider": "mike"}}</script>
     
     
-      <script src="../../../assets/javascripts/bundle.525ec568.min.js"></script>
+      <script src="../../../assets/javascripts/bundle.83f73b43.min.js"></script>
       
     
   </body>
