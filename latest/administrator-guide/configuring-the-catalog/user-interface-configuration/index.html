@@ -2526,21 +2526,20 @@
 <li><strong>Search application</strong>: Select this check box to determine whether the search application is visible in the top toolbar. If not set, no link is shown.</li>
 <li><strong>Application URL</strong>: Define the URL for the search application. In the majority of cases this can be left as the default.</li>
 <li><strong>Number of records per page</strong>: Define the options to determine the number of records shown per page of results, and the default.</li>
-<li><strong>Type of facet</strong>: Define the set of search facets should be visible in the search page. The default is <code>details</code> but <code>manager</code> can be used to show the facets more normally used on the editor page.</li>
-<li><strong>Default search</strong>: Define a default filter for the search.</li>
+<li><strong>Facet configuration</strong>: See <a href="../../../customizing-application/configuring-faceted-search/">Configuring faceted search</a>). The configuration are defined using JSON following Elasticsearch API (See <a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/search-aggregations-bucket.html">https://www.elastic.co/guide/en/elasticsearch/reference/current/search-aggregations-bucket.html</a>.</li>
 </ul>
 <p><img alt="" src="../img/ui-settings-searchpage.png" /></p>
 <ul>
-<li><strong>Facet field to display using tabs</strong>: This option creates a tab for each configured facet above the search results. This can be used to further narrow down the search results. The list of facet names can be found at <a href="https://github.com/geonetwork/core-geonetwork/blob/master/web/src/main/webapp/WEB-INF/config-summary.xml#L82">https://github.com/geonetwork/core-geonetwork/blob/master/web/src/main/webapp/WEB-INF/config-summary.xml#L82</a>. For example, to include the Topic Category filter above the search results, the administrator would add <code>topicCat</code> as the facet field to display.</li>
-<li><strong>List of facets</strong>: This can be used to restrict the facets available for searching. For example, adding <code>topicCat</code> to this list would restrict the search options to <code>Topic Category</code> only. This can be useful for restricting the search options in a sub-portal or external web application. To add additional facets to the list, select the blue <code>+</code> button.</li>
+<li><strong>Facet field to display using tabs</strong>: This option creates a tab for each configured facet above the search results. This can be used to further narrow down the search results. </li>
 <li><strong>Filters</strong>: Define additional search criteria added to all searches and again are used primarily for external applications and sub-portals.</li>
-</ul>
-<p><img alt="" src="../img/ui-settings-searchpage2.png" /></p>
-<ul>
 <li><strong>Type of sort options</strong>: Define the different ways by which a user can sort a set of search results. The <strong>default sort by option</strong> is shown below. Note that to search for example on <code>title</code> in alphabetical order it is necessary to set the order to <code>reverse</code>.</li>
 <li><strong>List of templates for search results</strong>: This section allows the administrator to configure templates for the layout of the search results. The default is <code>grid</code> whereas <code>list</code> is the default for the editor board.</li>
 </ul>
 <p><img alt="" src="../img/ui-settings-searchpage3.png" /></p>
+<ul>
+<li><strong>Similar records</strong> or <strong>More like this</strong>: Define the query used to search for similar records that are displayed at the bottom of the record view.</li>
+</ul>
+<p><img alt="" src="../img/morelikethisconfig.png" /></p>
 <ul>
 <li><strong>Default template used for search results</strong>: Define the template page for the search. Generally this can be left as the default.</li>
 <li><strong>List of formatter for record view</strong>: Determine the formatter used to display the search results. See <a href="../../../customizing-application/creating-custom-view/">Customizing metadata views</a> for information on creating a new formatter. To add an additional view, click the blue <code>+</code> button below the list and provide a name and a URL.</li>
