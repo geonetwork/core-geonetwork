@@ -303,6 +303,7 @@
     "Metadata",
     "vcRecaptchaService",
     "gnConfig",
+    "gnConfigService",
     function (
       $http,
       gnUserfeedbackService,
@@ -311,7 +312,8 @@
       $rootScope,
       Metadata,
       vcRecaptchaService,
-      gnConfig
+      gnConfig,
+      gnConfigService
     ) {
       return {
         restrict: "AEC",
@@ -322,10 +324,12 @@
         templateUrl:
           "../../catalog/components/" + "userfeedback/partials/userfeedbacknew.html",
         link: function (scope) {
-          scope.recaptchaEnabled =
-            gnConfig["system.userSelfRegistration.recaptcha.enable"];
-          scope.recaptchaKey =
-            gnConfig["system.userSelfRegistration.recaptcha.publickey"];
+          gnConfigService.loadPromise.then(function () {
+            scope.recaptchaEnabled =
+              gnConfig["system.userSelfRegistration.recaptcha.enable"];
+            scope.recaptchaKey =
+              gnConfig["system.userSelfRegistration.recaptcha.publickey"];
+          });
           scope.resolveRecaptcha = false;
           scope.userName = null;
 

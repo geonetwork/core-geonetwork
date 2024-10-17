@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2023 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2024 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -181,7 +181,7 @@ public class ISO19115_3_2018SchemaPlugin
 
     @Override
     public Set<AssociatedResource> getAssociatedFeatureCatalogues(Element metadata) {
-        return collectAssociatedResources(metadata, "*//mrc:featureCatalogueCitation[@uuidref]");
+        return collectAssociatedResources(metadata, "*//mrc:featureCatalogueCitation[@uuidref != '']");
     }
 
     public Set<String> getAssociatedSourceUUIDs(Element metadata) {
@@ -193,7 +193,7 @@ public class ISO19115_3_2018SchemaPlugin
 
     @Override
     public Set<AssociatedResource> getAssociatedSources(Element metadata) {
-        return collectAssociatedResources(metadata, "*//mrl:source");
+        return collectAssociatedResources(metadata, "*//mrl:source[@uuidref != '']");
     }
 
     private Set<AssociatedResource> collectAssociatedResources(Element metadata, String xpath) {

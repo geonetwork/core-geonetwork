@@ -1143,45 +1143,35 @@
       return {
         copy: function (toCopy) {
           var deferred = $q.defer();
-          navigator.permissions.query({ name: "clipboard-write" }).then(
-            function (result) {
-              if (result.state == "granted" || result.state == "prompt") {
-                navigator.clipboard.writeText(toCopy).then(
-                  function () {
-                    deferred.resolve();
-                  },
-                  function (r) {
-                    console.warn(r);
-                    deferred.reject();
-                  }
-                );
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(toCopy).then(
+              function () {
+                deferred.resolve();
+              },
+              function (r) {
+                console.warn(r);
+                deferred.reject();
               }
-            },
-            function () {
-              deferred.reject();
-            }
-          );
+            );
+          } else {
+            deferred.reject();
+          }
           return deferred.promise;
         },
         paste: function () {
           var deferred = $q.defer();
-          navigator.permissions.query({ name: "clipboard-read" }).then(
-            function (result) {
-              if (result.state == "granted" || result.state == "prompt") {
-                navigator.clipboard.readText().then(
-                  function (text) {
-                    deferred.resolve(text);
-                  },
-                  function () {
-                    deferred.reject();
-                  }
-                );
+          if (navigator.clipboard && navigator.clipboard.readText) {
+            navigator.clipboard.readText().then(
+              function (text) {
+                deferred.resolve(text);
+              },
+              function () {
+                deferred.reject();
               }
-            },
-            function () {
-              deferred.reject();
-            }
-          );
+            );
+          } else {
+            deferred.reject();
+          }
           return deferred.promise;
         }
       };

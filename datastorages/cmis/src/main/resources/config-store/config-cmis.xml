@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  ~ Copyright (C) 2001-2016 Food and Agriculture Organization of the
+  ~ Copyright (C) 2001-2024 Food and Agriculture Organization of the
   ~ United Nations (FAO-UN), United Nations World Food Programme (WFP)
   ~ and United Nations Environment Programme (UNEP)
   ~
@@ -99,8 +99,8 @@
         <property name="externalResourceManagementModalEnabled" value="${cmis.external.resource.management.modal.enabled}"/>
         <property name="externalResourceManagementFolderEnabled" value="${cmis.external.resource.management.folder.enabled}"/>
         <property name="externalResourceManagementFolderRoot" value="${cmis.external.resource.management.folder.root}"/>
-        <property name="externalResourceManagementValidationStatusPropertyName" value="${cmis.external.resource.status.property.name}"/>
-        <property name="externalResourceManagementValidationStatusDefaultValue" value="${cmis.external.resource.management.status.default.value}"/>
+        <property name="externalResourceManagementValidationStatusPropertyName" value="${cmis.external.resource.management.validation.status.property.name}"/>
+        <property name="externalResourceManagementValidationStatusDefaultValue" value="${cmis.external.resource.management.validation.status.default.value}"/>
 
         <property name="versioningEnabled" value="${cmis.versioning.enabled}"/>
         <property name="versioningState" value="${cmis.versioning.state}"/>

@@ -391,6 +391,7 @@
     </entry>
     <entry key="4.4.5">
       <list>
+        <value>java:v445.DoiServerDatabaseMigration</value>
         <value>WEB-INF/classes/setup/sql/migrate/v445/migrate-</value>
       </list>
     </entry>

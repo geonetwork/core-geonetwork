@@ -45,6 +45,7 @@
     "$window",
     "$timeout",
     "gnUtilityService",
+    "gnConfigService",
     "gnConfig",
     "gnGlobalSettings",
     "vcRecaptchaService",
@@ -59,6 +60,7 @@
       $window,
       $timeout,
       gnUtilityService,
+      gnConfigService,
       gnConfig,
       gnGlobalSettings,
       vcRecaptchaService,
@@ -73,8 +75,23 @@
       $scope.userToRemind = null;
       $scope.changeKey = null;
 
-      $scope.recaptchaEnabled = gnConfig["system.userSelfRegistration.recaptcha.enable"];
-      $scope.recaptchaKey = gnConfig["system.userSelfRegistration.recaptcha.publickey"];
+      gnConfigService.loadPromise.then(function () {
+        $scope.recaptchaEnabled =
+          gnConfig["system.userSelfRegistration.recaptcha.enable"];
+        $scope.recaptchaKey = gnConfig["system.userSelfRegistration.recaptcha.publickey"];
+
+        // take the bigger of the two values
+        $scope.passwordMinLength = Math.max(
+          gnConfig["system.security.passwordEnforcement.minLength"],
+          6
+        );
+        $scope.passwordMaxLength = Math.max(
+          gnConfig["system.security.passwordEnforcement.maxLength"],
+          6
+        );
+        $scope.passwordPattern = gnConfig["system.security.passwordEnforcement.pattern"];
+      });
+
       $scope.resolveRecaptcha = false;
 
       $scope.redirectUrl = gnUtilityService.getUrlParameter("redirect");
@@ -83,17 +100,6 @@
       $scope.isDisableLoginForm = gnGlobalSettings.isDisableLoginForm;
       $scope.isShowLoginAsLink = gnGlobalSettings.isShowLoginAsLink;
       $scope.isUserProfileUpdateEnabled = gnGlobalSettings.isUserProfileUpdateEnabled;
-
-      // take the bigger of the two values
-      $scope.passwordMinLength = Math.max(
-        gnConfig["system.security.passwordEnforcement.minLength"],
-        6
-      );
-      $scope.passwordMaxLength = Math.max(
-        gnConfig["system.security.passwordEnforcement.maxLength"],
-        6
-      );
-      $scope.passwordPattern = gnConfig["system.security.passwordEnforcement.pattern"];
 
       function initForm() {
         if ($window.location.pathname.indexOf("new.password") !== -1) {
@@ -196,6 +202,9 @@
                 timeout: 0,
                 type: "danger"
               });
+              if ($scope.recaptchaEnabled) {
+                vcRecaptchaService.reload();
+              }
             }
           );
       };
