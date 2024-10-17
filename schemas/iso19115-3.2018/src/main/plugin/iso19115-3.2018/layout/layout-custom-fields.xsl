@@ -19,10 +19,8 @@
 
   <!-- Readonly elements -->
   <xsl:template mode="mode-iso19115-3.2018"
-                match="mdb:metadataIdentifier/mcc:MD_Identifier/mcc:code|
-                       mdb:dateInfo/cit:CI_Date[cit:dateType/cit:CI_DateTypeCode = 'revision']/cit:date|
-                       mdb:dateInfo/cit:CI_Date[cit:dateType/cit:CI_DateTypeCode = 'revision']/cit:dateType"
-                priority="2000">
+                match="mdb:metadataIdentifier/mcc:MD_Identifier/mcc:code"
+                priority="4000">
     <xsl:param name="schema" select="$schema" required="no"/>
     <xsl:param name="labels" select="$labels" required="no"/>
     <xsl:param name="overrideLabel" select="''" required="no"/>
