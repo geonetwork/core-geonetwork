@@ -65,7 +65,8 @@
 
   <!-- View configuration -->
   <views>
-    <view name="default" default="true">
+    <view name="default" default="true"
+          class="gn-label-above-input gn-indent-bluescale">
       <sidePanel>
         <directive data-gn-need-help="creating-metadata"/>
         <directive data-gn-associated-resources-panel="gnCurrentEdit.metadata" />
@@ -91,7 +92,8 @@
                  in="/gfc:FC_FeatureCatalogue"/>
           <field xpath="/gfc:FC_FeatureCatalogue/gfc:functionalLanguage" or="functionalLanguage"
                  in="/gfc:FC_FeatureCatalogue"/>
-          <field xpath="/gfc:FC_FeatureCatalogue/gfc:featureType" or="featureType" in="/gfc:FC_FeatureCatalogue"/>
+          <field xpath="/gfc:FC_FeatureCatalogue/gfc:featureType" or="featureType"
+                 in="/gfc:FC_FeatureCatalogue"/>
 
           <action type="suggest"
                   process="add-columns-from-csv"/>
@@ -99,10 +101,13 @@
       </tab>
       <flatModeExceptions>
         <for name="gfc:code"/>
+        <for name="gfc:featureType"/>
+        <for name="gfc:carrierOfCharacteristics"/>
         <for name="gfc:listedValue"/>
       </flatModeExceptions>
     </view>
-    <view name="advanced">
+    <view name="advanced"
+          class="gn-label-above-input gn-indent-bluescale">
       <sidePanel>
         <directive data-gn-need-help="creating-metadata"/>
         <directive data-gn-validation-report=""/>
