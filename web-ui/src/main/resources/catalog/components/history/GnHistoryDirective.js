@@ -58,7 +58,10 @@
             if (gnConfig["metadata.workflow.enable"]) {
               types.workflow = true;
             }
-            types.task = true;
+            // Currently the only task is DOI
+            if (gnConfig["system.publication.doi.doienabled"]) {
+              types.task = true;
+            }
             types.event = true;
 
             scope.filter = {
@@ -68,6 +71,10 @@
               size: recordByPage
             };
           });
+
+          scope.getNumberOfTypes = function () {
+            return Object.keys(scope.filter.types).length;
+          };
 
           // Wait for metatada to be available
           scope.$watch("md", function (n, o) {

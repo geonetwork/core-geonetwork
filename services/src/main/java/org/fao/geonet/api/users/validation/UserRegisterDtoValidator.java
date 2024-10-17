@@ -60,12 +60,10 @@ public class UserRegisterDtoValidator implements Validator {
         }
 
         UserRepository userRepository = ApplicationContextHolder.get().getBean(UserRepository.class);
-        if (userRepository.findOneByEmail(userRegisterDto.getEmail()) != null) {
-            errors.rejectValue("", "user_with_that_email_found", "A user with this email or username already exists.");
+        if ((userRepository.findOneByEmail(userRegisterDto.getEmail()) != null) ||
+            (!userRepository.findByUsernameIgnoreCase(userRegisterDto.getEmail()).isEmpty())) {
+            errors.rejectValue("", "user_with_that_email_username_found", "A user with this email or username already exists.");
         }
 
-        if (userRepository.findByUsernameIgnoreCase(userRegisterDto.getEmail()).size() != 0) {
-            errors.rejectValue("", "user_with_that_username_found", "A user with this email or username already exists.");
-        }
     }
 }

@@ -90,7 +90,7 @@
             placeholder="{{'inputGeometryText' | translate}}"
             ng-change="ctrl.handleInputChange()"
             ng-readonly="ctrl.readOnly"
-          />
+          ></textarea>
           <small class="text-danger" ng-show="ctrl.fromTextInput && ctrl.parseError">
             {{ 'inputGeometryIsInvalid' | translate}} {{ctrl.parseError}}</small
           >

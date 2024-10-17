@@ -1,38 +1,43 @@
 # Installing search platform
 
-The GeoNetwork search engine is built on top of Elasticsearch. The platform is used to index records and also to analyze WFS data (See [Analyze and visualize data](../user-guide/analyzing/data.md) ).
+The GeoNetwork search engine is built on top of Elasticsearch. The platform is used to index records and also to index WFS data (See [Analyze and visualize data](../user-guide/analyzing/data.md) ).
 
 GeoNetwork requires an [Elasticsearch](https://www.elastic.co/products/elasticsearch) instance to be installed next to the catalog.
 
+
 ## Elasticsearch compatibility
+
+Elasticsearch Java client version: 8.14.3
 
 | Elasticsearch Version | Compatibility |
 |-----------------------| ------------- |
-| Elasticsearch 7.15.x  | minimum       |
-| Elasticsearch 8.11.3  | tested        |
+| Elasticsearch 8.14.3  | recommended   |
+| Elasticsearch 8.14.x  | minimum       |
+
+Older version may be supported but are untested.
 
 
 ## Installation
 
 === "Manual installation"
         
-    1. **Download:** Elasticsearch 8.x (`8.11.3` tested, minimum `7.15.x`) from <https://www.elastic.co/downloads/elasticsearch> and unzip the file.
+    1. **Download:** Elasticsearch `8.14.3` from <https://www.elastic.co/downloads/elasticsearch> and unzip the file.
 
         ``` shell
-        wget https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-8.11.3.tar.gz
-        tar xvfz elasticsearch-8.11.3.tar.gz
+        wget https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-8.14.3.tar.gz
+        tar xvfz elasticsearch-8.14.3.tar.gz
         ```
 
     2. **Start**: Manually start Elasticsearch using:
 
         ``` shell
-        elasticsearch-8.11.3/bin/elasticsearch
+        elasticsearch-8.14.3/bin/elasticsearch
         ```
 
     3. **Stop**: Manually stop Elasticsearch using:
 
         ``` shell
-        elasticsearch-8.11.3/bin/elasticsearch stop
+        elasticsearch-8.14.3/bin/elasticsearch stop
         ```
         
 === "Install using Maven"

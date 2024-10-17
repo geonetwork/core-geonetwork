@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2023 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2024 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -57,7 +57,7 @@ public class LogUtil {
         // Filename safe representation of harvester name (using '_' as needed).
         final String harvesterName = name.replaceAll("\\W+", "_");
         final String harvesterType = type.replaceAll("\\W+", "_");
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmm");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
 
         String logfile = "harvester_"
             + harvesterType
@@ -71,7 +71,7 @@ public class LogUtil {
         }
 
         ThreadContext.put("harvest", harvesterName);
-        ThreadContext.putIfNull("logfile", logfile);
+        ThreadContext.put("logfile", logfile);
         ThreadContext.put("timeZone", timeZoneSetting);
 
         return logfile;

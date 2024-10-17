@@ -455,7 +455,7 @@
           .then(refreshEntriesInfo, function (e) {
             gnAlertService.addAlert({
               msg: $translate.instant("directoryEntry-removeError-referenced"),
-              delay: 5000,
+              delay: 5,
               type: "danger"
             });
           });

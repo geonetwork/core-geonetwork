@@ -147,7 +147,7 @@
     .img-thumbnail {
       padding: 0;
       border: none;
-      max-height: 300px;
+      max-height: 500px;
       min-height: 150px;
       max-width: 100%;
     }
@@ -258,14 +258,20 @@
       display: inline;
       line-break: auto;
       word-break: break-word;
+      letter-spacing: -1em;
+      * {
+        letter-spacing: normal;
+      }
       a {
         line-break: normal;
       }
       &:after {
         content: ", ";
+        letter-spacing: normal;
       }
       &:last-child:after {
         content: "";
+        letter-spacing: normal;
       }
     }
   }
@@ -325,6 +331,9 @@
       }
     }
     // keywords
+    .gn-thesaurus:not(:has(button)) {
+      display: none !important;
+    }
     [data-gn-keyword-badges] {
       .btn {
         word-break: break-word;

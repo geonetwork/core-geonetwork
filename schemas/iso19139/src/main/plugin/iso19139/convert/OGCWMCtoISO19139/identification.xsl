@@ -22,7 +22,6 @@
                                                      ows-context:General/ows:Title"/>
           </gco:CharacterString>
         </gmd:title>
-        <!-- date is mandatory -->
         <gmd:date>
           <gmd:CI_Date>
             <gmd:date>
@@ -70,49 +69,9 @@
 
     <xsl:if test="$currentuser_name != ''">
       <gmd:pointOfContact>
-        <gmd:CI_ResponsibleParty>
-          <gmd:individualName>
-            <gco:CharacterString>
-              <xsl:value-of select="$currentuser_name"/>
-            </gco:CharacterString>
-          </gmd:individualName>
-          <gmd:organisationName>
-            <gco:CharacterString>
-              <xsl:value-of select="$currentuser_org"/>
-            </gco:CharacterString>
-          </gmd:organisationName>
-          <gmd:contactInfo>
-            <gmd:CI_Contact>
-              <!--<gmd:phone>
-                <gmd:CI_Telephone>
-                  <gmd:voice>
-                    <gco:CharacterString>
-                      <xsl:value-of select="$currentuser_phone" />
-                    </gco:CharacterString>
-                  </gmd:voice>
-                </gmd:CI_Telephone>
-              </gmd:phone>-->
-              <gmd:address>
-                <gmd:CI_Address>
-                  <gmd:electronicMailAddress>
-                    <gco:CharacterString>
-                      <xsl:value-of select="$currentuser_mail"/>
-                    </gco:CharacterString>
-                  </gmd:electronicMailAddress>
-                </gmd:CI_Address>
-              </gmd:address>
-            </gmd:CI_Contact>
-          </gmd:contactInfo>
-          <gmd:role>
-            <gmd:CI_RoleCode
-              codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_RoleCode"
-              codeListValue="author"/>
-          </gmd:role>
-        </gmd:CI_ResponsibleParty>
+        <xsl:call-template name="build-current-user"/>
       </gmd:pointOfContact>
     </xsl:if>
-
-    <!-- TODO: add graphic overview -->
 
     <xsl:for-each select="wmc:General/wmc:KeywordList|
                           wmc11:General/wmc11:KeywordList|
@@ -128,13 +87,11 @@
       <gmd:LanguageCode codeList="http://www.loc.gov/standards/iso639-2/" codeListValue="{$lang}"/>
     </gmd:language>
 
-
     <gmd:topicCategory>
       <gmd:MD_TopicCategoryCode>
         <xsl:value-of select="$topic"/>
       </gmd:MD_TopicCategoryCode>
     </gmd:topicCategory>
-
   </xsl:template>
 
 
@@ -151,7 +108,5 @@
       <gmd:MD_KeywordTypeCode codeList="./resources/codeList.xml#MD_KeywordTypeCode"
                               codeListValue="theme"/>
     </gmd:type>
-
   </xsl:template>
-
 </xsl:stylesheet>
