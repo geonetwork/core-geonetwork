@@ -1021,9 +1021,54 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#upgrading-from-geonetwork-30-guidance" class="md-nav__link">
+  <a href="#supported-dcat-profiles" class="md-nav__link">
     <span class="md-ellipsis">
-      Upgrading from GeoNetwork 3.0 Guidance
+      Supported DCAT profiles
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#usage-in-the-formatters-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      Usage in the formatters API
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#usage-in-the-csw-service" class="md-nav__link">
+    <span class="md-ellipsis">
+      Usage in the CSW service
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#usage-in-ogc-api-records" class="md-nav__link">
+    <span class="md-ellipsis">
+      Usage in OGC API Records
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dcat-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      DCAT validation
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mapping-considerations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Mapping considerations
     </span>
   </a>
   
@@ -1259,9 +1304,54 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#upgrading-from-geonetwork-30-guidance" class="md-nav__link">
+  <a href="#supported-dcat-profiles" class="md-nav__link">
     <span class="md-ellipsis">
-      Upgrading from GeoNetwork 3.0 Guidance
+      Supported DCAT profiles
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#usage-in-the-formatters-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      Usage in the formatters API
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#usage-in-the-csw-service" class="md-nav__link">
+    <span class="md-ellipsis">
+      Usage in the CSW service
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#usage-in-ogc-api-records" class="md-nav__link">
+    <span class="md-ellipsis">
+      Usage in OGC API Records
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dcat-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      DCAT validation
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mapping-considerations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Mapping considerations
     </span>
   </a>
   
@@ -1298,29 +1388,110 @@
   
 
 
-<h1 id="rdf-dcat">RDF DCAT end point</h1>
-<div class="admonition warning">
-<p class="admonition-title">Warning</p>
-<p>Unavailable since version 4.0.0.</p>
-<p>There is no known sponsor or interested party for implementing RDF DCAT.
-Interested parties may contact the project team for guidance and to express their intent.</p>
-</div>
-<p>The RDF DCAT end point provides a way of getting information about the catalog, the datasets and services, and links to distributed resources in a machine-readable format. The formats of the output are based on DCAT, an RDF vocabulary that is designed to facilitate interoperability between web-based data catalogs.</p>
-<p>Reference:</p>
+<h1 id="rdf-dcat">DCAT</h1>
+<p>The catalogue has the capability to convert ISO to DCAT format in various API endpoint. <a href="https://trac.osgeo.org/geonetwork/wiki/proposals/DCATandRDFServices">The first implementation of DCAT output was done in 2012</a> and was targeting interaction with semantic service and semantic sitemap support. DCAT output was available using a service named <code>rdf.search</code>. This service was deprecated in version 4.0.0 in favor of producing DCAT output in the <a href="../csw/">Catalog Service for the Web (CSW)</a> or using the formatters API. </p>
+<h2 id="supported-dcat-profiles">Supported DCAT profiles</h2>
+<p>A base conversion is provided with complementary extensions for various profiles of DCAT developed in Europe:</p>
 <ul>
-<li><a href="https://www.w3.org/TR/vocab-dcat-3/">Data Catalog Vocabulary (DCAT)</a></li>
+<li>a default DCAT export following W3C standard https://www.w3.org/TR/vocab-dcat-3/</li>
+<li>an extension for the European DCAT-AP https://semiceu.github.io/DCAT-AP/releases/3.0.0/</li>
+<li>an extension for the European GeoDCAT-AP https://semiceu.github.io/GeoDCAT-AP/releases/</li>
+<li>an extension for the European DCAT-AP-Mobility https://mobilitydcat-ap.github.io/mobilityDCAT-AP/releases/1.0.0/index.html</li>
+<li>an extension for the European DCAT-AP-HVD https://semiceu.github.io/DCAT-AP/releases/2.2.0-hvd/</li>
 </ul>
-<h2 id="upgrading-from-geonetwork-30-guidance">Upgrading from GeoNetwork 3.0 Guidance</h2>
-<p>RDF DCAT API is no longer available.</p>
-<ol>
+<p>The mapping is done from ISO19115-3 to DCAT*. An ISO19139 to ISO19115-3 conversion can be applied before if needed.</p>
+<p><a href="https://github.com/SEMICeu/iso-19139-to-dcat-ap/blob/master/iso-19139-to-dcat-ap.xsl">The SEMICeu XSLT conversion</a>) is also included with minor improvements. This conversion is from ISO19139 to RDF and if needed a conversion from ISO19115-3 is applied.</p>
+<h2 id="usage-in-the-formatters-api">Usage in the formatters API</h2>
+<p>Each DCAT formats are available using a formatter eg. http://localhost:8080/geonetwork/srv/api/records/be44fe5a-65ca-4b70-9d29-ac5bf1f0ebc5/formatters/eu-dcat-ap?output=xml</p>
+<p>To add the formatter in the record view download list, the user interface configuration can be updated:</p>
+<p><img alt="image" src="../../../api/img/dcat-in-download-menu.png" /></p>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="p">{</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">  </span><span class="nt">&quot;mods&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">    </span><span class="nt">&quot;search&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">      </span><span class="nt">&quot;downloadFormatter&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">        </span><span class="p">{</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">          </span><span class="nt">&quot;label&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;exportMEF&quot;</span><span class="p">,</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">          </span><span class="nt">&quot;url&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/formatters/zip?withRelated=false&quot;</span><span class="p">,</span>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">          </span><span class="nt">&quot;class&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;fa-file-zip-o&quot;</span>
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">        </span><span class="p">},</span>
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">        </span><span class="p">{</span>
+</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">          </span><span class="nt">&quot;label&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;exportPDF&quot;</span><span class="p">,</span>
+</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="w">          </span><span class="nt">&quot;url&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/formatters/xsl-view?output=pdf&amp;language=${lang}&quot;</span><span class="p">,</span>
+</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="w">          </span><span class="nt">&quot;class&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;fa-file-pdf-o&quot;</span>
+</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="w">        </span><span class="p">},</span>
+</span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="w">        </span><span class="p">{</span>
+</span><span id="__span-0-16"><a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="w">          </span><span class="nt">&quot;label&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;exportXML&quot;</span><span class="p">,</span>
+</span><span id="__span-0-17"><a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="w">          </span><span class="nt">&quot;url&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/formatters/xml&quot;</span><span class="p">,</span>
+</span><span id="__span-0-18"><a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="w">          </span><span class="nt">&quot;class&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;fa-file-code-o&quot;</span>
+</span><span id="__span-0-19"><a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="w">        </span><span class="p">},</span>
+</span><span id="__span-0-20"><a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="w">        </span><span class="p">{</span>
+</span><span id="__span-0-21"><a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="w">          </span><span class="nt">&quot;label&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;DCAT&quot;</span><span class="p">,</span>
+</span><span id="__span-0-22"><a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="w">          </span><span class="nt">&quot;url&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/formatters/dcat?output=xml&quot;</span>
+</span><span id="__span-0-23"><a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a><span class="w">        </span><span class="p">},</span>
+</span><span id="__span-0-24"><a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a><span class="w">        </span><span class="p">{</span>
+</span><span id="__span-0-25"><a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a><span class="w">          </span><span class="nt">&quot;label&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;EU-DCAT-AP&quot;</span><span class="p">,</span>
+</span><span id="__span-0-26"><a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a><span class="w">          </span><span class="nt">&quot;url&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/formatters/eu-dcat-ap?output=xml&quot;</span>
+</span><span id="__span-0-27"><a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a><span class="w">        </span><span class="p">},</span>
+</span><span id="__span-0-28"><a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a><span class="w">        </span><span class="p">{</span>
+</span><span id="__span-0-29"><a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a><span class="w">          </span><span class="nt">&quot;label&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;EU-GEO-DCAT-AP&quot;</span><span class="p">,</span>
+</span><span id="__span-0-30"><a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a><span class="w">          </span><span class="nt">&quot;url&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/formatters/eu-geodcat-ap?output=xml&quot;</span>
+</span><span id="__span-0-31"><a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a><span class="w">        </span><span class="p">},</span>
+</span><span id="__span-0-32"><a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a><span class="w">        </span><span class="p">{</span>
+</span><span id="__span-0-33"><a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a><span class="w">          </span><span class="nt">&quot;label&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;EU-DCAT-AP-MOBILITY&quot;</span><span class="p">,</span>
+</span><span id="__span-0-34"><a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a><span class="w">          </span><span class="nt">&quot;url&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/formatters/eu-dcat-ap-mobility?output=xml&quot;</span>
+</span><span id="__span-0-35"><a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a><span class="w">        </span><span class="p">},</span>
+</span><span id="__span-0-36"><a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a><span class="w">        </span><span class="p">{</span>
+</span><span id="__span-0-37"><a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a><span class="w">          </span><span class="nt">&quot;label&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;EU-DCAT-AP-HVD&quot;</span><span class="p">,</span>
+</span><span id="__span-0-38"><a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a><span class="w">          </span><span class="nt">&quot;url&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/formatters/eu-dcat-ap-hvd?output=xml&quot;</span>
+</span><span id="__span-0-39"><a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a><span class="w">        </span><span class="p">}</span>
+</span><span id="__span-0-40"><a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a><span class="w">      </span><span class="p">]</span>
+</span></code></pre></div>
+<h2 id="usage-in-the-csw-service">Usage in the CSW service</h2>
+<p>All DCAT profiles are also accessible using CSW protocol.</p>
+<p>A <code>GetRecordById</code> operation can be used: http://localhost:8080/geonetwork/srv/eng/csw?SERVICE=CSW&amp;VERSION=2.0.2&amp;REQUEST=GetRecordById&amp;ID=da165110-88fd-11da-a88f-000d939bc5d8&amp;outputSchema=https://semiceu.github.io/DCAT-AP/releases/2.2.0-hvd/ and is equivalent to the API http://localhost:8080/geonetwork/srv/api/records/da165110-88fd-11da-a88f-000d939bc5d8/formatters/eu-dcat-ap-hvd?output=xml.</p>
+<p>A <code>GetRecords</code> operation can be used to retrieve a set of records: http://localhost:8080/geonetwork/srv/fre/csw?SERVICE=CSW&amp;VERSION=2.0.2&amp;REQUEST=GetRecords&amp;outputSchema=http://data.europa.eu/930/&amp;elementSetName=full&amp;resultType=results&amp;maxRecords=300</p>
+<p>Use the <code>outputSchema</code> parameter to select the DCAT profile to use. The following values are supported:</p>
+<div class="language-xml highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nt">&lt;ows:Parameter</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;outputSchema&quot;</span><span class="nt">&gt;</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">   </span><span class="nt">&lt;ows:Value&gt;</span>http://data.europa.eu/930/<span class="nt">&lt;/ows:Value&gt;</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">   </span><span class="nt">&lt;ows:Value&gt;</span>http://data.europa.eu/930/#semiceu<span class="nt">&lt;/ows:Value&gt;</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">   </span><span class="nt">&lt;ows:Value&gt;</span>http://data.europa.eu/r5r/<span class="nt">&lt;/ows:Value&gt;</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">   </span><span class="nt">&lt;ows:Value&gt;</span>http://standards.iso.org/iso/19115/-3/mdb/2.0<span class="nt">&lt;/ows:Value&gt;</span>
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">   </span><span class="nt">&lt;ows:Value&gt;</span>http://www.isotc211.org/2005/gfc<span class="nt">&lt;/ows:Value&gt;</span>
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">   </span><span class="nt">&lt;ows:Value&gt;</span>http://www.isotc211.org/2005/gmd<span class="nt">&lt;/ows:Value&gt;</span>
+</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">   </span><span class="nt">&lt;ows:Value&gt;</span>http://www.opengis.net/cat/csw/2.0.2<span class="nt">&lt;/ows:Value&gt;</span>
+</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">   </span><span class="nt">&lt;ows:Value&gt;</span>http://www.w3.org/ns/dcat#<span class="nt">&lt;/ows:Value&gt;</span>
+</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">   </span><span class="nt">&lt;ows:Value&gt;</span>http://www.w3.org/ns/dcat#core<span class="nt">&lt;/ows:Value&gt;</span>
+</span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">   </span><span class="nt">&lt;ows:Value&gt;</span>https://semiceu.github.io/DCAT-AP/releases/2.2.0-hvd/<span class="nt">&lt;/ows:Value&gt;</span>
+</span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="w">   </span><span class="nt">&lt;ows:Value&gt;</span>https://w3id.org/mobilitydcat-ap<span class="nt">&lt;/ows:Value&gt;</span>
+</span></code></pre></div>
+<p>Those values are listed in the <code>GetCapabilities</code> operation http://localhost:8080/geonetwork/srv/eng/csw?SERVICE=CSW&amp;VERSION=2.0.2&amp;REQUEST=GetCapabilities.</p>
+<h2 id="usage-in-ogc-api-records">Usage in OGC API Records</h2>
+<p>For the time being, OGC API Records provides a simplified DCAT output (based on the index document). </p>
+<h2 id="dcat-validation">DCAT validation</h2>
+<p>The DCAT validation can be done using online validation tool:
+* https://www.itb.ec.europa.eu/shacl/dcat-ap/upload</p>
+<p>Depending on the target DCAT profile to use, it may be required to build proper ISO template and metadata record containing all required fields. Usually profiles are adding constraints for usage of specific vocabularies and fields (eg. <a href="https://semiceu.github.io/DCAT-AP/releases/2.2.0-hvd/#controlled-vocabularies-to-be-used">for High Value datasets, specific vocabularies are defined for categories, license, applicable legislations, ...</a>).</p>
+<h2 id="mapping-considerations">Mapping considerations</h2>
+<p>The mapping is done from ISO19115-3 to DCAT. The mapping may not cover all usages and may be adapted. This can be done in the <code>iso19115-3.2018</code> schema plugin in the <code>formatter/dcat*</code> XSLT files.</p>
+<p>Some points under discussion are:
+* Object vs Reference: 
+  * Should we use object or reference for some fields (eg. contact, organisation, ...)?
+  * What should be the reference URI?
+  * Where is defined the reference URI in ISO?</p>
+<p>eg. for an organisation, the URI will be the first value in the following sequence:
+<div class="language-xml highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>(cit:partyIdentifier/*/mcc:code/*/text(),
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>cit:contactInfo/*/cit:onlineResource/*/cit:linkage/gco:CharacterString/text(),
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>cit:name/gcx:Anchor/@xlink:href,
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>@uuid)[1]
+</span></code></pre></div></p>
+<ul>
 <li>
-<p>We recommend migrating to use of <a href="../csw/">Catalog Service for the Web (CSW)</a> API to query and explore data.</p>
+<p>No equivalent field in ISO (eg. Where to store <code>spdx:checksum</code> in ISO?)</p>
 </li>
 <li>
-<p>When downloading using <code>GetRecord</code> make use of the <code>application/rdf+xml; charset=UTF-8</code> output format.</p>
+<p>Associated resources: Links between are not always bidirectional so using the associated API would allow to populate more relations. This is also mitigated with the complete RDF graph of the catalogue is retrieved providing relations from all records.</p>
 </li>
-</ol>
-<p>This will allow retrieving records in the same document format as previously provided by RDF DCAT api.</p>
+</ul>
 
 
 
