@@ -59,6 +59,7 @@ class DatabaseHarvesterAligner extends BaseAligner<DatabaseHarvesterParams> impl
     private IMetadataUtils metadataUtils;
     private IMetadataIndexer metadataIndexer;
     private IMetadataSchemaUtils metadataSchemaUtils;
+    private MetadataRepository metadataRepository;
     private HarvestResult result;
     private CategoryMapper localCateg;
     private GroupMapper localGroups;
@@ -91,6 +92,7 @@ class DatabaseHarvesterAligner extends BaseAligner<DatabaseHarvesterParams> impl
         metadataSchemaUtils = gc.getBean(IMetadataSchemaUtils.class);
         metadataUtils = gc.getBean(IMetadataUtils.class);
         metadataIndexer = gc.getBean(IMetadataIndexer.class);
+        metadataRepository = gc.getBean(MetadataRepository.class);
     }
 
     @Override
@@ -110,7 +112,7 @@ class DatabaseHarvesterAligner extends BaseAligner<DatabaseHarvesterParams> impl
         //--- retrieve harvested uuids for given harvesting node
         localCateg = new CategoryMapper(context);
         localGroups = new GroupMapper(context);
-        localUuids = new UUIDMapper(context.getBean(IMetadataUtils.class), params.getUuid());
+        localUuids = new UUIDMapper(metadataUtils, params.getUuid());
 
         Pair<String, Map<String, Object>> filter = HarvesterUtil.parseXSLFilter(params.getXslfilter());
         processName = filter.one();
@@ -165,7 +167,7 @@ class DatabaseHarvesterAligner extends BaseAligner<DatabaseHarvesterParams> impl
 
     private void deleteLocalMetadataNotInDatabase(List<Integer> idsForHarvestingResult) throws Exception {
         Set<Integer> idsResultHs = Sets.newHashSet(idsForHarvestingResult);
-        List<Integer> existingMetadata = context.getBean(MetadataRepository.class).findIdsBy(MetadataSpecs.hasHarvesterUuid(params.getUuid()));
+        List<Integer> existingMetadata = metadataRepository.findIdsBy(MetadataSpecs.hasHarvesterUuid(params.getUuid()));
         for (Integer existingId : existingMetadata) {
             if (cancelMonitor.get()) {
                 return;
