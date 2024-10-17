@@ -383,7 +383,7 @@
       <dct:relation rdf:resource="http://localhost:8080/geonetwork/srv/api/records/ffc45d44-1cc2-4924-bb8c-214096eb9058?language=all"/>
       <dct:isPartOf rdf:resource="http://localhost:8080/geonetwork/srv/api/records/da165110-88fd-11da-a88f-000d939bc5d8"/>
       <dct:language>
-         <dct:LinguisticSystem rdf:about="http://publications.europa.eu/resource/authority/language/FRE"/>
+         <dct:LinguisticSystem rdf:about="http://publications.europa.eu/resource/authority/language/FRA"/>
       </dct:language>
       <dct:language>
          <dct:LinguisticSystem rdf:about="http://publications.europa.eu/resource/authority/language/ENG"/>
