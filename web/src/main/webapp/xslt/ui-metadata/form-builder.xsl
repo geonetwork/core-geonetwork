@@ -1770,6 +1770,14 @@
                 <xsl:choose>
                   <xsl:when test="@use != ''">
                     <xsl:copy-of select="@use|directiveAttributes"/>
+
+                    <xsl:if test="@xpath != ''">
+                      <saxon:call-template name="{concat('evaluate-', $schema)}">
+                        <xsl:with-param name="base" select="$base"/>
+                        <xsl:with-param name="in"
+                                        select="concat('/', @xpath)"/>
+                      </saxon:call-template>
+                    </xsl:if>
                   </xsl:when>
                   <xsl:when test="@del != ''">
                     <xsl:attribute name="remove" select="'true'"/>

@@ -34,11 +34,13 @@ import com.amazonaws.services.s3.model.S3ObjectInputStream;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
+import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.MetadataResource;
 import org.fao.geonet.domain.MetadataResourceContainer;
 import org.fao.geonet.domain.MetadataResourceVisibility;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.resources.S3Credentials;
+import org.fao.geonet.utils.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.File;
@@ -186,12 +188,18 @@ public class S3Store extends AbstractStore {
         try {
             final ListObjectsV2Result objects = s3.getClient().listObjectsV2(
                 s3.getBucket(), getMetadataDir(metadataId));
+
+            Log.info(Geonet.RESOURCES, String.format("Deleting all files from metadataId '%s'", metadataId));
             for (S3ObjectSummary object: objects.getObjectSummaries()) {
                 s3.getClient().deleteObject(s3.getBucket(), object.getKey());
             }
-            return String.format("Metadata '%s' directory removed.", metadataId);
+            Log.info(Geonet.RESOURCES,
+                String.format("Metadata '%d' directory removed.", metadataId));
+            return String.format("Metadata '%d' directory removed.", metadataId);
         } catch (AmazonServiceException e) {
-            return String.format("Unable to remove metadata '%s' directory.", metadataId);
+            Log.warning(Geonet.RESOURCES,
+                String.format("Unable to remove metadata '%d' directory. %s", metadataId, e.getMessage()));
+            return String.format("Unable to remove metadata '%d' directory.", metadataId);
         }
     }
 
@@ -202,7 +210,7 @@ public class S3Store extends AbstractStore {
 
         for (MetadataResourceVisibility visibility: MetadataResourceVisibility.values()) {
             if (tryDelResource(metadataUuid, metadataId, visibility, resourceId)) {
-                return String.format("MetadataResource '%s' removed.", resourceId);
+                return String.format("Metadata resource '%s' removed.", resourceId);
             }
         }
         return String.format("Unable to remove resource '%s'.", resourceId);
@@ -213,7 +221,7 @@ public class S3Store extends AbstractStore {
             final String resourceId, Boolean approved) throws Exception {
         int metadataId = canEdit(context, metadataUuid, approved);
         if (tryDelResource(metadataUuid, metadataId, visibility, resourceId)) {
-            return String.format("MetadataResource '%s' removed.", resourceId);
+            return String.format("Metadata resource '%s' removed.", resourceId);
         }
         return String.format("Unable to remove resource '%s'.", resourceId);
     }
@@ -223,8 +231,12 @@ public class S3Store extends AbstractStore {
         final String key = getKey(metadataUuid, metadataId, visibility, resourceId);
         if (s3.getClient().doesObjectExist(s3.getBucket(), key)) {
             s3.getClient().deleteObject(s3.getBucket(), key);
+            Log.info(Geonet.RESOURCES,
+                String.format("Resource '%s' removed for metadata %d (%s).", resourceId, metadataId, metadataUuid));
             return true;
         }
+        Log.info(Geonet.RESOURCES,
+            String.format("Unable to remove resource '%s' for metadata %d (%s).", resourceId, metadataId, metadataUuid));
         return false;
     }
 

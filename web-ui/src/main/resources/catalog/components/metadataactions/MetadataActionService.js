@@ -51,6 +51,7 @@
     "$q",
     "$http",
     "gnConfig",
+    "gnLangs",
     function (
       $rootScope,
       $timeout,
@@ -67,7 +68,8 @@
       $translate,
       $q,
       $http,
-      gnConfig
+      gnConfig,
+      gnLangs
     ) {
       var windowName = "geonetwork";
       var windowOption = "";
@@ -154,7 +156,7 @@
           if (params.sortOrder) {
             url += "&sortOrder=" + params.sortOrder;
           }
-          url += "&bucket=" + bucket;
+          url += "&bucket=" + bucket + "&language=" + gnLangs.current;
           location.replace(url);
         } else if (angular.isString(params)) {
           gnMdFormatter.getFormatterUrl(null, null, params).then(function (url) {
@@ -194,7 +196,11 @@
       };
 
       this.exportCSV = function (bucket) {
-        window.open("../api/records/csv" + "?bucket=" + bucket, windowName, windowOption);
+        window.open(
+          "../api/records/csv" + "?bucket=" + bucket + "&language=" + gnLangs.current,
+          windowName,
+          windowOption
+        );
       };
       this.validateMdLinks = function (bucket) {
         $rootScope.$broadcast("operationOnSelectionStart");
@@ -275,20 +281,28 @@
           );
         } else {
           $rootScope.$broadcast("operationOnSelectionStart");
-          $http.delete("../api/records?" + "bucket=" + bucket).then(
-            function (data) {
-              $rootScope.$broadcast("mdSelectNone");
-              $rootScope.$broadcast("operationOnSelectionStop");
-              $rootScope.$broadcast("search");
-              $timeout(function () {
+          $http
+            .delete("../api/records?" + "bucket=" + bucket)
+            .then(
+              function (data) {
+                $rootScope.$broadcast("mdSelectNone");
                 $rootScope.$broadcast("search");
-              }, 5000);
-              deferred.resolve(data);
-            },
-            function (data) {
-              deferred.reject(data);
-            }
-          );
+                $timeout(function () {
+                  $rootScope.$broadcast("search");
+                }, 5000);
+                deferred.resolve(data);
+              },
+              function (data) {
+                gnAlertService.addAlert({
+                  msg: data.data.message || data.data.description,
+                  type: "danger"
+                });
+                deferred.reject(data);
+              }
+            )
+            .finally(function () {
+              $rootScope.$broadcast("operationOnSelectionStop");
+            });
         }
         return deferred.promise;
       };
@@ -523,6 +537,7 @@
               }
 
               if (md) {
+                gnMetadataManager.updateMdObj(md);
                 md.publish(publicationType);
               }
             },
@@ -640,8 +655,10 @@
           })
           .then(function (data) {
             $rootScope.$broadcast("inspireMdValidationStop");
-            $rootScope.$broadcast("operationOnSelectionStop");
             $rootScope.$broadcast("search");
+          })
+          .finally(function () {
+            $rootScope.$broadcast("operationOnSelectionStop");
           });
       };
 
@@ -653,8 +670,10 @@
             method: "DELETE"
           })
           .then(function (data) {
-            $rootScope.$broadcast("operationOnSelectionStop");
             $rootScope.$broadcast("search");
+          })
+          .finally(function () {
+            $rootScope.$broadcast("operationOnSelectionStop");
           });
       };
 

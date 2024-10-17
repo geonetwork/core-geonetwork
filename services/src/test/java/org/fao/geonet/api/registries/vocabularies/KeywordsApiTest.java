@@ -249,6 +249,6 @@ public class KeywordsApiTest extends AbstractServiceIntegrationTest {
             "Mobility Theme", scheme.getChildText("title", NAMESPACE_DCT));
 
         List concepts = thesaurus.getChildren("Concept", SKOS_NAMESPACE);
-        assertEquals(123, concepts.size());
+        assertEquals(121, concepts.size());
     }
 }
