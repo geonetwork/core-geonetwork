@@ -22,7 +22,8 @@ Providing the following information:
     -   *Port*: The database port. For example, for Postgres usually 5432.
     -   *Database name*: The database name to connect.
     -   *Table name*: Table name with the metadata. The name must begin with a letter (a-z) or underscore (_). Subsequent characters in a name can be letters, digits (0-9), or underscores.
-    -   *Metadata field name*: Table field name that contains the metadata. The name must begin with a letter (a-z) or underscore (_). Subsequent characters in a name can be letters, digits (0-9), or underscores.
+    -   *Metadata field name*: Table field name that contains the metadata XML text. The field name must begin with a letter (a-z) or underscore (_). Subsequent characters in a name can be letters, digits (0-9), or underscores.
+        The supported SQL generic types for this field are the following: `BLOB`, `LONGVARBINARY`, `LONGNVARCHAR`, `LONGVARCHAR`, `VARCHAR`, `SQLXML`. Check your database documentation for specific implementations of these generic types.
     -   *Database type*: Database type. Currently supported Postgres and Oracle.
     -   *Remote authentication*: Credentials to connect to the database.
 
