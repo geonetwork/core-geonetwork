@@ -664,11 +664,6 @@
           scope.fauxMultilingual = scope.fauxMultilingual === "true"; //default false
           scope.showHintsOnFocus = attrs.showHintsOnFocus === "true"; // displays all the values on focus and adds a dropdown caret icon, default shows only the selected value
 
-          // Add the required mock dropdown class if show hints on focus is enabled
-          if (scope.showHintsOnFocus) {
-             element.addClass("mock-dropdown");
-          }
-
           // Configuration only required when using the directive in template fields.
           //
           // - data-template-field: true to indicate a template field
