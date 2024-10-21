@@ -901,6 +901,7 @@
         restrict: "A",
         link: function (scope, element, attrs) {
           scope.prefix = attrs["prefix"] || "";
+          scope.showHintsOnFocus = attrs.showHintsOnFocus === "true"; // displays all the values on focus, default shows only the selected value
           element.attr("placeholder", "...");
           element.on("focus", function () {
             $http
@@ -945,7 +946,8 @@
                 $(element).typeahead(
                   {
                     minLength: 0,
-                    highlight: true
+                    highlight: true,
+                    showHintsOnFocus: scope.showHintsOnFocus
                   },
                   {
                     name: "isoLanguages",
@@ -958,6 +960,10 @@
                     }
                   }
                 );
+                // Since the typeahead is initialized on focus the first focus will not trigger the hints
+                // So we blur then refocus to trigger the hints
+                $(element).blur();
+                $(element).focus();
               });
             element.unbind("focus");
           });
