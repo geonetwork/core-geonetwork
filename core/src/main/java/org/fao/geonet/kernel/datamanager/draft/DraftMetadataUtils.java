@@ -677,6 +677,7 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
             metadataFileUpload.setFileSize(mfu.getFileSize());
             metadataFileUpload.setUploadDate(mfu.getUploadDate());
             metadataFileUpload.setUserName(mfu.getUserName());
+            metadataFileUpload.setDeletedDate(mfu.getDeletedDate());
 
             repo.save(metadataFileUpload);
         }
