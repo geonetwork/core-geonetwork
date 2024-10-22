@@ -8,21 +8,21 @@ In brief the committee votes on proposals on the geonetwork-dev mailinglist. Pro
 
 ### Members of the Project Steering Committee
 
--   Florent Gravin
--   Francois Prunayre
--   Jeroen Ticheler - Chair
--   Jo Cook
--   Jose Garcia
--   Paul van Genuchten
--   Simon Pigot
+-   Jeroen Ticheler (jeroen ticheler * geocat net) [GeoCat](https://www.geocat.net) - Chair
+-   Francois Prunayre [Titellus](https://titellus.net)
+-   Simon Pigot [CSIRO](https://www.csiro.au)
+-   Florent Gravin [CamptoCamp](https://camptocamp.com)
+-   Jose Garcia [GeoCat](https://www.geocat.net)
+-   Paul van Genuchten [ISRIC](https://www.isric.org)
 
 ### Former members of the PSC
 
--   Andrea Carboni
--   Archie Warnock
--   Patrizia Monteduro
+-   Jo Cook [Astun Technology](https://www.astuntechnology.com)
+-   Patrizia Monteduro (Patrizia Monteduro * fao org) [FAO-UN](https://www.fao.org)
+-   Emanuele Tajariol (e tajariol * mclink it - GeoSolutions)
 -   Jesse Eichar
--   Emanuele Tajariol
+-   Andrea Carboni (acarboni * crisalis-tech com - Independent consultant)
+-   Archie Warnock (warnock * awcubed com) [A/WWW Enterprises](https://www.awcubed.com)
 
 ## Committers
 
@@ -42,6 +42,8 @@ Committers list is available [here for the core team](https://github.com/orgs/ge
 -   Paul van Genuchten
 -   Antonio Cerciello
 -   Michel Gabriel
+-   Jody Garnett
+-   David Blasby
 
 ## Contributors
 
