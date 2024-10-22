@@ -34,6 +34,7 @@
   <xsl:include href="layout-custom-fields-date.xsl"/>
   <xsl:include href="layout-custom-fields-contact.xsl"/>
   <xsl:include href="layout-custom-fields-keywords.xsl"/>
+  <xsl:include href="layout-custom-feature-catalogue.xsl"/>
 
   <!-- Visit all XML tree recursively -->
   <xsl:template mode="mode-iso19115-3.2018"
@@ -139,6 +140,7 @@
       * and not(gco:CharacterString): Don't take into account those having gco:CharacterString (eg. multilingual elements)
   -->
   <xsl:template mode="mode-iso19115-3.2018" priority="200"
+                name="mode-iso19115-3.2018-fieldset"
                 match="*[name() = $editorConfig/editor/fieldsWithFieldset/name
                           or @gco:isoType = $editorConfig/editor/fieldsWithFieldset/name]|
                         *[namespace-uri(.) != $gnUri and $isFlatMode = false() and

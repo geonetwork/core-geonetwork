@@ -27,6 +27,8 @@
   <xml_iso19110Tooai_dc>Save this metadata as an OAI Dublin Core XML file</xml_iso19110Tooai_dc>
 
   <advanced>Volledig</advanced>
-  <default>Eenvoudig</default>
+  <default>Standaard</default>
   <xml>XML</xml>
+  <selectFeaturetype>Selecteer een objecttype</selectFeaturetype>
+  <missingFeatureTypeName>Nieuw objecttype</missingFeatureTypeName>
 </strings>
