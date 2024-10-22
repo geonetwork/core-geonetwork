@@ -13,11 +13,11 @@ In brief the committee votes on proposals on the geonetwork-dev mailinglist. Pro
 -   Simon Pigot [CSIRO](https://www.csiro.au)
 -   Florent Gravin [CamptoCamp](https://camptocamp.com)
 -   Jose Garcia [GeoCat](https://www.geocat.net)
--   Jo Cook [Astun Technology](https://www.astuntechnology.com)
 -   Paul van Genuchten [ISRIC](https://www.isric.org)
 
 ### Former members of the PSC
 
+-   Jo Cook [Astun Technology](https://www.astuntechnology.com)
 -   Patrizia Monteduro (Patrizia Monteduro * fao org) [FAO-UN](https://www.fao.org)
 -   Emanuele Tajariol (e tajariol * mclink it - GeoSolutions)
 -   Jesse Eichar
