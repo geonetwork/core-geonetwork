@@ -27,6 +27,7 @@ import com.google.common.base.Optional;
 import com.google.common.collect.Sets;
 import jeeves.server.context.ServiceContext;
 import org.eclipse.jetty.io.RuntimeIOException;
+import org.fao.geonet.api.records.attachments.Store;
 import org.fao.geonet.api.records.attachments.StoreUtils;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.*;
@@ -648,6 +649,10 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
                 metadataRatingByIpRepository.deleteAllById_MetadataId(intId);
                 metadataValidationRepository.deleteAllById_MetadataId(intId);
                 metadataStatusRepository.deleteAllById_MetadataId(intId);
+
+                // Delete resources
+                Store store = context.getBean("resourceStore", Store.class);
+                store.delResources(context, intId);
 
                 // --- remove metadata
                 xmlSerializer.delete(id, ServiceContext.get());
