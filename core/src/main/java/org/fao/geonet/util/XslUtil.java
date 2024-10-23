@@ -1246,7 +1246,7 @@ public final class XslUtil {
                 Matcher m = Pattern.compile(settingManager.getNodeURL() + "api/records/(.*)/attachments/(.*)$").matcher(url);
                 BufferedImage image;
                 if (m.find()) {
-                    Store store = ApplicationContextHolder.get().getBean(FilesystemStore.class);
+                    Store store = ApplicationContextHolder.get().getBean("resourceStore", Store.class);
                     try (Store.ResourceHolder file = store.getResourceInternal(
                         m.group(1),
                         MetadataResourceVisibility.PUBLIC,
@@ -1581,7 +1581,7 @@ public final class XslUtil {
     public static String escapeForJson(String value) {
         return StringEscapeUtils.escapeJson(value);
     }
-  
+
     public static String getWebAnalyticsService() {
         ApplicationContext applicationContext = ApplicationContextHolder.get();
         WebAnalyticsConfiguration webAnalyticsConfiguration = applicationContext.getBean(WebAnalyticsConfiguration.class);
