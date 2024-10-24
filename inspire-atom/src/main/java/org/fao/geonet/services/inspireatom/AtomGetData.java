@@ -23,6 +23,8 @@
 package org.fao.geonet.services.inspireatom;
 
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -84,7 +86,7 @@ public class AtomGetData {
     )
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Get a data file related to dataset"),
-        @ApiResponse(responseCode = "204", description = "Not authenticated.")
+        @ApiResponse(responseCode = "204", description = "Not authenticated.", content = {@Content(schema = @Schema(hidden = true))})
     })
     @ResponseStatus(OK)
     @ResponseBody
