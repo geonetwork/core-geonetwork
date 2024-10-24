@@ -327,14 +327,16 @@
             </xsl:variable>
             <xsl:choose>
               <xsl:when test="$zuluDateTime != ''">
+                <!-- Store original date information for the resource, instead of $zuluDateTime,
+                     to avoid timezone shifts when used for facet filters -->
                 <xsl:element name="{$dateType}DateForResource">
-                  <xsl:value-of select="$zuluDateTime"/>
+                  <xsl:value-of select="$date"/>
                 </xsl:element>
                 <xsl:element name="{$dateType}YearForResource">
-                  <xsl:value-of select="substring($zuluDateTime, 0, 5)"/>
+                  <xsl:value-of select="substring($date, 0, 5)"/>
                 </xsl:element>
                 <xsl:element name="{$dateType}MonthForResource">
-                  <xsl:value-of select="substring($zuluDateTime, 0, 8)"/>
+                  <xsl:value-of select="substring($date, 0, 8)"/>
                 </xsl:element>
               </xsl:when>
               <xsl:otherwise>
