@@ -401,6 +401,8 @@
   "setServiceConnectPoint": "Add service connect point",
   "mimeType": "Format",
   "uploadedResourceAlreadyExistException": "File {{file}} already exist in this record data store. Remove it first.",
+  "uploadedResourceSizeExceededException": "File {{file}} too large ({{humanizedSize}}).",
+  "uploadNetworkErrorException": "File {{file}} failed to upload due to network error or connection reset.",
   "qualityMeasures": "Quality",
   "measureType": "Type",
   "measureName": "Measure",
