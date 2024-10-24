@@ -67,6 +67,7 @@ import org.springframework.data.jpa.domain.Specification;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
@@ -86,6 +87,8 @@ public class EsSearchManager implements ISearchManager {
     public static final String SCHEMA_INDEX_SUBTEMPLATE_XSTL_FILENAME = "index-subtemplate.xsl";
     public static final String FIELDNAME = "name";
     public static final String FIELDSTRING = "string";
+
+    private static final int COMMIT_INTERVAL = 200;
 
     public static final Map<String, String> RELATED_INDEX_FIELDS;
     public static final Set<String> FIELDLIST_CORE;
@@ -173,11 +176,7 @@ public class EsSearchManager implements ISearchManager {
     @Autowired
     private OverviewIndexFieldUpdater overviewFieldUpdater;
 
-    private int commitInterval = 200;
-
-    // public for test, to be private or protected
-    public Map<String, String> listOfDocumentsToIndex =
-        Collections.synchronizedMap(new HashMap<>());
+    private final Map<String, String> listOfDocumentsToIndex = Collections.synchronizedMap(new HashMap<>());
     private Map<String, String> indexList;
 
     private Path getXSLTForIndexing(Path schemaDir, MetadataType metadataType) {
@@ -397,7 +396,7 @@ public class EsSearchManager implements ISearchManager {
                 .doc(fields)
         );
 
-        client.getAsynchClient()
+        client.getAsyncClient()
             .update(updateRequest, ObjectNode.class)
             .whenComplete((response, exception) -> {
                 if (exception != null) {
@@ -453,37 +452,38 @@ public class EsSearchManager implements ISearchManager {
 
         String jsonDocument = mapper.writeValueAsString(doc);
 
-        if (forceRefreshReaders) {
-            Map<String, String> document = new HashMap<>();
-            document.put(id, jsonDocument);
-            final BulkResponse bulkItemResponses = client.bulkRequest(defaultIndex, document);
-            checkIndexResponse(bulkItemResponses, document);
-            overviewFieldUpdater.process(id);
-        } else {
-            listOfDocumentsToIndex.put(id, jsonDocument);
-            if (listOfDocumentsToIndex.size() == commitInterval) {
-                sendDocumentsToIndex();
-            }
+        listOfDocumentsToIndex.put(id, jsonDocument);
+        if (forceRefreshReaders || listOfDocumentsToIndex.size() >= COMMIT_INTERVAL) {
+            sendDocumentsToIndex();
         }
     }
 
     private void sendDocumentsToIndex() {
-        Map<String, String> documents = new HashMap<>(listOfDocumentsToIndex);
-        listOfDocumentsToIndex.clear();
-        if (!documents.isEmpty()) {
-            try {
-                final BulkResponse bulkItemResponses = client
-                    .bulkRequest(defaultIndex, documents);
-                checkIndexResponse(bulkItemResponses, documents);
-            } catch (Exception e) {
-                LOGGER.error(
-                    "An error occurred while indexing {} documents in current indexing list. Error is {}.",
-                    listOfDocumentsToIndex.size(), e.getMessage());
-            } finally {
-                // TODO: Trigger this async ?
-                documents.keySet().forEach(uuid -> overviewFieldUpdater.process(uuid));
-            }
+        Map<String, String> documents;
+        synchronized (listOfDocumentsToIndex) {
+            if (listOfDocumentsToIndex.isEmpty()) return;
+            documents = new HashMap<>(listOfDocumentsToIndex);
+            listOfDocumentsToIndex.clear();
         }
+
+        BulkRequest bulkRequest = client.buildBulkRequest(defaultIndex, documents);
+        client.getAsyncClient().bulk(bulkRequest)
+            .thenAcceptAsync(bulkItemResponses -> {
+                    try {
+                        checkIndexResponse(bulkItemResponses, documents);
+                    } catch (IOException e) {
+                        throw new UncheckedIOException(e);
+                    } finally {
+                        documents.keySet().forEach(uuid -> overviewFieldUpdater.process(uuid));
+                    }
+                }
+            )
+            .exceptionally(e -> {
+                LOGGER.error(
+                    "An error occurred while indexing {} documents in current indexing list.",
+                    documents.size(), e);
+                return null;
+            });
     }
 
     private void checkIndexResponse(BulkResponse bulkItemResponses,
@@ -537,7 +537,8 @@ public class EsSearchManager implements ISearchManager {
             });
 
             if (!listErrorOfDocumentsToIndex.isEmpty()) {
-                BulkResponse response = client.bulkRequest(defaultIndex, listErrorOfDocumentsToIndex);
+                BulkRequest bulkRequest = client.buildBulkRequest(defaultIndex, listErrorOfDocumentsToIndex);
+                BulkResponse response = client.getClient().bulk(bulkRequest);
                 if (response.errors()) {
                     LOGGER.error("Failed to save error documents {}.",
                         Arrays.toString(errorDocumentIds.toArray()));
@@ -546,9 +547,9 @@ public class EsSearchManager implements ISearchManager {
         }
     }
 
-    private static ImmutableSet<String> booleanFields;
-    private static ImmutableSet<String> arrayFields;
-    private static ImmutableSet<String> booleanValues;
+    private static final ImmutableSet<String> booleanFields;
+    private static final ImmutableSet<String> arrayFields;
+    private static final ImmutableSet<String> booleanValues;
 
     static {
         arrayFields = ImmutableSet.<String>builder()
@@ -930,7 +931,7 @@ public class EsSearchManager implements ISearchManager {
     }
 
     public boolean isIndexing() {
-        return listOfDocumentsToIndex.size() > 0;
+        return !listOfDocumentsToIndex.isEmpty();
     }
 
     public boolean isIndexWritable(String indexName) throws IOException, ElasticsearchException {

@@ -31,7 +31,6 @@ import co.elastic.clients.elasticsearch._types.query_dsl.QueryStringQuery;
 import co.elastic.clients.elasticsearch._types.query_dsl.WrapperQuery;
 import co.elastic.clients.elasticsearch.cluster.HealthResponse;
 import co.elastic.clients.elasticsearch.core.*;
-import co.elastic.clients.elasticsearch.core.search.Hit;
 import co.elastic.clients.elasticsearch.indices.AnalyzeRequest;
 import co.elastic.clients.elasticsearch.indices.AnalyzeResponse;
 import co.elastic.clients.elasticsearch.indices.analyze.AnalyzeToken;
@@ -110,7 +109,7 @@ public class EsRestClient implements InitializingBean {
         return client;
     }
 
-    public ElasticsearchAsyncClient getAsynchClient() {
+    public ElasticsearchAsyncClient getAsyncClient() {
         return asyncClient;
     }
 
@@ -208,11 +207,9 @@ public class EsRestClient implements InitializingBean {
         return this;
     }
 
-    public static final String ROUTING_KEY = "101";
-
-    public BulkResponse bulkRequest(String index, Map<String, String> docs) throws IOException {
+    public BulkRequest buildBulkRequest(String index, Map<String, String> docs) {
         if (!activated) {
-            throw new IOException("Index not yet activated.");
+            throw new IllegalStateException("Index not yet activated.");
         }
 
         BulkRequest.Builder requestBuilder = new BulkRequest.Builder()
@@ -222,10 +219,7 @@ public class EsRestClient implements InitializingBean {
         JsonpMapper jsonpMapper = client._transport().jsonpMapper();
         JsonProvider jsonProvider = jsonpMapper.jsonProvider();
 
-        Iterator<Map.Entry<String, String>> iterator = docs.entrySet().iterator();
-        while (iterator.hasNext()) {
-            Map.Entry<String, String> entry = iterator.next();
-
+        for (Map.Entry<String, String> entry : docs.entrySet()) {
             JsonData jd = JsonData.from(jsonProvider.createParser(new StringReader(entry.getValue())), jsonpMapper);
 
             requestBuilder
@@ -234,25 +228,8 @@ public class EsRestClient implements InitializingBean {
                     .document(jd)));
         }
 
-        BulkRequest request = requestBuilder.build();
-
-        try {
-            return client.bulk(request);
-        } catch (IOException e) {
-            e.printStackTrace();
-            throw e;
-        }
+        return requestBuilder.build();
     }
-
-//
-//    public void bulkRequestAsync(Bulk.Builder bulk , JestResultHandler<BulkResult> handler) {
-//        client.executeAsync(bulk.build(), handler);
-//
-//    }
-//
-//    public BulkResult bulkRequestSync(Bulk.Builder bulk) throws IOException {
-//        return client.execute(bulk.build());
-//    }
 
 
     /**
