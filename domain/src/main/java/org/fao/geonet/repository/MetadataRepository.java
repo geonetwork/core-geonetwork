@@ -24,20 +24,17 @@
 package org.fao.geonet.repository;
 
 import java.util.List;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import org.fao.geonet.domain.Metadata;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Data Access object for the {@link Metadata} entities.
- *
+ * <p>
  * The use of this class is discouraged, you should use IMetadataUtils or IMetadataManager instead.
  *
  * @author Jesse
@@ -60,12 +57,12 @@ public interface MetadataRepository extends GeonetRepository<Metadata, Integer>,
 
     /**
      * Find all metadata by the metadata's uuid.
-    *
-    * @param uuid the uuid of the metadata to find
-    * @return a list of metadata.
-    */
-   @Nullable
-   List<Metadata> findAllByUuid(@Nonnull String uuid);
+     *
+     * @param uuid the uuid of the metadata to find
+     * @return a list of metadata.
+     */
+    @Nullable
+    List<Metadata> findAllByUuid(@Nonnull String uuid);
 
     /**
      * Find all metadata harvested by the identified harvester.
@@ -76,7 +73,76 @@ public interface MetadataRepository extends GeonetRepository<Metadata, Integer>,
     @Nonnull
     List<Metadata> findAllByHarvestInfo_Uuid(@Nonnull String uuid);
 
+    int countByHarvestInfo_Uuid(@Nonnull String uuid);
 
+    @Query(value = "SELECT distinct(source) FROM metadata WHERE harvestuuid = :harvesterUuid)",
+        nativeQuery = true)
+    List<String> findDistinctSourcesByHarvestInfo__uuid(@Param("harvesterUuid") String harvesterUuid);
+
+
+    @Query(value = "DELETE FROM operationallowed WHERE metadataid IN (SELECT id FROM metadata WHERE harvestuuid = :harvesterUuid)",
+        nativeQuery = true)
+    @Modifying
+    void deleteAllOperationAllowedByHarvesterUuid(@Param("harvesterUuid") String harvesterUuid);
+
+    @Query(value = "DELETE FROM metadatarating WHERE metadataid IN (SELECT id FROM metadata WHERE harvestuuid = :harvesterUuid)",
+        nativeQuery = true)
+    @Modifying
+    void deleteAllMetadataRatingByHarvesterUuid(@Param("harvesterUuid") String harvesterUuid);
+
+    @Query(value = "DELETE FROM validation WHERE metadataid IN (SELECT id FROM metadata WHERE harvestuuid = :harvesterUuid)",
+        nativeQuery = true)
+    @Modifying
+    void deleteAllValidationByHarvesterUuid(@Param("harvesterUuid") String harvesterUuid);
+
+    @Query(value = "DELETE FROM usersavedselections WHERE metadatauuid IN (SELECT uuid FROM metadata WHERE harvestuuid = :harvesterUuid)",
+        nativeQuery = true)
+    @Modifying
+    void deleteAllUsersavedselectionsByHarvesterUuid(@Param("harvesterUuid") String harvesterUuid);
+
+    @Query(value = "DELETE FROM metadatafiledownloads WHERE metadataid IN (SELECT id FROM metadata WHERE harvestuuid = :harvesterUuid)",
+        nativeQuery = true)
+    @Modifying
+    void deleteAllMetadatafiledownloadsByHarvesterUuid(@Param("harvesterUuid") String harvesterUuid);
+
+    @Query(value = "DELETE FROM metadatafileuploads WHERE metadataid IN (SELECT id FROM metadata WHERE harvestuuid = :harvesterUuid)",
+        nativeQuery = true)
+    @Modifying
+    void deleteAllMetadatafileuploadsByHarvesterUuid(@Param("harvesterUuid") String harvesterUuid);
+
+    @Query(value = "DELETE FROM metadatastatus WHERE metadataid IN (SELECT id FROM metadata WHERE harvestuuid = :harvesterUuid)",
+        nativeQuery = true)
+    @Modifying
+    void deleteAllMetadatastatusByHarvesterUuid(@Param("harvesterUuid") String harvesterUuid);
+
+    @Query(value = "DELETE FROM metadatalink WHERE metadataid IN (SELECT id FROM metadata WHERE harvestuuid = :harvesterUuid)",
+        nativeQuery = true)
+    @Modifying
+    void deleteAllMetadatalinkByHarvesterUuid(@Param("harvesterUuid") String harvesterUuid);
+
+    @Query(value = "DELETE FROM metadatacateg WHERE metadataid IN (SELECT id FROM metadata WHERE harvestuuid = :harvesterUuid)",
+        nativeQuery = true)
+    @Modifying
+    void deleteAllMetadatacategByHarvesterUuid(@Param("harvesterUuid") String harvesterUuid);
+
+    @Query(value = "DELETE FROM metadata WHERE harvestuuid = :harvesterUuid",
+        nativeQuery = true)
+    @Modifying
+    void deleteAllMetadataByHarvesterUuid(@Param("harvesterUuid") String harvesterUuid);
+
+    default void deleteAllByHarvesterUuid(String harvesterUuid) {
+        deleteAllOperationAllowedByHarvesterUuid(harvesterUuid);
+        deleteAllMetadataRatingByHarvesterUuid(harvesterUuid);
+        deleteAllValidationByHarvesterUuid(harvesterUuid);
+        deleteAllUsersavedselectionsByHarvesterUuid(harvesterUuid);
+        deleteAllMetadatafiledownloadsByHarvesterUuid(harvesterUuid);
+        deleteAllMetadatafiledownloadsByHarvesterUuid(harvesterUuid);
+        deleteAllMetadatafileuploadsByHarvesterUuid(harvesterUuid);
+        deleteAllMetadatastatusByHarvesterUuid(harvesterUuid);
+        deleteAllMetadatalinkByHarvesterUuid(harvesterUuid);
+        deleteAllMetadatacategByHarvesterUuid(harvesterUuid);
+        deleteAllMetadataByHarvesterUuid(harvesterUuid);
+    }
 
     @Query(value = "SELECT replace(data, :search, :replace) FROM metadata m " +
         "WHERE uuid = :uuid",
