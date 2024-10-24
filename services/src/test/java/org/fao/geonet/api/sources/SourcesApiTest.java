@@ -71,6 +71,38 @@ public class SourcesApiTest extends AbstractServiceIntegrationTest {
     }
 
     @Test
+    public void getSource() throws Exception {
+        Source source = sourceRepo.findOneByName("source-test");
+        Assert.assertNotNull(source);
+
+        this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+
+        this.mockHttpSession = loginAsAdmin();
+
+        this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+        this.mockMvc.perform(get("/srv/api/sources/" + source.getUuid())
+                .accept(MediaType.parseMediaType("application/json")))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING));
+    }
+
+    @Test
+    public void getNonExistingSource() throws Exception {
+        Source sourceToUpdate = sourceRepo.findOneByName("source-test-2");
+        Assert.assertNull(sourceToUpdate);
+
+        this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+
+        this.mockHttpSession = loginAsAdmin();
+
+        this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+        this.mockMvc.perform(get("/srv/api/sources/source-test-2")
+                .accept(MediaType.parseMediaType("application/json")))
+            .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING))
+            .andExpect(status().is(404));
+    }
+
+    @Test
     public void getSources() throws Exception {
         Long sourcesCount = sourceRepo.count();
 
