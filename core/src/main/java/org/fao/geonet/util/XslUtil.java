@@ -1440,7 +1440,7 @@ public final class XslUtil {
 
         return thesaurus == null ? "" : "geonetwork.thesaurus." + thesaurus.getKey();
     }
-    
+
     /**
      * Retrieve the thesaurus title using the thesaurus key.
      *
@@ -1453,6 +1453,15 @@ public final class XslUtil {
         Thesaurus thesaurus = thesaurusManager.getThesaurusByName(id);
         return thesaurus == null ? "" : thesaurus.getTitle();
     }
+
+
+    public static String getThesaurusUriByKey(String id) {
+        ApplicationContext applicationContext = ApplicationContextHolder.get();
+        ThesaurusManager thesaurusManager = applicationContext.getBean(ThesaurusManager.class);
+        Thesaurus thesaurus = thesaurusManager.getThesaurusByName(id);
+        return thesaurus == null ? "" : thesaurus.getDefaultNamespace();
+    }
+
 
 
     /**
@@ -1594,7 +1603,7 @@ public final class XslUtil {
     public static String escapeForJson(String value) {
         return StringEscapeUtils.escapeJson(value);
     }
-  
+
     public static String getWebAnalyticsService() {
         ApplicationContext applicationContext = ApplicationContextHolder.get();
         WebAnalyticsConfiguration webAnalyticsConfiguration = applicationContext.getBean(WebAnalyticsConfiguration.class);
