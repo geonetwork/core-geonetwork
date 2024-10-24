@@ -76,7 +76,7 @@
                                     ('publication', 'revision')]/
                                     cit:date/gco:*[. != '']"/>
 
-    <xsl:variable name="publicationDates">
+    <xsl:variable name="publicationDates" as="node()*">
       <xsl:perform-sort select="$dates">
         <xsl:sort select="." order="descending"/>
       </xsl:perform-sort>

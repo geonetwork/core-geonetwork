@@ -27,7 +27,7 @@
   <parent>
     <artifactId>geonetwork</artifactId>
     <groupId>org.geonetwork-opensource</groupId>
-    <version>4.2.6-SNAPSHOT</version>
+    <version>4.2.11-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <artifactId>gn-docs</artifactId>
@@ -40,7 +40,8 @@
     </license>
   </licenses>
   <modules>
+    <module>manual</module>
     <!--<module>schema-doc</module>-->
-    <module>manuals</module>
+    <!--module>manuals</module>-->
   </modules>
 </project>

@@ -47,7 +47,6 @@ var gnHarvestergeonetwork20 = {
                 {"@name": "dynamic"}
               ]
             }],
-            "groupsCopyPolicy": [],
             "info":   {
               "lastRun": [],
               "lastRunSuccess" : [],

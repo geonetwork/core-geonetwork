@@ -176,7 +176,7 @@
               scope.$on("beforeSearchReset", function () {
                 field.typeahead("val", "");
                 stringValues = [];
-                for (i = 0; i < prev.length; i++) {
+                for (var i = 0; i < prev.length; i++) {
                   $(element).tagsinput("remove", prev[i]);
                 }
                 prev = [];
@@ -396,7 +396,8 @@
     .directive("sortbyCombo", [
       "$translate",
       "hotkeys",
-      function ($translate, hotkeys) {
+      "gnGlobalSettings",
+      function ($translate, hotkeys, gnGlobalSettings) {
         return {
           restrict: "A",
           require: "^ngSearchForm",
@@ -415,6 +416,7 @@
               angular.extend(scope.params, v);
               searchFormCtrl.triggerSearch(true);
             };
+
             hotkeys.bindTo(scope).add({
               combo: "s",
               description: $translate.instant("hotkeySortBy"),

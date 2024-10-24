@@ -52,8 +52,10 @@
     "gnMapsManager",
     "gnGlobalSettings",
     "gnConfig",
+    "gnConfigService",
     "gnClipboard",
     "gnSearchSettings",
+    "gnLanguageService",
     function (
       $scope,
       $q,
@@ -68,8 +70,10 @@
       gnMapsManager,
       gnGlobalSettings,
       gnConfig,
+      gnConfigService,
       gnClipboard,
-      gnSearchSettings
+      gnSearchSettings,
+      gnLanguageService
     ) {
       $scope.searchObj = {
         internal: true,
@@ -92,6 +96,7 @@
       $scope.harvesterNew = false;
       $scope.harvesterHistory = {};
       $scope.isLoadingOneHarvester = false;
+
       $scope.harvesterHistoryPaging = {
         page: 1,
         size: 3,
@@ -133,6 +138,11 @@
             }
             $scope.isLoadingOneHarvester = false;
 
+            // The backend returns an empty array in json serialization if the field is empty, instead of a string
+            if (angular.isArray($scope.harvesterSelected.content.translateContentLangs)) {
+              $scope.harvesterSelected.content.translateContentLangs = "";
+            }
+
             if (
               $scope.harvesterSelected.content &&
               $scope.harvesterSelected.content.batchEdits
@@ -147,7 +157,7 @@
               }
             }
             if ($scope.harvesterSelected.bboxFilter) {
-              s = $scope.harvesterSelected.bboxFilter;
+              var s = $scope.harvesterSelected.bboxFilter;
               if ($scope.harvesterSelected.bboxFilter["bbox-xmin"]) {
                 bboxProperties.forEach(function (coordinate) {
                   s[coordinate] = parseFloat(s[coordinate]);
@@ -450,12 +460,20 @@
             h.options.outputSchemaOnCollectionsDIF !== "" ? "DIF" : "UNIDATA";
         }
 
+        $scope.harvesterSelected = null;
+
         $scope.harvesterSelected = h;
         $scope.harvesterUpdated = false;
         $scope.harvesterNew = false;
         $scope.harvesterHistory = {};
         $scope.searchResults = null;
         $scope.searchResultsTotal = null;
+        $scope.harvesterHistoryPaging = {
+          page: 1,
+          size: 3,
+          pages: 0,
+          total: 0
+        };
 
         loadHarvester(h["@id"]).then(function (data) {
           loadHistory();
@@ -777,8 +795,8 @@
               var i = 0;
               var xmlDoc = $.parseXML(response.data);
               var $xml = $(xmlDoc);
-              $sources = $xml.find("uuid");
-              $names = $xml.find("name");
+              var $sources = $xml.find("uuid");
+              var $names = $xml.find("name");
 
               angular.forEach($sources, function (s) {
                 // FIXME: probably some issue on IE ?

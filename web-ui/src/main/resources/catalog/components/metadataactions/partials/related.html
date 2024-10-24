@@ -80,6 +80,13 @@
               data-typename="{{::isLayerProtocol(r) ? r.locTitle : ''}}"
               data-url="{{::r.locUrl}}"
             ></div>
+
+            <div
+              data-ng-if="::!isLayerProtocol(r)"
+              data-gn-wfs-download=""
+              data-typename=""
+              data-url="{{::r.locUrl}}"
+            ></div>
           </div>
 
           <div data-ng-switch-when="ATOM">
@@ -172,12 +179,12 @@
                     icon = config.getClassIcon(mainType);"
   >
     <h3 data-ng-if="groupSiblingsByType && items.length > 0" class="gn-related-title">
-      <i class="fa fa-fw {{icon}}" />
+      <i class="fa fa-fw {{icon}}"></i>
       {{type.replace('siblings', '') | translate}}
     </h3>
 
-    <ul class="gn-related-list">
-      <li data-ng-repeat="md in items | orderBy:getOrderBy">
+    <ul class="gn-related-list list-group">
+      <li class="list-group-item" data-ng-repeat="md in items | orderBy:getOrderBy">
         <a
           data-ng-hide="md.remoteUrl"
           href=""
@@ -247,7 +254,7 @@
               <b title="{{'associationType' | translate}}">
                 <i
                   class="fa fa-fw {{icon}} gn-icon-association-{{md.properties.associationType}}"
-                />
+                ></i>
                 {{md.properties.associationType | translate}}
               </b>
               <span data-ng-if="md.properties && md.properties.initiativeType">
@@ -255,7 +262,7 @@
                 <b title="{{'initiativeType' | translate}}">
                   <i
                     class="fa fa-fw {{icon}} gn-icon-initiative-{{md.properties.initiativeType}}"
-                  />
+                  ></i>
                   {{md.properties.initiativeType | translate}}
                 </b>
               </span>

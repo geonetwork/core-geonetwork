@@ -741,23 +741,34 @@ i.fa-times.delete:hover {
 
 .gn-search-page {
   .gn-status {
-    position: absolute;
-    bottom: 9px;
     margin-left: -8px;
     z-index: 98;
+  }
+  [data-search-results] table .gn-status {
+    position: unset;
+  }
+  .gn-status-container {
+    text-align: right;
+    margin-right: -10px;
+
+    .gn-status {
+      border-radius: 3px;
+      margin-left: 2px;
+    }
   }
   .gn-status,
   .gn-workflow-status {
     border: 2px solid @brand-primary;
     display: inline-block;
-    margin-top: 5px;
-    margin-right: 5px;
+    margin-right: 10px;
     border-radius: 0 3px 3px 0;
     padding: 5px 18px;
     background-color: @brand-primary;
     font-weight: 500;
     font-size: 80%;
     color: #fff;
+    flex-grow: 0;
+    align-self: center;
   }
   .gn-status-mdview,
   .gn-workflow-status-mdview {

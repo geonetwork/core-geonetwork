@@ -326,6 +326,11 @@ public class Aligner extends BaseAligner<CswParams> {
 
         }
 
+        // Translate metadata
+        if (params.isTranslateContent()) {
+            md = translateMetadataContent(context, md, schema);
+        }
+
         //
         // insert metadata
         //
@@ -529,7 +534,7 @@ public class Aligner extends BaseAligner<CswParams> {
             try {
                 Integer groupIdVal = null;
                 if (StringUtils.isNotEmpty(params.getOwnerIdGroup())) {
-                    groupIdVal = Integer.parseInt(params.getOwnerIdGroup());
+                    groupIdVal = getGroupOwner();
                 }
 
                 params.getValidate().validate(dataMan, context, response, groupIdVal);

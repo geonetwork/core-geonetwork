@@ -140,7 +140,7 @@
               scope.spyElems.pop();
             }
 
-            rootElement = $("#" + scope.id);
+            var rootElement = $("#" + scope.id);
 
             // Get the number of fieldset above the current element
             // to compute depth later.

@@ -38,6 +38,7 @@ import org.apache.http.nio.conn.SchemeIOSessionStrategy;
 import org.apache.http.nio.conn.ssl.SSLIOSessionStrategy;
 import org.apache.http.ssl.SSLContextBuilder;
 import org.apache.lucene.search.TotalHits;
+import org.elasticsearch.ElasticsearchException;
 import org.elasticsearch.ElasticsearchStatusException;
 import org.elasticsearch.action.admin.cluster.health.ClusterHealthRequest;
 import org.elasticsearch.action.admin.cluster.health.ClusterHealthResponse;
@@ -52,7 +53,7 @@ import org.elasticsearch.client.*;
 import org.elasticsearch.client.core.MainResponse;
 import org.elasticsearch.client.indices.AnalyzeRequest;
 import org.elasticsearch.client.indices.AnalyzeResponse;
-import org.elasticsearch.common.xcontent.XContentType;
+import org.elasticsearch.xcontent.XContentType;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.index.query.QueryStringQueryBuilder;
@@ -377,49 +378,23 @@ public class EsRestClient implements InitializingBean {
     /**
      * Query the index for a specific record and return values for a set of fields.
      */
-    public Map<String, String> getFieldsValues(String index, String id, Set<String> fields) throws IOException {
+    public Map<String, String> getFieldsValues(String index, String id, Set<String> fields, String language) throws Exception {
         if (!activated) {
             return Collections.emptyMap();
         }
 
-        Map<String, String> fieldValues = new HashMap<>(fields.size());
-        try {
-            String query = String.format("_id:\"%s\"", id);
-            // TODO: Check maxRecords
-            // TODO: Use _doc API?
-            final SearchResponse searchResponse = this.query(index, query, null, fields, new HashMap<>(), 0, 1, null);
-            if (searchResponse.status().getStatus() == 200) {
-                TotalHits totalHits = searchResponse.getHits().getTotalHits();
-                long matches = totalHits == null ? -1 : totalHits.value;
-                if (matches == 0) {
-                    return fieldValues;
-                } else if (matches == 1) {
-                    final SearchHit[] hits = searchResponse.getHits().getHits();
+        Map<String, String> fieldValues = new HashMap<>();
+        Map<String, Object> sources = getDocument(index, id);
 
-                    fields.forEach(f -> {
-                        final Object o = hits[0].getSourceAsMap().get(f);
-                        if (o instanceof String) {
-                            fieldValues.put(f, (String) o);
-                        } else if (o instanceof HashMap && f.endsWith("Object")) {
-                            fieldValues.put(f, (String) ((HashMap) o).get("default"));
-                        }
-                    });
-                } else {
-                    throw new IOException(String.format(
-                        "Your query '%s' returned more than one record, %d in fact. Can't retrieve field values for more than one record.",
-                        query,
-                        matches
-                    ));
-                }
-            } else {
-                throw new IOException(String.format(
-                    "Error during fields value retrieval. Status is '%s'.", searchResponse.status().getStatus()
-                ));
+        for (String field : fields) {
+            Object value = sources.get(field);
+            if (value instanceof String) {
+                fieldValues.put(field, (String) value);
+            } else if (value instanceof Map && field.endsWith("Object")) {
+                Map valueMap = (Map) value;
+                String languageValue = (String) valueMap.get("lang" + language);
+                fieldValues.put(field, languageValue != null ? languageValue : (String) valueMap.get("default"));
             }
-        } catch (Exception e) {
-            throw new IOException(String.format(
-                "Error during fields value retrieval. Errors is '%s'.", e.getMessage()
-            ));
         }
         return fieldValues;
     }
@@ -504,7 +479,7 @@ public class EsRestClient implements InitializingBean {
 //        return getClient().ping(RequestOptions.DEFAULT);
     }
 
-    public String getServerVersion() throws IOException {
+    public String getServerVersion() throws IOException, ElasticsearchException {
         MainResponse.Version version = client.info(RequestOptions.DEFAULT).getVersion();
 
         return version.getNumber();

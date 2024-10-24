@@ -73,6 +73,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import static org.fao.geonet.api.ApiParams.API_CLASS_FORMATTERS_OPS;
+import static org.fao.geonet.api.ApiParams.API_CLASS_FORMATTERS_TAG;
 import static org.fao.geonet.api.records.formatters.FormatterConstants.SCHEMA_PLUGIN_FORMATTER_DIR;
 import static org.fao.geonet.api.records.formatters.FormatterConstants.VIEW_XSL_FILENAME;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
@@ -82,8 +84,8 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
  *
  * @author jeichar
  */
-@Tag(name = "formatters",
-    description = "Formatter admin operations")
+@Tag(name = API_CLASS_FORMATTERS_TAG,
+    description = API_CLASS_FORMATTERS_OPS)
 @Controller("formattersList")
 public class FormatterAdminApi extends AbstractFormatService {
 

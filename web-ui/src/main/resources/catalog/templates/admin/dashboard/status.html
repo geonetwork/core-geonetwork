@@ -148,10 +148,13 @@
         class="form-horizontal"
         role="form"
         data-ng-search-form=""
-        data-ng-if="hasIndexingError"
+        data-ng-if="hasIndexingError || hasIndexingWarning"
         data-runSearch="true"
       >
-        <div class="panel panel-default panel-danger">
+        <div
+          class="panel panel-default"
+          data-ng-class="hasIndexingError ? 'panel-danger' : 'panel-warning'"
+        >
           <div class="panel-heading">
             <span data-translate="">metadataWithIndexingErrors</span>
 
@@ -291,12 +294,12 @@
                 </tr>
               </tbody>
             </table>
-            <div data-gn-pagination="paginationInfo" />
+            <div data-gn-pagination="paginationInfo"></div>
           </div>
         </div>
       </form>
 
-      <gn-indexing-tasks-container />
+      <gn-indexing-tasks-container></gn-indexing-tasks-container>
     </div>
   </div>
   <div class="row">

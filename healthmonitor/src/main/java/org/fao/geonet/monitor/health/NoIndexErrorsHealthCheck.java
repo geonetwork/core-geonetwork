@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2024 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -44,10 +44,11 @@ public class NoIndexErrorsHealthCheck implements HealthCheckFactory {
                 GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 
                 EsSearchManager searchMan = gc.getBean(EsSearchManager.class);
-                long numDocs = searchMan.getNumDocs("+" + IndexFields.INDEXING_ERROR_FIELD + ":true");
+                long numDocs = searchMan.getNumDocs("-" + IndexFields.INDEXING_ERROR_MSG + ":Warning* +" +
+                    IndexFields.INDEXING_ERROR_FIELD + ":true");
 
                 if (numDocs > 0) {
-                    return Result.unhealthy("Found " + numDocs + " metadata that had errors during indexing");
+                    return Result.unhealthy(String.format("Found %d metadata that had errors during indexing", numDocs));
                 } else {
                     return Result.healthy();
                 }

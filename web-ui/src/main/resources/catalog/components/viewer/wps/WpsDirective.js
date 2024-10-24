@@ -231,7 +231,7 @@
                   scope.wfsLink.name
                 );
 
-                // use filter values in ElasticSearch object state
+                // use filter values in Elasticsearch object state
                 // to overload input
                 if (esObject) {
                   // this will hold wfs filter values
@@ -677,7 +677,7 @@
             var inputs = scope.wpsLink.inputs;
             var output = scope.wpsLink.output;
 
-            updateStatus = function (statusLocation) {
+            var updateStatus = function (statusLocation) {
               gnWpsService.getStatus(statusLocation).then(
                 function (response) {
                   processResponse(response);
@@ -690,7 +690,7 @@
               );
             };
 
-            processResponse = function (response) {
+            var processResponse = function (response) {
               if (response.TYPE_NAME === "OWS_1_1_0.ExceptionReport") {
                 scope.executeState = "finished";
                 scope.running = false;

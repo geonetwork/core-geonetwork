@@ -94,12 +94,6 @@ echo
 
 # TODO: check that version is the version in the file to be updated.
 
-# Update version in sphinx doc files
-echo 'Documentation'
-echo ' * updating docs/manuals/source/conf.py'
-sed $sedopt "s/${version}/${new_version_main}/g" docs/manuals/source/conf.py
-echo
-
 # Update release properties
 echo 'Release (ZIP bundle)'
 echo '  * updating release/build.properties'
@@ -112,8 +106,8 @@ echo 'SQL script'
 sed $sedopt "s/'system\/platform\/version', '.*', 0/'system\/platform\/version', '${new_version_main}', 0/g" web/src/main/webapp/WEB-INF/classes/setup/sql/data/data-db-default.sql
 sed $sedopt "s/'system\/platform\/subVersion', '.*', 0/'system\/platform\/subVersion', '${sub_version}', 0/g" web/src/main/webapp/WEB-INF/classes/setup/sql/data/data-db-default.sql
 
-find . -wholename *v${version//[.]/}/migrate-default.sql -exec sed $sedopt "s/value='${version}' WHERE name='system\/platform\/version'/value='${new_version_main}' WHERE name='system\/platform\/version'/g" {} \;
-find . -wholename *v${version//[.]/}/migrate-default.sql -exec sed $sedopt "s/value='.*' WHERE name='system\/platform\/subVersion'/value='${sub_version}' WHERE name='system\/platform\/subVersion'/g" {} \;
+find . -wholename *v${new_version_main_nopoint//[.]/}/migrate-default.sql -exec sed $sedopt "s/value='${version}' WHERE name='system\/platform\/version'/value='${new_version_main}' WHERE name='system\/platform\/version'/g" {} \;
+find . -wholename *v${new_version_main_nopoint//[.]/}/migrate-default.sql -exec sed $sedopt "s/value='.*' WHERE name='system\/platform\/subVersion'/value='${sub_version}' WHERE name='system\/platform\/subVersion'/g" {} \;
 
 # Update version pom files
 mvn versions:set-property -Dproperty=gn.project.version -DnewVersion=${new_version}

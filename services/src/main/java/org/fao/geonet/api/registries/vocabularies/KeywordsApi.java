@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2023 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2024 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -24,6 +24,7 @@
 package org.fao.geonet.api.registries.vocabularies;
 
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -61,6 +62,7 @@ import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -327,10 +329,7 @@ public class KeywordsApi {
     )
     @RequestMapping(
         path = "/keyword",
-        method = {
-            RequestMethod.GET,
-            RequestMethod.POST
-        },
+        method = RequestMethod.GET,
         produces = {
             MediaType.APPLICATION_XML_VALUE,
             MediaType.APPLICATION_JSON_VALUE
@@ -374,17 +373,113 @@ public class KeywordsApi {
         @Parameter(hidden = true)
         @RequestParam
             Map<String, String> allRequestParams,
-        @RequestHeader(
-            value = "Accept",
-            defaultValue = MediaType.APPLICATION_XML_VALUE
-        )
-        String accept,
         @Parameter(hidden = true)
         HttpServletRequest request
         ) throws Exception {
+        return getKeyword(uri,sThesaurusName,langs, keywordOnly, transformation,langMapJson,allRequestParams, request);
+    }
+
+    /**
+     * Gets the keyword by id.
+     *
+     * @param uri              the uri
+     * @param sThesaurusName   the s thesaurus name
+     * @param langs            the langs
+     * @param keywordOnly      the keyword only
+     * @param transformation   the transformation
+     * @param allRequestParams the all request params
+     * @param request          the request
+     * @return the keyword by id
+     * @throws Exception the exception
+     */
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Get keyword by ids",
+        description = "Retrieve XML representation of keyword(s) from same thesaurus" +
+            "using different transformations. " +
+            "'to-iso19139-keyword' is the default and return an ISO19139 snippet." +
+            "'to-iso19139-keyword-as-xlink' return an XLinked element. Custom transformation " +
+            "can be create on a per schema basis." +
+            "This can be used instead of the GET method for cases where you need to submit large parameters list"
+    )
+    @RequestMapping(
+        path = "/keyword",
+        method = RequestMethod.POST,
+        produces = {
+            MediaType.APPLICATION_XML_VALUE,
+            MediaType.APPLICATION_JSON_VALUE
+        })
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "XML snippet with requested keywords."),
+    })
+    @ResponseBody
+    @ResponseStatus(HttpStatus.OK)
+    public Object getKeywordByIds(
+        @Parameter(
+            description = "Keyword identifier or list of keyword identifiers comma separated.",
+            required = true)
+        @RequestParam(name = "id")
+            String uri,
+        @Parameter(
+            description = "Thesaurus to look info for the keyword(s).",
+            required = true)
+        @RequestParam(name = "thesaurus")
+            String sThesaurusName,
+        @Parameter(
+            description = "Languages.",
+            required = false)
+        @RequestParam(name = "lang", required = false)
+            String[] langs,
+        @Parameter(
+            description = "Only print the keyword, no thesaurus information.",
+            required = false)
+        @RequestParam(required = false, defaultValue = "false")
+            boolean keywordOnly,
+        @Parameter(
+            description = "XSL template to use (ISO19139 keyword by default, see convert.xsl).",
+            required = false)
+        @RequestParam(required = false)
+            String transformation,
+        @Parameter(
+            description = "langMap, that converts the values in the 'lang' parameter to how they will be actually represented in the record. {'fre':'fra'} or {'fre':'fr'}.  Missing/empty means to convert to iso 2 letter.",
+            required = false)
+        @RequestParam (name = "langMap", required = false)
+            String  langMapJson,
+        @Parameter(hidden = true)
+        @RequestParam
+            Map<String, String> allRequestParams,
+        @Parameter(hidden = true)
+        HttpServletRequest request
+        ) throws Exception {
+        return getKeyword(uri,sThesaurusName,langs, keywordOnly, transformation,langMapJson,allRequestParams, request);
+    }
+
+    /**
+     * Gets the keyword by id.
+     *
+     * @param uri              the uri
+     * @param sThesaurusName   the s thesaurus name
+     * @param langs            the langs
+     * @param keywordOnly      the keyword only
+     * @param transformation   the transformation
+     * @param allRequestParams the all request params
+     * @param request          the request
+     * @return the keyword by id
+     * @throws Exception the exception
+     */
+    private Object getKeyword(
+        String uri,
+        String sThesaurusName,
+        String[] langs,
+        boolean keywordOnly,
+        String transformation,
+        String  langMapJson,
+        Map<String, String> allRequestParams,
+        HttpServletRequest request
+    ) throws Exception {
         final String SEPARATOR = ",";
         ServiceContext context = ApiUtils.createServiceContext(request);
-        boolean isJson = MediaType.APPLICATION_JSON_VALUE.equals(accept);
+        String acceptHeader = StringUtils.isBlank(request.getHeader(HttpHeaders.ACCEPT)) ? MediaType.APPLICATION_XML_VALUE : request.getHeader(HttpHeaders.ACCEPT);
+        boolean isJson = MediaType.APPLICATION_JSON_VALUE.equals(acceptHeader);
 
         // Search thesaurus by name (as facet key only contains the name of the thesaurus)
         Thesaurus thesaurus = thesaurusManager.getThesaurusByName(sThesaurusName);
@@ -411,7 +506,7 @@ public class KeywordsApi {
         }
 
         Element descKeys;
-        Map<String, String> jsonResponse = new HashMap<>();
+        Map<String, Map<String, String>> jsonResponse = new HashMap<>();
 
         uri = URLDecoder.decode(uri, "UTF-8");
 
@@ -447,10 +542,15 @@ public class KeywordsApi {
             descKeys = new Element("descKeys");
             for (KeywordBean keywordBean : kbList) {
                 if (isJson) {
+
+                    Map<String, String> keywordInfo = new HashMap<>();
+                    keywordInfo.put("label", keywordBean.getDefaultValue());
+                    keywordInfo.put("definition", StringUtils.isNotEmpty(keywordBean.getDefaultDefinition()) ?
+                        keywordBean.getDefaultDefinition() : keywordBean.getDefaultValue());
                     jsonResponse.put(
                         keywordBean.getUriCode(),
                         // Requested lang or the first non empty value
-                        keywordBean.getDefaultValue()
+                        keywordInfo
                     );
                 } else {
                     KeywordsSearcher.toRawElement(descKeys, keywordBean);
@@ -458,7 +558,7 @@ public class KeywordsApi {
             }
         }
 
-       Element langConversion = null;
+        Element langConversion = null;
         if ( (langMapJson != null) && (!langMapJson.isEmpty()) ){
             JSONObject obj = JSONObject.fromObject(langMapJson);
             langConversion = new Element("languageConversions");
@@ -512,7 +612,6 @@ public class KeywordsApi {
         }
     }
 
-
     /**
      * Gets the thesaurus.
      *
@@ -532,7 +631,8 @@ public class KeywordsApi {
             MediaType.TEXT_XML_VALUE
         })
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Thesaurus in SKOS format."),
+        @ApiResponse(responseCode = "200", description = "Thesaurus in SKOS format.",
+        content = @Content(schema = @io.swagger.v3.oas.annotations.media.Schema(type = "string", format = "binary"))),
         @ApiResponse(responseCode = "404", description = ApiParams.API_RESPONSE_RESOURCE_NOT_FOUND)
     })
     @ResponseBody
@@ -557,10 +657,12 @@ public class KeywordsApi {
         response.setContentType("text/xml");
         response.setHeader("Content-Disposition", "attachment;filename=" + directoryFile.getFileName());
         ServletOutputStream out = response.getOutputStream();
-        BufferedReader reader1 = new BufferedReader(new InputStreamReader(new FileInputStream(directoryFile.toFile()), StandardCharsets.UTF_8));
-        IOUtils.copy(reader1, out);
-        out.flush();
-        out.close();
+        try (BufferedReader reader1 = new BufferedReader(new InputStreamReader(new FileInputStream(directoryFile.toFile()), StandardCharsets.UTF_8))) {
+            IOUtils.copy(reader1, out, StandardCharsets.UTF_8);
+        } finally {
+            out.flush();
+            out.close();
+        }
     }
 
 
@@ -992,9 +1094,7 @@ public class KeywordsApi {
                 key,
                 Arrays.stream(csvRecord.get(column).split(conceptLinkSeparator))
                     .filter(StringUtils::isNotEmpty)
-                    .map(c -> {
-                        return thesaurusNamespaceUrl + c;
-                    })
+                    .map(c -> thesaurusNamespaceUrl + c)
                     .collect(Collectors.toList())
             );
         }

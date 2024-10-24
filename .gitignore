@@ -13,6 +13,7 @@ git*.properties
 */*/target/
 */target/
 .*/
+!.github
 #GeoNetwork*
 /geonetwork*
 camel-harvesters/wfsfeature-harvester/logs
@@ -68,6 +69,7 @@ web/src/main/webapp/WEB-INF/data/data/metadata_data
 web/src/main/webapp/WEB-INF/data/data/metadata_subversion
 web/src/main/webapp/WEB-INF/data/data/resources/htmlcache
 web/src/main/webapp/WEB-INF/data/data/resources/images
+web/src/main/webapp/WEB-INF/data/data/resources/schemapublication
 web/src/main/webapp/WEB-INF/data/data/resources/xml
 web/src/main/webapp/WEB-INF/data/data/upload/
 web/src/main/webapp/WEB-INF/data/harvester_*

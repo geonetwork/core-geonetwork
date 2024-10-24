@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2023 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2024 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -42,10 +42,13 @@ import org.fao.geonet.NodeInfo;
 import org.fao.geonet.SystemInfo;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
+import org.fao.geonet.api.OpenApiConfig;
+import org.fao.geonet.api.exception.FeatureNotEnabledException;
 import org.fao.geonet.api.exception.NotAllowedException;
 import org.fao.geonet.api.site.model.SettingSet;
 import org.fao.geonet.api.site.model.SettingsListResponse;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
+import org.fao.geonet.api.users.recaptcha.RecaptchaChecker;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.doi.client.DoiManager;
 import org.fao.geonet.domain.*;
@@ -64,9 +67,11 @@ import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.lib.Lib;
+import org.fao.geonet.lib.ProxyConfiguration;
 import org.fao.geonet.repository.*;
 import org.fao.geonet.repository.specification.MetadataSpecs;
 import org.fao.geonet.resources.Resources;
+import org.fao.geonet.util.MailUtil;
 import org.fao.geonet.utils.FilePathChecker;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.ProxyInfo;
@@ -76,21 +81,16 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.*;
 
 import javax.imageio.ImageIO;
-import javax.servlet.ServletRegistration;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -98,19 +98,12 @@ import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.ListIterator;
-import java.util.Map;
-import java.util.Optional;
-import java.util.TimeZone;
+import java.util.*;
 
 import static org.apache.commons.fileupload.util.Streams.checkFileName;
 import static org.fao.geonet.api.ApiParams.API_CLASS_CATALOG_TAG;
 import static org.fao.geonet.constants.Geonet.Path.IMPORT_STYLESHEETS_SCHEMA_PREFIX;
+import static org.fao.geonet.kernel.setting.Settings.SYSTEM_FEEDBACK_EMAIL;
 
 /**
  *
@@ -161,12 +154,12 @@ public class SiteApi {
         try {
             // Load proxy information into Jeeves
             ProxyInfo pi = JeevesProxyInfo.getInstance();
-            boolean useProxy = settingMan.getValueAsBool(Settings.SYSTEM_PROXY_USE, false);
+            boolean useProxy = Lib.net.getProxyConfiguration().isEnabled();
             if (useProxy) {
-                String proxyHost = settingMan.getValue(Settings.SYSTEM_PROXY_HOST);
-                String proxyPort = settingMan.getValue(Settings.SYSTEM_PROXY_PORT);
-                String username = settingMan.getValue(Settings.SYSTEM_PROXY_USERNAME);
-                String password = settingMan.getValue(Settings.SYSTEM_PROXY_PASSWORD);
+                String proxyHost = Lib.net.getProxyConfiguration().getHost();
+                String proxyPort = Lib.net.getProxyConfiguration().getPort();
+                String username = Lib.net.getProxyConfiguration().getUsername();
+                String password = Lib.net.getProxyConfiguration().getPassword();
                 pi.setProxyInfo(proxyHost, Integer.valueOf(proxyPort), username, password);
             } else {
                 pi.setProxyInfo(null, -1, null, null);
@@ -419,6 +412,7 @@ public class SiteApi {
         ApplicationContext applicationContext = ApplicationContextHolder.get();
         String currentUuid = settingManager.getSiteId();
         String oldSiteName = settingManager.getSiteName();
+        String oldBaseUrl = settingManager.getBaseURL();
 
         if (!settingManager.setValues(allRequestParams)) {
             throw new OperationAbortedEx("Cannot set all values");
@@ -437,6 +431,11 @@ public class SiteApi {
                 );
                 sourceRepository.save(siteSource);
             }
+        }
+        String newBaseUrl = settingManager.getBaseURL();
+        // Update SpringDoc host information if the base url is changed.
+        if (!oldBaseUrl.equals(newBaseUrl)) {
+            OpenApiConfig.setHostRelatedInfo();
         }
 
         // Update the system default timezone. If the setting is blank use the timezone user.timezone property from command line or
@@ -570,7 +569,7 @@ public class SiteApi {
         method = RequestMethod.PUT)
     @PreAuthorize("hasAuthority('Editor')")
     @ResponseBody
-    public HttpEntity index(
+    public HttpEntity indexSite(
         @Parameter(description = "Drop and recreate index",
             required = false)
         @RequestParam(required = false, defaultValue = "true")
@@ -736,6 +735,24 @@ public class SiteApi {
     }
 
     @io.swagger.v3.oas.annotations.Operation(
+        summary = "Get proxy configuration details",
+        description = "Get the proxy configuration.")
+    @RequestMapping(
+        path = "/info/proxy",
+        produces = MediaType.APPLICATION_JSON_VALUE,
+        method = RequestMethod.GET)
+    @ResponseStatus(HttpStatus.OK)
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Proxy configuration.")
+    })
+    @PreAuthorize("hasAuthority('Administrator')")
+    @ResponseBody
+    public ProxyConfiguration getProxyConfiguration(
+    ) {
+        return Lib.net.getProxyConfiguration();
+    }
+
+    @io.swagger.v3.oas.annotations.Operation(
         summary = "Set catalog logo",
         description = "Logos are stored in the data directory " +
             "resources/images/harvesting as PNG or GIF images. " +
@@ -850,7 +867,7 @@ public class SiteApi {
             )) {
                 for (Path sheet : sheets) {
                     String id = sheet.toString();
-                    if (id != null && id.contains("convert/from") && id.endsWith(".xsl")) {
+                    if (id != null && id.contains("convert" + File.separator + "from") && id.endsWith(".xsl")) {
                         String name = com.google.common.io.Files.getNameWithoutExtension(
                             sheet.getFileName().toString());
                         list.add(IMPORT_STYLESHEETS_SCHEMA_PREFIX + schema + ":convert/" + name);
@@ -875,5 +892,78 @@ public class SiteApi {
             }
             return list;
         }
+    }
+
+
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Send an email to catalogue administrator with feedback about the application",
+        description = "")
+    @PostMapping(
+        value = "/userfeedback",
+        produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseBody
+    public ResponseEntity<String> sendApplicationUserFeedback(
+        @Parameter(
+            description = "Recaptcha validation key."
+        )
+        @RequestParam(required = false, defaultValue = "") final String recaptcha,
+        @Parameter(
+            description = "User name.",
+            required = true
+        )
+        @RequestParam final String name,
+        @Parameter(
+            description = "User organisation.",
+            required = true
+        )
+        @RequestParam final String org,
+        @Parameter(
+            description = "User email address.",
+            required = true
+        )
+        @RequestParam final String email,
+        @Parameter(
+            description = "A comment or question.",
+            required = true
+        )
+        @RequestParam final String comments,
+        @Parameter(hidden = true) final HttpServletRequest request
+    ) throws Exception {
+        Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
+        ResourceBundle messages = ResourceBundle.getBundle("org.fao.geonet.api.Messages", locale);
+
+        boolean feedbackEnabled = settingManager.getValueAsBool(Settings.SYSTEM_USERFEEDBACK_ENABLE, false);
+        if (!feedbackEnabled) {
+            throw new FeatureNotEnabledException(
+                "Application feedback is not enabled.")
+                .withMessageKey("exception.resourceNotEnabled.applicationFeedback")
+                .withDescriptionKey("exception.resourceNotEnabled.applicationFeedback.description");
+        }
+
+        boolean recaptchaEnabled = settingManager.getValueAsBool(Settings.SYSTEM_USERSELFREGISTRATION_RECAPTCHA_ENABLE);
+
+        if (recaptchaEnabled) {
+            boolean validRecaptcha = RecaptchaChecker.verify(recaptcha,
+                settingManager.getValue(Settings.SYSTEM_USERSELFREGISTRATION_RECAPTCHA_SECRETKEY));
+            if (!validRecaptcha) {
+                return new ResponseEntity<>(
+                    messages.getString("recaptcha_not_valid"), HttpStatus.PRECONDITION_FAILED);
+            }
+        }
+
+        String to = settingManager.getValue(SYSTEM_FEEDBACK_EMAIL);
+
+        Set<String> toAddress = new HashSet<>();
+        toAddress.add(to);
+
+        MailUtil.sendMail(new ArrayList<>(toAddress),
+            messages.getString("site_user_feedback_title"),
+            String.format(
+                messages.getString("site_user_feedback_text"),
+                name, email, org, comments),
+            settingManager);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 }

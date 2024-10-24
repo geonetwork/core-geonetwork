@@ -99,7 +99,7 @@
           <p data-ng-repeat="e in layer.get('errors')" data-ng-bind-html="e"></p>
         </div>
 
-        <div data-gn-layer-dimensions="layer" />
+        <div data-gn-layer-dimensions="layer"></div>
 
         <p ng-if="layer.get('legend')">
           <img
@@ -110,12 +110,12 @@
         <h6 ng-if="layer.get('attribution')" data-translate="">Attribution</h6>
         <p ng-if="layer.get('attribution')"><em>{{layer.get('attribution')}}</em></p>
 
-        <div data-ng-if="::!layer.get('wfs') && layer.get('style').length > 0">
+        <div data-ng-if="::layer.get('style').length > 0">
           <div
             data-gn-layer-styles="layer.get('style')"
             data-gn-layer-styles-on-click="setLayerStyle(layer, style)"
             data-gn-layer-styles-current="layer.get('currentStyle')"
-          />
+          ></div>
         </div>
       </tab>
 

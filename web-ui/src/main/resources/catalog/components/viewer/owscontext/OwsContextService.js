@@ -237,7 +237,7 @@
                 layerAttributionArray = [];
                 for (var a = 0; a < layer.vendorExtension.attribution.length; a++) {
                   var attribution = layer.vendorExtension.attribution[a];
-                  layerAttribution = attribution.title;
+                  var layerAttribution = attribution.title;
                   // If href exist then make the title a link
                   if (attribution.onlineResource && attribution.onlineResource[0].href) {
                     var link = document.createElement("a");
@@ -559,8 +559,6 @@
             name = "{type=osm}";
           } else if (source instanceof ol.source.BingMaps) {
             name = "{type=bing_aerial}";
-          } else if (source instanceof ol.source.Stamen) {
-            name = "{type=stamen,name=" + layer.getSource().get("type") + "}";
           } else if (source instanceof ol.source.WMTS) {
             name = "{type=wmts,name=" + layer.get("name") + "}";
             params.server = [
@@ -601,6 +599,19 @@
                   }
                 ],
                 service: "urn:ogc:serviceType:WMS"
+              }
+            ];
+          } else if (source instanceof ol.source.TileImage) {
+            name = "{type=tms,name=" + layer.get("name") + "}";
+
+            params.server = [
+              {
+                onlineResource: [
+                  {
+                    href: layer.getSource().getUrls()[0]
+                  }
+                ],
+                service: "urn:ogc:serviceType:WMTS"
               }
             ];
           } else {
@@ -813,13 +824,16 @@
           if (layer.enabled) {
             olL.showInfo = layer.enabled; // Enabled in layer manager
           }
-          var params = olL.getSource().getParams() || {};
-          dimensions.forEach(function (dimension) {
-            if (layer[dimension.toLowerCase() + "DimensionValue"]) {
-              params[dimension] = layer[dimension.toLowerCase() + "DimensionValue"];
-              olL.getSource().updateParams(params);
-            }
-          });
+          // WMTS layers for example doesn't have this type of information
+          if (typeof olL.getSource().getParams === "function") {
+            var params = olL.getSource().getParams() || {};
+            dimensions.forEach(function (dimension) {
+              if (layer[dimension.toLowerCase() + "DimensionValue"]) {
+                params[dimension] = layer[dimension.toLowerCase() + "DimensionValue"];
+                olL.getSource().updateParams(params);
+              }
+            });
+          }
         }
 
         if (layer.name && layer.name.match(reT)) {
@@ -862,7 +876,9 @@
               setMapLayerProperties(olL, layer);
               return olL;
             })
-            .catch(function () {});
+            .catch(function (error) {
+              console.error(error);
+            });
         } else {
           // we suppose it's WMS
           // TODO: Would be good to attach the MD
@@ -891,7 +907,9 @@
               }
               return olL;
             })
-            .catch(function () {});
+            .catch(function (error) {
+              console.error(error);
+            });
         }
       };
     }

@@ -39,7 +39,7 @@
         <div class="col-sm-10">
           <div class="input-group" id="siblingdd">
             <span class="input-group-addon">
-              <i class="fa fa-search" />
+              <i class="fa fa-search"></i>
             </span>
             <input
               class="form-control"
@@ -70,7 +70,7 @@
               </a>
             </div>
           </div>
-          <div data-gn-pagination="paginationInfo" />
+          <div data-gn-pagination="paginationInfo"></div>
         </div>
       </div>
       <div data-gn-remote-record-selector=""></div>
@@ -94,12 +94,14 @@
                 <td>
                   <i
                     class="fa fa-fw gn-icon-association-{{obj.associationType}} gn-margin-right-sm"
-                  />{{obj.associationType | translate}}
+                  ></i
+                  >{{obj.associationType | translate}}
                 </td>
                 <td>
                   <i
                     class="fa fa-fw gn-icon-initiative-{{obj.initiativeType}} gn-margin-right-sm"
-                  />{{obj.initiativeType | translate}}
+                  ></i
+                  >{{obj.initiativeType | translate}}
                 </td>
                 <td class="text-center">
                   <a
@@ -122,7 +124,7 @@
           data-gn-click-and-spin="linkToResource()"
           data-ng-disabled="selection.length < 1"
         >
-          <i class="fa gn-icon-sibling" />&nbsp;
+          <i class="fa gn-icon-sibling"></i>&nbsp;
           <span data-translate="">saveLinkToSibling</span>
         </button>
         <div data-gn-need-help="linking-others" class="pull-right"></div>

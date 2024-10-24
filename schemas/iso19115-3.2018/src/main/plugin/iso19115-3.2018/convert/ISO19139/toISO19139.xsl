@@ -15,7 +15,7 @@
                 xmlns:gcx="http://standards.iso.org/iso/19115/-3/gcx/1.0"
                 xmlns:gex="http://standards.iso.org/iso/19115/-3/gex/1.0"
                 xmlns:lan="http://standards.iso.org/iso/19115/-3/lan/1.0"
-                xmlns:srv2="http://standards.iso.org/iso/19115/-3/srv/2.1"
+                xmlns:srv2="http://standards.iso.org/iso/19115/-3/srv/2.0"
                 xmlns:mac="http://standards.iso.org/iso/19115/-3/mac/2.0"
                 xmlns:mas="http://standards.iso.org/iso/19115/-3/mas/1.0"
                 xmlns:mcc="http://standards.iso.org/iso/19115/-3/mcc/1.0"
@@ -553,23 +553,29 @@
   <xsl:template match="mdb:resourceLineage[not(../mdb:dataQualityInfo)]">
     <gmd:dataQualityInfo>
       <gmd:DQ_DataQuality>
-          <xsl:apply-templates select="mrl:LI_Lineage/mrl:scope"/>
-          <gmd:lineage>
-            <gmd:LI_Lineage>
-              <xsl:call-template name="writeCharacterStringElement">
-                <xsl:with-param name="elementName"
-                                select="'gmd:statement'"/>
-                <xsl:with-param name="nodeWithStringToWrite"
-                                select="mrl:LI_Lineage/mrl:statement"/>
-              </xsl:call-template>
-              <xsl:apply-templates select="mrl:LI_Lineage/mrl:processStep"/>
-              <xsl:apply-templates select="mrl:LI_Lineage/mrl:source"/>
-            </gmd:LI_Lineage>
-          </gmd:lineage>
+        <xsl:if test="mrl:LI_Lineage/mrl:scope">
+          <gmd:scope>
+            <gmd:DQ_Scope>
+              <xsl:apply-templates select="mrl:LI_Lineage/mrl:scope/@*"/>
+              <xsl:apply-templates select="mrl:LI_Lineage/mrl:scope/mcc:MD_Scope/*"/>
+            </gmd:DQ_Scope>
+          </gmd:scope>
+        </xsl:if>
+        <gmd:lineage>
+          <gmd:LI_Lineage>
+            <xsl:call-template name="writeCharacterStringElement">
+              <xsl:with-param name="elementName"
+                              select="'gmd:statement'"/>
+              <xsl:with-param name="nodeWithStringToWrite"
+                              select="mrl:LI_Lineage/mrl:statement"/>
+            </xsl:call-template>
+            <xsl:apply-templates select="mrl:LI_Lineage/mrl:processStep"/>
+            <xsl:apply-templates select="mrl:LI_Lineage/mrl:source"/>
+          </gmd:LI_Lineage>
+        </gmd:lineage>
       </gmd:DQ_DataQuality>
     </gmd:dataQualityInfo>
   </xsl:template>
-
 
   <xsl:template match="mmi:maintenanceDate">
     <gmd:dateOfNextUpdate>

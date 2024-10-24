@@ -420,7 +420,7 @@ public class MetadataEditingApi {
 
                         List<MetadataStatus> listOfStatusChange = new ArrayList<>(1);
                         listOfStatusChange.add(metadataStatus);
-                        sa.onStatusChange(listOfStatusChange);
+                        sa.onStatusChange(listOfStatusChange, true);
                     } else {
                         throw new SecurityException(String.format("Only users with editor profile can submit."));
                     }
@@ -442,7 +442,7 @@ public class MetadataEditingApi {
 
                         List<MetadataStatus> listOfStatusChange = new ArrayList<>(1);
                         listOfStatusChange.add(metadataStatus);
-                        sa.onStatusChange(listOfStatusChange);
+                        sa.onStatusChange(listOfStatusChange, true);
                     } else {
                         throw new SecurityException(String.format("Only users with review profile can approve."));
                     }
@@ -596,7 +596,7 @@ public class MetadataEditingApi {
     @ApiResponses(value = {@ApiResponse(responseCode = "201", description = "Element reordered."),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)})
     @ResponseBody
-    public void addElement(@Parameter(description = API_PARAM_RECORD_UUID, required = true) @PathVariable String metadataUuid,
+    public void reorderElement(@Parameter(description = API_PARAM_RECORD_UUID, required = true) @PathVariable String metadataUuid,
                            @Parameter(description = "Reference of the element to move.", required = true) @RequestParam String ref,
                            @Parameter(description = "Direction", required = true) @PathVariable Direction direction,
                            @Parameter(description = "Should attributes be shown on the editor snippet?", required = false) @RequestParam(defaultValue = "false") boolean displayAttributes,
@@ -688,7 +688,8 @@ public class MetadataEditingApi {
         GeonetworkDataDirectory dataDirectory = applicationContext.getBean(GeonetworkDataDirectory.class);
         Path xslt = dataDirectory.getWebappDir()
             .resolve(isEmbedded ? "xslt/ui-metadata/edit/edit-embedded.xsl" : "xslt/ui-metadata/edit/edit.xsl");
-        Xml.transformXml(root, xslt, response.getOutputStream());
+
+        Xml.transform(root, xslt, response.getOutputStream());
     }
 
     private Element buildResourceDocument(ApplicationContext applicationContext, ServiceContext context,

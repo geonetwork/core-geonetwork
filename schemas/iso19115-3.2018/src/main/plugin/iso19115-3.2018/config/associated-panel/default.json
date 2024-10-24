@@ -30,7 +30,8 @@
           "metadataStore": {
             "label": "searchAnApplication",
             "params": {
-              "resourceType": "application"
+              "resourceType": "application",
+              "isTemplate": "n"
             }
           }
         },
@@ -63,7 +64,8 @@
           "metadataStore": {
             "label": "searchAservice",
             "params": {
-              "serviceType": ["OGC:WMS", "WMS", "view"]
+              "serviceType": ["OGC:WMS", "WMS", "view"],
+              "isTemplate": "n"
             }
           }
         },
@@ -95,7 +97,8 @@
           "metadataStore": {
             "label": "searchAservice",
             "params": {
-              "serviceType": "view"
+              "serviceType": "view",
+              "isTemplate": "n"
             }
           }
         },
@@ -132,7 +135,8 @@
           "metadataStore": {
             "label": "searchAservice",
             "params": {
-              "serviceType": ["OGC:WMTS", "WMTS"]
+              "serviceType": ["OGC:WMTS", "WMTS"],
+              "isTemplate": "n"
             }
           }
         },
@@ -164,7 +168,8 @@
           "metadataStore": {
             "label": "searchAservice",
             "params": {
-              "serviceType": "ESRI:REST"
+              "serviceType": "ESRI:REST",
+              "isTemplate": "n"
             }
           }
         },
@@ -196,7 +201,8 @@
           "metadataStore": {
             "label": "searchAservice",
             "params": {
-              "serviceType": "ESRI:REST"
+              "serviceType": "ESRI:REST",
+              "isTemplate": "n"
             }
           }
         },
@@ -310,7 +316,8 @@
           "metadataStore": {
             "label": "searchAservice",
             "params": {
-              "serviceType": ["OGC:WFS", "WFS", "download"]
+              "serviceType": ["OGC:WFS", "WFS", "download"],
+              "isTemplate": "n"
             }
           }
         },
@@ -342,7 +349,8 @@
           "metadataStore": {
             "label": "searchAservice",
             "params": {
-              "serviceType": ["OGC:WCS", "WCS"]
+              "serviceType": ["OGC:WCS", "WCS"],
+              "isTemplate": "n"
             }
           }
         },
@@ -374,7 +382,8 @@
           "metadataStore": {
             "label": "searchAservice",
             "params": {
-              "serviceType": "download"
+              "serviceType": "download",
+              "isTemplate": "n"
             }
           }
         },
@@ -411,7 +420,8 @@
           "metadataStore": {
             "label": "searchAservice",
             "params": {
-              "serviceType": "download"
+              "serviceType": "download",
+              "isTemplate": "n"
             }
           }
         },

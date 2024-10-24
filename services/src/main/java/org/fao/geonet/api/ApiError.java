@@ -58,8 +58,8 @@ public class ApiError {
 
     public ApiError(String code, Exception exception) {
         this(code,
-            exception.getClass().getSimpleName(),
-            exception.getMessage()
+            exception.getMessage(),
+            null
         );
         this.exception = exception;
     }

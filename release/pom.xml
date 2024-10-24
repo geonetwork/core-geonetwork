@@ -7,11 +7,11 @@
   <parent>
     <groupId>org.geonetwork-opensource</groupId>
     <artifactId>geonetwork</artifactId>
-    <version>4.2.6-SNAPSHOT</version>
+    <version>4.2.11-SNAPSHOT</version>
   </parent>
 
   <artifactId>gn-release</artifactId>
-  <packaging>jar</packaging>
+  <packaging>pom</packaging>
   <name>Release module</name>
   <description>Use to create distribution packages.</description>
 
@@ -23,12 +23,41 @@
     </license>
   </licenses>
 
+  <dependencies>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>gn-web-app</artifactId>
+      <version>${project.version}</version>
+      <type>war</type>
+    </dependency>
+  </dependencies>
+  <build>
+    <plugins>
+      <plugin>
+        <artifactId>maven-clean-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>reset</id>
+            <goals><goal>clean</goal></goals>
+            <configuration>
+              <filesets>
+                <fileset>
+                  <directory>jetty</directory>
+                </fileset>
+              </filesets>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+
   <profiles>
     <profile>
       <id>jetty-download</id>
       <activation>
         <property>
-          <name>jetty-download</name>
+          <name>release</name>
         </property>
       </activation>
       <build>
@@ -38,8 +67,9 @@
             <artifactId>download-maven-plugin</artifactId>
             <executions>
               <execution>
-                <id>download-jetty</id>
+                <id>jetty-download</id>
                 <phase>pre-integration-test</phase>
+                <!-- prepare-package step moved later in maven lifecycle to avoid slowing down local testing -->
                 <goals>
                   <goal>wget</goal>
                 </goals>
@@ -56,7 +86,9 @@
             <artifactId>maven-antrun-plugin</artifactId>
             <executions>
               <execution>
-                <phase>install</phase>
+                <id>jetty-rename</id>
+                <phase>pre-integration-test</phase>
+                <!-- prepare-package step moved later in maven lifecycle to avoid slowing down local testing -->
                 <goals>
                   <goal>run</goal>
                 </goals>
@@ -76,5 +108,34 @@
         </plugins>
       </build>
     </profile>
+    <profile>
+      <id>bundle</id>
+      <activation>
+        <property>
+          <name>release</name>
+        </property>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <artifactId>maven-antrun-plugin</artifactId>
+            <executions>
+              <execution>
+                <phase>post-integration-test</phase>
+                <goals>
+                  <goal>run</goal>
+                </goals>
+                <configuration>
+                  <target>
+                    <ant antfile="build.xml"/>
+                  </target>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
   </profiles>
 </project>

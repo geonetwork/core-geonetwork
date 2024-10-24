@@ -10,7 +10,7 @@
           ng-click="ctrl.collapseAll()"
           title="{{'collapseAllFacet' | translate}}"
         >
-          <i class="fa fa-fw fa-caret-right" />
+          <i class="fa fa-fw fa-caret-right"></i>
         </button>
         <button
           type="button"
@@ -18,7 +18,7 @@
           ng-click="ctrl.expandAll()"
           title="{{'expandAllFacet' | translate}}"
         >
-          <i class="fa fa-fw fa-caret-down" />
+          <i class="fa fa-fw fa-caret-down"></i>
         </button>
       </div>
     </div>
@@ -136,11 +136,20 @@
 
         <a
           href
-          class="gn-facet-more"
+          class="gn-facet-more d-inline-block"
           ng-if="facet.more"
           ng-click="ctrl.loadMoreTerms(facet)"
         >
           <span translate>more</span>
+        </a>
+        <span data-ng-if="facet.more && facet.less"> | </span>
+        <a
+          href
+          data-ng-class="facet.more ? '' : 'gn-facet-less'"
+          ng-if="facet.less"
+          ng-click="ctrl.loadLessTerms(facet)"
+        >
+          <span translate>less</span>
         </a>
       </div>
     </div>

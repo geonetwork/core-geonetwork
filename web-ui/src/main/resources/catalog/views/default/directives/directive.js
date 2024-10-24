@@ -81,12 +81,16 @@
 
   module.directive("gnLinksBtn", [
     "gnTplResultlistLinksbtn",
-    function (gnTplResultlistLinksbtn) {
+    "gnMetadataActions",
+    function (gnTplResultlistLinksbtn, gnMetadataActions) {
       return {
         restrict: "E",
         replace: true,
         scope: true,
-        templateUrl: gnTplResultlistLinksbtn
+        templateUrl: gnTplResultlistLinksbtn,
+        link: function linkFn(scope) {
+          scope.gnMetadataActions = gnMetadataActions;
+        }
       };
     }
   ]);
@@ -138,9 +142,9 @@
                 "../api/records/" +
                 uuid +
                 url.replace("${lang}", scope.lang) +
-                (url.indexOf("?") !== -1 ? "&" : "?") +
-                "approved=" +
-                (isDraft != "y")
+                (isDraft == "y"
+                  ? (url.indexOf("?") !== -1 ? "&" : "?") + "approved=false"
+                  : "")
               );
             }
           };
@@ -247,6 +251,7 @@
            */
           scope.displayPublicationOption = function (md, user, pubOption) {
             return (
+              md &&
               md.canReview &&
               md.draft != "y" &&
               md.mdStatus != 3 &&

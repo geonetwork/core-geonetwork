@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2007 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2024 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -93,6 +93,10 @@ public abstract class AbstractParams implements Cloneable {
     private String ownerIdGroup;
     private String ownerIdUser;
     private OverrideUuid overrideUuid;
+
+    private boolean translateContent;
+    private String translateContentLangs;
+    private String translateContentFields;
 
     /**
      *  When more than one harvester harvest the same record, then record is usually rejected.
@@ -199,6 +203,9 @@ public abstract class AbstractParams implements Cloneable {
 
         setImportXslt(Util.getParam(content, "importxslt", "none"));
         setBatchEdits(Util.getParam(content, "batchEdits", ""));
+        setTranslateContent(Util.getParam(content, "translateContent", false));
+        setTranslateContentLangs(Util.getParam(content, "translateContentLangs", ""));
+        setTranslateContentFields(Util.getParam(content, "translateContentFields", ""));
 
         this.setValidate(readValidateFromParams(content));
 
@@ -279,6 +286,9 @@ public abstract class AbstractParams implements Cloneable {
 
         setImportXslt(Util.getParam(content, "importxslt", "none"));
         setBatchEdits(Util.getParam(content, "batchEdits", getBatchEdits()));
+        setTranslateContent(Util.getParam(content, "translateContent", false));
+        setTranslateContentLangs(Util.getParam(content, "translateContentLangs", ""));
+        setTranslateContentFields(Util.getParam(content, "translateContentFields", ""));
         this.setValidate(readValidateFromParams(content));
 
         if (privil != null) {
@@ -329,7 +339,9 @@ public abstract class AbstractParams implements Cloneable {
 
         copy.setImportXslt(getImportXslt());
         copy.setBatchEdits(getBatchEdits());
+        copy.setTranslateContent(isTranslateContent());
         copy.setValidate(getValidate());
+        copy.setTranslateContent(isTranslateContent());
 
         for (Privileges p : alPrivileges) {
             copy.addPrivilege(p.copy());
@@ -630,5 +642,29 @@ public abstract class AbstractParams implements Cloneable {
 
     public void setBatchEdits(String batchEdits) {
         this.batchEdits = batchEdits;
+    }
+
+    public boolean isTranslateContent() {
+        return translateContent;
+    }
+
+    public void setTranslateContent(boolean translateContent) {
+        this.translateContent = translateContent;
+    }
+
+    public String getTranslateContentLangs() {
+        return translateContentLangs;
+    }
+
+    public void setTranslateContentLangs(String translateContentLangs) {
+        this.translateContentLangs = translateContentLangs;
+    }
+
+    public String getTranslateContentFields() {
+        return translateContentFields;
+    }
+
+    public void setTranslateContentFields(String translateContentFields) {
+        this.translateContentFields = translateContentFields;
     }
 }

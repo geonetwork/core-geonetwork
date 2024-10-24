@@ -174,7 +174,10 @@
             } else {
               query.query = {
                 function_score: {
-                  random_score: { seed: Math.floor(Math.random() * 10000) },
+                  random_score: {
+                    seed: Math.floor(Math.random() * 10000),
+                    field: "uuid"
+                  },
                   query: query.query
                 }
               };
@@ -482,12 +485,16 @@
           var addGeonames = !attrs["disableGeonames"];
           scope.regionTypes = [];
 
+          scope.lang = attrs["lang"];
+
           function setDefault() {
             var defaultThesaurus = attrs["default"];
-            for (t in scope.regionTypes) {
-              if (scope.regionTypes[t].name === defaultThesaurus) {
-                scope.regionType = scope.regionTypes[t];
-                return;
+            if (defaultThesaurus) {
+              for (var t in scope.regionTypes) {
+                if (scope.regionTypes[t].name === defaultThesaurus) {
+                  scope.regionType = scope.regionTypes[t];
+                  return;
+                }
               }
             }
             scope.regionType = scope.regionTypes[0];
@@ -729,13 +736,15 @@
         link: function (scope, element, attrs) {
           if (attrs["gnRegionType"]) {
             gnRegionService.loadList().then(function (data) {
-              for (i = 0; i < data.length; ++i) {
+              for (var i = 0; i < data.length; ++i) {
                 if (attrs["gnRegionType"] == data[i].name) {
                   scope.regionType = data[i];
                 }
               }
             });
           }
+          scope.lang = attrs["lang"];
+
           scope.$watch("regionType", function (val) {
             if (scope.regionType) {
               if (scope.regionType.id == "geonames") {
@@ -760,7 +769,15 @@
                   queryTokenizer: Bloodhound.tokenizers.whitespace,
                   limit: 30,
                   remote: {
-                    wildcard: "QUERY",
+                    replace: function (url, query) {
+                      // url parameter will be decoded once by the proxy
+                      // and we have to keep URI component encoded in the API call to the service
+                      // If not, search with " " will fail because invalid URI.
+                      return url.replace(
+                        "QUERY",
+                        encodeURIComponent(encodeURIComponent(query))
+                      );
+                    },
                     url: url,
                     ajax: {
                       beforeSend: function () {
@@ -949,6 +966,144 @@
     }
   ]);
 
+  /**
+   * @ngdoc directive
+   * @name gn_utility.directive:gnDataPicker
+   * @function
+   *
+   * @description
+   * A generic directive that allows to select values from the provided source (Bloodhound object).
+   *
+   * The selected values are returned as a comma separated string in the 'value' scope property.
+   *
+   * Data model:
+   *   - code: Value to select.
+   *   - name: Label to display.
+   *
+   */
+  module.directive("gnDataPicker", [
+    "$timeout",
+    function ($timeout) {
+      return {
+        restrict: "A",
+        replace: true,
+        transclude: true,
+        templateUrl: "../../catalog/components/utility/partials/dataselector.html",
+        scope: {
+          source: "<",
+          elementId: "@",
+          value: "=",
+          maxTags: "@"
+        },
+        link: function (scope, element, attrs) {
+          scope.prefix = attrs["prefix"] || "";
+          scope.selected = [];
+          scope.initialValues = [];
+          scope.initialised = false;
+
+          var id = "#tagsinput_" + scope.elementId;
+
+          var initTagsInput = function () {
+            $timeout(function () {
+              try {
+                $(id).tagsinput({
+                  itemValue: "code",
+                  itemText: "name",
+                  maxTags: scope.maxTags
+                });
+
+                var source = scope.source;
+
+                scope.$watch("value", function (newValue, oldValue) {
+                  if (
+                    newValue !== oldValue ||
+                    (scope.initialValues.length == 0 && newValue)
+                  ) {
+                    scope.initialValues = newValue.split(",");
+
+                    scope.selected = [];
+                    $(id).tagsinput("removeAll");
+
+                    angular.forEach(scope.initialValues, function (value) {
+                      scope.selected = scope.selected.concat(
+                        _.filter(source.local, ["code", value])
+                      );
+                    });
+
+                    // Add selection to the list of tags
+                    angular.forEach(scope.selected, function (keyword) {
+                      $(id).tagsinput("add", keyword);
+                    });
+                  }
+                });
+
+                function allOrSearchFn(q, sync) {
+                  if (q === "") {
+                    sync(source.all());
+                  } else {
+                    source.search(q, sync);
+                  }
+                }
+
+                var field = $(id).tagsinput("input");
+
+                field
+                  .typeahead(
+                    {
+                      minLength: 0,
+                      highlight: true
+                    },
+                    {
+                      name: "datapicker",
+                      displayKey: "code",
+                      source: allOrSearchFn,
+                      limit: Infinity,
+                      templates: {
+                        suggestion: function (datum) {
+                          return "<p>" + datum.name + " (" + datum.code + ")</p>";
+                        }
+                      }
+                    }
+                  )
+                  .bind(
+                    "typeahead:selected",
+                    $.proxy(function (obj, keyword) {
+                      // Add to tags
+                      this.tagsinput("add", keyword);
+
+                      // Update selection and snippet
+                      angular.copy(this.tagsinput("items"), scope.selected);
+                      scope.value = _.map(scope.selected, "code").join(",");
+
+                      // Clear typeahead
+                      this.tagsinput("input").typeahead("val", "");
+                      field.blur();
+                      field.triggerHandler("input"); // force angular to see changes
+                    }, $(id))
+                  );
+
+                $(id).on("itemRemoved", function () {
+                  angular.copy($(this).tagsinput("items"), scope.selected);
+                  scope.value = _.map(scope.selected, "code").join(",");
+                  field.blur();
+                  field.triggerHandler("input"); // force angular to see changes
+                });
+              } catch (e) {
+                console.warn("No tagsinput for " + id + ", error: " + e.message);
+              }
+            });
+          };
+
+          scope.$watch("source", function (newValue, oldValue) {
+            if (newValue && newValue != oldValue) {
+              initTagsInput();
+            }
+          });
+        }
+      };
+    }
+  ]);
+
   module.directive("gnHumanizeTime", [
     "gnGlobalSettings",
     "gnHumanizeTimeService",
@@ -1068,7 +1223,7 @@
           '           href=""' +
           '           title="{{::title | translate}}">' +
           '  <i class="fa fa-fw" ' +
-          "   ng-class=\"{'fa-copy': !copied, 'fa-check': copied}\"/>" +
+          "   ng-class=\"{'fa-copy': !copied, 'fa-check': copied}\"></i>" +
           "</a>",
         scope: {
           btnClass: "@",
@@ -1205,7 +1360,7 @@
         restrict: "A",
         template:
           "<button title=\"{{'gnToggle' | translate}}\">" +
-          '<i class="fa fa-fw fa-angle-double-up"/>&nbsp;' +
+          '<i class="fa fa-fw fa-angle-double-up"></i>&nbsp;' +
           "</button>",
         link: function linkFn(scope, element, attr) {
           var collapsing = true,
@@ -1254,8 +1409,8 @@
         transclude: true,
         template:
           '<a href=\'#/search?query_string=%7B"{{field}}":%7B"{{::filter | encodeURIComponent}}":true%7D%7D\'>' +
-          '  <i class="fa fa-fw fa-filter"/>' +
-          "  <span>{{(label || 'focusOn') | translate}} <ng-transclude/></span>" +
+          '  <i class="fa fa-fw fa-filter"></i>' +
+          "  <span>{{(label || 'focusOn') | translate}} <ng-transclude></ng-transclude></span>" +
           "</a>",
         scope: {
           field: "@gnSearchFilterLink",
@@ -1267,18 +1422,22 @@
   ]);
 
   module.directive("gnStatusBadge", [
-    function () {
+    "$translate",
+    function ($translate) {
       return {
         restrict: "A",
         replace: true,
-        transclude: true,
-        template:
-          '<div data-ng-if="::md.cl_status.length > 0"' +
-          ' title="{{::md.cl_status[0].key | translate}}"' +
-          ' class="gn-status gn-status-{{::md.cl_status[0].key}}">{{::md.cl_status[0].key | translate}}' +
-          "</div>",
+        templateUrl: "../../catalog/components/utility/partials/statusbadge.html",
         scope: {
           md: "=gnStatusBadge"
+        },
+        link: function (scope, element, attrs) {
+          scope.statusTitle = "";
+          if (scope.md && scope.md.cl_status && scope.md.cl_status.length > 0) {
+            angular.forEach(scope.md.cl_status, function (status) {
+              scope.statusTitle += $translate.instant(status.key) + "\n";
+            });
+          }
         }
       };
     }
@@ -1347,7 +1506,7 @@
           "    </defs>" +
           '    <circle fill="url(\'#image{{imageId}}\')" style="stroke-miterlimit:10;" cx="250" cy="250" r="240"/>' +
           '    <text x="50%" y="50%"' +
-          '          text-anchor="middle" alignment-baseline="central"' +
+          '          text-anchor="middle" alignment-baseline="central" dominant-baseline="central"' +
           "          font-size=\"300\">{{hasIcon ? '' : org.substr(0, 1).toUpperCase()}}</text>" +
           "</svg>",
         scope: {
@@ -2366,9 +2525,9 @@
                   '">' +
                   '<div class="modal-dialog gn-img-modal in">' +
                   '  <button type=button class="btn btn-danger gn-btn-modal-img">' +
-                  '<i class="fa fa-times"/></button>' +
+                  '<i class="fa fa-times"></i></button>' +
                   '  <img src="' +
-                  (img.lUrl || img.url || img.id) +
+                  (attr.ngSrc || img.lUrl || img.url || img.id) +
                   '"/>' +
                   (label != "" ? labelDiv : "") +
                   "</div>" +
@@ -2574,7 +2733,7 @@
         replace: true,
         scope: {
           uuid: "=gnMetadataSelector", // Model property with the metadata uuid selected
-          searchObj: "=", // ElasticSearch search object
+          searchObj: "=", // Elasticsearch search object
           md: "=", // Metadata object selected
           elementName: "@" // Input element name for the uuid control
         },

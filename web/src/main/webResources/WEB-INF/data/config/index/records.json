@@ -1053,31 +1053,35 @@
             "properties": {
               "default": {
                 "type": "keyword",
-                "copy_to": ["any.default"]
+                "copy_to": ["any.default", "organisationName.default"]
               },
               "langeng": {
                 "type": "keyword",
-                "copy_to": ["any.langeng"]
+                "copy_to": ["any.langeng", "organisationName.langeng"]
               },
               "langfre": {
                 "type": "keyword",
-                "copy_to": ["any.langfre"]
+                "copy_to": ["any.langfre", "organisationName.langfre"]
               },
               "langger": {
                 "type": "keyword",
-                "copy_to": ["any.langger"]
+                "copy_to": ["any.langger", "organisationName.langger"]
               },
               "langita": {
                 "type": "keyword",
-                "copy_to": ["any.langita"]
+                "copy_to": ["any.langita", "organisationName.langita"]
               },
               "langdut": {
                 "type": "keyword",
-                "copy_to": ["any.langdut"]
+                "copy_to": ["any.langdut", "organisationName.langdut"]
+              },
+              "langdan": {
+                "type": "keyword",
+                "copy_to": ["any.langdan", "organisationName.langdan"]
               },
               "langspa": {
                 "type": "keyword",
-                "copy_to": ["any.langspa"]
+                "copy_to": ["any.langspa", "organisationName.langspa"]
               },
               "link": {
                 "type": "keyword"
@@ -1154,6 +1158,19 @@
                 "analyzer": "dutch",
                 "copy_to": [
                   "any.langdut"
+                ],
+                "fields": {
+                  "keyword": {
+                    "type": "keyword",
+                    "ignore_above": ${es.index.ignore_above}
+                  }
+                }
+              },
+              "langdan": {
+                "type": "text",
+                "analyzer": "danish",
+                "copy_to": [
+                  "any.langdan"
                 ],
                 "fields": {
                   "keyword": {
@@ -1275,6 +1292,12 @@
                 "type": "keyword",
                 "copy_to": [
                   "any.langdut"
+                ]
+              },
+              "langdan": {
+                "type": "keyword",
+                "copy_to": [
+                  "any.langdan"
                 ]
               },
               "langita": {
@@ -1516,6 +1539,10 @@
             "type": "text",
             "analyzer": "dutch"
           },
+          "langdan": {
+            "type": "text",
+            "analyzer": "danish"
+          },
           "langita": {
             "type": "text",
             "analyzer": "italian"
@@ -1556,6 +1583,12 @@
             "type": "keyword",
             "copy_to": [
               "any.langdut"
+              ]
+          },
+          "langdan": {
+            "type": "keyword",
+            "copy_to": [
+              "any.langdan"
               ]
           },
           "langita": {
@@ -2033,6 +2066,35 @@
                 "format": "date_optional_time"
               }
             }
+          }
+        }
+      },
+      "organisationName": {
+        "type": "object",
+        "properties": {
+          "default": {
+            "type": "keyword"
+          },
+          "langeng": {
+            "type": "keyword"
+          },
+          "langfre": {
+            "type": "keyword"
+          },
+          "langger": {
+            "type": "keyword"
+          },
+          "langita": {
+            "type": "keyword"
+          },
+          "langdut": {
+            "type": "keyword"
+          },
+          "langdan": {
+            "type": "keyword"
+          },
+          "langspa": {
+            "type": "keyword"
           }
         }
       }

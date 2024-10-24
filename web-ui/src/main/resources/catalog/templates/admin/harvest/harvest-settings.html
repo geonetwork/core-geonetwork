@@ -35,8 +35,8 @@
             title="{{h.error ? ('selectForError' | translate) : (h.info.lastRun.length === 0 ? '' : ('lastRun' | translate) + (h.info.lastRun | gnFromNow))}}"
           >
             <p>
-              <i data-ng-show="h.options.status === 'active'" class="fa fa-play" />
-              <i data-ng-show="h.options.status === 'inactive'" class="fa fa-pause" />
+              <i data-ng-show="h.options.status === 'active'" class="fa fa-play"></i>
+              <i data-ng-show="h.options.status === 'inactive'" class="fa fa-pause"></i>
               <span class="gn-harvester-name"
                 ><strong>{{h.site.name}}</strong> ({{('harvester-' + h['@type']) |
                 translate}})</span
@@ -95,7 +95,7 @@
             data-gn-pagination-list=""
             data-items="$parent.harvesters | filter:harvesterSearch | orderBy:'name'"
             data-cache="$parent.harvesters"
-          />
+          ></span>
         </div>
 
         <div
@@ -109,9 +109,9 @@
             class="btn btn-success dropdown-toggle"
             data-toggle="dropdown"
           >
-            <i class="fa fa-plus"> </i>&nbsp;
+            <i class="fa fa-plus"></i>&nbsp;
             <span data-translate="">newHarvester</span>
-            <span class="caret" />
+            <span class="caret"></span>
           </button>
           <ul id="gn-harvest-select-available-list" class="dropdown-menu" role="menu">
             <li
@@ -131,7 +131,7 @@
             <li>
               <a href="" data-ng-click="addFromClipboard()">
                 {{'addHarvesterFromClipboard' | translate}}
-                <i class="fa fa-paste" />
+                <i class="fa fa-paste"></i>
               </a>
             </li>
           </ul>
@@ -151,7 +151,7 @@
           >
             <span class="fa fa-copy"></span>&nbsp;
             <span data-translate="">cloneHarvester</span>
-            <span class="caret" />
+            <span class="caret"></span>
           </button>
           <ul id="gn-harvest-select-clone-list" class="dropdown-menu" role="menu">
             <li data-ng-repeat="h in $parent.harvesters | orderBy:'site.name'">
@@ -486,7 +486,7 @@
               data-ng-hide="harvesterSelected['@id'] == ''"
               title="{{'copyHarvesterConfig' | translate}}"
               timeout="1000"
-            />
+            ></div>
 
             <div
               id="gn-harvest-settings-info"

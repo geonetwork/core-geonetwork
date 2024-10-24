@@ -224,7 +224,7 @@
       var encLegends = [];
       var attributions = [];
       var layers = $scope.map.getLayers();
-      pdfLegendsToDownload = [];
+      var pdfLegendsToDownload = [];
 
       var sortedZindexLayers = layers.getArray().sort(function (a, b) {
         return a.getZIndex() > b.getZIndex();

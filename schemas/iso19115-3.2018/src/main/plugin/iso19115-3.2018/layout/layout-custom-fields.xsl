@@ -7,7 +7,6 @@
   xmlns:cit="http://standards.iso.org/iso/19115/-3/cit/2.0"
   xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0"
   xmlns:mrs="http://standards.iso.org/iso/19115/-3/mrs/1.0"
-  xmlns:gts="http://www.isotc211.org/2005/gts"
   xmlns:gml="http://www.opengis.net/gml/3.2"
   xmlns:xlink="http://www.w3.org/1999/xlink"
   xmlns:gn="http://www.fao.org/geonetwork"
@@ -278,7 +277,7 @@
     <xsl:call-template name="render-boxed-element">
       <xsl:with-param name="label"
         select="gn-fn-metadata:getLabel($schema, name(), $labels, name(..), $isoType, $xpath)/label"/>
-      <xsl:with-param name="editInfo" select="gn:element"/>
+      <xsl:with-param name="editInfo" select="../gn:element"/>
       <xsl:with-param name="cls" select="local-name()"/>
       <xsl:with-param name="subTreeSnippet">
         <div gn-draw-bbox="" data-hleft="{gex:westBoundLongitude/gco:Decimal}"

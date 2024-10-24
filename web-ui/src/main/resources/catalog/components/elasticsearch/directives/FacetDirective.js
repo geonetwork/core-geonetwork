@@ -101,6 +101,12 @@
     });
   };
 
+  FacetsController.prototype.loadLessTerms = function (facet) {
+    this.searchCtrl.loadLessTerms(facet).then(function (terms) {
+      angular.copy(terms, facet);
+    });
+  };
+
   FacetsController.prototype.filterTerms = function (facet) {
     if (facet.meta && facet.meta.filterByTranslation) {
       var match = [];
@@ -177,6 +183,23 @@
             return facet.key;
           };
         }
+      };
+    }
+  ]);
+
+  module.filter("facetTooltip", [
+    "$translate",
+    "$filter",
+    function ($translate, $filter) {
+      return function (item) {
+        if (item.definition) {
+          var key = item.definition + "-tooltip",
+            tooltip = $translate.instant(key);
+          if (tooltip !== key) {
+            return tooltip;
+          }
+        }
+        return $filter("facetTranslator")(item.value);
       };
     }
   ]);
@@ -278,8 +301,10 @@
    * @param $scope
    * @constructor
    */
-  var FacetController = function ($scope) {
+  var FacetController = function ($scope, $translate, $filter) {
     this.$scope = $scope;
+    this.$translate = $translate;
+    this.$filter = $filter;
   };
 
   FacetController.prototype.$onInit = function () {
@@ -325,7 +350,7 @@
     this.filter(this.facet, item);
   };
 
-  FacetController.$inject = ["$scope"];
+  FacetController.$inject = ["$scope", "$translate", "$filter"];
 
   module.directive("esFacet", [
     "gnLangs",
@@ -447,8 +472,9 @@
   ]);
 
   module.directive("esFacetCards", [
+    "gnFacetSorter",
     "gnLangs",
-    function (gnLangs) {
+    function (gnFacetSorter, gnLangs) {
       return {
         restrict: "A",
         scope: {
@@ -480,6 +506,7 @@
 
           init();
 
+          scope.facetSorter = gnFacetSorter.sortByTranslation;
           scope.$watch("key", function (n, o) {
             if (n && n !== o) {
               init();

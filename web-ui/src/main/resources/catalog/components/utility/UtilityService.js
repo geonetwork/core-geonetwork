@@ -677,7 +677,8 @@
           if (!newNode) {
             newNode = {
               name: group,
-              value: group
+              value: group,
+              definition: group
               //selected: themesInSearch.indexOf(t['@name']) >= 0 ? true : false
             };
             if (!node.nodes) node.nodes = [];
@@ -795,12 +796,19 @@
         if (Object.keys(translationsToLoad[fieldId]).length > 0) {
           loadTranslation(fieldId, meta && meta.thesaurus).then(function (translations) {
             if (angular.isObject(translations)) {
+              var translationToAdd = {};
+              var keys = Object.keys(translations);
+              for (var i = 0; i < keys.length; i++) {
+                translationToAdd[keys[i]] = translations[keys[i]].label;
+                translationToAdd[keys[i] + "-tooltip"] = translations[keys[i]].definition;
+              }
+
               var t = {};
               t[gnLangs.current] = {};
               t[gnLangs.current] = angular.extend(
                 {},
                 gnLangs.provider.translations()[gnLangs.current],
-                translations
+                translationToAdd
               );
               gnLangs.provider.useLoader("inlineLoaderFactory", t);
               $translate.refresh();
@@ -923,4 +931,44 @@
       };
     }
   ]);
+
+  module.provider("gnLanguageService", function () {
+    this.$get = [
+      "$q",
+      "$http",
+      function ($q, $http) {
+        return {
+          getLanguages: function () {
+            var defer = $q.defer();
+            var url = "../api/isolanguages";
+            $http.get(url, { cache: true }).then(
+              function (response) {
+                defer.resolve(response.data);
+              },
+              function (error) {
+                defer.reject(error);
+              }
+            );
+            return defer.promise;
+          },
+
+          getLanguageAutocompleter: function (data) {
+            var source = new Bloodhound({
+              datumTokenizer: Bloodhound.tokenizers.obj.whitespace(
+                "name",
+                "code",
+                "english"
+              ),
+              queryTokenizer: Bloodhound.tokenizers.whitespace,
+              local: data,
+              limit: 30
+            });
+            source.initialize();
+
+            return source;
+          }
+        };
+      }
+    ];
+  });
 })();

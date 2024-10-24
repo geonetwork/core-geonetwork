@@ -29,13 +29,10 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jeeves.server.UserSession;
-import jeeves.server.context.ServiceContext;
 import jeeves.services.ReadWriteController;
-import net.sf.json.JSONObject;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.kernel.DataManager;
-import org.fao.geonet.kernel.SelectionManager;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.search.index.BatchOpsMetadataReindexer;
 import org.fao.geonet.kernel.setting.SettingManager;
@@ -46,7 +43,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.Set;
 
@@ -86,7 +82,7 @@ public class MetadataIndexApi {
     })
     public
     @ResponseBody
-    JSONObject index(
+    IndexResponse index(
         @Parameter(description = API_PARAM_RECORD_UUIDS_OR_SELECTION,
             required = false,
             example = "")
@@ -125,11 +121,30 @@ public class MetadataIndexApi {
         new BatchOpsMetadataReindexer(dataManager, ids)
             .process(settingManager.getSiteId(), false);
 
-        JSONObject res = new JSONObject();
-        res.put("success", true);
-        res.put("count", index);
-
-        return res;
+        IndexResponse indexResponse = new IndexResponse();
+        indexResponse.setSuccess(true);
+        indexResponse.setCount(index);
+        return indexResponse;
     }
 
+    private static class IndexResponse {
+        private boolean success;
+        private int count;
+
+        public boolean isSuccess() {
+            return success;
+        }
+
+        public void setSuccess(boolean success) {
+            this.success = success;
+        }
+
+        public int getCount() {
+            return count;
+        }
+
+        public void setCount(int count) {
+            this.count = count;
+        }
+    }
 }

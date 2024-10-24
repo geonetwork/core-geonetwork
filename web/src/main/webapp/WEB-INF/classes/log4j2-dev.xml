@@ -34,7 +34,6 @@
     <Logger name="geonetwork" level="debug" additivity="false">
       <AppenderRef ref="Console"/>
       <AppenderRef ref="File"/>
-      <AppenderRef ref="Harvester"/>
     </Logger>
     <Logger name="geonetwork.accessmanager" level="debug"/>
     <Logger name="geonetwork.atom" level="debug"/>
@@ -56,8 +55,10 @@
     <Logger name="geonetwork.geoserver.publisher" level="debug"/>
     <Logger name="geonetwork.geoserver.rest" level="debug"/>
     <Logger name="geonetwork.harvest.wfs.features"/>
-    <Logger name="geonetwork.harvester" level="debug"/>
-    <Logger name="geonetwork.harvester" level="info"/>
+    <Logger name="geonetwork.harvester" level="debug">
+      <AppenderRef ref="Harvester"/>
+    </Logger>
+    <Logger name="geonetwork.harvest-man" level="info"/>
     <Logger name="geonetwork.index" level="debug"/>
     <Logger name="geonetwork.ldap" level="debug"/>
     <Logger name="geonetwork.lucene" level="error"/>

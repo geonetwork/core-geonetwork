@@ -41,7 +41,7 @@
             data-gn-pagination-list=""
             data-items="groups | filter:groupSearch | orderBy:sortByLabel"
             data-cache="groups"
-          />
+          ></span>
         </div>
 
         <button
@@ -51,7 +51,7 @@
           data-ng-show="user.isAdministratorOrMore()"
           id="gn-btn-group-add"
         >
-          <i class="fa fa-plus" />
+          <i class="fa fa-plus"></i>
           <span data-translate="">newGroup</span>
         </button>
       </div>
@@ -146,7 +146,7 @@
                 class="form-control"
                 data-ng-model="groupSelected.description"
                 data-ng-maxlength="255"
-              />
+              ></textarea>
               <p class="help-block" data-translate="">groupDescriptionHelp</p>
               <p class="help-block">
                 <span
@@ -288,16 +288,16 @@
           <h3>
             <span data-translate="">translationForGroup</span> {{groupSelected.name}}
           </h3>
-          <div data-gn-db-translation="groupSelected" data-type="group" />
+          <div data-gn-db-translation="groupSelected" data-type="group"></div>
         </div>
 
         <div data-ng-search-form="" data-ng-show="searchResults.count != 0">
           <h3>
             <ng-pluralize
               count="searchResults.count"
-              when="{'0': ('noRecordFound' | translate),
-                'one': '1' +  ('groupRecord' | translate) + ' {{groupSelected.label[lang]}}',
-                'other': '{}' +  ('groupRecords' | translate) + ' {{groupSelected.label[lang]}}'}"
+              when="{'0': '{{&quot;noRecordFound&quot; | translate}}',
+                'one': '1' + '{{&quot;groupRecord&quot; | translate}}' + ' {{groupSelected.label[lang]}}',
+                'other': '{}' + '{{&quot;groupRecords&quot; | translate}}' + ' {{groupSelected.label[lang]}}'}"
             ></ng-pluralize>
           </h3>
           <div
@@ -331,7 +331,7 @@
             data-first-page-function-name="groupUsersFirstPage"
             data-items="groupusers | orderBy:'name'"
             data-cache="groupusers"
-          />
+          ></span>
         </div>
       </div>
     </div>

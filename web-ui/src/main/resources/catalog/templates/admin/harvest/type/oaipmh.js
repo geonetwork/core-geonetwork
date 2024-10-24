@@ -21,7 +21,10 @@ var gnHarvesteroaipmh = {
               "icon" : "blank.png"
             },
             "content":   {
-              "validate": "NOVALIDATION"
+              "validate": "NOVALIDATION",
+              "translateContent": false,
+              "translateContentLangs": "",
+              "translateContentFields": ""
             },
             "options":   {
               "every": "0 0 0 ? * *",
@@ -42,7 +45,6 @@ var gnHarvesteroaipmh = {
                 {"@name": "dynamic"}
               ]
             }],
-            "groupsCopyPolicy": [],
             "info":   {
               "lastRun": [],
               "lastRunSuccess" : [],
@@ -85,6 +87,9 @@ var gnHarvesteroaipmh = {
                 + '  </options>'
                 + '  <content>'
                 + '    <validate>' + h.content.validate + '</validate>'
+                + '    <translateContent>' + _.escape(h.content.translateContent) + '</translateContent>'
+                + '    <translateContentLangs>' + _.escape(h.content.translateContentLangs) + '</translateContentLangs>'
+                + '    <translateContentFields>' + _.escape(h.content.translateContentFields) + '</translateContentFields>'
                 + '  </content>'
                 + $scope.buildResponseGroup(h)
                 + $scope.buildResponseCategory(h) + '</node>';

@@ -27,6 +27,9 @@
                 xmlns:srv="http://www.isotc211.org/2005/srv"
                 xmlns:gco="http://www.isotc211.org/2005/gco"
                 xmlns:geonet="http://www.fao.org/geonetwork"
+                xmlns:xs="http://www.w3.org/2001/XMLSchema"
+                xmlns:digestUtils="java:org.apache.commons.codec.digest.DigestUtils"
+                xmlns:exslt="http://exslt.org/common"
                 exclude-result-prefixes="#all"
                 version="2.0">
 
@@ -41,11 +44,22 @@
   <xsl:param name="thumbnail_desc" select="''"/>
   <xsl:param name="thumbnail_type" select="''"/>
 
-  <!-- Target element to update. The key is based on the concatenation
-  of URL+Name -->
-  <xsl:param name="updateKey"/>
+  <!-- Target element to update.
+    updateKey is used to identify the resource name to be updated - it is for backwards compatibility.  Will not be used if resourceHash is set.
+              The key is based on the concatenation of URL+Name
+    resourceHash is hash value of the object to be removed which will ensure the correct value is removed. It will override the usage of updateKey
+    resourceIdx is the index location of the object to be removed - can be used when duplicate entries exists to ensure the correct one is removed.
+-->
+  <xsl:param name="updateKey" select="''"/>
+  <xsl:param name="resourceHash" select="''"/>
+  <xsl:param name="resourceIdx" select="''"/>
 
-  <xsl:template match="gmd:identificationInfo/*">
+  <xsl:variable name="update_flag">
+    <xsl:value-of select="boolean($updateKey != '' or $resourceHash != '' or $resourceIdx != '')"/>
+  </xsl:variable>
+
+  <!--  Add new gmd:graphicOverview -->
+  <xsl:template match="gmd:identificationInfo/*[$update_flag = false()]">
     <xsl:copy>
       <xsl:copy-of select="@*"/>
       <xsl:apply-templates select="gmd:citation"/>
@@ -56,9 +70,7 @@
       <xsl:apply-templates select="gmd:pointOfContact"/>
       <xsl:apply-templates select="gmd:resourceMaintenance"/>
 
-      <xsl:if test="$updateKey = ''">
-        <xsl:call-template name="fill"/>
-      </xsl:if>
+      <xsl:call-template name="fill"/>
 
       <xsl:apply-templates select="gmd:graphicOverview"/>
 
@@ -83,12 +95,19 @@
     </xsl:copy>
   </xsl:template>
 
-
-  <xsl:template match="gmd:graphicOverview[concat(
-                         */gmd:fileName/gco:CharacterString,
-                         */gmd:fileName/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[@locale = '#DE'],
-                         */gmd:fileDescription/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[@locale = '#DE'],
-                         */gmd:fileDescription/gco:CharacterString) = normalize-space($updateKey)]">
+  <!-- Updating the gmd:graphicOverview based on update parameters -->
+  <!-- Note: first part of the match needs to match the xsl:for-each select from extract-relations.xsl in order to get the position() to match -->
+  <!-- The unique identifier is marked with resourceIdx which is the position index and resourceHash which is hash code of the current node (combination of url, resource name, and description) -->
+  <xsl:template
+    priority="2"
+    match="*//gmd:graphicOverview
+         [$resourceIdx = '' or position() = xs:integer($resourceIdx)]
+         [    ($resourceHash != '' or ($updateKey != '' and normalize-space($updateKey) = concat(
+                           */gmd:fileName/gco:CharacterString,
+                           */gmd:fileName/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[@locale = '#DE'],
+                           */gmd:fileDescription/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[@locale = '#DE'],
+                           */gmd:fileDescription/gco:CharacterString)))
+          and ($resourceHash = '' or digestUtils:md5Hex(string(exslt:node-set(.))) = $resourceHash)]">
     <xsl:call-template name="fill"/>
   </xsl:template>
 

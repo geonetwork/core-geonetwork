@@ -42,7 +42,6 @@ var gnHarvesterarcsde = {
                 {"@name": "dynamic"}
               ]
             }],
-            "groupsCopyPolicy": [],
             "info":   {
               "lastRun": [],
               "lastRunSuccess" : [],

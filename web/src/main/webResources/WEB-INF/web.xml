@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <!--
-  ~ Copyright (C) 2001-2016 Food and Agriculture Organization of the
+  ~ Copyright (C) 2001-2024 Food and Agriculture Organization of the
   ~ United Nations (FAO-UN), United Nations World Food Programme (WFP)
   ~ and United Nations Environment Programme (UNEP)
   ~
@@ -75,10 +75,6 @@
   <filter>
     <filter-name>springSecurityFilterChain</filter-name>
     <filter-class>jeeves.config.springutil.JeevesDelegatingFilterProxy</filter-class>
-    <init-param>
-      <param-name>loginService</param-name>
-      <param-value>signin</param-value>
-    </init-param>
   </filter>
 
   <filter-mapping>
@@ -410,6 +406,14 @@
     <init-param>
       <param-name>securityMode</param-name>
       <param-value>${proxy.securityMode}</param-value>
+    </init-param>
+    <init-param>
+      <param-name>excludeHosts</param-name>
+      <param-value>${proxy.excludeHosts}</param-value>
+    </init-param>
+    <init-param>
+      <param-name>allowPorts</param-name>
+      <param-value>${proxy.allowPorts}</param-value>
     </init-param>
   </servlet>
   <servlet-mapping>

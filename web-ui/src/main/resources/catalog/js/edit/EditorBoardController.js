@@ -79,7 +79,7 @@
         filters: gnSearchSettings.filters,
         configId: "editor",
         params: {
-          sortBy: "dateStamp",
+          sortBy: "changeDate",
           sortOrder: "desc",
           isTemplate: ["y", "n"],
           resultType: $scope.facetsSummaryType,
@@ -87,7 +87,7 @@
           to: 20
         },
         defaultParams: {
-          sortBy: "dateStamp",
+          sortBy: "changeDate",
           sortOrder: "desc",
           isTemplate: ["y", "n"],
           resultType: $scope.facetsSummaryType,
@@ -126,7 +126,8 @@
           },
           function (reason) {
             $rootScope.$broadcast("StatusUpdated", {
-              title: reason.data.description, //returned error JSON obj
+              title: reason.data.message, //returned error JSON obj
+              error: reason.data.description,
               timeout: 0,
               type: "danger"
             });
@@ -147,6 +148,9 @@
     "gnSearchSettings",
     "gnGlobalSettings",
     function ($scope, $rootScope, $route, $location, gnSearchSettings, gnGlobalSettings) {
+      // Cleanup onbeforeunload event
+      window.onbeforeunload = null;
+
       // https://github.com/angular/angular.js/issues/1699#issuecomment-11496428
       var lastRoute = $route.current;
       $scope.$on("$locationChangeSuccess", function (event) {
@@ -184,7 +188,7 @@
         }
       ];
 
-      gnSearchSettings.resultTemplate = gnSearchSettings.resultViewTpls[0].tplUrl;
+      gnSearchSettings.resultTemplate = gnSearchSettings.resultViewTpls[0];
 
       $scope.facetsSummaryType = gnSearchSettings.facetsSummaryType = "manager";
       $scope.facetConfig = gnGlobalSettings.gnCfg.mods.editor.facetConfig;

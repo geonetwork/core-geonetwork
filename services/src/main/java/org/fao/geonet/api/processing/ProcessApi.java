@@ -105,7 +105,7 @@ public class ProcessApi {
     @ResponseBody
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PreAuthorize("isAuthenticated()")
-    public void delete() throws Exception {
+    public void deleteProcessReport() throws Exception {
         registry.clear();
     }
 

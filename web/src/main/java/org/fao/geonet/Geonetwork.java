@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2021 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2023 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -54,6 +54,7 @@ import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.kernel.thumbnail.ThumbnailMaker;
 import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.lib.DbLib;
+import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.SettingRepository;
 import org.fao.geonet.repository.SourceRepository;
@@ -297,15 +298,18 @@ public class Geonetwork implements ApplicationHandler {
         // images/logos folder is not copied from old application
         createSiteLogo(settingMan.getSiteId(), context, context.getAppPath());
 
+        //-- Initialize the proxy configuration if required
+        Lib.net.setupProxy(settingMan);
+
         //--- load proxy information from settings into Jeeves for observers such
         //--- as jeeves.utils.XmlResolver to use
         ProxyInfo pi = JeevesProxyInfo.getInstance();
-        boolean useProxy = settingMan.getValueAsBool(Settings.SYSTEM_PROXY_USE, false);
+        boolean useProxy = Lib.net.getProxyConfiguration().isEnabled();
         if (useProxy) {
-            String proxyHost = settingMan.getValue(Settings.SYSTEM_PROXY_HOST);
-            String proxyPort = settingMan.getValue(Settings.SYSTEM_PROXY_PORT);
-            String username = settingMan.getValue(Settings.SYSTEM_PROXY_USERNAME);
-            String password = settingMan.getValue(Settings.SYSTEM_PROXY_PASSWORD);
+            String proxyHost = Lib.net.getProxyConfiguration().getHost();
+            String proxyPort = Lib.net.getProxyConfiguration().getPort();
+            String username = Lib.net.getProxyConfiguration().getUsername();
+            String password = Lib.net.getProxyConfiguration().getPassword();
             pi.setProxyInfo(proxyHost, Integer.valueOf(proxyPort), username, password);
         }
 

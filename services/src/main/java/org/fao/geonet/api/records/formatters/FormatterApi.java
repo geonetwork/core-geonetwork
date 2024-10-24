@@ -189,11 +189,6 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
         @Parameter(
             description = "Formatter type to use."
         )
-        @RequestHeader(
-            value = HttpHeaders.ACCEPT,
-            defaultValue = MediaType.TEXT_HTML_VALUE
-        )
-            String acceptHeader,
         @PathVariable(
             value = "formatterId"
         ) final String formatterId,
@@ -228,6 +223,8 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
 
         Locale locale = languageUtils.parseAcceptLanguage(servletRequest.getLocales());
 
+        String acceptHeader = StringUtils.isBlank(request.getHeader(HttpHeaders.ACCEPT)) ? MediaType.TEXT_HTML_VALUE : request.getHeader(HttpHeaders.ACCEPT);
+
         // TODO :
         // if text/html > xsl_view
         // if application/pdf > xsl_view and PDF output
@@ -258,7 +255,7 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
             language = isoLanguagesMapper.iso639_2T_to_iso639_2B(locale.getISO3Language());
         }
 
-        AbstractMetadata metadata = ApiUtils.canViewRecord(metadataUuid, servletRequest);
+        AbstractMetadata metadata = ApiUtils.canViewRecord(metadataUuid, approved, servletRequest);
 
         if (approved) {
             metadata = ApplicationContextHolder.get().getBean(MetadataRepository.class).findOneByUuid(metadataUuid);

@@ -25,7 +25,10 @@ var gnHarvestergeonetwork = {
       },
       "content":   {
         "validate": "NOVALIDATION",
-        "importxslt": "none"
+        "importxslt": "none",
+        "translateContent": false,
+        "translateContentLangs": "",
+        "translateContentFields": ""
       },
       "options":   {
         "every": "0 0 0 ? * *",
@@ -112,6 +115,9 @@ var gnHarvestergeonetwork = {
       + '  <content>'
       + '    <validate>' + h.content.validate + '</validate>'
       + '    <importxslt>' + h.content.importxslt + '</importxslt>'
+      + '    <translateContent>' + _.escape(h.content.translateContent) + '</translateContent>'
+      + '    <translateContentLangs>' + _.escape(h.content.translateContentLangs) + '</translateContentLangs>'
+      + '    <translateContentFields>' + _.escape(h.content.translateContentFields) + '</translateContentFields>'
       + '  </content>'
       + $scope.buildResponseGroup(h)
       + $scope.buildResponseCategory(h) + '</node>';

@@ -38,7 +38,8 @@
       <list>
         <!-- TODO: This needs to be secured to not access private info -->
         <sec:filter-chain pattern="/index/**" filters=""/>
-        <sec:filter-chain pattern="/jolokia/**" filters="securityContextPersistenceFilter, authenticatedUserFilter"/>
+        <sec:filter-chain pattern="/jolokia" filters="securityContextPersistenceFilter, authenticatedUserFilter"/>
+        <sec:filter-chain pattern="/jolokia/read/geonetwork-**" filters="securityContextPersistenceFilter, authenticatedUserFilter"/>
         <sec:filter-chain pattern="/dashboards/**" filters="securityContextPersistenceFilter, basicAuthenticationFilter, authenticatedUserFilter"/>
         <sec:filter-chain pattern="/doc/**" filters=""/>
         <sec:filter-chain pattern="/api/**" filters=""/>

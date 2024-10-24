@@ -3,7 +3,7 @@
 <xsl:stylesheet version="2.0" 
 		xmlns:xsl="http://www.w3.org/1999/XSL/Transform"  
 		xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0"
-		xmlns:srv="http://standards.iso.org/iso/19115/-3/srv/2.1"
+		xmlns:srv="http://standards.iso.org/iso/19115/-3/srv/2.0"
 		xmlns:mds="http://standards.iso.org/iso/19115/-3/mds/2.0"
 		xmlns:mcc="http://standards.iso.org/iso/19115/-3/mcc/1.0"
 		xmlns:mri="http://standards.iso.org/iso/19115/-3/mri/1.0"

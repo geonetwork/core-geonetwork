@@ -30,7 +30,7 @@
   <parent>
     <groupId>org.geonetwork-opensource</groupId>
     <artifactId>geonetwork</artifactId>
-    <version>4.2.6-SNAPSHOT</version>
+    <version>4.2.11-SNAPSHOT</version>
   </parent>
 
 
@@ -224,10 +224,6 @@
       <artifactId>xmlgraphics-commons</artifactId>
     </dependency>
     <dependency>
-      <groupId>commons-fileupload</groupId>
-      <artifactId>commons-fileupload</artifactId>
-    </dependency>
-    <dependency>
       <groupId>commons-collections</groupId>
       <artifactId>commons-collections</artifactId>
     </dependency>
@@ -404,6 +400,12 @@
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>gn-listeners</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>gn-translationproviders</artifactId>
       <version>${project.version}</version>
     </dependency>
 
@@ -613,6 +615,12 @@
       <artifactId>gn-schema-iso19115-3.2018</artifactId>
       <version>${project.version}</version>
     </dependency>
+    <dependency>
+      <groupId>org.xmlunit</groupId>
+      <artifactId>xmlunit-matchers</artifactId>
+      <version>${xmlunit.version}</version>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 
   <build>
@@ -696,7 +704,7 @@
           </validationProperties>
           <validationShouldFailIfNoMatch>false</validationShouldFailIfNoMatch>
         </configuration>
-	    </plugin>
+      </plugin>
       <plugin>
         <artifactId>maven-clean-plugin</artifactId>
         <configuration>
@@ -794,6 +802,21 @@
               </sources>
             </configuration>
           </execution>
+          <execution>
+            <id>add-test-resource</id>
+            <phase>generate-test-resources</phase>
+            <goals>
+              <goal>add-test-resource</goal>
+            </goals>
+            <configuration>
+              <resources>
+                <resource>
+                  <directory>${basedir}/src/main/webapp/xslt</directory>
+                  <targetPath>resources/xslt</targetPath>
+                </resource>
+              </resources>
+            </configuration>
+          </execution>
         </executions>
       </plugin>
 
@@ -822,24 +845,6 @@
                 <filter>${basedir}/src/main/filters/${env}.properties</filter>
               </filters>
               <overwrite>true</overwrite>
-            </configuration>
-          </execution>
-          <execution>
-            <id>copy-documentation</id>
-            <phase>process-resources</phase>
-            <goals>
-              <goal>copy-resources</goal>
-            </goals>
-            <configuration>
-              <includeEmptyDirs>true</includeEmptyDirs>
-              <overwrite>true</overwrite>
-              <outputDirectory>${build.webapp.resources}</outputDirectory>
-              <resources>
-                <resource>
-                  <directory>${project.basedir}/../docs/manuals/target/doc</directory>
-                  <targetPath>${basedir}/src/main/webapp/doc</targetPath>
-                </resource>
-              </resources>
             </configuration>
           </execution>
           <execution>
@@ -969,7 +974,8 @@
             catalog/lib/style/bootstrap/*.js,
             catalog/lib/style/bootstrap/*.md,
             catalog/lib/style/bootstrap/CNAME,
-            catalog/lib/style/bootstrap/docs/**,
+            catalog/lib/style/bootstrap/docs/en/**,
+            catalog/lib/style/bootstrap/docs/fr/**,
             catalog/lib/style/bootstrap/fonts/**,
             catalog/lib/style/bootstrap/nuget/**,
             catalog/lib/style/bootstrap/grunt/**,
@@ -1270,6 +1276,48 @@
       <properties>
         <env>inspire</env>
       </properties>
+    </profile>
+
+    <profile>
+      <id>with-doc</id>
+      <dependencies>
+        <dependency>
+          <groupId>${project.groupId}</groupId>
+          <artifactId>gn-guide</artifactId>
+          <version>${project.version}</version>
+          <classifier>help</classifier>
+          <type>zip</type>
+        </dependency>
+      </dependencies>
+
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-resources-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>copy-documentation</id>
+                <phase>process-resources</phase>
+                <goals>
+                  <goal>copy-resources</goal>
+                </goals>
+                <configuration>
+                  <includeEmptyDirs>true</includeEmptyDirs>
+                  <overwrite>true</overwrite>
+                  <outputDirectory>${build.webapp.resources}</outputDirectory>
+                  <resources>
+                    <resource>
+                      <directory>${project.basedir}/../docs/manual/target/help</directory>
+                      <targetPath>${basedir}/src/main/webapp/doc/en</targetPath>
+                    </resource>
+                  </resources>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
     </profile>
 
     <profile>

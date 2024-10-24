@@ -24,7 +24,7 @@
 (function () {
   goog.provide("gn_formatter_lib");
 
-  gnFormatter = {};
+  var gnFormatter = {};
   gnFormatter.formatterSectionTogglersEventHandler = function (e) {
     var thisEl = $(e.currentTarget);
     thisEl.toggleClass("closed");
@@ -198,7 +198,7 @@
   };
 
   gnFormatter.toggleTab = function (tabElementId) {
-    tab = $('.view-outline [id="tab-' + tabElementId + '"] a[rel]');
+    var tab = $('.view-outline [id="tab-' + tabElementId + '"] a[rel]');
     if (tab.length > 0) {
       tab.click();
     } else {

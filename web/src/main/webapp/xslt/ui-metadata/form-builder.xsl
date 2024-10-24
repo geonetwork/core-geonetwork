@@ -444,7 +444,7 @@
        data-gn-click-and-spin="remove({$editInfo/@ref}, {$editInfo/@parent})"
        data-gn-field-highlight-remove="{$editInfo/@ref}"
        title="{{{{'deleteFieldSet' | translate}}}}">
-      <i class="fa fa-times text-danger"/>
+      <i class="fa fa-times text-danger"></i>
     </a>
   </xsl:template>
 
@@ -893,10 +893,8 @@
         data-gn-field-highlight="">
         <label class="col-sm-2 control-label"
                data-gn-field-tooltip="{$schema}|{$qualifiedName}|{$parentName}|">
-          <xsl:if test="normalize-space($label) != ''">
-            <xsl:value-of select="$label"/>
-          </xsl:if>
-          &#160;
+          <xsl:value-of select="if (normalize-space($label) != '')
+                                then $label else '&#160;'"/>
         </label>
         <div class="col-sm-9">
 
@@ -1579,7 +1577,7 @@
         <a class="btn pull-right"
            data-gn-click-and-spin="removeAttribute('{$fieldName}')" data-toggle="tooltip"
            data-placement="top" title="{{{{'deleteField' | translate}}}}">
-          <i class="fa fa-times text-danger"/>
+          <i class="fa fa-times text-danger"></i>
         </a>
       </div>
     </div>

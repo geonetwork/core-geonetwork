@@ -174,6 +174,8 @@
 
       $scope.isGroupPublicationNotificationLevel = false;
       $scope.isGroupLocalRatingNotificationLevel = false;
+      $scope.isTranslationProviderSelected = false;
+      $scope.translationProviders = [];
 
       $scope.changeLocalRatingNotificationLevel = function (value) {
         $scope.isGroupLocalRatingNotificationLevel = value === "recordGroupEmail";
@@ -181,6 +183,10 @@
 
       $scope.changePublicationNotificationLevel = function (value) {
         $scope.isGroupPublicationNotificationLevel = value === "recordGroupEmail";
+      };
+
+      $scope.changeTranslationProvider = function (value) {
+        $scope.isTranslationProviderSelected = value !== null && value !== "";
       };
 
       /**
@@ -192,6 +198,15 @@
        * element name in XML Jeeves request element).
        */
       function loadSettings() {
+        $http.get("../api/site/info/proxy").then(function (response) {
+          $scope.isProxyConfiguredInSystemProperties =
+            response.data.proxyConfiguredInSystemProperties;
+        });
+
+        $http.get("../api/translationproviders").then(function (response) {
+          $scope.translationProviders = response.data;
+        });
+
         $http.get("../api/site/info/build").then(function (response) {
           $scope.systemInfo = response.data;
         });
@@ -239,6 +254,9 @@
               } else if ("system/localrating/notificationLevel") {
                 $scope.isGroupLocalRatingNotificationLevel =
                   $scope.settings[i].value === "recordGroupEmail";
+              } else if ($scope.settings[i].name == "system/translation/provider") {
+                $scope.isTranslationProviderSelected =
+                  $scope.settings[i].value !== null && $scope.settings[i].value !== "";
               }
 
               var tokens = $scope.settings[i].name.split("/");
@@ -256,10 +274,23 @@
                 var level2name = level1name + "/" + tokens[1];
                 if (sectionsLevel2.indexOf(level2name) === -1) {
                   sectionsLevel2.push(level2name);
+
+                  var sectionChildren;
+
+                  // Remove the system proxy information if using Java system properties
+                  if (
+                    level2name === "system/proxy" &&
+                    $scope.isProxyConfiguredInSystemProperties
+                  ) {
+                    sectionChildren = [];
+                  } else {
+                    sectionChildren = filterBySection($scope.settings, level2name);
+                  }
+
                   $scope.sectionsLevel1[level1name].children.push({
                     name: level2name,
                     position: $scope.settings[i].position,
-                    children: filterBySection($scope.settings, level2name)
+                    children: sectionChildren
                   });
                 }
               }

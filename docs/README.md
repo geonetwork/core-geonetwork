@@ -1,9 +1,9 @@
-Documentation
-=============
+# Documentation
 
 This module contains:
-* Documentation in RST format
-* Change logs
-* Copyright template
-* Licenses for library
-* Utility folder with scripts to generate extra docs
+
+* `changes/` change logs txt files
+* `manual/` in Markdown format for MkDocs
+* `licenses/` for library
+* `schema-doc/` folder with scripts to generate extra docs
+* [copyright.txt](copyright.txt) Copyright template

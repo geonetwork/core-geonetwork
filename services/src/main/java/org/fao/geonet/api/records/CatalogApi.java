@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2023 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2024 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -61,13 +61,17 @@ import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.util.XslUtil;
 import org.fao.geonet.utils.Log;
+import org.fao.geonet.web.DefaultLanguage;
 import org.jdom.Element;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletOutputStream;
@@ -81,6 +85,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.Map.Entry;
+import java.util.stream.Collectors;
 
 import static org.fao.geonet.api.ApiParams.*;
 import static org.fao.geonet.kernel.mef.MEFLib.Version.Constants.MEF_V1_ACCEPT_TYPE;
@@ -114,16 +119,20 @@ public class CatalogApi {
             .add("geom")
             .add(SOURCE_CATALOGUE)
             .add(Geonet.IndexFieldNames.DATABASE_CHANGE_DATE)
-            .add("resourceTitleObject.default") // TODOES multilingual
-            .add("resourceAbstractObject.default").build();
+            .add(Geonet.IndexFieldNames.RESOURCETITLE + "Object")
+            .add(Geonet.IndexFieldNames.RESOURCEABSTRACT + "Object").build();
     }
 
+    @Autowired
+    DefaultLanguage defaultLanguage;
     @Autowired
     ThesaurusManager thesaurusManager;
     @Autowired
     MetadataRepository metadataRepository;
     @Autowired
     IMetadataUtils metadataUtils;
+    @Autowired
+    SchemaManager schemaManager;
     @Autowired
     DataManager dataManager;
     @Autowired
@@ -150,7 +159,7 @@ public class CatalogApi {
         StringBuilder paramNonPaging = new StringBuilder();
         for (Entry<String, String> pair : requestParams.entrySet()) {
             if (!pair.getKey().equals("from") && !pair.getKey().equals("to")) {
-                paramNonPaging.append(paramNonPaging.toString().equals("") ? "" : "&").append(pair.getKey()).append("=").append(pair.getValue());
+                paramNonPaging.append(paramNonPaging.toString().isEmpty() ? "" : "&").append(pair.getKey()).append("=").append(pair.getValue());
             }
         }
         return paramNonPaging.toString();
@@ -160,7 +169,7 @@ public class CatalogApi {
         summary = "Get a set of metadata records as ZIP",
         description = "Metadata Exchange Format (MEF) is returned. MEF is a ZIP file containing " +
             "the metadata as XML and some others files depending on the version requested. " +
-            "See http://geonetwork-opensource.org/manuals/trunk/eng/users/annexes/mef-format.html.")
+            "See https://docs.geonetwork-opensource.org/latest/annexes/mef-format/.")
     @RequestMapping(value = "/zip",
         method = RequestMethod.GET,
         consumes = {
@@ -225,11 +234,6 @@ public class CatalogApi {
             required = false)
         @RequestParam(required = false, defaultValue = "true")
         boolean approved,
-        @RequestHeader(
-            value = HttpHeaders.ACCEPT,
-            defaultValue = "application/x-gn-mef-2-zip"
-        )
-        String acceptHeader,
         @Parameter(hidden = true)
         HttpSession httpSession,
         @Parameter(hidden = true)
@@ -251,11 +255,12 @@ public class CatalogApi {
         Log.info(Geonet.MEF, "Current record(s) in selection: " + uuidList.size());
 
         ServiceContext context = ApiUtils.createServiceContext(request);
+        String acceptHeader = StringUtils.isBlank(request.getHeader(HttpHeaders.ACCEPT)) ? "application/x-gn-mef-2-zip" : request.getHeader(HttpHeaders.ACCEPT);
         MEFLib.Version version = MEFLib.Version.find(acceptHeader);
         if (version == MEFLib.Version.V1) {
             throw new IllegalArgumentException("MEF version 1 only support one record. Use the /records/{uuid}/formatters/zip to retrieve that format");
         } else {
-            Set<String> allowedUuid = new HashSet<String>();
+            Set<String> allowedUuid = new HashSet<>();
             for (String uuid : uuidList) {
                 try {
                     ApiUtils.canViewRecord(uuid, request);
@@ -275,7 +280,7 @@ public class CatalogApi {
             if (withRelated) {
                 int maxhits = Integer.parseInt(settingInfo.getSelectionMaxRecords());
 
-                Set<String> tmpUuid = new HashSet<String>();
+                Set<String> tmpUuid = new HashSet<>();
                 for (String uuid : allowedUuid) {
                     Map<RelatedItemType, List<AssociatedRecord>> associated =
                         MetadataUtils.getAssociated(context,
@@ -355,6 +360,11 @@ public class CatalogApi {
             required = false
         )
         String bucket,
+        @RequestParam(
+            required = false,
+            defaultValue = "eng"
+        )
+        String language,
         @Parameter(hidden = true)
         @RequestParam
         Map<String, String> allRequestParams,
@@ -383,66 +393,72 @@ public class CatalogApi {
 
         Map<String, Object> params = new HashMap<>();
         Element request = new Element("request");
-        allRequestParams.entrySet().forEach(e -> {
-            Element n = new Element(e.getKey());
-            n.setText(e.getValue());
+        allRequestParams.forEach((key, value) -> {
+            Element n = new Element(key);
+            n.setText(value);
             request.addContent(n);
         });
+
+        if (!languageUtils.getUiLanguages().contains(language)) {
+            language = languageUtils.getDefaultUiLanguage();
+        }
+
+        String langCode = "lang" + language;
 
         Element response = new Element("response");
         Arrays.asList(searchResponse.getHits().getHits()).forEach(h -> {
             Element r = new Element("metadata");
             final Map<String, Object> source = h.getSourceAsMap();
-            source.entrySet().forEach(e -> {
-                Object v = e.getValue();
+            source.forEach((key, v) -> {
                 if (v instanceof String) {
-                    Element t = new Element(e.getKey());
+                    Element t = new Element(key);
                     t.setText((String) v);
                     r.addContent(t);
-                } else if (v instanceof HashMap && e.getKey().endsWith("Object")) {
-                    Element t = new Element(e.getKey());
-                    Map<String, String> textFields = (HashMap) e.getValue();
-                    t.setText(textFields.get("default"));
+                } else if (v instanceof HashMap && key.endsWith("Object")) {
+                    Element t = new Element(key);
+                    Map<String, String> textFields = (HashMap) v;
+                    String textValue = textFields.get(langCode) != null ? textFields.get(langCode) : textFields.get("default");
+                    t.setText(textValue);
                     r.addContent(t);
-                } else if (v instanceof ArrayList && e.getKey().equals("link")) {
+                } else if (v instanceof ArrayList && key.equals("link")) {
                     //landform|Physiography of North and Central Eurasia Landform|http://geonetwork3.fao.org/ows/7386_landf|OGC:WMS-1.1.1-http-get-map|application/vnd.ogc.wms_xml
                     ((ArrayList) v).forEach(i -> {
-                        Element t = new Element(e.getKey());
+                        Element t = new Element(key);
                         Map<String, String> linkProperties = (HashMap) i;
                         t.setText(linkProperties.get("description") + "|" + linkProperties.get("name") + "|" + linkProperties.get("url") + "|" + linkProperties.get("protocol"));
                         r.addContent(t);
                     });
-                } else if (v instanceof HashMap && e.getKey().equals("overview")) {
-                    Element t = new Element(e.getKey());
+                } else if (v instanceof HashMap && key.equals("overview")) {
+                    Element t = new Element(key);
                     Map<String, String> overviewProperties = (HashMap) v;
                     t.setText(overviewProperties.get("url") + "|" + overviewProperties.get("name"));
                     r.addContent(t);
                 } else if (v instanceof ArrayList) {
                     ((ArrayList) v).forEach(i -> {
-                        if (i instanceof HashMap && e.getKey().equals("overview")) {
-                            Element t = new Element(e.getKey());
+                        if (i instanceof HashMap && key.equals("overview")) {
+                            Element t = new Element(key);
                             Map<String, String> overviewProperties = (HashMap) i;
                             t.setText(overviewProperties.get("url") + "|" + overviewProperties.get("name"));
                             r.addContent(t);
                         } else if (i instanceof HashMap) {
-                            Element t = new Element(e.getKey());
+                            Element t = new Element(key);
                             Map<String, String> tags = (HashMap) i;
                             t.setText(tags.get("default")); // TODOES: Multilingual support
                             r.addContent(t);
                         } else {
-                            Element t = new Element(e.getKey());
+                            Element t = new Element(key);
                             t.setText((String) i);
                             r.addContent(t);
                         }
                     });
-                } else if (v instanceof HashMap && e.getKey().equals("geom")) {
-                    Element t = new Element(e.getKey());
+                } else if (v instanceof HashMap && key.equals("geom")) {
+                    Element t = new Element(key);
                     t.setText(((HashMap) v).get("coordinates").toString());
                     r.addContent(t);
                 } else if (v instanceof HashMap) {
                     // Skip.
                 } else {
-                    Element t = new Element(e.getKey());
+                    Element t = new Element(key);
                     t.setText(v.toString());
                     r.addContent(t);
                 }
@@ -450,14 +466,13 @@ public class CatalogApi {
             response.addContent(r);
         });
 
-        Locale locale = languageUtils.parseAcceptLanguage(httpRequest.getLocales());
-        String language = IsoLanguagesMapper.iso639_2T_to_iso639_2B(locale.getISO3Language());
-        language = XslUtil.twoCharLangCode(language, "eng").toLowerCase();
 
-        new XsltResponseWriter("env", "search")
-            .withJson(String.format("catalog/locales/%s-v4.json", language))
-            .withJson(String.format("catalog/locales/%s-core.json", language))
-            .withJson(String.format("catalog/locales/%s-search.json", language))
+        String language2Code = XslUtil.twoCharLangCode(language, "eng").toLowerCase();
+
+        new XsltResponseWriter("env", "search", language)
+            .withJson(String.format("catalog/locales/%s-v4.json", language2Code))
+            .withJson(String.format("catalog/locales/%s-core.json", language2Code))
+            .withJson(String.format("catalog/locales/%s-search.json", language2Code))
             .withXml(response)
             .withParams(params)
             .withXsl("xslt/services/pdf/portal-present-fop.xsl")
@@ -494,6 +509,11 @@ public class CatalogApi {
             required = false
         )
         String bucket,
+        @RequestParam(
+            required = false,
+            defaultValue = "eng"
+        )
+        String language,
         @Parameter(hidden = true)
         @RequestParam
         Map<String, String> allRequestParams,
@@ -528,7 +548,15 @@ public class CatalogApi {
             }
         });
 
-        Element r = new XsltResponseWriter(null, "search")
+            if (!languageUtils.getUiLanguages().contains(language)) {
+                language = languageUtils.getDefaultUiLanguage();
+            }
+
+            Element r = new XsltResponseWriter(null, "search", language)
+                .withParams(allRequestParams.entrySet().stream()
+                    .collect(Collectors.toMap(
+                        Entry::getKey,
+                        Entry::getValue)))
             .withXml(response)
             .withXsl("xslt/services/csv/csv-search.xsl")
             .asElement();

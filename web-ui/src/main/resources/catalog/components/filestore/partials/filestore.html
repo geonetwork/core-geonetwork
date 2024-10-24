@@ -13,7 +13,7 @@
     data-ng-show="metadataResources.length > 0"
     data-gn-click-and-spin="loadMetadataResources()"
   >
-    <i class="fa fa-fw fa-refresh" />
+    <i class="fa fa-fw fa-refresh"></i>
   </a>
 
   <table class="table gn-data-store">
@@ -61,7 +61,7 @@
             <i
               class="fa"
               data-ng-class="{'fa-lock text-danger': r.visibility == 'PRIVATE',
-                               'fa-unlock text-success': r.visibility == 'PUBLIC'}"
+                               'fa-lock-open text-success': r.visibility == 'PUBLIC'}"
             ></i>
           </a>
         </td>

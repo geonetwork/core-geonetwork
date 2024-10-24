@@ -204,6 +204,9 @@
             scope.isRemoteRecordPropertiesExtracted = false;
             scope.selectionList = undefined;
 
+            // Get the parent div's ID
+            scope.popupId = element.closest(".onlinesrc-popup").attr("id");
+
             scope.$on("resetSearch", function (event, args) {
               scope.remoteRecord = {
                 remoteUrl: "",
@@ -677,7 +680,6 @@
                 //   });
                 // }
                 // Add each WMS layer to the map
-                scope.layers = scope.gnCurrentEdit.layerConfig;
                 angular.forEach(scope.gnCurrentEdit.layerConfig, function (layer) {
                   scope.map.addLayer(
                     new ol.layer.Tile({
@@ -724,7 +726,7 @@
               scope.generateThumbnail = function () {
                 //Added mandatory custom params here to avoid
                 //changing other printing services
-                jsonSpec = angular.extend(scope.jsonSpec, {
+                var jsonSpec = angular.extend(scope.jsonSpec, {
                   hasNoTitle: true
                 });
 
@@ -867,8 +869,6 @@
                 } else {
                   return DEFAULT_CONFIG;
                 }
-
-                return DEFAULT_CONFIG;
               }
 
               gnOnlinesrc.register("onlinesrc", function (linkToEditOrType) {
@@ -968,6 +968,8 @@
                       }
                     }
                     scope.editingKey = [keyUrl, linkToEdit.protocol, keyName].join("");
+                    scope.editingIdx = linkToEdit.idx;
+                    scope.editingHash = linkToEdit.hash;
 
                     scope.OGCProtocol = checkIsOgc(linkToEdit.protocol);
 
@@ -1016,6 +1018,8 @@
                     };
                   } else {
                     scope.editingKey = null;
+                    scope.editingIdx = null;
+                    scope.editingHash = null;
                     scope.params.linkType = typeConfig;
                     scope.params.protocol = null;
                     scope.params.mimeType = "";
@@ -1207,6 +1211,8 @@
 
                 if (scope.isEditing) {
                   processParams.updateKey = scope.editingKey;
+                  processParams.resourceIdx = scope.editingIdx;
+                  processParams.resourceHash = scope.editingHash;
                 }
 
                 // Add list of layers for WMS
@@ -1473,7 +1479,7 @@
                     // Editing an online resource after saving the metadata doesn't trigger the params.protocol watcher
                     processSelectedWMSLayers();
                   });
-                  scope.isImage = curUrl.match(/.*.(png|jpg|jpeg|gif)$/i);
+                  scope.isImage = curUrl.match(/.*.(png|jpg|jpeg|gif)(\?.*)?$/i);
                 }
               };
               scope.$watch("params.url", updateImageTag, true);
@@ -1931,6 +1937,7 @@
                   params: {}
                 };
                 scope.modelOptions = angular.copy(gnGlobalSettings.modelOptions);
+                scope.selectRecords = [];
               },
               post: function postLink(scope, iElement, iAttrs) {
                 scope.mode = iAttrs["gnLinkToMetadata"];
@@ -2126,7 +2133,7 @@
                  * Return the index or -1 if not present.
                  */
                 var findObj = function (md) {
-                  for (i = 0; i < scope.selection.length; ++i) {
+                  for (var i = 0; i < scope.selection.length; ++i) {
                     if (scope.selection[i].md === md) {
                       return i;
                     }
@@ -2174,7 +2181,7 @@
                  */
                 scope.linkToResource = function () {
                   var uuids = [];
-                  for (i = 0; i < scope.selection.length; ++i) {
+                  for (var i = 0; i < scope.selection.length; ++i) {
                     var obj = scope.selection[i],
                       parameter =
                         obj.md.uuid +

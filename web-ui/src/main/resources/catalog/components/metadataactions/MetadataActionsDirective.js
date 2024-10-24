@@ -574,7 +574,7 @@
               },
               function (error) {
                 $rootScope.$broadcast("StatusUpdated", {
-                  title: $translate.instant("changeCategoryError"),
+                  title: $translate.instant("error"),
                   error: error,
                   timeout: 0,
                   type: "danger"
@@ -727,6 +727,21 @@
           scope.groupsLoaded = false;
           scope.userGroupDefined = false;
           scope.userGroups = null;
+
+          scope.ownerUserName = "";
+          scope.ownerGroupName = "";
+
+          if (ownerId) {
+            $http.get("../api/users/" + ownerId).then(function (response) {
+              scope.ownerUserName = response.data.username;
+            });
+          }
+
+          if (groupOwner) {
+            $http.get("../api/groups/" + groupOwner).then(function (response) {
+              scope.ownerGroupName = response.data.name;
+            });
+          }
 
           scope.selectGroup = function (group) {
             scope.selectedGroup = group;

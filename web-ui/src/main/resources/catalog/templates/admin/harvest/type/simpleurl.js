@@ -27,7 +27,10 @@ var gnHarvestersimpleurl = {
       },
       "content" : {
         "validate" : "NOVALIDATION",
-        "batchEdits" : ""
+        "batchEdits" : "",
+        "translateContent": false,
+        "translateContentLangs": "",
+        "translateContentFields": ""
       },
       "options" : {
         "every" : "0 0 0 ? * *",
@@ -103,6 +106,9 @@ var gnHarvestersimpleurl = {
       + '  <content>'
       + '    <validate>' + h.content.validate + '</validate>'
       + '    <batchEdits><![CDATA[' + (h.content.batchEdits == '' ? '[]' : h.content.batchEdits) + ']]></batchEdits>'
+      + '    <translateContent>' + _.escape(h.content.translateContent) + '</translateContent>'
+      + '    <translateContentLangs>' + _.escape(h.content.translateContentLangs) + '</translateContentLangs>'
+      + '    <translateContentFields>' + _.escape(h.content.translateContentFields) + '</translateContentFields>'
       + '  </content>'
       + $scope.buildResponseGroup(h)
       + $scope.buildResponseCategory(h) + '</node>';

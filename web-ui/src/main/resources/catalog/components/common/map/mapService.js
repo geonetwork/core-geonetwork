@@ -296,7 +296,6 @@
            * Handled types are:
            *  * `osm`: OSM, no other prop required
            *  * `bing_aerial`: Bing Aerial background, required prop: `key`
-           *  * `stamen`: Stamen layers, required prop: `name`
            *  * `wms`: generic WMS layer, required props: `name`, `url`
            *  * `wmts`: generic WMTS layer, required props: `name`, `url`
            *  * `tms`: generic TMS layer, required prop: `url`
@@ -383,21 +382,6 @@
                       imagerySet: "Aerial"
                     }),
                     title: layerInfo.title || "Bing Aerial"
-                  })
-                );
-                break;
-
-              case "stamen":
-                //We make watercolor the default layer
-                var type = layerInfo.name ? layerInfo.name : "watercolor",
-                  source = new ol.source.Stamen({
-                    layer: type
-                  });
-                source.set("type", type);
-                defer.resolve(
-                  new ol.layer.Tile({
-                    source: source,
-                    title: layerInfo.title || "Stamen"
                   })
                 );
                 break;
@@ -1676,7 +1660,7 @@
                     var _url = url.split("/");
                     _url = _url[0] + "/" + _url[1] + "/" + _url[2] + "/";
                     if (
-                      $.inArray(_url, gnGlobalSettings.requireProxy) >= 0 &&
+                      $.inArray(_url + "#GET", gnGlobalSettings.requireProxy) >= 0 &&
                       url.indexOf(gnGlobalSettings.proxyUrl) != 0
                     ) {
                       capL.useProxy = true;
@@ -1851,13 +1835,25 @@
               .then(function (results) {
                 var layerInfo = results[0];
                 var legendUrl = results[1];
+
+                var layerExtent;
+
+                // Scale the layer extent. See https://github.com/geonetwork/core-geonetwork/issues/8025
+                if (layerInfo.extent) {
+                  layerExtent = [
+                    layerInfo.extent.xmin,
+                    layerInfo.extent.ymin,
+                    layerInfo.extent.xmax,
+                    layerInfo.extent.ymax
+                  ];
+
+                  var geomExtent = ol.geom.Polygon.fromExtent(layerExtent);
+                  geomExtent.scale(1.1);
+                  layerExtent = geomExtent.getExtent();
+                }
+
                 var extent = layerInfo.extent
-                  ? [
-                      layerInfo.extent.xmin,
-                      layerInfo.extent.ymin,
-                      layerInfo.extent.xmax,
-                      layerInfo.extent.ymax
-                    ]
+                  ? layerExtent
                   : map.getView().calculateExtent();
                 if (
                   layerInfo.extent &&
@@ -2317,7 +2313,8 @@
                   source: new ol.source.XYZ({
                     url: opt.url
                   }),
-                  title: title || "TMS Layer"
+                  title: title || "TMS Layer",
+                  name: opt.name
                 });
               case "bing_aerial":
                 return new ol.layer.Tile({
@@ -2327,17 +2324,6 @@
                     imagerySet: "Aerial"
                   }),
                   title: title || "Bing Aerial"
-                });
-              case "stamen":
-                //We make watercolor the default layer
-                var type = opt && opt.name ? opt.name : "watercolor",
-                  source = new ol.source.Stamen({
-                    layer: type
-                  });
-                source.set("type", type);
-                return new ol.layer.Tile({
-                  source: source,
-                  title: title || "Stamen"
                 });
 
               case "wmts":

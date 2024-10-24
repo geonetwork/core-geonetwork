@@ -29,7 +29,7 @@
   <groupId>org.geonetwork-opensource</groupId>
   <artifactId>geonetwork</artifactId>
   <packaging>pom</packaging>
-  <version>4.2.6-SNAPSHOT</version>
+  <version>4.2.11-SNAPSHOT</version>
   <name>GeoNetwork opensource</name>
   <description>GeoNetwork opensource is a standards based, Free and
     Open Source catalog application to manage spatially referenced
@@ -113,11 +113,6 @@
           <version>3.1.2</version>
         </plugin>
         <plugin>
-          <groupId>org.codehaus.mojo</groupId>
-          <artifactId>jslint-maven-plugin</artifactId>
-          <version>1.0.1</version>
-        </plugin>
-        <plugin>
           <groupId>org.bsc.maven</groupId>
           <artifactId>maven-processor-plugin</artifactId>
           <version>3.3.3</version>
@@ -136,6 +131,14 @@
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-clean-plugin</artifactId>
           <version>3.1.0</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-install-plugin</artifactId>
+          <version>3.1.1</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-deploy-plugin</artifactId>
+          <version>3.1.1</version>
         </plugin>
         <plugin>
           <groupId>net.alchim31.maven</groupId>
@@ -504,7 +507,7 @@
       <dependency>
         <groupId>commons-fileupload</groupId>
         <artifactId>commons-fileupload</artifactId>
-        <version>1.3.3</version>
+        <version>1.5</version>
       </dependency>
       <dependency>
         <groupId>commons-collections</groupId>
@@ -1202,10 +1205,11 @@
           <artifactId>diff-match-patch</artifactId>
           <version>1.2</version>
       </dependency>
+
       <dependency>
-          <groupId>org.bitbucket.cowwoc</groupId>
-          <artifactId>diff-match-patch</artifactId>
-          <version>1.2</version>
+        <groupId>org.json</groupId>
+        <artifactId>json</artifactId>
+        <version>20240205</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
@@ -1318,6 +1322,7 @@
     <module>messaging</module>
     <module>estest</module>
     <module>index</module>
+    <module>translationproviders</module>
   </modules>
 
   <profiles>
@@ -1424,16 +1429,6 @@
      </snapshotRepository>
   </distributionManagement>
 
-  <!--
-  <distributionManagement>
-    <snapshotRepository>
-      <id>scp-repository.geonetwork-opensource.org</id>
-      <name>GeoNetwork opensource repositories</name>
-      <url>scpexe://TO DEFINED</url>
-    </snapshotRepository>
-  </distributionManagement>
-  -->
-
   <properties>
     <db.properties>WEB-INF/config-db/jdbc.properties</db.properties>
     <!--<db.properties>file:/${geonetwork.dir}/jdbc.properties</db.properties>-->
@@ -1493,12 +1488,18 @@
        * allow only host registered in metadata link table
     -->
     <proxy.securityMode>DB_LINK_CHECK</proxy.securityMode>
+    <!-- Hosts to exclude from http proxy access: typically localhost, intranet resources -->
+    <proxy.excludeHosts>^(localhost|127\..*|0\..*|255\.255\.255\.255|.*\.local|.*\.localhost|0:0:0:0:0:0:1|::1)$</proxy.excludeHosts>
+
+    <!-- Additional ports (separated by | char) allowed to be access through the http proxy. 80 and 443 are always allowed -->
+    <proxy.allowPorts></proxy.allowPorts>
+    <!--<proxy.allowPorts>8443|8080</proxy.allowPorts>-->
 
     <!-- Jetty plugin port configuration -->
     <jetty.port>8080</jetty.port>
     <jetty.stop.port>8090</jetty.stop.port>
 
-    <es.version>7.15.1</es.version>
+    <es.version>7.17.15</es.version>
     <es.platform>linux-x86_64</es.platform>
     <es.installer.extension>tar.gz</es.installer.extension>
     <es.protocol>http</es.protocol>
@@ -1555,7 +1556,7 @@
      request the list of hosts (but JPA cache db queries). -->
     <cors.allowedHosts>*</cors.allowedHosts>
 
-    <jetty.version>9.4.48.v20220622</jetty.version>
+    <jetty.version>9.4.54.v20240208</jetty.version>
     <jetty.file>jetty-distribution-${jetty.version}</jetty.file>
     <jetty.download>https://repo1.maven.org/maven2/org/eclipse/jetty/jetty-distribution/${jetty.version}/${jetty.file}.tar.gz</jetty.download>
 
@@ -1565,11 +1566,11 @@
     <jts.version>1.18.2</jts.version>
     <pg.version>42.3.3</pg.version>
 
-    <spring.version>5.3.27</spring.version>
-    <spring.security.version>5.7.8</spring.security.version>
+    <spring.version>5.3.37</spring.version>
+    <spring.security.version>5.7.12</spring.security.version>
     <spring.jpa.version>2.2.13.RELEASE</spring.jpa.version>
     <springboot.version>2.7.0</springboot.version>
-    <springdoc.version>1.5.9</springdoc.version>
+    <springdoc.version>1.7.0</springdoc.version>
 
     <metrics.version>2.2.0</metrics.version>
     <maven.build.timestamp.format>yyyy-MM-dd'T'HH'\:'mm'\:'ssZ</maven.build.timestamp.format>
@@ -1581,13 +1582,13 @@
     <node.version>v8.11.1</node.version>
     <npm.version>5.8.0</npm.version>
     <xmlunit.version>2.1.1</xmlunit.version>
-    <jackson.version>2.10.4</jackson.version>
+    <jackson.version>2.10.5</jackson.version>
     <flying-saucer>9.1.22</flying-saucer>
     <camel.version>2.25.1</camel.version>
     <log4j2.version>2.17.2</log4j2.version>
     <slf4j.version>1.8.0-beta2</slf4j.version>
     <xbean.version>4.22</xbean.version>
-    <jolokia.version>1.6.0</jolokia.version>
+    <jolokia.version>1.7.2</jolokia.version>
     <httpcomponents.version>4.5.14</httpcomponents.version>
     <jasypt.version>1.9.3</jasypt.version>
     <jupiter.version>5.9.1</jupiter.version>

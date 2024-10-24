@@ -62,6 +62,7 @@
         role="menuitem"
         data-ng-if="displayPublicationOption(md, user, pubOption)"
         data-ng-class="getPublicationOptionClass(md, user, isMdWorkflowEnable, pubOption)"
+        class="gn-puboption-{{pubOption.name}}-{{md.isPublished(pubOption)?'unpublish':'publish'}}"
         title="{{getPublicationOptionTitle(md, user, isMdWorkflowEnable, pubOption) | translate}}"
       >
         <a
@@ -70,7 +71,7 @@
         >
           <span
             class="fa fa-fw"
-            data-ng-class="md.isPublished(pubOption) ? 'fa-lock' : 'fa-unlock'"
+            data-ng-class="md.isPublished(pubOption) ? 'fa-lock' : 'fa-lock-open'"
           ></span
           >&nbsp;
           <span data-ng-if="md.isPublished(pubOption)" data-translate=""
@@ -228,14 +229,14 @@
           target="_blank"
         >
           <span class="fa fa-fw {{f.class}}"></span>&nbsp;
-          <span data-translate="">{{f.label | translate}}</span>
+          <span>{{f.label | translate}}</span>
         </a>
         <a
           data-ng-if="!!f.url === false && f.label.indexOf('PDF') !== -1"
           href="javascript:print();"
         >
           <span class="fa fa-fw {{f.class}}"></span>&nbsp;
-          <span data-translate="">{{f.label | translate}}</span>
+          <span>{{f.label | translate}}</span>
         </a>
       </li>
     </ul>

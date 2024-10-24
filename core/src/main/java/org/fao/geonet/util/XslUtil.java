@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2020 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2023 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -39,6 +39,7 @@ import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.NotImplementedException;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.text.StringEscapeUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
@@ -470,7 +471,7 @@ public final class XslUtil {
         return ApplicationContextHolder.get().getBean(org.fao.geonet.NodeInfo.class).getId();
     }
 
-    
+
     public static String getNodeLogo(String key) {
         Optional<Source> source = getSource(key);
         return source.isPresent() ? source.get().getLogo() : "";
@@ -641,13 +642,19 @@ public final class XslUtil {
         Store store = BeanFactoryAnnotationUtils.qualifiedBeanOfType(ApplicationContextHolder.get().getBeanFactory(), Store.class, "filesystemStore");
 
         if (store != null) {
-            if (store.getResourceManagementExternalProperties() != null && store.getResourceManagementExternalProperties().isFolderEnabled()) {
-                ServiceContext context = ServiceContext.get();
-                return store.getResourceContainerDescription(ServiceContext.get(), metadataUuid, approved);
-            } else {
-                // Return an empty object which should not be used because the folder is not enabled.
-                return new FilesystemStoreResourceContainer(metadataUuid, -1, null, null, null, approved);
+            try {
+                if (store.getResourceManagementExternalProperties() != null && store.getResourceManagementExternalProperties().isFolderEnabled()) {
+                    ServiceContext context = ServiceContext.get();
+                    return store.getResourceContainerDescription(ServiceContext.get(), metadataUuid, approved);
+                } else {
+                    // Return an empty object which should not be used because the folder is not enabled.
+                    return new FilesystemStoreResourceContainer(metadataUuid, -1, null, null, null, approved);
+                }
+            } catch (RuntimeException e) {
+                Log.error(Geonet.RESOURCES, "Could not locate resource in getResourceContainerDescription due to runtime exception", e);
+                return null;
             }
+
         }
         Log.error(Geonet.RESOURCES, "Could not locate a Store bean in getResourceContainerDescription");
         return null;
@@ -853,11 +860,9 @@ public final class XslUtil {
         try {
             Set<String> fields = new HashSet<>();
             fields.add(fieldname);
-            // TODO: Multilingual fields
-            final Map<String, String> values = searchManager.getFieldsValues(id, fields);
+            final Map<String, String> values = searchManager.getFieldsValues(id, fields, language);
             return values.get(fieldname);
         } catch (Exception e) {
-            e.printStackTrace();
             Log.error(Geonet.GEONETWORK, "Failed to get index field '" + fieldname + "' value on '" + id + "', caused by " + e.getMessage());
         }
         return "";
@@ -1718,5 +1723,9 @@ public final class XslUtil {
             }
         });
         return listOfLinks;
+    }
+
+    public static String escapeForJson(String value) {
+        return StringEscapeUtils.escapeJson(value);
     }
 }

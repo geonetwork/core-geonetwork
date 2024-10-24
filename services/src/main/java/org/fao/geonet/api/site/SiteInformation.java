@@ -27,6 +27,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.dbcp2.BasicDataSource;
+import org.elasticsearch.ElasticsearchException;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.search.EsSearchManager;
@@ -65,7 +66,7 @@ public class SiteInformation {
             }
             try {
                 loadIndexInfo(context);
-            } catch (IOException e) {
+            } catch (IOException | ElasticsearchException e) {
                 Log.error(Geonet.GEONETWORK, e.getMessage(), e);
             }
             loadVersionInfo();
@@ -180,6 +181,21 @@ public class SiteInformation {
             connection = context.getBean(DataSource.class).getConnection();
             dbURL = connection.getMetaData().getURL();
             databaseProperties.put("db.openattempt", "Database Opened Successfully");
+            try {
+                databaseProperties.put("db.type", connection.getMetaData().getDatabaseProductName());
+                databaseProperties.put("db.version", connection.getMetaData().getDatabaseProductVersion());
+                databaseProperties.put("db.driver", connection.getMetaData().getDriverName());
+                databaseProperties.put("db.driverVersion", connection.getMetaData().getDriverVersion());
+                databaseProperties.put("db.username", connection.getMetaData().getUserName());
+                databaseProperties.put("db.name", connection.getCatalog());
+                // Put "db.schema" field last as getSchema() has a known issues with the jetty jndi h2 drivers which is most likely related to a driver mismatch issue.
+                //    Receiver class org.apache.commons.dbcp.PoolingDataSource$PoolGuardConnectionWrapper does not define or inherit an implementation of the resolved method 'abstract java.lang.String getSchema()' of interface java.sql.Connection.
+                databaseProperties.put("db.schema", connection.getSchema());
+            } catch (AbstractMethodError e) {
+                // Most likely driver mismatch
+                //    https://stackoverflow.com/questions/17969365/why-i-am-getting-java-lang-abstractmethoderror-errors
+                Log.warning(Geonet.GEONETWORK, "Failed to get db properties. " + e.getMessage());
+            }
 
             if (connection instanceof BasicDataSource) {
                 BasicDataSource basicDataSource = (BasicDataSource) connection;
