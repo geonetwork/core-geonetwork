@@ -7,6 +7,7 @@ import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
 import org.fao.geonet.Constants;
+import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Pair;
 import org.fao.geonet.utils.Log;
@@ -80,6 +81,9 @@ public class RDFUtils {
      */
     public static HashMap<String, Element> getAllUuids(Element feed) throws Exception {
         Element rdfDocument = checkForMissingRdfAbout(feed);
+
+        // if xsi:schemaLocation is present on the rdf:RDF element Jena fails to parse the Element.
+        rdfDocument.removeAttribute("schemaLocation", Geonet.Namespaces.XSI);
 
         Model model = ModelFactory.createMemModelMaker().createDefaultModel();
         RDFDataMgr.read(model,
