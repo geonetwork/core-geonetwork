@@ -27,8 +27,11 @@ import jeeves.server.ServiceConfig;
 import jeeves.server.sources.http.JeevesServlet;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.exceptions.BadParameterEx;
+import org.fao.geonet.utils.FilePathChecker;
 import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Log;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -62,6 +65,9 @@ public class GeonetworkDataDirectory {
      * The id used when registering this object in a spring application context.
      */
     public static final String GEONETWORK_BEAN_KEY = "GeonetworkDataDirectory";
+
+    @Autowired
+    SchemaManager schemaManager;
 
     private Path webappDir;
     private Path systemDataDir;
@@ -777,11 +783,18 @@ public class GeonetworkDataDirectory {
         if (conversionId.startsWith(IMPORT_STYLESHEETS_SCHEMA_PREFIX)) {
             String[] pathToken = conversionId.split(":");
             if (pathToken.length == 3) {
+                String schema = pathToken[1];
+                if (!schemaManager.existsSchema(schema)) {
+                    throw new BadParameterEx(String.format(
+                        "Conversion not found. Schema '%s' is not registered in this catalog.", schema));
+                }
+                FilePathChecker.verify(pathToken[2]);
                 return this.getSchemaPluginsDir()
                     .resolve(pathToken[1])
                     .resolve(pathToken[2] + ".xsl");
             }
         } else {
+            FilePathChecker.verify(conversionId);
             return this.getWebappDir().resolve(Geonet.Path.IMPORT_STYLESHEETS).
                 resolve(conversionId + ".xsl");
         }

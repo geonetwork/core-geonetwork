@@ -34,7 +34,7 @@
                 xmlns:gmx="http://www.isotc211.org/2005/gmx"
                 xmlns:xlink="http://www.w3.org/1999/xlink"
                 xmlns:util="java:org.fao.geonet.util.XslUtil"
-                xmlns:exslt="http://exslt.org/common"
+                xmlns:digestUtils="java:org.apache.commons.codec.digest.DigestUtils"
                 xmlns:gn-fn-rel="http://geonetwork-opensource.org/xsl/functions/relations"
                 version="2.0"
                 exclude-result-prefixes="#all">
@@ -109,7 +109,7 @@
               <xsl:value-of select="position()"/>
             </idx>
             <hash>
-              <xsl:value-of select="util:md5Hex(string(exslt:node-set(.)))"/>
+              <xsl:value-of select="digestUtils:md5Hex(normalize-space(.))"/>
             </hash>
             <url>
               <xsl:apply-templates mode="get-iso19139-localized-string"
@@ -141,7 +141,7 @@
                 <xsl:value-of select="position()"/>
               </idx>
               <hash>
-                <xsl:value-of select="util:md5Hex(string(exslt:node-set(.)))"/>
+                <xsl:value-of select="digestUtils:md5Hex(normalize-space(.))"/>
               </hash>
               <title>
                 <xsl:apply-templates mode="get-iso19139-localized-string"

@@ -320,11 +320,15 @@ public class EsHTTPProxy {
         description = "The multi search API executes several searches from a single API request. See https://www.elastic.co/guide/en/elasticsearch/reference/current/search-multi-search.html for search parameters, and https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl.html Query DSL.")
     @RequestMapping(value = "/search/records/_msearch",
         method = RequestMethod.POST,
-        produces = MediaType.APPLICATION_JSON_VALUE,
-        consumes = MediaType.APPLICATION_JSON_VALUE)
+        produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_NDJSON_VALUE},
+        consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_NDJSON_VALUE})
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Search results.",
-            content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(type = "string")))
+            content = {
+                @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(type = "string")),
+                @Content(mediaType = MediaType.APPLICATION_NDJSON_VALUE, schema = @Schema(type = "string"))
+            }
+        )
     })
     @ResponseStatus(value = HttpStatus.OK)
     @ResponseBody

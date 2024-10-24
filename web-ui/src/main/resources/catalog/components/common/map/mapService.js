@@ -747,10 +747,10 @@
                 extent[1] +
                 ", " +
                 "East " +
-                extent[0] +
+                extent[2] +
                 ", " +
                 "West " +
-                extent[2];
+                extent[0];
               if (location) {
                 dc += ". " + location;
               }
@@ -1380,7 +1380,7 @@
               } else {
                 gnAlertService.addAlert({
                   msg: $translate.instant("layerCRSNotFound"),
-                  delay: 5000,
+                  delay: 5,
                   type: "warning"
                 });
               }
@@ -1390,7 +1390,7 @@
                   msg: $translate.instant("layerNotAvailableInMapProj", {
                     proj: mapProjection
                   }),
-                  delay: 5000,
+                  delay: 5,
                   type: "warning"
                 });
               }
@@ -1971,7 +1971,7 @@
                         type: "wmts",
                         url: encodeURIComponent(url)
                       }),
-                      delay: 20000,
+                      delay: 20,
                       type: "warning"
                     });
                     var o = {
@@ -2069,7 +2069,7 @@
                       type: "wfs",
                       url: encodeURIComponent(url)
                     }),
-                    delay: 20000,
+                    delay: 20,
                     type: "warning"
                   });
                   var o = {
@@ -2149,7 +2149,7 @@
               } catch (e) {
                 gnAlertService.addAlert({
                   msg: $translate.instant("wmtsLayerNoUsableMatrixSet"),
-                  delay: 5000,
+                  delay: 5,
                   type: "danger"
                 });
                 return;

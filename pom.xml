@@ -29,7 +29,7 @@
   <groupId>org.geonetwork-opensource</groupId>
   <artifactId>geonetwork</artifactId>
   <packaging>pom</packaging>
-  <version>4.2.11-SNAPSHOT</version>
+  <version>4.2.12-SNAPSHOT</version>
   <name>GeoNetwork opensource</name>
   <description>GeoNetwork opensource is a standards based, Free and
     Open Source catalog application to manage spatially referenced
@@ -1397,6 +1397,21 @@
           <kb.executable>kibana.sh</kb.executable>
           <kb.platform>darwin-x86</kb.platform>
           <kb.installer.extension>tar.gz</kb.installer.extension>
+      </properties>
+    </profile>
+    <profile>
+      <id>macOS_aarch64</id>
+      <activation>
+        <os>
+          <family>mac</family>
+          <arch>aarch64</arch>
+        </os>
+      </activation>
+      <properties>
+        <es.platform>darwin-aarch64</es.platform>
+        <kb.executable>kibana.sh</kb.executable>
+        <kb.platform>darwin-aarch64</kb.platform>
+        <kb.installer.extension>tar.gz</kb.installer.extension>
       </properties>
     </profile>
      <profile>

@@ -28,7 +28,6 @@
                 xmlns:xs="http://www.w3.org/2001/XMLSchema"
                 xmlns:geonet="http://www.fao.org/geonetwork" exclude-result-prefixes="#all"
                 xmlns:digestUtils="java:org.apache.commons.codec.digest.DigestUtils"
-                xmlns:exslt="http://exslt.org/common"
                 version="2.0">
 
   <!--
@@ -48,12 +47,23 @@
   <!-- Remove the thumbnail define in thumbnail_url parameter -->
   <!-- Note: first part of the match needs to match the xsl:for-each select from extract-relations.xsl in order to get the position() to match -->
   <!-- The unique identifier is marked with resourceIdx which is the position index and resourceHash which is hash code of the current node (combination of url, resource name, and description) -->
-  <xsl:template
-    priority="4"
-    match="*//gmd:graphicOverview
-         [$resourceIdx = '' or (count(preceding::gmd:graphicOverview) + 1) = xs:integer($resourceIdx)]
-         [    ($resourceHash != '' or ($thumbnail_url != '' and normalize-space(gmd:MD_BrowseGraphic/gmd:fileName/gco:CharacterString) = normalize-space($thumbnail_url)))
-          and ($resourceHash = '' or digestUtils:md5Hex(string(exslt:node-set(.))) = $resourceHash)]"/>
+
+  <xsl:template match="//gmd:graphicOverview" priority="2">
+
+    <!-- Calculate the global position of the current gmd:onLine element -->
+    <xsl:variable name="position" select="count(//gmd:graphicOverview[current() >> .]) + 1" />
+
+    <xsl:if test="not(
+                      ($resourceIdx = '' or $position = xs:integer($resourceIdx)) and
+                      ($resourceHash != '' or ($thumbnail_url != null and (normalize-space(gmd:MD_BrowseGraphic/gmd:fileName/gco:CharacterString) = normalize-space($thumbnail_url))))
+                        and ($resourceHash = '' or digestUtils:md5Hex(normalize-space(.)) = $resourceHash)
+                   )">
+      <xsl:copy>
+        <xsl:apply-templates select="@*|node()"/>
+      </xsl:copy>
+    </xsl:if>
+  </xsl:template>
+
 
   <!-- Do a copy of every node and attribute -->
   <xsl:template match="@*|node()">

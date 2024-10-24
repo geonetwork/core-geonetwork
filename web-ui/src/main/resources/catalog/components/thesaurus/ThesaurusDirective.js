@@ -256,7 +256,8 @@
           // on keyword.
           maxTags: "@",
           thesaurusTitle: "@",
-          browsable: "@"
+          browsable: "@",
+          required: "@"
         },
         templateUrl:
           "../../catalog/components/thesaurus/" + "partials/keywordselector.html",
@@ -661,6 +662,7 @@
           scope.orderById = attrs.orderById || "false";
           scope.max = gnThesaurusService.DEFAULT_NUMBER_OF_RESULTS;
           scope.fauxMultilingual = scope.fauxMultilingual === "true"; //default false
+          scope.showHintsOnFocus = attrs.showHintsOnFocus === "true"; // displays all the values on focus, default shows only the selected value
 
           // Configuration only required when using the directive in template fields.
           //
@@ -910,7 +912,8 @@
               .typeahead(
                 {
                   minLength: 0,
-                  highlight: true
+                  highlight: true,
+                  showHintsOnFocus: scope.showHintsOnFocus
                 },
                 {
                   name: "keyword",

@@ -50,6 +50,7 @@
               {{::s.name}}
               <img
                 class="gn-source-logo"
+                onerror="this.style.display='none'"
                 data-ng-src="{{'../../images/' + (s.type === 'subportal' ? 'harvesting/' +  s.logo : 'logos/' +  s.uuid + '.png')}}"
               />
             </a>
@@ -133,6 +134,20 @@
             />
             <p class="help-block" data-translate="">sourceName-help</p>
 
+            <table class="table table-striped">
+              <tr data-ng-repeat="(key, value) in source.label">
+                <td>{{key | translate}}</td>
+                <td>
+                  <input
+                    type="text"
+                    class="form-control"
+                    value="{{value}}"
+                    data-ng-model="source.label[key]"
+                  />
+                </td>
+              </tr>
+            </table>
+
             <label data-translate="">sourceFilter</label>
             <input type="text" class="form-control" data-ng-model="source.filter" />
             <p class="help-block" data-translate="">sourceFilter-help</p>
@@ -141,130 +156,116 @@
               <span data-translate="">displayInHeaderSwitcher</span>
             </label>
             <p class="help-block" data-translate="">displayInHeaderSwitcher-help</p>
+
+            <label data-translate="">sourceUiConfig</label>
+            <select
+              id="uiConfigurationList"
+              class="form-control"
+              data-ng-options="c.id as c.id for (key, c) in uiConfigurations | orderBy: 'id'"
+              data-ng-model="source.uiConfig"
+            ></select>
+            <p class="help-block" data-translate="">sourceUiConfig-help</p>
+
+            <div>
+              <label for="serviceList"
+                >{{'system/csw/capabilityRecordUuid' | translate}}</label
+              >
+
+              <div
+                data-gn-suggest="serviceRecordSearchObj"
+                data-gn-suggest-model="source.serviceRecord"
+                data-gn-suggest-property="_id"
+                data-gn-suggest-display-title="span"
+              ></div>
+
+              <p class="help-block">
+                {{'system/csw/capabilityRecordUuid-help' | translate}}
+              </p>
+            </div>
+
+            <div data-ng-show="groups.length">
+              <label class="control-label" data-translate="">subPortalGroupOwner</label>
+              <div
+                data-groups-combo=""
+                data-owner-group="source.groupOwner"
+                data-set-default-value="false"
+                data-optional="{{::$parent.user.isAdministrator()}}"
+                lang="lang"
+                groups="groups"
+                data-exclude-special-groups="true"
+              ></div>
+
+              <p class="help-block" data-translate="">subPortalGroupOwnerHelp</p>
+            </div>
+
+            <div>
+              <label data-translate="">sourceLogo</label>
+
+              <div class="row" data-ng-show="source.logo">
+                <div class="col-md-6 gn-nopadding-left">
+                  <img
+                    data-ng-show="source.logo"
+                    src="../../images/harvesting/{{ source.logo }}"
+                    class="img-thumbnail form-group"
+                    data-ng-attr-title="{{ source.logo }}"
+                  />
+                </div>
+                <div class="col-md-6 gn-nopadding-left">
+                  <a href="" data-ng-click="deleteSourceLogo()" class="text-danger">
+                    <i data-ng-show="source.logo" class="fa fa-times delete"></i>
+                  </a>
+                </div>
+              </div>
+            </div>
           </form>
 
-          <div>
-            <label data-translate="">sourceLogo</label>
-
-            <div class="row" data-ng-show="source.logo">
-              <div class="col-md-6 gn-nopadding-left">
-                <img
-                  data-ng-show="source.logo"
-                  src="../../images/harvesting/{{ source.logo }}"
-                  class="img-thumbnail form-group"
-                  data-ng-attr-title="{{ source.logo }}"
-                />
-              </div>
-              <div class="col-md-6 gn-nopadding-left">
-                <a href="" data-ng-click="deleteSourceLogo()" class="text-danger">
-                  <i data-ng-show="source.logo" class="fa fa-times delete"></i>
-                </a>
-              </div>
+          <!--Display logo picker from harvester logos-->
+          <div class="row" data-ng-show="queue.length == 0">
+            <div class="col-md-12 gn-nopadding-left gn-margin-bottom" translate>
+              selectExistingLogo
             </div>
+            <div class="col-md-12 gn-nopadding-left gn-margin-bottom">
+              <div class="form-group" gn-logo-picker="source.logo"></div>
+            </div>
+          </div>
 
-            <!--Display logo picker from harvester logos-->
-            <div class="row" data-ng-show="queue.length == 0">
+          <!--Display logo upload input-->
+          <form
+            id="gn-group-edit"
+            name="gnGroupEdit"
+            method="POST"
+            data-file-upload="logoUploadOptions"
+            role="form"
+          >
+            <input type="hidden" name="_csrf" value="{{csrf}}" />
+            <div class="row" data-ng-show="!source.logo" id="group-logo-upload">
               <div class="col-md-12 gn-nopadding-left gn-margin-bottom" translate>
-                selectExistingLogo
+                addNewLogo
               </div>
-              <div class="col-md-12 gn-nopadding-left gn-margin-bottom">
-                <div class="form-group" gn-logo-picker="source.logo"></div>
-              </div>
-            </div>
-
-            <!--Display logo upload input-->
-            <form
-              id="gn-group-edit"
-              name="gnGroupEdit"
-              method="POST"
-              data-file-upload="logoUploadOptions"
-              role="form"
-            >
-              <input type="hidden" name="_csrf" value="{{csrf}}" />
-              <div class="row" data-ng-show="!source.logo" id="group-logo-upload">
-                <div class="col-md-12 gn-nopadding-left gn-margin-bottom" translate>
-                  addNewLogo
-                </div>
-                <div class="col-md-12 gn-nopadding-left gn-nopadding-right">
-                  <div class="panel panel-default">
-                    <div class="panel-heading" data-translate="">upload</div>
-                    <div class="panel-body">
-                      <span class="btn btn-success btn-block fileinput-button">
-                        <i class="fa fa-plus fa-white"></i>
-                        <span data-translate="">chooseLogos</span>
-                        <input type="file" id="source-logo" name="file" />
-                      </span>
-                      <ul style="list-style: none">
-                        <li data-ng-repeat="file in queue">
-                          <div class="preview" data-file-upload-preview="file"></div>
-                          {{file.name}} ({{file.type}} / {{file.size | formatFileSize}})
-                          <i class="fa fa-trash-o" data-ng-click="clear(file)"></i>
-                        </li>
-                      </ul>
-                    </div>
+              <div class="col-md-12 gn-nopadding-left gn-nopadding-right">
+                <div class="panel panel-default">
+                  <div class="panel-heading" data-translate="">upload</div>
+                  <div class="panel-body">
+                    <span class="btn btn-success btn-block fileinput-button">
+                      <i class="fa fa-plus fa-white"></i>
+                      <span data-translate="">chooseLogos</span>
+                      <input type="file" id="source-logo" name="file" />
+                    </span>
+                    <ul style="list-style: none">
+                      <li data-ng-repeat="file in queue">
+                        <div class="preview" data-file-upload-preview="file"></div>
+                        {{file.name}} ({{file.type}} / {{file.size | formatFileSize}})
+                        <i class="fa fa-trash-o" data-ng-click="clear(file)"></i>
+                      </li>
+                    </ul>
                   </div>
                 </div>
               </div>
-            </form>
+            </div>
+          </form>
 
-            <p class="help-block" data-translate="">sourceLogo-help</p>
-          </div>
-
-          <label data-translate="">sourceUiConfig</label>
-          <select
-            id="uiConfigurationList"
-            class="form-control"
-            data-ng-options="c.id as c.id for (key, c) in uiConfigurations | orderBy: 'id'"
-            data-ng-model="source.uiConfig"
-          ></select>
-          <p class="help-block" data-translate="">sourceUiConfig-help</p>
-
-          <div>
-            <label for="serviceList"
-              >{{'system/csw/capabilityRecordUuid' | translate}}</label
-            >
-
-            <div
-              data-gn-suggest="serviceRecordSearchObj"
-              data-gn-suggest-model="source.serviceRecord"
-              data-gn-suggest-property="_id"
-              data-gn-suggest-display-title="span"
-            ></div>
-
-            <p class="help-block">
-              {{'system/csw/capabilityRecordUuid-help' | translate}}
-            </p>
-          </div>
-
-          <div data-ng-show="groups.length">
-            <label class="control-label" data-translate="">subPortalGroupOwner</label>
-            <div
-              data-groups-combo=""
-              data-owner-group="source.groupOwner"
-              data-set-default-value="false"
-              data-optional="{{::$parent.user.isAdministrator()}}"
-              lang="lang"
-              groups="groups"
-              data-exclude-special-groups="true"
-            ></div>
-
-            <p class="help-block" data-translate="">subPortalGroupOwnerHelp</p>
-          </div>
+          <p class="help-block" data-translate="">sourceLogo-help</p>
         </div>
-
-        <table class="table table-striped">
-          <tr data-ng-repeat="(key, value) in source.label">
-            <td>{{key | translate}}</td>
-            <td>
-              <input
-                type="text"
-                class="form-control"
-                value="{{value}}"
-                data-ng-model="source.label[key]"
-              />
-            </td>
-          </tr>
-        </table>
       </div>
     </div>
   </div>

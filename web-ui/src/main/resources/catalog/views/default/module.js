@@ -171,6 +171,7 @@
     "gnFacetSorter",
     "gnExternalViewer",
     "gnUrlUtils",
+    "gnAlertService",
     function (
       $scope,
       $location,
@@ -193,7 +194,8 @@
       gnESFacet,
       gnFacetSorter,
       gnExternalViewer,
-      gnUrlUtils
+      gnUrlUtils,
+      gnAlertService
     ) {
       var viewerMap = gnSearchSettings.viewerMap;
       var searchMap = gnSearchSettings.searchMap;
@@ -424,6 +426,55 @@
           });
           return;
         },
+        addMdWFSLayerToMap: function (link, md) {
+          var url = $filter("gnLocalized")(link.url) || link.url;
+
+          var isServiceLink =
+            gnSearchSettings.mapProtocols.services.indexOf(link.protocol) > -1;
+
+          var isGetFeatureLink = url.toLowerCase().indexOf("request=getfeature") > -1;
+
+          var featureName;
+          if (isGetFeatureLink) {
+            var name = "typename";
+            var regex = new RegExp("[\\?&]" + name + "=([^&#]*)");
+            var results = regex.exec(url);
+
+            if (results) {
+              featureName = decodeURIComponent(results[1].replace(/\+/g, " "));
+            }
+          } else {
+            featureName = $filter("gnLocalized")(link.title) || link.name;
+          }
+
+          // if an external viewer is defined, use it here
+          if (gnExternalViewer.isEnabled()) {
+            gnExternalViewer.viewService(
+              {
+                id: md ? md.id : null,
+                uuid: md ? md.uuid : null
+              },
+              {
+                type: "wfs",
+                url: url,
+                name: featureName
+              }
+            );
+            return;
+          }
+          if (featureName && (!isServiceLink || isGetFeatureLink)) {
+            gnMap.addWfsFromScratch(
+              gnSearchSettings.viewerMap,
+              url,
+              featureName,
+              false,
+              md
+            );
+          } else {
+            gnMap.addOwsServiceToMap(url, "WFS");
+          }
+          gnSearchLocation.setMap();
+        },
         addAllMdLayersToMap: function (layers, md) {
           var config = [];
           angular.forEach(layers, function (layer) {
@@ -463,13 +514,22 @@
       setActiveTab();
       $scope.$on("$locationChangeSuccess", setActiveTab);
 
-      $scope.$on("$locationChangeSuccess", function (next, current) {
+      $scope.$on("$locationChangeSuccess", function (event, next, current) {
         if (
           gnSearchLocation.isSearch() &&
           (!angular.isArray(searchMap.getSize()) || searchMap.getSize()[0] < 0)
         ) {
           setTimeout(function () {
             searchMap.updateSize();
+          }, 0);
+        }
+
+        // Changing from the map to search pages, hide alerts
+        var currentUrlHash =
+          current.indexOf("#") > -1 ? current.slice(current.indexOf("#") + 1) : "";
+        if (gnSearchLocation.isMap(currentUrlHash)) {
+          setTimeout(function () {
+            gnAlertService.closeAlerts();
           }, 0);
         }
       });

@@ -324,6 +324,7 @@
     <entry key="series">Dataset</entry>
     <entry key="service">Service</entry>
     <entry key="software">Software</entry>
+    <entry key="application">Software</entry>
   </xsl:variable>
   <xsl:template mode="toDatacite"
                 match="mdb:metadataScope/*/mdb:resourceScope/*/@codeListValue">
@@ -331,7 +332,7 @@
                   select="."/>
     <xsl:variable name="type"
                   select="concat(upper-case(substring(.,1,1)), substring(., 2))"/>
-    <datacite:resourceType resourceTypeGeneral="{$scopeMapping//*[@key = $key]/text()}">
+    <datacite:resourceType resourceTypeGeneral="{($scopeMapping//*[@key = $key]/text(), 'Other')[1]}">
       <xsl:value-of select="concat($key, '/', $type)"/>
     </datacite:resourceType>
   </xsl:template>

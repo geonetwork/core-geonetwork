@@ -17,7 +17,7 @@
   </div>
 
   <span data-ng-show="!invalidKeywordMatch">
-    <div class="row">
+    <div class="row" data-ng-class="required == 'true' ? 'gn-required' : ''">
       <label class="col-sm-2 control-label"> {{thesaurusTitle}} </label>
       <div
         class="col-sm-9"

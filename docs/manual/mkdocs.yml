@@ -148,9 +148,10 @@ nav:
     - overview/authors.md
     - 'Changelog':
       - overview/change-log/index.md
-      - overview/change-log/version-4.2.10.md
+      - overview/change-log/version-4.2.11.md
       - 'Release History':
         - overview/change-log/history/index.md
+        - overview/change-log/version-4.2.10.md
         - overview/change-log/version-4.2.9.md
         - overview/change-log/version-4.2.8.md
         - overview/change-log/version-4.2.7.md
@@ -283,6 +284,7 @@ nav:
       - user-guide/harvesting/harvesting-csw.md
       - user-guide/harvesting/harvesting-filesystem.md
       - user-guide/harvesting/harvesting-geonetwork.md
+      - user-guide/harvesting/harvesting-geonetwork-2.md
       - user-guide/harvesting/harvesting-geoportal.md
       - user-guide/harvesting/harvesting-oaipmh.md
       - user-guide/harvesting/harvesting-ogcwxs.md
@@ -291,7 +293,6 @@ nav:
       - user-guide/harvesting/harvesting-thredds.md
       - user-guide/harvesting/harvesting-webdav.md
       - user-guide/harvesting/harvesting-wfs-features.md
-      - user-guide/harvesting/harvesting-z3950.md
     - user-guide/export/index.md
     - 'Administration':
       - administrator-guide/index.md
