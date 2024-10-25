@@ -25,6 +25,7 @@ package org.fao.geonet.kernel.harvest.harvester.simpleurl;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.io.CharStreams;
 import jeeves.server.context.ServiceContext;
@@ -208,7 +209,17 @@ class Harvester implements IHarvester<HarvestResult> {
     private void collectRecordsFromJson(JsonNode jsonObj,
                                         Map<String, Element> uuids,
                                         Aligner aligner) {
-        JsonNode nodes = jsonObj.at(params.loopElement);
+        JsonNode nodes = null;
+        if (".".equals(params.loopElement)) {
+            ObjectMapper objectMapper = new ObjectMapper();
+            ArrayNode jsonNodes = objectMapper.createArrayNode();
+            jsonNodes.add(jsonObj);
+            nodes = jsonNodes;
+        } else {
+            nodes = jsonObj.at(params.loopElement);
+        }
+
+
         log.debug(String.format("%d records found in JSON response.", nodes.size()));
 
         nodes.forEach(jsonRecord -> {

@@ -9,8 +9,7 @@
                  xmlns:mrd="http://standards.iso.org/iso/19115/-3/mrd/1.0"
                  xmlns:mri="http://standards.iso.org/iso/19115/-3/mri/1.0"
                  xmlns:mrl="http://standards.iso.org/iso/19115/-3/mrl/2.0"
-                 xmlns:xlink="http://www.w3.org/1999/xlink"
->
+                 xmlns:xlink="http://www.w3.org/1999/xlink">
   <mdb:metadataIdentifier>
     <mcc:MD_Identifier>
       <mcc:code>
@@ -51,7 +50,7 @@
           <cit:individual>
             <cit:CI_Individual>
               <cit:name>
-                <gco:CharacterString>Guillaume</gco:CharacterString>
+                <gco:CharacterString>Guillaume Maze</gco:CharacterString>
               </cit:name>
               <cit:partyIdentifier>
                 <mcc:MD_Identifier>
@@ -83,7 +82,7 @@
           <cit:individual>
             <cit:CI_Individual>
               <cit:name>
-                <gco:CharacterString>Kevin</gco:CharacterString>
+                <gco:CharacterString>Kevin Balem</gco:CharacterString>
               </cit:name>
               <cit:partyIdentifier>
                 <mcc:MD_Identifier>
@@ -158,11 +157,11 @@
         <gco:CharacterString>&lt;p&gt;Argo is a real-time global ocean in situ observing system. It provides thousands
           of highly accurate ocean measurements every day. The Argo dataset has now accumulated more than 2.3 million
           vertical ocean profiles and accessing it for scientific analysis remains a challenge.&lt;/p&gt; &lt;p&gt;The
-          Argo expert community, focused on delivering a curated dataset of the best scientific quality
-          possible, has never provided its user base with a Python software package to easily access and manipulate Argo
-          measurements: the argopy software aims to fill this gap. &lt;strong&gt;The argopy software can be used to
-          easily fetch and manipulate measurements from Argo floats&lt;/strong&gt;. It is dedicated to scientists
-          without knowledge of the Argo data management system but is also designed to accommodate expert requirements.&lt;/p&gt;
+          Argo expert community, focused on delivering a curated dataset of the best scientific quality possible, has
+          never provided its user base with a Python software package to easily access and manipulate Argo measurements:
+          the argopy software aims to fill this gap. &lt;strong&gt;The argopy software can be used to easily fetch and
+          manipulate measurements from Argo floats&lt;/strong&gt;. It is dedicated to scientists without knowledge of
+          the Argo data management system but is also designed to accommodate expert requirements.&lt;/p&gt;
         </gco:CharacterString>
       </mri:abstract>
       <mri:pointOfContact>
@@ -180,7 +179,7 @@
               <cit:individual>
                 <cit:CI_Individual>
                   <cit:name>
-                    <gco:CharacterString>Guillaume</gco:CharacterString>
+                    <gco:CharacterString>Guillaume Maze</gco:CharacterString>
                   </cit:name>
                   <cit:partyIdentifier>
                     <mcc:MD_Identifier>
@@ -213,7 +212,7 @@
               <cit:individual>
                 <cit:CI_Individual>
                   <cit:name>
-                    <gco:CharacterString>Kevin</gco:CharacterString>
+                    <gco:CharacterString>Kevin Balem</gco:CharacterString>
                   </cit:name>
                   <cit:partyIdentifier>
                     <mcc:MD_Identifier>
@@ -246,7 +245,7 @@
               <cit:individual>
                 <cit:CI_Individual>
                   <cit:name>
-                    <gco:CharacterString>Tyler</gco:CharacterString>
+                    <gco:CharacterString>Tyler Tucker</gco:CharacterString>
                   </cit:name>
                   <cit:partyIdentifier>
                     <mcc:MD_Identifier>
@@ -279,7 +278,7 @@
               <cit:individual>
                 <cit:CI_Individual>
                   <cit:name>
-                    <gco:CharacterString>Filipe</gco:CharacterString>
+                    <gco:CharacterString>Filipe Fernandes</gco:CharacterString>
                   </cit:name>
                   <cit:partyIdentifier>
                     <mcc:MD_Identifier>
