@@ -363,7 +363,9 @@
           editorConfig: "="
         },
         link: function (scope, element, attrs) {
-          scope.canPublishDoiForResource = gnDoiService.canPublishDoiForResource;
+          scope.checkDoiManagementForResource =
+            gnDoiService.checkDoiManagementForResource;
+
           scope.editable = angular.isDefined(scope.editorConfig);
           scope.lang = scope.lang || scope.$parent.lang;
 

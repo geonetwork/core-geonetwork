@@ -27,14 +27,20 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import javax.servlet.http.HttpServletRequest;
+import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
+import static org.fao.geonet.api.ApiParams.API_PARAM_RECORD_UUID;
+import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.doiservers.model.AnonymousDoiServer;
 import org.fao.geonet.api.doiservers.model.DoiServerDto;
+import org.fao.geonet.api.exception.NotAllowedException;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.DoiServer;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.repository.DoiServerRepository;
+import org.fao.geonet.utils.Log;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -93,27 +99,38 @@ public class DoiServersApi {
     @io.swagger.v3.oas.annotations.Operation(
         summary = "Get DOI servers that can be used with a metadata"
     )
-    @GetMapping(value = "metadata/{metadataId}",
+    @GetMapping(value = "metadata/{metadataUuid}",
         produces = {
             MediaType.APPLICATION_JSON_VALUE
         })
     public
     @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("hasAuthority('Administrator')")
+    @PreAuthorize("hasAuthority('Editor')")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "List of all DOI servers where a metadata can be published."),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_ADMIN)
     })
     List<AnonymousDoiServer> getDoiServers(
-        @Parameter(description = "Metadata UUID",
-            required = true,
-            example = "")
-        @PathVariable Integer metadataId) {
+        @Parameter(
+            description = API_PARAM_RECORD_UUID,
+            required = true)
+        @PathVariable
+        String metadataUuid,
+        HttpServletRequest request) throws ResourceNotFoundException {
 
         List<DoiServer> doiServers = doiServerRepository.findAll();
         List<AnonymousDoiServer> list = new ArrayList<>(doiServers.size());
 
-        AbstractMetadata metadata = metadataUtils.findOne(metadataId);
+        AbstractMetadata metadata;
+        try {
+            metadata = ApiUtils.canViewRecord(metadataUuid, true, request);
+        } catch (ResourceNotFoundException e) {
+            Log.debug(API.LOG_MODULE_NAME, e.getMessage(), e);
+            throw e;
+        } catch (Exception e) {
+            Log.debug(API.LOG_MODULE_NAME, e.getMessage(), e);
+            throw new NotAllowedException(ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW);
+        }
         Integer groupOwner = metadata.getSourceInfo().getGroupOwner();
 
         // Find servers related to the metadata groups owner
