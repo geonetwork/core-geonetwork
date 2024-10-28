@@ -39,7 +39,9 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.BufferedInputStream;
+import java.io.IOException;
 import java.io.InputStream;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -152,6 +154,22 @@ public abstract class AbstractStore implements Store {
         return metadataId;
     }
 
+    protected String getFilenameFromHeader(final URL fileUrl) throws IOException {
+        HttpURLConnection connection = (HttpURLConnection) fileUrl.openConnection();
+        try {
+            connection.setRequestMethod("HEAD");
+            connection.connect();
+            String contentDisposition = connection.getHeaderField("Content-Disposition");
+
+            if (contentDisposition != null && contentDisposition.contains("filename=")) {
+                return contentDisposition.split("filename=")[1].replace("\"", "");
+            }
+            return null;
+        } finally {
+            connection.disconnect();
+        }
+    }
+
     protected String getFilenameFromUrl(final URL fileUrl) {
         String fileName = FilenameUtils.getName(fileUrl.getPath());
         if (fileName.contains("?")) {
@@ -198,7 +216,11 @@ public abstract class AbstractStore implements Store {
     @Override
     public final MetadataResource putResource(ServiceContext context, String metadataUuid, URL fileUrl,
             MetadataResourceVisibility visibility, Boolean approved) throws Exception {
-        return putResource(context, metadataUuid, getFilenameFromUrl(fileUrl), fileUrl.openStream(), null, visibility, approved);
+        String filename = getFilenameFromHeader(fileUrl);
+        if (filename == null) {
+            filename = getFilenameFromUrl(fileUrl);
+        }
+        return putResource(context, metadataUuid, filename, fileUrl.openStream(), null, visibility, approved);
     }
 
     @Override
