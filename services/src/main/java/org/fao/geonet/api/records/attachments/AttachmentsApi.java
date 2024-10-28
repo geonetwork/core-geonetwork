@@ -229,7 +229,6 @@ public class AttachmentsApi {
     @io.swagger.v3.oas.annotations.Operation(summary = "Create a new resource from a URL for a given metadata")
     @PreAuthorize("hasAuthority('Editor')")
     @RequestMapping(method = RequestMethod.PUT,
-        consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE,
         produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.CREATED)
     @ApiResponses(value = {@ApiResponse(responseCode = "201", description = "Attachment added."),
