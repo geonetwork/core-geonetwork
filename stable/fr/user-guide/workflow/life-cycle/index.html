@@ -1219,9 +1219,18 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#record-life-cycle" class="md-nav__link">
+  <a href="#activate-workflow" class="md-nav__link">
     <span class="md-ellipsis">
-      Record life cycle
+      Activate the metadata workflow
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#usage" class="md-nav__link">
+    <span class="md-ellipsis">
+      Usage
     </span>
   </a>
   
@@ -1824,9 +1833,18 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#record-life-cycle" class="md-nav__link">
+  <a href="#activate-workflow" class="md-nav__link">
     <span class="md-ellipsis">
-      Record life cycle
+      Activate the metadata workflow
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#usage" class="md-nav__link">
+    <span class="md-ellipsis">
+      Usage
     </span>
   </a>
   
@@ -1906,32 +1924,34 @@
 
 
 <h1 id="life-cycle">Life cycle</h1>
-<h2 id="record-life-cycle">Record life cycle</h2>
-<p>Metadata records have a lifecycle that typically goes through one or more states. For example, when a record is:</p>
+<p>Metadata records can have a lifecycle that typically goes through one or more states. This is an optional feature that 
+can be activated on demand (see <a href="#activate-workflow">Activate the metadata workflow</a>).</p>
+<p>For example, when a record is:</p>
 <ul>
 <li>created and edited by an <code>Editor</code> it is in the <code>Draft</code> state.</li>
-<li>being reviewed by a <code>content reviewer</code>, or a review is requested brings the record to <code>Submitted</code> state.</li>
+<li>being reviewed by a <code>Content reviewer</code>, or a review is requested brings the record to <code>Submitted</code> state.</li>
 <li>completed and corrected by the <code>Content Reviewer</code> it is in the <code>Approved</code> state.</li>
 <li>superseded or replaced the state is <code>Retired</code>.</li>
 </ul>
-<p>The catalog has (an extensible) set of states that a metadata record can have:</p>
+<p>The catalog has a set of states that a metadata record can have:</p>
 <ul>
-<li><code>Unknown</code> - this is the default state - nothing is known about the status of the metadata record.</li>
 <li><code>Draft</code> - the record is under construction or being edited.</li>
 <li><code>Submitted</code> - the record has been submitted for approval to a content review.</li>
 <li><code>Approved</code> - the content reviewer has reviewed and approved the metadata record.</li>
-<li><code>Rejected</code> - the content reviewer has reviewed and rejected the metadata record.</li>
 <li><code>Retired</code> - the record has been retired.</li>
 </ul>
-<p>Workflow can be enabled for the full catalogue, certain groups or on an individual record level.</p>
-<p>In the last case, to enable workflow and change the status from <code>Unknown</code> to <code>Draft</code>, click the <code>enable workflow</code> button in the metadata view:</p>
+<p>When the metadata workflow is activated, the existing records are set in a special status <code>Unknown</code>.</p>
+<h2 id="activate-workflow">Activate the metadata workflow</h2>
+<p>To enable the record life cycle, activate the metadata workflow. It can be activated for the full catalogue, certain groups, or on an individual record.</p>
+<p>In the case of activating for an individual record: enable workflow in a metadata, change the status from <code>Unknown</code> to <code>Draft</code>, and then click the <code>Enable workflow</code> button in the metadata view:</p>
 <p><img alt="" src="../../../../user-guide/workflow/img/workflow-enable.png" /></p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>To use the workflow for metadata records created before enabling it, you must use the above option.</p>
 </div>
-<p>To enable workflow for the full catalogue or certain groups, check Administration &rarr; Settings &rarr; Metadata Workflow. In workflow mode, in case approved records are modified, you're working on a copy of the approved record. Changes on the record will not be visible to users outside your group until the modified record is approved again.</p>
-<p>When done editing you can submit a record for review by a content reviewer. The submit button is available on the <code>manage record</code> menu in the metadata view. A popup will open in which you can leave a message for the content reviewer.</p>
+<p>To enable workflow for the full catalogue or certain groups, check <code>Administration</code> &rarr; <code>Settings</code> &rarr; <code>Metadata Workflow</code>. In workflow mode, in case approved records are modified, you're working on a copy of the approved record. Changes on the record will not be visible to users outside your group until the modified record is approved again.</p>
+<h2 id="usage">Usage</h2>
+<p>When done editing you can submit a record for review by a content reviewer. The submit button is available on the <code>Manage record</code> menu in the metadata view. A popup will open in which you can leave a message for the content reviewer.</p>
 <p><img alt="" src="../../../../user-guide/workflow/img/submit-for-review.png" /></p>
 <p>A user with role content reviewer is able to submit a record, instantly approve a record (without submission) or approve a record which has been submitted for review. During the review process a content reviewer may benefit from the version history option, which shows the differences between the different versions of the record. As part of the approval process, the content reviewer can also set the level of access to the record, an option is to set the access level to public (visible to all).</p>
 <p><img alt="" src="../../../../user-guide/workflow/img/approve-metadata.png" /></p>
