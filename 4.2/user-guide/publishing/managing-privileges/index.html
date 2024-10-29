@@ -1772,9 +1772,9 @@
 </ol>
 <p>Below is a brief description for each privilege to help you identify which ones you should assign to which group(s).</p>
 <p><strong>Publish</strong>: Users in the specified group/s are able to view the metadata eg. if it matches search criteria entered by such a user.</p>
-<p><strong>Download</strong>: Users in the specified group/s are able to download the data.</p>
 <p><strong>Interactive Map</strong>: Users in the specified group/s are able to get an interactive map. The interactive map has to be created separately using a Web Map Server such as GeoServer, which is distributed with GeoNetwork.</p>
-<p><strong>Featured</strong>: When randomly selected by GeoNetwork, the metadata record can appear in the <code>Featured</code> section of the GeoNetwork home page.</p>
+<p><strong>Download</strong>: Users in the specified group/s are able to download the data.</p>
+<p><strong>Editing</strong>: Users in the specified group/s are able to edit the metadata, if they have the <em>editor</em> profile.</p>
 <p><strong>Notify</strong>: Users in the specified group receive notification if data attached to the metadata record is downloaded.</p>
 <p>Review and make sure that you understand <a href="../../../administrator-guide/managing-users-and-groups/#user_profiles">Users, Groups and Roles</a> in the User and Group Administration section of this manual.</p>
 <div class="admonition note">
@@ -1801,12 +1801,15 @@
 <p>Any user (logged in or not) can view the public metadata.</p>
 <h2 id="editing">Editing</h2>
 <p>An <em>administrator</em> can edit any metadata.</p>
-<p>A <em>reviewer</em> can edit a metadata if:</p>
+<p>A <em>reviewer</em> / <em>editor</em> can edit a metadata if:</p>
 <ul>
-<li>The metadata owner is member of one of the groups assigned to the reviewer.</li>
-<li>They are the metadata owner.</li>
+<li>
+<p>They are the metadata owner.</p>
+</li>
+<li>
+<p>The metadata has editing privilege in the group(s) where the user is a <em>reviewer</em> / <em>editor</em>.</p>
+</li>
 </ul>
-<p>A <em>User Administrator</em> or an <em>Editor</em> can only edit metadata they created.</p>
 <h1 id="setting-privileges">Setting Privileges</h1>
 <h2 id="setting-privileges-on-a-metadata-record">Setting Privileges on a metadata record</h2>
 <p>A button to access the Privileges page for a metadata record displays in the search results or when you are viewing the record for:</p>
