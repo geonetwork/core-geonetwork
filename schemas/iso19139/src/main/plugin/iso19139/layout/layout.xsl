@@ -541,6 +541,9 @@
       <xsl:with-param name="cls" select="local-name()"/>
       <xsl:with-param name="xpath" select="$xpath"/>
       <xsl:with-param name="type" select="gn-fn-iso19139:getCodeListType(name())"/>
+      <xsl:with-param name="directiveAttributes">
+        <xsl:copy-of select="gn-fn-metadata:getFieldDirective($editorConfig, name(),name(*[@codeListValue]), $xpath)"/>
+      </xsl:with-param>
       <xsl:with-param name="name"
                       select="if ($isEditing) then concat(*/gn:element/@ref, '_codeListValue') else ''"/>
       <xsl:with-param name="editInfo" select="*/gn:element"/>

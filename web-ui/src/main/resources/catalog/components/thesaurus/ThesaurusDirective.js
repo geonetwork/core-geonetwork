@@ -662,7 +662,7 @@
           scope.orderById = attrs.orderById || "false";
           scope.max = gnThesaurusService.DEFAULT_NUMBER_OF_RESULTS;
           scope.fauxMultilingual = scope.fauxMultilingual === "true"; //default false
-          scope.showHintsOnFocus = attrs.showHintsOnFocus === "true"; // displays all the values on focus, default shows only the selected value
+          scope.showHintsOnFocus = attrs.showHintsOnFocus === "true"; // displays all the values on focus and adds a dropdown caret icon, default shows only the selected value
 
           // Configuration only required when using the directive in template fields.
           //
