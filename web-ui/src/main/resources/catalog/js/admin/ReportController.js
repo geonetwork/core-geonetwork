@@ -36,7 +36,8 @@
     "$http",
     "$rootScope",
     "$translate",
-    function ($scope, $routeParams, $http, $rootScope, $translate) {
+    "gnUtilityService",
+    function ($scope, $routeParams, $http, $rootScope, $translate, gnUtilityService) {
       $scope.pageMenu = {
         folder: "report/",
         defaultTab: "report-updated-metadata",
@@ -150,7 +151,11 @@
         if ($scope.user.profile === "Administrator") {
           $http.get("../api/groups").then(
             function (response) {
-              $scope.groups = response.data;
+              $scope.groups = gnUtilityService.sortByTranslation(
+                response.data,
+                $scope.lang,
+                "name"
+              );
             },
             function (response) {
               // TODO
@@ -166,6 +171,12 @@
               $scope.groups = _.uniqBy(groups, function (e) {
                 return e.id;
               });
+
+              $scope.groups = gnUtilityService.sortByTranslation(
+                $scope.groups,
+                $scope.lang,
+                "name"
+              );
             },
             function (response) {
               // TODO

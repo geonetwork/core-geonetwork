@@ -155,7 +155,11 @@
       $scope.retrieveGroups = function () {
         $http.get("../api/groups").then(
           function (response) {
-            $scope.groups = response.data;
+            $scope.groups = gnUtilityService.sortByTranslation(
+              response.data,
+              $scope.lang,
+              "name"
+            );
           },
           function (response) {}
         );

@@ -436,6 +436,22 @@
         return defer.promise;
       };
 
+      /**
+       * Sort an array of elements with translations labels, using the provided language.
+       *
+       */
+      var sortByTranslation = function (values, sortByLanguage, defaultProperty) {
+        return Object.values(
+          // Don't mutate the original array
+          values.concat().sort(function (a, b) {
+            var aValue = a.label[sortByLanguage] || a[defaultProperty];
+            var bValue = b.label[sortByLanguage] || b[defaultProperty];
+
+            return aValue.localeCompare(bValue);
+          })
+        );
+      };
+
       return {
         scrollTo: scrollTo,
         isInView: isInView,
@@ -452,7 +468,8 @@
         randomUuid: randomUuid,
         displayPermalink: displayPermalink,
         openModal: openModal,
-        goBack: goBack
+        goBack: goBack,
+        sortByTranslation: sortByTranslation
       };
     }
   ]);
