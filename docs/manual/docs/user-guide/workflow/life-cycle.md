@@ -21,7 +21,7 @@ When the metadata workflow is activated, the existing records are set in a speci
 
 ## Activate the metadata workflow {#activate-workflow}
 
-To enable the record life cycle, the metadata workflow should be activated. It can be activated for the full catalogue, certain groups or on an individual record level.
+To enable the record life cycle, activate the metadata workflow. It can be activated for the full catalogue, certain groups, or on an individual record.
 
 In the last case, to enable workflow in a metadata and change the status from `Unknown` to `Draft`, click the `Enable workflow` button in the metadata view:
 
