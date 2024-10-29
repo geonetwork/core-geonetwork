@@ -32,6 +32,7 @@ import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.UpdateDatestamp;
 import org.fao.geonet.kernel.search.IndexingMode;
+import org.fao.geonet.kernel.search.submission.DirectIndexSubmittor;
 import org.fao.geonet.repository.SourceRepository;
 import org.fao.geonet.services.AbstractServiceIntegrationTest;
 import org.fao.geonet.utils.Xml;
@@ -339,7 +340,7 @@ public class MetadataExtentApiTest extends AbstractServiceIntegrationTest {
             .setHarvested(false);
 
         dataManager.insertMetadata(context, metadata, sampleMetadataXml, IndexingMode.full, false, UpdateDatestamp.NO,
-            false, false).getId();
+            false, DirectIndexSubmittor.INSTANCE).getId();
 
         return uuid;
     }

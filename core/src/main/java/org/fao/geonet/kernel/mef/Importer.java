@@ -45,6 +45,7 @@ import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.datamanager.IMetadataValidator;
 import org.fao.geonet.kernel.search.IndexingMode;
+import org.fao.geonet.kernel.search.submission.DirectIndexSubmittor;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.*;
@@ -444,7 +445,7 @@ public class Importer {
                     }
                 }
 
-                dm.indexMetadata(metadataIdMap.get(index), true);
+                dm.indexMetadata(metadataIdMap.get(index), DirectIndexSubmittor.INSTANCE);
             }
 
             // --------------------------------------------------------------------

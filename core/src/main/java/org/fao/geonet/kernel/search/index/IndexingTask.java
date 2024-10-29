@@ -30,6 +30,7 @@ import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.search.EsSearchManager;
+import org.fao.geonet.kernel.search.submission.BatchingIndexSubmittor;
 import org.fao.geonet.utils.Log;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
@@ -63,7 +64,11 @@ public class IndexingTask extends QuartzJobBean {
         ApplicationContextHolder.set(applicationContext);
         IndexingList list = applicationContext.getBean(IndexingList.class);
         Set<Integer> metadataIdentifiers = list.getIdentifiers();
-        if (metadataIdentifiers.size() > 0) {
+        if (metadataIdentifiers.isEmpty()) {
+            return;
+        }
+
+        try (BatchingIndexSubmittor batchingIndexSubmittor = new BatchingIndexSubmittor()) {
             if (Log.isDebugEnabled(Geonet.INDEX_ENGINE)) {
                 Log.debug(Geonet.INDEX_ENGINE, "Indexing task / List of records to index: "
                     + metadataIdentifiers.toString() + ".");
@@ -71,13 +76,12 @@ public class IndexingTask extends QuartzJobBean {
 
             for (Integer metadataIdentifier : metadataIdentifiers) {
                 try {
-                    _dataManager.indexMetadata(String.valueOf(metadataIdentifier), false);
+                    _dataManager.indexMetadata(String.valueOf(metadataIdentifier), batchingIndexSubmittor);
                 } catch (Exception e) {
                     Log.error(Geonet.INDEX_ENGINE, "Indexing task / An error happens indexing the metadata "
                         + metadataIdentifier + ". Error: " + e.getMessage(), e);
                 }
             }
-            this.applicationContext.getBean(EsSearchManager.class).forceIndexChanges();
         }
     }
 

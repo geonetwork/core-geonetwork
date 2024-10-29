@@ -75,7 +75,7 @@ public class FormatterApiIntegrationTest extends AbstractServiceIntegrationTest 
     public void setUp() throws Exception {
         serviceContext = createServiceContext();
         loginAsAdmin(serviceContext);
-        AbstractMetadata metadata = injectMetadataInDbDoNotRefreshHeader(getSampleMetadataXml(), serviceContext);
+        AbstractMetadata metadata = injectMetadataInDb(getSampleMetadataXml(), serviceContext);
         id = metadata.getId();
         schema = metadata.getDataInfo().getSchemaId();
     }

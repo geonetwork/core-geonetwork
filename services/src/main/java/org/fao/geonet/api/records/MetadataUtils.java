@@ -52,6 +52,7 @@ import org.fao.geonet.kernel.schema.AssociatedResource;
 import org.fao.geonet.kernel.schema.AssociatedResourcesSchemaPlugin;
 import org.fao.geonet.kernel.schema.SchemaPlugin;
 import org.fao.geonet.kernel.search.EsSearchManager;
+import org.fao.geonet.kernel.search.submission.DirectIndexSubmittor;
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
@@ -306,7 +307,7 @@ public class MetadataUtils {
                     if (!e.fields().isEmpty()) {
                         FIELDLIST_RELATED_SCRIPTED.keySet().forEach(f -> {
                             JsonData dc = (JsonData) e.fields().get(f);
-                            
+
                             if (dc != null) {
                                 if (associatedRecord.getProperties() == null) {
                                     associatedRecord.setProperties(new HashMap<>());
@@ -765,7 +766,7 @@ public class MetadataUtils {
 
         if (!hasValidation) {
             validator.doValidate(metadata, context.getLanguage());
-            dataManager.indexMetadata(metadata.getId() + "", true);
+            dataManager.indexMetadata(metadata.getId() + "", DirectIndexSubmittor.INSTANCE);
         }
 
         boolean isInvalid =

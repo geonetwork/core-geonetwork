@@ -11,6 +11,7 @@ import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.kernel.search.IndexingMode;
+import org.fao.geonet.kernel.search.submission.DirectIndexSubmittor;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.repository.LinkRepository;
 import org.fao.geonet.repository.LinkStatusRepository;
@@ -301,7 +302,7 @@ public class UrlAnalyzerTest extends AbstractCoreIntegrationTest {
                 false,
                 NO,
                 false,
-                false);
+            DirectIndexSubmittor.INSTANCE);
 
         return dbInsertedMetadata;
     }

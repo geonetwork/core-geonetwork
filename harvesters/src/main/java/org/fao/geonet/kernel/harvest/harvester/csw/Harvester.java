@@ -110,9 +110,8 @@ class Harvester implements IHarvester<HarvestResult> {
 
         boolean error = false;
         HarvestResult result = new HarvestResult();
-    	Set<String> uuids = new HashSet<String>();
-        try {
-            Aligner aligner = new Aligner(cancelMonitor, context, server, params, log);
+    	Set<String> uuids = new HashSet<>();
+        try (Aligner aligner = new Aligner(cancelMonitor, context, server, params, log)) {
             searchAndAlign(server, uuids, aligner, errors);
             result = aligner.cleanupRemovedRecords(uuids);
         } catch (Exception t) {

@@ -42,6 +42,8 @@ import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
 import org.fao.geonet.kernel.harvest.harvester.GroupMapper;
 import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
 import org.fao.geonet.kernel.search.IndexingMode;
+import org.fao.geonet.kernel.search.submission.BatchingIndexSubmittor;
+import org.fao.geonet.kernel.search.submission.DirectIndexSubmittor;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
 import org.fao.geonet.repository.specification.MetadataSpecs;
@@ -270,26 +272,25 @@ public class ArcSDEHarvester extends AbstractHarvester<HarvestResult, ArcSDEPara
                             continue;
                         }
 
-                        BaseAligner aligner = new BaseAligner(cancelMonitor) {
-                        };
-                        aligner.setParams(params);
-                        //
-                        // add / update the metadata from this harvesting result
-                        //
-                        String id = dataMan.getMetadataId(uuid);
-                        if (id == null) {
-                            id = addMetadata(metadataElement, uuid, schema, localGroups, localCateg, aligner);
-                            result.addedMetadata++;
-                        } else {
-                            updateMetadata(metadataElement, id, localGroups, localCateg, aligner);
-                            result.updatedMetadata++;
-                        }
+                        try (BaseAligner<ArcSDEParams> aligner = new BaseAligner<>(cancelMonitor) {}) {
+                            aligner.setParams(params);
+                            //
+                            // add / update the metadata from this harvesting result
+                            //
+                            String id = dataMan.getMetadataId(uuid);
+                            if (id == null) {
+                                id = addMetadata(metadataElement, uuid, schema, localGroups, localCateg, aligner);
+                                result.addedMetadata++;
+                            } else {
+                                updateMetadata(metadataElement, id, localGroups, localCateg, aligner);
+                                result.updatedMetadata++;
+                            }
+                            if (StringUtils.isNotEmpty(thumbnailContent)) {
+                                loadMetadataThumbnail(thumbnailContent, id, uuid);
+                            }
 
-                        if (StringUtils.isNotEmpty(thumbnailContent)) {
-                            loadMetadataThumbnail(thumbnailContent, id, uuid);
+                            idsForHarvestingResult.add(Integer.valueOf(id));
                         }
-
-                        idsForHarvestingResult.add(Integer.valueOf(id));
                     }
                 }
             }catch(Throwable t) {
@@ -320,7 +321,7 @@ public class ArcSDEHarvester extends AbstractHarvester<HarvestResult, ArcSDEPara
         }
     }
 
-    private void updateMetadata(Element xml, String id, GroupMapper localGroups, final CategoryMapper localCateg, BaseAligner aligner) throws Exception {
+    private void updateMetadata(Element xml, String id, GroupMapper localGroups, final CategoryMapper localCateg, BaseAligner<ArcSDEParams> aligner) throws Exception {
         log.info("Updating metadata with id: " + id);
 
         //
@@ -352,14 +353,14 @@ public class ArcSDEHarvester extends AbstractHarvester<HarvestResult, ArcSDEPara
 
         metadataManager.flush();
 
-        dataMan.indexMetadata(id, true);
+        dataMan.indexMetadata(id, DirectIndexSubmittor.INSTANCE);
     }
 
     /**
      * Inserts a metadata into the database. Lucene index is updated after insertion.
      */
     private String addMetadata(Element xml, String uuid, String schema, GroupMapper localGroups, final CategoryMapper localCateg,
-                               BaseAligner aligner) throws Exception {
+                               BaseAligner<ArcSDEParams> aligner) throws Exception {
         log.info("  - Adding metadata with remote uuid: " + uuid);
 
         //
@@ -396,13 +397,13 @@ public class ArcSDEHarvester extends AbstractHarvester<HarvestResult, ArcSDEPara
 
         aligner.addCategories(metadata, params.getCategories(), localCateg, context, null, false);
 
-        metadata = metadataManager.insertMetadata(context, metadata, xml, IndexingMode.none, false, UpdateDatestamp.NO, false, false);
+        metadata = metadataManager.insertMetadata(context, metadata, xml, IndexingMode.none, false, UpdateDatestamp.NO, false, DirectIndexSubmittor.INSTANCE);
 
         String id = String.valueOf(metadata.getId());
 
         aligner.addPrivileges(id, params.getPrivileges(), localGroups, context);
 
-        dataMan.indexMetadata(id, true);
+        dataMan.indexMetadata(id, DirectIndexSubmittor.INSTANCE);
 
         return id;
     }

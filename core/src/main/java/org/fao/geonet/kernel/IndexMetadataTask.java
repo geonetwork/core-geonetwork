@@ -29,6 +29,7 @@ import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.kernel.search.EsSearchManager;
+import org.fao.geonet.kernel.search.submission.BatchingIndexSubmittor;
 import org.fao.geonet.utils.Log;
 import org.springframework.transaction.TransactionStatus;
 
@@ -77,7 +78,7 @@ public final class IndexMetadataTask implements Runnable {
     }
 
     public void run() {
-        try {
+        try (BatchingIndexSubmittor batchingIndexSubmittor = new BatchingIndexSubmittor()) {
             _context.setAsThreadLocal();
             while (_transactionStatus != null && !_transactionStatus.isCompleted()) {
                 try {
@@ -107,7 +108,7 @@ public final class IndexMetadataTask implements Runnable {
                 }
 
                 try {
-                    dataManager.indexMetadata(metadataId.toString(), false);
+                    dataManager.indexMetadata(metadataId.toString(), batchingIndexSubmittor);
                 } catch (Exception e) {
                     Log.error(Geonet.INDEX_ENGINE, "Error indexing metadata '" + metadataId + "': " + e.getMessage()
                         + "\n" + Util.getStackTrace(e));
@@ -116,7 +117,6 @@ public final class IndexMetadataTask implements Runnable {
             if (_user != null && _context.getUserSession().getUserId() == null) {
                 _context.getUserSession().loginAs(_user);
             }
-            searchManager.forceIndexChanges();
         } finally {
             _batchIndex.remove(this);
         }

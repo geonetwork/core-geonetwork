@@ -74,7 +74,7 @@ public class DataManagerIntegrationTest extends AbstractDataManagerIntegrationTe
         ServiceContext serviceContext = createContextAndLogAsAdmin();
         long count = metadataRepository.count();
 
-        int mdId = injectMetadataInDbDoNotRefreshHeader(getSampleMetadataXml(), serviceContext).getId();
+        int mdId = injectMetadataInDb(getSampleMetadataXml(), serviceContext).getId();
 
         assertEquals(count + 1, metadataRepository.count());
 

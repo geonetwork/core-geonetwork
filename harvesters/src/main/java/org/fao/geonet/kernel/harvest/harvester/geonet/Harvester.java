@@ -226,8 +226,9 @@ class Harvester implements IHarvester<HarvestResult> {
         HarvestResult result = new HarvestResult();
         if (!error) {
             try {
-                Aligner aligner = new Aligner(cancelMonitor, log, context, req, params, remoteInfo);
-                result = aligner.align(records, errors);
+                try (Aligner aligner = new Aligner(cancelMonitor, log, context, req, params, remoteInfo)) {
+                    result = aligner.align(records, errors);
+                }
 
                 Map<String, Source> sources = buildSources(remoteInfo);
                 updateSources(records, sources);

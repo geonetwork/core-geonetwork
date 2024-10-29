@@ -13,6 +13,7 @@ import org.fao.geonet.kernel.UpdateDatestamp;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.search.EsSearchManager;
 import org.fao.geonet.kernel.search.IndexingMode;
+import org.fao.geonet.kernel.search.submission.DirectIndexSubmittor;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.util.Sha1Encoder;
 import org.fao.geonet.utils.Log;
@@ -44,7 +45,7 @@ public class DirectoryUtils {
             entries.rowKeySet().iterator();
         AbstractMetadata record = collectResults.getRecord();
         boolean validate = false, ufo = false,
-            notify = false, publicForGroup = true, refreshReaders = false;
+            notify = false, publicForGroup = true;
         Map<String, Exception> errors = new HashMap<>();
 
         while (entriesIterator.hasNext()) {
@@ -73,7 +74,7 @@ public class DirectoryUtils {
                         (Element) entry.clone(),
                         IndexingMode.none, ufo,
                         UpdateDatestamp.NO,
-                        publicForGroup, refreshReaders);
+                        publicForGroup, DirectIndexSubmittor.INSTANCE);
 
                     collectResults.getEntryIdentifiers().put(
                         uuid, subtemplate.getId());

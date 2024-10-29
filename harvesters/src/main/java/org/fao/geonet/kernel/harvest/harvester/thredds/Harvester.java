@@ -56,6 +56,7 @@ import org.fao.geonet.kernel.harvest.harvester.IHarvester;
 import org.fao.geonet.kernel.harvest.harvester.RecordInfo;
 import org.fao.geonet.kernel.harvest.harvester.UriMapper;
 import org.fao.geonet.kernel.search.IndexingMode;
+import org.fao.geonet.kernel.search.submission.DirectIndexSubmittor;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.MetadataCategoryRepository;
 import org.fao.geonet.util.Sha1Encoder;
@@ -572,13 +573,13 @@ class Harvester extends BaseAligner<ThreddsParams> implements IHarvester<Harvest
         	addCategories(metadata, params.getCategories(), localCateg, context, null, false);
 				}
 
-        metadata = (Metadata) mdManager.insertMetadata(context, metadata, md, IndexingMode.none, false, UpdateDatestamp.NO, false, false);
+        metadata = (Metadata) mdManager.insertMetadata(context, metadata, md, IndexingMode.none, false, UpdateDatestamp.NO, false, DirectIndexSubmittor.INSTANCE);
 
         String id = String.valueOf(metadata.getId());
 
         addPrivileges(id, params.getPrivileges(), localGroups, context);
 
-        mdIndexer.indexMetadata(id, true, IndexingMode.full);
+        mdIndexer.indexMetadata(id, DirectIndexSubmittor.INSTANCE, IndexingMode.full);
 
         mdManager.flush();
     }

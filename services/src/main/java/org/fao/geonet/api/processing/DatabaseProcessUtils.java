@@ -36,6 +36,7 @@ import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataSchemaUtils;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.search.IndexingMode;
+import org.fao.geonet.kernel.search.submission.DirectIndexSubmittor;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.MetadataRepository;
@@ -111,7 +112,7 @@ public class DatabaseProcessUtils {
                         dataMan.updateMetadata(context, id, wellFormedXml, validate, ufo, language, new ISODate().toString(),
                             updateDateStamp, index ? IndexingMode.full : IndexingMode.none);
                         if (index) {
-                            dataMan.indexMetadata(id, true);
+                            dataMan.indexMetadata(id, DirectIndexSubmittor.INSTANCE);
                         }
                     }
                 }

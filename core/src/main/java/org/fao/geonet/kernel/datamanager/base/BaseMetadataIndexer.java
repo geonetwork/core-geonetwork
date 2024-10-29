@@ -49,6 +49,8 @@ import org.fao.geonet.kernel.datamanager.draft.DraftMetadataIndexer;
 import org.fao.geonet.kernel.search.EsSearchManager;
 import org.fao.geonet.kernel.search.IndexFields;
 import org.fao.geonet.kernel.search.IndexingMode;
+import org.fao.geonet.kernel.search.submission.BatchingIndexSubmittor;
+import org.fao.geonet.kernel.search.submission.IIndexSubmittor;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.*;
@@ -300,14 +302,16 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
 
     @Override
     public void indexMetadata(final List<String> metadataIds) throws Exception {
-        for (String metadataId : metadataIds) {
-            indexMetadata(metadataId, true, IndexingMode.full);
+        try (BatchingIndexSubmittor indexSubmittor = new BatchingIndexSubmittor()) {
+            for (String metadataId : metadataIds) {
+                indexMetadata(metadataId, indexSubmittor, IndexingMode.full);
+            }
         }
     }
 
     @Override
     public void indexMetadata(final String metadataId,
-                              final boolean forceRefreshReaders,
+                              final IIndexSubmittor indexSubmittor,
                               final IndexingMode indexingMode)
         throws Exception {
         AbstractMetadata fullMd;
@@ -388,7 +392,7 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
                         "error",
                         Map.of("record", metadataId, "schema", schema)));
                 searchManager.index(null, md, indexKey, fields, metadataType,
-                    forceRefreshReaders, indexingMode);
+                    indexSubmittor, indexingMode);
                 Log.error(Geonet.DATA_MANAGER, String.format(
                     "Record %s / Schema '%s' is not registered in this catalog. Install it or remove those records. Record is indexed indexing error flag.",
                     metadataId, schema));
@@ -533,7 +537,7 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
                 }
 
                 searchManager.index(schemaManager.getSchemaDir(schema), md, indexKey, fields, metadataType,
-                    forceRefreshReaders, indexingMode);
+                    indexSubmittor, indexingMode);
             }
         } catch (Exception x) {
             Log.error(Geonet.DATA_MANAGER, "The metadata document index with id=" + metadataId

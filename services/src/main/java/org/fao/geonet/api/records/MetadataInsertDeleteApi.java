@@ -80,6 +80,7 @@ import org.fao.geonet.kernel.mef.Importer;
 import org.fao.geonet.kernel.mef.MEFLib;
 import org.fao.geonet.kernel.search.EsSearchManager;
 import org.fao.geonet.kernel.search.IndexingMode;
+import org.fao.geonet.kernel.search.submission.DirectIndexSubmittor;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.MetadataDraftRepository;
@@ -1022,7 +1023,7 @@ public class MetadataInsertDeleteApi {
             metadataValidator.doValidate(metadata, context.getLanguage());
         }
 
-        dataManager.indexMetadata(id.get(0), true);
+        dataManager.indexMetadata(id.get(0), DirectIndexSubmittor.INSTANCE);
         return Pair.read(Integer.valueOf(id.get(0)), uuid);
     }
 

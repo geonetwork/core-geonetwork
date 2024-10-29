@@ -415,7 +415,7 @@ class Harvester extends BaseAligner<OgcWxSParams> implements IHarvester<HarvestR
 
         if (!dataMan.existsMetadataUuid(uuid)) {
             result.addedMetadata++;
-            metadata = metadataManager.insertMetadata(context, metadata, md, IndexingMode.none, false, UpdateDatestamp.NO, false, false);
+            metadata = metadataManager.insertMetadata(context, metadata, md, IndexingMode.none, false, UpdateDatestamp.NO, false, batchingIndexSubmittor);
         } else {
             result.updatedMetadata++;
             String id = dataMan.getMetadataId(uuid);
@@ -834,7 +834,7 @@ class Harvester extends BaseAligner<OgcWxSParams> implements IHarvester<HarvestR
             }
             if (!dataMan.existsMetadataUuid(reg.uuid)) {
                 result.addedMetadata++;
-                metadata = metadataManager.insertMetadata(context, metadata, xml, IndexingMode.none, false, UpdateDatestamp.NO, false, false);
+                metadata = metadataManager.insertMetadata(context, metadata, xml, IndexingMode.none, false, UpdateDatestamp.NO, false, batchingIndexSubmittor);
             } else {
                 result.updatedMetadata++;
                 String id = dataMan.getMetadataId(reg.uuid);

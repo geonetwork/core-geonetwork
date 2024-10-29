@@ -255,8 +255,6 @@ public class Aligner extends BaseAligner<GeonetParams> {
             }
         }
 
-        dataMan.forceIndexChanges();
-
         log.info("End of alignment for : " + params.getName());
 
         return result;
@@ -517,7 +515,7 @@ public class Aligner extends BaseAligner<GeonetParams> {
 
         addCategories(metadata, params.getCategories(), localCateg, context, null, false);
 
-        metadata = metadataManager.insertMetadata(context, metadata, md, IndexingMode.none, ufo, UpdateDatestamp.NO, false, false);
+        metadata = metadataManager.insertMetadata(context, metadata, md, IndexingMode.none, ufo, UpdateDatestamp.NO, false, this.batchingIndexSubmittor);
 
         String id = String.valueOf(metadata.getId());
 
@@ -546,7 +544,7 @@ public class Aligner extends BaseAligner<GeonetParams> {
         }
         context.getBean(IMetadataManager.class).save(metadata);
 
-        dataMan.indexMetadata(id, Math.random() < 0.01);
+        dataMan.indexMetadata(id, this.batchingIndexSubmittor);
         result.addedMetadata++;
 
         return id;
@@ -843,7 +841,7 @@ public class Aligner extends BaseAligner<GeonetParams> {
         metadataManager.save(metadata);
 //        dataMan.flush();
 
-        dataMan.indexMetadata(id, Math.random() < 0.01);
+        dataMan.indexMetadata(id, this.batchingIndexSubmittor);
     }
 
     private void handleFile(String id, String file, MetadataResourceVisibility visibility, String changeDate,

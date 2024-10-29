@@ -42,6 +42,7 @@ import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
 import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
 import org.fao.geonet.kernel.harvest.harvester.UUIDMapper;
 import org.fao.geonet.kernel.search.IndexingMode;
+import org.fao.geonet.kernel.search.submission.DirectIndexSubmittor;
 import org.fao.geonet.repository.MetadataCategoryRepository;
 import org.fao.geonet.repository.specification.MetadataCategorySpecs;
 import org.fao.geonet.utils.XmlRequest;
@@ -157,7 +158,7 @@ public class Aligner extends AbstractAligner<GeonetParams> {
                 //--- maybe the metadata was unretrievable
 
                 if (id != null) {
-                    dataMan.indexMetadata(id, true);
+                    dataMan.indexMetadata(id, DirectIndexSubmittor.INSTANCE);
                 }
             }
         }
@@ -212,7 +213,7 @@ public class Aligner extends AbstractAligner<GeonetParams> {
         List<Element> categories = info.getChildren("category");
         addCategories(metadata, categories);
 
-        metadata = metadataManager.insertMetadata(context, metadata, md, IndexingMode.none, false, UpdateDatestamp.NO, false, false);
+        metadata = metadataManager.insertMetadata(context, metadata, md, IndexingMode.none, false, UpdateDatestamp.NO, false, DirectIndexSubmittor.INSTANCE);
 
         String id = String.valueOf(metadata.getId());
 

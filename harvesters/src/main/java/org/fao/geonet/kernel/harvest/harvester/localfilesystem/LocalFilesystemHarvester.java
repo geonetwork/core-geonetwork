@@ -44,6 +44,7 @@ import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
 import org.fao.geonet.kernel.harvest.harvester.GroupMapper;
 import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
 import org.fao.geonet.kernel.search.IndexingMode;
+import org.fao.geonet.kernel.search.submission.DirectIndexSubmittor;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.specification.MetadataSpecs;
 import org.fao.geonet.utils.IO;
@@ -90,48 +91,50 @@ public class LocalFilesystemHarvester extends AbstractHarvester<HarvestResult, L
      */
     private HarvestResult align(Path root) throws Exception {
         log.debug("Start of alignment for : " + params.getName());
-        final LocalFsHarvesterFileVisitor visitor = new LocalFsHarvesterFileVisitor(cancelMonitor, context, params, this);
-        if (params.recurse) {
-            Files.walkFileTree(root, visitor);
-        } else {
-            try (DirectoryStream<Path> paths = Files.newDirectoryStream(root)) {
-                for (Path path : paths) {
-                    if (path != null && Files.isRegularFile(path)) {
-                        visitor.visitFile(path, Files.readAttributes(path, BasicFileAttributes.class));
+        try (final LocalFsHarvesterFileVisitor visitor = new LocalFsHarvesterFileVisitor(cancelMonitor, context, params, this)) {
+            if (params.recurse) {
+                Files.walkFileTree(root, visitor);
+            } else {
+                try (DirectoryStream<Path> paths = Files.newDirectoryStream(root)) {
+                    for (Path path : paths) {
+                        if (path != null && Files.isRegularFile(path)) {
+                            visitor.visitFile(path, Files.readAttributes(path, BasicFileAttributes.class));
+                        }
                     }
                 }
             }
-        }
-        result = visitor.getResult();
-        log.debug(String.format("Scan directory is done. %d files analyzed.", result.totalMetadata));
-        Set<Integer> idsForHarvestingResult = visitor.getListOfRecords();
-        Set<Integer> idsResultHs = Sets.newHashSet(idsForHarvestingResult);
+            result = visitor.getResult();
+            log.debug(String.format("Scan directory is done. %d files analyzed.", result.totalMetadata));
+            Set<Integer> idsForHarvestingResult = visitor.getListOfRecords();
+            Set<Integer> idsResultHs = Sets.newHashSet(idsForHarvestingResult);
 
-        if (!params.nodelete) {
-            log.debug("Starting to delete locally existing metadata " +
-                "from the same source if they " +
-                " were not in this harvesting result...");
-            List<Integer> existingMetadata = context.getBean(MetadataRepository.class).findIdsBy((Specification<Metadata>) MetadataSpecs.hasHarvesterUuid(params.getUuid()));
-            for (Integer existingId : existingMetadata) {
+            if (!params.nodelete) {
+                log.debug("Starting to delete locally existing metadata " +
+                    "from the same source if they " +
+                    " were not in this harvesting result...");
+                List<Integer> existingMetadata = context.getBean(MetadataRepository.class).findIdsBy((Specification<Metadata>) MetadataSpecs.hasHarvesterUuid(params.getUuid()));
+                for (Integer existingId : existingMetadata) {
 
-                if (cancelMonitor.get()) {
-                    return this.result;
-                }
-                if (!idsResultHs.contains(existingId)) {
-                    log.debug("  Removing: " + existingId);
-                    metadataManager.deleteMetadata(context, existingId.toString());
-                    result.locallyRemoved++;
+                    if (cancelMonitor.get()) {
+                        return this.result;
+                    }
+                    if (!idsResultHs.contains(existingId)) {
+                        log.debug("  Removing: " + existingId);
+                        metadataManager.deleteMetadata(context, existingId.toString());
+                        result.locallyRemoved++;
+                    }
                 }
             }
+
+            log.debug("Starting indexing in batch thread pool...");
+
+            List<Integer> listOfRecordsToIndex = Lists.newArrayList(visitor.getListOfRecordsToIndex());
+
+            log.debug(String.format(
+                "Starting indexing in batch thread pool of %d updated records ...",
+                listOfRecordsToIndex.size()));
+            dataMan.batchIndexInThreadPool(context, listOfRecordsToIndex);
         }
-
-        log.debug("Starting indexing in batch thread pool...");
-
-        List<Integer> listOfRecordsToIndex = Lists.newArrayList(visitor.getListOfRecordsToIndex());
-        log.debug(String.format(
-            "Starting indexing in batch thread pool of %d updated records ...",
-            listOfRecordsToIndex.size()));
-        dataMan.batchIndexInThreadPool(context, listOfRecordsToIndex);
 
         log.debug("End of alignment for : " + params.getName());
         return result;
@@ -170,7 +173,7 @@ public class LocalFilesystemHarvester extends AbstractHarvester<HarvestResult, L
 
         metadataManager.flush();
 
-        dataMan.indexMetadata(id, true);
+        dataMan.indexMetadata(id, DirectIndexSubmittor.INSTANCE);
     }
 
     String addMetadata(Element xml, String uuid, String schema, GroupMapper localGroups, final CategoryMapper localCateg,
@@ -218,7 +221,7 @@ public class LocalFilesystemHarvester extends AbstractHarvester<HarvestResult, L
 
         aligner.addCategories(metadata, params.getCategories(), localCateg, context, null, false);
 
-        metadata = metadataManager.insertMetadata(context, metadata, md, IndexingMode.none, false, UpdateDatestamp.NO, false, false);
+        metadata = metadataManager.insertMetadata(context, metadata, md, IndexingMode.none, false, UpdateDatestamp.NO, false, DirectIndexSubmittor.INSTANCE);
 
         String id = String.valueOf(metadata.getId());
 
@@ -227,7 +230,7 @@ public class LocalFilesystemHarvester extends AbstractHarvester<HarvestResult, L
         metadataManager.flush();
 
         if (index) {
-            dataMan.indexMetadata(id, true);
+            dataMan.indexMetadata(id, DirectIndexSubmittor.INSTANCE);
         }
         return id;
     }

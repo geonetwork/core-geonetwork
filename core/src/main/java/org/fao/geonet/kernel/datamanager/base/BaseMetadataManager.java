@@ -50,6 +50,8 @@ import org.fao.geonet.kernel.schema.SchemaPlugin;
 import org.fao.geonet.kernel.search.EsSearchManager;
 import org.fao.geonet.kernel.search.IndexingMode;
 import org.fao.geonet.kernel.search.index.BatchOpsMetadataReindexer;
+import org.fao.geonet.kernel.search.submission.DirectIndexSubmittor;
+import org.fao.geonet.kernel.search.submission.IIndexSubmittor;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.kernel.setting.SettingInfo;
@@ -464,7 +466,7 @@ public class BaseMetadataManager implements IMetadataManager {
         newMetadata.getMetadataCategories().addAll(filteredCategories);
 
         int finalId = insertMetadata(context, newMetadata, xml, IndexingMode.full, true, UpdateDatestamp.YES,
-            fullRightsForGroup, true).getId();
+            fullRightsForGroup, DirectIndexSubmittor.INSTANCE).getId();
 
         return String.valueOf(finalId);
     }
@@ -569,7 +571,7 @@ public class BaseMetadataManager implements IMetadataManager {
         boolean fullRightsForGroup = false;
 
         int finalId = insertMetadata(context, newMetadata, metadataXml, indexingMode, ufo, UpdateDatestamp.NO,
-            fullRightsForGroup, true).getId();
+            fullRightsForGroup, DirectIndexSubmittor.INSTANCE).getId();
 
         return String.valueOf(finalId);
     }
@@ -577,7 +579,7 @@ public class BaseMetadataManager implements IMetadataManager {
     @Override
     public AbstractMetadata insertMetadata(ServiceContext context, AbstractMetadata newMetadata, Element metadataXml,
                                            IndexingMode indexingMode, boolean updateFixedInfo, UpdateDatestamp updateDatestamp,
-                                           boolean fullRightsForGroup, boolean forceRefreshReaders) throws Exception {
+                                           boolean fullRightsForGroup, IIndexSubmittor indexSubmittor) throws Exception {
         final String schema = newMetadata.getDataInfo().getSchemaId();
 
         // Check if the schema is allowed by settings
@@ -616,7 +618,7 @@ public class BaseMetadataManager implements IMetadataManager {
         metadataOperations.copyDefaultPrivForGroup(context, stringId, groupId, fullRightsForGroup);
 
         if (indexingMode != IndexingMode.none) {
-            metadataIndexer.indexMetadata(stringId, forceRefreshReaders, indexingMode);
+            metadataIndexer.indexMetadata(stringId, indexSubmittor, indexingMode);
         }
 
         return savedMetadata;
@@ -789,7 +791,7 @@ public class BaseMetadataManager implements IMetadataManager {
                 if (uuidBeforeUfo != null && !uuidBeforeUfo.equals(uuid)) {
                     getSearchManager().delete(String.format("+uuid:\"%s\"", uuidBeforeUfo));
                 }
-                metadataIndexer.indexMetadata(metadataId, true, indexingMode);
+                metadataIndexer.indexMetadata(metadataId, DirectIndexSubmittor.INSTANCE, indexingMode);
             }
         }
 

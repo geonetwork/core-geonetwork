@@ -365,13 +365,13 @@ public class Aligner extends BaseAligner<CswParams> {
 
         addCategories(metadata, params.getCategories(), localCateg, context, null, false);
 
-        metadata = metadataManager.insertMetadata(context, metadata, md, IndexingMode.none, false, UpdateDatestamp.NO, false, false);
+        metadata = metadataManager.insertMetadata(context, metadata, md, IndexingMode.none, false, UpdateDatestamp.NO, false, batchingIndexSubmittor);
 
         String id = String.valueOf(metadata.getId());
 
         addPrivileges(id, params.getPrivileges(), localGroups, context);
 
-        metadataIndexer.indexMetadata(id, true, IndexingMode.full);
+        metadataIndexer.indexMetadata(id, batchingIndexSubmittor, IndexingMode.full);
         result.addedMetadata++;
     }
 
@@ -435,7 +435,7 @@ public class Aligner extends BaseAligner<CswParams> {
             } else {
                 log.debug("  - Updating local metadata for uuid:" + ri.uuid);
                 if (updatingLocalMetadata(ri, id, force)) {
-                    metadataIndexer.indexMetadata(id, true, IndexingMode.full);
+                    metadataIndexer.indexMetadata(id, batchingIndexSubmittor, IndexingMode.full);
                     result.updatedMetadata++;
                 }
             }
@@ -541,7 +541,7 @@ public class Aligner extends BaseAligner<CswParams> {
 
                 params.getValidate().validate(dataMan, context, response, groupIdVal);
             } catch (Exception e) {
-                log.info("Ignoring invalid metadata with uuid " + uuid);
+                log.info("Ignoring invalid metadata with uuid " + uuid, e);
                 result.doesNotValidate++;
                 return null;
             }

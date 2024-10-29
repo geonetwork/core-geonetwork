@@ -212,12 +212,12 @@ class Harvester implements IHarvester<HarvestResult> {
         }
 
         //--- harvest metadata and subtemplates from fragments using generic fragment harvester
-        FragmentHarvester fragmentHarvester = new FragmentHarvester(cancelMonitor, log, context, getFragmentHarvesterParams());
-
-        if (params.streamFeatures) {
-            harvestFeatures(wfsQuery, fragmentHarvester);
-        } else {
-            harvestResponse(wfsQuery, fragmentHarvester);
+        try (FragmentHarvester fragmentHarvester = new FragmentHarvester(cancelMonitor, log, context, getFragmentHarvesterParams())) {
+            if (params.streamFeatures) {
+                harvestFeatures(wfsQuery, fragmentHarvester);
+            } else {
+                harvestResponse(wfsQuery, fragmentHarvester);
+            }
         }
 
         return result;

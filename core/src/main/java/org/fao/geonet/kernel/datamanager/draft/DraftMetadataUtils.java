@@ -41,6 +41,7 @@ import org.fao.geonet.kernel.metadata.StatusActions;
 import org.fao.geonet.kernel.metadata.StatusActionsFactory;
 import org.fao.geonet.kernel.search.EsSearchManager;
 import org.fao.geonet.kernel.search.IndexingMode;
+import org.fao.geonet.kernel.search.submission.DirectIndexSubmittor;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.*;
 import org.fao.geonet.repository.specification.MetadataFileUploadSpecs;
@@ -521,7 +522,7 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
 
         try {
             newMetadata = (MetadataDraft) metadataManager.insertMetadata(context, newMetadata, xml, IndexingMode.full, true,
-                UpdateDatestamp.YES, false, true);
+                UpdateDatestamp.YES, false, DirectIndexSubmittor.INSTANCE);
 
             Integer finalId = newMetadata.getId();
 

@@ -50,6 +50,7 @@ import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.UpdateDatestamp;
 import org.fao.geonet.kernel.mef.MEFLib;
 import org.fao.geonet.kernel.search.IndexingMode;
+import org.fao.geonet.kernel.search.submission.DirectIndexSubmittor;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
@@ -290,7 +291,7 @@ public class MetadataSampleApi {
                             if (MetadataType.lookup(isTemplate) == MetadataType.TEMPLATE) {
                                 xml = dataManager.setUUID(schemaName, uuid, xml);
                             }
-                            dataManager.insertMetadata(context, metadata, xml, IndexingMode.full, true, UpdateDatestamp.NO, false, true);
+                            dataManager.insertMetadata(context, metadata, xml, IndexingMode.full, true, UpdateDatestamp.NO, false, DirectIndexSubmittor.INSTANCE);
                             report.addMetadataInfos(metadata,
                             String.format(
                             "Template for schema '%s' with UUID '%s' added.",

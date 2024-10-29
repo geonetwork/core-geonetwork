@@ -33,6 +33,7 @@ import org.fao.geonet.domain.MetadataSourceInfo;
 import org.fao.geonet.kernel.EditLib;
 import org.fao.geonet.kernel.UpdateDatestamp;
 import org.fao.geonet.kernel.search.IndexingMode;
+import org.fao.geonet.kernel.search.submission.IIndexSubmittor;
 import org.fao.geonet.repository.BatchUpdateQuery;
 import org.fao.geonet.repository.PathSpec;
 import org.fao.geonet.repository.Updater;
@@ -147,12 +148,12 @@ public interface IMetadataManager {
      * @param updateFixedInfo
      * @param updateDatestamp
      * @param fullRightsForGroup
-     * @param forceRefreshReaders
+     * @param indexSubmittor
      * @return
      * @throws Exception
      */
     AbstractMetadata insertMetadata(ServiceContext context, AbstractMetadata newMetadata, Element metadataXml, IndexingMode indexingMode,
-                                    boolean updateFixedInfo, UpdateDatestamp updateDatestamp, boolean fullRightsForGroup, boolean forceRefreshReaders)
+                                    boolean updateFixedInfo, UpdateDatestamp updateDatestamp, boolean fullRightsForGroup, IIndexSubmittor indexSubmittor)
             throws Exception;
 
     /**

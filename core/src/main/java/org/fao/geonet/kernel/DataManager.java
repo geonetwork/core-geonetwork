@@ -55,6 +55,7 @@ import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.datamanager.IMetadataValidator;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.search.IndexingMode;
+import org.fao.geonet.kernel.search.submission.IIndexSubmittor;
 import org.fao.geonet.repository.UserGroupRepository;
 import org.jdom.Element;
 import org.slf4j.Logger;
@@ -164,8 +165,8 @@ public class DataManager {
     }
 
     @Deprecated
-    public void indexMetadata(final String metadataId, boolean forceRefreshReaders) throws Exception {
-        metadataIndexer.indexMetadata(metadataId, forceRefreshReaders, IndexingMode.full);
+    public void indexMetadata(final String metadataId, IIndexSubmittor indexSubmittor) throws Exception {
+        metadataIndexer.indexMetadata(metadataId, indexSubmittor, IndexingMode.full);
     }
 
     @Deprecated
@@ -361,10 +362,10 @@ public class DataManager {
 
     @Deprecated
     public AbstractMetadata insertMetadata(ServiceContext context, AbstractMetadata newMetadata, Element metadataXml, IndexingMode indexingMode,
-                                           boolean updateFixedInfo, UpdateDatestamp updateDatestamp, boolean fullRightsForGroup, boolean forceRefreshReaders)
+                                           boolean updateFixedInfo, UpdateDatestamp updateDatestamp, boolean fullRightsForGroup, IIndexSubmittor indexSubmittor)
         throws Exception {
         return metadataManager.insertMetadata(context, newMetadata, metadataXml, indexingMode, updateFixedInfo, updateDatestamp,
-            fullRightsForGroup, forceRefreshReaders);
+            fullRightsForGroup, indexSubmittor);
     }
 
     @Deprecated

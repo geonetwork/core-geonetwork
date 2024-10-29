@@ -45,6 +45,7 @@ import org.fao.geonet.exceptions.BadParameterEx;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.schema.MetadataSchema;
+import org.fao.geonet.kernel.search.submission.DirectIndexSubmittor;
 import org.fao.geonet.repository.MetadataValidationRepository;
 import org.fao.geonet.repository.SchematronRepository;
 import org.fao.geonet.utils.IO;
@@ -189,7 +190,7 @@ public class MetadataValidateApi {
                 .setStatus(isvalid ? MetadataValidationStatus.VALID : MetadataValidationStatus.INVALID)
                 .setRequired(true).setNumTests(0).setNumFailures(0);
             this.metadataValidationRepository.save(metadataValidation);
-            dataManager.indexMetadata(("" + metadata.getId()), true);
+            dataManager.indexMetadata(("" + metadata.getId()), DirectIndexSubmittor.INSTANCE);
             new RecordValidationTriggeredEvent(metadata.getId(),
                 ApiUtils.getUserSession(request.getSession()).getUserIdAsInt(),
                 metadataValidation.getStatus().getCode()).publish(appContext);

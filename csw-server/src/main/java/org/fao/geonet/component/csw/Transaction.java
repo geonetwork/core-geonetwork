@@ -50,6 +50,7 @@ import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.search.IndexingMode;
+import org.fao.geonet.kernel.search.submission.DirectIndexSubmittor;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.utils.Log;
@@ -279,7 +280,7 @@ public class Transaction extends AbstractOperation implements CatalogService {
             dataMan.setOperation(context, id, "" + ReservedGroup.all.getId(), ReservedOperation.dynamic);
         }
 
-        dataMan.indexMetadata(id, true);
+        dataMan.indexMetadata(id, DirectIndexSubmittor.INSTANCE);
 
         AbstractMetadata metadata = metadataUtils.findOne(id);
         ApplicationContext applicationContext = ApplicationContextHolder.get();

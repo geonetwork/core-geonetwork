@@ -53,6 +53,8 @@ import org.fao.geonet.kernel.SelectionManager;
 import org.fao.geonet.kernel.datamanager.IMetadataIndexer;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.search.index.OverviewIndexFieldUpdater;
+import org.fao.geonet.kernel.search.submission.BatchingIndexSubmittor;
+import org.fao.geonet.kernel.search.submission.IIndexSubmittor;
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.repository.SourceRepository;
 import org.fao.geonet.repository.specification.MetadataSpecs;
@@ -87,8 +89,6 @@ public class EsSearchManager implements ISearchManager {
     public static final String SCHEMA_INDEX_SUBTEMPLATE_XSTL_FILENAME = "index-subtemplate.xsl";
     public static final String FIELDNAME = "name";
     public static final String FIELDSTRING = "string";
-
-    private static final int COMMIT_INTERVAL = 200;
 
     public static final Map<String, String> RELATED_INDEX_FIELDS;
     public static final Set<String> FIELDLIST_CORE;
@@ -176,7 +176,6 @@ public class EsSearchManager implements ISearchManager {
     @Autowired
     private OverviewIndexFieldUpdater overviewFieldUpdater;
 
-    private final Map<String, String> listOfDocumentsToIndex = Collections.synchronizedMap(new HashMap<>());
     private Map<String, String> indexList;
 
     private Path getXSLTForIndexing(Path schemaDir, MetadataType metadataType) {
@@ -426,7 +425,7 @@ public class EsSearchManager implements ISearchManager {
     public void index(Path schemaDir, Element metadata, String id,
                       Multimap<String, Object> dbFields,
                       MetadataType metadataType,
-                      boolean forceRefreshReaders,
+                      IIndexSubmittor indexSubmittor,
                       IndexingMode indexingMode) throws Exception {
 
         Element docs = new Element("doc");
@@ -452,38 +451,17 @@ public class EsSearchManager implements ISearchManager {
 
         String jsonDocument = mapper.writeValueAsString(doc);
 
-        listOfDocumentsToIndex.put(id, jsonDocument);
-        if (forceRefreshReaders || listOfDocumentsToIndex.size() >= COMMIT_INTERVAL) {
-            sendDocumentsToIndex();
-        }
+        indexSubmittor.submitToIndex(id, jsonDocument, this);
     }
 
-    private void sendDocumentsToIndex() {
-        Map<String, String> documents;
-        synchronized (listOfDocumentsToIndex) {
-            if (listOfDocumentsToIndex.isEmpty()) return;
-            documents = new HashMap<>(listOfDocumentsToIndex);
-            listOfDocumentsToIndex.clear();
+    public void handleIndexResponse(BulkResponse bulkResponse, Map<String, String> documents) throws IOException {
+        try {
+            checkIndexResponse(bulkResponse, documents);
+        } finally {
+            for (String uuid : documents.keySet()) {
+                overviewFieldUpdater.process(uuid);
+            }
         }
-
-        BulkRequest bulkRequest = client.buildBulkRequest(defaultIndex, documents);
-        client.getAsyncClient().bulk(bulkRequest)
-            .thenAcceptAsync(bulkItemResponses -> {
-                    try {
-                        checkIndexResponse(bulkItemResponses, documents);
-                    } catch (IOException e) {
-                        throw new UncheckedIOException(e);
-                    } finally {
-                        documents.keySet().forEach(uuid -> overviewFieldUpdater.process(uuid));
-                    }
-                }
-            )
-            .exceptionally(e -> {
-                LOGGER.error(
-                    "An error occurred while indexing {} documents in current indexing list.",
-                    documents.size(), e);
-                return null;
-            });
     }
 
     private void checkIndexResponse(BulkResponse bulkItemResponses,
@@ -726,7 +704,7 @@ public class EsSearchManager implements ISearchManager {
 
     @Override
     public void forceIndexChanges() {
-        sendDocumentsToIndex();
+        // TODO remove - no longer needed due to new indexing behaviour
     }
 
     @Override
@@ -739,44 +717,43 @@ public class EsSearchManager implements ISearchManager {
             clearIndex();
         }
 
-        if (StringUtils.isNotBlank(bucket)) {
-            ArrayList<String> listOfIdsToIndex = new ArrayList<>();
-            UserSession session = context.getUserSession();
-            SelectionManager sm = SelectionManager.getManager(session);
+        try (BatchingIndexSubmittor indexSubmittor = new BatchingIndexSubmittor()) {
+            if (StringUtils.isNotBlank(bucket)) {
+                ArrayList<String> listOfIdsToIndex = new ArrayList<>();
+                UserSession session = context.getUserSession();
+                SelectionManager sm = SelectionManager.getManager(session);
 
-            synchronized (sm.getSelection(bucket)) {
-                for (Iterator<String> iter = sm.getSelection(bucket).iterator();
-                     iter.hasNext(); ) {
-                    String uuid = iter.next();
-                    for (AbstractMetadata metadata : metadataRepository.findAllByUuid(uuid)) {
-                        String indexKey = uuid;
-                        if (metadata instanceof MetadataDraft) {
-                            indexKey += "-draft";
+                synchronized (sm.getSelection(bucket)) {
+                    for (String uuid : sm.getSelection(bucket)) {
+                        for (AbstractMetadata metadata : metadataRepository.findAllByUuid(uuid)) {
+                            String indexKey = uuid;
+                            if (metadata instanceof MetadataDraft) {
+                                indexKey += "-draft";
+                            }
+
+                            listOfIdsToIndex.add(indexKey);
                         }
 
-                        listOfIdsToIndex.add(indexKey);
-                    }
-
-                    if (!metadataRepository.existsMetadataUuid(uuid)) {
-                        LOGGER.warn("Selection contains uuid '{}' not found in database", uuid);
+                        if (!metadataRepository.existsMetadataUuid(uuid)) {
+                            LOGGER.warn("Selection contains uuid '{}' not found in database", uuid);
+                        }
                     }
                 }
-            }
-            for (String id : listOfIdsToIndex) {
-                metadataIndexer.indexMetadata(id, false, IndexingMode.full);
-            }
-        } else {
-            final Specification<Metadata> metadataSpec =
-                Specification.where((Specification<Metadata>) MetadataSpecs.isType(MetadataType.METADATA))
-                    .or((Specification<Metadata>) MetadataSpecs.isType(MetadataType.TEMPLATE));
-            final List<Integer> metadataIds = metadataRepository.findAllIdsBy(
-                Specification.where(metadataSpec)
-            );
-            for (Integer id : metadataIds) {
-                metadataIndexer.indexMetadata(id + "", false, IndexingMode.full);
+                for (String id : listOfIdsToIndex) {
+                    metadataIndexer.indexMetadata(id, indexSubmittor, IndexingMode.full);
+                }
+            } else {
+                final Specification<Metadata> metadataSpec =
+                    Specification.where((Specification<Metadata>) MetadataSpecs.isType(MetadataType.METADATA))
+                        .or((Specification<Metadata>) MetadataSpecs.isType(MetadataType.TEMPLATE));
+                final List<Integer> metadataIds = metadataRepository.findAllIdsBy(
+                    Specification.where(metadataSpec)
+                );
+                for (Integer id : metadataIds) {
+                    metadataIndexer.indexMetadata(id + "", indexSubmittor, IndexingMode.full);
+                }
             }
         }
-        sendDocumentsToIndex();
         return true;
     }
 
@@ -931,7 +908,8 @@ public class EsSearchManager implements ISearchManager {
     }
 
     public boolean isIndexing() {
-        return !listOfDocumentsToIndex.isEmpty();
+        // TODO this needs a new metric
+        return false;
     }
 
     public boolean isIndexWritable(String indexName) throws IOException, ElasticsearchException {
