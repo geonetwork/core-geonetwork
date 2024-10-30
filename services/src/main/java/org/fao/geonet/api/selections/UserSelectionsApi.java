@@ -386,7 +386,7 @@ public class UserSelectionsApi {
         if (uuid == null || uuid.length == 0) {
             umsRepository.deleteAllBySelectionAndUser(selectionIdentifier, userIdentifier);
         } else {
-            try (BatchingIndexSubmittor batchingIndexSubmittor = new BatchingIndexSubmittor()) {
+            try (BatchingIndexSubmittor batchingIndexSubmittor = new BatchingIndexSubmittor(uuid.length)) {
                 for (String u : uuid) {
                     UserSavedSelectionId e = new UserSavedSelectionId()
                         .setSelectionId(selectionIdentifier)

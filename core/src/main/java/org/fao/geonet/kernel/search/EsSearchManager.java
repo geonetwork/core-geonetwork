@@ -717,38 +717,40 @@ public class EsSearchManager implements ISearchManager {
             clearIndex();
         }
 
-        try (BatchingIndexSubmittor indexSubmittor = new BatchingIndexSubmittor()) {
-            if (StringUtils.isNotBlank(bucket)) {
-                ArrayList<String> listOfIdsToIndex = new ArrayList<>();
-                UserSession session = context.getUserSession();
-                SelectionManager sm = SelectionManager.getManager(session);
+        if (StringUtils.isNotBlank(bucket)) {
+            ArrayList<String> listOfIdsToIndex = new ArrayList<>();
+            UserSession session = context.getUserSession();
+            SelectionManager sm = SelectionManager.getManager(session);
 
-                synchronized (sm.getSelection(bucket)) {
-                    for (String uuid : sm.getSelection(bucket)) {
-                        for (AbstractMetadata metadata : metadataRepository.findAllByUuid(uuid)) {
-                            String indexKey = uuid;
-                            if (metadata instanceof MetadataDraft) {
-                                indexKey += "-draft";
-                            }
-
-                            listOfIdsToIndex.add(indexKey);
+            synchronized (sm.getSelection(bucket)) {
+                for (String uuid : sm.getSelection(bucket)) {
+                    for (AbstractMetadata metadata : metadataRepository.findAllByUuid(uuid)) {
+                        String indexKey = uuid;
+                        if (metadata instanceof MetadataDraft) {
+                            indexKey += "-draft";
                         }
 
-                        if (!metadataRepository.existsMetadataUuid(uuid)) {
-                            LOGGER.warn("Selection contains uuid '{}' not found in database", uuid);
-                        }
+                        listOfIdsToIndex.add(indexKey);
+                    }
+
+                    if (!metadataRepository.existsMetadataUuid(uuid)) {
+                        LOGGER.warn("Selection contains uuid '{}' not found in database", uuid);
                     }
                 }
+            }
+            try (BatchingIndexSubmittor indexSubmittor = new BatchingIndexSubmittor(listOfIdsToIndex.size())) {
                 for (String id : listOfIdsToIndex) {
                     metadataIndexer.indexMetadata(id, indexSubmittor, IndexingMode.full);
                 }
-            } else {
-                final Specification<Metadata> metadataSpec =
-                    Specification.where((Specification<Metadata>) MetadataSpecs.isType(MetadataType.METADATA))
-                        .or((Specification<Metadata>) MetadataSpecs.isType(MetadataType.TEMPLATE));
-                final List<Integer> metadataIds = metadataRepository.findAllIdsBy(
-                    Specification.where(metadataSpec)
-                );
+            }
+        } else {
+            final Specification<Metadata> metadataSpec =
+                Specification.where((Specification<Metadata>) MetadataSpecs.isType(MetadataType.METADATA))
+                    .or((Specification<Metadata>) MetadataSpecs.isType(MetadataType.TEMPLATE));
+            final List<Integer> metadataIds = metadataRepository.findAllIdsBy(
+                Specification.where(metadataSpec)
+            );
+            try (BatchingIndexSubmittor indexSubmittor = new BatchingIndexSubmittor(metadataIds.size())) {
                 for (Integer id : metadataIds) {
                     metadataIndexer.indexMetadata(id + "", indexSubmittor, IndexingMode.full);
                 }

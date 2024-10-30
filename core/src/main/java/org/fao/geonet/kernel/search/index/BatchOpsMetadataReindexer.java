@@ -209,7 +209,7 @@ public class BatchOpsMetadataReindexer extends MetadataIndexerProcessor implemen
                 "Indexing range [%d-%d]/%d by threads %s.",
                 beginIndex, beginIndex + count, ids.length, Thread.currentThread().getId()));
             long start = System.currentTimeMillis();
-            try (BatchingIndexSubmittor batchingIndexSubmittor = new BatchingIndexSubmittor()) {
+            try (BatchingIndexSubmittor batchingIndexSubmittor = new BatchingIndexSubmittor(count)) {
                 for (int i = beginIndex; i < beginIndex + count; i++) {
                     try {
                         dm.indexMetadata(ids[i] + "", batchingIndexSubmittor);

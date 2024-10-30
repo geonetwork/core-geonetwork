@@ -78,7 +78,7 @@ public final class IndexMetadataTask implements Runnable {
     }
 
     public void run() {
-        try (BatchingIndexSubmittor batchingIndexSubmittor = new BatchingIndexSubmittor()) {
+        try (BatchingIndexSubmittor batchingIndexSubmittor = new BatchingIndexSubmittor(_metadataIds.size())) {
             _context.setAsThreadLocal();
             while (_transactionStatus != null && !_transactionStatus.isCompleted()) {
                 try {

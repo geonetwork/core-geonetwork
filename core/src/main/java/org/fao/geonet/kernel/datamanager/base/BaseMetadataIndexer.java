@@ -302,7 +302,7 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
 
     @Override
     public void indexMetadata(final List<String> metadataIds) throws Exception {
-        try (BatchingIndexSubmittor indexSubmittor = new BatchingIndexSubmittor()) {
+        try (BatchingIndexSubmittor indexSubmittor = new BatchingIndexSubmittor(metadataIds.size())) {
             for (String metadataId : metadataIds) {
                 indexMetadata(metadataId, indexSubmittor, IndexingMode.full);
             }

@@ -68,11 +68,12 @@ public class IndexingTask extends QuartzJobBean {
             return;
         }
 
-        try (BatchingIndexSubmittor batchingIndexSubmittor = new BatchingIndexSubmittor()) {
-            if (Log.isDebugEnabled(Geonet.INDEX_ENGINE)) {
-                Log.debug(Geonet.INDEX_ENGINE, "Indexing task / List of records to index: "
-                    + metadataIdentifiers.toString() + ".");
-            }
+
+        if (Log.isDebugEnabled(Geonet.INDEX_ENGINE)) {
+            Log.debug(Geonet.INDEX_ENGINE, "Indexing task / List of records to index: "
+                + metadataIdentifiers.toString() + ".");
+        }
+        try (BatchingIndexSubmittor batchingIndexSubmittor = new BatchingIndexSubmittor(metadataIdentifiers.size())) {
 
             for (Integer metadataIdentifier : metadataIdentifiers) {
                 try {

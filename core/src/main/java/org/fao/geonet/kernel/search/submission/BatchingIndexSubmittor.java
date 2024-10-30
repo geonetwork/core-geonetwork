@@ -24,13 +24,36 @@ public class BatchingIndexSubmittor implements AutoCloseable, IIndexSubmittor {
      * Maximum number of inflight bulk requests before waiting for the Elasticsearch
      */
     private static final int MAX_INFLIGHT_INDEX_REQUESTS = 4;
-    private static final int COMMIT_INTERVAL = 200;
     @SuppressWarnings("unchecked")
     private final CompletableFuture<Void>[] inflightFutures = new CompletableFuture[MAX_INFLIGHT_INDEX_REQUESTS];
     private final Map<String, String> listOfDocumentsToIndex = new HashMap<>();
+    private final int commitInterval;
     private int index;
     private boolean closed = false;
     private EsSearchManager searchManager;
+
+    public BatchingIndexSubmittor() {
+        this.commitInterval = 200;
+    }
+
+    /**
+     * @param estimatedTotalSize The estimated size of documents to index. Does not need to match the actual amount of submitted documents
+     */
+    public BatchingIndexSubmittor(int estimatedTotalSize) {
+        if (estimatedTotalSize < 0) {
+            throw new IllegalArgumentException("estimatedTotalSize must not be negative");
+        }
+
+        // Compute an ideal commit interval based on estimated size of elements to index
+        // Try to strike a balance between
+        // a) Not making enough bulk requests, thus having to wait a long time at the end for a large chunk => try to make at least 8 requests
+        int elementsPerBatchRequest = estimatedTotalSize / 8;
+        // b) Making too many requests, adding unnecessary overhead => set the minimum batch size to 20
+        elementsPerBatchRequest = Math.max(20, elementsPerBatchRequest);
+        // c) Growing the listOfDocumentsToIndex too large => set the maximum batch size to 200
+        elementsPerBatchRequest = Math.min(200, elementsPerBatchRequest);
+        this.commitInterval = elementsPerBatchRequest;
+    }
 
     @Override
     public void submitToIndex(String id, String jsonDocument, EsSearchManager searchManager) {
@@ -40,7 +63,7 @@ public class BatchingIndexSubmittor implements AutoCloseable, IIndexSubmittor {
 
         this.searchManager = searchManager;
         listOfDocumentsToIndex.put(id, jsonDocument);
-        if (listOfDocumentsToIndex.size() >= COMMIT_INTERVAL) {
+        if (listOfDocumentsToIndex.size() >= commitInterval) {
             Map<String, String> toIndex = new HashMap<>(listOfDocumentsToIndex);
             listOfDocumentsToIndex.clear();
             sendDocumentsToIndex(toIndex);
