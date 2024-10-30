@@ -91,7 +91,12 @@ public class ResourceLoggerStore extends AbstractStore {
 
     @Override
     public ResourceHolder getResourceInternal(String metadataUuid, MetadataResourceVisibility visibility, String resourceId, Boolean approved) throws Exception {
-        throw new UnsupportedOperationException("ResourceLoggerStore does not support getResourceInternal.");
+        if (decoratedStore != null) {
+            final ResourceHolder resource = decoratedStore
+                .getResourceInternal(metadataUuid, visibility, resourceId, approved);
+            return resource;
+        }
+        return null;
     }
 
     @Override
