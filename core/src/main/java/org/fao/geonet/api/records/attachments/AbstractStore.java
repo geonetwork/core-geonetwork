@@ -35,6 +35,8 @@ import org.fao.geonet.domain.MetadataResourceVisibility;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.repository.MetadataRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -55,6 +57,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public abstract class AbstractStore implements Store {
     protected static final String RESOURCE_MANAGEMENT_EXTERNAL_PROPERTIES_SEPARATOR = ":";
     protected static final String RESOURCE_MANAGEMENT_EXTERNAL_PROPERTIES_ESCAPED_SEPARATOR = "\\:";
+    private static final Logger log = LoggerFactory.getLogger(AbstractStore.class);
 
     @Override
     public final List<MetadataResource> getResources(final ServiceContext context, final String metadataUuid, final Sort sort,
@@ -162,8 +165,12 @@ public abstract class AbstractStore implements Store {
             String contentDisposition = connection.getHeaderField("Content-Disposition");
 
             if (contentDisposition != null && contentDisposition.contains("filename=")) {
-                return contentDisposition.split("filename=")[1].replace("\"", "");
+                String filename = contentDisposition.split("filename=")[1].replace("\"", "").trim();
+                return filename.isEmpty() ? null : filename;
             }
+            return null;
+        } catch (Exception e) {
+            log.error("Error retrieving resource filename from header", e);
             return null;
         } finally {
             connection.disconnect();
