@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
+import java.lang.ref.Cleaner;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
@@ -20,20 +21,71 @@ import java.util.concurrent.CompletableFuture;
  */
 public class BatchingIndexSubmittor implements AutoCloseable, IIndexSubmittor {
     private static final Logger LOGGER = LoggerFactory.getLogger(Geonet.INDEX_ENGINE);
+    private static final Cleaner CLEANER = Cleaner.create();
     /**
      * Maximum number of inflight bulk requests before waiting for the Elasticsearch
      */
     private static final int MAX_INFLIGHT_INDEX_REQUESTS = 4;
-    @SuppressWarnings("unchecked")
-    private final CompletableFuture<Void>[] inflightFutures = new CompletableFuture[MAX_INFLIGHT_INDEX_REQUESTS];
-    private final Map<String, String> listOfDocumentsToIndex = new HashMap<>();
+
+    private static class State implements Runnable {
+        private final Map<String, String> listOfDocumentsToIndex = new HashMap<>();
+        @SuppressWarnings("unchecked")
+        private final CompletableFuture<Void>[] inflightFutures = new CompletableFuture[MAX_INFLIGHT_INDEX_REQUESTS];
+        private int index;
+        private EsSearchManager searchManager;
+        private boolean closed = false;
+
+        @Override
+        public void run() {
+            if (!closed) {
+                LOGGER.error("BatchingIndexSubmittor was not closed before it was cleaned! Sending any remaining data");
+            }
+            // Send any remaining pending documents
+            if (!listOfDocumentsToIndex.isEmpty()) {
+                sendDocumentsToIndex(listOfDocumentsToIndex);
+            }
+        }
+
+
+        private void sendDocumentsToIndex(Map<String, String> toIndex) {
+            EsRestClient restClient = searchManager.getClient();
+            BulkRequest bulkRequest = restClient.buildBulkRequest(searchManager.getDefaultIndex(), listOfDocumentsToIndex);
+            CompletableFuture<Void> currentIndexFuture = restClient.getAsyncClient().bulk(bulkRequest)
+                    .thenAcceptAsync(bulkItemResponses -> {
+                        try {
+                            searchManager.handleIndexResponse(bulkItemResponses, listOfDocumentsToIndex);
+                        } catch (IOException e) {
+                            throw new UncheckedIOException(e);
+                        }
+                    }).exceptionally(e -> {
+                        LOGGER.error(
+                                "An error occurred while indexing {} documents in current indexing list.",
+                                toIndex.size(), e);
+                        return null;
+                    });
+
+            // Request send, sort into queue
+            // First, see if the previous future already finished
+            CompletableFuture<Void> previousFuture = inflightFutures[index];
+            if (previousFuture != null) {
+                if (!previousFuture.isDone()) {
+                    // Normally, the ES should be able to keep up. If it does not, just wait until there is some space in the ring buffer
+                    LOGGER.info("Waiting for elasticsearch to process pending bulk requests...");
+                    previousFuture.join();
+                }
+            }
+            inflightFutures[index] = currentIndexFuture;
+            index = (index + 1) % inflightFutures.length;
+        }
+    }
+
+    private final State state = new State();
+    private final Cleaner.Cleanable cleanable;
     private final int commitInterval;
-    private int index;
-    private boolean closed = false;
-    private EsSearchManager searchManager;
 
     public BatchingIndexSubmittor() {
         this.commitInterval = 200;
+        this.cleanable = CLEANER.register(this, state);
     }
 
     /**
@@ -53,71 +105,38 @@ public class BatchingIndexSubmittor implements AutoCloseable, IIndexSubmittor {
         // c) Growing the listOfDocumentsToIndex too large => set the maximum batch size to 200
         elementsPerBatchRequest = Math.min(200, elementsPerBatchRequest);
         this.commitInterval = elementsPerBatchRequest;
+        this.cleanable = CLEANER.register(this, state);
     }
 
     @Override
     public void submitToIndex(String id, String jsonDocument, EsSearchManager searchManager) {
-        if (closed) {
+        if (state.closed) {
             throw new IllegalStateException("Attempting to use a closed " + this.getClass().getSimpleName());
         }
 
-        this.searchManager = searchManager;
+        state.searchManager = searchManager;
+        Map<String, String> listOfDocumentsToIndex = state.listOfDocumentsToIndex;
         listOfDocumentsToIndex.put(id, jsonDocument);
         if (listOfDocumentsToIndex.size() >= commitInterval) {
             Map<String, String> toIndex = new HashMap<>(listOfDocumentsToIndex);
             listOfDocumentsToIndex.clear();
-            sendDocumentsToIndex(toIndex);
+            state.sendDocumentsToIndex(toIndex);
         }
     }
 
     @Override
     public void close() {
-        if (closed) {
+        if (this.state.closed) {
             throw new IllegalStateException("Attempting to close a already closed " + this.getClass().getSimpleName());
         }
-        this.closed = true;
-
-        // Send any remaining pending documents
-        if (!this.listOfDocumentsToIndex.isEmpty()) {
-            sendDocumentsToIndex(this.listOfDocumentsToIndex);
-        }
+        this.state.closed = true;
+        this.cleanable.clean();
 
         // Wait for all remaining documents to be received
-        for (CompletableFuture<Void> inflightFuture : inflightFutures) {
+        for (CompletableFuture<Void> inflightFuture : state.inflightFutures) {
             if (inflightFuture != null) {
                 inflightFuture.join();
             }
         }
-    }
-
-    private void sendDocumentsToIndex(Map<String, String> toIndex) {
-        EsRestClient restClient = searchManager.getClient();
-        BulkRequest bulkRequest = restClient.buildBulkRequest(searchManager.getDefaultIndex(), listOfDocumentsToIndex);
-        CompletableFuture<Void> currentIndexFuture = restClient.getAsyncClient().bulk(bulkRequest)
-            .thenAcceptAsync(bulkItemResponses -> {
-                try {
-                    searchManager.handleIndexResponse(bulkItemResponses, listOfDocumentsToIndex);
-                } catch (IOException e) {
-                    throw new UncheckedIOException(e);
-                }
-            }).exceptionally(e -> {
-                LOGGER.error(
-                    "An error occurred while indexing {} documents in current indexing list.",
-                    toIndex.size(), e);
-                return null;
-            });
-
-        // Request send, sort into queue
-        // First, see if the previous future already finished
-        CompletableFuture<Void> previousFuture = inflightFutures[index];
-        if (previousFuture != null) {
-            if (!previousFuture.isDone()) {
-                // Normally, the ES should be able to keep up. If it does not, just wait until there is some space in the ring buffer
-                LOGGER.info("Waiting for elasticsearch to process pending bulk requests...");
-                previousFuture.join();
-            }
-        }
-        inflightFutures[index] = currentIndexFuture;
-        index = (index + 1) % inflightFutures.length;
     }
 }
