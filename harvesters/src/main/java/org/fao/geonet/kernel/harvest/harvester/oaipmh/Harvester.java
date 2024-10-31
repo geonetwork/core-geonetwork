@@ -353,7 +353,6 @@ class Harvester extends BaseAligner<OaiPmhParams> implements IHarvester<HarvestR
             }
         }
 
-        dataMan.forceIndexChanges();
         log.info("End of alignment for : " + params.getName());
     }
 

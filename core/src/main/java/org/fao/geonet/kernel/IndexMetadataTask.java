@@ -50,8 +50,6 @@ public final class IndexMetadataTask implements Runnable {
     private final List<?> _metadataIds;
     private final TransactionStatus _transactionStatus;
     private final Set<IndexMetadataTask> _batchIndex;
-    private final EsSearchManager searchManager;
-    private final AtomicInteger indexed;
     private User _user;
 
     /**
@@ -62,13 +60,11 @@ public final class IndexMetadataTask implements Runnable {
      * @param transactionStatus if non-null, wait for the transaction to complete before indexing
      */
     public IndexMetadataTask(@Nonnull ServiceContext context, @Nonnull List<?> metadataIds, Set<IndexMetadataTask> batchIndex,
-                      @Nullable TransactionStatus transactionStatus, @Nonnull AtomicInteger indexed) {
-        this.indexed = indexed;
+                      @Nullable TransactionStatus transactionStatus) {
         this._transactionStatus = transactionStatus;
         this._context = context;
         this._metadataIds = metadataIds;
         this._batchIndex = batchIndex;
-        this.searchManager = context.getBean(EsSearchManager.class);
 
         batchIndex.add(this);
 
@@ -102,10 +98,6 @@ public final class IndexMetadataTask implements Runnable {
             DataManager dataManager = _context.getBean(DataManager.class);
             // servlet up so safe to index all metadata that needs indexing
             for (Object metadataId : _metadataIds) {
-                this.indexed.incrementAndGet();
-                if (this.indexed.compareAndSet(500, 0)) {
-                    searchManager.forceIndexChanges();
-                }
 
                 try {
                     dataManager.indexMetadata(metadataId.toString(), batchingIndexSubmittor);

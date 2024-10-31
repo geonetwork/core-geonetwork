@@ -145,8 +145,6 @@ public class Aligner extends BaseAligner<GeoPRESTParams> {
             }
         }
 
-        dataMan.forceIndexChanges();
-
         log.info("End of alignment for : " + params.getName());
 
         return result;

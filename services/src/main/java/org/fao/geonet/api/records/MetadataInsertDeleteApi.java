@@ -244,8 +244,6 @@ public class MetadataInsertDeleteApi {
         RecordDeletedEvent recordDeletedEvent = triggerDeletionEvent(request, metadata.getId() + "");
         metadataManager.deleteMetadata(context, metadata.getId() + "");
         recordDeletedEvent.publish(ApplicationContextHolder.get());
-
-        dataManager.forceIndexChanges();
     }
 
     @io.swagger.v3.oas.annotations.Operation(summary = "Delete one or more records", description ="User MUST be able to edit the record to delete it. "

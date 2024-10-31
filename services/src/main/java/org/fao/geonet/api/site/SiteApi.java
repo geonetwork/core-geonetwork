@@ -614,22 +614,6 @@ public class SiteApi {
         return new HttpEntity<>(HttpStatus.CREATED);
     }
 
-    @io.swagger.v3.oas.annotations.Operation(
-        summary = "Index commit",
-        description = "")
-    @RequestMapping(
-        path = "/index/commit",
-        produces = MediaType.APPLICATION_JSON_VALUE,
-        method = RequestMethod.GET)
-    @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("hasAuthority('Administrator')")
-    public void indexCommit(
-        HttpServletRequest request
-    ) throws Exception {
-        EsSearchManager searchMan = ApplicationContextHolder.get().getBean(EsSearchManager.class);
-        searchMan.forceIndexChanges();
-    }
-
 
     @io.swagger.v3.oas.annotations.Operation(
         summary = "Index status",
@@ -673,24 +657,6 @@ public class SiteApi {
         );
         infoIndexDbSynch.put("index.count", countResponse.count());
         return infoIndexDbSynch;
-    }
-
-
-    @io.swagger.v3.oas.annotations.Operation(
-        summary = "Force to commit pending documents in index.",
-        description = "May be used when indexing task is hanging.")
-    @PutMapping(
-        path = "/index/commit")
-    @ApiResponses(value = {
-        @ApiResponse(responseCode = "201", description = "Changes committed.")
-    })
-    @ResponseStatus(HttpStatus.CREATED)
-    @PreAuthorize("hasAuthority('Administrator')")
-    public void commitIndexChanges(
-    ) throws Exception {
-        ApplicationContextHolder.get()
-            .getBean(EsSearchManager.class)
-            .forceIndexChanges();
     }
 
 

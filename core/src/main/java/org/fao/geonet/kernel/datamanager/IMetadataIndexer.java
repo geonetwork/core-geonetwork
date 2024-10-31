@@ -51,11 +51,6 @@ public interface IMetadataIndexer {
     public void init(ServiceContext context, Boolean force) throws Exception;
 
     /**
-     * Force the index to wait until all changes are processed and the next reader obtained will get the latest data.
-     */
-    void forceIndexChanges() throws IOException;
-
-    /**
      * Remove the records that matches the specification
      *
      * @param specification

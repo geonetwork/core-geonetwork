@@ -703,11 +703,6 @@ public class EsSearchManager implements ISearchManager {
     }
 
     @Override
-    public void forceIndexChanges() {
-        // TODO remove - no longer needed due to new indexing behaviour
-    }
-
-    @Override
     public boolean rebuildIndex(ServiceContext context,
                                 boolean reset, String bucket) throws Exception {
         IMetadataIndexer metadataIndexer = context.getBean(IMetadataIndexer.class);

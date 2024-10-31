@@ -264,7 +264,6 @@ public class Aligner extends BaseAligner<CswParams> {
                 result.locallyRemoved++;
             }
         }
-        dataMan.forceIndexChanges();
 
         return result;
     }

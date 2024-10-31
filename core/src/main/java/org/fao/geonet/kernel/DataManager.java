@@ -580,11 +580,6 @@ public class DataManager {
     }
 
     @Deprecated
-    public void forceIndexChanges() throws IOException {
-        metadataIndexer.forceIndexChanges();
-    }
-
-    @Deprecated
     public int batchDeleteMetadataAndUpdateIndex(Specification<? extends AbstractMetadata> specification) throws Exception {
         return metadataIndexer.batchDeleteMetadataAndUpdateIndex(specification);
     }

@@ -54,12 +54,6 @@ public interface ISearchManager {
                MetadataType metadataType, IIndexSubmittor indexSubmittor, IndexingMode indexingMode)
         throws Exception;
 
-    /**
-     * Force the index to wait until all changes are processed and the next reader obtained will get
-     * the latest data.
-     */
-    void forceIndexChanges() throws IOException;
-
 
     /**
      * Rebuilds the Lucene index. If xlink or from selection parameters are defined, reindex a

@@ -150,11 +150,6 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
     Set<IndexMetadataTask> batchIndex = ConcurrentHashMap.newKeySet();
 
     @Override
-    public void forceIndexChanges() throws IOException {
-        searchManager.forceIndexChanges();
-    }
-
-    @Override
     public int batchDeleteMetadataAndUpdateIndex(Specification<? extends AbstractMetadata> specification)
         throws Exception {
         final List<? extends AbstractMetadata> metadataToDelete = metadataUtils.findAll(specification);
@@ -270,7 +265,6 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
             Log.debug(Geonet.INDEX_ENGINE, "Indexing " + metadataIds.size() + " records.");
             Log.debug(Geonet.INDEX_ENGINE, metadataIds.toString());
         }
-        AtomicInteger numIndexedTracker = new AtomicInteger();
         while (index < metadataIds.size()) {
             int start = index;
             int count = Math.min(perThread, metadataIds.size() - start);
@@ -287,7 +281,7 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
             }
 
             // create threads to process this chunk of ids
-            Runnable worker = new IndexMetadataTask(context, subList, batchIndex, transactionStatus, numIndexedTracker);
+            Runnable worker = new IndexMetadataTask(context, subList, batchIndex, transactionStatus);
             executor.execute(worker);
             index += count;
         }

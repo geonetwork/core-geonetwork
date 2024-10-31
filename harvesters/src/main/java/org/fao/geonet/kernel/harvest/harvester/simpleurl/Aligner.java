@@ -186,7 +186,6 @@ public class Aligner extends BaseAligner<SimpleUrlParams> {
                 result.locallyRemoved ++;
             }
         }
-        dataMan.forceIndexChanges();
 
         return result;
     }
