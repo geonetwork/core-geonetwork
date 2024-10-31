@@ -37,6 +37,7 @@ import org.fao.geonet.inspireatom.util.InspireAtomUtil;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.search.EsSearchManager;
+import org.fao.geonet.kernel.search.submission.DirectIndexSubmittor;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.InspireAtomFeedRepository;
@@ -169,7 +170,7 @@ public class InspireAtomHarvester {
             // Removes all atom information from existing metadata. Harvester will reload with updated information
             localLogger.info("ATOM feed harvest: remove existing metadata feed");
             repository.deleteAll(InspireAtomFeedSpecs.hasMetadataId(Integer.parseInt(metadataId)));
-            dataMan.indexMetadata(Arrays.asList(metadataId));
+            dataMan.indexMetadata(metadataId, DirectIndexSubmittor.INSTANCE);
 
             // Process service metadata feeds
             //    datasetsInformation stores the dataset information for identifier and namespace for the services feed.
@@ -244,7 +245,7 @@ public class InspireAtomHarvester {
                 repository.save(inspireAtomFeed);
 
                 // Index the metadata to store the atom feed information in the index
-                dataMan.indexMetadata(Arrays.asList(metadataId));
+                dataMan.indexMetadata(metadataId, DirectIndexSubmittor.INSTANCE);
 
 
                 // Extract datasets information (identifier, namespace) from the service feed:
@@ -337,7 +338,7 @@ public class InspireAtomHarvester {
                 repository.save(inspireAtomFeed);
 
                 // Index the metadata to store the atom feed information in the index
-                dataMan.indexMetadata(Arrays.asList(metadataId));
+                dataMan.indexMetadata(metadataId, DirectIndexSubmittor.INSTANCE);
                 result.addContent(new Element("feed").setAttribute("uuid", metadataUuid)
                     .setAttribute("feed", atomUrl).setAttribute("status", "ok"));
             } catch (Exception ex) {

@@ -33,6 +33,8 @@ import org.fao.geonet.events.md.MetadataStatusChanged;
 import org.fao.geonet.kernel.datamanager.IMetadataIndexer;
 import org.fao.geonet.kernel.datamanager.IMetadataOperations;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
+import org.fao.geonet.kernel.search.IndexingMode;
+import org.fao.geonet.kernel.search.submission.DirectIndexSubmittor;
 import org.fao.geonet.utils.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
@@ -88,7 +90,7 @@ public class RetireRecord implements ApplicationListener<MetadataStatusChanged> 
                         metadataOperations.forceUnsetOperation(context, event.getMd().getId(), ReservedGroup.all.getId(), ReservedOperation.view.getId());
                         metadataOperations.forceUnsetOperation(context, event.getMd().getId(), ReservedGroup.all.getId(), ReservedOperation.notify.getId());
 
-                        metadataIndexer.indexMetadata(Arrays.asList(String.valueOf(event.getMd().getId())));
+                        metadataIndexer.indexMetadata(String.valueOf(event.getMd().getId()), DirectIndexSubmittor.INSTANCE, IndexingMode.full);
 
                     } catch (Exception e) {
                         Log.error(Geonet.DATA_MANAGER, "Error upgrading status", e);

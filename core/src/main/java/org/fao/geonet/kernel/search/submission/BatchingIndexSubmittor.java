@@ -46,7 +46,6 @@ public class BatchingIndexSubmittor implements AutoCloseable, IIndexSubmittor {
             }
         }
 
-
         private void sendDocumentsToIndex(Map<String, String> toIndex) {
             EsRestClient restClient = searchManager.getClient();
             BulkRequest bulkRequest = restClient.buildBulkRequest(searchManager.getDefaultIndex(), listOfDocumentsToIndex);

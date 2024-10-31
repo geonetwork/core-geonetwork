@@ -16,6 +16,7 @@ import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.datamanager.IMetadataSchemaUtils;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
+import org.fao.geonet.kernel.search.submission.DirectIndexSubmittor;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.repository.MetadataValidationRepository;
 import org.fao.geonet.repository.SourceRepository;
@@ -263,7 +264,7 @@ public class MInspireEtfValidateProcess implements SelfNaming {
                                     }
 
                                     if (reindexMetadata) {
-                                        dataManager.indexMetadata(new ArrayList<>(Arrays.asList(metadataRecord.getId() + "")));
+                                        dataManager.indexMetadata(metadataRecord.getId() + "", DirectIndexSubmittor.INSTANCE);
                                     }
 
                                 } catch (Exception ex) {

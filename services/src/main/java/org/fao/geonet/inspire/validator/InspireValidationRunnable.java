@@ -31,6 +31,7 @@ import org.fao.geonet.domain.MetadataValidation;
 import org.fao.geonet.domain.MetadataValidationId;
 import org.fao.geonet.domain.MetadataValidationStatus;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.search.submission.DirectIndexSubmittor;
 import org.fao.geonet.repository.MetadataValidationRepository;
 import org.springframework.transaction.TransactionStatus;
 
@@ -91,7 +92,7 @@ public class InspireValidationRunnable implements Runnable {
                     DataManager dataManager =
                         ApplicationContextHolder.get().getBean(DataManager.class);
 
-                    dataManager.indexMetadata(new ArrayList<>(Arrays.asList(mdId + "")));
+                    dataManager.indexMetadata(mdId + "", DirectIndexSubmittor.INSTANCE);
 
                     return null;
                 }

@@ -36,6 +36,8 @@ import org.fao.geonet.events.md.sharing.MetadataShare.Type;
 import org.fao.geonet.kernel.datamanager.IMetadataIndexer;
 import org.fao.geonet.kernel.datamanager.IMetadataOperations;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
+import org.fao.geonet.kernel.search.IndexingMode;
+import org.fao.geonet.kernel.search.submission.DirectIndexSubmittor;
 import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.MetadataDraftRepository;
 import org.fao.geonet.utils.Log;
@@ -121,7 +123,7 @@ public class UpdateOperations implements ApplicationListener<MetadataShare> {
                                     metadataOperations.forceSetOperation(context, draft.getId(),
                                         op.getId().getGroupId(), op.getId().getOperationId());
                                 }
-                                metadataIndexer.indexMetadata(Arrays.asList(String.valueOf(draft.getId())));
+                                metadataIndexer.indexMetadata(String.valueOf(draft.getId()), DirectIndexSubmittor.INSTANCE, IndexingMode.full);
                             } catch (Exception e) {
                                 Log.error(Geonet.DATA_MANAGER, "Error cascading operation to draft", e);
                             }
