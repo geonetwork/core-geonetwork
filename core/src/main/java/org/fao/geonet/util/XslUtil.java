@@ -1246,7 +1246,7 @@ public final class XslUtil {
                 Matcher m = Pattern.compile(settingManager.getNodeURL() + "api/records/(.*)/attachments/(.*)$").matcher(url);
                 BufferedImage image;
                 if (m.find()) {
-                    Store store = ApplicationContextHolder.get().getBean(FilesystemStore.class);
+                    Store store = ApplicationContextHolder.get().getBean("filesystemStore", Store.class);
                     try (Store.ResourceHolder file = store.getResourceInternal(
                         m.group(1),
                         MetadataResourceVisibility.PUBLIC,
