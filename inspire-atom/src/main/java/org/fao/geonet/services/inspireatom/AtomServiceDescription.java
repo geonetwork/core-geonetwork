@@ -1,79 +1,67 @@
-//=============================================================================
-//===	Copyright (C) 2001-2017 Food and Agriculture Organization of the
-//===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
-//===	and United Nations Environment Programme (UNEP)
-//===
-//===	This program is free software; you can redistribute it and/or modify
-//===	it under the terms of the GNU General Public License as published by
-//===	the Free Software Foundation; either version 2 of the License, or (at
-//===	your option) any later version.
-//===
-//===	This program is distributed in the hope that it will be useful, but
-//===	WITHOUT ANY WARRANTY; without even the implied warranty of
-//===	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
-//===	General Public License for more details.
-//===
-//===	You should have received a copy of the GNU General Public License
-//===	along with this program; if not, write to the Free Software
-//===	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
-//===
-//===	Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
-//===	Rome - Italy. email: geonetwork@osgeo.org
-//==============================================================================
+/*
+ * Copyright (C) 2001-2023 Food and Agriculture Organization of the
+ * United Nations (FAO-UN), United Nations World Food Programme (WFP)
+ * and United Nations Environment Programme (UNEP)
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or (at
+ * your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
+ *
+ * Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
+ * Rome - Italy. email: geonetwork@osgeo.org
+ */
 package org.fao.geonet.services.inspireatom;
 
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jeeves.interfaces.Service;
-import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-
-import nonapi.io.github.classgraph.utils.Join;
-import org.apache.commons.lang.NotImplementedException;
-import org.fao.geonet.Util;
+import org.apache.commons.lang.StringUtils;
+import org.fao.geonet.GeonetContext;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.exception.NotAllowedException;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
+import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.AbstractMetadata;
-import org.fao.geonet.domain.ReservedOperation;
+import org.fao.geonet.domain.InspireAtomFeed;
+import org.fao.geonet.domain.InspireAtomFeedEntry;
+import org.fao.geonet.exceptions.ResourceNotFoundEx;
 import org.fao.geonet.guiapi.search.XsltResponseWriter;
 import org.fao.geonet.inspireatom.InspireAtomService;
+import org.fao.geonet.inspireatom.harvester.InspireAtomHarvester;
 import org.fao.geonet.inspireatom.model.DatasetFeedInfo;
+import org.fao.geonet.inspireatom.util.InspireAtomUtil;
+import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.InspireAtomFeedRepository;
 import org.fao.geonet.utils.Log;
-import org.apache.commons.lang.StringUtils;
-import org.fao.geonet.GeonetContext;
-import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.exceptions.MetadataNotFoundEx;
-import org.fao.geonet.inspireatom.util.InspireAtomUtil;
-import org.fao.geonet.inspireatom.harvester.InspireAtomHarvester;
-import org.fao.geonet.domain.InspireAtomFeed;
-import org.fao.geonet.domain.InspireAtomFeedEntry;
-import org.fao.geonet.kernel.DataManager;
-import org.fao.geonet.lib.Lib;
 import org.jdom.Element;
-
-import java.nio.file.Path;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import org.fao.geonet.exceptions.ResourceNotFoundEx;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-import static org.fao.geonet.api.ApiParams.API_PARAM_RECORD_UUID;
 import static org.fao.geonet.inspireatom.util.InspireAtomUtil.retrieveKeywordsFromFileIdentifier;
-import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
 
 @RequestMapping(value = {
@@ -105,7 +93,7 @@ public class AtomServiceDescription {
         produces = MediaType.APPLICATION_XML_VALUE)
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Feeds."),
-        @ApiResponse(responseCode = "204", description = "Not authenticated.")
+        @ApiResponse(responseCode = "204", description = "Not authenticated.", content = {@Content(schema = @Schema(hidden = true))})
     })
     @ResponseStatus(OK)
     @ResponseBody
@@ -127,9 +115,9 @@ public class AtomServiceDescription {
             throw new Exception("Inspire is disabled");
         }
 
-        AbstractMetadata record;
+        AbstractMetadata metadataRecord;
         try {
-            record = ApiUtils.canViewRecord(metadataUuid, request);
+            metadataRecord = ApiUtils.canViewRecord(metadataUuid, request);
         } catch (ResourceNotFoundException e) {
             Log.debug(API.LOG_MODULE_NAME, e.getMessage(), e);
             throw e;
@@ -138,9 +126,9 @@ public class AtomServiceDescription {
             throw new NotAllowedException(ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW);
         }
 
-        Element md = record.getXmlData(false);
-        String schema = record.getDataInfo().getSchemaId();
-        String id = record.getId() + "";
+        Element md = metadataRecord.getXmlData(false);
+        String schema = metadataRecord.getDataInfo().getSchemaId();
+        String id = String.valueOf(metadataRecord.getId());
 
         String atomProtocol = sm.getValue(Settings.SYSTEM_INSPIRE_ATOM_PROTOCOL);
 
@@ -187,7 +175,7 @@ public class AtomServiceDescription {
         // Dataset feeds referenced by service feed.
         List<DatasetFeedInfo> datasetsInformation = InspireAtomUtil.extractRelatedDatasetsInfoFromServiceFeed(inspireAtomFeed.getAtom(), dm);
 
-        // Get information from the the service atom feed.
+        // Get information from the service atom feed.
         String feedAuthorName = inspireAtomFeed.getAuthorName();
         String feedTitle = inspireAtomFeed.getTitle();
         String feedSubtitle = inspireAtomFeed.getSubtitle();
@@ -196,14 +184,14 @@ public class AtomServiceDescription {
         List<String> keywords = retrieveKeywordsFromFileIdentifier(context, metadataUuid);
 
         // Process datasets information
-        Element datasetsEl = processDatasetsInfo(datasetsInformation, metadataUuid, context);
+        Element datasetsEl = processDatasetsInfo(datasetsInformation, metadataUuid);
 
         Element response = new Element("response")
             .addContent(new Element("fileId").setText(metadataUuid))
             .addContent(new Element("title").setText(feedTitle))
             .addContent(new Element("subtitle").setText(feedSubtitle))
             .addContent(new Element("lang").setText(feedLang))
-            .addContent(new Element("keywords").setText(Join.join(", ", keywords)))
+            .addContent(new Element("keywords").setText(StringUtils.join(keywords, ", ")))
             .addContent(new Element("authorName").setText(feedAuthorName))
             .addContent(new Element("url").setText(feedUrl))
             .addContent(datasetsEl);
@@ -220,28 +208,28 @@ public class AtomServiceDescription {
      *
      * @param datasetsInformation List of dataset identifiers to process.
      * @param serviceIdentifier  Service identifier.
-     * @param context            Service context.
      * @return JDOM Element with the datasets information.
      * @throws Exception Exception.
      */
-    private Element processDatasetsInfo(final List<DatasetFeedInfo> datasetsInformation, final String serviceIdentifier,
-                                        final ServiceContext context)
+    private Element processDatasetsInfo(final List<DatasetFeedInfo> datasetsInformation, final String serviceIdentifier)
         throws Exception {
         Element datasetsEl = new Element("datasets");
 
         for (DatasetFeedInfo datasetFeedInfo : datasetsInformation) {
-            // Get the metadata uuid for the dataset
-            String datasetUuid = inspireAtomFeedRepository.retrieveDatasetUuidFromIdentifier(datasetFeedInfo.identifier);
-
-            // If dataset metadata not found, ignore
-            if (StringUtils.isEmpty(datasetUuid)) {
-                Log.warning(Geonet.ATOM, "AtomServiceDescription for service metadata (" + serviceIdentifier +
-                    "): metadata for dataset identifier " + datasetFeedInfo.identifier + " is not found, ignoring it.");
+            // Get the metadata id for the dataset
+            InspireAtomFeed inspireAtomFeed;
+            List<InspireAtomFeed> inspireAtomFeedList = inspireAtomFeedRepository.findAllByAtomDatasetid(datasetFeedInfo.identifier);
+            if (!inspireAtomFeedList.isEmpty()) {
+                inspireAtomFeed = inspireAtomFeedList.get(0);
+            } else {
+                // If dataset metadata not found, ignore
+                Log.warning(Geonet.ATOM, String.format("AtomServiceDescription for service metadata (%s): metadata "
+                    + "for dataset identifier %s was not found, ignoring it.",
+                    serviceIdentifier, datasetFeedInfo.identifier));
                 continue;
             }
 
-            String id = dm.getMetadataId(datasetUuid);
-            InspireAtomFeed inspireAtomFeed = inspireAtomFeedRepository.findByMetadataId(Integer.parseInt(id));
+            String datasetUuid = dm.getMetadataUuid(String.valueOf(inspireAtomFeed.getMetadataId()));
 
             String idNs = inspireAtomFeed.getAtomDatasetid();
             String namespace = inspireAtomFeed.getAtomDatasetns();
@@ -266,10 +254,10 @@ public class AtomServiceDescription {
 
             // Get dataset download info
             // From INSPIRE spec: if a CRS has multiple downloads should be returned a link to feed document with the CRS downloads.
-            Map<String, Integer> downloadsCountByCrs = new HashMap<String, Integer>();
+            Map<String, Integer> downloadsCountByCrs = new HashMap<>();
             for (InspireAtomFeedEntry entry : inspireAtomFeed.getEntryList()) {
                 Integer count = downloadsCountByCrs.get(entry.getCrs());
-                if (count == null) count = Integer.valueOf(0);
+                if (count == null) count = 0;
                 downloadsCountByCrs.put(entry.getCrs(), count + 1);
             }
 

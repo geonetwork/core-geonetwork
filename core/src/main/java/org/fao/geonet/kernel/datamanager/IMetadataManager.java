@@ -62,12 +62,26 @@ public interface IMetadataManager {
 
     /**
      * Removes the record with the id metadataId
+     * from the database and index without sending events.
+     *
+     * This is useful for harvesting tasks.
      *
      * @param context
      * @param metadataId
      * @throws Exception
      */
     void deleteMetadata(ServiceContext context, String metadataId) throws Exception;
+
+    /**
+     * Delete the record with the id metadataId
+     * from the database and index
+     * and additionally take care of cleaning up resources, send events, ...
+     *
+     * @param context
+     * @param metadataId
+     * @throws Exception
+     */
+    void purgeMetadata(ServiceContext context, String metadataId, boolean withBackup) throws Exception;
 
     /**
      * Removes a record without notifying.

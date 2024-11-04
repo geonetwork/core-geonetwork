@@ -1452,7 +1452,7 @@
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
     <entry>
       <code>otherRestrictions</code>
-      <label>Benutzerdeifinierte Einschränkungen</label>
+      <label>Benutzerdefinierte Einschränkungen</label>
       <description>Andere Einschränkungen, die oben nicht aufgeführt sind</description>
     </entry>
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -1578,26 +1578,25 @@
             <label>Publication</label>
             <description>Publication</description>
         </entry>-->
-    <!--TODO: NEEDS TRANSLATION -->
     <!-- Used for facet translation only and not displayed in editor -->
     <entry hideInEditMode="true">
       <code>map</code>
-      <label>Map</label>
+      <label>Karte</label>
       <description></description>
     </entry>
     <entry hideInEditMode="true">
       <code>staticMap</code>
-      <label>Static map</label>
+      <label>Statische Karte</label>
       <description></description>
     </entry>
     <entry hideInEditMode="true">
       <code>interactiveMap</code>
-      <label>Interactive map</label>
+      <label>Interaktive Karte</label>
       <description></description>
     </entry>
     <entry hideInEditMode="true">
       <code>featureCatalog</code>
-      <label>Feature catalog</label>
+      <label>Objektkatalog</label>
       <description></description>
     </entry>
   </codelist>

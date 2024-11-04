@@ -28,7 +28,7 @@
   <name>iso19139</name>
   <id>3f95190a-dde4-11df-8626-001c2346de4c</id>
   <version>1.0</version>
-  <appMinorVersionSupported>3.4.0</appMinorVersionSupported>
+  <appMinorVersionSupported>4.4.0</appMinorVersionSupported>
   <title xml:lang="en">Geographic information -- Metadata (iso19139:2007)</title>
   <title xml:lang="fr">Information géographique -- Métadonnées (iso19139:2007)</title>
   <description xml:lang="en"><![CDATA[
@@ -83,13 +83,16 @@ of data.]]>
   </autodetect>
   <filters xmlns:gco="http://www.isotc211.org/2005/gco">
     <filter xpath=".//*[@gco:nilReason='withheld']"
+            jsonpath="$.*[?(@.nilReason == 'withheld')]"
             ifNotOperation="editing">
       <keepMarkedElement gco:nilReason="withheld"/>
     </filter>
     <filter
       xpath=".//gmd:onLine[*/gmd:protocol/gco:CharacterString = 'WWW:DOWNLOAD-1.0-http--download']"
+      jsonpath="$['link'][?(@.protocol == 'WWW:DOWNLOAD-1.0-http--download')]"
       ifNotOperation="download"/>
     <filter xpath=".//gmd:onLine[starts-with(*/gmd:protocol/gco:CharacterString, 'OGC:WMS')]"
+            jsonpath="$['link'][?(@.protocol =~ /OGC:WMS.*?/i)]"
             ifNotOperation="dynamic"/>
   </filters>
 </schema>

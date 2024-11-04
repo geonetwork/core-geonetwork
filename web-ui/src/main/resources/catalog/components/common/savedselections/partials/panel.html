@@ -3,7 +3,7 @@
   data-ng-show="isSavedSelectionEnabled && selections != null && selections.list.length > 0"
 >
   <div class="panel-heading" data-gn-slide-toggle="">
-    <i class="fa fa-shopping-cart" />&nbsp;
+    <i class="fa fa-shopping-cart"></i>&nbsp;
     <span data-ng-show="selections.size > 0" data-translate="">basket</span>
     <span data-ng-hide="selections.size > 0" data-translate="">emptyBasket</span>
   </div>
@@ -16,7 +16,7 @@
       <legend data-gn-slide-toggle="">
         {{sel.label[lang] || (sel.name | translate)}}
         <span>({{sel.records.length}})</span>
-        <i class="fa gn-icon-{{sel.name}} pull-right" />
+        <i class="fa gn-icon-{{sel.name}} pull-right"></i>
       </legend>
 
       <ul class="list-group" data-ng-repeat="r in sel.records">

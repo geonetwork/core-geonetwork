@@ -47,11 +47,13 @@
           "resourceTitle*",
           "resourceAbstract*",
           "draft",
+          "draftId",
           "owner",
           "link",
           "status*",
           "rating",
           "geom",
+          "contact*",
           "Org*",
           "isTemplate",
           "valid",
@@ -81,6 +83,9 @@
               "return params['_source'].overview == null ? [] : params['_source'].overview.stream().findFirst().orElse([]);"
           }
         }
+      };
+      this.getDefaultSize = function () {
+        return DEFAULT_SIZE;
       };
       this.buildDefaultQuery = function (query, size) {
         return {
@@ -113,6 +118,13 @@
           },
           script_fields: defaultScriptedFields
         },
+        recordWithLink: {
+          facets: {},
+          source: {
+            includes: minimalSource.includes.concat("link")
+          },
+          script_fields: defaultScriptedFields
+        },
         editor: {
           facets: gnGlobalSettings.gnCfg.mods.editor.facetConfig,
           source: {
@@ -131,6 +143,7 @@
               "valid",
               "isHarvested",
               "dateStamp",
+              "changeDate",
               "documentStandard",
               "mdStatus*",
               "*inspire*"
@@ -203,12 +216,12 @@
                 filters: {
                   errors: {
                     query_string: {
-                      query: "-indexingErrorMsg:/Warning.*/"
+                      query: "-indexingErrorMsg.type:warning"
                     }
                   },
                   warning: {
                     query_string: {
-                      query: "+indexingErrorMsg:/Warning.*/"
+                      query: "+indexingErrorMsg.type:warning"
                     }
                   }
                 }
@@ -221,20 +234,8 @@
             },
             indexingErrorMsg: {
               terms: {
-                field: "indexingErrorMsg",
-                size: 10,
-                exclude: "Warning.*"
-              }
-            },
-            indexingWarningMsg: {
-              terms: {
-                field: "indexingErrorMsg",
-                size: 10,
-                include: "Warning.*"
-              },
-              meta: {
-                displayFilter: false,
-                field: "indexingErrorMsg"
+                field: "indexingErrorMsg.string",
+                size: 10
               }
             }
           },
@@ -306,11 +307,19 @@
         };
       };
 
-      this.addSourceConfiguration = function (esParams, type) {
+      this.addSourceConfiguration = function (esParams, type, templateSource) {
         if (type === undefined) {
           type = "simplelist";
         }
-        var source = typeof type === "string" ? this.configs[type].source : type;
+        var source =
+          typeof type === "string" ? angular.copy(this.configs[type].source, {}) : type;
+        if (templateSource) {
+          if (templateSource.exclude) {
+            source.includes = source.includes.filter(function (field) {
+              return templateSource.exclude.indexOf(field) === -1;
+            });
+          }
+        }
         esParams._source = source;
         if (this.configs[type].script_fields) {
           esParams.script_fields = this.configs[type].script_fields;
@@ -384,6 +393,9 @@
               facetModel.type = "terms";
               facetModel.size = reqAgg.terms.size;
               facetModel.more = respAgg.sum_other_doc_count > 0;
+              facetModel.less =
+                respAgg.buckets &&
+                respAgg.buckets.length > Math.min(reqAgg.terms.size, DEFAULT_SIZE);
               facetModel.includeFilter = reqAgg.terms.include !== undefined;
               facetModel.excludeFilter = reqAgg.terms.exclude !== undefined;
               var esFacet = this;

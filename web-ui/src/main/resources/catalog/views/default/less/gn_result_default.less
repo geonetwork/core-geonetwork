@@ -36,7 +36,7 @@
   h3 {
     font-size: 18px;
   }
-  [data-gn-keyword-badges] {
+  [data-gn-keyword-badges], .gn-md-side-social {
     .col-md-12 {
       padding-left: 0px;
       padding-right: 0px;
@@ -106,11 +106,15 @@
   }
   .gn-card-badge {
     padding: 15px;
+    font-size: 100%;
     margin-top: 30px !important;
     color: #0e0e0e;
     position: absolute;
-    left: -5px;
-    bottom: 10px;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    text-align: left;
+    border-radius: 0;
   }
   .btn-block + .btn-block {
     margin-top: 0;
@@ -143,7 +147,7 @@
     .img-thumbnail {
       padding: 0;
       border: none;
-      max-height: 300px;
+      max-height: 500px;
       min-height: 150px;
       max-width: 100%;
     }
@@ -170,6 +174,19 @@
     background-color: lighten(@gray-base, 85%);
     &:hover {
       background-color: lighten(@gray-base, 85%);
+    }
+  }
+  .gn-card-series, .gn-card-dataset, .gn-card-nonGeographicDataset, .gn-card-service, .gn-card-application {
+    .gn-related-list {
+      &.list-group {
+        padding: 0;
+        margin-bottom: 10px;
+        .list-group-item {
+          background: none;
+          border: 0;
+          padding: 0;
+        }
+      }
     }
   }
   .gn-series {
@@ -241,14 +258,20 @@
       display: inline;
       line-break: auto;
       word-break: break-word;
+      letter-spacing: -1em;
+      * {
+        letter-spacing: normal;
+      }
       a {
         line-break: normal;
       }
       &:after {
-        content: ",";
+        content: ", ";
+        letter-spacing: normal;
       }
       &:last-child:after {
         content: "";
+        letter-spacing: normal;
       }
     }
   }
@@ -308,8 +331,12 @@
       }
     }
     // keywords
+    .gn-thesaurus:not(:has(button)) {
+      display: none !important;
+    }
     [data-gn-keyword-badges] {
       .btn {
+        word-break: break-word;
         white-space: normal;
         text-align: left;
       }
@@ -461,7 +488,6 @@
     ul {
       margin-top: 2px;
       max-width: none;
-      display: block;
       a {
         color: @link-color;
       }

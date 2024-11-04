@@ -1,0 +1,46 @@
+<li
+  class="dropdown"
+  data-ng-show="gnCfg.mods.admin.enabled && user.isUserAdminOrMore()"
+  role="menuitem"
+>
+  <a
+    title="{{'adminConsole' | translate}}"
+    href
+    class="dropdown-toggle gn-menuheader-xs"
+    data-toggle="dropdown"
+    aria-haspopup="true"
+    aria-expanded="false"
+  >
+    <span class="fa fa-fw fa-wrench hidden-xs"></span>
+    <span translate>adminConsole</span>
+    <span class="caret hidden-xs"></span>
+  </a>
+  <ul data-ng-if="user.isUserAdmin()" class="dropdown-menu gn-menu-xs">
+    <li class="gn-menuitem-xs" role="menuitem">
+      <a data-gn-active-tb-item="admin.console#/home">
+        <span class="fa fa-fw fa-th"></span><span translate>adminHome</span>
+      </a>
+    </li>
+    <li role="separator" class="divider gn-separator-xs"></li>
+    <li class="gn-menuitem-xs" role="menuitem" data-ng-repeat="t in userAdminMenu">
+      <a data-gn-active-tb-item="admin.console{{t.route}}">
+        <span class="fa fa-fw {{t.icon}}"></span
+        ><span translate>{{t.name | translate}}</span>
+      </a>
+    </li>
+  </ul>
+  <ul data-ng-if="user.isAdministrator()" class="dropdown-menu gn-menu-xs">
+    <li class="gn-menuitem-xs" role="menuitem">
+      <a data-gn-active-tb-item="admin.console#/home">
+        <span class="fa fa-fw fa-th"></span><span translate>adminHome</span>
+      </a>
+    </li>
+    <li role="separator" class="divider gn-separator-xs"></li>
+    <li class="gn-menuitem-xs" role="menuitem" data-ng-repeat="t in adminMenu">
+      <a data-gn-active-tb-item="{{gnCfg.mods.admin.appUrl}}{{t.route}}">
+        <span class="fa fa-fw {{t.icon}}"></span
+        ><span translate>{{t.name | translate}}</span>
+      </a>
+    </li>
+  </ul>
+</li>

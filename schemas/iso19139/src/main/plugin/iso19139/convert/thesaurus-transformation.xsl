@@ -136,6 +136,10 @@
     <xsl:param name="withThesaurusAnchor"/>
 
     <gmd:descriptiveKeywords>
+      <xsl:namespace name="gmd" select="'http://www.isotc211.org/2005/gmd'"/>
+      <xsl:namespace name="gco" select="'http://www.isotc211.org/2005/gco'"/>
+      <xsl:namespace name="gmx" select="'http://www.isotc211.org/2005/gmx'"/>
+      <xsl:namespace name="xlink" select="'http://www.w3.org/1999/xlink'"/>
       <xsl:choose>
         <xsl:when test="$withXlink">
           <xsl:variable name="isLocalXlink"
@@ -293,12 +297,15 @@
       </xsl:if>
 
       <xsl:copy-of
-        select="geonet:add-thesaurus-info($currentThesaurus, $withAnchor, $withThesaurusAnchor, /root/gui/thesaurus/thesauri, not(/root/request/keywordOnly))"/>
+        select="geonet:add-thesaurus-info($currentThesaurus, $listOfLanguage[1],
+                              $withAnchor, $withThesaurusAnchor,
+                              /root/gui/thesaurus/thesauri, not(/root/request/keywordOnly))"/>
     </gmd:MD_Keywords>
   </xsl:template>
 
   <xsl:function name="geonet:add-thesaurus-info">
     <xsl:param name="currentThesaurus" as="xs:string"/>
+    <xsl:param name="mainLanguage" as="xs:string?"/>
     <xsl:param name="withTitleAnchor" as="xs:boolean"/>
     <xsl:param name="withThesaurusAnchor" as="xs:boolean"/>
     <xsl:param name="thesauri" as="node()"/>
@@ -311,51 +318,60 @@
         codeListValue="{$thesauri/thesaurus[key = $currentThesaurus]/dname}"/>
     </gmd:type>
     <xsl:if test="$thesaurusInfo">
+      <xsl:variable name="thesaurus"
+                    select="$thesauri/thesaurus[key = $currentThesaurus]"/>
+
+      <xsl:variable name="thesaurusInMainLanguage"
+                    select="$thesaurus
+                              /multilingualTitles/multilingualTitle[
+                                lang = util:twoCharLangCode($mainLanguage, '')]/title"/>
+      <xsl:variable name="thesaurusTitle"
+                    select="if ($thesaurusInMainLanguage != '')
+                            then $thesaurusInMainLanguage
+                            else $thesaurus/title"/>
+
       <gmd:thesaurusName>
         <gmd:CI_Citation>
           <gmd:title>
             <xsl:choose>
               <xsl:when test="$withTitleAnchor = true()">
-                <gmx:Anchor xlink:href="{$thesauri/thesaurus[key = $currentThesaurus]/defaultNamespace}">
-                  <xsl:value-of select="$thesauri/thesaurus[key = $currentThesaurus]/title"/>
+                <gmx:Anchor xlink:href="{$thesaurus/defaultNamespace}">
+                  <xsl:value-of select="$thesaurusTitle"/>
                 </gmx:Anchor>
               </xsl:when>
               <xsl:otherwise>
                 <gco:CharacterString>
-                  <xsl:value-of select="$thesauri/thesaurus[key = $currentThesaurus]/title"/>
+                  <xsl:value-of select="$thesaurusTitle"/>
                 </gco:CharacterString>
               </xsl:otherwise>
             </xsl:choose>
           </gmd:title>
 
-          <xsl:variable name="thesaurusDate"
-                        select="normalize-space($thesauri/thesaurus[key = $currentThesaurus]/date)"/>
 
-          <xsl:if test="$thesaurusDate != ''">
+          <xsl:variable name="thesaurusDates" as="node()*">
+            <publication date="{normalize-space($thesaurus/date)}"/>
+            <creation date="{normalize-space($thesaurus/createdDate)}"/>
+            <publication date="{normalize-space($thesaurus/issuedDate)}"/>
+            <publication date="{normalize-space($thesaurus/modifiedDate)}"/>
+          </xsl:variable>
+
+          <xsl:for-each-group select="$thesaurusDates[@date != '']" group-by="@date">
+            <xsl:sort select="@date" order="descending"/>
             <gmd:date>
               <gmd:CI_Date>
                 <gmd:date>
-                  <xsl:choose>
-                    <xsl:when test="contains($thesaurusDate, 'T')">
-                      <gco:DateTime>
-                        <xsl:value-of select="$thesaurusDate"/>
-                      </gco:DateTime>
-                    </xsl:when>
-                    <xsl:otherwise>
-                      <gco:Date>
-                        <xsl:value-of select="$thesaurusDate"/>
-                      </gco:Date>
-                    </xsl:otherwise>
-                  </xsl:choose>
+                  <xsl:element name="{if (contains(current-grouping-key(), 'T')) then 'gco:DateTime' else 'gco:Date'}">
+                    <xsl:value-of select="current-grouping-key()" />
+                  </xsl:element>
                 </gmd:date>
                 <gmd:dateType>
                   <gmd:CI_DateTypeCode
                     codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_DateTypeCode"
-                    codeListValue="publication"/>
+                    codeListValue="{name(current-group()[1])}"/>
                 </gmd:dateType>
               </gmd:CI_Date>
             </gmd:date>
-          </xsl:if>
+          </xsl:for-each-group>
 
           <!--
               You can pull in the publisher from the Thesaurus XML.  See Metadata101/iso19139.ca.HNAP

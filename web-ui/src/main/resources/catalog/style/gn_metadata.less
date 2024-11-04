@@ -21,6 +21,13 @@ blockquote {
   div.col-md-9 {
     padding: 20px 20px;
     background-color: #ebecec;
+    p {
+      display: inline;
+    }
+    div {
+      display: inline;
+      font-weight: bold;
+    }
   }
 }
 
@@ -53,7 +60,7 @@ header div.gn-abstract {
         border-bottom: 1px solid @table-border-color;
       }
       th {
-        width: 35%;
+        width: 30%;
       }
       @media (max-width: @screen-xs-max) {
         th,
@@ -351,17 +358,6 @@ header div.gn-abstract {
   }
 }
 
-.gn-metadata-view-groovy {
-  font-family: Arial @font-family-sans-serif;
-  font-size: 13px;
-  dd,
-  .offseted {
-    border-left: 1px solid @gray-light;
-    background: @gray-lighter;
-    padding-left: 0.6em;
-  }
-}
-
 .gn-period {
   border-radius: 4px;
   padding-left: 8px;
@@ -555,8 +551,6 @@ ul.container-list {
       margin-bottom: 0.5em;
     }
     td {
-      padding-left: 40px;
-      word-break: break-word;
       ul {
         padding-left: 0;
       }
@@ -656,6 +650,10 @@ ul.container-list {
       fill: #333333;
     }
   }
+}
+
+.gn-contact-col-1 ul {
+  grid-template-columns: 1fr;
 }
 
 @media only screen and (min-width: 550px) {

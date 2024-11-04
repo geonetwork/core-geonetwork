@@ -47,7 +47,6 @@ public class Language extends GeonetEntity {
     String _id;
     String _name;
     char _inspire = Constants.YN_FALSE;
-    char _defaultLanguage = Constants.YN_FALSE;
 
     /**
      * Get the id of the language. This is a generated value and as such new instances should not
@@ -130,38 +129,5 @@ public class Language extends GeonetEntity {
      */
     public void setInspire(boolean inspire) {
         setInspire_JPAWorkaround(Constants.toYN_EnabledChar(inspire));
-    }
-
-    /**
-     * For backwards compatibility we need the isdefault column to be either 'n' or 'y'. This is a
-     * workaround to allow this until future versions of JPA that allow different ways of
-     * controlling how types are mapped to the database.
-     */
-    @Column(name = "isDefault", length = 1)
-    protected char getDefaultLanguage_JPAWorkaround() {
-        return _defaultLanguage;
-    }
-
-    protected void setDefaultLanguage_JPAWorkaround(char isdefault) {
-        _defaultLanguage = isdefault;
-    }
-
-    /**
-     * Get whether or not this language is the default system language.
-     *
-     * @return true is default language.
-     */
-    @Transient
-    public boolean isDefaultLanguage() {
-        return Constants.toBoolean_fromYNChar(getDefaultLanguage_JPAWorkaround());
-    }
-
-    /**
-     * set true if this is the default language.
-     *
-     * @param newDefault true if this language is the new default.
-     */
-    public void setDefaultLanguage(boolean newDefault) {
-        setDefaultLanguage_JPAWorkaround(Constants.toYN_EnabledChar(newDefault));
     }
 }

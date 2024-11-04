@@ -28,7 +28,7 @@
   <name>csw-record</name>
   <id>e5f27024-dde2-11df-a18e-001c2346de4c</id>
   <version>2.0.2</version>
-  <appMinorVersionSupported>3.4.0</appMinorVersionSupported>
+  <appMinorVersionSupported>4.4.0</appMinorVersionSupported>
   <title xml:lang="en">Dublin core (for CSW only)</title>
   <schemaLocation>http://www.opengis.net/cat/csw/2.0.2
     http://schemas.opengis.net/csw/2.0.2/CSW-discovery.xsd

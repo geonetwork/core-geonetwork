@@ -66,15 +66,19 @@
           for="layer-{{$index}}"
           data-ng-class="{'gn-map-layer-selected': layer.showInfo}"
         >
-          <a data-ng-class="layer.get('errors').length > 0 ? 'text-danger' : ''">
-            {{layer.get('label')}}
+          <span
+            class="clickable"
+            data-ng-class="layer.get('errors').length > 0 ? 'text-danger' : ''"
+            title="{{layer.get('label')}}"
+          >
+            {{layer.get('layerTitleFromMetadata') || layer.get('label')}}
             <span
               ><em>
                 {{layer.get('currentStyle') ? '(' + (layer.get('currentStyle').Title ||
                 layer.get('currentStyle').Name) + ')' : ''}}
               </em>
             </span>
-          </a>
+          </span>
         </label>
       </div>
     </div>
@@ -95,7 +99,7 @@
           <p data-ng-repeat="e in layer.get('errors')" data-ng-bind-html="e"></p>
         </div>
 
-        <div data-gn-layer-dimensions="layer" />
+        <div data-gn-layer-dimensions="layer"></div>
 
         <p ng-if="layer.get('legend')">
           <img
@@ -106,12 +110,12 @@
         <h6 ng-if="layer.get('attribution')" data-translate="">Attribution</h6>
         <p ng-if="layer.get('attribution')"><em>{{layer.get('attribution')}}</em></p>
 
-        <div data-ng-if="::!layer.get('wfs') && layer.get('style').length > 0">
+        <div data-ng-if="::layer.get('style').length > 0">
           <div
             data-gn-layer-styles="layer.get('style')"
             data-gn-layer-styles-on-click="setLayerStyle(layer, style)"
             data-gn-layer-styles-current="layer.get('currentStyle')"
-          />
+          ></div>
         </div>
       </tab>
 
@@ -173,7 +177,9 @@
 
         <div
           ng-if="hasDownload"
-          data-gn-wfs-download="layer"
+          data-gn-wfs-download=""
+          data-typename="{{layer.getSource().getParams().LAYERS}}"
+          data-url="{{layer.get('url')}}"
           data-init-on-demand="true"
           data-mode="select"
           has-download="hasDownload"

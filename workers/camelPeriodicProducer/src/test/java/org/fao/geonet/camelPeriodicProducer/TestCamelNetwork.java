@@ -24,16 +24,28 @@
 package org.fao.geonet.camelPeriodicProducer;
 
 import org.apache.camel.builder.RouteBuilder;
+import org.apache.camel.component.quartz2.QuartzComponent;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import javax.annotation.PostConstruct;
 
 public class TestCamelNetwork extends RouteBuilder {
 
     private MessageProducerTest.MessageConsumer messageConsumer;
     private MessageProducerControllerTest.MessageConsumer wfsHarvesterParamConsumer;
 
+    @Autowired
+    public QuartzComponent quartzComponent;
 
     public TestCamelNetwork() {
         messageConsumer = new MessageProducerTest.MessageConsumer("direct:consumer");
         wfsHarvesterParamConsumer = new MessageProducerControllerTest.MessageConsumer("direct:wfsHravesterParamConsumer");
+    }
+
+    @PostConstruct
+    public void init() throws Exception {
+        quartzComponent.start();
+        quartzComponent.setCamelContext(this.getContext());
     }
 
     public MessageProducerTest.MessageConsumer getMessageConsumer() {

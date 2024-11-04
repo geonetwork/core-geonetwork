@@ -58,7 +58,10 @@
             if (gnConfig["metadata.workflow.enable"]) {
               types.workflow = true;
             }
-            types.task = true;
+            // Currently the only task is DOI
+            if (gnConfig["system.publication.doi.doienabled"]) {
+              types.task = true;
+            }
             types.event = true;
 
             scope.filter = {
@@ -68,6 +71,10 @@
               size: recordByPage
             };
           });
+
+          scope.getNumberOfTypes = function () {
+            return Object.keys(scope.filter.types).length;
+          };
 
           // Wait for metatada to be available
           scope.$watch("md", function (n, o) {
@@ -140,11 +147,11 @@
           };
 
           scope.restoreHistoryElement = function (statusId) {
-            confirmMessage = $translate.instant("confirmRestore");
+            var confirmMessage = $translate.instant("confirmRestore");
             if ($window.confirm(confirmMessage)) {
               return gnRecordHistoryService.restoreHistoryElement(statusId).then(
                 function (r) {
-                  message = $translate.instant("recordRestored");
+                  var message = $translate.instant("recordRestored");
                   scope.$emit("StatusUpdated", {
                     msg: message,
                     timeout: 0,
@@ -154,7 +161,7 @@
                   $window.location.reload();
                 },
                 function (response) {
-                  message = "";
+                  var message = "";
                   if (response.status === 403) {
                     message = $translate.instant("notAllowedError");
                   } else if (response.status === 404) {

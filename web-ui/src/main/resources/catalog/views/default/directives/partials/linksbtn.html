@@ -2,7 +2,7 @@
   <a
     class="gn-md-edit-btn btn btn-default btn-sm"
     data-ng-show="user.canEditRecord(md)"
-    data-ng-href="catalog.edit#/metadata/{{md.id}}?redirectUrl=catalog.search%23%2Fmetadata%2F{{md.uuid}}"
+    data-ng-href="catalog.edit#/metadata/{{gnMetadataActions.getMetadataIdToEdit(md)}}?redirectUrl=catalog.search%23%2Fmetadata%2F{{md.uuid}}"
     title="{{'edit' | translate}}"
     aria-label="{{'edit' | translate}}"
   >
@@ -17,7 +17,7 @@
     data-record="md"
     data-user="user"
     data-lang="lang"
-  />
+  ></div>
 
   <span
     data-ng-repeat="(k, links) in md.linksByType"

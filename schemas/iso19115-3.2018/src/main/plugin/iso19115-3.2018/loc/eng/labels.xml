@@ -5,7 +5,7 @@
         xmlns:gcx="http://standards.iso.org/iso/19115/-3/gcx/1.0"
         xmlns:gex="http://standards.iso.org/iso/19115/-3/gex/1.0"
         xmlns:lan="http://standards.iso.org/iso/19115/-3/lan/1.0"
-        xmlns:srv="http://standards.iso.org/iso/19115/-3/srv/2.1"
+        xmlns:srv="http://standards.iso.org/iso/19115/-3/srv/2.0"
         xmlns:mas="http://standards.iso.org/iso/19115/-3/mas/1.0"
         xmlns:mcc="http://standards.iso.org/iso/19115/-3/mcc/1.0"
         xmlns:mco="http://standards.iso.org/iso/19115/-3/mco/1.0"
@@ -398,14 +398,8 @@
     </description>
     <condition></condition>
   </element>
-  <element name="mdb:MD_MetadataScoperd" id="39.0">
-    <label>Resource scope</label>
-    <description iso="true">Information about the scope of the resource.
-    </description>
-    <condition></condition>
-  </element>
   <element name="mdb:resourceScope" id="40.0">
-    <label>Resource scope</label>
+    <label>Resource type</label>
     <description iso="true">Code for the scope.</description>
     <condition>mandatory</condition>
   </element>
@@ -1324,6 +1318,18 @@
   <element name="cit:extent" id="378.0" context="cit:CI_Responsibility">
     <label>Extent</label>
     <description iso="true">Spatial or temporal extent of the role</description>
+  </element>
+  <element name="lan:language" id="448.0" context="/mdb:MD_Metadata/mdb:defaultLocale/lan:PT_Locale/lan:language">
+    <label>Metadata language</label>
+    <description iso="true">Designation of the locale language</description>
+  </element>
+  <element name="lan:language" id="448.0" context="/mdb:MD_Metadata/mdb:identificationInfo/mri:MD_DataIdentification/mri:defaultLocale/lan:PT_Locale/lan:language">
+    <label>Dataset language</label>
+    <description iso="true">ISO 3 letters code.</description>
+  </element>
+  <element name="lan:language" id="448.0" context="/mdb:MD_Metadata/mdb:otherLocale/lan:PT_Locale/lan:language">
+    <label>Other language</label>
+    <description iso="true">Additional metadata language</description>
   </element>
   <element name="lan:language" id="448.0">
     <label>Language</label>
@@ -3924,6 +3930,8 @@
       <option value="OGC API - Features">OGC API - Features</option>
       <option value="OGC API - Maps">OGC API - Maps</option>
       <option value="OGC API - Records">OGC API - Records</option>
+      <option value="OGC:3DTILES">OGC-3DTiles Dataset</option>
+      <option value="OGC:COG">OGC-Cloud Optimized GeoTIFF</option>
       <option value="OGC:CSW">OGC-CSW Catalogue Service for the Web
       </option>
       <option value="OGC:KML">OGC-KML Keyhole Markup Language

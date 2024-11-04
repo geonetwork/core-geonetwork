@@ -2,15 +2,19 @@
   <div class="btn-toolbar" role="toolbar">
     <!-- TODO: toggle icon when collapsed to fa-caret-square-o-up -->
     <button
-      class="btn btn-primary btn-round fa fa-bars"
+      class="btn btn-primary btn-round"
       data-ng-click="toggle()"
       title="{{'toggleScrollSpy' | translate}}"
-    />
+    >
+      <i class="fa fa-bars"></i>
+    </button>
     <button
-      class="btn btn-primary btn-round fa fa-chevron-up"
+      class="btn btn-primary btn-round"
       data-ng-click="scrollTo()"
       title="{{'scrollTop' | translate}}"
-    />
+    >
+      <i class="fa fa-chevron-up"></i>
+    </button>
   </div>
   <ul
     class="nav nav-pills nav-stacked"

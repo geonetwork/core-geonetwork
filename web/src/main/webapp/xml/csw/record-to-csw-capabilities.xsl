@@ -12,7 +12,7 @@
                 xmlns:gex="http://standards.iso.org/iso/19115/-3/gex/1.0"
                 xmlns:gcx="http://standards.iso.org/iso/19115/-3/gcx/1.0"
                 xmlns:srv="http://www.isotc211.org/2005/srv"
-                xmlns:srv19115="http://standards.iso.org/iso/19115/-3/srv/2.1"
+                xmlns:srv19115="http://standards.iso.org/iso/19115/-3/srv/2.0"
                 xmlns:gml="http://www.opengis.net/gml/3.2"
                 xmlns:gmd="http://www.isotc211.org/2005/gmd"
                 xmlns:gco139="http://www.isotc211.org/2005/gco"

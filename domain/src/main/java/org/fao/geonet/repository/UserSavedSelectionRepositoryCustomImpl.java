@@ -131,9 +131,10 @@ public class UserSavedSelectionRepositoryCustomImpl
         final String selectionIdPath =
             SortUtils.createPath(UserSavedSelection_.id, UserSavedSelectionId_.selectionId);
         final String qlString =
-            "DELETE FROM " + UserSavedSelection.class.getSimpleName() +
-                " WHERE " + selectionIdPath + " = " + selectionId;
-        final int deleted = _entityManager.createQuery(qlString).executeUpdate();
+            String.format("DELETE FROM UserSavedSelection WHERE %s = :selectionId", selectionIdPath);
+        final int deleted = _entityManager.createQuery(qlString)
+            .setParameter("selectionId", selectionId)
+            .executeUpdate();
         _entityManager.flush();
         _entityManager.clear();
         return deleted;
@@ -145,9 +146,10 @@ public class UserSavedSelectionRepositoryCustomImpl
         final String userIdPath =
             SortUtils.createPath(UserSavedSelection_.id, UserSavedSelectionId_.userId);
         final String qlString =
-            "DELETE FROM " + UserSavedSelection.class.getSimpleName() +
-                " WHERE " + userIdPath + " = " + userId;
-        final int deleted = _entityManager.createQuery(qlString).executeUpdate();
+            String.format("DELETE FROM UserSavedSelection WHERE %s = :userId", userIdPath);
+        final int deleted = _entityManager.createQuery(qlString)
+            .setParameter("userId", userId)
+            .executeUpdate();
         _entityManager.flush();
         _entityManager.clear();
         return deleted;
@@ -158,10 +160,10 @@ public class UserSavedSelectionRepositoryCustomImpl
     public int deleteAllByUuid(String metadataUuid) {
         final String metadataUuidPath =
             SortUtils.createPath(UserSavedSelection_.id, UserSavedSelectionId_.metadataUuid);
-        final String qlString =
-            "DELETE FROM " + UserSavedSelection.class.getSimpleName() +
-                " WHERE " + metadataUuidPath + " = '" + metadataUuid + "'";
-        final int deleted = _entityManager.createQuery(qlString).executeUpdate();
+        final String qlString = String.format("DELETE FROM UserSavedSelection WHERE %s = :metadataUuid", metadataUuidPath);
+        final int deleted = _entityManager.createQuery(qlString)
+            .setParameter("metadataUuid", metadataUuid)
+            .executeUpdate();
         _entityManager.flush();
         _entityManager.clear();
         return deleted;
@@ -174,11 +176,12 @@ public class UserSavedSelectionRepositoryCustomImpl
             SortUtils.createPath(UserSavedSelection_.id, UserSavedSelectionId_.selectionId);
         final String userIdPath =
             SortUtils.createPath(UserSavedSelection_.id, UserSavedSelectionId_.userId);
-        final String qlString =
-            "DELETE FROM " + UserSavedSelection.class.getSimpleName() +
-                " WHERE " + selectionIdPath + " = " + selection +
-                " AND " + userIdPath + " = " + userId;
-        final int deleted = _entityManager.createQuery(qlString).executeUpdate();
+        final String qlString = String.format("DELETE FROM UserSavedSelection WHERE %s = :selection AND %s = :userId",
+            selectionIdPath, userIdPath);
+        final int deleted = _entityManager.createQuery(qlString)
+            .setParameter("selection", selection)
+            .setParameter("userId", userId)
+            .executeUpdate();
         _entityManager.flush();
         _entityManager.clear();
         return deleted;

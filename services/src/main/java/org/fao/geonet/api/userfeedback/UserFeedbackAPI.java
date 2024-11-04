@@ -24,6 +24,8 @@
 package org.fao.geonet.api.userfeedback;
 
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -51,8 +53,8 @@ import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.userfeedback.RatingCriteriaRepository;
-import org.fao.geonet.util.MailUtil;
-import org.fao.geonet.util.XslUtil;
+import org.fao.geonet.languages.FeedbackLanguages;
+import org.fao.geonet.util.*;
 import org.fao.geonet.utils.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -71,6 +73,10 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.fao.geonet.kernel.setting.Settings.*;
+import static org.fao.geonet.util.LocalizedEmailComponent.ComponentType.*;
+import static org.fao.geonet.util.LocalizedEmailComponent.KeyType;
+import static org.fao.geonet.util.LocalizedEmailComponent.ReplacementType.*;
+import static org.fao.geonet.util.LocalizedEmailParameter.ParameterType;
 
 
 /**
@@ -96,6 +102,9 @@ public class UserFeedbackAPI {
 
     @Autowired
     IMetadataUtils metadataUtils;
+
+    @Autowired
+    FeedbackLanguages feedbackLanguages;
 
     /**
      * Gets rating criteria
@@ -139,7 +148,7 @@ public class UserFeedbackAPI {
     @RequestMapping(value = "/userfeedback/{uuid}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.DELETE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PreAuthorize("hasAuthority('Reviewer')")
-    @ApiResponses(value = {@ApiResponse(responseCode = "204", description = "User feedback removed."),
+    @ApiResponses(value = {@ApiResponse(responseCode = "204", description = "User feedback removed.", content = {@Content(schema = @Schema(hidden = true))}),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_REVIEWER)})
     @ResponseBody
     public ResponseEntity deleteUserFeedback(
@@ -514,14 +523,18 @@ public class UserFeedbackAPI {
                     String title = XslUtil.getIndexField(null, userFeedbackDto.getMetadataUUID(), "resourceTitleObject", "");
 
                     if (toAddress.size() > 0) {
-                        MailUtil.sendMail(toAddress,
-                            String.format(
-                                messages.getString("new_user_rating"),
-                                catalogueName, title),
-                            String.format(
-                                messages.getString("new_user_rating_text"),
-                                metadataUtils.getDefaultUrl(userFeedbackDto.getMetadataUUID(), locale.getISO3Language())),
-                            settingManager);
+                        try {
+                            MailUtil.sendMail(toAddress,
+                                String.format(
+                                    messages.getString("new_user_rating"),
+                                    catalogueName, title),
+                                String.format(
+                                    messages.getString("new_user_rating_text"),
+                                    metadataUtils.getDefaultUrl(userFeedbackDto.getMetadataUUID(), locale.getISO3Language())),
+                                settingManager);
+                        } catch (IllegalArgumentException ex) {
+                            Log.warning(API.LOG_MODULE_NAME, ex.getMessage(), ex);
+                        }
                     }
                 }
             }
@@ -582,7 +595,7 @@ public class UserFeedbackAPI {
             description = "Email subject.",
             required = false
         )
-        @RequestParam(required = false, defaultValue = "User feedback") final String subject,
+        @RequestParam(required = false, defaultValue = "feedback_subject_userFeedback") final String subject,
         @Parameter(
             description = "User function.",
             required = false
@@ -609,6 +622,7 @@ public class UserFeedbackAPI {
 
         Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
         ResourceBundle messages = ResourceBundle.getBundle("org.fao.geonet.api.Messages", locale);
+        Locale[] feedbackLocales = feedbackLanguages.getLocales(locale);
 
         boolean recaptchaEnabled = settingManager.getValueAsBool(Settings.SYSTEM_USERSELFREGISTRATION_RECAPTCHA_ENABLE);
 
@@ -632,23 +646,48 @@ public class UserFeedbackAPI {
             String[] metadataAddresses = StringUtils.split(metadataEmail, ",");
             for (String metadataAddress : metadataAddresses) {
                 String cleanMetadataAddress = StringUtils.trimToEmpty(metadataAddress);
-                if (cleanMetadataAddress.length() > 0 && md.getData().indexOf(cleanMetadataAddress) > 0) {
+                if (!cleanMetadataAddress.isEmpty() && md.getData().contains(cleanMetadataAddress)) {
                     toAddress.add(cleanMetadataAddress);
                 }
             }
         }
 
-        String title = XslUtil.getIndexField(null, metadataUuid, "resourceTitleObject", "");
+        LocalizedEmailComponent emailSubjectComponent = new LocalizedEmailComponent(SUBJECT, "user_feedback_title", KeyType.MESSAGE_KEY, POSITIONAL_FORMAT);
+        LocalizedEmailComponent emailMessageComponent = new LocalizedEmailComponent(MESSAGE, "user_feedback_text", KeyType.MESSAGE_KEY, POSITIONAL_FORMAT);
 
-        MailUtil.sendMail(new ArrayList<>(toAddress),
-            String.format(
-                messages.getString("user_feedback_title"),
-                catalogueName, title, subject),
-            String.format(
-                messages.getString("user_feedback_text"),
-                name, org, function, email, phone, title, type, category, comments,
-                metadataUtils.getDefaultUrl(metadataUuid, locale.getISO3Language())),
-            settingManager);
+        for (Locale feedbackLocale : feedbackLocales) {
+
+            emailSubjectComponent.addParameters(
+                feedbackLocale,
+                new LocalizedEmailParameter(ParameterType.RAW_VALUE, 1, catalogueName),
+                new LocalizedEmailParameter(ParameterType.INDEX_FIELD, 2, "resourceTitleObject", metadataUuid),
+                new LocalizedEmailParameter(ParameterType.MESSAGE_OR_JSON_KEY, 3, subject)
+            );
+
+            emailMessageComponent.addParameters(
+                feedbackLocale,
+                new LocalizedEmailParameter(ParameterType.RAW_VALUE, 1, name),
+                new LocalizedEmailParameter(ParameterType.RAW_VALUE, 2, org),
+                new LocalizedEmailParameter(ParameterType.RAW_VALUE, 3, function),
+                new LocalizedEmailParameter(ParameterType.RAW_VALUE, 4, email),
+                new LocalizedEmailParameter(ParameterType.RAW_VALUE, 5, phone),
+                new LocalizedEmailParameter(ParameterType.INDEX_FIELD, 6, "resourceTitleObject", metadataUuid),
+                new LocalizedEmailParameter(ParameterType.MESSAGE_OR_JSON_KEY, 7, type),
+                new LocalizedEmailParameter(ParameterType.MESSAGE_OR_JSON_KEY, 8, category),
+                new LocalizedEmailParameter(ParameterType.RAW_VALUE, 9, comments),
+                new LocalizedEmailParameter(ParameterType.RAW_VALUE, 10, metadataUtils.getDefaultUrl(metadataUuid, locale.getISO3Language()))
+            );
+        }
+
+        LocalizedEmail localizedEmail = new LocalizedEmail(false);
+        localizedEmail.addComponents(emailSubjectComponent, emailMessageComponent);
+
+        MailUtil.sendMail(
+            new ArrayList<>(toAddress),
+            localizedEmail.getParsedSubject(feedbackLocales),
+            localizedEmail.getParsedMessage(feedbackLocales),
+            settingManager
+        );
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
@@ -682,7 +721,7 @@ public class UserFeedbackAPI {
     @RequestMapping(value = "/userfeedback/{uuid}/publish", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     @PreAuthorize("hasAuthority('Reviewer')")
-    @ApiResponses(value = {@ApiResponse(responseCode = "204", description = "User feedback published."),
+    @ApiResponses(value = {@ApiResponse(responseCode = "204", description = "User feedback published.", content = {@Content(schema = @Schema(hidden = true))}),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_REVIEWER),
         @ApiResponse(responseCode = "404", description = ApiParams.API_RESPONSE_RESOURCE_NOT_FOUND)})
     @ResponseBody

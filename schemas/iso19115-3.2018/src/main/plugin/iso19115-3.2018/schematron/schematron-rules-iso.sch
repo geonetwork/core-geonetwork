@@ -1524,13 +1524,20 @@
       est associée.
     </sch:diagnostic>
 
+    <sch:diagnostic id="rule.mri.associatedresourceduplicated-failure-en" xml:lang="en">
+      The resource "<sch:value-of select="$resourceRef"/>" is declared multiple time with same association and initiative type.
+    </sch:diagnostic>
+
+    <sch:diagnostic id="rule.mri.associatedresourceduplicated-failure-fr" xml:lang="fr">La
+      ressource "<sch:value-of select="$resourceRef"/>" est référencée plusieurs fois avec le même type d'association et d'initiative.
+    </sch:diagnostic>
+
   </sch:diagnostics>
   <sch:pattern id="rule.mri.associatedresource">
 
     <sch:title xml:lang="en">Associated resource name</sch:title>
 
-    <sch:title xml:lang="fr">Nom ou référence à une ressource associée
-    </sch:title>
+    <sch:title xml:lang="fr">Nom ou référence à une ressource associée</sch:title>
 
 
     <sch:rule
@@ -1552,6 +1559,18 @@
 
       <sch:let name="hasMdRef" value="$mdRefTitle != '' or $mdRefRef != ''"/>
 
+      <sch:let name="association" value="mri:associationType/*/@codeListValue"/>
+      <sch:let name="initiative" value="mri:initiativeType/*/@codeListValue"/>
+
+      <sch:let name="hasNoDuplicate"
+               value="count(../../mri:associatedResource/*[
+                        mri:metadataReference/@uuidref = $mdRefRef
+                        and concat(
+                            mri:associationType/*/@codeListValue,
+                            mri:initiativeType/*/@codeListValue) =
+                            concat($association, $initiative)]) = 1"/>
+
+
       <!-- Concat ref assuming there is not both name and metadataReference -->
 
       <sch:let name="resourceRef"
@@ -1564,6 +1583,9 @@
 
       <sch:report test="$hasName or $hasMdRef"
                   diagnostics="rule.mri.associatedresource-success-en                       rule.mri.associatedresource-success-fr"/>
+
+      <sch:assert test="$hasNoDuplicate"
+                  diagnostics="rule.mri.associatedresourceduplicated-failure-en rule.mri.associatedresourceduplicated-failure-fr"/>
 
     </sch:rule>
 

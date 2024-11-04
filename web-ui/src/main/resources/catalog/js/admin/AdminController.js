@@ -81,14 +81,14 @@
                   ];
 
                   var irol = 0;
-                  for (i = 0; i < roles.length; i++) {
+                  for (var i = 0; i < roles.length; i++) {
                     if (rol.toUpperCase() == roles[i].toUpperCase()) {
                       irol = i;
                     }
                   }
 
                   var iprofile = 0;
-                  for (i = 0; i < roles.length; i++) {
+                  for (var i = 0; i < roles.length; i++) {
                     if (newProfile.toUpperCase() == roles[i].toUpperCase()) {
                       iprofile = i;
                     }

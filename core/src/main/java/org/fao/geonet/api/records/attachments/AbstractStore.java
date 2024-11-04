@@ -1,6 +1,6 @@
 /*
  * =============================================================================
- * ===	Copyright (C) 2019 Food and Agriculture Organization of the
+ * ===	Copyright (C) 2024 Food and Agriculture Organization of the
  * ===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * ===	and United Nations Environment Programme (UNEP)
  * ===
@@ -44,12 +44,16 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public abstract class AbstractStore implements Store {
+    protected static final String RESOURCE_MANAGEMENT_EXTERNAL_PROPERTIES_SEPARATOR = ":";
+    protected static final String RESOURCE_MANAGEMENT_EXTERNAL_PROPERTIES_ESCAPED_SEPARATOR = "\\:";
+
     @Override
     public final List<MetadataResource> getResources(final ServiceContext context, final String metadataUuid, final Sort sort,
             final String filter) throws Exception {
@@ -97,7 +101,7 @@ public abstract class AbstractStore implements Store {
     }
 
     protected static AccessManager getAccessManager(final ServiceContext context) {
-        return context.getBean(AccessManager.class);
+        return ApplicationContextHolder.get().getBean(AccessManager.class);
     }
 
     public static int getAndCheckMetadataId(String metadataUuid, Boolean approved) throws Exception {
@@ -203,6 +207,12 @@ public abstract class AbstractStore implements Store {
     }
 
     @Override
+    public String delResources(final ServiceContext context, final String metadataUuid, Boolean approved) throws Exception {
+        int metadataId = canEdit(context, metadataUuid, approved);
+        return delResources(context, metadataId);
+    }
+
+    @Override
     public String delResource(final ServiceContext context, final String metadataUuid, final String resourceId) throws Exception {
         return delResource(context, metadataUuid, resourceId, true);
     }
@@ -272,5 +282,29 @@ public abstract class AbstractStore implements Store {
                 }
             }
         };
+    }
+
+    private String escapeResourceManagementExternalProperties(String value) {
+        return value.replace(RESOURCE_MANAGEMENT_EXTERNAL_PROPERTIES_SEPARATOR, RESOURCE_MANAGEMENT_EXTERNAL_PROPERTIES_ESCAPED_SEPARATOR);
+}
+
+    /**
+     * Create an encoded base 64 object id contains the following fields to uniquely identify the resource
+     * The fields are separated by a colon ":"
+     * @param type to identify type of storage - document/folder
+     * @param visibility of the resource public/private
+     * @param metadataId internal metadata id
+     * @param version identifier which can be used to directly get this version.
+     * @param resourceId or filename of the resource
+     * @return based 64 object id
+     */
+    protected String getResourceManagementExternalPropertiesObjectId(final String type, final MetadataResourceVisibility visibility, final Integer metadataId, final String version,
+                                                                     final String resourceId) {
+        return Base64.getEncoder().encodeToString(
+            ((type + RESOURCE_MANAGEMENT_EXTERNAL_PROPERTIES_SEPARATOR +
+                escapeResourceManagementExternalProperties(visibility == null ? "" : visibility.toString().toLowerCase()) + RESOURCE_MANAGEMENT_EXTERNAL_PROPERTIES_SEPARATOR +
+                metadataId + RESOURCE_MANAGEMENT_EXTERNAL_PROPERTIES_SEPARATOR +
+                escapeResourceManagementExternalProperties(version == null ? "" : version) + RESOURCE_MANAGEMENT_EXTERNAL_PROPERTIES_SEPARATOR +
+                escapeResourceManagementExternalProperties(resourceId)).getBytes()));
     }
 }

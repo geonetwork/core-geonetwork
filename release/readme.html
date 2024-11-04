@@ -51,12 +51,15 @@
         <h1>Getting Started</h1>
         <h2>Running the application</h2>
         <p>
-          @displayName@ is a web based Spatial Data Catalog written in Java.
-          To use it, you first have to start the included servlet container (Jetty).
-          However, you can also download the @appName@ WAR file and run that on your own container. 
+          @displayName@ is a web based Spatial Data Catalog written in Java @javaVersion@.
+          Requires having Java @javaVersion@ installed, which can be downloaded from <a href="@jreUrl@"> @jreName@ </a>.
         </p>
         <p>
-          You can start the @appName@ webserver using the shell scripts located in the <code>bin</code> directory.     
+          To use it, you first have to start the included servlet container (Jetty).
+          However, you can also download the @appName@ WAR file and run that on your own container.
+        </p>
+        <p>
+          You can start the @appName@ webserver using the shell scripts located in the <code>bin</code> directory.
           These require administrative privileges and have been named:
           <ul>
             <li><code>startup.sh</code> (use <code>startup.bat</code> on Windows)</li>
@@ -64,7 +67,7 @@
           </ul>
         </p>
         <p>
-          By default, the @appName@ web interface should be available at <a href="http://localhost:8080/geonetwork">http://localhost:8080/geonetwork</a>. 
+          By default, the @appName@ web interface should be available at <a href="http://localhost:8080/geonetwork">http://localhost:8080/geonetwork</a>.
           If you wish to run the application on a different port, please edit the startup shell script.
           For example, if you are using the provided Jetty server and you wish to run @appName@ on port 1234, you can add the following Java configuration option:
           <code>-Djetty.port=1234</code>
@@ -80,17 +83,17 @@
         <h2>Notes</h2>
         <ul>
           <li>
-            When @appName@ runs for the first time, it could take a little longer to start. 
-            By default, @appName@ will use a local database (H2), which takes a while to set up if it doesn't exist yet. 
+            When @appName@ runs for the first time, it could take a little longer to start.
+            By default, @appName@ will use a local database (H2), which takes a while to set up if it doesn't exist yet.
           </li>
           <li>
-            By default, H2 will create 3 <code>gn.*.db</code> files in the Jetty folder. 
-            You can change the location of the database by setting the <code>-Djdbc.database="path\to\gn"</code> 
+            By default, H2 will create 3 <code>gn.*.db</code> files in the Jetty folder.
+            You can change the location of the database by setting the <code>-Djdbc.database="path\to\gn"</code>
             Java option (do <b>not</b> include the <code>.db</code> extension) in the startup shell script.
             Alternatively, you can also set up @appName@ to work with a remote database (e.g. Oracle).
           </li>
           <li>
-            If you plan to remove @appName@ but wish to keep the database, please backup the <code>gn.*.db</code> files. 
+            If you plan to remove @appName@ but wish to keep the database, please backup the <code>gn.*.db</code> files.
             When you (re-)install @appName@ again and put the database files back at the original location, @appName@ should pick it up.
            </li>
         </ul>

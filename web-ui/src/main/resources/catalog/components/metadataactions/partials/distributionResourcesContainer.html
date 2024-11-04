@@ -1,0 +1,67 @@
+<div data-ng-if="editable">
+  <div data-ng-repeat="config in relatedConfig track by $index">
+    <div class="flex-row">
+      <div class="flex-grow">
+        <h2 data-ng-if="config.title.indexOf('<') === -1">
+          {{::config.title | translate}}
+        </h2>
+        <div
+          data-ng-if="config.title.indexOf('<') === 0"
+          data-ng-bind-html="config.title"
+        ></div>
+      </div>
+      <div
+        class="gn-margin-bottom gn-margin-left-sm"
+        data-ng-repeat="action in config.editActions"
+      >
+        <a
+          href=""
+          title="{{(action + '-help') | translate}}"
+          class="btn btn-default btn-xs"
+          data-ng-click="onlinesrcService.onOpenPopup('onlinesrc', action)"
+        >
+          <i class="fa fa-fw fa-plus"></i>
+          <span>{{ action | translate}}</span>
+        </a>
+      </div>
+    </div>
+    <div
+      data-gn-related-distribution="md"
+      data-user="user"
+      data-editor-config="editorConfig"
+      data-layout="{{config.layout}}"
+      data-types="{{config.types}}"
+      data-filter="{{config.filter}}"
+    ></div>
+  </div>
+</div>
+
+<div data-ng-if="!editable">
+  <tabset class="info-tabset" data-ng-if="mode == 'tabset'">
+    <tab
+      data-ng-repeat="item in relatedConfigUI track by $index"
+      data-ng-if="item.relationFound"
+      heading="{{item.title | translate}}"
+    >
+      <div
+        data-gn-related-distribution="md"
+        data-user="user"
+        data-editor-config="editorConfig"
+        data-layout="{{item.layout}}"
+        data-filter="{{item.filter}}"
+      ></div>
+    </tab>
+  </tabset>
+
+  <div data-ng-if="mode != 'tabset'">
+    <div
+      data-ng-repeat="item in relatedConfigUI track by $index"
+      data-gn-related-distribution="md"
+      data-user="user"
+      data-editor-config="editorConfig"
+      data-layout="{{item.layout}}"
+      data-filter="{{item.filter}}"
+      data-title="{{item.title | translate}}"
+    ></div>
+  </div>
+</div>

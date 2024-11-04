@@ -34,9 +34,10 @@
         http://camel.apache.org/schema/spring
         http://camel.apache.org/schema/spring/camel-spring.xsd">
 
-  <context:property-placeholder location="${app.properties}"
-                                file-encoding="UTF-8"
-                                ignore-unresolvable="true" />
+  <context:property-placeholder location="${app.properties},file://#{systemEnvironment['geonetwork_dir']}/config/app.properties"
+                                ignore-unresolvable="true"
+                                ignore-resource-not-found="true"
+                                file-encoding="UTF-8"/>
 
   <bean id="wfsfeaturesHarvesterRouteBuilder"
         class="org.fao.geonet.harvester.wfsfeatures.worker.WFSHarvesterRouteBuilder">

@@ -100,7 +100,7 @@ var OWC_0_3_1_Module_Factory = function () {
           {
             n: "vendorExtension",
             en: "VendorExtension",
-            ti: "OWC_0_3_1.ExtensionType"
+            ti: "OWC_0_3_1.VendorExtensionType"
           },
           {
             n: "queryable",
@@ -135,6 +135,21 @@ var OWC_0_3_1_Module_Factory = function () {
           {
             n: "title",
             t: "a"
+          }
+        ]
+      },
+      {
+        ln: "Attribution",
+        ps: [
+          {
+            n: "onlineResource",
+            col: true,
+            en: "OnlineResource",
+            ti: "OWC_0_3_1.OnlineResourceType"
+          },
+          {
+            n: "title",
+            en: "Title"
           }
         ]
       },
@@ -354,6 +369,22 @@ var OWC_0_3_1_Module_Factory = function () {
             n: "any",
             mx: true,
             t: "ae"
+          }
+        ]
+      },
+      {
+        ln: "VendorExtensionType",
+        ps: [
+          {
+            n: "any",
+            mx: true,
+            t: "ae"
+          },
+          {
+            n: "attribution",
+            col: true,
+            en: "Attribution",
+            ti: "OWC_0_3_1.Attribution"
           }
         ]
       },

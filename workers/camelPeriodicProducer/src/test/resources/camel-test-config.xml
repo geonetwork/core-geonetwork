@@ -26,11 +26,19 @@
        xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:cm="http://camel.apache.org/schema/spring"
+       xmlns:context="http://www.springframework.org/schema/context"
        xsi:schemaLocation="
         http://www.springframework.org/schema/beans
         http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd
         http://camel.apache.org/schema/spring
         http://camel.apache.org/schema/spring/camel-spring.xsd">
+
+  <context:property-placeholder location="WEB-INF/config.properties"
+                                ignore-unresolvable="true"
+                                ignore-resource-not-found="true"
+                                file-encoding="UTF-8"/>
 
   <bean id="testCamelNetwork" class="org.fao.geonet.camelPeriodicProducer.TestCamelNetwork"/>
 
@@ -45,4 +53,9 @@
                           maxQueueSize="1000"
                           rejectedPolicy="CallerRuns"/>
   </cm:camelContext>
+
+  <bean id="language" class="org.fao.geonet.web.DefaultLanguage">
+    <property name="language" value="${language.default}"/>
+    <property name="forceDefault" value="${language.forceDefault}"/>
+  </bean>
 </beans>

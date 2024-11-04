@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (C) 2001-2024 Food and Agriculture Organization of the
+  ~ United Nations (FAO-UN), United Nations World Food Programme (WFP)
+  ~ and United Nations Environment Programme (UNEP)
+  ~
+  ~ This program is free software; you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation; either version 2 of the License, or (at
+  ~ your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful, but
+  ~ WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+  ~ General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program; if not, write to the Free Software
+  ~ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
+  ~
+  ~ Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
+  ~ Rome - Italy. email: geonetwork@osgeo.org
+  -->
+
+<beans
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.springframework.org/schema/beans"
+        xmlns:context="http://www.springframework.org/schema/context"
+        xsi:schemaLocation="
+          http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+          http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+    ">
+
+    <context:property-placeholder location="classpath:config-store/config-jcloud-overrides.properties"
+                                  file-encoding="UTF-8"
+                                  ignore-unresolvable="true"
+                                  />
+
+    <bean id="jCloudConfiguration" class="org.fao.geonet.resources.JCloudConfiguration">
+        <property name="provider" value="${jcloud.provider}"/>
+        <property name="folderDelimiter" value="${jcloud.folder.delimiter}"/>
+        <property name="containerName" value="${jcloud.container.name}"/>
+        <property name="baseFolder" value="${jcloud.base.folder}"/>
+        <property name="storageAccountName" value="${jcloud.storage.account.name}"/>
+        <property name="storageAccountKey" value="${jcloud.storage.account.key}"/>
+        <property name="endpoint" value="${jcloud.endpoint:#{null}}"/>
+
+        <property name="externalResourceManagementUrl" value="${jcloud.external.resource.management.url}"/>
+        <property name="externalResourceManagementWindowParameters" value="${jcloud.external.resource.management.window.parameters}"/>
+        <property name="externalResourceManagementModalEnabled" value="${jcloud.external.resource.management.modal.enabled}"/>
+        <property name="externalResourceManagementFolderEnabled" value="${jcloud.external.resource.management.folder.enabled}"/>
+        <property name="externalResourceManagementFolderRoot" value="${jcloud.external.resource.management.folder.root}"/>
+        <property name="externalResourceManagementValidationStatusPropertyName" value="${jcloud.external.resource.management.validation.status.property.name}"/>
+        <property name="externalResourceManagementValidationStatusDefaultValue" value="${jcloud.external.resource.management.validation.status.default.value}"/>
+        <property name="externalResourceManagementChangedDatePropertyName" value="${jcloud.external.resource.management.changed.date.property.name}"/>
+
+        <property name="versioningEnabled" value="${jcloud.versioning.enabled}"/>
+
+        <property name="metadataUUIDPropertyName" value="${jcloud.metadata.uuid.property.name}"/>
+    </bean>
+    <bean id="filesystemStore" class="org.fao.geonet.api.records.attachments.JCloudStore" />
+    <bean id="resourceStore"
+          class="org.fao.geonet.api.records.attachments.ResourceLoggerStore">
+      <constructor-arg index="0" ref="filesystemStore"/>
+    </bean>
+    <bean id="resources" class="org.fao.geonet.resources.JCloudResources"/>
+
+</beans>

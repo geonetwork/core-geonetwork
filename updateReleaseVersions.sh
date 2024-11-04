@@ -5,7 +5,7 @@
 
 function showUsage
 {
-  echo -e "\nThis script is used to update branch from a SNAPSHOT version to a release version. Should be used in branch before creating a new release (tag)." 
+  echo -e "\nThis script is used to update branch from a SNAPSHOT version to a release version. Should be used in branch before creating a new release (tag)."
   echo
   echo -e "Usage: `basename $0 $1` version"
   echo
@@ -14,7 +14,7 @@ function showUsage
   echo
 }
 
-if [ "$1" = "-h" ] 
+if [ "$1" = "-h" ]
 then
 	showUsage
 	exit
@@ -45,14 +45,11 @@ else
 fi
 
 echo
-echo 'Your Operating System is' $OSTYPE 
+echo 'Your Operating System is' $OSTYPE
 echo 'sed will use the following option: ' $sedopt
 echo
 
 version="$1"
-
-# Update version in sphinx doc files
-sed $sedopt "s/${version}-SNAPSHOT/${version}/g" docs/manuals/source/conf.py
 
 # Update release subversion
 sed $sedopt "s/subVersion=SNAPSHOT/subVersion=0/g" release/build.properties

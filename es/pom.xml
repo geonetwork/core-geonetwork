@@ -5,12 +5,111 @@
   <parent>
     <artifactId>geonetwork</artifactId>
     <groupId>org.geonetwork-opensource</groupId>
-    <version>4.2.4-SNAPSHOT</version>
+    <version>4.4.7-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <artifactId>gn-es</artifactId>
   <name>GeoNetwork index using Elasticsearch</name>
   <packaging>pom</packaging>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-enforcer-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>check-readme</id>
+            <goals>
+              <goal>enforce</goal>
+            </goals>
+            <configuration>
+              <rules>
+                <evaluateBeanshell>
+                  <message>Update README.md examples for Elasticsearch ${es.version}</message>
+                  <condition>
+                      import java.util.regex.Pattern;
+
+                      esVersion = "${es.version}";
+                      print("Scanning README for " + esVersion);
+
+                      docker = Pattern.compile("elasticsearch:(\\d.\\d\\d.\\d)");
+                      download = Pattern.compile("Download Elasticsearch (\\d.\\d\\d.\\d)");
+                      folder = Pattern.compile("es/elasticsearch-(\\d.\\d\\d.\\d)");
+
+                      patterns = new Pattern[]{ docker, download, folder};
+
+                      readme = new BufferedReader(new FileReader("README.md"));
+
+                      number = 0;
+                      while ((line = readme.readLine()) != null) {
+                        number++;
+                        for (pattern : patterns ){
+                          matcher = pattern.matcher(line);
+                          if (matcher.find()) {
+                            if (!esVersion.equals(matcher.group(1))) {
+                              print("README.md:"+number+" FAILURE: " + line);
+                              return false;
+                            }
+                          }
+                        }
+                      }
+                      readme.close();
+                    true;
+                  </condition>
+                </evaluateBeanshell>
+              </rules>
+            </configuration>
+          </execution>
+          <execution>
+            <id>check-docker</id>
+            <goals>
+              <goal>enforce</goal>
+            </goals>
+            <configuration>
+              <rules>
+                <evaluateBeanshell>
+                  <message>Update docker-compose.yml for Elasticsearch ${es.version}</message>
+                  <condition>
+                      import java.util.regex.Pattern;
+
+                      boolean scanDockerCompose(String filename){
+                        esVersion = "${es.version}";
+                        print("Scanning "+filename+" for " + esVersion);
+
+                        docker = Pattern.compile("elasticsearch:(\\d.\\d\\d.\\d)");
+                        kibana = Pattern.compile("kibana:(\\d.\\d\\d.\\d)");
+                        patterns = new Pattern[]{ docker, kibana};
+
+                        reader = new BufferedReader(new FileReader("${project.basedir}"+"/"+filename));
+
+                        number = 0;
+                        while ((line = reader.readLine()) != null) {
+                          number++;
+                          for (pattern : patterns ){
+                            matcher = pattern.matcher(line);
+                            if (matcher.find()) {
+                              if (!esVersion.equals(matcher.group(1))) {
+                                print(filename+":"+number+" FAILURE: " + line);
+                                return false;
+                              }
+                            }
+                          }
+                        }
+                        reader.close();
+                        return true;
+                      }
+
+                      return scanDockerCompose("docker-compose.yml");
+                  </condition>
+                </evaluateBeanshell>
+              </rules>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
 
   <profiles>
     <profile>

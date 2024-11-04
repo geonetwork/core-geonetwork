@@ -1,4 +1,4 @@
-INSERT INTO Languages (id, name, isinspire, isdefault) VALUES ('chi','中文', 'n', 'n');
+INSERT INTO Languages (id, name, isinspire) VALUES ('chi','中文', 'n');
 
 -- Take care to table ID (related to other loc files)
 INSERT INTO CategoriesDes (iddes, langid, label) VALUES (1,'chi','Maps & graphics');

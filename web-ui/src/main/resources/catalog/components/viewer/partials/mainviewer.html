@@ -186,7 +186,7 @@
       </div>
       <div class="panel-body">
         <p translate="" class="text-muted">filterDataDescription</p>
-        <div data-gn-data-filter-view="map" />
+        <div data-gn-data-filter-view="map"></div>
       </div>
     </div>
 
@@ -208,22 +208,36 @@
         <h3>{{'processesTool' | translate}}</h3>
       </div>
       <div class="panel-body">
-        <p translate="" class="text-muted">WPSDescription</p>
         <tabset class="info-tabset">
-          <tab heading="{{'wpsByUrl' | translate}}" active="wpsTabs.byUrl" role="tab">
+          <tab
+            data-ng-repeat="(wpsType, active) in wpsTabs"
+            heading="{{('wpsProcess' + wpsType) | translate}}"
+            active="wpsTabs[wpsType]"
+            role="tab"
+          >
             <br />
-            <gn-wps-url-discovery wps-link="selectedWps" />
-          </tab>
-          <tab heading="{{'wpsRecent' | translate}}" active="wpsTabs.recent" role="tab">
-            <br />
-            <gn-wps-recent-list wps-link="selectedWps" />
+            <gn-wps-recent-list
+              data-ng-if="wpsType == 'list'"
+              wps-link="selectedWps"
+              with-list="true"
+              with-recent="false"
+              lang="lang"
+            ></gn-wps-recent-list>
+            <gn-wps-url-discovery
+              data-ng-if="wpsType == 'url'"
+              wps-link="selectedWps"
+            ></gn-wps-url-discovery>
+            <gn-wps-recent-list
+              data-ng-if="wpsType == 'recent'"
+              wps-link="selectedWps"
+            ></gn-wps-recent-list>
           </tab>
         </tabset>
         <gn-wps-process-form
           map="map"
           wps-link="selectedWps"
           ng-if="activeTools.processes"
-        />
+        ></gn-wps-process-form>
       </div>
     </div>
 
@@ -333,7 +347,10 @@
       ng-hide="disabledTools.syncAllLayers"
       aria-label="{{'syncAllLayers' | translate}}"
     >
-      <span class="fa fa-sync" ng-class="syncAllLayers ? 'fa-lock' : 'fa-unlock'" />
+      <span
+        class="fa fa-sync"
+        ng-class="syncAllLayers ? 'fa-lock' : 'fa-lock-open'"
+      ></span>
       <span class="label" ng-show="showToolLabels" translate="">syncAllLayers</span>
       <span role="tooltip" translate="">syncAllLayers</span>
     </button>
@@ -377,7 +394,7 @@
     >
       <span class="badge badge-left badge-2d" data-ng-hide="is3dEnabled">2D</span>
       <span class="badge badge-left badge-3d" data-ng-show="is3dEnabled">3D</span>
-      <span class="fa fa-cube" />
+      <span class="fa fa-cube"></span>
       <span class="badge badge-right badge-2d" data-ng-hide="is3dEnabled">2D</span>
       <span class="badge badge-right badge-3d" data-ng-show="is3dEnabled">3D</span>
       <span role="tooltip" data-translate="">switchFrom2DTo3D</span>
@@ -391,5 +408,5 @@
     ></button>
   </div>
 
-  <div gn-map-mouse-position="" />
+  <div gn-map-mouse-position=""></div>
 </div>

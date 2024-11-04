@@ -24,13 +24,23 @@
 
 <beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        default-lazy-init="true"
+       xmlns:context="http://www.springframework.org/schema/context"
        xmlns="http://www.springframework.org/schema/beans"
        xsi:schemaLocation="
-		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-	">
+          http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+          http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+        ">
+
+  <context:property-placeholder
+    location="${app.properties},file://#{systemEnvironment['geonetwork_dir']}/config/app.properties"
+    ignore-unresolvable="true"
+    ignore-resource-not-found="true"
+    file-encoding="UTF-8"/>
 
   <bean id="Harvest" class="org.fao.geonet.component.harvester.csw.Harvest"/>
-  <bean id="HarvestManager" class="org.fao.geonet.kernel.harvest.HarvestManagerImpl"/>
+  <bean id="HarvestManager" class="org.fao.geonet.kernel.harvest.HarvestManagerImpl">
+    <property name="harvesterRefreshIntervalMinutes" value="${harvester.refresh.interval.minutes}"/>
+  </bean>
 
   <!-- The id of the beans is the same as the type in the harvester settings table and thus should not be changed -->
   <bean id="geonetwork" class="org.fao.geonet.kernel.harvest.harvester.geonet.GeonetHarvester"
@@ -59,7 +69,7 @@
         scope="prototype"/>
   <!-- ArcSDE also requires a ArcSDEConnectionFactory beans -->
   <bean id="arcSDEConnectionFactory"
-    class="org.fao.geonet.kernel.harvest.harvester.arcsde.ArcSDEConnectionFactory" />
+        class="org.fao.geonet.kernel.harvest.harvester.arcsde.ArcSDEConnectionFactory"/>
   <bean id="simpleurl"
         class="org.fao.geonet.kernel.harvest.harvester.simpleurl.SimpleUrlHarvester"
         scope="prototype"/>

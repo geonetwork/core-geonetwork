@@ -11,8 +11,8 @@
   <skos:ConceptScheme rdf:about="http://geonetwork-opensource.org/thesaurus/naturalearth-and-seavox">
     <dc:title>Continents, countries, sea regions of the world.</dc:title>
     <dc:description>Generated from NaturalEarth datasets and SeaVox.</dc:description>
-    <dcterms:issued>2015-07-17 12:00:00</dcterms:issued>
-    <dcterms:modified>2015-07-17 12:00:00</dcterms:modified>
+    <dcterms:issued>2015-07-17</dcterms:issued>
+    <dcterms:modified>2015-07-17</dcterms:modified>
     <skos:hasTopConcept rdf:resource="http://www.naturalearthdata.com/ne_admin#Continent"/>
     <skos:hasTopConcept rdf:resource="http://www.naturalearthdata.com/ne_admin#Country"/>
     <skos:hasTopConcept rdf:resource="http://www.naturalearthdata.com/ne_admin#CountryGroup"/>

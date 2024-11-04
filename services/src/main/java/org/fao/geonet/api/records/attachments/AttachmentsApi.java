@@ -1,6 +1,6 @@
 /*
  * =============================================================================
- * ===	Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * ===	Copyright (C) 2001-2023 Food and Agriculture Organization of the
  * ===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * ===	and United Nations Environment Programme (UNEP)
  * ===
@@ -25,7 +25,12 @@
 
 package org.fao.geonet.api.records.attachments;
 
+import static org.fao.geonet.api.ApiParams.API_CLASS_RECORD_OPS;
+import static org.fao.geonet.api.ApiParams.API_CLASS_RECORD_TAG;
+
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -41,13 +46,11 @@ import org.fao.geonet.events.history.AttachmentAddedEvent;
 import org.fao.geonet.events.history.AttachmentDeletedEvent;
 import org.fao.geonet.util.ImageUtil;
 import org.springframework.context.ApplicationContext;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
-import org.springframework.util.MultiValueMap;
+import org.springframework.util.StreamUtils;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -62,8 +65,8 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import javax.annotation.PostConstruct;
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
@@ -78,7 +81,8 @@ import java.util.List;
 @EnableWebMvc
 @Service
 @RequestMapping(value = {"/{portal}/api/records/{metadataUuid}/attachments"})
-@Tag(name = "records", description = "Metadata record operations")
+@Tag(name = API_CLASS_RECORD_TAG,
+    description = API_CLASS_RECORD_OPS)
 public class AttachmentsApi {
     public static final Integer MIN_IMAGE_SIZE = 1;
     public static final Integer MAX_IMAGE_SIZE = 2048;
@@ -105,15 +109,22 @@ public class AttachmentsApi {
                 case "png":
                 case "gif":
                 case "bmp":
-                case "tif":
-                case "tiff":
-                case "jpg":
-                case "jpeg":
                     contentType = "image/" + ext;
                     break;
+                case "tif":
+                case "tiff":
+                    contentType = "image/tiff";
+                    break;
+                case "jpg":
+                case "jpeg":
+                    contentType = "image/jpeg";
+                    break;
                 case "txt":
+                    contentType = "text/plain";
+                    break;
+                case "htm":
                 case "html":
-                    contentType = "text/" + ext;
+                    contentType = "text/html";
                     break;
                 default:
                     contentType = "application/" + ext;
@@ -147,7 +158,7 @@ public class AttachmentsApi {
         return null;
     }
 
-    @io.swagger.v3.oas.annotations.Operation(summary = "List all metadata attachments", description = "<a href='http://geonetwork-opensource.org/manuals/trunk/eng/users/user-guide/associating-resources/using-filestore.html'>More info</a>")
+    @io.swagger.v3.oas.annotations.Operation(summary = "List all metadata attachments", description = "<a href='https://docs.geonetwork-opensource.org/latest/user-guide/associating-resources/using-filestore/'>More info</a>")
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.OK)
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Return the record attachments."),
@@ -167,7 +178,7 @@ public class AttachmentsApi {
     @io.swagger.v3.oas.annotations.Operation(summary = "Delete all uploaded metadata resources")
     @RequestMapping(method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAuthority('Editor')")
-    @ApiResponses(value = {@ApiResponse(responseCode = "204", description = "Attachment added."),
+    @ApiResponses(value = {@ApiResponse(responseCode = "204", description = "Attachment added.", content = {@Content(schema = @Schema(hidden = true))}),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)})
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public void delResources(
@@ -188,7 +199,9 @@ public class AttachmentsApi {
 
     @io.swagger.v3.oas.annotations.Operation(summary = "Create a new resource for a given metadata")
     @PreAuthorize("hasAuthority('Editor')")
-    @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(method = RequestMethod.POST,
+        consumes = MediaType.ALL_VALUE,
+        produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.CREATED)
     @ApiResponses(value = {@ApiResponse(responseCode = "201", description = "Attachment uploaded."),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)})
@@ -244,44 +257,40 @@ public class AttachmentsApi {
     // @PreAuthorize("permitAll")
     @RequestMapping(value = "/{resourceId:.+}", method = RequestMethod.GET)
     @ResponseStatus(value = HttpStatus.OK)
-    @ApiResponses(value = {@ApiResponse(responseCode = "201", description = "Record attachment."),
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Record attachment.",
+        content = @Content(schema = @Schema(type = "string", format = "binary"))),
         @ApiResponse(responseCode = "403", description = "Operation not allowed. "
             + "User needs to be able to download the resource.")})
-    @ResponseBody
-    public HttpEntity<byte[]> getResource(
+    public void getResource(
         @Parameter(description = "The metadata UUID", required = true, example = "43d7c186-2187-4bcd-8843-41e575a5ef56") @PathVariable String metadataUuid,
         @Parameter(description = "The resource identifier (ie. filename)", required = true) @PathVariable String resourceId,
         @Parameter(description = "Use approved version or not", example = "true") @RequestParam(required = false, defaultValue = "true") Boolean approved,
         @Parameter(description = "Size (only applies to images). From 1px to 2048px.", example = "200") @RequestParam(required = false) Integer size,
-        @Parameter(hidden = true) HttpServletRequest request) throws Exception {
+        @Parameter(hidden = true) HttpServletRequest request,
+        @Parameter(hidden = true) HttpServletResponse response
+    ) throws Exception {
         ServiceContext context = ApiUtils.createServiceContext(request);
         try (Store.ResourceHolder file = store.getResource(context, metadataUuid, resourceId, approved)) {
 
             ApiUtils.canViewRecord(metadataUuid, request);
 
-            MultiValueMap<String, String> headers = new HttpHeaders();
-            headers.add("Content-Disposition", "inline; filename=\"" + file.getMetadata().getFilename() + "\"");
-            headers.add("Cache-Control", "no-cache");
+            response.setHeader("Content-Disposition", "inline; filename=\"" + file.getMetadata().getFilename() + "\"");
+            response.setHeader("Cache-Control", "no-cache");
             String contentType = getFileContentType(file.getPath());
-            headers.add("Content-Type", contentType);
+            response.setHeader("Content-Type", contentType);
 
             if (contentType.startsWith("image/") && size != null) {
                 if (size >= MIN_IMAGE_SIZE && size <= MAX_IMAGE_SIZE) {
                     BufferedImage image = ImageIO.read(file.getPath().toFile());
                     BufferedImage resized = ImageUtil.resize(image, size);
-                    ByteArrayOutputStream output = new ByteArrayOutputStream();
-                    ImageIO.write(resized, "png", output);
-                    output.flush();
-                    byte[] imagesB = output.toByteArray();
-                    output.close();
-                    return new HttpEntity<>(imagesB, headers);
+                    ImageIO.write(resized, "png", response.getOutputStream());
                 } else {
                     throw new IllegalArgumentException(String.format(
                         "Image can only be resized from %d to %d. You requested %d.",
                         MIN_IMAGE_SIZE, MAX_IMAGE_SIZE, size));
                 }
             } else {
-                return new HttpEntity<>(Files.readAllBytes(file.getPath()), headers);
+                StreamUtils.copy(Files.newInputStream(file.getPath()), response.getOutputStream());
             }
         }
     }
@@ -307,7 +316,7 @@ public class AttachmentsApi {
     @io.swagger.v3.oas.annotations.Operation(summary = "Delete a metadata resource")
     @PreAuthorize("hasAuthority('Editor')")
     @RequestMapping(value = "/{resourceId:.+}", method = RequestMethod.DELETE)
-    @ApiResponses(value = {@ApiResponse(responseCode = "204", description = "Attachment visibility removed."),
+    @ApiResponses(value = {@ApiResponse(responseCode = "204", description = "Attachment visibility removed.", content = {@Content(schema = @Schema(hidden = true))}),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)})
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public void delResource(

@@ -23,10 +23,11 @@
 
 package org.fao.geonet.kernel.mef;
 
+import co.elastic.clients.elasticsearch.core.SearchResponse;
+import co.elastic.clients.elasticsearch.core.search.Hit;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.io.FileUtils;
-import org.elasticsearch.action.search.SearchResponse;
-import org.elasticsearch.search.SearchHit;
 import org.fao.geonet.Constants;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.ZipUtil;
@@ -137,8 +138,9 @@ class MEF2Exporter {
                 String mdSchema = null, mdTitle = null, mdAbstract = null, isHarvested = null;
                 MetadataType mdType = null;
 
-                SearchHit[] hits = result.getHits().getHits();
-                final Map<String, Object> source = hits[0].getSourceAsMap();
+                List<Hit> hits = result.hits().hits();
+                ObjectMapper objectMapper = new ObjectMapper();
+                final Map<String, Object> source = objectMapper.convertValue(hits.get(0).source(), Map.class);
                 mdSchema = (String) source.get(Geonet.IndexFieldNames.SCHEMA);
                 mdTitle = (String) source.get(Geonet.IndexFieldNames.RESOURCETITLE);
                 mdAbstract = (String) source.get(Geonet.IndexFieldNames.RESOURCEABSTRACT);

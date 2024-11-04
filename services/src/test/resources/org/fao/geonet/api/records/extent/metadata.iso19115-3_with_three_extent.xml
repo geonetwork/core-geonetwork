@@ -12,7 +12,7 @@
                  xmlns:mdt="http://standards.iso.org/iso/19115/-3/mdt/2.0"
                  xmlns:msr="http://standards.iso.org/iso/19115/-3/msr/2.0"
                  xmlns:mpc="http://standards.iso.org/iso/19115/-3/mpc/1.0"
-                 xmlns:srv="http://standards.iso.org/iso/19115/-3/srv/2.1"
+                 xmlns:srv="http://standards.iso.org/iso/19115/-3/srv/2.0"
                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                  xmlns:lan="http://standards.iso.org/iso/19115/-3/lan/1.0"
                  xmlns:mac="http://standards.iso.org/iso/19115/-3/mac/2.0"

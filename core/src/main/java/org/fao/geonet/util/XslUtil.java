@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2020 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2023 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -23,6 +23,7 @@
 
 package org.fao.geonet.util;
 
+import co.elastic.clients.elasticsearch.core.search.Hit;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -39,28 +40,19 @@ import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.NotImplementedException;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.text.StringEscapeUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.lucene.search.join.ScoreMode;
-import org.elasticsearch.action.search.MultiSearchRequest;
-import org.elasticsearch.action.search.MultiSearchResponse;
-import org.elasticsearch.action.search.SearchRequest;
-import org.elasticsearch.client.RequestOptions;
-import org.elasticsearch.index.query.BoolQueryBuilder;
-import org.elasticsearch.index.query.QueryBuilder;
-import org.elasticsearch.index.query.QueryBuilders;
-import org.elasticsearch.search.SearchHits;
-import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.SystemInfo;
+import org.fao.geonet.analytics.WebAnalyticsConfiguration;
 import org.fao.geonet.api.records.attachments.FilesystemStore;
 import org.fao.geonet.api.records.attachments.FilesystemStoreResourceContainer;
 import org.fao.geonet.api.records.attachments.Store;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.*;
-import org.fao.geonet.index.es.EsRestClient;
 import org.fao.geonet.kernel.*;
 import org.fao.geonet.kernel.datamanager.base.BaseMetadataUtils;
 import org.fao.geonet.kernel.search.CodeListTranslator;
@@ -84,6 +76,7 @@ import org.geotools.geometry.jts.JTS;
 import org.geotools.geometry.jts.ReferencedEnvelope;
 import org.geotools.referencing.CRS;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
+import org.geotools.referencing.crs.DefaultProjectedCRS;
 import org.geotools.xsd.Parser;
 import org.jdom.Document;
 import org.jdom.Element;
@@ -95,16 +88,18 @@ import org.locationtech.jts.geom.*;
 import org.locationtech.jts.io.WKTReader;
 import org.locationtech.jts.operation.valid.IsValidOp;
 import org.locationtech.jts.precision.GeometryPrecisionReducer;
-import org.opengis.referencing.crs.CoordinateReferenceSystem;
-import org.opengis.referencing.operation.MathTransform;
+import org.geotools.api.referencing.crs.CoordinateReferenceSystem;
+import org.geotools.api.referencing.operation.MathTransform;
 import org.owasp.esapi.errors.EncodingException;
 import org.owasp.esapi.reference.DefaultEncoder;
 import org.springframework.beans.factory.BeanCreationException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.BeanFactoryAnnotationUtils;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 
@@ -184,6 +179,22 @@ public final class XslUtil {
 
                 if (geom == null) {
                     return "Warning: GML geometry is null.";
+                }
+
+                Object userData = geom.getUserData();
+                if (userData instanceof DefaultProjectedCRS) {
+                    geom = JTS.transform(
+                        geom,
+                        CRS.findMathTransform((DefaultProjectedCRS) userData,
+                            CRS.decode("EPSG:4326", true), true)
+                    );
+                }
+                else if (userData instanceof DefaultGeographicCRS) {
+                    geom = JTS.transform(
+                        geom,
+                        CRS.findMathTransform((DefaultGeographicCRS) userData,
+                            CRS.decode("EPSG:4326", true), true)
+                    );
                 }
 
                 if (!geom.isValid()) {
@@ -438,9 +449,33 @@ public final class XslUtil {
             + (withOrganization ? " - " + settingsMan.getValue(SYSTEM_SITE_ORGANIZATION) : "");
     }
 
+
+    /**
+     * Return the ID of the current node (catalog or subportal).
+     * If the main one, then srv.
+     * If a sub portal, use the sub portal key.
+     *
+     * @return
+     */
+    public static String getNodeId() {
+        return ApplicationContextHolder.get().getBean(org.fao.geonet.NodeInfo.class).getId();
+    }
+
+
     public static String getNodeLogo(String key) {
         Optional<Source> source = getSource(key);
         return source.isPresent() ? source.get().getLogo() : "";
+    }
+
+    public static String getDiscoveryServiceUuid(String key) {
+        Optional<Source> source = getSource(key);
+        if (source.isPresent() && source.get().getType() == SourceType.subportal) {
+            return source.get().getServiceRecord();
+        } else {
+            SettingManager settingsMan = ApplicationContextHolder.get().getBean(SettingManager.class);
+            String uuid = settingsMan.getValue(SYSTEM_CSW_CAPABILITY_RECORD_UUID);
+            return "-1".equals(uuid) ? "" : uuid;
+        }
     }
 
     private static Optional<Source> getSource(String idOrUuid) {
@@ -509,7 +544,19 @@ public final class XslUtil {
         return null;
     }
 
-	/**
+    /**
+     * Check if user is authenticated.
+     */
+    public static boolean isAuthenticated() throws Exception {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || AnonymousAuthenticationToken.class.isAssignableFrom(authentication.getClass())) {
+            return false;
+        }
+        return authentication.isAuthenticated();
+    }
+
+
+    /**
 	 * Check if security provider require login form
 	 */
 	public static boolean isDisableLoginForm() {
@@ -585,13 +632,19 @@ public final class XslUtil {
         Store store = BeanFactoryAnnotationUtils.qualifiedBeanOfType(ApplicationContextHolder.get().getBeanFactory(), Store.class, "filesystemStore");
 
         if (store != null) {
-            if (store.getResourceManagementExternalProperties() != null && store.getResourceManagementExternalProperties().isFolderEnabled()) {
-                ServiceContext context = ServiceContext.get();
-                return store.getResourceContainerDescription(ServiceContext.get(), metadataUuid, approved);
-            } else {
-                // Return an empty object which should not be used because the folder is not enabled.
-                return new FilesystemStoreResourceContainer(metadataUuid, -1, null, null, null, approved);
+            try {
+                if (store.getResourceManagementExternalProperties() != null && store.getResourceManagementExternalProperties().isFolderEnabled()) {
+                    ServiceContext context = ServiceContext.get();
+                    return store.getResourceContainerDescription(ServiceContext.get(), metadataUuid, approved);
+                } else {
+                    // Return an empty object which should not be used because the folder is not enabled.
+                    return new FilesystemStoreResourceContainer(metadataUuid, -1, null, null, null, approved);
+                }
+            } catch (RuntimeException e) {
+                Log.error(Geonet.RESOURCES, "Could not locate resource in getResourceContainerDescription due to runtime exception", e);
+                return null;
             }
+
         }
         Log.error(Geonet.RESOURCES, "Could not locate a Store bean in getResourceContainerDescription");
         return null;
@@ -797,12 +850,10 @@ public final class XslUtil {
         try {
             Set<String> fields = new HashSet<>();
             fields.add(fieldname);
-            // TODO: Multilingual fields
-            final Map<String, String> values = searchManager.getFieldsValues(id, fields);
+            final Map<String, String> values = searchManager.getFieldsValues(id, fields, language);
             return values.get(fieldname);
         } catch (Exception e) {
-            e.printStackTrace();
-            Log.error(Geonet.GEONETWORK, "Failed to get index field '" + fieldname + "' value on '" + id + "', caused by " + e.getMessage());
+            Log.warning(Geonet.GEONETWORK, "Failed to get index field '" + fieldname + "' value on '" + id + "', caused by " + e.getMessage());
         }
         return "";
     }
@@ -1189,12 +1240,13 @@ public final class XslUtil {
         String extension = Files.getFileExtension(url).toLowerCase();
         if (extension.matches(supportedExtension)) {
 
+            InputStream in = null;
             try {
                 SettingManager settingManager = ApplicationContextHolder.get().getBean(SettingManager.class);
                 Matcher m = Pattern.compile(settingManager.getNodeURL() + "api/records/(.*)/attachments/(.*)$").matcher(url);
                 BufferedImage image;
                 if (m.find()) {
-                    Store store = ApplicationContextHolder.get().getBean(FilesystemStore.class);
+                    Store store = ApplicationContextHolder.get().getBean("filesystemStore", Store.class);
                     try (Store.ResourceHolder file = store.getResourceInternal(
                         m.group(1),
                         MetadataResourceVisibility.PUBLIC,
@@ -1202,7 +1254,12 @@ public final class XslUtil {
                         image = ImageIO.read(file.getPath().toFile());
                     }
                 } else {
-                    image = ImageIO.read(new URL(url));
+                    URL imageUrl = new URL(url);
+                    URLConnection con = imageUrl.openConnection();
+                    con.setConnectTimeout(1000);
+                    con.setReadTimeout(10000);
+                    in = con.getInputStream();
+                    image = ImageIO.read(in);
                 }
 
                 if (image != null) {
@@ -1225,6 +1282,8 @@ public final class XslUtil {
                 Log.info(Geonet.GEONETWORK, String.format(
                     "Image '%s' is not accessible or can't be converted to Data URL. Error is: %s",
                     url, e.getMessage()));
+            } finally {
+                IOUtils.closeQuietly(in);
             }
         } else {
             Log.info(Geonet.GEONETWORK, String.format(
@@ -1382,6 +1441,28 @@ public final class XslUtil {
         return thesaurus == null ? "" : "geonetwork.thesaurus." + thesaurus.getKey();
     }
 
+    /**
+     * Retrieve the thesaurus title using the thesaurus key.
+     *
+     * @param id   the thesaurus key
+     * @return the thesaurus title or empty string if the thesaurus doesn't exist.
+     */
+    public static String getThesaurusTitleByKey(String id) {
+        ApplicationContext applicationContext = ApplicationContextHolder.get();
+        ThesaurusManager thesaurusManager = applicationContext.getBean(ThesaurusManager.class);
+        Thesaurus thesaurus = thesaurusManager.getThesaurusByName(id);
+        return thesaurus == null ? "" : thesaurus.getTitle();
+    }
+
+
+    public static String getThesaurusUriByKey(String id) {
+        ApplicationContext applicationContext = ApplicationContextHolder.get();
+        ThesaurusManager thesaurusManager = applicationContext.getBean(ThesaurusManager.class);
+        Thesaurus thesaurus = thesaurusManager.getThesaurusByName(id);
+        return thesaurus == null ? "" : thesaurus.getDefaultNamespace();
+    }
+
+
 
     /**
      * Utility method to retrieve the name (label) for an iso language using it's code for a specific language.
@@ -1486,152 +1567,27 @@ public final class XslUtil {
         return "";
     }
 
-    /**
-     * Associated resource like
-     * <ul>
-     * <li>parent</li>
-     * <li>source</li>
-     * <li>dataset (for service record)</li>
-     * <li>siblings</li>
-     * <li>feature catalogue</li>
-     * </ul>
-     * are stored in current records
-     * BUT
-     * some other relations are stored in the other side of the relation record ie.
-     * <ul>
-     * <li>service operatingOn current = +recordOperateOn:currentUuid</li>
-     * <li>siblings of current = +recordLink.type:siblings +recordLink.to:currentUuid</li>
-     * <li>children of current = +parentUuid:currentUuid</li>
-     * <li>brothersAndSisters = +parentUuid:currentParentUuid</li>
-     * </ul>
-     * Instead of relying on related API, it can make sense to index all relations
-     * (including bidirectional links) at indexing time to speed up rendering of
-     * associated resources which is slow task on search results.
-     *
-     * MetadataUtils#getRelated has the logic to search for all associated resources
-     * and also takes into account privileges in case of target record is not visible
-     * to current user.
-     *
-     * BTW in some cases, all records are public (or it is not an issue to only display
-     * a title of a private record) and a more direct approach can be used.
-     *
-     * @param uuid
-     * @return
-     */
-    public static Element getTargetAssociatedResources(String uuid, String parentUuid) {
-        EsRestClient client = ApplicationContextHolder.get().getBean(EsRestClient.class);
-        EsSearchManager searchManager = ApplicationContextHolder.get().getBean(EsSearchManager.class);
-        Element recordLinks = new Element("recordLinks");
-
-        try {
-            MultiSearchRequest request = new MultiSearchRequest();
-
-
-            SearchRequest serviceRequest = new SearchRequest(searchManager.getDefaultIndex());
-            SearchSourceBuilder serviceSearchSourceBuilder = new SearchSourceBuilder();
-            serviceSearchSourceBuilder.fetchSource(
-                    new String[]{"resourceTitleObject.default"},
-                    null
-            );
-            serviceSearchSourceBuilder.query(QueryBuilders.matchQuery(
-                    "recordOperateOn", uuid));
-            serviceRequest.source(serviceSearchSourceBuilder);
-            request.add(serviceRequest);
-
-
-            SearchRequest childrenRequest = new SearchRequest(searchManager.getDefaultIndex());
-            SearchSourceBuilder childrenSearchSourceBuilder = new SearchSourceBuilder();
-            childrenSearchSourceBuilder.fetchSource(
-                    new String[]{"resourceTitleObject.default"},
-                    null
-            );
-            childrenSearchSourceBuilder.query(QueryBuilders.matchQuery(
-                    "parentUuid", uuid));
-            childrenRequest.source(childrenSearchSourceBuilder);
-            request.add(childrenRequest);
-
-
-            SearchRequest siblingsRequest = new SearchRequest(searchManager.getDefaultIndex());
-            SearchSourceBuilder siblingsSearchSourceBuilder = new SearchSourceBuilder();
-            siblingsSearchSourceBuilder.fetchSource(
-                    new String[]{"resourceTitleObject.default"},
-                    null
-            );
-            BoolQueryBuilder boolQuery = QueryBuilders.boolQuery();
-            List<QueryBuilder> must = boolQuery.must();
-            must.add(QueryBuilders.matchQuery("recordLink.type", "siblings"));
-            must.add(QueryBuilders.matchQuery("recordLink.to", uuid));
-            siblingsSearchSourceBuilder.query(
-                    QueryBuilders.nestedQuery(
-                            Geonet.IndexFieldNames.RECORDLINK,
-                            boolQuery,
-                            ScoreMode.Avg));
-            siblingsRequest.source(siblingsSearchSourceBuilder);
-            request.add(siblingsRequest);
-
-
-
-            boolean hasParent = StringUtils.isNotEmpty(parentUuid);
-            if (hasParent) {
-                SearchRequest brothersAndSistersRequest = new SearchRequest(searchManager.getDefaultIndex());
-                SearchSourceBuilder brothersAndSistersSearchSourceBuilder = new SearchSourceBuilder();
-                brothersAndSistersSearchSourceBuilder.fetchSource(
-                        new String[]{"resourceTitleObject.default"},
-                        null
-                );
-                brothersAndSistersSearchSourceBuilder.query(QueryBuilders.matchQuery(
-                        "parentUuid", parentUuid));
-                brothersAndSistersRequest.source(brothersAndSistersSearchSourceBuilder);
-                request.add(brothersAndSistersRequest);
-            }
-
-
-            MultiSearchResponse response = client.getClient().msearch(request, RequestOptions.DEFAULT);
-            recordLinks.addContent(buildRecordLink(response.getResponses()[0].getResponse().getHits(), "services"));
-            recordLinks.addContent(buildRecordLink(response.getResponses()[1].getResponse().getHits(), "children"));
-            recordLinks.addContent(buildRecordLink(response.getResponses()[2].getResponse().getHits(), "siblings"));
-
-            if (hasParent) {
-                recordLinks.addContent(buildRecordLink(response.getResponses()[3].getResponse().getHits(), "brothersAndSisters"));
-            }
-        } catch (Exception e) {
-            Log.error(Geonet.GEONETWORK,
-                    "Get related document '" + uuid + "' error: " + e.getMessage(), e);
-        }
-        return recordLinks;
-    }
-
-    public static Node getTargetAssociatedResourcesAsNode(String uuid, String parentUuid) {
-        DOMOutputter outputter = new DOMOutputter();
-        try {
-            return outputter.output(
-                    new Document(
-                            getTargetAssociatedResources(uuid, parentUuid)));
-        } catch (Exception e) {
-            Log.error(Geonet.GEONETWORK,
-                    "Get related document '" + uuid + "' error: " + e.getMessage(), e);
-        }
-        return null;
-    }
-
-    private static List<Element> buildRecordLink(SearchHits hits, String type) {
+    private static List<Element> buildRecordLink(List<Hit> hits, String type) {
         ObjectMapper mapper = new ObjectMapper();
         SettingManager settingManager = ApplicationContextHolder.get().getBean(SettingManager.class);
         String recordUrlPrefix = settingManager.getNodeURL() + "api/records/";
         ArrayList<Element> listOfLinks = new ArrayList<>();
+
+        ObjectMapper objectMapper = new ObjectMapper();
+
         hits.forEach(record -> {
             Element recordLink = new Element("recordLink");
             recordLink.setAttribute("type", "object");
             ObjectNode recordLinkProperties = mapper.createObjectNode();
 
-            recordLinkProperties.put("to", record.getId());
+            recordLinkProperties.put("to", record.id());
             recordLinkProperties.put("origin", "catalog");
             recordLinkProperties.put("created", "bySearch");
-            Map<String, String> titleObject = (Map<String, String>) record.getSourceAsMap().get("resourceTitleObject");
+            Map<String, String> titleObject = (Map<String, String>) objectMapper.convertValue(record.source(), Map.class).get("resourceTitleObject");
             if (titleObject != null) {
                 recordLinkProperties.put("title", titleObject.get("default"));
             }
-            recordLinkProperties.put("url", recordUrlPrefix + record.getId());
+            recordLinkProperties.put("url", recordUrlPrefix + record.id());
             recordLinkProperties.put("type", type);
 
             try {
@@ -1642,5 +1598,23 @@ public final class XslUtil {
             }
         });
         return listOfLinks;
+    }
+
+    public static String escapeForJson(String value) {
+        return StringEscapeUtils.escapeJson(value);
+    }
+
+    public static String getWebAnalyticsService() {
+        ApplicationContext applicationContext = ApplicationContextHolder.get();
+        WebAnalyticsConfiguration webAnalyticsConfiguration = applicationContext.getBean(WebAnalyticsConfiguration.class);
+
+        return webAnalyticsConfiguration.getService();
+    }
+
+    public static String getWebAnalyticsJavascriptCode() {
+        ApplicationContext applicationContext = ApplicationContextHolder.get();
+        WebAnalyticsConfiguration webAnalyticsConfiguration = applicationContext.getBean(WebAnalyticsConfiguration.class);
+
+        return webAnalyticsConfiguration.getJavascriptCode();
     }
 }

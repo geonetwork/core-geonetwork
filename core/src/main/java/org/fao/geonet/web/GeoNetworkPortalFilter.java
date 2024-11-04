@@ -23,11 +23,12 @@
 
 package org.fao.geonet.web;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.NodeInfo;
 import org.fao.geonet.domain.SourceType;
 import org.fao.geonet.repository.SourceRepository;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
@@ -36,25 +37,34 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Filter to check that the portal requested is a valid one, otherwise redirects to the default portal:
- *
- *  - Default srv portal.
- *  - Valid portal defined in the sources table
+ * <p>
+ * - Default srv portal.
+ * - Valid portal defined in the sources table
  */
 public class GeoNetworkPortalFilter implements javax.servlet.Filter {
-    private static final String EXCLUDED_PATHS = "excludedPaths";
+    private static final String EXCLUDED_URL_PATHS = "excludedPaths";
 
     private static final String URL_PATH_SEPARATOR = "/";
 
-    private List<String> excludedPaths = new ArrayList<>();
+    /**
+     * Ignored application paths.
+     **/
+    private List<AntPathRequestMatcher> excludedPathsMatchers = new ArrayList<>();
+
 
     @Override
     public void init(FilterConfig config) {
-        String excludedPathsValue = config.getInitParameter(EXCLUDED_PATHS);
+        String excludedPathsValue = config.getInitParameter(EXCLUDED_URL_PATHS);
         if (StringUtils.isNotEmpty(excludedPathsValue)) {
-            excludedPaths = Arrays.asList(excludedPathsValue.split(","));
+            excludedPathsMatchers = Arrays.stream(excludedPathsValue.split(","))
+                .map(StringUtils::trimToEmpty)
+                .filter(StringUtils::isNotEmpty)
+                .map(AntPathRequestMatcher::new)
+                .collect(Collectors.toList());
         }
     }
 
@@ -62,7 +72,7 @@ public class GeoNetworkPortalFilter implements javax.servlet.Filter {
         HttpServletResponse httpResp = (HttpServletResponse) resp;
         HttpServletRequest httpReq = (HttpServletRequest) req;
 
-        if (!ignoreUrl(httpReq.getPathInfo())) {
+        if (!ignoreUrl(httpReq)) {
             String portal = "";
 
             // Check the url format: /portal/lang/service/..., /portal/api/service/...
@@ -75,14 +85,15 @@ public class GeoNetworkPortalFilter implements javax.servlet.Filter {
             if (!NodeInfo.DEFAULT_NODE.equals(portal)) {
                 SourceRepository sourceRepository = ApplicationContextHolder.get().getBean(SourceRepository.class);
                 // Check the portal exists and it's of type subportal, otherwise redirect to the default portal
-                boolean redirectToDefaultPortal = !sourceRepository.existsByNameAndType(portal, SourceType.subportal);
+                boolean redirectToDefaultPortal = !sourceRepository.existsByUuidAndType(portal, SourceType.subportal);
 
                 if (redirectToDefaultPortal) {
                     String newPath = httpReq.getPathInfo().replace(URL_PATH_SEPARATOR + portal + URL_PATH_SEPARATOR,
-                        URL_PATH_SEPARATOR + NodeInfo.DEFAULT_NODE +URL_PATH_SEPARATOR);
-                    if ( httpReq.getQueryString() != null) {
+                        URL_PATH_SEPARATOR + NodeInfo.DEFAULT_NODE + URL_PATH_SEPARATOR);
+                    if (httpReq.getQueryString() != null) {
                         newPath = newPath + "?" + httpReq.getQueryString();
                     }
+
                     httpResp.sendRedirect(httpReq.getContextPath() + newPath);
                     return;
                 }
@@ -97,11 +108,12 @@ public class GeoNetworkPortalFilter implements javax.servlet.Filter {
         // No cleanup required
     }
 
-    private boolean ignoreUrl(String urlPath) {
-        if (StringUtils.isEmpty(urlPath)) {
+    private boolean ignoreUrl(HttpServletRequest request) {
+        if (StringUtils.isEmpty(request.getPathInfo())) {
             return true;
         } else {
-            return excludedPaths.stream().anyMatch(urlPath::matches);
+            return excludedPathsMatchers.stream()
+                .anyMatch(matcher -> matcher.matches(request));
         }
     }
 }

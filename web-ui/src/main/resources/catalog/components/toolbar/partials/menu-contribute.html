@@ -1,0 +1,57 @@
+<li
+  class="dropdown gn-clear-xs"
+  data-ng-show="gnCfg.mods.editor.enabled && authenticated && user.isEditorOrMore()"
+  id="gn-login-dropdown"
+  role="menuitem"
+>
+  <a
+    title="{{'editorBoard' | translate}}"
+    href
+    class="dropdown-toggle gn-menuheader-xs"
+    role="button"
+    data-toggle="dropdown"
+    aria-haspopup="true"
+    aria-expanded="false"
+  >
+    <span class="fa fa-fw fa-pencil hidden-xs"></span>
+    <span translate>contribute</span>
+    <span class="caret hidden-xs"></span>
+  </a>
+  <ul class="dropdown-menu gn-menu-xs clearfix">
+    <li class="gn-menuitem-xs" role="menuitem">
+      <a data-gn-active-tb-item="{{gnCfg.mods.editor.appUrl}}#/board">
+        <span class="fa fa-fw fa-bars"></span><span translate>editorHome</span>
+      </a>
+    </li>
+    <li role="separator" class="divider gn-separator-xs"></li>
+    <li class="gn-menuitem-xs" role="menuitem">
+      <a data-gn-active-tb-item="{{gnCfg.mods.editor.appUrl}}#/create">
+        <span class="fa fa-fw fa-plus"></span>&nbsp;<span translate>addRecord</span>
+      </a>
+    </li>
+    <li class="gn-menuitem-xs" role="menuitem" data-ng-if="user.canImportMetadata()">
+      <a data-gn-active-tb-item="{{gnCfg.mods.editor.appUrl}}#/import">
+        <span class="fa fa-fw fa-upload"></span><span translate>ImportRecord</span>
+      </a>
+    </li>
+    <li class="gn-menuitem-xs" role="menuitem">
+      <a data-gn-active-tb-item="{{gnCfg.mods.editor.appUrl}}#/directory">
+        <span class="fa fa-fw fa-bookmark"></span><span translate>directoryManager</span>
+      </a>
+    </li>
+    <li class="gn-menuitem-xs" role="menuitem" data-ng-if="user.canBatchEditMetadata()">
+      <a data-gn-active-tb-item="{{gnCfg.mods.editor.appUrl}}#/batchedit">
+        <span class="fa fa-fw fa-pencil"></span><span translate>batchEditing</span>
+      </a>
+    </li>
+    <li
+      class="gn-menuitem-xs"
+      role="menuitem"
+      ng-if="user.isAdministratorOrMore() && healthCheck.IndexHealthCheck === true"
+    >
+      <a data-gn-active-tb-item="{{gnCfg.mods.editor.appUrl}}#/accessManager">
+        <span class="fa fa-fw fa-lock"></span><span data-translate="">accessManager</span>
+      </a>
+    </li>
+  </ul>
+</li>

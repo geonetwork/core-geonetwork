@@ -38,12 +38,12 @@
 
   <sec:global-method-security pre-post-annotations="enabled"/>
 
-  <context:property-placeholder location="${app.properties}"
-                                file-encoding="UTF-8"
-                                ignore-unresolvable="true" />
+  <context:property-placeholder location="${app.properties},file://#{systemEnvironment['geonetwork_dir']}/config/app.properties"
+                                ignore-unresolvable="true"
+                                ignore-resource-not-found="true"
+                                file-encoding="UTF-8"/>
 
   <context:component-scan base-package="org.fao.geonet"/>
-
 
   <bean id="configPath" class="java.lang.String">
     <constructor-arg index="0" value="/WEB-INF/"/>

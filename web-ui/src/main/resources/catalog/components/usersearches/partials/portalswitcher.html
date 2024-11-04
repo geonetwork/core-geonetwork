@@ -1,7 +1,7 @@
 <li
   class="dropdown gn-clear-xs"
   role="menuitem"
-  data-ng-if="showPortalSwitcher && ((portals | filter: {listableInHeaderSelector: true}).length > 0 || nodeId != 'srv')"
+  data-ng-show="showPortalSwitcher && ((portals | filter: {listableInHeaderSelector: true}).length > 0 || nodeId != 'srv')"
 >
   <a
     title="{{'portals' | translate}}"
@@ -39,7 +39,7 @@
     <li
       class="gn-menuitem-xs"
       role="menuitem"
-      data-ng-repeat="p in portals | filter: {listableInHeaderSelector: true} |orderBy:'name'"
+      data-ng-repeat="p in portals | filter: {listableInHeaderSelector: true} |orderBy:sortByLabel"
     >
       <a href="../../{{p.uuid}}/{{lang}}/catalog.search">
         <img

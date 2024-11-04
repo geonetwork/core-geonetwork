@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2010 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2023 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -22,12 +22,18 @@
 //==============================================================================
 package org.fao.geonet.doi.client;
 
+import org.apache.commons.lang.StringUtils;
+import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.Group;
+import org.fao.geonet.kernel.datamanager.base.BaseMetadataUtils;
+import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.repository.GroupRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Optional;
+
+import static org.fao.geonet.doi.client.DoiManager.DOI_DEFAULT_PATTERN;
 
 /**
  * Class to generate a DOI.
@@ -41,17 +47,38 @@ public class DoiBuilder {
     /**
      * Creates a DOI value.
      *
-     * @return
+     * @return The DOI value from prefix based on DOI pattern define in settings.
      */
-    public String create(String doiPattern, String prefix, AbstractMetadata record) {
+    public String create(String doiPattern, String prefix, AbstractMetadata metadata) {
         java.util.Optional<Group> groupOwner =
-            record.getSourceInfo().getGroupOwner() != null
-                ? groupRepository.findById(record.getSourceInfo().getGroupOwner())
+            metadata.getSourceInfo().getGroupOwner() != null
+                ? groupRepository.findById(metadata.getSourceInfo().getGroupOwner())
                 : Optional.empty();
 
         return prefix + "/" + doiPattern
-                .replace("{{groupOwner}}", groupOwner.isPresent() ? groupOwner.get().getName() : "")
-                .replace("{{id}}", record.getId() + "")
-                .replace("{{uuid}}", record.getUuid());
+            .replace("{{groupOwner}}", groupOwner.isPresent() ? groupOwner.get().getName() : "")
+            .replace("{{id}}", metadata.getId() + "")
+            .replace("{{uuid}}", metadata.getUuid());
+    }
+
+    /**
+     * Static utility for XSL calls.
+     */
+    public static String createDoi(String uuid) {
+        DoiBuilder doiBuilder =
+            ApplicationContextHolder.get().getBean(DoiBuilder.class);
+
+        SettingManager settingManager =
+            ApplicationContextHolder.get().getBean(SettingManager.class);
+        String doiPrefix = settingManager.getValue(DoiSettings.SETTING_PUBLICATION_DOI_DOIKEY);
+        String doiPattern = StringUtils.defaultIfEmpty(
+            settingManager.getValue(DoiSettings.SETTING_PUBLICATION_DOI_DOIPATTERN),
+            DOI_DEFAULT_PATTERN);
+
+        BaseMetadataUtils metadataUtils =
+            ApplicationContextHolder.get().getBean(BaseMetadataUtils.class);
+        AbstractMetadata metadata = metadataUtils.findOneByUuid(uuid);
+
+        return doiBuilder.create(doiPattern, doiPrefix, metadata);
     }
 }

@@ -22,8 +22,9 @@
   ~ Rome - Italy. email: geonetwork@osgeo.org
   -->
 
-<xs:schema xmlns:gns="http://geonetwork-opensource.org/schemas/schema-ident" xmlns:xml="http://www.w3.org/XML/1998/namespace"
-           xmlns:xs="http://www.w3.org/2001/XMLSchema"
+<xs:schema xmlns:gns="http://geonetwork-opensource.org/schemas/schema-ident"
+           xmlns:xml="http://www.w3.org/XML/1998/namespace"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsl="http://www.w3.org/2001/XMLSchema"
            version="1.0"
            elementFormDefault="qualified"
            attributeFormDefault="unqualified"
@@ -247,6 +248,13 @@
         </xs:documentation>
       </xs:annotation>
     </xs:attribute>
+    <xs:attribute name="jsonpath">
+      <xs:annotation>
+        <xs:documentation>
+          An JSON path to select elements to filter in the Elasticsearch index.
+        </xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
     <xs:attribute name="ifNotOperation" use="required">
       <xs:annotation>
         <xs:documentation>
@@ -258,6 +266,7 @@
           <xs:enumeration value="editing"/>
           <xs:enumeration value="download"/>
           <xs:enumeration value="dynamic"/>
+          <xs:enumeration value="authenticated" />
         </xs:restriction>
       </xs:simpleType>
     </xs:attribute>

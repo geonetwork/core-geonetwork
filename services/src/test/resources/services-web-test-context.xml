@@ -24,10 +24,30 @@
     </property>
   </bean>
 
+  <bean id="roleHierarchy"
+        class="org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl">
+    <property name="hierarchy">
+      <value>
+        Administrator > UserAdmin
+        UserAdmin > Reviewer
+        Reviewer > Editor
+        Editor > RegisteredUser
+        RegisteredUser > Guest
+      </value>
+    </property>
+  </bean>
+
   <bean name="statusActionFactory"
         class="org.fao.geonet.kernel.metadata.StatusActionsFactory">
     <constructor-arg name="className" value="org.fao.geonet.kernel.metadata.DefaultStatusActions"/>
   </bean>
+
+
+  <!--
+  Bean with the default publication configuration.
+  The default publication options publishes the metadata to the ALL group and the INTRANET group.
+  -->
+  <bean class="org.fao.geonet.config.DefaultPublicationConfig" name="publicationConfig" />
 
   <mvc:annotation-driven content-negotiation-manager="cnManager">
     <mvc:message-converters>

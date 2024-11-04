@@ -1,4 +1,7 @@
-<div class="row gn-row-main hidden-print">
+<div
+  class="row gn-row-main hidden-print"
+  data-ng-hide="gnCfg.mods.home.showSearch === false"
+>
   <div data-ng-class="fluidLayout ? 'container-fluid' : 'container'">
     <div class="col-sm-offset-6" data-gn-index-error-panel=""></div>
 
@@ -49,7 +52,7 @@
             class="btn btn-default btn-lg"
             type="button"
             data-ng-disabled="searchInfo.hits.total.value == 0"
-            data-ng-href="#/search?any={{homeAnyField}}"
+            data-ng-href="{{(gnCfg.mods.search.appUrl + '?any=' + homeAnyField) | setUrlPlaceholder}}"
           >
             <i class="fa fa-search"></i>
             <span class="sr-only" data-translate="">search</span>
@@ -68,7 +71,11 @@
   </div>
 </div>
 <!-- /.gn-row-main -->
-<div data-ng-if="showMosaic" data-gn-record-mosaic="-cl_status.key:obsolete" size="9" />
+<div
+  data-ng-if="showMosaic"
+  data-gn-record-mosaic="-cl_status.key:obsolete"
+  size="9"
+></div>
 
 <form
   data-ng-if="showMaps"
@@ -114,9 +121,12 @@
     <div data-ng-show="homeFacet.list.length > 0">
       <div class="row">
         <h1 class="col-md-12">
-          <span data-translate="">browseBy</span>
+          <span data-translate="" data-ng-if="homeFacet.list.length > 2">browseBy</span>
+          <span data-ng-if="homeFacet.list.length < 3" data-translate="">
+            {{::('facet-' + homeFacet.list[0]) | facetKeyTranslator}}
+          </span>
         </h1>
-        <div class="gn-topic-select col-md-12">
+        <div class="gn-topic-select col-md-12" data-ng-if="homeFacet.list.length > 2">
           <label
             data-ng-repeat="facetKey in homeFacet.list"
             data-ng-init="agg = searchInfo.aggregations[facetKey]"
@@ -141,7 +151,7 @@
           data-home-facet="homeFacet"
           data-search-info="searchInfo"
           data-agg-config="aggConfig"
-        />
+        ></div>
       </div>
     </div>
     <div data-ng-show="searchInfo.aggregations[homeFacet.lastKey].buckets.length > 0">
@@ -157,24 +167,27 @@
           data-home-facet="homeFacet"
           data-search-info="searchInfo"
           data-agg-config="aggConfig"
-        />
+        ></div>
       </div>
     </div>
   </div>
 </div>
 
 <!-- /.gn-row-topics -->
-
 <div
   class="row gn-row-info"
-  data-ng-show="searchInfo.hits.total.value > 0"
-  data-ng-class="{'gn-info-list-blocks': type === 'blocks' || type === undefined, 'gn-info-list-large': type === 'large', 'gn-info-list-small': type === 'small'}"
+  data-ng-class="{
+                    'gn-info-list-blocks': type === 'blocks' || type === undefined,
+                    'gn-info-list-large': type === 'large',
+                    'gn-info-list-small': type === 'small'
+                  }"
+  data-ng-show="searchInfo.hits.total.value > 0 && gnCfg.mods.home.info.length > 0"
 >
   <div data-ng-class="fluidLayout ? 'container-fluid' : 'container'">
     <div class="col-sm-12">
-      <!-- toggle buttons -->
       <div
         id="info-toggle-buttons"
+        data-ng-show="getActiveInfoTab().type == 'search'"
         class="btn-group pull-right hidden-print"
         data-toggle="buttons"
       >
@@ -214,50 +227,40 @@
       </div>
 
       <tabset id="info-tabset" type="pills" justified="false" role="tablist">
-        <tab heading="{{'lastRecords' | translate}}" active="infoTabs.lastRecords.active">
+        <tab
+          data-ng-repeat="infoType in gnCfg.mods.home.info"
+          data-ng-init="infoType.active = infoType.active || false"
+          heading="{{(infoType.title || infoType.type) | translate}}"
+          active="infoType.active"
+        >
           <form
+            data-ng-if="infoType.type == 'search'"
             class="form-horizontal"
-            data-ng-controller="gnsSearchLatestController"
+            data-ng-init="searchObj = {
+                            permalink: false,
+                            internal: true,
+                            filters: gnCfg.mods.search.filters,
+                            state: {},
+                            configId: 'home',
+                            params: infoType.params
+                          }"
+            data-ng-controller="gnsHomeSearchController"
             data-ng-search-form=""
             data-runSearch="true"
             data-ng-show="searchResults.records.length > 0"
           >
             <input type="hidden" name="_csrf" value="{{csrf}}" />
+            <div data-gn-info-list=""></div>
+          </form>
 
-            <div data-gn-info-list=""></div>
-          </form>
-        </tab>
-        <tab
-          heading="{{'preferredRecords' | translate}}"
-          active="infoTabs.preferredRecords.active"
-        >
           <form
+            data-ng-if="infoType.type == 'featuredUserSearches'"
             class="form-horizontal"
-            role="form"
-            data-ng-controller="gnsSearchPopularController"
-            data-ng-search-form=""
-            data-runSearch="true"
-            data-ng-show="searchResults.records.length > 0"
           >
-            <input type="hidden" name="_csrf" value="{{csrf}}" />
-            <div data-gn-info-list=""></div>
-          </form>
-        </tab>
-        <tab
-          heading="{{'featuredUserSearches' | translate}}"
-          data-ng-if="isUserSearchesEnabled && displayFeaturedSearchesPanel"
-          active="infoTabs.featuredSearches.active"
-        >
-          <form class="form-horizontal">
             <div data-gn-user-searches-list></div>
           </form>
-        </tab>
-        <tab
-          heading="{{'Comments' | translate}}"
-          data-ng-if="isUserFeedbackEnabled"
-          active="infoTabs.commentsalt.active"
-        >
-          <form class="form-horizontal">
+
+          <form data-ng-if="infoType.type == 'Comments'" class="form-horizontal">
             <div class="data-gn-userfeedbacklasthome" data-nb-of-comments="10"></div>
           </form>
         </tab>
@@ -265,4 +268,5 @@
     </div>
   </div>
 </div>
+
 <!-- /.gn-row-info -->

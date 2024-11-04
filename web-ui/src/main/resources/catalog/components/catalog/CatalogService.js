@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2021 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2024 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -369,7 +369,6 @@
     lang: "lang?_content_type=json&",
     removeThumbnail: "md.thumbnail.remove?_content_type=json&",
     removeOnlinesrc: "resource.del.and.detach", // TODO: CHANGE
-    suggest: "suggest",
     selectionLayers: "selection.layers",
 
     featureindexproxy: "../../index/features",
@@ -495,6 +494,7 @@
       isXLinkLocal: "system.xlinkResolver.localXlinkEnable",
       isSelfRegisterEnabled: "system.userSelfRegistration.enable",
       isFeedbackEnabled: "system.userFeedback.enable",
+      isMetadataFeedbackEnabled: "system.userFeedback.metadata.enable",
       isInspireEnabled: "system.inspire.enable",
       isRatingUserFeedbackEnabled: "system.localrating.enable",
       isSearchStatEnabled: "system.searchStats.enable",
@@ -710,12 +710,14 @@
           var mlObjs = angular.isArray(multilingualObjects)
             ? multilingualObjects
             : [multilingualObjects];
-          mlObjs.forEach(function (mlObj) {
-            mlObj.default =
-              mlObj["lang" + gnLangs.current] ||
-              mlObj.default ||
-              mlObj["lang" + this.mainLanguage];
-          });
+          mlObjs.forEach(
+            function (mlObj) {
+              mlObj.default =
+                mlObj["lang" + gnLangs.current] ||
+                mlObj.default ||
+                mlObj["lang" + this.mainLanguage];
+            }.bind(this)
+          );
         },
         translateCodelists: function (index) {
           var codelists = angular.isArray(index) ? index : [index];
@@ -734,7 +736,7 @@
           for (var fieldName in index) {
             var field = index[fieldName];
             if (fieldName.endsWith("Object")) {
-              this.translateMultilingualObjects(field);
+              this.translateMultilingualObjects.call(this, field);
               index[fieldName.replace(/Object$/g, "")] = angular.isArray(field)
                 ? field.map(function (mlObj) {
                     return mlObj.default;
@@ -745,24 +747,54 @@
             } else if (fieldName === "allKeywords") {
               Object.keys(field).forEach(
                 function (th) {
-                  this.translateMultilingualObjects(field[th].keywords);
+                  this.translateMultilingualObjects.call(this, field[th].keywords);
+                  if (field[th].multilingualTitle != null) {
+                    this.translateMultilingualObjects(field[th].multilingualTitle);
+                  }
                 }.bind(this)
               );
             } else if (
               fieldName.match(/th_.*$/) !== null &&
               fieldName.match(/.*(_tree|Number)$/) === null
             ) {
-              this.translateMultilingualObjects(field);
+              this.translateMultilingualObjects.call(this, field);
             } else if (typeof field === "object") {
-              this.translateMultingualFields(field);
+              this.translateMultingualFields.call(this, field);
             }
           }
         },
         getUuid: function () {
           return this.uuid;
         },
-        isPublished: function () {
-          return JSON.parse(this.isPublishedToAll) === true;
+        getMetadataLanguages: function () {
+          if (!this.mainLanguage) {
+            return [];
+          }
+          return [this.mainLanguage]
+            .concat(this.otherLanguage)
+            .unique()
+            .filter(function (l) {
+              // do not allow null values
+              return !!l;
+            });
+        },
+        isPublished: function (pubOption) {
+          if (pubOption) {
+            return this.isPublishedToGroup(pubOption.publicationGroup);
+          } else {
+            return JSON.parse(this.isPublishedToAll) === true;
+          }
+        },
+        isPublishedToGroup: function (group) {
+          if (group === "all") {
+            return JSON.parse(this.isPublishedToAll) === true;
+          } else if (group === "intranet") {
+            return JSON.parse(this.isPublishedToIntranet) === true;
+          } else if (group === "guest") {
+            return JSON.parse(this.isPublishedToGuest) === true;
+          }
+
+          return false;
         },
         isValid: function () {
           return this.valid === "1";
@@ -771,19 +803,61 @@
           return this.valid > -1;
         },
         isOwned: function () {
-          return this.owner === "true";
+          return this.owner === true;
         },
         getOwnerId: function () {
           return this.ownerId;
         },
         getGroupOwner: function () {
-          return this.owner;
+          return this.groupOwner;
         },
         getSchema: function () {
           return this.schema;
         },
-        publish: function () {
-          this.isPublishedToAll = this.isPublished() ? false : true;
+        publish: function (pubOption) {
+          if (pubOption) {
+            if (pubOption.publicationGroup === "all") {
+              this.isPublishedToAll = this.isPublished(pubOption) ? false : true;
+            } else if (pubOption.publicationGroup === "intranet") {
+              this.isPublishedToIntranet = this.isPublished(pubOption) ? false : true;
+            } else if (pubOption.publicationGroup === "guest") {
+              this.isPublishedToGuest = this.isPublished(pubOption) ? false : true;
+            }
+
+            if (pubOption.additionalPublications) {
+              var additionalPublicationGroups = Object.keys(
+                pubOption.additionalPublications
+              );
+              for (var i = 0; i < additionalPublicationGroups.length; i++) {
+                var additionalPublicationGroup = additionalPublicationGroups[i];
+
+                if (additionalPublicationGroup === pubOption.publicationGroup) {
+                  continue;
+                }
+
+                var additionalPubOption = {
+                  publicationGroup: additionalPublicationGroup
+                };
+                if (additionalPublicationGroup === "all") {
+                  this.isPublishedToAll = this.isPublished(additionalPubOption)
+                    ? false
+                    : true;
+                } else if (additionalPublicationGroup === "intranet") {
+                  this.isPublishedToIntranet = this.isPublished(additionalPubOption)
+                    ? false
+                    : true;
+                } else if (additionalPublicationGroup === "guest") {
+                  this.isPublishedToGuest = this.isPublished(additionalPubOption)
+                    ? false
+                    : true;
+                }
+              }
+            }
+
+            return;
+          }
+
+          this.isPublishedToAll = this.isPublished(pubOption) ? false : true;
         },
         getFields: function (filter) {
           var values = {},

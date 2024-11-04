@@ -227,6 +227,7 @@
   <report.M23>NazwaZagregowanegoZbioruDanych lub IdentyfikatorZagregowanegoZbioruDanych są
     udokumentowane.
   </report.M23>
+<report.M23-dup>An associated resource is declared multiple time with same association and initiative type.</report.M23-dup>
   <alert.M24>
     <div>Nieobecny język.</div>
   </alert.M24>

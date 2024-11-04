@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (C) 2001-2016 Food and Agriculture Organization of the
+  ~ United Nations (FAO-UN), United Nations World Food Programme (WFP)
+  ~ and United Nations Environment Programme (UNEP)
+  ~
+  ~ This program is free software; you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation; either version 2 of the License, or (at
+  ~ your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful, but
+  ~ WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+  ~ General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program; if not, write to the Free Software
+  ~ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
+  ~
+  ~ Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
+  ~ Rome - Italy. email: geonetwork@osgeo.org
+  -->
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <parent>
+    <artifactId>gn-docs</artifactId>
+    <groupId>org.geonetwork-opensource</groupId>
+    <version>4.4.7-SNAPSHOT</version>
+  </parent>
+  <modelVersion>4.0.0</modelVersion>
+  <artifactId>gn-guide</artifactId>
+  <name>GeoNetwork Guide</name>
+  <packaging>pom</packaging>
+  <properties>
+     <french>true</french>
+  </properties>
+  <licenses>
+    <license>
+      <name>Creative Commons Attribution 3.0 License</name>
+      <url>http://creativecommons.org/licenses/by/3.0/</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+
+  <build>
+    <plugins>
+      <plugin>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>docs</id>
+            <phase>compile</phase>
+            <goals>
+              <goal>run</goal>
+            </goals>
+            <configuration>
+              <target>
+                <exec executable="mkdocs" failonerror="true" dir="${basedir}">
+                  <env key="FRENCH" value="${french}"/>
+                  <arg line="build"/>
+                  <arg line="--no-directory-urls --strict"/>
+                </exec>
+              </target>
+            </configuration>
+          </execution>
+          <execution>
+            <id>help</id>
+            <phase>compile</phase>
+            <goals>
+              <goal>run</goal>
+            </goals>
+            <configuration>
+              <target>
+                <exec executable="mkdocs" failonerror="true" dir="${basedir}">
+                  <env key="FRENCH" value="${french}"/>
+                  <arg line="build"/>
+                  <arg line="--config-file help.yml"/>
+                  <arg line="--no-directory-urls --strict"/>
+                </exec>
+              </target>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <!-- package distribution -->
+      <plugin>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>make-assembly</id>
+            <phase>package</phase>
+            <goals>
+              <goal>single</goal>
+            </goals>
+            <configuration>
+              <finalName>geonetwork-${project.version}</finalName>
+              <descriptors>
+                <descriptor>src/assembly/guide.xml</descriptor>
+                <descriptor>src/assembly/help.xml</descriptor>
+              </descriptors>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <!-- no need to deploy to nexus repo -->
+      <plugin>
+        <artifactId>maven-deploy-plugin</artifactId>
+        <configuration>
+          <skip>true</skip>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
+<profiles>
+  <profile>
+    <id>default</id>
+    <properties>
+       <french>false</french>
+    </properties>
+  </profile>
+</profiles>
+
+</project>

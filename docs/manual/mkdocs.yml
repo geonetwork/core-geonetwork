@@ -1,0 +1,453 @@
+# Project information
+site_name: GeoNetwork opensource
+site_description: GeoNetwork catalogue for listing, searching and reviewing records.
+site_dir: target/html
+site_url: https://docs.geonetwork-opensource.org/
+
+# Repository
+repo_name: core-geonetwork
+repo_url: https://github.com/geonetwork/core-geonetwork
+edit_uri: edit/main/docs/manual/docs
+
+# Copyright
+copyright: Copyright &copy; 2001 - 2024 FAO-UN and others
+
+extra_css:
+  - assets/stylesheets/extra.css
+
+# Configuration
+theme:
+  name: material
+  language: en
+  custom_dir: overrides
+  logo: assets/images/geonetwork-logo.svg
+  favicon: assets/images/geonetwork-logo.png
+  icon:
+    repo: fontawesome/brands/github
+  palette:
+    # Palette toggle for light mode
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: blue
+      toggle:
+        icon: material/weather-night
+        name: Switch to dark mode
+    # Palette toggle for dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      toggle:
+        icon: material/weather-sunny
+        name: Switch to light mode
+  features:
+    - toc.follow
+    - navigation.tracking
+    - navigation.top
+    - navigation.tabs
+    - navigation.prune
+    - navigation.indexes
+    - navigation.footer
+    - header.autohide
+    - content.tabs.link
+    - content.code.copy
+    - content.action.view
+    - content.action.edit
+    - announce.dismiss
+
+# Plugins - install using: pip3 install -r requirements.txt
+plugins:
+  - exclude:
+      glob:
+        - annexes/gallery/bin/README.md
+  - i18n:
+      docs_structure: suffix
+      reconfigure_material: true
+      languages:
+        - locale: en
+          name: English
+          build: true
+          default: true
+          site_name: 'GeoNetwork opensource'
+        - locale: fr
+          name: Français
+          build: !ENV [FRENCH,true]
+          site_name: 'GeoNetwork opensource'
+          site_description: Catalogue GeoNetwork pour répertorier, rechercher et examiner les enregistrements.
+          nav_translations:
+            Home: Home
+            Search: Search
+            Record: Record
+            Map: Map
+  - search
+
+# Customizations
+extra:
+  version:
+    provider: mike
+    default: stable
+    alias: true
+  homepage: https://geonetwork-opensource.org/
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/geonetwork
+    - icon: fontawesome/brands/docker
+      link: https://hub.docker.com/_/geonetwork
+    - icon: geonetwork/logo_bw
+      link: https://geonetwork-opensource.org/
+      name: GeoNetwork Website
+
+# For use with --strict to produce failures on build warnings
+validation:
+  nav:
+    omitted_files: warn
+    not_found: warn
+    absolute_links: warn
+  links:
+    not_found: warn
+    absolute_links: warn
+    unrecognized_links: warn
+
+# Extensions
+# - These are carefully chosen to work with pandoc markdown support for whole document translation
+markdown_extensions:
+  - admonition
+  - attr_list
+  - def_list
+  - pymdownx.details
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+      options:
+        custom_icons:
+          - overrides/.icons
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.keys
+  - pymdownx.smartsymbols
+  - pymdownx.snippets
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
+  - tables
+  - md_in_html
+
+# Page tree
+nav:
+  - 'GeoNetwork': index.md
+  - 'Overview':
+    - overview/index.md
+    - overview/about.md
+    - 'License':
+      - overview/license/index.md
+      - overview/license/GPL.md
+    - overview/authors.md
+    - 'Changelog':
+      - overview/change-log/index.md
+      - overview/change-log/version-4.4.6.md
+      - overview/change-log/version-4.2.11.md
+      - 'Release History':
+        - overview/change-log/history/index.md
+        - overview/change-log/version-4.4.6.md
+        - overview/change-log/version-4.4.5.md
+        - overview/change-log/version-4.4.4.md
+        - overview/change-log/version-4.4.3.md
+        - overview/change-log/version-4.4.2.md
+        - overview/change-log/version-4.4.1.md
+        - overview/change-log/version-4.4.0.md
+      - 'Release History':
+        - overview/change-log/history/index.md
+        - overview/change-log/version-4.2.11.md
+        - overview/change-log/version-4.2.10.md
+        - overview/change-log/version-4.2.9.md
+        - overview/change-log/version-4.2.8.md
+        - overview/change-log/version-4.2.7.md
+        - overview/change-log/version-4.2.6.md
+        - overview/change-log/version-4.2.5.md
+        - overview/change-log/version-4.2.4.md
+        - overview/change-log/version-4.2.3.md
+        - overview/change-log/version-4.2.2.md
+        - overview/change-log/version-4.2.1.md
+        - overview/change-log/version-4.2.0.md
+        - overview/change-log/version-3.12.12.md
+        - overview/change-log/version-3.12.11.md
+        - overview/change-log/version-3.12.10.md
+        - overview/change-log/version-3.12.9.md
+        - overview/change-log/version-3.12.8.md
+        - overview/change-log/version-3.12.7.md
+        - overview/change-log/version-3.12.6.md
+        - overview/change-log/version-3.12.5.md
+        - overview/change-log/version-3.12.4.md
+        - overview/change-log/version-3.12.3.md
+        - overview/change-log/version-3.12.2.md
+        - overview/change-log/version-3.12.1.md
+        - overview/change-log/version-3.12.0.md
+        - overview/change-log/version-4.0.6.md
+        - overview/change-log/version-4.0.5.md
+        - overview/change-log/version-4.0.4.md
+        - overview/change-log/version-4.0.3.md
+        - overview/change-log/version-4.0.2.md
+        - overview/change-log/version-4.0.1.md
+        - overview/change-log/version-4.0.0.md
+        - overview/change-log/version-4.0.0-alpha.2.md
+        - overview/change-log/version-4.0.0-alpha.1.md
+        - overview/change-log/version-3.10.10.md
+        - overview/change-log/version-3.10.9.md
+        - overview/change-log/version-3.10.8.md
+        - overview/change-log/version-3.10.7.md
+        - overview/change-log/version-3.10.6.md
+        - overview/change-log/version-3.10.5.md
+        - overview/change-log/version-3.10.4.md
+        - overview/change-log/version-3.10.3.md
+        - overview/change-log/version-3.10.2.md
+        - overview/change-log/version-3.10.1.md
+        - overview/change-log/version-3.10.0.md
+        - overview/change-log/version-3.8.3.md
+        - overview/change-log/version-3.8.2.md
+        - overview/change-log/version-3.8.1.md
+        - overview/change-log/version-3.8.0.md
+        - overview/change-log/version-3.6.0.md
+        - overview/change-log/version-3.4.4.md
+        - overview/change-log/version-3.4.3.md
+        - overview/change-log/version-3.4.2.md
+        - overview/change-log/version-3.4.1.md
+        - overview/change-log/version-3.4.0.md
+        - overview/change-log/version-3.2.2.md
+        - overview/change-log/version-3.2.1.md
+        - overview/change-log/version-3.2.0.md
+        - overview/change-log/version-3.0.4.md
+        - overview/change-log/version-3.0.3.md
+        - overview/change-log/version-3.0.2.md
+        - overview/change-log/version-3.0.1.md
+        - overview/change-log/version-3.0.0.md
+  - 'Help':
+    - help/index.md
+    - 'Home page':
+      - help/home/index.md
+    - 'Search page':
+      - help/search/index.md
+    - 'Detail page':
+      - help/record/index.md
+    - 'Map page':
+      - help/map/index.md
+      - help/map/visualize/index.md
+  - 'User Guide':
+    - user-guide/index.md
+    - user-guide/quick-start/index.md
+    - user-guide/map/index.md
+    - 'Describing Information':
+      - user-guide/describing-information/index.md
+      - user-guide/describing-information/creating-metadata.md
+      - user-guide/describing-information/deleting-metadata.md
+      - user-guide/describing-information/editing-metadata.md
+      - user-guide/describing-information/importing-metadata.md
+      - user-guide/describing-information/inspire-editing.md
+      - user-guide/describing-information/managing-templates.md
+      - user-guide/describing-information/multilingual-editing.md
+    - 'Associating Resources':
+      - user-guide/associating-resources/index.md
+      - 'Associating documents':
+        - user-guide/associating-resources/linking-documents.md
+        - user-guide/associating-resources/using-filestore.md
+        - user-guide/associating-resources/linking-thumbnail.md
+        - user-guide/associating-resources/linking-online-resources.md
+      - 'Associating another record':
+        - user-guide/associating-resources/linking-records.md
+        - user-guide/associating-resources/linking-parent.md
+        - user-guide/associating-resources/linking-source.md
+        - user-guide/associating-resources/linking-dataset-or-service.md
+        - user-guide/associating-resources/linking-feature-catalog.md
+        - user-guide/associating-resources/linking-others.md
+        - user-guide/associating-resources/linking-remote-records.md
+      - user-guide/associating-resources/doi.md
+      - user-guide/associating-resources/cite.md
+    - 'Tag information':
+      - user-guide/tag-information/index.md
+      - user-guide/tag-information/tagging-with-categories.md
+      - user-guide/tag-information/tagging-with-keywords.md
+    - 'Publishing':
+      - user-guide/publishing/index.md
+      - user-guide/publishing/managing-privileges.md
+      - user-guide/publishing/restricting-information-to-metadata-sections.md
+      - user-guide/publishing/transferring-privileges.md
+    - 'Analyzing':
+      - user-guide/analyzing/index.md
+      - user-guide/analyzing/data.md
+      - user-guide/analyzing/metadata.md
+    - 'Workflow':
+      - user-guide/workflow/index.md
+      - 'Updating a set of records':
+        - user-guide/workflow/batchupdate/index.md
+        - user-guide/workflow/batchediting.md
+        - user-guide/workflow/batchupdate-from-admin.md
+        - user-guide/workflow/batchupdate-xsl.md
+      - user-guide/workflow/geopublication.md
+      - user-guide/workflow/life-cycle.md
+      - user-guide/workflow/suggestion.md
+      - user-guide/workflow/validation.md
+      - user-guide/workflow/versioning.md
+    - 'Harvesting':
+      - user-guide/harvesting/index.md
+      - user-guide/harvesting/harvesting-csw.md
+      - user-guide/harvesting/harvesting-filesystem.md
+      - user-guide/harvesting/harvesting-geonetwork.md
+      - user-guide/harvesting/harvesting-geonetwork-2.md
+      - user-guide/harvesting/harvesting-geoportal.md
+      - user-guide/harvesting/harvesting-oaipmh.md
+      - user-guide/harvesting/harvesting-ogcwxs.md
+      - user-guide/harvesting/harvesting-sde.md
+      - user-guide/harvesting/harvesting-simpleurl.md
+      - user-guide/harvesting/harvesting-thredds.md
+      - user-guide/harvesting/harvesting-webdav.md
+      - user-guide/harvesting/harvesting-wfs-features.md
+    - user-guide/export/index.md
+    - 'Administration':
+      - administrator-guide/index.md
+      - 'Catalog':
+        - administrator-guide/configuring-the-catalog/index.md
+        - administrator-guide/configuring-the-catalog/system-configuration.md
+        - administrator-guide/configuring-the-catalog/user-interface-configuration.md
+        - administrator-guide/configuring-the-catalog/css-configuration.md
+        - administrator-guide/configuring-the-catalog/csw-configuration.md
+        - administrator-guide/configuring-the-catalog/portal-configuration.md
+        - administrator-guide/configuring-the-catalog/inspire-configuration.md
+        - administrator-guide/configuring-the-catalog/map-server-configuration.md
+      - 'Users and Groups':
+        - administrator-guide/managing-users-and-groups/index.md
+        - administrator-guide/managing-users-and-groups/authentication-mode.md
+        - administrator-guide/managing-users-and-groups/creating-group.md
+        - administrator-guide/managing-users-and-groups/creating-user.md
+        - administrator-guide/managing-users-and-groups/user-self-registration.md
+      - 'Classification Systems':
+        - administrator-guide/managing-classification-systems/index.md
+        - administrator-guide/managing-classification-systems/managing-categories.md
+        - administrator-guide/managing-classification-systems/managing-directories.md
+        - administrator-guide/managing-classification-systems/managing-thesaurus.md
+      - 'Metadata Standards':
+        - administrator-guide/managing-metadata-standards/index.md
+        - administrator-guide/managing-metadata-standards/configure-validation.md
+        - administrator-guide/managing-metadata-standards/metadata-identifier.md
+        - administrator-guide/managing-metadata-standards/standards.md
+
+  - 'Maintainer Guide':
+      - maintainer-guide/index.md
+      - 'Installation':
+          - 'Installing':
+            - install-guide/index.md
+            - install-guide/installing-index.md
+            - install-guide/installing-from-zip.md
+            - install-guide/installing-from-war-file.md
+            - install-guide/installing-with-docker.md
+            - install-guide/installing-from-source-code.md
+          - 'Configuration':
+            - install-guide/configuring-database.md
+            - install-guide/customizing-data-directory.md
+            - install-guide/logging.md
+            - install-guide/map-print-setup.md
+            - install-guide/loading-samples.md
+      - maintainer-guide/production-use/index.md
+      - 'Updating the application': maintainer-guide/updating/index.md
+  - 'API':
+    - api/index.md
+    - api/the-geonetwork-api.md
+    - api/search.md
+    - api/csw.md
+    - api/inspire_atom.md
+    - 'Open Archive Initiative': api/oai-pmh.md
+    - api/opensearch.md
+    - api/q-search.md
+    - 'RDF DCAT': api/rdf-dcat.md
+    - api/z39-50.md
+  - 'Development':
+    - devel/index.md
+    - 'Documentation':
+      - devel/docs/index.md
+      - devel/docs/style/index.md
+      - devel/docs/markdown/index.md
+      - devel/docs/translation/index.md
+    - 'Customization':
+      - customizing-application/index.md
+      - 'Search':
+        - customizing-application/search-ui/index.md
+        - customizing-application/search-ui/configdefault.md
+        - customizing-application/search-ui/customview.md
+        - customizing-application/search-ui/enrichview.md
+        - customizing-application/search-ui/loadview.md
+        - customizing-application/search-ui/wro4jdependencies.md
+      - customizing-application/creating-custom-view.md
+      - customizing-application/editor-ui/creating-custom-editor.md
+      - customizing-application/editor-ui/custom-editor-examples.md
+      - customizing-application/editor-ui/tutorial.md
+      - customizing-application/changing-layout.md
+      - customizing-application/configuring-search-fields.md
+      - customizing-application/configuring-faceted-search.md
+      - customizing-application/advanced-configuration.md
+      - customizing-application/adding-static-pages.md
+      - customizing-application/characterset.md
+      - customizing-application/implementing-a-schema-plugin.md
+      - customizing-application/misc.md
+    - 'Contributing':
+      - contributing/index.md
+      - contributing/translating.md
+      - contributing/making-a-pull-request.md
+      - contributing/doing-a-release.md
+  - 'Tutorials':
+    - tutorials/index.md
+    - 'Introduction':
+       - tutorials/introduction/index.md
+       - 'Overview':
+         - tutorials/introduction/introduction/index.md
+         - tutorials/introduction/introduction/discover.md
+         - tutorials/introduction/introduction/map.md
+         - tutorials/introduction/introduction/schema.md
+         - 'Deployment':
+           - tutorials/introduction/deployment/index.md
+           - tutorials/introduction/deployment/build.md
+           - tutorials/introduction/deployment/deploy.md
+           - tutorials/introduction/deployment/docker.md
+         - tutorials/introduction/setup/index.md
+         - 'Edit':
+           - tutorials/introduction/edit/index.md
+           - tutorials/introduction/edit/edit.md
+           - tutorials/introduction/edit/editor.md
+         - tutorials/introduction/harvesting/index.md
+         - tutorials/introduction/extra/index.md
+    - 'Customize':
+      - tutorials/customui/index.md
+      - 'Search':
+        - tutorials/customui/search/index.md
+        - tutorials/customui/search/customview.md
+        - tutorials/customui/search/defaultview.md
+        - tutorials/customui/search/loadpage.md
+      - 'View':
+        - tutorials/customui/view/index.md
+        - tutorials/customui/view/formatter.md
+    - 'Hook':
+      - tutorials/hookcustomizations/index.md
+      - tutorials/hookcustomizations/events/index.md
+      - tutorials/hookcustomizations/newproject/index.md
+      - tutorials/hookcustomizations/schemaplugins/index.md
+      - tutorials/hookcustomizations/searchfields/index.md
+      - tutorials/hookcustomizations/ui/index.md
+    - 'Inspire':
+      - tutorials/inspire/index.md
+      - tutorials/inspire/download-atom.md
+      - tutorials/inspire/download-geoserver.md
+      - tutorials/inspire/view-geoserver.md
+      - tutorials/inspire/view-mapserver.md
+  - 'Annexes':
+    - annexes/index.md
+    - annexes/gallery/index.md
+    - annexes/mef-format.md
+    - 'Standards':
+      - annexes/standards/index.md
+      - annexes/standards/iso19115-3.2018.md
+      - annexes/standards/iso19139.md
+      - annexes/standards/iso19110.md
+      - annexes/standards/dublin-core.md
+

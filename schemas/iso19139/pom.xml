@@ -5,7 +5,7 @@
   <parent>
     <artifactId>gn-schemas</artifactId>
     <groupId>org.geonetwork-opensource.schemas</groupId>
-    <version>4.2.4-SNAPSHOT</version>
+    <version>4.4.7-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
@@ -57,6 +57,45 @@
     </testResources>
 
     <plugins>
+
+      <plugin>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>sample-data</id>
+            <phase>compile</phase>
+            <configuration>
+              <!-- inline ant build target -->
+              <target>
+                 <mkdir dir="target/sample-data"/>
+                 <defaultexcludes add="**/.DS_Store"/>
+                 <zip destfile="target/sample-data/basins_in_africa.mef"
+                   basedir="src/main/plugin/iso19139/sample-data/basins_in_africa"
+                   whenempty="create"
+                   excludes="**/.keepme"/>
+                 <zip destfile="target/sample-data/locality_polygons_comprehensive.mef"
+                   basedir="src/main/plugin/iso19139/sample-data/locality_polygons_comprehensive"
+                   whenempty="create"
+                   excludes="**/.keepme"/>
+                 <zip destfile="target/sample-data/photographic_session.mef"
+                   basedir="src/main/plugin/iso19139/sample-data/photographic_session"
+                   whenempty="create"
+                   excludes="**/.keepme"/>
+                 <zip destfile="target/sample-data/physiographic.mef"
+                   basedir="src/main/plugin/iso19139/sample-data/physiographic"
+                   whenempty="create"
+                   excludes="**/.keepme"/>
+                 <zip destfile="target/sample-data/z3950_server.mef"
+                   basedir="src/main/plugin/iso19139/sample-data/z3950_server"
+                   whenempty="create"
+                   excludes="**/.keepme"/>
+              </target>
+            </configuration>
+            <goals><goal>run</goal></goals>
+          </execution>
+        </executions>
+      </plugin>
+
       <plugin>
         <artifactId>maven-assembly-plugin</artifactId>
         <executions>

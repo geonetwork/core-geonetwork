@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 Food and Agriculture Organization of the
+ * Copyright (C) 2023 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -41,8 +41,10 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.oauth2.core.oidc.OidcIdToken;
 import org.springframework.util.StringUtils;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Class for handling Oidc User and the Geonetwork User.
@@ -74,6 +76,12 @@ public class OidcUser2GeonetworkUser {
         if (!StringUtils.hasText(simpleUser.getUsername()))
             return null;
 
+        if (!oidcConfiguration.isUpdateProfile()) {
+            // SimpleOidcUser.updateUser assigns the user profile to the OpenId user profile, unless
+            // SimpleOidcUser.profile is empty. Force the empty value, to avoid the assignment.
+            simpleUser.setProfile("");
+        }
+
         User user;
         boolean newUserFlag = false;
         try {
@@ -88,8 +96,9 @@ public class OidcUser2GeonetworkUser {
         simpleUser.updateUser(user); // copy attributes from the IDToken to the GN user
 
         Map<Profile, List<String>> profileGroups = oidcRoleProcessor.getProfileGroups(attributes);
-        user.setProfile(oidcRoleProcessor.getProfile(attributes));
-
+        if (newUserFlag || oidcConfiguration.isUpdateProfile()) {
+            user.setProfile(oidcRoleProcessor.getProfile(attributes));
+        }
 
         //Apply changes to database is required.
         if (withDbUpdate) {
@@ -122,6 +131,12 @@ public class OidcUser2GeonetworkUser {
         if (!StringUtils.hasText(simpleUser.getUsername()))
             return null;
 
+        if (!oidcConfiguration.isUpdateProfile()) {
+            // SimpleOidcUser.updateUser assigns the user profile to the OpenId user profile, unless
+            // SimpleOidcUser.profile is empty. Force the empty value, to avoid the assignment.
+            simpleUser.setProfile("");
+        }
+
         User user;
         boolean newUserFlag = false;
         try {
@@ -136,7 +151,9 @@ public class OidcUser2GeonetworkUser {
         simpleUser.updateUser(user); // copy attributes from the IDToken to the GN user
 
         Map<Profile, List<String>> profileGroups = oidcRoleProcessor.getProfileGroups(idToken);
-        user.setProfile(oidcRoleProcessor.getProfile(idToken));
+        if (newUserFlag || oidcConfiguration.isUpdateProfile()) {
+            user.setProfile(oidcRoleProcessor.getProfile(idToken));
+        }
 
 
         //Apply changes to database is required.
@@ -159,8 +176,7 @@ public class OidcUser2GeonetworkUser {
      */
     //from keycloak
     protected void updateGroups(Map<Profile, List<String>> profileGroups, User user) {
-        // First we remove all previous groups
-        userGroupRepository.deleteAll(UserGroupSpecs.hasUserId(user.getId()));
+        Set<UserGroup> userGroups = new HashSet<>();
 
         // Now we add the groups
         for (Profile p : profileGroups.keySet()) {
@@ -201,13 +217,13 @@ public class OidcUser2GeonetworkUser {
                     ug.setGroup(group);
                     ug.setUser(user);
                     ug.setProfile(Profile.Editor);
-                    userGroupRepository.save(ug);
+                    userGroups.add(ug);
                 }
 
-                userGroupRepository.save(usergroup);
+                userGroups.add(usergroup);
             }
         }
+
+        userGroupRepository.updateUserGroups(user.getId(), userGroups);
     }
-
-
 }

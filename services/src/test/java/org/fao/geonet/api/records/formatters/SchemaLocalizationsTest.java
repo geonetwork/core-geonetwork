@@ -24,11 +24,7 @@
 package org.fao.geonet.api.records.formatters;
 
 import com.google.common.collect.Maps;
-
-import groovy.util.XmlSlurper;
-import groovy.util.slurpersupport.GPathResult;
-
-import org.fao.geonet.api.records.formatters.groovy.CurrentLanguageHolder;
+import jeeves.server.dispatchers.guiservices.XmlFile;
 import org.fao.geonet.domain.IsoLanguage;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.repository.IsoLanguageRepository;
@@ -43,8 +39,6 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Map;
-
-import jeeves.server.dispatchers.guiservices.XmlFile;
 
 import static org.fao.geonet.api.records.formatters.SchemaLocalizations.LANG_CODELIST_NS;
 import static org.junit.Assert.assertArrayEquals;
@@ -157,24 +151,7 @@ public class SchemaLocalizationsTest {
         assertEquals("Element One No Parent", localizations.nodeLabel("elem1", null));
         assertEquals("Desc Element One No Parent", localizations.nodeDesc("elem1", null));
         assertEquals("Desc Element One No Parent", localizations.nodeDesc("elem1", "random parent"));
-
-        GPathResult gPathResult = new XmlSlurper().parseText("<elem1>hi</elem1>");
-        assertEquals("Element One No Parent", localizations.nodeLabel(gPathResult));
-        assertEquals("Desc Element One No Parent", localizations.nodeDesc(gPathResult));
-
-        gPathResult = new XmlSlurper().parseText("<parent><elem1>hi</elem1></parent>");
-        assertEquals("Element One", localizations.nodeLabel((GPathResult) gPathResult.children().getAt(0)));
-        assertEquals("Desc Element One", localizations.nodeDesc((GPathResult) gPathResult.children().getAt(0)));
-
-
-        gPathResult = new XmlSlurper().parseText("<m><elem1>hi</elem1></m>");
-        assertEquals("Element One No Parent", localizations.nodeLabel((GPathResult) gPathResult.children().getAt(0)));
-        assertEquals("Desc Element One No Parent", localizations.nodeDesc((GPathResult) gPathResult.children().getAt(0)));
-
-
         assertEquals("Desc Element Two", localizations.nodeDesc("elem2", "random parent"));
-
-
     }
 
     @Test
@@ -183,9 +160,6 @@ public class SchemaLocalizationsTest {
         assertEquals("Code Three", localizations.codelistValueLabel("http://yaya.com#codelist2", "code1"));
         assertEquals("Desc Code One", localizations.codelistValueDesc("http://yaya.com#codelist1", "code1"));
         assertEquals("Desc Code Three", localizations.codelistValueDesc("http://yaya.com#codelist2", "code1"));
-        final GPathResult gPathResult = new XmlSlurper().parseText("<cl codeList='http://yaya.com#codelist1' codeListValue='code1'/>");
-        assertEquals("Code One", localizations.codelistValueLabel(gPathResult));
-        assertEquals("Desc Code One", localizations.codelistValueDesc(gPathResult));
     }
 
     @Test

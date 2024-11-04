@@ -1,7 +1,12 @@
 /* this is a set of icons used in geonetwork, they either map to fa-variables or can be defined here (as font symbol or background image) */
-@import "../lib/style/font-awesome/less/variables";
-@import "../lib/style/font-awesome/less/mixins";
+@import "fa_variables";
+@import "../lib/style/font-awesome/less/_shims";
 @import "../lib/style/bootstrap/less/variables.less";
+
+@font-face {
+  font-family: "geonetwork";
+  src: url("../catalog/style/gn.ttf") format("truetype");
+}
 
 /* used to display icons with resource types - iso19139 hierarchylevel */
 .gn-icon-dataset:before,
@@ -12,12 +17,12 @@
   content: @fa-var-cog;
 }
 .gn-icon-map:before,
+.gn-icon-map-static:before,
 .gn-icon-staticMap:before,
-.gn-icon-maps:before {
-  content: @fa-var-map-o;
-}
+.gn-icon-maps:before,
+.gn-icon-map-interactive:before,
 .gn-icon-interactiveMap:before {
-  content: @fa-var-globe;
+  content: @fa-var-map;
 }
 .gn-icon-featureCatalog:before {
   content: @fa-var-table;
@@ -38,13 +43,13 @@
   content: @fa-var-podcast;
 }
 .gn-icon-series:before {
-  content: @fa-var-files-o;
+  content: @fa-var-copy;
 }
 .gn-icon-nonGeographicDataset:before {
-  content: @fa-var-bar-chart-o;
+  content: @fa-var-chart-column;
 }
 .gn-icon-dimensionGroup:before {
-  content: @fa-var-star-half-o;
+  content: @fa-var-star-half-stroke;
 }
 .gn-icon-feature:before {
   content: @fa-var-map-pin;
@@ -59,20 +64,20 @@
   content: @fa-var-calendar;
 }
 .gn-icon-software:before {
-  content: @fa-var-floppy-o;
+  content: @fa-var-floppy-disk;
 }
 .gn-icon-model:before {
   content: @fa-var-dashboard;
 }
 .gn-icon-application:before {
-  content: @fa-var-floppy-o;
+  content: @fa-var-floppy-disk;
 }
 /* GN-categories */
 .gn-icon-audioVideo:before {
   content: @fa-var-headphones;
 }
 .gn-icon-applications:before {
-  content: @fa-var-floppy-o;
+  content: @fa-var-floppy-disk;
 }
 .gn-icon-publication:before {
   content: @fa-var-book;
@@ -105,32 +110,32 @@
   content: @fa-var-desktop;
 }
 .gn-icon-inspire:before {
-  content: @fa-var-lemon-o;
+  content: @fa-var-lemon;
 }
 /* topiccats */
 .gn-icon-farming:before {
-  content: @fa-var-lemon-o;
+  content: @fa-var-tractor;
 }
 .gn-icon-biota:before {
-  content: @fa-var-leaf;
+  content: @fa-var-seedling;
 }
 .gn-icon-boundaries:before {
   content: @fa-var-ellipsis-h;
 }
 .gn-icon-climatologyMeteorologyAtmosphere:before {
-  content: @fa-var-cloud;
+  content: @fa-var-cloud-sun-rain;
 }
 .gn-icon-economy:before {
-  content: @fa-var-shopping-cart;
+  content: @fa-var-landmark;
 }
 .gn-icon-elevation:before {
-  content: @fa-var-flag;
+  content: @fa-var-mountain;
 }
 .gn-icon-environment:before {
   content: @fa-var-tree;
 }
 .gn-icon-geoscientificInformation:before {
-  content: @fa-var-bullseye;
+  content: @fa-var-flask-vial;
 }
 .gn-icon-health:before {
   content: @fa-var-stethoscope;
@@ -142,35 +147,41 @@
   content: @fa-var-fighter-jet;
 }
 .gn-icon-inlandWaters:before {
-  content: @fa-var-tint;
+  content: @fa-var-bridge-water;
 }
 .gn-icon-location:before {
   content: @fa-var-map-marker;
 }
 .gn-icon-oceans:before {
-  content: @fa-var-anchor;
+  content: @fa-var-water;
 }
 .gn-icon-planningCadastre:before {
   content: @fa-var-home;
 }
 .gn-icon-society:before {
-  content: @fa-var-comments;
+  content: @fa-var-city;
 }
 .gn-icon-structure:before {
   content: @fa-var-building;
 }
 .gn-icon-transportation:before {
-  content: @fa-var-truck;
+  content: @fa-var-truck-plane;
 }
 .gn-icon-utilitiesCommunication:before {
-  content: @fa-var-phone;
+  content: @fa-var-satellite-dish;
+}
+.gn-icon-extraTerrestrial:before {
+  content: @fa-var-user-astronaut;
+}
+.gn-icon-disaster:before {
+  content: @fa-var-burst;
 }
 
 .gn-icon-fcats:before {
   content: @fa-var-table;
 }
 .gn-icon-thumbnail:before {
-  content: @fa-var-picture-o;
+  content: @fa-var-image;
 }
 .gn-icon-onlinesrc:before {
   content: @fa-var-link;
@@ -183,7 +194,7 @@
 .gn-icon-geojson:before,
 .gn-icon-wms:before,
 .gn-icon-arcgis-mapservice:before {
-  content: @fa-var-map-o;
+  content: @fa-var-map;
 }
 
 .gn-icon-tif:before,
@@ -219,7 +230,7 @@
 }
 
 .gn-icon-pdf:before {
-  content: @fa-var-file-pdf-o;
+  content: @fa-var-file-pdf;
 }
 
 .gn-icon-mp3:before {
@@ -227,20 +238,29 @@
 }
 
 .gn-icon-ogc-gml:before {
-  content: @fa-var-file-code-o;
+  content: @fa-var-file-code;
 }
 
 .gn-icon-json:before {
-  content: @fa-var-file-text-o;
+  content: @fa-var-file-text;
 }
 
 .gn-icon-zip-shape,
 .gn-icon-zip-shape {
-  content: @fa-var-file-zip-o;
+  content: @fa-var-file-zipper;
+}
+
+.gn-icon-doi {
+  display: inline-block;
+  font: normal normal normal 1em/1 "geonetwork";
+  color: inherit;
+  flex-shrink: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 .gn-icon-doi:before {
-  content: @fa-var-info-circle;
+  content: "\ea01";
 }
 
 .gn-icon-parent:before {
@@ -251,7 +271,7 @@
   content: @fa-var-sitemap;
 }
 .gn-icon-source {
-  .fa-icon-rotate(180deg, 2);
+  transform: rotate(180deg);
 }
 .gn-icon-sibling:before,
 .gn-icon-siblings:before {
@@ -274,6 +294,8 @@
 .gn-icontype-wps,
 .gn-icontype-wcs,
 .gn-icontype-atom,
+.gn-icontype-3dtiles,
+.gn-icontype-cog,
 .gn-icontype-esri-rest,
 .gn-icontype-wfs {
   background-color: @btn-success-bg !important;
@@ -301,4 +323,109 @@
 [data-gn-link-label] {
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.gn-status-draft-to-submitted-editor:before,
+.gn-status-draft-to-submitted-reviewer:before {
+  content: @fa-var-check-circle;
+}
+.gn-status-retired-to-draft-editor:before,
+.gn-status-retired-to-draft-reviewer:before {
+  content: @fa-var-pencil;
+}
+.gn-status-submitted-to-draft-editor:before {
+  content: @fa-var-undo;
+}
+.gn-status-submitted-to-draft-reviewer:before {
+  content: @fa-var-thumbs-down;
+}
+.gn-status-submitted-to-approved-reviewer:before {
+  content: @fa-var-thumbs-up;
+}
+.gn-status-draft-to-approved-reviewer:before {
+  content: @fa-var-thumbs-up;
+}
+.gn-status-approved-to-retired-editor:before,
+.gn-status-approved-to-retired-reviewer:before {
+  content: @fa-var-archive;
+}
+.gn-status-draft-to-submitted-editor:before,
+.gn-status-draft-to-submitted-reviewer:before {
+  content: @fa-var-check-circle;
+}
+
+// association types
+.gn-icon-association-crossReference:before {
+  content: @fa-var-shuffle;
+}
+.gn-icon-association-largerWorkCitation:before {
+  content: @fa-var-message;
+}
+.gn-icon-association-partOfSeamlessDatabase:before {
+  content: @fa-var-database;
+}
+.gn-icon-association-stereoMate:before {
+  content: @fa-var-headphones;
+}
+.gn-icon-association-isComposedOf:before {
+  content: @fa-var-sitemap;
+}
+.gn-icon-association-collectiveTitle:before {
+  content: @fa-var-heading;
+}
+.gn-icon-association-series:before {
+  content: @fa-var-copy;
+}
+.gn-icon-association-dependency:before {
+  content: @fa-var-diagram-next;
+}
+.gn-icon-association-revisionOf:before {
+  content: @fa-var-clock-rotate-left;
+}
+
+// initiative types
+.gn-icon-initiative-campaign:before {
+  content: @fa-var-bullhorn;
+}
+.gn-icon-initiative-collection:before {
+  content: @fa-var-share-nodes;
+}
+.gn-icon-initiative-exercise:before {
+  content: @fa-var-book-atlas;
+}
+.gn-icon-initiative-experiment:before {
+  content: @fa-var-flask;
+}
+.gn-icon-initiative-investigation:before {
+  content: @fa-var-magnifying-glass;
+}
+.gn-icon-initiative-mission:before {
+  content: @fa-var-crosshairs;
+}
+.gn-icon-initiative-sensor:before {
+  content: @fa-var-microchip;
+}
+.gn-icon-initiative-operation:before {
+  content: @fa-var-person-chalkboard;
+}
+.gn-icon-initiative-platform:before {
+  content: @fa-var-sitemap;
+}
+.gn-icon-initiative-process:before {
+  content: @fa-var-gears;
+}
+.gn-icon-initiative-program:before {
+  content: @fa-var-laptop-code;
+}
+.gn-icon-initiative-project:before {
+  content: @fa-var-paste;
+}
+.gn-icon-initiative-study:before {
+  content: @fa-var-graduation-cap;
+}
+.gn-icon-initiative-task:before {
+  content: @fa-var-list-check;
+}
+.gn-icon-initiative-trial:before {
+  content: @fa-var-gavel;
 }

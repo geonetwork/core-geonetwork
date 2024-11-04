@@ -98,7 +98,10 @@ public class ApprovePublishedRecord implements ApplicationListener<MetadataPubli
                     changeToApproved(event.getMd(), previousStatus);
                 }
 
-                draftUtilities.replaceMetadataWithDraft(publishedMd);
+                // Don't replace the approved version with the draft copy, when publishing the approved version
+                if (!(event.getMd() instanceof Metadata)) {
+                    draftUtilities.replaceMetadataWithDraft(publishedMd);
+                }
             }
         } catch (Exception e) {
             Log.error(Geonet.DATA_MANAGER, "Error upgrading workflow of " + event.getMd(), e);
@@ -118,7 +121,7 @@ public class ApprovePublishedRecord implements ApplicationListener<MetadataPubli
         status.setChangeDate(new ISODate());
         status.setUserId(ServiceContext.get().getUserSession().getUserIdAsInt());
 
-        metadataStatus.setStatusExt(status);
+        metadataStatus.setStatusExt(status, true);
 
         Log.trace(Geonet.DATA_MANAGER, "Metadata with id " + md.getId() + " automatically approved due to publishing.");
     }

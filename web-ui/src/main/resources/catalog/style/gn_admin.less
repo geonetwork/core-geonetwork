@@ -219,7 +219,8 @@ ul.pager {
 #gn-mapservers-container,
 #gn-sources-container,
 #gn-metadatatemplates-container,
-#gn-static-pages-container {
+#gn-static-pages-container,
+#gn-doiservers-container {
   // Fixes gn-modal windows; TODO: fix this globally in gn-popup style
   [gn-modal] {
     max-width: none;
@@ -258,4 +259,10 @@ ul > li > a.privilege-check-order {
 ul > li.list-group-item > input {
   margin-right: 40px;
   margin-left: 30px;
+}
+
+.gn-env {
+  table tr td:first-child {
+    width: 33%;
+  }
 }

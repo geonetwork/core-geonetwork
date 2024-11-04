@@ -18,11 +18,11 @@
               <input
                 type="radio"
                 name="linkType"
-                data-ng-disabled="isEditing"
+                data-ng-disabled="!isEditableLinkType"
                 data-ng-model="params.linkType"
                 data-ng-value="c"
               />
-              <i class="{{c.icon}}" />&nbsp; {{c.label | translate}}
+              <i class="{{c.icon}}"></i>&nbsp; {{c.label | translate}}
             </label>
           </div>
 
@@ -36,10 +36,10 @@
             </label>
             <div class="col-sm-10">
               <select
-                data-ng-options="option as (option.label | translate) group by (option.group  | translate) for option in config.types"
-                data-ng-disabled="isEditing"
+                data-ng-options="option as (option.label | translate) group by (option.group  | translate) for option in (config.types | filter:filterTypeChoices)"
+                data-ng-disabled="!isEditableLinkType"
                 data-ng-model="params.linkType"
-              />
+              ></select>
             </div>
           </div>
 
@@ -64,8 +64,15 @@
               data-ng-if="key === 'function' &&
                              !params.linkType.fields.function.hidden"
             >
-              <label id="gn-addonlinesrc-function-label" class="col-sm-2 control-label">
-                <span data-translate="">onlineFunction</span>
+              <label
+                id="gn-addonlinesrc-function-label"
+                class="col-sm-2 control-label"
+                data-gn-field-tooltip="{{schema}}|{{params.linkType.fields.function.tooltip}}"
+              >
+                <span>
+                  {{(params.linkType.fields.function.label || 'onlineFunction') |
+                  translate}}
+                </span>
               </label>
               <div class="col-sm-9">
                 <div
@@ -75,7 +82,6 @@
                   data-init-on-load="true"
                   data-allow-blank="true"
                   data-selected-info="params.function"
-                  data-gn-field-tooltip="{{schema}}|{{params.linkType.fields.function.tooltip}}"
                   data-gn-schema-info="function"
                   lang="lang"
                 ></div>
@@ -93,8 +99,14 @@
               data-ng-if="key === 'protocol' &&
                              !params.linkType.fields.protocol.hidden"
             >
-              <label id="gn-addonlinesrc-protocol-label" class="col-sm-2 control-label">
-                <span data-translate="">protocol</span>
+              <label
+                id="gn-addonlinesrc-protocol-label"
+                class="col-sm-2 control-label"
+                data-gn-field-tooltip="{{schema}}|{{params.linkType.fields.protocol.tooltip}}"
+              >
+                <span>
+                  {{(params.linkType.fields.protocol.label || 'protocol') | translate}}
+                </span>
               </label>
               <div class="col-sm-9">
                 <div
@@ -103,7 +115,6 @@
                   data-init-on-load="true"
                   name="protocol"
                   data-selected-info="params.protocol"
-                  data-gn-field-tooltip="{{schema}}|{{params.linkType.fields.protocol.tooltip}}"
                   data-gn-schema-info="protocol"
                   lang="lang"
                   data-extra-options="dataFormats"
@@ -120,8 +131,14 @@
               data-ng-if="key === 'mimeType' &&
                              !params.linkType.fields.mimeType.hidden"
             >
-              <label id="gn-addonlinesrc-mimeType-label" class="col-sm-2 control-label">
-                <span data-translate="">mimeType</span>
+              <label
+                id="gn-addonlinesrc-mimeType-label"
+                class="col-sm-2 control-label"
+                data-gn-field-tooltip="{{schema}}|{{params.linkType.fields.mimeType.tooltip}}"
+              >
+                <span>
+                  {{(params.linkType.fields.mimeType.label || 'mimeType') | translate}}
+                </span>
               </label>
               <div class="col-sm-9">
                 <input
@@ -129,7 +146,6 @@
                   type="text"
                   name="format"
                   data-ng-model="params.mimeType"
-                  data-gn-field-tooltip="{{schema}}|{{params.linkType.fields.mimeType.tooltip}}"
                 />
               </div>
               <div class="col-sm-1 gn-control"></div>
@@ -147,8 +163,8 @@
                   id="gn-addonlinesrc-url-label"
                   for="gn-addonlinesrc-url-list-single-input"
                   class="col-sm-2 control-label"
-                  data-translate=""
-                  >url</label
+                  data-gn-field-tooltip="{{schema}}|{{params.linkType.fields.url.tooltip}}"
+                  >{{(params.linkType.fields.url.label || 'url') | translate}}</label
                 >
 
                 <div
@@ -166,7 +182,6 @@
                     class="form-control input-sm"
                     lang="{{val}}"
                     ng-model-options="{debounce: 500}"
-                    data-gn-field-tooltip="{{schema}}|{{params.linkType.fields.url.tooltip}}"
                     data-ng-model="params.url[val]"
                   />
                 </div>
@@ -188,7 +203,6 @@
                       type="text"
                       data-ng-blur="loadCurrentLink()"
                       id="gn-addonlinesrc-url-list-single-input"
-                      data-gn-field-tooltip="{{schema}}|{{params.linkType.fields.url.tooltip}}"
                       placeholder="{{params.linkType.fields.url.placeholder || 'https://...'}}"
                     />
                     <span class="input-group-btn" data-ng-show="OGCProtocol != null">
@@ -200,7 +214,7 @@
                         title="{{'loadCapabilitiesLayers' | translate}}"
                         data-gn-click-and-spin="loadCurrentLink(true)"
                       >
-                        <i class="fa fa-refresh" />
+                        <i class="fa fa-refresh"></i>
                       </button>
                     </span>
                     <span
@@ -227,6 +241,21 @@
                       </ul>
                     </span>
                   </div>
+
+                  <div data-gn-url-validator=""></div>
+                </div>
+
+                <div
+                  class="col-sm-9 col-sm-offset-2"
+                  data-ng-show="params.linkType.sources.filestore"
+                >
+                  <div
+                    id="gn-addonlinesrc-file-select"
+                    data-gn-file-store="gnCurrentEdit.uuid"
+                    data-select-callback="selectUploadedResource(selected)"
+                    data-filter="params.linkType.fileStoreFilter || ''"
+                    data-layout="select"
+                  ></div>
                 </div>
 
                 <div class="col-sm-1 gn-control"></div>
@@ -291,7 +320,9 @@
                 for="gn-addonlinesrc-name-single-input"
                 class="col-sm-2 control-label"
                 data-translate=""
-                >onlineResourceName</label
+                data-gn-field-tooltip="{{schema}}|{{params.linkType.fields.name.tooltip}}"
+                >{{(params.linkType.fields.name.label || 'onlineResourceName') |
+                translate}}</label
               >
               <div
                 id="gn-addonlinesrc-name-single-row"
@@ -305,7 +336,6 @@
                   name="name"
                   class="form-control input-sm"
                   type="text"
-                  data-gn-field-tooltip="{{schema}}|{{params.linkType.fields.name.tooltip}}"
                   placeholder="Name"
                   data-ng-readonly='config.wmsResources.addLayerNamesMode ==
                 "resourcename" && OGCProtocol != null && isWMSProtocol()'
@@ -325,7 +355,6 @@
                   data-ng-required="params.linkType.fields.name.required"
                   class="form-control input-sm"
                   lang="{{val}}"
-                  data-gn-field-tooltip="{{schema}}|{{params.linkType.fields.name.tooltip}}"
                   data-ng-model="params.name[val]"
                   data-ng-readonly='config.wmsResources.addLayerNamesMode ==
                 "resourcename" && OGCProtocol != null && isWMSProtocol()'
@@ -348,9 +377,10 @@
                 id="gn-addonlinesrc-description-label"
                 for="gn-addonlinesrc-description-single-textarea"
                 class="col-sm-2 control-label"
-                data-translate=""
-                >description</label
+                data-gn-field-tooltip="{{schema}}|{{params.linkType.fields.desc.tooltip}}"
               >
+                {{(params.linkType.fields.desc.label || 'description') | translate}}
+              </label>
               <div class="col-sm-9" data-ng-if="!params.linkType.fields.desc.directive">
                 <div
                   id="gn-addonlinesrc-description-single-row"
@@ -364,9 +394,8 @@
                     data-ng-model="params.desc"
                     class="form-control input-sm"
                     placeholder="description"
-                    data-gn-field-tooltip="{{schema}}|{{params.linkType.fields.desc.tooltip}}"
                     name="description"
-                  />
+                  ></textarea>
                 </div>
                 <div
                   id="gn-addonlinesrc-description-multilingual-row"
@@ -384,17 +413,17 @@
                     data-ng-model="params.desc[val]"
                     class="form-control input-sm"
                     placeholder="description"
-                    data-gn-field-tooltip="{{schema}}|{{params.linkType.fields.desc.tooltip}}"
                     name="description"
-                  />
+                  ></textarea>
                 </div>
               </div>
               <div
+                class="col-sm-9 col-xs-9"
                 data-ng-if="params.linkType.fields.desc.directive === 'gn-multientry-combiner-online-resources-description'"
               >
                 <div
                   data-gn-multientry-combiner-online-resources-description="{{params.linkType.fields.desc.directiveConfig}}"
-                  class="col-sm-9 col-xs-9 gn-value nopadding-in-table"
+                  class="gn-value nopadding-in-table"
                   data-label="description"
                   data-ng-required="params.linkType.fields.desc.required"
                 ></div>
@@ -417,8 +446,11 @@
                 for="gn-addonlinesrc-profile-input"
                 class="col-sm-2 control-label"
                 data-translate=""
-                >applicationProfile</label
+                data-gn-field-tooltip="{{schema}}|{{params.linkType.fields.applicationProfile.tooltip}}"
               >
+                {{(params.linkType.fields.applicationProfile.label ||
+                'applicationProfile') | translate}}
+              </label>
               <div class="col-sm-9">
                 <input
                   data-ng-model="params.applicationProfile"
@@ -426,7 +458,6 @@
                   data-ng-required="params.linkType.fields.applicationProfile.required"
                   name="applicationProfile"
                   class="form-control"
-                  data-gn-field-tooltip="{{schema}}|{{params.linkType.fields.applicationProfile.tooltip}}"
                   type="text"
                 />
               </div>
@@ -440,32 +471,6 @@
 
     <div class="col-md-6">
       <div
-        id="gn-addonlinesrc-file-panel"
-        class="panel panel-default"
-        data-ng-show="params.linkType.sources.filestore"
-      >
-        <div class="panel-heading">
-          <span data-translate>fileStore</span>
-          <a
-            class="btn btn-link btn-xs pull-right"
-            title="{{'externalResourceManagement' | translate}}"
-            data-ng-click="onlinesrcService.openExternalResourceManagement(gnCurrentEdit.resourceContainerDescription)"
-            data-ng-if="gnCurrentEdit.resourceManagementExternalProperties.folderEnabled && gnCurrentEdit.resourceContainerDescription.url.length > 0"
-          >
-            <i class="fa fa-folder-open"></i>
-          </a>
-        </div>
-        <div class="panel-body">
-          <div
-            id="gn-addonlinesrc-file-input"
-            data-gn-file-store="gnCurrentEdit.uuid"
-            data-select-callback="selectUploadedResource(selected)"
-            data-filter="params.linkType.fileStoreFilter || ''"
-          />
-        </div>
-      </div>
-
-      <div
         id="gn-addonlinesrc-link-panel"
         class="panel panel-default"
         data-ng-show="params.linkType.sources.metadataStore.label"
@@ -478,7 +483,7 @@
             <input type="hidden" name="_csrf" value="{{csrf}}" />
             <div class="input-group">
               <span class="input-group-addon">
-                <i class="fa fa-search" />
+                <i class="fa fa-search"></i>
               </span>
               <input
                 class="form-control"
@@ -524,7 +529,7 @@
       <div
         id="gn-addonlinesrc-thumbnail-panel"
         class="panel panel-default"
-        data-ng-show="params.linkType.sources.thumbnailMaker"
+        data-ng-show="params.linkType.sources.thumbnailMaker && gnCurrentEdit.layerConfig.length > 0"
       >
         <div class="panel-heading" data-translate="">createAThumbnail</div>
         <div class="panel-body">
@@ -532,15 +537,7 @@
             id="gn-addonlinesrc-thumbnail-map"
             class="form-group gn-thumbnail-maker-panel"
           >
-            <div
-              id="gn-addonlinesrc-thumbnail-warning"
-              class="alert alert-warning"
-              data-ng-show="layers == undefined"
-              data-translate=""
-            >
-              noLayersForThumbnail
-            </div>
-            <div data-ng-hide="layers == undefined">
+            <div>
               <textarea
                 id="gn-addonlinesrc-thumbnail-json"
                 class="form-control hidden"
@@ -584,6 +581,32 @@
           </div>
         </div>
       </div>
+
+      <div
+        id="gn-addonlinesrc-file-panel"
+        class="panel panel-default"
+        data-ng-show="params.linkType.sources.filestore"
+      >
+        <div class="panel-heading">
+          <span data-translate>fileStore</span>
+          <a
+            class="btn btn-link btn-xs pull-right"
+            title="{{'externalResourceManagement' | translate}}"
+            data-ng-click="onlinesrcService.openExternalResourceManagement(gnCurrentEdit.resourceContainerDescription)"
+            data-ng-if="gnCurrentEdit.resourceManagementExternalProperties.folderEnabled && gnCurrentEdit.resourceContainerDescription.url.length > 0"
+          >
+            <i class="fa fa-folder-open"></i>
+          </a>
+        </div>
+        <div class="panel-body">
+          <div
+            id="gn-addonlinesrc-file-input"
+            data-gn-file-store="gnCurrentEdit.uuid"
+            data-select-callback="selectUploadedResource(selected)"
+            data-filter="params.linkType.fileStoreFilter || ''"
+          ></div>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -596,7 +619,7 @@
       ng-disabled="!gnAddLink.$valid"
       data-gn-click-and-spin="addOnlinesrc()"
     >
-      <i class="fa gn-icon-onlinesrc" />
+      <i class="fa gn-icon-onlinesrc"></i>
       <i class="icon-external-link"></i>&nbsp;
       <span data-ng-show="gnAddLink.$valid && isUrlOk">
         {{((isEditing ? 'update' : 'add') + 'Onlinesrc') | translate}}
@@ -613,21 +636,5 @@
       data-gn-need-help="linking-documents"
       class="pull-right"
     ></div>
-    <br />
-    <div
-      id="gn-addonlinesrc-add-alert"
-      class="alert alert-warning"
-      data-ng-show="gnAddLink.$valid && !isUrlOk"
-    >
-      <span data-translate="">areYouSureToAddALinkWithError</span>
-      <a
-        class="btn btn-link"
-        target="_blank"
-        data-ng-href="params.url[ctrl.urlCurLang]"
-        data-ng-show="gnAddLink.$valid && !isUrlOk"
-      >
-        {{params.url[ctrl.urlCurLang]}}
-      </a>
-    </div>
   </div>
 </div>

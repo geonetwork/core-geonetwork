@@ -101,6 +101,12 @@
     });
   };
 
+  FacetsController.prototype.loadLessTerms = function (facet) {
+    this.searchCtrl.loadLessTerms(facet).then(function (terms) {
+      angular.copy(terms, facet);
+    });
+  };
+
   FacetsController.prototype.filterTerms = function (facet) {
     if (facet.meta && facet.meta.filterByTranslation) {
       var match = [];
@@ -161,8 +167,7 @@
     ["isTemplate", "recordType"],
     ["groupOwner", "group"],
     ["groupPublishedId", "group"],
-    ["sourceCatalogue", "source"],
-    ["statusWorkflow", "mdStatus"]
+    ["sourceCatalogue", "source"]
   ]);
 
   module.service("gnFacetSorter", [
@@ -182,9 +187,27 @@
     }
   ]);
 
+  module.filter("facetTooltip", [
+    "$translate",
+    "$filter",
+    function ($translate, $filter) {
+      return function (item) {
+        if (item.definition) {
+          var key = item.definition + "-tooltip",
+            tooltip = $translate.instant(key);
+          if (tooltip !== key) {
+            return tooltip;
+          }
+        }
+        return $filter("facetTranslator")(item.value);
+      };
+    }
+  ]);
+
   module.filter("facetTranslator", [
     "$translate",
-    function ($translate) {
+    "$filter",
+    function ($translate, $filter) {
       return function (input, facetKey) {
         if (!input || angular.isObject(input)) {
           return input;
@@ -203,7 +226,12 @@
         // A specific facet key eg. "isHarvested-true"
         var translationId =
             (facetKeyToTranslationGroupMap.get(facetKey) || facetKey) + "-" + input,
+          translation = undefined;
+        if (facetKey === "statusWorkflow") {
+          translation = $filter("getStatusLabel")(input);
+        } else {
           translation = $translate.instant(translationId);
+        }
         if (translation !== translationId) {
           return translation;
         } else {
@@ -273,8 +301,10 @@
    * @param $scope
    * @constructor
    */
-  var FacetController = function ($scope) {
+  var FacetController = function ($scope, $translate, $filter) {
     this.$scope = $scope;
+    this.$translate = $translate;
+    this.$filter = $filter;
   };
 
   FacetController.prototype.$onInit = function () {
@@ -320,7 +350,7 @@
     this.filter(this.facet, item);
   };
 
-  FacetController.$inject = ["$scope"];
+  FacetController.$inject = ["$scope", "$translate", "$filter"];
 
   module.directive("esFacet", [
     "gnLangs",
@@ -406,7 +436,9 @@
   ]);
 
   module.filter("facetSearchUrlBuilder", [
-    function () {
+    "gnGlobalSettings",
+    "$filter",
+    function (gnGlobalSettings, $filter) {
       return function (facetValue, key, response, config, missingValue) {
         var field = (response.meta && response.meta.field) || key,
           filter = config.filters
@@ -415,7 +447,8 @@
           value = response.meta && response.meta.wildcard ? facetValue + "*" : facetValue;
 
         return (
-          '#/search?query_string={"' +
+          $filter("setUrlPlaceholder")(gnGlobalSettings.gnCfg.mods.search.appUrl) +
+          '?query_string={"' +
           field +
           '": {"' +
           (value === missingValue ? "%23MISSING%23" : value) +
@@ -442,16 +475,15 @@
   ]);
 
   module.directive("esFacetCards", [
+    "gnFacetSorter",
     "gnLangs",
-    function (gnLangs) {
+    function (gnFacetSorter, gnLangs) {
       return {
         restrict: "A",
         scope: {
           key: "=esFacetCards",
           homeFacet: "=homeFacet",
-          searchInfo: "=searchInfo",
-          aggResponse: "=aggResponse",
-          aggConfig: "=aggConfig"
+          searchInfo: "=searchInfo"
         },
         templateUrl: function (elem, attrs) {
           return (
@@ -468,10 +500,16 @@
               scope.homeFacet.config[scope.key].terms &&
               scope.homeFacet.config[scope.key].terms.missing;
             scope.isInspire = scope.key.indexOf("th_httpinspireeceuropaeutheme") === 0;
+
+            scope.aggregations = {};
+            scope.homeFacet.facets.forEach(function (facet) {
+              scope.aggregations[facet.key] = facet;
+            });
           }
 
           init();
 
+          scope.facetSorter = gnFacetSorter.sortByTranslation;
           scope.$watch("key", function (n, o) {
             if (n && n !== o) {
               init();

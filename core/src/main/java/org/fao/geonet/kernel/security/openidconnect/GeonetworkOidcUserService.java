@@ -22,9 +22,11 @@
  */
 package org.fao.geonet.kernel.security.openidconnect;
 
+import org.fao.geonet.kernel.security.GeonetworkAuthenticationProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserRequest;
 import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserService;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
@@ -55,12 +57,33 @@ public class GeonetworkOidcUserService extends OidcUserService {
     @Autowired
     RoleHierarchy roleHierarchy;
 
+    @Autowired
+    GeonetworkAuthenticationProvider geonetworkAuthenticationProvider;
+
+    @Autowired
+    protected SimpleOidcUserFactory simpleOidcUserFactory;
+
     @Override
     public OidcUser loadUser(OidcUserRequest userRequest) throws OAuth2AuthenticationException {
         OidcUser user = super.loadUser(userRequest);
 
+        Collection<? extends GrantedAuthority> authorities;
+
+        if (!oidcConfiguration.isUpdateProfile()) {
+            // Retrieve the authorities from the local user
+            try {
+                SimpleOidcUser simpleUser = simpleOidcUserFactory.create(user.getAttributes());
+                UserDetails userDetails = geonetworkAuthenticationProvider.loadUserByUsername(simpleUser.getUsername());
+
+                authorities = userDetails.getAuthorities();
+            } catch (Exception ex) {
+                authorities = createAuthorities(user);
+            }
+        } else {
+            authorities = createAuthorities(user);
+        }
+
         OidcUserInfo userInfo = user.getUserInfo();
-        Collection<? extends GrantedAuthority> authorities = createAuthorities(user);
 
         //get the user name from a specific attribute (if specified) or use default.
         String userNameAttributeName = userRequest.getClientRegistration()

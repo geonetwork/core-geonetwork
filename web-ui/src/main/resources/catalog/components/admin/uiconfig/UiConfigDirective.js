@@ -46,8 +46,9 @@
   module.directive("gnUiConfig", [
     "gnGlobalSettings",
     "gnProjService",
+    "gnConfig",
     "$translate",
-    function (gnGlobalSettings, gnProjService, $translate) {
+    function (gnGlobalSettings, gnProjService, gnConfig, $translate) {
       return {
         restrict: "A",
         scope: {
@@ -194,11 +195,16 @@
             true
           );
 
+          $("gn-app-frame") && $("gn-app-frame").attr("url", gnConfig.env.url);
           scope.$watch(
             "jsonConfig",
             function (n) {
               scope.config = JSON.stringify(n, null, 2);
               buildFinalConfig();
+
+              if (scope.config && $("gn-app-frame")) {
+                $("gn-app-frame").attr("config", scope.config);
+              }
             },
             true
           );
@@ -340,10 +346,14 @@
           if (JSON.stringify(newObj) === JSON.stringify(scope.value)) {
             return;
           }
-          for (var key in scope.value) {
-            delete scope.value[key];
+          if (angular.isArray(newObj)) {
+            scope.value = newObj;
+          } else {
+            for (var key in scope.value) {
+              delete scope.value[key];
+            }
+            angular.merge(scope.value, newObj);
           }
-          angular.merge(scope.value, newObj);
           internalUpdate = true;
         });
       }

@@ -1,0 +1,69 @@
+<div data-ng-class="fluidHeaderLayout ? 'container-fluid' : 'container'">
+  <div class="navbar-header">
+    <a
+      class="hidden-sm hidden-md hidden-lg pull-left gn-logo-link"
+      data-gn-active-tb-item="{{gnCfg.mods.home.appUrl}}"
+      data-ng-hide="{{gnCfg.mods.header.isLogoInHeader}}"
+    >
+      <img
+        class="gn-logo"
+        alt="{{'siteLogo' | translate}}"
+        data-ng-src="{{gnUrl}}../images/logos/{{info['node/id'] || info['system/site/siteId']}}.png?random{{info['system/site/lastUpdate']}}"
+      />
+    </a>
+    <a
+      class="hidden-sm hidden-md hidden-lg btn btn-link pull-left"
+      data-gn-active-tb-item="{{gnCfg.mods.home.appUrl}}"
+    >
+      <span
+        class="gn-name"
+        data-ng-class="authenticated && user.isEditorOrMore() ? 'gn-truncate' : ''"
+        title="{{info['system/site/name']}}"
+        >{{info['node/name'] || info['system/site/name']}}</span
+      >
+    </a>
+    <button
+      type="button"
+      class="navbar-toggle collapsed"
+      data-toggle="collapse"
+      data-target="#navbar"
+      title="{{'toggleNavigation' | translate}}"
+      aria-expanded="false"
+      aria-controls="navbar"
+    >
+      <span class="sr-only" data-translate>toggleNavigation</span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </button>
+  </div>
+  <div id="navbar" class="navbar-accessible navbar-collapse collapse">
+    <ul class="nav navbar-nav gn-menu-xs" role="menu">
+      <li data-ng-repeat-start="menu in toolbarMenu"></li>
+      <li data-ng-if="menu == 'gn-site-name-menu'" gn-site-name-menu=""></li>
+      <li data-ng-if="menu == 'gn-portal-switcher'" gn-portal-switcher=""></li>
+      <li data-ng-if="menu == 'gn-search-menu'" gn-search-menu=""></li>
+      <li data-ng-if="menu == 'gn-map-menu'" gn-map-menu=""></li>
+      <li data-ng-if="menu == 'gn-contribute-menu'" gn-contribute-menu=""></li>
+      <li data-ng-if="menu == 'gn-admin-menu'" gn-admin-menu=""></li>
+      <li
+        data-ng-if="isPage(menu)"
+        gn-static-page-menu="menu"
+        language="{{lang}}"
+        section="top"
+      ></li>
+      <ul
+        data-ng-if="menu == 'gn-static-pages-list-viewer'"
+        gn-static-pages-list-viewer=""
+        language="{{lang}}"
+        section="top"
+        class="nav navbar-nav gn-menu-xs"
+      ></ul>
+      <li data-ng-repeat-end=""></li>
+    </ul>
+    <div class="navbar-right">
+      <ul gn-signin-menu=""></ul>
+      <div gn-languages-menu=""></div>
+    </div>
+  </div>
+</div>

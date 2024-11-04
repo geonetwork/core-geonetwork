@@ -84,7 +84,7 @@ public class DiskbackedCache implements CacheStrategy<CacheKey, CacheValue>, Clo
         if (path == null) {
             if (ApplicationContextHolder.get() != null) {
                 GeonetworkDataDirectory geonetworkDataDirectory = ApplicationContextHolder.get().getBean(GeonetworkDataDirectory.class);
-                path = geonetworkDataDirectory.getSystemDataDir().resolve("wro4j-cache").toString();
+                path = geonetworkDataDirectory.getHtmlCacheDir().resolve("wro4j-cache").toString();
             }
         }
 

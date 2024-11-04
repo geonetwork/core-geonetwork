@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2007 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2023 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -33,7 +33,6 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.http.client.methods.HttpGet;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.Logger;
-import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.exceptions.BadParameterEx;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.harvest.harvester.HarvestError;
@@ -106,6 +105,7 @@ class Harvester implements IHarvester<HarvestResult> {
         String[] urlList = params.url.split("\n");
         boolean error = false;
         Aligner aligner = new Aligner(cancelMonitor, context, params, log);
+        Set<String> listOfUuids = new HashSet<>();
 
         for (String url : urlList) {
             log.debug("Loading URL: " + url);
@@ -152,9 +152,7 @@ class Harvester implements IHarvester<HarvestResult> {
                         params.numberOfRecordPath, e.getMessage()));
                 }
             }
-            Map<String, Element> allUuids = new HashMap<>();
             try {
-                Map<String, Element> uuids = new HashMap<>();
                 List<String> listOfUrlForPages = buildListOfUrl(params, numberOfRecordsToHarvest);
                 for (int i = 0; i < listOfUrlForPages.size(); i++) {
                     if (i != 0) {
@@ -167,6 +165,7 @@ class Harvester implements IHarvester<HarvestResult> {
                     }
                     if (StringUtils.isNotEmpty(params.loopElement)
                         || type == SimpleUrlResourceType.RDFXML) {
+                        Map<String, Element> uuids = new HashMap<>();
                         try {
                             if (type == SimpleUrlResourceType.XML) {
                                 collectRecordsFromXml(xmlObj, uuids, aligner);
@@ -176,7 +175,7 @@ class Harvester implements IHarvester<HarvestResult> {
                                 collectRecordsFromJson(jsonObj, uuids, aligner);
                             }
                             aligner.align(uuids, errors);
-                            allUuids.putAll(uuids);
+                            listOfUuids.addAll(uuids.keySet());
                         } catch (Exception e) {
                             errors.add(new HarvestError(this.context, e));
                             log.error(String.format("Failed to collect record in response at path %s. Error is: %s",
@@ -184,7 +183,6 @@ class Harvester implements IHarvester<HarvestResult> {
                         }
                     }
                 }
-                aligner.cleanupRemovedRecords(allUuids.keySet());
             } catch (Exception t) {
                 error = true;
                 log.error("Unknown error trying to harvest");
@@ -198,11 +196,12 @@ class Harvester implements IHarvester<HarvestResult> {
                 errors.add(new HarvestError(context, t));
             }
 
-            log.info("Total records processed in all searches :" + allUuids.size());
+            log.info("Total records processed in all searches :" + listOfUuids.size());
             if (error) {
                 log.warning("Due to previous errors the align process has not been called");
             }
         }
+        aligner.cleanupRemovedRecords(listOfUuids);
         return aligner.getResult();
     }
 

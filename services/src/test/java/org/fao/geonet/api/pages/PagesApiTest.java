@@ -73,6 +73,7 @@ public class PagesApiTest extends AbstractServiceIntegrationTest {
         PageProperties newPage = new PageProperties();
         newPage.setPageId(pageId);
         newPage.setLanguage(language);
+        newPage.setLabel(pageId);
         newPage.setLink(link);
         ArrayList<Page.PageSection> sections = new ArrayList<>();
         sections.add(Page.PageSection.TOP);
@@ -94,6 +95,7 @@ public class PagesApiTest extends AbstractServiceIntegrationTest {
         page = pageRepository.findById(new PageIdentity(language, pageId));
         Assert.assertTrue(page.isPresent());
         Assert.assertEquals(link, page.get().getLink());
+        Assert.assertEquals(pageId, page.get().getLabel());
         Assert.assertTrue(page.get().getSections().contains(Page.PageSection.TOP));
 
         this.mockMvc.perform(createPageBuilder)
@@ -106,6 +108,8 @@ public class PagesApiTest extends AbstractServiceIntegrationTest {
         newPage.setLanguage(language);
         newPage.setPageId(pageId);
         newPage.setLink(link + "updated");
+        newPage.setLabel(pageId + "updated");
+        newPage.setIcon("dummy-icon");
         newPage.getSections().add(Page.PageSection.FOOTER);
         MockHttpServletRequestBuilder updatePageBuilder = put("/srv/api/pages/eng/license")
             .content(gson.toJson(newPage))
@@ -119,6 +123,8 @@ public class PagesApiTest extends AbstractServiceIntegrationTest {
         page = pageRepository.findById(new PageIdentity(language, pageId));
         Assert.assertTrue(page.isPresent());
         Assert.assertEquals(link + "updated", page.get().getLink());
+        Assert.assertEquals(pageId + "updated", page.get().getLabel());
+        Assert.assertEquals("dummy-icon", page.get().getIcon());
         Assert.assertTrue(page.get().getSections().contains(Page.PageSection.TOP));
         Assert.assertTrue(page.get().getSections().contains(Page.PageSection.FOOTER));
 

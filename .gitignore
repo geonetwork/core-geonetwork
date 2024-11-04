@@ -13,7 +13,8 @@ git*.properties
 */*/target/
 */target/
 .*/
-GeoNetwork*
+!.github
+#GeoNetwork*
 /geonetwork*
 camel-harvesters/wfsfeature-harvester/logs
 changes-*
@@ -27,6 +28,7 @@ eclipse/
 es/elasticsearch-*
 es/es-dashboards/kibana-*
 es/es-dashboards/data/nodes/
+es/es-dashboards/data/index/
 harvesters/harvester_*.log
 idea/
 jcs_caching/
@@ -38,7 +40,12 @@ release/jetty/*
 schemas/*/doc/*/*.rst
 schematrons/.build
 target/
+
+# build and release
 transifex/transifex-format/
+build/
+web-ui/LICENSE
+web-ui/tx
 
 # web-app, clear using: mvn -f web/pom.xml clean:clean@reset
 
@@ -57,17 +64,14 @@ web/src/main/webapp/META-INF/MANIFEST.MF
 web/src/main/webapp/WEB-INF/data/0*
 web/src/main/webapp/WEB-INF/data/config/encryptor.properties
 web/src/main/webapp/WEB-INF/data/config/index/records.json
-web/src/main/webapp/WEB-INF/data/config/schema_plugins/*/schematron/schematron*.xsl
-web/src/main/webapp/WEB-INF/data/config/schema_plugins/csw-record
-web/src/main/webapp/WEB-INF/data/config/schema_plugins/dublin-core
-web/src/main/webapp/WEB-INF/data/config/schema_plugins/iso19*
-web/src/main/webapp/WEB-INF/data/config/schema_plugins/schemaplugin-uri-catalog.xml
+web/src/main/webapp/WEB-INF/data/config/schema_plugins/*
 web/src/main/webapp/WEB-INF/data/config/schemaplugin-uri-catalog.xml
 web/src/main/webapp/WEB-INF/data/data/backup
 web/src/main/webapp/WEB-INF/data/data/metadata_data
 web/src/main/webapp/WEB-INF/data/data/metadata_subversion
 web/src/main/webapp/WEB-INF/data/data/resources/htmlcache
 web/src/main/webapp/WEB-INF/data/data/resources/images
+web/src/main/webapp/WEB-INF/data/data/resources/schemapublication
 web/src/main/webapp/WEB-INF/data/data/resources/xml
 web/src/main/webapp/WEB-INF/data/data/upload/
 web/src/main/webapp/WEB-INF/data/harvester_*
@@ -79,8 +83,8 @@ web/src/main/webapp/WEB-INF/data/wro4j*.db
 web/src/main/webapp/WEB-INF/data/wro4j-cache*
 web/src/main/webapp/WEB-INF/data_*
 web/src/main/webapp/WEB-INF/metadata_subversion/
-web/src/main/webapp/WEB-INF/server.prop
 web/src/main/webapp/WEB-INF/prebuilt
 web/src/main/webapp/data/
 web/src/main/webapp/doc/en
 web/src/main/webapp/doc/fr
+web/src/main/webapp/WEB-INF/data/data/resources/schemapublication

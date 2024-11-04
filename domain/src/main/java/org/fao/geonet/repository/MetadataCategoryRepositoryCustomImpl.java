@@ -66,13 +66,13 @@ public class MetadataCategoryRepositoryCustomImpl implements MetadataCategoryRep
     public void deleteCategoryAndMetadataReferences(int id) {
         /*
          * Start of HACK.
-          *
-          * The following select seems to be needed so that the delete from below will actually delete elements...
-          * At least in the unit tests.
+         *
+         * The following select seems to be needed so that the delete from below will actually delete elements...
+         * At least in the unit tests.
          */
         final Query nativeQuery2 = _entityManager.createNativeQuery("Select * from " + Metadata.METADATA_CATEG_JOIN_TABLE_NAME + " WHERE "
-            + Metadata.METADATA_CATEG_JOIN_TABLE_CATEGORY_ID + "=" + id);
-
+            + Metadata.METADATA_CATEG_JOIN_TABLE_CATEGORY_ID + "= :id");
+        nativeQuery2.setParameter("id", id);
         nativeQuery2.setMaxResults(1);
         nativeQuery2.getResultList();
         // END HACK

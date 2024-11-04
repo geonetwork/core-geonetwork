@@ -65,10 +65,10 @@
     To use tab instead of semicolon, use "&#009;".
     Default is comma.
   -->
-  <xsl:variable name="sep" select="','"/>
+  <xsl:param name="sep" select="','"/>
 
   <!-- Intra field separator -->
-  <xsl:variable name="internalSep" select="'###'"/>
+  <xsl:param name="internalSep" select="'###'"/>
 
   <xsl:include href="../../common/profiles-loader-tpl-brief.xsl"/>
   <xsl:include href="../../common/profiles-loader-tpl-csv.xsl"/>
@@ -173,12 +173,12 @@
       <xsl:choose>
         <xsl:when test="@name='geoBox'">
           <xsl:value-of
-            select="replace(replace(string-join($metadata/*[name(.)=$currentColumn]/*, $internalSep), '\n|\r\n', ''), '&quot;', '\\&quot;')"
+            select="replace(replace(string-join($metadata/*[name(.)=$currentColumn]/*, $internalSep), '\n|\r\n', ''), '&quot;', '&quot;&quot;')"
           />
         </xsl:when>
         <xsl:otherwise>
           <xsl:value-of
-            select="replace(replace(string-join($metadata/*[name(.)=$currentColumn]/normalize-space(), $internalSep), '\n|\r\n', ''), '&quot;', '\\&quot;')"
+            select="replace(replace(string-join($metadata/*[name(.)=$currentColumn]/normalize-space(), $internalSep), '\n|\r\n', ''), '&quot;', '&quot;&quot;')"
           />
         </xsl:otherwise>
       </xsl:choose>

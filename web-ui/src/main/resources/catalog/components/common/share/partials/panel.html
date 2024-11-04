@@ -42,7 +42,7 @@
           </th>
           <th data-ng-repeat="key in ::operations">
             <a href="" ng-click="setSorter(key)">
-              <i class="fa {{icons[key] || fa-fw}}" />
+              <i class="fa {{icons[key] || fa-fw}}"></i>
               <span class="hidden-xs">&nbsp;{{('op-' + key) | translate}}&nbsp;</span>
               <i
                 data-ng-if="sorter.predicate == key"
@@ -89,6 +89,18 @@
                                 internalOperations.indexOf(key) != -1 ? 'hidden' : ''"
               data-ng-model="g.operations[key]"
             />
+            <i
+              class="fa fa-fw fa-plus text-success"
+              data-ng-class="internalGroups.indexOf(g.group) != -1 &&
+                                internalOperations.indexOf(key) != -1 ? 'hidden' : ''"
+              data-ng-show="batch && opsForm[g.group + '-' + key].$dirty && opsForm[g.group + '-' + key].$viewValue"
+            ></i>
+            <i
+              class="fa fa-fw fa-minus text-danger"
+              data-ng-class="internalGroups.indexOf(g.group) != -1 &&
+                                internalOperations.indexOf(key) != -1 ? 'hidden' : ''"
+              data-ng-show="batch && opsForm[g.group + '-' + key].$dirty && !opsForm[g.group + '-' + key].$viewValue"
+            ></i>
           </td>
           <td data-ng-if="!disableAllCol">
             <input
@@ -114,6 +126,14 @@
               data-ng-disabled="g.privileges[key].disabled"
               data-ng-model="g.operations[key]"
             />
+            <i
+              class="fa fa-fw fa-plus text-success"
+              data-ng-show="batch && opsForm[g.group + '-' + key].$dirty && opsForm[g.group + '-' + key].$viewValue"
+            ></i>
+            <i
+              class="fa fa-fw fa-minus text-danger"
+              data-ng-show="batch && opsForm[g.group + '-' + key].$dirty && !opsForm[g.group + '-' + key].$viewValue"
+            ></i>
           </td>
           <td data-ng-if="::!disableAllCol">
             <input

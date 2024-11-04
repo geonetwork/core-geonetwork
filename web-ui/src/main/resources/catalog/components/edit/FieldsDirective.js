@@ -342,7 +342,7 @@
                       0.95;
 
                     var closeBtn =
-                      '<a class="fa fa-times btn btn-link pull-right close-popover"></a>';
+                      '<a class="btn btn-link pull-right close-popover"><i class="fa fa-times"></i></a>';
 
                     tooltipTarget.popover({
                       title: info.label,
@@ -368,7 +368,7 @@
                         tooltipsMode === "onhover" ? "hover" : isField ? "focus" : "click"
                     });
 
-                    if (tooltipsMode === "" || tooltipsMode === "onfocus") {
+                    if (tooltipsMode !== "onhover") {
                       // Remove first the event, to avoid ending with multiple events
                       // every time a new popup is displayed.
                       $(document)
@@ -474,7 +474,8 @@
             element.off();
           });
 
-          $(element).click(function () {
+          $(element).click(function (event) {
+            event.stopPropagation();
             gnEditor.move(scope.ref, scope.direction || "down", scope.domelementToMove);
           });
         }

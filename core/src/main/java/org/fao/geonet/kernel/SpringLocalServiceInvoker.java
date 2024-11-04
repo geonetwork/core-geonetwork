@@ -22,8 +22,6 @@
  */
 package org.fao.geonet.kernel;
 
-import org.fao.geonet.NodeInfo;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockHttpSession;
@@ -43,15 +41,18 @@ import org.apache.commons.lang.StringUtils;
 
 public class SpringLocalServiceInvoker {
 
-    @Autowired
-    public RequestMappingHandlerMapping requestMappingHandlerMapping;
+    public final RequestMappingHandlerMapping requestMappingHandlerMapping;
 
-    @Autowired
-    public RequestMappingHandlerAdapter requestMappingHandlerAdapter;
+    public final RequestMappingHandlerAdapter requestMappingHandlerAdapter;
 
     private HandlerMethodArgumentResolverComposite argumentResolvers;
     private HandlerMethodReturnValueHandlerComposite returnValueHandlers;
     private DefaultDataBinderFactory webDataBinderFactory;
+
+    public SpringLocalServiceInvoker(RequestMappingHandlerMapping requestMappingHandlerMapping, RequestMappingHandlerAdapter requestMappingHandlerAdapter) {
+        this.requestMappingHandlerMapping = requestMappingHandlerMapping;
+        this.requestMappingHandlerAdapter = requestMappingHandlerAdapter;
+    }
 
     public void init() {
         argumentResolvers = new HandlerMethodArgumentResolverComposite().addResolvers(requestMappingHandlerAdapter.getArgumentResolvers());

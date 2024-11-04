@@ -51,7 +51,7 @@
                 aria-label="{$i18n/selectView}"
                 title="{$i18n/selectView}"
                 aria-expanded="false">
-          <i class="fa fa-eye"></i>
+          <i class="fa fa-fw fa-eye"></i>
           <span class="caret"></span>
         </button>
         <ul class="dropdown-menu" role="menu">
@@ -93,7 +93,9 @@
                     </xsl:if>
                     <!-- When a view contains multiple tab, the one with
                   the default attribute is the one to open -->
-                    <a data-ng-click="switchToTab('{tab[@default]/@id}', '{tab[@default]/@mode}')"
+                    <xsl:variable name="defaultTab"
+                                  select="tab[@default and gn-fn-metadata:check-elementandsession-visibility($schema, $metadata, $serviceInfo, @displayIfRecord, @displayIfServiceInfo)]"/>
+                    <a data-ng-click="switchToTab('{$defaultTab/@id}', '{$defaultTab/@mode}')"
                        href="">
                       <xsl:variable name="viewName" select="@name"/>
                       <xsl:value-of select="($strings/*[name() = $viewName]|$viewName)[1]"/>

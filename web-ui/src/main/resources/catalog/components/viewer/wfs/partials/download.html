@@ -4,20 +4,20 @@
     title="{{'checkIfDataIsDownloadableFromWfsHelp' | translate}}"
     data-ng-click="init()"
   >
-    <i class="fa fa-fw fa-download" />
+    <i class="fa fa-fw fa-download"></i>
     <span data-translate="">checkIfDataIsDownloadableFromWfs</span>
   </button>
 </div>
 <div data-ng-show="isInitialized">
-  <p data-ng-show="isWfsAvailable && featureType" data-translate="">
+  <p data-ng-show="isWfsAvailable && featureTypes" data-translate="">
     wfsDownloadDataInstruction
   </p>
   <p data-ng-show="!isWfsAvailable" class="text-warning clearfix">
-    <i class="fa fa-warning fa-2x fa-fw pull-left" />
+    <i class="fa fa-warning fa-2x fa-fw pull-left"></i>
     {{'Unable_to_connect_to_service'|translate}}
   </p>
 
-  <div class="btn-group" data-ng-show="featureType && isWfsAvailable">
+  <div class="btn-group" data-ng-show="featureTypes && isWfsAvailable">
     <select
       class="form-control"
       data-ng-if="mode == 'select'"
@@ -42,49 +42,53 @@
       </optgroup>
     </select>
     <div data-ng-if="mode == 'dropdown'">
-      <button
-        type="button"
-        class="btn btn-default btn-sm dropdown-toggle"
-        data-toggle="dropdown"
-        aria-haspopup="true"
-        aria-expanded="false"
-      >
-        <span data-translate="">downloadFeature</span>
-        <span class="caret"></span>
-      </button>
-      <ul class="dropdown-menu">
-        <li class="dropdown-header" data-translate="">downloadAllIn</li>
-        <li data-ng-repeat="f in formats | orderBy:f track by $index">
-          <a data-gn-click-and-spin="download(f)"> {{f | lowercase}} </a>
-        </li>
-        <li data-ng-if="map" role="separator" class="divider"></li>
-        <li class="dropdown-header" data-ng-if="map" data-translate="">
-          downloadInCurrentMapExtent
-        </li>
-        <li data-ng-if="map" data-ng-repeat="f in formats | orderBy:f track by $index">
-          <a data-gn-click-and-spin="download(f, true)"> {{f | lowercase }} </a>
-        </li>
-      </ul>
+      <div data-ng-repeat="type in featureTypes">
+        <button
+          type="button"
+          class="btn btn-default btn-sm dropdown-toggle"
+          data-toggle="dropdown"
+          aria-haspopup="true"
+          aria-expanded="false"
+        >
+          <i class="fa fa-fw fa-download"></i>
+          <span data-translate="">downloadFeature</span>
+          <span>{{type.label}}</span>
+          <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu">
+          <li class="dropdown-header" data-translate="">downloadAllIn</li>
+          <li data-ng-repeat="f in formats | orderBy:f track by $index">
+            <a
+              data-gn-click-and-spin="downloadFeatureType(type.type, type.label, f)"
+              title="{{f}}"
+            >
+              {{f | lowercase | translate}}
+            </a>
+          </li>
+          <li data-ng-if="map" role="separator" class="divider"></li>
+          <li class="dropdown-header" data-ng-if="map" data-translate="">
+            downloadInCurrentMapExtent
+          </li>
+          <li data-ng-if="map" data-ng-repeat="f in formats | orderBy:f track by $index">
+            <a
+              data-gn-click-and-spin="downloadFeatureType(type.type, type.label, f, true)"
+              title="{{f}}"
+            >
+              {{f | lowercase | translate}}
+            </a>
+          </li>
+        </ul>
+      </div>
     </div>
   </div>
-  <div data-ng-if="formats.length == 0 && featureType" class="text-warning clearfix">
+  <div
+    data-ng-if="formats.length == 0 && featureTypes.length > 0"
+    class="text-warning clearfix"
+  >
     <div class="fa fa-warning fa-2x fa-fw pull-left"></div>
     <div class="pull-left" data-translate="">wfsNoOutputFormats</div>
   </div>
-  <div data-ng-if="formats.length > 0 && !featureType">
-    <div
-      class="clearfix gn-margin-top gn-margin-bottom text-warning"
-      data-ng-show="typename != ''"
-    >
-      <div class="fa fa-warning fa-2x fa-fw pull-left"></div>
-      <div
-        data-translate=""
-        class="pull-left width-75"
-        data-translate-values="{typename:'{{typename}}'}"
-      >
-        wfsTypenameNotAvailable
-      </div>
-    </div>
+  <div data-ng-if="formats.length > 0 && featureTypes.length === 0">
     <div class="row">
       <div class="col-md-8 gn-nopadding-left">
         <select
@@ -105,15 +109,19 @@
             aria-haspopup="true"
             aria-expanded="false"
           >
+            <i class="fa fa-fw fa-download"></i>
             <span data-translate="">downloadFeature</span>
+            <span>{{ftSelected.name.localPart}}</span>
             <span class="caret"></span>
           </button>
           <ul class="dropdown-menu">
             <li data-ng-repeat="format in formats | orderBy:format">
               <a
-                data-gn-click-and-spin="downloadFeatureType(format, ftSelected, ftSelected.name.prefix+':'+ftSelected.name.localPart)"
+                data-gn-click-and-spin="downloadFeatureType(ftSelected,
+                        ftSelected.name.prefix + ':' + ftSelected.name.localPart,
+                       format)"
               >
-                {{format|lowercase}}
+                {{format | lowercase | translate}}
               </a>
             </li>
             <li data-ng-if="map" role="separator" class="divider"></li>
@@ -122,9 +130,11 @@
             </li>
             <li data-ng-if="map" data-ng-repeat="format in formats | orderBy:f">
               <a
-                data-gn-click-and-spin="downloadFeatureType(format, ftSelected, ftSelected.name.localPart, true)"
+                data-gn-click-and-spin="downloadFeatureType(ftSelected,
+                 ftSelected.name.prefix + ':' + ftSelected.name.localPart,
+                  true)"
               >
-                {{format|lowercase}}
+                {{format | lowercase | translate}}
               </a>
             </li>
           </ul>

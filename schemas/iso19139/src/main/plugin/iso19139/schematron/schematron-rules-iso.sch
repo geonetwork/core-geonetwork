@@ -28,34 +28,34 @@
 
 This Schematron schema merges three sets of Schematron rules
 1. Schematron rules embedded in the GML 3.2 schema
-2. Schematron rules implementing the Additional Constraints described in 
+2. Schematron rules implementing the Additional Constraints described in
    ISO 19139 Table A.1
 3. INSPIRE IR on metadata for datasets and services.
 
 
-This script was written by CSIRO for the Australia-New Zealand Land 
-Information Council (ANZLIC) as part of a project to develop an XML 
-implementation of the ANZLIC ISO Metadata Profile. 
+This script was written by CSIRO for the Australia-New Zealand Land
+Information Council (ANZLIC) as part of a project to develop an XML
+implementation of the ANZLIC ISO Metadata Profile.
 
 December 2006, March 2007
 
 Port back to good old Schematron-1.5 for use with schematron-report.xsl
-and change titles for use as bare bones 19115/19139 schematron checker 
+and change titles for use as bare bones 19115/19139 schematron checker
 in GN 2.2 onwards.
 
 Simon Pigot, 2007
 Francois Prunayre, 2008
 Etienne Taffoureau, 2008
 
-This work is licensed under the Creative Commons Attribution 2.5 License. 
-To view a copy of this license, visit 
-    http://creativecommons.org/licenses/by/2.5/au/ 
+This work is licensed under the Creative Commons Attribution 2.5 License.
+To view a copy of this license, visit
+    http://creativecommons.org/licenses/by/2.5/au/
 
 or send a letter to:
 
-Creative Commons, 
-543 Howard Street, 5th Floor, 
-San Francisco, California, 94105, 
+Creative Commons,
+543 Howard Street, 5th Floor,
+San Francisco, California, 94105,
 USA.
 
 -->
@@ -64,16 +64,17 @@ USA.
   <sch:ns prefix="gml" uri="http://www.opengis.net/gml/3.2"/>
   <sch:ns prefix="gml320" uri="http://www.opengis.net/gml"/>
 	<sch:ns prefix="gmd" uri="http://www.isotc211.org/2005/gmd"/>
+  <sch:ns prefix="gmx" uri="http://www.isotc211.org/2005/gmx"/>
 	<sch:ns prefix="srv" uri="http://www.isotc211.org/2005/srv"/>
 	<sch:ns prefix="gco" uri="http://www.isotc211.org/2005/gco"/>
 	<sch:ns prefix="geonet" uri="http://www.fao.org/geonetwork"/>
 	<sch:ns prefix="xlink" uri="http://www.w3.org/1999/xlink"/>
 
 	<!-- Test that every CharacterString element has content or it's parent has a
-   		 valid nilReason attribute value - this is not necessary for geonetwork 
-			 because update-fixed-info.xsl supplies a gco:nilReason of missing for 
+   		 valid nilReason attribute value - this is not necessary for geonetwork
+			 because update-fixed-info.xsl supplies a gco:nilReason of missing for
 			 all gco:CharacterString elements with no content and removes it if the
-			 user fills in a value - this is the same for all gco:nilReason tests 
+			 user fills in a value - this is the same for all gco:nilReason tests
 			 used below - the test for gco:nilReason in 'inapplicable....' etc is
 			 "mickey mouse" for that reason. -->
 	<sch:pattern>
@@ -106,7 +107,7 @@ USA.
 	<sch:pattern>
 		<sch:title>$loc/strings/M8</sch:title>
 		<sch:rule context="//*[gmd:CI_ResponsibleParty]">
-			<sch:let name="count" value="(count(gmd:CI_ResponsibleParty/gmd:individualName[@gco:nilReason!='missing' or not(@gco:nilReason)]) 
+			<sch:let name="count" value="(count(gmd:CI_ResponsibleParty/gmd:individualName[@gco:nilReason!='missing' or not(@gco:nilReason)])
 				+ count(gmd:CI_ResponsibleParty/gmd:organisationName[@gco:nilReason!='missing' or not(@gco:nilReason)])
 				+ count(gmd:CI_ResponsibleParty/gmd:positionName[@gco:nilReason!='missing' or not(@gco:nilReason)]))"/>
 			<sch:assert
@@ -114,7 +115,7 @@ USA.
 				>$loc/strings/alert.M8</sch:assert>
 			<sch:report
 				test="$count > 0"
-				><sch:value-of select="$loc/strings/report.M8"/> 
+				><sch:value-of select="$loc/strings/report.M8"/>
 				<sch:value-of select="gmd:CI_ResponsibleParty/gmd:organisationName"/>-
 				<sch:value-of select="gmd:CI_ResponsibleParty/gmd:individualName"/>
 			</sch:report>
@@ -126,8 +127,8 @@ USA.
 		<sch:title>$loc/strings/M9</sch:title>
 		<sch:rule context="//gmd:MD_LegalConstraints[gmd:accessConstraints/gmd:MD_RestrictionCode/@codeListValue='otherRestrictions']
 			|//*[@gco:isoType='gmd:MD_LegalConstraints' and gmd:accessConstraints/gmd:MD_RestrictionCode/@codeListValue='otherRestrictions']">
-			<sch:let name="access" value="not(gmd:otherConstraints) 
-				or count(gmd:otherConstraints[gco:CharacterString = '']) > 0 
+			<sch:let name="access" value="not(gmd:otherConstraints)
+				or count(gmd:otherConstraints[gco:CharacterString = '']) > 0
 				or gmd:otherConstraints/@gco:nilReason='missing'"/>
 			<sch:assert
 				test="$access = false()"
@@ -160,7 +161,7 @@ USA.
 		<sch:title>$loc/strings/M10</sch:title>
 		<sch:rule context="//gmd:MD_Band[gmd:maxValue or gmd:minValue]">
 			<sch:let name="values" value="(gmd:maxValue[@gco:nilReason!='missing' or not(@gco:nilReason)]
-				or gmd:minValue[@gco:nilReason!='missing' or not(@gco:nilReason)]) 
+				or gmd:minValue[@gco:nilReason!='missing' or not(@gco:nilReason)])
 				and not(gmd:units)"/>
 			<sch:assert test="$values = false()"
 				><sch:value-of select="$loc/strings/alert.M9"/>
@@ -168,7 +169,7 @@ USA.
 			<sch:report test="$values = false()"
 				>
 				<sch:value-of select="$loc/strings/report.M9.min"/>
-				<sch:value-of select="gmd:minValue"/> / 
+				<sch:value-of select="gmd:minValue"/> /
 				<sch:value-of select="$loc/strings/report.M9.max"/>
 				<sch:value-of select="gmd:maxValue"/> [
 				<sch:value-of select="$loc/strings/report.M9.units"/>
@@ -192,11 +193,11 @@ USA.
 	<!-- TEST  7 FXCHECK -->
 	<sch:pattern>
 		<sch:title>$loc/strings/M13</sch:title>
-		<sch:rule context="//gmd:DQ_DataQuality[gmd:scope/gmd:DQ_Scope/gmd:level/gmd:MD_ScopeCode/@codeListValue='dataset' 
+		<sch:rule context="//gmd:DQ_DataQuality[gmd:scope/gmd:DQ_Scope/gmd:level/gmd:MD_ScopeCode/@codeListValue='dataset'
 			or gmd:scope/gmd:DQ_Scope/gmd:level/gmd:MD_ScopeCode/@codeListValue='series']">
 			<sch:let name="emptyStatement" value="
-				count(*/gmd:LI_Lineage/gmd:source) + count(*/gmd:LI_Lineage/gmd:processStep) = 0 
-				and not(gmd:lineage/gmd:LI_Lineage/gmd:statement[@gco:nilReason!='missing' or not(@gco:nilReason)]) 
+				count(*/gmd:LI_Lineage/gmd:source) + count(*/gmd:LI_Lineage/gmd:processStep) = 0
+				and not(gmd:lineage/gmd:LI_Lineage/gmd:statement[@gco:nilReason!='missing' or not(@gco:nilReason)])
 				"/>
 			<sch:assert
 				test="$emptyStatement = false()"
@@ -210,15 +211,15 @@ USA.
 	<sch:pattern>
 		<sch:title>$loc/strings/M14</sch:title>
 		<sch:rule context="//gmd:LI_Lineage">
-			<sch:let name="emptySource" value="not(gmd:source) 
-				and not(gmd:statement[@gco:nilReason!='missing' or not(@gco:nilReason)]) 
+			<sch:let name="emptySource" value="not(gmd:source)
+				and not(gmd:statement[@gco:nilReason!='missing' or not(@gco:nilReason)])
 				and not(gmd:processStep)"/>
 			<sch:assert test="$emptySource = false()"
 				>$loc/strings/alert.M14</sch:assert>
 			<sch:report test="$emptySource = false()"
 				>$loc/strings/report.M14</sch:report>
 
-			<sch:let name="emptyProcessStep" value="not(gmd:processStep) 
+			<sch:let name="emptyProcessStep" value="not(gmd:processStep)
 				and not(gmd:statement[@gco:nilReason!='missing' or not(@gco:nilReason)])
 				and not(gmd:source)"/>
 			<sch:assert test="$emptyProcessStep = false()"
@@ -231,7 +232,7 @@ USA.
 	<sch:pattern>
 		<sch:title>$loc/strings/M16</sch:title>
 		<sch:rule context="//gmd:DQ_DataQuality[gmd:scope/gmd:DQ_Scope/gmd:level/gmd:MD_ScopeCode/@codeListValue='dataset']">
-			<sch:let name="noReportNorLineage" value="not(gmd:report) 
+			<sch:let name="noReportNorLineage" value="not(gmd:report)
 				and not(gmd:lineage)"/>
 			<sch:assert
 				test="$noReportNorLineage = false()"
@@ -245,11 +246,11 @@ USA.
 	<sch:pattern>
 		<sch:title>$loc/strings/M17</sch:title>
 		<sch:rule context="//gmd:DQ_Scope">
-			<sch:let name="levelDesc" value="gmd:level/gmd:MD_ScopeCode/@codeListValue='dataset' 
-				or gmd:level/gmd:MD_ScopeCode/@codeListValue='series' 
-				or (gmd:levelDescription and ((normalize-space(gmd:levelDescription) != '') 
-				or (gmd:levelDescription/gmd:MD_ScopeDescription) 
-				or (gmd:levelDescription/@gco:nilReason 
+			<sch:let name="levelDesc" value="gmd:level/gmd:MD_ScopeCode/@codeListValue='dataset'
+				or gmd:level/gmd:MD_ScopeCode/@codeListValue='series'
+				or (gmd:levelDescription and ((normalize-space(gmd:levelDescription) != '')
+				or (gmd:levelDescription/gmd:MD_ScopeDescription)
+				or (gmd:levelDescription/@gco:nilReason
 				and contains('inapplicable missing template unknown withheld',gmd:levelDescription/@gco:nilReason))))"/>
 			<sch:assert
 				test="$levelDesc"
@@ -268,7 +269,7 @@ USA.
 			<sch:assert test="$density = false()"
 				>$loc/strings/alert.M18</sch:assert>
 			<sch:report test="$density = false()"
-				><sch:value-of select="$loc/strings/report.M18"/> <sch:value-of select="gmd:density"/> 
+				><sch:value-of select="$loc/strings/report.M18"/> <sch:value-of select="gmd:density"/>
 				<sch:value-of select="gmd:densityUnits/gco:CharacterString"/></sch:report>
 		</sch:rule>
 	</sch:pattern>
@@ -278,7 +279,7 @@ USA.
 		<sch:rule context="//gmd:MD_Distribution">
 			<sch:let name="total" value="count(gmd:distributionFormat) +
 				count(gmd:distributor/gmd:MD_Distributor/gmd:distributorFormat)"/>
-			<sch:let name="count" value="count(gmd:distributionFormat)>0 
+			<sch:let name="count" value="count(gmd:distributionFormat)>0
 				or count(gmd:distributor/gmd:MD_Distributor/gmd:distributorFormat)>0"/>
 			<sch:assert
 				test="$count"
@@ -293,9 +294,9 @@ USA.
 	<sch:pattern>
 		<sch:title>$loc/strings/M20</sch:title>
 		<sch:rule context="//gmd:EX_Extent">
-			<sch:let name="count" value="count(gmd:description[@gco:nilReason!='missing' or not(@gco:nilReason)])>0 
-				or count(gmd:geographicElement)>0 
-				or count(gmd:temporalElement)>0 
+			<sch:let name="count" value="count(gmd:description[@gco:nilReason!='missing' or not(@gco:nilReason)])>0
+				or count(gmd:geographicElement)>0
+				or count(gmd:temporalElement)>0
 				or count(gmd:verticalElement)>0"/>
 			<sch:assert
 				test="$count"
@@ -309,10 +310,10 @@ USA.
 	<sch:pattern>
 		<sch:title>$loc/strings/M21</sch:title>
 		<sch:rule context="//gmd:MD_DataIdentification|//*[contains(@gco:isoType, 'MD_DataIdentification')]">
-			<sch:let name="extent" value="(not(../../gmd:hierarchyLevel) 
-				or ../../gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue='dataset' 
-				or ../../gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue='') 
-				and (count(gmd:extent/*/gmd:geographicElement/gmd:EX_GeographicBoundingBox) 
+			<sch:let name="extent" value="(not(../../gmd:hierarchyLevel)
+				or ../../gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue='dataset'
+				or ../../gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue='')
+				and (count(gmd:extent/*/gmd:geographicElement/gmd:EX_GeographicBoundingBox)
 				+ count (gmd:extent/*/gmd:geographicElement/gmd:EX_GeographicDescription))=0"/>
 			<sch:assert
 				test="$extent = false()"
@@ -326,9 +327,9 @@ USA.
 	<sch:pattern>
 		<sch:title>$loc/strings/M22</sch:title>
 		<sch:rule context="//gmd:MD_DataIdentification|//*[contains(@gco:isoType, 'MD_DataIdentification')]">
-			<sch:let name="topic" value="(not(../../gmd:hierarchyLevel) 
-				or ../../gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue='dataset' 
-				or ../../gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue='series'  
+			<sch:let name="topic" value="(not(../../gmd:hierarchyLevel)
+				or ../../gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue='dataset'
+				or ../../gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue='series'
 				or ../../gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue='' )
 				and not(gmd:topicCategory)"/>
 			<sch:assert
@@ -347,8 +348,23 @@ USA.
 				>$loc/strings/alert.M23</sch:assert>
 			<sch:report test="gmd:aggregateDataSetName or gmd:aggregateDataSetIdentifier"
 				>$loc/strings/report.M23</sch:report>
-		</sch:rule>
-	</sch:pattern>
+
+      <sch:let name="mdRefRef" value="gmd:aggregateDataSetIdentifier/*/gmd:code/(gco:CharacterString|gmx:Anchor)"/>
+      <sch:let name="association" value="gmd:associationType/*/@codeListValue"/>
+      <sch:let name="initiative" value="gmd:initiativeType/*/@codeListValue"/>
+
+
+      <sch:let name="hasNoDuplicate"
+               value="count(../../*/gmd:MD_AggregateInformation[
+                                      gmd:aggregateDataSetIdentifier/*/gmd:code/(gco:CharacterString|gmx:Anchor) = $mdRefRef
+                                      and concat(
+                                        gmd:associationType/*/@codeListValue,
+                                        gmd:initiativeType/*/@codeListValue) =
+                                        concat($association, $initiative)]) = 1"/>
+      <sch:assert test="$hasNoDuplicate">$loc/strings/report.M23-dup</sch:assert>
+    </sch:rule>
+  </sch:pattern>
+
 	<!-- anzlic/trunk/gml/3.2.0/gmd/metadataEntity.xsd: -->
 	<!--<sch:pattern>
 		<sch:title>$loc/strings/M24</sch:title>
@@ -356,14 +372,14 @@ USA.
 		<sch:rule
 			context="//gmd:MD_Metadata/gmd:language|//*[@gco:isoType='gmd:MD_Metadata']/gmd:language">
 			<sch:assert
-				test=". and ((normalize-space(.) != '') 
-      				or (normalize-space(./gco:CharacterString) != '') 
-      				or (./gmd:LanguageCode) 
-      				or (./@gco:nilReason 
+				test=". and ((normalize-space(.) != '')
+      				or (normalize-space(./gco:CharacterString) != '')
+      				or (./gmd:LanguageCode)
+      				or (./@gco:nilReason
       					and contains('inapplicable missing template unknown withheld',./@gco:nilReason)))"
 				>$loc/strings/alert.M24</sch:assert>
-			<!-\- language: documented if not defined by the encoding standard. 
-					 It can't be documented by the encoding because GML doesn't 
+			<!-\- language: documented if not defined by the encoding standard.
+					 It can't be documented by the encoding because GML doesn't
 					 include xml:language. -\->
 		</sch:rule>
 	</sch:pattern>-->
@@ -383,27 +399,27 @@ USA.
 		<sch:title>$loc/strings/M26</sch:title>
 		<sch:rule context="//gmd:MD_ExtendedElementInformation">
 			<sch:assert
-				test="(gmd:dataType/gmd:MD_DatatypeCode/@codeListValue='codelist' 
-				or gmd:dataType/gmd:MD_DatatypeCode/@codeListValue='enumeration' 
-				or gmd:dataType/gmd:MD_DatatypeCode/@codeListValue='codelistElement') 
-				or (gmd:obligation and ((normalize-space(gmd:obligation) != '')  
-				or (gmd:obligation/gmd:MD_ObligationCode) 
+				test="(gmd:dataType/gmd:MD_DatatypeCode/@codeListValue='codelist'
+				or gmd:dataType/gmd:MD_DatatypeCode/@codeListValue='enumeration'
+				or gmd:dataType/gmd:MD_DatatypeCode/@codeListValue='codelistElement')
+				or (gmd:obligation and ((normalize-space(gmd:obligation) != '')
+				or (gmd:obligation/gmd:MD_ObligationCode)
 				or (gmd:obligation/@gco:nilReason and contains('inapplicable missing template unknown withheld',gmd:obligation/@gco:nilReason))))"
 				>$loc/strings/alert.M26.obligation</sch:assert>
 			<sch:assert
-				test="(gmd:dataType/gmd:MD_DatatypeCode/@codeListValue='codelist' 
-				or gmd:dataType/gmd:MD_DatatypeCode/@codeListValue='enumeration' 
-				or gmd:dataType/gmd:MD_DatatypeCode/@codeListValue='codelistElement') 
-				or (gmd:maximumOccurrence and ((normalize-space(gmd:maximumOccurrence) != '')  
-				or (normalize-space(gmd:maximumOccurrence/gco:CharacterString) != '') 
+				test="(gmd:dataType/gmd:MD_DatatypeCode/@codeListValue='codelist'
+				or gmd:dataType/gmd:MD_DatatypeCode/@codeListValue='enumeration'
+				or gmd:dataType/gmd:MD_DatatypeCode/@codeListValue='codelistElement')
+				or (gmd:maximumOccurrence and ((normalize-space(gmd:maximumOccurrence) != '')
+				or (normalize-space(gmd:maximumOccurrence/gco:CharacterString) != '')
 				or (gmd:maximumOccurrence/@gco:nilReason and contains('inapplicable missing template unknown withheld',gmd:maximumOccurrence/@gco:nilReason))))"
 				>$loc/strings/alert.M26.maximumOccurence</sch:assert>
 			<sch:assert
-				test="(gmd:dataType/gmd:MD_DatatypeCode/@codeListValue='codelist' 
-				or gmd:dataType/gmd:MD_DatatypeCode/@codeListValue='enumeration' 
-				or gmd:dataType/gmd:MD_DatatypeCode/@codeListValue='codelistElement') 
-				or (gmd:domainValue and ((normalize-space(gmd:domainValue) != '')  
-				or (normalize-space(gmd:domainValue/gco:CharacterString) != '') 
+				test="(gmd:dataType/gmd:MD_DatatypeCode/@codeListValue='codelist'
+				or gmd:dataType/gmd:MD_DatatypeCode/@codeListValue='enumeration'
+				or gmd:dataType/gmd:MD_DatatypeCode/@codeListValue='codelistElement')
+				or (gmd:domainValue and ((normalize-space(gmd:domainValue) != '')
+				or (normalize-space(gmd:domainValue/gco:CharacterString) != '')
 				or (gmd:domainValue/@gco:nilReason and contains('inapplicable missing template unknown withheld',gmd:domainValue/@gco:nilReason))))"
 				>$loc/strings/alert.M26.domainValue</sch:assert>
 		</sch:rule>
@@ -457,7 +473,7 @@ USA.
 	<sch:pattern>
 		<sch:title>$loc/strings/M30</sch:title>
 		<sch:rule context="//gmd:MD_Georectified">
-			<sch:let name="cpd" value="(gmd:checkPointAvailability/gco:Boolean='1' or gmd:checkPointAvailability/gco:Boolean='true') and 
+			<sch:let name="cpd" value="(gmd:checkPointAvailability/gco:Boolean='1' or gmd:checkPointAvailability/gco:Boolean='true') and
 				(not(gmd:checkPointDescription) or count(gmd:checkPointDescription[@gco:nilReason='missing'])>0)"/>
 			<sch:assert
 				test="$cpd = false()"
@@ -471,10 +487,10 @@ USA.
 	<sch:pattern>
 		<sch:title>$loc/strings/M61</sch:title>
 		<sch:rule context="//gmd:MD_Metadata/gmd:hierarchyLevel|//*[@gco:isoType='gmd:MD_Metadata']/gmd:hierarchyLevel">
-			<sch:let name="hl" value="count(../gmd:hierarchyLevel/gmd:MD_ScopeCode[@codeListValue='dataset' or @codeListValue=''])=0 and 
+			<sch:let name="hl" value="count(../gmd:hierarchyLevel/gmd:MD_ScopeCode[@codeListValue='dataset' or @codeListValue=''])=0 and
 				(not(../gmd:hierarchyLevelName) or ../gmd:hierarchyLevelName/@gco:nilReason)"/>
 			<sch:let name="resourceType" value="string-join(../gmd:hierarchyLevel/*/@codeListValue, ',')"/>
-			
+
 			<sch:assert
 				test="$hl = false()"
 				>$loc/strings/alert.M61</sch:assert>

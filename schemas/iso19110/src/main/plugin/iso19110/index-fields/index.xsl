@@ -50,7 +50,7 @@
         <xsl:variable name="resourceTitleObject" as="xs:string"
                       select="concat('{',
                           $doubleQuote, 'default', $doubleQuote, ':',
-                          $doubleQuote, gn-fn-index:json-escape(.) ,$doubleQuote,
+                          $doubleQuote, util:escapeForJson(.) ,$doubleQuote,
                         '}')"/>
 
         <xsl:copy-of select="gn-fn-index:add-object-field(
@@ -65,36 +65,43 @@
 
       <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
       <!-- === Version identifier === -->
-      <versionIdentifier>
+      <resourceEdition>
         <xsl:value-of select="string(/gfc:FC_FeatureCatalogue/gmx:versionNumber/gco:CharacterString|
         /gfc:FC_FeatureCatalogue/gfc:versionNumber/gco:CharacterString)"/>
-      </versionIdentifier>
+      </resourceEdition>
 
       <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
       <!-- === Responsible organization === -->
       <xsl:for-each select="/gfc:FC_FeatureCatalogue/gfc:producer">
         <xsl:apply-templates mode="index-contact"
                              select=".">
-          <xsl:with-param name="type" select="'resource'"/>
-          <xsl:with-param name="fieldPrefix" select="'responsibleParty'"/>
-          <xsl:with-param name="position" select="position()"/>
+          <xsl:with-param name="fieldSuffix" select="''"/>
+        </xsl:apply-templates>
+        <xsl:apply-templates mode="index-contact"
+                             select=".">
+          <xsl:with-param name="fieldSuffix" select="'ForResource'"/>
         </xsl:apply-templates>
       </xsl:for-each>
 
       <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
       <!-- === Revision date === -->
-      <xsl:for-each select="/gfc:FC_FeatureCatalogue/gmx:versionDate/gco:Date|
-        /gfc:FC_FeatureCatalogue/gfc:versionDate/gco:Date">
-        <revisionDate><xsl:value-of select="date-util:convertToISOZuluDateTime(string(.))"/></revisionDate>
+      <xsl:for-each select="/gfc:FC_FeatureCatalogue/gmx:versionDate/(gco:Date|gco:DateTime)
+                           |/gfc:FC_FeatureCatalogue/gfc:versionDate/(gco:Date|gco:DateTime)">
+        <xsl:variable name="dateStamp"
+                      select="date-util:convertToISOZuluDateTime(string(.))"/>
+        <resourceDate type="object">
+          {"type": "revision", "date": "<xsl:value-of select="$dateStamp"/>"}
+        </resourceDate>
+        <dateStamp><xsl:value-of select="$dateStamp"/></dateStamp>
       </xsl:for-each>
 
       <xsl:variable name="jsonFeatureTypes">[
         <xsl:for-each select=".//gfc:featureType">{
-          "typeName" : "<xsl:value-of select="gn-fn-index:json-escape(gfc:FC_FeatureType/gfc:typeName/*/text())"/>",
-          "definition" :"<xsl:value-of select="gn-fn-index:json-escape(gfc:FC_FeatureType/gfc:definition/*/text())"/>",
-          "code" :"<xsl:value-of select="gn-fn-index:json-escape(gfc:FC_FeatureType/gfc:code/*/text())"/>",
+          "typeName" : "<xsl:value-of select="util:escapeForJson(gfc:FC_FeatureType/gfc:typeName/*/text())"/>",
+          "definition" :"<xsl:value-of select="util:escapeForJson(gfc:FC_FeatureType/gfc:definition/*/text())"/>",
+          "code" :"<xsl:value-of select="util:escapeForJson(gfc:FC_FeatureType/gfc:code/*/text())"/>",
           "isAbstract" :"<xsl:value-of select="gfc:FC_FeatureType/gfc:isAbstract/*/text()"/>",
-          "aliases" : "<xsl:value-of select="gn-fn-index:json-escape(gfc:FC_FeatureType/gfc:aliases/*/text())"/>"
+          "aliases" : "<xsl:value-of select="util:escapeForJson(gfc:FC_FeatureType/gfc:aliases/*/text())"/>"
           <!--"inheritsFrom" : "<xsl:value-of select="gfc:FC_FeatureType/gfc:inheritsFrom/*/text()"/>",
           "inheritsTo" : "<xsl:value-of select="gfc:FC_FeatureType/gfc:inheritsTo/*/text()"/>",
           "constrainedBy" : "<xsl:value-of select="gfc:FC_FeatureType/gfc:constrainedBy/*/text()"/>",
@@ -105,17 +112,27 @@
           <xsl:if test="count($attributes) > 0">
             ,"attributeTable" : [
             <xsl:for-each select="$attributes">
-              {"name": "<xsl:value-of select="gn-fn-index:json-escape(*/gfc:memberName/*/text())"/>",
-              "definition": "<xsl:value-of select="gn-fn-index:json-escape(*/gfc:definition/*/text())"/>",
-              "code": "<xsl:value-of select="gn-fn-index:json-escape(*/gfc:code/*/text())"/>",
+              {"name": "<xsl:value-of select="util:escapeForJson(*/gfc:memberName/*/text())"/>",
+              "definition": "<xsl:value-of select="util:escapeForJson(*/gfc:definition/*/text())"/>",
+              "code": "<xsl:value-of select="util:escapeForJson(*/gfc:code/*/text())"/>",
               "link": "<xsl:value-of select="*/gfc:code/*/@xlink:href"/>",
               "type": "<xsl:value-of select="*/gfc:valueType/gco:TypeName/gco:aName/*/text()"/>"
-              <xsl:if test="*/gfc:listedValue">
+              <xsl:if test="*/gfc:cardinality">
+                <xsl:variable name="cardinalityValue">
+                  <xsl:for-each select="*/gfc:cardinality/*/gco:range">
+                    <xsl:value-of select="concat(*/gco:lower/*/text(), '..', */gco:upper/*/text())"/><xsl:if test="position() != last()">, </xsl:if>
+                  </xsl:for-each>
+                </xsl:variable>
+                ,"cardinality": "<xsl:value-of select="$cardinalityValue"/>"
+              </xsl:if>
+              <xsl:variable name="codeList"
+                            select="*/gfc:listedValue[normalize-space(*) != '']"/>
+              <xsl:if test="$codeList">
                 ,"values": [
-                <xsl:for-each select="*/gfc:listedValue">{
-                  "label": "<xsl:value-of select="gn-fn-index:json-escape(*/gfc:label/*/text())"/>",
-                  "code": "<xsl:value-of select="gn-fn-index:json-escape(*/gfc:code/*/text())"/>",
-                  "definition": "<xsl:value-of select="gn-fn-index:json-escape(*/gfc:definition/*/text())"/>"}
+                <xsl:for-each select="$codeList">{
+                  "label": "<xsl:value-of select="util:escapeForJson(*/gfc:label/*/text())"/>",
+                  "code": "<xsl:value-of select="util:escapeForJson(*/gfc:code/*/text())"/>",
+                  "definition": "<xsl:value-of select="util:escapeForJson(*/gfc:definition/*/text())"/>"}
                   <xsl:if test="position() != last()">,</xsl:if>
                 </xsl:for-each>
                 ]
@@ -184,16 +201,16 @@
       <xsl:attribute name="type" select="'object'"/>{
       <xsl:if test="$organisationName">
         "organisationObject": <xsl:value-of select="gn-fn-index:add-multilingual-field(
-                              'organisation', $organisationName, $languages)"/>,
+                              'organisation', $organisationName, $languages, true())"/>,
       </xsl:if>
       "role":"<xsl:value-of select="$role"/>",
-      "email":"<xsl:value-of select="gn-fn-index:json-escape($email[1])"/>",
+      "email":"<xsl:value-of select="util:escapeForJson($email[1])"/>",
       "website":"<xsl:value-of select="$website"/>",
       "logo":"<xsl:value-of select="$logo"/>",
-      "individual":"<xsl:value-of select="gn-fn-index:json-escape($individualName)"/>",
-      "position":"<xsl:value-of select="gn-fn-index:json-escape($positionName)"/>",
-      "phone":"<xsl:value-of select="gn-fn-index:json-escape($phone[1])"/>",
-      "address":"<xsl:value-of select="gn-fn-index:json-escape($address)"/>"
+      "individual":"<xsl:value-of select="util:escapeForJson($individualName)"/>",
+      "position":"<xsl:value-of select="util:escapeForJson($positionName)"/>",
+      "phone":"<xsl:value-of select="util:escapeForJson($phone[1])"/>",
+      "address":"<xsl:value-of select="util:escapeForJson($address)"/>"
       }
     </xsl:element>
   </xsl:template>

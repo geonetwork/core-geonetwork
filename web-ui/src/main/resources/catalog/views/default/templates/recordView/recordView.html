@@ -35,10 +35,20 @@
     <div
       class="alert alert-warning"
       data-ng-hide="!mdView.loadDetailsFinished || mdView.current.record"
-      data-translate=""
-      data-translate-values="{uuid: '{{recordIdentifierRequested | htmlToPlaintext}}', url: '{{url | encodeURIComponent}}'}"
     >
-      recordNotFound
+      <span
+        data-translate=""
+        data-translate-values="{uuid: '{{recordIdentifierRequested | htmlToPlaintext}}'}"
+      >
+        recordNotFound
+      </span>
+      <span
+        data-ng-hide="user"
+        data-translate=""
+        data-translate-values="{url: '{{url | encodeURIComponent}}'}"
+      >
+        trySignIn
+      </span>
     </div>
     <div class="row" data-ng-show="!mdView.loadDetailsFinished">
       <i class="fa fa-spinner fa-spin fa-3x fa-fw"></i>
@@ -99,12 +109,26 @@
             <a
               class="btn btn-default"
               href
+              data-ng-if="mdView.current.record.draft != 'y'"
               data-ng-show="(!mdView.current.record.isPublished() || (mdView.current.record.isPublished() && user.canDeletePublishedMetadata()) ) && user.canEditRecord(mdView.current.record)
                             && (user.isReviewerOrMore() || mdView.current.record.mdStatus != 4 || !isMdWorkflowEnable)"
               data-gn-click-and-spin="deleteRecord(mdView.current.record)"
-              data-ng-init="translateValues = {resourceTitle: (mdView.current.record.resourceTitle | json)}"
-              data-gn-confirm-click="{{(mdView.current.record.draft != 'y') ? 'deleteRecordConfirm' : 'deleteWorkingCopyRecordConfirm' | translate:translateValues}}"
-              title="{{(mdView.current.record.draft != 'y') ? 'delete' : 'cancelWorkingCopy' | translate}}"
+              data-gn-confirm-click="{{'deleteRecordConfirm' | translate: {resourceTitle: (mdView.current.record.resourceTitle | json)} }}"
+              title="{{'delete' | translate}}"
+            >
+              <span class="fa fa-fw fa-times"></span>
+              <span data-translate="" class="hidden-sm hidden-xs">delete</span>
+            </a>
+
+            <a
+              class="btn btn-default"
+              href
+              data-ng-if="mdView.current.record.draft == 'y'"
+              data-ng-show="(!mdView.current.record.isPublished() || (mdView.current.record.isPublished() && user.canDeletePublishedMetadata()) ) && user.canEditRecord(mdView.current.record)
+                            && (user.isReviewerOrMore() || mdView.current.record.mdStatus != 4 || !isMdWorkflowEnable)"
+              data-gn-click-and-spin="cancelWorkingCopy(mdView.current.record)"
+              data-gn-confirm-click="{{'deleteWorkingCopyRecordConfirm' | translate: {resourceTitle: (mdView.current.record.resourceTitle | json)} }}"
+              title="{{'cancelWorkingCopy' | translate}}"
             >
               <span class="fa fa-fw fa-times"></span>
               <span
@@ -113,12 +137,6 @@
                 data-ng-if="mdView.current.record.draft == 'y'"
                 >cancelWorkingCopy</span
               >
-              <span
-                data-translate=""
-                class="hidden-sm hidden-xs"
-                data-ng-if="mdView.current.record.draft != 'y'"
-                >delete</span
-              >
             </a>
           </div>
 
@@ -126,7 +144,7 @@
           <div
             class="gn-md-actions-btn pull-left"
             data-gn-md-actions-menu="mdView.current.record"
-          />
+          ></div>
 
           <!-- display mode -->
           <div class="btn-group gn-view-menu-button pull-left">
@@ -172,17 +190,17 @@
           <div data-ng-switch-when="series">
             <div
               ng-include="'../../catalog/views/default/templates/recordView/type-series.html'"
-            />
+            ></div>
           </div>
           <div data-ng-switch-when="service">
             <div
               ng-include="'../../catalog/views/default/templates/recordView/type-service.html'"
-            />
+            ></div>
           </div>
           <div data-ng-switch-default>
             <div
               ng-include="'../../catalog/views/default/templates/recordView/type-dataset.html'"
-            />
+            ></div>
           </div>
         </div>
       </div>

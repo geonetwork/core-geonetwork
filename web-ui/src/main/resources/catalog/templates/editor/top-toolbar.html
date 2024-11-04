@@ -12,8 +12,10 @@
       {{gnCurrentEdit.mdTitle | limitTo: 50 }} {{gnCurrentEdit.mdTitle.length > 50 ? '...'
       : ''}}
     </h1>
-    <span data-ng-if="savedStatus">| </span>
-    <span data-ng-class="saveError ? 'text-danger' : ''">{{savedStatus}}</span>
+    <br />
+    <span class="label label-default" data-ng-class="saveError ? 'text-danger' : ''"
+      >{{savedStatus}}</span
+    >
   </div>
 
   <div class="gn-btn-toolbar navbar-right">
@@ -23,13 +25,13 @@
       data-gn-group-owner="groupOwner"
       data-metadata-uuid="gnCurrentEdit.uuid"
       title="{{'categories'|translate}}"
-    />
+    ></div>
 
     <div
       data-gn-metadata-group-updater="groupOwner"
       data-metadata-id="gnCurrentEdit.id"
       title="{{'group'|translate}}"
-    />
+    ></div>
 
     <div class="btn-group" data-ng-if="gnConfig.metadata.vcs.enable">
       <button
@@ -39,7 +41,7 @@
         aria-label="{{'tools' | translate}}"
         aria-expanded="true"
       >
-        <i class="fa fa-fw fa-cog" />
+        <i class="fa fa-fw fa-cog"></i>
         <span class="visible-lg" data-translate="">tools</span>
         <span class="caret"></span>
       </button>
@@ -51,7 +53,7 @@
             data-gn-click-and-spin="startVersioning()"
             title="{{'startVersioning-help' | translate}}"
           >
-            <i class="fa fa-fw fa-history" />
+            <i class="fa fa-fw fa-history"></i>
             <span data-translate="">startVersioning</span>
           </a>
         </li>
@@ -70,7 +72,7 @@
         data-ng-mouseover="getCancelStatus()"
         title="{{cancelStatus}}"
       >
-        <i class="fa fa-fw fa-undo" />
+        <i class="fa fa-fw fa-undo"></i>
         <span class="visible-lg" data-translate="">cancel</span>
       </button>
     </div>
@@ -83,7 +85,7 @@
         gn-click-and-spin="close(false, false)"
         id="gn-editor-btn-close"
       >
-        <i class="fa fa-fw fa-sign-out" />
+        <i class="fa fa-fw fa-sign-out"></i>
         <span class="visible-lg" data-translate="">closeEditor</span>
       </button>
       <button
@@ -136,7 +138,7 @@
         aria-label="{{(isTemplate() ? 'saveTemplate' : (gnCurrentEdit.metadata.draft === 'y' ? 'saveDraft' : 'saveMetadata')) | translate}}"
         class="btn btn-success navbar-btn"
       >
-        <i class="fa fa-fw fa-save" />
+        <i class="fa fa-fw fa-save"></i>
         <span class="visible-lg"
           >{{(isTemplate() ? 'saveTemplate' : (gnCurrentEdit.metadata.draft === 'y' ?
           'saveDraft' : 'saveMetadata')) | translate}}</span

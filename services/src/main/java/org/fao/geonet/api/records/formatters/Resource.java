@@ -126,9 +126,6 @@ public class Resource extends AbstractFormatService {
             case "xslt":
                 response.setContentType("application/xslt+xml");
                 return;
-            case "groovy":
-                response.setContentType("text/x-groovy-source,groovy");
-                return;
             default:
                 response.setContentType("application/octet-stream");
         }

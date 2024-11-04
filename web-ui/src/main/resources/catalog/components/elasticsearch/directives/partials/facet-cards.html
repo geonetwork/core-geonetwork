@@ -1,6 +1,6 @@
 <div
-  data-ng-repeat="(k, facet) in searchInfo.aggregations[key].buckets"
-  data-ng-init="facetValue = facet.key || k;"
+  data-ng-repeat="(k, facet) in aggregations[key].items | orderBy: facetSorter(aggregations[key], aggregations[key].key)"
+  data-ng-init="facetValue = facet.value;"
   data-ng-show="facetValue"
   data-ng-class="isInspire ? ('bg-iti-' + (facet.key | facetCssClassCode: isInspire)) : ''"
   class="col-xs-6 col-sm-4 col-md-3 col-lg-2 gn-topic"
@@ -12,17 +12,17 @@
     <div class="panel-body">
       <a
         class="clearfix"
-        title="{{::facetValue}}"
+        title="{{::(facet | facetTooltip)}}"
         role="link"
-        data-ng-init="response = searchInfo.aggregations[key];
+        data-ng-init="response = aggregations[key];
                       decorator = (response.meta && response.meta.decorator) || undefined"
-        data-ng-href="{{::facetValue | facetSearchUrlBuilder:key:searchInfo.aggregations[key]:homeFacet.config[key]:missingValue}}"
+        data-ng-href="{{::facetValue | facetSearchUrlBuilder:key:aggregations[key]:homeFacet.config[key]:missingValue}}"
       >
         <span
           data-ng-if="decorator"
           data-es-facet-decorator="decorator"
           data-key="facetValue"
-        />
+        ></span>
         <h2
           data-ng-show="isInspire"
           class="inspire-{{::(facetValue | facetCssClassCode: isInspire)}}-{{::iso2lang}}"
@@ -38,7 +38,7 @@
       </a>
     </div>
     <div class="panel-footer">
-      <i class="fa fa-fw fa-file-text-o"></i>{{::facet.doc_count}}
+      <i class="fa fa-fw fa-file-text-o"></i>{{::facet.count}}
     </div>
   </div>
 </div>

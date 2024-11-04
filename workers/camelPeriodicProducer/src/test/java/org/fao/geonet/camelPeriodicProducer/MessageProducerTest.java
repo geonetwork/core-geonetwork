@@ -27,6 +27,7 @@ import org.apache.camel.Exchange;
 import org.apache.camel.component.quartz2.QuartzComponent;
 import org.apache.camel.component.quartz2.QuartzEndpoint;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -72,19 +73,10 @@ public class MessageProducerTest extends AbstractJUnit4SpringContextTests {
     @Autowired
     MessageProducerFactory toTest;
 
-    private QuartzComponent quartzComponent;
-
-    @Before
-    public void init() throws Exception {
-        quartzComponent = new QuartzComponent(testCamelNetwork.getContext());
-        quartzComponent.start();
-    }
-
     @Test
     public void registerAndStart() throws Exception {
         testCamelNetwork.getContext().start();
         toTest.routeBuilder = testCamelNetwork;
-        toTest.quartzComponent = quartzComponent;
 
         TestMessage testMessage = new TestMessage("testMsg1");
         MessageProducer<TestMessage> messageProducer1 = new MessageProducer<>();
@@ -139,11 +131,10 @@ public class MessageProducerTest extends AbstractJUnit4SpringContextTests {
     public void registerAndStartWithoutCronExpression() throws Exception {
         testCamelNetwork.getContext().start();
         toTest.routeBuilder = testCamelNetwork;
-        toTest.quartzComponent = quartzComponent;
 
         TestMessage testMessage = new TestMessage("testMsg1");
         MessageProducer<TestMessage> messageProducer = new MessageProducer<>();
-        messageProducer.setId(1L);
+        messageProducer.setId(3L);
         messageProducer.setTarget(testCamelNetwork.getMessageConsumer().getUri());
         messageProducer.setMessage(testMessage);
         messageProducer.setCronExpession(null);
@@ -153,16 +144,16 @@ public class MessageProducerTest extends AbstractJUnit4SpringContextTests {
             .filter(x -> x.getEndpointKey().compareTo(
                 "quartz2://" + settingManager.getSiteId() + "-" + messageProducer.getId()) == 0).findFirst().get();
 
-        CronTrigger trigger = (CronTrigger) quartzComponent.getScheduler().getTrigger(endpoint.getTriggerKey());
+        CronTrigger trigger = (CronTrigger) toTest.quartzComponent.getScheduler().getTrigger(endpoint.getTriggerKey());
         assertEquals(NEVER, trigger.getCronExpression());
 
         messageProducer.setCronExpession(EVERY_SECOND);
         toTest.changeMessageAndReschedule(messageProducer);
 
-        trigger = (CronTrigger) quartzComponent.getScheduler().getTrigger(endpoint.getTriggerKey());
+        trigger = (CronTrigger) toTest.quartzComponent.getScheduler().getTrigger(endpoint.getTriggerKey());
         assertEquals(EVERY_SECOND, trigger.getCronExpression());
 
-        toTest.destroy(1L);
+        toTest.destroy(3L);
     }
 
 

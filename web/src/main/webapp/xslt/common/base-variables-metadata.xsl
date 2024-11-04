@@ -26,6 +26,7 @@
                 xmlns:gn="http://www.fao.org/geonetwork"
                 xmlns:util="java:org.fao.geonet.util.XslUtil"
                 xmlns:saxon="http://saxon.sf.net/"
+                xmlns:gn-fn-metadata="http://geonetwork-opensource.org/xsl/functions/metadata"
                 version="2.0" extension-element-prefixes="saxon"
 >
   <!-- Global XSL variables about the metadata record. This should be included for
@@ -105,7 +106,10 @@
                         then /root/request/currTab
                         else if (/root/gui/currTab != '')
                         then /root/gui/currTab
-                        else $editorConfig/editor/views/view[@default]/tab[@default]/@id"/>
+                        else $editorConfig/editor/views/view[@default]/tab[
+                          @default and
+                          gn-fn-metadata:check-elementandsession-visibility($schema, $metadata, $serviceInfo, @displayIfRecord, @displayIfServiceInfo)
+                        ]/@id"/>
 
   <xsl:variable name="viewConfig"
                 select="$editorConfig/editor/views/view[tab/@id = $tab]"/>

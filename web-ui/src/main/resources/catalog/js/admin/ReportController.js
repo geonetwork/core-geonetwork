@@ -163,7 +163,7 @@
               var groups = _.map(response.data, "group");
 
               // Get unique groups
-              $scope.groups = _.uniq(groups, function (e) {
+              $scope.groups = _.uniqBy(groups, function (e) {
                 return e.id;
               });
             },

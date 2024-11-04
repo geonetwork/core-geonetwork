@@ -87,7 +87,7 @@
               var url = $scope.url.split("/");
               getCapLayer.useProxy = false;
               url = url[0] + "/" + url[1] + "/" + url[2] + "/";
-              if ($.inArray(url, gnGlobalSettings.requireProxy) >= 0) {
+              if ($.inArray(url + "#GET", gnGlobalSettings.requireProxy) >= 0) {
                 getCapLayer.useProxy = true;
               }
               if ($scope.format == "wms") {
@@ -105,7 +105,7 @@
                     }),
                     type: "success"
                   },
-                  4
+                  15
                 );
                 gnMap.feedLayerMd(layer);
                 return layer;
@@ -170,7 +170,7 @@
             var query = {
               from: 0,
               size: 100,
-              sort: [{ "resourceTitleObject.default.keyword": "asc" }],
+              sort: [{ "resourceTitleObject.default.sort": "asc" }],
               query: {
                 bool: {
                   must: [

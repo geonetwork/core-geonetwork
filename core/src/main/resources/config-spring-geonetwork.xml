@@ -33,9 +33,10 @@
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
     ">
 
-  <context:property-placeholder location="${app.properties}"
-                                file-encoding="UTF-8"
-                                ignore-unresolvable="true" />
+  <context:property-placeholder location="${app.properties},file://#{systemEnvironment['geonetwork_dir']}/config/app.properties"
+                                ignore-unresolvable="true"
+                                ignore-resource-not-found="true"
+                                file-encoding="UTF-8"/>
 
   <context:annotation-config/>
   <bean id="ProfileManager" class="jeeves.component.ProfileManager" lazy-init="true"/>
@@ -237,6 +238,7 @@
     </property>
   </bean>
 
+  <bean id="FeedbackLanguages" class="org.fao.geonet.languages.FeedbackLanguages"/>
 
   <!-- Resource Storage -->
   <!-- geonetwork.store.type can be supplied
@@ -249,5 +251,5 @@
      s3      - AWS S3 storage (see config-store/config-s3.xml for more details)
      cmis    - CMIS storage (see config-store/config-cmis.xml for more details)
   -->
-  <import resource="config-store/config-${geonetwork.store.type:default}.xml"/>
+  <import resource="classpath*:/config-store/config-${geonetwork.store.type:default}.xml"/>
 </beans>

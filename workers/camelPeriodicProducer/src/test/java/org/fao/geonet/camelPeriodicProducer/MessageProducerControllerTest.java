@@ -31,6 +31,7 @@ import org.fao.geonet.domain.WfsHarvesterParamEntity;
 import org.fao.geonet.harvester.wfsfeatures.model.WFSHarvesterParameter;
 import org.fao.geonet.repository.MessageProducerRepository;
 import org.fao.geonet.repository.MetadataRepository;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -75,8 +76,6 @@ public class MessageProducerControllerTest {
     @Autowired
     MetadataSavedQueryApi savedQueryApi;
 
-    private QuartzComponent quartzComponent;
-
     @Autowired
     MessageProducerFactory messageProducerFactory;
 
@@ -84,9 +83,11 @@ public class MessageProducerControllerTest {
     public void init() throws Exception {
         testCamelNetwork.getContext().start();
         messageProducerFactory.routeBuilder = testCamelNetwork;
-        quartzComponent = new QuartzComponent(testCamelNetwork.getContext());
-        messageProducerFactory.quartzComponent = quartzComponent;
-        quartzComponent.start();
+    }
+
+    @After
+    public void destroy() {
+        messageProducerRepository.deleteAll();
     }
 
     @Test

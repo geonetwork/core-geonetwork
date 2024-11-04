@@ -1,19 +1,48 @@
 # Install, configure and start Elasticsearch
 
-## Manual installation
+## Installation options
 
-1. Download Elasticsearch (at least 7.6.2 for Geonetwork 4.0.x) from https://www.elastic.co/downloads/elasticsearch
-and copy to the ES module. eg. es/elasticsearch-7.6.2
- 
-2. Start ES using:
+This section describes several methods for configuring Elasticsearch for development.
 
-   ```shell script
-   ./bin/elasticsearch
+These configurations should not be used for a production deployment.
+
+### Docker installation (Recommended)
+
+1. Use docker pull to download the image (you can check version in the :file:`pom.xml` file):
+
+   ```
+   docker pull docker.elastic.co/elasticsearch/elasticsearch:8.14.3
+   ```
+
+2. Use docker run, leaving 9200 available:
+
+   ```
+   docker run -p 9200:9200 -p 9300:9300 \ 
+      -e "discovery.type=single-node" \
+      -e "xpack.security.enabled=false" \
+      -e "xpack.security.enrollment.enabled=false" \ 
+      docker.elastic.co/elasticsearch/elasticsearch:8.14.3
    ```
 
 3. Check that elasticsearch is running by visiting http://localhost:9200 in a browser
 
-## Maven installation
+### Docker compose installation
+
+1. Use docker compose with the provided [docker-compose.yml](docker-compose.yml):
+
+   ```
+   cd es
+   docker-compose up
+   ```
+
+3. Check that it is running using your browser:
+   
+   * Elasticsearch: http://localhost:9200
+   * Kibana: http://localhost:5601
+
+### Maven installation
+
+Maven installation ensure you always are using the ``es.version`` version specified in ``pom.xml``.
 
 1. Maven can take care of the installation steps:
 
@@ -30,37 +59,31 @@ and copy to the ES module. eg. es/elasticsearch-7.6.2
    ```
 3. Check that elasticsearch is running by visiting http://localhost:9200 in a browser
 
-## Docker installation
+## Manual installation
 
-1. Use docker pull to download the image (you can check version in the :file:`pom.xml` file):
+1. Download Elasticsearch 8.14.3 from https://www.elastic.co/downloads/elasticsearch
+and copy to the ES module, e.g., ``es/elasticsearch-8.14.3`
 
-   ```
-   docker pull docker.elastic.co/elasticsearch/elasticsearch:7.6.2
-   ```
+2. Disable the security
 
-2. Use docker run, leacing 9200 available:
-
-   ```
-   docker run -p 9200:9200 -p 9300:9300 -e "discovery.type=single-node" docker.elastic.co/elasticsearch/elasticsearch:7.6.2
-   ```
-
-3. Check that elasticsearch is running by visiting http://localhost:9200 in a browser
-
-## Docker compose installation
-
-1. Use docer compose with the provided [docker-compose.yml](docker-compose.yml):
+   Elasticsearch 8 has security enabled by default. To disable this configuration for development, update the file `config/elasticsearch.yml` adding at the end:
 
    ```
-   cd es
-   docker-compose up
+   xpack.security.enabled: false
+   xpack.security.enrollment.enabled: false
    ```
 
-3. Check that it is running using your browser:
-   
-   * Elasticsearch: http://localhost:9200
-   * Kabana: http://localhost:5601
+3. Start ES using:
+
+   ```shell script
+   ./bin/elasticsearch
+   ```
+
+4. Check that elasticsearch is running by visiting http://localhost:9200 in a browser
 
 # Configuration
+
+## Index management
 
 Optionally you can manually create index but they will be created by the catalogue when 
 the Elastic instance is available and if index does not exist.
@@ -104,7 +127,7 @@ Don't hesitate to propose a Pull Request with the new language.
 
 1. Configure ES to start on server startup. It is recommended to protect `gn-records` index from the Internet access.
 
-   * Note that for debian-based servers the current deb download (7.3.2) can be installed rather than installing manually and can be configured to run as a service using the instructions here: https://www.elastic.co/guide/en/elasticsearch/reference/current/starting-elasticsearch.html
+   * Note that for debian-based servers the current deb download (8.14.3) can be installed rather than installing manually and can be configured to run as a service using the instructions here: https://www.elastic.co/guide/en/elasticsearch/reference/current/starting-elasticsearch.html
 
 
 # Troubleshoot
@@ -145,3 +168,22 @@ field expansion for [*] matches too many fields, limit: 1024
 An option is to restrict `queryBase` to limit the number of field to query on. `any:(${any}) resourceTitleObject.default:(${any})^2` is a good default. Using `${any}` will probably trigger the error if the number of records is high.
 
 The other option is to increase `indices.query.bool.max_clause_count`.
+
+
+## Disk space threshold
+
+The server application will refuse to write new content unless there is enough free space available (by default 1/4 of your hard drive).
+
+To turn off this check:
+
+```
+ curl -XPUT http://localhost:9200/_cluster/settings -H 'Content-Type: application/json' -d '{ "transient" : { "cluster.routing.allocation.disk.threshold_enabled" : false } }' 
+```
+
+## Blocked by index read-only / allow delete
+
+To recover:
+
+```
+curl -XPUT -H "Content-Type: application/json" http://localhost:9200/_all/_settings -d '{"index.blocks.read_only_allow_delete": null}'
+```

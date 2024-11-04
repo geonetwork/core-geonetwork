@@ -92,7 +92,7 @@ public class MoveHarvesterSettingsToHigherNumber extends DatabaseMigrationTask {
         }
 
         private void loadChildren(Statement statement) throws SQLException {
-            final ResultSet resultSet2 = statement.executeQuery("SELECT * FROM Settings where parentId = " + originalId);
+            final ResultSet resultSet2 = statement.executeQuery("SELECT * FROM Settings where parentId = " + originalId); //NOSONAR
             try {
                 while (resultSet2.next()) {
                     children.add(new HarvesterSetting(id, resultSet2));
@@ -119,7 +119,7 @@ public class MoveHarvesterSettingsToHigherNumber extends DatabaseMigrationTask {
             for (HarvesterSetting child : children) {
                 child.delete(statement);
             }
-            statement.execute("DELETE FROM Settings WHERE id=" + originalId);
+            statement.execute("DELETE FROM Settings WHERE id=" + originalId); // NOSONAR
         }
     }
 }

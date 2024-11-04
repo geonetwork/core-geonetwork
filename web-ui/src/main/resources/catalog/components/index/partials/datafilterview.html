@@ -12,7 +12,13 @@
 
   <div class="tab-content" data-ng-show="currentLayer">
     <div role="tabpanel" class="tab-pane active" id="home">
-      <div data-gn-wfs-download="currentLayer" class="clearfix" data-map="map"></div>
+      <div
+        data-gn-wfs-download=""
+        data-typename="{{layer.getSource().getParams().LAYERS}}"
+        data-url="{{layer.get('url')}}"
+        class="clearfix"
+        data-map="map"
+      ></div>
 
       <div
         data-gn-wfs-filter-facets=""

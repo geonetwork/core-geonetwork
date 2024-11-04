@@ -172,8 +172,8 @@ public class PagesAPI {
 
         Optional<Page> page = pageRepository.findById(new PageIdentity(language, pageId));
 
-        if (!page.isPresent()) {
-            Page newPage = getEmptyHiddenDraftPage(pageProperties.getLanguage(), pageProperties.getPageId(), pageProperties.getLabel(), format);
+        if (page.isEmpty()) {
+            Page newPage = getEmptyHiddenDraftPage(pageProperties.getLanguage(), pageProperties.getPageId(), pageProperties.getLabel(), pageProperties.getIcon(), format);
             fillContent(data, link, content, newPage);
 
             if (section != null) {
@@ -201,6 +201,7 @@ public class PagesAPI {
         String newPageId = pageProperties.getPageId();
         Page.PageFormat format = pageProperties.getFormat();
         String newLabel = pageProperties.getLabel();
+        String newIcon = pageProperties.getIcon();
 
         checkValidLanguage(language);
 
@@ -214,7 +215,7 @@ public class PagesAPI {
 
         Optional<Page> page = pageRepository.findById(new PageIdentity(language, pageId));
 
-        if (!page.isPresent()) {
+        if (page.isEmpty()) {
             throw new ResourceNotFoundException("Can't update non existing page " + pageId + ".");
         }
         Page pageToUpdate = page.get();
@@ -238,7 +239,8 @@ public class PagesAPI {
                 format != null ? format : pageToUpdate.getFormat(),
                 pageProperties.getSections() != null ? pageProperties.getSections() : pageToUpdate.getSections(),
                 pageProperties.getStatus() != null ? pageProperties.getStatus() : pageToUpdate.getStatus(),
-                newLabel != null ? newLabel : pageToUpdate.getLabel());
+                newLabel != null ? newLabel : pageToUpdate.getLabel(),
+                newIcon != null ? newIcon : pageToUpdate.getIcon());
 
             pageRepository.save(pageCopy);
             pageRepository.delete(pageToUpdate);
@@ -247,6 +249,8 @@ public class PagesAPI {
             fillContent(null, link, content, pageToUpdate);
             pageToUpdate.setSections(pageProperties.getSections() != null ? pageProperties.getSections() : pageToUpdate.getSections());
             pageToUpdate.setStatus(pageProperties.getStatus() != null ? pageProperties.getStatus() : pageToUpdate.getStatus());
+            pageToUpdate.setLabel(newLabel);
+            pageToUpdate.setIcon(newIcon);
             pageRepository.save(pageToUpdate);
         }
 
@@ -338,7 +342,7 @@ public class PagesAPI {
 
         final Optional<Page> page = pageRepository.findById(new PageIdentity(language, pageId));
 
-        if (!page.isPresent()) {
+        if (page.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
 
@@ -521,7 +525,7 @@ public class PagesAPI {
         throws ResourceNotFoundException {
         final Optional<Page> page = pageRepository.findById(new PageIdentity(language, pageId));
 
-        if (!page.isPresent()) {
+        if (page.isEmpty()) {
             throw new ResourceNotFoundException("Page " + pageId + " not found");
         }
         return page.get();
@@ -530,9 +534,9 @@ public class PagesAPI {
     /**
      * @return An empty hidden draft Page
      */
-    protected Page getEmptyHiddenDraftPage(final String language, final String pageId, final String label, final Page.PageFormat format) {
+    protected Page getEmptyHiddenDraftPage(final String language, final String pageId, final String label, final String icon, final Page.PageFormat format) {
         final List<Page.PageSection> sections = new ArrayList<>();
-        return new Page(new PageIdentity(language, pageId), null, null, format, sections, Page.PageStatus.HIDDEN, label);
+        return new Page(new PageIdentity(language, pageId), null, null, format, sections, Page.PageStatus.HIDDEN, label, icon);
     }
 
     /**

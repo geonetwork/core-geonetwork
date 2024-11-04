@@ -23,17 +23,19 @@
 
 package org.fao.geonet.api.records;
 
+import co.elastic.clients.elasticsearch.core.SearchResponse;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jeeves.server.context.ServiceContext;
 import jeeves.services.ReadWriteController;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.elasticsearch.action.search.SearchResponse;
+import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
@@ -45,6 +47,7 @@ import org.fao.geonet.api.records.model.related.*;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.AbstractMetadata;
+import org.fao.geonet.domain.MetadataDraft;
 import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
@@ -59,6 +62,7 @@ import org.fao.geonet.utils.Xml;
 import org.jdom.Attribute;
 import org.jdom.Element;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -76,6 +80,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static org.fao.geonet.api.ApiParams.*;
+
 import static org.fao.geonet.kernel.mef.MEFLib.Version.Constants.MEF_V1_ACCEPT_TYPE;
 import static org.fao.geonet.kernel.mef.MEFLib.Version.Constants.MEF_V2_ACCEPT_TYPE;
 import static org.fao.geonet.kernel.search.EsSearchManager.FIELDLIST_UUID;
@@ -107,10 +112,12 @@ public class MetadataApi {
     @Autowired
     GeonetworkDataDirectory dataDirectory;
 
+    private ApplicationContext context;
+
     @Autowired
     EsSearchManager esSearchManager;
 
-    public static RelatedResponse getAssociatedResources(
+    public static RelatedResponse getRelatedResources(
         String language, ServiceContext context,
         AbstractMetadata md, RelatedItemType[] type, int start, int rows) throws Exception {
         // TODO PERF: ByPass XSL processing and create response directly
@@ -127,18 +134,23 @@ public class MetadataApi {
             .resolve("xslt/services/metadata/relation.xsl");
 
         final Element transform = Xml.transform(raw, relatedXsl);
-        return (RelatedResponse) Xml.unmarshall(transform, RelatedResponse.class);
+        RelatedResponse response = (RelatedResponse) Xml.unmarshall(transform, RelatedResponse.class);
+        return response;
+    }
+
+    public synchronized void setApplicationContext(ApplicationContext context) {
+        this.context = context;
     }
 
     @io.swagger.v3.oas.annotations.Operation(summary = "Get a metadata record",
-        description = "Depending on the accept header the appropriate formatter is used. " +
+        description = "Accept header should indicate which is the appropriate format " +
+            "to return. It could be text/html, application/xml, application/zip, ..." +
+            "If no appropriate Accept header found, the XML format is returned." +
+            "Depending on the accept header the appropriate formatter is used. " +
             "When requesting a ZIP, a MEF version 2 file is returned. " +
             "When requesting HTML, the default formatter is used.")
     @RequestMapping(value = "/{metadataUuid:.+}",
         method = RequestMethod.GET,
-        consumes = {
-            MediaType.ALL_VALUE
-        },
         produces = {
             MediaType.TEXT_HTML_VALUE,
             MediaType.APPLICATION_XML_VALUE,
@@ -151,25 +163,26 @@ public class MetadataApi {
             MediaType.ALL_VALUE
         })
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Return the record."),
-        @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW),
-        @ApiResponse(responseCode = "404", description = ApiParams.API_RESPONSE_RESOURCE_NOT_FOUND)
+        @ApiResponse(responseCode = "200", description = "Return the record.",
+            content = @Content(schema = @Schema(type = "string", format = "binary"))),
+        @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW,
+            content = {
+                @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(type = "string")),
+                @Content(mediaType = MediaType.APPLICATION_XML_VALUE, schema = @Schema(type = "string")),
+                @Content(mediaType = MediaType.APPLICATION_XHTML_XML_VALUE, schema = @Schema(type = "string"))
+            }),
+        @ApiResponse(responseCode = "404", description = ApiParams.API_RESPONSE_RESOURCE_NOT_FOUND,
+            content = {
+                @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(type = "string")),
+                @Content(mediaType = MediaType.APPLICATION_XML_VALUE, schema = @Schema(type = "string")),
+                @Content(mediaType = MediaType.APPLICATION_XHTML_XML_VALUE, schema = @Schema(type = "string"))
+            })
     })
     public String getRecord(
         @Parameter(description = API_PARAM_RECORD_UUID,
             required = true)
         @PathVariable
         String metadataUuid,
-        @Parameter(description = "Accept header should indicate which is the appropriate format " +
-            "to return. It could be text/html, application/xml, application/zip, ..." +
-            "If no appropriate Accept header found, the XML format is returned.",
-            required = true)
-        @RequestHeader(
-            value = HttpHeaders.ACCEPT,
-            defaultValue = MediaType.APPLICATION_XML_VALUE,
-            required = false
-        )
-        String acceptHeader,
         HttpServletResponse response,
         HttpServletRequest request
     )
@@ -180,26 +193,28 @@ public class MetadataApi {
             Log.debug(API.LOG_MODULE_NAME, e.getMessage(), e);
             throw new NotAllowedException(ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW);
         }
+
+        String acceptHeader = StringUtils.isBlank(request.getHeader(HttpHeaders.ACCEPT)) ? MediaType.APPLICATION_XML_VALUE : request.getHeader(HttpHeaders.ACCEPT);
         List<String> accept = Arrays.asList(acceptHeader.split(","));
 
         String defaultFormatter = "xsl-view";
-        String forwardResponsePrefix = "forward:";
-
         if (accept.contains(MediaType.TEXT_HTML_VALUE)
             || accept.contains(MediaType.APPLICATION_XHTML_XML_VALUE)
             || accept.contains("application/pdf")) {
-            return forwardResponsePrefix + (metadataUuid + "/formatters/" + defaultFormatter);
-        } else if (accept.contains(MediaType.APPLICATION_XML_VALUE)
-            || accept.contains(MediaType.APPLICATION_JSON_VALUE)) {
-            return forwardResponsePrefix + (metadataUuid + "/formatters/xml");
+            return "forward:" + (metadataUuid + "/formatters/" + defaultFormatter);
+        } else if (accept.contains(MediaType.APPLICATION_XML_VALUE)) {
+            return "forward:" + (metadataUuid + "/formatters/xml");
+        } else if (accept.contains(MediaType.APPLICATION_JSON_VALUE)) {
+            return "forward:" + (metadataUuid + "/formatters/json");
         } else if (accept.contains("application/zip")
             || accept.contains(MEF_V1_ACCEPT_TYPE)
             || accept.contains(MEF_V2_ACCEPT_TYPE)) {
-            return forwardResponsePrefix + (metadataUuid + "/formatters/zip");
+            return "forward:" + (metadataUuid + "/formatters/zip");
         } else {
             // FIXME this else is never reached because any of the accepted medias match one of the previous if conditions.
             response.setHeader(HttpHeaders.ACCEPT, MediaType.APPLICATION_XHTML_XML_VALUE);
-            return forwardResponsePrefix + (metadataUuid + "/formatters/" + defaultFormatter);
+            //response.sendRedirect(metadataUuid + "/formatters/" + defaultFormatter);
+            return "forward:" + (metadataUuid + "/formatters/" + defaultFormatter);
         }
     }
 
@@ -236,25 +251,18 @@ public class MetadataApi {
     }
 
 
-    @io.swagger.v3.oas.annotations.Operation(summary = "Get a metadata record as XML or JSON",
-        description = "")
-    @RequestMapping(value =
-        {
-            "/{metadataUuid}/formatters/xml",
-            "/{metadataUuid}/formatters/json"
-        },
+    @io.swagger.v3.oas.annotations.Operation(summary = "Get a metadata record as JSON")
+    @RequestMapping(value = "/{metadataUuid}/formatters/json",
         method = RequestMethod.GET,
-        produces = {
-            MediaType.APPLICATION_XML_VALUE,
-            MediaType.APPLICATION_JSON_VALUE
-        })
+        produces = MediaType.APPLICATION_JSON_VALUE
+    )
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Return the record."),
+        @ApiResponse(responseCode = "200", description = "Return the record.",
+            content = @Content(schema = @Schema(type = "string", format = "binary"))),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW)
     })
-    public
     @ResponseBody
-    Object getRecordAs(
+    public Object getRecordAsJson(
         @Parameter(
             description = API_PARAM_RECORD_UUID,
             required = true)
@@ -281,18 +289,93 @@ public class MetadataApi {
             required = false)
         @RequestParam(required = false, defaultValue = "true")
         boolean approved,
-        @RequestHeader(
-            value = HttpHeaders.ACCEPT,
-            defaultValue = MediaType.APPLICATION_XML_VALUE
-        )
-        String acceptHeader,
         HttpServletResponse response,
         HttpServletRequest request
     )
         throws Exception {
+        return getRecordAs(metadataUuid, addSchemaLocation, increasePopularity, withInfo, attachment, approved, response, request, MediaType.APPLICATION_JSON);
+    }
+
+    @io.swagger.v3.oas.annotations.Operation(summary = "Get a metadata record as XML")
+    @RequestMapping(value = "/{metadataUuid}/formatters/xml",
+        method = RequestMethod.GET,
+        produces = MediaType.APPLICATION_XML_VALUE
+    )
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Return the record.",
+            content = @Content(schema = @Schema(type = "string", format = "binary"))),
+        @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW)
+    })
+    @ResponseBody
+    public Object getRecordAsXml(
+        @Parameter(
+            description = API_PARAM_RECORD_UUID,
+            required = true)
+        @PathVariable
+        String metadataUuid,
+        @Parameter(description = "Add XSD schema location based on standard configuration " +
+            "(see schema-ident.xml).",
+            required = false)
+        @RequestParam(required = false, defaultValue = "true")
+        boolean addSchemaLocation,
+        @Parameter(description = "Increase record popularity",
+            required = false)
+        @RequestParam(required = false, defaultValue = "true")
+        boolean increasePopularity,
+        @Parameter(description = "Add geonet:info details",
+            required = false)
+        @RequestParam(required = false, defaultValue = "false")
+        boolean withInfo,
+        @Parameter(description = "Download as a file",
+            required = false)
+        @RequestParam(required = false, defaultValue = "false")
+        boolean attachment,
+        @Parameter(description = "Download the approved version",
+            required = false)
+        @RequestParam(required = false, defaultValue = "true")
+        boolean approved,
+        HttpServletResponse response,
+        HttpServletRequest request
+    )
+        throws Exception {
+        return getRecordAs(metadataUuid, addSchemaLocation, increasePopularity, withInfo, attachment, approved, response, request, MediaType.APPLICATION_XML);
+    }
+
+    /**
+     * Get records based on media type. Supports xml or json
+     * @return It will default to xml if the media type is not known.
+     */
+
+    /**
+     * Get records based on media type.
+     *
+     * @param metadataUuid       Record UUID.
+     * @param addSchemaLocation  Add XSD schema location based on standard configuration (see schema-ident.xml).
+     * @param increasePopularity Increase record popularity
+     * @param withInfo           Add geonet:info details
+     * @param attachment         Download as a file
+     * @param approved           Download the approved version
+     * @param response           object
+     * @param request            object
+     * @param mediaType          Supports xml or json - default to xml if the media type is not known.
+     * @return It will the object
+     * @throws Exception if record not found of permissions denied.
+     */
+    private Object getRecordAs(
+        String metadataUuid,
+        boolean addSchemaLocation,
+        boolean increasePopularity,
+        boolean withInfo,
+        boolean attachment,
+        boolean approved,
+        HttpServletResponse response,
+        HttpServletRequest request,
+        MediaType mediaType
+    )
+        throws Exception {
         AbstractMetadata metadata;
         try {
-            metadata = ApiUtils.canViewRecord(metadataUuid, request);
+            metadata = ApiUtils.canViewRecord(metadataUuid, approved, request);
         } catch (ResourceNotFoundException e) {
             Log.debug(API.LOG_MODULE_NAME, e.getMessage(), e);
             throw e;
@@ -313,11 +396,6 @@ public class MetadataApi {
 
         }
 
-        if (increasePopularity) {
-            metadataUtils.increasePopularity(context, metadata.getId() + "");
-        }
-
-
         boolean withValidationErrors = false;
         boolean keepXlinkAttributes = false;
         boolean forEditing = false;
@@ -328,30 +406,36 @@ public class MetadataApi {
         //ApiUtils.canViewRecord already filtered draft for non editors.
         if (approved) {
             mdId = String.valueOf(metadataRepository.findOneByUuid(metadata.getUuid()).getId());
+
+            // Only increase popularity for the no working copy
+            if (increasePopularity) {
+                dataManager.increasePopularity(context, mdId + "");
+            }
         }
 
         Element xml = withInfo ?
             dataManager.getMetadata(context, mdId, forEditing,
                 withValidationErrors, keepXlinkAttributes) :
-            metadataUtils.getMetadataNoInfo(context, mdId + "");
+            dataManager.getMetadataNoInfo(context, mdId + "");
 
         if (addSchemaLocation) {
             Attribute schemaLocAtt = schemaManager.getSchemaLocation(
                 metadata.getDataInfo().getSchemaId(), context);
 
-            if (schemaLocAtt != null && (xml.getAttribute(
+            if (schemaLocAtt != null) {
+                if (xml.getAttribute(
                     schemaLocAtt.getName(),
-                    schemaLocAtt.getNamespace()) == null)) {
+                    schemaLocAtt.getNamespace()) == null) {
                     xml.setAttribute(schemaLocAtt);
                     // make sure namespace declaration for schemalocation is present -
                     // remove it first (does nothing if not there) then add it
                     xml.removeNamespaceDeclaration(schemaLocAtt.getNamespace());
                     xml.addNamespaceDeclaration(schemaLocAtt.getNamespace());
-
+                }
             }
         }
 
-        boolean isJson = acceptHeader.contains(MediaType.APPLICATION_JSON_VALUE);
+        boolean isJson = MediaType.APPLICATION_JSON.equals(mediaType);
 
         String mode = (attachment) ? "attachment" : "inline";
         response.setHeader("Content-Disposition", String.format(
@@ -366,7 +450,7 @@ public class MetadataApi {
         summary = "Get a metadata record as ZIP",
         description = "Metadata Exchange Format (MEF) is returned. MEF is a ZIP file containing " +
             "the metadata as XML and some others files depending on the version requested. " +
-            "See http://geonetwork-opensource.org/manuals/trunk/eng/users/annexes/mef-format.html.")
+            "See https://docs.geonetwork-opensource.org/latest/annexes/mef-format/.")
     @RequestMapping(value = "/{metadataUuid}/formatters/zip",
         method = RequestMethod.GET,
         consumes = {
@@ -425,11 +509,6 @@ public class MetadataApi {
             required = false)
         @RequestParam(required = false, defaultValue = "true")
         boolean approved,
-        @RequestHeader(
-            value = HttpHeaders.ACCEPT,
-            defaultValue = "application/x-gn-mef-2-zip"
-        )
-        String acceptHeader,
         HttpServletResponse response,
         HttpServletRequest request
     )
@@ -443,7 +522,8 @@ public class MetadataApi {
         }
         Path stylePath = dataDirectory.getWebappDir().resolve(Geonet.Path.SCHEMAS);
         Path file = null;
-        ServiceContext context = ApiUtils.createServiceContext(request);
+        ServiceContext serviceContext = ApiUtils.createServiceContext(request);
+        String acceptHeader = StringUtils.isBlank(request.getHeader(HttpHeaders.ACCEPT)) ? "application/x-gn-mef-2-zip" : request.getHeader(HttpHeaders.ACCEPT);
         MEFLib.Version version = MEFLib.Version.find(acceptHeader);
         try {
             if (version == MEFLib.Version.V1) {
@@ -459,7 +539,7 @@ public class MetadataApi {
                 }
 
                 file = MEFLib.doExport(
-                    context, id, format.toString(),
+                    serviceContext, id, format.toString(),
                     skipUUID, withXLinksResolved, withXLinkAttribute, addSchemaLocation
                 );
                 response.setContentType(MEFLib.Version.Constants.MEF_V1_ACCEPT_TYPE);
@@ -470,8 +550,8 @@ public class MetadataApi {
                 if (withRelated) {
                     // Adding children in MEF file
 
-                    RelatedResponse related = getAssociatedResources(
-                        metadataUuid, null, 0, 100, request);
+                    RelatedResponse related = getRelatedResources(
+                        metadataUuid, null, approved, 0, 100, request);
                     uuidsToExport.addAll(getUuidsOfAssociatedRecords(related.getParent()));
                     uuidsToExport.addAll(getUuidsOfAssociatedRecords(related.getChildren()));
                     uuidsToExport.addAll(getUuidsOfAssociatedRecords(related.getDatasets()));
@@ -486,7 +566,7 @@ public class MetadataApi {
                 Log.info(Geonet.MEF, "Building MEF2 file with " + uuidsToExport.size()
                     + " records.");
 
-                file = MEFLib.doMEF2Export(context, uuidsToExport, format.toString(), false, stylePath, withXLinksResolved, withXLinkAttribute, false, addSchemaLocation, approved);
+                file = MEFLib.doMEF2Export(serviceContext, uuidsToExport, format.toString(), false, stylePath, withXLinksResolved, withXLinkAttribute, false, addSchemaLocation, approved);
 
                 response.setContentType(MEFLib.Version.Constants.MEF_V2_ACCEPT_TYPE);
             }
@@ -520,7 +600,7 @@ public class MetadataApi {
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW),
         @ApiResponse(responseCode = "404", description = ApiParams.API_RESPONSE_RESOURCE_NOT_FOUND)
     })
-    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<String> getRecordPopularity(
         @Parameter(description = API_PARAM_RECORD_UUID,
             required = true)
@@ -532,6 +612,11 @@ public class MetadataApi {
         AbstractMetadata metadata;
         try {
             metadata = ApiUtils.canViewRecord(metadataUuid, request);
+
+            // If the workflow is enabled, don't use the working copy to increase the popularity
+            if (metadata instanceof MetadataDraft) {
+                metadata = metadataRepository.findOneByUuid(metadataUuid);
+            }
         } catch (ResourceNotFoundException e) {
             Log.debug(API.LOG_MODULE_NAME, e.getMessage(), e);
             throw e;
@@ -566,6 +651,11 @@ public class MetadataApi {
         AbstractMetadata metadata;
         try {
             metadata = ApiUtils.canViewRecord(metadataUuid, request);
+
+            // If the workflow is enabled, don't use the working copy to increase the popularity
+            if (metadata instanceof MetadataDraft) {
+                metadata = metadataRepository.findOneByUuid(metadataUuid);
+            }
         } catch (ResourceNotFoundException e) {
             Log.debug(API.LOG_MODULE_NAME, e.getMessage(), e);
             throw e;
@@ -573,9 +663,9 @@ public class MetadataApi {
             Log.debug(API.LOG_MODULE_NAME, e.getMessage(), e);
             throw new NotAllowedException(ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW);
         }
-        ServiceContext context = ApiUtils.createServiceContext(request);
+        ServiceContext serviceContext = ApiUtils.createServiceContext(request);
 
-        metadataUtils.increasePopularity(context, metadata.getId() + "");
+        dataManager.increasePopularity(serviceContext, metadata.getId() + "");
 
         return new ResponseEntity<>(metadata.getDataInfo().getPopularity() + "",
             HttpStatus.CREATED);
@@ -585,7 +675,7 @@ public class MetadataApi {
         summary = "Get record related resources",
         description = "Retrieve related services, datasets, onlines, thumbnails, sources, ... " +
             "to this records.<br/>" +
-            "<a href='http://geonetwork-opensource.org/manuals/trunk/eng/users/user-guide/associating-resources/index.html'>More info</a>")
+            "<a href='https://geonetwork-opensource.org/manuals/trunk/eng/users/user-guide/associating-resources/index.html'>More info</a>")
     @RequestMapping(value = "/{metadataUuid:.+}/related",
         method = RequestMethod.GET,
         produces = {
@@ -598,7 +688,7 @@ public class MetadataApi {
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW)
     })
     @ResponseBody
-    public RelatedResponse getAssociatedResources(
+    public RelatedResponse getRelatedResources(
         @Parameter(
             description = API_PARAM_RECORD_UUID,
             required = true)
@@ -609,6 +699,9 @@ public class MetadataApi {
         )
         @RequestParam(defaultValue = "")
         RelatedItemType[] type,
+        @Parameter(description = "Use approved version or not", example = "true")
+        @RequestParam(required = false, defaultValue = "true")
+        Boolean approved,
         @Parameter(description = "Start offset for paging. Default 1. Only applies to related metadata records (ie. not for thumbnails).",
             required = false
         )
@@ -621,16 +714,16 @@ public class MetadataApi {
 
         AbstractMetadata md;
         try {
-            md = ApiUtils.canViewRecord(metadataUuid, request);
+            md = ApiUtils.canViewRecord(metadataUuid, approved, request);
         } catch (SecurityException e) {
             Log.debug(API.LOG_MODULE_NAME, e.getMessage(), e);
             throw new NotAllowedException(ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW);
         }
 
         String language = languageUtils.getIso3langCode(request.getLocales());
-        final ServiceContext context = ApiUtils.createServiceContext(request);
+        final ServiceContext serviceContext = ApiUtils.createServiceContext(request);
 
-        return getAssociatedResources(language, context, md, type, start, rows);
+        return getRelatedResources(language, serviceContext, md, type, start, rows);
     }
 
     @io.swagger.v3.oas.annotations.Operation(
@@ -654,6 +747,9 @@ public class MetadataApi {
             required = true)
         @PathVariable
         String metadataUuid,
+        @Parameter(description = "Use approved version or not", example = "true")
+        @RequestParam(required = false, defaultValue = "true")
+        Boolean approved,
         HttpServletRequest request) throws ResourceNotFoundException {
 
         RelatedItemType[] type = {RelatedItemType.fcats};
@@ -663,8 +759,8 @@ public class MetadataApi {
         Map<String, String[]> decodeMap = new HashMap<>();
 
         try {
-            RelatedResponse related = getAssociatedResources(
-                metadataUuid, type, 0, 100, request);
+            RelatedResponse related = getRelatedResources(
+                metadataUuid, type, approved, 0, 100, request);
 
             if (isIncludedAttributeTable(related.getFcats())) {
                 // TODO: Make consistent with document in index? and add codelists
@@ -758,7 +854,7 @@ public class MetadataApi {
                 FIELDLIST_UUID,
                 0, 5);
 
-            metadataWithSameTitle = queryResult.getHits().getHits().length != 0;
+            metadataWithSameTitle = !queryResult.hits().hits().isEmpty();
         } catch (Exception ex) {
             Log.error(API.LOG_MODULE_NAME, ex.getMessage(), ex);
         }
