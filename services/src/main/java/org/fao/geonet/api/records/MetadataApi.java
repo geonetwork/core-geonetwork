@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2023 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2024 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -23,9 +23,6 @@
 
 package org.fao.geonet.api.records;
 
-import co.elastic.clients.elasticsearch.core.SearchResponse;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -83,7 +80,6 @@ import static org.fao.geonet.api.ApiParams.*;
 
 import static org.fao.geonet.kernel.mef.MEFLib.Version.Constants.MEF_V1_ACCEPT_TYPE;
 import static org.fao.geonet.kernel.mef.MEFLib.Version.Constants.MEF_V2_ACCEPT_TYPE;
-import static org.fao.geonet.kernel.search.EsSearchManager.FIELDLIST_UUID;
 
 @RequestMapping(value = {
     "/{portal}/api/records"
@@ -789,23 +785,24 @@ public class MetadataApi {
 
     }
 
-    @io.swagger.v3.oas.annotations.Operation(summary = "Check if metadata title is duplicated",
-        description = "Verifies if the metadata title is in use.")
-    @PostMapping(value = "/{metadataUuid:.+}/checkDuplicatedTitle",
+    @io.swagger.v3.oas.annotations.Operation(summary = "Check if metadata field value is duplicated in another metadata",
+        description = "Verifies if a metadata field value is in use. Fields supported: title (title), " +
+            "alternate title (altTitle) or resource identifier (identifier)")
+    @PostMapping(value = "/{metadataUuid:.+}/checkDuplicatedFieldValue",
         produces = {MediaType.APPLICATION_JSON_VALUE})
     @PreAuthorize("hasAuthority('Editor')")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Return true if the title is duplicated or false in other case."),
+        @ApiResponse(responseCode = "200", description = "Return true if the field value is duplicated in another metadata or false in other case."),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW)
     })
-    public ResponseEntity<Boolean> checkMetadataTitleDuplicated(
+    public ResponseEntity<Boolean> checkDuplicatedFieldValue(
         @Parameter(description = API_PARAM_RECORD_UUID,
             required = true)
         @PathVariable
         String metadataUuid,
-        @Parameter(description = "Metadata title to check",
+        @Parameter(description = "Metadata field information to check",
             required = true)
-        @RequestBody String title,
+        @RequestBody DuplicatedValueDto duplicatedValueDto,
         HttpServletRequest request
     ) throws Exception {
         try {
@@ -815,7 +812,18 @@ public class MetadataApi {
             throw new NotAllowedException(ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW);
         }
 
-        boolean uuidsWithSameTitle = isMetadataTitleExistingInOtherRecords(title, metadataUuid);
+        List<String> validFields = Arrays.asList("title", "altTitle", "identifier");
+
+        if (!validFields.contains(duplicatedValueDto.getField())) {
+            throw new IllegalArgumentException(String.format("A valid field name is required:", String.join(",", validFields)));
+        }
+
+        if (StringUtils.isEmpty(duplicatedValueDto.getValue())) {
+            throw new IllegalArgumentException("A non-empty value is required.");
+        }
+
+
+        boolean uuidsWithSameTitle = MetadataUtils.isMetadataFieldValueExistingInOtherRecords(duplicatedValueDto.getValue(), duplicatedValueDto.getField(), metadataUuid);
         return ResponseEntity.ok(uuidsWithSameTitle);
     }
 
@@ -828,36 +836,24 @@ public class MetadataApi {
             && fcat.getItem().get(0).getFeatureType().getAttributeTable().getElement() != null;
     }
 
+    private static class DuplicatedValueDto {
+        private String field;
+        private String value;
 
-    /**
-     * Check if other metadata records exist apart from the one with {code}metadataUuidToExclude{code} with
-     * {code}metadataTitle{code} title in the catalogue.
-     *
-     * @param metadataTitle         Metadata title to check.
-     * @param metadataUuidToExclude Metadata identifier to exclude from the search.
-     * @return A list of metadata uuids that have the same metadata title.
-     */
-    private boolean isMetadataTitleExistingInOtherRecords(String metadataTitle, String metadataUuidToExclude) {
-        boolean metadataWithSameTitle = false;
-        String jsonQuery = " {" +
-            "       \"query_string\": {" +
-            "       \"query\": \"+resourceTitleObject.\\\\*.keyword:\\\"%s\\\" -uuid:\\\"%s\\\"\"" +
-            "       }" +
-            "}";
-
-        ObjectMapper objectMapper = new ObjectMapper();
-        try {
-            JsonNode esJsonQuery = objectMapper.readTree(String.format(jsonQuery, metadataTitle, metadataUuidToExclude));
-
-            final SearchResponse queryResult = esSearchManager.query(
-                esJsonQuery,
-                FIELDLIST_UUID,
-                0, 5);
-
-            metadataWithSameTitle = !queryResult.hits().hits().isEmpty();
-        } catch (Exception ex) {
-            Log.error(API.LOG_MODULE_NAME, ex.getMessage(), ex);
+        public String getField() {
+            return field;
         }
-        return metadataWithSameTitle;
+
+        public void setField(String field) {
+            this.field = field;
+        }
+
+        public String getValue() {
+            return value;
+        }
+
+        public void setValue(String value) {
+            this.value = value;
+        }
     }
 }

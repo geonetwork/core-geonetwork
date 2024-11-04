@@ -545,43 +545,59 @@
 
   /**
    * @ngdoc directive
-   * @name gn_fields.directive:gnDuplicatedMetadataTitleChecker
+   * @name gn_fields.directive:gnDuplicatedMetadataValueChecker
    *
    * @description
-   * Checks if the associated control value exists in another metadata record title.
+   * Checks if the associated control value exists in another metadata record.
+   * Valid field keys:
+   *   - title: Metadata title.
+   *   - altTitle: Metadata alternative title.
+   *   - identifier: Metadata resource identifier.
    * Configure in your metadata schema config-editor.xml the usage of this directive
    * for the title element. For example, for iso19139:
    * <fields>
    *   ...
-   *   <for name="gmd:title" use="data-gn-duplicated-metadata-title-checker" />
+   *  <for name="gmd:alternateTitle" use="data-gn-duplicated-metadata-value-checker">
+   *       <directiveAttributes
+   *         data-field-name="ResourceName"
+   *         data-field-key="altTitle" />
    */
-  module.directive("gnDuplicatedMetadataTitleChecker", [
+  module.directive("gnDuplicatedMetadataValueChecker", [
     "gnCurrentEdit",
     "$http",
     "$compile",
-    function (gnCurrentEdit, $http, $compile) {
+    "$translate",
+    function (gnCurrentEdit, $http, $compile, $translate) {
       return {
         restrict: "A",
-        scope: {},
+        scope: {
+          fieldKey: "@" // Elasticsearch field name. Allowed values: title (Metadata title), altTitle (Metadata alternate title), identifier (Resource identifier)
+        },
         link: function (scope, element, attrs) {
+          var duplicatedFieldNameMessage = $translate.instant(
+            "metadataDuplicatedField-" + scope.fieldKey
+          );
+
           var messageTemplate =
             "<p class='help-block' " +
             "style='color: #d9534f' " +
-            "data-ng-show='duplicatedTitle && !hiddenControl' " +
-            "data-translate>metadataDuplicatedTitle</p>";
+            "data-ng-show='duplicatedValue && !hiddenControl' " +
+            "data-translate>" +
+            duplicatedFieldNameMessage +
+            "</p>";
           var messageTemplateCompiled = $compile(messageTemplate)(scope);
 
-          var messageTarget = element.context;
+          var messageTarget = document.getElementById(element[0].id);
           element.blur(function () {
-            if (messageTarget.value !== scope.metadataTitle) {
-              scope.metadataTitle = messageTarget.value;
-              scope.checkTitle(scope.metadataTitle, scope.metadataUuid);
+            if (messageTarget.value !== scope.metadataFieldValue) {
+              scope.metadataFieldValue = messageTarget.value;
+              scope.checkField(scope.metadataFieldValue, scope.metadataUuid);
             }
           });
 
           scope.metadataUuid = gnCurrentEdit.uuid;
-          scope.metadataTitle = messageTarget.value;
-          scope.duplicatedTitle = false;
+          scope.metadataFieldValue = messageTarget.value;
+          scope.duplicatedValue = false;
           scope.hiddenControl = false;
 
           element.after(messageTemplateCompiled);
@@ -602,18 +618,28 @@
             characterData: false
           });
 
-          scope.checkTitle = function (metadataTitle, metadataUuid) {
+          scope.checkField = function (fieldValue, metadataUuid) {
+            if (fieldValue === "") {
+              scope.duplicatedValue = false;
+              return;
+            }
+
+            var postBody = {
+              field: scope.fieldKey,
+              value: fieldValue
+            };
+
             $http
               .post(
-                "../api/records/" + metadataUuid + "/checkDuplicatedTitle",
-                metadataTitle
+                "../api/records/" + metadataUuid + "/checkDuplicatedFieldValue",
+                postBody
               )
               .then(function (response) {
-                scope.duplicatedTitle = response.data === true;
+                scope.duplicatedValue = response.data === true;
               });
           };
 
-          scope.checkTitle(scope.metadataTitle, scope.metadataUuid);
+          scope.checkField(scope.metadataFieldValue, scope.metadataUuid);
         }
       };
     }
