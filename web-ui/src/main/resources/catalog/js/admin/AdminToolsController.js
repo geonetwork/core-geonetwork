@@ -271,22 +271,6 @@
         );
       };
 
-      $scope.commitIndexChanges = function (dropFirst) {
-        return $http.put("../api/site/index/commit").then(
-          function (response) {
-            checkIsIndexing();
-          },
-          function (response) {
-            $rootScope.$broadcast("StatusUpdated", {
-              title: $translate.instant("indexCommitError"),
-              error: response.data,
-              timeout: 0,
-              type: "danger"
-            });
-          }
-        );
-      };
-
       $scope.clearJsCache = function () {
         return $http.get("../../static/wroAPI/reloadModel").then(function (response) {
           $http.get("../../static/wroAPI/reloadCache").then(function (response) {
