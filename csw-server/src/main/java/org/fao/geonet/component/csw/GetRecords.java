@@ -44,6 +44,7 @@ import org.fao.geonet.kernel.csw.services.AbstractOperation;
 import org.fao.geonet.kernel.csw.services.getrecords.FieldMapper;
 import org.fao.geonet.kernel.csw.services.getrecords.SearchController;
 import org.fao.geonet.kernel.csw.services.getrecords.SortByParser;
+import org.fao.geonet.kernel.search.index.BatchOpsMetadataReindexer;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.CustomElementSetRepository;
@@ -129,10 +130,9 @@ public class GetRecords extends AbstractOperation implements CatalogService {
 
         // Return exception is indexing.
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-        DataManager dataManager = gc.getBean(DataManager.class);
         SettingManager settingsManager = gc.getBean(SettingManager.class);
         if (!settingsManager.getValueAsBool(SYSTEM_CSW_ENABLEWHENINDEXING) &&
-            dataManager.isIndexing()) {
+            BatchOpsMetadataReindexer.isIndexing()) {
             throw new RuntimeException("Catalog is indexing records, retry later.");
         }
 

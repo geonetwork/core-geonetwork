@@ -74,13 +74,6 @@ public interface IMetadataIndexer {
     void batchIndexInThreadPool(ServiceContext context, List<?> metadataIds);
 
     /**
-     * Is the platform currently indexing?
-     *
-     * @return
-     */
-    boolean isIndexing();
-
-    /**
      * Index the list of records passed as parameter in order.
      *
      * @param metadataIds

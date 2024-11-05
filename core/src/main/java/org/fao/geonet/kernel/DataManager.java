@@ -155,11 +155,6 @@ public class DataManager {
     }
 
     @Deprecated
-    public boolean isIndexing() {
-        return metadataIndexer.isIndexing();
-    }
-
-    @Deprecated
     public void indexMetadata(final List<String> metadataIds) throws Exception {
         metadataIndexer.indexMetadata(metadataIds);
     }

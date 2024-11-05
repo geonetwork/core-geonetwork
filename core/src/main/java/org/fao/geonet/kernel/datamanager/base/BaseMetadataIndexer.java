@@ -290,11 +290,6 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
     }
 
     @Override
-    public boolean isIndexing() {
-        return searchManager.isIndexing();
-    }
-
-    @Override
     public void indexMetadata(final List<String> metadataIds) throws Exception {
         try (BatchingIndexSubmittor indexSubmittor = new BatchingIndexSubmittor(metadataIds.size())) {
             for (String metadataId : metadataIds) {

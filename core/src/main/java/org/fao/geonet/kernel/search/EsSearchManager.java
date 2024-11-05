@@ -904,11 +904,6 @@ public class EsSearchManager implements ISearchManager {
             fieldValue);
     }
 
-    public boolean isIndexing() {
-        // TODO this needs a new metric
-        return false;
-    }
-
     public boolean isIndexWritable(String indexName) throws IOException, ElasticsearchException {
         String indexBlockRead = "index.blocks.read_only_allow_delete";
 

@@ -180,12 +180,9 @@ public class BaseMetadataManager implements IMetadataManager {
     /**
      * Refresh index if needed. Can also be called after GeoNetwork startup in
      * order to rebuild the lucene index
-     * t
      *
-     * @param force        Force reindexing all from scratch
-     * @param asynchronous
      **/
-    public void synchronizeDbWithIndex(ServiceContext context, Boolean force, Boolean asynchronous) throws Exception {
+    public void synchronizeDbWithIndex(ServiceContext context) throws Exception {
 
         // get lastchangedate of all metadata in index
         Map<String, String> docs = searchManager.getDocsChangeDate();
@@ -226,7 +223,7 @@ public class BaseMetadataManager implements IMetadataManager {
                     LOGGER_DATA_MANAGER.debug("- idxLastChange: {}", idxLastChange);
 
                     // date in index contains 't', date in DBMS contains 'T'
-                    if (force || !idxLastChange.equalsIgnoreCase(lastChange)) {
+                    if (!idxLastChange.equalsIgnoreCase(lastChange)) {
                         LOGGER_DATA_MANAGER.debug("-  will be indexed");
                         toIndex.add(id);
                     }
@@ -240,18 +237,14 @@ public class BaseMetadataManager implements IMetadataManager {
 
         // if anything to index then schedule it to be done after servlet is
         // up so that any links to local fragments are resolvable
-        if (toIndex.size() > 0) {
-            if (asynchronous) {
-                Set<Integer> integerList = toIndex.stream().map(Integer::parseInt).collect(Collectors.toSet());
-                new BatchOpsMetadataReindexer(
-                    context.getBean(DataManager.class),
-                    integerList).process(settingManager.getSiteId(), false);
-            } else {
-                metadataIndexer.batchIndexInThreadPool(context, toIndex);
-            }
+        if (!toIndex.isEmpty()) {
+            Set<Integer> integerList = toIndex.stream().map(Integer::parseInt).collect(Collectors.toSet());
+            new BatchOpsMetadataReindexer(
+                context.getBean(DataManager.class),
+                integerList).process(settingManager.getSiteId(), false);
         }
 
-        if (docs.size() > 0) { // anything left?
+        if (!docs.isEmpty()) { // anything left?
             LOGGER_DATA_MANAGER.debug("INDEX HAS RECORDS THAT ARE NOT IN DB:");
         }
 
