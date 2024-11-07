@@ -419,6 +419,7 @@
   "staticPageFormat-TEXT": "Plain text content",
   "staticPageStatus-HIDDEN": "Visible only to the administrator",
   "staticPageStatus-PRIVATE": "Visible to logged users",
+  "staticPageStatus-GROUPS": "Visible to users belonging to the groups",
   "staticPageStatus-PUBLIC": "Visible to everyone",
   "pageLink": "Link",
   "pageSection-help": "Currently, the default UI view only supports TOP and FOOTER values. Custom UI views can make use of additional values.",
