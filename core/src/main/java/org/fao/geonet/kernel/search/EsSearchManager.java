@@ -24,6 +24,7 @@
 package org.fao.geonet.kernel.search;
 
 import co.elastic.clients.elasticsearch._types.ElasticsearchException;
+import co.elastic.clients.elasticsearch._types.Refresh;
 import co.elastic.clients.elasticsearch._types.SortOptions;
 import co.elastic.clients.elasticsearch.core.*;
 import co.elastic.clients.elasticsearch.core.bulk.BulkOperation;
@@ -381,6 +382,7 @@ public class EsSearchManager implements ISearchManager {
         BulkRequest bulkRequest = BulkRequest.of(
             b -> b.index(defaultIndex)
                 .operations(bulkOperationList)
+                .refresh(Refresh.True)
         );
 
         return client.getClient().bulk(bulkRequest);
