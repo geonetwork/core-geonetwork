@@ -128,13 +128,14 @@ Ce schéma est également composé des normes :
   -->
   <filters xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0">
     <!--
-    All elemenets having a nilReason attribute
+    All elements having a nilReason attribute
     set to withheld, then users needs to have
     the edit privilege in order to be able to see
     the information. When filtered the element is
     preserved but with no content in.
     -->
-    <filter xpath=".//*[@gco:nilReason='withheld']"
+    <filter xpath=".//*[@gco:nilReason = 'withheld']"
+            jsonpath="$.*[?(@.nilReason == 'withheld')]"
             ifNotOperation="editing">
       <keepMarkedElement gco:nilReason="withheld"/>
     </filter>
