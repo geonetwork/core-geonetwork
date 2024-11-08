@@ -157,7 +157,12 @@
 
             baseUrl = baseUrl.replace("{{version}}", scope.applicationVersion);
 
-            var helpPageUrl = baseUrl + "/" + page;
+            var helpPageUrl;
+            if (baseUrl.includes("{{section}}")) {
+              helpPageUrl = baseUrl.replace("{{section}}", page);
+            } else {
+              helpPageUrl = baseUrl + "/" + page;
+            }
 
             testAndOpen(helpPageUrl).then(
               function () {},
@@ -165,7 +170,12 @@
                 var baseUrl = scope.helpBaseUrl
                   .replace("/{{lang}}", "")
                   .replace("{{version}}", scope.applicationVersion);
-                var helpPageUrl = baseUrl + "/" + page;
+                var helpPageUrl;
+                if (baseUrl.includes("{{section}}")) {
+                  helpPageUrl = baseUrl.replace("{{section}}", page);
+                } else {
+                  helpPageUrl = baseUrl + "/" + page;
+                }
 
                 testAndOpen(helpPageUrl);
               }
