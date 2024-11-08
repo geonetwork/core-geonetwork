@@ -301,7 +301,7 @@ public class EsHTTPProxy {
     @ResponseStatus(value = HttpStatus.OK)
     @ResponseBody
     public void search(
-        @RequestParam(defaultValue = SelectionManager.SELECTION_METADATA)
+        @RequestParam(defaultValue = SelectionManager.SELECTION_BUCKET)
         String bucket,
         @Parameter(description = "Type of related resource. If none, no associated resource returned.",
             required = false
@@ -387,7 +387,7 @@ public class EsHTTPProxy {
     @PreAuthorize("hasAuthority('Administrator')")
     @ResponseBody
     public void call(
-        @RequestParam(defaultValue = SelectionManager.SELECTION_METADATA)
+        @RequestParam(defaultValue = SelectionManager.SELECTION_BUCKET)
         String bucket,
         @Parameter(description = "'_search' for search service.")
         @PathVariable String endPoint,
