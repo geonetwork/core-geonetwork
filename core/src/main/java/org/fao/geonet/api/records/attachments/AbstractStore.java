@@ -158,8 +158,9 @@ public abstract class AbstractStore implements Store {
     }
 
     protected String getFilenameFromHeader(final URL fileUrl) throws IOException {
-        HttpURLConnection connection = (HttpURLConnection) fileUrl.openConnection();
+        HttpURLConnection connection = null;
         try {
+            connection = (HttpURLConnection) fileUrl.openConnection();
             connection.setRequestMethod("HEAD");
             connection.connect();
             String contentDisposition = connection.getHeaderField("Content-Disposition");
@@ -173,7 +174,9 @@ public abstract class AbstractStore implements Store {
             log.error("Error retrieving resource filename from header", e);
             return null;
         } finally {
-            connection.disconnect();
+            if (connection != null) {
+                connection.disconnect();
+            }
         }
     }
 
