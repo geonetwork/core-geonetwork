@@ -76,7 +76,9 @@
         <!--     Removing for now, because if you close open popup
    the title disappear. <h3 class="popover-title">{{cnts[0].role | translate}}</h3>-->
         <div data-ng-repeat="c in cnts | orderBy:'organisation'">
-          <label class="visible-print" data-ng-if="::c.website" data-translate="">mdWebsite</label>
+          <label class="visible-print" data-ng-if="::c.website" data-translate=""
+            >mdWebsite</label
+          >
           <a data-ng-href="{{::c.website}}" data-ng-if="::c.website">
             <i class="fa fa-fw fa-link"></i>
             {{c.organisation}}
