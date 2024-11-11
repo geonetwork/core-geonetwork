@@ -41,6 +41,7 @@ import org.fao.geonet.kernel.metadata.StatusActions;
 import org.fao.geonet.kernel.metadata.StatusActionsFactory;
 import org.fao.geonet.kernel.search.EsSearchManager;
 import org.fao.geonet.kernel.search.IndexingMode;
+import org.fao.geonet.kernel.search.submission.DirectDeletionSubmittor;
 import org.fao.geonet.kernel.search.submission.DirectIndexSubmittor;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.*;
@@ -652,7 +653,7 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
 
                 // --- remove metadata
                 xmlSerializer.delete(id, ServiceContext.get());
-                searchManager.delete(String.format("+id:%s", id));
+                searchManager.deleteById(id, DirectDeletionSubmittor.INSTANCE);
 
                 // Unset METADATA_EDITING_CREATED_DRAFT flag
                 context.getUserSession().removeProperty(Geonet.Session.METADATA_EDITING_CREATED_DRAFT);

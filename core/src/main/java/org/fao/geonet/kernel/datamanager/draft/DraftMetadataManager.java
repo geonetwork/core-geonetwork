@@ -32,6 +32,7 @@ import org.fao.geonet.domain.MetadataSourceInfo;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.kernel.datamanager.base.BaseMetadataManager;
+import org.fao.geonet.kernel.search.submission.IDeletionSubmittor;
 import org.fao.geonet.repository.MetadataDraftRepository;
 import org.fao.geonet.repository.PathSpec;
 import org.fao.geonet.repository.Updater;
@@ -69,7 +70,7 @@ public class DraftMetadataManager extends BaseMetadataManager implements IMetada
      * Removes a metadata.
      */
     @Override
-    public void deleteMetadata(ServiceContext context, String metadataId) throws Exception {
+    public void deleteMetadata(ServiceContext context, String metadataId, IDeletionSubmittor submittor) throws Exception {
         AbstractMetadata findOne = metadataUtils.findOne(metadataId);
 
         if (findOne != null) {
@@ -89,7 +90,7 @@ public class DraftMetadataManager extends BaseMetadataManager implements IMetada
         }
 
         // --- update search criteria
-        getSearchManager().delete(String.format("+id:%s", metadataId));
+        getSearchManager().deleteById(metadataId, submittor);
         // _entityManager.flush();
         // _entityManager.clear();
     }

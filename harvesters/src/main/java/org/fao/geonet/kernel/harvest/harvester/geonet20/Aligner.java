@@ -43,6 +43,7 @@ import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
 import org.fao.geonet.kernel.harvest.harvester.UUIDMapper;
 import org.fao.geonet.kernel.search.IndexingMode;
 import org.fao.geonet.kernel.search.submission.DirectIndexSubmittor;
+import org.fao.geonet.kernel.search.submission.batch.BatchingDeletionSubmittor;
 import org.fao.geonet.repository.MetadataCategoryRepository;
 import org.fao.geonet.repository.specification.MetadataCategorySpecs;
 import org.fao.geonet.utils.XmlRequest;
@@ -105,19 +106,21 @@ public class Aligner extends AbstractAligner<GeonetParams> {
         //-----------------------------------------------------------------------
         //--- remove old metadata
 
-        for (String uuid : localUuids.getUUIDs()) {
-            if (cancelMonitor.get()) {
-                return this.result;
-            }
+        try (BatchingDeletionSubmittor submittor = new BatchingDeletionSubmittor()) {
+            for (String uuid : localUuids.getUUIDs()) {
+                if (cancelMonitor.get()) {
+                    return this.result;
+                }
 
-            if (!exists(mdList, uuid)) {
-                String id = localUuids.getID(uuid);
+                if (!exists(mdList, uuid)) {
+                    String id = localUuids.getID(uuid);
 
-                if (log.isDebugEnabled()) log.debug("  - Removing old metadata with id=" + id);
-                metadataManager.deleteMetadata(context, id);
+                    if (log.isDebugEnabled()) log.debug("  - Removing old metadata with id=" + id);
+                    metadataManager.deleteMetadata(context, id, submittor);
 
-                metadataManager.flush();
-                this.result.locallyRemoved++;
+                    metadataManager.flush();
+                    this.result.locallyRemoved++;
+                }
             }
         }
         //-----------------------------------------------------------------------

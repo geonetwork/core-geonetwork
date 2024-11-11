@@ -28,7 +28,6 @@ import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.Logger;
 import org.fao.geonet.arcgis.ArcSDEConnection;
-import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
@@ -42,8 +41,8 @@ import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
 import org.fao.geonet.kernel.harvest.harvester.GroupMapper;
 import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
 import org.fao.geonet.kernel.search.IndexingMode;
-import org.fao.geonet.kernel.search.submission.BatchingIndexSubmittor;
 import org.fao.geonet.kernel.search.submission.DirectIndexSubmittor;
+import org.fao.geonet.kernel.search.submission.batch.BatchingDeletionSubmittor;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
 import org.fao.geonet.repository.specification.MetadataSpecs;
@@ -308,15 +307,17 @@ public class ArcSDEHarvester extends AbstractHarvester<HarvestResult, ArcSDEPara
         //
         Set<Integer> idsResultHs = Sets.newHashSet(idsForHarvestingResult);
         List<Integer> existingMetadata = context.getBean(MetadataRepository.class).findIdsBy((Specification<Metadata>) MetadataSpecs.hasHarvesterUuid(params.getUuid()));
-        for (Integer existingId : existingMetadata) {
+        try (BatchingDeletionSubmittor submittor = new BatchingDeletionSubmittor()) {
+            for (Integer existingId : existingMetadata) {
 
-            if (cancelMonitor.get()) {
-                return;
-            }
-            if (!idsResultHs.contains(existingId)) {
-                log.debug("  Removing: " + existingId);
-                metadataManager.deleteMetadata(context, existingId.toString());
-                result.locallyRemoved++;
+                if (cancelMonitor.get()) {
+                    return;
+                }
+                if (!idsResultHs.contains(existingId)) {
+                    log.debug("  Removing: " + existingId);
+                    metadataManager.deleteMetadata(context, existingId.toString(), submittor);
+                    result.locallyRemoved++;
+                }
             }
         }
     }

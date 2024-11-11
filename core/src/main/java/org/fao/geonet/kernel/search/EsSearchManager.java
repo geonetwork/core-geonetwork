@@ -28,6 +28,7 @@ import co.elastic.clients.elasticsearch._types.Refresh;
 import co.elastic.clients.elasticsearch._types.SortOptions;
 import co.elastic.clients.elasticsearch.core.*;
 import co.elastic.clients.elasticsearch.core.bulk.BulkOperation;
+import co.elastic.clients.elasticsearch.core.bulk.BulkResponseItem;
 import co.elastic.clients.elasticsearch.core.bulk.UpdateOperation;
 import co.elastic.clients.elasticsearch.core.search.Hit;
 import co.elastic.clients.elasticsearch.indices.ExistsRequest;
@@ -54,7 +55,9 @@ import org.fao.geonet.kernel.SelectionManager;
 import org.fao.geonet.kernel.datamanager.IMetadataIndexer;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.search.index.OverviewIndexFieldUpdater;
-import org.fao.geonet.kernel.search.submission.BatchingIndexSubmittor;
+import org.fao.geonet.kernel.search.submission.IDeletionSubmittor;
+import org.fao.geonet.kernel.search.submission.batch.BatchingDeletionSubmittor;
+import org.fao.geonet.kernel.search.submission.batch.BatchingIndexSubmittor;
 import org.fao.geonet.kernel.search.submission.IIndexSubmittor;
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.repository.SourceRepository;
@@ -70,7 +73,6 @@ import org.springframework.data.jpa.domain.Specification;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
@@ -466,6 +468,18 @@ public class EsSearchManager implements ISearchManager {
         }
     }
 
+    public void handleDeletionResponse(BulkResponse bulkResponse, List<String> documents) {
+        if (bulkResponse.errors()) {
+            StringBuilder builder = new StringBuilder();
+            for (BulkResponseItem item : bulkResponse.items()) {
+                if (item.error() != null) {
+                    builder.append("Failed to delete document ").append(item.id()).append(" from index: ").append(item.error()).append("\n");
+                }
+            }
+            throw new RuntimeException("Some documents could not be deleted from the index!\n" + builder.toString());
+        }
+    }
+
     private void checkIndexResponse(BulkResponse bulkItemResponses,
                                     Map<String, String> documents) throws IOException {
         if (bulkItemResponses.errors()) {
@@ -517,7 +531,7 @@ public class EsSearchManager implements ISearchManager {
             });
 
             if (!listErrorOfDocumentsToIndex.isEmpty()) {
-                BulkRequest bulkRequest = client.buildBulkRequest(defaultIndex, listErrorOfDocumentsToIndex);
+                BulkRequest bulkRequest = client.buildIndexBulkRequest(defaultIndex, listErrorOfDocumentsToIndex);
                 BulkResponse response = client.getClient().bulk(bulkRequest);
                 if (response.errors()) {
                     LOGGER.error("Failed to save error documents {}.",
@@ -855,19 +869,24 @@ public class EsSearchManager implements ISearchManager {
     }
 
     @Override
-    public void delete(String txt) throws Exception {
+    public void deleteByQuery(String txt) throws Exception {
         client.deleteByQuery(defaultIndex, txt);
     }
 
     @Override
+    public void deleteById(String txt, IDeletionSubmittor submittor) throws Exception {
+        submittor.submitToIndex(txt, this);
+    }
+
+    @Override
     public void delete(List<Integer> metadataIds) throws Exception {
-        metadataIds.forEach(metadataId -> {
-            try {
-                this.delete(String.format("+id:%d", metadataId));
-            } catch (Exception e) {
-                e.printStackTrace();
+        try (BatchingDeletionSubmittor submittor = new BatchingDeletionSubmittor(metadataIds.size())) {
+            for (Integer id : metadataIds) {
+                deleteById(String.valueOf(id), submittor);
             }
-        });
+        } catch (Exception e) {
+            LOGGER.error("Error while deleting metadata: {}", e.getMessage(), e);
+        }
     }
 
     public long getNumDocs(String query) throws Exception {

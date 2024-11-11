@@ -47,6 +47,7 @@ import org.fao.geonet.kernel.harvest.harvester.*;
 import org.fao.geonet.kernel.schema.ISOPlugin;
 import org.fao.geonet.kernel.schema.SchemaPlugin;
 import org.fao.geonet.kernel.search.IndexingMode;
+import org.fao.geonet.kernel.search.submission.batch.BatchingDeletionSubmittor;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.MetadataCategoryRepository;
@@ -248,25 +249,27 @@ class Harvester extends BaseAligner<OgcWxSParams> implements IHarvester<HarvestR
 
         //-----------------------------------------------------------------------
         //--- remove old metadata
-        for (String uuid : localUuids.getUUIDs()) {
-            if (cancelMonitor.get()) {
-                return this.result;
-            }
+        try (BatchingDeletionSubmittor submittor = new BatchingDeletionSubmittor()) {
+            for (String uuid : localUuids.getUUIDs()) {
+                if (cancelMonitor.get()) {
+                    return this.result;
+                }
 
-            //If it was not on the uuids added:
-            if (!uuids.contains(uuid)) {
-                String id = localUuids.getID(uuid);
+                //If it was not on the uuids added:
+                if (!uuids.contains(uuid)) {
+                    String id = localUuids.getID(uuid);
 
-                if (log.isDebugEnabled())
-                    log.debug("  - Removing old metadata before update with id: " + id);
+                    if (log.isDebugEnabled())
+                        log.debug("  - Removing old metadata before update with id: " + id);
 
-                //--- remove the metadata directory including the public and private directories.
-                store.delResources(context, uuid);
+                    //--- remove the metadata directory including the public and private directories.
+                    store.delResources(context, uuid);
 
-                // Remove metadata
-                metadataManager.deleteMetadata(context, id);
+                    // Remove metadata
+                    metadataManager.deleteMetadata(context, id, submittor);
 
-                result.locallyRemoved++;
+                    result.locallyRemoved++;
+                }
             }
         }
 

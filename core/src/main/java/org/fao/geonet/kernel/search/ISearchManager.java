@@ -28,6 +28,7 @@ import com.google.common.collect.Multimap;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.MetadataType;
+import org.fao.geonet.kernel.search.submission.IDeletionSubmittor;
 import org.fao.geonet.kernel.search.submission.IIndexSubmittor;
 import org.jdom.Element;
 
@@ -70,9 +71,14 @@ public interface ISearchManager {
     ISODate getDocChangeDate(String mdId) throws Exception;
 
     /**
-     * deletes a document.
+     * deletes a document by a query.
      */
-    void delete(String txt) throws Exception;
+    void deleteByQuery(String query) throws Exception;
+
+    /**
+     * deletes a document by its id.
+     */
+    void deleteById(String id, IDeletionSubmittor submittor) throws Exception;
 
     /**
      * deletes a list of documents.

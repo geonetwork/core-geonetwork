@@ -57,6 +57,7 @@ import org.fao.geonet.kernel.harvest.harvester.RecordInfo;
 import org.fao.geonet.kernel.harvest.harvester.UriMapper;
 import org.fao.geonet.kernel.search.IndexingMode;
 import org.fao.geonet.kernel.search.submission.DirectIndexSubmittor;
+import org.fao.geonet.kernel.search.submission.batch.BatchingDeletionSubmittor;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.MetadataCategoryRepository;
 import org.fao.geonet.util.Sha1Encoder;
@@ -289,27 +290,30 @@ class Harvester extends BaseAligner<ThreddsParams> implements IHarvester<Harvest
         harvestCatalog(xml);
 
         //--- Remove previously harvested metadata for uris that no longer exist on the remote site
-        for (String localUri : localUris.getUris()) {
-            if (cancelMonitor.get()) {
-                return this.result;
-            }
+        try (BatchingDeletionSubmittor submittor = new BatchingDeletionSubmittor()) {
 
-            if (!harvestUris.contains(localUri)) {
-                for (RecordInfo record : localUris.getRecords(localUri)) {
-                    if (cancelMonitor.get()) {
-                        return this.result;
-                    }
+            for (String localUri : localUris.getUris()) {
+                if (cancelMonitor.get()) {
+                    return this.result;
+                }
 
-                    if (log.isDebugEnabled())
-                        log.debug("  - Removing deleted metadata with id: " + record.id);
-                    mdManager.deleteMetadata(context, record.id);
+                if (!harvestUris.contains(localUri)) {
+                    for (RecordInfo record : localUris.getRecords(localUri)) {
+                        if (cancelMonitor.get()) {
+                            return this.result;
+                        }
 
-                    if (record.isTemplate.equals("s")) {
-                        //--- Uncache xlinks if a subtemplate
-                        Processor.uncacheXLinkUri(metadataGetService + record.uuid);
-                        result.subtemplatesRemoved++;
-                    } else {
-                        result.locallyRemoved++;
+                        if (log.isDebugEnabled())
+                            log.debug("  - Removing deleted metadata with id: " + record.id);
+                        mdManager.deleteMetadata(context, record.id, submittor);
+
+                        if (record.isTemplate.equals("s")) {
+                            //--- Uncache xlinks if a subtemplate
+                            Processor.uncacheXLinkUri(metadataGetService + record.uuid);
+                            result.subtemplatesRemoved++;
+                        } else {
+                            result.locallyRemoved++;
+                        }
                     }
                 }
             }
@@ -785,12 +789,14 @@ class Harvester extends BaseAligner<ThreddsParams> implements IHarvester<Harvest
 
         if (localRecords == null) return;
 
-        for (RecordInfo record : localRecords) {
-            mdManager.deleteMetadata(context, record.id);
+        try (BatchingDeletionSubmittor submittor = new BatchingDeletionSubmittor(localRecords.size())) {
+            for (RecordInfo record : localRecords) {
+                mdManager.deleteMetadata(context, record.id, submittor);
 
-            if (record.isTemplate.equals("s")) {
-                //--- Uncache xlinks if a subtemplate
-                Processor.uncacheXLinkUri(metadataGetService + record.uuid);
+                if (record.isTemplate.equals("s")) {
+                    //--- Uncache xlinks if a subtemplate
+                    Processor.uncacheXLinkUri(metadataGetService + record.uuid);
+                }
             }
         }
     }

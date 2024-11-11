@@ -80,6 +80,7 @@ import org.fao.geonet.kernel.mef.Importer;
 import org.fao.geonet.kernel.mef.MEFLib;
 import org.fao.geonet.kernel.search.EsSearchManager;
 import org.fao.geonet.kernel.search.IndexingMode;
+import org.fao.geonet.kernel.search.submission.DirectDeletionSubmittor;
 import org.fao.geonet.kernel.search.submission.DirectIndexSubmittor;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
@@ -242,7 +243,7 @@ public class MetadataInsertDeleteApi {
 
         store.delResources(context, metadata.getUuid(), approved);
         RecordDeletedEvent recordDeletedEvent = triggerDeletionEvent(request, metadata.getId() + "");
-        metadataManager.deleteMetadata(context, metadata.getId() + "");
+        metadataManager.deleteMetadata(context, metadata.getId() + "", DirectDeletionSubmittor.INSTANCE);
         recordDeletedEvent.publish(ApplicationContextHolder.get());
     }
 
@@ -301,7 +302,7 @@ public class MetadataInsertDeleteApi {
                 store.delResources(context, metadata.getUuid());
 
                 RecordDeletedEvent recordDeletedEvent = triggerDeletionEvent(request, String.valueOf(metadata.getId()));
-                metadataManager.deleteMetadata(context, String.valueOf(metadata.getId()));
+                metadataManager.deleteMetadata(context, String.valueOf(metadata.getId()), DirectDeletionSubmittor.INSTANCE);
                 recordDeletedEvent.publish(ApplicationContextHolder.get());
 
                 report.incrementProcessedRecords();

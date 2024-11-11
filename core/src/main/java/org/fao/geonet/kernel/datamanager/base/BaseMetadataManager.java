@@ -50,8 +50,11 @@ import org.fao.geonet.kernel.schema.SchemaPlugin;
 import org.fao.geonet.kernel.search.EsSearchManager;
 import org.fao.geonet.kernel.search.IndexingMode;
 import org.fao.geonet.kernel.search.index.BatchOpsMetadataReindexer;
+import org.fao.geonet.kernel.search.submission.DirectDeletionSubmittor;
 import org.fao.geonet.kernel.search.submission.DirectIndexSubmittor;
+import org.fao.geonet.kernel.search.submission.IDeletionSubmittor;
 import org.fao.geonet.kernel.search.submission.IIndexSubmittor;
+import org.fao.geonet.kernel.search.submission.batch.BatchingDeletionSubmittor;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.kernel.setting.SettingInfo;
@@ -249,9 +252,11 @@ public class BaseMetadataManager implements IMetadataManager {
         }
 
         // remove from index metadata not in DBMS
-        for (String id : docs.keySet()) {
-            getSearchManager().delete(String.format("+id:%s", id));
-            LOGGER_DATA_MANAGER.debug("- removed record ({}) from index", id);
+        try (BatchingDeletionSubmittor submittor = new BatchingDeletionSubmittor(docs.keySet().size())) {
+            for (String id : docs.keySet()) {
+                getSearchManager().deleteById(id, submittor);
+                LOGGER_DATA_MANAGER.debug("- removed record ({}) from index", id);
+            }
         }
     }
 
@@ -330,7 +335,7 @@ public class BaseMetadataManager implements IMetadataManager {
      * Removes a metadata.
      */
     @Override
-    public void deleteMetadata(ServiceContext context, String metadataId) throws Exception {
+    public void deleteMetadata(ServiceContext context, String metadataId, IDeletionSubmittor submittor) throws Exception {
         AbstractMetadata findOne = metadataUtils.findOne(metadataId);
         if (findOne != null) {
             boolean isMetadata = findOne.getDataInfo().getType() == MetadataType.METADATA;
@@ -339,7 +344,7 @@ public class BaseMetadataManager implements IMetadataManager {
         }
 
         // --- update search criteria
-        getSearchManager().delete(String.format("+id:%s", metadataId));
+        getSearchManager().deleteById(metadataId, submittor);
         // _entityManager.flush();
         // _entityManager.clear();
     }
@@ -370,7 +375,7 @@ public class BaseMetadataManager implements IMetadataManager {
         RecordDeletedEvent recordDeletedEvent = new RecordDeletedEvent(
             metadata.getId(), metadata.getUuid(), new LinkedHashMap<>(),
             context.getUserSession().getUserIdAsInt(), metadata.getData());
-        deleteMetadata(context, metadataId);
+        deleteMetadata(context, metadataId, DirectDeletionSubmittor.INSTANCE);
         recordDeletedEvent.publish(ApplicationContextHolder.get());
     }
 
@@ -382,7 +387,7 @@ public class BaseMetadataManager implements IMetadataManager {
     @Override
     public void deleteMetadataGroup(ServiceContext context, String metadataId) throws Exception {
         deleteMetadataFromDB(context, metadataId);
-        getSearchManager().delete(String.format("+id:%s", metadataId));
+        getSearchManager().deleteById(metadataId, DirectDeletionSubmittor.INSTANCE);
     }
 
     /**
@@ -782,7 +787,7 @@ public class BaseMetadataManager implements IMetadataManager {
             if (indexingMode != IndexingMode.none) {
                 // Delete old record if UUID changed
                 if (uuidBeforeUfo != null && !uuidBeforeUfo.equals(uuid)) {
-                    getSearchManager().delete(String.format("+uuid:\"%s\"", uuidBeforeUfo));
+                    getSearchManager().deleteByQuery(String.format("+uuid:\"%s\"", uuidBeforeUfo));
                 }
                 metadataIndexer.indexMetadata(metadataId, DirectIndexSubmittor.INSTANCE, indexingMode);
             }

@@ -45,6 +45,7 @@ import org.fao.geonet.kernel.harvest.harvester.GroupMapper;
 import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
 import org.fao.geonet.kernel.search.IndexingMode;
 import org.fao.geonet.kernel.search.submission.DirectIndexSubmittor;
+import org.fao.geonet.kernel.search.submission.batch.BatchingDeletionSubmittor;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.specification.MetadataSpecs;
 import org.fao.geonet.utils.IO;
@@ -113,15 +114,17 @@ public class LocalFilesystemHarvester extends AbstractHarvester<HarvestResult, L
                     "from the same source if they " +
                     " were not in this harvesting result...");
                 List<Integer> existingMetadata = context.getBean(MetadataRepository.class).findIdsBy((Specification<Metadata>) MetadataSpecs.hasHarvesterUuid(params.getUuid()));
-                for (Integer existingId : existingMetadata) {
+                try (BatchingDeletionSubmittor submittor = new BatchingDeletionSubmittor()) {
+                    for (Integer existingId : existingMetadata) {
 
-                    if (cancelMonitor.get()) {
-                        return this.result;
-                    }
-                    if (!idsResultHs.contains(existingId)) {
-                        log.debug("  Removing: " + existingId);
-                        metadataManager.deleteMetadata(context, existingId.toString());
-                        result.locallyRemoved++;
+                        if (cancelMonitor.get()) {
+                            return this.result;
+                        }
+                        if (!idsResultHs.contains(existingId)) {
+                            log.debug("  Removing: " + existingId);
+                            metadataManager.deleteMetadata(context, existingId.toString(), submittor);
+                            result.locallyRemoved++;
+                        }
                     }
                 }
             }

@@ -207,10 +207,14 @@ public class EsRestClient implements InitializingBean {
         return this;
     }
 
-    public BulkRequest buildBulkRequest(String index, Map<String, String> docs) {
+    private void checkActivated() {
         if (!activated) {
             throw new IllegalStateException("Index not yet activated.");
         }
+    }
+
+    public BulkRequest buildIndexBulkRequest(String index, Map<String, String> docs) {
+        checkActivated();
 
         BulkRequest.Builder requestBuilder = new BulkRequest.Builder()
             .index(index)
@@ -229,6 +233,43 @@ public class EsRestClient implements InitializingBean {
         }
 
         return requestBuilder.build();
+    }
+
+    public BulkRequest buildDeleteBulkRequest(String index, List<String> deletionIds) {
+        checkActivated();
+        BulkRequest.Builder requestBuilder = new BulkRequest.Builder()
+            .index(index)
+            .refresh(Refresh.True);
+
+        for (String deletionQuery : deletionIds) {
+            requestBuilder.operations(op -> op.delete(del -> del.index(index)
+                .id(deletionQuery)));
+        }
+
+        return requestBuilder.build();
+    }
+
+    public void deleteByQuery(String index, String query) throws IOException {
+        checkActivated();
+
+        DeleteByQueryRequest request = DeleteByQueryRequest.of(
+            b -> b.index(index)
+                .q(query)
+                .refresh(true));
+
+        final DeleteByQueryResponse deleteByQueryResponse =
+            client.deleteByQuery(request);
+
+
+        if (!deleteByQueryResponse.failures().isEmpty()) {
+            StringBuilder stringBuilder = new StringBuilder();
+
+            deleteByQueryResponse.failures().forEach(f -> stringBuilder.append(f.toString()));
+
+            throw new IOException(String.format(
+                "Error during removal. Errors are '%s'.", stringBuilder.toString()
+            ));
+        }
     }
 
 
@@ -332,34 +373,6 @@ public class EsRestClient implements InitializingBean {
             Log.error("geonetwork.index", String.format(
                 "Error during querying index. %s", esException.error().toString()));
             throw esException;
-        }
-    }
-
-
-    public String deleteByQuery(String index, String query) throws Exception {
-        if (!activated) {
-            return "";
-        }
-
-        DeleteByQueryRequest request = DeleteByQueryRequest.of(
-            b -> b.index(new ArrayList<>(Arrays.asList(index)))
-                .q(query)
-                .refresh(true));
-
-        final DeleteByQueryResponse deleteByQueryResponse =
-            client.deleteByQuery(request);
-
-
-        if (deleteByQueryResponse.deleted() >= 0) {
-            return String.format("Record removed. %s.", deleteByQueryResponse.deleted());
-        } else {
-            StringBuilder stringBuilder = new StringBuilder();
-
-            deleteByQueryResponse.failures().forEach(f -> stringBuilder.append(f.toString()));
-
-            throw new IOException(String.format(
-                "Error during removal. Errors are '%s'.", stringBuilder.toString()
-            ));
         }
     }
 

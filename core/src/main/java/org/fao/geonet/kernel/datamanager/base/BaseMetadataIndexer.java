@@ -49,7 +49,8 @@ import org.fao.geonet.kernel.datamanager.draft.DraftMetadataIndexer;
 import org.fao.geonet.kernel.search.EsSearchManager;
 import org.fao.geonet.kernel.search.IndexFields;
 import org.fao.geonet.kernel.search.IndexingMode;
-import org.fao.geonet.kernel.search.submission.BatchingIndexSubmittor;
+import org.fao.geonet.kernel.search.submission.batch.BatchingDeletionSubmittor;
+import org.fao.geonet.kernel.search.submission.batch.BatchingIndexSubmittor;
 import org.fao.geonet.kernel.search.submission.IIndexSubmittor;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
@@ -71,13 +72,11 @@ import org.springframework.transaction.NoTransactionException;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
-import java.io.IOException;
 import java.nio.file.Path;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.fao.geonet.resources.Resources.DEFAULT_LOGO_EXTENSION;
 
@@ -170,29 +169,31 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
 //        searchManager.delete(metadataToDelete.stream().map(input -> Integer.toString(input.getId())).collect(Collectors.toList()));
 //        metadataManager.deleteAll(specification);
         // So delete one by one even if slower
-        metadataToDelete.forEach(md -> {
-            try {
-                // Extract information for RecordDeletedEvent
-                LinkedHashMap<String, String> titles = metadataUtils.extractTitles(Integer.toString(md.getId()));
-                UserSession userSession = ServiceContext.get().getUserSession();
-                String xmlBefore = md.getData();
+        try (BatchingDeletionSubmittor submittor = new BatchingDeletionSubmittor(metadataToDelete.size())) {
+            metadataToDelete.forEach(md -> {
+                try {
+                    // Extract information for RecordDeletedEvent
+                    LinkedHashMap<String, String> titles = metadataUtils.extractTitles(Integer.toString(md.getId()));
+                    UserSession userSession = ServiceContext.get().getUserSession();
+                    String xmlBefore = md.getData();
 
-                store.delResources(ServiceContext.get(), md.getUuid());
-                metadataManager.deleteMetadata(ServiceContext.get(), String.valueOf(md.getId()));
+                    store.delResources(ServiceContext.get(), md.getUuid());
+                    metadataManager.deleteMetadata(ServiceContext.get(), String.valueOf(md.getId()), submittor);
 
-                // Trigger RecordDeletedEvent
-                new RecordDeletedEvent(md.getId(), md.getUuid(), titles, userSession.getUserIdAsInt(), xmlBefore).publish(ApplicationContextHolder.get());
-            } catch (Exception e) {
-                Log.warning(Geonet.DATA_MANAGER, String.format(
+                    // Trigger RecordDeletedEvent
+                    new RecordDeletedEvent(md.getId(), md.getUuid(), titles, userSession.getUserIdAsInt(), xmlBefore).publish(ApplicationContextHolder.get());
+                } catch (Exception e) {
+                    Log.warning(Geonet.DATA_MANAGER, String.format(
 
-                    "Error during removal of metadata %s part of batch delete operation. " +
-                        "This error may create a ghost record (ie. not in the index " +
-                        "but still present in the database). " +
-                        "You can reindex the catalogue to see it again. " +
-                        "Error was: %s.", md.getUuid(), e.getMessage()));
-                e.printStackTrace();
-            }
-        });
+                        "Error during removal of metadata %s part of batch delete operation. " +
+                            "This error may create a ghost record (ie. not in the index " +
+                            "but still present in the database). " +
+                            "You can reindex the catalogue to see it again. " +
+                            "Error was: %s.", md.getUuid(), e.getMessage()));
+                    e.printStackTrace();
+                }
+            });
+        }
 
         return metadataToDelete.size();
     }

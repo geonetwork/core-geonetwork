@@ -33,6 +33,7 @@ import org.fao.geonet.domain.MetadataSourceInfo;
 import org.fao.geonet.kernel.EditLib;
 import org.fao.geonet.kernel.UpdateDatestamp;
 import org.fao.geonet.kernel.search.IndexingMode;
+import org.fao.geonet.kernel.search.submission.IDeletionSubmittor;
 import org.fao.geonet.kernel.search.submission.IIndexSubmittor;
 import org.fao.geonet.repository.BatchUpdateQuery;
 import org.fao.geonet.repository.PathSpec;
@@ -69,9 +70,10 @@ public interface IMetadataManager {
      *
      * @param context
      * @param metadataId
+     * @param deletionSubmittor
      * @throws Exception
      */
-    void deleteMetadata(ServiceContext context, String metadataId) throws Exception;
+    void deleteMetadata(ServiceContext context, String metadataId, IDeletionSubmittor deletionSubmittor) throws Exception;
 
     /**
      * Delete the record with the id metadataId

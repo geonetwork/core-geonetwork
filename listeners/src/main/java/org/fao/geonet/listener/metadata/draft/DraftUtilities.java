@@ -10,6 +10,7 @@ import org.fao.geonet.kernel.datamanager.IMetadataOperations;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.search.EsSearchManager;
 import org.fao.geonet.kernel.search.IndexingMode;
+import org.fao.geonet.kernel.search.submission.DirectDeletionSubmittor;
 import org.fao.geonet.repository.*;
 import org.fao.geonet.repository.specification.MetadataFileUploadSpecs;
 import org.fao.geonet.repository.specification.MetadataValidationSpecs;
@@ -186,7 +187,7 @@ public class DraftUtilities {
 
             // --- remove metadata
             xmlSerializer.delete(String.valueOf(id), ServiceContext.get());
-            searchManager.delete(String.format("+id:%d", id ));
+            searchManager.deleteById(String.valueOf(id), DirectDeletionSubmittor.INSTANCE);
         } catch (Exception e) {
             Log.error(Geonet.DATA_MANAGER, "Couldn't cleanup draft " + draft, e);
         }

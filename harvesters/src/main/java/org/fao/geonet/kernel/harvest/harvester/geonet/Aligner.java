@@ -44,6 +44,7 @@ import org.fao.geonet.kernel.harvest.BaseAligner;
 import org.fao.geonet.kernel.harvest.harvester.*;
 import org.fao.geonet.kernel.mef.*;
 import org.fao.geonet.kernel.search.IndexingMode;
+import org.fao.geonet.kernel.search.submission.batch.BatchingDeletionSubmittor;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.GroupRepository;
@@ -150,24 +151,26 @@ public class Aligner extends BaseAligner<GeonetParams> {
         //-----------------------------------------------------------------------
         //--- remove old metadata
 
-        for (String uuid : localUuids.getUUIDs()) {
-            if (cancelMonitor.get()) {
-                return this.result;
-            }
-
-            try {
-                if (!exists(records, uuid)) {
-                    String id = localUuids.getID(uuid);
-
-                    if (log.isDebugEnabled()) log.debug("  - Removing old metadata with id:" + id);
-                    metadataManager.deleteMetadata(context, id);
-
-                    result.locallyRemoved++;
+        try (BatchingDeletionSubmittor submittor = new BatchingDeletionSubmittor()) {
+            for (String uuid : localUuids.getUUIDs()) {
+                if (cancelMonitor.get()) {
+                    return this.result;
                 }
-            } catch (Exception t) {
-                log.error("Couldn't remove metadata with uuid " + uuid);
-                log.error(t);
-                result.unchangedMetadata++;
+
+                try {
+                    if (!exists(records, uuid)) {
+                        String id = localUuids.getID(uuid);
+
+                        if (log.isDebugEnabled()) log.debug("  - Removing old metadata with id:" + id);
+                        metadataManager.deleteMetadata(context, id, submittor);
+
+                        result.locallyRemoved++;
+                    }
+                } catch (Exception t) {
+                    log.error("Couldn't remove metadata with uuid " + uuid);
+                    log.error(t);
+                    result.unchangedMetadata++;
+                }
             }
         }
         //--- insert/update new metadata

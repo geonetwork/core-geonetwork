@@ -35,7 +35,7 @@ import org.fao.geonet.kernel.harvest.harvester.AbstractParams;
 import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
 import org.fao.geonet.kernel.harvest.harvester.GroupMapper;
 import org.fao.geonet.kernel.harvest.harvester.Privileges;
-import org.fao.geonet.kernel.search.submission.BatchingIndexSubmittor;
+import org.fao.geonet.kernel.search.submission.batch.BatchingIndexSubmittor;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.MetadataCategoryRepository;

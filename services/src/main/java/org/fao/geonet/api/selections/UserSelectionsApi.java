@@ -37,7 +37,7 @@ import org.fao.geonet.domain.*;
 import org.fao.geonet.kernel.datamanager.IMetadataIndexer;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.search.IndexingMode;
-import org.fao.geonet.kernel.search.submission.BatchingIndexSubmittor;
+import org.fao.geonet.kernel.search.submission.batch.BatchingIndexSubmittor;
 import org.fao.geonet.kernel.search.submission.DirectIndexSubmittor;
 import org.fao.geonet.repository.LanguageRepository;
 import org.fao.geonet.repository.SelectionRepository;

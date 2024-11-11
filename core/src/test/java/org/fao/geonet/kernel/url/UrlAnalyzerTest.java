@@ -11,6 +11,7 @@ import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.kernel.search.IndexingMode;
+import org.fao.geonet.kernel.search.submission.DirectDeletionSubmittor;
 import org.fao.geonet.kernel.search.submission.DirectIndexSubmittor;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.repository.LinkRepository;
@@ -188,7 +189,7 @@ public class UrlAnalyzerTest extends AbstractCoreIntegrationTest {
         SimpleJpaRepository metadataLinkRepository = new SimpleJpaRepository<MetadataLink, Integer>(MetadataLink.class, entityManager);
         List<MetadataLink> metadataLinkList = metadataLinkRepository.findAll();
         assertEquals(6, metadataLinkList.size());
-        dataManager.deleteMetadata(context, md.getId() + "");
+        dataManager.deleteMetadata(context, md.getId() + "", DirectDeletionSubmittor.INSTANCE);
 
         linkRepository.findAll().stream().forEach(toTest::purgeMetataLink);
 

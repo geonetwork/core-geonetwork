@@ -29,8 +29,7 @@ import jeeves.server.dispatchers.ServiceManager;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.DataManager;
-import org.fao.geonet.kernel.search.EsSearchManager;
-import org.fao.geonet.kernel.search.submission.BatchingIndexSubmittor;
+import org.fao.geonet.kernel.search.submission.batch.BatchingIndexSubmittor;
 import org.fao.geonet.utils.Log;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
@@ -38,7 +37,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.scheduling.quartz.QuartzJobBean;
 
-import java.io.IOException;
 import java.util.Date;
 import java.util.Set;
 

@@ -22,8 +22,7 @@ public class DirectIndexSubmittor implements IIndexSubmittor {
         EsRestClient restClient = searchManager.getClient();
         Map<String, String> documents = Collections.singletonMap(id, jsonDocument);
 
-        BulkRequest bulkRequest = restClient.buildBulkRequest(searchManager.getDefaultIndex(), documents);
-        // TODO log any exception
+        BulkRequest bulkRequest = restClient.buildIndexBulkRequest(searchManager.getDefaultIndex(), documents);
         final BulkResponse bulkItemResponses = restClient.getClient().bulk(bulkRequest);
 
         searchManager.handleIndexResponse(bulkItemResponses, documents);

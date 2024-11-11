@@ -44,6 +44,7 @@ import org.fao.geonet.kernel.harvest.harvester.UUIDMapper;
 import org.fao.geonet.kernel.harvest.harvester.fragment.FragmentHarvester;
 import org.fao.geonet.kernel.harvest.harvester.fragment.FragmentHarvester.FragmentParams;
 import org.fao.geonet.kernel.harvest.harvester.fragment.FragmentHarvester.HarvestSummary;
+import org.fao.geonet.kernel.search.submission.batch.BatchingDeletionSubmittor;
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.utils.*;
@@ -334,29 +335,31 @@ class Harvester implements IHarvester<HarvestResult> {
         if (log.isDebugEnabled())
             log.debug("  - Removing orphaned metadata records and fragments after update");
 
-        for (String uuid : localUuids.getUUIDs()) {
-            try {
-                String isTemplate = localUuids.getTemplate(uuid);
-                if (isTemplate.equals("s")) {
-                    Processor.uncacheXLinkUri(metadataGetService + uuid);
-                }
-
-                if (!updatedMetadata.contains(uuid)) {
-                    String id = localUuids.getID(uuid);
-                    metadataManager.deleteMetadata(context, id);
-
+        try (BatchingDeletionSubmittor submittor = new BatchingDeletionSubmittor()) {
+            for (String uuid : localUuids.getUUIDs()) {
+                try {
+                    String isTemplate = localUuids.getTemplate(uuid);
                     if (isTemplate.equals("s")) {
-                        result.subtemplatesRemoved++;
-                    } else {
-                        result.locallyRemoved++;
+                        Processor.uncacheXLinkUri(metadataGetService + uuid);
                     }
+
+                    if (!updatedMetadata.contains(uuid)) {
+                        String id = localUuids.getID(uuid);
+                        metadataManager.deleteMetadata(context, id, submittor);
+
+                        if (isTemplate.equals("s")) {
+                            result.subtemplatesRemoved++;
+                        } else {
+                            result.locallyRemoved++;
+                        }
+                    }
+                } catch (CacheException e) {
+                    HarvestError error = new HarvestError(context, e);
+                    this.errors.add(error);
+                } catch (Exception e) {
+                    HarvestError error = new HarvestError(context, e);
+                    this.errors.add(error);
                 }
-            } catch (CacheException e) {
-                HarvestError error = new HarvestError(context, e);
-                this.errors.add(error);
-            } catch (Exception e) {
-                HarvestError error = new HarvestError(context, e);
-                this.errors.add(error);
             }
         }
 

@@ -28,15 +28,12 @@ import jeeves.server.context.ServiceContext;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.User;
-import org.fao.geonet.kernel.search.EsSearchManager;
-import org.fao.geonet.kernel.search.submission.BatchingIndexSubmittor;
+import org.fao.geonet.kernel.search.submission.batch.BatchingIndexSubmittor;
 import org.fao.geonet.utils.Log;
 import org.springframework.transaction.TransactionStatus;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

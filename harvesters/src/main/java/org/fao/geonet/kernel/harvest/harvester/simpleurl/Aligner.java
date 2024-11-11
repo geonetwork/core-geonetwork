@@ -44,6 +44,7 @@ import org.fao.geonet.kernel.harvest.harvester.HarvestError;
 import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
 import org.fao.geonet.kernel.harvest.harvester.UUIDMapper;
 import org.fao.geonet.kernel.search.IndexingMode;
+import org.fao.geonet.kernel.search.submission.batch.BatchingDeletionSubmittor;
 import org.fao.geonet.repository.OperationAllowedRepository;
 import org.jdom.Element;
 
@@ -178,12 +179,15 @@ public class Aligner extends BaseAligner<SimpleUrlParams> {
             return result;
         }
 
-        for (String uuid : localUuids.getUUIDs()) {
-            if (!records.contains(uuid)) {
-                String id = localUuids.getID(uuid);
-                log.debug("  - Removing old metadata with local id:" + id);
-                metadataManager.deleteMetadata(context, id);
-                result.locallyRemoved ++;
+        try (BatchingDeletionSubmittor submittor = new BatchingDeletionSubmittor()) {
+
+            for (String uuid : localUuids.getUUIDs()) {
+                if (!records.contains(uuid)) {
+                    String id = localUuids.getID(uuid);
+                    log.debug("  - Removing old metadata with local id:" + id);
+                    metadataManager.deleteMetadata(context, id, submittor);
+                    result.locallyRemoved++;
+                }
             }
         }
 

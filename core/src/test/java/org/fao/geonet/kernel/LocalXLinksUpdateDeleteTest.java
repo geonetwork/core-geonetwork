@@ -5,6 +5,7 @@ import org.fao.geonet.AbstractCoreIntegrationTest;
 import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.kernel.search.IndexingMode;
+import org.fao.geonet.kernel.search.submission.DirectDeletionSubmittor;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.utils.Xml;
@@ -74,8 +75,8 @@ public class LocalXLinksUpdateDeleteTest extends AbstractIntegrationTestWithMock
         AbstractMetadata contactMetadata = insertContact();
         AbstractMetadata vicinityMapMetadata = insertVicinityMap(contactMetadata);
 
-        metadataManager.deleteMetadata(serviceContext, Integer.toString(vicinityMapMetadata.getId()));
-        metadataManager.deleteMetadata(serviceContext, Integer.toString(contactMetadata.getId()));
+        metadataManager.deleteMetadata(serviceContext, Integer.toString(vicinityMapMetadata.getId()), DirectDeletionSubmittor.INSTANCE);
+        metadataManager.deleteMetadata(serviceContext, Integer.toString(contactMetadata.getId()), DirectDeletionSubmittor.INSTANCE);
         assertNull(metadataManager.getMetadata(Integer.toString(contactMetadata.getId())));
     }
 
@@ -87,7 +88,7 @@ public class LocalXLinksUpdateDeleteTest extends AbstractIntegrationTestWithMock
 
         try {
             metadataManager.deleteMetadata(serviceContext,
-                Integer.toString(contactMetadata.getId()));
+                Integer.toString(contactMetadata.getId()), DirectDeletionSubmittor.INSTANCE);
         } catch (Exception e) {
 
         }
@@ -100,7 +101,7 @@ public class LocalXLinksUpdateDeleteTest extends AbstractIntegrationTestWithMock
         AbstractMetadata contactMetadata = insertContact();
         insertVicinityMap(contactMetadata);
 
-        metadataManager.deleteMetadata(serviceContext, Integer.toString(contactMetadata.getId()));
+        metadataManager.deleteMetadata(serviceContext, Integer.toString(contactMetadata.getId()), DirectDeletionSubmittor.INSTANCE);
         assertNull(metadataManager.getMetadata(Integer.toString(contactMetadata.getId())));
     }
 
