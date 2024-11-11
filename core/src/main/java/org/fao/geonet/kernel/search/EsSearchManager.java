@@ -55,6 +55,7 @@ import org.fao.geonet.kernel.SelectionManager;
 import org.fao.geonet.kernel.datamanager.IMetadataIndexer;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.search.index.OverviewIndexFieldUpdater;
+import org.fao.geonet.kernel.search.submission.DirectDeletionSubmittor;
 import org.fao.geonet.kernel.search.submission.IDeletionSubmittor;
 import org.fao.geonet.kernel.search.submission.batch.BatchingIndexSubmittor;
 import org.fao.geonet.kernel.search.submission.IIndexSubmittor;
@@ -479,6 +480,18 @@ public class EsSearchManager implements ISearchManager {
         }
     }
 
+    public void handleDeletionResponse(DeleteByQueryResponse deleteByQueryResponse, String query) {
+        if (!deleteByQueryResponse.failures().isEmpty()) {
+            StringBuilder stringBuilder = new StringBuilder();
+
+            deleteByQueryResponse.failures().forEach(f -> stringBuilder.append(f.toString()));
+
+            throw new RuntimeException(String.format(
+                "Error during removal of query %s. Errors are '%s'.", query, stringBuilder.toString()
+            ));
+        }
+    }
+
     private void checkIndexResponse(BulkResponse bulkItemResponses,
                                     Map<String, String> documents) throws IOException {
         if (bulkItemResponses.errors()) {
@@ -810,7 +823,7 @@ public class EsSearchManager implements ISearchManager {
 
 
     public void clearIndex() throws Exception {
-        client.deleteByQuery(defaultIndex, "*:*");
+        deleteByQuery("*:*", DirectDeletionSubmittor.INSTANCE);
     }
 
     static ImmutableSet<String> docsChangeIncludedFields;
@@ -868,13 +881,13 @@ public class EsSearchManager implements ISearchManager {
     }
 
     @Override
-    public void deleteByQuery(String txt) throws Exception {
-        client.deleteByQuery(defaultIndex, txt);
+    public void deleteByQuery(String query, IDeletionSubmittor submittor) throws Exception {
+        submittor.submitQueryToIndex(query, this);
     }
 
     @Override
     public void deleteByUuid(String uuid, IDeletionSubmittor submittor) throws Exception {
-        submittor.submitToIndex(uuid, this);
+        submittor.submitUUIDToIndex(uuid, this);
     }
 
     public long getNumDocs(String query) throws Exception {

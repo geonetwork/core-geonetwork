@@ -2,6 +2,8 @@ package org.fao.geonet.kernel.search.submission;
 
 import co.elastic.clients.elasticsearch.core.BulkRequest;
 import co.elastic.clients.elasticsearch.core.BulkResponse;
+import co.elastic.clients.elasticsearch.core.DeleteByQueryRequest;
+import co.elastic.clients.elasticsearch.core.DeleteByQueryResponse;
 import org.fao.geonet.index.es.EsRestClient;
 import org.fao.geonet.kernel.search.EsSearchManager;
 
@@ -15,7 +17,7 @@ public class DirectDeletionSubmittor implements IDeletionSubmittor {
     private DirectDeletionSubmittor() {}
 
     @Override
-    public void submitToIndex(String uuid, EsSearchManager searchManager) throws IOException {
+    public void submitUUIDToIndex(String uuid, EsSearchManager searchManager) throws IOException {
         EsRestClient restClient = searchManager.getClient();
         List<String> documents = Collections.singletonList(uuid);
 
@@ -23,5 +25,15 @@ public class DirectDeletionSubmittor implements IDeletionSubmittor {
         final BulkResponse bulkItemResponses = restClient.getClient().bulk(bulkRequest);
 
         searchManager.handleDeletionResponse(bulkItemResponses, documents);
+    }
+
+    @Override
+    public void submitQueryToIndex(String query, EsSearchManager searchManager) throws IOException {
+        EsRestClient restClient = searchManager.getClient();
+
+        DeleteByQueryRequest deleteByQueryRequest = restClient.buildDeleteByQuery(searchManager.getDefaultIndex(), query);
+        final DeleteByQueryResponse deleteByQueryResponse = restClient.getClient().deleteByQuery(deleteByQueryRequest);
+
+        searchManager.handleDeletionResponse(deleteByQueryResponse, query);
     }
 }

@@ -1,6 +1,8 @@
 package org.fao.geonet.kernel.search.submission.batch;
 
 import co.elastic.clients.elasticsearch.core.BulkRequest;
+import co.elastic.clients.elasticsearch.core.DeleteByQueryRequest;
+import co.elastic.clients.elasticsearch.core.DeleteByQueryResponse;
 import org.fao.geonet.index.es.EsRestClient;
 import org.fao.geonet.kernel.search.EsSearchManager;
 import org.fao.geonet.kernel.search.submission.IDeletionSubmittor;
@@ -30,6 +32,15 @@ public class BatchingDeletionSubmittor extends BatchingSubmittorBase<BatchingDel
                 .thenAcceptAsync(bulkItemResponses -> searchManager.handleDeletionResponse(bulkItemResponses, toDelete));
             queueFuture(currentIndexFuture);
         }
+
+        private void deleteDocumentByQuery(String query) {
+            EsRestClient restClient = searchManager.getClient();
+
+            DeleteByQueryRequest deleteByQueryRequest = restClient.buildDeleteByQuery(searchManager.getDefaultIndex(), query);
+            final CompletableFuture<Void> deleteByQueryFuture = restClient.getAsyncClient().deleteByQuery(deleteByQueryRequest)
+                .thenAcceptAsync(response -> searchManager.handleDeletionResponse(response, query));
+            queueFuture(deleteByQueryFuture);
+        }
     }
 
     public BatchingDeletionSubmittor() {
@@ -41,7 +52,7 @@ public class BatchingDeletionSubmittor extends BatchingSubmittorBase<BatchingDel
     }
 
     @Override
-    public void submitToIndex(String uuid, EsSearchManager searchManager) {
+    public void submitUUIDToIndex(String uuid, EsSearchManager searchManager) {
         if (state.closed) {
             throw new IllegalStateException("Attempting to use a closed " + this.getClass().getSimpleName());
         }
@@ -54,5 +65,15 @@ public class BatchingDeletionSubmittor extends BatchingSubmittorBase<BatchingDel
             listOfUUIDsToDelete.clear();
             state.deleteDocumentsFromIndex(toDelete);
         }
+    }
+
+    @Override
+    public void submitQueryToIndex(String query, EsSearchManager searchManager) {
+        if (state.closed) {
+            throw new IllegalStateException("Attempting to use a closed " + this.getClass().getSimpleName());
+        }
+
+        state.searchManager = searchManager;
+        state.deleteDocumentByQuery(query);
     }
 }

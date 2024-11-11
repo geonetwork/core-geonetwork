@@ -252,9 +252,11 @@ public class BaseMetadataManager implements IMetadataManager {
         }
 
         // remove from index metadata not in DBMS
-        for (String id : docs.keySet()) {
-            getSearchManager().deleteByQuery(String.format("+id:%s", id));
-            LOGGER_DATA_MANAGER.debug("- removed record ({}) from index", id);
+        try (BatchingDeletionSubmittor submittor = new BatchingDeletionSubmittor()) {
+            for (String id : docs.keySet()) {
+                getSearchManager().deleteByQuery(String.format("+id:%s", id), submittor);
+                LOGGER_DATA_MANAGER.debug("- removed record ({}) from index", id);
+            }
         }
     }
 
@@ -342,7 +344,7 @@ public class BaseMetadataManager implements IMetadataManager {
             // --- update search criteria
             getSearchManager().deleteByUuid(findOne.getUuid(), submittor);
         } else {
-            getSearchManager().deleteByQuery(String.format("+id:%s", metadataId));
+            getSearchManager().deleteByQuery(String.format("+id:%s", metadataId), submittor);
         }
     }
 
@@ -384,7 +386,7 @@ public class BaseMetadataManager implements IMetadataManager {
     @Override
     public void deleteMetadataGroup(ServiceContext context, String metadataId) throws Exception {
         deleteMetadataFromDB(context, metadataId);
-        getSearchManager().deleteByQuery(String.format("+id:%s", metadataId));
+        getSearchManager().deleteByQuery(String.format("+id:%s", metadataId), DirectDeletionSubmittor.INSTANCE);
     }
 
     /**

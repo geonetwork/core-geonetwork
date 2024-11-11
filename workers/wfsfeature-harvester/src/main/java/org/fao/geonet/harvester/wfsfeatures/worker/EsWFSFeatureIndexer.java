@@ -26,10 +26,7 @@ package org.fao.geonet.harvester.wfsfeatures.worker;
 import co.elastic.clients.elasticsearch._helpers.bulk.BulkIngester;
 import co.elastic.clients.elasticsearch._helpers.bulk.BulkListener;
 import co.elastic.clients.elasticsearch._types.Result;
-import co.elastic.clients.elasticsearch.core.BulkRequest;
-import co.elastic.clients.elasticsearch.core.BulkResponse;
-import co.elastic.clients.elasticsearch.core.IndexRequest;
-import co.elastic.clients.elasticsearch.core.IndexResponse;
+import co.elastic.clients.elasticsearch.core.*;
 import co.elastic.clients.util.BinaryData;
 import co.elastic.clients.util.ContentType;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -224,11 +221,11 @@ public class EsWFSFeatureIndexer {
             new Object[]{url, typeName, index, indexType});
         try {
             long begin = System.currentTimeMillis();
-            client.deleteByQuery(index, String.format("+featureTypeId:\"%s\"", getIdentifier(url, typeName)));
+            deleteByQuery(String.format("+featureTypeId:\"%s\"", getIdentifier(url, typeName)));
             LOGGER.info("  Features deleted in {} ms.", System.currentTimeMillis() - begin);
 
             begin = System.currentTimeMillis();
-            client.deleteByQuery(index, String.format("+id:\"%s\"",
+            deleteByQuery(String.format("+id:\"%s\"",
                 getIdentifier(url, typeName)));
             LOGGER.info("  Report deleted in {} ms.", System.currentTimeMillis() - begin);
 
@@ -236,6 +233,21 @@ public class EsWFSFeatureIndexer {
             e.printStackTrace();
             LOGGER.error("Error connecting to ES at '{}'. Error is {}.", index, e.getMessage());
         }
+    }
+
+    private void deleteByQuery(String query) throws IOException {
+        DeleteByQueryRequest deleteByQueryRequest = client.buildDeleteByQuery(index, query);
+        DeleteByQueryResponse deleteByQueryResponse = client.getClient().deleteByQuery(deleteByQueryRequest);
+        if (!deleteByQueryResponse.failures().isEmpty()) {
+            StringBuilder stringBuilder = new StringBuilder();
+
+            deleteByQueryResponse.failures().forEach(f -> stringBuilder.append(f.toString()));
+
+            throw new RuntimeException(String.format(
+                "Error during removal of query %s. Errors are '%s'.", query, stringBuilder.toString()
+            ));
+        }
+
     }
 
     interface TitleResolver {

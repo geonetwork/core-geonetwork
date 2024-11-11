@@ -653,7 +653,7 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
 
                 // --- remove metadata
                 xmlSerializer.delete(id, ServiceContext.get());
-                searchManager.deleteByQuery(String.format("+id:%s", id));
+                searchManager.deleteByQuery(String.format("+id:%s", id), DirectDeletionSubmittor.INSTANCE);
 
                 // Unset METADATA_EDITING_CREATED_DRAFT flag
                 context.getUserSession().removeProperty(Geonet.Session.METADATA_EDITING_CREATED_DRAFT);

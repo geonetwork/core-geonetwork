@@ -89,7 +89,7 @@ public class DraftMetadataManager extends BaseMetadataManager implements IMetada
             deleteMetadataFromDB(context, metadataId);
             getSearchManager().deleteByUuid(findOne.getUuid(), submittor);
         } else {
-            getSearchManager().deleteByQuery(String.format("+id:%s", metadataId));
+            getSearchManager().deleteByQuery(String.format("+id:%s", metadataId), submittor);
         }
     }
 

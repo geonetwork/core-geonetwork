@@ -250,27 +250,13 @@ public class EsRestClient implements InitializingBean {
         return requestBuilder.build();
     }
 
-    public void deleteByQuery(String index, String query) throws IOException {
+    public DeleteByQueryRequest buildDeleteByQuery(String index, String query) {
         checkActivated();
 
-        DeleteByQueryRequest request = DeleteByQueryRequest.of(
+        return DeleteByQueryRequest.of(
             b -> b.index(index)
                 .q(query)
                 .refresh(true));
-
-        final DeleteByQueryResponse deleteByQueryResponse =
-            client.deleteByQuery(request);
-
-
-        if (!deleteByQueryResponse.failures().isEmpty()) {
-            StringBuilder stringBuilder = new StringBuilder();
-
-            deleteByQueryResponse.failures().forEach(f -> stringBuilder.append(f.toString()));
-
-            throw new IOException(String.format(
-                "Error during removal. Errors are '%s'.", stringBuilder.toString()
-            ));
-        }
     }
 
 

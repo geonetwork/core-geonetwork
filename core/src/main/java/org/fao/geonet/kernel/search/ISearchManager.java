@@ -73,7 +73,7 @@ public interface ISearchManager {
     /**
      * deletes a document by a query.
      */
-    void deleteByQuery(String query) throws Exception;
+    void deleteByQuery(String query, IDeletionSubmittor submittor) throws Exception;
 
     /**
      * deletes a document by its uuid.
