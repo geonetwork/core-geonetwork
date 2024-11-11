@@ -184,6 +184,8 @@ public class DataManagerIntegrationTest extends AbstractDataManagerIntegrationTe
 
         dataManager.batchDeleteMetadataAndUpdateIndex(spec);
 
+        Thread.sleep(500);
+
         assertEquals(0, metadataRepository.findAll(spec).size());
         assertEquals(0, searchManager.query(String.format("uuid:(%s OR %s)", uuid1, uuid2), null, 0, 10).hits().hits().size());
     }

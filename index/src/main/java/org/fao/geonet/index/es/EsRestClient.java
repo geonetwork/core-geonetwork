@@ -235,15 +235,16 @@ public class EsRestClient implements InitializingBean {
         return requestBuilder.build();
     }
 
-    public BulkRequest buildDeleteBulkRequest(String index, List<String> deletionIds) {
+    public BulkRequest buildDeleteBulkRequest(String index, List<String> deletionUUIDs) {
         checkActivated();
+
         BulkRequest.Builder requestBuilder = new BulkRequest.Builder()
             .index(index)
             .refresh(Refresh.True);
 
-        for (String deletionQuery : deletionIds) {
+        for (String uuid : deletionUUIDs) {
             requestBuilder.operations(op -> op.delete(del -> del.index(index)
-                .id(deletionQuery)));
+                .id(uuid)));
         }
 
         return requestBuilder.build();

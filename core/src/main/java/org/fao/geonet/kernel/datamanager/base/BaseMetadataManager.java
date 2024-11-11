@@ -252,11 +252,9 @@ public class BaseMetadataManager implements IMetadataManager {
         }
 
         // remove from index metadata not in DBMS
-        try (BatchingDeletionSubmittor submittor = new BatchingDeletionSubmittor(docs.keySet().size())) {
-            for (String id : docs.keySet()) {
-                getSearchManager().deleteById(id, submittor);
-                LOGGER_DATA_MANAGER.debug("- removed record ({}) from index", id);
-            }
+        for (String id : docs.keySet()) {
+            getSearchManager().deleteByQuery(String.format("+id:%s", id));
+            LOGGER_DATA_MANAGER.debug("- removed record ({}) from index", id);
         }
     }
 
@@ -341,12 +339,11 @@ public class BaseMetadataManager implements IMetadataManager {
             boolean isMetadata = findOne.getDataInfo().getType() == MetadataType.METADATA;
 
             deleteMetadataFromDB(context, metadataId);
+            // --- update search criteria
+            getSearchManager().deleteByUuid(findOne.getUuid(), submittor);
+        } else {
+            getSearchManager().deleteByQuery(String.format("+id:%s", metadataId));
         }
-
-        // --- update search criteria
-        getSearchManager().deleteById(metadataId, submittor);
-        // _entityManager.flush();
-        // _entityManager.clear();
     }
 
     /**
@@ -387,7 +384,7 @@ public class BaseMetadataManager implements IMetadataManager {
     @Override
     public void deleteMetadataGroup(ServiceContext context, String metadataId) throws Exception {
         deleteMetadataFromDB(context, metadataId);
-        getSearchManager().deleteById(metadataId, DirectDeletionSubmittor.INSTANCE);
+        getSearchManager().deleteByQuery(String.format("+id:%s", metadataId));
     }
 
     /**
@@ -787,7 +784,7 @@ public class BaseMetadataManager implements IMetadataManager {
             if (indexingMode != IndexingMode.none) {
                 // Delete old record if UUID changed
                 if (uuidBeforeUfo != null && !uuidBeforeUfo.equals(uuid)) {
-                    getSearchManager().deleteByQuery(String.format("+uuid:\"%s\"", uuidBeforeUfo));
+                    getSearchManager().deleteByUuid(uuidBeforeUfo, DirectDeletionSubmittor.INSTANCE);
                 }
                 metadataIndexer.indexMetadata(metadataId, DirectIndexSubmittor.INSTANCE, indexingMode);
             }

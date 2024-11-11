@@ -76,14 +76,9 @@ public interface ISearchManager {
     void deleteByQuery(String query) throws Exception;
 
     /**
-     * deletes a document by its id.
+     * deletes a document by its uuid.
      */
-    void deleteById(String id, IDeletionSubmittor submittor) throws Exception;
-
-    /**
-     * deletes a list of documents.
-     */
-    void delete(List<Integer> metadataIds) throws Exception;
+    void deleteByUuid(String uuid, IDeletionSubmittor submittor) throws Exception;
 
     boolean isIndexWritable(String indexName) throws IOException, ElasticsearchException;
 }

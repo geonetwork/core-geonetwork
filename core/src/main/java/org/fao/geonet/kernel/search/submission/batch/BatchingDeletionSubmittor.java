@@ -13,13 +13,13 @@ import java.util.concurrent.CompletableFuture;
 public class BatchingDeletionSubmittor extends BatchingSubmittorBase<BatchingDeletionSubmittor.State> implements IDeletionSubmittor {
 
     protected static class State extends StateBase {
-        private final List<String> listOfIDsToDelete = new ArrayList<>();
+        private final List<String> listOfUUIDsToDelete = new ArrayList<>();
 
         @Override
         protected void cleanUp() {
             // Send any remaining pending documents
-            if (!listOfIDsToDelete.isEmpty()) {
-                deleteDocumentsFromIndex(listOfIDsToDelete);
+            if (!listOfUUIDsToDelete.isEmpty()) {
+                deleteDocumentsFromIndex(listOfUUIDsToDelete);
             }
         }
 
@@ -27,9 +27,7 @@ public class BatchingDeletionSubmittor extends BatchingSubmittorBase<BatchingDel
             EsRestClient restClient = searchManager.getClient();
             BulkRequest bulkRequest = restClient.buildDeleteBulkRequest(searchManager.getDefaultIndex(), toDelete);
             CompletableFuture<Void> currentIndexFuture = restClient.getAsyncClient().bulk(bulkRequest)
-                .thenAcceptAsync(bulkItemResponses -> {
-                    searchManager.handleDeletionResponse(bulkItemResponses, toDelete);
-                });
+                .thenAcceptAsync(bulkItemResponses -> searchManager.handleDeletionResponse(bulkItemResponses, toDelete));
             queueFuture(currentIndexFuture);
         }
     }
@@ -43,17 +41,17 @@ public class BatchingDeletionSubmittor extends BatchingSubmittorBase<BatchingDel
     }
 
     @Override
-    public void submitToIndex(String id, EsSearchManager searchManager) throws IOException {
+    public void submitToIndex(String uuid, EsSearchManager searchManager) {
         if (state.closed) {
             throw new IllegalStateException("Attempting to use a closed " + this.getClass().getSimpleName());
         }
 
         state.searchManager = searchManager;
-        List<String> listOfIDsToDelete = state.listOfIDsToDelete;
-        listOfIDsToDelete.add(id);
-        if (listOfIDsToDelete.size() >= commitInterval) {
-            List<String> toDelete = new ArrayList<>(listOfIDsToDelete);
-            listOfIDsToDelete.clear();
+        List<String> listOfUUIDsToDelete = state.listOfUUIDsToDelete;
+        listOfUUIDsToDelete.add(uuid);
+        if (listOfUUIDsToDelete.size() >= commitInterval) {
+            List<String> toDelete = new ArrayList<>(listOfUUIDsToDelete);
+            listOfUUIDsToDelete.clear();
             state.deleteDocumentsFromIndex(toDelete);
         }
     }

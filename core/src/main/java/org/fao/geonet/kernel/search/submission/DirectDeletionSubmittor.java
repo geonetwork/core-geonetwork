@@ -15,9 +15,9 @@ public class DirectDeletionSubmittor implements IDeletionSubmittor {
     private DirectDeletionSubmittor() {}
 
     @Override
-    public void submitToIndex(String id, EsSearchManager searchManager) throws IOException {
+    public void submitToIndex(String uuid, EsSearchManager searchManager) throws IOException {
         EsRestClient restClient = searchManager.getClient();
-        List<String> documents = Collections.singletonList(id);
+        List<String> documents = Collections.singletonList(uuid);
 
         BulkRequest bulkRequest = restClient.buildDeleteBulkRequest(searchManager.getDefaultIndex(), documents);
         final BulkResponse bulkItemResponses = restClient.getClient().bulk(bulkRequest);

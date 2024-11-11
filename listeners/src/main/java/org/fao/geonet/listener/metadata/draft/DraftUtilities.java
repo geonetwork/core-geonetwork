@@ -187,7 +187,7 @@ public class DraftUtilities {
 
             // --- remove metadata
             xmlSerializer.delete(String.valueOf(id), ServiceContext.get());
-            searchManager.deleteById(String.valueOf(id), DirectDeletionSubmittor.INSTANCE);
+            searchManager.deleteByUuid(draft.getUuid(), DirectDeletionSubmittor.INSTANCE);
         } catch (Exception e) {
             Log.error(Geonet.DATA_MANAGER, "Couldn't cleanup draft " + draft, e);
         }

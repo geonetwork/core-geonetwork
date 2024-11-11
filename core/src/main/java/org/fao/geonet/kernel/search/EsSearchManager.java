@@ -56,7 +56,6 @@ import org.fao.geonet.kernel.datamanager.IMetadataIndexer;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.search.index.OverviewIndexFieldUpdater;
 import org.fao.geonet.kernel.search.submission.IDeletionSubmittor;
-import org.fao.geonet.kernel.search.submission.batch.BatchingDeletionSubmittor;
 import org.fao.geonet.kernel.search.submission.batch.BatchingIndexSubmittor;
 import org.fao.geonet.kernel.search.submission.IIndexSubmittor;
 import org.fao.geonet.kernel.setting.SettingInfo;
@@ -874,19 +873,8 @@ public class EsSearchManager implements ISearchManager {
     }
 
     @Override
-    public void deleteById(String txt, IDeletionSubmittor submittor) throws Exception {
-        submittor.submitToIndex(txt, this);
-    }
-
-    @Override
-    public void delete(List<Integer> metadataIds) throws Exception {
-        try (BatchingDeletionSubmittor submittor = new BatchingDeletionSubmittor(metadataIds.size())) {
-            for (Integer id : metadataIds) {
-                deleteById(String.valueOf(id), submittor);
-            }
-        } catch (Exception e) {
-            LOGGER.error("Error while deleting metadata: {}", e.getMessage(), e);
-        }
+    public void deleteByUuid(String uuid, IDeletionSubmittor submittor) throws Exception {
+        submittor.submitToIndex(uuid, this);
     }
 
     public long getNumDocs(String query) throws Exception {

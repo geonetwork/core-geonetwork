@@ -6,5 +6,5 @@ import java.io.IOException;
 
 public interface IDeletionSubmittor {
 
-    void submitToIndex(String id, EsSearchManager searchManager) throws IOException;
+    void submitToIndex(String uuid, EsSearchManager searchManager) throws IOException;
 }
