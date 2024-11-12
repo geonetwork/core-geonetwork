@@ -167,7 +167,7 @@
             href=""
             data-ng-repeat="resource in relations.onlines | filter:sortLinksFilter | orderBy:sortLinks:sortLinksReverse"
             data-ng-init="gnRelatedResources.getType(resource, 'onlines');
-                                  checkDoiManagementForResource(md, r)"
+                                  checkDoiManagementForResource(gnCurrentEdit.metadata, resource)"
           >
             <div class="row">
               <div class="col-md-11">
@@ -184,7 +184,7 @@
                 <br />
 
                 <div
-                  data-ng-if="r.canManageDoi"
+                  data-ng-if="resource.canManageDoi"
                   data-gn-doi-wizard="gnCurrentEdit.uuid"
                   data-doi-url="resource.lUrl"
                   data-xs-mode="true"
