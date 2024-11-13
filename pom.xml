@@ -424,6 +424,13 @@
         <groupId>org.openrdf</groupId>
         <artifactId>sesame</artifactId>
         <version>1.2.7</version>
+        <exclusions>
+          <!-- Remove CVE-2022-45378 and do not break sesame usage. -->
+          <exclusion>
+            <groupId>soap</groupId>
+            <artifactId>soap</artifactId>
+          </exclusion>
+        </exclusions>
       </dependency>
       <dependency>
         <groupId>org.openrdf</groupId>
