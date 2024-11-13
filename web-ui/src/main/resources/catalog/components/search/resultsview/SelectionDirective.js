@@ -99,7 +99,7 @@
                   function (r) {
                     gnAlertService.addAlert({
                       msg: r.data.message || r.data.description,
-                      delay: 20000,
+                      delay: 20,
                       type: "danger"
                     });
                     if (r.id) {

@@ -362,7 +362,11 @@
          * @param {string} type of the directive that calls it.
          */
         onOpenPopup: function (type, additionalParams) {
-          if (type === "parent" && additionalParams.fields.associationType) {
+          if (
+            type === "parent" &&
+            additionalParams.fields &&
+            additionalParams.fields.associationType
+          ) {
             // In ISO19115-3, parents are usually encoded using the association records
             // Configured in config/associated-panel/default.json
             type = "siblings";
@@ -928,7 +932,13 @@
     function ($http) {
       return {
         search: function (url, prefix, query) {
-          return $http.get(url + "?prefix=" + prefix + "&query=" + query);
+          return $http.get(
+            url +
+              "?prefix=" +
+              prefix +
+              "&query=" +
+              query.replaceAll("https://doi.org/", "")
+          );
         }
       };
     }

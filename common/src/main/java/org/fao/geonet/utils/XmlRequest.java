@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2024 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -124,13 +124,13 @@ public class XmlRequest extends AbstractHttpRequest {
                 " -- Response Code: " + httpResponse.getRawStatusCode());
         }
 
-        byte[] data = null;
+        byte[] data;
 
         try {
             data = IOUtils.toByteArray(httpResponse.getBody());
             return Xml.loadStream(new ByteArrayInputStream(data));
         } catch (JDOMException e) {
-            throw new BadXmlResponseEx("Response: '" + new String(data, "UTF8") + "' (from URI " + httpMethod.getURI() + ")");
+            throw new BadXmlResponseEx("Invalid XML document from URI: " + httpMethod.getURI());
         } finally {
             httpMethod.releaseConnection();
 

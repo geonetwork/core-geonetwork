@@ -1,7 +1,7 @@
 <div
   data-ng-repeat="(key, t) in allKeywords"
   data-ng-if="thesaurus && thesaurus.indexOf(key) !== -1"
-  title="{{t.title}}"
+  title="{{t.multilingualTitle.default || t.title}}"
   class="row"
 >
   <div
@@ -16,9 +16,7 @@
       gn-popover-placement="bottom"
       class="pull-left"
     >
-      <button gn-popover-anchor="" class="btn btn-default btn-xs">
-        {{::k.default | capitalize}}
-      </button>
+      <button gn-popover-anchor="" class="btn btn-default btn-xs">{{::k.default}}</button>
       <div gn-popover-content="">
         <a data-ng-href="{{::k.link}}" data-ng-if="::!!k.link">
           <i class="fa fa-fw fa-info"></i>

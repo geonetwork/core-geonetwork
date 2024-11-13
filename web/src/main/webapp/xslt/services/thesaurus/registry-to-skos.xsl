@@ -126,7 +126,6 @@
 
 
         <dcterms:issued><xsl:value-of select="if ($thesaurusDate != '') then $thesaurusDate else $now"/></dcterms:issued>
-        <dcterms:modified><xsl:value-of select="if ($thesaurusDate != '') then $thesaurusDate else $now"/></dcterms:modified>
 
         <!-- Add top concepts for all items with no parent -->
         <xsl:if test="$hasBroaderNarrowerLinks">

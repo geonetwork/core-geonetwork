@@ -1361,7 +1361,6 @@
       {
         "tag": {
           "match": "th_*",
-          "match_mapping_type": "object",
           "mapping": {
             "properties": {
               "default": {

@@ -106,6 +106,8 @@
 
     <xsl:variable name="isoType" select="if (../@gco:isoType) then ../@gco:isoType else ''"/>
 
+    <xsl:variable name="elementCondition" select="gn-fn-metadata:getLabel($schema, name(), $labels, name(..),$isoType, $xpath)/condition" />
+
     <!-- Required status is defined in parent element for
     some profiles like ISO19139. If not set, the element
     editing information is used.
@@ -113,12 +115,15 @@
     -->
     <xsl:variable name="isRequired" as="xs:boolean">
       <xsl:choose>
+        <xsl:when test="$elementCondition = 'mandatory'">
+          <xsl:value-of select="true()"/>
+        </xsl:when>
+        <xsl:when test="$elementCondition = 'optional'">
+          <xsl:value-of select="false()"/>
+        </xsl:when>
         <xsl:when
           test="($parentEditInfo and $parentEditInfo/@min = 1 and $parentEditInfo/@max = 1) or
           (not($parentEditInfo) and $editInfo and $editInfo/@min = 1 and $editInfo/@max = 1)">
-          <xsl:value-of select="true()"/>
-        </xsl:when>
-        <xsl:when test="gn-fn-metadata:getLabel($schema, name(), $labels, name(..),$isoType, $xpath)/condition = 'mandatory'">
           <xsl:value-of select="true()"/>
         </xsl:when>
         <xsl:otherwise>
@@ -562,7 +567,7 @@
                       <xsl:attribute name="aria-haspopup">true</xsl:attribute>
                       <xsl:attribute name="aria-expanded">false</xsl:attribute>
                     </xsl:if>
-                    <i class="{if ($btnClass != '') then $btnClass else 'fa fa-plus'}"/>
+                    <i class="{if ($btnClass != '') then $btnClass else 'fa fa-plus'}"></i>
                     <xsl:if test="$btnLabel != ''">&#160;
                       <span>
                         <xsl:value-of select="$btnLabel"/>
@@ -929,9 +934,9 @@
               <xsl:when test="$qualifiedName = 'gfc:code' and $schema='iso19110'">
 
                 <div class="btn-group">
-                  <button type="button" class="btn btn-default dropdown-toggle fa fa-plus gn-add" data-toggle="dropdown" title="{$i18n/addA} {$label}">
-                    <span/>
-                    <span class="caret"/>
+                  <button type="button" class="btn btn-default dropdown-toggle gn-add" data-toggle="dropdown" title="{$i18n/addA} {$label}">
+                    <i class="fa fa-plus"></i>
+                    <span class="caret"></span>
                   </button>
                   <ul class="dropdown-menu">
                     <xsl:variable name="name" select="'gco:CharacterString'"/>
@@ -977,10 +982,10 @@
               <xsl:when test="count($childEditInfo/gn:choose) > 1">
                 <div class="btn-group">
                   <button type="button"
-                          class="btn btn-default dropdown-toggle {if ($btnClass != '') then $btnClass else 'fa fa-plus'} gn-add"
+                          class="btn btn-default dropdown-toggle gn-add"
                           data-toggle="dropdown"
                           title="{$i18n/addA} {$label}">
-                    <span/>
+                    <i class="{if ($btnClass != '') then $btnClass else 'fa fa-plus'}"></i>
                     <xsl:if test="$btnLabel != ''">&#160;
                       <span>
                         <xsl:value-of select="$btnLabel"/>
@@ -1014,7 +1019,7 @@
                 <a class="btn btn-default"
                    title="{$i18n/addA} {$label}"
                    data-gn-click-and-spin="add({$parentEditInfo/@ref}, '{if ($name != '') then $name else concat(@prefix, ':', @name)}', '{$id}', 'before');">
-                  <i class="{if ($btnClass != '') then $btnClass else 'fa fa-plus'} gn-add"/>
+                  <i class="{if ($btnClass != '') then $btnClass else 'fa fa-plus'} gn-add"></i>
                   <xsl:if test="$btnLabel != ''">&#160;
                     <span>
                       <xsl:value-of select="$btnLabel"/>
@@ -1472,7 +1477,7 @@
       <a class="btn btn-default"
          title="{$i18n/addA} {$name}"
          data-gn-click-and-spin="add({$parentEditInfo/@parent}, '{$name}', {$editInfo/@ref})">
-        <i class="fa fa-plus gn-add"/>
+        <i class="fa fa-plus gn-add"></i>
       </a>
     </xsl:if>
   </xsl:template>
@@ -1635,7 +1640,7 @@
             id="gn-attr-add-button-{$fieldName}"
             data-gn-click-and-spin="add('{$ref}', '{@name}', '{$insertRef}', null, true)"
             title="{$attributeLabel/description}">
-      <i class="fa fa-plus fa-fw"/>
+      <i class="fa fa-plus fa-fw"></i>
       <xsl:value-of select="$attributeLabel/label"/>
     </button>
   </xsl:template>
@@ -1770,6 +1775,14 @@
                 <xsl:choose>
                   <xsl:when test="@use != ''">
                     <xsl:copy-of select="@use|directiveAttributes"/>
+
+                    <xsl:if test="@xpath != ''">
+                      <saxon:call-template name="{concat('evaluate-', $schema)}">
+                        <xsl:with-param name="base" select="$base"/>
+                        <xsl:with-param name="in"
+                                        select="concat('/', @xpath)"/>
+                      </saxon:call-template>
+                    </xsl:if>
                   </xsl:when>
                   <xsl:when test="@del != ''">
                     <xsl:attribute name="remove" select="'true'"/>
