@@ -38,6 +38,7 @@
 
   geonetwork.gnIndexRequest = function (config, $injector) {
     this.ES_URL = config.url + "?_=_search";
+    this.ES_MAPPING_URL = config.url + "?_=_mapping";
 
     this.$http = $injector.get("$http");
     this.$q = $injector.get("$q");
@@ -151,70 +152,64 @@
    */
   geonetwork.gnIndexRequest.prototype.getDocTypeInfo = function (options) {
     this.config.docTypeId = this.config.idDoc(options);
+    this.config.indexKey = this.config.getIndexKey(options);
     var defer = this.$q.defer();
-    this.$http
-      .post(this.ES_URL, {
-        size: 1,
-        query: {
-          query_string: {
-            query: this.config.docTypeIdField + ':"' + this.config.docTypeId + '"'
-          }
-        }
-      })
-      .then(
-        angular.bind(this, function (response) {
-          var indexInfos = [];
-          try {
-            var indexInfo = response.data.hits.hits[0]._source;
-            var docF = indexInfo.docColumns_s.split("|");
-            var customF = indexInfo.ftColumns_s.split("|");
 
-            for (var i = 0; i < docF.length; i++) {
-              indexInfos.push({
-                label: customF[i],
-                name: customF[i],
-                idxName: docF[i],
-                isRange: docF[i].endsWith("_d"),
-                isTree: docF[i].endsWith("_tree"),
-                isDateTime: docF[i].endsWith("_dt"),
-                isMultiple: docF[i].endsWith("_ss")
-              });
-            }
-            this.docTypeFieldsInfo = indexInfos;
-            this.filteredDocTypeFieldsInfo = [];
-            indexInfos.forEach(function (field) {
-              var f = field.idxName;
-              var fname = f.toLowerCase();
+    this.$http.get(this.ES_MAPPING_URL + "&index=" + this.config.indexKey).then(
+      angular.bind(this, function (response) {
+        var indexInfos = [];
+        try {
+          var indexInfo =
+            response.data[Object.keys(response.data)[0]].mappings.properties;
+          var docF = Object.keys(indexInfo);
+          var customF = Object.keys(indexInfo);
 
-              // Set geometry field
-              if (["geom", "the_geom", "msgeometry"].indexOf(fname) >= 0) {
-                this.geomField = field;
-              }
-              // Set facet fields
-              if ($.inArray(fname, this.config.excludedFields) === -1) {
-                this.filteredDocTypeFieldsInfo.push(field);
-              }
-            }, this);
-
-            this.totalCount = indexInfo.totalRecords_i;
-            this.isPointOnly = indexInfo.isPointOnly;
-            this.initBaseRequest_(options);
-          } catch (e) {
-            var msg = this.$translate.instant("docTypeNotIndexed", {
-              id: this.config.docTypeId
+          for (var i = 0; i < docF.length; i++) {
+            indexInfos.push({
+              label: customF[i],
+              name: customF[i],
+              idxName: docF[i],
+              isRange: indexInfo[docF[i]].type === "integer",
+              isTree: docF[i].endsWith("_tree"),
+              isDateTime: docF[i].endsWith("_dt"),
+              isMultiple: docF[i].endsWith("_ss")
             });
-            defer.reject({ statusText: msg });
           }
-          defer.resolve(indexInfos);
-        }),
-        function (r) {
-          if (r.status === 404) {
-            defer.reject({ statusText: this.$translate.instant("indexNotRunning") });
-          } else {
-            defer.reject(r);
-          }
-        }.bind(this)
-      );
+          this.docTypeFieldsInfo = indexInfos;
+          this.filteredDocTypeFieldsInfo = [];
+          indexInfos.forEach(function (field) {
+            var f = field.idxName;
+            var fname = f.toLowerCase();
+
+            // Set geometry field
+            if (["geom", "geometry", "the_geom", "msgeometry"].indexOf(fname) >= 0) {
+              this.geomField = field;
+            }
+            // Set facet fields
+            if ($.inArray(fname, this.config.excludedFields) === -1) {
+              this.filteredDocTypeFieldsInfo.push(field);
+            }
+          }, this);
+
+          this.totalCount = 2; //TODO: indexInfo.totalRecords_i;
+          this.isPointOnly = false; //TODO: indexInfo.isPointOnly;
+          this.initBaseRequest_(options);
+        } catch (e) {
+          var msg = this.$translate.instant("docTypeNotIndexed", {
+            id: this.config.docTypeId
+          });
+          defer.reject({ statusText: msg });
+        }
+        defer.resolve(indexInfos);
+      }),
+      function (r) {
+        if (r.status === 404) {
+          defer.reject({ statusText: this.$translate.instant("indexNotRunning") });
+        } else {
+          defer.reject(r);
+        }
+      }.bind(this)
+    );
     return defer.promise;
   };
 
@@ -256,9 +251,11 @@
    */
   geonetwork.gnIndexRequest.prototype.search_es = function (override) {
     var esParams = angular.extend({}, this.reqParams, override);
-    return this.$http.post(this.ES_URL, esParams).then(function (response) {
-      return response.data;
-    });
+    return this.$http
+      .post(this.ES_URL + "&index=" + this.config.indexKey, esParams)
+      .then(function (response) {
+        return response.data;
+      });
   };
 
   geonetwork.gnIndexRequest.prototype.search = function (qParams, indexParams) {
@@ -333,7 +330,7 @@
 
     if (!doNotSaveParams) this.reqParams = params;
 
-    return this.$http.post(this.ES_URL, params).then(
+    return this.$http.post(this.ES_URL + "&index=" + this.config.indexKey, params).then(
       angular.bind(this, function (r) {
         var resp = {
           indexData: r.data,
@@ -379,10 +376,12 @@
   geonetwork.gnIndexRequest.prototype.initBaseRequest_ = function (options) {
     this.initialParams = angular.extend({}, this.initialParams, { filter: "" });
     if (this.config.docIdField) {
-      this.initialParams.filter =
-        "+" + this.config.docIdField + ':"' + this.config.idDoc(options) + '"';
+      this.initialParams.filter = "";
+      // TODO "+" + this.config.docIdField + ':"' + this.config.idDoc(options) + '"';
     }
-    this.baseUrl = this.ES_URL;
+    this.config.indexKey = this.config.getIndexKey(options);
+
+    this.baseUrl = this.ES_URL + "&index=" + this.config.indexKey;
     this.initBaseParams();
   };
 
@@ -437,7 +436,7 @@
           if (angular.isDefined(field.idxName)) {
             facetParams[field.idxName] = {
               terms: {
-                field: field.idxName,
+                field: field.idxName + ".keyword", // TODO
                 size: field.isDateTime ? MAX_ROWS : field.isTree ? FACET_TREE_ROWS : ROWS
               }
             };

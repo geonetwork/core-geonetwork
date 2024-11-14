@@ -621,6 +621,74 @@
 
   <!-- View configuration -->
   <views>
+    <view name="data-upload-wizard">
+      <tab id="Main description" mode="flat">
+        <section>
+          <field xpath="/mdb:MD_Metadata/mdb:identificationInfo/*/mri:citation/*/cit:title"/>
+          <field xpath="/mdb:MD_Metadata/mdb:identificationInfo/*/mri:abstract"/>
+          <field xpath="/mdb:MD_Metadata/mdb:identificationInfo/*/mri:citation/*/cit:identifier/*/mcc:code"/>
+          <field xpath="/mdb:MD_Metadata/mdb:identificationInfo/*/mri:citation/*/cit:date"/>
+        </section>
+      </tab>
+      <tab id="Upload data" default="true">
+        <section>
+          <text>
+            <div class="info">Upload new files and trigger analysis to populate main metadata informations</div>
+          </text>
+          <directive data-gn-file-uploader=""
+                     data-title="Data file (eg. CSV, (GEO)JSON, XLS, SHP, GPKG, (GEO)PARQUET)"
+                     data-btn-label="Drop a file here"
+                     data-icon="fa-cloud"
+                     data-type="onlines"/>
+        </section>
+      </tab>
+      <tab id="Data model" mode="flat">
+        <section xpath="/mdb:MD_Metadata/mdb:contentInfo" collapsible="false"/>
+      </tab>
+      <tab id="Spatial and temporal" mode="flat">
+        <section xpath="/mdb:MD_Metadata/mdb:identificationInfo/*/mri:extent" collapsible="false"/>
+      </tab>
+      <tab id="Classification" mode="flat">
+        <section xpath="/mdb:MD_Metadata/mdb:identificationInfo/*/mri:descriptiveKeywords" collapsible="false"/>
+      </tab>
+      <tab id="Quality" mode="flat">
+        <section xpath="/mdb:MD_Metadata/mdb:dataQualityInfo" collapsible="false"/>
+        <section xpath="/mdb:MD_Metadata/mdb:resourceLineage" collapsible="false"/>
+      </tab>
+      <tab id="Distribution" mode="flat">
+        <section>
+          <directive data-gn-distribution-resources-panel="gnCurrentEdit.metadata"
+                   data-mode="viewConfig.distributionConfig.layout || ''"
+                   data-editor-config="default"
+                   data-related-config="[{
+                                             title: 'API',
+                                             filter: 'protocol:OGC:WMS|OGC:WMTS|ESRI:.*|atom.*|REST|OGC API Maps|OGC API Records',
+                                             editActions: ['addOnlinesrc#API']
+                                           }, {
+                                              title: 'download',
+                                              filter: 'protocol:OGC:WFS|OGC:WCS|.*DOWNLOAD.*|DB:.*|FILE:.*|OGC API Features|OGC API Coverages',
+                                              editActions: ['addOnlinesrc#onlineDownload|localNetwork']
+                                           }, {
+                                             title: 'mapLegend',
+                                             filter: 'function:legend',
+                                             editActions: ['addOnlinesrc#onlineUseLegend']
+                                           }, {
+                                              title: 'links',
+                                              filter:'-protocol:OGC.*|REST|ESRI:.*|atom.*|.*DOWNLOAD.*|DB:.*|FILE:.* AND -function:legend|featureCatalogue|dataQualityReport',
+                                              editActions: ['addOnlinesrc#links']
+                                           }, {
+                                              title: 'quality',
+                                              filter: 'function:dataQualityReport',
+                                              editActions: ['addOnlinesrc#quality']
+                                           }, {
+                                              title: 'featureCatalog',
+                                              filter: 'function:featureCatalogue',
+                                              editActions: ['onlineUseFcats']
+                                           }]"
+        />
+        </section>
+      </tab>
+    </view>
     <view name="default"
           default="true"
           class="gn-label-above-input gn-indent-bluescale">
@@ -674,7 +742,6 @@
 
         <directive data-gn-suggestion-list=""/>
       </sidePanel>
-
       <tab id="default" default="true" mode="flat">
         <section xpath="/mdb:MD_Metadata/mdb:identificationInfo" collapsible="false"/>
         <section xpath="/mdb:MD_Metadata/mdb:contentInfo" collapsible="false"/>

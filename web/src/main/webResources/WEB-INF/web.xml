@@ -464,7 +464,7 @@
     <servlet-class>org.fao.geonet.proxy.URITemplateProxyServlet</servlet-class>
     <init-param>
       <param-name>targetUri</param-name>
-      <param-value>${es.url}/${es.index.features}/{_}</param-value>
+      <param-value>${es.url}/${es.index.features}-{index}/{_}</param-value>
     </init-param>
     <init-param>
       <param-name>log</param-name>

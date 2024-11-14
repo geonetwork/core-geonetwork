@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (C) 2001-2020 Food and Agriculture Organization of the
+  ~ United Nations (FAO-UN), United Nations World Food Programme (WFP)
+  ~ and United Nations Environment Programme (UNEP)
+  ~
+  ~ This program is free software; you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation; either version 2 of the License, or (at
+  ~ your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful, but
+  ~ WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+  ~ General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program; if not, write to the Free Software
+  ~ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
+  ~
+  ~ Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
+  ~ Rome - Italy. email: geonetwork@osgeo.org
+  -->
+<!-- TODO: Create an XSD and a Java model -->
+<config>
+    <title>
+        <add>
+            <iso19139 xpath="./gmd:identificationInfo/*/gmd:citation/*/gmd:title/gco:CharacterString"
+                      condition="starts-with(./gmd:identificationInfo/*/gmd:citation/*/gmd:title/gco:CharacterString, 'Copy of')">
+                <gn_add>
+                    <gn_add>${layerName}</gn_add>
+                </gn_add>
+            </iso19139>
+            <iso19115-3.2018 xpath="./mdb:identificationInfo/*/mri:citation/*/cit:title/gco:CharacterString"
+                             condition="starts-with(./mdb:identificationInfo/*/mri:citation/*/cit:title/gco:CharacterString, 'Copy of')">
+                <gn_add>${layerName}</gn_add>
+            </iso19115-3.2018>
+        </add>
+    </title>
+    <spatialRepresentation help="For each layers, set the feature count and geometry type if geometry column found">
+        <delete>
+            <iso19139 xpath="./gmd:spatialRepresentationInfo">
+                <gn_delete/>
+            </iso19139>
+            <iso19115-3.2018 xpath="./mdb:spatialRepresentationInfo">
+                <gn_delete/>
+            </iso19115-3.2018>
+        </delete>
+        <add>
+            <iso19139 xpath=".">
+                <gn_add>
+                    <gmd:spatialRepresentationInfo
+                            xmlns:gco="http://www.isotc211.org/2005/gco"
+                            xmlns:gmd="http://www.isotc211.org/2005/gmd">
+                        <gmd:MD_VectorSpatialRepresentation>
+                            <gmd:geometricObjects>
+                                <gmd:MD_GeometricObjects>
+                                    <gmd:geometricObjectType>
+                                        <gmd:MD_GeometricObjectTypeCode
+                                                codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#MD_GeometricObjectTypeCode"
+                                                codeListValue="curve"/>
+                                    </gmd:geometricObjectType>
+                                    <gmd:geometricObjectCount>
+                                        <gco:Integer>${featureCount}</gco:Integer>
+                                    </gmd:geometricObjectCount>
+                                </gmd:MD_GeometricObjects>
+                            </gmd:geometricObjects>
+                        </gmd:MD_VectorSpatialRepresentation>
+                    </gmd:spatialRepresentationInfo>
+                </gn_add>
+            </iso19139>
+            <iso19115-3.2018 xpath=".">
+                <gn_add>
+                    <mdb:spatialRepresentationInfo xmlns:mdb="http://standards.iso.org/iso/19115/-3/mdb/2.0"
+                                                   xmlns:msr="http://standards.iso.org/iso/19115/-3/msr/2.0"
+                                                   xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0">
+                        <msr:MD_VectorSpatialRepresentation>
+                            <msr:geometricObjects>
+                                <msr:MD_GeometricObjects>
+                                    <msr:geometricObjectType>
+                                        <msr:MD_GeometricObjectTypeCode
+                                                codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#MD_GeometricObjectTypeCode"
+                                                codeListValue="point"/>
+                                    </msr:geometricObjectType>
+                                    <msr:geometricObjectCount>
+                                        <gco:Integer>${featureCount}</gco:Integer>
+                                    </msr:geometricObjectCount>
+                                </msr:MD_GeometricObjects>
+                            </msr:geometricObjects>
+                        </msr:MD_VectorSpatialRepresentation>
+                    </mdb:spatialRepresentationInfo>
+                </gn_add>
+            </iso19115-3.2018>
+        </add>
+    </spatialRepresentation>
+    <geographicBoundingBox>
+        <delete>
+            <iso19139 xpath="./gmd:identificationInfo/*/gmd:extent/*/gmd:geographicElement[gmd:EX_GeographicBoundingBox]">
+                <gn_delete/>
+            </iso19139>
+            <iso19115-3.2018 xpath="./mdb:identificationInfo/*/mri:extent/*/gex:geographicElement[gex:EX_GeographicBoundingBox]">
+                <gn_delete/>
+            </iso19115-3.2018>
+        </delete>
+        <add>
+            <iso19139 xpath="./gmd:identificationInfo/*">
+                <gn_add>
+                    <gmd:extent xmlns:gco="http://www.isotc211.org/2005/gco"
+                                xmlns:gmd="http://www.isotc211.org/2005/gmd">
+                        <gmd:EX_Extent>
+                            <gmd:geographicElement>
+                                <gmd:EX_GeographicBoundingBox>
+                                    <gmd:westBoundLongitude>
+                                        <gco:Decimal>${west}</gco:Decimal>
+                                    </gmd:westBoundLongitude>
+                                    <gmd:eastBoundLongitude>
+                                        <gco:Decimal>${east}</gco:Decimal>
+                                    </gmd:eastBoundLongitude>
+                                    <gmd:southBoundLatitude>
+                                        <gco:Decimal>${south}</gco:Decimal>
+                                    </gmd:southBoundLatitude>
+                                    <gmd:northBoundLatitude>
+                                        <gco:Decimal>${north}</gco:Decimal>
+                                    </gmd:northBoundLatitude>
+                                </gmd:EX_GeographicBoundingBox>
+                            </gmd:geographicElement>
+                        </gmd:EX_Extent>
+                    </gmd:extent>
+                </gn_add>
+            </iso19139>
+            <iso19115-3.2018 xpath="./mdb:identificationInfo/*">
+                <gn_add>
+                    <mri:extent xmlns:mri="http://standards.iso.org/iso/19115/-3/mri/1.0"
+                                xmlns:gex="http://standards.iso.org/iso/19115/-3/gex/1.0"
+                                xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0">
+                        <gex:EX_Extent>
+                            <gex:geographicElement>
+                                <gex:EX_GeographicBoundingBox>
+                                    <gex:westBoundLongitude>
+                                        <gco:Decimal>${west}</gco:Decimal>
+                                    </gex:westBoundLongitude>
+                                    <gex:eastBoundLongitude>
+                                        <gco:Decimal>${east}</gco:Decimal>
+                                    </gex:eastBoundLongitude>
+                                    <gex:southBoundLatitude>
+                                        <gco:Decimal>${south}</gco:Decimal>
+                                    </gex:southBoundLatitude>
+                                    <gex:northBoundLatitude>
+                                        <gco:Decimal>${north}</gco:Decimal>
+                                    </gex:northBoundLatitude>
+                                </gex:EX_GeographicBoundingBox>
+                            </gex:geographicElement>
+                        </gex:EX_Extent>
+                    </mri:extent>
+                </gn_add>
+            </iso19115-3.2018>
+        </add>
+    </geographicBoundingBox>
+    <distributionFormat>
+        <delete>
+            <iso19139 xpath="./gmd:distributionInfo/*/gmd:distributionFormat">
+                <gn_delete/>
+            </iso19139>
+            <iso19115-3.2018 xpath="./mdb:distributionInfo/*/mrd:distributionFormat">
+                <gn_delete/>
+            </iso19115-3.2018>
+        </delete>
+        <add>
+            <iso19139 xpath="./gmd:distributionInfo/*">
+                <gn_add>
+                    <gmd:distributionFormat
+                            xmlns:gco="http://www.isotc211.org/2005/gco"
+                            xmlns:gmd="http://www.isotc211.org/2005/gmd">
+                        <gmd:MD_Format>
+                            <gmd:name>
+                                <gco:CharacterString>${driverLongName}</gco:CharacterString>
+                            </gmd:name>
+                            <gmd:version gco:nilReason="unknown">
+                                <gco:CharacterString/>
+                            </gmd:version>
+                        </gmd:MD_Format>
+                    </gmd:distributionFormat>
+                </gn_add>
+            </iso19139>
+            <iso19115-3.2018 xpath="./mdb:distributionInfo/*">
+                <gn_add>
+                    <mrd:distributionFormat xmlns:mdb="http://standards.iso.org/iso/19115/-3/mdb/2.0"
+                                            xmlns:msr="http://standards.iso.org/iso/19115/-3/msr/2.0"
+                                            xmlns:cit="http://standards.iso.org/iso/19115/-3/cit/2.0"
+                                            xmlns:mrd="http://standards.iso.org/iso/19115/-3/mrd/1.0"
+                                            xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0">
+                        <mrd:MD_Format>
+                            <mrd:formatSpecificationCitation>
+                                <cit:CI_Citation>
+                                    <cit:title>
+                                        <gco:CharacterString>${driverLongName}</gco:CharacterString>
+                                    </cit:title>
+                                </cit:CI_Citation>
+                            </mrd:formatSpecificationCitation>
+                        </mrd:MD_Format>
+                    </mrd:distributionFormat>
+                </gn_add>
+            </iso19115-3.2018>
+        </add>
+    </distributionFormat>
+    <featureCatalogue>
+        <delete>
+            <iso19115-3.2018
+                    xpath="./mdb:contentInfo[*/mrc:featureCatalogue/*/gfc:featureType/*/gfc:typeName]">
+                <gn_delete/>
+            </iso19115-3.2018>
+        </delete>
+        <add>
+            <iso19115-3.2018 xpath=".">
+                <gn_add-per-layer>
+                    <gfc:featureType xmlns:mrc="http://standards.iso.org/iso/19115/-3/mrc/2.0"
+                                     xmlns:cat="http://standards.iso.org/iso/19115/-3/cat/1.0"
+                                     xmlns:gfc="http://standards.iso.org/iso/19110/gfc/1.1"
+                                     xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0">
+                        <gfc:FC_FeatureType>
+                            <gfc:typeName>${featureTypeName}</gfc:typeName>
+                            <gfc:isAbstract>
+                                <gco:Boolean>false</gco:Boolean>
+                            </gfc:isAbstract>
+                            ${gn_add-per-column}
+                        </gfc:FC_FeatureType>
+                    </gfc:featureType>
+                </gn_add-per-layer>
+                <gn_add-per-column xmlns:mrc="http://standards.iso.org/iso/19115/-3/mrc/2.0"
+                                   xmlns:cat="http://standards.iso.org/iso/19115/-3/cat/1.0"
+                                   xmlns:gfc="http://standards.iso.org/iso/19110/gfc/1.1"
+                                   xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0">
+                    <gfc:carrierOfCharacteristics>
+                        <gfc:FC_FeatureAttribute>
+                            <gfc:memberName>${fieldName}</gfc:memberName>
+                            <gfc:definition>
+                                <gco:CharacterString>${fieldDescription}</gco:CharacterString>
+                            </gfc:definition>
+                            <gfc:valueType>
+                                <gco:TypeName>
+                                    <gco:aName>
+                                        <gco:CharacterString>${fieldType}</gco:CharacterString>
+                                    </gco:aName>
+                                </gco:TypeName>
+                            </gfc:valueType>
+                        </gfc:FC_FeatureAttribute>
+                    </gfc:carrierOfCharacteristics>
+                </gn_add-per-column>
+                <gn_add>
+                    <mdb:contentInfo xmlns:mdb="http://standards.iso.org/iso/19115/-3/mdb/2.0"
+                                     xmlns:mrc="http://standards.iso.org/iso/19115/-3/mrc/2.0"
+                                     xmlns:cat="http://standards.iso.org/iso/19115/-3/cat/1.0"
+                                     xmlns:gfc="http://standards.iso.org/iso/19110/gfc/1.1"
+                                     xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0">
+                        <mrc:MD_FeatureCatalogue>
+                            <mrc:featureCatalogue>
+                                <gfc:FC_FeatureCatalogue>
+                                    <cat:name gco:nilReason="missing">
+                                        <gco:CharacterString/>
+                                    </cat:name>
+                                    <cat:scope gco:nilReason="missing">
+                                        <gco:CharacterString/>
+                                    </cat:scope>
+                                    <cat:versionNumber gco:nilReason="missing">
+                                        <gco:CharacterString/>
+                                    </cat:versionNumber>
+                                    ${gn_add-per-layer}
+                                </gfc:FC_FeatureCatalogue>
+                            </mrc:featureCatalogue>
+                        </mrc:MD_FeatureCatalogue>
+                    </mdb:contentInfo>
+                </gn_add>
+            </iso19115-3.2018>
+        </add>
+    </featureCatalogue>
+    <!--
+    TODO:
+    CRS
+    Metadata ?
+    -->
+</config>

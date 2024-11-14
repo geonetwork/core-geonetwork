@@ -69,6 +69,12 @@
 
     <dependency>
       <groupId>${project.groupId}</groupId>
+      <artifactId>gn-data-analyzer</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>${project.groupId}</groupId>
       <artifactId>gn-harvesters</artifactId>
       <version>${project.version}</version>
     </dependency>

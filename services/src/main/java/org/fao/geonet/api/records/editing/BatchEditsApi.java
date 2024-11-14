@@ -179,7 +179,7 @@ public class BatchEditsApi implements ApplicationContextAware {
         return applyBatchEdits(uuids, bucket, updateDateStamp, edits, request, false, null).one();
     }
 
-    private Pair<SimpleMetadataProcessingReport, Element> applyBatchEdits(
+    public Pair<SimpleMetadataProcessingReport, Element> applyBatchEdits(
         String[] uuids, String bucket,
         boolean updateDateStamp, BatchEditParameter[] edits,
         HttpServletRequest request,
