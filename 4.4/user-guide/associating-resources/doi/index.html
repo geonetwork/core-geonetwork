@@ -20,7 +20,7 @@
       
       
       <link rel="icon" href="../../../assets/images/geonetwork-logo.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.42">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.44">
     
     
       
@@ -1888,7 +1888,7 @@
 <li><code>Final DOI URL prefix</code>: (Optional) Keep it empty to use the default https://doi.org prefix. Use https://mds.test.datacite.org/doi when using the test API.</li>
 <li><code>DOI pattern</code>: Default is <code>{{uuid}}</code> but the DOI structure can be customized with database id and/or record group eg. <code>example-{{groupOwner}}-{{id}}</code>.</li>
 <li><code>DataCite prefix</code>: Usually looks like <code>10.xxxx</code>. You will be allowed to register DOI names only under the prefixes that have been assigned to you.</li>
-<li><code>Publication groups</code>: (Optional) Select the groups which metadata should be published to the DOI server. If no groups are selected, the server will be provided to publish the metadata that has no other DOI servers related to the metadata owner group.</li>
+<li><code>Record groups</code>: (Optional) When creating a DOI, only DOI server(s) associated with the record group are proposed. If record group is not associated with any DOI servers, then DOI servers with no group are proposed.</li>
 </ul>
 <p>A record can be downloaded using the DataCite format from the API using: <a href="http://localhost:8080/geonetwork/srv/api/records/da165110-88fd-11da-a88f-000d939bc5d8/formatters/datacite?output=xml">http://localhost:8080/geonetwork/srv/api/records/da165110-88fd-11da-a88f-000d939bc5d8/formatters/datacite?output=xml</a></p>
 <h2 id="creating-the-doi">Creating the DOI</h2>
