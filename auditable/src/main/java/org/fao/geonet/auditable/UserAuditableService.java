@@ -30,6 +30,9 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class UserAuditableService extends BaseAuditableService<UserAuditable> {
+
+    public static final String ENTITY_TYPE = "user";
+
     public UserAuditableService(SettingManager settingManager, UserAuditableRepository repository) {
         this.settingManager = settingManager;
         this.repository = repository;
@@ -37,6 +40,6 @@ public class UserAuditableService extends BaseAuditableService<UserAuditable> {
 
     @Override
     public String getEntityType() {
-        return "user";
+        return ENTITY_TYPE;
     }
 }

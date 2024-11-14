@@ -20,15 +20,13 @@
  * Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
  * Rome - Italy. email: geonetwork@osgeo.org
  */
-
 package org.fao.geonet.auditable;
 
+import java.util.Optional;
 import org.fao.geonet.domain.User;
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-
-import java.util.Optional;
 
 /**
  * Extracts the current user used, to store the information in the auditable entities.

@@ -20,12 +20,7 @@
  * Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
  * Rome - Italy. email: geonetwork@osgeo.org
  */
-package org.fao.geonet.repository;
+@NonNullApi
+package org.fao.geonet.auditable;
 
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.repository.NoRepositoryBean;
-import org.springframework.data.repository.history.RevisionRepository;
-
-@NoRepositoryBean
-public interface BaseAuditableRepository<U> extends RevisionRepository<U, Integer, Integer>, JpaRepository<U, Integer> {
-}
+import org.springframework.lang.NonNullApi;

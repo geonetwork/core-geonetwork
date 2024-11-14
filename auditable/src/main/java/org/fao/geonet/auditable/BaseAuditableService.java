@@ -20,7 +20,6 @@
  * Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
  * Rome - Italy. email: geonetwork@osgeo.org
  */
-
 package org.fao.geonet.auditable;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -39,10 +38,12 @@ import org.springframework.util.StringUtils;
 import java.util.*;
 
 public abstract class BaseAuditableService<U> {
-    protected static final String LINE_SEPARATOR = System.getProperty("line.separator");
+    protected static final String LINE_SEPARATOR = System.lineSeparator();
 
     protected BaseAuditableRepository<U> repository;
     protected SettingManager settingManager;
+
+    public abstract String getEntityType();
 
     public void auditSave(U auditableEntity) {
         if (!isAuditableEnabled()) return;
@@ -72,7 +73,6 @@ public abstract class BaseAuditableService<U> {
         return retrieveRevisionHistory(revisions);
     }
 
-    public abstract String getEntityType();
 
     protected String retrieveRevisionHistoryAsString(Revisions<Integer, U> revisions, ResourceBundle messages) {
         List<RevisionInfo> revisionInfoList = retrieveRevisionHistory(revisions);
@@ -123,7 +123,7 @@ public abstract class BaseAuditableService<U> {
 
             // Initial revision
             ObjectMapper objectMapper = new ObjectMapper();
-            Map<String, Object> revisionMap =  objectMapper.convertValue(initialRevision.getEntity(), Map.class);
+            Map<String, Object> revisionMap = objectMapper.convertValue(initialRevision.getEntity(), Map.class);
             // Remove empty values and id
             revisionMap.values().removeAll(Arrays.asList("", null));
             revisionMap.remove(idFieldName);
@@ -136,13 +136,13 @@ public abstract class BaseAuditableService<U> {
             revisionInfoList.add(initialRevisionInfo);
 
             int i = 0;
-            while (i+1 < numRevisions) {
+            while (i + 1 < numRevisions) {
                 Revision<Integer, U> revision1 = revisionList.get(i);
-                Revision<Integer, U> revision2 = revisionList.get(i+1);
+                Revision<Integer, U> revision2 = revisionList.get(i + 1);
 
-                Map<String, Object> revision1Map =  objectMapper.convertValue(revision1.getEntity(), Map.class);
+                Map<String, Object> revision1Map = objectMapper.convertValue(revision1.getEntity(), Map.class);
                 revision1Map.remove(idFieldName);
-                Map<String, Object> revision2Map =  objectMapper.convertValue(revision2.getEntity(), Map.class);
+                Map<String, Object> revision2Map = objectMapper.convertValue(revision2.getEntity(), Map.class);
                 revision2Map.remove(idFieldName);
 
                 MapDifference<String, Object> diff = Maps.difference(revision1Map, revision2Map);
@@ -162,7 +162,6 @@ public abstract class BaseAuditableService<U> {
                     RevisionFieldChange revisionFieldChange = new RevisionFieldChange(key, oldValueAsString, newValueAsString);
 
                     revisionInfo.addChange(revisionFieldChange);
-
                 });
 
 

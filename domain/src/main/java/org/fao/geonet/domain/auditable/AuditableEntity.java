@@ -20,19 +20,21 @@
  * Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
  * Rome - Italy. email: geonetwork@osgeo.org
  */
-
 package org.fao.geonet.domain.auditable;
 
+import javax.persistence.Column;
+import javax.persistence.EntityListeners;
+import javax.persistence.MappedSuperclass;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.util.Date;
 import org.hibernate.envers.Audited;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-
-import javax.persistence.*;
-import java.util.Date;
 
 /**
  * Base class for auditable entities, providing fields for creation and last modification user / dates.
@@ -46,12 +48,6 @@ public abstract class AuditableEntity {
     @JsonIgnore
     protected String createdBy;
 
-    @CreatedDate
-    @Column(name = "created_date")
-    @Temporal(TemporalType.TIMESTAMP)
-    @JsonIgnore
-    private Date createdDate;
-
     @LastModifiedBy
     @Column(name = "last_modified_by", nullable = true, updatable = true)
     @JsonIgnore
@@ -62,6 +58,12 @@ public abstract class AuditableEntity {
     @Column(name = "last_modified_date", nullable = true, updatable = true)
     @JsonIgnore
     protected Date lastModifiedDate;
+
+    @CreatedDate
+    @Column(name = "created_date")
+    @Temporal(TemporalType.TIMESTAMP)
+    @JsonIgnore
+    private Date createdDate;
 
     public String getCreatedBy() {
         return createdBy;

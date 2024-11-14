@@ -20,29 +20,30 @@
  * Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
  * Rome - Italy. email: geonetwork@osgeo.org
  */
-
 package org.fao.geonet.domain.auditable;
 
+import javax.annotation.Nonnull;
+import javax.persistence.Access;
+import javax.persistence.AccessType;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.domain.Address;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.domain.UserGroup;
 import org.hibernate.envers.Audited;
 
-import javax.annotation.Nonnull;
-import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * An entity to audit the changes for user entities.
  *
  * @see org.fao.geonet.domain.User
- *
  */
 @Entity
 @Access(AccessType.PROPERTY)
-@Audited(withModifiedFlag=true)
+@Audited(withModifiedFlag = true)
 public class UserAuditable extends AuditableEntity {
 
     private int id;
@@ -63,6 +64,68 @@ public class UserAuditable extends AuditableEntity {
     private String groupsReviewer;
     private String groupsUserAdmin;
     private boolean enabled;
+
+    public static UserAuditable build(User user, List<UserGroup> userGroups) {
+        UserAuditable userAuditable = new UserAuditable();
+
+        userAuditable.setId(user.getId());
+        userAuditable.setUsername(user.getUsername());
+        userAuditable.setName(user.getName());
+        userAuditable.setSurname(user.getSurname());
+        userAuditable.setEnabled(user.isEnabled());
+        userAuditable.setKind(user.getKind());
+        userAuditable.setOrganisation(user.getOrganisation());
+        userAuditable.setProfile(user.getProfile().name());
+        if (!user.getEmailAddresses().isEmpty()) {
+            // A user can have only 1 address defined in the UI.
+            userAuditable.setEmailAddress((String) user.getEmailAddresses().toArray()[0]);
+        }
+        if (!user.getAddresses().isEmpty()) {
+            // A user can have only 1 address defined in the UI.
+            Address userAddress = (Address) user.getAddresses().toArray()[0];
+            userAuditable.setAddress(userAddress.getAddress());
+            userAuditable.setZip(userAddress.getZip());
+            userAuditable.setState(userAddress.getState());
+            userAuditable.setCity(userAddress.getCity());
+            userAuditable.setCountry(userAddress.getCountry());
+        }
+        userAuditable.setEnabled(user.isEnabled());
+
+        Set<String> groupsRegisteredUserList = new TreeSet<>();
+        Set<String> groupsEditorList = new TreeSet<>();
+        Set<String> groupsReviewerList = new TreeSet<>();
+        Set<String> groupsUserAdminList = new TreeSet<>();
+
+        // Groups
+        if (userGroups != null) {
+            userGroups.forEach(userGroup -> {
+                switch (userGroup.getProfile()) {
+                    case RegisteredUser:
+                        groupsRegisteredUserList.add(userGroup.getGroup().getName());
+                        break;
+                    case Editor:
+                        groupsEditorList.add(userGroup.getGroup().getName());
+                        break;
+                    case Reviewer:
+                        groupsReviewerList.add(userGroup.getGroup().getName());
+                        break;
+                    case UserAdmin:
+                        groupsUserAdminList.add(userGroup.getGroup().getName());
+                        break;
+                    default:
+                        break;
+                }
+            });
+        }
+
+
+        userAuditable.setGroupsRegisteredUser(StringUtils.join(groupsRegisteredUserList, ","));
+        userAuditable.setGroupsEditor(StringUtils.join(groupsEditorList, ","));
+        userAuditable.setGroupsReviewer(StringUtils.join(groupsReviewerList, ","));
+        userAuditable.setGroupsUserAdmin(StringUtils.join(groupsUserAdminList, ","));
+
+        return userAuditable;
+    }
 
     @Id
     public int getId() {
@@ -86,8 +149,7 @@ public class UserAuditable extends AuditableEntity {
         return username;
     }
 
-    @Nonnull
-    public void setUsername(String username) {
+    public void setUsername(@Nonnull String username) {
         this.username = username;
     }
 
@@ -209,64 +271,5 @@ public class UserAuditable extends AuditableEntity {
 
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
-    }
-
-    public static UserAuditable build(User user, List<UserGroup> userGroups) {
-        UserAuditable userAuditable = new UserAuditable();
-
-        userAuditable.setId(user.getId());
-        userAuditable.setUsername(user.getUsername());
-        userAuditable.setName(user.getName());
-        userAuditable.setSurname(user.getSurname());
-        userAuditable.setEnabled(user.isEnabled());
-        userAuditable.setKind(user.getKind());
-        userAuditable.setOrganisation(user.getOrganisation());
-        userAuditable.setProfile(user.getProfile().name());
-        if (!user.getEmailAddresses().isEmpty()) {
-            // A user can have only 1 address defined in the UI.
-            userAuditable.setEmailAddress((String) user.getEmailAddresses().toArray()[0]);
-        }
-        if (!user.getAddresses().isEmpty()) {
-            // A user can have only 1 address defined in the UI.
-            Address userAddress = (Address) user.getAddresses().toArray()[0];
-            userAuditable.setAddress(userAddress.getAddress());
-            userAuditable.setZip(userAddress.getZip());
-            userAuditable.setState(userAddress.getState());
-            userAuditable.setCity(userAddress.getCity());
-            userAuditable.setCountry(userAddress.getCountry());
-        }
-        userAuditable.setEnabled(user.isEnabled());
-
-        List<String> groupsRegisteredUserList = new ArrayList<>();
-        List<String> groupsEditorList = new ArrayList<>();
-        List<String> groupsReviewerList = new ArrayList<>();
-        List<String> groupsUserAdminList = new ArrayList<>();
-
-        // Groups
-        userGroups.stream().forEach(userGroup -> {
-            switch (userGroup.getProfile()) {
-                case RegisteredUser:
-                    groupsRegisteredUserList.add(userGroup.getGroup().getName());
-                    break;
-                case Editor:
-                    groupsEditorList.add(userGroup.getGroup().getName());
-                    break;
-                case Reviewer:
-                    groupsReviewerList.add(userGroup.getGroup().getName());
-                    break;
-                case UserAdmin:
-                    groupsUserAdminList.add(userGroup.getGroup().getName());
-                    break;
-                default:
-                    break;
-            }
-        });
-
-        userAuditable.setGroupsRegisteredUser(StringUtils.join(groupsRegisteredUserList.toArray(), ","));
-        userAuditable.setGroupsEditor(StringUtils.join(groupsEditorList.toArray(), ","));
-        userAuditable.setGroupsReviewer(StringUtils.join(groupsReviewerList.toArray(), ","));
-        userAuditable.setGroupsUserAdmin(StringUtils.join(groupsUserAdminList.toArray(), ","));
-
-        return userAuditable;
     }
 }

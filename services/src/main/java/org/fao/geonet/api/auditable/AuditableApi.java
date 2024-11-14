@@ -23,24 +23,26 @@
 
 package org.fao.geonet.api.auditable;
 
+import javax.servlet.ServletRequest;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.fao.geonet.api.ApiUtils;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import org.fao.geonet.auditable.BaseAuditableService;
 import org.fao.geonet.auditable.model.RevisionInfo;
 import org.fao.geonet.domain.auditable.AuditableEntity;
 import org.springframework.beans.factory.ListableBeanFactory;
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.core.ResolvableType;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.ServletRequest;
-import java.util.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
 
 
 @RequestMapping(value = {
@@ -52,7 +54,7 @@ import java.util.*;
 public class AuditableApi {
 
     // Auditable service beans
-    private Map<String, BaseAuditableService<? extends AuditableEntity>> factory = new HashMap<>();
+    private final Map<String, BaseAuditableService<? extends AuditableEntity>> factory = new HashMap<>();
 
     public AuditableApi(ListableBeanFactory beanFactory) {
         Collection<BaseAuditableService> auditableServiceBeans = beanFactory.getBeansOfType(BaseAuditableService.class).values();
@@ -82,14 +84,9 @@ public class AuditableApi {
             required = true
         )
         @PathVariable
-        Integer entityIdentifier,
-        @Parameter(hidden = true)
-        ServletRequest request
-        ) {
-        ResourceBundle messages = ApiUtils.getMessagesResourceBundle(request.getLocales());
-
+        Integer entityIdentifier
+    ) {
         BaseAuditableService<? extends AuditableEntity> service = factory.get(entityType);
-
         return service.getEntityHistory(entityIdentifier);
     }
 }

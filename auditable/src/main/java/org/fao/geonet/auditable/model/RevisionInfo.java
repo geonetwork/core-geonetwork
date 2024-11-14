@@ -20,23 +20,20 @@
  * Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
  * Rome - Italy. email: geonetwork@osgeo.org
  */
-
 package org.fao.geonet.auditable.model;
 
-import org.fao.geonet.domain.ISODate;
-
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import org.fao.geonet.domain.ISODate;
 
 public class RevisionInfo {
-    private int revisionNumber;
-    private String user;
-    private String date;
-
-    private String value;
-
-    private List<RevisionFieldChange> changes;
+    private final int revisionNumber;
+    private final String user;
+    private final String date;
+    private final String value;
+    private final List<RevisionFieldChange> changes;
 
     public RevisionInfo(int revisionNumber, String user, Date date, String value) {
         this.revisionNumber = revisionNumber;
@@ -62,8 +59,11 @@ public class RevisionInfo {
         return value;
     }
 
+    /**
+     * @return an unmodifiable view of the list of changes.
+     */
     public List<RevisionFieldChange> getChanges() {
-        return changes;
+        return Collections.unmodifiableList(changes);
     }
 
     public void addChange(RevisionFieldChange change) {

@@ -20,9 +20,11 @@
  * Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
  * Rome - Italy. email: geonetwork@osgeo.org
  */
-
 package org.fao.geonet.auditable.model;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 import org.fao.geonet.domain.Group;
 import org.fao.geonet.domain.Profile;
 import org.fao.geonet.domain.User;
@@ -31,21 +33,16 @@ import org.fao.geonet.domain.auditable.UserAuditable;
 import org.junit.Test;
 import org.springframework.util.StringUtils;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 public class UserAuditableTest {
 
     @Test
     public void testBuildUserAuditable() {
-        Group group = new Group()
-            .setId(1)
-            .setName("sample");
+        Group group = new Group().setId(1).setName("sample");
+        Group group2 = new Group().setId(2).setName("sampleGroup2");
 
 
         User user = new User()
@@ -54,7 +51,7 @@ public class UserAuditableTest {
             .setSurname("surname")
             .setUsername("username")
             .setEnabled(true)
-            .setEmailAddresses(new HashSet<>(Arrays.asList("test@mail.com")))
+            .setEmailAddresses(new HashSet<>(List.of("test@mail.com")))
             .setProfile(Profile.Reviewer);
 
 
@@ -65,7 +62,7 @@ public class UserAuditableTest {
             .setProfile(Profile.Editor);
 
         UserGroup userGroup2 = new UserGroup()
-            .setGroup(group)
+            .setGroup(group2)
             .setUser(user)
             .setProfile(Profile.Reviewer);
 
@@ -81,12 +78,12 @@ public class UserAuditableTest {
         assertEquals(user.getUsername(), userAuditable.getUsername());
         assertEquals(user.getEmailAddresses().toArray()[0], userAuditable.getEmailAddress());
         assertEquals(user.getProfile().toString(), userAuditable.getProfile());
-        assertTrue(!StringUtils.hasLength(userAuditable.getGroupsRegisteredUser()));
+        assertFalse(StringUtils.hasLength(userAuditable.getGroupsRegisteredUser()));
         assertTrue(userAuditable.getGroupsEditor().contains(group.getName()));
-        assertTrue(userAuditable.getGroupsReviewer().contains(group.getName()));
-        assertTrue(!StringUtils.hasLength(userAuditable.getGroupsUserAdmin()));
+        assertTrue(userAuditable.getGroupsReviewer().contains(group2.getName()));
+        assertFalse(StringUtils.hasLength(userAuditable.getGroupsUserAdmin()));
 
         assertEquals(group.getName(), userAuditable.getGroupsEditor());
-        assertEquals(group.getName(), userAuditable.getGroupsReviewer());
+        assertEquals(group2.getName(), userAuditable.getGroupsReviewer());
     }
 }

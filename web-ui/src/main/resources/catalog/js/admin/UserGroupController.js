@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2024 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -49,8 +49,10 @@
     "$rootScope",
     "$translate",
     "$timeout",
+    "$log",
     "gnConfig",
     "gnConfigService",
+    "gnAuditableService",
     function (
       $scope,
       $routeParams,
@@ -58,8 +60,10 @@
       $rootScope,
       $translate,
       $timeout,
+      $log,
       gnConfig,
-      gnConfigService
+      gnConfigService,
+      gnAuditableService
     ) {
       $scope.searchObj = {
         params: {
@@ -319,17 +323,19 @@
             );
 
             // Load user changes
-            $http.get("../api/auditable/user/" + u.id).then(
+            gnAuditableService.getEntityHistory("user", u.id).then(
               function (response) {
                 $scope.userHistory = response.data;
               },
               function (response) {
                 // TODO
+                $log.error("Error retrieving the audit history of user " + u.id);
               }
             );
           },
           function (response) {
             // TODO
+            $log.error("Error retrieving the info of user " + u.id);
           }
         );
 

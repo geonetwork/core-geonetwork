@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2024 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -20,19 +20,12 @@
  * Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
  * Rome - Italy. email: geonetwork@osgeo.org
  */
-
 package org.fao.geonet.repository;
 
-
 import org.fao.geonet.domain.auditable.UserAuditable;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.repository.history.RevisionRepository;
-import org.springframework.stereotype.Repository;
-
 
 /**
  * Data Access object for accessing {@link UserAuditable} entities.
- *
  */
 public interface UserAuditableRepository extends BaseAuditableRepository<UserAuditable> {
 
