@@ -34,7 +34,9 @@
   </require>
   <declarative name="lib" pathOnDisk="web-ui/src/main/resources">
     <jsSource webappPath="/catalog/lib/modernizr.js" minimize="false"/>
-    <jsSource webappPath="/catalog/lib/jquery-2.2.4.min.js" minimize="false"/>
+    <jsSource webappPath="/catalog/lib/jquery-3.7.1.js" minimize="true"/>
+    <jsSource webappPath="/catalog/lib/jquery-migrate-mute.js" minimize="false"/>
+    <jsSource webappPath="/catalog/lib/jquery-migrate-3.4.1.js" minimize="false"/>
     <jsSource webappPath="/catalog/lib/moment-with-locales.min.js" minimize="false"/>
     <jsSource webappPath="/catalog/lib/moment-timezone-with-data-1970-2030.min.js" minimize="false" />
     <jsSource webappPath="/catalog/lib/angular/angular.min.js" minimize="false"/>
@@ -61,7 +63,7 @@
     <jsSource webappPath="/catalog/lib/angular.ext/angular-floatThead.js"/>
     <jsSource webappPath="/catalog/lib/tinycolor.js"/>
     <jsSource webappPath="/catalog/lib/franc-min/franc-min.js"/>
-    <jsSource webappPath="/catalog/lib/style/bootstrap/dist/js/bootstrap.min.js" minimize="false"/>
+    <jsSource webappPath="/catalog/lib/bootstrap.js" minimize="true"/>
     <jsSource webappPath="/catalog/lib/proj4js-compressed.js" minimize="false"/>
     <jsSource webappPath="/catalog/lib/openlayers/ol.js" minimize="false"/>
     <jsSource webappPath="/catalog/lib/d3.v3.min.js" minimize="false"/>
@@ -73,18 +75,38 @@
     <jsSource webappPath="/catalog/lib/jquery.ext/jquery.fileupload-process.js"/>
     <jsSource webappPath="/catalog/lib/jquery.ext/jquery.fileupload-angular.js"/>
     <jsSource webappPath="/catalog/lib/jquery.ext/jquery.floatThead-slim.min.js"/>
-    <jsSource webappPath="/catalog/lib/jquery.ext/jquery-ui-slider.min.js" minimize="false"/>
+    <jsSource webappPath="/catalog/lib/jquery.ext/jquery-ui-slider-1.13.2.min.js" minimize="false"/>
     <jsSource webappPath="/catalog/lib/bootstrap.ext/typeahead.js/typeahead.bundle.js"/>
     <jsSource webappPath="/catalog/lib/bootstrap.ext/tagsinput/bootstrap-tagsinput.min.js"
               minimize="false"/>
     <jsSource webappPath="/catalog/lib/bootstrap.ext/tagsinput/bootstrap-tagsinput-angular.js"/>
-    <jsSource webappPath="/catalog/lib/bootstrap.ext/datepicker/bootstrap-datepicker.js"/>
-    <jsSource webappPath="/catalog/lib/bootstrap.ext/datepicker/bootstrap-datepicker.fr.js"/>
-    <jsSource webappPath="/catalog/lib/bootstrap.ext/datepicker/bootstrap-datepicker.nl.js"/>
+    <jsSource webappPath="/catalog/lib/bootstrap.ext/datepicker/bootstrap-datepicker.js" minimize="true"/>
+    <jsSource webappPath="/catalog/lib/bootstrap.ext/datepicker/bootstrap-datepicker.fr.min.js" minimize="false"/>
+    <jsSource webappPath="/catalog/lib/bootstrap.ext/datepicker/bootstrap-datepicker.nl.min.js" minimize="false"/>
+    <jsSource webappPath="/catalog/lib/bootstrap.ext/datepicker/bootstrap-datepicker.az.min.js" minimize="false"/>
+    <jsSource webappPath="/catalog/lib/bootstrap.ext/datepicker/bootstrap-datepicker.ca.min.js" minimize="false"/>
+    <jsSource webappPath="/catalog/lib/bootstrap.ext/datepicker/bootstrap-datepicker.cs.min.js" minimize="false"/>
+    <jsSource webappPath="/catalog/lib/bootstrap.ext/datepicker/bootstrap-datepicker.cy.min.js" minimize="false"/>
+    <jsSource webappPath="/catalog/lib/bootstrap.ext/datepicker/bootstrap-datepicker.da.min.js" minimize="false"/>
+    <jsSource webappPath="/catalog/lib/bootstrap.ext/datepicker/bootstrap-datepicker.de.min.js" minimize="false"/>
+    <jsSource webappPath="/catalog/lib/bootstrap.ext/datepicker/bootstrap-datepicker.es.min.js" minimize="false"/>
+    <jsSource webappPath="/catalog/lib/bootstrap.ext/datepicker/bootstrap-datepicker.fi.min.js" minimize="false"/>
+    <jsSource webappPath="/catalog/lib/bootstrap.ext/datepicker/bootstrap-datepicker.hy.min.js" minimize="false"/>
+    <jsSource webappPath="/catalog/lib/bootstrap.ext/datepicker/bootstrap-datepicker.is.min.js" minimize="false"/>
+    <jsSource webappPath="/catalog/lib/bootstrap.ext/datepicker/bootstrap-datepicker.it.min.js" minimize="false"/>
+    <jsSource webappPath="/catalog/lib/bootstrap.ext/datepicker/bootstrap-datepicker.ka.min.js" minimize="false"/>
+    <jsSource webappPath="/catalog/lib/bootstrap.ext/datepicker/bootstrap-datepicker.ko.min.js" minimize="false"/>
+    <jsSource webappPath="/catalog/lib/bootstrap.ext/datepicker/bootstrap-datepicker.pt.min.js" minimize="false"/>
+    <jsSource webappPath="/catalog/lib/bootstrap.ext/datepicker/bootstrap-datepicker.ro.min.js" minimize="false"/>
+    <jsSource webappPath="/catalog/lib/bootstrap.ext/datepicker/bootstrap-datepicker.ru.min.js" minimize="false"/>
+    <jsSource webappPath="/catalog/lib/bootstrap.ext/datepicker/bootstrap-datepicker.sk.min.js" minimize="false"/>
+    <jsSource webappPath="/catalog/lib/bootstrap.ext/datepicker/bootstrap-datepicker.sv.min.js" minimize="false"/>
+    <jsSource webappPath="/catalog/lib/bootstrap.ext/datepicker/bootstrap-datepicker.uk.min.js" minimize="false"/>
+    <jsSource webappPath="/catalog/lib/bootstrap.ext/datepicker/bootstrap-datepicker.zh.min.js" minimize="false"/>
     <jsSource webappPath="/catalog/lib/bootstrap-table/dist/bootstrap-table.min.js"
               minimize="false"/>
     <jsSource webappPath="/catalog/lib/bootstrap-table/dist/bootstrap-table-locale-all.min.js"
-            minimize="false"/>
+              minimize="false"/>
     <jsSource webappPath="/catalog/lib/bootstrap-table-angular.js"
               minimize="false"/>
     <jsSource webappPath="/catalog/lib/FileSaver/FileSaver.min.js" minimize="false"/>
@@ -98,12 +120,13 @@
     <jsSource webappPath="/catalog/lib/recaptcha/angular-recaptcha.min.js" minimize="false"/>
     <jsSource webappPath="/catalog/lib/geohash.js"/>
     <jsSource webappPath="/catalog/lib/xml2json/xml2json.min.js" minimize="false"/>
-    <jsSource webappPath="/catalog/lib/dom-to-image/dom-to-image.min.js" minimize="false"/>
   </declarative>
   <!-- Same as previous + olcesium -->
   <declarative name="lib3d" pathOnDisk="web-ui/src/main/resources">
     <jsSource webappPath="/catalog/lib/modernizr.js" minimize="false"/>
-    <jsSource webappPath="/catalog/lib/jquery-2.2.4.min.js" minimize="false"/>
+    <jsSource webappPath="/catalog/lib/jquery-3.7.1.js" minimize="true"/>
+    <jsSource webappPath="/catalog/lib/jquery-migrate-mute.js" minimize="false"/>
+    <jsSource webappPath="/catalog/lib/jquery-migrate-3.4.1.js" minimize="false"/>
     <jsSource webappPath="/catalog/lib/moment-with-locales.min.js" minimize="false"/>
     <jsSource webappPath="/catalog/lib/moment-timezone-with-data-1970-2030.min.js" minimize="false" />
     <jsSource webappPath="/catalog/lib/angular/angular.min.js" minimize="false"/>
@@ -131,7 +154,7 @@
     <jsSource webappPath="/catalog/lib/jquery.ext/jquery.floatThead-slim.min.js"/>
     <jsSource webappPath="/catalog/lib/tinycolor.js"/>
     <jsSource webappPath="/catalog/lib/franc-min/franc-min.js"/>
-    <jsSource webappPath="/catalog/lib/style/bootstrap/dist/js/bootstrap.min.js" minimize="false"/>
+    <jsSource webappPath="/catalog/lib/bootstrap.js" minimize="true"/>
     <jsSource webappPath="/catalog/lib/proj4js-compressed.js" minimize="false"/>
     <!-- FIXME in non debug mode, 3D mode does not work when WMS layer is displayed.
          No errors, only block tile loading-->
@@ -145,14 +168,34 @@
     <jsSource webappPath="/catalog/lib/jquery.ext/jquery.fileupload.js"/>
     <jsSource webappPath="/catalog/lib/jquery.ext/jquery.fileupload-process.js"/>
     <jsSource webappPath="/catalog/lib/jquery.ext/jquery.fileupload-angular.js"/>
-    <jsSource webappPath="/catalog/lib/jquery.ext/jquery-ui-slider.min.js" minimize="false"/>
+    <jsSource webappPath="/catalog/lib/jquery.ext/jquery-ui-slider-1.13.2.min.js" minimize="false"/>
     <jsSource webappPath="/catalog/lib/bootstrap.ext/typeahead.js/typeahead.bundle.js"/>
     <jsSource webappPath="/catalog/lib/bootstrap.ext/tagsinput/bootstrap-tagsinput.min.js"
               minimize="false"/>
     <jsSource webappPath="/catalog/lib/bootstrap.ext/tagsinput/bootstrap-tagsinput-angular.js"/>
     <jsSource webappPath="/catalog/lib/bootstrap.ext/datepicker/bootstrap-datepicker.js"/>
-    <jsSource webappPath="/catalog/lib/bootstrap.ext/datepicker/bootstrap-datepicker.fr.js"/>
-    <jsSource webappPath="/catalog/lib/bootstrap.ext/datepicker/bootstrap-datepicker.nl.js"/>
+    <jsSource webappPath="/catalog/lib/bootstrap.ext/datepicker/bootstrap-datepicker.fr.min.js" minimize="false"/>
+    <jsSource webappPath="/catalog/lib/bootstrap.ext/datepicker/bootstrap-datepicker.nl.min.js" minimize="false"/>
+    <jsSource webappPath="/catalog/lib/bootstrap.ext/datepicker/bootstrap-datepicker.az.min.js" minimize="false"/>
+    <jsSource webappPath="/catalog/lib/bootstrap.ext/datepicker/bootstrap-datepicker.ca.min.js" minimize="false"/>
+    <jsSource webappPath="/catalog/lib/bootstrap.ext/datepicker/bootstrap-datepicker.cs.min.js" minimize="false"/>
+    <jsSource webappPath="/catalog/lib/bootstrap.ext/datepicker/bootstrap-datepicker.cy.min.js" minimize="false"/>
+    <jsSource webappPath="/catalog/lib/bootstrap.ext/datepicker/bootstrap-datepicker.da.min.js" minimize="false"/>
+    <jsSource webappPath="/catalog/lib/bootstrap.ext/datepicker/bootstrap-datepicker.de.min.js" minimize="false"/>
+    <jsSource webappPath="/catalog/lib/bootstrap.ext/datepicker/bootstrap-datepicker.es.min.js" minimize="false"/>
+    <jsSource webappPath="/catalog/lib/bootstrap.ext/datepicker/bootstrap-datepicker.fi.min.js" minimize="false"/>
+    <jsSource webappPath="/catalog/lib/bootstrap.ext/datepicker/bootstrap-datepicker.hy.min.js" minimize="false"/>
+    <jsSource webappPath="/catalog/lib/bootstrap.ext/datepicker/bootstrap-datepicker.is.min.js" minimize="false"/>
+    <jsSource webappPath="/catalog/lib/bootstrap.ext/datepicker/bootstrap-datepicker.it.min.js" minimize="false"/>
+    <jsSource webappPath="/catalog/lib/bootstrap.ext/datepicker/bootstrap-datepicker.ka.min.js" minimize="false"/>
+    <jsSource webappPath="/catalog/lib/bootstrap.ext/datepicker/bootstrap-datepicker.ko.min.js" minimize="false"/>
+    <jsSource webappPath="/catalog/lib/bootstrap.ext/datepicker/bootstrap-datepicker.pt.min.js" minimize="false"/>
+    <jsSource webappPath="/catalog/lib/bootstrap.ext/datepicker/bootstrap-datepicker.ro.min.js" minimize="false"/>
+    <jsSource webappPath="/catalog/lib/bootstrap.ext/datepicker/bootstrap-datepicker.ru.min.js" minimize="false"/>
+    <jsSource webappPath="/catalog/lib/bootstrap.ext/datepicker/bootstrap-datepicker.sk.min.js" minimize="false"/>
+    <jsSource webappPath="/catalog/lib/bootstrap.ext/datepicker/bootstrap-datepicker.sv.min.js" minimize="false"/>
+    <jsSource webappPath="/catalog/lib/bootstrap.ext/datepicker/bootstrap-datepicker.uk.min.js" minimize="false"/>
+    <jsSource webappPath="/catalog/lib/bootstrap.ext/datepicker/bootstrap-datepicker.zh.min.js" minimize="false"/>
     <jsSource webappPath="/catalog/lib/bootstrap-table/dist/bootstrap-table.min.js"
               minimize="false"/>
     <jsSource webappPath="/catalog/lib/bootstrap-table/dist/bootstrap-table-locale-all.min.js"
@@ -170,6 +213,5 @@
     <jsSource webappPath="/catalog/lib/recaptcha/angular-recaptcha.min.js" minimize="false"/>
     <jsSource webappPath="/catalog/lib/geohash.js"/>
     <jsSource webappPath="/catalog/lib/xml2json/xml2json.min.js" minimize="false"/>
-    <jsSource webappPath="/catalog/lib/dom-to-image/dom-to-image.min.js" minimize="false"/>
   </declarative>
 </sources>

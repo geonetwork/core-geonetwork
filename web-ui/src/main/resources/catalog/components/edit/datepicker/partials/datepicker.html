@@ -63,7 +63,7 @@
         data-ng-model="timezone"
         data-ng-hide="hideTimezone"
         data-ng-options="t.offset as (t.name + ' ' + t.offset) for t in timezoneNames"
-      />
+      ></select>
 
       <input
         type="text"
@@ -132,7 +132,7 @@
             data-ng-model="dateDropDownInput"
             data-on-set-time="formatFromDatePicker"
             data-datetimepicker-config="{minView: 'minute', dropdownSelector: '#dropdown2' }"
-          />
+          ></datetimepicker>
         </ul>
       </div>
     </div>

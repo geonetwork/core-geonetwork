@@ -61,14 +61,6 @@ Then on the Java application, register the new language in `src/main/webResource
 
 Add a new SQL file for the database initialization in `src/main/webapp/WEB-INF/classes/setup/sql/data/loc-cze-default.sql` and update translations. This file is used to register the new language for database entity translations (eg. groups, status).
 
-In `src/main/webResources/WEB-INF/config-db/initial_data.xml`, register the new SQL file:
-
-``` xml
-<bean class="org.fao.geonet.domain.Pair" factory-method="read">
-  <constructor-arg value="WEB-INF/classes/setup/sql/data"/>
-  <constructor-arg value="loc-cze-"/>
-</bean>
-```
 
 # Translating a standard
 

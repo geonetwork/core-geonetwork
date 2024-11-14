@@ -87,6 +87,7 @@
     "chi": "중국어",
     "city": "도시",
     "cl_status": "상태",
+    "cl_couplingType": "Coupling type",
     "associatedResources": "연관 자원",
     "brothersAndSisters": "형제",
     "moreInfoOnRecord": "더 보기...",
@@ -184,7 +185,7 @@
     "hitsPerPage": "페이지 당 레코드",
     "chooseRecordsPerPage": "클릭하여 페이지당 레코드 수를 선택하십시오.",
     "sortedBy": " {{field}} 정렬",
-    "sortBy-dateStampDesc": "last updates",
+    "sortBy-changeDateDesc": "last updates",
     "sortBy-createDateDesc": "new records",
     "sortBy-resourceTitleObject.default.sort": "title (ascending)",
     "sortBy-resourceTitleObject.default.sortDesc": "title (descending)",
@@ -551,6 +552,7 @@
     "cancelWorkingCopy": "Cancel working copy",
     "deleteWorkingCopyRecordConfirm": "Do you really want to remove the working copy '{{resourceTitle}}'?",
     "workingCopy": "Working copy",
+    "approvedRecord": "Approved record",
     "onTheWeb": "More online information",
     "pdfReportTocTitle": "Contents",
     "metadataValidated": "Metadata validated.",
@@ -580,5 +582,9 @@
     "reviewerNotAllowedPublish": "Reviewer not allowed to publish the metadata",
     "reviewerNotAllowedUnpublish": "Reviewer not allowed to un-publish the metadata",
     "reviewerNotAllowedPublishUnpublish": "Reviewer not allowed to publish / un-publish the metadata",
-    "missingTitle": "Missing title"
+    "missingTitle": "Missing title",
+    "mapLegend": "범례",
+    "quality": "품질",
+    "download": "Download",
+    "links": "링크"
 }

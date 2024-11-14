@@ -226,11 +226,14 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
         // if text/html > xsl_view
         // if application/pdf > xsl_view and PDF output
         // if application/x-gn-<formatterId>+(xml|html|pdf|text)
-        // Force PDF ouutput when URL parameter is set.
+        // Force PDF output when URL parameter is set.
         // This is useful when making GET link to PDF which
         // can not use headers.
         if (MediaType.ALL_VALUE.equals(acceptHeader)) {
             acceptHeader = MediaType.TEXT_HTML_VALUE;
+        }
+        if (formatType == null) {
+            formatType = FormatType.findByFormatterKey(formatterId);
         }
         if (formatType == null) {
             formatType = FormatType.find(acceptHeader);
@@ -252,7 +255,7 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
             language = isoLanguagesMapper.iso639_2T_to_iso639_2B(locale.getISO3Language());
         }
 
-        AbstractMetadata metadata = ApiUtils.canViewRecord(metadataUuid, servletRequest);
+        AbstractMetadata metadata = ApiUtils.canViewRecord(metadataUuid, approved, servletRequest);
 
         if (approved) {
             metadata = ApplicationContextHolder.get().getBean(MetadataRepository.class).findOneByUuid(metadataUuid);

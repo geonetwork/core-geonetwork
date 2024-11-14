@@ -24,12 +24,74 @@
   <modelVersion>4.0.0</modelVersion>
   <artifactId>gn-es-dashboards</artifactId>
   <name>GeoNetwork dashboard app based on Kibana</name>
-
   <parent>
     <artifactId>gn-es</artifactId>
     <groupId>org.geonetwork-opensource</groupId>
-    <version>4.4.3-SNAPSHOT</version>
+    <version>4.4.7-SNAPSHOT</version>
   </parent>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-enforcer-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>check-readme</id>
+            <goals>
+              <goal>enforce</goal>
+            </goals>
+            <configuration combine.self="override">
+              <rules>
+                <evaluateBeanshell>
+                  <message>Update README.md examples for Elasticsearch ${es.version}</message>
+                  <condition>
+                      import java.util.regex.Pattern;
+
+                      esVersion = "${es.version}";
+                      print("Scanning README for " + esVersion);
+
+                      docker = Pattern.compile("Kibana (\\d.\\d\\d.\\d)");
+                      download = Pattern.compile("Download Kibana (\\d.\\d\\d.\\d)");
+
+                      patterns = new Pattern[]{ docker, download};
+
+                      readme = new BufferedReader(new FileReader("README.md"));
+
+                      number = 0;
+                      while ((line = readme.readLine()) != null) {
+                        number++;
+                        for (pattern : patterns ){
+                          matcher = pattern.matcher(line);
+                          if (matcher.find()) {
+                            if (!esVersion.equals(matcher.group(1))) {
+                              print("README.md:"+number+" FAILURE: " + line);
+                              return false;
+                            }
+                          }
+                        }
+                      }
+                      readme.close();
+                    true;
+                  </condition>
+                </evaluateBeanshell>
+              </rules>
+            </configuration>
+          </execution>
+          <execution>
+            <id>check-docker</id>
+            <goals>
+              <goal>enforce</goal>
+            </goals>
+            <configuration combine.self="override">
+              <skip>true</skip>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+
   <profiles>
     <profile>
       <id>kb-download</id>

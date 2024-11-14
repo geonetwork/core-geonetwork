@@ -40,7 +40,7 @@
             data-gn-pagination-list=""
             data-items="users | filter:userSearch | orderBy:'name'"
             data-cache="users"
-          />
+          ></span>
         </div>
 
         <button
@@ -50,7 +50,7 @@
           data-ng-click="addUser()"
           data-ng-show="user.isUserAdminOrMore() && isUserProfileUpdateEnabled"
         >
-          <i class="fa fa-plus" />
+          <i class="fa fa-plus"></i>
           <span data-translate="">newUser</span>
         </button>
       </div>
@@ -590,7 +590,7 @@
           data-ng-show="userSelected.id > 0"
         >
           <div class="panel-heading" data-gn-slide-toggle="">
-            <i class="fa fa-search" />&nbsp;
+            <i class="fa fa-search"></i>&nbsp;
             <ng-pluralize
               count="searchResults.count"
               when="{'0': '{{&quot;noRecordFound&quot; | translate}}',
@@ -614,7 +614,7 @@
           data-gn-saved-selections=""
           data-ng-if="userSelected.id > 0"
           data-gn-saved-selections-panel="userSelected"
-        />
+        ></div>
       </div>
     </div>
   </div>

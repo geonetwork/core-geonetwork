@@ -589,7 +589,7 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
 
                     List<MetadataStatus> listOfStatusChange = new ArrayList<>(1);
                     listOfStatusChange.add(metadataStatus);
-                    sa.onStatusChange(listOfStatusChange);
+                    sa.onStatusChange(listOfStatusChange, true);
                 }
             }
 
@@ -677,6 +677,7 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
             metadataFileUpload.setFileSize(mfu.getFileSize());
             metadataFileUpload.setUploadDate(mfu.getUploadDate());
             metadataFileUpload.setUserName(mfu.getUserName());
+            metadataFileUpload.setDeletedDate(mfu.getDeletedDate());
 
             repo.save(metadataFileUpload);
         }

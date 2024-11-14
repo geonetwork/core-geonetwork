@@ -103,7 +103,7 @@
           image: new ol.style.Circle({
             radius: 10,
             fill: new ol.style.Fill({ color: "orange" }),
-            stroke: new ol.style.Stroke({ color: "rgba(255,0,0,1)", width: 3 })
+            stroke: new ol.style.Stroke({ color: "rgba(255,255,0,0.3)", width: 3 })
           })
         })
       };

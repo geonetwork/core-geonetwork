@@ -87,6 +87,7 @@
     "chi": "中文",
     "city": "Cidade",
     "cl_status": "Estado",
+    "cl_couplingType": "Coupling type",
     "associatedResources": "Recursos associados",
     "brothersAndSisters": "Irmãos",
     "moreInfoOnRecord": "Mais ...",
@@ -184,7 +185,7 @@
     "hitsPerPage": "Registros por página",
     "chooseRecordsPerPage": "Clique para escolher o número de registros por página",
     "sortedBy": "Ordenado por {{field}}",
-    "sortBy-dateStampDesc": "ultimas atualizações",
+    "sortBy-changeDateDesc": "ultimas atualizações",
     "sortBy-createDateDesc": "novos registros",
     "sortBy-resourceTitleObject.default.sort": "title (ascending)",
     "sortBy-resourceTitleObject.default.sortDesc": "title (descending)",
@@ -551,6 +552,7 @@
     "cancelWorkingCopy": "Cancelar Cópia de Trabalho",
     "deleteWorkingCopyRecordConfirm": "Do you really want to remove the working copy '{{resourceTitle}}'?",
     "workingCopy": "Cópia de Trabalho",
+    "approvedRecord": "Approved record",
     "onTheWeb": "Mais informações online",
     "pdfReportTocTitle": "Contents",
     "metadataValidated": "Metadata validated.",
@@ -580,5 +582,9 @@
     "reviewerNotAllowedPublish": "Reviewer not allowed to publish the metadata",
     "reviewerNotAllowedUnpublish": "Reviewer not allowed to un-publish the metadata",
     "reviewerNotAllowedPublishUnpublish": "Reviewer not allowed to publish / un-publish the metadata",
-    "missingTitle": "Missing title"
+    "missingTitle": "Missing title",
+    "mapLegend": "Legenda",
+    "quality": "Qualidade",
+    "download": "Download",
+    "links": "Links"
 }

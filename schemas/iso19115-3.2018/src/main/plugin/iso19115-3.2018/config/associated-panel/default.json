@@ -335,7 +335,7 @@
             "isMultilingual": false
           },
           "protocol": {
-            "value": "WWW:LINK",
+            "value": "WWW:DOWNLOAD",
             "hidden": true,
             "isMultilingual": false
           },
@@ -800,6 +800,59 @@
         }
       },
       {
+        "group": "onlineUseMap",
+        "label": "map-interactive",
+        "copyLabel": "name",
+        "sources": {
+          "filestore": true
+        },
+        "fileStoreFilter": "*.{xml,XML}",
+        "icon": "fa fa-map",
+        "process": "onlinesrc-add",
+        "fields": {
+          "url": {
+            "isMultilingual": false
+          },
+          "name": {},
+          "function": {
+            "value": "browsing",
+            "hidden": true,
+            "isMultilingual": false
+          },
+          "protocol": {
+            "value": "OGC:OWS-C",
+            "hidden": true,
+            "isMultilingual": false
+          }
+        }
+      },
+      {
+        "group": "onlineUseMap",
+        "label": "map-static",
+        "copyLabel": "name",
+        "sources": {
+          "filestore": true
+        },
+        "fileStoreFilter": "*.{pdf,PDF}",
+        "icon": "fa fa-map",
+        "process": "onlinesrc-add",
+        "fields": {
+          "url": {
+            "isMultilingual": false
+          },
+          "name": {},
+          "function": {
+            "value": "browsing",
+            "hidden": true,
+            "isMultilingual": false
+          },
+          "protocol": {
+            "value": "PDF:MAP",
+            "isMultilingual": false
+          }
+        }
+      },
+      {
         "group": "onlineUseLegend",
         "label": "onlineUseLegendLYR",
         "copyLabel": "name",
@@ -991,6 +1044,95 @@
           }
         }
       }
-    ]
+    ],
+    "associatedResourcesTypes": [{
+      "type": "parent",
+      "label": "linkToParent",
+      "config": {
+        "fields": {"associationType": "partOfSeamlessDatabase", "initiativeType": "" },
+        "sources": {
+          "metadataStore": {
+            "params": {
+              "isTemplate": "n"
+            }
+          },
+          "remoteurl": {"multiple": true}
+        }
+      }
+    }, {
+      "type": "siblings",
+      "label": "linkToSibling",
+      "config": {
+        "sources": {
+          "metadataStore": {
+            "params": {
+              "isTemplate": "n"
+            }
+          },
+          "remoteurl": {"multiple": true}
+        }
+      }
+    }, {
+      "type": "service",
+      "label": "linkToService",
+      "condition": "!gnCurrentEdit.isService",
+      "config": {
+        "sources": {
+          "metadataStore": {
+            "label": "searchAservice",
+            "params": {
+              "resourceType": ["service"],
+              "isTemplate": "n"
+            }
+          },
+          "remoteurl": {"multiple": false}
+        }
+      }
+    }, {
+      "type": "dataset",
+      "label": "linkToDataset",
+      "condition": "gnCurrentEdit.isService",
+      "config": {
+        "sources": {
+          "metadataStore": {
+            "params": {
+              "resourceType": ["dataset"],
+              "isTemplate": "n"
+            }
+          },
+          "remoteurl": {"multiple": false}
+        }
+      }
+    }, {
+      "type": "source",
+      "label": "linkToSource",
+      "config": {
+        "sources": {
+          "metadataStore": {
+            "label": "linkToSource",
+            "params": {
+              "resourceType": ["dataset"],
+              "isTemplate": "n"
+            }
+          },
+          "remoteurl": {"multiple": false}
+        }
+      }
+    }, {
+      "type": "fcats",
+      "label": "linkToFeatureCatalog",
+      "config": {
+        "sources": {
+          "metadataStore": {
+            "label": "linkToFeatureCatalog",
+            "params": {
+              "resourceType": ["featureCatalog"],
+              "isTemplate": "n"
+            }
+          },
+          "remoteurl": {"multiple": false}
+        }
+      }
+    }]
   }
 }

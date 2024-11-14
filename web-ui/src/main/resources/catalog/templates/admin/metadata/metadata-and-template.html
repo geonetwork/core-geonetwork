@@ -12,7 +12,7 @@
               data-toggle="dropdown"
             >
               {{selectedSchemas.length}} <span data-translate="">selected</span
-              ><span class="caret" />
+              ><span class="caret"></span>
             </button>
             <ul class="dropdown-menu">
               <li>
@@ -43,7 +43,8 @@
               <i
                 class="fa"
                 data-ng-class="isSchemaSelected(s.name) ? 'fa-check-square-o' : 'fa-square-o'"
-              />&nbsp {{s.titles[iso2lang] || s.titles['en'] || s.name}} ({{s.name}})
+              ></i
+              >&nbsp {{s.titles[iso2lang] || s.titles['en'] || s.name}} ({{s.name}})
             </h4>
           </li>
         </div>
@@ -57,7 +58,7 @@
               data-ng-disabled="!selectedSchemas.length > 0 || sampleLoadRunning === true || tplLoadRunning === true"
               data-ng-click="loadTemplates()"
             >
-              <i class="fa gn-recordtype-y" />&nbsp;
+              <i class="fa gn-recordtype-y"></i>&nbsp;
               <span data-translate="">loadTemplatesForSelectedSchema</span>
             </button>
             <br />
@@ -68,7 +69,7 @@
               data-ng-disabled="!selectedSchemas.length > 0 || sampleLoadRunning === true || tplLoadRunning === true"
               data-ng-click="loadSamples()"
             >
-              <i class="fa gn-recordtype-n" />&nbsp;
+              <i class="fa gn-recordtype-n"></i>&nbsp;
               <span data-translate="">loadSamplesForSelectedSchema</span>
             </button>
           </div>
@@ -83,7 +84,7 @@
       class="progress progress-striped active"
       data-ng-show="sampleLoadRunning === true || tplLoadRunning === true"
     >
-      <div class="progress-bar" style="width: 100%" />
+      <div class="progress-bar" style="width: 100%"></div>
     </div>
 
     <div

@@ -87,6 +87,7 @@
     "chi": "中文",
     "city": "Město",
     "cl_status": "Stav",
+    "cl_couplingType": "Coupling type",
     "associatedResources": "Přidružené zdroje",
     "brothersAndSisters": "Sourozenci",
     "moreInfoOnRecord": "více ...",
@@ -184,7 +185,7 @@
     "hitsPerPage": "Počet záznamů na stránku",
     "chooseRecordsPerPage": "Kliknutím zvolte počet záznamů na stránku",
     "sortedBy": "Tříděno dle {{field}}",
-    "sortBy-dateStampDesc": "poslední aktualizace",
+    "sortBy-changeDateDesc": "poslední aktualizace",
     "sortBy-createDateDesc": "nové záznamy",
     "sortBy-resourceTitleObject.default.sort": "titul (vzestupně)",
     "sortBy-resourceTitleObject.default.sortDesc": "titul (sestupně)",
@@ -551,6 +552,7 @@
     "cancelWorkingCopy": "Zrušit pracovní kopii",
     "deleteWorkingCopyRecordConfirm": "Opravdu chcete odstranit pracovní kopii '{{resourceTitle}}'?",
     "workingCopy": "Pracovní kopie",
+    "approvedRecord": "Approved record",
     "onTheWeb": "Více online informací",
     "pdfReportTocTitle": "Obsah",
     "metadataValidated": "Metadata byla ověřena.",
@@ -580,5 +582,9 @@
     "reviewerNotAllowedPublish": "Prohlížející nemá oprávnění publikovat metadata",
     "reviewerNotAllowedUnpublish": "Prohlížející nemůže zrušit publikování metadat",
     "reviewerNotAllowedPublishUnpublish": "Prohlížející nemá oprávnění publikovat/zrušit publikování metadat",
-    "missingTitle": "Chybí název"
+    "missingTitle": "Chybí název",
+    "mapLegend": "Legenda",
+    "quality": "Kvalita",
+    "download": "Download",
+    "links": "Odkazy"
 }
