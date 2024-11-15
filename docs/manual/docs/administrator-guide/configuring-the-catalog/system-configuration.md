@@ -86,7 +86,7 @@ Additional settings are available to respect user language preference:
 
 !!! note
     
-    Email notifications are sent as `text/html` messages, this can be changed using ```WEB-INF/config.properties``` configuration:
+    Email notifications for metadata publication are sent as `text/html` messages, this can be changed using ```WEB-INF/config.properties``` configuration:
     
     ```properties
     # Configure the metadata publication notification mails to be sent as HTML (true) or TEXT (false)
