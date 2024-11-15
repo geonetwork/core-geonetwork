@@ -2556,21 +2556,40 @@
 </ul>
 <p>JVM proxy parameters may also be required to properly set the proxy for all remote access.</p>
 <h2 id="system-config-feedback">Feedback</h2>
-<p>Email may be sent by the catalog.</p>
+<p>Email notifications are sent by the catalog.</p>
 <ul>
-<li>you are using the User Self-registration system</li>
-<li>you are using the metadata status workflow (See <a href="../../../user-guide/workflow/life-cycle/">Life cycle</a>)</li>
-<li>a file uploaded with a metadata record is downloaded and notify privilege is selected</li>
+<li>When using the User Self-registration system.</li>
+<li>When using the metadata status workflow (See <a href="../../../user-guide/workflow/life-cycle/">Life cycle</a>).</li>
+<li>When a file uploaded with a metadata record is downloaded and notify privilege is selected.</li>
 </ul>
 <p>This section configure the mail server to use.</p>
 <ul>
 <li><strong>Email</strong> This is the administrator's email address used to send feedback.</li>
 <li><strong>SMTP host</strong> The mail server name or IP address to use for sending emails.</li>
 <li><strong>SMTP port</strong> The SMTP port.</li>
-<li><strong>Use SSL</strong> Enable SSL mode</li>
+<li><strong>Use SSL</strong> Enable Secure Sockets Layer (SSL) mode</li>
 <li><strong>User name</strong> Username if connection is required on the SMTP server</li>
 <li><strong>Password</strong> Username password if connection is required on the SMTP server</li>
+<li><strong>Use TLS</strong> Enable use of Transport Layer Security (TLS) </li>
 </ul>
+<p><img alt="" src="../img/feedback-email.png" /></p>
+<p>Additional settings are available to respect user language preference:</p>
+<ul>
+<li>
+<p><strong>Language for system generated emails</strong> The ui language will be used when sending notification emails by default. To To override this behaviour and generate a multi-lingual notification email list the langauges to be used.</p>
+</li>
+<li>
+<p><strong>Translation follows text</strong> Provide an introduction phrase indicating a multi-lingual notification follows.</p>
+</li>
+</ul>
+<p><img alt="" src="../img/feedback-multilingual.png" /></p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Email notifications for metadata publication are sent as <code>text/html</code> messages, this can be changed using <code>WEB-INF/config.properties</code> configuration:</p>
+<div class="language-properties highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Configure the metadata publication notification mails to be sent as HTML (true) or TEXT (false)</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="na">metadata.publicationmail.format.html</span><span class="o">=</span><span class="s">true</span>
+</span></code></pre></div>
+</div>
 <h2 id="metadata-search-results">Metadata search results</h2>
 <p>Configuration settings in this group determine what the limits are on user interaction with the search results.</p>
 <ul>
