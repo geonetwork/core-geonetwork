@@ -58,21 +58,41 @@ JVM proxy parameters may also be required to properly set the proxy for all remo
 
 ## Feedback {#system-config-feedback}
 
-Email may be sent by the catalog.
+Email notifications are sent by the catalog.
 
--   you are using the User Self-registration system
--   you are using the metadata status workflow (See [Life cycle](../../user-guide/workflow/life-cycle.md))
--   a file uploaded with a metadata record is downloaded and notify privilege is selected
+-   When using the User Self-registration system.
+-   When using the metadata status workflow (See [Life cycle](../../user-guide/workflow/life-cycle.md)).
+-   When a file uploaded with a metadata record is downloaded and notify privilege is selected.
 
 This section configure the mail server to use.
 
 -   **Email** This is the administrator's email address used to send feedback.
 -   **SMTP host** The mail server name or IP address to use for sending emails.
 -   **SMTP port** The SMTP port.
--   **Use SSL** Enable SSL mode
+-   **Use SSL** Enable Secure Sockets Layer (SSL) mode
 -   **User name** Username if connection is required on the SMTP server
 -   **Password** Username password if connection is required on the SMTP server
+-   **Use TLS** Enable use of Transport Layer Security (TLS) 
 
+![](img/feedback-email.png)
+
+Additional settings are available to respect user language preference:
+
+-  **Language for system generated emails** The ui language will be used when sending notification emails by default. To To override this behaviour and generate a multi-lingual notification email list the langauges to be used.
+
+-  **Translation follows text** Provide an introduction phrase indicating a multi-lingual notification follows.
+
+![](img/feedback-multilingual.png)
+
+!!! note
+    
+    Email notifications for metadata publication are sent as `text/html` messages, this can be changed using ```WEB-INF/config.properties``` configuration:
+    
+    ```properties
+    # Configure the metadata publication notification mails to be sent as HTML (true) or TEXT (false)
+    metadata.publicationmail.format.html=true
+    ```
+    
 ## Metadata search results
 
 Configuration settings in this group determine what the limits are on user interaction with the search results.
