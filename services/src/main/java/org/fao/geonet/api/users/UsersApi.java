@@ -636,10 +636,7 @@ public class UsersApi {
         if (securityProviderConfiguration == null || securityProviderConfiguration.isUserGroupUpdateEnabled()) {
             setUserGroups(user, groups);
         }
-
-        user = userRepository.save(user);
-        setUserGroups(user, groups);
-
+        
         List<UserGroup> userGroups = userGroupRepository.findAll(UserGroupSpecs
             .hasUserId(user.getId()));
 
