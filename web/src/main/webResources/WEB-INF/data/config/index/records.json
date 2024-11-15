@@ -130,7 +130,7 @@
           },
           "french_stemmer": {
             "type": "stemmer",
-            "language": "light_french"
+            "language": "minimal_french"
           },
           "english_stop": {
             "type": "stop",
