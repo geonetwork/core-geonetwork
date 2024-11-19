@@ -43,7 +43,7 @@
         getMapservices: function () {
           if (mapservicesCache === null) {
             var client = new XMLHttpRequest();
-            client.open("GET", "../api/mapservices", false);
+            client.open("GET", gnGlobalSettings.gnUrl + "api/mapservices", false);
             client.setRequestHeader("accept", "application/json");
             client.send();
             if (client.status === 200) {
