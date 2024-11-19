@@ -71,7 +71,7 @@
                 (config.url.indexOf("http") !== 0 && config.url.indexOf("//") !== 0);
 
               // If this is an authorized mapservice then we need to adjust the url or add auth headers
-              // Only check http url and exclude any urls like data: which should not be changed. Also, there is not need to check prox urls.
+              // Only check http url and exclude any urls like data: which should not be changed. Also, there is no need to check proxy urls.
               if (
                 config.url !== null &&
                 config.url.startsWith("http") &&
