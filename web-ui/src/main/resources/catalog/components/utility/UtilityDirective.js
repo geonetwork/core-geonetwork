@@ -504,7 +504,10 @@
            * Load list on init to fill the dropdown
            */
           gnRegionService.loadList().then(function (data) {
-            scope.regionTypes = angular.copy(data);
+            var dataFiltered = _.filter(data, function (o) {
+              return o.id !== "metadata";
+            });
+            scope.regionTypes = angular.copy(dataFiltered);
             if (addGeonames) {
               scope.regionTypes.unshift({
                 name: "Geonames",
