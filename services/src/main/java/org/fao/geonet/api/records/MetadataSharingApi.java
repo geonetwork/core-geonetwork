@@ -135,6 +135,9 @@ public class MetadataSharingApi implements ApplicationEventPublisherAware
     IMetadataManager metadataManager;
 
     @Autowired
+    IMetadataOperations metadataOperations;
+
+    @Autowired
     MetadataValidationRepository metadataValidationRepository;
 
     @Autowired
@@ -742,6 +745,8 @@ public class MetadataSharingApi implements ApplicationEventPublisherAware
                 }
                 groupPrivilege.setUserProfile(userGroupProfile);
 
+                // Restrict changing privileges for groups with a minimum profile for setting privileges set
+                groupPrivilege.setRestricted(!canUserChangePrivilegesForGroup(context, groupOwner, g));
 
                 //--- get all operations that this group can do on given metadata
                 Specification<OperationAllowed> hasGroupIdAndMetadataId =
@@ -1471,6 +1476,25 @@ public class MetadataSharingApi implements ApplicationEventPublisherAware
                 throw new NotAllowedException(String.format(
                     "Unpublication of metadata is not allowed. User needs to be at least %s to unpublish record.", allowedUserProfileToUnpublishMetadata));
             }
+        }
+    }
+
+    /**
+     * Checks if the user can change the privileges for the group.
+     *
+     * @param context            The {@link ServiceContext} object.
+     * @param metadataGroupOwner The {@link Group} that owns the metadata.
+     * @param group              The {@link Group} to change the privileges for.
+     * @return True if the user can change the privileges for the group, false otherwise.
+     */
+    private boolean canUserChangePrivilegesForGroup(final ServiceContext context, Integer metadataGroupOwner, Group group) {
+        Profile minimumProfileForPrivileges = group.getMinimumProfileForPrivileges();
+        if (minimumProfileForPrivileges == null) {
+            return true;
+        } else {
+            boolean isGroupOwner = metadataGroupOwner != null && metadataGroupOwner == group.getId();
+            boolean userIsMinimumProfile = accessManager.isProfileOrMoreOnGroup(context, minimumProfileForPrivileges, group.getId());
+            return isGroupOwner || userIsMinimumProfile;
         }
     }
 
