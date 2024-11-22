@@ -155,7 +155,6 @@
               baseUrl = scope.helpBaseUrl.replace("/{{lang}}", "");
             }
 
-            baseUrl = baseUrl.replace("{{isoLang}}", scope.applicationVersion);
             baseUrl = baseUrl.replace("{{version}}", scope.applicationVersion);
 
             var helpPageUrl;
