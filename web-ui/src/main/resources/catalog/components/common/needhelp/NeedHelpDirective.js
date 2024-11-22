@@ -152,7 +152,7 @@
             if (gnGlobalSettings.lang !== "en") {
               baseUrl = scope.helpBaseUrl.replace("{{lang}}", gnGlobalSettings.lang);
             } else {
-              baseUrl = scope.helpBaseUrl.replace("/{{lang}}", "");
+              baseUrl = scope.helpBaseUrl.replace("{{lang}}", "");
             }
 
             baseUrl = baseUrl.replace("{{version}}", scope.applicationVersion);
@@ -168,7 +168,7 @@
               function () {},
               function () {
                 var baseUrl = scope.helpBaseUrl
-                  .replace("/{{lang}}", "")
+                  .replace("{{lang}}", "")
                   .replace("{{version}}", scope.applicationVersion);
                 var helpPageUrl;
                 if (baseUrl.includes("{{section}}")) {
