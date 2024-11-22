@@ -245,9 +245,10 @@
             // Do not submit internal groups info
             // If user is not allowed.
             var allowed =
-              ($.inArray(g.group, gnShareConstants.internalGroups) !== -1 &&
-                user.isReviewerOrMore()) ||
-              $.inArray(g.group, gnShareConstants.internalGroups) === -1;
+              !g.restricted &&
+              (($.inArray(g.group, gnShareConstants.internalGroups) !== -1 &&
+                  user.isReviewerOrMore()) ||
+                $.inArray(g.group, gnShareConstants.internalGroups) === -1);
 
             if (allowed) {
               ops.push({

@@ -565,8 +565,24 @@ public class MetadataSharingApi implements ApplicationEventPublisherAware
             // Check if the user profile can change the privileges for publication/un-publication of the reserved groups
             checkChangesAllowedToUserProfileForReservedGroups(context.getUserSession(), sharingBefore, privileges, !sharing.isClear());
 
+            List<Integer> excludeFromDelete = new ArrayList<Integer>();
+
+            // Exclude deleting privileges for groups in which the user does not have the minimum profile for privileges
+            for (Group group: groupRepository.findByMinimumProfileForPrivilegesNotNull()) {
+                if (!canUserChangePrivilegesForGroup(context, groupOwnerId, group)) {
+                    excludeFromDelete.add(group.getId());
+                }
+            }
+
+            // Exclude deleting privileges for reserved groups if the skipAllReservedGroup flag is set
+            if (skipAllReservedGroup) {
+                excludeFromDelete.add(ReservedGroup.all.getId());
+                excludeFromDelete.add(ReservedGroup.intranet.getId());
+                excludeFromDelete.add(ReservedGroup.guest.getId());
+            }
+
             if (sharing.isClear()) {
-                dataManager.deleteMetadataOper(context, String.valueOf(metadata.getId()), skipAllReservedGroup);
+                metadataOperations.deleteMetadataOper(String.valueOf(metadata.getId()), excludeFromDelete);
             }
 
             for (GroupOperations p : privileges) {
