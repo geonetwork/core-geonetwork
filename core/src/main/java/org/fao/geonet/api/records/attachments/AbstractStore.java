@@ -286,7 +286,7 @@ public abstract class AbstractStore implements Store {
 
     private String escapeResourceManagementExternalProperties(String value) {
         return value.replace(RESOURCE_MANAGEMENT_EXTERNAL_PROPERTIES_SEPARATOR, RESOURCE_MANAGEMENT_EXTERNAL_PROPERTIES_ESCAPED_SEPARATOR);
-}
+    }
 
     /**
      * Create an encoded base 64 object id contains the following fields to uniquely identify the resource
