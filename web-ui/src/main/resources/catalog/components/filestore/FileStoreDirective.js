@@ -93,8 +93,8 @@
 
             var humanizeDataSize = function (bytes) {
               if (bytes === 0) return "0 Bytes";
-              const sizes = ["Bytes", "KB", "MB", "GB", "TB"];
-              const i = Math.floor(Math.log(bytes) / Math.log(1024)); // Determine the index for sizes
+              var sizes = ["Bytes", "KB", "MB", "GB", "TB"];
+              var i = Math.floor(Math.log(bytes) / Math.log(1024)); // Determine the index for sizes
               return parseFloat((bytes / Math.pow(1024, i)).toFixed(2)) + " " + sizes[i]; // Format size
             };
 
