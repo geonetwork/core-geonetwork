@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2024 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -36,6 +36,7 @@ import org.fao.geonet.kernel.EditLib;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.UpdateDatestamp;
 import org.fao.geonet.kernel.schema.MetadataSchema;
+import org.fao.geonet.kernel.schema.MultilingualSchemaPlugin;
 import org.fao.geonet.kernel.schema.SchemaPlugin;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.schema.iso19139.ISO19139Namespaces;
@@ -340,8 +341,16 @@ public class AjaxEditUtils extends EditUtils {
 
     /**
      * For Ajax Editing : adds an element or an attribute to a metadata element ([add] link).
+     *
+     * @param session       User session.
+     * @param id            Metadata identifier.
+     * @param ref           Reference of the parent element to add the element.
+     * @param name          Name of the element or attribute to add, with the namespace
+     * @param childName     Empty for inserting element, `geonet:attribute` for attributes.
+     * @return
+     * @throws Exception
      */
-    public synchronized Element addElementEmbedded(UserSession session, String id, String ref, String name, String childName) throws Exception {
+    public synchronized List<Element> addElementEmbedded(UserSession session, String id, String ref, String name, String childName) throws Exception {
         Lib.resource.checkEditPrivilege(context, id);
         String schema = dataManager.getMetadataSchema(id);
         //--- get metadata from session
@@ -362,10 +371,13 @@ public class AjaxEditUtils extends EditUtils {
             md.removeChild(Edit.RootChild.INFO, Edit.NAMESPACE);
         }
 
-        Element child = null;
+        List<Element> children = new ArrayList<>();
         MetadataSchema mds = dataManager.getSchema(schema);
+
         if (childName != null) {
             if (childName.equals("geonet:attribute")) {
+                Element child = null;
+
                 String defaultValue = "";
                 @SuppressWarnings("unchecked")
                 List<Element> attributeDefs = el.getChildren(Edit.RootChild.ATTRIBUTE, Edit.NAMESPACE);
@@ -385,9 +397,11 @@ public class AjaxEditUtils extends EditUtils {
                 el.setAttribute(new Attribute(attInfo.two(), defaultValue, attInfo.one()));
 
                 child = el;
+                children.add(child);
+
             } else {
                 //--- normal element
-                child = editLib.addElement(mds, el, name);
+                Element child = editLib.addElement(mds, el, name);
                 if (!childName.equals("")) {
                     //--- or element
                     String uChildName = editLib.getUnqualifiedName(childName);
@@ -403,20 +417,35 @@ public class AjaxEditUtils extends EditUtils {
                     //--- add mandatory sub-tags
                     editLib.fillElement(schema, child, orChild);
                 }
+
+                children.add(child);
             }
         } else {
-            child = editLib.addElement(mds, el, name);
+            List<String> metadataLanguages = new ArrayList<>();
+            if (mds.getSchemaPlugin() instanceof MultilingualSchemaPlugin) {
+                // Metadata languages are only required if the schema plugin requires to duplicate the added
+                // element for each language and the element to add is multilingual.
+                // See {@link org.fao.geonet.kernel.schema.MultilingualSchemaPlugin#duplicateElementsForMultilingual()}
+                metadataLanguages = ((MultilingualSchemaPlugin) mds.getSchemaPlugin()).getMetadataLanguages(md);
+            }
+
+            children = editLib.addElements(mds, el, name, metadataLanguages);
         }
+
         //--- now enumerate the new child (if not a simple attribute)
-        if (childName == null || !childName.equals("geonet:attribute")) {
-            int iRef = editLib.findMaximumRef(md);
-            editLib.enumerateTreeStartingAt(child, iRef + 1, Integer.parseInt(ref));
-            editLib.expandTree(mds, child);
+        if ((childName == null || !childName.equals("geonet:attribute")) && (children != null)) {
+            for (Element c: children) {
+                int iRef = editLib.findMaximumRef(md);
+                editLib.enumerateTreeStartingAt(c, iRef + 1, Integer.parseInt(ref));
+                editLib.expandTree(mds, c);
+            }
         }
-        if (info != null) {
-            //--- remove and re-attach the info element to the child
-            child.removeChild(Edit.RootChild.INFO, Edit.NAMESPACE);
-            child.addContent(info);
+        if ((info != null) && (children != null)) {
+            for (Element c: children) {
+                //--- remove and re-attach the info element to the child
+                c.removeChild(Edit.RootChild.INFO, Edit.NAMESPACE);
+                c.addContent((Element) info.clone());
+            }
         }
 
           /* When adding an gmx:Anchor to an element, due to the following code gets also a gco:CharacterString in EditLib.
@@ -436,9 +465,11 @@ public class AjaxEditUtils extends EditUtils {
             Element child = isoPlugin.createBasicTypeCharacterString();
             element.addContent(child);
         */
-        if (childName != null && childName.equals("gmx:Anchor")) {
-            if (child.getChild("CharacterString", ISO19139Namespaces.GCO) != null) {
-                child.removeChild("CharacterString", ISO19139Namespaces.GCO);
+        if (childName != null && childName.equals("gmx:Anchor") && (children != null)) {
+            for (Element c: children) {
+                if (c.getChild("CharacterString", ISO19139Namespaces.GCO) != null) {
+                    c.removeChild("CharacterString", ISO19139Namespaces.GCO);
+                }
             }
         }
 
@@ -451,8 +482,7 @@ public class AjaxEditUtils extends EditUtils {
         setMetadataIntoSession(session, (Element) md.clone(), id);
 
         // Return element added
-        return child;
-
+        return children;
     }
 
     /**

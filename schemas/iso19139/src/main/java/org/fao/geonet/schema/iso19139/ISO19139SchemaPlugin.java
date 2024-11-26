@@ -607,6 +607,33 @@ public class ISO19139SchemaPlugin
 
     }
 
+    @Override
+    public boolean duplicateElementsForMultilingual() {
+        return false;
+    }
+
+    @Override
+    public List<String> getMetadataLanguages(Element metadata) {
+        try {
+            return Xml.selectNodes(metadata, ".//gmd:locale/gmd:PT_Locale/@id", allNamespaces.asList())
+                .stream()
+                .filter(node -> node instanceof Attribute)
+                .map(node -> ((Attribute)node).getValue())
+                .filter(s -> s != null && !s.isBlank())
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
+        } catch (JDOMException e) {
+            e.printStackTrace();
+        }
+        return Collections.emptyList();
+    }
+
+    @Override
+    public boolean isMultilingualElementType(String elementType) {
+        // Not required in ISO schemas, only required for schemas where duplicateElementsForMultilingual returns true.
+        return false;
+    }
+
     /**
      * Checks if an element requires processing in {@link #processElement(Element, String, String, String)}.
      *

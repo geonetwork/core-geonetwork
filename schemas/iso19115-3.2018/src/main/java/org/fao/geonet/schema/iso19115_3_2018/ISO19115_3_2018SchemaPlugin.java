@@ -30,6 +30,7 @@ import org.fao.geonet.kernel.schema.LinkPatternStreamer.ILinkBuilder;
 import org.fao.geonet.kernel.schema.LinkPatternStreamer.RawLinkPatternStreamer;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
+import org.jdom.Attribute;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.Namespace;
@@ -577,6 +578,41 @@ public class ISO19115_3_2018SchemaPlugin
             return super.processElement(el, attributeRef, parsedAttributeName, attributeValue);
         }
 
+    }
+
+    @Override
+    public boolean duplicateElementsForMultilingual() {
+        return false;
+    }
+
+    @Override
+    public List<String> getMetadataLanguages(Element metadata) {
+        try {
+             Xml.selectNodes(metadata, ".//mdb:defaultLocale/lan:PT_Locale/@id", allNamespaces.asList())
+                .stream()
+                .filter(node -> node instanceof Attribute)
+                .map(node -> ((Attribute)node).getValue())
+                .filter(s -> s != null && !s.isBlank())
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList()).addAll(
+                     Xml.selectNodes(metadata, ".//mdb:otherLocale/lan:PT_Locale/@id", allNamespaces.asList())
+                         .stream()
+                         .filter(node -> node instanceof Attribute)
+                         .map(node -> ((Attribute)node).getValue())
+                         .filter(s -> s != null && !s.isBlank())
+                         .filter(Objects::nonNull)
+                         .collect(Collectors.toList())
+                 );
+        } catch (JDOMException e) {
+            e.printStackTrace();
+        }
+        return Collections.emptyList();
+    }
+
+    @Override
+    public boolean isMultilingualElementType(String elementType) {
+        // Not required in ISO schemas, only required for schemas where duplicateElementsForMultilingual returns true.
+        return false;
     }
 
     /**
