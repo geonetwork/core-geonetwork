@@ -46,7 +46,6 @@ import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
-import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.util.UserUtil;
 import org.fao.geonet.utils.Diff;
 import org.fao.geonet.utils.DiffType;
@@ -311,11 +310,6 @@ public class DatabaseProcessApi {
             example = "false")
         @RequestParam(required = false, defaultValue = "true")
             boolean index,
-        @Parameter(description = "Use approved version or not",
-            required = false,
-            example = "false")
-        @RequestParam(required = false, defaultValue = "false")
-            boolean approved,
         @Parameter(hidden = true)
             HttpSession httpSession,
         @Parameter(hidden = true)
@@ -338,7 +332,7 @@ public class DatabaseProcessApi {
             BatchDatabaseUpdateMetadataReindexer m = new BatchDatabaseUpdateMetadataReindexer(
                 serviceContext,
                 dataMan, records, useRegexp, search, replace, regexpFlags, httpSession, siteURL,
-                processingReport, request, index, approved, updateDateStamp, userSession.getUserIdAsInt());
+                processingReport, request, index, updateDateStamp, userSession.getUserIdAsInt());
             m.process(settingManager.getSiteId());
 
         } catch (Exception exception) {
@@ -354,7 +348,6 @@ public class DatabaseProcessApi {
         MetadataIndexerProcessor {
         private final boolean index;
         private final boolean updateDateStamp;
-        private final boolean approved;
         Set<String> records;
         boolean useRegexp;
         String search;
@@ -377,7 +370,7 @@ public class DatabaseProcessApi {
                                                     HttpSession session,
                                                     String siteURL,
                                                     MetadataReplacementProcessingReport processingReport,
-                                                    HttpServletRequest request, boolean index, boolean approved,
+                                                    HttpServletRequest request, boolean index,
                                                     boolean updateDateStamp, int userId) {
             super(dm);
             this.records = records;
@@ -388,7 +381,6 @@ public class DatabaseProcessApi {
             this.session = session;
             this.index = index;
             this.updateDateStamp = updateDateStamp;
-            this.approved = approved;
             this.siteURL = siteURL;
             this.request = request;
             this.processingReport = processingReport;
@@ -401,12 +393,7 @@ public class DatabaseProcessApi {
             DataManager dataMan = context.getBean(DataManager.class);
             ApplicationContext appContext = ApplicationContextHolder.get();
             for (String uuid : this.records) {
-                String id;
-                if (this.approved) {
-                    id = String.valueOf(context.getBean(MetadataRepository.class).findOneByUuid(uuid).getId());
-                } else {
-                    id = String.valueOf(context.getBean(IMetadataUtils.class).findOneByUuid(uuid).getId());
-                }
+                String id = String.valueOf(context.getBean(IMetadataUtils.class).findOneByUuid(uuid).getId());
                 Log.info("org.fao.geonet.services.metadata",
                     "Processing metadata with id:" + id);
 
