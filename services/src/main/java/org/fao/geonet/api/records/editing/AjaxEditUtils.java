@@ -622,8 +622,6 @@ public class AjaxEditUtils extends EditUtils {
     public synchronized void swapElementEmbedded(UserSession session, String id, String ref, boolean down) throws Exception {
         Lib.resource.checkEditPrivilege(context, id);
 
-        dataManager.getMetadataSchema(id);
-
         //--- get metadata from session
         Element md = getMetadataFromSession(session, id);
 
@@ -635,29 +633,87 @@ public class AjaxEditUtils extends EditUtils {
             throw new IllegalStateException(EditLib.MSG_ELEMENT_NOT_FOUND_AT_REF + ref);
 
         //--- swap the elements
-        int iSwapIndex = -1;
-
         @SuppressWarnings("unchecked")
+        // For DCAT records, swap all elements of a translation group
+        // ie. all elements sibling with same name and different language code
         List<Element> list = elSwap.getParentElement().getChildren(elSwap.getName(), elSwap.getNamespace());
 
+        String schemaId = dataManager.getMetadataSchema(id);
+        MetadataSchema metadataSchema = dataManager.getSchema(schemaId);
+        SchemaPlugin schemaPlugin = metadataSchema.getSchemaPlugin();
+        List<String> languages = new ArrayList<>();
+        if (schemaPlugin instanceof MultilingualSchemaPlugin) {
+            languages = ((MultilingualSchemaPlugin) schemaPlugin).getMetadataLanguages(md);
+        }
+
+        // Get element index and first index of the group
+        int swapIndex = getElementSwapIndex(list, elSwap);
+        int groupSwapIndex = getGroupSwapIndex(list, swapIndex, languages);
+
+        if (swapIndex == -1)
+            throw new IllegalStateException("Index not found for element --> " + elSwap);
+
+        // Swap the element or all the group of element up or down
+        if (groupSwapIndex == -1) {
+            swapElements(elSwap, list.get(down ? swapIndex + 1 : swapIndex - 1));
+        } else {
+            for (int i = 0; i < languages.size(); i ++) {
+                int currentElementToSwapIndex = groupSwapIndex + i;
+                Element topElement = list.get(currentElementToSwapIndex);
+                Element bottomElement = list.get(currentElementToSwapIndex + languages.size());
+                if (down) {
+                    swapElements(topElement, bottomElement);
+                } else {
+                    swapElements(bottomElement, topElement);
+                }
+            }
+        }
+
+        //--- store the metadata in the session again
+        setMetadataIntoSession(session, (Element) md.clone(), id);
+    }
+
+    /**
+     * Swap index is the target element from the API call.
+     * Can be one element of a group of translations.
+     * Collect here the index of the first element of the group.
+     *
+     * <p>
+     * The list of languages is ordered. eg. "nl", "fr", "en"
+     * <pre>
+     *             <dcat:keyword xml:lang="nl">Rivier</dcat:keyword>
+     *             <dcat:keyword xml:lang="fr">Rivière</dcat:keyword>
+     *             <dcat:keyword xml:lang="en">River</dcat:keyword>
+     *             <dcat:keyword xml:lang="nl">Kwaliteit</dcat:keyword>
+     *             <dcat:keyword xml:lang="fr">Qualité</dcat:keyword>
+     *             <dcat:keyword xml:lang="en">Qualiy</dcat:keyword>
+     * </pre>
+     * </p>
+     */
+    private int getGroupSwapIndex(List<Element> list, int swapIndex, List<String> languages) {
+        String elementLanguage = list.get(swapIndex).getAttributeValue("lang", Namespace.XML_NAMESPACE);
+        if (list.size() == 1 || languages.size() == 1 || elementLanguage == null) {
+            return -1;
+        }
+
+        // Consider element are always in order (see update-fixed-info.xsl)
+        // River index = 3, group index = 3 - (en lang index)
+        int indexInGroup = languages.indexOf(elementLanguage);
+        if (indexInGroup == -1) {
+            return swapIndex; // Language not declared?
+        }
+        return swapIndex - indexInGroup;
+    }
+
+    private static int getElementSwapIndex(List<Element> list, Element elSwap) {
         int i = -1;
         for (Element element : list) {
             i++;
             if (element == elSwap) {
-                iSwapIndex = i;
-                break;
+                return i;
             }
         }
-
-        if (iSwapIndex == -1)
-            throw new IllegalStateException("Index not found for element --> " + elSwap);
-
-        if (down) swapElements(elSwap, list.get(iSwapIndex + 1));
-        else swapElements(elSwap, list.get(iSwapIndex - 1));
-
-        //--- store the metadata in the session again
-        setMetadataIntoSession(session, (Element) md.clone(), id);
-
+        return i;
     }
 
     /**
