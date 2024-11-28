@@ -87,7 +87,7 @@ public class JCloudStore extends AbstractStore {
     }
 
     // For azure Blob ADSL hdi_isfolder property name used to identify folders
-    private final static String AZURE_BLOB_IS_FOLDER_PROPERTY_NAME="hdi_isfolder";
+    private static final String AZURE_BLOB_IS_FOLDER_PROPERTY_NAME="hdi_isfolder";
 
     private Path baseMetadataDir = null;
 
@@ -147,15 +147,16 @@ public class JCloudStore extends AbstractStore {
                                                        StorageMetadata storageMetadata, int metadataId, boolean approved) {
         String filename = getFilename(metadataUuid, resourceId);
 
-        Date changedDate = null;
+        Date changedDate;
         String changedDatePropertyName = jCloudConfiguration.getExternalResourceManagementChangedDatePropertyName();
         if (storageMetadata.getUserMetadata().containsKey(changedDatePropertyName)) {
             String changedDateValue = storageMetadata.getUserMetadata().get(changedDatePropertyName);
             try {
                 changedDate = DATE_FORMATTER.parse(changedDateValue);
             } catch (ParseException e) {
-                Log.warning(Geonet.RESOURCES, String.format("Unable to parse date '%s' into format pattern '%s' on resource '%s' for metadata %d(%s)",
+                Log.warning(Geonet.RESOURCES, String.format("Unable to parse date '%s' into format pattern '%s' on resource '%s' for metadata %d(%s). Will use resource last modified date",
                     changedDateValue, DATE_FORMATTER.toPattern(), resourceId, metadataId, metadataUuid), e);
+                changedDate = storageMetadata.getLastModified();
             }
         } else {
             changedDate = storageMetadata.getLastModified();
@@ -169,9 +170,9 @@ public class JCloudStore extends AbstractStore {
                 if (storageMetadata.getUserMetadata().containsKey(versionPropertyName)) {
                     versionValue = storageMetadata.getUserMetadata().get(versionPropertyName);
                 } else {
-                    versionValue = "";
                     Log.warning(Geonet.RESOURCES, String.format("Expecting property '%s' on resource '%s' for metadata %d(%s) but the property was not found.",
                         versionPropertyName, resourceId, metadataId, metadataUuid));
+                    versionValue = "";
                 }
             } else {
                 versionValue = storageMetadata.getETag();
@@ -353,11 +354,11 @@ public class JCloudStore extends AbstractStore {
         // JCloud does not allow created date to be set so we may supply the value we want as a property so assign the value.
         // Only assign the value if we currently don't have a creation date, and we don't have a version assigned either because if either of these exists then
         // it will indicate that this is not the first version.
-        String CreatedDatePropertyName = jCloudConfiguration.getExternalResourceManagementCreatedDatePropertyName();
-        String VersionPropertyName = jCloudConfiguration.getExternalResourceManagementVersionPropertyName();
-        if (StringUtils.hasLength(CreatedDatePropertyName) &&
-            !properties.containsKey(CreatedDatePropertyName) &&
-            (!StringUtils.hasLength(VersionPropertyName) || (!properties.containsKey(VersionPropertyName)))
+        String createdDatePropertyName = jCloudConfiguration.getExternalResourceManagementCreatedDatePropertyName();
+        String versionPropertyName = jCloudConfiguration.getExternalResourceManagementVersionPropertyName();
+        if (StringUtils.hasLength(createdDatePropertyName) &&
+            !properties.containsKey(createdDatePropertyName) &&
+            (!StringUtils.hasLength(versionPropertyName) || (!properties.containsKey(versionPropertyName)))
         ) {
             properties.put(jCloudConfiguration.getExternalResourceManagementCreatedDatePropertyName(), DATE_FORMATTER.format(changeDate));
         }
@@ -391,7 +392,7 @@ public class JCloudStore extends AbstractStore {
         if (StringUtils.hasLength(jCloudConfiguration.getExternalResourceManagementVersionPropertyName())) {
             String versionPropertyName = jCloudConfiguration.getExternalResourceManagementVersionPropertyName();
 
-            final int approvedMetadataId = approved ? metadataId : canEdit(context, metadataUuid, true);
+            final int approvedMetadataId = Boolean.TRUE.equals(approved) ? metadataId : canEdit(context, metadataUuid, true);
             // if the current record id equal to the approved record id then it has not been approved and is a draft otherwise we are editing a working copy
             final boolean draft = (metadataId == approvedMetadataId);
 
