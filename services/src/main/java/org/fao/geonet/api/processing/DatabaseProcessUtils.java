@@ -38,7 +38,6 @@ import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.search.IndexingMode;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
-import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.MetadataValidationRepository;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
