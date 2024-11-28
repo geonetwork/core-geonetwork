@@ -3,6 +3,7 @@
 -   [Creating group](creating-group.md)
 -   [Creating user](creating-user.md)
 -   [User Self-Registration](user-self-registration.md)
+-   [User reset password](user-reset-password.md)
 -   [Authentication mode](authentication-mode.md)
 
 ## Default user {#user-defaults}
