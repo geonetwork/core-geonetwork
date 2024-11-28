@@ -569,7 +569,7 @@ public class MetadataSharingApi implements ApplicationEventPublisherAware
 
             // Exclude deleting privileges for groups in which the user does not have the minimum profile for privileges
             for (Group group: groupRepository.findByMinimumProfileForPrivilegesNotNull()) {
-                if (!canUserChangePrivilegesForGroup(context, groupOwnerId, group)) {
+                if (!canUserChangePrivilegesForGroup(context, group)) {
                     excludeFromDelete.add(group.getId());
                 }
             }
@@ -762,7 +762,7 @@ public class MetadataSharingApi implements ApplicationEventPublisherAware
                 groupPrivilege.setUserProfile(userGroupProfile);
 
                 // Restrict changing privileges for groups with a minimum profile for setting privileges set
-                groupPrivilege.setRestricted(!canUserChangePrivilegesForGroup(context, groupOwner, g));
+                groupPrivilege.setRestricted(!canUserChangePrivilegesForGroup(context, g));
 
                 //--- get all operations that this group can do on given metadata
                 Specification<OperationAllowed> hasGroupIdAndMetadataId =
@@ -1498,19 +1498,16 @@ public class MetadataSharingApi implements ApplicationEventPublisherAware
     /**
      * Checks if the user can change the privileges for the group.
      *
-     * @param context            The {@link ServiceContext} object.
-     * @param metadataGroupOwner The {@link Group} that owns the metadata.
-     * @param group              The {@link Group} to change the privileges for.
+     * @param context The {@link ServiceContext} object.
+     * @param group   The {@link Group} to change the privileges for.
      * @return True if the user can change the privileges for the group, false otherwise.
      */
-    private boolean canUserChangePrivilegesForGroup(final ServiceContext context, Integer metadataGroupOwner, Group group) {
+    private boolean canUserChangePrivilegesForGroup(final ServiceContext context, Group group) {
         Profile minimumProfileForPrivileges = group.getMinimumProfileForPrivileges();
         if (minimumProfileForPrivileges == null) {
             return true;
         } else {
-            boolean isGroupOwner = metadataGroupOwner != null && metadataGroupOwner == group.getId();
-            boolean userIsMinimumProfile = accessManager.isProfileOrMoreOnGroup(context, minimumProfileForPrivileges, group.getId());
-            return isGroupOwner || userIsMinimumProfile;
+            return accessManager.isProfileOrMoreOnGroup(context, minimumProfileForPrivileges, group.getId());
         }
     }
 
