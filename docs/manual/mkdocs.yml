@@ -323,6 +323,7 @@ nav:
         - administrator-guide/managing-users-and-groups/creating-group.md
         - administrator-guide/managing-users-and-groups/creating-user.md
         - administrator-guide/managing-users-and-groups/user-self-registration.md
+        - administrator-guide/managing-users-and-groups/user-reset-password.md
       - 'Classification Systems':
         - administrator-guide/managing-classification-systems/index.md
         - administrator-guide/managing-classification-systems/managing-categories.md
