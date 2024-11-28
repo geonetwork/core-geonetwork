@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2024 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -25,7 +25,6 @@ package org.fao.geonet.repository;
 
 import org.fao.geonet.domain.*;
 import org.fao.geonet.utils.Log;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 
 import javax.annotation.Nonnull;
@@ -60,8 +59,10 @@ public class UserRepositoryCustomImpl implements UserRepositoryCustom {
         CriteriaBuilder cb = _entityManager.getCriteriaBuilder();
         CriteriaQuery<User> query = cb.createQuery(User.class);
         Root<User> root = query.from(User.class);
+        Join<User, String> joinedEmailAddresses = root.join(User_.emailAddresses);
 
-        query.where(cb.isMember(email, root.get(User_.emailAddresses)));
+        // Case in-sensitive email search
+        query.where( cb.equal(cb.lower(joinedEmailAddresses), email.toLowerCase()));
         final List<User> resultList = _entityManager.createQuery(query).getResultList();
         if (resultList.isEmpty()) {
             return null;
@@ -78,10 +79,12 @@ public class UserRepositoryCustomImpl implements UserRepositoryCustom {
         CriteriaBuilder cb = _entityManager.getCriteriaBuilder();
         CriteriaQuery<User> query = cb.createQuery(User.class);
         Root<User> root = query.from(User.class);
+        Join<User, String> joinedEmailAddresses = root.join(User_.emailAddresses);
 
         final Path<String> authTypePath = root.get(User_.security).get(UserSecurity_.authType);
         query.where(cb.and(
-            cb.isMember(email, root.get(User_.emailAddresses)),
+            // Case in-sensitive email search
+            cb.equal(cb.lower(joinedEmailAddresses), email.toLowerCase()),
             cb.or(cb.isNull(authTypePath), cb.equal(cb.trim(authTypePath), ""))));
         List<User> results = _entityManager.createQuery(query).getResultList();
 
@@ -101,7 +104,8 @@ public class UserRepositoryCustomImpl implements UserRepositoryCustom {
 
         final Path<String> authTypePath = root.get(User_.security).get(UserSecurity_.authType);
         final Path<String> usernamePath = root.get(User_.username);
-        query.where(cb.and(cb.equal(usernamePath, username), cb.or(cb.isNull(authTypePath), cb.equal(cb.trim(authTypePath), ""))));
+        // Case in-sensitive username search
+        query.where(cb.and(cb.equal(cb.lower(usernamePath), username.toLowerCase()), cb.or(cb.isNull(authTypePath), cb.equal(cb.trim(authTypePath), ""))));
         List<User> results = _entityManager.createQuery(query).getResultList();
 
 
@@ -130,7 +134,7 @@ public class UserRepositoryCustomImpl implements UserRepositoryCustom {
     @Nonnull
     public List<Pair<Integer, User>> findAllByGroupOwnerNameAndProfile(@Nonnull final Collection<Integer> metadataIds,
                                                                        @Nullable final Profile profile) {
-        List<Pair<Integer, User>> results = new ArrayList<Pair<Integer, User>>();
+        List<Pair<Integer, User>> results = new ArrayList<>();
 
         results.addAll(findAllByGroupOwnerNameAndProfileInternal(metadataIds, profile, false));
         results.addAll(findAllByGroupOwnerNameAndProfileInternal(metadataIds, profile, true));
@@ -180,7 +184,7 @@ public class UserRepositoryCustomImpl implements UserRepositoryCustom {
 
         query.distinct(true);
 
-        List<Pair<Integer, User>> results = new ArrayList<Pair<Integer, User>>();
+        List<Pair<Integer, User>> results = new ArrayList<>();
 
         for (Tuple result : _entityManager.createQuery(query).getResultList()) {
             Integer mdId = (Integer) result.get(0);
