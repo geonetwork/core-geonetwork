@@ -247,7 +247,7 @@
             var allowed =
               !g.restricted &&
               (($.inArray(g.group, gnShareConstants.internalGroups) !== -1 &&
-                  user.isReviewerOrMore()) ||
+                user.isReviewerOrMore()) ||
                 $.inArray(g.group, gnShareConstants.internalGroups) === -1);
 
             if (allowed) {
