@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2024 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -89,7 +89,13 @@
           gnConfig["system.security.passwordEnforcement.maxLength"],
           6
         );
-        $scope.passwordPattern = gnConfig["system.security.passwordEnforcement.pattern"];
+
+        $scope.usePattern = gnConfig["system.security.passwordEnforcement.usePattern"];
+
+        if ($scope.usePattern) {
+          $scope.passwordPattern =
+            gnConfig["system.security.passwordEnforcement.pattern"];
+        }
       });
 
       $scope.resolveRecaptcha = false;
