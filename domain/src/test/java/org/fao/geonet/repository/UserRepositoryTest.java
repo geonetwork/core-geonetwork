@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2024 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -31,7 +31,6 @@ import org.fao.geonet.repository.specification.UserGroupSpecs;
 import org.hamcrest.CoreMatchers;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 
 import javax.annotation.Nullable;
@@ -121,6 +120,11 @@ public class UserRepositoryTest extends AbstractSpringDataTest {
         assertNotNull(foundUser);
         assertEquals(user2.getId(), foundUser.getId());
 
+        // Test case-insensitive
+        foundUser = _userRepo.findOneByEmail(add2b.toUpperCase());
+        assertNotNull(foundUser);
+        assertEquals(user2.getId(), foundUser.getId());
+
         foundUser = _userRepo.findOneByEmail("xjkjk");
         assertNull(foundUser);
     }
@@ -150,7 +154,48 @@ public class UserRepositoryTest extends AbstractSpringDataTest {
         foundUser = _userRepo.findOneByUsernameAndSecurityAuthTypeIsNullOrEmpty(user3.getUsername());
         assertNull(foundUser);
 
+        // Test case-insensitive
+        foundUser = _userRepo.findOneByUsernameAndSecurityAuthTypeIsNullOrEmpty(user3.getUsername().toUpperCase());
+        assertNull(foundUser);
+
         foundUser = _userRepo.findOneByUsernameAndSecurityAuthTypeIsNullOrEmpty("blarg");
+        assertNull(foundUser);
+    }
+
+
+    @Test
+    public void testFindOneByEmailAndSecurityAuthTypeIsNullOrEmpty() {
+        User user1 = newUser();
+        user1.getSecurity().setAuthType("");
+        user1.getEmailAddresses().add("user1@geonetwork.com");
+        user1 = _userRepo.save(user1);
+
+        User user2 = newUser();
+        user2.getSecurity().setAuthType(null);
+        user2.getEmailAddresses().add("user2@geonetwork.com");
+        user2 = _userRepo.save(user2);
+
+        User user3 = newUser();
+        user3.getSecurity().setAuthType("nonull");
+        user3.getEmailAddresses().add("user3@geonetwork.com");
+        _userRepo.save(user3);
+
+        User foundUser = _userRepo.findOneByEmailAndSecurityAuthTypeIsNullOrEmpty(user1.getEmail());
+        assertNotNull(foundUser);
+        assertEquals(user1.getId(), foundUser.getId());
+
+        foundUser = _userRepo.findOneByEmailAndSecurityAuthTypeIsNullOrEmpty(user2.getEmail());
+        assertNotNull(foundUser);
+        assertEquals(user2.getId(), foundUser.getId());
+
+        foundUser = _userRepo.findOneByEmailAndSecurityAuthTypeIsNullOrEmpty(user3.getEmail());
+        assertNull(foundUser);
+
+        // Test case-insensitive
+        foundUser = _userRepo.findOneByEmailAndSecurityAuthTypeIsNullOrEmpty(user3.getEmail().toUpperCase());
+        assertNull(foundUser);
+
+        foundUser = _userRepo.findOneByEmailAndSecurityAuthTypeIsNullOrEmpty("blarg");
         assertNull(foundUser);
     }
 
@@ -219,8 +264,8 @@ public class UserRepositoryTest extends AbstractSpringDataTest {
         assertEquals(4, found.size());
         int md1Found = 0;
         int md2Found = 0;
-        for (Pair<Integer, User> record : found) {
-            if (record.one() == md1.getId()) {
+        for (Pair<Integer, User> info : found) {
+            if (info.one() == md1.getId()) {
                 md1Found++;
             } else {
                 md2Found++;
@@ -330,8 +375,6 @@ public class UserRepositoryTest extends AbstractSpringDataTest {
     }
 
     private User newUser() {
-        User user = newUser(_inc);
-        return user;
+        return newUser(_inc);
     }
-
 }

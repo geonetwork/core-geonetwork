@@ -1,5 +1,5 @@
 //=============================================================================
-//===   Copyright (C) 2001-2007 Food and Agriculture Organization of the
+//===   Copyright (C) 2001-2024 Food and Agriculture Organization of the
 //===   United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===   and United Nations Environment Programme (UNEP)
 //===
@@ -27,7 +27,6 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.ApplicationContextHolder;
-import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
 import org.fao.geonet.constants.Geonet;
@@ -57,6 +56,7 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import javax.servlet.http.HttpServletRequest;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
@@ -117,8 +117,9 @@ public class PasswordApi {
 
         ServiceContext context = ApiUtils.createServiceContext(request);
 
-        User user = userRepository.findOneByUsername(username);
-        if (user == null) {
+        List<User> existingUsers = userRepository.findByUsernameIgnoreCase(username);
+
+        if (existingUsers.isEmpty()) {
             Log.warning(LOGGER, String.format("User update password. Can't find user '%s'",
                 username));
 
@@ -128,6 +129,9 @@ public class PasswordApi {
                 XslUtil.encodeForJavaScript(username)
             ), HttpStatus.PRECONDITION_FAILED);
         }
+
+        User user = existingUsers.get(0);
+
         if (LDAPConstants.LDAP_FLAG.equals(user.getSecurity().getAuthType())) {
             Log.warning(LOGGER, String.format("User '%s' is authenticated using LDAP. Password can't be sent by email.",
                 username));
@@ -183,14 +187,16 @@ public class PasswordApi {
         String content = localizedEmail.getParsedMessage(feedbackLocales);
 
         // send change link via email with admin in CC
-        if (!MailUtil.sendMail(user.getEmail(),
+        Boolean mailSent = MailUtil.sendMail(user.getEmail(),
             subject,
             content,
             null, sm,
-            adminEmail, "")) {
+            adminEmail, "");
+        if (Boolean.FALSE.equals(mailSent)) {
             return new ResponseEntity<>(String.format(
                 messages.getString("mail_error")), HttpStatus.PRECONDITION_FAILED);
         }
+
         return new ResponseEntity<>(String.format(
             messages.getString("user_password_changed"),
             XslUtil.encodeForJavaScript(username)
@@ -225,8 +231,9 @@ public class PasswordApi {
 
         ServiceContext serviceContext = ApiUtils.createServiceContext(request);
 
-        final User user = userRepository.findOneByUsername(username);
-        if (user == null) {
+        List<User> existingUsers = userRepository.findByUsernameIgnoreCase(username);
+
+        if (existingUsers.isEmpty()) {
             Log.warning(LOGGER, String.format("User reset password. Can't find user '%s'",
                 username));
 
@@ -236,6 +243,7 @@ public class PasswordApi {
                 XslUtil.encodeForJavaScript(username)
             ), HttpStatus.CREATED);
         }
+        User user = existingUsers.get(0);
 
         if (LDAPConstants.LDAP_FLAG.equals(user.getSecurity().getAuthType())) {
             Log.warning(LOGGER, String.format("User '%s' is authenticated using LDAP. Password can't be sent by email.",
@@ -249,7 +257,7 @@ public class PasswordApi {
         }
 
         String email = user.getEmail();
-        if (StringUtils.isEmpty(email)) {
+        if (!StringUtils.hasLength(email)) {
             Log.warning(LOGGER, String.format("User reset password. User '%s' has no email",
                 username));
 
@@ -298,14 +306,16 @@ public class PasswordApi {
         String content = localizedEmail.getParsedMessage(feedbackLocales);
 
         // send change link via email with admin in CC
-        if (!MailUtil.sendMail(email,
+        Boolean mailSent = MailUtil.sendMail(email,
             subject,
             content,
             null, sm,
-            adminEmail, "")) {
+            adminEmail, "");
+        if (Boolean.FALSE.equals(mailSent)) {
             return new ResponseEntity<>(String.format(
                 messages.getString("mail_error")), HttpStatus.PRECONDITION_FAILED);
         }
+
         return new ResponseEntity<>(String.format(
             messages.getString("user_password_sent"),
             XslUtil.encodeForJavaScript(username)
