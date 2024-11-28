@@ -26,7 +26,7 @@
 
   <codelist name="gmd:CI_DateTypeCode">
     <entry>
-      <code>criation</code>
+      <code>creation</code>
       <label>Criação</label>
       <description>A data identifica quando o recurso foi criado</description>
     </entry>
@@ -86,7 +86,7 @@
     <entry>
       <code>documentDigital</code>
       <label>Documento digital</label>
-      <description>Visualização digital dum item principalmente escrito (também possa conter
+      <description>Visualização digital de um item principalmente escrito (também pode conter
         ilustrações)
       </description>
     </entry>
@@ -339,7 +339,7 @@
     <entry>
       <code>campaign</code>
       <label>Campanha</label>
-      <description>Série de acções organizadas e planeadas</description>
+      <description>Série de acções organizadas e planejadas</description>
     </entry>
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
     <entry>
@@ -401,7 +401,7 @@
     <entry>
       <code>program</code>
       <label>Programa</label>
-      <description>Actividade específica e planeada</description>
+      <description>Actividade específica e planejada</description>
     </entry>
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
     <entry>
@@ -1096,7 +1096,7 @@
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
     <entry>
       <code>notPlanned</code>
-      <label>Não planeado</label>
+      <label>Não planejado</label>
       <description>Não há planos para actualizar os dados</description>
     </entry>
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -1349,7 +1349,7 @@
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
     <entry>
       <code>planned</code>
-      <label>Planeado</label>
+      <label>Planejado</label>
       <description>Data fixa estabelecida, a partir da qual, os dados foram ou serão criados ou
         actualizados
       </description>
@@ -1582,7 +1582,7 @@
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
     <entry>
       <code>stereoModel</code>
-      <label>Modelo estereofónico</label>
+      <label>Modelo estereofônico</label>
       <description>Vista tridimensional, que é formada pelos reios homólogos intersectandos
         dum par de imagens sobrepostos
       </description>
@@ -1608,7 +1608,7 @@
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
     <entry>
       <code>biota</code>
-      <label>Biotopos</label>
+      <label>Biota</label>
       <description>Fauna e flora em habitat natural. Exemplos: vida selvagem, vegetação, ciências
         biológicas, ecologia, desertos, vida marinha, zonas húmidas, habitat
       </description>
@@ -1624,7 +1624,7 @@
     <entry>
       <code>climatologyMeteorologyAtmosphere</code>
       <label>Climatologia, Atmosfera</label>
-      <description>Processos e fenómenos atmosféricos. Exemplos: nebulosidade, estado do tempo,
+      <description>Processos e fenômenos atmosféricos. Exemplos: nebulosidade, estado do tempo,
         clima, condições atmosféricas, alterações climáticas, precipitação
       </description>
     </entry>
@@ -1632,7 +1632,7 @@
     <entry>
       <code>economy</code>
       <label>Economia</label>
-      <description>Actividades económicas e emprego. Exemplos: produção, emprego, rendimentos,
+      <description>Actividades econômicas e emprego. Exemplos: produção, emprego, rendimentos,
         comércio, indústria, turismo e eco-turismo, florestas, pescas, caça para fins comerciais ou
         de subsistência, exploração e extracção de recursos minerais, petróleo e gás
       </description>
@@ -1650,7 +1650,7 @@
       <code>environment</code>
       <label>Ambiente</label>
       <description>Recursos ambientais, protecção e conservação da natureza. Exemplos: poluição,
-        armazenamento e tratamento de resíduos, avaliação de impactes ambientais, monitorização do
+        armazenamento e tratamento de resíduos, avaliação de impactos ambientais, monitoramento do
         risco ambiental, reservas naturais, paisagem
       </description>
     </entry>
@@ -1716,8 +1716,8 @@
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
     <entry>
       <code>planningCadastre</code>
-      <label>Planeamento e Cadastro</label>
-      <description>informação destinada ao planeamento do uso do território. Exemplos: mapas de uso
+      <label>Planejamento e Cadastro</label>
+      <description>informação destinada ao planejamento do uso do território. Exemplos: mapas de uso
         do solo, mapas de zonamento, levantamentos cadastrais, registo predial e rústico
       </description>
     </entry>
@@ -1734,7 +1734,7 @@
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
     <entry>
       <code>structure</code>
-      <label>Património Edificado</label>
+      <label>Patrimônio Edificado</label>
       <description>Construção desenvolvida pelo homem. Exemplos: edifícios, museus, igrejas,
         fábricas, habitação, monumentos, lojas
       </description>
