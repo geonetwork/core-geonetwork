@@ -424,6 +424,13 @@
         <groupId>org.openrdf</groupId>
         <artifactId>sesame</artifactId>
         <version>1.2.7</version>
+        <exclusions>
+          <!-- Remove CVE-2022-45378 and do not break sesame usage. -->
+          <exclusion>
+            <groupId>soap</groupId>
+            <artifactId>soap</artifactId>
+          </exclusion>
+        </exclusions>
       </dependency>
       <dependency>
         <groupId>org.openrdf</groupId>
@@ -1578,10 +1585,10 @@
     of Postgres is used and update pg.version if needed. -->
     <geotools.version>28.2</geotools.version>
     <jts.version>1.18.2</jts.version>
-    <pg.version>42.3.3</pg.version>
+    <pg.version>42.3.10</pg.version>
 
-    <spring.version>5.3.37</spring.version>
-    <spring.security.version>5.7.12</spring.security.version>
+    <spring.version>5.3.39</spring.version>
+    <spring.security.version>5.7.13</spring.security.version>
     <spring.jpa.version>2.2.13.RELEASE</spring.jpa.version>
     <springboot.version>2.7.0</springboot.version>
     <springdoc.version>1.8.0</springdoc.version>
