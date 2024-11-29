@@ -693,16 +693,28 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
 
     @Override
     public String selectOneWithSearchAndReplace(String uuid, String search, String replace) {
-        return metadataDraftRepository.selectOneWithSearchAndReplace(uuid, search, replace);
+        String updatedXml = metadataDraftRepository.selectOneWithSearchAndReplace(uuid, search, replace);
+        if (updatedXml == null) {
+            updatedXml = super.selectOneWithSearchAndReplace(uuid, search, replace);
+        }
+        return updatedXml;
     }
 
     @Override
     public String selectOneWithRegexSearchAndReplaceWithFlags(String uuid, String search, String replace, String flags) {
-        return metadataDraftRepository.selectOneWithRegexSearchAndReplaceWithFlags(uuid, search, replace, flags);
+        String updatedXml = metadataDraftRepository.selectOneWithRegexSearchAndReplaceWithFlags(uuid, search, replace, flags);
+        if (updatedXml == null) {
+            updatedXml = super.selectOneWithRegexSearchAndReplaceWithFlags(uuid, search, replace, flags);
+        }
+        return updatedXml;
     }
 
     @Override
     public String selectOneWithRegexSearchAndReplace(String uuid, String search, String replace) {
-        return metadataDraftRepository.selectOneWithSearchAndReplace(uuid, search, replace);
+        String updatedXml = metadataDraftRepository.selectOneWithRegexSearchAndReplace(uuid, search, replace);
+        if (updatedXml == null) {
+            updatedXml = super.selectOneWithRegexSearchAndReplace(uuid, search, replace);
+        }
+        return updatedXml;
     }
 }
