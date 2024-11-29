@@ -26,6 +26,7 @@ package org.fao.geonet.repository;
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
 
+import java.util.Collections;
 import org.fao.geonet.domain.*;
 import org.fao.geonet.repository.specification.UserGroupSpecs;
 import org.hamcrest.CoreMatchers;
@@ -239,7 +240,7 @@ public class UserRepositoryTest extends AbstractSpringDataTest {
         userGroupRepository.save(new UserGroup().setGroup(group2).setUser(reviewerUser).setProfile(Profile.Editor));
         userGroupRepository.save(new UserGroup().setGroup(group1).setUser(reviewerUser).setProfile(Profile.Reviewer));
 
-        List<Pair<Integer, User>> found = userRepo.findAllByGroupOwnerNameAndProfile(List.of(md1.getId()), null);
+        List<Pair<Integer, User>> found = userRepo.findAllByGroupOwnerNameAndProfile(Collections.singletonList(md1.getId()), null);
         found.sort(Comparator.comparing(s -> s.two().getName()));
 
         assertEquals(2, found.size());
@@ -248,7 +249,7 @@ public class UserRepositoryTest extends AbstractSpringDataTest {
         assertEquals(editUser, found.get(0).two());
         assertEquals(reviewerUser, found.get(1).two());
 
-        found = userRepo.findAllByGroupOwnerNameAndProfile(List.of(md1.getId()), null);
+        found = userRepo.findAllByGroupOwnerNameAndProfile(Collections.singletonList(md1.getId()), null);
         // Sort by user name descending
         found.sort(Comparator.comparing(s -> s.two().getName(), Comparator.reverseOrder()));
 
@@ -291,7 +292,7 @@ public class UserRepositoryTest extends AbstractSpringDataTest {
         userGroupRepository.save(new UserGroup().setGroup(group1).setUser(reviewerUser).setProfile(Profile.Reviewer));
 
         List<Integer> found = Lists.transform(userRepo.findAllUsersInUserGroups(UserGroupSpecs.hasGroupId(group1.getId())),
-            new Function<>() {
+            new Function<User, Integer>() {
 
                 @Nullable
                 @Override
@@ -368,7 +369,7 @@ public class UserRepositoryTest extends AbstractSpringDataTest {
 
         List<String> duplicatedUsernames = userRepo.findDuplicatedUsernamesCaseInsensitive();
         MatcherAssert.assertThat("Duplicated usernames don't match the expected ones",
-            duplicatedUsernames, CoreMatchers.is(Lists.newArrayList("username1")));
+            duplicatedUsernames, CoreMatchers.is(Collections.singletonList("username1")));
         assertEquals(1, duplicatedUsernames.size());
 
     }
