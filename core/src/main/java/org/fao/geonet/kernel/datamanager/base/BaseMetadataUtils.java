@@ -1041,6 +1041,6 @@ public class BaseMetadataUtils implements IMetadataUtils {
 
     @Override
     public String selectOneWithRegexSearchAndReplace(String uuid, String search, String replace) {
-        return metadataRepository.selectOneWithSearchAndReplace(uuid, search, replace);
+        return metadataRepository.selectOneWithRegexSearchAndReplace(uuid, search, replace);
     }
 }
