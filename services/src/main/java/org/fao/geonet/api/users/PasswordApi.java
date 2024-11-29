@@ -76,6 +76,7 @@ public class PasswordApi {
     public static final String LOGGER = Geonet.GEONETWORK + ".api.user";
 
     public static final String DATE_FORMAT = "yyyy-MM-dd";
+    public static final String USER_PASSWORD_SENT = "user_password_sent";
     @Autowired
     LanguageUtils languageUtils;
     @Autowired
@@ -85,14 +86,13 @@ public class PasswordApi {
     @Autowired
     FeedbackLanguages feedbackLanguages;
 
-    @Autowired(required=false)
+    @Autowired(required = false)
     SecurityProviderConfiguration securityProviderConfiguration;
 
     @io.swagger.v3.oas.annotations.Operation(summary = "Update user password",
         description = "Get a valid changekey by email first and then update your password.")
-    @RequestMapping(
+    @PatchMapping(
         value = "/{username}",
-        method = RequestMethod.PATCH,
         produces = MediaType.TEXT_PLAIN_VALUE)
     @ResponseStatus(value = HttpStatus.CREATED)
     @ResponseBody
@@ -100,13 +100,12 @@ public class PasswordApi {
         @Parameter(description = "The user name",
             required = true)
         @PathVariable
-            String username,
+        String username,
         @Parameter(description = "The new password and a valid change key",
             required = true)
         @RequestBody
-            PasswordUpdateParameter passwordAndChangeKey,
-        HttpServletRequest request)
-        throws Exception {
+        PasswordUpdateParameter passwordAndChangeKey,
+        HttpServletRequest request) {
         Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
         ResourceBundle messages = ResourceBundle.getBundle("org.fao.geonet.api.Messages", locale);
         Locale[] feedbackLocales = feedbackLanguages.getLocales(locale);
@@ -208,9 +207,8 @@ public class PasswordApi {
             "reset his password. User MUST have an email to get the link. " +
             "LDAP users will not be able to retrieve their password " +
             "using this service.")
-    @RequestMapping(
+    @PutMapping(
         value = "/actions/forgot-password",
-        method = RequestMethod.PUT,
         produces = MediaType.TEXT_PLAIN_VALUE)
     @ResponseStatus(value = HttpStatus.CREATED)
     @ResponseBody
@@ -218,9 +216,8 @@ public class PasswordApi {
         @Parameter(description = "The user name",
             required = true)
         @RequestParam
-            String username,
-        HttpServletRequest request)
-        throws Exception {
+        String username,
+        HttpServletRequest request) {
         Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
         ResourceBundle messages = ResourceBundle.getBundle("org.fao.geonet.api.Messages", locale);
         Locale[] feedbackLocales = feedbackLanguages.getLocales(locale);
@@ -239,7 +236,7 @@ public class PasswordApi {
 
             // Return response not providing details about the issue, that should be logged.
             return new ResponseEntity<>(String.format(
-                messages.getString("user_password_sent"),
+                messages.getString(USER_PASSWORD_SENT),
                 XslUtil.encodeForJavaScript(username)
             ), HttpStatus.CREATED);
         }
@@ -251,7 +248,7 @@ public class PasswordApi {
 
             // Return response not providing details about the issue, that should be logged.
             return new ResponseEntity<>(String.format(
-                messages.getString("user_password_sent"),
+                messages.getString(USER_PASSWORD_SENT),
                 XslUtil.encodeForJavaScript(username)
             ), HttpStatus.CREATED);
         }
@@ -263,7 +260,7 @@ public class PasswordApi {
 
             // Return response not providing details about the issue, that should be logged.
             return new ResponseEntity<>(String.format(
-                messages.getString("user_password_sent"),
+                messages.getString(USER_PASSWORD_SENT),
                 XslUtil.encodeForJavaScript(username)
             ), HttpStatus.CREATED);
         }
@@ -317,7 +314,7 @@ public class PasswordApi {
         }
 
         return new ResponseEntity<>(String.format(
-            messages.getString("user_password_sent"),
+            messages.getString(USER_PASSWORD_SENT),
             XslUtil.encodeForJavaScript(username)
         ), HttpStatus.CREATED);
     }

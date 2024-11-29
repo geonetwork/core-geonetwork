@@ -47,36 +47,37 @@ import java.util.List;
 public class UserRepositoryCustomImpl implements UserRepositoryCustom {
 
     @PersistenceContext
-    private EntityManager _entityManager;
+    private EntityManager entityManager;
 
     @Override
     public User findOne(final String userId) {
-        return _entityManager.find(User.class, Integer.valueOf(userId));
+        return entityManager.find(User.class, Integer.valueOf(userId));
     }
 
     @Override
-    public User findOneByEmail(final String email) {
-        CriteriaBuilder cb = _entityManager.getCriteriaBuilder();
+    public User findOneByEmail(@Nonnull final String email) {
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<User> query = cb.createQuery(User.class);
         Root<User> root = query.from(User.class);
         Join<User, String> joinedEmailAddresses = root.join(User_.emailAddresses);
 
         // Case in-sensitive email search
-        query.where( cb.equal(cb.lower(joinedEmailAddresses), email.toLowerCase()));
-        final List<User> resultList = _entityManager.createQuery(query).getResultList();
+        query.where(cb.equal(cb.lower(joinedEmailAddresses), email.toLowerCase()));
+        query.orderBy(cb.asc(root.get(User_.username)));
+        final List<User> resultList = entityManager.createQuery(query).getResultList();
         if (resultList.isEmpty()) {
             return null;
         }
         if (resultList.size() > 1) {
-            Log.error(Constants.DOMAIN_LOG_MODULE, "The database is inconsistent.  There are multiple users with the email address: " +
-                email);
+            Log.error(Constants.DOMAIN_LOG_MODULE, String.format("The database is inconsistent.  There are multiple users with the email address: %s",
+                email));
         }
         return resultList.get(0);
     }
 
     @Override
-    public User findOneByEmailAndSecurityAuthTypeIsNullOrEmpty(final String email) {
-        CriteriaBuilder cb = _entityManager.getCriteriaBuilder();
+    public User findOneByEmailAndSecurityAuthTypeIsNullOrEmpty(@Nonnull final String email) {
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<User> query = cb.createQuery(User.class);
         Root<User> root = query.from(User.class);
         Join<User, String> joinedEmailAddresses = root.join(User_.emailAddresses);
@@ -85,33 +86,44 @@ public class UserRepositoryCustomImpl implements UserRepositoryCustom {
         query.where(cb.and(
             // Case in-sensitive email search
             cb.equal(cb.lower(joinedEmailAddresses), email.toLowerCase()),
-            cb.or(cb.isNull(authTypePath), cb.equal(cb.trim(authTypePath), ""))));
-        List<User> results = _entityManager.createQuery(query).getResultList();
+            cb.or(cb.isNull(authTypePath), cb.equal(cb.trim(authTypePath), "")))
+        ).orderBy(cb.asc(root.get(User_.username)));
+        List<User> results = entityManager.createQuery(query).getResultList();
 
 
         if (results.isEmpty()) {
             return null;
         } else {
+            if (results.size() > 1) {
+                Log.error(Constants.DOMAIN_LOG_MODULE, String.format("The database is inconsistent.  There are multiple users with the email address: %s",
+                    email));
+            }
             return results.get(0);
         }
     }
 
     @Override
-    public User findOneByUsernameAndSecurityAuthTypeIsNullOrEmpty(final String username) {
-        CriteriaBuilder cb = _entityManager.getCriteriaBuilder();
+    public User findOneByUsernameAndSecurityAuthTypeIsNullOrEmpty(@Nonnull final String username) {
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<User> query = cb.createQuery(User.class);
         Root<User> root = query.from(User.class);
 
         final Path<String> authTypePath = root.get(User_.security).get(UserSecurity_.authType);
         final Path<String> usernamePath = root.get(User_.username);
         // Case in-sensitive username search
-        query.where(cb.and(cb.equal(cb.lower(usernamePath), username.toLowerCase()), cb.or(cb.isNull(authTypePath), cb.equal(cb.trim(authTypePath), ""))));
-        List<User> results = _entityManager.createQuery(query).getResultList();
-
+        query.where(cb.and(
+            cb.equal(cb.lower(usernamePath), username.toLowerCase()),
+            cb.or(cb.isNull(authTypePath), cb.equal(cb.trim(authTypePath), "")))
+        ).orderBy(cb.asc(root.get(User_.username)));
+        List<User> results = entityManager.createQuery(query).getResultList();
 
         if (results.isEmpty()) {
             return null;
         } else {
+            if (results.size() > 1) {
+                Log.error(Constants.DOMAIN_LOG_MODULE, String.format("The database is inconsistent.  There are multiple users with username: %s",
+                    username));
+            }
             return results.get(0);
         }
     }
@@ -119,7 +131,7 @@ public class UserRepositoryCustomImpl implements UserRepositoryCustom {
     @Nonnull
     @Override
     public List<String> findDuplicatedUsernamesCaseInsensitive() {
-        CriteriaBuilder cb = _entityManager.getCriteriaBuilder();
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<String> query = cb.createQuery(String.class);
 
         Root<User> userRoot = query.from(User.class);
@@ -127,7 +139,7 @@ public class UserRepositoryCustomImpl implements UserRepositoryCustom {
         query.groupBy(cb.lower(userRoot.get(User_.username)));
         query.having(cb.gt(cb.count(userRoot), 1));
 
-        return _entityManager.createQuery(query).getResultList();
+        return entityManager.createQuery(query).getResultList();
     }
 
     @Override
@@ -143,8 +155,8 @@ public class UserRepositoryCustomImpl implements UserRepositoryCustom {
     }
 
     private List<Pair<Integer, User>> findAllByGroupOwnerNameAndProfileInternal(@Nonnull final Collection<Integer> metadataIds,
-                                                                       @Nullable final Profile profile, boolean draft) {
-        CriteriaBuilder cb = _entityManager.getCriteriaBuilder();
+                                                                                @Nullable final Profile profile, boolean draft) {
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<Tuple> query = cb.createQuery(Tuple.class);
 
         Root<User> userRoot = query.from(User.class);
@@ -152,22 +164,20 @@ public class UserRepositoryCustomImpl implements UserRepositoryCustom {
 
         Predicate metadataPredicate;
         Predicate ownerPredicate;
-        Root<Metadata> metadataRoot = null;
-        Root<MetadataDraft> metadataDraftRoot = null;
 
         if (!draft) {
-            metadataRoot = query.from(Metadata.class);
+            Root<Metadata> metadataRoot = query.from(Metadata.class);
             query.multiselect(metadataRoot.get(Metadata_.id), userRoot);
             metadataPredicate = metadataRoot.get(Metadata_.id).in(metadataIds);
 
             ownerPredicate = cb.equal(metadataRoot.get(Metadata_.sourceInfo).get(MetadataSourceInfo_.groupOwner),
                 userGroupRoot.get(UserGroup_.id).get(UserGroupId_.groupId));
         } else {
-            metadataDraftRoot = query.from(MetadataDraft.class);
-            query.multiselect(metadataDraftRoot.get(MetadataDraft_.id), userRoot);
-            metadataPredicate = metadataDraftRoot.get(Metadata_.id).in(metadataIds);
+            Root<MetadataDraft> metadataRoot = query.from(MetadataDraft.class);
+            query.multiselect(metadataRoot.get(MetadataDraft_.id), userRoot);
+            metadataPredicate = metadataRoot.get(MetadataDraft_.id).in(metadataIds);
 
-            ownerPredicate = cb.equal(metadataDraftRoot.get(Metadata_.sourceInfo).get(MetadataSourceInfo_.groupOwner),
+            ownerPredicate = cb.equal(metadataRoot.get(MetadataDraft_.sourceInfo).get(MetadataSourceInfo_.groupOwner),
                 userGroupRoot.get(UserGroup_.id).get(UserGroupId_.groupId));
         }
 
@@ -186,7 +196,7 @@ public class UserRepositoryCustomImpl implements UserRepositoryCustom {
 
         List<Pair<Integer, User>> results = new ArrayList<>();
 
-        for (Tuple result : _entityManager.createQuery(query).getResultList()) {
+        for (Tuple result : entityManager.createQuery(query).getResultList()) {
             Integer mdId = (Integer) result.get(0);
             User user = (User) result.get(1);
             results.add(Pair.read(mdId, user));
@@ -197,7 +207,7 @@ public class UserRepositoryCustomImpl implements UserRepositoryCustom {
     @Nonnull
     @Override
     public List<User> findAllUsersThatOwnMetadata() {
-        final CriteriaBuilder cb = _entityManager.getCriteriaBuilder();
+        final CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         final CriteriaQuery<User> query = cb.createQuery(User.class);
 
         final Root<Metadata> metadataRoot = query.from(Metadata.class);
@@ -210,13 +220,13 @@ public class UserRepositoryCustomImpl implements UserRepositoryCustom {
         query.where(ownerExpression);
         query.distinct(true);
 
-        return _entityManager.createQuery(query).getResultList();
+        return entityManager.createQuery(query).getResultList();
     }
 
     @Nonnull
     @Override
     public List<User> findAllUsersInUserGroups(@Nonnull final Specification<UserGroup> userGroupSpec) {
-        final CriteriaBuilder cb = _entityManager.getCriteriaBuilder();
+        final CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         final CriteriaQuery<User> query = cb.createQuery(User.class);
 
         final Root<UserGroup> userGroupRoot = query.from(UserGroup.class);
@@ -229,7 +239,7 @@ public class UserRepositoryCustomImpl implements UserRepositoryCustom {
         query.where(cb.and(ownerExpression, userGroupSpec.toPredicate(userGroupRoot, query, cb)));
         query.distinct(true);
 
-        return _entityManager.createQuery(query).getResultList();
+        return entityManager.createQuery(query).getResultList();
     }
 
 }

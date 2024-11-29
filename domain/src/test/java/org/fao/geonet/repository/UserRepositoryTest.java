@@ -29,34 +29,34 @@ import com.google.common.collect.Lists;
 import org.fao.geonet.domain.*;
 import org.fao.geonet.repository.specification.UserGroupSpecs;
 import org.hamcrest.CoreMatchers;
+import org.hamcrest.MatcherAssert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
+
 
 import javax.annotation.Nullable;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static junit.framework.Assert.assertNull;
 import static org.junit.Assert.*;
 
 public class UserRepositoryTest extends AbstractSpringDataTest {
     @Autowired
-    UserGroupRepository _userGroupRepository;
+    UserGroupRepository userGroupRepository;
     @Autowired
-    MetadataRepository _metadataRepo;
+    MetadataRepository metadataRepo;
     @Autowired
-    GroupRepository _groupRepo;
+    GroupRepository groupRepo;
     @Autowired
-    UserRepository _userRepo;
+    UserRepository userRepo;
     @PersistenceContext
-    private EntityManager _entityManager;
+    private EntityManager entityManager;
 
     public static User newUser(AtomicInteger inc) {
         String val = String.format("%04d", inc.incrementAndGet());
@@ -72,15 +72,15 @@ public class UserRepositoryTest extends AbstractSpringDataTest {
 
         assertNull(user.getSecurity().getNodeId());
 
-        _userRepo.save(user);
+        userRepo.save(user);
         // save sets the nodeId
         assertNodeId(user);
         // loading should also set nodeid
-        assertNodeId(_userRepo.findAll().get(0));
-        assertNodeId(_userRepo.findById(user.getId()).get());
-        assertNodeId(_userRepo.findOneByUsername(user.getUsername()));
-        assertNodeId(_userRepo.findOneByEmail(user.getEmail()));
-        assertNodeId(_userRepo.findAllByProfile(user.getProfile()).get(0));
+        assertNodeId(userRepo.findAll().get(0));
+        assertNodeId(userRepo.findById(user.getId()).get());
+        assertNodeId(userRepo.findOneByUsername(user.getUsername()));
+        assertNodeId(userRepo.findOneByEmail(user.getEmail()));
+        assertNodeId(userRepo.findAllByProfile(user.getProfile()).get(0));
 
     }
 
@@ -88,8 +88,8 @@ public class UserRepositoryTest extends AbstractSpringDataTest {
         String testNodeId = "testNodeId";
         assertEquals(testNodeId, loaded4.getSecurity().getNodeId());
         loaded4.getSecurity().setNodeId(null);
-        _entityManager.flush();
-        _entityManager.clear();
+        entityManager.flush();
+        entityManager.clear();
     }
 
     @Test
@@ -99,33 +99,33 @@ public class UserRepositoryTest extends AbstractSpringDataTest {
         String add1b = "add1b";
         user1.getEmailAddresses().add(add1);
         user1.getEmailAddresses().add(add1b);
-        user1 = _userRepo.save(user1);
+        user1 = userRepo.save(user1);
 
         User user2 = newUser();
         String add2 = "add2";
         String add2b = "add2b";
         user2.getEmailAddresses().add(add2);
         user2.getEmailAddresses().add(add2b);
-        user2 = _userRepo.save(user2);
+        user2 = userRepo.save(user2);
 
-        User foundUser = _userRepo.findOneByEmail(add1);
+        User foundUser = userRepo.findOneByEmail(add1);
         assertNotNull(foundUser);
         assertEquals(user1.getId(), foundUser.getId());
 
-        foundUser = _userRepo.findOneByEmail(add1b);
+        foundUser = userRepo.findOneByEmail(add1b);
         assertNotNull(foundUser);
         assertEquals(user1.getId(), foundUser.getId());
 
-        foundUser = _userRepo.findOneByEmail(add2b);
+        foundUser = userRepo.findOneByEmail(add2b);
         assertNotNull(foundUser);
         assertEquals(user2.getId(), foundUser.getId());
 
         // Test case-insensitive
-        foundUser = _userRepo.findOneByEmail(add2b.toUpperCase());
+        foundUser = userRepo.findOneByEmail(add2b.toUpperCase());
         assertNotNull(foundUser);
         assertEquals(user2.getId(), foundUser.getId());
 
-        foundUser = _userRepo.findOneByEmail("xjkjk");
+        foundUser = userRepo.findOneByEmail("xjkjk");
         assertNull(foundUser);
     }
 
@@ -133,32 +133,32 @@ public class UserRepositoryTest extends AbstractSpringDataTest {
     public void testFindByUsernameAndAuthTypeIsNullOrEmpty() {
         User user1 = newUser();
         user1.getSecurity().setAuthType("");
-        user1 = _userRepo.save(user1);
+        user1 = userRepo.save(user1);
 
         User user2 = newUser();
         user2.getSecurity().setAuthType(null);
-        user2 = _userRepo.save(user2);
+        user2 = userRepo.save(user2);
 
         User user3 = newUser();
         user3.getSecurity().setAuthType("nonull");
-        _userRepo.save(user3);
+        userRepo.save(user3);
 
-        User foundUser = _userRepo.findOneByUsernameAndSecurityAuthTypeIsNullOrEmpty(user1.getUsername());
+        User foundUser = userRepo.findOneByUsernameAndSecurityAuthTypeIsNullOrEmpty(user1.getUsername());
         assertNotNull(foundUser);
         assertEquals(user1.getId(), foundUser.getId());
 
-        foundUser = _userRepo.findOneByUsernameAndSecurityAuthTypeIsNullOrEmpty(user2.getUsername());
+        foundUser = userRepo.findOneByUsernameAndSecurityAuthTypeIsNullOrEmpty(user2.getUsername());
         assertNotNull(foundUser);
         assertEquals(user2.getId(), foundUser.getId());
 
-        foundUser = _userRepo.findOneByUsernameAndSecurityAuthTypeIsNullOrEmpty(user3.getUsername());
+        foundUser = userRepo.findOneByUsernameAndSecurityAuthTypeIsNullOrEmpty(user3.getUsername());
         assertNull(foundUser);
 
         // Test case-insensitive
-        foundUser = _userRepo.findOneByUsernameAndSecurityAuthTypeIsNullOrEmpty(user3.getUsername().toUpperCase());
+        foundUser = userRepo.findOneByUsernameAndSecurityAuthTypeIsNullOrEmpty(user3.getUsername().toUpperCase());
         assertNull(foundUser);
 
-        foundUser = _userRepo.findOneByUsernameAndSecurityAuthTypeIsNullOrEmpty("blarg");
+        foundUser = userRepo.findOneByUsernameAndSecurityAuthTypeIsNullOrEmpty("blarg");
         assertNull(foundUser);
     }
 
@@ -168,79 +168,79 @@ public class UserRepositoryTest extends AbstractSpringDataTest {
         User user1 = newUser();
         user1.getSecurity().setAuthType("");
         user1.getEmailAddresses().add("user1@geonetwork.com");
-        user1 = _userRepo.save(user1);
+        user1 = userRepo.save(user1);
 
         User user2 = newUser();
         user2.getSecurity().setAuthType(null);
         user2.getEmailAddresses().add("user2@geonetwork.com");
-        user2 = _userRepo.save(user2);
+        user2 = userRepo.save(user2);
 
         User user3 = newUser();
         user3.getSecurity().setAuthType("nonull");
         user3.getEmailAddresses().add("user3@geonetwork.com");
-        _userRepo.save(user3);
+        userRepo.save(user3);
 
-        User foundUser = _userRepo.findOneByEmailAndSecurityAuthTypeIsNullOrEmpty(user1.getEmail());
+        User foundUser = userRepo.findOneByEmailAndSecurityAuthTypeIsNullOrEmpty(user1.getEmail());
         assertNotNull(foundUser);
         assertEquals(user1.getId(), foundUser.getId());
 
-        foundUser = _userRepo.findOneByEmailAndSecurityAuthTypeIsNullOrEmpty(user2.getEmail());
+        foundUser = userRepo.findOneByEmailAndSecurityAuthTypeIsNullOrEmpty(user2.getEmail());
         assertNotNull(foundUser);
         assertEquals(user2.getId(), foundUser.getId());
 
-        foundUser = _userRepo.findOneByEmailAndSecurityAuthTypeIsNullOrEmpty(user3.getEmail());
+        foundUser = userRepo.findOneByEmailAndSecurityAuthTypeIsNullOrEmpty(user3.getEmail());
         assertNull(foundUser);
 
         // Test case-insensitive
-        foundUser = _userRepo.findOneByEmailAndSecurityAuthTypeIsNullOrEmpty(user3.getEmail().toUpperCase());
+        foundUser = userRepo.findOneByEmailAndSecurityAuthTypeIsNullOrEmpty(user3.getEmail().toUpperCase());
         assertNull(foundUser);
 
-        foundUser = _userRepo.findOneByEmailAndSecurityAuthTypeIsNullOrEmpty("blarg");
+        foundUser = userRepo.findOneByEmailAndSecurityAuthTypeIsNullOrEmpty("blarg");
         assertNull(foundUser);
     }
 
     @Test
     public void testFindByUsername() {
         User user1 = newUser();
-        user1 = _userRepo.save(user1);
+        user1 = userRepo.save(user1);
 
-        User foundUser = _userRepo.findOneByUsernameAndSecurityAuthTypeIsNullOrEmpty(user1.getUsername());
+        User foundUser = userRepo.findOneByUsernameAndSecurityAuthTypeIsNullOrEmpty(user1.getUsername());
         assertNotNull(foundUser);
         assertEquals(user1.getId(), foundUser.getId());
 
-        foundUser = _userRepo.findOneByUsernameAndSecurityAuthTypeIsNullOrEmpty("blarg");
+        foundUser = userRepo.findOneByUsernameAndSecurityAuthTypeIsNullOrEmpty("blarg");
         assertNull(foundUser);
     }
 
     @Test
     public void testFindAllByGroupOwnerNameAndProfile() {
-        Group group1 = _groupRepo.save(GroupRepositoryTest.newGroup(_inc));
-        Group group2 = _groupRepo.save(GroupRepositoryTest.newGroup(_inc));
+        Group group1 = groupRepo.save(GroupRepositoryTest.newGroup(_inc));
+        Group group2 = groupRepo.save(GroupRepositoryTest.newGroup(_inc));
 
-        User editUser = _userRepo.save(newUser().setProfile(Profile.Editor));
-        User reviewerUser = _userRepo.save(newUser().setProfile(Profile.Reviewer));
-        User registeredUser = _userRepo.save(newUser().setProfile(Profile.RegisteredUser));
-        _userRepo.save(newUser().setProfile(Profile.Administrator));
+        User editUser = userRepo.save(newUser().setProfile(Profile.Editor));
+        User reviewerUser = userRepo.save(newUser().setProfile(Profile.Reviewer));
+        User registeredUser = userRepo.save(newUser().setProfile(Profile.RegisteredUser));
+        userRepo.save(newUser().setProfile(Profile.Administrator));
 
         Metadata md1 = MetadataRepositoryTest.newMetadata(_inc);
         md1.getSourceInfo().setGroupOwner(group1.getId());
-        md1 = _metadataRepo.save(md1);
+        md1 = metadataRepo.save(md1);
 
         Metadata md2 = MetadataRepositoryTest.newMetadata(_inc);
         md2.getSourceInfo().setGroupOwner(group1.getId());
-        md2 = _metadataRepo.save(md2);
+        md2 = metadataRepo.save(md2);
 
         Metadata md3 = MetadataRepositoryTest.newMetadata(_inc);
         md3.getSourceInfo().setGroupOwner(group2.getId());
-        _metadataRepo.save(md3);
+        metadataRepo.save(md3);
 
-        _userGroupRepository.save(new UserGroup().setGroup(group1).setUser(editUser).setProfile(Profile.Editor));
-        _userGroupRepository.save(new UserGroup().setGroup(group2).setUser(registeredUser).setProfile(Profile.RegisteredUser));
-        _userGroupRepository.save(new UserGroup().setGroup(group2).setUser(reviewerUser).setProfile(Profile.Editor));
-        _userGroupRepository.save(new UserGroup().setGroup(group1).setUser(reviewerUser).setProfile(Profile.Reviewer));
+        userGroupRepository.save(new UserGroup().setGroup(group1).setUser(editUser).setProfile(Profile.Editor));
+        userGroupRepository.save(new UserGroup().setGroup(group2).setUser(registeredUser).setProfile(Profile.RegisteredUser));
+        userGroupRepository.save(new UserGroup().setGroup(group2).setUser(reviewerUser).setProfile(Profile.Editor));
+        userGroupRepository.save(new UserGroup().setGroup(group1).setUser(reviewerUser).setProfile(Profile.Reviewer));
 
-        List<Pair<Integer, User>> found = _userRepo.findAllByGroupOwnerNameAndProfile(Arrays.asList(md1.getId()), null);
-        Collections.sort(found, Comparator.comparing(s -> s.two().getName()));
+        List<Pair<Integer, User>> found = userRepo.findAllByGroupOwnerNameAndProfile(List.of(md1.getId()), null);
+        found.sort(Comparator.comparing(s -> s.two().getName()));
 
         assertEquals(2, found.size());
         assertEquals(md1.getId(), found.get(0).one().intValue());
@@ -248,9 +248,9 @@ public class UserRepositoryTest extends AbstractSpringDataTest {
         assertEquals(editUser, found.get(0).two());
         assertEquals(reviewerUser, found.get(1).two());
 
-        found = _userRepo.findAllByGroupOwnerNameAndProfile(Arrays.asList(md1.getId()), null);
+        found = userRepo.findAllByGroupOwnerNameAndProfile(List.of(md1.getId()), null);
         // Sort by user name descending
-        Collections.sort(found, Comparator.comparing(s -> s.two().getName(), Comparator.reverseOrder()));
+        found.sort(Comparator.comparing(s -> s.two().getName(), Comparator.reverseOrder()));
 
         assertEquals(2, found.size());
         assertEquals(md1.getId(), found.get(0).one().intValue());
@@ -259,7 +259,7 @@ public class UserRepositoryTest extends AbstractSpringDataTest {
         assertEquals(reviewerUser, found.get(0).two());
 
 
-        found = _userRepo.findAllByGroupOwnerNameAndProfile(Arrays.asList(md1.getId(), md2.getId()), null);
+        found = userRepo.findAllByGroupOwnerNameAndProfile(Arrays.asList(md1.getId(), md2.getId()), null);
 
         assertEquals(4, found.size());
         int md1Found = 0;
@@ -277,21 +277,21 @@ public class UserRepositoryTest extends AbstractSpringDataTest {
 
     @Test
     public void testFindAllUsersInUserGroups() {
-        Group group1 = _groupRepo.save(GroupRepositoryTest.newGroup(_inc));
-        Group group2 = _groupRepo.save(GroupRepositoryTest.newGroup(_inc));
+        Group group1 = groupRepo.save(GroupRepositoryTest.newGroup(_inc));
+        Group group2 = groupRepo.save(GroupRepositoryTest.newGroup(_inc));
 
-        User editUser = _userRepo.save(newUser().setProfile(Profile.Editor));
-        User reviewerUser = _userRepo.save(newUser().setProfile(Profile.Reviewer));
-        User registeredUser = _userRepo.save(newUser().setProfile(Profile.RegisteredUser));
-        _userRepo.save(newUser().setProfile(Profile.Administrator));
+        User editUser = userRepo.save(newUser().setProfile(Profile.Editor));
+        User reviewerUser = userRepo.save(newUser().setProfile(Profile.Reviewer));
+        User registeredUser = userRepo.save(newUser().setProfile(Profile.RegisteredUser));
+        userRepo.save(newUser().setProfile(Profile.Administrator));
 
-        _userGroupRepository.save(new UserGroup().setGroup(group1).setUser(editUser).setProfile(Profile.Editor));
-        _userGroupRepository.save(new UserGroup().setGroup(group2).setUser(registeredUser).setProfile(Profile.RegisteredUser));
-        _userGroupRepository.save(new UserGroup().setGroup(group2).setUser(reviewerUser).setProfile(Profile.Editor));
-        _userGroupRepository.save(new UserGroup().setGroup(group1).setUser(reviewerUser).setProfile(Profile.Reviewer));
+        userGroupRepository.save(new UserGroup().setGroup(group1).setUser(editUser).setProfile(Profile.Editor));
+        userGroupRepository.save(new UserGroup().setGroup(group2).setUser(registeredUser).setProfile(Profile.RegisteredUser));
+        userGroupRepository.save(new UserGroup().setGroup(group2).setUser(reviewerUser).setProfile(Profile.Editor));
+        userGroupRepository.save(new UserGroup().setGroup(group1).setUser(reviewerUser).setProfile(Profile.Reviewer));
 
-        List<Integer> found = Lists.transform(_userRepo.findAllUsersInUserGroups(UserGroupSpecs.hasGroupId(group1.getId())),
-            new Function<User, Integer>() {
+        List<Integer> found = Lists.transform(userRepo.findAllUsersInUserGroups(UserGroupSpecs.hasGroupId(group1.getId())),
+            new Function<>() {
 
                 @Nullable
                 @Override
@@ -304,7 +304,7 @@ public class UserRepositoryTest extends AbstractSpringDataTest {
         assertTrue(found.contains(editUser.getId()));
         assertTrue(found.contains(reviewerUser.getId()));
 
-        found = Lists.transform(_userRepo.findAllUsersInUserGroups(Specification.not(UserGroupSpecs.hasProfile(Profile.RegisteredUser)
+        found = Lists.transform(userRepo.findAllUsersInUserGroups(Specification.not(UserGroupSpecs.hasProfile(Profile.RegisteredUser)
         )), new Function<User, Integer>() {
 
             @Nullable
@@ -323,21 +323,20 @@ public class UserRepositoryTest extends AbstractSpringDataTest {
 
     @Test
     public void testFindAllUsersThatOwnMetadata() {
-
-        User editUser = _userRepo.save(newUser().setProfile(Profile.Editor));
-        User reviewerUser = _userRepo.save(newUser().setProfile(Profile.Reviewer));
-        _userRepo.save(newUser().setProfile(Profile.RegisteredUser));
-        _userRepo.save(newUser().setProfile(Profile.Administrator));
+        User editUser = userRepo.save(newUser().setProfile(Profile.Editor));
+        User reviewerUser = userRepo.save(newUser().setProfile(Profile.Reviewer));
+        userRepo.save(newUser().setProfile(Profile.RegisteredUser));
+        userRepo.save(newUser().setProfile(Profile.Administrator));
 
         Metadata md1 = MetadataRepositoryTest.newMetadata(_inc);
         md1.getSourceInfo().setOwner(editUser.getId());
-        _metadataRepo.save(md1);
+        metadataRepo.save(md1);
 
         Metadata md2 = MetadataRepositoryTest.newMetadata(_inc);
         md2.getSourceInfo().setOwner(reviewerUser.getId());
-        _metadataRepo.save(md2);
+        metadataRepo.save(md2);
 
-        List<User> found = _userRepo.findAllUsersThatOwnMetadata();
+        List<User> found = userRepo.findAllUsersThatOwnMetadata();
 
         assertEquals(2, found.size());
         boolean editUserFound = false;
@@ -363,12 +362,12 @@ public class UserRepositoryTest extends AbstractSpringDataTest {
         User userNonDuplicated1 = newUser();
         usernameDuplicated1.setUsername("userNamE1");
         usernameDuplicated2.setUsername("usERNAME1");
-        _userRepo.save(usernameDuplicated1);
-        _userRepo.save(usernameDuplicated2);
-        _userRepo.save(userNonDuplicated1);
+        userRepo.save(usernameDuplicated1);
+        userRepo.save(usernameDuplicated2);
+        userRepo.save(userNonDuplicated1);
 
-        List<String> duplicatedUsernames = _userRepo.findDuplicatedUsernamesCaseInsensitive();
-        assertThat("Duplicated usernames don't match the expected ones",
+        List<String> duplicatedUsernames = userRepo.findDuplicatedUsernamesCaseInsensitive();
+        MatcherAssert.assertThat("Duplicated usernames don't match the expected ones",
             duplicatedUsernames, CoreMatchers.is(Lists.newArrayList("username1")));
         assertEquals(1, duplicatedUsernames.size());
 
