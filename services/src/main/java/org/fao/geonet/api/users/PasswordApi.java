@@ -1,5 +1,5 @@
 //=============================================================================
-//===   Copyright (C) 2001-2007 Food and Agriculture Organization of the
+//===   Copyright (C) 2001-2024 Food and Agriculture Organization of the
 //===   United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===   and United Nations Environment Programme (UNEP)
 //===
@@ -27,7 +27,6 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.ApplicationContextHolder;
-import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
 import org.fao.geonet.constants.Geonet;
@@ -57,6 +56,7 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import javax.servlet.http.HttpServletRequest;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
@@ -76,6 +76,7 @@ public class PasswordApi {
     public static final String LOGGER = Geonet.GEONETWORK + ".api.user";
 
     public static final String DATE_FORMAT = "yyyy-MM-dd";
+    public static final String USER_PASSWORD_SENT = "user_password_sent";
     @Autowired
     LanguageUtils languageUtils;
     @Autowired
@@ -85,14 +86,13 @@ public class PasswordApi {
     @Autowired
     FeedbackLanguages feedbackLanguages;
 
-    @Autowired(required=false)
+    @Autowired(required = false)
     SecurityProviderConfiguration securityProviderConfiguration;
 
     @io.swagger.v3.oas.annotations.Operation(summary = "Update user password",
         description = "Get a valid changekey by email first and then update your password.")
-    @RequestMapping(
+    @PatchMapping(
         value = "/{username}",
-        method = RequestMethod.PATCH,
         produces = MediaType.TEXT_PLAIN_VALUE)
     @ResponseStatus(value = HttpStatus.CREATED)
     @ResponseBody
@@ -100,13 +100,12 @@ public class PasswordApi {
         @Parameter(description = "The user name",
             required = true)
         @PathVariable
-            String username,
+        String username,
         @Parameter(description = "The new password and a valid change key",
             required = true)
         @RequestBody
-            PasswordUpdateParameter passwordAndChangeKey,
-        HttpServletRequest request)
-        throws Exception {
+        PasswordUpdateParameter passwordAndChangeKey,
+        HttpServletRequest request) {
         Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
         ResourceBundle messages = ResourceBundle.getBundle("org.fao.geonet.api.Messages", locale);
         Locale[] feedbackLocales = feedbackLanguages.getLocales(locale);
@@ -117,8 +116,9 @@ public class PasswordApi {
 
         ServiceContext context = ApiUtils.createServiceContext(request);
 
-        User user = userRepository.findOneByUsername(username);
-        if (user == null) {
+        List<User> existingUsers = userRepository.findByUsernameIgnoreCase(username);
+
+        if (existingUsers.isEmpty()) {
             Log.warning(LOGGER, String.format("User update password. Can't find user '%s'",
                 username));
 
@@ -128,6 +128,9 @@ public class PasswordApi {
                 XslUtil.encodeForJavaScript(username)
             ), HttpStatus.PRECONDITION_FAILED);
         }
+
+        User user = existingUsers.get(0);
+
         if (LDAPConstants.LDAP_FLAG.equals(user.getSecurity().getAuthType())) {
             Log.warning(LOGGER, String.format("User '%s' is authenticated using LDAP. Password can't be sent by email.",
                 username));
@@ -183,14 +186,16 @@ public class PasswordApi {
         String content = localizedEmail.getParsedMessage(feedbackLocales);
 
         // send change link via email with admin in CC
-        if (!MailUtil.sendMail(user.getEmail(),
+        Boolean mailSent = MailUtil.sendMail(user.getEmail(),
             subject,
             content,
             null, sm,
-            adminEmail, "")) {
+            adminEmail, "");
+        if (Boolean.FALSE.equals(mailSent)) {
             return new ResponseEntity<>(String.format(
                 messages.getString("mail_error")), HttpStatus.PRECONDITION_FAILED);
         }
+
         return new ResponseEntity<>(String.format(
             messages.getString("user_password_changed"),
             XslUtil.encodeForJavaScript(username)
@@ -202,9 +207,8 @@ public class PasswordApi {
             "reset his password. User MUST have an email to get the link. " +
             "LDAP users will not be able to retrieve their password " +
             "using this service.")
-    @RequestMapping(
+    @PutMapping(
         value = "/actions/forgot-password",
-        method = RequestMethod.PUT,
         produces = MediaType.TEXT_PLAIN_VALUE)
     @ResponseStatus(value = HttpStatus.CREATED)
     @ResponseBody
@@ -212,9 +216,8 @@ public class PasswordApi {
         @Parameter(description = "The user name",
             required = true)
         @RequestParam
-            String username,
-        HttpServletRequest request)
-        throws Exception {
+        String username,
+        HttpServletRequest request) {
         Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
         ResourceBundle messages = ResourceBundle.getBundle("org.fao.geonet.api.Messages", locale);
         Locale[] feedbackLocales = feedbackLanguages.getLocales(locale);
@@ -225,17 +228,19 @@ public class PasswordApi {
 
         ServiceContext serviceContext = ApiUtils.createServiceContext(request);
 
-        final User user = userRepository.findOneByUsername(username);
-        if (user == null) {
+        List<User> existingUsers = userRepository.findByUsernameIgnoreCase(username);
+
+        if (existingUsers.isEmpty()) {
             Log.warning(LOGGER, String.format("User reset password. Can't find user '%s'",
                 username));
 
             // Return response not providing details about the issue, that should be logged.
             return new ResponseEntity<>(String.format(
-                messages.getString("user_password_sent"),
+                messages.getString(USER_PASSWORD_SENT),
                 XslUtil.encodeForJavaScript(username)
             ), HttpStatus.CREATED);
         }
+        User user = existingUsers.get(0);
 
         if (LDAPConstants.LDAP_FLAG.equals(user.getSecurity().getAuthType())) {
             Log.warning(LOGGER, String.format("User '%s' is authenticated using LDAP. Password can't be sent by email.",
@@ -243,19 +248,19 @@ public class PasswordApi {
 
             // Return response not providing details about the issue, that should be logged.
             return new ResponseEntity<>(String.format(
-                messages.getString("user_password_sent"),
+                messages.getString(USER_PASSWORD_SENT),
                 XslUtil.encodeForJavaScript(username)
             ), HttpStatus.CREATED);
         }
 
         String email = user.getEmail();
-        if (StringUtils.isEmpty(email)) {
+        if (!StringUtils.hasLength(email)) {
             Log.warning(LOGGER, String.format("User reset password. User '%s' has no email",
                 username));
 
             // Return response not providing details about the issue, that should be logged.
             return new ResponseEntity<>(String.format(
-                messages.getString("user_password_sent"),
+                messages.getString(USER_PASSWORD_SENT),
                 XslUtil.encodeForJavaScript(username)
             ), HttpStatus.CREATED);
         }
@@ -298,16 +303,18 @@ public class PasswordApi {
         String content = localizedEmail.getParsedMessage(feedbackLocales);
 
         // send change link via email with admin in CC
-        if (!MailUtil.sendMail(email,
+        Boolean mailSent = MailUtil.sendMail(email,
             subject,
             content,
             null, sm,
-            adminEmail, "")) {
+            adminEmail, "");
+        if (Boolean.FALSE.equals(mailSent)) {
             return new ResponseEntity<>(String.format(
                 messages.getString("mail_error")), HttpStatus.PRECONDITION_FAILED);
         }
+
         return new ResponseEntity<>(String.format(
-            messages.getString("user_password_sent"),
+            messages.getString(USER_PASSWORD_SENT),
             XslUtil.encodeForJavaScript(username)
         ), HttpStatus.CREATED);
     }
