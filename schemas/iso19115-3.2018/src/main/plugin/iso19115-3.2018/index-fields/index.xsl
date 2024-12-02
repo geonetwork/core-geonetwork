@@ -258,10 +258,10 @@
                             ($isStatic or $isInteractive or $isPublishedWithWMCProtocol)">
           <xsl:choose>
             <xsl:when test="$isStatic">
-              <resourceType>map-static</resourceType>
+              <resourceType>staticMap</resourceType>
             </xsl:when>
             <xsl:when test="$isInteractive or $isPublishedWithWMCProtocol">
-              <resourceType>map-interactive</resourceType>
+              <resourceType>interactiveMap</resourceType>
             </xsl:when>
           </xsl:choose>
         </xsl:when>

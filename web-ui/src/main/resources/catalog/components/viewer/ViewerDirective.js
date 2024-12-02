@@ -408,7 +408,7 @@
                         filters: {
                           filters: {
                             maps: {
-                              query_string: { query: '+resourceType:"map-interactive"' }
+                              query_string: { query: '+resourceType:"interactiveMap"' }
                             }
                           }
                         }
