@@ -38,7 +38,6 @@
                               @codeListValue[normalize-space(.) != '']"/>
 
   <xsl:template match="mri:MD_Keywords[count(mri:keyword/gco:CharacterString) > 0]">
-    <xsl:message>processing keyword to anchor</xsl:message>
     <xsl:copy>
       <xsl:apply-templates select="@*"/>
 
@@ -60,10 +59,6 @@
                                                 $keywordLabel,
                                                 $thesaurusId,
                                                 $mainLanguage)"/>
-
-    <xsl:message>Keyword Label: <xsl:value-of select="$keywordLabel"/></xsl:message>
-    <xsl:message>Thesaurus ID: <xsl:value-of select="$thesaurusId"/></xsl:message>
-    <xsl:message>Keyword URI: <xsl:value-of select="$keywordUri"/></xsl:message>
 
     <xsl:choose>
       <xsl:when test="$keywordLabel != '' and $keywordUri">
