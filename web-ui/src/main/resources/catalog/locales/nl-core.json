@@ -266,7 +266,7 @@
     "spatialRepresentationType": "Representatie type",
     "cl_spatialRepresentationType": "Representatie type",
     "state": "Staat",
-    "staticMap": "Vaste kaart",
+    "map-static": "Vaste kaart",
     "surname": "Achternaam",
     "title": "Titel",
     "to": "Tot",

@@ -266,7 +266,7 @@
     "spatialRepresentationType": "Тип представництва",
     "cl_spatialRepresentationType": "Тип представництва",
     "state": "Держава",
-    "staticMap": "Статична карта",
+    "map-static": "Статична карта",
     "surname": "Прізвище",
     "title": "Назва",
     "to": "до",

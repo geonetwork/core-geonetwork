@@ -801,7 +801,7 @@
       },
       {
         "group": "onlineUseMap",
-        "label": "interactiveMap",
+        "label": "map-interactive",
         "copyLabel": "name",
         "sources": {
           "filestore": true
@@ -828,7 +828,7 @@
       },
       {
         "group": "onlineUseMap",
-        "label": "staticMap",
+        "label": "map-static",
         "copyLabel": "name",
         "sources": {
           "filestore": true

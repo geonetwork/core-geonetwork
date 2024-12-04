@@ -75,7 +75,7 @@
               }
             };
             if ($scope.mode === "map") {
-              $scope.searchObj.params.type = "interactiveMap";
+              $scope.searchObj.params.type = "map-interactive";
             } else {
               $scope.searchObj.params.linkProtocol = "OGC:WMS*";
             }

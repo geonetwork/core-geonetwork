@@ -266,7 +266,7 @@
     "spatialRepresentationType": "Representationstyp",
     "cl_spatialRepresentationType": "Representationstyp",
     "state": "Län",
-    "staticMap": "Statisk karta",
+    "map-static": "Statisk karta",
     "surname": "Efternamn",
     "title": "Titel",
     "to": "Till",

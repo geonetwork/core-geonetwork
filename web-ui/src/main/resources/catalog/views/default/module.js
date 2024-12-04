@@ -95,7 +95,7 @@
         filters: [
           {
             query_string: {
-              query: '+resourceType:"interactiveMap"'
+              query: '+resourceType:"map-interactive"'
             }
           }
         ],
