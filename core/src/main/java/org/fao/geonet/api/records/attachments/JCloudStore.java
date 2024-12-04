@@ -610,10 +610,10 @@ public class JCloudStore extends AbstractStore {
                         String sourceBlobName = sourceStorageMetadata.getName();
                         String targetBlobName = targetResourceTypeDir + sourceBlobName.substring(sourceResourceTypeDir.length());
 
-                        Blob sourceBlob = jCloudConfiguration.getClient().getBlobStore().getBlob(jCloudConfiguration.getContainerName(), sourceBlobName);
+                        BlobMetadata blobMetadata = jCloudConfiguration.getClient().getBlobStore().blobMetadata(jCloudConfiguration.getContainerName(), sourceBlobName);
 
                         // Copy existing properties.
-                        Map<String, String> targetProperties = new HashMap<>(sourceBlob.getMetadata().getUserMetadata());
+                        Map<String, String> targetProperties = new HashMap<>(blobMetadata.getUserMetadata());
 
                         // Check if target exists.
                         StorageMetadata targetStorageMetadata = null;
@@ -670,14 +670,14 @@ public class JCloudStore extends AbstractStore {
                                     targetProperties.get(versionPropertyName)));
                             }
                         }
-                        Blob targetblob = jCloudConfiguration.getClient().getBlobStore().blobBuilder(targetBlobName)
-                            .payload(sourceBlob.getPayload())
-                            .contentLength(sourceBlob.getMetadata().getContentMetadata().getContentLength())
-                            .userMetadata(targetProperties)
-                            .build();
 
-                        // Upload the Blob in multiple chunks to supports large files.
-                        jCloudConfiguration.getClient().getBlobStore().putBlob(jCloudConfiguration.getContainerName(), targetblob, multipart());
+                        // Use the copyBlob to copy the resource with updated metadata.
+                        jCloudConfiguration.getClient().getBlobStore().copyBlob(
+                            jCloudConfiguration.getContainerName(),
+                            sourceBlobName,
+                            jCloudConfiguration.getContainerName(),
+                            targetBlobName,
+                            CopyOptions.builder().userMetadata(targetProperties).build());
                     }
                 }
                 marker = page.getNextMarker();
