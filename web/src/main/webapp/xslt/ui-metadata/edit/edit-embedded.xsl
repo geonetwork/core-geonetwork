@@ -32,7 +32,10 @@
                 extension-element-prefixes="saxon"
                 exclude-result-prefixes="#all">
 
-  <xsl:output method="html" encoding="UTF-8" indent="yes"/>
+  <xsl:output omit-xml-declaration="yes"
+              method="html"
+              indent="yes"
+              encoding="UTF-8"/>
 
   <xsl:include href="../../common/base-variables-metadata-editor.xsl"/>
 

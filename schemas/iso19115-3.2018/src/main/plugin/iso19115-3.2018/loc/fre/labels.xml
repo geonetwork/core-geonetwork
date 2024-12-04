@@ -5,7 +5,7 @@
         xmlns:gcx="http://standards.iso.org/iso/19115/-3/gcx/1.0"
         xmlns:gex="http://standards.iso.org/iso/19115/-3/gex/1.0"
         xmlns:lan="http://standards.iso.org/iso/19115/-3/lan/1.0"
-        xmlns:srv="http://standards.iso.org/iso/19115/-3/srv/2.1"
+        xmlns:srv="http://standards.iso.org/iso/19115/-3/srv/2.0"
         xmlns:mas="http://standards.iso.org/iso/19115/-3/mas/1.0"
         xmlns:mcc="http://standards.iso.org/iso/19115/-3/mcc/1.0"
         xmlns:mco="http://standards.iso.org/iso/19115/-3/mco/1.0"
@@ -1395,6 +1395,10 @@
   <element name="lan:language" id="448.0" context="/mdb:MD_Metadata/mdb:defaultLocale/lan:PT_Locale/lan:language">
     <label>Langue de la fiche</label>
     <description iso="true">Langue principale de la fiche. Code ISO de la langue à 3 caractères.</description>
+  </element>
+  <element name="lan:language" id="448.0" context="/mdb:MD_Metadata/mdb:identificationInfo/mri:MD_DataIdentification/mri:defaultLocale/lan:PT_Locale/lan:language">
+    <label>Langue de la donnée</label>
+    <description iso="true">Langue de la donnée. Code ISO de la langue à 3 caractères.</description>
   </element>
   <element name="lan:language" id="448.0" context="/mdb:MD_Metadata/mdb:otherLocale/lan:PT_Locale/lan:language">
     <label>Autres langues</label>
@@ -8814,11 +8818,11 @@ http://www.sandre.eaufrance.fr/?urn=urn:sandre:ensembledonnees:BDCarthage:FXX:::
     <description></description>
   </element>
   <element name="gfc:code">
-    <label>Code</label>
+    <label>Identifiant</label>
     <description></description>
   </element>
   <element name="gfc:isOrdered">
-    <label>Est prdonné</label>
+    <label>Est ordonné</label>
     <description></description>
   </element>
   <element name="gfc:isNavigable">
@@ -8882,7 +8886,7 @@ http://www.sandre.eaufrance.fr/?urn=urn:sandre:ensembledonnees:BDCarthage:FXX:::
     <description></description>
   </element>
   <element name="gfc:memberName">
-    <label>Nom</label>
+    <label>Libellé</label>
     <description></description>
   </element>
   <element name="gfc:FC_Constraint">

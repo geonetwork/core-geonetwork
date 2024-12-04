@@ -47,6 +47,7 @@
           "resourceTitle*",
           "resourceAbstract*",
           "draft",
+          "draftId",
           "owner",
           "link",
           "status*",
@@ -142,6 +143,7 @@
               "valid",
               "isHarvested",
               "dateStamp",
+              "changeDate",
               "documentStandard",
               "mdStatus*",
               "*inspire*"

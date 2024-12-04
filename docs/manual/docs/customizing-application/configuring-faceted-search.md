@@ -467,7 +467,7 @@ A date range field:
 "resourceTemporalDateRange": {
    "gnBuildFilterForRange": {
       "field": "resourceTemporalDateRange",
-      "buckets": "2021 - 1970",
+      "buckets": 51, //"2021 - 1970",
       "dateFormat": "YYYY",
       "vegaDateFormat": "%Y",
       "from": "1970",

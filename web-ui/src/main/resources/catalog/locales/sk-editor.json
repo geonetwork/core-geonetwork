@@ -165,7 +165,7 @@
     "linkToParentTitle": "Prepojiť materský metaúdajový záznam s aktuálnymi metaúdajmi",
     "linkToService": "Prepojiť so službou",
     "linkToServiceTitle": "Prepojiť službu s aktuálnymi metaúdajmi",
-    "linkToSibling": "Prepojiť s ďalšími zdrojmi",
+    "linkToSibling": "Link to records",
     "linkToSiblingTitle": "Prepojiť zdroj s aktuálnymi metaúdajmi",
     "linkToSource": "Prepojiť so zdrojovou údajovou sadou",
     "linkToSourceTitle": "Prepojiť zdrojovú údajovú sadu s aktuálnymi metaúdajmi",
@@ -446,5 +446,13 @@
     "addOnlinesrc#links": "Pridať odkazy",
     "addOnlinesrc#links-help": "eg. web links",
     "addOnlinesrc#quality": "Add quality info",
-    "addOnlinesrc#quality-help": "eg. specification, reports"
+    "addOnlinesrc#quality-help": "eg. specification, reports",
+    "associated-parent": "Zdrojové metaúdaje",
+    "associated-service": "Služba",
+    "associated-dataset": "Údajová sada",
+    "associated-source": "Zdrojové údajové sady",
+    "associated-fcats": "Katalóg prvkov",
+    "associated-siblings": "Pridružené zdroje",
+    "associated-hasfeaturecats": "Tento katalóg objektov se práve používa",
+    "associatedResourcesPanel": "Pridružené zdroje"
 }

@@ -35,7 +35,11 @@ import org.fao.geonet.kernel.setting.Settings;
 import org.geotools.geometry.jts.JTS;
 import org.geotools.geometry.jts.ReferencedEnvelope;
 import org.geotools.referencing.CRS;
+import org.locationtech.jts.awt.IdentityPointTransformation;
+import org.locationtech.jts.awt.PointShapeFactory;
+import org.locationtech.jts.awt.PointTransformation;
 import org.locationtech.jts.awt.ShapeWriter;
+import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.Envelope;
 import org.locationtech.jts.geom.Geometry;
 import org.geotools.api.metadata.extent.Extent;
@@ -47,6 +51,7 @@ import org.springframework.context.ApplicationContext;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.util.Collection;
 import java.util.Map;
@@ -54,6 +59,8 @@ import java.util.SortedSet;
 
 import static java.lang.Math.pow;
 import static java.lang.Math.sqrt;
+import static org.locationtech.jts.geom.Geometry.TYPENAME_GEOMETRYCOLLECTION;
+import static org.locationtech.jts.geom.Geometry.TYPENAME_POINT;
 
 public class MapRenderer {
 
@@ -166,7 +173,14 @@ public class MapRenderer {
             }
         }
         BufferedImage image;
-        Envelope bboxOfImage = new Envelope(geom.getEnvelopeInternal());
+        boolean isPoint = geom.getGeometryType().equals(TYPENAME_POINT)
+                || (geom.getGeometryType().equals(TYPENAME_GEOMETRYCOLLECTION)
+                    && geom.getNumGeometries() == 1
+                    && geom.getGeometryN(0).getGeometryType().equals(TYPENAME_POINT));
+        int pointBufferSize = 150;
+
+        Envelope bboxOfImage = new Envelope(isPoint ?
+                geom.buffer(pointBufferSize).getEnvelopeInternal() : geom.getEnvelopeInternal());
         double expandFactor = calculateExpandFactor(regionGetMapExpandFactors, bboxOfImage, srs);
         bboxOfImage.expandBy(bboxOfImage.getWidth() * expandFactor, bboxOfImage.getHeight() * expandFactor);
         Dimension imageDimensions = calculateImageSize(bboxOfImage, width, height);
@@ -209,10 +223,14 @@ public class MapRenderer {
             if (error != null) {
                 graphics.drawString(error.getMessage(), 0, imageDimensions.height / 2);
             }
-            ShapeWriter shapeWriter = new ShapeWriter();
-            Color geomFillColor = getColor(fillColor, new Color(0, 0, 0, 50));
+
+            Color geomFillColor = getColor(fillColor, new Color(0, 0, 0, 30));
             Color geomStrokeColor = getColor(strokeColor, new Color(0, 0, 0, 255));
             AffineTransform worldToScreenTransform = worldToScreenTransform(bboxOfImage, imageDimensions);
+            int pointSize = 5;
+            ShapeWriter shapeWriter = new ShapeWriter(new IdentityPointTransformation(),
+                    new PointShapeFactory.Circle(pointSize * bboxOfImage.getWidth() / imageDimensions.getWidth()));
+
             for (int i = 0; i < geom.getNumGeometries(); i++) {
                 Geometry geomExtent = MapRenderer.getGeometryExtent(geom.getGeometryN(i), srs, useGeodesicExtents);
                 // draw each included geometry separately to ensure they are filled correctly

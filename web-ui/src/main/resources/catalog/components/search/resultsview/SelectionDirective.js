@@ -36,6 +36,7 @@
     "gnConfig",
     "gnConfigService",
     "gnSearchSettings",
+    "gnGlobalSettings",
     "gnSearchManagerService",
     "gnCollectionService",
     function (
@@ -48,6 +49,7 @@
       gnConfig,
       gnConfigService,
       gnSearchSettings,
+      gnGlobalSettings,
       gnSearchManagerService,
       gnCollectionService
     ) {
@@ -97,7 +99,7 @@
                   function (r) {
                     gnAlertService.addAlert({
                       msg: r.data.message || r.data.description,
-                      delay: 20000,
+                      delay: 20,
                       type: "danger"
                     });
                     if (r.id) {
@@ -225,25 +227,28 @@
                 });
               });
           };
-          hotkeys
-            .bindTo(scope)
-            .add({
-              combo: "a",
-              description: $translate.instant("hotkeySelectAll"),
-              callback: scope.selectAll
-            })
-            .add({
-              combo: "p",
-              description: $translate.instant("hotkeySelectAllInPage"),
-              callback: function () {
-                scope.selectAllInPage(true);
-              }
-            })
-            .add({
-              combo: "n",
-              description: $translate.instant("hotkeyUnSelectAll"),
-              callback: scope.unSelectAll
-            });
+
+          if (gnGlobalSettings.gnCfg.mods.global.hotkeys) {
+            hotkeys
+              .bindTo(scope)
+              .add({
+                combo: "a",
+                description: $translate.instant("hotkeySelectAll"),
+                callback: scope.selectAll
+              })
+              .add({
+                combo: "p",
+                description: $translate.instant("hotkeySelectAllInPage"),
+                callback: function () {
+                  scope.selectAllInPage(true);
+                }
+              })
+              .add({
+                combo: "n",
+                description: $translate.instant("hotkeyUnSelectAll"),
+                callback: scope.unSelectAll
+              });
+          }
 
           scope.$on("mdSelectAll", scope.selectAll);
           scope.$on("mdSelectNone", scope.unSelectAll);

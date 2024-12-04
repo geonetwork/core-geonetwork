@@ -400,10 +400,7 @@ public class URITemplateProxyServlet extends ProxyServlet {
 
         // Check that the url host or port is not forbidden to access by the proxy
         if (!isUrlAllowed(servletRequest)) {
-            String message = String.format(
-                "The proxy does not allow to access '%s' .",
-                servletRequest.getParameter("url")
-            );
+            String message = "The proxy does not allow to access to the provided URL.";
             servletResponse.sendError(HttpServletResponse.SC_FORBIDDEN, message);
             return;
         }
@@ -436,7 +433,7 @@ public class URITemplateProxyServlet extends ProxyServlet {
                             ApplicationContextHolder.get().getBean(LinkRepository.class);
                         long linksFound = linkRepository.count(
                             LinkSpecs.filter(host, null, null,
-                                null, null, null));
+                                null, null, null, false,null));
                         if (linksFound == 0) {
                             String message = "The proxy does not allow to access the requested URI " +
                                 "because the URL host was not registered in any metadata records.";
@@ -452,8 +449,7 @@ public class URITemplateProxyServlet extends ProxyServlet {
                         proxyCallAllowed = linksFound > 0;
                     } catch (URISyntaxException e) {
                         throw new IllegalArgumentException(String.format(
-                            "'%s' is invalid. Error is: '%s'",
-                            servletRequest.getParameter("url"),
+                            "The provided URL is invalid. Error is: '%s'",
                             e.getMessage()
                         ));
                     }
@@ -489,8 +485,7 @@ public class URITemplateProxyServlet extends ProxyServlet {
             return (port == -1) || this.allowPorts.contains(port);
         } catch (URISyntaxException e) {
             throw new IllegalArgumentException(String.format(
-                "'%s' is invalid. Error is: '%s'",
-                url,
+                "The provided URL is invalid. Error is: '%s'",
                 e.getMessage()
             ));
         }

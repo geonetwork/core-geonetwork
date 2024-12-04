@@ -108,7 +108,7 @@
     </xsl:element>
   </xsl:function>
 
-  <xsl:function name="gn-fn-index:build-record-link" as="node()?">
+  <xsl:function name="gn-fn-index:build-record-link" as="node()*">
     <xsl:param name="uuid" as="xs:string"/>
     <xsl:param name="url" as="xs:string?"/>
     <xsl:param name="title" as="xs:string?"/>
@@ -119,7 +119,7 @@
     <xsl:copy-of select="gn-fn-index:build-record-link($uuid, $url, $title, $type, $properties)"/>
   </xsl:function>
 
-  <xsl:function name="gn-fn-index:build-record-link" as="node()?">
+  <xsl:function name="gn-fn-index:build-record-link" as="node()*">
     <xsl:param name="uuid" as="xs:string"/>
     <xsl:param name="url" as="xs:string?"/>
     <xsl:param name="title" as="xs:string?"/>
@@ -153,6 +153,17 @@
       "title": "<xsl:value-of select="util:escapeForJson($recordTitle)"/>",
       "origin": "<xsl:value-of select="normalize-space($origin)"/>"
       }</recordLink>
+    <xsl:variable name="fieldName"
+                  select="concat('recordLink_', $type, string-join($otherProperties//p[@name != '']/concat(@name, @value), '_'))"/>
+    <xsl:element name="{$fieldName}">
+      <xsl:value-of select="util:escapeForJson($recordTitle)"/>
+    </xsl:element>
+    <xsl:element name="{$fieldName}_uuid">
+      <xsl:value-of select="normalize-space($uuid)"/>
+    </xsl:element>
+    <xsl:element name="{$fieldName}_url">
+      <xsl:value-of select="normalize-space($url)"/>
+    </xsl:element>
   </xsl:function>
 
   <!-- Add a multilingual field to the index.
@@ -233,24 +244,30 @@
 
     <!--<xsl:message>gn-fn-index:add-field <xsl:value-of select="$fieldName"/></xsl:message>
     <xsl:message>gn-fn-index:add-field elements <xsl:copy-of select="$elements"/></xsl:message>
-    <xsl:message>gn-fn-index:add-field languages <xsl:copy-of select="$languages"/></xsl:message>-->
+    <xsl:message>gn-fn-index:add-field languages <xsl:copy-of select="$languages"/></xsl:message>
+    <xsl:message>gn-fn-index:add-field mainLanguage <xsl:copy-of select="$mainLanguage"/></xsl:message>-->
 
     <xsl:variable name="isArray"
                   select="count($elements[not(@xml:lang)]) > 1"/>
-    <xsl:for-each select="$elements">
+
+
+    <!-- Select the items to be processed depending on whether they are ISO multilingual or not ISO, but multilingual eg. DC or DCAT -->
+    <xsl:for-each select="if($languages and count($elements//(*:CharacterString|*:Anchor|*:LocalisedCharacterString)) = 0 ) then $elements[1] else $elements">
       <xsl:variable name="element" select="."/>
       <xsl:variable name="textObject" as="node()*">
         <xsl:choose>
           <!-- Not ISO but multilingual eg. DC or DCAT -->
           <xsl:when test="$languages and count($element//(*:CharacterString|*:Anchor|*:LocalisedCharacterString)) = 0">
-            <xsl:if test="position() = 1">
               <value><xsl:value-of select="concat($doubleQuote, 'default', $doubleQuote, ':',
                                              $doubleQuote, util:escapeForJson(.), $doubleQuote)"/></value>
               <xsl:for-each select="$elements">
-                <value><xsl:value-of select="concat($doubleQuote, 'lang', @xml:lang, $doubleQuote, ':',
+                <xsl:variable name="elementLangAttribute"
+                              select="@xml:lang"/>
+                <xsl:variable name="elementLangCode"
+                              select="$languages/lang[@value = $elementLangAttribute]/@code"/>
+                <value><xsl:value-of select="concat($doubleQuote, 'lang', $elementLangCode, $doubleQuote, ':',
                                              $doubleQuote, util:escapeForJson(.), $doubleQuote)"/></value>
               </xsl:for-each>
-            </xsl:if>
           </xsl:when>
           <xsl:when test="$languages">
             <!-- The default language -->
@@ -436,7 +453,16 @@
         <xsl:if test="info/@id != ''">
           "id": "<xsl:value-of select="util:escapeForJson(info/@id)"/>",
         </xsl:if>
-        "title": "<xsl:value-of select="util:escapeForJson(info/@title)"/>",
+        <xsl:choose>
+          <xsl:when test="exists(info/multilingualTitle)">
+            "multilingualTitle": {
+              <xsl:value-of select="string-join(info/multilingualTitle/value, ', ')"/>
+            },
+          </xsl:when>
+          <xsl:otherwise>
+            "title": "<xsl:value-of select="util:escapeForJson(info/@title)"/>",
+          </xsl:otherwise>
+        </xsl:choose>
         "theme": "<xsl:value-of select="util:escapeForJson(info/@type)"/>",
         <xsl:if test="info/@uri != ''">
           "link": "<xsl:value-of select="util:escapeForJson(info/@uri)"/>",
@@ -687,10 +713,10 @@
   <xsl:function name="gn-fn-index:json-escape" as="xs:string?">
     <!-- This function is deprecated. Please update your code to define the following namespace:
             xmlns:util="java:org.fao.geonet.util.XslUtil"
-            
-            and use util:escapeForJson function 
+
+            and use util:escapeForJson function
     -->
-    
+
       <xsl:param name="v" as="xs:string?" />
       <xsl:choose>
         <xsl:when test="normalize-space($v) = ''"></xsl:when>

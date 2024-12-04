@@ -709,7 +709,7 @@ It is also possible to use the [latest ISO standard ISO19115-3:2018](https://git
 <mdb:MD_Metadata xmlns:mac="http://standards.iso.org/iso/19115/-3/mac/2.0"
                xmlns:mrc="http://standards.iso.org/iso/19115/-3/mrc/2.0"
                xmlns:mdq="http://standards.iso.org/iso/19157/-2/mdq/1.0"
-               xmlns:srv="http://standards.iso.org/iso/19115/-3/srv/2.1"
+               xmlns:srv="http://standards.iso.org/iso/19115/-3/srv/2.0"
                xmlns:mrd="http://standards.iso.org/iso/19115/-3/mrd/1.0"
                xmlns:mrl="http://standards.iso.org/iso/19115/-3/mrl/2.0"
                xmlns:gml="http://www.opengis.net/gml/3.2"

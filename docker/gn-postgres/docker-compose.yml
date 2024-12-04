@@ -1,0 +1,50 @@
+version: '3.1'
+volumes:
+  geonetwork:
+
+services:
+  geonetwork:
+    image: geonetwork:latest
+    restart: always
+    ports:
+      - 8080:8080
+    environment:
+      DATA_DIR: /var/lib/geonetwork_data
+      ES_HOST: elasticsearch
+      ES_PROTOCOL: http
+      ES_PORT: 9200
+      KB_URL: http://kibana:5601
+
+      # Note: defining the following variable will activate the postgresql
+      # configuration and will require an external database (see the database
+      # service below)
+      POSTGRES_DB_HOST: database
+
+      POSTGRES_DB_NAME: geonetwork
+      POSTGRES_DB_USERNAME: geonetwork
+      POSTGRES_DB_PASSWORD: geonetwork
+
+    volumes:
+      - geonetwork:/var/lib/geonetwork_data
+    depends_on:
+      - kibana
+      - elasticsearch
+      - database
+
+  elasticsearch:
+    image: elasticsearch:7.6.2
+    environment:
+      discovery.type: single-node
+
+  kibana:
+    image: kibana:7.6.2
+    volumes:
+      - ./kibana/kibana.yml:/usr/share/kibana/config/kibana.yml
+
+  database:
+    image: mdillon/postgis
+    environment:
+      POSTGRES_USER: geonetwork
+      POSTGRES_PASSWORD: geonetwork
+      POSTGRES_DB: geonetwork
+

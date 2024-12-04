@@ -58,21 +58,41 @@ JVM proxy parameters may also be required to properly set the proxy for all remo
 
 ## Feedback {#system-config-feedback}
 
-Email may be sent by the catalog.
+Email notifications are sent by the catalog.
 
--   you are using the User Self-registration system
--   you are using the metadata status workflow (See [Life cycle](../../user-guide/workflow/life-cycle.md))
--   a file uploaded with a metadata record is downloaded and notify privilege is selected
+-   When using the User Self-registration system.
+-   When using the metadata status workflow (See [Life cycle](../../user-guide/workflow/life-cycle.md)).
+-   When a file uploaded with a metadata record is downloaded and notify privilege is selected.
 
 This section configure the mail server to use.
 
 -   **Email** This is the administrator's email address used to send feedback.
 -   **SMTP host** The mail server name or IP address to use for sending emails.
 -   **SMTP port** The SMTP port.
--   **Use SSL** Enable SSL mode
+-   **Use SSL** Enable Secure Sockets Layer (SSL) mode
 -   **User name** Username if connection is required on the SMTP server
 -   **Password** Username password if connection is required on the SMTP server
+-   **Use TLS** Enable use of Transport Layer Security (TLS) 
 
+![](img/feedback-email.png)
+
+Additional settings are available to respect user language preference:
+
+-  **Language for system generated emails** The ui language will be used when sending notification emails by default. To To override this behaviour and generate a multi-lingual notification email list the langauges to be used.
+
+-  **Translation follows text** Provide an introduction phrase indicating a multi-lingual notification follows.
+
+![](img/feedback-multilingual.png)
+
+!!! note
+    
+    Email notifications for metadata publication are sent as `text/html` messages, this can be changed using ```WEB-INF/config.properties``` configuration:
+    
+    ```properties
+    # Configure the metadata publication notification mails to be sent as HTML (true) or TEXT (false)
+    metadata.publicationmail.format.html=true
+    ```
+    
 ## Metadata search results
 
 Configuration settings in this group determine what the limits are on user interaction with the search results.
@@ -91,12 +111,18 @@ See [Configuring Shibboleth](../managing-users-and-groups/authentication-mode.md
 
 Enable the self registration form. See [User Self-Registration](../managing-users-and-groups/user-self-registration.md).
 
-## system/userFeedback
+You can configure optionally re-Captcha, to protect you and your users from spam and abuse. And a list of email domains (separated by commas)
+that can request an account. If not configured any email address is allowed.
 
-!!! warning "Deprecated"
+## User application feedback
 
-    3.0.0
+Enabling the setting, displays in the application footer a link to a page that allows sending comments about the application.
 
+![](img/application-feedback-link.png)
+
+![](img/application-feedback.png)
+
+It requires an email server configured.
 
 ## Link in metadata records
 
@@ -229,6 +255,19 @@ Allows to configure the user profile allowed to publish and un-publish metadata.
 -   **Minimum user profile allowed to un-publish metadata** Minimum user profile allowed to un-publish metadata (`Reviewer` or `Administrator`). The default value is `Reviewer`.
 
 ![](img/metadata-publication.png)
+
+## Metadata History
+
+Allows to view metadata history
+
+![](img/metadata_history.png)
+
+-   **Minimum user profile allowed to view metadata history** Minimum user profile allowed to delete metadata (`Registered User`, `Editor` or `Administrator`). The default value is `Editor`.
+![](img/metadata_history_config.png)
+
+-   **Registered User Configuration** The user who has granted view permission to the metadata record can view the history.
+-   **Editor Configuration** The user who has granted editing permission to the metadata record can view the history.
+-   **Administrator Configuration** The user who has granted system administrator permission can view the history.
 
 ## Harvesting
 
