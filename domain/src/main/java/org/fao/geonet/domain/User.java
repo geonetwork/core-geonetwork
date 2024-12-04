@@ -25,6 +25,7 @@ package org.fao.geonet.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.entitylistener.UserEntityListenerManager;
 import org.fao.geonet.domain.converter.BooleanToYNConverter;
@@ -59,17 +60,31 @@ public class User extends GeonetEntity implements UserDetails {
     public static final String NODE_APPLICATION_CONTEXT_KEY = "jeevesNodeApplicationContext_";
     static final String ID_SEQ_NAME = "user_id_seq";
     private static final long serialVersionUID = 2589607276443866650L;
+
+    @JsonProperty("id")
     private int _id;
+
+    @JsonProperty("username")
     private String _username;
+    @JsonProperty("surname")
     private String _surname;
+    @JsonProperty("name")
     private String _name;
+    @JsonProperty("email")
     private Set<String> _email = new HashSet<>();
+    @JsonProperty("addresss")
     private Set<Address> _addresses = new LinkedHashSet<>();
+    @JsonProperty("organisation")
     private String _organisation;
+    @JsonProperty("kind")
     private String _kind;
+    @JsonProperty("profile")
     private Profile _profile = Profile.RegisteredUser;
+    @JsonProperty("security")
     private UserSecurity _security = new UserSecurity();
+    @JsonProperty("lastLoginDate")
     private String _lastLoginDate;
+    @JsonProperty("isEnabled")
     private Boolean _isEnabled;
 
     public static String getRandomPassword() {
@@ -187,6 +202,7 @@ public class User extends GeonetEntity implements UserDetails {
      * @return the main email address of the user.
      */
     @Transient
+    @JsonIgnore
     public String getEmail() {
         if (_email != null) {
             for (String email : _email) {
@@ -249,6 +265,7 @@ public class User extends GeonetEntity implements UserDetails {
      * @return the first address in the list of the addresses.
      */
     @Transient
+    @JsonIgnore
     public
     @Nonnull
     Address getPrimaryAddress() {
@@ -375,6 +392,7 @@ public class User extends GeonetEntity implements UserDetails {
         return this;
     }
 
+    @JsonIgnore
     @Transient
     @Override
     public Collection<GrantedAuthority> getAuthorities() {
@@ -393,18 +411,21 @@ public class User extends GeonetEntity implements UserDetails {
     }
 
     @Transient
+    @JsonIgnore
     @Override
     public boolean isAccountNonExpired() {
         return true;
     }
 
     @Transient
+    @JsonIgnore
     @Override
     public boolean isAccountNonLocked() {
         return true;
     }
 
     @Override
+    @JsonIgnore
     @Transient
     public boolean isCredentialsNonExpired() {
         return true;

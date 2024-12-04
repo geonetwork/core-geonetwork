@@ -89,6 +89,7 @@
   <bean id="filterChainFilters" class="java.util.ArrayList">
     <constructor-arg>
       <list>
+        <ref bean="springSessionRepositoryFilter"/>
         <ref bean="securityContextPersistenceFilter"/>
         <!-- To disable csrf security (not recommended) comment the following line -->
         <ref bean="csrfFilter" />

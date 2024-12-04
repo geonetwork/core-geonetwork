@@ -23,6 +23,9 @@
 
 package jeeves.server;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import org.fao.geonet.domain.LDAPUser;
 import org.fao.geonet.domain.Profile;
 import org.fao.geonet.domain.User;
@@ -37,6 +40,7 @@ import org.springframework.security.core.context.SecurityContextImpl;
 
 import javax.servlet.http.HttpSession;
 
+import java.io.Serializable;
 import java.util.Hashtable;
 
 //=============================================================================
@@ -44,10 +48,11 @@ import java.util.Hashtable;
 /**
  * Abstraction layer from the user session.
  */
-public class UserSession {
+public class UserSession implements Serializable  {
+
+    @JsonProperty
     private Hashtable<String, Object> htProperties = new Hashtable<String, Object>(10, .75f);
 
-    private HttpSession sHttpSession;
 
     //--------------------------------------------------------------------------
     //---
@@ -64,19 +69,6 @@ public class UserSession {
     //---
     //--------------------------------------------------------------------------
 
-    /**
-     * @return the sHttpSession
-     */
-    public HttpSession getsHttpSession() {
-        return sHttpSession;
-    }
-
-    /**
-     * @param sHttpSession the sHttpSession to set
-     */
-    public void setsHttpSession(HttpSession sHttpSession) {
-        this.sHttpSession = sHttpSession;
-    }
 
     /**
      * Sets a generic property.
@@ -109,9 +101,6 @@ public class UserSession {
     public void clear() {
         htProperties.clear();
         SecurityContextHolder.clearContext();
-        if (sHttpSession != null) {
-            sHttpSession.invalidate();
-        }
     }
 
     //--------------------------------------------------------------------------
@@ -124,12 +113,14 @@ public class UserSession {
         SecurityContextHolder.setContext(secContext);
     }
 
+    @JsonIgnore
     public boolean isAuthenticated() {
         return !(auth() instanceof AnonymousAuthenticationToken);
     }
 
     //--------------------------------------------------------------------------
 
+    @JsonIgnore
     public String getUserId() {
         User userDetails = getPrincipal();
         if (userDetails == null) {
@@ -139,6 +130,7 @@ public class UserSession {
         }
     }
 
+    @JsonIgnore
     public String getUsername() {
         User userDetails = getPrincipal();
         if (userDetails == null) {
@@ -148,6 +140,7 @@ public class UserSession {
         }
     }
 
+    @JsonIgnore
     public String getName() {
         User userDetails = getPrincipal();
         if (userDetails == null) {
@@ -157,6 +150,7 @@ public class UserSession {
         }
     }
 
+    @JsonIgnore
     public String getSurname() {
         User userDetails = getPrincipal();
         if (userDetails == null) {
@@ -166,6 +160,7 @@ public class UserSession {
         }
     }
 
+    @JsonIgnore
     public Profile getProfile() {
         User userDetails = getPrincipal();
         if (userDetails == null) {
@@ -175,6 +170,7 @@ public class UserSession {
         }
     }
 
+    @JsonIgnore
     public String getEmailAddr() {
         User userDetails = getPrincipal();
         if (userDetails == null) {
@@ -184,6 +180,7 @@ public class UserSession {
         }
     }
 
+    @JsonIgnore
     public String getOrganisation() {
         User userDetails = getPrincipal();
         if (userDetails == null) {
@@ -193,6 +190,7 @@ public class UserSession {
         }
     }
 
+    @JsonIgnore
     public int getUserIdAsInt() {
         String id = getUserId();
         return id == null ? -1 : Integer.parseInt(getUserId());
@@ -212,6 +210,7 @@ public class UserSession {
         }
     }
 
+    @JsonIgnore
     public User getPrincipal() {
         Authentication auth = auth();
         if (auth != null) {

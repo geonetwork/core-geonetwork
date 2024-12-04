@@ -53,6 +53,13 @@
 
   <!-- FIXME set common dependencies to the root pom.xml  -->
   <dependencies>
+
+    <dependency>
+      <groupId>org.springframework.session</groupId>
+      <artifactId>spring-session-jdbc</artifactId>
+      <version>2.7.4</version>
+    </dependency>
+
     <dependency>
       <groupId>org.apache.logging.log4j</groupId>
       <artifactId>log4j-api</artifactId>

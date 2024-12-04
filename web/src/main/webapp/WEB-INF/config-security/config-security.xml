@@ -23,7 +23,7 @@
 
 <beans
   xmlns:ctx="http://www.springframework.org/schema/context"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
   xsi:schemaLocation="http://www.springframework.org/schema/beans
           http://www.springframework.org/schema/beans/spring-beans.xsd
           http://www.springframework.org/schema/context
@@ -37,8 +37,19 @@
                                 file-encoding="UTF-8"
                                 order="100"/>
 
+  <context:annotation-config/>
+
+  <context:component-scan base-package="org.fao.geonet.session" />
+  <bean class="org.springframework.session.jdbc.config.annotation.web.http.JdbcHttpSessionConfiguration"/>
+
+
+
+
+
   <import resource="config-security-core.xml"/>
   <import resource="config-security-mapping.xml"/>
+
+
 
   <!-- Security options
 

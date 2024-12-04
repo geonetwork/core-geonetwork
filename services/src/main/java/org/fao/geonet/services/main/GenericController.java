@@ -106,7 +106,7 @@ public class GenericController {
                 session = new UserSession();
 
                 httpSession.setAttribute(USER_SESSION_ATTRIBUTE_KEY, session);
-                session.setsHttpSession(httpSession);
+               // session.setsHttpSession(httpSession);
 
                 if (Log.isDebugEnabled(Log.REQUEST))
                     Log.debug(Log.REQUEST, "Session created for client : " + ip);

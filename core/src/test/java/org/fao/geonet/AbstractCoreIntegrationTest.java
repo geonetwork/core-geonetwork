@@ -288,7 +288,7 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
         UserSession userSession = new UserSession();
         userSession.loginAs(user);
         session.setAttribute(Jeeves.Elem.SESSION, userSession);
-        userSession.setsHttpSession(session);
+        //userSession.setsHttpSession(session);
 
         return session;
     }
@@ -303,8 +303,8 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
 
         UserSession userSession = new UserSession();
         session.setAttribute(Jeeves.Elem.SESSION, userSession);
-        userSession.setsHttpSession(session);
-
+//        userSession.setsHttpSession(session);
+//
         return session;
     }
 

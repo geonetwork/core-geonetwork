@@ -45,6 +45,7 @@ import java.util.Set;
 @Embeddable
 public class UserSecurity extends GeonetEntity implements Serializable {
     private char[] _password;
+    @JsonIgnore
     private Set<UserSecurityNotification> _securityNotifications = new HashSet<UserSecurityNotification>();
     private String _authType;
     private String _nodeId;
@@ -121,6 +122,7 @@ public class UserSecurity extends GeonetEntity implements Serializable {
      * @return the mutable set if security notifications.
      */
     @Transient
+    @JsonIgnore
     public Set<UserSecurityNotification> getSecurityNotifications() {
         return _securityNotifications;
     }

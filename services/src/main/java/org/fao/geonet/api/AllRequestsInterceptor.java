@@ -86,7 +86,7 @@ public class AllRequestsInterceptor extends HandlerInterceptorAdapter {
                 session = new UserSession();
 
                 httpSession.setAttribute(Jeeves.Elem.SESSION, session);
-                session.setsHttpSession(httpSession);
+              //  session.setsHttpSession(httpSession);
 
                 if (Log.isDebugEnabled(Log.REQUEST)) {
                     Log.debug(Log.REQUEST, "Session created for client : " + request.getRemoteAddr());

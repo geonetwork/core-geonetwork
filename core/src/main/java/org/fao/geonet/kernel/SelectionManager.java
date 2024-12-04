@@ -25,6 +25,7 @@ package org.fao.geonet.kernel;
 
 import co.elastic.clients.elasticsearch.core.SearchResponse;
 import co.elastic.clients.elasticsearch.core.search.Hit;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jeeves.server.UserSession;
@@ -40,6 +41,7 @@ import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.utils.Log;
 import org.jdom.Element;
 
+import java.io.Serializable;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -50,7 +52,7 @@ import static org.fao.geonet.kernel.search.EsSearchManager.FIELDLIST_UUID;
 /**
  * Manage objects selection for a user session.
  */
-public class SelectionManager {
+public class SelectionManager implements Serializable {
 
     public static final String SELECTION_METADATA = "metadata";
     public static final String SELECTION_BUCKET = "bucket";
@@ -72,6 +74,7 @@ public class SelectionManager {
     }
 
 
+    @JsonIgnore
     public Map<String, Integer> getSelectionsAndSize() {
         return selections.entrySet().stream().collect(Collectors.toMap(
             e -> e.getKey(),
