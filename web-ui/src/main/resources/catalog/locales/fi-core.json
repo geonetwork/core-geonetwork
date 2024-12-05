@@ -266,7 +266,7 @@
     "spatialRepresentationType": "Esitysmuoto",
     "cl_spatialRepresentationType": "Esitysmuoto",
     "state": "Tila",
-    "staticMap": "Staattinen kartta",
+    "map-static": "Staattinen kartta",
     "surname": "Sukunimi",
     "title": "Titteli",
     "to": "Vastaanottaja",

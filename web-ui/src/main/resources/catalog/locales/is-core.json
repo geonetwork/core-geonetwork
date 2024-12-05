@@ -266,7 +266,7 @@
     "spatialRepresentationType": "Framsetning tegund",
     "cl_spatialRepresentationType": "Framsetning tegund",
     "state": "Ástand",
-    "staticMap": "Kyrrstætt kort",
+    "map-static": "Kyrrstætt kort",
     "surname": "Eftirnafn",
     "title": "Titill",
     "to": "Til",

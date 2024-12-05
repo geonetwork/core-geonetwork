@@ -266,7 +266,7 @@
     "spatialRepresentationType": "Nümayəndəlik növü",
     "cl_spatialRepresentationType": "Nümayəndəlik növü",
     "state": "dövlət",
-    "staticMap": "Statik xəritə",
+    "map-static": "Statik xəritə",
     "surname": "soyad",
     "title": "Başlıq",
     "to": "Kimə",
