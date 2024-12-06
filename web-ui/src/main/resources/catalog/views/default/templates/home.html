@@ -139,7 +139,7 @@
               data-ng-model="homeFacet.key"
               data-ng-value="facetKey"
             />
-            <span data-translate="">{{::('facet-' + facetKey) | facetKeyTranslator}}</span
+            <span data-translate="">{{::getFacetLabel(agg) ||  (('facet-' + facetKey) | facetKeyTranslator)}}</span
             >&nbsp;
           </label>
         </div>
@@ -157,7 +157,7 @@
     <div data-ng-show="searchInfo.aggregations[homeFacet.lastKey].buckets.length > 0">
       <div class="row">
         <h1 class="col-md-12" data-translate="">
-          {{('facet-' + homeFacet.lastKey) | facetKeyTranslator}}
+          {{getFacetLabel(searchInfo.aggregations[homeFacet.lastKey]) ||  (('facet-' + homeFacet.lastKey) | facetKeyTranslator)}}
         </h1>
       </div>
       <div class="row">
