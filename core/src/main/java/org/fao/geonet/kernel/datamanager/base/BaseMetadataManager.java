@@ -254,8 +254,8 @@ public class BaseMetadataManager implements IMetadataManager {
         // remove from index metadata not in DBMS
         try (BatchingDeletionSubmitter submitter = new BatchingDeletionSubmitter()) {
             for (String id : docs.keySet()) {
+                LOGGER_DATA_MANAGER.debug("- removing record ({}) from index", id);
                 getSearchManager().deleteByQuery(String.format("+id:%s", id), submitter);
-                LOGGER_DATA_MANAGER.debug("- removed record ({}) from index", id);
             }
         }
     }
