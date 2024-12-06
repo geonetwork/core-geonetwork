@@ -3,7 +3,6 @@ package org.fao.geonet.api.registries;
 import co.elastic.clients.elasticsearch.core.SearchResponse;
 import co.elastic.clients.elasticsearch.core.search.Hit;
 import com.google.common.collect.Table;
-import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import jeeves.xlink.XLink;
 import org.apache.commons.lang.StringUtils;
@@ -13,7 +12,7 @@ import org.fao.geonet.kernel.UpdateDatestamp;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.search.EsSearchManager;
 import org.fao.geonet.kernel.search.IndexingMode;
-import org.fao.geonet.kernel.search.submission.DirectIndexSubmittor;
+import org.fao.geonet.kernel.search.submission.DirectIndexSubmitter;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.util.Sha1Encoder;
 import org.fao.geonet.utils.Log;
@@ -74,7 +73,7 @@ public class DirectoryUtils {
                         (Element) entry.clone(),
                         IndexingMode.none, ufo,
                         UpdateDatestamp.NO,
-                        publicForGroup, DirectIndexSubmittor.INSTANCE);
+                        publicForGroup, DirectIndexSubmitter.INSTANCE);
 
                     collectResults.getEntryIdentifiers().put(
                         uuid, subtemplate.getId());

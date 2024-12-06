@@ -4,7 +4,7 @@ import org.fao.geonet.kernel.search.EsSearchManager;
 
 import java.io.IOException;
 
-public interface IDeletionSubmittor {
+public interface IDeletionSubmitter {
 
     void submitUUIDToIndex(String uuid, EsSearchManager searchManager) throws IOException;
 

@@ -42,8 +42,8 @@ import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
 import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
 import org.fao.geonet.kernel.harvest.harvester.UUIDMapper;
 import org.fao.geonet.kernel.search.IndexingMode;
-import org.fao.geonet.kernel.search.submission.DirectIndexSubmittor;
-import org.fao.geonet.kernel.search.submission.batch.BatchingDeletionSubmittor;
+import org.fao.geonet.kernel.search.submission.DirectIndexSubmitter;
+import org.fao.geonet.kernel.search.submission.batch.BatchingDeletionSubmitter;
 import org.fao.geonet.repository.MetadataCategoryRepository;
 import org.fao.geonet.repository.specification.MetadataCategorySpecs;
 import org.fao.geonet.utils.XmlRequest;
@@ -106,7 +106,7 @@ public class Aligner extends AbstractAligner<GeonetParams> {
         //-----------------------------------------------------------------------
         //--- remove old metadata
 
-        try (BatchingDeletionSubmittor submittor = new BatchingDeletionSubmittor()) {
+        try (BatchingDeletionSubmitter submitter = new BatchingDeletionSubmitter()) {
             for (String uuid : localUuids.getUUIDs()) {
                 if (cancelMonitor.get()) {
                     return this.result;
@@ -116,7 +116,7 @@ public class Aligner extends AbstractAligner<GeonetParams> {
                     String id = localUuids.getID(uuid);
 
                     if (log.isDebugEnabled()) log.debug("  - Removing old metadata with id=" + id);
-                    metadataManager.deleteMetadata(context, id, submittor);
+                    metadataManager.deleteMetadata(context, id, submitter);
 
                     metadataManager.flush();
                     this.result.locallyRemoved++;
@@ -161,7 +161,7 @@ public class Aligner extends AbstractAligner<GeonetParams> {
                 //--- maybe the metadata was unretrievable
 
                 if (id != null) {
-                    dataMan.indexMetadata(id, DirectIndexSubmittor.INSTANCE);
+                    dataMan.indexMetadata(id, DirectIndexSubmitter.INSTANCE);
                 }
             }
         }
@@ -216,7 +216,7 @@ public class Aligner extends AbstractAligner<GeonetParams> {
         List<Element> categories = info.getChildren("category");
         addCategories(metadata, categories);
 
-        metadata = metadataManager.insertMetadata(context, metadata, md, IndexingMode.none, false, UpdateDatestamp.NO, false, DirectIndexSubmittor.INSTANCE);
+        metadata = metadataManager.insertMetadata(context, metadata, md, IndexingMode.none, false, UpdateDatestamp.NO, false, DirectIndexSubmitter.INSTANCE);
 
         String id = String.valueOf(metadata.getId());
 

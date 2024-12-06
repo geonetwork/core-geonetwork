@@ -56,8 +56,8 @@ import org.fao.geonet.kernel.harvest.harvester.IHarvester;
 import org.fao.geonet.kernel.harvest.harvester.RecordInfo;
 import org.fao.geonet.kernel.harvest.harvester.UriMapper;
 import org.fao.geonet.kernel.search.IndexingMode;
-import org.fao.geonet.kernel.search.submission.DirectIndexSubmittor;
-import org.fao.geonet.kernel.search.submission.batch.BatchingDeletionSubmittor;
+import org.fao.geonet.kernel.search.submission.DirectIndexSubmitter;
+import org.fao.geonet.kernel.search.submission.batch.BatchingDeletionSubmitter;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.MetadataCategoryRepository;
 import org.fao.geonet.util.Sha1Encoder;
@@ -92,7 +92,6 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -290,7 +289,7 @@ class Harvester extends BaseAligner<ThreddsParams> implements IHarvester<Harvest
         harvestCatalog(xml);
 
         //--- Remove previously harvested metadata for uris that no longer exist on the remote site
-        try (BatchingDeletionSubmittor submittor = new BatchingDeletionSubmittor()) {
+        try (BatchingDeletionSubmitter submitter = new BatchingDeletionSubmitter()) {
 
             for (String localUri : localUris.getUris()) {
                 if (cancelMonitor.get()) {
@@ -305,7 +304,7 @@ class Harvester extends BaseAligner<ThreddsParams> implements IHarvester<Harvest
 
                         if (log.isDebugEnabled())
                             log.debug("  - Removing deleted metadata with id: " + record.id);
-                        mdManager.deleteMetadata(context, record.id, submittor);
+                        mdManager.deleteMetadata(context, record.id, submitter);
 
                         if (record.isTemplate.equals("s")) {
                             //--- Uncache xlinks if a subtemplate
@@ -577,13 +576,13 @@ class Harvester extends BaseAligner<ThreddsParams> implements IHarvester<Harvest
         	addCategories(metadata, params.getCategories(), localCateg, context, null, false);
 				}
 
-        metadata = (Metadata) mdManager.insertMetadata(context, metadata, md, IndexingMode.none, false, UpdateDatestamp.NO, false, DirectIndexSubmittor.INSTANCE);
+        metadata = (Metadata) mdManager.insertMetadata(context, metadata, md, IndexingMode.none, false, UpdateDatestamp.NO, false, DirectIndexSubmitter.INSTANCE);
 
         String id = String.valueOf(metadata.getId());
 
         addPrivileges(id, params.getPrivileges(), localGroups, context);
 
-        mdIndexer.indexMetadata(id, DirectIndexSubmittor.INSTANCE, IndexingMode.full);
+        mdIndexer.indexMetadata(id, DirectIndexSubmitter.INSTANCE, IndexingMode.full);
 
         mdManager.flush();
     }
@@ -789,9 +788,9 @@ class Harvester extends BaseAligner<ThreddsParams> implements IHarvester<Harvest
 
         if (localRecords == null) return;
 
-        try (BatchingDeletionSubmittor submittor = new BatchingDeletionSubmittor(localRecords.size())) {
+        try (BatchingDeletionSubmitter submitter = new BatchingDeletionSubmitter(localRecords.size())) {
             for (RecordInfo record : localRecords) {
-                mdManager.deleteMetadata(context, record.id, submittor);
+                mdManager.deleteMetadata(context, record.id, submitter);
 
                 if (record.isTemplate.equals("s")) {
                     //--- Uncache xlinks if a subtemplate

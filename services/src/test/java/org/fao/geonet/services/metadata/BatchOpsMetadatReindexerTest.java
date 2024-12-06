@@ -5,8 +5,7 @@ import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.search.EsSearchManager;
 import org.fao.geonet.kernel.search.ISearchManager;
 import org.fao.geonet.kernel.search.index.BatchOpsMetadataReindexer;
-import org.fao.geonet.kernel.search.submission.DirectIndexSubmittor;
-import org.fao.geonet.kernel.search.submission.IIndexSubmittor;
+import org.fao.geonet.kernel.search.submission.IIndexSubmitter;
 import org.fao.geonet.util.ThreadUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -194,7 +193,7 @@ public class BatchOpsMetadatReindexerTest {
                 usedTread.add(Thread.currentThread());
                 return null;
             }
-        }).when(mockDataMan).indexMetadata(Mockito.anyString(), Mockito.any(IIndexSubmittor.class));
+        }).when(mockDataMan).indexMetadata(Mockito.anyString(), Mockito.any(IIndexSubmitter.class));
         return mockDataMan;
     }
 
@@ -208,7 +207,7 @@ public class BatchOpsMetadatReindexerTest {
                 latch.await();
                 return null;
             }
-        }).when(mockDataMan).indexMetadata(Mockito.anyString(), Mockito.any(IIndexSubmittor.class));
+        }).when(mockDataMan).indexMetadata(Mockito.anyString(), Mockito.any(IIndexSubmitter.class));
         return mockDataMan;
     }
 
@@ -223,7 +222,7 @@ public class BatchOpsMetadatReindexerTest {
 
     private ArgumentCaptor<String> captureIndexationLaunched(DataManager mockDataMan) throws Exception {
         ArgumentCaptor<String> metadataIdCaptor = ArgumentCaptor.forClass(String.class);
-        ArgumentCaptor<IIndexSubmittor> indexSubmittorCaptor = ArgumentCaptor.forClass(IIndexSubmittor.class);
+        ArgumentCaptor<IIndexSubmitter> indexSubmittorCaptor = ArgumentCaptor.forClass(IIndexSubmitter.class);
         ArgumentCaptor<ISearchManager> isearchManagerCaptor = ArgumentCaptor.forClass(ISearchManager.class);
 
         Mockito.verify(mockDataMan, Mockito.times(4)).indexMetadata(metadataIdCaptor.capture(), indexSubmittorCaptor.capture());

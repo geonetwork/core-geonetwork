@@ -28,8 +28,8 @@ import com.google.common.collect.Multimap;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.MetadataType;
-import org.fao.geonet.kernel.search.submission.IDeletionSubmittor;
-import org.fao.geonet.kernel.search.submission.IIndexSubmittor;
+import org.fao.geonet.kernel.search.submission.IDeletionSubmitter;
+import org.fao.geonet.kernel.search.submission.IIndexSubmitter;
 import org.jdom.Element;
 
 import java.io.IOException;
@@ -49,10 +49,10 @@ public interface ISearchManager {
     /**
      * Indexes a metadata record.
      *
-     * @param indexSubmittor The submittor to use
+     * @param indexSubmittor The submitter to use
      */
     void index(Path schemaDir, Element metadata, String id, Multimap<String, Object> moreFields,
-               MetadataType metadataType, IIndexSubmittor indexSubmittor, IndexingMode indexingMode)
+               MetadataType metadataType, IIndexSubmitter indexSubmittor, IndexingMode indexingMode)
         throws Exception;
 
 
@@ -73,12 +73,12 @@ public interface ISearchManager {
     /**
      * deletes a document by a query.
      */
-    void deleteByQuery(String query, IDeletionSubmittor submittor) throws Exception;
+    void deleteByQuery(String query, IDeletionSubmitter submitter) throws Exception;
 
     /**
      * deletes a document by its uuid.
      */
-    void deleteByUuid(String uuid, IDeletionSubmittor submittor) throws Exception;
+    void deleteByUuid(String uuid, IDeletionSubmitter submitter) throws Exception;
 
     boolean isIndexWritable(String indexName) throws IOException, ElasticsearchException;
 }

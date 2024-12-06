@@ -3,21 +3,20 @@ package org.fao.geonet.kernel.search.submission.batch;
 import co.elastic.clients.elasticsearch.core.BulkRequest;
 import org.fao.geonet.index.es.EsRestClient;
 import org.fao.geonet.kernel.search.EsSearchManager;
-import org.fao.geonet.kernel.search.submission.IIndexSubmittor;
+import org.fao.geonet.kernel.search.submission.IIndexSubmitter;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
-import java.lang.ref.Cleaner;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 /**
  * An index submitter that batches documents into larger chunks and sends them asynchronously to the index.
- * When closing, this submittor sends the remaining item to the index and waits until all elasticsearch requests have been received,
+ * When closing, this submitter sends the remaining item to the index and waits until all elasticsearch requests have been received,
  * so after closing there are no pending changes
  */
-public class BatchingIndexSubmittor extends BatchingSubmittorBase<BatchingIndexSubmittor.State> implements IIndexSubmittor {
+public class BatchingIndexSubmitter extends BatchingSubmitterBase<BatchingIndexSubmitter.State> implements IIndexSubmitter {
     protected static class State extends StateBase {
         private final Map<String, String> listOfDocumentsToIndex = new HashMap<>();
 
@@ -49,14 +48,14 @@ public class BatchingIndexSubmittor extends BatchingSubmittorBase<BatchingIndexS
         }
     }
 
-    public BatchingIndexSubmittor() {
+    public BatchingIndexSubmitter() {
         super(new State());
     }
 
     /**
      * @param estimatedTotalSize The estimated size of documents to index. Does not need to match the actual amount of submitted documents
      */
-    public BatchingIndexSubmittor(int estimatedTotalSize) {
+    public BatchingIndexSubmitter(int estimatedTotalSize) {
         super(new State(), estimatedTotalSize);
     }
 

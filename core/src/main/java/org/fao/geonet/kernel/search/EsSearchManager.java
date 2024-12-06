@@ -55,10 +55,10 @@ import org.fao.geonet.kernel.SelectionManager;
 import org.fao.geonet.kernel.datamanager.IMetadataIndexer;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.search.index.OverviewIndexFieldUpdater;
-import org.fao.geonet.kernel.search.submission.DirectDeletionSubmittor;
-import org.fao.geonet.kernel.search.submission.IDeletionSubmittor;
-import org.fao.geonet.kernel.search.submission.batch.BatchingIndexSubmittor;
-import org.fao.geonet.kernel.search.submission.IIndexSubmittor;
+import org.fao.geonet.kernel.search.submission.DirectDeletionSubmitter;
+import org.fao.geonet.kernel.search.submission.IDeletionSubmitter;
+import org.fao.geonet.kernel.search.submission.batch.BatchingIndexSubmitter;
+import org.fao.geonet.kernel.search.submission.IIndexSubmitter;
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.repository.SourceRepository;
 import org.fao.geonet.repository.specification.MetadataSpecs;
@@ -429,7 +429,7 @@ public class EsSearchManager implements ISearchManager {
     public void index(Path schemaDir, Element metadata, String id,
                       Multimap<String, Object> dbFields,
                       MetadataType metadataType,
-                      IIndexSubmittor indexSubmittor,
+                      IIndexSubmitter indexSubmittor,
                       IndexingMode indexingMode) throws Exception {
 
         Element docs = new Element("doc");
@@ -761,7 +761,7 @@ public class EsSearchManager implements ISearchManager {
                     }
                 }
             }
-            try (BatchingIndexSubmittor indexSubmittor = new BatchingIndexSubmittor(listOfIdsToIndex.size())) {
+            try (BatchingIndexSubmitter indexSubmittor = new BatchingIndexSubmitter(listOfIdsToIndex.size())) {
                 for (String id : listOfIdsToIndex) {
                     metadataIndexer.indexMetadata(id, indexSubmittor, IndexingMode.full);
                 }
@@ -773,7 +773,7 @@ public class EsSearchManager implements ISearchManager {
             final List<Integer> metadataIds = metadataRepository.findAllIdsBy(
                 Specification.where(metadataSpec)
             );
-            try (BatchingIndexSubmittor indexSubmittor = new BatchingIndexSubmittor(metadataIds.size())) {
+            try (BatchingIndexSubmitter indexSubmittor = new BatchingIndexSubmitter(metadataIds.size())) {
                 for (Integer id : metadataIds) {
                     metadataIndexer.indexMetadata(id + "", indexSubmittor, IndexingMode.full);
                 }
@@ -823,7 +823,7 @@ public class EsSearchManager implements ISearchManager {
 
 
     public void clearIndex() throws Exception {
-        deleteByQuery("*:*", DirectDeletionSubmittor.INSTANCE);
+        deleteByQuery("*:*", DirectDeletionSubmitter.INSTANCE);
     }
 
     static ImmutableSet<String> docsChangeIncludedFields;
@@ -881,13 +881,13 @@ public class EsSearchManager implements ISearchManager {
     }
 
     @Override
-    public void deleteByQuery(String query, IDeletionSubmittor submittor) throws Exception {
-        submittor.submitQueryToIndex(query, this);
+    public void deleteByQuery(String query, IDeletionSubmitter submitter) throws Exception {
+        submitter.submitQueryToIndex(query, this);
     }
 
     @Override
-    public void deleteByUuid(String uuid, IDeletionSubmittor submittor) throws Exception {
-        submittor.submitUUIDToIndex(uuid, this);
+    public void deleteByUuid(String uuid, IDeletionSubmitter submitter) throws Exception {
+        submitter.submitUUIDToIndex(uuid, this);
     }
 
     public long getNumDocs(String query) throws Exception {

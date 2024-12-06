@@ -57,7 +57,7 @@ import org.fao.geonet.kernel.harvest.harvester.UUIDMapper;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.search.EsSearchManager;
 import org.fao.geonet.kernel.search.IndexingMode;
-import org.fao.geonet.kernel.search.submission.batch.BatchingDeletionSubmittor;
+import org.fao.geonet.kernel.search.submission.batch.BatchingDeletionSubmitter;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
@@ -257,12 +257,12 @@ public class Aligner extends BaseAligner<CswParams> {
             return result;
         }
 
-        try (BatchingDeletionSubmittor submittor = new BatchingDeletionSubmittor()) {
+        try (BatchingDeletionSubmitter submitter = new BatchingDeletionSubmitter()) {
             for (String uuid : localUuids.getUUIDs()) {
                 if (!records.contains(uuid)) {
                     String id = localUuids.getID(uuid);
                     log.debug("  - Removing old metadata with local id:" + id);
-                    metadataManager.deleteMetadata(context, id, submittor);
+                    metadataManager.deleteMetadata(context, id, submitter);
                     result.locallyRemoved++;
                 }
             }
@@ -367,13 +367,13 @@ public class Aligner extends BaseAligner<CswParams> {
 
         addCategories(metadata, params.getCategories(), localCateg, context, null, false);
 
-        metadata = metadataManager.insertMetadata(context, metadata, md, IndexingMode.none, false, UpdateDatestamp.NO, false, batchingIndexSubmittor);
+        metadata = metadataManager.insertMetadata(context, metadata, md, IndexingMode.none, false, UpdateDatestamp.NO, false, batchingIndexSubmitter);
 
         String id = String.valueOf(metadata.getId());
 
         addPrivileges(id, params.getPrivileges(), localGroups, context);
 
-        metadataIndexer.indexMetadata(id, batchingIndexSubmittor, IndexingMode.full);
+        metadataIndexer.indexMetadata(id, batchingIndexSubmitter, IndexingMode.full);
         result.addedMetadata++;
     }
 
@@ -437,7 +437,7 @@ public class Aligner extends BaseAligner<CswParams> {
             } else {
                 log.debug("  - Updating local metadata for uuid:" + ri.uuid);
                 if (updatingLocalMetadata(ri, id, force)) {
-                    metadataIndexer.indexMetadata(id, batchingIndexSubmittor, IndexingMode.full);
+                    metadataIndexer.indexMetadata(id, batchingIndexSubmitter, IndexingMode.full);
                     result.updatedMetadata++;
                 }
             }

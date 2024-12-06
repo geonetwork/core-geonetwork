@@ -34,15 +34,13 @@ import org.fao.geonet.kernel.datamanager.IMetadataIndexer;
 import org.fao.geonet.kernel.datamanager.IMetadataOperations;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.search.IndexingMode;
-import org.fao.geonet.kernel.search.submission.DirectIndexSubmittor;
+import org.fao.geonet.kernel.search.submission.DirectIndexSubmitter;
 import org.fao.geonet.utils.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.event.TransactionPhase;
 import org.springframework.transaction.event.TransactionalEventListener;
-
-import java.util.Arrays;
 
 /**
  * When a record gets a status change to retired, unpublish it.
@@ -90,7 +88,7 @@ public class RetireRecord implements ApplicationListener<MetadataStatusChanged> 
                         metadataOperations.forceUnsetOperation(context, event.getMd().getId(), ReservedGroup.all.getId(), ReservedOperation.view.getId());
                         metadataOperations.forceUnsetOperation(context, event.getMd().getId(), ReservedGroup.all.getId(), ReservedOperation.notify.getId());
 
-                        metadataIndexer.indexMetadata(String.valueOf(event.getMd().getId()), DirectIndexSubmittor.INSTANCE, IndexingMode.full);
+                        metadataIndexer.indexMetadata(String.valueOf(event.getMd().getId()), DirectIndexSubmitter.INSTANCE, IndexingMode.full);
 
                     } catch (Exception e) {
                         Log.error(Geonet.DATA_MANAGER, "Error upgrading status", e);

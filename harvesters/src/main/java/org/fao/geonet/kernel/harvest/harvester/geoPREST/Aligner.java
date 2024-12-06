@@ -51,7 +51,7 @@ import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
 import org.fao.geonet.kernel.harvest.harvester.RecordInfo;
 import org.fao.geonet.kernel.harvest.harvester.UUIDMapper;
 import org.fao.geonet.kernel.search.IndexingMode;
-import org.fao.geonet.kernel.search.submission.batch.BatchingDeletionSubmittor;
+import org.fao.geonet.kernel.search.submission.batch.BatchingDeletionSubmitter;
 import org.fao.geonet.repository.OperationAllowedRepository;
 import org.fao.geonet.utils.GeonetHttpRequestFactory;
 import org.fao.geonet.utils.Xml;
@@ -106,7 +106,7 @@ public class Aligner extends BaseAligner<GeoPRESTParams> {
         //-----------------------------------------------------------------------
         //--- remove old metadata
 
-        try (BatchingDeletionSubmittor submittor = new BatchingDeletionSubmittor()) {
+        try (BatchingDeletionSubmitter submitter = new BatchingDeletionSubmitter()) {
             for (String uuid : localUuids.getUUIDs()) {
                 if (cancelMonitor.get()) {
                     return result;
@@ -117,7 +117,7 @@ public class Aligner extends BaseAligner<GeoPRESTParams> {
 
                     if (log.isDebugEnabled())
                         log.debug("  - Removing old metadata with local id:" + id);
-                    metadataManager.deleteMetadata(context, id, submittor);
+                    metadataManager.deleteMetadata(context, id, submitter);
 
                     metadataManager.flush();
 
@@ -192,13 +192,13 @@ public class Aligner extends BaseAligner<GeoPRESTParams> {
 
         addCategories(metadata, params.getCategories(), localCateg, context, null, false);
 
-        metadata = metadataManager.insertMetadata(context, metadata, md, IndexingMode.none, false, UpdateDatestamp.NO, false, batchingIndexSubmittor);
+        metadata = metadataManager.insertMetadata(context, metadata, md, IndexingMode.none, false, UpdateDatestamp.NO, false, batchingIndexSubmitter);
 
         String id = String.valueOf(metadata.getId());
 
         addPrivileges(id, params.getPrivileges(), localGroups, context);
 
-        dataMan.indexMetadata(id, batchingIndexSubmittor);
+        dataMan.indexMetadata(id, batchingIndexSubmitter);
         result.addedMetadata++;
     }
 
@@ -242,7 +242,7 @@ public class Aligner extends BaseAligner<GeoPRESTParams> {
                 addCategories(metadata, params.getCategories(), localCateg, context, null, true);
                 metadataManager.flush();
 
-                dataMan.indexMetadata(id, batchingIndexSubmittor);
+                dataMan.indexMetadata(id, batchingIndexSubmitter);
                 result.updatedMetadata++;
             }
         }

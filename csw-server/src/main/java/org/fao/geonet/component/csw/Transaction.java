@@ -50,8 +50,8 @@ import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.search.IndexingMode;
-import org.fao.geonet.kernel.search.submission.DirectIndexSubmittor;
-import org.fao.geonet.kernel.search.submission.batch.BatchingDeletionSubmittor;
+import org.fao.geonet.kernel.search.submission.DirectIndexSubmitter;
+import org.fao.geonet.kernel.search.submission.batch.BatchingDeletionSubmitter;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.utils.Log;
@@ -281,7 +281,7 @@ public class Transaction extends AbstractOperation implements CatalogService {
             dataMan.setOperation(context, id, "" + ReservedGroup.all.getId(), ReservedOperation.dynamic);
         }
 
-        dataMan.indexMetadata(id, DirectIndexSubmittor.INSTANCE);
+        dataMan.indexMetadata(id, DirectIndexSubmitter.INSTANCE);
 
         AbstractMetadata metadata = metadataUtils.findOne(id);
         ApplicationContext applicationContext = ApplicationContextHolder.get();
@@ -527,7 +527,7 @@ public class Transaction extends AbstractOperation implements CatalogService {
             return deleted;
 
         // delete all matching records
-        try (BatchingDeletionSubmittor submittor = new BatchingDeletionSubmittor(results.size())) {
+        try (BatchingDeletionSubmitter submitter = new BatchingDeletionSubmitter(results.size())) {
             while (i.hasNext()) {
                 Element result = i.next();
                 String uuid = result.getChildText("identifier", Csw.NAMESPACE_DC);
@@ -556,7 +556,7 @@ public class Transaction extends AbstractOperation implements CatalogService {
                     context.getUserSession().getUserIdAsInt(),
                     metadata.getData());
 
-                metadataManager.deleteMetadata(context, id, submittor);
+                metadataManager.deleteMetadata(context, id, submitter);
                 recordDeletedEvent.publish(ApplicationContextHolder.get());
 
                 deleted++;

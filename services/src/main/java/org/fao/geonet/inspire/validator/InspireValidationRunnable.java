@@ -26,17 +26,13 @@ import jeeves.server.context.ServiceContext;
 import jeeves.transaction.TransactionManager;
 import jeeves.transaction.TransactionTask;
 import org.fao.geonet.ApplicationContextHolder;
-import org.fao.geonet.inspire.validator.InspireValidatorUtils;
 import org.fao.geonet.domain.MetadataValidation;
 import org.fao.geonet.domain.MetadataValidationId;
 import org.fao.geonet.domain.MetadataValidationStatus;
 import org.fao.geonet.kernel.DataManager;
-import org.fao.geonet.kernel.search.submission.DirectIndexSubmittor;
+import org.fao.geonet.kernel.search.submission.DirectIndexSubmitter;
 import org.fao.geonet.repository.MetadataValidationRepository;
 import org.springframework.transaction.TransactionStatus;
-
-import java.util.ArrayList;
-import java.util.Arrays;
 
 import static jeeves.transaction.TransactionManager.CommitBehavior.ALWAYS_COMMIT;
 import static jeeves.transaction.TransactionManager.TransactionRequirement.CREATE_NEW;
@@ -92,7 +88,7 @@ public class InspireValidationRunnable implements Runnable {
                     DataManager dataManager =
                         ApplicationContextHolder.get().getBean(DataManager.class);
 
-                    dataManager.indexMetadata(mdId + "", DirectIndexSubmittor.INSTANCE);
+                    dataManager.indexMetadata(mdId + "", DirectIndexSubmitter.INSTANCE);
 
                     return null;
                 }

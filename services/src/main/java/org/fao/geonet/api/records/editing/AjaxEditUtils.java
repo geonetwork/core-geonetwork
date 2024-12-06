@@ -37,7 +37,7 @@ import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.UpdateDatestamp;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.schema.SchemaPlugin;
-import org.fao.geonet.kernel.search.submission.DirectIndexSubmittor;
+import org.fao.geonet.kernel.search.submission.DirectIndexSubmitter;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.schema.iso19139.ISO19139Namespaces;
 import org.fao.geonet.utils.Log;
@@ -696,7 +696,7 @@ public class AjaxEditUtils extends EditUtils {
         String changeDate = null;
         xmlSerializer.update(id, md, changeDate, false, null, context);
 
-        dataManager.indexMetadata(id, DirectIndexSubmittor.INSTANCE);
+        dataManager.indexMetadata(id, DirectIndexSubmitter.INSTANCE);
 
         return true;
     }
@@ -741,7 +741,7 @@ public class AjaxEditUtils extends EditUtils {
         String changeDate = null;
         xmlSerializer.update(id, md, changeDate, false, null, context);
 
-        dataManager.indexMetadata(id, DirectIndexSubmittor.INSTANCE);
+        dataManager.indexMetadata(id, DirectIndexSubmitter.INSTANCE);
 
         return true;
     }

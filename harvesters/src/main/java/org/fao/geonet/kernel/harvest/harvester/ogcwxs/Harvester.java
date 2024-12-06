@@ -47,7 +47,7 @@ import org.fao.geonet.kernel.harvest.harvester.*;
 import org.fao.geonet.kernel.schema.ISOPlugin;
 import org.fao.geonet.kernel.schema.SchemaPlugin;
 import org.fao.geonet.kernel.search.IndexingMode;
-import org.fao.geonet.kernel.search.submission.batch.BatchingDeletionSubmittor;
+import org.fao.geonet.kernel.search.submission.batch.BatchingDeletionSubmitter;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.MetadataCategoryRepository;
@@ -249,7 +249,7 @@ class Harvester extends BaseAligner<OgcWxSParams> implements IHarvester<HarvestR
 
         //-----------------------------------------------------------------------
         //--- remove old metadata
-        try (BatchingDeletionSubmittor submittor = new BatchingDeletionSubmittor()) {
+        try (BatchingDeletionSubmitter submitter = new BatchingDeletionSubmitter()) {
             for (String uuid : localUuids.getUUIDs()) {
                 if (cancelMonitor.get()) {
                     return this.result;
@@ -266,7 +266,7 @@ class Harvester extends BaseAligner<OgcWxSParams> implements IHarvester<HarvestR
                     store.delResources(context, uuid);
 
                     // Remove metadata
-                    metadataManager.deleteMetadata(context, id, submittor);
+                    metadataManager.deleteMetadata(context, id, submitter);
 
                     result.locallyRemoved++;
                 }
@@ -418,7 +418,7 @@ class Harvester extends BaseAligner<OgcWxSParams> implements IHarvester<HarvestR
 
         if (!dataMan.existsMetadataUuid(uuid)) {
             result.addedMetadata++;
-            metadata = metadataManager.insertMetadata(context, metadata, md, IndexingMode.none, false, UpdateDatestamp.NO, false, batchingIndexSubmittor);
+            metadata = metadataManager.insertMetadata(context, metadata, md, IndexingMode.none, false, UpdateDatestamp.NO, false, batchingIndexSubmitter);
         } else {
             result.updatedMetadata++;
             String id = dataMan.getMetadataId(uuid);
@@ -837,7 +837,7 @@ class Harvester extends BaseAligner<OgcWxSParams> implements IHarvester<HarvestR
             }
             if (!dataMan.existsMetadataUuid(reg.uuid)) {
                 result.addedMetadata++;
-                metadata = metadataManager.insertMetadata(context, metadata, xml, IndexingMode.none, false, UpdateDatestamp.NO, false, batchingIndexSubmittor);
+                metadata = metadataManager.insertMetadata(context, metadata, xml, IndexingMode.none, false, UpdateDatestamp.NO, false, batchingIndexSubmitter);
             } else {
                 result.updatedMetadata++;
                 String id = dataMan.getMetadataId(reg.uuid);

@@ -44,8 +44,8 @@ import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
 import org.fao.geonet.kernel.harvest.harvester.GroupMapper;
 import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
 import org.fao.geonet.kernel.search.IndexingMode;
-import org.fao.geonet.kernel.search.submission.DirectIndexSubmittor;
-import org.fao.geonet.kernel.search.submission.batch.BatchingDeletionSubmittor;
+import org.fao.geonet.kernel.search.submission.DirectIndexSubmitter;
+import org.fao.geonet.kernel.search.submission.batch.BatchingDeletionSubmitter;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.specification.MetadataSpecs;
 import org.fao.geonet.utils.IO;
@@ -54,8 +54,6 @@ import org.springframework.data.jpa.domain.Specification;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
-
-import java.util.*;
 
 /**
  * Harvester for local filesystem.
@@ -114,7 +112,7 @@ public class LocalFilesystemHarvester extends AbstractHarvester<HarvestResult, L
                     "from the same source if they " +
                     " were not in this harvesting result...");
                 List<Integer> existingMetadata = context.getBean(MetadataRepository.class).findIdsBy((Specification<Metadata>) MetadataSpecs.hasHarvesterUuid(params.getUuid()));
-                try (BatchingDeletionSubmittor submittor = new BatchingDeletionSubmittor()) {
+                try (BatchingDeletionSubmitter submitter = new BatchingDeletionSubmitter()) {
                     for (Integer existingId : existingMetadata) {
 
                         if (cancelMonitor.get()) {
@@ -122,7 +120,7 @@ public class LocalFilesystemHarvester extends AbstractHarvester<HarvestResult, L
                         }
                         if (!idsResultHs.contains(existingId)) {
                             log.debug("  Removing: " + existingId);
-                            metadataManager.deleteMetadata(context, existingId.toString(), submittor);
+                            metadataManager.deleteMetadata(context, existingId.toString(), submitter);
                             result.locallyRemoved++;
                         }
                     }
@@ -176,7 +174,7 @@ public class LocalFilesystemHarvester extends AbstractHarvester<HarvestResult, L
 
         metadataManager.flush();
 
-        dataMan.indexMetadata(id, DirectIndexSubmittor.INSTANCE);
+        dataMan.indexMetadata(id, DirectIndexSubmitter.INSTANCE);
     }
 
     String addMetadata(Element xml, String uuid, String schema, GroupMapper localGroups, final CategoryMapper localCateg,
@@ -224,7 +222,7 @@ public class LocalFilesystemHarvester extends AbstractHarvester<HarvestResult, L
 
         aligner.addCategories(metadata, params.getCategories(), localCateg, context, null, false);
 
-        metadata = metadataManager.insertMetadata(context, metadata, md, IndexingMode.none, false, UpdateDatestamp.NO, false, DirectIndexSubmittor.INSTANCE);
+        metadata = metadataManager.insertMetadata(context, metadata, md, IndexingMode.none, false, UpdateDatestamp.NO, false, DirectIndexSubmitter.INSTANCE);
 
         String id = String.valueOf(metadata.getId());
 
@@ -233,7 +231,7 @@ public class LocalFilesystemHarvester extends AbstractHarvester<HarvestResult, L
         metadataManager.flush();
 
         if (index) {
-            dataMan.indexMetadata(id, DirectIndexSubmittor.INSTANCE);
+            dataMan.indexMetadata(id, DirectIndexSubmitter.INSTANCE);
         }
         return id;
     }

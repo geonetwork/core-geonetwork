@@ -43,7 +43,7 @@ import org.fao.geonet.kernel.schema.SavedQuery;
 import org.fao.geonet.kernel.search.EsSearchManager;
 import org.fao.geonet.kernel.search.IndexingMode;
 import org.fao.geonet.kernel.search.index.IndexingList;
-import org.fao.geonet.kernel.search.submission.DirectIndexSubmittor;
+import org.fao.geonet.kernel.search.submission.DirectIndexSubmitter;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.lib.Lib;
@@ -513,7 +513,7 @@ public class BaseMetadataUtils implements IMetadataUtils {
     @Override
     public void setTemplate(final int id, final MetadataType type, final String title) throws Exception {
         setTemplateExt(id, type);
-        metadataIndexer.indexMetadata(Integer.toString(id), DirectIndexSubmittor.INSTANCE, IndexingMode.full);
+        metadataIndexer.indexMetadata(Integer.toString(id), DirectIndexSubmitter.INSTANCE, IndexingMode.full);
     }
 
     @Override
@@ -527,7 +527,7 @@ public class BaseMetadataUtils implements IMetadataUtils {
     @Override
     public void setHarvested(int id, String harvestUuid) throws Exception {
         setHarvestedExt(id, harvestUuid);
-        metadataIndexer.indexMetadata(Integer.toString(id), DirectIndexSubmittor.INSTANCE, IndexingMode.full);
+        metadataIndexer.indexMetadata(Integer.toString(id), DirectIndexSubmitter.INSTANCE, IndexingMode.full);
     }
 
     /**
@@ -768,7 +768,7 @@ public class BaseMetadataUtils implements IMetadataUtils {
         getXmlSerializer().update(metadataId, md, changeDate, true, uuid, context);
 
         if (indexAfterChange) {
-            metadataIndexer.indexMetadata(metadataId, DirectIndexSubmittor.INSTANCE, IndexingMode.full);
+            metadataIndexer.indexMetadata(metadataId, DirectIndexSubmitter.INSTANCE, IndexingMode.full);
         }
     }
 

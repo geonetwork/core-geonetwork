@@ -23,8 +23,6 @@
 
 package org.fao.geonet.listener.metadata.draft;
 
-import java.util.Arrays;
-
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.MetadataDraft;
@@ -32,7 +30,7 @@ import org.fao.geonet.events.md.MetadataDraftAdd;
 import org.fao.geonet.kernel.datamanager.IMetadataIndexer;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.search.IndexingMode;
-import org.fao.geonet.kernel.search.submission.DirectIndexSubmittor;
+import org.fao.geonet.kernel.search.submission.DirectIndexSubmitter;
 import org.fao.geonet.utils.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
@@ -69,7 +67,7 @@ public class DraftCreated implements ApplicationListener<MetadataDraftAdd> {
                 if (!(md instanceof MetadataDraft)) {
                     Log.trace(Geonet.DATA_MANAGER, "Reindexing " + md.getId());
                     try {
-                        metadataIndexer.indexMetadata(String.valueOf(md.getId()), DirectIndexSubmittor.INSTANCE, IndexingMode.full);
+                        metadataIndexer.indexMetadata(String.valueOf(md.getId()), DirectIndexSubmitter.INSTANCE, IndexingMode.full);
                     } catch (Exception e) {
                         Log.error(Geonet.DATA_MANAGER, e, e);
                     }

@@ -28,7 +28,7 @@ import jeeves.server.context.ServiceContext;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.User;
-import org.fao.geonet.kernel.search.submission.batch.BatchingIndexSubmittor;
+import org.fao.geonet.kernel.search.submission.batch.BatchingIndexSubmitter;
 import org.fao.geonet.utils.Log;
 import org.springframework.transaction.TransactionStatus;
 
@@ -71,7 +71,7 @@ public final class IndexMetadataTask implements Runnable {
     }
 
     public void run() {
-        try (BatchingIndexSubmittor batchingIndexSubmittor = new BatchingIndexSubmittor(_metadataIds.size())) {
+        try (BatchingIndexSubmitter batchingIndexSubmittor = new BatchingIndexSubmitter(_metadataIds.size())) {
             _context.setAsThreadLocal();
             while (_transactionStatus != null && !_transactionStatus.isCompleted()) {
                 try {

@@ -10,12 +10,12 @@ import java.util.Collections;
 import java.util.Map;
 
 /**
- * An index submittor that directly and synchronously transmits new documents to the index
+ * An index submitter that directly and synchronously transmits new documents to the index
  */
-public class DirectIndexSubmittor implements IIndexSubmittor {
-    public static final DirectIndexSubmittor INSTANCE = new DirectIndexSubmittor();
+public class DirectIndexSubmitter implements IIndexSubmitter {
+    public static final DirectIndexSubmitter INSTANCE = new DirectIndexSubmitter();
 
-    private DirectIndexSubmittor() {}
+    private DirectIndexSubmitter() {}
 
     @Override
     public void submitToIndex(String id, String jsonDocument, EsSearchManager searchManager) throws IOException {

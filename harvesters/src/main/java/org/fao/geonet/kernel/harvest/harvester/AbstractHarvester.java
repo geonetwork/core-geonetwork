@@ -49,7 +49,7 @@ import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.harvest.Common.OperResult;
 import org.fao.geonet.kernel.harvest.Common.Status;
-import org.fao.geonet.kernel.search.submission.batch.BatchingDeletionSubmittor;
+import org.fao.geonet.kernel.search.submission.batch.BatchingDeletionSubmitter;
 import org.fao.geonet.kernel.setting.HarvesterSettingsManager;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
@@ -280,10 +280,10 @@ public abstract class AbstractHarvester<T extends HarvestResult, P extends Abstr
                 final Specification<? extends AbstractMetadata> ownedByHarvester = Specification.where(MetadataSpecs.hasHarvesterUuid(getParams().getUuid()));
                 Set<String> sources = new HashSet<>();
                 List<Integer> allIdsBy = metadataRepository.findAllIdsBy(ownedByHarvester);
-                try (BatchingDeletionSubmittor submittor = new BatchingDeletionSubmittor(allIdsBy.size())) {
+                try (BatchingDeletionSubmitter submitter = new BatchingDeletionSubmitter(allIdsBy.size())) {
                     for (Integer metadataId : allIdsBy) {
                         sources.add(metadataUtils.findOne(metadataId).getSourceInfo().getSourceId());
-                        metadataManager.deleteMetadata(context, "" + metadataId, submittor);
+                        metadataManager.deleteMetadata(context, "" + metadataId, submitter);
                     }
                 }
 

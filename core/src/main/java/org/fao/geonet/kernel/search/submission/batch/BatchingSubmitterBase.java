@@ -3,19 +3,19 @@ package org.fao.geonet.kernel.search.submission.batch;
 import java.lang.ref.Cleaner;
 import java.util.concurrent.CompletableFuture;
 
-public abstract class BatchingSubmittorBase<STATE extends StateBase> implements AutoCloseable {
+public abstract class BatchingSubmitterBase<STATE extends StateBase> implements AutoCloseable {
     private static final Cleaner CLEANER = Cleaner.create();
     protected final STATE state;
     protected final int commitInterval;
     private final Cleaner.Cleanable cleanable;
 
-    protected BatchingSubmittorBase(final STATE state) {
+    protected BatchingSubmitterBase(final STATE state) {
         this.commitInterval = 200;
         this.state = state;
         this.cleanable = CLEANER.register(this, state);
     }
 
-    protected BatchingSubmittorBase(final STATE state, int estimatedTotalSize) {
+    protected BatchingSubmitterBase(final STATE state, int estimatedTotalSize) {
         if (estimatedTotalSize < 0) {
             throw new IllegalArgumentException("estimatedTotalSize must not be negative");
         }

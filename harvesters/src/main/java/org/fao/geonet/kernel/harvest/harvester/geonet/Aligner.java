@@ -44,7 +44,7 @@ import org.fao.geonet.kernel.harvest.BaseAligner;
 import org.fao.geonet.kernel.harvest.harvester.*;
 import org.fao.geonet.kernel.mef.*;
 import org.fao.geonet.kernel.search.IndexingMode;
-import org.fao.geonet.kernel.search.submission.batch.BatchingDeletionSubmittor;
+import org.fao.geonet.kernel.search.submission.batch.BatchingDeletionSubmitter;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.GroupRepository;
@@ -151,7 +151,7 @@ public class Aligner extends BaseAligner<GeonetParams> {
         //-----------------------------------------------------------------------
         //--- remove old metadata
 
-        try (BatchingDeletionSubmittor submittor = new BatchingDeletionSubmittor()) {
+        try (BatchingDeletionSubmitter submitter = new BatchingDeletionSubmitter()) {
             for (String uuid : localUuids.getUUIDs()) {
                 if (cancelMonitor.get()) {
                     return this.result;
@@ -162,7 +162,7 @@ public class Aligner extends BaseAligner<GeonetParams> {
                         String id = localUuids.getID(uuid);
 
                         if (log.isDebugEnabled()) log.debug("  - Removing old metadata with id:" + id);
-                        metadataManager.deleteMetadata(context, id, submittor);
+                        metadataManager.deleteMetadata(context, id, submitter);
 
                         result.locallyRemoved++;
                     }
@@ -518,7 +518,7 @@ public class Aligner extends BaseAligner<GeonetParams> {
 
         addCategories(metadata, params.getCategories(), localCateg, context, null, false);
 
-        metadata = metadataManager.insertMetadata(context, metadata, md, IndexingMode.none, ufo, UpdateDatestamp.NO, false, this.batchingIndexSubmittor);
+        metadata = metadataManager.insertMetadata(context, metadata, md, IndexingMode.none, ufo, UpdateDatestamp.NO, false, this.batchingIndexSubmitter);
 
         String id = String.valueOf(metadata.getId());
 
@@ -547,7 +547,7 @@ public class Aligner extends BaseAligner<GeonetParams> {
         }
         context.getBean(IMetadataManager.class).save(metadata);
 
-        dataMan.indexMetadata(id, this.batchingIndexSubmittor);
+        dataMan.indexMetadata(id, this.batchingIndexSubmitter);
         result.addedMetadata++;
 
         return id;
@@ -844,7 +844,7 @@ public class Aligner extends BaseAligner<GeonetParams> {
         metadataManager.save(metadata);
 //        dataMan.flush();
 
-        dataMan.indexMetadata(id, this.batchingIndexSubmittor);
+        dataMan.indexMetadata(id, this.batchingIndexSubmitter);
     }
 
     private void handleFile(String id, String file, MetadataResourceVisibility visibility, String changeDate,

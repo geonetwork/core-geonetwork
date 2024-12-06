@@ -11,10 +11,10 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 
-public class DirectDeletionSubmittor implements IDeletionSubmittor {
-    public static final DirectDeletionSubmittor INSTANCE = new DirectDeletionSubmittor();
+public class DirectDeletionSubmitter implements IDeletionSubmitter {
+    public static final DirectDeletionSubmitter INSTANCE = new DirectDeletionSubmitter();
 
-    private DirectDeletionSubmittor() {}
+    private DirectDeletionSubmitter() {}
 
     @Override
     public void submitUUIDToIndex(String uuid, EsSearchManager searchManager) throws IOException {

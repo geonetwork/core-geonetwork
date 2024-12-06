@@ -41,8 +41,8 @@ import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
 import org.fao.geonet.kernel.harvest.harvester.GroupMapper;
 import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
 import org.fao.geonet.kernel.search.IndexingMode;
-import org.fao.geonet.kernel.search.submission.DirectIndexSubmittor;
-import org.fao.geonet.kernel.search.submission.batch.BatchingDeletionSubmittor;
+import org.fao.geonet.kernel.search.submission.DirectIndexSubmitter;
+import org.fao.geonet.kernel.search.submission.batch.BatchingDeletionSubmitter;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
 import org.fao.geonet.repository.specification.MetadataSpecs;
@@ -307,7 +307,7 @@ public class ArcSDEHarvester extends AbstractHarvester<HarvestResult, ArcSDEPara
         //
         Set<Integer> idsResultHs = Sets.newHashSet(idsForHarvestingResult);
         List<Integer> existingMetadata = context.getBean(MetadataRepository.class).findIdsBy((Specification<Metadata>) MetadataSpecs.hasHarvesterUuid(params.getUuid()));
-        try (BatchingDeletionSubmittor submittor = new BatchingDeletionSubmittor()) {
+        try (BatchingDeletionSubmitter submitter = new BatchingDeletionSubmitter()) {
             for (Integer existingId : existingMetadata) {
 
                 if (cancelMonitor.get()) {
@@ -315,7 +315,7 @@ public class ArcSDEHarvester extends AbstractHarvester<HarvestResult, ArcSDEPara
                 }
                 if (!idsResultHs.contains(existingId)) {
                     log.debug("  Removing: " + existingId);
-                    metadataManager.deleteMetadata(context, existingId.toString(), submittor);
+                    metadataManager.deleteMetadata(context, existingId.toString(), submitter);
                     result.locallyRemoved++;
                 }
             }
@@ -354,7 +354,7 @@ public class ArcSDEHarvester extends AbstractHarvester<HarvestResult, ArcSDEPara
 
         metadataManager.flush();
 
-        dataMan.indexMetadata(id, DirectIndexSubmittor.INSTANCE);
+        dataMan.indexMetadata(id, DirectIndexSubmitter.INSTANCE);
     }
 
     /**
@@ -398,13 +398,13 @@ public class ArcSDEHarvester extends AbstractHarvester<HarvestResult, ArcSDEPara
 
         aligner.addCategories(metadata, params.getCategories(), localCateg, context, null, false);
 
-        metadata = metadataManager.insertMetadata(context, metadata, xml, IndexingMode.none, false, UpdateDatestamp.NO, false, DirectIndexSubmittor.INSTANCE);
+        metadata = metadataManager.insertMetadata(context, metadata, xml, IndexingMode.none, false, UpdateDatestamp.NO, false, DirectIndexSubmitter.INSTANCE);
 
         String id = String.valueOf(metadata.getId());
 
         aligner.addPrivileges(id, params.getPrivileges(), localGroups, context);
 
-        dataMan.indexMetadata(id, DirectIndexSubmittor.INSTANCE);
+        dataMan.indexMetadata(id, DirectIndexSubmitter.INSTANCE);
 
         return id;
     }

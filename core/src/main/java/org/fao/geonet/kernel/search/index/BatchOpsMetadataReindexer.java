@@ -49,7 +49,7 @@ import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.MetadataIndexerProcessor;
-import org.fao.geonet.kernel.search.submission.batch.BatchingIndexSubmittor;
+import org.fao.geonet.kernel.search.submission.batch.BatchingIndexSubmitter;
 import org.fao.geonet.util.ThreadUtils;
 import org.fao.geonet.utils.Log;
 import org.springframework.jmx.export.MBeanExporter;
@@ -227,7 +227,7 @@ public class BatchOpsMetadataReindexer extends MetadataIndexerProcessor implemen
                 "Indexing range [%d-%d]/%d by threads %s.",
                 beginIndex, beginIndex + count, ids.length, Thread.currentThread().getId()));
             long start = System.currentTimeMillis();
-            try (BatchingIndexSubmittor batchingIndexSubmittor = new BatchingIndexSubmittor(count)) {
+            try (BatchingIndexSubmitter batchingIndexSubmittor = new BatchingIndexSubmitter(count)) {
                 for (int i = beginIndex; i < beginIndex + count; i++) {
                     try {
                         dm.indexMetadata(ids[i] + "", batchingIndexSubmittor);

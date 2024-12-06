@@ -23,12 +23,11 @@
 
 package org.fao.geonet.kernel.datamanager;
 
-import java.io.IOException;
 import java.util.List;
 
 import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.kernel.search.IndexingMode;
-import org.fao.geonet.kernel.search.submission.IIndexSubmittor;
+import org.fao.geonet.kernel.search.submission.IIndexSubmitter;
 import org.jdom.Element;
 import org.springframework.data.jpa.domain.Specification;
 
@@ -81,7 +80,7 @@ public interface IMetadataIndexer {
      */
     void indexMetadata(List<String> metadataIds) throws Exception;
 
-    void indexMetadata(String metadataId, IIndexSubmittor indexSubmittor, IndexingMode indexingMode) throws Exception;
+    void indexMetadata(String metadataId, IIndexSubmitter indexSubmittor, IndexingMode indexingMode) throws Exception;
 
     void indexMetadataPrivileges(String uuid, int id) throws Exception;
 

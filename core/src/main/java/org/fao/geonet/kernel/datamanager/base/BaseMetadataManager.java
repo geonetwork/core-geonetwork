@@ -50,11 +50,11 @@ import org.fao.geonet.kernel.schema.SchemaPlugin;
 import org.fao.geonet.kernel.search.EsSearchManager;
 import org.fao.geonet.kernel.search.IndexingMode;
 import org.fao.geonet.kernel.search.index.BatchOpsMetadataReindexer;
-import org.fao.geonet.kernel.search.submission.DirectDeletionSubmittor;
-import org.fao.geonet.kernel.search.submission.DirectIndexSubmittor;
-import org.fao.geonet.kernel.search.submission.IDeletionSubmittor;
-import org.fao.geonet.kernel.search.submission.IIndexSubmittor;
-import org.fao.geonet.kernel.search.submission.batch.BatchingDeletionSubmittor;
+import org.fao.geonet.kernel.search.submission.DirectDeletionSubmitter;
+import org.fao.geonet.kernel.search.submission.DirectIndexSubmitter;
+import org.fao.geonet.kernel.search.submission.IDeletionSubmitter;
+import org.fao.geonet.kernel.search.submission.IIndexSubmitter;
+import org.fao.geonet.kernel.search.submission.batch.BatchingDeletionSubmitter;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.kernel.setting.SettingInfo;
@@ -252,9 +252,9 @@ public class BaseMetadataManager implements IMetadataManager {
         }
 
         // remove from index metadata not in DBMS
-        try (BatchingDeletionSubmittor submittor = new BatchingDeletionSubmittor()) {
+        try (BatchingDeletionSubmitter submitter = new BatchingDeletionSubmitter()) {
             for (String id : docs.keySet()) {
-                getSearchManager().deleteByQuery(String.format("+id:%s", id), submittor);
+                getSearchManager().deleteByQuery(String.format("+id:%s", id), submitter);
                 LOGGER_DATA_MANAGER.debug("- removed record ({}) from index", id);
             }
         }
@@ -335,16 +335,16 @@ public class BaseMetadataManager implements IMetadataManager {
      * Removes a metadata.
      */
     @Override
-    public void deleteMetadata(ServiceContext context, String metadataId, IDeletionSubmittor submittor) throws Exception {
+    public void deleteMetadata(ServiceContext context, String metadataId, IDeletionSubmitter submitter) throws Exception {
         AbstractMetadata findOne = metadataUtils.findOne(metadataId);
         if (findOne != null) {
             boolean isMetadata = findOne.getDataInfo().getType() == MetadataType.METADATA;
 
             deleteMetadataFromDB(context, metadataId);
             // --- update search criteria
-            getSearchManager().deleteByUuid(findOne.getUuid(), submittor);
+            getSearchManager().deleteByUuid(findOne.getUuid(), submitter);
         } else {
-            getSearchManager().deleteByQuery(String.format("+id:%s", metadataId), submittor);
+            getSearchManager().deleteByQuery(String.format("+id:%s", metadataId), submitter);
         }
     }
 
@@ -374,7 +374,7 @@ public class BaseMetadataManager implements IMetadataManager {
         RecordDeletedEvent recordDeletedEvent = new RecordDeletedEvent(
             metadata.getId(), metadata.getUuid(), new LinkedHashMap<>(),
             context.getUserSession().getUserIdAsInt(), metadata.getData());
-        deleteMetadata(context, metadataId, DirectDeletionSubmittor.INSTANCE);
+        deleteMetadata(context, metadataId, DirectDeletionSubmitter.INSTANCE);
         recordDeletedEvent.publish(ApplicationContextHolder.get());
     }
 
@@ -386,7 +386,7 @@ public class BaseMetadataManager implements IMetadataManager {
     @Override
     public void deleteMetadataGroup(ServiceContext context, String metadataId) throws Exception {
         deleteMetadataFromDB(context, metadataId);
-        getSearchManager().deleteByQuery(String.format("+id:%s", metadataId), DirectDeletionSubmittor.INSTANCE);
+        getSearchManager().deleteByQuery(String.format("+id:%s", metadataId), DirectDeletionSubmitter.INSTANCE);
     }
 
     /**
@@ -463,7 +463,7 @@ public class BaseMetadataManager implements IMetadataManager {
         newMetadata.getMetadataCategories().addAll(filteredCategories);
 
         int finalId = insertMetadata(context, newMetadata, xml, IndexingMode.full, true, UpdateDatestamp.YES,
-            fullRightsForGroup, DirectIndexSubmittor.INSTANCE).getId();
+            fullRightsForGroup, DirectIndexSubmitter.INSTANCE).getId();
 
         return String.valueOf(finalId);
     }
@@ -568,7 +568,7 @@ public class BaseMetadataManager implements IMetadataManager {
         boolean fullRightsForGroup = false;
 
         int finalId = insertMetadata(context, newMetadata, metadataXml, indexingMode, ufo, UpdateDatestamp.NO,
-            fullRightsForGroup, DirectIndexSubmittor.INSTANCE).getId();
+            fullRightsForGroup, DirectIndexSubmitter.INSTANCE).getId();
 
         return String.valueOf(finalId);
     }
@@ -576,7 +576,7 @@ public class BaseMetadataManager implements IMetadataManager {
     @Override
     public AbstractMetadata insertMetadata(ServiceContext context, AbstractMetadata newMetadata, Element metadataXml,
                                            IndexingMode indexingMode, boolean updateFixedInfo, UpdateDatestamp updateDatestamp,
-                                           boolean fullRightsForGroup, IIndexSubmittor indexSubmittor) throws Exception {
+                                           boolean fullRightsForGroup, IIndexSubmitter indexSubmittor) throws Exception {
         final String schema = newMetadata.getDataInfo().getSchemaId();
 
         // Check if the schema is allowed by settings
@@ -786,9 +786,9 @@ public class BaseMetadataManager implements IMetadataManager {
             if (indexingMode != IndexingMode.none) {
                 // Delete old record if UUID changed
                 if (uuidBeforeUfo != null && !uuidBeforeUfo.equals(uuid)) {
-                    getSearchManager().deleteByUuid(uuidBeforeUfo, DirectDeletionSubmittor.INSTANCE);
+                    getSearchManager().deleteByUuid(uuidBeforeUfo, DirectDeletionSubmitter.INSTANCE);
                 }
-                metadataIndexer.indexMetadata(metadataId, DirectIndexSubmittor.INSTANCE, indexingMode);
+                metadataIndexer.indexMetadata(metadataId, DirectIndexSubmitter.INSTANCE, indexingMode);
             }
         }
 

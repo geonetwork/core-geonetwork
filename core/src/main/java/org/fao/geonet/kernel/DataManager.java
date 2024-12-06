@@ -55,7 +55,7 @@ import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.datamanager.IMetadataValidator;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.search.IndexingMode;
-import org.fao.geonet.kernel.search.submission.IIndexSubmittor;
+import org.fao.geonet.kernel.search.submission.IIndexSubmitter;
 import org.fao.geonet.repository.UserGroupRepository;
 import org.jdom.Element;
 import org.slf4j.Logger;
@@ -66,7 +66,6 @@ import org.springframework.data.jpa.domain.Specification;
 import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Collection;
 import java.util.List;
@@ -160,7 +159,7 @@ public class DataManager {
     }
 
     @Deprecated
-    public void indexMetadata(final String metadataId, IIndexSubmittor indexSubmittor) throws Exception {
+    public void indexMetadata(final String metadataId, IIndexSubmitter indexSubmittor) throws Exception {
         metadataIndexer.indexMetadata(metadataId, indexSubmittor, IndexingMode.full);
     }
 
@@ -357,7 +356,7 @@ public class DataManager {
 
     @Deprecated
     public AbstractMetadata insertMetadata(ServiceContext context, AbstractMetadata newMetadata, Element metadataXml, IndexingMode indexingMode,
-                                           boolean updateFixedInfo, UpdateDatestamp updateDatestamp, boolean fullRightsForGroup, IIndexSubmittor indexSubmittor)
+                                           boolean updateFixedInfo, UpdateDatestamp updateDatestamp, boolean fullRightsForGroup, IIndexSubmitter indexSubmittor)
         throws Exception {
         return metadataManager.insertMetadata(context, newMetadata, metadataXml, indexingMode, updateFixedInfo, updateDatestamp,
             fullRightsForGroup, indexSubmittor);

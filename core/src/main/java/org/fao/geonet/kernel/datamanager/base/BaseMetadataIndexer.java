@@ -49,9 +49,9 @@ import org.fao.geonet.kernel.datamanager.draft.DraftMetadataIndexer;
 import org.fao.geonet.kernel.search.EsSearchManager;
 import org.fao.geonet.kernel.search.IndexFields;
 import org.fao.geonet.kernel.search.IndexingMode;
-import org.fao.geonet.kernel.search.submission.batch.BatchingDeletionSubmittor;
-import org.fao.geonet.kernel.search.submission.batch.BatchingIndexSubmittor;
-import org.fao.geonet.kernel.search.submission.IIndexSubmittor;
+import org.fao.geonet.kernel.search.submission.batch.BatchingDeletionSubmitter;
+import org.fao.geonet.kernel.search.submission.batch.BatchingIndexSubmitter;
+import org.fao.geonet.kernel.search.submission.IIndexSubmitter;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.*;
@@ -169,7 +169,7 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
 //        searchManager.delete(metadataToDelete.stream().map(input -> Integer.toString(input.getId())).collect(Collectors.toList()));
 //        metadataManager.deleteAll(specification);
         // So delete one by one even if slower
-        try (BatchingDeletionSubmittor submittor = new BatchingDeletionSubmittor(metadataToDelete.size())) {
+        try (BatchingDeletionSubmitter submitter = new BatchingDeletionSubmitter(metadataToDelete.size())) {
             metadataToDelete.forEach(md -> {
                 try {
                     // Extract information for RecordDeletedEvent
@@ -178,7 +178,7 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
                     String xmlBefore = md.getData();
 
                     store.delResources(ServiceContext.get(), md.getUuid());
-                    metadataManager.deleteMetadata(ServiceContext.get(), String.valueOf(md.getId()), submittor);
+                    metadataManager.deleteMetadata(ServiceContext.get(), String.valueOf(md.getId()), submitter);
 
                     // Trigger RecordDeletedEvent
                     new RecordDeletedEvent(md.getId(), md.getUuid(), titles, userSession.getUserIdAsInt(), xmlBefore).publish(ApplicationContextHolder.get());
@@ -292,7 +292,7 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
 
     @Override
     public void indexMetadata(final List<String> metadataIds) throws Exception {
-        try (BatchingIndexSubmittor indexSubmittor = new BatchingIndexSubmittor(metadataIds.size())) {
+        try (BatchingIndexSubmitter indexSubmittor = new BatchingIndexSubmitter(metadataIds.size())) {
             for (String metadataId : metadataIds) {
                 indexMetadata(metadataId, indexSubmittor, IndexingMode.full);
             }
@@ -301,7 +301,7 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
 
     @Override
     public void indexMetadata(final String metadataId,
-                              final IIndexSubmittor indexSubmittor,
+                              final IIndexSubmitter indexSubmittor,
                               final IndexingMode indexingMode)
         throws Exception {
         AbstractMetadata fullMd;

@@ -37,8 +37,8 @@ import org.fao.geonet.domain.*;
 import org.fao.geonet.kernel.datamanager.IMetadataIndexer;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.search.IndexingMode;
-import org.fao.geonet.kernel.search.submission.batch.BatchingIndexSubmittor;
-import org.fao.geonet.kernel.search.submission.DirectIndexSubmittor;
+import org.fao.geonet.kernel.search.submission.batch.BatchingIndexSubmitter;
+import org.fao.geonet.kernel.search.submission.DirectIndexSubmitter;
 import org.fao.geonet.repository.LanguageRepository;
 import org.fao.geonet.repository.SelectionRepository;
 import org.fao.geonet.repository.UserGroupRepository;
@@ -327,7 +327,7 @@ public class UserSelectionsApi {
                 UserSavedSelection e = new UserSavedSelection(selection.get(), user.get(), u);
                 try {
                     umsRepository.save(e);
-                    metadataIndexer.indexMetadata(metadataRepository.getMetadataId(u), DirectIndexSubmittor.INSTANCE, IndexingMode.full);
+                    metadataIndexer.indexMetadata(metadataRepository.getMetadataId(u), DirectIndexSubmitter.INSTANCE, IndexingMode.full);
                 } catch (Exception e1) {
                     Log.error(API.LOG_MODULE_NAME, "UserSelectionsApi - addToUserSelection: " + e1.getMessage(), e1);
                 }
@@ -386,7 +386,7 @@ public class UserSelectionsApi {
         if (uuid == null || uuid.length == 0) {
             umsRepository.deleteAllBySelectionAndUser(selectionIdentifier, userIdentifier);
         } else {
-            try (BatchingIndexSubmittor batchingIndexSubmittor = new BatchingIndexSubmittor(uuid.length)) {
+            try (BatchingIndexSubmitter batchingIndexSubmittor = new BatchingIndexSubmitter(uuid.length)) {
                 for (String u : uuid) {
                     UserSavedSelectionId e = new UserSavedSelectionId()
                         .setSelectionId(selectionIdentifier)

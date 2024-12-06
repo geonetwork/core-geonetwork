@@ -340,14 +340,14 @@ class Harvester extends BaseAligner<WebDavParams> implements IHarvester<HarvestR
         } catch (NumberFormatException e) {
         }
 
-        metadata = metadataManager.insertMetadata(context, metadata, md, IndexingMode.none, false, UpdateDatestamp.NO, false, batchingIndexSubmittor);
+        metadata = metadataManager.insertMetadata(context, metadata, md, IndexingMode.none, false, UpdateDatestamp.NO, false, batchingIndexSubmitter);
         String id = String.valueOf(metadata.getId());
 
         addPrivileges(id, params.getPrivileges(), localGroups, context);
 
         metadataManager.flush();
 
-        dataMan.indexMetadata(id, batchingIndexSubmittor);
+        dataMan.indexMetadata(id, batchingIndexSubmitter);
         result.addedMetadata++;
     }
 
@@ -522,7 +522,7 @@ class Harvester extends BaseAligner<WebDavParams> implements IHarvester<HarvestR
 
             dataMan.flush();
 
-            dataMan.indexMetadata(recordInfo.id, batchingIndexSubmittor);
+            dataMan.indexMetadata(recordInfo.id, batchingIndexSubmitter);
         }
     }
 

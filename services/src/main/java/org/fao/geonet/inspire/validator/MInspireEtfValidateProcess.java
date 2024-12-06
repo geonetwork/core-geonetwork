@@ -16,7 +16,7 @@ import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.datamanager.IMetadataSchemaUtils;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
-import org.fao.geonet.kernel.search.submission.DirectIndexSubmittor;
+import org.fao.geonet.kernel.search.submission.DirectIndexSubmitter;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.repository.MetadataValidationRepository;
 import org.fao.geonet.repository.SourceRepository;
@@ -34,8 +34,6 @@ import javax.management.MalformedObjectNameException;
 import javax.management.ObjectName;
 import java.io.ByteArrayInputStream;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Map;
 import java.util.Set;
 
@@ -264,7 +262,7 @@ public class MInspireEtfValidateProcess implements SelfNaming {
                                     }
 
                                     if (reindexMetadata) {
-                                        dataManager.indexMetadata(metadataRecord.getId() + "", DirectIndexSubmittor.INSTANCE);
+                                        dataManager.indexMetadata(metadataRecord.getId() + "", DirectIndexSubmitter.INSTANCE);
                                     }
 
                                 } catch (Exception ex) {

@@ -29,7 +29,7 @@ import jeeves.server.dispatchers.ServiceManager;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.DataManager;
-import org.fao.geonet.kernel.search.submission.batch.BatchingIndexSubmittor;
+import org.fao.geonet.kernel.search.submission.batch.BatchingIndexSubmitter;
 import org.fao.geonet.utils.Log;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
@@ -71,7 +71,7 @@ public class IndexingTask extends QuartzJobBean {
             Log.debug(Geonet.INDEX_ENGINE, "Indexing task / List of records to index: "
                 + metadataIdentifiers.toString() + ".");
         }
-        try (BatchingIndexSubmittor batchingIndexSubmittor = new BatchingIndexSubmittor(metadataIdentifiers.size())) {
+        try (BatchingIndexSubmitter batchingIndexSubmittor = new BatchingIndexSubmitter(metadataIdentifiers.size())) {
 
             for (Integer metadataIdentifier : metadataIdentifiers) {
                 try {
