@@ -29,7 +29,7 @@ import jeeves.server.dispatchers.ServiceManager;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.DataManager;
-import org.fao.geonet.kernel.search.EsSearchManager;
+import org.fao.geonet.kernel.search.submission.batch.BatchingIndexSubmitter;
 import org.fao.geonet.utils.Log;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
@@ -37,7 +37,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.scheduling.quartz.QuartzJobBean;
 
-import java.io.IOException;
 import java.util.Date;
 import java.util.Set;
 
@@ -63,21 +62,25 @@ public class IndexingTask extends QuartzJobBean {
         ApplicationContextHolder.set(applicationContext);
         IndexingList list = applicationContext.getBean(IndexingList.class);
         Set<Integer> metadataIdentifiers = list.getIdentifiers();
-        if (metadataIdentifiers.size() > 0) {
-            if (Log.isDebugEnabled(Geonet.INDEX_ENGINE)) {
-                Log.debug(Geonet.INDEX_ENGINE, "Indexing task / List of records to index: "
-                    + metadataIdentifiers.toString() + ".");
-            }
+        if (metadataIdentifiers.isEmpty()) {
+            return;
+        }
+
+
+        if (Log.isDebugEnabled(Geonet.INDEX_ENGINE)) {
+            Log.debug(Geonet.INDEX_ENGINE, "Indexing task / List of records to index: "
+                + metadataIdentifiers.toString() + ".");
+        }
+        try (BatchingIndexSubmitter batchingIndexSubmittor = new BatchingIndexSubmitter(metadataIdentifiers.size())) {
 
             for (Integer metadataIdentifier : metadataIdentifiers) {
                 try {
-                    _dataManager.indexMetadata(String.valueOf(metadataIdentifier), false);
+                    _dataManager.indexMetadata(String.valueOf(metadataIdentifier), batchingIndexSubmittor);
                 } catch (Exception e) {
                     Log.error(Geonet.INDEX_ENGINE, "Indexing task / An error happens indexing the metadata "
                         + metadataIdentifier + ". Error: " + e.getMessage(), e);
                 }
             }
-            this.applicationContext.getBean(EsSearchManager.class).forceIndexChanges();
         }
     }
 
