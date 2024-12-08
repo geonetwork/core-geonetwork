@@ -200,7 +200,7 @@ public class AttachmentsApi {
     @io.swagger.v3.oas.annotations.Operation(summary = "Create a new resource for a given metadata")
     @PreAuthorize("hasAuthority('Editor')")
     @RequestMapping(method = RequestMethod.POST,
-        consumes = MediaType.ALL_VALUE,
+        consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
         produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.CREATED)
     @ApiResponses(value = {@ApiResponse(responseCode = "201", description = "Attachment uploaded."),
@@ -228,7 +228,8 @@ public class AttachmentsApi {
 
     @io.swagger.v3.oas.annotations.Operation(summary = "Create a new resource from a URL for a given metadata")
     @PreAuthorize("hasAuthority('Editor')")
-    @RequestMapping(method = RequestMethod.PUT)
+    @RequestMapping(method = RequestMethod.PUT,
+        produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.CREATED)
     @ApiResponses(value = {@ApiResponse(responseCode = "201", description = "Attachment added."),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)})
