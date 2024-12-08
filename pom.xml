@@ -1161,6 +1161,11 @@
         <version>${spring.jpa.version}</version>
       </dependency>
       <dependency>
+        <groupId>org.springframework.data</groupId>
+        <artifactId>spring-data-envers</artifactId>
+        <version>${spring.jpa.version}</version>
+      </dependency>
+      <dependency>
         <groupId>com.fasterxml.jackson.datatype</groupId>
         <artifactId>jackson-datatype-hibernate5</artifactId>
         <version>${jackson.version}</version>
@@ -1299,7 +1304,6 @@
         <artifactId>json</artifactId>
         <version>20240205</version>
       </dependency>
-
     </dependencies>
   </dependencyManagement>
 
@@ -1413,6 +1417,7 @@
     <module>index</module>
     <module>datastorages</module>
     <module>translationproviders</module>
+    <module>auditable</module>
   </modules>
 
   <profiles>
