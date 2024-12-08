@@ -24,6 +24,7 @@
 package org.fao.geonet.kernel.datamanager;
 
 import java.util.Collection;
+import java.util.List;
 
 import org.fao.geonet.domain.OperationAllowed;
 import org.fao.geonet.domain.ReservedOperation;
@@ -51,6 +52,15 @@ public interface IMetadataOperations {
      * Removes all operations stored for a metadata.
      */
     void deleteMetadataOper(String metadataId, boolean skipAllReservedGroup) throws Exception;
+
+    /**
+     * Removes all operations stored for a metadata except for the operations of the groups in the exclude list.
+     * Used for preventing deletion of operations for reserved and restricted groups.
+     *
+     * @param metadataId        Metadata identifier
+     * @param groupIdsToExclude List of group ids to exclude from deletion
+     */
+    void deleteMetadataOper(String metadataId, List<Integer> groupIdsToExclude);
 
     /**
      * Adds a permission to a group. Metadata is not reindexed.
