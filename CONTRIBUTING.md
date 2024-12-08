@@ -2,7 +2,8 @@
 
 Thank you for contributing to GeoNetwork!
 
-* Free-software: GeoNetwork is free-software, using the [GNU GENERAL PUBLIC LICENSE](LICENSE.md). Contributions provided by you, or your employer, are required to be compatible with this free-software license.
+* Free-software: GeoNetwork is free-software, using the [GNU GENERAL PUBLIC LICENSE](LICENSE.md).
+* Contributions provided by you, or your employer, are required to be compatible with this free-software license. You will therefor be asked to sign the [Contributor License Agreement](https://cla-assistant.io/geonetwork/) when you are contributing to the repositories. This process is automatically enabled when you create your first pull request via https://cla-assistant.io/.
 * Pull-request: GeoNetwork uses a pull-request workflow to review and accept changes. Pull-requests must be submitted against the *main* branch first, and may be back ported as required.
 
 # Pull requests
