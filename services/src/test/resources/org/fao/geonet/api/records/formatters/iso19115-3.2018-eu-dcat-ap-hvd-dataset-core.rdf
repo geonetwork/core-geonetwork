@@ -383,6 +383,9 @@
       <dct:license>
          <dct:LicenseDocument rdf:about="http://publications.europa.eu/resource/authority/licence/CATOSL_1_1"/>
       </dct:license>
+       <dct:license>
+         <dct:LicenseDocument rdf:about="http://publications.europa.eu/resource/authority/licence/CC_BY_4_0"/>
+       </dct:license>
       <dct:rights>
          <dct:RightsStatement>
             <dct:description xml:lang="fre">Conditions d'accès et d'utilisation spécifiques</dct:description>

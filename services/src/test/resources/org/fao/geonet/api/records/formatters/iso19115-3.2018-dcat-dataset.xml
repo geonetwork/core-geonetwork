@@ -1207,6 +1207,9 @@
           <mco:otherConstraints>
             <gco:CharacterString>https://opensource.org/licenses/CATOSL-1.1</gco:CharacterString>
           </mco:otherConstraints>
+          <mco:otherConstraints>
+            <gcx:Anchor xlink:href="https://publications.europa.eu/resource/authority/licence/CC_BY_4_0">Ces données sont disponibles sous licence CC-BY 4.0.</gcx:Anchor>
+          </mco:otherConstraints>
         </mco:MD_LegalConstraints>
       </mri:resourceConstraints>
       <mri:resourceConstraints>

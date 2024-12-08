@@ -371,6 +371,9 @@
       <dct:license>
          <dct:LicenseDocument rdf:about="https://opensource.org/licenses/CATOSL-1.1"/>
       </dct:license>
+      <dct:license>
+         <dct:LicenseDocument rdf:about="https://publications.europa.eu/resource/authority/licence/CC_BY_4_0"/>
+      </dct:license>
       <dct:rights>
          <dct:RightsStatement>
             <dct:description xml:lang="fre">Conditions d'accès et d'utilisation spécifiques</dct:description>
