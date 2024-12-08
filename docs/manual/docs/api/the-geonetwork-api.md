@@ -435,32 +435,34 @@ password = 'password'
 
 # Set up your server and the authentication URL:
 server = "http://localhost:8080"
-authenticate_url = server + '/geonetwork/srv/eng/info?type=me'
 
-# To generate the XRSF token, send a post request to the following URL: http://localhost:8080/geonetwork/srv/eng/info?type=me
+authenticate_url = server + '/geonetwork/srv/api/me'
+
 session = requests.Session()
-response = session.post(authenticate_url)
+session.auth = (username, password)
+response = session.get(authenticate_url)
 
 # Extract XRSF token
 xsrf_token = response.cookies.get("XSRF-TOKEN")
 if xsrf_token:
-    print ("The XSRF Token is:", xsrf_token)
+  print("The XSRF Token is:", xsrf_token)
 else:
-    print("Unable to find the XSRF token")
-
-# You can now use the username and password, along with the XRSF token to send requests to the API.
+  print("Unable to find the XSRF token")
 
 # This example will add an online resource to a specified UUID using the http://localhost:8080/geonetwork/srv/api/records/batchediting endpoint
 
 # Set header for connection
-headers = {'Accept': 'application/json',
-'X-XSRF-TOKEN': xsrf_token
+headers = {
+  'Accept': 'application/json',
+  'X-XSRF-TOKEN': xsrf_token,
+  'JSESSION_ID': response.cookies.get("JSESSIONID")
 }
 
 # Set the parameters
-params = {'uuids': 'the uuid to be updated',
-'bucket': 'bucketname',
-'updateDateStamp': 'true',
+params = {
+  'uuids': 'the uuid to be updated',
+  'bucket': 'bucketname',
+  'updateDateStamp': 'true',
 }
 
 # Set the JSON data: note that the value must have one of <gn_add>, <gn_create>, <gn_replace> or <gn_delete>
@@ -473,7 +475,6 @@ json_data = [{'condition': '',
 # Send a put request to the endpoint
 response = session.put(server + 'geonetwork/srv/api/records/batchediting',
 params=params,
-auth = (username, password),
 headers=headers,
 json=json_data,
 )
