@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2011 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2024 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -549,4 +549,12 @@ public interface IMetadataUtils {
      * @param dest
      */
     void replaceFiles(AbstractMetadata original, AbstractMetadata dest);
+
+    /**
+     * Checks if the metadata is available in the current portal.
+     *
+     * @param id
+     * @return
+     */
+    boolean isMetadataAvailableInPortal(int id);
 }

@@ -409,6 +409,13 @@ public class MetadataApi {
             }
         }
 
+        if (!metadataUtils.isMetadataAvailableInPortal(Integer.parseInt(mdId))) {
+            Log.debug(API.LOG_MODULE_NAME, String.format("Metadata with UUID '%s' is not available in the portal", metadataUuid));
+            throw new ResourceNotFoundException(String.format("Metadata with UUID '%s' not found.", metadataUuid))
+                .withMessageKey("exception.resourceNotFound.metadata")
+                .withDescriptionKey("exception.resourceNotFound.metadata.description", new String[]{ metadataUuid });
+        }
+
         Element xml = withInfo ?
             dataManager.getMetadata(context, mdId, forEditing,
                 withValidationErrors, keepXlinkAttributes) :
