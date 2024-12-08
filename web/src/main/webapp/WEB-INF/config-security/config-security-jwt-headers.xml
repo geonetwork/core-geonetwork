@@ -1,0 +1,78 @@
+<!--
+  ~ Copyright (C) 2024 Food and Agriculture Organization of the
+  ~ United Nations (FAO-UN), United Nations World Food Programme (WFP)
+  ~ and United Nations Environment Programme (UNEP)
+  ~
+  ~ This program is free software; you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation; either version 2 of the License, or (at
+  ~ your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful, but
+  ~ WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+  ~ General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program; if not, write to the Free Software
+  ~ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
+  ~
+  ~ Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
+  ~ Rome - Italy. email: geonetwork@osgeo.org
+  -->
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:security="http://www.springframework.org/schema/security"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="
+          http://www.springframework.org/schema/beans
+          http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+          http://www.springframework.org/schema/context
+          http://www.springframework.org/schema/context/spring-context-3.0.xsd
+          http://www.springframework.org/schema/util
+          http://www.springframework.org/schema/util/spring-util.xsd">
+
+  <context:property-override
+    location="WEB-INF/config-security/config-security-jwt-headers-overrides.properties"
+    ignore-resource-not-found="true"/>
+
+
+  <bean id ="jwtHeadersSecurityConfig" class="org.fao.geonet.kernel.security.jwtheaders.JwtHeadersSecurityConfig"/>
+
+  <bean id ="jwtheadersConfiguration" class="org.fao.geonet.kernel.security.jwtheaders.JwtHeadersConfiguration">
+    <constructor-arg ref ="jwtHeadersSecurityConfig" />
+  </bean>
+  <bean id ="jwtHeadersUserUtil" class="org.fao.geonet.kernel.security.jwtheaders.JwtHeadersUserUtil"/>
+
+  <bean id="jwtHeadersAuthFilter" class="org.fao.geonet.kernel.security.jwtheaders.JwtHeadersAuthFilter">
+    <constructor-arg ref ="jwtheadersConfiguration" />
+  </bean>
+
+
+
+
+  <bean id="filterChainFilters" class="java.util.ArrayList">
+    <constructor-arg>
+      <list>
+        <ref bean="securityContextPersistenceFilter"/>
+        <!-- To disable csrf security (not recommended) comment the following line -->
+        <ref bean="csrfFilter" />
+        <!-- To disable csrf security (not recommended) comment the upper line -->
+
+
+        <ref bean="logoutFilter"/>
+        <ref bean="jwtHeadersAuthFilter"/>
+
+
+        <ref bean="requestCacheFilter"/>
+        <ref bean="anonymousFilter"/>
+        <ref bean="sessionMgmtFilter"/>
+        <ref bean="exceptionTranslationFilter"/>
+        <ref bean="filterSecurityInterceptor"/>
+      </list>
+    </constructor-arg>
+  </bean>
+
+
+</beans>
