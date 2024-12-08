@@ -7,7 +7,7 @@
     <a
       title="{{'userDetails' | translate}}"
       href
-      class="dropdown-toggle gn-menuitem-xs"
+      class="dropdown-toggle"
       data-toggle="dropdown"
       aria-haspopup="true"
       aria-expanded="false"
@@ -21,7 +21,7 @@
         <span class="gn-user-name">{{user.name}} {{user.surname}}</span><br />
         <span class="gn-user-role">{{user.profile | translate}}</span>
       </div>
-      <span class="caret"></span>
+      <span class="caret hidden-xs"></span>
       <span
         class="alert alert-danger ng-hide"
         data-ng-show="session.remainingTime > 0 &&
@@ -32,7 +32,7 @@
         sessionWillExpireIn
       </span>
     </a>
-    <ul class="dropdown-menu gn-menuitem-xs">
+    <ul class="dropdown-menu">
       <li class="text-center hidden-xs" role="menuitem">
         <img
           class="img-circle"
@@ -72,7 +72,6 @@
     <a
       href="{{signInFormAction}}?_csrf={{csrf}}&redirectUrl={{redirectUrlAfterSign}}"
       title="{{'signIn'|translate}}"
-      class="gn-menuheader-xs"
       data-ng-keypress="$event"
       id="signinLink"
     >
@@ -88,7 +87,7 @@
     <a
       href="{{gnCfg.mods.authentication.signinUrl | signInLink}}"
       title="{{'signIn'|translate}}"
-      class="dropdown-toggle gn-menuheader-xs"
+      class="dropdown-toggle"
       data-ng-keypress="$event"
       data-toggle="dropdown"
       aria-haspopup="true"
@@ -96,7 +95,7 @@
     >
       <span class="fa fa-fw fa-sign-in hidden-sm"></span>
       {{'signIn' | translate}}
-      <span class="caret"></span>
+      <span class="caret hidden-xs"></span>
     </a>
     <ul class="dropdown-menu">
       <form
