@@ -80,8 +80,9 @@
     </xsl:call-template>
 
   </xsl:template>
+<!--
 
-  <!-- Measure elements, gco:Distance, gco:Angle, gco:Scale, gco:Length, ... -->
+  &lt;!&ndash; Measure elements, gco:Distance, gco:Angle, gco:Scale, gco:Length, ... &ndash;&gt;
   <xsl:template mode="mode-iso19139" priority="2000" match="*[gco:*/@uom]">
     <xsl:param name="schema" select="$schema" required="no"/>
     <xsl:param name="labels" select="$labels" required="no"/>
@@ -148,6 +149,7 @@
     </div>
   </xsl:template>
 
+-->
 
 
 
