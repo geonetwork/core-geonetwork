@@ -187,6 +187,19 @@
     }
   ]);
 
+  module.service("gnFacetMetaLabel", [
+    "$translate",
+    function ($translate) {
+      this.getFacetLabel = function (facet) {
+        if (!facet || !facet.meta || !facet.meta.labels) {
+          return null;
+        }
+        var currentLang = $translate.use();
+        return facet.meta.labels[currentLang] || null;
+      };
+    }
+  ]);
+
   module.filter("facetTooltip", [
     "$translate",
     "$filter",
@@ -266,7 +279,8 @@
   module.directive("esFacets", [
     "gnFacetSorter",
     "gnSearchSettings",
-    function (gnFacetSorter, gnSearchSettings) {
+    "gnFacetMetaLabel",
+    function (gnFacetSorter, gnSearchSettings, gnFacetMetaLabel) {
       return {
         restrict: "A",
         controllerAs: "ctrl",
@@ -291,6 +305,7 @@
           // Directive tab field property
           scope.isTabMode = scope.ctrl.tabField !== undefined;
           scope.facetSorter = gnFacetSorter.sortByTranslation;
+          scope.getFacetLabel = gnFacetMetaLabel.getFacetLabel;
         }
       };
     }
