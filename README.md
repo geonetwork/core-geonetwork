@@ -31,5 +31,8 @@ Developer documentation located in ``README.md`` files in the code-base:
 * [Software Development Documentation](/software_development/) provides instructions for setting up a development environment, building GeoNetwork, compiling user documentation, and making a releases.
 * Module specific documentation can be found in each module:
 
+## Individual Contributor Licenses signed using the CLS Assistant
+[![CLA assistant](https://cla-assistant.io/readme/badge/geonetwork/geonetwork)](https://cla-assistant.io/geonetwork/geonetwork)
+
 ## Open Source Security Foundation (OpenSSF) best practices status
-[![OpenSSF Best Practices](https://www.bestpractices.dev/projects/8626/badge)](https://www.bestpractices.dev/projects/8626)
+[![OpenSSF Best Practices](https://www.bestpractices.dev/projects/8626/badge)](https://www.bestpractices.dev/projects/8626) 
