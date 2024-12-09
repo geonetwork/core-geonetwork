@@ -40,7 +40,7 @@
     <div class="gn-scroll-spy"
          data-gn-scroll-spy="gn-editor-{$metadataId}"
          data-watch=""
-         data-all-depth="{if ($isFlatMode) then 'true' else 'false'}"/>
+         data-all-depth="{if ($isFlatMode) then 'true' else 'false'}"></div>
 
     <div class="nav nav-tabs">
       <!-- Make a drop down choice to swith to one view to another -->
@@ -106,7 +106,7 @@
               <li role="menuitem">
                 <a data-ng-click="toggleAttributes(true)" href="">
                   <i class="fa"
-                     data-ng-class="gnCurrentEdit.displayAttributes ? 'fa-check-square-o' : 'fa-square-o'"/>
+                     data-ng-class="gnCurrentEdit.displayAttributes ? 'fa-check-square-o' : 'fa-square-o'"></i>
                   &#160;
                   <span data-translate="">toggleAttributes</span>
                 </a>
@@ -114,7 +114,7 @@
               <li role="menuitem">
                 <a data-ng-click="toggleTooltips(true)" href="">
                   <i class="fa"
-                     data-ng-class="gnCurrentEdit.displayTooltips ? 'fa-check-square-o' : 'fa-square-o'"/>
+                     data-ng-class="gnCurrentEdit.displayTooltips ? 'fa-check-square-o' : 'fa-square-o'"></i>
                   &#160;
                   <span data-translate="">toggleTooltips</span>
                 </a>
