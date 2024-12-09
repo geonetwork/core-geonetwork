@@ -2694,7 +2694,14 @@
 
   <xsl:template mode="iso19139-to-dcatap" name="Dates" match="gmd:date/gmd:CI_Date">
     <xsl:param name="date">
+      <xsl:choose>
+        <xsl:when test="gmd:date/gco:Date">
       <xsl:value-of select="normalize-space(gmd:date/gco:Date)"/>
+        </xsl:when>
+        <xsl:when test="gmd:date/gco:DateTime">
+          <xsl:value-of select="normalize-space(gmd:date/gco:DateTime)"/>
+        </xsl:when>
+      </xsl:choose>
     </xsl:param>
     <xsl:param name="type">
       <xsl:value-of select="gmd:dateType/gmd:CI_DateTypeCode/@codeListValue"/>
@@ -2774,14 +2781,14 @@
         <xsl:choose>
           <!-- In case the rights/licence URL IS NOT provided -->
           <xsl:when test="normalize-space(gco:CharacterString) != ''">
-            <dct:license>
-              <dct:LicenseDocument>
+            <dct:rights>
+              <dct:RightsStatement>
                 <dct:description xml:lang="{$MetadataLanguage}"><xsl:value-of select="normalize-space(gco:CharacterString)"/></dct:description>
                 <xsl:call-template name="LocalisedString">
                   <xsl:with-param name="term">dct:description</xsl:with-param>
                 </xsl:call-template>
-              </dct:LicenseDocument>
-            </dct:license>
+              </dct:RightsStatement>
+            </dct:rights>
             <!--
                       <dct:rights>
                         <dct:RightsStatement>
@@ -2802,8 +2809,8 @@
                 </xsl:when>
               </xsl:choose>
             </xsl:variable>
-            <dct:license>
-              <dct:LicenseDocument>
+            <dct:rights>
+              <dct:RightsStatement>
                 <xsl:if test="$use-limitation-code != ''">
                   <dct:identifier rdf:datatype="{$xsd}string"><xsl:value-of select="$use-limitation-code"/></dct:identifier>
                 </xsl:if>
@@ -2811,8 +2818,8 @@
                 <xsl:call-template name="LocalisedString">
                   <xsl:with-param name="term">dct:description</xsl:with-param>
                 </xsl:call-template>
-              </dct:LicenseDocument>
-            </dct:license>
+              </dct:RightsStatement>
+            </dct:rights>
             <!--
                       <dct:rights>
                         <dct:RightsStatement>
@@ -2844,14 +2851,14 @@
       <xsl:choose>
         <!-- In case the rights/licence URL IS NOT provided -->
         <xsl:when test="normalize-space(gco:CharacterString) != ''">
-          <dct:license>
-            <dct:LicenseDocument>
+          <dct:rights>
+            <dct:RightsStatement>
               <dct:description xml:lang="{$MetadataLanguage}"><xsl:value-of select="normalize-space(gco:CharacterString)"/></dct:description>
               <xsl:call-template name="LocalisedString">
                 <xsl:with-param name="term">dct:description</xsl:with-param>
               </xsl:call-template>
-            </dct:LicenseDocument>
-          </dct:license>
+            </dct:RightsStatement>
+          </dct:rights>
         </xsl:when>
         <xsl:when test="gmd:MD_RestrictionCode">
           <xsl:variable name="use-constraints-code" select="normalize-space(@codeListValue)"/>
@@ -2865,8 +2872,8 @@
               </xsl:when>
             </xsl:choose>
           </xsl:variable>
-          <dct:license>
-            <dct:LicenseDocument>
+          <dct:rights>
+            <dct:RightsStatement>
               <xsl:if test="$use-constraints-code != ''">
                 <dct:identifier rdf:datatype="{$xsd}string"><xsl:value-of select="$use-constraints-code"/></dct:identifier>
               </xsl:if>
@@ -2874,8 +2881,8 @@
               <xsl:call-template name="LocalisedString">
                 <xsl:with-param name="term">dct:description</xsl:with-param>
               </xsl:call-template>
-            </dct:LicenseDocument>
-          </dct:license>
+            </dct:RightsStatement>
+          </dct:rights>
         </xsl:when>
         <!-- In case the rights/licence URL IS provided -->
         <xsl:when test="gmx:Anchor/@xlink:href">
@@ -2895,14 +2902,14 @@
       <xsl:choose>
         <!-- In case the rights/licence URL IS NOT provided -->
         <xsl:when test="normalize-space(gco:CharacterString) != ''">
-          <dct:accessRights>
+          <dct:rights>
             <dct:RightsStatement>
               <dct:description xml:lang="{$MetadataLanguage}"><xsl:value-of select="normalize-space(gco:CharacterString)"/></dct:description>
               <xsl:call-template name="LocalisedString">
                 <xsl:with-param name="term">dct:description</xsl:with-param>
               </xsl:call-template>
             </dct:RightsStatement>
-          </dct:accessRights>
+          </dct:rights>
         </xsl:when>
         <xsl:when test="gmd:MD_RestrictionCode">
           <xsl:variable name="access-constraints-code" select="normalize-space(@codeListValue)"/>
@@ -2916,7 +2923,7 @@
               </xsl:when>
             </xsl:choose>
           </xsl:variable>
-          <dct:accessRights>
+          <dct:rights>
             <dct:RightsStatement>
               <xsl:if test="$access-constraints-code != ''">
                 <dct:identifier rdf:datatype="{$xsd}string"><xsl:value-of select="$access-constraints-code"/></dct:identifier>
@@ -2926,7 +2933,7 @@
                 <xsl:with-param name="term">dct:description</xsl:with-param>
               </xsl:call-template>
             </dct:RightsStatement>
-          </dct:accessRights>
+          </dct:rights>
         </xsl:when>
         <!-- In case the rights/licence URL IS provided -->
         <xsl:when test="gmx:Anchor/@xlink:href">
@@ -3891,8 +3898,7 @@
           </xsl:when>
           <xsl:when test="@codeListValue = 'asNeeded'">
             <!--  A mapping is missing in Dublin Core -->
-            <!--  A mapping is missing in MDR Freq NAL -->
-            <xsl:value-of select="concat($MaintenanceFrequencyCodelistUri,'/',@codeListValue)"/>
+            <xsl:value-of select="concat($opfq,'AS_NEEDED')"/>
           </xsl:when>
           <xsl:when test="@codeListValue = 'irregular'">
             <!--  DC Freq voc
@@ -3902,8 +3908,7 @@
           </xsl:when>
           <xsl:when test="@codeListValue = 'notPlanned'">
             <!--  A mapping is missing in Dublin Core -->
-            <!--  A mapping is missing in MDR Freq NAL -->
-            <xsl:value-of select="concat($MaintenanceFrequencyCodelistUri,'/',@codeListValue)"/>
+            <xsl:value-of select="concat($opfq,'NOT_PLANNED')"/>
           </xsl:when>
           <xsl:when test="@codeListValue = 'unknown'">
             <!--  A mapping is missing in Dublin Core -->
@@ -3963,7 +3968,7 @@
         </xsl:variable>
         <xsl:variable name="sridVersion" select="substring-before(substring-after(substring-after(substring-after(substring-after(substring-after($code,':'),':'),':'),':'),':'),':')"/>
         <xsl:choose>
-          <xsl:when test="$srid != '' and string(number($srid)) != 'NaN'">
+          <xsl:when test="$srid != '' and number($srid) = number($srid)">
             <geodcatap:referenceSystem>
               <rdf:Description rdf:about="{$EpsgSrsBaseUri}/{$srid}">
                 <rdf:type rdf:resource="{$dct}Standard"/>
