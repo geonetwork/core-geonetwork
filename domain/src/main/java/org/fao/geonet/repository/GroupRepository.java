@@ -52,6 +52,14 @@ public interface GroupRepository extends GeonetRepository<Group, Integer>, Group
     @Nullable
     Group findByEmail(@Nonnull String email);
 
+    /**
+     * Find all groups with a minimumProfileForPrivileges not equal to null.
+     * These groups are "restricted".
+     *
+     * @return a list of groups with a minimumProfileForPrivileges not equal to null
+     */
+    @Nullable
+    List<Group> findByMinimumProfileForPrivilegesNotNull();
 
     public
     @Nullable

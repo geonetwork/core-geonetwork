@@ -259,6 +259,24 @@
                 </div>
               </div>
             </div>
+            <div
+              data-ng-class="gnGroupEdit.minimumProfileForPrivileges.$error.minimumProfileForPrivileges  ? 'has-error' : ''"
+            >
+              <label class="control-label" data-translate=""
+                >minimumProfileForPrivileges</label
+              >
+              <select
+                class="form-control"
+                name="minimumProfileForPrivileges"
+                data-ng-model="groupSelected.minimumProfileForPrivileges"
+              >
+                <option value="">{{'noRestrictions' | translate }}</option>
+                <option value="Editor">{{'Editor' | translate}}</option>
+                <option value="Reviewer">{{'Reviewer' | translate}}</option>
+                <option value="Administrator">{{'Administrator' | translate}}</option>
+              </select>
+              <p class="help-block" data-translate="">minimumProfileForPrivilegesHelp</p>
+            </div>
             <div class="checkbox">
               <label>
                 <input

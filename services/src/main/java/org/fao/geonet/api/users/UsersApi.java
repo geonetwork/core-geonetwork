@@ -442,7 +442,7 @@ public class UsersApi {
 
         // TODO: CheckAccessRights
 
-        if (!myProfile.getAll().contains(profile)) {
+        if (!myProfile.getProfileAndAllChildren().contains(profile)) {
             throw new IllegalArgumentException(
                 "Trying to set profile to " + profile
                     + " max profile permitted is: " + myProfile);
@@ -553,7 +553,7 @@ public class UsersApi {
         }
 
 
-        if (!myProfile.getAll().contains(profile)) {
+        if (!myProfile.getProfileAndAllChildren().contains(profile)) {
             throw new IllegalArgumentException(
                 "Trying to set profile to " + profile
                     + " max profile permitted is: " + myProfile);
