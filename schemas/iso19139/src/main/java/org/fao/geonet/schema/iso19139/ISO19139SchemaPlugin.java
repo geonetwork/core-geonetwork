@@ -617,13 +617,11 @@ public class ISO19139SchemaPlugin
         try {
             return Xml.selectNodes(metadata, ".//gmd:locale/gmd:PT_Locale/@id", allNamespaces.asList())
                 .stream()
-                .filter(node -> node instanceof Attribute)
+                .filter(Attribute.class::isInstance)
                 .map(node -> ((Attribute)node).getValue())
                 .filter(s -> s != null && !s.isBlank())
-                .filter(Objects::nonNull)
                 .collect(Collectors.toList());
-        } catch (JDOMException e) {
-            e.printStackTrace();
+        } catch (JDOMException ignored) {
         }
         return Collections.emptyList();
     }

@@ -588,23 +588,13 @@ public class ISO19115_3_2018SchemaPlugin
     @Override
     public List<String> getMetadataLanguages(Element metadata) {
         try {
-             Xml.selectNodes(metadata, ".//mdb:defaultLocale/lan:PT_Locale/@id", allNamespaces.asList())
+             return Xml.selectNodes(metadata, ".//*[name() = 'mdb:defaultLocale' or name() = 'mdb:otherLocale']/lan:PT_Locale/@id", allNamespaces.asList())
                 .stream()
-                .filter(node -> node instanceof Attribute)
+                .filter(Attribute.class::isInstance)
                 .map(node -> ((Attribute)node).getValue())
                 .filter(s -> s != null && !s.isBlank())
-                .filter(Objects::nonNull)
-                .collect(Collectors.toList()).addAll(
-                     Xml.selectNodes(metadata, ".//mdb:otherLocale/lan:PT_Locale/@id", allNamespaces.asList())
-                         .stream()
-                         .filter(node -> node instanceof Attribute)
-                         .map(node -> ((Attribute)node).getValue())
-                         .filter(s -> s != null && !s.isBlank())
-                         .filter(Objects::nonNull)
-                         .collect(Collectors.toList())
-                 );
-        } catch (JDOMException e) {
-            e.printStackTrace();
+                .collect(Collectors.toList());
+        } catch (JDOMException ignored) {
         }
         return Collections.emptyList();
     }
