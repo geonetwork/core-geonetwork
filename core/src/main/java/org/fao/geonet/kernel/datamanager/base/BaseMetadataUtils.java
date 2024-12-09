@@ -1028,4 +1028,19 @@ public class BaseMetadataUtils implements IMetadataUtils {
     public void replaceFiles(AbstractMetadata original, AbstractMetadata dest) {
         // Empty implementation for non-draft mode as not used
     }
+
+    @Override
+    public String selectOneWithSearchAndReplace(String uuid, String search, String replace) {
+        return metadataRepository.selectOneWithSearchAndReplace(uuid, search, replace);
+    }
+
+    @Override
+    public String selectOneWithRegexSearchAndReplaceWithFlags(String uuid, String search, String replace, String flags) {
+        return metadataRepository.selectOneWithRegexSearchAndReplaceWithFlags(uuid, search, replace, flags);
+    }
+
+    @Override
+    public String selectOneWithRegexSearchAndReplace(String uuid, String search, String replace) {
+        return metadataRepository.selectOneWithRegexSearchAndReplace(uuid, search, replace);
+    }
 }
