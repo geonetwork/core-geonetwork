@@ -26,6 +26,7 @@ package org.fao.geonet.kernel.schema;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -40,8 +41,66 @@ public interface MultilingualSchemaPlugin {
      */
     public abstract List<Element> getTranslationForElement(Element element, String languageIdentifier);
 
+    /**
+     * Updates an element with the related multilingual information using the language and value provided.
+     *
+     * @param element               XML element to update.
+     * @param languageIdentifier    Language identifier.
+     * @param value                 Value for the element.
+     */
     public abstract void addTranslationToElement(Element element, String languageIdentifier, String value);
 
+    /**
+     * Remove all multilingual aspect of an element.
+     *
+     * @param element               XML element to update.
+     * @param mdLang                Metadata languages.
+     * @return
+     * @throws JDOMException
+     */
     public abstract  Element removeTranslationFromElement(Element element, List<String> mdLang) throws JDOMException;
 
+    /**
+     * Retrieves the list of metadata languages used in the metadata.
+     * @param metadata
+     * @return
+     */
+    public abstract List<String> getMetadataLanguages(Element metadata);
+
+    /**
+     * Checks if an element type is multilingual. For example, in DCAT schema, rdf:PlainLiteral type.
+     *
+     * @param elementType   Element type to check.
+     * @return              true if the element type is multilingual, otherwise false.
+     */
+    public abstract boolean isMultilingualElementType(String elementType);
+
+
+    /**
+     * Flag to indicate when adding an element to the metadata editor, if should be duplicated for each metadata language.
+     * For example, in DCAT schema adding vcard:organization-name in a metadata that has English and French languages
+     * (similar case for Dublin Core), should duplicate the element for each language:
+     *
+     *    <vcard:organization-name xml:lang="en"/>
+     *    <vcard:organization-name xml:lang="fr"/>
+     *
+     * For ISO profiles should be set to false, as the multilingual elements are not duplicated. Multilingual values
+     * are added as children elements, requiring a different processing. Adding gmd:organisationName in a metadata
+     * that has English and French languages:
+     *
+     * <gmd:organisationName xsi:type="gmd:PT_FreeText_PropertyType">
+     *     <gco:CharacterString></gco:CharacterString>
+     *     <gmd:PT_FreeText>
+     *         <gmd:textGroup>
+     *             <gmd:LocalisedCharacterString locale="#EN"></gmd:LocalisedCharacterString>
+     *         </gmd:textGroup>
+     *         <gmd:textGroup>
+     *             <gmd:LocalisedCharacterString locale="#FR"></gmd:LocalisedCharacterString>
+     *         </gmd:textGroup>
+     *     </gmd:PT_FreeText>
+     * </gmd:organisationName>
+     *
+     * @return
+     */
+    public abstract boolean duplicateElementsForMultilingual();
 }
