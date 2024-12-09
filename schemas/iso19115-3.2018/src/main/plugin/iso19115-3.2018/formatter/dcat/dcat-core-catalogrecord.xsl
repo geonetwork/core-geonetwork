@@ -40,10 +40,10 @@
                as="node()"/>
 
     <foaf:isPrimaryTopicOf>
-      <rdf:Description>
+      <rdf:Description rdf:about="{gn-fn-dcat:getRecordUri(.)}">
         <rdf:type rdf:resource="http://www.w3.org/ns/dcat#CatalogRecord"/>
         <xsl:copy-of select="$properties"/>
-        <foaf:primaryTopic rdf:resource="{gn-fn-dcat:getRecordUri($metadata)}"/>
+        <foaf:primaryTopic rdf:resource="{gn-fn-dcat:getResourceUri($metadata)}"/>
       </rdf:Description>
     </foaf:isPrimaryTopicOf>
   </xsl:template>
