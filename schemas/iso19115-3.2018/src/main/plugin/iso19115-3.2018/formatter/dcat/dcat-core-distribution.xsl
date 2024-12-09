@@ -10,7 +10,9 @@
                 xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0"
                 xmlns:mco="http://standards.iso.org/iso/19115/-3/mco/1.0"
                 xmlns:mri="http://standards.iso.org/iso/19115/-3/mri/1.0"
+                xmlns:mpc="http://standards.iso.org/iso/19115/-3/mpc/1.0"
                 xmlns:mdq="http://standards.iso.org/iso/19157/-2/mdq/1.0"
+                xmlns:mrc="http://standards.iso.org/iso/19115/-3/mrc/2.0"
                 xmlns:gcx="http://standards.iso.org/iso/19115/-3/gcx/1.0"
                 xmlns:xlink="http://www.w3.org/1999/xlink"
                 xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
@@ -117,7 +119,12 @@
   -->
   <xsl:template mode="iso19115-3-to-dcat"
                 name="iso19115-3-to-dcat-distribution"
-                match="mdb:distributionInfo//mrd:onLine">
+                match="mdb:distributionInfo//mrd:onLine
+                            |mpc:portrayalCatalogueCitation/*/cit:onlineResource
+                            |mrl:additionalDocumentation/*/cit:onlineResource
+                            |mdq:reportReference/*/cit:onlineResource
+                            |mdq:specification/*/cit:onlineResource
+                            |mrc:featureCatalogueCitation/*/cit:onlineResource">
     <xsl:param name="additionalProperties"
                as="node()*"/>
 
@@ -142,7 +149,7 @@
     <xsl:choose>
       <xsl:when test="normalize-space($url) = ''"/>
       <xsl:when test="$function = ('information', 'search', 'completeMetadata', 'browseGraphic', 'upload', 'emailService')
-                      or matches($protocol, 'WWW:LINK.*')">
+                                 or (not($function) and matches($protocol, 'WWW:LINK.*'))">
         <foaf:page>
           <foaf:Document rdf:about="{$url}">
             <xsl:apply-templates mode="iso19115-3-to-dcat"
