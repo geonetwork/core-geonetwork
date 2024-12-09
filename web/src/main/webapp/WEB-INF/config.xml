@@ -145,7 +145,6 @@
 
   <include>config/config-service-search.xml</include>
   <include>config/config-service-sru.xml</include>
-  <include>config/config-service-oai.xml</include>
   <include>config/config-service-rss.xml</include>
   <include>config/config-service-dcat-rdf.xml</include>
   <include>config/config-service-thesaurus.xml</include>
