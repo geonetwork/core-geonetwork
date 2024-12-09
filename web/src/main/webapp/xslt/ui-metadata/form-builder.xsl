@@ -1459,7 +1459,7 @@
          data-gn-click-and-spin="remove({$elementToRemove/@ref}, {$elementToRemove/@parent}, {$editInfo/@ref})"
          data-gn-field-highlight-remove="{$editInfo/@ref}"
          data-toggle="tooltip" data-placement="top" title="{{{{'deleteField' | translate}}}}">
-        <i class="fa fa-times text-danger gn-control"/>
+        <i class="fa fa-times text-danger gn-control"></i>
       </a>
     </xsl:if>
   </xsl:template>
@@ -1538,7 +1538,7 @@
     <div class="form-group {$class} gn-attr-{replace($attributeName, ':', '_')}" id="gn-attr-{$fieldName}">
       <label class="col-sm-4">
         <xsl:if test="$attributeName = 'xlink:href'">
-          <i class="fa fa-link fa-fw"/>
+          <i class="fa fa-link fa-fw"></i>
         </xsl:if>
         <xsl:value-of select="gn-fn-metadata:getLabel($schema, $attributeName, $labels, name(..), '', gn-fn-metadata:getXPath(.))/label"/>
       </label>
@@ -1659,7 +1659,7 @@
               data-params="{$process-params}"
               data-icon="{$btnClass}"
               data-name="{normalize-space($strings/*[name() = $process-label-key])}"
-              data-help="{normalize-space($strings/*[name() = concat($process-name, 'Help')])}"/>
+              data-help="{normalize-space($strings/*[name() = concat($process-name, 'Help')])}"></span>
       </div>
     </div>
   </xsl:template>
@@ -1676,7 +1676,7 @@
               data-params="{$process-params}"
               data-icon="{$btnClass}"
               data-name="{normalize-space($strings/*[name() = $process-name])}"
-              data-help="{normalize-space($strings/*[name() = concat($process-name, 'Help')])}"/>
+              data-help="{normalize-space($strings/*[name() = concat($process-name, 'Help')])}"></span>
       </div>
     </div>
   </xsl:template>
