@@ -690,4 +690,31 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
     public Set<String> getListOfStatusCreatingDraft() {
         return listOfStatusToTriggerDraftCreation;
     }
+
+    @Override
+    public String selectOneWithSearchAndReplace(String uuid, String search, String replace) {
+        String updatedXml = metadataDraftRepository.selectOneWithSearchAndReplace(uuid, search, replace);
+        if (updatedXml == null) {
+            updatedXml = super.selectOneWithSearchAndReplace(uuid, search, replace);
+        }
+        return updatedXml;
+    }
+
+    @Override
+    public String selectOneWithRegexSearchAndReplaceWithFlags(String uuid, String search, String replace, String flags) {
+        String updatedXml = metadataDraftRepository.selectOneWithRegexSearchAndReplaceWithFlags(uuid, search, replace, flags);
+        if (updatedXml == null) {
+            updatedXml = super.selectOneWithRegexSearchAndReplaceWithFlags(uuid, search, replace, flags);
+        }
+        return updatedXml;
+    }
+
+    @Override
+    public String selectOneWithRegexSearchAndReplace(String uuid, String search, String replace) {
+        String updatedXml = metadataDraftRepository.selectOneWithRegexSearchAndReplace(uuid, search, replace);
+        if (updatedXml == null) {
+            updatedXml = super.selectOneWithRegexSearchAndReplace(uuid, search, replace);
+        }
+        return updatedXml;
+    }
 }
