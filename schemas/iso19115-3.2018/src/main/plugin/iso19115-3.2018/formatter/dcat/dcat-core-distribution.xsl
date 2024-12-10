@@ -30,46 +30,46 @@
   https://github.com/SEMICeu/GeoDCAT-AP/issues/100
   -->
   <xsl:param name="copyDatasetInfoToDistribution"
-                as="xs:string"
-                select="'false'"/>
+             as="xs:string"
+             select="'false'"/>
   <xsl:variable name="isCopyingDatasetInfoToDistribution"
                 as="xs:boolean"
                 select="xs:boolean($copyDatasetInfoToDistribution)"/>
 
   <xsl:variable name="protocolToStandardPage"
                 as="node()*">
-      <entry key="http://www.opengeospatial.org/standards/cat">
-        <value>csw</value>
-        <value>ogc:csw</value>
-      </entry>
-      <entry key="http://www.opengeospatial.org/standards/sos">
-        <value>sos</value>
-        <value>ogc:sos</value>
-      </entry>
-      <entry key="http://www.opengeospatial.org/standards/sps">
-        <value>sps</value>
-        <value>ogc:sps</value>
-      </entry>
-      <entry key="http://www.opengeospatial.org/standards/wcs">
-        <value>wcs</value>
-        <value>ogc:wcs</value>
-      </entry>
-      <entry key="http://www.opengeospatial.org/standards/wfs">
-        <value>wfs</value>
-        <value>ogc:wfs</value>
-      </entry>
-      <entry key="http://www.opengeospatial.org/standards/wms">
-        <value>wms</value>
-        <value>ogc:wms</value>
-      </entry>
-      <entry key="http://www.opengeospatial.org/standards/wmts">
-        <value>wmts</value>
-        <value>ogc:wmts</value>
-      </entry>
-      <entry key="http://www.opengeospatial.org/standards/wps">
-        <value>wps</value>
-        <value>ogc:wps</value>
-      </entry>
+    <entry key="http://www.opengeospatial.org/standards/cat">
+      <value>csw</value>
+      <value>ogc:csw</value>
+    </entry>
+    <entry key="http://www.opengeospatial.org/standards/sos">
+      <value>sos</value>
+      <value>ogc:sos</value>
+    </entry>
+    <entry key="http://www.opengeospatial.org/standards/sps">
+      <value>sps</value>
+      <value>ogc:sps</value>
+    </entry>
+    <entry key="http://www.opengeospatial.org/standards/wcs">
+      <value>wcs</value>
+      <value>ogc:wcs</value>
+    </entry>
+    <entry key="http://www.opengeospatial.org/standards/wfs">
+      <value>wfs</value>
+      <value>ogc:wfs</value>
+    </entry>
+    <entry key="http://www.opengeospatial.org/standards/wms">
+      <value>wms</value>
+      <value>ogc:wms</value>
+    </entry>
+    <entry key="http://www.opengeospatial.org/standards/wmts">
+      <value>wmts</value>
+      <value>ogc:wmts</value>
+    </entry>
+    <entry key="http://www.opengeospatial.org/standards/wps">
+      <value>wps</value>
+      <value>ogc:wps</value>
+    </entry>
   </xsl:variable>
 
 
@@ -97,7 +97,6 @@
       </foaf:Document>
     </dcat:landingPage>
   </xsl:template>
-
 
 
   <xsl:template mode="iso19115-3-to-dcat"
@@ -148,6 +147,22 @@
 
     <xsl:choose>
       <xsl:when test="normalize-space($url) = ''"/>
+      <!--
+      TODO: The rule to populate the documentation element depends a lot on the context.
+      There is no known common guidance how to encode this and this can be quite user specific.
+      For service, it is mandatory from an HVD point of view ("quality of service information is considered part of the generic documentation of a Data Service.").
+      -->
+      <xsl:when test="$function = ('documentation')
+                                  or count(ancestor::mrl:additionalDocumentation) = 1
+                                  or starts-with($url, 'https://directory.spatineo.com')">
+        <foaf:documentation>
+          <foaf:Document rdf:about="{$url}">
+            <xsl:apply-templates mode="iso19115-3-to-dcat"
+                                 select="*/cit:name[normalize-space(.) != '']
+                                        |*/cit:description[normalize-space(.) != '']"/>
+          </foaf:Document>
+        </foaf:documentation>
+      </xsl:when>
       <xsl:when test="$function = ('information', 'search', 'completeMetadata', 'browseGraphic', 'upload', 'emailService')
                                  or (not($function) and matches($protocol, 'WWW:LINK.*'))">
         <foaf:page>
@@ -176,7 +191,8 @@
              RDF Property:	dcterms:issued
              Definition:	Date of formal issuance (e.g., publication) of the distribution.
             -->
-            <xsl:for-each select="ancestor::mrd:MD_Distributor/mrd:distributionOrderProcess/*/mrd:plannedAvailableDateTime">
+            <xsl:for-each
+              select="ancestor::mrd:MD_Distributor/mrd:distributionOrderProcess/*/mrd:plannedAvailableDateTime">
               <xsl:apply-templates mode="iso19115-3-to-dcat"
                                    select=".">
                 <xsl:with-param name="dateType" select="'publication'"/>
@@ -235,7 +251,6 @@
             -->
 
 
-
             <!--
             RDF Property:	dcat:byteSize
             Definition:	The size of a distribution in bytes.
@@ -244,9 +259,12 @@
             Usage note:	The size in bytes can be approximated (as a non-negative integer) when the precise size is not known.
             Usage note:	While it is recommended that the size be given as an integer, alternative literals such as '1.5 MB' are sometimes used.
             -->
-            <xsl:for-each select="ancestor::mrd:MD_DigitalTransferOptions/mrd:transferSize/*/text()[. castable as xs:double]">
+            <xsl:for-each
+              select="ancestor::mrd:MD_DigitalTransferOptions/mrd:transferSize/*/text()[. castable as xs:double]">
               <!-- Not valid for eu-dcat-ap <dcat:byteSize><xsl:value-of select="concat(., ' MB')"/></dcat:byteSize>-->
-              <dcat:byteSize rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger"><xsl:value-of select="format-number(. * 1048576, '#')"/></dcat:byteSize>
+              <dcat:byteSize rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">
+                <xsl:value-of select="format-number(. * 1048576, '#')"/>
+              </dcat:byteSize>
             </xsl:for-each>
 
 
@@ -440,7 +458,9 @@
         </xsl:when>
         <xsl:otherwise>
           <xsl:element name="{$rangeName}">
-            <rdfs:label><xsl:value-of select="$format"/></rdfs:label>
+            <rdfs:label>
+              <xsl:value-of select="$format"/>
+            </rdfs:label>
           </xsl:element>
         </xsl:otherwise>
       </xsl:choose>
