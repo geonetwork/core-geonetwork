@@ -11,31 +11,31 @@
          xmlns:pav="http://purl.org/pav/"
          xmlns:adms="http://www.w3.org/ns/adms#"
          xmlns:skos="http://www.w3.org/2004/02/skos/core#">
-   <rdf:Description rdf:about="http://geodata.wallonie.be/id/3dbe0017-a71f-4923-9b44-fdb5afef5778">
-      <rdf:type rdf:resource="http://www.w3.org/ns/dcat#DataService"/>
-      <dct:type>
-         <skos:Concept rdf:about="http://purl.org/dc/dcmitype/Service">
-            <skos:prefLabel>Service</skos:prefLabel>
-         </skos:Concept>
-      </dct:type>
-      <dct:type>
-         <skos:Concept rdf:about="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#service">
-            <skos:prefLabel>service</skos:prefLabel>
-         </skos:Concept>
-      </dct:type>
-      <foaf:isPrimaryTopicOf>
-         <rdf:Description rdf:about="https://metawal.wallonie.be/geonetwork/srv/api/records/3dbe0017-a71f-4923-9b44-fdb5afef5778">
-            <rdf:type rdf:resource="http://www.w3.org/ns/dcat#CatalogRecord"/>
-            <dct:identifier rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">urn:uuid:{uuid}</dct:identifier>
-            <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2023-12-11T07:25:51.082626Z</dct:modified>
-            <dct:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2019-04-02T12:35:21</dct:issued>
-            <dct:title xml:lang="fre">INSPIRE - Sites protégés en Wallonie (BE) - Service de téléchargement
-              
-              
-            </dct:title>
-            <dct:title xml:lang="eng">INSPIRE - Protected site in Walloon region (BE) - Download
-                  service</dct:title>
-            <dct:description xml:lang="fre">Ce service de téléchargement ATOM Feed donne accès aux couches de données du thème INSPIRE
+  <rdf:Description rdf:about="http://geodata.wallonie.be/id/3dbe0017-a71f-4923-9b44-fdb5afef5778">
+    <rdf:type rdf:resource="http://www.w3.org/ns/dcat#DataService"/>
+    <dct:type>
+      <skos:Concept rdf:about="http://purl.org/dc/dcmitype/Service">
+        <skos:prefLabel>Service</skos:prefLabel>
+      </skos:Concept>
+    </dct:type>
+    <dct:type>
+      <skos:Concept rdf:about="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#service">
+        <skos:prefLabel>service</skos:prefLabel>
+      </skos:Concept>
+    </dct:type>
+    <foaf:isPrimaryTopicOf>
+      <rdf:Description rdf:about="https://metawal.wallonie.be/geonetwork/srv/api/records/3dbe0017-a71f-4923-9b44-fdb5afef5778">
+        <rdf:type rdf:resource="http://www.w3.org/ns/dcat#CatalogRecord"/>
+        <dct:identifier rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">urn:uuid:{uuid}</dct:identifier>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2023-12-11T07:25:51.082626Z</dct:modified>
+        <dct:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2019-04-02T12:35:21</dct:issued>
+        <dct:title xml:lang="fre">INSPIRE - Sites protégés en Wallonie (BE) - Service de téléchargement
+
+
+        </dct:title>
+        <dct:title xml:lang="eng">INSPIRE - Protected site in Walloon region (BE) - Download
+          service</dct:title>
+        <dct:description xml:lang="fre">Ce service de téléchargement ATOM Feed donne accès aux couches de données du thème INSPIRE
           "Sites protégés" au sein du territoire wallon (Belgique).
 
           Ce service de téléchargement simple est fourni par le Service public de Wallonie (SPW) et permet le
@@ -64,324 +64,335 @@
           dérivées selon le mécanisme de désignation;
           - Accéder aux séries de couches de données géographiques relatives au thème "Sites protégés" et aux sites de
           désignation par site protégé.
-          
+
         </dct:description>
-            <foaf:primaryTopic rdf:resource="http://geodata.wallonie.be/id/3dbe0017-a71f-4923-9b44-fdb5afef5778"/>
-         </rdf:Description>
-      </foaf:isPrimaryTopicOf>
-      <dcat:landingPage>
-         <foaf:Document rdf:about="https://metawal.wallonie.be/geonetwork/srv/api/records/3dbe0017-a71f-4923-9b44-fdb5afef5778"/>
-      </dcat:landingPage>
-      <dct:title xml:lang="fre">INSPIRE - Sites protégés en Wallonie (BE) - Service de téléchargement
-              
-              
-            </dct:title>
-      <dct:title xml:lang="eng">INSPIRE - Protected site in Walloon region (BE) - Download
-                  service</dct:title>
-      <dct:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2017-11-15</dct:issued>
-      <dct:identifier rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">http://geodata.wallonie.be/id/3dbe0017-a71f-4923-9b44-fdb5afef5778</dct:identifier>
-      <dct:description xml:lang="fre">Ce service de téléchargement ATOM Feed donne accès aux couches de données du thème INSPIRE
-          "Sites protégés" au sein du territoire wallon (Belgique).
+        <foaf:primaryTopic rdf:resource="http://geodata.wallonie.be/id/3dbe0017-a71f-4923-9b44-fdb5afef5778"/>
+      </rdf:Description>
+    </foaf:isPrimaryTopicOf>
+    <dcat:landingPage>
+      <foaf:Document rdf:about="https://metawal.wallonie.be/geonetwork/srv/api/records/3dbe0017-a71f-4923-9b44-fdb5afef5778"/>
+    </dcat:landingPage>
+    <dct:title xml:lang="fre">INSPIRE - Sites protégés en Wallonie (BE) - Service de téléchargement
 
-          Ce service de téléchargement simple est fourni par le Service public de Wallonie (SPW) et permet le
-          téléchargement direct des couches de données géographiques constitutives du thème "sites protégés" de la
-          Directive INSPIRE (Annexe 1.9) sur l'ensemble du territoire wallon. Il utilise la technologie de flux de
-          données ATOM Feed.
 
-          Le service est conforme aux spécifications de la Directive INSPIRE en la matière.
+    </dct:title>
+    <dct:title xml:lang="eng">INSPIRE - Protected site in Walloon region (BE) - Download
+      service</dct:title>
+    <dct:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2017-11-15</dct:issued>
+    <dct:identifier rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">http://geodata.wallonie.be/id/3dbe0017-a71f-4923-9b44-fdb5afef5778</dct:identifier>
+    <dct:description xml:lang="fre">Ce service de téléchargement ATOM Feed donne accès aux couches de données du thème INSPIRE
+      "Sites protégés" au sein du territoire wallon (Belgique).
 
-          Ce service de téléchargement simple permet d’accéder en téléchargement aux couches de données présentes dans
-          le thème "Sites protégés". Via ce service, les informations suivantes sont téléchargeables :
-          - "INSPIRE - Sites protégés en Wallonie" : série de couches de données regroupant l'ensemble des sites
-          protégés en Wallonie;
-          - "INSPIRE - Sites protégés Natura 2000 en Wallonie" : série de couches de données présentant uniquement les
-          sites classés selon le mécanisme de désignation Natura 2000;
-          - "INSPIRE - Sites protégés par type IUCN en Wallonie" : série de couches de données présentant uniquement les
-          sites classés selon le mécanisme de désignation IUCN;
-          - "INSPIRE - Sites protégés UNESCO en Wallonie" : série de couches de données présentant uniquement les sites
-          classés selon le mécanisme de désignation UNESCO;
-          - "INSPIRE - Sites protégés Monument National en Wallonie" : série de couches de données présentant uniquement
-          les sites classés selon le mécanisme de désignation Monument National
+      Ce service de téléchargement simple est fourni par le Service public de Wallonie (SPW) et permet le
+      téléchargement direct des couches de données géographiques constitutives du thème "sites protégés" de la
+      Directive INSPIRE (Annexe 1.9) sur l'ensemble du territoire wallon. Il utilise la technologie de flux de
+      données ATOM Feed.
 
-          Le service propose les opérations suivantes :
-          - Accéder aux métadonnées du service de téléchargement;
-          - Décrire la série de couche de données géographiques relative au thème "Sites protégés" ainsi que les séries
-          dérivées selon le mécanisme de désignation;
-          - Accéder aux séries de couches de données géographiques relatives au thème "Sites protégés" et aux sites de
-          désignation par site protégé.
-          
-        </dct:description>
-      <dcat:contactPoint>
-         <rdf:Description>
-            <rdf:type rdf:resource="http://www.w3.org/2006/vcard/ns#Organization"/>
-            <vcard:org>
-               <rdf:Description>
-                  <vcard:organisation-name xml:lang="fre">Helpdesk carto du SPW (SPW - Secrétariat général - SPW Digital - Département de la
-                  Géomatique - Direction de l'Intégration des géodonnées)
-                  
-                </vcard:organisation-name>
-               </rdf:Description>
-            </vcard:org>
-            <vcard:hasEmail rdf:resource="mailto:helpdesk.carto@spw.wallonie.be"/>
-         </rdf:Description>
-      </dcat:contactPoint>
-      <prov:qualifiedAttribution>
-         <prov:Attribution>
-            <prov:agent>
-               <rdf:Description>
-                  <rdf:type rdf:resource="http://xmlns.com/foaf/0.1/Organization"/>
-                  <rdf:type rdf:resource="http://www.w3.org/ns/prov#Agent"/>
-                  <foaf:name xml:lang="fre">Direction de l'Intégration des géodonnées (SPW - Secrétariat général - SPW Digital
-                  - Département de la Géomatique - Direction de l'Intégration des géodonnées)
-                  
-                </foaf:name>
-                  <foaf:mbox rdf:resource="mailto:helpdesk.carto@spw.wallonie.be"/>
-               </rdf:Description>
-            </prov:agent>
-            <dcat:hadRole>
-               <dcat:Role rdf:about="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#custodian">
-                  <skos:prefLabel>custodian</skos:prefLabel>
-               </dcat:Role>
-            </dcat:hadRole>
-         </prov:Attribution>
-      </prov:qualifiedAttribution>
-      <dct:rightsHolder>
-         <rdf:Description rdf:about="https://geoportail.wallonie.be">
+      Le service est conforme aux spécifications de la Directive INSPIRE en la matière.
+
+      Ce service de téléchargement simple permet d’accéder en téléchargement aux couches de données présentes dans
+      le thème "Sites protégés". Via ce service, les informations suivantes sont téléchargeables :
+      - "INSPIRE - Sites protégés en Wallonie" : série de couches de données regroupant l'ensemble des sites
+      protégés en Wallonie;
+      - "INSPIRE - Sites protégés Natura 2000 en Wallonie" : série de couches de données présentant uniquement les
+      sites classés selon le mécanisme de désignation Natura 2000;
+      - "INSPIRE - Sites protégés par type IUCN en Wallonie" : série de couches de données présentant uniquement les
+      sites classés selon le mécanisme de désignation IUCN;
+      - "INSPIRE - Sites protégés UNESCO en Wallonie" : série de couches de données présentant uniquement les sites
+      classés selon le mécanisme de désignation UNESCO;
+      - "INSPIRE - Sites protégés Monument National en Wallonie" : série de couches de données présentant uniquement
+      les sites classés selon le mécanisme de désignation Monument National
+
+      Le service propose les opérations suivantes :
+      - Accéder aux métadonnées du service de téléchargement;
+      - Décrire la série de couche de données géographiques relative au thème "Sites protégés" ainsi que les séries
+      dérivées selon le mécanisme de désignation;
+      - Accéder aux séries de couches de données géographiques relatives au thème "Sites protégés" et aux sites de
+      désignation par site protégé.
+
+    </dct:description>
+    <dcat:contactPoint>
+      <rdf:Description>
+        <rdf:type rdf:resource="http://www.w3.org/2006/vcard/ns#Organization"/>
+        <vcard:org>
+          <rdf:Description>
+            <vcard:organisation-name xml:lang="fre">Helpdesk carto du SPW (SPW - Secrétariat général - SPW Digital - Département de la
+              Géomatique - Direction de l'Intégration des géodonnées)
+
+            </vcard:organisation-name>
+          </rdf:Description>
+        </vcard:org>
+        <vcard:hasEmail rdf:resource="mailto:helpdesk.carto@spw.wallonie.be"/>
+      </rdf:Description>
+    </dcat:contactPoint>
+    <prov:qualifiedAttribution>
+      <prov:Attribution>
+        <prov:agent>
+          <rdf:Description>
             <rdf:type rdf:resource="http://xmlns.com/foaf/0.1/Organization"/>
             <rdf:type rdf:resource="http://www.w3.org/ns/prov#Agent"/>
-            <foaf:name xml:lang="fre">Service public de Wallonie (SPW)
-                  
-                </foaf:name>
+            <foaf:name xml:lang="fre">Direction de l'Intégration des géodonnées (SPW - Secrétariat général - SPW Digital
+              - Département de la Géomatique - Direction de l'Intégration des géodonnées)
+
+            </foaf:name>
             <foaf:mbox rdf:resource="mailto:helpdesk.carto@spw.wallonie.be"/>
-            <foaf:workplaceHomepage xml:lang="fre">https://geoportail.wallonie.be
-                          
-                        </foaf:workplaceHomepage>
-         </rdf:Description>
-      </dct:rightsHolder>
-      <dcat:theme>
-         <skos:Concept rdf:about="https://metawal.wallonie.be/thesaurus/theme-geoportail-wallon#ThemesGeoportailWallon/10">
-            <skos:prefLabel xml:lang="fre">Nature et environnement
-              
-            </skos:prefLabel>
-         </skos:Concept>
-      </dcat:theme>
-      <dcat:theme>
-         <skos:Concept rdf:about="https://metawal.wallonie.be/thesaurus/theme-geoportail-wallon#SubThemesGeoportailWallon/1010">
-            <skos:prefLabel xml:lang="fre">Faune et flore
-              
-            </skos:prefLabel>
-         </skos:Concept>
-      </dcat:theme>
-      <dcat:theme>
-         <skos:Concept rdf:about="http://inspire.ec.europa.eu/theme/ps">
-            <skos:prefLabel xml:lang="fre">Sites protégés
-              
-            </skos:prefLabel>
-         </skos:Concept>
-      </dcat:theme>
-      <dcat:keyword xml:lang="fre">zones naturelles, paysages, écosystèmes
-              
-            </dcat:keyword>
-      <dcat:keyword xml:lang="fre">politique environnementale
-              
-            </dcat:keyword>
-      <dcat:keyword xml:lang="fre">biologie
-              
-            </dcat:keyword>
-      <dcat:keyword xml:lang="fre">site naturel
-              
-            </dcat:keyword>
-      <dcat:keyword xml:lang="fre">écologie
-              
-            </dcat:keyword>
-      <dcat:keyword xml:lang="fre">évaluation du patrimoine naturel
-              
-            </dcat:keyword>
-      <dcat:keyword xml:lang="fre">politique de conservation de la nature
-              
-            </dcat:keyword>
-      <dcat:keyword xml:lang="fre">monument historique
-              
-            </dcat:keyword>
-      <dcat:keyword xml:lang="fre">parc naturel
-              
-            </dcat:keyword>
-      <dcat:keyword xml:lang="fre">espace naturel
-              
-            </dcat:keyword>
-      <dcat:keyword xml:lang="fre">législation en matière de préservation de la nature
-              
-            </dcat:keyword>
-      <dcat:keyword xml:lang="fre">conservation des ressources naturelles
-              
-            </dcat:keyword>
-      <dcat:keyword xml:lang="fre">site naturel protégé
-              
-            </dcat:keyword>
-      <dcat:keyword xml:lang="fre">archéologie
-              
-            </dcat:keyword>
-      <dcat:keyword xml:lang="fre">milieu naturel
-              
-            </dcat:keyword>
-      <dcat:keyword xml:lang="fre">patrimoine naturel
-              
-            </dcat:keyword>
-      <dcat:keyword xml:lang="fre">paysage
-              
-            </dcat:keyword>
-      <dcat:keyword xml:lang="fre">géologie
-              
-            </dcat:keyword>
-      <dcat:keyword xml:lang="fre">monument
-              
-            </dcat:keyword>
-      <dcat:keyword xml:lang="fre">conservation
-              
-            </dcat:keyword>
-      <dcat:keyword xml:lang="fre">espace protégé
-              
-            </dcat:keyword>
-      <dcat:keyword xml:lang="fre">patrimoine culturel
-              
-            </dcat:keyword>
-      <dcat:keyword xml:lang="fre">Reporting INSPIRE
-              
-            </dcat:keyword>
-      <dcat:keyword xml:lang="fre">natura2000
-              
-            </dcat:keyword>
-      <dcat:keyword xml:lang="fre">N2K
-              
-            </dcat:keyword>
-      <dcat:keyword xml:lang="fre">biodiversité
-              
-            </dcat:keyword>
-      <dcat:keyword xml:lang="fre">protected sites
-              
-            </dcat:keyword>
-      <dcat:keyword xml:lang="fre">site protégé
-              
-            </dcat:keyword>
-      <dcat:keyword xml:lang="fre">aire protégée
-              
-            </dcat:keyword>
-      <dcat:keyword xml:lang="fre">inspire
-              
-            </dcat:keyword>
-      <dcat:keyword xml:lang="fre">téléchargement
-              
-            </dcat:keyword>
-      <dcat:keyword xml:lang="fre">Feed
-              
-            </dcat:keyword>
-      <dcat:keyword xml:lang="fre">ATOM
-              
-            </dcat:keyword>
-      <dcat:keyword xml:lang="fre">IUCN
-              
-            </dcat:keyword>
-      <dcat:keyword xml:lang="fre">ProtectedSite
-              
-            </dcat:keyword>
-      <dcat:theme>
-         <skos:Concept rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/infoProductAccessService">
-            <skos:prefLabel xml:lang="fre">Service d’accès aux produits
-              
-            </skos:prefLabel>
-         </skos:Concept>
-      </dcat:theme>
-      <dcat:keyword xml:lang="fre">Location of sites (Habitats Directive)
-              
-            </dcat:keyword>
-      <dcat:theme>
-         <skos:Concept rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialScope/regional">
-            <skos:prefLabel xml:lang="fre">Régional
-              
-            </skos:prefLabel>
-         </skos:Concept>
-      </dcat:theme>
-      <dct:accessRights>
-         <dct:RightsStatement rdf:about="http://inspire.ec.europa.eu/metadata-codelist/LimitationsOnPublicAccess/noLimitations"/>
-      </dct:accessRights>
-      <dct:license>
-         <dct:LicenseDocument rdf:about="https://geoportail.wallonie.be/files/documents/ConditionsSPW/LicServicesSPW.pdf"/>
-      </dct:license>
-      <dct:rights>
-         <dct:RightsStatement>
-            <dct:description xml:lang="fre">Conditions d'utilisation spécifiques
-              
-            </dct:description>
-         </dct:RightsStatement>
-      </dct:rights>
-      <dct:conformsTo>
-         <dct:Standard rdf:about="http://data.europa.eu/eli/reg/2009/976"/>
-      </dct:conformsTo>
-      <dct:conformsTo>
-         <dct:Standard rdf:about="http://data.europa.eu/eli/reg/2010/1089"/>
-      </dct:conformsTo>
-      <adms:versionNotes xml:lang="fre">Ce service de téléchargement simple INSPIRE basé sur ATOM est au standard Atom RFC 4287, à
-          la spécification GeoRSS Simple et à la spécification OpenSearch (pour les éléments concernés).
-          
-        </adms:versionNotes>
-      <dct:spatial>
-         <rdf:Description>
-            <rdf:type rdf:resource="http://purl.org/dc/terms/Location"/>
-            <dcat:bbox rdf:datatype="http://www.opengis.net/ont/geosparql#geoJSONLiteral"><![CDATA[{"type":"Polygon","coordinates":[[[2.75,50.85],[6.50,50.85],[6.50,49.45],[2.75,49.45],[2.75,50.85]]]}]]></dcat:bbox>
-         </rdf:Description>
-      </dct:spatial>
-      <foaf:page>
-         <foaf:Document rdf:about="https://metawal.wallonie.be/geonetwork/srv/api/records/3dbe0017-a71f-4923-9b44-fdb5afef5778/attachments/download_Inspire_20190430.png">
-            <dct:description xml:lang="fre">INSPIRE_PS_DS_PIC
-              
-            </dct:description>
-         </foaf:Document>
-      </foaf:page>
-      <dcat:distribution>
-         <dcat:Distribution>
+          </rdf:Description>
+        </prov:agent>
+        <dcat:hadRole>
+          <dcat:Role rdf:about="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#custodian">
+            <skos:prefLabel>custodian</skos:prefLabel>
+          </dcat:Role>
+        </dcat:hadRole>
+      </prov:Attribution>
+    </prov:qualifiedAttribution>
+    <dct:rightsHolder>
+      <rdf:Description rdf:about="https://geoportail.wallonie.be">
+        <rdf:type rdf:resource="http://xmlns.com/foaf/0.1/Organization"/>
+        <rdf:type rdf:resource="http://www.w3.org/ns/prov#Agent"/>
+        <foaf:name xml:lang="fre">Service public de Wallonie (SPW)
+
+        </foaf:name>
+        <foaf:mbox rdf:resource="mailto:helpdesk.carto@spw.wallonie.be"/>
+        <foaf:workplaceHomepage xml:lang="fre">https://geoportail.wallonie.be
+
+        </foaf:workplaceHomepage>
+      </rdf:Description>
+    </dct:rightsHolder>
+    <dcat:theme>
+      <skos:Concept rdf:about="https://metawal.wallonie.be/thesaurus/theme-geoportail-wallon#ThemesGeoportailWallon/10">
+        <skos:prefLabel xml:lang="fre">Nature et environnement
+
+        </skos:prefLabel>
+      </skos:Concept>
+    </dcat:theme>
+    <dcat:theme>
+      <skos:Concept rdf:about="https://metawal.wallonie.be/thesaurus/theme-geoportail-wallon#SubThemesGeoportailWallon/1010">
+        <skos:prefLabel xml:lang="fre">Faune et flore
+
+        </skos:prefLabel>
+      </skos:Concept>
+    </dcat:theme>
+    <dcat:theme>
+      <skos:Concept rdf:about="http://inspire.ec.europa.eu/theme/ps">
+        <skos:prefLabel xml:lang="fre">Sites protégés
+
+        </skos:prefLabel>
+      </skos:Concept>
+    </dcat:theme>
+    <dcat:keyword xml:lang="fre">zones naturelles, paysages, écosystèmes
+
+    </dcat:keyword>
+    <dcat:keyword xml:lang="fre">politique environnementale
+
+    </dcat:keyword>
+    <dcat:keyword xml:lang="fre">biologie
+
+    </dcat:keyword>
+    <dcat:keyword xml:lang="fre">site naturel
+
+    </dcat:keyword>
+    <dcat:keyword xml:lang="fre">écologie
+
+    </dcat:keyword>
+    <dcat:keyword xml:lang="fre">évaluation du patrimoine naturel
+
+    </dcat:keyword>
+    <dcat:keyword xml:lang="fre">politique de conservation de la nature
+
+    </dcat:keyword>
+    <dcat:keyword xml:lang="fre">monument historique
+
+    </dcat:keyword>
+    <dcat:keyword xml:lang="fre">parc naturel
+
+    </dcat:keyword>
+    <dcat:keyword xml:lang="fre">espace naturel
+
+    </dcat:keyword>
+    <dcat:keyword xml:lang="fre">législation en matière de préservation de la nature
+
+    </dcat:keyword>
+    <dcat:keyword xml:lang="fre">conservation des ressources naturelles
+
+    </dcat:keyword>
+    <dcat:keyword xml:lang="fre">site naturel protégé
+
+    </dcat:keyword>
+    <dcat:keyword xml:lang="fre">archéologie
+
+    </dcat:keyword>
+    <dcat:keyword xml:lang="fre">milieu naturel
+
+    </dcat:keyword>
+    <dcat:keyword xml:lang="fre">patrimoine naturel
+
+    </dcat:keyword>
+    <dcat:keyword xml:lang="fre">paysage
+
+    </dcat:keyword>
+    <dcat:keyword xml:lang="fre">géologie
+
+    </dcat:keyword>
+    <dcat:keyword xml:lang="fre">monument
+
+    </dcat:keyword>
+    <dcat:keyword xml:lang="fre">conservation
+
+    </dcat:keyword>
+    <dcat:keyword xml:lang="fre">espace protégé
+
+    </dcat:keyword>
+    <dcat:keyword xml:lang="fre">patrimoine culturel
+
+    </dcat:keyword>
+    <dcat:keyword xml:lang="fre">Reporting INSPIRE
+
+    </dcat:keyword>
+    <dcat:keyword xml:lang="fre">natura2000
+
+    </dcat:keyword>
+    <dcat:keyword xml:lang="fre">N2K
+
+    </dcat:keyword>
+    <dcat:keyword xml:lang="fre">biodiversité
+
+    </dcat:keyword>
+    <dcat:keyword xml:lang="fre">protected sites
+
+    </dcat:keyword>
+    <dcat:keyword xml:lang="fre">site protégé
+
+    </dcat:keyword>
+    <dcat:keyword xml:lang="fre">aire protégée
+
+    </dcat:keyword>
+    <dcat:keyword xml:lang="fre">inspire
+
+    </dcat:keyword>
+    <dcat:keyword xml:lang="fre">téléchargement
+
+    </dcat:keyword>
+    <dcat:keyword xml:lang="fre">Feed
+
+    </dcat:keyword>
+    <dcat:keyword xml:lang="fre">ATOM
+
+    </dcat:keyword>
+    <dcat:keyword xml:lang="fre">IUCN
+
+    </dcat:keyword>
+    <dcat:keyword xml:lang="fre">ProtectedSite
+
+    </dcat:keyword>
+    <dcat:theme>
+      <skos:Concept rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/infoProductAccessService">
+        <skos:prefLabel xml:lang="fre">Service d’accès aux produits
+
+        </skos:prefLabel>
+      </skos:Concept>
+    </dcat:theme>
+    <dcat:keyword xml:lang="fre">Location of sites (Habitats Directive)
+
+    </dcat:keyword>
+    <dcat:theme>
+      <skos:Concept rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialScope/regional">
+        <skos:prefLabel xml:lang="fre">Régional
+
+        </skos:prefLabel>
+      </skos:Concept>
+    </dcat:theme>
+    <dct:accessRights>
+      <dct:RightsStatement rdf:about="http://inspire.ec.europa.eu/metadata-codelist/LimitationsOnPublicAccess/noLimitations"/>
+    </dct:accessRights>
+    <dct:license>
+      <dct:LicenseDocument rdf:about="https://geoportail.wallonie.be/files/documents/ConditionsSPW/LicServicesSPW.pdf"/>
+    </dct:license>
+    <dct:rights>
+      <dct:RightsStatement>
+        <dct:description xml:lang="fre">Conditions d'utilisation spécifiques
+
+        </dct:description>
+      </dct:RightsStatement>
+    </dct:rights>
+    <dct:conformsTo>
+      <dct:Standard rdf:about="http://data.europa.eu/eli/reg/2009/976"/>
+    </dct:conformsTo>
+    <dct:conformsTo>
+      <dct:Standard rdf:about="http://data.europa.eu/eli/reg/2010/1089"/>
+    </dct:conformsTo>
+    <adms:versionNotes xml:lang="fre">Ce service de téléchargement simple INSPIRE basé sur ATOM est au standard Atom RFC 4287, à
+      la spécification GeoRSS Simple et à la spécification OpenSearch (pour les éléments concernés).
+
+    </adms:versionNotes>
+    <dct:spatial>
+      <rdf:Description>
+        <rdf:type rdf:resource="http://purl.org/dc/terms/Location"/>
+        <dcat:bbox rdf:datatype="http://www.opengis.net/ont/geosparql#geoJSONLiteral"><![CDATA[{"type":"Polygon","coordinates":[[[2.75,50.85],[6.50,50.85],[6.50,49.45],[2.75,49.45],[2.75,50.85]]]}]]></dcat:bbox>
+      </rdf:Description>
+    </dct:spatial>
+    <foaf:page>
+      <foaf:Document rdf:about="https://metawal.wallonie.be/geonetwork/srv/api/records/3dbe0017-a71f-4923-9b44-fdb5afef5778/attachments/download_Inspire_20190430.png">
+        <dct:description xml:lang="fre">INSPIRE_PS_DS_PIC
+
+        </dct:description>
+      </foaf:Document>
+    </foaf:page>
+    <dcat:distribution>
+      <dcat:Distribution>
+        <dct:title xml:lang="fre">INSPIRE Sites Protégés - Service de téléchargement
+
+        </dct:title>
+        <dct:description xml:lang="fre">Adresse de connexion au service de téléchargement ATOM Feed des couches de données
+          du thème "Sites protégés".
+
+        </dct:description>
+        <dcat:accessURL rdf:resource="https://geoservices.wallonie.be/inspire/atom/PS_Service.xml"/>
+        <dcat:accessService>
+          <rdf:Description>
+            <rdf:type rdf:resource="http://www.w3.org/ns/dcat#DataService"/>
             <dct:title xml:lang="fre">INSPIRE Sites Protégés - Service de téléchargement
-                  
-                </dct:title>
-            <dct:description xml:lang="fre">Adresse de connexion au service de téléchargement ATOM Feed des couches de données
-                  du thème "Sites protégés".
-                  
-                </dct:description>
-            <dcat:accessURL rdf:resource="https://geoservices.wallonie.be/inspire/atom/PS_Service.xml"/>
-            <dcat:accessService>
-               <rdf:Description>
-                  <rdf:type rdf:resource="http://www.w3.org/ns/dcat#DataService"/>
-                  <dct:title xml:lang="fre">INSPIRE Sites Protégés - Service de téléchargement
-                  
-                </dct:title>
-                  <dcat:endpointURL rdf:resource="https://geoservices.wallonie.be/inspire/atom/PS_Service.xml"/>
-               </rdf:Description>
-            </dcat:accessService>
-         </dcat:Distribution>
-      </dcat:distribution>
-      <dcat:endpointURL rdf:resource="https://geoservices.wallonie.be/inspire/atom/PS_Opensearch.xml"/>
-      <dcat:endpointURL rdf:resource="https://geoservices.wallonie.be/inspire/atom/PS_Service.xml"/>
-      <dcat:endpointDescription rdf:resource="https://geoservices.wallonie.be/wms/PS_Service?ProtocolIsGetCapabilities"/>
-      <dcat:endpointURL rdf:resource="https://geoservices.wallonie.be/wms/PS_Service"/>
-      <dcat:servesDataset>
-         <dcat:Dataset rdf:about="https://metawal.wallonie.be/geonetwork/srv/api/records/c2526c30-ee7e-4c0b-b866-599e9aba3665"/>
-      </dcat:servesDataset>
-      <dcat:servesDataset>
-         <dcat:Dataset rdf:about="https://metawal.wallonie.be/geonetwork/srv/api/records/ffc45d44-1cc2-4924-bb8c-214096eb9058"/>
-      </dcat:servesDataset>
-      <dcat:servesDataset>
-         <dcat:Dataset rdf:about="https://metawal.wallonie.be/geonetwork/srv/api/records/bee148c9-f6f2-458e-8359-c33816927a8a"/>
-      </dcat:servesDataset>
-      <dcat:servesDataset>
-         <dcat:Dataset rdf:about="https://metawal.wallonie.be/geonetwork/srv/api/records/ce6b6455-3273-41e3-bfab-ae71bcd677cc"/>
-      </dcat:servesDataset>
-      <dcat:servesDataset>
-         <dcat:Dataset rdf:about="https://metawal.wallonie.be/geonetwork/srv/api/records/e2964ae5-93e3-4da0-ac16-b6cdb5c364e9"/>
-      </dcat:servesDataset>
-      <dcat:servesDataset>
-         <dcat:Dataset rdf:about="https://metawal.wallonie.be/geonetwork/insipre/api/records/541e92de-dbc9-46df-880c-1076798bdbb3"/>
-      </dcat:servesDataset>
-      <dcat:servesDataset>
-         <dcat:Dataset rdf:about="https://metawal.wallonie.be/geonetwork/srv/api/records/09b168b9-6f7c-4e6a-adb4-e3352eeda75b"/>
-      </dcat:servesDataset>
-   </rdf:Description>
+
+            </dct:title>
+            <dcat:endpointURL rdf:resource="https://geoservices.wallonie.be/inspire/atom/PS_Service.xml"/>
+          </rdf:Description>
+        </dcat:accessService>
+      </dcat:Distribution>
+    </dcat:distribution>
+    <foaf:documentation>
+      <foaf:Document rdf:about="https://directory.spatineo.com/service/164564">
+        <dct:title xml:lang="fre">Statistiques de disponibilité WMS</dct:title>
+        <dct:description xml:lang="fre">Statistiques de disponibilité du service WMS fournies par Spatineo</dct:description>
+      </foaf:Document>
+    </foaf:documentation>
+    <foaf:documentation>
+      <foaf:Document rdf:about="https://docs.wallonie.be/services?url=https://geoservices.wallonie.be/arcgis/services/SOL_SOUS_SOL/WAL_OCS_IA__CHA_18_20/MapServer/WMSServer"/>
+    </foaf:documentation>
+    <foaf:documentation>
+      <foaf:Document rdf:about="https://stats.wallonie.be/services?url=https://geoservices.wallonie.be/arcgis/services/SOL_SOUS_SOL/WAL_OCS_IA__CHA_18_20/MapServer/WMSServer"/>
+    </foaf:documentation>
+    <dcat:endpointURL rdf:resource="https://geoservices.wallonie.be/inspire/atom/PS_Opensearch.xml"/>
+    <dcat:endpointURL rdf:resource="https://geoservices.wallonie.be/inspire/atom/PS_Service.xml"/>
+    <dcat:endpointDescription rdf:resource="https://geoservices.wallonie.be/wms/PS_Service"/>
+    <dcat:servesDataset>
+      <dcat:Dataset rdf:about="https://metawal.wallonie.be/geonetwork/srv/api/records/c2526c30-ee7e-4c0b-b866-599e9aba3665"/>
+    </dcat:servesDataset>
+    <dcat:servesDataset>
+      <dcat:Dataset rdf:about="https://metawal.wallonie.be/geonetwork/srv/api/records/ffc45d44-1cc2-4924-bb8c-214096eb9058"/>
+    </dcat:servesDataset>
+    <dcat:servesDataset>
+      <dcat:Dataset rdf:about="https://metawal.wallonie.be/geonetwork/srv/api/records/bee148c9-f6f2-458e-8359-c33816927a8a"/>
+    </dcat:servesDataset>
+    <dcat:servesDataset>
+      <dcat:Dataset rdf:about="https://metawal.wallonie.be/geonetwork/srv/api/records/ce6b6455-3273-41e3-bfab-ae71bcd677cc"/>
+    </dcat:servesDataset>
+    <dcat:servesDataset>
+      <dcat:Dataset rdf:about="https://metawal.wallonie.be/geonetwork/srv/api/records/e2964ae5-93e3-4da0-ac16-b6cdb5c364e9"/>
+    </dcat:servesDataset>
+    <dcat:servesDataset>
+      <dcat:Dataset rdf:about="https://metawal.wallonie.be/geonetwork/insipre/api/records/541e92de-dbc9-46df-880c-1076798bdbb3"/>
+    </dcat:servesDataset>
+    <dcat:servesDataset>
+      <dcat:Dataset rdf:about="https://metawal.wallonie.be/geonetwork/srv/api/records/09b168b9-6f7c-4e6a-adb4-e3352eeda75b"/>
+    </dcat:servesDataset>
+  </rdf:Description>
 </rdf:RDF>
