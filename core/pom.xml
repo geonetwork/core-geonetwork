@@ -39,7 +39,7 @@
     <dependency>
       <groupId>org.geoserver.community.jwt-headers</groupId>
       <artifactId>jwt-headers-util</artifactId>
-      <version>2.26-SNAPSHOT</version>
+      <version>2.27-SNAPSHOT</version>
     </dependency>
 
     <dependency>
