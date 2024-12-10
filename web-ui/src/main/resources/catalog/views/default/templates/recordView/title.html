@@ -42,5 +42,12 @@
     data-types="parent"
   ></div>
 
-  <p data-ng-bind-html="(mdView.current.record.resourceAbstract) | linky | newlines"></p>
+  <p
+    data-ng-if="mdView.current.record.resourceAbstract | isHtml"
+    data-ng-bind-html="mdView.current.record.resourceAbstract"
+  ></p>
+  <p
+    data-ng-if="!(mdView.current.record.resourceAbstract | isHtml)"
+    data-ng-bind-html="(mdView.current.record.resourceAbstract) | linky | newlines"
+  ></p>
 </div>
