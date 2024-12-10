@@ -73,31 +73,70 @@ public enum Profile {
         return null;
     }
 
-    public Set<Profile> getParents() {
-        HashSet<Profile> parents = new HashSet<Profile>();
+    /**
+     * Retrieves all direct child profiles of the current profile.
+     * Child profiles have fewer permissions than parents.
+     *
+     * @return A set containing profiles that have this profile as a parent.
+     */
+    public Set<Profile> getChildren() {
+        HashSet<Profile> children = new HashSet<Profile>();
         for (Profile profile : values()) {
             if (profile.parents.contains(this)) {
-                parents.add(profile);
+                children.add(profile);
             }
         }
 
+        return children;
+    }
+
+    /**
+     * Retrieves the direct parent profiles of the current profile.
+     * Parent profiles have more permissions than children.
+     *
+     * @return A set of profiles that are direct parents of this profile.
+     */
+    public Set<Profile> getParents() {
         return parents;
     }
 
-    public Set<Profile> getAll() {
-        HashSet<Profile> all = new HashSet<Profile>();
-        all.add(this);
-        for (Profile parent : getParents()) {
-            all.addAll(parent.getAll());
+    /**
+     * Retrieves the profile and all of its children recursively.
+     * The returned set will include the profile itself.
+     * Child profiles have fewer permissions than parents.
+     *
+     * @return A {@link Set<Profile>} containing the profile and all of its children.
+     */
+    public Set<Profile> getProfileAndAllChildren() {
+        HashSet<Profile> profiles = new HashSet<Profile>();
+        profiles.add(this);
+        for (Profile child : getChildren()) {
+            profiles.addAll(child.getProfileAndAllChildren());
         }
 
-        return all;
+        return profiles;
+    }
+
+    /**
+     * Retrieves the profile and all of its parents recursively.
+     * The returned set will include the profile itself.
+     * Parent profiles have more permissions than children.
+     *
+     * @return A {@link Set<Profile>} containing the profile and all of its parents.
+     */
+    public Set<Profile> getProfileAndAllParents() {
+        Set<Profile> profiles = new HashSet<>();
+        profiles.add(this);
+        for (Profile parent : getParents()) {
+            profiles.addAll(parent.getProfileAndAllParents());
+        }
+        return profiles;
     }
 
     public Element asElement() {
         Element elResult = new Element(PROFILES_ELEM_NAME);
 
-        for (Profile profile : getAll()) {
+        for (Profile profile : getProfileAndAllChildren()) {
             if (profile == Guest)
                 continue;
 
@@ -109,7 +148,7 @@ public enum Profile {
 
     public Set<String> getAllNames() {
         HashSet<String> names = new HashSet<String>();
-        for (Profile p : getAll()) {
+        for (Profile p : getProfileAndAllChildren()) {
             names.add(p.name());
         }
         return names;
