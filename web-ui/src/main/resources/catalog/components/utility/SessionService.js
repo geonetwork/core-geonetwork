@@ -42,9 +42,9 @@
   module.factory("gnSessionService", [
     "$rootScope",
     "$translate",
-    "$timeout",
     "$cookies",
-    function ($rootScope, $translate, $timeout, $cookies) {
+    "$interval",
+    function ($rootScope, $translate, $cookies, $interval) {
       var session = {
         remainingTime: null,
         start: null,
@@ -109,10 +109,22 @@
         }
       }
       function scheduleCheck(user, interval) {
-        $timeout(function () {
-          check(user);
-          scheduleCheck(user, interval);
-        }, interval || session.checkInterval);
+        // FIXME: When embedding the app using webcomponent mode,
+        // this interact with the location for unknown reason.
+        // This was observed when deploying an Angular app with the map as webcomponent
+        // on Apache or GN5 spring boot app embedded.
+        // Map actions are oddly redirecting to other route.
+        // The link between scheduleCheck and $locationChangeSuccess is not clear.
+        if (typeof gnShadowRoot === "undefined") {
+          $interval(
+            function () {
+              check(user);
+            },
+            interval || session.checkInterval,
+            0,
+            false
+          );
+        }
       }
       return {
         getSession: getSession,
