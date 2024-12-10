@@ -20,7 +20,7 @@
       
       
       <link rel="icon" href="../../../../assets/images/geonetwork-logo.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.47">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.48">
     
     
       
@@ -1409,6 +1409,17 @@
         
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Creating group
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
         
   
@@ -1418,6 +1429,76 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table des matières">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table des matières
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#access-privileges" class="md-nav__link">
+    <span class="md-ellipsis">
+      Access privileges
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#minimum-user-profile-allowed-to-set-privileges" class="md-nav__link">
+    <span class="md-ellipsis">
+      Minimum user profile allowed to set privileges
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Minimum user profile allowed to set privileges">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#default-setting" class="md-nav__link">
+    <span class="md-ellipsis">
+      Default setting
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#restricted-setting" class="md-nav__link">
+    <span class="md-ellipsis">
+      Restricted setting
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-usage" class="md-nav__link">
+    <span class="md-ellipsis">
+      Example usage
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -1930,6 +2011,65 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table des matières
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#access-privileges" class="md-nav__link">
+    <span class="md-ellipsis">
+      Access privileges
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#minimum-user-profile-allowed-to-set-privileges" class="md-nav__link">
+    <span class="md-ellipsis">
+      Minimum user profile allowed to set privileges
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Minimum user profile allowed to set privileges">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#default-setting" class="md-nav__link">
+    <span class="md-ellipsis">
+      Default setting
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#restricted-setting" class="md-nav__link">
+    <span class="md-ellipsis">
+      Restricted setting
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-usage" class="md-nav__link">
+    <span class="md-ellipsis">
+      Example usage
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -1980,11 +2120,27 @@
 <p>Click <em>Save</em></p>
 </li>
 </ol>
-<p>Access privileges can be set per metadata record. You can define privileges on a per Group basis.</p>
-<p>Privileges that can be set relate to visibility of the Metadata (<em>Publish</em>), data <em>Download</em>, <em>Interactive Map</em> access and display of the record in the <em>Featured</em> section of the home page.</p>
-<p><em>Editing</em> defines the groups for which editors can edit the metadata record.</p>
-<p><em>Notify</em> defines what Groups are notified when a file managed by GeoNetwork is downloaded.</p>
-<p>Below is an example of the privileges management table related to a dataset.</p>
+<h2 id="access-privileges">Access privileges</h2>
+<p>Access privileges can be set on a per-metadata-record basis. Privileges define which actions are available to users in the group:</p>
+<ul>
+<li><strong>Publish</strong>: Controls visibility of the metadata.</li>
+<li><strong>Download</strong>: Grants access to data downloads.</li>
+<li><strong>Interactive Map</strong>: Provides access to map tools.</li>
+<li><strong>Featured</strong>: Displays the record in the <em>Featured</em> section on the home page.</li>
+</ul>
+<p>Additional settings:
+- <strong>Editing</strong>: Specifies which groups can edit the metadata record.
+- <strong>Notify</strong>: Determines which groups are notified when a file managed by GeoNetwork is downloaded.</p>
+<h2 id="minimum-user-profile-allowed-to-set-privileges">Minimum user profile allowed to set privileges</h2>
+<p>This setting allows administrators to control the minimum user profile required to assign privileges for a group. It provides enhanced control over who can manage sensitive privileges for users within the group.</p>
+<h3 id="default-setting">Default setting</h3>
+<p>By default, the <strong>"Minimum User Profile Allowed to Set Privileges"</strong> is set to <strong>No Restrictions</strong>. This means that any user with permission to manage privileges for a metadata record can assign privileges for users in this group.</p>
+<h3 id="restricted-setting">Restricted setting</h3>
+<p>When a specific profile is selected, only users with that profile or higher within the group can assign privileges. Users with lower profiles will have <strong>read-only</strong> access to privilege settings for this group.</p>
+<h3 id="example-usage">Example usage</h3>
+<p>If a group has <strong>"Minimum User Profile Allowed to Set Privileges"</strong> set to <strong>Reviewer</strong>:
+- Only users with the <strong>Reviewer</strong> profile or higher (e.g., <strong>Administrator</strong>) can assign privileges for users in this group.
+- Users with profiles below <strong>Reviewer</strong> (e.g., <strong>Editor</strong>) will see the group as <strong>read-only</strong> in the privileges interface.</p>
 
 
 
