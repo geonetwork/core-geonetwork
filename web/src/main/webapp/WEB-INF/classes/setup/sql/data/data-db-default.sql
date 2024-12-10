@@ -574,7 +574,7 @@ INSERT INTO Operations (id, name) VALUES  (6,'featured');
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/site/name', 'My GeoNetwork catalogue', 0, 110, 'n');
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/site/siteId', '', 0, 120, 'n');
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/site/organization', 'My organization', 0, 130, 'n');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/platform/version', '4.4.6', 0, 150, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/platform/version', '4.4.7', 0, 150, 'n');
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/platform/subVersion', 'SNAPSHOT', 0, 160, 'n');
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/site/svnUuid', '', 0, 170, 'y');
 
@@ -740,6 +740,9 @@ INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/security/passwordEnforcement/maxLength', '20', 1, 12001, 'n');
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/security/passwordEnforcement/usePattern', 'true', 2, 12002, 'n');
 INSERT INTO Settings (name, value, datatype, position, internal, editable) VALUES ('system/security/passwordEnforcement/pattern', '^((?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*(_|[^\w])).*)$', 0, 12003, 'n', 'n');
+
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/banner/enable', 'false', 2, 1920, 'n');
+
 
 -- WARNING: Security / Add this settings only if you need to allow admin
 -- users to be able to reset user password. If you have mail server configured

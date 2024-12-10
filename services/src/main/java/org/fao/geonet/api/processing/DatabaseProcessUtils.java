@@ -35,6 +35,7 @@ import org.fao.geonet.kernel.search.IndexingMode;
 import org.fao.geonet.kernel.search.submission.DirectIndexSubmitter;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.MetadataRepository;
+import org.fao.geonet.repository.MetadataValidationRepository;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 
@@ -54,7 +55,6 @@ public class DatabaseProcessUtils {
         AccessManager accessMan = context.getBean(AccessManager.class);
         DataManager dataMan = context.getBean(DataManager.class);
         IMetadataUtils metadataUtils = context.getBean(IMetadataUtils.class);
-        MetadataRepository metadataRepository = context.getBean(MetadataRepository.class);
 
         report.incrementProcessedRecords();
 
@@ -81,11 +81,11 @@ public class DatabaseProcessUtils {
                 String updatedXml =
                     useRegexp
                         ? (StringUtils.isNotEmpty(flags)
-                          ? metadataRepository.selectOneWithRegexSearchAndReplaceWithFlags(
+                          ? metadataUtils.selectOneWithRegexSearchAndReplaceWithFlags(
                         info.getUuid(), search, replace, flags)
-                          : metadataRepository.selectOneWithRegexSearchAndReplace(
+                          : metadataUtils.selectOneWithRegexSearchAndReplace(
                         info.getUuid(), search, replace))
-                        : metadataRepository.selectOneWithSearchAndReplace(
+                        : metadataUtils.selectOneWithSearchAndReplace(
                         info.getUuid(), search, replace);
 
                 // Check XML is still well formed.

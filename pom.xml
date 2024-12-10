@@ -29,7 +29,7 @@
   <groupId>org.geonetwork-opensource</groupId>
   <artifactId>geonetwork</artifactId>
   <packaging>pom</packaging>
-  <version>4.4.6-SNAPSHOT</version>
+  <version>4.4.7-SNAPSHOT</version>
   <name>GeoNetwork opensource</name>
   <description>GeoNetwork opensource is a standards based, Free and
     Open Source catalog application to manage spatially referenced
@@ -1634,12 +1634,12 @@
 
     <!-- NOTE: When updating GeoTools, check which version
     of Postgres is used and update pg.version if needed. -->
-    <geotools.version>30.0</geotools.version>
-    <jts.version>1.19.0</jts.version>
+    <geotools.version>32.0</geotools.version>
+    <jts.version>1.20.0</jts.version>
     <pg.version>42.7.3</pg.version>
 
-    <spring.version>5.3.33</spring.version>
-    <spring.security.version>5.8.11</spring.security.version>
+    <spring.version>5.3.39</spring.version>
+    <spring.security.version>5.8.15</spring.security.version>
     <spring.jpa.version>2.7.18</spring.jpa.version>
     <springboot.version>2.7.0</springboot.version>
     <springdoc.version>1.8.0</springdoc.version>

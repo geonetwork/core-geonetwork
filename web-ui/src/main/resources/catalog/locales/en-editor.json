@@ -459,5 +459,8 @@
     "associated-hasfeaturecats": "Using this feature catalog",
     "associatedResourcesPanel": "Associated resources",
     "validationSuccessLabel": "success",
-    "validationErrorLabel": "errors"
+    "validationErrorLabel": "errors",
+    "metadataDuplicatedField-title": "The metadata title is used in another metadata record.",
+    "metadataDuplicatedField-altTitle": "The metadata alternate title is used in another metadata record.",
+    "metadataDuplicatedField-identifier": "The metadata resource identifier is used in another metadata record."
 }

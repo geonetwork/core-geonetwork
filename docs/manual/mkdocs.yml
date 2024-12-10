@@ -149,10 +149,11 @@ nav:
     - overview/authors.md
     - 'Changelog':
       - overview/change-log/index.md
-      - overview/change-log/version-4.4.5.md
-      - overview/change-log/version-4.2.10.md
+      - overview/change-log/version-4.4.6.md
+      - overview/change-log/version-4.2.11.md
       - 'Release History':
         - overview/change-log/history/index.md
+        - overview/change-log/version-4.4.6.md
         - overview/change-log/version-4.4.5.md
         - overview/change-log/version-4.4.4.md
         - overview/change-log/version-4.4.3.md
@@ -161,6 +162,7 @@ nav:
         - overview/change-log/version-4.4.0.md
       - 'Release History':
         - overview/change-log/history/index.md
+        - overview/change-log/version-4.2.11.md
         - overview/change-log/version-4.2.10.md
         - overview/change-log/version-4.2.9.md
         - overview/change-log/version-4.2.8.md
@@ -321,6 +323,7 @@ nav:
         - administrator-guide/managing-users-and-groups/creating-group.md
         - administrator-guide/managing-users-and-groups/creating-user.md
         - administrator-guide/managing-users-and-groups/user-self-registration.md
+        - administrator-guide/managing-users-and-groups/user-reset-password.md
       - 'Classification Systems':
         - administrator-guide/managing-classification-systems/index.md
         - administrator-guide/managing-classification-systems/managing-categories.md

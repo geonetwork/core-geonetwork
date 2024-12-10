@@ -266,7 +266,7 @@
     "spatialRepresentationType": "Type de représentation",
     "cl_spatialRepresentationType": "Type de représentation",
     "state": "Région",
-    "staticMap": "Carte statique",
+    "map-static": "Carte statique",
     "surname": "Nom",
     "title": "Titre",
     "to": "à",

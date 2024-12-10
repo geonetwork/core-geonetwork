@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2023 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2024 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -37,6 +37,7 @@ import org.apache.commons.text.StringEscapeUtils;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.NodeInfo;
+import org.fao.geonet.api.API;
 import org.fao.geonet.api.es.EsHTTPProxy;
 import org.fao.geonet.api.records.model.related.AssociatedRecord;
 import org.fao.geonet.api.records.model.related.RelatedItemOrigin;
@@ -775,6 +776,48 @@ public class MetadataUtils {
         return isInvalid;
     }
 
+    /**
+     * Check if other metadata records exist apart from the one with {code}metadataUuidToExclude{code} with the same
+     * {code}metadataValue{code} for the field {code}metadataField{code}.
+     *
+     * @param metadataValue         Metadata value to check.
+     * @param metadataField         Metadata field to check the value.
+     * @param metadataUuidToExclude Metadata identifier to exclude from the search.
+     * @return A list of metadata uuids that have the same value for the field provided.
+     */
+    public static boolean isMetadataFieldValueExistingInOtherRecords(String metadataValue, String metadataField, String metadataUuidToExclude) {
+        ApplicationContext applicationContext = ApplicationContextHolder.get();
+        EsSearchManager searchMan = applicationContext.getBean(EsSearchManager.class);
+
+        String esFieldName = "resourceTitleObject.\\\\*.keyword";
+        if (metadataField.equals("altTitle")) {
+            esFieldName = "resourceAltTitleObject.\\\\*.keyword";
+        } else if (metadataField.equals("identifier")) {
+            esFieldName = "resourceIdentifier.code";
+        }
+
+        boolean duplicatedMetadataValue = false;
+        String jsonQuery = " {" +
+            "       \"query_string\": {" +
+            "       \"query\": \"+" + esFieldName + ":\\\"%s\\\" -uuid:\\\"%s\\\"\"" +
+            "       }" +
+            "}";
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            JsonNode esJsonQuery = objectMapper.readTree(String.format(jsonQuery, metadataValue, metadataUuidToExclude));
+
+            final SearchResponse queryResult = searchMan.query(
+                esJsonQuery,
+                FIELDLIST_UUID,
+                0, 5);
+
+            duplicatedMetadataValue = !queryResult.hits().hits().isEmpty();
+        } catch (Exception ex) {
+            Log.error(API.LOG_MODULE_NAME, ex.getMessage(), ex);
+        }
+        return duplicatedMetadataValue;
+    }
 
     /**
      * Checks if a result for a search query has results.

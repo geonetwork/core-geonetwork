@@ -97,6 +97,8 @@
               <xsl:variable name="euDcatLicense"
                             select="$euLicenses/rdf:RDF/skos:Concept[
                                                   matches(skos:exactMatch/@rdf:resource,
+                                                          concat('https?://', $licenseUriWithoutHttp, '/?'))
+                                                  or matches(@rdf:about,
                                                           concat('https?://', $licenseUriWithoutHttp, '/?'))]"/>
 
               <xsl:if test="$euDcatLicense != ''">
