@@ -1583,6 +1583,37 @@
               </cit:function>
             </cit:CI_OnlineResource>
           </mrd:onLine>
+          <mrd:onLine>
+            <cit:CI_OnlineResource>
+              <cit:linkage>
+                <gco:CharacterString>https://directory.spatineo.com/service/164564</gco:CharacterString>
+              </cit:linkage>
+              <cit:protocol>
+                <gco:CharacterString>WWW:LINK</gco:CharacterString>
+              </cit:protocol>
+              <cit:name>
+                <gco:CharacterString>Statistiques de disponibilité WMS</gco:CharacterString>
+              </cit:name>
+              <cit:description>
+                <gco:CharacterString>Statistiques de disponibilité du service WMS fournies par Spatineo</gco:CharacterString>
+              </cit:description>
+              <cit:function>
+                <cit:CI_OnLineFunctionCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_OnLineFunctionCode"
+                                           codeListValue="information"/>
+              </cit:function>
+            </cit:CI_OnlineResource>
+          </mrd:onLine>
+          <mrd:onLine>
+            <cit:CI_OnlineResource>
+              <cit:linkage>
+                <gco:CharacterString>https://docs.wallonie.be/services?url=https://geoservices.wallonie.be/arcgis/services/SOL_SOUS_SOL/WAL_OCS_IA__CHA_18_20/MapServer/WMSServer</gco:CharacterString>
+              </cit:linkage>
+              <cit:function>
+                <cit:CI_OnLineFunctionCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_OnLineFunctionCode"
+                                           codeListValue="documentation"/>
+              </cit:function>
+            </cit:CI_OnlineResource>
+          </mrd:onLine>
         </mrd:MD_DigitalTransferOptions>
       </mrd:transferOptions>
     </mrd:MD_Distribution>
@@ -1749,6 +1780,23 @@
           </mcc:levelDescription>
         </mcc:MD_Scope>
       </mrl:scope>
+      <mrl:additionalDocumentation>
+        <cit:CI_Citation>
+          <cit:title>
+            <gco:CharacterString>Service quality report</gco:CharacterString>
+          </cit:title>
+          <cit:otherCitationDetails gco:nilReason="missing">
+            <gco:CharacterString/>
+          </cit:otherCitationDetails>
+          <cit:onlineResource>
+            <cit:CI_OnlineResource>
+              <cit:linkage>
+                <gco:CharacterString>https://stats.wallonie.be/services?url=https://geoservices.wallonie.be/arcgis/services/SOL_SOUS_SOL/WAL_OCS_IA__CHA_18_20/MapServer/WMSServer</gco:CharacterString>
+              </cit:linkage>
+            </cit:CI_OnlineResource>
+          </cit:onlineResource>
+        </cit:CI_Citation>
+      </mrl:additionalDocumentation>
     </mrl:LI_Lineage>
   </mdb:resourceLineage>
 </mdb:MD_Metadata>
