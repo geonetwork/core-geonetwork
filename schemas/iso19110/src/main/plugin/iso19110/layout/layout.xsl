@@ -22,10 +22,12 @@
   ~ Rome - Italy. email: geonetwork@osgeo.org
   -->
 
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:gmd="http://www.isotc211.org/2005/gmd"
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                xmlns:gmd="http://www.isotc211.org/2005/gmd"
                 xmlns:gco="http://www.isotc211.org/2005/gco"
                 xmlns:gmx="http://www.isotc211.org/2005/gmx"
                 xmlns:gfc="http://www.isotc211.org/2005/gfc"
+                xmlns:xs="http://www.w3.org/2001/XMLSchema"
                 xmlns:gn="http://www.fao.org/geonetwork"
                 xmlns:gn-fn-metadata="http://geonetwork-opensource.org/xsl/functions/metadata"
                 xmlns:gn-fn-iso19110="http://geonetwork-opensource.org/xsl/functions/profiles/iso19110"
@@ -38,7 +40,7 @@
   <xsl:include href="layout-custom-fields.xsl"/>
 
   <!-- Ignore all gn element -->
-  <xsl:template mode="mode-iso19110" match="gn:*|@gn:*" priority="1000"/>
+  <xsl:template mode="mode-iso19110" match="gn:*|@gn:*|@id|@uuid" priority="1000"/>
 
 
   <!-- Template to display non existing element ie. geonet:child element
@@ -70,6 +72,43 @@
   </xsl:template>
 
 
+  <xsl:template mode="mode-iso19110"
+                match="gfc:featureType"
+                priority="2000">
+
+    <xsl:variable name="isFirstFeatureType"
+                  select="preceding-sibling::*[1]/name() != 'gfc:featureType'"
+                  as="xs:boolean"/>
+
+    <xsl:if test="$isFirstFeatureType">
+      <xsl:variable name="selector" as="node()*">
+        <select name="selectFeaturetype"
+                icon="fa gn-icon-featureCatalog"
+                xpath="/gfc:FC_FeatureCatalogue/gfc:featureType"
+                parameter="featureType"
+                value="*/gfc:typeName/gco:LocalName/text()"
+                layout="dropdown"/>
+      </xsl:variable>
+      <xsl:apply-templates mode="form-builder"
+                           select="$selector">
+        <xsl:with-param name="base" select="ancestor::gfc:FC_FeatureCatalogue"/>
+      </xsl:apply-templates>
+    </xsl:if>
+
+    <xsl:variable name="isRequestedFeatureType"
+                  select="*/gfc:typeName/gco:LocalName = $request/featureType"/>
+
+    <xsl:variable name="isRequestedFeatureTypeInCurrentRecord"
+                  select="count(../gfc:featureType[*/gfc:typeName/gco:LocalName = $request/featureType]) > 0"/>
+
+    <xsl:if test="$isRequestedFeatureType
+                  or (not($isRequestedFeatureTypeInCurrentRecord) and $isFirstFeatureType)
+                  or ($service = 'md.format.html')">
+      <xsl:call-template name="mode-iso19110-fieldset"/>
+    </xsl:if>
+  </xsl:template>
+
+
   <!-- Visit all XML tree recursively -->
   <xsl:template mode="mode-iso19110" match="gfc:*">
     <xsl:apply-templates mode="mode-iso19110" select="*|@*"/>
@@ -85,6 +124,7 @@
 
   <!-- Boxed element -->
   <xsl:template mode="mode-iso19110" priority="200"
+                name="mode-iso19110-fieldset"
                 match="gfc:*[gfc:FC_FeatureType]|
     gfc:*[gfc:FC_AssociationRole]|
     gfc:*[gfc:FC_AssociationOperation]|

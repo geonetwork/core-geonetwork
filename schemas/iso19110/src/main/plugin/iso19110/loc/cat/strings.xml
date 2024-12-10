@@ -29,4 +29,7 @@
   <advanced>Complet</advanced>
   <default>Senzill</default>
   <xml>XML</xml>
+  <selectFeaturetype>Select a feature type</selectFeaturetype>
+  <missingFeatureTypeName>New feature type</missingFeatureTypeName>
+
 </strings>

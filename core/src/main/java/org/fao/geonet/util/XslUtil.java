@@ -1604,6 +1604,10 @@ public final class XslUtil {
         return StringEscapeUtils.escapeJson(value);
     }
 
+    public static String escapeForEcmaScript(String value) {
+        return StringEscapeUtils.escapeEcmaScript(value);
+    }
+  
     public static String getWebAnalyticsService() {
         ApplicationContext applicationContext = ApplicationContextHolder.get();
         WebAnalyticsConfiguration webAnalyticsConfiguration = applicationContext.getBean(WebAnalyticsConfiguration.class);
