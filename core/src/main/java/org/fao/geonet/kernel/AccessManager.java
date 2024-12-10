@@ -509,6 +509,37 @@ public class AccessManager {
 
     }
 
+    /**
+     * Checks if the user has the specified profile or any profile with greater permissions within the group.
+     *
+     * @param context The service context containing the user's session.
+     * @param profile The profile to be verified.
+     * @param groupId The ID of the group in which the user's profile is to be verified.
+     * @return true if the user has the specified profile (or greater) within the group; false otherwise.
+     */
+    public boolean isProfileOrMoreOnGroup(final ServiceContext context, Profile profile, final int groupId) {
+        UserSession us = context.getUserSession();
+        if (!isUserAuthenticated(us)) {
+            return false;
+        }
+
+        // Grant access if the user is a global administrator
+        if (Profile.Administrator == us.getProfile()) {
+            return true;
+        }
+
+        // Get the profile and all its parent profiles to consider higher-level permissions
+        Set<Profile> acceptedProfiles = profile.getProfileAndAllParents();
+
+        // Build a specification to fetch any accepted profiles for the user in the specified group
+        Specification<UserGroup> spec = Specification.where(UserGroupSpecs.hasUserId(us.getUserIdAsInt()))
+            .and(UserGroupSpecs.hasGroupId(groupId))
+            .and(UserGroupSpecs.hasProfileIn(acceptedProfiles));
+        List<UserGroup> userGroups = userGroupRepository.findAll(spec);
+
+        return !userGroups.isEmpty();
+    }
+
     public int getPrivilegeId(final String name) {
         final Operation op = operationRepository.findByName(name);
         if (op == null) {

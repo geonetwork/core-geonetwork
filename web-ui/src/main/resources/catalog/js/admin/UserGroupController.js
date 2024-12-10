@@ -709,6 +709,10 @@
         ) {
           $scope.groupSelected.defaultCategory = null;
         }
+        // Ensure that the minimum profile for privileges is not an empty string
+        if ($scope.groupSelected.minimumProfileForPrivileges == "") {
+          $scope.groupSelected.minimumProfileForPrivileges = null;
+        }
         $http
           .put(
             "../api/groups" +

@@ -38,6 +38,7 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public final class UserGroupSpecs {
 
@@ -84,6 +85,12 @@ public final class UserGroupSpecs {
         };
     }
 
+    /**
+     * Specification for retrieving all the userGroups with a given profile.
+     *
+     * @param profile The {@link Profile} to filter the userGroups.
+     * @return the query.
+     */
     public static Specification<UserGroup> hasProfile(final Profile profile) {
         return new Specification<UserGroup>() {
             @Override
@@ -91,6 +98,23 @@ public final class UserGroupSpecs {
                 Path<Profile> profileIdAttributePath = root.get(UserGroup_.id).get(UserGroupId_.profile);
                 Predicate profileIdEqualPredicate = cb.equal(profileIdAttributePath, cb.literal(profile));
                 return profileIdEqualPredicate;
+            }
+        };
+    }
+
+    /**
+     * Specification for retrieving all the userGroups with a {@link Profile} in a given set of profiles.
+     *
+     * @param profiles The {@link Set} of {@link Profile} to filter the userGroups.
+     * @return the query.
+     */
+    public static Specification<UserGroup> hasProfileIn(final Set<Profile> profiles) {
+        return new Specification<UserGroup>() {
+            @Override
+            public Predicate toPredicate(Root<UserGroup> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+                Path<Profile> profileIdAttributePath = root.get(UserGroup_.id).get(UserGroupId_.profile);
+                Predicate profileIdInPredicate = profileIdAttributePath.in(profiles);
+                return profileIdInPredicate;
             }
         };
     }
