@@ -209,6 +209,7 @@ public class ISODate implements Cloneable, Comparable<ISODate>, Serializable, Xm
         }
     }
 
+
     public void setDateAndTime(String isoDate) {
 
         String timeAndDate = isoDate;
@@ -370,58 +371,82 @@ public class ISODate implements Cloneable, Comparable<ISODate>, Serializable, Xm
 
     private void parseDate(@Nonnull String isoDate) {
         try {
-            String[] parts = isoDate.split("[-/]");
-            if ((parts.length == 0) || (parts.length > 3)) {
+            int startPos = 0;
+            int partNumber = 0;
+            int year = -1;
+            int month = -1;
+            int day = -1;
+
+            ZoneId offset = ZoneId.systemDefault();
+            // canonicalize the string
+            isoDate = isoDate.replace('/', '-');
+            // until we've processed the whole string
+            while (startPos < isoDate.length()) {
+                if (partNumber >= 3) {
+                    break;
+                }
+                // try to find the next chunk
+                int nextPos = isoDate.indexOf('-', startPos);
+                if (nextPos == -1) {
+                    // no next chunk to be found? This means this is the last chunk, process it accordingly
+                    nextPos = isoDate.length();
+                }
+                String subString = isoDate.substring(startPos, nextPos);
+                switch (partNumber) {
+                    case 0:
+                        // First part: year
+                        int parsedInt = Integer.parseInt(subString);
+                        if ((nextPos - startPos) < 4) {
+                            int thisYear = ZonedDateTime.now(ZoneOffset.UTC).getYear();
+                            int century = thisYear / 100;
+                            int yearInCentury = thisYear % 100;
+                            year = (century * 100) + parsedInt;
+                            if (parsedInt > yearInCentury) {
+                                // If year is 2024, turn 32-05-05 into 1932, not 2032
+                                year -= 100;
+                            }
+                        } else {
+                            year = parsedInt;
+                        }
+                        break;
+                    case 1:
+                        // Second part: month
+                        month = Integer.parseInt(subString);
+                        break;
+                    case 2:
+                        // Third part: day
+                        if (subString.toLowerCase().endsWith("z")) {
+                            offset = ZoneOffset.UTC;
+                            day = Integer.parseInt(subString.substring(0, subString.length() - 1));
+                        } else {
+                            day = Integer.parseInt(subString);
+                        }
+                        break;
+                    default:
+                        throw new IllegalStateException("Should not reach partNumber " + partNumber);
+                }
+                partNumber++;
+                startPos = nextPos + 1;
+            }
+            if (partNumber == 0 || partNumber > 3) {
                 throw new IllegalArgumentException("Invalid ISO date: " + isoDate);
             }
 
-            _shortDate = (parts.length == 3);
-            _shortDateYearMonth = (parts.length == 2);
-            _shortDateYear = (parts.length == 1);
+            _shortDate = (partNumber == 3);
+            _shortDateYearMonth = (partNumber == 2);
+            _shortDateYear = (partNumber == 1);
 
-            int year;
-            if (parts[0].length() < 4) {
-                int shortYear = Integer.parseInt(parts[0]);
-                String thisYear = String.valueOf(ZonedDateTime.now(ZoneOffset.UTC).getYear());
-                int century = Integer.parseInt(thisYear.substring(0, 2)) * 100;
-                int yearInCentury = Integer.parseInt(thisYear.substring(2));
-
-                if (shortYear <= yearInCentury) {
-                    year = century + shortYear;
-                } else {
-                    year = century - 100 + shortYear;
-                }
-            } else {
-                year = Integer.parseInt(parts[0]);
-            }
-
-            int month;
-            if (_shortDate || _shortDateYearMonth) {
-                month = Integer.parseInt(parts[1]);
-            } else {
+            if (!_shortDate && !_shortDateYearMonth) {
                 month = 12;
             }
 
-            int day;
-            ZoneId offset = ZoneId.systemDefault();
-            if (_shortDate) {
-
-                if (parts[2].toLowerCase().endsWith("z")) {
-                    offset = ZoneOffset.UTC;
-                    day = Integer.parseInt(parts[2].substring(0, parts[2].length() - 1));
-                } else {
-                    day = Integer.parseInt(parts[2]);
-                }
-            } else {
+            if (!_shortDate) {
                 // Calculate the last day for the year/month
                 day = YearMonth.of(year, month).atEndOfMonth().getDayOfMonth();
             }
 
             _shortDate = true;
-            internalDateTime = ZonedDateTime.now(offset).withYear(year).withMonth(month).withDayOfMonth(day).withHour(0).withMinute(0)
-                    .withSecond(0).withNano(0);
-            //..ZonedDateTime.of(year, month, day, hour, minute, second, 0, offset);
-
+            internalDateTime = ZonedDateTime.of(year, month, day, 0, 0, 0, 0, offset);
         } catch (Exception e) {
             throw new IllegalArgumentException("Invalid ISO date: " + isoDate, e);
         }
