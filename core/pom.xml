@@ -35,6 +35,13 @@
   <name>GeoNetwork core</name>
 
   <dependencies>
+
+    <dependency>
+      <groupId>org.geoserver.community.jwt-headers</groupId>
+      <artifactId>jwt-headers-util</artifactId>
+      <version>2.27-SNAPSHOT</version>
+    </dependency>
+
     <dependency>
       <groupId>net.objecthunter</groupId>
       <artifactId>exp4j</artifactId>
@@ -303,6 +310,10 @@
     <dependency>
       <groupId>org.geotools</groupId>
       <artifactId>gt-geojson</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.jayway.jsonpath</groupId>
+      <artifactId>json-path</artifactId>
     </dependency>
     <dependency>
       <groupId>org.locationtech.jts</groupId>
