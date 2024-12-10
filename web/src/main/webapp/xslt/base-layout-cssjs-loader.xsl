@@ -187,6 +187,48 @@
           src="{$uiResourcesPath}lib/bootstrap.ext/datepicker/bootstrap-datepicker.fr.min.js?v={$buildNumber}"></script>
         <script
           src="{$uiResourcesPath}lib/bootstrap.ext/datepicker/bootstrap-datepicker.nl.min.js?v={$buildNumber}"></script>
+        <script
+          src="{$uiResourcesPath}lib/bootstrap.ext/datepicker/bootstrap-datepicker.az.min.js?v={$buildNumber}"></script>
+        <script
+          src="{$uiResourcesPath}lib/bootstrap.ext/datepicker/bootstrap-datepicker.ca.min.js?v={$buildNumber}"></script>
+        <script
+          src="{$uiResourcesPath}lib/bootstrap.ext/datepicker/bootstrap-datepicker.cs.min.js?v={$buildNumber}"></script>
+        <script
+          src="{$uiResourcesPath}lib/bootstrap.ext/datepicker/bootstrap-datepicker.cy.min.js?v={$buildNumber}"></script>
+        <script
+          src="{$uiResourcesPath}lib/bootstrap.ext/datepicker/bootstrap-datepicker.da.min.js?v={$buildNumber}"></script>
+        <script
+          src="{$uiResourcesPath}lib/bootstrap.ext/datepicker/bootstrap-datepicker.de.min.js?v={$buildNumber}"></script>
+        <script
+          src="{$uiResourcesPath}lib/bootstrap.ext/datepicker/bootstrap-datepicker.es.min.js?v={$buildNumber}"></script>
+        <script
+          src="{$uiResourcesPath}lib/bootstrap.ext/datepicker/bootstrap-datepicker.fi.min.js?v={$buildNumber}"></script>
+        <script
+          src="{$uiResourcesPath}lib/bootstrap.ext/datepicker/bootstrap-datepicker.hy.min.js?v={$buildNumber}"></script>
+        <script
+          src="{$uiResourcesPath}lib/bootstrap.ext/datepicker/bootstrap-datepicker.is.min.js?v={$buildNumber}"></script>
+        <script
+          src="{$uiResourcesPath}lib/bootstrap.ext/datepicker/bootstrap-datepicker.it.min.js?v={$buildNumber}"></script>
+        <script
+          src="{$uiResourcesPath}lib/bootstrap.ext/datepicker/bootstrap-datepicker.ka.min.js?v={$buildNumber}"></script>
+        <script
+          src="{$uiResourcesPath}lib/bootstrap.ext/datepicker/bootstrap-datepicker.ko.min.js?v={$buildNumber}"></script>
+        <script
+          src="{$uiResourcesPath}lib/bootstrap.ext/datepicker/bootstrap-datepicker.pt.min.js?v={$buildNumber}"></script>
+        <script
+          src="{$uiResourcesPath}lib/bootstrap.ext/datepicker/bootstrap-datepicker.ro.min.js?v={$buildNumber}"></script>
+        <script
+          src="{$uiResourcesPath}lib/bootstrap.ext/datepicker/bootstrap-datepicker.ru.min.js?v={$buildNumber}"></script>
+        <script
+          src="{$uiResourcesPath}lib/bootstrap.ext/datepicker/bootstrap-datepicker.sk.min.js?v={$buildNumber}"></script>
+        <script
+          src="{$uiResourcesPath}lib/bootstrap.ext/datepicker/bootstrap-datepicker.sv.min.js?v={$buildNumber}"></script>
+        <script
+          src="{$uiResourcesPath}lib/bootstrap.ext/datepicker/bootstrap-datepicker.uk.min.js?v={$buildNumber}"></script>
+        <script
+          src="{$uiResourcesPath}lib/bootstrap.ext/datepicker/bootstrap-datepicker.zh.min.js?v={$buildNumber}"></script>
+
+
         <script src="{$uiResourcesPath}lib/bootstrap-table/dist/bootstrap-table.js?v={$buildNumber}"></script>
         <script src="{$uiResourcesPath}lib/bootstrap-table-angular.js?v={$buildNumber}"></script>
         <script src="{$uiResourcesPath}lib/bootstrap-table/src/extensions/export/bootstrap-table-export.js?v={$buildNumber}"></script>
@@ -200,7 +242,6 @@
         <script src="{$uiResourcesPath}lib/geohash.js?v={$buildNumber}"></script>
 
         <script src="{$uiResourcesPath}lib/xml2json/xml2json.min.js?v={$buildNumber}"></script>
-        <script src="{$uiResourcesPath}lib/dom-to-image/dom-to-image.min.js?v={$buildNumber}"></script>
       </xsl:when>
       <xsl:otherwise>
       </xsl:otherwise>

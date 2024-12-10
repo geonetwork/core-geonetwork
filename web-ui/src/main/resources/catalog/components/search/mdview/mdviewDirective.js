@@ -178,12 +178,28 @@
             var resourceType = scope.md.resourceType
               ? scope.md.resourceType[0]
               : undefined;
+            var filter = [];
             if (scope.ofSameType && resourceType) {
               var mapping = resourceTypeMapping[resourceType];
               scope.label = mapping ? mapping.label : resourceType;
-              query.query.bool.filter = [
-                { terms: { resourceType: mapping ? mapping.types : [resourceType] } }
-              ];
+              filter.push({
+                terms: { resourceType: mapping ? mapping.types : [resourceType] }
+              });
+            }
+
+            if (
+              gnGlobalSettings.gnCfg.mods.search.moreLikeThisFilter &&
+              gnGlobalSettings.gnCfg.mods.search.moreLikeThisFilter != ""
+            ) {
+              filter.push({
+                query_string: {
+                  query: gnGlobalSettings.gnCfg.mods.search.moreLikeThisFilter
+                }
+              });
+            }
+
+            if (filter.length > 0) {
+              query.query.bool.filter = filter;
             }
 
             return query;

@@ -5,6 +5,16 @@
   </div>
 
   <div class="btn-group" data-ng-class="{'btn-group-xs': xsMode}" role="group">
+    <select
+      class="form-control"
+      data-ng-change="updateDoiServer()"
+      data-ng-show="doiServers.length > 1"
+      data-ng-model="selectedDoiServer"
+      data-ng-options="s.id as s.name for s in doiServers"
+    >
+      >
+    </select>
+
     <button
       class="btn btn-default"
       data-gn-click-and-spin="check()"

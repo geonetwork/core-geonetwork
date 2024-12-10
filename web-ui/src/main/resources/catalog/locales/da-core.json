@@ -266,7 +266,7 @@
     "spatialRepresentationType": "Repræsentationstype",
     "cl_spatialRepresentationType": "Repræsentationstype",
     "state": "Stat",
-    "staticMap": "Statisk kort",
+    "map-static": "Statisk kort",
     "surname": "Efternavn",
     "title": "Titel",
     "to": "Til",
