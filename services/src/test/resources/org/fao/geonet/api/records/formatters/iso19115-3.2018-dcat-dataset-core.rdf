@@ -348,6 +348,11 @@
             <skos:prefLabel xml:lang="fre">1143/2014</skos:prefLabel>
          </skos:Concept>
       </dcat:theme>
+     <dcat:theme>
+       <skos:Concept rdf:about="http://data.europa.eu/eli/reg_impl/2023/138/oj">
+         <skos:prefLabel xml:lang="fre">2023/138</skos:prefLabel>
+       </skos:Concept>
+     </dcat:theme>
       <dct:accessRights>
          <dct:RightsStatement rdf:about="http://inspire.ec.europa.eu/metadata-codelist/LimitationsOnPublicAccess/noLimitations"/>
       </dct:accessRights>

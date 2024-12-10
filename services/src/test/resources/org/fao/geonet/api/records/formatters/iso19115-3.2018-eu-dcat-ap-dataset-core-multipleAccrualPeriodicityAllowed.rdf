@@ -365,6 +365,7 @@
       <dcat:keyword xml:lang="fre">Mobilité</dcat:keyword>
       <dcat:keyword xml:lang="fre">Observation de la terre et environnement</dcat:keyword>
       <dcatap:applicableLegislation rdf:resource="http://data.europa.eu/eli/reg/2014/1143/oj"/>
+      <dcatap:applicableLegislation rdf:resource="http://data.europa.eu/eli/reg_impl/2023/138/oj"/>
       <dct:accessRights>
          <dct:RightsStatement rdf:about="http://inspire.ec.europa.eu/metadata-codelist/LimitationsOnPublicAccess/noLimitations"/>
       </dct:accessRights>

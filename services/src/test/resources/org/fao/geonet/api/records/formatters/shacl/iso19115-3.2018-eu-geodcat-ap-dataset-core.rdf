@@ -374,7 +374,6 @@
          </skos:Concept>
       </dcatap:hvdCategory>
       <dcatap:applicableLegislation rdf:resource="http://data.europa.eu/eli/reg/2014/1143/oj"/>
-      <dcatap:applicableLegislation rdf:resource="http://data.europa.eu/eli/reg_impl/2023/138/oj"/>
       <dct:accessRights>
          <dct:RightsStatement rdf:about="http://inspire.ec.europa.eu/metadata-codelist/LimitationsOnPublicAccess/noLimitations"/>
       </dct:accessRights>
@@ -384,9 +383,6 @@
       <dct:license>
          <dct:LicenseDocument rdf:about="http://publications.europa.eu/resource/authority/licence/CATOSL_1_1"/>
       </dct:license>
-       <dct:license>
-         <dct:LicenseDocument rdf:about="http://publications.europa.eu/resource/authority/licence/CC_BY_4_0"/>
-       </dct:license>
       <dct:rights>
          <dct:RightsStatement>
             <dct:description xml:lang="fre">Conditions d'accès et d'utilisation spécifiques</dct:description>
@@ -490,9 +486,9 @@
          </rdf:Description>
       </geodcatap:referenceSystem>
         <geodcatap:topicCategory rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/TopicCategory/planningCadastre"/>
-
+      
         <geodcatap:topicCategory rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/TopicCategory/imageryBaseMapsEarthCover"/>
-
+      
         <geodcatap:topicCategory rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/TopicCategory/location"/>
       <dcat:spatialResolutionInMeters rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.01</dcat:spatialResolutionInMeters>
       <dcat:temporalResolution rdf:datatype="http://www.w3.org/2001/XMLSchema#duration">P0Y2M0DT0H0M0S</dcat:temporalResolution>
