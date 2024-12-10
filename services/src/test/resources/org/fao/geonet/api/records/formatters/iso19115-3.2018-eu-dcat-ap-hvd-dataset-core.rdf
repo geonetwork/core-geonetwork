@@ -374,6 +374,7 @@
          </skos:Concept>
       </dcatap:hvdCategory>
       <dcatap:applicableLegislation rdf:resource="http://data.europa.eu/eli/reg/2014/1143/oj"/>
+      <dcatap:applicableLegislation rdf:resource="http://data.europa.eu/eli/reg_impl/2023/138/oj"/>
       <dct:accessRights>
          <dct:RightsStatement rdf:about="http://inspire.ec.europa.eu/metadata-codelist/LimitationsOnPublicAccess/noLimitations"/>
       </dct:accessRights>
