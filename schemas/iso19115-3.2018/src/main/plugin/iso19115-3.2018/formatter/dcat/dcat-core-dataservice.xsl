@@ -15,7 +15,7 @@
   Filter to define which service operation has to be considered
   as an endpoint URL or description depending on linkage and protocol.
   -->
-  <xsl:param name="endpointDescriptionUrllExpression"
+  <xsl:param name="endpointDescriptionUrlExpression"
                 as="xs:string"
                 select="'GetCapabilities|WSDL'"/>
   <xsl:param name="endpointDescriptionProtocolsExpression"
@@ -31,7 +31,7 @@
   <xsl:template mode="iso19115-3-to-dcat"
                 match="srv:containsOperations/*/srv:connectPoint/*[not(
                                 matches(cit:protocol/(gco:CharacterString|gcx:Anchor)/text(), $endpointDescriptionProtocolsExpression, 'i')
-                                or matches(cit:linkage/(gco:CharacterString|gcx:Anchor)/text(), $endpointDescriptionUrllExpression, 'i'))]/cit:linkage">
+                                or matches(cit:linkage/(gco:CharacterString|gcx:Anchor)/text(), $endpointDescriptionUrlExpression, 'i'))]/cit:linkage">
 
     <dcat:endpointURL rdf:resource="{normalize-space((gco:CharacterString|gcx:Anchor)/text())}"/>
   </xsl:template>
@@ -54,7 +54,7 @@
   <xsl:template mode="iso19115-3-to-dcat"
                 match="srv:containsOperations/*/srv:connectPoint/*[
                                 matches(cit:protocol/(gco:CharacterString|gcx:Anchor)/text(), $endpointDescriptionProtocolsExpression, 'i')
-                                or matches(cit:linkage/(gco:CharacterString|gcx:Anchor)/text(), $endpointDescriptionUrllExpression, 'i')]/cit:linkage">
+                                or matches(cit:linkage/(gco:CharacterString|gcx:Anchor)/text(), $endpointDescriptionUrlExpression, 'i')]/cit:linkage">
     <dcat:endpointDescription rdf:resource="{normalize-space((gco:CharacterString|gcx:Anchor)/text())}"/>
   </xsl:template>
 
