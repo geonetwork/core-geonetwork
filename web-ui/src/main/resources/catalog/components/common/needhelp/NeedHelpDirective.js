@@ -141,6 +141,18 @@
           };
 
           /**
+           * Processes an URL removing // characters in the URL path.
+           *
+           * @param url
+           * @returns {string}
+           */
+          var processUrl = function(url) {
+            var urlToProcess = new URL(url);
+            urlToProcess.pathname = urlToProcess.pathname.replace(/\/\//g, "/");
+            return urlToProcess.toString();
+          }
+
+          /**
            * Get the URL of the corresponding help page and open it in a new tab
            * @returns {boolean}
            */
@@ -163,6 +175,8 @@
             } else {
               helpPageUrl = baseUrl + "/" + page;
             }
+
+            helpPageUrl = processUrl(helpPageUrl);
 
             testAndOpen(helpPageUrl).then(
               function () {},
