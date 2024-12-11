@@ -7,7 +7,7 @@
                  xmlns:gcx="http://standards.iso.org/iso/19115/-3/gcx/1.0"
                  xmlns:gex="http://standards.iso.org/iso/19115/-3/gex/1.0"
                  xmlns:lan="http://standards.iso.org/iso/19115/-3/lan/1.0"
-                 xmlns:srv="http://standards.iso.org/iso/19115/-3/srv/2.1"
+                 xmlns:srv="http://standards.iso.org/iso/19115/-3/srv/2.0"
                  xmlns:mas="http://standards.iso.org/iso/19115/-3/mas/1.0"
                  xmlns:mcc="http://standards.iso.org/iso/19115/-3/mcc/1.0"
                  xmlns:mco="http://standards.iso.org/iso/19115/-3/mco/1.0"
@@ -1447,7 +1447,7 @@
           <srv:connectPoint>
             <cit:CI_OnlineResource>
               <cit:linkage xsi:type="lan:PT_FreeText_PropertyType">
-                <gco:CharacterString>https://geoservices.wallonie.be/wms/PS_Service</gco:CharacterString>
+                <gco:CharacterString>https://geoservices.wallonie.be/wms/PS_Service?ProtocolIsGetCapabilities</gco:CharacterString>
                 <lan:PT_FreeText>
                   <lan:textGroup>
                     <lan:LocalisedCharacterString locale="#FR">https://geoservices.wallonie.be/wms/PS_Service
@@ -1457,6 +1457,33 @@
               </cit:linkage>
               <cit:protocol>
                 <gco:CharacterString>GetCapabilities</gco:CharacterString>
+              </cit:protocol>
+            </cit:CI_OnlineResource>
+          </srv:connectPoint>
+        </srv:SV_OperationMetadata>
+      </srv:containsOperations>
+      <srv:containsOperations>
+        <srv:SV_OperationMetadata>
+          <srv:operationName>
+            <gco:CharacterString>GetCapabilities</gco:CharacterString>
+          </srv:operationName>
+          <srv:distributedComputingPlatform>
+            <srv:DCPList codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#DCPList"
+                         codeListValue="WebServices"/>
+          </srv:distributedComputingPlatform>
+          <srv:connectPoint>
+            <cit:CI_OnlineResource>
+              <cit:linkage xsi:type="lan:PT_FreeText_PropertyType">
+                <gco:CharacterString>https://geoservices.wallonie.be/wms/PS_Service</gco:CharacterString>
+                <lan:PT_FreeText>
+                  <lan:textGroup>
+                    <lan:LocalisedCharacterString locale="#FR">https://geoservices.wallonie.be/wms/PS_Service?protocolIsWms
+                    </lan:LocalisedCharacterString>
+                  </lan:textGroup>
+                </lan:PT_FreeText>
+              </cit:linkage>
+              <cit:protocol>
+                <gco:CharacterString>OGC:WMS</gco:CharacterString>
               </cit:protocol>
             </cit:CI_OnlineResource>
           </srv:connectPoint>

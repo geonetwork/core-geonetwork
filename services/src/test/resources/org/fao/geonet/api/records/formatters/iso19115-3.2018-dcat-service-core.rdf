@@ -360,7 +360,8 @@
       </dcat:distribution>
       <dcat:endpointURL rdf:resource="https://geoservices.wallonie.be/inspire/atom/PS_Opensearch.xml"/>
       <dcat:endpointURL rdf:resource="https://geoservices.wallonie.be/inspire/atom/PS_Service.xml"/>
-      <dcat:endpointDescription rdf:resource="https://geoservices.wallonie.be/wms/PS_Service"/>
+      <dcat:endpointDescription rdf:resource="https://geoservices.wallonie.be/wms/PS_Service?ProtocolIsGetCapabilities"/>
+      <dcat:endpointURL rdf:resource="https://geoservices.wallonie.be/wms/PS_Service"/>
       <dcat:servesDataset>
          <dcat:Dataset rdf:about="https://metawal.wallonie.be/geonetwork/srv/api/records/c2526c30-ee7e-4c0b-b866-599e9aba3665"/>
       </dcat:servesDataset>
