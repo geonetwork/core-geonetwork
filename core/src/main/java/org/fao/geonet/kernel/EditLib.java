@@ -243,21 +243,23 @@ public class EditLib {
 
         List<Element> result = new ArrayList<>();
 
-        MultilingualSchemaPlugin multilingualSchemaPlugin = (MultilingualSchemaPlugin) mdSchema.getSchemaPlugin();
+        if (mdSchema.getSchemaPlugin() instanceof MultilingualSchemaPlugin) {
+            MultilingualSchemaPlugin multilingualSchemaPlugin = (MultilingualSchemaPlugin) mdSchema.getSchemaPlugin();
 
-        if (!languages.isEmpty() &&
-            multilingualSchemaPlugin.duplicateElementsForMultilingual() &&
-            multilingualSchemaPlugin.isMultilingualElementType(mdSchema.getElementType(qname, el.getName()))) {
-            for(String language : languages) {
-                Element child = addElement(mdSchema, el, qname);
-                ((MultilingualSchemaPlugin) mdSchema.getSchemaPlugin()).addTranslationToElement(child, language, "");
-                result.add(child);
+            if (!languages.isEmpty() &&
+                multilingualSchemaPlugin.duplicateElementsForMultilingual() &&
+                multilingualSchemaPlugin.isMultilingualElementType(mdSchema.getElementType(qname, el.getName()))) {
+                for(String language : languages) {
+                    Element child = addElement(mdSchema, el, qname);
+                    ((MultilingualSchemaPlugin) mdSchema.getSchemaPlugin()).addTranslationToElement(child, language, "");
+                    result.add(child);
+                }
+                return result;
             }
-            return result;
-        } else {
-            // If no multilingual management is required, process the single element.
-            result.add(addElement(mdSchema, el, qname));
         }
+
+        // If no multilingual management is required, process the single element.
+        result.add(addElement(mdSchema, el, qname));
 
         return result;
     }
