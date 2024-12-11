@@ -27,6 +27,7 @@ import com.google.common.base.Optional;
 import com.google.common.collect.Sets;
 import jeeves.server.context.ServiceContext;
 import org.eclipse.jetty.io.RuntimeIOException;
+import org.fao.geonet.api.records.attachments.Store;
 import org.fao.geonet.api.records.attachments.StoreUtils;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.*;
@@ -53,6 +54,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.transaction.support.TransactionSynchronization;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 import javax.annotation.Nonnull;
 import javax.persistence.EntityNotFoundException;
@@ -635,6 +638,7 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
 
     @Override
     public void cancelEditingSession(ServiceContext context, String id) throws Exception {
+        // Restore the draft to the state it was in before editing
         super.cancelEditingSession(context, id);
 
         int intId = Integer.parseInt(id);
@@ -655,6 +659,23 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
 
                 // Unset METADATA_EDITING_CREATED_DRAFT flag
                 context.getUserSession().removeProperty(Geonet.Session.METADATA_EDITING_CREATED_DRAFT);
+
+                // Get the resource store
+                Store store = context.getBean("resourceStore", Store.class);
+
+                // Register synchronization to delete resources after commit
+                TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
+                    @Override
+                    public void afterCommit() {
+                        try {
+                            // Delete resources from the store
+                            store.delResources(context, intId);
+                        } catch (Exception e) {
+                            Log.error(Geonet.DATA_MANAGER, "Couldn't delete resources for draft " + id, e);
+                        }
+                    }
+                });
+
             } catch (Exception e) {
                 Log.error(Geonet.DATA_MANAGER, "Couldn't cleanup draft " + id, e);
             }
