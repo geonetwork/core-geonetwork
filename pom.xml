@@ -1106,6 +1106,11 @@
         <version>${hibernate.version}</version>
       </dependency>
       <dependency>
+        <groupId>net.sf.ehcache</groupId>
+        <artifactId>ehcache</artifactId>
+        <version>2.10.9.2</version>
+      </dependency>
+      <dependency>
         <groupId>org.hibernate</groupId>
         <artifactId>hibernate-jpamodelgen</artifactId>
         <version>${hibernate.version}</version>
@@ -1561,7 +1566,7 @@
     <kb.url>http://localhost:${kb.port}</kb.url>
 
     <jms.url>tcp://localhost:61616</jms.url>
-    <activemq.version>5.6.0</activemq.version>
+    <activemq.version>5.7.0</activemq.version>
 
     <!-- Avoid to create any sessions for crawlers.
     Define the list of User-Agent to be considered as bot. -->
