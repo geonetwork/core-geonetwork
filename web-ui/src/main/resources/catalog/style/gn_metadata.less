@@ -1,4 +1,5 @@
 @import "gn_search.less";
+@import "gn_variables.less";
 
 .panel-body .gn-metadata-view {
   width: 100%;
@@ -617,23 +618,45 @@ ul.container-list {
       }
       .col-md-6,
       .col-md-4 {
-        padding-left: 0px;
-        padding-right: 0px;
+        padding-left: 0;
+        padding-right: 0;
       }
-      .gn-contact-card-org {
+      .gn-contact-card-org,
+      .gn-contact-card-org-group {
         padding: 5px 0;
         margin-bottom: 10px;
       }
       .gn-contact-card-role {
-        font-style: italic;
-        font-weight: bolder;
-      }
-      .gn-contact-card-org-group {
-        font-style: italic;
         font-weight: bolder;
       }
       .gn-contact-card-group-role {
         padding: 5px;
+      }
+      @media print {
+        svg {
+          max-width: 75px;
+          margin: 15px;
+        }
+        [gn-popover-content] {
+          .make-md-column-offset(3);
+          padding: 0 @gn-spacing-lg;
+          display: block !important;
+          label,
+          a {
+            display: block;
+            margin-bottom: @gn-spacing;
+          }
+          [data-label="focusOnFrom"] {
+            display: none;
+          }
+          .fa {
+            display: none;
+          }
+          [data-ng-href] {
+            margin-bottom: @gn-spacing;
+            display: inline-block;
+          }
+        }
       }
     }
   }

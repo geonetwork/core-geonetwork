@@ -457,5 +457,10 @@
   "linkStatus": "Link status",
   "requestStatus": "Request status",
   "linkUrl": "Link url",
-  "associatedUuid": "Associated to metadata UUID"
+  "associatedUuid": "Associated to metadata UUID",
+  "mdEmail": "Email",
+  "mdWebsite": "Website",
+  "mdOrganization": "Organization",
+  "mdAddress": "Address",
+  "mdPhone": "Phone"
 }
