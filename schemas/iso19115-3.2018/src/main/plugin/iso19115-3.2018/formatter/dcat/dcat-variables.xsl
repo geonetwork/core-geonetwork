@@ -44,7 +44,7 @@
     <entry key="dct:description">mdb:MD_Metadata/mdb:identificationInfo/mri:MD_DataIdentification/mri:graphicOverview/mcc:MD_BrowseGraphic/mcc:fileDescription</entry>
     <entry key="dct:description">mdb:MD_Metadata/mdb:identificationInfo/srv:SV_ServiceIdentification/mri:graphicOverview/mcc:MD_BrowseGraphic/mcc:fileDescription</entry>
     <entry key="dct:description">mdb:MD_Metadata/mdb:distributionInfo/mrd:MD_Distribution/mrd:transferOptions/mrd:MD_DigitalTransferOptions/mrd:onLine/cit:CI_OnlineResource/cit:description</entry>
-    <entry key="dct:description">mdb:MD_Metadata/mdb:contentInfo/mrc:MD_FeatureCatalogueDescription/mrc:featureCatalogueCitatio/cit:CI_Citation/cit:onlineResource/cit:CI_OnlineResource/cit:CI_OnlineResource/cit:description</entry>
+    <entry key="dct:description">mdb:MD_Metadata/mdb:contentInfo/mrc:MD_FeatureCatalogueDescription/mrc:featureCatalogueCitation/cit:CI_Citation/cit:onlineResource/cit:CI_OnlineResource/cit:CI_OnlineResource/cit:description</entry>
     <entry key="dct:description">mdb:MD_Metadata/mdb:resourceLineage/mrl:LI_Lineage/mrl:additionalDocumentation/cit:CI_Citation/cit:onlineResource/cit:CI_OnlineResource/cit:CI_OnlineResource/cit:description</entry>
     <entry key="dct:description">mdb:MD_Metadata/mdb:portrayalCatalogueInfo/mpc:MD_PortrayalCatalogueReference/mpc:portrayalCatalogueCitation/cit:CI_Citation/cit:onlineResource/cit:CI_OnlineResource/cit:description</entry>
     <entry key="dct:description">mdb:MD_Metadata/mdb:distributionInfo/mrd:MD_Distribution/mrd:distributor/mrd:MD_Distributor/mrd:distributorTransferOptions/mrd:MD_DigitalTransferOptions/mrd:onLine/cit:CI_OnlineResource/cit:description</entry>
