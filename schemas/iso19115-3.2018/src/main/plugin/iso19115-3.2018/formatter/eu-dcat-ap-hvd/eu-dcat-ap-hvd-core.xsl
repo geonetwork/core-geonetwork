@@ -10,6 +10,7 @@
                 xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
                 xmlns:skos="http://www.w3.org/2004/02/skos/core#"
                 xmlns:dcatap="http://data.europa.eu/r5r/"
+                xmlns:dcat="http://www.w3.org/ns/dcat#"
                 xmlns:eli="http://data.europa.eu/eli/ontology"
                 xmlns:xlink="http://www.w3.org/1999/xlink"
                 xmlns:dct="http://purl.org/dc/terms/"
@@ -75,6 +76,11 @@
       <xsl:variable name="hvdCategory"
                     select="$euHvdDataCategories/rdf:RDF/*[skos:prefLabel/normalize-space(.) = $category]"/>
       <xsl:if test="$hvdCategory">
+        <!--<dcat:theme>
+          <skos:Concept rdf:about="{$hvdCategory/@rdf:about}">
+            <xsl:copy-of select="$hvdCategory/skos:prefLabel[@xml:lang = $languages/@iso2code]"/>
+          </skos:Concept>
+        </dcat:theme>-->
         <dcatap:hvdCategory>
           <skos:Concept rdf:about="{$hvdCategory/@rdf:about}">
             <xsl:copy-of select="$hvdCategory/skos:prefLabel[@xml:lang = $languages/@iso2code]"/>
