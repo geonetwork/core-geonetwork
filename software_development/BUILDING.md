@@ -66,7 +66,19 @@ Please refer to the maven documentation for additional options, [Maven: The Comp
 
 ## Maven Profiles
 
-Maven profiles are used to enable additional build configuration.
+Maven profiles are used to enable additional build configuration or optional modules:
+
+```
+mvn install -Pdatastorage-s3
+```
+
+Some build profiles are activated with specific properties, such as `release` to build release bundles:
+
+```
+mvn install -Drelease
+```
+
+The `release` flag above asks `datastorage-s3`, `datastorage-jcloud`, `datastorage-cmis` and the `release` module to produce `zip` bundles for distribution.
 
 ## Run Elasticsearch
 

@@ -251,5 +251,5 @@
      s3      - AWS S3 storage (see config-store/config-s3.xml for more details)
      cmis    - CMIS storage (see config-store/config-cmis.xml for more details)
   -->
-  <import resource="config-store/config-${geonetwork.store.type:default}.xml"/>
+  <import resource="classpath*:/config-store/config-${geonetwork.store.type:default}.xml"/>
 </beans>

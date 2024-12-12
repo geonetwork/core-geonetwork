@@ -105,7 +105,7 @@ public class S3Resources extends Resources {
             final ListObjectsV2Result objects = s3.getClient().listObjectsV2(s3.getBucket(), key);
             for (S3ObjectSummary next: objects.getObjectSummaries()) {
                 String ext = FilenameUtils.getExtension(next.getKey());
-                if (IMAGE_EXTENSIONS.contains(ext.toLowerCase())) {
+                if (Resources.IMAGE_EXTENSIONS.contains(ext.toLowerCase())) {
                     return getKeyPath(next.getKey());
                 }
             }
@@ -203,13 +203,13 @@ public class S3Resources extends Resources {
                 final String suffix = FilenameUtils.getExtension(key);
 
                 // find a different format and convert it to our desired format
-                if (IMAGE_WRITE_SUFFIXES.contains(suffix.toLowerCase())) {
+                if (Resources.IMAGE_WRITE_SUFFIXES.contains(suffix.toLowerCase())) {
                     final String suffixless = FilenameUtils.removeExtension(key);
                     final ListObjectsV2Result objects =
                         s3.getClient().listObjectsV2(s3.getBucket(), suffixless + ".");
                     for (S3ObjectSummary object: objects.getObjectSummaries()) {
                         final String ext = FilenameUtils.getExtension(object.getKey()).toLowerCase();
-                        if (IMAGE_READ_SUFFIXES.contains(ext)) {
+                        if (Resources.IMAGE_READ_SUFFIXES.contains(ext)) {
                             try (ResourceHolder in = new S3ResourceHolder(object.getKey(), true);
                                  ResourceHolder out = new S3ResourceHolder(key, true)) {
                                 try (InputStream inS = IO.newInputStream(in.getPath());

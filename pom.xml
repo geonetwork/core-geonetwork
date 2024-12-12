@@ -1218,6 +1218,36 @@
         <artifactId>json</artifactId>
         <version>20240205</version>
       </dependency>
+
+      <dependency>
+        <groupId>org.apache.chemistry.opencmis</groupId>
+        <artifactId>chemistry-opencmis-client-api</artifactId>
+        <version>1.1.0</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.apache.chemistry.opencmis</groupId>
+        <artifactId>chemistry-opencmis-client-impl</artifactId>
+        <version>1.1.0</version>
+        <exclusions>
+          <exclusion>
+            <groupId>xml-resolver</groupId>
+            <artifactId>xml-resolver</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+
+      <dependency>
+        <groupId>org.apache.jclouds</groupId>
+        <artifactId>jclouds-all</artifactId>
+        <version>2.3.0</version>
+      </dependency>
+
+      <dependency>
+        <groupId>com.amazonaws</groupId>
+        <artifactId>aws-java-sdk-s3</artifactId>
+        <version>1.12.261</version>
+      </dependency>
     </dependencies>
   </dependencyManagement>
 
@@ -1330,6 +1360,7 @@
     <module>estest</module>
     <module>index</module>
     <module>translationproviders</module>
+    <module>datastorages</module>
   </modules>
 
   <profiles>
