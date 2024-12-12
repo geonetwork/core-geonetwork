@@ -191,6 +191,8 @@
                   helpPageUrl = baseUrl + "/" + page;
                 }
 
+                helpPageUrl = processUrl(helpPageUrl);
+
                 testAndOpen(helpPageUrl);
               }
             );
