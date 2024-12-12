@@ -29,7 +29,7 @@
           http://www.springframework.org/schema/context/spring-context-3.0.xsd">
 
   <context:property-override
-    location="WEB-INF/config-security/config-security-jwt-headers-overrides.properties"
+    location="WEB-INF/config-security/config-security-gn5-overrides.properties"
     ignore-resource-not-found="true"/>
 
   <import resource="config-security-jwt-headers-base.xml"/>
