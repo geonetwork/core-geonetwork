@@ -530,7 +530,10 @@
         );
       }
       var setActiveTab = function () {
-        $scope.activeTab = $location.path().match(/^(\/[a-zA-Z0-9]*)($|\/.*)/)[1];
+        let match = $location.path().match(/^(\/[a-zA-Z0-9]*)($|\/.*)/);
+        if (match) {
+          $scope.activeTab = match[1];
+        }
       };
 
       setActiveTab();
