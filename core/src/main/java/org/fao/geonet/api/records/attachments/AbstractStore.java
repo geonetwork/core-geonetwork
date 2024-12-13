@@ -44,7 +44,6 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.BufferedInputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -163,7 +162,7 @@ public abstract class AbstractStore implements Store {
         return metadataId;
     }
 
-    protected String getFilenameFromHeader(final URL fileUrl) throws IOException {
+    protected String getFilenameFromHeader(final URL fileUrl) {
         HttpURLConnection connection = null;
         try {
             connection = (HttpURLConnection) fileUrl.openConnection();
