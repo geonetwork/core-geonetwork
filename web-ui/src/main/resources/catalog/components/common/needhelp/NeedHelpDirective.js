@@ -141,6 +141,18 @@
           };
 
           /**
+           * Processes an URL removing // characters in the URL path.
+           *
+           * @param url
+           * @returns {string}
+           */
+          var processUrl = function(url) {
+            var urlToProcess = new URL(url);
+            urlToProcess.pathname = urlToProcess.pathname.replace(/\/\//g, "/");
+            return urlToProcess.toString();
+          }
+
+          /**
            * Get the URL of the corresponding help page and open it in a new tab
            * @returns {boolean}
            */
@@ -152,20 +164,34 @@
             if (gnGlobalSettings.lang !== "en") {
               baseUrl = scope.helpBaseUrl.replace("{{lang}}", gnGlobalSettings.lang);
             } else {
-              baseUrl = scope.helpBaseUrl.replace("/{{lang}}", "");
+              baseUrl = scope.helpBaseUrl.replace("{{lang}}", "");
             }
 
             baseUrl = baseUrl.replace("{{version}}", scope.applicationVersion);
 
-            var helpPageUrl = baseUrl + "/" + page;
+            var helpPageUrl;
+            if (baseUrl.includes("{{section}}")) {
+              helpPageUrl = baseUrl.replace("{{section}}", page);
+            } else {
+              helpPageUrl = baseUrl + "/" + page;
+            }
+
+            helpPageUrl = processUrl(helpPageUrl);
 
             testAndOpen(helpPageUrl).then(
               function () {},
               function () {
                 var baseUrl = scope.helpBaseUrl
-                  .replace("/{{lang}}", "")
+                  .replace("{{lang}}", "")
                   .replace("{{version}}", scope.applicationVersion);
-                var helpPageUrl = baseUrl + "/" + page;
+                var helpPageUrl;
+                if (baseUrl.includes("{{section}}")) {
+                  helpPageUrl = baseUrl.replace("{{section}}", page);
+                } else {
+                  helpPageUrl = baseUrl + "/" + page;
+                }
+
+                helpPageUrl = processUrl(helpPageUrl);
 
                 testAndOpen(helpPageUrl);
               }
