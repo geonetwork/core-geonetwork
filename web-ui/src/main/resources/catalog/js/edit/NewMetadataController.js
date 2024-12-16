@@ -79,7 +79,7 @@
         featureCatalog: "fa-table",
         service: "fa-cog",
         map: "fa-map",
-        staticMap: "fa-map",
+        "map-static": "fa-map",
         dataset: "fa-file"
       };
 
@@ -116,7 +116,7 @@
             resourceType: {
               terms: {
                 field: "resourceType",
-                exclude: ["map/static", "theme", "place"],
+                exclude: ["map-static", "theme", "place"],
                 missing: "other"
               }
             }

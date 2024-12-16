@@ -263,7 +263,7 @@
     "spatialRepresentationType": "Tipo di rappresentazione",
     "cl_spatialRepresentationType": "Tipo di rappresentazione",
     "state": "Stato",
-    "staticMap": "Mappa statica",
+    "map-static": "Mappa statica",
     "surname": "Cognome",
     "title": "Titolo",
     "to": "A",

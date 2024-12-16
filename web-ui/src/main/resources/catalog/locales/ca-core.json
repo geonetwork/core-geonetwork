@@ -263,7 +263,7 @@
     "spatialRepresentationType": "Tipus de representació",
     "cl_spatialRepresentationType": "Tipus de representació",
     "state": "Estat",
-    "staticMap": "Mapa estàtic",
+    "map-static": "Mapa estàtic",
     "surname": "Cognom",
     "title": "Títol",
     "to": "A",

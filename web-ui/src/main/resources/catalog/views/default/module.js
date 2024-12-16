@@ -121,7 +121,7 @@
         filters: [
           {
             query_string: {
-              query: '+resourceType:"map/interactive"'
+              query: '+resourceType:"map-interactive"'
             }
           }
         ],

@@ -1694,12 +1694,12 @@
       <description></description>
     </entry>
     <entry hideInEditMode="true">
-      <code>staticMap</code>
+      <code>map-static</code>
       <label>Static map</label>
       <description></description>
     </entry>
     <entry hideInEditMode="true">
-      <code>interactiveMap</code>
+      <code>map-interactive</code>
       <label>Interactive map</label>
       <description></description>
     </entry>
