@@ -22,8 +22,7 @@
     >
       <strong class="text-no-wrap">
         <span ng-if="::!specific"
-          >{{getFacetLabel(dimensionList[filter.key]) || ('facet-' + filter.key) |
-          facetKeyTranslator}}</span
+          >{{getFacetLabel(dimensionList[filter.key], 'facet-' + filter.key)}}</span
         >
         <span ng-if="::specific">{{filter.key}}</span>
       </strong>

@@ -2,9 +2,7 @@
   <h2>{{title}}</h2>
   <p class="text-muted" translate="">filterHelp</p>
   <div data-ng-repeat="filter in filtersToProcess">
-    <label
-      >{{getFacetLabel(agg[filter]) || ('facet-' + filter) | facetKeyTranslator}}</label
-    >
+    <label>{{getFacetLabel(agg[filter], 'facet-' + filter)}}</label>
     <div>
       <button
         data-ng-repeat="(key, b) in agg[filter].buckets"
