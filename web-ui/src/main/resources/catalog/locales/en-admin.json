@@ -627,7 +627,7 @@
     "system/clickablehyperlinks/enable-help": "If set, GeoNetwork will display clickable hyperlinks in the metadata.",
     "system/documentation": "Documentation configuration",
     "system/documentation/url": "Base manual url",
-    "system/documentation/url-help": "Base application manual url. Defaults to the official manual page (https://docs.geonetwork-opensource.org/{version}/{lang}) and can be customised to use a self hosted documentation with a custom branding. The url can contain \\{\\{lang\\}\\} placeholder, to display the manual in different languages when available, and \\{\\{version\\}\\} placeholder to use the application version.",
+    "system/documentation/url-help": "Base application manual url. Defaults to the official manual page (https://docs.geonetwork-opensource.org/{version}/{lang}) and can be customised to use a self hosted documentation with a custom branding. The url can contain \\{\\{lang\\}\\} placeholder, to display the manual in different languages when available, \\{\\{version\\}\\} placeholder to use the application version, and \\{\\{section\\}\\} placeholder to parse sub section url from manual.json of the current page. When the \\{\\{section\\}\\} placeholder is not provided, the sub section value is automatically appended to the end of the url.",
     "system/publication": "Publication",
     "system/publication/doi/doienabled": "Allow creation of Digital Object Identifier (DOI)",
     "system/publication/doi/doipattern": "DOI pattern",
