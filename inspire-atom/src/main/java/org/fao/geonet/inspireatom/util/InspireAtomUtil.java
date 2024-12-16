@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2023 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2024 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -63,7 +63,7 @@ import static org.fao.geonet.kernel.search.EsSearchManager.FIELDLIST_CORE;
  * @author Jose García
  */
 public class InspireAtomUtil {
-    private final static String EXTRACT_DATASETS_FROM_SERVICE_XSLT = "extract-datasetinfo-from-service-feed.xsl";
+    private static final String EXTRACT_DATASETS_FROM_SERVICE_XSLT = "extract-datasetinfo-from-service-feed.xsl";
 
     /**
      * Xslt process to get the related datasets in service metadata.
@@ -395,7 +395,15 @@ public class InspireAtomUtil {
             "              \"value\": \"%s\"" +
             "            }" +
             "          }" +
+            "        }," +
+            "        {" +
+            "          \"term\": {" +
+            "            \"isPublishedToAll\": {" +
+            "              \"value\": \"true\"" +
+            "            }" +
+            "          }" +
             "        }" +
+
             "      ]" +
             "    }" +
             "}";

@@ -266,7 +266,7 @@
     "spatialRepresentationType": "Tipul de reprezentare",
     "cl_spatialRepresentationType": "Tipul de reprezentare",
     "state": "Stat",
-    "staticMap": "Harta statica",
+    "map-static": "Harta statica",
     "surname": "Nume de familie",
     "title": "Titlu",
     "to": "La",

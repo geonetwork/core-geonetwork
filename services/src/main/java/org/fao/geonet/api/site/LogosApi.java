@@ -24,6 +24,8 @@
 package org.fao.geonet.api.site;
 
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -240,7 +242,7 @@ public class LogosApi {
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     @PreAuthorize("hasAuthority('UserAdmin')")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "204", description = "Logo removed."),
+        @ApiResponse(responseCode = "204", description = "Logo removed.", content = {@Content(schema = @Schema(hidden = true))}),
         @ApiResponse(responseCode = "404", description = ApiParams.API_RESPONSE_RESOURCE_NOT_FOUND),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_USER_ADMIN)
     })

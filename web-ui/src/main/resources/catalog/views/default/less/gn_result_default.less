@@ -1,4 +1,5 @@
 @import "../../../style/gn_search.less";
+@import "../../../style/gn_variables.less";
 // variables for manipulating the theme
 @import "gn_variables_default.less"; // must be last
 
@@ -97,6 +98,39 @@
       background-color: @brand-danger !important;
     }
   }
+  // address card
+  .panel-address {
+    padding-bottom: 0;
+    box-shadow: none;
+    border: 1px solid @panel-default-border;
+    .panel-heading {
+      padding: @gn-spacing-lg;
+      border-bottom: 1px solid @panel-default-border;
+      background-color: @panel-default-heading-bg;
+      height: auto;
+      line-height: normal;
+      h3 {
+        margin: 0;
+        padding: 0;
+        font-size: 14px;
+        font-weight: bold;
+      }
+    }
+    .panel-body {
+      padding: 0;
+      address {
+        padding: @gn-spacing-lg;
+
+        border-radius: @panel-border-radius;
+        margin: 0;
+        label {
+          min-width: 20%;
+          margin-right: @gn-spacing;
+        }
+      }
+    }
+
+  }
   // card
   .gn-card-view-header {
     padding: 15px;
@@ -147,7 +181,7 @@
     .img-thumbnail {
       padding: 0;
       border: none;
-      max-height: 300px;
+      max-height: 500px;
       min-height: 150px;
       max-width: 100%;
     }
@@ -258,14 +292,20 @@
       display: inline;
       line-break: auto;
       word-break: break-word;
+      letter-spacing: -1em;
+      * {
+        letter-spacing: normal;
+      }
       a {
         line-break: normal;
       }
       &:after {
         content: ", ";
+        letter-spacing: normal;
       }
       &:last-child:after {
         content: "";
+        letter-spacing: normal;
       }
     }
   }
@@ -325,6 +365,9 @@
       }
     }
     // keywords
+    .gn-thesaurus:not(:has(button)) {
+      display: none !important;
+    }
     [data-gn-keyword-badges] {
       .btn {
         word-break: break-word;

@@ -79,6 +79,25 @@
     }
   ]);
 
+  module.directive("gnApplicationBanner", [
+    "gnConfig",
+    "gnConfigService",
+    function (gnConfig, gnConfigService) {
+      return {
+        restrict: "E",
+        replace: true,
+        scope: true,
+        templateUrl:
+          "../../catalog/views/default/directives/partials/applicationBanner.html",
+        link: function linkFn(scope) {
+          gnConfigService.load().then(function (c) {
+            scope.isBannerEnabled = gnConfig["system.banner.enable"];
+          });
+        }
+      };
+    }
+  ]);
+
   module.directive("gnLinksBtn", [
     "gnTplResultlistLinksbtn",
     "gnMetadataActions",
@@ -98,6 +117,7 @@
   module.directive("gnMdActionsMenu", [
     "gnMetadataActions",
     "$http",
+    "$q",
     "gnConfig",
     "gnConfigService",
     "gnGlobalSettings",
@@ -105,6 +125,7 @@
     function (
       gnMetadataActions,
       $http,
+      $q,
       gnConfig,
       gnConfigService,
       gnGlobalSettings,
@@ -121,6 +142,8 @@
 
           scope.tasks = [];
           scope.hasVisibletasks = false;
+
+          scope.doiServers = [];
 
           gnConfigService.load().then(function (c) {
             scope.isMdWorkflowEnable = gnConfig["metadata.workflow.enable"];
@@ -224,7 +247,7 @@
           scope.taskConfiguration = {
             doiCreationTask: {
               isVisible: function (md) {
-                return gnConfig["system.publication.doi.doienabled"];
+                return scope.doiServers.length > 0;
               },
               isApplicable: function (md) {
                 // TODO: Would be good to return why a task is not applicable as tooltip
@@ -265,6 +288,14 @@
 
           scope.$watch(attrs.gnMdActionsMenu, function (a) {
             scope.md = a;
+
+            if (scope.md) {
+              $http
+                .get("../api/doiservers/metadata/" + scope.md.id)
+                .then(function (response) {
+                  scope.doiServers = response.data;
+                });
+            }
           });
 
           scope.getScope = function () {

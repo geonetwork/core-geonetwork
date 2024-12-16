@@ -112,6 +112,14 @@
 
     <for name="mrs:referenceSystemIdentifier" addDirective="data-gn-crs-selector"/>
 
+    <!-- Example configuration to check duplicated metadata alternate title -->
+    <!--<for name="cit:alternateTitle"
+         xpath="/mdb:MD_Metadata/mdb:identificationInfo/mri:MD_DataIdentification/mri:citation/cit:CI_Citation/cit:alternateTitle"
+         use="data-gn-duplicated-metadata-value-checker">
+      <directiveAttributes
+        data-field-key="altTitle" />
+    </for>-->
+
     <for name="mdb:contact" addDirective="data-gn-directory-entry-selector">
       <directiveAttributes
               data-template-add-snippet="&lt;cit:CI_Responsibility
@@ -655,12 +663,16 @@
                                               filter: 'protocol:OGC:WFS|OGC:WCS|.*DOWNLOAD.*|DB:.*|FILE:.*|OGC API Features|OGC API Coverages',
                                               editActions: ['addOnlinesrc#onlineDownload|localNetwork']
                                            }, {
+                                             title: 'map',
+                                             filter: 'protocol:OGC:OWS-C|PDF:MAP',
+                                             editActions: ['addOnlinesrc#onlineUseMap']
+                                           }, {
                                              title: 'mapLegend',
                                              filter: 'function:legend',
                                              editActions: ['addOnlinesrc#onlineUseLegend']
                                            }, {
                                               title: 'links',
-                                              filter:'-protocol:OGC.*|REST|ESRI:.*|atom.*|.*DOWNLOAD.*|DB:.*|FILE:.* AND -function:legend|featureCatalogue|dataQualityReport',
+                                              filter:'-protocol:OGC.*|REST|ESRI:.*|atom.*|.*DOWNLOAD.*|DB:.*|FILE:.*|PDF:MAP AND -function:legend|featureCatalogue|dataQualityReport',
                                               editActions: ['addOnlinesrc#links']
                                            }, {
                                               title: 'quality',
@@ -758,12 +770,16 @@
                                               filter: 'protocol:OGC:WFS|OGC:WCS|.*DOWNLOAD.*|DB:.*|FILE:.*|OGC API Features|OGC API Coverages',
                                               editActions: ['addOnlinesrc#onlineDownload|localNetwork']
                                            }, {
+                                             title: 'map',
+                                             filter: 'protocol:OGC:OWS-C|PDF:MAP',
+                                             editActions: ['addOnlinesrc#onlineUseMap']
+                                           }, {
                                              title: 'mapLegend',
                                              filter: 'function:legend',
                                              editActions: ['addOnlinesrc#onlineUseLegend']
                                            }, {
                                               title: 'links',
-                                              filter:'-protocol:OGC.*|REST|ESRI:.*|atom.*|.*DOWNLOAD.*|DB:.*|FILE:.* AND -function:legend|featureCatalogue|dataQualityReport',
+                                              filter:'-protocol:OGC.*|REST|ESRI:.*|atom.*|.*DOWNLOAD.*|DB:.*|FILE:.*|PDF:MAP AND -function:legend|featureCatalogue|dataQualityReport',
                                               editActions: ['addOnlinesrc#links']
                                            }, {
                                               title: 'quality',
@@ -891,12 +907,16 @@
                                               filter: 'protocol:OGC:WFS|OGC:WCS|.*DOWNLOAD.*|DB:.*|FILE:.*|OGC API Features|OGC API Coverages',
                                               editActions: ['addOnlinesrc#onlineDownload|localNetwork']
                                            }, {
+                                             title: 'map',
+                                             filter: 'protocol:OGC:OWS-C|PDF:MAP',
+                                             editActions: ['addOnlinesrc#onlineUseMap']
+                                           }, {
                                              title: 'mapLegend',
                                              filter: 'function:legend',
                                              editActions: ['addOnlinesrc#onlineUseLegend']
                                            }, {
                                               title: 'links',
-                                              filter:'-protocol:OGC.*|REST|ESRI:.*|atom.*|.*DOWNLOAD.*|DB:.*|FILE:.* AND -function:legend|featureCatalogue|dataQualityReport',
+                                              filter:'-protocol:OGC.*|REST|ESRI:.*|atom.*|.*DOWNLOAD.*|DB:.*|FILE:.*|PDF:MAP AND -function:legend|featureCatalogue|dataQualityReport',
                                               editActions: ['addOnlinesrc#links']
                                            }, {
                                               title: 'quality',

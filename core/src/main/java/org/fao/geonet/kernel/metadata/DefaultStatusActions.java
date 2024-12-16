@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2023 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2024 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -48,6 +48,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static org.fao.geonet.kernel.setting.Settings.SYSTEM_FEEDBACK_EMAIL;
 import static org.fao.geonet.util.LocalizedEmailComponent.ComponentType.*;
@@ -330,22 +332,24 @@ public class DefaultStatusActions implements StatusActions {
             );
         }
 
-        LocalizedEmail localizedEmail = new LocalizedEmail(false);
-        localizedEmail.addComponents(emailSubjectComponent, emailMessageComponent, emailSalutationComponent);
-
-        String subject = localizedEmail.getParsedSubject(feedbackLocales);
-
         for (User user : userToNotify) {
+            LocalizedEmail localizedEmail = new LocalizedEmail(false);
+
             String userName = Joiner.on(" ").skipNulls().join(user.getName(), user.getSurname());
             //If we have a userName add the salutation
             String message;
             if (StringUtils.isEmpty(userName)) {
+                localizedEmail.addComponents(emailSubjectComponent, emailMessageComponent);
+
                 message = localizedEmail.getParsedMessage(feedbackLocales);
             } else {
+                localizedEmail.addComponents(emailSubjectComponent, emailMessageComponent, emailSalutationComponent);
+
                 Map<String, String> replacements = new HashMap<>();
                 replacements.put("{{userName}}", userName);
                 message = localizedEmail.getParsedMessage(feedbackLocales, replacements);
             }
+            String subject = localizedEmail.getParsedSubject(feedbackLocales);
             sendEmail(user.getEmail(), subject, message);
         }
     }
@@ -369,6 +373,25 @@ public class DefaultStatusActions implements StatusActions {
                 return new ArrayList<>();
         }
 
+        // If status is DRAFT and previous status is SUBMITTED, which means either:
+        //   - a cancel working copy (from editor) --> should be notified the reviewer.
+        //   - rejection (from reviewer) --> should be notified the editor.
+        // and the notification level is recordUserAuthor or recordProfileReviewer,
+        // then adjust the notification level, depending on the user role
+        if ((status.getStatusValue().getId() == Integer.parseInt(StatusValue.Status.DRAFT)) &&
+            (!StringUtils.isEmpty(status.getPreviousState()) &&
+                (status.getPreviousState().equals(StatusValue.Status.SUBMITTED))) &&
+            (notificationLevel.equals(StatusValueNotificationLevel.recordUserAuthor) || (notificationLevel.equals(StatusValueNotificationLevel.recordProfileReviewer)))) {
+            UserRepository userRepository = ApplicationContextHolder.get().getBean(UserRepository.class);
+            Optional<User> user = userRepository.findById(status.getUserId());
+            if (user.isPresent()) {
+                if (user.get().getProfile() == Profile.Editor) {
+                    notificationLevel = StatusValueNotificationLevel.recordProfileReviewer;
+                } else {
+                    notificationLevel = StatusValueNotificationLevel.recordUserAuthor;
+                }
+            }
+        }
         // TODO: Status does not provide batch update
         // So taking care of one record at a time.
         // Currently the code could notify a mix of reviewers
@@ -430,7 +453,9 @@ public class DefaultStatusActions implements StatusActions {
                 }
             }
         }
-        return users;
+
+        // Filter out users without email
+        return users.stream().filter(u -> StringUtils.isNotEmpty(u.getEmail())).collect(Collectors.toList());
     }
 
     public static List<Group> getGroupToNotify(StatusValueNotificationLevel notificationLevel, List<String> groupNames) {

@@ -1,6 +1,6 @@
 /*
  * =============================================================================
- * ===	Copyright (C) 2019 Food and Agriculture Organization of the
+ * ===	Copyright (C) 2024 Food and Agriculture Organization of the
  * ===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * ===	and United Nations Environment Programme (UNEP)
  * ===
@@ -35,21 +35,30 @@ import org.fao.geonet.domain.MetadataResourceVisibility;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.repository.MetadataRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.BufferedInputStream;
+import java.io.IOException;
 import java.io.InputStream;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public abstract class AbstractStore implements Store {
+    protected static final String RESOURCE_MANAGEMENT_EXTERNAL_PROPERTIES_SEPARATOR = ":";
+    protected static final String RESOURCE_MANAGEMENT_EXTERNAL_PROPERTIES_ESCAPED_SEPARATOR = "\\:";
+    private static final Logger log = LoggerFactory.getLogger(AbstractStore.class);
+
     @Override
     public final List<MetadataResource> getResources(final ServiceContext context, final String metadataUuid, final Sort sort,
             final String filter) throws Exception {
@@ -148,6 +157,29 @@ public abstract class AbstractStore implements Store {
         return metadataId;
     }
 
+    protected String getFilenameFromHeader(final URL fileUrl) throws IOException {
+        HttpURLConnection connection = null;
+        try {
+            connection = (HttpURLConnection) fileUrl.openConnection();
+            connection.setRequestMethod("HEAD");
+            connection.connect();
+            String contentDisposition = connection.getHeaderField("Content-Disposition");
+
+            if (contentDisposition != null && contentDisposition.contains("filename=")) {
+                String filename = contentDisposition.split("filename=")[1].replace("\"", "").trim();
+                return filename.isEmpty() ? null : filename;
+            }
+            return null;
+        } catch (Exception e) {
+            log.error("Error retrieving resource filename from header", e);
+            return null;
+        } finally {
+            if (connection != null) {
+                connection.disconnect();
+            }
+        }
+    }
+
     protected String getFilenameFromUrl(final URL fileUrl) {
         String fileName = FilenameUtils.getName(fileUrl.getPath());
         if (fileName.contains("?")) {
@@ -194,7 +226,11 @@ public abstract class AbstractStore implements Store {
     @Override
     public final MetadataResource putResource(ServiceContext context, String metadataUuid, URL fileUrl,
             MetadataResourceVisibility visibility, Boolean approved) throws Exception {
-        return putResource(context, metadataUuid, getFilenameFromUrl(fileUrl), fileUrl.openStream(), null, visibility, approved);
+        String filename = getFilenameFromHeader(fileUrl);
+        if (filename == null) {
+            filename = getFilenameFromUrl(fileUrl);
+        }
+        return putResource(context, metadataUuid, filename, fileUrl.openStream(), null, visibility, approved);
     }
 
     @Override
@@ -278,5 +314,29 @@ public abstract class AbstractStore implements Store {
                 }
             }
         };
+    }
+
+    private String escapeResourceManagementExternalProperties(String value) {
+        return value.replace(RESOURCE_MANAGEMENT_EXTERNAL_PROPERTIES_SEPARATOR, RESOURCE_MANAGEMENT_EXTERNAL_PROPERTIES_ESCAPED_SEPARATOR);
+    }
+
+    /**
+     * Create an encoded base 64 object id contains the following fields to uniquely identify the resource
+     * The fields are separated by a colon ":"
+     * @param type to identify type of storage - document/folder
+     * @param visibility of the resource public/private
+     * @param metadataId internal metadata id
+     * @param version identifier which can be used to directly get this version.
+     * @param resourceId or filename of the resource
+     * @return based 64 object id
+     */
+    protected String getResourceManagementExternalPropertiesObjectId(final String type, final MetadataResourceVisibility visibility, final Integer metadataId, final String version,
+                                                                     final String resourceId) {
+        return Base64.getEncoder().encodeToString(
+            ((type + RESOURCE_MANAGEMENT_EXTERNAL_PROPERTIES_SEPARATOR +
+                escapeResourceManagementExternalProperties(visibility == null ? "" : visibility.toString().toLowerCase()) + RESOURCE_MANAGEMENT_EXTERNAL_PROPERTIES_SEPARATOR +
+                metadataId + RESOURCE_MANAGEMENT_EXTERNAL_PROPERTIES_SEPARATOR +
+                escapeResourceManagementExternalProperties(version == null ? "" : version) + RESOURCE_MANAGEMENT_EXTERNAL_PROPERTIES_SEPARATOR +
+                escapeResourceManagementExternalProperties(resourceId)).getBytes()));
     }
 }

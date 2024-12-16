@@ -504,7 +504,10 @@
            * Load list on init to fill the dropdown
            */
           gnRegionService.loadList().then(function (data) {
-            scope.regionTypes = angular.copy(data);
+            var dataFiltered = _.filter(data, function (o) {
+              return o.id !== "metadata";
+            });
+            scope.regionTypes = angular.copy(dataFiltered);
             if (addGeonames) {
               scope.regionTypes.unshift({
                 name: "Geonames",
@@ -901,6 +904,7 @@
         restrict: "A",
         link: function (scope, element, attrs) {
           scope.prefix = attrs["prefix"] || "";
+          scope.showHintsOnFocus = attrs.showHintsOnFocus === "true"; // displays all the values on focus, default shows only the selected value
           element.attr("placeholder", "...");
           element.on("focus", function () {
             $http
@@ -945,7 +949,8 @@
                 $(element).typeahead(
                   {
                     minLength: 0,
-                    highlight: true
+                    highlight: true,
+                    showHintsOnFocus: scope.showHintsOnFocus
                   },
                   {
                     name: "isoLanguages",
@@ -958,6 +963,10 @@
                     }
                   }
                 );
+                // Since the typeahead is initialized on focus the first focus will not trigger the hints
+                // So we blur then refocus to trigger the hints
+                $(element).blur();
+                $(element).focus();
               });
             element.unbind("focus");
           });
@@ -1143,45 +1152,35 @@
       return {
         copy: function (toCopy) {
           var deferred = $q.defer();
-          navigator.permissions.query({ name: "clipboard-write" }).then(
-            function (result) {
-              if (result.state == "granted" || result.state == "prompt") {
-                navigator.clipboard.writeText(toCopy).then(
-                  function () {
-                    deferred.resolve();
-                  },
-                  function (r) {
-                    console.warn(r);
-                    deferred.reject();
-                  }
-                );
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(toCopy).then(
+              function () {
+                deferred.resolve();
+              },
+              function (r) {
+                console.warn(r);
+                deferred.reject();
               }
-            },
-            function () {
-              deferred.reject();
-            }
-          );
+            );
+          } else {
+            deferred.reject();
+          }
           return deferred.promise;
         },
         paste: function () {
           var deferred = $q.defer();
-          navigator.permissions.query({ name: "clipboard-read" }).then(
-            function (result) {
-              if (result.state == "granted" || result.state == "prompt") {
-                navigator.clipboard.readText().then(
-                  function (text) {
-                    deferred.resolve(text);
-                  },
-                  function () {
-                    deferred.reject();
-                  }
-                );
+          if (navigator.clipboard && navigator.clipboard.readText) {
+            navigator.clipboard.readText().then(
+              function (text) {
+                deferred.resolve(text);
+              },
+              function () {
+                deferred.reject();
               }
-            },
-            function () {
-              deferred.reject();
-            }
-          );
+            );
+          } else {
+            deferred.reject();
+          }
           return deferred.promise;
         }
       };

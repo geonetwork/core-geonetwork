@@ -29,6 +29,7 @@ import org.apache.commons.lang.math.NumberUtils;
 import org.apache.commons.text.StringEscapeUtils;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.csw.services.getrecords.IFieldMapper;
+import org.fao.geonet.utils.DateUtil;
 import org.fao.geonet.utils.Log;
 import org.geotools.api.filter.*;
 import org.geotools.api.filter.expression.Expression;
@@ -338,7 +339,11 @@ public class CswFilter2Es extends AbstractFilterVisitor {
         String dataPropertyValue = stack.pop();
         String dataPropertyName = stack.pop();
 
-        if (!NumberUtils.isNumber(dataPropertyValue)) {
+        boolean isDate = (DateUtil.parseBasicOrFullDateTime(dataPropertyValue) != null);
+
+        if (isDate) {
+            dataPropertyValue = CswFilter2Es.quoteString(dataPropertyValue);
+        } else if (!NumberUtils.isNumber(dataPropertyValue)) {
             dataPropertyValue = StringEscapeUtils.escapeJson(CswFilter2Es.quoteString(dataPropertyValue));
         }
 

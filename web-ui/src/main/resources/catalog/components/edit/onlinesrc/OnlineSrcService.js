@@ -932,7 +932,13 @@
     function ($http) {
       return {
         search: function (url, prefix, query) {
-          return $http.get(url + "?prefix=" + prefix + "&query=" + query);
+          return $http.get(
+            url +
+              "?prefix=" +
+              prefix +
+              "&query=" +
+              query.replaceAll("https://doi.org/", "")
+          );
         }
       };
     }

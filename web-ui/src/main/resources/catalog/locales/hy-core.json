@@ -266,7 +266,7 @@
     "spatialRepresentationType": "Ներկայացման տեսակը",
     "cl_spatialRepresentationType": "Ներկայացման տեսակը",
     "state": "Պետություն",
-    "staticMap": "Ստատիկ քարտեզ",
+    "map-static": "Ստատիկ քարտեզ",
     "surname": "Ազգանունը",
     "title": "Կոչում",
     "to": "Դեպի",

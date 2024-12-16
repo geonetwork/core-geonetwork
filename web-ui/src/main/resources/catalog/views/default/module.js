@@ -95,7 +95,7 @@
         filters: [
           {
             query_string: {
-              query: '+resourceType:"map/interactive"'
+              query: '+resourceType:"map-interactive"'
             }
           }
         ],
@@ -412,7 +412,7 @@
             msg: $translate.instant("layerProtocolNotSupported", {
               type: link.protocol
             }),
-            delay: 20000,
+            delay: 20,
             type: "warning"
           });
           return;
@@ -536,13 +536,22 @@
       setActiveTab();
       $scope.$on("$locationChangeSuccess", setActiveTab);
 
-      $scope.$on("$locationChangeSuccess", function (next, current) {
+      $scope.$on("$locationChangeSuccess", function (event, next, current) {
         if (
           gnSearchLocation.isSearch() &&
           (!angular.isArray(searchMap.getSize()) || searchMap.getSize()[0] < 0)
         ) {
           setTimeout(function () {
             searchMap.updateSize();
+          }, 0);
+        }
+
+        // Changing from the map to search pages, hide alerts
+        var currentUrlHash =
+          current.indexOf("#") > -1 ? current.slice(current.indexOf("#") + 1) : "";
+        if (gnSearchLocation.isMap(currentUrlHash)) {
+          setTimeout(function () {
+            gnAlertService.closeAlerts();
           }, 0);
         }
       });
