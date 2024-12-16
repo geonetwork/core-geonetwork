@@ -146,11 +146,11 @@
            * @param url
            * @returns {string}
            */
-          var processUrl = function(url) {
+          var processUrl = function (url) {
             var urlToProcess = new URL(url);
             urlToProcess.pathname = urlToProcess.pathname.replace(/\/\//g, "/");
             return urlToProcess.toString();
-          }
+          };
 
           /**
            * Get the URL of the corresponding help page and open it in a new tab
