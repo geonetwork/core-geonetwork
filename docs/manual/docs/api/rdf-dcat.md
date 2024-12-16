@@ -6,7 +6,7 @@ The catalogue has the capability to convert ISO to DCAT format in various API en
 
 A base conversion is provided with complementary extensions for various profiles of DCAT:
 
-| Profile                     | Version | Description                                                                                                         | URL  | Conversion from* |
+| Profile                     | Version | Description                                                                                                         | URL  | Conversion from |
 |-----------------------------|---------|---------------------------------------------------------------------------------------------------------------------|------|------------------|
 | W3C DCAT                    | 3       | Default W3C standard                                                                                                | https://www.w3.org/TR/vocab-dcat-3/  | ISO19115-3       |
 | European DCAT-AP            | 3.0.0 | DCAT profile for sharing information about Catalogues containing Datasets and Data Services descriptions in Europe  | https://semiceu.github.io/DCAT-AP/releases/3.0.0/  | ISO19115-3       |
@@ -16,9 +16,10 @@ A base conversion is provided with complementary extensions for various profiles
 | European GeoDCAT-AP (SEMIC) | 3.0.0   | [XSLT conversion maintained by SEMIC](https://github.com/SEMICeu/iso-19139-to-dcat-ap/blob/main/iso-19139-to-dcat-ap.xsl)                                                                             | https://semiceu.github.io/GeoDCAT-AP/releases/3.0.0/  | ISO19139         |
 
 
-\*: 
 * The mapping is done from ISO19115-3 to DCAT* except for the SEMIC conversion which converts ISO19139 to GeoDCAT-AP. 
+
 * When needed, an ISO19139 to or from ISO19115-3 conversion is applied (eg. a CSW request querying a catalog in ISO19115-3 using the SEMIC conversion).
+
 * DCAT output are not available for ISO19110 or Dublin core standards.
 
 ## Past implementation
@@ -132,6 +133,7 @@ For the time being, OGC API Records provides a simplified DCAT output (based on 
 ## DCAT validation
 
 The DCAT validation can be done using online validation tool:
+
 * https://www.itb.ec.europa.eu/shacl/dcat-ap/upload
 
 Depending on the target DCAT profile to use, it may be required to build proper ISO template and metadata record containing all required fields. Usually profiles are adding constraints for usage of specific vocabularies and fields (eg. [for High Value datasets, specific vocabularies are defined for categories, license, applicable legislations, ...](https://semiceu.github.io/DCAT-AP/releases/2.2.0-hvd/#controlled-vocabularies-to-be-used)).
@@ -153,9 +155,11 @@ Some points under discussion are:
 * Where is defined the reference URI in ISO?
 
 eg.
+
 * for the CatalogRecord reference URI is the `metadataLinkage` or the `metadataIdentifier`.
 * for the Resource reference URI is the first resource identifier or the CatalogRecord reference URI with `#resource` suffix.
 * for an organisation, the URI will be the first value in the following sequence:
+
 ```xml
 (cit:partyIdentifier/*/mcc:code/*/text(),
 cit:contactInfo/*/cit:onlineResource/*/cit:linkage/gco:CharacterString/text(),
@@ -185,7 +189,7 @@ This is also mitigated when the complete RDF graph of the catalogue is retrieved
 
 When encoding in ISO datasets in the context of DCAT HVD, consider encoding the following properties:
 
-* Add a keyword pointing to the legislation http://data.europa.eu/eli/reg_impl/2023/138/oj
+* Add a keyword pointing to the legislation [http://data.europa.eu/eli/reg_impl/2023/138/oj](http://data.europa.eu/eli/reg_impl/2023/138/oj)
 * Add at least one keyword for the `dcatap:hvdCategory` from the [High-value dataset categories vocabulary](https://op.europa.eu/en/web/eu-vocabularies/dataset/-/resource?uri=http://publications.europa.eu/resource/dataset/high-value-dataset-category)
 
 See [DCAT AP HVD specification](https://semiceu.github.io/DCAT-AP/releases/2.2.0-hvd/) for other requirements.
@@ -209,6 +213,7 @@ The main differences between the 2 conversions is that the GeoNetwork conversion
 SEMIC conversion parameters `core`, `extended`, `include-deprecated` are not available in the GeoNetwork conversion which focus on version 3 of GeoDCAT-AP.
 
 Some of the differences in the GeoNetwork conversion are:
+
 * CatalogRecord / `dct:identifier` is prefixed with the code space if defined.
 * CatalogRecord / `dct:title` and `dct:description` are set at CatalogRecord level and at the Resource level
 * Resource / First resource identifier is used for `dct:identifer` (MobilityDCAT restrict it to 0..1), then additional ones are encoded in `adms:identifier`
@@ -229,6 +234,7 @@ vs
 ```
 
 Additional properties supported:
+
 * CatalogRecord / `dct:issued` is added if exists in the metadata (added in ISO19115-3) 
 * CatalogRecord / `dct:language` is added if exists 
 * CatalogRecord / `cnt:characterEncoding` is added if exists
@@ -239,6 +245,7 @@ Additional properties supported:
 * Party identifier (added in ISO19115-3) are used for `rdf:about` attribute for individual or organization
 
 Technical differences:
+
 * `normalize-space` is not applied to `abstract` or `lineage` (which lose the line breaks and basic formatting) 
 
 
