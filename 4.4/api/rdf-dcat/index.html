@@ -1585,7 +1585,7 @@
 <th>Version</th>
 <th>Description</th>
 <th>URL</th>
-<th>Conversion from*</th>
+<th>Conversion from</th>
 </tr>
 </thead>
 <tbody>
@@ -1633,10 +1633,17 @@
 </tr>
 </tbody>
 </table>
-<p>*: 
-* The mapping is done from ISO19115-3 to DCAT* except for the SEMIC conversion which converts ISO19139 to GeoDCAT-AP. 
-* When needed, an ISO19139 to or from ISO19115-3 conversion is applied (eg. a CSW request querying a catalog in ISO19115-3 using the SEMIC conversion).
-* DCAT output are not available for ISO19110 or Dublin core standards.</p>
+<ul>
+<li>
+<p>The mapping is done from ISO19115-3 to DCAT* except for the SEMIC conversion which converts ISO19139 to GeoDCAT-AP. </p>
+</li>
+<li>
+<p>When needed, an ISO19139 to or from ISO19115-3 conversion is applied (eg. a CSW request querying a catalog in ISO19115-3 using the SEMIC conversion).</p>
+</li>
+<li>
+<p>DCAT output are not available for ISO19110 or Dublin core standards.</p>
+</li>
+</ul>
 <h2 id="past-implementation">Past implementation</h2>
 <p><a href="https://trac.osgeo.org/geonetwork/wiki/proposals/DCATandRDFServices">The first implementation of DCAT output was done in 2012</a> and was targeting interaction with semantic service and semantic sitemap support. DCAT output was available using a service named <code>rdf.search</code>. This service was deprecated in version 4.0.0 in favor of producing DCAT output in the <a href="../csw/">Catalog Service for the Web (CSW)</a> or using the formatters API.</p>
 <h2 id="usage-in-the-formatters-api">Usage in the formatters API</h2>
@@ -1762,8 +1769,10 @@
 <h2 id="usage-in-ogc-api-records">Usage in OGC API Records</h2>
 <p>For the time being, OGC API Records provides a simplified DCAT output (based on the index document). </p>
 <h2 id="dcat-validation">DCAT validation</h2>
-<p>The DCAT validation can be done using online validation tool:
-* https://www.itb.ec.europa.eu/shacl/dcat-ap/upload</p>
+<p>The DCAT validation can be done using online validation tool:</p>
+<ul>
+<li>https://www.itb.ec.europa.eu/shacl/dcat-ap/upload</li>
+</ul>
 <p>Depending on the target DCAT profile to use, it may be required to build proper ISO template and metadata record containing all required fields. Usually profiles are adding constraints for usage of specific vocabularies and fields (eg. <a href="https://semiceu.github.io/DCAT-AP/releases/2.2.0-hvd/#controlled-vocabularies-to-be-used">for High Value datasets, specific vocabularies are defined for categories, license, applicable legislations, ...</a>).</p>
 <h2 id="mapping-considerations">Mapping considerations</h2>
 <h3 id="items-under-discussion">Items under discussion</h3>
@@ -1775,15 +1784,17 @@
 <li>What should be the reference URI?</li>
 <li>Where is defined the reference URI in ISO?</li>
 </ul>
-<p>eg.
-* for the CatalogRecord reference URI is the <code>metadataLinkage</code> or the <code>metadataIdentifier</code>.
-* for the Resource reference URI is the first resource identifier or the CatalogRecord reference URI with <code>#resource</code> suffix.
-* for an organisation, the URI will be the first value in the following sequence:
+<p>eg.</p>
+<ul>
+<li>for the CatalogRecord reference URI is the <code>metadataLinkage</code> or the <code>metadataIdentifier</code>.</li>
+<li>for the Resource reference URI is the first resource identifier or the CatalogRecord reference URI with <code>#resource</code> suffix.</li>
+<li>for an organisation, the URI will be the first value in the following sequence:</li>
+</ul>
 <div class="language-xml highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>(cit:partyIdentifier/*/mcc:code/*/text(),
 </span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>cit:contactInfo/*/cit:onlineResource/*/cit:linkage/gco:CharacterString/text(),
 </span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>cit:name/gcx:Anchor/@xlink:href,
 </span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>@uuid)[1]
-</span></code></pre></div></p>
+</span></code></pre></div>
 <h4 id="distribution-model-in-dcat-and-iso">Distribution model in DCAT and ISO</h4>
 <p>In DCAT, a number of properties from the dataset are also defined in the distribution elements.
 In ISO, an option could be to use multiple transfer options element to create multiple distribution elements with more detailed information in DCAT (eg. transfer size).</p>
@@ -1796,7 +1807,7 @@ This is also mitigated when the complete RDF graph of the catalogue is retrieved
 <h3 id="eu-dcat-ap-high-value-datasets">EU DCAT AP High Value Datasets</h3>
 <p>When encoding in ISO datasets in the context of DCAT HVD, consider encoding the following properties:</p>
 <ul>
-<li>Add a keyword pointing to the legislation http://data.europa.eu/eli/reg_impl/2023/138/oj</li>
+<li>Add a keyword pointing to the legislation <a href="http://data.europa.eu/eli/reg_impl/2023/138/oj">http://data.europa.eu/eli/reg_impl/2023/138/oj</a></li>
 <li>Add at least one keyword for the <code>dcatap:hvdCategory</code> from the <a href="https://op.europa.eu/en/web/eu-vocabularies/dataset/-/resource?uri=http://publications.europa.eu/resource/dataset/high-value-dataset-category">High-value dataset categories vocabulary</a></li>
 </ul>
 <p>See <a href="https://semiceu.github.io/DCAT-AP/releases/2.2.0-hvd/">DCAT AP HVD specification</a> for other requirements.</p>
@@ -1812,15 +1823,17 @@ This is also mitigated when the complete RDF graph of the catalogue is retrieved
 <h3 id="semic-conversion-compared-to-geonetwork-conversion">SEMIC conversion compared to GeoNetwork conversion</h3>
 <p>The main differences between the 2 conversions is that the GeoNetwork conversion <strong>starts from ISO19115-3 instead of ISO19139</strong> (to better support additional information provided in ISO19115-3 eg. date lifecycle, party identifiers and citation in data quality, feature catalogue, additional documentation, portrayal sections).  <strong>The conversion to GeoDCAT-AP is done as an extension of DCAT-AP which extends the core W3C DCAT</strong> for easier customization and extension. This allows non EU countries to also use the base DCAT conversion. The conversion is less linear and easier to extend or customize.</p>
 <p>SEMIC conversion parameters <code>core</code>, <code>extended</code>, <code>include-deprecated</code> are not available in the GeoNetwork conversion which focus on version 3 of GeoDCAT-AP.</p>
-<p>Some of the differences in the GeoNetwork conversion are:
-* CatalogRecord / <code>dct:identifier</code> is prefixed with the code space if defined.
-* CatalogRecord / <code>dct:title</code> and <code>dct:description</code> are set at CatalogRecord level and at the Resource level
-* Resource / First resource identifier is used for <code>dct:identifer</code> (MobilityDCAT restrict it to 0..1), then additional ones are encoded in <code>adms:identifier</code>
-* Resource / <code>dct:spatial</code> is only encoded using a <code>dcat:bbox</code> in GeoJSON (instead of WKT and GML and GeoJson and the <code>locn:geometry</code> which was kept for backward compatibility with GeoDCAT-AP v1.<em>)
-* Resource / <code>dct:temporal</code> is only encoded using a <code>dcat:startDate</code> and <code>dcat:endDate</code> (and do not add same information in <code>schemas:startDate</code> and <code>schemas:endDate</code> which was kept for backward compatibility with GeoDCAT-AP v1.</em>)
-* Portrayal, specification, report online link are encoded using <code>foaf:page</code> instead of <code>foaf:landingPage</code>
-* <code>prov:qualifiedAttribution</code> element are not created because <code>dcat:creator|publisher|contactPoint|..</code> already provide the same information.
-* Keyword / When encoded with <code>Anchor</code>, <code>dcat:theme</code> encoded with only a reference in SEMIC conversion and using <code>skos:Concept</code> in the GeoNetwork conversion (see discussion point above)</p>
+<p>Some of the differences in the GeoNetwork conversion are:</p>
+<ul>
+<li>CatalogRecord / <code>dct:identifier</code> is prefixed with the code space if defined.</li>
+<li>CatalogRecord / <code>dct:title</code> and <code>dct:description</code> are set at CatalogRecord level and at the Resource level</li>
+<li>Resource / First resource identifier is used for <code>dct:identifer</code> (MobilityDCAT restrict it to 0..1), then additional ones are encoded in <code>adms:identifier</code></li>
+<li>Resource / <code>dct:spatial</code> is only encoded using a <code>dcat:bbox</code> in GeoJSON (instead of WKT and GML and GeoJson and the <code>locn:geometry</code> which was kept for backward compatibility with GeoDCAT-AP v1.*)</li>
+<li>Resource / <code>dct:temporal</code> is only encoded using a <code>dcat:startDate</code> and <code>dcat:endDate</code> (and do not add same information in <code>schemas:startDate</code> and <code>schemas:endDate</code> which was kept for backward compatibility with GeoDCAT-AP v1.*)</li>
+<li>Portrayal, specification, report online link are encoded using <code>foaf:page</code> instead of <code>foaf:landingPage</code></li>
+<li><code>prov:qualifiedAttribution</code> element are not created because <code>dcat:creator|publisher|contactPoint|..</code> already provide the same information.</li>
+<li>Keyword / When encoded with <code>Anchor</code>, <code>dcat:theme</code> encoded with only a reference in SEMIC conversion and using <code>skos:Concept</code> in the GeoNetwork conversion (see discussion point above)</li>
+</ul>
 <div class="language-xml highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nt">&lt;dcat:theme</span><span class="w"> </span><span class="na">rdf:resource=</span><span class="s">&quot;https://metawal.wallonie.be/thesaurus/theme-geoportail-wallon#SubThemesGeoportailWallon/5099&quot;</span><span class="nt">/&gt;</span>
 </span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>vs
 </span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="nt">&lt;dcat:theme&gt;</span>
@@ -1829,17 +1842,21 @@ This is also mitigated when the complete RDF graph of the catalogue is retrieved
 </span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">  </span><span class="nt">&lt;/skos:Concept&gt;</span>
 </span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="nt">&lt;/dcat:theme&gt;</span>
 </span></code></pre></div>
-<p>Additional properties supported:
-* CatalogRecord / <code>dct:issued</code> is added if exists in the metadata (added in ISO19115-3) 
-* CatalogRecord / <code>dct:language</code> is added if exists 
-* CatalogRecord / <code>cnt:characterEncoding</code> is added if exists
-* Resource / <code>graphicOverview</code> is encoded as <code>foaf:page</code>
-* Resource / Associated resources
-  * Source dataset are encoded using <code>dct:source</code>
-  * Associated resource are encoded using <code>dct:relation</code> and subtypes (eg. <code>isPartOf</code>) 
-* Party identifier (added in ISO19115-3) are used for <code>rdf:about</code> attribute for individual or organization</p>
-<p>Technical differences:
-* <code>normalize-space</code> is not applied to <code>abstract</code> or <code>lineage</code> (which lose the line breaks and basic formatting) </p>
+<p>Additional properties supported:</p>
+<ul>
+<li>CatalogRecord / <code>dct:issued</code> is added if exists in the metadata (added in ISO19115-3) </li>
+<li>CatalogRecord / <code>dct:language</code> is added if exists </li>
+<li>CatalogRecord / <code>cnt:characterEncoding</code> is added if exists</li>
+<li>Resource / <code>graphicOverview</code> is encoded as <code>foaf:page</code></li>
+<li>Resource / Associated resources</li>
+<li>Source dataset are encoded using <code>dct:source</code></li>
+<li>Associated resource are encoded using <code>dct:relation</code> and subtypes (eg. <code>isPartOf</code>) </li>
+<li>Party identifier (added in ISO19115-3) are used for <code>rdf:about</code> attribute for individual or organization</li>
+</ul>
+<p>Technical differences:</p>
+<ul>
+<li><code>normalize-space</code> is not applied to <code>abstract</code> or <code>lineage</code> (which lose the line breaks and basic formatting) </li>
+</ul>
 
 
 
