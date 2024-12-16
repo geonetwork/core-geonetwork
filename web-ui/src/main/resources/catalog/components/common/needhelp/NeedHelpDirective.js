@@ -184,7 +184,14 @@
                 var baseUrl = scope.helpBaseUrl
                   .replace("{{lang}}", "")
                   .replace("{{version}}", scope.applicationVersion);
-                var helpPageUrl = baseUrl + "/" + page;
+                var helpPageUrl;
+                if (baseUrl.includes("{{section}}")) {
+                  helpPageUrl = baseUrl.replace("{{section}}", page);
+                } else {
+                  helpPageUrl = baseUrl + "/" + page;
+                }
+
+                helpPageUrl = processUrl(helpPageUrl);
 
                 testAndOpen(helpPageUrl);
               }
