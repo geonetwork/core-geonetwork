@@ -137,7 +137,7 @@
               Reset requireProxy array. This prevent same host of map server and catalouge deployment affecting together.
               For example: One online resource of wms https://example.com/mapserver/ows?service=WMS&request=GetCapabilities&layers=roads
               and another online resource of file store https://example.com/geonetwork/srv/api/records/c90c284d-171f-41a9-bc92-b2533970cdc8/attachments/sample.txt
-              The will confuse the proxy to think the filestore has same hostname and will use proxy url. But due to the staight security meansure the proxy url will not work for the backend store
+              This will confuse the proxy to think the filestore has same hostname and will use proxy url. But due to the staight security meansure the proxy url will not work for the backend store
               */
               gnGlobalSettings.requireProxy = [];
 
