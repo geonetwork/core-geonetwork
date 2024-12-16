@@ -21,7 +21,10 @@
       ng-click="removeFilter(filter)"
     >
       <strong class="text-no-wrap">
-        <span ng-if="::!specific">{{('facet-' + filter.key) | facetKeyTranslator}}</span>
+        <span ng-if="::!specific"
+          >{{getFacetLabel(dimensionList[filter.key]) || ('facet-' + filter.key) |
+          facetKeyTranslator}}</span
+        >
         <span ng-if="::specific">{{filter.key}}</span>
       </strong>
       <div class="flex-spacer"></div>
