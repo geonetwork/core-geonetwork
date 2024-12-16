@@ -1113,14 +1113,6 @@ bearbetningens genomförande</description>
         <label>Avstånd</label>
         <description>Avståndet mellan observationspunkter i terrängen.</description>
         <condition>Provide a distance if no equivalent Scale is documented</condition>
-		<helper relAtt="uom">
-			<option title="cm" value="0.10">10 cm</option>
-			<option title="cm" value="0.25">25 cm</option>
-			<option title="cm" value="0.50">50 cm</option>
-			<option title="m" value="1">1 m</option>
-			<option title="m" value="30">30 m</option>
-			<option title="m" value="100">100 m</option>
-		</helper>
     </element>
     <element id="271.0" name="gmd:distributionFormat">
         <label>Distributionsformat</label>
