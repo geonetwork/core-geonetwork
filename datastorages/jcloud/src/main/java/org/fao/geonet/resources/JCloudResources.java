@@ -23,42 +23,47 @@
 
 package org.fao.geonet.resources;
 
+import static org.jclouds.blobstore.options.PutOptions.Builder.multipart;
+
 import jeeves.config.springutil.JeevesDelegatingFilterProxy;
 import jeeves.server.context.ServiceContext;
-import org.apache.chemistry.opencmis.client.api.*;
-import org.apache.chemistry.opencmis.client.runtime.DocumentImpl;
-import org.apache.chemistry.opencmis.commons.exceptions.CmisObjectNotFoundException;
+import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.io.FilenameUtils;
-import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Pair;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Log;
+import org.jclouds.blobstore.domain.Blob;
+import org.jclouds.blobstore.domain.PageSet;
+import org.jclouds.blobstore.domain.StorageMetadata;
+import org.jclouds.blobstore.domain.StorageType;
+import org.jclouds.blobstore.options.ListContainerOptions;
+import org.jclouds.http.HttpResponseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
 
 import java.awt.image.BufferedImage;
-import java.io.*;
+import java.io.DataInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.nio.file.attribute.FileTime;
-import java.util.*;
+import java.util.HashSet;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.imageio.ImageIO;
 import javax.servlet.ServletContext;
 
-public class CMISResources extends Resources {
+public class JCloudResources extends Resources {
     @Autowired
-    CMISConfiguration cmisConfiguration;
-
-    @Autowired
-    CMISUtils cmisUtils;
+    JCloudConfiguration jCloudConfiguration;
 
     private Path resourceBaseDir = null;
 
@@ -82,19 +87,19 @@ public class CMISResources extends Resources {
             }
 
             if (this.resourceBaseDir.toString().equals(".")) {
-                this.resourceBaseDir = Paths.get(cmisConfiguration.getBaseRepositoryPath()).resolve(resourceFullDir);
+                this.resourceBaseDir = Paths.get(jCloudConfiguration.getBaseFolder()).resolve(resourceFullDir);
             } else {
-                this.resourceBaseDir = Paths.get(cmisConfiguration.getBaseRepositoryPath()).resolve(this.resourceBaseDir.relativize(resourceFullDir));
+                this.resourceBaseDir = Paths.get(jCloudConfiguration.getBaseFolder()).resolve(this.resourceBaseDir.relativize(resourceFullDir));
             }
         }
         return this.resourceBaseDir;
     }
 
-    protected String getKey(final Path dir, final String name) {
+    private String getKey(final Path dir, final String name) {
         return getKey(dir.resolve(name));
     }
 
-    protected String getKey(final Path path) {
+    private String getKey(final Path path) {
 
         // Get keyPath as a relative path from /.
         Path keyPath;
@@ -107,10 +112,10 @@ public class CMISResources extends Resources {
 
         if (resourceBaseDir != null) {
             // If it starts with resource folder then it is missing the basePath so add it.
-            if (keyPath.startsWith(Paths.get(cmisConfiguration.getBaseRepositoryPath()).relativize(resourceBaseDir))) {
-                keyPath = Paths.get(cmisConfiguration.getBaseRepositoryPath()).resolve(keyPath);
+            if (keyPath.startsWith(Paths.get(jCloudConfiguration.getBaseFolder()).relativize(resourceBaseDir))) {
+                keyPath = Paths.get(jCloudConfiguration.getBaseFolder()).resolve(keyPath);
             } else {
-                Path resourceDir = Paths.get(cmisConfiguration.getBaseRepositoryPath()).resolve(resourceBaseDir);
+                Path resourceDir = Paths.get(jCloudConfiguration.getBaseFolder()).resolve(resourceBaseDir);
                 // If it starts with the resource dir by not starting with a "/" then add the "/"
                 if (keyPath.startsWith(Paths.get("/").relativize(resourceDir))) {
                     keyPath = Paths.get("/").resolve(keyPath);
@@ -125,61 +130,62 @@ public class CMISResources extends Resources {
 
         String key;
         // For windows it may be "\" in which case we need to change it to folderDelimiter which is normally "/"
-        if (keyPath.getFileSystem().getSeparator().equals(cmisConfiguration.getFolderDelimiter())) {
+        if (keyPath.getFileSystem().getSeparator().equals(jCloudConfiguration.getFolderDelimiter())) {
             key = keyPath.toString();
         } else {
-            key = keyPath.toString().replace(keyPath.getFileSystem().getSeparator(), cmisConfiguration.getFolderDelimiter());
+            key = keyPath.toString().replace(keyPath.getFileSystem().getSeparator(), jCloudConfiguration.getFolderDelimiter());
         }
         // For Windows, the pathString may start with // so remove one if this is the case.
         if (key.startsWith("//")) {
             key = key.substring(1);
         }
 
-        // Make sure the key that is returns starts with "/"
-        if (key.startsWith(cmisConfiguration.getFolderDelimiter())) {
-            return key;
+        // Make sure the key that is returns does not starts with "/" as it is already assumed to be relative to the container.
+        if (key.startsWith(jCloudConfiguration.getFolderDelimiter())) {
+            return key.substring(1);
         } else {
-            return cmisConfiguration.getFolderDelimiter() + key;
+            return key;
         }
     }
 
-    protected Path getKeyPath(String key) {
+    private Path getKeyPath(String key) {
         // Keypath should not reference the base path so it should be removed.
-        return Paths.get(key.substring(cmisConfiguration.getBaseRepositoryPath().length()));
+        return Paths.get(key.substring(jCloudConfiguration.getBaseFolder().length()));
     }
 
     @Nullable
     @Override
     protected Path findImagePath(final String imageName, final Path logosDir) {
-        String key = getKey(logosDir, imageName);
+        final String key = getKey(logosDir, imageName);
         if (imageName.indexOf('.') > -1) {
-            if (cmisConfiguration.getClient().existsPath(key)) {
+            if (jCloudConfiguration.getClient().getBlobStore().blobExists(jCloudConfiguration.getContainerName(), key)) {
                 return getKeyPath(key);
-            } else {
-                Log.warning(Geonet.RESOURCES,
-                        String.format("Unable to locate image resource '%s'.", key));
             }
         } else {
-            try {
-                CmisObject cmisObject = cmisConfiguration.getClient().getObjectByPath(key);
-                Folder folder = (Folder) cmisObject;
+            ListContainerOptions opts = new ListContainerOptions();
+            opts.delimiter(jCloudConfiguration.getFolderDelimiter());
+            opts.prefix(key);
 
-                ItemIterable<CmisObject> children = folder.getChildren();
+            // Page through the data
+            String marker = null;
+            do {
+                if (marker != null) {
+                    opts.afterMarker(marker);
+                }
 
-                for (CmisObject object : children) {
-                    if (object instanceof Document) {
-                        String ext = FilenameUtils.getExtension(object.getName());
-                        if (IMAGE_EXTENSIONS.contains(ext.toLowerCase())) {
-                            //Todo not sure if name will be correct.
-                            return getKeyPath(((Document) object).getName());
+                PageSet<? extends StorageMetadata> page = jCloudConfiguration.getClient().getBlobStore().list(jCloudConfiguration.getContainerName(), opts);
+
+                for (StorageMetadata storageMetadata : page) {
+                    // Only add to the list if it is a blob and it matches the filter.
+                    if (storageMetadata.getType() == StorageType.BLOB) {
+                        String ext = FilenameUtils.getExtension(storageMetadata.getName());
+                        if (Resources.IMAGE_EXTENSIONS.contains(ext.toLowerCase())) {
+                            return getKeyPath(storageMetadata.getName());
                         }
-
                     }
                 }
-            } catch (CmisObjectNotFoundException e) {
-                Log.warning(Geonet.RESOURCES,
-                        String.format("Unable to locate image resource '%s'.", key));
-            }
+                marker = page.getNextMarker();
+            } while (marker != null);
         }
         return null;
     }
@@ -191,7 +197,7 @@ public class CMISResources extends Resources {
         Path path = findImagePath(imageName, logosDir);
         if (path != null) {
             String key = getKey(path);
-            return new CMISResourceHolder(key, false);
+            return new JCloudResourceHolder(key, false);
         } else {
             return null;
         }
@@ -200,7 +206,7 @@ public class CMISResources extends Resources {
     @Override
     public ResourceHolder getWritableImage(final ServiceContext context, final String imageName,
                                            final Path logosDir) {
-        return new CMISResourceHolder(getKey(logosDir, imageName), true);
+        return new JCloudResourceHolder(getKey(logosDir, imageName), true);
     }
 
     @Override
@@ -208,14 +214,15 @@ public class CMISResources extends Resources {
                                     final Path appPath, final String filename, final byte[] defaultValue,
                                     final long loadSince) throws IOException {
         final Path file = locateResource(resourcesDir, context, appPath, filename);
-        final String key = getKey(file);
+        final String key = getKey(file, filename);
         try {
-            final CmisObject object = cmisConfiguration.getClient().getObjectByPath(key);
+            final Blob object = jCloudConfiguration.getClient().getBlobStore().getBlob(jCloudConfiguration.getContainerName(), key);
             if (object != null) {
-                final long lastModified = object.getLastModificationDate().toInstant().toEpochMilli();
-                try (InputStream in = ((Document) object).getContentStream().getStream()) {
+                final long lastModified = object.getMetadata().getLastModified().toInstant().toEpochMilli();
+                try (InputStream in = object.getPayload().openStream()) {
                     if (loadSince < 0 || lastModified > loadSince) {
-                        byte[] content = new byte[(int) ((Document) object).getContentStreamLength()];
+                        // Todo Modify to support stream otherwise reading full will kill memory
+                        byte[] content = new byte[(int) object.getMetadata().getSize().intValue()];
                         new DataInputStream(in).readFully(content);
                         return Pair.read(content, lastModified);
                     } else {
@@ -223,12 +230,15 @@ public class CMISResources extends Resources {
                     }
                 }
             } else {
-                Log.info(Log.RESOURCES, "Error loading resource " + cmisConfiguration.getRepositoryId() + ":" + key);
+                Log.info(Log.RESOURCES, "Error loading resource " + jCloudConfiguration.getContainerName() + ":" + key);
             }
-        } catch (CmisObjectNotFoundException e) {
-            Log.warning(Geonet.RESOURCES,
+        } catch (HttpResponseException e) {
+            if (e.getResponse().getStatusCode() == HttpStatus.SC_NOT_FOUND) {
+                Log.warning(Geonet.RESOURCES,
                     String.format("Unable to locate resource '%s'.", key));
-            // Ignore not found error.
+            } else {
+                throw e;
+            }
         }
         return Pair.read(defaultValue, -1L);
     }
@@ -244,19 +254,11 @@ public class CMISResources extends Resources {
         if (resourcesDir != null) {
             key = getKey(resourcesDir, filename);
         } else {
-            key = cmisConfiguration.getFolderDelimiter() +  filename;
+            key = jCloudConfiguration.getFolderDelimiter() + filename;
         }
 
-        boolean keyExists=false;
-        // Use getObjectByPath as it does caching while existsPath does not.
-        try {
-            cmisConfiguration.getClient().getObjectByPath(key);
-            keyExists = true;
-        } catch (CmisObjectNotFoundException e) {
-            keyExists=false;
-        }
 
-        if (!keyExists) {
+        if (!jCloudConfiguration.getClient().getBlobStore().blobExists(jCloudConfiguration.getContainerName(), key)) {
             Path webappCopy = null;
             if (context != null) {
                 final String realPath = context.getRealPath(filename);
@@ -270,13 +272,13 @@ public class CMISResources extends Resources {
             }
             if (!Files.isReadable(webappCopy)) {
                 final ConfigurableApplicationContext applicationContext =
-                        JeevesDelegatingFilterProxy.getApplicationContextFromServletContext(context);
+                    JeevesDelegatingFilterProxy.getApplicationContextFromServletContext(context);
                 if (resourcesDir.equals(locateResourcesDir(context, applicationContext))) {
                     webappCopy = super.locateResourcesDir(context, applicationContext).resolve(filename);
                 }
             }
             if (Files.isReadable(webappCopy)) {
-                try (ResourceHolder holder = new CMISResourceHolder(key, true)) {
+                try (ResourceHolder holder = new JCloudResourceHolder(key, true)) {
                     Log.info(Log.RESOURCES, "Copying " + webappCopy + " to " + holder.getPath() + " for resource " + key);
                     Files.copy(webappCopy, holder.getPath(), StandardCopyOption.REPLACE_EXISTING);
                 }
@@ -285,47 +287,50 @@ public class CMISResources extends Resources {
                 final String suffix = FilenameUtils.getExtension(key);
 
                 // find a different format and convert it to our desired format
-                if (IMAGE_WRITE_SUFFIXES.contains(suffix.toLowerCase())) {
+                if (Resources.IMAGE_WRITE_SUFFIXES.contains(suffix.toLowerCase())) {
                     final String suffixless = FilenameUtils.removeExtension(key);
-                    final String suffixlessKeyFilename = FilenameUtils.getName(suffixless);
-                    final String suffixlessKeyFolder = getKey(Paths.get(FilenameUtils.getFullPath(suffixless)));
+                    ListContainerOptions opts = new ListContainerOptions();
+                    opts.delimiter(jCloudConfiguration.getFolderDelimiter());
+                    opts.prefix(suffixless);
 
-                    try {
-                        Folder resourceFolder = cmisUtils.getFolderCache(suffixlessKeyFolder);
-                        Map<String, Document> documentMap = cmisUtils.getCmisObjectMap(resourceFolder, null, suffixlessKeyFilename);
+                    // Page through the data
+                    String marker = null;
+                    do {
+                        if (marker != null) {
+                            opts.afterMarker(marker);
+                        }
 
-                        for (Map.Entry<String,Document> entry : documentMap.entrySet()) {
-                            Document object = entry.getValue();
-                            String cmisFilePath = entry.getKey();
-                            final String ext = FilenameUtils.getExtension(object.getName()).toLowerCase();
-                            if (IMAGE_READ_SUFFIXES.contains(ext)) {
-                                try (ResourceHolder in = new CMISResourceHolder(object.getName(), true);
-                                     ResourceHolder out = new CMISResourceHolder(key, true)) {
-                                    try (InputStream inS = IO.newInputStream(in.getPath());
-                                         OutputStream outS = Files.newOutputStream(out.getPath())) {
-                                        Log.info(Log.RESOURCES, "Converting " + cmisFilePath + " to " + key);
-                                        BufferedImage image = ImageIO.read(inS);
-                                        ImageIO.write(image, suffix, outS);
-                                        break;
-                                    } catch (IOException e) {
-                                        if (context != null) {
-                                            context.log("Unable to convert image from " + in.getPath() + " to " +
+                        PageSet<? extends StorageMetadata> page = jCloudConfiguration.getClient().getBlobStore().list(jCloudConfiguration.getContainerName(), opts);
+
+                        for (StorageMetadata storageMetadata : page) {
+                            // Only add to the list if it is a blob and it matches the filter.
+                            if (storageMetadata.getType() == StorageType.BLOB) {
+                                final String ext = FilenameUtils.getExtension(storageMetadata.getName()).toLowerCase();
+                                if (Resources.IMAGE_READ_SUFFIXES.contains(ext)) {
+                                    try (ResourceHolder in = new JCloudResourceHolder(storageMetadata.getName(), true);
+                                         ResourceHolder out = new JCloudResourceHolder(key, true)) {
+                                        try (InputStream inS = IO.newInputStream(in.getPath());
+                                             OutputStream outS = java.nio.file.Files.newOutputStream(out.getPath())) {
+                                            Log.info(Log.RESOURCES, "Converting " + storageMetadata.getName() + " to " + key);
+                                            BufferedImage image = ImageIO.read(inS);
+                                            ImageIO.write(image, suffix, outS);
+                                            break;
+                                        } catch (IOException e) {
+                                            if (context != null) {
+                                                context.log("Unable to convert image from " + in.getPath() + " to " +
                                                     out.getPath(), e);
-                                        } else {
-                                            Log.warning(Log.RESOURCES, "Unable to convert image from " +
+                                            } else {
+                                                Log.warning(Log.RESOURCES, "Unable to convert image from " +
                                                     in.getPath() + " to " + out.getPath(), e);
+                                            }
                                         }
                                     }
                                 }
                             }
                         }
-                    } catch (CmisObjectNotFoundException | ResourceNotFoundException e) {
-                        Log.warning(Geonet.RESOURCES,
-                                String.format("Unable to locate resource folder '%s'.", suffixlessKeyFolder));
-                        // Ignore not found error.
-                    }
+                        marker = page.getNextMarker();
+                    } while (marker != null);
                 }
-
             }
         }
 
@@ -335,25 +340,34 @@ public class CMISResources extends Resources {
     @Override
     protected void addFiles(final DirectoryStream.Filter<Path> iconFilter, final Path webappDir,
                             final HashSet<Path> result) {
+        ListContainerOptions opts = new ListContainerOptions();
+        opts.delimiter(jCloudConfiguration.getFolderDelimiter());
+        opts.prefix(getKey(webappDir) + jCloudConfiguration.getFolderDelimiter());
 
-        String keyFolder = getKey(webappDir);
-        CmisObject cmisObject = cmisConfiguration.getClient().getObjectByPath(keyFolder);
-        Folder folder = (Folder) cmisObject;
+        // Page through the data
+        String marker = null;
+        do {
+            if (marker != null) {
+                opts.afterMarker(marker);
+            }
 
-        ItemIterable<CmisObject> children = folder.getChildren();
+            PageSet<? extends StorageMetadata> page = jCloudConfiguration.getClient().getBlobStore().list(jCloudConfiguration.getContainerName(), opts);
 
-        for (CmisObject object : children) {
-            if (object instanceof Document) {
-                final Path curPath = getKeyPath(((DocumentImpl) object).getPaths().get(0));
-                try {
-                    if (iconFilter.accept(curPath)) {
-                        result.add(curPath);
+            for (StorageMetadata storageMetadata : page) {
+                // Only add to the list if it is a blob and it matches the filter.
+                if (storageMetadata.getType() == StorageType.BLOB) {
+                    final Path curPath = getKeyPath(storageMetadata.getName());
+                    try {
+                        if (iconFilter.accept(curPath)) {
+                            result.add(curPath);
+                        }
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
                     }
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
                 }
             }
-        }
+            marker = page.getNextMarker();
+        } while (marker != null);
     }
 
     @Nullable
@@ -363,40 +377,39 @@ public class CMISResources extends Resources {
         final Path file = locateResource(resourcesDir, context, appPath, filename);
         final String key = getKey(file);
         try {
-            final CmisObject object = cmisConfiguration.getClient().getObjectByPath(key);
-            return FileTime.from(object.getLastModificationDate().toInstant());
-        } catch (CmisObjectNotFoundException e) {
-            // Ignore not found error.
+            final Blob object = jCloudConfiguration.getClient().getBlobStore().getBlob(jCloudConfiguration.getContainerName(), key);
+            if (object == null) {
+                return null;
+            } else {
+                return FileTime.from(object.getMetadata().getLastModified().toInstant());
+            }
+        } catch (HttpResponseException e) {
+            if (e.getResponse().getStatusCode() == HttpStatus.SC_NOT_FOUND) {
+                // key does not exist
+                return null;
+            } else {
+                throw e;
+            }
         }
-        // key does not exist
-        return null;
     }
 
     @Override
     public void deleteImageIfExists(final String image, final Path dir) {
         Path icon = findImagePath(image, dir);
         if (icon != null) {
-            cmisConfiguration.getClient().deleteByPath(getKey(icon));
+            jCloudConfiguration.getClient().getBlobStore().removeBlob(jCloudConfiguration.getContainerName(), getKey(icon));
         }
     }
 
-    protected class CMISResourceHolder implements ResourceHolder {
+    private class JCloudResourceHolder implements ResourceHolder {
         private final String key;
         private Path path = null;
         private Path tempFolderPath = null;
         private boolean writeOnClose = false;
-        private CmisObject cmisObject;
 
-        private CMISResourceHolder(final String key, boolean writeOnClose) {
+        private JCloudResourceHolder(final String key, boolean writeOnClose) {
             this.key = key;
             this.writeOnClose = writeOnClose;
-            try {
-                this.cmisObject = cmisConfiguration.getClient().getObjectByPath(this.key);
-            } catch (CmisObjectNotFoundException e) {
-                this.cmisObject = null;
-                Log.error(Geonet.RESOURCES,
-                    String.format("Unable to locate resource '%s'.", this.key), e);
-            }
         }
 
         @Override
@@ -404,22 +417,32 @@ public class CMISResources extends Resources {
             if (path != null) {
                 return path;
             }
-            final String[] splittedKey = key.split(cmisConfiguration.getFolderDelimiter());
+            final String[] splittedKey = key.split(jCloudConfiguration.getFolderDelimiter());
             try {
                 // Preserve filename by putting the files into a temporary folder and using the same filename.
                 tempFolderPath = Files.createTempDirectory("gn-res-" + splittedKey[splittedKey.length - 2] + "-");
                 tempFolderPath.toFile().deleteOnExit();
                 path = tempFolderPath.resolve(splittedKey[splittedKey.length - 1]);
 
-                if (this.cmisObject != null) {
-                    try (InputStream in = ((Document) this.cmisObject).getContentStream().getStream()) {
-                        Files.copy(in, path,
-                            StandardCopyOption.REPLACE_EXISTING);
+                try {
+                    final Blob object = jCloudConfiguration.getClient().getBlobStore().getBlob(jCloudConfiguration.getContainerName(), key);
+                    if (object == null) {
+                        if (writeOnClose && Files.exists(path)) {
+                            Files.delete(path);
+                        }
+                    } else {
+                        try (InputStream in = object.getPayload().openStream()) {
+                            java.nio.file.Files.copy(in, path,
+                                StandardCopyOption.REPLACE_EXISTING);
+                        }
                     }
-                } else {
-                    // As there is no cmis file, we will also remove the path if it exists so that the current file does not get saved on close.
-                    if (writeOnClose && Files.exists(path)) {
-                        Files.delete(path);
+                } catch (HttpResponseException e) {
+                    if (e.getResponse().getStatusCode() == HttpStatus.SC_NOT_FOUND) {
+                        if (writeOnClose && Files.exists(path)) {
+                            Files.delete(path);
+                        }
+                    } else {
+                        throw e;
                     }
                 }
             } catch (IOException e) {
@@ -438,10 +461,11 @@ public class CMISResources extends Resources {
 
         @Override
         public FileTime getLastModifiedTime() {
-            if (this.cmisObject != null) {
-                return FileTime.from(this.cmisObject.getLastModificationDate().toInstant());
-            } else {
+            final Blob object = jCloudConfiguration.getClient().getBlobStore().getBlob(jCloudConfiguration.getContainerName(), key);
+            if (object == null) {
                 return null;
+            } else {
+                return FileTime.from(object.getMetadata().getLastModified().toInstant());
             }
         }
 
@@ -457,13 +481,17 @@ public class CMISResources extends Resources {
             }
             try {
                 if (writeOnClose && Files.isReadable(path)) {
-                    Map<String, Object> properties = new HashMap<>();
-                    cmisUtils.saveDocument(this.key, this.cmisObject, properties, Files.newInputStream(path), null);
+                    Blob blob = jCloudConfiguration.getClient().getBlobStore().blobBuilder(key)
+                        .payload(path.toFile())
+                        .contentLength(Files.size(path))
+                        .build();
+                    // Upload the Blob
+                    jCloudConfiguration.getClient().getBlobStore().putBlob(jCloudConfiguration.getContainerName(), blob, multipart());
                 }
             } finally {
                 // Delete temporary file and folder.
                 IO.deleteFileOrDirectory(tempFolderPath, true);
-                path=null;
+                path = null;
                 tempFolderPath = null;
             }
         }
