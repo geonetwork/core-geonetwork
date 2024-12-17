@@ -248,20 +248,24 @@ public abstract class AbstractStore implements Store {
     @Override
     public final MetadataResource putResource(ServiceContext context, String metadataUuid, URL fileUrl,
             MetadataResourceVisibility visibility, Boolean approved) throws Exception {
-        long contentLength = getContentLengthFromHeader(fileUrl);
-        if (contentLength > maxUploadSize) {
-            throw new GeonetMaxUploadSizeExceededException("uploadedResourceSizeExceededException")
-                .withMessageKey("exception.maxUploadSizeExceeded",
-                    new String[]{FileUtil.humanizeFileSize(maxUploadSize)})
-                .withDescriptionKey("exception.maxUploadSizeExceeded.description",
-                    new String[]{FileUtil.humanizeFileSize(contentLength),
-                        FileUtil.humanizeFileSize(maxUploadSize)});
-        }
         String filename = getFilenameFromHeader(fileUrl);
         if (filename == null) {
             filename = getFilenameFromUrl(fileUrl);
         }
-        return putResource(context, metadataUuid, filename, fileUrl.openStream(), null, visibility, approved);
+        try (InputStream is = fileUrl.openStream()) {
+            long contentLength = getContentLengthFromHeader(fileUrl);
+            long availableBytes = is.available();
+            long fileSize = availableBytes > contentLength ? availableBytes : contentLength;
+            if (fileSize > maxUploadSize) {
+                throw new GeonetMaxUploadSizeExceededException("uploadedResourceSizeExceededException")
+                    .withMessageKey("exception.maxUploadSizeExceeded",
+                        new String[]{FileUtil.humanizeFileSize(maxUploadSize)})
+                    .withDescriptionKey("exception.maxUploadSizeExceeded.description",
+                        new String[]{FileUtil.humanizeFileSize(fileSize),
+                            FileUtil.humanizeFileSize(maxUploadSize)});
+            }
+            return putResource(context, metadataUuid, filename, is, null, visibility, approved);
+        }
     }
 
     @Override
