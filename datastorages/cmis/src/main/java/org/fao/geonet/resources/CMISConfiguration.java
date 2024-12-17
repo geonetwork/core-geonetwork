@@ -57,7 +57,7 @@ import java.util.regex.Pattern;
  * https://chemistry.apache.org/java/developing/dev-session-parameters.html
  */
 public class CMISConfiguration {
-    private Session client = null;
+    private Session client = ;
 
     // DFO change to 100. Due to bug with open text cmis where if max is set to 1000, it will return 100 but if it is set to 100 it will return all records.
     // https://dev.azure.com/foc-poc/EDH-CDE/_workitems/edit/95878
