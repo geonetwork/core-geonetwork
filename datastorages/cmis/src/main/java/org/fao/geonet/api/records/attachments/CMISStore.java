@@ -190,7 +190,7 @@ public class CMISStore extends AbstractStore {
 
     @Override
     public ResourceHolder getResourceInternal(String metadataUuid, MetadataResourceVisibility visibility, String resourceId, Boolean approved) throws Exception {
-        int metadataId = getAndCheckMetadataId(metadataUuid, approved);
+        int metadataId = AbstractStore.getAndCheckMetadataId(metadataUuid, approved);
         checkResourceId(resourceId);
 
         try {
@@ -483,7 +483,7 @@ public class CMISStore extends AbstractStore {
     @Override
     public MetadataResource getResourceDescription(final ServiceContext context, final String metadataUuid,
                                                    final MetadataResourceVisibility visibility, final String filename, Boolean approved) throws Exception {
-        int metadataId = getAndCheckMetadataId(metadataUuid, approved);
+        int metadataId = AbstractStore.getAndCheckMetadataId(metadataUuid, approved);
         final String key = getKey(context, metadataUuid, metadataId, visibility, filename);
 
         try {
@@ -496,7 +496,7 @@ public class CMISStore extends AbstractStore {
 
     @Override
     public MetadataResourceContainer getResourceContainerDescription(final ServiceContext context, final String metadataUuid, Boolean approved) throws Exception {
-        int metadataId = getAndCheckMetadataId(metadataUuid, approved);
+        int metadataId = AbstractStore.getAndCheckMetadataId(metadataUuid, approved);
 
         final String key = getMetadataDir(context, metadataId);
 

@@ -1332,6 +1332,39 @@
     </profile>
 
     <profile>
+      <id>datastorage-cmis</id>
+      <dependencies>
+        <dependency>
+          <groupId>org.geonetwork-opensource.datastorage</groupId>
+          <artifactId>gn-datastorage-cmis</artifactId>
+          <version>${project.version}</version>
+        </dependency>
+      </dependencies>
+    </profile>
+
+    <profile>
+      <id>datastorage-jcloud</id>
+      <dependencies>
+        <dependency>
+          <groupId>org.geonetwork-opensource.datastorage</groupId>
+          <artifactId>gn-datastorage-jcloud</artifactId>
+          <version>${project.version}</version>
+        </dependency>
+      </dependencies>
+    </profile>
+
+    <profile>
+      <id>datastorage-s3</id>
+      <dependencies>
+        <dependency>
+          <groupId>org.geonetwork-opensource.datastorage</groupId>
+          <artifactId>gn-datastorage-s3</artifactId>
+          <version>${project.version}</version>
+        </dependency>
+      </dependencies>
+    </profile>
+
+    <profile>
       <id>war</id>
       <dependencies>
         <dependency>

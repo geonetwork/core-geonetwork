@@ -34,7 +34,7 @@ import javax.annotation.PostConstruct;
 
 public class JCloudConfiguration {
 
-    private BlobStoreContext client = null;
+    private BlobStoreContext client = ;
 
     private static final String DEFAULT_CLOUD_FOLDER_SEPARATOR = "/"; // not sure if this is consistent for all clouds defaulting to "/" and make it a config
     private static final String DEFAULT_EXTERNAL_RESOURCE_MANAGEMENT_WINDOW_PARAMETERS = "toolbar=0,width=600,height=600";

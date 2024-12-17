@@ -230,7 +230,7 @@ public class JCloudStore extends AbstractStore {
 
     @Override
     public ResourceHolder getResourceInternal(String metadataUuid, MetadataResourceVisibility visibility, String resourceId, Boolean approved) throws Exception {
-        int metadataId = getAndCheckMetadataId(metadataUuid, approved);
+        int metadataId = AbstractStore.getAndCheckMetadataId(metadataUuid, approved);
         checkResourceId(resourceId);
 
         try {
@@ -691,7 +691,7 @@ public class JCloudStore extends AbstractStore {
     @Override
     public MetadataResource getResourceDescription(final ServiceContext context, final String metadataUuid,
                                                    final MetadataResourceVisibility visibility, final String filename, Boolean approved) throws Exception {
-        int metadataId = getAndCheckMetadataId(metadataUuid, approved);
+        int metadataId = AbstractStore.getAndCheckMetadataId(metadataUuid, approved);
         final String key = getKey(context, metadataUuid, metadataId, visibility, filename);
         try {
             final Blob object = jCloudConfiguration.getClient().getBlobStore().getBlob(jCloudConfiguration.getContainerName(), key);
@@ -708,7 +708,7 @@ public class JCloudStore extends AbstractStore {
 
     @Override
     public MetadataResourceContainer getResourceContainerDescription(final ServiceContext context, final String metadataUuid, Boolean approved) throws Exception {
-        int metadataId = getAndCheckMetadataId(metadataUuid, approved);
+        int metadataId = AbstractStore.getAndCheckMetadataId(metadataUuid, approved);
 
         MetadataResourceExternalManagementProperties metadataResourceExternalManagementProperties =
             getMetadataResourceExternalManagementProperties(context, metadataId, metadataUuid, null, String.valueOf(metadataId), null, null, StorageType.FOLDER,
