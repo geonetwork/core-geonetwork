@@ -263,7 +263,7 @@
     "spatialRepresentationType": "Типы представлений",
     "cl_spatialRepresentationType": "Типы представлений",
     "state": "Государство",
-    "staticMap": "Статическая карта",
+    "map-static": "Статическая карта",
     "surname": "Фамилия",
     "title": "Титул",
     "to": "К",

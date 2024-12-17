@@ -263,7 +263,7 @@
     "spatialRepresentationType": "Darstellungsart",
     "cl_spatialRepresentationType": "Darstellungsart",
     "state": "Bundesland / Kanton",
-    "staticMap": "Statische Karte",
+    "map-static": "Statische Karte",
     "surname": "Nachname",
     "title": "Titel",
     "to": "Bis",
