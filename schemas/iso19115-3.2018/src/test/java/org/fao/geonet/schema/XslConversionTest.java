@@ -72,4 +72,62 @@ public class XslConversionTest extends XslProcessTest {
             String.format("Differences: %s", diff.toString()),
             diff.hasDifferences());
     }
+
+
+    @Test
+    public void testZenodoConversion() throws Exception {
+        xslFile = Paths.get(testClass.getClassLoader().getResource("convert/fromZenodo.xsl").toURI());
+        xmlFile = Paths.get(testClass.getClassLoader().getResource("zenodo.xml").toURI());
+        Path jsonFile = Paths.get(testClass.getClassLoader().getResource("zenodo.json").toURI());
+        String jsonString = Files.readString(jsonFile);
+        Element xmlFromJSON = Xml.getXmlFromJSON(jsonString);
+        xmlFromJSON.setName("record");
+
+        Element inputElement = Xml.loadFile(xmlFile);
+        String expectedXml = Xml.getString(inputElement);
+
+        Element resultElement = Xml.transform(xmlFromJSON, xslFile);
+        String resultOfConversion = Xml.getString(resultElement);
+
+        Diff diff = DiffBuilder
+            .compare(Input.fromString(resultOfConversion))
+            .withTest(Input.fromString(expectedXml))
+            .withNodeMatcher(new DefaultNodeMatcher(ElementSelectors.byName))
+            .normalizeWhitespace()
+            .ignoreComments()
+            .checkForSimilar()
+            .build();
+        assertFalse(
+            String.format("Differences: %s", diff.toString()),
+            diff.hasDifferences());
+    }
+
+
+    @Test
+    public void testPangaeaConversion() throws Exception {
+        xslFile = Paths.get(testClass.getClassLoader().getResource("convert/fromPangaea.xsl").toURI());
+        xmlFile = Paths.get(testClass.getClassLoader().getResource("pangaea_output.xml").toURI());
+        Path pangaeaInputFile = Paths.get(testClass.getClassLoader().getResource("pangaea_input.xml").toURI());
+        String pangaeaInputDocument = Files.readString(pangaeaInputFile);
+        Element pangaeaInput = Xml.loadString(pangaeaInputDocument, false);
+
+        Element inputElement = Xml.loadFile(xmlFile);
+        String expectedXml = Xml.getString(inputElement);
+
+        Element resultElement = Xml.transform(pangaeaInput, xslFile);
+        String resultOfConversion = Xml.getString(resultElement);
+
+        Diff diff = DiffBuilder
+            .compare(Input.fromString(resultOfConversion))
+            .withTest(Input.fromString(expectedXml))
+            .withNodeMatcher(new DefaultNodeMatcher(ElementSelectors.byName))
+            .normalizeWhitespace()
+            .ignoreComments()
+            .checkForSimilar()
+            .build();
+        assertFalse(
+            String.format("Differences: %s", diff.toString()),
+            diff.hasDifferences());
+    }
+
 }
