@@ -185,23 +185,6 @@ public abstract class AbstractStore implements Store {
         }
     }
 
-    protected long getContentLengthFromHeader(final URL fileUrl) {
-        HttpURLConnection connection = null;
-        try {
-            connection = (HttpURLConnection) fileUrl.openConnection();
-            connection.setRequestMethod("HEAD");
-            connection.connect();
-            return connection.getContentLengthLong();
-        } catch (Exception e) {
-            log.error("Error retrieving resource content length from header", e);
-            return -1;
-        } finally {
-            if (connection != null) {
-                connection.disconnect();
-            }
-        }
-    }
-
     protected String getFilenameFromUrl(final URL fileUrl) {
         String fileName = FilenameUtils.getName(fileUrl.getPath());
         if (fileName.contains("?")) {
@@ -253,15 +236,13 @@ public abstract class AbstractStore implements Store {
             filename = getFilenameFromUrl(fileUrl);
         }
         try (InputStream is = fileUrl.openStream()) {
-            long contentLength = getContentLengthFromHeader(fileUrl);
-            long availableBytes = is.available();
-            long fileSize = availableBytes > contentLength ? availableBytes : contentLength;
-            if (fileSize > maxUploadSize) {
+            int availableBytes = is.available();
+            if (availableBytes > maxUploadSize) {
                 throw new GeonetMaxUploadSizeExceededException("uploadedResourceSizeExceededException")
                     .withMessageKey("exception.maxUploadSizeExceeded",
                         new String[]{FileUtil.humanizeFileSize(maxUploadSize)})
                     .withDescriptionKey("exception.maxUploadSizeExceeded.description",
-                        new String[]{FileUtil.humanizeFileSize(fileSize),
+                        new String[]{FileUtil.humanizeFileSize(availableBytes),
                             FileUtil.humanizeFileSize(maxUploadSize)});
             }
             return putResource(context, metadataUuid, filename, is, null, visibility, approved);
