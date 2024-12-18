@@ -27,6 +27,7 @@ package org.fao.geonet.api.records.attachments;
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.io.FilenameUtils;
 import org.fao.geonet.ApplicationContextHolder;
+import org.fao.geonet.api.exception.GeonetMaxUploadSizeExceededException;
 import org.fao.geonet.api.exception.NotAllowedException;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.domain.AbstractMetadata;
@@ -35,13 +36,14 @@ import org.fao.geonet.domain.MetadataResourceVisibility;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.repository.MetadataRepository;
+import org.fao.geonet.util.FileUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.BufferedInputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -58,6 +60,9 @@ public abstract class AbstractStore implements Store {
     protected static final String RESOURCE_MANAGEMENT_EXTERNAL_PROPERTIES_SEPARATOR = ":";
     protected static final String RESOURCE_MANAGEMENT_EXTERNAL_PROPERTIES_ESCAPED_SEPARATOR = "\\:";
     private static final Logger log = LoggerFactory.getLogger(AbstractStore.class);
+
+    @Value("${api.params.maxUploadSize}")
+    private int maxUploadSize;
 
     @Override
     public final List<MetadataResource> getResources(final ServiceContext context, final String metadataUuid, final Sort sort,
@@ -157,7 +162,7 @@ public abstract class AbstractStore implements Store {
         return metadataId;
     }
 
-    protected String getFilenameFromHeader(final URL fileUrl) throws IOException {
+    protected String getFilenameFromHeader(final URL fileUrl) {
         HttpURLConnection connection = null;
         try {
             connection = (HttpURLConnection) fileUrl.openConnection();
@@ -230,7 +235,18 @@ public abstract class AbstractStore implements Store {
         if (filename == null) {
             filename = getFilenameFromUrl(fileUrl);
         }
-        return putResource(context, metadataUuid, filename, fileUrl.openStream(), null, visibility, approved);
+        try (InputStream is = fileUrl.openStream()) {
+            int availableBytes = is.available();
+            if (availableBytes > maxUploadSize) {
+                throw new GeonetMaxUploadSizeExceededException("uploadedResourceSizeExceededException")
+                    .withMessageKey("exception.maxUploadSizeExceeded",
+                        new String[]{FileUtil.humanizeFileSize(maxUploadSize)})
+                    .withDescriptionKey("exception.maxUploadSizeExceeded.description",
+                        new String[]{FileUtil.humanizeFileSize(availableBytes),
+                            FileUtil.humanizeFileSize(maxUploadSize)});
+            }
+            return putResource(context, metadataUuid, filename, is, null, visibility, approved);
+        }
     }
 
     @Override
