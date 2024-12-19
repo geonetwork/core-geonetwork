@@ -750,6 +750,44 @@
           );
       };
 
+      $scope.geonetworkGetSources2 = function (url) {
+        $http
+          .get($scope.proxyUrl + encodeURIComponent(url + "/srv/api/sources/portal"))
+          .then(
+            function (response) {
+              $scope.geonetworkSources = [];
+
+              angular.forEach(response.data, function (source) {
+                $scope.geonetworkSources.push({
+                  uuid: source.uuid,
+                  name: source.name
+                });
+              });
+
+              $http
+                .get(
+                  $scope.proxyUrl + encodeURIComponent(url + "/srv/api/sources/harvester")
+                )
+                .then(
+                  function (response) {
+                    angular.forEach(response.data, function (source) {
+                      $scope.geonetworkSources.push({
+                        uuid: source.uuid,
+                        name: source.name
+                      });
+                    });
+                  },
+                  function (response) {
+                    // TODO
+                  }
+                );
+            },
+            function (response) {
+              // TODO
+            }
+          );
+      };
+
       // OGCWxS
       var ogcwxsGet = function () {
         $scope.ogcwxsTemplates = [];
