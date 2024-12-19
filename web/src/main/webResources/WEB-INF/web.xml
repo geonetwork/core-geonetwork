@@ -405,6 +405,15 @@
       <param-value>false</param-value>
     </init-param>
     <init-param>
+      <param-name>disallowHeaders</param-name>
+      <!-- comma separated list of header to NOT send to the remote proxy-ed server -->
+      <!--
+           This is the standard gn5->gn4 security header name. It should not be sent to
+           external services!
+       -->
+      <param-value>gn5.to.gn4.trusted.json.auth</param-value>
+    </init-param>
+    <init-param>
       <param-name>http.protocol.handle-redirects</param-name>
       <param-value>true</param-value>
     </init-param>
