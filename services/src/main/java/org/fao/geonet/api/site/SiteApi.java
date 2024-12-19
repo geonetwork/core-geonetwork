@@ -24,6 +24,8 @@
 package org.fao.geonet.api.site;
 
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -400,7 +402,7 @@ public class SiteApi {
     @PreAuthorize("hasAuthority('Administrator')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "204", description = "Settings saved."),
+        @ApiResponse(responseCode = "204", description = "Settings saved.", content = {@Content(schema = @Schema(hidden = true))}),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_ADMIN)
     })
     public void saveSettings(
@@ -519,7 +521,7 @@ public class SiteApi {
         method = RequestMethod.PUT)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "204", description = "Staging profile saved."),
+        @ApiResponse(responseCode = "204", description = "Staging profile saved.", content = {@Content(schema = @Schema(hidden = true))}),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_ADMIN)
     })
     @PreAuthorize("hasAuthority('Administrator')")
@@ -765,7 +767,7 @@ public class SiteApi {
     @PreAuthorize("hasAuthority('Administrator')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "204", description = "Logo set."),
+        @ApiResponse(responseCode = "204", description = "Logo set.", content = {@Content(schema = @Schema(hidden = true))}),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_USER_ADMIN)
     })
     public void setLogo(

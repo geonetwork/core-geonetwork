@@ -25,6 +25,8 @@ package org.fao.geonet.api.records;
 
 import com.google.common.collect.Sets;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -212,7 +214,7 @@ public class MetadataTagApi {
     @DeleteMapping(value = "/{metadataUuid}/tags")
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "204", description = "Record tags removed."),
+        @ApiResponse(responseCode = "204", description = "Record tags removed.", content = {@Content(schema = @Schema(hidden = true))}),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)
     })
     @PreAuthorize("hasAuthority('Editor')")
