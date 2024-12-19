@@ -65,7 +65,8 @@
   <jpa:repositories base-package="org.fao.geonet.repository"
                     base-class="org.fao.geonet.repository.GeonetRepositoryImpl"
                     entity-manager-factory-ref="entityManagerFactory"
-                    transaction-manager-ref="transactionManager"/>
+                    transaction-manager-ref="transactionManager"
+                    factory-class="org.springframework.data.envers.repository.support.EnversRevisionRepositoryFactoryBean"/>
 
   <bean id="entityManagerFactory"
         class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
@@ -94,4 +95,9 @@
         class="org.jasypt.encryption.pbe.StandardPBEStringEncryptor" />
   <bean id="settingsManager" class="org.fao.geonet.kernel.setting.SettingManager"/>
   <bean id="feedbackLanguages" class="org.fao.geonet.languages.FeedbackLanguages"/>
+
+  <!-- Extracts the current user used, to store the information in the auditable entities -->
+  <bean id="auditingProvider" class="org.fao.geonet.auditable.UsernameAuditorAware"/>
+
+  <jpa:auditing auditor-aware-ref="auditingProvider" set-dates="true"/>
 </beans>
