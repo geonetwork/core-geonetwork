@@ -889,7 +889,8 @@
   module.directive("gnRecordsFilters", [
     "$rootScope",
     "gnGlobalSettings",
-    function ($rootScope, gnGlobalSettings) {
+    "gnFacetMetaLabel",
+    function ($rootScope, gnGlobalSettings, gnFacetMetaLabel) {
       return {
         restrict: "A",
         templateUrl: function (elem, attrs) {
@@ -911,6 +912,7 @@
           scope.criteria = { p: {} };
           scope.relatedFacetConfig =
             gnGlobalSettings.gnCfg.mods.recordview.relatedFacetConfig;
+          scope.getFacetLabel = gnFacetMetaLabel.getFacetLabel;
 
           function removeEmptyFilters(filters, agg) {
             var cleanFilterPos = [];
