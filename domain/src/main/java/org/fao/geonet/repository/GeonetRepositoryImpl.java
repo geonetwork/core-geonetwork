@@ -110,6 +110,7 @@ public class GeonetRepositoryImpl<T extends GeonetEntity, ID extends Serializabl
         return rootEl;
     }
 
+    @Transactional
     public T update(ID id, Updater<T> updater) {
         final T entity = _entityManager.find(this._entityClass, id);
 
