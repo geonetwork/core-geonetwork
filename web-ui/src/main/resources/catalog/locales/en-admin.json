@@ -854,6 +854,9 @@
     "system/banner": "Application banner",
     "system/banner/enable": "Enable",
     "system/banner/enable-help": "If set, an application banner is displayed with the message configured. To configure the message, go to <a href='#/settings/languages' target='_blank'>Language and translations</a> and configure a translation with the key <strong>application-banner</strong>",
+    "system/auditable": "Audit changes",
+    "system/auditable/enable": "Allow auditing changes",
+    "system/auditable/enable-help": "When enabled, audits changes in users configuration",
     "metadata/workflow": "Metadata workflow",
     "metadata/workflow/automaticUnpublishInvalidMd": "Automatic unpublication of invalid metadata",
     "metadata/workflow/automaticUnpublishInvalidMd-help": " Automatically unpublishes metadata that is edited that becomes not valid according to xsd or schematron rules.",
@@ -1531,6 +1534,12 @@
     "doiserver-euApiText": "Publication Office of the European Union",
     "confirmDoiServerDelete": "Are you sure you want to delete this DOI server?",
     "NoTranslationProvider": "No translation provider",
-    "LibreTranslate": "Libretranslate"
+    "LibreTranslate": "Libretranslate",
+    "userHistory": "User history",
+    "userHistoryRevision": "Updated by {{revisionUser}} on {{revisionDate}}:",
+    "userHistoryFieldUpdate": "Field '{{fieldName}}' changed from '{{oldValue}}' to '{{newValue}}'",
+    "userHistoryFieldSet": "Field '{{fieldName}}' set to '{{newValue}}'",
+    "userHistoryFieldUnset": "Field '{{fieldName}}' unset",
+    "noUserHistory": "No user history available"
 }
 
