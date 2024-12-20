@@ -1,0 +1,262 @@
+<md:MetaData
+  xmlns:md="http://www.pangaea.de/MetaData"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.pangaea.de/MetaData http://ws.pangaea.de/schemas/pangaea/MetaData.xsd"
+  version="2024-07-19">
+  <md:citation id="dataset820342">
+    <md:author id="dataset.author49092">
+      <md:lastName>Barreyre</md:lastName>
+      <md:firstName>Thibaut</md:firstName>
+      <md:eMail>barreyre@ipgp.fr</md:eMail>
+      <md:orcid>0000-0002-5109-2633</md:orcid>
+    </md:author>
+    <md:author id="dataset.author41940">
+      <md:lastName>Escartín</md:lastName>
+      <md:firstName>Javier</md:firstName>
+      <md:eMail>escartin@ipgp.fr</md:eMail>
+      <md:URI>http://www.ipgp.fr/rech/lgm/je/</md:URI>
+    </md:author>
+    <md:author id="dataset.author49093">
+      <md:lastName>Sohn</md:lastName>
+      <md:firstName>Robert A</md:firstName>
+    </md:author>
+    <md:author id="dataset.author524">
+      <md:lastName>Cannat</md:lastName>
+      <md:firstName>Mathilde</md:firstName>
+      <md:eMail>cannat@ipgp.fr</md:eMail>
+      <md:orcid>0000-0002-5157-8473</md:orcid>
+    </md:author>
+    <md:author id="dataset.author49094">
+      <md:lastName>Ballu</md:lastName>
+      <md:firstName>Valérie</md:firstName>
+    </md:author>
+    <md:author id="dataset.author49095">
+      <md:lastName>Crawford</md:lastName>
+      <md:firstName>Wayne C</md:firstName>
+      <md:orcid>0000-0002-3260-1826</md:orcid>
+    </md:author>
+    <md:year>2014</md:year>
+    <md:title>Lucky Strike record of hydrothermal outflow temperature at station CI_V01_110710_120716_HW0012A</md:title>
+    <md:type id="dataset.reftype10" includeInCitation="true">dataset</md:type>
+    <md:URI>https://doi.org/10.1594/PANGAEA.820342</md:URI>
+    <md:parentURI>https://doi.org/10.1594/PANGAEA.820343</md:parentURI>
+  </md:citation>
+  <md:reference dataciteRelType="References" group="210" id="ref60752" relationType="Related to" relationTypeId="12">
+    <md:author id="ref60752.author49092">
+      <md:lastName>Barreyre</md:lastName>
+      <md:firstName>Thibaut</md:firstName>
+      <md:eMail>barreyre@ipgp.fr</md:eMail>
+      <md:orcid>0000-0002-5109-2633</md:orcid>
+    </md:author>
+    <md:author id="ref60752.author41940">
+      <md:lastName>Escartín</md:lastName>
+      <md:firstName>Javier</md:firstName>
+      <md:eMail>escartin@ipgp.fr</md:eMail>
+      <md:URI>http://www.ipgp.fr/rech/lgm/je/</md:URI>
+    </md:author>
+    <md:author id="ref60752.author49093">
+      <md:lastName>Sohn</md:lastName>
+      <md:firstName>Robert A</md:firstName>
+    </md:author>
+    <md:author id="ref60752.author524">
+      <md:lastName>Cannat</md:lastName>
+      <md:firstName>Mathilde</md:firstName>
+      <md:eMail>cannat@ipgp.fr</md:eMail>
+      <md:orcid>0000-0002-5157-8473</md:orcid>
+    </md:author>
+    <md:author id="ref60752.author49094">
+      <md:lastName>Ballu</md:lastName>
+      <md:firstName>Valérie</md:firstName>
+    </md:author>
+    <md:author id="ref60752.author49095">
+      <md:lastName>Crawford</md:lastName>
+      <md:firstName>Wayne C</md:firstName>
+      <md:orcid>0000-0002-3260-1826</md:orcid>
+    </md:author>
+    <md:year>2014</md:year>
+    <md:title>Temporal variability and tidal modulation of hydrothermal exit-fluid temperatures at the Lucky Strike
+      deep-sea vent field, Mid-Atlantic Ridge
+    </md:title>
+    <md:type id="ref60752.reftype1">journal article</md:type>
+    <md:source id="ref60752.journal8824" type="journal">Journal of Geophysical Research: Solid Earth</md:source>
+    <md:volume>119(4)</md:volume>
+    <md:URI>https://doi.org/10.1002/2013JB010478</md:URI>
+    <md:pages>2543-2566</md:pages>
+  </md:reference>
+  <md:extent>
+    <md:geographic>
+      <md:westBoundLongitude>-32.27589</md:westBoundLongitude>
+      <md:eastBoundLongitude>-32.27589</md:eastBoundLongitude>
+      <md:southBoundLatitude>37.28802</md:southBoundLatitude>
+      <md:northBoundLatitude>37.28802</md:northBoundLatitude>
+      <md:meanLongitude>-32.27589</md:meanLongitude>
+      <md:meanLatitude>37.28802</md:meanLatitude>
+    </md:geographic>
+    <md:temporal>
+      <md:minDateTime>2011-07-07T16:00:00</md:minDateTime>
+      <md:maxDateTime>2012-07-17T06:24:00</md:maxDateTime>
+    </md:temporal>
+    <md:elevation geocodeId="geocode1619" name="DEPTH, water" unit="m">
+      <md:min>1720.0</md:min>
+      <md:max>1720.0</md:max>
+    </md:elevation>
+    <md:topoType id="topotype8">time series</md:topoType>
+  </md:extent>
+  <md:event id="event2705449">
+    <md:label>CI_V01_110710_120716_HW0012A</md:label>
+    <md:latitude>37.28802</md:latitude>
+    <md:longitude>-32.27589</md:longitude>
+    <md:elevation>-1700.0</md:elevation>
+    <md:dateTime>2011-07-07T16:00:00</md:dateTime>
+    <md:dateTime2>2012-07-17T06:24:00</md:dateTime2>
+    <md:location id="event2705449.term30853">
+      <md:name>Lucky Strike Hydrothermal Field, Cimendef</md:name>
+    </md:location>
+    <md:method id="event2705449.method5105">
+      <md:name>Temperature recorder</md:name>
+      <md:optionalName>TEMP-R</md:optionalName>
+      <md:term id="event2705449.method5105.term67658" terminologyId="3" terminologyLabel="PAN-M&amp;D">
+        <md:name>Temperature sensors</md:name>
+      </md:term>
+      <md:term id="event2705449.method5105.term2299603" semanticURI="SDN:L05::134" terminologyId="21"
+               terminologyLabel="NERC-L05">
+        <md:name>water temperature sensor</md:name>
+        <md:URI>http://vocab.nerc.ac.uk/collection/L05/current/134/</md:URI>
+      </md:term>
+    </md:method>
+    <md:comment>Record length: 37.201 days, sampling interval: 1440 s</md:comment>
+  </md:event>
+  <md:size unit="data points">22537</md:size>
+  <md:license id="license101">
+    <md:label>CC-BY-3.0</md:label>
+    <md:name>Creative Commons Attribution 3.0 Unported</md:name>
+    <md:URI>https://creativecommons.org/licenses/by/3.0/</md:URI>
+  </md:license>
+  <md:comment>The temperature record include ambient temperatures (onboard the ship), water column temperatures (going
+    up and down) and the hydrothermal temperatures.
+  </md:comment>
+  <md:matrixColumn behaviour="4" col="0" format="yyyy-MM-dd'T'HH:mm" id="col0.ds1479523" source="geocode"
+                   type="datetime">
+    <md:parameter id="col0.ds1479523.geocode1599">
+      <md:name>DATE/TIME</md:name>
+      <md:shortName>Date/Time</md:shortName>
+      <md:URI>http://en.wikipedia.org/wiki/ISO_8601</md:URI>
+      <md:term endOffset="9" fragment="2" id="col0.ds1479523.geocode1599.term43975"
+               semanticURI="http://qudt.org/1.1/vocab/quantity#Time" startOffset="5" terminologyId="13"
+               terminologyLabel="PAN-Quantity">
+        <md:name>Time</md:name>
+        <md:optionalName>T</md:optionalName>
+        <md:URI>http://dbpedia.org/resource/Time</md:URI>
+      </md:term>
+    </md:parameter>
+    <md:caption>Date/Time</md:caption>
+  </md:matrixColumn>
+  <md:matrixColumn behaviour="1" col="1" format="###0" id="col1.ds1479522" source="geocode" type="numeric">
+    <md:parameter id="col1.ds1479522.geocode1619">
+      <md:name>DEPTH, water</md:name>
+      <md:shortName>Depth water</md:shortName>
+      <md:unit>m</md:unit>
+      <md:term endOffset="5" fragment="1" id="col1.ds1479522.geocode1619.term1073131"
+               semanticURI="urn:obo:pato:term:0001595" startOffset="0" terminologyId="14" terminologyLabel="PATO">
+        <md:name>depth</md:name>
+        <md:URI>http://purl.obolibrary.org/obo/PATO_0001595</md:URI>
+      </md:term>
+      <md:term endOffset="12" fragment="2" id="col1.ds1479522.geocode1619.term2606205"
+               semanticURI="http://purl.obolibrary.org/obo/CHEBI_15377" startOffset="7" terminologyId="16"
+               terminologyLabel="ChEBI">
+        <md:name>water</md:name>
+        <md:URI>http://purl.obolibrary.org/obo/CHEBI_15377</md:URI>
+      </md:term>
+      <md:term id="col1.ds1479522.geocode1619.term43863" semanticURI="http://qudt.org/1.1/vocab/quantity#Length"
+               terminologyId="13" terminologyLabel="PAN-Quantity">
+        <md:name>Length</md:name>
+        <md:optionalName>L</md:optionalName>
+        <md:URI>http://dbpedia.org/resource/Length</md:URI>
+      </md:term>
+    </md:parameter>
+    <md:caption>Depth water [m]</md:caption>
+  </md:matrixColumn>
+  <md:matrixColumn col="2" format="##0.00" id="col2.ds12186417" source="data" type="numeric">
+    <md:parameter id="col2.ds12186417.param717">
+      <md:name>Temperature, water</md:name>
+      <md:shortName>Temp</md:shortName>
+      <md:unit>°C</md:unit>
+      <md:term endOffset="11" fragment="1" id="col2.ds12186417.param717.term43972"
+               semanticURI="http://qudt.org/1.1/vocab/quantity#ThermodynamicTemperature" startOffset="0"
+               terminologyId="13" terminologyLabel="PAN-Quantity">
+        <md:name>Temperature</md:name>
+        <md:optionalName>Θ</md:optionalName>
+        <md:URI>http://dbpedia.org/resource/Temperature</md:URI>
+      </md:term>
+      <md:term endOffset="18" fragment="2" id="col2.ds12186417.param717.term2606205"
+               semanticURI="http://purl.obolibrary.org/obo/CHEBI_15377" startOffset="13" terminologyId="16"
+               terminologyLabel="ChEBI">
+        <md:name>water</md:name>
+        <md:URI>http://purl.obolibrary.org/obo/CHEBI_15377</md:URI>
+      </md:term>
+    </md:parameter>
+    <md:method id="col2.ds12186417.method8304">
+      <md:name>High temperature sensor, MISO-Woods Hole</md:name>
+      <md:term id="col2.ds12186417.method8304.term67658" terminologyId="3" terminologyLabel="PAN-M&amp;D">
+        <md:name>Temperature sensors</md:name>
+      </md:term>
+      <md:term id="col2.ds12186417.method8304.term2299603" semanticURI="SDN:L05::134" terminologyId="21"
+               terminologyLabel="NERC-L05">
+        <md:name>water temperature sensor</md:name>
+        <md:URI>http://vocab.nerc.ac.uk/collection/L05/current/134/</md:URI>
+      </md:term>
+    </md:method>
+    <md:PI id="col2.ds12186417.pi41940">
+      <md:lastName>Escartín</md:lastName>
+      <md:firstName>Javier</md:firstName>
+      <md:eMail>escartin@ipgp.fr</md:eMail>
+      <md:URI>http://www.ipgp.fr/rech/lgm/je/</md:URI>
+    </md:PI>
+    <md:caption>Temp [°C]</md:caption>
+  </md:matrixColumn>
+  <md:keywords>
+    <md:techKeyword type="autoGenerated">citable</md:techKeyword>
+    <md:techKeyword type="autoGenerated">author41940</md:techKeyword>
+    <md:techKeyword type="autoGenerated">author49092</md:techKeyword>
+    <md:techKeyword type="autoGenerated">author49093</md:techKeyword>
+    <md:techKeyword type="autoGenerated">author49094</md:techKeyword>
+    <md:techKeyword type="autoGenerated">author49095</md:techKeyword>
+    <md:techKeyword type="autoGenerated">author524</md:techKeyword>
+    <md:techKeyword type="autoGenerated">event2705449</md:techKeyword>
+    <md:techKeyword type="autoGenerated">geocode1599</md:techKeyword>
+    <md:techKeyword type="autoGenerated">geocode1600</md:techKeyword>
+    <md:techKeyword type="autoGenerated">geocode1601</md:techKeyword>
+    <md:techKeyword type="autoGenerated">geocode1619</md:techKeyword>
+    <md:techKeyword type="autoGenerated">geocode8128</md:techKeyword>
+    <md:techKeyword type="autoGenerated">journal8824</md:techKeyword>
+    <md:techKeyword type="autoGenerated">license101</md:techKeyword>
+    <md:techKeyword type="autoGenerated">method5105</md:techKeyword>
+    <md:techKeyword type="autoGenerated">method8304</md:techKeyword>
+    <md:techKeyword type="autoGenerated">param717</md:techKeyword>
+    <md:techKeyword type="autoGenerated">pi41940</md:techKeyword>
+    <md:techKeyword type="autoGenerated">ref60752</md:techKeyword>
+    <md:techKeyword type="autoGenerated">term1073131</md:techKeyword>
+    <md:techKeyword type="autoGenerated">term2299603</md:techKeyword>
+    <md:techKeyword type="autoGenerated">term2606205</md:techKeyword>
+    <md:techKeyword type="autoGenerated">term30853</md:techKeyword>
+    <md:techKeyword type="autoGenerated">term43863</md:techKeyword>
+    <md:techKeyword type="autoGenerated">term43972</md:techKeyword>
+    <md:techKeyword type="autoGenerated">term43975</md:techKeyword>
+    <md:techKeyword type="autoGenerated">term67658</md:techKeyword>
+    <md:techKeyword type="autoGenerated">topotype8</md:techKeyword>
+  </md:keywords>
+  <md:technicalInfo>
+    <md:entry key="xmlLastModified" value="2024-07-19T18:12:21Z"></md:entry>
+    <md:entry key="lastModified" value="2015-04-10T10:43:47"></md:entry>
+    <md:entry key="filename" value="CI_V01_110710_120716_HW0012A_temp"></md:entry>
+    <md:entry key="mimeType" value="text/tab-separated-values"></md:entry>
+    <md:entry key="status" value="published"></md:entry>
+    <md:entry key="status_num" value="4"></md:entry>
+    <md:entry key="DOIRegistryStatus" value="registered"></md:entry>
+    <md:entry key="DOIRegistryStatus_num" value="4"></md:entry>
+    <md:entry key="DOIRegistrationDate" value="2013-11-11T03:04:53"></md:entry>
+    <md:entry key="hierarchyLevel" value="child"></md:entry>
+    <md:entry key="loginOption" value="unrestricted"></md:entry>
+    <md:entry key="loginOption_num" value="1"></md:entry>
+  </md:technicalInfo>
+</md:MetaData>
