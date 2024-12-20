@@ -26,6 +26,7 @@ package org.fao.geonet.api.records.attachments;
 
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.io.input.BoundedInputStream;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.exception.GeonetMaxUploadSizeExceededException;
 import org.fao.geonet.api.exception.NotAllowedException;
@@ -44,11 +45,13 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.BufferedInputStream;
+import java.io.FileInputStream;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
@@ -235,17 +238,25 @@ public abstract class AbstractStore implements Store {
         if (filename == null) {
             filename = getFilenameFromUrl(fileUrl);
         }
-        try (InputStream is = fileUrl.openStream()) {
-            int availableBytes = is.available();
-            if (availableBytes > maxUploadSize) {
-                throw new GeonetMaxUploadSizeExceededException("uploadedResourceSizeExceededException")
-                    .withMessageKey("exception.maxUploadSizeExceeded",
-                        new String[]{FileUtil.humanizeFileSize(maxUploadSize)})
-                    .withDescriptionKey("exception.maxUploadSizeExceeded.description",
-                        new String[]{FileUtil.humanizeFileSize(availableBytes),
-                            FileUtil.humanizeFileSize(maxUploadSize)});
-            }
+
+        Path tempFilePath = Files.createTempFile("uploaded_resource", null);
+        try (BoundedInputStream boundedInputStream = new BoundedInputStream(fileUrl.openStream(), maxUploadSize+1)) {
+            Files.copy(boundedInputStream, tempFilePath, StandardCopyOption.REPLACE_EXISTING);
+        }
+
+        if (Files.size(tempFilePath) > maxUploadSize) {
+            Files.deleteIfExists(tempFilePath);
+            throw new GeonetMaxUploadSizeExceededException("uploadedResourceSizeExceededException")
+                .withMessageKey("exception.maxUploadSizeExceeded",
+                    new String[]{FileUtil.humanizeFileSize(maxUploadSize)})
+                .withDescriptionKey("exception.maxUploadSizeExceededUnknownSize.description",
+                    new String[]{FileUtil.humanizeFileSize(maxUploadSize)});
+        }
+
+        try (InputStream is = new FileInputStream(tempFilePath.toFile())) {
             return putResource(context, metadataUuid, filename, is, null, visibility, approved);
+        } finally {
+            Files.deleteIfExists(tempFilePath);
         }
     }
 
