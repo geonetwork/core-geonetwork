@@ -80,7 +80,7 @@ public class MetadataApiTest extends AbstractServiceIntegrationTest {
 
     private void createTestData() throws Exception {
         loginAsAdmin(context);
-        AbstractMetadata metadata = injectMetadataInDb(getSampleMetadataXml(), context, true);
+        AbstractMetadata metadata = injectMetadataInDb(getSampleMetadataXml(), context);
         id = metadata.getId();
         uuid = metadata.getUuid();
     }
