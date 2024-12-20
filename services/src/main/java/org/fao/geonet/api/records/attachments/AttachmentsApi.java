@@ -178,7 +178,7 @@ public class AttachmentsApi {
     @io.swagger.v3.oas.annotations.Operation(summary = "Delete all uploaded metadata resources")
     @RequestMapping(method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAuthority('Editor')")
-    @ApiResponses(value = {@ApiResponse(responseCode = "204", description = "Attachment added."),
+    @ApiResponses(value = {@ApiResponse(responseCode = "204", description = "Attachment added.", content = {@Content(schema = @Schema(hidden = true))}),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)})
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public void delResources(
@@ -321,7 +321,7 @@ public class AttachmentsApi {
     @io.swagger.v3.oas.annotations.Operation(summary = "Delete a metadata resource")
     @PreAuthorize("hasAuthority('Editor')")
     @RequestMapping(value = "/{resourceId:.+}", method = RequestMethod.DELETE)
-    @ApiResponses(value = {@ApiResponse(responseCode = "204", description = "Attachment visibility removed."),
+    @ApiResponses(value = {@ApiResponse(responseCode = "204", description = "Attachment visibility removed.", content = {@Content(schema = @Schema(hidden = true))}),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)})
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public void delResource(
