@@ -243,7 +243,7 @@ public class S3Store extends AbstractStore {
     @Override
     public MetadataResource getResourceDescription(final ServiceContext context, final String metadataUuid,
             final MetadataResourceVisibility visibility, final String filename, Boolean approved) throws Exception {
-        int metadataId = getAndCheckMetadataId(metadataUuid, approved);
+        int metadataId = AbstractStore.getAndCheckMetadataId(metadataUuid, approved);
         final String key = getKey(metadataUuid, metadataId, visibility, filename);
         try {
             final ObjectMetadata metadata = s3.getClient().getObjectMetadata(s3.getBucket(), key);
@@ -257,7 +257,7 @@ public class S3Store extends AbstractStore {
     @Override
     public MetadataResourceContainer getResourceContainerDescription(ServiceContext context, String metadataUuid, Boolean approved) throws Exception {
 
-        int metadataId = getAndCheckMetadataId(metadataUuid, approved);
+        int metadataId = AbstractStore.getAndCheckMetadataId(metadataUuid, approved);
 
         return new FilesystemStoreResourceContainer(metadataUuid, metadataId, metadataUuid, settingManager.getNodeURL() + "api/records/", approved);
     }
