@@ -1757,7 +1757,6 @@
       $scope.publicationOptions = [];
       $scope.getFacetLabel = gnFacetMetaLabel.getFacetLabel;
 
-
       $http.get("../api/records/sharing/options").then(function (response) {
         $scope.publicationOptions = response.data;
       });
