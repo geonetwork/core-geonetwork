@@ -68,6 +68,8 @@ import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.jdom.input.JDOMParseException;
 import org.jdom.output.XMLOutputter;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.data.domain.PageRequest;
@@ -1261,7 +1263,27 @@ public class MetadataWorkflowApi {
             checkCanViewStatus(stateText, httpSession);
         }
 
+        if (isValidJSON(stateText)) {
+            JSONObject json = new JSONObject(stateText);
+            String xmlRecord = json.getString("xmlRecord");
+            return xmlRecord;
+        }
+
         return stateText;
+    }
+
+    /**
+     * Check if the input string is valid JSON format string
+     * @param json input string
+     * @return boolean if string is JSON format
+     */
+    private boolean isValidJSON(String json) {
+        try {
+            new JSONObject(json);
+        } catch (JSONException e) {
+            return false;
+        }
+        return true;
     }
 
     /**
