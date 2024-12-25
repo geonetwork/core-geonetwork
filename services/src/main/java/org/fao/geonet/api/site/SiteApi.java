@@ -25,8 +25,11 @@ package org.fao.geonet.api.site;
 
 import co.elastic.clients.elasticsearch.core.CountRequest;
 import co.elastic.clients.elasticsearch.core.CountResponse;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -88,10 +91,7 @@ import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -387,24 +387,67 @@ public class SiteApi {
 
     @io.swagger.v3.oas.annotations.Operation(
         summary = "Save settings",
-        description = "")
-    @RequestMapping(
+        description = "Save the provided settings.",
+        requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+            description = "Map of settings to be saved",
+            required = true,
+            content = {
+                @Content(
+                    mediaType = MediaType.APPLICATION_FORM_URLENCODED_VALUE,
+                    schema = @Schema(implementation = Map.class),
+                    examples = {
+                        @ExampleObject(
+                            name = "Example setting (application/x-www-form-urlencoded)",
+                            value = "{\n  \"additionalProp1\": \"string\",\n  \"additionalProp2\": \"string\",\n  \"additionalProp3\": \"string\"\n}"
+                        ),
+                        @ExampleObject(
+                            name = "Example setting selection manager max records to 1000 (application/x-www-form-urlencoded)",
+                            value = "{\n  \"system/selectionmanager/maxrecords\": \"1000\"\n}"
+                        )
+                    }
+                ),
+                @Content(
+                    mediaType = MediaType.APPLICATION_JSON_VALUE,
+                    schema = @Schema(implementation = Map.class),
+                    examples = {
+                        @ExampleObject(
+                            name = "Example setting (application/json)",
+                            value = "{\n  \"additionalProp1\": \"string\",\n  \"additionalProp2\": \"string\",\n  \"additionalProp3\": \"string\"\n}"
+                        ),
+                        @ExampleObject(
+                            name = "Example setting selection manager max records to 1000 (application/json)",
+                            value = "{\n  \"system/selectionmanager/maxrecords\": \"1000\"\n}"
+                        )
+                    }
+                )
+            }
+        )
+    )
+    @PostMapping(
         path = "/settings",
-        produces = MediaType.APPLICATION_JSON_VALUE,
-        method = RequestMethod.POST
+        consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE, MediaType.APPLICATION_JSON_VALUE}
     )
     @PreAuthorize("hasAuthority('Administrator')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "204", description = "Settings saved.", content = {@Content(schema = @Schema(hidden = true))}),
+        @ApiResponse(responseCode = "204", description = "Settings saved."),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_ADMIN)
     })
     public void saveSettings(
-        @Parameter(hidden = false)
-        @RequestParam
-        Map<String, String> allRequestParams,
+        // Mark parameter as hidden in open api specification as the Operation requestBody(above) will describe the format to be supplied
+        //    Without this fix, the swagger ui will fail to work correctly.
+        @Parameter(description = "Map of settings to be saved",
+            required = true, hidden = true)
+        @RequestParam Map<String, String> allRequestParams,
         HttpServletRequest request
     ) throws Exception {
+        //If sent as JSON then the allRequestParams will be empty, and we need to manually load it from the request body
+        if (MediaType.APPLICATION_JSON_VALUE.equals(request.getContentType()) && allRequestParams.isEmpty()) {
+            BufferedReader reader = request.getReader();
+            ObjectMapper mapper = new ObjectMapper();
+            allRequestParams = mapper.readValue(reader, new TypeReference<Map<String, String>>() {});
+        }
+
         ApplicationContext applicationContext = ApplicationContextHolder.get();
         String currentUuid = settingManager.getSiteId();
         String oldSiteName = settingManager.getSiteName();
