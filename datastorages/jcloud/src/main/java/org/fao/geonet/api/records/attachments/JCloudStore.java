@@ -29,7 +29,6 @@ import static org.jclouds.blobstore.options.PutOptions.Builder.multipart;
 import jeeves.server.context.ServiceContext;
 
 import org.apache.commons.collections.MapUtils;
-import org.apache.commons.io.input.CountingInputStream;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.exception.GeonetMaxUploadSizeExceededException;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
@@ -44,6 +43,7 @@ import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.resources.JCloudConfiguration;
 import org.fao.geonet.util.FileUtil;
+import org.fao.geonet.util.LimitedInputStream;
 import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Log;
 import org.jclouds.blobstore.ContainerNotFoundException;
