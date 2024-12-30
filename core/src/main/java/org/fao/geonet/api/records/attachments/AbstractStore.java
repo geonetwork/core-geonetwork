@@ -188,6 +188,23 @@ public abstract class AbstractStore implements Store {
         }
     }
 
+    protected long getContentLengthFromHeader(final URL fileUrl) {
+        HttpURLConnection connection = null;
+        try {
+            connection = (HttpURLConnection) fileUrl.openConnection();
+            connection.setRequestMethod("HEAD");
+            connection.connect();
+            return connection.getContentLengthLong();
+        } catch (Exception e) {
+            log.error("Error retrieving resource content length from header", e);
+            return -1;
+        } finally {
+            if (connection != null) {
+                connection.disconnect();
+            }
+        }
+    }
+
     protected String getFilenameFromUrl(final URL fileUrl) {
         String fileName = FilenameUtils.getName(fileUrl.getPath());
         if (fileName.contains("?")) {
@@ -237,6 +254,16 @@ public abstract class AbstractStore implements Store {
         String filename = getFilenameFromHeader(fileUrl);
         if (filename == null) {
             filename = getFilenameFromUrl(fileUrl);
+        }
+
+        long contentLength = getContentLengthFromHeader(fileUrl);
+        if (contentLength > maxUploadSize) {
+            throw new GeonetMaxUploadSizeExceededException("uploadedResourceSizeExceededException")
+                .withMessageKey("exception.maxUploadSizeExceeded",
+                    new String[]{FileUtil.humanizeFileSize(maxUploadSize)})
+                .withDescriptionKey("exception.maxUploadSizeExceeded.description",
+                    new String[]{FileUtil.humanizeFileSize(contentLength),
+                        FileUtil.humanizeFileSize(maxUploadSize)});
         }
 
         Path tempFilePath = Files.createTempFile("uploaded_resource", null);
