@@ -38,6 +38,7 @@ import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.util.FileUtil;
+import org.fao.geonet.util.LimitedInputStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -45,13 +46,11 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.BufferedInputStream;
-import java.io.FileInputStream;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
@@ -65,7 +64,7 @@ public abstract class AbstractStore implements Store {
     private static final Logger log = LoggerFactory.getLogger(AbstractStore.class);
 
     @Value("${api.params.maxUploadSize}")
-    private int maxUploadSize;
+    protected int maxUploadSize;
 
     @Override
     public final List<MetadataResource> getResources(final ServiceContext context, final String metadataUuid, final Sort sort,
@@ -266,24 +265,8 @@ public abstract class AbstractStore implements Store {
                         FileUtil.humanizeFileSize(maxUploadSize)});
         }
 
-        Path tempFilePath = Files.createTempFile("uploaded_resource", null);
-        try (BoundedInputStream boundedInputStream = new BoundedInputStream(fileUrl.openStream(), maxUploadSize+1)) {
-            Files.copy(boundedInputStream, tempFilePath, StandardCopyOption.REPLACE_EXISTING);
-        }
-
-        if (Files.size(tempFilePath) > maxUploadSize) {
-            Files.deleteIfExists(tempFilePath);
-            throw new GeonetMaxUploadSizeExceededException("uploadedResourceSizeExceededException")
-                .withMessageKey("exception.maxUploadSizeExceeded",
-                    new String[]{FileUtil.humanizeFileSize(maxUploadSize)})
-                .withDescriptionKey("exception.maxUploadSizeExceededUnknownSize.description",
-                    new String[]{FileUtil.humanizeFileSize(maxUploadSize)});
-        }
-
-        try (InputStream is = new FileInputStream(tempFilePath.toFile())) {
+        try (InputStream is = new LimitedInputStream(fileUrl.openStream(), maxUploadSize+1)) {
             return putResource(context, metadataUuid, filename, is, null, visibility, approved);
-        } finally {
-            Files.deleteIfExists(tempFilePath);
         }
     }
 
