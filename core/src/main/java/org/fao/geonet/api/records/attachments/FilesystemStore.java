@@ -26,6 +26,7 @@
 package org.fao.geonet.api.records.attachments;
 
 import jeeves.server.context.ServiceContext;
+import org.fao.geonet.api.exception.GeonetMaxUploadSizeExceededException;
 import org.fao.geonet.api.exception.ResourceAlreadyExistException;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.constants.Geonet;
@@ -35,6 +36,8 @@ import org.fao.geonet.domain.MetadataResourceVisibility;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
+import org.fao.geonet.util.FileUtil;
+import org.fao.geonet.util.LimitedInputStream;
 import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Log;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -203,6 +206,14 @@ public class FilesystemStore extends AbstractStore {
         checkResourceId(filename);
         Path filePath = getPath(context, metadataId, visibility, filename, approved);
         Files.copy(is, filePath, StandardCopyOption.REPLACE_EXISTING);
+        if (is instanceof LimitedInputStream && ((LimitedInputStream) is).isLimitReached()) {
+            Files.deleteIfExists(filePath);
+            throw new GeonetMaxUploadSizeExceededException("uploadedResourceSizeExceededException")
+                .withMessageKey("exception.maxUploadSizeExceeded",
+                    new String[]{FileUtil.humanizeFileSize(maxUploadSize)})
+                .withDescriptionKey("exception.maxUploadSizeExceededUnknownSize.description",
+                    new String[]{FileUtil.humanizeFileSize(maxUploadSize)});
+        }
         if (changeDate != null) {
             IO.touch(filePath, FileTime.from(changeDate.getTime(), TimeUnit.MILLISECONDS));
         }
