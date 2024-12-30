@@ -29,7 +29,9 @@ import static org.jclouds.blobstore.options.PutOptions.Builder.multipart;
 import jeeves.server.context.ServiceContext;
 
 import org.apache.commons.collections.MapUtils;
+import org.apache.commons.io.input.CountingInputStream;
 import org.fao.geonet.ApplicationContextHolder;
+import org.fao.geonet.api.exception.GeonetMaxUploadSizeExceededException;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.MetadataResource;
@@ -41,6 +43,7 @@ import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.resources.JCloudConfiguration;
+import org.fao.geonet.util.FileUtil;
 import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Log;
 import org.jclouds.blobstore.ContainerNotFoundException;
@@ -312,6 +315,14 @@ public class JCloudStore extends AbstractStore {
                 jCloudConfiguration.getClient().getBlobStore().putBlob(jCloudConfiguration.getContainerName(), blob, multipart());
                 Blob blobResults = jCloudConfiguration.getClient().getBlobStore().getBlob(jCloudConfiguration.getContainerName(), key);
 
+                if (is instanceof LimitedInputStream && ((LimitedInputStream) is).isLimitExceeded()) {
+                    delResource(context, metadataUuid, visibility, filename, approved);
+                    throw new GeonetMaxUploadSizeExceededException("uploadedResourceSizeExceededException")
+                        .withMessageKey("exception.maxUploadSizeExceeded",
+                            new String[]{FileUtil.humanizeFileSize(maxUploadSize)})
+                        .withDescriptionKey("exception.maxUploadSizeExceededUnknownSize.description",
+                            new String[]{FileUtil.humanizeFileSize(maxUploadSize)});
+                }
                 return createResourceDescription(context, metadataUuid, visibility, filename, blobResults.getMetadata(), metadataId, approved);
             } finally {
                 locks.remove(key);
