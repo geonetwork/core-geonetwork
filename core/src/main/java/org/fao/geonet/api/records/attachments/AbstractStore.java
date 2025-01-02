@@ -26,7 +26,6 @@ package org.fao.geonet.api.records.attachments;
 
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.io.input.BoundedInputStream;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.exception.GeonetMaxUploadSizeExceededException;
 import org.fao.geonet.api.exception.NotAllowedException;
@@ -46,6 +45,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.BufferedInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -164,52 +164,36 @@ public abstract class AbstractStore implements Store {
         return metadataId;
     }
 
-    protected String getFilenameFromHeader(final URL fileUrl) {
-        HttpURLConnection connection = null;
-        try {
-            connection = (HttpURLConnection) fileUrl.openConnection();
-            connection.setRequestMethod("HEAD");
-            connection.connect();
-            String contentDisposition = connection.getHeaderField("Content-Disposition");
-
-            if (contentDisposition != null && contentDisposition.contains("filename=")) {
-                String filename = contentDisposition.split("filename=")[1].replace("\"", "").trim();
-                return filename.isEmpty() ? null : filename;
-            }
-            return null;
-        } catch (Exception e) {
-            log.error("Error retrieving resource filename from header", e);
-            return null;
-        } finally {
-            if (connection != null) {
-                connection.disconnect();
-            }
-        }
-    }
-
-    protected long getContentLengthFromHeader(final URL fileUrl) {
-        HttpURLConnection connection = null;
-        try {
-            connection = (HttpURLConnection) fileUrl.openConnection();
-            connection.setRequestMethod("HEAD");
-            connection.connect();
-            return connection.getContentLengthLong();
-        } catch (Exception e) {
-            log.error("Error retrieving resource content length from header", e);
-            return -1;
-        } finally {
-            if (connection != null) {
-                connection.disconnect();
-            }
-        }
-    }
-
     protected String getFilenameFromUrl(final URL fileUrl) {
         String fileName = FilenameUtils.getName(fileUrl.getPath());
         if (fileName.contains("?")) {
             fileName = fileName.substring(0, fileName.indexOf("?"));
         }
         return fileName;
+    }
+
+    /**
+     * Attempts to extract the filename from the Content-Disposition header.
+     *
+     * Example header:
+     * Content-Disposition: attachment; filename="myfile.txt"
+     *
+     * @param contentDisposition The Content-Disposition header value
+     * @return The filename if present, otherwise null
+     */
+    private String extractFilenameFromContentDisposition(String contentDisposition) {
+        if (contentDisposition == null) {
+            return null;
+        }
+        for (String token : contentDisposition.split(";")) {
+            token = token.trim();
+            if (token.toLowerCase().startsWith("filename=")) {
+                return token.substring("filename=".length())
+                    .replace("\"", "") // Remove surrounding quotes if any
+                    .trim();
+            }
+        }
+        return null;
     }
 
     @Override
@@ -250,12 +234,27 @@ public abstract class AbstractStore implements Store {
     @Override
     public final MetadataResource putResource(ServiceContext context, String metadataUuid, URL fileUrl,
             MetadataResourceVisibility visibility, Boolean approved) throws Exception {
-        String filename = getFilenameFromHeader(fileUrl);
-        if (filename == null) {
+
+        // Open a connection to the URL
+        HttpURLConnection connection = (HttpURLConnection) fileUrl.openConnection();
+        connection.setInstanceFollowRedirects(true);
+        connection.setRequestMethod("GET");
+
+        // Check if the response code is OK
+        int responseCode = connection.getResponseCode();
+        if (responseCode != HttpURLConnection.HTTP_OK) {
+            throw new IOException("Unexpected response code: " + responseCode);
+        }
+
+        // Extract filename from Content-Disposition header if present otherwise use the filename from the URL
+        String contentDisposition = connection.getHeaderField("Content-Disposition");
+        String filename = extractFilenameFromContentDisposition(contentDisposition);
+        if (filename.isEmpty()) {
             filename = getFilenameFromUrl(fileUrl);
         }
 
-        long contentLength = getContentLengthFromHeader(fileUrl);
+        // Check if the content length is within the allowed limit
+        long contentLength = connection.getContentLengthLong();
         if (contentLength > maxUploadSize) {
             throw new GeonetMaxUploadSizeExceededException("uploadedResourceSizeExceededException")
                 .withMessageKey("exception.maxUploadSizeExceeded",
@@ -265,7 +264,9 @@ public abstract class AbstractStore implements Store {
                         FileUtil.humanizeFileSize(maxUploadSize)});
         }
 
-        try (InputStream is = new LimitedInputStream(fileUrl.openStream(), maxUploadSize+1)) {
+        // Put the resource but limit the input stream to the max upload size plus one byte
+        // so we can check if the file is larger than the allowed size
+        try (InputStream is = new LimitedInputStream(connection.getInputStream(), maxUploadSize+1)) {
             return putResource(context, metadataUuid, filename, is, null, visibility, approved);
         }
     }
