@@ -249,7 +249,7 @@ public abstract class AbstractStore implements Store {
         // Extract filename from Content-Disposition header if present otherwise use the filename from the URL
         String contentDisposition = connection.getHeaderField("Content-Disposition");
         String filename = extractFilenameFromContentDisposition(contentDisposition);
-        if (filename.isEmpty()) {
+        if (filename == null || filename.isEmpty()) {
             filename = getFilenameFromUrl(fileUrl);
         }
 
