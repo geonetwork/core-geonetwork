@@ -219,11 +219,31 @@
             </mri:pointOfContact>
           </xsl:for-each>
 
-          <!-- TODO
+          <!--
               <subjects>
                 <subject>oceanography</subject>
               </subjects>
           -->
+          <xsl:variable name="keywords"
+                        select="metadata/subjects/subject"
+                        as="node()*"/>
+
+          <xsl:if test="$keywords">
+            <mri:descriptiveKeywords>
+              <mri:MD_Keywords>
+                <xsl:for-each select="$keywords">
+                  <mri:keyword>
+                    <gco:CharacterString><xsl:value-of select="."/></gco:CharacterString>
+                  </mri:keyword>
+                </xsl:for-each>
+                <mri:type>
+                  <mri:MD_KeywordTypeCode codeListValue="theme"
+                                          codeList="./resources/codeList.xml#MD_KeywordTypeCode"/>
+                </mri:type>
+              </mri:MD_Keywords>
+            </mri:descriptiveKeywords>
+          </xsl:if>
+
 
           <!--
           <rights>
