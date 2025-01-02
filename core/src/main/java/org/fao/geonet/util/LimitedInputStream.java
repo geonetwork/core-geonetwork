@@ -1,6 +1,5 @@
 package org.fao.geonet.util;
 
-import java.io.FilterInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 

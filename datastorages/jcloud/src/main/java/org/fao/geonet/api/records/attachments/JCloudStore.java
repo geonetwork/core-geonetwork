@@ -43,7 +43,7 @@ import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.resources.JCloudConfiguration;
 import org.fao.geonet.util.FileUtil;
-import org.fao.geonet.util.LimitedIntputStream;
+import org.fao.geonet.util.LimitedInputStream;
 import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Log;
 import org.jclouds.blobstore.ContainerNotFoundException;
