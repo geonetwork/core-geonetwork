@@ -75,6 +75,8 @@ public abstract class AbstractStoreTest extends AbstractServiceIntegrationTest {
             Files.newInputStream(file)
         );
 
+        Mockito.when(mockConnection.getResponseCode()).thenReturn(HttpURLConnection.HTTP_OK);
+
         final URLStreamHandler handler = new URLStreamHandler() {
             @Override
             protected HttpURLConnection openConnection(final URL arg0) {
