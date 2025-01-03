@@ -30,7 +30,7 @@ import jeeves.server.context.ServiceContext;
 
 import org.apache.commons.collections.MapUtils;
 import org.fao.geonet.ApplicationContextHolder;
-import org.fao.geonet.api.exception.GeonetMaxUploadSizeExceededException;
+import org.fao.geonet.api.exception.RemoteFileTooLargeException;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.MetadataResource;
@@ -315,39 +315,18 @@ public class JCloudStore extends AbstractStore {
                 Log.info(Geonet.RESOURCES,
                     String.format("Put(2) blob '%s' with version label '%s'.", key, properties.get(jCloudConfiguration.getExternalResourceManagementVersionPropertyName())));
 
-                // Upload the Blob in multiple chunks to supports large files.
                 try {
+                    // Upload the Blob in multiple chunks to supports large files.
                     jCloudConfiguration.getClient().getBlobStore().putBlob(jCloudConfiguration.getContainerName(), blob, multipart());
                 } catch (Exception e) {
-                    // If the exception was caused by the size limit being exceeded then rollback the resource
-                    if (isUploadSizeExceeded(is)) {
-                        rollbackPutResource(key, backupKey, isNewResource);
-                        throw new GeonetMaxUploadSizeExceededException("uploadedResourceSizeExceededException")
-                            .withMessageKey("exception.maxUploadSizeExceeded",
-                                new String[]{FileUtil.humanizeFileSize(maxUploadSize)})
-                            .withDescriptionKey("exception.maxUploadSizeExceededUnknownSize.description",
-                                new String[]{FileUtil.humanizeFileSize(maxUploadSize)});
+                    if (e.getMessage().contains("Exceeded configured input limit of")) {
+                        throw new RemoteFileTooLargeException(this.maxUploadSize);
                     } else {
                         throw e;
                     }
                 }
 
                 Blob blobResults = jCloudConfiguration.getClient().getBlobStore().getBlob(jCloudConfiguration.getContainerName(), key);
-
-                // Rollback the upload if the size was exceeded
-                if (isUploadSizeExceeded(is)) {
-                    rollbackPutResource(key, backupKey, isNewResource);
-                    throw new GeonetMaxUploadSizeExceededException("uploadedResourceSizeExceededException")
-                        .withMessageKey("exception.maxUploadSizeExceeded",
-                            new String[]{FileUtil.humanizeFileSize(maxUploadSize)})
-                        .withDescriptionKey("exception.maxUploadSizeExceededUnknownSize.description",
-                            new String[]{FileUtil.humanizeFileSize(maxUploadSize)});
-                }
-
-                if (!isNewResource) {
-                    // Remove the backup if the new resource was successfully uploaded.
-                    jCloudConfiguration.getClient().getBlobStore().removeBlob(jCloudConfiguration.getContainerName(), backupKey);
-                }
 
                 return createResourceDescription(context, metadataUuid, visibility, filename, blobResults.getMetadata(), metadataId, approved);
             } finally {
