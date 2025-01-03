@@ -30,6 +30,7 @@ import jeeves.server.context.ServiceContext;
 
 import org.apache.commons.collections.MapUtils;
 import org.fao.geonet.ApplicationContextHolder;
+import org.fao.geonet.api.exception.RemoteFileTooLargeException;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.MetadataResource;
@@ -41,6 +42,8 @@ import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.resources.JCloudConfiguration;
+import org.fao.geonet.util.FileUtil;
+import org.fao.geonet.util.LimitedInputStream;
 import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Log;
 import org.jclouds.blobstore.ContainerNotFoundException;
@@ -277,11 +280,15 @@ public class JCloudStore extends AbstractStore {
             try {
                 Map<String, String> properties = null;
                 boolean isNewResource = true;
+                String backupKey = key + ".backup";
 
                 try {
                     StorageMetadata storageMetadata = jCloudConfiguration.getClient().getBlobStore().blobMetadata(jCloudConfiguration.getContainerName(), key);
                     if (storageMetadata != null) {
                         isNewResource = false;
+
+                        // Copy the existing blob to a backup location.
+                        jCloudConfiguration.getClient().getBlobStore().copyBlob(jCloudConfiguration.getContainerName(), key, jCloudConfiguration.getContainerName(), backupKey, CopyOptions.NONE);
 
                         // Copy existing properties
                         properties = new HashMap<>(storageMetadata.getUserMetadata());
@@ -308,8 +315,17 @@ public class JCloudStore extends AbstractStore {
                 Log.info(Geonet.RESOURCES,
                     String.format("Put(2) blob '%s' with version label '%s'.", key, properties.get(jCloudConfiguration.getExternalResourceManagementVersionPropertyName())));
 
-                // Upload the Blob in multiple chunks to supports large files.
-                jCloudConfiguration.getClient().getBlobStore().putBlob(jCloudConfiguration.getContainerName(), blob, multipart());
+                try {
+                    // Upload the Blob in multiple chunks to supports large files.
+                    jCloudConfiguration.getClient().getBlobStore().putBlob(jCloudConfiguration.getContainerName(), blob, multipart());
+                } catch (Exception e) {
+                    if (e.getMessage().contains("Exceeded configured input limit of")) {
+                        throw new RemoteFileTooLargeException(this.maxUploadSize);
+                    } else {
+                        throw e;
+                    }
+                }
+
                 Blob blobResults = jCloudConfiguration.getClient().getBlobStore().getBlob(jCloudConfiguration.getContainerName(), key);
 
                 return createResourceDescription(context, metadataUuid, visibility, filename, blobResults.getMetadata(), metadataId, approved);
@@ -317,6 +333,28 @@ public class JCloudStore extends AbstractStore {
                 locks.remove(key);
             }
         }
+    }
+
+    protected void rollbackPutResource(final String key, final String backupKey, boolean isNewResource) {
+        // If the resource is not new then restore the backup
+        // otherwise remove the new resource.
+        if (!isNewResource) {
+            // Check if the backup exists before restoring it.
+            StorageMetadata storageMetadata = jCloudConfiguration.getClient().getBlobStore().blobMetadata(jCloudConfiguration.getContainerName(), backupKey);
+            if (storageMetadata == null) {
+                Log.warning(Geonet.RESOURCES,
+                    String.format("Backup resource '%s' not found for rollback.  Resource '%s' will not be restored.", backupKey, key));
+                return;
+            }
+            jCloudConfiguration.getClient().getBlobStore().copyBlob(jCloudConfiguration.getContainerName(), backupKey, jCloudConfiguration.getContainerName(), key, CopyOptions.NONE);
+            jCloudConfiguration.getClient().getBlobStore().removeBlob(jCloudConfiguration.getContainerName(), backupKey);
+        } else {
+            jCloudConfiguration.getClient().getBlobStore().removeBlob(jCloudConfiguration.getContainerName(), key);
+        }
+    }
+
+    protected boolean isUploadSizeExceeded(InputStream is) {
+        return is instanceof LimitedInputStream && ((LimitedInputStream) is).isLimitReached();
     }
 
     protected void setProperties(Map<String, String> properties, String metadataUuid, Date changeDate, Map<String, String> additionalProperties) {
