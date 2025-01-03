@@ -24,11 +24,12 @@
  */
 package org.fao.geonet.api.records.attachments;
 
+import com.nimbusds.jose.util.BoundedInputStream;
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.io.FilenameUtils;
 import org.fao.geonet.ApplicationContextHolder;
-import org.fao.geonet.api.exception.GeonetMaxUploadSizeExceededException;
 import org.fao.geonet.api.exception.NotAllowedException;
+import org.fao.geonet.api.exception.RemoteFileTooLargeException;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.MetadataResource;
@@ -36,8 +37,6 @@ import org.fao.geonet.domain.MetadataResourceVisibility;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.repository.MetadataRepository;
-import org.fao.geonet.util.FileUtil;
-import org.fao.geonet.util.LimitedInputStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -256,17 +255,12 @@ public abstract class AbstractStore implements Store {
         // Check if the content length is within the allowed limit
         long contentLength = connection.getContentLengthLong();
         if (contentLength > maxUploadSize) {
-            throw new GeonetMaxUploadSizeExceededException("uploadedResourceSizeExceededException")
-                .withMessageKey("exception.maxUploadSizeExceeded",
-                    new String[]{FileUtil.humanizeFileSize(maxUploadSize)})
-                .withDescriptionKey("exception.maxUploadSizeExceeded.description",
-                    new String[]{FileUtil.humanizeFileSize(contentLength),
-                        FileUtil.humanizeFileSize(maxUploadSize)});
+            throw new RemoteFileTooLargeException(maxUploadSize, contentLength);
         }
 
         // Put the resource but limit the input stream to the max upload size plus one byte
         // so we can check if the file is larger than the allowed size
-        try (InputStream is = new LimitedInputStream(connection.getInputStream(), maxUploadSize+1)) {
+        try (BoundedInputStream is = new BoundedInputStream(connection.getInputStream(), maxUploadSize+1)) {
             return putResource(context, metadataUuid, filename, is, null, visibility, approved);
         }
     }
