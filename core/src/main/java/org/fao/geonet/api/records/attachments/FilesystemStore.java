@@ -205,13 +205,9 @@ public class FilesystemStore extends AbstractStore {
         Path filePath = getPath(context, metadataId, visibility, filename, approved);
         try {
             Files.copy(is, filePath, StandardCopyOption.REPLACE_EXISTING);
-        } catch (Exception e) {
-            if (e.getMessage().contains("Exceeded configured input limit of")) {
+        } catch (RemoteFileTooLargeException e) {
                 Files.deleteIfExists(filePath);
-                throw new RemoteFileTooLargeException(this.maxUploadSize);
-            } else {
                 throw e;
-            }
         }
         if (changeDate != null) {
             IO.touch(filePath, FileTime.from(changeDate.getTime(), TimeUnit.MILLISECONDS));

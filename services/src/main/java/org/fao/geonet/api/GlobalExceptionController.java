@@ -153,20 +153,19 @@ public class GlobalExceptionController {
     @ApiResponse(content = {@Content(mediaType = APPLICATION_JSON_VALUE)})
     @ExceptionHandler({
         MaxUploadSizeExceededException.class,
-        RemoteFileTooLargeException.class,
+        RemoteFileTooLargeException.class
     })
     public ApiError maxFileExceededHandler(final Exception exception, final HttpServletRequest request) {
         Exception ex;
         long contentLength = request.getContentLengthLong();
         // As MaxUploadSizeExceededException is a spring exception, we need to convert it to a localized exception so that it can be translated.
         if (exception instanceof MaxUploadSizeExceededException) {
-            long maxUploadSize = ((MaxUploadSizeExceededException) exception).getMaxUploadSize();
-                ex = new GeonetMaxUploadSizeExceededException("uploadedResourceSizeExceededException", exception)
-                    .withMessageKey("exception.maxUploadSizeExceeded",
-                        new String[]{FileUtil.humanizeFileSize(maxUploadSize)})
-                    .withDescriptionKey("exception.maxUploadSizeExceeded.description",
-                        new String[]{FileUtil.humanizeFileSize(contentLength),
-                            FileUtil.humanizeFileSize(maxUploadSize)});
+            ex = new GeonetMaxUploadSizeExceededException("uploadedResourceSizeExceededException", exception)
+                .withMessageKey("exception.maxUploadSizeExceeded",
+                    new String[]{FileUtil.humanizeFileSize(((MaxUploadSizeExceededException) exception).getMaxUploadSize())})
+                .withDescriptionKey("exception.maxUploadSizeExceeded.description",
+                    new String[]{FileUtil.humanizeFileSize(contentLength),
+                        FileUtil.humanizeFileSize(((MaxUploadSizeExceededException) exception).getMaxUploadSize())});
         } else if (exception instanceof RemoteFileTooLargeException) {
             long maxUploadSize = ((RemoteFileTooLargeException) exception).getMaxUploadSize();
             long remoteFileSize = ((RemoteFileTooLargeException) exception).getRemoteFileSize();
