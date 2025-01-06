@@ -12,7 +12,7 @@
                 xmlns:gcx="http://standards.iso.org/iso/19115/-3/gcx/1.0"
                 xmlns:xlink="http://www.w3.org/1999/xlink"
                 xmlns:gml="http://www.opengis.net/gml/3.2"
-                xmlns:md="http://www.pangaea.de/MetaData"
+                xmlns:util="java:org.fao.geonet.util.XslUtil"
                 exclude-result-prefixes="#all">
 
   <!--
@@ -176,7 +176,7 @@
 
           <mri:abstract>
             <gco:CharacterString>
-              <xsl:value-of select="metadata/description"/>
+              <xsl:value-of select="util:html2text(metadata/description, true())"/>
             </gco:CharacterString>
           </mri:abstract>
 
@@ -296,7 +296,7 @@
                 <mri:associationType>
                   <mri:DS_AssociationTypeCode
                     codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#DS_AssociationTypeCode"
-                    codeListValue="largerWorkCitation"/>
+                    codeListValue="partOfSeamlessDatabase"/>
                 </mri:associationType>
                 <mri:metadataReference xlink:href="{.}" xlink:title="{.}"/>
               </mri:MD_AssociatedResource>
