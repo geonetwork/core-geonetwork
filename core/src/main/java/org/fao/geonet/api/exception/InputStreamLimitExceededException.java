@@ -5,7 +5,7 @@ import java.io.IOException;
 /**
  * Custom exception to be thrown when the size of a remote file to be uploaded to the store exceeds the maximum upload size.
  */
-public class RemoteFileTooLargeException extends IOException {
+public class InputStreamLimitExceededException extends IOException {
     private final long maxUploadSize;
     private final long remoteFileSize;
 
@@ -14,7 +14,7 @@ public class RemoteFileTooLargeException extends IOException {
      *
      * @param maxUploadSize the maximum upload size allowed
      */
-    public RemoteFileTooLargeException(long maxUploadSize) {
+    public InputStreamLimitExceededException(long maxUploadSize) {
         this(maxUploadSize, -1L);
     }
 
@@ -24,7 +24,7 @@ public class RemoteFileTooLargeException extends IOException {
      * @param maxUploadSize the maximum upload size allowed
      * @param remoteFileSize the size of the remote file
      */
-    public RemoteFileTooLargeException(long maxUploadSize, long remoteFileSize) {
+    public InputStreamLimitExceededException(long maxUploadSize, long remoteFileSize) {
         super("Remote file size " + (remoteFileSize >= 0L ? "of " + remoteFileSize + " bytes " : "") + "exceeds the maximum upload size" + (maxUploadSize >= 0L ? " of " + maxUploadSize + " bytes" : ""));
         this.maxUploadSize = maxUploadSize;
         this.remoteFileSize = remoteFileSize;
