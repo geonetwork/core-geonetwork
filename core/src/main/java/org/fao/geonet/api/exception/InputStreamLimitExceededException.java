@@ -10,7 +10,7 @@ public class InputStreamLimitExceededException extends IOException {
     private final long remoteFileSize;
 
     /**
-     * Create a new RemoteFileTooLargeException with an unknown remote file size.
+     * Create a new InputStreamLimitExceededException with an unknown remote file size.
      *
      * @param maxUploadSize the maximum upload size allowed
      */
@@ -19,7 +19,7 @@ public class InputStreamLimitExceededException extends IOException {
     }
 
     /**
-     * Create a new RemoteFileTooLargeException with a known remote file size.
+     * Create a new InputStreamLimitExceededException with a known remote file size.
      *
      * @param maxUploadSize the maximum upload size allowed
      * @param remoteFileSize the size of the remote file
