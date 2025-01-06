@@ -6,7 +6,8 @@ import java.io.IOException;
 import java.io.InputStream;
 
 /**
- *
+ * Implementation of {@link org.apache.commons.fileupload.util.LimitedInputStream} that throws a
+ * {@link RemoteFileTooLargeException} when the configured limit is exceeded.
  */
 public class LimitedInputStream extends org.apache.commons.fileupload.util.LimitedInputStream {
 
