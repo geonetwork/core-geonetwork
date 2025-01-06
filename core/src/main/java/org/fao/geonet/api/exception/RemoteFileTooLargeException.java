@@ -1,9 +1,11 @@
 package org.fao.geonet.api.exception;
 
+import java.io.IOException;
+
 /**
  * Custom exception to be thrown when the size of a remote file to be uploaded to the store exceeds the maximum upload size.
  */
-public class RemoteFileTooLargeException extends RuntimeException {
+public class RemoteFileTooLargeException extends IOException {
     private final long maxUploadSize;
     private final long remoteFileSize;
 

@@ -24,7 +24,6 @@
  */
 package org.fao.geonet.api.records.attachments;
 
-import com.nimbusds.jose.util.BoundedInputStream;
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.io.FilenameUtils;
 import org.fao.geonet.ApplicationContextHolder;
@@ -37,10 +36,13 @@ import org.fao.geonet.domain.MetadataResourceVisibility;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.repository.MetadataRepository;
+import org.fao.geonet.util.LimitedInputStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
+import org.springframework.http.ContentDisposition;
+import org.springframework.http.HttpHeaders;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.BufferedInputStream;
@@ -171,30 +173,6 @@ public abstract class AbstractStore implements Store {
         return fileName;
     }
 
-    /**
-     * Attempts to extract the filename from the Content-Disposition header.
-     *
-     * Example header:
-     * Content-Disposition: attachment; filename="myfile.txt"
-     *
-     * @param contentDisposition The Content-Disposition header value
-     * @return The filename if present, otherwise null
-     */
-    private String extractFilenameFromContentDisposition(String contentDisposition) {
-        if (contentDisposition == null) {
-            return null;
-        }
-        for (String token : contentDisposition.split(";")) {
-            token = token.trim();
-            if (token.toLowerCase().startsWith("filename=")) {
-                return token.substring("filename=".length())
-                    .replace("\"", "") // Remove surrounding quotes if any
-                    .trim();
-            }
-        }
-        return null;
-    }
-
     @Override
     public final MetadataResource putResource(final ServiceContext context, final String metadataUuid, final MultipartFile file,
             final MetadataResourceVisibility visibility) throws Exception {
@@ -246,8 +224,11 @@ public abstract class AbstractStore implements Store {
         }
 
         // Extract filename from Content-Disposition header if present otherwise use the filename from the URL
-        String contentDisposition = connection.getHeaderField("Content-Disposition");
-        String filename = extractFilenameFromContentDisposition(contentDisposition);
+        String contentDisposition = connection.getHeaderField(HttpHeaders.CONTENT_DISPOSITION);
+        String filename = null;
+        if (contentDisposition != null) {
+            filename = ContentDisposition.parse(contentDisposition).getFilename();
+        }
         if (filename == null || filename.isEmpty()) {
             filename = getFilenameFromUrl(fileUrl);
         }
@@ -260,7 +241,7 @@ public abstract class AbstractStore implements Store {
 
         // Put the resource but limit the input stream to the max upload size plus one byte
         // so we can check if the file is larger than the allowed size
-        try (BoundedInputStream is = new BoundedInputStream(connection.getInputStream(), maxUploadSize+1)) {
+        try (LimitedInputStream is = new LimitedInputStream(connection.getInputStream(), maxUploadSize)) {
             return putResource(context, metadataUuid, filename, is, null, visibility, approved);
         }
     }
