@@ -66,8 +66,6 @@ import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.jdom.input.JDOMParseException;
 import org.jdom.output.XMLOutputter;
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.data.domain.PageRequest;
@@ -83,6 +81,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static org.fao.geonet.api.ApiParams.*;
 import static org.fao.geonet.kernel.setting.Settings.SYSTEM_METADATAPRIVS_PUBLICATION_NOTIFICATIONLEVEL;
@@ -160,11 +159,7 @@ public class MetadataWorkflowApi {
     RoleHierarchy roleHierarchy;
 
     // The restore function currently supports these states
-    static final Integer[] supportedRestoreStatuses = {
-        Integer.parseInt(StatusValue.Events.RECORDUPDATED),
-        Integer.parseInt(StatusValue.Events.RECORDPROCESSINGCHANGE),
-        Integer.parseInt(StatusValue.Events.RECORDDELETED),
-        Integer.parseInt(StatusValue.Events.RECORDRESTORED)};
+    static final StatusValue.Events[] supportedRestoreStatuses = StatusValue.Events.getSupportedRestoreStatuses();
 
     private enum State {
         BEFORE, AFTER
@@ -1049,15 +1044,15 @@ public class MetadataWorkflowApi {
     }
 
     private String extractCurrentStatus(MetadataStatus s) {
-        switch (Integer.toString(s.getStatusValue().getId())) {
-            case StatusValue.Events.ATTACHMENTADDED:
+        switch (StatusValue.Events.fromId(s.getStatusValue().getId())) {
+            case ATTACHMENTADDED:
                 return s.getCurrentState();
-            case StatusValue.Events.RECORDOWNERCHANGE:
-            case StatusValue.Events.RECORDGROUPOWNERCHANGE:
+            case RECORDOWNERCHANGE:
+            case RECORDGROUPOWNERCHANGE:
                 return ObjectJSONUtils.extractFieldFromJSONString(s.getCurrentState(), "owner", "name");
-            case StatusValue.Events.RECORDPROCESSINGCHANGE:
+            case RECORDPROCESSINGCHANGE:
                 return ObjectJSONUtils.extractFieldFromJSONString(s.getCurrentState(), "process");
-            case StatusValue.Events.RECORDCATEGORYCHANGE:
+            case RECORDCATEGORYCHANGE:
                 List<String> categories = ObjectJSONUtils.extractListOfFieldFromJSONString(s.getCurrentState(), "category",
                     "name");
                 StringBuilder categoriesAsString = new StringBuilder("[ ");
@@ -1066,7 +1061,7 @@ public class MetadataWorkflowApi {
                 }
                 categoriesAsString.append("]");
                 return categoriesAsString.toString();
-            case StatusValue.Events.RECORDVALIDATIONTRIGGERED:
+            case RECORDVALIDATIONTRIGGERED:
                 if (s.getCurrentState() == null) {
                     return "UNKNOWN";
                 } else if (s.getCurrentState().equals("1")) {
@@ -1080,11 +1075,11 @@ public class MetadataWorkflowApi {
     }
 
     private String extractPreviousStatus(MetadataStatus s) {
-        switch (Integer.toString(s.getStatusValue().getId())) {
-            case StatusValue.Events.ATTACHMENTDELETED:
+        switch (StatusValue.Events.fromId(s.getStatusValue().getId())) {
+            case ATTACHMENTDELETED:
                 return s.getPreviousState();
-            case StatusValue.Events.RECORDOWNERCHANGE:
-            case StatusValue.Events.RECORDGROUPOWNERCHANGE:
+            case RECORDOWNERCHANGE:
+            case RECORDGROUPOWNERCHANGE:
                 return ObjectJSONUtils.extractFieldFromJSONString(s.getPreviousState(), "owner", "name");
             default:
                 return "";
@@ -1230,20 +1225,31 @@ public class MetadataWorkflowApi {
     private String getValidatedStateText(MetadataStatus metadataStatus, State state, HttpServletRequest request, HttpSession httpSession) throws Exception {
 
         if (!StatusValueType.event.equals(metadataStatus.getStatusValue().getType())
-            || !ArrayUtils.contains(supportedRestoreStatuses, metadataStatus.getStatusValue().getId())) {
+            || !ArrayUtils.contains(supportedRestoreStatuses, StatusValue.Events.fromId(metadataStatus.getStatusValue().getId()))) {
             throw new NotAllowedException("Unsupported action on status type '" + metadataStatus.getStatusValue().getType()
                 + "' for metadata '" + metadataStatus.getUuid() + "'. Supports status type '"
-                + StatusValueType.event + "' with the status id '" + Arrays.toString(supportedRestoreStatuses) + "'.");
+                + StatusValueType.event + "' with the status id '" + Arrays.stream(supportedRestoreStatuses).map(StatusValue.Events::getId).collect(Collectors.toList()) + "'.");
         }
 
         String stateText;
+        MediaType stateFormat;
         if (state.equals(State.AFTER)) {
             stateText = metadataStatus.getCurrentState();
+            stateFormat = StatusValue.Events.fromId(metadataStatus.getStatusValue().getId()).getCurrentStateFormat();
         } else {
             stateText = metadataStatus.getPreviousState();
+            stateFormat = StatusValue.Events.fromId(metadataStatus.getStatusValue().getId()).getPreviousStateFormat();
         }
 
-        if (stateText == null) {
+        String xmlStateText;
+        if (stateFormat.equals(MediaType.APPLICATION_JSON)) {
+            // Any status with JSON format will have the XML stored in the field 'xmlRecord'
+            xmlStateText = ObjectJSONUtils.extractFieldFromJSONString(stateText, "xmlRecord");
+        } else {
+            xmlStateText = stateText;
+        }
+
+        if (xmlStateText == null) {
             throw new ResourceNotFoundException(
                 String.format("No data exists for previous state on metadata record '%s', user '%d' at date '%s'",
                     metadataStatus.getUuid(), metadataStatus.getUserId(), metadataStatus.getChangeDate()));
@@ -1258,30 +1264,10 @@ public class MetadataWorkflowApi {
         } catch (ResourceNotFoundException e) {
             // If metadata record does not exists then it was deleted so
             // we will only allow the administrator, owner to view the contents
-            checkCanViewStatus(stateText, httpSession);
+            checkCanViewStatus(xmlStateText, httpSession);
         }
 
-        if (isValidJSON(stateText)) {
-            JSONObject json = new JSONObject(stateText);
-            String xmlRecord = json.getString("xmlRecord");
-            return xmlRecord;
-        }
-
-        return stateText;
-    }
-
-    /**
-     * Check if the input string is valid JSON format string
-     * @param json input string
-     * @return boolean if string is JSON format
-     */
-    private boolean isValidJSON(String json) {
-        try {
-            new JSONObject(json);
-        } catch (JSONException e) {
-            return false;
-        }
-        return true;
+        return xmlStateText;
     }
 
     /**
