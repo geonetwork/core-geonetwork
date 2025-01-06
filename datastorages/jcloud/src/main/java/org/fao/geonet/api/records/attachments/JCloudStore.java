@@ -30,7 +30,6 @@ import jeeves.server.context.ServiceContext;
 
 import org.apache.commons.collections.MapUtils;
 import org.fao.geonet.ApplicationContextHolder;
-import org.fao.geonet.api.exception.RemoteFileTooLargeException;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.MetadataResource;
@@ -42,8 +41,6 @@ import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.resources.JCloudConfiguration;
-import org.fao.geonet.util.FileUtil;
-import org.fao.geonet.util.LimitedInputStream;
 import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Log;
 import org.jclouds.blobstore.ContainerNotFoundException;
