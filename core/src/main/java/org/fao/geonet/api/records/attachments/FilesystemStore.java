@@ -26,7 +26,7 @@
 package org.fao.geonet.api.records.attachments;
 
 import jeeves.server.context.ServiceContext;
-import org.fao.geonet.api.exception.RemoteFileTooLargeException;
+import org.fao.geonet.api.exception.InputStreamLimitExceededException;
 import org.fao.geonet.api.exception.ResourceAlreadyExistException;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.constants.Geonet;
@@ -205,7 +205,7 @@ public class FilesystemStore extends AbstractStore {
         Path filePath = getPath(context, metadataId, visibility, filename, approved);
         try {
             Files.copy(is, filePath, StandardCopyOption.REPLACE_EXISTING);
-        } catch (RemoteFileTooLargeException e) {
+        } catch (InputStreamLimitExceededException e) {
                 Files.deleteIfExists(filePath);
                 throw e;
         }

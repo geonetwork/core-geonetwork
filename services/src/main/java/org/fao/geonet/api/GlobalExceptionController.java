@@ -153,7 +153,7 @@ public class GlobalExceptionController {
     @ApiResponse(content = {@Content(mediaType = APPLICATION_JSON_VALUE)})
     @ExceptionHandler({
         MaxUploadSizeExceededException.class,
-        RemoteFileTooLargeException.class
+        InputStreamLimitExceededException.class
     })
     public ApiError maxFileExceededHandler(final Exception exception, final HttpServletRequest request) {
         Exception ex;
@@ -166,9 +166,9 @@ public class GlobalExceptionController {
                 .withDescriptionKey("exception.maxUploadSizeExceeded.description",
                     new String[]{FileUtil.humanizeFileSize(contentLength),
                         FileUtil.humanizeFileSize(((MaxUploadSizeExceededException) exception).getMaxUploadSize())});
-        } else if (exception instanceof RemoteFileTooLargeException) {
-            long maxUploadSize = ((RemoteFileTooLargeException) exception).getMaxUploadSize();
-            long remoteFileSize = ((RemoteFileTooLargeException) exception).getRemoteFileSize();
+        } else if (exception instanceof InputStreamLimitExceededException) {
+            long maxUploadSize = ((InputStreamLimitExceededException) exception).getMaxUploadSize();
+            long remoteFileSize = ((InputStreamLimitExceededException) exception).getRemoteFileSize();
             if (remoteFileSize == -1) {
                 ex = new GeonetMaxUploadSizeExceededException("uploadedResourceSizeExceededException", exception)
                     .withMessageKey("exception.maxUploadSizeExceeded",

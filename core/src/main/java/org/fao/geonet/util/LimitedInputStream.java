@@ -1,13 +1,13 @@
 package org.fao.geonet.util;
 
-import org.fao.geonet.api.exception.RemoteFileTooLargeException;
+import org.fao.geonet.api.exception.InputStreamLimitExceededException;
 
 import java.io.IOException;
 import java.io.InputStream;
 
 /**
  * Implementation of {@link org.apache.commons.fileupload.util.LimitedInputStream} that throws a
- * {@link RemoteFileTooLargeException} when the configured limit is exceeded.
+ * {@link InputStreamLimitExceededException} when the configured limit is exceeded.
  */
 public class LimitedInputStream extends org.apache.commons.fileupload.util.LimitedInputStream {
 
@@ -25,6 +25,6 @@ public class LimitedInputStream extends org.apache.commons.fileupload.util.Limit
 
     @Override
     protected void raiseError(long pSizeMax, long pCount) throws IOException {
-        throw new RemoteFileTooLargeException(pSizeMax);
+        throw new InputStreamLimitExceededException(pSizeMax);
     }
 }

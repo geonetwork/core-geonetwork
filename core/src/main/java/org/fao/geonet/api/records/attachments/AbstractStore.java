@@ -28,7 +28,7 @@ import jeeves.server.context.ServiceContext;
 import org.apache.commons.io.FilenameUtils;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.exception.NotAllowedException;
-import org.fao.geonet.api.exception.RemoteFileTooLargeException;
+import org.fao.geonet.api.exception.InputStreamLimitExceededException;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.MetadataResource;
@@ -236,7 +236,7 @@ public abstract class AbstractStore implements Store {
         // Check if the content length is within the allowed limit
         long contentLength = connection.getContentLengthLong();
         if (contentLength > maxUploadSize) {
-            throw new RemoteFileTooLargeException(maxUploadSize, contentLength);
+            throw new InputStreamLimitExceededException(maxUploadSize, contentLength);
         }
 
         // Put the resource but limit the input stream to the max upload size plus one byte
