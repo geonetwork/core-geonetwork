@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2024 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -37,7 +37,6 @@ import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
-import org.fao.geonet.api.exception.NotAllowedException;
 import org.fao.geonet.api.processing.report.IProcessingReport;
 import org.fao.geonet.api.processing.report.SimpleMetadataProcessingReport;
 import org.fao.geonet.domain.AbstractMetadata;
@@ -110,24 +109,21 @@ public class BatchEditsApi implements ApplicationContextAware {
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public Object previewBatchEdit(
-        @Parameter(description = ApiParams.API_PARAM_RECORD_UUIDS_OR_SELECTION,
-            required = false)
+        @Parameter(description = ApiParams.API_PARAM_RECORD_UUIDS_OR_SELECTION)
         @RequestParam(required = false) String[] uuids,
         @Parameter(
-            description = ApiParams.API_PARAM_BUCKET_NAME,
-            required = false)
+            description = ApiParams.API_PARAM_BUCKET_NAME)
         @RequestParam(
             required = false
         )
-            String bucket,
+        String bucket,
         @Parameter(
-            description = "Return differences with diff, diffhtml or patch",
-            required = false
+            description = "Return differences with diff, diffhtml or patch"
         )
         @RequestParam(
             required = false
         )
-            DiffType diffType,
+        DiffType diffType,
         @RequestBody BatchEditParameter[] edits,
         HttpServletRequest request)
         throws Exception {
@@ -153,25 +149,22 @@ public class BatchEditsApi implements ApplicationContextAware {
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
     public IProcessingReport batchEdit(
-        @Parameter(description = ApiParams.API_PARAM_RECORD_UUIDS_OR_SELECTION,
-            required = false)
+        @Parameter(description = ApiParams.API_PARAM_RECORD_UUIDS_OR_SELECTION)
         @RequestParam(required = false) String[] uuids,
         @Parameter(
-            description = ApiParams.API_PARAM_BUCKET_NAME,
-            required = false)
+            description = ApiParams.API_PARAM_BUCKET_NAME)
         @RequestParam(
             required = false
         )
-            String bucket,
+        String bucket,
         @Parameter(
-            description = ApiParams.API_PARAM_UPDATE_DATESTAMP,
-            required = false
+            description = ApiParams.API_PARAM_UPDATE_DATESTAMP
         )
         @RequestParam(
             required = false,
             defaultValue = "false"
         )
-            boolean updateDateStamp,
+        boolean updateDateStamp,
         @RequestBody BatchEditParameter[] edits,
         HttpServletRequest request)
         throws Exception {
@@ -185,7 +178,7 @@ public class BatchEditsApi implements ApplicationContextAware {
         HttpServletRequest request,
         boolean previewOnly, DiffType diffType) throws Exception {
         List<BatchEditParameter> listOfUpdates = Arrays.asList(edits);
-        if (listOfUpdates.size() == 0) {
+        if (listOfUpdates.isEmpty()) {
             throw new IllegalArgumentException("At least one edit must be defined.");
         }
 
@@ -206,7 +199,7 @@ public class BatchEditsApi implements ApplicationContextAware {
             setOfUuidsToEdit = Sets.newHashSet(Arrays.asList(uuids));
         }
 
-        if (setOfUuidsToEdit.size() == 0) {
+        if (setOfUuidsToEdit.isEmpty()) {
             throw new IllegalArgumentException("At least one record should be defined or selected for updates.");
         }
 
@@ -214,10 +207,9 @@ public class BatchEditsApi implements ApplicationContextAware {
         DataManager dataMan = appContext.getBean(DataManager.class);
         SchemaManager _schemaManager = context.getBean(SchemaManager.class);
         AccessManager accessMan = context.getBean(AccessManager.class);
-        final String settingId = Settings.SYSTEM_CSW_TRANSACTION_XPATH_UPDATE_CREATE_NEW_ELEMENTS;
-        boolean createXpathNodeIfNotExists =
-            context.getBean(SettingManager.class).getValueAsBool(settingId);
-
+        // This value is used in replace mode to create the node if it doesn't exist.
+        // We don't want to create a node in replace mode, just replace the element if it exists, otherwise ignore it.
+        boolean createXpathNodeIfNotExists = false;
 
         SimpleMetadataProcessingReport report = new SimpleMetadataProcessingReport();
         report.setTotalRecords(setOfUuidsToEdit.size());
@@ -254,7 +246,7 @@ public class BatchEditsApi implements ApplicationContextAware {
                         if (StringUtils.isNotEmpty(batchEditParameter.getCondition())) {
                             applyEdit = false;
                             final Object node = Xml.selectSingle(metadata, batchEditParameter.getCondition(), metadataSchema.getNamespaces());
-                            if (node != null && node instanceof Boolean && (Boolean)node == true) {
+                            if (node != null && node instanceof Boolean && (Boolean) node == true) {
                                 applyEdit = true;
                             }
                         }
