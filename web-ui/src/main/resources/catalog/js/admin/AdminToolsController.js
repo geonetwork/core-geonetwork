@@ -252,10 +252,7 @@
 
       $scope.rebuildIndex = function (dropFirst, index) {
         var url =
-          "../api/site/index?reset=" +
-          dropFirst +
-          "&asynchronous=true" +
-          (index ? "&indices=" + index : "");
+          "../api/site/index?reset=" + dropFirst + (index ? "&indices=" + index : "");
         return $http.put(url).then(
           function (response) {
             checkIsIndexing();
@@ -263,22 +260,6 @@
           function (response) {
             $rootScope.$broadcast("StatusUpdated", {
               title: $translate.instant("rebuildIndexError"),
-              error: response.data,
-              timeout: 0,
-              type: "danger"
-            });
-          }
-        );
-      };
-
-      $scope.commitIndexChanges = function (dropFirst) {
-        return $http.put("../api/site/index/commit").then(
-          function (response) {
-            checkIsIndexing();
-          },
-          function (response) {
-            $rootScope.$broadcast("StatusUpdated", {
-              title: $translate.instant("indexCommitError"),
               error: response.data,
               timeout: 0,
               type: "danger"
