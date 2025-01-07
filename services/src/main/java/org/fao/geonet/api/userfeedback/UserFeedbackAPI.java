@@ -24,6 +24,8 @@
 package org.fao.geonet.api.userfeedback;
 
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -146,7 +148,7 @@ public class UserFeedbackAPI {
     @RequestMapping(value = "/userfeedback/{uuid}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.DELETE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PreAuthorize("hasAuthority('Reviewer')")
-    @ApiResponses(value = {@ApiResponse(responseCode = "204", description = "User feedback removed."),
+    @ApiResponses(value = {@ApiResponse(responseCode = "204", description = "User feedback removed.", content = {@Content(schema = @Schema(hidden = true))}),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_REVIEWER)})
     @ResponseBody
     public ResponseEntity deleteUserFeedback(
@@ -719,7 +721,7 @@ public class UserFeedbackAPI {
     @RequestMapping(value = "/userfeedback/{uuid}/publish", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     @PreAuthorize("hasAuthority('Reviewer')")
-    @ApiResponses(value = {@ApiResponse(responseCode = "204", description = "User feedback published."),
+    @ApiResponses(value = {@ApiResponse(responseCode = "204", description = "User feedback published.", content = {@Content(schema = @Schema(hidden = true))}),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_REVIEWER),
         @ApiResponse(responseCode = "404", description = ApiParams.API_RESPONSE_RESOURCE_NOT_FOUND)})
     @ResponseBody

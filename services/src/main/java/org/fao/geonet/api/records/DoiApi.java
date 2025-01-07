@@ -23,6 +23,8 @@
 package org.fao.geonet.api.records;
 
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -182,7 +184,7 @@ public class DoiApi {
     )
     @PreAuthorize("hasAuthority('Administrator')")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "204", description = "DOI unregistered."),
+        @ApiResponse(responseCode = "204", description = "DOI unregistered.", content = {@Content(schema = @Schema(hidden = true))}),
         @ApiResponse(responseCode = "404", description = "Metadata or DOI not found."),
         @ApiResponse(responseCode = "500", description = "Service unavailable."),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_ADMIN)
