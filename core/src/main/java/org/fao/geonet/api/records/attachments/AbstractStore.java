@@ -239,8 +239,7 @@ public abstract class AbstractStore implements Store {
             throw new InputStreamLimitExceededException(maxUploadSize, contentLength);
         }
 
-        // Put the resource but limit the input stream to the max upload size plus one byte
-        // so we can check if the file is larger than the allowed size
+        // Upload the resource while ensuring the input stream does not exceed the maximum allowed size.
         try (LimitedInputStream is = new LimitedInputStream(connection.getInputStream(), maxUploadSize)) {
             return putResource(context, metadataUuid, filename, is, null, visibility, approved);
         }
