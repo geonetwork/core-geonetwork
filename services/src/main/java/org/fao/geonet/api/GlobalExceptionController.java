@@ -152,36 +152,34 @@ public class GlobalExceptionController {
     @ResponseStatus(HttpStatus.PAYLOAD_TOO_LARGE)
     @ApiResponse(content = {@Content(mediaType = APPLICATION_JSON_VALUE)})
     @ExceptionHandler({
-        MaxUploadSizeExceededException.class,
-        InputStreamLimitExceededException.class
+        MaxUploadSizeExceededException.class
     })
     public ApiError maxFileExceededHandler(final Exception exception, final HttpServletRequest request) {
         Exception ex;
-        long contentLength = request.getContentLengthLong();
-        // As MaxUploadSizeExceededException is a spring exception, we need to convert it to a localized exception so that it can be translated.
+        // Convert exception to a localized exception so that it can be translated.
         if (exception instanceof MaxUploadSizeExceededException) {
-            ex = new GeonetMaxUploadSizeExceededException("uploadedResourceSizeExceededException", exception)
-                .withMessageKey("exception.maxUploadSizeExceeded",
-                    new String[]{FileUtil.humanizeFileSize(((MaxUploadSizeExceededException) exception).getMaxUploadSize())})
-                .withDescriptionKey("exception.maxUploadSizeExceeded.description",
-                    new String[]{FileUtil.humanizeFileSize(contentLength),
-                        FileUtil.humanizeFileSize(((MaxUploadSizeExceededException) exception).getMaxUploadSize())});
-        } else if (exception instanceof InputStreamLimitExceededException) {
-            long maxUploadSize = ((InputStreamLimitExceededException) exception).getMaxUploadSize();
-            long remoteFileSize = ((InputStreamLimitExceededException) exception).getRemoteFileSize();
-            if (remoteFileSize == -1) {
+            long maxUploadSize = ((MaxUploadSizeExceededException) exception).getMaxUploadSize();
+            long contentLength = exception instanceof InputStreamLimitExceededException ?
+                ((InputStreamLimitExceededException) exception).getRemoteFileSize() :
+                request.getContentLengthLong();
+
+            if (contentLength > 0 && contentLength < maxUploadSize) {
+                Log.warning(Geonet.RESOURCES, "Request content length is less than the maximum upload size but still caused an exception.");
+            }
+
+            if (contentLength > maxUploadSize) {
+                ex = new GeonetMaxUploadSizeExceededException("uploadedResourceSizeExceededException", exception)
+                    .withMessageKey("exception.maxUploadSizeExceeded",
+                        new String[]{FileUtil.humanizeFileSize(maxUploadSize)})
+                    .withDescriptionKey("exception.maxUploadSizeExceeded.description",
+                        new String[]{FileUtil.humanizeFileSize(contentLength),
+                            FileUtil.humanizeFileSize(maxUploadSize)});
+            } else {
                 ex = new GeonetMaxUploadSizeExceededException("uploadedResourceSizeExceededException", exception)
                     .withMessageKey("exception.maxUploadSizeExceeded",
                         new String[]{FileUtil.humanizeFileSize(maxUploadSize)})
                     .withDescriptionKey("exception.maxUploadSizeExceededUnknownSize.description",
                         new String[]{FileUtil.humanizeFileSize(maxUploadSize)});
-            } else {
-                ex = new GeonetMaxUploadSizeExceededException("uploadedResourceSizeExceededException", exception)
-                    .withMessageKey("exception.maxUploadSizeExceeded",
-                        new String[]{FileUtil.humanizeFileSize(maxUploadSize)})
-                    .withDescriptionKey("exception.maxUploadSizeExceeded.description",
-                        new String[]{FileUtil.humanizeFileSize(remoteFileSize),
-                            FileUtil.humanizeFileSize(maxUploadSize)});
             }
         } else {
             ex = exception;
