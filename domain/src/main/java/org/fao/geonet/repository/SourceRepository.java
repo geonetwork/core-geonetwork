@@ -70,8 +70,11 @@ public interface SourceRepository extends GeonetRepository<Source, String>, JpaS
 
     public
     @Nullable
-    List<Source> findByGroupOwner(@Nonnull int groupOwner);
+    List<Source> findByGroupOwner(@Nonnull int groupOwner, Sort sort);
 
+    public
+    @Nullable
+    List<Source> findByGroupOwnerAndType(@Nonnull int groupOwner, @Nonnull SourceType sourceType, Sort sort);
     public
     @Nullable
     List<Source> findByGroupOwnerIn(Set<Integer> groupOwner);
