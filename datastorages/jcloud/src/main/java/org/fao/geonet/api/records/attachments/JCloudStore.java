@@ -310,12 +310,13 @@ public class JCloudStore extends AbstractStore {
                 Log.info(Geonet.RESOURCES,
                     String.format("Put(2) blob '%s' with version label '%s'.", key, properties.get(jCloudConfiguration.getExternalResourceManagementVersionPropertyName())));
 
-                // Upload the Blob in multiple chunks to supports large files.
                 try {
+                    // Upload the Blob in multiple chunks to supports large files.
                     jCloudConfiguration.getClient().getBlobStore().putBlob(jCloudConfiguration.getContainerName(), blob, multipart());
                 } catch (HttpResponseException e) {
+                    // This is special logic for the jcloud store as the InputStreamLimitExceededException gets wrapped in a HttpResponseException
                     Throwable cause = e.getCause();
-                    if (cause != null && cause instanceof InputStreamLimitExceededException) {
+                    if (cause instanceof InputStreamLimitExceededException) {
                         throw (InputStreamLimitExceededException) cause;
                     }
                     throw e;
