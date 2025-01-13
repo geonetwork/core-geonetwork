@@ -163,6 +163,8 @@ public class GlobalExceptionController {
                 ((InputStreamLimitExceededException) exception).getRemoteFileSize() :
                 request.getContentLengthLong();
 
+            // This can occur if the content length header is present on a resource but does not reflect the actual file size.
+            // This could indicate an attempt to bypass the maximum upload size.
             if (contentLength > 0 && contentLength < maxUploadSize) {
                 Log.warning(Geonet.RESOURCES, "Request content length is less than the maximum upload size but still caused an exception.");
             }
