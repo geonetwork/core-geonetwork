@@ -206,8 +206,8 @@ public class FilesystemStore extends AbstractStore {
         try {
             Files.copy(is, filePath, StandardCopyOption.REPLACE_EXISTING);
         } catch (InputStreamLimitExceededException e) {
-                Files.deleteIfExists(filePath);
-                throw e;
+            Files.deleteIfExists(filePath);
+            throw e;
         }
         if (changeDate != null) {
             IO.touch(filePath, FileTime.from(changeDate.getTime(), TimeUnit.MILLISECONDS));
