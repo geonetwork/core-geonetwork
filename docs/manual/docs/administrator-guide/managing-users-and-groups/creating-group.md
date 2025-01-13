@@ -4,9 +4,9 @@ The administrator can create new groups of users. User groups could correspond t
 
 To create new groups you should be logged on with an account that has administrative privileges.
 
-1.  Select the *Administration* button in the menu. On the Administration page, select *Group management*.
+1.  Select *Users and groups* from the *Admin console* drop down, then select *Manage groups*.
 
-2.  Select *Add a new group*. You may want to remove the *Sample* group;
+2.  Click *+New group*. You may want to remove the *Sample* group;
 
 3.  Fill out the details. The email address will be used to send feedback on data downloads when they occur for resources that are part of the Group.
 
