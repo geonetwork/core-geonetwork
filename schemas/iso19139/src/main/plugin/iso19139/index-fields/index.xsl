@@ -977,19 +977,24 @@
 
 
         <xsl:for-each select="gmd:report/*[gmd:nameOfMeasure/gco:CharacterString != ''
-                                          or gmd:measureDescription/gco:CharacterString != '']">
+                                          or gmd:measureDescription/gco:CharacterString != '']/gmd:result/gmd:DQ_QuantitativeResult">
           <xsl:variable name="name"
-                        select="(gmd:nameOfMeasure/gco:CharacterString)[1]"/>
+                        select="(../../gmd:nameOfMeasure/gco:CharacterString)[1]"/>
           <xsl:variable name="value"
-                        select="(gmd:result/gmd:DQ_QuantitativeResult/gmd:value)[1]"/>
+                        select="(gmd:value)[1]"/>
           <xsl:variable name="unit"
-                        select="(gmd:result/gmd:DQ_QuantitativeResult/gmd:valueUnit//(gml:identifier|gml320:identifier))[1]"/>
+                        select="(gmd:valueUnit//(gml:identifier|gml320:identifier))[1]"/>
           <xsl:variable name="description"
-                        select="(gmd:measureDescription/gco:CharacterString)[1]"/>
+                        select="(../../gmd:measureDescription/gco:CharacterString)[1]"/>
+          <xsl:variable name="measureDate"
+                        select="../../gmd:dateTime/gco:DateTime"/>
           <measure type="object">{
             "name": "<xsl:value-of select="util:escapeForJson($name)"/>",
             <xsl:if test="$description != ''">
               "description": "<xsl:value-of select="util:escapeForJson($description)"/>",
+            </xsl:if>
+            <xsl:if test="$measureDate != ''">
+              "date": "<xsl:value-of select="gn-fn-index:json-escape($measureDate)"/>",
             </xsl:if>
             <!-- First value only. -->
             "value": "<xsl:value-of select="util:escapeForJson($value/gco:Record[1])"/>",
@@ -1000,7 +1005,7 @@
             }
           </measure>
 
-          <xsl:for-each select="gmd:result/gmd:DQ_QuantitativeResult/gmd:value/gco:Record[. != '']">
+          <xsl:for-each select="gmd:value/gco:Record[. != '']">
             <xsl:element name="measure_{gn-fn-index:build-field-name($name)}">
               <xsl:value-of select="."/>
             </xsl:element>
