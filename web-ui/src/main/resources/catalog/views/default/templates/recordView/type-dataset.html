@@ -169,12 +169,22 @@
 
 <div
   class="row gn-section gn-section-{{mdView.current.record.resourceType[0]}} gn-padding-bottom-lg"
-  data-ng-if="mdView.current.record.specificationConformance"
+  data-ng-if="mdView.current.record.specificationConformance || mdView.current.record.processSteps"
 >
   <div class="col-md-8 gn-record">
     <div
       ng-include="'../../catalog/views/default/templates/recordView/quality.html'"
     ></div>
+  </div>
+
+  <div class="col-md-12 gn-record">
+    <div ng-include="'../../catalog/views/default/templates/recordView/measures.html'" />
+  </div>
+
+  <div class="col-md-12 gn-record">
+    <div
+      ng-include="'../../catalog/views/default/templates/recordView/processsteps.html'"
+    />
   </div>
 </div>
 

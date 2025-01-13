@@ -283,6 +283,7 @@
         <value>json/schemas</value>
         <value>standards/iso19139/codelists/gmd:MD_TopicCategoryCode+gmd:MD_ScopeCode+gmd:MD_MaintenanceFrequencyCode+gmd:MD_ProgressCode+gmd:MD_SpatialRepresentationTypeCode</value>
         <value>standards/iso19115-3.2018/codelists/cit:CI_DateTypeCode+indeterminatePosition+mri:DS_InitiativeTypeCode+mri:DS_AssociationTypeCode+cit:CI_RoleCode</value>
+        <value>standards/iso19139/labels/gmd:DQ_ThematicClassificationCorrectness+gmd:DQ_AbsoluteExternalPositionalAccuracy+gmd:DQ_AccuracyOfATimeMeasurement+gmd:DQ_CompletenessCommission+gmd:DQ_CompletenessOmission+gmd:DQ_ConceptualConsistency+gmd:DQ_ConformanceResult+gmd:DQ_DataQuality+gmd:DQ_DomainConsistency+gmd:DQ_EvaluationMethodTypeCode+gmd:DQ_FormatConsistency+gmd:DQ_GriddedDataPositionalAccuracy+gmd:DQ_NonQuantitativeAttributeAccuracy+gmd:DQ_QuantitativeAttributeAccuracy+gmd:DQ_RelativeInternalPositionalAccuracy+gmd:DQ_TemporalConsistency+gmd:DQ_TemporalValidity+gmd:DQ_ThematicClassificationCorrectness+gmd:DQ_TopologicalConsistency</value>
         <value>db/MetadataCategory+Operation+Group+StatusValue+Source+Translations</value>
       </util:list>
     </entry>

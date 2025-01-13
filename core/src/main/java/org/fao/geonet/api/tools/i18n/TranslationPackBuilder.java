@@ -136,12 +136,21 @@ public class TranslationPackBuilder {
                     );
                 } else if (config[0].equals(TranslationType.standards.name())
                            && config.length == 4) {
-                    // standards/iso19115-3.2018/codelists/cit:CI_DateTypeCode+...
                     String[] codelistKeys = config[3].split(LIST_SEPARATOR);
-                    translations.putAll(
-                        self.getStandardCodelist(
-                            language, config[1], Arrays.asList(codelistKeys), context)
-                    );
+
+                    if ("labels".equals(config[2])) {
+                        // standards/iso19139/labels/gmd:DQ_AbsoluteExternalPositionalAccuracy+gmd
+                        translations.putAll(
+                            self.getStandardLabel(
+                                language, config[1], Arrays.asList(codelistKeys), context)
+                        );
+                    } else {
+                        // standards/iso19115-3.2018/codelists/cit:CI_DateTypeCode+...
+                        translations.putAll(
+                            self.getStandardCodelist(
+                                language, config[1], Arrays.asList(codelistKeys), context)
+                        );
+                    }
                 } else {
                     throw new IllegalArgumentException(
                         String.format(
@@ -188,6 +197,28 @@ public class TranslationPackBuilder {
             List<Element> listOfEntry = e.getChildren("entry");
             for (Element entry : listOfEntry) {
                 translations.put(entry.getChildText("code"), entry.getChildText("label"));
+            }
+        }
+        return translations;
+    }
+
+    @Cacheable(value = "translations",
+        cacheManager = "cacheManager",
+        key = "{#schema, #language, #label}")
+    public Map<String, String> getStandardLabel(
+        String language, String schema, List<String> label,
+        ServiceContext context) {
+        Map<String, String> translations = new HashMap<>();
+        context.setLanguage(language);
+
+        for (String c : label) {
+            Element e = null;
+            try {
+                e = StandardsUtils.getLabel(c, schemaManager,
+                    schema, null, null, null, null, context);
+                translations.put(c.split(":")[1], e.getChildText("label"));
+            } catch (Exception exception) {
+                exception.printStackTrace();
             }
         }
         return translations;
