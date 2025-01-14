@@ -30,6 +30,7 @@ import jeeves.server.context.ServiceContext;
 
 import org.apache.commons.collections.MapUtils;
 import org.fao.geonet.ApplicationContextHolder;
+import org.fao.geonet.api.exception.InputStreamLimitExceededException;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.MetadataResource;
@@ -47,6 +48,7 @@ import org.jclouds.blobstore.ContainerNotFoundException;
 import org.jclouds.blobstore.domain.*;
 import org.jclouds.blobstore.options.CopyOptions;
 import org.jclouds.blobstore.options.ListContainerOptions;
+import org.jclouds.http.HttpResponseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 
@@ -308,8 +310,17 @@ public class JCloudStore extends AbstractStore {
                 Log.info(Geonet.RESOURCES,
                     String.format("Put(2) blob '%s' with version label '%s'.", key, properties.get(jCloudConfiguration.getExternalResourceManagementVersionPropertyName())));
 
-                // Upload the Blob in multiple chunks to supports large files.
-                jCloudConfiguration.getClient().getBlobStore().putBlob(jCloudConfiguration.getContainerName(), blob, multipart());
+                try {
+                    // Upload the Blob in multiple chunks to supports large files.
+                    jCloudConfiguration.getClient().getBlobStore().putBlob(jCloudConfiguration.getContainerName(), blob, multipart());
+                } catch (HttpResponseException e) {
+                    // This is special logic for the jcloud store as the InputStreamLimitExceededException gets wrapped in a HttpResponseException
+                    Throwable cause = e.getCause();
+                    if (cause instanceof InputStreamLimitExceededException) {
+                        throw (InputStreamLimitExceededException) cause;
+                    }
+                    throw e;
+                }
                 Blob blobResults = jCloudConfiguration.getClient().getBlobStore().getBlob(jCloudConfiguration.getContainerName(), key);
 
                 return createResourceDescription(context, metadataUuid, visibility, filename, blobResults.getMetadata(), metadataId, approved);

@@ -28,6 +28,7 @@ import jeeves.server.context.ServiceContext;
 import org.apache.commons.io.FilenameUtils;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.exception.NotAllowedException;
+import org.fao.geonet.api.exception.InputStreamLimitExceededException;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.MetadataResource;
@@ -35,9 +36,13 @@ import org.fao.geonet.domain.MetadataResourceVisibility;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.repository.MetadataRepository;
+import org.fao.geonet.util.LimitedInputStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
+import org.springframework.http.ContentDisposition;
+import org.springframework.http.HttpHeaders;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.BufferedInputStream;
@@ -58,6 +63,9 @@ public abstract class AbstractStore implements Store {
     protected static final String RESOURCE_MANAGEMENT_EXTERNAL_PROPERTIES_SEPARATOR = ":";
     protected static final String RESOURCE_MANAGEMENT_EXTERNAL_PROPERTIES_ESCAPED_SEPARATOR = "\\:";
     private static final Logger log = LoggerFactory.getLogger(AbstractStore.class);
+
+    @Value("${api.params.maxUploadSize}")
+    protected int maxUploadSize;
 
     @Override
     public final List<MetadataResource> getResources(final ServiceContext context, final String metadataUuid, final Sort sort,
@@ -157,29 +165,6 @@ public abstract class AbstractStore implements Store {
         return metadataId;
     }
 
-    protected String getFilenameFromHeader(final URL fileUrl) throws IOException {
-        HttpURLConnection connection = null;
-        try {
-            connection = (HttpURLConnection) fileUrl.openConnection();
-            connection.setRequestMethod("HEAD");
-            connection.connect();
-            String contentDisposition = connection.getHeaderField("Content-Disposition");
-
-            if (contentDisposition != null && contentDisposition.contains("filename=")) {
-                String filename = contentDisposition.split("filename=")[1].replace("\"", "").trim();
-                return filename.isEmpty() ? null : filename;
-            }
-            return null;
-        } catch (Exception e) {
-            log.error("Error retrieving resource filename from header", e);
-            return null;
-        } finally {
-            if (connection != null) {
-                connection.disconnect();
-            }
-        }
-    }
-
     protected String getFilenameFromUrl(final URL fileUrl) {
         String fileName = FilenameUtils.getName(fileUrl.getPath());
         if (fileName.contains("?")) {
@@ -226,11 +211,38 @@ public abstract class AbstractStore implements Store {
     @Override
     public final MetadataResource putResource(ServiceContext context, String metadataUuid, URL fileUrl,
             MetadataResourceVisibility visibility, Boolean approved) throws Exception {
-        String filename = getFilenameFromHeader(fileUrl);
-        if (filename == null) {
+
+        // Open a connection to the URL
+        HttpURLConnection connection = (HttpURLConnection) fileUrl.openConnection();
+        connection.setInstanceFollowRedirects(true);
+        connection.setRequestMethod("GET");
+
+        // Check if the response code is OK
+        int responseCode = connection.getResponseCode();
+        if (responseCode != HttpURLConnection.HTTP_OK) {
+            throw new IOException("Unexpected response code: " + responseCode);
+        }
+
+        // Extract filename from Content-Disposition header if present otherwise use the filename from the URL
+        String contentDisposition = connection.getHeaderField(HttpHeaders.CONTENT_DISPOSITION);
+        String filename = null;
+        if (contentDisposition != null) {
+            filename = ContentDisposition.parse(contentDisposition).getFilename();
+        }
+        if (filename == null || filename.isEmpty()) {
             filename = getFilenameFromUrl(fileUrl);
         }
-        return putResource(context, metadataUuid, filename, fileUrl.openStream(), null, visibility, approved);
+
+        // Check if the content length is within the allowed limit
+        long contentLength = connection.getContentLengthLong();
+        if (contentLength > maxUploadSize) {
+            throw new InputStreamLimitExceededException(maxUploadSize, contentLength);
+        }
+
+        // Upload the resource while ensuring the input stream does not exceed the maximum allowed size.
+        try (LimitedInputStream is = new LimitedInputStream(connection.getInputStream(), maxUploadSize)) {
+            return putResource(context, metadataUuid, filename, is, null, visibility, approved);
+        }
     }
 
     @Override
