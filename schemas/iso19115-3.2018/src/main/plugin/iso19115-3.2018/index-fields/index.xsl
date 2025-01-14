@@ -1110,10 +1110,13 @@
         <xsl:variable name="processSteps"
                       select="mrl:processStep/*[mrl:description/gco:CharacterString != '']"/>
         <xsl:for-each select="$processSteps">
+          <xsl:variable name="stepDateTimeZulu"
+                        select="date-util:convertToISOZuluDateTime(normalize-space(mrl:stepDateTime))"/>
+
           <processSteps type="object">{
             "descriptionObject": <xsl:value-of select="gn-fn-index:add-multilingual-field(
                                 'description', mrl:description, $allLanguages)"/>
-            <xsl:if test="normalize-space(mrl:stepDateTime) != ''">
+            <xsl:if test="$stepDateTimeZulu != ''">
               ,"date": "<xsl:value-of select="mrl:stepDateTime//gml:timePosition/text()"/>"
             </xsl:if>
             <xsl:if test="normalize-space(mrl:source) != ''">
@@ -1177,17 +1180,17 @@
                         select="mdq:valueUnit//gml:identifier"/>
           <xsl:variable name="description"
                         select="(../../mdq:measure/*/mdq:measureDescription/gco:CharacterString)[1]"/>
-
           <xsl:variable name="measureDate"
-                        select="mdq:dateTime/gco:DateTime"/>
-
+                        select="normalize-space(mdq:dateTime/gco:DateTime)"/>
+          <xsl:variable name="measureDateZulu"
+                        select="date-util:convertToISOZuluDateTime($measureDate)"/>
           <measure type="object">{
             "name": "<xsl:value-of select="util:escapeForJson($name)"/>",
             <xsl:if test="$description != ''">
               "description": "<xsl:value-of select="util:escapeForJson($description)"/>",
             </xsl:if>
-            <xsl:if test="$measureDate != ''">
-              "date": "<xsl:value-of select="gn-fn-index:json-escape($measureDate)"/>",
+            <xsl:if test="$measureDateZulu != ''">
+              "date": "<xsl:value-of select="util:escapeForJson($measureDate)"/>",
             </xsl:if>
             <!-- First value only. -->
             "value": "<xsl:value-of select="util:escapeForJson($value[1])"/>",
