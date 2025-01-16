@@ -2492,14 +2492,6 @@ version en tant que mot-clé complémentaire(s). Le numéro de version doit comp
     <description>Distance de référence, mesurée au sol</description>
     <help>Résolution au sol</help>
     <condition>Saisir une distance si pas d'échelle</condition>
-    <helper relAtt="uom">
-      <option value="0.10" title="m">10 cm</option>
-      <option value="0.25" title="m">25 cm</option>
-      <option value="0.50" title="m">50 cm</option>
-      <option value="1" title="m">1 m</option>
-      <option value="30" title="m">30 m</option>
-      <option value="100" title="m">100 m</option>
-    </helper>
   </element>
 
   <element name="gmd:distributionFormat" id="271.0">

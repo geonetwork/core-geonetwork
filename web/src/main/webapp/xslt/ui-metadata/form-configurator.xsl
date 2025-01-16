@@ -26,6 +26,7 @@
                 xmlns:gn-fn-metadata="http://geonetwork-opensource.org/xsl/functions/metadata"
                 xmlns:gn="http://www.fao.org/geonetwork"
                 xmlns:xs="http://www.w3.org/2001/XMLSchema"
+                xmlns:util="java:org.fao.geonet.util.XslUtil"
                 xmlns:saxon="http://saxon.sf.net/"
                 extension-element-prefixes="saxon"
                 exclude-result-prefixes="#all" version="2.0">
@@ -262,6 +263,120 @@
     </xsl:for-each>
   </xsl:template>
 
+  <!--
+  <select name="Choose a feature type"
+          xpath="/gfc:FC_FeatureCatalogue/gfc:featureType"
+          parameter="featureType"
+          value="*/gfc:typeName/gco:LocalName"
+          layout="list|tab|dropdown"/>
+  -->
+  <xsl:template mode="form-builder" match="select">
+    <xsl:param name="base" as="node()"/>
+
+    <xsl:variable name="parameter" select="@parameter" as="xs:string"/>
+    <xsl:variable name="value" select="@value" as="xs:string"/>
+    <xsl:variable name="icon" select="@icon"/>
+    <xsl:variable name="labelKey" select="@name"/>
+    <xsl:variable name="layout" select="@layout" as="xs:string"/>
+
+    <!-- Depending on the context, we need to prefix the xpath
+      to work in evaluate function. If root element eg. /gmd:MD_Metadata...
+      then we prepend /.. if a child node, we use current. -->
+    <xsl:variable name="xpathPrefix"
+                  select="if (starts-with(@xpath, '/'))
+                                    then '/..'
+                                    else '/'"/>
+
+    <xsl:variable name="nodes" as="node()*">
+      <saxon:call-template name="{concat('evaluate-', $schema)}">
+        <xsl:with-param name="base" select="$base"/>
+        <xsl:with-param name="in"
+                        select="concat($xpathPrefix, @xpath)"/>
+      </saxon:call-template>
+    </xsl:variable>
+
+    <xsl:if test="count($nodes) > 1">
+
+      <xsl:variable name="selectorLabel"
+                    select="if (contains($labelKey, ':'))
+                            then gn-fn-metadata:getLabel($schema, $labelKey, $labels)/label
+                            else if ($strings/*[name() = $labelKey] != '')
+                            then $strings/*[name() = $labelKey]
+                            else $labelKey"
+      />
+
+      <xsl:variable name="listOfNodes" as="node()*">
+        <xsl:for-each select="$nodes">
+          <item>
+            <xsl:variable name="featureTypeKey">
+              <saxon:call-template name="{concat('evaluate-', $schema)}">
+                <xsl:with-param name="base" select="current()"/>
+                <xsl:with-param name="in" select="concat('/', $value)"/>
+              </saxon:call-template>
+            </xsl:variable>
+
+            <xsl:attribute name="featureTypeKey"
+                           select="$featureTypeKey"/>
+            <xsl:attribute name="isRequestedFeatureType"
+                           select="$request/*[name() = $parameter] = $featureTypeKey"/>
+            <xsl:copy-of select="."/>
+          </item>
+        </xsl:for-each>
+      </xsl:variable>
+
+
+      <xsl:variable name="choices">
+        <ul class="{if ($layout = 'dropdown') then 'dropdown-menu' else concat('nav nav-', $layout)}">
+          <xsl:variable name="isRequestedFeatureTypeFound"
+                        select="$listOfNodes/@isRequestedFeatureType = 'true'"
+                        as="xs:boolean"/>
+
+          <xsl:for-each select="$listOfNodes">
+            <li>
+              <xsl:if test="@isRequestedFeatureType = 'true'
+                          or (not($isRequestedFeatureTypeFound) and position() = 1)">
+                <xsl:attribute name="class" select="if ($layout = 'dropdown') then 'disabled' else 'active'"/>
+                <input type="hidden" id="{$parameter}" name="{$parameter}" value="{@featureTypeKey}"/>
+              </xsl:if>
+              <a data-ng-click="switchToTabWithParam('{$parameter}', '{util:escapeForEcmaScript(@featureTypeKey)}')" href="">
+                <xsl:value-of select="if (@featureTypeKey != '') then @featureTypeKey else $strings/*[name() = 'missingFeatureTypeName']"/>
+              </a>
+            </li>
+          </xsl:for-each>
+        </ul>
+      </xsl:variable>
+
+      <xsl:variable name="fieldTitle">
+        <xsl:if test="$icon">
+          <i class="fa fa-fw {$icon}"></i>
+        </xsl:if>
+        <xsl:value-of select="$selectorLabel"/>
+      </xsl:variable>
+
+      <div class="form-group gn-field col-sm-12">
+        <xsl:choose>
+          <xsl:when test="$layout = 'dropdown'">
+            <div class="dropdown">
+              <button class="btn btn-default dropdown-toggle" type="button"
+                      data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                <xsl:copy-of select="$fieldTitle"/>
+                <span class="caret"></span>
+              </button>
+              <xsl:copy-of select="$choices"/>
+            </div>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:if test="$selectorLabel != ''">
+              <label>
+                <xsl:copy-of select="$fieldTitle"/>
+              </label>
+            </xsl:if>
+            <xsl:copy-of select="$choices"/>
+          </xsl:otherwise>
+        </xsl:choose>
+      </div>
+    </xsl:if>
+  </xsl:template>
 
 
   <!-- Element to ignore in that mode -->

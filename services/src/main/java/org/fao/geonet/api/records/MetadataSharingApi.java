@@ -136,6 +136,9 @@ public class MetadataSharingApi implements ApplicationEventPublisherAware
     IMetadataManager metadataManager;
 
     @Autowired
+    IMetadataOperations metadataOperations;
+
+    @Autowired
     MetadataValidationRepository metadataValidationRepository;
 
     @Autowired
@@ -563,8 +566,24 @@ public class MetadataSharingApi implements ApplicationEventPublisherAware
             // Check if the user profile can change the privileges for publication/un-publication of the reserved groups
             checkChangesAllowedToUserProfileForReservedGroups(context.getUserSession(), sharingBefore, privileges, !sharing.isClear());
 
+            List<Integer> excludeFromDelete = new ArrayList<Integer>();
+
+            // Exclude deleting privileges for groups in which the user does not have the minimum profile for privileges
+            for (Group group: groupRepository.findByMinimumProfileForPrivilegesNotNull()) {
+                if (!canUserChangePrivilegesForGroup(context, group)) {
+                    excludeFromDelete.add(group.getId());
+                }
+            }
+
+            // Exclude deleting privileges for reserved groups if the skipAllReservedGroup flag is set
+            if (skipAllReservedGroup) {
+                excludeFromDelete.add(ReservedGroup.all.getId());
+                excludeFromDelete.add(ReservedGroup.intranet.getId());
+                excludeFromDelete.add(ReservedGroup.guest.getId());
+            }
+
             if (sharing.isClear()) {
-                dataManager.deleteMetadataOper(context, String.valueOf(metadata.getId()), skipAllReservedGroup);
+                metadataOperations.deleteMetadataOper(String.valueOf(metadata.getId()), excludeFromDelete);
             }
 
             for (GroupOperations p : privileges) {
@@ -743,6 +762,8 @@ public class MetadataSharingApi implements ApplicationEventPublisherAware
                 }
                 groupPrivilege.setUserProfile(userGroupProfile);
 
+                // Restrict changing privileges for groups with a minimum profile for setting privileges set
+                groupPrivilege.setRestricted(!canUserChangePrivilegesForGroup(context, g));
 
                 //--- get all operations that this group can do on given metadata
                 Specification<OperationAllowed> hasGroupIdAndMetadataId =
@@ -1472,6 +1493,22 @@ public class MetadataSharingApi implements ApplicationEventPublisherAware
                 throw new NotAllowedException(String.format(
                     "Unpublication of metadata is not allowed. User needs to be at least %s to unpublish record.", allowedUserProfileToUnpublishMetadata));
             }
+        }
+    }
+
+    /**
+     * Checks if the user can change the privileges for the group.
+     *
+     * @param context The {@link ServiceContext} object.
+     * @param group   The {@link Group} to change the privileges for.
+     * @return True if the user can change the privileges for the group, false otherwise.
+     */
+    private boolean canUserChangePrivilegesForGroup(final ServiceContext context, Group group) {
+        Profile minimumProfileForPrivileges = group.getMinimumProfileForPrivileges();
+        if (minimumProfileForPrivileges == null) {
+            return true;
+        } else {
+            return accessManager.isProfileOrMoreOnGroup(context, minimumProfileForPrivileges, group.getId());
         }
     }
 

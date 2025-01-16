@@ -179,7 +179,7 @@
         in default language
         -->
         <xsl:variable name="keywords" select="string-join(
-                  if ($guiLangId and mri:keyword//*[@locale = concat('#', $guiLangId)])
+                  if ($guiLangId and mri:keyword//*[@locale = concat('#', $guiLangId)][*/text() != ''])
                   then mri:keyword//*[@locale = concat('#', $guiLangId)][. != '']/replace(text(), ',', ',,')
                   else mri:keyword/*[1][. != '']/replace(text(), ',', ',,'), ',')"/>
 

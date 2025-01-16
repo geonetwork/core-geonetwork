@@ -37,9 +37,7 @@ import org.geotools.geometry.jts.ReferencedEnvelope;
 import org.geotools.referencing.CRS;
 import org.locationtech.jts.awt.IdentityPointTransformation;
 import org.locationtech.jts.awt.PointShapeFactory;
-import org.locationtech.jts.awt.PointTransformation;
 import org.locationtech.jts.awt.ShapeWriter;
-import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.Envelope;
 import org.locationtech.jts.geom.Geometry;
 import org.geotools.api.metadata.extent.Extent;
@@ -51,7 +49,6 @@ import org.springframework.context.ApplicationContext;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;
-import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.util.Collection;
 import java.util.Map;
@@ -181,8 +178,14 @@ public class MapRenderer {
 
         Envelope bboxOfImage = new Envelope(isPoint ?
                 geom.buffer(pointBufferSize).getEnvelopeInternal() : geom.getEnvelopeInternal());
-        double expandFactor = calculateExpandFactor(regionGetMapExpandFactors, bboxOfImage, srs);
-        bboxOfImage.expandBy(bboxOfImage.getWidth() * expandFactor, bboxOfImage.getHeight() * expandFactor);
+        ExpandFactor factor = calculateExpandFactor(regionGetMapExpandFactors, bboxOfImage, srs);
+        double expandFactor = factor.factor;
+        if (factor.isSquareImage()) {
+            height = width;
+            bboxOfImage.expandBy(bboxOfImage.getWidth() * expandFactor, bboxOfImage.getWidth() * expandFactor);
+        } else {
+            bboxOfImage.expandBy(bboxOfImage.getWidth() * expandFactor, bboxOfImage.getHeight() * expandFactor);
+        }
         Dimension imageDimensions = calculateImageSize(bboxOfImage, width, height);
 
         Exception error = null;
@@ -272,8 +275,8 @@ public class MapRenderer {
         return defaultColor;
     }
 
-    private double calculateExpandFactor(SortedSet<ExpandFactor> regionGetMapExpandFactors, Envelope bboxOfImage,
-                                         String srs) throws Exception {
+    private ExpandFactor calculateExpandFactor(SortedSet<ExpandFactor> regionGetMapExpandFactors, Envelope bboxOfImage,
+                                               String srs) throws Exception {
         CoordinateReferenceSystem crs = Region.decodeCRS(srs);
         ReferencedEnvelope env = new ReferencedEnvelope(bboxOfImage, crs);
         env = env.transform(Region.WGS84, true);
@@ -284,10 +287,10 @@ public class MapRenderer {
 
         for (ExpandFactor factor : regionGetMapExpandFactors) {
             if (scale < factor.proportion) {
-                return factor.factor;
+                return factor;
             }
         }
-        return regionGetMapExpandFactors.last().factor;
+        return regionGetMapExpandFactors.last();
     }
 
     private Dimension calculateImageSize(Envelope bboxOfImage, Integer width, Integer height) {

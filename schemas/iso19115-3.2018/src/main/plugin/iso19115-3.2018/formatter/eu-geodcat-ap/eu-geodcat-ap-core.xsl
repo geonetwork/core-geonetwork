@@ -19,6 +19,7 @@
     <!-- http://data.europa.eu/930/ -->
 
     <xsl:import href="../eu-dcat-ap/eu-dcat-ap-core.xsl"/>
+    <xsl:import href="../eu-dcat-ap-hvd/eu-dcat-ap-hvd-core.xsl"/>
     <xsl:import href="eu-geodcat-ap-variables.xsl"/>
 
     <xsl:template name="create-namespaces-eu-geodcat-ap">

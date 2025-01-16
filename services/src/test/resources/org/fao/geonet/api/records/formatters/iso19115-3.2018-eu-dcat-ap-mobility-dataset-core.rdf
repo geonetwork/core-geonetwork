@@ -14,7 +14,7 @@
          xmlns:dcatap="http://data.europa.eu/r5r/"
          xmlns:eli="http://data.europa.eu/eli/ontology"
          xmlns:mobilitydcatap="https://w3id.org/mobilitydcat-ap">
-   <rdf:Description rdf:about="https://metawal.wallonie.be/geonetwork/srv/api/records/7fe2f305-1302-4297-b67e-792f55acd834">
+   <rdf:Description rdf:about="http://geodata.wallonie.be/id/7fe2f305-1302-4297-b67e-792f55acd834">
       <rdf:type rdf:resource="http://www.w3.org/ns/dcat#Dataset"/>
       <dct:type>
          <skos:Concept rdf:about="http://purl.org/dc/dcmitype/Dataset">
@@ -22,7 +22,7 @@
          </skos:Concept>
       </dct:type>
       <foaf:isPrimaryTopicOf>
-         <rdf:Description>
+         <rdf:Description rdf:about="https://metawal.wallonie.be/geonetwork/srv/api/records/7fe2f305-1302-4297-b67e-792f55acd834">
             <rdf:type rdf:resource="http://www.w3.org/ns/dcat#CatalogRecord"/>
             <dct:identifier rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">urn:uuid:{uuid}</dct:identifier>
             <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2023-12-08T12:26:19.337626Z</dct:modified>
@@ -85,7 +85,7 @@
             <dct:conformsTo>
                <dct:Standard rdf:about="http://data.europa.eu/r5r/"/>
             </dct:conformsTo>
-            <foaf:primaryTopic rdf:resource="https://metawal.wallonie.be/geonetwork/srv/api/records/7fe2f305-1302-4297-b67e-792f55acd834"/>
+            <foaf:primaryTopic rdf:resource="http://geodata.wallonie.be/id/7fe2f305-1302-4297-b67e-792f55acd834"/>
          </rdf:Description>
       </foaf:isPrimaryTopicOf>
       <dcat:landingPage>
@@ -366,6 +366,7 @@
       <dcat:keyword xml:lang="fre">Mobilité</dcat:keyword>
       <dcat:keyword xml:lang="fre">Observation de la terre et environnement</dcat:keyword>
       <dcatap:applicableLegislation rdf:resource="http://data.europa.eu/eli/reg/2014/1143/oj"/>
+      <dcatap:applicableLegislation rdf:resource="http://data.europa.eu/eli/reg_impl/2023/138/oj"/>
       <dct:accessRights>
          <dct:RightsStatement rdf:about="http://inspire.ec.europa.eu/metadata-codelist/LimitationsOnPublicAccess/noLimitations"/>
       </dct:accessRights>
@@ -524,20 +525,36 @@
             </dcat:compressFormat>
          </dcat:Distribution>
       </dcat:distribution>
-      <foaf:page>
-         <foaf:Document rdf:about="http://geoapps.wallonie.be/webgisdgo4/#CTX=PDS">
+      <dcat:distribution>
+         <dcat:Distribution>
             <dct:title xml:lang="fre">Application de consultation des données de la DGO4 - Plan de secteur</dct:title>
             <dct:description xml:lang="fre">Application dédiée à la consultation des couches de données relatives au Plan de
                   secteur. Cette application constitue un thème de l'application de consultation des données de la DGO4.</dct:description>
-         </foaf:Document>
-      </foaf:page>
-      <foaf:page>
-         <foaf:Document rdf:about="https://geoportail.wallonie.be/walonmap/#ADU=https://geoservices.wallonie.be/arcgis/rest/services/AMENAGEMENT_TERRITOIRE/PDS/MapServer">
+            <dcat:accessURL rdf:resource="http://geoapps.wallonie.be/webgisdgo4/#CTX=PDS"/>
+            <dcat:accessService>
+               <rdf:Description>
+                  <rdf:type rdf:resource="http://www.w3.org/ns/dcat#DataService"/>
+                  <dct:title xml:lang="fre">Application de consultation des données de la DGO4 - Plan de secteur</dct:title>
+                  <dcat:endpointURL rdf:resource="http://geoapps.wallonie.be/webgisdgo4/#CTX=PDS"/>
+               </rdf:Description>
+            </dcat:accessService>
+         </dcat:Distribution>
+      </dcat:distribution>
+      <dcat:distribution>
+         <dcat:Distribution>
             <dct:title xml:lang="fre">Application WalOnMap - Toute la Wallonie à la carte</dct:title>
             <dct:description xml:lang="fre">Application cartographique du Geoportail (WalOnMap) qui permet de découvrir les
                   données géographiques de la Wallonie.</dct:description>
-         </foaf:Document>
-      </foaf:page>
+            <dcat:accessURL rdf:resource="https://geoportail.wallonie.be/walonmap/#ADU=https://geoservices.wallonie.be/arcgis/rest/services/AMENAGEMENT_TERRITOIRE/PDS/MapServer"/>
+            <dcat:accessService>
+               <rdf:Description>
+                  <rdf:type rdf:resource="http://www.w3.org/ns/dcat#DataService"/>
+                  <dct:title xml:lang="fre">Application WalOnMap - Toute la Wallonie à la carte</dct:title>
+                  <dcat:endpointURL rdf:resource="https://geoportail.wallonie.be/walonmap/#ADU=https://geoservices.wallonie.be/arcgis/rest/services/AMENAGEMENT_TERRITOIRE/PDS/MapServer"/>
+               </rdf:Description>
+            </dcat:accessService>
+         </dcat:Distribution>
+      </dcat:distribution>
       <dcat:distribution>
          <dcat:Distribution>
             <dct:title xml:lang="fre">Service de visualisation ESRI-REST</dct:title>
@@ -597,5 +614,11 @@
                   shapefile en coordonnées Lambert 72</dct:description>
          </foaf:Document>
       </foaf:page>
+      <dcat:distribution>
+         <dcat:Distribution>
+            <dct:description xml:lang="fre">Légende associée au plan de secteur (sur base du service de visualisation)</dct:description>
+            <dcat:accessURL rdf:resource="https://geoservices.wallonie.be/arcgis/rest/services/AMENAGEMENT_TERRITOIRE/PDS/MapServer/legend"/>
+         </dcat:Distribution>
+      </dcat:distribution>
    </rdf:Description>
 </rdf:RDF>

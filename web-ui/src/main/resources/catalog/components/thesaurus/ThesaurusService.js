@@ -44,7 +44,7 @@
           var foundLang = _.find(UILangs, function (l) {
             return props.values[l] !== undefined;
           });
-          if (foundLang) return props.values[foundLang];
+          if (foundLang) return props.values[foundLang] || props.values["eng"];
         }
         return this.props.value["#text"] || this.props.value;
       }
@@ -152,6 +152,11 @@
           if (outputLang) {
             parameters["pLang"] = outputLang;
           }
+          if (lang !== "eng") {
+            // Fallback in english if thesaurus has no translation in current record language
+            parameters["pLang"] = ["eng", lang];
+          }
+
           return gnUrlUtils.append(
             "../api/registries/vocabularies/search",
             gnUrlUtils.toKeyValue(parameters)
