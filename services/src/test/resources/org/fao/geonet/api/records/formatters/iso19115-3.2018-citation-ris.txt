@@ -1,6 +1,7 @@
 TY  - DATA
 AU  - Production géomatique et traitement de données (SPW - Secrétariat général - SPW Digital - Département Données transversales - Production géomatique et traitement de données)
 TI  - Utilisation du Sol en Wallonie - WALOUS 2018
+LA  - fre
 KW  - Données de base
 KW  - Nature et environnement
 KW  - Aménagement du territoire
@@ -20,4 +21,6 @@ KW  - UTS
 KW  - COSW
 UR  - http://localhost:8080/srv/api/records/{uuid}
 ID  - {uuid}
+DA  - 2020/10/30/
+PY  - 2020
 ER  -
