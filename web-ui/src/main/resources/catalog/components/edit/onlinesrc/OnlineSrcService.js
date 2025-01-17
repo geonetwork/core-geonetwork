@@ -939,6 +939,11 @@
               "&query=" +
               query.replaceAll("https://doi.org/", "")
           );
+        },
+        searchCrossref: function (url, prefix, query) {
+          return $http.get(
+            url + "?select=DOI%2Ctitle%2Ctype%2Cprefix%2Cabstract%2CURL&" + query
+          );
         }
       };
     }

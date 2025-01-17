@@ -2460,6 +2460,8 @@
             doiUrl: "=?",
             doiPrefix: "=?",
             doiQueryPattern: "=?",
+            doiCrossrefUrl: "=?",
+            doiCrossrefQueryPattern: "=?",
             mode: "@",
             addToSelectionCb: "&?",
             removeFromSelectionCb: "&?"
@@ -2469,6 +2471,7 @@
           link: function (scope, element, attrs) {
             // select (single value) / add mode (used in siblings dialog)
             scope.mode = scope.mode || "select";
+            scope.searchedValue = false;
             scope.updateSelection = angular.isFunction(scope.addToSelectionCb)
               ? function (md) {
                   if (scope.isSelected(md)) {
@@ -2491,13 +2494,15 @@
             scope.isSearching = false;
 
             scope.clearSearch = function () {
+              scope.searchedValue = false;
               scope.queryValue = "";
               scope.results = [];
+              scope.resultsCrossref = [];
             };
 
             scope.$on("resetSearch", scope.clearSearch);
 
-            scope.search = function () {
+            var searchDatacite = function () {
               var searchQuery =
                 scope.queryValue !== ""
                   ? scope.doiQueryPattern.replaceAll("{query}", scope.queryValue)
@@ -2533,6 +2538,52 @@
                   scope.isSearching = false;
                 }
               );
+            };
+
+            var searchCrossref = function () {
+              var searchQuery =
+                scope.crossrefQueryValue !== ""
+                  ? scope.doiCrossrefQueryPattern
+                      .replaceAll("{query}", scope.queryValue)
+                      .replaceAll("{prefix}", scope.doiPrefix)
+                  : "";
+              scope.isSearchingCrossref = true;
+              gnDoiSearchService
+                .searchCrossref(scope.doiCrossrefUrl, scope.doiPrefix, searchQuery)
+                .then(
+                  function (response) {
+                    scope.isSearchingCrossref = false;
+                    var results = [];
+
+                    angular.forEach(response.data.message.items, function (r) {
+                      results.push({
+                        uuid: r.DOI,
+                        remoteUrl: r.URL,
+                        resourceTitle: r.title && r.title.length > 0 ? r.title[0] : "",
+                        title: r.title && r.title.length > 0 ? r.title[0] : "",
+                        description:
+                          r.abstract && r.abstract.length > 0 ? r.abstract[0] : ""
+                      });
+                    });
+
+                    scope.resultsCrossref = results;
+                  },
+                  function (response) {
+                    scope.isSearchingCrossref = false;
+                  }
+                );
+            };
+
+            scope.search = function () {
+              scope.searchedValue = true;
+
+              if (scope.doiUrl) {
+                searchDatacite();
+              }
+
+              if (scope.doiCrossrefUrl) {
+                searchCrossref();
+              }
             };
           }
         };
