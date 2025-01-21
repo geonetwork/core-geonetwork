@@ -1137,7 +1137,7 @@ public class Thesaurus {
         String cacheKey = "getKeyword" + uri + String.join("", languages);
         Object cacheValue = THESAURUS_SEARCH_CACHE.getIfPresent(cacheKey);
         if (cacheValue != null) {
-            return (KeywordBean) cacheValue;
+            //return (KeywordBean) cacheValue;
         }
 
         List<KeywordBean> keywords;
