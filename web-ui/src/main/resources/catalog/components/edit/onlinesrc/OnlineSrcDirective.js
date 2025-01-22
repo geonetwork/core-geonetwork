@@ -2497,93 +2497,149 @@
               scope.searchedValue = false;
               scope.queryValue = "";
               scope.results = [];
-              scope.resultsCrossref = [];
             };
 
             scope.$on("resetSearch", scope.clearSearch);
 
-            var searchDatacite = function () {
-              var searchQuery =
-                scope.queryValue !== ""
-                  ? scope.doiQueryPattern.replaceAll("{query}", scope.queryValue)
-                  : "";
-              scope.isSearching = true;
-              gnDoiSearchService.search(scope.doiUrl, scope.doiPrefix, searchQuery).then(
-                function (response) {
-                  scope.isSearching = false;
-                  var results = [];
+            var processResultsDatacite = function (resultsDatacite) {
+              var results = [];
 
-                  angular.forEach(response.data.data, function (r) {
-                    results.push({
-                      uuid: r.id,
-                      remoteUrl: r.attributes.url,
-                      resourceTitle:
-                        r.attributes.titles.length > 0
-                          ? r.attributes.titles[0].title
-                          : r.url,
-                      title:
-                        r.attributes.titles.length > 0
-                          ? r.attributes.titles[0].title
-                          : r.url,
-                      description:
-                        r.attributes.descriptions.length > 0
-                          ? r.attributes.descriptions[0].descriptions
-                          : ""
-                    });
-                  });
+              angular.forEach(resultsDatacite, function (r) {
+                results.push({
+                  uuid: r.id,
+                  remoteUrl: r.attributes.url,
+                  resourceTitle:
+                    r.attributes.titles.length > 0 ? r.attributes.titles[0].title : r.url,
+                  title:
+                    r.attributes.titles.length > 0 ? r.attributes.titles[0].title : r.url,
+                  description:
+                    r.attributes.descriptions.length > 0
+                      ? r.attributes.descriptions[0].descriptions
+                      : ""
+                });
+              });
 
-                  scope.results = results;
-                },
-                function (response) {
-                  scope.isSearching = false;
-                }
-              );
+              return results;
             };
 
-            var searchCrossref = function () {
-              var searchQuery =
-                scope.crossrefQueryValue !== ""
-                  ? scope.doiCrossrefQueryPattern
-                      .replaceAll("{query}", scope.queryValue)
-                      .replaceAll("{prefix}", scope.doiPrefix)
-                  : "";
-              scope.isSearchingCrossref = true;
-              gnDoiSearchService
-                .searchCrossref(scope.doiCrossrefUrl, scope.doiPrefix, searchQuery)
-                .then(
-                  function (response) {
-                    scope.isSearchingCrossref = false;
-                    var results = [];
+            var processResultsCrossref = function (resultsCrossref) {
+              var results = [];
 
-                    angular.forEach(response.data.message.items, function (r) {
-                      results.push({
-                        uuid: r.DOI,
-                        remoteUrl: r.URL,
-                        resourceTitle: r.title && r.title.length > 0 ? r.title[0] : "",
-                        title: r.title && r.title.length > 0 ? r.title[0] : "",
-                        description:
-                          r.abstract && r.abstract.length > 0 ? r.abstract[0] : ""
-                      });
-                    });
+              angular.forEach(resultsCrossref, function (r) {
+                results.push({
+                  uuid: r.DOI,
+                  remoteUrl: r.URL,
+                  resourceTitle: r.title && r.title.length > 0 ? r.title[0] : "",
+                  title: r.title && r.title.length > 0 ? r.title[0] : "",
+                  description: r.abstract && r.abstract.length > 0 ? r.abstract[0] : ""
+                });
+              });
 
-                    scope.resultsCrossref = results;
-                  },
-                  function (response) {
-                    scope.isSearchingCrossref = false;
-                  }
-                );
+              return results;
+            };
+
+            var sortResults = function () {
+              scope.results.sort(function (a, b) {
+                if (a.resourceTitle < b.resourceTitle) {
+                  return -1;
+                }
+                if (a.resourceTitle > b.resourceTitle) {
+                  return 1;
+                }
+                return 0;
+              });
+            };
+            var dataciteQuery = function () {
+              return scope.queryValue !== ""
+                ? scope.doiQueryPattern.replaceAll("{query}", scope.queryValue)
+                : "";
+            };
+
+            var crossrefQuery = function () {
+              return scope.crossrefQueryValue !== ""
+                ? scope.doiCrossrefQueryPattern
+                    .replaceAll("{query}", scope.queryValue)
+                    .replaceAll("{prefix}", scope.doiPrefix)
+                : "";
+            };
+
+            var internalSearch = function (doDataciteSearch, doCrossrefSearch) {
+              scope.isSearching = true;
+              var results = [];
+
+              if (doDataciteSearch && doCrossrefSearch) {
+                // Search Datacite
+                gnDoiSearchService
+                  .search(scope.doiUrl, scope.doiPrefix, dataciteQuery())
+                  .then(
+                    function (response) {
+                      results = processResultsDatacite(response.data.data);
+
+                      // Search Crossref
+                      gnDoiSearchService
+                        .searchCrossref(
+                          scope.doiCrossrefUrl,
+                          scope.doiPrefix,
+                          crossrefQuery()
+                        )
+                        .then(
+                          function (response) {
+                            scope.isSearching = false;
+
+                            results = results.concat(
+                              processResultsCrossref(response.data.message.items)
+                            );
+
+                            scope.results = results;
+                            sortResults();
+                          },
+                          function (response) {
+                            scope.isSearching = false;
+                          }
+                        );
+                    },
+                    function (response) {
+                      scope.isSearching = false;
+                    }
+                  );
+              } else if (doDataciteSearch) {
+                gnDoiSearchService
+                  .search(scope.doiUrl, scope.doiPrefix, dataciteQuery())
+                  .then(
+                    function (response) {
+                      scope.isSearching = false;
+                      scope.results = processResultsDatacite(response.data.data);
+                      sortResults();
+                    },
+                    function (response) {
+                      scope.isSearching = false;
+                    }
+                  );
+              } else if (doCrossrefSearch) {
+                gnDoiSearchService
+                  .searchCrossref(scope.doiCrossrefUrl, scope.doiPrefix, crossrefQuery())
+                  .then(
+                    function (response) {
+                      scope.isSearching = false;
+                      scope.results = processResultsCrossref(response.data.message.items);
+                      sortResults();
+                    },
+                    function (response) {
+                      scope.isSearching = false;
+                    }
+                  );
+              } else {
+                scope.isSearching = false;
+              }
             };
 
             scope.search = function () {
               scope.searchedValue = true;
 
-              if (scope.doiUrl) {
-                searchDatacite();
-              }
+              var doDataciteSearch = scope.doiUrl !== "";
+              var doCrossrefSearch = scope.doiCrossrefUrl !== "";
 
-              if (scope.doiCrossrefUrl) {
-                searchCrossref();
-              }
+              internalSearch(doDataciteSearch, doCrossrefSearch);
             };
           }
         };
