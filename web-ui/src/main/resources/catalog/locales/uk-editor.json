@@ -236,6 +236,7 @@
     "onlineUseDQReport": "Звіт про якість даних",
     "onlineUseDQTOR": "Специфікація якості даних",
     "onlineUseDQProdReport": "Звіт про якість даних",
+    "onlineUseMap": "Map",
     "onlineUseLegend": "Легенда для ресурсу",
     "onlineUseLegendLYR": "Стиль для ресурсу для ArcGIS (LYR)",
     "onlineUseStyleSLD": "Стиль для ресурсу з використанням SLD",
@@ -441,6 +442,8 @@
     "addOnlinesrc#API-help": "напр. служба перегляду, REST API",
     "addOnlinesrc#onlineDownload|localNetwork": "Додати завантаження",
     "addOnlinesrc#onlineDownload|localNetwork-help": "напр. файл, сервіс завантаження, посилання на локальну мережу",
+    "addOnlinesrc#onlineUseMap": "Add map",
+    "addOnlinesrc#onlineUseMap-help": "eg. PDF static maps or OGC Web Map Context interactive maps",
     "addOnlinesrc#onlineUseLegend": "Додайте зображення",
     "addOnlinesrc#onlineUseLegend-help": "напр. Файли LYR, QML, SLD",
     "addOnlinesrc#links": "Додайте посилання",
@@ -454,5 +457,10 @@
     "associated-fcats": "Каталог характеристик",
     "associated-siblings": "Пов&#39;язані ресурси",
     "associated-hasfeaturecats": "Використання цього каталогу функцій",
-    "associatedResourcesPanel": "Пов&#39;язані ресурси"
+    "associatedResourcesPanel": "Пов&#39;язані ресурси",
+    "validationSuccessLabel": "success",
+    "validationErrorLabel": "errors",
+    "metadataDuplicatedField-title": "The metadata title is used in another metadata record.",
+    "metadataDuplicatedField-altTitle": "The metadata alternate title is used in another metadata record.",
+    "metadataDuplicatedField-identifier": "The metadata resource identifier is used in another metadata record."
 }
