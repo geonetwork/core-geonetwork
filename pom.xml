@@ -1619,8 +1619,8 @@
 
     <!-- NOTE: When updating GeoTools, check which version
     of Postgres is used and update pg.version if needed. -->
-    <geotools.version>28.2</geotools.version>
-    <jts.version>1.18.2</jts.version>
+    <geotools.version>31.5</geotools.version>
+    <jts.version>1.19.0</jts.version>
     <pg.version>42.3.10</pg.version>
 
     <spring.version>5.3.39</spring.version>
