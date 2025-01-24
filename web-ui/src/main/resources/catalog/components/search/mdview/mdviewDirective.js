@@ -437,11 +437,22 @@
           // Group by 'default', 'role', 'org-role'
           mode: "@gnMode",
           // 'icon' or 'list' (default)
-          layout: "@layout"
+          layout: "@layout",
+          type: "@type"
         },
         link: function (scope, element, attrs, controller) {
           if (["default", "role", "org-role"].indexOf(scope.mode) == -1) {
             scope.mode = "default";
+          }
+
+          if (scope.type === "metadata") {
+            scope.focusOnFilterFieldName = "OrgObject.default";
+          } else if (scope.type === "distribution") {
+            scope.focusOnFilterFieldName = "OrgForDistributionObject.default";
+          } else if (scope.type === "processing") {
+            scope.focusOnFilterFieldName = "OrgForProcessingObject.default";
+          } else {
+            scope.focusOnFilterFieldName = "OrgForResourceObject.default";
           }
 
           scope.calculateContacts = function () {
