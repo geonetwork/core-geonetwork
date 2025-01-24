@@ -240,7 +240,7 @@ public abstract class AbstractStore implements Store {
         }
 
         // Upload the resource while ensuring the input stream does not exceed the maximum allowed size.
-        try (LimitedInputStream is = new LimitedInputStream(connection.getInputStream(), maxUploadSize)) {
+        try (LimitedInputStream is = new LimitedInputStream(connection.getInputStream(), maxUploadSize, contentLength)) {
             return putResource(context, metadataUuid, filename, is, null, visibility, approved);
         }
     }

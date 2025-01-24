@@ -34,6 +34,11 @@ import java.io.InputStream;
  */
 public class LimitedInputStream extends org.apache.commons.fileupload.util.LimitedInputStream {
 
+    /**
+     * The size of the file being uploaded if known.
+     */
+    long fileSize = -1;
+
 
     /**
      * Creates a new instance.
@@ -46,8 +51,25 @@ public class LimitedInputStream extends org.apache.commons.fileupload.util.Limit
         super(inputStream, pSizeMax);
     }
 
+    /**
+     * Creates a new instance.
+     *
+     * @param inputStream The input stream, which shall be limited.
+     * @param pSizeMax    The limit; no more than this number of bytes
+     *                    shall be returned by the source stream.
+     * @param fileSize    The size of the file being uploaded.
+     */
+    public LimitedInputStream(InputStream inputStream, long pSizeMax, long fileSize) {
+        super(inputStream, pSizeMax);
+        this.fileSize = fileSize;
+    }
+
     @Override
     protected void raiseError(long pSizeMax, long pCount) throws IOException {
         throw new InputStreamLimitExceededException(pSizeMax);
+    }
+
+    public long getFileSize() {
+        return fileSize;
     }
 }
