@@ -39,7 +39,6 @@ public class LimitedInputStream extends org.apache.commons.fileupload.util.Limit
      */
     long fileSize = -1;
 
-
     /**
      * Creates a new instance.
      *
