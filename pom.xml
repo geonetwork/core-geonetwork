@@ -1682,7 +1682,7 @@
     <xmlunit.version>2.10.0</xmlunit.version>
     <jackson.version>2.16.2</jackson.version>
     <flying-saucer>9.1.22</flying-saucer>
-    <camel.version>2.25.1</camel.version>
+    <camel.version>3.20.4</camel.version>
     <log4j2.version>2.17.2</log4j2.version>
     <slf4j.version>1.8.0-beta2</slf4j.version>
     <xbean.version>4.22</xbean.version>
