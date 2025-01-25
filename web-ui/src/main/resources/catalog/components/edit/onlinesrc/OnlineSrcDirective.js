@@ -599,7 +599,8 @@
             scope.isDoiApplicableForMetadata = gnDoiService.isDoiApplicableForMetadata(
               scope.gnCurrentEdit.metadata
             );
-            scope.canPublishDoiForResource = gnDoiService.canPublishDoiForResource;
+            scope.checkDoiManagementForResource =
+              gnDoiService.checkDoiManagementForResource;
 
             /**
              * Calls service 'relations.get' to load
