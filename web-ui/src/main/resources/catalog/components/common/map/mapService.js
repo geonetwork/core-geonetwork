@@ -747,10 +747,10 @@
                 extent[1] +
                 ", " +
                 "East " +
-                extent[0] +
+                extent[2] +
                 ", " +
                 "West " +
-                extent[2];
+                extent[0];
               if (location) {
                 dc += ". " + location;
               }

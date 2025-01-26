@@ -641,12 +641,16 @@
                                               filter: 'protocol:OGC:WFS|OGC:WCS|.*DOWNLOAD.*|DB:.*|FILE:.*|OGC API Features|OGC API Coverages',
                                               editActions: ['addOnlinesrc#onlineDownload|localNetwork']
                                            }, {
+                                             title: 'map',
+                                             filter: 'protocol:OGC:OWS-C|PDF:MAP',
+                                             editActions: ['addOnlinesrc#onlineUseMap']
+                                           }, {
                                              title: 'mapLegend',
                                              filter: 'function:legend',
                                              editActions: ['addOnlinesrc#onlineUseLegend']
                                            }, {
                                               title: 'links',
-                                              filter:'-protocol:OGC.*|REST|ESRI:.*|atom.*|.*DOWNLOAD.*|DB:.*|FILE:.* AND -function:legend|featureCatalogue|dataQualityReport',
+                                              filter:'-protocol:OGC.*|REST|ESRI:.*|atom.*|.*DOWNLOAD.*|DB:.*|FILE:.*|PDF:MAP AND -function:legend|featureCatalogue|dataQualityReport',
                                               editActions: ['addOnlinesrc#links']
                                            }, {
                                               title: 'quality',
@@ -744,12 +748,16 @@
                                               filter: 'protocol:OGC:WFS|OGC:WCS|.*DOWNLOAD.*|DB:.*|FILE:.*|OGC API Features|OGC API Coverages',
                                               editActions: ['addOnlinesrc#onlineDownload|localNetwork']
                                            }, {
+                                             title: 'map',
+                                             filter: 'protocol:OGC:OWS-C|PDF:MAP',
+                                             editActions: ['addOnlinesrc#onlineUseMap']
+                                           }, {
                                              title: 'mapLegend',
                                              filter: 'function:legend',
                                              editActions: ['addOnlinesrc#onlineUseLegend']
                                            }, {
                                               title: 'links',
-                                              filter:'-protocol:OGC.*|REST|ESRI:.*|atom.*|.*DOWNLOAD.*|DB:.*|FILE:.* AND -function:legend|featureCatalogue|dataQualityReport',
+                                              filter:'-protocol:OGC.*|REST|ESRI:.*|atom.*|.*DOWNLOAD.*|DB:.*|FILE:.*|PDF:MAP AND -function:legend|featureCatalogue|dataQualityReport',
                                               editActions: ['addOnlinesrc#links']
                                            }, {
                                               title: 'quality',
@@ -877,12 +885,16 @@
                                               filter: 'protocol:OGC:WFS|OGC:WCS|.*DOWNLOAD.*|DB:.*|FILE:.*|OGC API Features|OGC API Coverages',
                                               editActions: ['addOnlinesrc#onlineDownload|localNetwork']
                                            }, {
+                                             title: 'map',
+                                             filter: 'protocol:OGC:OWS-C|PDF:MAP',
+                                             editActions: ['addOnlinesrc#onlineUseMap']
+                                           }, {
                                              title: 'mapLegend',
                                              filter: 'function:legend',
                                              editActions: ['addOnlinesrc#onlineUseLegend']
                                            }, {
                                               title: 'links',
-                                              filter:'-protocol:OGC.*|REST|ESRI:.*|atom.*|.*DOWNLOAD.*|DB:.*|FILE:.* AND -function:legend|featureCatalogue|dataQualityReport',
+                                              filter:'-protocol:OGC.*|REST|ESRI:.*|atom.*|.*DOWNLOAD.*|DB:.*|FILE:.*|PDF:MAP AND -function:legend|featureCatalogue|dataQualityReport',
                                               editActions: ['addOnlinesrc#links']
                                            }, {
                                               title: 'quality',

@@ -133,7 +133,7 @@
 
   <xsl:template match="/">
     <datacite:resource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                       xsi:schemaLocation="http://datacite.org/schema/kernel-4 http://schema.datacite.org/meta/kernel-4.1/metadata.xsd">
+                       xsi:schemaLocation="http://datacite.org/schema/kernel-4 https://schema.datacite.org/meta/kernel-4.1/metadata.xsd">
       <xsl:apply-templates select="$metadata"
                            mode="toDatacite"/>
     </datacite:resource>
@@ -349,6 +349,7 @@
     <entry key="series">Dataset</entry>
     <entry key="service">Service</entry>
     <entry key="software">Software</entry>
+    <entry key="application">Software</entry>
   </xsl:variable>
   <xsl:template mode="toDatacite"
                 match="mdb:metadataScope/*/mdb:resourceScope/*/@codeListValue">
@@ -356,7 +357,7 @@
                   select="."/>
     <xsl:variable name="type"
                   select="concat(upper-case(substring(.,1,1)), substring(., 2))"/>
-    <datacite:resourceType resourceTypeGeneral="{$scopeMapping//*[@key = $key]/text()}">
+    <datacite:resourceType resourceTypeGeneral="{($scopeMapping//*[@key = $key]/text(), 'Other')[1]}">
       <xsl:value-of select="concat($key, '/', $type)"/>
     </datacite:resourceType>
   </xsl:template>

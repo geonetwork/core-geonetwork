@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2024 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -59,26 +59,28 @@ import java.util.regex.Pattern;
 public class CMISConfiguration {
     private Session client = null;
 
-    public final static Integer CMIS_MAX_ITEMS_PER_PAGE = 1000;
-    public final static String CMIS_FOLDER_DELIMITER = "/"; // Specs indicate that "/" is the folder delimiter/separator - not sure if other delimiter can be used?.
-    public final static String CMIS_SECONDARY_PROPERTY_SEPARATOR = "->";
-    private final String CMIS_DEFAULT_WEBSERVICES_ACL_SERVICE = "/services/ACLService?wsdl";
-    private final String CMIS_DEFAULT_WEBSERVICES_DISCOVERY_SERVICE = "/services/DiscoveryService?wsdl";
-    private final String CMIS_DEFAULT_WEBSERVICES_MULTIFILING_SERVICE = "/services/MultiFilingService?wsdl";
-    private final String CMIS_DEFAULT_WEBSERVICES_NAVIGATION_SERVICE = "/services/NavigationService?wsdl";
-    private final String CMIS_DEFAULT_WEBSERVICES_OBJECT_SERVICE = "/services/ObjectService?wsdl";
-    private final String CMIS_DEFAULT_WEBSERVICES_POLICY_SERVICE = "/services/PolicyService?wsdl";
-    private final String CMIS_DEFAULT_WEBSERVICES_RELATIONSHIP_SERVICE = "/services/RelationshipService?wsdl";
-    private final String CMIS_DEFAULT_WEBSERVICES_REPOSITORY_SERVICE = "/services/RepositoryService?wsdl";
-    private final String CMIS_DEFAULT_WEBSERVICES_VERSIONING_SERVICE = "/services/VersioningService?wsdl";
-    private final String CMIS_DEFAULT_WEBSERVICES_BASE_URL_SERVICE = "/cmis";
-    private final String CMIS_DEFAULT_BROWSER_URL_SERVICE = "/browser";
-    private final String CMIS_DEFAULT_ATOMPUB_URL_SERVICE = "/atom";
+    // DFO change to 100. Due to bug with open text cmis where if max is set to 1000, it will return 100 but if it is set to 100 it will return all records.
+    // https://dev.azure.com/foc-poc/EDH-CDE/_workitems/edit/95878
+    public static final Integer CMIS_MAX_ITEMS_PER_PAGE = 100;
+    public static final String CMIS_FOLDER_DELIMITER = "/"; // Specs indicate that "/" is the folder delimiter/separator - not sure if other delimiter can be used?.
+    public static final String CMIS_SECONDARY_PROPERTY_SEPARATOR = "->";
+    private static final String CMIS_DEFAULT_WEBSERVICES_ACL_SERVICE = "/services/ACLService?wsdl";
+    private static final String CMIS_DEFAULT_WEBSERVICES_DISCOVERY_SERVICE = "/services/DiscoveryService?wsdl";
+    private static final String CMIS_DEFAULT_WEBSERVICES_MULTIFILING_SERVICE = "/services/MultiFilingService?wsdl";
+    private static final String CMIS_DEFAULT_WEBSERVICES_NAVIGATION_SERVICE = "/services/NavigationService?wsdl";
+    private static final String CMIS_DEFAULT_WEBSERVICES_OBJECT_SERVICE = "/services/ObjectService?wsdl";
+    private static final String CMIS_DEFAULT_WEBSERVICES_POLICY_SERVICE = "/services/PolicyService?wsdl";
+    private static final String CMIS_DEFAULT_WEBSERVICES_RELATIONSHIP_SERVICE = "/services/RelationshipService?wsdl";
+    private static final String CMIS_DEFAULT_WEBSERVICES_REPOSITORY_SERVICE = "/services/RepositoryService?wsdl";
+    private static final String CMIS_DEFAULT_WEBSERVICES_VERSIONING_SERVICE = "/services/VersioningService?wsdl";
+    private static final String CMIS_DEFAULT_WEBSERVICES_BASE_URL_SERVICE = "/cmis";
+    private static final String CMIS_DEFAULT_BROWSER_URL_SERVICE = "/browser";
+    private static final String CMIS_DEFAULT_ATOMPUB_URL_SERVICE = "/atom";
 
-    private final String CMIS_DEFAULT_EXTERNAL_RESOURCE_MANAGEMENT_WINDOW_PARAMETERS = "toolbar=0,width=600,height=600";
-    private final Boolean CMIS_DEFAULT_EXTERNAL_RESOURCE_MANAGEMENT_MODAL_ENABLED = true;
-    private final Boolean CMIS_DEFAULT_EXTERNAL_RESOURCE_MANAGEMENT_FOLDER_ENABLED = true;
-    private final Boolean CMIS_DEFAULT_VERSIONING_ENABLED = false;
+    private static final String CMIS_DEFAULT_EXTERNAL_RESOURCE_MANAGEMENT_WINDOW_PARAMETERS = "toolbar=0,width=600,height=600";
+    private static final Boolean CMIS_DEFAULT_EXTERNAL_RESOURCE_MANAGEMENT_MODAL_ENABLED = true;
+    private static final Boolean CMIS_DEFAULT_EXTERNAL_RESOURCE_MANAGEMENT_FOLDER_ENABLED = true;
+    private static final Boolean CMIS_DEFAULT_VERSIONING_ENABLED = false;
 
     private String servicesBaseUrl;
     private String bindingType;
@@ -111,7 +113,6 @@ public class CMISConfiguration {
      * Property name for validation status that is expected to be an integer with values of null, 0, 1, 2
      * (See MetadataResourceExternalManagementProperties.ValidationStatus for code meaning)
      * Property name follows the same format as cmisMetadataUUIDPropertyName
-     *
      * If null then validation status will default to UNKNOWN.
      */
     private String externalResourceManagementValidationStatusPropertyName;
@@ -505,7 +506,6 @@ public class CMISConfiguration {
                     String.format("Invalid format for property name %s property will not be used", externalResourceManagementValidationStatusPropertyName));
                 this.externalResourceManagementValidationStatusPropertyName = null;
                 this.externalResourceManagementValidationStatusSecondaryProperty = false;
-                return;
             } else {
                 this.externalResourceManagementValidationStatusSecondaryProperty = true;
             }
@@ -514,7 +514,7 @@ public class CMISConfiguration {
 
     public MetadataResourceExternalManagementProperties.ValidationStatus getValidationStatusDefaultValue() {
         // We only need to set the default if there is a status property supplied, and it is not already set
-        if (this.defaultStatus == null &&  !org.springframework.util.StringUtils.isEmpty(getExternalResourceManagementValidationStatusPropertyName())) {
+        if (this.defaultStatus == null &&  org.springframework.util.StringUtils.hasLength(getExternalResourceManagementValidationStatusPropertyName())) {
             if (getExternalResourceManagementValidationStatusDefaultValue() != null) {
                 // If a default property name does exist then use it
                 this.defaultStatus = MetadataResourceExternalManagementProperties.ValidationStatus.valueOf(getExternalResourceManagementValidationStatusDefaultValue());
@@ -536,9 +536,8 @@ public class CMISConfiguration {
         }
 
         // default factory implementation
-        Map<String, String> parameters = new HashMap<String, String>();
+        Map<String, String> parameters = new HashMap<>();
 
-        this.baseRepositoryPath = baseRepositoryPath;
         if (this.baseRepositoryPath == null) {
             this.baseRepositoryPath = "";
         }
@@ -609,7 +608,7 @@ public class CMISConfiguration {
                 }
             }
         } else {
-            // Try to find the repository name for the id that we have specified..
+            // Try to find the repository name for the id that we have specified.
             try {
                 for (Repository repository : factory.getRepositories(parameters)) {
                     if (repository.getId().equalsIgnoreCase(this.repositoryId)) {
@@ -633,7 +632,7 @@ public class CMISConfiguration {
                     repositoryUrl + "' using product '" + client.getRepositoryInfo().getProductName() + "' version '" +
                     client.getRepositoryInfo().getProductVersion() + "'.");
 
-                // Check if we can parse the secondary parameters from human readable to secondary ids.
+                // Check if we can parse the secondary parameters from human-readable to secondary ids.
                 parsedCmisMetadataUUIDPropertyName = parseSecondaryProperty(client, cmisMetadataUUIDPropertyName);
                 parsedExternalResourceManagementValidationStatusPropertyName = parseSecondaryProperty(client, externalResourceManagementValidationStatusPropertyName);
 
@@ -743,7 +742,7 @@ public class CMISConfiguration {
     }
 
     /**
-     * Generte a full url based on the supplied entered serviceurl and the default.
+     * Generate a full url based on the supplied entered serviceUrl and the default.
      *
      * @param baseUrl                Base url
      * @param serviceUrl             Supplied service url (This could start with / or http. If it starts with http then ignore baseUrl)

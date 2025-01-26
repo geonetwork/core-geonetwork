@@ -192,19 +192,6 @@
       </xsl:for-each>
 
       <!-- # Resource type -->
-      <xsl:choose>
-        <xsl:when test="$isDataset">
-          <resourceType>dataset</resourceType>
-        </xsl:when>
-        <xsl:otherwise>
-          <xsl:for-each select="gmd:hierarchyLevel/*/@codeListValue[normalize-space(.) != '']">
-            <resourceType>
-              <xsl:value-of select="."/>
-            </resourceType>
-          </xsl:for-each>
-        </xsl:otherwise>
-      </xsl:choose>
-
       <xsl:variable name="isMapDigital"
                     select="count(gmd:identificationInfo/*/gmd:citation/*/gmd:presentationForm[*/@codeListValue = 'mapDigital']) > 0"/>
       <xsl:variable name="isStatic"
@@ -217,16 +204,25 @@
       <xsl:choose>
         <xsl:when test="$isDataset and $isMapDigital and
                             ($isStatic or $isInteractive or $isPublishedWithWMCProtocol)">
-          <resourceType>map</resourceType>
           <xsl:choose>
             <xsl:when test="$isStatic">
-              <resourceType>map/static</resourceType>
+              <resourceType>map-static</resourceType>
             </xsl:when>
             <xsl:when test="$isInteractive or $isPublishedWithWMCProtocol">
-              <resourceType>map/interactive</resourceType>
+              <resourceType>map-interactive</resourceType>
             </xsl:when>
           </xsl:choose>
         </xsl:when>
+        <xsl:when test="$isDataset">
+          <resourceType>dataset</resourceType>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:for-each select="gmd:hierarchyLevel/*/@codeListValue[normalize-space(.) != '']">
+            <resourceType>
+              <xsl:value-of select="."/>
+            </resourceType>
+          </xsl:for-each>
+        </xsl:otherwise>
       </xsl:choose>
 
 
@@ -287,14 +283,16 @@
 
             <xsl:choose>
               <xsl:when test="$zuluDateTime != ''">
+                <!-- Store original date information for the resource, instead of $zuluDateTime,
+                     to avoid timezone shifts when used for facet filters -->
                 <xsl:element name="{$dateType}DateForResource">
-                  <xsl:value-of select="$zuluDateTime"/>
+                  <xsl:value-of select="$date"/>
                 </xsl:element>
                 <xsl:element name="{$dateType}YearForResource">
-                  <xsl:value-of select="substring($zuluDateTime, 0, 5)"/>
+                  <xsl:value-of select="substring($date, 0, 5)"/>
                 </xsl:element>
                 <xsl:element name="{$dateType}MonthForResource">
-                  <xsl:value-of select="substring($zuluDateTime, 0, 8)"/>
+                  <xsl:value-of select="substring($date, 0, 8)"/>
                 </xsl:element>
               </xsl:when>
               <xsl:otherwise>
@@ -383,7 +381,7 @@
         <xsl:for-each select="$overviews">
           <!-- TODO can be multilingual desc and name -->
           <overview type="object">{
-            "url": "<xsl:value-of select="normalize-space(.)"/>"
+            "url": "<xsl:value-of select="util:escapeForJson(normalize-space(.))"/>"
             <xsl:if test="normalize-space(../../gmd:fileDescription) != ''">,
               "nameObject": <xsl:value-of select="gn-fn-index:add-multilingual-field('name', ../../gmd:fileDescription, $allLanguages, true())"/>
             </xsl:if>
