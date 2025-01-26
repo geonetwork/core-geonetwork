@@ -259,10 +259,10 @@ public class ApiUtils {
     }
 
     /**
-     * Check if the current user can edit this approved record
+     * Check if the current user can edit this record
      */
     public static AbstractMetadata canEditRecord(String metadataUuid, HttpServletRequest request) throws Exception {
-        return canEditRecord(metadataUuid, true, request);
+        return canEditRecord(metadataUuid, false, request);
     }
 
     /**
