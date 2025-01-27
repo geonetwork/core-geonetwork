@@ -521,6 +521,21 @@
         </div>
 
         <br />
+
+        <div
+          class="panel panel-default"
+          data-ng-show="auditableEnabled && userSelected.id > 0"
+        >
+          <div class="panel-heading" data-gn-slide-toggle="">
+            <i class="fa fa-history"></i>&nbsp;
+            <span data-translate="">userHistory</span>
+          </div>
+          <div class="panel-body">
+            <div data-gn-auditable-history="userSelected.id" data-type="user"></div>
+          </div>
+        </div>
+
+        <br />
         <div
           data-gn-saved-selections=""
           data-ng-if="userSelected.id > 0"
