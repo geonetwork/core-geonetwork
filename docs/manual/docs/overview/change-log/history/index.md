@@ -12,6 +12,8 @@ This series is under **active development** by our community, with new features,
 
 ### 4.4
 
+-   [Version 4.4.6](../version-4.4.6.md)
+-   [Version 4.4.5](../version-4.4.5.md)
 -   [Version 4.4.4](../version-4.4.4.md)
 -   [Version 4.4.3](../version-4.4.3.md)
 -   [Version 4.4.2](../version-4.4.2.md)
@@ -26,6 +28,8 @@ This series is under **active use** by our community, with regular improvements,
 
 ### 4.2
 
+- [Version 4.2.11](../version-4.2.11.md)
+- [Version 4.2.10](../version-4.2.10.md)
 - [Version 4.2.9](../version-4.2.9.md)
 - [Version 4.2.8](../version-4.2.8.md)
 - [Version 4.2.7](../version-4.2.7.md)

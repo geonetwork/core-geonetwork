@@ -46,9 +46,9 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.fao.geonet.ApplicationContextHolder;
+import org.fao.geonet.Constants;
 import org.fao.geonet.SystemInfo;
 import org.fao.geonet.analytics.WebAnalyticsConfiguration;
-import org.fao.geonet.api.records.attachments.FilesystemStore;
 import org.fao.geonet.api.records.attachments.FilesystemStoreResourceContainer;
 import org.fao.geonet.api.records.attachments.Store;
 import org.fao.geonet.constants.Geonet;
@@ -113,6 +113,7 @@ import java.io.InputStream;
 import java.io.StringReader;
 import java.net.URL;
 import java.net.URLConnection;
+import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.util.*;
@@ -1246,11 +1247,11 @@ public final class XslUtil {
                 Matcher m = Pattern.compile(settingManager.getNodeURL() + "api/records/(.*)/attachments/(.*)$").matcher(url);
                 BufferedImage image;
                 if (m.find()) {
-                    Store store = ApplicationContextHolder.get().getBean(FilesystemStore.class);
+                    Store store = ApplicationContextHolder.get().getBean("filesystemStore", Store.class);
                     try (Store.ResourceHolder file = store.getResourceInternal(
-                        m.group(1),
+                        URLDecoder.decode(m.group(1), Constants.ENCODING),
                         MetadataResourceVisibility.PUBLIC,
-                        m.group(2), true)) {
+                        URLDecoder.decode(m.group(2), Constants.ENCODING), true)) {
                         image = ImageIO.read(file.getPath().toFile());
                     }
                 } else {
@@ -1441,6 +1442,28 @@ public final class XslUtil {
         return thesaurus == null ? "" : "geonetwork.thesaurus." + thesaurus.getKey();
     }
 
+    /**
+     * Retrieve the thesaurus title using the thesaurus key.
+     *
+     * @param id   the thesaurus key
+     * @return the thesaurus title or empty string if the thesaurus doesn't exist.
+     */
+    public static String getThesaurusTitleByKey(String id) {
+        ApplicationContext applicationContext = ApplicationContextHolder.get();
+        ThesaurusManager thesaurusManager = applicationContext.getBean(ThesaurusManager.class);
+        Thesaurus thesaurus = thesaurusManager.getThesaurusByName(id);
+        return thesaurus == null ? "" : thesaurus.getTitle();
+    }
+
+
+    public static String getThesaurusUriByKey(String id) {
+        ApplicationContext applicationContext = ApplicationContextHolder.get();
+        ThesaurusManager thesaurusManager = applicationContext.getBean(ThesaurusManager.class);
+        Thesaurus thesaurus = thesaurusManager.getThesaurusByName(id);
+        return thesaurus == null ? "" : thesaurus.getDefaultNamespace();
+    }
+
+
 
     /**
      * Utility method to retrieve the name (label) for an iso language using it's code for a specific language.
@@ -1581,7 +1604,11 @@ public final class XslUtil {
     public static String escapeForJson(String value) {
         return StringEscapeUtils.escapeJson(value);
     }
-  
+
+    public static String escapeForEcmaScript(String value) {
+        return StringEscapeUtils.escapeEcmaScript(value);
+    }
+
     public static String getWebAnalyticsService() {
         ApplicationContext applicationContext = ApplicationContextHolder.get();
         WebAnalyticsConfiguration webAnalyticsConfiguration = applicationContext.getBean(WebAnalyticsConfiguration.class);

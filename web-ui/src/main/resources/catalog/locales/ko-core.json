@@ -266,7 +266,7 @@
     "spatialRepresentationType": "표현 형태",
     "cl_spatialRepresentationType": "표현 형태",
     "state": "주",
-    "staticMap": "정적 지도",
+    "map-static": "정적 지도",
     "surname": "성",
     "title": "제목",
     "to": "종료",

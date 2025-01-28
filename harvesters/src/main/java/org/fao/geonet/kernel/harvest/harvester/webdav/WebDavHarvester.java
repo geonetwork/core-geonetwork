@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2007 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2024 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -28,40 +28,23 @@ import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
 
 import java.sql.SQLException;
 
-//=============================================================================
-
 public class WebDavHarvester extends AbstractHarvester<HarvestResult, WebDavParams> {
-    //---------------------------------------------------------------------------
-    //---
-    //--- Add
-    //---
-    //---------------------------------------------------------------------------
-
     @Override
     protected WebDavParams createParams() {
         return new WebDavParams(dataMan);
     }
 
     //---------------------------------------------------------------------------
+    @Override
     protected void storeNodeExtra(WebDavParams params, String path, String siteId, String optionsId) throws SQLException {
         harvesterSettingsManager.add("id:" + siteId, "url", params.url);
         harvesterSettingsManager.add("id:" + siteId, "icon", params.icon);
         harvesterSettingsManager.add("id:" + optionsId, "validate", params.getValidate());
         harvesterSettingsManager.add("id:" + optionsId, "recurse", params.recurse);
         harvesterSettingsManager.add("id:" + optionsId, "subtype", params.subtype);
+        harvesterSettingsManager.add("id:" + siteId, "xslfilter", params.xslfilter);
     }
 
-    //---------------------------------------------------------------------------
-    //---
-    //--- Variables
-    //---
-    //---------------------------------------------------------------------------
-
-    //---------------------------------------------------------------------------
-    //---
-    //--- Harvest
-    //---
-    //---------------------------------------------------------------------------
     public void doHarvest(Logger log) throws Exception {
         log.info("WebDav doHarvest start");
         Harvester h = new Harvester(cancelMonitor, log, context, params);

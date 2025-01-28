@@ -588,14 +588,6 @@
     <label>Resolution</label>
     <description iso="true">Degree of detail in the grid dataset</description>
     <condition>optional</condition>
-    <helper relAtt="uom">
-      <option value="1" title="second">seconds</option>
-      <option value="1" title="minute">minutes</option>
-      <option value="1" title="hour">hours</option>
-      <option value="1" title="day">days</option>
-      <option value="1" title="month">months</option>
-      <option value="1" title="year">years</option>
-    </helper>
   </element>
   <element name="msr:dimensionTitle" id="174.0">
     <label>Dimension title</label>
@@ -1322,6 +1314,10 @@
   <element name="lan:language" id="448.0" context="/mdb:MD_Metadata/mdb:defaultLocale/lan:PT_Locale/lan:language">
     <label>Metadata language</label>
     <description iso="true">Designation of the locale language</description>
+  </element>
+  <element name="lan:language" id="448.0" context="/mdb:MD_Metadata/mdb:identificationInfo/mri:MD_DataIdentification/mri:defaultLocale/lan:PT_Locale/lan:language">
+    <label>Dataset language</label>
+    <description iso="true">ISO 3 letters code.</description>
   </element>
   <element name="lan:language" id="448.0" context="/mdb:MD_Metadata/mdb:otherLocale/lan:PT_Locale/lan:language">
     <label>Other language</label>
@@ -2643,14 +2639,6 @@
     <label>Spatial resolution</label>
     <description>Ground sample distance</description>
     <condition>Provide a distance if no equivalent Scale is documented</condition>
-    <helper relAtt="uom">
-      <option value="0.10" title="cm">10 cm</option>
-      <option value="0.25" title="cm">25 cm</option>
-      <option value="0.50" title="cm">50 cm</option>
-      <option value="1" title="m">1 m</option>
-      <option value="30" title="m">30 m</option>
-      <option value="100" title="m">100 m</option>
-    </helper>
   </element>
   <element name="mrd:distributionFormat" id="271.0">
     <label>Distribution format</label>

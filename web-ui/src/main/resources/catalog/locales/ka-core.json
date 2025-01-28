@@ -266,7 +266,7 @@
     "spatialRepresentationType": "წარმომადგენლობის ტიპი",
     "cl_spatialRepresentationType": "წარმომადგენლობის ტიპი",
     "state": "სახელმწიფო",
-    "staticMap": "სტატიკური რუკა",
+    "map-static": "სტატიკური რუკა",
     "surname": "გვარი",
     "title": "სათაური",
     "to": "რომ",

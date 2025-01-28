@@ -54,19 +54,18 @@
       </div>
       <div class="form-group col-sm-2">
         <a
-          class="gn-action fa fa-save"
+          class="gn-action"
           data-ng-mousedown="handleFocus($event)"
           data-ng-click="saveEdit()"
           data-ng-disabled="criteria.uitype === 'NEW' || (criteria.uitype !== 'ALWAYS_ACCEPT' && criteria.uivalue === '')"
         >
+          <i class="fa fa-save"></i>
           {{'save' | translate}}</a
         >
         <br />
-        <a
-          class="fa fa-times"
-          data-ng-mousedown="handleFocus($event)"
-          data-ng-click="cancelEditing()"
-          >{{'cancel' | translate}}</a
+        <a data-ng-mousedown="handleFocus($event)" data-ng-click="cancelEditing()">
+          <i class="fa fa-times"></i>
+          {{'cancel' | translate}}</a
         >
       </div>
     </form>

@@ -71,11 +71,9 @@
             ng-mouseleave="c.over = false"
           >
             <i title="{{c.help.broader}}"></i>
-            <span
-              skos-label="c"
-              lang="{{mainLanguage}}"
-              title="{{'makeConceptCurrent' | translate}}"
-            ></span>
+            <span title="{{'makeConceptCurrent' | translate}}">
+              {{c.prefLabel[mainLanguage] || c.prefLabel['eng']}}
+            </span>
           </a>
         </li>
       </ul>
@@ -95,11 +93,9 @@
             ng-mouseleave="c.over = false"
           >
             <i title="{{c.help.narrower}}"></i>
-            <span
-              skos-label="c"
-              lang="{{mainLanguage}}"
-              title="{{'makeConceptCurrent' | translate}}"
-            ></span>
+            <span title="{{'makeConceptCurrent' | translate}}">
+              {{c.prefLabel[mainLanguage] || c.prefLabel['eng']}}
+            </span>
           </a>
         </li>
       </ul>
