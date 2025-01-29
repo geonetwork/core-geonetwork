@@ -210,6 +210,11 @@ public class KeywordsApiTest extends AbstractServiceIntegrationTest {
             "taxref.csv", scheme.getChildText("title", NAMESPACE_DC));
     }
 
+    // see finally block in #testImportOntologyToSkos
+    // this is required to locate the file to be deleted.
+    @Autowired
+    GeonetworkDataDirectory geonetworkDataDirectory;
+
 
     @Test
     public void testImportOntologyToSkos() throws Exception {
