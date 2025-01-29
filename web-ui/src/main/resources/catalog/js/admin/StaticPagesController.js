@@ -184,13 +184,20 @@
 
         $scope.content = "";
         $scope.pageApiLink = gnGlobalSettings.nodeUrl + link + "/content";
-        if ($scope.staticPageSelected.format !== "LINK") {
+        if (
+          $scope.staticPageSelected.format !== "LINK" &&
+          $scope.staticPageSelected.format !== "EMAILLINK"
+        ) {
           $http
             .get($scope.action + "/content", { headers: { Accept: "text/html" } })
             .then(function (r) {
               $scope.staticPageSelected.content = r.data;
             });
         }
+      };
+
+      $scope.isLinkFormat = function (format) {
+        return format === "LINK" || format === "EMAILLINK";
       };
 
       $scope.deleteContent = function () {
