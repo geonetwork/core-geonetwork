@@ -109,6 +109,7 @@ public class Settings {
     public static final String SYSTEM_METADATAPRIVS_PUBLICATIONNOTIFICATION_EMAILS = "system/metadataprivs/publication/notificationEmails";
     public static final String SYSTEM_METADATAPRIVS_PUBLICATION_NOTIFICATIONLEVEL = "system/metadataprivs/publication/notificationLevel";
     public static final String SYSTEM_METADATAPRIVS_PUBLICATION_NOTIFICATIONGROUPS = "system/metadataprivs/publication/notificationGroups";
+    public static final String SYSTEM_METADATAPRIVS_USER_ALWAYS_CAN_EDIT_OWNED_METADATA = "system/metadataprivs/userAlwaysCanEditOwnedMetadata";
     public static final String SYSTEM_INSPIRE_ATOM_PROTOCOL = "system/inspire/atomProtocol";
     public static final String SYSTEM_HARVESTING_MAIL_RECIPIENT = "system/harvesting/mail/recipient";
     public static final String SYSTEM_HARVESTING_MAIL_LEVEL3 = "system/harvesting/mail/level3";
