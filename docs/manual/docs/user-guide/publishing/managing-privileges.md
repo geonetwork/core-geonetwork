@@ -67,7 +67,9 @@ A *reviewer* / *editor* can edit a metadata if:
 
 * The metadata has editing privilege in the group(s) where the user is a *reviewer* / *editor*.
 
+!!! note
 
+    The default behavior allows editors who own a metadata record to always edit it. An administrator can change this by disabling the *Users can always edit their own metadata* setting in [System Configuration](../../administrator-guide/configuring-the-catalog/system-configuration.md#metadata-privileges). When disabled, ownership alone does not grant editing rights — editors must have explicit editing privileges through their group membership.
 
 # Setting Privileges
 
