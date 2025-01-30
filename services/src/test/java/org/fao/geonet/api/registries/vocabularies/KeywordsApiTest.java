@@ -23,6 +23,7 @@
 
 package org.fao.geonet.api.registries.vocabularies;
 
+import java.nio.file.Files;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.kernel.SpringLocalServiceInvoker;
