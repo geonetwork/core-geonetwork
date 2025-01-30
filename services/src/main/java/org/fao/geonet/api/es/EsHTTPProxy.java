@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018-2024 Food and Agriculture Organization of the
+ * Copyright (C) 2018-2025 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -65,6 +65,7 @@ import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.schema.MetadataSchemaOperationFilter;
 import org.fao.geonet.kernel.search.EsFilterBuilder;
+import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.repository.SourceRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -91,6 +92,8 @@ import java.util.zip.DeflaterOutputStream;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
+import static org.fao.geonet.kernel.setting.Settings.SYSTEM_METADATAPRIVS_USER_ALWAYS_CAN_EDIT_OWNED_METADATA;
+
 
 @RequestMapping(value = {
     "/{portal}/api"
@@ -104,7 +107,7 @@ import java.util.zip.GZIPOutputStream;
  * The portal and privileges are included the search provided by the user.
  */
 public class EsHTTPProxy {
-    public static final String[] _validContentTypes = {
+    protected static final String[] validContentTypes = {
         "application/json", "text/plain"
     };
     private static final Logger LOGGER = LoggerFactory.getLogger(Geonet.INDEX_ENGINE);
@@ -112,7 +115,7 @@ public class EsHTTPProxy {
      * Privileges filter only allows
      * * op0 (ie. view operation) contains one of the ids of your groups
      */
-    private static final String filterTemplate = " {\n" +
+    private static final String FILTER_TEMPLATE = " {\n" +
         "       \t\"query_string\": {\n" +
         "       \t\t\"query\": \"%s\"\n" +
         "       \t}\n" +
@@ -145,7 +148,7 @@ public class EsHTTPProxy {
     /**
      * Ignore list of headers handled by proxy implementation directly.
      */
-    private String[] proxyHeadersIgnoreList =  {"Content-Length"};
+    private String[] proxyHeadersIgnoreList = {"Content-Length"};
 
     @Autowired
     private EsRestClient client;
@@ -215,7 +218,7 @@ public class EsHTTPProxy {
         final AccessManager accessManager = context.getBean(AccessManager.class);
         final boolean isOwner = accessManager.isOwner(context, sourceInfo);
         final HashSet<ReservedOperation> operations;
-        boolean canEdit = false;
+        boolean canEdit = id != null && accessManager.canEdit(context, id);
         if (isOwner) {
             operations = Sets.newHashSet(Arrays.asList(ReservedOperation.values()));
             if (owner != null) {
@@ -224,8 +227,6 @@ public class EsHTTPProxy {
         } else {
             final Collection<Integer> groups =
                 accessManager.getUserGroups(context.getUserSession(), context.getIpAddress(), false);
-            final Collection<Integer> editingGroups =
-                accessManager.getUserGroups(context.getUserSession(), context.getIpAddress(), true);
             operations = Sets.newHashSet();
             for (ReservedOperation operation : ReservedOperation.values()) {
                 final JsonNode operationNodes = doc.get("_source").get(Geonet.IndexFieldNames.OP_PREFIX + operation.getId());
@@ -234,11 +235,6 @@ public class EsHTTPProxy {
                     if (opFields != null) {
                         for (JsonNode field : opFields) {
                             final int groupId = field.asInt();
-                            if (operation == ReservedOperation.editing
-                                && canEdit == false
-                                && editingGroups.contains(groupId)) {
-                                canEdit = true;
-                            }
 
                             if (groups.contains(groupId)) {
                                 operations.add(operation);
@@ -248,9 +244,15 @@ public class EsHTTPProxy {
                 }
             }
         }
-        doc.put(Edit.Info.Elem.EDIT, isOwner || canEdit);
+
+        final SettingManager settingManager = context.getBean(SettingManager.class);
+        if (settingManager.getValueAsBool(SYSTEM_METADATAPRIVS_USER_ALWAYS_CAN_EDIT_OWNED_METADATA, true)) {
+            doc.put(Edit.Info.Elem.EDIT, isOwner || canEdit);
+        } else {
+            doc.put(Edit.Info.Elem.EDIT, canEdit);
+        }
         doc.put(Edit.Info.Elem.REVIEW,
-            id != null ? accessManager.hasReviewPermission(context, id) : false);
+            id != null && accessManager.hasReviewPermission(context, id));
         doc.put(Edit.Info.Elem.OWNER, isOwner);
         doc.put(Edit.Info.Elem.IS_PUBLISHED_TO_ALL, hasOperation(doc, ReservedGroup.all, ReservedOperation.view));
         addReservedOperation(doc, operations, ReservedOperation.view);
@@ -359,8 +361,8 @@ public class EsHTTPProxy {
         @RequestBody
         @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "JSON request based on Elasticsearch API.",
             content = @Content(examples = {
-            @ExampleObject(value = "{\"query\":{\"match\":{\"_id\":\"catalogue_uuid\"}}}")
-        }))
+                @ExampleObject(value = "{\"query\":{\"match\":{\"_id\":\"catalogue_uuid\"}}}")
+            }))
         String body) throws Exception {
         ServiceContext context = ApiUtils.createServiceContext(request);
         call(context, httpSession, request, response, MULTISEARCH_ENDPOINT, body, bucket, relatedTypes);
@@ -409,10 +411,10 @@ public class EsHTTPProxy {
     }
 
     private void call(ServiceContext context, HttpSession httpSession, HttpServletRequest request,
-                     HttpServletResponse response,
-                     String endPoint, String body,
-                     String selectionBucket,
-                     RelatedItemType[] relatedTypes) throws Exception {
+                      HttpServletResponse response,
+                      String endPoint, String body,
+                      String selectionBucket,
+                      RelatedItemType[] relatedTypes) throws Exception {
         final String url = client.getServerUrl() + "/" + defaultIndex + "/" + endPoint + "?";
         // Make query on multiple indices
 //        final String url = client.getServerUrl() + "/" + defaultIndex + ",gn-features/" + endPoint + "?";
@@ -423,23 +425,23 @@ public class EsHTTPProxy {
 
             // multisearch support
             final MappingIterator<Object> mappingIterator = objectMapper.readerFor(JsonNode.class).readValues(body);
-            StringBuffer requestBody = new StringBuffer();
+            StringBuilder requestBody = new StringBuilder();
             while (mappingIterator.hasNextValue()) {
-                JsonNode node = (JsonNode) mappingIterator.nextValue();
-                final JsonNode indexNode = node.get("index");
+                JsonNode jsonNode = (JsonNode) mappingIterator.nextValue();
+                final JsonNode indexNode = jsonNode.get("index");
                 if (indexNode != null) {
-                    ((ObjectNode) node).put("index", defaultIndex);
+                    ((ObjectNode) jsonNode).put("index", defaultIndex);
                 } else {
-                    final JsonNode queryNode = node.get("query");
+                    final JsonNode queryNode = jsonNode.get("query");
                     if (queryNode != null) {
-                        addFilterToQuery(context, objectMapper, node);
+                        addFilterToQuery(context, objectMapper, jsonNode);
                         if (selectionBucket != null) {
                             // Multisearch are not supposed to work with a bucket.
                             // Only one request is store in session
-                            session.setProperty(Geonet.Session.SEARCH_REQUEST + selectionBucket, node);
+                            session.setProperty(Geonet.Session.SEARCH_REQUEST + selectionBucket, jsonNode);
                         }
                     }
-                    final JsonNode sourceNode = node.get("_source");
+                    final JsonNode sourceNode = jsonNode.get("_source");
                     if (sourceNode != null) {
                         if (sourceNode.isArray()) {
                             addRequiredField((ArrayNode) sourceNode);
@@ -451,7 +453,7 @@ public class EsHTTPProxy {
                         }
                     }
                 }
-                requestBody.append(node.toString()).append(System.lineSeparator());
+                requestBody.append(jsonNode.toString()).append(System.lineSeparator());
             }
             handleRequest(context, httpSession, request, response, url, endPoint,
                 requestBody.toString(), true, selectionBucket, relatedTypes);
@@ -527,7 +529,7 @@ public class EsHTTPProxy {
      * Add search privilege criteria to a query.
      */
     private String buildQueryFilter(ServiceContext context, String type, boolean isSearchingForDraft) throws Exception {
-        return String.format(filterTemplate,
+        return String.format(FILTER_TEMPLATE,
             EsFilterBuilder.build(context, type, isSearchingForDraft, node));
 
     }
@@ -586,7 +588,7 @@ public class EsHTTPProxy {
                             "Error is: %s.\nRequest:\n%s.\nError:\n%s.",
                             connectionWithFinalHost.getResponseMessage(),
                             requestBody,
-                            IOUtils.toString(errorDetails)
+                            IOUtils.toString(errorDetails, StandardCharsets.UTF_8)
                         ));
                     return;
                 }
@@ -601,13 +603,12 @@ public class EsHTTPProxy {
 
                 // content type has to be valid
                 if (!isContentTypeValid(contentType)) {
-                    if (connectionWithFinalHost.getResponseMessage() != null) {
-                        if (connectionWithFinalHost.getResponseMessage().equalsIgnoreCase("Not Found")) {
-                            // content type was not valid because it was a not found page (text/html)
-                            response.sendError(HttpServletResponse.SC_NOT_FOUND, "Remote host not found");
-                            return;
-                        }
+                    if (connectionWithFinalHost.getResponseMessage() != null && connectionWithFinalHost.getResponseMessage().equalsIgnoreCase("Not Found")) {
+                        // content type was not valid because it was a not found page (text/html)
+                        response.sendError(HttpServletResponse.SC_NOT_FOUND, "Remote host not found");
+                        return;
                     }
+
 
                     response.sendError(HttpServletResponse.SC_FORBIDDEN,
                         "The content type of the remote host's response \"" + contentType
@@ -686,7 +687,7 @@ public class EsHTTPProxy {
                     addSelectionInfo(doc, selections);
                 }
 
-                if ((relatedTypes != null ) && (relatedTypes.length > 0)) {
+                if ((relatedTypes != null) && (relatedTypes.length > 0)) {
                     addRelatedTypes(doc, relatedTypes, context);
                 }
 
@@ -713,7 +714,7 @@ public class EsHTTPProxy {
                     addSelectionInfo(doc, selections);
                 }
 
-                if ((relatedTypes != null ) && (relatedTypes.length > 0)) {
+                if ((relatedTypes != null) && (relatedTypes.length > 0)) {
                     addRelatedTypes(doc, relatedTypes, context);
                 }
 
@@ -741,13 +742,11 @@ public class EsHTTPProxy {
      */
     private String getContentEncoding(Map<String, List<String>> headerFields) {
         for (String headerName : headerFields.keySet()) {
-            if (headerName != null) {
-                if ("Content-Encoding".equalsIgnoreCase(headerName)) {
-                    List<String> valuesList = headerFields.get(headerName);
-                    StringBuilder sBuilder = new StringBuilder();
-                    valuesList.forEach(sBuilder::append);
-                    return sBuilder.toString().toLowerCase();
-                }
+            if (headerName != null && "Content-Encoding".equalsIgnoreCase(headerName)) {
+                List<String> valuesList = headerFields.get(headerName);
+                StringBuilder sBuilder = new StringBuilder();
+                valuesList.forEach(sBuilder::append);
+                return sBuilder.toString().toLowerCase();
             }
         }
         return null;
@@ -819,7 +818,7 @@ public class EsHTTPProxy {
 
         // focus only on type, not on the text encoding
         String type = contentType.split(";")[0];
-        for (String validTypeContent : EsHTTPProxy._validContentTypes) {
+        for (String validTypeContent : EsHTTPProxy.validContentTypes) {
             if (validTypeContent.equals(type)) {
                 return true;
             }
@@ -831,29 +830,29 @@ public class EsHTTPProxy {
     /**
      * Process the metadata schema filters to filter out from the Elasticsearch response
      * the elements defined in the metadata schema filters.
-     *
+     * <p>
      * It uses a jsonpath to filter the elements, typically is configured with the following jsonpath, to
      * filter the ES object elements with an attribute nilReason = 'withheld'.
-     *
-     *  $.*[?(@.nilReason == 'withheld')]
-     *
+     * <p>
+     * $.*[?(@.nilReason == 'withheld')]
+     * <p>
      * The metadata index process, has to define this attribute. Any element that requires to be filtered, should be
      * defined as an object in Elasticsearch.
-     *
+     * <p>
      * Example for contacts:
-     *
-     *  <xsl:template mode="index-contact" match="*[cit:CI_Responsibility]">
-     *      ...
-     *      <!-- Check if the contact has an attribute @gco:nilReason = 'withheld', added by update-fixed-info.xsl process -->
-     *      <xsl:variable name="hasWithheld" select="@gco:nilReason = 'withheld'" as="xs:boolean" />
-     *
-     *      <xsl:element name="contact{$fieldSuffix}">
-     *        <xsl:attribute name="type" select="'object'"/>{
-     *        ...
-     *        "address":"<xsl:value-of select="util:escapeForJson($address)"/>"
-     *        <xsl:if test="$hasWithheld">
-     *         ,"nilReason": "withheld"
-     *        </xsl:if>
+     * <p>
+     * <xsl:template mode="index-contact" match="*[cit:CI_Responsibility]">
+     * ...
+     * <!-- Check if the contact has an attribute @gco:nilReason = 'withheld', added by update-fixed-info.xsl process -->
+     * <xsl:variable name="hasWithheld" select="@gco:nilReason = 'withheld'" as="xs:boolean" />
+     * <p>
+     * <xsl:element name="contact{$fieldSuffix}">
+     * <xsl:attribute name="type" select="'object'"/>{
+     * ...
+     * "address":"<xsl:value-of select="util:escapeForJson($address)"/>"
+     * <xsl:if test="$hasWithheld">
+     * ,"nilReason": "withheld"
+     * </xsl:if>
      *
      * @param mds
      * @param doc
@@ -908,10 +907,11 @@ public class EsHTTPProxy {
             doc.set("_source", actualObj);
         }
     }
+
     private JsonNode filterResponseElements(ObjectMapper mapper, ObjectNode sourceNode, List<String> jsonPathFilters) throws JsonProcessingException {
         DocumentContext jsonContext = JsonPath.parse(sourceNode.toPrettyString());
 
-        for(String jsonPath : jsonPathFilters) {
+        for (String jsonPath : jsonPathFilters) {
             if (StringUtils.isNotBlank(jsonPath)) {
                 try {
                     jsonContext = jsonContext.delete(jsonPath);
