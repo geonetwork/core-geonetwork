@@ -53,6 +53,7 @@
     "gnConfig",
     "gnConfigService",
     "gnAuditableService",
+    "gnUtilityService",
     function (
       $scope,
       $routeParams,
@@ -63,7 +64,8 @@
       $log,
       gnConfig,
       gnConfigService,
-      gnAuditableService
+      gnAuditableService,
+      gnUtilityService
     ) {
       $scope.searchObj = {
         params: {
@@ -156,7 +158,13 @@
       $http.get("../api/tags").then(function (response) {
         var nullTag = { id: null, name: "", label: {} };
         nullTag.label[$scope.lang] = "";
-        $scope.categories = [nullTag].concat(response.data);
+        var categoriesSorted = gnUtilityService.sortByTranslation(
+          response.data,
+          $scope.lang,
+          "name"
+        );
+
+        $scope.categories = [nullTag].concat(categoriesSorted);
       });
 
       function loadGroups() {
