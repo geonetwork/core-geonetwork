@@ -165,7 +165,7 @@
     "linkToParentTitle": "Verbinde einen Eltern-Metadatensatz mit dem aktuellen Metadatensatz",
     "linkToService": "Mit einem Service verlinken",
     "linkToServiceTitle": "Verbinde einen Dienst mit dem aktuellen Metadatensatz",
-    "linkToSibling": "Link to records",
+    "linkToSibling": "Link zu übergeordnetem Datensatz erstellen",
     "linkToSiblingTitle": "Verlinke eine Resource mit dem aktuellen Metadatensatz",
     "linkToSource": "Mit dem Herkunfts-Datensatz verlinken",
     "linkToSourceTitle": "Verlinke einen Ursprungsdatensatz mit dem aktuellen Metadatensatz",

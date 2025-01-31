@@ -165,7 +165,7 @@
     "linkToParentTitle": "Link a parent metadata record to the current metadata",
     "linkToService": "Link to a service",
     "linkToServiceTitle": "Link a service to the current metadata",
-    "linkToSibling": "Link to records",
+    "linkToSibling": "Link to other resources",
     "linkToSiblingTitle": "Link a resource to the current metadata",
     "linkToSource": "Link to a source dataset",
     "linkToSourceTitle": "Link a source dataset to the current metadata",

@@ -165,7 +165,7 @@
     "linkToParentTitle": "Vincular um registro de metadado pai ao metadado atual",
     "linkToService": "Link para um serviço",
     "linkToServiceTitle": "Vincular um serviço ao metadado atual",
-    "linkToSibling": "Link to records",
+    "linkToSibling": "Link para outros recursos",
     "linkToSiblingTitle": "Vincular um recurso ao metadado atual",
     "linkToSource": "Link para um conjunto de dados fonte",
     "linkToSourceTitle": "Vincular um conjunto de dados fonte ao metadado atual",
