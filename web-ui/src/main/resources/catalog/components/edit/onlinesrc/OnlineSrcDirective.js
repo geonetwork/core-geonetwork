@@ -2553,7 +2553,7 @@
               });
             };
             var dataciteQuery = function () {
-              return scope.queryValue !== ""
+              return !!scope.queryValue
                 ? scope.doiQueryPattern.replaceAll(
                     "{query}",
                     encodeURIComponent(scope.queryValue)
@@ -2562,7 +2562,7 @@
             };
 
             var crossrefQuery = function () {
-              return scope.crossrefQueryValue !== ""
+              return !!scope.crossrefQueryValue
                 ? scope.doiCrossrefQueryPattern
                     .replaceAll("{query}", encodeURIComponent(scope.queryValue))
                     .replaceAll("{prefix}", scope.doiPrefix)
@@ -2617,8 +2617,8 @@
             scope.search = function () {
               scope.searchedValue = true;
 
-              var doDataciteSearch = scope.doiUrl !== "";
-              var doCrossrefSearch = scope.doiCrossrefUrl !== "";
+              var doDataciteSearch = !!scope.doiUrl;
+              var doCrossrefSearch = !!scope.doiCrossrefUrl;
 
               internalSearch(doDataciteSearch, doCrossrefSearch);
             };
