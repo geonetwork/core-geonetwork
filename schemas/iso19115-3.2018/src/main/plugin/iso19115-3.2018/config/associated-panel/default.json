@@ -1069,6 +1069,16 @@
               "isTemplate": "n"
             }
           },
+          "doiapi": {
+            "datacite": {
+              "url": "https://api.datacite.org/dois",
+              "params": {"query": "titles.title:{query}* OR doi:{query} OR id:{query}"}
+            },
+            "crossref": {
+              "url": "https://api.crossref.org/works?mailto=GroovyBib@example.org",
+              "params": {"query": "rows=10&query={query}"}
+            }
+          },
           "remoteurl": {"multiple": true}
         }
       }

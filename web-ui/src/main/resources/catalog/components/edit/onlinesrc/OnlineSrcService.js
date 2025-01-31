@@ -930,19 +930,25 @@
   module.service("gnDoiSearchService", [
     "$http",
     function ($http) {
+      function buildBaseUrl(url) {
+        var containsQuestionMark = url.indexOf("?") >= 0;
+        return url + (containsQuestionMark ? "&" : "?");
+      }
       return {
         search: function (url, prefix, query) {
+          var url = buildBaseUrl(url);
+          if (prefix) {
+            url += "prefix=" + prefix + "&";
+          }
           return $http.get(
-            url +
-              "?prefix=" +
-              prefix +
-              "&query=" +
-              query.replaceAll("https://doi.org/", "")
+            url + "query=" + query.replaceAll(encodeURIComponent("https://doi.org/"), "")
           );
         },
         searchCrossref: function (url, prefix, query) {
           return $http.get(
-            url + "?select=DOI%2Ctitle%2Ctype%2Cprefix%2Cabstract%2CURL&" + query
+            buildBaseUrl(url) +
+              "select=DOI%2Ctitle%2Ctype%2Cprefix%2Cabstract%2CURL&" +
+              query
           );
         }
       };

@@ -2452,7 +2452,8 @@
      */
     .directive("gnDoiSearchPanel", [
       "gnDoiSearchService",
-      function (gnDoiSearchService) {
+      "$q",
+      function (gnDoiSearchService, $q) {
         return {
           restrict: "A",
           replace: true,
@@ -2515,7 +2516,8 @@
                   description:
                     r.attributes.descriptions.length > 0
                       ? r.attributes.descriptions[0].descriptions
-                      : ""
+                      : "",
+                  source: "Datacite"
                 });
               });
 
@@ -2531,7 +2533,8 @@
                   remoteUrl: r.URL,
                   resourceTitle: r.title && r.title.length > 0 ? r.title[0] : "",
                   title: r.title && r.title.length > 0 ? r.title[0] : "",
-                  description: r.abstract && r.abstract.length > 0 ? r.abstract[0] : ""
+                  description: r.abstract && r.abstract.length > 0 ? r.abstract[0] : "",
+                  source: "Crossref"
                 });
               });
 
@@ -2551,14 +2554,17 @@
             };
             var dataciteQuery = function () {
               return scope.queryValue !== ""
-                ? scope.doiQueryPattern.replaceAll("{query}", scope.queryValue)
+                ? scope.doiQueryPattern.replaceAll(
+                    "{query}",
+                    encodeURIComponent(scope.queryValue)
+                  )
                 : "";
             };
 
             var crossrefQuery = function () {
               return scope.crossrefQueryValue !== ""
                 ? scope.doiCrossrefQueryPattern
-                    .replaceAll("{query}", scope.queryValue)
+                    .replaceAll("{query}", encodeURIComponent(scope.queryValue))
                     .replaceAll("{prefix}", scope.doiPrefix)
                 : "";
             };
@@ -2566,71 +2572,46 @@
             var internalSearch = function (doDataciteSearch, doCrossrefSearch) {
               scope.isSearching = true;
               var results = [];
-
-              if (doDataciteSearch && doCrossrefSearch) {
-                // Search Datacite
-                gnDoiSearchService
-                  .search(scope.doiUrl, scope.doiPrefix, dataciteQuery())
-                  .then(
-                    function (response) {
-                      results = processResultsDatacite(response.data.data);
-
-                      // Search Crossref
-                      gnDoiSearchService
-                        .searchCrossref(
-                          scope.doiCrossrefUrl,
-                          scope.doiPrefix,
-                          crossrefQuery()
-                        )
-                        .then(
-                          function (response) {
-                            scope.isSearching = false;
-
-                            results = results.concat(
-                              processResultsCrossref(response.data.message.items)
-                            );
-
-                            scope.results = results;
-                            sortResults();
-                          },
-                          function (response) {
-                            scope.isSearching = false;
-                          }
-                        );
-                    },
-                    function (response) {
-                      scope.isSearching = false;
-                    }
-                  );
-              } else if (doDataciteSearch) {
-                gnDoiSearchService
-                  .search(scope.doiUrl, scope.doiPrefix, dataciteQuery())
-                  .then(
-                    function (response) {
-                      scope.isSearching = false;
-                      scope.results = processResultsDatacite(response.data.data);
-                      sortResults();
-                    },
-                    function (response) {
-                      scope.isSearching = false;
-                    }
-                  );
-              } else if (doCrossrefSearch) {
-                gnDoiSearchService
-                  .searchCrossref(scope.doiCrossrefUrl, scope.doiPrefix, crossrefQuery())
-                  .then(
-                    function (response) {
-                      scope.isSearching = false;
-                      scope.results = processResultsCrossref(response.data.message.items);
-                      sortResults();
-                    },
-                    function (response) {
-                      scope.isSearching = false;
-                    }
-                  );
-              } else {
-                scope.isSearching = false;
+              var promises = [];
+              if (doDataciteSearch) {
+                promises.push(
+                  gnDoiSearchService.search(
+                    scope.doiUrl,
+                    scope.doiPrefix,
+                    dataciteQuery()
+                  )
+                );
               }
+              if (doCrossrefSearch) {
+                promises.push(
+                  gnDoiSearchService.searchCrossref(
+                    scope.doiCrossrefUrl,
+                    scope.doiPrefix,
+                    crossrefQuery()
+                  )
+                );
+              }
+              $q.all(promises).then(
+                function (response) {
+                  for (var i = 0; i < response.length; i++) {
+                    if (response[i].data.data) {
+                      results = results.concat(
+                        processResultsDatacite(response[i].data.data)
+                      );
+                    } else if (response[i].data.message.items) {
+                      results = results.concat(
+                        processResultsCrossref(response[i].data.message.items)
+                      );
+                    }
+                    scope.results = results;
+                    sortResults();
+                    scope.isSearching = false;
+                  }
+                },
+                function (response) {
+                  scope.isSearching = false;
+                }
+              );
             };
 
             scope.search = function () {
