@@ -165,7 +165,7 @@
     "linkToParentTitle": "부모 메타데이터 레코드를 현재 메타데이터에 링크",
     "linkToService": "서비스에 링크",
     "linkToServiceTitle": "서비스를 현재 메타데이터에 링크",
-    "linkToSibling": "Link to records",
+    "linkToSibling": "다른 자원에 링크",
     "linkToSiblingTitle": "자원을 현재 메타데이터에 링크",
     "linkToSource": "원본 데이터셋에 링크",
     "linkToSourceTitle": "원본 데이터셋을 현재 메타데이터에 링크",
