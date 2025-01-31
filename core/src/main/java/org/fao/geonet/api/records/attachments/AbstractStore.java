@@ -50,6 +50,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -170,6 +172,7 @@ public abstract class AbstractStore implements Store {
         if (fileName.contains("?")) {
             fileName = fileName.substring(0, fileName.indexOf("?"));
         }
+        fileName = URLDecoder.decode(fileName, StandardCharsets.UTF_8);
         return fileName;
     }
 
