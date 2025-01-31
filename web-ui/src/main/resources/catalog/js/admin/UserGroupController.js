@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2024 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -48,6 +48,7 @@
     "$timeout",
     "gnConfig",
     "gnConfigService",
+    "gnUtilityService",
     function (
       $scope,
       $routeParams,
@@ -56,7 +57,8 @@
       $translate,
       $timeout,
       gnConfig,
-      gnConfigService
+      gnConfigService,
+      gnUtilityService
     ) {
       $scope.searchObj = {
         params: {
@@ -146,7 +148,13 @@
       $http.get("../api/tags").then(function (response) {
         var nullTag = { id: null, name: "", label: {} };
         nullTag.label[$scope.lang] = "";
-        $scope.categories = [nullTag].concat(response.data);
+        var categoriesSorted = gnUtilityService.sortByTranslation(
+          response.data,
+          $scope.lang,
+          "name"
+        );
+
+        $scope.categories = [nullTag].concat(categoriesSorted);
       });
 
       function loadGroups() {
