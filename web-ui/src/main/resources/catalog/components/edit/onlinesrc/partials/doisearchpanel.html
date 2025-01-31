@@ -32,35 +32,37 @@
       <i data-ng-show="isSearching" class="fa fa-spinner fa-spin gn-margin-top-sm"></i>
       <p
         class="gn-margin-top-sm"
-        data-ng-show="!isSearching && results.length == 0"
-        data-translate=""
+        data-ng-show="(searchedValue && !isSearching && results.length == 0 )"
       >
-        zarooResult
+        {{ 'zarooResult' | translate }}
       </p>
 
-      <ul class="list-group gn-nopadding-left gn-nopadding-right">
-        <li
-          data-ng-repeat="md in results"
-          class="list-group-item"
-          data-ng-class="(mode == 'select' && isSelected(md)) ? 'active' : ''"
-        >
-          <div class="d-inline pull-right gn-margin-left-sm">
-            <a target="_blank" href="{{md.remoteUrl}}" rel="noopener noreferrer">
-              <span class="fa fa-eye"></span
-            ></a>
-          </div>
-          <div
-            class="d-inline"
-            style="cursor: pointer"
-            data-ng-click="updateSelection(md, associationType, initiativeType)"
+      <div>
+        <ul class="list-group gn-nopadding-left gn-nopadding-right">
+          <li
+            data-ng-repeat="md in results"
+            class="list-group-item"
+            data-ng-class="(mode == 'select' && isSelected(md)) ? 'active' : ''"
           >
-            {{md.resourceTitle}}
-            <div data-ng-if="mode == 'add'" class="pull-right">
-              <span class="fa fa-plus"></span>
+            <div class="d-inline pull-right gn-margin-left-sm">
+              <a target="_blank" href="{{md.remoteUrl}}" rel="noopener noreferrer">
+                <span class="fa fa-eye"></span
+              ></a>
             </div>
-          </div>
-        </li>
-      </ul>
+            <div
+              class="d-inline"
+              style="cursor: pointer"
+              data-ng-click="updateSelection(md, associationType, initiativeType)"
+              title="{{md.source}}"
+            >
+              {{md.resourceTitle}}
+              <div data-ng-if="mode == 'add'" class="pull-right">
+                <span class="fa fa-plus"></span>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </div>
     </div>
   </div>
 </div>
