@@ -109,6 +109,7 @@
               ita: "it",
               dut: "nl",
               kor: "ko",
+              pol: "pl",
               por: "pt",
               rum: "ro",
               rus: "ru",
@@ -1739,7 +1740,8 @@
         swe: "Svenska",
         ukr: "українська",
         dan: "Dansk",
-        wel: "Cymraeg"
+        wel: "Cymraeg",
+        pol: "Polski"
       };
       $scope.url = "";
       $scope.gnUrl = gnGlobalSettings.gnUrl;

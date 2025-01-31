@@ -236,6 +236,7 @@
     "onlineUseDQReport": "Správa kvality údajov",
     "onlineUseDQTOR": "Špecifikácia kvality údajov",
     "onlineUseDQProdReport": "Správa o kvalite údajov",
+    "onlineUseMap": "Mapa",
     "onlineUseLegend": "Legenda pre zdroj",
     "onlineUseLegendLYR": "Štýl zdroja pre ArcGIS (LYR)",
     "onlineUseStyleSLD": "Štýl zdroja použitím SLD",
@@ -441,6 +442,8 @@
     "addOnlinesrc#API-help": "eg. view service, REST API",
     "addOnlinesrc#onlineDownload|localNetwork": "Add download",
     "addOnlinesrc#onlineDownload|localNetwork-help": "eg. file, download service, local network links",
+    "addOnlinesrc#onlineUseMap": "Add map",
+    "addOnlinesrc#onlineUseMap-help": "eg. PDF static maps or OGC Web Map Context interactive maps",
     "addOnlinesrc#onlineUseLegend": "Add portrayal",
     "addOnlinesrc#onlineUseLegend-help": "eg. LYR, QML, SLD files",
     "addOnlinesrc#links": "Pridať odkazy",
@@ -454,5 +457,10 @@
     "associated-fcats": "Katalóg prvkov",
     "associated-siblings": "Pridružené zdroje",
     "associated-hasfeaturecats": "Tento katalóg objektov se práve používa",
-    "associatedResourcesPanel": "Pridružené zdroje"
+    "associatedResourcesPanel": "Pridružené zdroje",
+    "validationSuccessLabel": "success",
+    "validationErrorLabel": "errors",
+    "metadataDuplicatedField-title": "The metadata title is used in another metadata record.",
+    "metadataDuplicatedField-altTitle": "The metadata alternate title is used in another metadata record.",
+    "metadataDuplicatedField-identifier": "The metadata resource identifier is used in another metadata record."
 }
