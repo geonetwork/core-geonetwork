@@ -635,127 +635,17 @@
       <version>${xmlunit.version}</version>
       <scope>test</scope>
     </dependency>
+    <!-- FIXME: only add this with the datahub-integration profile -->
+    <dependency>
+      <groupId>org.geonetwork-opensource.plugins</groupId>
+      <artifactId>gn-datahub-integration</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+
   </dependencies>
 
   <build>
     <plugins>
-      <!--   DATAHUB INTEGRATION   -->
-
-      <!-- Git clone geonetwork-ui -->
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>exec-maven-plugin</artifactId>
-        <version>3.3.0</version>
-        <executions>
-          <execution>
-            <id>delete-existing</id>
-            <phase>initialize</phase>
-            <goals>
-              <goal>exec</goal>
-            </goals>
-            <configuration>
-              <executable>rm</executable>
-              <arguments>
-                <argument>-rf</argument>
-                <argument>src/main/geonetwork-ui</argument>
-              </arguments>
-            </configuration>
-          </execution>
-          <execution>
-            <id>checkout-geonetwork-ui</id>
-            <phase>initialize</phase>
-            <goals>
-              <goal>exec</goal>
-            </goals>
-            <configuration>
-              <executable>git</executable>
-              <arguments>
-                <argument>clone</argument>
-                <argument>--branch</argument>
-                <argument>${geonetwork-ui.git.branch}</argument>
-                <argument>https://github.com/geonetwork/geonetwork-ui.git</argument>
-                <argument>src/main/geonetwork-ui</argument>
-              </arguments>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-
-      <!--   Install node & npm -> npm install -> npm run build  -->
-      <plugin>
-        <groupId>com.github.eirslett</groupId>
-        <artifactId>frontend-maven-plugin</artifactId>
-        <version>1.15.0</version>
-        <executions>
-          <execution>
-            <!--   Installing node and npm   -->
-            <id>install-node-and-npm</id>
-            <goals>
-              <goal>install-node-and-npm</goal>
-            </goals>
-            <configuration>
-              <nodeVersion>v20.12.2</nodeVersion>
-              <npmVersion>10.7.0</npmVersion>
-            </configuration>
-          </execution>
-          <!--   Install geonetwork-ui dependencies   -->
-          <execution>
-            <id>npm-install</id>
-            <goals>
-              <goal>npm</goal>
-            </goals>
-            <configuration>
-              <arguments>ci --loglevel error</arguments>
-              <workingDirectory>src/main/geonetwork-ui</workingDirectory>
-              <installDirectory>${basedir}</installDirectory>
-            </configuration>
-          </execution>
-          <!--   Build datahub app   -->
-          <execution>
-            <id>npm-build</id>
-            <goals>
-              <goal>npm</goal>
-            </goals>
-            <configuration>
-              <environmentVariables>
-                <NX_DAEMON>false</NX_DAEMON>
-              </environmentVariables>
-              <arguments>
-                run nx -- build datahub --base-href=./
-              </arguments>
-              <workingDirectory>src/main/geonetwork-ui</workingDirectory>
-              <installDirectory>${basedir}</installDirectory>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-
-      <!--   Copy of datahub files   -->
-      <plugin>
-        <artifactId>maven-resources-plugin</artifactId>
-        <version>3.1.0</version>
-        <executions>
-          <execution>
-            <id>copy-resources</id>
-            <phase>generate-resources</phase>
-            <goals>
-              <goal>copy-resources</goal>
-            </goals>
-            <configuration>
-              <overwrite>true</overwrite>
-              <encoding>UTF-8</encoding>
-              <outputDirectory>${build.webapp.resources}/datahub</outputDirectory>
-              <resources>
-                <resource>
-                  <directory>src/main/geonetwork-ui/dist/apps/datahub</directory>
-                  <filtering>false</filtering>
-                </resource>
-              </resources>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-
       <!-- Generate a properties file with the commit hash to be displayed on the admin.console -->
 	    <plugin>
         <groupId>io.github.git-commit-id</groupId>

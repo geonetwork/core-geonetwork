@@ -1425,6 +1425,7 @@
     <module>datastorages</module>
     <module>translationproviders</module>
     <module>auditable</module>
+    <module>plugins/datahub-integration</module>
   </modules>
 
   <profiles>
