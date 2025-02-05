@@ -86,7 +86,7 @@
   <!-- Datahub filter -->
   <filter>
     <filter-name>datahubFilter</filter-name>
-    <filter-class>org.fao.geonet.web.DatahubFilter</filter-class>
+    <filter-class>org.fao.geonet.datahub.DatahubFilter</filter-class>
   </filter>
 
   <filter-mapping>

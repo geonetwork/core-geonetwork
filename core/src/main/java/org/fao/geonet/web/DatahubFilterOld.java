@@ -32,8 +32,8 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.zip.GZIPOutputStream;
 
-public class DatahubFilter implements Filter {
-    private static final Logger log = Logger.getLogger(DatahubFilter.class);
+public class DatahubFilterOld implements Filter {
+    private static final Logger log = Logger.getLogger(DatahubFilterOld.class);
 
     @Override
     public void init(FilterConfig config) {
