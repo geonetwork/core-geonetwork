@@ -59,6 +59,7 @@
                 as="node()"
                 select="(/root/mdb:MD_Metadata|/mdb:MD_Metadata|/root/gmd:MD_Metadata|/gmd:MD_Metadata)"/>
 
+  <!-- Extract languages from ISO19115.3-2018 mdb:MD_Metadata -->
   <xsl:template mode="get-language"
                 match="mdb:MD_Metadata"
                 as="node()*">
@@ -77,6 +78,29 @@
       <language id="{@id}"
                 iso3code="{lan:language/*/@codeListValue}"
                 iso2code="{util:twoCharLangCode(lan:language/*/@codeListValue)}"/>
+    </xsl:for-each>
+  </xsl:template>
+
+  <!-- Extract languages from ISO19139 gmd:MD_Metadata -->
+  <xsl:template mode="get-language"
+                match="gmd:MD_Metadata"
+                as="node()*">
+    <xsl:variable name="defaultLanguage"
+                  select="$metadata/gmd:language"/>
+
+    <xsl:for-each select="$defaultLanguage">
+      <xsl:variable name="iso3code"
+                    as="xs:string?"
+                    select="gmd:LanguageCode/@codeListValue"/>
+      <language id="{util:twoCharLangCode($iso3code)}"
+                iso3code="{$iso3code}"
+                iso2code="{util:twoCharLangCode($iso3code)}"
+                default=""/>
+    </xsl:for-each>
+    <xsl:for-each select="$metadata/gmd:locale/*[not(@id = $defaultLanguage/@id)]">
+      <language id="{util:twoCharLangCode(gmd:languageCode/*/@codeListValue)}"
+                iso3code="{gmd:languageCode/*/@codeListValue}"
+                iso2code="{util:twoCharLangCode(gmd:languageCode/*/@codeListValue)}"/>
     </xsl:for-each>
   </xsl:template>
 
