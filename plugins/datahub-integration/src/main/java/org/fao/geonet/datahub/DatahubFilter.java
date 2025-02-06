@@ -28,6 +28,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.zip.GZIPOutputStream;
@@ -51,8 +52,8 @@ public class DatahubFilter implements Filter {
             return;
         }
 
-        String isDatahubEnabled = getSettingManager().getValue(Settings.GEONETWORK_UI_DATAHUB_ENABLED);
-        if (!isDatahubEnabled.equals("true")) {
+        boolean isDatahubEnabled = Objects.equals(getSettingManager().getValue(Settings.GEONETWORK_UI_DATAHUB_ENABLED), "true");
+        if (!isDatahubEnabled) {
             res.setStatus(404);
             return;
         }
@@ -64,7 +65,7 @@ public class DatahubFilter implements Filter {
         SourceRepository sourceRepository = getSourceRepository();
         Boolean datahubEnabled = false;
         if (NodeInfo.DEFAULT_NODE.equals(portalName)) {
-            datahubEnabled = getSettingManager().getValue(Settings.GEONETWORK_UI_DATAHUB_ENABLED).equals("true");
+            datahubEnabled = Objects.equals(getSettingManager().getValue(Settings.GEONETWORK_UI_DATAHUB_ENABLED), "true");
         } else if (sourceRepository.existsByUuidAndType(portalName, SourceType.subportal)) {
             datahubEnabled = sourceRepository.findOneByUuid(portalName).getDatahubEnabled();
         }
