@@ -33,6 +33,8 @@ import org.fao.geonet.domain.MetadataSourceInfo;
 import org.fao.geonet.kernel.EditLib;
 import org.fao.geonet.kernel.UpdateDatestamp;
 import org.fao.geonet.kernel.search.IndexingMode;
+import org.fao.geonet.kernel.search.submission.IDeletionSubmitter;
+import org.fao.geonet.kernel.search.submission.IIndexSubmitter;
 import org.fao.geonet.repository.BatchUpdateQuery;
 import org.fao.geonet.repository.PathSpec;
 import org.fao.geonet.repository.Updater;
@@ -68,9 +70,10 @@ public interface IMetadataManager {
      *
      * @param context
      * @param metadataId
+     * @param deletionSubmittor
      * @throws Exception
      */
-    void deleteMetadata(ServiceContext context, String metadataId) throws Exception;
+    void deleteMetadata(ServiceContext context, String metadataId, IDeletionSubmitter deletionSubmittor) throws Exception;
 
     /**
      * Delete the record with the id metadataId
@@ -147,12 +150,12 @@ public interface IMetadataManager {
      * @param updateFixedInfo
      * @param updateDatestamp
      * @param fullRightsForGroup
-     * @param forceRefreshReaders
+     * @param indexSubmittor
      * @return
      * @throws Exception
      */
     AbstractMetadata insertMetadata(ServiceContext context, AbstractMetadata newMetadata, Element metadataXml, IndexingMode indexingMode,
-                                    boolean updateFixedInfo, UpdateDatestamp updateDatestamp, boolean fullRightsForGroup, boolean forceRefreshReaders)
+                                    boolean updateFixedInfo, UpdateDatestamp updateDatestamp, boolean fullRightsForGroup, IIndexSubmitter indexSubmittor)
             throws Exception;
 
     /**

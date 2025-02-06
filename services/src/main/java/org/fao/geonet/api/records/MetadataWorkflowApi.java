@@ -58,6 +58,7 @@ import org.fao.geonet.kernel.metadata.StatusActionsFactory;
 import org.fao.geonet.kernel.metadata.StatusChangeType;
 import org.fao.geonet.kernel.search.EsSearchManager;
 import org.fao.geonet.kernel.search.IndexingMode;
+import org.fao.geonet.kernel.search.submission.DirectIndexSubmitter;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.languages.FeedbackLanguages;
@@ -533,7 +534,7 @@ public class MetadataWorkflowApi {
 
         if (statusUpdate.get(metadata.getId()) == StatusChangeType.UPDATED) {
             //--- reindex metadata
-            metadataIndexer.indexMetadata(String.valueOf(metadata.getId()), true, IndexingMode.full);
+            metadataIndexer.indexMetadata(String.valueOf(metadata.getId()), DirectIndexSubmitter.INSTANCE, IndexingMode.full);
 
             // Reindex the metadata table record to update the field _statusWorkflow that contains the composite
             // status of the published and draft versions
@@ -542,7 +543,7 @@ public class MetadataWorkflowApi {
 
                 if (metadataApproved != null) {
                     metadataIdApproved = metadataApproved.getId();
-                    metadataIndexer.indexMetadata(String.valueOf(metadataApproved.getId()), true, IndexingMode.full);
+                    metadataIndexer.indexMetadata(String.valueOf(metadataApproved.getId()), DirectIndexSubmitter.INSTANCE, IndexingMode.full);
                 }
             }
         }
@@ -961,7 +962,7 @@ public class MetadataWorkflowApi {
             recoveredMetadataId = reloadRecord(element, metadataManager, httpSession, request);
         }
 
-        metadataIndexer.indexMetadata(String.valueOf(recoveredMetadataId), true, IndexingMode.full);
+        metadataIndexer.indexMetadata(String.valueOf(recoveredMetadataId), DirectIndexSubmitter.INSTANCE, IndexingMode.full);
 
         UserSession session = ApiUtils.getUserSession(request.getSession());
         if (session != null) {
