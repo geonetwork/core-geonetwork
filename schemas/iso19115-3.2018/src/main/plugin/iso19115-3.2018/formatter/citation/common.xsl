@@ -71,7 +71,7 @@
 
   <xsl:template mode="citation" match="citation[lower-case($format) = 'bibtex']">
     <!-- https://en.wikipedia.org/wiki/BibTeX -->
-    <textResponse>@data{<xsl:value-of select="uuid"/>,
+    <textResponse>@misc{<xsl:value-of select="uuid"/>,
       author = {<xsl:value-of select="normalize-space(string-join(authorsNameAndOrgList/*, ', '))"/>},
       publisher = {<xsl:value-of select="normalize-space(string-join(publishersNameAndOrgList/*, ', '))"/>},
       title = {<xsl:value-of select="normalize-space(translatedTitle)"/>},
@@ -91,7 +91,10 @@
         <xsl:text>AU  - </xsl:text><xsl:value-of select="normalize-space(.)"/><xsl:text>&#13;&#10;</xsl:text>
       </xsl:for-each>
       <xsl:text>TI  - </xsl:text><xsl:value-of select="normalize-space(translatedTitle)"/><xsl:text>&#13;&#10;</xsl:text>
-      <!-- TODO: LA, ET -->
+      <!-- TODO: ET -->
+      <xsl:if test="language != ''">
+        <xsl:text>LA  - </xsl:text><xsl:value-of select="language"/><xsl:text>&#13;&#10;</xsl:text>
+      </xsl:if>
       <xsl:for-each select="publishersNameAndOrgList/*[. != '']">
         <xsl:text>PB  - </xsl:text><xsl:value-of select="normalize-space(.)"/><xsl:text>&#13;&#10;</xsl:text>
       </xsl:for-each>
@@ -103,6 +106,10 @@
         <xsl:text>DO  - </xsl:text><xsl:value-of select="doi"/><xsl:text>&#13;&#10;</xsl:text>
       </xsl:if>
       <xsl:text>ID  - </xsl:text><xsl:value-of select="uuid"/><xsl:text>&#13;&#10;</xsl:text>
+      <xsl:if test="lastPublicationDate != ''">
+        <xsl:text>DA  - </xsl:text><xsl:value-of select="concat(replace(substring(lastPublicationDate, 1, 12), '-', '/'), '/')" /><xsl:text>&#13;&#10;</xsl:text>
+        <xsl:text>PY  - </xsl:text><xsl:value-of select="substring(lastPublicationDate, 1, 4)" /><xsl:text>&#13;&#10;</xsl:text>
+      </xsl:if>
       <xsl:text>ER  -</xsl:text>
     </textResponse>
   </xsl:template>

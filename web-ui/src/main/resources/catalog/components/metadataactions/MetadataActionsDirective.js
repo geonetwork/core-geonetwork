@@ -632,6 +632,23 @@
             return "../api/records/" + scope.md.uuid + "/formatters/citation?format=";
           }
 
+          var getCitationFormatExtension = function (format) {
+            if (format === "text") {
+              return "txt";
+            } else {
+              return format ? format : "txt";
+            }
+          };
+
+          scope.getCitationFilename = function () {
+            return (
+              "citation-" +
+              scope.md.uuid +
+              "." +
+              getCitationFormatExtension(scope.currentFormat)
+            );
+          };
+
           scope.getCitation = function (format) {
             return $http
               .get(buildUrl() + format, {

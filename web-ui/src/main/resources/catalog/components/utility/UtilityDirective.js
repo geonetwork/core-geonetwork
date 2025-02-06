@@ -1194,12 +1194,12 @@
    *
    * The code to be used in a HTML page:
    *
-   * <span gn-copy-to-clipboard=""></span>
+   * <span gn-copy-to-clipboard-button=""></span>
    *  eg. for citation
    *
    * or
    *
-   * <span gn-copy-to-clipboard="" data-text="{{::r.locUrl}}" gn-copy-button-only="true"></span>
+   * <span gn-copy-to-clipboard-button="" data-text="{{::r.locUrl}}" gn-copy-button-only="true"></span>
    *  eg. copy UUID or link URL
    *
    * or
@@ -1254,6 +1254,67 @@
                   console.warn("Failed to copy to clipboard.");
                 }
               );
+            });
+          };
+        }
+      };
+    }
+  ]);
+
+  /*
+   * @description
+   * Save a file with a string in an input field, the parent element text
+   * or the results of a promise.
+   *
+   * The code to be used in a HTML page:
+   *
+   * <span gn-save-text-button="" data-file-name="citation.txt"></span>
+   *  eg. for citation
+   *
+   * <span gn-save-text-button="" data-text="{{::r.locUrl}}"></span>
+   *  eg. save UUID or link URL
+   *
+   * or
+   *
+   * <button gn-save-text-button="" get-text-fn="getListOfUuids()"/>
+   *  eg. UUID of record with indexing errors
+   */
+  module.directive("gnSaveTextButton", [
+    "$q",
+    function ($q) {
+      return {
+        restrict: "A",
+        replace: true,
+        template:
+          "<a class=\"{{::btnClass || 'btn btn-default btn-xs'}}\" " +
+          '           ng-click="save()" ' +
+          '           href=""' +
+          '           title="{{::title | translate}}">' +
+          '  <i class="fa fa-download"></i>' +
+          "</a>",
+        scope: {
+          btnClass: "@",
+          getTextFn: "&?",
+          fileName: "@"
+        },
+        link: function linkFn(scope, element, attr) {
+          scope.title = attr["tooltip"] || "saveToFile";
+          scope.fileName = scope.fileName || "file.txt";
+          scope.save = function () {
+            var promise = undefined;
+
+            if (angular.isFunction(scope.getTextFn)) {
+              promise = scope.getTextFn();
+            } else {
+              promise = $q.when(
+                attr["text"] ? attr["text"] : element.parent().text().trim()
+              );
+            }
+
+            promise.then(function (text) {
+              var blob = new Blob([text], { type: "text/plain;charset=utf-8" });
+              // Bootstrap FileSaver
+              saveAs(blob, scope.fileName);
             });
           };
         }
