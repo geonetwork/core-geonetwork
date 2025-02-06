@@ -48,6 +48,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLDecoder;
@@ -172,7 +173,11 @@ public abstract class AbstractStore implements Store {
         if (fileName.contains("?")) {
             fileName = fileName.substring(0, fileName.indexOf("?"));
         }
-        fileName = URLDecoder.decode(fileName, StandardCharsets.UTF_8);
+        try {
+            fileName = URLDecoder.decode(fileName, StandardCharsets.UTF_8.toString());
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
+        }
         return fileName;
     }
 
