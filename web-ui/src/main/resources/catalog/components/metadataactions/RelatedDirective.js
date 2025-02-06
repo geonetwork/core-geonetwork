@@ -1075,6 +1075,8 @@
             if (md.overview && md.overview.length > 0) {
               return md.overview[0].url;
               // Related records contain the first overview in the properties.overview property
+            } else if (md.properties && md.properties.overview_data) {
+              return md.properties.overview_data;
             } else if (md.properties && md.properties.overview) {
               return md.properties.overview;
             }
