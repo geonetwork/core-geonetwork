@@ -107,8 +107,9 @@
     <!-- TODO: Should we consider DOI? It may be encoded in metadata linkage (not available in ISO19139) -->
 
     <xsl:value-of select="if($metadataLinkage) then $metadataLinkage
-                                      else if($metadataIdentifier) then $metadataIdentifier
-                                      else concat($resourcePrefix, encode-for-uri($metadata/mdb:metadataIdentifier/*/mcc:code/*/text()))"
+                            else if (string($metadataIdentifier) and starts-with($metadataIdentifier, 'http')) then $metadataIdentifier
+                            else if (string($metadataIdentifier)) then concat($resourcePrefix, encode-for-uri($metadataIdentifier))
+                            else concat($resourcePrefix, encode-for-uri($metadata/mdb:metadataIdentifier/*/mcc:code/*/text()))"
                  />
   </xsl:function>
 
@@ -125,7 +126,7 @@
                            select="($metadata/mdb:identificationInfo/*/mri:citation/*/cit:identifier)[1]"/>
     </xsl:variable>
 
-    <xsl:value-of select="if($resourceIdentifier) then $resourceIdentifier
+    <xsl:value-of select="if(string($resourceIdentifier) and starts-with($resourceIdentifier, 'http')) then $resourceIdentifier
                                       else concat($catalogRecordUri, '#resource')"
     />
   </xsl:function>
@@ -247,6 +248,8 @@
                       |cit:identifier">
     <xsl:variable name="code"
                   select="*/mcc:code/*/text()"/>
+    <xsl:variable name="codeAnchor"
+                  select="*/mcc:code/*/@xlink:href"/>
     <xsl:variable name="codeSpace"
                   select="*/mcc:codeSpace/*/text()"/>
     <xsl:variable name="isUrn"
@@ -261,6 +264,7 @@
                           then concat($codeSpace,
                                       (if (ends-with($codeSpace, $separator)) then '' else $separator),
                                       $code)
+                          else if ($codeAnchor) then $codeAnchor
                           else $code"/>
 
     <xsl:variable name="codeType"
