@@ -94,6 +94,8 @@ public class FormatterApiTest extends AbstractServiceIntegrationTest {
         data.add(new String[]{"iso19115-3.2018-dcat-dataset.xml", "eu-dcat-ap-hvd", "", "iso19115-3.2018", "dataset-core.rdf"});
         data.add(new String[]{"iso19115-3.2018-dcat-service.xml", "dcat", "", "iso19115-3.2018", "service-core.rdf"});
 
+        data.add(new String[]{"iso19139-dcat-dataset.xml", "dcat", "", "iso19139", "dataset-core.rdf"});
+
         return data;
     }
 
@@ -152,19 +154,25 @@ public class FormatterApiTest extends AbstractServiceIntegrationTest {
                     }
 
 
-//                    FileUtils.writeStringToFile(new File("/tmp/services/src/test/resources/org/fao/geonet/api/records/formatters/new/" + String.format("%s-%s-%s",
-//                            schema, formatter, checkfile)), actual.replaceFirst("urn:uuid/.*</dct:identifier>", "urn:uuid/{uuid}</dct:identifier>"), StandardCharsets.UTF_8);
+                    FileUtils.writeStringToFile(new File("/tmp/services/src/test/resources/org/fao/geonet/api/records/formatters/new/" + String.format("%s-%s-%s",
+                            schema, formatter, checkfile)), actual.replaceFirst("urn:uuid/.*</dct:identifier>", "urn:uuid/{uuid}</dct:identifier>"), StandardCharsets.UTF_8);
 
                     Diff diff = DiffBuilder
                             .compare(Input.fromString(actual))
                             .withTest(Input.fromString(expected))
-                            .withNodeMatcher(new DefaultNodeMatcher(ElementSelectors.byName))
+                            .withNodeMatcher(new DefaultNodeMatcher(
+                                ElementSelectors.byName
+//                                ElementSelectors.conditionalBuilder()
+//                                    .whenElementIsNamed("dct:references")
+//                                        .thenUse(ElementSelectors.byNameAndAttributes("rdf:resource"))
+//                                    .elseUse(ElementSelectors.byName).build())
+                            ))
                             .normalizeWhitespace()
                             .ignoreComments()
                             .checkForSimilar()
                             .build();
                     assertFalse(
-                            String.format("%s. Checked with %s. Differences: %s", url, checkfile, diff.toString()),
+                            String.format("%s: %s. Checked with %s. Differences: %s", schema, url, checkfile, diff.toString()),
                             diff.hasDifferences());
 
                     if (isRdf) {
