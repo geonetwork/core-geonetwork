@@ -1076,7 +1076,7 @@
             },
             "crossref": {
               "url": "https://api.crossref.org/works?mailto=GroovyBib@example.org",
-              "params": {"query": "rows=10&query={query}"}
+              "params": {"query": "rows=10&query.title={query}"}
             }
           },
           "remoteurl": {"multiple": true}
