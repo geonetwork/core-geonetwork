@@ -36,7 +36,7 @@
 
     <xsl:if test="*/text() != ''">
       <xsl:element name="{$nodeName}">
-        <xsl:attribute name="xml:lang" select="$languages[@default]/@iso3code"/>
+        <xsl:attribute name="xml:lang" select="$languages[@default]/@iso2code"/>
         <xsl:value-of select="*/text()"/>
       </xsl:element>
     </xsl:if>
@@ -55,7 +55,7 @@
         </xsl:when>
         <xsl:otherwise>
           <xsl:element name="{$nodeName}">
-            <xsl:attribute name="xml:lang" select="$languages[concat('#', @id) = $translationLanguage]/@iso3code"/>
+            <xsl:attribute name="xml:lang" select="$languages[concat('#', @id) = $translationLanguage]/@iso2code"/>
             <xsl:value-of select="text()"/>
           </xsl:element>
         </xsl:otherwise>
