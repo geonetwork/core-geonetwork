@@ -2561,8 +2561,22 @@
                 : "";
             };
 
+            
             var crossrefQuery = function () {
-              return scope.queryValue && scope.queryValue !== ''
+              if (!scope.queryValue) {
+                return "";
+              }
+
+              // https://api.crossref.org/swagger-ui/index.html#/Works/get_works
+              // Crossref query does not allow a search to be done on the title (or other search field)
+              // and DOI which is a filter eg. filter=doi:10.prefix/suffix.
+              // If the query value is a DOI, we will use the DOI filter.
+              var isDoi = scope.queryValue.match(/10\..+\/[^ ]+$/);
+              if (isDoi) {
+                return "filter=doi:" + scope.queryValue;
+              }
+
+              return scope.queryValue !== ""
                 ? scope.doiCrossrefQueryPattern
                     .replaceAll("{query}", encodeURIComponent(scope.queryValue))
                     .replaceAll("{prefix}", scope.doiPrefix)
