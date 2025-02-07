@@ -153,19 +153,14 @@ public class FormatterApiTest extends AbstractServiceIntegrationTest {
                         }
                     }
 
-
                     FileUtils.writeStringToFile(new File("/tmp/services/src/test/resources/org/fao/geonet/api/records/formatters/new/" + String.format("%s-%s-%s",
                             schema, formatter, checkfile)), actual.replaceFirst("urn:uuid/.*</dct:identifier>", "urn:uuid/{uuid}</dct:identifier>"), StandardCharsets.UTF_8);
 
                     Diff diff = DiffBuilder
-                            .compare(Input.fromString(actual))
-                            .withTest(Input.fromString(expected))
+                            .compare(Input.fromString(expected))
+                            .withTest(Input.fromString(actual))
                             .withNodeMatcher(new DefaultNodeMatcher(
                                 ElementSelectors.byName
-//                                ElementSelectors.conditionalBuilder()
-//                                    .whenElementIsNamed("dct:references")
-//                                        .thenUse(ElementSelectors.byNameAndAttributes("rdf:resource"))
-//                                    .elseUse(ElementSelectors.byName).build())
                             ))
                             .normalizeWhitespace()
                             .ignoreComments()
@@ -202,7 +197,7 @@ public class FormatterApiTest extends AbstractServiceIntegrationTest {
                     );
                 }
             } catch (Exception e) {
-                fail(String.format("Failure on %s. Error is: %s", url, e.getMessage()));
+                fail(String.format("Failure on %s with URL %s. Error is: %s", testFile, url, e.getMessage()));
             }
         }
     }

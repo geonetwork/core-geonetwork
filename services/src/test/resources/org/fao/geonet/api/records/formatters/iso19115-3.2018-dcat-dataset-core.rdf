@@ -374,10 +374,10 @@
           communal (ZEC) et la zone d'enjeu régional (ZER). Les ZEC et ZER sont toutes deux accompagnées d'une carte
           d'affectation des sols à valeur indicative
           - une nouvelle zone non destinée à l'urbanisation : zone d'extraction (ZE).</adms:versionNotes>
-      <dct:references rdf:resource="https://metawal.wallonie.be/geonetwork/srv/api/records/19cff95e-1971-4bdc-855e-9c9bcbc2c647"/>
-      <dct:references rdf:resource="https://metawal.wallonie.be/geonetwork/srv/api/records/be875ddb-ffd9-4c23-a013-53063a366b5b"/>
-      <dct:references rdf:resource="https://metawal.wallonie.be/geonetwork/srv/api/records/201ee90c-1971-4bdc-855e-9c9bcbc2c647"/>
-      <dct:references rdf:resource="https://metawal.wallonie.be/geonetwork/srv/api/records/ffc45d44-1cc2-4924-bb8c-214096eb9058"/>
+       <dct:references rdf:resource="https://metawal.wallonie.be/geonetwork/srv/api/records/19cff95e-1971-4bdc-855e-9c9bcbc2c647"/>
+       <dct:references rdf:resource="https://metawal.wallonie.be/geonetwork/srv/api/records/201ee90c-1971-4bdc-855e-9c9bcbc2c647"/>
+       <dct:references rdf:resource="https://metawal.wallonie.be/geonetwork/srv/api/records/be875ddb-ffd9-4c23-a013-53063a366b5b"/>
+       <dct:references rdf:resource="https://metawal.wallonie.be/geonetwork/srv/api/records/ffc45d44-1cc2-4924-bb8c-214096eb9058"/>
       <dcat:spatialResolutionInMeters rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.01</dcat:spatialResolutionInMeters>
       <dcat:spatialResolutionInMeters rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">30</dcat:spatialResolutionInMeters>
       <dcat:spatialResolutionInMeters rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.3048</dcat:spatialResolutionInMeters>

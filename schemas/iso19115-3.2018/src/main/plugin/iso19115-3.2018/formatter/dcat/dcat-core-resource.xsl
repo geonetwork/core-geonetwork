@@ -80,6 +80,7 @@
     <xsl:variable name="metadata" select="."/>
 
     <xsl:for-each select="$associations/relations/*">
+      <xsl:sort select="@url"/>
       <xsl:variable name="resourceIdentifierWithHttpCodeSpace"
                           select="(root/resourceIdentifier[starts-with(codeSpace, 'http')])[1]"/>
       <xsl:variable name="recordUri"

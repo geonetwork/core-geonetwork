@@ -308,10 +308,10 @@
 
         </adms:versionNotes>
       <dcat:servesDataset>
-         <dcat:Dataset rdf:about="https://metawal.wallonie.be/geonetwork/srv/api/records/e2964ae5-93e3-4da0-ac16-b6cdb5c364e9"/>
+         <dcat:Dataset rdf:about="https://metawal.wallonie.be/geonetwork/insipre/api/records/541e92de-dbc9-46df-880c-1076798bdbb3"/>
       </dcat:servesDataset>
       <dcat:servesDataset>
-         <dcat:Dataset rdf:about="https://metawal.wallonie.be/geonetwork/insipre/api/records/541e92de-dbc9-46df-880c-1076798bdbb3"/>
+         <dcat:Dataset rdf:about="https://metawal.wallonie.be/geonetwork/srv/api/records/09b168b9-6f7c-4e6a-adb4-e3352eeda75b"/>
       </dcat:servesDataset>
       <dcat:servesDataset>
          <dcat:Dataset rdf:about="https://metawal.wallonie.be/geonetwork/srv/api/records/bee148c9-f6f2-458e-8359-c33816927a8a"/>
@@ -320,13 +320,13 @@
          <dcat:Dataset rdf:about="https://metawal.wallonie.be/geonetwork/srv/api/records/c2526c30-ee7e-4c0b-b866-599e9aba3665"/>
       </dcat:servesDataset>
       <dcat:servesDataset>
-         <dcat:Dataset rdf:about="https://metawal.wallonie.be/geonetwork/srv/api/records/ffc45d44-1cc2-4924-bb8c-214096eb9058"/>
-      </dcat:servesDataset>
-      <dcat:servesDataset>
          <dcat:Dataset rdf:about="https://metawal.wallonie.be/geonetwork/srv/api/records/ce6b6455-3273-41e3-bfab-ae71bcd677cc"/>
       </dcat:servesDataset>
       <dcat:servesDataset>
-         <dcat:Dataset rdf:about="https://metawal.wallonie.be/geonetwork/srv/api/records/09b168b9-6f7c-4e6a-adb4-e3352eeda75b"/>
+         <dcat:Dataset rdf:about="https://metawal.wallonie.be/geonetwork/srv/api/records/e2964ae5-93e3-4da0-ac16-b6cdb5c364e9"/>
+      </dcat:servesDataset>
+      <dcat:servesDataset>
+         <dcat:Dataset rdf:about="https://metawal.wallonie.be/geonetwork/srv/api/records/ffc45d44-1cc2-4924-bb8c-214096eb9058"/>
       </dcat:servesDataset>
       <dct:spatial>
          <rdf:Description>

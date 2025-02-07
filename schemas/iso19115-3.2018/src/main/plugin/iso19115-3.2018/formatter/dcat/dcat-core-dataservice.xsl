@@ -71,9 +71,9 @@
     Can be disabled for catalogues describing services and
     associating them with datasets.
     See related API in dcat-core-resource
-    -->
     <dcat:servesDataset>
       <dcat:Dataset rdf:about="{if (@xlink:href) then @xlink:href else @uuidref}"/>
     </dcat:servesDataset>
+    -->
   </xsl:template>
 </xsl:stylesheet>

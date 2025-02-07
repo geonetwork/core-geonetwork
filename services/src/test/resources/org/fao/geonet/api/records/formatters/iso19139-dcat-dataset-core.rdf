@@ -11,7 +11,7 @@
          xmlns:pav="http://purl.org/pav/"
          xmlns:adms="http://www.w3.org/ns/adms#"
          xmlns:skos="http://www.w3.org/2004/02/skos/core#">
-  <rdf:Description rdf:about="http://localhost:7979/geonetwork/srv/api/records/d6b08cf9-fdf1-4fe9-b906-02d0feb39e4e#resource">
+  <rdf:Description rdf:about="http://localhost:8080/srv/api/records/{uuid}#resource">
     <rdf:type rdf:resource="http://www.w3.org/ns/dcat#Dataset"/>
     <dct:type>
       <skos:Concept rdf:about="http://purl.org/dc/dcmitype/Dataset">
@@ -24,13 +24,13 @@
       </skos:Concept>
     </dct:type>
     <foaf:isPrimaryTopicOf>
-      <rdf:Description rdf:about="http://localhost:7979/geonetwork/srv/api/records/d6b08cf9-fdf1-4fe9-b906-02d0feb39e4e">
+      <rdf:Description rdf:about="http://localhost:8080/srv/api/records/{uuid}">
         <rdf:type rdf:resource="http://www.w3.org/ns/dcat#CatalogRecord"/>
-        <dct:identifier rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">urn:uuid:{uuid}</dct:identifier>
+        <dct:identifier rdf:datatype="http://www.w3.org/2001/XMLSchema#string">{uuid}</dct:identifier>
         <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2024-11-26</dct:modified>
         <dct:title xml:lang="nl">Regionaal Fietsnetwerk 2024</dct:title>
         <dct:description xml:lang="nl">Regionaal Fietsnetwerk van provincie Utrecht. Samengesteld op basis van de dataset 'links' van de fietsersbond en aangevuld met opmerkingen van de gemeenten mbt type netwerk.  De attribuutwaarden van de fietsersbond zijn uit deze dataset verwijderd. In november 2024 zijn wat wijzigingen aangebracht.</dct:description>
-        <foaf:primaryTopic rdf:resource="http://localhost:7979/geonetwork/srv/api/records/d6b08cf9-fdf1-4fe9-b906-02d0feb39e4e#resource"/>
+        <foaf:primaryTopic rdf:resource="http://localhost:8080/srv/api/records/{uuid}#resource"/>
       </rdf:Description>
     </foaf:isPrimaryTopicOf>
     <dct:title xml:lang="nl">Regionaal Fietsnetwerk 2024</dct:title>
@@ -106,13 +106,15 @@
     </foaf:page>
     <dcat:distribution>
       <dcat:Distribution>
-        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2024-11-26</dct:modified>revision<dcat:accessURL rdf:resource="https://download.geodata-utrecht.nl/download/vector/d6b08cf9-fdf1-4fe9-b906-02d0feb39e4e"/>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2024-11-26</dct:modified>
+        <dcat:accessURL rdf:resource="https://download.geodata-utrecht.nl/download/vector/d6b08cf9-fdf1-4fe9-b906-02d0feb39e4e"/>
       </dcat:Distribution>
     </dcat:distribution>
     <dcat:distribution>
       <dcat:Distribution>
         <dct:title xml:lang="nl">Regionaal_Fietsnetwerk</dct:title>
-        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2024-11-26</dct:modified>revision<dcat:accessURL rdf:resource="https://services.geodata-utrecht.nl/geoserver/v01_1_mobiliteit/wfs"/>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2024-11-26</dct:modified>
+        <dcat:accessURL rdf:resource="https://services.geodata-utrecht.nl/geoserver/v01_1_mobiliteit/wfs"/>
         <dcat:accessService>
           <rdf:Description>
             <rdf:type rdf:resource="http://www.w3.org/ns/dcat#DataService"/>
@@ -128,7 +130,8 @@
     <dcat:distribution>
       <dcat:Distribution>
         <dct:title xml:lang="nl">Regionaal_Fietsnetwerk</dct:title>
-        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2024-11-26</dct:modified>revision<dcat:accessURL rdf:resource="https://services.geodata-utrecht.nl/geoserver/v01_1_mobiliteit/wms"/>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2024-11-26</dct:modified>
+        <dcat:accessURL rdf:resource="https://services.geodata-utrecht.nl/geoserver/v01_1_mobiliteit/wms"/>
         <dcat:accessService>
           <rdf:Description>
             <rdf:type rdf:resource="http://www.w3.org/ns/dcat#DataService"/>

@@ -454,5 +454,5 @@
 
 
   <xsl:template mode="iso19115-3-to-dcat"
-                match="mdb:referenceSystemInfo/*/mrs:referenceSystemIdentifier/*"/>
+                match="mdb:referenceSystemInfo/*/mrs:referenceSystemIdentifier/*|*[@codeListValue]/text()"/>
 </xsl:stylesheet>
