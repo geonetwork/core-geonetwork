@@ -78,8 +78,8 @@ class Harvester implements IHarvester<HarvestResult> {
 
     private final AtomicBoolean cancelMonitor;
     private Logger log;
-    private SimpleUrlParams params;
-    private ServiceContext context;
+    private final SimpleUrlParams params;
+    private final ServiceContext context;
 
     @Autowired
     GeonetHttpRequestFactory requestFactory;
@@ -87,13 +87,14 @@ class Harvester implements IHarvester<HarvestResult> {
     /**
      * Contains a list of accumulated errors during the executing of this harvest.
      */
-    private List<HarvestError> errors = new LinkedList<>();
+    private final List<HarvestError> errors;
 
-    public Harvester(AtomicBoolean cancelMonitor, Logger log, ServiceContext context, SimpleUrlParams params) {
+    public Harvester(AtomicBoolean cancelMonitor, Logger log, ServiceContext context, SimpleUrlParams params, List<HarvestError> errors) {
         this.cancelMonitor = cancelMonitor;
         this.log = log;
         this.context = context;
         this.params = params;
+        this.errors = errors;
     }
 
     public HarvestResult harvest(Logger log) throws Exception {
@@ -428,9 +429,5 @@ class Harvester implements IHarvester<HarvestResult> {
 
     private URI createUrl(String jsonUrl) throws URISyntaxException {
         return new URI(jsonUrl);
-    }
-
-    public List<HarvestError> getErrors() {
-        return errors;
     }
 }

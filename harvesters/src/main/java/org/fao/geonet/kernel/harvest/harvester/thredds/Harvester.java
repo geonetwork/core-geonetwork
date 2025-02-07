@@ -191,7 +191,7 @@ class Harvester extends BaseAligner<ThreddsParams> implements IHarvester<Harvest
     private HashSet<String> harvestUris = new HashSet<String>();
     private Map<String, ThreddsService> services = new HashMap<String, Harvester.ThreddsService>();
     private InvCatalogImpl catalog;
-    private List<HarvestError> errors = new LinkedList<HarvestError>();
+    private List<HarvestError> errors;
 
     private LatLonRect globalLatLonBox = null;
     private DateRange globalDateRange = null;
@@ -226,11 +226,12 @@ class Harvester extends BaseAligner<ThreddsParams> implements IHarvester<Harvest
      * @return null
      **/
 
-    public Harvester(AtomicBoolean cancelMonitor, Logger log, ServiceContext context, ThreddsParams params) {
+    public Harvester(AtomicBoolean cancelMonitor, Logger log, ServiceContext context, ThreddsParams params, List<HarvestError> errors) {
         super(cancelMonitor);
         this.log = log;
         this.context = context;
         this.params = params;
+        this.errors = errors;
 
         result = new HarvestResult();
 
@@ -318,11 +319,6 @@ class Harvester extends BaseAligner<ThreddsParams> implements IHarvester<Harvest
 
         result.totalMetadata = result.serviceRecords + result.collectionDatasetRecords;
         return result;
-    }
-
-    @Override
-    public List<HarvestError> getErrors() {
-        return errors;
     }
 
     //---------------------------------------------------------------------------
