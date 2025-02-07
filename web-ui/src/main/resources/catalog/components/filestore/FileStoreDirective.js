@@ -62,11 +62,20 @@
               : attrs["visibility"];
             scope.queue = [];
 
+            var input = element.find("input");
+            if (
+              scope.uploadOptions &&
+              angular.isDefined(scope.uploadOptions) &&
+              scope.uploadOptions.singleUpload === false
+            ) {
+              input.attr("multiple", "multiple");
+            }
+
             var uploadFile = function () {
               scope.queue = [];
               scope.filestoreUploadOptions = angular.extend(
                 {
-                  singleUpload: true,
+                  singleUpload: scope.singleUpload,
                   autoUpload: scope.autoUpload,
                   url:
                     "../api/records/" +
@@ -156,6 +165,17 @@
           link: function (scope, element, attrs, controller) {
             scope.autoUpload =
               angular.isUndefined(attrs["autoUpload"]) || attrs["autoUpload"] == "true";
+
+            scope.filestoreUploadOptions = {
+              autoUpload: scope.autoUpload,
+              singleUpload: false
+            };
+
+            scope.filestoreUploadOptionsSetResource = {
+              autoUpload: scope.autoUpload,
+              singleUpload: true
+            };
+
             var defaultStatus = angular.isUndefined(attrs["defaultStatus"])
               ? "public"
               : attrs["defaultStatus"];
@@ -210,15 +230,6 @@
                 scope.loadMetadataResources();
 
                 scope.queue = [];
-                scope.filestoreUploadOptions = {
-                  autoUpload: scope.autoUpload,
-                  url:
-                    "../api/records/" +
-                    scope.uuid +
-                    "/attachments?visibility=" +
-                    defaultStatus,
-                  singleUpload: false
-                };
               }
             });
           }
