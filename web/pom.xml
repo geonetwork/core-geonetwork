@@ -635,6 +635,13 @@
       <version>${xmlunit.version}</version>
       <scope>test</scope>
     </dependency>
+    <!-- FIXME: only add this with the datahub-integration profile -->
+    <dependency>
+      <groupId>org.geonetwork-opensource.plugins</groupId>
+      <artifactId>gn-datahub-integration</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+
   </dependencies>
 
   <build>
@@ -1401,6 +1408,7 @@
   </profiles>
 
   <properties>
+    <geonetwork-ui.git.branch>main</geonetwork-ui.git.branch>
     <geonetwork.version>${project.version}</geonetwork.version>
     <geonetwork.subversion>SNAPSHOT</geonetwork.subversion>
     <geonetwork.webapp.dir>${basedir}/src/main/webapp</geonetwork.webapp.dir>
