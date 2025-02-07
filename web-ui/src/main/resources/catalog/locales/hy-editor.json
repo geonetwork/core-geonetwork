@@ -236,6 +236,7 @@
     "onlineUseDQReport": "Տվյալների որակի հաշվետվություն",
     "onlineUseDQTOR": "Տվյալների որակի ճշգրտում",
     "onlineUseDQProdReport": "Տվյալների որակի արտադրության հաշվետվություն",
+    "onlineUseMap": "Map",
     "onlineUseLegend": "Լեգենդ ռեսուրսի համար",
     "onlineUseLegendLYR": "ArcGIS (LYR) ռեսուրսի ոճը",
     "onlineUseStyleSLD": "SLD ռեսուրսի ոճը",
@@ -441,6 +442,8 @@
     "addOnlinesrc#API-help": "օր. դիտել ծառայություն, REST API",
     "addOnlinesrc#onlineDownload|localNetwork": "Ավելացնել ներբեռնում",
     "addOnlinesrc#onlineDownload|localNetwork-help": "օր. ֆայլ, ներբեռնման ծառայություն, տեղական ցանցի հղումներ",
+    "addOnlinesrc#onlineUseMap": "Add map",
+    "addOnlinesrc#onlineUseMap-help": "eg. PDF static maps or OGC Web Map Context interactive maps",
     "addOnlinesrc#onlineUseLegend": "Ավելացնել պատկեր",
     "addOnlinesrc#onlineUseLegend-help": "օր. LYR, QML, SLD ֆայլեր",
     "addOnlinesrc#links": "Ավելացնել հղումներ",
@@ -454,5 +457,10 @@
     "associated-fcats": "Հատկանիշների կատալոգ",
     "associated-siblings": "Համակցված ռեսուրսներ",
     "associated-hasfeaturecats": "Օգտագործելով այս հնարավորությունների կատալոգը",
-    "associatedResourcesPanel": "Համակցված ռեսուրսներ"
+    "associatedResourcesPanel": "Համակցված ռեսուրսներ",
+    "validationSuccessLabel": "success",
+    "validationErrorLabel": "errors",
+    "metadataDuplicatedField-title": "The metadata title is used in another metadata record.",
+    "metadataDuplicatedField-altTitle": "The metadata alternate title is used in another metadata record.",
+    "metadataDuplicatedField-identifier": "The metadata resource identifier is used in another metadata record."
 }

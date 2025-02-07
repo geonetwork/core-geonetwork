@@ -236,6 +236,7 @@
     "onlineUseDQReport": "Rapport de contrôle qualité",
     "onlineUseDQTOR": "Spécification de données",
     "onlineUseDQProdReport": "Rapport de production",
+    "onlineUseMap": "Carte",
     "onlineUseLegend": "Légende",
     "onlineUseLegendLYR": "Légende pour ArcGIS (LYR)",
     "onlineUseStyleSLD": "Légende (SLD)",
@@ -441,6 +442,8 @@
     "addOnlinesrc#API-help": "eg. view service, REST API",
     "addOnlinesrc#onlineDownload|localNetwork": "Ajouter un téléchargement",
     "addOnlinesrc#onlineDownload|localNetwork-help": "eg. fichier, service de téléchargement",
+    "addOnlinesrc#onlineUseMap": "Add map",
+    "addOnlinesrc#onlineUseMap-help": "eg. PDF static maps or OGC Web Map Context interactive maps",
     "addOnlinesrc#onlineUseLegend": "Ajouter une représentation",
     "addOnlinesrc#onlineUseLegend-help": "eg. LYR, QML, SLD",
     "addOnlinesrc#links": "Ajouter les liens",
@@ -454,5 +457,10 @@
     "associated-fcats": "Catalogue d'attributs",
     "associated-siblings": "Ressources associées",
     "associated-hasfeaturecats": "Utilisant ce catalogue d'attributs",
-    "associatedResourcesPanel": "Ressources associées"
+    "associatedResourcesPanel": "Ressources associées",
+    "validationSuccessLabel": "success",
+    "validationErrorLabel": "errors",
+    "metadataDuplicatedField-title": "The metadata title is used in another metadata record.",
+    "metadataDuplicatedField-altTitle": "The metadata alternate title is used in another metadata record.",
+    "metadataDuplicatedField-identifier": "The metadata resource identifier is used in another metadata record."
 }

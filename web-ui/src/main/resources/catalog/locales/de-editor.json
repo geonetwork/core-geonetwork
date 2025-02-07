@@ -165,7 +165,7 @@
     "linkToParentTitle": "Verbinde einen Eltern-Metadatensatz mit dem aktuellen Metadatensatz",
     "linkToService": "Mit einem Service verlinken",
     "linkToServiceTitle": "Verbinde einen Dienst mit dem aktuellen Metadatensatz",
-    "linkToSibling": "Link to records",
+    "linkToSibling": "Link zu Datensätzen",
     "linkToSiblingTitle": "Verlinke eine Resource mit dem aktuellen Metadatensatz",
     "linkToSource": "Mit dem Herkunfts-Datensatz verlinken",
     "linkToSourceTitle": "Verlinke einen Ursprungsdatensatz mit dem aktuellen Metadatensatz",
@@ -236,6 +236,7 @@
     "onlineUseDQReport": "Datenqualitätsbericht",
     "onlineUseDQTOR": "Datenqualitätsspezifikation",
     "onlineUseDQProdReport": "Datenqualitätsproduktionsbericht",
+    "onlineUseMap": "Karte",
     "onlineUseLegend": "Legende der Ressource",
     "onlineUseLegendLYR": "Stil der Ressource für ArcGIS (LYR)",
     "onlineUseStyleSLD": "Stil der Ressource unter Verwendung von SLD",
@@ -441,6 +442,8 @@
     "addOnlinesrc#API-help": "z. B. view service, REST API",
     "addOnlinesrc#onlineDownload|localNetwork": "Download hinzufügen",
     "addOnlinesrc#onlineDownload|localNetwork-help": "z. B. Datei, download service, lokale Netzwerklinks",
+    "addOnlinesrc#onlineUseMap": "Karte hinzufügen",
+    "addOnlinesrc#onlineUseMap-help": "z. B. statische PDF-Karten oder interaktive OGC Web Map Context-Karten",
     "addOnlinesrc#onlineUseLegend": "Darstellung hinzufügen",
     "addOnlinesrc#onlineUseLegend-help": "z. B. LYR, QML, SLD Dateien",
     "addOnlinesrc#links": "Links hinzufügen",
@@ -454,5 +457,10 @@
     "associated-fcats": "Objektartenkatalaog",
     "associated-siblings": "Verlinkte Ressourcen",
     "associated-hasfeaturecats": "Diesen Feature Katalog gebrauchen",
-    "associatedResourcesPanel": "Verlinkte Ressourcen"
+    "associatedResourcesPanel": "Verlinkte Ressourcen",
+    "validationSuccessLabel": "erfolgreich",
+    "validationErrorLabel": "Fehler",
+    "metadataDuplicatedField-title": "Der Metadatentitel wird bereits in einem anderen Metadatensatz verwendet.",
+    "metadataDuplicatedField-altTitle": "Der Kurz-Titel (Alternativtitel) wird bereits in einem anderen Metadatensatz verwendet.",
+    "metadataDuplicatedField-identifier": "Der Ressourcenidentifikator (MD_Identifier/code) wird bereits in einem anderen Metadatensatz verwendet."
 }
