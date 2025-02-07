@@ -83,6 +83,8 @@
   -->
   <xsl:template mode="iso19115-3-to-dcat"
                 match="mdb:identificationInfo/*/mri:associatedResource">
+    <!--
+    Disabled / See dcat-core-resource using the related API
     <xsl:variable name="associationType"
                   select="*/mri:associationType/*/@codeListValue"/>
     <xsl:variable name="initiativeType"
@@ -106,6 +108,6 @@
                            select="*/mri:metadataReference|*/mri:aggregateDataSetIdentifier">
         <xsl:with-param name="isAbout" select="false()"/>
       </xsl:apply-templates>
-    </xsl:element>
+    </xsl:element>-->
   </xsl:template>
 </xsl:stylesheet>

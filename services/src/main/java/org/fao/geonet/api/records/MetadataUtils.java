@@ -49,6 +49,7 @@ import org.fao.geonet.domain.Source;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.datamanager.IMetadataValidator;
+import org.fao.geonet.kernel.datamanager.base.BaseMetadataUtils;
 import org.fao.geonet.kernel.schema.AssociatedResource;
 import org.fao.geonet.kernel.schema.AssociatedResourcesSchemaPlugin;
 import org.fao.geonet.kernel.schema.SchemaPlugin;
@@ -61,8 +62,12 @@ import org.fao.geonet.repository.SourceRepository;
 import org.fao.geonet.repository.specification.MetadataValidationSpecs;
 import org.fao.geonet.services.relations.Get;
 import org.fao.geonet.utils.Log;
+import org.fao.geonet.utils.Xml;
 import org.jdom.Content;
+import org.jdom.Document;
 import org.jdom.Element;
+import org.jdom.JDOMException;
+import org.jdom.output.DOMOutputter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
@@ -72,6 +77,7 @@ import java.util.stream.Collectors;
 
 import static org.fao.geonet.kernel.search.EsFilterBuilder.buildPermissionsFilter;
 import static org.fao.geonet.kernel.search.EsSearchManager.*;
+import org.w3c.dom.Node;
 
 
 /**
@@ -138,6 +144,53 @@ public class MetadataUtils {
             return remoteRecords;
         }
     }
+
+
+    public static Node getAssociatedAsXml(String metadataUuid) {
+        Element relations = new Element("relations");
+        BaseMetadataUtils metadataUtils = ApplicationContextHolder.get().getBean(BaseMetadataUtils.class);
+        AbstractMetadata metadataEntity = metadataUtils.findOneByUuid(metadataUuid);
+
+        ServiceContext context = ServiceContext.get();
+
+
+        try {
+            Map<RelatedItemType, List<AssociatedRecord>> associated = MetadataUtils.getAssociated(context, metadataEntity, RelatedItemType.values(), 0, 100);
+            for (Map.Entry<RelatedItemType, List<AssociatedRecord>> entry : associated.entrySet()) {
+                for (AssociatedRecord record : entry.getValue()) {
+                    Element relation = new Element(entry.getKey().name());
+                    relation.setAttribute("uuid", record.getUuid());
+                    relation.setAttribute("origin", record.getOrigin());
+                    if (record.getProperties() != null) {
+                        if (record.getProperties().get("associationType") != null) {
+                            relation.setAttribute("associationType", record.getProperties().get("associationType"));
+                        }
+                        if (record.getProperties().get("initiativeType") != null) {
+                            relation.setAttribute("initiativeType", record.getProperties().get("initiativeType"));
+                        }
+                        if (record.getProperties().get("resourceTitle") != null) {
+                            relation.setAttribute("resourceTitle", record.getProperties().get("resourceTitle"));
+                        }
+                        if (record.getProperties().get("url") != null) {
+                            relation.setAttribute("url", record.getProperties().get("url"));
+                        }
+                    }
+                    relation.addContent(Xml.getXmlFromJSON(record.getRecord().toPrettyString()));
+                    relations.addContent(relation);
+                }
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        DOMOutputter outputter = new DOMOutputter();
+        try {
+            return outputter.output(new Document(relations));
+        } catch (JDOMException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 
     public static Map<RelatedItemType, List<AssociatedRecord>> getAssociated(
         ServiceContext context,
