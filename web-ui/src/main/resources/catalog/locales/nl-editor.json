@@ -236,6 +236,7 @@
     "onlineUseDQReport": "Data kwaliteits rapport",
     "onlineUseDQTOR": "Data kwaliteits specificatie",
     "onlineUseDQProdReport": "Data kwaliteits productie rapport",
+    "onlineUseMap": "Kaart",
     "onlineUseLegend": "Legenda voor de bron",
     "onlineUseLegendLYR": "Tekenstijl voor de ArcGIS bron (.lyr)",
     "onlineUseStyleSLD": "Tekenstijl voor de bron (SLD)",
@@ -441,6 +442,8 @@
     "addOnlinesrc#API-help": "eg. view service, REST API",
     "addOnlinesrc#onlineDownload|localNetwork": "Add download",
     "addOnlinesrc#onlineDownload|localNetwork-help": "eg. file, download service, local network links",
+    "addOnlinesrc#onlineUseMap": "Add map",
+    "addOnlinesrc#onlineUseMap-help": "eg. PDF static maps or OGC Web Map Context interactive maps",
     "addOnlinesrc#onlineUseLegend": "Add portrayal",
     "addOnlinesrc#onlineUseLegend-help": "eg. LYR, QML, SLD files",
     "addOnlinesrc#links": "Links toevoegen",
@@ -454,5 +457,10 @@
     "associated-fcats": "Feature catalogus",
     "associated-siblings": "Gerelateerde records",
     "associated-hasfeaturecats": "Met behulp van deze feature catalogus",
-    "associatedResourcesPanel": "Gerelateerde records"
+    "associatedResourcesPanel": "Gerelateerde records",
+    "validationSuccessLabel": "success",
+    "validationErrorLabel": "errors",
+    "metadataDuplicatedField-title": "The metadata title is used in another metadata record.",
+    "metadataDuplicatedField-altTitle": "The metadata alternate title is used in another metadata record.",
+    "metadataDuplicatedField-identifier": "The metadata resource identifier is used in another metadata record."
 }

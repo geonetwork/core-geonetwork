@@ -66,6 +66,7 @@ l=(
     'ka::ka'
     'ko::ko'
     'nl::nl'
+    'pl::pl'
     'pt::pt_BR'
     'ro::ro'
     'ru::ru'

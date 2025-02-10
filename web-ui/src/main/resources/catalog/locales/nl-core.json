@@ -126,6 +126,7 @@
     "featureCatalog": "Feature catalogus",
     "frequency": "Frequentie",
     "feebackSent": "Uw bericht is verzonden naar de metadata eigenaar.",
+    "feebackSentError": "An error occurred sending your to the catalog manager. Please try again later, contact the service provider, or report this issue.",
     "feedbackNotEnable": "Feedback is niet ingeschakeld.",
     "filter": "Filter",
     "filterSearch": "Zoekopties weergeven",
@@ -170,7 +171,7 @@
     "needAnAccount": "Heeft u een account nodig?",
     "needAnAccountInfo": "Meld je dan meteen aan, het duurt maar een minuut.",
     "needHelp": "Heb je hulp nodig",
-    "newAccountInfo": "Wanneer je een account aanvraagt wordt er een e-mail naar je verzonden met jouw gebruikersgegevens. Als een profiel voor gevorderde gebruikers wordt aangevraagd, dan zal de catalogus beheerder je verzoek verwerken en bij je terugkomen.",
+    "newAccountInfo": "When registering, an email will be sent to you with account details. The catalogue administrator will review group and profile requests.",
     "next": "Volgende",
     "noFileSelected": "Geen bestand geselecteerd",
     "noRecordFound": "Geen bestand gevonden.",
@@ -234,6 +235,7 @@
     "register": "Registreren",
     "rememberMe": "Onthoud mij",
     "requestedProfile": "Gevraagd profiel",
+    "requestedGroup": "Requested group",
     "resetPassword": "Wachtwoord bijwerken",
     "resetPasswordTitle": "Vervang {{user}} wachtwoord.",
     "resetPasswordError": "Er is een fout opgetreden bij het opnieuw instellen van het wachtwoord",
@@ -585,6 +587,6 @@
     "missingTitle": "Missing title",
     "mapLegend": "Legenda",
     "quality": "Kwaliteit",
-    "download": "Download bestand",
+    "download": "Download",
     "links": "Links"
 }
