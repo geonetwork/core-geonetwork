@@ -41,10 +41,21 @@
 
         <!-- Datahub endpoint -->
         <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/datahub.*" access="permitAll"/>
-
-        <sec:intercept-url pattern="/.*" access="denyAll"/>
-
       </sec:filter-security-metadata-source>
     </property>
+  </bean>
+  <bean id="filterChainFilters" class="java.util.ArrayList">
+    <constructor-arg>
+      <list>
+        <ref bean="securityContextPersistenceFilter" />
+        <ref bean="csrfFilter" />
+        <ref bean="logoutFilter" />
+        <ref bean="requestCacheFilter" />
+        <ref bean="anonymousFilter" />
+        <ref bean="sessionMgmtFilter" />
+        <ref bean="exceptionTranslationFilter" />
+        <ref bean="filterSecurityInterceptor" />
+      </list>
+    </constructor-arg>
   </bean>
 </beans>

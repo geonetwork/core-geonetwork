@@ -9,7 +9,7 @@ INSERT INTO Settings (name, value, datatype, position, internal) SELECT distinct
 INSERT INTO Settings (name, value, datatype, position, internal) SELECT distinct 'system/feedback/translationFollowsText', '', 0, 647, 'n' from settings WHERE NOT EXISTS (SELECT name FROM Settings WHERE name = 'system/feedback/translationFollowsText');
 
 
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('geonetwork-ui/datahub/enabled', 'false', 2, 7304, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('geonetwork-ui/datahub/enabled', 'false', 2, 7404, 'n');
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('geonetwork-ui/datahub/configuration', '
 [global]
 proxy_path = ""
@@ -82,4 +82,4 @@ background_color = "#fdfbff"
 # [translations.fr]
 # results.sortBy.dateStamp = "Dernière fois que quelqu''un a modifié quelque chose"
 
-', 0, 7305, 'n');
+', 0, 7405, 'n');
