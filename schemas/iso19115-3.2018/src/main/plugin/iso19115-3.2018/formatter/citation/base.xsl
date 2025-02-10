@@ -7,6 +7,7 @@
                 xmlns:mdb="http://standards.iso.org/iso/19115/-3/mdb/2.0"
                 xmlns:mri="http://standards.iso.org/iso/19115/-3/mri/1.0"
                 xmlns:mrd="http://standards.iso.org/iso/19115/-3/mrd/1.0"
+                xmlns:lan="http://standards.iso.org/iso/19115/-3/lan/1.0"
                 xmlns:xs="http://www.w3.org/2001/XMLSchema"
                 xmlns:xlink="http://www.w3.org/1999/xlink"
                 xmlns:gn-fn-iso19115-3.2018="http://geonetwork-opensource.org/xsl/functions/profiles/iso19115-3.2018"
@@ -92,6 +93,10 @@
                                     ('publication', 'revision')]/
                                     cit:date/gco:*[. != '']"/>
 
+
+    <xsl:variable name="datasetLanguage"
+                  select="$metadata/mdb:identificationInfo/*/mri:defaultLocale/*/lan:language/*/@codeListValue"/>
+
     <xsl:variable name="publicationDates" as="node()*">
       <xsl:perform-sort select="$dates">
         <xsl:sort select="." order="descending"/>
@@ -163,6 +168,7 @@
       <doiUrl><xsl:value-of select="$doiUrl"/></doiUrl>
       <xsl:copy-of select="$translatedKeywords"/>
       <additionalCitation><xsl:value-of select="$additionalCitation"/></additionalCitation>
+      <language><xsl:value-of select="$datasetLanguage" /></language>
     </citation>
 
   </xsl:template>
