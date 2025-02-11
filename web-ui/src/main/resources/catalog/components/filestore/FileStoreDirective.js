@@ -63,7 +63,6 @@
             scope.queue = [];
 
             var uploadFile = function () {
-              var uploadZone = $("#gn-upload-" + scope.id);
               scope.queue = [];
               scope.filestoreUploadOptions = angular.extend(
                 {
@@ -74,8 +73,8 @@
                     gnCurrentEdit.uuid +
                     "/attachments?visibility=" +
                     (scope.visibility || "public"),
-                  dropZone: uploadZone,
-                  pasteZone: uploadZone,
+                  dropZone: $("#gn-upload-" + scope.id),
+                  pasteZone: null,
                   // TODO: acceptFileTypes: /(\.|\/)(xml|skos|rdf)$/i,
                   done: uploadResourceSuccess,
                   fail: uploadResourceFailed,
