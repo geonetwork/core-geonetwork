@@ -61,6 +61,7 @@
               ? "public"
               : attrs["visibility"];
             scope.queue = [];
+            scope.singleUpload = true;
 
             var input = element.find("input");
             if (
