@@ -61,6 +61,7 @@
               ? "public"
               : attrs["visibility"];
             scope.queue = [];
+            scope.singleUpload = true;
 
             var input = element.find("input");
             if (
@@ -168,11 +169,6 @@
             scope.filestoreUploadOptions = {
               autoUpload: scope.autoUpload,
               singleUpload: false
-            };
-
-            scope.filestoreUploadOptionsSetResource = {
-              autoUpload: scope.autoUpload,
-              singleUpload: true
             };
 
             var defaultStatus = angular.isUndefined(attrs["defaultStatus"])
