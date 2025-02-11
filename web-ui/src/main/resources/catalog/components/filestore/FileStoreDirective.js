@@ -64,7 +64,6 @@
 
             var input = element.find("input");
             if (
-              scope.uploadOptions &&
               angular.isDefined(scope.uploadOptions) &&
               scope.uploadOptions.singleUpload === false
             ) {
