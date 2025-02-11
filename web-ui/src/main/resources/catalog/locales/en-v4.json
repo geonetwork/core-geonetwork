@@ -416,5 +416,10 @@
   "lastCreatedRecords": "Last created records",
   "associationType": "Association type",
   "initiativeType": "Initiative type",
-  "associatedTo": "Associated "
+  "associatedTo": "Associated ",
+  "mdEmail": "Email",
+  "mdWebsite": "Website",
+  "mdOrganization": "Organization",
+  "mdAddress": "Address",
+  "mdPhone": "Phone"
 }
