@@ -77,24 +77,25 @@ class Harvester implements IHarvester<HarvestResult> {
     private static String CONSTRAINT_LANGUAGE_VERSION = "1.1.0";
 
     //FIXME version should be parametrized
-    private static String GETCAPABILITIES_PARAMETERS = "SERVICE=CSW&REQUEST=GetCapabilities&VERSION=2.0.2";
+    private static final String GETCAPABILITIES_PARAMETERS = "SERVICE=CSW&REQUEST=GetCapabilities&VERSION=2.0.2";
     private final AtomicBoolean cancelMonitor;
 
     private Logger log;
-    private CswParams params;
-    private ServiceContext context;
+    private final CswParams params;
+    private final ServiceContext context;
 
     /**
      * Contains a list of accumulated errors during the executing of this harvest.
      */
-    private List<HarvestError> errors = new LinkedList<HarvestError>();
+    private final List<HarvestError> errors;
 
 
-    public Harvester(AtomicBoolean cancelMonitor, Logger log, ServiceContext context, CswParams params) {
+    public Harvester(AtomicBoolean cancelMonitor, Logger log, ServiceContext context, CswParams params, List<HarvestError> errors) {
         this.cancelMonitor = cancelMonitor;
         this.log = log;
         this.context = context;
         this.params = params;
+        this.errors = errors;
     }
 
     public HarvestResult harvest(Logger log) throws Exception {
@@ -733,9 +734,5 @@ class Harvester implements IHarvester<HarvestResult> {
         // UUID or date modified
         return null;
 
-    }
-
-    public List<HarvestError> getErrors() {
-        return errors;
     }
 }
