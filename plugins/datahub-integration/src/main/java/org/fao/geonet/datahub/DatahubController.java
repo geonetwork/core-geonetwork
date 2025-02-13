@@ -1,6 +1,5 @@
 package org.fao.geonet.datahub;
 
-import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpHeaders;
 import org.fao.geonet.ApplicationContextHolder;
@@ -15,7 +14,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 
-import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -68,7 +66,7 @@ public class DatahubController {
 
         File actualFile = getRequestedFile(request);
         if (!actualFile.exists()) {
-            actualFile = getFallbackFile(request);
+            actualFile = getFallbackFile();
             disableCacheForIndex(response);
         }
 
@@ -99,15 +97,41 @@ public class DatahubController {
     }
 
     private File getRequestedFile(HttpServletRequest request) {
-        ServletContext context = request.getServletContext();
         String reqPath = request.getPathInfo();
-        String filePath = Stream.of(reqPath.split("/")).skip(2).collect(Collectors.joining("/"));
-        return new File(context.getRealPath("/" + filePath));
+
+        // a req path will be "/srv/datahub/bla/bla"
+        String filePath = Stream.of(reqPath.split("/")).skip(3).collect(Collectors.joining("/"));
+        if (!FileUtils.fileExistsInJar("/datahub/" + filePath)) {
+            return new File(filePath); // return a non-existent file for consistancy downstream
+        }
+        try {
+            return FileUtils.getFileFromJar("/datahub/" + filePath);
+        } catch (IOException e) {
+            Log.error(LOGGER_NAME, e.getMessage());
+            return new File(filePath); // return a non-existent file for consistancy downstream
+        }
     }
 
-    private File getFallbackFile(HttpServletRequest request) {
-        ServletContext context = request.getServletContext();
-        return new File(context.getRealPath("/datahub/index.html"));
+    private File getFallbackFile()  {
+        String indexPath = "/datahub/index.html";
+        try{
+           return FileUtils.getFileFromJar(indexPath);
+        } catch (IOException e) {
+            Log.error(LOGGER_NAME, e.getMessage());
+            return new File(indexPath);
+        }
+        /*try (InputStream resourceAsStream = this.getClass().getResourceAsStream("/datahub/index.html")) {
+            if (resourceAsStream != null) {
+                File file = new File(context.getRealPath("/data-index.html"));
+                try (OutputStream out = new FileOutputStream(file)) {
+                    IOUtils.copy(resourceAsStream, out);
+                }
+                return file;
+        }
+        }catch (IOException e) {
+            Log.error(LOGGER_NAME, e.getMessage());
+        }*/
+
     }
 
     private void disableCacheForIndex(HttpServletResponse response) {
@@ -118,7 +142,7 @@ public class DatahubController {
 
     private void setResponseHeaders(HttpServletResponse response, File actualFile) throws IOException {
         response.setStatus(HttpServletResponse.SC_OK);
-        String extension = FilenameUtils.getExtension(actualFile.getName()).toLowerCase();
+        String extension = actualFile.getName().toLowerCase();
         String contentType = extension.equals("js") ? "text/javascript; charset=UTF-8" : Files.probeContentType(actualFile.toPath());
         response.setContentType(contentType);
     }

@@ -184,7 +184,7 @@
             <configuration>
               <overwrite>true</overwrite>
               <encoding>UTF-8</encoding>
-              <outputDirectory>${project.build.directory}/webapp/datahub</outputDirectory>
+              <outputDirectory>src/main/resources/datahub</outputDirectory>
               <resources>
                 <resource>
                   <directory>src/main/geonetwork-ui/dist/apps/datahub</directory>
