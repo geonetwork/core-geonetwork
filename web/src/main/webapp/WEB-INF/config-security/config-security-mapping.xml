@@ -35,12 +35,6 @@
     <property name="accessDecisionManager" ref="accessDecisionManager"></property>
     <property name="securityMetadataSource">
       <sec:filter-security-metadata-source use-expressions="true" request-matcher="regex">
-        <sec:intercept-url
-          pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/datahub.*"
-          access="permitAll"/>
-
-        <!-- Datahub endpoint -->
-        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/datahub.*" access="permitAll"/>
         <sec:intercept-url pattern="/metadata/.*" access="permitAll"/>
 
         <sec:intercept-url pattern="/api/.*" access="permitAll"/>
@@ -262,8 +256,12 @@
         <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/getSLD/.*" access="permitAll"/>
 
         <!-- Datahub endpoint -->
-        <sec:intercept-url pattern="/.*" access="denyAll"/>
+        <sec:intercept-url
+          pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/datahub.*"
+          access="permitAll"/>
+        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/datahub.*" access="permitAll"/>
 
+        <sec:intercept-url pattern="/.*" access="denyAll"/>
       </sec:filter-security-metadata-source>
     </property>
   </bean>
