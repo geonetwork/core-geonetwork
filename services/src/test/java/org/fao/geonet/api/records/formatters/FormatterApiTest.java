@@ -35,8 +35,10 @@ import org.apache.jena.shacl.ShaclValidator;
 import org.apache.jena.shacl.Shapes;
 import org.apache.jena.shacl.ValidationReport;
 import org.apache.jena.shacl.lib.ShLib;
+import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.services.AbstractServiceIntegrationTest;
+import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.junit.Before;
@@ -166,6 +168,13 @@ public class FormatterApiTest extends AbstractServiceIntegrationTest {
                             .ignoreComments()
                             .checkForSimilar()
                             .build();
+
+                    if (diff.hasDifferences()) {
+                        diff.getDifferences().forEach(difference -> {
+                            Log.error(Geonet.FORMATTER, difference.getResult().toString());
+                        });
+                    }
+
                     assertFalse(
                             String.format("%s: %s. Checked with %s. Differences: %s", schema, url, checkfile, diff.toString()),
                             diff.hasDifferences());
