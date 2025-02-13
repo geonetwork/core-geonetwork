@@ -40,4 +40,4 @@ Disclosure workflow:
 
 This approach provides everyone a chance to update prior to public disclosure.
 
-Those seeking greater transparency are encouraged to [volunteer as a committer](CONTRIBUTING.md#core-commit-access), or work with one of the [commercial support provides](https://www.osgeo.org/service-providers/?p=geonetwork) to particiapte on your behalf.
+Those seeking greater transparency are encouraged to [volunteer as a committer](CONTRIBUTING.md#core-commit-access), or work with one of the [commercial support providers](https://www.osgeo.org/service-providers/?p=geonetwork) to participate on your behalf.
