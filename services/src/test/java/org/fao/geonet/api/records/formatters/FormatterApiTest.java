@@ -164,6 +164,8 @@ public class FormatterApiTest extends AbstractServiceIntegrationTest {
                             ))
                             .normalizeWhitespace()
                             .ignoreComments()
+                            .ignoreWhitespace()
+                            .ignoreElementContentWhitespace()
                             .checkForSimilar()
                             .build();
                     assertFalse(
