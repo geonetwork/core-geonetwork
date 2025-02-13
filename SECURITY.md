@@ -34,7 +34,7 @@ For more information see [How to contribute](https://github.com/geonetwork/core-
 Disclosure workflow:
 
 1. GitHub [security advisory](https://github.com/geonetwork/core-geonetwork/security) used to reserve a CVE number.
-2. Vulnerability addressed and backported to "latest" and "stable" branches, allowing origional reporter to verify nightly build.
+2. Vulnerability addressed and backported to "latest" and "stable" branches, allowing original reporter to verify nightly build.
 3. Fix available in published release for all "supported versions" identified above, providing an opportunity for everyone to update.
 4. The CVE vulnerability is published with mitigation and patch instructions.
 
