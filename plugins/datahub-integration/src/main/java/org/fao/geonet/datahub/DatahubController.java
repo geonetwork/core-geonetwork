@@ -120,18 +120,6 @@ public class DatahubController {
             Log.error(LOGGER_NAME, e.getMessage());
             return new File(indexPath);
         }
-        /*try (InputStream resourceAsStream = this.getClass().getResourceAsStream("/datahub/index.html")) {
-            if (resourceAsStream != null) {
-                File file = new File(context.getRealPath("/data-index.html"));
-                try (OutputStream out = new FileOutputStream(file)) {
-                    IOUtils.copy(resourceAsStream, out);
-                }
-                return file;
-        }
-        }catch (IOException e) {
-            Log.error(LOGGER_NAME, e.getMessage());
-        }*/
-
     }
 
     private void disableCacheForIndex(HttpServletResponse response) {
