@@ -10,6 +10,7 @@ import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.SourceRepository;
 import org.fao.geonet.utils.Log;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -29,6 +30,12 @@ import static org.fao.geonet.kernel.schema.SchemaPlugin.LOGGER_NAME;
 @RequestMapping(value = {"/{geonetworkPath:[a-zA-Z0-9_\\-]+}"})
 @Controller("datahub")
 public class DatahubController {
+
+    @Autowired
+    SourceRepository sourceRepository;
+
+    @Autowired
+    SettingManager settingManager;
 
     @RequestMapping("/datahub")
     public void handleDatahub(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -77,7 +84,7 @@ public class DatahubController {
     }
 
     private boolean isDatahubEnabled() {
-        return Objects.equals(getSettingManager().getValue(Settings.GEONETWORK_UI_DATAHUB_ENABLED), "true");
+        return Objects.equals(settingManager.getValue(Settings.GEONETWORK_UI_DATAHUB_ENABLED), "true");
     }
 
     private String getPortalName(HttpServletRequest request) {
@@ -87,7 +94,6 @@ public class DatahubController {
     }
 
     private boolean isPortalDatahubEnabled(String portalName) {
-        SourceRepository sourceRepository = getSourceRepository();
         if (NodeInfo.DEFAULT_NODE.equals(portalName)) {
             return isDatahubEnabled();
         } else if (sourceRepository.existsByUuidAndType(portalName, SourceType.subportal)) {
@@ -148,10 +154,10 @@ public class DatahubController {
         outStream.close();
     }
     private InputStream readConfiguration(String portalName) {
-        String configuration = getSettingManager().getValue(Settings.GEONETWORK_UI_DATAHUB_CONFIGURATION);
+        String configuration = settingManager.getValue(Settings.GEONETWORK_UI_DATAHUB_CONFIGURATION);
 
         if (!portalName.equals(NodeInfo.DEFAULT_NODE)) {
-            Source portal = getSourceRepository().findOneByUuid(portalName);
+            Source portal = sourceRepository.findOneByUuid(portalName);
             if (portal != null && !portal.getDatahubConfiguration().isEmpty()) {
                 configuration = portal.getDatahubConfiguration();
             }
@@ -161,13 +167,6 @@ public class DatahubController {
         configuration = configuration.replaceAll("\ngeonetwork4_api_url\\s?=.+", "\n")
             .replace("[global]", "[global]\ngeonetwork4_api_url = \"/geonetwork/" + portalName + "/api\"");
         return new ByteArrayInputStream(configuration.getBytes());
-    }
-
-    private SettingManager getSettingManager() {
-        return ApplicationContextHolder.get().getBean(SettingManager.class);
-    }
-    private SourceRepository getSourceRepository() {
-        return ApplicationContextHolder.get().getBean(SourceRepository.class);
     }
 
 }
