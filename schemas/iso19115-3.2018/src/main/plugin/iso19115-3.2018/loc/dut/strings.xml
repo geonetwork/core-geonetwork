@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (C) 2001-2025 Food and Agriculture Organization of the
+  ~ United Nations (FAO-UN), United Nations World Food Programme (WFP)
+  ~ and United Nations Environment Programme (UNEP)
+  ~
+  ~ This program is free software; you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation; either version 2 of the License, or (at
+  ~ your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful, but
+  ~ WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+  ~ General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program; if not, write to the Free Software
+  ~ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
+  ~
+  ~ Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
+  ~ Rome - Italy. email: geonetwork@osgeo.org
+  -->
+
+<strings>
+
+  <!-- XSD error translation -->
+  <invalidElement>Invalid content found at element </invalidElement>
+  <onElementOf>One of the following elements </onElementOf>
+  <isExpected> is expected.</isExpected>
+  <isNotComplete> is not complete.</isNotComplete>
+  <elementLocated> Parent element is </elementLocated>
+  <missingElement>Missing element in </missingElement>
+  <invalidValue>Invalid or missing value.</invalidValue>
+  <notValidFor> is not a valid value for </notValidFor>
+  <xsdErrorIs>XSD error is: </xsdErrorIs>
+  <inElement> in element </inElement>
+  <enum1>Value </enum1>
+  <enum2> is not valid for the field </enum2>
+  <enum3>Potential values are: </enum3>
+  <selectFeaturetype>Select a feature type</selectFeaturetype>
+  <missingFeatureTypeName>New feature type</missingFeatureTypeName>
+
+
+
+  <understandResource>Informatie over de dataset</understandResource>
+  <relatedResources>Gerelateerde services en gekoppelde data</relatedResources>
+  <techInfo>Technische informatie</techInfo>
+  <contactInfo>Contact informatie</contactInfo>
+  <mdContactInfo>Metadata contact</mdContactInfo>
+  <refDate>Referentie datum</refDate>
+  <temporalRef>Temporele informatie</temporalRef>
+  <constraintInfo>Toegang restrictie informatie</constraintInfo>
+  <xml_iso19139>Save this metadata as an ISO19139 XML file</xml_iso19139>
+  <xml_iso19139Tooai_dc>Save this metadata as an OAI Dublin Core XML file
+  </xml_iso19139Tooai_dc>
+  <resourceLineageTab>Lineage</resourceLineageTab>
+
+  <advanced>Volledig</advanced>
+  <default>Standaard</default>
+  <simple>Eenvoudig</simple>
+  <inspire>INSPIRE</inspire>
+  <inspireTheme>INSPIRE themes</inspireTheme>
+  <inspireThemeMandatory>INSPIRE themes*</inspireThemeMandatory>
+  <resource>Bron</resource>
+  <xml>XML</xml>
+  <metadata>Metadata</metadata>
+  <identificationInfo>Identificatie</identificationInfo>
+  <distributionInfo>Distributie</distributionInfo>
+  <dataQualityInfo>Kwaliteit</dataQualityInfo>
+  <resourceLineage>Lineage</resourceLineage>
+  <spatialRepresentationInfo>Ruimtelijke rep.</spatialRepresentationInfo>
+  <referenceSystemInfo>Ref. systeem</referenceSystemInfo>
+  <contentInfo>Inhoud</contentInfo>
+  <portrayalCatalogueInfo>Weergave</portrayalCatalogueInfo>
+  <metadataConstraints>Md. restricties</metadataConstraints>
+  <metadataMaintenance>Md. ouderhoud</metadataMaintenance>
+  <applicationSchemaInfo>Schema info</applicationSchemaInfo>
+  <acquisitionInformation>Acquisition info</acquisitionInformation>
+  <qualityMeasures>Q. measures</qualityMeasures>
+
+  <bboxesSection>Geographic coverage</bboxesSection>
+  <overviews>Overviews</overviews>
+  <metadataInXML>XML</metadataInXML>
+  <providedBy>Provided by</providedBy>
+  <shareOnSocialSite>Share on social sites</shareOnSocialSite>
+  <viewMode>Views</viewMode>
+  <linkToPortal>Access to the catalogue</linkToPortal>
+  <linkToPortal-help>Read here the full details and access to the data.</linkToPortal-help>
+  <citationProposal>Citation proposal</citationProposal>
+  <citationProposal-help>This proposal was automatically generated, check if the metadata authors did not specified custom citation requirements.</citationProposal-help>
+  <citationAdditional>When using this resource in a publication, also cite the related work(s) with:</citationAdditional>
+  <associatedResources>Associated resources</associatedResources>
+
+
+  <add-resource-id>Compute resource identifier</add-resource-id>
+  <add-resource-idHelp>Compose the resource identifier using the catalog URL and
+    the metadata identifier (eg.
+    http://www.organization.org/catalogue/5391bf69-44bc-4ea0-8cc0-6cf6c3bc81ae).
+  </add-resource-idHelp>
+  <add-extent-from-geokeywords>Add extent for each keywords</add-extent-from-geokeywords>
+  <add-one-extent-from-geokeywords>Add one extent from all keywords</add-one-extent-from-geokeywords>
+  <add-extent-from-geokeywordsHelp>Analyze each keyword of type place and add
+    matching extent.
+  </add-extent-from-geokeywordsHelp>
+  <extent>Geographic bounding box</extent>
+  <spatialExtent>Ruimtelijke dekking</spatialExtent>
+  <freeTextKeywords>Other keywords</freeTextKeywords>
+  <noThesaurusName>Trefwoorden</noThesaurusName>
+</strings>
