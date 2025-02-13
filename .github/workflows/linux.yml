@@ -12,7 +12,7 @@ jobs:
     strategy:
       matrix:
         include:
-          - os: ubuntu-22.04
+          - os: ubuntu-24.04
             jdk: 8
     steps:
     - uses: actions/checkout@v4
@@ -46,7 +46,7 @@ jobs:
         find ~/.m2/repository -name "*SNAPSHOT*" -type d | xargs rm -rf {}
 
   QA:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
     - uses: actions/checkout@v4
       with:
