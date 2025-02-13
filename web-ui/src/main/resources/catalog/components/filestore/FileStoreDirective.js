@@ -83,6 +83,7 @@
                     "/attachments?visibility=" +
                     (scope.visibility || "public"),
                   dropZone: $("#gn-upload-" + scope.id),
+                  pasteZone: null,
                   // TODO: acceptFileTypes: /(\.|\/)(xml|skos|rdf)$/i,
                   done: uploadResourceSuccess,
                   fail: uploadResourceFailed,
