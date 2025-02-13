@@ -153,8 +153,8 @@ public class FormatterApiTest extends AbstractServiceIntegrationTest {
                         }
                     }
 
-                    FileUtils.writeStringToFile(new File("/tmp/services/src/test/resources/org/fao/geonet/api/records/formatters/new/" + String.format("%s-%s-%s",
-                            schema, formatter, checkfile)), actual.replaceFirst("urn:uuid/.*</dct:identifier>", "urn:uuid/{uuid}</dct:identifier>"), StandardCharsets.UTF_8);
+                    //FileUtils.writeStringToFile(new File("/tmp/services/src/test/resources/org/fao/geonet/api/records/formatters/new/" + String.format("%s-%s-%s",
+                    //        schema, formatter, checkfile)), actual.replaceFirst("urn:uuid/.*</dct:identifier>", "urn:uuid/{uuid}</dct:identifier>"), StandardCharsets.UTF_8);
 
                     Diff diff = DiffBuilder
                             .compare(Input.fromString(expected))
