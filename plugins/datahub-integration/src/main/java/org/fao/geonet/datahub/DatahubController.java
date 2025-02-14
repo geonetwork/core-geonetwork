@@ -2,7 +2,6 @@ package org.fao.geonet.datahub;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpHeaders;
-import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.NodeInfo;
 import org.fao.geonet.domain.Source;
 import org.fao.geonet.domain.SourceType;
@@ -12,8 +11,8 @@ import org.fao.geonet.repository.SourceRepository;
 import org.fao.geonet.utils.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -31,6 +30,8 @@ import static org.fao.geonet.kernel.schema.SchemaPlugin.LOGGER_NAME;
 @Controller("datahub")
 public class DatahubController {
 
+    public static final String DATAHUB_CONFIGURATION_PATH = "datahub-configuration/";
+
     @Autowired
     SourceRepository sourceRepository;
 
@@ -39,39 +40,39 @@ public class DatahubController {
 
     @RequestMapping("/datahub")
     public void handleDatahub(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        handleDatahubRequest(request, response);
+        handleDatahubRequest(request, response, null);
     }
 
     @RequestMapping("/{locale:[a-z]{2,3}}/datahub")
-    public void handleLocalizedDatahub(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        handleDatahubRequest(request, response);
+    public void handleLocalizedDatahub(HttpServletRequest request, HttpServletResponse response, @PathVariable String locale) throws IOException {
+        handleDatahubRequest(request, response,locale);
     }
 
     @RequestMapping("/datahub/**")
     public void handleDatahubWithFilepath(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        handleDatahubRequest(request, response);
+        handleDatahubRequest(request, response,null);
     }
 
     @RequestMapping("/{locale:[a-z]{2,3}}/datahub/**")
-    public void handleLocalizedDatahubWithFilepath(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        handleDatahubRequest(request, response);
+    public void handleLocalizedDatahubWithFilepath(HttpServletRequest request, HttpServletResponse response, @PathVariable String locale) throws IOException {
+        handleDatahubRequest(request, response, locale);
     }
 
-    private HttpServletResponse handleDatahubRequest(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    private void handleDatahubRequest(HttpServletRequest request, HttpServletResponse response,String locale) throws IOException {
         Log.debug(LOGGER_NAME, "enter in datahub");
 
         if (!isDatahubEnabled()) {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-            return response;
+            return;
         }
 
         String portalName = getPortalName(request);
         if (!isPortalDatahubEnabled(portalName)) {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-            return response;
+            return;
         }
 
-        File actualFile = getRequestedFile(request);
+        File actualFile = getRequestedFile(request, locale);
         if (!actualFile.exists()) {
             actualFile = getFallbackFile();
             disableCacheForIndex(response);
@@ -79,8 +80,6 @@ public class DatahubController {
 
         setResponseHeaders(response, actualFile);
         writeResponseContent(request, response, actualFile, portalName);
-
-        return response;
     }
 
     private boolean isDatahubEnabled() {
@@ -102,11 +101,14 @@ public class DatahubController {
         return false;
     }
 
-    private File getRequestedFile(HttpServletRequest request) {
+    private File getRequestedFile(HttpServletRequest request, String locale) {
         String reqPath = request.getPathInfo();
+        int pathPartToSkip = 3;// "/srv/datahub/bla/bla"
+        if (locale != null) {
+            pathPartToSkip = 4;// /srv/fre/datahub/bla/bla
+        }
 
-        // a req path will be "/srv/datahub/bla/bla"
-        String filePath = Stream.of(reqPath.split("/")).skip(3).collect(Collectors.joining("/"));
+        String filePath = Stream.of(reqPath.split("/")).skip(pathPartToSkip).collect(Collectors.joining("/"));
         if (!FileUtils.fileExistsInJar("/datahub/" + filePath)) {
             return new File(filePath); // return a non-existent file for consistancy downstream
         }
