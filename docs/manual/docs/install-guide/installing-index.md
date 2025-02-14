@@ -113,7 +113,7 @@ By default, GeoNetwork expects Elasticsearch to be running at <http://localhost:
 * Define the connection details in Java properties.
 
   ```shell
-  export JAVA_OPTS="$JAVA_OPTS -Des.protocol=http -Des.port=9200 -Des.host=localhost -Des.url=http://localhost:9200 -Des.username= -Des.password="
+  export JAVA_OPTS="$JAVA_OPTS -Des.protocol=http -Des.port=9200 -Des.host=localhost  -Des.protocol=http -Des.username= -Des.password="
   ```
 
 * Define the connection details in environment variables.
@@ -122,7 +122,6 @@ By default, GeoNetwork expects Elasticsearch to be running at <http://localhost:
   export GEONETWORK_ES_HOST=localhost
   export GEONETWORK_ES_PROTOCOL=http
   export GEONETWORK_ES_PORT=9200
-  export GEONETWORK_ES_URL=$GEONETWORK_ES_PROTOCOL://$GEONETWORK_ES_HOST:$GEONETWORK_ES_PORT
   export GEONETWORK_ES_USERNAME=
   export GEONETWORK_ES_PASSWORD=
   ```
@@ -133,7 +132,6 @@ By default, GeoNetwork expects Elasticsearch to be running at <http://localhost:
   es.protocol=#{systemEnvironment['GEONETWORK_ES_PROTOCOL']?:'http'}
   es.port=#{systemEnvironment['GEONETWORK_ES_PORT']?:9200}
   es.host=#{systemEnvironment['GEONETWORK_ES_HOST']?:'localhost'}
-  es.url=#{systemEnvironment['GEONETWORK_ES_URL']?:'http://localhost:9200'}
   es.username=#{systemEnvironment['GEONETWORK_ES_USERNAME']?:''}
   es.password=#{systemEnvironment['GEONETWORK_ES_PASSWORD']?:''}
   ```
