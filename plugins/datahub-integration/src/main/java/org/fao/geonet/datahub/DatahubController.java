@@ -11,8 +11,10 @@ import org.fao.geonet.repository.SourceRepository;
 import org.fao.geonet.utils.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.view.RedirectView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -30,28 +32,34 @@ import static org.fao.geonet.kernel.schema.SchemaPlugin.LOGGER_NAME;
 @Controller("datahub")
 public class DatahubController {
 
-    public static final String DATAHUB_CONFIGURATION_PATH = "datahub-configuration/";
-
     @Autowired
     SourceRepository sourceRepository;
 
     @Autowired
     SettingManager settingManager;
 
-    @RequestMapping("/datahub")
-    public void handleDatahub(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        handleDatahubRequest(request, response, null);
+    @GetMapping("/datahub")
+    public RedirectView redirectDatahub(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        String uri = request.getRequestURI();
+        if (!uri.endsWith("/")) {
+            uri += "/";
+        }
+        return new RedirectView(uri + "index.html");
     }
 
-    @RequestMapping("/{locale:[a-z]{2,3}}/datahub")
-    public void handleLocalizedDatahub(HttpServletRequest request, HttpServletResponse response, @PathVariable String locale) throws IOException {
-        handleDatahubRequest(request, response,locale);
+    @GetMapping("/{locale:[a-z]{2,3}}/datahub")
+    public RedirectView redirectLocalizedDatahub(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        String uri = request.getRequestURI();
+        if (!uri.endsWith("/")) {
+            uri += "/";
+        }
+        return new RedirectView(uri + "index.html");
     }
 
     @RequestMapping("/datahub/**")
     public void handleDatahubWithFilepath(HttpServletRequest request, HttpServletResponse response) throws IOException {
         handleDatahubRequest(request, response,null);
-    }
+    }//TODO en mode portail je me fais rediriger avant d'arriver ici et j'ai srv aulieu de portalUUID
 
     @RequestMapping("/{locale:[a-z]{2,3}}/datahub/**")
     public void handleLocalizedDatahubWithFilepath(HttpServletRequest request, HttpServletResponse response, @PathVariable String locale) throws IOException {
@@ -170,5 +178,4 @@ public class DatahubController {
             .replace("[global]", "[global]\ngeonetwork4_api_url = \"/geonetwork/" + portalName + "/api\"");
         return new ByteArrayInputStream(configuration.getBytes());
     }
-
 }
