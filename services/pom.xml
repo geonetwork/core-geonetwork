@@ -363,7 +363,7 @@
                 <include>**/*.java</include>
               </includes>
               <runOrder>alphabetical</runOrder>
-              <forkCount>1</forkCount>
+              <forkCount>${system.numCores}</forkCount>
             </configuration>
             <executions>
               <execution>
