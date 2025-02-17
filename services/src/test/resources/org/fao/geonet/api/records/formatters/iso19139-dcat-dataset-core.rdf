@@ -40,7 +40,7 @@
     <dct:description xml:lang="nl">Regionaal Fietsnetwerk van provincie Utrecht. Samengesteld op basis van de dataset 'links' van de fietsersbond en aangevuld met opmerkingen van de gemeenten mbt type netwerk.  De attribuutwaarden van de fietsersbond zijn uit deze dataset verwijderd. In november 2024 zijn wat wijzigingen aangebracht.</dct:description>
     <adms:status>
       <skos:Concept rdf:about="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#onGoing">
-        <skos:prefLabel xml:lang="dut">On going</skos:prefLabel>
+        <skos:prefLabel xml:lang="dut">continu geactualiseerd</skos:prefLabel>
       </skos:Concept>
     </adms:status>
     <prov:qualifiedAttribution>
