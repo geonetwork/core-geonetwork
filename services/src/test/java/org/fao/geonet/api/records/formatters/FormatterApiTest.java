@@ -167,8 +167,8 @@ public class FormatterApiTest extends AbstractServiceIntegrationTest {
                             .checkForSimilar()
                             .build();
                     assertFalse(
-                            String.format("%s: %s. Checked with %s. Differences: %s", schema, url, checkfile, diff.toString()),
-                            diff.hasDifferences());
+                        String.format("%s: %s. Checked with %s. Differences: %s. Expected: %s. Actual: %s", schema, url, checkfile, diff.toString(), expected, actual),
+                        diff.hasDifferences());
 
                     if (isRdf) {
                         String[] shaclValidation = {};
