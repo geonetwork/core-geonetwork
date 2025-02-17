@@ -236,6 +236,7 @@
     "onlineUseDQReport": "Məlumat keyfiyyəti hesabatı",
     "onlineUseDQTOR": "Məlumat keyfiyyətinin spesifikasiyası",
     "onlineUseDQProdReport": "Məlumatların keyfiyyətinin istehsalı hesabatı",
+    "onlineUseMap": "Map",
     "onlineUseLegend": "Resurs üçün əfsanə",
     "onlineUseLegendLYR": "ArcGIS (LYR) üçün resurs üslubu",
     "onlineUseStyleSLD": "SLD istifadə edərək resurs üçün üslub",
@@ -441,6 +442,8 @@
     "addOnlinesrc#API-help": "məs. baxış xidməti, REST API",
     "addOnlinesrc#onlineDownload|localNetwork": "Yükləmə əlavə edin",
     "addOnlinesrc#onlineDownload|localNetwork-help": "məs. fayl, yükləmə xidməti, yerli şəbəkə bağlantıları",
+    "addOnlinesrc#onlineUseMap": "Add map",
+    "addOnlinesrc#onlineUseMap-help": "eg. PDF static maps or OGC Web Map Context interactive maps",
     "addOnlinesrc#onlineUseLegend": "Təsvir əlavə edin",
     "addOnlinesrc#onlineUseLegend-help": "məs. LYR, QML, SLD faylları",
     "addOnlinesrc#links": "Bağlantılar əlavə edin",
@@ -454,5 +457,10 @@
     "associated-fcats": "Xüsusiyyətlər kataloqu",
     "associated-siblings": "Əlaqədar resurslar",
     "associated-hasfeaturecats": "Bu xüsusiyyət kataloqundan istifadə",
-    "associatedResourcesPanel": "Əlaqədar resurslar"
+    "associatedResourcesPanel": "Əlaqədar resurslar",
+    "validationSuccessLabel": "success",
+    "validationErrorLabel": "errors",
+    "metadataDuplicatedField-title": "The metadata title is used in another metadata record.",
+    "metadataDuplicatedField-altTitle": "The metadata alternate title is used in another metadata record.",
+    "metadataDuplicatedField-identifier": "The metadata resource identifier is used in another metadata record."
 }

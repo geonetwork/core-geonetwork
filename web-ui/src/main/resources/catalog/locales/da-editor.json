@@ -118,7 +118,7 @@
     "datasetFound": "Datasæt fundet og tilføjet til kortvisning",
     "datasetNotFound": "Datasæt ikke fundet - 404",
     "datasets": "Datasæt",
-    "dateMode": "Dato eller dato tid",
+    "dateMode": "Dato eller dato og klokkeslæt",
     "description": "Beskrivelse",
     "directory": "Mappe sti",
     "directoryEntries": "Poster",
@@ -236,6 +236,7 @@
     "onlineUseDQReport": "Datakvalitetsrapport",
     "onlineUseDQTOR": "Datakvalitetsspecifikation",
     "onlineUseDQProdReport": "Datakvalitetsproduktionsrapport",
+    "onlineUseMap": "Kort",
     "onlineUseLegend": "Legend for ressourcen",
     "onlineUseLegendLYR": "Kartografi til ArcGIS (LYR)",
     "onlineUseStyleSLD": "Kartografi via SLD",
@@ -441,6 +442,8 @@
     "addOnlinesrc#API-help": "eg. view service, REST API",
     "addOnlinesrc#onlineDownload|localNetwork": "Add download",
     "addOnlinesrc#onlineDownload|localNetwork-help": "eg. file, download service, local network links",
+    "addOnlinesrc#onlineUseMap": "Add map",
+    "addOnlinesrc#onlineUseMap-help": "eg. PDF static maps or OGC Web Map Context interactive maps",
     "addOnlinesrc#onlineUseLegend": "Add portrayal",
     "addOnlinesrc#onlineUseLegend-help": "eg. LYR, QML, SLD files",
     "addOnlinesrc#links": "Tilføj links",
@@ -454,5 +457,10 @@
     "associated-fcats": "Objektkatalog",
     "associated-siblings": "Andre ressourcer",
     "associated-hasfeaturecats": "Brug af dette objektkatalog",
-    "associatedResourcesPanel": "Andre ressourcer"
+    "associatedResourcesPanel": "Andre ressourcer",
+    "validationSuccessLabel": "success",
+    "validationErrorLabel": "errors",
+    "metadataDuplicatedField-title": "The metadata title is used in another metadata record.",
+    "metadataDuplicatedField-altTitle": "The metadata alternate title is used in another metadata record.",
+    "metadataDuplicatedField-identifier": "The metadata resource identifier is used in another metadata record."
 }
