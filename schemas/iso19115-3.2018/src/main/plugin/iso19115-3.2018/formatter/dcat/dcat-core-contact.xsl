@@ -199,7 +199,6 @@
         <xsl:with-param name="reference" select="$reference"/>
       </xsl:call-template>
       <rdf:type rdf:resource="http://xmlns.com/foaf/0.1/{if ($isindividual) then 'Person' else 'Organization'}"/>
-      <rdf:type rdf:resource="http://www.w3.org/ns/prov#Agent"/>
 
       <xsl:choose>
         <xsl:when test="$isindividual">

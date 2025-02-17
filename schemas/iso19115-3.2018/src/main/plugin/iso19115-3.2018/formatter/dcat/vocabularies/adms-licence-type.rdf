@@ -1,0 +1,972 @@
+<?xml version="1.0"?>
+<rdf:RDF
+  xml:base="http://www.semanticweb.org/owl/owlapi/turtle"
+  xmlns:wdrs="http://www.w3.org/2007/05/powder-s#"
+  xmlns:foaf="http://xmlns.com/foaf/0.1/"
+  xmlns:vann="http://purl.org/vocab/vann/"
+  xmlns:xml="http://www.w3.org/XML/1998/namespace"
+  xmlns:dcterms="http://purl.org/dc/terms/"
+  xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+  xmlns:owl="http://www.w3.org/2002/07/owl#"
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+  xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+  xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+  xmlns:cc="http://creativecommons.org/ns#">
+  <owl:Ontology rdf:about="http://purl.org/adms">
+    <rdfs:label xml:lang="en">Controlled vocabularies for the Asset Description Metadata Schema</rdfs:label>
+    <dcterms:modified rdf:datatype="xsd:date">2012-04-13</dcterms:modified>
+    <dcterms:rights xml:lang="en">Copyright (c) 2012 European Union.</dcterms:rights>
+    <cc:attributionName xml:lang="en">European Commission</cc:attributionName>
+    <rdfs:comment xml:lang="en">This file specifies the controlled vocabularies defined by ADMS v1.0 as SKOS concept
+      schemes and SKOS concepts.
+    </rdfs:comment>
+    <dcterms:description xml:lang="en">This file specifies the controlled vocabularies defined by ADMS v1.0 as SKOS
+      concept schemes and SKOS concepts.
+    </dcterms:description>
+    <dcterms:abstract xml:lang="en">This file specifies the controlled vocabularies defined by ADMS v1.0 as SKOS concept
+      schemes and SKOS concepts.
+    </dcterms:abstract>
+    <owl:versionInfo xml:lang="en">Version 1.00 13 March 2012</owl:versionInfo>
+    <vann:preferredNamespacePrefix xml:lang="en">admsv</vann:preferredNamespacePrefix>
+    <vann:preferredNamespaceUri xml:lang="en">http://purl.org/adms/</vann:preferredNamespaceUri>
+    <foaf:maker rdf:resource="http://stijngoedertier.org"/>
+    <dcterms:creator rdf:resource="http://stijngoedertier.org"/>
+    <cc:attributionURL rdf:resource="http://ec.europa.eu/"/>
+    <wdrs:describedby rdf:resource="https://joinup.ec.europa.eu/asset/adms/release/100"/>
+    <dcterms:license rdf:resource="https://joinup.ec.europa.eu/category/licence/isa-open-metadata-licence-v11"/>
+    <dcterms:conformsTo
+      rdf:resource="https://joinup.ec.europa.eu/elibrary/document/isa-deliverable-process-and-methodology-developing-core-vocabularies"/>
+  </owl:Ontology>
+
+
+  <!--
+  ///////////////////////////////////////////////////////////////////////////////////////
+  //
+  // Annotation properties
+  //
+  ///////////////////////////////////////////////////////////////////////////////////////
+   -->
+
+  <owl:AnnotationProperty rdf:about="skos:prefLabel"/>
+  <owl:AnnotationProperty rdf:about="skos:hasTopConcept"/>
+  <owl:AnnotationProperty rdf:about="skos:notation"/>
+  <owl:AnnotationProperty rdf:about="skos:definition"/>
+  <owl:AnnotationProperty rdf:about="skos:inScheme"/>
+
+
+  <!--
+  ///////////////////////////////////////////////////////////////////////////////////////
+  //
+  // Datatypes
+  //
+  ///////////////////////////////////////////////////////////////////////////////////////
+   -->
+
+
+  <!--
+  ///////////////////////////////////////////////////////////////////////////////////////
+  //
+  // Classes
+  //
+  ///////////////////////////////////////////////////////////////////////////////////////
+   -->
+
+
+  <!-- http://www.w3.org/2004/02/skos/core#Concept -->
+
+  <owl:Class rdf:about="skos:Concept"/>
+
+
+  <!-- http://www.w3.org/2004/02/skos/core#ConceptScheme -->
+
+  <owl:Class rdf:about="skos:ConceptScheme"/>
+
+
+  <!--
+  ///////////////////////////////////////////////////////////////////////////////////////
+  //
+  // Individuals
+  //
+  ///////////////////////////////////////////////////////////////////////////////////////
+   -->
+
+
+  <!-- http://purl.org/adms/assettype/1.0 -->
+
+  <owl:NamedIndividual rdf:about="http://purl.org/adms/assettype/1.0">
+    <rdf:type rdf:resource="skos:ConceptScheme"/>
+    <rdfs:label xml:lang="en">Asset Type</rdfs:label>
+    <skos:hasTopConcept rdf:resource="http://purl.org/adms/assettype/CodeList"/>
+    <skos:hasTopConcept rdf:resource="http://purl.org/adms/assettype/CoreComponent"/>
+    <skos:hasTopConcept rdf:resource="http://purl.org/adms/assettype/DomainModel"/>
+    <skos:hasTopConcept rdf:resource="http://purl.org/adms/assettype/InformationExchangePackageDescription"/>
+    <skos:hasTopConcept rdf:resource="http://purl.org/adms/assettype/Mapping"/>
+    <skos:hasTopConcept rdf:resource="http://purl.org/adms/assettype/NameAuthorityList"/>
+    <skos:hasTopConcept rdf:resource="http://purl.org/adms/assettype/Ontology"/>
+    <skos:hasTopConcept rdf:resource="http://purl.org/adms/assettype/Schema"/>
+    <skos:hasTopConcept rdf:resource="http://purl.org/adms/assettype/ServiceDescription"/>
+    <skos:hasTopConcept rdf:resource="http://purl.org/adms/assettype/SyntaxEncodingScheme"/>
+    <skos:hasTopConcept rdf:resource="http://purl.org/adms/assettype/Taxonomy"/>
+    <skos:hasTopConcept rdf:resource="http://purl.org/adms/assettype/Thesaurus"/>
+  </owl:NamedIndividual>
+
+
+  <!-- http://purl.org/adms/assettype/CodeList -->
+
+  <owl:NamedIndividual rdf:about="http://purl.org/adms/assettype/CodeList">
+    <rdf:type rdf:resource="skos:Concept"/>
+    <skos:notation>CodeList</skos:notation>
+    <skos:prefLabel xml:lang="en">Code List</skos:prefLabel>
+    <skos:definition xml:lang="en">Complete set of data element values of a coded simple data element [ISO 9735-1:2002,
+      4.14].
+    </skos:definition>
+    <skos:inScheme rdf:resource="http://purl.org/adms/assettype/1.0"/>
+  </owl:NamedIndividual>
+
+
+  <!-- http://purl.org/adms/assettype/CoreComponent -->
+
+  <owl:NamedIndividual rdf:about="http://purl.org/adms/assettype/CoreComponent">
+    <rdf:type rdf:resource="skos:Concept"/>
+    <skos:prefLabel xml:lang="en">Core Component</skos:prefLabel>
+    <skos:notation>CoreComponent</skos:notation>
+    <skos:definition xml:lang="en">A core component is a context-free semantic building block for creating clear and
+      meaningful data models, vocabularies, and information exchange packages [UN/CEFACT CCTS ].
+    </skos:definition>
+    <skos:inScheme rdf:resource="http://purl.org/adms/assettype/1.0"/>
+  </owl:NamedIndividual>
+
+
+  <!-- http://purl.org/adms/assettype/DomainModel -->
+
+  <owl:NamedIndividual rdf:about="http://purl.org/adms/assettype/DomainModel">
+    <rdf:type rdf:resource="skos:Concept"/>
+    <skos:notation>DomainModel</skos:notation>
+    <skos:definition xml:lang="en">A domain model is a conceptual view of a system or an information exchange that
+      identifies the entities involved and their relationships [NIEM Glossary ].
+    </skos:definition>
+    <skos:prefLabel xml:lang="en">Domain Model</skos:prefLabel>
+    <skos:inScheme rdf:resource="http://purl.org/adms/assettype/1.0"/>
+  </owl:NamedIndividual>
+
+
+  <!-- http://purl.org/adms/assettype/InformationExchangePackageDescription -->
+
+  <owl:NamedIndividual rdf:about="http://purl.org/adms/assettype/InformationExchangePackageDescription">
+    <rdf:type rdf:resource="skos:Concept"/>
+    <skos:prefLabel xml:lang="en">Information Exchange Package Description</skos:prefLabel>
+    <skos:notation>InformationExchangePackageDescription</skos:notation>
+    <skos:definition xml:lang="en">A collection of artifacts that define and describe the structure and content of an
+      information exchange [NIEM Glossary]. An Information Exchange Package Description has a specific information
+      exchange context and may refer to other semantic assets.
+    </skos:definition>
+    <skos:inScheme rdf:resource="http://purl.org/adms/assettype/1.0"/>
+  </owl:NamedIndividual>
+
+
+  <!-- http://purl.org/adms/assettype/Mapping -->
+
+  <owl:NamedIndividual rdf:about="http://purl.org/adms/assettype/Mapping">
+    <rdf:type rdf:resource="skos:Concept"/>
+    <skos:notation>Mapping</skos:notation>
+    <skos:prefLabel xml:lang="en">Mapping</skos:prefLabel>
+    <skos:definition xml:lang="en">relationship between a concept in one vocabulary and one or more concepts in another
+      [ISO/DIS 25964-2].
+    </skos:definition>
+    <skos:inScheme rdf:resource="http://purl.org/adms/assettype/1.0"/>
+  </owl:NamedIndividual>
+
+
+  <!-- http://purl.org/adms/assettype/NameAuthorityList -->
+
+  <owl:NamedIndividual rdf:about="http://purl.org/adms/assettype/NameAuthorityList">
+    <rdf:type rdf:resource="skos:Concept"/>
+    <skos:notation>NameAuthorityList</skos:notation>
+    <skos:prefLabel xml:lang="en">Name Authority List</skos:prefLabel>
+    <skos:definition xml:lang="en">controlled vocabulary for use in naming particular entities consistently [ISO/DIS
+      25964-2].
+    </skos:definition>
+    <skos:inScheme rdf:resource="http://purl.org/adms/assettype/1.0"/>
+  </owl:NamedIndividual>
+
+
+  <!-- http://purl.org/adms/assettype/Ontology -->
+
+  <owl:NamedIndividual rdf:about="http://purl.org/adms/assettype/Ontology">
+    <rdf:type rdf:resource="skos:Concept"/>
+    <skos:definition xml:lang="en">A formal, explicit specification of a shared conceptualization [ISO/DIS 25964-2].
+    </skos:definition>
+    <skos:notation>Ontology</skos:notation>
+    <skos:prefLabel xml:lang="en">Ontology</skos:prefLabel>
+    <skos:inScheme rdf:resource="http://purl.org/adms/assettype/1.0"/>
+  </owl:NamedIndividual>
+
+
+  <!-- http://purl.org/adms/assettype/Schema -->
+
+  <owl:NamedIndividual rdf:about="http://purl.org/adms/assettype/Schema">
+    <rdf:type rdf:resource="skos:Concept"/>
+    <skos:notation>Schema</skos:notation>
+    <skos:definition xml:lang="en">A schema is a concrete view on a system or information exchange, describing the
+      structure, content, and semantics of data.
+    </skos:definition>
+    <skos:prefLabel xml:lang="en">Schema</skos:prefLabel>
+    <skos:inScheme rdf:resource="http://purl.org/adms/assettype/1.0"/>
+  </owl:NamedIndividual>
+
+
+  <!-- http://purl.org/adms/assettype/ServiceDescription -->
+
+  <owl:NamedIndividual rdf:about="http://purl.org/adms/assettype/ServiceDescription">
+    <rdf:type rdf:resource="skos:Concept"/>
+    <skos:definition xml:lang="en">A service description is a set of documents that describe the interface to and
+      semantics of a service [W3C WS-GLOSS ].
+    </skos:definition>
+    <skos:prefLabel xml:lang="en">Service Description</skos:prefLabel>
+    <skos:notation>ServiceDescription</skos:notation>
+    <skos:inScheme rdf:resource="http://purl.org/adms/assettype/1.0"/>
+  </owl:NamedIndividual>
+
+
+  <!-- http://purl.org/adms/assettype/SyntaxEncodingScheme -->
+
+  <owl:NamedIndividual rdf:about="http://purl.org/adms/assettype/SyntaxEncodingScheme">
+    <rdf:type rdf:resource="skos:Concept"/>
+    <skos:prefLabel xml:lang="en">Syntax Encoding Scheme</skos:prefLabel>
+    <skos:notation>SyntaxEncodingScheme</skos:notation>
+    <skos:definition xml:lang="en">Syntax Encoding Schemes indicate that the value is a string formatted in accordance
+      with a formal notation, such as &quot;2000-01-01&quot; as the standard expression of a date. [DCMI Glossary].
+    </skos:definition>
+    <skos:inScheme rdf:resource="http://purl.org/adms/assettype/1.0"/>
+  </owl:NamedIndividual>
+
+
+  <!-- http://purl.org/adms/assettype/Taxonomy -->
+
+  <owl:NamedIndividual rdf:about="http://purl.org/adms/assettype/Taxonomy">
+    <rdf:type rdf:resource="skos:Concept"/>
+    <skos:notation>Taxonomy</skos:notation>
+    <skos:prefLabel xml:lang="en">Taxonomy</skos:prefLabel>
+    <skos:definition xml:lang="en">scheme of categories and subcategories that can be used to sort and otherwise
+      organize items of knowledge or information [ISO/DIS 25964-2].
+    </skos:definition>
+    <skos:inScheme rdf:resource="http://purl.org/adms/assettype/1.0"/>
+  </owl:NamedIndividual>
+
+
+  <!-- http://purl.org/adms/assettype/Thesaurus -->
+
+  <owl:NamedIndividual rdf:about="http://purl.org/adms/assettype/Thesaurus">
+    <rdf:type rdf:resource="skos:Concept"/>
+    <skos:notation>Thesaurus</skos:notation>
+    <skos:prefLabel xml:lang="en">Thesaurus</skos:prefLabel>
+    <skos:definition xml:lang="en">controlled and structured vocabulary in which concepts are represented by terms,
+      organized so that relationships between concepts are made explicit, and preferred terms are accompanied by lead-in
+      entries for synonyms or quasi-synonyms [ISO 25964-1:2011].
+    </skos:definition>
+    <skos:inScheme rdf:resource="http://purl.org/adms/assettype/1.0"/>
+  </owl:NamedIndividual>
+
+
+  <!-- http://purl.org/adms/interoperabilitylevel/1.0 -->
+
+  <owl:NamedIndividual rdf:about="http://purl.org/adms/interoperabilitylevel/1.0">
+    <rdf:type rdf:resource="skos:ConceptScheme"/>
+    <rdfs:label xml:lang="en">Interoperability Level</rdfs:label>
+    <skos:hasTopConcept rdf:resource="http://purl.org/adms/interoperabilitylevel/Legal"/>
+    <skos:hasTopConcept rdf:resource="http://purl.org/adms/interoperabilitylevel/Organisational"/>
+    <skos:hasTopConcept rdf:resource="http://purl.org/adms/interoperabilitylevel/Political"/>
+    <skos:hasTopConcept rdf:resource="http://purl.org/adms/interoperabilitylevel/Semantic"/>
+    <skos:hasTopConcept rdf:resource="http://purl.org/adms/interoperabilitylevel/Technical"/>
+  </owl:NamedIndividual>
+
+
+  <!-- http://purl.org/adms/interoperabilitylevel/Legal -->
+
+  <owl:NamedIndividual rdf:about="http://purl.org/adms/interoperabilitylevel/Legal">
+    <rdf:type rdf:resource="skos:Concept"/>
+    <skos:notation>Legal</skos:notation>
+    <skos:prefLabel xml:lang="en">Legal</skos:prefLabel>
+    <skos:inScheme rdf:resource="http://purl.org/adms/interoperabilitylevel/1.0"/>
+  </owl:NamedIndividual>
+
+
+  <!-- http://purl.org/adms/interoperabilitylevel/Organisational -->
+
+  <owl:NamedIndividual rdf:about="http://purl.org/adms/interoperabilitylevel/Organisational">
+    <rdf:type rdf:resource="skos:Concept"/>
+    <skos:notation>Organisational</skos:notation>
+    <skos:prefLabel xml:lang="en">Organisational</skos:prefLabel>
+    <skos:inScheme rdf:resource="http://purl.org/adms/interoperabilitylevel/1.0"/>
+  </owl:NamedIndividual>
+
+
+  <!-- http://purl.org/adms/interoperabilitylevel/Political -->
+
+  <owl:NamedIndividual rdf:about="http://purl.org/adms/interoperabilitylevel/Political">
+    <rdf:type rdf:resource="skos:Concept"/>
+    <skos:notation>Political</skos:notation>
+    <skos:prefLabel xml:lang="en">Political</skos:prefLabel>
+    <skos:inScheme rdf:resource="http://purl.org/adms/interoperabilitylevel/1.0"/>
+  </owl:NamedIndividual>
+
+
+  <!-- http://purl.org/adms/interoperabilitylevel/Semantic -->
+
+  <owl:NamedIndividual rdf:about="http://purl.org/adms/interoperabilitylevel/Semantic">
+    <rdf:type rdf:resource="skos:Concept"/>
+    <skos:notation>Semantic</skos:notation>
+    <skos:prefLabel xml:lang="en">Semantic</skos:prefLabel>
+    <skos:inScheme rdf:resource="http://purl.org/adms/interoperabilitylevel/1.0"/>
+  </owl:NamedIndividual>
+
+
+  <!-- http://purl.org/adms/interoperabilitylevel/Technical -->
+
+  <owl:NamedIndividual rdf:about="http://purl.org/adms/interoperabilitylevel/Technical">
+    <rdf:type rdf:resource="skos:Concept"/>
+    <skos:notation>Technical</skos:notation>
+    <skos:prefLabel xml:lang="en">Technical</skos:prefLabel>
+    <skos:inScheme rdf:resource="http://purl.org/adms/interoperabilitylevel/1.0"/>
+  </owl:NamedIndividual>
+
+
+  <!-- http://purl.org/adms/licencetype/1.0 -->
+
+  <owl:NamedIndividual rdf:about="http://purl.org/adms/licencetype/1.0">
+    <rdf:type rdf:resource="skos:ConceptScheme"/>
+    <rdfs:label xml:lang="en">Licence Type</rdfs:label>
+    <skos:hasTopConcept rdf:resource="http://purl.org/adms/licencetype/Attribution"/>
+    <skos:hasTopConcept rdf:resource="http://purl.org/adms/licencetype/GrantBack"/>
+    <skos:hasTopConcept rdf:resource="http://purl.org/adms/licencetype/JurisdictionWithinTheEU"/>
+    <skos:hasTopConcept rdf:resource="http://purl.org/adms/licencetype/KnownPatentEncumbrance"/>
+    <skos:hasTopConcept rdf:resource="http://purl.org/adms/licencetype/NoDerivativeWork"/>
+    <skos:hasTopConcept rdf:resource="http://purl.org/adms/licencetype/NominalCost"/>
+    <skos:hasTopConcept rdf:resource="http://purl.org/adms/licencetype/NonCommercialUseOnly"/>
+    <skos:hasTopConcept rdf:resource="http://purl.org/adms/licencetype/OtherRestrictiveClauses"/>
+    <skos:hasTopConcept rdf:resource="http://purl.org/adms/licencetype/PublicDomain"/>
+    <skos:hasTopConcept rdf:resource="http://purl.org/adms/licencetype/ReservedNames-Endorsement-OfficialStatus"/>
+    <skos:hasTopConcept rdf:resource="http://purl.org/adms/licencetype/RoyaltiesRequired"/>
+    <skos:hasTopConcept rdf:resource="http://purl.org/adms/licencetype/UnknownIPR"/>
+    <skos:hasTopConcept rdf:resource="http://purl.org/adms/licencetype/ViralEffect-ShareAlike"/>
+  </owl:NamedIndividual>
+
+
+  <!-- http://purl.org/adms/licencetype/Attribution -->
+
+  <owl:NamedIndividual rdf:about="http://purl.org/adms/licencetype/Attribution">
+    <rdf:type rdf:resource="skos:Concept"/>
+    <skos:notation>Attribution</skos:notation>
+    <skos:prefLabel xml:lang="en">Attribution</skos:prefLabel>
+    <skos:inScheme rdf:resource="http://purl.org/adms/licencetype/1.0"/>
+  </owl:NamedIndividual>
+
+
+  <!-- http://purl.org/adms/licencetype/GrantBack -->
+
+  <owl:NamedIndividual rdf:about="http://purl.org/adms/licencetype/GrantBack">
+    <rdf:type rdf:resource="skos:Concept"/>
+    <skos:notation>GrantBack</skos:notation>
+    <skos:prefLabel xml:lang="en">Grant back</skos:prefLabel>
+    <skos:inScheme rdf:resource="http://purl.org/adms/licencetype/1.0"/>
+  </owl:NamedIndividual>
+
+
+  <!-- http://purl.org/adms/licencetype/JurisdictionWithinTheEU -->
+
+  <owl:NamedIndividual rdf:about="http://purl.org/adms/licencetype/JurisdictionWithinTheEU">
+    <rdf:type rdf:resource="skos:Concept"/>
+    <skos:prefLabel xml:lang="en">Jurisdiction within the EU</skos:prefLabel>
+    <skos:notation>JurisdictionWithinTheEU</skos:notation>
+    <skos:inScheme rdf:resource="http://purl.org/adms/licencetype/1.0"/>
+  </owl:NamedIndividual>
+
+
+  <!-- http://purl.org/adms/licencetype/KnownPatentEncumbrance -->
+
+  <owl:NamedIndividual rdf:about="http://purl.org/adms/licencetype/KnownPatentEncumbrance">
+    <rdf:type rdf:resource="skos:Concept"/>
+    <skos:notation>KnownPatentEncumbrance</skos:notation>
+    <skos:prefLabel xml:lang="en">Known patent encumbrance</skos:prefLabel>
+    <skos:inScheme rdf:resource="http://purl.org/adms/licencetype/1.0"/>
+  </owl:NamedIndividual>
+
+
+  <!-- http://purl.org/adms/licencetype/NoDerivativeWork -->
+
+  <owl:NamedIndividual rdf:about="http://purl.org/adms/licencetype/NoDerivativeWork">
+    <rdf:type rdf:resource="skos:Concept"/>
+    <skos:notation>NoDerivativeWork</skos:notation>
+    <skos:prefLabel xml:lang="en">No derivative work</skos:prefLabel>
+    <skos:inScheme rdf:resource="http://purl.org/adms/licencetype/1.0"/>
+  </owl:NamedIndividual>
+
+
+  <!-- http://purl.org/adms/licencetype/NominalCost -->
+
+  <owl:NamedIndividual rdf:about="http://purl.org/adms/licencetype/NominalCost">
+    <rdf:type rdf:resource="skos:Concept"/>
+    <skos:prefLabel xml:lang="en">Nominal cost</skos:prefLabel>
+    <skos:notation>NominalCost</skos:notation>
+    <skos:inScheme rdf:resource="http://purl.org/adms/licencetype/1.0"/>
+  </owl:NamedIndividual>
+
+
+  <!-- http://purl.org/adms/licencetype/NonCommercialUseOnly -->
+
+  <owl:NamedIndividual rdf:about="http://purl.org/adms/licencetype/NonCommercialUseOnly">
+    <rdf:type rdf:resource="skos:Concept"/>
+    <skos:prefLabel xml:lang="en">Non-commercial use only</skos:prefLabel>
+    <skos:notation>NonCommercialUseOnly</skos:notation>
+    <skos:inScheme rdf:resource="http://purl.org/adms/licencetype/1.0"/>
+  </owl:NamedIndividual>
+
+
+  <!-- http://purl.org/adms/licencetype/OtherRestrictiveClauses -->
+
+  <owl:NamedIndividual rdf:about="http://purl.org/adms/licencetype/OtherRestrictiveClauses">
+    <rdf:type rdf:resource="skos:Concept"/>
+    <skos:notation>OtherRestrictiveClauses</skos:notation>
+    <skos:prefLabel xml:lang="en">Other restrictive clauses</skos:prefLabel>
+    <skos:inScheme rdf:resource="http://purl.org/adms/licencetype/1.0"/>
+  </owl:NamedIndividual>
+
+
+  <!-- http://purl.org/adms/licencetype/PublicDomain -->
+
+  <owl:NamedIndividual rdf:about="http://purl.org/adms/licencetype/PublicDomain">
+    <rdf:type rdf:resource="skos:Concept"/>
+    <skos:prefLabel xml:lang="en">Public domain</skos:prefLabel>
+    <skos:notation>PublicDomain</skos:notation>
+    <skos:inScheme rdf:resource="http://purl.org/adms/licencetype/1.0"/>
+  </owl:NamedIndividual>
+
+
+  <!-- http://purl.org/adms/licencetype/ReservedNames-Endorsement-OfficialStatus -->
+
+  <owl:NamedIndividual rdf:about="http://purl.org/adms/licencetype/ReservedNames-Endorsement-OfficialStatus">
+    <rdf:type rdf:resource="skos:Concept"/>
+    <skos:notation>ReservedNames-Endorsement-OfficialStatus</skos:notation>
+    <skos:prefLabel xml:lang="en">Reserved names / endorsement / official status</skos:prefLabel>
+    <skos:inScheme rdf:resource="http://purl.org/adms/licencetype/1.0"/>
+  </owl:NamedIndividual>
+
+
+  <!-- http://purl.org/adms/licencetype/RoyaltiesRequired -->
+
+  <owl:NamedIndividual rdf:about="http://purl.org/adms/licencetype/RoyaltiesRequired">
+    <rdf:type rdf:resource="skos:Concept"/>
+    <skos:prefLabel xml:lang="en">Royalties required</skos:prefLabel>
+    <skos:notation>RoyaltiesRequired</skos:notation>
+    <skos:inScheme rdf:resource="http://purl.org/adms/licencetype/1.0"/>
+  </owl:NamedIndividual>
+
+
+  <!-- http://purl.org/adms/licencetype/UnknownIPR -->
+
+  <owl:NamedIndividual rdf:about="http://purl.org/adms/licencetype/UnknownIPR">
+    <rdf:type rdf:resource="skos:Concept"/>
+    <skos:notation>UnknownIPR</skos:notation>
+    <skos:prefLabel xml:lang="en">Unknown IPR</skos:prefLabel>
+    <skos:inScheme rdf:resource="http://purl.org/adms/licencetype/1.0"/>
+  </owl:NamedIndividual>
+
+
+  <!-- http://purl.org/adms/licencetype/ViralEffect-ShareAlike -->
+
+  <owl:NamedIndividual rdf:about="http://purl.org/adms/licencetype/ViralEffect-ShareAlike">
+    <rdf:type rdf:resource="skos:Concept"/>
+    <skos:prefLabel xml:lang="en">Viral effect (a.k.a. Share-alike)</skos:prefLabel>
+    <skos:notation>ViralEffect-ShareAlike</skos:notation>
+    <skos:inScheme rdf:resource="http://purl.org/adms/licencetype/1.0"/>
+  </owl:NamedIndividual>
+
+
+  <!-- http://purl.org/adms/publishertype/1.0 -->
+
+  <owl:NamedIndividual rdf:about="http://purl.org/adms/publishertype/1.0">
+    <rdf:type rdf:resource="skos:ConceptScheme"/>
+    <rdfs:label xml:lang="en">Publisher Type</rdfs:label>
+    <skos:hasTopConcept rdf:resource="http://purl.org/adms/publishertype/Academia-ScientificOrganisation"/>
+    <skos:hasTopConcept rdf:resource="http://purl.org/adms/publishertype/Company"/>
+    <skos:hasTopConcept rdf:resource="http://purl.org/adms/publishertype/IndustryConsortium"/>
+    <skos:hasTopConcept rdf:resource="http://purl.org/adms/publishertype/LocalAuthority"/>
+    <skos:hasTopConcept rdf:resource="http://purl.org/adms/publishertype/NationalAuthority"/>
+    <skos:hasTopConcept rdf:resource="http://purl.org/adms/publishertype/NonGovernmentalOrganisation"/>
+    <skos:hasTopConcept rdf:resource="http://purl.org/adms/publishertype/NonProfitOrganisation"/>
+    <skos:hasTopConcept rdf:resource="http://purl.org/adms/publishertype/PrivateIndividual(s)"/>
+    <skos:hasTopConcept rdf:resource="http://purl.org/adms/publishertype/RegionalAuthority"/>
+    <skos:hasTopConcept rdf:resource="http://purl.org/adms/publishertype/StandardisationBody"/>
+    <skos:hasTopConcept rdf:resource="http://purl.org/adms/publishertype/SupraNationalAuthority"/>
+  </owl:NamedIndividual>
+
+
+  <!-- http://purl.org/adms/publishertype/Academia-ScientificOrganisation -->
+
+  <owl:NamedIndividual rdf:about="http://purl.org/adms/publishertype/Academia-ScientificOrganisation">
+    <rdf:type rdf:resource="skos:Concept"/>
+    <skos:notation>Academia-ScientificOrganisation</skos:notation>
+    <skos:prefLabel xml:lang="en">Academia/Scientific organisation</skos:prefLabel>
+    <skos:inScheme rdf:resource="http://purl.org/adms/publishertype/1.0"/>
+  </owl:NamedIndividual>
+
+
+  <!-- http://purl.org/adms/publishertype/Company -->
+
+  <owl:NamedIndividual rdf:about="http://purl.org/adms/publishertype/Company">
+    <rdf:type rdf:resource="skos:Concept"/>
+    <skos:notation>Company</skos:notation>
+    <skos:prefLabel xml:lang="en">Company</skos:prefLabel>
+    <skos:inScheme rdf:resource="http://purl.org/adms/publishertype/1.0"/>
+  </owl:NamedIndividual>
+
+
+  <!-- http://purl.org/adms/publishertype/IndustryConsortium -->
+
+  <owl:NamedIndividual rdf:about="http://purl.org/adms/publishertype/IndustryConsortium">
+    <rdf:type rdf:resource="skos:Concept"/>
+    <skos:prefLabel xml:lang="en">Industry consortium</skos:prefLabel>
+    <skos:notation>IndustryConsortium</skos:notation>
+    <skos:inScheme rdf:resource="http://purl.org/adms/publishertype/1.0"/>
+  </owl:NamedIndividual>
+
+
+  <!-- http://purl.org/adms/publishertype/LocalAuthority -->
+
+  <owl:NamedIndividual rdf:about="http://purl.org/adms/publishertype/LocalAuthority">
+    <rdf:type rdf:resource="skos:Concept"/>
+    <skos:notation>LocalAuthority</skos:notation>
+    <skos:prefLabel xml:lang="en">Local Authority</skos:prefLabel>
+    <skos:inScheme rdf:resource="http://purl.org/adms/publishertype/1.0"/>
+  </owl:NamedIndividual>
+
+
+  <!-- http://purl.org/adms/publishertype/NationalAuthority -->
+
+  <owl:NamedIndividual rdf:about="http://purl.org/adms/publishertype/NationalAuthority">
+    <rdf:type rdf:resource="skos:Concept"/>
+    <skos:prefLabel xml:lang="en">National authority</skos:prefLabel>
+    <skos:notation>NationalAuthority</skos:notation>
+    <skos:inScheme rdf:resource="http://purl.org/adms/publishertype/1.0"/>
+  </owl:NamedIndividual>
+
+
+  <!-- http://purl.org/adms/publishertype/NonGovernmentalOrganisation -->
+
+  <owl:NamedIndividual rdf:about="http://purl.org/adms/publishertype/NonGovernmentalOrganisation">
+    <rdf:type rdf:resource="skos:Concept"/>
+    <skos:prefLabel xml:lang="en">Non-Governmental Organisation</skos:prefLabel>
+    <skos:notation>NonGovernmentalOrganisation</skos:notation>
+    <skos:inScheme rdf:resource="http://purl.org/adms/publishertype/1.0"/>
+  </owl:NamedIndividual>
+
+
+  <!-- http://purl.org/adms/publishertype/NonProfitOrganisation -->
+
+  <owl:NamedIndividual rdf:about="http://purl.org/adms/publishertype/NonProfitOrganisation">
+    <rdf:type rdf:resource="skos:Concept"/>
+    <skos:prefLabel xml:lang="en">Non-Profit Organisation</skos:prefLabel>
+    <skos:notation>NonProfitOrganisation</skos:notation>
+    <skos:inScheme rdf:resource="http://purl.org/adms/publishertype/1.0"/>
+  </owl:NamedIndividual>
+
+
+  <!-- http://purl.org/adms/publishertype/PrivateIndividual(s) -->
+
+  <owl:NamedIndividual rdf:about="http://purl.org/adms/publishertype/PrivateIndividual(s)">
+    <rdf:type rdf:resource="skos:Concept"/>
+    <skos:prefLabel xml:lang="en">Private Individual(s)</skos:prefLabel>
+    <skos:notation>PrivateIndividual(s)</skos:notation>
+    <skos:inScheme rdf:resource="http://purl.org/adms/publishertype/1.0"/>
+  </owl:NamedIndividual>
+
+
+  <!-- http://purl.org/adms/publishertype/RegionalAuthority -->
+
+  <owl:NamedIndividual rdf:about="http://purl.org/adms/publishertype/RegionalAuthority">
+    <rdf:type rdf:resource="skos:Concept"/>
+    <skos:notation>RegionalAuthority</skos:notation>
+    <skos:prefLabel xml:lang="en">Regional authority</skos:prefLabel>
+    <skos:inScheme rdf:resource="http://purl.org/adms/publishertype/1.0"/>
+  </owl:NamedIndividual>
+
+
+  <!-- http://purl.org/adms/publishertype/StandardisationBody -->
+
+  <owl:NamedIndividual rdf:about="http://purl.org/adms/publishertype/StandardisationBody">
+    <rdf:type rdf:resource="skos:Concept"/>
+    <skos:prefLabel xml:lang="en">Standardisation body</skos:prefLabel>
+    <skos:notation>StandardisationBody</skos:notation>
+    <skos:inScheme rdf:resource="http://purl.org/adms/publishertype/1.0"/>
+  </owl:NamedIndividual>
+
+
+  <!-- http://purl.org/adms/publishertype/SupraNationalAuthority -->
+
+  <owl:NamedIndividual rdf:about="http://purl.org/adms/publishertype/SupraNationalAuthority">
+    <rdf:type rdf:resource="skos:Concept"/>
+    <skos:prefLabel xml:lang="en">Supra-national authority</skos:prefLabel>
+    <skos:notation>SupraNationalAuthority</skos:notation>
+    <skos:inScheme rdf:resource="http://purl.org/adms/publishertype/1.0"/>
+  </owl:NamedIndividual>
+
+
+  <!-- http://purl.org/adms/representationtechnique/1.0 -->
+
+  <owl:NamedIndividual rdf:about="http://purl.org/adms/representationtechnique/1.0">
+    <rdf:type rdf:resource="skos:ConceptScheme"/>
+    <rdfs:label xml:lang="en">Representation Technique</rdfs:label>
+    <skos:hasTopConcept rdf:resource="http://purl.org/adms/representationtechnique/Archimate"/>
+    <skos:hasTopConcept rdf:resource="http://purl.org/adms/representationtechnique/BPMN"/>
+    <skos:hasTopConcept rdf:resource="http://purl.org/adms/representationtechnique/CommonLogic"/>
+    <skos:hasTopConcept rdf:resource="http://purl.org/adms/representationtechnique/DTD"/>
+    <skos:hasTopConcept rdf:resource="http://purl.org/adms/representationtechnique/Datalog"/>
+    <skos:hasTopConcept rdf:resource="http://purl.org/adms/representationtechnique/Diagram"/>
+    <skos:hasTopConcept rdf:resource="http://purl.org/adms/representationtechnique/Genericode"/>
+    <skos:hasTopConcept rdf:resource="http://purl.org/adms/representationtechnique/HumanLanguage"/>
+    <skos:hasTopConcept rdf:resource="http://purl.org/adms/representationtechnique/IDEF"/>
+    <skos:hasTopConcept rdf:resource="http://purl.org/adms/representationtechnique/KIF"/>
+    <skos:hasTopConcept rdf:resource="http://purl.org/adms/representationtechnique/OWL"/>
+    <skos:hasTopConcept rdf:resource="http://purl.org/adms/representationtechnique/Prolog"/>
+    <skos:hasTopConcept rdf:resource="http://purl.org/adms/representationtechnique/RDFSchema"/>
+    <skos:hasTopConcept rdf:resource="http://purl.org/adms/representationtechnique/RIF"/>
+    <skos:hasTopConcept rdf:resource="http://purl.org/adms/representationtechnique/RelaxNG"/>
+    <skos:hasTopConcept rdf:resource="http://purl.org/adms/representationtechnique/RuleML"/>
+    <skos:hasTopConcept rdf:resource="http://purl.org/adms/representationtechnique/SBVR"/>
+    <skos:hasTopConcept rdf:resource="http://purl.org/adms/representationtechnique/SKOS"/>
+    <skos:hasTopConcept rdf:resource="http://purl.org/adms/representationtechnique/SPARQL"/>
+    <skos:hasTopConcept rdf:resource="http://purl.org/adms/representationtechnique/SPIN"/>
+    <skos:hasTopConcept rdf:resource="http://purl.org/adms/representationtechnique/SWRL"/>
+    <skos:hasTopConcept rdf:resource="http://purl.org/adms/representationtechnique/Schematron"/>
+    <skos:hasTopConcept rdf:resource="http://purl.org/adms/representationtechnique/TopicMaps"/>
+    <skos:hasTopConcept rdf:resource="http://purl.org/adms/representationtechnique/UML"/>
+    <skos:hasTopConcept rdf:resource="http://purl.org/adms/representationtechnique/WSDL"/>
+    <skos:hasTopConcept rdf:resource="http://purl.org/adms/representationtechnique/WSMO"/>
+    <skos:hasTopConcept rdf:resource="http://purl.org/adms/representationtechnique/XMLSchema"/>
+  </owl:NamedIndividual>
+
+
+  <!-- http://purl.org/adms/representationtechnique/Archimate -->
+
+  <owl:NamedIndividual rdf:about="http://purl.org/adms/representationtechnique/Archimate">
+    <rdf:type rdf:resource="skos:Concept"/>
+    <skos:notation>Archimate</skos:notation>
+    <skos:prefLabel xml:lang="en">Archimate</skos:prefLabel>
+    <skos:inScheme rdf:resource="http://purl.org/adms/representationtechnique/1.0"/>
+  </owl:NamedIndividual>
+
+
+  <!-- http://purl.org/adms/representationtechnique/BPMN -->
+
+  <owl:NamedIndividual rdf:about="http://purl.org/adms/representationtechnique/BPMN">
+    <rdf:type rdf:resource="skos:Concept"/>
+    <skos:notation>BPMN</skos:notation>
+    <skos:prefLabel xml:lang="en">Business Process Modeling Notation</skos:prefLabel>
+    <skos:inScheme rdf:resource="http://purl.org/adms/representationtechnique/1.0"/>
+  </owl:NamedIndividual>
+
+
+  <!-- http://purl.org/adms/representationtechnique/CommonLogic -->
+
+  <owl:NamedIndividual rdf:about="http://purl.org/adms/representationtechnique/CommonLogic">
+    <rdf:type rdf:resource="skos:Concept"/>
+    <skos:notation>CommonLogic</skos:notation>
+    <skos:prefLabel xml:lang="en">Common logic</skos:prefLabel>
+    <skos:inScheme rdf:resource="http://purl.org/adms/representationtechnique/1.0"/>
+  </owl:NamedIndividual>
+
+
+  <!-- http://purl.org/adms/representationtechnique/DTD -->
+
+  <owl:NamedIndividual rdf:about="http://purl.org/adms/representationtechnique/DTD">
+    <rdf:type rdf:resource="skos:Concept"/>
+    <skos:notation>DTD</skos:notation>
+    <skos:prefLabel xml:lang="en">Document Type Definition</skos:prefLabel>
+    <skos:inScheme rdf:resource="http://purl.org/adms/representationtechnique/1.0"/>
+  </owl:NamedIndividual>
+
+
+  <!-- http://purl.org/adms/representationtechnique/Datalog -->
+
+  <owl:NamedIndividual rdf:about="http://purl.org/adms/representationtechnique/Datalog">
+    <rdf:type rdf:resource="skos:Concept"/>
+    <skos:notation>Datalog</skos:notation>
+    <skos:prefLabel xml:lang="en">Datalog</skos:prefLabel>
+    <skos:inScheme rdf:resource="http://purl.org/adms/representationtechnique/1.0"/>
+  </owl:NamedIndividual>
+
+
+  <!-- http://purl.org/adms/representationtechnique/Diagram -->
+
+  <owl:NamedIndividual rdf:about="http://purl.org/adms/representationtechnique/Diagram">
+    <rdf:type rdf:resource="skos:Concept"/>
+    <skos:notation>Diagram</skos:notation>
+    <skos:prefLabel xml:lang="en">Diagram</skos:prefLabel>
+    <skos:inScheme rdf:resource="http://purl.org/adms/representationtechnique/1.0"/>
+  </owl:NamedIndividual>
+
+
+  <!-- http://purl.org/adms/representationtechnique/Genericode -->
+
+  <owl:NamedIndividual rdf:about="http://purl.org/adms/representationtechnique/Genericode">
+    <rdf:type rdf:resource="skos:Concept"/>
+    <skos:notation>Genericode</skos:notation>
+    <skos:prefLabel xml:lang="en">genericode</skos:prefLabel>
+    <skos:inScheme rdf:resource="http://purl.org/adms/representationtechnique/1.0"/>
+  </owl:NamedIndividual>
+
+
+  <!-- http://purl.org/adms/representationtechnique/HumanLanguage -->
+
+  <owl:NamedIndividual rdf:about="http://purl.org/adms/representationtechnique/HumanLanguage">
+    <rdf:type rdf:resource="skos:Concept"/>
+    <skos:notation>HumanLanguage</skos:notation>
+    <skos:prefLabel xml:lang="en">Human Language</skos:prefLabel>
+    <skos:inScheme rdf:resource="http://purl.org/adms/representationtechnique/1.0"/>
+  </owl:NamedIndividual>
+
+
+  <!-- http://purl.org/adms/representationtechnique/IDEF -->
+
+  <owl:NamedIndividual rdf:about="http://purl.org/adms/representationtechnique/IDEF">
+    <rdf:type rdf:resource="skos:Concept"/>
+    <skos:notation>IDEF</skos:notation>
+    <skos:prefLabel xml:lang="en">Integration Definition</skos:prefLabel>
+    <skos:inScheme rdf:resource="http://purl.org/adms/representationtechnique/1.0"/>
+  </owl:NamedIndividual>
+
+
+  <!-- http://purl.org/adms/representationtechnique/KIF -->
+
+  <owl:NamedIndividual rdf:about="http://purl.org/adms/representationtechnique/KIF">
+    <rdf:type rdf:resource="skos:Concept"/>
+    <skos:notation>KIF</skos:notation>
+    <skos:prefLabel xml:lang="en">Knowledge Interchange Format</skos:prefLabel>
+    <skos:inScheme rdf:resource="http://purl.org/adms/representationtechnique/1.0"/>
+  </owl:NamedIndividual>
+
+
+  <!-- http://purl.org/adms/representationtechnique/OWL -->
+
+  <owl:NamedIndividual rdf:about="http://purl.org/adms/representationtechnique/OWL">
+    <rdf:type rdf:resource="skos:Concept"/>
+    <skos:notation>OWL</skos:notation>
+    <skos:prefLabel xml:lang="en">Web Ontology Language Full/DL/Lite</skos:prefLabel>
+    <skos:inScheme rdf:resource="http://purl.org/adms/representationtechnique/1.0"/>
+  </owl:NamedIndividual>
+
+
+  <!-- http://purl.org/adms/representationtechnique/Prolog -->
+
+  <owl:NamedIndividual rdf:about="http://purl.org/adms/representationtechnique/Prolog">
+    <rdf:type rdf:resource="skos:Concept"/>
+    <skos:notation>Prolog</skos:notation>
+    <skos:prefLabel xml:lang="en">Prolog</skos:prefLabel>
+    <skos:inScheme rdf:resource="http://purl.org/adms/representationtechnique/1.0"/>
+  </owl:NamedIndividual>
+
+
+  <!-- http://purl.org/adms/representationtechnique/RDFSchema -->
+
+  <owl:NamedIndividual rdf:about="http://purl.org/adms/representationtechnique/RDFSchema">
+    <rdf:type rdf:resource="skos:Concept"/>
+    <skos:notation>RDFSchema</skos:notation>
+    <skos:prefLabel xml:lang="en">Resource Description Framework Schema</skos:prefLabel>
+    <skos:inScheme rdf:resource="http://purl.org/adms/representationtechnique/1.0"/>
+  </owl:NamedIndividual>
+
+
+  <!-- http://purl.org/adms/representationtechnique/RIF -->
+
+  <owl:NamedIndividual rdf:about="http://purl.org/adms/representationtechnique/RIF">
+    <rdf:type rdf:resource="skos:Concept"/>
+    <skos:notation>RIF</skos:notation>
+    <skos:prefLabel xml:lang="en">Rule Interchange Format</skos:prefLabel>
+    <skos:inScheme rdf:resource="http://purl.org/adms/representationtechnique/1.0"/>
+  </owl:NamedIndividual>
+
+
+  <!-- http://purl.org/adms/representationtechnique/RelaxNG -->
+
+  <owl:NamedIndividual rdf:about="http://purl.org/adms/representationtechnique/RelaxNG">
+    <rdf:type rdf:resource="skos:Concept"/>
+    <skos:notation>RelaxNG</skos:notation>
+    <skos:prefLabel xml:lang="en">Relax NG</skos:prefLabel>
+    <skos:inScheme rdf:resource="http://purl.org/adms/representationtechnique/1.0"/>
+  </owl:NamedIndividual>
+
+
+  <!-- http://purl.org/adms/representationtechnique/RuleML -->
+
+  <owl:NamedIndividual rdf:about="http://purl.org/adms/representationtechnique/RuleML">
+    <rdf:type rdf:resource="skos:Concept"/>
+    <skos:prefLabel xml:lang="en">Rule Markup Langauge</skos:prefLabel>
+    <skos:notation>RuleML</skos:notation>
+    <skos:inScheme rdf:resource="http://purl.org/adms/representationtechnique/1.0"/>
+  </owl:NamedIndividual>
+
+
+  <!-- http://purl.org/adms/representationtechnique/SBVR -->
+
+  <owl:NamedIndividual rdf:about="http://purl.org/adms/representationtechnique/SBVR">
+    <rdf:type rdf:resource="skos:Concept"/>
+    <skos:notation>SBVR</skos:notation>
+    <skos:prefLabel xml:lang="en">Semantics of Business Vocabulary and Rules</skos:prefLabel>
+    <skos:inScheme rdf:resource="http://purl.org/adms/representationtechnique/1.0"/>
+  </owl:NamedIndividual>
+
+
+  <!-- http://purl.org/adms/representationtechnique/SKOS -->
+
+  <owl:NamedIndividual rdf:about="http://purl.org/adms/representationtechnique/SKOS">
+    <rdf:type rdf:resource="skos:Concept"/>
+    <skos:notation>SKOS</skos:notation>
+    <skos:prefLabel xml:lang="en">Simple Knowledge Organization System</skos:prefLabel>
+    <skos:inScheme rdf:resource="http://purl.org/adms/representationtechnique/1.0"/>
+  </owl:NamedIndividual>
+
+
+  <!-- http://purl.org/adms/representationtechnique/SPARQL -->
+
+  <owl:NamedIndividual rdf:about="http://purl.org/adms/representationtechnique/SPARQL">
+    <rdf:type rdf:resource="skos:Concept"/>
+    <skos:notation>SPARQL</skos:notation>
+    <skos:prefLabel xml:lang="en">SPARQL Query Language for RDF</skos:prefLabel>
+    <skos:inScheme rdf:resource="http://purl.org/adms/representationtechnique/1.0"/>
+  </owl:NamedIndividual>
+
+
+  <!-- http://purl.org/adms/representationtechnique/SPIN -->
+
+  <owl:NamedIndividual rdf:about="http://purl.org/adms/representationtechnique/SPIN">
+    <rdf:type rdf:resource="skos:Concept"/>
+    <skos:prefLabel xml:lang="en">SPARQL Inference Notation</skos:prefLabel>
+    <skos:notation>SPIN</skos:notation>
+    <skos:inScheme rdf:resource="http://purl.org/adms/representationtechnique/1.0"/>
+  </owl:NamedIndividual>
+
+
+  <!-- http://purl.org/adms/representationtechnique/SWRL -->
+
+  <owl:NamedIndividual rdf:about="http://purl.org/adms/representationtechnique/SWRL">
+    <rdf:type rdf:resource="skos:Concept"/>
+    <skos:notation>SWRL</skos:notation>
+    <skos:prefLabel xml:lang="en">Semantic Web Rule Language</skos:prefLabel>
+    <skos:inScheme rdf:resource="http://purl.org/adms/representationtechnique/1.0"/>
+  </owl:NamedIndividual>
+
+
+  <!-- http://purl.org/adms/representationtechnique/Schematron -->
+
+  <owl:NamedIndividual rdf:about="http://purl.org/adms/representationtechnique/Schematron">
+    <rdf:type rdf:resource="skos:Concept"/>
+    <skos:notation>Schematron</skos:notation>
+    <skos:prefLabel xml:lang="en">Schematron</skos:prefLabel>
+    <skos:inScheme rdf:resource="http://purl.org/adms/representationtechnique/1.0"/>
+  </owl:NamedIndividual>
+
+
+  <!-- http://purl.org/adms/representationtechnique/TopicMaps -->
+
+  <owl:NamedIndividual rdf:about="http://purl.org/adms/representationtechnique/TopicMaps">
+    <rdf:type rdf:resource="skos:Concept"/>
+    <skos:prefLabel xml:lang="en">Topic Maps</skos:prefLabel>
+    <skos:notation>TopicMaps</skos:notation>
+    <skos:inScheme rdf:resource="http://purl.org/adms/representationtechnique/1.0"/>
+  </owl:NamedIndividual>
+
+
+  <!-- http://purl.org/adms/representationtechnique/UML -->
+
+  <owl:NamedIndividual rdf:about="http://purl.org/adms/representationtechnique/UML">
+    <rdf:type rdf:resource="skos:Concept"/>
+    <skos:notation>UML</skos:notation>
+    <skos:prefLabel xml:lang="en">Unified Modelling Language</skos:prefLabel>
+    <skos:inScheme rdf:resource="http://purl.org/adms/representationtechnique/1.0"/>
+  </owl:NamedIndividual>
+
+
+  <!-- http://purl.org/adms/representationtechnique/WSDL -->
+
+  <owl:NamedIndividual rdf:about="http://purl.org/adms/representationtechnique/WSDL">
+    <rdf:type rdf:resource="skos:Concept"/>
+    <skos:notation>WSDL</skos:notation>
+    <skos:prefLabel xml:lang="en">Web Service Description Language</skos:prefLabel>
+    <skos:inScheme rdf:resource="http://purl.org/adms/representationtechnique/1.0"/>
+  </owl:NamedIndividual>
+
+
+  <!-- http://purl.org/adms/representationtechnique/WSMO -->
+
+  <owl:NamedIndividual rdf:about="http://purl.org/adms/representationtechnique/WSMO">
+    <rdf:type rdf:resource="skos:Concept"/>
+    <skos:notation>WSMO</skos:notation>
+    <skos:prefLabel xml:lang="en">Web Service Modelling Ontology</skos:prefLabel>
+    <skos:inScheme rdf:resource="http://purl.org/adms/representationtechnique/1.0"/>
+  </owl:NamedIndividual>
+
+
+  <!-- http://purl.org/adms/representationtechnique/XMLSchema -->
+
+  <owl:NamedIndividual rdf:about="http://purl.org/adms/representationtechnique/XMLSchema">
+    <rdf:type rdf:resource="skos:Concept"/>
+    <skos:notation>XMLSchema</skos:notation>
+    <skos:prefLabel xml:lang="en">XML Schema</skos:prefLabel>
+    <skos:inScheme rdf:resource="http://purl.org/adms/representationtechnique/1.0"/>
+  </owl:NamedIndividual>
+
+
+  <!-- http://purl.org/adms/status/1.0 -->
+
+  <owl:NamedIndividual rdf:about="http://purl.org/adms/status/1.0">
+    <rdf:type rdf:resource="skos:ConceptScheme"/>
+    <rdfs:label xml:lang="en">Status</rdfs:label>
+    <skos:hasTopConcept rdf:resource="http://purl.org/adms/status/Completed"/>
+    <skos:hasTopConcept rdf:resource="http://purl.org/adms/status/Deprecated"/>
+    <skos:hasTopConcept rdf:resource="http://purl.org/adms/status/UnderDevelopment"/>
+    <skos:hasTopConcept rdf:resource="http://purl.org/adms/status/Withdrawn"/>
+  </owl:NamedIndividual>
+
+
+  <!-- http://purl.org/adms/status/Completed -->
+
+  <owl:NamedIndividual rdf:about="http://purl.org/adms/status/Completed">
+    <rdf:type rdf:resource="skos:Concept"/>
+    <skos:notation>Completed</skos:notation>
+    <skos:prefLabel xml:lang="en">Completed</skos:prefLabel>
+    <skos:inScheme rdf:resource="http://purl.org/adms/status/1.0"/>
+  </owl:NamedIndividual>
+
+
+  <!-- http://purl.org/adms/status/Deprecated -->
+
+  <owl:NamedIndividual rdf:about="http://purl.org/adms/status/Deprecated">
+    <rdf:type rdf:resource="skos:Concept"/>
+    <skos:notation>Deprecated</skos:notation>
+    <skos:prefLabel xml:lang="en">Deprecated</skos:prefLabel>
+    <skos:inScheme rdf:resource="http://purl.org/adms/status/1.0"/>
+  </owl:NamedIndividual>
+
+
+  <!-- http://purl.org/adms/status/UnderDevelopment -->
+
+  <owl:NamedIndividual rdf:about="http://purl.org/adms/status/UnderDevelopment">
+    <rdf:type rdf:resource="skos:Concept"/>
+    <skos:notation>UnderDevelopment</skos:notation>
+    <skos:prefLabel xml:lang="en">Under development</skos:prefLabel>
+    <skos:inScheme rdf:resource="http://purl.org/adms/status/1.0"/>
+  </owl:NamedIndividual>
+
+
+  <!-- http://purl.org/adms/status/Withdrawn -->
+
+  <owl:NamedIndividual rdf:about="http://purl.org/adms/status/Withdrawn">
+    <rdf:type rdf:resource="skos:Concept"/>
+    <skos:notation>Withdrawn</skos:notation>
+    <skos:prefLabel xml:lang="en">Withdrawn</skos:prefLabel>
+    <skos:inScheme rdf:resource="http://purl.org/adms/status/1.0"/>
+  </owl:NamedIndividual>
+</rdf:RDF>
+
+
+  <!-- Generated by the OWL API (version 3.2.5.1912) http://owlapi.sourceforge.net -->
