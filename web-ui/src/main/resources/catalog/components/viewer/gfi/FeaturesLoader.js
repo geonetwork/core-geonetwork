@@ -247,8 +247,9 @@
                 obj[key] = $filter('linky')(obj[key], '_blank');
               }
               if (obj[key]) {
-                obj[key] = obj[key].replace(/>(.)*</, ' ' +
+                obj[key.toLowerCase()] = obj[key].replace(/>(.)*</, ' ' +
                     'target="_blank">' + linkTpl + '<');
+                delete obj[key];
               }
             } else {
               // Exclude objects which will not be displayed properly
