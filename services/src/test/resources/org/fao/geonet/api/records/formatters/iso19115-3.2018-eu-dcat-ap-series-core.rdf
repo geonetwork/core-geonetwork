@@ -137,7 +137,7 @@ Location:[Focus node] - [https://metawal.wallonie.be/geonetwork/srv/api/records/
     </dct:description>
     <adms:status>
       <skos:Concept rdf:about="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#onGoing">
-        <skos:prefLabel xml:lang="fre">Mis à jour continue</skos:prefLabel>
+        <skos:prefLabel xml:lang="fr">Mis à jour continue</skos:prefLabel>
       </skos:Concept>
     </adms:status>
     <dcat:contactPoint>
