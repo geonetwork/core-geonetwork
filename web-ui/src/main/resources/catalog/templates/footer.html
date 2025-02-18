@@ -1,3 +1,18 @@
-<div class="footer">
-  <p data-translate>poweredBy</p>
-</div>
+<ul class="nav navbar-nav">
+    <li class="navbar-text">
+      <span data-translate=""
+            data-translate-values="{platform: '{{info['system/platform/name']}}', version: '{{info['system/platform/version']}}', subversion: '{{info['system/platform/subVersion']}}'}">
+        versionDetails</span>
+    </li>
+    <li><a href="http://geonetwork-opensource.org/">
+      <span data-translate="">about</span></a>
+    </li>
+    <li class="hidden-sm"><a href="https://github.com/geonetwork/core-geonetwork">
+      <i class="fa fa-fw fa-github"></i>
+      <span data-translate="">github</span></a></li>
+    <li>
+      <a href="../../doc/api" title="{{'learnTheApi' | translate}}">API</a>
+    </li>
+    <li gn-static-pages-list-viewer data-section="footer" data-language="{{lang}}" />
+ </ul>
+  
