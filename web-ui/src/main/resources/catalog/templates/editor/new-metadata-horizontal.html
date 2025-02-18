@@ -22,16 +22,16 @@
       <div class="panel panel-default dynamic-list">
         <div class="panel-heading">
           <span data-translate="">createA</span>
-          <strong>{{(activeType || '...') | translate}}</strong>
+          <strong>{{(activeTypeLabel || '...') | translate}}</strong>
         </div>
         <div class="panel-body">
           <div class="list-group gn-record-type">
             <a data-ng-repeat="type in mdTypes" href="" class="list-group-item"
                data-ng-click="getTemplateNamesByType(type)"
-               data-ng-class="{'active': type==activeType}">
-              <i class="fa {{getTypeIcon(type)}} fa-3x"></i>
+               data-ng-class="{'active': type['@name']==activeType}">
+              <i class="fa {{getTypeIcon(type['@name'])}} fa-3x"></i>
               <p>
-                {{type | translate}}
+                {{type['@label'] | translate}}
               </p>
             </a>
           </div>
