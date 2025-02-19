@@ -103,7 +103,6 @@
 
   <xsl:variable name="formatLabelToUri"
                 as="node()*">
-    <!-- TODO: application/x-worldfile -->
     <entry key="http://publications.europa.eu/resource/authority/file-type/GRID_ASCII">aaigrid</entry>
     <entry key="http://publications.europa.eu/resource/authority/file-type/GRID">aig</entry>
     <entry key="http://publications.europa.eu/resource/authority/file-type/ATOM">atom</entry>
@@ -134,7 +133,8 @@
     <entry key="http://publications.europa.eu/resource/authority/file-type/GPKG">geopackage</entry>
     <entry key="http://publications.europa.eu/resource/authority/file-type/RSS">georss</entry>
     <entry key="http://publications.europa.eu/resource/authority/file-type/TIFF">image/tiff</entry>
-    <entry key="http://publications.europa.eu/resource/authority/file-type/TIFF">geotiff</entry>
+    <entry key="http://publications.europa.eu/resource/authority/file-type/GeoTIFF">geotiff</entry>
+    <entry key="http://publications.europa.eu/resource/authority/file-type/GeoTIFF">application/x-worldfile</entry>
     <entry key="http://publications.europa.eu/resource/authority/file-type/GIF">gif</entry>
     <entry key="http://publications.europa.eu/resource/authority/file-type/GML">gml</entry>
     <entry key="http://publications.europa.eu/resource/authority/file-type/GML">application/gml+xml</entry>
@@ -154,7 +154,7 @@
     <entry key="http://publications.europa.eu/resource/authority/file-type/JSON">json</entry>
     <entry key="http://publications.europa.eu/resource/authority/file-type/JSON">OGC API - Coverages</entry>
     <entry key="http://publications.europa.eu/resource/authority/file-type/JSON">OGC API - Records</entry>
-    <entry key="http://publications.europa.eu/resource/authority/file-type/JSON">OGC API - Features</entry>
+    <entry key="http://publications.europa.eu/resource/authority/file-type/GEOJSON">OGC API - Features</entry>
     <entry key="http://publications.europa.eu/resource/authority/file-type/JSON_LD">json-ld</entry>
     <entry key="http://publications.europa.eu/resource/authority/file-type/JSON_LD">json_ld</entry>
     <entry key="http://publications.europa.eu/resource/authority/file-type/JSON_LD">jsonld</entry>
@@ -181,6 +181,7 @@
     <entry key="http://publications.europa.eu/resource/authority/file-type/GML">ogc:wps</entry>
     <entry key="http://publications.europa.eu/resource/authority/file-type/TXT">pc-axis</entry>
     <entry key="http://publications.europa.eu/resource/authority/file-type/PDF">pdf</entry>
+    <entry key="http://publications.europa.eu/resource/authority/file-type/PDF">application/pdf</entry>
     <entry key="http://publications.europa.eu/resource/authority/file-type/MDB">pgeo</entry>
     <entry key="http://publications.europa.eu/resource/authority/file-type/PNG">png</entry>
     <entry key="http://publications.europa.eu/resource/authority/file-type/RAR">rar</entry>
