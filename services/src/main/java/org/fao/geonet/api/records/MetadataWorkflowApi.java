@@ -234,7 +234,7 @@ public class MetadataWorkflowApi {
     @io.swagger.v3.oas.annotations.Operation(summary = "Get last workflow status for a record", description = "")
     @RequestMapping(value = "/{metadataUuid}/status/workflow/last", method = RequestMethod.GET, produces = {
         MediaType.APPLICATION_JSON_VALUE})
-    @PreAuthorize("hasAuthority('Editor')")
+    @PreAuthorize("hasAuthority('RegisteredUser')")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Record status."),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)})
     @ResponseStatus(HttpStatus.OK)
@@ -249,11 +249,26 @@ public class MetadataWorkflowApi {
         ResourceBundle messages = ApiUtils.getMessagesResourceBundle(request.getLocales());
         ServiceContext context = ApiUtils.createServiceContext(request, locale.getISO3Language());
 
-        try {
-            ApiUtils.canViewRecord(metadataUuid, approved, request);
-        } catch (SecurityException e) {
-            Log.debug(API.LOG_MODULE_NAME, e.getMessage(), e);
-            throw new NotAllowedException(messages.getString("exception.notAllowed.cannotView"));
+        Profile profile = context.getUserSession().getProfile();
+        String allowedProfileLevel = org.apache.commons.lang3.StringUtils.defaultIfBlank(settingManager.getValue(Settings.METADATA_HISTORY_ACCESS_LEVEL), Profile.Editor.toString());
+        Profile allowedAccessLevelProfile = Profile.valueOf(allowedProfileLevel);
+
+        if (profile != Profile.Administrator) {
+            if (allowedAccessLevelProfile == Profile.RegisteredUser) {
+                try {
+                    ApiUtils.canViewRecord(metadataUuid, approved, request);
+                } catch (SecurityException e) {
+                    Log.debug(API.LOG_MODULE_NAME, e.getMessage(), e);
+                    throw new NotAllowedException(messages.getString("exception.notAllowed.cannotView"));
+                }
+            } else {
+                try {
+                    ApiUtils.canEditRecord(metadataUuid, approved, request);
+                } catch (SecurityException e) {
+                    Log.debug(API.LOG_MODULE_NAME, e.getMessage(), e);
+                    throw new NotAllowedException(messages.getString("exception.notAllowed.cannotEdit"));
+                }
+            }
         }
 
         MetadataStatus recordStatus = metadataStatus.getStatus(metadata.getId());
