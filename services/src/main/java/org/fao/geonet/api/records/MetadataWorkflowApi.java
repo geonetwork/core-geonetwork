@@ -248,10 +248,11 @@ public class MetadataWorkflowApi {
         ResourceBundle messages = ApiUtils.getMessagesResourceBundle(request.getLocales());
         ServiceContext context = ApiUtils.createServiceContext(request, locale.getISO3Language());
 
-        // --- only allow the owner of the record to set its status
-        if (!accessManager.isOwner(context, String.valueOf(metadata.getId()))) {
-            throw new SecurityException(
-                messages.getString("api.metadata.status.errorGetStatusNotAllowed"));
+        try {
+            ApiUtils.canViewRecord(metadataUuid, approved, request);
+        } catch (SecurityException e) {
+            Log.debug(API.LOG_MODULE_NAME, e.getMessage(), e);
+            throw new NotAllowedException(ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW);
         }
 
         MetadataStatus recordStatus = metadataStatus.getStatus(metadata.getId());
