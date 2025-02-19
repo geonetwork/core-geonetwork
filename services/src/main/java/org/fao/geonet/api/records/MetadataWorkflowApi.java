@@ -180,13 +180,13 @@ public class MetadataWorkflowApi {
         @RequestParam(required = false, defaultValue = "true")  Boolean approved,
         HttpServletRequest request) throws Exception {
         ServiceContext context = ApiUtils.createServiceContext(request);
-
+        ResourceBundle messages = ApiUtils.getMessagesResourceBundle(request.getLocales());
         AbstractMetadata metadata;
         try {
             metadata = ApiUtils.canViewRecord(metadataUuid, approved, request);
         } catch (SecurityException e) {
             Log.debug(API.LOG_MODULE_NAME, e.getMessage(), e);
-            throw new NotAllowedException(ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW);
+            throw new NotAllowedException(messages.getString("exception.notAllowed.cannotView"));
         }
 
         String sortField = SortUtils.createPath(MetadataStatus_.changeDate);
@@ -212,12 +212,13 @@ public class MetadataWorkflowApi {
         @RequestParam(required = false, defaultValue = "true") Boolean approved,
         HttpServletRequest request) throws Exception {
         ServiceContext context = ApiUtils.createServiceContext(request);
+        ResourceBundle messages = ApiUtils.getMessagesResourceBundle(request.getLocales());
         AbstractMetadata metadata;
         try {
             metadata = ApiUtils.canViewRecord(metadataUuid, approved, request);
         } catch (SecurityException e) {
             Log.debug(API.LOG_MODULE_NAME, e.getMessage(), e);
-            throw new NotAllowedException(ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW);
+            throw new NotAllowedException(messages.getString("exception.notAllowed.cannotView"));
         }
 
         String sortField = SortUtils.createPath(MetadataStatus_.changeDate);
@@ -252,7 +253,7 @@ public class MetadataWorkflowApi {
             ApiUtils.canViewRecord(metadataUuid, approved, request);
         } catch (SecurityException e) {
             Log.debug(API.LOG_MODULE_NAME, e.getMessage(), e);
-            throw new NotAllowedException(ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW);
+            throw new NotAllowedException(messages.getString("exception.notAllowed.cannotView"));
         }
 
         MetadataStatus recordStatus = metadataStatus.getStatus(metadata.getId());
@@ -1246,6 +1247,8 @@ public class MetadataWorkflowApi {
 
     private String getValidatedStateText(MetadataStatus metadataStatus, State state, HttpServletRequest request, HttpSession httpSession) throws Exception {
 
+        ResourceBundle messages = ApiUtils.getMessagesResourceBundle(request.getLocales());
+
         if (!StatusValueType.event.equals(metadataStatus.getStatusValue().getType())
             || !ArrayUtils.contains(supportedRestoreStatuses, StatusValue.Events.fromId(metadataStatus.getStatusValue().getId()))) {
             throw new NotAllowedException("Unsupported action on status type '" + metadataStatus.getStatusValue().getType()
@@ -1282,7 +1285,7 @@ public class MetadataWorkflowApi {
             ApiUtils.canEditRecord(metadataStatus.getUuid(), request);
         } catch (SecurityException e) {
             Log.debug(API.LOG_MODULE_NAME, e.getMessage(), e);
-            throw new NotAllowedException(ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW);
+            throw new NotAllowedException(messages.getString("exception.notAllowed.cannotView"));
         } catch (ResourceNotFoundException e) {
             // If metadata record does not exists then it was deleted so
             // we will only allow the administrator, owner to view the contents
