@@ -261,30 +261,12 @@ public class MetadataWorkflowApi {
 
             if (!minimumAllowedProfile.getProfileAndAllParents().contains(userProfile)) {
                 // If the user profile is not at least the minimum profile, then the user is not allowed to view record workflow status
-                String message = MessageFormat.format(
-                    messages.getString("exception.notAllowed.mustBeProfileOrOwner"),
-                    messages.getString(minimumAllowedProfileName));
+                String message = getMustBeProfileOrOwnerMessage(minimumAllowedProfileName, messages);
                 Log.debug(API.LOG_MODULE_NAME, message);
                 throw new NotAllowedException(message);
             }
 
-            if (minimumAllowedProfile == Profile.RegisteredUser) {
-                // If the minimum profile is RegisteredUser, then the user must be able to view the record to view the workflow status
-                try {
-                    ApiUtils.canViewRecord(metadataUuid, approved, request);
-                } catch (SecurityException e) {
-                    Log.debug(API.LOG_MODULE_NAME, e.getMessage(), e);
-                    throw new NotAllowedException(messages.getString("exception.notAllowed.cannotView"));
-                }
-            } else if (minimumAllowedProfile == Profile.Editor) {
-                // If the minimum profile is Editor, then the user must be able to edit the record to view the workflow status
-                try {
-                    ApiUtils.canEditRecord(metadataUuid, approved, request);
-                } catch (SecurityException e) {
-                    Log.debug(API.LOG_MODULE_NAME, e.getMessage(), e);
-                    throw new NotAllowedException(messages.getString("exception.notAllowed.cannotEdit"));
-                }
-            }
+            checkUserCanSeeHistory(minimumAllowedProfile, metadataUuid, messages, request);
         }
 
         MetadataStatus recordStatus = metadataStatus.getStatus(metadata.getId());
@@ -762,9 +744,7 @@ public class MetadataWorkflowApi {
         );
         Profile minimumAllowedProfile = Profile.valueOf(minimumAllowedProfileName);
         boolean isMinimumAllowedProfile = minimumAllowedProfile.getProfileAndAllParents().contains(userProfile);
-        String mustBeProfileOrOwnerMessage = MessageFormat.format(
-            messages.getString("exception.notAllowed.mustBeProfileOrOwner"),
-            messages.getString(minimumAllowedProfileName));
+        String mustBeProfileOrOwnerMessage = getMustBeProfileOrOwnerMessage(minimumAllowedProfileName, messages);
 
         if (userProfile != Profile.Administrator) {
             if (CollectionUtils.isEmpty(recordIdentifier) &&
@@ -779,16 +759,7 @@ public class MetadataWorkflowApi {
                         Log.debug(API.LOG_MODULE_NAME, mustBeProfileOrOwnerMessage);
                         throw new NotAllowedException(mustBeProfileOrOwnerMessage);
                     }
-                    try {
-                        if (minimumAllowedProfile == Profile.RegisteredUser) {
-                            ApiUtils.canViewRecord(String.valueOf(recordId), request);
-                        } else {
-                            ApiUtils.canEditRecord(String.valueOf(recordId), request);
-                        }
-
-                    } catch (SecurityException e) {
-                        throw new NotAllowedException(ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT);
-                    }
+                    checkUserCanSeeHistory(minimumAllowedProfile, String.valueOf(recordId), messages, request);
                 }
             }
             if (!CollectionUtils.isEmpty(uuid)) {
@@ -797,16 +768,7 @@ public class MetadataWorkflowApi {
                         Log.debug(API.LOG_MODULE_NAME, mustBeProfileOrOwnerMessage);
                         throw new NotAllowedException(mustBeProfileOrOwnerMessage);
                     }
-                    try {
-                        if (minimumAllowedProfile == Profile.RegisteredUser) {
-                            ApiUtils.canViewRecord(recordId, request);
-                        } else {
-                            ApiUtils.canEditRecord(recordId, request);
-                        }
-
-                    } catch (SecurityException e) {
-                        throw new NotAllowedException(ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT);
-                    }
+                    checkUserCanSeeHistory(minimumAllowedProfile, recordId, messages, request);
                 }
             }
         }
@@ -1414,4 +1376,46 @@ public class MetadataWorkflowApi {
         sa.onStatusChange(listOfStatusChange, true);
     }
 
+    /**
+     * Constructs a message indicating that the user must have a specific profile or be the owner to perform an action.
+     *
+     * @param messages The resource bundle containing localized messages.
+     * @param minimumAllowedProfileName The name of the minimum allowed profile.
+     * @return A formatted message indicating the required profile or ownership.
+     */
+    private String getMustBeProfileOrOwnerMessage(String minimumAllowedProfileName, ResourceBundle messages) {
+        return MessageFormat.format(
+            messages.getString("exception.notAllowed.mustBeProfileOrOwner"),
+            messages.getString(minimumAllowedProfileName)
+        );
+    }
+
+    /**
+     * Checks if the user has the necessary permissions to view the history of a record.
+     *
+     * @param minimumAllowedProfile The minimum profile required to view the history.
+     * @param recordId The ID of the record.
+     * @param messages The resource bundle containing localized messages.
+     * @param request The HTTP request object.
+     * @throws Exception If the user does not have the necessary permissions.
+     */
+    private void checkUserCanSeeHistory(Profile minimumAllowedProfile, String recordId, ResourceBundle messages, HttpServletRequest request) throws Exception {
+        if (minimumAllowedProfile == Profile.RegisteredUser) {
+            // If the minimum profile is RegisteredUser, then the user must be able to view the record
+            try {
+                ApiUtils.canViewRecord(recordId, request);
+            } catch (SecurityException e) {
+                Log.debug(API.LOG_MODULE_NAME, e.getMessage(), e);
+                throw new NotAllowedException(messages.getString("exception.notAllowed.cannotView"));
+            }
+        } else if (minimumAllowedProfile == Profile.Editor) {
+            // If the minimum profile is Editor, then the user must be able to edit the record
+            try {
+                ApiUtils.canEditRecord(recordId, request);
+            } catch (SecurityException e) {
+                Log.debug(API.LOG_MODULE_NAME, e.getMessage(), e);
+                throw new NotAllowedException(messages.getString("exception.notAllowed.cannotEdit"));
+            }
+        }
+    }
 }
