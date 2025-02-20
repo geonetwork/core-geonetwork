@@ -82,6 +82,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.text.MessageFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -249,19 +250,34 @@ public class MetadataWorkflowApi {
         ResourceBundle messages = ApiUtils.getMessagesResourceBundle(request.getLocales());
         ServiceContext context = ApiUtils.createServiceContext(request, locale.getISO3Language());
 
-        Profile profile = context.getUserSession().getProfile();
-        String allowedProfileLevel = org.apache.commons.lang3.StringUtils.defaultIfBlank(settingManager.getValue(Settings.METADATA_HISTORY_ACCESS_LEVEL), Profile.Editor.toString());
-        Profile allowedAccessLevelProfile = Profile.valueOf(allowedProfileLevel);
+        // If the user does not own the record check if they meet the minimum profile
+        if (!accessManager.isOwner(context, String.valueOf(metadata.getId()))) {
+            Profile userProfile = context.getUserSession().getProfile();
+            String minimumAllowedProfileName = StringUtils.defaultIfBlank(
+                settingManager.getValue(Settings.METADATA_HISTORY_ACCESS_LEVEL),
+                Profile.Editor.toString()
+            );
+            Profile minimumAllowedProfile = Profile.valueOf(minimumAllowedProfileName);
 
-        if (profile != Profile.Administrator) {
-            if (allowedAccessLevelProfile == Profile.RegisteredUser) {
+            if (!minimumAllowedProfile.getProfileAndAllParents().contains(userProfile)) {
+                // If the user profile is not at least the minimum profile, then the user is not allowed to view record workflow status
+                String message = MessageFormat.format(
+                    messages.getString("exception.notAllowed.mustBeProfileOrOwner"),
+                    messages.getString(minimumAllowedProfileName));
+                Log.debug(API.LOG_MODULE_NAME, message);
+                throw new NotAllowedException(message);
+            }
+
+            if (minimumAllowedProfile == Profile.RegisteredUser) {
+                // If the minimum profile is RegisteredUser, then the user must be able to view the record to view the workflow status
                 try {
                     ApiUtils.canViewRecord(metadataUuid, approved, request);
                 } catch (SecurityException e) {
                     Log.debug(API.LOG_MODULE_NAME, e.getMessage(), e);
                     throw new NotAllowedException(messages.getString("exception.notAllowed.cannotView"));
                 }
-            } else {
+            } else if (minimumAllowedProfile == Profile.Editor) {
+                // If the minimum profile is Editor, then the user must be able to edit the record to view the workflow status
                 try {
                     ApiUtils.canEditRecord(metadataUuid, approved, request);
                 } catch (SecurityException e) {
@@ -737,12 +753,20 @@ public class MetadataWorkflowApi {
         Integer size,
         HttpServletRequest request) throws Exception {
         ServiceContext context = ApiUtils.createServiceContext(request);
+        ResourceBundle messages = ApiUtils.getMessagesResourceBundle(request.getLocales());
 
-        Profile profile = context.getUserSession().getProfile();
-        String allowedProfileLevel = org.apache.commons.lang.StringUtils.defaultIfBlank(settingManager.getValue(Settings.METADATA_HISTORY_ACCESS_LEVEL), Profile.Editor.toString());
-        Profile allowedAccessLevelProfile = Profile.valueOf(allowedProfileLevel);
+        Profile userProfile = context.getUserSession().getProfile();
+        String minimumAllowedProfileName = StringUtils.defaultIfBlank(
+            settingManager.getValue(Settings.METADATA_HISTORY_ACCESS_LEVEL),
+            Profile.Editor.toString()
+        );
+        Profile minimumAllowedProfile = Profile.valueOf(minimumAllowedProfileName);
+        boolean isMinimumAllowedProfile = minimumAllowedProfile.getProfileAndAllParents().contains(userProfile);
+        String mustBeProfileOrOwnerMessage = MessageFormat.format(
+            messages.getString("exception.notAllowed.mustBeProfileOrOwner"),
+            messages.getString(minimumAllowedProfileName));
 
-        if (profile != Profile.Administrator) {
+        if (userProfile != Profile.Administrator) {
             if (CollectionUtils.isEmpty(recordIdentifier) &&
                 CollectionUtils.isEmpty(uuid)) {
                 throw new NotAllowedException(
@@ -751,8 +775,12 @@ public class MetadataWorkflowApi {
 
             if (!CollectionUtils.isEmpty(recordIdentifier)) {
                 for (Integer recordId : recordIdentifier) {
+                    if (!isMinimumAllowedProfile && !accessManager.isOwner(context, String.valueOf(recordId))) {
+                        Log.debug(API.LOG_MODULE_NAME, mustBeProfileOrOwnerMessage);
+                        throw new NotAllowedException(mustBeProfileOrOwnerMessage);
+                    }
                     try {
-                        if (allowedAccessLevelProfile == Profile.RegisteredUser) {
+                        if (minimumAllowedProfile == Profile.RegisteredUser) {
                             ApiUtils.canViewRecord(String.valueOf(recordId), request);
                         } else {
                             ApiUtils.canEditRecord(String.valueOf(recordId), request);
@@ -765,8 +793,12 @@ public class MetadataWorkflowApi {
             }
             if (!CollectionUtils.isEmpty(uuid)) {
                 for (String recordId : uuid) {
+                    if (!isMinimumAllowedProfile && !accessManager.isOwner(context, recordId)) {
+                        Log.debug(API.LOG_MODULE_NAME, mustBeProfileOrOwnerMessage);
+                        throw new NotAllowedException(mustBeProfileOrOwnerMessage);
+                    }
                     try {
-                        if (allowedAccessLevelProfile == Profile.RegisteredUser) {
+                        if (minimumAllowedProfile == Profile.RegisteredUser) {
                             ApiUtils.canViewRecord(recordId, request);
                         } else {
                             ApiUtils.canEditRecord(recordId, request);
