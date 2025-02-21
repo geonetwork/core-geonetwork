@@ -760,7 +760,9 @@ public class MetadataWorkflowApi {
 
             if (!CollectionUtils.isEmpty(recordIdentifier)) {
                 for (Integer recordId : recordIdentifier) {
-                    if (!isMinimumAllowedProfile && !accessManager.isOwner(context, String.valueOf(recordId))) {
+                    // Handle record not found
+                    AbstractMetadata metadata = ApiUtils.getRecord(String.valueOf(recordId));
+                    if (!isMinimumAllowedProfile && !accessManager.isOwner(context, metadata.getSourceInfo())) {
                         Log.debug(API.LOG_MODULE_NAME, mustBeProfileOrOwnerMessage);
                         throw new NotAllowedException(mustBeProfileOrOwnerMessage);
                     }
@@ -769,7 +771,9 @@ public class MetadataWorkflowApi {
             }
             if (!CollectionUtils.isEmpty(uuid)) {
                 for (String recordId : uuid) {
-                    if (!isMinimumAllowedProfile && !accessManager.isOwner(context, recordId)) {
+                    // Handle record not found
+                    AbstractMetadata metadata = ApiUtils.getRecord(recordId);
+                    if (!isMinimumAllowedProfile && !accessManager.isOwner(context, metadata.getSourceInfo())) {
                         Log.debug(API.LOG_MODULE_NAME, mustBeProfileOrOwnerMessage);
                         throw new NotAllowedException(mustBeProfileOrOwnerMessage);
                     }
