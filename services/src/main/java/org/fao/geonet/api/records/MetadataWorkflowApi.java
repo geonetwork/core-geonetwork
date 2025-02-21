@@ -250,7 +250,7 @@ public class MetadataWorkflowApi {
         @Parameter(description = "Use approved version or not", example = "true")
         @RequestParam(required = false, defaultValue = "true")  Boolean approved,
         HttpServletRequest request) throws Exception {
-        AbstractMetadata metadata = metadataUtils.findOneByUuid(metadataUuid);
+        AbstractMetadata metadata = ApiUtils.getRecord(metadataUuid);
         Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
         ResourceBundle messages = ApiUtils.getMessagesResourceBundle(request.getLocales());
         ServiceContext context = ApiUtils.createServiceContext(request, locale.getISO3Language());
