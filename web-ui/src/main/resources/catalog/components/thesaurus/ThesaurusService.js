@@ -207,13 +207,7 @@
               s1 = k1.label.toLowerCase();
               s2 = k2.label.toLowerCase();
             }
-            if (s1 < s2) {
-              return -1;
-            }
-            if (s1 > s2) {
-              return 1;
-            }
-            return 0;
+            return s1.localeCompare(s2);
           });
 
           if (dataToExclude && dataToExclude.length > 0) {
