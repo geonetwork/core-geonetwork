@@ -58,6 +58,8 @@ import org.fao.geonet.kernel.metadata.StatusActionsFactory;
 import org.fao.geonet.kernel.metadata.StatusChangeType;
 import org.fao.geonet.kernel.search.EsSearchManager;
 import org.fao.geonet.kernel.search.IndexingMode;
+import org.fao.geonet.kernel.search.Translator;
+import org.fao.geonet.kernel.search.TranslatorFactory;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.languages.FeedbackLanguages;
@@ -160,6 +162,9 @@ public class MetadataWorkflowApi {
 
     @Autowired
     RoleHierarchy roleHierarchy;
+
+    @Autowired
+    TranslatorFactory translatorFactory;
 
     // The restore function currently supports these states
     static final StatusValue.Events[] supportedRestoreStatuses = StatusValue.Events.getSupportedRestoreStatuses();
@@ -1384,9 +1389,10 @@ public class MetadataWorkflowApi {
      * @return A formatted message indicating the required profile or ownership.
      */
     private String getMustBeProfileOrOwnerMessage(String minimumAllowedProfileName, ResourceBundle messages) {
+        Translator jsonLocTranslator = translatorFactory.getTranslator("apploc:", messages.getLocale().getISO3Language());
         return MessageFormat.format(
             messages.getString("exception.notAllowed.mustBeProfileOrOwner"),
-            messages.getString(minimumAllowedProfileName)
+            jsonLocTranslator.translate(minimumAllowedProfileName)
         );
     }
 
