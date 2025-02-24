@@ -68,9 +68,6 @@
           <name>release</name>
         </property>
       </activation>
-      <modules>
-        <module>gn-datahub-integration</module>
-      </modules>
     </profile>
   </profiles>
 

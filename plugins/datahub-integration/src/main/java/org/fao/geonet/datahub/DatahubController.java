@@ -6,7 +6,6 @@ import org.fao.geonet.NodeInfo;
 import org.fao.geonet.domain.Source;
 import org.fao.geonet.domain.SourceType;
 import org.fao.geonet.kernel.setting.SettingManager;
-import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.SourceRepository;
 import org.fao.geonet.utils.Log;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,11 +68,6 @@ public class DatahubController {
     void handleDatahubRequest(HttpServletRequest request, HttpServletResponse response,String locale) throws IOException {
         Log.debug(LOGGER_NAME, "enter in datahub");
 
-        if (!isDatahubEnabled()) {
-            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-            return;
-        }
-
         String portalName = getPortalName(request);
         if (!isPortalDatahubEnabled(portalName)) {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
@@ -90,9 +84,6 @@ public class DatahubController {
         writeResponseContent(request, response, actualFile, portalName);
     }
 
-    private boolean isDatahubEnabled() {
-        return Objects.equals(settingManager.getValue(Settings.GEONETWORK_UI_DATAHUB_ENABLED), "true");
-    }
 
     private String getPortalName(HttpServletRequest request) {
         String reqPath = request.getPathInfo();
@@ -102,7 +93,7 @@ public class DatahubController {
 
     private boolean isPortalDatahubEnabled(String portalName) {
         if (NodeInfo.DEFAULT_NODE.equals(portalName)) {
-            return isDatahubEnabled();
+            return true;
         } else if (sourceRepository.existsByUuidAndType(portalName, SourceType.subportal)) {
             return Objects.requireNonNull(sourceRepository.findOneByUuid(portalName)).getDatahubEnabled();
         }
@@ -164,13 +155,15 @@ public class DatahubController {
         outStream.close();
     }
     InputStream readConfiguration(String portalName) {
-        String configuration = settingManager.getValue(Settings.GEONETWORK_UI_DATAHUB_CONFIGURATION);
-
-        if (!portalName.equals(NodeInfo.DEFAULT_NODE)) {
-            Source portal = sourceRepository.findOneByUuid(portalName);
-            if (portal != null && !portal.getDatahubConfiguration().isEmpty()) {
-                configuration = portal.getDatahubConfiguration();
-            }
+       Source portal = null;
+        if(portalName.equals(NodeInfo.DEFAULT_NODE)){ //srv path, default portal
+            portal = Objects.requireNonNull(sourceRepository.findByType(SourceType.portal, null)).get(0);
+        }else {
+            portal = sourceRepository.findOneByUuid(portalName);
+        }
+        String configuration = "";
+        if (portal != null && !portal.getDatahubConfiguration().isEmpty()) {
+            configuration = portal.getDatahubConfiguration();
         }
 
         // remove url & add new one

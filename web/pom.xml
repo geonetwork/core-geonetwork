@@ -635,12 +635,6 @@
       <version>${xmlunit.version}</version>
       <scope>test</scope>
     </dependency>
-    <!-- FIXME: only add this with the datahub-integration profile -->
-    <dependency>
-      <groupId>org.geonetwork-opensource.plugins</groupId>
-      <artifactId>gn-datahub-integration</artifactId>
-      <version>${project.version}</version>
-    </dependency>
 
   </dependencies>
 
@@ -1058,6 +1052,16 @@
   </build>
 
   <profiles>
+    <profile>
+      <id>datahub-integration</id>
+      <dependencies>
+        <dependency>
+          <groupId>org.geonetwork-opensource.plugins</groupId>
+          <artifactId>gn-datahub-integration</artifactId>
+          <version>${project.version}</version>
+        </dependency>
+      </dependencies>
+    </profile>
     <profile>
       <id>wro4j-prebuild-cache</id>
       <activation>
