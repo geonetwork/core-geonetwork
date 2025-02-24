@@ -272,8 +272,3 @@ Allows to view metadata history
 ## Harvesting
 
 *Allow editing on harvested records*: Enables/Disables editing of harvested records in the catalogue. By default, harvested records cannot be edited.
-
-## Geonetwork-ui configuration
-
-*Enable datahub*:
-You can adapt your GeoNetwork UI by enabling Datahub. First, download the specific plugin datahub-integration. Then, on the settings page, enable Datahub . you can provide an other specific Datahub configuration than the default one. You can also configure it for each portal. Ensure that Datahub is enabled in the settings to make it work on portals.
