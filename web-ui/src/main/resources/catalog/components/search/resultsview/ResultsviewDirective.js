@@ -192,7 +192,7 @@
             if (resourceAbstract) {
               var abstractParagraphs = resourceAbstract.split('\n');
               var abstractBrief="";
-              for (let index=0; index < abstractParagraphs.length; index++) {
+              for (var index=0; index < abstractParagraphs.length; index++) {
                 var abstractBrief=abstractBrief+abstractParagraphs[index]+"\n";
                 if (abstractBrief.length>50) {
                   break;
