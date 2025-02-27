@@ -34,6 +34,7 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -328,6 +329,11 @@ public class OIDCRoleProcessor {
             if (o == null) {
                 Log.debug(Geonet.SECURITY, "oidc: pathToRoles - cannot find path component named: " + path);
                 return new ArrayList<>();
+            }
+            if (o instanceof String) {
+                List<String> singleGroup = new ArrayList<>();
+                singleGroup.add((String) o);
+                return singleGroup;
             }
             if (o instanceof Map) {
                 info = (Map<String, Object>) o;
