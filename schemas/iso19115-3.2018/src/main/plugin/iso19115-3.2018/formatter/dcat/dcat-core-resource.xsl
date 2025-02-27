@@ -127,9 +127,16 @@
                     <dcat:accessURL rdf:resource="{.}"/>
                     <dcat:accessService rdf:resource="{$serviceUri}"/>
                   </xsl:for-each>
-                  <dct:title><xsl:value-of select="root/resourceTitleObject/default"/></dct:title>
-                  <dct:description xml:lang="fre"><xsl:value-of select="root/resourceAbstractObject/default"/></dct:description>
 
+                  <xsl:call-template name="rdf-index-field-localised">
+                    <xsl:with-param name="nodeName" select="'dct:title'"/>
+                    <xsl:with-param name="field" select="root/resourceTitleObject"/>
+                  </xsl:call-template>
+
+                  <xsl:call-template name="rdf-index-field-localised">
+                    <xsl:with-param name="nodeName" select="'dct:description'"/>
+                    <xsl:with-param name="field" select="root/resourceAbstractObject"/>
+                  </xsl:call-template>
                   <!--
                    RDF Property:	dcterms:issued
                    Definition:	Date of formal issuance (e.g., publication) of the distribution.
