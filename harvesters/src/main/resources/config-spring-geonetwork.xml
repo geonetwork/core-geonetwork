@@ -73,4 +73,6 @@
   <bean id="simpleurl"
         class="org.fao.geonet.kernel.harvest.harvester.simpleurl.SimpleUrlHarvester"
         scope="prototype"/>
+  <bean id="sftp" class="org.fao.geonet.kernel.harvest.harvester.sftp.SftpHarvester"
+        scope="prototype"/>
 </beans>
