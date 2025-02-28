@@ -82,7 +82,7 @@ public class EsRestClient implements InitializingBean {
 
     private ElasticsearchAsyncClient asyncClient;
 
-    @Value("${es.url}")
+
     private String serverUrl;
 
     @Value("${es.protocol}")
@@ -128,10 +128,18 @@ public class EsRestClient implements InitializingBean {
 
     @Override
     public void afterPropertiesSet() throws Exception {
+        if (StringUtils.isBlank(serverProtocol) || StringUtils.isBlank(serverHost) || StringUtils.isBlank(serverPort)) {
+            Log.error("geonetwork.index", String.format(
+                "Elasticsearch URL defined by serverProtocol='%s', serverHost='%s', serverPort='%s' is missing. "
+                    + "Check configuration.", this.serverProtocol,this.serverHost,this.serverPort));
+        }
+
+        //build server URL
+        serverUrl = serverProtocol + "://" + serverHost + ":" + serverPort;
         if (StringUtils.isNotEmpty(serverUrl)) {
             RestClientBuilder builder = RestClient.builder(new HttpHost(serverHost, Integer.parseInt(serverPort), serverProtocol));
 
-            if (serverUrl.startsWith("https://")) {
+            if (serverProtocol.startsWith("https")) {
                 SSLContext sslContext = new SSLContextBuilder().loadTrustMaterial(
                     null, new TrustStrategy() {
                         public boolean isTrusted(X509Certificate[] arg0, String arg1) throws CertificateException {
