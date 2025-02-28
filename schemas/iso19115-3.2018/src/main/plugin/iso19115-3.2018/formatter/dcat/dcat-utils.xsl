@@ -17,6 +17,7 @@
                 xmlns:owl="http://www.w3.org/2002/07/owl#"
                 xmlns:adms="http://www.w3.org/ns/adms#"
                 xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+                xmlns:util="java:org.fao.geonet.util.XslUtil"
                 xmlns:gn-fn-dcat="http://geonetwork-opensource.org/xsl/functions/dcat"
                 xmlns:xlink="http://www.w3.org/1999/xlink"
                 exclude-result-prefixes="#all">
@@ -63,6 +64,20 @@
     </xsl:for-each>
   </xsl:template>
 
+  <xsl:template name="rdf-index-field-localised">
+    <xsl:param name="nodeName"
+               as="xs:string"/>
+    <xsl:param name="field"
+               as="node()"/>
+
+    <xsl:for-each select="$field/*[starts-with(local-name(.), 'lang')]">
+      <xsl:variable name="language" select="substring-after(local-name(.), 'lang')"/>
+      <xsl:element name="{$nodeName}">
+        <xsl:attribute name="xml:lang" select="util:twoCharLangCode($language)"/>
+        <xsl:value-of select="."/>
+      </xsl:element>
+    </xsl:for-each>
+  </xsl:template>
 
   <xsl:template name="rdf-not-localised">
     <xsl:param name="nodeName"
