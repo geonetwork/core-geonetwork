@@ -242,6 +242,17 @@ public class OIDCRoleProcessorTest {
         return claims;
     }
 
+    public Map<String, Object> createSingleValuedRoleClaims() {
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("abc", "ABC");
+        Map<String, Map> resource_access = new HashMap<>();
+        Map<String, String> gn_key = new HashMap<>();
+        gn_key.put("roles", "SINGLE_ROLE_MEMBERSHIP");
+        resource_access.put("gn-key", gn_key);
+        claims.put("resource_access", resource_access);
+        return claims;
+    }
+
 
     // simple test - easiest example
     @Test
@@ -287,7 +298,15 @@ public class OIDCRoleProcessorTest {
         claims = createBadSimpleClaims6();
         roles = oidcRoleProcessor.getTokenRoles(claims);
         assertEquals(0, roles.size());
+    }
 
+    @Test
+    public void testGetTokenRolesSingleValue() {
+        OIDCRoleProcessor oidcRoleProcessor = getOIDCRoleProcessor();
+        Map<String, Object> claims = createSingleValuedRoleClaims();
+        List<String> roles = oidcRoleProcessor.getTokenRoles(claims);
+        assertEquals("Expected only one role from the claims", 1, roles.size());
+        assertEquals("Expected single role to match SINGLE_ROLE_MEMBERSHIP", "SINGLE_ROLE_MEMBERSHIP", roles.get(0));
     }
 
     //test with profile-groups
