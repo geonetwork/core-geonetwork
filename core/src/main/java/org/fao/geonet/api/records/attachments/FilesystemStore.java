@@ -88,6 +88,11 @@ public class FilesystemStore extends AbstractStore {
         Path resourceTypeDir = calculateMetadataDir(metadataDir, visibilityToUse);
 
         List<MetadataResource> resourceList = new ArrayList<>();
+
+        if (!resourceTypeDir.toFile().exists()) {
+            return resourceList;
+        }
+
         if (filter == null) {
             filter = FilesystemStore.DEFAULT_FILTER;
         }
