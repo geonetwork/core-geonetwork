@@ -172,5 +172,19 @@
     </xsl:choose>
   </xsl:function>
 
+  <!-- Replace a given list of $placeholders by a list of respective $values in the given $string. -->
+  <xsl:function name="geonet:replacePlaceholders">
+    <xsl:param name="string"/>
+    <xsl:param name="placeholders"/>
+    <xsl:param name="values"/>
+    <xsl:choose>
+      <xsl:when test="count($placeholders)=1">
+        <xsl:value-of select="replace($string, $placeholders[position()=1], $values[position()=1])"/>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:value-of select="geonet:replacePlaceholders(replace($string, $placeholders[position()=1], $values[position()=1]), $placeholders[position()>1], $values[position()>1])"/>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:function>
 
 </xsl:stylesheet>
