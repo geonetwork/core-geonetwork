@@ -28,6 +28,7 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.MetadataCategory;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.kernel.harvest.harvester.AbstractHarvester;
@@ -198,5 +199,39 @@ public abstract class BaseAligner<P extends AbstractParams> extends AbstractAlig
         }
         return md;
     }
+
+
+    /**
+     * Filter the metadata if process parameter is set and corresponding XSL transformation
+     * exists in xsl/conversion/import.
+     *
+     * @param context
+     * @param md
+     * @param processName
+     * @param processParams
+     * @param log
+     * @return
+     */
+    protected Element applyXSLTProcessToMetadata(ServiceContext context,
+                                    Element md,
+                                    String processName,
+                                    Map<String, Object> processParams,
+                                                 org.fao.geonet.Logger log) {
+        Path filePath = context.getBean(GeonetworkDataDirectory.class).getXsltConversion(processName);
+        if (!Files.exists(filePath)) {
+            log.debug("     processing instruction  " + processName + ". Metadata not filtered.");
+        } else {
+            Element processedMetadata;
+            try {
+                processedMetadata = Xml.transform(md, filePath, processParams);
+                log.debug("     metadata filtered.");
+                md = processedMetadata;
+            } catch (Exception e) {
+                log.warning("     processing error " + processName + ": " + e.getMessage());
+            }
+        }
+        return md;
+    }
+
 
 }
