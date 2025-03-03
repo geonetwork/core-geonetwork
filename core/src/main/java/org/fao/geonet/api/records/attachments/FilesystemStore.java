@@ -89,7 +89,7 @@ public class FilesystemStore extends AbstractStore {
 
         List<MetadataResource> resourceList = new ArrayList<>();
 
-        if (!resourceTypeDir.toFile().exists()) {
+        if (!Files.exists(resourceTypeDir)) {
             return resourceList;
         }
 
