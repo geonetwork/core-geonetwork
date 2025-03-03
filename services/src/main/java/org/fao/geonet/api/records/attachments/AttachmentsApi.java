@@ -71,7 +71,10 @@ import javax.servlet.http.HttpServletResponse;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.URL;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
@@ -357,7 +360,13 @@ public class AttachmentsApi {
     }
 
     private String retrieveResourceFileFromUrl(HttpServletRequest request) {
-        return new AntPathMatcher().extractPathWithinPattern(
+        String fileName = new AntPathMatcher().extractPathWithinPattern(
             request.getAttribute(HandlerMapping.BEST_MATCHING_PATTERN_ATTRIBUTE).toString(),request.getRequestURI());
+
+        try {
+            return URLDecoder.decode(fileName, StandardCharsets.UTF_8.name());
+        } catch(UnsupportedEncodingException ex) {
+            return fileName;
+        }
     }
 }
