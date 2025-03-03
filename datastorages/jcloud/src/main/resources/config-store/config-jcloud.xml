@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  ~ Copyright (C) 2001-2016 Food and Agriculture Organization of the
+  ~ Copyright (C) 2001-2024 Food and Agriculture Organization of the
   ~ United Nations (FAO-UN), United Nations World Food Programme (WFP)
   ~ and United Nations Environment Programme (UNEP)
   ~
@@ -50,8 +50,17 @@
         <property name="externalResourceManagementModalEnabled" value="${jcloud.external.resource.management.modal.enabled}"/>
         <property name="externalResourceManagementFolderEnabled" value="${jcloud.external.resource.management.folder.enabled}"/>
         <property name="externalResourceManagementFolderRoot" value="${jcloud.external.resource.management.folder.root}"/>
+        <property name="externalResourceManagementValidationStatusPropertyName" value="${jcloud.external.resource.management.validation.status.property.name}"/>
+        <property name="externalResourceManagementValidationStatusDefaultValue" value="${jcloud.external.resource.management.validation.status.default.value}"/>
+        <property name="externalResourceManagementChangedDatePropertyName" value="${jcloud.external.resource.management.changed.date.property.name}"/>
+        <property name="externalResourceManagementCreatedDatePropertyName" value="${jcloud.external.resource.management.created.date.property.name}"/>
 
         <property name="versioningEnabled" value="${jcloud.versioning.enabled}"/>
+        <!-- Supported versioning Strategy:  ALL, DRAFT, APPROVED -->
+        <property name="versioningStrategy" value="${jcloud.versioning.strategy}"/>
+        <property name="externalResourceManagementVersionPropertyName" value="${jcloud.external.resource.management.version.property.name}"/>
+
+        <property name="metadataUUIDPropertyName" value="${jcloud.metadata.uuid.property.name}"/>
     </bean>
     <bean id="filesystemStore" class="org.fao.geonet.api.records.attachments.JCloudStore" />
     <bean id="resourceStore"

@@ -338,6 +338,23 @@ When using a generic field like `tag.default` and including only a subset of key
 },
 ```
 
+To translate the label `IDP_TOPICS`, 2 options:
+
+* Use the translation API to add your custom translation in the database for the facet key `facet-IDP_TOPICS` (see the Admin console --> Settings --> Languages).
+* Or declare a meta property `labels` in the facet configuration:
+
+``` js
+"IDP_TOPICS": {
+  "terms": {
+    ...
+  "meta": {
+      "labels": {
+        "eng": "IDP topics",
+        "fre": "Thèmes IDP"
+      },
+```
+
+
 ## Decorate aggregations {#configuring-facet-decorator}
 
 All aggregations can be decorated by an icon or an image in the home page or in other pages. The decorator is configured in the `meta` properties of the facet:
@@ -467,7 +484,7 @@ A date range field:
 "resourceTemporalDateRange": {
    "gnBuildFilterForRange": {
       "field": "resourceTemporalDateRange",
-      "buckets": "2021 - 1970",
+      "buckets": 51, //"2021 - 1970",
       "dateFormat": "YYYY",
       "vegaDateFormat": "%Y",
       "from": "1970",

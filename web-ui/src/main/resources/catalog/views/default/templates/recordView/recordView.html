@@ -35,10 +35,20 @@
     <div
       class="alert alert-warning"
       data-ng-hide="!mdView.loadDetailsFinished || mdView.current.record"
-      data-translate=""
-      data-translate-values="{uuid: '{{recordIdentifierRequested | htmlToPlaintext}}', url: '{{url | encodeURIComponent}}'}"
     >
-      recordNotFound
+      <span
+        data-translate=""
+        data-translate-values="{uuid: '{{recordIdentifierRequested | htmlToPlaintext}}'}"
+      >
+        recordNotFound
+      </span>
+      <span
+        data-ng-hide="user"
+        data-translate=""
+        data-translate-values="{signInFormAction: '{{signInFormAction}}', csrf: '{{csrf}}', redirectUrlAfterSign: '{{redirectUrlAfterSign}}'}"
+      >
+        trySignIn
+      </span>
     </div>
     <div class="row" data-ng-show="!mdView.loadDetailsFinished">
       <i class="fa fa-spinner fa-spin fa-3x fa-fw"></i>
@@ -134,7 +144,7 @@
           <div
             class="gn-md-actions-btn pull-left"
             data-gn-md-actions-menu="mdView.current.record"
-          />
+          ></div>
 
           <!-- display mode -->
           <div class="btn-group gn-view-menu-button pull-left">
@@ -180,17 +190,17 @@
           <div data-ng-switch-when="series">
             <div
               ng-include="'../../catalog/views/default/templates/recordView/type-series.html'"
-            />
+            ></div>
           </div>
           <div data-ng-switch-when="service">
             <div
               ng-include="'../../catalog/views/default/templates/recordView/type-service.html'"
-            />
+            ></div>
           </div>
           <div data-ng-switch-default>
             <div
               ng-include="'../../catalog/views/default/templates/recordView/type-dataset.html'"
-            />
+            ></div>
           </div>
         </div>
       </div>

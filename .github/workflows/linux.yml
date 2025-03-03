@@ -12,7 +12,7 @@ jobs:
     strategy:
       matrix:
         include:
-          - os: ubuntu-22.04
+          - os: ubuntu-24.04
             jdk: 11
     steps:
     - uses: actions/checkout@v4
@@ -22,7 +22,7 @@ jobs:
         submodules: 'recursive'
         show-progress: 'false'
     - name: Set up JDK
-      uses: actions/setup-java@v4.1.0
+      uses: actions/setup-java@v4.2.1
       with:
         distribution: 'temurin'
         java-version: ${{ matrix.jdk }}
@@ -37,7 +37,7 @@ jobs:
     - name: Set up Maven
       uses: stCarolas/setup-maven@v5
       with:
-        maven-version: 3.6.3
+        maven-version: 3.8.3
     - name: Build with Maven
       run: |
         mvn -B -ntp -V install -DskipTests=true -Dmaven.javadoc.skip=true -Drelease -Pwith-doc
@@ -46,7 +46,7 @@ jobs:
         find ~/.m2/repository -name "*SNAPSHOT*" -type d | xargs rm -rf {}
 
   QA:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
     - uses: actions/checkout@v4
       with:
@@ -55,7 +55,7 @@ jobs:
         submodules: 'recursive'
         show-progress: 'false'
     - name: Set up JDK
-      uses: actions/setup-java@v4.1.0
+      uses: actions/setup-java@v4.2.1
       with:
         distribution: 'temurin'
         java-version: 11
@@ -63,7 +63,7 @@ jobs:
     - name: Set up Maven
       uses: stCarolas/setup-maven@v5
       with:
-        maven-version: 3.6.3
+        maven-version: 3.8.3
     - name: Test with maven
       run: |
         mvn -B resources:resources@copy-index-schema-to-source -f web

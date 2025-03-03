@@ -26,6 +26,7 @@
 package org.fao.geonet.api.records.attachments;
 
 import jeeves.server.context.ServiceContext;
+import org.fao.geonet.api.exception.InputStreamLimitExceededException;
 import org.fao.geonet.api.exception.ResourceAlreadyExistException;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.constants.Geonet;
@@ -64,7 +65,6 @@ import java.util.concurrent.TimeUnit;
  * </pre>
  */
 public class FilesystemStore extends AbstractStore {
-
     public static final String DEFAULT_FILTER = "*";
 
     @Autowired
@@ -173,7 +173,6 @@ public class FilesystemStore extends AbstractStore {
 
     public MetadataResource getResourceDescription(final ServiceContext context, String metadataUuid, MetadataResourceVisibility visibility,
                                                    String filename, Boolean approved) throws Exception {
-
         MetadataResourceVisibility visibilityToUse = calculateVisibilityToUse(visibility);
 
         Path path = getPath(context, metadataUuid, visibilityToUse, filename, approved);
@@ -237,7 +236,12 @@ public class FilesystemStore extends AbstractStore {
         MetadataResourceVisibility visibilityToUse = calculateVisibilityToUse(visibility);
 
         Path filePath = getPath(context, metadataId, visibilityToUse, filename, approved);
-        Files.copy(is, filePath, StandardCopyOption.REPLACE_EXISTING);
+        try {
+            Files.copy(is, filePath, StandardCopyOption.REPLACE_EXISTING);
+        } catch (InputStreamLimitExceededException e) {
+            Files.deleteIfExists(filePath);
+            throw e;
+        }
         if (changeDate != null) {
             IO.touch(filePath, FileTime.from(changeDate.getTime(), TimeUnit.MILLISECONDS));
         }
@@ -276,25 +280,31 @@ public class FilesystemStore extends AbstractStore {
     }
 
     @Override
-    public String delResources(ServiceContext context, String metadataUuid, Boolean approved) throws Exception {
-        int metadataId = canEdit(context, metadataUuid, approved);
+    public String delResources(ServiceContext context, int metadataId) throws Exception {
         Path metadataDir = Lib.resource.getMetadataDir(getDataDirectory(context), metadataId);
         try {
+            Log.info(Geonet.RESOURCES, String.format("Deleting all files from metadataId '%d'", metadataId));
             IO.deleteFileOrDirectory(metadataDir, true);
-            return String.format("Metadata '%s' directory removed.", metadataId);
+            Log.info(Geonet.RESOURCES,
+                String.format("Metadata '%d' directory removed.", metadataId));
+            return String.format("Metadata '%d' directory removed.", metadataId);
         } catch (Exception e) {
-            return String.format("Unable to remove metadata '%s' directory.", metadataId);
+            return String.format("Unable to remove metadata '%d' directory.", metadataId);
         }
     }
 
     @Override
     public String delResource(ServiceContext context, String metadataUuid, String resourceId, Boolean approved) throws Exception {
-        canEdit(context, metadataUuid, approved);
+        int metadataId = canEdit(context, metadataUuid, approved);
 
         try (ResourceHolder filePath = getResource(context, metadataUuid, resourceId, approved)) {
             Files.deleteIfExists(filePath.getPath());
-            return String.format("MetadataResource '%s' removed.", resourceId);
+            Log.info(Geonet.RESOURCES,
+                String.format("Resource '%s' removed for metadata %d (%s).", resourceId, metadataId, metadataUuid));
+            return String.format("Metadata resource '%s' removed.", resourceId);
         } catch (IOException e) {
+            Log.warning(Geonet.RESOURCES,
+                String.format("Unable to remove resource '%s' for metadata %d (%s). %s", resourceId, metadataId, metadataUuid, e.getMessage()));
             return String.format("Unable to remove resource '%s'.", resourceId);
         }
     }
@@ -308,12 +318,16 @@ public class FilesystemStore extends AbstractStore {
             return null;
         }
 
-        canEdit(context, metadataUuid, approved);
+        int metadataId = canEdit(context, metadataUuid, approved);
 
         try (ResourceHolder filePath = getResource(context, metadataUuid, visibility, resourceId, approved)) {
             Files.deleteIfExists(filePath.getPath());
-            return String.format("MetadataResource '%s' removed.", resourceId);
+            Log.info(Geonet.RESOURCES,
+                String.format("Resource '%s' removed for metadata %d (%s).", resourceId, metadataId, metadataUuid));
+            return String.format("Metadata resource '%s' removed.", resourceId);
         } catch (IOException e) {
+            Log.warning(Geonet.RESOURCES,
+                String.format("Unable to remove resource '%s' for metadata %d (%s). %s", resourceId, metadataId, metadataUuid, e.getMessage()));
             return String.format("Unable to remove resource '%s'.", resourceId);
         }
     }

@@ -12,7 +12,7 @@
     <div class="panel-body">
       <a
         class="clearfix"
-        title="{{::facetValue}}"
+        title="{{::(facet | facetTooltip)}}"
         role="link"
         data-ng-init="response = aggregations[key];
                       decorator = (response.meta && response.meta.decorator) || undefined"
@@ -22,7 +22,7 @@
           data-ng-if="decorator"
           data-es-facet-decorator="decorator"
           data-key="facetValue"
-        />
+        ></span>
         <h2
           data-ng-show="isInspire"
           class="inspire-{{::(facetValue | facetCssClassCode: isInspire)}}-{{::iso2lang}}"

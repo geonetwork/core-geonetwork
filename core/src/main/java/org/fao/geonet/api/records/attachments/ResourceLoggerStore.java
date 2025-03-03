@@ -135,6 +135,13 @@ public class ResourceLoggerStore extends AbstractStore {
         return null;
     }
 
+    public String delResources(ServiceContext context, int metadataId) throws Exception {
+        if (decoratedStore != null) {
+            return decoratedStore.delResources(context, metadataId);
+        }
+        return null;
+    }
+
     @Override
     public String delResource(ServiceContext context, String metadataUuid, String resourceId, Boolean approved) throws Exception {
         if (decoratedStore != null) {

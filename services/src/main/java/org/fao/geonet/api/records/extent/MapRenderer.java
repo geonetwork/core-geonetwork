@@ -35,6 +35,8 @@ import org.fao.geonet.kernel.setting.Settings;
 import org.geotools.geometry.jts.JTS;
 import org.geotools.geometry.jts.ReferencedEnvelope;
 import org.geotools.referencing.CRS;
+import org.locationtech.jts.awt.IdentityPointTransformation;
+import org.locationtech.jts.awt.PointShapeFactory;
 import org.locationtech.jts.awt.ShapeWriter;
 import org.locationtech.jts.geom.Envelope;
 import org.locationtech.jts.geom.Geometry;
@@ -54,6 +56,8 @@ import java.util.SortedSet;
 
 import static java.lang.Math.pow;
 import static java.lang.Math.sqrt;
+import static org.locationtech.jts.geom.Geometry.TYPENAME_GEOMETRYCOLLECTION;
+import static org.locationtech.jts.geom.Geometry.TYPENAME_POINT;
 
 public class MapRenderer {
 
@@ -166,9 +170,22 @@ public class MapRenderer {
             }
         }
         BufferedImage image;
-        Envelope bboxOfImage = new Envelope(geom.getEnvelopeInternal());
-        double expandFactor = calculateExpandFactor(regionGetMapExpandFactors, bboxOfImage, srs);
-        bboxOfImage.expandBy(bboxOfImage.getWidth() * expandFactor, bboxOfImage.getHeight() * expandFactor);
+        boolean isPoint = geom.getGeometryType().equals(TYPENAME_POINT)
+                || (geom.getGeometryType().equals(TYPENAME_GEOMETRYCOLLECTION)
+                    && geom.getNumGeometries() == 1
+                    && geom.getGeometryN(0).getGeometryType().equals(TYPENAME_POINT));
+        int pointBufferSize = 150;
+
+        Envelope bboxOfImage = new Envelope(isPoint ?
+                geom.buffer(pointBufferSize).getEnvelopeInternal() : geom.getEnvelopeInternal());
+        ExpandFactor factor = calculateExpandFactor(regionGetMapExpandFactors, bboxOfImage, srs);
+        double expandFactor = factor.factor;
+        if (factor.isSquareImage()) {
+            height = width;
+            bboxOfImage.expandBy(bboxOfImage.getWidth() * expandFactor, bboxOfImage.getWidth() * expandFactor);
+        } else {
+            bboxOfImage.expandBy(bboxOfImage.getWidth() * expandFactor, bboxOfImage.getHeight() * expandFactor);
+        }
         Dimension imageDimensions = calculateImageSize(bboxOfImage, width, height);
 
         Exception error = null;
@@ -209,10 +226,14 @@ public class MapRenderer {
             if (error != null) {
                 graphics.drawString(error.getMessage(), 0, imageDimensions.height / 2);
             }
-            ShapeWriter shapeWriter = new ShapeWriter();
-            Color geomFillColor = getColor(fillColor, new Color(0, 0, 0, 50));
+
+            Color geomFillColor = getColor(fillColor, new Color(0, 0, 0, 30));
             Color geomStrokeColor = getColor(strokeColor, new Color(0, 0, 0, 255));
             AffineTransform worldToScreenTransform = worldToScreenTransform(bboxOfImage, imageDimensions);
+            int pointSize = 5;
+            ShapeWriter shapeWriter = new ShapeWriter(new IdentityPointTransformation(),
+                    new PointShapeFactory.Circle(pointSize * bboxOfImage.getWidth() / imageDimensions.getWidth()));
+
             for (int i = 0; i < geom.getNumGeometries(); i++) {
                 Geometry geomExtent = MapRenderer.getGeometryExtent(geom.getGeometryN(i), srs, useGeodesicExtents);
                 // draw each included geometry separately to ensure they are filled correctly
@@ -254,8 +275,8 @@ public class MapRenderer {
         return defaultColor;
     }
 
-    private double calculateExpandFactor(SortedSet<ExpandFactor> regionGetMapExpandFactors, Envelope bboxOfImage,
-                                         String srs) throws Exception {
+    private ExpandFactor calculateExpandFactor(SortedSet<ExpandFactor> regionGetMapExpandFactors, Envelope bboxOfImage,
+                                               String srs) throws Exception {
         CoordinateReferenceSystem crs = Region.decodeCRS(srs);
         ReferencedEnvelope env = new ReferencedEnvelope(bboxOfImage, crs);
         env = env.transform(Region.WGS84, true);
@@ -266,10 +287,10 @@ public class MapRenderer {
 
         for (ExpandFactor factor : regionGetMapExpandFactors) {
             if (scale < factor.proportion) {
-                return factor.factor;
+                return factor;
             }
         }
-        return regionGetMapExpandFactors.last().factor;
+        return regionGetMapExpandFactors.last();
     }
 
     private Dimension calculateImageSize(Envelope bboxOfImage, Integer width, Integer height) {

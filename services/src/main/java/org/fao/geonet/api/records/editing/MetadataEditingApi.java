@@ -24,6 +24,8 @@
 package org.fao.geonet.api.records.editing;
 
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -41,6 +43,7 @@ import org.fao.geonet.api.records.MetadataUtils;
 import org.fao.geonet.api.records.attachments.Store;
 import org.fao.geonet.api.records.model.Direction;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
+import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.*;
@@ -432,7 +435,7 @@ public class MetadataEditingApi {
 
                         List<MetadataStatus> listOfStatusChange = new ArrayList<>(1);
                         listOfStatusChange.add(metadataStatus);
-                        sa.onStatusChange(listOfStatusChange);
+                        sa.onStatusChange(listOfStatusChange, true);
                     } else {
                         throw new SecurityException(String.format("Only users with editor profile can submit."));
                     }
@@ -454,7 +457,7 @@ public class MetadataEditingApi {
 
                         List<MetadataStatus> listOfStatusChange = new ArrayList<>(1);
                         listOfStatusChange.add(metadataStatus);
-                        sa.onStatusChange(listOfStatusChange);
+                        sa.onStatusChange(listOfStatusChange, true);
                     } else {
                         throw new SecurityException(String.format("Only users with review profile can approve."));
                     }
@@ -544,7 +547,7 @@ public class MetadataEditingApi {
         MediaType.ALL_VALUE}, produces = {MediaType.APPLICATION_XML_VALUE})
     @PreAuthorize("hasAuthority('Editor')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @ApiResponses(value = {@ApiResponse(responseCode = "204", description = "Editing session cancelled."),
+    @ApiResponses(value = {@ApiResponse(responseCode = "204", description = "Editing session cancelled.", content = {@Content(schema = @Schema(hidden = true))}),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)})
     @ResponseBody
     public void cancelEdits(@Parameter(description = API_PARAM_RECORD_UUID, required = true) @PathVariable String metadataUuid,
@@ -568,7 +571,7 @@ public class MetadataEditingApi {
     public void addElement(@Parameter(description = API_PARAM_RECORD_UUID, required = true) @PathVariable String metadataUuid,
                            @Parameter(description = "Reference of the insertion point.", required = true) @RequestParam String ref,
                            @Parameter(description = "Name of the element to add (with prefix)", required = true) @RequestParam String name,
-                           @Parameter(description = "Use geonet:attribute for attributes or child name.", required = false) @RequestParam(required = false) String child,
+                           @Parameter(description = "Empty for inserting element, `geonet:attribute` for attributes.", required = false) @RequestParam(required = false) String child,
                            @Parameter(description = "Should attributes be shown on the editor snippet?", required = false) @RequestParam(defaultValue = "false") boolean displayAttributes,
                            @Parameter(hidden = true) @RequestParam Map<String, String> allRequestParams,
                            HttpServletRequest request, HttpServletResponse response,
@@ -590,11 +593,26 @@ public class MetadataEditingApi {
         // -- Note that the metadata-embedded.xsl stylesheet
         // -- only applies the templating to the added element, not to
         // -- the entire metadata so performance should not be a big issue
-        Element elResp = new AjaxEditUtils(context).addElementEmbedded(ApiUtils.getUserSession(httpSession),
+        List<Element> elResp = new AjaxEditUtils(context).addElementEmbedded(ApiUtils.getUserSession(httpSession),
             String.valueOf(metadata.getId()), ref, name, child);
-        EditLib.tagForDisplay(elResp);
-        Element md = (Element) findRoot(elResp).clone();
-        EditLib.removeDisplayTag(elResp);
+        Element md = null;
+
+        EditLib editLib = context.getBean(DataManager.class).getEditLib();
+
+        for(Element el: elResp) {
+            if (md == null) {
+                EditLib.tagForDisplay(el);
+                md = (Element) findRoot(el).clone();
+                EditLib.removeDisplayTag(el);
+            } else {
+                Element el2 = editLib.findElement(md, el.getChild("element", Edit.NAMESPACE).getAttribute("ref").getValue());
+                EditLib.tagForDisplay(el2);
+                md = (Element) md.clone();
+                EditLib.removeDisplayTag(el2);
+            }
+
+        }
+
 
         buildEditorForm(allRequestParams.get("currTab"), httpSession, allRequestParams, request, md,
             metadata.getDataInfo().getSchemaId(), context, applicationContext, true, true, response);
@@ -626,7 +644,7 @@ public class MetadataEditingApi {
         MediaType.ALL_VALUE}, produces = {MediaType.APPLICATION_XML_VALUE})
     @PreAuthorize("hasAuthority('Editor')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @ApiResponses(value = {@ApiResponse(responseCode = "204", description = "Element removed."),
+    @ApiResponses(value = {@ApiResponse(responseCode = "204", description = "Element removed.", content = {@Content(schema = @Schema(hidden = true))}),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)})
     @ResponseBody
     public void deleteElement(
@@ -650,7 +668,7 @@ public class MetadataEditingApi {
         MediaType.ALL_VALUE}, produces = {MediaType.APPLICATION_XML_VALUE})
     @PreAuthorize("hasAuthority('Editor')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @ApiResponses(value = {@ApiResponse(responseCode = "204", description = "Attribute removed."),
+    @ApiResponses(value = {@ApiResponse(responseCode = "204", description = "Attribute removed.", content = {@Content(schema = @Schema(hidden = true))}),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)})
     @ResponseBody
     public void deleteAttribute(
@@ -700,7 +718,8 @@ public class MetadataEditingApi {
         GeonetworkDataDirectory dataDirectory = applicationContext.getBean(GeonetworkDataDirectory.class);
         Path xslt = dataDirectory.getWebappDir()
             .resolve(isEmbedded ? "xslt/ui-metadata/edit/edit-embedded.xsl" : "xslt/ui-metadata/edit/edit.xsl");
-        Xml.transformXml(root, xslt, response.getOutputStream());
+
+        Xml.transform(root, xslt, response.getOutputStream());
     }
 
     private Element buildResourceDocument(ApplicationContext applicationContext, ServiceContext context,

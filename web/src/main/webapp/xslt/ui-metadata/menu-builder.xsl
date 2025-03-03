@@ -40,7 +40,7 @@
     <div class="gn-scroll-spy"
          data-gn-scroll-spy="gn-editor-{$metadataId}"
          data-watch=""
-         data-all-depth="{if ($isFlatMode) then 'true' else 'false'}"/>
+         data-all-depth="{if ($isFlatMode) then 'true' else 'false'}"></div>
 
     <div class="nav nav-tabs">
       <!-- Make a drop down choice to swith to one view to another -->
@@ -51,7 +51,7 @@
                 aria-label="{$i18n/selectView}"
                 title="{$i18n/selectView}"
                 aria-expanded="false">
-          <i class="fa fa-eye"></i>
+          <i class="fa fa-fw fa-eye"></i>
           <span class="caret"></span>
         </button>
         <ul class="dropdown-menu" role="menu">
@@ -108,7 +108,7 @@
               <li role="menuitem">
                 <a data-ng-click="toggleAttributes(true)" href="">
                   <i class="fa"
-                     data-ng-class="gnCurrentEdit.displayAttributes ? 'fa-check-square-o' : 'fa-square-o'"/>
+                     data-ng-class="gnCurrentEdit.displayAttributes ? 'fa-check-square-o' : 'fa-square-o'"></i>
                   &#160;
                   <span data-translate="">toggleAttributes</span>
                 </a>
@@ -116,7 +116,7 @@
               <li role="menuitem">
                 <a data-ng-click="toggleTooltips(true)" href="">
                   <i class="fa"
-                     data-ng-class="gnCurrentEdit.displayTooltips ? 'fa-check-square-o' : 'fa-square-o'"/>
+                     data-ng-class="gnCurrentEdit.displayTooltips ? 'fa-check-square-o' : 'fa-square-o'"></i>
                   &#160;
                   <span data-translate="">toggleTooltips</span>
                 </a>

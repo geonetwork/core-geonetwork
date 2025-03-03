@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2023 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2024 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -22,13 +22,32 @@
  */
 package org.fao.geonet.config;
 
+import jeeves.server.context.ServiceContext;
+
 import java.util.List;
 import java.util.Optional;
 
 public interface IPublicationConfig {
-    public List<String> getPublicationOptionNames();
+    List<String> getPublicationOptionNames();
 
-    public List<PublicationOption> getPublicationOptions();
+    List<PublicationOption> getPublicationOptions();
 
-    public Optional<PublicationOption> getPublicationOptionConfiguration(String configName);
+    Optional<PublicationOption> getPublicationOptionConfiguration(String configName);
+
+    /**
+     * Method interface that can be implemented by a custom publication configuration class to do additional processing
+     * of the metadata published / unpublished.
+     *
+     * For example, assigning / removing a certain metadata category when the metadata is published / unpublished.
+     *
+     * @param serviceContext            The service context.
+     * @param publicationOption         Publication option selected.
+     * @param metadataId                Metadata internal identifier to process.
+     * @param publish                   Boolean to indicate publish/un-publish.
+     * @throws Exception
+     */
+    default void processMetadata(ServiceContext serviceContext, PublicationOption publicationOption,
+                                 Integer metadataId, boolean publish) throws Exception {
+        // Empty implementation
+    }
 }

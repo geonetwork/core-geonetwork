@@ -747,10 +747,10 @@
                 extent[1] +
                 ", " +
                 "East " +
-                extent[0] +
+                extent[2] +
                 ", " +
                 "West " +
-                extent[2];
+                extent[0];
               if (location) {
                 dc += ". " + location;
               }
@@ -900,7 +900,17 @@
                   imageTile.getImage().src = src;
                 },
                 function (r) {
-                  if (r.status === 414) {
+                  // Apache may not set CORS header in case of HTTP errors
+                  // This depends on virtual hosts configuration,
+                  // usage of Header always set Access-Control-Allow-Origin "*",
+                  // and virtual host resolution (by server name, ip or wildcard).
+                  // On CORS error, status is -1.
+                  // Check client side if the URI is too large according to default Apache LimitRequestFieldSize
+                  // and switch to POST in this case.
+                  var uriTooLarge =
+                    (r.status === undefined || r.status === -1) && src.length >= 8190;
+
+                  if (r.status === 414 || uriTooLarge) {
                     // Request URI too large, try POST
                     convertGetMapRequestToPost(src, function (response) {
                       var arrayBufferView = new Uint8Array(response.data);
@@ -1380,7 +1390,7 @@
               } else {
                 gnAlertService.addAlert({
                   msg: $translate.instant("layerCRSNotFound"),
-                  delay: 5000,
+                  delay: 5,
                   type: "warning"
                 });
               }
@@ -1390,7 +1400,7 @@
                   msg: $translate.instant("layerNotAvailableInMapProj", {
                     proj: mapProjection
                   }),
-                  delay: 5000,
+                  delay: 5,
                   type: "warning"
                 });
               }
@@ -1660,7 +1670,7 @@
                     var _url = url.split("/");
                     _url = _url[0] + "/" + _url[1] + "/" + _url[2] + "/";
                     if (
-                      $.inArray(_url, gnGlobalSettings.requireProxy) >= 0 &&
+                      $.inArray(_url + "#GET", gnGlobalSettings.requireProxy) >= 0 &&
                       url.indexOf(gnGlobalSettings.proxyUrl) != 0
                     ) {
                       capL.useProxy = true;
@@ -1835,13 +1845,25 @@
               .then(function (results) {
                 var layerInfo = results[0];
                 var legendUrl = results[1];
+
+                var layerExtent;
+
+                // Scale the layer extent. See https://github.com/geonetwork/core-geonetwork/issues/8025
+                if (layerInfo.extent) {
+                  layerExtent = [
+                    layerInfo.extent.xmin,
+                    layerInfo.extent.ymin,
+                    layerInfo.extent.xmax,
+                    layerInfo.extent.ymax
+                  ];
+
+                  var geomExtent = ol.geom.Polygon.fromExtent(layerExtent);
+                  geomExtent.scale(1.1);
+                  layerExtent = geomExtent.getExtent();
+                }
+
                 var extent = layerInfo.extent
-                  ? [
-                      layerInfo.extent.xmin,
-                      layerInfo.extent.ymin,
-                      layerInfo.extent.xmax,
-                      layerInfo.extent.ymax
-                    ]
+                  ? layerExtent
                   : map.getView().calculateExtent();
                 if (
                   layerInfo.extent &&
@@ -1959,7 +1981,7 @@
                         type: "wmts",
                         url: encodeURIComponent(url)
                       }),
-                      delay: 20000,
+                      delay: 20,
                       type: "warning"
                     });
                     var o = {
@@ -2057,7 +2079,7 @@
                       type: "wfs",
                       url: encodeURIComponent(url)
                     }),
-                    delay: 20000,
+                    delay: 20,
                     type: "warning"
                   });
                   var o = {
@@ -2137,7 +2159,7 @@
               } catch (e) {
                 gnAlertService.addAlert({
                   msg: $translate.instant("wmtsLayerNoUsableMatrixSet"),
-                  delay: 5000,
+                  delay: 5,
                   type: "danger"
                 });
                 return;
@@ -2301,7 +2323,8 @@
                   source: new ol.source.XYZ({
                     url: opt.url
                   }),
-                  title: title || "TMS Layer"
+                  title: title || "TMS Layer",
+                  name: opt.name
                 });
               case "bing_aerial":
                 return new ol.layer.Tile({

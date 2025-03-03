@@ -23,7 +23,7 @@
         data-ng-click="removeStep(h)"
         title="{{'removeHistoryStep' | translate}}"
       >
-        <i class="fa fa-times text-danger" />
+        <i class="fa fa-times text-danger"></i>
       </a>
       <a data-ng-href="catalog.search#/metadata/{{h.uuid}}" data-ng-hide="noTitle"
         ><i>{{h.title}}</i></a
@@ -109,7 +109,7 @@
       data-ng-init="key = h.metadataId + '-' + h.statusId"
     >
       <div
-        data-ng-show="h.statusValue.name == 'doiCreationTask'"
+        data-ng-if="h.statusValue.name == 'doiCreationTask'"
         data-gn-doi-wizard="h.metadataId"
       ></div>
 

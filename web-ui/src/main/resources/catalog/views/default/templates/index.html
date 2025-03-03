@@ -38,6 +38,8 @@
   xmlns="http://www.w3.org/1999/html"
 ></nav>
 
+<gn-application-banner></gn-application-banner>
+
 <main class="gn-search-page" id="main-content" data-ng-controller="GnSearchController">
   <cookiewarning></cookiewarning>
   <div class="" data-ng-controller="gnsDefault">
@@ -47,29 +49,29 @@
       <div
         data-ng-include="'../../catalog/views/default/templates/home.html'"
         data-ng-if="activeTab == '/home'"
-      />
+      ></div>
       <div
         data-ng-include="'../../catalog/views/default/templates/results.html'"
         data-ng-show="activeTab == '/search'"
-      />
+      ></div>
       <div
         data-ng-if="isMapViewerEnabled && !isExternalViewerEnabled && activeTab == '/map'"
         data-ng-include="'../../catalog/views/default/templates/map.html'"
-      />
+      ></div>
       <div
         data-ng-include="'../../catalog/views/default/templates/recordView/recordView.html'"
         data-ng-if="activeTab == '/metadata'"
         class="gn-view-approved"
-      />
+      ></div>
       <div
         data-ng-include="'../../catalog/views/default/templates/recordView/recordView.html'"
         data-ng-if="activeTab == '/metadraf'"
         class="gn-view-not-approved"
-      />
+      ></div>
       <div
         data-ng-include="'../../catalog/views/default/templates/page.html'"
         data-ng-if="activeTab == '/page'"
-      />
+      ></div>
     </div>
   </div>
 </main>

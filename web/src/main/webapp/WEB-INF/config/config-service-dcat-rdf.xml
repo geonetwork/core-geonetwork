@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  ~ Copyright (C) 2001-2016 Food and Agriculture Organization of the
+  ~ Copyright (C) 2001-2024 Food and Agriculture Organization of the
   ~ United Nations (FAO-UN), United Nations World Food Programme (WFP)
   ~ and United Nations Environment Programme (UNEP)
   ~
@@ -24,19 +24,6 @@
 
 <geonet>
   <services package="org.fao.geonet">
-
-
-    <service name="rdf.search">
-      <documentation>Search the catalogue and return results in RDF/DCAT format.</documentation>
-      <class name=".services.main.XmlSearch">
-        <!-- rdf.xsl requires the full metadata, returned only if fast=false in the searcher -->
-        <param name="fast" value="false"/>
-        <param name="maxRecords" value="100"/>
-      </class>
-      <output sheet="../xslt/services/dcat/rdf.xsl"
-              contentType=" application/rdf+xml; charset=UTF-8"/>
-      <error id="search-error" sheet="../xslt/common/error/error-xml.xsl" statusCode="500"/>
-    </service>
 
     <service name="rdf.metadata.public.get">
       <documentation>Return all public metadata in RDF/DCAT format.</documentation>

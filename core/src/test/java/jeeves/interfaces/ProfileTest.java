@@ -35,16 +35,26 @@ import static org.junit.Assert.assertTrue;
 public class ProfileTest {
 
     @Test
+    public void testGetChildren() {
+        assertContainsAllExactly(Administrator.getChildren(), UserAdmin, Monitor);
+        assertContainsOnly(Reviewer, UserAdmin.getChildren());
+        assertContainsOnly(Editor, Reviewer.getChildren());
+        assertContainsOnly(RegisteredUser, Editor.getChildren());
+        assertContainsOnly(Guest, RegisteredUser.getChildren());
+        assertEquals(0, Monitor.getChildren().size());
+        assertEquals(0, Guest.getChildren().size());
+    }
+
+    @Test
     public void testGetParents() {
-        assertEquals(2, Administrator.getParents().size());
-        assertTrue(Administrator.getParents().contains(UserAdmin));
-        assertTrue(Administrator.getParents().contains(Monitor));
-        assertContainsOnly(Reviewer, UserAdmin.getParents());
-        assertContainsOnly(Editor, Reviewer.getParents());
-        assertContainsOnly(RegisteredUser, Editor.getParents());
-        assertContainsOnly(Guest, RegisteredUser.getParents());
-        assertEquals(0, Monitor.getParents().size());
-        assertEquals(0, Guest.getParents().size());
+        assertEquals(0, Administrator.getParents().size());
+        assertContainsOnly(Administrator, UserAdmin.getParents());
+        assertContainsOnly(UserAdmin, Reviewer.getParents());
+        assertContainsOnly(Reviewer, Editor.getParents());
+        assertContainsOnly(Editor, RegisteredUser.getParents());
+        assertContainsOnly(RegisteredUser, Guest.getParents());
+        assertContainsOnly(Administrator, Monitor.getParents());
+
     }
 
     private void assertContainsOnly(Profile profile, Set<Profile> parents) {
@@ -53,12 +63,25 @@ public class ProfileTest {
     }
 
     @Test
-    public void testGetAll() {
-        assertContainsAllExactly(Administrator.getAll(), Administrator, UserAdmin, Reviewer, Editor, RegisteredUser, Guest, Monitor);
-        assertContainsAllExactly(UserAdmin.getAll(), UserAdmin, Reviewer, Editor, RegisteredUser, Guest);
-        assertContainsAllExactly(Reviewer.getAll(), Reviewer, Editor, RegisteredUser, Guest);
-        assertContainsAllExactly(Editor.getAll(), Editor, RegisteredUser, Guest);
-        assertContainsAllExactly(Editor.getAll(), Editor, RegisteredUser, Guest);
+    public void testGetProfileAndAllChildren() {
+        assertContainsAllExactly(Administrator.getProfileAndAllChildren(), Administrator, UserAdmin, Reviewer, Editor, RegisteredUser, Guest, Monitor);
+        assertContainsAllExactly(UserAdmin.getProfileAndAllChildren(), UserAdmin, Reviewer, Editor, RegisteredUser, Guest);
+        assertContainsAllExactly(Reviewer.getProfileAndAllChildren(), Reviewer, Editor, RegisteredUser, Guest);
+        assertContainsAllExactly(Editor.getProfileAndAllChildren(), Editor, RegisteredUser, Guest);
+        assertContainsAllExactly(RegisteredUser.getProfileAndAllChildren(), RegisteredUser, Guest);
+        assertContainsAllExactly(Guest.getProfileAndAllChildren(), Guest);
+        assertContainsAllExactly(Monitor.getProfileAndAllChildren(), Monitor);
+    }
+
+    @Test
+    public void testGetProfileAndAllParents() {
+        assertContainsAllExactly(Administrator.getProfileAndAllParents(), Administrator);
+        assertContainsAllExactly(UserAdmin.getProfileAndAllParents(), UserAdmin, Administrator);
+        assertContainsAllExactly(Reviewer.getProfileAndAllParents(), Reviewer, UserAdmin, Administrator);
+        assertContainsAllExactly(Editor.getProfileAndAllParents(), Editor, Reviewer, UserAdmin, Administrator);
+        assertContainsAllExactly(RegisteredUser.getProfileAndAllParents(), RegisteredUser, Editor, Reviewer, UserAdmin, Administrator);
+        assertContainsAllExactly(Guest.getProfileAndAllParents(), Guest, RegisteredUser, Editor, Reviewer, UserAdmin, Administrator);
+        assertContainsAllExactly(Monitor.getProfileAndAllParents(), Monitor, Administrator);
     }
 
     private void assertContainsAllExactly(Set<Profile> all, Profile... profiles) {

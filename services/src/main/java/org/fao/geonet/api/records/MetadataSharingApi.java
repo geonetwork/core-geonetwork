@@ -25,6 +25,8 @@ package org.fao.geonet.api.records;
 
 import com.google.common.base.Optional;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -58,6 +60,7 @@ import org.fao.geonet.kernel.search.IndexingMode;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.lib.Lib;
+import org.fao.geonet.languages.FeedbackLanguages;
 import org.fao.geonet.repository.*;
 import org.fao.geonet.repository.specification.MetadataSpecs;
 import org.fao.geonet.repository.specification.MetadataValidationSpecs;
@@ -106,6 +109,9 @@ public class MetadataSharingApi implements ApplicationEventPublisherAware
     LanguageUtils languageUtils;
 
     @Autowired
+    FeedbackLanguages feedbackLanguages;
+
+    @Autowired
     DataManager dataManager;
 
     @Autowired
@@ -131,6 +137,9 @@ public class MetadataSharingApi implements ApplicationEventPublisherAware
 
     @Autowired
     IMetadataManager metadataManager;
+
+    @Autowired
+    IMetadataOperations metadataOperations;
 
     @Autowired
     MetadataValidationRepository metadataValidationRepository;
@@ -215,7 +224,7 @@ public class MetadataSharingApi implements ApplicationEventPublisherAware
         method = RequestMethod.PUT
     )
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "204", description = "Settings updated."),
+        @ApiResponse(responseCode = "204", description = "Settings updated.", content = {@Content(schema = @Schema(hidden = true))}),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)
     })
     @PreAuthorize("hasAuthority('Reviewer')")
@@ -236,7 +245,7 @@ public class MetadataSharingApi implements ApplicationEventPublisherAware
         HttpServletRequest request
     )
         throws Exception {
-
+        ServiceContext serviceContext = ApiUtils.createServiceContext(request);
         UserSession userSession = ApiUtils.getUserSession(request.getSession());
         checkUserProfileToPublishMetadata(userSession);
 
@@ -245,6 +254,12 @@ public class MetadataSharingApi implements ApplicationEventPublisherAware
         }
 
         shareMetadataWithReservedGroup(metadataUuid, true, publicationType, session, request);
+
+        java.util.Optional<PublicationOption> publicationOption = publicationConfig.getPublicationOptionConfiguration(publicationType);
+        if (publicationOption.isPresent()) {
+            AbstractMetadata metadata = ApiUtils.getRecord(metadataUuid);
+            publicationConfig.processMetadata(serviceContext, publicationOption.get(), metadata.getId(), true);
+        }
     }
 
     @io.swagger.v3.oas.annotations.Operation(
@@ -254,7 +269,7 @@ public class MetadataSharingApi implements ApplicationEventPublisherAware
         method = RequestMethod.PUT
     )
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "204", description = "Settings updated."),
+        @ApiResponse(responseCode = "204", description = "Settings updated.", content = {@Content(schema = @Schema(hidden = true))}),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)
     })
     @PreAuthorize("hasAuthority('Reviewer')")
@@ -275,7 +290,7 @@ public class MetadataSharingApi implements ApplicationEventPublisherAware
         HttpServletRequest request
     )
         throws Exception {
-
+        ServiceContext serviceContext = ApiUtils.createServiceContext(request);
         UserSession userSession = ApiUtils.getUserSession(request.getSession());
         checkUserProfileToUnpublishMetadata(userSession);
 
@@ -284,6 +299,12 @@ public class MetadataSharingApi implements ApplicationEventPublisherAware
         }
 
         shareMetadataWithReservedGroup(metadataUuid, false, publicationType, session, request);
+
+        java.util.Optional<PublicationOption> publicationOption = publicationConfig.getPublicationOptionConfiguration(publicationType);
+        if (publicationOption.isPresent()) {
+            AbstractMetadata metadata = ApiUtils.getRecord(metadataUuid);
+            publicationConfig.processMetadata(serviceContext, publicationOption.get(), metadata.getId(), false);
+        }
     }
 
     @io.swagger.v3.oas.annotations.Operation(
@@ -302,7 +323,7 @@ public class MetadataSharingApi implements ApplicationEventPublisherAware
         method = RequestMethod.PUT
     )
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "204", description = "Settings updated."),
+        @ApiResponse(responseCode = "204", description = "Settings updated.", content = {@Content(schema = @Schema(hidden = true))}),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)
     })
     @PreAuthorize("hasAuthority('Editor')")
@@ -330,7 +351,7 @@ public class MetadataSharingApi implements ApplicationEventPublisherAware
         AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
         ApplicationContext appContext = ApplicationContextHolder.get();
         ServiceContext context = ApiUtils.createServiceContext(request);
-        ResourceBundle messages = ApiUtils.getMessagesResourceBundle(request.getLocales());
+        Locale[] feedbackLocales = feedbackLanguages.getLocales(request.getLocale());
 
         //--- in case of owner, privileges for groups 0,1 and GUEST are disabled
         //--- and are not sent to the server. So we cannot remove them
@@ -354,7 +375,7 @@ public class MetadataSharingApi implements ApplicationEventPublisherAware
         metadataIndexer.indexMetadataPrivileges(metadata.getUuid(), metadata.getId());
 
         if (notifyByEmail && !metadataListToNotifyPublication.isEmpty()) {
-            metadataPublicationMailNotifier.notifyPublication(messages, context.getLanguage(),
+            metadataPublicationMailNotifier.notifyPublication(feedbackLocales,
                 metadataListToNotifyPublication);
         }
     }
@@ -389,10 +410,23 @@ public class MetadataSharingApi implements ApplicationEventPublisherAware
         HttpServletRequest request
     )
         throws Exception {
-
+        ServiceContext serviceContext = ApiUtils.createServiceContext(request);
+        String publicationTypeToUse =
+            StringUtils.isNotEmpty(publicationType) ? publicationType : DEFAULT_PUBLICATION_TYPE_NAME;
         SharingParameter sharing = buildSharingForPublicationConfig(true,
-            StringUtils.isNotEmpty(publicationType) ? publicationType : DEFAULT_PUBLICATION_TYPE_NAME);
-        return shareSelection(uuids, bucket, sharing, session, request);
+            publicationTypeToUse);
+        MetadataProcessingReport metadataProcessingReport = shareSelection(uuids, bucket, sharing, session, request);
+
+        java.util.Optional<PublicationOption> publicationOption = publicationConfig.getPublicationOptionConfiguration(publicationTypeToUse);
+        if (publicationOption.isPresent()) {
+            Set<Integer> metadataProcessed = metadataProcessingReport.getMetadata();
+            for(Integer metadataId: metadataProcessed) {
+                publicationConfig.processMetadata(serviceContext, publicationOption.get(),
+                    metadataId, true);
+            }
+        }
+
+        return metadataProcessingReport;
     }
 
     @io.swagger.v3.oas.annotations.Operation(
@@ -425,10 +459,22 @@ public class MetadataSharingApi implements ApplicationEventPublisherAware
         HttpServletRequest request
     )
         throws Exception {
-
+        ServiceContext serviceContext = ApiUtils.createServiceContext(request);
+        String publicationTypeToUse =
+            StringUtils.isNotEmpty(publicationType) ? publicationType : DEFAULT_PUBLICATION_TYPE_NAME;
         SharingParameter sharing = buildSharingForPublicationConfig(false,
-            StringUtils.isNotEmpty(publicationType) ? publicationType : DEFAULT_PUBLICATION_TYPE_NAME);
-        return shareSelection(uuids, bucket, sharing, session, request);
+            publicationTypeToUse);
+        MetadataProcessingReport metadataProcessingReport = shareSelection(uuids, bucket, sharing, session, request);
+
+        java.util.Optional<PublicationOption> publicationOption = publicationConfig.getPublicationOptionConfiguration(publicationTypeToUse);
+        if (publicationOption.isPresent()) {
+            Set<Integer> metadataProcessed = metadataProcessingReport.getMetadata();
+            for(Integer metadataId: metadataProcessed) {
+                publicationConfig.processMetadata(serviceContext, publicationOption.get(),
+                    metadataId, false);
+            }
+        }
+        return metadataProcessingReport;
     }
 
     @io.swagger.v3.oas.annotations.Operation(
@@ -523,8 +569,24 @@ public class MetadataSharingApi implements ApplicationEventPublisherAware
             // Check if the user profile can change the privileges for publication/un-publication of the reserved groups
             checkChangesAllowedToUserProfileForReservedGroups(context.getUserSession(), sharingBefore, privileges, !sharing.isClear());
 
+            List<Integer> excludeFromDelete = new ArrayList<Integer>();
+
+            // Exclude deleting privileges for groups in which the user does not have the minimum profile for privileges
+            for (Group group: groupRepository.findByMinimumProfileForPrivilegesNotNull()) {
+                if (!canUserChangePrivilegesForGroup(context, group)) {
+                    excludeFromDelete.add(group.getId());
+                }
+            }
+
+            // Exclude deleting privileges for reserved groups if the skipAllReservedGroup flag is set
+            if (skipAllReservedGroup) {
+                excludeFromDelete.add(ReservedGroup.all.getId());
+                excludeFromDelete.add(ReservedGroup.intranet.getId());
+                excludeFromDelete.add(ReservedGroup.guest.getId());
+            }
+
             if (sharing.isClear()) {
-                dataManager.deleteMetadataOper(context, String.valueOf(metadata.getId()), skipAllReservedGroup);
+                metadataOperations.deleteMetadataOper(String.valueOf(metadata.getId()), excludeFromDelete);
             }
 
             for (GroupOperations p : privileges) {
@@ -703,6 +765,8 @@ public class MetadataSharingApi implements ApplicationEventPublisherAware
                 }
                 groupPrivilege.setUserProfile(userGroupProfile);
 
+                // Restrict changing privileges for groups with a minimum profile for setting privileges set
+                groupPrivilege.setRestricted(!canUserChangePrivilegesForGroup(context, g));
 
                 //--- get all operations that this group can do on given metadata
                 Specification<OperationAllowed> hasGroupIdAndMetadataId =
@@ -738,7 +802,7 @@ public class MetadataSharingApi implements ApplicationEventPublisherAware
         method = RequestMethod.PUT
     )
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "204", description = "Record group updated."),
+        @ApiResponse(responseCode = "204", description = "Record group updated.", content = {@Content(schema = @Schema(hidden = true))}),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)
     })
     @PreAuthorize("hasAuthority('Editor')")
@@ -781,7 +845,10 @@ public class MetadataSharingApi implements ApplicationEventPublisherAware
         metadataManager.save(metadata);
         dataManager.indexMetadata(String.valueOf(metadata.getId()), true);
 
-        new RecordGroupOwnerChangeEvent(metadata.getId(), ApiUtils.getUserSession(request.getSession()).getUserIdAsInt(), ObjectJSONUtils.convertObjectInJsonObject(oldGroup, RecordGroupOwnerChangeEvent.FIELD), ObjectJSONUtils.convertObjectInJsonObject(group, RecordGroupOwnerChangeEvent.FIELD)).publish(appContext);
+        new RecordGroupOwnerChangeEvent(metadata.getId(),
+                                        ApiUtils.getUserSession(request.getSession()).getUserIdAsInt(),
+                                        ObjectJSONUtils.convertObjectInJsonObject(oldGroup, RecordGroupOwnerChangeEvent.FIELD),
+                                        ObjectJSONUtils.convertObjectInJsonObject(group.get(), RecordGroupOwnerChangeEvent.FIELD)).publish(appContext);
     }
 
     @io.swagger.v3.oas.annotations.Operation(
@@ -1152,6 +1219,7 @@ public class MetadataSharingApi implements ApplicationEventPublisherAware
         ApplicationContext appContext = ApplicationContextHolder.get();
         ServiceContext context = ApiUtils.createServiceContext(request);
         ResourceBundle messages = ApiUtils.getMessagesResourceBundle(request.getLocales());
+        Locale[] feedbackLocales = feedbackLanguages.getLocales(request.getLocale());
 
         if (!accessManager.hasReviewPermission(context, Integer.toString(metadata.getId()))) {
             throw new Exception(String.format(messages.getString("api.metadata.share.ErrorUserNotAllowedToPublish"),
@@ -1191,7 +1259,7 @@ public class MetadataSharingApi implements ApplicationEventPublisherAware
             publicationOption.get().hasPublicationTo(ReservedGroup.all) &&
             notifyByEmail &&
             !metadataListToNotifyPublication.isEmpty()) {
-            metadataPublicationMailNotifier.notifyPublication(messages, context.getLanguage(),
+            metadataPublicationMailNotifier.notifyPublication(feedbackLocales,
                 metadataListToNotifyPublication);
         }
     }
@@ -1220,7 +1288,7 @@ public class MetadataSharingApi implements ApplicationEventPublisherAware
             final ApplicationContext appContext = ApplicationContextHolder.get();
 
             ServiceContext context = ApiUtils.createServiceContext(request);
-            ResourceBundle messages = ApiUtils.getMessagesResourceBundle(request.getLocales());
+            Locale[] feedbackLocales = feedbackLanguages.getLocales(request.getLocale());
 
             List<String> listOfUpdatedRecords = new ArrayList<>();
             List<MetadataPublicationNotificationInfo> metadataListToNotifyPublication = new ArrayList<>();
@@ -1261,6 +1329,7 @@ public class MetadataSharingApi implements ApplicationEventPublisherAware
 
                                 report.incrementProcessedRecords();
                                 listOfUpdatedRecords.add(String.valueOf(md.getId()));
+                                report.addMetadataId(metadata.getId());
                             } else {
                                 setOperations(sharing, dataManager, context, appContext, metadata, operationMap, privileges,
                                     ApiUtils.getUserSession(session).getUserIdAsInt(), skipAllReservedGroup, report, request,
@@ -1268,6 +1337,7 @@ public class MetadataSharingApi implements ApplicationEventPublisherAware
 
                                 report.incrementProcessedRecords();
                                 listOfUpdatedRecords.add(String.valueOf(metadata.getId()));
+                                report.addMetadataId(metadata.getId());
                             }
 
                         } else {
@@ -1277,6 +1347,7 @@ public class MetadataSharingApi implements ApplicationEventPublisherAware
 
                             report.incrementProcessedRecords();
                             listOfUpdatedRecords.add(String.valueOf(metadata.getId()));
+                            report.addMetadataId(metadata.getId());
                         }
                     } catch (NotAllowedException ex) {
                         report.addMetadataError(metadata, ex.getMessage());
@@ -1286,7 +1357,7 @@ public class MetadataSharingApi implements ApplicationEventPublisherAware
             }
 
             if (!metadataListToNotifyPublication.isEmpty()) {
-                metadataPublicationMailNotifier.notifyPublication(messages, context.getLanguage(),
+                metadataPublicationMailNotifier.notifyPublication(feedbackLocales,
                     metadataListToNotifyPublication);
             }
 
@@ -1435,6 +1506,22 @@ public class MetadataSharingApi implements ApplicationEventPublisherAware
                 throw new NotAllowedException(String.format(
                     "Unpublication of metadata is not allowed. User needs to be at least %s to unpublish record.", allowedUserProfileToUnpublishMetadata));
             }
+        }
+    }
+
+    /**
+     * Checks if the user can change the privileges for the group.
+     *
+     * @param context The {@link ServiceContext} object.
+     * @param group   The {@link Group} to change the privileges for.
+     * @return True if the user can change the privileges for the group, false otherwise.
+     */
+    private boolean canUserChangePrivilegesForGroup(final ServiceContext context, Group group) {
+        Profile minimumProfileForPrivileges = group.getMinimumProfileForPrivileges();
+        if (minimumProfileForPrivileges == null) {
+            return true;
+        } else {
+            return accessManager.isProfileOrMoreOnGroup(context, minimumProfileForPrivileges, group.getId());
         }
     }
 

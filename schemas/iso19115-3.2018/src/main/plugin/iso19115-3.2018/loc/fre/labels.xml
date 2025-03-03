@@ -5,7 +5,7 @@
         xmlns:gcx="http://standards.iso.org/iso/19115/-3/gcx/1.0"
         xmlns:gex="http://standards.iso.org/iso/19115/-3/gex/1.0"
         xmlns:lan="http://standards.iso.org/iso/19115/-3/lan/1.0"
-        xmlns:srv="http://standards.iso.org/iso/19115/-3/srv/2.1"
+        xmlns:srv="http://standards.iso.org/iso/19115/-3/srv/2.0"
         xmlns:mas="http://standards.iso.org/iso/19115/-3/mas/1.0"
         xmlns:mcc="http://standards.iso.org/iso/19115/-3/mcc/1.0"
         xmlns:mco="http://standards.iso.org/iso/19115/-3/mco/1.0"
@@ -1395,6 +1395,10 @@
   <element name="lan:language" id="448.0" context="/mdb:MD_Metadata/mdb:defaultLocale/lan:PT_Locale/lan:language">
     <label>Langue de la fiche</label>
     <description iso="true">Langue principale de la fiche. Code ISO de la langue à 3 caractères.</description>
+  </element>
+  <element name="lan:language" id="448.0" context="/mdb:MD_Metadata/mdb:identificationInfo/mri:MD_DataIdentification/mri:defaultLocale/lan:PT_Locale/lan:language">
+    <label>Langue de la donnée</label>
+    <description iso="true">Langue de la donnée. Code ISO de la langue à 3 caractères.</description>
   </element>
   <element name="lan:language" id="448.0" context="/mdb:MD_Metadata/mdb:otherLocale/lan:PT_Locale/lan:language">
     <label>Autres langues</label>
@@ -4213,14 +4217,6 @@ version en tant que mot-clé complémentaire(s). Le numéro de version doit comp
     <description>Distance de référence, mesurée au sol</description>
     <help>Résolution au sol</help>
     <condition>Saisir une distance si pas d'échelle</condition>
-    <helper relAtt="uom">
-      <option value="0.10" title="m">10 cm</option>
-      <option value="0.25" title="m">25 cm</option>
-      <option value="0.50" title="m">50 cm</option>
-      <option value="1" title="m">1 m</option>
-      <option value="30" title="m">30 m</option>
-      <option value="100" title="m">100 m</option>
-    </helper>
   </element>
 
   <element name="mrd:distributionFormat" id="271.0">
@@ -8814,11 +8810,11 @@ http://www.sandre.eaufrance.fr/?urn=urn:sandre:ensembledonnees:BDCarthage:FXX:::
     <description></description>
   </element>
   <element name="gfc:code">
-    <label>Code</label>
+    <label>Identifiant</label>
     <description></description>
   </element>
   <element name="gfc:isOrdered">
-    <label>Est prdonné</label>
+    <label>Est ordonné</label>
     <description></description>
   </element>
   <element name="gfc:isNavigable">
@@ -8882,7 +8878,7 @@ http://www.sandre.eaufrance.fr/?urn=urn:sandre:ensembledonnees:BDCarthage:FXX:::
     <description></description>
   </element>
   <element name="gfc:memberName">
-    <label>Nom</label>
+    <label>Libellé</label>
     <description></description>
   </element>
   <element name="gfc:FC_Constraint">

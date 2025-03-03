@@ -1,0 +1,105 @@
+================================================================================
+===
+=== GeoNetwork 4.4.5-SNAPSHOT: List of changes
+===
+================================================================================
+- Documentation / Release notes 4.2.10 (#8170)
+- Release / 4.4.5 / Changelog.
+- i18n / Transifex update.
+- Map viewer / Add layer with styles from a metadata doesn't show the styles selector
+- Map viewer / fix TMS layer persistence in map context (#8173)
+- Record view / don't display the add to map button for WFS resources when the map viewer is disabled.
+- Record view / display WMS resources button label to open the link when the map viewer is not enabled
+- Fix issue with Map Attribution not being toggled correctly in data preview. (#8149)
+- Fix html <i> elements defined in javascript with wrong self-closing. (#8164)
+- Analytics services integration (#7313)
+- Improve tooltips for facet filter items (#8122)
+- Database setup / Instead of declaring all SQL for each language, declare the language and load SQL files for each languages if available.
+- i18n / Add armenian, azerbaijani, georgian, romanian and ukrainian languages
+- fix #geonetwork/core-geonetwork/issues/7930
+- Editor / Remove wrong ERROR log message on multilingual records (#8049)
+- Map list / Improve layout of card
+- Map / Feature table / Missing translation
+- Editor / Associated panel / CSS class by type
+- Delete draft resource at the end of draft util transaction. (#8100)
+- Editor / Associated resource / Avoid scrollbar (#8051)
+- Fix issues with category icons in search results list view (#8099)
+- Editor / CRS search / Fix duplicated icon (#8141)
+- Translation provider / Fix pom version.
+- Editor / Keywords / Add option to configure keyword encoding for a view. (#8118)
+- Metadata workflow API / Update security exceptions to use translations
+- Transfer ownership / fix translation key for 'Save' button
+- Support for translation providers in harvesters (#7849)
+- Fix copy xsd files from metadata schemas to the web application
+- Update portal-configuration.md
+- update last changed date when restore metadata (#8033)
+- Editor / Associated resource / Update panel based on type config (#8052)
+- Map / WPS / Add message for no recent process. (#8091)
+- Harvesters / remove unused groupsCopyPolicy property
+- Indexing / ISO19115-3 / Avoir error on multiple contact website (#8113)
+- Make logo size bigger and set it to fixed position regardless of web pages (#7801)
+- Deprecated BearerTokenAuthenticationToken (#8107)
+- Update DOI exceptions to be multilingual exceptions (#8106)
+- Editor / Add list mode (#7998)
+- Remove link from admin-guide to schematron details as inappropriate
+- Editor / Group owner change / Fix label on error (#8101)
+- Editor / Groupowner change error (#8102)
+- Be able to edit metadata when backend store is not available (#8060)
+- Documentation / Add information about the type of users that can request a DOI
+- Indicate 4.4 is latest (not outdated)
+- how to update mkdoc env (removed instructions for docker mkdocs use) (#8089)
+- flatten changelog into current release and release history for ease of maintenance (#7887)
+- HTTP proxy servlet / update error messages. (#8009)
+- Record view / ISO19139 / ISO19115-3.2008 display the unit part in @uom attribute - avoid duplicated value
+- Add missing bootstrap-datepicker3.css.map that caused a wro4j error. (#8078)
+- Map / Switch from GET to POST request improved in case of missing CORS header on HTTP errors (#8036)
+- WMS GetMap HEAD request error response - check response status defined (#8023)
+- GeoNetwork app as web components. (#6516)
+- Users / reset form status when creating a user
+- Cleanup onbeforeunload event when loading the editorboard controller
+- search menu size (#8024)
+- Record view / Fix JS error related to publication options display.
+- XSL / Utility / Add multilingual support to getIndexField
+- Editor / Map / Use main context to have a better default on new extent (#8046)
+- Editor / Table mode / Add ordering control. (#8016)
+- Standard / ISO19115-3 / Improve linking to parent (#8018)
+- Search / Aggregations on related records. (#7939)
+- Standard / ISO19115-3 / Avoid indexing error on multilingual feature catalogue (#8013)
+- Standard / ISO19115-3 / Remove geographicElement when removing bounding box (#8048)
+- Record view / Focus on organisation fix
+- jQuery upgrade to version 3.7.1 (#8015)
+- Formatter / ISO / Avoid error on invalid extent (#8035)
+- Workflow / Edit action / Fix link in search results (#8031)
+- Synchronize Messages.properties from web and test (#8011)
+- Editor / Distributions / Feed icon for ATOM.
+- Editor / Add custom element in distribution and associated record directive
+- Mail / Log / Remove debug level
+- Map viewer / ESRIREST layers / Scale the layer extent to show the symbology of the features in the corners of the extent. (#8027)
+- Search tab map is blank on first page load. Fixes #7961 (#8026)
+- Merge pull request from GHSA-52rf-25hq-5m33
+- ISO19139 metadata full view / display citation titles (#8003)
+- Map / Add scale. (#7967)
+- API / Extent / Add geometry collection support. (#7911)
+- Status dashboard / Don't include indexing warnings as errors
+- Record view / Metadata info / Add standard name and version.
+- Record view / Service / Add service type, version and coupling type.
+- Standard / ISO19115-3 / Feature catalogue improvements (#7919)
+- Standard / ISO19115-3 / Ensure dqm namespace is on top of the document. Remove gts namespace which is ISO19139. (#7960)
+- Standards / ISO19115-3 / Cleanup project specific template (#7940)
+- Test / Fix formatter test. (#7993)
+- French translation update for metadata_approved_published_record_text (#7974)
+- Remove unused JeevesDelegatingFilterProxy servlet parameter 'loginService' configuration, related to multinode feature, removed from GeoNework 4.x
+- Report users - Display profile for Administrator / Guest profiles that are not related to groups
+- fix for nextrecord in csw getrecord response when using pagination
+- Update the default sort field name in editor board and batch editor.
+- API / XSL / Use XSL output configuration (formatter, editor). (#7929)
+- Workflow / Editor board / Add search configuration to display draft, approved record or both (#7477)
+- Support additional metadata processing when publishing / un-publishing metadata. (#7747)
+- Update sort by fields configuration with language placeholder, to support sort by multilingual fields (#7902)
+- WPS process parameters - support datetime / time formats (#7932)
+- GeoNetwork 4.4.x minor versions library updates: - Spring Framework: 5.3.33 - Spring Security: 5.8.11
+- Editor board / Use metadata database change date instead of the metadata dateStamp (xml) (#7910)
+- Doc / Editor configuration / Subtemplate insert mode (#7944)
+- Update springdoc to 1.8.0 which required upgrade of jackson.version to version 2.16.2 Fix springdocs HashMap mapping in /db/translations using new additionalPropertiesSchema
+- Update Jetty to version 9.4.54.v20240208
+- Update version to 4.4.5-SNAPSHOT

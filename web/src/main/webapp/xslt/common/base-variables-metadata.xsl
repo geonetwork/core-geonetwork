@@ -106,10 +106,11 @@
                         then /root/request/currTab
                         else if (/root/gui/currTab != '')
                         then /root/gui/currTab
-                        else $editorConfig/editor/views/view[@default]/tab[
+                        else ($editorConfig/editor/views/view[@default and
+                          gn-fn-metadata:check-elementandsession-visibility($schema, $metadata, $serviceInfo, @displayIfRecord, @displayIfServiceInfo)]/tab[
                           @default and
                           gn-fn-metadata:check-elementandsession-visibility($schema, $metadata, $serviceInfo, @displayIfRecord, @displayIfServiceInfo)
-                        ]/@id"/>
+                        ]/@id)[1]"/>
 
   <xsl:variable name="viewConfig"
                 select="$editorConfig/editor/views/view[tab/@id = $tab]"/>

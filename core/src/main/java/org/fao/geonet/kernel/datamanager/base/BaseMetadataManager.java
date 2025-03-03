@@ -582,7 +582,11 @@ public class BaseMetadataManager implements IMetadataManager {
 
         // Check if the schema is allowed by settings
         String mdImportSetting = settingManager.getValue(Settings.METADATA_IMPORT_RESTRICT);
-        if (mdImportSetting != null && !mdImportSetting.equals("")) {
+        if (mdImportSetting != null) {
+            // Remove spaces from the list so that "iso19115-3.2018, dublin-core" will also work
+            mdImportSetting = mdImportSetting.replace(" ", "");
+        }
+        if (!StringUtils.isBlank(mdImportSetting)) {
             if (!newMetadata.getHarvestInfo().isHarvested() && !Arrays.asList(mdImportSetting.split(",")).contains(schema)) {
                 throw new IllegalArgumentException("The system setting '" + Settings.METADATA_IMPORT_RESTRICT
                     + "' doesn't allow to import " + schema

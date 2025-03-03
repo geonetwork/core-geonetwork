@@ -1,5 +1,5 @@
 //=============================================================================
-//===   Copyright (C) 2001-2021 Food and Agriculture Organization of the
+//===   Copyright (C) 2001-2024 Food and Agriculture Organization of the
 //===   United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===   and United Nations Environment Programme (UNEP)
 //===
@@ -26,36 +26,37 @@ package org.fao.geonet.api.users;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jeeves.server.context.ServiceContext;
-import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
 import org.fao.geonet.api.users.model.UserRegisterDto;
 import org.fao.geonet.api.users.recaptcha.RecaptchaChecker;
+import org.fao.geonet.api.users.validation.UserRegisterDtoValidator;
 import org.fao.geonet.domain.*;
 import org.fao.geonet.kernel.security.SecurityProviderConfiguration;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
+import org.fao.geonet.languages.FeedbackLanguages;
 import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.UserGroupRepository;
 import org.fao.geonet.repository.UserRepository;
-import org.fao.geonet.util.MailUtil;
-import org.fao.geonet.util.PasswordUtil;
+import org.fao.geonet.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import javax.servlet.http.HttpServletRequest;
-import java.sql.SQLException;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Locale;
-import java.util.ResourceBundle;
+import java.util.*;
+
+import static org.fao.geonet.util.LocalizedEmailComponent.ComponentType.*;
+import static org.fao.geonet.util.LocalizedEmailComponent.KeyType;
+import static org.fao.geonet.util.LocalizedEmailComponent.ReplacementType.*;
+import static org.fao.geonet.util.LocalizedEmailParameter.ParameterType;
 
 @EnableWebMvc
 @Service
@@ -72,12 +73,26 @@ public class RegisterApi {
     @Autowired(required=false)
     SecurityProviderConfiguration securityProviderConfiguration;
 
+    @Autowired
+    FeedbackLanguages feedbackLanguages;
+
+    @Autowired
+    UserRepository userRepository;
+
+    @Autowired
+    GroupRepository groupRepository;
+
+    @Autowired
+    UserGroupRepository userGroupRepository;
+
+    @Autowired
+    SettingManager settingManager;
+
     @io.swagger.v3.oas.annotations.Operation(summary = "Create user account",
         description = "User is created with a registered user profile. username field is ignored and the email is used as " +
             "username. Password is sent by email. Catalog administrator is also notified.")
-    @RequestMapping(
+    @PutMapping(
         value = "/actions/register",
-        method = RequestMethod.PUT,
         produces = MediaType.TEXT_PLAIN_VALUE)
     @ResponseStatus(value = HttpStatus.CREATED)
     @ResponseBody
@@ -94,6 +109,7 @@ public class RegisterApi {
 
         Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
         ResourceBundle messages = ResourceBundle.getBundle("org.fao.geonet.api.Messages", locale);
+        Locale[] feedbackLocales = feedbackLanguages.getLocales(locale);
 
         if (securityProviderConfiguration != null && !securityProviderConfiguration.isUserProfileUpdateEnabled()) {
             return new ResponseEntity<>(messages.getString("security_provider_unsupported_functionality"), HttpStatus.PRECONDITION_FAILED);
@@ -101,67 +117,54 @@ public class RegisterApi {
 
         ServiceContext context = ApiUtils.createServiceContext(request);
 
-        SettingManager sm = context.getBean(SettingManager.class);
-        boolean selfRegistrationEnabled = sm.getValueAsBool(Settings.SYSTEM_USERSELFREGISTRATION_ENABLE);
+        boolean selfRegistrationEnabled = settingManager.getValueAsBool(Settings.SYSTEM_USERSELFREGISTRATION_ENABLE);
         if (!selfRegistrationEnabled) {
             return new ResponseEntity<>(String.format(
                 messages.getString("self_registration_disabled")
             ), HttpStatus.PRECONDITION_FAILED);
         }
 
-        boolean recaptchaEnabled = sm.getValueAsBool(Settings.SYSTEM_USERSELFREGISTRATION_RECAPTCHA_ENABLE);
+        boolean recaptchaEnabled = settingManager.getValueAsBool(Settings.SYSTEM_USERSELFREGISTRATION_RECAPTCHA_ENABLE);
 
         if (recaptchaEnabled) {
             boolean validRecaptcha = RecaptchaChecker.verify(userRegisterDto.getCaptcha(),
-                sm.getValue(Settings.SYSTEM_USERSELFREGISTRATION_RECAPTCHA_SECRETKEY));
+                settingManager.getValue(Settings.SYSTEM_USERSELFREGISTRATION_RECAPTCHA_SECRETKEY));
             if (!validRecaptcha) {
                 return new ResponseEntity<>(
                     messages.getString("recaptcha_not_valid"), HttpStatus.PRECONDITION_FAILED);
             }
         }
 
-        // Validate the user registration
-        if (bindingResult.hasErrors()) {
-            List<ObjectError> errorList = bindingResult.getAllErrors();
+        // Validate userDto data
+        UserRegisterDtoValidator userRegisterDtoValidator = new UserRegisterDtoValidator();
+        userRegisterDtoValidator.validate(userRegisterDto, bindingResult);
+        String errorMessage = ApiUtils.processRequestValidation(bindingResult, messages);
+        if (org.apache.commons.lang.StringUtils.isNotEmpty(errorMessage)) {
+            return new ResponseEntity<>(errorMessage, HttpStatus.PRECONDITION_FAILED);
+        }
 
-            StringBuilder sb = new StringBuilder();
-            Iterator<ObjectError> it = errorList.iterator();
-            while (it.hasNext()) {
-                sb.append(messages.getString(it.next().getDefaultMessage()));
-                if (it.hasNext()) {
-                    sb.append(", ");
-                }
+
+        String emailDomainsAllowed = settingManager.getValue(Settings.SYSTEM_USERSELFREGISTRATION_EMAIL_DOMAINS);
+        if (StringUtils.hasLength(emailDomainsAllowed)) {
+            List<String> emailDomainsAllowedList = Arrays.asList(emailDomainsAllowed.split(","));
+
+            String userEmailDomain = userRegisterDto.getEmail().split("@")[1];
+
+            if (!emailDomainsAllowedList.contains(userEmailDomain)) {
+                return new ResponseEntity<>(String.format(
+                    messages.getString("self_registration_no_valid_mail")
+                ), HttpStatus.PRECONDITION_FAILED);
             }
-
-            return new ResponseEntity<>(sb.toString(), HttpStatus.PRECONDITION_FAILED);
-        }
-
-        final UserRepository userRepository = context.getBean(UserRepository.class);
-        if (userRepository.findOneByEmail(userRegisterDto.getEmail()) != null) {
-            return new ResponseEntity<>(String.format(
-                messages.getString("user_with_that_email_found"),
-                userRegisterDto.getEmail()
-            ), HttpStatus.PRECONDITION_FAILED);
-        }
-
-        if (userRepository.findByUsernameIgnoreCase(userRegisterDto.getEmail()).size() != 0) {
-            // username is ignored and the email is used as username in selfregister
-            return new ResponseEntity<>(String.format(
-                messages.getString("user_with_that_username_found"),
-                userRegisterDto.getEmail()
-            ), HttpStatus.PRECONDITION_FAILED);
         }
 
         User user = new User();
 
-        // user.setUsername(userRegisterDto.getUsername());
         user.setName(userRegisterDto.getName());
         user.setSurname(userRegisterDto.getSurname());
         user.setOrganisation(userRegisterDto.getOrganisation());
         user.setProfile(Profile.findProfileIgnoreCase(userRegisterDto.getProfile()));
         user.getAddresses().add(userRegisterDto.getAddress());
         user.getEmailAddresses().add(userRegisterDto.getEmail());
-
 
         String password = User.getRandomPassword();
         user.getSecurity().setPassword(
@@ -172,48 +175,110 @@ public class RegisterApi {
         user.setProfile(Profile.RegisteredUser);
         user = userRepository.save(user);
 
-        Group targetGroup = getGroup(context);
+        Group targetGroup = getGroup();
+
         if (targetGroup != null) {
             UserGroup userGroup = new UserGroup().setUser(user).setGroup(targetGroup).setProfile(Profile.RegisteredUser);
-            context.getBean(UserGroupRepository.class).save(userGroup);
+            userGroupRepository.save(userGroup);
         }
 
+        String catalogAdminEmail = settingManager.getValue(Settings.SYSTEM_FEEDBACK_EMAIL);
+        LocalizedEmailComponent emailAdminSubjectComponent = new LocalizedEmailComponent(SUBJECT, "register_email_admin_subject", KeyType.MESSAGE_KEY, POSITIONAL_FORMAT);
+        Group requestedGroup = getRequestedGroup(userRegisterDto.getGroup());
+        LocalizedEmailComponent emailAdminMessageComponent;
+        if (requestedGroup != null) {
+            emailAdminMessageComponent = new LocalizedEmailComponent(MESSAGE, "register_email_group_admin_message", KeyType.MESSAGE_KEY, POSITIONAL_FORMAT);
+        } else {
+            emailAdminMessageComponent = new LocalizedEmailComponent(MESSAGE, "register_email_admin_message", KeyType.MESSAGE_KEY, POSITIONAL_FORMAT);
+        }
 
-        String catalogAdminEmail = sm.getValue(Settings.SYSTEM_FEEDBACK_EMAIL);
-        String subject = String.format(
-            messages.getString("register_email_admin_subject"),
-            sm.getSiteName(),
-            user.getEmail(),
-            requestedProfile
-        );
-        String message = String.format(
-            messages.getString("register_email_admin_message"),
-            user.getEmail(),
-            requestedProfile,
-            sm.getNodeURL(),
-            sm.getSiteName()
-        );
-        if (!MailUtil.sendMail(catalogAdminEmail, subject, message, null, sm)) {
+        for (Locale feedbackLocale : feedbackLocales) {
+            emailAdminSubjectComponent.addParameters(
+                feedbackLocale,
+                new LocalizedEmailParameter(ParameterType.RAW_VALUE, 1, settingManager.getSiteName()),
+                new LocalizedEmailParameter(ParameterType.RAW_VALUE, 2, user.getEmail()),
+                new LocalizedEmailParameter(ParameterType.RAW_VALUE, 3, requestedProfile)
+            );
+
+            if (requestedGroup != null) {
+                emailAdminMessageComponent.addParameters(
+                    feedbackLocale,
+                    new LocalizedEmailParameter(ParameterType.RAW_VALUE, 1, user.getEmail()),
+                    new LocalizedEmailParameter(ParameterType.RAW_VALUE, 2, requestedProfile),
+                    new LocalizedEmailParameter(ParameterType.RAW_VALUE, 3, requestedGroup.getLabelTranslations().get(feedbackLocale.getISO3Language())),
+                    new LocalizedEmailParameter(ParameterType.RAW_VALUE, 4, settingManager.getNodeURL()),
+                    new LocalizedEmailParameter(ParameterType.RAW_VALUE, 5, settingManager.getSiteName())
+                );
+            } else {
+                emailAdminMessageComponent.addParameters(
+                    feedbackLocale,
+                    new LocalizedEmailParameter(ParameterType.RAW_VALUE, 1, user.getEmail()),
+                    new LocalizedEmailParameter(ParameterType.RAW_VALUE, 2, requestedProfile),
+                    new LocalizedEmailParameter(ParameterType.RAW_VALUE, 3, settingManager.getNodeURL()),
+                    new LocalizedEmailParameter(ParameterType.RAW_VALUE, 4, settingManager.getSiteName())
+                );
+            }
+        }
+
+        LocalizedEmail adminLocalizedEmail = new LocalizedEmail(false);
+        adminLocalizedEmail.addComponents(emailAdminSubjectComponent, emailAdminMessageComponent);
+
+        String adminSubject = adminLocalizedEmail.getParsedSubject(feedbackLocales);
+        String adminMessage = adminLocalizedEmail.getParsedMessage(feedbackLocales);
+
+        if (!MailUtil.sendMail(catalogAdminEmail, adminSubject, adminMessage, null, settingManager)) {
             return new ResponseEntity<>(String.format(
                 messages.getString("mail_error")), HttpStatus.PRECONDITION_FAILED);
         }
 
-        subject = String.format(
-            messages.getString("register_email_subject"),
-            sm.getSiteName(),
-            user.getProfile()
-        );
-        message = String.format(
-            messages.getString("register_email_message"),
-            sm.getSiteName(),
-            user.getUsername(),
-            password,
-            Profile.RegisteredUser,
-            requestedProfile,
-            sm.getNodeURL(),
-            sm.getSiteName()
-        );
-        if (!MailUtil.sendMail(user.getEmail(), subject, message, null, sm)) {
+        LocalizedEmailComponent emailSubjectComponent = new LocalizedEmailComponent(SUBJECT, "register_email_subject", KeyType.MESSAGE_KEY, POSITIONAL_FORMAT);
+        LocalizedEmailComponent emailMessageComponent;
+        if (requestedGroup != null) {
+            emailMessageComponent = new LocalizedEmailComponent(MESSAGE, "register_email_group_message", KeyType.MESSAGE_KEY, POSITIONAL_FORMAT);
+        } else {
+            emailMessageComponent = new LocalizedEmailComponent(MESSAGE, "register_email_message", KeyType.MESSAGE_KEY, POSITIONAL_FORMAT);
+        }
+
+        for (Locale feedbackLocale : feedbackLocales) {
+            emailSubjectComponent.addParameters(
+                feedbackLocale,
+                new LocalizedEmailParameter(ParameterType.RAW_VALUE, 1, settingManager.getSiteName()),
+                new LocalizedEmailParameter(ParameterType.RAW_VALUE, 2, user.getProfile())
+            );
+
+            if (requestedGroup != null) {
+                emailMessageComponent.addParameters(
+                    feedbackLocale,
+                    new LocalizedEmailParameter(ParameterType.RAW_VALUE, 1, settingManager.getSiteName()),
+                    new LocalizedEmailParameter(ParameterType.RAW_VALUE, 2, user.getUsername()),
+                    new LocalizedEmailParameter(ParameterType.RAW_VALUE, 3, password),
+                    new LocalizedEmailParameter(ParameterType.RAW_VALUE, 4, Profile.RegisteredUser),
+                    new LocalizedEmailParameter(ParameterType.RAW_VALUE, 5, requestedProfile),
+                    new LocalizedEmailParameter(ParameterType.RAW_VALUE, 6, requestedGroup.getLabelTranslations().get(feedbackLocale.getISO3Language())),
+                    new LocalizedEmailParameter(ParameterType.RAW_VALUE, 7, settingManager.getNodeURL()),
+                    new LocalizedEmailParameter(ParameterType.RAW_VALUE, 8, settingManager.getSiteName())
+                );
+            } else {
+                emailMessageComponent.addParameters(
+                    feedbackLocale,
+                    new LocalizedEmailParameter(ParameterType.RAW_VALUE, 1, settingManager.getSiteName()),
+                    new LocalizedEmailParameter(ParameterType.RAW_VALUE, 2, user.getUsername()),
+                    new LocalizedEmailParameter(ParameterType.RAW_VALUE, 3, password),
+                    new LocalizedEmailParameter(ParameterType.RAW_VALUE, 4, Profile.RegisteredUser),
+                    new LocalizedEmailParameter(ParameterType.RAW_VALUE, 5, requestedProfile),
+                    new LocalizedEmailParameter(ParameterType.RAW_VALUE, 6, settingManager.getNodeURL()),
+                    new LocalizedEmailParameter(ParameterType.RAW_VALUE, 7, settingManager.getSiteName())
+                );
+            }
+        }
+
+        LocalizedEmail localizedEmail = new LocalizedEmail(false);
+        localizedEmail.addComponents(emailSubjectComponent, emailMessageComponent);
+
+        String subject = localizedEmail.getParsedSubject(feedbackLocales);
+        String message = localizedEmail.getParsedMessage(feedbackLocales);
+
+        if (!MailUtil.sendMail(user.getEmail(), subject, message, null, settingManager)) {
             return new ResponseEntity<>(String.format(
                 messages.getString("mail_error")), HttpStatus.PRECONDITION_FAILED);
         }
@@ -224,8 +289,39 @@ public class RegisterApi {
         ), HttpStatus.CREATED);
     }
 
-    Group getGroup(ServiceContext context) throws SQLException {
-        final GroupRepository bean = context.getBean(GroupRepository.class);
-        return bean.findById(ReservedGroup.guest.getId()).get();
+    /**
+     * Returns the group (GUEST) to assign to the registered user.
+     *
+     * @return
+     */
+    private Group getGroup()  {
+        Optional<Group> targetGroupOpt = groupRepository.findById(ReservedGroup.guest.getId());
+
+        if (targetGroupOpt.isPresent()) {
+            return targetGroupOpt.get();
+        }
+
+        return null;
+    }
+
+    /**
+     * Returns the group requested by the registered user.
+     *
+     * @param requestedGroup    Requested group identifier for the user.
+     * @return
+     */
+    private Group getRequestedGroup(String requestedGroup) {
+        Group targetGroup = null;
+
+        if (StringUtils.hasLength(requestedGroup)) {
+            Optional<Group> targetGroupOpt =  groupRepository.findById(Integer.parseInt(requestedGroup));
+
+            // Don't allow reserved groups
+            if (targetGroupOpt.isPresent() && !targetGroupOpt.get().isReserved()) {
+                targetGroup = targetGroupOpt.get();
+            }
+        }
+
+        return targetGroup;
     }
 }

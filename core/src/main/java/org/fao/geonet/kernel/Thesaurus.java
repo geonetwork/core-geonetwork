@@ -121,7 +121,7 @@ public class Thesaurus {
     // map of lang -> dictionary of values
     //                 key is a dublinCore element (i.e. https://guides.library.ucsc.edu/c.php?g=618773&p=4306386)
     // see #retrieveDublinCore() for example
-    private Map<String, Map<String,String>> dublinCoreMultilingual =   new Hashtable<>();
+    private Map<String, Map<String, String>> dublinCoreMultilingual = new Hashtable<>();
 
     private Cache<String, Object> THESAURUS_SEARCH_CACHE;
 
@@ -133,13 +133,14 @@ public class Thesaurus {
     }
 
     /**
-     * @param fname file name
-     * @param dname category/domain name of thesaurus
+     * @param fname                 file name
+     * @param dname                 category/domain name of thesaurus
      * @param thesaurusCacheMaxSize
      */
     public Thesaurus(IsoLanguagesMapper isoLanguageMapper, String fname, String type, String dname, Path thesaurusFile, String siteUrl, int thesaurusCacheMaxSize) {
         this(isoLanguageMapper, fname, null, null, type, dname, thesaurusFile, siteUrl, false, thesaurusCacheMaxSize);
     }
+
 
     public Thesaurus(IsoLanguagesMapper isoLanguageMapper, String fname, String tname, String tnamespace, String type, String dname, Path thesaurusFile, String siteUrl, boolean ignoreMissingError, int thesaurusCacheMaxSize) {
         this(isoLanguageMapper, fname, null, null, null, type, dname, thesaurusFile, siteUrl, false, thesaurusCacheMaxSize);
@@ -152,9 +153,9 @@ public class Thesaurus {
         super();
 
         THESAURUS_SEARCH_CACHE = CacheBuilder.newBuilder()
-            .maximumSize(thesaurusCacheMaxSize)
-            .expireAfterAccess(25, TimeUnit.HOURS)
-            .build();
+                .maximumSize(thesaurusCacheMaxSize)
+                .expireAfterAccess(25, TimeUnit.HOURS)
+                .build();
 
         this.isoLanguageMapper = isoLanguageMapper;
         this.fname = fname;
@@ -193,7 +194,6 @@ public class Thesaurus {
     }
 
     /**
-     *
      * @param fname
      * @param type
      * @param dname
@@ -211,7 +211,7 @@ public class Thesaurus {
         return Collections.unmodifiableMap(this.multilingualTitles);
     }
 
-    public Map<String,Map<String, String>> getDublinCoreMultilingual() {
+    public Map<String, Map<String, String>> getDublinCoreMultilingual() {
         return Collections.unmodifiableMap(this.dublinCoreMultilingual);
     }
 
@@ -332,7 +332,7 @@ public class Thesaurus {
 
         SailConfig syncSail = new SailConfig("org.openrdf.sesame.sailimpl.sync.SyncRdfSchemaRepository");
         SailConfig memSail = new org.openrdf.sesame.sailimpl.memory.RdfSchemaRepositoryConfig(getFile().toString(),
-            RDFFormat.RDFXML);
+                RDFFormat.RDFXML);
         repConfig.addSail(syncSail);
         repConfig.addSail(memSail);
         repConfig.setWorldReadable(true);
@@ -344,7 +344,7 @@ public class Thesaurus {
     }
 
     public synchronized QueryResultsTable performRequest(String query) throws IOException, MalformedQueryException,
-        QueryEvaluationException, AccessDeniedException {
+            QueryEvaluationException, AccessDeniedException {
         if (Log.isDebugEnabled(Geonet.THESAURUS))
             Log.debug(Geonet.THESAURUS, "Query : " + query);
 
@@ -354,15 +354,15 @@ public class Thesaurus {
     public boolean hasConceptScheme(String uri) {
 
         String query = "SELECT conceptScheme"
-            + " FROM {conceptScheme} rdf:type {skos:ConceptScheme}"
-            + " WHERE conceptScheme = <" + uri + ">"
-            + " USING NAMESPACE skos = <http://www.w3.org/2004/02/skos/core#>";
+                + " FROM {conceptScheme} rdf:type {skos:ConceptScheme}"
+                + " WHERE conceptScheme = <" + uri + ">"
+                + " USING NAMESPACE skos = <http://www.w3.org/2004/02/skos/core#>";
 
         try {
             return performRequest(query).getRowCount() > 0;
         } catch (Exception e) {
             Log.error(Geonet.THESAURUS_MAN,
-                String.format("Error retrieving concept scheme for %s. Error is: %s", thesaurusFile, e.getMessage()));
+                    String.format("Error retrieving concept scheme for %s. Error is: %s", thesaurusFile, e.getMessage()));
             throw new RuntimeException(e);
         }
     }
@@ -370,8 +370,8 @@ public class Thesaurus {
     public List<String> getConceptSchemes() {
 
         String query = "SELECT conceptScheme"
-            + " FROM {conceptScheme} rdf:type {skos:ConceptScheme}"
-            + " USING NAMESPACE skos = <http://www.w3.org/2004/02/skos/core#>";
+                + " FROM {conceptScheme} rdf:type {skos:ConceptScheme}"
+                + " USING NAMESPACE skos = <http://www.w3.org/2004/02/skos/core#>";
 
         try {
             List<String> ret = new ArrayList<>();
@@ -383,7 +383,7 @@ public class Thesaurus {
             return ret;
         } catch (Exception e) {
             Log.error(Geonet.THESAURUS_MAN, String.format(
-                "Error retrieving concept schemes for %s. Error is: %s", thesaurusFile, e.getMessage()));
+                    "Error retrieving concept schemes for %s. Error is: %s", thesaurusFile, e.getMessage()));
             return Collections.emptyList();
         }
     }
@@ -406,34 +406,28 @@ public class Thesaurus {
         URI mySubject = myFactory.createURI(keyword.getUriCode());
 
         URI skosClass = myFactory.createURI(SKOS_NAMESPACE, "Concept");
+
         URI rdfType = myFactory.createURI(org.openrdf.vocabulary.RDF.TYPE);
-        URI predicatePrefLabel = myFactory
-            .createURI(SKOS_NAMESPACE, "prefLabel");
-        URI predicateScopeNote = myFactory
-            .createURI(SKOS_NAMESPACE, "scopeNote");
-
-        URI predicateBoundedBy = myFactory.createURI(namespaceGml, "BoundedBy");
-        URI predicateEnvelope = myFactory.createURI(namespaceGml, "Envelope");
-        URI predicateSrsName = myFactory.createURI(namespaceGml, "srsName");
-        URI srsNameURI = myFactory
-            .createURI("http://www.opengis.net/gml/srs/epsg.xml#epsg:4326");
-        BNode gmlNode = myFactory.createBNode();
-        URI predicateLowerCorner = myFactory.createURI(namespaceGml,
-            "lowerCorner");
-        URI predicateUpperCorner = myFactory.createURI(namespaceGml,
-            "upperCorner");
-
-        Literal lowerCorner = myFactory.createLiteral(keyword.getCoordWest() + " " + keyword.getCoordSouth());
-        Literal upperCorner = myFactory.createLiteral(keyword.getCoordEast() + " " + keyword.getCoordNorth());
-
         mySubject.addProperty(rdfType, skosClass);
+
+        URI predicatePrefLabel = myFactory
+                .createURI(SKOS_NAMESPACE, "prefLabel");
+        URI predicateScopeNote = myFactory
+                .createURI(SKOS_NAMESPACE, "scopeNote");
+
+        URI predicateInScheme = myFactory
+                .createURI(SKOS_NAMESPACE, "inScheme");
+        myGraph.add(mySubject,
+                predicateInScheme,
+                myFactory.createURI(this.getDefaultNamespace()));
+
         Set<Entry<String, String>> values = keyword.getValues().entrySet();
         for (Entry<String, String> entry : values) {
             String language = toiso639_1_Lang(entry.getKey());
             Value valueObj = myFactory.createLiteral(entry.getValue(), language);
             myGraph.add(mySubject, predicatePrefLabel, valueObj);
-
         }
+
         Set<Entry<String, String>> definitions = keyword.getDefinitions().entrySet();
         for (Entry<String, String> entry : definitions) {
             String language = toiso639_1_Lang(entry.getKey());
@@ -441,12 +435,29 @@ public class Thesaurus {
             myGraph.add(mySubject, predicateScopeNote, definitionObj);
 
         }
-        myGraph.add(mySubject, predicateBoundedBy, gmlNode);
 
-        gmlNode.addProperty(rdfType, predicateEnvelope);
-        myGraph.add(gmlNode, predicateLowerCorner, lowerCorner);
-        myGraph.add(gmlNode, predicateUpperCorner, upperCorner);
-        myGraph.add(gmlNode, predicateSrsName, srsNameURI);
+        if (!(keyword.getCoordEast() + keyword.getCoordNorth() + keyword.getCoordWest() + keyword.getCoordSouth()).trim().isEmpty()) {
+            URI predicateBoundedBy = myFactory.createURI(namespaceGml, "BoundedBy");
+            URI predicateEnvelope = myFactory.createURI(namespaceGml, "Envelope");
+            URI predicateSrsName = myFactory.createURI(namespaceGml, "srsName");
+            URI srsNameURI = myFactory
+                    .createURI("http://www.opengis.net/gml/srs/epsg.xml#epsg:4326");
+            BNode gmlNode = myFactory.createBNode();
+            URI predicateLowerCorner = myFactory.createURI(namespaceGml,
+                    "lowerCorner");
+            URI predicateUpperCorner = myFactory.createURI(namespaceGml,
+                    "upperCorner");
+
+            Literal lowerCorner = myFactory.createLiteral(keyword.getCoordWest() + " " + keyword.getCoordSouth());
+            Literal upperCorner = myFactory.createLiteral(keyword.getCoordEast() + " " + keyword.getCoordNorth());
+
+            myGraph.add(mySubject, predicateBoundedBy, gmlNode);
+
+            gmlNode.addProperty(rdfType, predicateEnvelope);
+            myGraph.add(gmlNode, predicateLowerCorner, lowerCorner);
+            myGraph.add(gmlNode, predicateUpperCorner, upperCorner);
+            myGraph.add(gmlNode, predicateSrsName, srsNameURI);
+        }
 
         repository.addGraph(myGraph);
         return mySubject;
@@ -485,7 +496,7 @@ public class Thesaurus {
     }
 
     private Thesaurus removeElement(Graph myGraph, URI subject)
-        throws AccessDeniedException {
+            throws AccessDeniedException {
         StatementIterator iter = myGraph.getStatements(subject, null, null);
         while (iter.hasNext()) {
             AtomicReference<Statement> st = new AtomicReference<Statement>(iter.next());
@@ -504,8 +515,8 @@ public class Thesaurus {
 
     private String toiso639_1_Lang(String lang) {
         String defaultCode = getIsoLanguageMapper().iso639_2_to_iso639_1(
-            Geonet.DEFAULT_LANGUAGE,
-            Geonet.DEFAULT_LANGUAGE.substring(0, 2));
+                Geonet.DEFAULT_LANGUAGE,
+                Geonet.DEFAULT_LANGUAGE.substring(0, 2));
         return getIsoLanguageMapper().iso639_2_to_iso639_1(lang, defaultCode);
     }
 
@@ -548,15 +559,14 @@ public class Thesaurus {
             String language = toiso639_1_Lang(entry.getKey());
             Value valueObj = myFactory.createLiteral(entry.getValue(), language);
             myGraph.add(subject, predicatePrefLabel, valueObj);
-
         }
+
         // add updated Definitions/Notes
         Set<Entry<String, String>> definitions = keyword.getDefinitions().entrySet();
         for (Entry<String, String> entry : definitions) {
             String language = toiso639_1_Lang(entry.getKey());
             Value definitionObj = myFactory.createLiteral(entry.getValue(), language);
             myGraph.add(subject, predicateScopeNote, definitionObj);
-
         }
 
         // update bbox
@@ -677,7 +687,7 @@ public class Thesaurus {
     /**
      * Update concept code using its URI. This is recommended when concept identifier may not be
      * based on thesaurus namespace and does not contains #.
-     *
+     * <p>
      * eg. http://vocab.nerc.ac.uk/collection/P07/current/CFV13N44/
      */
     public synchronized Thesaurus updateCodeByURI(String olduri, String newuri) throws AccessDeniedException {
@@ -729,13 +739,13 @@ public class Thesaurus {
         Graph myGraph = new org.openrdf.model.impl.GraphImpl();
 
         writeConceptScheme(myGraph,
-            thesaurusTitle,
-            multilingualTitles,
-            thesaurusDescription,
-            multilingualDescriptions,
-            identifier,
-            type,
-            namespace);
+                thesaurusTitle,
+                multilingualTitles,
+                thesaurusDescription,
+                multilingualDescriptions,
+                identifier,
+                type,
+                namespace);
 
         repository.addGraph(myGraph);
     }
@@ -755,13 +765,13 @@ public class Thesaurus {
         removeElement(getConceptSchemes().get(0));
 
         writeConceptScheme(myGraph,
-            thesaurusTitle,
-            multilingualTitles,
-            thesaurusDescription,
-            multilingualDescriptions,
-            identifier,
-            type,
-            namespace);
+                thesaurusTitle,
+                multilingualTitles,
+                thesaurusDescription,
+                multilingualDescriptions,
+                identifier,
+                type,
+                namespace);
     }
 
     public void writeConceptScheme(Graph myGraph, String thesaurusTitle,
@@ -823,9 +833,6 @@ public class Thesaurus {
     }
 
 
-
-
-
     private void addElement(String name, String value, Graph myGraph, ValueFactory myFactory, URI mySubject) {
         if (StringUtils.isNotEmpty(value)) {
             URI uri = myFactory.createURI(DC_NAMESPACE, name);
@@ -861,22 +868,22 @@ public class Thesaurus {
     private void retrieveDublinCore(Element thesaurusEl) {
         List<Namespace> theNSs = getThesaurusNamespaces();
 
-        Namespace xmlNS = Namespace.getNamespace("xml","http://www.w3.org/XML/1998/namespace");
+        Namespace xmlNS = Namespace.getNamespace("xml", "http://www.w3.org/XML/1998/namespace");
         try {
             List<Element> multiLingualTitles = (List<Element>) Xml.selectNodes(thesaurusEl,
-                "skos:ConceptScheme/dc:*[@xml:lang]|skos:ConceptScheme/dcterms:*[@xml:lang]", theNSs);
+                    "skos:ConceptScheme/dc:*[@xml:lang]|skos:ConceptScheme/dcterms:*[@xml:lang]", theNSs);
             dublinCoreMultilingual.clear();
-            for (Element el: multiLingualTitles) {
+            for (Element el : multiLingualTitles) {
                 String lang = isoLanguageMapper.iso639_2_to_iso639_1(el.getAttribute("lang", xmlNS).getValue());
                 String value = el.getTextTrim();
                 String name = el.getName();
                 if (!dublinCoreMultilingual.containsKey(lang)) {
-                    dublinCoreMultilingual.put(lang,new HashMap<>());
+                    dublinCoreMultilingual.put(lang, new HashMap<>());
                 }
-                dublinCoreMultilingual.get(lang).put(name,value);
+                dublinCoreMultilingual.get(lang).put(name, value);
             }
         } catch (Exception e) {
-            Log.warning(Geonet.THESAURUS,"error extracting multilingual dublin core items from thesaurus",e);
+            Log.warning(Geonet.THESAURUS, "error extracting multilingual dublin core items from thesaurus", e);
         }
     }
 
@@ -896,14 +903,14 @@ public class Thesaurus {
     private void retrieveMultiLingualTitles(Element thesaurusEl) {
         try {
             String xpathTitles = "skos:ConceptScheme/dc:title[@xml:lang]" +
-                "|skos:ConceptScheme/dcterms:title[@xml:lang]" +
-                "|skos:ConceptScheme/rdfs:label[@xml:lang]" +
-                "|skos:ConceptScheme/skos:prefLabel[@xml:lang]" +
-                "|rdf:Description[rdf:type/@rdf:resource = 'http://www.w3.org/2004/02/skos/core#ConceptScheme']/dc:title[@xml:lang]";
+                    "|skos:ConceptScheme/dcterms:title[@xml:lang]" +
+                    "|skos:ConceptScheme/rdfs:label[@xml:lang]" +
+                    "|skos:ConceptScheme/skos:prefLabel[@xml:lang]" +
+                    "|rdf:Description[rdf:type/@rdf:resource = 'http://www.w3.org/2004/02/skos/core#ConceptScheme']/dc:title[@xml:lang]";
             multilingualTitles.clear();
             multilingualTitles.putAll(retrieveMultilingualField(thesaurusEl, xpathTitles));
         } catch (Exception e) {
-            Log.warning(Geonet.THESAURUS,"error extracting multilingual titles from thesaurus",e);
+            Log.warning(Geonet.THESAURUS, "error extracting multilingual titles from thesaurus", e);
         }
     }
 
@@ -913,19 +920,19 @@ public class Thesaurus {
             multilingualDescriptions.clear();
             multilingualDescriptions.putAll(retrieveMultilingualField(thesaurusEl, xpathDescriptions));
         } catch (Exception e) {
-            Log.warning(Geonet.THESAURUS,"error extracting multilingual descriptions from thesaurus",e);
+            Log.warning(Geonet.THESAURUS, "error extracting multilingual descriptions from thesaurus", e);
         }
     }
 
     private Map<String, String> retrieveMultilingualField(Element thesaurusEl, String xpath) throws JDOMException {
         List<Namespace> theNSs = getThesaurusNamespaces();
 
-        Namespace xmlNS = Namespace.getNamespace("xml","http://www.w3.org/XML/1998/namespace");
+        Namespace xmlNS = Namespace.getNamespace("xml", "http://www.w3.org/XML/1998/namespace");
 
         Map<String, String> multilingualValues = new HashMap<>();
         List<Element> multilingualValuesEl = (List<Element>) Xml.selectNodes(thesaurusEl,
-            xpath, theNSs);
-        for (Element el: multilingualValuesEl) {
+                xpath, theNSs);
+        for (Element el : multilingualValuesEl) {
             String lang = isoLanguageMapper.iso639_2_to_iso639_1(el.getAttribute("lang", xmlNS).getValue());
             String titleValue = el.getTextTrim();
             multilingualValues.put(lang, titleValue);
@@ -936,7 +943,7 @@ public class Thesaurus {
 
     /**
      * Retrieves the thesaurus information from rdf file.
-     *
+     * <p>
      * Used to set the thesaurusName and thesaurusDate for keywords.
      */
     private void retrieveThesaurusInformation(Path thesaurusFile, String defaultTitle, boolean ignoreMissingError) {
@@ -956,25 +963,25 @@ public class Thesaurus {
             retrieveDublinCore(thesaurusEl);
 
             Element titleEl = Xml.selectElement(thesaurusEl,
-                "skos:ConceptScheme/dc:title|skos:ConceptScheme/dcterms:title" +
-                    "|skos:ConceptScheme/rdfs:label|skos:ConceptScheme/skos:prefLabel" +
-                    "|skos:Collection/dc:title|skos:Collection/dcterms:title" +
-                    "|rdf:Description/dc:title|rdf:Description/dcterms:title", theNSs);
+                    "skos:ConceptScheme/dc:title|skos:ConceptScheme/dcterms:title" +
+                            "|skos:ConceptScheme/rdfs:label|skos:ConceptScheme/skos:prefLabel" +
+                            "|skos:Collection/dc:title|skos:Collection/dcterms:title" +
+                            "|rdf:Description/dc:title|rdf:Description/dcterms:title", theNSs);
 
             if (titleEl != null) {
                 this.title = titleEl.getValue();
                 this.defaultNamespace = titleEl
-                    .getParentElement()
-                    .getAttributeValue("about", Namespace.getNamespace("rdf", RDF_NAMESPACE));
+                        .getParentElement()
+                        .getAttributeValue("about", Namespace.getNamespace("rdf", RDF_NAMESPACE));
             } else {
                 this.title = defaultTitle;
                 this.defaultNamespace = DEFAULT_THESAURUS_NAMESPACE;
             }
 
             Element descriptionEl = Xml.selectElement(thesaurusEl,
-                "skos:ConceptScheme/dc:description|skos:ConceptScheme/dcterms:description|" +
-                    "skos:Collection/dc:description|skos:Collection/dcterms:description|" +
-                    "rdf:Description/dc:description|rdf:Description/dcterms:description", theNSs);
+                    "skos:ConceptScheme/dc:description|skos:ConceptScheme/dcterms:description|" +
+                            "skos:Collection/dc:description|skos:Collection/dcterms:description|" +
+                            "rdf:Description/dc:description|rdf:Description/dcterms:description", theNSs);
 
             this.description = descriptionEl != null ? descriptionEl.getValue() : "";
 
@@ -987,13 +994,13 @@ public class Thesaurus {
             }
 
             Element issuedDateEl = Xml.selectElement(thesaurusEl, "skos:ConceptScheme/dcterms:issued", theNSs);
-            this.issuedDate = issuedDateEl==null? "": issuedDateEl.getText();
+            this.issuedDate = issuedDateEl == null ? "" : issuedDateEl.getText();
 
             Element modifiedDateEl = Xml.selectElement(thesaurusEl, "skos:ConceptScheme/dcterms:modified", theNSs);
-            this.modifiedDate = modifiedDateEl==null? "": modifiedDateEl.getText();
+            this.modifiedDate = modifiedDateEl == null ? "" : modifiedDateEl.getText();
 
             Element createdDateEl = Xml.selectElement(thesaurusEl, "skos:ConceptScheme/dcterms:created", theNSs);
-            this.createdDate = createdDateEl==null? "": createdDateEl.getText();
+            this.createdDate = createdDateEl == null ? "" : createdDateEl.getText();
 
             // Default date
             Element dateEl = Xml.selectElement(thesaurusEl, "skos:ConceptScheme/dcterms:issued|skos:Collection/dc:date", theNSs);
@@ -1031,12 +1038,12 @@ public class Thesaurus {
 
             if (Log.isDebugEnabled(Geonet.THESAURUS_MAN)) {
                 Log.debug(Geonet.THESAURUS_MAN, String.format(
-                    "Thesaurus information: %s (%s)", this.title, this.date));
+                        "Thesaurus information: %s (%s)", this.title, this.date));
             }
         } catch (Exception ex) {
             if (!ignoreMissingError)
                 Log.error(Geonet.THESAURUS_MAN, String.format(
-                    "Error getting thesaurus info for %s. Error is: %s", thesaurusFile, ex.getMessage()));
+                        "Error getting thesaurus info for %s. Error is: %s", thesaurusFile, ex.getMessage()));
         }
     }
 
@@ -1064,12 +1071,11 @@ public class Thesaurus {
 
         StringBuffer errorMsg = new StringBuffer("Error parsing the thesaurus date value: ");
         errorMsg.append(dateVal);
-        boolean success = false;
 
         for (SimpleDateFormat df : dfList) {
             try {
                 thesaurusDate = df.parse(dateVal);
-                success = true;
+                return thesaurusDate;
             } catch (Exception ex) {
                 // Ignore the exception and try next format
                 errorMsg.append("\n  * with format: ");
@@ -1079,11 +1085,9 @@ public class Thesaurus {
             }
         }
         // Report error if no success
-        if (!success) {
-            errorMsg.append("\nCheck thesaurus date in ");
-            errorMsg.append(this.fname);
-            Log.error(Geonet.THESAURUS_MAN, errorMsg.toString());
-        }
+        errorMsg.append("\nCheck thesaurus date in ");
+        errorMsg.append(this.fname);
+        Log.error(Geonet.THESAURUS_MAN, errorMsg.toString());
         return thesaurusDate;
     }
 
@@ -1140,9 +1144,9 @@ public class Thesaurus {
 
         try {
             Query<KeywordBean> query = QueryBuilder
-                .keywordQueryBuilder(getIsoLanguageMapper(), languages)
-                .where(Wheres.ID(uri))
-                .build();
+                    .keywordQueryBuilder(getIsoLanguageMapper(), languages)
+                    .where(Wheres.ID(uri))
+                    .build();
 
             keywords = query.execute(this);
         } catch (Exception e) {
@@ -1168,9 +1172,9 @@ public class Thesaurus {
 
         try {
             Query<KeywordBean> query = QueryBuilder
-                .keywordQueryBuilder(getIsoLanguageMapper(), languages)
-                .select(Selectors.TOPCONCEPTS, true)
-                .build();
+                    .keywordQueryBuilder(getIsoLanguageMapper(), languages)
+                    .select(Selectors.TOPCONCEPTS, true)
+                    .build();
 
             keywords = query.execute(this);
         } catch (Exception e) {
@@ -1238,9 +1242,9 @@ public class Thesaurus {
      */
     public List<KeywordBean> getRelated(String uri, KeywordRelation request, String... languages) {
         Query<KeywordBean> query = QueryBuilder
-            .keywordQueryBuilder(getIsoLanguageMapper(), languages)
-            .select(Selectors.related(uri, request), true)
-            .build();
+                .keywordQueryBuilder(getIsoLanguageMapper(), languages)
+                .select(Selectors.related(uri, request), true)
+                .build();
 
         try {
             return query.execute(this);
@@ -1275,9 +1279,9 @@ public class Thesaurus {
      */
     public KeywordBean getKeywordWithLabel(String label, String langCode) {
         Query<KeywordBean> query = QueryBuilder
-            .keywordQueryBuilder(getIsoLanguageMapper(), langCode)
-            .where(Wheres.prefLabel(langCode, label))
-            .build();
+                .keywordQueryBuilder(getIsoLanguageMapper(), langCode)
+                .where(Wheres.prefLabel(langCode, label))
+                .build();
 
         List<KeywordBean> matchingKeywords;
 
@@ -1307,7 +1311,7 @@ public class Thesaurus {
         return LangUtils.translate(context, getKey());
     }
 
-    public List <String> getKeywordHierarchy(String keywordLabel, String langCode) {
+    public List<String> getKeywordHierarchy(String keywordLabel, String langCode) {
         String cacheKey = "getKeywordHierarchy" + keywordLabel + langCode;
         Object cacheValue = THESAURUS_SEARCH_CACHE.getIfPresent(cacheKey);
         if (cacheValue != null) {
@@ -1315,26 +1319,26 @@ public class Thesaurus {
         }
         boolean isUri = keywordLabel.startsWith("http");
         KeywordBean term =
-            isUri
-                ? this.getKeyword(keywordLabel, langCode)
-                : this.getKeywordWithLabel(keywordLabel, langCode);
+                isUri
+                        ? this.getKeyword(keywordLabel, langCode)
+                        : this.getKeywordWithLabel(keywordLabel, langCode);
 
-        List<ArrayList <KeywordBean>> result = this.classify(term, langCode);
+        List<ArrayList<KeywordBean>> result = this.classify(term, langCode);
 
-        List <String> hierarchies = new ArrayList<>();
-        for ( List <KeywordBean> hierachy : result) {
+        List<String> hierarchies = new ArrayList<>();
+        for (List<KeywordBean> hierachy : result) {
             String path = hierachy.stream()
-                .map(k -> isUri ? k.getUriCode() : k.getPreferredLabel(langCode))
-                .collect(Collectors.joining("^"));
+                    .map(k -> isUri ? k.getUriCode() : k.getPreferredLabel(langCode))
+                    .collect(Collectors.joining("^"));
             hierarchies.add(path);
         }
         THESAURUS_SEARCH_CACHE.put(cacheKey, hierarchies);
         return hierarchies;
     }
 
-    public List<ArrayList <KeywordBean>> classify(KeywordBean term, String langCode) {
+    public List<ArrayList<KeywordBean>> classify(KeywordBean term, String langCode) {
 
-        List<ArrayList <KeywordBean>> result = new ArrayList<>();
+        List<ArrayList<KeywordBean>> result = new ArrayList<>();
         if (this.hasBroader(term.getUriCode())) {
             result.addAll(classifyTermWithBroaderTerms(term, langCode));
         } else {
@@ -1343,16 +1347,16 @@ public class Thesaurus {
         return result;
     }
 
-    private List<ArrayList <KeywordBean>> classifyTermWithBroaderTerms(KeywordBean term, String langCode) {
-        List<ArrayList <KeywordBean>> result = new ArrayList<>();
-        for (ArrayList <KeywordBean> stringToBroaderTerm : classifyBroaderTerms(term, langCode)) {
+    private List<ArrayList<KeywordBean>> classifyTermWithBroaderTerms(KeywordBean term, String langCode) {
+        List<ArrayList<KeywordBean>> result = new ArrayList<>();
+        for (ArrayList<KeywordBean> stringToBroaderTerm : classifyBroaderTerms(term, langCode)) {
             stringToBroaderTerm.add(term);
             result.add(stringToBroaderTerm);
         }
         return result;
     }
 
-    private List<ArrayList <KeywordBean>> classifyBroaderTerms(KeywordBean term, String langCode) {
+    private List<ArrayList<KeywordBean>> classifyBroaderTerms(KeywordBean term, String langCode) {
         List<ArrayList<KeywordBean>> result = new ArrayList<>();
         List<KeywordBean> narrowerList = this.getNarrower(term.getUriCode(), langCode);
         for (KeywordBean broaderTerm : this.getBroader(term.getUriCode(), langCode)) {
@@ -1364,8 +1368,8 @@ public class Thesaurus {
         return result;
     }
 
-    private ArrayList <KeywordBean> classifyTermWithNoBroaderTerms(KeywordBean term) {
-        ArrayList <KeywordBean> list = new ArrayList <>();
+    private ArrayList<KeywordBean> classifyTermWithNoBroaderTerms(KeywordBean term) {
+        ArrayList<KeywordBean> list = new ArrayList<>();
         list.add(term);
         return list;
     }

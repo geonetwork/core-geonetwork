@@ -108,13 +108,31 @@
     </for>
     -->
 
+    <!-- Check if metadata title is defined in other metadata record
+    <for name="gmd:title" use="data-gn-duplicated-metadata-title-checker" />
+    -->
+
     <for name="gts:TM_PeriodDuration" use="data-gn-field-duration-div"/>
     <for name="gml:duration" use="data-gn-field-duration-div"/>
 
     <for name="gco:Distance" use="number"/>
+    <for name="gco:Distance/@uom" use="data-gn-keyword-picker">
+      <directiveAttributes
+        data-thesaurus-key="local.theme.codelist_unit_distance"
+        data-display-definition="true"
+        data-show-hints-on-focus="true"/>
+    </for>
     <for name="gco:Decimal" use="number"/>
     <for name="gco:Integer" use="number"/>
     <for name="gco:Real" use="number"/>
+    <for name="gco:Measure" use="number"/>
+    <for name="gco:Measure/@uom" use="data-gn-keyword-picker">
+      <directiveAttributes
+        data-thesaurus-key="xpath::../*:dimensionName/*[@codeListValue]/(if (@codeListValue = 'time') then 'local.theme.codelist_unit_time' else 'local.theme.codelist_unit_distance')"
+        data-display-definition="true"
+        data-show-hints-on-focus="true"/>
+    </for>
+
     <for name="gco:Boolean" use="checkbox"/>
 
     <!-- Use data-gn-checkbox-with-nilreason for INSPIRE conformity, using xpath attribute.Similar configuration can be
@@ -424,6 +442,7 @@
   <tableFields>
     <table for="gmd:CI_ResponsibleParty">
       <header>
+        <col/>
         <!-- TODO: Add label from strings.xml / label with context-->
         <col label="gmd:organisationName"/>
         <col label="gmd:individualName"/>
@@ -432,6 +451,7 @@
         <col/>
       </header>
       <row>
+        <col orderControl=".."/>
         <col xpath="gmd:organisationName"/>
         <col xpath="gmd:individualName"/>
         <col xpath="gmd:contactInfo/*/gmd:address/*/gmd:electronicMailAddress"/>
@@ -441,12 +461,14 @@
     </table>
     <table for="gmd:CI_OnlineResource">
       <header>
+        <col/>
         <col label="gmd:protocol"/>
         <col label="gmd:linkage"/>
         <col label="gmd:name"/>
         <col/>
       </header>
       <row>
+        <col orderControl=".."/>
         <col xpath="gmd:protocol"/>
         <col xpath="gmd:linkage"/>
         <col xpath="gmd:name"/>
@@ -541,8 +563,7 @@
                                             editActions: ['addOnlinesrc']}]"
         />
 
-        <directive data-gn-onlinesrc-list=""
-                   data-types="parent|dataset|service|source|sibling|associated|fcats"/>
+        <directive data-gn-associated-resources-panel="gnCurrentEdit.metadata" />
 
         <directive gn-geo-publisher=""
                    data-ng-if="gnCurrentEdit.geoPublisherConfig"
@@ -3201,6 +3222,11 @@
     <view name="default" default="true"
           class="gn-label-above-input gn-indent-bluescale">
       <sidePanel>
+        <!-- Simple overview manager + online source manger for other types
+        Limit the max number of overviews with data-number-of-overviews="3" attribute.
+        In the full view, editor can access and manage the file store and
+        thumbnail name and description not supported by the overview manager.
+        -->
         <directive data-gn-need-help="creating-metadata"/>
 
         <directive data-gn-validation-report=""/>
@@ -3225,8 +3251,7 @@
                                             editActions: []}]"
         />
 
-        <directive data-gn-onlinesrc-list=""
-                   data-types="parent|dataset|service|source|sibling|associated|fcats"/>
+        <directive data-gn-associated-resources-panel="gnCurrentEdit.metadata"/>
 
         <directive gn-geo-publisher=""
                    data-ng-if="gnCurrentEdit.geoPublisherConfig"
@@ -3327,12 +3352,7 @@
                    transformations="to-iso19139-keyword-with-anchor"/>
       </thesaurusList>
       -->
-
-      <thesaurusList>
-        <thesaurus key="external.none.allThesaurus"
-                   fieldset="false"/>
-      </thesaurusList>
-
+      <thesaurusList defaultTransformation="to-iso19139-keyword-with-anchor"/>
     </view>
     <view name="advanced"
           class="gn-label-above-input gn-indent-bluescale">
@@ -3361,8 +3381,7 @@
                                             editActions: ['addOnlinesrc']}]"
         />
 
-        <directive data-gn-onlinesrc-list=""
-                   data-types="parent|dataset|service|source|sibling|associated|fcats"/>
+        <directive data-gn-associated-resources-panel="gnCurrentEdit.metadata" />
 
         <directive gn-geo-publisher=""
                    data-ng-if="gnCurrentEdit.geoPublisherConfig"
@@ -3435,6 +3454,8 @@
         <section xpath="/gmd:MD_Metadata/gmd:applicationSchemaInfo" or="applicationSchemaInfo"
                  in="/gmd:MD_Metadata"/>
       </tab>
+
+      <thesaurusList defaultTransformation="to-iso19139-keyword-with-anchor"/>
     </view>
     <view name="xml">
       <sidePanel>
@@ -3462,8 +3483,7 @@
                                             editActions: ['addOnlinesrc']}]"
         />
 
-        <directive data-gn-onlinesrc-list=""
-                   data-types="parent|dataset|service|source|sibling|associated|fcats"/>
+        <directive data-gn-associated-resources-panel="gnCurrentEdit.metadata" />
 
         <directive gn-geo-publisher=""
                    data-ng-if="gnCurrentEdit.geoPublisherConfig"

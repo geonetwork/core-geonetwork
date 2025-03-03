@@ -70,6 +70,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -173,14 +174,13 @@ public class AttachmentsApi {
         @RequestParam(required = false, defaultValue = FilesystemStore.DEFAULT_FILTER) String filter,
         @Parameter(hidden = true) HttpServletRequest request) throws Exception {
         ServiceContext context = ApiUtils.createServiceContext(request);
-        List<MetadataResource> list = store.getResources(context, metadataUuid, sort, filter, approved);
-        return list;
+        return store.getResources(context, metadataUuid, sort, filter, approved);
     }
 
     @io.swagger.v3.oas.annotations.Operation(summary = "Delete all uploaded metadata resources")
     @RequestMapping(method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAuthority('Editor')")
-    @ApiResponses(value = {@ApiResponse(responseCode = "204", description = "Attachment added."),
+    @ApiResponses(value = {@ApiResponse(responseCode = "204", description = "Attachment added.", content = {@Content(schema = @Schema(hidden = true))}),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)})
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public void delResources(
@@ -202,7 +202,7 @@ public class AttachmentsApi {
     @io.swagger.v3.oas.annotations.Operation(summary = "Create a new resource for a given metadata")
     @PreAuthorize("hasAuthority('Editor')")
     @RequestMapping(method = RequestMethod.POST,
-        consumes = MediaType.ALL_VALUE,
+        consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
         produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.CREATED)
     @ApiResponses(value = {@ApiResponse(responseCode = "201", description = "Attachment uploaded."),
@@ -230,7 +230,8 @@ public class AttachmentsApi {
 
     @io.swagger.v3.oas.annotations.Operation(summary = "Create a new resource from a URL for a given metadata")
     @PreAuthorize("hasAuthority('Editor')")
-    @RequestMapping(method = RequestMethod.PUT)
+    @RequestMapping(method = RequestMethod.PUT,
+        produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.CREATED)
     @ApiResponses(value = {@ApiResponse(responseCode = "201", description = "Attachment added."),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)})
@@ -297,7 +298,11 @@ public class AttachmentsApi {
                         MIN_IMAGE_SIZE, MAX_IMAGE_SIZE, size));
                 }
             } else {
-                StreamUtils.copy(Files.newInputStream(file.getPath()), response.getOutputStream());
+                response.setContentLengthLong(Files.size(file.getPath()));
+
+                try (InputStream inputStream = Files.newInputStream(file.getPath())) {
+                    StreamUtils.copy(inputStream, response.getOutputStream());
+                }
             }
         }
     }

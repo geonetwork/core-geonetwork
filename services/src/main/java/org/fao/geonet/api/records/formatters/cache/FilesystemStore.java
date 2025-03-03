@@ -371,8 +371,6 @@ public class FilesystemStore implements PersistentStore {
     private Path getCacheFile(Key key, boolean isPublicCache) throws IOException {
         final String accessDir = isPublicCache ? PUBLIC : PRIVATE;
         final String sMdId = String.valueOf(key.mdId);
-
-
         final Path metadataDir = Lib.resource.getMetadataDir(getBaseCacheDir().resolve(accessDir), sMdId);
         String hidden = key.hideWithheld ? WITHHELD_MD_DIRNAME : FULL_MD_NAME;
         return metadataDir.resolve(key.formatterId).resolve(key.lang).resolve(hidden).resolve(key.hashCode() + "." + key.formatType.name());

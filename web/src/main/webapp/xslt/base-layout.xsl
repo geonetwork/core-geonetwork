@@ -49,10 +49,10 @@
         <xsl:variable name="htmlHeadTitle"
                       select="if ($discoveryServiceRecordUuid != '')
                               then util:getIndexField(
-                                        $lang,
+                                        string($lang),
                                         $discoveryServiceRecordUuid,
                                         'resourceTitleObject',
-                                        $lang)
+                                        string($lang))
                               else if (contains($nodeName, '|'))
                               then substring-before($nodeName, '|')
                               else $nodeName"/>
@@ -61,10 +61,10 @@
         <xsl:variable name="htmlHeadDescription"
                       select="if ($discoveryServiceRecordUuid != '')
                               then util:getIndexField(
-                                        $lang,
+                                        string($lang),
                                         $discoveryServiceRecordUuid,
                                         'resourceAbstractObject',
-                                        $lang)
+                                        string($lang))
                               else if (contains($nodeName, '|'))
                               then substring-after($nodeName, '|')
                               else $nodeName"/>
@@ -99,7 +99,7 @@
       -->
       <body data-ng-controller="GnCatController" data-ng-class="[isHeaderFixed ? 'gn-header-fixed' : 'gn-header-relative', isLogoInHeader ? 'gn-logo-in-header' : 'gn-logo-in-navbar', isFooterEnabled ? 'gn-show-footer' : 'gn-hide-footer']">
 
-        <div data-gn-alert-manager=""></div>
+        <div data-gn-alert-manager=""/>
 
         <xsl:choose>
           <xsl:when test="ends-with($service, 'nojs')">
@@ -128,6 +128,8 @@
             </xsl:if>
           </xsl:otherwise>
         </xsl:choose>
+
+        <xsl:call-template name="webAnalytics"/>
       </body>
     </html>
   </xsl:template>
