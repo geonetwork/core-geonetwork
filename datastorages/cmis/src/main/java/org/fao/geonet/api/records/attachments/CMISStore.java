@@ -206,7 +206,7 @@ public class CMISStore extends AbstractStore {
         }
     }
 
-    protected String getKey(final ServiceContext context, String metadataUuid, int metadataId, MetadataResourceVisibility visibility, String resourceId) {
+    protected String getKey(final ServiceContext context, String metadataUuid, int metadataId, MetadataResourceVisibility visibility, String resourceId) throws IOException {
         checkResourceId(resourceId);
         final String metadataDir = getMetadataDir(context, metadataId);
         return metadataDir + cmisConfiguration.getFolderDelimiter() + visibility.toString() + cmisConfiguration.getFolderDelimiter() + getFilename(metadataUuid, resourceId);
@@ -589,7 +589,7 @@ public class CMISStore extends AbstractStore {
         return propertyValue;
     }
 
-    protected String getMetadataDir(ServiceContext context, final int metadataId) {
+    protected String getMetadataDir(ServiceContext context, final int metadataId) throws IOException {
 
         Path metadataFullDir = Lib.resource.getMetadataDir(getDataDirectory(context), metadataId);
         Path baseMetadataDir = getBaseMetadataDir(context, metadataFullDir);

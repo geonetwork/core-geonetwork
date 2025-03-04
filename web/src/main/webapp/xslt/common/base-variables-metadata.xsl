@@ -129,6 +129,9 @@
   <xsl:variable name="resourceManagementExternalProperties"
                 select="util:getResourceManagementExternalProperties()"/>
 
+  <xsl:variable name="resourceFolderPrivilegesStrategy"
+                select="util:getResourceFolderPrivilegesStrategy()"/>
+
   <xsl:variable name="isDisplayingAttributes"
                 select="if (/root/request/displayAttributes)
                         then /root/request/displayAttributes = 'true'
