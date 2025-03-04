@@ -28,13 +28,17 @@ import com.google.common.collect.Sets;
 import com.google.common.jimfs.Configuration;
 import com.google.common.jimfs.Jimfs;
 
+import org.fao.geonet.ApplicationContextHolder;
+import org.fao.geonet.SystemInfo;
 import org.fao.geonet.api.records.formatters.FormatType;
 import org.fao.geonet.api.records.formatters.FormatterWidth;
+import org.fao.geonet.api.records.attachments.StoreFolderConfig;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
+import org.springframework.context.ConfigurableApplicationContext;
 
 import java.io.IOException;
 import java.nio.file.FileSystem;
@@ -63,6 +67,10 @@ public class FilesystemStoreTest {
 
     @Before
     public void setUp() throws Exception {
+        ConfigurableApplicationContext applicationContext = Mockito.mock(ConfigurableApplicationContext.class);
+        ApplicationContextHolder.set(applicationContext);
+        Mockito.when(applicationContext.getBean(StoreFolderConfig.class)).thenReturn(new StoreFolderConfig());
+
         createDataDir();
         initStore();
 

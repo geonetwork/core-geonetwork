@@ -55,7 +55,7 @@ public class StoreFolderConfig {
     @Value("${datastore.folderStructureFallbackNonPublic}")
     private String folderStructureFallbackNonPublic = "";
 
-    StoreFolderConfig() {
+    public StoreFolderConfig() {
 
     }
 
