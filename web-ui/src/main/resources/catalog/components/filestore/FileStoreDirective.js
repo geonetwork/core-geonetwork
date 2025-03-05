@@ -71,6 +71,18 @@
               input.attr("multiple", "multiple");
             }
 
+            var droparea = $(".file-drop-area");
+
+            // highlight drag area
+            input.on("dragenter focus click", function () {
+              droparea.addClass("is-active");
+            });
+
+            // back to normal state
+            input.on("dragleave blur drop", function () {
+              droparea.removeClass("is-active");
+            });
+
             var uploadFile = function () {
               scope.queue = [];
               scope.filestoreUploadOptions = angular.extend(
