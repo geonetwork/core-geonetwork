@@ -27,18 +27,15 @@ import java.util.zip.GZIPOutputStream;
 
 import static org.fao.geonet.kernel.schema.SchemaPlugin.LOGGER_NAME;
 
-@RequestMapping(value = {"/{geonetworkPath:[a-zA-Z0-9_\\-]+}"})
+@RequestMapping(value = { "/{geonetworkPath:[a-zA-Z0-9_\\-]+}" })
 @Controller("datahub")
 public class DatahubController {
 
     @Autowired
     SourceRepository sourceRepository;
 
-    @Autowired
-    SettingManager settingManager;
-
     @GetMapping("/datahub")
-    public RedirectView redirectDatahub(HttpServletRequest request, HttpServletResponse response)  {
+    public RedirectView redirectDatahub(HttpServletRequest request, HttpServletResponse response) {
         String uri = request.getRequestURI();
         if (!uri.endsWith("/")) {
             uri += "/";
@@ -47,7 +44,7 @@ public class DatahubController {
     }
 
     @GetMapping("/{locale:[a-z]{2,3}}/datahub")
-    public RedirectView redirectLocalizedDatahub(HttpServletRequest request, HttpServletResponse response)  {
+    public RedirectView redirectLocalizedDatahub(HttpServletRequest request, HttpServletResponse response) {
         String uri = request.getRequestURI();
         if (!uri.endsWith("/")) {
             uri += "/";
@@ -57,24 +54,24 @@ public class DatahubController {
 
     @RequestMapping("/datahub/**")
     public void handleDatahubWithFilepath(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        handleDatahubRequest(request, response,null);
+        handleDatahubRequest(request, response);
     }
 
     @RequestMapping("/{locale:[a-z]{2,3}}/datahub/**")
-    public void handleLocalizedDatahubWithFilepath(HttpServletRequest request, HttpServletResponse response, @PathVariable String locale) throws IOException {
-        handleDatahubRequest(request, response, locale);
+    public void handleLocalizedDatahubWithFilepath(HttpServletRequest request, HttpServletResponse response,
+            @PathVariable String locale) throws IOException {
+        handleDatahubRequest(request, response);
     }
 
-    void handleDatahubRequest(HttpServletRequest request, HttpServletResponse response,String locale) throws IOException {
-        Log.debug(LOGGER_NAME, "enter in datahub");
-
+    void handleDatahubRequest(HttpServletRequest request, HttpServletResponse response)
+            throws IOException {
         String portalName = getPortalName(request);
         if (!isPortalDatahubEnabled(portalName)) {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
             return;
         }
 
-        File actualFile = getRequestedFile(request, locale);
+        File actualFile = getRequestedFile(request);
         if (!actualFile.exists()) {
             actualFile = getFallbackFile();
             disableCacheForIndex(response);
@@ -83,7 +80,6 @@ public class DatahubController {
         setResponseHeaders(response, actualFile);
         writeResponseContent(request, response, actualFile, portalName);
     }
-
 
     private String getPortalName(HttpServletRequest request) {
         String reqPath = request.getPathInfo();
@@ -100,29 +96,21 @@ public class DatahubController {
         return false;
     }
 
-    private File getRequestedFile(HttpServletRequest request, String locale) {
+    private File getRequestedFile(HttpServletRequest request) {
         String reqPath = request.getPathInfo();
-        int pathPartToSkip = 3;// "/srv/datahub/bla/bla"
-        if (locale != null) {
-            pathPartToSkip = 4;// /srv/fre/datahub/bla/bla
-        }
 
-        String filePath = Stream.of(reqPath.split("/")).skip(pathPartToSkip).collect(Collectors.joining("/"));
-        if (!FileUtils.fileExistsInJar("/datahub/" + filePath)) {
-            return new File(filePath);
-        }
+        String filePath = Stream.of(reqPath.split("/datahub/")).skip(1).collect(Collectors.joining("/"));
         try {
             return FileUtils.getFileFromJar("/datahub/" + filePath);
         } catch (IOException e) {
-            Log.error(LOGGER_NAME, e.getMessage());
-            return new File(filePath);
+            return new File(filePath);// return file doesn't exist in jar to go back to main menu
         }
     }
 
-    private File getFallbackFile()  {
+    private File getFallbackFile() {
         String indexPath = "/datahub/index.html";
-        try{
-           return FileUtils.getFileFromJar(indexPath);
+        try {
+            return FileUtils.getFileFromJar(indexPath);
         } catch (IOException e) {
             Log.error(LOGGER_NAME, e.getMessage());
             return new File(indexPath);
@@ -138,12 +126,15 @@ public class DatahubController {
     private void setResponseHeaders(HttpServletResponse response, File actualFile) throws IOException {
         response.setStatus(HttpServletResponse.SC_OK);
         String extension = actualFile.getName().toLowerCase();
-        String contentType = extension.equals("js") ? "text/javascript; charset=UTF-8" : Files.probeContentType(actualFile.toPath());
+        String contentType = extension.equals("js") ? "text/javascript; charset=UTF-8"
+                : Files.probeContentType(actualFile.toPath());
         response.setContentType(contentType);
     }
 
-    void writeResponseContent(HttpServletRequest request, HttpServletResponse response, File actualFile, String portalName) throws IOException {
-        InputStream inStream = actualFile.getName().equals("default.toml") ? readConfiguration(portalName) : new FileInputStream(actualFile);
+    void writeResponseContent(HttpServletRequest request, HttpServletResponse response, File actualFile,
+            String portalName) throws IOException {
+        InputStream inStream = actualFile.getName().equals("default.toml") ? readConfiguration(portalName)
+                : new FileInputStream(actualFile);
         OutputStream outStream = response.getOutputStream();
 
         if (request.getHeader(HttpHeaders.ACCEPT_ENCODING).contains("gzip")) {
@@ -154,21 +145,33 @@ public class DatahubController {
         IOUtils.copy(inStream, outStream);
         outStream.close();
     }
+
     InputStream readConfiguration(String portalName) {
-       Source portal = null;
-        if(portalName.equals(NodeInfo.DEFAULT_NODE)){ //srv path, default portal
-            portal = Objects.requireNonNull(sourceRepository.findByType(SourceType.portal, null)).get(0);
-        }else {
+        String configuration = getPortalConfiguration(portalName);
+        configuration = configuration.replaceAll("\ngeonetwork4_api_url\\s?=.+", "\n")
+                .replace("[global]", "[global]\ngeonetwork4_api_url = \"/geonetwork/" + portalName + "/api\"");
+        return new ByteArrayInputStream(configuration.getBytes());
+    }
+
+    private String getPortalConfiguration(String portalName) {
+        Source portal = Objects.requireNonNull(sourceRepository.findByType(SourceType.portal, null)).get(0);
+        if (isNotDefaultPortal(portalName)) {
             portal = sourceRepository.findOneByUuid(portalName);
         }
-        String configuration = "";
-        if (portal != null && !portal.getDatahubConfiguration().isEmpty()) {
-            configuration = portal.getDatahubConfiguration();
+
+        if (datahubConfigurationExist(portal)) {
+            return portal.getDatahubConfiguration();
+        } else {
+            return this.getPortalConfiguration(NodeInfo.DEFAULT_NODE);
         }
 
-        // remove url & add new one
-        configuration = configuration.replaceAll("\ngeonetwork4_api_url\\s?=.+", "\n")
-            .replace("[global]", "[global]\ngeonetwork4_api_url = \"/geonetwork/" + portalName + "/api\"");
-        return new ByteArrayInputStream(configuration.getBytes());
+    }
+
+    private boolean isNotDefaultPortal(String portalName) {
+        return !portalName.equals(NodeInfo.DEFAULT_NODE);
+    }
+
+    private boolean datahubConfigurationExist(Source portal) {
+        return portal != null && !portal.getDatahubConfiguration().isEmpty();
     }
 }
