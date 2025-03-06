@@ -1,6 +1,6 @@
 /*
  * =============================================================================
- * ===	Copyright (C) 2024 Food and Agriculture Organization of the
+ * ===	Copyright (C) 2001-2024 Food and Agriculture Organization of the
  * ===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * ===	and United Nations Environment Programme (UNEP)
  * ===
@@ -278,6 +278,11 @@ public abstract class AbstractStore implements Store {
                 putResource(context, targetUuid, holder.getPath(), metadataResourceVisibility, targetApproved);
             }
         }
+    }
+
+    @Override
+    public void renameFolder(Path originalPath, Path newPath) {
+        // Empty implementation
     }
 
     protected String getFilename(final String metadataUuid, final String resourceId) {
