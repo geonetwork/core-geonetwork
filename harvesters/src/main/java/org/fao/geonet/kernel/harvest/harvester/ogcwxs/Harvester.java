@@ -1045,14 +1045,6 @@ class Harvester extends BaseAligner<OgcWxSParams> implements IHarvester<HarvestR
         }
     }
 
-    /* (non-Javadoc)
-     * @see org.fao.geonet.kernel.harvest.harvester.IHarvester#getErrors()
-     */
-    @Override
-    public List<HarvestError> getErrors() {
-        return new ArrayList<>();
-    }
-
     private static class WxSLayerRegistry {
         public String uuid;
         public String id;
