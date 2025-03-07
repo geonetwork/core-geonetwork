@@ -137,7 +137,6 @@
           datahubEnabled: false,
           datahubConfiguration: ""
         };
-        // TODO: init labels
       };
 
       $scope.updateSource = function () {
