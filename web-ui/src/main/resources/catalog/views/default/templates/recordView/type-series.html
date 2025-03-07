@@ -70,6 +70,15 @@
   </div>
   <div class="col-md-4 gn-md-side">
     <div
+      class="gn-contact-col-1"
+      data-ng-if="mdView.current.record.contactForDistribution"
+      data-gn-metadata-contacts="mdView.current.record.contactForDistribution"
+      data-gn-mode="default"
+      data-type="distribution"
+      data-layout="icon"
+    ></div>
+
+    <div
       data-ng-if="mdView.current.record.related.uuids"
       data-gn-related="mdView.current.record"
       data-user="user"
