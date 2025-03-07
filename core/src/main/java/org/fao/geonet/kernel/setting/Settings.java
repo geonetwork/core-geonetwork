@@ -166,6 +166,7 @@ public class Settings {
 
     public static final String MICROSERVICES_ENABLED = "microservices/enabled";
 
+
     public static class GNSetting {
         private String name;
         private boolean nullable;
