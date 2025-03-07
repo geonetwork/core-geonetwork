@@ -33,7 +33,16 @@
     "$translate",
     "$log",
     "gnGlobalSettings",
-    function ($scope, $http, $rootScope, $translate, $log, gnGlobalSettings) {
+    "gnUtilityService",
+    function (
+      $scope,
+      $http,
+      $rootScope,
+      $translate,
+      $log,
+      gnGlobalSettings,
+      gnUtilityService
+    ) {
       $scope.dbLanguages = [];
       $scope.staticPages = [];
       $scope.formats = [];
@@ -67,7 +76,7 @@
 
       function loadGroups() {
         $http.get("../api/groups").then(function (r) {
-          $scope.groups = r.data;
+          $scope.groups = gnUtilityService.sortByTranslation(r.data, $scope.lang, "name");
         });
       }
 
