@@ -30,7 +30,7 @@ import static org.fao.geonet.kernel.schema.SchemaPlugin.LOGGER_NAME;
 @RequestMapping(value = { "/{geonetworkPath:[a-zA-Z0-9_\\-]+}" })
 @Controller("datahub")
 public class DatahubController {
-    public static final String indexPath = "/datahub/index.html";
+    public static final String INDEX_PATH = "/datahub/index.html";
 
     @Autowired
     SourceRepository sourceRepository;
@@ -104,16 +104,16 @@ public class DatahubController {
         try {
             return FileUtils.getFileFromJar("/datahub/" + filePath);
         } catch (IOException e) {
-            return new File(indexPath);// return file doesn't exist in jar => go back to main menu
+            return new File(INDEX_PATH);// return file doesn't exist in jar => go back to main menu
         }
     }
 
     private File getFallbackFile() {
         try {
-            return FileUtils.getFileFromJar(indexPath);
+            return FileUtils.getFileFromJar(INDEX_PATH);
         } catch (IOException e) {
             Log.error(LOGGER_NAME, e.getMessage());
-            return new File(indexPath);
+            return new File(INDEX_PATH);
         }
     }
 
