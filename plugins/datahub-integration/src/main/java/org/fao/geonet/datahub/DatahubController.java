@@ -1,11 +1,11 @@
 package org.fao.geonet.datahub;
 
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpHeaders;
 import org.fao.geonet.NodeInfo;
 import org.fao.geonet.domain.Source;
 import org.fao.geonet.domain.SourceType;
-import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.repository.SourceRepository;
 import org.fao.geonet.utils.Log;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +30,7 @@ import static org.fao.geonet.kernel.schema.SchemaPlugin.LOGGER_NAME;
 @RequestMapping(value = { "/{geonetworkPath:[a-zA-Z0-9_\\-]+}" })
 @Controller("datahub")
 public class DatahubController {
+    public static final String indexPath = "/datahub/index.html";
 
     @Autowired
     SourceRepository sourceRepository;
@@ -84,7 +85,7 @@ public class DatahubController {
     private String getPortalName(HttpServletRequest request) {
         String reqPath = request.getPathInfo();
         String[] parts = reqPath.split("/");
-        return parts[1];
+        return FilenameUtils.getName(parts[1]);
     }
 
     private boolean isPortalDatahubEnabled(String portalName) {
@@ -98,17 +99,16 @@ public class DatahubController {
 
     private File getRequestedFile(HttpServletRequest request) {
         String reqPath = request.getPathInfo();
-
         String filePath = Stream.of(reqPath.split("/datahub/")).skip(1).collect(Collectors.joining("/"));
+        filePath = FilenameUtils.normalize(filePath);
         try {
             return FileUtils.getFileFromJar("/datahub/" + filePath);
         } catch (IOException e) {
-            return new File(filePath);// return file doesn't exist in jar to go back to main menu
+            return new File(indexPath);// return file doesn't exist in jar => go back to main menu
         }
     }
 
     private File getFallbackFile() {
-        String indexPath = "/datahub/index.html";
         try {
             return FileUtils.getFileFromJar(indexPath);
         } catch (IOException e) {
