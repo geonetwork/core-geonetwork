@@ -90,5 +90,6 @@ web/src/main/webapp/doc/fr
 web/src/main/webapp/WEB-INF/data/data/resources/schemapublication
 
 # geonetwork-ui git project
-plugins/datahub-integration/src/main/
+plugins/datahub-integration/src/main/geonetwork-ui/
+plugins/datahub-integration/src/main/resources/datahub/
 plugins/datahub-integration/node/
