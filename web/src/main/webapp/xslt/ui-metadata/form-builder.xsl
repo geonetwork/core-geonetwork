@@ -602,9 +602,10 @@
                     </xsl:if>
                   </button>
                   <xsl:if test="$hasMultipleChoice">
-                    <!-- A combo with the list of snippet available -->
+                    <!-- A combo with the list of snippets available -->
                     <ul class="dropdown-menu">
                       <xsl:for-each select="$snippets">
+                        <xsl:sort select="if(current()/@sortLabel != '') then current()/@sortLabel else (if ($strings/*[name() = current()/@label] != '') then $strings/*[name() = current()/@label] else current()/@label)"/>
                         <xsl:variable name="label" select="@label"/>
                         <li><a id="{concat($id, $label)}">
                           <xsl:value-of select="if ($strings/*[name() = $label] != '') then $strings/*[name() = $label] else $label"/>
