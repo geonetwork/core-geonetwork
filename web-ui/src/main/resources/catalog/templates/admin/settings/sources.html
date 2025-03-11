@@ -244,15 +244,7 @@
             </div>
             <div>
               <label data-translate="">datahubConfiguration</label>
-              <textarea
-                data-gn-autogrow=""
-                type="text"
-                name="datahubConfiguration"
-                class="form-control"
-                rows="10"
-                id="datahubConfiguration"
-                data-ng-model="source.datahubConfiguration"
-              ></textarea>
+              <gn-toml-edit model="source.datahubConfiguration"></gn-toml-edit>
             </div>
             <p class="help-block" data-translate="">sourceDatahubConfiguration-help</p>
             <div>
