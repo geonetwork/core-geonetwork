@@ -19,7 +19,7 @@
       data-ng-repeat="page in page.pages"
       class="gn-menuitem-xs"
       role="menuitem"
-      data-ng-init="submenuExternalLink = (page.format == 'LINK' || page.format == 'HTMLPAGE');"
+      data-ng-init="submenuExternalLink = (page.format == 'LINK' || page.format == 'EMAILLINK' || page.format == 'HTMLPAGE');"
     >
       <a
         data-ng-show="submenuExternalLink"
