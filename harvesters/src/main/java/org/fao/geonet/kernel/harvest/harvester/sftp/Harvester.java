@@ -41,18 +41,14 @@ public class Harvester implements IHarvester<HarvestResult> {
     /**
      * Contains a list of accumulated errors during the executing of this harvest.
      */
-    private final List<HarvestError> errors = new LinkedList<>();
+    private final List<HarvestError> errors;
 
-    public Harvester(AtomicBoolean cancelMonitor, Logger log, ServiceContext context, SftpParams params) {
+    public Harvester(AtomicBoolean cancelMonitor, Logger log, ServiceContext context, SftpParams params, List<HarvestError> errors) {
         this.cancelMonitor = cancelMonitor;
         this.log = log;
         this.context = context;
         this.params = params;
-    }
-
-    @Override
-    public List<HarvestError> getErrors() {
-        return List.of();
+        this.errors = errors;
     }
 
     @Override

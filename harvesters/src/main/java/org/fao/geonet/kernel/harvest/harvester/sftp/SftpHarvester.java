@@ -69,14 +69,14 @@ public class SftpHarvester extends AbstractHarvester<HarvestResult, SftpParams> 
                     log.error(ex.getMessage(), ex);
                 }
             }
-        
+
         harvesterSettingsManager.add("id:" + optionsId, "publicKey", params.publicKey);
         harvesterSettingsManager.add("id:" + optionsId, "typeAuthKey", params.typeAuthKey);
     }
 
     public void doHarvest(Logger log) throws Exception {
         log.info("Sftp doHarvest start");
-        org.fao.geonet.kernel.harvest.harvester.sftp.Harvester h = new org.fao.geonet.kernel.harvest.harvester.sftp.Harvester(cancelMonitor, log, context, params);
+        org.fao.geonet.kernel.harvest.harvester.sftp.Harvester h = new org.fao.geonet.kernel.harvest.harvester.sftp.Harvester(cancelMonitor, log, context, params, errors);
         result = h.harvest(log);
         log.info("Sftp doHarvest end");
     }
