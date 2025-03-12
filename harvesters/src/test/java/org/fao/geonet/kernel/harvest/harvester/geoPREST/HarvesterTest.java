@@ -17,6 +17,7 @@
 package org.fao.geonet.kernel.harvest.harvester.geoPREST;
 
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Date;
 import org.fao.geonet.utils.Log;
 import org.junit.Assert;
@@ -32,7 +33,7 @@ public class HarvesterTest
     @Test
     public void testParseDate() throws Exception {
 
-        Harvester h = new Harvester(null, Log.createLogger("TEST"), null, null);
+        Harvester h = new Harvester(null, Log.createLogger("TEST"), null, null, new ArrayList<>());
 
         // test EN date
         h.parseDate("Mon, 04 Feb 2013 10:19:00 +1000");
@@ -47,7 +48,7 @@ public class HarvesterTest
     @Test
     public void testJDK8136539Workaround() throws Exception {
 
-        Harvester h = new Harvester(null, Log.createLogger("TEST"), null, null);
+        Harvester h = new Harvester(null, Log.createLogger("TEST"), null, null, new ArrayList<>());
         Date p0 = h.parseDate("Fr, 24 Mär 2017 10:58:59 +0100");
         Date p1 = h.parseDate("Fr, 24 Mrz 2017 10:58:59 +0100");
 
@@ -57,7 +58,7 @@ public class HarvesterTest
     @Test
     public void testUnparsableDate() throws Exception {
 
-        Harvester h = new Harvester(null, Log.createLogger("TEST"), null, null);
+        Harvester h = new Harvester(null, Log.createLogger("TEST"), null, null, new ArrayList<>());
 
         try {
             h.parseDate("Xyz, 04 Feb 2013 10:19:00 +1000");
