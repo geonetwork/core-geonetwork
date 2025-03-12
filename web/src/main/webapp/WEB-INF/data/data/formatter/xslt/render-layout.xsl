@@ -158,6 +158,10 @@
               <h1>
                 <i class="fa fa-fw gn-icon-{$type}"></i>
                 <xsl:copy-of select="$title"/>
+                <span class="text-muted badge"
+                      data-ng-class="{{ 'text-success': md.mdStatus == 2, 'text-warning': md.mdStatus == 4 }}"
+                      data-ng-if="user.isEditorOrMore() &amp;&amp; md.mdStatus &lt; 50 &amp;&amp; isMdWorkflowEnable"
+                >{{('status-' + md.mdStatus) | translate}}</span>
               </h1>
 
               <xsl:call-template name="render-language-switcher"/>
