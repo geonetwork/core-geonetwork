@@ -156,12 +156,14 @@
 
             <header>
               <h1>
-                <i class="fa fa-fw gn-icon-{$type}"></i>
+                <i class="fa fa-fw gn-icon-{$type}"/>
                 <xsl:copy-of select="$title"/>
-                <span class="text-muted badge"
-                      data-ng-class="{{ 'text-success': md.mdStatus == 2, 'text-warning': md.mdStatus == 4 }}"
-                      data-ng-if="user.isEditorOrMore() &amp;&amp; md.mdStatus &lt; 50 &amp;&amp; isMdWorkflowEnable"
-                >{{('status-' + md.mdStatus) | translate}}</span>
+                <xsl:if test="$root = 'div'">
+                  <span class="text-muted badge"
+                        data-ng-class="{{ 'text-success': md.mdStatus == 2, 'text-warning': md.mdStatus == 4 }}"
+                        data-ng-if="user.isEditorOrMore() &amp;&amp; md.mdStatus &lt; 50 &amp;&amp; isMdWorkflowEnable"
+                  >{{('status-' + md.mdStatus) | translate}}</span>
+                </xsl:if>
               </h1>
 
               <xsl:call-template name="render-language-switcher"/>
@@ -407,7 +409,7 @@
     <xsl:if test="$isDisplayed">
       <div id="gn-view-{generate-id()}" class="gn-tab-content">
         <xsl:apply-templates mode="render-view" select="@xpath"/>
-        
+
       </div>
     </xsl:if>
   </xsl:template>
