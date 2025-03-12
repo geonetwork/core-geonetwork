@@ -78,24 +78,23 @@ class Harvester implements IHarvester<HarvestResult> {
     //--- API methods
     //---
     //---------------------------------------------------------------------------
-    private GeoPRESTParams params;
+    private final GeoPRESTParams params;
 
     //---------------------------------------------------------------------------
-    private ServiceContext context;
+    private final ServiceContext context;
 
     //---------------------------------------------------------------------------
     /**
      * Contains a list of accumulated errors during the executing of this harvest.
      */
-    private List<HarvestError> errors = new LinkedList<HarvestError>();
+    private final List<HarvestError> errors;
 
-    public Harvester(AtomicBoolean cancelMonitor, Logger log, ServiceContext context, GeoPRESTParams params) {
-
+    public Harvester(AtomicBoolean cancelMonitor, Logger log, ServiceContext context, GeoPRESTParams params, List<HarvestError> errors) {
         this.cancelMonitor = cancelMonitor;
         this.log = log;
         this.context = context;
         this.params = params;
-
+        this.errors = errors;
     }
 
     public HarvestResult harvest(Logger log) throws Exception {
@@ -302,10 +301,6 @@ class Harvester implements IHarvester<HarvestResult> {
         }
 
         throw new ParseException("Can't parse date '"+pubDate+"'", 0);
-    }
-
-    public List<HarvestError> getErrors() {
-        return errors;
     }
 }
 
