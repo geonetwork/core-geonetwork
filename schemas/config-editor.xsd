@@ -2331,6 +2331,11 @@ This can allow to build dynamic snippet based on the current record.
           <xs:documentation>Snippet label.</xs:documentation>
         </xs:annotation>
       </xs:attribute>
+      <xs:attribute name="sortLabel" type="xs:string" use="optional">
+        <xs:annotation>
+          <xs:documentation>When defined, @sortLabel should be used instead of @label for sorting purposes. Handy for putting values at the start of end of a list, for example.</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
     </xs:complexType>
   </xs:element>
   <xs:element name="batchEditing">
