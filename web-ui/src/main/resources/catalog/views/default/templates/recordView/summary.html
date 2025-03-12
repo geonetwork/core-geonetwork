@@ -14,7 +14,7 @@
           <span data-ng-show="range.start.indeterminatePosition"
             >{{range.start.indeterminatePosition | translate}}&nbsp;</span
           >
-          <span data-gn-humanize-time="{{range.start.date}}" />
+          <span data-gn-humanize-time="{{range.start.date}}"></span>
           <span data-ng-show="range.start.calendarEraName"
             >{{range.start.calendarEraName | translate}}</span
           >
@@ -26,7 +26,7 @@
           <span data-ng-show="range.end.indeterminatePosition"
             >{{range.end.indeterminatePosition | translate}}&nbsp;</span
           >
-          <span data-gn-humanize-time="{{range.end.date}}" />
+          <span data-gn-humanize-time="{{range.end.date}}"></span>
           <span data-ng-show="range.end.calendarEraName"
             >{{range.end.calendarEraName | translate}}</span
           >
@@ -44,21 +44,21 @@
     </span>
     <div>
       <h3 data-translate="">resourceVerticalRange</h3>
-      <div
-        class="flex flex-row flex-align-center gn-vertical-range"
-        data-ng-repeat="range in mdView.current.record.resourceVerticalRange"
-      >
-        <div class="width-25">
-          <i class="fa fa-fw fa-chevron-up" />
-        </div>
-        <div class="width-75">
-          <div data-ng-show="range.lte">
-            <dt>{{range.lte}}</dt>
-          </div>
-          <div data-ng-show="range.gte">
-            <dt>{{range.gte}}</dt>
-          </div>
-        </div>
+      <div class="flex flex-col">
+        <p data-ng-repeat="range in mdView.current.record.resourceVerticalRange">
+          <span data-ng-show="range.gte || range.gte===0">
+            {{range.gte}}{{range.unit || 'm'}}
+          </span>
+          <span
+            class="spacer"
+            data-ng-show="(range.gte || range.gte===0) && (range.lte || range.lte===0)"
+          >
+            <i class="fa fa-long-arrow-right"></i>
+          </span>
+          <span data-ng-show="range.lte || range.lte===0">
+            {{range.lte}}{{range.unit || 'm'}}
+          </span>
+        </p>
       </div>
     </div>
   </div>
@@ -67,4 +67,4 @@
 <div
   data-gn-keyword-badges="mdView.current.record"
   data-thesaurus="viewConfig.mainThesaurus"
-/>
+></div>

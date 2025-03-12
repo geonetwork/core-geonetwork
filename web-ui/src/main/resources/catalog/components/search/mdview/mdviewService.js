@@ -90,7 +90,7 @@
         }
 
         // Set the route only if not same as before
-        formatter = gnSearchLocation.getFormatter();
+        var formatter = gnSearchLocation.getFormatter();
 
         gnUtilityService.scrollTo();
 
@@ -114,12 +114,13 @@
             // Configuration to retrieve the results for the aggregations
             var relatedFacetConfig =
               gnGlobalSettings.gnCfg.mods.recordview.relatedFacetConfig;
+            var nbOfRecords = Object.keys(recordsMap).length;
             Object.keys(relatedFacetConfig).map(function (k) {
               relatedFacetConfig[k].aggs = {
                 docs: {
                   top_hits: {
                     // associated stats with UUIDs
-                    size: 100,
+                    size: nbOfRecords,
                     _source: {
                       includes: ["uuid"]
                     }
@@ -158,7 +159,9 @@
                   JSON.stringify(relatedFacetConfig) +
                   "," +
                   '  "from": 0,' +
-                  '  "size": 100,' +
+                  '  "size": ' +
+                  nbOfRecords +
+                  "," +
                   '  "_source": ["uuid"]' +
                   "}";
               }
@@ -341,7 +344,7 @@
                         var metadata = [];
                         metadata.push(new Metadata(r.data.hits.hits[i]));
 
-                        data = { metadata: metadata };
+                        var data = { metadata: metadata };
                         //Keep the search results (gnMdViewObj.records)
                         // that.feedMd(0, undefined, data.metadata);
                         //and the trace of where in the search result we are

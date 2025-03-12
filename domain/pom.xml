@@ -27,7 +27,7 @@
   <parent>
     <artifactId>geonetwork</artifactId>
     <groupId>org.geonetwork-opensource</groupId>
-    <version>4.4.0-SNAPSHOT</version>
+    <version>4.4.7-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
@@ -59,6 +59,16 @@
     <dependency>
       <groupId>org.hibernate</groupId>
       <artifactId>hibernate-ehcache</artifactId>
+      <exclusions>
+        <exclusion>
+          <groupId>net.sf.ehcache</groupId>
+          <artifactId>ehcache-core</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>net.sf.ehcache</groupId>
+      <artifactId>ehcache</artifactId>
     </dependency>
     <dependency>
       <groupId>org.springframework</groupId>
@@ -79,6 +89,10 @@
     <dependency>
       <groupId>org.springframework.data</groupId>
       <artifactId>spring-data-jpa</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.data</groupId>
+      <artifactId>spring-data-envers</artifactId>
     </dependency>
     <dependency>
       <groupId>org.springframework</groupId>
@@ -283,6 +297,7 @@
               <clusterName>test</clusterName>
               <transportPort>9300</transportPort>
               <httpPort>9200</httpPort>
+              <environmentVariables><ES_JAVA_OPTS>-Xmx2g</ES_JAVA_OPTS></environmentVariables>
             </configuration>
             <executions>
               <execution>

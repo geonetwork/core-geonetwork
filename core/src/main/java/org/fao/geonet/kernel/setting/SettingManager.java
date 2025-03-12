@@ -33,6 +33,7 @@ import org.fao.geonet.domain.HarvesterSetting;
 import org.fao.geonet.domain.Setting;
 import org.fao.geonet.domain.SettingDataType;
 import org.fao.geonet.domain.Setting_;
+import org.fao.geonet.languages.FeedbackLanguages;
 import org.fao.geonet.repository.SettingRepository;
 import org.fao.geonet.repository.SortUtils;
 import org.fao.geonet.repository.SourceRepository;
@@ -93,6 +94,9 @@ public class SettingManager {
 
     @Autowired
     DefaultLanguage defaultLanguage;
+
+    @Autowired
+    FeedbackLanguages feedbackLanguages;
 
     @PostConstruct
     private void init() {
@@ -343,6 +347,12 @@ public class SettingManager {
 
         repo.save(setting);
 
+        if (key.equals("system/feedback/languages")) {
+            feedbackLanguages.updateSupportedLocales();
+        } else if (key.equals("system/feedback/translationFollowsText")) {
+            feedbackLanguages.updateTranslationFollowsText();
+        }
+
         return true;
     }
 
@@ -431,6 +441,15 @@ public class SettingManager {
     public
     @Nonnull
     String getNodeURL() {
+        return getBaseURL() + getNodeId() + "/";
+    }
+
+    /**
+     * Return node id - i.e. srv
+     */
+    public
+    @Nonnull
+    String getNodeId() {
         String nodeId = NodeInfo.DEFAULT_NODE;
         try {
             NodeInfo node = ApplicationContextHolder.get().getBean(NodeInfo.class);
@@ -438,7 +457,7 @@ public class SettingManager {
                 nodeId = node.getId();
             }
         } catch (Exception e) {}
-        return getBaseURL() + nodeId + "/";
+        return  nodeId;
     }
     /**
      * Return complete node URL eg. http://localhost:8080/geonetwork/

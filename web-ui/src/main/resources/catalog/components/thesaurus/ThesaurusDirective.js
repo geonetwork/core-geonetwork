@@ -256,7 +256,8 @@
           // on keyword.
           maxTags: "@",
           thesaurusTitle: "@",
-          browsable: "@"
+          browsable: "@",
+          required: "@"
         },
         templateUrl:
           "../../catalog/components/thesaurus/" + "partials/keywordselector.html",
@@ -661,6 +662,7 @@
           scope.orderById = attrs.orderById || "false";
           scope.max = gnThesaurusService.DEFAULT_NUMBER_OF_RESULTS;
           scope.fauxMultilingual = scope.fauxMultilingual === "true"; //default false
+          scope.showHintsOnFocus = attrs.showHintsOnFocus === "true"; // displays all the values on focus and adds a dropdown caret icon, default shows only the selected value
 
           // Configuration only required when using the directive in template fields.
           //
@@ -805,6 +807,8 @@
             // By default, such an attribute is identified in the form by
             // the parent element id + '_' + attribute name
             if (angular.isDefined(attrs.thesaurusConceptIdAttribute)) {
+              var input;
+
               if (scope.templateField) {
                 scope.conceptIdElementName =
                   // In multilingual mode, the ref to the CharacterString is known using the id
@@ -863,7 +867,7 @@
                 var conceptIdElement = angular.element(
                   '<div class="well well-sm gn-keyword-picker-concept-id row">' +
                     '  <div class="form-group">' +
-                    '    <label class="col-sm-4"><i class="fa fa-link fa-fw"/><span data-translate>URL</span></label>' +
+                    '    <label class="col-sm-4"><i class="fa fa-link fa-fw"></i><span data-translate>URL</span></label>' +
                     '    <div class="col-sm-6"><input ' +
                     inputPropertyName +
                     '="' +
@@ -871,7 +875,7 @@
                     '" ' +
                     '       class="gn-field-link form-control"/>' +
                     "    </div>" +
-                    '    <div class="col-sm-2"><a class="btn btn-link" title="{{\'resetUrl\' | translate}}" data-ng-click="resetUrl()"><i class="fa fa-times text-danger"/></a></div>' +
+                    '    <div class="col-sm-2"><a class="btn btn-link" title="{{\'resetUrl\' | translate}}" data-ng-click="resetUrl()"><i class="fa fa-times text-danger"></i></a></div>' +
                     "  </div>" +
                     "</div>"
                 );
@@ -910,7 +914,8 @@
               .typeahead(
                 {
                   minLength: 0,
-                  highlight: true
+                  highlight: true,
+                  showHintsOnFocus: scope.showHintsOnFocus
                 },
                 {
                   name: "keyword",

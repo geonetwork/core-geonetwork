@@ -190,16 +190,6 @@
          * If refreshForm is true, then will also update the current form.
          * This is required while switching tab for example. Update the tab
          * value in the form and trigger save to update the view.
-         */
-        save: function (refreshForm, silent, terminate) {
-          save(refreshForm, silent, terminate, false, false);
-        },
-        /**
-         * Save the metadata record currently in editing session.
-         *
-         * If refreshForm is true, then will also update the current form.
-         * This is required while switching tab for example. Update the tab
-         * value in the form and trigger save to update the view.
          * If submit is true and the current user is editor, the metadata
          * status will be changed to submitted.
          * If approve is true and the current user is reviewer, the metadata
@@ -331,8 +321,7 @@
             // properly without removing them. There is maybe
             // references to DOM objects in the JS code which
             // make those objects not reachable by GC.
-            $(gnCurrentEdit.containerId).find("*").remove();
-
+            $(gnCurrentEdit.containerId).empty();
             $(gnCurrentEdit.containerId).replaceWith(snippet);
 
             if (gnCurrentEdit.compileScope) {
@@ -386,6 +375,15 @@
               .val();
           };
 
+          // The list of layers in a record is defined in XSL template get-online-source-config
+          // and is depending on each schema. If emtpy an empty array is set.
+          var getLayerConfiguration = function () {
+            var configuration = angular.fromJson(getInputValue("layerConfig")) || [];
+            return Array.isArray(configuration)
+              ? configuration
+              : [configuration.resource];
+          };
+
           var extent = [],
             value = getInputValue("extent");
           try {
@@ -415,16 +413,17 @@
             version: getInputValue("version"),
             tab: getInputValue("currTab"),
             geoPublisherConfig: angular.fromJson(getInputValue("geoPublisherConfig")),
-            resourceContainerDescription: angular.fromJson(
-              getInputValue("resourceContainerDescription")
-            ),
+            resourceContainerDescription:
+              getInputValue("resourceContainerDescription") == ""
+                ? null
+                : angular.fromJson(getInputValue("resourceContainerDescription")),
             resourceManagementExternalProperties: angular.fromJson(
               getInputValue("resourceManagementExternalProperties")
             ),
             extent: extent,
             dataFormats: dataFormats,
             isMinor: getInputValue("minor") === "true",
-            layerConfig: angular.fromJson(getInputValue("layerConfig")),
+            layerConfig: getLayerConfiguration(),
             saving: false
           });
 
@@ -614,12 +613,12 @@
                 checkAddControls(target.get(0), true);
                 checkMoveControls(target.get(0));
 
-                target.slideUp(duration, function () {
+                target.slideUp(duration);
+                target.promise().done(function () {
                   $(this).remove();
+                  // TODO: Take care of moving the + sign
+                  defer.resolve(response.data);
                 });
-
-                // TODO: Take care of moving the + sign
-                defer.resolve(response.data);
               },
               function (response) {
                 defer.reject(response.data);
@@ -669,12 +668,12 @@
 
             // For each existing up/down control transfer
             // the hidden class between the two elements.
-            angular.forEach(switchWithElementCtrl, function (ctrl, idx) {
-              var ctrl2 = currentElementCtrl[idx];
-              var ctrlHidden = $(ctrl).hasClass("invisible");
-              var ctrl2Hidden = $(ctrl2).hasClass("invisible");
-              $(ctrl).toggleClass("invisible", ctrl2Hidden);
-              $(ctrl2).toggleClass("invisible", ctrlHidden);
+            angular.forEach(switchWithElementCtrl, function (switchedElement, idx) {
+              var movedElement = currentElementCtrl[idx];
+              var switchHidden = $(switchedElement).hasClass("hidden");
+              var movedHidden = $(movedElement).hasClass("hidden");
+              $(switchedElement).toggleClass("hidden", movedHidden);
+              $(movedElement).toggleClass("hidden", switchHidden);
             });
 
             var hasClass = currentElement.hasClass("gn-extra-field");

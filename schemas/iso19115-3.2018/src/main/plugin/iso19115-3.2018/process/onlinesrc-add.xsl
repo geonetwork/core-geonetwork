@@ -268,7 +268,7 @@
 
   <xsl:template name="setProtocol">
     <xsl:choose>
-      <xsl:when test="$mimeTypeStrategy = 'mimeType'">
+      <xsl:when test="$mimeTypeStrategy = 'mimeType' and $mimeType != ''">
         <gcx:MimeFileType type="{$mimeType}">
           <xsl:value-of select="$protocol"/>
         </gcx:MimeFileType>

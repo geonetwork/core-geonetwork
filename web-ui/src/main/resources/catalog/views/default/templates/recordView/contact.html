@@ -5,7 +5,8 @@
     data-gn-metadata-contacts="mdView.current.record.contactForResource"
     data-gn-mode="role"
     data-layout="icon"
-  />
+    data-focus-on-field-name="resource"
+  ></div>
 </div>
 
 <div data-ng-if="mdView.current.record.resourceCredit" class="flex-row gn-margin-bottom">
@@ -17,6 +18,6 @@
     <div
       data-ng-repeat="c in mdView.current.record.resourceCredit"
       data-ng-bind-html="c | linky | newlines"
-    />
+    ></div>
   </div>
 </div>

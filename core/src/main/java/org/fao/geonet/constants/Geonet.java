@@ -535,6 +535,7 @@ public final class Geonet {
      */
     public static final class Config {
         public static final String HTMLCACHE_DIR = "htmlCacheDir";
+        public static final String SCHEMAPUBLICATION_DIR = "schemaPublicationDir";
         public static final String INDEX_CONFIG_DIR = "indexConfigDir";
         /**
          * Profiles of languages for autodetection using https://code.google.com/p/language-detection/.
@@ -629,7 +630,7 @@ public final class Geonet {
 
     public static class IndexFieldNames {
         public static final String HASXLINKS = "_hasxlinks";
-        public static final String XLINK = "_xlink";
+        public static final String XLINK = "xlink";
         public static final String ROOT = "_root";
         public static final String SCHEMA = "documentStandard";
         public static final String DATABASE_CREATE_DATE = "createDate";

@@ -1,16 +1,3 @@
-<div class="gn-margin-bottom hidden-print">
-  <span class="badge badge-rounded" title="{{'updatedOn' | translate}}">
-    <i class="fa fa-fw fa-file-code-o"></i>
-  </span>
-  <a
-    class="btn btn-default btn-sm"
-    data-ng-href="../api/records/{{mdView.current.record.uuid}}/formatters/xml"
-    target="_blank"
-  >
-    <span data-translate="">metadataInXML</span>
-  </a>
-</div>
-
 <div class="gn-md-side-calendar gn-margin-bottom">
   <span class="badge badge-rounded" title="{{'updatedOn' | translate}}">
     <i class="fa fa-fw fa-calendar"></i>
@@ -23,8 +10,8 @@
 </div>
 
 <div
-  data-ng-init="mdLanguages = [mdView.current.record.mainLanguage].concat(mdView.current.record.otherLanguage || [])"
-  data-aang-if="mdLanguages.length > 0"
+  data-ng-init="mdLanguages = mdView.current.record.getMetadataLanguages()"
+  data-ng-show="mdLanguages.length > 0"
   class="gn-margin-bottom flex-row"
 >
   <span class="badge badge-rounded" title="{{'language' | translate}}">
@@ -33,8 +20,25 @@
   <div>
     <h3 data-translate="">metadataLanguage</h3>
     <ul class="gn-comma-list">
-      <li data-ng-repeat="l in mdLanguages">{{l | translate}}</li>
+      <li data-ng-repeat="l in mdLanguages">
+        <span> {{l | translate}} </span>
+      </li>
     </ul>
+  </div>
+</div>
+
+<div data-ng-if="mdView.current.record.standardName" class="gn-margin-bottom flex-row">
+  <span class="badge badge-rounded" title="{{'documentStandard' | translate}}">
+    <i class="fa fa-fw fa-certificate"></i>
+  </span>
+  <div>
+    <h3 data-translate="">documentStandard</h3>
+    <p>
+      {{mdView.current.record.standardName}}
+      <span data-ng-if="mdView.current.record.standardVersion">
+        ({{mdView.current.record.standardVersion}})</span
+      >
+    </p>
   </div>
 </div>
 
@@ -42,8 +46,9 @@
   <span class="badge badge-rounded" title="{{'sourceCatalog' | translate}}">
     <i class="fa fa-fw fa-cloud"></i>
   </span>
-  <span data-translate="">sourceCatalog</span>:
-  <span data-gn-record-origin-logo="mdView.current.record" />
+  <h3 data-translate="">sourceCatalog</h3>
+  :
+  <span data-gn-record-origin-logo="mdView.current.record"></span>
 </div>
 
 <div

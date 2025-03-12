@@ -33,7 +33,7 @@
           class="btn btn-primary btn-block"
           data-ng-click="addStaticPage()"
         >
-          <i class="fa fa-plus" />
+          <i class="fa fa-plus"></i>
           <span data-translate="">newStaticPage</span>
         </button>
       </div>
@@ -62,7 +62,7 @@
             <button
               type="button"
               class="btn btn-primary"
-              data-ng-disabled="!gnStaticPageEdit.$valid && !gnStaticPageEdit.dirty"
+              data-ng-disabled="!gnStaticPageEdit.$valid || !gnStaticPageEdit.$dirty"
               data-gn-click-and-spin="saveStaticPage('#gn-static-page-edit')"
             >
               <i class="fa fa-save"></i>&nbsp;
@@ -144,6 +144,23 @@
           </div>
 
           <div class="form-group">
+            <label class="control-label col-sm-3" data-translate="">pageIcon</label>
+
+            <div class="col-sm-9">
+              <input
+                type="text"
+                name="label"
+                class="form-control"
+                data-ng-model="staticPageSelected.icon"
+              />
+            </div>
+
+            <div class="col-sm-9 col-sm-offset-3">
+              <p class="help-block ng-scope" data-translate="">pageIcon-help</p>
+            </div>
+          </div>
+
+          <div class="form-group">
             <label class="control-label col-sm-3" data-translate="">format</label>
 
             <div class="col-sm-9">
@@ -196,8 +213,8 @@
               >
                 {{staticPageSelected.link}}
                 <a href="" data-ng-click="deleteContent()"
-                  ><i class="fa fa-fw fa-trash"
-                /></a>
+                  ><i class="fa fa-fw fa-trash"></i
+                ></a>
               </div>
             </div>
 
@@ -217,7 +234,7 @@
               <div class="panel panel-default">
                 <div class="panel-body">
                   <span class="btn btn-success btn-block fileinput-button">
-                    <i class="fa fa-plus fa-white" />
+                    <i class="fa fa-plus fa-white"></i>
                     <span data-translate="">chooseStaticPageFile</span>
                     <input type="file" id="md-staticpage-file" name="data" />
                   </span>
@@ -289,12 +306,33 @@
                 class="form-control"
                 required=""
                 data-ng-model="staticPageSelected.status"
+                data-ng-change="updateGroupSelection()"
               >
                 <option value="HIDDEN">{{'staticPageStatus-HIDDEN' | translate }}</option>
                 <option value="PRIVATE">
                   {{'staticPageStatus-PRIVATE' | translate }}
                 </option>
+                <option value="GROUPS">{{'staticPageStatus-GROUPS' | translate }}</option>
                 <option value="PUBLIC">{{'staticPageStatus-PUBLIC' | translate }}</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="control-label col-sm-3" data-translate="">groups</label>
+
+            <div class="col-sm-9">
+              <select
+                name="groups"
+                class="form-control"
+                data-ng-disabled="!isGroupEnabled"
+                data-ng-readonly="!isGroupEnabled"
+                data-ng-model="staticPageSelected.groups"
+                multiple
+              >
+                <option data-ng-repeat="g in groups" value="{{g.name}}">
+                  {{g.label[lang]|empty:g.name}}
+                </option>
               </select>
             </div>
           </div>

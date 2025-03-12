@@ -26,11 +26,9 @@ package org.fao.geonet.api.records.formatters;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Joiner;
 import com.google.common.collect.*;
-import groovy.util.slurpersupport.GPathResult;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.dispatchers.guiservices.XmlFile;
 import org.fao.geonet.ApplicationContextHolder;
-import org.fao.geonet.api.records.formatters.groovy.CurrentLanguageHolder;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.IsoLanguage;
@@ -157,17 +155,6 @@ public class SchemaLocalizations {
     }
 
     /**
-     * Obtain a translation for the given node by looking up the elements name in the the schema's
-     * labels.xml file
-     *
-     * @param node the node to get a translation for.
-     */
-    public String nodeLabel(GPathResult node) throws Exception {
-        String parentNodeName = parentNodeName(node);
-        return nodeLabel(node.name(), parentNodeName);
-    }
-
-    /**
      * Look up a translation in the schema's labels.xml file
      *
      * @param qualifiedNodeName       the name to use as a key for the lookup
@@ -176,26 +163,6 @@ public class SchemaLocalizations {
      */
     public String nodeLabel(String qualifiedNodeName, String qualifiedParentNodeName) throws Exception {
         return nodeTranslation(qualifiedNodeName, qualifiedParentNodeName, "label");
-    }
-
-    /**
-     * Obtain the description for the given node by looking up the elements name in the the schema's
-     * labels.xml file
-     *
-     * @param node the node to get a description for.
-     */
-    public String nodeDesc(GPathResult node) throws Exception {
-        String parentNodeName = parentNodeName(node);
-        return nodeDesc(node.name(), parentNodeName);
-    }
-
-    protected String parentNodeName(GPathResult node) {
-        GPathResult parentNode = node.parent();
-        String parentNodeName = null;
-        if (parentNode != node) {
-            parentNodeName = parentNode.name();
-        }
-        return parentNodeName;
     }
 
     /**
@@ -238,15 +205,6 @@ public class SchemaLocalizations {
 
     /**
      * Obtain a translation for the given codelist by looking up the codelist and codelist value in
-     * the the schema's codelists.xml file * @param node a node containing a codeListValue attribute
-     * and a codeList attribute
-     */
-    public String codelistValueLabel(GPathResult node) throws Exception {
-        return codelistValueLabel(node.getProperty("@codeList").toString(), node.getProperty("@codeListValue").toString());
-    }
-
-    /**
-     * Obtain a translation for the given codelist by looking up the codelist and codelist value in
      * the the schema's codelists.xml file.
      *
      * @param codelist the name of the codelist
@@ -254,16 +212,6 @@ public class SchemaLocalizations {
      */
     public String codelistValueLabel(String codelist, String value) throws Exception {
         return codelistTranslation(codelist, value, "label");
-    }
-
-    /**
-     * Obtain the description for the given codelist by looking up the codelist and codelist value
-     * in the the schema's codelists.xml file.
-     *
-     * @param node a node containing a codeListValue attribute and a codeList attribute
-     */
-    public String codelistValueDesc(GPathResult node) throws Exception {
-        return codelistValueDesc(node.getProperty("@codeList").toString(), node.getProperty("@codeListValue").toString());
     }
 
     /**
@@ -360,8 +308,8 @@ public class SchemaLocalizations {
 
         for (SchemaLocalization schemaLocalization : this.schemaLocalizations) {
             Element strings = schemaLocalization.getStrings(this.languageHolder.getLang3());
-            for (int i = 0; i < key.length; i++) {
-                strings = strings.getChild(key[i]);
+            for (String s : key) {
+                strings = strings.getChild(s);
                 if (strings == null) {
                     break;
                 }
@@ -373,5 +321,4 @@ public class SchemaLocalizations {
 
         return "[" + Joiner.on(',').join(key) + "]";
     }
-
 }

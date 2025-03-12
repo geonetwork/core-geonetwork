@@ -31,7 +31,7 @@
   <parent>
     <groupId>org.geonetwork-opensource</groupId>
     <artifactId>geonetwork</artifactId>
-    <version>4.4.0-SNAPSHOT</version>
+    <version>4.4.7-SNAPSHOT</version>
   </parent>
 
 
@@ -84,6 +84,10 @@
     <dependency>
       <groupId>org.apache.jcs</groupId>
       <artifactId>jcs</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>xalan</groupId>
+      <artifactId>serializer</artifactId>
     </dependency>
     <dependency>
       <groupId>net.sf.saxon</groupId>
@@ -171,12 +175,18 @@
     <dependency>
       <groupId>org.json</groupId>
       <artifactId>json</artifactId>
-      <version>20140107</version>
-      <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>org.bitbucket.cowwoc</groupId>
       <artifactId>diff-match-patch</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>javax.annotation</groupId>
+      <artifactId>javax.annotation-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>javax.xml.bind</groupId>
+      <artifactId>jaxb-api</artifactId>
     </dependency>
   </dependencies>
 

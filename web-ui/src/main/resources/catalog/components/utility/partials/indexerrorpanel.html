@@ -1,16 +1,16 @@
 <div class="col-sm-4 ng-cloak" data-ng-if="showHealthIndexError">
   <div class="alert alert-warning text-center">
     <h3 data-translate="">indexNotAvailable</h3>
-    <i class="fa fa-fw fa-cogs fa-3x" />
+    <i class="fa fa-fw fa-cogs fa-3x"></i>
     <br />
     <a
       class="btn btn-block btn-link"
       data-ng-if="user.isAdministrator()"
-      data-ng-href="admin.console?debug#/dashboard"
+      data-ng-href="admin.console#/dashboard"
     >
       <i class="fa fa-fw fa-dashboard"></i>
       <span data-translate="">status</span>
     </a>
-    <div data-gn-need-help="installing-index" />
+    <div data-gn-need-help="installing-index"></div>
   </div>
 </div>

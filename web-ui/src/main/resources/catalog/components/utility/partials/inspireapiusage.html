@@ -1,0 +1,15 @@
+<div data-ng-show="inspireApiUsage">
+  <span data-translate="">inspireApiQuotaCurrentValue</span><br />
+  <span data-ng-if="!inspireApiUsage.body.items">{{inspireApiUsage.body}}</span>
+
+  <ul data-ng-if="inspireApiUsage.body.items">
+    <li data-ng-repeat="date in inspireApiUsage.body.items">
+      <span>{{date.date}}:</span>
+      <span data-translate="">inspireApiQuotaValidation</span>
+      <span>{{date.uses}}</span>
+      <span> / </span>
+      <span data-translate="">inspireApiQuotaRemaining</span>
+      <span>{{date.remaining_uses}}</span>
+    </li>
+  </ul>
+</div>

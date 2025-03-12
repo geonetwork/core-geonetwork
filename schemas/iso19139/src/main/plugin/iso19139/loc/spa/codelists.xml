@@ -1543,12 +1543,12 @@
       <description />
     </entry>
     <entry hideInEditMode="true">
-      <code>staticMap</code>
+      <code>map-static</code>
       <label>Mapa estático</label>
       <description />
     </entry>
     <entry hideInEditMode="true">
-      <code>interactiveMap</code>
+      <code>map-interactive</code>
       <label>Mapa interactivo</label>
       <description />
     </entry>

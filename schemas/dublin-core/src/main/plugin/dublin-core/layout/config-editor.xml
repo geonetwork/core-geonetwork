@@ -54,8 +54,20 @@
       <sidePanel>
         <directive data-gn-need-help="creating-metadata"/>
         <directive data-gn-validation-report=""/>
-        <directive data-gn-onlinesrc-list=""
-                   data-types="onlinesrc|thumbnail|parent"/>
+
+        <directive data-gn-overview-manager=""
+                   data-file-types=".png,.gif,.jpeg,.jpg"/>
+
+        <directive data-gn-distribution-resources-panel="gnCurrentEdit.metadata"
+                   data-mode="viewConfig.distributionConfig.layout || ''"
+                   data-editor-config="default"
+                   data-related-config="[{
+                                          title: 'links',
+                                          filter: 'protocol:.*',
+                                          editActions: ['addOnlinesrc']
+                                        }]"/>
+
+        <directive data-gn-associated-resources-panel="gnCurrentEdit.metadata" />
       </sidePanel>
       <tab id="default" default="true" mode="flat">
         <section xpath="/simpledc"/>
@@ -68,8 +80,20 @@
       <sidePanel>
         <directive data-gn-need-help="creating-metadata"/>
         <directive data-gn-validation-report=""/>
-        <directive data-gn-onlinesrc-list=""
-                   data-types="onlinesrc|thumbnail|parent"/>
+
+        <directive data-gn-overview-manager=""
+                   data-file-types=".png,.gif,.jpeg,.jpg"/>
+
+        <directive data-gn-distribution-resources-panel="gnCurrentEdit.metadata"
+                   data-mode="viewConfig.distributionConfig.layout || ''"
+                   data-editor-config="default"
+                   data-related-config="[{
+                                          title: 'links',
+                                          filter: 'protocol:.*',
+                                          editActions: ['addOnlinesrc']
+                                        }]"/>
+
+        <directive data-gn-associated-resources-panel="gnCurrentEdit.metadata" />
       </sidePanel>
       <tab id="advanced" default="true">
         <section xpath="/simpledc"/>
@@ -79,8 +103,21 @@
       <sidePanel>
         <directive data-gn-need-help="creating-metadata"/>
         <directive data-gn-validation-report=""/>
-        <directive data-gn-onlinesrc-list=""
-                   data-types="onlinesrc|thumbnail|parent"/>
+
+        <directive data-gn-overview-manager=""
+                   data-file-types=".png,.gif,.jpeg,.jpg"/>
+
+        <directive data-gn-distribution-resources-panel="gnCurrentEdit.metadata"
+                   data-mode="viewConfig.distributionConfig.layout || ''"
+                   data-editor-config="default"
+                   data-related-config="[{
+                                          title: 'links',
+                                          filter: 'protocol:.*',
+                                          editActions: ['addOnlinesrc']
+                                        }]"/>
+
+        <directive data-gn-associated-resources-panel="gnCurrentEdit.metadata" />
+
       </sidePanel>
       <tab id="xml" default="true"/>
     </view>

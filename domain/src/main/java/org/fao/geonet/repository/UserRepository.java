@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2024 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -45,6 +45,10 @@ public interface UserRepository extends GeonetRepository<User, Integer>, JpaSpec
 
     /**
      * Find all users identified by the provided username ignoring the case.
+     *
+     * Old versions allowed to create users with the same username with different case.
+     * New versions do not allow this.
+     *
      * @param username the username.
      * @return all users with username equals ignore case the provided username.
      */

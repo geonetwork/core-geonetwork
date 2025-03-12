@@ -45,7 +45,8 @@
 
   module.directive("searchFilterTags", [
     "$location",
-    function ($location) {
+    "gnFacetMetaLabel",
+    function ($location, gnFacetMetaLabel) {
       return {
         restrict: "EA",
         require: "^ngSearchForm",
@@ -61,6 +62,12 @@
 
           // key is the raw facet path, value is a valid filter object
           scope.facetFilterCache = {};
+          scope.getFacetLabel = gnFacetMetaLabel.getFacetLabel;
+          scope.dimensionList = {};
+          for (var i = 0; i < scope.dimensions.length; i++) {
+            var dimension = scope.dimensions[i];
+            scope.dimensionList[dimension.key] = dimension;
+          }
 
           function getSearchParams() {
             if (scope.useLocationParameters) {
@@ -269,7 +276,7 @@
           };
 
           scope.removeFilter = function (filter) {
-            removeFacetElement = [];
+            var removeFacetElement = [];
             removeFacetElement.push(filter.key);
             var keys = Object.keys(filter.value);
             if (angular.isObject(filter.value) && keys[0] != 0) {

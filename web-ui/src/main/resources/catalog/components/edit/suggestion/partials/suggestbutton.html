@@ -1,10 +1,11 @@
 <button
   type="button"
-  class="btn btn-default"
+  class="btn btn-default btn-xs"
   data-ng-hide="sugg === undefined"
-  title="{{sugg === undefined ? 'processNotFound' : ''}}"
+  title="{{sugg.name}}"
   data-ng-click="gnSuggestion.onSuggestionClick(sugg)"
 >
-  <i class="fa {{icon || 'fa-cog'}}" />
-  <span>{{sugg.name}}</span>
+  <i class="fa fa-fw {{icon || 'fa-lightbulb'}}"></i>
+  <span data-ng-if="!name">{{sugg.name}}</span>
+  <span data-ng-if="name">{{('suggest-' + processId) | translate}}</span>
 </button>

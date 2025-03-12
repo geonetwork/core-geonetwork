@@ -33,6 +33,9 @@
             title="{{md.resourceTitle}}"
             class="gn-break"
           >
+            <i data-ng-show="md.resourceTitle.trim()=='' || md.resourceTitle===undefined"
+              >{{'missingTitle' | translate}}</i
+            >
             {{(md.resourceTitle) | characters:80}}
           </a>
         </h1>
@@ -64,7 +67,7 @@
         <div class="gn-md-details">
           <div class="gn-md-abstract text-muted">
             <div class="ellipsis">
-              <p>{{md.resourceAbstract.split('\n')[0] | striptags}}</p>
+              <p>{{::abstractBriefMaker(md.resourceAbstract) | striptags}}</p>
             </div>
           </div>
         </div>
@@ -83,7 +86,7 @@
           },
           showStatusFooterFor.indexOf(md.cl_status[0].key) !== -1 ? 'gn-status-' + md.cl_status[0].key + '-bg' : '']"
     >
-      <div data-gn-status-badge="md" />
+      <div data-gn-status-badge="md"></div>
       <div class="gn-toolbar">
         <gn-links-btn class="pull-right"></gn-links-btn>
         <!-- <div data-gn-related-dropdown="md" data-user="user"></div>-->

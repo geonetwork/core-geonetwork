@@ -73,6 +73,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import static org.fao.geonet.api.ApiParams.API_CLASS_FORMATTERS_OPS;
+import static org.fao.geonet.api.ApiParams.API_CLASS_FORMATTERS_TAG;
 import static org.fao.geonet.api.records.formatters.FormatterConstants.SCHEMA_PLUGIN_FORMATTER_DIR;
 import static org.fao.geonet.api.records.formatters.FormatterConstants.VIEW_XSL_FILENAME;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
@@ -82,8 +84,8 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
  *
  * @author jeichar
  */
-@Tag(name = "formatters",
-    description = "Formatter admin operations")
+@Tag(name = API_CLASS_FORMATTERS_TAG,
+    description = API_CLASS_FORMATTERS_OPS)
 @Controller("formattersList")
 public class FormatterAdminApi extends AbstractFormatService {
 
@@ -528,11 +530,6 @@ public class FormatterAdminApi extends AbstractFormatService {
         if (Files.exists(rootView)) {
             return rootView;
         }
-        final String groovyView = "view.groovy";
-        rootView = zipFs.getPath(groovyView);
-        if (Files.exists(rootView)) {
-            return rootView;
-        }
         final Path rootDir = zipFs.getRootDirectories().iterator().next();
         try (DirectoryStream<Path> dirs = Files.newDirectoryStream(rootDir, IO.DIRECTORIES_FILTER)) {
             Iterator<Path> dirIter = dirs.iterator();
@@ -542,10 +539,6 @@ public class FormatterAdminApi extends AbstractFormatService {
                     "The formatter/view zip file must either have a single root directory which contains the view file or " +
                         "it must have all formatter resources at the root of the directory");
                 rootView = next.resolve(VIEW_XSL_FILENAME);
-                if (Files.exists(rootView)) {
-                    return rootView;
-                }
-                rootView = next.resolve(groovyView);
                 if (Files.exists(rootView)) {
                     return rootView;
                 }

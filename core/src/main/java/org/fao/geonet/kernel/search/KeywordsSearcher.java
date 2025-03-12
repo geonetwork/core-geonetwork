@@ -101,9 +101,11 @@ public class KeywordsSearcher {
 
         elKeyword.addContent(elSelected);
         elKeyword.addContent(new Element("id").addContent(Integer.toString(kb.getId())));
-        elKeyword.addContent(new Element("value").addContent(kb.getDefaultValue()).setAttribute("language", defaultLang));
-        elKeyword.addContent(new Element("definition").addContent(kb.getDefaultDefinition()).setAttribute("language", defaultLang));
-        elKeyword.addContent(new Element("defaultLang").addContent(defaultLang));
+        if (defaultLang != null) {
+            elKeyword.addContent(new Element("value").addContent(kb.getDefaultValue()).setAttribute("language", defaultLang));
+            elKeyword.addContent(new Element("definition").addContent(kb.getDefaultDefinition()).setAttribute("language", defaultLang));
+            elKeyword.addContent(new Element("defaultLang").addContent(defaultLang));
+        }
         Element thesaurusElement = new Element("thesaurus");
         thesaurusElement.addContent(new Element("key").setText(kb.getThesaurusKey()));
         thesaurusElement.addContent(new Element("title").setText(kb.getThesaurusTitle()));

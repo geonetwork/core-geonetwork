@@ -81,6 +81,8 @@
     at some point but at the moment they are needed here. -->
   <util:set id="languages" value-type="java.lang.String">
     <value>ara</value>
+    <value>arm</value>
+    <value>aze</value>
     <value>cat</value>
     <value>chi</value>
     <value>cze</value>
@@ -89,6 +91,7 @@
     <value>eng</value>
     <value>fin</value>
     <value>fre</value>
+    <value>geo</value>
     <value>ger</value>
     <value>ice</value>
     <value>ita</value>
@@ -96,11 +99,14 @@
     <value>nor</value>
     <value>pol</value>
     <value>por</value>
+    <value>rum</value>
     <value>rus</value>
     <value>slo</value>
     <value>spa</value>
     <value>swe</value>
     <value>tur</value>
+    <value>ukr</value>
+    <value>wel</value>
   </util:set>
 
   <util:map id="jpaPropertyMap">
@@ -283,6 +289,7 @@
         <value>json/schemas</value>
         <value>standards/iso19139/codelists/gmd:MD_TopicCategoryCode+gmd:MD_ScopeCode+gmd:MD_MaintenanceFrequencyCode+gmd:MD_ProgressCode+gmd:MD_SpatialRepresentationTypeCode</value>
         <value>standards/iso19115-3.2018/codelists/cit:CI_DateTypeCode+indeterminatePosition+mri:DS_InitiativeTypeCode+mri:DS_AssociationTypeCode+cit:CI_RoleCode</value>
+        <value>standards/iso19139/labels/gmd:DQ_ThematicClassificationCorrectness+gmd:DQ_AbsoluteExternalPositionalAccuracy+gmd:DQ_AccuracyOfATimeMeasurement+gmd:DQ_CompletenessCommission+gmd:DQ_CompletenessOmission+gmd:DQ_ConceptualConsistency+gmd:DQ_ConformanceResult+gmd:DQ_DataQuality+gmd:DQ_DomainConsistency+gmd:DQ_EvaluationMethodTypeCode+gmd:DQ_FormatConsistency+gmd:DQ_GriddedDataPositionalAccuracy+gmd:DQ_NonQuantitativeAttributeAccuracy+gmd:DQ_QuantitativeAttributeAccuracy+gmd:DQ_RelativeInternalPositionalAccuracy+gmd:DQ_TemporalConsistency+gmd:DQ_TemporalValidity+gmd:DQ_ThematicClassificationCorrectness+gmd:DQ_TopologicalConsistency</value>
         <value>db/MetadataCategory+Operation+Group+StatusValue+Source+Translations</value>
       </util:list>
     </entry>
@@ -309,4 +316,10 @@
   The default publication options publishes the metadata to the ALL group and the INTRANET group.
   -->
   <bean class="org.fao.geonet.config.DefaultPublicationConfig" name="publicationConfig" />
+
+
+  <bean class="org.fao.geonet.analytics.WebAnalyticsConfiguration" name="webAnalyticsConfiguration">
+    <property name="service" value="\${analytics.web.service}" />
+    <property name="javascriptCode" value="\${analytics.web.jscode}" />
+  </bean>
 </beans>

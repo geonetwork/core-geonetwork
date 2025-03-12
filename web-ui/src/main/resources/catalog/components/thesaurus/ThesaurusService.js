@@ -44,7 +44,7 @@
           var foundLang = _.find(UILangs, function (l) {
             return props.values[l] !== undefined;
           });
-          if (foundLang) return props.values[foundLang];
+          if (foundLang) return props.values[foundLang] || props.values["eng"];
         }
         return this.props.value["#text"] || this.props.value;
       }
@@ -152,6 +152,11 @@
           if (outputLang) {
             parameters["pLang"] = outputLang;
           }
+          if (lang !== "eng") {
+            // Fallback in english if thesaurus has no translation in current record language
+            parameters["pLang"] = ["eng", lang];
+          }
+
           return gnUrlUtils.append(
             "../api/registries/vocabularies/search",
             gnUrlUtils.toKeyValue(parameters)
@@ -177,17 +182,17 @@
           }
 
           if (gnLangs.langs[currentUILang_3char]) {
-            v = gnLangs.langs[currentUILang_3char];
+            var v = gnLangs.langs[currentUILang_3char];
             if (!_.includes(result, v)) result.push(v);
           }
           if (currentUILang2_3char && gnLangs.langs[currentUILang2_3char]) {
-            v = gnLangs.langs[currentUILang2_3char];
+            var v = gnLangs.langs[currentUILang2_3char];
             if (!_.includes(result, v)) result.push(v);
           }
           return result;
         };
 
-        var parseKeywordsResponse = function (data, dataToExclude) {
+        var parseKeywordsResponse = function (data, dataToExclude, orderById) {
           var listOfKeywords = [];
 
           var uiLangs = getUILangs();
@@ -195,6 +200,19 @@
             if (k.value) {
               listOfKeywords.push(new Keyword(k, uiLangs));
             }
+          });
+
+          listOfKeywords.sort(function(k1,k2) {
+            var s1;
+            var s2;
+            if (orderById == "true") {
+              s1 = k1.props.uri;
+              s2 = k2.props.uri;
+            } else {
+              s1 = k1.label.toLowerCase();
+              s2 = k2.label.toLowerCase();
+            }
+            return s1.localeCompare(s2);
           });
 
           if (dataToExclude && dataToExclude.length > 0) {
@@ -298,20 +316,7 @@
                   config.outputLang
                 ),
                 filter: function (data) {
-                  if (config.orderById == "true") {
-                    data.sort(function (a, b) {
-                      var nameA = a.uri.toUpperCase();
-                      var nameB = b.uri.toUpperCase();
-                      if (nameA < nameB) {
-                        return -1;
-                      }
-                      if (nameA > nameB) {
-                        return 1;
-                      }
-                      return 0;
-                    });
-                  }
-                  return parseKeywordsResponse(data, config.dataToExclude);
+                  return parseKeywordsResponse(data, config.dataToExclude, config.orderById);
                 }
               }
             });

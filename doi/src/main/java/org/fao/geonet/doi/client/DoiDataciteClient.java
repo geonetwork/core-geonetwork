@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2010 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2024 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -24,8 +24,6 @@ package org.fao.geonet.doi.client;
 
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.io.IOUtils;
-import org.apache.http.auth.AuthScope;
-import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.methods.HttpDelete;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.utils.GeonetHttpRequestFactory;
@@ -169,9 +167,8 @@ public class DoiDataciteClient extends BaseDoiClient implements IDoiClient {
 
             deleteMethod = new HttpDelete(createUrl("metadata/" + doi));
 
-            httpResponse = requestFactory.execute(
-                deleteMethod,
-                new UsernamePasswordCredentials(username, password), AuthScope.ANY);
+            httpResponse = executeRequest(deleteMethod);
+
             int status = httpResponse.getRawStatusCode();
 
             Log.debug(LOGGER_NAME, "   -- Request status code: " + status);
@@ -180,14 +177,24 @@ public class DoiDataciteClient extends BaseDoiClient implements IDoiClient {
             if ((status != HttpStatus.SC_NOT_FOUND) && (status != HttpStatus.SC_OK)) {
                 Log.info(LOGGER_NAME, "Delete DOI metadata end -- Error: " + httpResponse.getStatusText());
 
-                throw new DoiClientException( httpResponse.getStatusText() );
+                String message = httpResponse.getStatusText();
+
+                throw new DoiClientException(String.format(
+                    "Error deleting DOI: %s",
+                    message))
+                    .withMessageKey("exception.doi.serverErrorDelete")
+                    .withDescriptionKey("exception.doi.serverErrorDelete.description", new String[]{message});
             } else {
                 Log.info(LOGGER_NAME, "DeleteDOI metadata end");
             }
 
         } catch (Exception ex) {
-            Log.error(LOGGER_NAME, "   -- Error (exception): " + ex.getMessage());
-            throw new DoiClientException(ex.getMessage());
+            Log.error(LOGGER_NAME, "   -- Error (exception): " + ex.getMessage(), ex);
+            throw new DoiClientException(String.format(
+                "Error deleting DOI: %s",
+                ex.getMessage()))
+                .withMessageKey("exception.doi.serverErrorDelete")
+                .withDescriptionKey("exception.doi.serverErrorDelete.description", new String[]{ex.getMessage()});
 
         } finally {
             if (deleteMethod != null) {
@@ -210,9 +217,8 @@ public class DoiDataciteClient extends BaseDoiClient implements IDoiClient {
 
             deleteMethod = new HttpDelete(createUrl("doi/" + doi));
 
-            httpResponse = requestFactory.execute(
-                deleteMethod,
-                new UsernamePasswordCredentials(username, password), AuthScope.ANY);
+            httpResponse = executeRequest(deleteMethod);
+
             int status = httpResponse.getRawStatusCode();
 
             Log.debug(LOGGER_NAME, "   -- Request status code: " + status);
@@ -221,14 +227,25 @@ public class DoiDataciteClient extends BaseDoiClient implements IDoiClient {
             if ((status != HttpStatus.SC_NOT_FOUND) && (status != HttpStatus.SC_OK)) {
                 Log.info(LOGGER_NAME, "Delete DOI end -- Error: " + httpResponse.getStatusText());
 
-                throw new DoiClientException( httpResponse.getStatusText() );
+                String message = httpResponse.getStatusText();
+
+                throw new DoiClientException(String.format(
+                    "Error deleting DOI: %s",
+                    message))
+                    .withMessageKey("exception.doi.serverErrorDelete")
+                    .withDescriptionKey("exception.doi.serverErrorDelete.description", new String[]{message});
             } else {
                 Log.info(LOGGER_NAME, "DeleteDOI end");
             }
 
         } catch (Exception ex) {
-            Log.error(LOGGER_NAME, "   -- Error (exception): " + ex.getMessage());
-            throw new DoiClientException(ex.getMessage());
+            Log.error(LOGGER_NAME, "   -- Error (exception): " + ex.getMessage(), ex);
+
+            throw new DoiClientException(String.format(
+                "Error deleting DOI: %s",
+                ex.getMessage()))
+                .withMessageKey("exception.doi.serverErrorDelete")
+                .withDescriptionKey("exception.doi.serverErrorDelete.description", new String[]{ex.getMessage()});
 
         } finally {
             if (deleteMethod != null) {

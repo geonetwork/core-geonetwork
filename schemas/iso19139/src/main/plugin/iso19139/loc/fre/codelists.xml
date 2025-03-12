@@ -1558,12 +1558,12 @@
       <description></description>
     </entry>
     <entry>
-      <code>staticMap</code>
+      <code>map-static</code>
       <label>Carte statique</label>
       <description></description>
     </entry>
     <entry>
-      <code>interactiveMap</code>
+      <code>map-interactive</code>
       <label>Carte interactive</label>
       <description></description>
     </entry>
@@ -2073,7 +2073,7 @@
     </entry>
     <entry>
       <code>now</code>
-      <label>Maintenant</label>
+      <label>En cours</label>
     </entry>
     <entry>
       <code>unknown</code>

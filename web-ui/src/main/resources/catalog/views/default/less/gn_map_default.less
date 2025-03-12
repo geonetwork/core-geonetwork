@@ -37,14 +37,23 @@
   }
   .ol-attribution {
     .gn-attribution();
-    bottom: 1em;
     left: 1em;
+    bottom: 1em;
     button {
       background-color: @brand-primary;
     }
     @media screen and (max-height: 768px) {
       left: auto;
       right: 1em;
+    }
+  }
+
+  .ol-scale-line {
+    bottom: 1em;
+    left: 180px;
+    @media screen and (max-height: 768px) {
+      left: auto;
+      right: 180px;
     }
   }
 
@@ -88,7 +97,7 @@
       margin: 0;
       padding: 0;
       position: absolute;
-      width: 16.5em;
+      width: 24.5em; // value = maptools panel width - label width - panel tools opener button width (34em - 7em - 2.5em)
       border-radius: 0;
       li {
         width: calc(~"100% -30px");
@@ -140,6 +149,9 @@
     background: @body-bg;
     .ol-attribution {
       .gn-attribution();
+      ul {
+        max-width: 180px;
+      }
     }
   }
 }

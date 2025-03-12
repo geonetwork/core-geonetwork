@@ -1,0 +1,7 @@
+@misc{{uuid},
+      author = {Production géomatique et traitement de données (SPW - Secrétariat général - SPW Digital - Département Données transversales - Production géomatique et traitement de données)},
+      publisher = {},
+      title = {Utilisation du Sol en Wallonie - WALOUS 2018},
+      year = {2020},
+      url = {http://localhost:8080/srv/api/records/{uuid}}
+      }

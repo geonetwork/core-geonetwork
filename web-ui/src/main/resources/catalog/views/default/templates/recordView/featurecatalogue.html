@@ -49,13 +49,13 @@
       </tr>
       <tr data-ng-if="featureType.aliases">
         <th data-translate="">featureAliases</th>
-        <td>{{featureType.aliases}}</td>
+        <td>{{featureType.aliases.join(", ")}}</td>
       </tr>
       <tr data-ng-if="featureType.attributeTable">
         <td
           colspan="2"
           class="gn-noborder-top gn-noborder-bottom gn-nopadding-top gn-nopadding-bottom"
-        />
+        ></td>
       </tr>
       <tr data-ng-if="featureType.attributeTable">
         <td colspan="2" class="gn-noborder-top gn-table-attribute">

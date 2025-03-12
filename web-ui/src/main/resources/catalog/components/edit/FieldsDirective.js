@@ -93,12 +93,12 @@
    *
    * @description
    * Component to edit a measure type field composed
-   * of a numberic value and a unit.
+   * of a numeric value and a unit.
    */
   module.directive("gnMeasure", function () {
     return {
       restrict: "A",
-      templateUrl: "../../catalog/components/edit/partials/" + "measure.html",
+      templateUrl: "../../catalog/components/edit/partials/measure.html",
       scope: {
         uom: "@",
         ref: "@"
@@ -368,7 +368,7 @@
                         tooltipsMode === "onhover" ? "hover" : isField ? "focus" : "click"
                     });
 
-                    if (tooltipsMode === "" || tooltipsMode === "onfocus") {
+                    if (tooltipsMode !== "onhover") {
                       // Remove first the event, to avoid ending with multiple events
                       // every time a new popup is displayed.
                       $(document)
@@ -474,7 +474,8 @@
             element.off();
           });
 
-          $(element).click(function () {
+          $(element).click(function (event) {
+            event.stopPropagation();
             gnEditor.move(scope.ref, scope.direction || "down", scope.domelementToMove);
           });
         }
@@ -537,6 +538,108 @@
             element.removeClass("field-bg");
             btns.css("visibility", "hidden");
           });
+        }
+      };
+    }
+  ]);
+
+  /**
+   * @ngdoc directive
+   * @name gn_fields.directive:gnDuplicatedMetadataValueChecker
+   *
+   * @description
+   * Checks if the associated control value exists in another metadata record.
+   * Valid field keys:
+   *   - title: Metadata title.
+   *   - altTitle: Metadata alternative title.
+   *   - identifier: Metadata resource identifier.
+   * Configure in your metadata schema config-editor.xml the usage of this directive
+   * for the title element. For example, for iso19139:
+   * <fields>
+   *   ...
+   *  <for name="gmd:alternateTitle" use="data-gn-duplicated-metadata-value-checker">
+   *       <directiveAttributes
+   *         data-field-name="ResourceName"
+   *         data-field-key="altTitle" />
+   */
+  module.directive("gnDuplicatedMetadataValueChecker", [
+    "gnCurrentEdit",
+    "$http",
+    "$compile",
+    "$translate",
+    function (gnCurrentEdit, $http, $compile, $translate) {
+      return {
+        restrict: "A",
+        scope: {
+          fieldKey: "@" // Elasticsearch field name. Allowed values: title (Metadata title), altTitle (Metadata alternate title), identifier (Resource identifier)
+        },
+        link: function (scope, element, attrs) {
+          var duplicatedFieldNameMessage = $translate.instant(
+            "metadataDuplicatedField-" + scope.fieldKey
+          );
+
+          var messageTemplate =
+            "<p class='help-block' " +
+            "style='color: #d9534f' " +
+            "data-ng-show='duplicatedValue && !hiddenControl' " +
+            "data-translate>" +
+            duplicatedFieldNameMessage +
+            "</p>";
+          var messageTemplateCompiled = $compile(messageTemplate)(scope);
+
+          var messageTarget = document.getElementById(element[0].id);
+          element.blur(function () {
+            if (messageTarget.value !== scope.metadataFieldValue) {
+              scope.metadataFieldValue = messageTarget.value;
+              scope.checkField(scope.metadataFieldValue, scope.metadataUuid);
+            }
+          });
+
+          scope.metadataUuid = gnCurrentEdit.uuid;
+          scope.metadataFieldValue = messageTarget.value;
+          scope.duplicatedValue = false;
+          scope.hiddenControl = false;
+
+          element.after(messageTemplateCompiled);
+
+          // For multilingual title directive to hide the messages when displaying each language individually
+          var observer = new MutationObserver(function (event) {
+            if (event.length > 0) {
+              scope.hiddenControl = event[0].target.className.indexOf("hidden") > -1;
+              // Force a refresh, otherwise takes a delay to show / hide the message
+              scope.$apply();
+            }
+          });
+
+          observer.observe(messageTarget, {
+            attributes: true,
+            attributeFilter: ["class"],
+            childList: false,
+            characterData: false
+          });
+
+          scope.checkField = function (fieldValue, metadataUuid) {
+            if (fieldValue === "") {
+              scope.duplicatedValue = false;
+              return;
+            }
+
+            var postBody = {
+              field: scope.fieldKey,
+              value: fieldValue
+            };
+
+            $http
+              .post(
+                "../api/records/" + metadataUuid + "/checkDuplicatedFieldValue",
+                postBody
+              )
+              .then(function (response) {
+                scope.duplicatedValue = response.data === true;
+              });
+          };
+
+          scope.checkField(scope.metadataFieldValue, scope.metadataUuid);
         }
       };
     }

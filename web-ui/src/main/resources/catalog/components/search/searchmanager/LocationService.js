@@ -77,12 +77,14 @@
         return p.indexOf(this.METADATA) == 0 || p.indexOf(this.DRAFT) == 0;
       };
 
-      this.isMap = function () {
-        return $location.path() == this.MAP;
+      this.isMap = function (path) {
+        var p = path || $location.path();
+        return p == this.MAP;
       };
 
-      this.isHome = function () {
-        return $location.path() == this.HOME;
+      this.isHome = function (path) {
+        var p = path || $location.path();
+        return p == this.HOME;
       };
 
       this.isUndefined = function () {
@@ -99,13 +101,13 @@
       this.getFormatterPath = function (defaultFormatter) {
         var tokens = $location.path().split("/");
         if (tokens.length > 2 && tokens[3] === "formatters") {
-          return "../api/records/" + $location.url().split(/^metadraf|metadata\//)[1];
+          return "../api/records/" + $location.url().split(/^\/(metadraf|metadata)\//)[2];
         } else if (tokens.length > 2 && tokens[3] === "main") {
           return undefined; // Angular view
         } else if (defaultFormatter) {
           return (
             "../api/records/" +
-            $location.url().split(/^metadraf|metadata\//)[1] +
+            $location.url().split(/^\/(metadraf|metadata)\//)[2] +
             defaultFormatter
           );
         } else {

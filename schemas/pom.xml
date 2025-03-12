@@ -28,7 +28,7 @@
   <parent>
     <artifactId>geonetwork</artifactId>
     <groupId>org.geonetwork-opensource</groupId>
-    <version>4.4.0-SNAPSHOT</version>
+    <version>4.4.7-SNAPSHOT</version>
   </parent>
 
   <modelVersion>4.0.0</modelVersion>
@@ -36,13 +36,6 @@
   <artifactId>gn-schemas</artifactId>
   <name>GeoNetwork schema plugins</name>
   <packaging>pom</packaging>
-
-  <dependencies>
-    <dependency>
-      <groupId>org.codehaus.groovy</groupId>
-      <artifactId>groovy-all</artifactId>
-    </dependency>
-  </dependencies>
 
   <modules>
     <module>schema-core</module>
@@ -53,11 +46,7 @@
     <module>iso19115-3.2018</module>
   </modules>
 
-  <profiles>
-  </profiles>
-
   <properties>
     <rootProjectDir>../..</rootProjectDir>
   </properties>
-
 </project>

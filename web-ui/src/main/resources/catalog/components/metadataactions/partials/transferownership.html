@@ -1,5 +1,14 @@
 <div class="row">
   <div class="col-md-12" data-ng-show="userGroupDefined">
+    <p data-ng-if="ownerUserName">
+      <span data-translate="">recordOwner</span>: <span>{{ ownerUserName }}</span>
+    </p>
+    <p data-ng-if="ownerGroupName">
+      <span data-translate="">groupRecordOwner</span>: <span>{{ ownerGroupName }}</span>
+    </p>
+
+    <hr data-ng-if="ownerUserName || ownerGroupName" />
+
     <select
       class="form-control"
       data-ng-model="selectedUserGroup"
@@ -17,7 +26,7 @@
       data-ng-disabled="!selectedUserGroup"
     >
       <i class="fa fa-save"></i>&nbsp
-      <span data-translate="" class="ng-scope">Save</span>
+      <span data-translate="" class="ng-scope">save</span>
     </button>
   </div>
 

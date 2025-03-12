@@ -357,7 +357,7 @@
           getWFSCapabilities: function (url, version) {
             var defer = $q.defer();
             if (url) {
-              defaultVersion = "1.1.0";
+              var defaultVersion = "1.1.0";
               version = version || defaultVersion;
               url = mergeDefaultParams(url, {
                 request: "GetCapabilities",
@@ -396,7 +396,7 @@
           getWCSCapabilities: function (url, version) {
             var defer = $q.defer();
             if (url) {
-              defaultVersion = "1.1.0";
+              var defaultVersion = "1.1.0";
               version = version || defaultVersion;
               url = mergeDefaultParams(url, {
                 REQUEST: "GetCapabilities",
@@ -474,13 +474,13 @@
             var layers = capObj.layers || capObj.Layer;
 
             // Layer name may be a list of comma separated layers
-            layerList = layerName.split(",");
+            var layerList = layerName.split(",");
             var needles = new Array(layerList.length);
 
             layersLoop: for (var j = 0; j < layerList.length; j++) {
               var name = layerList[j];
               //non namespaced lowercase name
-              nameNoNamespace = this.getNameWithoutNamespace(name).toLowerCase();
+              var nameNoNamespace = this.getNameWithoutNamespace(name).toLowerCase();
 
               capabilityLayers: for (var i = 0; i < layers.length; i++) {
                 //Add Info for Requests:
@@ -589,12 +589,14 @@
                 name == layers[i].name.prefix + ":" + layers[i].name.localPart ||
                 name == layers[i].Name
               ) {
-                return layers[i];
+                needles.push(layers[i]);
+                continue;
               }
 
               //check title
               if (name == layers[i].title || name == layers[i].Title) {
-                return layers[i];
+                needles.push(layers[i]);
+                continue;
               }
 
               //check dataset identifer match
@@ -626,6 +628,9 @@
 
             //FIXME: allow multiple, remove duplicates
             if (needles.length > 0) {
+              if (capObj.version) {
+                needles[0].version = capObj.version;
+              }
               return needles[0];
             } else {
               return;

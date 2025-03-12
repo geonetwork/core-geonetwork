@@ -48,15 +48,16 @@
     "$http",
     "$q",
     function ($http, $q) {
-      this.get = function (uuidOrId, types) {
+      this.get = function (uuidOrId, types, approved) {
         var canceller = $q.defer();
         var request = $http({
           method: "get",
           url:
             "../api/records/" +
             uuidOrId +
-            "/related?" +
-            (types ? "type=" + types.split("|").join("&type=") : ""),
+            "/related?type=" +
+            (types ? types.split("|").join("&type=") : "") +
+            (approved === false ? "&approved=false" : ""),
           timeout: canceller.promise,
           cache: true
         });
@@ -87,11 +88,15 @@
         var uuids = mds.map(function (md) {
           return md.uuid;
         });
+        var approved = mds.map(function (md) {
+          return md.draft !== "y";
+        });
         var url = "../api/related";
         return $http.get(url, {
           params: {
             type: types,
-            uuid: uuids
+            uuid: uuids,
+            approved: approved
           }
         });
       };
@@ -179,6 +184,319 @@
               scope.relatedConfigUI.push(config);
             });
           });
+        }
+      };
+    }
+  ]);
+
+  /**
+   * Directive to display a panel in the metadata editor with a header and a list of distributions grouped by type.
+   *
+   */
+  module.directive("gnDistributionResourcesPanel", [
+    function () {
+      return {
+        restrict: "A",
+        transclude: true,
+        templateUrl: function (elem, attrs) {
+          return (
+            attrs.template ||
+            "../../catalog/components/metadataactions/partials/distributionResourcesPanel.html"
+          );
+        },
+        scope: {
+          md: "=gnDistributionResourcesPanel",
+          mode: "=",
+          relatedConfig: "=",
+          editorConfig: "@"
+        },
+        link: function (scope, element, attrs) {}
+      };
+    }
+  ]);
+
+  /**
+   * Displays a panel with different types of distributions available in the metadata object 'md'.
+   *
+   *  - mode: mode to display the distributions.
+   *      - tabset: displays the distributions in a tabset panel.
+   *      - (other value): displays the distributions in different div blocks.
+   *
+   *  - layout: Layout for the distribution items.
+   *      - card: display the distribution items as a card.
+   *      - (other value): display the distribution items as a list.
+   *
+   *  - editable: when used in the metadata editor, set to true.
+   *
+   *  - relatedConfig: array with the configuration of the distributions to display. For each distribution:
+   *      - filter: Filter a type based on an attribute.
+   *                Can't be used when multiple types are requested
+   *                eg. data-filter="associationType:upstreamData"
+   *                    data-filter="protocol:OGC:.*|ESRI:.*"
+   *                    data-filter="-protocol:OGC:.*"
+   *      - title: title translation key for the relations section.
+   *      - editActions: List of edit actions to add online resources to the distribution.
+   *                     eg. editActions: ['addOnlinesrc'] -> adds a button to open the default dialog to add
+   *                            an online resource.
+   *                         editActions: ['addOnlinesrc', 'onlineDiscoverWMS', 'onlineDiscoverArcGIS'] ->
+   *                            adds a button to open the default dialog to add an online resourceand other 2 buttons
+   *                            with predefined values to add WMS and ArcGIS resources.
+   *
+   * Example configuration (view mode):
+   *
+   * <div data-gn-distribution-resources-container="md"
+   *      data-mode="tabset"
+   *      data-related-config="[{'filter': 'protocol:OGC:.*|ESRI:.*|atom.*', 'title': 'API'},
+   *                      {'filter': 'protocol:.*DOWNLOAD.*|DB:.*|FILE:.*', 'title': 'download'},
+   *                      {'filter': '-protocol:OGC:.*|ESRI:.*|atom.*|.*DOWNLOAD.*|DB:.*|FILE:.*', 'title': 'links'}]">
+   *
+   * </div>
+   *
+   * Example configuration (edit mode):
+   *
+   * <div data-gn-distribution-resources-container="md"
+   *      data-related-config="[{'filter': 'protocol:OGC:.*|ESRI:.*|atom.*', 'title': 'API', editActions: ['addOnlinesrc']},
+   *                      {'filter': 'protocol:.*DOWNLOAD.*|DB:.*|FILE:.*', 'title': 'download', editActions: ['addOnlinesrc']},
+   *                      {'filter': '-protocol:OGC:.*|ESRI:.*|atom.*|.*DOWNLOAD.*|DB:.*|FILE:.*', 'title': 'links', editActions: ['addOnlinesrc']}]">
+   *
+   * </div>
+   *
+   */
+  module.directive("gnDistributionResourcesContainer", [
+    "gnRelatedResources",
+    "gnConfigService",
+    "$injector",
+    function (gnRelatedResources, gnConfigService, $injector) {
+      return {
+        restrict: "A",
+        templateUrl: function (elem, attrs) {
+          return (
+            attrs.template ||
+            "../../catalog/components/metadataactions/partials/distributionResourcesContainer.html"
+          );
+        },
+        scope: {
+          md: "=gnDistributionResourcesContainer",
+          mode: "=",
+          relatedConfig: "=",
+          editorConfig: "="
+        },
+        link: function (scope, element, attrs, controller) {
+          scope.lang = scope.lang || scope.$parent.lang;
+          scope.relations = {};
+          scope.relatedConfigUI = [];
+          scope.editable = angular.isDefined(scope.editorConfig);
+          scope.config = gnRelatedResources;
+          if ($injector.has("gnOnlinesrc")) {
+            scope.onlinesrcService = $injector.get("gnOnlinesrc");
+          }
+
+          scope.relatedConfig.forEach(function (config) {
+            config.relations = scope.md.link || {};
+            config.relationFound = config.relations.length > 0;
+
+            var value = config.relations;
+
+            // Check if tabs needs to be displayed
+            if (scope.mode === "tabset" && config.filter && angular.isArray(value)) {
+              var filters = gnConfigService.parseFilters(config.filter);
+
+              config.relations = [];
+              for (var j = 0; j < value.length; j++) {
+                gnConfigService.testFilters(filters, value[j]) &&
+                  config.relations.push(value[j]);
+              }
+              config.relationFound = config.relations.length > 0;
+            } else {
+              config.relations = value;
+            }
+
+            scope.relatedConfigUI.push(config);
+          });
+        }
+      };
+    }
+  ]);
+
+  module.directive("gnRelatedDistribution", [
+    "gnGlobalSettings",
+    "gnSearchSettings",
+    "gnRelatedResources",
+    "gnExternalViewer",
+    "gnConfigService",
+    "gnUrlUtils",
+    "gnDoiService",
+    "$injector",
+    function (
+      gnGlobalSettings,
+      gnSearchSettings,
+      gnRelatedResources,
+      gnExternalViewer,
+      gnConfigService,
+      gnUrlUtils,
+      gnDoiService,
+      $injector
+    ) {
+      return {
+        restrict: "A",
+        templateUrl: function (elem, attrs) {
+          return (
+            attrs.template ||
+            "../../catalog/components/metadataactions/partials/relatedDistribution.html"
+          );
+        },
+        scope: {
+          md: "=gnRelatedDistribution",
+          template: "@",
+          title: "@",
+          altTitle: "@",
+          list: "@",
+          // Filter a type based on an attribute.
+          // Can't be used when multiple types are requested
+          // eg. data-filter="associationType:upstreamData"
+          // data-filter="protocol:OGC:.*|ESRI:.*"
+          // data-filter="-protocol:OGC:.*"
+          filter: "@",
+          user: "=",
+          hasResults: "=?",
+          layout: "@",
+          editorConfig: "="
+        },
+        link: function (scope, element, attrs) {
+          scope.canPublishDoiForResource = gnDoiService.canPublishDoiForResource;
+          scope.editable = angular.isDefined(scope.editorConfig);
+          scope.lang = scope.lang || scope.$parent.lang;
+
+          if ($injector.has("gnOnlinesrc")) {
+            scope.onlinesrcService = $injector.get("gnOnlinesrc");
+            $injector.get("gnCurrentEdit").associatedPanelConfigId = scope.editorConfig;
+          }
+
+          /**
+           * The type is use to find the config to use for this
+           * type of link. See link-utility.xsl.
+           */
+          function getType(fn) {
+            if (fn === "legend") {
+              return fn;
+            } else if (fn === "featureCatalogue") {
+              return "fcats";
+            } else if (fn === "dataQualityReport") {
+              return "dq-report";
+            }
+            return "onlinesrc";
+          }
+
+          function convertLangProperties(object) {
+            if (!angular.isObject(object)) {
+              return;
+            }
+            var newObject = {};
+            Object.keys(object).forEach(function (key) {
+              newObject[key.replace(/^lang/, "")] = object[key];
+            });
+            return newObject;
+          }
+
+          scope.convertLinkToEdit = function (link) {
+            var convertedLink = {
+              id: link.url,
+              idx: link.idx,
+              hash: link.hash,
+              url: convertLangProperties(link.urlObject),
+              type: getType(link.function),
+              title: convertLangProperties(link.nameObject),
+              protocol: link.protocol,
+              description: convertLangProperties(link.descriptionObject),
+              function: link["function"],
+              mimeType: link.mimeType,
+              applicationProfile: link.applicationProfile,
+              lUrl: link.url,
+              locTitle: link.nameObject ? link.nameObject["default"] : "",
+              locDescription: link.descriptionObject
+                ? link.descriptionObject["default"]
+                : "",
+              locUrl: link.urlObject["default"]
+            };
+            return convertedLink;
+          };
+
+          scope.loadDistributions = function (distribution) {
+            var distributionCount = 0;
+            scope.distributionFound = false;
+            scope.distributions = [];
+
+            angular.forEach(distribution, function (value) {
+              if (!value) {
+                return;
+              }
+
+              // init object if required
+              scope.distributions = scope.distributions || [];
+              scope.hasResults = true;
+
+              if (!scope.distributions) {
+                scope.distributions = [];
+              }
+              if (scope.filter) {
+                var filters = gnConfigService.parseFilters(scope.filter);
+
+                if (gnConfigService.testFilters(filters, value)) {
+                  scope.distributions.push(value);
+                }
+              } else {
+                scope.distributions = value;
+              }
+
+              // For draft version append "approved=false" to url
+              if (scope.md.draft === "y") {
+                for (var i = 0; i < scope.distributions.length; i++) {
+                  if (
+                    scope.distributions[i].url.match(
+                      ".*/api/records/" + scope.md.uuid + "/attachments/.*"
+                    ) != null
+                  ) {
+                    scope.distributions[i].url = gnUrlUtils.remove(
+                      scope.distributions[i].url,
+                      ["approved"],
+                      true
+                    );
+                    scope.distributions[i].url = gnUrlUtils.append(
+                      scope.distributions[i].url,
+                      "approved=false"
+                    );
+                  }
+                }
+              }
+
+              distributionCount += scope.distributions.length;
+            });
+            scope.distributionFound = distributionCount > 0;
+          };
+
+          scope.getOrderBy = function (link) {
+            return link && link.resourceTitle ? link.resourceTitle : link.locTitle;
+          };
+
+          scope.externalViewerAction = function (mainType, link, md) {
+            gnExternalViewer.viewService(md, link);
+          };
+          scope.hasAction = gnRelatedResources.hasAction;
+          scope.getBadgeLabel = gnRelatedResources.getBadgeLabel;
+          scope.isLayerProtocol = gnRelatedResources.isLayerProtocol;
+          scope.externalViewerActionEnabled = gnExternalViewer.isEnabledViewAction();
+
+          scope.config = gnRelatedResources;
+
+          scope.$watchCollection("md.link", function (n, o) {
+            if (scope.md != null && n !== o) {
+              scope.loadDistributions(scope.md.link);
+            }
+          });
+
+          if (scope.md != null) {
+            scope.loadDistributions(scope.md.link);
+          }
         }
       };
     }
@@ -315,13 +633,15 @@
     "gnRelatedResources",
     "gnExternalViewer",
     "gnConfigService",
+    "gnUrlUtils",
     function (
       gnRelatedService,
       gnGlobalSettings,
       gnSearchSettings,
       gnRelatedResources,
       gnExternalViewer,
-      gnConfigService
+      gnConfigService,
+      gnUrlUtils
     ) {
       return {
         restrict: "A",
@@ -404,6 +724,27 @@
                 scope.relations[idx] = value;
               }
 
+              // For draft version append "approved=false" to url
+              if (scope.md.draft === "y" && idx === "onlines") {
+                for (var i = 0; i < scope.relations[idx].length; i++) {
+                  if (
+                    scope.relations[idx][i].url.match(
+                      ".*/api/records/" + scope.md.uuid + "/attachments/.*"
+                    ) != null
+                  ) {
+                    scope.relations[idx][i].url = gnUrlUtils.remove(
+                      scope.relations[idx][i].url,
+                      ["approved"],
+                      true
+                    );
+                    scope.relations[idx][i].url = gnUrlUtils.append(
+                      scope.relations[idx][i].url,
+                      "approved=false"
+                    );
+                  }
+                }
+              }
+
               // siblings, children, parent can contain elements from
               // siblings or associated if linking is made in both direction
               // Priority:
@@ -444,14 +785,21 @@
                   scope.relations.siblings = [];
                   siblings
                     .map(function (r) {
-                      return (r.properties && r.properties.initiativeType) || "";
+                      return r.properties
+                        ? r.properties.associationType + "-" + r.properties.initiativeType
+                        : "";
                     })
                     .filter(function (value, index, self) {
                       return self.indexOf(value) === index;
                     })
                     .forEach(function (type) {
                       scope.relations["siblings" + type] = siblings.filter(function (r) {
-                        return r.properties && r.properties.initiativeType === type;
+                        var key = r.properties
+                          ? r.properties.associationType +
+                            "-" +
+                            r.properties.initiativeType
+                          : "";
+                        return key === type;
                       });
                       siblingsCount += scope.relations["siblings" + type].length;
                     });
@@ -473,7 +821,11 @@
               if (controller) {
                 controller.startGnRelatedRequest(elem);
               }
-              (promise = gnRelatedService.get(scope.id, scope.types)).then(
+              (promise = gnRelatedService.get(
+                scope.id,
+                scope.types,
+                scope.md.draft !== "y"
+              )).then(
                 function (data) {
                   scope.loadRelations(data);
                   if (angular.isDefined(scope.container) && scope.relations == null) {
@@ -536,7 +888,9 @@
 
   module.directive("gnRecordsFilters", [
     "$rootScope",
-    function ($rootScope) {
+    "gnGlobalSettings",
+    "gnFacetMetaLabel",
+    function ($rootScope, gnGlobalSettings, gnFacetMetaLabel) {
       return {
         restrict: "A",
         templateUrl: function (elem, attrs) {
@@ -556,6 +910,9 @@
           scope.showTypes = !angular.isDefined(scope.type);
           scope.type = scope.type || "blocks";
           scope.criteria = { p: {} };
+          scope.relatedFacetConfig =
+            gnGlobalSettings.gnCfg.mods.recordview.relatedFacetConfig;
+          scope.getFacetLabel = gnFacetMetaLabel.getFacetLabel;
 
           function removeEmptyFilters(filters, agg) {
             var cleanFilterPos = [];
@@ -580,7 +937,7 @@
           }
 
           // Remove the filters without values
-          scope.filtersToProcess = scope.filters || Object.keys(scope.agg);
+          scope.filtersToProcess = scope.filters || Object.keys(scope.relatedFacetConfig);
           scope.agg && removeEmptyFilters(scope.filtersToProcess, scope.agg);
 
           reset();
@@ -938,6 +1295,237 @@
 
             sort();
           };
+        }
+      };
+    }
+  ]);
+
+  /**
+   * Directive to display a panel in the metadata editor with a header and a list of associated resources.
+   *
+   */
+  module.directive("gnAssociatedResourcesPanel", [
+    "gnCurrentEdit",
+    function (gnCurrentEdit) {
+      return {
+        restrict: "A",
+        transclude: true,
+        templateUrl: function (elem, attrs) {
+          return (
+            attrs.template ||
+            "../../catalog/components/metadataactions/partials/associatedResourcesPanel.html"
+          );
+        },
+        scope: {
+          md: "=gnAssociatedResourcesPanel",
+          mode: "="
+        },
+        link: function (scope, element, attrs) {
+          gnCurrentEdit.associatedPanelConfigId = attrs["editorConfig"] || "default";
+        }
+      };
+    }
+  ]);
+
+  /**
+   * Displays a panel with different types of associations defined in the schema configuration and available in the metadata object 'md'.
+   *
+   */
+  module.directive("gnAssociatedResourcesContainer", [
+    "gnRelatedResources",
+    "gnConfigService",
+    "gnOnlinesrc",
+    "gnCurrentEdit",
+    "gnSchemaManagerService",
+    "$injector",
+    "$filter",
+    function (
+      gnRelatedResources,
+      gnConfigService,
+      gnOnlinesrc,
+      gnCurrentEdit,
+      gnSchemaManagerService,
+      $injector,
+      $filter
+    ) {
+      return {
+        restrict: "A",
+        templateUrl: function (elem, attrs) {
+          return (
+            attrs.template ||
+            "../../catalog/components/metadataactions/partials/associatedResourcesContainer.html"
+          );
+        },
+        scope: {
+          md: "=gnAssociatedResourcesContainer",
+          mode: "="
+        },
+        link: function (scope, element, attrs, controller) {
+          scope.lang = scope.lang || scope.$parent.lang;
+          scope.gnCurrentEdit = gnCurrentEdit;
+          scope.relations = [];
+          scope.relatedConfigUI = [];
+          scope.relatedResourcesConfig = gnRelatedResources;
+          if ($injector.has("gnOnlinesrc")) {
+            scope.onlinesrcService = $injector.get("gnOnlinesrc");
+          }
+
+          // Values for relation types used in the UI (and also to filter some metadata by resource type: dataset / service
+          var UIRelationTypeValues = {
+            dataset: "dataset",
+            service: "service",
+            source: "source",
+            parent: "parent",
+            fcats: "fcats",
+            siblings: "siblings"
+          };
+
+          // Values used for the relation types by the /associated API, that doesn't match with the UI
+          var APIRelationTypeValues = {
+            dataset: "datasets",
+            service: "services",
+            source: "sources",
+            parent: "parent",
+            fcats: "fcats",
+            siblings: "siblings"
+          };
+
+          // A mapper from relation types from the UI to the API values
+          scope.mapUIRelationToApi = function (type) {
+            return APIRelationTypeValues[type];
+          };
+
+          scope.getClass = function (type) {
+            if (type === UIRelationTypeValues.dataset) {
+              return "fa gn-icon-dataset";
+            } else if (type === UIRelationTypeValues.service) {
+              return "fa fa-fw fa-cloud";
+            } else if (type === UIRelationTypeValues.source) {
+              return "fa gn-icon-source";
+            } else if (type === UIRelationTypeValues.parent) {
+              return "fa gn-icon-series";
+            } else if (type === UIRelationTypeValues.fcats) {
+              return "fa fa-table";
+            } else if (type === UIRelationTypeValues.siblings) {
+              return "fa fa-sign-out";
+            }
+
+            return "";
+          };
+          scope.canRemoveLink = function (record, type) {
+            if (record.origin === "remote") {
+              return true;
+            } else {
+              return (
+                type === UIRelationTypeValues.dataset ||
+                type === UIRelationTypeValues.service ||
+                type === UIRelationTypeValues.parent ||
+                type === UIRelationTypeValues.source ||
+                type === UIRelationTypeValues.fcats ||
+                type === UIRelationTypeValues.siblings
+              );
+            }
+          };
+
+          scope.remove = function (record, type) {
+            if (type === UIRelationTypeValues.dataset) {
+              scope.onlinesrcService.removeDataset(record);
+            } else if (type === UIRelationTypeValues.service) {
+              scope.onlinesrcService.removeService(record);
+            } else if (type === UIRelationTypeValues.parent) {
+              scope.onlinesrcService.removeMdLink(UIRelationTypeValues.parent, record);
+            } else if (type === UIRelationTypeValues.source) {
+              scope.onlinesrcService.removeMdLink(UIRelationTypeValues.source, record);
+            } else if (type === UIRelationTypeValues.fcats) {
+              scope.onlinesrcService.removeFeatureCatalog(record);
+            } else if (type === UIRelationTypeValues.siblings) {
+              scope.onlinesrcService.removeSibling(record);
+            }
+          };
+
+          var loadRelations = function (relationTypes) {
+            gnOnlinesrc.getAllResources(relationTypes).then(function (data) {
+              var res = gnOnlinesrc.formatResources(
+                data,
+                scope.lang,
+                gnCurrentEdit.mdLanguage
+              );
+
+              // Change the relation keys from the API response to the UI values
+              scope.relations = _.mapKeys(res.relations, function (value, key) {
+                if (key === APIRelationTypeValues.service) {
+                  return UIRelationTypeValues.service;
+                } else if (key === APIRelationTypeValues.dataset) {
+                  return UIRelationTypeValues.dataset;
+                } else if (key === APIRelationTypeValues.source) {
+                  return UIRelationTypeValues.source;
+                } else {
+                  return key;
+                }
+              });
+
+              scope.md.related = {};
+
+              scope.relatedConfig.forEach(function (config) {
+                config.relations = scope.relations[config.type] || [];
+
+                var processConfig = true;
+
+                // The configuration has an expression to evaluate if it should be processed
+                if (config.condition) {
+                  processConfig = scope.$eval(config.condition);
+                }
+
+                if (processConfig) {
+                  scope.md.related[config.type] = scope.relations[config.type] || [];
+                  // TODO: Review filter by siblings properties, Metadata instances doesn't have this information
+                  if (config.config && config.config.fields) {
+                    var filterObject = { properties: {} };
+
+                    for (var item in config.config.fields) {
+                      filterObject.properties[item] = config.config.fields[item];
+                    }
+
+                    config.relations = $filter("filter")(config.relations, filterObject);
+                  }
+
+                  config.relationFound = config.relations.length > 0;
+                  // By default, allow to add relations unless explicitly disallowed in the configuration.
+                  config.allowToAddRelation = angular.isDefined(config.allowToAddRelation)
+                    ? config.allowToAddRelation
+                    : true;
+                  scope.relatedConfigUI.push(config);
+                }
+              });
+            });
+          };
+
+          gnSchemaManagerService
+            .getEditorAssociationPanelConfig(
+              gnCurrentEdit.schema,
+              gnCurrentEdit.associatedPanelConfigId
+            )
+            .then(function (r) {
+              scope.relatedConfig = r.config.associatedResourcesTypes;
+              var relationTypes = _.map(scope.relatedConfig, "type");
+
+              // Adapt the UI types to the backend types value: services --> service, datasets --> dataset
+              // The UI depends on the values also filter by resource type in
+              // the associated resources dialogs.
+              relationTypes = _.map(relationTypes, function (value) {
+                if (value === UIRelationTypeValues.service) {
+                  return APIRelationTypeValues.service;
+                } else if (value === UIRelationTypeValues.dataset) {
+                  return APIRelationTypeValues.dataset;
+                } else if (value === UIRelationTypeValues.source) {
+                  return APIRelationTypeValues.source;
+                } else {
+                  return value;
+                }
+              });
+
+              loadRelations(relationTypes);
+            });
         }
       };
     }

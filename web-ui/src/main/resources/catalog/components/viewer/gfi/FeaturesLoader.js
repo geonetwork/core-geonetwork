@@ -151,7 +151,7 @@
       })
       .then(
         function (response) {
-          if (infoFormat && infoFormat.match(/application\/(geo|geo\+)json/i) != null) {
+          if (infoFormat && infoFormat.match(/application\/(geo|geo\+)?json/i) != null) {
             var jsonf = new ol.format.GeoJSON();
             var features = [];
             response.data.features.forEach(function (f) {
@@ -210,8 +210,8 @@
     var promises = [this.promise, this.dictionary];
 
     return $q.all(promises).then(function (data) {
-      features = data[0];
-      dictionary = data[1];
+      var features = data[0];
+      var dictionary = data[1];
 
       if (!features || features.length == 0) {
         return;

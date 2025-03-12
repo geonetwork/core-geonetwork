@@ -31,7 +31,7 @@
     // TODO: Move config to DB using order in operations table
     columnOrder: ["view", "dynamic", "download", "editing", "notify"],
     icons: {
-      view: "fa-unlock",
+      view: "fa-lock-open",
       dynamic: "fa-globe",
       download: "fa-download",
       notify: "fa-envelope",
@@ -245,9 +245,10 @@
             // Do not submit internal groups info
             // If user is not allowed.
             var allowed =
-              ($.inArray(g.group, gnShareConstants.internalGroups) !== -1 &&
+              !g.restricted &&
+              (($.inArray(g.group, gnShareConstants.internalGroups) !== -1 &&
                 user.isReviewerOrMore()) ||
-              $.inArray(g.group, gnShareConstants.internalGroups) === -1;
+                $.inArray(g.group, gnShareConstants.internalGroups) === -1);
 
             if (allowed) {
               ops.push({

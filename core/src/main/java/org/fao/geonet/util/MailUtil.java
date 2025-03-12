@@ -68,6 +68,7 @@ public class MailUtil {
 
         email.setSubject(subject);
         try {
+            email.setCharset(EmailConstants.UTF_8);
             email.setHtmlMsg(htmlMessage);
         } catch (EmailException e1) {
             Log.error("Error setting email HTML content. Subject:" + subject, e1);
@@ -362,9 +363,6 @@ public class MailUtil {
         if (StringUtils.isNotEmpty(username)) {
             email.setAuthenticator(new DefaultAuthenticator(username, password));
         }
-
-
-        email.setDebug(true);
 
         if (tls != null && tls) {
             email.setStartTLSEnabled(tls);

@@ -52,9 +52,6 @@ public class Env implements Service {
     //--------------------------------------------------------------------------
 
     public Element exec(Element params, ServiceContext context) throws Exception {
-        // reset the thread local
-        XmlSerializer.clearThreadLocal();
-
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 
         Element response = gc.getBean(SettingManager.class).getAllAsXML(true);

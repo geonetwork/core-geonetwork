@@ -1,0 +1,50 @@
+<div class="gn-record gn-process-steps" data-ng-if="mdView.current.record.processSteps">
+  <h2 data-translate="">processSteps</h2>
+
+  <div class="row">
+    <div class="col-md-8">
+      <ul class="timeline timeline-1-col">
+        <li
+          class="timeline-inverted"
+          data-ng-repeat="p in mdView.current.record.processSteps"
+        >
+          <div class="timeline-badge timeline-badge-small">
+            <i class="fa fa-fw fa-cog"></i>
+          </div>
+          <div class="timeline-panel">
+            <div class="timeline-heading">
+              <strong data-gn-humanize-time="{{p.date}}">{{p.date}}</strong>
+              <strong data-ng-if="p.processor" title="{{'processor' | translate}}">
+                <span data-ng-if="p.date"> - </span><i class="fa fa-fw fa-user-gear"></i>
+                <span data-ng-repeat="o in p.processor track by $index">
+                  <span data-ng-if="o.individual"
+                    >{{o.individual}} ({{o.organisation}})<span data-ng-if="!$last"
+                      >,
+                    </span></span
+                  >
+                  <span data-ng-if="!o.individual"
+                    >{{o.organisation}}<span data-ng-if="!$last">, </span></span
+                  >
+                </span>
+              </strong>
+              <br data-ng-if="p.date || p.processor" />
+              {{p.description}}
+            </div>
+            <div class="timeline-body" data-ng-if="p.source">
+              <span data-translate="">sourceDescription</span>
+              <p data-ng-repeat="s in p.source">{{s.description}}</p>
+            </div>
+          </div>
+        </li>
+      </ul>
+    </div>
+    <div
+      class="col-md-4 gn-contact-col-1"
+      data-ng-if="mdView.current.record.contactForProcessing"
+      data-gn-metadata-contacts="mdView.current.record.contactForProcessing"
+      data-gn-mode="default"
+      data-type="processing"
+      data-layout="icon"
+    ></div>
+  </div>
+</div>

@@ -44,6 +44,7 @@
 
   <!-- The current service name -->
   <xsl:variable name="service" select="/root/gui/reqService"/>
+  <xsl:variable name="request" select="/root/request"/>
 
   <xsl:variable name="i18n" select="/root/gui/i18n"/>
   <!-- Used by SearchApi loading translation from JSON locale files. -->
@@ -167,6 +168,8 @@
   <xsl:variable name="layerMatchingPattern"
                 select="'^OGC:WMS.*'"/>
 
+
+  <xsl:variable name="userFeedbackEnabled" select="$envSystem/userFeedback/enable = 'true'" />
 
   <xsl:variable name="metadataUserFeedbackEnabled" select="$envSystem/localrating/enable = 'advanced'" />
 </xsl:stylesheet>

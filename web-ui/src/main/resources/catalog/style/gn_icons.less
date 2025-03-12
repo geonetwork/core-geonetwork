@@ -3,6 +3,11 @@
 @import "../lib/style/font-awesome/less/_shims";
 @import "../lib/style/bootstrap/less/variables.less";
 
+@font-face {
+  font-family: "geonetwork";
+  src: url("../catalog/style/gn.ttf") format("truetype");
+}
+
 /* used to display icons with resource types - iso19139 hierarchylevel */
 .gn-icon-dataset:before,
 .gn-icon-datasets:before {
@@ -12,12 +17,10 @@
   content: @fa-var-cog;
 }
 .gn-icon-map:before,
-.gn-icon-staticMap:before,
-.gn-icon-maps:before {
+.gn-icon-map-static:before,
+.gn-icon-maps:before,
+.gn-icon-map-interactive:before {
   content: @fa-var-map;
-}
-.gn-icon-interactiveMap:before {
-  content: @fa-var-globe;
 }
 .gn-icon-featureCatalog:before {
   content: @fa-var-table;
@@ -245,8 +248,17 @@
   content: @fa-var-file-zipper;
 }
 
+.gn-icon-doi {
+  display: inline-block;
+  font: normal normal normal 1em/1 "geonetwork";
+  color: inherit;
+  flex-shrink: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
 .gn-icon-doi:before {
-  content: @fa-var-info-circle;
+  content: "\ea01";
 }
 
 .gn-icon-parent:before {
@@ -280,6 +292,8 @@
 .gn-icontype-wps,
 .gn-icontype-wcs,
 .gn-icontype-atom,
+.gn-icontype-3dtiles,
+.gn-icontype-cog,
 .gn-icontype-esri-rest,
 .gn-icontype-wfs {
   background-color: @btn-success-bg !important;
@@ -336,4 +350,80 @@
 .gn-status-draft-to-submitted-editor:before,
 .gn-status-draft-to-submitted-reviewer:before {
   content: @fa-var-check-circle;
+}
+
+// association types
+.gn-icon-association-crossReference:before {
+  content: @fa-var-shuffle;
+}
+.gn-icon-association-largerWorkCitation:before {
+  content: @fa-var-message;
+}
+.gn-icon-association-partOfSeamlessDatabase:before {
+  content: @fa-var-database;
+}
+.gn-icon-association-stereoMate:before {
+  content: @fa-var-headphones;
+}
+.gn-icon-association-isComposedOf:before {
+  content: @fa-var-sitemap;
+}
+.gn-icon-association-collectiveTitle:before {
+  content: @fa-var-heading;
+}
+.gn-icon-association-series:before {
+  content: @fa-var-copy;
+}
+.gn-icon-association-dependency:before {
+  content: @fa-var-diagram-next;
+}
+.gn-icon-association-revisionOf:before {
+  content: @fa-var-clock-rotate-left;
+}
+
+// initiative types
+.gn-icon-initiative-campaign:before {
+  content: @fa-var-bullhorn;
+}
+.gn-icon-initiative-collection:before {
+  content: @fa-var-share-nodes;
+}
+.gn-icon-initiative-exercise:before {
+  content: @fa-var-book-atlas;
+}
+.gn-icon-initiative-experiment:before {
+  content: @fa-var-flask;
+}
+.gn-icon-initiative-investigation:before {
+  content: @fa-var-magnifying-glass;
+}
+.gn-icon-initiative-mission:before {
+  content: @fa-var-crosshairs;
+}
+.gn-icon-initiative-sensor:before {
+  content: @fa-var-microchip;
+}
+.gn-icon-initiative-operation:before {
+  content: @fa-var-person-chalkboard;
+}
+.gn-icon-initiative-platform:before {
+  content: @fa-var-sitemap;
+}
+.gn-icon-initiative-process:before {
+  content: @fa-var-gears;
+}
+.gn-icon-initiative-program:before {
+  content: @fa-var-laptop-code;
+}
+.gn-icon-initiative-project:before {
+  content: @fa-var-paste;
+}
+.gn-icon-initiative-study:before {
+  content: @fa-var-graduation-cap;
+}
+.gn-icon-initiative-task:before {
+  content: @fa-var-list-check;
+}
+.gn-icon-initiative-trial:before {
+  content: @fa-var-gavel;
 }

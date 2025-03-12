@@ -32,6 +32,7 @@ import javax.persistence.*;
 
 import java.io.Serializable;
 import java.util.IdentityHashMap;
+import java.util.Objects;
 
 /**
  * The mapping between user, the groups a user is a part of and the profiles the user has for each
@@ -144,5 +145,20 @@ public class UserGroup extends GeonetEntity implements Serializable {
             .addContent(new Element("group").setText("" + getId().getGroupId()))
             .addContent(new Element("user").setText("" + getId().getUserId()))
             .addContent(new Element("profile").setText(getProfile().name()));
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        UserGroup ug = (UserGroup) o;
+        return (getId().getGroupId() == (ug.getId().getGroupId()) &&
+            getId().getUserId() == (ug.getId().getUserId()) &&
+            getProfile().name().equals(ug.getProfile().name()));
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getProfile().name(), getId().getUserId(), getId().getGroupId());
     }
 }

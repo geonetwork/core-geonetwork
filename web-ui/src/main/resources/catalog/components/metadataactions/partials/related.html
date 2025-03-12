@@ -80,6 +80,13 @@
               data-typename="{{::isLayerProtocol(r) ? r.locTitle : ''}}"
               data-url="{{::r.locUrl}}"
             ></div>
+
+            <div
+              data-ng-if="::!isLayerProtocol(r)"
+              data-gn-wfs-download=""
+              data-typename=""
+              data-url="{{::r.locUrl}}"
+            ></div>
           </div>
 
           <div data-ng-switch-when="ATOM">
@@ -171,13 +178,14 @@
                     badge = config.getBadgeLabel(mainType, md);
                     icon = config.getClassIcon(mainType);"
   >
-    <h3 data-ng-if="groupSiblingsByType && items.length > 0" class="gn-related-title">
-      <i class="fa fa-fw {{icon}}" />
-      {{type.replace('siblings', '') | translate}}
-    </h3>
+    <h3
+      data-ng-if="groupSiblingsByType && items.length > 0"
+      data-ng-init="keyToken = type.replace('siblings', '').split('-')"
+      data-gn-associated-record-label="{associationType: keyToken[0], initiativeType: keyToken[1]}"
+    ></h3>
 
-    <ul class="gn-related-list">
-      <li data-ng-repeat="md in items | orderBy:getOrderBy">
+    <ul class="gn-related-list list-group">
+      <li class="list-group-item" data-ng-repeat="md in items | orderBy:getOrderBy">
         <a
           data-ng-hide="md.remoteUrl"
           href=""
@@ -194,7 +202,7 @@
           target="_blank"
           title="{{md.resourceTitle}}"
         >
-          {{md.resourceTitle}}
+          {{md.resourceTitle || md.remoteUrl}}
           <i
             data-ng-if="md.origin === 'remote'"
             class="fa fa-external-link"
@@ -213,9 +221,12 @@
                     badge = config.getBadgeLabel(mainType, md);
                     icon = config.getClassIcon(mainType);"
   >
-    <h3 data-ng-if="groupSiblingsByType && items.length > 0">
-      {{type.replace('siblings', '') | translate}}
-    </h3>
+    <h3
+      data-ng-if="groupSiblingsByType && items.length > 0"
+      data-ng-init="keyToken = type.replace('siblings', '').split('-')"
+      data-gn-associated-record-label="{associationType: keyToken[0], initiativeType: keyToken[1]}"
+    ></h3>
+
     <ul class="row list-group gn-info-list">
       <gn-metadata-card
         data-ng-repeat="md in items | orderBy:getOrderBy"
@@ -223,34 +234,6 @@
         md="md"
         formatter-url="formatter.defaultUrl"
       >
-        <span
-          class="label label-default gn-card-badge"
-          data-ng-class="{
-            'gn-card-series': type === 'parent',
-            'gn-card-nonGeographicDataset': type === 'nonGeographicDataset',
-            'gn-card-service': type === 'services' || type === 'application',
-            'gn-card-dataset': type !== 'parent' && type !== 'services' && type !== 'application' && type !== 'nonGeographicDataset'
-            }"
-        >
-          <i class="fa {{icon}}" />
-          <span data-ng-hide="md.properties && !md.properties.associationType">
-            {{(config.getLabel(mainType, type)) | translate}}</span
-          >
-          <span
-            data-ng-show="md.properties && md.properties.associationType"
-            title="{{(config.getLabel(mainType, type)) | translate}}"
-          >
-            {{md.properties.associationType | translate}}
-            <span data-ng-if="md.properties && md.properties.initiativeType">
-              ({{md.properties.initiativeType | translate}})
-            </span>
-          </span>
-          <i
-            data-ng-if="md.origin === 'remote'"
-            class="fa fa-external-link"
-            title="{{'remoteRecord' | translate}}"
-          ></i>
-        </span>
       </gn-metadata-card>
       <button
         class="btn btn-link"

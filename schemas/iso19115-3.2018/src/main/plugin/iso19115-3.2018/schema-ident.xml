@@ -128,13 +128,14 @@ Ce schéma est également composé des normes :
   -->
   <filters xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0">
     <!--
-    All elemenets having a nilReason attribute
+    All elements having a nilReason attribute
     set to withheld, then users needs to have
     the edit privilege in order to be able to see
     the information. When filtered the element is
     preserved but with no content in.
     -->
-    <filter xpath=".//*[@gco:nilReason='withheld']"
+    <filter xpath=".//*[@gco:nilReason = 'withheld']"
+            jsonpath="$.*[?(@.nilReason == 'withheld')]"
             ifNotOperation="editing">
       <keepMarkedElement gco:nilReason="withheld"/>
     </filter>
@@ -148,6 +149,7 @@ Ce schéma est également composé des normes :
                                   */cit:protocol/gco:CharacterString = 'FILE' or
                                   */cit:protocol/gco:CharacterString = 'DB' or
                                   */cit:protocol/gco:CharacterString = 'COPYFILE']"
+            jsonpath="$['link'][?(@.protocol =~ /(DOWNLOAD|FILE|DB|COPYFILE).*?/i)]"
             ifNotOperation="download"/>
 
     <!--
@@ -156,6 +158,7 @@ Ce schéma est également composé des normes :
     TODO: other type of services ?
     -->
     <filter xpath=".//mrd:onLine[starts-with(*/cit:protocol/gco:CharacterString, 'OGC:WMS')]"
+            jsonpath="$['link'][?(@.protocol =~ /OGC:WMS.*?/i)]"
             ifNotOperation="dynamic"/>
   </filters>
 </schema>

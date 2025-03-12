@@ -27,8 +27,11 @@ import jeeves.server.ServiceConfig;
 import jeeves.server.sources.http.JeevesServlet;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.exceptions.BadParameterEx;
+import org.fao.geonet.utils.FilePathChecker;
 import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Log;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -63,6 +66,9 @@ public class GeonetworkDataDirectory {
      */
     public static final String GEONETWORK_BEAN_KEY = "GeonetworkDataDirectory";
 
+    @Autowired
+    SchemaManager schemaManager;
+
     private Path webappDir;
     private Path systemDataDir;
     private Path indexConfigDir;
@@ -74,6 +80,7 @@ public class GeonetworkDataDirectory {
     private Path metadataRevisionDir;
     private Path resourcesDir;
     private Path htmlCacheDir;
+    private Path schemaPublicationDir;
     private Path uploadDir;
     private Path formatterDir;
     private Path nodeLessFiles;
@@ -302,9 +309,11 @@ public class GeonetworkDataDirectory {
         );
         formatterDir = setDir(jeevesServlet, webappName, handlerConfig, formatterDir,
             ".formatter" + KEY_SUFFIX, Geonet.Config.FORMATTER_PATH, "data", "formatter");
-
         htmlCacheDir = setDir(jeevesServlet, webappName, handlerConfig, htmlCacheDir,
             ".htmlcache" + KEY_SUFFIX, Geonet.Config.HTMLCACHE_DIR, handlerConfig.getValue(Geonet.Config.RESOURCES_DIR), "htmlcache"
+        );
+        schemaPublicationDir = setDir(jeevesServlet, webappName, handlerConfig, schemaPublicationDir,
+            ".schemapublication" + KEY_SUFFIX, Geonet.Config.SCHEMAPUBLICATION_DIR, handlerConfig.getValue(Geonet.Config.RESOURCES_DIR), "schemapublication"
         );
         backupDir = setDir(jeevesServlet, webappName, handlerConfig, backupDir,
             ".backup" + KEY_SUFFIX, Geonet.Config.BACKUP_DIR, "data", "backup"
@@ -720,6 +729,23 @@ public class GeonetworkDataDirectory {
     }
 
     /**
+     * Get directory for publishing schemas and making them publicly available.
+     *
+     * @return directory for publishing schemas and making them publicly available.
+     */
+    public Path getSchemaPublicationDir() {
+        return schemaPublicationDir;
+    }
+
+    /**
+     * Set directory for publishing schemas and making them publicly available.
+      * @param schemaPublicationDir
+     */
+    public void setSchemaPublicationDir(Path schemaPublicationDir) {
+        this.schemaPublicationDir = schemaPublicationDir;
+    }
+
+    /**
      * Get directory for caching where uploaded files go.
      *
      * @return directory for caching html data.
@@ -777,11 +803,18 @@ public class GeonetworkDataDirectory {
         if (conversionId.startsWith(IMPORT_STYLESHEETS_SCHEMA_PREFIX)) {
             String[] pathToken = conversionId.split(":");
             if (pathToken.length == 3) {
+                String schema = pathToken[1];
+                if (!schemaManager.existsSchema(schema)) {
+                    throw new BadParameterEx(String.format(
+                        "Conversion not found. Schema '%s' is not registered in this catalog.", schema));
+                }
+                FilePathChecker.verify(pathToken[2]);
                 return this.getSchemaPluginsDir()
                     .resolve(pathToken[1])
                     .resolve(pathToken[2] + ".xsl");
             }
         } else {
+            FilePathChecker.verify(conversionId);
             return this.getWebappDir().resolve(Geonet.Path.IMPORT_STYLESHEETS).
                 resolve(conversionId + ".xsl");
         }

@@ -216,11 +216,13 @@ div[gn-transfer-ownership] * .list-group {
 
 a {
   word-wrap: break-word;
-  word-break: break-all;
 }
 .gn-break {
   word-wrap: break-word;
   word-break: break-word;
+}
+.gn-break-all {
+  word-break: break-all;
 }
 
 /**
@@ -296,11 +298,9 @@ a {
  * Logo in nav bar can't be big
  */
 .gn-logo {
-  max-height: 24px;
-  margin: -12px 0px 0px 0px;
-  @media (max-width: @screen-md-max) {
-    margin-top: -6px;
-  }
+  max-height: 36px;
+  vertical-align: top;
+  margin: -3px 0px 0px 12px;
   @media (max-width: @screen-xs-max) {
     margin-top: 0;
   }
@@ -742,23 +742,34 @@ i.fa-times.delete:hover {
 
 .gn-search-page {
   .gn-status {
-    position: absolute;
-    bottom: 9px;
     margin-left: -8px;
     z-index: 98;
+  }
+  [data-search-results] table .gn-status {
+    position: unset;
+  }
+  .gn-status-container {
+    text-align: right;
+    margin-right: -10px;
+
+    .gn-status {
+      border-radius: 3px;
+      margin-left: 2px;
+    }
   }
   .gn-status,
   .gn-workflow-status {
     border: 2px solid @brand-primary;
     display: inline-block;
-    margin-top: 5px;
-    margin-right: 5px;
+    margin-right: 10px;
     border-radius: 0 3px 3px 0;
     padding: 5px 18px;
     background-color: @brand-primary;
     font-weight: 500;
     font-size: 80%;
     color: #fff;
+    flex-grow: 0;
+    align-self: center;
   }
   .gn-status-mdview,
   .gn-workflow-status-mdview {
@@ -946,6 +957,11 @@ i.fa-times.delete:hover {
     }
     .gn-status-lg {
       font-size: inherit !important;
+    }
+    .gn-md-title {
+      a {
+        word-break: break-all;
+      }
     }
   }
 }
@@ -1555,6 +1571,9 @@ gn-indexing-task-status {
 .flex-self-center {
   align-self: center;
 }
+.flex-self-right {
+  align-self: end;
+}
 .flex-gap-5 {
   gap: 5px;
 }
@@ -1584,6 +1603,9 @@ gn-indexing-task-status {
 }
 .text-large {
   font-size: 30px;
+}
+.width-auto {
+  width: auto;
 }
 .width-100 {
   width: 100%;

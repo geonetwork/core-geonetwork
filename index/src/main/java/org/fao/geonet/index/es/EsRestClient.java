@@ -23,7 +23,27 @@
 
 package org.fao.geonet.index.es;
 
+import co.elastic.clients.elasticsearch.ElasticsearchAsyncClient;
+import co.elastic.clients.elasticsearch.ElasticsearchClient;
+import co.elastic.clients.elasticsearch._types.*;
+import co.elastic.clients.elasticsearch._types.query_dsl.Query;
+import co.elastic.clients.elasticsearch._types.query_dsl.QueryStringQuery;
+import co.elastic.clients.elasticsearch._types.query_dsl.WrapperQuery;
+import co.elastic.clients.elasticsearch.cluster.HealthResponse;
+import co.elastic.clients.elasticsearch.core.*;
+import co.elastic.clients.elasticsearch.core.search.Hit;
+import co.elastic.clients.elasticsearch.indices.AnalyzeRequest;
+import co.elastic.clients.elasticsearch.indices.AnalyzeResponse;
+import co.elastic.clients.elasticsearch.indices.analyze.AnalyzeToken;
+import co.elastic.clients.json.JsonData;
+import co.elastic.clients.json.JsonpMapper;
+import co.elastic.clients.json.jackson.JacksonJsonpMapper;
+import co.elastic.clients.transport.ElasticsearchTransport;
+import co.elastic.clients.transport.rest_client.RestClientTransport;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import jakarta.json.spi.JsonProvider;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpHost;
@@ -37,32 +57,8 @@ import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.nio.conn.SchemeIOSessionStrategy;
 import org.apache.http.nio.conn.ssl.SSLIOSessionStrategy;
 import org.apache.http.ssl.SSLContextBuilder;
-import org.apache.lucene.search.TotalHits;
-import org.elasticsearch.ElasticsearchStatusException;
-import org.elasticsearch.action.admin.cluster.health.ClusterHealthRequest;
-import org.elasticsearch.action.admin.cluster.health.ClusterHealthResponse;
-import org.elasticsearch.action.bulk.BulkRequest;
-import org.elasticsearch.action.bulk.BulkResponse;
-import org.elasticsearch.action.get.GetRequest;
-import org.elasticsearch.action.index.IndexRequest;
-import org.elasticsearch.action.search.SearchRequest;
-import org.elasticsearch.action.search.SearchResponse;
-import org.elasticsearch.action.support.WriteRequest;
-import org.elasticsearch.client.*;
-import org.elasticsearch.client.core.MainResponse;
-import org.elasticsearch.client.indices.AnalyzeRequest;
-import org.elasticsearch.client.indices.AnalyzeResponse;
-import org.elasticsearch.common.xcontent.XContentType;
-import org.elasticsearch.index.query.QueryBuilder;
-import org.elasticsearch.index.query.QueryBuilders;
-import org.elasticsearch.index.query.QueryStringQueryBuilder;
-import org.elasticsearch.index.reindex.BulkByScrollResponse;
-import org.elasticsearch.index.reindex.DeleteByQueryRequest;
-import org.elasticsearch.script.Script;
-import org.elasticsearch.search.SearchHit;
-import org.elasticsearch.search.builder.SearchSourceBuilder;
-import org.elasticsearch.search.sort.FieldSortBuilder;
-import org.elasticsearch.search.sort.SortBuilder;
+import org.elasticsearch.client.RestClient;
+import org.elasticsearch.client.RestClientBuilder;
 import org.fao.geonet.utils.Log;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
@@ -70,6 +66,7 @@ import org.springframework.beans.factory.annotation.Value;
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLContext;
 import java.io.IOException;
+import java.io.StringReader;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.*;
@@ -81,7 +78,9 @@ import java.util.*;
 public class EsRestClient implements InitializingBean {
     private static EsRestClient instance;
 
-    private RestHighLevelClient client;
+    private ElasticsearchClient client;
+
+    private ElasticsearchAsyncClient asyncClient;
 
     @Value("${es.url}")
     private String serverUrl;
@@ -107,8 +106,12 @@ public class EsRestClient implements InitializingBean {
         return instance;
     }
 
-    public RestHighLevelClient getClient() {
+    public ElasticsearchClient getClient() {
         return client;
+    }
+
+    public ElasticsearchAsyncClient getAsynchClient() {
+        return asyncClient;
     }
 
     public String getDashboardAppUrl() {
@@ -158,7 +161,14 @@ public class EsRestClient implements InitializingBean {
                     builder.setHttpClientConfigCallback(httpClientBuilder -> httpClientBuilder.setDefaultCredentialsProvider(credentialsProvider));
                 }
             }
-            client = new RestHighLevelClient(builder);
+
+            RestClient restClient = builder.build();
+
+            ElasticsearchTransport transport = new RestClientTransport(restClient, new JacksonJsonpMapper());
+
+            client = new ElasticsearchClient(transport);
+
+            asyncClient = new ElasticsearchAsyncClient(transport);
 
             synchronized (EsRestClient.class) {
                 instance = this;
@@ -205,20 +215,29 @@ public class EsRestClient implements InitializingBean {
             throw new IOException("Index not yet activated.");
         }
 
-        BulkRequest request = new BulkRequest();
-        request.setRefreshPolicy(WriteRequest.RefreshPolicy.IMMEDIATE);
+        BulkRequest.Builder requestBuilder = new BulkRequest.Builder()
+            .index(index)
+            .refresh(Refresh.True);
+
+        JsonpMapper jsonpMapper = client._transport().jsonpMapper();
+        JsonProvider jsonProvider = jsonpMapper.jsonProvider();
+
         Iterator<Map.Entry<String, String>> iterator = docs.entrySet().iterator();
         while (iterator.hasNext()) {
             Map.Entry<String, String> entry = iterator.next();
-            request.add(new IndexRequest(index).id(entry.getKey())
-                .source(entry.getValue(), XContentType.JSON));
-                // https://www.elastic.co/fr/blog/customizing-your-document-routing
-                // For features & record search we need to route the record
-                // document to the same place as the features in order to make join
-//                .routing(ROUTING_KEY));
+
+            JsonData jd = JsonData.from(jsonProvider.createParser(new StringReader(entry.getValue())), jsonpMapper);
+
+            requestBuilder
+                .operations(op -> op.index(idx -> idx.index(index)
+                    .id(entry.getKey())
+                    .document(jd)));
         }
+
+        BulkRequest request = requestBuilder.build();
+
         try {
-            return client.bulk(request, RequestOptions.DEFAULT);
+            return client.bulk(request);
         } catch (IOException e) {
             e.printStackTrace();
             throw e;
@@ -253,86 +272,88 @@ public class EsRestClient implements InitializingBean {
 
     public SearchResponse query(String index, String luceneQuery, String filterQuery, Set<String> includedFields,
                                 Map<String, String> scriptedFields,
-                                int from, int size, List<SortBuilder<FieldSortBuilder>> sort) throws Exception {
-        final QueryBuilder query = QueryBuilders.queryStringQuery(luceneQuery);
-        QueryBuilder filter = null;
+                                int from, int size, List<SortOptions> sort) throws Exception {
+
+        Query.Builder queryBuilder = new Query.Builder();
+        queryBuilder.queryString(new QueryStringQuery.Builder().query(luceneQuery).build());
+
+        Query.Builder filterBuilder = null;
         if (StringUtils.isNotEmpty(filterQuery)) {
-            filter = QueryBuilders.queryStringQuery(filterQuery);
+            filterBuilder = new Query.Builder();
+            filterBuilder.queryString(new QueryStringQuery.Builder().query(filterQuery).build());
         }
-        return query(index, query, filter, includedFields, scriptedFields, from, size, sort);
+        return query(index, queryBuilder, filterBuilder, includedFields, scriptedFields, from, size, sort);
     }
 
     /**
      * Query using JSON elastic query
      */
-    public SearchResponse query(String index, JsonNode jsonQuery, QueryBuilder postFilterBuilder,
+    public SearchResponse query(String index, JsonNode jsonQuery, Query.Builder postFilterBuilder,
                                 Set<String> includedFields, Map<String, String> scriptedFields,
                                 int from, int size) throws Exception {
         return query(index, jsonQuery, postFilterBuilder, includedFields, scriptedFields, from, size, null);
     }
 
-    public SearchResponse query(String index, JsonNode jsonQuery, QueryBuilder postFilterBuilder, Set<String> includedFields,
+    public SearchResponse query(String index, JsonNode jsonQuery, Query.Builder postFilterBuilder, Set<String> includedFields,
                                 int from, int size) throws Exception {
         return query(index, jsonQuery, postFilterBuilder, includedFields, new HashMap<>(), from, size, null);
     }
 
-    public SearchResponse query(String index, JsonNode jsonQuery, QueryBuilder postFilterBuilder,
+    public SearchResponse query(String index, JsonNode jsonQuery, Query.Builder postFilterBuilder,
                                 Set<String> includedFields, Map<String, String> scriptedFields,
-                                int from, int size, List<SortBuilder<FieldSortBuilder>> sort) throws Exception {
-        final QueryBuilder query = QueryBuilders.wrapperQuery(String.valueOf(jsonQuery));
+                                int from, int size, List<SortOptions> sort) throws Exception {
+        final Query.Builder query = new Query.Builder();
+
+        WrapperQuery.Builder wrapperQueryBuilder = new WrapperQuery.Builder();
+        wrapperQueryBuilder.query(Base64.getEncoder().encodeToString(String.valueOf(jsonQuery).getBytes()));
+        query.wrapper(wrapperQueryBuilder.build());
+
         return query(index, query, postFilterBuilder, includedFields, scriptedFields, from, size, sort);
     }
 
-    public SearchResponse query(String index, QueryBuilder queryBuilder, QueryBuilder postFilterBuilder,
+    public SearchResponse query(String index, Query.Builder queryBuilder, Query.Builder postFilterBuilder,
                                 Set<String> includedFields, Map<String, String> scriptedFields,
-                                int from, int size, List<SortBuilder<FieldSortBuilder>> sort) throws Exception {
+                                int from, int size, List<SortOptions> sort) throws Exception {
         if (!activated) {
             return null;
         }
 
         // TODOES: Add permission if index is gn-records
         // See EsHTTPProxy#addUserInfo
-        SearchRequest searchRequest = new SearchRequest();
-        searchRequest.indices(index);
-        SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
-        searchSourceBuilder.query(queryBuilder);
+        SearchRequest.Builder searchRequestBuilder = new SearchRequest.Builder()
+            .index(index)
+            .from(from)
+            .size(size)
+            .query(queryBuilder.build())
+            .trackTotalHits(th -> th.enabled(true))
+            .source(sc -> sc.filter(f -> f.includes(new ArrayList<>(includedFields))));
+
+        if (postFilterBuilder != null) {
+            searchRequestBuilder.postFilter(postFilterBuilder.build());
+        }
 
         if (MapUtils.isNotEmpty(scriptedFields)) {
             for (Map.Entry<String, String> scriptedField: scriptedFields.entrySet()) {
-                searchSourceBuilder.scriptField(scriptedField.getKey(), new Script(scriptedField.getValue()));
+                ScriptField scriptField = ScriptField.of(
+                    b -> b.script(sb -> sb.inline(is -> is.source(scriptedField.getValue())))
+                );
+
+                searchRequestBuilder.scriptFields(scriptedField.getKey(), scriptField);
             }
         }
 
-        searchSourceBuilder.fetchSource(includedFields.toArray(new String[includedFields.size()]), null);
-        searchSourceBuilder.from(from);
-        searchSourceBuilder.size(size);
-        searchSourceBuilder.trackTotalHits(true);
-        if (postFilterBuilder != null) {
-            searchSourceBuilder.postFilter(postFilterBuilder);
+        if (sort != null) {
+            searchRequestBuilder.sort(sort);
         }
 
-        if ((sort != null) && (!sort.isEmpty())) {
-            sort.forEach(searchSourceBuilder::sort);
-        }
-
-        searchRequest.source(searchSourceBuilder);
+        SearchRequest searchRequest = searchRequestBuilder.build();
 
         try {
-            SearchResponse searchResponse = client.search(searchRequest, RequestOptions.DEFAULT);
-            if (searchResponse.status().getStatus() == 200) {
-                return searchResponse;
-            } else {
-                throw new IOException(String.format(
-                    "Error during querying index. Errors is '%s'.", searchResponse.status().toString()
-                ));
-            }
-        } catch (ElasticsearchStatusException esException) {
-            Throwable[] suppressed = esException.getSuppressed();
-            if (suppressed.length > 0 && suppressed[0] instanceof ResponseException) {
-                ResponseException re = (ResponseException) suppressed[0];
-                Log.error("geonetwork.index", String.format(
-                    "Error during querying index. %s", re.getMessage()));
-            }
+            return client.search(searchRequest, ObjectNode.class);
+
+        } catch (ElasticsearchException esException) {
+            Log.error("geonetwork.index", String.format(
+                "Error during querying index. %s", esException.error().toString()));
             throw esException;
         }
     }
@@ -343,19 +364,24 @@ public class EsRestClient implements InitializingBean {
             return "";
         }
 
-        DeleteByQueryRequest request = new DeleteByQueryRequest();
-        request.setRefresh(true);
-        request.indices(index);
-        request.setQuery(new QueryStringQueryBuilder(query));
+        DeleteByQueryRequest request = DeleteByQueryRequest.of(
+            b -> b.index(new ArrayList<>(Arrays.asList(index)))
+                .q(query)
+                .refresh(true));
 
-        final BulkByScrollResponse deleteByQueryResponse =
-            client.deleteByQuery(request, RequestOptions.DEFAULT);
+        final DeleteByQueryResponse deleteByQueryResponse =
+            client.deleteByQuery(request);
 
-        if (deleteByQueryResponse.getStatus().getDeleted() >= 0) {
-            return String.format("Record removed. %s.", deleteByQueryResponse.getStatus().getDeleted());
+
+        if (deleteByQueryResponse.deleted() >= 0) {
+            return String.format("Record removed. %s.", deleteByQueryResponse.deleted());
         } else {
+            StringBuilder stringBuilder = new StringBuilder();
+
+            deleteByQueryResponse.failures().forEach(f -> stringBuilder.append(f.toString()));
+
             throw new IOException(String.format(
-                "Error during removal. Errors is '%s'.", deleteByQueryResponse.getStatus().getReasonCancelled()
+                "Error during removal. Errors are '%s'.", stringBuilder.toString()
             ));
         }
     }
@@ -369,57 +395,41 @@ public class EsRestClient implements InitializingBean {
         if (!activated) {
             return Collections.emptyMap();
         }
-        GetRequest request = new GetRequest().index(index).id(id);
-        return client.get(request, RequestOptions.DEFAULT).getSourceAsMap();
 
+        GetRequest request = GetRequest.of(
+            b -> b.index(index).id(id)
+        );
+
+        GetResponse<ObjectNode> response = client.get(request, ObjectNode.class);
+
+        if (response.found()) {
+            ObjectMapper objectMapper = new ObjectMapper();
+            return objectMapper.convertValue(response.source(), Map.class);
+        } else {
+            throw new Exception(String.format("Document with id %s not found", id));
+        }
     }
 
     /**
      * Query the index for a specific record and return values for a set of fields.
      */
-    public Map<String, String> getFieldsValues(String index, String id, Set<String> fields) throws IOException {
+    public Map<String, String> getFieldsValues(String index, String id, Set<String> fields, String language) throws Exception {
         if (!activated) {
             return Collections.emptyMap();
         }
 
-        Map<String, String> fieldValues = new HashMap<>(fields.size());
-        try {
-            String query = String.format("_id:\"%s\"", id);
-            // TODO: Check maxRecords
-            // TODO: Use _doc API?
-            final SearchResponse searchResponse = this.query(index, query, null, fields, new HashMap<>(), 0, 1, null);
-            if (searchResponse.status().getStatus() == 200) {
-                TotalHits totalHits = searchResponse.getHits().getTotalHits();
-                long matches = totalHits == null ? -1 : totalHits.value;
-                if (matches == 0) {
-                    return fieldValues;
-                } else if (matches == 1) {
-                    final SearchHit[] hits = searchResponse.getHits().getHits();
+        Map<String, String> fieldValues = new HashMap<>();
+        Map<String, Object> sources = getDocument(index, id);
 
-                    fields.forEach(f -> {
-                        final Object o = hits[0].getSourceAsMap().get(f);
-                        if (o instanceof String) {
-                            fieldValues.put(f, (String) o);
-                        } else if (o instanceof HashMap && f.endsWith("Object")) {
-                            fieldValues.put(f, (String) ((HashMap) o).get("default"));
-                        }
-                    });
-                } else {
-                    throw new IOException(String.format(
-                        "Your query '%s' returned more than one record, %d in fact. Can't retrieve field values for more than one record.",
-                        query,
-                        matches
-                    ));
-                }
-            } else {
-                throw new IOException(String.format(
-                    "Error during fields value retrieval. Status is '%s'.", searchResponse.status().getStatus()
-                ));
+        for (String field : fields) {
+            Object value = sources.get(field);
+            if (value instanceof String) {
+                fieldValues.put(field, (String) value);
+            } else if (value instanceof Map && field.endsWith("Object")) {
+                Map valueMap = (Map) value;
+                String languageValue = (String) valueMap.get("lang" + language);
+                fieldValues.put(field, languageValue != null ? languageValue : (String) valueMap.get("default"));
             }
-        } catch (Exception e) {
-            throw new IOException(String.format(
-                "Error during fields value retrieval. Errors is '%s'.", e.getMessage()
-            ));
         }
         return fieldValues;
     }
@@ -463,19 +473,21 @@ public class EsRestClient implements InitializingBean {
                                       String analyzer,
                                       String fieldValue) {
 
-        AnalyzeRequest request = AnalyzeRequest.withIndexAnalyzer(collection,
-            analyzer,
-            // Replace , as it is meaningful in synonym map format
-            fieldValue.replace(",", ""));
+        AnalyzeRequest analyzeRequest = AnalyzeRequest.of(
+            b -> b.index(collection)
+                .analyzer(analyzer)
+                // Replace , as it is meaningful in synonym map format
+                .text(fieldValue.replace(",", ""))
+        );
 
         try {
-            AnalyzeResponse response = EsRestClient.get().client.indices().analyze(request, RequestOptions.DEFAULT);
+            AnalyzeResponse response = EsRestClient.get().client.indices().analyze(analyzeRequest);
 
-            final List<AnalyzeResponse.AnalyzeToken> tokens = response.getTokens();
+            final List<AnalyzeToken> tokens = response.tokens();
             if (tokens.size() == 1) {
-                final String type = tokens.get(0).getType();
+                final String type = tokens.get(0).type();
                 if ("SYNONYM".equals(type) || "word".equals(type)) {
-                    return tokens.get(0).getTerm();
+                    return tokens.get(0).token();
                 }
                 return "";
             } else {
@@ -486,27 +498,16 @@ public class EsRestClient implements InitializingBean {
         }
     }
 
-
-    protected void finalize() {
-        try {
-            client.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
     // TODO: check index exist too
     public String getServerStatus() throws IOException {
-        ClusterHealthRequest request = new ClusterHealthRequest();
-        ClusterHealthResponse response = client.cluster().health(request, RequestOptions.DEFAULT);
 
-        return response.getStatus().toString();
-//        return getClient().ping(RequestOptions.DEFAULT);
+        HealthResponse response = client.cluster().health();
+        return response.status().toString();
     }
 
-    public String getServerVersion() throws IOException {
-        MainResponse.Version version = client.info(RequestOptions.DEFAULT).getVersion();
+    public String getServerVersion() throws IOException, ElasticsearchException {
+        ElasticsearchVersionInfo version = client.info().version();
 
-        return version.getNumber();
+        return version.number();
     }
 }

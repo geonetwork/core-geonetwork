@@ -12,20 +12,22 @@ on:
 jobs:
   update-maven-dep-tree:
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
-      
-      - name: Setup Java JDK
-        uses: actions/setup-java@v3.10.0
+        uses: actions/checkout@v4
         with:
-          java-version: 8
+          show-progress: 'false'
+
+      - name: Setup Java JDK
+        uses: actions/setup-java@v4.2.1
+        with:
+          java-version: 11
           # Java distribution. See the list of supported distributions in README file
           distribution: temurin
           # The package type (jdk, jre, jdk+fx, jre+fx)
           java-package: jdk
           cache: maven
-    
+
       - name: Submit Dependency Snapshot
-        uses: advanced-security/maven-dependency-submission-action@v3
+        uses: advanced-security/maven-dependency-submission-action@v4

@@ -54,6 +54,97 @@
       "addLayerNamesMode": "resourcename",
       "resourceName": "layerName",
       "resourceDescription": "layerTitle"
+    },
+    "associatedResourcesTypes": [{
+      "type": "parent",
+      "label": "linkToParent",
+      "config": {
+        "sources": {
+          "metadataStore": {
+            "label": "linkToParent",
+            "params": {
+              "resourceType": ["series"],
+              "isTemplate": "n"
+            }
+          },
+          "remoteurl": {"multiple": false}
+        }
+      }
+    }, {
+        "type": "service",
+        "label": "linkToService",
+        "condition": "!gnCurrentEdit.isService",
+        "config": {
+          "sources": {
+            "metadataStore": {
+              "label": "searchAservice",
+              "params": {
+                "resourceType": ["service"],
+                "isTemplate": "n"
+              }
+            },
+            "remoteurl": {"multiple": false}
+          }
+        }
+    }, {
+      "type": "dataset",
+      "label": "linkToDataset",
+      "condition": "gnCurrentEdit.isService",
+      "config": {
+        "sources": {
+          "metadataStore": {
+            "params": {
+              "resourceType": ["dataset"],
+              "isTemplate": "n"
+            }
+          },
+          "remoteurl": {"multiple": false}
+        }
+      }
+    }, {
+      "type": "source",
+      "label": "linkToSource",
+      "config": {
+        "sources": {
+          "metadataStore": {
+            "label": "linkToSource",
+            "params": {
+              "resourceType": ["dataset"],
+              "isTemplate": "n"
+            }
+          },
+          "remoteurl": {"multiple": false}
+        }
+      }
+    }, {
+      "type": "fcats",
+      "label": "linkToFeatureCatalog",
+      "config": {
+        "sources": {
+          "metadataStore": {
+            "label": "linkToFeatureCatalog",
+            "params": {
+              "resourceType": ["featureCatalog"],
+              "isTemplate": "n"
+            }
+          },
+          "remoteurl": {"multiple": false}
+        }
+      }
+    }, {
+      "type": "siblings",
+      "label": "linkToSibling",
+      "config": {
+        "sources": {
+          "metadataStore": {
+            "params": {
+              "isTemplate": "n"
+            }
+          },
+          "remoteurl": {"multiple": true}
+        }
+      }
     }
+    ]
   }
 }

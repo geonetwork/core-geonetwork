@@ -6,7 +6,7 @@
  <parent>
    <artifactId>gn-schemas</artifactId>
    <groupId>org.geonetwork-opensource.schemas</groupId>
-   <version>4.4.0-SNAPSHOT</version>
+   <version>4.4.7-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
@@ -68,6 +68,29 @@
           </execution>
         </executions>
       </plugin>
+
+      <plugin>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>sample-data</id>
+            <phase>compile</phase>
+            <configuration>
+              <!-- inline ant build target -->
+              <target>
+                 <mkdir dir="target/sample-data"/>
+                 <defaultexcludes add="**/.DS_Store"/>
+                 <zip destfile="target/sample-data/service_record.mef"
+                   basedir="src/main/plugin/iso19115-3.2018/sample-data/service_record"
+                   whenempty="create"
+                   excludes="**/.keepme"/>
+              </target>
+            </configuration>
+            <goals><goal>run</goal></goals>
+          </execution>
+        </executions>
+      </plugin>
+
 
       <plugin>
         <artifactId>maven-assembly-plugin</artifactId>

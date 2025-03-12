@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2023 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2024 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -27,10 +27,13 @@ import jeeves.server.sources.http.ServletPathFinder;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpEntityEnclosingRequest;
 import org.apache.http.HttpRequest;
+import org.apache.http.NameValuePair;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.utils.URIUtils;
+import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.entity.BufferedHttpEntity;
 import org.apache.http.entity.InputStreamEntity;
 import org.apache.http.impl.client.BasicCredentialsProvider;
@@ -47,6 +50,7 @@ import org.fao.geonet.repository.LinkRepository;
 import org.fao.geonet.repository.MetadataLinkRepository;
 import org.fao.geonet.repository.specification.LinkSpecs;
 import org.fao.geonet.utils.Log;
+import org.mitre.dsmiley.httpproxy.ProxyServlet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.SystemEnvironmentPropertySource;
 import org.springframework.http.HttpHeaders;
@@ -60,27 +64,53 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
+import java.util.stream.Collectors;
+
+import static org.apache.commons.lang3.StringUtils.isBlank;
 
 /**
  * This is a class extending the real proxy to make sure we can tweak specifics like removing the CSRF token on requests
  *
  * @author delawen
  */
-public class URITemplateProxyServlet extends org.mitre.dsmiley.httpproxy.URITemplateProxyServlet {
+public class URITemplateProxyServlet extends ProxyServlet {
     public static final String P_FORWARDEDHOST = "forwardHost";
     public static final String P_FORWARDEDHOSTPREFIXPATH = "forwardHostPrefixPath";
+    /* Rich:
+     * It might be a nice addition to have some syntax that allowed a proxy arg to be "optional", that is,
+     * don't fail if not present, just return the empty string or a given default. But I don't see
+     * anything in the spec that supports this kind of construct.
+     * Notionally, it might look like {?host:google.com} would return the value of
+     * the URL parameter "?hostProxyArg=somehost.com" if defined, but if not defined, return "google.com".
+     * Similarly, {?host} could return the value of hostProxyArg or empty string if not present.
+     * But that's not how the spec works. So for now we will require a proxy arg to be present
+     * if defined for this proxy URL.
+     */
+    protected static final Pattern TEMPLATE_PATTERN = Pattern.compile("\\{(.+?)\\}");
     private static final Logger LOGGER = Log.createLogger("URITemplateProxyServlet");
     private static final long serialVersionUID = 4847856943273604410L;
     private static final String P_SECURITY_MODE = "securityMode";
     private static final String P_IS_SECURED = "isSecured";
+    private static final String P_DISALLOW_HEADERS = "disallowHeaders";
 
     private static final String TARGET_URI_NAME = "targetUri";
+    private static final String P_EXCLUDE_HOSTS = "excludeHosts";
+    private static final String P_ALLOW_PORTS = "allowPorts";
+    private static final String ATTR_QUERY_STRING =
+        URITemplateProxyServlet.class.getSimpleName() + ".queryString";
+
+    protected List<String> disallowHeaders = new ArrayList<>();
 
     /*
      * These are the "hop-by-hop" headers that should not be copied.
      * http://www.w3.org/Protocols/rfc2616/rfc2616-sec13.html Overriding
-     * parent
+     * parent.
      */
     static {
         String[] headers = new String[]{
@@ -99,10 +129,24 @@ public class URITemplateProxyServlet extends org.mitre.dsmiley.httpproxy.URITemp
     protected String doForwardHostPrefixPath = "";
     protected boolean isSecured = false;
     protected SECURITY_MODE securityMode;
+    protected String targetUriTemplate;//has {name} parts
     @Autowired
     MetadataLinkRepository metadataLinkRepository;
     private String username;
     private String password;
+    // Regular expression pattern with the hosts to prevent access through the proxy
+    private Pattern excludeHostsPattern;
+    // Allowed ports allowed to access through the proxy
+    private Set<Integer> allowPorts = new HashSet<>(Arrays.asList(80, 443));
+
+    @Override
+    protected void copyRequestHeader(HttpServletRequest servletRequest, HttpRequest proxyRequest,
+                                     String headerName) {
+        if (disallowHeaders.contains(headerName)) {
+            return; // dont copy
+        }
+        super.copyRequestHeader(servletRequest,proxyRequest,headerName);
+    }
 
     /**
      * Init some properties from the servlet's init parameters. They try to be resolved the same way other GeoNetwork
@@ -130,6 +174,11 @@ public class URITemplateProxyServlet extends org.mitre.dsmiley.httpproxy.URITemp
      */
     @Override
     protected void initTarget() throws ServletException {
+        //parse the disallowHeaders
+        if (!isBlank(getConfigParam(P_DISALLOW_HEADERS))) {
+            disallowHeaders =  Arrays.asList(getConfigParam(P_DISALLOW_HEADERS).split(","));
+        }
+
         securityMode = SECURITY_MODE.parse(getConfigParam(P_SECURITY_MODE));
         String doForwardHostString = getConfigParam(P_FORWARDEDHOST);
         if (doForwardHostString != null) {
@@ -144,19 +193,19 @@ public class URITemplateProxyServlet extends org.mitre.dsmiley.httpproxy.URITemp
         targetUriTemplate = getConfigValue(TARGET_URI_NAME);
 
         // If not set externally try to use the value from web.xml
-        if (StringUtils.isBlank(targetUriTemplate)) {
-            super.initTarget();
+        if (isBlank(targetUriTemplate)) {
+            targetUriTemplate = getConfigParam(P_TARGET_URI);
+            if (targetUriTemplate == null) {
+                throw new ServletException(P_TARGET_URI + "  is required in web.xml or set externally");
+            }
         }
 
-        if (targetUriTemplate == null) {
-            throw new ServletException(P_TARGET_URI + " is required in web.xml or set externally");
-        }
 
         this.getServletContext().setAttribute(this.getServletName() + "." + P_TARGET_URI, targetUriTemplate);
 
         this.username = getConfigValue("username");
         this.password = getConfigValue("password");
-        if (StringUtils.isBlank(this.username)) {
+        if (isBlank(this.username)) {
             this.username = getConfigParam("username");
             this.password = getConfigParam("password");
         }
@@ -166,6 +215,29 @@ public class URITemplateProxyServlet extends org.mitre.dsmiley.httpproxy.URITemp
             isSecured = Boolean.parseBoolean(doIsSecured);
         }
 
+        String excludeHosts = getConfigValue(P_EXCLUDE_HOSTS);
+        if (isBlank(excludeHosts)) {
+            excludeHosts = getConfigParam(P_EXCLUDE_HOSTS);
+        }
+
+        if (StringUtils.isNotBlank(excludeHosts)) {
+            try {
+                this.excludeHostsPattern = Pattern.compile(excludeHosts);
+            } catch (PatternSyntaxException ex) {
+                throw new ServletException(P_EXCLUDE_HOSTS + " doesn't contain a valid regular expression");
+            }
+        }
+
+        String additionalAllowPorts = getConfigValue(P_ALLOW_PORTS);
+        if (isBlank(additionalAllowPorts)) {
+            additionalAllowPorts = getConfigParam(P_ALLOW_PORTS);
+        }
+
+        if (StringUtils.isNotBlank(additionalAllowPorts)) {
+            Set<Integer> validPorts = Arrays.stream(additionalAllowPorts.split("\\|"))
+                .filter(StringUtils::isNumeric).map(Integer::valueOf).collect(Collectors.toSet());
+            this.allowPorts.addAll(validPorts);
+        }
     }
 
     private String getConfigValue(String suffix) {
@@ -184,7 +256,7 @@ public class URITemplateProxyServlet extends org.mitre.dsmiley.httpproxy.URITemp
         result = resolveConfigValue(webappName + "." + getServletName() + "." + suffix);
 
 
-        if (StringUtils.isBlank(result)) {
+        if (isBlank(result)) {
             // GEONETWORK is the default prefix
 
             LOGGER.info(
@@ -346,9 +418,16 @@ public class URITemplateProxyServlet extends org.mitre.dsmiley.httpproxy.URITemp
     protected void service(HttpServletRequest servletRequest, HttpServletResponse servletResponse)
         throws ServletException, IOException {
 
+        // Check that the url host or port is not forbidden to access by the proxy
+        if (!isUrlAllowed(servletRequest)) {
+            String message = "The proxy does not allow to access to the provided URL.";
+            servletResponse.sendError(HttpServletResponse.SC_FORBIDDEN, message);
+            return;
+        }
+
         switch (securityMode) {
             case NONE:
-                super.service(servletRequest, servletResponse);
+                internalService(servletRequest, servletResponse);
                 break;
             case DB_LINK_CHECK:
                 boolean proxyCallAllowed = false;
@@ -362,6 +441,7 @@ public class URITemplateProxyServlet extends org.mitre.dsmiley.httpproxy.URITemp
                 } catch (SecurityException securityException) {
                     servletResponse.sendError(HttpServletResponse.SC_FORBIDDEN,
                         securityException.getMessage());
+                    return;
                 }
 
                 // Check if the link requested is in database link list
@@ -373,38 +453,158 @@ public class URITemplateProxyServlet extends org.mitre.dsmiley.httpproxy.URITemp
                             ApplicationContextHolder.get().getBean(LinkRepository.class);
                         long linksFound = linkRepository.count(
                             LinkSpecs.filter(host, null, null,
-                                null, null, null));
+                                null, null, null, false,null));
                         if (linksFound == 0) {
-                            String message = String.format(
-                                "The proxy does not allow to access '%s' " +
-                                    "because the URL host was not registered in any metadata records.",
-                                uri
-                            );
+                            String message = "The proxy does not allow to access the requested URI " +
+                                "because the URL host was not registered in any metadata records.";
                             if (linkRepository.count() == 0) {
-                                servletResponse.sendError(HttpServletResponse.SC_FORBIDDEN,
-                                    "The proxy is configured with DB_LINK_CHECK mode " +
-                                        "but the MetadataLink table is empty. " +
-                                        "Administrator may need to analyze record links from the admin console " +
-                                        "in order to register URL allowed by the proxy. " + message);
+                                message = "The proxy is configured with DB_LINK_CHECK mode " +
+                                    "but the MetadataLink table is empty. " +
+                                    "Administrator may need to analyze record links from the admin console " +
+                                    "in order to register URL allowed by the proxy.";
                             }
                             servletResponse.sendError(HttpServletResponse.SC_FORBIDDEN, message);
+                            return;
                         }
                         proxyCallAllowed = linksFound > 0;
                     } catch (URISyntaxException e) {
                         throw new IllegalArgumentException(String.format(
-                            "'%s' is invalid. Error is: '%s'",
-                            servletRequest.getParameter("url"),
+                            "The provided URL is invalid. Error is: '%s'",
                             e.getMessage()
                         ));
                     }
                 }
 
                 if (proxyCallAllowed) {
-                    super.service(servletRequest, servletResponse);
+                    internalService(servletRequest, servletResponse);
                 }
                 break;
         }
     }
+
+    private boolean isUrlAllowed(HttpServletRequest servletRequest) {
+        String url = servletRequest.getParameter("url");
+        if (isBlank(url)) {
+            return true;
+        }
+
+        try {
+            URI uri = new URI(url);
+
+            if (this.excludeHostsPattern != null) {
+                Matcher matcher = this.excludeHostsPattern.matcher(uri.getHost());
+
+                if (matcher.matches()) {
+                    return false;
+                }
+            }
+
+            int port = uri.getPort();
+
+            // Default port for the protocol has value -1
+            return (port == -1) || this.allowPorts.contains(port);
+        } catch (URISyntaxException e) {
+            throw new IllegalArgumentException(String.format(
+                "The provided URL is invalid. Error is: '%s'",
+                e.getMessage()
+            ));
+        }
+    }
+
+    /**
+     * Updated method from  {{@link org.mitre.dsmiley.httpproxy.URITemplateProxyServlet#service(HttpServletRequest, HttpServletResponse)}}
+     * to support a parameter repeated with different values. The original code doesn't support these cases:
+     * param1=value1&param1=value2&param1=value3
+     * <p>
+     * Example: when proxing Kibana requests like this failed using org.mitre.dsmiley.httpproxy.URITemplateProxyServlet:
+     * <p>
+     * http://localhost:8080/geonetwork/dashboards/api/index_patterns/_fields_for_wildcard?pattern=gn-records&
+     * meta_fields=_source&meta_fields=_id&meta_fields=_type&meta_fields=_index&meta_fields=_score
+     *
+     * @param servletRequest
+     * @param servletResponse
+     * @throws ServletException
+     * @throws IOException
+     */
+    private void internalService(HttpServletRequest servletRequest, HttpServletResponse servletResponse)
+        throws ServletException, IOException {
+        //First collect params
+        /*
+         * Do not use servletRequest.getParameter(arg) because that will
+         * typically read and consume the servlet InputStream (where our
+         * form data is stored for POST). We need the InputStream later on.
+         * So we'll parse the query string ourselves. A side benefit is
+         * we can keep the proxy parameters in the query string and not
+         * have to add them to a URL encoded form attachment.
+         */
+        String requestQueryString = servletRequest.getQueryString();
+        String queryString = "";
+        if (requestQueryString != null) {
+            queryString = "?" + requestQueryString;//no "?" but might have "#"
+        }
+        int hash = queryString.indexOf('#');
+        if (hash >= 0) {
+            queryString = queryString.substring(0, hash);
+        }
+        List<NameValuePair> pairs;
+        try {
+            //note: HttpClient 4.2 lets you parse the string without building the URI
+            pairs = URLEncodedUtils.parse(new URI(queryString), StandardCharsets.UTF_8);
+        } catch (URISyntaxException e) {
+            throw new ServletException("Unexpected URI parsing error on " + queryString, e);
+        }
+
+        LinkedHashMap<String, List<String>> params = new LinkedHashMap<>();
+        for (NameValuePair pair : pairs) {
+            params.computeIfAbsent(pair.getName(), k -> new ArrayList<>()).add(pair.getValue());
+        }
+
+        //Now rewrite the URL
+        StringBuilder urlBuf = new StringBuilder();//note: StringBuilder isn't supported by Matcher in Java < 9
+        Matcher matcher = TEMPLATE_PATTERN.matcher(targetUriTemplate);
+        while (matcher.find()) {
+            String arg = matcher.group(1);
+            List<String> replacementValues = params.remove(arg); //note we remove
+
+            if (replacementValues == null) {
+                throw new ServletException("Missing HTTP parameter " + arg + " to fill the template");
+            }
+            String replacement = String.join(",", replacementValues);
+            matcher.appendReplacement(urlBuf, replacement);
+        }
+        matcher.appendTail(urlBuf);
+        String newTargetUri = urlBuf.toString();
+        servletRequest.setAttribute(ATTR_TARGET_URI, newTargetUri);
+        URI targetUriObj;
+        try {
+            targetUriObj = new URI(newTargetUri);
+        } catch (Exception e) {
+            throw new ServletException("Rewritten targetUri is invalid: " + newTargetUri, e);
+        }
+        servletRequest.setAttribute(ATTR_TARGET_HOST, URIUtils.extractHost(targetUriObj));
+
+        //Determine the new query string based on removing the used names
+        StringBuilder newQueryBuf = new StringBuilder(queryString.length());
+        for (Map.Entry<String, List<String>> nameVal : params.entrySet()) {
+            for (String name : nameVal.getValue()) {
+                if (newQueryBuf.length() > 0)
+                    newQueryBuf.append('&');
+
+                newQueryBuf.append(nameVal.getKey()).append('=');
+                if (name != null)
+                    newQueryBuf.append(URLEncoder.encode(name, StandardCharsets.UTF_8));
+            }
+        }
+        servletRequest.setAttribute(ATTR_QUERY_STRING, newQueryBuf.toString());
+
+        super.service(servletRequest, servletResponse);
+    }
+
+    @Override
+    protected String rewriteQueryStringFromRequest(HttpServletRequest servletRequest, String queryString) {
+        return (String) servletRequest.getAttribute(ATTR_QUERY_STRING);
+    }
+
 
     private enum SECURITY_MODE {
         NONE,

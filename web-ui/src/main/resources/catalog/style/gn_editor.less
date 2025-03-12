@@ -34,6 +34,7 @@ select {
 
 .gn-editor-container {
   padding: 20px 5px;
+  overflow-anchor: none;
 }
 
 @media only screen and (max-width: @screen-xs-max) {
@@ -1022,4 +1023,19 @@ gn-bounding-polygon {
   .btn.btn-round {
     border-radius: 50% !important;
   }
+}
+
+#gn-editor-validation-panel {
+  button.inactive {
+    opacity: 0.65;
+  }
+}
+
+.file-drop-area {
+  padding: 10px;
+}
+
+.is-active {
+  background-color: #e2edf7;
+  border-radius: 3px;
 }

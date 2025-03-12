@@ -18,10 +18,15 @@ package org.fao.geonet.kernel.harvest.harvester.geoPREST;
 
 import java.text.ParseException;
 import java.util.Date;
+
+import org.apache.commons.lang3.SystemUtils;
 import org.fao.geonet.utils.Log;
 import org.junit.Assert;
 
+import org.junit.Ignore;
 import org.junit.Test;
+
+import static org.junit.Assume.assumeTrue;
 
 public class HarvesterTest
 {
@@ -30,6 +35,7 @@ public class HarvesterTest
     }
 
     @Test
+    @Ignore("see https://github.com/georchestra/geonetwork/pull/191#issuecomment-1014424757")
     public void testParseDate() throws Exception {
 
         Harvester h = new Harvester(null, Log.createLogger("TEST"), null, null);
@@ -46,6 +52,8 @@ public class HarvesterTest
      */
     @Test
     public void testJDK8136539Workaround() throws Exception {
+
+        assumeTrue(SystemUtils.IS_JAVA_1_8);
 
         Harvester h = new Harvester(null, Log.createLogger("TEST"), null, null);
         Date p0 = h.parseDate("Fr, 24 Mär 2017 10:58:59 +0100");

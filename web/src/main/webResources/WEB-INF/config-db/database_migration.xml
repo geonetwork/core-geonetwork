@@ -21,15 +21,7 @@
   ~ Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
   ~ Rome - Italy. email: geonetwork@osgeo.org
   -->
-
-<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:util="http://www.springframework.org/schema/util"
-       default-lazy-init="true"
-       xmlns="http://www.springframework.org/schema/beans"
-       xsi:schemaLocation="
-		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
-	">
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util" xmlns="http://www.springframework.org/schema/beans" default-lazy-init="true" xsi:schemaLocation="   http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd   http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd  ">
   <bean id="database-migration-bean" class="org.fao.geonet.DatabaseMigration">
     <property name="migration" ref="migrationMap"/>
     <property name="initAfter" value="javax.sql.DataSource"/>
@@ -40,11 +32,7 @@
     <property name="initAfter" value="org.springframework.orm.jpa.JpaTransactionManager"/>
     <property name="dbMigrationOnStartup" value="\${db.migration_onstartup}"/>
   </bean>
-
-  <util:map id="migrationMap"
-            map-class="java.util.LinkedHashMap"
-            key-type="java.lang.String"
-            value-type="java.util.List">
+  <util:map id="migrationMap" map-class="java.util.LinkedHashMap" key-type="java.lang.String" value-type="java.util.List">
     <entry key="2.4.3">
       <list>
         <value>WEB-INF/classes/setup/sql/migrate/v243/migrate-</value>
@@ -166,12 +154,7 @@
       </list>
     </entry>
   </util:map>
-
-
-  <util:map id="dataMigrationMap"
-            map-class="java.util.LinkedHashMap"
-            key-type="java.lang.String"
-            value-type="java.util.List">
+  <util:map id="dataMigrationMap" map-class="java.util.LinkedHashMap" key-type="java.lang.String" value-type="java.util.List">
     <entry key="3.0.3">
       <list>
         <value>WEB-INF/classes/setup/sql/migrate/v303/migrate-</value>
@@ -316,7 +299,7 @@
       <list>
         <value>java:v402.SetSequenceValueToMaxOfMessageProducerEntity</value>
         <value>WEB-INF/classes/setup/sql/migrate/v402/migrate-</value>
-<!--
+        <!--
         <value>java:v402.DateTimeMigrationTask</value>
 -->
       </list>
@@ -384,6 +367,42 @@
     <entry key="4.4.0">
       <list>
         <value>WEB-INF/classes/setup/sql/migrate/v440/migrate-</value>
+      </list>
+    </entry>
+    <entry key="4.4.1">
+      <list>
+        <value>WEB-INF/classes/setup/sql/migrate/v441/migrate-</value>
+      </list>
+    </entry>
+    <entry key="4.4.2">
+      <list>
+        <value>WEB-INF/classes/setup/sql/migrate/v442/migrate-</value>
+      </list>
+    </entry>
+    <entry key="4.4.3">
+      <list>
+        <value>WEB-INF/classes/setup/sql/migrate/v443/migrate-</value>
+      </list>
+    </entry>
+    <entry key="4.4.4">
+      <list>
+        <value>WEB-INF/classes/setup/sql/migrate/v444/migrate-</value>
+      </list>
+    </entry>
+    <entry key="4.4.5">
+      <list>
+        <value>java:v445.DoiServerDatabaseMigration</value>
+        <value>WEB-INF/classes/setup/sql/migrate/v445/migrate-</value>
+      </list>
+    </entry>
+    <entry key="4.4.6">
+      <list>
+        <value>WEB-INF/classes/setup/sql/migrate/v446/migrate-</value>
+      </list>
+    </entry>
+    <entry key="4.4.7">
+      <list>
+        <value>WEB-INF/classes/setup/sql/migrate/v447/migrate-</value>
       </list>
     </entry>
   </util:map>

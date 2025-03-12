@@ -8,7 +8,7 @@
                   xmlns:mrd="http://standards.iso.org/iso/19115/-3/mrd/1.0"
                   xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0"
                   xmlns:mri="http://standards.iso.org/iso/19115/-3/mri/1.0"
-                  xmlns:srv="http://standards.iso.org/iso/19115/-3/srv/2.1"
+                  xmlns:srv="http://standards.iso.org/iso/19115/-3/srv/2.0"
                   xmlns:xs="http://www.w3.org/2001/XMLSchema"
                   xmlns:geonet="http://www.fao.org/geonetwork"
                   xmlns:util="java:org.fao.geonet.util.XslUtil"
@@ -88,7 +88,8 @@
          merge="mri:defaultLocaleCode"/>
     <tag name="mri:graphicOverview" context="mri:MD_DataIdentification|srv:SV_ServiceIdentification"
          groupBy="*/mcc:fileName/*/text()"
-         merge="."/>
+         merge="."
+         limit="1"/>
     <tag name="mri:spatialRepresentationType" context="mri:MD_DataIdentification|srv:SV_ServiceIdentification"
          groupBy="mcc:MD_SpatialRepresentationTypeCode/@codeListValue"
          merge="mri:spatialRepresentationType"/>

@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2023 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2024 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -22,6 +22,7 @@
 //==============================================================================
 package org.fao.geonet.doi.client;
 
+import com.google.common.base.Function;
 import com.google.common.io.CharStreams;
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.io.IOUtils;
@@ -31,11 +32,18 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.BasicCredentialsProvider;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicHeader;
+import org.fao.geonet.ApplicationContextHolder;
+import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.lib.Lib;
 import org.fao.geonet.utils.GeonetHttpRequestFactory;
 import org.fao.geonet.utils.Log;
 import org.springframework.http.client.ClientHttpResponse;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.io.InputStreamReader;
 
 import static org.fao.geonet.doi.client.DoiSettings.LOGGER_NAME;
@@ -62,6 +70,7 @@ public class BaseDoiClient {
 
             postMethod = new HttpPost(url);
 
+
             ((HttpUriRequest) postMethod).addHeader( new BasicHeader("Content-Type",  contentType + ";charset=UTF-8") );
             Log.debug(LOGGER_NAME, "   -- Request body: " + body);
 
@@ -72,9 +81,8 @@ public class BaseDoiClient {
 
             postMethod.setEntity(requestEntity);
 
-            httpResponse = requestFactory.execute(
-                postMethod,
-                new UsernamePasswordCredentials(username, password), AuthScope.ANY);
+            httpResponse = executeRequest(postMethod);
+
             int status = httpResponse.getRawStatusCode();
 
             Log.debug(LOGGER_NAME, "   -- Request status code: " + status);
@@ -86,14 +94,22 @@ public class BaseDoiClient {
                     url, body, status,
                     httpResponse.getStatusText(), responseBody);
                 Log.info(LOGGER_NAME, message);
-                throw new DoiClientException(message);
+                throw new DoiClientException(String.format(
+                    "Error creating DOI: %s",
+                    message))
+                    .withMessageKey("exception.doi.serverErrorCreate")
+                    .withDescriptionKey("exception.doi.serverErrorCreate.description", new String[]{message});
             } else {
                 Log.info(LOGGER_NAME, String.format(
                     successMessage, url));
             }
         } catch (Exception ex) {
-            Log.error(LOGGER_NAME, "   -- Error (exception): " + ex.getMessage());
-            throw new DoiClientException(ex.getMessage());
+            Log.error(LOGGER_NAME, "   -- Error (exception): " + ex.getMessage(), ex);
+            throw new DoiClientException(String.format(
+                "Error creating DOI: %s",
+                ex.getMessage()))
+                .withMessageKey("exception.doi.serverErrorCreate")
+                .withDescriptionKey("exception.doi.serverErrorCreate.description", new String[]{ex.getMessage()});
 
         } finally {
             if (postMethod != null) {
@@ -116,9 +132,8 @@ public class BaseDoiClient {
 
             getMethod = new HttpGet(url);
 
+            httpResponse = executeRequest(getMethod);
 
-            httpResponse = requestFactory.execute(getMethod,
-                new UsernamePasswordCredentials(username, password), AuthScope.ANY);
             int status = httpResponse.getRawStatusCode();
 
             Log.debug(LOGGER_NAME, "   -- Request status code: " + status);
@@ -132,13 +147,24 @@ public class BaseDoiClient {
             } else {
                 Log.info(LOGGER_NAME, "Retrieve DOI metadata end -- Error: " + httpResponse.getStatusText());
 
-                throw new DoiClientException( httpResponse.getStatusText() +
-                    CharStreams.toString(new InputStreamReader(httpResponse.getBody())));
+                String message = httpResponse.getStatusText() +
+                    CharStreams.toString(new InputStreamReader(httpResponse.getBody()));
+
+                throw new DoiClientException(String.format(
+                    "Error retrieving DOI: %s",
+                    message))
+                    .withMessageKey("exception.doi.serverErrorRetrieve")
+                    .withDescriptionKey("exception.doi.serverErrorRetrieve.description", new String[]{message});
+
             }
 
         } catch (Exception ex) {
-            Log.error(LOGGER_NAME, "   -- Error (exception): " + ex.getMessage());
-            throw new DoiClientException(ex.getMessage());
+            Log.error(LOGGER_NAME, "   -- Error (exception): " + ex.getMessage(), ex);
+            throw new DoiClientException(String.format(
+                "Error retrieving DOI: %s",
+                ex.getMessage()))
+                .withMessageKey("exception.doi.serverErrorRetrieve")
+                .withDescriptionKey("exception.doi.serverErrorRetrieve.description", new String[]{ex.getMessage()});
 
         } finally {
             if (getMethod != null) {
@@ -147,5 +173,27 @@ public class BaseDoiClient {
             // Release the connection.
             IOUtils.closeQuietly(httpResponse);
         }
+    }
+
+
+    protected ClientHttpResponse executeRequest(HttpUriRequest method) throws Exception {
+        final String requestHost = method.getURI().getHost();
+
+        final Function<HttpClientBuilder, Void> requestConfiguration = new Function<HttpClientBuilder, Void>() {
+            @Nullable
+            @Override
+            public Void apply(@Nonnull HttpClientBuilder input) {
+                final BasicCredentialsProvider credentialsProvider = new BasicCredentialsProvider();
+                credentialsProvider.setCredentials(AuthScope.ANY, new UsernamePasswordCredentials(username, password));
+                input.setDefaultCredentialsProvider(credentialsProvider);
+
+                Lib.net.setupProxy(ApplicationContextHolder.get().getBean(SettingManager.class), input, requestHost);
+                input.useSystemProperties();
+
+                return null;
+            }
+        };
+
+        return requestFactory.execute(method, requestConfiguration);
     }
 }

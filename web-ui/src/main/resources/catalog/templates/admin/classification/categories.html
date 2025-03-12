@@ -32,14 +32,14 @@
             ng-class="{ 'active': c === categorySelected }"
             data-ng-click="selectCategory(c)"
           >
-            <span class="fa gn-icon-{{c.name}}"></span>
+            <span class="fa fa-fw gn-icon-{{c.name}}"></span>
             {{c.label[lang]}}</a
           >
           <span
             data-gn-pagination-list=""
             data-items="categories | filter:categorySearch"
             data-cache="categories"
-          />
+          ></span>
         </div>
 
         <!-- Add new button  -->
@@ -48,7 +48,7 @@
           class="btn btn-success btn-block"
           data-ng-click="addCategory()"
         >
-          <i class="fa fa-plus" />
+          <i class="fa fa-plus"></i>
           <span data-translate="">newCategory</span>
         </button>
       </div>
@@ -74,7 +74,7 @@
             <button
               type="button"
               class="btn btn-primary pull-right"
-              data-ng-disabled="!gnCategoryFrom.$dirty"
+              data-ng-disabled="!gnCategoryFrom.$valid || !gnCategoryFrom.$dirty"
               data-ng-click="saveCategory()"
             >
               <span class="fa fa-save"></span> {{"saveCategory"|translate}}
@@ -91,8 +91,10 @@
         </div>
         <div class="panel-body">
           <fieldset>
-            <label data-translate="" class="col-lg-2 control-label">categoryName</label>
-            <div class="col-lg-10">
+            <div
+              data-ng-class="gnCategoryFrom.name.$error.required || gnCategoryFrom.name.$error.maxlength ? 'has-error' : ''"
+            >
+              <label data-translate="" class="control-label">categoryName</label>
               <input
                 type="text"
                 id="categoryname"
@@ -100,7 +102,17 @@
                 class="form-control"
                 autofocus=""
                 data-ng-model="categorySelected.name"
+                data-ng-required="true"
+                data-ng-maxlength="255"
               />
+              <p class="help-block">
+                <span
+                  class="error"
+                  data-ng-show="gnCategoryFrom.name.$error.maxlength"
+                  data-translate=""
+                  >categoryNameMaxlength</span
+                >
+              </p>
             </div>
           </fieldset>
 

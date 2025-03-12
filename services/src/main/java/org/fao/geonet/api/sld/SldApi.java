@@ -1,5 +1,8 @@
 package org.fao.geonet.api.sld;
 
+import static org.fao.geonet.api.ApiParams.API_CLASS_TOOLS_OPS;
+import static org.fao.geonet.api.ApiParams.API_CLASS_TOOLS_TAG;
+
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jeeves.transaction.TransactionManager;
@@ -21,7 +24,7 @@ import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.opengis.filter.Filter;
+import org.geotools.api.filter.Filter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -47,8 +50,8 @@ import java.util.Optional;
 @RequestMapping(value = {
     "/{portal}/api/tools/ogc"
 })
-@Tag(name = "tools",
-    description = "Utility operations")
+@Tag(name = API_CLASS_TOOLS_TAG,
+    description = API_CLASS_TOOLS_OPS)
 public class SldApi {
 
     public static final String LOGGER = Geonet.GEONETWORK + ".api.sld";

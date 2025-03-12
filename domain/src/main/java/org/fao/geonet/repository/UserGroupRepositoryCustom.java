@@ -31,6 +31,7 @@ import javax.persistence.metamodel.SingularAttribute;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Custom methods for loading {@link UserGroup} entities.
@@ -61,4 +62,13 @@ public interface UserGroupRepositoryCustom {
      * @return the number of entities deleted
      */
     int deleteAllByIdAttribute(SingularAttribute<UserGroupId, Integer> idAttribute, Collection<Integer> ids);
+
+    /**
+     * Update user with the new list of {@link UserGroup}. 
+     * If the user already has all the groups specified then no change will be made.
+     *
+     * @param userId        user id to have the groups updated
+     * @param newUserGroups the {@link UserGroup} to set
+     */
+    void updateUserGroups(int userId, Set<UserGroup> newUserGroups);
 }
