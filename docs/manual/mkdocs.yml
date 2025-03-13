@@ -334,6 +334,8 @@ nav:
         - administrator-guide/managing-metadata-standards/configure-validation.md
         - administrator-guide/managing-metadata-standards/metadata-identifier.md
         - administrator-guide/managing-metadata-standards/standards.md
+      - 'Plugins':
+        - administrator-guide/plugins/plugins.md
 
   - 'Maintainer Guide':
       - maintainer-guide/index.md
