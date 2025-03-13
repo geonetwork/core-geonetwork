@@ -9,6 +9,7 @@ import org.fao.geonet.domain.SourceType;
 import org.fao.geonet.repository.SourceRepository;
 import org.fao.geonet.utils.Log;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -34,6 +35,11 @@ public class DatahubController {
 
     @Autowired
     SourceRepository sourceRepository;
+
+    @GetMapping("/datahub/status")
+    public ResponseEntity<Void> getDatahubStatus() {
+        return ResponseEntity.ok().build();
+    }
 
     @GetMapping("/datahub")
     public RedirectView redirectDatahub(HttpServletRequest request, HttpServletResponse response) {

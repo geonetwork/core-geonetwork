@@ -1542,7 +1542,8 @@
     "userHistoryFieldUnset": "Field '{{fieldName}}' unset",
     "noUserHistory": "No user history available",
     "datahubConfiguration": "DataHub configuration",
-    "sourceDatahubConfiguration-help": "\nYou can configure the datahub settings here. For this you can use the documentation available here: <a href='https://geonetwork.github.io/geonetwork-ui/main/docs/guide/configure.html'>Configure GeoNetwork-UI</a>. You can leave this configuration empty, in this case the default configuration will be used.",
-    "datahubEnabled": "Enable DataHub"
+    "sourceDatahubConfiguration-help": "You can configure the datahub settings here. For this you can use the documentation available here: <a href='https://geonetwork.github.io/geonetwork-ui/main/docs/guide/configure.html'>Configure GeoNetwork-UI</a>. You can leave this configuration empty, in this case the default configuration will be used.",
+    "datahubEnabled": "Enable DataHub",
+    "datahubPluginNotInstalled-help": "The datahub plugin is not installed. Please install the plugin to use this feature. Please refer to this documentation for more information: <a href='https://geonetwork.github.io/geonetwork-ui/main/docs/guide/configure.html'>Configure GeoNetwork-UI</a>.",
 }
 

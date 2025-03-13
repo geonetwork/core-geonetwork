@@ -236,17 +236,22 @@
             <div>
               <label data-translate="">datahubEnabled</label>
               <input
+                data-ng-disabled="!datahubAvailable"
                 type="checkbox"
                 name="datahubEnabled"
-                id="datahubEnabled"
+                id="datahubEnabled1"
                 data-ng-model="source.datahubEnabled"
               />
             </div>
-            <div>
+            <div ng-if="datahubAvailable">
               <label data-translate="">datahubConfiguration</label>
               <gn-toml-edit model="source.datahubConfiguration"></gn-toml-edit>
+              <p class="help-block" data-translate="">sourceDatahubConfiguration-help</p>
             </div>
-            <p class="help-block" data-translate="">sourceDatahubConfiguration-help</p>
+            <div ng-if="!datahubAvailable" class="alert alert-warning">
+              <i class="fa fa-exclamation-triangle"></i>
+              <span data-translate="">datahubPluginNotInstalled-help</span>
+            </div>
             <div>
               <label data-translate="">sourceLogo</label>
 

@@ -87,7 +87,16 @@
         },
         true
       );
-
+      function loadDatahubStatus() {
+        $http
+          .get("../datahub/status")
+          .then(function () {
+            $scope.datahubAvailable = true;
+          })
+          .catch(function () {
+            $scope.datahubAvailable = false;
+          });
+      }
       function loadSources() {
         var url = "../api/sources";
         if ($scope.user.profile === "UserAdmin") {
@@ -300,8 +309,10 @@ background_color = "#fdfbff"
           $scope.clear(item);
         });
       });
+      $scope.datahubAvailable = false;
 
       loadSources();
+      loadDatahubStatus();
       loadUiConfigurations();
     }
   ]);
