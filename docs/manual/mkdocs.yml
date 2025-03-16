@@ -334,8 +334,6 @@ nav:
         - administrator-guide/managing-metadata-standards/configure-validation.md
         - administrator-guide/managing-metadata-standards/metadata-identifier.md
         - administrator-guide/managing-metadata-standards/standards.md
-      - 'Plugins':
-        - administrator-guide/plugins/plugins.md
 
   - 'Maintainer Guide':
       - maintainer-guide/index.md
@@ -347,6 +345,7 @@ nav:
             - install-guide/installing-from-war-file.md
             - install-guide/installing-with-docker.md
             - install-guide/installing-from-source-code.md
+            - install-guide/plugins.md
           - 'Configuration':
             - install-guide/configuring-database.md
             - install-guide/customizing-data-directory.md
