@@ -97,11 +97,7 @@
       <li role="menuitem" class="dropdown-header" data-ng-show="isMdWorkflowEnable">
         <span data-translate="">workflow</span>
       </li>
-      <li
-        data-ng-if="isMdWorkflowEnable
-                    && user.canEditRecord(md)
-                    && !md.isWorkflowEnabled()"
-      >
+      <li data-ng-if="displayEnableWorkflowOption(user)">
         <a
           role="menuitem"
           href=""

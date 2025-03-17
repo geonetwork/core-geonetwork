@@ -146,7 +146,11 @@
           scope.doiServers = [];
 
           gnConfigService.load().then(function (c) {
+            // Get the "is metadata workflow enabled" setting
             scope.isMdWorkflowEnable = gnConfig["metadata.workflow.enable"];
+            // Get the workflow group matching regex setting
+            scope.workflowGroupMatchingRegex =
+              gnConfig["metadata.workflow.draftWhenInGroup"];
 
             scope.isMdWorkflowAssistEnable =
               gnGlobalSettings.gnCfg.mods.workflowHelper.enabled;
@@ -283,6 +287,35 @@
             );
           };
 
+          /**
+           * Can workflow be enabled for this metadata record and user?
+           *
+           * Checks:
+           *  - Workflow is enabled in the configuration.
+           *  - The metadata record is not null.
+           *  - The metadata record does not have workflow enabled.
+           *  - The user is logged in.
+           *  - The user is an admin or can edit the metadata record.
+           *  - The metadata record has a group owner.
+           *  - The group matching regex is set.
+           *  - The group owner name matches the group matching regex.
+           *
+           * @param user The user who wants to enable the workflow
+           * @returns {boolean} True if the workflow can be enabled, false otherwise
+           */
+          scope.displayEnableWorkflowOption = function (user) {
+            return (
+              scope.isMdWorkflowEnable &&
+              scope.md &&
+              !scope.md.isWorkflowEnabled() &&
+              user.id &&
+              (user.isAdmin() || user.canEditRecord(scope.md)) &&
+              scope.ownerGroupName &&
+              scope.workflowGroupMatchingRegex &&
+              scope.ownerGroupName.match(scope.workflowGroupMatchingRegex)
+            );
+          };
+
           loadTasks();
           loadWorkflowStatus();
 
@@ -295,6 +328,16 @@
                 .then(function (response) {
                   scope.doiServers = response.data;
                 });
+              if (scope.md.groupOwner) {
+                // Load the group owner name when the metadata record changes
+                $http
+                  .get("../api/groups/" + scope.md.groupOwner, { cache: true })
+                  .then(function (response) {
+                    if (response.data.name) {
+                      scope.ownerGroupName = response.data.name;
+                    }
+                  });
+              }
             }
           });
 
