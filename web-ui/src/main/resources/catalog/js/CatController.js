@@ -2042,6 +2042,17 @@
                     }
                     return false;
                   };
+                  me["is" + profile + "OrMoreForGroup"] = function (groupId) {
+                    if ("Administrator" == profile) {
+                      return me.admin;
+                    }
+                    var allowedProfiles = $scope.profiles.slice(
+                      $scope.profiles.indexOf(profile)
+                    );
+                    return allowedProfiles.some((p) =>
+                      me["is" + p + "ForGroup"](groupId)
+                    );
+                  };
                 });
                 angular.extend($scope.user, me);
                 angular.extend($scope.user, userFn);
