@@ -1540,5 +1540,8 @@
     "userHistoryFieldUpdate": "Feld „{{fieldName}}“ von „{{oldValue}}“ in „{{newValue}}“ geändert",
     "userHistoryFieldSet": "Feld '{{fieldName}}' gesetzt auf '{{newValue}}'",
     "userHistoryFieldUnset": "Feld '{{fieldName}}' nicht gesetzt / zurück gesetzt",
-    "noUserHistory": "Keine Benutzer-Historie verfügbar"
+    "noUserHistory": "Keine Benutzer-Historie verfügbar",
+    "datahubConfiguration": "DataHub configuration",
+    "sourceDatahubConfiguration-help": "You can configure the datahub settings here. For this you can use the documentation available here: <a href='https://geonetwork.github.io/geonetwork-ui/main/docs/guide/configure.html'>Configure GeoNetwork-UI</a>. You can leave this configuration empty, in this case the default configuration will be used.",
+    "datahubEnabled": "Enable DataHub"
 }
