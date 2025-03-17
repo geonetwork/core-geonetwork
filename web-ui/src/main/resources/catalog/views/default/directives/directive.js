@@ -288,6 +288,55 @@
           };
 
           /**
+           * Checks if the workflow option for the specified step should be displayed for the given user.
+           *
+           * Checks:
+           * - The user is logged in.
+           * - The metadata record is not null.
+           * - The user can edit the metadata record.
+           * - The metadata record has a group owner.
+           * - The user is an admin or is an editor or more for the group owner.
+           * - The metadata record has a status.
+           * - The step has a 'from' status.
+           * - The 'from' status of the step exists in the status object.
+           * - The 'from' status of the step matches the status of the metadata record.
+           * - Workflow is enabled in the configuration.
+           * - The metadata record has workflow enabled.
+           *
+           * @param {Object} step - The workflow step to check.
+           * @param {Object} user - The user for whom the check is being performed.
+           * @returns {boolean} - True if the workflow option should be displayed, false otherwise.
+           */
+          scope.displayWorkflowStepOption = function (step, user) {
+            return (
+              user.id &&
+              scope.md &&
+              user.canEditRecord(scope.md) &&
+              scope.md.groupOwner &&
+              (user.isAdmin() || user.isEditorOrMoreForGroup(scope.md.groupOwner)) &&
+              scope.md.mdStatus &&
+              scope.status &&
+              step.from &&
+              scope.status[step.from] &&
+              scope.md.mdStatus == scope.status[step.from] &&
+              scope.isMdWorkflowEnable &&
+              scope.md.isWorkflowEnabled()
+            );
+          };
+
+          /**
+           * Retrieves the workflow status effects for the given user based on their role.
+           *
+           * @param {Object} user - The user for whom the workflow status effects are being retrieved.
+           * @returns {Array} - An array of workflow status effects applicable to the user.
+           */
+          scope.getStatusEffects = function (user) {
+            const isReviewer =
+              user.isAdmin() || user.isReviewerForGroup(scope.md.groupOwner);
+            return scope.statusEffects[isReviewer ? "reviewer" : "editor"];
+          };
+
+          /**
            * Can workflow be enabled for this metadata record and user?
            *
            * Checks:
