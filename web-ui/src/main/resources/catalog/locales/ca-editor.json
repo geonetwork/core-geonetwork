@@ -165,7 +165,7 @@
     "linkToParentTitle": "Enllaça una metadada pare a l'actual metadada",
     "linkToService": "Enllaça a un servei",
     "linkToServiceTitle": "Enllaça un servei a l'actual metadada",
-    "linkToSibling": "Enllaça a altres recursos",
+    "linkToSibling": "Link to records",
     "linkToSiblingTitle": "Enllaça un altre recurs a l'actual metadada",
     "linkToSource": "Enllaça a un conjunt de dades font",
     "linkToSourceTitle": "Enllaça un conjunt de dades font a l'actual metadada",
@@ -427,5 +427,10 @@
     "confirmCancelEdit": "Do you want to cancel all changes and close the editor?",
     "allowEditGroupMembers": "Allow group editors to edit",
     "wmsSelectedLayers": "Selected layers",
-    "wmsSelectedLayersNone": "No layers selected"
+    "wmsSelectedLayersNone": "No layers selected",
+    "validationSuccessLabel": "success",
+    "validationErrorLabel": "errors",
+    "metadataDuplicatedField-title": "The metadata title is used in another metadata record.",
+    "metadataDuplicatedField-altTitle": "The metadata alternate title is used in another metadata record.",
+    "metadataDuplicatedField-identifier": "The metadata resource identifier is used in another metadata record."
 }

@@ -165,7 +165,7 @@
     "linkToParentTitle": "Linkitä ylämetatietodokumentti tähän metatietoon",
     "linkToService": "Linkki palveluun",
     "linkToServiceTitle": "Linkitä palvelu tähän metatietoon",
-    "linkToSibling": "Linkki muihin resursseihin",
+    "linkToSibling": "Link to records",
     "linkToSiblingTitle": "Linkitä resurssi tähän metatietoon",
     "linkToSource": "Linkki lähdeaineistoon",
     "linkToSourceTitle": "Linkitä lähdeaineisto tähän metatietoon",
@@ -427,5 +427,10 @@
     "confirmCancelEdit": "Do you want to cancel all changes and close the editor?",
     "allowEditGroupMembers": "Allow group editors to edit",
     "wmsSelectedLayers": "Selected layers",
-    "wmsSelectedLayersNone": "No layers selected"
+    "wmsSelectedLayersNone": "No layers selected",
+    "validationSuccessLabel": "success",
+    "validationErrorLabel": "errors",
+    "metadataDuplicatedField-title": "The metadata title is used in another metadata record.",
+    "metadataDuplicatedField-altTitle": "The metadata alternate title is used in another metadata record.",
+    "metadataDuplicatedField-identifier": "The metadata resource identifier is used in another metadata record."
 }

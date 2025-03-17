@@ -365,7 +365,8 @@
     "shareOnLinkedIn": "Dela på LinkedIn",
     "shareByEmail": "Dela via e-post",
     "zoomto": "Zooma till",
-    "recordNotFound": "Posten med identifieraren <strong>{{uuid}}</strong> hittades inte eller delas inte med dig. Försök att <a href=\"catalog.signin?redirect={{url}}\">logga in</a> om du har ett konto.",
+    "recordNotFound": "Posten med identifieraren <strong>{{uuid}}</strong> hittades inte eller delas inte med dig.",
+    "trySignIn": "Try <a href=\"{{signInFormAction}}?_csrf={{csrf}}&redirectUrl={{redirectUrlAfterSign}}\">to log in</a> if you have an account.",
     "intersectWith": "Korsar",
     "fullyOutsideOf": "Helt utanför",
     "encloses": "Omsluter",
@@ -545,12 +546,5 @@
     "fieldEmailNotValid": "En giltig emailadress krävs",
     "addLayerPrefix": "Add layer",
     "addLayerPostfix": "to the map",
-    "submit": "Inlämna",
-    "indexingErrorMsg-invalidBounds": "Warning / Field resourceTemporalDateRange / Lower and upper bounds empty or not valid dates. Date range not indexed.",
-    "indexingErrorMsg-invalidDateFormat": "Warning / Date {{dateType}} with value '{{date}}' was not a valid date format.",
-    "indexingErrorMsg-keywordNotFoundInThesaurus": "Warning / Keyword {{keyword}} not found in {{thesaurus}}.",
-    "indexingErrorMsg-temporalDateRangeLowerGreaterThanUpper": "Warning / Field resourceTemporalDateRange / Lower range bound {{lowerBound}} can not be greater than upper bound {{upperBound}}. Date range not indexed.",
-    "indexingErrorMsg-temporalRangeLowerGreaterThanUpper": "Warning / Field resourceTemporalDateRange / Lower range bound {{lowerBound}} can not be greater than upper bound {{upperBound}}.",
-    "indexingErrorMsg-schemaNotRegistered": "Record {{record}} / Schema '{{schema}}' is not registered in this catalog. Install it or remove those records. Record is indexed indexing error flag.",
-    "indexingErrorMsg-indexingStyleSheetError": "Indexing stylesheet contains errors: {{message}} \n  Marking the metadata as _indexingError=1 in index."
+    "submit": "Inlämna"
 }

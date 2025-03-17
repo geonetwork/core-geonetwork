@@ -165,7 +165,7 @@
     "linkToParentTitle": "Verbinde einen Eltern-Metadatensatz mit dem aktuellen Metadatensatz",
     "linkToService": "Mit einem Service verlinken",
     "linkToServiceTitle": "Verbinde einen Dienst mit dem aktuellen Metadatensatz",
-    "linkToSibling": "Link zu übergeordnetem Datensatz erstellen",
+    "linkToSibling": "Link zu Datensätzen",
     "linkToSiblingTitle": "Verlinke eine Resource mit dem aktuellen Metadatensatz",
     "linkToSource": "Mit dem Herkunfts-Datensatz verlinken",
     "linkToSourceTitle": "Verlinke einen Ursprungsdatensatz mit dem aktuellen Metadatensatz",
@@ -427,5 +427,10 @@
     "confirmCancelEdit": "Möchtest du alle Änderungen abbrechen und den Editor schließen?",
     "allowEditGroupMembers": "Bearbeitung für Gruppeneditoren erlauben",
     "wmsSelectedLayers": "Ausgewählte Ebenen",
-    "wmsSelectedLayersNone": "Keine Ebenen ausgewählt"
+    "wmsSelectedLayersNone": "Keine Ebenen ausgewählt",
+    "validationSuccessLabel": "erfolgreich",
+    "validationErrorLabel": "Fehler",
+    "metadataDuplicatedField-title": "Der Metadatentitel wird bereits in einem anderen Metadatensatz verwendet.",
+    "metadataDuplicatedField-altTitle": "Der Kurz-Titel (Alternativtitel) wird bereits in einem anderen Metadatensatz verwendet.",
+    "metadataDuplicatedField-identifier": "Der Ressourcenidentifikator (MD_Identifier/code) wird bereits in einem anderen Metadatensatz verwendet."
 }
