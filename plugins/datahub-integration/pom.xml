@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (C) 2001-2023 Food and Agriculture Organization of the
+  ~ United Nations (FAO-UN), United Nations World Food Programme (WFP)
+  ~ and United Nations Environment Programme (UNEP)
+  ~
+  ~ This program is free software; you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation; either version 2 of the License, or (at
+  ~ your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful, but
+  ~ WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+  ~ General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program; if not, write to the Free Software
+  ~ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
+  ~
+  ~ Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
+  ~ Rome - Italy. email: geonetwork@osgeo.org
+  -->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <parent>
+    <artifactId>geonetwork</artifactId>
+    <groupId>org.geonetwork-opensource</groupId>
+    <version>4.4.7-SNAPSHOT</version>
+    <relativePath>../../pom.xml</relativePath>
+  </parent>
+  <modelVersion>4.0.0</modelVersion>
+
+
+  <groupId>org.geonetwork-opensource.plugins</groupId>
+  <artifactId>gn-datahub-integration</artifactId>
+  <name>GeoNetwork Datahub integration</name>
+  <packaging>jar</packaging>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.geonetwork-opensource</groupId>
+      <artifactId>gn-core</artifactId>
+      <version>${project.version}</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-context</artifactId>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-context-support</artifactId>
+      <scope>provided</scope>
+    </dependency>
+  </dependencies>
+
+  <profiles>
+    <profile>
+      <id>datahub-integration</id>
+      <activation>
+        <property>
+          <!-- include when making a release -->
+          <name>release</name>
+        </property>
+      </activation>
+    </profile>
+  </profiles>
+
+  <properties>
+    <geonetwork-ui.git.branch>main</geonetwork-ui.git.branch>
+    <rootProjectDir>../..</rootProjectDir>
+  </properties>
+
+  <build>
+    <plugins>
+      <!-- Git clone geonetwork-ui -->
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+        <version>3.3.0</version>
+        <executions>
+          <execution>
+            <id>delete-existing</id>
+            <phase>initialize</phase>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+            <configuration>
+              <executable>rm</executable>
+              <arguments>
+                <argument>-rf</argument>
+                <argument>src/main/geonetwork-ui</argument>
+              </arguments>
+            </configuration>
+          </execution>
+          <execution>
+            <id>checkout-geonetwork-ui</id>
+            <phase>initialize</phase>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+            <configuration>
+              <executable>git</executable>
+              <arguments>
+                <argument>clone</argument>
+                <argument>--branch</argument>
+                <argument>${geonetwork-ui.git.branch}</argument>
+                <argument>https://github.com/geonetwork/geonetwork-ui.git</argument>
+                <argument>src/main/geonetwork-ui</argument>
+              </arguments>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <!--   Install node & npm -> npm install -> npm run build  -->
+      <plugin>
+        <groupId>com.github.eirslett</groupId>
+        <artifactId>frontend-maven-plugin</artifactId>
+        <version>1.15.0</version>
+        <executions>
+          <execution>
+            <!--   Installing node and npm   -->
+            <id>install-node-and-npm</id>
+            <goals>
+              <goal>install-node-and-npm</goal>
+            </goals>
+            <configuration>
+              <nodeVersion>v20.12.2</nodeVersion>
+              <npmVersion>10.7.0</npmVersion>
+            </configuration>
+          </execution>
+          <!--   Install geonetwork-ui dependencies   -->
+          <execution>
+            <id>npm-install</id>
+            <goals>
+              <goal>npm</goal>
+            </goals>
+            <configuration>
+              <arguments>ci --loglevel error</arguments>
+              <workingDirectory>src/main/geonetwork-ui</workingDirectory>
+              <installDirectory>${basedir}</installDirectory>
+            </configuration>
+          </execution>
+          <!--   Build datahub app   -->
+          <execution>
+            <id>npm-build</id>
+            <goals>
+              <goal>npm</goal>
+            </goals>
+            <configuration>
+              <environmentVariables>
+                <NX_DAEMON>false</NX_DAEMON>
+              </environmentVariables>
+              <arguments>
+                run nx -- build datahub --base-href=./
+              </arguments>
+              <workingDirectory>src/main/geonetwork-ui</workingDirectory>
+              <installDirectory>${basedir}</installDirectory>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <!--   Copy of datahub files   -->
+      <plugin>
+        <artifactId>maven-resources-plugin</artifactId>
+        <version>3.1.0</version>
+        <executions>
+          <execution>
+            <id>copy-resources</id>
+            <phase>generate-resources</phase>
+            <goals>
+              <goal>copy-resources</goal>
+            </goals>
+            <configuration>
+              <overwrite>true</overwrite>
+              <encoding>UTF-8</encoding>
+              <outputDirectory>src/main/resources/datahub</outputDirectory>
+              <resources>
+                <resource>
+                  <directory>src/main/geonetwork-ui/dist/apps/datahub</directory>
+                  <filtering>false</filtering>
+                </resource>
+              </resources>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+    </plugins>
+  </build>
+</project>
