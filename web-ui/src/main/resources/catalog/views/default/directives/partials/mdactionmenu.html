@@ -93,7 +93,11 @@
       </li>
 
       <!-- Workflow -->
-      <li role="menuitem" class="dropdown-header" data-ng-show="isMdWorkflowEnable">
+      <li
+        role="menuitem"
+        class="dropdown-header"
+        data-ng-show="anyWorkflowOptionDisplayed(user)"
+      >
         <span data-translate="">workflow</span>
       </li>
       <li data-ng-if="displayEnableWorkflowOption(user)">

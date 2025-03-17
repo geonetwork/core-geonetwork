@@ -325,6 +325,21 @@
           };
 
           /**
+           * Checks if any workflow option should be displayed for the given user.
+           *
+           * @param {Object} user - The user for whom the check is being performed.
+           * @returns {boolean} - True if any workflow option should be displayed, false otherwise.
+           */
+          scope.anyWorkflowOptionDisplayed = function (user) {
+            if (scope.displayEnableWorkflowOption(user)) {
+              return true;
+            }
+            return scope
+              .getStatusEffects(user)
+              .some((step) => scope.displayWorkflowStepOption(step, user));
+          };
+
+          /**
            * Retrieves the workflow status effects for the given user based on their role.
            *
            * @param {Object} user - The user for whom the workflow status effects are being retrieved.
