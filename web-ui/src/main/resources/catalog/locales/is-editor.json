@@ -165,7 +165,7 @@
     "linkToParentTitle": "Tengja foreldra lýsigagna færslu við núgildandi lýsigögn",
     "linkToService": "Tengja við þjónustu",
     "linkToServiceTitle": "Tengja þjónustu við núgildandi lýsigögn",
-    "linkToSibling": "Tengja við önnur gögn",
+    "linkToSibling": "Link to records",
     "linkToSiblingTitle": "Tengja aðföng við núgildandi lýsigögn",
     "linkToSource": "Tengja við uppruna gagnasett",
     "linkToSourceTitle": "Tengja uppruna gagnasett við núgildandi lýsigögn",
@@ -427,5 +427,10 @@
     "confirmCancelEdit": "Do you want to cancel all changes and close the editor?",
     "allowEditGroupMembers": "Allow group editors to edit",
     "wmsSelectedLayers": "Selected layers",
-    "wmsSelectedLayersNone": "No layers selected"
+    "wmsSelectedLayersNone": "No layers selected",
+    "validationSuccessLabel": "success",
+    "validationErrorLabel": "errors",
+    "metadataDuplicatedField-title": "The metadata title is used in another metadata record.",
+    "metadataDuplicatedField-altTitle": "The metadata alternate title is used in another metadata record.",
+    "metadataDuplicatedField-identifier": "The metadata resource identifier is used in another metadata record."
 }

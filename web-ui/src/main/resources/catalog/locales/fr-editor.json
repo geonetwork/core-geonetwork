@@ -165,7 +165,7 @@
     "linkToParentTitle": "Associer une fiche parent",
     "linkToService": "Associer un service",
     "linkToServiceTitle": "Associer un service",
-    "linkToSibling": "Autres liens (eg. études, capteurs)",
+    "linkToSibling": "Associer",
     "linkToSiblingTitle": "Associer une ressource (eg. études, capteurs)",
     "linkToSource": "Associer à une donnée source",
     "linkToSourceTitle": "Associer une donnée source utilisée pour créer ce jeu de données",
@@ -427,5 +427,10 @@
     "confirmCancelEdit": "Voulez-vous annuler tous les changements et fermer l'éditeur ?",
     "allowEditGroupMembers": "Autoriser l'édition par les membres du groupe.",
     "wmsSelectedLayers": "Couches sélectionnées",
-    "wmsSelectedLayersNone": "Aucune couche sélectionnée"
+    "wmsSelectedLayersNone": "Aucune couche sélectionnée",
+    "validationSuccessLabel": "success",
+    "validationErrorLabel": "errors",
+    "metadataDuplicatedField-title": "The metadata title is used in another metadata record.",
+    "metadataDuplicatedField-altTitle": "The metadata alternate title is used in another metadata record.",
+    "metadataDuplicatedField-identifier": "The metadata resource identifier is used in another metadata record."
 }

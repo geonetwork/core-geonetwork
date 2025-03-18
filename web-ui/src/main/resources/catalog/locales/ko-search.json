@@ -365,7 +365,8 @@
     "shareOnLinkedIn": "LinkedIn에 공유",
     "shareByEmail": "이메일로 공유",
     "zoomto": "확대",
-    "recordNotFound": "식별자가 <strong>{{uuid}}</strong> 인 레코드가 없거나 공유되지 않았습니다. 계정이 있다면 <a href=\"catalog.signin?redirect={{url}}\">로그인</a> 해보십시오.",
+    "recordNotFound": "The record with identifier <strong>{{uuid}}</strong> was not found or is not shared with you.",
+    "trySignIn": "Try <a href=\"{{signInFormAction}}?_csrf={{csrf}}&redirectUrl={{redirectUrlAfterSign}}\">to log in</a> if you have an account.",
     "intersectWith": "Intersects with",
     "fullyOutsideOf": "Fully outside of",
     "encloses": "Enclosing",
@@ -545,12 +546,5 @@
     "fieldEmailNotValid": "A valid email address is required",
     "addLayerPrefix": "Add layer",
     "addLayerPostfix": "to the map",
-    "submit": "Submit",
-    "indexingErrorMsg-invalidBounds": "Warning / Field resourceTemporalDateRange / Lower and upper bounds empty or not valid dates. Date range not indexed.",
-    "indexingErrorMsg-invalidDateFormat": "Warning / Date {{dateType}} with value '{{date}}' was not a valid date format.",
-    "indexingErrorMsg-keywordNotFoundInThesaurus": "Warning / Keyword {{keyword}} not found in {{thesaurus}}.",
-    "indexingErrorMsg-temporalDateRangeLowerGreaterThanUpper": "Warning / Field resourceTemporalDateRange / Lower range bound {{lowerBound}} can not be greater than upper bound {{upperBound}}. Date range not indexed.",
-    "indexingErrorMsg-temporalRangeLowerGreaterThanUpper": "Warning / Field resourceTemporalDateRange / Lower range bound {{lowerBound}} can not be greater than upper bound {{upperBound}}.",
-    "indexingErrorMsg-schemaNotRegistered": "Record {{record}} / Schema '{{schema}}' is not registered in this catalog. Install it or remove those records. Record is indexed indexing error flag.",
-    "indexingErrorMsg-indexingStyleSheetError": "Indexing stylesheet contains errors: {{message}} \n  Marking the metadata as _indexingError=1 in index."
+    "submit": "Submit"
 }

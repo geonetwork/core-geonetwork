@@ -165,7 +165,7 @@
     "linkToParentTitle": "Collega un record di metadati \"genitore\" ai metadati correnti",
     "linkToService": "Collegamento a un servizio",
     "linkToServiceTitle": "Collega un servizio ai metadati correnti",
-    "linkToSibling": "Collegamento ad altre risorse",
+    "linkToSibling": "Link to records",
     "linkToSiblingTitle": "Collega una risorsa ai metadati correnti",
     "linkToSource": "Collegamento a un dataset di origine",
     "linkToSourceTitle": "Collega un set di dati di origine ai metadati correnti",
@@ -427,5 +427,10 @@
     "confirmCancelEdit": "Do you want to cancel all changes and close the editor?",
     "allowEditGroupMembers": "Allow group editors to edit",
     "wmsSelectedLayers": "Selected layers",
-    "wmsSelectedLayersNone": "No layers selected"
+    "wmsSelectedLayersNone": "No layers selected",
+    "validationSuccessLabel": "success",
+    "validationErrorLabel": "errors",
+    "metadataDuplicatedField-title": "The metadata title is used in another metadata record.",
+    "metadataDuplicatedField-altTitle": "The metadata alternate title is used in another metadata record.",
+    "metadataDuplicatedField-identifier": "The metadata resource identifier is used in another metadata record."
 }

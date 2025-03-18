@@ -365,7 +365,8 @@
     "shareOnLinkedIn": "Deel op LinkedIn",
     "shareByEmail": "Deel per mail",
     "zoomto": "Zoom naar",
-    "recordNotFound": "Het record met identificatie <strong>{{uuid}}</strong> is nog niet gevonden of is niet met u gedeeld. Probeer <a href=\"catalog.signin?redirect={{url}}\">in te loggen</a> indien u een account heeft.",
+    "recordNotFound": "Het record met identifier <strong>{{uuid}}</strong> is niet gevonden.",
+    "trySignIn": "Probeer <a href=\"{{signInFormAction}}?_csrf={{csrf}}&redirectUrl={{redirectUrlAfterSign}}\">in te loggen</a> als u een account heeft.",
     "intersectWith": "Snijdt met",
     "fullyOutsideOf": "Volledig buiten",
     "encloses": "Omvat",
@@ -545,12 +546,5 @@
     "fieldEmailNotValid": "Een geldig email adres is vereist",
     "addLayerPrefix": "Voeg laag toe",
     "addLayerPostfix": "aan de kaart",
-    "submit": "Indienen",
-    "indexingErrorMsg-invalidBounds": "Waarschuwing / Veld resourceTemporalDateRange / Onder- en bovengrens leeg of ongeldige datum. Datum bereik niet geïndexeerd.",
-    "indexingErrorMsg-invalidDateFormat": "Waarschuwing / Datum {{dateType}} met waarde '{{date}}' was geen geldig datum formaat.",
-    "indexingErrorMsg-keywordNotFoundInThesaurus": "Waarschuwing / Trefwoord {{keyword}} niet gevonden in {{thesaurus}}.",
-    "indexingErrorMsg-temporalDateRangeLowerGreaterThanUpper": "Waarschuwing / Veld resourceTemporalDateRange / Ondergrens {{lowerBound}} kan niet groter zijn dan bovengrens {{upperBound}}. Datumbereik niet geïndexeerd.",
-    "indexingErrorMsg-temporalRangeLowerGreaterThanUpper": "Waarschuwing / Veld resourceTemporalDateRange / Ondergrens {{lowerBound}} kan niet groter zijn dan bovengrens {{upperBound}}.",
-    "indexingErrorMsg-schemaNotRegistered": "Record {{record}} / Schema '{{schema}}' is niet geregistreerd in deze catalogus. Installeer het of verwijder de overeenkomstige records. Het record werd gemarkeerd met indexingError in de index.",
-    "indexingErrorMsg-indexingStyleSheetError": "Index stylesheet bevat fouten: \"{{message}}\". De metadata werd gemarkeerd in de index met _indexingError=1."
+    "submit": "Indienen"
 }
