@@ -44,21 +44,6 @@ import static org.junit.Assert.assertTrue;
  */
 public class OIDCRoleProcessorTest {
 
-
-    //creates the OIDCRoleProcessor
-    public OIDCRoleProcessor getOIDCRoleProcessor() {
-        OIDCRoleProcessor result = new OIDCRoleProcessor();
-
-        result.oidcConfiguration = new OIDCConfiguration();
-        result.oidcConfiguration.roleConverter = new HashMap<String, String>() {{
-            put("CHANGEME", "CHANGED");
-        }};
-        result.oidcConfiguration.idTokenRoleLocation = "resource_access.gn-key.roles";
-        result.oidcConfiguration.minimumProfile = "RegisteredUser";
-
-        return result;
-    }
-
     //test that the setRoleConverterString properly parses the serialized form
     @Test
     public void testRoleConverterParser() {
@@ -102,157 +87,6 @@ public class OIDCRoleProcessorTest {
         assertSame("CHANGED", xformedRoles.get(1));
         assertSame("DO-NOT-CHANGE2", xformedRoles.get(2));
     }
-
-    //no "roles" component
-    public Map<String, Object> createBadSimpleClaims1() {
-        Map<String, Object> claims = new HashMap<>();
-
-        claims.put("abc", "ABC");
-
-        //resource_access.gn-key.roles -> ["Reviewer","Administrator","blah"]
-        Map<String, Map> resource_access = new HashMap<>();
-        Map<String, List> gn_key = new HashMap<>();
-
-
-        resource_access.put("gn-key", gn_key);
-        claims.put("resource_access", resource_access);
-        return claims;
-    }
-
-    //roles isn't a list - its a map
-    public Map<String, Object> createBadSimpleClaims2() {
-        Map<String, Object> claims = new HashMap<>();
-
-        claims.put("abc", "ABC");
-
-        //resource_access.gn-key.roles -> ["Reviewer","Administrator","blah"]
-        Map<String, Map> resource_access = new HashMap<>();
-        Map<String, Map> gn_key = new HashMap<>();
-
-        gn_key.put("roles", new HashMap<String, Object>());
-
-        resource_access.put("gn-key", gn_key);
-        claims.put("resource_access", resource_access);
-        return claims;
-    }
-
-    //no gn-key
-    public Map<String, Object> createBadSimpleClaims3() {
-        Map<String, Object> claims = new HashMap<>();
-
-        claims.put("abc", "ABC");
-
-        //resource_access.gn-key.roles -> ["Reviewer","Administrator","blah"]
-        Map<String, Map> resource_access = new HashMap<>();
-
-
-        claims.put("resource_access", resource_access);
-        return claims;
-    }
-
-    //no resource_access
-    public Map<String, Object> createBadSimpleClaims4() {
-        Map<String, Object> claims = new HashMap<>();
-
-        claims.put("abc", "ABC");
-
-        return claims;
-    }
-
-    //no resource_access is empty
-    public Map<String, Object> createBadSimpleClaims5() {
-        Map<String, Object> claims = new HashMap<>();
-
-        claims.put("abc", "ABC");
-        Map<String, List> resource_access = new HashMap<>();
-
-
-        claims.put("resource_access", resource_access);
-        return claims;
-    }
-
-    //no resource_access is list
-    public Map<String, Object> createBadSimpleClaims6() {
-        Map<String, Object> claims = new HashMap<>();
-
-        claims.put("abc", "ABC");
-        List<String> resource_access = new ArrayList();
-        resource_access.add("Reviewer");
-        resource_access.add("blah");
-        resource_access.add("GROUP1:UserAdmin");
-        resource_access.add("GROUP2:Editor");
-
-
-        claims.put("resource_access", resource_access);
-        return claims;
-    }
-
-    // utility - create a simple user claims for processing
-    public Map<String, Object> createSimpleClaims() {
-        Map<String, Object> claims = new HashMap<>();
-
-        claims.put("abc", "ABC");
-
-        //resource_access.gn-key.roles -> ["Reviewer","Administrator","blah"]
-        Map<String, Map> resource_access = new HashMap<>();
-        Map<String, List> gn_key = new HashMap<>();
-        List roles = new ArrayList();
-        roles.add("Reviewer");
-        roles.add("Administrator");
-        roles.add("blah");
-        gn_key.put("roles", roles);
-        resource_access.put("gn-key", gn_key);
-        claims.put("resource_access", resource_access);
-        return claims;
-    }
-
-    // utility - create a simple user claims for processing (with a given set of roles)
-    public Map<String, Object> createSimpleClaims(List<String> roles) {
-        Map<String, Object> claims = new HashMap<>();
-
-        claims.put("abc", "ABC");
-
-        //resource_access.gn-key.roles -> ["Reviewer","Administrator","blah"]
-        Map<String, Map> resource_access = new HashMap<>();
-        Map<String, List> gn_key = new HashMap<>();
-
-        gn_key.put("roles", roles);
-        resource_access.put("gn-key", gn_key);
-        claims.put("resource_access", resource_access);
-        return claims;
-    }
-
-    // utility - create a more complex user claims for processing (i.e. roles with GN-group:GN-profile format)
-    public Map<String, Object> createComplexClaims() {
-        Map<String, Object> claims = new HashMap<>();
-
-        claims.put("abc", "ABC");
-
-        //resource_access.gn-key.roles -> ["Reviewer","blah","GROUP1:UserAdmin","GROUP2:Editor"]
-        Map<String, Map> resource_access = new HashMap<>();
-        Map<String, List> gn_key = new HashMap<>();
-        List roles = new ArrayList();
-        roles.add("Reviewer");
-        roles.add("blah");
-        roles.add("GROUP1:UserAdmin");
-        roles.add("GROUP2:Editor");
-        gn_key.put("roles", roles);
-        resource_access.put("gn-key", gn_key);
-        claims.put("resource_access", resource_access);
-        return claims;
-    }
-
-    public Map<String, Object> createSingleValuedRoleClaims() {
-        Map<String, Object> claims = new HashMap<>();
-        claims.put("abc", "ABC");
-        Map<String, Map> resource_access = new HashMap<>();
-        Map<String, String> gn_key = new HashMap<>();
-        gn_key.put("roles", "SINGLE_ROLE_MEMBERSHIP");
-        resource_access.put("gn-key", gn_key);
-        claims.put("resource_access", resource_access);
-        return claims;
-    }
-
 
     // simple test - easiest example
     @Test
@@ -437,17 +271,6 @@ public class OIDCRoleProcessorTest {
         assertEquals(Profile.RegisteredUser, profile); // no claims -> get minimum
     }
 
-    // from standard GN configuration
-    private RoleHierarchyImpl getRoleHierarchy() {
-        RoleHierarchyImpl roleHierarchy = new RoleHierarchyImpl();
-        roleHierarchy.setHierarchy("  Administrator > UserAdmin\n" +
-            "        UserAdmin > Reviewer\n" +
-            "        Reviewer > Editor\n" +
-            "        Editor > RegisteredUser\n" +
-            "        RegisteredUser > Guest");
-        return roleHierarchy;
-    }
-
     //an editor profile has authorities Editor, RegisteredUser, and Guest
     @Test
     public void testCreateAuthorities1() {
@@ -496,5 +319,180 @@ public class OIDCRoleProcessorTest {
         assertTrue(authorities.contains(new SimpleGrantedAuthority(Profile.Editor.toString())));
         assertTrue(authorities.contains(new SimpleGrantedAuthority(Profile.RegisteredUser.toString())));
         assertTrue(authorities.contains(new SimpleGrantedAuthority(Profile.Guest.toString())));
+    }
+
+    //creates the OIDCRoleProcessor
+    private OIDCRoleProcessor getOIDCRoleProcessor() {
+        OIDCRoleProcessor result = new OIDCRoleProcessor();
+
+        result.oidcConfiguration = new OIDCConfiguration();
+        result.oidcConfiguration.roleConverter = new HashMap<String, String>() {{
+            put("CHANGEME", "CHANGED");
+        }};
+        result.oidcConfiguration.idTokenRoleLocation = "resource_access.gn-key.roles";
+        result.oidcConfiguration.minimumProfile = "RegisteredUser";
+
+        return result;
+    }
+
+    // from standard GN configuration
+    private RoleHierarchyImpl getRoleHierarchy() {
+        RoleHierarchyImpl roleHierarchy = new RoleHierarchyImpl();
+        roleHierarchy.setHierarchy("  Administrator > UserAdmin\n" +
+            "        UserAdmin > Reviewer\n" +
+            "        Reviewer > Editor\n" +
+            "        Editor > RegisteredUser\n" +
+            "        RegisteredUser > Guest");
+        return roleHierarchy;
+    }
+
+    //no "roles" component
+    private Map<String, Object> createBadSimpleClaims1() {
+        Map<String, Object> claims = new HashMap<>();
+
+        claims.put("abc", "ABC");
+
+        //resource_access.gn-key.roles -> ["Reviewer","Administrator","blah"]
+        Map<String, Map> resource_access = new HashMap<>();
+        Map<String, List> gn_key = new HashMap<>();
+
+
+        resource_access.put("gn-key", gn_key);
+        claims.put("resource_access", resource_access);
+        return claims;
+    }
+
+    //roles isn't a list - its a map
+    private Map<String, Object> createBadSimpleClaims2() {
+        Map<String, Object> claims = new HashMap<>();
+
+        claims.put("abc", "ABC");
+
+        //resource_access.gn-key.roles -> ["Reviewer","Administrator","blah"]
+        Map<String, Map> resource_access = new HashMap<>();
+        Map<String, Map> gn_key = new HashMap<>();
+
+        gn_key.put("roles", new HashMap<String, Object>());
+
+        resource_access.put("gn-key", gn_key);
+        claims.put("resource_access", resource_access);
+        return claims;
+    }
+
+    //no gn-key
+    private Map<String, Object> createBadSimpleClaims3() {
+        Map<String, Object> claims = new HashMap<>();
+
+        claims.put("abc", "ABC");
+
+        //resource_access.gn-key.roles -> ["Reviewer","Administrator","blah"]
+        Map<String, Map> resource_access = new HashMap<>();
+
+
+        claims.put("resource_access", resource_access);
+        return claims;
+    }
+
+    //no resource_access
+    private Map<String, Object> createBadSimpleClaims4() {
+        Map<String, Object> claims = new HashMap<>();
+
+        claims.put("abc", "ABC");
+
+        return claims;
+    }
+
+    //no resource_access is empty
+    private Map<String, Object> createBadSimpleClaims5() {
+        Map<String, Object> claims = new HashMap<>();
+
+        claims.put("abc", "ABC");
+        Map<String, List> resource_access = new HashMap<>();
+
+
+        claims.put("resource_access", resource_access);
+        return claims;
+    }
+
+    //no resource_access is list
+    private Map<String, Object> createBadSimpleClaims6() {
+        Map<String, Object> claims = new HashMap<>();
+
+        claims.put("abc", "ABC");
+        List<String> resource_access = new ArrayList();
+        resource_access.add("Reviewer");
+        resource_access.add("blah");
+        resource_access.add("GROUP1:UserAdmin");
+        resource_access.add("GROUP2:Editor");
+
+
+        claims.put("resource_access", resource_access);
+        return claims;
+    }
+
+    // utility - create a simple user claims for processing
+    private Map<String, Object> createSimpleClaims() {
+        Map<String, Object> claims = new HashMap<>();
+
+        claims.put("abc", "ABC");
+
+        //resource_access.gn-key.roles -> ["Reviewer","Administrator","blah"]
+        Map<String, Map> resource_access = new HashMap<>();
+        Map<String, List> gn_key = new HashMap<>();
+        List roles = new ArrayList();
+        roles.add("Reviewer");
+        roles.add("Administrator");
+        roles.add("blah");
+        gn_key.put("roles", roles);
+        resource_access.put("gn-key", gn_key);
+        claims.put("resource_access", resource_access);
+        return claims;
+    }
+
+    // utility - create a simple user claims for processing (with a given set of roles)
+    private Map<String, Object> createSimpleClaims(List<String> roles) {
+        Map<String, Object> claims = new HashMap<>();
+
+        claims.put("abc", "ABC");
+
+        //resource_access.gn-key.roles -> ["Reviewer","Administrator","blah"]
+        Map<String, Map> resource_access = new HashMap<>();
+        Map<String, List> gn_key = new HashMap<>();
+
+        gn_key.put("roles", roles);
+        resource_access.put("gn-key", gn_key);
+        claims.put("resource_access", resource_access);
+        return claims;
+    }
+
+    // utility - create a more complex user claims for processing (i.e. roles with GN-group:GN-profile format)
+    private Map<String, Object> createComplexClaims() {
+        Map<String, Object> claims = new HashMap<>();
+
+        claims.put("abc", "ABC");
+
+        //resource_access.gn-key.roles -> ["Reviewer","blah","GROUP1:UserAdmin","GROUP2:Editor"]
+        Map<String, Map> resource_access = new HashMap<>();
+        Map<String, List> gn_key = new HashMap<>();
+        List roles = new ArrayList();
+        roles.add("Reviewer");
+        roles.add("blah");
+        roles.add("GROUP1:UserAdmin");
+        roles.add("GROUP2:Editor");
+        gn_key.put("roles", roles);
+        resource_access.put("gn-key", gn_key);
+        claims.put("resource_access", resource_access);
+        return claims;
+    }
+
+    private Map<String, Object> createSingleValuedRoleClaims() {
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("abc", "ABC");
+        Map<String, Map> resource_access = new HashMap<>();
+        Map<String, String> gn_key = new HashMap<>();
+        gn_key.put("roles", "SINGLE_ROLE_MEMBERSHIP");
+        resource_access.put("gn-key", gn_key);
+        claims.put("resource_access", resource_access);
+        return claims;
     }
 }
