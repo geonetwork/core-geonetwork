@@ -146,11 +146,7 @@
           scope.doiServers = [];
 
           gnConfigService.load().then(function (c) {
-            // Get the "is metadata workflow enabled" setting
             scope.isMdWorkflowEnable = gnConfig["metadata.workflow.enable"];
-            // Get the workflow group matching regex setting
-            scope.workflowGroupMatchingRegex =
-              gnConfig["metadata.workflow.draftWhenInGroup"];
 
             scope.isMdWorkflowAssistEnable =
               gnGlobalSettings.gnCfg.mods.workflowHelper.enabled;

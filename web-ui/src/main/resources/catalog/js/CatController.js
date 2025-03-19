@@ -1834,6 +1834,9 @@
           });
           ol.proj.proj4.register(proj4);
         }
+
+        $scope.workflowGroupMatchingRegex =
+          gnConfig["metadata.workflow.draftWhenInGroup"];
       });
 
       // login url for inline signin form in top toolbar
