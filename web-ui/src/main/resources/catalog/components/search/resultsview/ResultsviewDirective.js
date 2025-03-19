@@ -125,12 +125,13 @@
             // Check if there are any records
             if (rec && rec.length) {
               // Extract unique group owner IDs from the records
-              const groupIds = [...new Set(rec.map(md => md.groupOwner))];
+              const groupIds = [...new Set(rec.map((md) => md.groupOwner))];
 
               // Fetch and store group names for each group ID
-              groupIds.forEach(groupId => {
-                $http.get(`../api/groups/${groupId}`, { cache: true })
-                  .then(response => {
+              groupIds.forEach((groupId) => {
+                $http
+                  .get(`../api/groups/${groupId}`, { cache: true })
+                  .then((response) => {
                     scope.groupNames[groupId] = response.data.name;
                   });
               });
@@ -231,7 +232,12 @@
            */
           scope.displayWorkflowStatus = function (md) {
             // Return false if any required property is missing or workflow is not enabled
-            if (!md.groupOwner || !scope.groupNames || !scope.workflowGroupMatchingRegex || !scope.isMdWorkflowEnable) {
+            if (
+              !md.groupOwner ||
+              !scope.groupNames ||
+              !scope.workflowGroupMatchingRegex ||
+              !scope.isMdWorkflowEnable
+            ) {
               return false;
             }
             // Get the group name from the groupNames object
