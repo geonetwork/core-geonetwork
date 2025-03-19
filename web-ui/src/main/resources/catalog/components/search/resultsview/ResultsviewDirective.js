@@ -76,6 +76,7 @@
     "gnMetadataActions",
     "gnConfig",
     "gnConfigService",
+    "$http",
     function (
       $compile,
       gnMap,
@@ -83,7 +84,8 @@
       gnSearchSettings,
       gnMetadataActions,
       gnConfig,
-      gnConfigService
+      gnConfigService,
+      $http
     ) {
       return {
         restrict: "A",
@@ -116,6 +118,24 @@
           scope.$watchCollection("searchResults.records", function (rec) {
             //scroll to top
             element.animate({ scrollTop: top });
+
+            // Initialize/reset an empty object to store group names
+            scope.groupNames = {};
+
+            // Check if there are any records
+            if (rec && rec.length) {
+              // Extract unique group owner IDs from the records
+              const groupIds = [...new Set(rec.map((md) => md.groupOwner))];
+
+              // Fetch and store group names for each group ID
+              groupIds.forEach((groupId) => {
+                $http
+                  .get(`../api/groups/${groupId}`, { cache: true })
+                  .then((response) => {
+                    scope.groupNames[groupId] = response.data.name;
+                  });
+              });
+            }
 
             // get md extent boxes
             if (scope.map) {
@@ -202,6 +222,32 @@
               //remove the last line break character
               return abstractBrief.substring(0, abstractBrief.length - 1);
             }
+          };
+
+          /**
+           * @function displayWorkflowStatus
+           * @description Checks if workflow is enabled and the group owner's name matches the workflow group regex.
+           * @param {Object} md - The metadata object.
+           * @returns {boolean} - Returns true if the group owner's name matches the workflow group regex and the workflow is enabled, otherwise false.
+           */
+          scope.displayWorkflowStatus = function (md) {
+            // Return false if any required property is missing or workflow is not enabled
+            if (
+              !md.groupOwner ||
+              !scope.groupNames ||
+              !scope.workflowGroupMatchingRegex ||
+              !scope.isMdWorkflowEnable
+            ) {
+              return false;
+            }
+            // Get the group name from the groupNames object
+            const groupName = scope.groupNames[md.groupOwner];
+            // Return false if the group name is not found
+            if (!groupName) {
+              return false;
+            }
+            // Check if the group name matches the workflow group regex
+            return !!groupName.match(scope.workflowGroupMatchingRegex);
           };
 
           if (scope.map) {
