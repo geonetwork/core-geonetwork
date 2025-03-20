@@ -518,7 +518,7 @@ public class MetadataWorkflowApi {
         }
 
         // If the metadata workflow status is unset and the new status is DRAFT, workflow is being enabled
-        if (metadataStatus.getStatus(metadata.getId()) == null && status.getStatus() == Integer.parseInt(StatusValue.Status.DRAFT)) {
+        if (metadataStatus.getStatus(metadata.getId()) == null) {
             // Retrieve the group owner ID from the metadata source information
             Integer groupOwnerId = metadata.getSourceInfo().getGroupOwner();
 
