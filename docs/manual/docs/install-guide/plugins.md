@@ -25,7 +25,7 @@ Support for these data storage interfaces is available through the following plu
 
 ## Datahub integration: `gn-datahub-integration`
 
-The [Datahub](https://geonetwork.github.io/geonetwork-ui/main/docs/apps/datahub.html) is a modern facade to GeoNetwork provided by [the GeoNetwork-UI project](https://github.com/geonetwork/geonetwork-ui).
+The [Datahub application](https://geonetwork.github.io/geonetwork-ui/main/docs/apps/datahub.html) is a modern facade to GeoNetwork provided by [the GeoNetwork-UI project](https://github.com/geonetwork/geonetwork-ui).
 
 ![datahub.png](img/datahub.png)
 
