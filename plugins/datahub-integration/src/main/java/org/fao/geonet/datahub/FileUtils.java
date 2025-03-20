@@ -47,10 +47,10 @@ public class FileUtils {
     }
 
     public static String readFromInputStream(InputStream inputStream)
-        throws IOException {
+            throws IOException {
         StringBuilder resultStringBuilder = new StringBuilder();
         try (BufferedReader br
-                 = new BufferedReader(new InputStreamReader(inputStream))) {
+                     = new BufferedReader(new InputStreamReader(inputStream))) {
             String line;
             while ((line = br.readLine()) != null) {
                 resultStringBuilder.append(line).append("\n");
