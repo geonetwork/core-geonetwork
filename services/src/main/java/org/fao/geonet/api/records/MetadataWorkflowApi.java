@@ -567,8 +567,7 @@ public class MetadataWorkflowApi {
         // --- change status and carry out behaviours for status changes
         StatusActions sa = statusActionFactory.createStatusActions(context);
 
-        String metadataCurrentStatus = metadataStatus.getCurrentStatus(metadata.getId());
-
+        String metadataCurrentStatus = dataManager.getCurrentStatus(metadata.getId());
         metadataStatusValue.setPreviousState(metadataCurrentStatus);
 
         List<MetadataStatus> listOfStatusChange = new ArrayList<>(1);
