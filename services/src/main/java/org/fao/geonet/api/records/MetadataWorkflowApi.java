@@ -534,10 +534,11 @@ public class MetadataWorkflowApi {
             );
 
             // Check if the group has an enabled workflow
-            // If not, throw a NotAllowedException with an appropriate message
+            // If not, throw a FeatureNotEnabledException with an appropriate message
             if (!WorkflowUtil.isGroupWithEnabledWorkflow(groupOwner.getName())) {
-                throw new NotAllowedException(
-                    messages.getString("api.metadata.status.errorSetStatusNotAllowed"));
+                throw new FeatureNotEnabledException("Metadata workflow is disabled for group '" + groupOwner.getName() + "', metadata status can not be set")
+                    .withMessageKey("exception.resourceNotEnabled.groupWorkflow", new Object[]{groupOwner.getName()})
+                    .withDescriptionKey("exception.resourceNotEnabled.groupWorkflow.description", new Object[]{groupOwner.getName()});
             }
         }
 
