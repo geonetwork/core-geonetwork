@@ -65,6 +65,7 @@ import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.languages.FeedbackLanguages;
 import org.fao.geonet.repository.*;
 import org.fao.geonet.util.MetadataPublicationMailNotifier;
+import org.fao.geonet.util.WorkflowUtil;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
@@ -516,6 +517,30 @@ public class MetadataWorkflowApi {
                 .withDescriptionKey("exception.resourceNotEnabled.workflow.description");
         }
 
+        // If the metadata workflow status is unset and the new status is DRAFT, workflow is being enabled
+        if (metadataStatus.getStatus(metadata.getId()) == null && status.getStatus() == Integer.parseInt(StatusValue.Status.DRAFT)) {
+            // Retrieve the group owner ID from the metadata source information
+            Integer groupOwnerId = metadata.getSourceInfo().getGroupOwner();
+
+            // Find the group owner by ID from the group repository
+            // If the group owner is not found, throw a ResourceNotFoundException with a formatted message
+            Group groupOwner = groupRepository.findById(groupOwnerId).orElseThrow(
+                () -> new ResourceNotFoundException(
+                    MessageFormat.format(
+                        messages.getString("api.groups.group_not_found"),
+                        groupOwnerId
+                    )
+                )
+            );
+
+            // Check if the group has an enabled workflow
+            // If not, throw a NotAllowedException with an appropriate message
+            if (!WorkflowUtil.isGroupWithEnabledWorkflow(groupOwner.getName())) {
+                throw new NotAllowedException(
+                    messages.getString("api.metadata.status.errorSetStatusNotAllowed"));
+            }
+        }
+
         // --- only allow the owner of the record to set its status
         if (!accessManager.isOwner(context, String.valueOf(metadata.getId()))) {
             throw new SecurityException(
@@ -542,7 +567,8 @@ public class MetadataWorkflowApi {
         // --- change status and carry out behaviours for status changes
         StatusActions sa = statusActionFactory.createStatusActions(context);
 
-        String metadataCurrentStatus = dataManager.getCurrentStatus(metadata.getId());
+        String metadataCurrentStatus = metadataStatus.getCurrentStatus(metadata.getId());
+
         metadataStatusValue.setPreviousState(metadataCurrentStatus);
 
         List<MetadataStatus> listOfStatusChange = new ArrayList<>(1);
