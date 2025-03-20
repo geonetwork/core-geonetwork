@@ -29,15 +29,16 @@ The [Datahub](https://geonetwork.github.io/geonetwork-ui/main/docs/apps/datahub.
 
 ![datahub.png](img/datahub.png)
 
-**Using the `gn-datahub-integration` plugin allows easily deploying multiple Datahub frontends for each portal and subportal set up in the GeoNetwork instance** ([see documentation for portals here](../administrator-guide/configuring-the-catalog/portal-configuration.md)).
+*Using the `gn-datahub-integration` plugin allows easily deploying multiple Datahub frontends for each portal and subportal set up in your GeoNetwork installation* ([see documentation for portals here](../administrator-guide/configuring-the-catalog/portal-configuration.md)).
 
-Two additional settings will be available in the portal configuration module:
+### Enabling the plugin
 
-* Datahub enabled (checkbox)
-* Datahub configuration (text field in TOML format)
+Simply unzip the [gn-plugin-datahub-integration](https://sourceforge.net/projects/geonetwork/files/GeoNetwork_opensource/v4.4.6/gn-plugin-datahub-integration-4.4.6-0.zip) archive and copy its content in the `WEB-INF/lib` folder of your GeoNetwork installation.
 
-If no configuration is given for a portal or subportal, the default configuration will be used.
+### Configuration
 
-!!! note
+Please refer to the [Portal configuration page](../administrator-guide/configuring-the-catalog/portal-configuration.md#configuring-a-datahub-interface-for-a-sub-portal) to set up a Datahub interface once the plugin is enabled on your GeoNetwork installation,
 
-    A complete documentation on how configure the Datahub application is available [here](https://geonetwork.github.io/geonetwork-ui/main/docs/guide/configure.html).
+### Building the plugin
+
+Use the `-Pdatahub-integration` profile when building GeoNetwork: the plugin will be packaged as a JAR file in `plugins/gn-datahub-integration/target/`.
