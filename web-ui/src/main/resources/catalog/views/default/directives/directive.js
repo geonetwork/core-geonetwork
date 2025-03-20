@@ -356,9 +356,7 @@
            *  - The metadata record does not have workflow enabled.
            *  - The user is logged in.
            *  - The user is an admin or can edit the metadata record.
-           *  - The metadata record has a group owner.
-           *  - The group matching regex is set.
-           *  - The group owner name matches the group matching regex.
+           *  - The group owner has workflow enabled.
            *
            * @param user The user who wants to enable the workflow
            * @returns {boolean} True if the workflow can be enabled, false otherwise
@@ -370,9 +368,7 @@
               !scope.md.isWorkflowEnabled() &&
               user.id &&
               (user.isAdmin() || user.canEditRecord(scope.md)) &&
-              scope.ownerGroupName &&
-              scope.workflowGroupMatchingRegex &&
-              scope.ownerGroupName.match(scope.workflowGroupMatchingRegex)
+              gnMetadataActions.isGroupWithWorkflowEnabled(scope.ownerGroupName)
             );
           };
 
@@ -390,13 +386,9 @@
                 });
               if (scope.md.groupOwner) {
                 // Load the group owner name when the metadata record changes
-                $http
-                  .get("../api/groups/" + scope.md.groupOwner, { cache: true })
-                  .then(function (response) {
-                    if (response.data.name) {
-                      scope.ownerGroupName = response.data.name;
-                    }
-                  });
+                gnMetadataActions.getGroupName(scope.md.groupOwner).then(function (name) {
+                  scope.ownerGroupName = name;
+                });
               }
             }
           });

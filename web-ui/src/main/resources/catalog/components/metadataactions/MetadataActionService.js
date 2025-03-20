@@ -686,6 +686,33 @@
         if (crsDetails.name) return crsDetails.name + " (" + crs + ")";
         else return crs;
       };
+
+      /**
+       * Retrieves the name of a group given its ID.
+       *
+       * @param {number} groupId - The ID of the group to retrieve the name for.
+       * @returns {Promise<string>} - A promise that resolves to the name of the group.
+       */
+      this.getGroupName = function (groupId) {
+        return $http.get("../api/groups/" + groupId).then(function (data) {
+          return data.data.name;
+        });
+      };
+
+      /**
+       * Checks if the given group name matches the workflow group matching regex.
+       *
+       * @param {string} groupName - The name of the group to check.
+       * @returns {boolean} - True if the group name matches the workflow group matching regex, false otherwise.
+       */
+      this.isGroupWithWorkflowEnabled = function (groupName) {
+        const workflowGroupMatchingRegex = gnConfig["metadata.workflow.draftWhenInGroup"];
+        return (
+          groupName &&
+          workflowGroupMatchingRegex &&
+          !!groupName.match(workflowGroupMatchingRegex)
+        );
+      };
     }
   ]);
 })();

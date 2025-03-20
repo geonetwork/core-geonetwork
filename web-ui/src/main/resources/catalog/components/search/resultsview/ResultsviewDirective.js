@@ -129,11 +129,9 @@
 
               // Fetch and store group names for each group ID
               groupIds.forEach((groupId) => {
-                $http
-                  .get(`../api/groups/${groupId}`, { cache: true })
-                  .then((response) => {
-                    scope.groupNames[groupId] = response.data.name;
-                  });
+                gnMetadataActions.getGroupName(groupId).then((groupName) => {
+                  scope.groupNames[groupId] = groupName;
+                });
               });
             }
 
@@ -232,22 +230,13 @@
            */
           scope.displayWorkflowStatus = function (md) {
             // Return false if any required property is missing or workflow is not enabled
-            if (
-              !md.groupOwner ||
-              !scope.groupNames ||
-              !scope.workflowGroupMatchingRegex ||
-              !scope.isMdWorkflowEnable
-            ) {
-              return false;
-            }
-            // Get the group name from the groupNames object
-            const groupName = scope.groupNames[md.groupOwner];
-            // Return false if the group name is not found
-            if (!groupName) {
+            if (!md.groupOwner || !scope.groupNames || !scope.isMdWorkflowEnable) {
               return false;
             }
             // Check if the group name matches the workflow group regex
-            return !!groupName.match(scope.workflowGroupMatchingRegex);
+            return gnMetadataActions.isGroupWithWorkflowEnabled(
+              scope.groupNames[md.groupOwner]
+            );
           };
 
           if (scope.map) {
