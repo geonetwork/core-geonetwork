@@ -234,7 +234,7 @@
               return false;
             }
             // Check if the group name matches the workflow group regex
-            return gnMetadataActions.isGroupWithWorkflowEnabled(
+            return md.isWorkflowEnabled() || gnMetadataActions.isGroupWithWorkflowEnabled(
               scope.groupNames[md.groupOwner]
             );
           };
