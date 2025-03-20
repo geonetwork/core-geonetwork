@@ -478,14 +478,19 @@
        */
       this.publish = function (md, bucket, flag, scope, publicationType) {
         if (md) {
+          // Determine the publication flag based on current publication state
           flag = md.isPublished(publicationType) ? "off" : "on";
         }
 
         scope.isMdWorkflowEnable = gnConfig["metadata.workflow.enable"];
 
-        //Warn about possible workflow changes on batch changes
-        // or when record is not approved
-        if ((!md || md.mdStatus != 2) && flag === "on" && scope.isMdWorkflowEnable) {
+        // Warn about possible workflow changes on batch changes or when record is not approved
+        if (
+          (!md || (md.mdStatus != 2 && md.isWorkflowEnabled())) &&
+          flag === "on" &&
+          scope.isMdWorkflowEnable
+        ) {
+          // Show confirmation dialog to the user
           if (!confirm($translate.instant("warnPublishDraft"))) {
             return;
           }
