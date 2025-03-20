@@ -22,6 +22,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -30,13 +31,14 @@ import java.util.zip.GZIPOutputStream;
 
 import static org.fao.geonet.kernel.schema.SchemaPlugin.LOGGER_NAME;
 
+// FIXME: unit tests missing for this class!
+
 @RequestMapping(value = {"/{geonetworkPath:[a-zA-Z0-9_\\-]+}"})
 @Controller("datahub")
 public class DatahubController {
     public static final String INDEX_PATH = "/datahub/index.html";
-
-    final String DATAHUB_FILES_PATH = "/datahub/";
-    final String DEFAULT_CONFIGURATION_FILE_PATH = DATAHUB_FILES_PATH + "assets/configuration/default.toml";
+    public static final String DATAHUB_FILES_PATH = "/datahub/";
+    public static final String DEFAULT_CONFIGURATION_FILE_PATH = DATAHUB_FILES_PATH + "assets/configuration/default.toml";
 
     @Autowired
     SourceRepository sourceRepository;
@@ -160,7 +162,17 @@ public class DatahubController {
             outStream = new GZIPOutputStream(outStream);
         }
 
-        IOUtils.copy(inStream, outStream);
+        if (actualFile.getName().equals("index.html")) {
+            // rewrite the base-href attribute to make app routing work
+            String baseHref = "/geonetwork/" + portalName + "/datahub/";
+            String content = IOUtils
+                    .toString(inStream, StandardCharsets.UTF_8)
+                    .replaceAll("<base href=\".*\">", "<base href=\"" + baseHref + "\">");
+            outStream.write(content.getBytes());
+        } else {
+            IOUtils.copy(inStream, outStream);
+        }
+
         outStream.close();
     }
 
