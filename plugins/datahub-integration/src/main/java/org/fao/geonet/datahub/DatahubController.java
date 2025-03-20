@@ -8,7 +8,10 @@ import org.fao.geonet.domain.Source;
 import org.fao.geonet.domain.SourceType;
 import org.fao.geonet.repository.SourceRepository;
 import org.fao.geonet.utils.Log;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,6 +22,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -27,13 +31,29 @@ import java.util.zip.GZIPOutputStream;
 
 import static org.fao.geonet.kernel.schema.SchemaPlugin.LOGGER_NAME;
 
-@RequestMapping(value = { "/{geonetworkPath:[a-zA-Z0-9_\\-]+}" })
+// FIXME: unit tests missing for this class!
+
+@RequestMapping(value = {"/{geonetworkPath:[a-zA-Z0-9_\\-]+}"})
 @Controller("datahub")
 public class DatahubController {
     public static final String INDEX_PATH = "/datahub/index.html";
+    public static final String DATAHUB_FILES_PATH = "/datahub/";
+    public static final String DEFAULT_CONFIGURATION_FILE_PATH = DATAHUB_FILES_PATH + "assets/configuration/default.toml";
 
     @Autowired
     SourceRepository sourceRepository;
+
+    @GetMapping("/datahub/status")
+    public ResponseEntity<String> getDatahubStatus() throws IOException {
+        File configFile = FileUtils.getFileFromJar(DEFAULT_CONFIGURATION_FILE_PATH);
+        String defaultConfig = FileUtils.readFromInputStream(new FileInputStream(configFile));
+        JSONObject body = new JSONObject();
+        body.put("defaultConfig", defaultConfig);
+        return ResponseEntity
+                .ok()
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(body.toString());
+    }
 
     @GetMapping("/datahub")
     public RedirectView redirectDatahub(HttpServletRequest request, HttpServletResponse response) {
@@ -60,7 +80,7 @@ public class DatahubController {
 
     @RequestMapping("/{locale:[a-z]{2,3}}/datahub/**")
     public void handleLocalizedDatahubWithFilepath(HttpServletRequest request, HttpServletResponse response,
-            @PathVariable String locale) throws IOException {
+                                                   @PathVariable String locale) throws IOException {
         handleDatahubRequest(request, response);
     }
 
@@ -102,7 +122,7 @@ public class DatahubController {
         String filePath = Stream.of(reqPath.split("/datahub/")).skip(1).collect(Collectors.joining("/"));
         filePath = FilenameUtils.normalize(filePath);
         try {
-            return FileUtils.getFileFromJar("/datahub/" + filePath);
+            return FileUtils.getFileFromJar(DATAHUB_FILES_PATH + filePath);
         } catch (IOException e) {
             return new File(INDEX_PATH);// return file doesn't exist in jar => go back to main menu
         }
@@ -132,7 +152,7 @@ public class DatahubController {
     }
 
     void writeResponseContent(HttpServletRequest request, HttpServletResponse response, File actualFile,
-            String portalName) throws IOException {
+                              String portalName) throws IOException {
         InputStream inStream = actualFile.getName().equals("default.toml") ? readConfiguration(portalName)
                 : new FileInputStream(actualFile);
         OutputStream outStream = response.getOutputStream();
@@ -142,29 +162,46 @@ public class DatahubController {
             outStream = new GZIPOutputStream(outStream);
         }
 
-        IOUtils.copy(inStream, outStream);
+        if (actualFile.getName().equals("index.html")) {
+            // rewrite the base-href attribute to make app routing work
+            String baseHref = "/geonetwork/" + portalName + "/datahub/";
+            String content = IOUtils
+                    .toString(inStream, StandardCharsets.UTF_8)
+                    .replaceAll("<base href=\".*\">", "<base href=\"" + baseHref + "\">");
+            outStream.write(content.getBytes());
+        } else {
+            IOUtils.copy(inStream, outStream);
+        }
+
         outStream.close();
     }
 
-    InputStream readConfiguration(String portalName) {
+    InputStream readConfiguration(String portalName) throws IOException {
         String configuration = getPortalConfiguration(portalName);
         configuration = configuration.replaceAll("\ngeonetwork4_api_url\\s?=.+", "\n")
                 .replace("[global]", "[global]\ngeonetwork4_api_url = \"/geonetwork/" + portalName + "/api\"");
         return new ByteArrayInputStream(configuration.getBytes());
     }
 
-    private String getPortalConfiguration(String portalName) {
+    private String getPortalConfiguration(String portalName) throws IOException {
         Source portal = Objects.requireNonNull(sourceRepository.findByType(SourceType.portal, null)).get(0);
         if (isNotDefaultPortal(portalName)) {
             portal = sourceRepository.findOneByUuid(portalName);
         }
 
+        // 1. read for subportal
         if (datahubConfigurationExist(portal)) {
             return portal.getDatahubConfiguration();
-        } else {
+        }
+        // 2. fallback: read from main portal
+        else if (isNotDefaultPortal(portalName)) {
             return this.getPortalConfiguration(NodeInfo.DEFAULT_NODE);
         }
-
+        // 3. fallback: read from default.toml file in resource
+        else {
+            File defaultConfig = FileUtils.getFileFromJar(DEFAULT_CONFIGURATION_FILE_PATH);
+            return FileUtils.readFromInputStream(new FileInputStream(defaultConfig));
+        }
     }
 
     private boolean isNotDefaultPortal(String portalName) {
@@ -172,6 +209,8 @@ public class DatahubController {
     }
 
     private boolean datahubConfigurationExist(Source portal) {
-        return portal != null && !portal.getDatahubConfiguration().isEmpty();
+        return portal != null
+                && portal.getDatahubConfiguration() != null
+                && !portal.getDatahubConfiguration().isEmpty();
     }
 }

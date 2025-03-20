@@ -234,27 +234,32 @@
               <p class="help-block" data-translate="">subPortalGroupOwnerHelp</p>
             </div>
             <div>
-              <label data-translate="">datahubEnabled</label>
-              <input
-                type="checkbox"
-                name="datahubEnabled"
-                id="datahubEnabled"
-                data-ng-model="source.datahubEnabled"
-              />
+              <label>
+                <input
+                  data-ng-disabled="!datahubAvailable"
+                  type="checkbox"
+                  data-ng-model="source.datahubEnabled"
+                />
+                <span data-translate="">datahubEnabled</span>
+              </label>
+              <p
+                class="alert alert-success"
+                data-ng-if="datahubAvailable && source.datahubEnabled"
+                data-translate=""
+                data-translate-values="{'uuid': source.uuid}"
+              >
+                datahubInfo
+              </p>
             </div>
-            <div>
+            <div ng-if="datahubAvailable && source.datahubEnabled">
               <label data-translate="">datahubConfiguration</label>
-              <textarea
-                data-gn-autogrow=""
-                type="text"
-                name="datahubConfiguration"
-                class="form-control"
-                rows="10"
-                id="datahubConfiguration"
-                data-ng-model="source.datahubConfiguration"
-              ></textarea>
+              <gn-toml-edit model="source.datahubConfiguration"></gn-toml-edit>
+              <p class="help-block" data-translate="">sourceDatahubConfiguration-help</p>
             </div>
-            <p class="help-block" data-translate="">sourceDatahubConfiguration-help</p>
+            <div ng-if="!datahubAvailable" class="alert alert-info">
+              <i class="fa fa-exclamation-triangle"></i>
+              <span data-translate="">datahubPluginNotInstalled-help</span>
+            </div>
             <div>
               <label data-translate="">sourceLogo</label>
 
