@@ -1478,6 +1478,21 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Configuring a sub-portal">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#configuring-a-datahub-interface-for-a-sub-portal" class="md-nav__link">
+    <span class="md-ellipsis">
+      Configuring a Datahub interface for a sub-portal
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -2089,6 +2104,21 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Configuring a sub-portal">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#configuring-a-datahub-interface-for-a-sub-portal" class="md-nav__link">
+    <span class="md-ellipsis">
+      Configuring a Datahub interface for a sub-portal
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -2181,6 +2211,18 @@
 <p>A sub-portal can also use a specific user interface configuration.</p>
 <p>The list of sub-portal available is at <a href="http://localhost:8080/geonetwork/srv/api/sources">http://localhost:8080/geonetwork/srv/api/sources</a></p>
 <p><img alt="" src="../img/portal-list.png" /></p>
+<h3 id="configuring-a-datahub-interface-for-a-sub-portal">Configuring a Datahub interface for a sub-portal</h3>
+<p>If the <a href="../../../install-guide/plugins/#datahub-integration-gn-datahub-integration">Datahub Integration Plugin</a> is installed, a Datahub interface can be configured for a sub-portal. Two settings are available for this:</p>
+<ul>
+<li>Datahub enabled (checkbox)</li>
+<li>Datahub configuration (text field in TOML format)</li>
+</ul>
+<p><img alt="datahub-config.png" src="../img/datahub-config.png" /></p>
+<p>Please refer to the <a href="https://geonetwork.github.io/geonetwork-ui/main/docs/guide/configure.html">GeoNetwork-UI Configuration guide</a> for a complete documentation on what each setting does.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If no configuration is given for a portal or sub-portal, the default configuration will be used.</p>
+</div>
 <h2 id="example-of-usage">Example of usage</h2>
 <p>To find the lucene element terms available for filtering you can query a record in your ElasticSearch instance: </p>
 <p><code>POST /gn-records*/_search

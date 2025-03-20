@@ -1060,6 +1060,39 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Datahub integration: gn-datahub-integration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#enabling-the-plugin" class="md-nav__link">
+    <span class="md-ellipsis">
+      Enabling the plugin
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      Configuration
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#building-the-plugin" class="md-nav__link">
+    <span class="md-ellipsis">
+      Building the plugin
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
     </ul>
@@ -1472,6 +1505,39 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Datahub integration: gn-datahub-integration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#enabling-the-plugin" class="md-nav__link">
+    <span class="md-ellipsis">
+      Enabling the plugin
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      Configuration
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#building-the-plugin" class="md-nav__link">
+    <span class="md-ellipsis">
+      Building the plugin
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
     </ul>
@@ -1528,19 +1594,15 @@
 <li>Jcloud: <code>gn-datastorage-jcloud</code></li>
 </ul>
 <h2 id="datahub-integration-gn-datahub-integration">Datahub integration: <code>gn-datahub-integration</code></h2>
-<p>The <a href="https://geonetwork.github.io/geonetwork-ui/main/docs/apps/datahub.html">Datahub</a> is a modern facade to GeoNetwork provided by <a href="https://github.com/geonetwork/geonetwork-ui">the GeoNetwork-UI project</a>.</p>
+<p>The <a href="https://geonetwork.github.io/geonetwork-ui/main/docs/apps/datahub.html">Datahub application</a> is a modern facade to GeoNetwork provided by <a href="https://github.com/geonetwork/geonetwork-ui">the GeoNetwork-UI project</a>.</p>
 <p><img alt="datahub.png" src="../img/datahub.png" /></p>
-<p><strong>Using the <code>gn-datahub-integration</code> plugin allows easily deploying multiple Datahub frontends for each portal and subportal set up in the GeoNetwork instance</strong> (<a href="../../administrator-guide/configuring-the-catalog/portal-configuration/">see documentation for portals here</a>).</p>
-<p>Two additional settings will be available in the portal configuration module:</p>
-<ul>
-<li>Datahub enabled (checkbox)</li>
-<li>Datahub configuration (text field in TOML format)</li>
-</ul>
-<p>If no configuration is given for a portal or subportal, the default configuration will be used.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>A complete documentation on how configure the Datahub application is available <a href="https://geonetwork.github.io/geonetwork-ui/main/docs/guide/configure.html">here</a>.</p>
-</div>
+<p><em>Using the <code>gn-datahub-integration</code> plugin allows easily deploying multiple Datahub frontends for each portal and subportal set up in your GeoNetwork installation</em> (<a href="../../administrator-guide/configuring-the-catalog/portal-configuration/">see documentation for portals here</a>).</p>
+<h3 id="enabling-the-plugin">Enabling the plugin</h3>
+<p>Simply unzip the <a href="https://sourceforge.net/projects/geonetwork/files/GeoNetwork_opensource/v4.4.6/gn-plugin-datahub-integration-4.4.6-0.zip">gn-plugin-datahub-integration</a> archive and copy its content in the <code>WEB-INF/lib</code> folder of your GeoNetwork installation.</p>
+<h3 id="configuration">Configuration</h3>
+<p>Please refer to the <a href="../../administrator-guide/configuring-the-catalog/portal-configuration/#configuring-a-datahub-interface-for-a-sub-portal">Portal configuration page</a> to set up a Datahub interface once the plugin is enabled on your GeoNetwork installation,</p>
+<h3 id="building-the-plugin">Building the plugin</h3>
+<p>Use the <code>-Pdatahub-integration</code> profile when building GeoNetwork: the plugin will be packaged as a JAR file in <code>plugins/gn-datahub-integration/target/</code>.</p>
 
 
 
