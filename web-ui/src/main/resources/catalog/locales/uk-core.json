@@ -588,5 +588,6 @@
     "mapLegend": "Легенда",
     "quality": "якість",
     "download": "Завантажити",
-    "links": "Посилання"
+    "links": "Посилання",
+    "saveToFile": "Save to file."
 }

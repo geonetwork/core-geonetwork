@@ -588,5 +588,6 @@
     "mapLegend": "Allwedd",
     "quality": "Ansawdd",
     "download": "Lawrlwytho",
-    "links": "Dolenni"
+    "links": "Dolenni",
+    "saveToFile": "Save to file."
 }

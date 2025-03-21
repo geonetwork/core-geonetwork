@@ -588,5 +588,6 @@
     "mapLegend": "범례",
     "quality": "품질",
     "download": "Download",
-    "links": "링크"
+    "links": "링크",
+    "saveToFile": "Save to file."
 }

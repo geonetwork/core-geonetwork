@@ -588,5 +588,6 @@
     "mapLegend": "Legendă",
     "quality": "Calitate",
     "download": "Descarca",
-    "links": "Legături"
+    "links": "Legături",
+    "saveToFile": "Save to file."
 }

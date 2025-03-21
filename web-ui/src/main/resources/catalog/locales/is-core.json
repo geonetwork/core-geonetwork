@@ -588,5 +588,6 @@
     "mapLegend": "Legend",
     "quality": "Gæði",
     "download": "Niðurhal",
-    "links": "Links"
+    "links": "Links",
+    "saveToFile": "Save to file."
 }

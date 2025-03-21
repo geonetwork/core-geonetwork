@@ -588,5 +588,6 @@
     "mapLegend": "ლეგენდა",
     "quality": "ხარისხიანი",
     "download": "ჩამოტვირთვა",
-    "links": "ბმულები"
+    "links": "ბმულები",
+    "saveToFile": "Save to file."
 }
