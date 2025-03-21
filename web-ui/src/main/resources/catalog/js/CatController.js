@@ -909,6 +909,8 @@
             isSocialbarEnabled: true,
             showStatusWatermarkFor: "",
             showStatusTopBarFor: "",
+            showStaticPageMenu: false,
+            recordviewCustomMenu: [], // List of static pages identifiers to display
             showCitation: {
               enabled: false,
               // if: {'documentStandard': ['iso19115-3.2018']}
