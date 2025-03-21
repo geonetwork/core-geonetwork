@@ -160,6 +160,7 @@
               data-popup-action="true"
               data-template-type="contact"
               data-filter='{"root": "cit:CI_Responsibility"}'
+              data-insert-modes="xlink"
               data-variables="cit:role/cit:CI_RoleCode/@codeListValue~{role}"/>
     </for>
     <for name="mri:pointOfContact" addDirective="data-gn-directory-entry-selector">
@@ -213,6 +214,7 @@
               data-popup-action="true"
               data-template-type="contact"
               data-filter='{"root": "cit:CI_Responsibility"}'
+              data-insert-modes="xlink"
               data-variables="cit:role/cit:CI_RoleCode/@codeListValue~{role}"/>
     </for>
     <for name="mrd:distributorContact" addDirective="data-gn-directory-entry-selector">
@@ -255,6 +257,7 @@
               data-popup-action="true"
               data-template-type="contact"
               data-filter='{"root": "cit:CI_Responsibility"}'
+              data-insert-modes="xlink"
               data-variables="cit:role/cit:CI_RoleCode/@codeListValue~{role}"/>
     </for>
     <for name="mrl:processor" addDirective="data-gn-directory-entry-selector">
@@ -297,6 +300,7 @@
               data-popup-action="true"
               data-template-type="contact"
               data-filter='{"root": "cit:CI_Responsibility"}'
+              data-insert-modes="xlink"
               data-variables="cit:role/cit:CI_RoleCode/@codeListValue~{role}"/>
     </for>
     <for name="cit:citedResponsibleParty" addDirective="data-gn-directory-entry-selector">
@@ -339,6 +343,7 @@
               data-popup-action="true"
               data-template-type="contact"
               data-filter='{"root": "cit:CI_Responsibility"}'
+              data-insert-modes="xlink"
               data-variables="cit:role/cit:CI_RoleCode/@codeListValue~{role}"/>
     </for>
 
