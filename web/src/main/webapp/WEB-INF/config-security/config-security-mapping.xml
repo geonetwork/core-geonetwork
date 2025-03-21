@@ -78,7 +78,6 @@
 
         <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/q!?.*" access="permitAll"/>
         <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/qi!?.*" access="permitAll"/>
-        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/oaipmh!?.*" access="permitAll"/>
         <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/info!?.*" access="permitAll"/>
 
 
