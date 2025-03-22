@@ -1425,7 +1425,6 @@
     <module>datastorages</module>
     <module>translationproviders</module>
     <module>auditable</module>
-    <module>plugins/datahub-integration</module>
   </modules>
 
   <profiles>
@@ -1515,6 +1514,12 @@
          <kb.installer.extension>zip</kb.installer.extension>
        </properties>
      </profile>
+    <profile>
+      <id>datahub-integration</id>
+      <modules>
+        <module>plugins/datahub-integration</module>
+      </modules>
+    </profile>
   </profiles>
 
   <distributionManagement>
