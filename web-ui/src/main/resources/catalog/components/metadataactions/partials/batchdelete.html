@@ -1,0 +1,20 @@
+<form id="gn-batch-approval">
+  <div>
+    <p data-ng-bind-html="getMetadataDeleteConfirmMessage()"></p>
+
+    <div class="modal-footer-inline clearfix">
+      <div class="btn-toolbar pull-right">
+        <button
+          class="btn btn-primary"
+          data-gn-click-and-spin="deleteMd()"
+          data-translate=""
+        >
+          confirm
+        </button>
+        <button class="btn btn-default" type="button" data-dismiss="modal">
+          <span data-translate="">cancel</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</form>

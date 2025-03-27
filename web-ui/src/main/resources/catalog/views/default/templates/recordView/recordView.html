@@ -112,8 +112,7 @@
               data-ng-if="mdView.current.record.draft != 'y'"
               data-ng-show="(!mdView.current.record.isPublished() || (mdView.current.record.isPublished() && user.canDeletePublishedMetadata()) ) && user.canEditRecord(mdView.current.record)
                             && (user.isReviewerOrMore() || mdView.current.record.mdStatus != 4 || !isMdWorkflowEnable)"
-              data-gn-click-and-spin="deleteRecord(mdView.current.record)"
-              data-gn-confirm-click="{{'deleteRecordConfirm' | translate: {resourceTitle: (mdView.current.record.resourceTitle | json)} }}"
+              data-ng-click="removeMetadata()"
               title="{{'delete' | translate}}"
             >
               <span class="fa fa-fw fa-times"></span>
@@ -177,6 +176,15 @@
             </ul>
           </div>
         </div>
+      </div>
+
+      <div
+        gn-modal
+        class="gn-confirm-delete"
+        gn-popup-options="{title: 'confirmDialogTitle', confirmCallback: confirmRemoveMetadata}"
+        id="gn-confirm-remove-metadata"
+      >
+        <p data-ng-bind-html="getMetadataDeleteConfirmMessage()"></p>
       </div>
 
       <div

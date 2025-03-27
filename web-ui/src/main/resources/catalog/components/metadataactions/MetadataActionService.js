@@ -392,6 +392,18 @@
         );
       };
 
+      this.deleteBatch = function (bucket, resourceType, scope) {
+        gnUtilityService.openModal(
+          {
+            title: "batchDeleteTitle",
+            content:
+              '<div gn-metadata-batch-delete selection-bucket="' + bucket + '"></div>'
+          },
+          scope,
+          "MetadataDeleted"
+        );
+      };
+
       this.submit = function (bucket, scope) {
         gnUtilityService.openModal(
           {
