@@ -91,6 +91,55 @@
         });
       };
 
+      $rootScope.$on("metadataSelectedClear", function (event, args) {
+        selectedMetadataTypes = [];
+      });
+
+      $rootScope.$on("metadataSelected", function (event, args) {
+        var selectedMetadata;
+        if (angular.isArray(args)) {
+          selectedMetadata = args;
+        } else {
+          selectedMetadata = [args];
+        }
+
+        for (var j = 0; j < selectedMetadata.length; j++) {
+          var resourceType = selectedMetadata[j]["resourceType"][0];
+          var index = _.findIndex(selectedMetadataTypes, function (o) {
+            return o.type === resourceType;
+          });
+
+          if (index == -1) {
+            selectedMetadataTypes.push({ type: resourceType, count: 1 });
+          } else {
+            selectedMetadataTypes[index].count = selectedMetadataTypes[index].count + 1;
+          }
+        }
+      });
+
+      $rootScope.$on("metadataUnselected", function (event, args) {
+        var index = _.findIndex(selectedMetadataTypes, function (o) {
+          return o.type === args["resourceType"][0];
+        });
+
+        if (index > -1) {
+          selectedMetadataTypes[index].count = selectedMetadataTypes[index].count - 1;
+
+          if (selectedMetadataTypes[index].count === 0) {
+            selectedMetadataTypes.splice(index, 1);
+          }
+        }
+      });
+
+      $rootScope.$on("metadataSelectedAll", function (event, args) {
+        var keys = Object.keys(args.data);
+        var values = Object.values(args.data);
+
+        for (var i = 0; i < keys.length; i++) {
+          selectedMetadataTypes.push({ type: keys[i], count: values[i] });
+        }
+      });
+
       var callBatch = function (service) {
         return gnHttp.callService(service).then(function (data) {
           alertResult(data.data);

@@ -187,7 +187,7 @@
       };
 
       $scope.getMetadataDeleteConfirmMessage = function () {
-        if (! $scope.mdView.current.record) return "";
+        if (!$scope.mdView.current.record) return "";
 
         return $translate.instant("metadataDeleteConfirm", {
           title: $scope.mdView.current.record.resourceTitle
