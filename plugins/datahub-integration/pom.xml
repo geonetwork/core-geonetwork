@@ -26,13 +26,11 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <parent>
-    <artifactId>geonetwork</artifactId>
-    <groupId>org.geonetwork-opensource</groupId>
+    <artifactId>gn-plugins</artifactId>
+    <groupId>org.geonetwork-opensource.plugins</groupId>
     <version>4.4.7-SNAPSHOT</version>
-    <relativePath>../../pom.xml</relativePath>
   </parent>
   <modelVersion>4.0.0</modelVersion>
-
 
   <groupId>org.geonetwork-opensource.plugins</groupId>
   <artifactId>gn-datahub-integration</artifactId>
@@ -73,7 +71,7 @@
   </profiles>
 
   <properties>
-    <geonetwork-ui.git.branch>main</geonetwork-ui.git.branch>
+    <geonetwork-ui.git.branch>v2.5.0</geonetwork-ui.git.branch>
     <rootProjectDir>../..</rootProjectDir>
   </properties>
 
@@ -83,7 +81,6 @@
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>exec-maven-plugin</artifactId>
-        <version>3.3.0</version>
         <executions>
           <execution>
             <id>delete-existing</id>
@@ -109,6 +106,7 @@
               <executable>git</executable>
               <arguments>
                 <argument>clone</argument>
+                <argument>--depth=1</argument>
                 <argument>--branch</argument>
                 <argument>${geonetwork-ui.git.branch}</argument>
                 <argument>https://github.com/geonetwork/geonetwork-ui.git</argument>
@@ -128,6 +126,7 @@
           <execution>
             <!--   Installing node and npm   -->
             <id>install-node-and-npm</id>
+            <phase>initialize</phase>
             <goals>
               <goal>install-node-and-npm</goal>
             </goals>
@@ -139,6 +138,7 @@
           <!--   Install geonetwork-ui dependencies   -->
           <execution>
             <id>npm-install</id>
+            <phase>initialize</phase>
             <goals>
               <goal>npm</goal>
             </goals>
@@ -151,6 +151,7 @@
           <!--   Build datahub app   -->
           <execution>
             <id>npm-build</id>
+            <phase>compile</phase>
             <goals>
               <goal>npm</goal>
             </goals>
@@ -171,11 +172,10 @@
       <!--   Copy of datahub files   -->
       <plugin>
         <artifactId>maven-resources-plugin</artifactId>
-        <version>3.1.0</version>
         <executions>
           <execution>
             <id>copy-resources</id>
-            <phase>generate-resources</phase>
+            <phase>prepare-package</phase>
             <goals>
               <goal>copy-resources</goal>
             </goals>
@@ -194,6 +194,62 @@
         </executions>
       </plugin>
 
+      <!-- generate html contents-->
+      <plugin>
+        <groupId>com.ruleoftech</groupId>
+        <artifactId>markdown-page-generator-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>readme</id>
+            <phase>prepare-package</phase>
+            <goals>
+              <goal>generate</goal>
+            </goals>
+            <configuration>
+              <inputDirectory>${project.basedir}/src/main/assembly</inputDirectory>
+              <outputDirectory>${project.build.directory}/html</outputDirectory>
+            </configuration>
+          </execution>
+          <execution>
+            <id>licenses</id>
+            <phase>prepare-package</phase>
+            <goals>
+              <goal>generate</goal>
+            </goals>
+            <configuration>
+              <inputDirectory>${project.basedir}/../../</inputDirectory>
+              <outputDirectory>${project.build.directory}/html/license</outputDirectory>
+            </configuration>
+          </execution>
+        </executions>
+        <configuration>
+          <recursiveInput>false</recursiveInput>
+          <transformRelativeMarkdownLinks>true</transformRelativeMarkdownLinks>
+          <headerHtmlFile>${project.basedir}/../../release/src/markdown/html/header.html</headerHtmlFile>
+          <footerHtmlFile>${project.basedir}/../../release/src/markdown/html/footer.html</footerHtmlFile>
+          <pegdownExtensions>TABLES,FENCED_CODE_BLOCKS</pegdownExtensions>
+          <defaultTitle>true</defaultTitle>
+        </configuration>
+      </plugin>
+      <!-- assemble into zip for release -->
+      <plugin>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>release-zip</id>
+            <phase>package</phase>
+            <goals>
+              <goal>single</goal>
+            </goals>
+            <configuration>
+              <appendAssemblyId>false</appendAssemblyId>
+              <descriptors>
+                <descriptor>src/main/assembly/assembly.xml</descriptor>
+              </descriptors>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
     </plugins>
   </build>
 </project>
