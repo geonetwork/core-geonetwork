@@ -34,18 +34,21 @@
       <input
         type="number"
         class="form-control"
+        data-ng-readonly="readonly === 'true'"
         data-ng-model="year"
         data-ng-show="mode === 'year'"
       />
       <input
         type="month"
         class="form-control"
+        data-ng-readonly="readonly === 'true'"
         data-ng-model="month"
         data-ng-show="mode === 'month'"
       />
       <input
         type="date"
         class="form-control gn-date"
+        data-ng-readonly="readonly === 'true'"
         data-ng-model="date"
         data-ng-class="hideTime == 'true' ? 'gn-notime' : ''"
         data-ng-show="mode === ''"
@@ -53,12 +56,14 @@
       <input
         type="time"
         class="form-control gn-time"
+        data-ng-readonly="readonly === 'true'"
         data-ng-class="hideTime == 'true' ? 'hidden' : ''"
         data-ng-model="time"
         data-ng-show="mode === ''"
       />
       <select
         class="form-control gn-timezone"
+        data-ng-readonly="readonly === 'true'"
         data-ng-class="hideTime == 'true' ? 'hidden' : ''"
         data-ng-model="timezone"
         data-ng-hide="hideTimezone"
@@ -78,6 +83,7 @@
         <button
           type="button"
           class="btn btn-default dropdown-toggle"
+          data-ng-disabled="readonly === 'true'"
           data-toggle="dropdown"
         >
           <i class="fa fa-clock-o"></i>&nbsp;<span class="caret"></span>
