@@ -1,22 +1,22 @@
 <li
-  class="dropdown gn-clear-xs"
+  class="dropdown"
   role="menuitem"
   data-ng-show="showPortalSwitcher && ((portals | filter: {listableInHeaderSelector: true}).length > 0 || nodeId != 'srv')"
 >
   <a
     title="{{'portals' | translate}}"
     href
-    class="dropdown-toggle gn-menuheader-xs"
+    class="dropdown-toggle"
     role="button"
     data-toggle="dropdown"
     aria-haspopup="true"
     aria-expanded="false"
   >
-    <span translate class="sr-only">portals</span>
-    <span class="caret"></span>
+    <span translate class="visible-xs">portals</span>
+    <span class="caret hidden-xs"></span>
   </a>
-  <ul class="dropdown-menu gn-menu-xs clearfix">
-    <li class="gn-menuitem-xs" role="menuitem" data-ng-if="nodeId != 'srv'">
+  <ul class="dropdown-menu clearfix">
+    <li role="menuitem" data-ng-if="nodeId != 'srv'">
       <a href="../../srv/{{lang}}/catalog.search#/home">
         <img
           class="gn-source-logo"
@@ -30,14 +30,13 @@
       data-ng-if="(portals | filter: {listableInHeaderSelector: true}).length > 0 && (nodeId != 'srv')"
     ></li>
     <li
-      class="dropdown-header"
+      class="dropdown-header hidden-xs"
       translate=""
       data-ng-if="(portals | filter: {listableInHeaderSelector: true}).length > 0"
     >
       switchPortals
     </li>
     <li
-      class="gn-menuitem-xs"
       role="menuitem"
       data-ng-repeat="p in portals | filter: {listableInHeaderSelector: true} |orderBy:sortByLabel"
     >
@@ -49,5 +48,6 @@
         {{::p.label[lang]}}
       </a>
     </li>
+    <li role="separator" class="divider visible-xs"></li>
   </ul>
 </li>
