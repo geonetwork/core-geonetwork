@@ -682,6 +682,9 @@
           <xsl:for-each select="gmd:useLimitation">
             <xsl:copy-of select="gn-fn-index:add-multilingual-field(concat($fieldPrefix, 'UseLimitation'), ., $allLanguages)"/>
           </xsl:for-each>
+          <xsl:for-each select="gmd:userNote">
+            <xsl:copy-of select="gn-fn-index:add-multilingual-field(concat($fieldPrefix, 'UserNote'), ., $allLanguages)"/>
+          </xsl:for-each>
         </xsl:for-each>
 
         <xsl:for-each select="gmd:resourceConstraints/gmd:MD_LegalConstraints/gmd:otherConstraints">
