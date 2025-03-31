@@ -33,18 +33,10 @@ import static org.fao.geonet.constants.Edit.RootChild.CHILD;
 
 import java.io.IOException;
 import java.io.StringReader;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.BitSet;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
-import java.util.Vector;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.jxpath.ri.parser.Token;
@@ -271,7 +263,7 @@ public class EditLib {
         // remove everything and then, depending on removeExisting
         // readd all children to the element and assure a correct position for the new one: at the end of the others
         // or just add the new one
-        List existingAllType = new ArrayList(targetElement.getChildren());
+        List<Element> existingAllType = new ArrayList(targetElement.getChildren());
         targetElement.removeContent();
         for (String singleType: type.getAlElements()) {
             List<Element> existingForThisType = filterOnQname(existingAllType, singleType);
@@ -282,9 +274,22 @@ public class EditLib {
                     LOGGER_ADD_ELEMENT.debug("####		- add child {}", existingChild.toString());
                 }
             }
-            if (qname.equals(singleType))
+            if (qname.equals(singleType)) {
                 targetElement.addContent(childToAdd);
+            }
+
+            filterOnQname(existingAllType, "geonet:child")
+                .stream()
+                .filter(gnChild -> (gnChild.getAttributeValue("prefix") + ":" + gnChild.getAttributeValue("name")).equals(singleType))
+                .findFirst()
+                .ifPresent(targetElement::addContent);
         }
+
+        Stream.concat(
+            filterOnQname(existingAllType, "geonet:element").stream(),
+            filterOnQname(existingAllType, "geonet:attribute").stream()
+        ).forEach(targetElement::addContent);
+
     }
 
     public void addXMLFragments(String schema, Element md, Map<String, String> xmlInputs) throws Exception {
