@@ -264,7 +264,7 @@ public class MetadataWorkflowApi {
 
             if (!minimumAllowedProfile.getProfileAndAllParents().contains(userProfile)) {
                 // If the user profile is not at least the minimum profile, then the user is not allowed to view record workflow status
-                String message = getMustBeProfileOrOwnerMessage(minimumAllowedProfileName, messages);
+                String message = getMustBeProfileOrOwnerMessage(minimumAllowedProfileName, messages, locale);
                 Log.debug(API.LOG_MODULE_NAME, message);
                 throw new NotAllowedException(message);
             }
@@ -738,6 +738,7 @@ public class MetadataWorkflowApi {
         Integer size,
         HttpServletRequest request) throws Exception {
         ServiceContext context = ApiUtils.createServiceContext(request);
+        Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
         ResourceBundle messages = ApiUtils.getMessagesResourceBundle(request.getLocales());
 
         Profile userProfile = context.getUserSession().getProfile();
@@ -747,7 +748,7 @@ public class MetadataWorkflowApi {
         );
         Profile minimumAllowedProfile = Profile.valueOf(minimumAllowedProfileName);
         boolean isMinimumAllowedProfile = minimumAllowedProfile.getProfileAndAllParents().contains(userProfile);
-        String mustBeProfileOrOwnerMessage = getMustBeProfileOrOwnerMessage(minimumAllowedProfileName, messages);
+        String mustBeProfileOrOwnerMessage = getMustBeProfileOrOwnerMessage(minimumAllowedProfileName, messages, locale);
 
         if (userProfile != Profile.Administrator) {
             if (CollectionUtils.isEmpty(recordIdentifier) &&
@@ -1390,8 +1391,8 @@ public class MetadataWorkflowApi {
      * @param minimumAllowedProfileName The name of the minimum allowed profile.
      * @return A formatted message indicating the required profile or ownership.
      */
-    private String getMustBeProfileOrOwnerMessage(String minimumAllowedProfileName, ResourceBundle messages) {
-        Translator jsonLocTranslator = translatorFactory.getTranslator("apploc:", messages.getLocale().getISO3Language());
+    private String getMustBeProfileOrOwnerMessage(String minimumAllowedProfileName, ResourceBundle messages, Locale locale) {
+        Translator jsonLocTranslator = translatorFactory.getTranslator("apploc:", locale.getISO3Language());
         return MessageFormat.format(
             messages.getString("exception.notAllowed.mustBeProfileOrOwner"),
             jsonLocTranslator.translate(minimumAllowedProfileName)
