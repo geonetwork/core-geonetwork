@@ -133,8 +133,8 @@
     <entry key="http://publications.europa.eu/resource/authority/file-type/GPKG">geopackage</entry>
     <entry key="http://publications.europa.eu/resource/authority/file-type/RSS">georss</entry>
     <entry key="http://publications.europa.eu/resource/authority/file-type/TIFF">image/tiff</entry>
-    <entry key="http://publications.europa.eu/resource/authority/file-type/GeoTIFF">geotiff</entry>
-    <entry key="http://publications.europa.eu/resource/authority/file-type/GeoTIFF">application/x-worldfile</entry>
+    <entry key="http://publications.europa.eu/resource/authority/file-type/GEOTIFF">geotiff</entry>
+    <entry key="http://publications.europa.eu/resource/authority/file-type/GEOTIFF">application/x-worldfile</entry>
     <entry key="http://publications.europa.eu/resource/authority/file-type/GIF">gif</entry>
     <entry key="http://publications.europa.eu/resource/authority/file-type/GML">gml</entry>
     <entry key="http://publications.europa.eu/resource/authority/file-type/GML">application/gml+xml</entry>
@@ -222,7 +222,7 @@
     <entry key="http://publications.europa.eu/resource/authority/file-type/XHTML">xhtml</entry>
     <entry key="http://publications.europa.eu/resource/authority/file-type/XLS">xls</entry>
     <entry key="http://publications.europa.eu/resource/authority/file-type/XLSX">xlsx</entry>
-    <entry key="http://publications.europa.eu/resource/authority/file-type/XSLX">application/vnd.openxmlformats-officedocument.spreadsheetml.sheet</entry>
+    <entry key="http://publications.europa.eu/resource/authority/file-type/XLSX">application/vnd.openxmlformats-officedocument.spreadsheetml.sheet</entry>
     <entry key="http://publications.europa.eu/resource/authority/file-type/XML">application/xml</entry>
     <entry key="http://publications.europa.eu/resource/authority/file-type/XML">xml</entry>
     <entry key="http://publications.europa.eu/resource/authority/file-type/WCS_SRVC">wcs</entry>
