@@ -538,9 +538,8 @@ public class GeonetWroModelFactory implements WroModelFactory {
         Resource resource = new Resource();
         resource.setMinimize(dep.isMinimized);
         resource.setType(ResourceType.JS);
-        final Path path = IO.toPath(dep.path.replace("file:/D:", "/D"));
-        if (Files.exists(path)) {
-            resource.setUri(path.toUri().toString());
+        if (!dep.path.startsWith("file:/") && Files.exists(IO.toPath(dep.path))) {
+            resource.setUri(IO.toPath(dep.path).toUri().toString());
         } else {
             resource.setUri(dep.path);
         }
