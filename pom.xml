@@ -118,7 +118,7 @@
         </plugin>
         <plugin>
           <artifactId>maven-resources-plugin</artifactId>
-          <version>3.3.0</version>
+          <version>3.3.1</version>
         </plugin>
         <plugin>
           <artifactId>maven-dependency-plugin</artifactId>
@@ -148,7 +148,7 @@
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>exec-maven-plugin</artifactId>
-          <version>1.6.0</version>
+          <version>3.5.0</version>
         </plugin>
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
@@ -1423,6 +1423,7 @@
     <module>estest</module>
     <module>index</module>
     <module>datastorages</module>
+    <module>plugins</module>
     <module>translationproviders</module>
     <module>auditable</module>
   </modules>
@@ -1514,12 +1515,6 @@
          <kb.installer.extension>zip</kb.installer.extension>
        </properties>
      </profile>
-    <profile>
-      <id>datahub-integration</id>
-      <modules>
-        <module>plugins/datahub-integration</module>
-      </modules>
-    </profile>
   </profiles>
 
   <distributionManagement>

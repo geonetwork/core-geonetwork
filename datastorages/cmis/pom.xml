@@ -140,7 +140,7 @@
               </execution>
             </executions>
           </plugin>
-          <!-- generate html conrtents-->
+          <!-- generate html contents-->
           <plugin>
             <groupId>com.ruleoftech</groupId>
             <artifactId>markdown-page-generator-plugin</artifactId>
