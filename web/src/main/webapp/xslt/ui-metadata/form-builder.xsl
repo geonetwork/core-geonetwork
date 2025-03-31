@@ -935,11 +935,24 @@
         id="gn-el-{$id}"
         data-gn-cardinality="{$childEditInfo/@min}-{$childEditInfo/@max}"
         data-gn-field-highlight="">
-        <label class="col-sm-2 control-label"
-               data-gn-field-tooltip="{$schema}|{$qualifiedName}|{$parentName}|">
-          <xsl:value-of select="if (normalize-space($label) != '')
+
+        <xsl:choose>
+          <xsl:when test="$viewConfig/@displayTooltipsMode = 'icon'">
+            <!-- Avoid displaying the help icon next to buttons when the toolstip mode is icon -->
+            <label class="col-sm-2 control-label">
+              <xsl:value-of select="if (normalize-space($label) != '')
                                 then $label else '&#160;'"/>
-        </label>
+            </label>
+          </xsl:when>
+          <xsl:otherwise>
+            <label class="col-sm-2 control-label"
+                   data-gn-field-tooltip="{$schema}|{$qualifiedName}|{$parentName}|">
+              <xsl:value-of select="if (normalize-space($label) != '')
+                                then $label else '&#160;'"/>
+            </label>
+          </xsl:otherwise>
+        </xsl:choose>
+
         <div class="col-sm-9">
 
           <xsl:variable name="addDirective" select="$directive/@addDirective != ''"/>
