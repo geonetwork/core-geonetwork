@@ -16,8 +16,7 @@
     <ul
       class="dropdown-menu"
       role="menu"
-      data-ng-init="isReviewer = user.isAdmin() || user.isReviewerForGroup(md.groupOwner);
-                    isRecordWorkflowEnabled = isMdWorkflowEnable && md.isWorkflowEnabled();"
+      data-ng-init="isReviewer = user.isAdmin() || user.isReviewerForGroup(md.groupOwner);"
     >
       <li role="menuitem" data-ng-if="showBatchDropdown">
         <label>
@@ -94,14 +93,14 @@
       </li>
 
       <!-- Workflow -->
-      <li role="menuitem" class="dropdown-header" data-ng-show="isMdWorkflowEnable">
+      <li
+        role="menuitem"
+        class="dropdown-header"
+        data-ng-show="anyWorkflowOptionDisplayed(user)"
+      >
         <span data-translate="">workflow</span>
       </li>
-      <li
-        data-ng-if="isMdWorkflowEnable
-                    && user.canEditRecord(md)
-                    && !md.isWorkflowEnabled()"
-      >
+      <li data-ng-if="displayEnableWorkflowOption(user)">
         <a
           role="menuitem"
           href=""
@@ -112,11 +111,8 @@
         </a>
       </li>
       <li
-        data-ng-repeat="step in statusEffects[isReviewer ? 'reviewer' : 'editor']"
-        data-ng-show="user.canEditRecord(md)
-                        && (user.isAdmin() || user[isReviewer ? 'isReviewerForGroup' : 'isEditorForGroup'](md.groupOwner))
-                        && md.mdStatus == status[step.from]
-                        && isRecordWorkflowEnabled"
+        data-ng-repeat="step in getStatusEffects(user)"
+        data-ng-show="displayWorkflowStepOption(step, user)"
       >
         <a
           href=""
