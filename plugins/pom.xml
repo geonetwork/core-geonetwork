@@ -52,7 +52,4 @@
     </profile>
   </profiles>
 
-  <properties>
-    <rootProjectDir>../..</rootProjectDir>
-  </properties>
 </project>
