@@ -471,6 +471,10 @@ public class Aligner extends BaseAligner<CswParams> {
 
         applyBatchEdits(ri.uuid, md, schema, params.getBatchEdits(), context, log);
 
+        // Translate metadata
+        if (params.isTranslateContent()) {
+            md = translateMetadataContent(context, md, schema);
+        }
 
         boolean validate = false;
         boolean ufo = false;
