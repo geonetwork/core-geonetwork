@@ -126,7 +126,7 @@
     "featureCatalog": "Catalogue d'attributs",
     "frequency": "Fréquence",
     "feebackSent": "Votre message a été envoyé au gestionnaire du catalogue.",
-    "feebackSentError": "An error occurred sending your to the catalog manager. Please try again later, contact the service provider, or report this issue.",
+    "feebackSentError": "Une erreur s'est produite lors de l'envoi de votre demande à l'administrateur du catalogue. Veuillez réessayer ultérieurement, contacter le fournisseur du service ou signaler ce problème.",
     "feedbackNotEnable": "L'envoi de commentaire n'est pas activé.",
     "filter": "Filtrer",
     "filterSearch": "Afficher les options de recherche",
@@ -171,7 +171,7 @@
     "needAnAccount": "Besoin d'un compte?",
     "needAnAccountInfo": "Enregistrez-vous, cela ne prend qu'une minute.",
     "needHelp": "Besoin d'aide",
-    "newAccountInfo": "When registering, an email will be sent to you with account details. The catalogue administrator will review group and profile requests.",
+    "newAccountInfo": "Une fois votre demande de création de compte faite, un courriel vous sera envoyé. Si vous demandez un profil utilisateur avancé, l'administrateur du catalogue analysera votre demande et vous fera un retour.",
     "next": "Suivant",
     "noFileSelected": "Aucun fichier sélectionné",
     "noRecordFound": "Aucune fiche trouvée.",
@@ -235,7 +235,7 @@
     "register": "Créer un compte",
     "rememberMe": "Se souvenir de moi",
     "requestedProfile": "Profil souhaité",
-    "requestedGroup": "Requested group",
+    "requestedGroup": "Groupe demandé",
     "resetPassword": "Changer le mot de passe",
     "resetPasswordTitle": "Modification du mot de passe de {{user}}.",
     "resetPasswordError": "Il y a eu une erreur lors de la réinitialisation du mot de passe",
@@ -385,7 +385,7 @@
     "layerNotAvailableInMapProj": "Le service ne fournit par la couche dans le système de projection de la carte '{{proj}}'. La couche sera ajoutée mais risque de ne pas s'afficher correctement.",
     "layerCRSNotFound": "La couche n'indique pas de système de projection. Cela peut être lié à un problème de version WMS < 1.3.0.",
     "layerTileLoadError": "Un incident est survenu lors du chargement de la tuile <a href='{{url}}' target='_blank'>'{{url | limitTo: 30}} ...'</a> pour la couche '{{layer}}'.",
-    "layerProtocolNotSupported": "The following protocol is not supported yet in the map viewer: {{type}}",
+    "layerProtocolNotSupported": "Le protocole suivant n'est pas encore pris en charge dans la visionneuse de carte : {{type}}",
     "getCapFailure": "Les demandes GetCapabilities du WMS ont échoué",
     "standards": "Standards",
     "documentStandard": "Standards",
@@ -589,5 +589,5 @@
     "quality": "Qualité",
     "download": "Téléchargement",
     "links": "Liens",
-    "saveToFile": "Save to file."
+    "saveToFile": "Enregistrer dans un fichier."
 }

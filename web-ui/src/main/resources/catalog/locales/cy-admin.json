@@ -1541,7 +1541,9 @@
     "userHistoryFieldSet": "Field '{{fieldName}}' set to '{{newValue}}'",
     "userHistoryFieldUnset": "Field '{{fieldName}}' unset",
     "noUserHistory": "No user history available",
-    "datahubConfiguration": "DataHub configuration",
-    "sourceDatahubConfiguration-help": "You can configure the datahub settings here. For this you can use the documentation available here: <a href='https://geonetwork.github.io/geonetwork-ui/main/docs/guide/configure.html'>Configure GeoNetwork-UI</a>. You can leave this configuration empty, in this case the default configuration will be used.",
-    "datahubEnabled": "Enable DataHub"
+    "datahubConfiguration": "Datahub configuration",
+    "sourceDatahubConfiguration-help": "You can configure the Datahub settings here. Please refer to the <a href='https://geonetwork.github.io/geonetwork-ui/main/docs/guide/configure.html' target='_blank'>GeoNetwork-UI configuration guide</a> for more information. The default configuration for the Datahub can be found <a href='https://github.com/geonetwork/geonetwork-ui/blob/main/conf/default.toml' target='_blank'>here</a>.<br>Note: leaving this configuration empty will fallback to the main portal configuration.",
+    "datahubEnabled": "Enable Datahub interface for this portal",
+    "datahubInfo": "This Datahub interface is accessible <a href='../../{{uuid}}/datahub'>here</a>.",
+    "datahubPluginNotInstalled-help": "The Datahub plugin is not installed. Please refer to <a href='https://docs.geonetwork-opensource.org/4.4/install-guide/plugins/#datahub-integration-gn-datahub-integration' target='_blank'>the related documentation for more information</a> on installation and usage."
 }
