@@ -59,71 +59,22 @@
   </dependencies>
 
   <properties>
-    <geonetwork-ui.git.branch>v2.5.0</geonetwork-ui.git.branch>
     <rootProjectDir>../..</rootProjectDir>
   </properties>
 
   <build>
     <resources>
       <resource>
+        <directory>src/main/resources</directory>
+      </resource>
+      <resource>
         <directory>target/resources</directory>
       </resource>
     </resources>
     <plugins>
-      <!-- Git clone geonetwork-ui -->
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>exec-maven-plugin</artifactId>
-        <executions>
-          <execution>
-            <id>delete-existing</id>
-            <phase>initialize</phase>
-            <goals>
-              <goal>exec</goal>
-            </goals>
-            <configuration>
-              <executable>rm</executable>
-              <arguments>
-                <argument>-rf</argument>
-                <argument>target/geonetwork-ui</argument>
-              </arguments>
-            </configuration>
-          </execution>
-          <execution>
-            <id>checkout-geonetwork-ui</id>
-            <phase>initialize</phase>
-            <goals>
-              <goal>exec</goal>
-            </goals>
-            <configuration>
-              <executable>git</executable>
-              <arguments>
-                <argument>clone</argument>
-                <argument>--depth=1</argument>
-                <argument>--branch</argument>
-                <argument>${geonetwork-ui.git.branch}</argument>
-                <argument>https://github.com/geonetwork/geonetwork-ui.git</argument>
-                <argument>target/geonetwork-ui</argument>
-              </arguments>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-
       <!--   Install node & npm -> npm install -> npm run build  -->
       <plugin>
         <artifactId>maven-clean-plugin</artifactId>
-        <configuration>
-          <filesets>
-            <fileset>
-              <directory>${schema-plugins.dir}</directory>
-              <includes>
-                <include>**/*</include>
-              </includes>
-              <followSymlinks>false</followSymlinks>
-            </fileset>
-          </filesets>
-        </configuration>
         <executions>
           <execution>
             <id>reset</id>
@@ -168,7 +119,7 @@
             </goals>
             <configuration>
               <arguments>ci --loglevel error</arguments>
-              <workingDirectory>target/geonetwork-ui</workingDirectory>
+              <workingDirectory>geonetwork-ui</workingDirectory>
               <installDirectory>${basedir}</installDirectory>
             </configuration>
           </execution>
@@ -186,7 +137,7 @@
               <arguments>
                 run nx -- build datahub --base-href=./
               </arguments>
-              <workingDirectory>target/geonetwork-ui</workingDirectory>
+              <workingDirectory>geonetwork-ui</workingDirectory>
               <installDirectory>${basedir}</installDirectory>
             </configuration>
           </execution>
@@ -209,7 +160,7 @@
               <outputDirectory>target/resources/datahub</outputDirectory>
               <resources>
                 <resource>
-                  <directory>target/geonetwork-ui/dist/apps/datahub</directory>
+                  <directory>geonetwork-ui/dist/apps/datahub</directory>
                   <filtering>false</filtering>
                 </resource>
               </resources>
