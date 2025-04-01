@@ -58,24 +58,17 @@
     </dependency>
   </dependencies>
 
-  <profiles>
-    <profile>
-      <id>datahub-integration</id>
-      <activation>
-        <property>
-          <!-- include when making a release -->
-          <name>release</name>
-        </property>
-      </activation>
-    </profile>
-  </profiles>
-
   <properties>
     <geonetwork-ui.git.branch>v2.5.0</geonetwork-ui.git.branch>
     <rootProjectDir>../..</rootProjectDir>
   </properties>
 
   <build>
+    <resources>
+      <resource>
+        <directory>target/resources</directory>
+      </resource>
+    </resources>
     <plugins>
       <!-- Git clone geonetwork-ui -->
       <plugin>
@@ -92,7 +85,7 @@
               <executable>rm</executable>
               <arguments>
                 <argument>-rf</argument>
-                <argument>src/main/geonetwork-ui</argument>
+                <argument>target/geonetwork-ui</argument>
               </arguments>
             </configuration>
           </execution>
@@ -110,7 +103,7 @@
                 <argument>--branch</argument>
                 <argument>${geonetwork-ui.git.branch}</argument>
                 <argument>https://github.com/geonetwork/geonetwork-ui.git</argument>
-                <argument>src/main/geonetwork-ui</argument>
+                <argument>target/geonetwork-ui</argument>
               </arguments>
             </configuration>
           </execution>
@@ -118,6 +111,37 @@
       </plugin>
 
       <!--   Install node & npm -> npm install -> npm run build  -->
+      <plugin>
+        <artifactId>maven-clean-plugin</artifactId>
+        <configuration>
+          <filesets>
+            <fileset>
+              <directory>${schema-plugins.dir}</directory>
+              <includes>
+                <include>**/*</include>
+              </includes>
+              <followSymlinks>false</followSymlinks>
+            </fileset>
+          </filesets>
+        </configuration>
+        <executions>
+          <execution>
+            <id>reset</id>
+            <goals><goal>clean</goal></goals>
+            <configuration>
+              <filesets>
+                <!-- reset working files covered by .gitignore -->
+                <fileset>
+                  <directory>.</directory>
+                  <includes>
+                    <include>node/**</include>
+                  </includes>
+                </fileset>
+              </filesets>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
       <plugin>
         <groupId>com.github.eirslett</groupId>
         <artifactId>frontend-maven-plugin</artifactId>
@@ -144,7 +168,7 @@
             </goals>
             <configuration>
               <arguments>ci --loglevel error</arguments>
-              <workingDirectory>src/main/geonetwork-ui</workingDirectory>
+              <workingDirectory>target/geonetwork-ui</workingDirectory>
               <installDirectory>${basedir}</installDirectory>
             </configuration>
           </execution>
@@ -162,7 +186,7 @@
               <arguments>
                 run nx -- build datahub --base-href=./
               </arguments>
-              <workingDirectory>src/main/geonetwork-ui</workingDirectory>
+              <workingDirectory>target/geonetwork-ui</workingDirectory>
               <installDirectory>${basedir}</installDirectory>
             </configuration>
           </execution>
@@ -182,10 +206,10 @@
             <configuration>
               <overwrite>true</overwrite>
               <encoding>UTF-8</encoding>
-              <outputDirectory>src/main/resources/datahub</outputDirectory>
+              <outputDirectory>target/resources/datahub</outputDirectory>
               <resources>
                 <resource>
-                  <directory>src/main/geonetwork-ui/dist/apps/datahub</directory>
+                  <directory>target/geonetwork-ui/dist/apps/datahub</directory>
                   <filtering>false</filtering>
                 </resource>
               </resources>
@@ -249,6 +273,18 @@
             </configuration>
           </execution>
         </executions>
+      </plugin>
+      <plugin>
+         <artifactId>maven-install-plugin</artifactId>
+         <configuration>
+           <skip>true</skip> <!-- download artifact no need to install -->
+         </configuration>
+      </plugin>
+      <plugin>
+         <artifactId>maven-deploy-plugin</artifactId>
+         <configuration>
+           <skip>true</skip> <!-- download artifact no need to deploy -->
+         </configuration>
       </plugin>
     </plugins>
   </build>
