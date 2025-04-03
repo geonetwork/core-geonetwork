@@ -36,10 +36,18 @@
     "gn-static-pages-list-viewer"
   ]);
 
+  module.constant("GN_DEFAULT_RECORD_VIEW_MENU", [
+    "gn-recordview-edit-menu",
+    "gn-recordview-delete-menu",
+    "gn-recordview-manage-menu",
+    "gn-recordview-display-menu"
+  ]);
+
   module.directive("gnToolbar", [
     "GN_DEFAULT_MENU",
+    "GN_DEFAULT_RECORD_VIEW_MENU",
     "gnGlobalSettings",
-    function (GN_DEFAULT_MENU, gnGlobalSettings) {
+    function (GN_DEFAULT_MENU, GN_DEFAULT_RECORD_VIEW_MENU, gnGlobalSettings) {
       return {
         templateUrl: "../../catalog/components/toolbar/partials/top-toolbar.html",
         link: function ($scope) {
@@ -48,6 +56,11 @@
             gnGlobalSettings.gnCfg.mods.header.topCustomMenu.length > 0
               ? gnGlobalSettings.gnCfg.mods.header.topCustomMenu
               : GN_DEFAULT_MENU;
+          $scope.recordviewMenu =
+            gnGlobalSettings.gnCfg.mods.recordview.recordviewCustomMenu &&
+            gnGlobalSettings.gnCfg.mods.recordview.recordviewCustomMenu.length > 0
+              ? gnGlobalSettings.gnCfg.mods.recordview.recordviewCustomMenu
+              : GN_DEFAULT_RECORD_VIEW_MENU;
 
           $scope.isPage = function (page) {
             return angular.isObject(page) || page.indexOf("gn-") === -1;
@@ -109,6 +122,32 @@
       return {
         replace: true,
         templateUrl: "../../catalog/components/toolbar/partials/menu-languages.html"
+      };
+    }
+  ]);
+  module.directive("gnRecordViewEditMenu", [
+    function () {
+      return {
+        replace: true,
+        templateUrl: "../../catalog/components/toolbar/partials/menu-recordview-edit.html"
+      };
+    }
+  ]);
+  module.directive("gnRecordViewDeleteMenu", [
+    function () {
+      return {
+        replace: true,
+        templateUrl:
+          "../../catalog/components/toolbar/partials/menu-recordview-delete.html"
+      };
+    }
+  ]);
+  module.directive("gnRecordViewDisplayModeMenu", [
+    function () {
+      return {
+        replace: true,
+        templateUrl:
+          "../../catalog/components/toolbar/partials/menu-recordview-display-mode.html"
       };
     }
   ]);
