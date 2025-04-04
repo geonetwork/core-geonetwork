@@ -856,4 +856,51 @@
       };
     }
   ]);
+
+  /**
+   * @ngdoc directive
+   * @name gn_mdactions_directive.directive:gnMetadataBatchDelete
+   * @restrict A
+   *
+   * @description
+   * The `gnMetadataBatchDelete` directive provides a
+   * dialog to confirm the deletion of a metadata selection.
+   *
+   */
+  module.directive("gnMetadataBatchDelete", [
+    "$translate",
+    "gnMetadataActions",
+    function ($translate, gnMetadataActions) {
+      return {
+        restrict: "A",
+        replace: false,
+        templateUrl:
+          "../../catalog/components/metadataactions/partials/" + "batchdelete.html",
+        scope: {
+          selectionBucket: "@"
+        },
+        link: function (scope, element, attrs) {
+          scope.deleteMd = function () {
+            return gnMetadataActions.deleteMd(null, scope.selectionBucket).then(
+              function () {
+                scope.$emit("MetadataDeleted");
+                scope.$emit("StatusUpdated", {
+                  msg: $translate.instant("metadataDeletedWithNoErrors"),
+                  timeout: 2,
+                  type: "success"
+                });
+              },
+              function () {
+                scope.$emit("MetadataDeleted");
+              }
+            );
+          };
+
+          scope.getMetadataDeleteConfirmMessage = function () {
+            return $translate.instant("metadataBatchDeleteConfirm");
+          };
+        }
+      };
+    }
+  ]);
 })();
