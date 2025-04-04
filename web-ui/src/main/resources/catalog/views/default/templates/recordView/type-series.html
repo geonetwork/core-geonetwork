@@ -154,7 +154,10 @@
 </div>
 
 <!-- contact -->
-<div class="row gn-section">
+<div
+  class="row gn-section"
+  data-ng-if="mdView.current.record.contactForResource || mdView.current.record.resourceCredit"
+>
   <div class="col-md-8 gn-record gn-break">
     <div
       ng-include="'../../catalog/views/default/templates/recordView/contact.html'"
