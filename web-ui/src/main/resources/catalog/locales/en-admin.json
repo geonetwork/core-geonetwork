@@ -881,6 +881,8 @@
     "metadata/delete": "Metadata delete",
     "metadata/delete/profilePublishedMetadata": "Minimum user profile allowed to delete published metadata",
     "metadata/delete/profilePublishedMetadata-help": "Minimum user profile allowed to delete published metadata (Editor, Reviewer or Administrator). The default value is Editor.",
+    "metadata/delete/enablebackup": "Enable Backup",
+    "metadata/delete/enablebackup-help": "Backup metadata on the server before deleting process.",
     "metadata/batchediting": "Metadata Batch Editing",
     "metadata/batchediting/accesslevel": "Select the minimum user profile allowed to access batch editing",
     "metadata/batchediting/accesslevel-help": "Select the minimum user profile allowed to access batch editing (Editor, Reviewer or Administrator). The default value is Editor.",
