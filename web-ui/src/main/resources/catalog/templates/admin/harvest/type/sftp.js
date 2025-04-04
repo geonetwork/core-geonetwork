@@ -34,7 +34,8 @@ var gnHarvestersftp = {
         "overrideUuid": "SKIP",
         "folder": "",
         "useAuthKey": true,
-        "typeAuthKey": "RSA"
+        "typeAuthKey": "RSA",
+        "publicKey": ""
       },
       "ifRecordExistAppendPrivileges": false,
       "privileges": [{
