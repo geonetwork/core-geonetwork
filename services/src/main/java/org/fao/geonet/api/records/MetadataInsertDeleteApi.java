@@ -215,8 +215,18 @@ public class MetadataInsertDeleteApi {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteRecord(
         @Parameter(description = API_PARAM_RECORD_UUID, required = true) @PathVariable String metadataUuid,
-        @Parameter(description = API_PARAM_BACKUP_FIRST, required = false) @RequestParam(required = false, defaultValue = "true") boolean withBackup,
+        @Parameter(description = API_PARAM_BACKUP_FIRST, required = false) @RequestParam(required = false) Boolean withBackup,
         HttpServletRequest request) throws Exception {
+        boolean isMdDeleteBackupEnable = settingManager.getValueAsBool(Settings.METADATA_DELETE_ENABLEBACKUP);
+        if (withBackup == null) {
+            Log.info(LOGGER, String.format("withBackup paramter is missing. Will use setting of metadata/delete/enablebackup '%s' during the deletion process", isMdDeleteBackupEnable));
+            withBackup = isMdDeleteBackupEnable;
+        } else if (withBackup != isMdDeleteBackupEnable) {
+            ResourceBundle messages = ApiUtils.getMessagesResourceBundle(request.getLocales());
+            throw new IllegalArgumentException(
+                String.format(messages.getString("api.metadata.delete.errorWithBackupParamMismatch"), isMdDeleteBackupEnable, withBackup));
+        }
+
         AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
         ServiceContext context = ApiUtils.createServiceContext(request);
         Store store = context.getBean("resourceStore", Store.class);

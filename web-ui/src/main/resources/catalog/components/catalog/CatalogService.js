@@ -61,11 +61,10 @@
          * Delete a metadata from catalog
          *
          * @param {string} id Internal id of the metadata
-         * @param {string} backupMetadata flag to enable backup during the delete process
          * @return {HttpPromise} Future object
          */
-        remove: function (id, backupMetadata) {
-          return $http.delete("../api/records/" + id, {params: {withBackup: backupMetadata}});
+        remove: function (id) {
+          return $http.delete("../api/records/" + id);
         },
 
         /**

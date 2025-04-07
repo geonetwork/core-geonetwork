@@ -268,7 +268,7 @@
       this.deleteMd = function (md, bucket) {
         var deferred = $q.defer();
         if (md) {
-          gnMetadataManager.remove(md.id, gnConfig["metadata.delete.enablebackup"]).then(
+          gnMetadataManager.remove(md.id).then(
             function (data) {
               $timeout(function () {
                 $rootScope.$broadcast("search");
@@ -308,7 +308,7 @@
       };
 
       this.cancelWorkingCopy = function (md) {
-        return gnMetadataManager.remove(md.id, gnConfig["metadata.delete.enablebackup"]);
+        return gnMetadataManager.remove(md.id);
       };
 
       this.getMetadataIdToEdit = function (md) {

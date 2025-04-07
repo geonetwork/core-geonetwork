@@ -144,6 +144,7 @@ public class Settings {
     public static final String METADATA_HISTORY_ENABLED = "metadata/history/enabled";
     public static final String METADATA_HISTORY_ACCESS_LEVEL = "metadata/history/accesslevel";
     public static final String METADATA_PUBLISHED_DELETE_USERPROFILE = "metadata/delete/profilePublishedMetadata";
+    public static final String METADATA_DELETE_ENABLEBACKUP = "metadata/delete/enablebackup";
     public static final String METADATA_PUBLISH_USERPROFILE = "metadata/publication/profilePublishMetadata";
     public static final String METADATA_UNPUBLISH_USERPROFILE = "metadata/publication/profileUnpublishMetadata";
     public static final String METADATA_BACKUPARCHIVE_ENABLE = "metadata/backuparchive/enable";
