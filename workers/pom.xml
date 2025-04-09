@@ -28,7 +28,7 @@
   <parent>
     <artifactId>geonetwork</artifactId>
     <groupId>org.geonetwork-opensource</groupId>
-    <version>4.4.7-0</version>
+    <version>4.4.8-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
