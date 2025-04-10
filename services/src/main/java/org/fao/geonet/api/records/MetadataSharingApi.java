@@ -967,6 +967,15 @@ public class MetadataSharingApi implements ApplicationEventPublisherAware
         HttpServletRequest request
     )
         throws Exception {
+
+        Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
+
+        // If the group is reserved, there is no need to check if it's a workspace as the group will not be changed.
+        // This is required for transferring ownership to an administrator
+        if (!ReservedGroup.isReserved(groupIdentifier)) {
+            checkGroupIsWorkspace(groupIdentifier, locale);
+        }
+
         MetadataProcessingReport report = new SimpleMetadataProcessingReport();
 
         try {
@@ -1037,6 +1046,15 @@ public class MetadataSharingApi implements ApplicationEventPublisherAware
         HttpServletRequest request
     )
         throws Exception {
+
+        Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
+
+        // If the group is reserved, there is no need to check if it's a workspace as the group will not be changed.
+        // This is required for transferring ownership to an administrator
+        if (!ReservedGroup.isReserved(groupIdentifier)) {
+            checkGroupIsWorkspace(groupIdentifier, locale);
+        }
+
         MetadataProcessingReport report = new SimpleMetadataProcessingReport();
 
         ApiUtils.canEditRecord(metadataUuid, request);
