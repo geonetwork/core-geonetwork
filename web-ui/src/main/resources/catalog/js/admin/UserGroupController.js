@@ -167,6 +167,12 @@
         $scope.categories = [nullTag].concat(categoriesSorted);
       });
 
+      $scope.groupTypes = [
+        { id: "Workspace", label: "groupTypeWorkspace" },
+        { id: "RecordPrivilege", label: "groupTypeRecordPrivilege" },
+        { id: "SystemPrivilege", label: "groupTypeSystemPrivilege" }
+      ];
+
       function loadGroups() {
         $scope.isLoadingGroups = true;
         // If not send profile, all groups are returned
@@ -681,6 +687,8 @@
           label: {},
           description: "",
           email: "",
+          type: "Workspace",
+          minimumProfileForPrivileges: null,
           enableAllowedCategories: false,
           allowedCategories: [],
           defaultCategory: null,
@@ -739,10 +747,6 @@
           $scope.groupSelected.defaultCategory.id == null
         ) {
           $scope.groupSelected.defaultCategory = null;
-        }
-        // Ensure that the minimum profile for privileges is not an empty string
-        if ($scope.groupSelected.minimumProfileForPrivileges == "") {
-          $scope.groupSelected.minimumProfileForPrivileges = null;
         }
         $http
           .put(

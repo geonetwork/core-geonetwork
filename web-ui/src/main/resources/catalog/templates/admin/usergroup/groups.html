@@ -260,6 +260,20 @@
               </div>
             </div>
             <div
+              class="form-group"
+              data-ng-class="gnGroupEdit.type.$error.type  ? 'has-error' : ''"
+            >
+              <label class="control-label" data-translate="">groupType</label>
+              <select
+                class="form-control"
+                name="type"
+                data-ng-model="groupSelected.type"
+                data-ng-options="t.id as (t.label | translate) for t in groupTypes"
+              ></select>
+              <p class="help-block" data-translate="">groupTypeHelp</p>
+            </div>
+            <div
+              class="form-group"
               data-ng-class="gnGroupEdit.minimumProfileForPrivileges.$error.minimumProfileForPrivileges  ? 'has-error' : ''"
             >
               <label class="control-label" data-translate=""
