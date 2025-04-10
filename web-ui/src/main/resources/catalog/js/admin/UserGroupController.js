@@ -104,6 +104,7 @@
       // List of catalog groups
       $scope.groups = null;
       $scope.groupSelected = { id: $routeParams.userOrGroup };
+      $scope.nonSystemGroups = null;
       // On going changes group ...
       $scope.groupUpdated = false;
       $scope.groupSearch = {};
@@ -183,6 +184,9 @@
             $scope.groups = response.data;
             angular.forEach($scope.groups, function (u) {
               u.langlabel = getLabel(u);
+            });
+            $scope.nonSystemGroups = $scope.groups.filter(function (g) {
+              return g.type !== "SystemPrivilege";
             });
             $scope.isLoadingGroups = false;
 

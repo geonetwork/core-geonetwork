@@ -853,6 +853,11 @@ public class UsersApi {
             String profile = element.getProfile();
             // The user has a new group and profile
 
+            if (group.getType() == GroupType.SystemPrivilege && !Profile.RegisteredUser.name().equals(profile)) {
+                throw new NotAllowedException(messages.getMessage("api.users.invalid_profile_for_system_group", new
+                    Object[]{group.getName()}, locale));
+            }
+
             // Combine all groups editor and reviewer groups
             if (profile.equals(Profile.Reviewer.name())) {
                 final UserGroup userGroup = new UserGroup().setGroup(group)
