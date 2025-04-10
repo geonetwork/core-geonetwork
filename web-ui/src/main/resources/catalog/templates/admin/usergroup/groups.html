@@ -341,7 +341,7 @@
         </div>
 
         <!-- Display users of the group -->
-        <div data-ng-hide="!groupusers">
+        <div data-ng-hide="groupusers.length < 1">
           <h3><span data-translate="">usersInGroup</span> {{groupSelected.name}}</h3>
         </div>
 
