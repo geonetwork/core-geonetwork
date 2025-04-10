@@ -7,7 +7,7 @@
   <a
     title="{{'editorBoard' | translate}}"
     href
-    class="dropdown-toggle gn-menuheader-xs"
+    class="dropdown-toggle"
     role="button"
     data-toggle="dropdown"
     aria-haspopup="true"
@@ -17,35 +17,34 @@
     <span translate>contribute</span>
     <span class="caret hidden-xs"></span>
   </a>
-  <ul class="dropdown-menu gn-menu-xs clearfix">
-    <li class="gn-menuitem-xs" role="menuitem">
+  <ul class="dropdown-menu clearfix">
+    <li role="menuitem">
       <a data-gn-active-tb-item="{{gnCfg.mods.editor.appUrl}}#/board">
         <span class="fa fa-fw fa-bars"></span><span translate>editorHome</span>
       </a>
     </li>
-    <li role="separator" class="divider gn-separator-xs"></li>
-    <li class="gn-menuitem-xs" role="menuitem">
+    <li role="separator" class="divider"></li>
+    <li role="menuitem">
       <a data-gn-active-tb-item="{{gnCfg.mods.editor.appUrl}}#/create">
         <span class="fa fa-fw fa-plus"></span>&nbsp;<span translate>addRecord</span>
       </a>
     </li>
-    <li class="gn-menuitem-xs" role="menuitem" data-ng-if="user.canImportMetadata()">
+    <li role="menuitem" data-ng-if="user.canImportMetadata()">
       <a data-gn-active-tb-item="{{gnCfg.mods.editor.appUrl}}#/import">
         <span class="fa fa-fw fa-upload"></span><span translate>ImportRecord</span>
       </a>
     </li>
-    <li class="gn-menuitem-xs" role="menuitem">
+    <li role="menuitem">
       <a data-gn-active-tb-item="{{gnCfg.mods.editor.appUrl}}#/directory">
         <span class="fa fa-fw fa-bookmark"></span><span translate>directoryManager</span>
       </a>
     </li>
-    <li class="gn-menuitem-xs" role="menuitem" data-ng-if="user.canBatchEditMetadata()">
+    <li role="menuitem" data-ng-if="user.canBatchEditMetadata()">
       <a data-gn-active-tb-item="{{gnCfg.mods.editor.appUrl}}#/batchedit">
         <span class="fa fa-fw fa-pencil"></span><span translate>batchEditing</span>
       </a>
     </li>
     <li
-      class="gn-menuitem-xs"
       role="menuitem"
       ng-if="user.isAdministratorOrMore() && healthCheck.IndexHealthCheck === true"
     >
