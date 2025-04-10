@@ -66,9 +66,11 @@ import org.fao.geonet.util.MetadataPublicationMailNotifier;
 import org.fao.geonet.util.UserUtil;
 import org.fao.geonet.util.WorkflowUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
+import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
@@ -101,8 +103,18 @@ public class MetadataSharingApi implements ApplicationEventPublisherAware
 {
     private static final String DEFAULT_PUBLICATION_TYPE_NAME = "default";
 
+    /**
+     * Language utils used to detect the requested language.
+     */
     @Autowired
     LanguageUtils languageUtils;
+
+    /**
+     * Message source.
+     */
+    @Autowired
+    @Qualifier("apiMessages")
+    ResourceBundleMessageSource messages;
 
     @Autowired
     FeedbackLanguages feedbackLanguages;

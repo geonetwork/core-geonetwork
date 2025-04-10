@@ -553,14 +553,14 @@ public class GroupsApi {
     ) throws Exception {
         Optional<Group> group = groupRepository.findById(groupIdentifier);
 
+        Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
+
         if (group.isPresent()) {
             final long metadataCount = metadataRepository.count(where((Specification<Metadata>)
                 MetadataSpecs.isOwnedByOneOfFollowingGroups(Arrays.asList(group.get().getId()))));
             if (metadataCount > 0) {
-                throw new NotAllowedException(String.format(
-                    "Group %s owns metadata. To remove the group you should transfer first the metadata to another group.",
-                    group.get().getName()
-                ));
+                throw new NotAllowedException(messages.getMessage("api.groups.delete.owns_metadata", new
+                    Object[]{group.get().getName()}, locale));
             }
 
             List<Integer> reindex = operationAllowedRepo.findAllIds(OperationAllowedSpecs.hasGroupId(groupIdentifier),

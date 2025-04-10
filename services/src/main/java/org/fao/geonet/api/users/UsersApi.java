@@ -33,6 +33,7 @@ import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
+import org.fao.geonet.api.exception.NotAllowedException;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
 import org.fao.geonet.api.users.model.PasswordResetDto;
 import org.fao.geonet.api.users.model.UserDto;
@@ -53,6 +54,8 @@ import org.fao.geonet.repository.specification.UserGroupSpecs;
 import org.fao.geonet.repository.specification.UserSpecs;
 import org.fao.geonet.util.PasswordUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -114,6 +117,13 @@ public class UsersApi {
 
     @Autowired
     LanguageUtils languageUtils;
+
+    /**
+     * Message source.
+     */
+    @Autowired
+    @Qualifier("apiMessages")
+    private ResourceBundleMessageSource messages;
 
     @Autowired(required=false)
     SecurityProviderConfiguration securityProviderConfiguration;
@@ -502,7 +512,7 @@ public class UsersApi {
         fillUserFromParams(user, userDto);
 
         user = userRepository.save(user);
-        setUserGroups(user, groups);
+        setUserGroups(user, groups, locale);
 
         List<UserGroup> userGroups = userGroupRepository.findAll(UserGroupSpecs
             .hasUserId(user.getId()));
@@ -539,7 +549,6 @@ public class UsersApi {
             HttpSession httpSession
     ) throws Exception {
         Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
-        ResourceBundle messages = ResourceBundle.getBundle("org.fao.geonet.api.Messages", locale);
 
         Profile profile = Profile.findProfileIgnoreCase(userDto.getProfile());
 
@@ -634,9 +643,9 @@ public class UsersApi {
         user = userRepository.save(user);
 
         if (securityProviderConfiguration == null || securityProviderConfiguration.isUserGroupUpdateEnabled()) {
-            setUserGroups(user, groups);
+            setUserGroups(user, groups, locale);
         }
-        
+
         List<UserGroup> userGroups = userGroupRepository.findAll(UserGroupSpecs
             .hasUserId(user.getId()));
 
@@ -816,7 +825,7 @@ public class UsersApi {
     }
 
 
-    private void setUserGroups(final User user, List<GroupElem> userGroups)
+    private void setUserGroups(final User user, List<GroupElem> userGroups, Locale locale)
         throws Exception {
 
         Collection<UserGroup> all = userGroupRepository.findAll(UserGroupSpecs
