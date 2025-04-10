@@ -821,6 +821,11 @@ public class MetadataSharingApi implements ApplicationEventPublisherAware
         HttpServletRequest request
     )
         throws Exception {
+
+        Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
+
+        checkGroupIsWorkspace(groupIdentifier, locale);
+
         AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
         ApplicationContext appContext = ApplicationContextHolder.get();
 
@@ -1552,6 +1557,39 @@ public class MetadataSharingApi implements ApplicationEventPublisherAware
         }
 
         return privilegeStatuses.stream().filter(p -> p.publishedBefore != p.publishedAfter).collect(Collectors.toList());
+    }
+
+    /**
+     * Checks if the given group is of type Workspace.
+     *
+     * @param groupId the identifier of the group to check
+     * @param locale the locale to use for error messages
+     * @throws ResourceNotFoundException if the group is not found
+     * @throws IllegalArgumentException if the group is not of type Workspace
+     */
+    private void checkGroupIsWorkspace(Integer groupId, Locale locale) throws ResourceNotFoundException {
+        if (!groupIsType(groupId, GroupType.Workspace, locale)) {
+            throw new IllegalArgumentException(messages.getMessage("api.groups.group_not_workspace", new
+                Object[]{groupId}, locale));
+        }
+    }
+
+    /**
+     * Checks if the given group is of the specified type.
+     *
+     * @param groupId the identifier of the group to check
+     * @param groupType the type to check against
+     * @param locale the locale to use for error messages
+     * @return true if the group is of the specified type, false otherwise
+     * @throws ResourceNotFoundException if the group is not found
+     */
+    private boolean groupIsType(Integer groupId, GroupType groupType, Locale locale) throws ResourceNotFoundException {
+        Group group = groupRepository.findById(groupId).orElse(null);
+        if (group == null) {
+            throw new ResourceNotFoundException(messages.getMessage("api.groups.group_not_found", new
+                Object[]{groupId}, locale));
+        }
+        return group.getType() == groupType;
     }
 
     /**
