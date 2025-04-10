@@ -539,6 +539,7 @@ public class MetadataSharingApi implements ApplicationEventPublisherAware
         boolean notifyByMail) throws Exception {
         if (privileges != null) {
 
+            Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
             ResourceBundle messages = ApiUtils.getMessagesResourceBundle(request.getLocales());
 
             boolean sharingChanges = false;
@@ -598,17 +599,20 @@ public class MetadataSharingApi implements ApplicationEventPublisherAware
             }
 
             for (GroupOperations p : privileges) {
+                Integer groupId = p.getGroup();
                 for (Map.Entry<String, Boolean> o : p.getOperations().entrySet()) {
                     Integer opId = operationMap.get(o.getKey());
-                    // Never set editing for reserved group
-                    if (opId == ReservedOperation.editing.getId() &&
-                        ReservedGroup.isReserved(p.getGroup())) {
+                    // Never set editing for reserved group or any privileges for system groups
+                    if (
+                        groupIsType(groupId, GroupType.SystemPrivilege, locale) ||
+                        (opId == ReservedOperation.editing.getId() && ReservedGroup.isReserved(groupId))
+                    ) {
                         continue;
                     }
 
                     if (Boolean.TRUE.equals(o.getValue())) {
                         // For privileges to ALL group, check if it's allowed or not to publish invalid metadata
-                        if ((p.getGroup() == ReservedGroup.all.getId())) {
+                        if ((groupId == ReservedGroup.all.getId())) {
                             try {
                                 checkCanPublishToAllGroup(context, messages, metadata,
                                     allowPublishInvalidMd, allowPublishNonApprovedMd);
@@ -625,11 +629,11 @@ public class MetadataSharingApi implements ApplicationEventPublisherAware
 
                         }
                         dataMan.setOperation(
-                            context, metadata.getId(), p.getGroup(), opId);
+                            context, metadata.getId(), groupId, opId);
                         sharingChanges = true;
                     } else if (!sharing.isClear() && Boolean.TRUE.equals(!o.getValue())) {
                         dataMan.unsetOperation(
-                            context, metadata.getId(), p.getGroup(), opId);
+                            context, metadata.getId(), groupId, opId);
                         sharingChanges = true;
                     }
                 }
@@ -754,6 +758,9 @@ public class MetadataSharingApi implements ApplicationEventPublisherAware
             for (Group g : elGroup) {
                 if (!hasNetworkConfig
                     && g.getId() == ReservedGroup.intranet.getId()) {
+                    continue;
+                }
+                if (g.getType() == GroupType.SystemPrivilege) {
                     continue;
                 }
                 GroupPrivilege groupPrivilege = new GroupPrivilege();
@@ -909,6 +916,9 @@ public class MetadataSharingApi implements ApplicationEventPublisherAware
         for (Group g : elGroup) {
             if (!hasNetworkConfig
                 && g.getId() == ReservedGroup.intranet.getId()) {
+                continue;
+            }
+            if (g.getType() == GroupType.SystemPrivilege) {
                 continue;
             }
             GroupPrivilege groupPrivilege = new GroupPrivilege();
