@@ -897,6 +897,8 @@ public class MetadataSharingApi implements ApplicationEventPublisherAware
             GroupPrivilege groupPrivilege = new GroupPrivilege();
             groupPrivilege.setGroup(g.getId());
             groupPrivilege.setReserved(g.isReserved());
+            // Restrict changing privileges for groups with a minimum profile for setting privileges set
+            groupPrivilege.setRestricted(!canUserChangePrivilegesForGroup(context, g));
             groupPrivilege.setUserGroup(userGroups.contains(g.getId()));
 
             Map<String, Boolean> operations = new HashMap<>(allOperations.size());
