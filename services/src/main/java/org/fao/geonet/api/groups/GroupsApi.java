@@ -33,7 +33,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
-import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.exception.ExceptionUtils;
@@ -454,29 +453,68 @@ public class GroupsApi {
             description = API_PARAM_GROUP_DETAILS
         )
         @RequestBody
-            Group group
+            Group group,
+        @Parameter(hidden = true)
+            ServletRequest request
     ) throws Exception {
-        final Optional<Group> existing = groupRepository.findById(groupIdentifier);
-        if (!existing.isPresent()) {
-            throw new ResourceNotFoundException(String.format(
-                MSG_GROUP_WITH_IDENTIFIER_NOT_FOUND, groupIdentifier
-            ));
-        } else {
-            // Rebuild translation pack cache if there are changes in the translations
-            boolean clearTranslationPackCache =
-                !existing.get().getLabelTranslations().equals(group.getLabelTranslations());
 
-            try {
-                groupRepository.saveAndFlush(group);
-            } catch (Exception ex) {
-                Log.error(API.LOG_MODULE_NAME, ExceptionUtils.getStackTrace(ex));
-                throw new RuntimeException(ex.getMessage());
+        Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
+
+        final Group existingGroup = groupRepository.findById(groupIdentifier)
+            .orElseThrow(() -> new ResourceNotFoundException(String.format(
+                MSG_GROUP_WITH_IDENTIFIER_NOT_FOUND, groupIdentifier)));
+
+        GroupType existingGroupType = existingGroup.getType();
+        GroupType newGroupType = group.getType();
+
+        // If changing a workspace group to a non-workspace group
+        if (existingGroupType == GroupType.Workspace && newGroupType != GroupType.Workspace) {
+            // Check if the group owns any metadata
+            final long metadataCount = metadataRepository.count(where((Specification<Metadata>)
+                MetadataSpecs.isOwnedByOneOfFollowingGroups(Arrays.asList(group.getId()))));
+            if (metadataCount > 0) {
+                throw new NotAllowedException(messages.getMessage("api.groups.unset_workspace.owns_metadata", new
+                    Object[]{group.getName()}, locale));
             }
+        }
 
-
-            if (clearTranslationPackCache) {
-                translationPackBuilder.clearCache();
+        // If changing a group to a system group
+        if (existingGroupType != GroupType.SystemPrivilege && newGroupType == GroupType.SystemPrivilege) {
+            // Check if the group has any users associated with it that are not registered users
+            final long invalidProfileCount = userGroupRepository.count(UserGroupSpecs.hasGroupId(group.getId())
+                .and(Specification.not(UserGroupSpecs.hasProfile(Profile.RegisteredUser))));
+            if (invalidProfileCount > 0) {
+                throw new NotAllowedException(messages.getMessage("api.groups.set_system.invalid_profile",
+                    new Object[]{group.getName()}, locale));
             }
+            // Check if the group has any privileges associated with it
+            final long operationAllowedCount = operationAllowedRepo.count(OperationAllowedSpecs.hasGroupId(group.getId()));
+            if (operationAllowedCount > 0) {
+                throw new NotAllowedException(messages.getMessage("api.groups.set_system.has_privileges",
+                    new Object[]{group.getName()}, locale));
+            }
+        }
+
+        // If the group is a system group, it cannot have a minimum profile for privileges
+        if (newGroupType == GroupType.SystemPrivilege && group.getMinimumProfileForPrivileges() != null) {
+            throw new IllegalArgumentException(messages.getMessage("api.groups.system_group_has_minimum_profile",
+                new Object[]{group.getName()}, locale));
+        }
+
+        // Rebuild translation pack cache if there are changes in the translations
+        boolean clearTranslationPackCache =
+            !existingGroup.getLabelTranslations().equals(group.getLabelTranslations());
+
+        try {
+            groupRepository.saveAndFlush(group);
+        } catch (Exception ex) {
+            Log.error(API.LOG_MODULE_NAME, ExceptionUtils.getStackTrace(ex));
+            throw new RuntimeException(ex.getMessage());
+        }
+
+
+        if (clearTranslationPackCache) {
+            translationPackBuilder.clearCache();
         }
     }
 
