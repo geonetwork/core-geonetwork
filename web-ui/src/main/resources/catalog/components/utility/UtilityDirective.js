@@ -2348,7 +2348,7 @@
           scope.$on("$locationChangeSuccess", checkActive);
 
           // Watch for changes in the link attribute
-          attrs.$observe('gnActiveTbItem', function (newLink) {
+          attrs.$observe("gnActiveTbItem", function (newLink) {
             link = newLink;
             updateHref();
             checkActive();

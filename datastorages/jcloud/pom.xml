@@ -28,7 +28,7 @@
   <parent>
     <artifactId>gn-datastorages</artifactId>
     <groupId>org.geonetwork-opensource.datastorage</groupId>
-    <version>4.2.12-SNAPSHOT</version>
+    <version>4.2.12-0</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
