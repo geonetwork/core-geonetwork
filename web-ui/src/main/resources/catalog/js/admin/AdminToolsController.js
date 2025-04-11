@@ -202,7 +202,12 @@
               params.running = false;
             },
             function (response) {
-              // TODO
+              $rootScope.$broadcast("StatusUpdated", {
+                title: $translate.instant("transfertPrivilegesError"),
+                error: response.data,
+                timeout: 0,
+                type: "danger"
+              });
               params.running = false;
             }
           );

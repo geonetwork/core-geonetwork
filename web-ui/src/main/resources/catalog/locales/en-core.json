@@ -411,6 +411,7 @@
     "attributeType": "Type",
     "attributeCode": "Code",
     "transfertPrivilegesFinished": "{{metadata}} record(s) transferred.",
+    "transfertPrivilegesError": "Error transferring metadata ownership.",
     "valueName": "Name",
     "xmlView": "XML view",
     "downloadRecord": "Download record",
