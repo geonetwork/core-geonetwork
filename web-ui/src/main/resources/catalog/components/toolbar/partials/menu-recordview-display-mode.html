@@ -1,0 +1,29 @@
+<div class="btn-group gn-view-menu-button pull-left">
+  <button
+    type="button"
+    class="btn btn-default dropdown-toggle"
+    data-toggle="dropdown"
+    aria-label="{{'chooseAView' | translate}}"
+    aria-expanded="false"
+  >
+    <span class="fa fa-fw fa-eye"></span>
+    <span data-translate="" class="hidden-sm hidden-xs">chooseAView</span>
+    <span class="caret"></span>
+  </button>
+  <ul class="dropdown-menu" role="menu">
+    <li
+      role="menuitem"
+      data-ng-repeat="f in recordFormatterList"
+      data-ng-class="currentFormatter === f.url ? 'disabled' : ''"
+    >
+      <a
+        href=""
+        gn-metadata-open="mdView.current.record"
+        gn-records="mdView.records"
+        gn-formatter="f && f.url"
+      >
+        {{f.label | translate}}
+      </a>
+    </li>
+  </ul>
+</div>
