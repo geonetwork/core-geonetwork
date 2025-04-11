@@ -223,6 +223,31 @@
                       </select>
 
                       <select
+                        data-ng-switch-when="metadata/delete/backupOptions"
+                        class="form-control"
+                        name="{{s.name}}"
+                      >
+                        <option
+                          value="ForceBackup"
+                          ng-selected="'ForceBackup' == s.value"
+                        >
+                          {{'Force backup' | translate}}
+                        </option>
+                        <option
+                          value="ForceNoBackup"
+                          ng-selected="'ForceNoBackup' == s.value"
+                        >
+                          {{'Force no backup' | translate}}
+                        </option>
+                        <option value="Enabled" ng-selected="'Enabled' == s.value">
+                          {{'Enabled' | translate}}
+                        </option>
+                        <option value="Disabled" ng-selected="'Disabled' == s.value">
+                          {{'Disabled' | translate}}
+                        </option>
+                      </select>
+
+                      <select
                         data-ng-switch-when="metadata/publication/profilePublishMetadata"
                         class="form-control"
                         name="{{s.name}}"

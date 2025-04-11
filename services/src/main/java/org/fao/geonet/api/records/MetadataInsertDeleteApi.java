@@ -217,15 +217,7 @@ public class MetadataInsertDeleteApi {
         @Parameter(description = API_PARAM_RECORD_UUID, required = true) @PathVariable String metadataUuid,
         @Parameter(description = API_PARAM_BACKUP_FIRST, required = false) @RequestParam(required = false) Boolean withBackup,
         HttpServletRequest request) throws Exception {
-        boolean isMdDeleteBackupEnable = settingManager.getValueAsBool(Settings.METADATA_DELETE_ENABLEBACKUP);
-        if (withBackup == null) {
-            Log.info(LOGGER, String.format("withBackup paramter is missing. Will use setting of metadata/delete/enablebackup '%s' during the deletion process", isMdDeleteBackupEnable));
-            withBackup = isMdDeleteBackupEnable;
-        } else if (withBackup != isMdDeleteBackupEnable) {
-            ResourceBundle messages = ApiUtils.getMessagesResourceBundle(request.getLocales());
-            throw new IllegalArgumentException(
-                String.format(messages.getString("api.metadata.delete.errorWithBackupParamMismatch"), isMdDeleteBackupEnable, withBackup));
-        }
+        boolean doBackup = withDeleteBackup(withBackup, request);
 
         AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
         ServiceContext context = ApiUtils.createServiceContext(request);
@@ -235,7 +227,7 @@ public class MetadataInsertDeleteApi {
         ApplicationContextHolder.get().publishEvent(preRemoveEvent);
 
         if (metadata.getDataInfo().getType() != MetadataType.SUB_TEMPLATE
-            && metadata.getDataInfo().getType() != MetadataType.TEMPLATE_OF_SUB_TEMPLATE && withBackup) {
+            && metadata.getDataInfo().getType() != MetadataType.TEMPLATE_OF_SUB_TEMPLATE && doBackup) {
             MEFLib.backupRecord(metadata, context);
         }
 
@@ -1034,6 +1026,43 @@ public class MetadataInsertDeleteApi {
 
         dataManager.indexMetadata(id.get(0), true);
         return Pair.read(Integer.valueOf(id.get(0)), uuid);
+    }
+
+    /**
+     * Determine if the metadata backup is needed during delete API.<br/>
+     * 1) The withBackup flag missing from the API, will only overide if setting as ForceNoBackup, otherwise default to true<br/>
+     * 2) The withBackup flag designated as true from the API, will throw an error if system setting for ForceNoBackup
+     * 3) The withbackup flag designated as false from the API, will throw an error if system setting for ForceBackup
+     *
+     * @param withBackup API parameter from the client side
+     * @param request HTTP Request
+     * @return boolean of metadata backup and defaulted to true
+     */
+    private boolean withDeleteBackup (Boolean withBackup, HttpServletRequest request) {
+        ResourceBundle messages = ApiUtils.getMessagesResourceBundle(request.getLocales());
+        String mdDeleteBackupOption = settingManager.getValue(Settings.METADATA_DELETE_BACKUPOPTIONS);
+        if (withBackup == null) {
+            if (StringUtils.equals(mdDeleteBackupOption, "ForceNoBackup")) {
+                return false;
+            }
+            // Will default to true if setting set to NoPreference, ForceBackup or empty
+            return true;
+        } else if (withBackup == true) {
+            if (StringUtils.equals(mdDeleteBackupOption, "ForceNoBackup")) {
+                throw new IllegalArgumentException(
+                    String.format(messages.getString("api.metadata.delete.errorForceBackup"), withBackup));
+            }
+            return true;
+        } else if (withBackup = false) {
+            if (StringUtils.equals(mdDeleteBackupOption, "ForceBackup")) {
+                throw new IllegalArgumentException(
+                    String.format(messages.getString("api.metadata.delete.errorForceNoBackup"), withBackup));
+            }
+            return false;
+        }
+
+        return true;
+
     }
 
 }
