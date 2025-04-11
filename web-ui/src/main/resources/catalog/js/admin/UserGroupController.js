@@ -488,6 +488,12 @@
         $scope.groupsByProfile = res;
       };
 
+      $scope.$watch("groupSelected.type", function (newValue) {
+        if (newValue === "System") {
+          $scope.groupSelected.minimumProfileForPrivileges = null;
+        }
+      });
+
       $scope.$watch("userGroups", function (groups) {
         updateGroupsByProfile(groups);
       });

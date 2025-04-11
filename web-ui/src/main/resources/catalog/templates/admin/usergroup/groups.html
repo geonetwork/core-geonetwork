@@ -282,12 +282,15 @@
               <select
                 class="form-control"
                 name="minimumProfileForPrivileges"
+                data-ng-disabled="groupSelected.type == 'SystemPrivilege'"
                 data-ng-model="groupSelected.minimumProfileForPrivileges"
               >
-                <option value="">{{'noRestrictions' | translate }}</option>
-                <option value="Editor">{{'Editor' | translate}}</option>
-                <option value="Reviewer">{{'Reviewer' | translate}}</option>
-                <option value="Administrator">{{'Administrator' | translate}}</option>
+                <option data-ng-value="null">{{'noRestrictions' | translate }}</option>
+                <option data-ng-value="'Editor'">{{'Editor' | translate}}</option>
+                <option data-ng-value="'Reviewer'">{{'Reviewer' | translate}}</option>
+                <option data-ng-value="'Administrator'">
+                  {{'Administrator' | translate}}
+                </option>
               </select>
               <p class="help-block" data-translate="">minimumProfileForPrivilegesHelp</p>
             </div>
