@@ -27,8 +27,6 @@
 
   <sch:title xmlns="http://www.w3.org/2001/XMLSchema">Datacite (DOI)</sch:title>
   <sch:ns prefix="gml" uri="http://www.opengis.net/gml"/>
-  <sch:ns prefix="gmd" uri="http://standards.iso.org/iso/19115/-3/gmd"/>
-  <sch:ns prefix="gmx" uri="http://standards.iso.org/iso/19115/-3/gmx"/>
   <sch:ns prefix="geonet" uri="http://www.fao.org/geonetwork"/>
   <sch:ns prefix="skos" uri="http://www.w3.org/2004/02/skos/core#"/>
   <sch:ns prefix="xlink" uri="http://www.w3.org/1999/xlink"/>
@@ -85,7 +83,7 @@
 
 
       <sch:let name="publisher"
-               value="(mdb:distributionInfo//mrd:distributorContact)[1]//cit:CI_Organisation/cit:name/gco:CharacterString"/>
+               value="(mdb:distributionInfo//mrd:distributorContact)[1]//cit:CI_Organisation/cit:name/(gco:CharacterString|gcx:Anchor)"/>
 
       <sch:assert test="$publisher != ''">$loc/strings/datacite.publisher.missing</sch:assert>
       <sch:report test="$publisher != ''">
