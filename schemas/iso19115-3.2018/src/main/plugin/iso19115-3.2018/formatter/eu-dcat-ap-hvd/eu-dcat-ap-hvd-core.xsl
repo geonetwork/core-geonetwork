@@ -90,29 +90,4 @@
     </xsl:for-each>
   </xsl:template>
 
-
-  <!--
-  applicable legislation	Legal Resource	1..*	The legislation that mandates the creation or management of the Data Service.
-  **For HVD the value MUST include the ELI http://data.europa.eu/eli/reg_impl/2023/138/oj.**
-  As multiple legislations may apply to the resource the maximum cardinality is not limited.
-
-  See DCAT-AP
-  applicable legislation	Legal Resource	0..*	The legislation that mandates the creation or management of the Catalog.
-
-  To create valid HVD document, a keyword anchor or a title href of mri:resourceConstraints/mco:MD_LegalConstraints/mco:reference
-  in the ISO record MUST define the ELI http://data.europa.eu/eli/reg_impl/2023/138/oj.
-  -->
-
-
-  <xsl:template mode="iso19115-3-to-dcat"
-                match="mdb:distributionInfo//mrd:onLine">
-    <xsl:call-template name="iso19115-3-to-dcat-distribution">
-      <xsl:with-param name="additionalProperties">
-        <xsl:if test="$isCopyingDatasetInfoToDistribution">
-          <xsl:apply-templates mode="iso19115-3-to-dcat"
-                               select="ancestor::mdb:MD_Metadata/mdb:identificationInfo/*/mri:resourceConstraints/mco:MD_LegalConstraints/mco:reference"/>
-        </xsl:if>
-      </xsl:with-param>
-    </xsl:call-template>
-  </xsl:template>
 </xsl:stylesheet>
