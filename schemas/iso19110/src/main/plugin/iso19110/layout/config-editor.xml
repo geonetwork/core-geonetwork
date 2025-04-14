@@ -43,7 +43,7 @@
         data-search-action="true"
         data-popup-action="true"
         data-template-type="contact"
-        data-insert-modes=""
+        data-insert-modes="xlink"
         data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~{role}"/>
     </for>
   </fields>
