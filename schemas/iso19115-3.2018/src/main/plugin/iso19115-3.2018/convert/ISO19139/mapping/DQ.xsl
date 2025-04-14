@@ -94,6 +94,7 @@
                           <xsl:with-param name="elementName" select="'mdq:evaluationMethodType'"/>
                           <xsl:with-param name="codeListName" select="'mdq:DQ_EvaluationMethodTypeCode'"/>
                           <xsl:with-param name="codeListValue" select="gmd:evaluationMethodType/gmd:DQ_EvaluationMethodTypeCode/@codeListValue"/>
+                          <xsl:with-param name="codeListText" select="gmd:evaluationMethodType/gmd:DQ_EvaluationMethodTypeCode/text()"/>
                         </xsl:call-template>
                       </mdq:DQ_FullInspection>
                     </mdq:evaluationMethod>
@@ -139,6 +140,8 @@
                   <xsl:with-param name="codeListValue"
                     select="$dataQualityScopeObject//gmd:MD_ScopeCode/@codeListValue|
                                           $dataQualityScopeObject//gmx:MX_ScopeCode/@codeListValue"/>
+                  <xsl:with-param name="codeListText" select="$dataQualityScopeObject//gmd:MD_ScopeCode/@codeListValue|
+                                          $dataQualityScopeObject//gmx:MX_ScopeCode/text()"/>
                 </xsl:call-template>
                 <xsl:for-each select="$dataQualityScopeObject//gmd:EX_Extent">
                   <mcc:extent>
