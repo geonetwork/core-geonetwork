@@ -22,7 +22,7 @@ jobs:
         with:
           fetch-depth: 0
       - name: Install Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: 3.x
       - name: mkdocs install
@@ -33,9 +33,9 @@ jobs:
         if: ${{ github.event_name == 'pull_request' }}
         working-directory: docs/manual
         run: |
-          mike deploy --title "4.4 Latest" --no-redirect --update-aliases 4.4 latest
+          mike deploy --title "4.4" --alias-type=copy --update-aliases 4.4 latest
       - name: deploy latest docs to gh-pages branch
         if: ${{ github.event_name != 'pull_request' }}
         working-directory: docs/manual
         run: |
-          mike deploy --push --title "4.4 Latest" --no-redirect --update-aliases 4.4 latest
+          mike deploy --push --title "4.4" --alias-type=copy --update-aliases 4.4 latest

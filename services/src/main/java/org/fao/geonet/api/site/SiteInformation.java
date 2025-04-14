@@ -23,15 +23,18 @@
 
 package org.fao.geonet.api.site;
 
+import co.elastic.clients.elasticsearch._types.ElasticsearchException;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.apache.commons.lang.StringUtils;
-import org.elasticsearch.ElasticsearchException;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.search.EsSearchManager;
+import org.fao.geonet.kernel.setting.SettingInfo;
+import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.utils.Env;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.TransformerFactoryFactory;
@@ -70,7 +73,7 @@ public class SiteInformation {
                 Log.error(Geonet.GEONETWORK, e.getMessage(), e);
             }
             loadEnvInfo();
-            loadVersionInfo();
+            loadVersionInfo(context);
             loadSystemInfo();
         }
     }
@@ -227,6 +230,21 @@ public class SiteInformation {
             connection = context.getBean(DataSource.class).getConnection();
             dbURL = connection.getMetaData().getURL();
             databaseProperties.put("db.openattempt", "Database Opened Successfully");
+            try {
+                databaseProperties.put("db.type", connection.getMetaData().getDatabaseProductName());
+                databaseProperties.put("db.version", connection.getMetaData().getDatabaseProductVersion());
+                databaseProperties.put("db.driver", connection.getMetaData().getDriverName());
+                databaseProperties.put("db.driverVersion", connection.getMetaData().getDriverVersion());
+                databaseProperties.put("db.username", connection.getMetaData().getUserName());
+                databaseProperties.put("db.name", connection.getCatalog());
+                // Put "db.schema" field last as getSchema() has a known issues with the jetty jndi h2 drivers which is most likely related to a driver mismatch issue.
+                //    Receiver class org.apache.commons.dbcp.PoolingDataSource$PoolGuardConnectionWrapper does not define or inherit an implementation of the resolved method 'abstract java.lang.String getSchema()' of interface java.sql.Connection.
+                databaseProperties.put("db.schema", connection.getSchema());
+            } catch (AbstractMethodError e) {
+                // Most likely driver mismatch
+                //    https://stackoverflow.com/questions/17969365/why-i-am-getting-java-lang-abstractmethoderror-errors
+                Log.warning(Geonet.GEONETWORK, "Failed to get db properties. " + e.getMessage());
+            }
 
             if (connection instanceof BasicDataSource) {
                 BasicDataSource basicDataSource = (BasicDataSource) connection;
@@ -251,12 +269,17 @@ public class SiteInformation {
     }
 
     /**
-     * Compute information about git commit.
+     * Compute information about the application and git commit.
      */
-    private void loadVersionInfo() {
+    private void loadVersionInfo(ServiceContext context) {
         Properties prop = new Properties();
 
         try (InputStream input = getClass().getResourceAsStream("/git.properties")) {
+            SettingManager settingManager = context.getBean(SettingManager.class);
+
+            versionProperties.put("app.version", settingManager.getValue(Settings.SYSTEM_PLATFORM_VERSION));
+            versionProperties.put("app.subVersion", settingManager.getValue(Settings.SYSTEM_PLATFORM_SUBVERSION));
+
             prop.load(input);
 
             Enumeration<?> e = prop.propertyNames();

@@ -25,6 +25,8 @@ package org.fao.geonet.api.records;
 
 import com.google.common.collect.Sets;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -95,7 +97,7 @@ public class MetadataTagApi {
     @io.swagger.v3.oas.annotations.Operation(
         summary = "Get record tags",
         description = "Tags are used to classify information.<br/>" +
-            "<a href='http://geonetwork-opensource.org/manuals/trunk/eng/users/user-guide/tag-information/tagging-with-categories.html'>More info</a>")
+            "<a href='https://docs.geonetwork-opensource.org/latest/user-guide/tag-information/tagging-with-categories/'>More info</a>")
     @GetMapping(
         value = "/{metadataUuid}/tags",
         produces = {
@@ -212,7 +214,7 @@ public class MetadataTagApi {
     @DeleteMapping(value = "/{metadataUuid}/tags")
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "204", description = "Record tags removed."),
+        @ApiResponse(responseCode = "204", description = "Record tags removed.", content = {@Content(schema = @Schema(hidden = true))}),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)
     })
     @PreAuthorize("hasAuthority('Editor')")
@@ -389,9 +391,9 @@ public class MetadataTagApi {
         produces = {
             MediaType.APPLICATION_JSON_VALUE
         })
-    @ResponseStatus(value = HttpStatus.NO_CONTENT)
+    @ResponseStatus(value = HttpStatus.OK)
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "201", description = "Report about removed records."),
+        @ApiResponse(responseCode = "200", description = "Report about removed records."),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_EDITOR)
     })
     @PreAuthorize("hasAuthority('Editor')")

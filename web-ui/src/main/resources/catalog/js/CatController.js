@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2024 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -69,6 +69,7 @@
         },
         mods: {
           global: {
+            hotkeys: true,
             humanizeDates: true,
             dateFormat: "DD-MM-YYYY",
             timezone: "Browser" // Default to browser timezone
@@ -93,11 +94,14 @@
           header: {
             enabled: true,
             languages: {
+              arm: "hy",
+              aze: "az",
               eng: "en",
               cat: "ca",
               chi: "zh",
               cze: "cs",
               dan: "da",
+              geo: "ka",
               ger: "de",
               fre: "fr",
               spa: "es",
@@ -105,11 +109,15 @@
               ita: "it",
               dut: "nl",
               kor: "ko",
+              pol: "pl",
               por: "pt",
+              rum: "ro",
               rus: "ru",
               slo: "sk",
               fin: "fi",
-              swe: "sv"
+              ukr: "uk",
+              swe: "sv",
+              wel: "cy"
             },
             isLogoInHeader: false,
             logoInHeaderPosition: "left",
@@ -127,6 +135,7 @@
           home: {
             enabled: true,
             appUrl: "../../{{node}}/{{lang}}/catalog.search#/home",
+            showSearch: true,
             showSocialBarInFooter: true,
             showMosaic: true,
             showMaps: true,
@@ -142,7 +151,8 @@
                     type: "icon",
                     prefix: "fa fa-2x pull-left gn-icon iti-",
                     expression: "http://inspire.ec.europa.eu/theme/(.*)"
-                  }
+                  },
+                  orderByTranslation: true
                 }
               },
               "cl_topic.key": {
@@ -154,7 +164,8 @@
                   decorator: {
                     type: "icon",
                     prefix: "fa fa-2x pull-left gn-icon-"
-                  }
+                  },
+                  orderByTranslation: true
                 }
               },
               // 'OrgForResource': {
@@ -178,6 +189,37 @@
                 }
               }
             },
+            info: [
+              {
+                type: "search",
+                title: "lastRecords",
+                active: true,
+                params: {
+                  isTemplate: "n",
+                  sortBy: "createDate",
+                  sortOrder: "desc",
+                  from: 1,
+                  to: 12
+                }
+              },
+              {
+                type: "search",
+                title: "preferredRecords",
+                params: {
+                  isTemplate: "n",
+                  sortBy: "popularity",
+                  sortOrder: "desc",
+                  from: 1,
+                  to: 12
+                }
+              },
+              {
+                type: "featuredUserSearches"
+              },
+              {
+                type: "Comments"
+              }
+            ],
             fluidLayout: true
           },
           search: {
@@ -292,7 +334,7 @@
                 // Start boosting down records more than 3 months old
                 {
                   gauss: {
-                    dateStamp: {
+                    changeDate: {
                       scale: "365d",
                       offset: "90d",
                       decay: 0.5
@@ -329,6 +371,8 @@
               size: 20
             },
             moreLikeThisSameType: true,
+            moreLikeThisFilter:
+              "-cl_status.key:(obsolete OR historicalArchive OR superseded)",
             moreLikeThisConfig: {
               more_like_this: {
                 fields: [
@@ -412,9 +456,9 @@
                 }
               },
               // GEMET configuration for non multilingual catalog
-              "th_gemet_tree.default": {
+              "th_gemet_tree.key": {
                 terms: {
-                  field: "th_gemet_tree.default",
+                  field: "th_gemet_tree.key",
                   size: 100,
                   order: { _key: "asc" },
                   include: "[^^]+^?[^^]+"
@@ -626,7 +670,7 @@
                 sortOrder: ""
               },
               {
-                sortBy: "dateStamp",
+                sortBy: "changeDate",
                 sortOrder: "desc"
               },
               {
@@ -653,23 +697,30 @@
                   "../../catalog/components/" +
                   "search/resultsview/partials/viewtemplates/grid.html",
                 tooltip: "Grid",
-                icon: "fa-th"
+                icon: "fa-th",
+                related: []
               },
               {
                 tplUrl:
                   "../../catalog/components/" +
                   "search/resultsview/partials/viewtemplates/list.html",
                 tooltip: "List",
-                icon: "fa-bars"
+                icon: "fa-bars",
+                related: ["parent", "children", "services", "datasets"]
               },
               {
                 tplUrl:
                   "../../catalog/components/" +
                   "search/resultsview/partials/viewtemplates/table.html",
                 tooltip: "Table",
-                icon: "fa-table"
+                icon: "fa-table",
+                related: [],
+                source: {
+                  exclude: ["resourceAbstract*", "Org*", "contact*"]
+                }
               }
             ],
+            // Optional. If not set, the first resultViewTpls is used.
             resultTemplate:
               "../../catalog/components/" +
               "search/resultsview/partials/viewtemplates/grid.html",
@@ -725,6 +776,7 @@
                 class: "fa-file-code-o"
               }*/
             ],
+            // Deprecated (use configuration on resultViewTpls)
             grid: {
               related: ["parent", "children", "services", "datasets"]
             },
@@ -775,14 +827,17 @@
             is3DModeAllowed: false,
             singleTileWMS: true,
             isSaveMapInCatalogAllowed: true,
-            isExportMapAsImageEnabled: false,
+            isExportMapAsImageEnabled: true,
             isAccessible: false,
             storage: "sessionStorage",
             bingKey: "",
             listOfServices: {
               wms: [],
-              wmts: []
+              wmts: [],
+              wps: []
             },
+            // wpsSource: ["list", "url", "recent"],
+            wpsSource: ["url", "recent"],
             projection: "EPSG:3857",
             projectionList: [
               {
@@ -813,7 +868,8 @@
               graticule: false,
               mousePosition: true,
               syncAllLayers: false,
-              drawVector: false
+              drawVector: false,
+              scaleLine: false
             },
             defaultTool: "layers",
             defaultToolAfterMapLoad: "layers",
@@ -830,9 +886,9 @@
               geodesicExtents: false
             },
             "map-editor": {
-              context: "",
+              context: "../../map/config-viewer.xml",
               extent: [0, 0, 0, 0],
-              layers: [{ type: "osm" }]
+              layers: []
             },
             "map-thumbnail": {
               context: "../../map/config-viewer.xml",
@@ -846,9 +902,14 @@
             appUrl: "https://secure.geonames.org/searchJSON"
           },
           recordview: {
+            // To use to redirect to another application for rendering record
+            // eg. when embedding simple search results using a web component
+            // and redirecting to the catalogue to view metadata record
+            // appUrl: "https://sextant.ifremer.fr/Donnees/Catalogue",
             isSocialbarEnabled: true,
             showStatusWatermarkFor: "",
             showStatusTopBarFor: "",
+            recordviewCustomMenu: [], // List of static pages identifiers to display
             showCitation: {
               enabled: false,
               // if: {'documentStandard': ['iso19115-3.2018']}
@@ -870,32 +931,29 @@
               // 'layout': 'tabset',
               layout: "",
               sections: [
-                // {'types': 'services', 'title': 'Services', 'layout': 'card'},
                 {
-                  types: "onlines",
-                  filter: "protocol:OGC:.*|ESRI:.*|atom.*",
+                  filter:
+                    "protocol:OGC:WMS|OGC:WMTS|ESRI:.*|atom.*|REST|OGC API Maps|OGC API Records",
                   title: "API"
                 },
                 {
-                  types: "onlines",
-                  filter: "protocol:.*DOWNLOAD.*|DB:.*|FILE:.*",
+                  filter:
+                    "protocol:OGC:WFS|OGC:WCS|.*DOWNLOAD.*|DB:.*|FILE:.*|OGC API Features|OGC API Coverages",
                   title: "download"
                 },
-                { types: "onlines", filter: "function:legend", title: "mapLegend" },
+                { filter: "protocol:OGC:OWS-C", title: "map" },
+                { filter: "function:legend", title: "mapLegend" },
                 {
-                  types: "onlines",
                   filter: "function:featureCatalogue",
                   title: "featureCatalog"
                 },
                 {
-                  types: "onlines",
                   filter: "function:dataQualityReport",
                   title: "quality"
                 },
                 {
-                  types: "onlines",
                   filter:
-                    "-protocol:OGC:.*|ESRI:.*|atom.*|.*DOWNLOAD.*|DB:.*|FILE:.* AND -function:legend|featureCatalogue|dataQualityReport",
+                    "-protocol:OGC.*|REST|ESRI:.*|atom.*|.*DOWNLOAD.*|DB:.*|FILE:.* AND -function:legend|featureCatalogue|dataQualityReport",
                   title: "links"
                 }
               ]
@@ -938,6 +996,7 @@
             createPageTpl: "../../catalog/templates/editor/new-metadata-horizontal.html",
             editorIndentType: "",
             allowRemoteRecordLink: true,
+            workflowSearchRecordTypes: ["n", "e"],
             facetConfig: {
               resourceType: {
                 terms: {
@@ -1031,7 +1090,7 @@
                     prefix: "fa fa-fw ",
                     map: {
                       false: "fa-lock",
-                      true: "fa-unlock"
+                      true: "fa-lock-open"
                     }
                   }
                 }
@@ -1101,7 +1160,7 @@
                 sortOrder: ""
               },
               {
-                sortBy: "dateStamp",
+                sortBy: "changeDate",
                 sortOrder: "desc"
               },
               {
@@ -1225,7 +1284,7 @@
         requireProxy: [],
         gnCfg: angular.copy(defaultConfig),
         gnUrl: "",
-        docUrl: "https://geonetwork-opensource.org/manuals/4.0.x/{lang}",
+        docUrl: "https://docs.geonetwork-opensource.org/latest/{lang}",
         //docUrl: '../../doc/',
         modelOptions: {
           updateOn: "default blur",
@@ -1243,6 +1302,7 @@
           "languageWhitelist",
           "hitsperpageValues",
           "sortbyValues",
+          "wpsSource",
           "resultViewTpls",
           "formatter",
           "downloadFormatter",
@@ -1266,6 +1326,7 @@
           "geocoder",
           "disabledTools",
           "filters",
+          "info",
           "scoreConfig",
           "autocompleteConfig",
           "moreLikeThisConfig",
@@ -1276,6 +1337,7 @@
           "distributionConfig",
           "collectionTableConfig",
           "queryBaseOptions",
+          "workflowSearchRecordTypes",
           "workflowAssistApps"
         ],
         current: null,
@@ -1418,6 +1480,19 @@
         getProxyUrl: function () {
           return this.proxyUrl;
         },
+        getDefaultResultTemplate: function () {
+          if (this.gnCfg.mods.search.resultTemplate) {
+            for (var i = 0; i < this.gnCfg.mods.search.resultViewTpls.length; i++) {
+              if (
+                this.gnCfg.mods.search.resultViewTpls[i].tplUrl ==
+                this.gnCfg.mods.search.resultTemplate
+              ) {
+                return this.gnCfg.mods.search.resultViewTpls[i];
+              }
+            }
+          }
+          return this.gnCfg.mods.search.resultViewTpls[0];
+        },
         // Removes the proxy path and decodes the layer url,
         // so the layer can be printed with MapFish.
         // Otherwise Mapfish rejects it, due to relative url.
@@ -1535,6 +1610,7 @@
     "gnExternalViewer",
     "gnAlertService",
     "gnESFacet",
+    "gnFacetMetaLabel",
     function (
       $scope,
       $http,
@@ -1555,7 +1631,8 @@
       $cookies,
       gnExternalViewer,
       gnAlertService,
-      gnESFacet
+      gnESFacet,
+      gnFacetMetaLabel
     ) {
       $scope.version = "0.0.1";
       var defaultNode = "srv";
@@ -1584,6 +1661,10 @@
 
       $scope.getApplicationInfoVisible = function () {
         return gnGlobalSettings.gnCfg.mods.footer.showApplicationInfoAndLinksInFooter;
+      };
+
+      $scope.getContactusVisible = function () {
+        return gnConfig[gnConfig.key.isFeedbackEnabled];
       };
 
       function detectNode(detector) {
@@ -1626,6 +1707,7 @@
       gnConfig.env.node = $scope.nodeId;
       gnConfig.env.defaultNode = defaultNode;
       gnConfig.env.baseURL = detectBaseURL(gnGlobalSettings.gnCfg.baseURLDetector);
+      gnConfig.env.url = location.origin + gnConfig.env.baseURL;
 
       $scope.signoutUrl =
         gnGlobalSettings.gnCfg.mods.authentication.signoutUrl +
@@ -1637,9 +1719,12 @@
 
       // Lang names to be displayed in language selector
       $scope.langLabels = {
+        arm: "հայերեն",
+        aze: "Azərbaycan dili",
         eng: "English",
         dut: "Nederlands",
         fre: "Français",
+        geo: "ქართული",
         ger: "Deutsch",
         kor: "한국의",
         spa: "Español",
@@ -1649,11 +1734,15 @@
         ita: "Italiano",
         fin: "Suomeksi",
         ice: "Íslenska",
+        rum: "Română",
         rus: "русский",
         chi: "中文",
         slo: "Slovenčina",
         swe: "Svenska",
-        dan: "Dansk"
+        ukr: "українська",
+        dan: "Dansk",
+        wel: "Cymraeg",
+        pol: "Polski"
       };
       $scope.url = "";
       $scope.gnUrl = gnGlobalSettings.gnUrl;
@@ -1669,6 +1758,7 @@
       $scope.isExternalViewerEnabled = gnExternalViewer.isEnabled();
       $scope.externalViewerUrl = gnExternalViewer.getBaseUrl();
       $scope.publicationOptions = [];
+      $scope.getFacetLabel = gnFacetMetaLabel.getFacetLabel;
 
       $http.get("../api/records/sharing/options").then(function (response) {
         $scope.publicationOptions = response.data;
@@ -1839,6 +1929,17 @@
                 profile !== ""
                   ? "is" + profile[0].toUpperCase() + profile.substring(1) + "OrMore"
                   : "";
+            return angular.isFunction(this[fnName]) ? this[fnName]() : false;
+          },
+          canViewMetadataHistory: function () {
+            var profile = gnConfig["metadata.history.accesslevel"] || "Editor",
+              fnName =
+                profile !== ""
+                  ? "is" + profile[0].toUpperCase() + profile.substring(1) + "OrMore"
+                  : "";
+            if (profile === "RegisteredUser") {
+              return true;
+            }
             return angular.isFunction(this[fnName]) ? this[fnName]() : false;
           },
           canDeletePublishedMetadata: function () {

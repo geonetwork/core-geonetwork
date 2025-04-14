@@ -7,13 +7,13 @@
   <parent>
     <groupId>org.geonetwork-opensource</groupId>
     <artifactId>geonetwork</artifactId>
-    <version>4.4.1-SNAPSHOT</version>
+    <version>4.4.8-SNAPSHOT</version>
   </parent>
 
   <artifactId>gn-release</artifactId>
   <packaging>pom</packaging>
-  <name>Release module</name>
-  <description>Use to create distribution packages.</description>
+  <name>GeoNetwork Release module</name>
+  <description>Use to create zip distribution packages (copies from files from web which must be built first).</description>
 
   <licenses>
     <license>
@@ -22,6 +22,35 @@
       <distribution>repo</distribution>
     </license>
   </licenses>
+
+  <dependencies>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>gn-web-app</artifactId>
+      <version>${project.version}</version>
+      <type>war</type>
+    </dependency>
+  </dependencies>
+  <build>
+    <plugins>
+      <plugin>
+        <artifactId>maven-clean-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>reset</id>
+            <goals><goal>clean</goal></goals>
+            <configuration>
+              <filesets>
+                <fileset>
+                  <directory>jetty</directory>
+                </fileset>
+              </filesets>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
 
   <profiles>
     <!-- jetty-download is an optional build step for generating release -->
@@ -40,8 +69,9 @@
             <artifactId>download-maven-plugin</artifactId>
             <executions>
               <execution>
-                <id>download-jetty</id>
+                <id>jetty-download</id>
                 <phase>pre-integration-test</phase>
+                <!-- prepare-package step moved later in maven lifecycle to avoid slowing down local testing -->
                 <goals>
                   <goal>wget</goal>
                 </goals>
@@ -57,7 +87,9 @@
             <artifactId>maven-antrun-plugin</artifactId>
             <executions>
               <execution>
-                <phase>install</phase>
+                <id>jetty-rename</id>
+                <phase>pre-integration-test</phase>
+                <!-- prepare-package step moved later in maven lifecycle to avoid slowing down local testing -->
                 <goals>
                   <goal>run</goal>
                 </goals>
@@ -91,6 +123,7 @@
             <executions>
               <execution>
                 <phase>post-integration-test</phase>
+                <!-- package step moved later in maven lifecycle to avoid slowing down local testing -->
                 <goals>
                   <goal>run</goal>
                 </goals>

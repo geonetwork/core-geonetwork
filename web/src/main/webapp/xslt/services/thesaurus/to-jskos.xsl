@@ -22,7 +22,10 @@
   ~ Rome - Italy. email: geonetwork@osgeo.org
   -->
 
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0">
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                xmlns:util="java:org.fao.geonet.util.XslUtil"
+                version="2.0"
+                exclude-result-prefixes="#all">
 
   <xsl:template match="/root">
     <xsl:choose>
@@ -45,8 +48,8 @@
       <xsl:variable name="contents">
         <xsl:copy-of select="uri"/>
         <prefLabel>
-          <xsl:for-each select="value">
-            <xsl:element name="{$iso3code}">
+          <xsl:for-each select="value[. != '']">
+            <xsl:element name="{util:threeCharLangCode(@lang|@language)}">
               <xsl:value-of select="text()"/>
             </xsl:element>
             <xsl:element name="{lower-case(substring(@lang|@language, 1, 2))}">

@@ -47,11 +47,11 @@
     return {
       require: "^ngSearchForm",
       templateUrl:
-        "../../catalog/components/search/resultsview/partials/" + "templateswitcher.html",
+        "../../catalog/components/search/resultsview/partials/templateswitcher.html",
       restrict: "A",
       link: function ($scope, element, attrs, searchFormCtrl) {
         $scope.setResultTemplate = function (t) {
-          $scope.resultTemplate = t.tplUrl;
+          $scope.resultTemplate = t;
           searchFormCtrl.triggerSearch(true);
         };
       }
@@ -91,18 +91,6 @@
         link: function (scope, element, attrs, controller) {
           scope.mdService = gnMetadataActions;
           scope.map = scope.$eval(attrs.map);
-          //scope.searchResults = scope.$eval(attrs.searchResults);
-
-          /** Display fa icons for categories
-           * TODO: Move to configuration */
-          scope.catIcons = {
-            featureCatalogs: "fa-table",
-            services: "fa-cog",
-            maps: "fa-globe",
-            staticMaps: "fa-globe",
-            datasets: "fa-file",
-            interactiveResources: "fa-rss"
-          };
 
           if (scope.map) {
             scope.hoverOL = new ol.layer.Vector({
@@ -177,13 +165,13 @@
             }
           });
 
-          scope.$watch("resultTemplate", function (templateUrl) {
-            if (angular.isUndefined(templateUrl)) {
+          scope.$watch("resultTemplate", function (templateConfig) {
+            if (angular.isUndefined(templateConfig)) {
               return;
             }
             var template = angular.element(document.createElement("div"));
             template.attr({
-              "ng-include": "resultTemplate"
+              "ng-include": "resultTemplate.tplUrl"
             });
             element.empty();
             element.append(template);
@@ -197,6 +185,22 @@
             );
             if (feat) {
               map.getView().fit(feat.getGeometry().getExtent(), map.getSize());
+            }
+          };
+
+          scope.abstractBriefMaker = function (resourceAbstract) {
+            if (resourceAbstract) {
+              var abstractParagraphs = resourceAbstract.split("\n");
+              var abstractBrief = "";
+              for (var index = 0; index < abstractParagraphs.length; index++) {
+                var abstractBrief = abstractBrief + abstractParagraphs[index] + "\n";
+                if (abstractBrief.length > 50) {
+                  break;
+                }
+              }
+
+              //remove the last line break character
+              return abstractBrief.substring(0, abstractBrief.length - 1);
             }
           };
 

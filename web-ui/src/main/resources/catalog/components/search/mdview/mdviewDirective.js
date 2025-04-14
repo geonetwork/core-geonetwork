@@ -37,7 +37,9 @@
   module.directive("gnMetadataOpen", [
     "gnMdViewObj",
     "gnMdView",
-    function (gnMdViewObj, gnMdView) {
+    "gnGlobalSettings",
+    "$filter",
+    function (gnMdViewObj, gnMdView, gnGlobalSettings, $filter) {
       return {
         restrict: "A",
         scope: {
@@ -65,8 +67,18 @@
 
             var hyperlinkTagName = "A";
             if (element.get(0).tagName === hyperlinkTagName) {
+              var url = scope.appUrl || window.location.pathname + window.location.search;
+
+              if (
+                gnGlobalSettings.gnCfg.mods.recordview.appUrl &&
+                gnGlobalSettings.gnCfg.mods.recordview.appUrl.indexOf("http") === 0
+              ) {
+                url = $filter("setUrlPlaceholder")(
+                  gnGlobalSettings.gnCfg.mods.recordview.appUrl
+                );
+              }
               var url =
-                (scope.appUrl || window.location.pathname + window.location.search) +
+                url +
                 "#/" +
                 (scope.md.draft == "y" ? "metadraf" : "metadata") +
                 "/" +
@@ -166,12 +178,28 @@
             var resourceType = scope.md.resourceType
               ? scope.md.resourceType[0]
               : undefined;
+            var filter = [];
             if (scope.ofSameType && resourceType) {
               var mapping = resourceTypeMapping[resourceType];
               scope.label = mapping ? mapping.label : resourceType;
-              query.query.bool.filter = [
-                { terms: { resourceType: mapping ? mapping.types : [resourceType] } }
-              ];
+              filter.push({
+                terms: { resourceType: mapping ? mapping.types : [resourceType] }
+              });
+            }
+
+            if (
+              gnGlobalSettings.gnCfg.mods.search.moreLikeThisFilter &&
+              gnGlobalSettings.gnCfg.mods.search.moreLikeThisFilter != ""
+            ) {
+              filter.push({
+                query_string: {
+                  query: gnGlobalSettings.gnCfg.mods.search.moreLikeThisFilter
+                }
+              });
+            }
+
+            if (filter.length > 0) {
+              query.query.bool.filter = filter;
             }
 
             return query;
@@ -409,11 +437,22 @@
           // Group by 'default', 'role', 'org-role'
           mode: "@gnMode",
           // 'icon' or 'list' (default)
-          layout: "@layout"
+          layout: "@layout",
+          type: "@type"
         },
         link: function (scope, element, attrs, controller) {
           if (["default", "role", "org-role"].indexOf(scope.mode) == -1) {
             scope.mode = "default";
+          }
+
+          if (scope.type === "metadata") {
+            scope.focusOnFilterFieldName = "OrgObject.default";
+          } else if (scope.type === "distribution") {
+            scope.focusOnFilterFieldName = "OrgForDistributionObject.default";
+          } else if (scope.type === "processing") {
+            scope.focusOnFilterFieldName = "OrgForProcessingObject.default";
+          } else {
+            scope.focusOnFilterFieldName = "OrgForResourceObject.default";
           }
 
           scope.calculateContacts = function () {
@@ -549,6 +588,9 @@
           thesaurus: "=thesaurus"
         },
         link: function (scope, element, attrs) {
+          scope.thesaurus = angular.isArray(scope.thesaurus)
+            ? scope.thesaurus
+            : [scope.thesaurus];
           scope.allKeywords = scope.record && scope.record.allKeywords;
           scope.getOrderByConfig = function (thesaurus) {
             return thesaurus === "th_regions"
@@ -573,19 +615,27 @@
         },
         link: function (scope, element, attrs) {
           scope.mdService = gnUtilityService;
-          $http
-            .get("../api/records/" + scope.md.getUuid() + "/permalink")
-            .then(function (r) {
-              scope.socialMediaLink = r.data;
-            });
+
+          scope.$watch(
+            "md",
+            function (newVal, oldVal) {
+              if (newVal !== null && newVal !== oldVal) {
+                $http
+                  .get("../api/records/" + scope.md.getUuid() + "/permalink")
+                  .then(function (r) {
+                    scope.socialMediaLink = r.data;
+                  });
+              }
+            },
+            true
+          );
         }
       };
     }
   ]);
 
   module.directive("gnQualityMeasuresTable", [
-    "gnGlobalSettings",
-    function (gnGlobalSettings) {
+    function () {
       return {
         templateUrl:
           "../../catalog/components/search/mdview/partials/qualitymeasures.html",
@@ -597,9 +647,10 @@
             name: false,
             description: false,
             value: false,
-            type: false
+            type: false,
+            date: false
           };
-          for (idx in scope.measures) {
+          for (var idx in scope.measures) {
             angular.forEach(Object.keys(scope.columnVisibility), function (p) {
               if (scope.measures[idx][p]) {
                 scope.columnVisibility[p] = true;

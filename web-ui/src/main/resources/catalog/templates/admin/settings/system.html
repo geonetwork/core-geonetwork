@@ -64,7 +64,7 @@
         data-gn-scroll-spy="gn-settings-spy-target"
         data-watch="sectionsLevel1"
         data-all-depth="true"
-      />
+      ></div>
       <div class="panel-heading">
         <h1 data-translate="">settings</h1>
 
@@ -166,6 +166,25 @@
                     <!-- According to entry -->
                     <div class="col-sm-7" data-ng-switch="s['name']">
                       <select
+                        data-ng-switch-when="system/translation/provider"
+                        class="form-control"
+                        name="{{s.name}}"
+                        data-ng-model="s.value"
+                        data-ng-change="changeTranslationProvider(s.value)"
+                      >
+                        <option value="" ng-selected="'' == s.value">
+                          {{'NoTranslationProvider' | translate}}
+                        </option>
+                        <option
+                          data-ng-repeat="t in translationProviders"
+                          value="{{t}}"
+                          ng-selected="t === s.value"
+                        >
+                          {{t}}
+                        </option>
+                      </select>
+
+                      <select
                         data-ng-switch-when="metadata/import/userprofile"
                         class="form-control"
                         name="{{s.name}}"
@@ -254,6 +273,28 @@
                         </option>
                       </select>
 
+                      <select
+                        data-ng-switch-when="metadata/history/accesslevel"
+                        class="form-control"
+                        name="{{s.name}}"
+                      >
+                        <option
+                          value="RegisteredUser"
+                          ng-selected="'RegisteredUser' == s.value"
+                        >
+                          {{'RegisteredUser' | translate}}
+                        </option>
+                        <option value="Editor" ng-selected="'Editor' == s.value">
+                          {{'Editor' | translate}}
+                        </option>
+                        <option
+                          value="Administrator"
+                          ng-selected="'Administrator' == s.value"
+                        >
+                          {{'Administrator' | translate}}
+                        </option>
+                      </select>
+
                       <div data-ng-switch-when="system/metadatacreate/preferredGroup">
                         <input
                           type="hidden"
@@ -269,7 +310,7 @@
                           lang="lang"
                           data-groups="groups"
                           data-exclude-special-groups="true"
-                        />
+                        ></div>
                       </div>
 
                       <div data-ng-switch-when="system/metadatacreate/preferredTemplate">
@@ -284,7 +325,7 @@
                           data-gn-suggest-model="s.value"
                           data-gn-suggest-property="_id"
                           data-gn-suggest-display-title="span"
-                        />
+                        ></div>
                       </div>
 
                       <div data-ng-switch-when="metadata/workflow/draftWhenInGroup">
@@ -356,7 +397,6 @@
                       >
 {{s.value}}</textarea
                       >
-
                       <select
                         data-ng-switch-when="system/server/protocol"
                         class="form-control"
@@ -717,6 +757,25 @@
                         data-ng-disabled="!isGroupLocalRatingNotificationLevel"
                       />
 
+                      <input
+                        data-ng-switch-when="system/translation/serviceUrl"
+                        type="text"
+                        class="form-control"
+                        id="{{s['name']}}"
+                        name="{{s.name}}"
+                        value="{{s.value}}"
+                        data-ng-disabled="!isTranslationProviderSelected"
+                      />
+
+                      <input
+                        data-ng-switch-when="system/translation/apiKey"
+                        type="text"
+                        class="form-control"
+                        id="{{s['name']}}"
+                        name="{{s.name}}"
+                        value="{{s.value}}"
+                        data-ng-disabled="!isTranslationProviderSelected"
+                      />
                       <!-- Default -->
                       <input
                         data-ng-switch-default=""

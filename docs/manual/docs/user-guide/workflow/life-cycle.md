@@ -1,26 +1,29 @@
 # Life cycle
 
-## Record life cycle
+Metadata records can have a lifecycle that typically goes through one or more states. This is an optional feature that 
+can be activated on demand (see [Activate the metadata workflow](#activate-workflow)).
 
-Metadata records have a lifecycle that typically goes through one or more states. For example, when a record is:
+For example, when a record is:
 
 -   created and edited by an `Editor` it is in the `Draft` state.
--   being reviewed by a `content reviewer`, or a review is requested brings the record to `Submitted` state.
+-   being reviewed by a `Content reviewer`, or a review is requested brings the record to `Submitted` state.
 -   completed and corrected by the `Content Reviewer` it is in the `Approved` state.
 -   superseded or replaced the state is `Retired`.
 
-The catalog has (an extensible) set of states that a metadata record can have:
+The catalog has a set of states that a metadata record can have:
 
--   `Unknown` - this is the default state - nothing is known about the status of the metadata record.
 -   `Draft` - the record is under construction or being edited.
 -   `Submitted` - the record has been submitted for approval to a content review.
 -   `Approved` - the content reviewer has reviewed and approved the metadata record.
--   `Rejected` - the content reviewer has reviewed and rejected the metadata record.
 -   `Retired` - the record has been retired.
 
-Workflow can be enabled for the full catalogue, certain groups or on an individual record level.
+When the metadata workflow is activated, the existing records are set in a special status `Unknown`.
 
-In the last case, to enable workflow and change the status from `Unknown` to `Draft`, click the `enable workflow` button in the metadata view:
+## Activate the metadata workflow {#activate-workflow}
+
+To enable the record life cycle, activate the metadata workflow. It can be activated for the full catalogue, certain groups, or on an individual record.
+
+In the case of activating for an individual record: enable workflow in a metadata, change the status from `Unknown` to `Draft`, and then click the `Enable workflow` button in the metadata view:
 
 ![](img/workflow-enable.png)
 
@@ -28,10 +31,11 @@ In the last case, to enable workflow and change the status from `Unknown` to `Dr
 
     To use the workflow for metadata records created before enabling it, you must use the above option.
 
+To enable workflow for the full catalogue or certain groups, check `Administration` --> `Settings` --> `Metadata Workflow`. In workflow mode, in case approved records are modified, you're working on a copy of the approved record. Changes on the record will not be visible to users outside your group until the modified record is approved again.
 
-To enable workflow for the full catalogue or certain groups, check Administration --> Settings --> Metadata Workflow. In workflow mode, in case approved records are modified, you're working on a copy of the approved record. Changes on the record will not be visible to users outside your group until the modified record is approved again.
+## Usage
 
-When done editing you can submit a record for review by a content reviewer. The submit button is available on the `rd` menu in the metadata view. A popup will open in which you can leave a message for the content reviewer.
+When done editing you can submit a record for review by a content reviewer. The submit button is available on the `Manage record` menu in the metadata view. A popup will open in which you can leave a message for the content reviewer.
 
 ![](img/submit-for-review.png)
 

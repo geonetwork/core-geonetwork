@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2023 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2024 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -23,6 +23,9 @@
 
 package org.fao.geonet.api.records;
 
+import co.elastic.clients.elasticsearch.core.SearchResponse;
+import co.elastic.clients.elasticsearch.core.search.Hit;
+import co.elastic.clients.json.JsonData;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -31,12 +34,10 @@ import com.google.common.base.Joiner;
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.text.StringEscapeUtils;
-import org.elasticsearch.action.search.SearchResponse;
-import org.elasticsearch.common.document.DocumentField;
-import org.elasticsearch.search.SearchHit;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.NodeInfo;
+import org.fao.geonet.api.API;
 import org.fao.geonet.api.es.EsHTTPProxy;
 import org.fao.geonet.api.records.model.related.AssociatedRecord;
 import org.fao.geonet.api.records.model.related.RelatedItemOrigin;
@@ -294,29 +295,29 @@ public class MetadataUtils {
             Set<String> remoteRecords = relatedTypeDetails.getRemoteRecords();
 
             List<AssociatedRecord> records = new ArrayList<>();
-            if (result.getHits().getTotalHits().value > 0) {
-                for (SearchHit e : Arrays.asList(result.getHits().getHits())) {
-                    allCatalogueUuids.add(e.getId());
+            if (!result.hits().hits().isEmpty()) {
+                for (Hit e : (List<Hit>) result.hits().hits()) {
+                    allCatalogueUuids.add(e.id());
                     AssociatedRecord associatedRecord = new AssociatedRecord();
-                    associatedRecord.setUuid(e.getId());
+                    associatedRecord.setUuid(e.id());
                     // Set properties eg. remote, associationType, ...
-                    associatedRecord.setProperties(relatedTypeDetails.recordsProperties.get(e.getId()));
+                    associatedRecord.setProperties(relatedTypeDetails.recordsProperties.get(e.id()));
 
                     // Add scripted field values to the properties of the record
-                    if (!e.getFields().isEmpty()) {
+                    if (!e.fields().isEmpty()) {
                         FIELDLIST_RELATED_SCRIPTED.keySet().forEach(f -> {
-                            DocumentField dc = e.getFields().get(f);
+                            JsonData dc = (JsonData) e.fields().get(f);
 
                             if (dc != null) {
                                 if (associatedRecord.getProperties() == null) {
                                     associatedRecord.setProperties(new HashMap<>());
                                 }
-                                associatedRecord.getProperties().put(dc.getName(), dc.getValue());
+                                associatedRecord.getProperties().put(f, dc.toJson().asJsonArray().get(0).toString().replaceAll("^\"|\"$", ""));
                             }
                         });
                     }
 
-                    JsonNode source = mapper.readTree(e.getSourceAsString());
+                    JsonNode source = mapper.convertValue(e.source(), JsonNode.class);
                     ObjectNode doc = mapper.createObjectNode();
                     doc.set("_source", source);
                     EsHTTPProxy.addUserInfo(doc, context);
@@ -330,12 +331,12 @@ public class MetadataUtils {
                     associatedRecord.setRecord(source);
                     associatedRecord.setOrigin(RelatedItemOrigin.catalog.name());
                     records.add(associatedRecord);
-                    if (expectedUuids.contains(e.getId())) {
-                        expectedUuids.remove(e.getId());
+                    if (expectedUuids.contains(e.id())) {
+                        expectedUuids.remove(e.id());
                     }
                     // Remote records may be found in current catalogue (eg. if harvested)
-                    if (remoteRecords.contains(e.getId())) {
-                        remoteRecords.remove(e.getId());
+                    if (remoteRecords.contains(e.id())) {
+                        remoteRecords.remove(e.id());
                     }
                 }
             }
@@ -382,9 +383,9 @@ public class MetadataUtils {
                     start, size);
 
                 Set<String> allPortalUuids = new HashSet<>();
-                if (recordsInPortal.getHits().getTotalHits().value > 0) {
-                    for (SearchHit e : Arrays.asList(recordsInPortal.getHits().getHits())) {
-                        allPortalUuids.add(e.getId());
+                if (!recordsInPortal.hits().hits().isEmpty()) {
+                    for (Hit e : (List<Hit>) recordsInPortal.hits().hits()) {
+                        allPortalUuids.add(e.id());
                     }
                 }
 
@@ -662,12 +663,17 @@ public class MetadataUtils {
             fromValue, (toValue - fromValue));
 
         Element typeResponse = new Element(type.equals("brothersAndSisters") ? "siblings" : type);
-        if (result.getHits().getTotalHits().value > 0) {
+        if (!result.hits().hits().isEmpty()) {
             // Build the old search service response format
             Element response = new Element("response");
-            Arrays.asList(result.getHits().getHits()).forEach(e -> {
+
+            ObjectMapper objectMapper = new ObjectMapper();
+
+            result.hits().hits().forEach(e1 -> {
+                Hit e = (Hit) e1;
+
                 Element recordMetadata = new Element("metadata");
-                final Map<String, Object> source = e.getSourceAsMap();
+                final Map<String, Object> source = objectMapper.convertValue(e.source(), Map.class);
                 recordMetadata.addContent(new Element("id").setText((String) source.get(Geonet.IndexFieldNames.ID)));
                 recordMetadata.addContent(new Element("uuid").setText((String) source.get(Geonet.IndexFieldNames.UUID)));
                 if (type.equals("brothersAndSisters")) {
@@ -718,9 +724,10 @@ public class MetadataUtils {
         int size = Integer.parseInt(si.getSelectionMaxRecords());
 
         final SearchResponse result = searchMan.query(query, null, from, size);
-        if (result.getHits().getTotalHits().value > 0) {
-            final SearchHit[] elements = result.getHits().getHits();
-            Arrays.asList(elements).forEach(e -> uuids.add((String) e.getSourceAsMap().get(Geonet.IndexFieldNames.UUID)));
+        if (!result.hits().hits().isEmpty()) {
+            final List<Hit> elements = result.hits().hits();
+            ObjectMapper objectMapper = new ObjectMapper();
+            elements.forEach(e -> uuids.add((String) objectMapper.convertValue(e.source(), Map.class).get(Geonet.IndexFieldNames.UUID)));
         }
         Log.info(Geonet.MEF, "  Found " + uuids.size() + " record(s).");
         return uuids;
@@ -768,6 +775,48 @@ public class MetadataUtils {
         return isInvalid;
     }
 
+    /**
+     * Check if other metadata records exist apart from the one with {code}metadataUuidToExclude{code} with the same
+     * {code}metadataValue{code} for the field {code}metadataField{code}.
+     *
+     * @param metadataValue         Metadata value to check.
+     * @param metadataField         Metadata field to check the value.
+     * @param metadataUuidToExclude Metadata identifier to exclude from the search.
+     * @return A list of metadata uuids that have the same value for the field provided.
+     */
+    public static boolean isMetadataFieldValueExistingInOtherRecords(String metadataValue, String metadataField, String metadataUuidToExclude) {
+        ApplicationContext applicationContext = ApplicationContextHolder.get();
+        EsSearchManager searchMan = applicationContext.getBean(EsSearchManager.class);
+
+        String esFieldName = "resourceTitleObject.\\\\*.keyword";
+        if (metadataField.equals("altTitle")) {
+            esFieldName = "resourceAltTitleObject.\\\\*.keyword";
+        } else if (metadataField.equals("identifier")) {
+            esFieldName = "resourceIdentifier.code";
+        }
+
+        boolean duplicatedMetadataValue = false;
+        String jsonQuery = " {" +
+            "       \"query_string\": {" +
+            "       \"query\": \"+" + esFieldName + ":\\\"%s\\\" -uuid:\\\"%s\\\"\"" +
+            "       }" +
+            "}";
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            JsonNode esJsonQuery = objectMapper.readTree(String.format(jsonQuery, metadataValue, metadataUuidToExclude));
+
+            final SearchResponse queryResult = searchMan.query(
+                esJsonQuery,
+                FIELDLIST_UUID,
+                0, 5);
+
+            duplicatedMetadataValue = !queryResult.hits().hits().isEmpty();
+        } catch (Exception ex) {
+            Log.error(API.LOG_MODULE_NAME, ex.getMessage(), ex);
+        }
+        return duplicatedMetadataValue;
+    }
 
     /**
      * Checks if a result for a search query has results.

@@ -120,10 +120,25 @@
               }
 
               /** wps process tabs */
-              scope.wpsTabs = {
-                byUrl: true,
-                recent: false
-              };
+              function initWpsConfiguration() {
+                var tabs = {};
+                if (!gnViewerSettings.mapConfig.wpsSources) {
+                  gnViewerSettings.mapConfig.wpsSources = ["url", "recent"];
+                }
+                if (
+                  gnViewerSettings.mapConfig.listOfServices.wps &&
+                  gnViewerSettings.mapConfig.listOfServices.wps.length > 0 &&
+                  gnViewerSettings.mapConfig.wpsSources &&
+                  gnViewerSettings.mapConfig.wpsSources.indexOf("list") === -1
+                ) {
+                  gnViewerSettings.mapConfig.wpsSources.unshift("list");
+                }
+                gnViewerSettings.mapConfig.wpsSources.map(function (type, index) {
+                  return (tabs[type] = index === 0);
+                });
+                return tabs;
+              }
+              scope.wpsTabs = initWpsConfiguration();
               scope.selectedWps = {};
 
               scope.zoom = function (map, delta) {
@@ -240,7 +255,7 @@
                             }),
                             type: "success"
                           },
-                          5000
+                          5
                         );
                       }
                     },
@@ -278,7 +293,7 @@
                           url: config.url,
                           extent: extent ? extent.join(",") : ""
                         }),
-                        delay: 5000,
+                        delay: 5,
                         type: "warning"
                       });
                       // TODO: You may want to add more than one time
@@ -393,7 +408,7 @@
                         filters: {
                           filters: {
                             maps: {
-                              query_string: { query: '+resourceType:"map/interactive"' }
+                              query_string: { query: '+resourceType:"map-interactive"' }
                             }
                           }
                         }
@@ -459,7 +474,7 @@
 
                   // handle processes tool
                   if (scope.activeTools.processes && openedTool.url) {
-                    scope.wpsTabs.byUrl = true;
+                    scope.wpsTabs.url = true;
                     scope.selectedWps.url = openedTool.url;
                   }
 
@@ -481,6 +496,10 @@
               setTimeout(function () {
                 scope.map.updateSize();
               }, 300);
+
+              if (gnViewerSettings.mapConfig.disabledTools.scaleLine === false) {
+                scope.map.addControl(new ol.control.ScaleLine());
+              }
             }
           };
         }
@@ -495,11 +514,19 @@
       templateUrl: "../../catalog/components/viewer/partials/mouseposition.html",
       controller: [
         "gnViewerSettings",
+        "gnGlobalSettings",
         "hotkeys",
         "gnAlertService",
         "$translate",
         "$scope",
-        function (gnViewerSettings, hotkeys, gnAlertService, $translate, scope) {
+        function (
+          gnViewerSettings,
+          gnGlobalSettings,
+          hotkeys,
+          gnAlertService,
+          $translate,
+          scope
+        ) {
           scope.switchMousePosition = function () {
             scope.displayMousePosition = !scope.displayMousePosition;
           };
@@ -547,25 +574,27 @@
             });
             scope.map.addControl(scope.mousePositionControl);
 
-            hotkeys.bindTo(scope).add({
-              combo: "c",
-              description: $translate.instant("copyMousePosition"),
-              callback: function (event) {
-                if (scope.mousePosition != "") {
-                  navigator.clipboard.writeText(scope.mousePosition).then(function () {
-                    gnAlertService.addAlert(
-                      {
-                        msg: $translate.instant("mousePositionCopiedToClipboard", {
-                          position: scope.mousePosition
-                        }),
-                        type: "success"
-                      },
-                      2
-                    );
-                  });
+            if (gnGlobalSettings.gnCfg.mods.global.hotkeys) {
+              hotkeys.bindTo(scope).add({
+                combo: "c",
+                description: $translate.instant("copyMousePosition"),
+                callback: function (event) {
+                  if (scope.mousePosition != "") {
+                    navigator.clipboard.writeText(scope.mousePosition).then(function () {
+                      gnAlertService.addAlert(
+                        {
+                          msg: $translate.instant("mousePositionCopiedToClipboard", {
+                            position: scope.mousePosition
+                          }),
+                          type: "success"
+                        },
+                        2
+                      );
+                    });
+                  }
                 }
-              }
-            });
+              });
+            }
           }
         }
       ]

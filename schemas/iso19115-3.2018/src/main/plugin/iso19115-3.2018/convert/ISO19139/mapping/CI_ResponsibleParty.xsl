@@ -18,7 +18,7 @@
                 xmlns:gcx="http://standards.iso.org/iso/19115/-3/gcx/1.0"
                 xmlns:gex="http://standards.iso.org/iso/19115/-3/gex/1.0"
                 xmlns:lan="http://standards.iso.org/iso/19115/-3/lan/1.0"
-                xmlns:srv="http://standards.iso.org/iso/19115/-3/srv/2.1"
+                xmlns:srv="http://standards.iso.org/iso/19115/-3/srv/2.0"
                 xmlns:mac="http://standards.iso.org/iso/19115/-3/mac/2.0"
                 xmlns:mas="http://standards.iso.org/iso/19115/-3/mas/1.0"
                 xmlns:mcc="http://standards.iso.org/iso/19115/-3/mcc/1.0"
@@ -42,9 +42,9 @@
                 xmlns:mdq="http://standards.iso.org/iso/19157/-2/mdq/1.0"
                 xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0"
                 exclude-result-prefixes="#all">
-    
+
     <xsl:import href="../utility/multiLingualCharacterStrings.xsl"/>
-    
+
     <xd:doc xmlns:xd="http://www.oxygenxml.com/ns/doc/xsl" scope="stylesheet">
         <xd:desc>
             <xd:p>
@@ -62,8 +62,8 @@
 
     <xsl:template match="gmd:CI_ResponsibleParty" mode="from19139to19115-3.2018">
         <xsl:choose>
-            <xsl:when test="count(gmd:individualName/gcoold:CharacterString) + count(gmd:organisationName/gcoold:CharacterString) + count(gmd:positionName/gcoold:CharacterString) > 0">
-                <!-- 
+            <xsl:when test="count(gmd:individualName/gcoold:CharacterString) + count(gmd:organisationName/(gcoold:CharacterString|gmx:Anchor)) + count(gmd:positionName/gcoold:CharacterString) > 0">
+                <!--
                 CI_ResponsibleParties that include name elements (individualName, organisationName, or positionName) are translated to CI_Responsibilities.
                 CI_ResponsibleParties without name elements are assummed to be placeholders for CI_OnlineResources. They are transformed later in the process
                 using the CI_ResponsiblePartyToOnlineResource template
@@ -142,11 +142,11 @@
         </xsl:choose>
     </xsl:template>
     <xsl:template name="CI_ResponsiblePartyToOnlineResource">
-        <!-- 
+        <!--
         CI_ResponsibleParties that have no name elements and only a CI_OnlineResource
         are assumed to be used to add CI_OnlineResources to CI_Citations in 19115 where
         CI_Citations do not include CI_OnlineResources. In this case we, transform
-        only the CI_OnlineResource element of the CI_ResponsibleParty 
+        only the CI_OnlineResource element of the CI_ResponsibleParty
     -->
         <xsl:apply-templates select=".//gmd:onlineResource" mode="from19139to19115-3.2018"/>
     </xsl:template>

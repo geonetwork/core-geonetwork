@@ -1,4 +1,4 @@
-<div class="md-feedback gn-margin-bottom" data-ng-show="!isUserFeedbackEnabled">
+<div class="md-feedback gn-margin-bottom" data-ng-show="isUserMetadataFeedbackEnabled">
   <a
     href
     data-ng-click="toggle()"
@@ -115,10 +115,10 @@
                       required="required"
                       aria-label="{{'fbFunction' | translate}}"
                     >
-                      <option value="question" data-translate="">fbQuestion</option>
-                      <option value="error" data-translate="">fbError</option>
-                      <option value="comment" data-translate="">fbComments</option>
-                      <option value="contact" data-translate="">fbContact</option>
+                      <option value="fbQuestion" data-translate="">fbQuestion</option>
+                      <option value="fbError" data-translate="">fbError</option>
+                      <option value="fbComments" data-translate="">fbComments</option>
+                      <option value="fbContact" data-translate="">fbContact</option>
                     </select>
                   </div>
                 </div>
@@ -133,35 +133,39 @@
                       aria-label="{{'fbCategory' | translate}}"
                       required="required"
                     >
-                      <option value="Metadata Contents" data-translate="">
+                      <option value="fbCatMetadataContents" data-translate="">
                         fbCatMetadataContents
                       </option>
-                      <option value="Data Contents" data-translate="">
+                      <option value="fbCatDataContents" data-translate="">
                         fbCatDataContents
                       </option>
-                      <option value="Service Contents" data-translate="">
+                      <option value="fbCatServiceContents" data-translate="">
                         fbCatServiceContents
                       </option>
-                      <option value="Support" data-translate="">fbCatSupport</option>
-                      <option value="Map Viewer" data-translate="">fbCatMapViewer</option>
-                      <option value="Search" data-translate="">fbCatSearch</option>
-                      <option value="Organizations" data-translate="">
+                      <option value="fbCatSupport" data-translate="">fbCatSupport</option>
+                      <option value="fbCatMapViewer" data-translate="">
+                        fbCatMapViewer
+                      </option>
+                      <option value="fbCatSearch" data-translate="">fbCatSearch</option>
+                      <option value="fbCatOrganizations" data-translate="">
                         fbCatOrganizations
                       </option>
-                      <option value="Content Management" data-translate="">
+                      <option value="fbCatContentManagement" data-translate="">
                         fbCatContentManagement
                       </option>
-                      <option value="Metadata Import" data-translate="">
+                      <option value="fbCatMetadataImport" data-translate="">
                         fbCatMetadataImport
                       </option>
-                      <option value="Metadata Editing" data-translate="">
+                      <option value="fbCatMetadataEditing" data-translate="">
                         fbCatMetadataEditing
                       </option>
-                      <option value="Harvesting" data-translate="">
+                      <option value="fbCatHarvesting" data-translate="">
                         fbCatHarvesting
                       </option>
-                      <option value="Validator" data-translate="">fbCatValidator</option>
-                      <option value="Others" data-translate="">fbCatOthers</option>
+                      <option value="fbCatValidator" data-translate="">
+                        fbCatValidator
+                      </option>
+                      <option value="fbCatOthers" data-translate="">fbCatOthers</option>
                     </select>
                   </div>
                 </div>
@@ -197,11 +201,11 @@
                       <label>
                         <input
                           type="checkbox"
-                          aria-label="{{'fbSendTo' | translate}} {{c.email}} ({{c.role}})"
+                          aria-label="{{'fbSendTo' | translate}} {{c.email}} ({{c.role | translate}})"
                           data-ng-model="c.selected"
                           data-ng-change="updateList()"
                         />
-                        {{c.email}} ({{c.role}})
+                        {{c.email}} ({{c.role | translate}})
                       </label>
                     </li>
                   </ul>

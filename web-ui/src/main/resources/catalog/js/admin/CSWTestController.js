@@ -50,7 +50,7 @@
           $scope.cswTests = response.data;
         });
 
-        $http.get("../api/sources/subportal").then(function (response) {
+        $http.get("../api/sources?type=subportal").then(function (response) {
           $scope.cswVirtual = response.data;
         });
       }

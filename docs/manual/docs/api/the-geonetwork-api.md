@@ -2,8 +2,93 @@
 
 The REST API and documentation are available in your catalog at page <http://localhost:8080/geonetwork/doc/api/> and linked from the footer on the home page.
 
-In version 4, the API description is using OpenAPI specification. Old path to the API including the version ``/srv/api/0.1/\...`` is replaced by ``/srv/api/\...``. The version of the API correspond to the version of the GeoNetwork instance.
+Reference:
 
+* [OpenAPI Specification](https://swagger.io/specification/) (swagger.io)
+
+## GeoNetwork API Access
+
+GeoNetwork API is provided as a self-describing OpenAPI document, browsable in html form, and avaialble as JSON or XML for script interactions.
+
+1. The API is available from the **Admin Console --> Catalogue admin tools** page:
+    
+    * http://localhost:8080/geonetwork/doc/api/index.html
+
+    ![](img/admin-console-api.png)
+    **Catalogue admin tools**
+
+2. The OpenAPI document is browsable as an html page:
+
+    ![](img/geonetwork-api-html.png)
+    **GeoNetwork API OpenAPI document**
+
+3. The page documents each service end-point, including parameters and output results.
+   
+    ![](img/geonetwork-api-document.png)
+    **GeoNetwork API Service Endpoint Description**
+
+4. Selecting **Server variables** at the top of the page allows API testing:
+
+    ![](img/geonetwork-api-test.png)
+    **GeoNetwork API Service Endpoint Test**
+
+5.  The OpenAPI document is also available as `text/json` and `text/xml` for script access:
+
+     * https://localhost:8080/geonetwork/srv/api/doc
+    
+     ```json
+     {
+       "openapi": "3.0.1",
+       "info": {
+         "title": "GeoNetwork 4.0.1 OpenAPI Documentation",
+         "description": "This is the description of the GeoNetwork OpenAPI. Use this API to manage your catalog.",
+         "contact": {
+           "name": "GeoNetwork user mailing list",
+           "url": "https://sourceforge.net/p/geonetwork/mailman/geonetwork-users/",
+           "email": "geonetwork-users@lists.sourceforge.net"
+         },
+         "license": {
+           "name": "GPL 2.0",
+           "url": "http://www.gnu.org/licenses/old-licenses/gpl-2.0.html"
+         },
+         "version": "4.0.1"
+       },
+       { 
+         "description": "Learn how to access the catalog using the GeoNetwork REST API.",
+         "url": "http://localhost:8080/geonetwork/doc/api"
+       },
+       ...
+     ```
+
+## Upgrading from GeoNetwork 3 Guidance
+
+In version `4.0.1` onward the API description is provided using OpenAPI specification:
+
+- The version of the API correspond to the version of the GeoNetwork instance when the API changed.
+
+- The GeoNetwork API version number is indicated in the `html` page title available
+
+- The GeoNetwork API version number is available to scripts at in the `json` or `xml` info description.
+
+- Previously in GeoNetwork 3 the GeoNetwork API version was included in the path, ``/srv/api/0.1/\...``
+
+!!! warning
+
+    Lucene is no longer available, replaced by Elasticsearch.
+
+!!! warning
+    
+    The GeoNetwork API support for Report Uploads has not been migrated.
+    
+    Interested parties may contact the project team for guidance and to express their intent.
+
+!!! warning
+
+    XLink / Remove directory entry used in other record has not been migrated.
+    
+    Interested parties may contact the project team for guidance and to express their intent.
+    
+    
 ## Using the API to apply an XSL process
 
 This is an example to trigger an XSL process on a set of records. It illustrates how to make a set of actions using the API:
@@ -151,7 +236,7 @@ Then use the function in formula. Here we search for records matching particular
 
 ## Building client for the API using codegen
 
-The API is described using the open API specification. [Codegen](https://swagger.io/swagger-codegen/) is a tool to build an API client based on the specification. To build a Java client use the following procedure.
+The API is described using the Open API specification. [Codegen](https://swagger.io/swagger-codegen/) is a tool to build an API client based on the specification. To build a Java client use the following procedure.
 
 First, create a configuration file apiconfig.json for the API:
 
@@ -345,53 +430,57 @@ This is an example of how to use requests in python to authenticate to the API a
 import requests
 
 # Set up your username and password:
-username = 'username'
-password = 'password'
+username = "username"
+password = "password"
 
 # Set up your server and the authentication URL:
 server = "http://localhost:8080"
-authenticate_url = server + '/geonetwork/srv/eng/info?type=me'
 
-# To generate the XRSF token, send a post request to the following URL: http://localhost:8080/geonetwork/srv/eng/info?type=me
+authenticate_url = server + "/geonetwork/srv/api/me"
+
 session = requests.Session()
-response = session.post(authenticate_url)
+session.auth = (username, password)
+response = session.get(authenticate_url)
 
 # Extract XRSF token
 xsrf_token = response.cookies.get("XSRF-TOKEN")
 if xsrf_token:
-    print ("The XSRF Token is:", xsrf_token)
+    print("The XSRF Token is:", xsrf_token)
 else:
     print("Unable to find the XSRF token")
-
-# You can now use the username and password, along with the XRSF token to send requests to the API.
 
 # This example will add an online resource to a specified UUID using the http://localhost:8080/geonetwork/srv/api/records/batchediting endpoint
 
 # Set header for connection
-headers = {'Accept': 'application/json',
-'X-XSRF-TOKEN': xsrf_token
+headers = {
+    "Accept": "application/json",
+    "X-XSRF-TOKEN": xsrf_token,
+    "JSESSION_ID": response.cookies.get("JSESSIONID"),
 }
 
 # Set the parameters
-params = {'uuids': 'the uuid to be updated',
-'bucket': 'bucketname',
-'updateDateStamp': 'true',
+params = {
+    "uuids": "the uuid to be updated",
+    "bucket": "bucketname",
+    "updateDateStamp": "true",
 }
 
 # Set the JSON data: note that the value must have one of <gn_add>, <gn_create>, <gn_replace> or <gn_delete>
-json_data = [{'condition': '',
-'value': '<gn_add><gmd:onLine xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gco="http://www.isotc211.org/2005/gco"><gmd:CI_OnlineResource><gmd:linkage><gmd:URL>https://localhost</gmd:URL></gmd:linkage><gmd:protocol><gco:CharacterString>WWW:LINK-1.0-http--link</gco:CharacterString></gmd:protocol><gmd:name><gco:CharacterString>The Title of the URL</gco:CharacterString></gmd:name><gmd:description><gco:CharacterString>The description of the resource</gco:CharacterString></gmd:description><gmd:function></gmd:function></gmd:CI_OnlineResource></gmd:onLine></gn_add>',
-'xpath': '/gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions/gmd:MD_DigitalTransferOptions',
-},
+json_data = [
+    {
+        "condition": "",
+        "value": '<gn_add><gmd:onLine xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gco="http://www.isotc211.org/2005/gco"><gmd:CI_OnlineResource><gmd:linkage><gmd:URL>https://localhost</gmd:URL></gmd:linkage><gmd:protocol><gco:CharacterString>WWW:LINK-1.0-http--link</gco:CharacterString></gmd:protocol><gmd:name><gco:CharacterString>The Title of the URL</gco:CharacterString></gmd:name><gmd:description><gco:CharacterString>The description of the resource</gco:CharacterString></gmd:description><gmd:function></gmd:function></gmd:CI_OnlineResource></gmd:onLine></gn_add>',
+        "xpath": "/gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions/gmd:MD_DigitalTransferOptions",
+    },
 ]
 
 # Send a put request to the endpoint
-response = session.put(server + 'geonetwork/srv/api/records/batchediting',
-params=params,
-auth = (username, password),
-headers=headers,
-json=json_data,
+response = session.put(
+    server + "/geonetwork/srv/api/records/batchediting",
+    params=params,
+    headers=headers,
+    json=json_data,
 )
-
 print(response.text)
+
 ```

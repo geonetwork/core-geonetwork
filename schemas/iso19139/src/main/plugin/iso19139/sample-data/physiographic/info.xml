@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<info version="1.0">
+  <general>
+    <uuid>78f93047-74f8-4419-ac3d-fc62e4b0477b</uuid>
+    <createDate>2007-07-25T12:05:45</createDate>
+    <changeDate>2007-11-06T12:10:47</changeDate>
+    <schema>iso19139</schema>
+    <isTemplate>false</isTemplate>
+    <format>full</format>
+  </general>
+  <categories>
+    <category name="maps" />
+    <category name="interactiveResources" />
+  </categories>
+  <privileges>
+    <group name="all">
+      <operation name="view" />
+      <operation name="download" />
+      <operation name="dynamic" />
+      <operation name="featured" />
+    </group>
+    <group name="intranet">
+      <operation name="view" />
+      <operation name="download" />
+      <operation name="dynamic" />
+      <operation name="featured" />
+    </group>
+    <group name="sample">
+      <operation name="view" />
+      <operation name="download" />
+      <operation name="editing" />
+      <operation name="dynamic" />
+      <operation name="featured" />
+    </group>
+  </privileges>
+  <public>
+    <file name="phy.gif" changeDate="2007-07-25T12:07:34" />
+    <file name="phy_s.gif" changeDate="2007-07-25T12:07:26" />
+  </public>
+  <private>
+    <file name="phy.zip" changeDate="2007-07-25T12:11:26" />
+  </private>
+</info>
+

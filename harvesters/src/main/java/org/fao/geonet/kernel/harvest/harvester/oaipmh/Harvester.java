@@ -101,13 +101,14 @@ class Harvester extends BaseAligner<OaiPmhParams> implements IHarvester<HarvestR
     /**
      * Contains a list of accumulated errors during the executing of this harvest.
      */
-    private List<HarvestError> errors = new LinkedList<>();
+    private final List<HarvestError> errors;
 
-    public Harvester(AtomicBoolean cancelMonitor, Logger log, ServiceContext context, OaiPmhParams params) {
+    public Harvester(AtomicBoolean cancelMonitor, Logger log, ServiceContext context, OaiPmhParams params, List<HarvestError> errors) {
         super(cancelMonitor);
         this.log = log;
         this.context = context;
         this.params = params;
+        this.errors = errors;
 
         result = new HarvestResult();
 
@@ -396,6 +397,11 @@ class Harvester extends BaseAligner<OaiPmhParams> implements IHarvester<HarvestR
             schema = dataMan.autodetectSchema(md);
         }
 
+        // Translate metadata
+        if (params.isTranslateContent()) {
+            md = translateMetadataContent(context, md, schema);
+        }
+
         //
         // insert metadata
         //
@@ -472,7 +478,7 @@ class Harvester extends BaseAligner<OaiPmhParams> implements IHarvester<HarvestR
                 try {
                     Integer groupIdVal = null;
                     if (StringUtils.isNotEmpty(params.getOwnerIdGroup())) {
-                        groupIdVal = Integer.parseInt(params.getOwnerIdGroup());
+                        groupIdVal = getGroupOwner();
                     }
 
                     params.getValidate().validate(dataMan, context, md, groupIdVal);
@@ -561,6 +567,11 @@ class Harvester extends BaseAligner<OaiPmhParams> implements IHarvester<HarvestR
                 updateSchema = true;
             }
 
+            // Translate metadata
+            if (params.isTranslateContent()) {
+                md = translateMetadataContent(context, md, schema);
+            }
+
             //
             // update metadata
             //
@@ -610,9 +621,5 @@ class Harvester extends BaseAligner<OaiPmhParams> implements IHarvester<HarvestR
             metadataIndexer.indexMetadata(id, true, IndexingMode.full);
             result.updatedMetadata++;
         }
-    }
-
-    public List<HarvestError> getErrors() {
-        return errors;
     }
 }

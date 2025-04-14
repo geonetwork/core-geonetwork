@@ -35,10 +35,20 @@
     <div
       class="alert alert-warning"
       data-ng-hide="!mdView.loadDetailsFinished || mdView.current.record"
-      data-translate=""
-      data-translate-values="{uuid: '{{recordIdentifierRequested | htmlToPlaintext}}', url: '{{url | encodeURIComponent}}'}"
     >
-      recordNotFound
+      <span
+        data-translate=""
+        data-translate-values="{uuid: '{{recordIdentifierRequested | htmlToPlaintext}}'}"
+      >
+        recordNotFound
+      </span>
+      <span
+        data-ng-hide="user"
+        data-translate=""
+        data-translate-values="{signInFormAction: '{{signInFormAction}}', csrf: '{{csrf}}', redirectUrlAfterSign: '{{redirectUrlAfterSign}}'}"
+      >
+        trySignIn
+      </span>
     </div>
     <div class="row" data-ng-show="!mdView.loadDetailsFinished">
       <i class="fa fa-spinner fa-spin fa-3x fa-fw"></i>
@@ -81,83 +91,42 @@
         </div>
 
         <div class="pull-right">
-          <!-- edit -->
-          <div class="btn-group pull-left" role="group">
-            <a
-              class="btn btn-default gn-md-edit-btn"
-              data-ng-show="user.canEditRecord(mdView.current.record) && (user.isReviewerOrMore() || mdView.current.record.mdStatus != 4 || !isMdWorkflowEnable)"
-              data-ng-href="catalog.edit#/metadata/{{gnMetadataActions.getMetadataIdToEdit(mdView.current.record)}}?redirectUrl=catalog.search%23%2Fmetadata%2F{{mdView.current.record.uuid}}"
-              title="{{'edit' | translate}}"
-            >
-              <span class="fa fa-fw fa-pencil"></span>
-              <span data-translate="" class="hidden-sm hidden-xs">edit</span>
-            </a>
-          </div>
+          <ul class="nav navbar-nav gn-menu-xs" role="menu">
+            <li data-ng-repeat-start="menu in recordviewMenu"></li>
+            <!--record view menu static pages-->
+            <li
+              data-ng-if="isPage(menu)"
+              gn-static-page-menu="menu"
+              language="{{lang}}"
+              section="record_view_menu"
+            ></li>
 
-          <!-- delete -->
-          <div class="btn-group pull-left" role="group">
-            <a
-              class="btn btn-default"
-              href
-              data-ng-show="(!mdView.current.record.isPublished() || (mdView.current.record.isPublished() && user.canDeletePublishedMetadata()) ) && user.canEditRecord(mdView.current.record)
-                            && (user.isReviewerOrMore() || mdView.current.record.mdStatus != 4 || !isMdWorkflowEnable)"
-              data-gn-click-and-spin="deleteRecord(mdView.current.record)"
-              data-ng-init="translateValues = {resourceTitle: (mdView.current.record.resourceTitle | json)}"
-              data-gn-confirm-click="{{(mdView.current.record.draft != 'y') ? 'deleteRecordConfirm' : 'deleteWorkingCopyRecordConfirm' | translate:translateValues}}"
-              title="{{(mdView.current.record.draft != 'y') ? 'delete' : 'cancelWorkingCopy' | translate}}"
-            >
-              <span class="fa fa-fw fa-times"></span>
-              <span
-                data-translate=""
-                class="hidden-sm hidden-xs"
-                data-ng-if="mdView.current.record.draft == 'y'"
-                >cancelWorkingCopy</span
-              >
-              <span
-                data-translate=""
-                class="hidden-sm hidden-xs"
-                data-ng-if="mdView.current.record.draft != 'y'"
-                >delete</span
-              >
-            </a>
-          </div>
+            <!-- edit -->
+            <div
+              data-ng-if="menu == 'gn-recordview-edit-menu'"
+              gn-record-view-edit-menu=""
+            ></div>
 
-          <!-- manage -->
-          <div
-            class="gn-md-actions-btn pull-left"
-            data-gn-md-actions-menu="mdView.current.record"
-          />
+            <!-- delete -->
+            <div
+              data-ng-if="menu == 'gn-recordview-delete-menu'"
+              gn-record-view-delete-menu=""
+            ></div>
 
-          <!-- display mode -->
-          <div class="btn-group gn-view-menu-button pull-left">
-            <button
-              type="button"
-              class="btn btn-default dropdown-toggle"
-              data-toggle="dropdown"
-              aria-label="{{'chooseAView' | translate}}"
-              aria-expanded="false"
-            >
-              <span class="fa fa-fw fa-eye"></span>
-              <span data-translate="" class="hidden-sm hidden-xs">chooseAView</span>
-              <span class="caret"></span>
-            </button>
-            <ul class="dropdown-menu" role="menu">
-              <li
-                role="menuitem"
-                data-ng-repeat="f in recordFormatterList"
-                data-ng-class="currentFormatter === f.url ? 'disabled' : ''"
-              >
-                <a
-                  href=""
-                  gn-metadata-open="mdView.current.record"
-                  gn-records="mdView.records"
-                  gn-formatter="f && f.url"
-                >
-                  {{f.label | translate}}
-                </a>
-              </li>
-            </ul>
-          </div>
+            <!-- manage -->
+            <div
+              data-ng-if="menu == 'gn-recordview-manage-menu' && mdView.current.record"
+              class="gn-md-actions-btn pull-left"
+              data-gn-md-actions-menu="mdView.current.record"
+            ></div>
+
+            <!-- display mode -->
+            <div
+              data-ng-if="menu == 'gn-recordview-display-menu'"
+              gn-record-view-display-mode-menu=""
+            ></div>
+            <li data-ng-repeat-end=""></li>
+          </ul>
         </div>
       </div>
 
@@ -172,17 +141,17 @@
           <div data-ng-switch-when="series">
             <div
               ng-include="'../../catalog/views/default/templates/recordView/type-series.html'"
-            />
+            ></div>
           </div>
           <div data-ng-switch-when="service">
             <div
               ng-include="'../../catalog/views/default/templates/recordView/type-service.html'"
-            />
+            ></div>
           </div>
           <div data-ng-switch-default>
             <div
               ng-include="'../../catalog/views/default/templates/recordView/type-dataset.html'"
-            />
+            ></div>
           </div>
         </div>
       </div>

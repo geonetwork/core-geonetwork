@@ -4,7 +4,7 @@ To get to the CSW server configuration, you must be logged on as administrator f
 
 ![](img/csw.png)
 
-The CSW service provides a description of itself, the human who administers it, and other information through a `es` request (eg. <http://localhost:8080/geonetwork/srv/en/csw?request=GetCapabilities&service=CSW&version=2.0.2>). This form allows you to configure the CSW server and fill out some of the properties returned in response to a GetCapabilities request.
+The CSW service provides a description of itself, the human who administers it, and other information through a `GetCapabilities` request (eg. <http://localhost:8080/geonetwork/srv/en/csw?request=GetCapabilities&service=CSW&version=2.0.2>). This form allows you to configure the CSW server and fill out some of the properties returned in response to a GetCapabilities request.
 
 Configuration options:
 

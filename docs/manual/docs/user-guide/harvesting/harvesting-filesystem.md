@@ -4,21 +4,35 @@ This harvester will harvest metadata as XML files from a filesystem available on
 
 ## Adding a Local File System harvester
 
-The figure above shows the options available:
+To create a Local File System harvester go to `Admin console` > `Harvesting` and select `Harvest from` > `Directory`:
 
--   **Site** - Options about the remote site.
-    -   *Name* - This is a short description of the filesystem harvester. It will be shown in the harvesting main page as the name for this instance of the Local Filesystem harvester.
-    -   *Directory* - The path name of the directory containing the metadata (as XML files) to be harvested.
-    -   *Recurse* - If checked and the *Directory* path contains other directories, then the harvester will traverse the entire file system tree in that directory and add all metadata files found.
-    -   *Keep local if deleted at source* - If checked then metadata records that have already been harvested will be kept even if they have been deleted from the *Directory* specified.
-    -   *Icon* - An icon to assign to harvested metadata. The icon will be used when showing harvested metadata records in the search results.
--   **Options** - Scheduling options.
--   **Harvested Content** - Options that are applied to harvested content.
-    -   *Apply this XSLT to harvested records* - Choose an XSLT here that will convert harvested records to a different format.
-    -   *Validate* - If checked, the metadata will be validated after retrieval. If the validation does not pass, the metadata will be skipped.
+![](img/add-filesystem-harvester.png)
+
+Providing the following information:
+
+-   **Identification**
+    -   *Node name and logo*: A unique name for the harvester and, optionally, a logo to assign to the harvester.
+    -   *Group*: Group which owns the harvested records. Only the catalog administrator or users with the profile `UserAdmin` of this group can manage the harvester.
+    -   *User*: User who owns the harvested records.
+
+-   **Schedule**: Scheduling options to execute the harvester. If disabled, the harvester must be run manually from the harvester page. If enabled, a scheduling expression using cron syntax should be configured ([See examples](https://www.quartz-scheduler.org/documentation/quartz-2.1.7/tutorials/crontrigger)).
+
+-   **Configure connection to Directory**
+    -   *Directory*: The path name of the directory containing the metadata (as XML files) to be harvested. The directory must be accessible by GeoNetwork.
+    -   *Also search in subfolders*: If checked and the *Directory* path contains other directories, then the harvester will traverse the entire file system tree in that directory and add all metadata files found.
+    -   *Script to run before harvesting*
+    -   *Type of record*
+    
+-   **Configure response processing for filesystem**
+    -   *Action on UUID collision*: When a harvester finds the same uuid on a record collected by another method (another harvester, importer, dashboard editor,...), should this record be skipped (default), overriden or generate a new UUID?
+    -   *Update catalog record only if file was updated*
+    -   *Keep local even if deleted at source*: If checked then metadata records that have already been harvested will be kept even if they have been deleted from the *Directory* specified.
+    -   *Validate records before import*: Defines the criteria to reject metadata that is invalid according to XML structure (XSD) and validation rules (schematron).
+        -   Accept all metadata without validation.
+        -   Accept metadata that are XSD valid.
+        -   Accept metadata that are XSD and schematron valid.
+    -   *XSL transformation to apply*: (Optional)  The referenced XSL transform will be applied to each metadata record before it is added to GeoNetwork.
+    -   *Batch edits*: (Optional) Allows to update harvested records, using XPATH syntax. It can be used to add, replace or delete element.
+    -   *Category*: (Optional) A GeoNetwork category to assign to each metadata record.
+
 -   **Privileges** - Assign privileges to harvested metadata.
--   **Categories**
-
-!!! Notes
-
-    -   in order to be successfully harvested, metadata records retrieved from the file system must match a metadata schema in the local GeoNetwork instance

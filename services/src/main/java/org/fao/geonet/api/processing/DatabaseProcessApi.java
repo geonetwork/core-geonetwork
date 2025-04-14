@@ -32,11 +32,9 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.services.ReadWriteController;
-import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
-import org.fao.geonet.api.exception.NotAllowedException;
 import org.fao.geonet.api.processing.report.MetadataReplacementProcessingReport;
 import org.fao.geonet.api.processing.report.XsltMetadataProcessingReport;
 import org.fao.geonet.domain.AbstractMetadata;
@@ -63,7 +61,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -89,6 +91,9 @@ public class DatabaseProcessApi {
 
     @Autowired
     DataManager dataMan;
+
+    @Autowired
+    IMetadataUtils metadataUtils;
 
     @Autowired
     SchemaManager schemaMan;
@@ -184,13 +189,13 @@ public class DatabaseProcessApi {
 
         try {
             ServiceContext serviceContext = ApiUtils.createServiceContext(request);
-            checkUserProfileToBatchEditMetadata(serviceContext.getUserSession());
+            UserUtil.checkUserProfileLevel(serviceContext.getUserSession(), settingManager, roleHierarchy, Settings.METADATA_BATCH_EDITING_ACCESS_LEVEL, Profile.Editor, "batch edit metadata");
 
             Set<String> records = ApiUtils.getUuidsParameterOrSelection(uuids, bucket, session);
 
             final String siteURL = request.getRequestURL().toString() + "?" + request.getQueryString();
             for (String uuid : records) {
-                String id = dataMan.getMetadataId(uuid);
+                String id = String.valueOf(metadataUtils.findOneByUuid(uuid).getId());
                 Log.info("org.fao.geonet.services.metadata",
                     "Processing metadata for preview with id:" + id);
 
@@ -201,7 +206,6 @@ public class DatabaseProcessApi {
                     false, processingReport);
                 if (record != null) {
                     if (diffType != null) {
-                        IMetadataUtils metadataUtils = serviceContext.getBean(IMetadataUtils.class);
                         AbstractMetadata metadata = metadataUtils.findOne(id);
                         preview.addContent(
                             Diff.diff(metadata.getData(), Xml.getString(record), diffType));
@@ -319,7 +323,7 @@ public class DatabaseProcessApi {
 
         try {
             ServiceContext serviceContext = ApiUtils.createServiceContext(request);
-            checkUserProfileToBatchEditMetadata(serviceContext.getUserSession());
+            UserUtil.checkUserProfileLevel(serviceContext.getUserSession(), settingManager, roleHierarchy, Settings.METADATA_BATCH_EDITING_ACCESS_LEVEL, Profile.Editor, "batch edit metadata");
             Set<String> records = ApiUtils.getUuidsParameterOrSelection(uuids, bucket, session);
             UserSession userSession = ApiUtils.getUserSession(httpSession);
 
@@ -391,7 +395,7 @@ public class DatabaseProcessApi {
             DataManager dataMan = context.getBean(DataManager.class);
             ApplicationContext appContext = ApplicationContextHolder.get();
             for (String uuid : this.records) {
-                String id = getDataManager().getMetadataId(uuid);
+                String id = String.valueOf(context.getBean(IMetadataUtils.class).findOneByUuid(uuid).getId());
                 Log.info("org.fao.geonet.services.metadata",
                     "Processing metadata with id:" + id);
 
@@ -416,21 +420,4 @@ public class DatabaseProcessApi {
         }
     }
 
-    /**
-     * Checks if the user profile is allowed to batch edit metadata.
-     *
-     * @param userSession
-     */
-    private void checkUserProfileToBatchEditMetadata(UserSession userSession) {
-        if (userSession.getProfile() != Profile.Administrator) {
-            String allowedUserProfileToImportMetadata =
-                StringUtils.defaultIfBlank(settingManager.getValue(Settings.METADATA_BATCH_EDITING_ACCESS_LEVEL), Profile.Editor.toString());
-
-            // Is the user profile is higher than the profile allowed to import metadata?
-            if (!UserUtil.hasHierarchyRole(allowedUserProfileToImportMetadata, this.roleHierarchy)) {
-                throw new NotAllowedException("The user has no permissions to batch edit metadata.");
-            }
-        }
-
-    }
 }

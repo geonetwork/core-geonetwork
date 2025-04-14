@@ -108,13 +108,31 @@
     </for>
     -->
 
+    <!-- Check if metadata title is defined in other metadata record
+    <for name="gmd:title" use="data-gn-duplicated-metadata-title-checker" />
+    -->
+
     <for name="gts:TM_PeriodDuration" use="data-gn-field-duration-div"/>
     <for name="gml:duration" use="data-gn-field-duration-div"/>
 
     <for name="gco:Distance" use="number"/>
+    <for name="gco:Distance/@uom" use="data-gn-keyword-picker">
+      <directiveAttributes
+        data-thesaurus-key="local.theme.codelist_unit_distance"
+        data-display-definition="true"
+        data-show-hints-on-focus="true"/>
+    </for>
     <for name="gco:Decimal" use="number"/>
     <for name="gco:Integer" use="number"/>
     <for name="gco:Real" use="number"/>
+    <for name="gco:Measure" use="number"/>
+    <for name="gco:Measure/@uom" use="data-gn-keyword-picker">
+      <directiveAttributes
+        data-thesaurus-key="xpath::../*:dimensionName/*[@codeListValue]/(if (@codeListValue = 'time') then 'local.theme.codelist_unit_time' else 'local.theme.codelist_unit_distance')"
+        data-display-definition="true"
+        data-show-hints-on-focus="true"/>
+    </for>
+
     <for name="gco:Boolean" use="checkbox"/>
 
     <!-- Use data-gn-checkbox-with-nilreason for INSPIRE conformity, using xpath attribute.Similar configuration can be
@@ -424,6 +442,7 @@
   <tableFields>
     <table for="gmd:CI_ResponsibleParty">
       <header>
+        <col/>
         <!-- TODO: Add label from strings.xml / label with context-->
         <col label="gmd:organisationName"/>
         <col label="gmd:individualName"/>
@@ -432,6 +451,7 @@
         <col/>
       </header>
       <row>
+        <col orderControl=".."/>
         <col xpath="gmd:organisationName"/>
         <col xpath="gmd:individualName"/>
         <col xpath="gmd:contactInfo/*/gmd:address/*/gmd:electronicMailAddress"/>
@@ -441,12 +461,14 @@
     </table>
     <table for="gmd:CI_OnlineResource">
       <header>
+        <col/>
         <col label="gmd:protocol"/>
         <col label="gmd:linkage"/>
         <col label="gmd:name"/>
         <col/>
       </header>
       <row>
+        <col orderControl=".."/>
         <col xpath="gmd:protocol"/>
         <col xpath="gmd:linkage"/>
         <col xpath="gmd:name"/>
@@ -518,12 +540,36 @@
     <view name="inspire" upAndDownControlHidden="true" displayIfServiceInfo="/settings/system/inspire/enable='true'">
       <sidePanel>
         <directive data-gn-need-help="creating-metadata"/>
+
         <directive data-gn-validation-report=""/>
-        <directive data-gn-onlinesrc-list=""/>
+
+        <directive data-gn-overview-manager=""
+                   data-file-types=".png,.gif,.jpeg,.jpg"/>
+
+        <directive data-gn-distribution-resources-panel="gnCurrentEdit.metadata"
+                   data-mode="viewConfig.distributionConfig.layout || ''"
+                   data-editor-config="default"
+                   data-related-config="[{
+                                           title: 'API',
+                                           filter: 'protocol:OGC:.*|ESRI:.*|atom.*',
+                                           editActions: ['addOnlinesrc']},
+                                         {
+                                           title: 'download',
+                                           filter: 'protocol:.*DOWNLOAD.*|DB:.*|FILE:.*',
+                                           editActions: ['addOnlinesrc']},
+                                         {
+                                            title: 'links',
+                                            filter:'-protocol:OGC:.*|ESRI:.*|atom.*|.*DOWNLOAD.*|DB:.*|FILE:.* AND -function:legend|featureCatalogue|dataQualityReport',
+                                            editActions: ['addOnlinesrc']}]"
+        />
+
+        <directive data-gn-associated-resources-panel="gnCurrentEdit.metadata" />
+
         <directive gn-geo-publisher=""
                    data-ng-if="gnCurrentEdit.geoPublisherConfig"
                    data-config="{{gnCurrentEdit.geoPublisherConfig}}"
                    data-lang="lang"/>
+
         <directive data-gn-suggestion-list=""/>
       </sidePanel>
 
@@ -3183,24 +3229,36 @@
         -->
         <directive data-gn-need-help="creating-metadata"/>
 
+        <directive data-gn-validation-report=""/>
+
         <directive data-gn-overview-manager=""
                    data-file-types=".png,.gif,.jpeg,.jpg"/>
 
-        <directive data-gn-file-uploader=""
-                   data-type="onlines"/>
+        <directive data-gn-distribution-resources-panel="gnCurrentEdit.metadata"
+                   data-mode="viewConfig.distributionConfig.layout || ''"
+                   data-editor-config="default"
+                   data-related-config="[{
+                                           title: 'API',
+                                           filter: 'protocol:OGC:.*|ESRI:.*|atom.*',
+                                           editActions: ['addOnlinesrc']},
+                                         {
+                                           title: 'download',
+                                           filter: 'protocol:.*DOWNLOAD.*|DB:.*|FILE:.*',
+                                           editActions: []},
+                                         {
+                                            title: 'links',
+                                            filter:'-protocol:OGC:.*|ESRI:.*|atom.*|.*DOWNLOAD.*|DB:.*|FILE:.* AND -function:legend|featureCatalogue|dataQualityReport',
+                                            editActions: []}]"
+        />
 
-        <directive data-gn-onlinesrc-list=""
-                   data-types="onlinesrc|parent|dataset|service|source|sibling|associated|fcats"/>
+        <directive data-gn-associated-resources-panel="gnCurrentEdit.metadata"/>
 
         <directive gn-geo-publisher=""
                    data-ng-if="gnCurrentEdit.geoPublisherConfig"
                    data-config="{{gnCurrentEdit.geoPublisherConfig}}"
                    data-lang="lang"/>
 
-        <directive data-gn-validation-report=""/>
-
         <directive data-gn-suggestion-list=""/>
-
       </sidePanel>
 
       <tab id="default" default="true" mode="flat">
@@ -3294,23 +3352,42 @@
                    transformations="to-iso19139-keyword-with-anchor"/>
       </thesaurusList>
       -->
-
-      <thesaurusList>
-        <thesaurus key="external.none.allThesaurus"
-                   fieldset="false"/>
-      </thesaurusList>
-
+      <thesaurusList defaultTransformation="to-iso19139-keyword-with-anchor"/>
     </view>
     <view name="advanced"
           class="gn-label-above-input gn-indent-bluescale">
       <sidePanel>
         <directive data-gn-need-help="creating-metadata"/>
+
         <directive data-gn-validation-report=""/>
-        <directive data-gn-onlinesrc-list=""/>
+
+        <directive data-gn-overview-manager=""
+                   data-file-types=".png,.gif,.jpeg,.jpg"/>
+
+        <directive data-gn-distribution-resources-panel="gnCurrentEdit.metadata"
+                   data-mode="viewConfig.distributionConfig.layout || ''"
+                   data-editor-config="default"
+                   data-related-config="[{
+                                           title: 'API',
+                                           filter: 'protocol:OGC:.*|ESRI:.*|atom.*',
+                                           editActions: ['addOnlinesrc']},
+                                         {
+                                           title: 'download',
+                                           filter: 'protocol:.*DOWNLOAD.*|DB:.*|FILE:.*',
+                                           editActions: ['addOnlinesrc']},
+                                         {
+                                            title: 'links',
+                                            filter:'-protocol:OGC:.*|ESRI:.*|atom.*|.*DOWNLOAD.*|DB:.*|FILE:.* AND -function:legend|featureCatalogue|dataQualityReport',
+                                            editActions: ['addOnlinesrc']}]"
+        />
+
+        <directive data-gn-associated-resources-panel="gnCurrentEdit.metadata" />
+
         <directive gn-geo-publisher=""
                    data-ng-if="gnCurrentEdit.geoPublisherConfig"
                    data-config="{{gnCurrentEdit.geoPublisherConfig}}"
                    data-lang="lang"/>
+
         <directive data-gn-suggestion-list=""/>
       </sidePanel>
 
@@ -3377,16 +3454,42 @@
         <section xpath="/gmd:MD_Metadata/gmd:applicationSchemaInfo" or="applicationSchemaInfo"
                  in="/gmd:MD_Metadata"/>
       </tab>
+
+      <thesaurusList defaultTransformation="to-iso19139-keyword-with-anchor"/>
     </view>
     <view name="xml">
       <sidePanel>
         <directive data-gn-need-help="creating-metadata"/>
+
         <directive data-gn-validation-report=""/>
-        <directive data-gn-onlinesrc-list=""/>
+
+        <directive data-gn-overview-manager=""
+                   data-file-types=".png,.gif,.jpeg,.jpg"/>
+
+        <directive data-gn-distribution-resources-panel="gnCurrentEdit.metadata"
+                   data-mode="viewConfig.distributionConfig.layout || ''"
+                   data-editor-config="default"
+                   data-related-config="[{
+                                           title: 'API',
+                                           filter: 'protocol:OGC:.*|ESRI:.*|atom.*',
+                                           editActions: ['addOnlinesrc']},
+                                         {
+                                           title: 'download',
+                                           filter: 'protocol:.*DOWNLOAD.*|DB:.*|FILE:.*',
+                                           editActions: ['addOnlinesrc']},
+                                         {
+                                            title: 'links',
+                                            filter:'-protocol:OGC:.*|ESRI:.*|atom.*|.*DOWNLOAD.*|DB:.*|FILE:.* AND -function:legend|featureCatalogue|dataQualityReport',
+                                            editActions: ['addOnlinesrc']}]"
+        />
+
+        <directive data-gn-associated-resources-panel="gnCurrentEdit.metadata" />
+
         <directive gn-geo-publisher=""
                    data-ng-if="gnCurrentEdit.geoPublisherConfig"
                    data-config="{{gnCurrentEdit.geoPublisherConfig}}"
                    data-lang="lang"/>
+
         <directive data-gn-suggestion-list=""/>
       </sidePanel>
       <tab id="xml" default="true"/>

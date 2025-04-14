@@ -1,16 +1,22 @@
 <div data-ng-if="mdView.current.record.lineage">
   <h2 data-translate="">lineage</h2>
-  <p data-ng-bind-html="mdView.current.record.lineage | linky | newlines" />
+  <p data-ng-bind-html="mdView.current.record.lineage | linky | newlines"></p>
 </div>
 
-<div data-ng-if="mdView.current.record.sourceDescription">
+<div
+  data-ng-if="mdView.current.record.sourceDescription && mdView.current.record.sourceDescription.length > 0"
+>
   <h2 data-translate="">sourceDescription</h2>
-  <p data-ng-bind-html="mdView.current.record.sourceDescription | linky | newlines" />
+
+  <p
+    data-ng-repeat="d in mdView.current.record.sourceDescription track by $index"
+    data-ng-bind-html="d | linky | newlines"
+  ></p>
 </div>
 
 <div data-ng-if="mdView.current.record.supplementalInformation">
   <h2 data-translate="">supplementalInformation</h2>
   <p
     data-ng-bind-html="mdView.current.record.supplementalInformation | linky | newlines"
-  />
+  ></p>
 </div>

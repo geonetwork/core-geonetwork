@@ -65,11 +65,11 @@ public class ProfileManager {
      */
     public static Profile getLowestProfile(String[] profiles) {
         Profile lowestProfile = null;
-        int numberOfProfilesExtended = Profile.Administrator.getAll().size();
+        int numberOfProfilesExtended = Profile.Administrator.getProfileAndAllChildren().size();
 
         for (String profileName : profiles) {
             Profile p = Profile.valueOf(profileName);
-            Set<Profile> currentProfileSet = p.getAll();
+            Set<Profile> currentProfileSet = p.getProfileAndAllChildren();
             if (currentProfileSet.size() < numberOfProfilesExtended) {
                 lowestProfile = p;
                 numberOfProfilesExtended = currentProfileSet.size();
@@ -89,7 +89,7 @@ public class ProfileManager {
         int numberOfProfilesExtended = 0;
 
         for (Profile profile : profiles) {
-            Set<Profile> all = profile.getAll();
+            Set<Profile> all = profile.getProfileAndAllChildren();
             if (all.size() > numberOfProfilesExtended) {
                 highestProfile = profile;
                 numberOfProfilesExtended = all.size();

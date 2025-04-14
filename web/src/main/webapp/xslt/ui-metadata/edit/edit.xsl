@@ -74,7 +74,7 @@
                   select="exists($viewConfig/@class)"/>
     <xsl:variable name="hasSidePanel"
                   select="exists($viewConfig/sidePanel) and $isTemplate != 's' and $isTemplate != 't'"/>
-    <div id="gn-editor-container-{$metadataId}">
+    <div id="gn-editor-container-{$metadataId}" class="gn-view-{$viewConfig/@name}">
       <form id="gn-editor-{$metadataId}"
             name="gnEditor" accept-charset="UTF-8" method="POST"
             novalidate="" class="form-horizontal gn-editor gn-tab-{$tab} {if ($hasViewClass) then concat('gn-editor-config-css ', $viewConfig/@class) else ''}" role="form"
@@ -158,17 +158,18 @@
             </xsl:otherwise>
           </xsl:choose>
         </div>
-      </form>
-      <xsl:if test="$hasSidePanel">
-        <div class="col-md-4 gn-editor-sidebar">
-          <div class="gn-editor-tools-container">
-            <xsl:apply-templates mode="form-builder"
-                                 select="$viewConfig/sidePanel/*">
-              <xsl:with-param name="base" select="$metadata"/>
-            </xsl:apply-templates>
+
+        <xsl:if test="$hasSidePanel">
+          <div class="col-md-4 gn-editor-sidebar">
+            <div class="gn-editor-tools-container">
+              <xsl:apply-templates mode="form-builder"
+                                   select="$viewConfig/sidePanel/*">
+                <xsl:with-param name="base" select="$metadata"/>
+              </xsl:apply-templates>
+            </div>
           </div>
-        </div>
-      </xsl:if>
+        </xsl:if>
+      </form>
     </div>
   </xsl:template>
 

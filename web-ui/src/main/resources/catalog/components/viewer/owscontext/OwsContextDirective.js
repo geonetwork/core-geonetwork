@@ -30,9 +30,11 @@
     "$scope",
     "gnRelatedResources",
     function ($scope, gnRelatedResources) {
-      $scope.resultTemplate =
-        "../../catalog/components/" +
-        "search/resultsview/partials/viewtemplates/grid4maps.html";
+      $scope.resultTemplate = {
+        tplUrl:
+          "../../catalog/components/" +
+          "search/resultsview/partials/viewtemplates/grid4maps.html"
+      };
 
       $scope.loadMap = function (map, md) {
         gnRelatedResources.getAction("MAP")(map, md);
@@ -43,7 +45,7 @@
         filters: [
           {
             query_string: {
-              query: '+resourceType:"map/interactive"'
+              query: '+resourceType:"map-interactive"'
             }
           }
         ],
@@ -138,27 +140,55 @@
               scope.mapFileName = getMapFileName();
 
               scope.map.once("postrender", function (event) {
-                domtoimage.toPng(scope.map.getTargetElement()).then(function (data) {
-                  // resize if necessary
-                  var finalData = data;
-
-                  if (scaleFactor !== undefined) {
-                    var img = new Image();
-                    img.src = data;
-                    img.onload = function () {
-                      var canvas = document.createElement("canvas");
-                      var size = scope.map.getSize();
-                      canvas.width = size[0];
-                      canvas.height = size[1];
-                      canvas
-                        .getContext("2d")
-                        .drawImage(img, 0, 0, canvas.width, canvas.height);
-                      finalData = canvas.toDataURL("image/png");
-                    };
+                var mapCanvas = document.createElement("canvas");
+                var size = scope.map.getSize();
+                mapCanvas.width = size[0];
+                mapCanvas.height = size[1];
+                var mapContext = mapCanvas.getContext("2d");
+                Array.prototype.forEach.call(
+                  scope.map
+                    .getViewport()
+                    .querySelectorAll(".ol-layer canvas, canvas.ol-layer"),
+                  function (canvas) {
+                    if (canvas.width > 0) {
+                      var opacity =
+                        canvas.parentNode.style.opacity || canvas.style.opacity;
+                      mapContext.globalAlpha = opacity === "" ? 1 : Number(opacity);
+                      var matrix;
+                      var transform = canvas.style.transform;
+                      if (transform) {
+                        // Get the transform parameters from the style's transform matrix
+                        matrix = transform
+                          .match(/^matrix\(([^\(]*)\)$/)[1]
+                          .split(",")
+                          .map(Number);
+                      } else {
+                        matrix = [
+                          parseFloat(canvas.style.width) / canvas.width,
+                          0,
+                          0,
+                          parseFloat(canvas.style.height) / canvas.height,
+                          0,
+                          0
+                        ];
+                      }
+                      // Apply the transform to the export map context
+                      CanvasRenderingContext2D.prototype.setTransform.apply(
+                        mapContext,
+                        matrix
+                      );
+                      var backgroundColor = canvas.parentNode.style.backgroundColor;
+                      if (backgroundColor) {
+                        mapContext.fillStyle = backgroundColor;
+                        mapContext.fillRect(0, 0, canvas.width, canvas.height);
+                      }
+                      mapContext.drawImage(canvas, 0, 0);
+                    }
                   }
-
-                  defer.resolve(finalData);
-                });
+                );
+                mapContext.globalAlpha = 1;
+                mapContext.setTransform(1, 0, 0, 1, 0, 0);
+                defer.resolve(mapCanvas.toDataURL());
               });
               scope.map.renderSync();
             } else {
@@ -206,7 +236,8 @@
             title: "",
             recordAbstract: "",
             group: null,
-            publishToAll: false
+            publishToAll: false,
+            schema: "iso19115-3.2018"
           };
 
           scope.mapProps = angular.extend({}, defaultMapProps);

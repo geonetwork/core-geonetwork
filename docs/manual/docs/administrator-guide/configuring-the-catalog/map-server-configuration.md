@@ -2,8 +2,8 @@
 
 To publish information from the catalog as OGC services (WMS, WFS, WCS), catalog administrator need to register one or more map servers to publish on. Map servers MUST support the GeoServer REST API in order to work with the catalog. The 2 following implementations have been tested:
 
--   [GeoServer](http://geoserver.org)
--   [Mapserver](http://mapserver.org) and [Mapserver REST API](https://github.com/neogeo-technologies/mra)
+-   [GeoServer](https://geoserver.org)
+-   [Mapserver](https://mapserver.org) and [Mapserver REST API](https://github.com/neogeo-technologies/mra)
 
 Setup you map server and then register it from the administration interface:
 

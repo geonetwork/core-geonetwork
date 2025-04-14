@@ -27,6 +27,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -47,7 +49,17 @@ import org.fao.geonet.api.records.attachments.Store;
 import org.fao.geonet.api.records.attachments.StoreUtils;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.*;
+import org.fao.geonet.domain.AbstractMetadata;
+import org.fao.geonet.domain.ISODate;
+import org.fao.geonet.domain.MetadataCategory;
+import org.fao.geonet.domain.MetadataDraft;
+import org.fao.geonet.domain.MetadataResourceVisibility;
+import org.fao.geonet.domain.MetadataType;
+import org.fao.geonet.domain.Pair;
+import org.fao.geonet.domain.Profile;
+import org.fao.geonet.domain.ReservedGroup;
+import org.fao.geonet.domain.ReservedOperation;
+import org.fao.geonet.domain.UserGroup;
 import org.fao.geonet.domain.utils.ObjectJSONUtils;
 import org.fao.geonet.events.history.RecordCreateEvent;
 import org.fao.geonet.events.history.RecordDeletedEvent;
@@ -91,18 +103,39 @@ import org.springframework.http.MediaType;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.nio.file.*;
+import java.nio.file.DirectoryStream;
+import java.nio.file.FileVisitResult;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.ResourceBundle;
+import java.util.Set;
+import java.util.UUID;
 
-import static org.fao.geonet.api.ApiParams.*;
+import static org.fao.geonet.api.ApiParams.API_CLASS_RECORD_OPS;
+import static org.fao.geonet.api.ApiParams.API_CLASS_RECORD_TAG;
+import static org.fao.geonet.api.ApiParams.API_PARAM_RECORD_UUID;
+import static org.fao.geonet.api.ApiParams.API_PARAM_RECORD_UUIDS_OR_SELECTION;
 import static org.springframework.data.jpa.domain.Specification.where;
 
 
@@ -175,7 +208,7 @@ public class MetadataInsertDeleteApi {
         + "from the index and then from the database.")
     @RequestMapping(value = "/{metadataUuid}", method = RequestMethod.DELETE)
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "204", description = "Record deleted."),
+        @ApiResponse(responseCode = "204", description = "Record deleted.", content = {@Content(schema = @Schema(hidden = true))}),
         @ApiResponse(responseCode = "401", description = "This template is referenced"),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)
     })
@@ -203,7 +236,7 @@ public class MetadataInsertDeleteApi {
 
         UserSession userSession = ApiUtils.getUserSession(request.getSession());
         if (accessMan.isVisibleToAll(String.valueOf(metadata.getId())) ) {
-            checkUserProfileToDeletePublishedMetadata(userSession);
+            UserUtil.checkUserProfileLevel(userSession, settingManager, roleHierarchy, Settings.METADATA_PUBLISHED_DELETE_USERPROFILE, Profile.Editor, "delete published metadata");
         }
 
         store.delResources(context, metadata.getUuid(), approved);
@@ -222,7 +255,7 @@ public class MetadataInsertDeleteApi {
             MediaType.APPLICATION_JSON_VALUE
         }
     )
-    @ApiResponses(value = {@ApiResponse(responseCode = "204", description = "Report about deleted records."),
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Report about deleted records."),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_EDITOR)})
     @PreAuthorize("hasAuthority('Editor')")
     @ResponseStatus(HttpStatus.OK)
@@ -250,7 +283,7 @@ public class MetadataInsertDeleteApi {
 
                 if (accessMan.isVisibleToAll(String.valueOf(metadata.getId())) ) {
                     try {
-                        checkUserProfileToDeletePublishedMetadata(userSession);
+                        UserUtil.checkUserProfileLevel(userSession, settingManager, roleHierarchy, Settings.METADATA_PUBLISHED_DELETE_USERPROFILE, Profile.Editor, "delete published metadata");
                     } catch (NotAllowedException ex) {
                         report.addMetadataInfos(metadata, ex.getMessage());
                         continue;
@@ -284,9 +317,9 @@ public class MetadataInsertDeleteApi {
         + "URL or file in a folder on the catalog server. When loading"
         + "from the catalog server folder, it might be faster to use a "
         + "local filesystem harvester.")
-    @RequestMapping(method = {RequestMethod.PUT}, produces = {MediaType.APPLICATION_JSON_VALUE}, consumes = {
-        MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE,
-        MediaType.APPLICATION_FORM_URLENCODED_VALUE})
+    @RequestMapping(method = RequestMethod.PUT,
+        produces = MediaType.APPLICATION_JSON_VALUE,
+        consumes = MediaType.APPLICATION_XML_VALUE)
     @ApiResponses(value = {@ApiResponse(responseCode = "201", description = API_PARAM_REPORT_ABOUT_IMPORTED_RECORDS),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_EDITOR)})
     @PreAuthorize("hasAuthority('Editor')")
@@ -320,7 +353,7 @@ public class MetadataInsertDeleteApi {
         SimpleMetadataProcessingReport report = new SimpleMetadataProcessingReport();
 
         UserSession userSession = ApiUtils.getUserSession(request.getSession());
-        checkUserProfileToImportMetadata(userSession);
+        UserUtil.checkUserProfileLevel(userSession, settingManager, roleHierarchy, Settings.METADATA_IMPORT_USERPROFILE, Profile.Editor, "import metadata");
 
 
         boolean isMdWorkflowEnable = settingManager.getValueAsBool(Settings.METADATA_WORKFLOW_ENABLE);
@@ -597,7 +630,7 @@ public class MetadataInsertDeleteApi {
         if (file != null) {
             ServiceContext context = ApiUtils.createServiceContext(request);
 
-            checkUserProfileToImportMetadata(context.getUserSession());
+            UserUtil.checkUserProfileLevel(context.getUserSession(), settingManager, roleHierarchy, Settings.METADATA_IMPORT_USERPROFILE, Profile.Editor, "import metadata");
 
             for (MultipartFile f : file) {
                 if (MEFLib.isValidArchiveExtensionForMEF(f.getOriginalFilename())) {
@@ -675,6 +708,9 @@ public class MetadataInsertDeleteApi {
         @Parameter(description = "Publish record.", required = false) @RequestParam(required = false, defaultValue = "false") final boolean publishToAll,
         @Parameter(description = API_PARAM_RECORD_UUID_PROCESSING, required = false) @RequestParam(required = false, defaultValue = "NOTHING") final MEFLib.UuidAction uuidProcessing,
         @Parameter(description = API_PARAM_RECORD_GROUP, required = false) @RequestParam(required = false) final String group,
+        @Parameter(description = "Schema", required = false)
+        @RequestParam(required = false, defaultValue = "iso19139")
+        final String schema,
         HttpServletRequest request) throws Exception {
         if (StringUtils.isEmpty(xml) && StringUtils.isEmpty(url)) {
             throw new IllegalArgumentException("A context as XML or a remote URL MUST be provided.");
@@ -685,12 +721,17 @@ public class MetadataInsertDeleteApi {
         }
 
         ServiceContext context = ApiUtils.createServiceContext(request);
-        Path styleSheetWmc = dataDirectory.getXsltConversion("schema:iso19139:convert/fromOGCWMC-OR-OWSC");
+        Path styleSheetWmc = dataDirectory.getXsltConversion(
+                String.format("schema:%s:convert/fromOGCWMC-OR-OWSC",
+                schema));
 
         FilePathChecker.verify(filename);
 
+        String uuid = UUID.randomUUID().toString();
+
         // Convert the context in an ISO19139 records
         Map<String, Object> xslParams = new HashMap<>();
+        xslParams.put("uuid", uuid);
         xslParams.put("viewer_url", viewerUrl);
         xslParams.put("map_url", url);
         xslParams.put("topic", topic);
@@ -716,7 +757,6 @@ public class MetadataInsertDeleteApi {
 
         // 4. Inserts the metadata (does basically the same as the metadata.insert.paste
         // service (see Insert.java)
-        String uuid = UUID.randomUUID().toString();
 
         String date = new ISODate().toString();
         SimpleMetadataProcessingReport report = new SimpleMetadataProcessingReport();
@@ -727,7 +767,7 @@ public class MetadataInsertDeleteApi {
         md.add(transformedMd);
 
         // Import record
-        Importer.importRecord(uuid, uuidProcessing, md, "iso19139", 0, settingManager.getSiteId(),
+        Importer.importRecord(uuid, uuidProcessing, md, schema, 0, settingManager.getSiteId(),
             settingManager.getSiteName(), null, context, id, date, date, group, MetadataType.METADATA);
 
         final Store store = context.getBean("resourceStore", Store.class);
@@ -746,7 +786,7 @@ public class MetadataInsertDeleteApi {
             onlineSrcParams.put("name", filename);
             onlineSrcParams.put("desc", title);
             transformedMd = Xml.transform(transformedMd,
-                schemaManager.getSchemaDir("iso19139").resolve("process").resolve("onlinesrc-add.xsl"),
+                schemaManager.getSchemaDir(schema).resolve("process").resolve("onlinesrc-add.xsl"),
                 onlineSrcParams);
             dataManager.updateMetadata(context, id.get(0), transformedMd, false, true, context.getLanguage(),
                 null, true, IndexingMode.none);
@@ -761,7 +801,7 @@ public class MetadataInsertDeleteApi {
             onlineSrcParams.put("thumbnail_url", settingManager.getNodeURL()
                 + String.format("api/records/%s/attachments/%s", uuid, overviewFilename));
             transformedMd = Xml.transform(transformedMd,
-                schemaManager.getSchemaDir("iso19139").resolve("process").resolve("thumbnail-add.xsl"),
+                schemaManager.getSchemaDir(schema).resolve("process").resolve("thumbnail-add.xsl"),
                 onlineSrcParams);
             dataManager.updateMetadata(context, id.get(0), transformedMd, false, true, context.getLanguage(),
                 null, true, IndexingMode.none);
@@ -986,39 +1026,4 @@ public class MetadataInsertDeleteApi {
         return Pair.read(Integer.valueOf(id.get(0)), uuid);
     }
 
-    /**
-     * Checks if the user profile is allowed to import metadata.
-     *
-     * @param userSession
-     */
-    private void checkUserProfileToImportMetadata(UserSession userSession) {
-        if (userSession.getProfile() != Profile.Administrator) {
-            String allowedUserProfileToImportMetadata =
-                StringUtils.defaultIfBlank(settingManager.getValue(Settings.METADATA_IMPORT_USERPROFILE), Profile.Editor.toString());
-
-            // Is the user profile is higher than the profile allowed to import metadata?
-            if (!UserUtil.hasHierarchyRole(allowedUserProfileToImportMetadata, this.roleHierarchy)) {
-                throw new NotAllowedException("The user has no permissions to import metadata.");
-            }
-        }
-
-    }
-
-    /**
-     * Checks if the user profile is allowed to import metadata.
-     *
-     * @param userSession
-     */
-    private void checkUserProfileToDeletePublishedMetadata(UserSession userSession) {
-        if (userSession.getProfile() != Profile.Administrator) {
-            String allowedUserProfileToImportMetadata =
-                StringUtils.defaultIfBlank(settingManager.getValue(Settings.METADATA_PUBLISHED_DELETE_USERPROFILE), Profile.Editor.toString());
-
-            // Is the user profile is higher than the profile allowed to import metadata?
-            if (!UserUtil.hasHierarchyRole(allowedUserProfileToImportMetadata, this.roleHierarchy)) {
-                throw new NotAllowedException("The user has no permissions to delete published metadata.");
-            }
-        }
-
-    }
 }

@@ -41,7 +41,7 @@
             data-gn-pagination-list=""
             data-items="groups | filter:groupSearch | orderBy:sortByLabel"
             data-cache="groups"
-          />
+          ></span>
         </div>
 
         <button
@@ -51,7 +51,7 @@
           data-ng-show="user.isAdministratorOrMore()"
           id="gn-btn-group-add"
         >
-          <i class="fa fa-plus" />
+          <i class="fa fa-plus"></i>
           <span data-translate="">newGroup</span>
         </button>
       </div>
@@ -74,7 +74,7 @@
             type="button"
             class="btn btn-primary pull-right"
             data-ng-hide="!user.isUserAdminOrMore()"
-            data-ng-disabled="!gnGroupEdit.$valid && !gnGroupEdit.dirty"
+            data-ng-disabled="!gnGroupEdit.$valid || !gnGroupEdit.$dirty"
             data-ng-click="saveGroup('#gn-group-edit', '#group-logo-upload')"
             id="gn-btn-group-save"
           >
@@ -123,7 +123,7 @@
                 class="form-control"
                 data-ng-disabled="!user.isAdministratorOrMore()"
                 data-ng-model="groupSelected.name"
-                data-ng-maxlength="32"
+                data-ng-maxlength="255"
                 data-ng-required="true"
               />
               <p class="help-block" data-translate="">groupNameHelp</p>
@@ -146,7 +146,7 @@
                 class="form-control"
                 data-ng-model="groupSelected.description"
                 data-ng-maxlength="255"
-              />
+              ></textarea>
               <p class="help-block" data-translate="">groupDescriptionHelp</p>
               <p class="help-block">
                 <span
@@ -259,6 +259,24 @@
                 </div>
               </div>
             </div>
+            <div
+              data-ng-class="gnGroupEdit.minimumProfileForPrivileges.$error.minimumProfileForPrivileges  ? 'has-error' : ''"
+            >
+              <label class="control-label" data-translate=""
+                >minimumProfileForPrivileges</label
+              >
+              <select
+                class="form-control"
+                name="minimumProfileForPrivileges"
+                data-ng-model="groupSelected.minimumProfileForPrivileges"
+              >
+                <option value="">{{'noRestrictions' | translate }}</option>
+                <option value="Editor">{{'Editor' | translate}}</option>
+                <option value="Reviewer">{{'Reviewer' | translate}}</option>
+                <option value="Administrator">{{'Administrator' | translate}}</option>
+              </select>
+              <p class="help-block" data-translate="">minimumProfileForPrivilegesHelp</p>
+            </div>
             <div class="checkbox">
               <label>
                 <input
@@ -288,7 +306,7 @@
           <h3>
             <span data-translate="">translationForGroup</span> {{groupSelected.name}}
           </h3>
-          <div data-gn-db-translation="groupSelected" data-type="group" />
+          <div data-gn-db-translation="groupSelected" data-type="group"></div>
         </div>
 
         <div data-ng-search-form="" data-ng-show="searchResults.count != 0">
@@ -331,7 +349,7 @@
             data-first-page-function-name="groupUsersFirstPage"
             data-items="groupusers | orderBy:'name'"
             data-cache="groupusers"
-          />
+          ></span>
         </div>
       </div>
     </div>

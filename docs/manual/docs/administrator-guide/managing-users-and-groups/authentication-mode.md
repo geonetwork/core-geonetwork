@@ -6,6 +6,7 @@ By default the catalog uses the internal database for user management and authen
 -   [Configuring LDAP - Hierarchy](authentication-mode.md#authentication-ldap-hierarchy)
 -   [Configuring CAS](authentication-mode.md#authentication-cas)
 -   [Configuring OAUTH2 OpenID Connect](authentication-mode.md#authentication-openid)
+-   [Configuring JWT/JSON Headers](authentication-mode.md#jwt-headers)
 -   [Configuring Keycloak](authentication-mode.md#authentication-keycloak)
 -   [Configuring Shibboleth](authentication-mode.md#authentication-shibboleth)
 
@@ -96,7 +97,7 @@ In order to define which groups the user is member of and which profile is the u
 ``` text
 ldapUserContextMapper.mapping[privilege]=groups,sample
 # If not set, the default profile is RegisteredUser
-# Valid profiles are http://geonetwork-opensource.org/manuals/trunk/eng/developer/apidocs/geonetwork/org/fao/geonet/constants/Geonet.Profile.html
+# Valid profiles are ADMINISTRATOR, USER_ADMIN, REVIEWER, EDITOR, REGISTERED_USER, GUEST
 ldapUserContextMapper.mapping[profile]=privileges,RegisteredUser
 ```
 
@@ -143,7 +144,7 @@ An attribute could define both the profile and the group for a user. To extract 
     ldap.privilege.pattern.idx.profil=2
     ```
 
-    Enable the bean `er` for `LDAPUserDetailsContextMapperWithPattern` ( in `WEB-INF/config-security/config-security-ldap.xml`).
+    Enable the bean `ldapUserContextMapper` for `LDAPUserDetailsContextMapperWithPattern` ( in `WEB-INF/config-security/config-security-ldap.xml`).
 
     ``` xml
     <!--<bean id="ldapUserContextMapper"
@@ -302,7 +303,7 @@ GeoNetwork comes with a sample LDAP configuration that you can use in Apache Dir
     To use this configuration, uncomment the "<import resource="config-security-ldap-recursive.xml"/>" line in ``web/src/main/webapp/WEB-INF/config-security/config-security.xml``
 
 
-1.  Configure the `ce` bean with a reference to your LDAP server and a user that can execute LDAP queries.
+1.  Configure the `contextSource` bean with a reference to your LDAP server and a user that can execute LDAP queries.
 
     ``` xml
     <bean id="contextSource"   class="org.springframework.security.ldap.DefaultSpringSecurityContextSource">
@@ -313,9 +314,9 @@ GeoNetwork comes with a sample LDAP configuration that you can use in Apache Dir
     </bean>
     ```
 
-2.  Configure the `ch` bean with the query used to find the user (given what was typed in the login page).
+2.  Configure the `ldapUserSearch` bean with the query used to find the user (given what was typed in the login page).
 
-    NOTE: Set `ee` to `ue` to do a recursive search of the LDAP. Use `se` to control which directory the search starts in ("" means start from the root).
+    NOTE: Set `searchSubtree` to `true` to do a recursive search of the LDAP. Use `searchBase` to control which directory the search starts in ("" means start from the root).
 
     ``` xml
     <bean id="ldapUserSearch" class="…">
@@ -327,9 +328,9 @@ GeoNetwork comes with a sample LDAP configuration that you can use in Apache Dir
     </bean>
     ```
 
-3.  Configure the `er` bean with how to convert the LDAP user's attributes to GeoNetwork user attributes (see the original configuration documentation, above).
+3.  Configure the `ldapUserContextMapper` bean with how to convert the LDAP user's attributes to GeoNetwork user attributes (see the original configuration documentation, above).
 
-    NOTE: The `ue` portion has two parts. The first part is the name of LDAP attribute (can be blank). The second part is the default value if the LDAP attribute is missing or empty (see the original configuration documentation, above).
+    NOTE: The `value` portion has two parts. The first part is the name of LDAP attribute (can be blank). The second part is the default value if the LDAP attribute is missing or empty (see the original configuration documentation, above).
 
     ``` xml
     <bean id="ldapUserContextMapper" class=“LDAPUserDetailsContextMapperWithProfileSearchEnhanced">
@@ -354,9 +355,9 @@ GeoNetwork comes with a sample LDAP configuration that you can use in Apache Dir
     </bean>
     ```
 
-4.  Continue configuring the `er` bean so the LDAP can also provide group/profile roles for the user.
+4.  Continue configuring the `ldapUserContextMapper` bean so the LDAP can also provide group/profile roles for the user.
 
-    NOTE: The `ry` is the LDAP directory where the membership query will be start ("" means start at the root of the LDAP).
+    NOTE: The `ldapMembershipQuery` is the LDAP directory where the membership query will be start ("" means start at the root of the LDAP).
 
     ``` xml
     <bean id="ldapUserContextMapper" class="LDAPUserDetailsContextMapperWithProfileSearchEnhanced">
@@ -374,9 +375,9 @@ GeoNetwork comes with a sample LDAP configuration that you can use in Apache Dir
     </bean>
     ```
 
-5.  Continue configuring the `er` bean so the LDAP roles can be converted to GeoNetwork Groups/Profiles.
+5.  Continue configuring the `ldapUserContextMapper` bean so the LDAP roles can be converted to GeoNetwork Groups/Profiles.
 
-    NOTE: You can use multiple `rs`.
+    NOTE: You can use multiple `ldapRoleConverters`.
 
     ``` xml
     <bean id="ldapUserContextMapper" class="LDAPUserDetailsContextMapperWithProfileSearchEnhanced">
@@ -392,7 +393,7 @@ GeoNetwork comes with a sample LDAP configuration that you can use in Apache Dir
 
 There are currently two ways to convert an LDAP group to GeoNetwork Groups/Profiles.
 
--   The `er`, which works the same as the original LDAP configuration. It uses a regular expression to parse the LDAP group name into a GeoNetwork Group/Profile. This will convert the LDAP role `OR` into the GeoNetwork group `AL` with Profile `r.`
+-   The `LDAPRoleConverterGroupNameParser`, which works the same as the original LDAP configuration. It uses a regular expression to parse the LDAP group name into a GeoNetwork Group/Profile. This will convert the LDAP role `GCAT_GENERAL_EDITOR` into the GeoNetwork group `GENERAL` with Profile `Editor`.
 
     ``` xml
     <bean id="ldapRoleConverterGroupNameParser"  class="LDAPRoleConverterGroupNameParser">
@@ -411,7 +412,7 @@ There are currently two ways to convert an LDAP group to GeoNetwork Groups/Profi
     </bean>
     ```
 
--   There is also a more direct way using `er`. This directly converts the LDAP group name into a list of GeoNetwork Groups/Profiles.
+-   There is also a more direct way using `LDAPRoleConverterGroupNameConverter`. This directly converts the LDAP group name into a list of GeoNetwork Groups/Profiles.
 
     ``` xml
     <bean id=“ldapRoleConverterGroupNameParser" class="LDAPRoleConverterGroupNameConverter">
@@ -500,7 +501,7 @@ Geonetwork's Open ID Connect plugin has a lot of configuration options - please 
 
 **GEONETWORK_SECURITY_TYPE**
 
-Should be `ct`.
+Should be `openidconnect`.
 
 **OPENIDCONNECT_CLIENTID**
 
@@ -508,7 +509,7 @@ The name of the client/application you configured on your OpenID server.
 
 **OPENIDCONNECT_CLIENTSECRET**
 
-The `et` you configured on your OpenID server.
+The `client secret` you configured on your OpenID server.
 
 **OPENIDCONNECT_SERVERMETADATA_CONFIG_URL**
 
@@ -516,7 +517,7 @@ URL to the external OIDC server's JSON metadata document. This is typically at `
 
 !!! note
 
-    This will download the server's configuration everytime GeoNetwork starts up, which could be a security concern. For security, use a `ps` URL.
+    This will download the server's configuration everytime GeoNetwork starts up, which could be a security concern. For security, use a `https` URL.
 
 
 **OPENIDCONNECT_SERVERMETADATA_JSON_TEXT**
@@ -594,13 +595,13 @@ It's outside the scope of this document to fully describe the steps to configure
 
 This will configure keycloak backed by **another OpenID IDP** (for example, by an Azure AD). In keycloak:
 
-1.  Create a realm (i.e. `lm`)
-2.  Create an openid client (i.e. `nt`). This is your ClientID.
+1.  Create a realm (i.e. `myrealm`)
+2.  Create an openid client (i.e. `myclient`). This is your ClientID.
     1.  Root URL: ``http://localhost:7777/geonetwork`` (this is the GN root URL)
     2.  Valid Redirect URIs: ``http://localhost:7777/geonetwork/*``
     3.  Access Type: Confidential
-    4.  On the `ls` tab, get the secret (this is your Client Secret)
-    5.  On the `es` tab, create some roles: Administrator, Editor, Reviewer, RegisteredGuest
+    4.  On the `Credentials` tab, get the secret (this is your Client Secret)
+    5.  On the `Roles` tab, create some roles: Administrator, Editor, Reviewer, RegisteredGuest
 3.  Create your backing Identity Provider (i.e. to another OpenID server). Or you can configure users directly in keycloak.
     1.  At the bottom of the page, choose "import from URL" and import the backing server's configuration location.
     2.  Add the Client Secret (from the backing service)
@@ -610,9 +611,9 @@ This will configure keycloak backed by **another OpenID IDP** (for example, by a
     1.  Edit the "Identity Provider" you just created, and go to the "Mappers" tab.
     2.  Press "Create" and and add a "Claim to Role".
     3.  Set Sync Mode Override to "Force"
-    4.  Claim: `es`
-    5.  Claim Value: `DP`
-    6.  Role: choose the "Administrator" role from the `nt` client.
+    4.  Claim: `roles`
+    5.  Claim Value: `name of the administrator role in the backing IDP`
+    6.  Role: choose the "Administrator" role from the `myclient` client.
     7.  Repeat the above for Administrator, Editor, Reviewer, and RegisteredGuest
 5.  Configure details for your backing IDP
     1.  Edit the "Identity Provider" you just configured
@@ -639,7 +640,7 @@ There are two ways to setup Azure AD. The first is with user and groups (a more 
 
 Setup the Azure Application:
 
-1.  Create a new `on`
+1.  Create a new `App Registration`
 2.  use `http://localhost:8080/geonetwork/login/oauth2/code/geonetwork-oicd` as a redirect URIs
 3.  On the "Certificates & Secrets" add a new secret and record it (make sure you get the secret value and NOT the object id)
 4.  Make sure the groups are in the ID token - on the "Manifest" tab, edit the JSON so that "groupMembershipClaims": "SecurityGroup" is set
@@ -740,9 +741,9 @@ This has been tested with Keycloak and with Azure AD. It should work with other 
 
 The token is validated in three major ways:
 
-1.  The bearer token will be used to access the `fo` ("token validation") endpoint specified in the OIDC configuration. This means the IDP validates the token (at the very least its signature and expiry).
+1.  The bearer token will be used to access the `userinfo` ("token validation") endpoint specified in the OIDC configuration. This means the IDP validates the token (at the very least its signature and expiry).
 2.  The bearer token (JWT) will be checked that the audience for it is the same as our configurated OIDC configuration. This will ensure that someone isn't getting a token from a different service and attempting to use it here. See ``AudienceAccessTokenValidator.java``
-3.  The bearer token (JWT) will be checked that the subject of the JWT and the `fo` (returned from the IDP) are the same. This shouldnt be a problem in our use-case, but the OAUTH2 specification recommends this check. See ``SubjectAccessTokenValidator.java``
+3.  The bearer token (JWT) will be checked that the subject of the JWT and the `userinfo` (returned from the IDP) are the same. This shouldnt be a problem in our use-case, but the OAUTH2 specification recommends this check. See ``SubjectAccessTokenValidator.java``
 
 #### Configuration {#bearer_token_configuration}
 
@@ -752,19 +753,19 @@ Instead of using `GEONETWORK_SECURITY_TYPE=openidconnect`, use `GEONETWORK_SECUR
 
 Inside `WEB-INF/config-security/config-security-openidconnectbearer.xml`:
 
-1.  If you are using keycloak (configured with Groups in the `fo` response), then uncomment the `er` bean and comment out the `er` bean.
-2.  If you are using Azure AD (MS Graph API for the user's groups), then then uncomment the `er` bean and comment out the `er` bean.
+1.  If you are using keycloak (configured with Groups in the `userinfo` response), then uncomment the `UserInfoAccessTokenRolesResolver` bean and comment out the `MSGraphUserRolesResolver` bean.
+2.  If you are using Azure AD (MS Graph API for the user's groups), then then uncomment the `MSGraphUserRolesResolver` bean and comment out the `UserInfoAccessTokenRolesResolver` bean.
 
 The easiest way to test is to obtain a Bearer Token, and then use a browser plugin to add the ``Authorization: Bearer <token>`` header to all requests. When you visit the Geonetwork website, you should see yourself logged in with the appropriate permissions.
 
 #### Other Providers
 
-This has been tested with Azure AD (groups in the MS Graph API) and KeyCloak (groups in the `fo`).
+This has been tested with Azure AD (groups in the MS Graph API) and KeyCloak (groups in the `userinfo`).
 
 For other IDP, you might have to make some modifications.
 
-1.  Make sure the `or` and `or` work correctly for your JWT bearer tokens.
-2.  Make sure that the user's groups are available - see the `er` interface and its two implementations - `er` and `er`.
+1.  Make sure the `AudienceAccessTokenValidator` and `SubjectAccessTokenValidator` work correctly for your JWT bearer tokens.
+2.  Make sure that the user's groups are available - see the `UserRolesResolver` interface and its two implementations - `UserInfoAccessTokenRolesResolver` and `MSGraphUserRolesResolver`.
 
 ## Configuring Keycloak {#authentication-keycloak}
 
@@ -817,6 +818,253 @@ sample:RegisteredUser
 3.  Go to role Mappings -> Client Roles (myclient) -> select the available roles to be applied and click on "Add selected" or go to Groups -> Available Groups -> Click on the Administrator Group and then click on "Join"
 
 A similar setup is described for geoserver in the [geoserver documentation](https://docs.geoserver.org/latest/en/user/community/keycloak/index.html).
+
+## Configurating JWT/JSON Headers {#jwt-headers}
+
+The JWT Headers module provides a security module for header based security. It is equivalent to GeoServer's JWT Headers Module (both GeoServer and GeoNetwork share a code library to make them equivalent). 
+
+This module allows  [JSON-based](https://en.wikipedia.org/wiki/JSON) headers (for username and roles) as well as [JWT-based](https://en.wikipedia.org/wiki/JSON_Web_Token>) headers (for username and roles).  It also allows for validating JWT-Based AccessTokens (i.e. via [OAUTH2](https://en.wikipedia.org/wiki/OAuth>)/[OpenID Connect](ttps://en.wikipedia.org/wiki/OpenID#OpenID_Connect_(OIDC)).
+
+
+If you are using something like [Apache's mod_auth_openidc](https://github.com/OpenIDC/mod_auth_openidc), then this module will allow you to;
+
+1. Get the username from an Apache-provided `OIDC_*` header (either as simple-strings or as a component of a JSON object).
+2. Get the user's roles from an Apache-provided `OIDC_*` header (as a component of a JSON object).
+3. The user's roles can also come from the GeoNetwork Database (managed by the administrator in the GeoNetwork GUI).
+
+If you are using [OAUTH2/OIDC Access Tokens](https://www.oauth.com/oauth2-servers/access-tokens/):
+
+1. Get the username from the attached JWT Access Token (via a path into the [Access Token's JSON Claims](https://auth0.com/docs/authenticate/login/oidc-conformant-authentication/oidc-adoption-access-tokens/)).
+2. Get the user's roles from the JWT Access Token (via a path into the Token's JSON Claims).
+3. Validate the Access Token
+
+   * Validate its Signature
+   * Validate that it hasn't expired
+   * Validate the token against a token verifier URL ("userinfo_endpoint") and check that subjects match
+   * Validate components of the Access Token (like [aud (audience)](https://auth0.com/docs/secure/tokens/json-web-tokens/json-web-token-claims>))
+   
+4. The user's roles can also come from the GeoNetwork Database (managed by the administrator in the GeoNetwork GUI).
+5. You can also extract roles from the JWT Access Token (via a JSON path).
+
+### JWT Headers configuration
+
+
+The JWT Headers module covers three main use cases:
+
+1. Simple Text, JSON, or JWT headers for the username
+2. Verification of JWT Access Tokens
+3. Getting roles from a JSON header or an attached JWT Access Token claim
+
+#### Configuration Options
+
+You must turn on JWT Header Support by setting the `GEONETWORK_SECURITY_TYPE` environment variable to `jwt-headers`.
+
+```
+GEONETWORK_SECURITY_TYPE=jwt-headers
+```
+
+Please see these files for more detailed configuration:
+* `config-security-jwt-header.xml`
+* `config-security-jwt-header-overrides.properties`
+
+##### User Name Options
+
+
+| Environment Variable | Meaning |
+| ------------- | ------- |
+|JWTHEADERS_UserNameHeaderFormat | The name of the HTTP header item that contains the user name. |
+|JWTHEADERS_UserNameFormat| Format that the user name is in: <br> `STRING` - user name is the header's value.<br>`JSON` - The header is a JSON string.  Use "JSON path" for where the user name is in the JSON. <br> `JWT` -  The header is a JWT (base64) string.  Use "JSON path" for where the user name is in the JWT claims. |
+|JWTHEADERS_UserNameJsonPath | JSON path for the User Name. If the user name is in JSON or JWT format, this is the JSON path to the user's name.|
+
+
+   
+If you are using [Apache's mod_auth_openidc](https://github.com/OpenIDC/mod_auth_openidc), then Apache will typically add:
+
+* an `OIDC_id_token_payload` header item (containing a JSON string of the ID token claims)
+* an `OIDC_access_token` header item (containing a base64 JWT Access Token)
+* optionally, a simple header item with individual claim values (i.e. `OIDC_access_token`)
+   
+Here are some example values;
+
+STRING
+```
+OIDC_preferred_username: david.blasby@geocat.net
+```
+
+JSON
+```
+OIDC_id_token_payload: {"exp":1708555947,"iat":1708555647,"auth_time":1708555288,"jti":"42ee833e-89d3-4779-bd9d-06b979329c9f","iss":"http://localhost:7777/realms/dave-test2","aud":"live-key2","sub":"98cfe060-f980-4a05-8612-6c609219ffe9","typ":"ID","azp":"live-key2","nonce":"4PhqmZSJ355KBtJPbAP_PdwqiLnc7B1lA2SGpB0zXr4","session_state":"7712b364-339a-4053-ae0c-7d3adfca9005","at_hash":"2Tyw8q4ZMewuYrD38alCug","acr":"0","sid":"7712b364-339a-4053-ae0c-7d3adfca9005","upn":"david.blasby@geocat.net","resource_access":{"live-key2":{"roles":["GeonetworkAdministrator","GeoserverAdministrator"]}},"email_verified":false,"address":{},"name":"david blasby","groups":["default-roles-dave-test2","offline_access","uma_authorization"],"preferred_username":"david.blasby@geocat.net","given_name":"david","family_name":"blasby","email":"david.blasby@geocat.net"}
+```
+
+JWT
+```
+OIDC_access_token: eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICItb0QyZXphcjF3ZHBUUmZCS0NqMFY4cm5ZVkJGQmxJLW5ldzFEREJCNTJrIn0.eyJleHAiOjE3MDg1NTU5NDcsImlhdCI6MTcwODU1NTY0NywiYXV0aF90aW1lIjoxNzA4NTU1Mjg4LCJqdGkiOiI0M2UyYjUwZS1hYjJkLTQ2OWQtYWJjOC01Nzc1YTY0MTMwNTkiLCJpc3MiOiJodHRwOi8vbG9jYWxob3N0Ojc3NzcvcmVhbG1zL2RhdmUtdGVzdDIiLCJhdWQiOiJhY2NvdW50Iiwic3ViIjoiOThjZmUwNjAtZjk4MC00YTA1LTg2MTItNmM2MDkyMTlmZmU5IiwidHlwIjoiQmVhcmVyIiwiYXpwIjoibGl2ZS1rZXkyIiwibm9uY2UiOiI0UGhxbVpTSjM1NUtCdEpQYkFQX1Bkd3FpTG5jN0IxbEEyU0dwQjB6WHI0Iiwic2Vzc2lvbl9zdGF0ZSI6Ijc3MTJiMzY0LTMzOWEtNDA1My1hZTBjLTdkM2FkZmNhOTAwNSIsImFjciI6IjAiLCJyZWFsbV9hY2Nlc3MiOnsicm9sZXMiOlsiZGVmYXVsdC1yb2xlcy1kYXZlLXRlc3QyIiwib2ZmbGluZV9hY2Nlc3MiLCJ1bWFfYXV0aG9yaXphdGlvbiJdfSwicmVzb3VyY2VfYWNjZXNzIjp7ImxpdmUta2V5MiI6eyJyb2xlcyI6WyJHZW9uZXR3b3JrQWRtaW5pc3RyYXRvciIsIkdlb3NlcnZlckFkbWluaXN0cmF0b3IiXX0sImFjY291bnQiOnsicm9sZXMiOlsibWFuYWdlLWFjY291bnQiLCJtYW5hZ2UtYWNjb3VudC1saW5rcyIsInZpZXctcHJvZmlsZSJdfX0sInNjb3BlIjoib3BlbmlkIHBob25lIG9mZmxpbmVfYWNjZXNzIG1pY3JvcHJvZmlsZS1qd3QgcHJvZmlsZSBhZGRyZXNzIGVtYWlsIiwic2lkIjoiNzcxMmIzNjQtMzM5YS00MDUzLWFlMGMtN2QzYWRmY2E5MDA1IiwidXBuIjoiZGF2aWQuYmxhc2J5QGdlb2NhdC5uZXQiLCJlbWFpbF92ZXJpZmllZCI6ZmFsc2UsImFkZHJlc3MiOnt9LCJuYW1lIjoiZGF2aWQgYmxhc2J5IiwiZ3JvdXBzIjpbImRlZmF1bHQtcm9sZXMtZGF2ZS10ZXN0MiIsIm9mZmxpbmVfYWNjZXNzIiwidW1hX2F1dGhvcml6YXRpb24iXSwicHJlZmVycmVkX3VzZXJuYW1lIjoiZGF2aWQuYmxhc2J5QGdlb2NhdC5uZXQiLCJnaXZlbl9uYW1lIjoiZGF2aWQiLCJmYW1pbHlfbmFtZSI6ImJsYXNieSIsImVtYWlsIjoiZGF2aWQuYmxhc2J5QGdlb2NhdC5uZXQifQ.Iq8YJ99s_HBd-gU2zaDqGbJadCE--7PlS2kRHaegYTil7WoNKfjfcH-K-59mHGzJm-V_SefE-iWG63z2c6ChddzhvG8I_O5vDNFoGlGOQFunZC379SqhqhCEdwscEUDkNA3iTTXvK9vn0muStDiv9OzpJ1zcpqYqsgxGbolGgLJgeuK8yNDH7kzDtoRzHiHw2rx4seeVpxUYAjyg_cCkEjRt3wzud7H3xlfQWRx75YfpJ0pnVphuXYR7Z8x9p6hCPtrBfDeriudm-wkwXtcV2LNlXrZ2zpKS_6Zdxzza2lN30q_6DQXHGo8EAIr8SiiQrxPQulNiX9r8XmQ917Ep0g
+```
+
+
+
+It is recommended to either use the `OIDC_id_token_payload` (JSON) or `OIDC_access_token` (JWT) header.
+
+For `OIDC_id_token_payload`:
+
+* Request header attribute for User Name: `OIDC_id_token_payload`
+* Format the Header value is in: `JSON`
+* JSON path for the User Name: `preferred_username`
+
+For `OIDC_access_token`:
+
+* Request header attribute for User Name: `OIDC_access_token`
+* Format the Header value is in: `JWT`
+* JSON path for the User Name: `preferred_username`
+
+
+
+#### Role Source Options
+
+
+You can use the standard role source options in GeoNetwork (`Request Header`, `User Group Service`, or `Role Service`).  The JWT Headers module adds two more role sources - `Header Containing JSON String` and `Header containing JWT`.
+
+
+| Environment Variable | Meaning |
+| ------------- | ------- |
+|JWTHEADERS_RolesHeaderName| Name of the header item the JSON or JWT is contained in|
+| JWTHEADERS_JwtHeaderRoleSource |Which Role Source to use:<br> `JSON` - The header is a JSON string.  Use "JSON path" for where the roles are in the JSON. <br> `JWT` -  The header is a JWT (base64) string.  Use "JSON path" for where the roles are in the JWT claims. |
+| JWTHEADERS_RolesJsonPath| Path in the JSON object or JWT claims that contains the roles.  This should either be a simple string (single role) or a list of strings.|
+
+ 
+
+Using the example `OIDC_id_token_payload` (JSON) or `OIDC_access_token` (JWT) shown above, the claims are:
+
+
+```
+   {
+	   "exp": 1708555947,
+	   "iat": 1708555647,
+	   "auth_time": 1708555288,
+	   "jti": "42ee833e-89d3-4779-bd9d-06b979329c9f",
+	   "iss": "http://localhost:7777/realms/dave-test2",
+	   "aud": "live-key2",
+	   "sub": "98cfe060-f980-4a05-8612-6c609219ffe9",
+	   "typ": "ID",
+	   "azp": "live-key2",
+	   "nonce": "4PhqmZSJ355KBtJPbAP_PdwqiLnc7B1lA2SGpB0zXr4",
+	   "session_state": "7712b364-339a-4053-ae0c-7d3adfca9005",
+	   "at_hash": "2Tyw8q4ZMewuYrD38alCug",
+	   "acr": "0",
+	   "sid": "7712b364-339a-4053-ae0c-7d3adfca9005",
+	   "upn": "david.blasby@geocat.net",
+	   "resource_access":
+	   {
+		   "live-key2":
+		   {
+				"roles": 
+					[
+						"GeonetworkAdministrator", 
+						"GeoserverAdministrator"
+					]
+		   }
+	   },
+	   "email_verified": false,
+	   "address": { },
+	   "name": "david blasby",
+	   "groups": ["default-roles-dave-test2", "offline_access", "uma_authorization"],
+	   "preferred_username": "david.blasby@geocat.net",
+	   "given_name": "david",
+	   "family_name": "blasby",
+	   "email": "david.blasby@geocat.net"
+   }
+```
+
+In this JSON set of claims (mirrored in the JWT claims of the Access Token), and the two roles from the IDP are  "GeonetworkAdministrator", and "GeoserverAdministrator".  The JSON path to the roles is `resource_access.live-key2.roles`.
+
+#### Role Conversion
+
+
+The JWT Headers module also allows for converting roles (from the external IDP) to the GeoNetwork internal role names.
+
+
+| Environment Variable | Meaning                                                                                                                                                                                                                                                                                                                                                                          |
+| ------------- |----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+|JWTHEADERS_RoleConverterString| Role Converter Map from External Roles to GeoNetwork Roles. <br> This is a ";" delimited map in the form of: <br> `ExternalRole1=GeoNetworkRole1;ExternalRole2=GeoNetworkRole2`                                                                                                                                                                                                  |
+|JWTHEADERS_OnlyExternalListedRoles | Only allow External Roles that are explicitly named above. <br>If true, external roles that are not mentioned in the conversion map will be ignored.  If false, those external roles will be turned into GeoNetwork roles of the same name. <br>These roles should either be a Profile ("Administrator", "Reviewer", etc..) or group-based permissions ("GroupName:ProfileName") |
+ 
+
+For example, a conversion map like `GeonetworkAdministrator=ADMINISTRATOR` will convert our IDP "GeonetworkAdministrator" to the "ADMINISTRATOR" Profile...
+
+In our example, the user has two roles "GeoserverAdministrator" and "GeonetworkAdministrator".  If the "Only allow External Roles that are explicitly named above" is true, then GeoNetwork will only see the "ADMINISTRATOR" role.  If true, it will see "ADMINISTRATOR" and "GeoserverAdministrator".  In neither case will it see the converted "GeonetworkAdministrator" roles.
+
+##### Groups
+
+As equivalent with the OIDC and Keycloak providers, specify group permissions in the `<groupName>:<Profile>` format.
+
+
+### JWT Validation
+
+
+If you are using Apache's `mod_auth_openidc` module, then you do *not* have to do JWT validation - Apache will ensure they are valid when it attaches the headers to the request.
+
+However, if you are using robot access to GeoNetwork, you can attach an Access Token to the request header for access.
+
+```    
+Authentication: Bearer `base64 JWT Access Token`
+``` 
+
+OR 
+
+```     
+Authentication: `base64 JWT Access Token`
+``` 
+
+You would then setup the user name to come from a JWT token in the `Authentication` header with a JSON path like `preferred_username`.
+
+
+
+
+You can also extract roles from the Access Token in a similar manner - make sure your IDP imbeds roles inside the Access Token.
+
+| Environment Variable | Meaning |
+| ------------- | ------- |
+|JWTHEADERS_ValidateToken |Validate JWT (Access Token). <Br>If false, do not do any validation. |
+| JWTHEADERS_ValidateTokenExpiry|Validate Token Expiry. <br>If true, validate the `exp` claim in the JWT and ensure it is in the future.  This should always be true so you do not allow expired tokens. |
+| JWTHEADERS_ValidateTokenSignature|  Validate JWT (Access Token) Signature.<br>If true, validate the Token's Signature|
+|JWTHEADERS_ValidateTokenSignatureURL | JSON Web Key Set URL (jwks_uri).<br>URL for a JWK Set.  This is typically called `jwks_uri` in the OIDC metadata configuration.  This will be downloaded and used to check the JWT's signature.  This should always be true to ensure that the JWT has not been modified.|
+|JWTHEADERS_ValidateTokenAgainstURL | Validate JWT (Access Token) Against Endpoint.<br>If true, validate the access token against an IDP's token verification URL.|
+| JWTHEADERS_ValidateTokenAgainstURLEndpoint| URL (userinfo_endpoint). <br>IDP's token validation URL.  This URL will be retrieved by adding the Access Token to the `Authentiation: Bearer <access token>` header.  It should return a HTTP 200 status code if the token is valid.  This is recommened by the OIDC specification.|
+| JWTHEADERS_ValidateSubjectWithEndpoint|Also validate Subject.<br>If true, the `sub` claim of the Access Token and the "userinfo_endpoint" `sub` claim will be checked to ensure they are equal.  This is recommened by the OIDC specification. |
+|JWTHEADERS_ValidateTokenAudience | Validate JWT (Access Token) Audience. <br> If true, the audience of the Access Token is checked. This is recommened by the OIDC specification since this verifies that the Access Token is meant for us.|
+|JWTHEADERS_ValidateTokenAudienceClaimName | Claim Name.<br>The name of the claim the audience is in (`aud`, `azp`, or `appid` claim) the Access Token.|
+|JWTHEADERS_ValidateTokenAudienceClaimValue|Required Claim Value. <br>The value this claim must be (if the claim is a list of string, then it must contain this value). |
+
+
+#### Using Headers or GeoNetwork Database for Profiles & Profile Groups
+
+Inside `JwtHeaderSecurityConfig`, use these values to determine where Profile and ProfileGroups come from.  
+
+| Property | Meaning |
+| ------------- | ------- |
+|updateProfile|  true -> update the DB with the information from OIDC (don't allow user to edit profile in the UI)<br>false -> don't update the DB (user must edit profile in UI). |
+|updateGroup| true -> update the DB (user's group) with the information from OIDC (don't allow admin to edit user's groups in the UI)<br>false -> don't update the DB (admin must edit groups in UI).|
+
+### Using JWT Headers for both OIDC and OAUTH2 (Simultaneously)
+
+Using the above configuration, you can configure JWT Headers for either OIDC-based browser access (i.e. with Apache `mod_auth_openidc`) ***or*** for OAUTH2 based Bearer Token access.  However, you cannot do both at the same time.
+
+To configure JWT Headers to simultaneously provide OIDC and OAUTH2 access, you can use the `jwt-headers-multi` configuration.
+
+To use this, set the `GEONETWORK_SECURITY_TYPE` to `jwt-headers-multi`
+
+```
+GEONETWORK_SECURITY_TYPE=jwt-headers-multi
+```
+
+Please see these files for more detailed configuration:
+* `config-security-jwt-header-multi.xml`
+* `config-security-jwt-header-multi-overrides.properties`
+
+This creates two JWT Header authentication filters for GeoNetwork - one for OIDC based Browser access, and one for OAUTH2 based Robot access.
+
+You configure each of these independently using the same environment variables described above. 
+For the first filter, use the environment variables defined above (ie. `JWTHEADERS_UserNameFormat`).  For the second filter, add a `2` at the end of the environment variable (i.e. `JWTHEADERS_UserNameFormat2`).
 
 ## Configuring EU Login {#authentication-ecas}
 

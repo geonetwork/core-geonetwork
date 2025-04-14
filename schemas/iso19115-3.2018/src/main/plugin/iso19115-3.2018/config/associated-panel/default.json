@@ -3,7 +3,7 @@
     "display": "select",
     "types": [
       {
-        "group": "onlineDiscover",
+        "group": "overview",
         "label": "onlineDiscoverThumbnail",
         "sources": {
           "filestore": true,
@@ -15,48 +15,17 @@
         "fields": {
           "url": {
             "isMultilingual": false,
-            "param": "thumbnail_url"
+            "param": "thumbnail_url",
+            "label": "overviewUrl"
           },
           "name": {
+            "label": "overviewDescription",
             "param": "thumbnail_desc"
           }
         }
       },
       {
-        "group": "onlineDiscover",
-        "label": "onlineDiscoverInApp",
-        "copyLabel": "name",
-        "sources": {
-          "metadataStore": {
-            "label": "searchAnApplication",
-            "params": {
-              "resourceType": "application",
-              "isTemplate": "n"
-            }
-          }
-        },
-        "icon": "fa gn-icon-map",
-        "process": "onlinesrc-add",
-        "fields": {
-          "url": {
-            "isMultilingual": false
-          },
-          "protocol": {
-            "value": "WWW:LINK",
-            "hidden": true,
-            "isMultilingual": false
-          },
-          "name": {},
-          "desc": {},
-          "function": {
-            "value": "browsing",
-            "hidden": true,
-            "isMultilingual": false
-          }
-        }
-      },
-      {
-        "group": "onlineDiscover",
+        "group": "API",
         "label": "onlineDiscoverWMS",
         "copyLabel": "desc",
         "icon": "fa gn-icon-onlinesrc",
@@ -72,14 +41,18 @@
         "process": "onlinesrc-add",
         "fields": {
           "url": {
-            "isMultilingual": false
+            "isMultilingual": false,
+            "label": "ogcServiceUrl"
           },
           "protocol": {
             "value": "OGC:WMS",
             "hidden": true,
             "isMultilingual": false
           },
-          "name": {},
+          "name": {
+            "label": "layerName",
+            "tooltip": "layerNameTooltip"
+          },
           "desc": {},
           "function": {
             "value": "browsing",
@@ -89,7 +62,7 @@
         }
       },
       {
-        "group": "onlineDiscover",
+        "group": "API",
         "label": "onlineDiscoverINSPIREView",
         "copyLabel": "desc",
         "icon": "fa gn-icon-onlinesrc",
@@ -105,7 +78,8 @@
         "process": "onlinesrc-add",
         "fields": {
           "url": {
-            "isMultilingual": false
+            "isMultilingual": false,
+            "label": "ogcServiceUrl"
           },
           "protocol": {
             "value": "OGC:WMS",
@@ -127,7 +101,7 @@
         }
       },
       {
-        "group": "onlineDiscover",
+        "group": "API",
         "label": "onlineDiscoverWMTS",
         "copyLabel": "desc",
         "icon": "fa gn-icon-onlinesrc",
@@ -143,7 +117,8 @@
         "process": "onlinesrc-add",
         "fields": {
           "url": {
-            "isMultilingual": false
+            "isMultilingual": false,
+            "label": "ogcServiceUrl"
           },
           "protocol": {
             "value": "OGC:WMTS",
@@ -160,7 +135,7 @@
         }
       },
       {
-        "group": "onlineDiscover",
+        "group": "API",
         "label": "onlineDiscoverArcGIS",
         "copyLabel": "desc",
         "icon": "fa gn-icon-onlinesrc",
@@ -193,7 +168,7 @@
         }
       },
       {
-        "group": "onlineDiscover",
+        "group": "API",
         "label": "onlineDiscoverArcGISTiled",
         "copyLabel": "desc",
         "icon": "fa gn-icon-onlinesrc",
@@ -226,20 +201,86 @@
         }
       },
       {
-        "group": "onlineDiscover",
-        "label": "onlineDiscoverMap",
-        "copyLabel": "name",
+        "group": "API",
+        "label": "OGC API Maps",
+        "copyLabel": "desc",
+        "icon": "fa gn-icon-onlinesrc",
         "sources": {
-          "filestore": true
+          "metadataStore": {
+            "label": "searchAservice",
+            "params": {
+              "serviceType": ["OGC API Maps"],
+              "isTemplate": "n"
+            }
+          }
         },
-        "icon": "fa gn-icon-map",
         "process": "onlinesrc-add",
         "fields": {
           "url": {
-            "isMultilingual": false
+            "isMultilingual": false,
+            "label": "ogcServiceUrl"
           },
           "protocol": {
-            "value": "WWW:LINK",
+            "value": "OGC API Maps",
+            "hidden": true,
+            "isMultilingual": false
+          },
+          "name": {},
+          "desc": {},
+          "function": {
+            "value": "browsing",
+            "hidden": true,
+            "isMultilingual": false
+          }
+        }
+      },
+      {
+        "group": "API",
+        "label": "OGC API Records",
+        "copyLabel": "desc",
+        "icon": "fa gn-icon-onlinesrc",
+        "sources": {
+          "metadataStore": {
+            "label": "searchAservice",
+            "params": {
+              "serviceType": ["OGC API Records"],
+              "isTemplate": "n"
+            }
+          }
+        },
+        "process": "onlinesrc-add",
+        "fields": {
+          "url": {
+            "isMultilingual": false,
+            "label": "ogcServiceUrl"
+          },
+          "protocol": {
+            "value": "OGC API Records",
+            "hidden": true,
+            "isMultilingual": false
+          },
+          "name": {},
+          "desc": {},
+          "function": {
+            "value": "search",
+            "hidden": true,
+            "isMultilingual": false
+          }
+        }
+      },
+      {
+        "group": "API",
+        "label": "REST API",
+        "copyLabel": "name",
+        "icon": "fa gn-icon-onlinesrc",
+        "process": "onlinesrc-add",
+        "fields": {
+          "url": {
+            "isMultilingual": false,
+            "label": "restApiUrl"
+          },
+          "protocol": {
+            "value": "REST",
             "hidden": true,
             "isMultilingual": false
           },
@@ -294,7 +335,7 @@
             "isMultilingual": false
           },
           "protocol": {
-            "value": "WWW:LINK",
+            "value": "WWW:DOWNLOAD",
             "hidden": true,
             "isMultilingual": false
           },
@@ -324,7 +365,8 @@
         "process": "onlinesrc-add",
         "fields": {
           "url": {
-            "isMultilingual": false
+            "isMultilingual": false,
+            "label": "ogcServiceUrl"
           },
           "protocol": {
             "value": "OGC:WFS",
@@ -357,7 +399,8 @@
         "process": "onlinesrc-add",
         "fields": {
           "url": {
-            "isMultilingual": false
+            "isMultilingual": false,
+            "label": "ogcServiceUrl"
           },
           "protocol": {
             "value": "OGC:WCS",
@@ -390,7 +433,8 @@
         "process": "onlinesrc-add",
         "fields": {
           "url": {
-            "isMultilingual": false
+            "isMultilingual": false,
+            "label": "ogcServiceUrl"
           },
           "protocol": {
             "value": "OGC:WFS",
@@ -444,6 +488,74 @@
           },
           "applicationProfile": {
             "value": "inspire-download",
+            "hidden": true,
+            "isMultilingual": false
+          }
+        }
+      },
+      {
+        "group": "onlineDownload",
+        "label": "OGC API Features",
+        "copyLabel": "desc",
+        "icon": "fa gn-icon-onlinesrc",
+        "sources": {
+          "metadataStore": {
+            "label": "searchAservice",
+            "params": {
+              "serviceType": ["OGC API Features"],
+              "isTemplate": "n"
+            }
+          }
+        },
+        "process": "onlinesrc-add",
+        "fields": {
+          "url": {
+            "isMultilingual": false,
+            "label": "ogcServiceUrl"
+          },
+          "protocol": {
+            "value": "OGC API Features",
+            "hidden": true,
+            "isMultilingual": false
+          },
+          "name": {},
+          "desc": {},
+          "function": {
+            "value": "download",
+            "hidden": true,
+            "isMultilingual": false
+          }
+        }
+      },
+      {
+        "group": "onlineDownload",
+        "label": "OGC API Coverages",
+        "copyLabel": "desc",
+        "icon": "fa gn-icon-onlinesrc",
+        "sources": {
+          "metadataStore": {
+            "label": "searchAservice",
+            "params": {
+              "serviceType": ["OGC API Coverages"],
+              "isTemplate": "n"
+            }
+          }
+        },
+        "process": "onlinesrc-add",
+        "fields": {
+          "url": {
+            "isMultilingual": false,
+            "label": "ogcServiceUrl"
+          },
+          "protocol": {
+            "value": "OGC API Coverages",
+            "hidden": true,
+            "isMultilingual": false
+          },
+          "name": {},
+          "desc": {},
+          "function": {
+            "value": "download",
             "hidden": true,
             "isMultilingual": false
           }
@@ -562,12 +674,13 @@
         }
       },
       {
-        "group": "onlineUse",
+        "group": "onlineUseFcats",
         "label": "onlineUseFcats",
         "copyLabel": "name",
         "sources": {
           "filestore": true
         },
+        "fileStoreFilter": "*.{pdf,PDF,xls,XLS,ods,ODS,csv,CSV,txt,TXT}",
         "icon": "fa fa-table",
         "process": "fcats-file-add",
         "fields": {
@@ -588,12 +701,13 @@
         }
       },
       {
-        "group": "onlineUse",
+        "group": "quality",
         "label": "onlineUseDQReport",
         "copyLabel": "name",
         "sources": {
           "filestore": true
         },
+        "fileStoreFilter": "*.{pdf,PDF}",
         "icon": "fa fa-table",
         "process": "dq-report-add",
         "fields": {
@@ -620,12 +734,13 @@
         }
       },
       {
-        "group": "onlineUse",
+        "group": "quality",
         "label": "onlineUseDQTOR",
         "copyLabel": "name",
         "sources": {
           "filestore": true
         },
+        "fileStoreFilter": "*.{pdf,PDF}",
         "icon": "fa fa-table",
         "process": "dq-report-add",
         "fields": {
@@ -652,12 +767,13 @@
         }
       },
       {
-        "group": "onlineUse",
+        "group": "quality",
         "label": "onlineUseDQProdReport",
         "copyLabel": "name",
         "sources": {
           "filestore": true
         },
+        "fileStoreFilter": "*.{pdf,PDF}",
         "icon": "fa fa-table",
         "process": "dq-report-add",
         "fields": {
@@ -684,7 +800,60 @@
         }
       },
       {
-        "group": "onlineUse",
+        "group": "onlineUseMap",
+        "label": "map-interactive",
+        "copyLabel": "name",
+        "sources": {
+          "filestore": true
+        },
+        "fileStoreFilter": "*.{xml,XML}",
+        "icon": "fa fa-map",
+        "process": "onlinesrc-add",
+        "fields": {
+          "url": {
+            "isMultilingual": false
+          },
+          "name": {},
+          "function": {
+            "value": "browsing",
+            "hidden": true,
+            "isMultilingual": false
+          },
+          "protocol": {
+            "value": "OGC:OWS-C",
+            "hidden": true,
+            "isMultilingual": false
+          }
+        }
+      },
+      {
+        "group": "onlineUseMap",
+        "label": "map-static",
+        "copyLabel": "name",
+        "sources": {
+          "filestore": true
+        },
+        "fileStoreFilter": "*.{pdf,PDF}",
+        "icon": "fa fa-map",
+        "process": "onlinesrc-add",
+        "fields": {
+          "url": {
+            "isMultilingual": false
+          },
+          "name": {},
+          "function": {
+            "value": "browsing",
+            "hidden": true,
+            "isMultilingual": false
+          },
+          "protocol": {
+            "value": "PDF:MAP",
+            "isMultilingual": false
+          }
+        }
+      },
+      {
+        "group": "onlineUseLegend",
         "label": "onlineUseLegendLYR",
         "copyLabel": "name",
         "sources": {
@@ -711,7 +880,7 @@
         }
       },
       {
-        "group": "onlineUse",
+        "group": "onlineUseLegend",
         "label": "onlineUseStyleSLD",
         "copyLabel": "name",
         "sources": {
@@ -738,7 +907,7 @@
         }
       },
       {
-        "group": "onlineUse",
+        "group": "onlineUseLegend",
         "label": "onlineUseStyleQML",
         "copyLabel": "name",
         "sources": {
@@ -765,7 +934,67 @@
         }
       },
       {
-        "group": "onlineMore",
+        "group": "links",
+        "label": "onlineDiscoverInApp",
+        "copyLabel": "name",
+        "sources": {
+          "metadataStore": {
+            "label": "searchAnApplication",
+            "params": {
+              "resourceType": "application",
+              "isTemplate": "n"
+            }
+          }
+        },
+        "icon": "fa gn-icon-map",
+        "process": "onlinesrc-add",
+        "fields": {
+          "url": {
+            "isMultilingual": false
+          },
+          "protocol": {
+            "value": "WWW:LINK",
+            "hidden": true,
+            "isMultilingual": false
+          },
+          "name": {},
+          "desc": {},
+          "function": {
+            "value": "browsing",
+            "hidden": true,
+            "isMultilingual": false
+          }
+        }
+      },
+      {
+        "group": "links",
+        "label": "onlineDiscoverMap",
+        "copyLabel": "name",
+        "sources": {
+          "filestore": true
+        },
+        "icon": "fa gn-icon-map",
+        "process": "onlinesrc-add",
+        "fields": {
+          "url": {
+            "isMultilingual": false
+          },
+          "protocol": {
+            "value": "WWW:LINK",
+            "hidden": true,
+            "isMultilingual": false
+          },
+          "name": {},
+          "desc": {},
+          "function": {
+            "value": "browsing",
+            "hidden": true,
+            "isMultilingual": false
+          }
+        }
+      },
+      {
+        "group": "links",
         "label": "onlineMoreWWW",
         "copyLabel": "name",
         "icon": "fa gn-icon-onlinesrc",
@@ -789,7 +1018,7 @@
         }
       },
       {
-        "group": "onlineMore",
+        "group": "links",
         "label": "onlineMoreFile",
         "copyLabel": "name",
         "sources": {
@@ -815,6 +1044,95 @@
           }
         }
       }
-    ]
+    ],
+    "associatedResourcesTypes": [{
+      "type": "parent",
+      "label": "linkToParent",
+      "config": {
+        "fields": {"associationType": "partOfSeamlessDatabase", "initiativeType": "" },
+        "sources": {
+          "metadataStore": {
+            "params": {
+              "isTemplate": "n"
+            }
+          },
+          "remoteurl": {"multiple": true}
+        }
+      }
+    }, {
+      "type": "siblings",
+      "label": "linkToSibling",
+      "config": {
+        "sources": {
+          "metadataStore": {
+            "params": {
+              "isTemplate": "n"
+            }
+          },
+          "remoteurl": {"multiple": true}
+        }
+      }
+    }, {
+      "type": "service",
+      "label": "linkToService",
+      "condition": "!gnCurrentEdit.isService",
+      "config": {
+        "sources": {
+          "metadataStore": {
+            "label": "searchAservice",
+            "params": {
+              "resourceType": ["service"],
+              "isTemplate": "n"
+            }
+          },
+          "remoteurl": {"multiple": false}
+        }
+      }
+    }, {
+      "type": "dataset",
+      "label": "linkToDataset",
+      "condition": "gnCurrentEdit.isService",
+      "config": {
+        "sources": {
+          "metadataStore": {
+            "params": {
+              "resourceType": ["dataset"],
+              "isTemplate": "n"
+            }
+          },
+          "remoteurl": {"multiple": false}
+        }
+      }
+    }, {
+      "type": "source",
+      "label": "linkToSource",
+      "config": {
+        "sources": {
+          "metadataStore": {
+            "label": "linkToSource",
+            "params": {
+              "resourceType": ["dataset"],
+              "isTemplate": "n"
+            }
+          },
+          "remoteurl": {"multiple": false}
+        }
+      }
+    }, {
+      "type": "fcats",
+      "label": "linkToFeatureCatalog",
+      "config": {
+        "sources": {
+          "metadataStore": {
+            "label": "linkToFeatureCatalog",
+            "params": {
+              "resourceType": ["featureCatalog"],
+              "isTemplate": "n"
+            }
+          },
+          "remoteurl": {"multiple": false}
+        }
+      }
+    }]
   }
 }

@@ -10,18 +10,18 @@ repo_url: https://github.com/geonetwork/core-geonetwork
 edit_uri: edit/main/docs/manual/docs
 
 # Copyright
-copyright: Copyright &copy; 2001 - 2023 FAO-UN and others
+copyright: Copyright &copy; 2001 - 2024 FAO-UN and others
 
 extra_css:
-  - stylesheets/extra.css
+  - assets/stylesheets/extra.css
 
 # Configuration
 theme:
   name: material
   language: en
   custom_dir: overrides
-  logo: assets/geonetwork-logo.svg
-  favicon: assets/geonetwork-logo.png
+  logo: assets/images/geonetwork-logo.svg
+  favicon: assets/images/geonetwork-logo.png
   icon:
     repo: fontawesome/brands/github
   palette:
@@ -39,22 +39,25 @@ theme:
         icon: material/weather-sunny
         name: Switch to light mode
   features:
-    - content.action.view
-    - content.action.edit
-    - content.code.copy
-    - content.tabs.link
-    - navigation.tabs
+    - toc.follow
     - navigation.tracking
+    - navigation.top
+    - navigation.tabs
     - navigation.prune
     - navigation.indexes
-    - toc.follow
-    - navigation.top
     - navigation.footer
+    - header.autohide
+    - content.tabs.link
+    - content.code.copy
+    - content.action.view
+    - content.action.edit
     - announce.dismiss
 
 # Plugins - install using: pip3 install -r requirements.txt
 plugins:
-  - search
+  - exclude:
+      glob:
+        - annexes/gallery/bin/README.md
   - i18n:
       docs_structure: suffix
       reconfigure_material: true
@@ -63,26 +66,25 @@ plugins:
           name: English
           build: true
           default: true
-          site_name: 'GeoNetwork Opensource (EN)'
+          site_name: 'GeoNetwork opensource'
         - locale: fr
           name: Français
           build: !ENV [FRENCH,true]
-          site_name: 'GeoNetwork Opensource (FR)'
+          site_name: 'GeoNetwork opensource'
           site_description: Catalogue GeoNetwork pour répertorier, rechercher et examiner les enregistrements.
           nav_translations:
             Home: Home
             Search: Search
             Record: Record
             Map: Map
-  - exclude:
-      glob:
-        - annexes/gallery/bin/README.md
+  - search
 
 # Customizations
 extra:
   version:
     provider: mike
     default: stable
+    alias: true
   homepage: https://geonetwork-opensource.org/
   social:
     - icon: fontawesome/brands/github
@@ -93,6 +95,17 @@ extra:
       link: https://geonetwork-opensource.org/
       name: GeoNetwork Website
 
+# For use with --strict to produce failures on build warnings
+validation:
+  nav:
+    omitted_files: warn
+    not_found: warn
+    absolute_links: warn
+  links:
+    not_found: warn
+    absolute_links: warn
+    unrecognized_links: warn
+
 # Extensions
 # - These are carefully chosen to work with pandoc markdown support for whole document translation
 markdown_extensions:
@@ -101,8 +114,8 @@ markdown_extensions:
   - def_list
   - pymdownx.details
   - pymdownx.emoji:
-      emoji_index: !!python/name:materialx.emoji.twemoji
-      emoji_generator: !!python/name:materialx.emoji.to_svg
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
       options:
         custom_icons:
           - overrides/.icons
@@ -136,11 +149,25 @@ nav:
     - overview/authors.md
     - 'Changelog':
       - overview/change-log/index.md
-      - 'Latest':
-        - overview/change-log/latest/index.md
+      - overview/change-log/version-4.4.7.md
+      - overview/change-log/version-4.4.6.md
+      - overview/change-log/version-4.2.11.md
+      - 'Release History':
+        - overview/change-log/history/index.md
+        - overview/change-log/version-4.4.6.md
+        - overview/change-log/version-4.4.5.md
+        - overview/change-log/version-4.4.4.md
+        - overview/change-log/version-4.4.3.md
+        - overview/change-log/version-4.4.2.md
+        - overview/change-log/version-4.4.1.md
         - overview/change-log/version-4.4.0.md
-      - 'Stable':
-        - overview/change-log/stable/index.md
+      - 'Release History':
+        - overview/change-log/history/index.md
+        - overview/change-log/version-4.2.11.md
+        - overview/change-log/version-4.2.10.md
+        - overview/change-log/version-4.2.9.md
+        - overview/change-log/version-4.2.8.md
+        - overview/change-log/version-4.2.7.md
         - overview/change-log/version-4.2.6.md
         - overview/change-log/version-4.2.5.md
         - overview/change-log/version-4.2.4.md
@@ -148,8 +175,7 @@ nav:
         - overview/change-log/version-4.2.2.md
         - overview/change-log/version-4.2.1.md
         - overview/change-log/version-4.2.0.md
-      - 'Maintenance':
-        - overview/change-log/maintenance/index.md
+        - overview/change-log/version-3.12.12.md
         - overview/change-log/version-3.12.11.md
         - overview/change-log/version-3.12.10.md
         - overview/change-log/version-3.12.9.md
@@ -162,8 +188,6 @@ nav:
         - overview/change-log/version-3.12.2.md
         - overview/change-log/version-3.12.1.md
         - overview/change-log/version-3.12.0.md
-      - 'Archive':
-        - overview/change-log/archive/index.md
         - overview/change-log/version-4.0.6.md
         - overview/change-log/version-4.0.5.md
         - overview/change-log/version-4.0.4.md
@@ -228,19 +252,21 @@ nav:
       - user-guide/describing-information/multilingual-editing.md
     - 'Associating Resources':
       - user-guide/associating-resources/index.md
-      - user-guide/associating-resources/cite.md
+      - 'Associating documents':
+        - user-guide/associating-resources/linking-documents.md
+        - user-guide/associating-resources/using-filestore.md
+        - user-guide/associating-resources/linking-thumbnail.md
+        - user-guide/associating-resources/linking-online-resources.md
+      - 'Associating another record':
+        - user-guide/associating-resources/linking-records.md
+        - user-guide/associating-resources/linking-parent.md
+        - user-guide/associating-resources/linking-source.md
+        - user-guide/associating-resources/linking-dataset-or-service.md
+        - user-guide/associating-resources/linking-feature-catalog.md
+        - user-guide/associating-resources/linking-others.md
+        - user-guide/associating-resources/linking-remote-records.md
       - user-guide/associating-resources/doi.md
-      - user-guide/associating-resources/linking-dataset-or-service.md
-      - user-guide/associating-resources/linking-documents.md
-      - user-guide/associating-resources/linking-feature-catalog.md
-      - user-guide/associating-resources/linking-online-resources.md
-      - user-guide/associating-resources/linking-others.md
-      - user-guide/associating-resources/linking-parent.md
-      - user-guide/associating-resources/linking-records.md
-      - user-guide/associating-resources/linking-remote-records.md
-      - user-guide/associating-resources/linking-source.md
-      - user-guide/associating-resources/linking-thumbnail.md
-      - user-guide/associating-resources/using-filestore.md
+      - user-guide/associating-resources/cite.md
     - 'Tag information':
       - user-guide/tag-information/index.md
       - user-guide/tag-information/tagging-with-categories.md
@@ -256,10 +282,11 @@ nav:
       - user-guide/analyzing/metadata.md
     - 'Workflow':
       - user-guide/workflow/index.md
-      - user-guide/workflow/batchediting.md
-      - user-guide/workflow/batchupdate-from-admin.md
-      - user-guide/workflow/batchupdate-xsl.md
-      - user-guide/workflow/batchupdate.md
+      - 'Updating a set of records':
+        - user-guide/workflow/batchupdate/index.md
+        - user-guide/workflow/batchediting.md
+        - user-guide/workflow/batchupdate-from-admin.md
+        - user-guide/workflow/batchupdate-xsl.md
       - user-guide/workflow/geopublication.md
       - user-guide/workflow/life-cycle.md
       - user-guide/workflow/suggestion.md
@@ -270,6 +297,7 @@ nav:
       - user-guide/harvesting/harvesting-csw.md
       - user-guide/harvesting/harvesting-filesystem.md
       - user-guide/harvesting/harvesting-geonetwork.md
+      - user-guide/harvesting/harvesting-geonetwork-2.md
       - user-guide/harvesting/harvesting-geoportal.md
       - user-guide/harvesting/harvesting-oaipmh.md
       - user-guide/harvesting/harvesting-ogcwxs.md
@@ -278,7 +306,6 @@ nav:
       - user-guide/harvesting/harvesting-thredds.md
       - user-guide/harvesting/harvesting-webdav.md
       - user-guide/harvesting/harvesting-wfs-features.md
-      - user-guide/harvesting/harvesting-z3950.md
     - user-guide/export/index.md
     - 'Administration':
       - administrator-guide/index.md
@@ -297,6 +324,7 @@ nav:
         - administrator-guide/managing-users-and-groups/creating-group.md
         - administrator-guide/managing-users-and-groups/creating-user.md
         - administrator-guide/managing-users-and-groups/user-self-registration.md
+        - administrator-guide/managing-users-and-groups/user-reset-password.md
       - 'Classification Systems':
         - administrator-guide/managing-classification-systems/index.md
         - administrator-guide/managing-classification-systems/managing-categories.md
@@ -313,22 +341,18 @@ nav:
       - 'Installation':
           - 'Installing':
             - install-guide/index.md
+            - install-guide/installing-index.md
             - install-guide/installing-from-zip.md
             - install-guide/installing-from-war-file.md
             - install-guide/installing-with-docker.md
             - install-guide/installing-from-source-code.md
-            - install-guide/installing-index.md
+            - install-guide/plugins.md
           - 'Configuration':
             - install-guide/configuring-database.md
             - install-guide/customizing-data-directory.md
             - install-guide/logging.md
             - install-guide/map-print-setup.md
             - install-guide/loading-samples.md
-      - 'Setting up search/content statistics':
-        - maintainer-guide/statistics/index.md
-        - maintainer-guide/statistics/setup-elasticsearch.md
-        - maintainer-guide/statistics/setup-kibana.md
-        - maintainer-guide/statistics/setup-geonetwork.md
       - maintainer-guide/production-use/index.md
       - 'Updating the application': maintainer-guide/updating/index.md
   - 'API':
@@ -336,9 +360,11 @@ nav:
     - api/the-geonetwork-api.md
     - api/search.md
     - api/csw.md
+    - api/inspire_atom.md
+    - 'Open Archive Initiative': api/oai-pmh.md
     - api/opensearch.md
-    - api/rdf-dcat.md
-    - api/oai-pmh.md
+    - api/q-search.md
+    - 'RDF DCAT': api/rdf-dcat.md
     - api/z39-50.md
   - 'Development':
     - devel/index.md

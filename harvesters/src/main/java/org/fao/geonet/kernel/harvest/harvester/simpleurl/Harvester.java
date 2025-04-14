@@ -78,8 +78,8 @@ class Harvester implements IHarvester<HarvestResult> {
 
     private final AtomicBoolean cancelMonitor;
     private Logger log;
-    private SimpleUrlParams params;
-    private ServiceContext context;
+    private final SimpleUrlParams params;
+    private final ServiceContext context;
 
     @Autowired
     GeonetHttpRequestFactory requestFactory;
@@ -87,13 +87,14 @@ class Harvester implements IHarvester<HarvestResult> {
     /**
      * Contains a list of accumulated errors during the executing of this harvest.
      */
-    private List<HarvestError> errors = new LinkedList<>();
+    private final List<HarvestError> errors;
 
-    public Harvester(AtomicBoolean cancelMonitor, Logger log, ServiceContext context, SimpleUrlParams params) {
+    public Harvester(AtomicBoolean cancelMonitor, Logger log, ServiceContext context, SimpleUrlParams params, List<HarvestError> errors) {
         this.cancelMonitor = cancelMonitor;
         this.log = log;
         this.context = context;
         this.params = params;
+        this.errors = errors;
     }
 
     public HarvestResult harvest(Logger log) throws Exception {
@@ -105,6 +106,7 @@ class Harvester implements IHarvester<HarvestResult> {
         String[] urlList = params.url.split("\n");
         boolean error = false;
         Aligner aligner = new Aligner(cancelMonitor, context, params, log);
+        Set<String> listOfUuids = new HashSet<>();
 
         for (String url : urlList) {
             log.debug("Loading URL: " + url);
@@ -151,7 +153,6 @@ class Harvester implements IHarvester<HarvestResult> {
                         params.numberOfRecordPath, e.getMessage()));
                 }
             }
-            Map<String, Element> allUuids = new HashMap<>();
             try {
                 List<String> listOfUrlForPages = buildListOfUrl(params, numberOfRecordsToHarvest);
                 for (int i = 0; i < listOfUrlForPages.size(); i++) {
@@ -166,7 +167,6 @@ class Harvester implements IHarvester<HarvestResult> {
                     if (StringUtils.isNotEmpty(params.loopElement)
                         || type == SimpleUrlResourceType.RDFXML) {
                         Map<String, Element> uuids = new HashMap<>();
-
                         try {
                             if (type == SimpleUrlResourceType.XML) {
                                 collectRecordsFromXml(xmlObj, uuids, aligner);
@@ -176,7 +176,7 @@ class Harvester implements IHarvester<HarvestResult> {
                                 collectRecordsFromJson(jsonObj, uuids, aligner);
                             }
                             aligner.align(uuids, errors);
-                            allUuids.putAll(uuids);
+                            listOfUuids.addAll(uuids.keySet());
                         } catch (Exception e) {
                             errors.add(new HarvestError(this.context, e));
                             log.error(String.format("Failed to collect record in response at path %s. Error is: %s",
@@ -184,7 +184,6 @@ class Harvester implements IHarvester<HarvestResult> {
                         }
                     }
                 }
-                aligner.cleanupRemovedRecords(allUuids.keySet());
             } catch (Exception t) {
                 error = true;
                 log.error("Unknown error trying to harvest");
@@ -198,11 +197,12 @@ class Harvester implements IHarvester<HarvestResult> {
                 errors.add(new HarvestError(context, t));
             }
 
-            log.info("Total records processed in all searches :" + allUuids.size());
+            log.info("Total records processed in all searches :" + listOfUuids.size());
             if (error) {
                 log.warning("Due to previous errors the align process has not been called");
             }
         }
+        aligner.cleanupRemovedRecords(listOfUuids);
         return aligner.getResult();
     }
 
@@ -429,9 +429,5 @@ class Harvester implements IHarvester<HarvestResult> {
 
     private URI createUrl(String jsonUrl) throws URISyntaxException {
         return new URI(jsonUrl);
-    }
-
-    public List<HarvestError> getErrors() {
-        return errors;
     }
 }

@@ -22,6 +22,7 @@
   -->
 
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                xmlns:xs="http://www.w3.org/2001/XMLSchema"
                 version="2.0">
 
   <xsl:template name="replaceString">
@@ -125,8 +126,10 @@
 
   <xsl:template name="hyperlink">
     <xsl:param name="string" select="." />
+    <xsl:variable name="regex" as="xs:string">((http|https|ftp)://[^\s()]+[^\s\[\]`!(){};:'\\".,?«»“”‘’])</xsl:variable>
+
     <xsl:analyze-string select="$string"
-                        regex="(http|https|ftp)://[^\s]+">
+                        regex="{$regex}">
       <xsl:matching-substring>
         <a href="{.}">
           <xsl:value-of select="." />

@@ -33,6 +33,7 @@ import java.util.Map;
  */
 @XmlRootElement(name = "wfs")
 public class WFSHarvesterParameter implements Serializable {
+    public static final String DEFAULT_VERSION = "1.1.0";
     private String metadataUuid;
 
     private String url;
@@ -41,7 +42,7 @@ public class WFSHarvesterParameter implements Serializable {
 
     private String typeName;
 
-    private String version = "1.1.0";
+    private String version = DEFAULT_VERSION;
 
     private int timeOut = 300000;
 

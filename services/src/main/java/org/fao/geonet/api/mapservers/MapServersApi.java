@@ -24,6 +24,8 @@
 package org.fao.geonet.api.mapservers;
 
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -109,6 +111,7 @@ public class MapServersApi {
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasAuthority('Editor')")
     @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "List of all mapservers."),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_EDITOR)
     })
     List<AnonymousMapserver> getMapservers() throws Exception {
@@ -208,7 +211,7 @@ public class MapServersApi {
         })
     @PreAuthorize("hasAuthority('Reviewer')")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "204", description = "Mapserver updated."),
+        @ApiResponse(responseCode = "204", description = "Mapserver updated.", content = {@Content(schema = @Schema(hidden = true))}),
         @ApiResponse(responseCode = "404", description = ApiParams.API_RESPONSE_RESOURCE_NOT_FOUND),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_REVIEWER)
     })
@@ -252,12 +255,12 @@ public class MapServersApi {
         })
     @PreAuthorize("hasAuthority('Reviewer')")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "204", description = "Mapserver updated."),
+        @ApiResponse(responseCode = "204", description = "Mapserver updated.", content = {@Content(schema = @Schema(hidden = true))}),
         @ApiResponse(responseCode = "404", description = ApiParams.API_RESPONSE_RESOURCE_NOT_FOUND),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_REVIEWER)
     })
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void updateMapserver(
+    public void updateMapserverAuth(
         @Parameter(
             description = API_PARAM_MAPSERVER_IDENTIFIER,
             required = true,
@@ -322,7 +325,7 @@ public class MapServersApi {
         })
     @PreAuthorize("hasAuthority('Reviewer')")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "204", description = "Mapserver removed."),
+        @ApiResponse(responseCode = "204", description = "Mapserver removed.", content = {@Content(schema = @Schema(hidden = true))}),
         @ApiResponse(responseCode = "404", description = ApiParams.API_RESPONSE_RESOURCE_NOT_FOUND),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_REVIEWER)
     })

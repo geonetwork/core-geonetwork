@@ -33,13 +33,13 @@ import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Collections;
 
-import static org.fao.geonet.constants.Geonet.Namespaces.GCO;
-import static org.fao.geonet.constants.Geonet.Namespaces.GMD;
+import static org.fao.geonet.constants.Geonet.Namespaces.*;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 /**
  * Test some of the rules in the schematron-rules-iso.sch files in the iso19139 schema plugin.
- *
+ * <p>
  * Created by Jesse on 3/25/14.
  */
 public class SchematronRulesIsoTest extends AbstractSchematronTest {
@@ -147,6 +147,88 @@ public class SchematronRulesIsoTest extends AbstractSchematronTest {
         final Element dateTypeEl = Xml.selectElement(testMetadata, "gmd:identificationInfo/*/gmd:citation/*/gmd:date/*/gmd:dateType",
             Arrays.asList(GMD, GCO));
         testNoStringErrors(testMetadata, dateTypeEl);
+    }
+
+    @Test
+    public void testAggregationInfoCombinations() throws Exception {
+        final Element testMetadata = Xml.loadStream(SchematronRulesIsoTest.class.getResourceAsStream(INSPIRE_VALID_ISO19139_XML));
+        final Element mdDataIdentification = Xml.selectElement(testMetadata, "gmd:identificationInfo/gmd:MD_DataIdentification", Collections.singletonList(GMD));
+        assertNotNull(mdDataIdentification);
+
+        Element results = Xml.transform(testMetadata, getSchematronXsl(), params);
+        int errorsStart = countFailures(results);
+
+        // first we test cases that should not introduce failures
+        addDatasetIdentifier(mdDataIdentification, "uuid-1", null, "largerWorkCitation", null);
+        assertEquals(errorsStart, countFailures(Xml.transform(testMetadata, getSchematronXsl(), params)));
+        addDatasetIdentifier(mdDataIdentification, "uuid-2", null, "largerWorkCitation", null);
+        assertEquals(errorsStart, countFailures(Xml.transform(testMetadata, getSchematronXsl(), params)));
+        addDatasetIdentifier(mdDataIdentification, "uuid-2", null, "crossReference", null);
+        assertEquals(errorsStart, countFailures(Xml.transform(testMetadata, getSchematronXsl(), params)));
+        addDatasetIdentifier(mdDataIdentification, "uuid-3", null, "crossReference", "campaign");
+        assertEquals(errorsStart, countFailures(Xml.transform(testMetadata, getSchematronXsl(), params)));
+        addDatasetIdentifier(mdDataIdentification, "uuid-3", null, "crossReference", "collection");
+        assertEquals(errorsStart, countFailures(Xml.transform(testMetadata, getSchematronXsl(), params)));
+        addDatasetIdentifier(mdDataIdentification, "uuid-4", "href-4", "crossReference", "collection");
+        assertEquals(errorsStart, countFailures(Xml.transform(testMetadata, getSchematronXsl(), params)));
+
+        // adding duplicate uuid+initiativeType+associationType combinations should fail
+        Element bad = addDatasetIdentifier(mdDataIdentification, "uuid-1", null, "largerWorkCitation", null);
+        assertEquals(errorsStart + 2, countFailures(Xml.transform(testMetadata, getSchematronXsl(), params)));
+        bad.detach();
+        bad = addDatasetIdentifier(mdDataIdentification, "uuid-3", null, "crossReference", "campaign");
+        assertEquals(errorsStart + 2, countFailures(Xml.transform(testMetadata, getSchematronXsl(), params)));
+        bad.detach();
+        bad = addDatasetIdentifier(mdDataIdentification, "uuid-1", "href-1", "largerWorkCitation", null);
+        assertEquals(errorsStart + 2, countFailures(Xml.transform(testMetadata, getSchematronXsl(), params)));
+        bad.detach();
+        bad = addDatasetIdentifier(mdDataIdentification, "uuid-4", "href-4", "crossReference", "collection");
+        assertEquals(errorsStart + 2, countFailures(Xml.transform(testMetadata, getSchematronXsl(), params)));
+        bad.detach();
+    }
+
+    private static Element addDatasetIdentifier(Element parent, String uuid, String href, String associationType, String initiativeType) {
+        Element ai = new Element("aggregationInfo", GMD);
+        Element mdAi = new Element("MD_AggregateInformation", GMD);
+        Element adsi = new Element("aggregateDataSetIdentifier", GMD);
+        Element mdIdentifier = new Element("MD_Identifier", GMD);
+        Element code = new Element("code", GMD);
+
+        Element at = new Element("associationType", GMD);
+        Element dsAt = new Element("DS_AssociationTypeCode", GMD);
+        dsAt.setAttribute("codeListValue", associationType);
+        dsAt.setAttribute("codeList", "http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#DS_AssociationTypeCode");
+
+        at.addContent(dsAt);
+        ai.addContent(mdAi);
+        mdAi.addContent(adsi);
+        mdAi.addContent(at);
+        adsi.addContent(mdIdentifier);
+        mdIdentifier.addContent(code);
+
+        if (initiativeType != null) {
+            Element it = new Element("initiativeType", GMD);
+            Element dsIt = new Element("DS_InitiativeTypeCode", GMD);
+            dsIt.setAttribute("codeListValue", initiativeType);
+            dsIt.setAttribute("codeList", "http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#DS_InitiativeTypeCode");
+            it.addContent(dsIt);
+            mdAi.addContent(it);
+        }
+
+        if (href != null) {
+            Element anchor = new Element("Anchor", GMX);
+            anchor.setAttribute("href", href, XLINK);
+            anchor.setText(uuid);
+            code.addContent(anchor);
+        } else {
+            Element cs = new Element("CharacterString", GCO);
+            cs.setText(uuid);
+            code.addContent(cs);
+        }
+
+        parent.addContent(ai);
+
+        return ai;
     }
 
     private void testNoStringErrors(Element testMetadata, Element contact) throws Exception {

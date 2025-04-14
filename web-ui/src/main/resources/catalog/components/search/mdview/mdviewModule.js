@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2023 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -59,6 +59,7 @@
     "$rootScope",
     "$filter",
     "gnUtilityService",
+    "$window",
     function (
       $scope,
       $http,
@@ -77,13 +78,14 @@
       gnConfigService,
       $rootScope,
       $filter,
-      gnUtilityService
+      gnUtilityService,
+      $window
     ) {
       $scope.formatter = gnSearchSettings.formatter;
       $scope.gnMetadataActions = gnMetadataActions;
       $scope.url = location.href;
       $scope.compileScope = $scope.$new();
-      $scope.recordIdentifierRequested = gnSearchLocation.uuid;
+      $scope.recordIdentifierRequested = gnSearchLocation.getUuid();
       $scope.isUserFeedbackEnabled = false;
       $scope.isRatingEnabled = false;
       $scope.showCitation = false;
@@ -102,8 +104,9 @@
       $scope.showStatusTopBarFor =
         gnGlobalSettings.gnCfg.mods.recordview.showStatusTopBarFor;
 
+
       gnConfigService.load().then(function (c) {
-        $scope.isRecordHistoryEnabled = gnConfig["system.metadata.history.enabled"];
+        $scope.isRecordHistoryEnabled = gnConfig["metadata.history.enabled"];
         $scope.isPreferGroupLogo = gnConfig["system.metadata.prefergrouplogo"];
 
         var statusSystemRating = gnConfig["system.localrating.enable"];
@@ -191,6 +194,35 @@
               type: "success"
             });
             $scope.closeRecord(md);
+          },
+          function (reason) {
+            // Data needs improvements
+            // See https://github.com/geonetwork/core-geonetwork/issues/723
+            gnAlertService.addAlert({
+              msg: reason.data.message || reason.data.description,
+              type: "danger"
+            });
+          }
+        );
+      };
+
+      $scope.cancelWorkingCopy = function (md) {
+        return gnMetadataActions.cancelWorkingCopy(md).then(
+          function (data) {
+            gnAlertService.addAlert({
+              msg: $translate.instant("metadataRemoved", {
+                title: md.resourceTitle
+              }),
+              type: "success"
+            });
+
+            // Set a timeout to reload the page, to display the alert
+            $window.setTimeout(function () {
+              $window.location.href = $location
+                .absUrl()
+                .replace("/metadraf/", "/metadata/");
+              $window.location.reload();
+            }, 500);
           },
           function (reason) {
             // Data needs improvements

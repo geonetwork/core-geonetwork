@@ -38,7 +38,8 @@
       <list>
         <!-- TODO: This needs to be secured to not access private info -->
         <sec:filter-chain pattern="/index/**" filters=""/>
-        <sec:filter-chain pattern="/jolokia/**" filters="securityContextPersistenceFilter, authenticatedUserFilter"/>
+        <sec:filter-chain pattern="/jolokia" filters="securityContextPersistenceFilter, authenticatedUserFilter"/>
+        <sec:filter-chain pattern="/jolokia/read/geonetwork-**" filters="securityContextPersistenceFilter, authenticatedUserFilter"/>
         <sec:filter-chain pattern="/dashboards/**" filters="securityContextPersistenceFilter, basicAuthenticationFilter, authenticatedUserFilter"/>
         <sec:filter-chain pattern="/doc/**" filters=""/>
         <sec:filter-chain pattern="/api/**" filters=""/>
@@ -64,8 +65,14 @@
         <ref bean="coreFilterChain"/>
       </list>
     </constructor-arg>
+
+    <property name="firewall" ref="httpFirewall"/>
   </bean>
 
+  <!-- HttpFirewall that parses UTF8 header values -->
+  <bean id="httpFirewall"
+         class="org.fao.geonet.web.GeoNetworkStrictHttpFirewall">
+  </bean>
 
   <bean id="coreFilterChain"
         class="org.springframework.security.web.DefaultSecurityFilterChain">

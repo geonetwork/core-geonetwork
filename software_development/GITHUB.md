@@ -34,3 +34,23 @@ GeoNetwork uses feature branches for development, and a pull-request workflow fo
 
 * [Contributing](../CONTRIBUTING.md).
 * [Making a pull request](https://docs.geonetwork-opensource.org/latest/contributing/making-a-pull-request/).
+
+## Automation
+
+### Quality Assurance
+
+A number of [workflows](../.github/workflows/) are setup to ensure each PR compiles, passes tests and so forth.
+
+* [linux.yml](../.github/workflows/linux.yml): build and QA, including -Drelease check
+* [docs.yml](../.github/workflows/docs.yml): publish docs to gh-pages branch
+* [backport.yml](../.github/workflows/backport.yml): backport tagged pull requests
+
+### Tags
+
+Use backport tags to take advantage of the [backport.yml](https://github.com/m-kuhn/backport) automation:
+
+> Backport is a JavaScript GitHub Action to backport a pull request by simply adding a label to it.
+> 
+> It can backport rebased and merged pull requests with a single commit and squashed and merged pull requests. I
+
+This agrees with our CONTRIBUTING policy of using rebase and squash and merge.

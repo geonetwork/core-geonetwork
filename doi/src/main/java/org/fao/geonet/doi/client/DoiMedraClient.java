@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2010 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2024 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -23,7 +23,9 @@
 package org.fao.geonet.doi.client;
 
 import org.apache.commons.httpclient.HttpStatus;
+import org.apache.commons.lang3.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
+import static org.fao.geonet.doi.client.DoiManager.DOI_DEFAULT_URL;
 import org.fao.geonet.utils.GeonetHttpRequestFactory;
 
 /**
@@ -38,7 +40,7 @@ public class DoiMedraClient extends BaseDoiClient implements IDoiClient {
 
     public DoiMedraClient(String apiUrl, String username, String password, String doiPublicUrl) {
         this.apiUrl = apiUrl;
-        this.doiPublicUrl = doiPublicUrl.endsWith("/") ? doiPublicUrl : doiPublicUrl + "/";
+        this.doiPublicUrl = StringUtils.isEmpty(doiPublicUrl) ? DOI_DEFAULT_URL : doiPublicUrl.endsWith("/") ? doiPublicUrl : doiPublicUrl + "/";
         this.username = username;
         this.password = password;
 
@@ -58,7 +60,10 @@ public class DoiMedraClient extends BaseDoiClient implements IDoiClient {
 
     @Override
     public String retrieveAllDoi(String doi) throws DoiClientException {
-        throw new DoiClientException(MEDRA_NOT_SUPPORTED_EXCEPTION_MESSAGE);
+        throw new DoiClientException(MEDRA_NOT_SUPPORTED_EXCEPTION_MESSAGE)
+            .withMessageKey("exception.doi.operationNotSupported")
+            .withDescriptionKey("exception.doi.operationNotSupported.description",
+                new String[]{ MEDRA_NOT_SUPPORTED_EXCEPTION_MESSAGE });
     }
 
     /**

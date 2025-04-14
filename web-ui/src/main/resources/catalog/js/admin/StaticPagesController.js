@@ -33,7 +33,16 @@
     "$translate",
     "$log",
     "gnGlobalSettings",
-    function ($scope, $http, $rootScope, $translate, $log, gnGlobalSettings) {
+    "gnUtilityService",
+    function (
+      $scope,
+      $http,
+      $rootScope,
+      $translate,
+      $log,
+      gnGlobalSettings,
+      gnUtilityService
+    ) {
       $scope.dbLanguages = [];
       $scope.staticPages = [];
       $scope.formats = [];
@@ -41,6 +50,7 @@
       $scope.staticPageSelected = null;
       $scope.queue = [];
       $scope.uploadScope = angular.element("#gn-static-page-edit").scope();
+      $scope.groups = [];
 
       $scope.unsupportedFile = false;
       $scope.$watchCollection("queue", function (n, o) {
@@ -61,6 +71,12 @@
         });
         $http.get("../api/pages/config/sections").then(function (r) {
           $scope.sections = r.data;
+        });
+      }
+
+      function loadGroups() {
+        $http.get("../api/groups").then(function (r) {
+          $scope.groups = gnUtilityService.sortByTranslation(r.data, $scope.lang, "name");
         });
       }
 
@@ -144,6 +160,7 @@
 
       $scope.addStaticPage = function () {
         $scope.isUpdate = false;
+        $scope.isGroupEnabled = false;
         $scope.staticPageSelected = {
           language: "",
           pageId: "",
@@ -152,6 +169,7 @@
           data: "",
           content: "",
           status: "HIDDEN",
+          groups: "",
           label: "",
           sections: []
         };
@@ -164,6 +182,7 @@
       $scope.selectStaticPage = function (v) {
         $scope.isUpdate = true;
         $scope.staticPageSelected = v;
+        $scope.isGroupEnabled = $scope.staticPageSelected.status == "GROUPS";
 
         var link =
           "api/pages/" +
@@ -214,6 +233,12 @@
           $scope.uploadScope.submit();
         } else {
           delete sp.data;
+
+          // Reset empty string to null to avoid parsing error
+          if (sp.groups == "") {
+            sp.groups = null;
+          }
+
           return $http
             .put(action, sp, {
               headers: {
@@ -223,6 +248,13 @@
             .then(successHandler, function (r) {
               failureHandler(r.data);
             });
+        }
+      };
+      $scope.updateGroupSelection = function () {
+        if ($scope.staticPageSelected.status === "GROUPS") {
+          $scope.isGroupEnabled = true;
+        } else {
+          $scope.isGroupEnabled = false;
         }
       };
 
@@ -262,6 +294,7 @@
       loadFormats();
       loadDbLanguages();
       loadStaticPages();
+      loadGroups();
     }
   ]);
 })();

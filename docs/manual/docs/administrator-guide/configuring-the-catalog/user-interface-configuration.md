@@ -18,7 +18,7 @@ To add a new configuration, such as for a sub-portal (see [Portal configuration]
     Since the settings form is a long form, the `save` button is repeated at the base of the page. In either case, all settings are saved.
 
 
--   **Filter settings**: This search box can be used to filter settings in the form, for example searching for "social" will show only the settings related to the Social Bar.
+-   **Filter settings**: This search box can be used to filter settings in the form, for example searching for "social" will show only the settings related to the Social bar.
 
 ![](img/ui-settings-filter.png)
 
@@ -31,7 +31,7 @@ To add a new configuration, such as for a sub-portal (see [Portal configuration]
 ## Footer {#user-interface-config-footer}
 
 -   **Footer**: Select this checkbox to determine whether the GeoNetwork footer is shown. If not set, no footer will be visible.
--   **Social bar**: Select this check box to show the social bar (links to twitter, facebook, linkedin etc) in the footer.
+-   **Social bar**: Select this check box to show the social media bar in the footer.
 
 ![](img/ui-settings-footer.png)
 
@@ -60,21 +60,22 @@ To add a new configuration, such as for a sub-portal (see [Portal configuration]
 -   **Search application**: Select this check box to determine whether the search application is visible in the top toolbar. If not set, no link is shown.
 -   **Application URL**: Define the URL for the search application. In the majority of cases this can be left as the default.
 -   **Number of records per page**: Define the options to determine the number of records shown per page of results, and the default.
--   **Type of facet**: Define the set of search facets should be visible in the search page. The default is `details` but `manager` can be used to show the facets more normally used on the editor page.
--   **Default search**: Define a default filter for the search.
+-   **Facet configuration**: See [Configuring faceted search](../../customizing-application/configuring-faceted-search.md)). The configuration are defined using JSON following Elasticsearch API (See <https://www.elastic.co/guide/en/elasticsearch/reference/current/search-aggregations-bucket.html>.
 
 ![](img/ui-settings-searchpage.png)
 
--   **Facet field to display using tabs**: This option creates a tab for each configured facet above the search results. This can be used to further narrow down the search results. The list of facet names can be found at <https://github.com/geonetwork/core-geonetwork/blob/master/web/src/main/webapp/WEB-INF/config-summary.xml#L82>. For example, to include the Topic Category filter above the search results, the administrator would add `topicCat` as the facet field to display.
--   **List of facets**: This can be used to restrict the facets available for searching. For example, adding `topicCat` to this list would restrict the search options to `Topic Category` only. This can be useful for restricting the search options in a sub-portal or external web application. To add additional facets to the list, select the blue `+` button.
+-   **Facet field to display using tabs**: This option creates a tab for each configured facet above the search results. This can be used to further narrow down the search results. 
 -   **Filters**: Define additional search criteria added to all searches and again are used primarily for external applications and sub-portals.
-
-![](img/ui-settings-searchpage2.png)
-
 -   **Type of sort options**: Define the different ways by which a user can sort a set of search results. The **default sort by option** is shown below. Note that to search for example on `title` in alphabetical order it is necessary to set the order to `reverse`.
 -   **List of templates for search results**: This section allows the administrator to configure templates for the layout of the search results. The default is `grid` whereas `list` is the default for the editor board.
 
 ![](img/ui-settings-searchpage3.png)
+
+
+-   **Similar records** or **More like this**: Define the query used to search for similar records that are displayed at the bottom of the record view.
+
+![](img/morelikethisconfig.png)
+
 
 -   **Default template used for search results**: Define the template page for the search. Generally this can be left as the default.
 -   **List of formatter for record view**: Determine the formatter used to display the search results. See [Customizing metadata views](../../customizing-application/creating-custom-view.md) for information on creating a new formatter. To add an additional view, click the blue `+` button below the list and provide a name and a URL.
@@ -135,30 +136,30 @@ You can configure each map with different layers and projections.
 
 -   **Map Projection** This is the default projection of the map. Make sure the projection is defined in **Projections to display maps into** below.
 
-![](img/ui-settings-mapprojection.png)
+    ![](img/ui-settings-mapprojection.png)
 
--   **List of map projections to display bounding box coordinates in** This is used in the map when editing a record and defining the bounding box extent. Note that the coordinates will be stored in WGS84 regardless of the projection used to draw them.
+-   **List of map projections to display bounding box coordinates in** This is used in the map when editing a record and defining the bounding box extent. Make sure the listed projections are defined in **Projections to display maps into** below. Note that the coordinates will be stored in WGS84 regardless of the projection used to draw them.
 
-![](img/ui-settings-mapprojectionslist.png)
+    ![](img/ui-settings-mapprojectionslist.png)
 
 -   **Projections to display maps into** This is where the different projections available to the map are defined. All projections will be shown in the `Projection Switcher` tool of the map.
 
-![](img/ui-settings-mapprojection2.png)
+    ![](img/ui-settings-mapprojection2.png)
 
-In order to enable a new projection it must be defined here using the **proj4js** syntax, which can be found at <https://proj4js.io>. Additionally the default bounding box extent, maximum bounding box extent, and allowed resolutions (if required) can be defined.
+    In order to enable a new projection it must be defined here using the **proj4** syntax, which can be found for many EPSG-listed projections at, for example, <https://epsg.io>. Additionall, the default bounding box extent, maximum bounding box extent and allowed resolutions (if required) can be defined.
 
-Ensure that the coordinates inserted are in the correct units for and are local to the projection. A list of resolutions is only relevant if the main map layer has a XYZ source, which does not follow the common tiling pattern.
+    Ensure that the coordinates inserted are in the correct units for the projection and are local to the projection. A list of resolutions is only relevant if the main map layer has a XYZ source that does not follow the common tiling pattern.
 
-Check that this configuration is valid by opening the map.
+    Check that this configuration is valid by opening the map.
 
-![](img/ui-settings-mapprojection3.png)
+    ![](img/ui-settings-mapprojection3.png)
 
-!!! info "Important"
+    !!! info "Important"
 
     If the configuration of a projection is incomplete or invalid, the map may fail to load.
 
 
-If a projection is defined which is not supported by the source of the map layer, the map application will reproject map images at the client side. This may cause unexpected behaviour, such as rotated or distorted labels.
+    If a projection is defined which is not supported by the source of the map layer, the map application will reproject map images at the client side. This may cause unexpected behaviour, such as rotated or distorted labels.
 
 -   **Optional Map Viewer Tools** The checkboxes in this section define the tools available to the user in the right toolbar of the main map. Elements that are not checked are not visible.
 -   **OGC Service to use as a graticule**: This is optional and allows the use of an external service to display the graticule on the map.
@@ -177,7 +178,6 @@ This section is for configuring the map shown when viewing a record.
     -   **wmts**: generic WMTS layer, required properties: `name, url`.
     -   **tms**: generic TMS layer, required property: `url`.
     -   **osm**: OpenStreetMap default layer, no other property required.
-    -   **stamen**: Stamen layers, required property: `name`.
     -   **bing_aerial**: Bing Aerial background, required property: `key` containing the license key.
 
 ![](img/ui-settings-mapviewerlayers.png)
@@ -189,11 +189,6 @@ All layers can also have some optional extra properties:
 
 Examples of layers:
 
-This layer will use OpenStreetMap Stamen style, but only when the map is in `EPSG:3857`:
-
-``` json
-{"type":"stamen","projectionList":["EPSG:3857"]}
-```
 
 This WMS layer will be shown but only when the map is on `EPSG:4326`:
 
@@ -221,7 +216,7 @@ This section defines the configuration for the map shown when editing a record. 
 ## Record View
 
 -   **Record view**:
--   **Show Social bar**: If enabled the social bar (links to facebook, twitter etc) are enabled in record view.
+-   **Show Social bar**: If enabled, the social media bar is enabled in record view.
 
 ## Editor Application
 
@@ -256,7 +251,7 @@ This section defines the configuration for the map shown when editing a record. 
 
 ## JSON Configuration
 
-This section shows the JSON configuration for the currently applied User Interface settings. From here, the json can be saved to a file (by copying and pasting).
+This section shows the JSON configuration for the currently applied User Interface settings. From here, the JSON can be saved to a file (by copying and pasting).
 
 -   **Test client configuration**: Click this button to test the configuration in a new browser tab.
 -   **Reset configuration**: Click this button to reset the configuration back to the default. Note that this will revert any changes you have made in the above page.

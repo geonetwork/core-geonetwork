@@ -6,7 +6,7 @@
       <span class="caret"></span>
     </button>
 
-    <ul class="dropdown-menu">
+    <ul class="dropdown-menu dropdown-menu-right">
       <li class="dropdown-header" data-translate="">selectStyle</li>
       <li data-ng-repeat="s in styles | orderBy:'Title'">
         <div class="flex-row">
@@ -28,7 +28,7 @@
               data-gn-img-modal="{url: s.LegendURL[0].OnlineResource, title: (s.Title || s.Name), id: s.Name}"
               title="{{'previewLegend' | translate}}"
             >
-              <i class="fa fa-image" />
+              <i class="fa fa-image"></i>
             </a>
           </div>
         </div>
