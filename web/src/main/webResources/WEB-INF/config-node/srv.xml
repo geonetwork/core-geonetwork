@@ -36,6 +36,8 @@
        Use Java argument -Dgeonetwork.db.type=postgres to customize
         the database type or change the resource URL to ../config-db/postgres.xml.
 
+       If running in docker, use the environment variable GEONETWORK_DB_TYPE.
+
        Supported types:
        * db2
        * h2 (default)
