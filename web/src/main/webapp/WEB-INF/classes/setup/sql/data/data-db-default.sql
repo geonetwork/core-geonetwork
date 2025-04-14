@@ -1,22 +1,5 @@
 
 -- ======================================================================
--- === Table: Categories
--- ======================================================================
-
-INSERT INTO Categories (id, name) VALUES (1,'maps');
-INSERT INTO Categories (id, name) VALUES (2,'datasets');
-INSERT INTO Categories (id, name) VALUES (3,'interactiveResources');
-INSERT INTO Categories (id, name) VALUES (4,'applications');
-INSERT INTO Categories (id, name) VALUES (5,'caseStudies');
-INSERT INTO Categories (id, name) VALUES (6,'proceedings');
-INSERT INTO Categories (id, name) VALUES (7,'photo');
-INSERT INTO Categories (id, name) VALUES (8,'audioVideo');
-INSERT INTO Categories (id, name) VALUES (9,'directories');
-INSERT INTO Categories (id, name) VALUES (10,'otherResources');
-INSERT INTO Categories (id, name) VALUES (12,'registers');
-INSERT INTO Categories (id, name) VALUES (13,'physicalSamples');
-
--- ======================================================================
 -- === Table: Groups
 -- ======================================================================
 
