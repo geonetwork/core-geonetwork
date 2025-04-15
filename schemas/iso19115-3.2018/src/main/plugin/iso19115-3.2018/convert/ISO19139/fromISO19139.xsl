@@ -103,10 +103,6 @@
         root element (MD_Metadata or MI_Metadata)
         -->
         <xsl:for-each select="//(gmd:MD_Metadata|gmi:MI_Metadata|gfcold:FC_FeatureCatalogue)">
-            <xsl:variable name="nameSpacePrefix">
-                <xsl:call-template name="getNamespacePrefix"/>
-            </xsl:variable>
-
             <xsl:variable name="isFeatureCatalogue"
                           select="local-name() = 'FC_FeatureCatalogue'"
                           as="xs:boolean"/>
