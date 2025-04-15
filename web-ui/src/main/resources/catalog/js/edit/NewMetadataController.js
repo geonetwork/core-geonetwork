@@ -43,6 +43,7 @@
     "gnMetadataManager",
     "gnConfigService",
     "gnConfig",
+    "gnESFacet",
     "Metadata",
     function (
       $scope,
@@ -56,6 +57,7 @@
       gnMetadataManager,
       gnConfigService,
       gnConfig,
+      gnESFacet,
       Metadata
     ) {
       $scope.isTemplate = false;
@@ -134,6 +136,7 @@
                   must: query
                 }
               },
+              _source: gnESFacet.configs.editor.source,
               from: 0,
               size: 1000
             })
