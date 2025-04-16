@@ -81,12 +81,13 @@
                         kibana = Pattern.compile("kibana:(\\d.\\d\\d.\\d)");
                         patterns = new Pattern[]{ docker, kibana};
 
-                        reader = new BufferedReader(new FileReader("${project.basedir}"+"/"+filename));
+                        String baseDir = new File(java.net.URI.create("${project.baseUri}")).getAbsolutePath().toString();
+                        reader = new BufferedReader(new FileReader(baseDir+"/"+filename));
 
                         number = 0;
                         while ((line = reader.readLine()) != null) {
                           number++;
-                          for (pattern : patterns ){
+                          for (pattern : patterns) {
                             matcher = pattern.matcher(line);
                             if (matcher.find()) {
                               if (!esVersion.equals(matcher.group(1))) {
