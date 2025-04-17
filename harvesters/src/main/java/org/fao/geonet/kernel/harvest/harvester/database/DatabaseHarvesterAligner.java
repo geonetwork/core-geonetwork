@@ -64,21 +64,17 @@ class DatabaseHarvesterAligner extends BaseAligner<DatabaseHarvesterParams> impl
     private CategoryMapper localCateg;
     private GroupMapper localGroups;
     private UUIDMapper localUuids;
-    private List<HarvestError> errors = new LinkedList<>();
+    private List<HarvestError> errors;
     private List<Integer> idsForHarvestingResult;
     private String processName;
     private Map<String, Object> processParams = new HashMap<>();
 
-    @Override
-    public List<HarvestError> getErrors() {
-        return errors;
-    }
-
-    public DatabaseHarvesterAligner(AtomicBoolean cancelMonitor, Logger log, ServiceContext context, DatabaseHarvesterParams params) {
+    public DatabaseHarvesterAligner(AtomicBoolean cancelMonitor, Logger log, ServiceContext context, DatabaseHarvesterParams params, List<HarvestError> errors) {
         super(cancelMonitor);
         this.log = log;
         this.context = context;
         this.params = params;
+        this.errors = errors;
 
         result = new HarvestResult();
         result.addedMetadata = 0;
