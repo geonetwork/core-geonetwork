@@ -38,6 +38,8 @@ import java.util.Properties;
 import java.util.Vector;
 
 public class SftpClient {
+    private static final String UTF8_BOM = "\uFEFF";
+
     private final String      host;
     private final int         port;
     private final String      username;
@@ -154,13 +156,7 @@ public class SftpClient {
         try(ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream()) {
             channel.get(remotePath, byteArrayOutputStream);
 
-            return byteArrayOutputStream.toString(StandardCharsets.UTF_8);
-        }
-    }
-
-    private void checkChannel() {
-        if (channel == null) {
-            throw new IllegalArgumentException("Connection is not available");
+            return removeUTF8BOM(byteArrayOutputStream.toString(StandardCharsets.UTF_8.toString()));
         }
     }
 
@@ -174,5 +170,18 @@ public class SftpClient {
         if (session != null && session.isConnected()) {
             session.disconnect();
         }
+    }
+
+    private void checkChannel() {
+        if (channel == null) {
+            throw new IllegalArgumentException("Connection is not available");
+        }
+    }
+
+    private String removeUTF8BOM(String s) {
+        if (s.startsWith(UTF8_BOM)) {
+            s = s.substring(1);
+        }
+        return s;
     }
 }

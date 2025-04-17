@@ -30,6 +30,8 @@ import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.domain.Pair;
+import org.fao.geonet.exceptions.NoSchemaMatchesException;
+import org.fao.geonet.exceptions.SchemaMatchConflictException;
 import org.fao.geonet.kernel.UpdateDatestamp;
 import org.fao.geonet.kernel.datamanager.IMetadataIndexer;
 import org.fao.geonet.kernel.datamanager.IMetadataManager;
@@ -50,9 +52,11 @@ import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.specification.MetadataSpecs;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
+import org.jdom.JDOMException;
 import org.springframework.data.jpa.domain.Specification;
 
 import javax.transaction.Transactional;
+import java.io.IOException;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -119,20 +123,33 @@ public class Aligner extends BaseAligner<SftpParams> {
             List<SftpFileInfo> remoteFiles = sftpClient.listFiles(remoteFolder, "xml", this.params.recurse);
 
             for(SftpFileInfo remoteFile : remoteFiles) {
-                String fileContent = sftpClient.getFileAsText( normalizeFolderPath(remoteFile.getFolder()) + remoteFile.getFileName());
-                Element md = Xml.loadString(fileContent, false);
-                String schema = metadataSchemaUtils.autodetectSchema(md, null);
-                String uuid = metadataUtils.extractUUID(schema, md);
-                String modified = metadataUtils.extractDateModified(schema, md);
-
-                if (schema == null) {
-                    log.debug("  - Metadata skipped due to unknown schema. uuid:" + uuid);
-                    result.unknownSchema++;
-                    return result;
+                if (cancelMonitor.get()) {
+                    return this.result;
                 }
 
-                RecordInfo ri = new RecordInfo(uuid, modified);
-                insertOrUpdate(ri, md, errors);
+                String remotefilePath = normalizeFolderPath(remoteFile.getFolder()) + remoteFile.getFileName();
+                String fileContent = sftpClient.getFileAsText( remotefilePath);
+
+                try {
+                    Element md = Xml.loadString(fileContent, false);
+
+                    if (!params.xslfilter.isEmpty() && !params.xslfilter.startsWith("schema:")) {
+                        md = HarvesterUtil.processMetadata(null, md, processName, processParams);
+                    }
+
+                    String schema = metadataSchemaUtils.autodetectSchema(md, null);
+                    String uuid = metadataUtils.extractUUID(schema, md);
+                    String modified = metadataUtils.extractDateModified(schema, md);
+
+                    RecordInfo ri = new RecordInfo(uuid, modified);
+                    insertOrUpdate(ri, md, errors);
+                } catch (SchemaMatchConflictException | NoSchemaMatchesException e) {
+                    log.info("  - Metadata skipped due to unknown schema. Remote file:" + remotefilePath);
+                    result.unknownSchema++;
+                } catch (IOException | JDOMException e) {
+                    log.debug("  - Metadata skipped due to bad format schema. Remote file:" + remotefilePath);
+                    result.badFormat++;
+                }
             }
         } finally {
             sftpClient.close();
@@ -183,7 +200,7 @@ public class Aligner extends BaseAligner<SftpParams> {
                         addMetadata(ri, md, UUID.randomUUID().toString());
                         break;
                     case SKIP:
-                        log.debug("Skipping record with uuid " + ri.uuid);
+                        log.info("Skipping record with uuid " + ri.uuid + " because it already exists in the catalogue from other source");
                         result.uuidSkipped++;
                         break;
                     default:
@@ -227,7 +244,7 @@ public class Aligner extends BaseAligner<SftpParams> {
 
         String schema = metadataSchemaUtils.autodetectSchema(md, null);
         if (schema == null) {
-            log.debug("  - Metadata skipped due to unknown schema. uuid:" + ri.uuid);
+            log.info("  - Metadata skipped due to unknown schema. uuid:" + ri.uuid);
             result.unknownSchema++;
             return;
         }
@@ -237,7 +254,7 @@ public class Aligner extends BaseAligner<SftpParams> {
         // If the xslfilter process changes the metadata uuid,
         // use that uuid (newMdUuid) for the new metadata to add to the catalogue.
         String newMdUuid = null;
-        if (!params.xslfilter.isEmpty()) {
+        if (!params.xslfilter.isEmpty() && params.xslfilter.startsWith("schema:")) {
             md = HarvesterUtil.processMetadata(metadataSchemaUtils.getSchema(schema), md, processName, processParams);
             schema = metadataSchemaUtils.autodetectSchema(md);
             // Get new uuid if modified by XSLT process
@@ -328,7 +345,7 @@ public class Aligner extends BaseAligner<SftpParams> {
 
         boolean updateSchema = false;
 
-        if (!params.xslfilter.isEmpty()) {
+        if (!params.xslfilter.isEmpty() && params.xslfilter.startsWith("schema:")) {
             md = HarvesterUtil.processMetadata(metadataSchemaUtils.getSchema(schema), md, processName, processParams);
             String newSchema = metadataSchemaUtils.autodetectSchema(md);
             updateSchema = !newSchema.equals(schema);
