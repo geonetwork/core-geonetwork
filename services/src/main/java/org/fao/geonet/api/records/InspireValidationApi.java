@@ -27,6 +27,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.nio.file.Path;
 import jeeves.server.context.ServiceContext;
 import jeeves.services.ReadWriteController;
 import org.apache.commons.lang.StringUtils;
@@ -62,6 +63,7 @@ import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.output.XMLOutputter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -102,7 +104,8 @@ public class InspireValidationApi {
         + "ISO19115-3 are converted to ISO19139."
         + "If mode = csw, a GetRecordById request is used."
         + "If mode = any portal id, then a GetRecordById request is used on this portal "
-        + "CSW entry point which may define custom CSW post processing. "
+        + "CSW can only be used on public records as the remote validator request the CSW endpoint."
+        + "CSW entry point can define additional CSW post processing (if encoding need adjustments to cope with INSPIRE requirements). "
         + "See https://github.com/geonetwork/core-geonetwork/pull/4493.";
     @Autowired
     SettingManager settingManager;
@@ -123,6 +126,9 @@ public class InspireValidationApi {
 
     @Autowired
     private ThreadPool threadPool;
+
+    @Value("#{validatorAdditionalConfig['processing']}")
+    public String processing;
 
     @io.swagger.v3.oas.annotations.Operation(
         summary = "Get test suites available.",
@@ -152,7 +158,7 @@ public class InspireValidationApi {
         summary = "Submit a record to the INSPIRE service for validation.",
         description = "User MUST be able to edit the record to validate it. "
             + "An INSPIRE endpoint must be configured in Settings. "
-            + "This activates an asyncronous process, this method does not return any report. "
+            + "This activates an asynchronous process, this method does not return any report. "
             + "This method returns an id to be used to get the report.")
     @PutMapping(value = "/{metadataUuid}/validate/inspire",
         produces = {
@@ -248,6 +254,11 @@ public class InspireValidationApi {
                 editLib.contractElements(md);
             }
 
+
+            if (StringUtils.isNotEmpty(processing)) {
+                Path xslProcessing = schemaManager.getSchemaDir(schema).resolve(processing);
+                md = Xml.transform(md, xslProcessing);
+            }
 
             md.detach();
             Attribute schemaLocAtt = schemaManager.getSchemaLocation(
