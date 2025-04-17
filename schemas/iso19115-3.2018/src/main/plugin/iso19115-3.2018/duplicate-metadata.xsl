@@ -26,6 +26,7 @@
                   xmlns:cit="http://standards.iso.org/iso/19115/-3/cit/2.0"
                   xmlns:mcc="http://standards.iso.org/iso/19115/-3/mcc/1.0"
                   xmlns:mrd="http://standards.iso.org/iso/19115/-3/mrd/1.0"
+                  xmlns:mdb="http://standards.iso.org/iso/19115/-3/mdb/2.0"
                   xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0"
                   xmlns:xlink="http://www.w3.org/1999/xlink"
                   exclude-result-prefixes="#all">
@@ -39,6 +40,7 @@
     <xsl:apply-templates select="*[1]"/>
   </xsl:template>
 
+  <xsl:template match="mdb:MD_Metadata/mdb:dateInfo"/>
 
   <!-- Remove DOI identifiers -->
   <xsl:template match="cit:identifier[
@@ -48,7 +50,6 @@
 
   <!-- Remove DOI links -->
   <xsl:template match="mrd:onLine[*/cit:protocol/gco:CharacterString = $doiProtocol]" />
-
 
   <!-- Do a copy of every nodes and attributes -->
   <xsl:template match="@*|node()">
