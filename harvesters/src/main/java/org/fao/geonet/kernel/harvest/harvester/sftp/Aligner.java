@@ -32,6 +32,7 @@ import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.domain.Pair;
 import org.fao.geonet.exceptions.NoSchemaMatchesException;
 import org.fao.geonet.exceptions.SchemaMatchConflictException;
+import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.UpdateDatestamp;
 import org.fao.geonet.kernel.datamanager.IMetadataIndexer;
 import org.fao.geonet.kernel.datamanager.IMetadataManager;
@@ -133,7 +134,7 @@ public class Aligner extends BaseAligner<SftpParams> {
                 try {
                     Element md = Xml.loadString(fileContent, false);
 
-                    if (!params.xslfilter.isEmpty() && !params.xslfilter.startsWith("schema:")) {
+                    if (!params.xslfilter.isEmpty() && !isSchemaXslProcess(params.xslfilter)) {
                         md = HarvesterUtil.processMetadata(null, md, processName, processParams);
                     }
 
@@ -141,13 +142,29 @@ public class Aligner extends BaseAligner<SftpParams> {
                     String uuid = metadataUtils.extractUUID(schema, md);
                     String modified = metadataUtils.extractDateModified(schema, md);
 
-                    RecordInfo ri = new RecordInfo(uuid, modified);
-                    insertOrUpdate(ri, md, errors);
+                    boolean valid = true;
+                    try {
+                        Integer groupIdVal = null;
+                        if (StringUtils.isNotEmpty(params.getOwnerIdGroup())) {
+                            groupIdVal = getGroupOwner();
+                        }
+
+                        params.getValidate().validate(context.getBean(DataManager.class), context, md, groupIdVal);
+                    } catch (Exception e) {
+                        log.info("Ignoring invalid metadata with uuid " + uuid);
+                        result.doesNotValidate++;
+                        valid = false;
+                    }
+
+                    if (valid) {
+                        RecordInfo ri = new RecordInfo(uuid, modified);
+                        insertOrUpdate(ri, md, errors);
+                    }
                 } catch (SchemaMatchConflictException | NoSchemaMatchesException e) {
                     log.info("  - Metadata skipped due to unknown schema. Remote file:" + remotefilePath);
                     result.unknownSchema++;
                 } catch (IOException | JDOMException e) {
-                    log.debug("  - Metadata skipped due to bad format schema. Remote file:" + remotefilePath);
+                    log.info("  - Metadata skipped due to bad format schema. Remote file:" + remotefilePath);
                     result.badFormat++;
                 }
             }
@@ -254,7 +271,7 @@ public class Aligner extends BaseAligner<SftpParams> {
         // If the xslfilter process changes the metadata uuid,
         // use that uuid (newMdUuid) for the new metadata to add to the catalogue.
         String newMdUuid = null;
-        if (!params.xslfilter.isEmpty() && params.xslfilter.startsWith("schema:")) {
+        if (!params.xslfilter.isEmpty() && isSchemaXslProcess(params.xslfilter)) {
             md = HarvesterUtil.processMetadata(metadataSchemaUtils.getSchema(schema), md, processName, processParams);
             schema = metadataSchemaUtils.autodetectSchema(md);
             // Get new uuid if modified by XSLT process
@@ -345,7 +362,7 @@ public class Aligner extends BaseAligner<SftpParams> {
 
         boolean updateSchema = false;
 
-        if (!params.xslfilter.isEmpty() && params.xslfilter.startsWith("schema:")) {
+        if (!params.xslfilter.isEmpty() && isSchemaXslProcess(params.xslfilter)) {
             md = HarvesterUtil.processMetadata(metadataSchemaUtils.getSchema(schema), md, processName, processParams);
             String newSchema = metadataSchemaUtils.autodetectSchema(md);
             updateSchema = !newSchema.equals(schema);
@@ -390,5 +407,8 @@ public class Aligner extends BaseAligner<SftpParams> {
         fixedPath += fixedPath.endsWith("/") ? "" :"/";
 
         return fixedPath;
+    }
+    private boolean isSchemaXslProcess(String processName) {
+        return processName.startsWith("schema:");
     }
 }
