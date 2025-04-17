@@ -26,7 +26,8 @@ var gnHarvesterdatabase = {
             },
             "filter": {
               "field": "",
-              "value": ""
+              "value": "",
+              "operator": "LIKE"
             },
             "content":   {
               "validate": "NOVALIDATION",
@@ -79,6 +80,7 @@ var gnHarvesterdatabase = {
                 + '  <filter>'
                 + '    <field>' + h.filter.field + '</field>'
                 + '    <value>' + h.filter.value + '</value>'
+                + '    <operator>' + h.filter.operator + '</operator>'
                 + '  </filter>'
                 + '  <options>'
                 + '    <oneRunOnly>' + h.options.oneRunOnly + '</oneRunOnly>'

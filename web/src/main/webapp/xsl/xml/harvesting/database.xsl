@@ -55,6 +55,9 @@
       <value>
         <xsl:value-of select="children/filter/children/value/value" />
       </value>
+      <operator>
+        <xsl:value-of select="children/filter/children/operator/value" />
+      </operator>
     </filter>
   </xsl:template>
 

@@ -170,6 +170,22 @@
       data-ng-model="harvesterSelected.filter.value"
     />
     <p class="help-block" data-translate="">database-filterValueHelp</p>
+
+    <label
+      id="gn-harvest-settings-database-basic-filter-operator-label"
+      class="control-label"
+      data-translate=""
+      >database-filterOperator</label
+    >
+    <select
+      id="gn-harvest-settings-database-basic-filter-operator-input"
+      class="form-control"
+      data-ng-model="harvesterSelected.filter.operator"
+    >
+      <option value="LIKE">{{'database-like' | translate}}</option>
+      <option value="NOTLIKE">{{'database-notlike' | translate}}</option>
+    </select>
+    <p class="help-block" data-translate="">database-filterOperatorHelp</p>
   </fieldset>
 
   <fieldset id="gn-harvest-settings-database-advanced-row">

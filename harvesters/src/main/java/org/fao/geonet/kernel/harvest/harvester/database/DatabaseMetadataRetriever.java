@@ -87,12 +87,20 @@ class DatabaseMetadataRetriever {
         String columnName = params.getMetadataField();
         String filterField = params.getFilterField();
         String filterValue = params.getFilterValue();
+        String filterOperator = params.getFilterOperator();
+
+        String sqlOperator = "LIKE";
+        if (!StringUtils.isEmpty(filterOperator)) {
+            if (filterOperator.equalsIgnoreCase("NOTLIKE")) {
+                sqlOperator = "NOT " + sqlOperator;
+            }
+        }
 
         String sqlQuery;
         SqlParameterSource param = new MapSqlParameterSource();
 
         if (StringUtils.hasLength(filterField) && StringUtils.hasLength(filterValue)) {
-            sqlQuery = String.format("SELECT %s FROM %s WHERE %s LIKE :filter", columnName, metadataTable, filterField);
+            sqlQuery = String.format("SELECT %s FROM %s WHERE %s %s :filter", columnName, metadataTable, filterField, sqlOperator);
             param = new MapSqlParameterSource("filter", filterValue);
         } else {
             sqlQuery = String.format("SELECT %s FROM %s", columnName, metadataTable);

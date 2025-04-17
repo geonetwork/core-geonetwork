@@ -71,6 +71,11 @@ class DatabaseHarvesterParams extends AbstractParams {
     private String filterValue;
 
     /**
+     * Operator to filter the results.
+     */
+    private String filterOperator;
+
+    /**
      * The filter is a process (see schema/process folder) which depends on the schema. It could be
      * composed of parameter which will be sent to XSL transformation using the following syntax :
      * <pre>
@@ -145,6 +150,14 @@ class DatabaseHarvesterParams extends AbstractParams {
         this.filterValue = filterValue;
     }
 
+    public String getFilterOperator() {
+        return filterOperator;
+    }
+
+    public void setFilterOperator(String filterOperator) {
+        this.filterOperator = filterOperator;
+    }
+
     public String getXslfilter() {
         return xslfilter;
     }
@@ -184,6 +197,7 @@ class DatabaseHarvesterParams extends AbstractParams {
         Element filter = node.getChild("filter");
         filterField = Util.getParam(filter, "field", "");
         filterValue = Util.getParam(filter, "value", "");
+        filterOperator = Util.getParam(filter, "operator", "");
 
         icon = Util.getParam(site, "icon", "");
     }
@@ -205,6 +219,7 @@ class DatabaseHarvesterParams extends AbstractParams {
         Element filter = node.getChild("filter");
         filterField = Util.getParam(filter, "field", "");
         filterValue = Util.getParam(filter, "value", "");
+        filterOperator = Util.getParam(filter, "operator", "");
 
         icon = Util.getParam(site, "icon", icon);
 
@@ -223,6 +238,7 @@ class DatabaseHarvesterParams extends AbstractParams {
         copy.metadataField = metadataField;
         copy.filterField = filterField;
         copy.filterValue = filterValue;
+        copy.filterOperator = filterOperator;
         copy.xslfilter = xslfilter;
         copy.icon = icon;
 

@@ -61,6 +61,7 @@ public class DatabaseHarvester  extends AbstractHarvester<HarvestResult, Databas
         String filtersID = harvesterSettingsManager.add(path, "filter", "");
         harvesterSettingsManager.add("id:" + filtersID, "field", params.getFilterField());
         harvesterSettingsManager.add("id:" + filtersID, "value", params.getFilterValue());
+        harvesterSettingsManager.add("id:" + filtersID, "operator", params.getFilterOperator());
     }
 
     @Override

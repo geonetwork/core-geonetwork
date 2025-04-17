@@ -30,6 +30,7 @@ Providing the following information:
 -   **Search filter**: allows to define a simple field condition to filter the results.
     -   *Filter field*: Table field name used to filter the results. The name must begin with a letter (a-z) or underscore (_). Subsequent characters in a name can be letters, digits (0-9), or underscores.
     -   *Filter value*: Value to filter the results. It can contain wildcards (%).
+    -   *Filter operator*: Supported values are `LIKE` and `NOT LIKE`.
     
 -   **Configure response processing for database**
     -   *Action on UUID collision*: When a harvester finds the same uuid on a record collected by another method (another harvester, importer, dashboard editor,...), should this record be skipped (default), overriden or generate a new UUID?
