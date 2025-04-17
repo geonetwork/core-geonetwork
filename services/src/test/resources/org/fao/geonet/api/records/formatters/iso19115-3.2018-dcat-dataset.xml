@@ -1098,6 +1098,9 @@
           <mri:keyword>
             <gcx:Anchor xlink:href="http://data.europa.eu/eli/reg/2014/1143/oj">1143/2014</gcx:Anchor>
           </mri:keyword>
+          <mri:keyword>
+            <gcx:Anchor xlink:href="http://data.europa.eu/eli/reg_impl/2023/138/oj">2023/138</gcx:Anchor>
+          </mri:keyword>
           <mri:type>
             <mri:MD_KeywordTypeCode
               codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#MD_KeywordTypeCode"
@@ -1106,7 +1109,7 @@
           <mri:thesaurusName>
             <cit:CI_Citation>
               <cit:title>
-                <gcx:Anchor xlink:href="http://data.europa.eu/r5r/applicableLegislation">High-value dataset applicable
+                <gcx:Anchor xlink:href="http://data.europa.eu/r5r/applicableLegislation">Applicable
                   legislations
                 </gcx:Anchor>
               </cit:title>
@@ -1138,8 +1141,8 @@
                 <mcc:MD_Identifier>
                   <mcc:code>
                     <gcx:Anchor
-                      xlink:href="https://apps.titellus.net/geonetwork/srv/api/registries/vocabularies/external.theme.high-value-dataset-applicable-legislation">
-                      geonetwork.thesaurus.external.theme.high-value-dataset-applicable-legislation
+                      xlink:href="https://apps.titellus.net/geonetwork/srv/api/registries/vocabularies/external.theme.applicable-legislation">
+                      geonetwork.thesaurus.external.theme.applicable-legislation
                     </gcx:Anchor>
                   </mcc:code>
                 </mcc:MD_Identifier>
@@ -1206,6 +1209,9 @@
           </mco:otherConstraints>
           <mco:otherConstraints>
             <gco:CharacterString>https://opensource.org/licenses/CATOSL-1.1</gco:CharacterString>
+          </mco:otherConstraints>
+          <mco:otherConstraints>
+            <gcx:Anchor xlink:href="https://publications.europa.eu/resource/authority/licence/CC_BY_4_0">Ces données sont disponibles sous licence CC-BY 4.0.</gcx:Anchor>
           </mco:otherConstraints>
         </mco:MD_LegalConstraints>
       </mri:resourceConstraints>

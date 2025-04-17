@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (C) 2001-2023 Food and Agriculture Organization of the
+  ~ United Nations (FAO-UN), United Nations World Food Programme (WFP)
+  ~ and United Nations Environment Programme (UNEP)
+  ~
+  ~ This program is free software; you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation; either version 2 of the License, or (at
+  ~ your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful, but
+  ~ WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+  ~ General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program; if not, write to the Free Software
+  ~ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
+  ~
+  ~ Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
+  ~ Rome - Italy. email: geonetwork@osgeo.org
+  -->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <parent>
+    <artifactId>gn-plugins</artifactId>
+    <groupId>org.geonetwork-opensource.plugins</groupId>
+    <version>4.4.8-SNAPSHOT</version>
+  </parent>
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>org.geonetwork-opensource.plugins</groupId>
+  <artifactId>gn-datahub-integration</artifactId>
+  <name>GeoNetwork Datahub integration</name>
+  <packaging>jar</packaging>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.geonetwork-opensource</groupId>
+      <artifactId>gn-core</artifactId>
+      <version>${project.version}</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-context</artifactId>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-context-support</artifactId>
+      <scope>provided</scope>
+    </dependency>
+  </dependencies>
+
+  <properties>
+    <rootProjectDir>../..</rootProjectDir>
+  </properties>
+
+  <build>
+    <resources>
+      <resource>
+        <directory>src/main/resources</directory>
+      </resource>
+      <resource>
+        <directory>target/resources</directory>
+      </resource>
+    </resources>
+    <plugins>
+      <!--   Install node & npm -> npm install -> npm run build  -->
+      <plugin>
+        <artifactId>maven-clean-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>reset</id>
+            <goals><goal>clean</goal></goals>
+            <configuration>
+              <filesets>
+                <!-- reset working files covered by .gitignore -->
+                <fileset>
+                  <directory>.</directory>
+                  <includes>
+                    <include>node/**</include>
+                  </includes>
+                </fileset>
+              </filesets>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>com.github.eirslett</groupId>
+        <artifactId>frontend-maven-plugin</artifactId>
+        <version>1.15.0</version>
+        <executions>
+          <execution>
+            <!--   Installing node and npm   -->
+            <id>install-node-and-npm</id>
+            <phase>initialize</phase>
+            <goals>
+              <goal>install-node-and-npm</goal>
+            </goals>
+            <configuration>
+              <nodeVersion>v20.12.2</nodeVersion>
+              <npmVersion>10.7.0</npmVersion>
+            </configuration>
+          </execution>
+          <!--   Install geonetwork-ui dependencies   -->
+          <execution>
+            <id>npm-install</id>
+            <phase>initialize</phase>
+            <goals>
+              <goal>npm</goal>
+            </goals>
+            <configuration>
+              <arguments>ci --loglevel error</arguments>
+              <workingDirectory>geonetwork-ui</workingDirectory>
+              <installDirectory>${basedir}</installDirectory>
+            </configuration>
+          </execution>
+          <!--   Build datahub app   -->
+          <execution>
+            <id>npm-build</id>
+            <phase>compile</phase>
+            <goals>
+              <goal>npm</goal>
+            </goals>
+            <configuration>
+              <environmentVariables>
+                <NX_DAEMON>false</NX_DAEMON>
+              </environmentVariables>
+              <arguments>
+                run nx -- build datahub --base-href=./
+              </arguments>
+              <workingDirectory>geonetwork-ui</workingDirectory>
+              <installDirectory>${basedir}</installDirectory>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <!--   Copy of datahub files   -->
+      <plugin>
+        <artifactId>maven-resources-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>copy-resources</id>
+            <phase>prepare-package</phase>
+            <goals>
+              <goal>copy-resources</goal>
+            </goals>
+            <configuration>
+              <overwrite>true</overwrite>
+              <encoding>UTF-8</encoding>
+              <outputDirectory>target/resources/datahub</outputDirectory>
+              <resources>
+                <resource>
+                  <directory>geonetwork-ui/dist/apps/datahub</directory>
+                  <filtering>false</filtering>
+                </resource>
+              </resources>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <!-- generate html contents-->
+      <plugin>
+        <groupId>com.ruleoftech</groupId>
+        <artifactId>markdown-page-generator-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>readme</id>
+            <phase>prepare-package</phase>
+            <goals>
+              <goal>generate</goal>
+            </goals>
+            <configuration>
+              <inputDirectory>${project.basedir}/src/main/assembly</inputDirectory>
+              <outputDirectory>${project.build.directory}/html</outputDirectory>
+            </configuration>
+          </execution>
+          <execution>
+            <id>licenses</id>
+            <phase>prepare-package</phase>
+            <goals>
+              <goal>generate</goal>
+            </goals>
+            <configuration>
+              <inputDirectory>${project.basedir}/../../</inputDirectory>
+              <outputDirectory>${project.build.directory}/html/license</outputDirectory>
+            </configuration>
+          </execution>
+        </executions>
+        <configuration>
+          <recursiveInput>false</recursiveInput>
+          <transformRelativeMarkdownLinks>true</transformRelativeMarkdownLinks>
+          <headerHtmlFile>${project.basedir}/../../release/src/markdown/html/header.html</headerHtmlFile>
+          <footerHtmlFile>${project.basedir}/../../release/src/markdown/html/footer.html</footerHtmlFile>
+          <pegdownExtensions>TABLES,FENCED_CODE_BLOCKS</pegdownExtensions>
+          <defaultTitle>true</defaultTitle>
+        </configuration>
+      </plugin>
+      <!-- assemble into zip for release -->
+      <plugin>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>release-zip</id>
+            <phase>package</phase>
+            <goals>
+              <goal>single</goal>
+            </goals>
+            <configuration>
+              <appendAssemblyId>false</appendAssemblyId>
+              <descriptors>
+                <descriptor>src/main/assembly/assembly.xml</descriptor>
+              </descriptors>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+         <artifactId>maven-install-plugin</artifactId>
+         <configuration>
+           <skip>true</skip> <!-- download artifact no need to install -->
+         </configuration>
+      </plugin>
+      <plugin>
+         <artifactId>maven-deploy-plugin</artifactId>
+         <configuration>
+           <skip>true</skip> <!-- download artifact no need to deploy -->
+         </configuration>
+      </plugin>
+    </plugins>
+  </build>
+</project>

@@ -19,9 +19,10 @@
                 xmlns:mex="http://standards.iso.org/iso/19115/-3/mex/1.0"
                 xmlns:msr="http://standards.iso.org/iso/19115/-3/msr/2.0"
                 xmlns:mmi="http://standards.iso.org/iso/19115/-3/mmi/1.0"
+                xmlns:mpc="http://standards.iso.org/iso/19115/-3/mpc/1.0"
                 xmlns:mrd="http://standards.iso.org/iso/19115/-3/mrd/1.0"
                 xmlns:mdq="http://standards.iso.org/iso/19157/-2/mdq/1.0"
-                xmlns:srv="http://standards.iso.org/iso/19115/-3/srv/2.1"
+                xmlns:srv="http://standards.iso.org/iso/19115/-3/srv/2.0"
                 xmlns:gex="http://standards.iso.org/iso/19115/-3/gex/1.0"
                 xmlns:gml="http://www.opengis.net/gml/3.2"
                 xmlns:gmd="http://www.isotc211.org/2005/gmd"
@@ -85,7 +86,6 @@
                          select="$metadata"/>
   </xsl:variable>
 
-
   <xsl:variable name="resourcePrefix"
                 select="concat(util:getSettingValue('nodeUrl'), 'api/records/')"
                 as="xs:string"/>
@@ -99,15 +99,42 @@
                   select="$metadata/mdb:metadataLinkage/*/cit:linkage/(gco:CharacterString|gcx:Anchor)/text()"
                   as="xs:string?"/>
 
+    <xsl:variable name="metadataIdentifier"
+                  as="node()?">
+      <xsl:apply-templates mode="iso19115-3-to-dcat"
+                           select="$metadata/mdb:metadataIdentifier"/>
+    </xsl:variable>
+    <!-- TODO: Should we consider DOI? It may be encoded in metadata linkage (not available in ISO19139) -->
+
     <xsl:value-of select="if($metadataLinkage) then $metadataLinkage
-                          else concat($resourcePrefix, encode-for-uri($metadata/mdb:metadataIdentifier/*/mcc:code/*/text()))"
+                                      else if($metadataIdentifier) then $metadataIdentifier
+                                      else concat($resourcePrefix, encode-for-uri($metadata/mdb:metadataIdentifier/*/mcc:code/*/text()))"
                  />
   </xsl:function>
+
+  <xsl:function name="gn-fn-dcat:getResourceUri" as="xs:string">
+    <xsl:param name="metadata" as="node()"/>
+
+    <xsl:variable name="catalogRecordUri"
+                        select="gn-fn-dcat:getRecordUri($metadata)"
+                        as="xs:string"/>
+
+    <xsl:variable name="resourceIdentifier"
+                  as="node()?">
+      <xsl:apply-templates mode="iso19115-3-to-dcat"
+                           select="($metadata/mdb:identificationInfo/*/mri:citation/*/cit:identifier)[1]"/>
+    </xsl:variable>
+
+    <xsl:value-of select="if($resourceIdentifier) then $resourceIdentifier
+                                      else concat($catalogRecordUri, '#resource')"
+    />
+  </xsl:function>
+
 
   <!-- Create resource -->
   <xsl:template mode="iso19115-3-to-dcat"
                 match="mdb:MD_Metadata">
-    <rdf:Description rdf:about="{gn-fn-dcat:getRecordUri(.)}">
+    <rdf:Description rdf:about="{gn-fn-dcat:getResourceUri(.)}">
       <xsl:apply-templates mode="iso19115-3-to-dcat"
                            select="mdb:metadataScope/*/mdb:resourceScope/*/@codeListValue"/>
 
@@ -129,6 +156,11 @@
                                   |mdb:identificationInfo/*/mri:extent/*/gex:geographicElement/gex:EX_GeographicDescription
                                   |mdb:identificationInfo/*/mri:extent/*/gex:temporalElement/*/gex:extent
                                   |mdb:distributionInfo//mrd:onLine
+                                  |.//mpc:portrayalCatalogueCitation/*/cit:onlineResource
+                                  |.//mrl:additionalDocumentation//cit:onlineResource
+                                  |.//mdq:reportReference//cit:onlineResource
+                                  |.//mdq:specification//cit:onlineResource
+                                  |.//mrc:featureCatalogueCitation//cit:onlineResource
                                   |mdb:identificationInfo/*/mri:graphicOverview
                            "/>
 
@@ -150,6 +182,7 @@
                       |mdb:resourceLineage/*/mrl:statement
                       |mrd:onLine/*/cit:name
                       |mrd:onLine/*/cit:description
+                      |cit:onlineResource/*/cit:description
                       |mri:graphicOverview/*/mcc:fileDescription
                       ">
     <xsl:variable name="xpath"

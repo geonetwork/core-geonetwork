@@ -25,6 +25,7 @@ package org.fao.geonet.repository;
 
 
 import org.fao.geonet.domain.Group;
+import org.fao.geonet.domain.Profile;
 import org.fao.geonet.domain.ReservedGroup;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -129,6 +130,20 @@ public class GroupRepositoryTest extends AbstractSpringDataTest {
 
         assertSameContents(savedGroup, _repo.findByEmail(savedGroup.getEmail()));
         assertNull(_repo.findByEmail("some wrong email"));
+    }
+
+    @Test
+    public void testFindByMinimumProfileForPrivilegesNotNull() throws Exception {
+        Group savedGroup = _repo.save(newGroup().setMinimumProfileForPrivileges(Profile.Reviewer));
+        Group savedGroup2 = _repo.save(newGroup());
+
+        _repo.flush();
+        _entityManager.flush();
+        _entityManager.clear();
+
+        List<Group> groups = _repo.findByMinimumProfileForPrivilegesNotNull();
+        assertEquals(1, groups.size());
+        assertSameContents(savedGroup, groups.get(0));
     }
 
     @Test

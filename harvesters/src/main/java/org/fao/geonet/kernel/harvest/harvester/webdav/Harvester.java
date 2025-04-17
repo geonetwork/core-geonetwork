@@ -83,15 +83,16 @@ class Harvester extends BaseAligner<WebDavParams> implements IHarvester<HarvestR
     private UriMapper localUris;
     private HarvestResult result;
     private SchemaManager schemaMan;
-    private List<HarvestError> errors = new LinkedList<>();
+    private List<HarvestError> errors;
     private String processName;
     private Map<String, Object> processParams = new HashMap<>();
 
-    public Harvester(AtomicBoolean cancelMonitor, Logger log, ServiceContext context, WebDavParams params) {
+    public Harvester(AtomicBoolean cancelMonitor, Logger log, ServiceContext context, WebDavParams params, List<HarvestError> errors) {
         super(cancelMonitor);
         this.log = log;
         this.context = context;
         this.params = params;
+        this.errors = errors;
 
         result = new HarvestResult();
         result.addedMetadata = 0;
@@ -291,7 +292,7 @@ class Harvester extends BaseAligner<WebDavParams> implements IHarvester<HarvestR
         if (StringUtils.isNotEmpty(params.xslfilter)) {
             md = HarvesterUtil.processMetadata(dataMan.getSchema(schema),
                 md, processName, processParams);
-                
+
             schema = dataMan.autodetectSchema(md);
         }
 
@@ -524,10 +525,6 @@ class Harvester extends BaseAligner<WebDavParams> implements IHarvester<HarvestR
 
             dataMan.indexMetadata(recordInfo.id, true);
         }
-    }
-
-    public List<HarvestError> getErrors() {
-        return errors;
     }
 }
 

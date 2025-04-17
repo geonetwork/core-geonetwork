@@ -23,7 +23,9 @@
 package org.fao.geonet.doi.client;
 
 import org.apache.commons.httpclient.HttpStatus;
+import org.apache.commons.lang3.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
+import static org.fao.geonet.doi.client.DoiManager.DOI_DEFAULT_URL;
 import org.fao.geonet.utils.GeonetHttpRequestFactory;
 
 /**
@@ -38,7 +40,7 @@ public class DoiMedraClient extends BaseDoiClient implements IDoiClient {
 
     public DoiMedraClient(String apiUrl, String username, String password, String doiPublicUrl) {
         this.apiUrl = apiUrl;
-        this.doiPublicUrl = doiPublicUrl.endsWith("/") ? doiPublicUrl : doiPublicUrl + "/";
+        this.doiPublicUrl = StringUtils.isEmpty(doiPublicUrl) ? DOI_DEFAULT_URL : doiPublicUrl.endsWith("/") ? doiPublicUrl : doiPublicUrl + "/";
         this.username = username;
         this.password = password;
 

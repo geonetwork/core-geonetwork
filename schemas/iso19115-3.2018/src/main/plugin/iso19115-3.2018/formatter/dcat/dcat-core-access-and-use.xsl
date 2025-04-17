@@ -19,7 +19,7 @@
                 xmlns:msr="http://standards.iso.org/iso/19115/-3/msr/2.0"
                 xmlns:mrd="http://standards.iso.org/iso/19115/-3/mrd/1.0"
                 xmlns:mdq="http://standards.iso.org/iso/19157/-2/mdq/1.0"
-                xmlns:srv="http://standards.iso.org/iso/19115/-3/srv/2.1"
+                xmlns:srv="http://standards.iso.org/iso/19115/-3/srv/2.0"
                 xmlns:gcx="http://standards.iso.org/iso/19115/-3/gcx/1.0"
                 xmlns:gex="http://standards.iso.org/iso/19115/-3/gex/1.0"
                 xmlns:gml="http://www.opengis.net/gml/3.2"
@@ -97,6 +97,8 @@
               <xsl:variable name="euDcatLicense"
                             select="$euLicenses/rdf:RDF/skos:Concept[
                                                   matches(skos:exactMatch/@rdf:resource,
+                                                          concat('https?://', $licenseUriWithoutHttp, '/?'))
+                                                  or matches(@rdf:about,
                                                           concat('https?://', $licenseUriWithoutHttp, '/?'))]"/>
 
               <xsl:if test="$euDcatLicense != ''">

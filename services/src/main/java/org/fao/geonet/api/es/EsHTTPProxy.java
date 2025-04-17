@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018-2024 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2025 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -235,7 +235,7 @@ public class EsHTTPProxy {
                         for (JsonNode field : opFields) {
                             final int groupId = field.asInt();
                             if (operation == ReservedOperation.editing
-                                && canEdit == false
+                                && !canEdit
                                 && editingGroups.contains(groupId)) {
                                 canEdit = true;
                             }
@@ -301,7 +301,7 @@ public class EsHTTPProxy {
     @ResponseStatus(value = HttpStatus.OK)
     @ResponseBody
     public void search(
-        @RequestParam(defaultValue = SelectionManager.SELECTION_METADATA)
+        @RequestParam(defaultValue = SelectionManager.SELECTION_BUCKET)
         String bucket,
         @Parameter(description = "Type of related resource. If none, no associated resource returned.",
             required = false
@@ -387,7 +387,7 @@ public class EsHTTPProxy {
     @PreAuthorize("hasAuthority('Administrator')")
     @ResponseBody
     public void call(
-        @RequestParam(defaultValue = SelectionManager.SELECTION_METADATA)
+        @RequestParam(defaultValue = SelectionManager.SELECTION_BUCKET)
         String bucket,
         @Parameter(description = "'_search' for search service.")
         @PathVariable String endPoint,
@@ -451,7 +451,7 @@ public class EsHTTPProxy {
                         }
                     }
                 }
-                requestBody.append(node.toString()).append(System.lineSeparator());
+                requestBody.append(node).append(System.lineSeparator());
             }
             handleRequest(context, httpSession, request, response, url, endPoint,
                 requestBody.toString(), true, selectionBucket, relatedTypes);
@@ -693,11 +693,20 @@ public class EsHTTPProxy {
                 if (doc.has("_source")) {
                     ObjectNode sourceNode = (ObjectNode) doc.get("_source");
 
-                    String metadataSchema = doc.get("_source").get("documentStandard").asText();
-                    MetadataSchema mds = schemaManager.getSchema(metadataSchema);
+                    if (sourceNode.has(Geonet.IndexFieldNames.SCHEMA)) {
+                        String metadataSchema = sourceNode.get(Geonet.IndexFieldNames.SCHEMA).asText();
+                        try {
+                            MetadataSchema mds = schemaManager.getSchema(metadataSchema);
 
-                    // Apply metadata schema filters to remove non-allowed fields
-                    processMetadataSchemaFilters(context, mds, doc);
+                            // Apply metadata schema filters to remove non-allowed fields
+                            processMetadataSchemaFilters(context, mds, doc);
+                        } catch (IllegalArgumentException e) {
+                            LOGGER.error("Failed to load metadata schema for {}. Error is: {}",
+                                getSourceString(doc, Geonet.IndexFieldNames.UUID),
+                                e.getMessage()
+                            );
+                        }
+                    }
 
                     // Remove fields with privileges info
                     for (ReservedOperation o : ReservedOperation.values()) {
