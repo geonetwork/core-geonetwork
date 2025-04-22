@@ -2312,8 +2312,7 @@
 <p><img alt="image" src="../../../../administrator-guide/configuring-the-catalog/img/inspire-configuration.png" /></p>
 <p>Once enabled, the editor will show the remote validation option in the menu:</p>
 <p><img alt="image" src="../../../../administrator-guide/configuring-the-catalog/img/inspire-validation-menu.png" /></p>
-<p>The standard validate option will use the internal validation system (ie. XSD, Schematron rules for ISO, INSPIRE, ... depending on the configuration). In the internal system the INSPIRE validation is based on INSPIRE Technical guidance version 1.3 and results will be different from ETF reports.</p>
-<p>The remote INSPIRE validation will open the validator in a popup. Choose one of the options depending on the level of validation and type of resource to validate. The list of options can be customized in <a href="https://github.com/geonetwork/core-geonetwork/blob/master/services/src/main/resources/config-spring-geonetwork.xml#L61-L94">this configuration file</a>. The configuration is made by selecting one or more test suite from the ETF options:</p>
+<p>The remote INSPIRE validation will open the validator in a popup. Choose one of the options depending on the level of validation and type of resource to validate. The list of options can be customized in <a href="https://github.com/geonetwork/core-geonetwork/blob/main/web/src/main/webapp/WEB-INF/config-etf-validator.xml">this configuration file</a>. The configuration is made by selecting one or more test suite from the ETF options:</p>
 <p><img alt="image" src="../../../../administrator-guide/configuring-the-catalog/img/inspire-etf-test-configuration.png" /></p>
 <p>During the validation, the record is sent to the ETF service and processed. Once ETF completes the validation, the catalogue will display a link to the validation report.</p>
 <p><img alt="image" src="../../../../administrator-guide/configuring-the-catalog/img/inspire-validation-report.png" /></p>
@@ -2375,6 +2374,25 @@
 </span><span id="__span-1-13"><a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="w">  </span><span class="nt">&lt;entry</span><span class="w"> </span><span class="na">key=</span><span class="s">&quot;iso19115-3.2018::TG version 2.0 - Network services&quot;</span><span class="w"> </span><span class="na">value=</span><span class="s">&quot;.//srv:SV_ServiceIdentification&quot;</span><span class="nt">/&gt;</span>
 </span><span id="__span-1-14"><a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="nt">&lt;/util:map&gt;</span>
 </span></code></pre></div>
+<p>ETF validator provides a service to check if a validation task has finished and can be configured with the following parameters:</p>
+<ul>
+<li>
+<p><code>defaultTestSuite</code>: Default test suite to execute if none is specified.</p>
+</li>
+<li>
+<p><code>maxNumberOfEtfChecks</code>: Max. number of checks to do before throwing an Exception, to avoid waiting forever
+   if any issue with the ETF validator returning the task as pending while any error happened.</p>
+</li>
+<li>
+<p><code>intervalBetweenEtfChecks</code>: Interval to wait until do a new check, in milliseconds.</p>
+</li>
+<li>
+<p><code>processing</code>: Processing to apply to the metadata before the document is sent to the validation.
+  It does not apply to the CSW mode.
+  The XSL file must be in the schema folder corresponding to the metadata record.
+  eg. <code>present/csw/gmd-inspire-postprocessing.xsl</code> in the iso19139 schema folder.</p>
+</li>
+</ul>
 <h2 id="inspire-access-point">INSPIRE access point</h2>
 <p>In many cases only a part of the metadata records in a catalog are related to the INSPIRE Directive. In that case, it may be relevant to filter the set of records falling in the scope of the Directive and promote them through a sub portal. In this way a European portal can easily harvest the records related to INSPIRE.</p>
 <p>First define a filtering mechanism to identify the records in the scope of the directive. Frequently used method are:</p>
