@@ -148,6 +148,8 @@ public class Settings {
     public static final String METADATA_UNPUBLISH_USERPROFILE = "metadata/publication/profileUnpublishMetadata";
     public static final String METADATA_BACKUPARCHIVE_ENABLE = "metadata/backuparchive/enable";
     public static final String METADATA_VCS = "metadata/vcs/enable";
+
+    public static final String SYSTEM_AUDITABLE_ENABLE = "system/auditable/enable";
     public static final String VIRTUAL_SETTINGS_SUFFIX_ISDEFINED = "IsDefined";
     public static final String NODE = "node/id";
     public static final String NODE_DEFAULT = "node/default";
@@ -163,6 +165,7 @@ public class Settings {
     public static final String SYSTEM_TRANSLATION_APIKEY = "system/translation/apiKey";
 
     public static final String MICROSERVICES_ENABLED = "microservices/enabled";
+
 
     public static class GNSetting {
         private String name;

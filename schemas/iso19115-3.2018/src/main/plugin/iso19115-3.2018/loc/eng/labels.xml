@@ -4283,9 +4283,8 @@
   </element>
   <element name="mrl:statement" id="83.0">
     <label>Statement</label>
-    <description>General explanation of the data producer_s knowledge about the
-      lineage of a
-      dataset
+    <description>General explanation of the data producers knowledge about the
+      lineage of a dataset
     </description>
     <condition>conditional</condition>
   </element>

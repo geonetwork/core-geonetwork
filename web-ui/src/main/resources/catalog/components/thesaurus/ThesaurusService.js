@@ -192,7 +192,7 @@
           return result;
         };
 
-        var parseKeywordsResponse = function (data, dataToExclude) {
+        var parseKeywordsResponse = function (data, dataToExclude, orderById) {
           var listOfKeywords = [];
 
           var uiLangs = getUILangs();
@@ -200,6 +200,19 @@
             if (k.value) {
               listOfKeywords.push(new Keyword(k, uiLangs));
             }
+          });
+
+          listOfKeywords.sort(function(k1,k2) {
+            var s1;
+            var s2;
+            if (orderById == "true") {
+              s1 = k1.props.uri;
+              s2 = k2.props.uri;
+            } else {
+              s1 = k1.label.toLowerCase();
+              s2 = k2.label.toLowerCase();
+            }
+            return s1.localeCompare(s2);
           });
 
           if (dataToExclude && dataToExclude.length > 0) {
@@ -303,20 +316,7 @@
                   config.outputLang
                 ),
                 filter: function (data) {
-                  if (config.orderById == "true") {
-                    data.sort(function (a, b) {
-                      var nameA = a.uri.toUpperCase();
-                      var nameB = b.uri.toUpperCase();
-                      if (nameA < nameB) {
-                        return -1;
-                      }
-                      if (nameA > nameB) {
-                        return 1;
-                      }
-                      return 0;
-                    });
-                  }
-                  return parseKeywordsResponse(data, config.dataToExclude);
+                  return parseKeywordsResponse(data, config.dataToExclude, config.orderById);
                 }
               }
             });

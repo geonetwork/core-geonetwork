@@ -658,7 +658,11 @@
           <maintenance type="object">{
             "frequency": "<xsl:value-of select="*:maintenanceAndUpdateFrequency/*/@codeListValue"/>"
             <xsl:for-each select="gmd:dateOfNextUpdate[*/text() != '']">
+              <xsl:variable name="dateOfNextUpdateZulu"
+                            select="date-util:convertToISOZuluDateTime(*/text())"/>
+              <xsl:if test="$dateOfNextUpdateZulu != ''">
               ,"nextUpdateDate": "<xsl:value-of select="*/text()"/>"
+              </xsl:if>
             </xsl:for-each>
             <xsl:for-each select="gmd:userDefinedMaintenanceFrequency[*/text() != '']">
               ,"userDefinedFrequency": "<xsl:value-of select="*/text()"/>"

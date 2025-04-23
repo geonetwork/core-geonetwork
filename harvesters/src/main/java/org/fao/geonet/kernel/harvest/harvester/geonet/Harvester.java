@@ -71,21 +71,22 @@ class Harvester implements IHarvester<HarvestResult> {
     private final AtomicBoolean cancelMonitor;
     private Logger log;
 
-    private GeonetParams params;
-    private ServiceContext context;
+    private final GeonetParams params;
+    private final ServiceContext context;
 
     /**
      * Contains a list of accumulated errors during the executing of this harvest.
      */
-    private List<HarvestError> errors = new LinkedList<HarvestError>();
+    private final List<HarvestError> errors;
 
     //---------------------------------------------------------------------------
 
-    public Harvester(AtomicBoolean cancelMonitor, Logger log, ServiceContext context, GeonetParams params) {
+    public Harvester(AtomicBoolean cancelMonitor, Logger log, ServiceContext context, GeonetParams params, List<HarvestError> errors) {
         this.cancelMonitor = cancelMonitor;
         this.log = log;
         this.context = context;
         this.params = params;
+        this.errors = errors;
     }
 
     public HarvestResult harvest(Logger log) throws Exception {
@@ -426,9 +427,5 @@ class Harvester implements IHarvester<HarvestResult> {
 
             resources.copyUnknownLogo(context, uuid);
         }
-    }
-
-    public List<HarvestError> getErrors() {
-        return errors;
     }
 }

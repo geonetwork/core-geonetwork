@@ -50,6 +50,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -170,6 +172,7 @@ public abstract class AbstractStore implements Store {
         if (fileName.contains("?")) {
             fileName = fileName.substring(0, fileName.indexOf("?"));
         }
+        fileName = URLDecoder.decode(fileName, StandardCharsets.UTF_8);
         return fileName;
     }
 
@@ -240,7 +243,7 @@ public abstract class AbstractStore implements Store {
         }
 
         // Upload the resource while ensuring the input stream does not exceed the maximum allowed size.
-        try (LimitedInputStream is = new LimitedInputStream(connection.getInputStream(), maxUploadSize)) {
+        try (LimitedInputStream is = new LimitedInputStream(connection.getInputStream(), maxUploadSize, contentLength)) {
             return putResource(context, metadataUuid, filename, is, null, visibility, approved);
         }
     }

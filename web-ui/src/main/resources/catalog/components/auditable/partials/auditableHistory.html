@@ -1,0 +1,30 @@
+<div>
+  <p data-ng-if="history.length == 0" data-translate="">noUserHistory</p>
+
+  <ul data-ng-if="history.length > 0">
+    <li data-ng-repeat="u in history">
+      <p>
+        {{ 'userHistoryRevision' | translate:{ revisionUser: u.user, revisionDate: u.date
+        } }}
+      </p>
+
+      <ul>
+        <li><p>{{u.value}}</p></li>
+
+        <li data-ng-repeat="c in u.changes">
+          <p data-ng-if="c.oldValue && c.newValue">
+            {{ 'userHistoryFieldUpdate' | translate:{ fieldName: c.name, oldValue:
+            c.oldValue, newValue: c.newValue } }}
+          </p>
+          <p data-ng-if="!c.oldValue && c.newValue">
+            {{ 'userHistoryFieldSet' | translate:{ fieldName: c.name, newValue: c.newValue
+            } }}
+          </p>
+          <p data-ng-if="c.oldValue && !c.newValue">
+            {{ 'userHistoryFieldUnset' | translate:{ fieldName: c.name } }}
+          </p>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>

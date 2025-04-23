@@ -146,7 +146,8 @@ class Harvester implements IHarvester<HarvestResult> {
     /**
      * Contains a list of accumulated errors during the executing of this harvest.
      */
-    private List<HarvestError> errors = new LinkedList<HarvestError>();
+    private List<HarvestError> errors;
+
     /**
      * Constructor
      *
@@ -154,11 +155,12 @@ class Harvester implements IHarvester<HarvestResult> {
      * @param params  harvesting configuration for the node
      * @return null
      */
-    public Harvester(AtomicBoolean cancelMonitor, Logger log, ServiceContext context, WfsFeaturesParams params) {
+    public Harvester(AtomicBoolean cancelMonitor, Logger log, ServiceContext context, WfsFeaturesParams params, List<HarvestError> errors) {
         this.cancelMonitor = cancelMonitor;
         this.log = log;
         this.context = context;
         this.params = params;
+        this.errors = errors;
 
         result = new HarvestResult();
 
@@ -383,9 +385,5 @@ class Harvester implements IHarvester<HarvestResult> {
         fragmentParams.uuid = params.getUuid();
         fragmentParams.owner = params.getOwnerId();
         return fragmentParams;
-    }
-
-    public List<HarvestError> getErrors() {
-        return errors;
     }
 }

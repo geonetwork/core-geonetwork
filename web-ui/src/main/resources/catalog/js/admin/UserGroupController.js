@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2024 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -27,10 +27,12 @@
   goog.require("gn_dbtranslation");
   goog.require("gn_multiselect");
   goog.require("gn_mdtypewidget");
+  goog.require("gn_auditable");
 
   var module = angular.module("gn_usergroup_controller", [
     "gn_dbtranslation",
     "gn_multiselect",
+    "gn_auditable",
     "gn_mdtypewidget",
     "blueimp.fileupload",
     "ngMessages"
@@ -47,8 +49,11 @@
     "$rootScope",
     "$translate",
     "$timeout",
+    "$log",
     "gnConfig",
     "gnConfigService",
+    "gnAuditableService",
+    "gnUtilityService",
     function (
       $scope,
       $routeParams,
@@ -56,8 +61,11 @@
       $rootScope,
       $translate,
       $timeout,
+      $log,
       gnConfig,
-      gnConfigService
+      gnConfigService,
+      gnAuditableService,
+      gnUtilityService
     ) {
       $scope.searchObj = {
         params: {
@@ -117,6 +125,7 @@
 
       $scope.isLoadingUsers = false;
       $scope.isLoadingGroups = false;
+      $scope.auditableEnabled = false;
 
       gnConfigService.load().then(function (c) {
         // take the bigger of the two values
@@ -135,6 +144,8 @@
             gnConfig["system.security.passwordEnforcement.pattern"]
           );
         }
+
+        $scope.auditableEnabled = gnConfig["system.auditable.enable"];
       });
 
       // This is to force IE11 NOT to cache json requests
@@ -147,7 +158,13 @@
       $http.get("../api/tags").then(function (response) {
         var nullTag = { id: null, name: "", label: {} };
         nullTag.label[$scope.lang] = "";
-        $scope.categories = [nullTag].concat(response.data);
+        var categoriesSorted = gnUtilityService.sortByTranslation(
+          response.data,
+          $scope.lang,
+          "name"
+        );
+
+        $scope.categories = [nullTag].concat(categoriesSorted);
       });
 
       function loadGroups() {
@@ -312,9 +329,21 @@
                 // TODO
               }
             );
+
+            // Load user changes
+            gnAuditableService.getEntityHistory("user", u.id).then(
+              function (response) {
+                $scope.userHistory = response.data;
+              },
+              function (response) {
+                // TODO
+                $log.error("Error retrieving the audit history of user " + u.id);
+              }
+            );
           },
           function (response) {
             // TODO
+            $log.error("Error retrieving the info of user " + u.id);
           }
         );
 

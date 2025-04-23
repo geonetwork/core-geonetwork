@@ -1168,6 +1168,11 @@
         <version>${spring.jpa.version}</version>
       </dependency>
       <dependency>
+        <groupId>org.springframework.data</groupId>
+        <artifactId>spring-data-envers</artifactId>
+        <version>${spring.jpa.version}</version>
+      </dependency>
+      <dependency>
         <groupId>com.fasterxml.jackson.datatype</groupId>
         <artifactId>jackson-datatype-hibernate5</artifactId>
         <version>${jackson.version}</version>
@@ -1306,7 +1311,6 @@
         <artifactId>json</artifactId>
         <version>20240205</version>
       </dependency>
-
     </dependencies>
   </dependencyManagement>
 
@@ -1420,6 +1424,8 @@
     <module>index</module>
     <module>datastorages</module>
     <module>translationproviders</module>
+    <module>auditable</module>
+    <module>plugins/datahub-integration</module>
   </modules>
 
   <profiles>
@@ -1656,7 +1662,7 @@
 
     <!-- NOTE: When updating GeoTools, check which version
     of Postgres is used and update pg.version if needed. -->
-    <geotools.version>32.0</geotools.version>
+    <geotools.version>32.2</geotools.version>
     <jts.version>1.20.0</jts.version>
     <pg.version>42.7.3</pg.version>
 
