@@ -25,13 +25,9 @@ package org.fao.geonet.kernel.harvest.harvester.database;
 
 import org.fao.geonet.Logger;
 import org.fao.geonet.kernel.harvest.harvester.AbstractHarvester;
-import org.fao.geonet.kernel.harvest.harvester.HarvestError;
 import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
 
 import java.sql.SQLException;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
 
 public class DatabaseHarvester  extends AbstractHarvester<HarvestResult, DatabaseHarvesterParams> {
     private static final String TABLE_NAME_PATTERN = "([_a-zA-Z]+[_a-zA-Z0-9]*)";
@@ -71,8 +67,9 @@ public class DatabaseHarvester  extends AbstractHarvester<HarvestResult, Databas
     @Override
     protected void doHarvest(Logger l) throws Exception {
         log.info("Database harvester start");
-        DatabaseHarvesterAligner h = new DatabaseHarvesterAligner(cancelMonitor, log, context, params, errors);
-        result = h.harvest(log);
+        try (DatabaseHarvesterAligner h = new DatabaseHarvesterAligner(cancelMonitor, log, context, params, errors)) {
+            result = h.harvest(log);
+        }
         log.info("Database harvester end");
     }
 }
