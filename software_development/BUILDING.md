@@ -78,7 +78,13 @@ Some build profiles are activated with specific properties, such as `release` to
 mvn install -Drelease
 ```
 
-The `release` flag above asks `datastorage-s3`, `datastorage-jcloud`, `datastorage-cmis` and the `release` module to produce `zip` bundles for distribution.
+The `release` flag above asks the following modukes to produce `zip` bundles for distribution:
+
+* `datastorage-s3`
+* `datastorage-jcloud`
+* `datastorage-cmis`
+* `plugin-datahub-integration`
+* `release`
 
 ## Run Elasticsearch
 

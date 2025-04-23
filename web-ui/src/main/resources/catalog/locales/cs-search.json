@@ -366,7 +366,7 @@
     "shareByEmail": "Sdílet e-mailem",
     "zoomto": "Najet na",
     "recordNotFound": "Záznam s identifikátorem <strong>{{uuid}}</strong> nebyl nalezen nebo s vámi není sdílen.",
-    "trySignIn": "Try <a href=\"{{signInFormAction}}?_csrf={{csrf}}&redirectUrl={{redirectUrlAfterSign}}\">to log in</a> if you have an account.",
+    "trySignIn": "Zkuste <a href=\"{{signInFormAction}}?_csrf={{csrf}}&redirectUrl={{redirectUrlAfterSign}}\">se přihlásit</a> , pokud máte účet.",
     "intersectWith": "Protíná se s",
     "fullyOutsideOf": "Zcela mimo",
     "encloses": "Zahrnující",

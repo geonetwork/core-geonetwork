@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2023 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2025 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -147,9 +147,9 @@ public class EsRestClient implements InitializingBean {
                     credentialsProvider.setCredentials(AuthScope.ANY,
                         new UsernamePasswordCredentials(username, password));
 
-                    builder.setHttpClientConfigCallback(httpClientBuilder -> httpClientBuilder.setSSLContext(sslContext).setDefaultCredentialsProvider(credentialsProvider));
+                    builder.setHttpClientConfigCallback(httpClientBuilder -> httpClientBuilder.useSystemProperties().setSSLContext(sslContext).setDefaultCredentialsProvider(credentialsProvider));
                 } else {
-                    builder.setHttpClientConfigCallback(httpClientBuilder -> httpClientBuilder.setSSLContext(sslContext));
+                    builder.setHttpClientConfigCallback(httpClientBuilder -> httpClientBuilder.useSystemProperties().setSSLContext(sslContext));
                 }
             } else {
                 if (StringUtils.isNotEmpty(username) && StringUtils.isNotEmpty(password)) {
@@ -157,7 +157,9 @@ public class EsRestClient implements InitializingBean {
                     credentialsProvider.setCredentials(AuthScope.ANY,
                         new UsernamePasswordCredentials(username, password));
 
-                    builder.setHttpClientConfigCallback(httpClientBuilder -> httpClientBuilder.setDefaultCredentialsProvider(credentialsProvider));
+                    builder.setHttpClientConfigCallback(httpClientBuilder -> httpClientBuilder.useSystemProperties().setDefaultCredentialsProvider(credentialsProvider));
+                } else {
+                    builder.setHttpClientConfigCallback(httpClientBuilder -> httpClientBuilder.useSystemProperties());
                 }
             }
 

@@ -201,11 +201,11 @@
                       <label>
                         <input
                           type="checkbox"
-                          aria-label="{{'fbSendTo' | translate}} {{c.email}} ({{c.role}})"
+                          aria-label="{{'fbSendTo' | translate}} {{c.email}} ({{c.role | translate}})"
                           data-ng-model="c.selected"
                           data-ng-change="updateList()"
                         />
-                        {{c.email}} ({{c.role}})
+                        {{c.email}} ({{c.role | translate}})
                       </label>
                     </li>
                   </ul>
