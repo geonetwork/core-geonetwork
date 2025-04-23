@@ -603,7 +603,7 @@
                         select="gmd:MD_AggregateInformation/gmd:aggregateDataSetIdentifier/*/gmd:code/*/@uuidref"/>
           <mri:metadataReference>
             <xsl:copy-of select="gmd:MD_AggregateInformation/gmd:aggregateDataSetIdentifier/*/gmd:code/gmx:Anchor/@xlink:href"/>
-            <xsl:copy-of select="if ($uuidref != '') then $uuidref else gmd:MD_AggregateInformation/gmd:aggregateDataSetIdentifier/*/gmd:code/*/text()"/>
+            <xsl:attribute name="uuidref" select="if ($uuidref != '') then $uuidref else gmd:MD_AggregateInformation/gmd:aggregateDataSetIdentifier/*/gmd:code/*/text()"/>
           </mri:metadataReference>
         </xsl:if>
 
