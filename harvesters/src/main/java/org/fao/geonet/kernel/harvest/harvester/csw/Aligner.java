@@ -310,7 +310,7 @@ public class Aligner extends BaseAligner<CswParams> {
         // use that uuid (newMdUuid) for the new metadata to add to the catalogue.
         String newMdUuid = null;
         if (!params.xslfilter.equals("")) {
-            md = processMetadata(context, md, processName, processParams);
+            md = applyXSLTProcessToMetadata(context, md, processName, processParams, log);
             schema = dataMan.autodetectSchema(md);
             // Get new uuid if modified by XSLT process
             newMdUuid = metadataUtils.extractUUID(schema, md);
@@ -463,7 +463,7 @@ public class Aligner extends BaseAligner<CswParams> {
 
         boolean updateSchema = false;
         if (!params.xslfilter.equals("")) {
-            md = processMetadata(context, md, processName, processParams);
+            md = applyXSLTProcessToMetadata(context, md, processName, processParams, log);
             String newSchema = dataMan.autodetectSchema(md);
             updateSchema = !newSchema.equals(schema);
             schema = newSchema;
@@ -471,6 +471,10 @@ public class Aligner extends BaseAligner<CswParams> {
 
         applyBatchEdits(ri.uuid, md, schema, params.getBatchEdits(), context, log);
 
+        // Translate metadata
+        if (params.isTranslateContent()) {
+            md = translateMetadataContent(context, md, schema);
+        }
 
         boolean validate = false;
         boolean ufo = false;
@@ -483,9 +487,11 @@ public class Aligner extends BaseAligner<CswParams> {
                 metadata.getHarvestInfo().setUuid(params.getUuid());
                 metadata.getSourceInfo().setSourceId(params.getUuid());
             }
+
             if (updateSchema) {
                 metadata.getDataInfo().setSchemaId(schema);
             }
+
             metadataManager.save(metadata);
         }
 
@@ -618,36 +624,6 @@ public class Aligner extends BaseAligner<CswParams> {
             }
         }
         return false;
-    }
-
-    /**
-     * Filter the metadata if process parameter is set and corresponding XSL transformation
-     * exists in xsl/conversion/import.
-     *
-     * @param context
-     * @param md
-     * @param processName
-     * @param processParams
-     * @return
-     */
-    private Element processMetadata(ServiceContext context,
-                                    Element md,
-                                    String processName,
-                                    Map<String, Object> processParams) {
-        Path filePath = context.getBean(GeonetworkDataDirectory.class).getXsltConversion(processName);
-        if (!Files.exists(filePath)) {
-            log.debug("     processing instruction  " + processName + ". Metadata not filtered.");
-        } else {
-            Element processedMetadata;
-            try {
-                processedMetadata = Xml.transform(md, filePath, processParams);
-                log.debug("     metadata filtered.");
-                md = processedMetadata;
-            } catch (Exception e) {
-                log.warning("     processing error " + processName + ": " + e.getMessage());
-            }
-        }
-        return md;
     }
 
     /**

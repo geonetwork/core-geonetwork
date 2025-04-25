@@ -1,0 +1,34 @@
+<div class="btn-group pull-left" role="group">
+  <a
+    class="btn btn-default"
+    href
+    data-ng-if="mdView.current.record.draft != 'y'"
+    data-ng-show="(!mdView.current.record.isPublished() || (mdView.current.record.isPublished() && user.canDeletePublishedMetadata()) ) && user.canEditRecord(mdView.current.record)
+                            && (user.isReviewerOrMore() || mdView.current.record.mdStatus != 4 || !isMdWorkflowEnable)"
+    data-gn-click-and-spin="deleteRecord(mdView.current.record)"
+    data-gn-confirm-click="{{'deleteRecordConfirm' | translate: {resourceTitle: (mdView.current.record.resourceTitle | json)} }}"
+    title="{{'delete' | translate}}"
+  >
+    <span class="fa fa-fw fa-times"></span>
+    <span data-translate="" class="hidden-sm hidden-xs">delete</span>
+  </a>
+
+  <a
+    class="btn btn-default"
+    href
+    data-ng-if="mdView.current.record.draft == 'y'"
+    data-ng-show="(!mdView.current.record.isPublished() || (mdView.current.record.isPublished() && user.canDeletePublishedMetadata()) ) && user.canEditRecord(mdView.current.record)
+                            && (user.isReviewerOrMore() || mdView.current.record.mdStatus != 4 || !isMdWorkflowEnable)"
+    data-gn-click-and-spin="cancelWorkingCopy(mdView.current.record)"
+    data-gn-confirm-click="{{'deleteWorkingCopyRecordConfirm' | translate: {resourceTitle: (mdView.current.record.resourceTitle | json)} }}"
+    title="{{'cancelWorkingCopy' | translate}}"
+  >
+    <span class="fa fa-fw fa-times"></span>
+    <span
+      data-translate=""
+      class="hidden-sm hidden-xs"
+      data-ng-if="mdView.current.record.draft == 'y'"
+      >cancelWorkingCopy</span
+    >
+  </a>
+</div>

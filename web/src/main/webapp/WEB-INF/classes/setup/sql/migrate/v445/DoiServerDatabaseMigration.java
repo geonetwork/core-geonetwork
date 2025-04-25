@@ -87,20 +87,19 @@ public class DoiServerDatabaseMigration extends DatabaseMigrationTask {
             if (createDoiServer) {
                 try (PreparedStatement update = connection.prepareStatement(
                     "INSERT INTO doiservers " +
-                        "(id, isdefault, landingpagetemplate, name, url, username, password, pattern, prefix, publicurl) " +
-                        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
+                        "(id, landingpagetemplate, name, url, username, password, pattern, prefix, publicurl) " +
+                        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)")
                 ) {
 
                     update.setInt(1, 1);
-                    update.setString(2, "y");
-                    update.setString(3, doiLandingPageTemplate);
-                    update.setString(4, "Default DOI server");
-                    update.setString(5, doiUrl);
-                    update.setString(6, doiUsername);
-                    update.setString(7, doiPassword);
-                    update.setString(8, doiPattern);
-                    update.setString(9, doiKey);
-                    update.setString(10, doiPublicUrl);
+                    update.setString(2, doiLandingPageTemplate);
+                    update.setString(3, "Default DOI server");
+                    update.setString(4, doiUrl);
+                    update.setString(5, doiUsername);
+                    update.setString(6, doiPassword);
+                    update.setString(7, doiPattern);
+                    update.setString(8, doiKey);
+                    update.setString(9, doiPublicUrl);
 
                     update.execute();
 

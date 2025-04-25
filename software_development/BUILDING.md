@@ -79,6 +79,7 @@ mvn install -Drelease
 ```
 
 The `release` flag above asks the following modukes to produce `zip` bundles for distribution:
+
 * `datastorage-s3`
 * `datastorage-jcloud`
 * `datastorage-cmis`
