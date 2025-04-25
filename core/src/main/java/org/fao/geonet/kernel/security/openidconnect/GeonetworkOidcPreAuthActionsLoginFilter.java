@@ -13,8 +13,16 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URLEncoder;
 
+/**
+ * Filter implementation for handling pre-authentication actions for OpenID Connect (OIDC) login.
+ * This filter checks if the user is authenticated and redirects unauthenticated users to the login page.
+ */
 public class GeonetworkOidcPreAuthActionsLoginFilter  implements Filter {
 
+    /**
+     * Repository for managing client registrations for OpenID Connect.
+     * This is used to retrieve client registration details such as registration ID.
+     */
     @Autowired
     private  ClientRegistrationRepository clientRegistrationRepository;
 
@@ -25,6 +33,11 @@ public class GeonetworkOidcPreAuthActionsLoginFilter  implements Filter {
 
     }
 
+    /**
+     * Filter implementation for handling pre-authentication actions for OpenID Connect login.
+     * This filter checks if the user is authenticated and redirects unauthenticated users to the login page.
+     * It ensures secure access to protected resources by handling login redirection and bypassing public endpoints.
+     */
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
         throws IOException, ServletException {
