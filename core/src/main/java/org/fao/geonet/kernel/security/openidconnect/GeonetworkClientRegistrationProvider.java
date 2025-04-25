@@ -120,7 +120,6 @@ public class GeonetworkClientRegistrationProvider {
     public GeonetworkClientRegistrationProvider(InputStream inputStream,
                                                 OIDCConfiguration oidcConfiguration) throws IOException, ParseException {
         this.oidcConfiguration = oidcConfiguration;
-        this.oidcConfiguration = oidcConfiguration;
         String clientId = oidcConfiguration.clientId;
         String clientSecret = oidcConfiguration.clientSecret;
         clientRegistration = createClientRegistration(inputStream, clientId, clientSecret);
@@ -246,7 +245,7 @@ public class GeonetworkClientRegistrationProvider {
         Map<String, Object> configurationMetadata = new LinkedHashMap<>(oidcMetadata.toJSONObject());
 
         ClientRegistration.Builder builder = ClientRegistration.withRegistrationId(CLIENTREGISTRATION_NAME)
-            .userNameAttributeName(IdTokenClaimNames.SUB)
+            .userNameAttributeName(this.oidcConfiguration.getUserNameAttribute())
             .scope(scopes)
             .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
             .clientAuthenticationMethod(method)
