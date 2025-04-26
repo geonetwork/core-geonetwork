@@ -47,22 +47,14 @@ line=$(grep -n ${schema} schemas/pom.xml | cut -d: -f1)
 
 if [ ! -n "$line" ]
 then
-  line=$(grep -n '</profiles>' schemas/pom.xml | cut -d: -f1)
+  line=$(grep -n '</modules>' schemas/pom.xml | cut -d: -f1)
   insertLine=$(($line - 1))
 
   echo "Adding schema ${schema} to schemas/pom.xml"
 
   sed $sedopt -f /dev/stdin schemas/pom.xml << SED_SCRIPT
   ${insertLine} a\\
-\    <profile>\\
-\      <id>schema-${schema}</id>\\
-\      <activation>\\
-\        <file><exists>${schema}</exists></file>\\
-\      </activation>\\
-\      <modules>\\
-\        <module>${schema}</module>\\
-\      </modules>\\
-\    </profile>
+\    <module>schema-${schema}</module>
 SED_SCRIPT
 fi
 
