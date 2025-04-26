@@ -54,7 +54,7 @@ then
 
   sed $sedopt -f /dev/stdin schemas/pom.xml << SED_SCRIPT
   ${insertLine} a\\
-\    <module>schema-${schema}</module>
+\    <module>${schema}</module>
 SED_SCRIPT
 fi
 
