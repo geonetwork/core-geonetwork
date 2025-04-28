@@ -607,10 +607,17 @@ public class DoiManager {
                                         feedbackLocale,
                                         new LocalizedEmailParameter(LocalizedEmailParameter.ParameterType.RAW_VALUE, 1, sm.getSiteName())
                                     );
-
                                     emailMessageComponent.addParameters(
                                         feedbackLocale,
                                         new LocalizedEmailParameter(LocalizedEmailParameter.ParameterType.RAW_VALUE, 1, doiUrl)
+                                    );
+                                    emailMessageComponent.addParameters(
+                                        feedbackLocale,
+                                        new LocalizedEmailParameter(LocalizedEmailParameter.ParameterType.RAW_VALUE, 2, doiUrl)
+                                    );
+                                    emailMessageComponent.addParameters(
+                                        feedbackLocale,
+                                        new LocalizedEmailParameter(LocalizedEmailParameter.ParameterType.RAW_VALUE, 3, sm.getSiteName())
                                     );
                                 }
 
