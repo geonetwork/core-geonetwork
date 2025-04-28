@@ -583,7 +583,7 @@ public class DoiManager {
                     ms.getStatusValue().getName().equals("doiCreationTask") && (ms.getCloseDate() == null)).findFirst();
 
                 if (msOpt.isPresent()) {
-                    Integer taskOwner = msOpt.get().getOwner();
+                    Integer taskOwner = msOpt.get().getUserId();
                     if (taskOwner != null) {
                         UserRepository userRepository = context.getBean(UserRepository.class);
                         Optional<User> ownerUser = userRepository.findById(taskOwner);
