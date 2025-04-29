@@ -3392,7 +3392,7 @@ schema
 <ol>
 <li>Place your schematron rules in 'rules'. Naming convention is 'schematron-rules-<suffix>.sch' eg. <code>schematron-rules-iso-mcp.sch</code>. Place localized strings for the rule assertions into 'rules/loc/<language_prefix>'.</li>
 </ol>
-<p>Schematron rules are compiled when the schema is loaded.</p>
+<p>Schematron rules are compiled when the schema is loaded on startup. Schema can also be reloaded using the API operation http://localhost:8080/geonetwork/srv/api/standards/reload to update schematron.</p>
 <p>At this stage, our new GeoNetwork plugin schema for MCP contains:</p>
 <div class="language-text highlight"><pre><span></span><code>extract-date-modified.xsl  extract-gml.xsd  extract-uuid.xsl
 index-fields.xsl  loc  present  sample-data  schema-conversions.xml
