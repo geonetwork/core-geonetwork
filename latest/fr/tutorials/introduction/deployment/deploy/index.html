@@ -1785,7 +1785,9 @@
 <p>You need to ensure Tomcat is configured with enough memory for GeoNetwork to launch. This can be be configured via the <code>setenv</code> script in tomcat with the appropriate memory for the JAVA_OPTS property)</p>
 </div>
 <p>Open the file /geonetwork/WEB-INF/config.properties and alter the elasticsearch connection</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>$<span class="w"> </span>es.url<span class="o">=</span>http://localhost:9200
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>es.protocol<span class="o">=</span>http
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>es.host<span class="o">=</span>localhost
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>es.port<span class="o">=</span><span class="m">9200</span>
 </span></code></pre></div>
 <p>Then (re)start Jetty/Tomcat.</p>
 <p>You can make sure GeoNetwork is deployed via the following url: <a href="http://localhost:8080/geonetwork">http://localhost:8080/geonetwork</a></p>
