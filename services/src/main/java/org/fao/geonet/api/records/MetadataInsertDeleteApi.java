@@ -1045,7 +1045,7 @@ public class MetadataInsertDeleteApi {
             if (StringUtils.equals(mdDeleteBackupOption, "ForceNoBackup")) {
                 return false;
             }
-            // Will default to true if setting set to NoPreference, ForceBackup or empty
+            // Will default to true if setting set to UseAPIParameter, ForceBackup or empty
             return true;
         } else if (withBackup == true) {
             if (StringUtils.equals(mdDeleteBackupOption, "ForceNoBackup")) {
