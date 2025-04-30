@@ -13,7 +13,7 @@
       data-ng-if="mdView.current.record.draft == 'e'"
       class="see-draft see-draft-not-approved"
       title=" {{('status-' + mdView.current.record.mdStatus) | translate}}"
-      data-ng-href="#/metadraf/{{md.uuid}}"
+      data-ng-href="#/metadraf/{{mdView.current.record.uuid}}"
       data-ng-show="user.canEditRecord(mdView.current.record)"
     >
       {{'seeDraft' | translate}}
@@ -24,7 +24,7 @@
       data-ng-if="mdView.current.record.draft == 'y'"
       class="see-draft see-draft-approved"
       title=" {{('status-' + mdView.current.record.mdStatus) | translate}}"
-      data-ng-href="#/metadata/{{md.uuid}}"
+      data-ng-href="#/metadata/{{mdView.current.record.uuid}}"
       data-ng-show="user.canEditRecord(mdView.current.record)"
     >
       {{'seeNoDraft' | translate}}
@@ -137,7 +137,7 @@
       ></div>
 
       <div data-ng-show="!gnMdViewObj.usingFormatter" class="gn-metadata-display">
-        <div data-ng-switch on="md.resourceType[0]">
+        <div data-ng-switch on="mdView.current.record.resourceType[0]">
           <div data-ng-switch-when="series">
             <div
               ng-include="'../../catalog/views/default/templates/recordView/type-series.html'"
