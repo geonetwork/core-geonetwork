@@ -92,40 +92,40 @@
 
         <div class="pull-right">
           <ul class="nav navbar-nav gn-menu-xs" role="menu">
-            <li data-ng-repeat-start="menu in recordviewMenu"></li>
-            <!--record view menu static pages-->
-            <li
-              data-ng-if="isPage(menu)"
-              gn-static-page-menu="menu"
-              language="{{lang}}"
-              section="record_view_menu"
-            ></li>
+            <li data-ng-repeat="menu in recordviewMenu">
+              <!--record view menu static pages-->
+              <div
+                data-ng-if="isPage(menu)"
+                gn-static-page-menu="menu"
+                language="{{lang}}"
+                section="record_view_menu"
+              ></div>
 
-            <!-- edit -->
-            <div
-              data-ng-if="menu == 'gn-recordview-edit-menu'"
-              gn-record-view-edit-menu=""
-            ></div>
+              <!-- edit -->
+              <div
+                data-ng-if="menu == 'gn-recordview-edit-menu'"
+                gn-record-view-edit-menu=""
+              ></div>
 
-            <!-- delete -->
-            <div
-              data-ng-if="menu == 'gn-recordview-delete-menu'"
-              gn-record-view-delete-menu=""
-            ></div>
+              <!-- delete -->
+              <div
+                data-ng-if="menu == 'gn-recordview-delete-menu'"
+                gn-record-view-delete-menu=""
+              ></div>
 
-            <!-- manage -->
-            <div
-              data-ng-if="menu == 'gn-recordview-manage-menu' && mdView.current.record"
-              class="gn-md-actions-btn pull-left"
-              data-gn-md-actions-menu="mdView.current.record"
-            ></div>
+              <!-- manage -->
+              <div
+                data-ng-if="menu == 'gn-recordview-manage-menu' && mdView.current.record"
+                class="gn-md-actions-btn pull-left"
+                data-gn-md-actions-menu="mdView.current.record"
+              ></div>
 
-            <!-- display mode -->
-            <div
-              data-ng-if="menu == 'gn-recordview-display-menu'"
-              gn-record-view-display-mode-menu=""
-            ></div>
-            <li data-ng-repeat-end=""></li>
+              <!-- display mode -->
+              <div
+                data-ng-if="menu == 'gn-recordview-display-menu'"
+                gn-record-view-display-mode-menu=""
+              ></div>
+            </li>
           </ul>
         </div>
       </div>
