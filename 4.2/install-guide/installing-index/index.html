@@ -20,7 +20,7 @@
       
       
       <link rel="icon" href="../../assets/images/geonetwork-logo.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.11">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.12">
     
     
       
@@ -28,7 +28,7 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.4af4bdda.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.2afb09e1.min.css">
       
         
         <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
@@ -1730,21 +1730,31 @@
 </li>
 </ol>
 <h2 id="configure-geonetwork-connection-to-elasticsearch">Configure GeoNetwork connection to Elasticsearch</h2>
-<ol>
-<li>
-<p>Update Elasticsearch connection details in <code>WEB-INF/config.properties</code>:</p>
-<div class="language-properties highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="na">es.protocol</span><span class="o">=</span><span class="s">http</span>
-</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="na">es.port</span><span class="o">=</span><span class="s">9200</span>
-</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="na">es.host</span><span class="o">=</span><span class="s">localhost</span>
-</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="na">es.url</span><span class="o">=</span><span class="s">${es.protocol}://${es.host}:${es.port}</span>
-</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="na">es.username</span><span class="o">=</span>
-</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="na">es.password</span><span class="o">=</span>
+<p>By default, GeoNetwork expects Elasticsearch to be running at <a href="http://localhost:9200">http://localhost:9200</a> without authentication. If your Elasticsearch server is on a different host or port or requires authentication, you will need to configure connection details using either of these methods:</p>
+<ul>
+<li>Define the connection details in Java properties.</li>
+</ul>
+<div class="language-shell highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">JAVA_OPTS</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$JAVA_OPTS</span><span class="s2"> -Des.protocol=http -Des.port=9200 -Des.host=localhost  -Des.protocol=http -Des.username= -Des.password=&quot;</span>
 </span></code></pre></div>
-</li>
-<li>
-<p>Restart the application:</p>
-</li>
-</ol>
+<ul>
+<li>Define the connection details in environment variables.</li>
+</ul>
+<div class="language-shell highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">GEONETWORK_ES_HOST</span><span class="o">=</span>localhost
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="nb">export</span><span class="w"> </span><span class="nv">GEONETWORK_ES_PROTOCOL</span><span class="o">=</span>http
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="nb">export</span><span class="w"> </span><span class="nv">GEONETWORK_ES_PORT</span><span class="o">=</span><span class="m">9200</span>
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="nb">export</span><span class="w"> </span><span class="nv">GEONETWORK_ES_USERNAME</span><span class="o">=</span>
+</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="nb">export</span><span class="w"> </span><span class="nv">GEONETWORK_ES_PASSWORD</span><span class="o">=</span>
+</span></code></pre></div>
+<ul>
+<li>Edit the values in <code>WEB-INF/config.properties</code> (not recommended):</li>
+</ul>
+<div class="language-properties highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="na">es.protocol</span><span class="o">=</span><span class="s">#{systemEnvironment[&#39;GEONETWORK_ES_PROTOCOL&#39;]?:&#39;http&#39;}</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="na">es.port</span><span class="o">=</span><span class="s">#{systemEnvironment[&#39;GEONETWORK_ES_PORT&#39;]?:9200}</span>
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="na">es.host</span><span class="o">=</span><span class="s">#{systemEnvironment[&#39;GEONETWORK_ES_HOST&#39;]?:&#39;localhost&#39;}</span>
+</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="na">es.username</span><span class="o">=</span><span class="s">#{systemEnvironment[&#39;GEONETWORK_ES_USERNAME&#39;]?:&#39;&#39;}</span>
+</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="na">es.password</span><span class="o">=</span><span class="s">#{systemEnvironment[&#39;GEONETWORK_ES_PASSWORD&#39;]?:&#39;&#39;}</span>
+</span></code></pre></div>
+<p>Once the configuration is complete, you will need to restart the application.</p>
 
 
 
