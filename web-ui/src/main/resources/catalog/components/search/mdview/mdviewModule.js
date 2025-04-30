@@ -108,6 +108,7 @@
       gnConfigService.load().then(function (c) {
         $scope.isRecordHistoryEnabled = gnConfig["metadata.history.enabled"];
         $scope.isPreferGroupLogo = gnConfig["system.metadata.prefergrouplogo"];
+        $scope.isMdWorkflowEnable = gnConfig["metadata.workflow.enable"];
 
         var statusSystemRating = gnConfig["system.localrating.enable"];
 
