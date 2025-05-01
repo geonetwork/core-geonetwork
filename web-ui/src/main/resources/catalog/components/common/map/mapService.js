@@ -1245,7 +1245,8 @@
                   if (dimension.name == "elevation") {
                     layer.set("elevation", {
                       units: dimension.units,
-                      values: dimension.values.split(",")
+                      values: dimension.values.split(","),
+                      default: dimension.default
                     });
 
                     if (dimension.default) {
@@ -1267,7 +1268,8 @@
 
                     layer.set("time", {
                       units: dimension.units,
-                      values: dimensionValues
+                      values: dimensionValues,
+                      default: dimension.default
                     });
 
                     if (dimension.default) {
