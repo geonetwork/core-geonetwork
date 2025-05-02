@@ -51,7 +51,7 @@
   </bean>
 
   <bean id="jdbcURL" class="java.lang.String">
-    <constructor-arg value="jdbc:oracle:thin:@${jdbc.host}:${jdbc.port:1521}:${jdbc.database}"/>
+    <constructor-arg value="jdbc:oracle:thin:@${jdbc.host}:${jdbc.port:1521}/${jdbc.database}"/>
   </bean>
 
 </beans>
