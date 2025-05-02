@@ -1,4 +1,4 @@
-<li data-ng-class="{'dropdown': isSubmenu}" role="menuitem">
+<li data-ng-class="{'dropdown': isSubmenu}" role="menuitem" data-ng-hide="isSubmenu && page.pages.length < 1">
   <a
     data-ng-if="isSubmenu && section!='record_view_menu'"
     class="dropdown-toggle gn-menuheader-xs"

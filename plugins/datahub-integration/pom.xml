@@ -126,7 +126,7 @@
           <!--   Build datahub app   -->
           <execution>
             <id>npm-build</id>
-            <phase>compile</phase>
+            <phase>generate-resources</phase>
             <goals>
               <goal>npm</goal>
             </goals>
@@ -150,7 +150,7 @@
         <executions>
           <execution>
             <id>copy-resources</id>
-            <phase>prepare-package</phase>
+            <phase>generate-resources</phase>
             <goals>
               <goal>copy-resources</goal>
             </goals>

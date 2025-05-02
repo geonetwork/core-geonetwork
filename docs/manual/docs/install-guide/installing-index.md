@@ -108,15 +108,32 @@ Older version may be supported but are untested.
 
 ## Configure GeoNetwork connection to Elasticsearch
 
-1. Update Elasticsearch connection details in ```WEB-INF/config.properties```:
-    
-    ``` properties
-    es.protocol=http
-    es.port=9200
-    es.host=localhost
-    es.url=${es.protocol}://${es.host}:${es.port}
-    es.username=
-    es.password=
-    ```
+By default, GeoNetwork expects Elasticsearch to be running at <http://localhost:9200> without authentication. If your Elasticsearch server is on a different host or port or requires authentication, you will need to configure connection details using either of these methods:
 
-2.  Restart the application:
+* Define the connection details in Java properties.
+
+  ```shell
+  export JAVA_OPTS="$JAVA_OPTS -Des.protocol=http -Des.port=9200 -Des.host=localhost  -Des.protocol=http -Des.username= -Des.password="
+  ```
+
+* Define the connection details in environment variables.
+
+  ```shell
+  export GEONETWORK_ES_HOST=localhost
+  export GEONETWORK_ES_PROTOCOL=http
+  export GEONETWORK_ES_PORT=9200
+  export GEONETWORK_ES_USERNAME=
+  export GEONETWORK_ES_PASSWORD=
+  ```
+
+* Edit the values in ```WEB-INF/config.properties``` (not recommended):
+
+  ```properties
+  es.protocol=#{systemEnvironment['GEONETWORK_ES_PROTOCOL']?:'http'}
+  es.port=#{systemEnvironment['GEONETWORK_ES_PORT']?:9200}
+  es.host=#{systemEnvironment['GEONETWORK_ES_HOST']?:'localhost'}
+  es.username=#{systemEnvironment['GEONETWORK_ES_USERNAME']?:''}
+  es.password=#{systemEnvironment['GEONETWORK_ES_PASSWORD']?:''}
+  ```
+
+Once the configuration is complete, you will need to restart the application.
