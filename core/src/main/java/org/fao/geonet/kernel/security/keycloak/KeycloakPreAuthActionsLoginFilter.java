@@ -36,16 +36,23 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 import org.springframework.security.web.csrf.CsrfFilter;
 
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URLEncoder;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.web.context.ServletContextAware;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
-public class KeycloakPreAuthActionsLoginFilter extends KeycloakPreAuthActionsFilter {
+/**
+ * This class extends the KeycloakPreAuthActionsFilter to handle pre-authentication actions
+ * specific to Keycloak integration in GeoNetwork.
+ */
+public class KeycloakPreAuthActionsLoginFilter extends KeycloakPreAuthActionsFilter implements ServletContextAware {
 
     @Autowired
     LoginUrlAuthenticationEntryPoint loginUrlAuthenticationEntryPoint;
@@ -63,6 +70,38 @@ public class KeycloakPreAuthActionsLoginFilter extends KeycloakPreAuthActionsFil
         csrfFilter.setRequireCsrfProtectionMatcher(csrfRequestMatcher);
     }
 
+    /**
+     * The servlet context parameter name that contains the excluded URL paths.
+     * This is used to configure which paths should be ignored by the filter.
+     * Based on the GeoNetworkPortalFilter configured in web.xml
+     */
+    private static final String EXCLUDED_URL_PATHS = "excludedPaths";
+
+    /**
+     * RequestMatchers for the ignored application paths.
+     */
+    private List<AntPathRequestMatcher> excludedPathsMatchers = new ArrayList<>();
+
+    /**
+     * The Method to set the servlet context from the web.xml.
+     * It also sets the request matchers for the excluded paths.
+     */
+    public void setServletContext(ServletContext servletContext) {
+        //get excluded paths from servlet context in web.xml
+        String excludedPathsValue = servletContext.getInitParameter(EXCLUDED_URL_PATHS);
+
+        if (StringUtils.isNotEmpty(excludedPathsValue)) {
+            excludedPathsMatchers = Arrays.stream(excludedPathsValue.split(","))
+                .map(StringUtils::trimToEmpty)
+                .filter(StringUtils::isNotEmpty)
+                .map(AntPathRequestMatcher::new)
+                .collect(Collectors.toList());
+        }
+
+        // add the jwks endpoint to the excluded paths
+        excludedPathsMatchers.add(new AntPathRequestMatcher("/.well-known/jwks.json"));
+    }
+
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
         throws IOException, ServletException {
@@ -76,6 +115,8 @@ public class KeycloakPreAuthActionsLoginFilter extends KeycloakPreAuthActionsFil
         //       No sign in page required for api calls.
         //     - and it is not an internal k_* request which should be processed by keycloak adapter and also don't required login page.
         if (servletRequest.getPathInfo() != null &&
+            excludedPathsMatchers.stream()
+                .noneMatch(matcher -> matcher.matches(servletRequest)) &&
             !KeycloakAuthenticationProcessingFilter.DEFAULT_REQUEST_MATCHER.matches(servletRequest) &&
             !isAuthenticated() &&
             !(servletRequest.getContextPath() + KeycloakUtil.getSigninPath()).equals(servletRequest.getRequestURI()) &&
