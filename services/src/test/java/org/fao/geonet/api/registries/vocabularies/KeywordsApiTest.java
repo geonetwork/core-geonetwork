@@ -23,8 +23,10 @@
 
 package org.fao.geonet.api.registries.vocabularies;
 
+import java.nio.file.Files;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.User;
+import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.SpringLocalServiceInvoker;
 import org.fao.geonet.services.AbstractServiceIntegrationTest;
 import org.fao.geonet.utils.Xml;
@@ -210,45 +212,63 @@ public class KeywordsApiTest extends AbstractServiceIntegrationTest {
             "taxref.csv", scheme.getChildText("title", NAMESPACE_DC));
     }
 
+    // see finally block in #testImportOntologyToSkos
+    // this is required to locate the file to be deleted.
+    @Autowired
+    GeonetworkDataDirectory geonetworkDataDirectory;
+
 
     @Test
     public void testImportOntologyToSkos() throws Exception {
-        createServiceContext();
-        User user = new User().setId(USER_ID);
-        HttpSession session = loginAs(user);
-        MockHttpSession mockHttpSession = loginAsAdmin();
+        try {
+            createServiceContext();
+            User user = new User().setId(USER_ID);
+            HttpSession session = loginAs(user);
+            MockHttpSession mockHttpSession = loginAsAdmin();
 
-        MockMultipartHttpServletRequest request = new MockMultipartHttpServletRequest(session.getServletContext());
-        request.setRequestURI("/srv/api/registries/vocabularies");
-        MockMultipartFile file = new MockMultipartFile(
-            "file",
-            "mobility-theme.owl",
-            null,
-            getClass().getClassLoader().getResourceAsStream("mobility-theme.owl"));
-        request.addFile(file);
-        request.setSession(session);
-        request.setParameter("type", "external");
-        request.setParameter("dir", "theme");
-        MockHttpServletResponse response = new MockHttpServletResponse();
-        invoker.invoke(request, response);
-        assertEquals(200, response.getStatus());
+            MockMultipartHttpServletRequest request = new MockMultipartHttpServletRequest(session.getServletContext());
+            request.setRequestURI("/srv/api/registries/vocabularies");
+            MockMultipartFile file = new MockMultipartFile(
+                "file",
+                "mobility-theme.owl",
+                null,
+                getClass().getClassLoader().getResourceAsStream("mobility-theme.owl"));
+            request.addFile(file);
+            request.setSession(session);
+            request.setParameter("type", "external");
+            request.setParameter("dir", "theme");
+            MockHttpServletResponse response = new MockHttpServletResponse();
+            invoker.invoke(request, response);
+            assertEquals(200, response.getStatus());
 
 
-        MockMvc mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
-        MvcResult result = mockMvc.perform(get("/srv/api/registries/vocabularies/external.theme.mobility-theme")
-                .accept("application/xml")
-                .session(mockHttpSession))
-            .andExpect(status().isOk())
-            .andReturn();
+            MockMvc mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+            MvcResult result = mockMvc.perform(get("/srv/api/registries/vocabularies/external.theme.mobility-theme")
+                    .accept("application/xml")
+                    .session(mockHttpSession))
+                .andExpect(status().isOk())
+                .andReturn();
 
-        Element thesaurus = Xml.loadString(result.getResponse().getContentAsString(), false);
-        Element scheme = (Element) thesaurus.getChildren("ConceptScheme", SKOS_NAMESPACE).get(0);
-        assertEquals(
-            "https://w3id.org/mobilitydcat-ap/mobility-theme", scheme.getAttributeValue("about", RDF_NAMESPACE));
-        assertEquals(
-            "Mobility Theme", scheme.getChildText("title", NAMESPACE_DCT));
+            Element thesaurus = Xml.loadString(result.getResponse().getContentAsString(), false);
+            Element scheme = (Element) thesaurus.getChildren("ConceptScheme", SKOS_NAMESPACE).get(0);
+            assertEquals(
+                "https://w3id.org/mobilitydcat-ap/mobility-theme", scheme.getAttributeValue("about", RDF_NAMESPACE));
+            assertEquals(
+                "Mobility Theme", scheme.getChildText("title", NAMESPACE_DCT));
 
-        List concepts = thesaurus.getChildren("Concept", SKOS_NAMESPACE);
-        assertEquals(121, concepts.size());
+            List concepts = thesaurus.getChildren("Concept", SKOS_NAMESPACE);
+            assertEquals(121, concepts.size());
+        }
+        finally {
+            //clean up
+            // this test case uploads a thesaurus.
+            // if you don't delete it, then, on the next run, it will be picked up and you'll get an error because
+            // the thesaurus already exists.  This will clean up and there will not be a problem on the next run.
+            // This is typically only an issue if you are running the test locally - on the build server it gets a
+            // new, clean, filesystem so there isn't a problem.
+            var uploadedThesauras = geonetworkDataDirectory.resolveWebResource(
+                "WEB-INF/data/config/codelist/external/thesauri/theme/mobility-theme.rdf");
+            Files.deleteIfExists(uploadedThesauras);
+        }
     }
 }
