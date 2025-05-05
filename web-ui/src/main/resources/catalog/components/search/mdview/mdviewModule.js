@@ -104,7 +104,6 @@
       $scope.showStatusTopBarFor =
         gnGlobalSettings.gnCfg.mods.recordview.showStatusTopBarFor;
 
-
       gnConfigService.load().then(function (c) {
         $scope.isRecordHistoryEnabled = gnConfig["metadata.history.enabled"];
         $scope.isPreferGroupLogo = gnConfig["system.metadata.prefergrouplogo"];
@@ -357,9 +356,10 @@
 
           gnMdViewObj.usingFormatter = f !== undefined;
 
-          if (f != undefined) {
+          if (gnMdViewObj.usingFormatter) {
+            var uuid = gnSearchLocation.getUuid();
             $scope.currentFormatter = f.replace(/.*(\/formatters.*)/, "$1");
-            $scope.loadFormatter(f);
+            $scope.loadFormatter(f.replace(uuid, encodeURIComponent(uuid)));
           }
         }
       }

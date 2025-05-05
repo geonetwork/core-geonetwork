@@ -150,7 +150,9 @@
         buildEditUrlPrefix: function (service) {
           var params = [
             "../api/records/",
-            gnCurrentEdit.metadata ? gnCurrentEdit.metadata.uuid : gnCurrentEdit.id,
+            encodeURIComponent(
+              gnCurrentEdit.metadata ? gnCurrentEdit.metadata.uuid : gnCurrentEdit.id
+            ),
             "/",
             service,
             "?"
