@@ -34,12 +34,20 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URLEncoder;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.web.context.ServletContextAware;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
 
 /**
  * Filter implementation for handling pre-authentication actions for OpenID Connect (OIDC) login.
  * This filter checks if the user is authenticated and redirects unauthenticated users to the login page.
  */
-public class GeonetworkOidcPreAuthActionsLoginFilter  implements Filter {
+public class GeonetworkOidcPreAuthActionsLoginFilter  implements Filter, ServletContextAware {
 
     /**
      * Repository for managing client registrations for OpenID Connect.
@@ -49,10 +57,40 @@ public class GeonetworkOidcPreAuthActionsLoginFilter  implements Filter {
     private  ClientRegistrationRepository clientRegistrationRepository;
 
 
+    /**
+     * The servlet context parameter name that contains the excluded URL paths.
+     * This is used to configure which paths should be ignored by the filter.
+     * Based on the GeoNetworkPortalFilter configured in web.xml
+     */
+    private static final String EXCLUDED_URL_PATHS = "excludedPaths";
+
+    /**
+     * RequestMatchers for the ignored application paths.
+     */
+    private List<AntPathRequestMatcher> excludedPathsMatchers = new ArrayList<>();
+
+    /**
+     * The Method to set the servlet context from the web.xml.
+     * It also sets the request matchers for the excluded paths.
+     */
+    public void setServletContext(ServletContext servletContext) {
+        //get excluded paths from servlet context in web.xml
+        String excludedPathsValue = servletContext.getInitParameter(EXCLUDED_URL_PATHS);
+
+        if (StringUtils.isNotEmpty(excludedPathsValue)) {
+            excludedPathsMatchers = Arrays.stream(excludedPathsValue.split(","))
+                .map(StringUtils::trimToEmpty)
+                .filter(StringUtils::isNotEmpty)
+                .map(AntPathRequestMatcher::new)
+                .collect(Collectors.toList());
+        }
+
+        // add the jwks endpoint to the excluded paths
+        excludedPathsMatchers.add(new AntPathRequestMatcher("/.well-known/jwks.json"));
+    }
 
     @Override
-    public void init(FilterConfig filterConfig) throws ServletException {
-
+    public void init(FilterConfig config) {
     }
 
     /**
@@ -82,8 +120,8 @@ public class GeonetworkOidcPreAuthActionsLoginFilter  implements Filter {
             SecurityContextHolder.getContext().getAuthentication().isAuthenticated() &&
             !(SecurityContextHolder.getContext().getAuthentication() instanceof AnonymousAuthenticationToken);
 
-        boolean isPublicEndpoint =
-            requestUri.endsWith("/.well-known/jwks.json");
+        boolean isPublicEndpoint = excludedPathsMatchers.stream()
+            .anyMatch(matcher -> matcher.matches(servletRequest));
 
         if (!isAuthenticated && !isLoginRequest && !isPublicEndpoint && !isBearerTokenAccess) {
             String returningUrl = requestUri +
