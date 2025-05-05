@@ -621,7 +621,11 @@
             function (newVal, oldVal) {
               if (newVal !== null && newVal !== oldVal) {
                 $http
-                  .get("../api/records/" + scope.md.getUuid() + "/permalink")
+                  .get(
+                    "../api/records/" +
+                      encodeURIComponent(scope.md.getUuid()) +
+                      "/permalink"
+                  )
                   .then(function (r) {
                     scope.socialMediaLink = r.data;
                   });

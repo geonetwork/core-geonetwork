@@ -816,7 +816,7 @@
             if (bucket != "null") {
               url += "ownership?bucket=" + bucket + "&";
             } else {
-              url += mdUuid + "/ownership?";
+              url += encodeURIComponent(mdUuid) + "/ownership?";
             }
             return $http
               .put(
