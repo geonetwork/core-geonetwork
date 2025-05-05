@@ -189,8 +189,8 @@ public class MetadataApiTest extends AbstractServiceIntegrationTest {
             mockMvc.perform(get("/srv/api/records/" + this.uuid)
                     .session(mockHttpSession)
                     .accept(entry.getKey()))
-                .andExpect(status().isOk())
-                .andExpect(forwardedUrl(entry.getValue()));
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl(entry.getValue()));
         }
     }
 
