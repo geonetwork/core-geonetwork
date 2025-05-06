@@ -13,7 +13,7 @@
       data-ng-if="mdView.current.record.draft == 'e'"
       class="see-draft see-draft-not-approved"
       title=" {{('status-' + mdView.current.record.mdStatus) | translate}}"
-      data-ng-href="#/metadraf/{{md.uuid}}"
+      data-ng-href="#/metadraf/{{mdView.current.record.uuid}}"
       data-ng-show="user.canEditRecord(mdView.current.record)"
     >
       {{'seeDraft' | translate}}
@@ -24,7 +24,7 @@
       data-ng-if="mdView.current.record.draft == 'y'"
       class="see-draft see-draft-approved"
       title=" {{('status-' + mdView.current.record.mdStatus) | translate}}"
-      data-ng-href="#/metadata/{{md.uuid}}"
+      data-ng-href="#/metadata/{{mdView.current.record.uuid}}"
       data-ng-show="user.canEditRecord(mdView.current.record)"
     >
       {{'seeNoDraft' | translate}}
@@ -92,40 +92,40 @@
 
         <div class="pull-right">
           <ul class="nav navbar-nav gn-menu-xs" role="menu">
-            <li data-ng-repeat-start="menu in recordviewMenu"></li>
-            <!--record view menu static pages-->
-            <li
-              data-ng-if="isPage(menu)"
-              gn-static-page-menu="menu"
-              language="{{lang}}"
-              section="record_view_menu"
-            ></li>
+            <li data-ng-repeat="menu in recordviewMenu">
+              <!--record view menu static pages-->
+              <div
+                data-ng-if="isPage(menu)"
+                gn-static-page-menu="menu"
+                language="{{lang}}"
+                section="record_view_menu"
+              ></div>
 
-            <!-- edit -->
-            <div
-              data-ng-if="menu == 'gn-recordview-edit-menu'"
-              gn-record-view-edit-menu=""
-            ></div>
+              <!-- edit -->
+              <div
+                data-ng-if="menu == 'gn-recordview-edit-menu'"
+                gn-record-view-edit-menu=""
+              ></div>
 
-            <!-- delete -->
-            <div
-              data-ng-if="menu == 'gn-recordview-delete-menu'"
-              gn-record-view-delete-menu=""
-            ></div>
+              <!-- delete -->
+              <div
+                data-ng-if="menu == 'gn-recordview-delete-menu'"
+                gn-record-view-delete-menu=""
+              ></div>
 
-            <!-- manage -->
-            <div
-              data-ng-if="menu == 'gn-recordview-manage-menu' && mdView.current.record"
-              class="gn-md-actions-btn pull-left"
-              data-gn-md-actions-menu="mdView.current.record"
-            ></div>
+              <!-- manage -->
+              <div
+                data-ng-if="menu == 'gn-recordview-manage-menu' && mdView.current.record"
+                class="gn-md-actions-btn pull-left"
+                data-gn-md-actions-menu="mdView.current.record"
+              ></div>
 
-            <!-- display mode -->
-            <div
-              data-ng-if="menu == 'gn-recordview-display-menu'"
-              gn-record-view-display-mode-menu=""
-            ></div>
-            <li data-ng-repeat-end=""></li>
+              <!-- display mode -->
+              <div
+                data-ng-if="menu == 'gn-recordview-display-menu'"
+                gn-record-view-display-mode-menu=""
+              ></div>
+            </li>
           </ul>
         </div>
       </div>
@@ -137,7 +137,7 @@
       ></div>
 
       <div data-ng-show="!gnMdViewObj.usingFormatter" class="gn-metadata-display">
-        <div data-ng-switch on="md.resourceType[0]">
+        <div data-ng-switch on="mdView.current.record.resourceType[0]">
           <div data-ng-switch-when="series">
             <div
               ng-include="'../../catalog/views/default/templates/recordView/type-series.html'"

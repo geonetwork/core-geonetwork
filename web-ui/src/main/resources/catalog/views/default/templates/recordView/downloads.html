@@ -1,6 +1,6 @@
 <div
-  data-ng-if="md.related || md.link"
-  data-gn-related-container="md"
+  data-ng-if="mdView.current.record.related || mdView.current.record.link"
+  data-gn-related-container="mdView.current.record"
   data-mode="::viewConfig.distributionConfig.layout || ''"
   data-related-config="::viewConfig.distributionConfig.sections"
 ></div>
