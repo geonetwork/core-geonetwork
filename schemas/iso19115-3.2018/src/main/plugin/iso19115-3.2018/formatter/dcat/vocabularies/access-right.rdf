@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<rdf:RDF
+  xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+  xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+  xmlns:dcterms="http://purl.org/dc/terms/"
+  xmlns:owl="http://www.w3.org/2002/07/owl#"
+  xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+  xmlns:ns5="http://publications.europa.eu/ontology/euvoc#"
+  xmlns:ns6="http://www.w3.org/2008/05/skos-xl#"
+  xmlns:ns7="http://publications.europa.eu/ontology/authority/" >
+  <rdf:Description rdf:about="http://publications.europa.eu/resource/authority/access-right/NON_PUBLIC">
+    <skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/access-right" />
+    <skos:topConceptOf rdf:resource="http://publications.europa.eu/resource/authority/access-right" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://publications.europa.eu/resource/authority/access-right/OP_DATPRO">
+    <skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/access-right" />
+    <skos:topConceptOf rdf:resource="http://publications.europa.eu/resource/authority/access-right" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://publications.europa.eu/resource/authority/access-right/PUBLIC">
+    <skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/access-right" />
+    <skos:topConceptOf rdf:resource="http://publications.europa.eu/resource/authority/access-right" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://publications.europa.eu/resource/authority/access-right/RESTRICTED">
+    <skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/access-right" />
+    <skos:topConceptOf rdf:resource="http://publications.europa.eu/resource/authority/access-right" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://publications.europa.eu/resource/authority/access-right">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Ontology" />
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#ConceptScheme" />
+    <dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2016-07-21</dcterms:created>
+    <rdfs:label xml:lang="en">Access right</rdfs:label>
+    <owl:imports rdf:resource="http://publications.europa.eu/ontology/euvoc" />
+    <rdfs:comment rdf:datatype="http://www.w3.org/2000/01/rdf-schema#Literal">Access right</rdfs:comment>
+    <owl:versionInfo>20240612-0</owl:versionInfo>
+    <skos:prefLabel xml:lang="en">Access right</skos:prefLabel>
+    <dcterms:title xml:lang="en">Access right</dcterms:title>
+    <ns5:startDate rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2016-07-21</ns5:startDate>
+    <dcterms:identifier>http://publications.europa.eu/resource/authority/access-right</dcterms:identifier>
+    <ns6:prefLabel rdf:resource="http://publications.europa.eu/resource/authority/access-right/d4e24400" />
+    <skos:hasTopConcept rdf:resource="http://publications.europa.eu/resource/authority/access-right/SENSITIVE" />
+    <skos:hasTopConcept rdf:resource="http://publications.europa.eu/resource/authority/access-right/NORMAL" />
+    <skos:hasTopConcept rdf:resource="http://publications.europa.eu/resource/authority/access-right/OP_DATPRO" />
+    <skos:hasTopConcept rdf:resource="http://publications.europa.eu/resource/authority/access-right/PUBLIC" />
+    <skos:hasTopConcept rdf:resource="http://publications.europa.eu/resource/authority/access-right/NON_PUBLIC" />
+    <skos:hasTopConcept rdf:resource="http://publications.europa.eu/resource/authority/access-right/RESTRICTED" />
+    <skos:hasTopConcept rdf:resource="http://publications.europa.eu/resource/authority/access-right/CONFIDENTIAL" />
+    <ns7:prefLabel xml:lang="en">Access right</ns7:prefLabel>
+    <ns7:table.id>access-right</ns7:table.id>
+    <ns7:table.version.number>20240612-0</ns7:table.version.number>
+    <owl:versionIRI rdf:resource="http://publications.europa.eu/resource/authority/access-right/20240612-0" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://publications.europa.eu/resource/authority/access-right/SENSITIVE">
+    <skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/access-right" />
+    <skos:topConceptOf rdf:resource="http://publications.europa.eu/resource/authority/access-right" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://publications.europa.eu/resource/authority/access-right/CONFIDENTIAL">
+    <skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/access-right" />
+    <skos:topConceptOf rdf:resource="http://publications.europa.eu/resource/authority/access-right" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://publications.europa.eu/resource/authority/access-right/NORMAL">
+    <skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/access-right" />
+    <skos:topConceptOf rdf:resource="http://publications.europa.eu/resource/authority/access-right" />
+  </rdf:Description>
+</rdf:RDF>
