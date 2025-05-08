@@ -197,7 +197,9 @@
           .post(
             "../api/search/records/_search",
             {
-              _source: { includes: ["uuid", "root", "resourceTitle*", "isTemplate"] },
+              _source: {
+                includes: ["uuid", "root", "resourceTitle*", "isTemplate", "link"]
+              },
               from: 0,
               size: 2000,
               query: {
