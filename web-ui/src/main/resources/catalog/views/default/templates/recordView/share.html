@@ -1,4 +1,7 @@
-<div ng-include="'../../catalog/views/default/templates/recordView/social.html'"></div>
+<div
+  gn-metadata-social-link="mdView.current.record"
+  data-ng-show="isSocialbarEnabled"
+></div>
 
 <div data-ng-show="isRatingEnabled" class="gn-md-side-rating gn-margin-bottom">
   <h2>
