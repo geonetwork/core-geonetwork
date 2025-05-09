@@ -412,8 +412,10 @@ public class DefaultStatusActions implements StatusActions {
                 if (owner.isPresent()) {
                     users.add(owner.get());
                 }
-            } else if (notificationLevel == StatusValueNotificationLevel.recordProfileReviewer) {
-                List<Pair<Integer, User>> results = userRepository.findAllByGroupOwnerNameAndProfile(recordIds, Profile.Reviewer);
+            } else if (notificationLevel.name().startsWith("recordProfile")) {
+                String profileId = notificationLevel.name().replace("recordProfile", "");
+                Profile profile = Profile.findProfileIgnoreCase(profileId);
+                List<Pair<Integer, User>> results = userRepository.findAllByGroupOwnerNameAndProfile(recordIds, profile);
                 Collections.sort(results, Comparator.comparing(s -> s.two().getName()));
                 for (Pair<Integer, User> p : results) {
                     users.add(p.two());
