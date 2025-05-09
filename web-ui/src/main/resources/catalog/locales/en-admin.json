@@ -1480,6 +1480,7 @@
     "notificationLevel-catalogueProfileRegisteredUser": "Notify the catalogue registered user",
     "notificationLevel-catalogueProfileGuest": "Notify the catalogue guest",
     "notificationLevel-recordProfileReviewer": "Notify the reviewers part of the record group owner",
+    "notificationLevel-recordProfileUserAdmin": "Notify the user administrators part of the record group owner",
     "notificationLevel-recordUserAuthor": "Notify the record author",
     "notificationLevel-recordGroupEmail": "Notify the group(s) emails",
     "confirmMapserverDelete": "Are you sure you want to delete this Map server?",
