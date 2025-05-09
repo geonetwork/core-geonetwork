@@ -605,16 +605,16 @@
   ]);
 
   module.directive("gnMetadataSocialLink", [
-    "gnUtilityService",
+    "gnMetadataActions",
     "$http",
-    function (gnUtilityService, $http) {
+    function (gnMetadataActions, $http) {
       return {
         templateUrl: "../../catalog/components/search/mdview/partials/social.html",
         scope: {
           md: "=gnMetadataSocialLink"
         },
         link: function (scope, element, attrs) {
-          scope.mdService = gnUtilityService;
+          scope.mdService = gnMetadataActions;
 
           scope.$watch(
             "md",
