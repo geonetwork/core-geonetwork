@@ -546,5 +546,6 @@
     "fieldEmailNotValid": "Je vyžadována platná e-mailová adresa",
     "addLayerPrefix": "Přidat vrstvu",
     "addLayerPostfix": "do mapy",
-    "submit": "Odeslat"
+    "submit": "Odeslat",
+    "additionalLinks": "Additional Links"
 }

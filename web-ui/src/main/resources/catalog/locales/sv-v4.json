@@ -54,6 +54,7 @@
   "remoteRecordUrl-help": "Fjärrpost kan länkas till post i denna katalog genom att peka på en URL för fjärrpost. Om fjärrposten finns i en GeoNetwork-katalog rekommenderas postens målsida (t.ex. https: // catalog / geonetwork / srv / api / records / {uuid}). För GeoNode kan HTML-sidan fungera. För andra kan XML-dokument användas (t.ex. API-anrop eller CSW GetRecordById-begäran).",
   "remoteRecordPropertiesError": "Det gick inte att extrahera titel och UUID för fjärrposten. Kontrollera måldokumentet.",
   "remoteRecordUrlReturnedError": "Det gick inte att komma åt URL:",
+  "ui-rssFeeds": "Lista över RSS-flöden",
   "ui-defaultTool": "Aktivt standardverktyg",
   "ui-defaultToolAfterMapLoad": "Aktivt verktyg efter kartladdning",
   "ui-defaultToolAfterMapLoad-help": "Användaren kan öppna en karta från olika platser (t.ex. kartor på webbplatser, postvy, kartväljarpanel, URL). Definiera vilken verktygspanel som ska öppnas som standard efter att kartan har laddats. Kan vara tom för att inte aktivera något verktyg. &#39;lager&#39; eller &#39;legend&#39; gör att du enkelt kan se listan över lager på kartan.",

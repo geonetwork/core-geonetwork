@@ -54,6 +54,7 @@
   "remoteRecordUrl-help": "En ekstern instans kan linkes til en instans i dette katalog ved at henvise til et URL for den eksterne instans. Hvis den eksterne instans er i et GeoNetwork-katalog, anbefales instansens landingsside (f.eks. https://catalog/geonetwork/srv/api/records/{uuid}). Til brug i GeoNode kan HTML-siden benyttes. I andre tilfælde kan et XML-dokument bruges (f.eks. API-kald eller CSW GetRecordById-anmodning).",
   "remoteRecordPropertiesError": "Kunne ikke udtrække titel og UUID fra den eksterne instans. Tjek måldokumentet.",
   "remoteRecordUrlReturnedError": "Kunne ikke tilgå URL:",
+  "ui-rssFeeds": "Liste over RSS-feeds",
   "ui-defaultTool": "Standard aktivt værktøj",
   "ui-defaultToolAfterMapLoad": "Aktivt værktøj efter map",
   "ui-defaultToolAfterMapLoad-help": "Brugeren kan åbne et map fra en map placering (f.eks. hjemmeside , instans , map , URL). Definer hvilket værktøjspanel, der skal åbnes som standard, efter at map er indlæst. Kan være tom for ikke at aktivere noget værktøj. &#39;lag&#39; eller &#39; legende &#39; gør det nemt at se listen over lag på map .",

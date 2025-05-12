@@ -54,6 +54,7 @@
   "remoteRecordUrl-help": "Remote record can be linked to record in this catalog by pointing to an URL of the remote record. If the remote record is in a GeoNetwork catalog, the landing page of the record is recommended (eg. https://catalog/geonetwork/srv/api/records/{uuid}). For GeoNode, the HTML page can work. For others, XML document can be used (eg. API call or CSW GetRecordById request).",
   "remoteRecordPropertiesError": "Failed to extract title and UUID for remote record. Check the target document.",
   "remoteRecordUrlReturnedError": "Failed to access URL: ",
+  "ui-rssFeeds": "List of RSS feeds",
   "ui-defaultTool": "Default active tool",
   "ui-defaultToolAfterMapLoad": "Active tool after map load",
   "ui-defaultToolAfterMapLoad-help": "User can open a map from different location (eg. home page maps, record view, map selector panel, URL). Define which tool panel to open by default after map is loaded. Can be empty to not activate any tool. 'layers' or 'legend' allows to easily view the list of layers in the map.",

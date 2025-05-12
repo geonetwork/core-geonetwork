@@ -546,5 +546,6 @@
     "fieldEmailNotValid": "En godkendt e-mail er nødvendig",
     "addLayerPrefix": "Tilføj lag",
     "addLayerPostfix": "til kortet",
-    "submit": "Indsend"
+    "submit": "Indsend",
+    "additionalLinks": "Additional Links"
 }

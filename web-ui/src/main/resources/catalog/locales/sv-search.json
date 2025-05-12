@@ -546,5 +546,6 @@
     "fieldEmailNotValid": "En giltig emailadress krävs",
     "addLayerPrefix": "Add layer",
     "addLayerPostfix": "to the map",
-    "submit": "Inlämna"
+    "submit": "Inlämna",
+    "additionalLinks": "Additional Links"
 }

@@ -546,5 +546,6 @@
     "fieldEmailNotValid": "A valid email address is required",
     "addLayerPrefix": "Add layer",
     "addLayerPostfix": "to the map",
-    "submit": "Submit"
+    "submit": "Submit",
+    "additionalLinks": "Additional Links"
 }

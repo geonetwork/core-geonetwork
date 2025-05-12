@@ -382,7 +382,7 @@
     "layerNotAvailableInMapProj": "Služba neposkytuje vrstvu v zobrazení mapy '{{proj}}'. Vrstva bude přidána na mapu, ale nemusí být zobrazena správně.",
     "layerCRSNotFound": "Vrstva neposkytuje informace o souřadnicovém referenčním systému. To může souviset s verzí WMS nižší než 1.3.0.",
     "layerTileLoadError": "Při načítání dlaždice došlo k chybě <a href='{{url}}' target='_blank'>'{{url | limitTo: 30}} ...'</a> pro vrstvu '{{layer}}'.",
- m     "getCapFailure": "Požadavek na WMS getCapabilities se nezdařil",
+    "getCapFailure": "Požadavek na WMS getCapabilities se nezdařil",
     "standards": "Standard metadat",
     "documentStandard": "Metadatový standard",
     "metadataTypes": "Typ záznamu",
