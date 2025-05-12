@@ -366,7 +366,7 @@
     "shareByEmail": "Partager via email",
     "zoomto": "Zoom vers",
     "recordNotFound": "La fiche avec l'identifiant <strong>{{uuid}}</strong> n'a pas été trouvée ou n'est pas accessible pour vous.",
-    "trySignIn": "Try <a href=\"{{signInFormAction}}?_csrf={{csrf}}&redirectUrl={{redirectUrlAfterSign}}\">to log in</a> if you have an account.",
+    "trySignIn": "Essayer <a href=\"{{signInFormAction}}?_csrf={{csrf}}&redirectUrl={{redirectUrlAfterSign}}\">de vous connecter</a> si vous avez un compte.",
     "intersectWith": "Intersection avec",
     "fullyOutsideOf": "Entièrement à l'extérieur de",
     "encloses": "Comprends au moins",
@@ -546,5 +546,6 @@
     "fieldEmailNotValid": "Un email valide est requis",
     "addLayerPrefix": "Ajouter une couche",
     "addLayerPostfix": "à la carte",
-    "submit": "Soumettre"
+    "submit": "Soumettre",
+    "additionalLinks": "Additional Links"
 }

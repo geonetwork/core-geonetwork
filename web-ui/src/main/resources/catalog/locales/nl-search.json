@@ -546,5 +546,6 @@
     "fieldEmailNotValid": "Een geldig email adres is vereist",
     "addLayerPrefix": "Voeg laag toe",
     "addLayerPostfix": "aan de kaart",
-    "submit": "Indienen"
+    "submit": "Indienen",
+    "additionalLinks": "Additional Links"
 }
