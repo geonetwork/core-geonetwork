@@ -576,27 +576,6 @@
     }
   ]);
 
-  module.directive("gnMetadataSocialLink", [
-    "gnMetadataActions",
-    "$http",
-    function (gnMetadataActions, $http) {
-      return {
-        templateUrl: "../../catalog/components/search/mdview/partials/social.html",
-        scope: {
-          md: "=gnMetadataSocialLink"
-        },
-        link: function (scope, element, attrs) {
-          scope.mdService = gnMetadataActions;
-          $http
-            .get("../api/records/" + scope.md.getUuid() + "/permalink")
-            .then(function (r) {
-              scope.socialMediaLink = r.data;
-            });
-        }
-      };
-    }
-  ]);
-
   module.directive("gnQualityMeasuresTable", [
     function () {
       return {
