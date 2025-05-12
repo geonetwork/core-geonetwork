@@ -229,7 +229,7 @@
                    target="_blank"
                    aria-label="Twitter"
                    class="btn btn-default">
-                  <i class="fa fa-fw fa-twitter"></i>
+                  <i class="fa fa-fw fa-brands fa-x-twitter"></i>
                 </a>
                 <a href="https://www.facebook.com/sharer.php?u={encode-for-uri($nodeUrl)}api%2Frecords%2F{$metadataUuid}"
                    target="_blank"
