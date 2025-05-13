@@ -587,11 +587,16 @@
         },
         link: function (scope, element, attrs) {
           scope.mdService = gnMetadataActions;
-          $http
-            .get("../api/records/" + scope.md.getUuid() + "/permalink")
-            .then(function (r) {
-              scope.socialMediaLink = r.data;
-            });
+
+          scope.$watch("md", function (oldVal, newVal) {
+            if (newVal) {
+              $http
+                .get("../api/records/" + scope.md.getUuid() + "/permalink")
+                .then(function (r) {
+                  scope.socialMediaLink = r.data;
+                });
+            }
+          });
         }
       };
     }
