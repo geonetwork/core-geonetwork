@@ -64,6 +64,10 @@ public enum StatusValueNotificationLevel {
      */
     recordProfileReviewer,
     /**
+     * When assigned should notify the user administrators part of the record group owner.
+     */
+    recordProfileUserAdmin,
+    /**
      * When assigned should notify the record author.
      */
     recordUserAuthor,
