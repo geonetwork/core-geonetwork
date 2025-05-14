@@ -400,7 +400,8 @@
   module.directive("gnMetadataContacts", [
     "$http",
     "$filter",
-    function ($http, $filter) {
+    "gnGlobalSettings",
+    function ($http, $filter, gnGlobalSettings) {
       return {
         templateUrl: "../../catalog/components/search/mdview/partials/contact.html",
         restrict: "A",
@@ -413,6 +414,10 @@
           type: "@type"
         },
         link: function (scope, element, attrs, controller) {
+          scope.isDefaultContactViewEnabled = function () {
+            return gnGlobalSettings.gnCfg.mods.recordview.isDefaultContactViewEnabled;
+          };
+
           if (["default", "role", "org-role"].indexOf(scope.mode) == -1) {
             scope.mode = "default";
           }

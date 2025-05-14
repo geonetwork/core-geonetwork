@@ -858,6 +858,7 @@
           },
           recordview: {
             isSocialbarEnabled: true,
+            isDefaultContactViewEnabled: false,
             showStatusWatermarkFor: "",
             showStatusTopBarFor: "",
             recordviewCustomMenu: [], // List of static pages identifiers to display
