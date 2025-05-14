@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2024 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2025 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -50,23 +50,23 @@ import jeeves.server.context.ServiceContext;
 //=============================================================================
 
 interface RemoteRetriever {
-    public void init(AtomicBoolean cancelMonitor, Logger log, ServiceContext context, WebDavParams params);
+    void init(AtomicBoolean cancelMonitor, Logger log, ServiceContext context, WebDavParams params);
 
-    public List<RemoteFile> retrieve() throws Exception;
+    List<RemoteFile> retrieve() throws Exception;
 
-    public void destroy();
+    void destroy();
 }
 
 //=============================================================================
 
 interface RemoteFile {
-    public String getPath();
+    String getPath();
 
-    public ISODate getChangeDate();
+    ISODate getChangeDate();
 
-    public Element getMetadata(SchemaManager schemaMan) throws Exception;
+    Element getMetadata(SchemaManager schemaMan) throws Exception;
 
-    public boolean isMoreRecentThan(String localDate);
+    boolean isMoreRecentThan(String localDate);
 }
 
 //=============================================================================
@@ -117,7 +117,7 @@ class Harvester extends BaseAligner<WebDavParams> implements IHarvester<HarvestR
         this.log = log;
         if (log.isDebugEnabled())
             log.debug("Retrieving remote metadata information for : " + params.getName());
-        RemoteRetriever rr = null;
+        RemoteRetriever rr;
         if (params.subtype.equals("webdav")) {
             rr = new WebDavRetriever();
         } else if (params.subtype.equals("waf")) {
@@ -502,7 +502,7 @@ class Harvester extends BaseAligner<WebDavParams> implements IHarvester<HarvestR
             String language = context.getLanguage();
 
             final AbstractMetadata metadata = metadataManager.updateMetadata(context, recordInfo.id, md, validate, ufo, language,
-                date, false, IndexingMode.none);
+                date, true, IndexingMode.none);
 
             if(force) {
                 //change ownership of metadata to new harvester
