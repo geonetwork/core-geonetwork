@@ -39,7 +39,7 @@
         return {
           restrict: "A",
           templateUrl:
-            "../../catalog/components/filestore/" + "partials/dataUploaderButton.html",
+            "../../catalog/components/filestore/partials/dataUploaderButton.html",
           scope: {
             btnLabel: "=?gnDataUploaderButton",
             isOverview: "=?isOverview",
@@ -91,7 +91,7 @@
                   autoUpload: scope.autoUpload,
                   url:
                     "../api/records/" +
-                    gnCurrentEdit.uuid +
+                    encodeURIComponent(gnCurrentEdit.uuid) +
                     "/attachments?visibility=" +
                     (scope.visibility || "public"),
                   dropZone: $("#gn-upload-" + scope.id),

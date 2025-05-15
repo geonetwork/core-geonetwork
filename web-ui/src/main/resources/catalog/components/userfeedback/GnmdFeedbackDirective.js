@@ -120,7 +120,7 @@
 
             if (form.$valid) {
               $http({
-                url: "../api/records/" + uuid + "/alert",
+                url: "../api/records/" + encodeURIComponent(uuid) + "/alert",
                 method: "POST",
                 data: $(formId).serialize(),
                 headers: {

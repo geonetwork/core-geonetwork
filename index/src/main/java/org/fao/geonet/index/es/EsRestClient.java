@@ -443,6 +443,15 @@ public class EsRestClient implements InitializingBean {
         return fieldValues;
     }
 
+    public static String getFieldValue(String field, Map<String, Object> source) {
+        final Object o = source.get(field);
+        if (o instanceof String) {
+            return (String) o;
+        } else if (o instanceof HashMap && field.endsWith("Object")) {
+            return (String) ((HashMap) o).get("default");
+        }
+        return null;
+    }
 
     /**
      * Analyze a field and a value against the index

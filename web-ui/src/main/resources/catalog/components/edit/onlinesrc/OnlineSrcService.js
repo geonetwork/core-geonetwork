@@ -242,7 +242,7 @@
          */
         getAllResources: function (types) {
           var linksAndRelatedPromises = [],
-            apiPrefix = "../api/records/" + gnCurrentEdit.uuid,
+            apiPrefix = "../api/records/" + encodeURIComponent(gnCurrentEdit.uuid),
             isArray = angular.isArray(types),
             defaultRelatedTypes = ["thumbnails", "onlines"],
             relatedTypes = [],
@@ -500,7 +500,11 @@
         getApprovedUrl: function (url) {
           if (
             gnCurrentEdit.metadata.draft === "y" &&
-            url.match(".*/api/records/" + gnCurrentEdit.uuid + "/attachments/.*") != null
+            url.match(
+              ".*/api/records/" +
+                encodeURIComponent(gnCurrentEdit.uuid) +
+                "/attachments/.*"
+            ) != null
           ) {
             if (url.match(".*(&?)((approved=.*)(&?))+")) {
               // Remove approved parameter if already exists.
@@ -733,7 +737,9 @@
         removeOnlinesrc: function (onlinesrc) {
           var url = onlinesrc.lUrl || onlinesrc.url;
           if (
-            url.match(".*/api/records/' + gnCurrentEdit.uuid + '/attachments/.*") != null
+            url.match(
+              ".*/api/records/' + encodeURIComponent(gnCurrentEdit.uuid) + '/attachments/.*"
+            ) != null
           ) {
             url = gnUrlUtils.remove(url, ["approved"], true);
           }

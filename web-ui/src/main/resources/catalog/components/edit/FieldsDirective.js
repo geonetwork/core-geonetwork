@@ -631,7 +631,9 @@
 
             $http
               .post(
-                "../api/records/" + metadataUuid + "/checkDuplicatedFieldValue",
+                "../api/records/" +
+                  encodeURIComponent(metadataUuid) +
+                  "/checkDuplicatedFieldValue",
                 postBody
               )
               .then(function (response) {

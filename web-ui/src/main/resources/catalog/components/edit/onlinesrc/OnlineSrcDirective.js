@@ -113,8 +113,11 @@
           scope.removeFile = function (file) {
             var url = file.url[gnCurrentEdit.mdLanguage];
             if (
-              url.match(".*/api/records/" + gnCurrentEdit.uuid + "/attachments/.*") ==
-              null
+              url.match(
+                ".*/api/records/" +
+                  encodeURIComponent(gnCurrentEdit.uuid) +
+                  "/attachments/.*"
+              ) == null
             ) {
               // An external URL
               gnOnlinesrc[scope.isOverview ? "removeThumbnail" : "removeOnlinesrc"](
@@ -585,6 +588,7 @@
           },
           link: function (scope, element, attrs) {
             scope.onlinesrcService = gnOnlinesrc;
+
             scope.gnCurrentEdit = gnCurrentEdit;
             scope.gnRelatedResources = gnRelatedResources;
             scope.allowEdits = true;
@@ -890,7 +894,7 @@
                 return $http
                   .put(
                     "../api/records/" +
-                      scope.gnCurrentEdit.uuid +
+                      encodeURIComponent(scope.gnCurrentEdit.uuid) +
                       "/attachments/print-thumbnail",
                     null,
                     {

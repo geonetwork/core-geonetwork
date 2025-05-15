@@ -78,7 +78,7 @@ public class DoiApi {
     @io.swagger.v3.oas.annotations.Operation(
         summary = "Check that a record can be submitted to DataCite for DOI creation. " +
             "DataCite requires some fields to be populated.")
-    @GetMapping(value = "/{metadataUuid}/doi/{doiServerId}/checkPreConditions",
+    @GetMapping(value = "/{metadataUuid:.+}/doi/{doiServerId}/checkPreConditions",
         produces = {
             MediaType.APPLICATION_JSON_VALUE
         }
@@ -152,7 +152,7 @@ public class DoiApi {
 
     @io.swagger.v3.oas.annotations.Operation(
         summary = "Submit a record to the Datacite metadata store in order to create a DOI.")
-    @PutMapping(value = "/{metadataUuid}/doi/{doiServerId}",
+    @PutMapping(value = "/{metadataUuid:.+}/doi/{doiServerId}",
         produces = {
             MediaType.APPLICATION_JSON_VALUE
         }
@@ -193,7 +193,7 @@ public class DoiApi {
 
     @io.swagger.v3.oas.annotations.Operation(
         summary = "Remove a DOI (this is not recommended, DOI are supposed to be persistent once created. This is mainly here for testing).")
-    @DeleteMapping(value = "/{metadataUuid}/doi/{doiServerId}",
+    @DeleteMapping(value = "/{metadataUuid:.+}/doi/{doiServerId}",
         produces = {
             MediaType.APPLICATION_JSON_VALUE
         }
