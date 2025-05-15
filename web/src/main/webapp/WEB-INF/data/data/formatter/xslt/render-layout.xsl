@@ -229,19 +229,19 @@
                    target="_blank"
                    aria-label="Twitter"
                    class="btn btn-default">
-                  <i class="fa fa-fw fa-twitter"></i>
+                  <i class="fa-fw fa-brands fa-x-twitter"></i>
                 </a>
                 <a href="https://www.facebook.com/sharer.php?u={encode-for-uri($nodeUrl)}api%2Frecords%2F{$metadataUuid}"
                    target="_blank"
                    aria-label="Facebook"
                    class="btn btn-default">
-                  <i class="fa fa-fw fa-facebook"></i>
+                  <i class="fa-fw fa-brands fa-facebook-f"></i>
                 </a>
                 <a href="http://www.linkedin.com/shareArticle?mini=true&amp;summary=&amp;url={encode-for-uri($nodeUrl)}api%2Frecords%2F{$metadataUuid}"
                    target="_blank"
                    aria-label="LinkedIn"
                    class="btn btn-default">
-                  <i class="fa fa-fw fa-linkedin"></i>
+                  <i class="fa-fw fa-brands fa-linkedin-in"></i>
                 </a>
                 <a href="mailto:?subject={$title}&amp;body={encode-for-uri($nodeUrl)}api%2Frecords%2F{$metadataUuid}"
                    target="_blank"
