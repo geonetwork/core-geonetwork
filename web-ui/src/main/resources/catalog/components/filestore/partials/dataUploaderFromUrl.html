@@ -1,0 +1,20 @@
+<div class="row form-horizontal" data-ng-show="uuid" id="gn-upload-from-url-{{id}}">
+  <label for="gn-upload-from-url-{{id}}-input" data-translate=""
+    >filestoreUploadFromUrl</label
+  >
+
+  <div class="input-group">
+    <input
+      type="text"
+      class="form-control"
+      id="gn-upload-from-url-{{id}}-input"
+      data-ng-model="url"
+      placeholder="{{'https://...'}}"
+    />
+    <span class="input-group-btn">
+      <button class="btn btn-primary" data-ng-click="uploadFromUrl()">
+        <i class="fa fa-fw fa-file-upload"></i>
+      </button>
+    </span>
+  </div>
+</div>
