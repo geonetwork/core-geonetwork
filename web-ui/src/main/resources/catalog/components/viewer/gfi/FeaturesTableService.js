@@ -52,7 +52,7 @@
     }
 
     this.dictionary = this.$http
-      .get("../api/records/" + recordUuid + "/featureCatalog", {
+      .get("../api/records/" + encodeURIComponent(recordUuid) + "/featureCatalog", {
         cache: true,
         headers: {
           Accept: "application/json"

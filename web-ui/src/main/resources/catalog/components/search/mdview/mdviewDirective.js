@@ -382,7 +382,10 @@
 
           scope.rateForRecord = function () {
             return $http
-              .put("../api/records/" + scope.md.uuid + "/rate", scope.rate)
+              .put(
+                "../api/records/" + encodeURIComponent(scope.md.uuid) + "/rate",
+                scope.rate
+              )
               .then(function (response) {
                 scope.rate = response.data;
               });

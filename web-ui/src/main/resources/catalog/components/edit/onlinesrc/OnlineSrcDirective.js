@@ -113,8 +113,11 @@
           scope.removeFile = function (file) {
             var url = file.url[gnCurrentEdit.mdLanguage];
             if (
-              url.match(".*/api/records/" + gnCurrentEdit.uuid + "/attachments/.*") ==
-              null
+              url.match(
+                ".*/api/records/" +
+                  encodeURIComponent(gnCurrentEdit.uuid) +
+                  "/attachments/.*"
+              ) == null
             ) {
               // An external URL
               gnOnlinesrc[scope.isOverview ? "removeThumbnail" : "removeOnlinesrc"](

@@ -498,7 +498,7 @@
           return (
             url ||
             "../api/records/" +
-              uuid +
+              encodeURIComponent(uuid) +
               gnMetadataFormatter.getFormatterForRecord(md)[0].url
           );
         });

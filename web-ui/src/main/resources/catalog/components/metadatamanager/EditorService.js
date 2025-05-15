@@ -717,7 +717,7 @@
         },
         getRecord: function (uuid) {
           var defer = $q.defer();
-          $http.get("../api/records/" + uuid).then(
+          $http.get("../api/records/" + encodeURIComponent(uuid)).then(
             function (response) {
               defer.resolve(response.data);
             },

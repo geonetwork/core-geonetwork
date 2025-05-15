@@ -13,18 +13,19 @@
       data-ng-if="mdView.current.record.draft == 'e'"
       class="see-draft see-draft-not-approved"
       title=" {{('status-' + mdView.current.record.mdStatus) | translate}}"
-      data-ng-href="#/metadraf/{{md.uuid}}"
+      data-ng-href="#/metadraf/{{mdView.current.record.uuid}}"
       data-ng-show="user.canEditRecord(mdView.current.record)"
     >
       {{'seeDraft' | translate}}
     </a>
 
     <!-- If approved exists, show a link -->
+
     <a
       data-ng-if="mdView.current.record.draft == 'y'"
       class="see-draft see-draft-approved"
       title=" {{('status-' + mdView.current.record.mdStatus) | translate}}"
-      data-ng-href="#/metadata/{{md.uuid}}"
+      data-ng-href="#/metadata/{{mdView.current.record.uuid}}"
       data-ng-show="user.canEditRecord(mdView.current.record)"
     >
       {{'seeNoDraft' | translate}}

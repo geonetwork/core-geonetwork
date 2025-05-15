@@ -79,7 +79,7 @@
                 $http
                   .post(
                     "../api/records/" +
-                      (params.id || params.uuid) +
+                      (params.id || encodeURIComponent(params.uuid)) +
                       "/processes/" +
                       params.process,
                     gnUrlUtils.toKeyValue(params),
@@ -109,7 +109,7 @@
                 $http
                   .post(
                     "../api/records/" +
-                      (params.id || params.uuid) +
+                      (params.id || encodeURIComponent(params.uuid)) +
                       "/processes/" +
                       params.process,
                     gnUrlUtils.toKeyValue(params),
