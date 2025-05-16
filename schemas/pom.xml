@@ -44,6 +44,7 @@
     <module>iso19110</module>
     <module>iso19139</module>
     <module>iso19115-3.2018</module>
+    <module>iso19139.pt.mig.2.0</module>
   </modules>
 
   <properties>

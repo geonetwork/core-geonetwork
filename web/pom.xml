@@ -1178,6 +1178,11 @@
       <!-- Add dependencies to schema plugin having a custom Bean to be loaded. -->
       <dependencies>
         <!-- add schema_plugins -->
+        <dependency>
+          <groupId>org.geonetwork-opensource.schemas</groupId>
+          <artifactId>gn-schema-iso19139.pt.mig.2.0</artifactId>
+          <version>${project.version}</version>
+        </dependency>
       </dependencies>
       <build>
         <plugins>
@@ -1409,6 +1414,48 @@
         </dependency>
       </dependencies>
     </profile>
+    <!--
+    <profile>
+      <id>schema-iso19139.pt.mig.2.0</id>
+      <activation>
+        <property><name>schemasCopy</name><value>!true</value></property>
+        <file><exists>../schemas/iso19139.pt.mig.2.0</exists></file>
+      </activation>
+      <dependencies>
+        <dependency>
+          <groupId>org.geonetwork-opensource.schemas</groupId>
+          <artifactId>gn-schema-iso19139.pt.mig.2.0</artifactId>
+          <version>${project.version}</version>
+        </dependency>
+      </dependencies>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-dependency-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>iso19139.pt.mig.2.0-resources</id>
+                <phase>process-resources</phase>
+                <goals><goal>unpack</goal></goals>
+                <configuration>
+                  <artifactItems>
+                    <artifactItem>
+                      <groupId>org.geonetwork-opensource.schemas</groupId>
+                      <artifactId>gn-schema-iso19139.pt.mig.2.0</artifactId>
+                      <type>zip</type>
+                      <overWrite>false</overWrite>
+                      <outputDirectory>${schema-plugins.dir}</outputDirectory>
+                    </artifactItem>
+                  </artifactItems>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  -->
   </profiles>
 
   <properties>
