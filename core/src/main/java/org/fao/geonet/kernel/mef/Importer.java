@@ -407,9 +407,9 @@ public class Importer {
                 final String finalRating = rating;
                 final Element finalCategs = categs;
                 final String finalGroupId = groupId;
-                context.getBean(IMetadataManager.class).update(iMetadataId, new Updater<Metadata>() {
+                metadataManager.update(iMetadataId, new Updater<AbstractMetadata>() {
                     @Override
-                    public void apply(@Nonnull final Metadata metadata) {
+                    public void apply(@Nonnull final AbstractMetadata metadata) {
                         final MetadataDataInfo dataInfo = metadata.getDataInfo();
                         if (finalPopularity != null) {
                             dataInfo.setPopularity(Integer.valueOf(finalPopularity));
@@ -439,13 +439,11 @@ public class Importer {
                 });
 
                 if (validate) {
-                    java.util.Optional<Metadata> md = context.getBean(MetadataRepository.class).findById(iMetadataId);
+                    AbstractMetadata md = metadataUtils.findOne(iMetadataId);
 
-                    if (md.isPresent()) {
+                    if (md != null) {
                         // Persist the validation status
-                        IMetadataValidator metadataValidator = context.getBean(IMetadataValidator.class);
-
-                        metadataValidator.doValidate(md.get(), context.getLanguage());
+                        metadataValidator.doValidate(md, context.getLanguage());
                     }
                 }
 
@@ -504,7 +502,6 @@ public class Importer {
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
         IMetadataUtils metadataUtils = gc.getBean(IMetadataUtils.class);
         AccessManager accessManager = gc.getBean(AccessManager.class);
-        DraftMetadataUtils draftMetadataUtils = gc.getBean(DraftMetadataUtils.class);
         IMetadataStatus metadataStatus = gc.getBean(IMetadataStatus.class);
         IMetadataManager metadataManager = gc.getBean(IMetadataManager.class);
 
@@ -547,11 +544,13 @@ public class Importer {
         if (metadataExist && uuidAction == MEFLib.UuidAction.NOTHING) {
             throw new UnAuthorizedException("Record already exists. Change the import mode to overwrite or generating a new UUID.", null);
         } else if (metadataExist && uuidAction == MEFLib.UuidAction.OVERWRITE) {
+            String recordToUpdateId = metadataUtils.getMetadataId(uuid);
+
             if (isMdWorkflowEnable) {
-                throw new UnAuthorizedException("Overwrite mode is not allowed when workflow is enabled. Use the metadata editor.", null);
+                // If there is a working copy get its id otherwise create a new one and get its id
+                recordToUpdateId = metadataUtils.startEditingSession(context, recordToUpdateId).toString();
             }
 
-            String recordToUpdateId = metadataUtils.getMetadataId(uuid);
             if (accessManager.canEdit(context, recordToUpdateId)) {
                 MetadataValidationRepository metadataValidationRepository =
                     context.getBean(MetadataValidationRepository.class);
@@ -571,7 +570,7 @@ public class Importer {
             }
         } else if (metadataExist && uuidAction == MEFLib.UuidAction.REMOVE_AND_REPLACE) {
             if (isMdWorkflowEnable) {
-                throw new UnAuthorizedException("Overwrite mode is not allowed when workflow is enabled. Use the metadata editor.", null);
+                throw new UnAuthorizedException("Remove and replace mode is not allowed when workflow is enabled. Use the metadata editor.", null);
             }
 
             try {
