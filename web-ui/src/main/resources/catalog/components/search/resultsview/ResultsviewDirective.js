@@ -125,14 +125,25 @@
             // Check if there are any records
             if (rec && rec.length) {
               // Extract unique group owner IDs from the records
-              const groupIds = [...new Set(rec.map((md) => md.groupOwner))];
+              var groupIds = [];
+              var uniqueIds = {};
+
+              for (var i = 0; i < rec.length; i++) {
+                var groupOwner = rec[i].groupOwner;
+                if (groupOwner && !uniqueIds[groupOwner]) {
+                  uniqueIds[groupOwner] = true;
+                  groupIds.push(groupOwner);
+                }
+              }
 
               // Fetch and store group names for each group ID
-              groupIds.forEach((groupId) => {
-                gnMetadataActions.getGroupName(groupId).then((groupName) => {
-                  scope.groupNames[groupId] = groupName;
-                });
-              });
+              for (var j = 0; j < groupIds.length; j++) {
+                (function(groupId) {
+                  gnMetadataActions.getGroupName(groupId).then(function(groupName) {
+                    scope.groupNames[groupId] = groupName;
+                  });
+                })(groupIds[j]);
+              }
             }
 
             // get md extent boxes

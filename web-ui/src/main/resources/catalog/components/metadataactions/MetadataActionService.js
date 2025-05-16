@@ -711,7 +711,7 @@
        * @returns {boolean} - True if the group name matches the workflow group matching regex, false otherwise.
        */
       this.isGroupWithWorkflowEnabled = function (groupName) {
-        const workflowGroupMatchingRegex = gnConfig["metadata.workflow.draftWhenInGroup"];
+        var workflowGroupMatchingRegex = gnConfig["metadata.workflow.draftWhenInGroup"];
         return (
           groupName &&
           workflowGroupMatchingRegex &&

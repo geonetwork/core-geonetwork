@@ -330,9 +330,13 @@
             if (scope.displayEnableWorkflowOption(user)) {
               return true;
             }
-            return scope
-              .getStatusEffects(user)
-              .some((step) => scope.displayWorkflowStepOption(step, user));
+            var statusEffects = scope.getStatusEffects(user);
+            for (var i = 0; i < statusEffects.length; i++) {
+              if (scope.displayWorkflowStepOption(statusEffects[i], user)) {
+                return true;
+              }
+            }
+            return false;
           };
 
           /**
@@ -342,7 +346,7 @@
            * @returns {Array} - An array of workflow status effects applicable to the user.
            */
           scope.getStatusEffects = function (user) {
-            const isReviewer =
+            var isReviewer =
               user.isAdmin() || user.isReviewerForGroup(scope.md.groupOwner);
             return scope.statusEffects[isReviewer ? "reviewer" : "editor"];
           };

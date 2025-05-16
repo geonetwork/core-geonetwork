@@ -2049,9 +2049,9 @@
                     var allowedProfiles = $scope.profiles.slice(
                       $scope.profiles.indexOf(profile)
                     );
-                    return allowedProfiles.some((p) =>
-                      me["is" + p + "ForGroup"](groupId)
-                    );
+                    return allowedProfiles.some(function(p) {
+                      return me["is" + p + "ForGroup"](groupId);
+                    });
                   };
                 });
                 angular.extend($scope.user, me);
