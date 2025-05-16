@@ -39,11 +39,10 @@ import org.fao.geonet.domain.*;
 import org.fao.geonet.exceptions.BadFormatEx;
 import org.fao.geonet.exceptions.NoSchemaMatchesException;
 import org.fao.geonet.exceptions.UnAuthorizedException;
-import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
-import org.fao.geonet.kernel.datamanager.IMetadataManager;
-import org.fao.geonet.kernel.datamanager.IMetadataUtils;
-import org.fao.geonet.kernel.datamanager.IMetadataValidator;
+import org.fao.geonet.kernel.datamanager.*;
+import org.fao.geonet.kernel.datamanager.draft.DraftMetadataUtils;
 import org.fao.geonet.kernel.search.IndexingMode;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
@@ -94,7 +93,13 @@ public class Importer {
                                         final MetadataType isTemplate, final String[] category, final String groupId, final boolean validate, final boolean assign,
                                         final ServiceContext context, final Path mefFile) throws Exception {
         ApplicationContext applicationContext = ApplicationContextHolder.get();
-        final DataManager dm = applicationContext.getBean(DataManager.class);
+        final IMetadataSchemaUtils metadataSchemaUtils = applicationContext.getBean(IMetadataSchemaUtils.class);
+        final IMetadataUtils metadataUtils = applicationContext.getBean(IMetadataUtils.class);
+        final IMetadataManager metadataManager = applicationContext.getBean(IMetadataManager.class);
+        final AccessManager accessManager = applicationContext.getBean(AccessManager.class);
+        final IMetadataOperations metadataOperations = applicationContext.getBean(IMetadataOperations.class);
+        final IMetadataIndexer metadataIndexer = applicationContext.getBean(IMetadataIndexer.class);
+        final IMetadataValidator metadataValidator = applicationContext.getBean(IMetadataValidator.class);
         final SettingManager sm = applicationContext.getBean(SettingManager.class);
 
         // Load preferred schema and set to iso19139 by default
@@ -163,7 +168,7 @@ public class Importer {
                         lastUnknownMetadataFolderName = file.getParent().getParent().relativize(file);
 
                         try {
-                            String metadataSchema = dm.autodetectSchema(metadata, null);
+                            String metadataSchema = metadataSchemaUtils.autodetectSchema(metadata, null);
                             // If local node doesn't know metadata
                             // schema try to load next xml file.
                             if (metadataSchema == null) {
@@ -271,7 +276,7 @@ public class Importer {
                 }
 
                 final Element metadata = md.get(index);
-                String schema = dm.autodetectSchema(metadata, null);
+                String schema = metadataSchemaUtils.autodetectSchema(metadata, null);
 
                 if (schema == null)
                     throw new Exception("Unknown schema");
@@ -295,7 +300,7 @@ public class Importer {
 
                     if (isTemplate == MetadataType.METADATA) {
                         // Get the Metadata uuid if it's not a template.
-                        uuid = dm.extractUUID(schema, md.get(index));
+                        uuid = metadataUtils.extractUUID(schema, md.get(index));
                     } else if (isTemplate == MetadataType.SUB_TEMPLATE) {
                         // Get subtemplate uuid if defined in @uuid at root
                         uuid = md.get(index).getAttributeValue("uuid");
@@ -350,7 +355,7 @@ public class Importer {
                     }
 
                     // Validate xsd and schematron
-                    DataManager.validateExternalMetadata(schema, metadata, context, groupIdVal);
+                    metadataValidator.validateExternalMetadata(schema, metadata, context, " ", groupIdVal);
                 }
 
                 try {
@@ -364,7 +369,7 @@ public class Importer {
                     // UUID is set as @uuid in root element
                     uuid = UUID.randomUUID().toString();
 
-                    fc.add(index, dm.setUUID("iso19110", uuid, fc.get(index)));
+                    fc.add(index, metadataUtils.setUUID("iso19110", uuid, fc.get(index)));
 
                     //
                     // insert metadata
@@ -375,7 +380,7 @@ public class Importer {
                     String title = null;
                     String category = null;
                     boolean ufo = false;
-                    String fcId = dm
+                    String fcId = metadataManager
                         .insertMetadata(context, "iso19110", fc.get(index), uuid, userid, group, source, isTemplate.codeString, docType,
                             category, createDate, changeDate, ufo, IndexingMode.full);
 
@@ -420,13 +425,13 @@ public class Importer {
 
 
                         if (finalGroupId == null || finalGroupId.equals("")) {
-                            Group ownerGroup = addPrivileges(context, dm, iMetadataId, privileges);
+                            Group ownerGroup = addPrivileges(context, accessManager, metadataOperations, iMetadataId, privileges);
                             if (ownerGroup != null) {
                                 metadata.getSourceInfo().setGroupOwner(ownerGroup.getId());
                             }
                         } else {
                             final OperationAllowedRepository allowedRepository = context.getBean(OperationAllowedRepository.class);
-                            final Set<OperationAllowed> allowedSet = addOperations(context, dm, privileges, iMetadataId,
+                            final Set<OperationAllowed> allowedSet = addOperations(context, accessManager, metadataOperations, privileges, iMetadataId,
                                 Integer.valueOf(finalGroupId));
                             allowedRepository.saveAll(allowedSet);
                         }
@@ -444,7 +449,7 @@ public class Importer {
                     }
                 }
 
-                dm.indexMetadata(metadataIdMap.get(index), true);
+                metadataIndexer.indexMetadata(metadataIdMap.get(index), true, IndexingMode.full);
             }
 
             // --------------------------------------------------------------------
@@ -497,7 +502,10 @@ public class Importer {
                                     String changeDate, String groupId, MetadataType isTemplate) throws Exception {
 
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-        DataManager dm = gc.getBean(DataManager.class);
+        IMetadataUtils metadataUtils = gc.getBean(IMetadataUtils.class);
+        AccessManager accessManager = gc.getBean(AccessManager.class);
+        DraftMetadataUtils draftMetadataUtils = gc.getBean(DraftMetadataUtils.class);
+        IMetadataStatus metadataStatus = gc.getBean(IMetadataStatus.class);
         IMetadataManager metadataManager = gc.getBean(IMetadataManager.class);
 
         if (StringUtils.isBlank(uuid) || uuidAction == MEFLib.UuidAction.GENERATEUUID) {
@@ -512,7 +520,7 @@ public class Importer {
             uuid = newuuid;
 
             // --- set uuid inside metadata
-            md.add(index, dm.setUUID(schema, uuid, md.get(index)));
+            md.add(index, metadataUtils.setUUID(schema, uuid, md.get(index)));
         } else {
             if (sourceName == null)
                 sourceName = "???";
@@ -530,7 +538,7 @@ public class Importer {
             }
         }
 
-        boolean metadataExist = dm.existsMetadataUuid(uuid);
+        boolean metadataExist = metadataUtils.existsMetadataUuid(uuid);
 
         SettingManager settingManager = gc.getBean(SettingManager.class);
         boolean isMdWorkflowEnable = settingManager.getValueAsBool(Settings.METADATA_WORKFLOW_ENABLE);
@@ -543,8 +551,8 @@ public class Importer {
                 throw new UnAuthorizedException("Overwrite mode is not allowed when workflow is enabled. Use the metadata editor.", null);
             }
 
-            String recordToUpdateId = dm.getMetadataId(uuid);
-            if (dm.getAccessManager().canEdit(context, recordToUpdateId)) {
+            String recordToUpdateId = metadataUtils.getMetadataId(uuid);
+            if (accessManager.canEdit(context, recordToUpdateId)) {
                 MetadataValidationRepository metadataValidationRepository =
                     context.getBean(MetadataValidationRepository.class);
                 List<MetadataValidation> validationStatus = metadataValidationRepository
@@ -567,11 +575,11 @@ public class Importer {
             }
 
             try {
-                if (dm.getAccessManager().canEdit(context, dm.getMetadataId(uuid))) {
+                if (accessManager.canEdit(context, metadataUtils.getMetadataId(uuid))) {
                     if (Log.isDebugEnabled(Geonet.MEF)) {
                         Log.debug(Geonet.MEF, "Deleting existing metadata with UUID : " + uuid);
                     }
-                    metadataManager.deleteMetadata(context, dm.getMetadataId(uuid));
+                    metadataManager.deleteMetadata(context, metadataUtils.getMetadataId(uuid));
                     metadataManager.flush();
                 } else {
                     throw new UnAuthorizedException("User has no privilege to replace existing metadata", null);
@@ -579,16 +587,16 @@ public class Importer {
             } catch (Exception e) {
                 throw new Exception(" Existing metadata with UUID " + uuid + " could not be deleted. Error is: " + e.getMessage());
             }
-            metadataId = insertMetadata(uuid, md, schema, index, source, context, createDate, changeDate, groupId, isTemplate, dm, metadataManager);
+            metadataId = insertMetadata(uuid, md, schema, index, source, context, createDate, changeDate, groupId, isTemplate, metadataStatus, metadataManager);
         } else {
-            metadataId = insertMetadata(uuid, md, schema, index, source, context, createDate, changeDate, groupId, isTemplate, dm, metadataManager);
+            metadataId = insertMetadata(uuid, md, schema, index, source, context, createDate, changeDate, groupId, isTemplate, metadataStatus, metadataManager);
         }
 
         id.add(index, metadataId);
 
     }
 
-    private static String insertMetadata(String uuid, List<Element> md, String schema, int index, String source, ServiceContext context, String createDate, String changeDate, String groupId, MetadataType isTemplate, DataManager dm, IMetadataManager metadataManager) throws Exception {
+    private static String insertMetadata(String uuid, List<Element> md, String schema, int index, String source, ServiceContext context, String createDate, String changeDate, String groupId, MetadataType isTemplate, IMetadataStatus metadataStatus, IMetadataManager metadataManager) throws Exception {
         if (Log.isDebugEnabled(Geonet.MEF))
             Log.debug(Geonet.MEF, "Adding metadata with uuid:" + uuid);
 
@@ -601,7 +609,7 @@ public class Importer {
             .insertMetadata(context, schema, md.get(index), uuid, userid, groupId, source, isTemplate.codeString, docType, category,
                 createDate, changeDate, ufo, IndexingMode.none);
 
-        dm.activateWorkflowIfConfigured(context, metadataId, groupId);
+        metadataStatus.activateWorkflowIfConfigured(context, metadataId, groupId);
         return metadataId;
     }
 
@@ -617,7 +625,7 @@ public class Importer {
     /**
      * Add privileges according to information file.
      */
-    private static Group addPrivileges(final ServiceContext context, final DataManager dm, final int metadataId, final Element privil) {
+    private static Group addPrivileges(final ServiceContext context, final AccessManager accessManager, final IMetadataOperations metadataOperations, final int metadataId, final Element privil) {
 
         final GroupRepository groupRepository = context.getBean(GroupRepository.class);
         final OperationAllowedRepository allowedRepository = context.getBean(OperationAllowedRepository.class);
@@ -644,7 +652,7 @@ public class Importer {
                 }
 
                 groupsToAdd.add(groupEntity);
-                opAllowedToAdd.addAll(addOperations(context, dm, group, metadataId, groupEntity.getId()));
+                opAllowedToAdd.addAll(addOperations(context, accessManager, metadataOperations, group, metadataId, groupEntity.getId()));
                 if (groupOwner) {
                     if (Log.isDebugEnabled(Geonet.MEF)) {
                         Log.debug(Geonet.MEF, grpName + " set as group Owner ");
@@ -660,7 +668,7 @@ public class Importer {
     /**
      * Add operations according to information file.
      */
-    private static Set<OperationAllowed> addOperations(final ServiceContext context, final DataManager dm, final Element group,
+    private static Set<OperationAllowed> addOperations(final ServiceContext context, final AccessManager accessManager, final IMetadataOperations metadataOperations, final Element group,
                                                        final int metadataId, final int grpId) {
         @SuppressWarnings("unchecked") List<Element> operations = group.getChildren("operation");
 
@@ -668,7 +676,7 @@ public class Importer {
         for (Element operation : operations) {
             String opName = operation.getAttributeValue("name");
 
-            int opId = dm.getAccessManager().getPrivilegeId(opName);
+            int opId = accessManager.getPrivilegeId(opName);
 
             if (opId == -1) {
                 if (Log.isDebugEnabled(Geonet.MEF)) {
@@ -680,7 +688,7 @@ public class Importer {
                 if (Log.isDebugEnabled(Geonet.MEF)) {
                     Log.debug(Geonet.MEF, "   Adding --> " + opName);
                 }
-                Optional<OperationAllowed> opAllowed = dm.getOperationAllowedToAdd(context, metadataId, grpId, opId);
+                Optional<OperationAllowed> opAllowed = metadataOperations.getOperationAllowedToAdd(context, metadataId, grpId, opId);
                 if (opAllowed.isPresent()) {
                     toAdd.add(opAllowed.get());
                 }
