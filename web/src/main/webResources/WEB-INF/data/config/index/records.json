@@ -1326,7 +1326,7 @@
               },
               "langpor": {
                 "type": "text",
-                "analyzer": "${es.index.analyzer.default}",
+                "analyzer": "portuguese",
                 "copy_to": ["any.langpor"],
                 "fields": {
                   "keyword": {
@@ -1672,7 +1672,7 @@
           },
           "langpor": {
             "type": "text",
-            "analyzer": "${es.index.analyzer.default}"
+            "analyzer": "portuguese"
           }
         }
       },
