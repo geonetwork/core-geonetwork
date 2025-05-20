@@ -952,7 +952,7 @@ public class MetadataInsertDeleteApi {
         }
 
         if (uuidProcessing == MEFLib.UuidAction.NOTHING) {
-            AbstractMetadata md = metadataRepository.findOneByUuid(uuid);
+            AbstractMetadata md = metadataUtils.findOneByUuid(uuid);
             if (md != null) {
                 throw new IllegalArgumentException(
                     String.format(messages.getString("api.metadata.import.errorDuplicatedUUIDDetailed"), uuid));
@@ -1010,7 +1010,7 @@ public class MetadataInsertDeleteApi {
 
         if (rejectIfInvalid) {
             // Persist the validation status
-            AbstractMetadata metadata = metadataRepository.findOneById(iId);
+            AbstractMetadata metadata = metadataUtils.findOne(iId);
 
             metadataValidator.doValidate(metadata, context.getLanguage());
         }
