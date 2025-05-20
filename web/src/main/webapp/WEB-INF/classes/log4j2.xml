@@ -8,8 +8,8 @@
       <PatternLayout pattern="%date{ISO8601} %-5level [%logger] - %message%n"/>
     </Console>
     <RollingFile name="File">
-      <filename>${sys:log_dir:-log_dir}/geonetwork.log</filename>
-      <filePattern>${sys:log_dir:-log_dir}/geonetwork.log-%i.log</filePattern>
+      <filename>${sys:log_dir:-log_dir}/logs/geonetwork.log</filename>
+      <filePattern>${sys:log_dir:-log_dir}/logs/geonetwork.log-%i.log</filePattern>
       <PatternLayout pattern="%date{ISO8601} %-5level [%logger] - %message%n"/>
       <Policies>
         <SizeBasedTriggeringPolicy size="10 MB" />
