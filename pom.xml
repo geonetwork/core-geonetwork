@@ -1666,7 +1666,7 @@
     <pg.version>42.7.3</pg.version>
 
     <spring.version>5.3.39</spring.version>
-    <spring.security.version>5.8.15</spring.security.version>
+    <spring.security.version>5.8.16</spring.security.version>
     <spring.jpa.version>2.7.18</spring.jpa.version>
     <springboot.version>2.7.0</springboot.version>
     <springdoc.version>1.8.0</springdoc.version>
