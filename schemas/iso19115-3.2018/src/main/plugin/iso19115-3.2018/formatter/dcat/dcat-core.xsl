@@ -59,6 +59,7 @@
                 as="node()"
                 select="(/root/mdb:MD_Metadata|/mdb:MD_Metadata|/root/gmd:MD_Metadata|/gmd:MD_Metadata)"/>
 
+  <!-- Extract languages from ISO19115.3-2018 mdb:MD_Metadata -->
   <xsl:template mode="get-language"
                 match="mdb:MD_Metadata"
                 as="node()*">
@@ -77,6 +78,29 @@
       <language id="{@id}"
                 iso3code="{lan:language/*/@codeListValue}"
                 iso2code="{util:twoCharLangCode(lan:language/*/@codeListValue)}"/>
+    </xsl:for-each>
+  </xsl:template>
+
+  <!-- Extract languages from ISO19139 gmd:MD_Metadata -->
+  <xsl:template mode="get-language"
+                match="gmd:MD_Metadata"
+                as="node()*">
+    <xsl:variable name="defaultLanguage"
+                  select="$metadata/gmd:language"/>
+
+    <xsl:for-each select="$defaultLanguage">
+      <xsl:variable name="iso3code"
+                    as="xs:string?"
+                    select="gmd:LanguageCode/@codeListValue"/>
+      <language id="{util:twoCharLangCode($iso3code)}"
+                iso3code="{$iso3code}"
+                iso2code="{util:twoCharLangCode($iso3code)}"
+                default=""/>
+    </xsl:for-each>
+    <xsl:for-each select="$metadata/gmd:locale/*[not(@id = $defaultLanguage/@id)]">
+      <language id="{util:twoCharLangCode(gmd:languageCode/*/@codeListValue)}"
+                iso3code="{gmd:languageCode/*/@codeListValue}"
+                iso2code="{util:twoCharLangCode(gmd:languageCode/*/@codeListValue)}"/>
     </xsl:for-each>
   </xsl:template>
 
@@ -107,8 +131,9 @@
     <!-- TODO: Should we consider DOI? It may be encoded in metadata linkage (not available in ISO19139) -->
 
     <xsl:value-of select="if($metadataLinkage) then $metadataLinkage
-                                      else if($metadataIdentifier) then $metadataIdentifier
-                                      else concat($resourcePrefix, encode-for-uri($metadata/mdb:metadataIdentifier/*/mcc:code/*/text()))"
+                            else if (string($metadataIdentifier) and starts-with($metadataIdentifier, 'http')) then $metadataIdentifier
+                            else if (string($metadataIdentifier)) then concat($resourcePrefix, encode-for-uri($metadataIdentifier))
+                            else concat($resourcePrefix, encode-for-uri($metadata/mdb:metadataIdentifier/*/mcc:code/*/text()))"
                  />
   </xsl:function>
 
@@ -121,11 +146,12 @@
 
     <xsl:variable name="resourceIdentifier"
                   as="node()?">
-      <xsl:apply-templates mode="iso19115-3-to-dcat"
-                           select="($metadata/mdb:identificationInfo/*/mri:citation/*/cit:identifier)[1]"/>
+      <xsl:for-each select="($metadata/mdb:identificationInfo/*/mri:citation/*/cit:identifier[starts-with(*/mcc:codeSpace/*/text(), 'http')])[1]">
+        <xsl:call-template name="iso19115-3-to-dcat-identifier"/>
+      </xsl:for-each>
     </xsl:variable>
 
-    <xsl:value-of select="if($resourceIdentifier) then $resourceIdentifier
+    <xsl:value-of select="if(string($resourceIdentifier) and starts-with($resourceIdentifier, 'http')) then $resourceIdentifier
                                       else concat($catalogRecordUri, '#resource')"
     />
   </xsl:function>
@@ -159,7 +185,9 @@
                                   |.//mpc:portrayalCatalogueCitation/*/cit:onlineResource
                                   |.//mrl:additionalDocumentation//cit:onlineResource
                                   |.//mdq:reportReference//cit:onlineResource
+                                  |.//mdq:reportReference/*/cit:title[gcx:Anchor/@xlink:href]
                                   |.//mdq:specification//cit:onlineResource
+                                  |.//mdq:specification/*/cit:title[gcx:Anchor/@xlink:href]
                                   |.//mrc:featureCatalogueCitation//cit:onlineResource
                                   |mdb:identificationInfo/*/mri:graphicOverview
                            "/>
@@ -182,6 +210,7 @@
                       |mdb:resourceLineage/*/mrl:statement
                       |mrd:onLine/*/cit:name
                       |mrd:onLine/*/cit:description
+                      |cit:onlineResource/*/cit:name
                       |cit:onlineResource/*/cit:description
                       |mri:graphicOverview/*/mcc:fileDescription
                       ">
@@ -242,11 +271,14 @@
   Usage note:	The identifier is a text string which is assigned to the resource to provide an unambiguous reference within a particular context.
   -->
   <xsl:template mode="iso19115-3-to-dcat"
+                name="iso19115-3-to-dcat-identifier"
                 match="mdb:metadataIdentifier
                       |mdb:identificationInfo/*/mri:citation/*/cit:identifier
                       |cit:identifier">
     <xsl:variable name="code"
                   select="*/mcc:code/*/text()"/>
+    <xsl:variable name="codeAnchor"
+                  select="*/mcc:code/*/@xlink:href"/>
     <xsl:variable name="codeSpace"
                   select="*/mcc:codeSpace/*/text()"/>
     <xsl:variable name="isUrn"
@@ -261,6 +293,7 @@
                           then concat($codeSpace,
                                       (if (ends-with($codeSpace, $separator)) then '' else $separator),
                                       $code)
+                          else if ($codeAnchor) then $codeAnchor
                           else $code"/>
 
     <xsl:variable name="codeType"
@@ -421,5 +454,5 @@
 
 
   <xsl:template mode="iso19115-3-to-dcat"
-                match="mdb:referenceSystemInfo/*/mrs:referenceSystemIdentifier/*"/>
+                match="mdb:referenceSystemInfo/*/mrs:referenceSystemIdentifier/*|*[@codeListValue]/text()"/>
 </xsl:stylesheet>
