@@ -57,7 +57,7 @@
           <artifactId>jruby-stdlib</artifactId>
         </exclusion>
         <exclusion>
-          <groupId>org.webjars</groupId>
+          <groupId>org.webjars.npm</groupId>
           <artifactId>handlebars</artifactId>
         </exclusion>
         <exclusion>
