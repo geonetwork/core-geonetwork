@@ -114,10 +114,6 @@ public class SimpleOidcUser {
             if (idToken.getAddress() != null) {
                 address = new Address();
                 address.setAddress(idToken.getAddress().getStreetAddress());
-                if ( (address.getAddress() == null) && attributes.containsKey(StandardClaimNames.ADDRESS)) {
-                    address.setAddress(attributes.get(StandardClaimNames.ADDRESS).toString());
-
-                }
                 address.setCity(idToken.getAddress().getLocality());
                 address.setState(idToken.getAddress().getRegion());
                 address.setZip(idToken.getAddress().getPostalCode());
