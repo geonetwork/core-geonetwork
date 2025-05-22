@@ -36,6 +36,7 @@ import org.fao.geonet.kernel.harvest.harvester.AbstractParams;
 import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
 import org.fao.geonet.kernel.harvest.harvester.GroupMapper;
 import org.fao.geonet.kernel.harvest.harvester.Privileges;
+import org.fao.geonet.kernel.search.submission.batch.BatchingIndexSubmitter;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.MetadataCategoryRepository;
@@ -64,14 +65,16 @@ import java.util.concurrent.atomic.AtomicBoolean;
  *
  * @author heikki doeleman
  */
-public abstract class BaseAligner<P extends AbstractParams> extends AbstractAligner<P> {
+public abstract class BaseAligner<P extends AbstractParams> extends AbstractAligner<P> implements AutoCloseable {
 
-    private static Logger LOGGER = LoggerFactory.getLogger(Geonet.HARVESTER);
+    private static final Logger LOGGER = LoggerFactory.getLogger(Geonet.HARVESTER);
 
     public final AtomicBoolean cancelMonitor;
+    protected final BatchingIndexSubmitter batchingIndexSubmitter;
 
     protected BaseAligner(AtomicBoolean cancelMonitor) {
         this.cancelMonitor = cancelMonitor;
+        this.batchingIndexSubmitter = new BatchingIndexSubmitter();
     }
 
     public void addCategories(AbstractMetadata metadata, Iterable<String> categories,
@@ -234,4 +237,8 @@ public abstract class BaseAligner<P extends AbstractParams> extends AbstractAlig
     }
 
 
+    @Override
+    public void close() throws Exception {
+        this.batchingIndexSubmitter.close();
+    }
 }
