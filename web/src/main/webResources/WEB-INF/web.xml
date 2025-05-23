@@ -475,7 +475,7 @@
     <servlet-class>org.fao.geonet.proxy.URITemplateProxyServlet</servlet-class>
     <init-param>
       <param-name>targetUri</param-name>
-      <param-value>${es.protocol}://${es.host}:${es.port}/${es.index.features}/{_}</param-value>
+      <param-value>${es.protocol}://${es.host}:${es.port}/${es.index.features}/_search</param-value>
     </init-param>
     <init-param>
       <param-name>log</param-name>

@@ -37,7 +37,7 @@
   var FACET_RANGE_DELIMITER = " - ";
 
   geonetwork.gnIndexRequest = function (config, $injector) {
-    this.ES_URL = config.url + "?_=_search";
+    this.ES_URL = config.url;
 
     this.$http = $injector.get("$http");
     this.$q = $injector.get("$q");
