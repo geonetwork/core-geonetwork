@@ -112,6 +112,7 @@ public class SimpleOidcUser {
 
 
             if (idToken.getAddress() != null) {
+                //https://openid.net/specs/openid-connect-core-1_0.html#AddressClaim
                 address = new Address();
                 address.setAddress(idToken.getAddress().getStreetAddress());
                 address.setCity(idToken.getAddress().getLocality());
