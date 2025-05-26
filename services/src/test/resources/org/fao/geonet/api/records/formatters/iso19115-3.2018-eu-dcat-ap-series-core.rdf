@@ -155,7 +155,7 @@ Location:[Focus node] - [https://metawal.wallonie.be/geonetwork/srv/api/records/
           <rdf:Description>
             <rdf:type rdf:resource="http://xmlns.com/foaf/0.1/Person"/>
             <rdf:type rdf:resource="http://www.w3.org/ns/prov#Agent"/>
-            <foaf:name>Thierry Berthet</foaf:name>
+            <foaf:name xml:lang="fr">Thierry Berthet</foaf:name>
             <org:memberOf>
               <foaf:Organization>
                 <foaf:name xml:lang="fre">Direction du Développement territorial (SPW - Territoire, Logement,

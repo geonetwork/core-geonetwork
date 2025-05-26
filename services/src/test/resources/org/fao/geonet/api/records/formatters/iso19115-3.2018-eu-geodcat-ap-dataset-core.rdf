@@ -200,7 +200,7 @@
       <geodcatap:custodian>
          <rdf:Description>
             <rdf:type rdf:resource="http://www.w3.org/2006/vcard/ns#Organization"/>
-            <vcard:fn>Thierry Berthet</vcard:fn>
+            <vcard:fn xml:lang="fr">Thierry Berthet</vcard:fn>
             <vcard:org>
                <rdf:Description>
                   <vcard:organisation-name xml:lang="fr">Direction du Développement territorial (SPW - Territoire, Logement, Patrimoine,
@@ -214,7 +214,7 @@
       <geodcatap:custodian>
          <rdf:Description rdf:about="https://orcid.org/jb98765">
             <rdf:type rdf:resource="http://www.w3.org/2006/vcard/ns#Organization"/>
-            <vcard:fn>Jean Berthet</vcard:fn>
+            <vcard:fn xml:lang="fr">Jean Berthet</vcard:fn>
             <vcard:org>
                <rdf:Description>
                   <vcard:organisation-name xml:lang="fr">Direction du Développement territorial (SPW - Territoire, Logement, Patrimoine,

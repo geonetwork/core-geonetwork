@@ -48,7 +48,7 @@
         <prov:agent>
           <rdf:Description>
             <rdf:type rdf:resource="http://xmlns.com/foaf/0.1/Person"/>
-            <foaf:name>Trooster, Maria</foaf:name>
+            <foaf:name xml:lang="nl">Trooster, Maria</foaf:name>
             <org:memberOf>
               <foaf:Organization>
                 <foaf:name xml:lang="nl">Provincie Utrecht</foaf:name>
@@ -67,7 +67,7 @@
     <dct:rightsHolder>
       <rdf:Description>
         <rdf:type rdf:resource="http://xmlns.com/foaf/0.1/Person"/>
-        <foaf:name>Stemerdink, Mark</foaf:name>
+        <foaf:name xml:lang="nl">Stemerdink, Mark</foaf:name>
         <org:memberOf>
           <foaf:Organization>
             <foaf:name xml:lang="nl">Provincie Utrecht</foaf:name>

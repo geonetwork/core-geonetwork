@@ -183,7 +183,7 @@
             <prov:agent>
                <rdf:Description>
                   <rdf:type rdf:resource="http://xmlns.com/foaf/0.1/Person"/>
-                  <foaf:name>Thierry Berthet</foaf:name>
+                  <foaf:name xml:lang="fr">Thierry Berthet</foaf:name>
                   <org:memberOf>
                      <foaf:Organization>
                         <foaf:name xml:lang="fr">Direction du Développement territorial (SPW - Territoire, Logement, Patrimoine,
@@ -205,7 +205,7 @@
             <prov:agent>
                <rdf:Description rdf:about="https://orcid.org/jb98765">
                   <rdf:type rdf:resource="http://xmlns.com/foaf/0.1/Person"/>
-                  <foaf:name>Jean Berthet</foaf:name>
+                  <foaf:name xml:lang="fr">Jean Berthet</foaf:name>
                   <org:memberOf>
                      <foaf:Organization rdf:about="https://orcid.org/jb98765">
                         <foaf:name xml:lang="fr">Direction du Développement territorial (SPW - Territoire, Logement, Patrimoine,
