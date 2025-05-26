@@ -30,7 +30,9 @@ Once you have Tomcat installed on your system, locate the webapps folder and pla
 Open the file /geonetwork/WEB-INF/config.properties and alter the elasticsearch connection
 
 ``` bash
-$ es.url=http://localhost:9200
+es.protocol=http
+es.host=localhost
+es.port=9200
 ```
 
 Then (re)start Jetty/Tomcat.

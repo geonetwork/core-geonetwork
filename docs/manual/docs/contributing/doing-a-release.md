@@ -127,9 +127,100 @@
     ./release-restore.sh
     ```
 
+3. Close the milestone on github https://github.com/geonetwork/core-geonetwork/milestones?state=closed with link to sourceforge download.
+   
+   **Title:** ``4.4.7``
+   ```
+   Downloads available here: https://sourceforge.net/projects/geonetwork/files/GeoNetwork_opensource/v4.4.7/
+   ```
+   
+4. Publish the release on github https://github.com/geonetwork/core-geonetwork/releases .
+   
+   **Title:** ``GeoNetwork v4.4.7``
+   ```
+   https://sourceforge.net/projects/geonetwork/files/GeoNetwork_opensource/v4.4.7/
+
+   Check the [GeoNetwork 4.4.7 changelog](https://docs.geonetwork-opensource.org/4.4/overview/change-log/version-4.4.7/)
+   ```
+   
+5. Update the website https://github.com/geonetwork/website .
+   
+   * Version: [docssrc/conf.py](https://github.com/geonetwork/website/blob/master/docsrc/conf.py):
+   
+     ```
+     # The short X.Y version.
+     version = '4.4.7'
+     # The full version, including alpha/beta/rc tags.
+     release = '4.4.7'
+     ```
+
+    -   Update the download link: <>
+    -   Add the section for the new release: <https://github.com/geonetwork/website/blob/master/docsrc/news.rst>
+    
+   * Download: [docsrc/downloads.rst](https://github.com/geonetwork/website/blob/master/docsrc/downloads.rst)
+   
+     ```
+     Releases
+     --------
+     
+      * `v4.4.7 <https://sourceforge.net/projects/geonetwork/files/GeoNetwork_opensource/v4.4.7/>`_
+     ``` 
+     
+   * News: [docsrc/news.rst](https://github.com/geonetwork/website/blob/master/docsrc/news.rst)
+     
+     ```
+     News
+     ====
+     
+     GeoNetwork opensource v4.4.7 released
+     ------------------------------------------------
+     
+     Date: 10 April 2025
+     
+     We're pleased to announce the release 4.4.7 of GeoNetwork opensource.
+     Check the `changelog <https://docs.geonetwork-opensource.org/4.4/overview/change-log/version-4.4.7/>`__ and proceed to :doc:`downloads` and enjoy!
+     
+     Thanks and congratulations to the all community members!
+     ```
+   
+6. Share with [GeoNetwork User Forum](https://discourse.osgeo.org/c/geonetwork/user/54) inviting discussion:
+   
+   Latest: **GeoNetwork 4.4.7 Released** (Tags: ``release``)
+   
+   ```
+   We're pleased to [announce the release GeoNetwork opensource v4.4.7](https://geonetwork-opensource.org/news.html).
+   
+   This is a minor update to the 4.4 latest series, recommended for those enjoying the newest features from the GeoNetwork community.
+   
+   You can find the software in [GeoNetwork/v4.4.7](https://sourceforge.net/projects/geonetwork/files/GeoNetwork_opensource/v4.4.7/) downloads.
+   
+   The changelog [provides an overview of new functionality and features](https://docs.geonetwork-opensource.org/4.4/overview/change-log/version-4.4.7/).
+   
+   Thanks to everyone who contributed and congratulations to the GeoNetwork community.
+   
+   If you have any questions about this release please reply to this topic.
+   ```
+   
+   Stable: **GeoNetwork 4.4.12 Released** (Tags: ``release``)
+   
+   ```
+   We're pleased to [announce the release GeoNetwork opensource v4.2.12](https://geonetwork-opensource.org/news.html).
+   
+   This is a minor update to the 4.2 stable series, recommended for production use and for new installations of GeoNetwork.
+   
+   You can find the software in [GeoNetwork/v4.2.12](https://sourceforge.net/projects/geonetwork/files/GeoNetwork_opensource/v4.2.12/) downloads.
+   
+   The changelog [provides an overview of new functionality and features](https://sourceforge.net/projects/geonetwork/files/GeoNetwork_opensource/v4.2.12/).
+   
+   Thanks and congratulations to the all community members.
+   
+   If you have any questions about this release please reply to this topic.
+   ```
+
+
 ## Doing a manual release
 
-This section documents the steps followed by the development team to do a new release.
+This section documents the manual steps followed by the development team to do a new release.
 
 Once the release branch has been thoroughly tested and is stable a release can be made.
 

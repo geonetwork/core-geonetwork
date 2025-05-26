@@ -460,7 +460,7 @@
     "associatedResourcesPanel": "Přidružené zdroje",
     "validationSuccessLabel": "úspěch",
     "validationErrorLabel": "chyby",
-    "metadataDuplicatedField-title": "The metadata title is used in another metadata record.",
-    "metadataDuplicatedField-altTitle": "The metadata alternate title is used in another metadata record.",
-    "metadataDuplicatedField-identifier": "The metadata resource identifier is used in another metadata record."
+    "metadataDuplicatedField-title": "Název metadat se používá v jiném záznamu metadat.",
+    "metadataDuplicatedField-altTitle": "Alternativní název metadat se používá v jiném záznamu metadat.",
+    "metadataDuplicatedField-identifier": "Identifikátor zdroje metadat se používá v jiném záznamu metadat."
 }

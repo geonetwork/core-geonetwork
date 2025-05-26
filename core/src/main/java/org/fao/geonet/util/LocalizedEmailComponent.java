@@ -245,7 +245,7 @@ public class LocalizedEmailComponent {
      */
     public String parseMessage(Locale locale) {
 
-        ArrayList<LocalizedEmailParameter> parametersForLocale = parameters.get(locale);
+        ArrayList<LocalizedEmailParameter> parametersForLocale = parameters.getOrDefault(locale, new ArrayList<>());
 
         String parsedMessage;
         switch (keyType) {

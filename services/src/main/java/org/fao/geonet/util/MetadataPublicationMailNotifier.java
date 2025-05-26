@@ -75,9 +75,10 @@ public class MetadataPublicationMailNotifier {
                 StatusValueNotificationLevel.valueOf(notificationSetting);
             if (notificationLevel != null) {
 
-                if (notificationLevel == StatusValueNotificationLevel.recordProfileReviewer) {
+                if (notificationLevel.name().startsWith("recordProfile")) {
                     Map<Integer, List<MetadataPublicationNotificationInfo>> metadataListToNotifyPublicationPerGroup =
                         metadataListToNotifyPublication.stream()
+                            .filter(metadata -> metadata.getGroupId() != null)
                             .collect(Collectors.groupingBy(MetadataPublicationNotificationInfo::getGroupId));
 
                     // Process the metadata published by group owner

@@ -102,6 +102,7 @@
       data-ng-if="mdView.current.record.contactForDistribution"
       data-gn-metadata-contacts="mdView.current.record.contactForDistribution"
       data-gn-mode="default"
+      data-type="distribution"
       data-layout="icon"
     ></div>
 
@@ -198,7 +199,10 @@
   </div>
 </div>
 
-<div class="row gn-section gn-section-{{mdView.current.record.resourceType[0]}}">
+<div
+  class="row gn-section gn-section-{{mdView.current.record.resourceType[0]}}"
+  data-ng-if="mdView.current.record.contactForResource || mdView.current.record.resourceCredit"
+>
   <div class="col-md-8 gn-record gn-break">
     <div
       ng-include="'../../catalog/views/default/templates/recordView/contact.html'"
@@ -214,6 +218,7 @@
       data-user="user"
       data-layout="card"
       data-types="children"
+      data-size="20"
       data-title="{{'seriesComposedOf' | translate}}"
     ></div>
 

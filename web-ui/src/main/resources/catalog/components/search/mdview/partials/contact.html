@@ -1,4 +1,4 @@
-<div data-ng-if="::layout === 'icon'">
+<div data-ng-if="!isDefaultContactViewEnabled()">
   <ul>
     <li
       class="gn-contact-card"
@@ -41,7 +41,7 @@
         </address>
 
         <div
-          data-gn-search-filter-link="OrgForResourceObject.default"
+          data-gn-search-filter-link="{{focusOnFilterFieldName}}"
           data-filter="c.organisation"
           data-label="focusOnFrom"
         >
@@ -99,7 +99,7 @@
           </address>
 
           <div
-            data-gn-search-filter-link="OrgForResourceObject.default"
+            data-gn-search-filter-link="{{focusOnFilterFieldName}}"
             data-filter="c.organisation"
             data-label="focusOnFrom"
           >
@@ -157,7 +157,7 @@
           </address>
 
           <div
-            data-gn-search-filter-link="OrgForResourceObject.default"
+            data-gn-search-filter-link="{{focusOnFilterFieldName}}"
             data-filter="c.organisation"
             data-label="focusOnFrom"
           >
@@ -170,7 +170,7 @@
     </li>
   </ul>
 </div>
-<div data-ng-if="::layout !== 'icon'">
+<div data-ng-if="isDefaultContactViewEnabled()">
   <div
     class="gn-contact"
     data-ng-if="mode == 'default'"
@@ -236,24 +236,23 @@
             <img data-ng-if="c.logo" class="gn-source-logo" data-ng-src="{{::c.logo}}" />
           </div>
           <address>
-            <div data-ng-if="::c.website">
-              <label data-translate="">mdWebsite</label>
-              <a data-ng-href="{{::c.website}}">
-                <i class="fa fa-fw fa-link"></i>
-                {{c.organisation}}
-              </a>
-            </div>
-            <div data-ng-if="::!c.website">
-              <label data-translate="">mdOrganization</label>
-              {{c.organisation}}
-            </div>
-
             <div data-ng-repeat="c in contact track by $index">
               <div data-gn-metadata-individual="c"></div>
             </div>
 
             <!-- Address for organisation: display for 1st contact in organisation -->
             <div data-ng-repeat="c in contact | limitTo:1">
+              <div data-ng-if="::c.website">
+                <label data-translate="">mdWebsite</label>
+                <a data-ng-href="{{::c.website}}">
+                  <i class="fa fa-fw fa-link"></i>
+                  {{c.organisation}}
+                </a>
+              </div>
+              <div data-ng-if="::!c.website">
+                <label data-translate="">mdOrganization</label>
+                {{c.organisation}}
+              </div>
               <div data-ng-if="c.address != ''">
                 <label data-translate="">mdAddress</label>
                 {{c.address}}
