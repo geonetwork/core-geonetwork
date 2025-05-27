@@ -37,4 +37,4 @@ Fixes:
 * [Use the copyBlob to copy the resource with updated metadata](https://github.com/geonetwork/core-geonetwork/pull/8533)
 * [Update file upload so that it has better error support.](https://github.com/geonetwork/core-geonetwork/pull/8513)
 
-and more \... see [4.2.12-0 issues](https://github.com/geonetwork/core-geonetwork/issues?q=is%3Aissue+milestone%3A4.2.12+is%3Aclosed) and [pull requests](https://github.com/geonetwork/core-geonetwork/pulls?page=3&q=is%3Apr+milestone%3A4.2.12+is%3Aclosed) for full details.
+and more \... see [4.2.12-0 issues](https://github.com/geonetwork/core-geonetwork/issues?q=is%3Aissue+milestone%3A4.2.12+is%3Aclosed) and [pull requests](https://github.com/geonetwork/core-geonetwork/pulls?q=is%3Apr+milestone%3A4.2.12+is%3Aclosed) for full details.
