@@ -1,0 +1,41 @@
+================================================================================
+===
+=== GeoNetwork 4.2.13-SNAPSHOT: List of changes
+===
+================================================================================
+- Fix issue with parsing the oidc local (#8822)
+- OpenID Connect - Fix Login failure with empty address info (#8817)
+- Database harvester supporting PostgreSQL and Oracle JDBC connections (#8247) (#8795)
+- Update to GeoTools 28.6.1 (#8812)
+- ES 7.17.15 sync with pom.xml es.version property (#8811)
+- Fix typo in ESFeaturesProxy configuration.
+- Update z-index for citation buttons (#8806)
+- [Backport 4.2.x] Minor upgrade of FontAwesome to version 6.4.2 and update Twitter icon (#8791)
+- [Backport 4.2.x] Contact full view vs icon view configuration on record summary page (#8780) (#8789)
+- WebDav harvester / update database change date when updating a metadata. (#8790)
+- [Backport 4.2.x] Record view / fix permalink option. (#8778)
+- [Backport 4.2.x] Add new recordProfileUserAdmin notification level (#8787)
+- Remove ES 6 code and prettier formatting. (#8786)
+- [Backport 4.2.x] setting option to enable/disable backup during delete record (#8728) (#8784)
+-  Update translations for 4.2.x branch (#8783)
+- [Backport 4.2.x] Fix map list "add to map" function (#8775)
+- [Backport 4.2.x] Fix localized watchlist emails (#8773)
+- Fix md is null in record view (#8771)
+- [Backport 4.2.x] Update the excludedPaths from portalCheckFilter in web.xml to be sharable for other configs (#8770)
+- Allow to configure the Elasticsearch connection in environment variables (#8585) (#8764)
+- OIDC Improvements and bug fixes (#8761) (#8767)
+- Fix submenu still displays with no children (#8766)
+- API / WFSHarvesterApi / Restrict to Editor (#8760)
+- Search / Avoid breaking search when schema not indexed or not available (#7470) (#8751)
+- DOI / Validation / Failing on organisation encoded using Anchor. (#8753)
+- Add SQL migration to 4.2.13 version (#8758)
+- Fix cannot update groups for static page in 4.2.x (#8759)
+- remove dead code (#8746)
+- Map viewer / show style selection menu on the right to avoid cropping it (#8727)
+- Avoid null pointer in es painless script (#8736)
+- Translate roles in the feedback form (#8737)
+- Update AudienceAccessTokenValidator.java (#8738)
+- Hide contactForResource header when there is are none (#8739)
+- [Backport 4.2.x] 7802.backport.static page for record view menu (#8740)
+- update change log index for 4.2.12 release
+- release scripts
