@@ -1623,7 +1623,7 @@
     <pg.version>42.3.10</pg.version>
 
     <spring.version>5.3.39</spring.version>
-    <spring.security.version>5.7.13</spring.security.version>
+    <spring.security.version>5.7.14</spring.security.version>
     <spring.jpa.version>2.2.13.RELEASE</spring.jpa.version>
     <springboot.version>2.7.0</springboot.version>
     <springdoc.version>1.8.0</springdoc.version>
