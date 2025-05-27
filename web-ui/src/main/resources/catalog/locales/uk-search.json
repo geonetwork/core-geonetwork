@@ -552,6 +552,7 @@
     "addLayerPrefix": "Додайте шар",
     "addLayerPostfix": "до карти",
     "submit": "Надіслати",
+    "additionalLinks": "Additional Links",
     "indexingErrorMsg-invalidBounds": "Попередження / Поле resourceTemporalDateRange / Нижня та верхня межі пусті або недійсні дати. Діапазон дат не проіндексовано.",
     "indexingErrorMsg-invalidDateFormat": "Попередження/Дата {{dateType}} зі значенням &#39;{{date}}&#39; не була дійсним форматом дати.",
     "indexingErrorMsg-keywordNotFoundInThesaurus": "Попередження / Ключове слово {{keyword}} не знайдено в {{thesaurus}}.",
