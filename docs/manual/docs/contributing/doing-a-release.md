@@ -15,7 +15,7 @@
    
    ```bash
    git add .
-   git commit -m "Transifix update"
+   git commit -m "Transifex update"
    ```
 
 ### Release Notes
