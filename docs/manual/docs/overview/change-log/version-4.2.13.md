@@ -4,6 +4,10 @@ GeoNetwork 4.2.13 is a minor release.
 
 ## Migration notes
 
+### Security Advisory
+
+Release is made in conjunction with a security advisory to be published early June.
+
 ### API changes
 
 * [Restrict WFSHarvester API to users with Editor role](https://github.com/geonetwork/core-geonetwork/pull/8760)
