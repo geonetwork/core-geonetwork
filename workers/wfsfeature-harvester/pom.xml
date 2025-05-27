@@ -28,7 +28,7 @@
   <parent>
     <artifactId>gn-workers</artifactId>
     <groupId>org.geonetwork-opensource</groupId>
-    <version>4.2.13-SNAPSHOT</version>
+    <version>4.2.13-0</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
