@@ -357,7 +357,7 @@
     "KMLfileURL": "URL af KML skrá",
     "refineSearch": "Fínstilla leit",
     "backToList": "Til baka í Lista",
-    "privilegesBatchAlert": "<span class='text-danger'>The privileges will be updated for all editable records in the selection. The privilege form is empty and does not reflect the selected records current privileges! Privileges are reset and replaced by the new one.</span><br/><br/>Clicking on <strong>Merge selected</strong> will add (checked with <strong>+</strong>) or remove (checkbox with <strong>-</strong>) selected privileges.<br/><br/>Clicking on <strong>Replace by selected</strong> will remove record categories and then add (checked with <strong>+</strong>) or remove (checkbox with <strong>-</strong>) selected privileges.",
+    "privilegesBatchAlert": "<span class='text-danger'>The privileges will be updated for all editable records in the selection. The privilege form is empty and does not reflect the selected records current privileges! Privileges are reset and replaced by the new one.</span><br/><br/>Clicking on <strong>Merge selected</strong> will add (checked with <strong>+</strong>) or remove (checkbox with <strong>-</strong>) selected privileges.<br/><br/>Clicking on <strong>Update</strong> will remove record privileges and then add (checked with <strong>+</strong>) or remove (checkbox with <strong>-</strong>) selected privileges.",
     "permalink": "Endanlegur hlekkur",
     "permalinkTo": "Endanlegur hlekkur á  {{title}}",
     "shareOnTwitter": "Deila á Twitter",
