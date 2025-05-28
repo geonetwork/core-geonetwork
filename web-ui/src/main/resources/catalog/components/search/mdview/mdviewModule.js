@@ -357,9 +357,10 @@
 
           gnMdViewObj.usingFormatter = f !== undefined;
 
-          if (f != undefined) {
+          if (gnMdViewObj.usingFormatter) {
+            var uuid = gnSearchLocation.getUuid();
             $scope.currentFormatter = f.replace(/.*(\/formatters.*)/, "$1");
-            $scope.loadFormatter(f);
+            $scope.loadFormatter(f.replace(uuid, encodeURIComponent(uuid)));
           }
         }
       }

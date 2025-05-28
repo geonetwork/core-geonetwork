@@ -2,7 +2,7 @@
   <a
     class="btn btn-default gn-md-edit-btn"
     data-ng-show="user.canEditRecord(mdView.current.record) && (user.isReviewerOrMore() || mdView.current.record.mdStatus != 4 || !isMdWorkflowEnable)"
-    data-ng-href="catalog.edit#/metadata/{{gnMetadataActions.getMetadataIdToEdit(mdView.current.record)}}?redirectUrl=catalog.search%23%2Fmetadata%2F{{mdView.current.record.uuid}}"
+    data-ng-href="catalog.edit#/metadata/{{gnMetadataActions.getMetadataIdToEdit(mdView.current.record)}}?redirectUrl={{'catalog.search#/metadata/' + mdView.current.record.uuid | encodeURIComponent}}"
     title="{{'edit' | translate}}"
   >
     <span class="fa fa-fw fa-pencil"></span>

@@ -24,6 +24,8 @@
 package org.fao.geonet.kernel.datamanager.base;
 
 import com.google.common.base.Optional;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.lang.NotImplementedException;
@@ -342,7 +344,7 @@ public class BaseMetadataUtils implements IMetadataUtils {
 
 
         String sitemapLinkUrl = settingManager.getValue(METADATA_URL_SITEMAPLINKURL);
-        String defaultLink = settingManager.getNodeURL() + "api/records/" + uuid + "?language=all";
+        String defaultLink = String.format("%sapi/records/%s?language=all", settingManager.getNodeURL(), URLEncoder.encode(uuid, StandardCharsets.UTF_8));
         String permalink = buildUrl(uuid, language, sitemapLinkUrl);
         return StringUtils.isNotEmpty(permalink) ? permalink : defaultLink;
     }

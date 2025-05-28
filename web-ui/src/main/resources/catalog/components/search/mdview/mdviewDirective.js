@@ -82,13 +82,13 @@
                 "#/" +
                 (scope.md.draft == "y" ? "metadraf" : "metadata") +
                 "/" +
-                scope.md.uuid +
+                encodeURIComponent(scope.md.uuid) +
                 (scope.formatter === undefined || scope.formatter == "" ? "" : formatter);
 
               element.attr("href", url);
             } else {
               element.on("click", function (e) {
-                gnMdView.setLocationUuid(scope.md.uuid, formatter);
+                gnMdView.setLocationUuid(encodeURIComponent(scope.md.uuid), formatter);
               });
             }
             if (scope.records && scope.records.length) {
@@ -382,7 +382,10 @@
 
           scope.rateForRecord = function () {
             return $http
-              .put("../api/records/" + scope.md.uuid + "/rate", scope.rate)
+              .put(
+                "../api/records/" + encodeURIComponent(scope.md.uuid) + "/rate",
+                scope.rate
+              )
               .then(function (response) {
                 scope.rate = response.data;
               });
@@ -626,7 +629,11 @@
             function (newVal, oldVal) {
               if (newVal !== null && newVal !== oldVal) {
                 $http
-                  .get("../api/records/" + scope.md.getUuid() + "/permalink")
+                  .get(
+                    "../api/records/" +
+                      encodeURIComponent(scope.md.getUuid()) +
+                      "/permalink"
+                  )
                   .then(function (r) {
                     scope.socialMediaLink = r.data;
                   });
