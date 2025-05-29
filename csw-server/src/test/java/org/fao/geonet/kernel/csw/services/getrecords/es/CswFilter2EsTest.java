@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2024 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2025 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -182,7 +182,7 @@ class CswFilter2EsTest {
             "<Filter xmlns=\"http://www.opengis.net/ogc\">\n" //
                 + "    <PropertyIsLike wildCard=\"%\" singleChar=\"_\" escapeChar=\"\\\">\n" //
                 + "          <PropertyName>AnyText</PropertyName>\n" //
-                + "          <Literal>s\\_rvice\\%</Literal>\n" //
+                + "          <Literal>s_rvice%</Literal>\n" //
                 + "    </PropertyIsLike>\n" //
                 + "      </Filter>";
 
@@ -219,7 +219,7 @@ class CswFilter2EsTest {
             "<Filter xmlns=\"http://www.opengis.net/ogc\">\n" //
                 + "    <PropertyIsLike wildCard=\"%\" singleChar=\"_\" escapeChar=\"\\\">\n" //
                 + "          <PropertyName>AnyText</PropertyName>\n" //
-                + "          <Literal>OGC:WMS\\%</Literal>\n" //
+                + "          <Literal>OGC:WMS%</Literal>\n" //
                 + "    </PropertyIsLike>\n" //
                 + "      </Filter>";
 
