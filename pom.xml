@@ -29,7 +29,7 @@
   <groupId>org.geonetwork-opensource</groupId>
   <artifactId>geonetwork</artifactId>
   <packaging>pom</packaging>
-  <version>4.4.8-SNAPSHOT</version>
+  <version>4.4.9-SNAPSHOT</version>
   <name>GeoNetwork opensource</name>
   <description>GeoNetwork opensource is a standards based, Free and
     Open Source catalog application to manage spatially referenced
@@ -1604,7 +1604,6 @@
     <es.protocol>http</es.protocol>
     <es.port>9200</es.port>
     <es.host>localhost</es.host>
-    <es.url>${es.protocol}://${es.host}:${es.port}</es.url>
     <es.index.features>gn-features</es.index.features>
     <es.index.features.type>features</es.index.features.type>
     <es.index.records>gn-records</es.index.records>
@@ -1662,7 +1661,7 @@
 
     <!-- NOTE: When updating GeoTools, check which version
     of Postgres is used and update pg.version if needed. -->
-    <geotools.version>32.2</geotools.version>
+    <geotools.version>32.3</geotools.version>
     <jts.version>1.20.0</jts.version>
     <pg.version>42.7.3</pg.version>
 

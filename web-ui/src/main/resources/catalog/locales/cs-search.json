@@ -552,6 +552,7 @@
     "addLayerPrefix": "Přidat vrstvu",
     "addLayerPostfix": "do mapy",
     "submit": "Odeslat",
+    "additionalLinks": "Additional Links",
     "indexingErrorMsg-invalidBounds": "Upozornění / Pole resourceTemporalDateRange / Dolní a horní hranice prázdné nebo neplatné datum. Časové období není indexováno.",
     "indexingErrorMsg-invalidDateFormat": "Upozornění / Datum {{dateType}} s hodnotou '{{date}}' nebyl platný formát data.",
     "indexingErrorMsg-keywordNotFoundInThesaurus": "Upozornění / Klíčové slovo {{keyword}} nebylo v {{thesaurus}} nalezeno.",

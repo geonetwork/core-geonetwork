@@ -142,6 +142,7 @@ public class EsSearchManager implements ISearchManager {
             .add(Geonet.IndexFieldNames.GROUP_OWNER)
             .add(Geonet.IndexFieldNames.RESOURCEABSTRACT)
             .add(Geonet.IndexFieldNames.RESOURCEABSTRACT + "Object")
+            .add("resourceIdentifier")
             .add("operatesOn")
             .build();
 

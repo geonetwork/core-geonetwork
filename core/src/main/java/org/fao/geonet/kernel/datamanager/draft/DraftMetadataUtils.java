@@ -55,6 +55,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Nonnull;
 import javax.persistence.EntityNotFoundException;
@@ -421,6 +423,7 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
      * This needs improvements.
      */
     @Override
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public Integer startEditingSession(ServiceContext context, String id) throws Exception {
         // Check id
         AbstractMetadata md = findOne(Integer.valueOf(id));

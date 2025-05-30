@@ -66,6 +66,7 @@ import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.languages.FeedbackLanguages;
 import org.fao.geonet.repository.*;
 import org.fao.geonet.util.MetadataPublicationMailNotifier;
+import org.fao.geonet.util.WorkflowUtil;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
@@ -515,6 +516,31 @@ public class MetadataWorkflowApi {
                 "Metadata workflow is disabled, can not be set the status of metadata")
                 .withMessageKey("exception.resourceNotEnabled.workflow")
                 .withDescriptionKey("exception.resourceNotEnabled.workflow.description");
+        }
+
+        // If the metadata workflow status is unset and the new status is DRAFT, workflow is being enabled
+        if (metadataStatus.getStatus(metadata.getId()) == null) {
+            // Retrieve the group owner ID from the metadata source information
+            Integer groupOwnerId = metadata.getSourceInfo().getGroupOwner();
+
+            // Find the group owner by ID from the group repository
+            // If the group owner is not found, throw a ResourceNotFoundException with a formatted message
+            Group groupOwner = groupRepository.findById(groupOwnerId).orElseThrow(
+                () -> new ResourceNotFoundException(
+                    MessageFormat.format(
+                        messages.getString("api.groups.group_not_found"),
+                        groupOwnerId
+                    )
+                )
+            );
+
+            // Check if the group has an enabled workflow
+            // If not, throw a FeatureNotEnabledException with an appropriate message
+            if (!WorkflowUtil.isGroupWithEnabledWorkflow(groupOwner.getName())) {
+                throw new FeatureNotEnabledException("Metadata workflow is disabled for group '" + groupOwner.getName() + "', metadata status can not be set")
+                    .withMessageKey("exception.resourceNotEnabled.groupWorkflow", new Object[]{groupOwner.getName()})
+                    .withDescriptionKey("exception.resourceNotEnabled.groupWorkflow.description", new Object[]{groupOwner.getName()});
+            }
         }
 
         // --- only allow the owner of the record to set its status
