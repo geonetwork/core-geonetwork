@@ -49,6 +49,7 @@ import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.kernel.mef.Importer;
 import org.fao.geonet.kernel.mef.MEFLib;
 import org.fao.geonet.kernel.search.IndexingMode;
+import org.fao.geonet.kernel.search.submission.DirectIndexSubmitter;
 import org.fao.geonet.repository.AbstractSpringDataTest;
 import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.SourceRepository;
@@ -350,7 +351,7 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
             id, createDate, createDate,
             "" + groupId, metadataType);
 
-        dataManager.indexMetadata(id.get(0), true);
+        dataManager.indexMetadata(id.get(0), DirectIndexSubmitter.INSTANCE);
         return Integer.parseInt(id.get(0));
     }
 
@@ -386,11 +387,7 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
         return true;
     }
 
-    protected AbstractMetadata injectMetadataInDbDoNotRefreshHeader(Element sampleMetadataXml, ServiceContext context) throws Exception {
-        return injectMetadataInDb(sampleMetadataXml, context, false);
-    }
-
-    protected AbstractMetadata injectMetadataInDb(Element sampleMetadataXml, ServiceContext context, boolean resfreshHeader) throws Exception {
+    protected AbstractMetadata injectMetadataInDb(Element sampleMetadataXml, ServiceContext context) throws Exception {
         String uuid = UUID.randomUUID().toString();
         String schema = schemaManager.autodetectSchema(sampleMetadataXml);
         Xml.selectElement(sampleMetadataXml,
@@ -419,6 +416,6 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
             .setHarvested(false);
 
         return metadataManager.insertMetadata(context, metadata, sampleMetadataXml, IndexingMode.none, false, UpdateDatestamp.NO,
-            false, resfreshHeader);
+            false, DirectIndexSubmitter.INSTANCE);
     }
 }
