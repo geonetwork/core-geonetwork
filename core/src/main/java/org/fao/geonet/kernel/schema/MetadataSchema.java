@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2023 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2025 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -424,16 +424,16 @@ public class MetadataSchema {
                         Xml.transform(schematronExpandXml, schematronCompilationFile, schematronXsl);
                     } catch (FileNotFoundException e) {
                         Log.error(Geonet.SCHEMA_MANAGER, "     Schematron rule file not found " + schematronXslFilePath
-                            + ". Error is " + e.getMessage());
+                            + ". Error is " + e.getMessage(), e);
                     } catch (Exception e) {
                         Log.error(Geonet.SCHEMA_MANAGER, "     Schematron rule compilation failed for " + schematronXslFilePath
-                            + ". Error is " + e.getMessage());
+                            + ". Error is " + e.getMessage(), e);
                     }
 
                 }
             } catch (IOException e) {
                 Log.error(Geonet.SCHEMA_MANAGER, "     Schematron rule file not found " + schemaSchematronDir
-                    + ". Error is " + e.getMessage());
+                    + ". Error is " + e.getMessage(), e);
             }
         }
     }
