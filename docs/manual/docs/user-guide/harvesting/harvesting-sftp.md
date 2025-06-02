@@ -19,7 +19,7 @@ Providing the following information:
 
 -   **Configure connection to SFTP**
     -   *Server*: The SFTP host name or IP address.
-    -   *Port*: The SFTP port.
+    -   *SFTP port*: The port to connect to (usually 22).
     -   *Remote folder*: The path name of the directory containing the metadata (as XML files) to be harvested. The directory must be accessible by GeoNetwork.
     -   *Also search in subfolders*: If checked and the *Directory* path contains other directories, then the harvester will traverse the entire file system tree in that directory and add all metadata files found.
     -   *Username*: The username to connect to the SFTP server.
