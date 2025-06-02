@@ -552,6 +552,7 @@
     "addLayerPrefix": "Qat əlavə edin",
     "addLayerPostfix": "xəritəyə",
     "submit": "təqdim",
+    "additionalLinks": "Additional Links",
     "indexingErrorMsg-invalidBounds": "Xəbərdarlıq / Sahə resursuTemporalDateRange / Aşağı və yuxarı sərhədlər boş və ya etibarlı olmayan tarixlər. Tarix diapazonu indeksləşdirilməyib.",
     "indexingErrorMsg-invalidDateFormat": "Xəbərdarlıq / &#39;{{date}}&#39; dəyəri ilə {{dateType}} tarixi etibarlı tarix formatı deyildi.",
     "indexingErrorMsg-keywordNotFoundInThesaurus": "Xəbərdarlıq / Açar söz {{açar söz}} {{thesaurus}} dilində tapılmadı.",

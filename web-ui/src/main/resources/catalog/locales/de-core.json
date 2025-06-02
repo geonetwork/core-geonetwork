@@ -112,15 +112,15 @@
     "denominators": "Maßstab",
     "docNotFound": "<strong>Achtung !</strong> Seite <a href='{{page}}'>{{page}}</a> nicht in der Dokumentation gefunden.",
     "docPageNotFoundAtUrl": "Dokumentationsseite nicht verfügbar unter URL:",
-    "dut": "Nederlands",
+    "dut": "Niederländisch",
     "east": "Osten",
     "addThoseCategories": "Auswahl zusammenfügen",
     "replaceByThoseCategories": "Aktualisierung",
     "categoriesBatchAlert": "Beim Aktualisieren von Kategorien kann der Benutzer wählen, ob die neuen Kategorien mit den vorhandenen zusammengeführt oder ersetzt werden sollen.<br/><br/> Wenn Sie auf <strong>Ausgewählte zusammenführen</strong> klicken, werden ausgewählte Kategorien hinzugefügt (mit <strong>+</strong> markiert) oder entfernt (Kontrollkästchen mit <strong>-</strong> ).<br/><br/> Wenn Sie auf <strong>„Aktualisieren“</strong> klicken, werden Datensatzkategorien entfernt und dann Kategorien hinzugefügt (markiert mit <strong>+</strong> ) oder entfernt (Kontrollkästchen mit <strong>–</strong> ).",
     "editorBoard": "Bearbeitung",
     "contribute": "Neue Metadaten",
-    "email": "Email",
-    "eng": "English",
+    "email": "E-Mail",
+    "eng": "Englisch",
     "errorEmailAddressAlreadyRegistered": "E-Mail Adresse bereits gespeichert",
     "errorIs": "Fehler ist",
     "featureCatalog": "Objektartenkatalaog",
@@ -589,5 +589,5 @@
     "quality": "Qualität",
     "download": "Herunterladen",
     "links": "Links",
-    "saveToFile": "Save to file."
+    "saveToFile": "In Datei speichern."
 }

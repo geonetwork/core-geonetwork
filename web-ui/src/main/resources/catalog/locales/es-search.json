@@ -552,6 +552,7 @@
     "addLayerPrefix": "Add layer",
     "addLayerPostfix": "to the map",
     "submit": "Enviar",
+    "additionalLinks": "Additional Links",
     "indexingErrorMsg-invalidBounds": "Warning / Field resourceTemporalDateRange / Lower and upper bounds empty or not valid dates. Date range not indexed.",
     "indexingErrorMsg-invalidDateFormat": "Warning / Date {{dateType}} with value '{{date}}' was not a valid date format.",
     "indexingErrorMsg-keywordNotFoundInThesaurus": "Warning / Keyword {{keyword}} not found in {{thesaurus}}.",

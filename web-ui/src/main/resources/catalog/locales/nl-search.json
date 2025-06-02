@@ -552,6 +552,7 @@
     "addLayerPrefix": "Voeg laag toe",
     "addLayerPostfix": "aan de kaart",
     "submit": "Indienen",
+    "additionalLinks": "Additional Links",
     "indexingErrorMsg-invalidBounds": "Waarschuwing / Veld resourceTemporalDateRange / Onder- en bovengrens leeg of ongeldige datum. Datum bereik niet geïndexeerd.",
     "indexingErrorMsg-invalidDateFormat": "Waarschuwing / Datum {{dateType}} met waarde '{{date}}' was geen geldig datum formaat.",
     "indexingErrorMsg-keywordNotFoundInThesaurus": "Waarschuwing / Trefwoord {{keyword}} niet gevonden in {{thesaurus}}.",
