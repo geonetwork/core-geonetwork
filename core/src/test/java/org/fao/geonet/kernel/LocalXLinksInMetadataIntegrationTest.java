@@ -37,7 +37,11 @@ import org.jdom.Content;
 import org.jdom.Element;
 import org.jdom.input.SAXBuilder;
 import org.junit.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.test.context.ContextConfiguration;
 
 import java.io.StringReader;
 import java.util.List;
@@ -46,7 +50,7 @@ import java.util.UUID;
 import static org.fao.geonet.constants.Geonet.Namespaces.GCO;
 import static org.fao.geonet.constants.Geonet.Namespaces.GMD;
 import static org.junit.Assert.assertNull;
-import static org.mockito.Matchers.any;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -57,12 +61,21 @@ import static org.mockito.Mockito.when;
  *
  * Created by Jesse on 1/30/14.
  */
+@ContextConfiguration(classes = {LocalXLinksUpdateDeleteTest.TestConfig.class})
 public class LocalXLinksInMetadataIntegrationTest extends AbstractIntegrationTestWithMockedSingletons {
 
     @Autowired
     private SettingManager _settingManager;
     @Autowired
     private DataManager _dataManager;
+
+    @Configuration
+    static class TestConfig {
+        @Bean
+        public SpringLocalServiceInvoker springLocalServiceInvoker() {
+            return Mockito.mock(SpringLocalServiceInvoker.class);
+        }
+    }
 
     @Test
     public void testResolveLocalXLink() throws Exception {

@@ -12,7 +12,11 @@ import org.jdom.Attribute;
 import org.jdom.Element;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.test.context.ContextConfiguration;
 
 import java.net.URL;
 import java.util.Arrays;
@@ -23,10 +27,10 @@ import static org.fao.geonet.schema.iso19139.ISO19139Namespaces.GCO;
 import static org.fao.geonet.schema.iso19139.ISO19139Namespaces.GMD;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
-import static org.mockito.Matchers.any;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
-
+@ContextConfiguration(classes = {LocalXLinksUpdateDeleteTest.TestConfig.class})
 public class LocalXLinksUpdateDeleteTest extends AbstractIntegrationTestWithMockedSingletons {
     @Autowired
     private IMetadataManager metadataManager;
@@ -35,6 +39,14 @@ public class LocalXLinksUpdateDeleteTest extends AbstractIntegrationTestWithMock
     private SettingManager settingManager;
 
     private ServiceContext serviceContext;
+
+    @Configuration
+    static class TestConfig {
+        @Bean
+        public SpringLocalServiceInvoker springLocalServiceInvoker() {
+            return Mockito.mock(SpringLocalServiceInvoker.class);
+        }
+    }
 
     @Before
     public void setUp() throws Exception {
