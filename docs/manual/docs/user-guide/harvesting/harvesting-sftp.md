@@ -20,11 +20,11 @@ Providing the following information:
 -   **Configure connection to SFTP**
     -   *Server*: The SFTP host name or IP address.
     -   *SFTP port*: The port to connect to (usually 22).
-    -   *Remote folder*: The path name of the directory containing the metadata (as XML files) to be harvested. The directory must be accessible by GeoNetwork.
-    -   *Also search in subfolders*: If checked and the *Directory* path contains other directories, then the harvester will traverse the entire file system tree in that directory and add all metadata files found.
+    -   *SFTP home directory*: Directory path on the SFTP server containing the metadata (XML files) that need to be harvested. Set to '/' to start searching from the "root" directory of the connection. Note that the user that you are connecting with may already be mapped to a specific directory on the SFTP server.
+    -   *Recurse subfolders*: If checked, the harvester will recursively process metadata in all folders (within the given home directory) as well as their subfolders. Otherwise, only the items in the home directory itself will be processed.
     -   *Username*: The username to connect to the SFTP server.
-    -   *Use private  public keys*: Generates a private/public key to connect to the SFTP server instead of using a password. The user must configure the public key on the SFTP server.
-    -   *Key type*: Select the algorithm to create the keys: RSA (4096 bits) / ECDSA.
+    -   *Use SSH key*: If checked, a private/public key will be generated to connect to the SFTP server. An SSH key is a more secure authentication method than a password, and is therefore recommended. However, the user (or an administrator) must configure the generated public key on the SFTP server in order for it to work.
+        - *SSH key type*: Select the algorithm to create the SSH keys. You can choose between RSA (4096 bits) or ECDSA.
     -   *Password*: The password to connect to the SFTP server. Only applies when *Use private  public keys* is not enabled.
     
 -   **Configure response processing for filesystem**
