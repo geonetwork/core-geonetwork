@@ -14,6 +14,7 @@
                 xmlns:mdq="http://standards.iso.org/iso/19157/-2/mdq/1.0"
                 xmlns:mrc="http://standards.iso.org/iso/19115/-3/mrc/2.0"
                 xmlns:gcx="http://standards.iso.org/iso/19115/-3/gcx/1.0"
+                xmlns:srv="http://standards.iso.org/iso/19115/-3/srv/2.0"
                 xmlns:xlink="http://www.w3.org/1999/xlink"
                 xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
                 xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
@@ -147,6 +148,9 @@
     <!-- TODO: SEMICeu check if GetCapabilities in URL. Could check for protocols ?-->
     <xsl:variable name="pointsToService" select="false()"/>
 
+    <xsl:variable name="isServiceMetadata"
+                  select="exists(//mdb:MD_Metadata/mdb:identificationInfo/srv:SV_ServiceIdentification)" />
+
     <xsl:choose>
       <xsl:when test="normalize-space($url) = ''"/>
       <!--
@@ -175,6 +179,9 @@
                                         |*/cit:description[normalize-space(.) != '']"/>
           </foaf:Document>
         </foaf:page>
+      </xsl:when>
+      <xsl:when test="$isServiceMetadata">
+        <!-- Don't add distribution for service metadata -->
       </xsl:when>
       <xsl:otherwise>
         <dcat:distribution>
