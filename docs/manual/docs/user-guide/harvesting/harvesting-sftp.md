@@ -25,7 +25,7 @@ Providing the following information:
     -   *Username*: The username to connect to the SFTP server.
     -   *Use SSH key*: If checked, a private/public key will be generated to connect to the SFTP server. An SSH key is a more secure authentication method than a password, and is therefore recommended. However, the user (or an administrator) must configure the generated public key on the SFTP server in order for it to work.
         - *SSH key type*: Select the algorithm to create the SSH keys. You can choose between RSA (4096 bits) or ECDSA.
-    -   *Password*: The password to connect to the SFTP server. Only applies when *Use private  public keys* is not enabled.
+    -   *Password*: The password to connect to the SFTP server. Only applies when *Use SSH key* is unchecked.
     
 -   **Configure response processing for filesystem**
     -   *Action on UUID collision*: When a harvester finds the same uuid on a record collected by another method (another harvester, importer, dashboard editor,...), should this record be skipped (default), overriden or generate a new UUID?
