@@ -52,8 +52,8 @@ public class AbstractSchematronValidator {
         final ConfigurableApplicationContext applicationContext = ApplicationContextHolder.get();
         ThesaurusManager thesaurusManager = applicationContext.getBean(ThesaurusManager.class);
 
-        final Schematron schematron = applicable.schematron;
-        final SchematronRequirement requirement = applicable.requirement;
+        final Schematron schematron = applicable.getSchematron();
+        final SchematronRequirement requirement = applicable.getRequirement();
         final String ruleId = schematron.getRuleName();
 
         Element report = new Element("report", Edit.NAMESPACE);
