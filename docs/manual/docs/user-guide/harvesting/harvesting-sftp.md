@@ -18,7 +18,7 @@ Providing the following information:
 -   **Schedule**: Scheduling options to execute the harvester. If disabled, the harvester must be run manually from the harvester page. If enabled, a scheduling expression using cron syntax should be configured ([See examples](https://www.quartz-scheduler.org/documentation/quartz-2.1.7/tutorials/crontrigger)).
 
 -   **Configure connection to SFTP**
-    -   *Server*: The SFTP host name or IP address.
+    -   *SFTP host address*: The SFTP host name or IP address to connect to. Note that the 'sftp://' prefix should be omitted.
     -   *SFTP port*: The port to connect to (usually 22).
     -   *SFTP home directory*: Directory path on the SFTP server containing the metadata (XML files) that need to be harvested. Set to '/' to start searching from the "root" directory of the connection. Note that the user that you are connecting with may already be mapped to a specific directory on the SFTP server.
     -   *Recurse subfolders*: If checked, the harvester will recursively process metadata in all folders (within the given home directory) as well as their subfolders. Otherwise, only the items in the home directory itself will be processed.
