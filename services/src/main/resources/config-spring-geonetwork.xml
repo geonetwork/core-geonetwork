@@ -128,6 +128,7 @@
   <bean id="apiMessages" class="org.springframework.context.support.ResourceBundleMessageSource">
     <property name="basename" value="org.fao.geonet.api.Messages"/>
     <property name="useCodeAsDefaultMessage" value="true"/>
+    <property name="defaultEncoding" value="UTF-8"/>
   </bean>
 
   <bean id="SpringLocalServiceInvoker" class="org.fao.geonet.kernel.SpringLocalServiceInvoker"
