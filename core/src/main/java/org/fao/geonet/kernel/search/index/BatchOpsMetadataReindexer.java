@@ -88,12 +88,14 @@ public class BatchOpsMetadataReindexer extends MetadataIndexerProcessor implemen
     private final AtomicInteger inError = new AtomicInteger();
     private CompletableFuture<Void> allCompleted;
     private final MBeanExporter exporter;
+    private final EsSearchManager esSearchManager;
 
     public BatchOpsMetadataReindexer(DataManager dm, Set<Integer> metadata) {
         super(dm);
         this.metadata = metadata;
         this.toProcessCount = metadata.size();
         exporter = ApplicationContextHolder.get().getBean(MBeanExporter.class);
+        esSearchManager = ApplicationContextHolder.get().getBean(EsSearchManager.class);
         removalListener.setExporter(exporter);
     }
 
@@ -221,7 +223,7 @@ public class BatchOpsMetadataReindexer extends MetadataIndexerProcessor implemen
                 beginIndex, beginIndex + count, ids.length,
                 System.currentTimeMillis() - start,
                 Thread.currentThread().getId()));
-            ApplicationContextHolder.get().getBean(EsSearchManager.class).forceIndexChanges();
+            esSearchManager.forceIndexChanges();
         }
     }
 }
