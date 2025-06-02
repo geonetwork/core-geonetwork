@@ -588,5 +588,6 @@
     "mapLegend": "Legend",
     "quality": "Kvalitet",
     "download": "Download",
-    "links": "Länkar"
+    "links": "Länkar",
+    "saveToFile": "Save to file."
 }

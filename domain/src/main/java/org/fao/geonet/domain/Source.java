@@ -27,6 +27,7 @@ import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.domain.converter.BooleanToYNConverter;
 import org.fao.geonet.entitylistener.SourceEntityListenerManager;
 import org.fao.geonet.repository.LanguageRepository;
+import org.hibernate.annotations.Type;
 
 import javax.annotation.Nonnull;
 import javax.persistence.*;
@@ -63,6 +64,9 @@ public class Source extends Localized {
     private ISODate creationDate = new ISODate();
     private Integer groupOwner;
     private Boolean listableInHeaderSelector = true;
+
+    private Boolean datahubEnabled = false;
+    private String datahubConfiguration = ""; // will use the main conf if empty
 
     /**
      * Default constructor.  Required by framework.
@@ -221,6 +225,29 @@ public class Source extends Localized {
 
     public Source setUiConfig(String uiConfig) {
         this.uiConfig = uiConfig;
+        return this;
+    }
+
+    /**
+     * Only applies to subportal.
+     *
+     * @return
+     */
+    public Boolean getDatahubEnabled() {
+        return datahubEnabled;
+    }
+    public Source setDatahubEnabled(Boolean datahubEnabled) {
+        this.datahubEnabled = datahubEnabled;
+        return this;
+    }
+
+    @Lob
+    @Type(type = "org.hibernate.type.TextType")
+    public String getDatahubConfiguration() {
+        return datahubConfiguration;
+    }
+    public Source setDatahubConfiguration(String datahubConfiguration) {
+        this.datahubConfiguration = datahubConfiguration;
         return this;
     }
 

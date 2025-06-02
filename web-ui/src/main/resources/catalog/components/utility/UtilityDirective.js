@@ -2371,26 +2371,29 @@
             href,
             isCurrentService = false;
 
-          link = $filter("setUrlPlaceholder")(link);
+          function updateHref() {
+            link = $filter("setUrlPlaceholder")(link);
 
-          // Insert debug mode between service and route
-          if (link.indexOf("#") !== -1) {
-            var tokens = link.split("#");
-            isCurrentService =
-              window.location.pathname.match(".*" + tokens[0] + "$") !== null;
-            href =
-              (isCurrentService ? "" : tokens[0] + (scope.isDebug ? "?debug" : "")) +
-              "#" +
-              tokens[1];
-          } else {
-            isCurrentService = window.location.pathname.match(".*" + link + "$") !== null;
-            href = isCurrentService ? "#/" : link + (scope.isDebug ? "?debug" : "");
+            // Insert debug mode between service and route
+            if (link.indexOf("#") !== -1) {
+              var tokens = link.split("#");
+              isCurrentService =
+                window.location.pathname.match(".*" + tokens[0] + "$") !== null;
+              href =
+                (isCurrentService ? "" : tokens[0] + (scope.isDebug ? "?debug" : "")) +
+                "#" +
+                tokens[1];
+            } else {
+              isCurrentService =
+                window.location.pathname.match(".*" + link + "$") !== null;
+              href = isCurrentService ? "#/" : link + (scope.isDebug ? "?debug" : "");
+            }
+
+            // Set the href attribute for the element
+            // with the link containing the debug mode
+            // or not
+            element.attr("href", href);
           }
-
-          // Set the href attribute for the element
-          // with the link containing the debug mode
-          // or not
-          element.attr("href", href);
 
           function checkActive() {
             // regexps for getting the service & path
@@ -2416,6 +2419,14 @@
 
           scope.$on("$locationChangeSuccess", checkActive);
 
+          // Watch for changes in the link attribute
+          attrs.$observe("gnActiveTbItem", function (newLink) {
+            link = newLink;
+            updateHref();
+            checkActive();
+          });
+
+          updateHref();
           checkActive();
         }
       };

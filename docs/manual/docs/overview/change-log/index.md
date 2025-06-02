@@ -2,6 +2,6 @@
 
 Notable changes made to GeoNetwork opensource including new features, migration instructions, and bug fixes.
 
--   [Version 4.4.5](version-4.4.4.md)
--   [Version 4.2.11](version-4.2.11.md)
+-   [Version 4.4.8](version-4.4.8.md)
+-   [Version 4.2.13](version-4.2.13.md)
 -   [Release History](history/index.md)

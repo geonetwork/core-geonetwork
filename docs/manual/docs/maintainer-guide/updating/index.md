@@ -151,7 +151,6 @@ Guidance:
 * Please be advised of the following changes to application services:
    * [Search / q service is replaced by Elasticsearch](../../api/q-search.md#upgrading-from-geonetwork-30-guidance)
    * [Virtual CSW end-points are replaced by sub-portals](../../api/csw.md#upgrading-from-geonetwork-30-guidance)
-   * [RDF DCAT API no longer available](../../api/rdf-dcat.md#upgrading-from-geonetwork-30-guidance)
    * [Z39-50 API is no longer available](../../api/z39-50.md#upgrading-from-geonetwork-30-guidance)
    * [OpenSearch no longer available](../../api/opensearch.md#upgrading-from-geonetwork-30-guidance)
    * [Open Archives Initiative Protocol for Metadata Harvesting (OAI-PMH) is not migrated](../../api/oai-pmh.md#upgrading-from-geonetwork-30-guidance)

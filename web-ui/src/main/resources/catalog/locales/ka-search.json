@@ -552,6 +552,7 @@
     "addLayerPrefix": "ფენის დამატება",
     "addLayerPostfix": "რუკამდე",
     "submit": "გაგზავნა",
+    "additionalLinks": "Additional Links",
     "indexingErrorMsg-invalidBounds": "გაფრთხილება / ველის რესურსიTemporalDateRange / ქვედა და ზედა საზღვრები ცარიელი ან არასწორი თარიღები. თარიღის დიაპაზონი არ არის ინდექსირებული.",
     "indexingErrorMsg-invalidDateFormat": "გაფრთხილება / თარიღი {{dateType}} მნიშვნელობით „{{date}}“ არ იყო თარიღის სწორი ფორმატი.",
     "indexingErrorMsg-keywordNotFoundInThesaurus": "გაფრთხილება / საკვანძო სიტყვა {{keyword}} ვერ მოიძებნა {{thesaurus}}-ში.",

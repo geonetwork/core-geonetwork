@@ -588,5 +588,6 @@
     "mapLegend": "图例",
     "quality": "质量",
     "download": "Download",
-    "links": "链接"
+    "links": "链接",
+    "saveToFile": "Save to file."
 }
