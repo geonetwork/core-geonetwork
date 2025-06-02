@@ -150,19 +150,15 @@ public class CswFilter2Es extends AbstractFilterVisitor {
         String wildcardChar = filter.getWildCard();
         String escapeWildcardDefault = filter.getEscape() + "*";
 
-        //result = result.replaceAll(Pattern.quote(escapeWildcard), "\\\\*");
-        System.out.println("Result (replacement 1): " + result);
         // Replace wildcard character with default wildcard (asterisk)
         // For example, if the wildcard is % and the escape character is \:
         //  - %afr\%ca% becomes *afr\*ca*
         result = result.replaceAll(Pattern.quote(wildcardChar), "*");
-        System.out.println("Result (replacement 2): " + result);
         // Replace the escaped wildcard character with the wildcard character
         // For example, if the wildcard is % and the escape character is \:
         //  - in the previous replacement %afr\%ca% becomes *afr\*ca*
         //  - and with this replacement *afr\*ca* becomes *afr\%ca*
         result = result.replaceAll(Pattern.quote(escapeWildcardDefault), wildcardChar);
-        System.out.println("Result (replacement 3): " + result);
 
         if (wildcardChar.equals("%")) {
             // Escape % for String.format used in SearchController to process the csw filter
