@@ -102,8 +102,9 @@ public class OaiPmhParams {
         }
 
         if (StringUtils.isNotEmpty(metadataPrefix)) {
-            //--- remove any non letter, number, dot or dash character
-            String processedMetadataPrefix = metadataPrefix.replaceAll("[^a-zA-Z0-9.-]", "");
+            // remove any non letter, number, dot, underscore or dash character
+            // (metadata prefix correspond to schema plugin identifiers or conversion filename eg. oai_dc)
+            String processedMetadataPrefix = metadataPrefix.replaceAll("[^a-zA-Z0-9.-_]", "");
             params.put(OaiPmh.ParamNames.METADATA_PREFIX, processedMetadataPrefix);
         }
 
