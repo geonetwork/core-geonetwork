@@ -47,6 +47,7 @@ import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 
+import java.net.URLEncoder;
 import java.nio.file.FileSystem;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -57,6 +58,7 @@ import java.util.Set;
 
 import static com.google.common.xml.XmlEscapers.xmlContentEscaper;
 import static org.fao.geonet.Constants.CHARSET;
+import static org.fao.geonet.index.es.EsRestClient.getFieldValue;
 import static org.fao.geonet.kernel.mef.MEFConstants.*;
 
 class MEF2Exporter {
@@ -142,8 +144,8 @@ class MEF2Exporter {
                 ObjectMapper objectMapper = new ObjectMapper();
                 final Map<String, Object> source = objectMapper.convertValue(hits.get(0).source(), Map.class);
                 mdSchema = (String) source.get(Geonet.IndexFieldNames.SCHEMA);
-                mdTitle = (String) source.get(Geonet.IndexFieldNames.RESOURCETITLE);
-                mdAbstract = (String) source.get(Geonet.IndexFieldNames.RESOURCEABSTRACT);
+                mdTitle =  getFieldValue(Geonet.IndexFieldNames.RESOURCETITLE + "Object", source);
+                mdAbstract = getFieldValue(Geonet.IndexFieldNames.RESOURCEABSTRACT + "Object", source);
                 isHarvested = (String) source.get(Geonet.IndexFieldNames.IS_HARVESTED);
                 mdType = MetadataType.lookup(((String) source.get(Geonet.IndexFieldNames.IS_TEMPLATE)).charAt(0));
 
@@ -158,7 +160,8 @@ class MEF2Exporter {
 
                 body.addContent(new Element("div").setAttribute("class", "entry").addContent(Arrays.asList(
                     new Element("h4").setAttribute("class", "title").addContent(
-                        new Element("a").setAttribute("href", uuid).setText(cleanXml(mdTitle))),
+                        new Element("a").setAttribute("href",
+                            URLEncoder.encode(uuid, "UTF-8")).setText(cleanXml(mdTitle))),
                     new Element("p").setAttribute("class", "abstract").setText(cleanXml(mdAbstract)),
                     new Element("table").setAttribute("class", "table").addContent(Arrays.asList(
                         new Element("thead").addContent(
@@ -200,7 +203,9 @@ class MEF2Exporter {
 
     private static String cleanForCsv(String csvColumnText) {
         if (csvColumnText != null) {
-            return csvColumnText.replace("\"", "'");
+            return csvColumnText
+                .replace("\"", "'")
+                .replace("\n", "");
         }
         return "-";
     }
@@ -218,7 +223,8 @@ class MEF2Exporter {
                                              boolean removeXlinkAttribute,
                                              boolean addSchemaLocation) throws Exception {
 
-        final Path metadataRootDir = zipFs.getPath(metadata.getUuid());
+        final Path metadataRootDir = zipFs.getPath(
+            URLEncoder.encode(metadata.getUuid(), "UTF-8"));
         Files.createDirectories(metadataRootDir);
 
         Pair<AbstractMetadata, String> recordAndMetadataForExport =
