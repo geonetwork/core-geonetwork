@@ -59,7 +59,15 @@
             label: "addToMap",
             filterFn: function (record) {
               var md = new Metadata(record);
-              return md.getLinksByType("OGC:WMS").length > 0;
+              var linkTypes = [
+                "OGC:WMS",
+                "ESRI REST: Map Service",
+                "ESRI REST: Map Server"
+              ];
+              // returns true as soon as any type has ≥1 link
+              return linkTypes.some(function (type) {
+                return md.getLinksByType(type).length > 0;
+              });
             },
             fn: function (uuids, records) {
               for (var i = 0; i < uuids.length; i++) {
@@ -89,6 +97,24 @@
                   }
                   gnMap
                     .addWmsFromScratch(viewerMap, link.url, link.name, false, md)
+                    .then(function (layer) {
+                      if (layer) {
+                        gnMap.feedLayerWithRelated(layer, link.group);
+                      }
+                    });
+                });
+
+                var esriLinks = md
+                  .getLinksByType("ESRI REST: Map Server")
+                  .concat(md.getLinksByType("ESRI REST: Map Service"));
+
+                angular.forEach(esriLinks, function (link) {
+                  if (gnMap.isLayerInMap(viewerMap, link.name, link.url)) {
+                    return;
+                  }
+
+                  gnMap
+                    .addEsriRestLayer(viewerMap, link.url, link.name, false, md)
                     .then(function (layer) {
                       if (layer) {
                         gnMap.feedLayerWithRelated(layer, link.group);
@@ -197,7 +223,9 @@
           .post(
             "../api/search/records/_search",
             {
-              _source: { includes: ["uuid", "root", "resourceTitle*", "isTemplate"] },
+              _source: {
+                includes: ["uuid", "root", "resourceTitle*", "isTemplate", "link"]
+              },
               from: 0,
               size: 2000,
               query: {

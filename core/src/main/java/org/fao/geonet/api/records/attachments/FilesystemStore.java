@@ -26,6 +26,7 @@
 package org.fao.geonet.api.records.attachments;
 
 import jeeves.server.context.ServiceContext;
+import org.fao.geonet.api.exception.InputStreamLimitExceededException;
 import org.fao.geonet.api.exception.ResourceAlreadyExistException;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.constants.Geonet;
@@ -202,7 +203,12 @@ public class FilesystemStore extends AbstractStore {
         int metadataId = canEdit(context, metadataUuid, approved);
         checkResourceId(filename);
         Path filePath = getPath(context, metadataId, visibility, filename, approved);
-        Files.copy(is, filePath, StandardCopyOption.REPLACE_EXISTING);
+        try {
+            Files.copy(is, filePath, StandardCopyOption.REPLACE_EXISTING);
+        } catch (InputStreamLimitExceededException e) {
+            Files.deleteIfExists(filePath);
+            throw e;
+        }
         if (changeDate != null) {
             IO.touch(filePath, FileTime.from(changeDate.getTime(), TimeUnit.MILLISECONDS));
         }

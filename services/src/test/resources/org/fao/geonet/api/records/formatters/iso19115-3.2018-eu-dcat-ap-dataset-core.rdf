@@ -13,7 +13,7 @@
          xmlns:skos="http://www.w3.org/2004/02/skos/core#"
          xmlns:dcatap="http://data.europa.eu/r5r/"
          xmlns:eli="http://data.europa.eu/eli/ontology">
-   <rdf:Description rdf:about="https://metawal.wallonie.be/geonetwork/srv/api/records/7fe2f305-1302-4297-b67e-792f55acd834">
+   <rdf:Description rdf:about="http://geodata.wallonie.be/id/7fe2f305-1302-4297-b67e-792f55acd834">
       <rdf:type rdf:resource="http://www.w3.org/ns/dcat#Dataset"/>
       <dct:type>
          <skos:Concept rdf:about="http://purl.org/dc/dcmitype/Dataset">
@@ -21,13 +21,13 @@
          </skos:Concept>
       </dct:type>
       <foaf:isPrimaryTopicOf>
-         <rdf:Description>
+         <rdf:Description rdf:about="https://metawal.wallonie.be/geonetwork/srv/api/records/7fe2f305-1302-4297-b67e-792f55acd834">
             <rdf:type rdf:resource="http://www.w3.org/ns/dcat#CatalogRecord"/>
             <dct:identifier rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">urn:uuid:{uuid}</dct:identifier>
             <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2023-12-08T12:26:19.337626Z</dct:modified>
             <dct:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2019-04-02T12:33:24</dct:issued>
-            <dct:title xml:lang="fre">Plan de secteur en vigueur (version coordonnée vectorielle)</dct:title>
-            <dct:description xml:lang="fre">Le plan de secteur est un outil réglementaire d'aménagement du territoire et d'urbanisme
+            <dct:title xml:lang="fr">Plan de secteur en vigueur (version coordonnée vectorielle)</dct:title>
+            <dct:description xml:lang="fr">Le plan de secteur est un outil réglementaire d'aménagement du territoire et d'urbanisme
           régional wallon constitué de plusieurs couches de données spatiales.
 
           Le plan de secteur organise l'espace territorial wallon et en définit les différentes affectations afin
@@ -75,25 +75,25 @@
                   <dct:conformsTo>
                      <dct:Standard>
                         <rdf:type rdf:resource="http://purl.org/dc/terms/Standard"/>
-                        <dct:title xml:lang="fre">ISO 19115</dct:title>
-                        <owl:versionInfo xml:lang="fre">2003/Cor 1:2006</owl:versionInfo>
+                        <dct:title xml:lang="fr">ISO 19115</dct:title>
+                        <owl:versionInfo xml:lang="fr">2003/Cor 1:2006</owl:versionInfo>
                      </dct:Standard>
                   </dct:conformsTo>
                </rdf:Description>
             </dct:source>
             <dct:conformsTo>
-               <dct:Standard rdf:about="http://data.europa.eu/r5r/"/>
+               <dct:Standard rdf:about="https://www.w3.org/TR/vocab-dcat/"/>
             </dct:conformsTo>
-            <foaf:primaryTopic rdf:resource="https://metawal.wallonie.be/geonetwork/srv/api/records/7fe2f305-1302-4297-b67e-792f55acd834"/>
+            <foaf:primaryTopic rdf:resource="http://geodata.wallonie.be/id/7fe2f305-1302-4297-b67e-792f55acd834"/>
          </rdf:Description>
       </foaf:isPrimaryTopicOf>
       <dcat:landingPage>
          <foaf:Document rdf:about="https://metawal.wallonie.be/geonetwork/srv/api/records/7fe2f305-1302-4297-b67e-792f55acd834">
-            <dct:title xml:lang="fre">Complete metadata</dct:title>
-            <dct:description xml:lang="fre">All information about the resource</dct:description>
+            <dct:title xml:lang="fr">Complete metadata</dct:title>
+            <dct:description xml:lang="fr">All information about the resource</dct:description>
          </foaf:Document>
       </dcat:landingPage>
-      <dct:title xml:lang="fre">Plan de secteur en vigueur (version coordonnée vectorielle)</dct:title>
+      <dct:title xml:lang="fr">Plan de secteur en vigueur (version coordonnée vectorielle)</dct:title>
       <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2023-03-31</dct:modified>
       <dct:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2023-02-21</dct:issued>
       <dcat:version>1.0</dcat:version>
@@ -105,7 +105,7 @@
             <adms:schemaAgency>BE.SPW.INFRASIG.CARTON</adms:schemaAgency>
          </rdf:Description>
       </adms:identifier>
-      <dct:description xml:lang="fre">Le plan de secteur est un outil réglementaire d'aménagement du territoire et d'urbanisme
+      <dct:description xml:lang="fr">Le plan de secteur est un outil réglementaire d'aménagement du territoire et d'urbanisme
           régional wallon constitué de plusieurs couches de données spatiales.
 
           Le plan de secteur organise l'espace territorial wallon et en définit les différentes affectations afin
@@ -146,14 +146,13 @@
           création a été décidée par le Gouvernement wallon le 19 septembre 2005.</dct:description>
       <adms:status>
          <skos:Concept rdf:about="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#onGoing">
-            <skos:prefLabel xml:lang="fre">Mis à jour continue</skos:prefLabel>
+            <skos:prefLabel xml:lang="fr">Mis à jour continue</skos:prefLabel>
          </skos:Concept>
       </adms:status>
       <dct:creator>
          <rdf:Description>
             <rdf:type rdf:resource="http://xmlns.com/foaf/0.1/Organization"/>
-            <rdf:type rdf:resource="http://www.w3.org/ns/prov#Agent"/>
-            <foaf:name xml:lang="fre">Helpdesk carto du SPW (SPW - Secrétariat général - SPW Digital - Département de la
+            <foaf:name xml:lang="fr">Helpdesk carto du SPW (SPW - Secrétariat général - SPW Digital - Département de la
                   Géomatique - Direction de l'Intégration des géodonnées)</foaf:name>
             <foaf:mbox rdf:resource="mailto:helpdesk.carto@spw.wallonie.be"/>
          </rdf:Description>
@@ -161,8 +160,7 @@
       <dct:publisher>
          <rdf:Description>
             <rdf:type rdf:resource="http://xmlns.com/foaf/0.1/Organization"/>
-            <rdf:type rdf:resource="http://www.w3.org/ns/prov#Agent"/>
-            <foaf:name xml:lang="fre">Helpdesk carto du SPW (SPW - Secrétariat général - SPW Digital - Département de la
+            <foaf:name xml:lang="fr">Helpdesk carto du SPW (SPW - Secrétariat général - SPW Digital - Département de la
                   Géomatique - Direction de l'Intégration des géodonnées)</foaf:name>
             <foaf:mbox rdf:resource="mailto:helpdesk.carto@spw.wallonie.be"/>
          </rdf:Description>
@@ -172,7 +170,7 @@
             <rdf:type rdf:resource="http://www.w3.org/2006/vcard/ns#Organization"/>
             <vcard:org>
                <rdf:Description>
-                  <vcard:organisation-name xml:lang="fre">Helpdesk carto du SPW (SPW - Secrétariat général - SPW Digital - Département de la
+                  <vcard:organisation-name xml:lang="fr">Helpdesk carto du SPW (SPW - Secrétariat général - SPW Digital - Département de la
                   Géomatique - Direction de l'Intégration des géodonnées)</vcard:organisation-name>
                </rdf:Description>
             </vcard:org>
@@ -184,11 +182,10 @@
             <prov:agent>
                <rdf:Description>
                   <rdf:type rdf:resource="http://xmlns.com/foaf/0.1/Person"/>
-                  <rdf:type rdf:resource="http://www.w3.org/ns/prov#Agent"/>
-                  <foaf:name>Thierry Berthet</foaf:name>
+                  <foaf:name xml:lang="fr">Thierry Berthet</foaf:name>
                   <org:memberOf>
                      <foaf:Organization>
-                        <foaf:name xml:lang="fre">Direction du Développement territorial (SPW - Territoire, Logement, Patrimoine,
+                        <foaf:name xml:lang="fr">Direction du Développement territorial (SPW - Territoire, Logement, Patrimoine,
                   Énergie - Département de l'Aménagement du territoire et de l'Urbanisme - Direction du Développement
                   territorial)</foaf:name>
                      </foaf:Organization>
@@ -207,11 +204,10 @@
             <prov:agent>
                <rdf:Description rdf:about="https://orcid.org/jb98765">
                   <rdf:type rdf:resource="http://xmlns.com/foaf/0.1/Person"/>
-                  <rdf:type rdf:resource="http://www.w3.org/ns/prov#Agent"/>
-                  <foaf:name>Jean Berthet</foaf:name>
+                  <foaf:name xml:lang="fr">Jean Berthet</foaf:name>
                   <org:memberOf>
                      <foaf:Organization rdf:about="https://orcid.org/jb98765">
-                        <foaf:name xml:lang="fre">Direction du Développement territorial (SPW - Territoire, Logement, Patrimoine,
+                        <foaf:name xml:lang="fr">Direction du Développement territorial (SPW - Territoire, Logement, Patrimoine,
                   Énergie - Département de l'Aménagement du territoire et de l'Urbanisme - Direction du Développement
                   territorial)</foaf:name>
                      </foaf:Organization>
@@ -229,142 +225,94 @@
       <dct:rightsHolder>
          <rdf:Description rdf:about="https://geoportail.wallonie.be">
             <rdf:type rdf:resource="http://xmlns.com/foaf/0.1/Organization"/>
-            <rdf:type rdf:resource="http://www.w3.org/ns/prov#Agent"/>
-            <foaf:name xml:lang="fre">Service public de Wallonie (SPW)</foaf:name>
+            <foaf:name xml:lang="fr">Service public de Wallonie (SPW)</foaf:name>
             <foaf:mbox rdf:resource="mailto:helpdesk.carto@spw.wallonie.be"/>
-            <foaf:workplaceHomepage xml:lang="fre">https://geoportail.wallonie.be</foaf:workplaceHomepage>
+            <foaf:workplaceHomepage xml:lang="fr">https://geoportail.wallonie.be</foaf:workplaceHomepage>
          </rdf:Description>
       </dct:rightsHolder>
-      <dcat:theme>
-         <skos:Concept rdf:about="https://metawal.wallonie.be/thesaurus/theme-geoportail-wallon#SubThemesGeoportailWallon/6020">
-            <skos:prefLabel xml:lang="fre">Agriculture</skos:prefLabel>
-         </skos:Concept>
-      </dcat:theme>
-      <dcat:theme>
-         <skos:Concept rdf:about="https://metawal.wallonie.be/thesaurus/theme-geoportail-wallon#ThemesGeoportailWallon/60">
-            <skos:prefLabel xml:lang="fre">Société et activités</skos:prefLabel>
-         </skos:Concept>
-      </dcat:theme>
-      <dcat:theme>
-         <skos:Concept rdf:about="https://metawal.wallonie.be/thesaurus/theme-geoportail-wallon#ThemesGeoportailWallon/20">
-            <skos:prefLabel xml:lang="fre">Aménagement du territoire</skos:prefLabel>
-         </skos:Concept>
-      </dcat:theme>
-      <dcat:theme>
-         <skos:Concept rdf:about="https://metawal.wallonie.be/thesaurus/theme-geoportail-wallon#SubThemesGeoportailWallon/2010">
-            <skos:prefLabel xml:lang="fre">Plans et règlements</skos:prefLabel>
-         </skos:Concept>
-      </dcat:theme>
-      <dcat:keyword xml:lang="fre">espace</dcat:keyword>
-      <dcat:keyword xml:lang="fre">zones naturelles, paysages, écosystèmes</dcat:keyword>
-      <dcat:keyword xml:lang="fre">législation</dcat:keyword>
-      <dcat:keyword xml:lang="fre">géographie</dcat:keyword>
-      <dcat:keyword xml:lang="fre">agriculture</dcat:keyword>
-      <dcat:keyword xml:lang="fre">aménagement du paysage</dcat:keyword>
-      <dcat:keyword xml:lang="fre">réseau ferroviaire</dcat:keyword>
-      <dcat:keyword xml:lang="fre">planification écologique</dcat:keyword>
-      <dcat:keyword xml:lang="fre">plan d'aménagement</dcat:keyword>
-      <dcat:keyword xml:lang="fre">extraction</dcat:keyword>
-      <dcat:keyword xml:lang="fre">habitat rural</dcat:keyword>
-      <dcat:keyword xml:lang="fre">gestion et planification rurale</dcat:keyword>
-      <dcat:keyword xml:lang="fre">secteur d'activité</dcat:keyword>
-      <dcat:keyword xml:lang="fre">infrastructure</dcat:keyword>
-      <dcat:keyword xml:lang="fre">plan de gestion</dcat:keyword>
-      <dcat:keyword xml:lang="fre">planification rurale</dcat:keyword>
-      <dcat:keyword xml:lang="fre">planification économique</dcat:keyword>
-      <dcat:keyword xml:lang="fre">plan</dcat:keyword>
-      <dcat:keyword xml:lang="fre">développement du territoire</dcat:keyword>
-      <dcat:keyword xml:lang="fre">infrastructure routière</dcat:keyword>
-      <dcat:keyword xml:lang="fre">plan d'occupation des sols</dcat:keyword>
-      <dcat:keyword xml:lang="fre">activité économique</dcat:keyword>
-      <dcat:keyword xml:lang="fre">réseau routier</dcat:keyword>
-      <dcat:keyword xml:lang="fre">planification urbaine</dcat:keyword>
-      <dcat:keyword xml:lang="fre">loisirs</dcat:keyword>
-      <dcat:keyword xml:lang="fre">canalisation</dcat:keyword>
-      <dcat:keyword xml:lang="fre">habitat urbain</dcat:keyword>
-      <dcat:keyword xml:lang="fre">mesure d'aménagement du territoire</dcat:keyword>
-      <dcat:keyword xml:lang="fre">territoire</dcat:keyword>
-      <dcat:keyword xml:lang="fre">planification régionale</dcat:keyword>
-      <dcat:keyword xml:lang="fre">habitat</dcat:keyword>
-      <dcat:keyword xml:lang="fre">PanierTelechargementGeoportail</dcat:keyword>
-      <dcat:keyword xml:lang="fre">Open Data</dcat:keyword>
-      <dcat:keyword xml:lang="fre">WalOnMap</dcat:keyword>
-      <dcat:keyword xml:lang="fre">Extraction_DIG</dcat:keyword>
-      <dcat:keyword xml:lang="fre">BDInfraSIGNO</dcat:keyword>
-      <dcat:keyword xml:lang="fre">aménagement du territoire</dcat:keyword>
-      <dcat:keyword xml:lang="fre">plan de secteur</dcat:keyword>
-      <dcat:keyword xml:lang="fre">point remarquable</dcat:keyword>
-      <dcat:keyword xml:lang="fre">PDS</dcat:keyword>
-      <dcat:keyword xml:lang="fre">CoDT</dcat:keyword>
-      <dcat:keyword xml:lang="fre">Point de vue</dcat:keyword>
-      <dcat:keyword xml:lang="fre">centre d'enfouissement</dcat:keyword>
-      <dcat:keyword xml:lang="fre">servitude</dcat:keyword>
-      <dcat:keyword xml:lang="fre">Code du Développement Territorial</dcat:keyword>
-      <dcat:theme>
-         <skos:Concept rdf:about="http://inspire.ec.europa.eu/theme/el">
-            <skos:prefLabel xml:lang="fre">Altitude</skos:prefLabel>
-         </skos:Concept>
-      </dcat:theme>
-      <dcat:theme>
-         <skos:Concept rdf:about="http://inspire.ec.europa.eu/theme/mf">
-            <skos:prefLabel xml:lang="fre">Caractéristiques géographiques
-              météorologiques</skos:prefLabel>
-         </skos:Concept>
-      </dcat:theme>
-      <dcat:theme>
-         <skos:Concept rdf:about="http://inspire.ec.europa.eu/theme/of">
-            <skos:prefLabel xml:lang="fre">Caractéristiques géographiques
-              océanographiques</skos:prefLabel>
-         </skos:Concept>
-      </dcat:theme>
-      <dcat:theme>
-         <skos:Concept rdf:about="http://inspire.ec.europa.eu/theme/ac">
-            <skos:prefLabel xml:lang="fre">Conditions atmosphériques</skos:prefLabel>
-         </skos:Concept>
-      </dcat:theme>
-      <dcat:theme>
-         <skos:Concept rdf:about="http://inspire.ec.europa.eu/theme/gn">
-            <skos:prefLabel xml:lang="fre">Dénominations géographiques</skos:prefLabel>
-         </skos:Concept>
-      </dcat:theme>
-      <dcat:theme>
-         <skos:Concept rdf:about="http://inspire.ec.europa.eu/theme/ge">
-            <skos:prefLabel xml:lang="fre">Géologie</skos:prefLabel>
-         </skos:Concept>
-      </dcat:theme>
-      <dcat:theme>
-         <skos:Concept rdf:about="http://inspire.ec.europa.eu/theme/hy">
-            <skos:prefLabel xml:lang="fre">Hydrographie</skos:prefLabel>
-         </skos:Concept>
-      </dcat:theme>
-      <dcat:theme>
-         <skos:Concept rdf:about="http://inspire.ec.europa.eu/theme/af">
-            <skos:prefLabel xml:lang="fre">Installations agricoles et aquacoles</skos:prefLabel>
-         </skos:Concept>
-      </dcat:theme>
-      <dcat:theme>
-         <skos:Concept rdf:about="http://inspire.ec.europa.eu/theme/sr">
-            <skos:prefLabel xml:lang="fre">Régions maritimes</skos:prefLabel>
-         </skos:Concept>
-      </dcat:theme>
-      <dcat:theme>
-         <skos:Concept rdf:about="http://inspire.ec.europa.eu/theme/sd">
-            <skos:prefLabel xml:lang="fre">Répartition des espèces</skos:prefLabel>
-         </skos:Concept>
-      </dcat:theme>
-      <dcat:theme>
-         <skos:Concept rdf:about="http://inspire.ec.europa.eu/theme/mr">
-            <skos:prefLabel xml:lang="fre">Ressources minérales</skos:prefLabel>
-         </skos:Concept>
-      </dcat:theme>
-      <dcat:theme>
-         <skos:Concept rdf:about="http://inspire.ec.europa.eu/theme/hh">
-            <skos:prefLabel xml:lang="fre">Santé et sécurité des personnes</skos:prefLabel>
-         </skos:Concept>
-      </dcat:theme>
-      <dcat:keyword xml:lang="fre">Mobilité</dcat:keyword>
-      <dcat:keyword xml:lang="fre">Observation de la terre et environnement</dcat:keyword>
-     <dcatap:applicableLegislation rdf:resource="http://data.europa.eu/eli/reg/2014/1143/oj"/>
+      <dct:subject rdf:resource="https://metawal.wallonie.be/thesaurus/theme-geoportail-wallon#SubThemesGeoportailWallon/6020"/>
+      <dcat:keyword xml:lang="fr">Agriculture</dcat:keyword>
+      <dct:subject rdf:resource="https://metawal.wallonie.be/thesaurus/theme-geoportail-wallon#ThemesGeoportailWallon/60"/>
+      <dcat:keyword xml:lang="fr">Société et activités</dcat:keyword>
+      <dct:subject rdf:resource="https://metawal.wallonie.be/thesaurus/theme-geoportail-wallon#ThemesGeoportailWallon/20"/>
+      <dcat:keyword xml:lang="fr">Aménagement du territoire</dcat:keyword>
+      <dct:subject rdf:resource="https://metawal.wallonie.be/thesaurus/theme-geoportail-wallon#SubThemesGeoportailWallon/2010"/>
+      <dcat:keyword xml:lang="fr">Plans et règlements</dcat:keyword>
+      <dcat:keyword xml:lang="fr">espace</dcat:keyword>
+      <dcat:keyword xml:lang="fr">zones naturelles, paysages, écosystèmes</dcat:keyword>
+      <dcat:keyword xml:lang="fr">législation</dcat:keyword>
+      <dcat:keyword xml:lang="fr">géographie</dcat:keyword>
+      <dcat:keyword xml:lang="fr">agriculture</dcat:keyword>
+      <dcat:keyword xml:lang="fr">aménagement du paysage</dcat:keyword>
+      <dcat:keyword xml:lang="fr">réseau ferroviaire</dcat:keyword>
+      <dcat:keyword xml:lang="fr">planification écologique</dcat:keyword>
+      <dcat:keyword xml:lang="fr">plan d'aménagement</dcat:keyword>
+      <dcat:keyword xml:lang="fr">extraction</dcat:keyword>
+      <dcat:keyword xml:lang="fr">habitat rural</dcat:keyword>
+      <dcat:keyword xml:lang="fr">gestion et planification rurale</dcat:keyword>
+      <dcat:keyword xml:lang="fr">secteur d'activité</dcat:keyword>
+      <dcat:keyword xml:lang="fr">infrastructure</dcat:keyword>
+      <dcat:keyword xml:lang="fr">plan de gestion</dcat:keyword>
+      <dcat:keyword xml:lang="fr">planification rurale</dcat:keyword>
+      <dcat:keyword xml:lang="fr">planification économique</dcat:keyword>
+      <dcat:keyword xml:lang="fr">plan</dcat:keyword>
+      <dcat:keyword xml:lang="fr">développement du territoire</dcat:keyword>
+      <dcat:keyword xml:lang="fr">infrastructure routière</dcat:keyword>
+      <dcat:keyword xml:lang="fr">plan d'occupation des sols</dcat:keyword>
+      <dcat:keyword xml:lang="fr">activité économique</dcat:keyword>
+      <dcat:keyword xml:lang="fr">réseau routier</dcat:keyword>
+      <dcat:keyword xml:lang="fr">planification urbaine</dcat:keyword>
+      <dcat:keyword xml:lang="fr">loisirs</dcat:keyword>
+      <dcat:keyword xml:lang="fr">canalisation</dcat:keyword>
+      <dcat:keyword xml:lang="fr">habitat urbain</dcat:keyword>
+      <dcat:keyword xml:lang="fr">mesure d'aménagement du territoire</dcat:keyword>
+      <dcat:keyword xml:lang="fr">territoire</dcat:keyword>
+      <dcat:keyword xml:lang="fr">planification régionale</dcat:keyword>
+      <dcat:keyword xml:lang="fr">habitat</dcat:keyword>
+      <dcat:keyword xml:lang="fr">PanierTelechargementGeoportail</dcat:keyword>
+      <dcat:keyword xml:lang="fr">Open Data</dcat:keyword>
+      <dcat:keyword xml:lang="fr">WalOnMap</dcat:keyword>
+      <dcat:keyword xml:lang="fr">Extraction_DIG</dcat:keyword>
+      <dcat:keyword xml:lang="fr">BDInfraSIGNO</dcat:keyword>
+      <dcat:keyword xml:lang="fr">aménagement du territoire</dcat:keyword>
+      <dcat:keyword xml:lang="fr">plan de secteur</dcat:keyword>
+      <dcat:keyword xml:lang="fr">point remarquable</dcat:keyword>
+      <dcat:keyword xml:lang="fr">PDS</dcat:keyword>
+      <dcat:keyword xml:lang="fr">CoDT</dcat:keyword>
+      <dcat:keyword xml:lang="fr">Point de vue</dcat:keyword>
+      <dcat:keyword xml:lang="fr">centre d'enfouissement</dcat:keyword>
+      <dcat:keyword xml:lang="fr">servitude</dcat:keyword>
+      <dcat:keyword xml:lang="fr">Code du Développement Territorial</dcat:keyword>
+      <dct:subject rdf:resource="http://inspire.ec.europa.eu/theme/el"/>
+      <dcat:keyword xml:lang="fr">Altitude</dcat:keyword>
+      <dct:subject rdf:resource="http://inspire.ec.europa.eu/theme/mf"/>
+      <dcat:keyword xml:lang="fr">Caractéristiques géographiques
+              météorologiques</dcat:keyword>
+      <dct:subject rdf:resource="http://inspire.ec.europa.eu/theme/of"/>
+      <dcat:keyword xml:lang="fr">Caractéristiques géographiques
+              océanographiques</dcat:keyword>
+      <dct:subject rdf:resource="http://inspire.ec.europa.eu/theme/ac"/>
+      <dcat:keyword xml:lang="fr">Conditions atmosphériques</dcat:keyword>
+      <dct:subject rdf:resource="http://inspire.ec.europa.eu/theme/gn"/>
+      <dcat:keyword xml:lang="fr">Dénominations géographiques</dcat:keyword>
+      <dct:subject rdf:resource="http://inspire.ec.europa.eu/theme/ge"/>
+      <dcat:keyword xml:lang="fr">Géologie</dcat:keyword>
+      <dct:subject rdf:resource="http://inspire.ec.europa.eu/theme/hy"/>
+      <dcat:keyword xml:lang="fr">Hydrographie</dcat:keyword>
+      <dct:subject rdf:resource="http://inspire.ec.europa.eu/theme/af"/>
+      <dcat:keyword xml:lang="fr">Installations agricoles et aquacoles</dcat:keyword>
+      <dct:subject rdf:resource="http://inspire.ec.europa.eu/theme/sr"/>
+      <dcat:keyword xml:lang="fr">Régions maritimes</dcat:keyword>
+      <dct:subject rdf:resource="http://inspire.ec.europa.eu/theme/sd"/>
+      <dcat:keyword xml:lang="fr">Répartition des espèces</dcat:keyword>
+      <dct:subject rdf:resource="http://inspire.ec.europa.eu/theme/mr"/>
+      <dcat:keyword xml:lang="fr">Ressources minérales</dcat:keyword>
+      <dct:subject rdf:resource="http://inspire.ec.europa.eu/theme/hh"/>
+      <dcat:keyword xml:lang="fr">Santé et sécurité des personnes</dcat:keyword>
+      <dcat:keyword xml:lang="fr">Mobilité</dcat:keyword>
+      <dcat:keyword xml:lang="fr">Observation de la terre et environnement</dcat:keyword>
+      <dcatap:applicableLegislation rdf:resource="http://data.europa.eu/eli/reg/2014/1143/oj"/>
+      <dcatap:applicableLegislation rdf:resource="http://data.europa.eu/eli/reg_impl/2023/138/oj"/>
       <dct:accessRights>
          <dct:RightsStatement rdf:about="http://inspire.ec.europa.eu/metadata-codelist/LimitationsOnPublicAccess/noLimitations"/>
       </dct:accessRights>
@@ -374,17 +322,22 @@
       <dct:license>
          <dct:LicenseDocument rdf:about="http://publications.europa.eu/resource/authority/licence/CATOSL_1_1"/>
       </dct:license>
+      <dct:license>
+         <dct:LicenseDocument rdf:about="http://publications.europa.eu/resource/authority/licence/CC_BY_4_0">
+            <dct:type>
+               <skos:Concept rdf:about="http://purl.org/adms/licencetype/Attribution">
+                  <skos:notation>Attribution</skos:notation>
+                  <skos:prefLabel xml:lang="en">Attribution</skos:prefLabel>
+                  <skos:inScheme rdf:resource="http://purl.org/adms/licencetype/1.0"/>
+               </skos:Concept>
+            </dct:type>
+         </dct:LicenseDocument>
+      </dct:license>
       <dct:rights>
          <dct:RightsStatement>
-            <dct:description xml:lang="fre">Conditions d'accès et d'utilisation spécifiques</dct:description>
+            <dct:description xml:lang="fr">Conditions d'accès et d'utilisation spécifiques</dct:description>
          </dct:RightsStatement>
       </dct:rights>
-      <dct:isPartOf rdf:resource="https://metawal.wallonie.be/geonetwork/srv/api/records/be875ddb-ffd9-4c23-a013-53063a366b5b"/>
-      <dct:references rdf:resource="https://metawal.wallonie.be/geonetwork/srv/api/records/ffc45d44-1cc2-4924-bb8c-214096eb9058"/>
-      <dct:hasPart rdf:resource="https://metawal.wallonie.be/geonetwork/srv/api/records/201ee90c-1971-4bdc-855e-9c9bcbc2c647"/>
-      <pav:previousVersion rdf:resource="https://metawal.wallonie.be/geonetwork/srv/api/records/19cff95e-1971-4bdc-855e-9c9bcbc2c647"/>
-      <dct:relation rdf:resource="http://localhost:8080/geonetwork/srv/api/records/ffc45d44-1cc2-4924-bb8c-214096eb9058?language=all"/>
-      <dct:isPartOf rdf:resource="http://localhost:8080/geonetwork/srv/api/records/da165110-88fd-11da-a88f-000d939bc5d8"/>
       <dct:language>
          <dct:LinguisticSystem rdf:about="http://publications.europa.eu/resource/authority/language/FRA"/>
       </dct:language>
@@ -400,14 +353,14 @@
       <dct:conformsTo>
          <dct:Standard>
             <rdf:type rdf:resource="http://purl.org/dc/terms/Standard"/>
-            <rdfs:label xml:lang="fre">INSPIRE Data Specification on Transport Networks – Technical Guidelines,
+            <rdfs:label xml:lang="fr">INSPIRE Data Specification on Transport Networks – Technical Guidelines,
                       version 3.2</rdfs:label>
             <dct:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2014-04-17</dct:issued>
          </dct:Standard>
       </dct:conformsTo>
       <dct:provenance>
          <dct:ProvenanceStatement>
-            <dct:description xml:lang="fre">La version numérique vectorielle du plan de secteur se base sur la version papier originale
+            <dct:description xml:lang="fr">La version numérique vectorielle du plan de secteur se base sur la version papier originale
           digitalisée par l'Institut Wallon en juin 1994 (fond de plan au 1/10.000) qui a été complétée en mai 2001 par
           ce même institut. La donnée intègre la légende actuellement en vigueur et est mise à jour en continu par la
           DGO4 depuis 2001.
@@ -430,6 +383,10 @@
           - une nouvelle zone non destinée à l'urbanisation : zone d'extraction (ZE).</dct:description>
          </dct:ProvenanceStatement>
       </dct:provenance>
+      <dct:references rdf:resource="https://metawal.wallonie.be/geonetwork/srv/api/records/19cff95e-1971-4bdc-855e-9c9bcbc2c647"/>
+      <dct:references rdf:resource="https://metawal.wallonie.be/geonetwork/srv/api/records/201ee90c-1971-4bdc-855e-9c9bcbc2c647"/>
+       <dct:references rdf:resource="https://metawal.wallonie.be/geonetwork/srv/api/records/be875ddb-ffd9-4c23-a013-53063a366b5b"/>
+       <dct:references rdf:resource="https://metawal.wallonie.be/geonetwork/srv/api/records/ffc45d44-1cc2-4924-bb8c-214096eb9058"/>
       <dcat:theme>
          <skos:Concept rdf:about="http://publications.europa.eu/resource/authority/data-theme/AGRI">
             <skos:prefLabel xml:lang="fr">Agriculture, pêche, sylviculture et alimentation</skos:prefLabel>
@@ -484,7 +441,7 @@
       <dct:spatial>
          <rdf:Description>
             <rdf:type rdf:resource="http://purl.org/dc/terms/Location"/>
-            <skos:prefLabel xml:lang="fre">Région wallonne</skos:prefLabel>
+            <skos:prefLabel xml:lang="fr">Région wallonne</skos:prefLabel>
          </rdf:Description>
       </dct:spatial>
       <dct:temporal>
@@ -498,97 +455,154 @@
       </dct:accrualPeriodicity>
       <foaf:page>
          <foaf:Document rdf:about="https://metawal.wallonie.be/geonetwork/srv/api/records/7fe2f305-1302-4297-b67e-792f55acd834/attachments/pds_codt.png">
-            <dct:description xml:lang="fre">pds_codt_pic</dct:description>
+            <dct:description xml:lang="fr">pds_codt_pic</dct:description>
          </foaf:Document>
       </foaf:page>
       <dcat:distribution>
          <dcat:Distribution>
+              <dct:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2023-02-21</dct:issued>
+
+
+
             <dct:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2023-12-08T00:00:00</dct:issued>
+              <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2023-03-31</dct:modified>
+
+
+
             <dcat:accessURL rdf:resource="https://data.monde.org/secteur.shp"/>
             <dcat:downloadURL rdf:resource="https://data.monde.org/secteur.shp"/>
             <dcat:byteSize rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">10485760</dcat:byteSize>
             <dct:format>
-               <dct:MediaTypeOrExtent>
-                  <rdfs:label>ESRI Shapefile (.shp)</rdfs:label>
-               </dct:MediaTypeOrExtent>
+               <dct:MediaTypeOrExtent rdf:about="http://publications.europa.eu/resource/authority/file-type/SHP"/>
             </dct:format>
             <dcat:compressFormat>
-               <dct:MediaType rdf:about="https://publications.europa.eu/resource/authority/file-type/ZIP"/>
+               <dct:MediaType rdf:about="http://publications.europa.eu/resource/authority/file-type/ZIP"/>
             </dcat:compressFormat>
+            <dcatap:applicableLegislation rdf:resource="http://data.europa.eu/eli/reg/2014/1143/oj"/>
+            <dcatap:applicableLegislation rdf:resource="http://data.europa.eu/eli/reg_impl/2023/138/oj"/>
+            <dcatap:applicableLegislation rdf:resource="http://data.europa.eu/eli/reg_impl/2023/138/oj"/>
          </dcat:Distribution>
       </dcat:distribution>
       <foaf:page>
          <foaf:Document rdf:about="http://geoapps.wallonie.be/webgisdgo4/#CTX=PDS">
-            <dct:title xml:lang="fre">Application de consultation des données de la DGO4 - Plan de secteur</dct:title>
-            <dct:description xml:lang="fre">Application dédiée à la consultation des couches de données relatives au Plan de
+            <dct:title xml:lang="fr">Application de consultation des données de la DGO4 - Plan de secteur</dct:title>
+            <dct:description xml:lang="fr">Application dédiée à la consultation des couches de données relatives au Plan de
                   secteur. Cette application constitue un thème de l'application de consultation des données de la DGO4.</dct:description>
          </foaf:Document>
       </foaf:page>
       <foaf:page>
          <foaf:Document rdf:about="https://geoportail.wallonie.be/walonmap/#ADU=https://geoservices.wallonie.be/arcgis/rest/services/AMENAGEMENT_TERRITOIRE/PDS/MapServer">
-            <dct:title xml:lang="fre">Application WalOnMap - Toute la Wallonie à la carte</dct:title>
-            <dct:description xml:lang="fre">Application cartographique du Geoportail (WalOnMap) qui permet de découvrir les
+            <dct:title xml:lang="fr">Application WalOnMap - Toute la Wallonie à la carte</dct:title>
+            <dct:description xml:lang="fr">Application cartographique du Geoportail (WalOnMap) qui permet de découvrir les
                   données géographiques de la Wallonie.</dct:description>
          </foaf:Document>
       </foaf:page>
       <dcat:distribution>
          <dcat:Distribution>
-            <dct:title xml:lang="fre">Service de visualisation ESRI-REST</dct:title>
-            <dct:description xml:lang="fre">Ce service ESRI-REST permet de visualiser la série de couches de données "Plan de
+            <dct:title xml:lang="fr">Service de visualisation ESRI-REST</dct:title>
+            <dct:description xml:lang="fr">Ce service ESRI-REST permet de visualiser la série de couches de données "Plan de
                   secteur"</dct:description>
+              <dct:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2023-02-21</dct:issued>
+
+
+
+
+              <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2023-03-31</dct:modified>
+
+
+
             <dcat:accessURL rdf:resource="https://geoservices.wallonie.be/arcgis/rest/services/AMENAGEMENT_TERRITOIRE/PDS/MapServer"/>
             <dcat:accessService>
                <rdf:Description>
                   <rdf:type rdf:resource="http://www.w3.org/ns/dcat#DataService"/>
-                  <dct:title xml:lang="fre">Service de visualisation ESRI-REST</dct:title>
+                  <dct:title xml:lang="fr">Service de visualisation ESRI-REST</dct:title>
                   <dcat:endpointURL rdf:resource="https://geoservices.wallonie.be/arcgis/rest/services/AMENAGEMENT_TERRITOIRE/PDS/MapServer"/>
                </rdf:Description>
             </dcat:accessService>
+            <dcatap:applicableLegislation rdf:resource="http://data.europa.eu/eli/reg/2014/1143/oj"/>
+            <dcatap:applicableLegislation rdf:resource="http://data.europa.eu/eli/reg_impl/2023/138/oj"/>
+            <dcatap:applicableLegislation rdf:resource="http://data.europa.eu/eli/reg_impl/2023/138/oj"/>
          </dcat:Distribution>
       </dcat:distribution>
       <dcat:distribution>
          <dcat:Distribution>
-            <dct:title xml:lang="fre">Service de visualisation WMS</dct:title>
-            <dct:description xml:lang="fre">Ce service WMS permet de visualiser la série de couches de données "Plan de
+            <dct:title xml:lang="fr">Service de visualisation WMS</dct:title>
+            <dct:description xml:lang="fr">Ce service WMS permet de visualiser la série de couches de données "Plan de
                   secteur"</dct:description>
+              <dct:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2023-02-21</dct:issued>
+
+
+
+
+              <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2023-03-31</dct:modified>
+
+
+
             <dcat:accessURL rdf:resource="https://geoservices.wallonie.be/arcgis/services/AMENAGEMENT_TERRITOIRE/PDS/MapServer/WMSServer?request=GetCapabilities&amp;service=WMS"/>
             <dcat:accessService>
                <rdf:Description>
                   <rdf:type rdf:resource="http://www.w3.org/ns/dcat#DataService"/>
-                  <dct:title xml:lang="fre">Service de visualisation WMS</dct:title>
+                  <dct:title xml:lang="fr">Service de visualisation WMS</dct:title>
                   <dcat:endpointURL rdf:resource="https://geoservices.wallonie.be/arcgis/services/AMENAGEMENT_TERRITOIRE/PDS/MapServer/WMSServer?request=GetCapabilities&amp;service=WMS"/>
                   <dct:conformsTo>
                      <dct:Standard rdf:about="http://www.opengeospatial.org/standards/wms"/>
                   </dct:conformsTo>
                </rdf:Description>
             </dcat:accessService>
+            <dcatap:applicableLegislation rdf:resource="http://data.europa.eu/eli/reg/2014/1143/oj"/>
+            <dcatap:applicableLegislation rdf:resource="http://data.europa.eu/eli/reg_impl/2023/138/oj"/>
+            <dcatap:applicableLegislation rdf:resource="http://data.europa.eu/eli/reg_impl/2023/138/oj"/>
          </dcat:Distribution>
       </dcat:distribution>
       <foaf:page>
          <foaf:Document rdf:about="http://spw.wallonie.be/dgo4/site_thema/index.php?thema=modif_ps">
-            <dct:title xml:lang="fre">Base de données du Plan de secteur</dct:title>
-            <dct:description xml:lang="fre">Site permettant la recherche de Plans de secteur et des modifications dans la base
+            <dct:title xml:lang="fr">Base de données du Plan de secteur</dct:title>
+            <dct:description xml:lang="fr">Site permettant la recherche de Plans de secteur et des modifications dans la base
                   de données</dct:description>
          </foaf:Document>
       </foaf:page>
       <foaf:page>
          <foaf:Document rdf:about="https://lampspw.wallonie.be/dgo4/site_thema/index.php/synthese">
-            <dct:title xml:lang="fre">Inventaire des données géographiques de la DGO4</dct:title>
-            <dct:description xml:lang="fre">Inventaire des données géographiques produites ou exploitées à la DGO4.</dct:description>
+            <dct:title xml:lang="fr">Inventaire des données géographiques de la DGO4</dct:title>
+            <dct:description xml:lang="fr">Inventaire des données géographiques produites ou exploitées à la DGO4.</dct:description>
          </foaf:Document>
       </foaf:page>
       <foaf:page>
          <foaf:Document rdf:about="http://spw.wallonie.be/dgo4/site_amenagement/site/directions/dar">
-            <dct:title xml:lang="fre">La Direction de l'Aménagement Régional</dct:title>
-            <dct:description xml:lang="fre">Site de la Direction de l'Aménagement Régional (DAR)</dct:description>
+            <dct:title xml:lang="fr">La Direction de l'Aménagement Régional</dct:title>
+            <dct:description xml:lang="fr">Site de la Direction de l'Aménagement Régional (DAR)</dct:description>
          </foaf:Document>
       </foaf:page>
       <foaf:page>
          <foaf:Document rdf:about="http://geoservices.wallonie.be/geotraitement/spwdatadownload/get/7fe2f305-1302-4297-b67e-792f55acd834/PDS_SHAPE_31370.zip">
-            <dct:title xml:lang="fre">Plan de Secteur au format SHP</dct:title>
-            <dct:description xml:lang="fre">Dossier compressé contenant le jeu de données du Plan de Secteur au format
+            <dct:title xml:lang="fr">Plan de Secteur au format SHP</dct:title>
+            <dct:description xml:lang="fr">Dossier compressé contenant le jeu de données du Plan de Secteur au format
                   shapefile en coordonnées Lambert 72</dct:description>
          </foaf:Document>
       </foaf:page>
+      <foaf:page>
+         <foaf:Document rdf:about="http://data.europa.eu/eli/reg/2010/1089false"/>
+      </foaf:page>
+      <foaf:page>
+         <foaf:Document rdf:about="http://data.europa.eu/eli/reg/2010/1089"/>
+      </foaf:page>
+      <foaf:page>
+         <foaf:Document rdf:about="https://inspire.ec.europa.eu/id/document/tg/tn"/>
+      </foaf:page>
+      <dcat:distribution>
+         <dcat:Distribution>
+            <dct:description xml:lang="fr">Légende associée au plan de secteur (sur base du service de visualisation)</dct:description>
+              <dct:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2023-02-21</dct:issued>
+
+
+
+
+              <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2023-03-31</dct:modified>
+
+
+
+            <dcat:accessURL rdf:resource="https://geoservices.wallonie.be/arcgis/rest/services/AMENAGEMENT_TERRITOIRE/PDS/MapServer/legend"/>
+         </dcat:Distribution>
+      </dcat:distribution>
    </rdf:Description>
 </rdf:RDF>

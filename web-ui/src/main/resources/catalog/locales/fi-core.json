@@ -126,6 +126,7 @@
     "featureCatalog": "Kohdeluettelo",
     "frequency": "Taajuus",
     "feebackSent": "Viestisi on lähetetty luettelon hoitajalle.",
+    "feebackSentError": "An error occurred sending your to the catalog manager. Please try again later, contact the service provider, or report this issue.",
     "feedbackNotEnable": "Palautetoiminto ei ole käytössä.",
     "filter": "Suodin",
     "filterSearch": "Näytä hakumääreet",
@@ -170,7 +171,7 @@
     "needAnAccount": "Need an account?",
     "needAnAccountInfo": "Rekisteröidy siis nyt, se ottaa vain minuutin.",
     "needHelp": "Ohjeita",
-    "newAccountInfo": "Kun pyydät käyttäjätunnusta, järjestelmä lähettää käyttäjätietosi sähköpostilla. Jos pyydät laajempia käyttöoikeuksia, luettelon hoitaja tarkistaa pyynnön ja palaa asiaan.",
+    "newAccountInfo": "When registering, an email will be sent to you with account details. The catalogue administrator will review group and profile requests.",
     "next": "Seuraava",
     "noFileSelected": "Ei valittua tiedostoa",
     "noRecordFound": "Tietuetta ei löytynyt.",
@@ -234,6 +235,7 @@
     "register": "Rekisteröidy",
     "rememberMe": "Muista minut",
     "requestedProfile": "Pyydetty profiili",
+    "requestedGroup": "Requested group",
     "resetPassword": "Palauta salasana",
     "resetPasswordTitle": "Palauta käyttäjän {{user}} salasana.",
     "resetPasswordError": "Error occurred while resetting password",
@@ -266,7 +268,7 @@
     "spatialRepresentationType": "Esitysmuoto",
     "cl_spatialRepresentationType": "Esitysmuoto",
     "state": "Tila",
-    "staticMap": "Staattinen kartta",
+    "map-static": "Staattinen kartta",
     "surname": "Sukunimi",
     "title": "Titteli",
     "to": "Vastaanottaja",
@@ -586,5 +588,6 @@
     "mapLegend": "Selite",
     "quality": "Laatu",
     "download": "Download",
-    "links": "Linkit"
+    "links": "Linkit",
+    "saveToFile": "Save to file."
 }

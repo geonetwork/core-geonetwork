@@ -236,6 +236,7 @@
     "onlineUseDQReport": "Raport de calitate a datelor",
     "onlineUseDQTOR": "Specificația calității datelor",
     "onlineUseDQProdReport": "Raport de producție de calitate a datelor",
+    "onlineUseMap": "Map",
     "onlineUseLegend": "Legendă pentru resursă",
     "onlineUseLegendLYR": "Stil pentru resursa pentru ArcGIS (LYR)",
     "onlineUseStyleSLD": "Stil pentru resursă folosind SLD",
@@ -441,6 +442,8 @@
     "addOnlinesrc#API-help": "de exemplu. vizualizați serviciul, REST API",
     "addOnlinesrc#onlineDownload|localNetwork": "Adăugați descărcare",
     "addOnlinesrc#onlineDownload|localNetwork-help": "de exemplu. fișier, serviciu de descărcare, legături de rețea locală",
+    "addOnlinesrc#onlineUseMap": "Add map",
+    "addOnlinesrc#onlineUseMap-help": "eg. PDF static maps or OGC Web Map Context interactive maps",
     "addOnlinesrc#onlineUseLegend": "Adăugați o portretizare",
     "addOnlinesrc#onlineUseLegend-help": "de exemplu. Fișiere LYR, QML, SLD",
     "addOnlinesrc#links": "Adăugați linkuri",
@@ -454,5 +457,10 @@
     "associated-fcats": "Catalog de caracteristici",
     "associated-siblings": "Resurse asociate",
     "associated-hasfeaturecats": "Folosind acest catalog de caracteristici",
-    "associatedResourcesPanel": "Resurse asociate"
+    "associatedResourcesPanel": "Resurse asociate",
+    "validationSuccessLabel": "success",
+    "validationErrorLabel": "errors",
+    "metadataDuplicatedField-title": "The metadata title is used in another metadata record.",
+    "metadataDuplicatedField-altTitle": "The metadata alternate title is used in another metadata record.",
+    "metadataDuplicatedField-identifier": "The metadata resource identifier is used in another metadata record."
 }

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (C) 2001-2025 Food and Agriculture Organization of the
+  ~ United Nations (FAO-UN), United Nations World Food Programme (WFP)
+  ~ and United Nations Environment Programme (UNEP)
+  ~
+  ~ This program is free software; you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation; either version 2 of the License, or (at
+  ~ your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful, but
+  ~ WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+  ~ General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program; if not, write to the Free Software
+  ~ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
+  ~
+  ~ Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
+  ~ Rome - Italy. email: geonetwork@osgeo.org
+  -->
+
+<strings>
+  <datacite.mandatory>Mandatory fields</datacite.mandatory>
+
+  <datacite.identifier.missing>The identifier is missing. The Identifier is a unique
+    string that identifies a resource. This field is mandatory.
+  </datacite.identifier.missing>
+  <datacite.identifier.present>The identifier is: </datacite.identifier.present>
+
+  <datacite.type.missing>The type is missing. Check the metadata section and set the hierarchy level. This field is mandatory.
+  </datacite.type.missing>
+  <datacite.type.present>The resource type is: </datacite.type.present>
+
+  <datacite.title.missing>The title is missing. A name or title by which a
+    resource is known. May be
+    the title of a dataset or the
+    name of a piece of software. This field is mandatory.
+  </datacite.title.missing>
+  <datacite.title.present>The title is:</datacite.title.present>
+
+  <datacite.publicationDate.missing>Publication year is missing. The year when the data was
+    or will be made publicly
+    available. Check publication date in resource identification. This field is mandatory.
+  </datacite.publicationDate.missing>
+  <datacite.publicationDate.present>The publication date is: </datacite.publicationDate.present>
+
+  <datacite.creator.missing>Creator is missing. The main researchers involved
+    in producing the data, or the authors of the publication, in
+    priority order. To supply multiple creators, repeat this
+    property. Check point of contact in resource identification with role 'pointOfContact' or 'custodian'. This field is mandatory.
+  </datacite.creator.missing>
+  <datacite.creator.found> creator(s) found.</datacite.creator.found>
+
+  <datacite.publisher.missing>Publisher is missing. The name of the entity that
+    holds, archives, publishes
+    prints, distributes, releases,
+    issues, or produces the
+    resource. Check distribution section, the publisher is the first distributor contact. This field is mandatory.
+  </datacite.publisher.missing>
+  <datacite.publisher.present>The publisher is: </datacite.publisher.present>
+</strings>

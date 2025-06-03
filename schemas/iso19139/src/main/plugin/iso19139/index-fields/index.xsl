@@ -658,7 +658,11 @@
           <maintenance type="object">{
             "frequency": "<xsl:value-of select="*:maintenanceAndUpdateFrequency/*/@codeListValue"/>"
             <xsl:for-each select="gmd:dateOfNextUpdate[*/text() != '']">
+              <xsl:variable name="dateOfNextUpdateZulu"
+                            select="date-util:convertToISOZuluDateTime(*/text())"/>
+              <xsl:if test="$dateOfNextUpdateZulu != ''">
               ,"nextUpdateDate": "<xsl:value-of select="*/text()"/>"
+              </xsl:if>
             </xsl:for-each>
             <xsl:for-each select="gmd:userDefinedMaintenanceFrequency[*/text() != '']">
               ,"userDefinedFrequency": "<xsl:value-of select="*/text()"/>"
@@ -1033,12 +1037,14 @@
                         select="(../../gmd:measureDescription/gco:CharacterString)[1]"/>
           <xsl:variable name="measureDate"
                         select="(../../gmd:dateTime/gco:DateTime)[1]"/>
+          <xsl:variable name="measureDateZulu"
+                        select="date-util:convertToISOZuluDateTime($measureDate)"/>
           <measure type="object">{
             "name": "<xsl:value-of select="util:escapeForJson($name)"/>",
             <xsl:if test="$description != ''">
               "description": "<xsl:value-of select="util:escapeForJson($description)"/>",
             </xsl:if>
-            <xsl:if test="$measureDate != ''">
+            <xsl:if test="$measureDateZulu != ''">
               "date": "<xsl:value-of select="util:escapeForJson($measureDate)"/>",
             </xsl:if>
             <!-- First value only. -->
@@ -1060,10 +1066,13 @@
         <xsl:variable name="processSteps"
                       select="gmd:lineage/*/gmd:processStep/*[gmd:description/gco:CharacterString != '']"/>
         <xsl:for-each select="$processSteps">
+          <xsl:variable name="stepDateTimeZulu"
+                        select="date-util:convertToISOZuluDateTime(normalize-space(gmd:dateTime))"/>
+
           <processSteps type="object">{
             "descriptionObject": <xsl:value-of select="gn-fn-index:add-multilingual-field(
                                 'description', gmd:description, $allLanguages, true())"/>
-            <xsl:if test="normalize-space(gmd:dateTime) != ''">
+            <xsl:if test="$stepDateTimeZulu != ''">
               ,"date": "<xsl:value-of select="gmd:dateTime/gco:*/text()"/>"
             </xsl:if>
             <xsl:if test="normalize-space(gmd:source) != ''">

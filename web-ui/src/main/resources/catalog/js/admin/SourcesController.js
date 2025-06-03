@@ -39,7 +39,12 @@
       $scope.source = null;
       $scope.filteredSources = null;
       $scope.filter = {
-        types: { portal: true, subportal: true, externalportal: true, harvester: true }
+        types: {
+          portal: true,
+          subportal: true,
+          externalportal: true,
+          harvester: true
+        }
       };
 
       $scope.serviceRecordSearchObj = {
@@ -88,6 +93,20 @@
         true
       );
 
+      $scope.defaultConfig = "";
+
+      function loadDatahubStatus() {
+        $http
+          .get("../datahub/status")
+          .then(function (response) {
+            $scope.datahubAvailable = true;
+            $scope.defaultConfig = response.data.defaultConfig;
+          })
+          .catch(function () {
+            $scope.datahubAvailable = false;
+          });
+      }
+
       function loadSources() {
         var url = "../api/sources";
         if ($scope.user.profile === "UserAdmin") {
@@ -96,7 +115,9 @@
         $http.get(url).then(function (response) {
           $scope.sources = response.data;
           if ($scope.source && $scope.source.uuid !== null) {
-            var selectedSource = _.find($scope.sources, { uuid: $scope.source.uuid });
+            var selectedSource = _.find($scope.sources, {
+              uuid: $scope.source.uuid
+            });
             if (selectedSource) {
               $scope.source = selectedSource;
             }
@@ -133,9 +154,10 @@
           filter: "",
           serviceRecord: null,
           groupOwner: null,
-          listableInHeaderSelector: true
+          listableInHeaderSelector: true,
+          datahubEnabled: false,
+          datahubConfiguration: $scope.defaultConfig
         };
-        // TODO: init labels
       };
 
       $scope.updateSource = function () {
@@ -230,8 +252,10 @@
           $scope.clear(item);
         });
       });
+      $scope.datahubAvailable = false;
 
       loadSources();
+      loadDatahubStatus();
       loadUiConfigurations();
     }
   ]);

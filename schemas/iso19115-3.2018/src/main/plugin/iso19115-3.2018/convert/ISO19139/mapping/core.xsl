@@ -79,6 +79,16 @@
     <xsl:value-of select="."/>
   </xsl:template>
 
+  <!--
+  Feature Catalogue cardinality is changed from a gco:Multiplicity to a CharacterString
+  -->
+  <xsl:template match="gfcold:cardinality" priority="5" mode="from19139to19115-3.2018">
+    <gfc:cardinality>
+      <gco:CharacterString>
+        <xsl:value-of select="concat(*/gcoold:range/*/gcoold:lower/*/text(), '..', */gcoold:range/*/gcoold:upper/*/text())"/>
+      </gco:CharacterString>
+    </gfc:cardinality>
+  </xsl:template>
 
   <xsl:template match="gmd:language|gmd:locale" priority="5" mode="from19139to19115-3.2018">
     <xsl:variable name="nameSpacePrefix">

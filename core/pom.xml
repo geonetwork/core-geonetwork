@@ -27,7 +27,7 @@
   <parent>
     <artifactId>geonetwork</artifactId>
     <groupId>org.geonetwork-opensource</groupId>
-    <version>4.4.6-SNAPSHOT</version>
+    <version>4.4.9-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
@@ -35,6 +35,13 @@
   <name>GeoNetwork core</name>
 
   <dependencies>
+
+    <dependency>
+      <groupId>org.geoserver.community.jwt-headers</groupId>
+      <artifactId>jwt-headers-util</artifactId>
+      <version>2.27-SNAPSHOT</version>
+    </dependency>
+
     <dependency>
       <groupId>net.objecthunter</groupId>
       <artifactId>exp4j</artifactId>
@@ -305,6 +312,10 @@
       <artifactId>gt-geojson</artifactId>
     </dependency>
     <dependency>
+      <groupId>com.jayway.jsonpath</groupId>
+      <artifactId>json-path</artifactId>
+    </dependency>
+    <dependency>
       <groupId>org.locationtech.jts</groupId>
       <artifactId>jts-core</artifactId>
     </dependency>
@@ -563,6 +574,11 @@
     <dependency>
       <groupId>org.xmlunit</groupId>
       <artifactId>xmlunit-core</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.data</groupId>
+      <artifactId>spring-data-envers</artifactId>
       <scope>test</scope>
     </dependency>
     <dependency>
