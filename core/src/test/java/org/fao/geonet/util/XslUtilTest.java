@@ -41,8 +41,8 @@ public class XslUtilTest {
     @Test
     public void testHtml2textSubstituteHtmlToTextLayoutElement() {
         String html = "<div><span>Sample text</span><br/><span>Sample text 2</span><br/><span>Sample text 3</span></div>";
-        String lineSeperator = System.lineSeparator();
-        String expectedText = "Sample text" + lineSeperator + "Sample text 2" + lineSeperator + "Sample text 3";
+        String lineSeparator = System.lineSeparator();
+        String expectedText = "Sample text" + lineSeparator + "Sample text 2" + lineSeparator + "Sample text 3";
         String text = XslUtil.html2text(html, true);
 
         assertEquals(expectedText, text);
