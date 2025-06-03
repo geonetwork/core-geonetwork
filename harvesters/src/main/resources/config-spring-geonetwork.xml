@@ -61,16 +61,18 @@
         scope="prototype"/>
   <bean id="arcsde" class="org.fao.geonet.kernel.harvest.harvester.arcsde.ArcSDEHarvester"
         scope="prototype"/>
+  <!-- ArcSDE also requires a ArcSDEConnectionFactory beans -->
+  <bean id="arcSDEConnectionFactory"
+        class="org.fao.geonet.kernel.harvest.harvester.arcsde.ArcSDEConnectionFactory"/>
   <bean id="filesystem"
         class="org.fao.geonet.kernel.harvest.harvester.localfilesystem.LocalFilesystemHarvester"
         scope="prototype"/>
   <bean id="wfsfeatures"
         class="org.fao.geonet.kernel.harvest.harvester.wfsfeatures.WfsFeaturesHarvester"
         scope="prototype"/>
-  <!-- ArcSDE also requires a ArcSDEConnectionFactory beans -->
-  <bean id="arcSDEConnectionFactory"
-        class="org.fao.geonet.kernel.harvest.harvester.arcsde.ArcSDEConnectionFactory"/>
   <bean id="simpleurl"
         class="org.fao.geonet.kernel.harvest.harvester.simpleurl.SimpleUrlHarvester"
+        scope="prototype"/>
+  <bean id="database" class="org.fao.geonet.kernel.harvest.harvester.database.DatabaseHarvester"
         scope="prototype"/>
 </beans>

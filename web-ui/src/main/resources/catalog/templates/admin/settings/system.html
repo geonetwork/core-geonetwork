@@ -223,6 +223,31 @@
                       </select>
 
                       <select
+                        data-ng-switch-when="metadata/delete/backupOptions"
+                        class="form-control"
+                        name="{{s.name}}"
+                      >
+                        <option
+                          value="ForceBackup"
+                          ng-selected="'ForceBackup' == s.value"
+                        >
+                          {{'ForceBackup' | translate}}
+                        </option>
+                        <option
+                          value="ForceNoBackup"
+                          ng-selected="'ForceNoBackup' == s.value"
+                        >
+                          {{'ForceNoBackup' | translate}}
+                        </option>
+                        <option
+                          value="UseAPIParameter"
+                          ng-selected="'UseAPIParameter' == s.value"
+                        >
+                          {{'UseAPIParameter' | translate}}
+                        </option>
+                      </select>
+
+                      <select
                         data-ng-switch-when="metadata/publication/profilePublishMetadata"
                         class="form-control"
                         name="{{s.name}}"

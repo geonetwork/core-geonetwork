@@ -76,6 +76,7 @@
     "gnMetadataActions",
     "gnConfig",
     "gnConfigService",
+    "$http",
     function (
       $compile,
       gnMap,
@@ -83,7 +84,8 @@
       gnSearchSettings,
       gnMetadataActions,
       gnConfig,
-      gnConfigService
+      gnConfigService,
+      $http
     ) {
       return {
         restrict: "A",
@@ -116,6 +118,33 @@
           scope.$watchCollection("searchResults.records", function (rec) {
             //scroll to top
             element.animate({ scrollTop: top });
+
+            // Initialize/reset an empty object to store group names
+            scope.groupNames = {};
+
+            // Check if there are any records
+            if (rec && rec.length) {
+              // Extract unique group owner IDs from the records
+              var groupIds = [];
+              var uniqueIds = {};
+
+              for (var i = 0; i < rec.length; i++) {
+                var groupOwner = rec[i].groupOwner;
+                if (groupOwner && !uniqueIds[groupOwner]) {
+                  uniqueIds[groupOwner] = true;
+                  groupIds.push(groupOwner);
+                }
+              }
+
+              // Fetch and store group names for each group ID
+              for (var j = 0; j < groupIds.length; j++) {
+                (function(groupId) {
+                  gnMetadataActions.getGroupName(groupId).then(function(groupName) {
+                    scope.groupNames[groupId] = groupName;
+                  });
+                })(groupIds[j]);
+              }
+            }
 
             // get md extent boxes
             if (scope.map) {
@@ -202,6 +231,23 @@
               //remove the last line break character
               return abstractBrief.substring(0, abstractBrief.length - 1);
             }
+          };
+
+          /**
+           * @function displayWorkflowStatus
+           * @description Checks if workflow is enabled and the group owner's name matches the workflow group regex.
+           * @param {Object} md - The metadata object.
+           * @returns {boolean} - Returns true if the group owner's name matches the workflow group regex and the workflow is enabled, otherwise false.
+           */
+          scope.displayWorkflowStatus = function (md) {
+            // Return false if any required property is missing or workflow is not enabled
+            if (!md.groupOwner || !scope.groupNames || !scope.isMdWorkflowEnable) {
+              return false;
+            }
+            // Check if the group name matches the workflow group regex
+            return md.isWorkflowEnabled() || gnMetadataActions.isGroupWithWorkflowEnabled(
+              scope.groupNames[md.groupOwner]
+            );
           };
 
           if (scope.map) {
