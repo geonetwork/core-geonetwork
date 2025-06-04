@@ -167,7 +167,7 @@ public abstract class AbstractTokenLister implements OaiPmhService {
             }
 
             if (result.getIds().isEmpty()) {
-                throw new NoRecordsMatchException("No results");
+                throw new NoRecordsMatchException("No results (or no conversion available for prefix '" + req.getMetadataPrefix() + "')");
             }
 
             // we only need a new token if the result set is big enough

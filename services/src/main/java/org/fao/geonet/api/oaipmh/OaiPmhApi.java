@@ -26,6 +26,7 @@ package org.fao.geonet.api.oaipmh;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Operation;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.kernel.oaipmh.OaiPmhDispatcher;
@@ -34,7 +35,6 @@ import org.jdom.Element;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -43,21 +43,21 @@ import javax.servlet.http.HttpServletRequest;
     "/{portal}/api/oaipmh"
 })
 @Tag(name = "oaipmh",
-    description = "OAIPMH server operations")
-@Controller("oaipmh")
+    description = "OAI-PMH server")
+@RestController("oaipmh")
 public class OaiPmhApi {
 
     @Autowired
     private OaiPmhDispatcher oaiPmhDispatcher;
 
-    @io.swagger.v3.oas.annotations.Operation(
-        summary = "Oaiphm server",
-        description = "")
+    @Operation(
+        summary = "OAI-PMH server endpoint",
+        description = "[More information](https://docs.geonetwork-opensource.org/4.4/api/oai-pmh/)")
     @GetMapping(
         produces = MediaType.APPLICATION_XML_VALUE)
     @ResponseStatus(HttpStatus.OK)
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Oaiphm server response.")
+        @ApiResponse(responseCode = "200", description = "OAI-PMH server response.")
     })
     @ResponseBody
     public Element dispatch(
@@ -70,5 +70,4 @@ public class OaiPmhApi {
 
         return oaiPmhDispatcher.dispatch(oaiPmhParams, serviceContext);
     }
-
 }

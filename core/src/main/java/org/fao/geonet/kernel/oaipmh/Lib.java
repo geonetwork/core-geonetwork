@@ -23,14 +23,16 @@
 
 package org.fao.geonet.kernel.oaipmh;
 
+import co.elastic.clients.elasticsearch.core.SearchResponse;
+import co.elastic.clients.elasticsearch.core.search.Hit;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.Map;
+import java.util.stream.Collectors;
 import jeeves.constants.Jeeves;
 import jeeves.server.context.ServiceContext;
 
-import org.elasticsearch.action.search.SearchResponse;
-import org.elasticsearch.search.SearchHit;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.search.EsSearchManager;
 import org.fao.geonet.schema.iso19139.ISO19139SchemaPlugin;
@@ -45,28 +47,38 @@ import java.util.List;
 
 import static org.fao.geonet.kernel.search.EsSearchManager.FIELDLIST_CORE;
 
-//=============================================================================
-
 public class Lib {
     public static final String SESSION_OBJECT = "oai-list-records-result";
 
     private Lib() {
 
     }
-    //---------------------------------------------------------------------------
-    //---
-    //--- API methods
-    //---
-    //---------------------------------------------------------------------------
-
-    //--------------------------------------------------------------------------
-
     public static boolean existsConverter(Path schemaDir, String prefix) {
-        Path f = schemaDir.resolve("convert").resolve(prefix + ".xsl");
+        Path f = schemaDir.resolve("formatter").resolve(prefix).resolve("view.xsl");
         return Files.exists(f);
     }
 
-    //--------------------------------------------------------------------------
+    /**
+     * Return all XSL file basename available for the given schema directory.
+     */
+    public static List<String> availableConverters(Path schemaDir) {
+        List<String> result = new ArrayList<>();
+        Path convertDir = schemaDir.resolve("formatter");
+        if (Files.exists(convertDir) && Files.isDirectory(convertDir)) {
+            try {
+                Files.list(convertDir).forEach(f -> {
+                    if (Files.isDirectory(f)) {
+                        String folderName = f.getFileName().toString();
+                        result.add(folderName);
+                    }
+                });
+            } catch (Exception e) {
+                // Ignore errors
+            }
+        }
+        return result;
+    }
+
 
     public static Element prepareTransformEnv(String uuid, String changeDate, String baseUrl, String siteUrl, String siteName) {
 
@@ -83,8 +95,6 @@ public class Lib {
         return env;
     }
 
-    //---------------------------------------------------------------------------
-
     public static Element transform(Path schemaDir, Element env, Element md, String targetFormat) throws Exception {
 
         //--- setup root element
@@ -95,12 +105,10 @@ public class Lib {
 
         //--- do an XSL transformation
 
-        Path styleSheet = schemaDir.resolve("convert").resolve(targetFormat);
+        Path styleSheet = schemaDir.resolve("formatter").resolve(targetFormat).resolve("view.xsl");
 
         return Xml.transform(root, styleSheet);
     }
-
-    //---------------------------------------------------------------------------
 
     public static List<Integer> search(ServiceContext context, Element params) throws Exception {
         EsSearchManager searchMan = context.getBean(EsSearchManager.class);
@@ -113,26 +121,22 @@ public class Lib {
             FIELDLIST_CORE,
             0, 1);
 
-        long total = queryResult.getHits().getTotalHits().value;
+        long total = queryResult.hits().total().value();
 
         queryResult = searchMan.query(
             esJsonQuery,
             FIELDLIST_CORE,
             0, (int) total);
 
-        List<Integer> result = new ArrayList<>();
+        List<Integer> result;
 
-        for (SearchHit hit : queryResult.getHits()) {
-            result.add(Integer.parseInt(hit.getSourceAsMap().get(Geonet.IndexFieldNames.ID).toString()));
-        }
+        ObjectMapper objectMapper = new ObjectMapper();
+        result = ((List<Hit>) queryResult.hits().hits())
+            .stream()
+            .map(h -> Integer.parseInt(objectMapper.convertValue(h.source(), Map.class)
+                .get(Geonet.IndexFieldNames.ID).toString())).collect(Collectors.toList());
         return result;
     }
-
-    //---------------------------------------------------------------------------
-    //---
-    //--- Variables
-    //---
-    //---------------------------------------------------------------------------
 
     public static Element toJeevesException(OaiPmhException e) {
         String msg = e.getMessage();
@@ -168,13 +172,6 @@ public class Lib {
             "        {" +
             "          \"terms\": {" +
             "            \"isTemplate\": [\"n\"]" +
-            "          }" +
-            "        }, " +
-            "        {" +
-            "          \"term\": {" +
-            "            \"documentStandard\": {" +
-            "              \"value\": \"%s\"" +
-            "            }" +
             "          }" +
             "        }%s%s" +
             "      ]" +
@@ -215,10 +212,6 @@ public class Lib {
 
         ObjectMapper objectMapper = new ObjectMapper();
 
-        String schema = (params.getChild(PARAM_METADATAPREFIX) != null) ? params.getChild(PARAM_METADATAPREFIX).getValue() : ISO19139SchemaPlugin.IDENTIFIER;
-        return objectMapper.readTree(String.format(jsonQuery, schema, categoryQuery, temporalExtentQuery));
+        return objectMapper.readTree(String.format(jsonQuery, categoryQuery, temporalExtentQuery));
     }
 }
-
-//=============================================================================
-

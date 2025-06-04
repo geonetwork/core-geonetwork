@@ -24,6 +24,7 @@
 package org.fao.oaipmh.server;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.fao.geonet.domain.ISODate;
@@ -65,7 +66,12 @@ public class OaiPmhFactory {
 
         //--- proper processing
 
-        String verb = consumeMan(params, "verb");
+        String verb = consumeMan(params, "verb", List.of(IdentifyRequest.VERB,
+            GetRecordRequest.VERB,
+            ListIdentifiersRequest.VERB,
+            ListMetadataFormatsRequest.VERB,
+            ListRecordsRequest.VERB,
+            ListSetsRequest.VERB));
 
         if (verb.equals(IdentifyRequest.VERB)) {
             return handleIdentify(applicationContext, params);
@@ -101,10 +107,19 @@ public class OaiPmhFactory {
     //---------------------------------------------------------------------------
 
     private static String consumeMan(Map<String, String> params, String name) throws BadArgumentException {
+        return consumeMan(params, name, null);
+    }
+
+    private static String consumeMan(Map<String, String> params, String name, List<String> allowedValues) throws BadArgumentException {
         String value = params.get(name);
 
-        if (value == null)
-            throw new BadArgumentException("Missing '" + name + "' parameter");
+        if (value == null) {
+            if (allowedValues != null && !allowedValues.isEmpty()) {
+                throw new BadArgumentException("Missing '" + name + "' parameter, allowed values are: " + String.join(", ", allowedValues));
+            } else {
+                throw new BadArgumentException("Missing '" + name + "' parameter");
+            }
+        }
 
         if (value.trim().length() == 0)
             throw new BadArgumentException("Empty '" + name + "' parameter");

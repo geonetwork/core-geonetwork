@@ -23,6 +23,7 @@
 
 package org.fao.geonet.kernel.oaipmh.services;
 
+import java.util.List;
 import static org.fao.geonet.repository.specification.MetadataSpecs.hasMetadataUuid;
 
 import java.nio.file.Path;
@@ -93,9 +94,11 @@ public class GetRecord implements OaiPmhService {
                 final String siteURL = context.getBean(SettingManager.class).getSiteURL(context);
                 Element env = Lib.prepareTransformEnv(uuid, changeDate, context.getBaseUrl(), siteURL, gc.getBean(SettingManager.class)
                     .getSiteName());
-                md = Lib.transform(schemaDir, env, md, prefix + ".xsl");
+                md = Lib.transform(schemaDir, env, md, prefix );
             } else {
-                throw new CannotDisseminateFormatException("Unknown prefix : " + prefix);
+                List<String> availableConverters = Lib.availableConverters(schemaDir);
+                throw new CannotDisseminateFormatException(String.format(
+                    "Unknown prefix : %s. Available converters are: %s", prefix, availableConverters));
             }
         }
 
