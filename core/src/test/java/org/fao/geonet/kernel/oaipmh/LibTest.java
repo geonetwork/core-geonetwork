@@ -51,13 +51,6 @@ public class LibTest {
                 "          \"terms\": {" +
                 "            \"isTemplate\": [\"n\"]" +
                 "          }" +
-                "        }, " +
-                "        {" +
-                "          \"term\": {" +
-                "            \"documentStandard\": {" +
-                "              \"value\": \"iso19139\"" +
-                "            }" +
-                "          }" +
                 "        }" +
                 "      ]" +
                 "    }" +
@@ -86,13 +79,6 @@ public class LibTest {
                 "        {" +
                 "          \"terms\": {" +
                 "            \"isTemplate\": [\"n\"]" +
-                "          }" +
-                "        }, " +
-                "        {" +
-                "          \"term\": {" +
-                "            \"documentStandard\": {" +
-                "              \"value\": \"iso19139\"" +
-                "            }" +
                 "          }" +
                 "        }, {" +
                 "          \"term\": {" +
@@ -129,13 +115,6 @@ public class LibTest {
                 "          \"terms\": {" +
                 "            \"isTemplate\": [\"n\"]" +
                 "          }" +
-                "        }, " +
-                "        {" +
-                "          \"term\": {" +
-                "            \"documentStandard\": {" +
-                "              \"value\": \"iso19139\"" +
-                "            }" +
-                "          }" +
                 "        },{\"range\": {\"resourceTemporalDateRange\": {" +
                 "                \"gte\": \"2023-09-01\"," +
                 "                \"relation\": \"intersects\"" +
@@ -167,13 +146,6 @@ public class LibTest {
                 "        {" +
                 "          \"terms\": {" +
                 "            \"isTemplate\": [\"n\"]" +
-                "          }" +
-                "        }, " +
-                "        {" +
-                "          \"term\": {" +
-                "            \"documentStandard\": {" +
-                "              \"value\": \"iso19139\"" +
-                "            }" +
                 "          }" +
                 "        },{\"range\": {\"resourceTemporalDateRange\": {" +
                 "                \"lte\": \"2023-12-29\"," +
@@ -207,13 +179,6 @@ public class LibTest {
                 "        {" +
                 "          \"terms\": {" +
                 "            \"isTemplate\": [\"n\"]" +
-                "          }" +
-                "        }, " +
-                "        {" +
-                "          \"term\": {" +
-                "            \"documentStandard\": {" +
-                "              \"value\": \"iso19139\"" +
-                "            }" +
                 "          }" +
                 "        },{\"range\": {\"resourceTemporalDateRange\": {" +
                 "                \"gte\": \"2023-09-01\"," +
@@ -249,13 +214,6 @@ public class LibTest {
                 "        {" +
                 "          \"terms\": {" +
                 "            \"isTemplate\": [\"n\"]" +
-                "          }" +
-                "        }, " +
-                "        {" +
-                "          \"term\": {" +
-                "            \"documentStandard\": {" +
-                "              \"value\": \"iso19139\"" +
-                "            }" +
                 "          }" +
                 "        }, {" +
                 "          \"term\": {" +
@@ -293,13 +251,6 @@ public class LibTest {
                 "        {" +
                 "          \"terms\": {" +
                 "            \"isTemplate\": [\"n\"]" +
-                "          }" +
-                "        }, " +
-                "        {" +
-                "          \"term\": {" +
-                "            \"documentStandard\": {" +
-                "              \"value\": \"iso19139\"" +
-                "            }" +
                 "          }" +
                 "        }" +
                 "      ]" +

@@ -158,8 +158,13 @@ If the conversion is not available, the response will skip the record and contin
 ...
 ```
 
-
 The maximum number of records in the response is limited by the setting `system/oai/maxrecords`.
+
+
+To paginate over records use the `resumptionToken` parameter in the request. The response will include a `resumptionToken` element if there are more records to retrieve.
+
+http://localhost:8080/geonetwork/srv/api/oaipmh?verb=ListRecords&metadataPrefix=oai_dc&resumptionToken=/-/oai_dc/-//-//-/7ucugfvmh534od2bzcz267oay/-/1
+
 
 [More information](https://www.openarchives.org/OAI/openarchivesprotocol.html#ListRecords).
 
