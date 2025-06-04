@@ -23,19 +23,24 @@
 
 package org.fao.geonet.api.oaipmh;
 
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import io.swagger.v3.oas.annotations.Operation;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.kernel.oaipmh.OaiPmhDispatcher;
 import org.fao.geonet.kernel.oaipmh.OaiPmhParams;
 import org.jdom.Element;
+import org.springdoc.api.annotations.ParameterObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -44,7 +49,7 @@ import javax.servlet.http.HttpServletRequest;
 })
 @Tag(name = "oaipmh",
     description = "OAI-PMH server")
-@RestController("oaipmh")
+@RestController("oaipmh-server")
 public class OaiPmhApi {
 
     @Autowired
@@ -61,7 +66,7 @@ public class OaiPmhApi {
     })
     @ResponseBody
     public Element dispatch(
-        final OaiPmhParams oaiPmhParams,
+        @ParameterObject final OaiPmhParams oaiPmhParams,
         final HttpServletRequest request
     ) {
         ServiceContext serviceContext = ApiUtils.createServiceContext(request);
