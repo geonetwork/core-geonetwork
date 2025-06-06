@@ -357,7 +357,7 @@
     "KMLfileURL": "KML文件的URL",
     "refineSearch": "优化搜索",
     "backToList": "返回目录",
-    "privilegesBatchAlert": "<span class='text-danger'>The privileges will be updated for all editable records in the selection. The privilege form is empty and does not reflect the selected records current privileges! Privileges are reset and replaced by the new one.</span><br/><br/>Clicking on <strong>Merge selected</strong> will add (checked with <strong>+</strong>) or remove (checkbox with <strong>-</strong>) selected privileges.<br/><br/>Clicking on <strong>Replace by selected</strong> will remove record categories and then add (checked with <strong>+</strong>) or remove (checkbox with <strong>-</strong>) selected privileges.",
+    "privilegesBatchAlert": "<span class='text-danger'>The privileges will be updated for all editable records in the selection. The privilege form is empty and does not reflect the selected records current privileges! Privileges are reset and replaced by the new one.</span><br/><br/>Clicking on <strong>Merge selected</strong> will add (checked with <strong>+</strong>) or remove (checkbox with <strong>-</strong>) selected privileges.<br/><br/>Clicking on <strong>Update</strong> will remove record privileges and then add (checked with <strong>+</strong>) or remove (checkbox with <strong>-</strong>) selected privileges.",
     "permalink": "永久链接",
     "permalinkTo": "永久链接到{{title}}",
     "shareOnTwitter": "在Twitter上分享",
