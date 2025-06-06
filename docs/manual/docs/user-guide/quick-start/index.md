@@ -60,19 +60,28 @@ This topic describes how to sign in using your admin login details and load temp
 
 You can use the Search form to search information using the GeoNetwork catalog. The Search form allows you to search using:
 
--   a full text search box providing suggestions
+-   A full text search box providing suggestions. Enter the desired keywords and search terms into the `Search` box and click the search icon or press `Enter`. The search results are displayed in a list. Note that the entire content of the record is searched, not just the titles and description.
 
     ![](img/full-text.png)
 
--   facets which defines groups that you can click to browse the content of the catalog
+    The wildcard `*` is used to match the start or end of word; for example, if you search for `Area*`,  you will search for results that contain words beginning with the text `Area`. Wildcards can also be used multiple times to search for part of a word.
+
+-   Facets which defines groups that you can click to browse the content of the catalog
 
     ![](img/facets.png)
 
--   spatial filtering to choose information in specific areas
+-   Spatial filtering to choose information in specific areas
 
     ![](img/spatial-filter.png)
 
--   advanced search
+-   Advanced search options are located in the last menu item of the `Search` field.
+    - Allows you to configure the search behaviour, such as:
+        - Exact match: search for exact matches of the search terms. For example, if you search for multiple words, the search will return only records that contain all of the words in the same order as you entered them.
+        - Search in title only: searches for the search terms only in the title of the records.
+        - Only my records: searches for records that you have created.
+    
+    - Define the languages to search in.
+    - Filter by date range: allows you to search for records that were created or modified within a specific date range.
 
     ![](img/advanced.png)
 
