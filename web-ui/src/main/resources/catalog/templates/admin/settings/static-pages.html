@@ -178,7 +178,7 @@
             </div>
           </div>
 
-          <div class="form-group" data-ng-show="staticPageSelected.format === 'LINK'">
+          <div class="form-group" data-ng-show="isLinkFormat(staticPageSelected.format)">
             <label class="control-label col-sm-3" data-translate="">pageLink</label>
 
             <div class="col-sm-9">
@@ -186,7 +186,7 @@
                 type="text"
                 name="link"
                 class="form-control"
-                data-ng-required="staticPageSelected.format === 'LINK'"
+                data-ng-required="isLinkFormat(staticPageSelected.format)"
                 data-ng-model="staticPageSelected.link"
               />
             </div>
@@ -194,7 +194,7 @@
 
           <!-- Upload panel -->
           <div
-            data-ng-show="staticPageSelected.format !== 'LINK'"
+            data-ng-show="!isLinkFormat(staticPageSelected.format)"
             id="gn-staticpage-uploadfile-row"
             class="form-group"
           >
@@ -260,7 +260,7 @@
             </div>
           </div>
 
-          <div class="form-group" data-ng-show="staticPageSelected.format !== 'LINK'">
+          <div class="form-group" data-ng-show="!isLinkFormat(staticPageSelected.format)">
             <label class="control-label col-sm-3" data-translate="">pageContent</label>
 
             <div class="col-sm-9">
