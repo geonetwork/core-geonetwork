@@ -112,12 +112,13 @@
     <entry key="http://publications.europa.eu/resource/authority/file-type/XML">csw</entry>
     <entry key="http://publications.europa.eu/resource/authority/file-type/DBF">dbf</entry>
     <entry key="http://publications.europa.eu/resource/authority/file-type/BIN">dgn</entry>
-    <entry key="https://www.iana.org/assignments/media-types/image/vn.djvu">djvu</entry>
+    <entry key="https://www.iana.org/assignments/media-types/image/vnd.djvu">djvu</entry>
     <entry key="http://publications.europa.eu/resource/authority/file-type/DOC">doc</entry>
     <entry key="http://publications.europa.eu/resource/authority/file-type/DOCX">docx</entry>
-    <entry key="https://www.iana.org/assignments/media-types/image/vn.dxf">dxf</entry>
-    <entry key="https://www.iana.org/assignments/media-types/image/vn.dwg">image/vnd.dwg</entry>
-    <entry key="https://www.iana.org/assignments/media-types/image/vn.dwg">dwg</entry>
+    <entry key="http://publications.europa.eu/resource/authority/file-type/DXF">dxf</entry>
+    <entry key="http://publications.europa.eu/resource/authority/file-type/DXF">image/vnd.dxf</entry>
+    <entry key="http://publications.europa.eu/resource/authority/file-type/DWG">image/vnd.dwg</entry>
+    <entry key="http://publications.europa.eu/resource/authority/file-type/DWG">dwg</entry>
     <entry key="http://publications.europa.eu/resource/authority/file-type/ECW">ecw</entry>
     <entry key="http://publications.europa.eu/resource/authority/file-type/ECW">ecwp</entry>
     <entry key="http://publications.europa.eu/resource/authority/file-type/EXE">elp</entry>
@@ -130,6 +131,7 @@
     <entry key="http://publications.europa.eu/resource/authority/file-type/GEOJSON">application/geo+json</entry>
     <entry key="http://publications.europa.eu/resource/authority/file-type/GPKG">application/geopackage+vnd.sqlite3</entry>
     <entry key="http://publications.europa.eu/resource/authority/file-type/GPKG">application/geopackage+sqlite3</entry>
+    <entry key="http://publications.europa.eu/resource/authority/file-type/GPKG">OGC GeoPackage (.gpkg)</entry>
     <entry key="http://publications.europa.eu/resource/authority/file-type/GPKG">geopackage</entry>
     <entry key="http://publications.europa.eu/resource/authority/file-type/RSS">georss</entry>
     <entry key="http://publications.europa.eu/resource/authority/file-type/TIFF">image/tiff</entry>
@@ -151,6 +153,8 @@
     <entry key="http://publications.europa.eu/resource/authority/file-type/HTML">html</entry>
     <entry key="http://publications.europa.eu/resource/authority/file-type/JPEG">jpeg</entry>
     <entry key="http://publications.europa.eu/resource/authority/file-type/JPEG">jpg</entry>
+    <entry key="http://publications.europa.eu/resource/authority/file-type/JSON">application/json</entry>
+    <entry key="http://publications.europa.eu/resource/authority/file-type/GEOJSON">application/vnd.geo+json</entry>
     <entry key="http://publications.europa.eu/resource/authority/file-type/JSON">json</entry>
     <entry key="http://publications.europa.eu/resource/authority/file-type/JSON">OGC API - Coverages</entry>
     <entry key="http://publications.europa.eu/resource/authority/file-type/JSON">OGC API - Records</entry>
@@ -200,6 +204,7 @@
     <entry key="http://publications.europa.eu/resource/authority/file-type/SHP">shp</entry>
     <entry key="http://publications.europa.eu/resource/authority/file-type/SHP">application/vnd.shp</entry>
     <entry key="http://publications.europa.eu/resource/authority/file-type/SHP">application/x-shapefile</entry>
+    <entry key="http://publications.europa.eu/resource/authority/file-type/SHP">x-gis/x-shapefile</entry>
     <entry key="http://publications.europa.eu/resource/authority/file-type/REST">ESRI:REST</entry>
     <entry key="http://publications.europa.eu/resource/authority/file-type/SHP">ESRI Shapefile</entry>
     <entry key="http://publications.europa.eu/resource/authority/file-type/SHP">ESRI Shapefile (.shp)</entry>
@@ -222,6 +227,7 @@
     <entry key="http://publications.europa.eu/resource/authority/file-type/XHTML">xhtml</entry>
     <entry key="http://publications.europa.eu/resource/authority/file-type/XLS">xls</entry>
     <entry key="http://publications.europa.eu/resource/authority/file-type/XLSX">xlsx</entry>
+    <entry key="http://publications.europa.eu/resource/authority/file-type/XLSX">Excel</entry>
     <entry key="http://publications.europa.eu/resource/authority/file-type/XLSX">application/vnd.openxmlformats-officedocument.spreadsheetml.sheet</entry>
     <entry key="http://publications.europa.eu/resource/authority/file-type/XML">application/xml</entry>
     <entry key="http://publications.europa.eu/resource/authority/file-type/XML">xml</entry>
