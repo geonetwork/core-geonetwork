@@ -60,7 +60,7 @@ This topic describes how to sign in using your admin login details and load temp
 
 You can use the Search form to search information using the GeoNetwork catalog. The Search form allows you to search using:
 
--   A full text search box providing suggestions. Enter the desired keywords and search terms into the `Search` box and click the search icon or press `Enter`. The search results are displayed in a list. Note that the entire content of the record is searched, not just the titles and description.
+-   A full text search box providing suggestions. Enter the desired keywords and search terms into the **Search** box and click the **Search** icon or press ++Enter++. The search results are displayed in a list. Note that the entire content of the record is searched, not just the titles and description.
 
     ![](img/full-text.png)
 
