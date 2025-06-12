@@ -74,7 +74,7 @@ You can use the Search form to search information using the GeoNetwork catalog. 
 
     ![](img/spatial-filter.png)
 
--   Advanced search options are located in the last menu item of the `Search` field.
+-   Advanced search options are located in the last menu item of the **Search** field.
     - Allows you to configure the search behaviour, such as:
         - Exact match: search for exact matches of the search terms. For example, if you search for multiple words, the search will return only records that contain all of the words in the same order as you entered them.
         - Search in title only: searches for the search terms only in the title of the records.
