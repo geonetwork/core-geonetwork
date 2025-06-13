@@ -14,8 +14,10 @@
                 xmlns:mdUtil="java:org.fao.geonet.api.records.MetadataUtils"
                 xmlns:util="java:org.fao.geonet.util.XslUtil"
                 xmlns:dcat="http://www.w3.org/ns/dcat#"
+                xmlns:pav="http://purl.org/pav/"
                 xmlns:dct="http://purl.org/dc/terms/"
                 xmlns:xlink="http://www.w3.org/1999/xlink"
+                xmlns:xs="http://www.w3.org/2001/XMLSchema"
                 xmlns:foaf="http://xmlns.com/foaf/0.1/"
                 exclude-result-prefixes="#all">
 
@@ -101,8 +103,28 @@
         <xsl:when test="local-name() = 'sources'">
           <dct:source rdf:resource="{$recordUri}"/>
         </xsl:when>
-        <xsl:when test="local-name() = 'siblings'">
-          <dct:references rdf:resource="{$recordUri}"/>
+        <xsl:when test="local-name() = 'siblings' and not(@uuid = (../children/@uuid))">
+          <xsl:variable name="associationType"
+                        select="@associationType"/>
+          <xsl:variable name="initiativeType"
+                        select="@initiativeType"/>
+          <xsl:variable name="dcTypeForAssociationAndInitiative"
+                        as="xs:string?"
+                        select="$isoAssociatedTypesToDcatCommonNames[@associationType = $associationType and @initiativeType = $initiativeType]/text()"/>
+          <xsl:variable name="dcTypeForAssociation"
+                        as="xs:string?"
+                        select="$isoAssociatedTypesToDcatCommonNames[@associationType = $associationType and not(@initiativeType)]/text()"/>
+          <xsl:variable name="elementType"
+                        as="xs:string"
+                        select="if ($dcTypeForAssociationAndInitiative)
+                          then $dcTypeForAssociationAndInitiative
+                          else if ($dcTypeForAssociation)
+                          then $dcTypeForAssociation
+                          else 'dct:relation'"/>
+
+          <xsl:element name="{$elementType}">
+            <xsl:attribute name="rdf:resource" select="$recordUri"/>
+          </xsl:element>
         </xsl:when>
         <xsl:when test="local-name() = 'datasets'">
           <dcat:servesDataset>
