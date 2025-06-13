@@ -20,10 +20,10 @@ INSERT INTO Categories (id, name) VALUES (13,'physicalSamples');
 -- === Table: Groups
 -- ======================================================================
 
-INSERT INTO Groups (id, name, description, email, referrer) VALUES (-1,'GUEST','self-registered users',NULL,NULL);
-INSERT INTO Groups (id, name, description, email, referrer) VALUES (0,'intranet',NULL,NULL,NULL);
-INSERT INTO Groups (id, name, description, email, referrer) VALUES (1,'all',NULL,NULL,NULL);
-INSERT INTO Groups (id, name, description, email, referrer) VALUES (2,'sample',NULL,NULL,NULL);
+INSERT INTO Groups (id, name, description, email, referrer, type) VALUES (-1,'GUEST','self-registered users',NULL,NULL, 'RecordPrivilege');
+INSERT INTO Groups (id, name, description, email, referrer, type) VALUES (0,'intranet',NULL,NULL,NULL, 'RecordPrivilege');
+INSERT INTO Groups (id, name, description, email, referrer, type) VALUES (1,'all',NULL,NULL,NULL, 'RecordPrivilege');
+INSERT INTO Groups (id, name, description, email, referrer, type) VALUES (2,'sample',NULL,NULL,NULL, 'Workspace');
 
 -- ======================================================================
 -- === Table: IsoLanguages
