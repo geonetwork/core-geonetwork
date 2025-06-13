@@ -298,7 +298,9 @@
               if (user != undefined) {
                 getUserSelections.push(
                   $http
-                    .get("../api/userselections/" + sel.id + "/" + user)
+                    .get(
+                      "../api/userselections/" + sel.id + "/items?userIdentifier=" + user
+                    )
                     .then(function (response) {
                       sel.records = response.data;
                       allRecords = allRecords.concat(response.data);
@@ -357,11 +359,18 @@
           }
 
           return $http
-            .put("../api/userselections/" + selection.id + "/" + this.userId, null, {
-              params: {
-                uuid: uuid
+            .put(
+              "../api/userselections/" +
+                selection.id +
+                "/items?userIdentifier=" +
+                this.userId,
+              null,
+              {
+                params: {
+                  uuid: uuid
+                }
               }
-            })
+            )
             .then(function (r) {
               ctrl.init(ctrl.userId);
             });
@@ -375,11 +384,17 @@
         var ctrl = this;
         if (selection.id > -1) {
           return $http
-            .delete("../api/userselections/" + selection.id + "/" + this.userId, {
-              params: {
-                uuid: uuid
+            .delete(
+              "../api/userselections/" +
+                selection.id +
+                "/items?userIdentifier=" +
+                this.userId,
+              {
+                params: {
+                  uuid: uuid
+                }
               }
-            })
+            )
             .then(function (r) {
               ctrl.init(ctrl.userId);
             });

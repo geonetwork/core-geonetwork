@@ -204,19 +204,19 @@ public class UserSelectionsApiTest extends AbstractServiceIntegrationTest {
 
         // Check in API
         // Unknown selection set return 404
-        this.mockMvc.perform(put("/srv/api/userselections/11111/11111")
+        this.mockMvc.perform(put("/srv/api/userselections/11111/items?userIdentifier=11111")
             .session(this.mockHttpSession)
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().isNotFound());
 
         // Unknown user return 404
-        this.mockMvc.perform(put("/srv/api/userselections/" + createdSelection.getId() + "/11111")
+        this.mockMvc.perform(put("/srv/api/userselections/" + createdSelection.getId() + "/items?userIdentifier=11111")
             .session(this.mockHttpSession)
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().isNotFound());
 
         // Unkown metadata return 404
-        this.mockMvc.perform(put("/srv/api/userselections/" + createdSelection.getId() + "/1?uuid=ABCD")
+        this.mockMvc.perform(put("/srv/api/userselections/" + createdSelection.getId() + "/items?userIdentifier=1?uuid=ABCD")
             .session(this.mockHttpSession)
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().isNotFound());
@@ -224,14 +224,14 @@ public class UserSelectionsApiTest extends AbstractServiceIntegrationTest {
 
         String metadataId = importMetadata(context);
         String metadataUuid = _dataManager.getMetadataUuid(metadataId);
-        this.mockMvc.perform(put("/srv/api/userselections/" + createdSelection.getId() + "/1?uuid=" + metadataUuid)
+        this.mockMvc.perform(put("/srv/api/userselections/" + createdSelection.getId() + "/items?userIdentifier=1?uuid=" + metadataUuid)
             .session(this.mockHttpSession)
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().isCreated());
 
         verify(this.metadataIndexerSpy, times(1)).indexMetadata(eq(metadataId), any(Boolean.class), eq(IndexingMode.full));
 
-        this.mockMvc.perform(get("/srv/api/userselections/" + createdSelection.getId() + "/1")
+        this.mockMvc.perform(get("/srv/api/userselections/" + createdSelection.getId() + "/items?userIdentifier=1")
             .session(this.mockHttpSession)
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().isOk())
@@ -239,7 +239,7 @@ public class UserSelectionsApiTest extends AbstractServiceIntegrationTest {
             .andExpect(jsonPath("$", hasSize(1)))
             .andExpect(jsonPath("$[*]", hasItem(metadataUuid)));
 
-        this.mockMvc.perform(delete("/srv/api/userselections/" + createdSelection.getId() + "/1?uuid=" + metadataUuid)
+        this.mockMvc.perform(delete("/srv/api/userselections/" + createdSelection.getId() + "/items?userIdentifier=1?uuid=" + metadataUuid)
             .session(this.mockHttpSession)
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().isNoContent());
