@@ -24,6 +24,7 @@ import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.search.EsSearchManager;
 import org.fao.geonet.kernel.search.IndexingMode;
+import org.fao.geonet.kernel.search.submission.DirectIndexSubmitter;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.MetadataValidationRepository;
 import org.fao.geonet.repository.SourceRepository;
@@ -208,9 +209,9 @@ public class MetadataValidateApiTest extends AbstractServiceIntegrationTest {
                 false,
                 NO,
                 false,
-                false);
+            DirectIndexSubmitter.INSTANCE);
 
-        dataManager.indexMetadata("" + dbInsertedMetadata.getId(), true);
+        dataManager.indexMetadata("" + dbInsertedMetadata.getId(), DirectIndexSubmitter.INSTANCE);
         assertEquals(1, countTemplateIndexed(dbInsertedMetadata.getUuid(), false, type == MetadataType.SUB_TEMPLATE ? "s" : "n"));
         return dbInsertedMetadata;
     }
