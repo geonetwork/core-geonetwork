@@ -779,14 +779,14 @@ public class CMISStore extends AbstractStore {
     }
 
     protected static class ResourceHolderImpl implements ResourceHolder {
-        private CmisObject cmisObject;
+        private final CmisObject cmisObject;
         private Path tempFolderPath;
         private Path path;
         private final MetadataResource metadataResource;
 
         public ResourceHolderImpl(final CmisObject cmisObject, MetadataResource metadataResource) throws IOException {
             // Preserve filename by putting the files into a temporary folder and using the same filename.
-            tempFolderPath = Files.createTempDirectory("gn-meta-res-" + String.valueOf(metadataResource.getMetadataId() + "-"));
+            tempFolderPath = Files.createTempDirectory("gn-meta-res-" + metadataResource.getMetadataId() + "-");
             tempFolderPath.toFile().deleteOnExit();
             path = tempFolderPath.resolve(getFilename(cmisObject.getName()));
             this.metadataResource = metadataResource;
@@ -816,12 +816,6 @@ public class CMISStore extends AbstractStore {
             IO.deleteFileOrDirectory(tempFolderPath, true);
             path=null;
             tempFolderPath = null;
-        }
-
-        @Override
-        protected void finalize() throws Throwable {
-            close();
-            super.finalize();
         }
     }
 }

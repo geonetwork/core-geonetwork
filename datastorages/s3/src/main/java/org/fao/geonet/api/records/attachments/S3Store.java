@@ -295,11 +295,5 @@ public class S3Store extends AbstractStore {
                 path = null;
             }
         }
-
-        @Override
-        protected void finalize() throws Throwable {
-            close();
-            super.finalize();
-        }
     }
 }

@@ -156,8 +156,14 @@
 
             <header>
               <h1>
-                <i class="fa fa-fw gn-icon-{$type}"></i>
+                <i class="fa fa-fw gn-icon-{$type}"/>
                 <xsl:copy-of select="$title"/>
+                <xsl:if test="$root = 'div'">
+                  <span class="text-muted badge"
+                        data-ng-class="{{ 'text-success': md.mdStatus == 2, 'text-warning': md.mdStatus == 4 }}"
+                        data-ng-if="user.isEditorOrMore() &amp;&amp; md.mdStatus &lt; 50 &amp;&amp; isMdWorkflowEnable"
+                  >{{('status-' + md.mdStatus) | translate}}</span>
+                </xsl:if>
               </h1>
 
               <xsl:call-template name="render-language-switcher"/>
@@ -229,19 +235,19 @@
                    target="_blank"
                    aria-label="Twitter"
                    class="btn btn-default">
-                  <i class="fa fa-fw fa-twitter"></i>
+                  <i class="fa-fw fa-brands fa-x-twitter"></i>
                 </a>
                 <a href="https://www.facebook.com/sharer.php?u={encode-for-uri($nodeUrl)}api%2Frecords%2F{$metadataUuid}"
                    target="_blank"
                    aria-label="Facebook"
                    class="btn btn-default">
-                  <i class="fa fa-fw fa-facebook"></i>
+                  <i class="fa-fw fa-brands fa-facebook-f"></i>
                 </a>
                 <a href="http://www.linkedin.com/shareArticle?mini=true&amp;summary=&amp;url={encode-for-uri($nodeUrl)}api%2Frecords%2F{$metadataUuid}"
                    target="_blank"
                    aria-label="LinkedIn"
                    class="btn btn-default">
-                  <i class="fa fa-fw fa-linkedin"></i>
+                  <i class="fa-fw fa-brands fa-linkedin-in"></i>
                 </a>
                 <a href="mailto:?subject={$title}&amp;body={encode-for-uri($nodeUrl)}api%2Frecords%2F{$metadataUuid}"
                    target="_blank"
@@ -403,7 +409,7 @@
     <xsl:if test="$isDisplayed">
       <div id="gn-view-{generate-id()}" class="gn-tab-content">
         <xsl:apply-templates mode="render-view" select="@xpath"/>
-        
+
       </div>
     </xsl:if>
   </xsl:template>

@@ -126,6 +126,7 @@
     "featureCatalog": "Catalog nodwedd",
     "frequency": "Amlder",
     "feebackSent": "Mae eich neges wedi'i hanfon at y rheolwr catalog.",
+    "feebackSentError": "An error occurred sending your to the catalog manager. Please try again later, contact the service provider, or report this issue.",
     "feedbackNotEnable": "Nid yw adborth wedi'i alluogi.",
     "filter": "Hidlo",
     "filterSearch": "Arddangos opsiynau chwilio",
@@ -170,7 +171,7 @@
     "needAnAccount": "Angen cyfrif?",
     "needAnAccountInfo": "Yna cofrestrwch i'r dde, dim ond munud y mae'n ei gymryd.",
     "needHelp": "Angen help",
-    "newAccountInfo": "Pan fyddwch yn gofyn am gyfrif bydd e-bost yn cael ei anfon atoch gyda'ch manylion defnyddiwr. Os gofynnir am broffil defnyddiwr uwch, bydd gweinyddwr y catalog yn dadansoddi eich cais ac yn dychwelyd atoch.",
+    "newAccountInfo": "When registering, an email will be sent to you with account details. The catalogue administrator will review group and profile requests.",
     "next": "Nesaf",
     "noFileSelected": "Ni ddewiswyd ffeil",
     "noRecordFound": "Ni ddarganfuwyd unrhyw gofnod.",
@@ -234,6 +235,7 @@
     "register": "Cofrestru",
     "rememberMe": "Cofiwch fi",
     "requestedProfile": "Proffil y gofynnwyd amdano",
+    "requestedGroup": "Requested group",
     "resetPassword": "Ailosod cyfrinair",
     "resetPasswordTitle": "Ailosod cyfrinair {{user}}.",
     "resetPasswordError": "Digwyddodd gwall wrth ailosod cyfrinair",
@@ -266,7 +268,7 @@
     "spatialRepresentationType": "Math o gynrychiolaeth",
     "cl_spatialRepresentationType": "Math o gynrychiolaeth",
     "state": "Cyflwr",
-    "staticMap": "Map statig",
+    "map-static": "Map statig",
     "surname": "Cyfenw",
     "title": "Teitl",
     "to": "At",
@@ -586,5 +588,6 @@
     "mapLegend": "Allwedd",
     "quality": "Ansawdd",
     "download": "Lawrlwytho",
-    "links": "Dolenni"
+    "links": "Dolenni",
+    "saveToFile": "Save to file."
 }

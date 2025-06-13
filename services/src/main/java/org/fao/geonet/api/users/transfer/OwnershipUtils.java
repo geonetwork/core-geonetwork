@@ -86,7 +86,7 @@ public class OwnershipUtils {
 
         Set<String> hsMyGroups = getUserGroups(context, id);
 
-        Set<Profile> profileSet = us.getProfile().getAll();
+        Set<Profile> profileSet = us.getProfile().getProfileAndAllChildren();
 
         //--- now filter them
 

@@ -53,6 +53,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Nonnull;
 import javax.persistence.EntityNotFoundException;
@@ -419,6 +421,7 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
      * This needs improvements.
      */
     @Override
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public Integer startEditingSession(ServiceContext context, String id) throws Exception {
         // Check id
         AbstractMetadata md = findOne(Integer.valueOf(id));
@@ -689,5 +692,32 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
 
     public Set<String> getListOfStatusCreatingDraft() {
         return listOfStatusToTriggerDraftCreation;
+    }
+
+    @Override
+    public String selectOneWithSearchAndReplace(String uuid, String search, String replace) {
+        String updatedXml = metadataDraftRepository.selectOneWithSearchAndReplace(uuid, search, replace);
+        if (updatedXml == null) {
+            updatedXml = super.selectOneWithSearchAndReplace(uuid, search, replace);
+        }
+        return updatedXml;
+    }
+
+    @Override
+    public String selectOneWithRegexSearchAndReplaceWithFlags(String uuid, String search, String replace, String flags) {
+        String updatedXml = metadataDraftRepository.selectOneWithRegexSearchAndReplaceWithFlags(uuid, search, replace, flags);
+        if (updatedXml == null) {
+            updatedXml = super.selectOneWithRegexSearchAndReplaceWithFlags(uuid, search, replace, flags);
+        }
+        return updatedXml;
+    }
+
+    @Override
+    public String selectOneWithRegexSearchAndReplace(String uuid, String search, String replace) {
+        String updatedXml = metadataDraftRepository.selectOneWithRegexSearchAndReplace(uuid, search, replace);
+        if (updatedXml == null) {
+            updatedXml = super.selectOneWithRegexSearchAndReplace(uuid, search, replace);
+        }
+        return updatedXml;
     }
 }

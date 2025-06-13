@@ -19,7 +19,7 @@
                 xmlns:msr="http://standards.iso.org/iso/19115/-3/msr/2.0"
                 xmlns:mrd="http://standards.iso.org/iso/19115/-3/mrd/1.0"
                 xmlns:mdq="http://standards.iso.org/iso/19157/-2/mdq/1.0"
-                xmlns:srv="http://standards.iso.org/iso/19115/-3/srv/2.1"
+                xmlns:srv="http://standards.iso.org/iso/19115/-3/srv/2.0"
                 xmlns:gcx="http://standards.iso.org/iso/19115/-3/gcx/1.0"
                 xmlns:gex="http://standards.iso.org/iso/19115/-3/gex/1.0"
                 xmlns:gml="http://www.opengis.net/gml/3.2"
@@ -38,6 +38,41 @@
                 as="xs:boolean"
                 select="false()"/>
 
+  <xsl:variable name="dcatApAccessTypes" as="node()*">
+    <entry key="http://publications.europa.eu/resource/authority/access-right/PUBLIC">unrestricted</entry>
+    <entry key="http://publications.europa.eu/resource/authority/access-right/PUBLIC">licenceUnrestricted</entry>
+    <entry key="http://publications.europa.eu/resource/authority/access-right/RESTRICTED">restricted</entry>
+    <entry key="http://publications.europa.eu/resource/authority/access-right/NON_PUBLIC">private</entry>
+    <entry key="http://publications.europa.eu/resource/authority/access-right/CONFIDENTIAL">confidential</entry>
+    <entry key="http://publications.europa.eu/resource/authority/access-right/PUBLIC">http://inspire.ec.europa.eu/metadata-codelist/LimitationsOnPublicAccess/noLimitations</entry>
+    <entry key="http://publications.europa.eu/resource/authority/access-right/NON_PUBLIC">https://inspire.ec.europa.eu/metadata-codelist/LimitationsOnPublicAccess/INSPIRE_Directive_Article13_1e</entry>
+  </xsl:variable>
+
+  <xsl:variable name="admsLicenceTypes" as="node()*">
+    <entry key="https://creativecommons.org/licenses/by/4.0/">http://purl.org/adms/licencetype/Attribution</entry>
+    <entry key="https://creativecommons.org/licenses/by/4.0/legalcode">http://purl.org/adms/licencetype/Attribution</entry>
+    <entry key="https://publications.europa.eu/resource/authority/licence/CC_BY_4_0">http://purl.org/adms/licencetype/Attribution</entry>
+    <entry key="https://creativecommons.org/licenses/by/4.0/deed">http://purl.org/adms/licencetype/Attribution</entry>
+    <entry key="https://creativecommons.org/public-domain/cc0/">http://purl.org/adms/licencetype/PublicDomain</entry>
+    <entry key="https://creativecommons.org/publicdomain/zero/1.0/">http://purl.org/adms/licencetype/PublicDomain</entry>
+    <entry key="https://creativecommons.org/licenses/by-sa/3.0">http://purl.org/adms/licencetype/Attribution</entry>
+    <entry key="https://creativecommons.org/licenses/by-sa/3.0">http://purl.org/adms/licencetype/ViralEffect-ShareAlike</entry>
+    <entry key="https://creativecommons.org/licenses/by-sa/2.0">http://purl.org/adms/licencetype/ViralEffect-ShareAlike</entry>
+    <entry key="https://creativecommons.org/licenses/by-sa/2.0">http://purl.org/adms/licencetype/Attribution</entry>
+    <entry key="https://opendatacommons.org/licenses/odbl/1-0">http://purl.org/adms/licencetype/Attribution</entry>
+    <entry key="https://opendatacommons.org/licenses/odbl/1-0">http://purl.org/adms/licencetype/ViralEffect-ShareAlike</entry>
+    <entry key="https://opendatacommons.org/licenses/odbl/">http://purl.org/adms/licencetype/Attribution</entry>
+    <entry key="https://opendatacommons.org/licenses/odbl/">http://purl.org/adms/licencetype/ViralEffect-ShareAlike</entry>
+    <entry key="https://opendatacommons.org/licenses/odbl/summary/">http://purl.org/adms/licencetype/Attribution</entry>
+    <entry key="https://opendatacommons.org/licenses/odbl/summary/">http://purl.org/adms/licencetype/ViralEffect-ShareAlike</entry>
+    <entry key="https://creativecommons.org/licenses/by-nc/4.0/legalcode">http://purl.org/adms/licencetype/Attribution</entry>
+    <entry key="https://creativecommons.org/licenses/by-nc/4.0/legalcode">http://purl.org/adms/licencetype/NonCommercialUseOnly</entry>
+    <entry key="https://creativecommons.org/licenses/by-nc/3.0/">http://purl.org/adms/licencetype/Attribution</entry>
+    <entry key="https://creativecommons.org/licenses/by-nc/3.0/">http://purl.org/adms/licencetype/NonCommercialUseOnly</entry>
+  </xsl:variable>
+
+  <xsl:variable name="admsLicenceTypeVocabulary"
+                       select="document('vocabularies/adms-licence-type.rdf')"/>
   <!--
   RDF Property:	dcterms:accessRights
   Definition:	Information about who can access the resource or an indication of its security status.
@@ -58,6 +93,17 @@
   <xsl:template mode="iso19115-3-to-dcat"
                 match="mdb:identificationInfo/*/mri:resourceConstraints/*">
     <xsl:if test="count(../preceding-sibling::mri:resourceConstraints/*) = 0">
+
+      <xsl:for-each select="distinct-values(../../mri:resourceConstraints/*/mco:accessConstraints/*/@codeListValue)">
+        <xsl:variable name="dcatAccessType"
+                      select="$dcatApAccessTypes[. = current()]"/>
+        <xsl:if test="$dcatAccessType">
+          <dct:accessRights>
+            <dct:RightsStatement rdf:about="{$dcatAccessType/@key}"/>
+          </dct:accessRights>
+        </xsl:if>
+      </xsl:for-each>
+
       <xsl:for-each select="../../mri:resourceConstraints/*[mco:accessConstraints]/mco:otherConstraints">
         <xsl:if test="position() = 1 or ($isPreservingAllResourceConstraints and position() > 1)">
           <xsl:element name="{if (position() = 1) then 'dct:accessRights' else 'dct:rights'}">
@@ -97,11 +143,22 @@
               <xsl:variable name="euDcatLicense"
                             select="$euLicenses/rdf:RDF/skos:Concept[
                                                   matches(skos:exactMatch/@rdf:resource,
+                                                          concat('https?://', $licenseUriWithoutHttp, '/?'))
+                                                  or matches(@rdf:about,
                                                           concat('https?://', $licenseUriWithoutHttp, '/?'))]"/>
 
               <xsl:if test="$euDcatLicense != ''">
                 <dct:license>
                   <dct:LicenseDocument rdf:about="{$euDcatLicense/@rdf:about}">
+                    <xsl:for-each select="$admsLicenceTypes[starts-with($httpUriInAnchorOrText, @key)]">
+                      <xsl:variable name="uri" select="."/>
+                      <dct:type>
+                        <skos:Concept rdf:about="{$uri}">
+                          <xsl:copy-of select="$admsLicenceTypeVocabulary//owl:NamedIndividual[@rdf:about = $uri]/skos:*"
+                                               copy-namespaces="no"/>
+                        </skos:Concept>
+                      </dct:type>
+                    </xsl:for-each>
                     <!--<xsl:copy-of select="$euDcatLicense/(skos:prefLabel[@xml:lang = $languages/@iso2code]
                                                       |skos:exactMatch)"
                                    copy-namespaces="no"/>-->
@@ -111,7 +168,17 @@
             </xsl:when>
             <xsl:when test="$httpUriInAnchorOrText != ''">
               <dct:license>
-                <dct:LicenseDocument rdf:about="{$httpUriInAnchorOrText}"/>
+                <dct:LicenseDocument rdf:about="{$httpUriInAnchorOrText}">
+                  <xsl:for-each select="$admsLicenceTypes[starts-with($httpUriInAnchorOrText, @key)]">
+                    <xsl:variable name="uri" select="."/>
+                    <dct:type>
+                      <skos:Concept rdf:about="{$uri}">
+                        <xsl:copy-of select="$admsLicenceTypeVocabulary//owl:NamedIndividual[@rdf:about = $uri]/skos:*"
+                                             copy-namespaces="no"/>
+                      </skos:Concept>
+                    </dct:type>
+                  </xsl:for-each>
+                </dct:LicenseDocument>
               </dct:license>
             </xsl:when>
             <xsl:otherwise>

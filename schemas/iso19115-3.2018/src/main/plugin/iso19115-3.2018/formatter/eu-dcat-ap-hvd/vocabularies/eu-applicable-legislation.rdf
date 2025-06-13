@@ -6,7 +6,7 @@
         <dct:title xml:lang="en">EU applicable legislations</dct:title>
         <dct:title xml:lang="fr">Législations applicables dans l'UE</dct:title>
         <dct:description xml:lang="fr">Législation sectorielle qui prescrit la création ou la gestion de la ressource.
-          Liste non exhaustive.</dct:description>
+          Liste non exhaustive.
         </dct:description>
     </skos:ConceptScheme>
     <skos:Concept rdf:about="http://data.europa.eu/eli/reg_impl/2023/138/oj">

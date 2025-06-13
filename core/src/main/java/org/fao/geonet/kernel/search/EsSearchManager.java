@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2023 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2025 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -136,12 +136,14 @@ public class EsSearchManager implements ISearchManager {
             .add(Geonet.IndexFieldNames.GROUP_OWNER)
             .add(Geonet.IndexFieldNames.RESOURCEABSTRACT)
             .add(Geonet.IndexFieldNames.RESOURCEABSTRACT + "Object")
+            .add("resourceIdentifier")
             .add("operatesOn")
             .build();
 
         FIELDLIST_RELATED_SCRIPTED = ImmutableMap.<String, String>builder()
             // Elasticsearch scripted field to get the first overview url. Scripted fields must return single values.
             .put("overview", "return params['_source'].overview == null ? [] : params['_source'].overview.stream().map(f -> f.url).findFirst().orElse('');")
+            .put("overview_data", "return params['_source'].overview == null ? [] : params['_source'].overview.stream().map(f -> f.data).filter(Objects::nonNull).findFirst().orElse('');")
             .build();
     }
 
@@ -587,7 +589,7 @@ public class EsSearchManager implements ISearchManager {
             .add("MD_SecurityConstraintsUseLimitation")
             .add("MD_SecurityConstraintsUseLimitationObject")
             .add("overview")
-            .add("sourceDescription")
+            .add("sourceDescriptionObject")
             .add("MD_ConstraintsUseLimitation")
             .add("MD_ConstraintsUseLimitationObject")
             .add("resourceType")

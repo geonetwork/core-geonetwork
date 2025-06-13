@@ -29,7 +29,6 @@
 
     <div class="flex-col flex-grow">
       <div class="width-100 flex-grow">
-
         <label
           class="gn-map-layer"
           for="layer-{{$index}}"
@@ -49,18 +48,23 @@
             </span>
           </span>
         </label>
-
       </div>
     </div>
 
     <div class="flex-col flex-self-center">
       <div class="dropdown dropdown-left">
-        <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+        <button
+          class="btn btn-default dropdown-toggle"
+          type="button"
+          data-toggle="dropdown"
+          aria-haspopup="true"
+          aria-expanded="true"
+        >
           <span class="fa fa-fw fa-ellipsis-vertical"></span>
         </button>
         <ul class="dropdown-menu dropdown-menu-left">
           <li>
-            <span class=" btn-group btn-group-xs">
+            <span class="btn-group btn-group-xs">
               <!-- Layer Up -->
               <a
                 href=""
@@ -94,10 +98,8 @@
               </a>
             </span>
           </li>
-
         </ul>
       </div>
-
     </div>
   </div>
 
@@ -126,6 +128,7 @@
         <div data-ng-if="::layer.get('style').length > 0">
           <div
             data-gn-layer-styles="layer.get('style')"
+            data-gn-layer-styles-dropdown-direction="left"
             data-gn-layer-styles-on-click="setLayerStyle(layer, style)"
             data-gn-layer-styles-current="layer.get('currentStyle')"
           ></div>

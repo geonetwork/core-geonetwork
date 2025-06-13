@@ -58,11 +58,14 @@ import org.fao.geonet.kernel.metadata.StatusActionsFactory;
 import org.fao.geonet.kernel.metadata.StatusChangeType;
 import org.fao.geonet.kernel.search.EsSearchManager;
 import org.fao.geonet.kernel.search.IndexingMode;
+import org.fao.geonet.kernel.search.Translator;
+import org.fao.geonet.kernel.search.TranslatorFactory;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.languages.FeedbackLanguages;
 import org.fao.geonet.repository.*;
 import org.fao.geonet.util.MetadataPublicationMailNotifier;
+import org.fao.geonet.util.WorkflowUtil;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
@@ -82,7 +85,9 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.text.MessageFormat;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static org.fao.geonet.api.ApiParams.*;
 import static org.fao.geonet.kernel.setting.Settings.SYSTEM_METADATAPRIVS_PUBLICATION_NOTIFICATIONLEVEL;
@@ -159,12 +164,11 @@ public class MetadataWorkflowApi {
     @Autowired
     RoleHierarchy roleHierarchy;
 
+    @Autowired
+    TranslatorFactory translatorFactory;
+
     // The restore function currently supports these states
-    static final Integer[] supportedRestoreStatuses = {
-        Integer.parseInt(StatusValue.Events.RECORDUPDATED),
-        Integer.parseInt(StatusValue.Events.RECORDPROCESSINGCHANGE),
-        Integer.parseInt(StatusValue.Events.RECORDDELETED),
-        Integer.parseInt(StatusValue.Events.RECORDRESTORED)};
+    static final StatusValue.Events[] supportedRestoreStatuses = StatusValue.Events.getSupportedRestoreStatuses();
 
     private enum State {
         BEFORE, AFTER
@@ -179,9 +183,18 @@ public class MetadataWorkflowApi {
         @Parameter(description = API_PARAM_RECORD_UUID, required = true) @PathVariable String metadataUuid,
         @RequestParam(required = false) boolean details,
         @Parameter(description = "Sort direction", required = false) @RequestParam(defaultValue = "DESC") Sort.Direction sortOrder,
+        @Parameter(description = "Use approved version or not", example = "true")
+        @RequestParam(required = false, defaultValue = "true")  Boolean approved,
         HttpServletRequest request) throws Exception {
         ServiceContext context = ApiUtils.createServiceContext(request);
-        AbstractMetadata metadata = ApiUtils.canViewRecord(metadataUuid, request);
+        ResourceBundle messages = ApiUtils.getMessagesResourceBundle(request.getLocales());
+        AbstractMetadata metadata;
+        try {
+            metadata = ApiUtils.canViewRecord(metadataUuid, approved, request);
+        } catch (SecurityException e) {
+            Log.debug(API.LOG_MODULE_NAME, e.getMessage(), e);
+            throw new NotAllowedException(messages.getString("exception.notAllowed.cannotView"));
+        }
 
         String sortField = SortUtils.createPath(MetadataStatus_.changeDate);
 
@@ -202,9 +215,18 @@ public class MetadataWorkflowApi {
         @Parameter(description = "Type", required = true) @PathVariable StatusValueType type,
         @RequestParam(required = false) boolean details,
         @Parameter(description = "Sort direction", required = false) @RequestParam(defaultValue = "DESC") Sort.Direction sortOrder,
+        @Parameter(description = "Use approved version or not", example = "true")
+        @RequestParam(required = false, defaultValue = "true") Boolean approved,
         HttpServletRequest request) throws Exception {
         ServiceContext context = ApiUtils.createServiceContext(request);
-        AbstractMetadata metadata = ApiUtils.canViewRecord(metadataUuid, request);
+        ResourceBundle messages = ApiUtils.getMessagesResourceBundle(request.getLocales());
+        AbstractMetadata metadata;
+        try {
+            metadata = ApiUtils.canViewRecord(metadataUuid, approved, request);
+        } catch (SecurityException e) {
+            Log.debug(API.LOG_MODULE_NAME, e.getMessage(), e);
+            throw new NotAllowedException(messages.getString("exception.notAllowed.cannotView"));
+        }
 
         String sortField = SortUtils.createPath(MetadataStatus_.changeDate);
 
@@ -219,23 +241,38 @@ public class MetadataWorkflowApi {
     @io.swagger.v3.oas.annotations.Operation(summary = "Get last workflow status for a record", description = "")
     @RequestMapping(value = "/{metadataUuid}/status/workflow/last", method = RequestMethod.GET, produces = {
         MediaType.APPLICATION_JSON_VALUE})
-    @PreAuthorize("hasAuthority('Editor')")
+    @PreAuthorize("hasAuthority('RegisteredUser')")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Record status."),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)})
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public MetadataWorkflowStatusResponse getStatus(
         @Parameter(description = API_PARAM_RECORD_UUID, required = true) @PathVariable String metadataUuid,
+        @Parameter(description = "Use approved version or not", example = "true")
+        @RequestParam(required = false, defaultValue = "true")  Boolean approved,
         HttpServletRequest request) throws Exception {
-        AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
+        AbstractMetadata metadata = ApiUtils.getRecord(metadataUuid);
         Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
         ResourceBundle messages = ApiUtils.getMessagesResourceBundle(request.getLocales());
         ServiceContext context = ApiUtils.createServiceContext(request, locale.getISO3Language());
 
-        // --- only allow the owner of the record to set its status
+        // If the user does not own the record check if they meet the minimum profile
         if (!accessManager.isOwner(context, String.valueOf(metadata.getId()))) {
-            throw new SecurityException(
-                messages.getString("api.metadata.status.errorGetStatusNotAllowed"));
+            Profile userProfile = context.getUserSession().getProfile();
+            String minimumAllowedProfileName = StringUtils.defaultIfBlank(
+                settingManager.getValue(Settings.METADATA_HISTORY_ACCESS_LEVEL),
+                Profile.Editor.toString()
+            );
+            Profile minimumAllowedProfile = Profile.valueOf(minimumAllowedProfileName);
+
+            if (!minimumAllowedProfile.getProfileAndAllParents().contains(userProfile)) {
+                // If the user profile is not at least the minimum profile, then the user is not allowed to view record workflow status
+                String message = getMustBeProfileOrOwnerMessage(minimumAllowedProfileName, messages, locale);
+                Log.debug(API.LOG_MODULE_NAME, message);
+                throw new NotAllowedException(message);
+            }
+
+            checkUserCanSeeHistory(minimumAllowedProfile, metadataUuid, messages, request);
         }
 
         MetadataStatus recordStatus = metadataStatus.getStatus(metadata.getId());
@@ -480,6 +517,31 @@ public class MetadataWorkflowApi {
                 .withDescriptionKey("exception.resourceNotEnabled.workflow.description");
         }
 
+        // If the metadata workflow status is unset and the new status is DRAFT, workflow is being enabled
+        if (metadataStatus.getStatus(metadata.getId()) == null) {
+            // Retrieve the group owner ID from the metadata source information
+            Integer groupOwnerId = metadata.getSourceInfo().getGroupOwner();
+
+            // Find the group owner by ID from the group repository
+            // If the group owner is not found, throw a ResourceNotFoundException with a formatted message
+            Group groupOwner = groupRepository.findById(groupOwnerId).orElseThrow(
+                () -> new ResourceNotFoundException(
+                    MessageFormat.format(
+                        messages.getString("api.groups.group_not_found"),
+                        groupOwnerId
+                    )
+                )
+            );
+
+            // Check if the group has an enabled workflow
+            // If not, throw a FeatureNotEnabledException with an appropriate message
+            if (!WorkflowUtil.isGroupWithEnabledWorkflow(groupOwner.getName())) {
+                throw new FeatureNotEnabledException("Metadata workflow is disabled for group '" + groupOwner.getName() + "', metadata status can not be set")
+                    .withMessageKey("exception.resourceNotEnabled.groupWorkflow", new Object[]{groupOwner.getName()})
+                    .withDescriptionKey("exception.resourceNotEnabled.groupWorkflow.description", new Object[]{groupOwner.getName()});
+            }
+        }
+
         // --- only allow the owner of the record to set its status
         if (!accessManager.isOwner(context, String.valueOf(metadata.getId()))) {
             throw new SecurityException(
@@ -704,12 +766,19 @@ public class MetadataWorkflowApi {
         Integer size,
         HttpServletRequest request) throws Exception {
         ServiceContext context = ApiUtils.createServiceContext(request);
+        Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
+        ResourceBundle messages = ApiUtils.getMessagesResourceBundle(request.getLocales());
 
-        Profile profile = context.getUserSession().getProfile();
-        String allowedProfileLevel = org.apache.commons.lang.StringUtils.defaultIfBlank(settingManager.getValue(Settings.METADATA_HISTORY_ACCESS_LEVEL), Profile.Editor.toString());
-        Profile allowedAccessLevelProfile = Profile.valueOf(allowedProfileLevel);
+        Profile userProfile = context.getUserSession().getProfile();
+        String minimumAllowedProfileName = StringUtils.defaultIfBlank(
+            settingManager.getValue(Settings.METADATA_HISTORY_ACCESS_LEVEL),
+            Profile.Editor.toString()
+        );
+        Profile minimumAllowedProfile = Profile.valueOf(minimumAllowedProfileName);
+        boolean isMinimumAllowedProfile = minimumAllowedProfile.getProfileAndAllParents().contains(userProfile);
+        String mustBeProfileOrOwnerMessage = getMustBeProfileOrOwnerMessage(minimumAllowedProfileName, messages, locale);
 
-        if (profile != Profile.Administrator) {
+        if (userProfile != Profile.Administrator) {
             if (CollectionUtils.isEmpty(recordIdentifier) &&
                 CollectionUtils.isEmpty(uuid)) {
                 throw new NotAllowedException(
@@ -718,30 +787,24 @@ public class MetadataWorkflowApi {
 
             if (!CollectionUtils.isEmpty(recordIdentifier)) {
                 for (Integer recordId : recordIdentifier) {
-                    try {
-                        if (allowedAccessLevelProfile == Profile.RegisteredUser) {
-                            ApiUtils.canViewRecord(String.valueOf(recordId), request);
-                        } else {
-                            ApiUtils.canEditRecord(String.valueOf(recordId), request);
-                        }
-
-                    } catch (SecurityException e) {
-                        throw new NotAllowedException(ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT);
+                    // Handle record not found
+                    AbstractMetadata metadata = ApiUtils.getRecord(String.valueOf(recordId));
+                    if (!isMinimumAllowedProfile && !accessManager.isOwner(context, metadata.getSourceInfo())) {
+                        Log.debug(API.LOG_MODULE_NAME, mustBeProfileOrOwnerMessage);
+                        throw new NotAllowedException(mustBeProfileOrOwnerMessage);
                     }
+                    checkUserCanSeeHistory(minimumAllowedProfile, String.valueOf(recordId), messages, request);
                 }
             }
             if (!CollectionUtils.isEmpty(uuid)) {
                 for (String recordId : uuid) {
-                    try {
-                        if (allowedAccessLevelProfile == Profile.RegisteredUser) {
-                            ApiUtils.canViewRecord(recordId, request);
-                        } else {
-                            ApiUtils.canEditRecord(recordId, request);
-                        }
-
-                    } catch (SecurityException e) {
-                        throw new NotAllowedException(ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT);
+                    // Handle record not found
+                    AbstractMetadata metadata = ApiUtils.getRecord(recordId);
+                    if (!isMinimumAllowedProfile && !accessManager.isOwner(context, metadata.getSourceInfo())) {
+                        Log.debug(API.LOG_MODULE_NAME, mustBeProfileOrOwnerMessage);
+                        throw new NotAllowedException(mustBeProfileOrOwnerMessage);
                     }
+                    checkUserCanSeeHistory(minimumAllowedProfile, recordId, messages, request);
                 }
             }
         }
@@ -1049,15 +1112,15 @@ public class MetadataWorkflowApi {
     }
 
     private String extractCurrentStatus(MetadataStatus s) {
-        switch (Integer.toString(s.getStatusValue().getId())) {
-            case StatusValue.Events.ATTACHMENTADDED:
+        switch (StatusValue.Events.fromId(s.getStatusValue().getId())) {
+            case ATTACHMENTADDED:
                 return s.getCurrentState();
-            case StatusValue.Events.RECORDOWNERCHANGE:
-            case StatusValue.Events.RECORDGROUPOWNERCHANGE:
+            case RECORDOWNERCHANGE:
+            case RECORDGROUPOWNERCHANGE:
                 return ObjectJSONUtils.extractFieldFromJSONString(s.getCurrentState(), "owner", "name");
-            case StatusValue.Events.RECORDPROCESSINGCHANGE:
+            case RECORDPROCESSINGCHANGE:
                 return ObjectJSONUtils.extractFieldFromJSONString(s.getCurrentState(), "process");
-            case StatusValue.Events.RECORDCATEGORYCHANGE:
+            case RECORDCATEGORYCHANGE:
                 List<String> categories = ObjectJSONUtils.extractListOfFieldFromJSONString(s.getCurrentState(), "category",
                     "name");
                 StringBuilder categoriesAsString = new StringBuilder("[ ");
@@ -1066,7 +1129,7 @@ public class MetadataWorkflowApi {
                 }
                 categoriesAsString.append("]");
                 return categoriesAsString.toString();
-            case StatusValue.Events.RECORDVALIDATIONTRIGGERED:
+            case RECORDVALIDATIONTRIGGERED:
                 if (s.getCurrentState() == null) {
                     return "UNKNOWN";
                 } else if (s.getCurrentState().equals("1")) {
@@ -1080,11 +1143,11 @@ public class MetadataWorkflowApi {
     }
 
     private String extractPreviousStatus(MetadataStatus s) {
-        switch (Integer.toString(s.getStatusValue().getId())) {
-            case StatusValue.Events.ATTACHMENTDELETED:
+        switch (StatusValue.Events.fromId(s.getStatusValue().getId())) {
+            case ATTACHMENTDELETED:
                 return s.getPreviousState();
-            case StatusValue.Events.RECORDOWNERCHANGE:
-            case StatusValue.Events.RECORDGROUPOWNERCHANGE:
+            case RECORDOWNERCHANGE:
+            case RECORDGROUPOWNERCHANGE:
                 return ObjectJSONUtils.extractFieldFromJSONString(s.getPreviousState(), "owner", "name");
             default:
                 return "";
@@ -1229,21 +1292,34 @@ public class MetadataWorkflowApi {
 
     private String getValidatedStateText(MetadataStatus metadataStatus, State state, HttpServletRequest request, HttpSession httpSession) throws Exception {
 
+        ResourceBundle messages = ApiUtils.getMessagesResourceBundle(request.getLocales());
+
         if (!StatusValueType.event.equals(metadataStatus.getStatusValue().getType())
-            || !ArrayUtils.contains(supportedRestoreStatuses, metadataStatus.getStatusValue().getId())) {
+            || !ArrayUtils.contains(supportedRestoreStatuses, StatusValue.Events.fromId(metadataStatus.getStatusValue().getId()))) {
             throw new NotAllowedException("Unsupported action on status type '" + metadataStatus.getStatusValue().getType()
                 + "' for metadata '" + metadataStatus.getUuid() + "'. Supports status type '"
-                + StatusValueType.event + "' with the status id '" + Arrays.toString(supportedRestoreStatuses) + "'.");
+                + StatusValueType.event + "' with the status id '" + Arrays.stream(supportedRestoreStatuses).map(StatusValue.Events::getId).collect(Collectors.toList()) + "'.");
         }
 
         String stateText;
+        MediaType stateFormat;
         if (state.equals(State.AFTER)) {
             stateText = metadataStatus.getCurrentState();
+            stateFormat = StatusValue.Events.fromId(metadataStatus.getStatusValue().getId()).getCurrentStateFormat();
         } else {
             stateText = metadataStatus.getPreviousState();
+            stateFormat = StatusValue.Events.fromId(metadataStatus.getStatusValue().getId()).getPreviousStateFormat();
         }
 
-        if (stateText == null) {
+        String xmlStateText;
+        if (stateFormat.equals(MediaType.APPLICATION_JSON)) {
+            // Any status with JSON format will have the XML stored in the field 'xmlRecord'
+            xmlStateText = ObjectJSONUtils.extractFieldFromJSONString(stateText, "xmlRecord");
+        } else {
+            xmlStateText = stateText;
+        }
+
+        if (xmlStateText == null) {
             throw new ResourceNotFoundException(
                 String.format("No data exists for previous state on metadata record '%s', user '%d' at date '%s'",
                     metadataStatus.getUuid(), metadataStatus.getUserId(), metadataStatus.getChangeDate()));
@@ -1254,14 +1330,14 @@ public class MetadataWorkflowApi {
             ApiUtils.canEditRecord(metadataStatus.getUuid(), request);
         } catch (SecurityException e) {
             Log.debug(API.LOG_MODULE_NAME, e.getMessage(), e);
-            throw new NotAllowedException(ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW);
+            throw new NotAllowedException(messages.getString("exception.notAllowed.cannotView"));
         } catch (ResourceNotFoundException e) {
             // If metadata record does not exists then it was deleted so
             // we will only allow the administrator, owner to view the contents
-            checkCanViewStatus(stateText, httpSession);
+            checkCanViewStatus(xmlStateText, httpSession);
         }
 
-        return stateText;
+        return xmlStateText;
     }
 
     /**
@@ -1336,4 +1412,47 @@ public class MetadataWorkflowApi {
         sa.onStatusChange(listOfStatusChange, true);
     }
 
+    /**
+     * Constructs a message indicating that the user must have a specific profile or be the owner to perform an action.
+     *
+     * @param messages The resource bundle containing localized messages.
+     * @param minimumAllowedProfileName The name of the minimum allowed profile.
+     * @return A formatted message indicating the required profile or ownership.
+     */
+    private String getMustBeProfileOrOwnerMessage(String minimumAllowedProfileName, ResourceBundle messages, Locale locale) {
+        Translator jsonLocTranslator = translatorFactory.getTranslator("apploc:", locale.getISO3Language());
+        return MessageFormat.format(
+            messages.getString("exception.notAllowed.mustBeProfileOrOwner"),
+            jsonLocTranslator.translate(minimumAllowedProfileName)
+        );
+    }
+
+    /**
+     * Checks if the user has the necessary permissions to view the history of a record.
+     *
+     * @param minimumAllowedProfile The minimum profile required to view the history.
+     * @param recordId The ID of the record.
+     * @param messages The resource bundle containing localized messages.
+     * @param request The HTTP request object.
+     * @throws Exception If the user does not have the necessary permissions.
+     */
+    private void checkUserCanSeeHistory(Profile minimumAllowedProfile, String recordId, ResourceBundle messages, HttpServletRequest request) throws Exception {
+        if (minimumAllowedProfile == Profile.RegisteredUser) {
+            // If the minimum profile is RegisteredUser, then the user must be able to view the record
+            try {
+                ApiUtils.canViewRecord(recordId, request);
+            } catch (SecurityException e) {
+                Log.debug(API.LOG_MODULE_NAME, e.getMessage(), e);
+                throw new NotAllowedException(messages.getString("exception.notAllowed.cannotView"));
+            }
+        } else if (minimumAllowedProfile == Profile.Editor) {
+            // If the minimum profile is Editor, then the user must be able to edit the record
+            try {
+                ApiUtils.canEditRecord(recordId, request);
+            } catch (SecurityException e) {
+                Log.debug(API.LOG_MODULE_NAME, e.getMessage(), e);
+                throw new NotAllowedException(messages.getString("exception.notAllowed.cannotEdit"));
+            }
+        }
+    }
 }

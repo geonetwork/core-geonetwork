@@ -236,6 +236,7 @@
     "onlineUseDQReport": "მონაცემთა ხარისხის ანგარიში",
     "onlineUseDQTOR": "მონაცემთა ხარისხის სპეციფიკაცია",
     "onlineUseDQProdReport": "მონაცემთა ხარისხის წარმოების ანგარიში",
+    "onlineUseMap": "Map",
     "onlineUseLegend": "ლეგენდა რესურსისთვის",
     "onlineUseLegendLYR": "სტილი რესურსისთვის ArcGIS-ისთვის (LYR)",
     "onlineUseStyleSLD": "რესურსის სტილი SLD-ის გამოყენებით",
@@ -441,6 +442,8 @@
     "addOnlinesrc#API-help": "მაგალითად. სერვისის ნახვა, REST API",
     "addOnlinesrc#onlineDownload|localNetwork": "დაამატეთ ჩამოტვირთვა",
     "addOnlinesrc#onlineDownload|localNetwork-help": "მაგალითად. ფაილი, ჩამოტვირთვის სერვისი, ლოკალური ქსელის ბმულები",
+    "addOnlinesrc#onlineUseMap": "Add map",
+    "addOnlinesrc#onlineUseMap-help": "eg. PDF static maps or OGC Web Map Context interactive maps",
     "addOnlinesrc#onlineUseLegend": "დაამატეთ პორტრეტი",
     "addOnlinesrc#onlineUseLegend-help": "მაგალითად. LYR, QML, SLD ფაილები",
     "addOnlinesrc#links": "დაამატეთ ბმულები",
@@ -454,5 +457,10 @@
     "associated-fcats": "ფუნქციების კატალოგი",
     "associated-siblings": "ასოცირებული რესურსები",
     "associated-hasfeaturecats": "ამ ფუნქციების კატალოგის გამოყენებით",
-    "associatedResourcesPanel": "ასოცირებული რესურსები"
+    "associatedResourcesPanel": "ასოცირებული რესურსები",
+    "validationSuccessLabel": "success",
+    "validationErrorLabel": "errors",
+    "metadataDuplicatedField-title": "The metadata title is used in another metadata record.",
+    "metadataDuplicatedField-altTitle": "The metadata alternate title is used in another metadata record.",
+    "metadataDuplicatedField-identifier": "The metadata resource identifier is used in another metadata record."
 }

@@ -13,7 +13,7 @@
       data-ng-if="mdView.current.record.draft == 'e'"
       class="see-draft see-draft-not-approved"
       title=" {{('status-' + mdView.current.record.mdStatus) | translate}}"
-      data-ng-href="#/metadraf/{{md.uuid}}"
+      data-ng-href="#/metadraf/{{mdView.current.record.uuid}}"
       data-ng-show="user.canEditRecord(mdView.current.record)"
     >
       {{'seeDraft' | translate}}
@@ -24,7 +24,7 @@
       data-ng-if="mdView.current.record.draft == 'y'"
       class="see-draft see-draft-approved"
       title=" {{('status-' + mdView.current.record.mdStatus) | translate}}"
-      data-ng-href="#/metadata/{{md.uuid}}"
+      data-ng-href="#/metadata/{{mdView.current.record.uuid}}"
       data-ng-show="user.canEditRecord(mdView.current.record)"
     >
       {{'seeNoDraft' | translate}}
@@ -45,7 +45,7 @@
       <span
         data-ng-hide="user"
         data-translate=""
-        data-translate-values="{url: '{{url | encodeURIComponent}}'}"
+        data-translate-values="{signInFormAction: '{{signInFormAction}}', csrf: '{{csrf}}', redirectUrlAfterSign: '{{redirectUrlAfterSign}}'}"
       >
         trySignIn
       </span>
@@ -91,91 +91,42 @@
         </div>
 
         <div class="pull-right">
-          <!-- edit -->
-          <div class="btn-group pull-left" role="group">
-            <a
-              class="btn btn-default gn-md-edit-btn"
-              data-ng-show="user.canEditRecord(mdView.current.record) && (user.isReviewerOrMore() || mdView.current.record.mdStatus != 4 || !isMdWorkflowEnable)"
-              data-ng-href="catalog.edit#/metadata/{{gnMetadataActions.getMetadataIdToEdit(mdView.current.record)}}?redirectUrl=catalog.search%23%2Fmetadata%2F{{mdView.current.record.uuid}}"
-              title="{{'edit' | translate}}"
-            >
-              <span class="fa fa-fw fa-pencil"></span>
-              <span data-translate="" class="hidden-sm hidden-xs">edit</span>
-            </a>
-          </div>
+          <ul class="nav navbar-nav gn-menu-xs" role="menu">
+            <li data-ng-repeat="menu in recordviewMenu">
+              <!--record view menu static pages-->
+              <div
+                data-ng-if="isPage(menu)"
+                gn-static-page-menu="menu"
+                language="{{lang}}"
+                section="record_view_menu"
+              ></div>
 
-          <!-- delete -->
-          <div class="btn-group pull-left" role="group">
-            <a
-              class="btn btn-default"
-              href
-              data-ng-if="mdView.current.record.draft != 'y'"
-              data-ng-show="(!mdView.current.record.isPublished() || (mdView.current.record.isPublished() && user.canDeletePublishedMetadata()) ) && user.canEditRecord(mdView.current.record)
-                            && (user.isReviewerOrMore() || mdView.current.record.mdStatus != 4 || !isMdWorkflowEnable)"
-              data-gn-click-and-spin="deleteRecord(mdView.current.record)"
-              data-gn-confirm-click="{{'deleteRecordConfirm' | translate: {resourceTitle: (mdView.current.record.resourceTitle | json)} }}"
-              title="{{'delete' | translate}}"
-            >
-              <span class="fa fa-fw fa-times"></span>
-              <span data-translate="" class="hidden-sm hidden-xs">delete</span>
-            </a>
+              <!-- edit -->
+              <div
+                data-ng-if="menu == 'gn-recordview-edit-menu'"
+                gn-record-view-edit-menu=""
+              ></div>
 
-            <a
-              class="btn btn-default"
-              href
-              data-ng-if="mdView.current.record.draft == 'y'"
-              data-ng-show="(!mdView.current.record.isPublished() || (mdView.current.record.isPublished() && user.canDeletePublishedMetadata()) ) && user.canEditRecord(mdView.current.record)
-                            && (user.isReviewerOrMore() || mdView.current.record.mdStatus != 4 || !isMdWorkflowEnable)"
-              data-gn-click-and-spin="cancelWorkingCopy(mdView.current.record)"
-              data-gn-confirm-click="{{'deleteWorkingCopyRecordConfirm' | translate: {resourceTitle: (mdView.current.record.resourceTitle | json)} }}"
-              title="{{'cancelWorkingCopy' | translate}}"
-            >
-              <span class="fa fa-fw fa-times"></span>
-              <span
-                data-translate=""
-                class="hidden-sm hidden-xs"
-                data-ng-if="mdView.current.record.draft == 'y'"
-                >cancelWorkingCopy</span
-              >
-            </a>
-          </div>
+              <!-- delete -->
+              <div
+                data-ng-if="menu == 'gn-recordview-delete-menu'"
+                gn-record-view-delete-menu=""
+              ></div>
 
-          <!-- manage -->
-          <div
-            class="gn-md-actions-btn pull-left"
-            data-gn-md-actions-menu="mdView.current.record"
-          ></div>
+              <!-- manage -->
+              <div
+                data-ng-if="menu == 'gn-recordview-manage-menu' && mdView.current.record"
+                class="gn-md-actions-btn pull-left"
+                data-gn-md-actions-menu="mdView.current.record"
+              ></div>
 
-          <!-- display mode -->
-          <div class="btn-group gn-view-menu-button pull-left">
-            <button
-              type="button"
-              class="btn btn-default dropdown-toggle"
-              data-toggle="dropdown"
-              aria-label="{{'chooseAView' | translate}}"
-              aria-expanded="false"
-            >
-              <span class="fa fa-fw fa-eye"></span>
-              <span data-translate="" class="hidden-sm hidden-xs">chooseAView</span>
-              <span class="caret"></span>
-            </button>
-            <ul class="dropdown-menu" role="menu">
-              <li
-                role="menuitem"
-                data-ng-repeat="f in recordFormatterList"
-                data-ng-class="currentFormatter === f.url ? 'disabled' : ''"
-              >
-                <a
-                  href=""
-                  gn-metadata-open="mdView.current.record"
-                  gn-records="mdView.records"
-                  gn-formatter="f && f.url"
-                >
-                  {{f.label | translate}}
-                </a>
-              </li>
-            </ul>
-          </div>
+              <!-- display mode -->
+              <div
+                data-ng-if="menu == 'gn-recordview-display-menu'"
+                gn-record-view-display-mode-menu=""
+              ></div>
+            </li>
+          </ul>
         </div>
       </div>
 
@@ -186,7 +137,7 @@
       ></div>
 
       <div data-ng-show="!gnMdViewObj.usingFormatter" class="gn-metadata-display">
-        <div data-ng-switch on="md.resourceType[0]">
+        <div data-ng-switch on="mdView.current.record.resourceType[0]">
           <div data-ng-switch-when="series">
             <div
               ng-include="'../../catalog/views/default/templates/recordView/type-series.html'"

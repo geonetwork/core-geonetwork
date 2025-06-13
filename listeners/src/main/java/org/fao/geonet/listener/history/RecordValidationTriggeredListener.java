@@ -32,7 +32,7 @@ public class RecordValidationTriggeredListener extends GenericMetadataEventListe
         implements ApplicationListener<RecordValidationTriggeredEvent> {
 
     private String changeMessage = "";
-    private String eventType = StatusValue.Events.RECORDVALIDATIONTRIGGERED;
+    private final StatusValue.Events eventType = StatusValue.Events.RECORDVALIDATIONTRIGGERED;
 
     @Override
     public String getChangeMessage() {
@@ -41,7 +41,7 @@ public class RecordValidationTriggeredListener extends GenericMetadataEventListe
 
     @Override
     public String getEventType() {
-        return eventType;
+        return eventType.getCode();
     }
 
     @Override

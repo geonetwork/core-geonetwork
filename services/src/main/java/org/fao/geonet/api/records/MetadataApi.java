@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2023 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2024 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -51,6 +51,7 @@ import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.mef.MEFLib;
+import org.fao.geonet.kernel.search.EsSearchManager;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.utils.Log;
@@ -63,6 +64,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -107,6 +109,9 @@ public class MetadataApi {
     GeonetworkDataDirectory dataDirectory;
 
     private ApplicationContext context;
+
+    @Autowired
+    EsSearchManager esSearchManager;
 
     public static RelatedResponse getRelatedResources(
         String language, ServiceContext context,
@@ -780,6 +785,47 @@ public class MetadataApi {
 
     }
 
+    @io.swagger.v3.oas.annotations.Operation(summary = "Check if metadata field value is duplicated in another metadata",
+        description = "Verifies if a metadata field value is in use. Fields supported: title (title), " +
+            "alternate title (altTitle) or resource identifier (identifier)")
+    @PostMapping(value = "/{metadataUuid:.+}/checkDuplicatedFieldValue",
+        produces = {MediaType.APPLICATION_JSON_VALUE})
+    @PreAuthorize("hasAuthority('Editor')")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Return true if the field value is duplicated in another metadata or false in other case."),
+        @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW)
+    })
+    public ResponseEntity<Boolean> checkDuplicatedFieldValue(
+        @Parameter(description = API_PARAM_RECORD_UUID,
+            required = true)
+        @PathVariable
+        String metadataUuid,
+        @Parameter(description = "Metadata field information to check",
+            required = true)
+        @RequestBody DuplicatedValueDto duplicatedValueDto,
+        HttpServletRequest request
+    ) throws Exception {
+        try {
+            ApiUtils.canViewRecord(metadataUuid, request);
+        } catch (SecurityException e) {
+            Log.debug(API.LOG_MODULE_NAME, e.getMessage(), e);
+            throw new NotAllowedException(ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW);
+        }
+
+        List<String> validFields = Arrays.asList("title", "altTitle", "identifier");
+
+        if (!validFields.contains(duplicatedValueDto.getField())) {
+            throw new IllegalArgumentException(String.format("A valid field name is required:", String.join(",", validFields)));
+        }
+
+        if (StringUtils.isEmpty(duplicatedValueDto.getValue())) {
+            throw new IllegalArgumentException("A non-empty value is required.");
+        }
+
+
+        boolean uuidsWithSameTitle = MetadataUtils.isMetadataFieldValueExistingInOtherRecords(duplicatedValueDto.getValue(), duplicatedValueDto.getField(), metadataUuid);
+        return ResponseEntity.ok(uuidsWithSameTitle);
+    }
 
     private boolean isIncludedAttributeTable(RelatedResponse.Fcat fcat) {
         return fcat != null
@@ -788,5 +834,26 @@ public class MetadataApi {
             && fcat.getItem().get(0).getFeatureType() != null
             && fcat.getItem().get(0).getFeatureType().getAttributeTable() != null
             && fcat.getItem().get(0).getFeatureType().getAttributeTable().getElement() != null;
+    }
+
+    private static class DuplicatedValueDto {
+        private String field;
+        private String value;
+
+        public String getField() {
+            return field;
+        }
+
+        public void setField(String field) {
+            this.field = field;
+        }
+
+        public String getValue() {
+            return value;
+        }
+
+        public void setValue(String value) {
+            this.value = value;
+        }
     }
 }

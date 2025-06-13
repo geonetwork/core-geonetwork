@@ -268,7 +268,7 @@
     "spatialRepresentationType": "Representation type",
     "cl_spatialRepresentationType": "Representation type",
     "state": "State",
-    "staticMap": "Static map",
+    "map-static": "Static map",
     "surname": "Surname",
     "title": "Title",
     "to": "To",
@@ -588,5 +588,6 @@
     "mapLegend": "Legend",
     "quality": "Quality",
     "download": "Download",
-    "links": "Links"
+    "links": "Links",
+    "saveToFile": "Save to file."
 }

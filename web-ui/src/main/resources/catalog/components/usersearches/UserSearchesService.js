@@ -35,7 +35,7 @@
           usersearches = $http.get("../api/usersearches/featured?type=" + type);
         var apiCalls = [usersearches];
         if (withPortal) {
-          apiCalls.push($http.get("../api/sources/subportal"));
+          apiCalls.push($http.get("../api/sources?type=subportal"));
         }
         $q.all(apiCalls).then(function (alldata) {
           var usersearches = [];

@@ -10,7 +10,9 @@
                 xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0"
                 xmlns:mco="http://standards.iso.org/iso/19115/-3/mco/1.0"
                 xmlns:mri="http://standards.iso.org/iso/19115/-3/mri/1.0"
+                xmlns:mpc="http://standards.iso.org/iso/19115/-3/mpc/1.0"
                 xmlns:mdq="http://standards.iso.org/iso/19157/-2/mdq/1.0"
+                xmlns:mrc="http://standards.iso.org/iso/19115/-3/mrc/2.0"
                 xmlns:gcx="http://standards.iso.org/iso/19115/-3/gcx/1.0"
                 xmlns:xlink="http://www.w3.org/1999/xlink"
                 xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
@@ -28,46 +30,46 @@
   https://github.com/SEMICeu/GeoDCAT-AP/issues/100
   -->
   <xsl:param name="copyDatasetInfoToDistribution"
-                as="xs:string"
-                select="'false'"/>
+             as="xs:string"
+             select="'false'"/>
   <xsl:variable name="isCopyingDatasetInfoToDistribution"
                 as="xs:boolean"
                 select="xs:boolean($copyDatasetInfoToDistribution)"/>
 
   <xsl:variable name="protocolToStandardPage"
                 as="node()*">
-      <entry key="http://www.opengeospatial.org/standards/cat">
-        <value>csw</value>
-        <value>ogc:csw</value>
-      </entry>
-      <entry key="http://www.opengeospatial.org/standards/sos">
-        <value>sos</value>
-        <value>ogc:sos</value>
-      </entry>
-      <entry key="http://www.opengeospatial.org/standards/sps">
-        <value>sps</value>
-        <value>ogc:sps</value>
-      </entry>
-      <entry key="http://www.opengeospatial.org/standards/wcs">
-        <value>wcs</value>
-        <value>ogc:wcs</value>
-      </entry>
-      <entry key="http://www.opengeospatial.org/standards/wfs">
-        <value>wfs</value>
-        <value>ogc:wfs</value>
-      </entry>
-      <entry key="http://www.opengeospatial.org/standards/wms">
-        <value>wms</value>
-        <value>ogc:wms</value>
-      </entry>
-      <entry key="http://www.opengeospatial.org/standards/wmts">
-        <value>wmts</value>
-        <value>ogc:wmts</value>
-      </entry>
-      <entry key="http://www.opengeospatial.org/standards/wps">
-        <value>wps</value>
-        <value>ogc:wps</value>
-      </entry>
+    <entry key="http://www.opengeospatial.org/standards/cat">
+      <value>csw</value>
+      <value>ogc:csw</value>
+    </entry>
+    <entry key="http://www.opengeospatial.org/standards/sos">
+      <value>sos</value>
+      <value>ogc:sos</value>
+    </entry>
+    <entry key="http://www.opengeospatial.org/standards/sps">
+      <value>sps</value>
+      <value>ogc:sps</value>
+    </entry>
+    <entry key="http://www.opengeospatial.org/standards/wcs">
+      <value>wcs</value>
+      <value>ogc:wcs</value>
+    </entry>
+    <entry key="http://www.opengeospatial.org/standards/wfs">
+      <value>wfs</value>
+      <value>ogc:wfs</value>
+    </entry>
+    <entry key="http://www.opengeospatial.org/standards/wms">
+      <value>wms</value>
+      <value>ogc:wms</value>
+    </entry>
+    <entry key="http://www.opengeospatial.org/standards/wmts">
+      <value>wmts</value>
+      <value>ogc:wmts</value>
+    </entry>
+    <entry key="http://www.opengeospatial.org/standards/wps">
+      <value>wps</value>
+      <value>ogc:wps</value>
+    </entry>
   </xsl:variable>
 
 
@@ -97,7 +99,6 @@
   </xsl:template>
 
 
-
   <xsl:template mode="iso19115-3-to-dcat"
                 match="mdb:identificationInfo/*/mri:graphicOverview[*/mcc:fileName/*/text() != '']">
     <foaf:page>
@@ -117,12 +118,19 @@
   -->
   <xsl:template mode="iso19115-3-to-dcat"
                 name="iso19115-3-to-dcat-distribution"
-                match="mdb:distributionInfo//mrd:onLine">
+                match="mdb:distributionInfo//mrd:onLine
+                            |mpc:portrayalCatalogueCitation/*/cit:onlineResource
+                            |mrl:additionalDocumentation/*/cit:onlineResource
+                            |mdq:reportReference/*/cit:onlineResource
+                            |mdq:reportReference/*/cit:title[gcx:Anchor/@xlink:href]
+                            |mdq:specification/*/cit:onlineResource
+                            |mdq:specification/*/cit:title[gcx:Anchor/@xlink:href]
+                            |mrc:featureCatalogueCitation/*/cit:onlineResource">
     <xsl:param name="additionalProperties"
                as="node()*"/>
 
     <xsl:variable name="url"
-                  select="*/cit:linkage/gco:CharacterString/text()"/>
+                  select="(*/cit:linkage/gco:CharacterString/text()|gcx:Anchor/@xlink:href)[1]"/>
 
     <xsl:variable name="protocol"
                   select="*/cit:protocol/*/text()"/>
@@ -141,9 +149,26 @@
 
     <xsl:choose>
       <xsl:when test="normalize-space($url) = ''"/>
-      <xsl:when test="$function = ('information', 'search', 'completeMetadata', 'browseGraphic', 'upload', 'emailService')
-                      or matches($protocol, 'WWW:LINK.*')">
-        <foaf:page>
+      <!--
+      TODO: The rule to populate the documentation element depends a lot on the context.
+      There is no known common guidance how to encode this and this can be quite user specific.
+      For service, it is mandatory from an HVD point of view ("quality of service information is considered part of the generic documentation of a Data Service.").
+      -->
+      <xsl:when test="$function = ('documentation')
+                                  or count(ancestor::mrl:additionalDocumentation) = 1
+                                  or starts-with($url, 'https://directory.spatineo.com')">
+        <foaf:documentation>
+          <foaf:Document rdf:about="{$url}">
+            <xsl:apply-templates mode="iso19115-3-to-dcat"
+                                 select="*/cit:name[normalize-space(.) != '']
+                                        |*/cit:description[normalize-space(.) != '']"/>
+          </foaf:Document>
+        </foaf:documentation>
+      </xsl:when>
+      <xsl:when test="$function = ('information', 'information.content', 'search', 'completeMetadata', 'browseGraphic', 'upload', 'emailService')
+                                 or ($function = ('browsing') and matches($protocol, 'WWW:LINK.*'))
+                                 or ((not($function) or $function = '') and (matches($protocol, 'WWW:LINK.*') or not($protocol) or $protocol = ''))">
+      <foaf:page>
           <foaf:Document rdf:about="{$url}">
             <xsl:apply-templates mode="iso19115-3-to-dcat"
                                  select="*/cit:name[normalize-space(.) != '']
@@ -169,7 +194,8 @@
              RDF Property:	dcterms:issued
              Definition:	Date of formal issuance (e.g., publication) of the distribution.
             -->
-            <xsl:for-each select="ancestor::mrd:MD_Distributor/mrd:distributionOrderProcess/*/mrd:plannedAvailableDateTime">
+            <xsl:for-each select="ancestor::mrd:MD_Distributor/mrd:distributionOrderProcess/*/mrd:plannedAvailableDateTime|
+                                               ancestor::mdb:MD_Metadata/mdb:identificationInfo/*/mri:citation/*/cit:date/*[cit:dateType/*/@codeListValue = 'publication']">
               <xsl:apply-templates mode="iso19115-3-to-dcat"
                                    select=".">
                 <xsl:with-param name="dateType" select="'publication'"/>
@@ -180,9 +206,13 @@
             RDF Property:	dcterms:modified
             Definition:	Most recent date on which the distribution was changed, updated or modified.
             Range:	rdfs:Literal encoded using the relevant ISO 8601 Date and Time compliant string [DATETIME] and typed using the appropriate XML Schema datatype [XMLSCHEMA11-2] (xsd:gYear, xsd:gYearMonth, xsd:date, or xsd:dateTime).
-
-            Not supported
             -->
+            <xsl:for-each select="ancestor::mdb:MD_Metadata/mdb:identificationInfo/*/mri:citation/*/cit:date/*[cit:dateType/*/@codeListValue = 'revision']">
+              <xsl:apply-templates mode="iso19115-3-to-dcat"
+                                   select=".">
+                <xsl:with-param name="dateType" select="'revision'"/>
+              </xsl:apply-templates>
+            </xsl:for-each>
 
 
             <!--
@@ -228,7 +258,6 @@
             -->
 
 
-
             <!--
             RDF Property:	dcat:byteSize
             Definition:	The size of a distribution in bytes.
@@ -237,9 +266,12 @@
             Usage note:	The size in bytes can be approximated (as a non-negative integer) when the precise size is not known.
             Usage note:	While it is recommended that the size be given as an integer, alternative literals such as '1.5 MB' are sometimes used.
             -->
-            <xsl:for-each select="ancestor::mrd:MD_DigitalTransferOptions/mrd:transferSize/*/text()[. castable as xs:double]">
+            <xsl:for-each
+              select="ancestor::mrd:MD_DigitalTransferOptions/mrd:transferSize/*/text()[. castable as xs:double]">
               <!-- Not valid for eu-dcat-ap <dcat:byteSize><xsl:value-of select="concat(., ' MB')"/></dcat:byteSize>-->
-              <dcat:byteSize rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger"><xsl:value-of select="format-number(. * 1048576, '#')"/></dcat:byteSize>
+              <dcat:byteSize rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">
+                <xsl:value-of select="format-number(. * 1048576, '#')"/>
+              </dcat:byteSize>
             </xsl:for-each>
 
 
@@ -248,6 +280,8 @@
              Definition:	A data service that gives access to the distribution of the dataset
              Range:	dcat:DataService
              Usage note:	dcat:accessService SHOULD be used to link to a description of a dcat:DataService that can provide access to this distribution.
+
+             DataService can be better described by an associated service metadata record.
             -->
             <xsl:if test="$function = ('download', 'offlineAccess', 'order', 'browsing', 'fileAccess')
                           or matches($protocol, 'OGC:WMS|OGC:WFS|OGC:WCS|OGC:WPS|OGC API Features|OGC API Coverages|ESRI:REST')">
@@ -306,9 +340,22 @@
               <xsl:otherwise>
                 <xsl:choose>
                   <xsl:when test="starts-with($protocol, 'WWW:DOWNLOAD:')">
+                      <xsl:variable name="format"
+                                    select="substring-after($protocol, 'WWW:DOWNLOAD:')"/>
+
+                      <!-- The file format of the Distribution. -->
                     <xsl:call-template name="rdf-format-as-mediatype">
-                      <xsl:with-param name="format" select="substring-after($protocol, 'WWW:DOWNLOAD:')"/>
+                        <xsl:with-param name="format" select="$format"/>
                     </xsl:call-template>
+
+                      <!-- The media type of the Distribution as defined in the official register of media types managed by IANA. -->
+                      <xsl:if test="matches($format, '\w+/[-+.\w]+')">
+                        <dcat:mediaType>
+                          <dct:MediaType>
+                            <rdfs:label><xsl:value-of select="$format"/></rdfs:label>
+                          </dct:MediaType>
+                        </dcat:mediaType>
+                      </xsl:if>
                   </xsl:when>
                   <xsl:otherwise>
                     <xsl:apply-templates mode="iso19115-3-to-dcat-distribution"
@@ -324,6 +371,7 @@
 
             <xsl:if test="$isCopyingDatasetInfoToDistribution">
               <!--
+              [mco:useConstraints]
               RDF Property:	dcterms:license
               Definition:	A legal document under which the distribution is made available.
               Range:	dcterms:LicenseDocument
@@ -334,17 +382,15 @@
               for a Distribution of that Dataset SHOULD be avoided as this can create legal conflicts.
               See also guidance at 9. License and rights statements.
               -->
-              <xsl:apply-templates mode="iso19115-3-to-dcat"
-                                   select="ancestor::mdb:MD_Metadata/mdb:identificationInfo/*/mri:resourceConstraints/*[mco:useConstraints]"/>
-
               <!--
-              RDF Property:	dcterms:accessRights
-              Definition:	A rights statement that concerns how the distribution is accessed.
-              Range:	dcterms:RightsStatement
-              Usage note:	Information about licenses and rights MAY be provided for the Distribution. See also guidance at 9. License and rights statements.
-              -->
+             [mco:accessConstraints]
+             RDF Property:	dcterms:accessRights
+             Definition:	A rights statement that concerns how the distribution is accessed.
+             Range:	dcterms:RightsStatement
+             Usage note:	Information about licenses and rights MAY be provided for the Distribution. See also guidance at 9. License and rights statements.
+             -->
               <xsl:apply-templates mode="iso19115-3-to-dcat"
-                                   select="ancestor::mdb:MD_Metadata/mdb:identificationInfo/*/mri:resourceConstraints/*[mco:accessConstraints]"/>
+                                   select="ancestor::mdb:MD_Metadata/mdb:identificationInfo/*/mri:resourceConstraints/*"/>
 
               <!--
               RDF Property:	dcterms:rights
@@ -386,6 +432,9 @@
               -->
               <xsl:apply-templates mode="iso19115-3-to-dcat"
                                    select="ancestor::mdb:MD_Metadata/mdb:dataQualityInfo/*/mdq:report/*/mdq:result[mdq:DQ_ConformanceResult and mdq:DQ_ConformanceResult/mdq:pass/*/text() = 'true']"/>
+
+              <xsl:apply-templates mode="iso19115-3-to-dcat"
+                                   select="ancestor::mdb:MD_Metadata/mdb:identificationInfo/*/mri:defaultLocale"/>
             </xsl:if>
 
             <xsl:copy-of select="$additionalProperties"/>
@@ -419,7 +468,7 @@
 
     <xsl:variable name="formatUri"
                   as="xs:string?"
-                  select="($formatLabelToUri[lower-case($format) = text()]/@key)[1]"/>
+                  select="($formatLabelToUri[lower-case($format) = lower-case(text())]/@key)[1]"/>
 
     <xsl:variable name="rangeName"
                   as="xs:string"
@@ -433,7 +482,9 @@
         </xsl:when>
         <xsl:otherwise>
           <xsl:element name="{$rangeName}">
-            <rdfs:label><xsl:value-of select="$format"/></rdfs:label>
+            <rdfs:label>
+              <xsl:value-of select="$format"/>
+            </rdfs:label>
           </xsl:element>
         </xsl:otherwise>
       </xsl:choose>
