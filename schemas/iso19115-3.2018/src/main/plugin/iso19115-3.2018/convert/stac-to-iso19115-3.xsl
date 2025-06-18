@@ -28,15 +28,36 @@
 
   <xsl:strip-space elements="*"/>
 
-  <xsl:template match="/record">
+  <!-- Main template matching different possible root structures -->
+  <xsl:template match="/">
+    <xsl:choose>
+      <xsl:when test="/record">
+        <xsl:apply-templates select="/record"/>
+      </xsl:when>
+      <xsl:when test="/*[local-name()='collections'] or /*[local-name()='collection']">
+        <xsl:apply-templates select="/*"/>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:apply-templates select="/*"/>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
 
+  <xsl:template match="/record|*">
     <mdb:MD_Metadata>
       <xsl:call-template name="add-iso19115-3.2018-namespaces"/>
       <mdb:metadataIdentifier>
         <mcc:MD_Identifier>
           <mcc:code>
             <gco:CharacterString>
-              <xsl:value-of select="(datasetid|dataset/dataset_id)[1]"/>
+              <xsl:choose>
+                <xsl:when test="(datasetid|dataset/dataset_id|id)[1] and string-length((datasetid|dataset/dataset_id|id)[1]) > 0">
+                  <xsl:value-of select="(datasetid|dataset/dataset_id|id)[1]"/>
+                </xsl:when>
+                <xsl:otherwise>
+                  <xsl:value-of select="generate-id()"/>
+                </xsl:otherwise>
+              </xsl:choose>
             </gco:CharacterString>
           </mcc:code>
         </mcc:MD_Identifier>
@@ -46,7 +67,7 @@
           <lan:language>
             <lan:LanguageCode codeList="codeListLocation#LanguageCode"
                               codeListValue="{java-xsl-util:threeCharLangCode(
-                                (metas/language|dataset/metas/default/metadata_languages)[1])}"/>
+                                (metas/language|dataset/metas/default/metadata_languages|language)[1])}"/>
           </lan:language>
           <lan:characterEncoding>
             <lan:MD_CharacterSetCode codeList="codeListLocation#MD_CharacterSetCode"
@@ -117,7 +138,19 @@
             <cit:CI_Citation>
               <cit:title>
                 <gco:CharacterString>
-                  <xsl:value-of select="(metas/title|dataset/metas/default/title)[1]"/>
+                  <xsl:choose>
+                    <xsl:when test="(metas/title|dataset/metas/default/title|title)[1] and 
+                                   string-length((metas/title|dataset/metas/default/title|title)[1]) > 0">
+                      <xsl:value-of select="(metas/title|dataset/metas/default/title|title)[1]"/>
+                    </xsl:when>
+                    <xsl:when test="(id|datasetid|dataset/dataset_id)[1] and 
+                                   string-length((id|datasetid|dataset/dataset_id)[1]) > 0">
+                      <xsl:value-of select="concat('STAC Collection: ', (id|datasetid|dataset/dataset_id)[1])"/>
+                    </xsl:when>
+                    <xsl:otherwise>
+                      <xsl:value-of select="'STAC Collection'"/>
+                    </xsl:otherwise>
+                  </xsl:choose>
                 </gco:CharacterString>
               </cit:title>
 
@@ -127,11 +160,22 @@
 
               <xsl:apply-templates select="dataset/dataset_id"
                                    mode="ods-to-iso"/>
+              
+              <!-- Ensure we have at least one identifier -->
+              <xsl:call-template name="ensure-identifier"/>
             </cit:CI_Citation>
           </mri:citation>
           <mri:abstract>
             <gco:CharacterString>
-              <xsl:value-of select="(metas/description|dataset/metas/default/description)[1]"/>
+              <xsl:choose>
+                <xsl:when test="(metas/description|dataset/metas/default/description|description)[1] and 
+                               string-length((metas/description|dataset/metas/default/description|description)[1]) > 0">
+                  <xsl:value-of select="(metas/description|dataset/metas/default/description|description)[1]"/>
+                </xsl:when>
+                <xsl:otherwise>
+                  <xsl:value-of select="'STAC Collection harvested via STAC API'"/>
+                </xsl:otherwise>
+              </xsl:choose>
             </gco:CharacterString>
           </mri:abstract>
 
@@ -832,6 +876,21 @@
         </mcc:code>
       </mcc:MD_Identifier>
     </cit:identifier>
+  </xsl:template>
+  
+  <!-- Add a fallback identifier if none is provided -->
+  <xsl:template name="ensure-identifier">
+    <xsl:if test="not(dataset/dataset_id) and not(datasetid) and not(id)">
+      <cit:identifier>
+        <mcc:MD_Identifier>
+          <mcc:code>
+            <gco:CharacterString>
+              <xsl:value-of select="generate-id()"/>
+            </gco:CharacterString>
+          </mcc:code>
+        </mcc:MD_Identifier>
+      </cit:identifier>
+    </xsl:if>
   </xsl:template>
 
   <xsl:template match="dataset/metas/default/records_count"
