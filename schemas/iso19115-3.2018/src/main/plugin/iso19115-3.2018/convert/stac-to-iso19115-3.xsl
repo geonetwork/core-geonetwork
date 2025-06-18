@@ -86,35 +86,190 @@
         </mdb:MD_MetadataScope>
       </mdb:metadataScope>
 
-      <mdb:contact>
-        <cit:CI_Responsibility>
-          <cit:role>
-            <cit:CI_RoleCode codeList="codeListLocation#CI_RoleCode" codeListValue="publisher"/>
-          </cit:role>
-          <cit:party>
-            <cit:CI_Organisation>
-              <cit:name>
-                <gco:CharacterString>
-                  <xsl:value-of select="(metas/publisher|dataset/metas/default/publisher)[1]"/>
-                </gco:CharacterString>
-              </cit:name>
-              <cit:contactInfo>
-                <cit:CI_Contact>
-                  <cit:address>
-                    <cit:CI_Address>
-                      <cit:electronicMailAddress>
-                        <gco:CharacterString>
-                          <xsl:value-of select="author_email"/>
-                        </gco:CharacterString>
-                      </cit:electronicMailAddress>
-                    </cit:CI_Address>
-                  </cit:address>
-                </cit:CI_Contact>
-              </cit:contactInfo>
-            </cit:CI_Organisation>
-          </cit:party>
-        </cit:CI_Responsibility>
-      </mdb:contact>
+      <!-- Handle STAC contacts extension first if available -->
+      <xsl:choose>
+        <!-- Check if contacts extension is present -->
+        <xsl:when test="contacts">
+          <!-- Variable pour vérifier si nous avons des contacts avec les rôles appropriés -->
+          <xsl:variable name="hasMetadataContacts" select="count(contacts[not(roles) or roles[1]='publisher' or roles[1]='pointOfContact']) > 0"/>
+          
+          <!-- Sélectionner seulement les contacts qui ont le rôle 'publisher', 'pointOfContact' ou aucun rôle pour les métadonnées -->
+          <xsl:for-each select="contacts[not(roles) or roles[1]='publisher' or roles[1]='pointOfContact']">
+            <mdb:contact>
+              <cit:CI_Responsibility>
+                <cit:role>
+                  <cit:CI_RoleCode codeList="codeListLocation#CI_RoleCode">
+                    <xsl:attribute name="codeListValue">
+                      <xsl:choose>
+                        <xsl:when test="roles and roles[1]">
+                          <xsl:value-of select="roles[1]"/>
+                        </xsl:when>
+                        <xsl:otherwise>pointOfContact</xsl:otherwise>
+                      </xsl:choose>
+                    </xsl:attribute>
+                  </cit:CI_RoleCode>
+                </cit:role>
+                <cit:party>
+                  <cit:CI_Organisation>
+                    <cit:name>
+                      <gco:CharacterString>
+                        <xsl:choose>
+                          <xsl:when test="organization">
+                            <xsl:value-of select="organization"/>
+                          </xsl:when>
+                          <xsl:otherwise>
+                            <xsl:value-of select="name"/>
+                          </xsl:otherwise>
+                        </xsl:choose>
+                      </gco:CharacterString>
+                    </cit:name>
+                    <cit:contactInfo>
+                      <cit:CI_Contact>
+                        <xsl:if test="emails and emails/value">
+                          <cit:address>
+                            <cit:CI_Address>
+                              <xsl:if test="addresses">
+                                <xsl:for-each select="addresses">
+                                  <xsl:for-each select="deliveryPoint">
+                                    <cit:deliveryPoint>
+                                      <gco:CharacterString><xsl:value-of select="."/></gco:CharacterString>
+                                    </cit:deliveryPoint>
+                                  </xsl:for-each>
+                                  <xsl:if test="city">
+                                    <cit:city>
+                                      <gco:CharacterString><xsl:value-of select="city"/></gco:CharacterString>
+                                    </cit:city>
+                                  </xsl:if>
+                                  <xsl:if test="administrativeArea">
+                                    <cit:administrativeArea>
+                                      <gco:CharacterString><xsl:value-of select="administrativeArea"/></gco:CharacterString>
+                                    </cit:administrativeArea>
+                                  </xsl:if>
+                                  <xsl:if test="postalCode">
+                                    <cit:postalCode>
+                                      <gco:CharacterString><xsl:value-of select="postalCode"/></gco:CharacterString>
+                                    </cit:postalCode>
+                                  </xsl:if>
+                                  <xsl:if test="country">
+                                    <cit:country>
+                                      <gco:CharacterString><xsl:value-of select="country"/></gco:CharacterString>
+                                    </cit:country>
+                                  </xsl:if>
+                                </xsl:for-each>
+                              </xsl:if>
+                              <cit:electronicMailAddress>
+                                <gco:CharacterString><xsl:value-of select="emails[1]/value"/></gco:CharacterString>
+                              </cit:electronicMailAddress>
+                            </cit:CI_Address>
+                          </cit:address>
+                        </xsl:if>
+                        <xsl:if test="phones and phones/value">
+                          <cit:phone>
+                            <cit:CI_Telephone>
+                              <cit:number>
+                                <gco:CharacterString><xsl:value-of select="phones[1]/value"/></gco:CharacterString>
+                              </cit:number>
+                              <cit:numberType>
+                                <cit:CI_TelephoneTypeCode codeList="codeListLocation#CI_TelephoneTypeCode" codeListValue="voice"/>
+                              </cit:numberType>
+                            </cit:CI_Telephone>
+                          </cit:phone>
+                        </xsl:if>
+                      </cit:CI_Contact>
+                    </cit:contactInfo>
+                    <xsl:if test="name">
+                      <cit:individual>
+                        <cit:CI_Individual>
+                          <cit:name>
+                            <gco:CharacterString><xsl:value-of select="name"/></gco:CharacterString>
+                          </cit:name>
+                          <xsl:if test="positionName">
+                            <cit:positionName>
+                              <gco:CharacterString><xsl:value-of select="positionName"/></gco:CharacterString>
+                            </cit:positionName>
+                          </xsl:if>
+                        </cit:CI_Individual>
+                      </cit:individual>
+                    </xsl:if>
+                  </cit:CI_Organisation>
+                </cit:party>
+              </cit:CI_Responsibility>
+            </mdb:contact>
+          </xsl:for-each>
+          
+          <!-- Si aucun contact avec le rôle approprié n'a été trouvé, utilisez le premier contact disponible -->
+          <xsl:if test="not($hasMetadataContacts) and count(contacts) > 0">
+            <mdb:contact>
+              <cit:CI_Responsibility>
+                <cit:role>
+                  <cit:CI_RoleCode codeList="codeListLocation#CI_RoleCode" codeListValue="pointOfContact"/>
+                </cit:role>
+                <cit:party>
+                  <cit:CI_Organisation>
+                    <cit:name>
+                      <gco:CharacterString>
+                        <xsl:choose>
+                          <xsl:when test="contacts[1]/organization">
+                            <xsl:value-of select="contacts[1]/organization"/>
+                          </xsl:when>
+                          <xsl:otherwise>
+                            <xsl:value-of select="contacts[1]/name"/>
+                          </xsl:otherwise>
+                        </xsl:choose>
+                      </gco:CharacterString>
+                    </cit:name>
+                    <xsl:if test="contacts[1]/emails and contacts[1]/emails/value">
+                      <cit:contactInfo>
+                        <cit:CI_Contact>
+                          <cit:address>
+                            <cit:CI_Address>
+                              <cit:electronicMailAddress>
+                                <gco:CharacterString><xsl:value-of select="contacts[1]/emails[1]/value"/></gco:CharacterString>
+                              </cit:electronicMailAddress>
+                            </cit:CI_Address>
+                          </cit:address>
+                        </cit:CI_Contact>
+                      </cit:contactInfo>
+                    </xsl:if>
+                  </cit:CI_Organisation>
+                </cit:party>
+              </cit:CI_Responsibility>
+            </mdb:contact>
+          </xsl:if>
+        </xsl:when>
+        <!-- Fallback to legacy handling if no contacts extension is present -->
+        <xsl:otherwise>
+          <mdb:contact>
+            <cit:CI_Responsibility>
+              <cit:role>
+                <cit:CI_RoleCode codeList="codeListLocation#CI_RoleCode" codeListValue="publisher"/>
+              </cit:role>
+              <cit:party>
+                <cit:CI_Organisation>
+                  <cit:name>
+                    <gco:CharacterString>
+                      <xsl:value-of select="(metas/publisher|dataset/metas/default/publisher)[1]"/>
+                    </gco:CharacterString>
+                  </cit:name>
+                  <cit:contactInfo>
+                    <cit:CI_Contact>
+                      <cit:address>
+                        <cit:CI_Address>
+                          <cit:electronicMailAddress>
+                            <gco:CharacterString>
+                              <xsl:value-of select="author_email"/>
+                            </gco:CharacterString>
+                          </cit:electronicMailAddress>
+                        </cit:CI_Address>
+                      </cit:address>
+                    </cit:CI_Contact>
+                  </cit:contactInfo>
+                </cit:CI_Organisation>
+              </cit:party>
+            </cit:CI_Responsibility>
+          </mdb:contact>
+        </xsl:otherwise>
+      </xsl:choose>
 
 
       <xsl:call-template name="build-date">
@@ -193,77 +348,183 @@
           </mri:status>-->
 
           <!-- add publisher to resource organisation as well-->
-          <xsl:if test="not(organization)">
-            <mri:pointOfContact>
-              <cit:CI_Responsibility>
-                <cit:role>
-                  <cit:CI_RoleCode codeList="codeListLocation#CI_RoleCode" codeListValue="originator">publisher
-                  </cit:CI_RoleCode>
-                </cit:role>
-                <cit:party>
-                  <cit:CI_Organisation>
-                    <cit:name>
-                      <gco:CharacterString>
-                        <xsl:value-of select="metas/publisher|dataset/metas/default/publisher"/>
-                      </gco:CharacterString>
-                    </cit:name>
-                    <xsl:if test="author_email">
-                      <cit:contactInfo>
-                        <cit:CI_Contact>
-                          <cit:address>
-                            <cit:CI_Address>
-                              <cit:electronicMailAddress>
-                                <gco:CharacterString>
-                                  <xsl:value-of select="author_email"/>
-                                </gco:CharacterString>
-                              </cit:electronicMailAddress>
-                            </cit:CI_Address>
-                          </cit:address>
-                        </cit:CI_Contact>
-                      </cit:contactInfo>
-                    </xsl:if>
-                  </cit:CI_Organisation>
-                </cit:party>
-              </cit:CI_Responsibility>
-            </mri:pointOfContact>
-          </xsl:if>
-          <xsl:for-each select="organization">
-            <mri:pointOfContact>
-              <cit:CI_Responsibility>
-                <cit:role>
-                  <cit:CI_RoleCode codeList="codeListLocation#CI_RoleCode" codeListValue="pointOfContact">pointOfContact
-                  </cit:CI_RoleCode>
-                </cit:role>
-                <cit:party>
-                  <cit:CI_Organisation>
-                    <cit:name>
-                      <gco:CharacterString>
-                        <xsl:value-of select="contacts/organization"/>
-                      </gco:CharacterString>
-                    </cit:name>
-                    <cit:contactInfo>
-                      <cit:CI_Contact>
-                        <cit:address>
-                          <cit:CI_Address>
-                            <cit:deliveryPoint>
-                              <gco:CharacterString>
-                                <xsl:value-of select="contacts/name"/>
-                              </gco:CharacterString>
-                            </cit:deliveryPoint>
-                            <cit:electronicMailAddress>
-                              <gco:CharacterString>
-                                <xsl:value-of select="contacts/emails"/>
-                              </gco:CharacterString>
-                            </cit:electronicMailAddress>
-                          </cit:CI_Address>
-                        </cit:address>
-                      </cit:CI_Contact>
-                    </cit:contactInfo>
-                  </cit:CI_Organisation>
-                </cit:party>
-              </cit:CI_Responsibility>
-            </mri:pointOfContact>
-          </xsl:for-each>
+          <!-- Use contacts extension if available, otherwise use legacy approach -->
+          <xsl:choose>
+            <xsl:when test="contacts">
+              <!-- Sélectionner seulement les contacts qui ont un rôle autre que 'publisher' et 'pointOfContact' -->
+              <xsl:for-each select="contacts[roles and roles[1]!='publisher' and roles[1]!='pointOfContact']">
+                <mri:pointOfContact>
+                  <cit:CI_Responsibility>
+                    <cit:role>
+                      <cit:CI_RoleCode codeList="codeListLocation#CI_RoleCode">
+                        <xsl:attribute name="codeListValue">
+                          <xsl:choose>
+                            <xsl:when test="roles and roles[1]">
+                              <xsl:value-of select="roles[1]"/>
+                            </xsl:when>
+                            <xsl:otherwise>author</xsl:otherwise>
+                          </xsl:choose>
+                        </xsl:attribute>
+                      </cit:CI_RoleCode>
+                    </cit:role>
+                    <cit:party>
+                      <cit:CI_Organisation>
+                        <cit:name>
+                          <gco:CharacterString>
+                            <xsl:choose>
+                              <xsl:when test="organization">
+                                <xsl:value-of select="organization"/>
+                              </xsl:when>
+                              <xsl:otherwise>
+                                <xsl:value-of select="name"/>
+                              </xsl:otherwise>
+                            </xsl:choose>
+                          </gco:CharacterString>
+                        </cit:name>
+                        <cit:contactInfo>
+                          <cit:CI_Contact>
+                            <xsl:if test="emails and emails/value">
+                              <cit:address>
+                                <cit:CI_Address>
+                                  <xsl:if test="addresses">
+                                    <xsl:for-each select="addresses">
+                                      <xsl:for-each select="deliveryPoint">
+                                        <cit:deliveryPoint>
+                                          <gco:CharacterString><xsl:value-of select="."/></gco:CharacterString>
+                                        </cit:deliveryPoint>
+                                      </xsl:for-each>
+                                      <xsl:if test="city">
+                                        <cit:city>
+                                          <gco:CharacterString><xsl:value-of select="city"/></gco:CharacterString>
+                                        </cit:city>
+                                      </xsl:if>
+                                      <xsl:if test="administrativeArea">
+                                        <cit:administrativeArea>
+                                          <gco:CharacterString><xsl:value-of select="administrativeArea"/></gco:CharacterString>
+                                        </cit:administrativeArea>
+                                      </xsl:if>
+                                      <xsl:if test="postalCode">
+                                        <cit:postalCode>
+                                          <gco:CharacterString><xsl:value-of select="postalCode"/></gco:CharacterString>
+                                        </cit:postalCode>
+                                      </xsl:if>
+                                      <xsl:if test="country">
+                                        <cit:country>
+                                          <gco:CharacterString><xsl:value-of select="country"/></gco:CharacterString>
+                                        </cit:country>
+                                      </xsl:if>
+                                    </xsl:for-each>
+                                  </xsl:if>
+                                  <cit:electronicMailAddress>
+                                    <gco:CharacterString><xsl:value-of select="emails[1]/value"/></gco:CharacterString>
+                                  </cit:electronicMailAddress>
+                                </cit:CI_Address>
+                              </cit:address>
+                            </xsl:if>
+                            <xsl:if test="phones and phones/value">
+                              <cit:phone>
+                                <cit:CI_Telephone>
+                                  <cit:number>
+                                    <gco:CharacterString><xsl:value-of select="phones[1]/value"/></gco:CharacterString>
+                                  </cit:number>
+                                  <cit:numberType>
+                                    <cit:CI_TelephoneTypeCode codeList="codeListLocation#CI_TelephoneTypeCode" codeListValue="voice"/>
+                                  </cit:numberType>
+                                </cit:CI_Telephone>
+                              </cit:phone>
+                            </xsl:if>
+                          </cit:CI_Contact>
+                        </cit:contactInfo>
+                        <xsl:if test="name">
+                          <cit:individual>
+                            <cit:CI_Individual>
+                              <cit:name>
+                                <gco:CharacterString><xsl:value-of select="name"/></gco:CharacterString>
+                              </cit:name>
+                              <xsl:if test="positionName">
+                                <cit:positionName>
+                                  <gco:CharacterString><xsl:value-of select="positionName"/></gco:CharacterString>
+                                </cit:positionName>
+                              </xsl:if>
+                            </cit:CI_Individual>
+                          </cit:individual>
+                        </xsl:if>
+                      </cit:CI_Organisation>
+                    </cit:party>
+                  </cit:CI_Responsibility>
+                </mri:pointOfContact>
+              </xsl:for-each>
+            </xsl:when>
+            <xsl:otherwise>
+              <!-- Legacy handling if no contacts extension -->
+              <xsl:if test="not(organization)">
+                <mri:pointOfContact>
+                  <cit:CI_Responsibility>
+                    <cit:role>
+                      <cit:CI_RoleCode codeList="codeListLocation#CI_RoleCode" codeListValue="originator">publisher
+                      </cit:CI_RoleCode>
+                    </cit:role>
+                    <cit:party>
+                      <cit:CI_Organisation>
+                        <cit:name>
+                          <gco:CharacterString>
+                            <xsl:value-of select="metas/publisher|dataset/metas/default/publisher"/>
+                          </gco:CharacterString>
+                        </cit:name>
+                        <xsl:if test="author_email">
+                          <cit:contactInfo>
+                            <cit:CI_Contact>
+                              <cit:address>
+                                <cit:CI_Address>
+                                  <cit:electronicMailAddress>
+                                    <gco:CharacterString>
+                                      <xsl:value-of select="author_email"/>
+                                    </gco:CharacterString>
+                                  </cit:electronicMailAddress>
+                                </cit:CI_Address>
+                              </cit:address>
+                            </cit:CI_Contact>
+                          </cit:contactInfo>
+                        </xsl:if>
+                      </cit:CI_Organisation>
+                    </cit:party>
+                  </cit:CI_Responsibility>
+                </mri:pointOfContact>
+              </xsl:if>
+              <xsl:for-each select="organization">
+                <mri:pointOfContact>
+                  <cit:CI_Responsibility>
+                    <cit:role>
+                      <cit:CI_RoleCode codeList="codeListLocation#CI_RoleCode" codeListValue="pointOfContact">pointOfContact
+                      </cit:CI_RoleCode>
+                    </cit:role>
+                    <cit:party>
+                      <cit:CI_Organisation>
+                        <cit:name>
+                          <gco:CharacterString>
+                            <xsl:value-of select="."/>
+                          </gco:CharacterString>
+                        </cit:name>
+                        <cit:contactInfo>
+                          <cit:CI_Contact>
+                            <cit:address>
+                              <cit:CI_Address>
+                                <cit:electronicMailAddress>
+                                  <gco:CharacterString>
+                                    <xsl:value-of select="../author_email"/>
+                                  </gco:CharacterString>
+                                </cit:electronicMailAddress>
+                              </cit:CI_Address>
+                            </cit:address>
+                          </cit:CI_Contact>
+                        </cit:contactInfo>
+                      </cit:CI_Organisation>
+                    </cit:party>
+                  </cit:CI_Responsibility>
+                </mri:pointOfContact>
+              </xsl:for-each>
+            </xsl:otherwise>
+          </xsl:choose>
 
           <xsl:apply-templates select="dataset/metas/dcat/creator"
                                mode="ods-to-iso"/>
@@ -283,33 +544,61 @@
 
           <mri:extent>
             <gex:EX_Extent>
-              <xsl:for-each select="dataset/metas/default/bbox">
-                <gex:geographicElement>
-                  <gex:EX_GeographicBoundingBox>
-                    <gex:westBoundLongitude>
-                      <gco:Decimal>
-                        <xsl:value-of select="min(geometry/coordinates/array[position() mod 2 != 0])"/>
-                      </gco:Decimal>
-                    </gex:westBoundLongitude>
-                    <gex:eastBoundLongitude>
-                      <gco:Decimal>
-                        <xsl:value-of select="max(geometry/coordinates/array[position() mod 2 != 0])"/>
-                      </gco:Decimal>
-                    </gex:eastBoundLongitude>
-                    <gex:southBoundLatitude>
-                      <gco:Decimal>
-                        <xsl:value-of select="min(geometry/coordinates/array[position() mod 2 = 0])"/>
-                      </gco:Decimal>
-                    </gex:southBoundLatitude>
-                    <gex:northBoundLatitude>
-                      <gco:Decimal>
-                        <xsl:value-of select="max(geometry/coordinates/array[position() mod 2 = 0])"/>
-                      </gco:Decimal>
-                    </gex:northBoundLatitude>
-                  </gex:EX_GeographicBoundingBox>
-                </gex:geographicElement>
-              </xsl:for-each>
+              <!-- Handle STAC-style spatial extent using bbox -->
+              <xsl:choose>
+                <!-- STAC v1.0.0+ format with extent.spatial.bbox -->
+                <xsl:when test="extent/spatial/bbox">
+                  <!-- Les boîtes englobantes sont au format [west, south, east, north] -->
+                  <xsl:for-each select="extent/spatial/bbox">
+                    <gex:geographicElement>
+                      <gex:EX_GeographicBoundingBox>
+                        <gex:westBoundLongitude>
+                          <gco:Decimal>
+                            <xsl:choose>
+                              <xsl:when test="*[1] and *[1] != 'null'">
+                                <xsl:value-of select="*[1]"/>
+                              </xsl:when>
+                              <xsl:otherwise>-180</xsl:otherwise>
+                            </xsl:choose>
+                          </gco:Decimal>
+                        </gex:westBoundLongitude>
+                        <gex:eastBoundLongitude>
+                          <gco:Decimal>
+                            <xsl:choose>
+                              <xsl:when test="*[3] and *[3] != 'null'">
+                                <xsl:value-of select="*[3]"/>
+                              </xsl:when>
+                              <xsl:otherwise>180</xsl:otherwise>
+                            </xsl:choose>
+                          </gco:Decimal>
+                        </gex:eastBoundLongitude>
+                        <gex:southBoundLatitude>
+                          <gco:Decimal>
+                            <xsl:choose>
+                              <xsl:when test="*[2] and *[2] != 'null'">
+                                <xsl:value-of select="*[2]"/>
+                              </xsl:when>
+                              <xsl:otherwise>-90</xsl:otherwise>
+                            </xsl:choose>
+                          </gco:Decimal>
+                        </gex:southBoundLatitude>
+                        <gex:northBoundLatitude>
+                          <gco:Decimal>
+                            <xsl:choose>
+                              <xsl:when test="*[4] and *[4] != 'null'">
+                                <xsl:value-of select="*[4]"/>
+                              </xsl:when>
+                              <xsl:otherwise>90</xsl:otherwise>
+                            </xsl:choose>
+                          </gco:Decimal>
+                        </gex:northBoundLatitude>
+                      </gex:EX_GeographicBoundingBox>
+                    </gex:geographicElement>
+                  </xsl:for-each>
+                </xsl:when>
+              </xsl:choose>
 
+              <!-- Handle geographic references -->
               <xsl:for-each select="dataset/metas/default/geographic_reference">
                 <gex:geographicElement>
                   <gex:EX_GeographicDescription>
@@ -326,8 +615,39 @@
                 </gex:geographicElement>
               </xsl:for-each>
 
-              <xsl:apply-templates select="dataset/metas/dcat/temporal_coverage_start"
-                                   mode="ods-to-iso"/>
+              <!-- Handle STAC-style temporal extent -->
+              <xsl:if test="extent/temporal/interval">
+                <xsl:for-each select="extent/temporal/interval">
+                  <gex:temporalElement>
+                    <gex:EX_TemporalExtent>
+                      <gex:extent>
+                        <gml:TimePeriod>
+                          <gml:beginPosition>
+                            <xsl:choose>
+                              <xsl:when test="*[1] and *[1] != 'null'">
+                                <xsl:value-of select="*[1]"/>
+                              </xsl:when>
+                              <xsl:otherwise>
+                                <xsl:attribute name="indeterminatePosition">unknown</xsl:attribute>
+                              </xsl:otherwise>
+                            </xsl:choose>
+                          </gml:beginPosition>
+                          <gml:endPosition>
+                            <xsl:choose>
+                              <xsl:when test="*[2] and *[2] != 'null'">
+                                <xsl:value-of select="*[2]"/>
+                              </xsl:when>
+                              <xsl:otherwise>
+                                <xsl:attribute name="indeterminatePosition">now</xsl:attribute>
+                              </xsl:otherwise>
+                            </xsl:choose>
+                          </gml:endPosition>
+                        </gml:TimePeriod>
+                      </gex:extent>
+                    </gex:EX_TemporalExtent>
+                  </gex:temporalElement>
+                </xsl:for-each>
+              </xsl:if>
             </gex:EX_Extent>
           </mri:extent>
 
@@ -690,6 +1010,90 @@
     </mdb:MD_Metadata>
   </xsl:template>
 
+  <!-- Template for STAC collections -->
+  <xsl:template match="*[local-name()='collections']">
+    <!-- Process each collection in the array -->
+    <xsl:apply-templates select="*[local-name()='collections']/*"/>
+  </xsl:template>
+
+  <!-- Template for individual STAC collection -->
+  <xsl:template match="*[local-name()='collection']">
+    <mdb:MD_Metadata>
+      <xsl:call-template name="add-iso19115-3.2018-namespaces"/>
+      <!-- Apply regular processing but with special handling for extent -->
+      <xsl:apply-templates select="." mode="process-collection"/>
+    </mdb:MD_Metadata>
+  </xsl:template>
+
+  <!-- Mode for processing a collection specifically -->
+  <xsl:template match="*" mode="process-collection">
+    <!-- Apply all standard metadata processing -->
+    <xsl:apply-templates select="."/>
+    
+    <!-- Special handling for STAC-format extents if present -->
+    <xsl:if test="extent">
+      <mri:extent>
+        <gex:EX_Extent>
+          <!-- Handle spatial extent -->
+          <xsl:if test="extent/spatial/bbox">
+            <xsl:for-each select="extent/spatial/bbox/array">
+              <gex:geographicElement>
+                <gex:EX_GeographicBoundingBox>
+                  <gex:westBoundLongitude>
+                    <gco:Decimal><xsl:value-of select="array[1]"/></gco:Decimal>
+                  </gex:westBoundLongitude>
+                  <gex:eastBoundLongitude>
+                    <gco:Decimal><xsl:value-of select="array[3]"/></gco:Decimal>
+                  </gex:eastBoundLongitude>
+                  <gex:southBoundLatitude>
+                    <gco:Decimal><xsl:value-of select="array[2]"/></gco:Decimal>
+                  </gex:southBoundLatitude>
+                  <gex:northBoundLatitude>
+                    <gco:Decimal><xsl:value-of select="array[4]"/></gco:Decimal>
+                  </gex:northBoundLatitude>
+                </gex:EX_GeographicBoundingBox>
+              </gex:geographicElement>
+            </xsl:for-each>
+          </xsl:if>
+          
+          <!-- Handle temporal extent -->
+          <xsl:if test="extent/temporal/interval">
+            <xsl:for-each select="extent/temporal/interval/array">
+              <gex:temporalElement>
+                <gex:EX_TemporalExtent>
+                  <gex:extent>
+                    <gml:TimePeriod>
+                      <gml:beginPosition>
+                        <xsl:choose>
+                          <xsl:when test="array[1] and array[1] != 'null'">
+                            <xsl:value-of select="array[1]"/>
+                          </xsl:when>
+                          <xsl:otherwise>
+                            <xsl:attribute name="indeterminatePosition">unknown</xsl:attribute>
+                          </xsl:otherwise>
+                        </xsl:choose>
+                      </gml:beginPosition>
+                      <gml:endPosition>
+                        <xsl:choose>
+                          <xsl:when test="array[2] and array[2] != 'null'">
+                            <xsl:value-of select="array[2]"/>
+                          </xsl:when>
+                          <xsl:otherwise>
+                            <xsl:attribute name="indeterminatePosition">now</xsl:attribute>
+                          </xsl:otherwise>
+                        </xsl:choose>
+                      </gml:endPosition>
+                    </gml:TimePeriod>
+                  </gex:extent>
+                </gex:EX_TemporalExtent>
+              </gex:temporalElement>
+            </xsl:for-each>
+          </xsl:if>
+        </gex:EX_Extent>
+      </mri:extent>
+    </xsl:if>
+  </xsl:template>
+
   <xsl:template name="dataLink">
     <xsl:param name="format"/>
 
@@ -878,7 +1282,14 @@
               <xsl:value-of select="."/>
             </gml:beginPosition>
             <gml:endPosition>
-              <xsl:value-of select="../temporal_coverage_end[. != 'null']"/>
+              <xsl:choose>
+                <xsl:when test="../temporal_coverage_end[. != 'null']">
+                  <xsl:value-of select="../temporal_coverage_end"/>
+                </xsl:when>
+                <xsl:otherwise>
+                  <xsl:attribute name="indeterminatePosition">now</xsl:attribute>
+                </xsl:otherwise>
+              </xsl:choose>
             </gml:endPosition>
           </gml:TimePeriod>
         </gex:extent>
