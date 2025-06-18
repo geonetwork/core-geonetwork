@@ -231,23 +231,28 @@
             <mri:pointOfContact>
               <cit:CI_Responsibility>
                 <cit:role>
-                  <cit:CI_RoleCode codeList="codeListLocation#CI_RoleCode" codeListValue="originator">originator
+                  <cit:CI_RoleCode codeList="codeListLocation#CI_RoleCode" codeListValue="pointOfContact">pointOfContact
                   </cit:CI_RoleCode>
                 </cit:role>
                 <cit:party>
                   <cit:CI_Organisation>
                     <cit:name>
                       <gco:CharacterString>
-                        <xsl:value-of select="interop_metas/dcat/creator"/>
+                        <xsl:value-of select="contacts/organization"/>
                       </gco:CharacterString>
                     </cit:name>
                     <cit:contactInfo>
                       <cit:CI_Contact>
                         <cit:address>
                           <cit:CI_Address>
+                            <cit:deliveryPoint>
+                              <gco:CharacterString>
+                                <xsl:value-of select="contacts/name"/>
+                              </gco:CharacterString>
+                            </cit:deliveryPoint>
                             <cit:electronicMailAddress>
                               <gco:CharacterString>
-                                <xsl:value-of select="interop_metas/dcat/contact_email"/>
+                                <xsl:value-of select="contacts/emails"/>
                               </gco:CharacterString>
                             </cit:electronicMailAddress>
                           </cit:CI_Address>
@@ -355,7 +360,7 @@
 
           <!-- ODS keywords copied without type -->
           <xsl:variable name="keywords"
-                        select="metas/keyword|dataset/metas/default/keyword"/>
+                        select="keywords"/>
           <xsl:if test="$keywords">
             <mri:descriptiveKeywords>
               <mri:MD_Keywords>
@@ -375,52 +380,39 @@
           license_url: "http://opendatacommons.org/licenses/odbl/",
           -->
           <mri:resourceConstraints>
-            <mco:MD_LegalConstraints>
-              <mco:reference>
-                <cit:CI_Citation>
-                  <cit:title>
-                    <xsl:variable name="licenseUrl"
-                                  select="metas/license_url[. != 'null']|dataset/metas/default/license_url[. != 'null']"/>
-                    <xsl:choose>
-                      <xsl:when test="$licenseUrl != ''">
-                        <gcx:Anchor xlink:href="{$licenseUrl}">
-                          <xsl:value-of select="metas/license|dataset/metas/default/license"/>
-                        </gcx:Anchor>
-                      </xsl:when>
-                      <xsl:otherwise>
-                        <gco:CharacterString>
-                          <xsl:value-of select="metas/license|dataset/metas/default/license"/>
-                        </gco:CharacterString>
-                      </xsl:otherwise>
-                    </xsl:choose>
-                  </cit:title>
-                  <cit:onlineResource>
-                    <cit:CI_OnlineResource>
-                      <cit:linkage>
-                        <gco:CharacterString>
-                          <xsl:value-of select="metas/license_url|dataset/metas/default/license_url"/>
-                        </gco:CharacterString>
-                      </cit:linkage>
-                    </cit:CI_OnlineResource>
-                  </cit:onlineResource>
-                </cit:CI_Citation>
-              </mco:reference>
-              <mco:accessConstraints>
-                <mco:MD_RestrictionCode codeListValue="otherRestrictions"
-                                        codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#MD_RestrictionCode"/>
-              </mco:accessConstraints>
-              <mco:useConstraints>
-                <mco:MD_RestrictionCode codeListValue="otherRestrictions"
-                                        codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#MD_RestrictionCode"/>
-              </mco:useConstraints>
-              <mco:otherConstraints>
-                <gco:CharacterString>
-                  <xsl:value-of select="metas/license|dataset/metas/default/license"/>
-                </gco:CharacterString>
-              </mco:otherConstraints>
-            </mco:MD_LegalConstraints>
-          </mri:resourceConstraints>
-
+              <mco:MD_LegalConstraints>
+                <mco:reference>
+                  <cit:CI_Citation>
+                    <cit:title>
+                      <gco:CharacterString>
+                        <xsl:value-of select="license"/>
+                      </gco:CharacterString>
+                    </cit:title>
+                    <cit:onlineResource>
+                      <cit:CI_OnlineResource>
+                        <cit:linkage>
+                          <gco:CharacterString>
+                          </gco:CharacterString>
+                        </cit:linkage>
+                      </cit:CI_OnlineResource>
+                    </cit:onlineResource>
+                  </cit:CI_Citation>
+                </mco:reference>
+                <mco:accessConstraints>
+                  <mco:MD_RestrictionCode codeListValue="otherRestrictions"
+                                          codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#MD_RestrictionCode"/>
+                </mco:accessConstraints>
+                <mco:useConstraints>
+                  <mco:MD_RestrictionCode codeListValue="otherRestrictions"
+                                          codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#MD_RestrictionCode"/>
+                </mco:useConstraints>
+                <mco:otherConstraints>
+                  <gco:CharacterString>
+                    <xsl:value-of select="license"/>
+                  </gco:CharacterString>
+                </mco:otherConstraints>
+              </mco:MD_LegalConstraints>
+            </mri:resourceConstraints>
 
           <mri:defaultLocale>
             <lan:PT_Locale>
@@ -510,7 +502,7 @@
 -->
       <mdb:distributionInfo>
         <mrd:MD_Distribution>
-          <xsl:for-each-group select="attachments/mimetype" group-by=".">
+          <xsl:for-each-group select="links/mimetype" group-by=".">
             <mrd:distributionFormat>
               <mrd:MD_Format>
                 <mrd:formatSpecificationCitation>
@@ -552,12 +544,12 @@
                   <cit:CI_OnlineResource>
                     <cit:linkage>
                       <gco:CharacterString>
-                        <xsl:value-of select="url"/>
+                        <xsl:value-of select="href"/>
                       </gco:CharacterString>
                     </cit:linkage>
                     <cit:protocol>
                       <gco:CharacterString>
-                        <xsl:value-of select="mimetype"/>
+                        <xsl:value-of select="type"/>
                       </gco:CharacterString>
                     </cit:protocol>
                     <cit:name>
@@ -573,8 +565,64 @@
                   </cit:CI_OnlineResource>
                 </mrd:onLine>
               </xsl:for-each>
+              
+              <!-- Support pour les liens dans l'API STAC de Montpellier -->
+              <xsl:for-each select="links">
+                <mrd:onLine>
+                  <cit:CI_OnlineResource>
+                    <cit:linkage>
+                      <gco:CharacterString>
+                        <xsl:value-of select="href"/>
+                      </gco:CharacterString>
+                    </cit:linkage>
+                    <cit:protocol>
+                      <gco:CharacterString>
+                        <xsl:value-of select="rel"/>
+                      </gco:CharacterString>
+                    </cit:protocol>
+                    <cit:name>
+                      <gco:CharacterString>
+                        <xsl:value-of select="@title|title"/>
+                      </gco:CharacterString>
+                    </cit:name>
+                    <cit:description>
+                      <gco:CharacterString>
+                        <xsl:value-of select="type"/>
+                      </gco:CharacterString>
+                    </cit:description>
+                  </cit:CI_OnlineResource>
+                </mrd:onLine>
+              </xsl:for-each>
 
               <!-- Data download links are inferred from the record metadata -->
+              <!-- Support pour les assets de l'API STAC -->
+              <xsl:for-each select="assets/*">
+                <mrd:onLine>
+                  <cit:CI_OnlineResource>
+                    <cit:linkage>
+                      <gco:CharacterString>
+                        <xsl:value-of select="href"/>
+                      </gco:CharacterString>
+                    </cit:linkage>
+                    <cit:protocol>
+                      <gco:CharacterString>
+                        <xsl:value-of select="type"/>
+                      </gco:CharacterString>
+                    </cit:protocol>
+                    <cit:name>
+                      <gco:CharacterString>
+                        <xsl:value-of select="name(.)"/>
+                      </gco:CharacterString>
+                    </cit:name>
+                    <cit:description>
+                      <gco:CharacterString>
+                        <xsl:value-of select="description|title"/>
+                      </gco:CharacterString>
+                    </cit:description>
+                  </cit:CI_OnlineResource>
+                </mrd:onLine>
+              </xsl:for-each>
+
               <xsl:variable name="count"
                             select="metas/records_count|dataset/metas/default/records_count"/>
               <xsl:if test="$count > 0">
@@ -600,32 +648,6 @@
           </mrd:transferOptions>
           <mrd:transferOptions>
             <mrd:MD_DigitalTransferOptions>
-              <mrd:onLine>
-                <cit:CI_OnlineResource>
-                  <cit:linkage>
-                    <gco:CharacterString>
-                      <xsl:value-of select="concat(nodeUrl,
-                                          '/explore/dataset/',
-                                          (datasetid|dataset/dataset_id)[1],
-                                           '/information/')"/>
-                    </gco:CharacterString>
-                  </cit:linkage>
-                  <cit:protocol>
-                    <gco:CharacterString>
-                      WWW:LINK:LANDING_PAGE
-                    </gco:CharacterString>
-                  </cit:protocol>
-                  <cit:name>
-                    <gco:CharacterString>
-                      Landing Page
-                    </gco:CharacterString>
-                  </cit:name>
-                  <cit:description>
-                    <gco:CharacterString>
-                    </gco:CharacterString>
-                  </cit:description>
-                </cit:CI_OnlineResource>
-              </mrd:onLine>
 
               <xsl:for-each select="dataset/metas/default/references[. != 'null']">
                 <mrd:onLine>
