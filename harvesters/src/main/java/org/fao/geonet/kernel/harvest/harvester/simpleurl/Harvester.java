@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2023 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2025 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -221,9 +221,8 @@ class Harvester implements IHarvester<HarvestResult> {
                     params.recordIdPath, e.getMessage()));
             }
             String apiUrlPath = params.url.split("\\?")[0];
-            URL apiUrl = null;
             try {
-                apiUrl = new URL(apiUrlPath);
+                URL apiUrl = new URL(apiUrlPath);
                 String nodeUrl = new StringBuilder(apiUrl.getProtocol()).append("://").append(apiUrl.getAuthority()).toString();
                 Element xml = convertJsonRecordToXml(jsonRecord, uuid, apiUrlPath, nodeUrl);
                 uuids.put(uuid, xml);
@@ -277,10 +276,8 @@ class Harvester implements IHarvester<HarvestResult> {
             log.debug(String.format("%d records found in XML response.", xmlNodes.size()));
 
             xmlNodes.forEach(element -> {
-                String uuid =
-                    null;
                 try {
-                    uuid = getXmlElementTextValue(Xml.selectSingle(element, params.recordIdPath, element.getAdditionalNamespaces()));
+                    String uuid = getXmlElementTextValue(Xml.selectSingle(element, params.recordIdPath, element.getAdditionalNamespaces()));
                     uuids.put(uuid, applyConversion(element, null));
                 } catch (JDOMException e) {
                     log.error(String.format("Failed to extract UUID for record. Error is %s.",
@@ -333,7 +330,7 @@ class Harvester implements IHarvester<HarvestResult> {
         }
 
         final String pageFromParamValue = params.url.replaceAll(".*[?&]" + params.pageFromParam + "=([0-9]+).*", "$1");
-        boolean startAtZero = false;
+        boolean startAtZero;
         if (StringUtils.isNumeric(pageFromParamValue)) {
             startAtZero = Integer.parseInt(pageFromParamValue) == 0;
         } else {
@@ -370,7 +367,7 @@ class Harvester implements IHarvester<HarvestResult> {
             recordAsXml = Xml.stripNonValidXMLCharacters(recordAsXml)
                 .replace("<@", "<")
                 .replace("</@", "</")
-                .replaceAll("(:)(?![^<>]*<)", "_"); // this removes colon from property names
+                .replaceAll("(:|%)(?![^<>]*<)", "_"); // this removes colon and % from property names
             Element recordAsElement = Xml.loadString(recordAsXml, false);
             recordAsElement.addContent(new Element("uuid").setText(uuid));
             recordAsElement.addContent(new Element("apiUrl").setText(apiUrl));
