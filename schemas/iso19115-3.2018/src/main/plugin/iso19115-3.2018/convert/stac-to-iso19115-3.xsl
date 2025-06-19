@@ -318,6 +318,40 @@
               
               <!-- Ensure we have at least one identifier -->
               <xsl:call-template name="ensure-identifier"/>
+
+              <!-- Add graphicOverview from STAC QL asset if available -->
+              <xsl:if test="assets/QL">
+                <mri:graphicOverview>
+                  <mcc:MD_BrowseGraphic>
+                    <mcc:fileName>
+                      <gco:CharacterString>
+                        <xsl:value-of select="assets/QL/href"/>
+                      </gco:CharacterString>
+                    </mcc:fileName>
+                    <mcc:fileDescription>
+                      <gco:CharacterString>
+                        <xsl:choose>
+                          <xsl:when test="assets/QL/title and assets/QL/description">
+                            <xsl:value-of select="concat(assets/QL/title, ' - ', assets/QL/description)"/>
+                          </xsl:when>
+                          <xsl:when test="assets/QL/title">
+                            <xsl:value-of select="assets/QL/title"/>
+                          </xsl:when>
+                          <xsl:when test="assets/QL/description">
+                            <xsl:value-of select="assets/QL/description"/>
+                          </xsl:when>
+                          <xsl:otherwise>QuickLook preview image</xsl:otherwise>
+                        </xsl:choose>
+                      </gco:CharacterString>
+                    </mcc:fileDescription>
+                    <mcc:fileType>
+                      <gco:CharacterString>
+                        <xsl:value-of select="assets/QL/type"/>
+                      </gco:CharacterString>
+                    </mcc:fileType>
+                  </mcc:MD_BrowseGraphic>
+                </mri:graphicOverview>
+              </xsl:if>
             </cit:CI_Citation>
           </mri:citation>
           <mri:abstract>
