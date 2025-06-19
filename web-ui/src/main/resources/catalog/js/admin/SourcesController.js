@@ -210,6 +210,12 @@
         );
       };
 
+      $scope.$watch("source.logo", function (newValue, oldValue) {
+        if (!!newValue && newValue !== oldValue) {
+          $scope.gnSourceForm.$setDirty();
+        }
+      });
+
       var uploadLogoDone = function (e, data) {
         $scope.source.logo = data.files[0].name;
         $scope.clear(data.files[0]);
