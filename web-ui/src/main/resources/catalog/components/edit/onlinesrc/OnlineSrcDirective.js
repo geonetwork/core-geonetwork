@@ -1857,12 +1857,7 @@
           compile: function compile(tElement, tAttrs, transclude) {
             return {
               pre: function preLink(scope) {
-                scope.searchObj = {
-                  internal: true,
-                  params: {
-                    isTemplate: "n"
-                  }
-                };
+                scope.searchObj = gnOnlinesrc.getSearchConfig();
                 scope.modelOptions = angular.copy(gnGlobalSettings.modelOptions);
               },
               post: function postLink(scope, iElement, iAttrs) {
@@ -2130,11 +2125,7 @@
           compile: function compile(tElement, tAttrs, transclude) {
             return {
               pre: function preLink(scope) {
-                scope.searchObj = {
-                  internal: true,
-                  any: "",
-                  params: {}
-                };
+                scope.searchObj = gnOnlinesrc.getSearchConfig();
                 scope.modelOptions = angular.copy(gnGlobalSettings.modelOptions);
                 scope.selectRecords = [];
               },
@@ -2235,7 +2226,8 @@
     .directive("gnLinkToSibling", [
       "gnOnlinesrc",
       "gnGlobalSettings",
-      function (gnOnlinesrc, gnGlobalSettings) {
+      "gnOnlinesrcConfig",
+      function (gnOnlinesrc, gnGlobalSettings, gnOnlinesrcConfig) {
         return {
           restrict: "A",
           scope: {},
@@ -2245,20 +2237,7 @@
             return {
               pre: function preLink(scope) {
                 scope.ctrl = {};
-                scope.searchObj = {
-                  internal: true,
-                  any: "",
-                  defaultParams: {
-                    any: "",
-                    isTemplate: "n",
-                    from: 1,
-                    to: 50
-                  }
-                };
-                scope.searchObj.params = angular.extend(
-                  {},
-                  scope.searchObj.defaultParams
-                );
+                scope.searchObj = gnOnlinesrc.getSearchConfig();
 
                 // Define configuration to restrict search
                 // to a subset of records when an initiative type
@@ -2393,6 +2372,15 @@
                       });
                     }
                   }
+                };
+
+                scope.isInSelection = function (uuid) {
+                  for (var i = 0; i < scope.selection.length; ++i) {
+                    if (scope.selection[i].md._id === uuid) {
+                      return true;
+                    }
+                  }
+                  return false;
                 };
 
                 /**

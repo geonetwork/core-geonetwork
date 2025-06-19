@@ -44,7 +44,7 @@
             </div>
           </div>
           <label
-            class="col-sm-4 control-label"
+            class="col-sm-4 gn-nopadding-left control-label"
             style="text-align: left"
             data-gn-associated-record-label="config"
           >
@@ -63,26 +63,49 @@
           >
         </label>
         <div class="col-sm-10">
-          <div class="input-group" id="siblingdd">
-            <span class="input-group-addon">
-              <i class="fa fa-search"></i>
-            </span>
-            <input
-              class="form-control"
-              data-ng-change="updateParams();triggerSearch();"
-              type="text"
-              data-ng-model="searchObj.any"
-              data-ng-model-options="modelOptions"
-              autocomplete="off"
-              placeholder="{{'anyPlaceHolder' | translate}}"
-              aria-label="{{'anyPlaceHolder' | translate}}"
-            />
-            <span class="input-group-btn">
-              <button class="btn btn-default" type="button" data-ng-click="clearSearch()">
-                <span class="fa fa-fw fa-times text-danger"></span>
-              </button>
-            </span>
+          <div class="row">
+            <div
+              class="gn-nopadding-left"
+              data-ng-class="{
+              'col-sm-8': searchObj.sortbyValues,
+              'col-sm-12': !searchObj.sortbyValues
+            }"
+            >
+              <div class="input-group" id="siblingdd">
+                <span class="input-group-addon">
+                  <i class="fa fa-search"></i>
+                </span>
+                <input
+                  class="form-control"
+                  data-ng-change="updateParams();triggerSearch();"
+                  type="text"
+                  data-ng-model="searchObj.any"
+                  data-ng-model-options="modelOptions"
+                  autocomplete="off"
+                  placeholder="{{'anyPlaceHolder' | translate}}"
+                  aria-label="{{'anyPlaceHolder' | translate}}"
+                />
+                <span class="input-group-btn">
+                  <button
+                    class="btn btn-default"
+                    type="button"
+                    data-ng-click="clearSearch()"
+                  >
+                    <span class="fa fa-fw fa-times text-danger"></span>
+                  </button>
+                </span>
+              </div>
+            </div>
+            <div class="col-sm-4" data-ng-if="searchObj.sortbyValues">
+              <div
+                data-sortby-combo=""
+                class="d-inline-block"
+                data-params="searchObj.params"
+                data-gn-sortby-values="searchObj.sortbyValues"
+              ></div>
+            </div>
           </div>
+
           <div>
             <div class="list-group fixed gn-nopadding-left gn-nopadding-right">
               <div class="list-group-item" data-ng-repeat="md in searchResults.records">
@@ -99,14 +122,17 @@
                   data-ng-click="addToSelection(md, config.associationType, config.initiativeType)"
                 >
                   {{md.resourceTitle}}
-                  <div class="pull-right">
+                  <div class="pull-right" data-ng-hide="isInSelection(md._id)">
                     <span class="fa fa-plus"></span>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-          <div data-gn-pagination="paginationInfo"></div>
+          <div
+            data-gn-pagination="paginationInfo"
+            data-hits-values="searchObj.hitsperpageValues"
+          ></div>
         </div>
       </div>
 
