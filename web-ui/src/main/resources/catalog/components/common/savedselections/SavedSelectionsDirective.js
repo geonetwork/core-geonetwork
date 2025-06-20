@@ -32,7 +32,15 @@
     "gnMap",
     "gnSearchSettings",
     "gnExternalViewer",
-    function ($location, Metadata, gnMap, gnSearchSettings, gnExternalViewer) {
+    "gnViewerSettings",
+    function (
+      $location,
+      Metadata,
+      gnMap,
+      gnSearchSettings,
+      gnExternalViewer,
+      gnViewerSettings
+    ) {
       var viewerMap = gnSearchSettings.viewerMap;
 
       var searchRecordsInSelection = function (uuid, records) {
@@ -58,70 +66,17 @@
           MapLayerlist: {
             label: "addToMap",
             filterFn: function (record) {
-              var md = new Metadata(record);
-              var linkTypes = [
-                "OGC:WMS",
-                "ESRI REST: Map Service",
-                "ESRI REST: Map Server"
-              ];
-              // returns true as soon as any type has ≥1 link
-              return linkTypes.some(function (type) {
-                return md.getLinksByType(type).length > 0;
-              });
+              var links = new Metadata(record).getLinksByType("OGC:WMS", "ESRI REST");
+              return links && links.length > 0;
             },
             fn: function (uuids, records) {
-              for (var i = 0; i < uuids.length; i++) {
-                var uuid = uuids[i],
-                  record = records[uuid];
-
-                var md = new Metadata(record);
-                angular.forEach(md.getLinksByType("OGC:WMS"), function (link) {
-                  if (gnExternalViewer.isEnabled()) {
-                    gnExternalViewer.viewService(
-                      {
-                        id: md.id,
-                        uuid: md.uuid
-                      },
-                      {
-                        url: link.url,
-                        type: "wms",
-                        name: link.name,
-                        title: link.title
-                      }
-                    );
-                    return;
-                  }
-
-                  if (gnMap.isLayerInMap(viewerMap, link.name, link.url)) {
-                    return;
-                  }
-                  gnMap
-                    .addWmsFromScratch(viewerMap, link.url, link.name, false, md)
-                    .then(function (layer) {
-                      if (layer) {
-                        gnMap.feedLayerWithRelated(layer, link.group);
-                      }
-                    });
-                });
-
-                var esriLinks = md
-                  .getLinksByType("ESRI REST: Map Server")
-                  .concat(md.getLinksByType("ESRI REST: Map Service"));
-
-                angular.forEach(esriLinks, function (link) {
-                  if (gnMap.isLayerInMap(viewerMap, link.name, link.url)) {
-                    return;
-                  }
-
-                  gnMap
-                    .addEsriRestLayer(viewerMap, link.url, link.name, false, md)
-                    .then(function (layer) {
-                      if (layer) {
-                        gnMap.feedLayerWithRelated(layer, link.group);
-                      }
-                    });
-                });
-              }
+              uuids.forEach(function (uuid) {
+                var metadata = new Metadata(records[uuid]);
+                gnViewerSettings.resultviewFns.addAllMdLayersToMap(
+                  metadata.getLinksByType("OGC:WMS", "ESRI REST"),
+                  metadata
+                );
+              });
             },
             icon: "fa-globe"
           }
