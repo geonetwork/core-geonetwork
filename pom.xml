@@ -1519,15 +1519,10 @@
 
   <distributionManagement>
     <repository>
-      <id>osgeo</id>
-      <name>OSGeo GeoNetwork Release Repository</name>
-      <url>https://repo.osgeo.org/repository/geonetwork-releases/</url>
+      <id>sebr72</id>
+      <name>C2C commit specifics Repository</name>
+      <url>https://maven.pkg.github.com/sebr72/core-geonetwork</url>
     </repository>
-    <snapshotRepository>
-      <id>osgeo</id>
-      <name>OSGeo GeoNetwork Snapshot Repository</name>
-      <url>https://repo.osgeo.org/repository/geonetwork-snapshots/</url>
-     </snapshotRepository>
   </distributionManagement>
 
   <properties>

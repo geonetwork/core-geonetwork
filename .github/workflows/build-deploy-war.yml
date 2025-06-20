@@ -1,0 +1,32 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - commits_to_report_upstream*
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+
+      - name: "Checking out"
+        uses: actions/checkout@v4
+
+      - name: "Setup java JDK"
+        uses: actions/setup-java@v4.2.1
+        with:
+          java-version: 11
+          distribution: temurin
+          java-package: jdk
+          cache: maven
+
+      - name: "Build"
+        run: |
+          mvn clean install -DskipTests
+
+      - name: Publish package
+        run: mvn --batch-mode deploy
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
