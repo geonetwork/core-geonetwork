@@ -1071,8 +1071,6 @@
       </mrd:MD_Format>
     </mrd:distributionFormat>
   </xsl:template>
-
-
   <xsl:template name="build-date">
     <xsl:param name="tag"/>
     <xsl:for-each select="metas/modified[. != 'null']|
@@ -1095,66 +1093,6 @@
         </cit:CI_Date>
       </xsl:element>
     </xsl:for-each>
-  </xsl:template>
-
-
-  <xsl:template match="dataset/metas/dcat/accrualperiodicity"
-                mode="ods-to-iso">
-    <mri:resourceMaintenance>
-      <mmi:MD_MaintenanceInformation>
-        <mmi:maintenanceAndUpdateFrequency>
-          <mmi:MD_MaintenanceFrequencyCode
-            codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#MD_MaintenanceFrequencyCode"
-            codeListValue="{.}"/>
-        </mmi:maintenanceAndUpdateFrequency>
-      </mmi:MD_MaintenanceInformation>
-    </mri:resourceMaintenance>
-  </xsl:template>
-
-  <xsl:template match="dataset/metas/dcat/creator"
-                mode="ods-to-iso">
-    <mri:pointOfContact>
-      <cit:CI_Responsibility>
-        <cit:role>
-          <cit:CI_RoleCode codeList="codeListLocation#CI_RoleCode" codeListValue="author"></cit:CI_RoleCode>
-        </cit:role>
-        <cit:party>
-          <cit:CI_Organisation>
-            <cit:name>
-              <gco:CharacterString>
-                <xsl:value-of select="if (. != 'null') then . else ../../default/publisher"/>
-              </gco:CharacterString>
-            </cit:name>
-            <xsl:if test="../contact_email[. != 'null']">
-              <cit:contactInfo>
-                <cit:CI_Contact>
-                  <cit:address>
-                    <cit:CI_Address>
-                      <cit:electronicMailAddress>
-                        <gco:CharacterString>
-                          <xsl:value-of select="../contact_email"/>
-                        </gco:CharacterString>
-                      </cit:electronicMailAddress>
-                    </cit:CI_Address>
-                  </cit:address>
-                </cit:CI_Contact>
-              </cit:contactInfo>
-            </xsl:if>
-            <xsl:if test="../contact_name[. != 'null']">
-              <cit:individual>
-                <cit:CI_Individual>
-                  <cit:name>
-                    <gco:CharacterString>
-                      <xsl:value-of select="../contact_name"/>
-                    </gco:CharacterString>
-                  </cit:name>
-                </cit:CI_Individual>
-              </cit:individual>
-            </xsl:if>
-          </cit:CI_Organisation>
-        </cit:party>
-      </cit:CI_Responsibility>
-    </mri:pointOfContact>
   </xsl:template>
 
 
@@ -1184,27 +1122,6 @@
         </mcc:MD_Identifier>
       </cit:identifier>
     </xsl:if>
-  </xsl:template>
-
-  <xsl:template match="dataset/metas/default/records_count"
-                mode="ods-to-iso">
-    <mdb:spatialRepresentationInfo>
-      <msr:MD_VectorSpatialRepresentation>
-        <msr:geometricObjects>
-          <msr:MD_GeometricObjects>
-            <xsl:for-each select="../geometry_types[1]">
-              <msr:geometricObjectType>
-                <msr:MD_GeometricObjectTypeCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#MD_GeometricObjectTypeCode"
-                                                codeListValue="{.}"/>
-              </msr:geometricObjectType>
-            </xsl:for-each>
-            <msr:geometricObjectCount>
-              <gco:Integer><xsl:value-of select="."/></gco:Integer>
-            </msr:geometricObjectCount>
-          </msr:MD_GeometricObjects>
-        </msr:geometricObjects>
-      </msr:MD_VectorSpatialRepresentation>
-    </mdb:spatialRepresentationInfo>
   </xsl:template>
 
   <xsl:template match="*" mode="ods-to-iso"/>
