@@ -28,7 +28,6 @@
 
   <xsl:strip-space elements="*"/>
 
-  <!-- Main template matching different possible root structures -->
   <xsl:template match="/">
     <xsl:choose>
       <xsl:when test="/record">
@@ -85,15 +84,9 @@
           </mdb:resourceScope>
         </mdb:MD_MetadataScope>
       </mdb:metadataScope>
-
-      <!-- Handle STAC contacts extension first if available -->
       <xsl:choose>
-        <!-- Check if contacts extension is present -->
         <xsl:when test="contacts">
-          <!-- Variable pour vérifier si nous avons des contacts avec les rôles appropriés -->
           <xsl:variable name="hasMetadataContacts" select="count(contacts[not(roles) or roles[1]='publisher' or roles[1]='pointOfContact']) > 0"/>
-          
-          <!-- Sélectionner seulement les contacts qui ont le rôle 'publisher', 'pointOfContact' ou aucun rôle pour les métadonnées -->
           <xsl:for-each select="contacts[not(roles) or roles[1]='publisher' or roles[1]='pointOfContact']">
             <mdb:contact>
               <cit:CI_Responsibility>
@@ -197,7 +190,6 @@
             </mdb:contact>
           </xsl:for-each>
           
-          <!-- Si aucun contact avec le rôle approprié n'a été trouvé, utilisez le premier contact disponible -->
           <xsl:if test="not($hasMetadataContacts) and count(contacts) > 0">
             <mdb:contact>
               <cit:CI_Responsibility>
@@ -237,7 +229,6 @@
             </mdb:contact>
           </xsl:if>
         </xsl:when>
-        <!-- Fallback to legacy handling if no contacts extension is present -->
         <xsl:otherwise>
           <mdb:contact>
             <cit:CI_Responsibility>
@@ -316,10 +307,7 @@
               <xsl:apply-templates select="dataset/dataset_id"
                                    mode="ods-to-iso"/>
               
-              <!-- Ensure we have at least one identifier -->
               <xsl:call-template name="ensure-identifier"/>
-
-              <!-- Add graphicOverview from STAC QL asset if available -->
               <xsl:if test="assets/QL">
                 <mri:graphicOverview>
                   <mcc:MD_BrowseGraphic>
@@ -375,17 +363,8 @@
               </gco:CharacterString>
             </mri:credit>
           </xsl:for-each>
-
-          <!-- TODO: Check state definition-->
-          <!--<mri:status>
-            <mcc:MD_ProgressCode codeList="codeListLocation#MD_ProgressCode" codeListValue="{state}"/>
-          </mri:status>-->
-
-          <!-- add publisher to resource organisation as well-->
-          <!-- Use contacts extension if available, otherwise use legacy approach -->
           <xsl:choose>
             <xsl:when test="contacts">
-              <!-- Sélectionner seulement les contacts qui ont un rôle autre que 'publisher' et 'pointOfContact' -->
               <xsl:for-each select="contacts[roles and roles[1]!='publisher' and roles[1]!='pointOfContact']">
                 <mri:pointOfContact>
                   <cit:CI_Responsibility>
@@ -490,7 +469,6 @@
               </xsl:for-each>
             </xsl:when>
             <xsl:otherwise>
-              <!-- Legacy handling if no contacts extension -->
               <xsl:if test="not(organization)">
                 <mri:pointOfContact>
                   <cit:CI_Responsibility>
@@ -563,7 +541,6 @@
           <xsl:apply-templates select="dataset/metas/dcat/creator"
                                mode="ods-to-iso"/>
 
-
           <xsl:variable name="odsThemes"
                         select="metas/theme|dataset/metas/default/theme"/>
           <xsl:if test="count($odsThemes) > 0">
@@ -578,11 +555,8 @@
 
           <mri:extent>
             <gex:EX_Extent>
-              <!-- Handle STAC-style spatial extent using bbox -->
               <xsl:choose>
-                <!-- STAC v1.0.0+ format with extent.spatial.bbox -->
                 <xsl:when test="extent/spatial/bbox">
-                  <!-- Les boîtes englobantes sont au format [west, south, east, north] -->
                   <xsl:for-each select="extent/spatial/bbox">
                     <gex:geographicElement>
                       <gex:EX_GeographicBoundingBox>
@@ -631,25 +605,6 @@
                   </xsl:for-each>
                 </xsl:when>
               </xsl:choose>
-
-              <!-- Handle geographic references -->
-              <xsl:for-each select="dataset/metas/default/geographic_reference">
-                <gex:geographicElement>
-                  <gex:EX_GeographicDescription>
-                    <gex:geographicIdentifier>
-                      <mcc:MD_Identifier>
-                        <mcc:code>
-                          <gco:CharacterString>
-                            <xsl:value-of select="."/>
-                          </gco:CharacterString>
-                        </mcc:code>
-                      </mcc:MD_Identifier>
-                    </gex:geographicIdentifier>
-                  </gex:EX_GeographicDescription>
-                </gex:geographicElement>
-              </xsl:for-each>
-
-              <!-- Handle STAC-style temporal extent -->
               <xsl:if test="extent/temporal/interval">
                 <xsl:for-each select="extent/temporal/interval">
                   <gex:temporalElement>
@@ -684,35 +639,6 @@
               </xsl:if>
             </gex:EX_Extent>
           </mri:extent>
-
-          <xsl:apply-templates select="dataset/metas/dcat/accrualperiodicity"
-                               mode="ods-to-iso"/>
-
-          <xsl:apply-templates select="dataset/metas/dcat/temporal"
-                               mode="ods-to-iso"/>
-
-          <xsl:apply-templates select="dataset/metas/default/territory"
-                               mode="ods-to-iso"/>
-
-          <xsl:if test="count($odsThemes) > 0">
-            <mri:descriptiveKeywords>
-              <mri:MD_Keywords>
-                <xsl:for-each select="$odsThemes">
-                  <mri:keyword>
-                    <gco:CharacterString>
-                      <xsl:value-of select="."/>
-                    </gco:CharacterString>
-                  </mri:keyword>
-                </xsl:for-each>
-                <mri:type>
-                  <mri:MD_KeywordTypeCode codeListValue="theme"
-                                          codeList="./resources/codeList.xml#MD_KeywordTypeCode"/>
-                </mri:type>
-              </mri:MD_Keywords>
-            </mri:descriptiveKeywords>
-          </xsl:if>
-
-          <!-- ODS keywords copied without type -->
           <xsl:variable name="keywords"
                         select="keywords"/>
           <xsl:if test="$keywords">
@@ -729,10 +655,6 @@
             </mri:descriptiveKeywords>
           </xsl:if>
 
-
-          <!--
-          license_url: "http://opendatacommons.org/licenses/odbl/",
-          -->
           <mri:resourceConstraints>
               <mco:MD_LegalConstraints>
                 <mco:reference>
@@ -783,16 +705,6 @@
         </mri:MD_DataIdentification>
       </mdb:identificationInfo>
 
-
-      <!--
-      fields: [
-        {
-        label: "N_SQ_FIL",
-        type: "double",
-        description: "Numéro unique du filet de hauteur",
-        name: "n_sq_fil"
-        },
-      -->
       <xsl:if test="count(fields|dataset/fields) > 0">
         <mdb:contentInfo>
           <mrc:MD_FeatureCatalogue>
@@ -844,16 +756,6 @@
         </mdb:contentInfo>
       </xsl:if>
 
-      <!--
-      attachments: [
-      {
-      mimetype: "application/pdf",
-      url: "odsfile://plu_filets_hauteur0.pdf",
-      id: "plu_filets_hauteur_pdf",
-      title: "PLU_FILETS_HAUTEUR.pdf"
-      }
-      ],
--->
       <mdb:distributionInfo>
         <mrd:MD_Distribution>
           <xsl:for-each-group select="links/mimetype" group-by=".">
@@ -920,7 +822,6 @@
                 </mrd:onLine>
               </xsl:for-each>
               
-              <!-- Support pour les liens dans l'API STAC de Montpellier -->
               <xsl:for-each select="links">
                 <mrd:onLine>
                   <cit:CI_OnlineResource>
@@ -948,8 +849,6 @@
                 </mrd:onLine>
               </xsl:for-each>
 
-              <!-- Data download links are inferred from the record metadata -->
-              <!-- Support pour les assets de l'API STAC -->
               <xsl:for-each select="assets/*">
                 <mrd:onLine>
                   <cit:CI_OnlineResource>
@@ -1044,31 +943,23 @@
     </mdb:MD_Metadata>
   </xsl:template>
 
-  <!-- Template for STAC collections -->
   <xsl:template match="*[local-name()='collections']">
-    <!-- Process each collection in the array -->
     <xsl:apply-templates select="*[local-name()='collections']/*"/>
   </xsl:template>
 
-  <!-- Template for individual STAC collection -->
   <xsl:template match="*[local-name()='collection']">
     <mdb:MD_Metadata>
       <xsl:call-template name="add-iso19115-3.2018-namespaces"/>
-      <!-- Apply regular processing but with special handling for extent -->
       <xsl:apply-templates select="." mode="process-collection"/>
     </mdb:MD_Metadata>
   </xsl:template>
 
-  <!-- Mode for processing a collection specifically -->
   <xsl:template match="*" mode="process-collection">
-    <!-- Apply all standard metadata processing -->
     <xsl:apply-templates select="."/>
     
-    <!-- Special handling for STAC-format extents if present -->
     <xsl:if test="extent">
       <mri:extent>
         <gex:EX_Extent>
-          <!-- Handle spatial extent -->
           <xsl:if test="extent/spatial/bbox">
             <xsl:for-each select="extent/spatial/bbox/array">
               <gex:geographicElement>
@@ -1090,7 +981,6 @@
             </xsl:for-each>
           </xsl:if>
           
-          <!-- Handle temporal extent -->
           <xsl:if test="extent/temporal/interval">
             <xsl:for-each select="extent/temporal/interval/array">
               <gex:temporalElement>
@@ -1232,8 +1122,6 @@
           <cit:CI_Organisation>
             <cit:name>
               <gco:CharacterString>
-                <!-- TODO: Clarify meaning of publisher/creator/contributor
-                and to which contact contact_name/contact_email is attached to. -->
                 <xsl:value-of select="if (. != 'null') then . else ../../default/publisher"/>
               </gco:CharacterString>
             </cit:name>
@@ -1267,68 +1155,6 @@
         </cit:party>
       </cit:CI_Responsibility>
     </mri:pointOfContact>
-  </xsl:template>
-
-
-  <!--
-        "territory": [
-          "Région wallonne",
-          "Région de Bruxelles-Capitale"
-        ],
-
-        "metas": {
-          "dcat": {...
-          "accrualperiodicity": "daily",
--->
-  <xsl:template match="dataset/metas/dcat/temporal[. != 'null']
-                                    |dataset/metas/default/territory[. != 'null']"
-                mode="ods-to-iso">
-    <xsl:variable name="type"
-                  select="if(name() = 'temporal') then 'temporal' else 'place'"/>
-    <mri:descriptiveKeywords>
-      <mri:MD_Keywords>
-        <mri:keyword>
-          <gco:CharacterString>
-            <xsl:value-of select="."/>
-          </gco:CharacterString>
-        </mri:keyword>
-        <mri:type>
-          <mri:MD_KeywordTypeCode codeList="" codeListValue="{$type}"/>
-        </mri:type>
-      </mri:MD_Keywords>
-    </mri:descriptiveKeywords>
-  </xsl:template>
-
-
-  <!--
-        "metas": {
-          "dcat": {...
-            "temporal_coverage_start": "2018-12-30T23:00:00+00:00",
-            "temporal_coverage_end": "2020-12-30T23:00:00+00:00",
-  -->
-  <xsl:template match="dataset/metas/dcat/temporal_coverage_start[. != 'null']"
-                mode="ods-to-iso">
-    <gex:temporalElement>
-      <gex:EX_TemporalExtent>
-        <gex:extent>
-          <gml:TimePeriod>
-            <gml:beginPosition>
-              <xsl:value-of select="."/>
-            </gml:beginPosition>
-            <gml:endPosition>
-              <xsl:choose>
-                <xsl:when test="../temporal_coverage_end[. != 'null']">
-                  <xsl:value-of select="../temporal_coverage_end"/>
-                </xsl:when>
-                <xsl:otherwise>
-                  <xsl:attribute name="indeterminatePosition">now</xsl:attribute>
-                </xsl:otherwise>
-              </xsl:choose>
-            </gml:endPosition>
-          </gml:TimePeriod>
-        </gex:extent>
-      </gex:EX_TemporalExtent>
-    </gex:temporalElement>
   </xsl:template>
 
 
