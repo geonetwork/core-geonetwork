@@ -1,0 +1,60 @@
+<div
+  id="gn-editor-index-report-panel"
+  class="panel panel-warning"
+  data-ng-if="errorMessages.length > 0 || warningMessages.length > 0"
+>
+  <div class="panel-heading text-warning" data-gn-slide-toggle="">
+    <i class="fa fa-fw fa-cog"></i>&nbsp;
+    <span data-translate="">indexingIssues</span>
+  </div>
+  <div class="panel-body">
+    <div class="gn-validation-report gn-margin-top">
+      <div class="panel panel-default" data-ng-if="errorMessages.length > 0">
+        <div
+          data-gn-slide-toggle="{{initialSectionsClosed}}"
+          class="panel-heading clearfix"
+        >
+          <div class="col-md-9">
+            <h2 class="gn-schematron-title">
+              <i class="fa fa-fw fa-exclamation-circle text-danger"></i>&nbsp;
+              <span data-translate="">indexingErrors</span>
+            </h2>
+          </div>
+        </div>
+        <div class="panel-body">
+          <ul class="list-group">
+            <li
+              class="list-group-item text-danger"
+              data-ng-repeat="message in errorMessages"
+            >
+              <p>{{message}}</p>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="panel panel-default" data-ng-if="warningMessages.length > 0">
+        <div
+          data-gn-slide-toggle="{{initialSectionsClosed}}"
+          class="panel-heading clearfix"
+        >
+          <div class="col-md-9">
+            <h2 class="gn-schematron-title">
+              <i class="fa fa-fw fa-exclamation-triangle text-warning"></i>&nbsp;
+              <span data-translate="">indexingWarnings</span>
+            </h2>
+          </div>
+        </div>
+        <div class="panel-body">
+          <ul class="list-group">
+            <li
+              class="list-group-item text-warning"
+              data-ng-repeat="message in warningMessages"
+            >
+              <p>{{message}}</p>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
