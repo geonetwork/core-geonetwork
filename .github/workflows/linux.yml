@@ -68,6 +68,13 @@ jobs:
       run: |
         mvn -B resources:resources@copy-index-schema-to-source -f web
         mvn -B -ntp -V -fae verify -Drelesae -Pit
+    - name: Check for uncommitted changes such as formatting changes
+      run: |
+        if [[ -n "$(git status -s)" ]]; then
+           echo "Uncommitted changes"
+           git status -s
+           exit 1
+        fi
     - name: Remove SNAPSHOT jars from repository
       run: |
         find ~/.m2/repository -name "*SNAPSHOT*" -type d | xargs rm -rf {}
