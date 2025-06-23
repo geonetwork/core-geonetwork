@@ -70,12 +70,18 @@
               return links && links.length > 0;
             },
             fn: function (uuids, records) {
+              var config = [];
               uuids.forEach(function (uuid) {
                 var metadata = new Metadata(records[uuid]);
-                gnViewerSettings.resultviewFns.addAllMdLayersToMap(
+                angular.forEach(
                   metadata.getLinksByType("OGC:WMS", "ESRI REST"),
-                  metadata
+                  function (layer) {
+                    config.push(gnMap.buildAddToMapConfig(layer, metadata));
+                  }
                 );
+              });
+              $location.path("map").search({
+                add: encodeURIComponent(angular.toJson(config))
               });
             },
             icon: "fa-globe"
