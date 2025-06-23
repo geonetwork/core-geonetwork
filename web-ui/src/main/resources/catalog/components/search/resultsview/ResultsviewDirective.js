@@ -138,8 +138,8 @@
 
               // Fetch and store group names for each group ID
               for (var j = 0; j < groupIds.length; j++) {
-                (function(groupId) {
-                  gnMetadataActions.getGroupName(groupId).then(function(groupName) {
+                (function (groupId) {
+                  gnMetadataActions.getGroupName(groupId).then(function (groupName) {
                     scope.groupNames[groupId] = groupName;
                   });
                 })(groupIds[j]);
@@ -245,8 +245,11 @@
               return false;
             }
             // Check if the group name matches the workflow group regex
-            return md.isWorkflowEnabled() || gnMetadataActions.isGroupWithWorkflowEnabled(
-              scope.groupNames[md.groupOwner]
+            return (
+              md.isWorkflowEnabled() ||
+              gnMetadataActions.isGroupWithWorkflowEnabled(
+                scope.groupNames[md.groupOwner]
+              )
             );
           };
 
