@@ -37,6 +37,7 @@
   goog.require("gn_popup");
   goog.require("gn_suggestion");
   goog.require("gn_validation");
+  goog.require("gn_index");
 
   var module = angular.module("gn_editor", [
     "gn_module",
@@ -44,6 +45,7 @@
     "gn_onlinesrc",
     "gn_suggestion",
     "gn_validation",
+    "gn_index",
     "gn_draggable_directive",
     "gn_editor_controller",
     "gn_batchedit_controller",
