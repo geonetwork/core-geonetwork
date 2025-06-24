@@ -45,6 +45,7 @@ import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.UserGroupRepository;
 import org.fao.geonet.repository.page.PageRepository;
 import org.fao.geonet.repository.specification.UserGroupSpecs;
+import org.fao.geonet.utils.EmailUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -58,6 +59,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -178,7 +180,11 @@ public class PagesAPI {
         }
 
         if (!StringUtils.isBlank(link)) {
-            format = Page.PageFormat.LINK;
+            if (EmailUtil.isValidEmailAddress(link)) {
+                format = Page.PageFormat.EMAILLINK;
+            } else {
+                format = Page.PageFormat.LINK;
+            }
         }
 
         checkMandatoryContent(data, link, content);
@@ -496,8 +502,8 @@ public class PagesAPI {
     }
 
     private void checkCorrectFormat(final MultipartFile data, final Page.PageFormat format) {
-        if (Page.PageFormat.LINK.equals(format) && data != null && !data.isEmpty()) {
-            throw new IllegalArgumentException("Wrong format. Cannot set format to LINK and upload a file.");
+        if ((Page.PageFormat.LINK.equals(format) || Page.PageFormat.EMAILLINK.equals(format)) && data != null && !data.isEmpty()) {
+            throw new IllegalArgumentException("Wrong format. Cannot set format to LINK or EMAILLINK and upload a file.");
         }
     }
 
@@ -616,14 +622,23 @@ public class PagesAPI {
             page.setData(content.getBytes());
         } else if (page.getData() == null) {
             // Check the link, unless it refers to a file uploaded to the page, that contains the original file name.
-            if (StringUtils.isNotBlank(link) && !UrlUtils.isValidRedirectUrl(link)) {
-                throw new IllegalArgumentException("The link provided is not valid");
-            } else {
-                page.setLink(link);
+            // The link should be a valid URL or mailto address
+            if (page.getFormat() == Page.PageFormat.LINK) {
+                if (StringUtils.isNotBlank(link) && !UrlUtils.isValidRedirectUrl(link)) {
+                    throw new IllegalArgumentException("The link provided is not valid");
+                } else {
+                    page.setLink(link);
+                }
+            } else if (page.getFormat() == Page.PageFormat.EMAILLINK) {
+                if (StringUtils.isNotBlank(link) && !EmailUtil.isValidEmailAddress(link)) {
+                    throw new IllegalArgumentException("The link provided is not valid");
+                } else {
+                    page.setLink(link);
+                }
             }
         }
-
     }
+
 
     /**
      * Check is the user is in designated group to access the static page when page permission level is set to GROUP
