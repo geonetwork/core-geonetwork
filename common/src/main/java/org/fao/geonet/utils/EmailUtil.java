@@ -24,7 +24,7 @@
 package org.fao.geonet.utils;
 
 public class EmailUtil {
-    private static final String OWASP_EMAIL_REGEX = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
+    private static final String OWASP_EMAIL_REGEX = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,}$";
     private static final java.util.regex.Pattern OWASP_EMAIL_PATTERN = java.util.regex.Pattern.compile(OWASP_EMAIL_REGEX);
 
     private EmailUtil() {
