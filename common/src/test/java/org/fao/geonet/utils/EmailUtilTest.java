@@ -32,7 +32,7 @@ public class EmailUtilTest {
     public void testEmailAddress() {
         assertEquals(true, EmailUtil.isValidEmailAddress("test@domain.com"));
 
-        assertEquals(true, EmailUtil.isValidEmailAddress("test@example.international");
+        assertEquals(true, EmailUtil.isValidEmailAddress("test@example.international"));
         
         assertEquals(true, EmailUtil.isValidEmailAddress("test.user@domain.com"));
 
