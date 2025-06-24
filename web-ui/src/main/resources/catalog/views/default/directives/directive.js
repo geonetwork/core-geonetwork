@@ -157,6 +157,49 @@
 
           scope.status = undefined;
 
+          scope.statusEffects = {
+            editor: [
+              {
+                from: "draft",
+                to: "submitted"
+              },
+              {
+                from: "retired",
+                to: "draft"
+              },
+              {
+                from: "submitted",
+                to: "draft"
+              }
+            ],
+            reviewer: [
+              {
+                from: "draft",
+                to: "submitted"
+              },
+              {
+                from: "submitted",
+                to: "approved"
+              },
+              {
+                from: "submitted",
+                to: "draft"
+              },
+              {
+                from: "draft",
+                to: "approved"
+              },
+              {
+                from: "approved",
+                to: "retired"
+              },
+              {
+                from: "retired",
+                to: "draft"
+              }
+            ]
+          };
+
           scope.buildFormatter = function (url, uuid, isDraft) {
             if (url.indexOf("${uuid}") !== -1) {
               return url.replace("${lang}", scope.lang).replace("${uuid}", uuid);
@@ -180,49 +223,6 @@
                 response.data.forEach(function (s) {
                   scope.status[s.name] = s.id;
                 });
-
-                scope.statusEffects = {
-                  editor: [
-                    {
-                      from: "draft",
-                      to: "submitted"
-                    },
-                    {
-                      from: "retired",
-                      to: "draft"
-                    },
-                    {
-                      from: "submitted",
-                      to: "draft"
-                    }
-                  ],
-                  reviewer: [
-                    {
-                      from: "draft",
-                      to: "submitted"
-                    },
-                    {
-                      from: "submitted",
-                      to: "approved"
-                    },
-                    {
-                      from: "submitted",
-                      to: "draft"
-                    },
-                    {
-                      from: "draft",
-                      to: "approved"
-                    },
-                    {
-                      from: "approved",
-                      to: "retired"
-                    },
-                    {
-                      from: "retired",
-                      to: "draft"
-                    }
-                  ]
-                };
               });
           }
 
