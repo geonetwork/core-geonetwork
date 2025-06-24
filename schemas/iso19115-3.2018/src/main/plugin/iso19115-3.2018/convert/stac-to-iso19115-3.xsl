@@ -26,7 +26,7 @@
 
   <xsl:output method="xml" indent="yes"/>
 
-  <xsl:strip-space elements="*"/>
+  <xsl:strip-space elements="*"/> 
 
   <xsl:template match="/">
     <xsl:choose>
@@ -68,6 +68,12 @@
                               codeListValue="{java-xsl-util:threeCharLangCode(
                                 (metas/language|dataset/metas/default/metadata_languages|language)[1])}"/>
           </lan:language>
+          <mdb:hierarchyLevel>
+            <mdb:MD_ScopeCode codeListValue="series" codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_ScopeCode"/>
+          </mdb:hierarchyLevel>
+          <mdb:hierarchyLevelName>
+            <gco:CharacterString>Data collection</gco:CharacterString>
+          </mdb:hierarchyLevelName>
           <lan:characterEncoding>
             <lan:MD_CharacterSetCode codeList="codeListLocation#MD_CharacterSetCode"
                                      codeListValue="utf8"/>
@@ -80,7 +86,7 @@
           <mdb:resourceScope>
             <mcc:MD_ScopeCode
               codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#MD_ScopeCode"
-              codeListValue="{if (@type) then @type else 'dataset'}"/>
+              codeListValue="series"/>
           </mdb:resourceScope>
         </mdb:MD_MetadataScope>
       </mdb:metadataScope>
@@ -934,7 +940,7 @@
             <mcc:MD_Scope>
               <mcc:level>
                 <mcc:MD_ScopeCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#MD_ScopeCode"
-                                  codeListValue="dataset"/>
+                                  codeListValue="series"/>
               </mcc:level>
             </mcc:MD_Scope>
           </mrl:scope>
