@@ -1359,52 +1359,6 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#examples-of-api-usage" class="md-nav__link">
-    <span class="md-ellipsis">
-      Examples of API usage
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Examples of API usage">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#load-a-page-in-the-top-menu-bar" class="md-nav__link">
-    <span class="md-ellipsis">
-      Load a page in the top menu bar
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#load-a-link-in-the-footer-bar" class="md-nav__link">
-    <span class="md-ellipsis">
-      Load a link in the footer bar
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#remove-a-page-from-a-section" class="md-nav__link">
-    <span class="md-ellipsis">
-      Remove a page from a section
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#change-the-page-status" class="md-nav__link">
-    <span class="md-ellipsis">
-      Change the page status
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#change-the-menu-order-in-the-top-toolbar" class="md-nav__link">
     <span class="md-ellipsis">
       Change the menu order in the top toolbar
@@ -1412,9 +1366,13 @@
   </a>
   
 </li>
-        
-      </ul>
-    </nav>
+      
+        <li class="md-nav__item">
+  <a href="#change-the-static-pages-order-in-the-footer" class="md-nav__link">
+    <span class="md-ellipsis">
+      Change the static pages order in the footer
+    </span>
+  </a>
   
 </li>
       
@@ -1715,52 +1673,6 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#examples-of-api-usage" class="md-nav__link">
-    <span class="md-ellipsis">
-      Examples of API usage
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Examples of API usage">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#load-a-page-in-the-top-menu-bar" class="md-nav__link">
-    <span class="md-ellipsis">
-      Load a page in the top menu bar
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#load-a-link-in-the-footer-bar" class="md-nav__link">
-    <span class="md-ellipsis">
-      Load a link in the footer bar
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#remove-a-page-from-a-section" class="md-nav__link">
-    <span class="md-ellipsis">
-      Remove a page from a section
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#change-the-page-status" class="md-nav__link">
-    <span class="md-ellipsis">
-      Change the page status
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#change-the-menu-order-in-the-top-toolbar" class="md-nav__link">
     <span class="md-ellipsis">
       Change the menu order in the top toolbar
@@ -1768,9 +1680,13 @@
   </a>
   
 </li>
-        
-      </ul>
-    </nav>
+      
+        <li class="md-nav__item">
+  <a href="#change-the-static-pages-order-in-the-footer" class="md-nav__link">
+    <span class="md-ellipsis">
+      Change the static pages order in the footer
+    </span>
+  </a>
   
 </li>
       
@@ -1807,110 +1723,81 @@
 
 
 <h1 id="adding-static-pages">Adding static pages</h1>
-<p>This feature allows to store the HTML content for static pages and show the links to these pages in specific sections of the user interface:</p>
+<p>This function allows storing the HTML content of static pages and displaying links to these pages in specific sections of the user interface. </p>
+<p>To add new static pages go to <strong>Admin Console</strong> &rarr;  <strong>Settings</strong> &rarr;  <strong>Static Pages</strong> and select the <strong>+ New Static Page</strong> option, providing the following information:</p>
 <ul>
+<li><strong>Language</strong>: User interface language in which the static page will be displayed.</li>
+<li><strong>Page identifier</strong>: A unique text identifier for the page.</li>
+<li><strong>Page label</strong>: Label to display on the link.</li>
+<li><strong>Page icon</strong>: (Optional) Icon to display next to the link label.</li>
 <li>
-<p>The HTML content is stored in a new table of the GN's database.</p>
-</li>
-<li>
-<p>The link to pages can be showed in different points of the GN's GUI according to a list of "sections" associated to each page. In this PR is introduced the support to show the links for the top toolbar and the footer.</p>
-</li>
-<li>
-<p>Each page can be in 3 states:</p>
+<p><strong>Format</strong>: Format of the static page:</p>
 <ul>
-<li><code>HIDDEN</code>: visible to administrator.</li>
-<li><code>PRIVATE</code>: visible to logged users.</li>
-<li><code>PUBLIC</code>: visible to everyone.</li>
+<li><strong>Web link</strong>: Link to a web page.</li>
+<li><strong>HTML content displayed embedded in the app</strong></li>
+<li><strong>HTML content displayed in a new browser tab</strong></li>
+<li><strong>Plain text content</strong></li>
+<li><strong>Email link</strong>: Email address. Opens the system's mail client to send mail to the configured address.</li>
 </ul>
 </li>
 <li>
-<p>Pages can be added to different page sections. Currently the sections implemented are <code>TOP</code> (top menu of the main page) and <code>FOOTER</code> (footer of the main page).</p>
+<p><strong>Link</strong>: Available for <strong>Web link</strong> / <strong>Email link</strong> formats.</p>
+<ul>
+<li>For <strong>Web link</strong> the link to a web page.</li>
+<li>For <strong>Email link</strong>, the email address to which the email will be sent.</li>
+</ul>
 </li>
 <li>
-<p>Only the administrator can edit the pages and see the pages in <code>HIDDEN</code> status.</p>
+<p><strong>Page content file</strong>: For formats other than <strong>Web link</strong> or <strong>Email link</strong>, allows uploading a file with the HTML content / text to be displayed.</p>
 </li>
 <li>
-<p>The creation and the management of the content is done via the API.</p>
-<p><img alt="" src="../../../customizing-application/img/pages-api.png" /></p>
+<p><strong>Page content</strong>: For formats other than <strong>Web link</strong> or <strong>Email link</strong>, allows editing the HTML / text content to display.</p>
+</li>
+<li>
+<p><strong>Page section</strong>: Section of the page to display the link. Currently implemented sections are <code>TOP</code> (top menu of the main page) and <code>FOOTER</code> (footer of the main page).</p>
+</li>
+<li>
+<p><strong>Status</strong>: Defines which users can see the link.</p>
+<ul>
+<li><strong>Visible only to the administrator</strong></li>
+<li><strong>Visible to logged users</strong></li>
+<li><strong>Visible to users belonging to groups</strong></li>
+<li><strong>Visible to every one</strong></li>
+</ul>
 </li>
 </ul>
+<p><img alt="" src="../../../customizing-application/img/add-static-page.png" /></p>
+<p><img alt="" src="../../../customizing-application/img/static-page-footer.png" /></p>
 <p>Some restrictions:</p>
 <ul>
 <li>It is not possible to apply custom CSS to the page.</li>
 <li>Any external image must be loaded externally.</li>
 </ul>
-<h2 id="examples-of-api-usage">Examples of API usage</h2>
-<p>Before executing the following examples, see <a href="../misc/#example-csrf-curl">Example of CSRF call using curl</a> for details on the usage of the CSRF token (instead of the value <code>"X-XSRF-TOKEN: e934f557-17a3-47f2-8e6b-bdf1a3c90a97"</code> used in the examples) and cookies in the requests.</p>
-<h3 id="load-a-page-in-the-top-menu-bar">Load a page in the top menu bar</h3>
-<p>In this example we're going to upload a file <code>contactus.html</code> and link it in the top menu:</p>
-<ol>
-<li>
-<p>Load the content by using the method POST <code>/api/pages/</code>, the mandatory fields are:</p>
-<ul>
-<li>language (3 letters like 'eng', 'ita', 'fra' ...)</li>
-<li>pageId (the identifier/link description of the page)</li>
-<li>format (must be LINK if a link is associated to the page)</li>
-<li>the content: data (a file with the page content) or a link (URL to another page). Define both is not possible.</li>
-</ul>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>$<span class="w"> </span>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;http://localhost:8080/geonetwork/srv/api/pages/?language=eng&amp;pageId=contactus&amp;format=HTML&quot;</span><span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;accept: */*&quot;</span><span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: multipart/form-data&quot;</span><span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;X-XSRF-TOKEN: e934f557-17a3-47f2-8e6b-bdf1a3c90a97&quot;</span><span class="w"> </span>-d<span class="w"> </span>contactus.html
+<h2 id="change-the-menu-order-in-the-top-toolbar">Change the menu order in the top toolbar</h2>
+<p>In the top bar, pages can be inserted between the default menu of the catalogue. This can be configured in <strong>Admin Console</strong> &rarr;  <strong>Settings</strong> &rarr;  <strong>User interface</strong>, in the <strong>Header custom menu items</strong> section.</p>
+<p>By default, the order of the items in the top bar is as follows:</p>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="p">[</span><span class="s2">&quot;gn-site-name-menu&quot;</span><span class="p">,</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w"> </span><span class="s2">&quot;gn-portal-switcher&quot;</span><span class="p">,</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w"> </span><span class="s2">&quot;gn-search-menu&quot;</span><span class="p">,</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w"> </span><span class="s2">&quot;gn-map-menu&quot;</span><span class="p">,</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w"> </span><span class="s2">&quot;gn-contribute-menu&quot;</span><span class="p">,</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w"> </span><span class="s2">&quot;gn-admin-menu&quot;</span><span class="p">]</span>
 </span></code></pre></div>
-<p>At this point the page is created but not visible because is in status HIDDEN and is not loaded explicitly in any section of the page, except DRAFT that is not visible (in the future could be added to a page with an editor interface). Similar requests should be done for each UI language supported.</p>
-</li>
-<li>
-<p>To associate the link to the top bar is necessary to use the method POST <code>/api/pages/{language}/{pageId}/{section}</code> with the <code>TOP</code> value for the section.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>$<span class="w"> </span>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;http://localhost:8080/geonetwork/srv/api/pages/eng/contactus/TOP&quot;</span><span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;accept: */*&quot;</span><span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;X-XSRF-TOKEN: 7cfa1a0d-3335-4846-8061-a5bf176687b5&quot;</span><span class="w">  </span>--user<span class="w"> </span>admin:admin<span class="w"> </span>-b<span class="w"> </span>/tmp/cookie
+<p>Insert a page as a simple menu using the page identifier or as a submenu using an object:</p>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="p">[</span><span class="s2">&quot;gn-site-name-menu&quot;</span><span class="p">,</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w"> </span><span class="s2">&quot;gn-portal-switcher&quot;</span><span class="p">,</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w"> </span><span class="s2">&quot;gn-search-menu&quot;</span><span class="p">,</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w"> </span><span class="p">{</span><span class="nt">&quot;Quick search&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">   </span><span class="s2">&quot;searchForAfrica&quot;</span><span class="p">,</span>
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">   </span><span class="s2">&quot;forReview&quot;</span>
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w"> </span><span class="p">]},</span>
+</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w"> </span><span class="s2">&quot;gn-map-menu&quot;</span><span class="p">,</span>
+</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w"> </span><span class="s2">&quot;gn-contribute-menu&quot;</span><span class="p">,</span>
+</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w"> </span><span class="s2">&quot;gn-admin-menu&quot;</span><span class="p">,</span>
+</span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w"> </span><span class="s2">&quot;documentation&quot;</span><span class="p">]</span>
 </span></code></pre></div>
-</li>
-</ol>
-<h3 id="load-a-link-in-the-footer-bar">Load a link in the footer bar</h3>
-<p>In this example we're going to add a link to an external resource <a href="http://myorganisation/contactus.html">http://myorganisation/contactus.html</a> and link it in the footer:</p>
-<ol>
-<li>
-<p>Add the link by using the method POST <code>/api/pages/</code> with the <code>link</code> parameter in the request:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>$<span class="w"> </span>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;http://localhost:8080/geonetwork/srv/api/pages/?language=eng&amp;pageId=contactus&amp;format=LINK&amp;link=http://myorganisation/contactus.html&quot;</span><span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;accept: */*&quot;</span><span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;X-XSRF-TOKEN: e934f557-17a3-47f2-8e6b-bdf1a3c90a97&quot;</span>
-</span></code></pre></div>
-</li>
-<li>
-<p>To associate the link to the footer is necessary to use the method POST <code>/api/pages/{language}/{pageId}/{section}</code> with the <code>FOOTER</code> value for the section.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>$<span class="w"> </span>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;http://localhost:8080/geonetwork/srv/api/pages/eng/contactus/FOOTER&quot;</span><span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;accept: */*&quot;</span><span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;X-XSRF-TOKEN: 7cfa1a0d-3335-4846-8061-a5bf176687b5&quot;</span><span class="w">  </span>--user<span class="w"> </span>admin:admin<span class="w"> </span>-b<span class="w"> </span>/tmp/cookie
-</span></code></pre></div>
-</li>
-</ol>
-<h3 id="remove-a-page-from-a-section">Remove a page from a section</h3>
-<p>To remove a page from a section DELETE <code>/api/pages/{language}/{pageId}/{section}</code></p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>DELETE<span class="w"> </span><span class="s2">&quot;http://localhost:8080/geonetwork/srv/api/pages/eng/contactus?format=LINK&quot;</span><span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;accept: */*&quot;</span><span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;X-XSRF-TOKEN: 7cfa1a0d-3335-4846-8061-a5bf176687b5&quot;</span><span class="w">  </span>--user<span class="w"> </span>admin:admin<span class="w"> </span>-b<span class="w"> </span>/tmp/cookie
-</span></code></pre></div>
-<h3 id="change-the-page-status">Change the page status</h3>
-<p>The status of the page can be changed with the method PUT <code>/api/pages/{language}/{pageId}/{status}</code> where status could assume these values:</p>
-<ul>
-<li><code>PUBLIC</code> - Visible to every user</li>
-<li><code>PUBLIC_ONLY</code> - Visible to not logged users</li>
-<li><code>PRIVATE</code> - Visible to logged users</li>
-<li><code>HIDDEN</code> - Hidden to anyone</li>
-</ul>
-<p>Other methods in the API are to change/delete a page and to GET the list of the pages or the info of a specific one.</p>
-<h3 id="change-the-menu-order-in-the-top-toolbar">Change the menu order in the top toolbar</h3>
-<p>Pages can be inserted in between catalogue default menu which are:</p>
-<div class="language-json highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="p">[</span><span class="s2">&quot;gn-site-name-menu&quot;</span><span class="p">,</span>
-</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w"> </span><span class="s2">&quot;gn-portal-switcher&quot;</span><span class="p">,</span>
-</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w"> </span><span class="s2">&quot;gn-search-menu&quot;</span><span class="p">,</span>
-</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w"> </span><span class="s2">&quot;gn-map-menu&quot;</span><span class="p">,</span>
-</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w"> </span><span class="s2">&quot;gn-contribute-menu&quot;</span><span class="p">,</span>
-</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w"> </span><span class="s2">&quot;gn-admin-menu&quot;</span><span class="p">]</span>
-</span></code></pre></div>
-<p>Insert a page as a simple menu using its id or as a submenu using an object:</p>
-<div class="language-json highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="p">[</span><span class="s2">&quot;gn-site-name-menu&quot;</span><span class="p">,</span>
-</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w"> </span><span class="s2">&quot;gn-portal-switcher&quot;</span><span class="p">,</span>
-</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w"> </span><span class="s2">&quot;gn-search-menu&quot;</span><span class="p">,</span>
-</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w"> </span><span class="p">{</span><span class="nt">&quot;Quick search&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">   </span><span class="s2">&quot;searchForAfrica&quot;</span><span class="p">,</span>
-</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">   </span><span class="s2">&quot;forReview&quot;</span>
-</span><span id="__span-6-7"><a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w"> </span><span class="p">]},</span>
-</span><span id="__span-6-8"><a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="w"> </span><span class="s2">&quot;gn-map-menu&quot;</span><span class="p">,</span>
-</span><span id="__span-6-9"><a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="w"> </span><span class="s2">&quot;gn-contribute-menu&quot;</span><span class="p">,</span>
-</span><span id="__span-6-10"><a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="w"> </span><span class="s2">&quot;gn-admin-menu&quot;</span><span class="p">,</span>
-</span><span id="__span-6-11"><a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="w"> </span><span class="s2">&quot;documentation&quot;</span><span class="p">]</span>
-</span></code></pre></div>
+<h2 id="change-the-static-pages-order-in-the-footer">Change the static pages order in the footer</h2>
+<p>The order of the footer pages can be configured in <strong>Admin Console</strong> &rarr;  <strong>Settings</strong> &rarr;  <strong>User interface</strong>, in the <strong>Footer custom menu items</strong> section.</p>
 
 
 
