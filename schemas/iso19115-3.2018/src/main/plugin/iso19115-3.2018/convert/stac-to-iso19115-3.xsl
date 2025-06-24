@@ -286,6 +286,80 @@
 
       <mdb:identificationInfo>
         <mri:MD_DataIdentification>
+          <!-- Handle QL, ql, or thumbnail in assets -->
+          <xsl:if test="assets/QL or assets/ql or assets/thumbnail">
+            <mri:graphicOverview>
+              <mcc:MD_BrowseGraphic>
+                <mcc:fileName>
+                  <gco:CharacterString>
+                    <xsl:choose>
+                      <xsl:when test="assets/QL">
+                        <xsl:value-of select="assets/QL/href"/>
+                      </xsl:when>
+                      <xsl:when test="assets/ql">
+                        <xsl:value-of select="assets/ql/href"/>
+                      </xsl:when>
+                      <xsl:otherwise>
+                        <xsl:value-of select="assets/thumbnail/href"/>
+                      </xsl:otherwise>
+                    </xsl:choose>
+                  </gco:CharacterString>
+                </mcc:fileName>
+                <mcc:fileDescription>
+                  <gco:CharacterString>
+                    <xsl:choose>
+                      <!-- Handle cases for uppercase QL -->
+                      <xsl:when test="assets/QL/title and assets/QL/description">
+                        <xsl:value-of select="concat(assets/QL/title, ' - ', assets/QL/description)"/>
+                      </xsl:when>
+                      <xsl:when test="assets/QL/title">
+                        <xsl:value-of select="assets/QL/title"/>
+                      </xsl:when>
+                      <xsl:when test="assets/QL/description">
+                        <xsl:value-of select="assets/QL/description"/>
+                      </xsl:when>
+                      <!-- Handle cases for lowercase ql -->
+                      <xsl:when test="assets/ql/title and assets/ql/description">
+                        <xsl:value-of select="concat(assets/ql/title, ' - ', assets/ql/description)"/>
+                      </xsl:when>
+                      <xsl:when test="assets/ql/title">
+                        <xsl:value-of select="assets/ql/title"/>
+                      </xsl:when>
+                      <xsl:when test="assets/ql/description">
+                        <xsl:value-of select="assets/ql/description"/>
+                      </xsl:when>
+                      <!-- Handle cases for thumbnail -->
+                      <xsl:when test="assets/thumbnail/title and assets/thumbnail/description">
+                        <xsl:value-of select="concat(assets/thumbnail/title, ' - ', assets/thumbnail/description)"/>
+                      </xsl:when>
+                      <xsl:when test="assets/thumbnail/title">
+                        <xsl:value-of select="assets/thumbnail/title"/>
+                      </xsl:when>
+                      <xsl:when test="assets/thumbnail/description">
+                        <xsl:value-of select="assets/thumbnail/description"/>
+                      </xsl:when>
+                      <xsl:otherwise>Preview image</xsl:otherwise>
+                    </xsl:choose>
+                  </gco:CharacterString>
+                </mcc:fileDescription>
+                <mcc:fileType>
+                  <gco:CharacterString>
+                    <xsl:choose>
+                      <xsl:when test="assets/QL">
+                        <xsl:value-of select="assets/QL/type"/>
+                      </xsl:when>
+                      <xsl:when test="assets/ql">
+                        <xsl:value-of select="assets/ql/type"/>
+                      </xsl:when>
+                      <xsl:otherwise>
+                        <xsl:value-of select="assets/thumbnail/type"/>
+                      </xsl:otherwise>
+                    </xsl:choose>
+                  </gco:CharacterString>
+                </mcc:fileType>
+              </mcc:MD_BrowseGraphic>
+            </mri:graphicOverview>
+          </xsl:if>
           <mri:citation>
             <cit:CI_Citation>
               <cit:title>
@@ -314,38 +388,7 @@
                                    mode="ods-to-iso"/>
               
               <xsl:call-template name="ensure-identifier"/>
-              <xsl:if test="assets/QL">
-                <mri:graphicOverview>
-                  <mcc:MD_BrowseGraphic>
-                    <mcc:fileName>
-                      <gco:CharacterString>
-                        <xsl:value-of select="assets/QL/href"/>
-                      </gco:CharacterString>
-                    </mcc:fileName>
-                    <mcc:fileDescription>
-                      <gco:CharacterString>
-                        <xsl:choose>
-                          <xsl:when test="assets/QL/title and assets/QL/description">
-                            <xsl:value-of select="concat(assets/QL/title, ' - ', assets/QL/description)"/>
-                          </xsl:when>
-                          <xsl:when test="assets/QL/title">
-                            <xsl:value-of select="assets/QL/title"/>
-                          </xsl:when>
-                          <xsl:when test="assets/QL/description">
-                            <xsl:value-of select="assets/QL/description"/>
-                          </xsl:when>
-                          <xsl:otherwise>QuickLook preview image</xsl:otherwise>
-                        </xsl:choose>
-                      </gco:CharacterString>
-                    </mcc:fileDescription>
-                    <mcc:fileType>
-                      <gco:CharacterString>
-                        <xsl:value-of select="assets/QL/type"/>
-                      </gco:CharacterString>
-                    </mcc:fileType>
-                  </mcc:MD_BrowseGraphic>
-                </mri:graphicOverview>
-              </xsl:if>
+              
             </cit:CI_Citation>
           </mri:citation>
           <mri:abstract>
