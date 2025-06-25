@@ -127,10 +127,10 @@ public class GeonetTestFixture {
                 // Create ES index
                 esSearchManager.init(true, Optional.empty());
 
-                templateSchemaManager = initSchemaManager(webappDir, geonetworkDataDirectory);
 
                 Files.createDirectories(templateDataDirectory.resolve("data/resources/htmlcache"));
             }
+            templateSchemaManager = initSchemaManager(webappDir, geonetworkDataDirectory);
             isoLanguagesMapper.reinit();
         }
 
