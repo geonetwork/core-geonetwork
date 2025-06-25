@@ -28,5 +28,10 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
   <bean id="localInvokerMokitoMockFactory" class="org.fao.geonet.kernel.LocalInvokerMokitoMockFactory"/>
+
   <bean id="localInvokerMock" factory-bean="localInvokerMokitoMockFactory" factory-method="createMock" primary="true"/>
+
+  <bean id="spyFactory" class="org.fao.geonet.kernel.LocalXLinksUpdateDeleteTest.SpyFactory" autowire = "byType"/>
+
+  <bean id="baseMetadataIndexerSpy" factory-bean="spyFactory" factory-method="build" primary="true" />
 </beans>
