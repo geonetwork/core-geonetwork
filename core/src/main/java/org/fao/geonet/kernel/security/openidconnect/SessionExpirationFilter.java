@@ -92,10 +92,14 @@ public class SessionExpirationFilter implements Filter {
 
                         if (authorizedClient == null || authorizedClient.getAccessToken() == null) {
                             log.warn("Session '{}' for subject '{}', user '{}' is expired due to terminated/expired authentication server session.", httpSession.getId(), principal.getSubject(), principal.getPreferredUsername());
+                            httpRequest.logout();
+                            SecurityContextHolder.getContext().setAuthentication(null);
                             httpSession.invalidate();
                         }
                     } catch (ClientAuthorizationException e) {
                         log.warn("Authorization exception occurred for session '{}' for user '{}'.", httpSession.getId(), principal.getPreferredUsername(), e);
+                        httpRequest.logout();
+                        SecurityContextHolder.getContext().setAuthentication(null);
                         httpSession.invalidate();
                     }
                 }
