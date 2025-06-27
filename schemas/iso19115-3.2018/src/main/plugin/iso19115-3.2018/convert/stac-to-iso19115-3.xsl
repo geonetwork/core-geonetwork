@@ -902,153 +902,28 @@
               </mrd:MD_Format>
             </mrd:distributionFormat>
           </xsl:for-each-group>
-          <xsl:if test="metas/records_count > 0">
-            <xsl:call-template name="dataFormat">
-              <xsl:with-param name="format">csv</xsl:with-param>
-            </xsl:call-template>
-            <xsl:call-template name="dataFormat">
-              <xsl:with-param name="format">json</xsl:with-param>
-            </xsl:call-template>
-            <xsl:if test="count(features[. = 'geo']) > 0">
-              <xsl:call-template name="dataFormat">
-                <xsl:with-param name="format">geojson</xsl:with-param>
-              </xsl:call-template>
-              <xsl:if test="metas/records_count &lt; 5000">
-                <xsl:call-template name="dataFormat">
-                  <xsl:with-param name="format">shapefile</xsl:with-param>
-                </xsl:call-template>
-              </xsl:if>
-            </xsl:if>
-          </xsl:if>
-
-
-          <mrd:transferOptions>
-            <mrd:MD_DigitalTransferOptions>
-              <xsl:for-each select="attachments|dataset/attachments">
-                <mrd:onLine>
-                  <cit:CI_OnlineResource>
-                    <cit:linkage>
-                      <gco:CharacterString>
-                        <xsl:value-of select="href"/>
-                      </gco:CharacterString>
-                    </cit:linkage>
-                    <cit:protocol>
-                      <gco:CharacterString>
-                        <xsl:value-of select="type"/>
-                      </gco:CharacterString>
-                    </cit:protocol>
-                    <cit:name>
-                      <gco:CharacterString>
-                        <xsl:value-of select="id"/>
-                      </gco:CharacterString>
-                    </cit:name>
-                    <cit:description>
-                      <gco:CharacterString>
-                        <xsl:value-of select="title"/>
-                      </gco:CharacterString>
-                    </cit:description>
-                  </cit:CI_OnlineResource>
-                </mrd:onLine>
-              </xsl:for-each>
-              
-              <xsl:for-each select="links">
-                <mrd:onLine>
-                  <cit:CI_OnlineResource>
-                    <cit:linkage>
-                      <gco:CharacterString>
-                        <xsl:value-of select="href"/>
-                      </gco:CharacterString>
-                    </cit:linkage>
-                    <cit:protocol>
-                      <gco:CharacterString>
-                        <xsl:value-of select="rel"/>
-                      </gco:CharacterString>
-                    </cit:protocol>
-                    <cit:name>
-                      <gco:CharacterString>
-                        <xsl:value-of select="@title|title"/>
-                      </gco:CharacterString>
-                    </cit:name>
-                    <cit:description>
-                      <gco:CharacterString>
-                        <xsl:value-of select="type"/>
-                      </gco:CharacterString>
-                    </cit:description>
-                  </cit:CI_OnlineResource>
-                </mrd:onLine>
-              </xsl:for-each>
-
-              <xsl:for-each select="assets/*">
-                <mrd:onLine>
-                  <cit:CI_OnlineResource>
-                    <cit:linkage>
-                      <gco:CharacterString>
-                        <xsl:value-of select="href"/>
-                      </gco:CharacterString>
-                    </cit:linkage>
-                    <cit:protocol>
-                      <gco:CharacterString>
-                        <xsl:value-of select="type"/>
-                      </gco:CharacterString>
-                    </cit:protocol>
-                    <cit:name>
-                      <gco:CharacterString>
-                        <xsl:value-of select="name(.)"/>
-                      </gco:CharacterString>
-                    </cit:name>
-                    <cit:description>
-                      <gco:CharacterString>
-                        <xsl:value-of select="description|title"/>
-                      </gco:CharacterString>
-                    </cit:description>
-                  </cit:CI_OnlineResource>
-                </mrd:onLine>
-              </xsl:for-each>
-
-              <xsl:variable name="count"
-                            select="metas/records_count|dataset/metas/default/records_count"/>
-              <xsl:if test="$count > 0">
-                <xsl:call-template name="dataLink">
-                  <xsl:with-param name="format">csv</xsl:with-param>
-                </xsl:call-template>
-                <xsl:call-template name="dataLink">
-                  <xsl:with-param name="format">json</xsl:with-param>
-                </xsl:call-template>
-                <xsl:if test="count(.//features[. = 'geo']) > 0">
-                  <xsl:call-template name="dataLink">
-                    <xsl:with-param name="format">geojson</xsl:with-param>
-                  </xsl:call-template>
-                  <xsl:if test="$count &lt; 5000">
-                    <xsl:call-template name="dataLink">
-                      <xsl:with-param name="format">shp</xsl:with-param>
-                    </xsl:call-template>
-                  </xsl:if>
-                </xsl:if>
-              </xsl:if>
-
-            </mrd:MD_DigitalTransferOptions>
-          </mrd:transferOptions>
-          <mrd:transferOptions>
-            <mrd:MD_DigitalTransferOptions>
-
-              <xsl:for-each select="dataset/metas/default/references[. != 'null']">
-                <mrd:onLine>
-                  <cit:CI_OnlineResource>
-                    <cit:linkage>
-                      <gco:CharacterString>
-                        <xsl:value-of select="."/>
-                      </gco:CharacterString>
-                    </cit:linkage>
-                    <cit:protocol>
-                      <gco:CharacterString>
-                        WWW:LINK
-                      </gco:CharacterString>
-                    </cit:protocol>
-                  </cit:CI_OnlineResource>
-                </mrd:onLine>
-              </xsl:for-each>
-            </mrd:MD_DigitalTransferOptions>
-          </mrd:transferOptions>
+          <xsl:for-each select="links[rel = 'self']">
+            <mrd:onLine>
+              <cit:CI_OnlineResource>
+                <cit:linkage>
+                  <gco:CharacterString>
+                    <xsl:value-of select="href"/>
+                  </gco:CharacterString>
+                </cit:linkage>
+                <cit:protocol>
+                  <gco:CharacterString>STAC</gco:CharacterString>
+                </cit:protocol>
+                <cit:name>
+                  <gco:CharacterString>
+                    <xsl:value-of select="@title|title"/>
+                  </gco:CharacterString>
+                </cit:name>
+                <cit:description>
+                  <gco:CharacterString>STAC Collection</gco:CharacterString>
+                </cit:description>
+              </cit:CI_OnlineResource>
+            </mrd:onLine>
+          </xsl:for-each>
         </mrd:MD_Distribution>
       </mdb:distributionInfo>
 
@@ -1147,42 +1022,6 @@
     </xsl:if>
   </xsl:template>
 
-  <xsl:template name="dataLink">
-    <xsl:param name="format"/>
-
-    <mrd:onLine>
-      <cit:CI_OnlineResource>
-        <cit:linkage>
-          <gco:CharacterString>
-            <xsl:value-of select="concat(nodeUrl,
-                                   '/api/explore/v2.1/catalog/datasets/',
-                                   (datasetid|dataset/dataset_id)[1],
-                                   '/exports/', $format, '?use_labels=true')"/>
-          </gco:CharacterString>
-        </cit:linkage>
-        <cit:protocol>
-          <gco:CharacterString>
-            <xsl:value-of select="$format-protocol-mapping/entry[format=lower-case($format)]/protocol"/>
-          </gco:CharacterString>
-        </cit:protocol>
-        <cit:name>
-          <gco:CharacterString>
-            <xsl:value-of select="$format"/>
-          </gco:CharacterString>
-        </cit:name>
-        <cit:description>
-          <gco:CharacterString>
-            <xsl:value-of select="$format"/>
-          </gco:CharacterString>
-        </cit:description>
-        <cit:function>
-          <cit:CI_OnLineFunctionCode
-            codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_OnLineFunctionCode"
-            codeListValue="download"/>
-        </cit:function>
-      </cit:CI_OnlineResource>
-    </mrd:onLine>
-  </xsl:template>
 
   <xsl:template name="dataFormat">
     <xsl:param name="format"/>
