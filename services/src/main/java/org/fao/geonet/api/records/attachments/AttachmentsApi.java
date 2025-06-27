@@ -46,6 +46,7 @@ import org.fao.geonet.events.history.AttachmentAddedEvent;
 import org.fao.geonet.events.history.AttachmentDeletedEvent;
 import org.fao.geonet.util.ImageUtil;
 import org.springframework.context.ApplicationContext;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -280,7 +281,7 @@ public class AttachmentsApi {
             String contentType = getFileContentType(file.getPath());
             String dispositionFilename = originalFilename;
 
-            // If the image is being resized, always return as PNG and update 
+            // If the image is being resized, always return as PNG and update
             // filename and content-type accordingly
             if (contentType.startsWith("image/") && size != null) {
                 if (size >= MIN_IMAGE_SIZE && size <= MAX_IMAGE_SIZE) {
@@ -293,9 +294,9 @@ public class AttachmentsApi {
                     } else {
                         dispositionFilename = originalFilename + ".png";
                     }
-                    response.setHeader("Content-Disposition", "inline; filename=\"" + dispositionFilename + "\"");
-                    response.setHeader("Cache-Control", "no-cache");
-                    response.setHeader("Content-Type", contentType);
+                    response.setHeader(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + dispositionFilename + "\"");
+                    response.setHeader(HttpHeaders.CACHE_CONTROL, "no-cache");
+                    response.setHeader(HttpHeaders.CONTENT_TYPE, contentType);
 
                     // Read, resize, and write the image as PNG, and set Content-Length
                     BufferedImage image = ImageIO.read(file.getPath().toFile());
@@ -313,9 +314,9 @@ public class AttachmentsApi {
                 }
             } else {
                 // For all other files, use the original content type and filename
-                response.setHeader("Content-Disposition", "inline; filename=\"" + dispositionFilename + "\"");
-                response.setHeader("Cache-Control", "no-cache");
-                response.setHeader("Content-Type", contentType);
+                response.setHeader(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + dispositionFilename + "\"");
+                response.setHeader(HttpHeaders.CACHE_CONTROL, "no-cache");
+                response.setHeader(HttpHeaders.CONTENT_TYPE, contentType);
                 response.setContentLengthLong(Files.size(file.getPath()));
 
                 try (InputStream inputStream = Files.newInputStream(file.getPath())) {
