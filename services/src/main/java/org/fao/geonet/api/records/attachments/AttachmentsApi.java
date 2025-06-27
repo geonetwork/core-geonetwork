@@ -1,6 +1,6 @@
 /*
  * =============================================================================
- * ===	Copyright (C) 2001-2024 Food and Agriculture Organization of the
+ * ===	Copyright (C) 2001-2025 Food and Agriculture Organization of the
  * ===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * ===	and United Nations Environment Programme (UNEP)
  * ===
@@ -67,6 +67,7 @@ import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -275,22 +276,46 @@ public class AttachmentsApi {
 
             ApiUtils.canViewRecord(metadataUuid, request);
 
-            response.setHeader("Content-Disposition", "inline; filename=\"" + file.getMetadata().getFilename() + "\"");
-            response.setHeader("Cache-Control", "no-cache");
+            String originalFilename = file.getMetadata().getFilename();
             String contentType = getFileContentType(file.getPath());
-            response.setHeader("Content-Type", contentType);
+            String dispositionFilename = originalFilename;
 
+            // If the image is being resized, always return as PNG and update 
+            // filename and content-type accordingly
             if (contentType.startsWith("image/") && size != null) {
                 if (size >= MIN_IMAGE_SIZE && size <= MAX_IMAGE_SIZE) {
+                    // Set content type to PNG
+                    contentType = "image/png";
+                    // Change file extension to .png
+                    int dotIdx = originalFilename.lastIndexOf('.');
+                    if (dotIdx > 0) {
+                        dispositionFilename = originalFilename.substring(0, dotIdx) + ".png";
+                    } else {
+                        dispositionFilename = originalFilename + ".png";
+                    }
+                    response.setHeader("Content-Disposition", "inline; filename=\"" + dispositionFilename + "\"");
+                    response.setHeader("Cache-Control", "no-cache");
+                    response.setHeader("Content-Type", contentType);
+
+                    // Read, resize, and write the image as PNG, and set Content-Length
                     BufferedImage image = ImageIO.read(file.getPath().toFile());
                     BufferedImage resized = ImageUtil.resize(image, size);
-                    ImageIO.write(resized, "png", response.getOutputStream());
+                    // Write to a byte array first to get the length
+                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                    ImageIO.write(resized, "png", baos);
+                    byte[] pngBytes = baos.toByteArray();
+                    response.setContentLengthLong(pngBytes.length);
+                    response.getOutputStream().write(pngBytes);
                 } else {
                     throw new IllegalArgumentException(String.format(
                         "Image can only be resized from %d to %d. You requested %d.",
                         MIN_IMAGE_SIZE, MAX_IMAGE_SIZE, size));
                 }
             } else {
+                // For all other files, use the original content type and filename
+                response.setHeader("Content-Disposition", "inline; filename=\"" + dispositionFilename + "\"");
+                response.setHeader("Cache-Control", "no-cache");
+                response.setHeader("Content-Type", contentType);
                 response.setContentLengthLong(Files.size(file.getPath()));
 
                 try (InputStream inputStream = Files.newInputStream(file.getPath())) {
