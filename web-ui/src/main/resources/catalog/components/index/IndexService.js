@@ -29,7 +29,8 @@
   module.provider("gnIndexService", function () {
     this.$get = [
       "$http",
-      function ($http) {
+      "Metadata",
+      function ($http, Metadata) {
         // FIXME: this is not used
         function deleteDocs(filter) {
           return $http.delete(
@@ -40,8 +41,57 @@
             }
           );
         }
+
+        function getDoc(uuid) {
+          return $http.post("../api/search/records/_search", {
+            query: {
+              bool: {
+                must: [
+                  {
+                    match: {
+                      uuid: uuid
+                    }
+                  },
+                  { terms: { draft: ["n", "y", "e"] } },
+                  { terms: { isTemplate: ["n", "y", "s"] } }
+                ]
+              }
+            }
+          });
+        }
+
+        function getIndexMessages(uuid) {
+          return this.getDoc(uuid).then(function (r) {
+            if (r.data.hits.total.value !== 0) {
+              var metadata = new Metadata(r.data.hits.hits[0]);
+
+              var report = {};
+              report.allMessages = [].concat(metadata.indexingErrorMsg || []);
+
+              var warningPrefix = "Warning / ";
+
+              report.warningMessages = report.allMessages
+                .filter(function (msg) {
+                  return msg && msg.indexOf(warningPrefix) === 0;
+                })
+                .map(function (msg) {
+                  return msg.replace(warningPrefix, "");
+                });
+
+              report.errorMessages = report.allMessages.filter(function (msg) {
+                return msg && msg.indexOf(warningPrefix) !== 0;
+              });
+
+              return report;
+            }
+            throw new Error("No metadata found for UUID: " + uuid);
+          });
+        }
+
         return {
-          deleteDocs: deleteDocs
+          deleteDocs: deleteDocs,
+          getDoc: getDoc,
+          getIndexMessages: getIndexMessages
         };
       }
     ];
