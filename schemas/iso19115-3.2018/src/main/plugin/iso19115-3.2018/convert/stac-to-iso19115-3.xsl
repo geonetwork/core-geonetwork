@@ -26,7 +26,7 @@
 
   <xsl:output method="xml" indent="yes"/>
 
-  <xsl:strip-space elements="*"/> 
+  <xsl:strip-space elements="*"/>
 
   <xsl:template match="/">
     <xsl:choose>
@@ -66,7 +66,7 @@
           <lan:language>
             <lan:LanguageCode codeList="codeListLocation#LanguageCode"
                               codeListValue="{java-xsl-util:threeCharLangCode(
-                                (metas/language|dataset/metas/default/metadata_languages|language)[1])}"/>
+                                (language)[1])}"/>
           </lan:language>
           <mdb:hierarchyLevel>
             <mdb:MD_ScopeCode codeListValue="series" codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_ScopeCode"/>
@@ -95,7 +95,7 @@
         <xsl:when test="contacts or contact or providers">
           <!-- Determine if we have metadata contacts from STAC contacts extension -->
           <xsl:variable name="hasMetadataContacts" select="count(contacts) > 0 or contact"/>
-          
+
           <!-- Process contacts list from STAC contacts extension -->
           <xsl:for-each select="contacts">
             <mdb:contact>
@@ -206,7 +206,7 @@
               </cit:CI_Responsibility>
             </mdb:contact>
           </xsl:for-each>
-          
+
           <!-- Process single contact object from STAC if present -->
           <xsl:if test="contact">
             <mdb:contact>
@@ -327,7 +327,7 @@
               </cit:CI_Responsibility>
             </mdb:contact>
           </xsl:if>
-          
+
           <!-- Process first provider as metadata contact if no specific metadata contacts -->
           <xsl:if test="not($hasMetadataContacts) and count(providers) > 0">
             <xsl:for-each select="providers[1]">
@@ -371,7 +371,7 @@
               </mdb:contact>
             </xsl:for-each>
           </xsl:if>
-          
+
           <!-- Fallback: If no metadata contacts, providers, or single contact, use first contact from list as a default -->
           <xsl:if test="not($hasMetadataContacts) and count(providers) = 0 and count(contacts) > 0">
             <mdb:contact>
@@ -421,11 +421,6 @@
               </cit:role>
               <cit:party>
                 <cit:CI_Organisation>
-                  <cit:name>
-                    <gco:CharacterString>
-                      <xsl:value-of select="(metas/publisher|dataset/metas/default/publisher)[1]"/>
-                    </gco:CharacterString>
-                  </cit:name>
                   <cit:contactInfo>
                     <cit:CI_Contact>
                       <cit:address>
@@ -446,11 +441,6 @@
         </xsl:otherwise>
       </xsl:choose>
 
-
-      <xsl:call-template name="build-date">
-        <xsl:with-param name="tag" select="'mdb:dateInfo'"/>
-      </xsl:call-template>
-
       <mdb:metadataStandard>
         <cit:CI_Citation>
           <cit:title>
@@ -458,9 +448,6 @@
           </cit:title>
         </cit:CI_Citation>
       </mdb:metadataStandard>
-
-      <xsl:apply-templates select="dataset/metas/default/records_count"
-                           mode="ods-to-iso"/>
 
       <mdb:identificationInfo>
         <mri:MD_DataIdentification>
@@ -543,11 +530,11 @@
               <cit:title>
                 <gco:CharacterString>
                   <xsl:choose>
-                    <xsl:when test="(metas/title|dataset/metas/default/title|title)[1] and 
-                                   string-length((metas/title|dataset/metas/default/title|title)[1]) > 0">
-                      <xsl:value-of select="(metas/title|dataset/metas/default/title|title)[1]"/>
+                    <xsl:when test="(title)[1] and
+                                   string-length((title)[1]) > 0">
+                      <xsl:value-of select="(title)[1]"/>
                     </xsl:when>
-                    <xsl:when test="(id|datasetid|dataset/dataset_id)[1] and 
+                    <xsl:when test="(id|datasetid|dataset/dataset_id)[1] and
                                    string-length((id|datasetid|dataset/dataset_id)[1]) > 0">
                       <xsl:value-of select="concat('STAC Collection: ', (id|datasetid|dataset/dataset_id)[1])"/>
                     </xsl:when>
@@ -558,23 +545,19 @@
                 </gco:CharacterString>
               </cit:title>
 
-              <xsl:call-template name="build-date">
-                <xsl:with-param name="tag" select="'cit:date'"/>
-              </xsl:call-template>
-
               <xsl:apply-templates select="dataset/dataset_id"
                                    mode="ods-to-iso"/>
-              
+
               <xsl:call-template name="ensure-identifier"/>
-              
+
             </cit:CI_Citation>
           </mri:citation>
           <mri:abstract>
             <gco:CharacterString>
               <xsl:choose>
-                <xsl:when test="(metas/description|dataset/metas/default/description|description)[1] and 
-                               string-length((metas/description|dataset/metas/default/description|description)[1]) > 0">
-                  <xsl:value-of select="(metas/description|dataset/metas/default/description|description)[1]"/>
+                <xsl:when test="(description)[1] and
+                               string-length((description)[1]) > 0">
+                  <xsl:value-of select="(description)[1]"/>
                 </xsl:when>
                 <xsl:otherwise>
                   <xsl:value-of select="'STAC Collection harvested via STAC API'"/>
@@ -583,104 +566,11 @@
             </gco:CharacterString>
           </mri:abstract>
 
-          <xsl:for-each select="dataset/metas/default/attributions[. != 'null']">
-            <mri:credit>
-              <gco:CharacterString>
-                <xsl:value-of select="."/>
-              </gco:CharacterString>
-            </mri:credit>
-          </xsl:for-each>
-          <!-- Process contacts and providers -->
           <xsl:choose>
             <xsl:when test="contacts or contact or providers">
-              <!-- Process STAC providers -->
               <xsl:call-template name="map-stac-providers"/>
             </xsl:when>
-            <xsl:otherwise>
-              <!-- Fallback when no contacts or providers are available -->
-              <xsl:if test="not(organization)">
-                <mri:pointOfContact>
-                  <cit:CI_Responsibility>
-                    <cit:role>
-                      <cit:CI_RoleCode codeList="codeListLocation#CI_RoleCode" codeListValue="originator">publisher
-                      </cit:CI_RoleCode>
-                    </cit:role>
-                    <cit:party>
-                      <cit:CI_Organisation>
-                        <cit:name>
-                          <gco:CharacterString>
-                            <xsl:value-of select="metas/publisher|dataset/metas/default/publisher"/>
-                          </gco:CharacterString>
-                        </cit:name>
-                        <xsl:if test="author_email">
-                          <cit:contactInfo>
-                            <cit:CI_Contact>
-                              <cit:address>
-                                <cit:CI_Address>
-                                  <cit:electronicMailAddress>
-                                    <gco:CharacterString>
-                                      <xsl:value-of select="author_email"/>
-                                    </gco:CharacterString>
-                                  </cit:electronicMailAddress>
-                                </cit:CI_Address>
-                              </cit:address>
-                            </cit:CI_Contact>
-                          </cit:contactInfo>
-                        </xsl:if>
-                      </cit:CI_Organisation>
-                    </cit:party>
-                  </cit:CI_Responsibility>
-                </mri:pointOfContact>
-              </xsl:if>
-              <xsl:for-each select="organization">
-                <mri:pointOfContact>
-                  <cit:CI_Responsibility>
-                    <cit:role>
-                      <cit:CI_RoleCode codeList="codeListLocation#CI_RoleCode" codeListValue="pointOfContact">pointOfContact
-                      </cit:CI_RoleCode>
-                    </cit:role>
-                    <cit:party>
-                      <cit:CI_Organisation>
-                        <cit:name>
-                          <gco:CharacterString>
-                            <xsl:value-of select="."/>
-                          </gco:CharacterString>
-                        </cit:name>
-                        <cit:contactInfo>
-                          <cit:CI_Contact>
-                            <cit:address>
-                              <cit:CI_Address>
-                                <cit:electronicMailAddress>
-                                  <gco:CharacterString>
-                                    <xsl:value-of select="../author_email"/>
-                                  </gco:CharacterString>
-                                </cit:electronicMailAddress>
-                              </cit:CI_Address>
-                            </cit:address>
-                          </cit:CI_Contact>
-                        </cit:contactInfo>
-                      </cit:CI_Organisation>
-                    </cit:party>
-                  </cit:CI_Responsibility>
-                </mri:pointOfContact>
-              </xsl:for-each>
-            </xsl:otherwise>
           </xsl:choose>
-
-          <xsl:apply-templates select="dataset/metas/dcat/creator"
-                               mode="ods-to-iso"/>
-
-          <xsl:variable name="odsThemes"
-                        select="metas/theme|dataset/metas/default/theme"/>
-          <xsl:if test="count($odsThemes) > 0">
-            <xsl:for-each select="distinct-values($odsThemeToIsoTopic[theme = $odsThemes]/name())">
-              <mri:topicCategory>
-                <mri:MD_TopicCategoryCode>
-                  <xsl:value-of select="."/>
-                </mri:MD_TopicCategoryCode>
-              </mri:topicCategory>
-            </xsl:for-each>
-          </xsl:if>
 
           <mri:extent>
             <gex:EX_Extent>
@@ -803,14 +693,6 @@
                     </cit:onlineResource>
                   </cit:CI_Citation>
                 </mco:reference>
-                <mco:accessConstraints>
-                  <mco:MD_RestrictionCode codeListValue="otherRestrictions"
-                                          codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#MD_RestrictionCode"/>
-                </mco:accessConstraints>
-                <mco:useConstraints>
-                  <mco:MD_RestrictionCode codeListValue="otherRestrictions"
-                                          codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#MD_RestrictionCode"/>
-                </mco:useConstraints>
                 <mco:otherConstraints>
                   <gco:CharacterString>
                     <xsl:value-of select="license"/>
@@ -821,10 +703,6 @@
 
           <mri:defaultLocale>
             <lan:PT_Locale>
-              <lan:language>
-                <lan:LanguageCode codeList="codeListLocation#LanguageCode"
-                                  codeListValue="{java-xsl-util:threeCharLangCode((metas/language|dataset/metas/default/language)[1])}"/>
-              </lan:language>
               <lan:characterEncoding>
                 <lan:MD_CharacterSetCode codeList="codeListLocation#MD_CharacterSetCode"
                                          codeListValue="utf8"/>
@@ -842,9 +720,6 @@
                 <gfc:producer></gfc:producer>
                 <gfc:featureType>
                   <gfc:FC_FeatureType>
-                    <gfc:typeName>
-                      <xsl:value-of select="(metas/title|dataset/metas/default/title)[1]"/>
-                    </gfc:typeName>
                     <gfc:isAbstract>
                       <gco:Boolean>false</gco:Boolean>
                     </gfc:isAbstract>
@@ -929,11 +804,6 @@
 
       <mdb:resourceLineage>
         <mrl:LI_Lineage>
-          <mrl:statement>
-            <gco:CharacterString>
-              <xsl:value-of select="dataset/metas/dcat/dataquality[. != 'null']"/>
-            </gco:CharacterString>
-          </mrl:statement>
           <mrl:scope>
             <mcc:MD_Scope>
               <mcc:level>
@@ -960,7 +830,7 @@
 
   <xsl:template match="*" mode="process-collection">
     <xsl:apply-templates select="."/>
-    
+
     <xsl:if test="extent">
       <mri:extent>
         <gex:EX_Extent>
@@ -984,7 +854,7 @@
               </gex:geographicElement>
             </xsl:for-each>
           </xsl:if>
-          
+
           <xsl:if test="extent/temporal/interval">
             <xsl:for-each select="extent/temporal/interval/array">
               <gex:temporalElement>
@@ -1039,29 +909,6 @@
       </mrd:MD_Format>
     </mrd:distributionFormat>
   </xsl:template>
-  <xsl:template name="build-date">
-    <xsl:param name="tag"/>
-    <xsl:for-each select="metas/modified[. != 'null']|
-                                          metas/data_processed[. != 'null']|
-                                          dataset/metas/default/modified[. != 'null']|
-                                          dataset/metas/default/data_processed[. != 'null']">
-
-      <xsl:variable name="type"
-                    select="if(name() = 'data_processed') then 'revision' else 'publication'"/>
-      <xsl:element name="{$tag}">
-        <cit:CI_Date>
-          <cit:date>
-            <gco:DateTime>
-              <xsl:value-of select="."/>
-            </gco:DateTime>
-          </cit:date>
-          <cit:dateType>
-            <cit:CI_DateTypeCode codeList="codeListLocation#CI_DateTypeCode" codeListValue="{$type}"/>
-          </cit:dateType>
-        </cit:CI_Date>
-      </xsl:element>
-    </xsl:for-each>
-  </xsl:template>
 
 
   <xsl:template match="dataset/dataset_id"
@@ -1076,7 +923,7 @@
       </mcc:MD_Identifier>
     </cit:identifier>
   </xsl:template>
-  
+
   <!-- Add a fallback identifier if none is provided -->
   <xsl:template name="ensure-identifier">
     <xsl:if test="not(dataset/dataset_id) and not(datasetid) and not(id)">
@@ -1094,7 +941,6 @@
 
   <xsl:template match="*" mode="ods-to-iso"/>
 
-  <!-- Template to handle STAC providers -->
   <xsl:template name="map-stac-providers">
     <xsl:for-each select="providers">
       <mri:pointOfContact>

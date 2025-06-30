@@ -669,7 +669,7 @@
             toISOConversion: "schema:iso19115-3.2018:convert/fromJsonOpenDataSoft"
           }
         },
-        STAC: {
+        "STAC Collection": {
           defaultValues: {
             loopElement: "/collections",
             numberOfRecordPath: "",
