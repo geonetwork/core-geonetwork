@@ -686,7 +686,7 @@ public class KeywordsApi {
 
         // Remove file
         if (Files.exists(item)) {
-            IO.deleteFile(item, true, Geonet.THESAURUS);
+            org.fao.geonet.utils.IO.deleteFile(item, true, Geonet.THESAURUS);
         } else {
             throw new IllegalArgumentException(String.format(
                 "Thesaurus RDF file was not found for thesaurus with identifier '%s'.",
@@ -1460,7 +1460,7 @@ public class KeywordsApi {
             Thesaurus gst = new Thesaurus(languagesMapper, fname, type, dir, path, siteURL, thesaurusMan.getThesaurusCacheMaxSize());
             thesaurusMan.addThesaurus(gst, false);
         } else {
-            IO.deleteFile(rdfFile, false, Geonet.THESAURUS);
+            org.fao.geonet.utils.IO.deleteFile(rdfFile, false, Geonet.THESAURUS);
             throw new WebApplicationException("Unknown format (Must be in SKOS format).");
         }
     }
