@@ -50,8 +50,8 @@
           <mcc:code>
             <gco:CharacterString>
               <xsl:choose>
-                <xsl:when test="(datasetid|dataset/dataset_id|id)[1] and string-length((datasetid|dataset/dataset_id|id)[1]) > 0">
-                  <xsl:value-of select="(datasetid|dataset/dataset_id|id)[1]"/>
+                <xsl:when test="(id)[1] and string-length((id)[1]) > 0">
+                  <xsl:value-of select="(id)[1]"/>
                 </xsl:when>
                 <xsl:otherwise>
                   <xsl:value-of select="generate-id()"/>
@@ -534,9 +534,9 @@
                                    string-length((title)[1]) > 0">
                       <xsl:value-of select="(title)[1]"/>
                     </xsl:when>
-                    <xsl:when test="(id|datasetid|dataset/dataset_id)[1] and
-                                   string-length((id|datasetid|dataset/dataset_id)[1]) > 0">
-                      <xsl:value-of select="concat('STAC Collection: ', (id|datasetid|dataset/dataset_id)[1])"/>
+                    <xsl:when test="(id)[1] and
+                                   string-length((id)[1]) > 0">
+                      <xsl:value-of select="concat('STAC Collection: ', (id)[1])"/>
                     </xsl:when>
                     <xsl:otherwise>
                       <xsl:value-of select="'STAC Collection'"/>
@@ -544,9 +544,6 @@
                   </xsl:choose>
                 </gco:CharacterString>
               </cit:title>
-
-              <xsl:apply-templates select="dataset/dataset_id"
-                                   mode="ods-to-iso"/>
 
               <xsl:call-template name="ensure-identifier"/>
 
@@ -675,31 +672,31 @@
           </xsl:if>
 
           <mri:resourceConstraints>
-              <mco:MD_LegalConstraints>
-                <mco:reference>
-                  <cit:CI_Citation>
-                    <cit:title>
-                      <gco:CharacterString>
-                        <xsl:value-of select="license"/>
-                      </gco:CharacterString>
-                    </cit:title>
-                    <cit:onlineResource>
-                      <cit:CI_OnlineResource>
-                        <cit:linkage>
-                          <gco:CharacterString>
-                          </gco:CharacterString>
-                        </cit:linkage>
-                      </cit:CI_OnlineResource>
-                    </cit:onlineResource>
-                  </cit:CI_Citation>
-                </mco:reference>
-                <mco:otherConstraints>
-                  <gco:CharacterString>
-                    <xsl:value-of select="license"/>
-                  </gco:CharacterString>
-                </mco:otherConstraints>
-              </mco:MD_LegalConstraints>
-            </mri:resourceConstraints>
+            <mco:MD_LegalConstraints>
+              <mco:reference>
+                <cit:CI_Citation>
+                  <cit:title>
+                    <gco:CharacterString>
+                      <xsl:value-of select="license"/>
+                    </gco:CharacterString>
+                  </cit:title>
+                  <cit:onlineResource>
+                    <cit:CI_OnlineResource>
+                      <cit:linkage>
+                        <gco:CharacterString>
+                        </gco:CharacterString>
+                      </cit:linkage>
+                    </cit:CI_OnlineResource>
+                  </cit:onlineResource>
+                </cit:CI_Citation>
+              </mco:reference>
+              <mco:otherConstraints>
+                <gco:CharacterString>
+                  <xsl:value-of select="license"/>
+                </gco:CharacterString>
+              </mco:otherConstraints>
+            </mco:MD_LegalConstraints>
+          </mri:resourceConstraints>
 
           <mri:defaultLocale>
             <lan:PT_Locale>
@@ -911,22 +908,9 @@
   </xsl:template>
 
 
-  <xsl:template match="dataset/dataset_id"
-                mode="ods-to-iso">
-    <cit:identifier>
-      <mcc:MD_Identifier>
-        <mcc:code>
-          <gco:CharacterString>
-            <xsl:value-of select="."/>
-          </gco:CharacterString>
-        </mcc:code>
-      </mcc:MD_Identifier>
-    </cit:identifier>
-  </xsl:template>
-
   <!-- Add a fallback identifier if none is provided -->
   <xsl:template name="ensure-identifier">
-    <xsl:if test="not(dataset/dataset_id) and not(datasetid) and not(id)">
+    <xsl:if test="not(id)">
       <cit:identifier>
         <mcc:MD_Identifier>
           <mcc:code>
