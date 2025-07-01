@@ -8,19 +8,20 @@ The open-source project was initially managed by Jeroen Ticheler and then donate
 
 The GeoNetwork project roadmap is managed using a proposal process, with the GeoNetwork leadership team voting on proposals made by members of our community. This process has moved from mailing list to a [project board](https://github.com/orgs/geonetwork/projects/2).
 
-Active committers to the GeoNetwork project have responsibility for reviewing community contributions to the project,
-handling security vulnerability reports, and voting on roadmap proposals:
+Active developers in GeoNetwork project have taken on responsibility for reviewing community contributions, making releases, handling security vulnerability reports.
 
-* [Jose García](https://github.com/josegar74): [Active Committer](https://github.com/geonetwork/core-geonetwork/pulls?q=is%3Apr+is%3Aclosed+reviewed-by%3Ajosegar74)
-* [Olivia Guyot](https://github.com/jahow): [Active Committer](https://github.com/geonetwork/core-geonetwork/pulls?q=is%3Apr+is%3Aclosed++reviewed-by%3Ajahow)
-* [Jody Garnett](https://github.com/jodygarnett): [Active Committer](https://github.com/geonetwork/core-geonetwork/pulls?q=is%3Apr+is%3Aclosed++reviewed-by%3Ajodygarnett)
-* [François Prunayre](https://github.com/fxprunayre): [Active Committer](https://github.com/geonetwork/core-geonetwork/pulls?q=is%3Apr+is%3Aclosed++reviewed-by%3Afxprunayre)
-* [Juan Luis Rodríguez Ponce](https://github.com/juanluisrp): [Active Committer](https://github.com/geonetwork/core-geonetwork/pulls?q=is%3Apr+is%3Aclosed+reviewed-by%3Ajuanluisrp)
+This dedication is reflected in community trust, and a Leadership responsibility to vote on roadmap proposals:
+
+* [Jose García](https://github.com/josegar74): [Active Maintainer](https://github.com/geonetwork/core-geonetwork/pulls?q=is%3Apr+is%3Aclosed+reviewed-by%3Ajosegar74)
+* [Olivia Guyot](https://github.com/jahow): [Active Maintainer](https://github.com/geonetwork/core-geonetwork/pulls?q=is%3Apr+is%3Aclosed++reviewed-by%3Ajahow)
+* [Jody Garnett](https://github.com/jodygarnett): [Active Maintainer](https://github.com/geonetwork/core-geonetwork/pulls?q=is%3Apr+is%3Aclosed++reviewed-by%3Ajodygarnett)
+* [Tyler McHugh](https://github.com/tylerjmchugh): [Active Maintainer](https://github.com/geonetwork/core-geonetwork/pulls?q=is%3Apr+is%3Aclosed+reviewed-by%3Atylerjmchugh)
+* [François Prunayre](https://github.com/fxprunayre): [Active Maintainer](https://github.com/geonetwork/core-geonetwork/pulls?q=is%3Apr+is%3Aclosed++reviewed-by%3Afxprunayre)
+* [Juan Luis Rodríguez Ponce](https://github.com/juanluisrp): [Active Maintainer](https://github.com/geonetwork/core-geonetwork/pulls?q=is%3Apr+is%3Aclosed+reviewed-by%3Ajuanluisrp)
 * [Jeroen Ticheler](https://github.com/ticheler) - [OSGeo Project Officer](https://www.osgeo.org/about/board/)
-* [Ian Wallen](https://github.com/ianwallen): [Active Committer](https://github.com/geonetwork/core-geonetwork/pulls?q=is%3Apr+is%3Aclosed+reviewed-by%3Aianwallen)
-* [Fei Fei Wang](https://github.com/wangf1122): [Active Committer](https://github.com/geonetwork/core-geonetwork/pulls?q=is%3Apr+is%3Aclosed+reviewed-by%3Awangf1122)
+* [Ian Wallen](https://github.com/ianwallen): [Active Maintainer](https://github.com/geonetwork/core-geonetwork/pulls?q=is%3Apr+is%3Aclosed+reviewed-by%3Aianwallen)
 
-GeoNetwork activity determined over six months:
+Active maintainer statistics are determined over six months, with the goal of an effective leadership team between 5 and 10 individuals.
 
 * GN4: [is:pr is:closed  reviewed-by:@me](https://github.com/geonetwork/core-geonetwork/pulls?q=is%3Apr+is%3Aclosed++reviewed-by%3A%40me)
 * GN5: [is:pr is:closed  reviewed-by:@me](https://github.com/geonetwork/geonetwork/pulls?q=is%3Apr+is%3Aclosed++reviewed-by%3A%40me)
@@ -30,25 +31,27 @@ gh pr list --repo geonetwork/core-geonetwork --state closed --search "reviewed-b
 gh pr list --repo geonetwork/geonetwork --state closed --search "reviewed-by:@me"
 ```
 
-This is primarily an active maintenance role, based on trust given the level of responsibility required. If you are interested in participating please speak up on the developer forum and start by testing and reviewing pull-requests. Nominated committers demonstrate contributions and dedication to the project.
+Jeroen Ticheler is our Open Source Geospatial Foundation representative, acting as "chair" for the leadership team, and is available to cast a tie breaking vote if required 
 
-Earning community trust as an committer allows you to merge a pull-request once your review is complete, although this does come with increased leadership responsibility.
+## Developer Roles
 
-We ask that committers remain active, meeting responsibilities to review pull requests, address security vulnerabilities and vote on roadmap proposals. As maintainers we understand that life can get in the way of community particpation – you are welcome to rejoin as your availability permits you to meet the responsibilities.
+Developer roles are based on trust given the level of responsibility required. If you are interested in participating please speak up on the developer forum and start by testing and reviewing pull-requests. 
+
+Developers are nominated for a role, self nomination is fine, reflecting ongoing commitment and community trust.
+
+Roles reflect increased project access
+
+| Role  | Responsibility | Trust | Project Access | Roadmap |
+| ----- | -------------- | ----- | -------------- | ------- |
+| build | build, automations, and release | Low | Access to mange workflows, branches and package releases | Non-voting |
+| security | Review security vulnerabilities | High | Security advisories | Non-voting |
+| maintainer | Review pull-requests | Highest | Merge pull requests | Voting |
+
+We ask that maintainers remain active, meeting responsibilities to review pull requests, address security vulnerabilities, and vote on roadmap proposals. As maintainers we understand that life can get in the way of community particpation – you are welcome to rejoin as your availability permits you to meet the responsibilities.
 
 Reference:
 
-- [Active Committers](https://github.com/orgs/geonetwork/teams/active-committers) (GitHub Team)
-
-## Commmitters
-
-GeoNetwork welcomes contributors to take a more active role in the project. If you have capacity please work towards building your comfort level with the code base and express an interest in taking a greater role.
-
-Having commit access is required to volunteer for such activities as making a release.
-
-Reference:
-
-* [Committers](https://github.com/orgs/geonetwork/teams/committers) (GitHub Team)
+- [Active Maintainer](https://github.com/orgs/geonetwork/teams/active-maintainer) (GitHub Team)
 
 ## Contributors
 
@@ -72,13 +75,12 @@ We would like to thank prior contributors, committers, and leadership for their 
 * Jesse Eichar - Leadership
 * Michel Gabriel
 * Florent Gravin - Leadership
-* Olivier Guyot
 * Craig Jones
 * Pierre Mauduit
 * Patrizia Monteduro - Leadership
 * Simon Pigot - Leadership
 * Francois Prunayre - Leadership
-* Emanuele Tajariol - LeadershipEmanuele Tajariol
+* Emanuele Tajariol - Leadership
 * Archie Warnock
 * Maria de Reyna Arias
 * Paul van Genuchten - Leadership
