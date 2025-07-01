@@ -91,18 +91,18 @@
         return angular.isUndefined($location.path()) || $location.path() == "";
       };
       this.getFormatter = function () {
-        var tokens = $location.path().split("/");
-        if (tokens.length > 2 && tokens[3] === "formatters") {
-          return "/formatters/" + $location.url().split("/formatters/")[1];
+        var tokens = $location.path().split("/formatters/");
+        if (tokens.length === 2) {
+          return "/formatters/" + tokens[1];
         } else {
           return undefined;
         }
       };
       this.getFormatterPath = function (defaultFormatter) {
-        var tokens = $location.path().split("/");
-        if (tokens.length > 2 && tokens[3] === "formatters") {
-          return "../api/records/" + $location.url().split(/^\/(metadraf|metadata)\//)[2];
-        } else if (tokens.length > 2 && tokens[3] === "main") {
+        var tokens = $location.path().split("/formatters/");
+        if (tokens.length === 2) {
+          return "../api/records/" + $location.url().split(/^metadraf|metadata\//)[1];
+        } else if ($location.path().indexOf("/formatters/") === -1) {
           return undefined; // Angular view
         } else if (defaultFormatter) {
           return (
@@ -130,7 +130,10 @@
 
       this.getUuid = function () {
         if (this.isMdView()) {
-          return $location.path().split("/")[2];
+          return $location
+            .path()
+            .split("/formatters")[0]
+            .replace(/\/(metadraf|metadata)\/(.*)/, "$2");
         }
       };
 

@@ -200,7 +200,7 @@
 
         // Don't increase popularity for working copies
         if (!gnMdViewObj.usingFormatter && md.draft !== "y") {
-          $http.post("../api/records/" + md.uuid + "/popularity");
+          $http.post("../api/records/" + encodeURIComponent(md.uuid) + "/popularity");
         }
         this.setLocationUuid(md.uuid, formatter);
         gnMdViewObj.recordsLoaded = true;
@@ -498,7 +498,7 @@
           return (
             url ||
             "../api/records/" +
-              uuid +
+              encodeURIComponent(uuid) +
               gnMetadataFormatter.getFormatterForRecord(md)[0].url
           );
         });

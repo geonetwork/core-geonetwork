@@ -202,11 +202,13 @@
 
           scope.buildFormatter = function (url, uuid, isDraft) {
             if (url.indexOf("${uuid}") !== -1) {
-              return url.replace("${lang}", scope.lang).replace("${uuid}", uuid);
+              return url
+                .replace("${lang}", scope.lang)
+                .replace("${uuid}", encodeURIComponent(uuid));
             } else {
               return (
                 "../api/records/" +
-                uuid +
+                encodeURIComponent(uuid) +
                 url.replace("${lang}", scope.lang) +
                 (isDraft == "y"
                   ? (url.indexOf("?") !== -1 ? "&" : "?") + "approved=false"

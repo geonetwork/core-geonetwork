@@ -338,11 +338,14 @@
           }
           return deferred.promise;
         } else {
-          return $http.post("../api/records/" + uuid + "/query/wfs-indexing-config", {
-            url: wfsUrl,
-            name: ftName,
-            protocol: protocol
-          });
+          return $http.post(
+            "../api/records/" + encodeURIComponent(uuid) + "/query/wfs-indexing-config",
+            {
+              url: wfsUrl,
+              name: ftName,
+              protocol: protocol
+            }
+          );
         }
       };
 

@@ -150,7 +150,9 @@
         buildEditUrlPrefix: function (service) {
           var params = [
             "../api/records/",
-            gnCurrentEdit.metadata ? gnCurrentEdit.metadata.uuid : gnCurrentEdit.id,
+            encodeURIComponent(
+              gnCurrentEdit.metadata ? gnCurrentEdit.metadata.uuid : gnCurrentEdit.id
+            ),
             "/",
             service,
             "?"
@@ -715,7 +717,7 @@
         },
         getRecord: function (uuid) {
           var defer = $q.defer();
-          $http.get("../api/records/" + uuid).then(
+          $http.get("../api/records/" + encodeURIComponent(uuid)).then(
             function (response) {
               defer.resolve(response.data);
             },

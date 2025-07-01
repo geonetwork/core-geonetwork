@@ -54,7 +54,7 @@
           method: "get",
           url:
             "../api/records/" +
-            uuidOrId +
+            encodeURIComponent(uuidOrId) +
             "/related?type=" +
             (types ? types.split("|").join("&type=") : "") +
             (approved === false ? "&approved=false" : ""),
@@ -453,7 +453,9 @@
                 for (var i = 0; i < scope.distributions.length; i++) {
                   if (
                     scope.distributions[i].url.match(
-                      ".*/api/records/" + scope.md.uuid + "/attachments/.*"
+                      ".*/api/records/" +
+                        encodeURIComponent(scope.md.uuid) +
+                        "/attachments/.*"
                     ) != null
                   ) {
                     scope.distributions[i].url = gnUrlUtils.remove(
@@ -729,7 +731,9 @@
                 for (var i = 0; i < scope.relations[idx].length; i++) {
                   if (
                     scope.relations[idx][i].url.match(
-                      ".*/api/records/" + scope.md.uuid + "/attachments/.*"
+                      ".*/api/records/" +
+                        encodeURIComponent(scope.md.uuid) +
+                        "/attachments/.*"
                     ) != null
                   ) {
                     scope.relations[idx][i].url = gnUrlUtils.remove(

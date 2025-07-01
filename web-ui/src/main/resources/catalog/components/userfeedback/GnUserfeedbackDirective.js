@@ -49,7 +49,7 @@
           method: "GET",
           url:
             "../api/records/" +
-            metatdataUUID +
+            encodeURIComponent(metatdataUUID) +
             "/userfeedback?size=" +
             numberOfCommentsDisplayed,
           isArray: true
@@ -59,7 +59,8 @@
       this.loadRating = function (metatdataUUID) {
         return $http({
           method: "GET",
-          url: "../api/records/" + metatdataUUID + "/userfeedbackrating",
+          url:
+            "../api/records/" + encodeURIComponent(metatdataUUID) + "/userfeedbackrating",
           isArray: false
         });
       };
