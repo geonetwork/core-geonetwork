@@ -5,27 +5,16 @@
                 xmlns:mcc="http://standards.iso.org/iso/19115/-3/mcc/1.0"
                 xmlns:mco="http://standards.iso.org/iso/19115/-3/mco/1.0"
                 xmlns:mdb="http://standards.iso.org/iso/19115/-3/mdb/2.0"
-                xmlns:mmi="http://standards.iso.org/iso/19115/-3/mmi/1.0"
-                xmlns:mrc="http://standards.iso.org/iso/19115/-3/mrc/1.0"
                 xmlns:mrd="http://standards.iso.org/iso/19115/-3/mrd/1.0"
                 xmlns:mri="http://standards.iso.org/iso/19115/-3/mri/1.0"
-                xmlns:mrl="http://standards.iso.org/iso/19115/-3/mrl/2.0"
                 xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0"
-                xmlns:gcx="http://standards.iso.org/iso/19115/-3/gcx/1.0"
                 xmlns:gex="http://standards.iso.org/iso/19115/-3/gex/1.0"
-                xmlns:msr="http://standards.iso.org/iso/19115/-3/msr/2.0"
-                xmlns:gfc="http://standards.iso.org/iso/19110/gfc/1.1"
                 xmlns:gml="http://www.opengis.net/gml/3.2"
-                xmlns:xlink="http://www.w3.org/1999/xlink"
                 xmlns:java-xsl-util="java:org.fao.geonet.util.XslUtil"
                 exclude-result-prefixes="#all">
 
-  <xsl:import href="protocol-mapping.xsl"/>
-  <xsl:import href="odstheme-mapping.xsl"/>
   <xsl:import href="ISO19139/utility/create19115-3Namespaces.xsl"/>
-
   <xsl:output method="xml" indent="yes"/>
-
   <xsl:strip-space elements="*"/>
 
   <xsl:template match="/">
@@ -33,12 +22,6 @@
       <xsl:when test="/record">
         <xsl:apply-templates select="/record"/>
       </xsl:when>
-      <xsl:when test="/*[local-name()='collections'] or /*[local-name()='collection']">
-        <xsl:apply-templates select="/*"/>
-      </xsl:when>
-      <xsl:otherwise>
-        <xsl:apply-templates select="/*"/>
-      </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
 
@@ -328,7 +311,7 @@
             </mdb:contact>
           </xsl:if>
 
-          <!-- Process first provider as metadata contact if no specific metadata contacts -->
+          <!-- Process first provider as metadata contact if no STAC contacts / contact -->
           <xsl:if test="not($hasMetadataContacts) and count(providers) > 0">
             <xsl:for-each select="providers[1]">
               <mdb:contact>
@@ -372,82 +355,8 @@
             </xsl:for-each>
           </xsl:if>
 
-          <!-- Fallback: If no metadata contacts, providers, or single contact, use first contact from list as a default -->
-          <xsl:if test="not($hasMetadataContacts) and count(providers) = 0 and count(contacts) > 0">
-            <mdb:contact>
-              <cit:CI_Responsibility>
-                <cit:role>
-                  <cit:CI_RoleCode codeList="codeListLocation#CI_RoleCode" codeListValue="pointOfContact"/>
-                </cit:role>
-                <cit:party>
-                  <cit:CI_Organisation>
-                    <cit:name>
-                      <gco:CharacterString>
-                        <xsl:choose>
-                          <xsl:when test="contacts[1]/organization">
-                            <xsl:value-of select="contacts[1]/organization"/>
-                          </xsl:when>
-                          <xsl:otherwise>
-                            <xsl:value-of select="contacts[1]/name"/>
-                          </xsl:otherwise>
-                        </xsl:choose>
-                      </gco:CharacterString>
-                    </cit:name>
-                    <xsl:if test="contacts[1]/emails and contacts[1]/emails/value">
-                      <cit:contactInfo>
-                        <cit:CI_Contact>
-                          <cit:address>
-                            <cit:CI_Address>
-                              <cit:electronicMailAddress>
-                                <gco:CharacterString><xsl:value-of select="contacts[1]/emails[1]/value"/></gco:CharacterString>
-                              </cit:electronicMailAddress>
-                            </cit:CI_Address>
-                          </cit:address>
-                        </cit:CI_Contact>
-                      </cit:contactInfo>
-                    </xsl:if>
-                  </cit:CI_Organisation>
-                </cit:party>
-              </cit:CI_Responsibility>
-            </mdb:contact>
-          </xsl:if>
         </xsl:when>
-        <xsl:otherwise>
-          <!-- Legacy/fallback contact processing when no contacts or providers are present -->
-          <mdb:contact>
-            <cit:CI_Responsibility>
-              <cit:role>
-                <cit:CI_RoleCode codeList="codeListLocation#CI_RoleCode" codeListValue="publisher"/>
-              </cit:role>
-              <cit:party>
-                <cit:CI_Organisation>
-                  <cit:contactInfo>
-                    <cit:CI_Contact>
-                      <cit:address>
-                        <cit:CI_Address>
-                          <cit:electronicMailAddress>
-                            <gco:CharacterString>
-                              <xsl:value-of select="author_email"/>
-                            </gco:CharacterString>
-                          </cit:electronicMailAddress>
-                        </cit:CI_Address>
-                      </cit:address>
-                    </cit:CI_Contact>
-                  </cit:contactInfo>
-                </cit:CI_Organisation>
-              </cit:party>
-            </cit:CI_Responsibility>
-          </mdb:contact>
-        </xsl:otherwise>
       </xsl:choose>
-
-      <mdb:metadataStandard>
-        <cit:CI_Citation>
-          <cit:title>
-            <gco:CharacterString>ISO 19115-3</gco:CharacterString>
-          </cit:title>
-        </cit:CI_Citation>
-      </mdb:metadataStandard>
 
       <mdb:identificationInfo>
         <mri:MD_DataIdentification>
@@ -544,9 +453,6 @@
                   </xsl:choose>
                 </gco:CharacterString>
               </cit:title>
-
-              <xsl:call-template name="ensure-identifier"/>
-
             </cit:CI_Citation>
           </mri:citation>
           <mri:abstract>
@@ -582,7 +488,6 @@
                               <xsl:when test="*[1] and *[1] != 'null'">
                                 <xsl:value-of select="*[1]"/>
                               </xsl:when>
-                              <xsl:otherwise>-180</xsl:otherwise>
                             </xsl:choose>
                           </gco:Decimal>
                         </gex:westBoundLongitude>
@@ -592,7 +497,6 @@
                               <xsl:when test="*[3] and *[3] != 'null'">
                                 <xsl:value-of select="*[3]"/>
                               </xsl:when>
-                              <xsl:otherwise>180</xsl:otherwise>
                             </xsl:choose>
                           </gco:Decimal>
                         </gex:eastBoundLongitude>
@@ -602,7 +506,6 @@
                               <xsl:when test="*[2] and *[2] != 'null'">
                                 <xsl:value-of select="*[2]"/>
                               </xsl:when>
-                              <xsl:otherwise>-90</xsl:otherwise>
                             </xsl:choose>
                           </gco:Decimal>
                         </gex:southBoundLatitude>
@@ -612,7 +515,6 @@
                               <xsl:when test="*[4] and *[4] != 'null'">
                                 <xsl:value-of select="*[4]"/>
                               </xsl:when>
-                              <xsl:otherwise>90</xsl:otherwise>
                             </xsl:choose>
                           </gco:Decimal>
                         </gex:northBoundLatitude>
@@ -632,9 +534,6 @@
                               <xsl:when test="*[1] and *[1] != 'null'">
                                 <xsl:value-of select="*[1]"/>
                               </xsl:when>
-                              <xsl:otherwise>
-                                <xsl:attribute name="indeterminatePosition">unknown</xsl:attribute>
-                              </xsl:otherwise>
                             </xsl:choose>
                           </gml:beginPosition>
                           <gml:endPosition>
@@ -642,9 +541,6 @@
                               <xsl:when test="*[2] and *[2] != 'null'">
                                 <xsl:value-of select="*[2]"/>
                               </xsl:when>
-                              <xsl:otherwise>
-                                <xsl:attribute name="indeterminatePosition">now</xsl:attribute>
-                              </xsl:otherwise>
                             </xsl:choose>
                           </gml:endPosition>
                         </gml:TimePeriod>
@@ -680,14 +576,6 @@
                       <xsl:value-of select="license"/>
                     </gco:CharacterString>
                   </cit:title>
-                  <cit:onlineResource>
-                    <cit:CI_OnlineResource>
-                      <cit:linkage>
-                        <gco:CharacterString>
-                        </gco:CharacterString>
-                      </cit:linkage>
-                    </cit:CI_OnlineResource>
-                  </cit:onlineResource>
                 </cit:CI_Citation>
               </mco:reference>
               <mco:otherConstraints>
@@ -709,71 +597,8 @@
         </mri:MD_DataIdentification>
       </mdb:identificationInfo>
 
-      <xsl:if test="count(fields|dataset/fields) > 0">
-        <mdb:contentInfo>
-          <mrc:MD_FeatureCatalogue>
-            <mrc:featureCatalogue>
-              <gfc:FC_FeatureCatalogue>
-                <gfc:producer></gfc:producer>
-                <gfc:featureType>
-                  <gfc:FC_FeatureType>
-                    <gfc:isAbstract>
-                      <gco:Boolean>false</gco:Boolean>
-                    </gfc:isAbstract>
-                    <xsl:for-each select="fields|dataset/fields">
-                      <gfc:carrierOfCharacteristics>
-                        <gfc:FC_FeatureAttribute>
-                          <gfc:memberName>
-                            <xsl:value-of select="name"/>
-                          </gfc:memberName>
-                          <gfc:definition>
-                            <gco:CharacterString>
-                              <xsl:value-of select="label"/>
-                              <xsl:if test="description[. != 'null']">
-                                -
-                                <xsl:value-of select="description"/>
-                              </xsl:if>
-                            </gco:CharacterString>
-                          </gfc:definition>
-                          <gfc:cardinality>1</gfc:cardinality>
-                          <gfc:valueType>
-                            <gco:TypeName>
-                              <gco:aName>
-                                <gco:CharacterString>
-                                  <xsl:value-of select="type"/>
-                                </gco:CharacterString>
-                              </gco:aName>
-                            </gco:TypeName>
-                          </gfc:valueType>
-                        </gfc:FC_FeatureAttribute>
-                      </gfc:carrierOfCharacteristics>
-                    </xsl:for-each>
-                    <gfc:featureCatalogue/>
-                  </gfc:FC_FeatureType>
-                </gfc:featureType>
-              </gfc:FC_FeatureCatalogue>
-            </mrc:featureCatalogue>
-          </mrc:MD_FeatureCatalogue>
-        </mdb:contentInfo>
-      </xsl:if>
-
       <mdb:distributionInfo>
         <mrd:MD_Distribution>
-          <xsl:for-each-group select="links/mimetype" group-by=".">
-            <mrd:distributionFormat>
-              <mrd:MD_Format>
-                <mrd:formatSpecificationCitation>
-                  <cit:CI_Citation>
-                    <cit:title>
-                      <gco:CharacterString>
-                        <xsl:value-of select="."/>
-                      </gco:CharacterString>
-                    </cit:title>
-                  </cit:CI_Citation>
-                </mrd:formatSpecificationCitation>
-              </mrd:MD_Format>
-            </mrd:distributionFormat>
-          </xsl:for-each-group>
           <xsl:for-each select="links[rel = 'self']">
             <mrd:onLine>
               <cit:CI_OnlineResource>
@@ -787,7 +612,7 @@
                 </cit:protocol>
                 <cit:name>
                   <gco:CharacterString>
-                    <xsl:value-of select="@title|title"/>
+                    <xsl:value-of select="title"/>
                   </gco:CharacterString>
                 </cit:name>
                 <cit:description>
@@ -798,133 +623,10 @@
           </xsl:for-each>
         </mrd:MD_Distribution>
       </mdb:distributionInfo>
-
-      <mdb:resourceLineage>
-        <mrl:LI_Lineage>
-          <mrl:scope>
-            <mcc:MD_Scope>
-              <mcc:level>
-                <mcc:MD_ScopeCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#MD_ScopeCode"
-                                  codeListValue="series"/>
-              </mcc:level>
-            </mcc:MD_Scope>
-          </mrl:scope>
-        </mrl:LI_Lineage>
-      </mdb:resourceLineage>
     </mdb:MD_Metadata>
   </xsl:template>
-
-  <xsl:template match="*[local-name()='collections']">
-    <xsl:apply-templates select="*[local-name()='collections']/*"/>
-  </xsl:template>
-
-  <xsl:template match="*[local-name()='collection']">
-    <mdb:MD_Metadata>
-      <xsl:call-template name="add-iso19115-3.2018-namespaces"/>
-      <xsl:apply-templates select="." mode="process-collection"/>
-    </mdb:MD_Metadata>
-  </xsl:template>
-
-  <xsl:template match="*" mode="process-collection">
-    <xsl:apply-templates select="."/>
-
-    <xsl:if test="extent">
-      <mri:extent>
-        <gex:EX_Extent>
-          <xsl:if test="extent/spatial/bbox">
-            <xsl:for-each select="extent/spatial/bbox/array">
-              <gex:geographicElement>
-                <gex:EX_GeographicBoundingBox>
-                  <gex:westBoundLongitude>
-                    <gco:Decimal><xsl:value-of select="array[1]"/></gco:Decimal>
-                  </gex:westBoundLongitude>
-                  <gex:eastBoundLongitude>
-                    <gco:Decimal><xsl:value-of select="array[3]"/></gco:Decimal>
-                  </gex:eastBoundLongitude>
-                  <gex:southBoundLatitude>
-                    <gco:Decimal><xsl:value-of select="array[2]"/></gco:Decimal>
-                  </gex:southBoundLatitude>
-                  <gex:northBoundLatitude>
-                    <gco:Decimal><xsl:value-of select="array[4]"/></gco:Decimal>
-                  </gex:northBoundLatitude>
-                </gex:EX_GeographicBoundingBox>
-              </gex:geographicElement>
-            </xsl:for-each>
-          </xsl:if>
-
-          <xsl:if test="extent/temporal/interval">
-            <xsl:for-each select="extent/temporal/interval/array">
-              <gex:temporalElement>
-                <gex:EX_TemporalExtent>
-                  <gex:extent>
-                    <gml:TimePeriod>
-                      <gml:beginPosition>
-                        <xsl:choose>
-                          <xsl:when test="array[1] and array[1] != 'null'">
-                            <xsl:value-of select="array[1]"/>
-                          </xsl:when>
-                          <xsl:otherwise>
-                            <xsl:attribute name="indeterminatePosition">unknown</xsl:attribute>
-                          </xsl:otherwise>
-                        </xsl:choose>
-                      </gml:beginPosition>
-                      <gml:endPosition>
-                        <xsl:choose>
-                          <xsl:when test="array[2] and array[2] != 'null'">
-                            <xsl:value-of select="array[2]"/>
-                          </xsl:when>
-                          <xsl:otherwise>
-                            <xsl:attribute name="indeterminatePosition">now</xsl:attribute>
-                          </xsl:otherwise>
-                        </xsl:choose>
-                      </gml:endPosition>
-                    </gml:TimePeriod>
-                  </gex:extent>
-                </gex:EX_TemporalExtent>
-              </gex:temporalElement>
-            </xsl:for-each>
-          </xsl:if>
-        </gex:EX_Extent>
-      </mri:extent>
-    </xsl:if>
-  </xsl:template>
-
-
-  <xsl:template name="dataFormat">
-    <xsl:param name="format"/>
-    <mrd:distributionFormat>
-      <mrd:MD_Format>
-        <mrd:formatSpecificationCitation>
-          <cit:CI_Citation>
-            <cit:title>
-              <gco:CharacterString>
-                <xsl:value-of select="$format"/>
-              </gco:CharacterString>
-            </cit:title>
-          </cit:CI_Citation>
-        </mrd:formatSpecificationCitation>
-      </mrd:MD_Format>
-    </mrd:distributionFormat>
-  </xsl:template>
-
 
   <!-- Add a fallback identifier if none is provided -->
-  <xsl:template name="ensure-identifier">
-    <xsl:if test="not(id)">
-      <cit:identifier>
-        <mcc:MD_Identifier>
-          <mcc:code>
-            <gco:CharacterString>
-              <xsl:value-of select="generate-id()"/>
-            </gco:CharacterString>
-          </mcc:code>
-        </mcc:MD_Identifier>
-      </cit:identifier>
-    </xsl:if>
-  </xsl:template>
-
-  <xsl:template match="*" mode="ods-to-iso"/>
-
   <xsl:template name="map-stac-providers">
     <xsl:for-each select="providers">
       <mri:pointOfContact>
