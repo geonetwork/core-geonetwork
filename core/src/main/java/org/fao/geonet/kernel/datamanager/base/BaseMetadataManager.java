@@ -23,6 +23,8 @@
 
 package org.fao.geonet.kernel.datamanager.base;
 
+import co.elastic.clients.elasticsearch.core.search.Hit;
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Function;
 import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
@@ -33,6 +35,7 @@ import jeeves.transaction.TransactionManager;
 import jeeves.transaction.TransactionTask;
 import jeeves.xlink.Processor;
 import org.apache.commons.lang.StringUtils;
+import co.elastic.clients.elasticsearch.core.SearchResponse;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.records.attachments.Store;
 import org.fao.geonet.constants.Edit;
@@ -41,6 +44,7 @@ import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.*;
 import org.fao.geonet.events.history.RecordDeletedEvent;
 import org.fao.geonet.events.md.MetadataPreRemove;
+import org.fao.geonet.exceptions.GNException;
 import org.fao.geonet.exceptions.UnAuthorizedException;
 import org.fao.geonet.kernel.*;
 import org.fao.geonet.kernel.datamanager.*;
@@ -108,8 +112,6 @@ public class BaseMetadataManager implements IMetadataManager {
     @Autowired
     private GroupRepository groupRepository;
     @Autowired
-    private MetadataStatusRepository metadataStatusRepository;
-    @Autowired
     private MetadataValidationRepository metadataValidationRepository;
     @Autowired
     private MetadataRepository metadataRepository;
@@ -145,6 +147,10 @@ public class BaseMetadataManager implements IMetadataManager {
 
     @Autowired
     private ApplicationContext _applicationContext;
+
+    @VisibleForTesting
+    public int maxMdsReferencingSubTemplate = 10000;
+
     @PersistenceContext
     private EntityManager _entityManager;
 
@@ -790,18 +796,11 @@ public class BaseMetadataManager implements IMetadataManager {
                     getSearchManager().delete(String.format("+uuid:\"%s\"", uuidBeforeUfo));
                 }
                 metadataIndexer.indexMetadata(metadataId, true, indexingMode);
+                if (metadata.getDataInfo().getType() == MetadataType.SUB_TEMPLATE) {
+                    indexMdsReferencingSubTemplate(context, metadata);
+                }
             }
         }
-
-//		  TODO: TODOES Searhc for related records with an XLink pointing to this subtemplate
-//        if (metadata.getDataInfo().getType() == MetadataType.SUB_TEMPLATE) {
-//            MetaSearcher searcher = searcherForReferencingMetadata(context, metadata);
-//            Map<Integer, AbstractMetadata> result = ((LuceneSearcher) searcher).getAllMdInfo(context, 500);
-//            for (Integer id : result.keySet()) {
-//                IndexingList list = context.getBean(IndexingList.class);
-//                list.add(id);
-//            }
-//        }
 
         Log.trace(Geonet.DATA_MANAGER, "Finishing update of record with id " + metadataId);
         // Return an up to date metadata record
@@ -1350,4 +1349,26 @@ public class BaseMetadataManager implements IMetadataManager {
         return this.searchManager.query(query.toString(), null, 0, 0).hits().total().value() > 0;
     }
 
+    private void indexMdsReferencingSubTemplate(ServiceContext context, AbstractMetadata subTemplate) throws Exception {
+        String query = String.format("xlink:*%s*", subTemplate.getUuid());
+        SearchResponse response = this.searchManager.query(query, null, 0, maxMdsReferencingSubTemplate);
+        if (response.hits().total().value() > maxMdsReferencingSubTemplate) {
+            throw new GNException("Not implemented");
+        }
+        ArrayList<String> toIndex = new ArrayList<>();
+        List<Hit> hits = (List<Hit>) response.hits().hits();
+        hits.stream().map(Hit::id).forEach(consumerUuid -> {
+            try {
+                String consumerId = this.metadataUtils.getMetadataId(consumerUuid);
+                if (consumerId != null) {
+                    toIndex.add(consumerId);
+                }
+            } catch (RuntimeException e) {
+                throw e;
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        });
+        metadataIndexer.batchIndexInThreadPool(context, toIndex);
+    }
 }

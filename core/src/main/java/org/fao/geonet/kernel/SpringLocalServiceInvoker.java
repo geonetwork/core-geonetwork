@@ -22,6 +22,7 @@
  */
 package org.fao.geonet.kernel;
 
+import jeeves.server.context.ServiceContext;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockHttpSession;
@@ -67,7 +68,17 @@ public class SpringLocalServiceInvoker {
     }
 
     public Object invoke(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        ServiceContext srvContext = ServiceContext.get();
+        try {
+            return doInvoke(request, response);
+        } finally {
+            if (srvContext != null) {
+                srvContext.setAsThreadLocal();
+            }
+        }
+    }
 
+    private Object doInvoke(HttpServletRequest request, HttpServletResponse response) throws Exception {
         HandlerExecutionChain handlerExecutionChain = requestMappingHandlerMapping.getHandler(request);
         HandlerMethod handlerMethod = (HandlerMethod) handlerExecutionChain.getHandler();
 
@@ -91,10 +102,10 @@ public class SpringLocalServiceInvoker {
             //
             String fwdUrl = StringUtils.substringAfter(checkForward,"forward:");
 						String lastComponent = StringUtils.substringAfterLast(request.getRequestURI(),"/");
-            if (lastComponent.length() > 0 && StringUtils.startsWith(fwdUrl, lastComponent)) {
-							return invoke(request.getRequestURI()+StringUtils.substringAfter(fwdUrl,lastComponent));
+            if (!lastComponent.isEmpty() && StringUtils.startsWith(fwdUrl, lastComponent)) {
+                return invoke(request.getRequestURI() + StringUtils.substringAfter(fwdUrl, lastComponent));
 						} else {
-							return invoke(fwdUrl);
+                return invoke(fwdUrl);
            	}
           }
         }
