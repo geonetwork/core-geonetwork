@@ -122,6 +122,7 @@
     "gnConfigService",
     "gnGlobalSettings",
     "gnLangs",
+    "gnMdFormatter",
     function (
       gnMetadataActions,
       $http,
@@ -129,7 +130,8 @@
       gnConfig,
       gnConfigService,
       gnGlobalSettings,
-      gnLangs
+      gnLangs,
+      gnMdFormatter
     ) {
       return {
         restrict: "A",
@@ -138,7 +140,18 @@
         link: function linkFn(scope, element, attrs) {
           scope.mdService = gnMetadataActions;
           scope.md = scope.$eval(attrs.gnMdActionsMenu);
-          scope.formatterList = gnGlobalSettings.gnCfg.mods.search.downloadFormatter;
+          scope.formatterList = [];
+
+          gnMdFormatter
+            .getAvailableFormattersForRecord(scope.md)
+            .then(function (availableFormatters) {
+              var formatterList = gnGlobalSettings.gnCfg.mods.search.downloadFormatter;
+
+              scope.formatterList = gnMdFormatter.calculateValidFormattersForRecord(
+                formatterList,
+                availableFormatters
+              );
+            });
 
           scope.tasks = [];
           scope.hasVisibletasks = false;
