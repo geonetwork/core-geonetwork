@@ -49,7 +49,7 @@
             scope.loading = true;
 
             gnIndexService
-              .getIndexMessages(gnCurrentEdit.metadata.uuid)
+              .getIndexReport(gnCurrentEdit.metadata.uuid)
               .then(function (report) {
                 scope.warningMessages = report.warningMessages;
                 scope.errorMessages = report.errorMessages;
