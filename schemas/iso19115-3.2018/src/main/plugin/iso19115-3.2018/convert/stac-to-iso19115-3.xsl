@@ -68,7 +68,7 @@
           </mdb:resourceScope>
         </mdb:MD_MetadataScope>
       </mdb:metadataScope>
-      <!-- Process contacts and providers for metadata contacts -->
+
       <xsl:choose>
         <xsl:when test="contacts or contact or providers">
           <xsl:for-each select="contacts">
@@ -131,7 +131,6 @@
 
       <mdb:identificationInfo>
         <mri:MD_DataIdentification>
-          <!-- Handle assets with role "thumbnail" -->
           <xsl:variable name="thumbnailAssets" select="assets/*[roles[contains(., 'thumbnail')]]"/>
           <xsl:if test="count($thumbnailAssets) > 0">
             <mri:graphicOverview>
@@ -169,7 +168,7 @@
             <cit:CI_Citation>
               <cit:title>
                 <gco:CharacterString>
-                  <xsl:value-of select="if ((title)[1] and string-length((title)[1]) > 0) then (title)[1] 
+                  <xsl:value-of select="if ((title)[1] and string-length((title)[1]) > 0) then (title)[1]
                                         else if ((id)[1] and string-length((id)[1]) > 0) then concat('STAC Collection: ', (id)[1])
                                         else 'STAC Collection'"/>
                 </gco:CharacterString>
@@ -178,8 +177,8 @@
           </mri:citation>
           <mri:abstract>
             <gco:CharacterString>
-              <xsl:value-of select="if ((description)[1] and string-length((description)[1]) > 0) 
-                                    then (description)[1] 
+              <xsl:value-of select="if ((description)[1] and string-length((description)[1]) > 0)
+                                    then (description)[1]
                                     else 'STAC Collection harvested via STAC API'"/>
             </gco:CharacterString>
           </mri:abstract>
