@@ -32,14 +32,7 @@
         <mcc:MD_Identifier>
           <mcc:code>
             <gco:CharacterString>
-              <xsl:choose>
-                <xsl:when test="(id)[1] and string-length((id)[1]) > 0">
-                  <xsl:value-of select="(id)[1]"/>
-                </xsl:when>
-                <xsl:otherwise>
-                  <xsl:value-of select="generate-id()"/>
-                </xsl:otherwise>
-              </xsl:choose>
+              <xsl:value-of select="if ((id)[1] and string-length((id)[1]) > 0) then (id)[1] else generate-id()"/>
             </gco:CharacterString>
           </mcc:code>
         </mcc:MD_Identifier>
@@ -76,25 +69,19 @@
       <!-- Process contacts and providers for metadata contacts -->
       <xsl:choose>
         <xsl:when test="contacts or contact or providers">
-          <!-- Determine if we have metadata contacts from STAC contacts extension -->
-          <xsl:variable name="hasMetadataContacts" select="count(contacts) > 0 or contact"/>
-
-          <!-- Process contacts list from STAC contacts extension -->
           <xsl:for-each select="contacts">
             <xsl:call-template name="map-stac-contact">
               <xsl:with-param name="contactNode" select="."/>
             </xsl:call-template>
           </xsl:for-each>
 
-          <!-- Process single contact object from STAC if present -->
           <xsl:if test="contact">
             <xsl:call-template name="map-stac-contact">
               <xsl:with-param name="contactNode" select="contact"/>
             </xsl:call-template>
           </xsl:if>
 
-          <!-- Process first provider as metadata contact if no STAC contacts / contact -->
-          <xsl:if test="not($hasMetadataContacts) and count(providers) > 0">
+          <xsl:if test="not(contacts) and not(contact) and count(providers) > 0">
             <xsl:for-each select="providers[1]">
               <mdb:contact>
                 <cit:CI_Responsibility>
@@ -142,57 +129,27 @@
 
       <mdb:identificationInfo>
         <mri:MD_DataIdentification>
-          <!-- Handle QL, ql, or thumbnail in assets -->
-          <xsl:if test="assets/QL or assets/ql or assets/thumbnail">
+          <!-- Handle assets with role "thumbnail" -->
+          <xsl:variable name="thumbnailAssets" select="assets/*[roles[contains(., 'thumbnail')]]"/>
+          <xsl:if test="count($thumbnailAssets) > 0">
             <mri:graphicOverview>
               <mcc:MD_BrowseGraphic>
                 <mcc:fileName>
                   <gco:CharacterString>
-                    <xsl:choose>
-                      <xsl:when test="assets/QL">
-                        <xsl:value-of select="assets/QL/href"/>
-                      </xsl:when>
-                      <xsl:when test="assets/ql">
-                        <xsl:value-of select="assets/ql/href"/>
-                      </xsl:when>
-                      <xsl:otherwise>
-                        <xsl:value-of select="assets/thumbnail/href"/>
-                      </xsl:otherwise>
-                    </xsl:choose>
+                    <xsl:value-of select="$thumbnailAssets[1]/href"/>
                   </gco:CharacterString>
                 </mcc:fileName>
                 <mcc:fileDescription>
                   <gco:CharacterString>
                     <xsl:choose>
-                      <!-- Handle cases for uppercase QL -->
-                      <xsl:when test="assets/QL/title and assets/QL/description">
-                        <xsl:value-of select="concat(assets/QL/title, ' - ', assets/QL/description)"/>
+                      <xsl:when test="$thumbnailAssets[1]/title and $thumbnailAssets[1]/description">
+                        <xsl:value-of select="concat($thumbnailAssets[1]/title, ' - ', $thumbnailAssets[1]/description)"/>
                       </xsl:when>
-                      <xsl:when test="assets/QL/title">
-                        <xsl:value-of select="assets/QL/title"/>
+                      <xsl:when test="$thumbnailAssets[1]/title">
+                        <xsl:value-of select="$thumbnailAssets[1]/title"/>
                       </xsl:when>
-                      <xsl:when test="assets/QL/description">
-                        <xsl:value-of select="assets/QL/description"/>
-                      </xsl:when>
-                      <!-- Handle cases for lowercase ql -->
-                      <xsl:when test="assets/ql/title and assets/ql/description">
-                        <xsl:value-of select="concat(assets/ql/title, ' - ', assets/ql/description)"/>
-                      </xsl:when>
-                      <xsl:when test="assets/ql/title">
-                        <xsl:value-of select="assets/ql/title"/>
-                      </xsl:when>
-                      <xsl:when test="assets/ql/description">
-                        <xsl:value-of select="assets/ql/description"/>
-                      </xsl:when>
-                      <!-- Handle cases for thumbnail -->
-                      <xsl:when test="assets/thumbnail/title and assets/thumbnail/description">
-                        <xsl:value-of select="concat(assets/thumbnail/title, ' - ', assets/thumbnail/description)"/>
-                      </xsl:when>
-                      <xsl:when test="assets/thumbnail/title">
-                        <xsl:value-of select="assets/thumbnail/title"/>
-                      </xsl:when>
-                      <xsl:when test="assets/thumbnail/description">
-                        <xsl:value-of select="assets/thumbnail/description"/>
+                      <xsl:when test="$thumbnailAssets[1]/description">
+                        <xsl:value-of select="$thumbnailAssets[1]/description"/>
                       </xsl:when>
                       <xsl:otherwise>Preview image</xsl:otherwise>
                     </xsl:choose>
@@ -200,17 +157,7 @@
                 </mcc:fileDescription>
                 <mcc:fileType>
                   <gco:CharacterString>
-                    <xsl:choose>
-                      <xsl:when test="assets/QL">
-                        <xsl:value-of select="assets/QL/type"/>
-                      </xsl:when>
-                      <xsl:when test="assets/ql">
-                        <xsl:value-of select="assets/ql/type"/>
-                      </xsl:when>
-                      <xsl:otherwise>
-                        <xsl:value-of select="assets/thumbnail/type"/>
-                      </xsl:otherwise>
-                    </xsl:choose>
+                    <xsl:value-of select="$thumbnailAssets[1]/type"/>
                   </gco:CharacterString>
                 </mcc:fileType>
               </mcc:MD_BrowseGraphic>
@@ -220,34 +167,18 @@
             <cit:CI_Citation>
               <cit:title>
                 <gco:CharacterString>
-                  <xsl:choose>
-                    <xsl:when test="(title)[1] and
-                                   string-length((title)[1]) > 0">
-                      <xsl:value-of select="(title)[1]"/>
-                    </xsl:when>
-                    <xsl:when test="(id)[1] and
-                                   string-length((id)[1]) > 0">
-                      <xsl:value-of select="concat('STAC Collection: ', (id)[1])"/>
-                    </xsl:when>
-                    <xsl:otherwise>
-                      <xsl:value-of select="'STAC Collection'"/>
-                    </xsl:otherwise>
-                  </xsl:choose>
+                  <xsl:value-of select="if ((title)[1] and string-length((title)[1]) > 0) then (title)[1] 
+                                        else if ((id)[1] and string-length((id)[1]) > 0) then concat('STAC Collection: ', (id)[1])
+                                        else 'STAC Collection'"/>
                 </gco:CharacterString>
               </cit:title>
             </cit:CI_Citation>
           </mri:citation>
           <mri:abstract>
             <gco:CharacterString>
-              <xsl:choose>
-                <xsl:when test="(description)[1] and
-                               string-length((description)[1]) > 0">
-                  <xsl:value-of select="(description)[1]"/>
-                </xsl:when>
-                <xsl:otherwise>
-                  <xsl:value-of select="'STAC Collection harvested via STAC API'"/>
-                </xsl:otherwise>
-              </xsl:choose>
+              <xsl:value-of select="if ((description)[1] and string-length((description)[1]) > 0) 
+                                    then (description)[1] 
+                                    else 'STAC Collection harvested via STAC API'"/>
             </gco:CharacterString>
           </mri:abstract>
 
@@ -266,38 +197,22 @@
                       <gex:EX_GeographicBoundingBox>
                         <gex:westBoundLongitude>
                           <gco:Decimal>
-                            <xsl:choose>
-                              <xsl:when test="*[1] and *[1] != 'null'">
-                                <xsl:value-of select="*[1]"/>
-                              </xsl:when>
-                            </xsl:choose>
+                            <xsl:value-of select="if (*[1] and *[1] != 'null') then *[1] else ''"/>
                           </gco:Decimal>
                         </gex:westBoundLongitude>
                         <gex:eastBoundLongitude>
                           <gco:Decimal>
-                            <xsl:choose>
-                              <xsl:when test="*[3] and *[3] != 'null'">
-                                <xsl:value-of select="*[3]"/>
-                              </xsl:when>
-                            </xsl:choose>
+                            <xsl:value-of select="if (*[3] and *[3] != 'null') then *[3] else ''"/>
                           </gco:Decimal>
                         </gex:eastBoundLongitude>
                         <gex:southBoundLatitude>
                           <gco:Decimal>
-                            <xsl:choose>
-                              <xsl:when test="*[2] and *[2] != 'null'">
-                                <xsl:value-of select="*[2]"/>
-                              </xsl:when>
-                            </xsl:choose>
+                            <xsl:value-of select="if (*[2] and *[2] != 'null') then *[2] else ''"/>
                           </gco:Decimal>
                         </gex:southBoundLatitude>
                         <gex:northBoundLatitude>
                           <gco:Decimal>
-                            <xsl:choose>
-                              <xsl:when test="*[4] and *[4] != 'null'">
-                                <xsl:value-of select="*[4]"/>
-                              </xsl:when>
-                            </xsl:choose>
+                            <xsl:value-of select="if (*[4] and *[4] != 'null') then *[4] else ''"/>
                           </gco:Decimal>
                         </gex:northBoundLatitude>
                       </gex:EX_GeographicBoundingBox>
@@ -312,18 +227,10 @@
                       <gex:extent>
                         <gml:TimePeriod>
                           <gml:beginPosition>
-                            <xsl:choose>
-                              <xsl:when test="*[1] and *[1] != 'null'">
-                                <xsl:value-of select="*[1]"/>
-                              </xsl:when>
-                            </xsl:choose>
+                            <xsl:value-of select="if (*[1] and *[1] != 'null') then *[1] else ''"/>
                           </gml:beginPosition>
                           <gml:endPosition>
-                            <xsl:choose>
-                              <xsl:when test="*[2] and *[2] != 'null'">
-                                <xsl:value-of select="*[2]"/>
-                              </xsl:when>
-                            </xsl:choose>
+                            <xsl:value-of select="if (*[2] and *[2] != 'null') then *[2] else ''"/>
                           </gml:endPosition>
                         </gml:TimePeriod>
                       </gex:extent>
@@ -415,19 +322,14 @@
           <cit:role>
             <cit:CI_RoleCode codeList="codeListLocation#CI_RoleCode">
               <xsl:attribute name="codeListValue">
-                <xsl:choose>
-                  <xsl:when test="roles and roles[1]">
-                    <xsl:choose>
-                      <xsl:when test="roles[1]='licensor'">owner</xsl:when>
-                      <xsl:when test="roles[1]='producer'">originator</xsl:when>
-                      <xsl:when test="roles[1]='processor'">processor</xsl:when>
-                      <xsl:when test="roles[1]='publisher'">publisher</xsl:when>
-                      <xsl:when test="roles[1]='host'">distributor</xsl:when>
-                      <xsl:otherwise>resourceProvider</xsl:otherwise>
-                    </xsl:choose>
-                  </xsl:when>
-                  <xsl:otherwise>resourceProvider</xsl:otherwise>
-                </xsl:choose>
+                <xsl:value-of select="if (roles and roles[1]) then 
+                                     (if (roles[1]='licensor') then 'owner'
+                                      else if (roles[1]='producer') then 'originator'
+                                      else if (roles[1]='processor') then 'processor'
+                                      else if (roles[1]='publisher') then 'publisher'
+                                      else if (roles[1]='host') then 'distributor'
+                                      else 'resourceProvider')
+                                    else 'resourceProvider'"/>
               </xsl:attribute>
             </cit:CI_RoleCode>
           </cit:role>
@@ -479,14 +381,7 @@
           <cit:CI_Organisation>
             <cit:name>
               <gco:CharacterString>
-                <xsl:choose>
-                  <xsl:when test="$contactNode/organization">
-                    <xsl:value-of select="$contactNode/organization"/>
-                  </xsl:when>
-                  <xsl:otherwise>
-                    <xsl:value-of select="$contactNode/name"/>
-                  </xsl:otherwise>
-                </xsl:choose>
+                <xsl:value-of select="if ($contactNode/organization) then $contactNode/organization else $contactNode/name"/>
               </gco:CharacterString>
             </cit:name>
             <cit:contactInfo>
@@ -526,14 +421,9 @@
                       
                       <cit:electronicMailAddress>
                         <gco:CharacterString>
-                          <xsl:choose>
-                            <xsl:when test="$contactNode/emails and $contactNode/emails/value">
-                              <xsl:value-of select="$contactNode/emails[1]/value"/>
-                            </xsl:when>
-                            <xsl:when test="$contactNode/email">
-                              <xsl:value-of select="$contactNode/email"/>
-                            </xsl:when>
-                          </xsl:choose>
+                          <xsl:value-of select="if ($contactNode/emails and $contactNode/emails/value) 
+                                                then $contactNode/emails[1]/value 
+                                                else $contactNode/email"/>
                         </gco:CharacterString>
                       </cit:electronicMailAddress>
                     </cit:CI_Address>
