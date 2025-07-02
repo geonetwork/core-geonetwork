@@ -76,15 +76,15 @@ public class OAuth2SecurityProviderUtil implements SecurityProviderUtil {
         return null;
     }
 
-     public UserDetails getUserDetails(Authentication auth)  {
+    public UserDetails getUserDetails(Authentication auth)  {
         try {
             return getUserDetails(auth, false);
         } catch (Exception e) {
             Log.error(Geonet.SECURITY,"OIDC: couldnt get user details from OIDC user",e);
             return null;
-         }
-     }
-    
+        }
+    }
+
     // get the user's details (spring).  This might update the GN database with the user
     // (see underlying  oidcUser2GeonetworkUser#getUserDetail for when).
     public UserDetails getUserDetails(Authentication auth, boolean withDbUpdate) throws Exception {
