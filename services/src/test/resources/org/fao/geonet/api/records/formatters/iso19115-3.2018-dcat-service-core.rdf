@@ -341,31 +341,6 @@
             </dct:description>
          </foaf:Document>
       </foaf:page>
-      <dcat:distribution>
-         <dcat:Distribution>
-            <dct:title xml:lang="fr">INSPIRE Sites Protégés - Service de téléchargement
-
-                </dct:title>
-            <dct:description xml:lang="fr">Adresse de connexion au service de téléchargement ATOM Feed des couches de données
-                  du thème "Sites protégés".
-
-                </dct:description>
-              <dct:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2017-11-15</dct:issued>
-
-
-
-            <dcat:accessURL rdf:resource="https://geoservices.wallonie.be/inspire/atom/PS_Service.xml"/>
-            <dcat:accessService>
-               <rdf:Description>
-                  <rdf:type rdf:resource="http://www.w3.org/ns/dcat#DataService"/>
-                  <dct:title xml:lang="fr">INSPIRE Sites Protégés - Service de téléchargement
-
-                </dct:title>
-                  <dcat:endpointURL rdf:resource="https://geoservices.wallonie.be/inspire/atom/PS_Service.xml"/>
-               </rdf:Description>
-            </dcat:accessService>
-         </dcat:Distribution>
-      </dcat:distribution>
       <foaf:documentation>
          <foaf:Document rdf:about="https://directory.spatineo.com/service/164564">
             <dct:title xml:lang="fr">Statistiques de disponibilité WMS</dct:title>
