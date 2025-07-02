@@ -199,6 +199,9 @@
     </constructor-arg>
     <property name="filterProcessesUrl" value="/signout"/>
   </bean>
+
+  <bean id="sessionExpirationFilter" class="org.fao.geonet.kernel.security.openidconnect.SessionExpirationFilter"/>
+
   <bean id="geonetworkOidcPreAuthActionsLoginFilter" class="org.fao.geonet.kernel.security.openidconnect.GeonetworkOidcPreAuthActionsLoginFilter"/>
 
   <bean id="oAuth2Configuration" class="org.fao.geonet.kernel.security.openidconnect.OAuth2Configuration"/>
@@ -239,6 +242,7 @@
     <ref bean="openidconnectOAuth2AuthorizationRequestRedirectFilter"/>
     <ref bean="openidconnectOAuth2LoginAuthenticationFilter"/>
     <ref bean="logoutFilter"/>
+    <ref bean="sessionExpirationFilter"/>
     <!--     include a pre login filter-->
     <ref bean="geonetworkOidcPreAuthActionsLoginFilter"/>
 

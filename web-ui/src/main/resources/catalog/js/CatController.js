@@ -2049,7 +2049,7 @@
                     var allowedProfiles = $scope.profiles.slice(
                       $scope.profiles.indexOf(profile)
                     );
-                    return allowedProfiles.some(function(p) {
+                    return allowedProfiles.some(function (p) {
                       return me["is" + p + "ForGroup"](groupId);
                     });
                   };
