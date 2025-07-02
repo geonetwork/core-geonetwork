@@ -60,7 +60,7 @@
           });
         }
 
-        function getIndexMessages(uuid) {
+        function getIndexReport(uuid) {
           return this.getDoc(uuid).then(function (r) {
             if (r.data.hits.total.value !== 0) {
               var metadata = new Metadata(r.data.hits.hits[0]);
@@ -68,18 +68,12 @@
               var report = {};
               report.allMessages = [].concat(metadata.indexingErrorMsg || []);
 
-              var warningPrefix = "Warning / ";
-
-              report.warningMessages = report.allMessages
-                .filter(function (msg) {
-                  return msg && msg.indexOf(warningPrefix) === 0;
-                })
-                .map(function (msg) {
-                  return msg.replace(warningPrefix, "");
-                });
+              report.warningMessages = report.allMessages.filter(function (msg) {
+                return msg && msg.type === "warning";
+              });
 
               report.errorMessages = report.allMessages.filter(function (msg) {
-                return msg && msg.indexOf(warningPrefix) !== 0;
+                return msg && msg.type === "error";
               });
 
               return report;
@@ -91,7 +85,7 @@
         return {
           deleteDocs: deleteDocs,
           getDoc: getDoc,
-          getIndexMessages: getIndexMessages
+          getIndexReport: getIndexReport
         };
       }
     ];
