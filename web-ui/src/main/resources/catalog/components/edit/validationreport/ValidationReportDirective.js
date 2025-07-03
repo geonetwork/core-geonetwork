@@ -91,10 +91,13 @@
                     });
                   });
 
+                  scope.ruleTypes = scope.ruleTypes.concat(optional);
+
+                  // Display xsd validation section at the end
                   if (scope.ruleTypes[0].id === "xsd") {
                     scope.ruleTypes.push(scope.ruleTypes.splice(0, 1)[0]);
                   }
-                  scope.ruleTypes = scope.ruleTypes.concat(optional);
+
                   scope.hasSuccess = scope.ruleTypes.length > 0;
                   scope.loading = false;
                 })
