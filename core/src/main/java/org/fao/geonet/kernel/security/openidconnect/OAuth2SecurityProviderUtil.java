@@ -50,7 +50,7 @@ public class OAuth2SecurityProviderUtil implements SecurityProviderUtil {
      /**
      * Service to retrieve OAuth2 authorized clients inorder to get access token.
      */
-    @Autowired(required = false)
+    @Autowired
     private OAuth2AuthorizedClientManager authorizedClientManager;
 
 
