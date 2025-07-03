@@ -29,6 +29,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.oauth2.client.OAuth2AuthorizeRequest;
+import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
+import org.springframework.security.oauth2.client.OAuth2AuthorizedClientManager;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.oauth2.core.oidc.OidcIdToken;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.security.oauth2.core.user.OAuth2User;
@@ -43,13 +47,31 @@ public class OAuth2SecurityProviderUtil implements SecurityProviderUtil {
     @Autowired
     OidcUser2GeonetworkUser oidcUser2GeonetworkUser;
 
+     /**
+     * Service to retrieve OAuth2 authorized clients inorder to get access token.
+     */
+    @Autowired
+    private OAuth2AuthorizedClientManager authorizedClientManager;
 
-    // setup for BEARER authentication
+
+   // setup for BEARER authentication
     public String getSSOAuthenticationHeaderValue() {
-        if (SecurityContextHolder.getContext().getAuthentication().getPrincipal() instanceof OidcUser) {
-            OidcUser user = (OidcUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication instanceof OAuth2AuthenticationToken) {
+            OAuth2AuthenticationToken oauth2Token = (OAuth2AuthenticationToken) authentication;
+            // Refresh access token before getting new token, otherwise we could be using a token that is about to expire and that could cause issues.
+            OAuth2AuthorizedClient authorizedClient = authorizedClientManager.authorize(
+                OAuth2AuthorizeRequest.withClientRegistrationId(oauth2Token.getAuthorizedClientRegistrationId())
+                    .principal(oauth2Token)
+                    .build()
+            );
 
-            return "Bearer " + user.getIdToken().getTokenValue();
+            if (authorizedClient != null && authorizedClient.getAccessToken() != null) {
+                return "Bearer " + authorizedClient.getAccessToken().getTokenValue();
+            }else{
+                Log.warning(Geonet.GEONETWORK,"Unable to retrieve access token for OAuth2AuthenticationToken. Authorized client is null or access token is null.");
+            }
+
         }
         return null;
     }
