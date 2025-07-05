@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2023 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -57,7 +57,7 @@ public abstract class AbstractTokenLister implements OaiPmhService {
     private SettingManager settingMan;
     private SchemaManager schemaMan;
 
-    public AbstractTokenLister(ResumptionTokenCache cache, SettingManager sm, SchemaManager scm) {
+    protected AbstractTokenLister(ResumptionTokenCache cache, SettingManager sm, SchemaManager scm) {
         this.cache = cache;
         this.settingMan = sm;
         this.schemaMan = scm;
@@ -114,10 +114,8 @@ public abstract class AbstractTokenLister implements OaiPmhService {
 
         TokenListRequest req = (TokenListRequest) request;
 
-        //UserSession  session = context.getUserSession();
         SearchResult result;
 
-        //String token = req.getResumptionToken();
         String strToken = req.getResumptionToken();
         GeonetworkResumptionToken token = null;
 
@@ -165,11 +163,12 @@ public abstract class AbstractTokenLister implements OaiPmhService {
                     params.addContent(new Element("_schema").setText(schema));
                     result.addIds(Lib.search(context, (Element) params.clone()));
                 }
-                if (schemas.size() == 0) result.setIds(new ArrayList<Integer>());
+                if (schemas.isEmpty()) result.setIds(new ArrayList<>());
             }
 
-            if (result.getIds().size() == 0)
-                throw new NoRecordsMatchException("No results");
+            if (result.getIds().isEmpty()) {
+                throw new NoRecordsMatchException("No results (or no conversion available for prefix '" + req.getMetadataPrefix() + "')");
+            }
 
             // we only need a new token if the result set is big enough
             if (result.getIds().size() > getMaxRecords()) {
@@ -178,7 +177,6 @@ public abstract class AbstractTokenLister implements OaiPmhService {
             }
 
         } else {
-            //result = (SearchResult) session.getProperty(Lib.SESSION_OBJECT);
             token = cache.getResumptionToken(GeonetworkResumptionToken.buildKey(req));
             if (Log.isDebugEnabled(Geonet.OAI_HARVESTER))
                 Log.debug(Geonet.OAI_HARVESTER, "OAI ListRecords : using ResumptionToken :" + GeonetworkResumptionToken.buildKey(req));
@@ -188,7 +186,6 @@ public abstract class AbstractTokenLister implements OaiPmhService {
 
             result = token.getRes();
 
-            //pos = result.parseToken(token);
             pos = GeonetworkResumptionToken.getPos(req);
         }
 
@@ -198,7 +195,6 @@ public abstract class AbstractTokenLister implements OaiPmhService {
         if (token == null && res.getSize() == 0)
             throw new NoRecordsMatchException("No results");
 
-        //result.setupToken(res, pos);
         if (token != null) token.setupToken(pos);
         res.setResumptionToken(token);
 
@@ -214,7 +210,7 @@ public abstract class AbstractTokenLister implements OaiPmhService {
      */
 
     private List<String> getSchemasThatCanConvertTo(String prefix) {
-        List<String> result = new ArrayList<String>();
+        List<String> result = new ArrayList<>();
         for (String schema : schemaMan.getSchemas()) {
             if (Lib.existsConverter(schemaMan.getSchemaDir(schema), prefix)) {
                 result.add(schema);

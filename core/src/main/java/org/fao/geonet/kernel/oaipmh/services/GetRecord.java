@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2007 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2023 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -23,6 +23,7 @@
 
 package org.fao.geonet.kernel.oaipmh.services;
 
+import java.util.List;
 import static org.fao.geonet.repository.specification.MetadataSpecs.hasMetadataUuid;
 
 import java.nio.file.Path;
@@ -79,14 +80,13 @@ public class GetRecord implements OaiPmhService {
 
         if (prefix.equals(schema)) {
             Attribute schemaLocAtt = sm.getSchemaLocation(schema, context);
-            if (schemaLocAtt != null) {
-                if (md.getAttribute(schemaLocAtt.getName(), schemaLocAtt.getNamespace()) == null) {
-                    md.setAttribute(schemaLocAtt);
-                    // make sure namespace declaration for schemalocation is present -
-                    // remove it first (does nothing if not there) then add it
-                    md.removeNamespaceDeclaration(schemaLocAtt.getNamespace());
-                    md.addNamespaceDeclaration(schemaLocAtt.getNamespace());
-                }
+            if (schemaLocAtt != null && (md.getAttribute(schemaLocAtt.getName(), schemaLocAtt.getNamespace()) == null)) {
+                md.setAttribute(schemaLocAtt);
+                // make sure namespace declaration for schemalocation is present -
+                // remove it first (does nothing if not there) then add it
+                md.removeNamespaceDeclaration(schemaLocAtt.getNamespace());
+                md.addNamespaceDeclaration(schemaLocAtt.getNamespace());
+
             }
         } else {
             Path schemaDir = sm.getSchemaDir(schema);
@@ -94,9 +94,11 @@ public class GetRecord implements OaiPmhService {
                 final String siteURL = context.getBean(SettingManager.class).getSiteURL(context);
                 Element env = Lib.prepareTransformEnv(uuid, changeDate, context.getBaseUrl(), siteURL, gc.getBean(SettingManager.class)
                     .getSiteName());
-                md = Lib.transform(schemaDir, env, md, prefix + ".xsl");
+                md = Lib.transform(schemaDir, env, md, prefix );
             } else {
-                throw new CannotDisseminateFormatException("Unknown prefix : " + prefix);
+                List<String> availableConverters = Lib.availableConverters(schemaDir);
+                throw new CannotDisseminateFormatException(String.format(
+                    "Unknown prefix : %s. Available converters are: %s", prefix, availableConverters));
             }
         }
 
