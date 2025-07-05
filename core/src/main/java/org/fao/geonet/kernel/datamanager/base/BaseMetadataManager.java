@@ -977,6 +977,7 @@ public class BaseMetadataManager implements IMetadataManager {
                 env.addContent(new Element("parentUuid").setText(parentUuid));
             }
             if (metadataId.isPresent()) {
+                // TODO: Datastore review
                 final Path resourceDir = Lib.resource.getDir(Params.Access.PRIVATE, metadataId.get());
                 env.addContent(new Element("datadir").setText(resourceDir.toString()));
             }

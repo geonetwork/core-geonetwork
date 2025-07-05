@@ -1,6 +1,6 @@
 /*
  * =============================================================================
- * ===	Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * ===	Copyright (C) 2001-2024 Food and Agriculture Organization of the
  * ===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * ===	and United Nations Environment Programme (UNEP)
  * ===
@@ -43,6 +43,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ConfigurableApplicationContext;
 
 import java.io.InputStream;
+import java.nio.file.Path;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import javax.annotation.Nullable;
@@ -53,7 +55,6 @@ import javax.annotation.Nullable;
 public class ResourceLoggerStore extends AbstractStore {
 
     private Store decoratedStore;
-
 
     @Autowired private ThreadPool threadPool;
 
@@ -72,7 +73,16 @@ public class ResourceLoggerStore extends AbstractStore {
         if (decoratedStore != null) {
             return decoratedStore.getResources(context, metadataUuid, metadataResourceVisibility, filter, approved);
         }
-        return null;
+        return Collections.emptyList();
+    }
+
+    @Override
+    public List<MetadataResource> getResources(ServiceContext context, String metadataUuid, Sort sort, String filter, Boolean approved)
+        throws Exception {
+        if (decoratedStore != null) {
+            return decoratedStore.getResources(context, metadataUuid, sort, filter, approved);
+        }
+        return Collections.emptyList();
     }
 
     @Override
@@ -174,6 +184,13 @@ public class ResourceLoggerStore extends AbstractStore {
         return null;
     }
 
+    @Override
+    public void renameFolder(Path originalPath, Path newPath) {
+        if (decoratedStore != null) {
+            decoratedStore.renameFolder(originalPath, newPath);
+        }
+    }
+
     /**
      * * Stores a file download request in the MetadataFileDownloads table.
      */
@@ -185,41 +202,38 @@ public class ResourceLoggerStore extends AbstractStore {
         final MetadataFileDownloadRepository repo = context.getBean(MetadataFileDownloadRepository.class);
         final String userName = context.getUserSession().getUsername();
 
-        threadPool.runTask(new Runnable() {
-            @Override
-            public void run() {
-                MetadataFileUpload metadataFileUpload;
+        threadPool.runTask(() -> {
+            MetadataFileUpload metadataFileUpload;
 
-                // Each download is related to a file upload record
-                try {
-                    metadataFileUpload = uploadRepository.findByMetadataIdAndFileNameNotDeleted(metadataId, resourceId);
+            // Each download is related to a file upload record
+            try {
+                metadataFileUpload = uploadRepository.findByMetadataIdAndFileNameNotDeleted(metadataId, resourceId);
 
-                } catch (org.springframework.dao.EmptyResultDataAccessException ex) {
-                    Log.debug(Geonet.RESOURCES, String.format(
-                            "No references in FileNameNotDeleted repository for metadata '%s', resource id '%s'. Get request will not be "
-                                    + "saved.",
-                            metadataUuid, resourceId));
+            } catch (org.springframework.dao.EmptyResultDataAccessException ex) {
+                Log.debug(Geonet.RESOURCES, String.format(
+                        "No references in FileNameNotDeleted repository for metadata '%s', resource id '%s'. Get request will not be "
+                                + "saved.",
+                        metadataUuid, resourceId));
 
-                    // No related upload is found
-                    metadataFileUpload = null;
-                }
+                // No related upload is found
+                metadataFileUpload = null;
+            }
 
-                if (metadataFileUpload != null) {
-                    MetadataFileDownload metadataFileDownload = new MetadataFileDownload();
+            if (metadataFileUpload != null) {
+                MetadataFileDownload metadataFileDownload = new MetadataFileDownload();
 
-                    metadataFileDownload.setMetadataId(metadataId);
-                    metadataFileDownload.setFileName(resourceId);
-                    metadataFileDownload.setRequesterName(requesterName);
-                    metadataFileDownload.setRequesterMail(requesterMail);
+                metadataFileDownload.setMetadataId(metadataId);
+                metadataFileDownload.setFileName(resourceId);
+                metadataFileDownload.setRequesterName(requesterName);
+                metadataFileDownload.setRequesterMail(requesterMail);
 
-                    metadataFileDownload.setRequesterOrg(requesterOrg);
-                    metadataFileDownload.setRequesterComments(requesterComments);
-                    metadataFileDownload.setDownloadDate(downloadDate);
-                    metadataFileDownload.setUserName(userName);
-                    metadataFileDownload.setFileUploadId(metadataFileUpload.getId());
+                metadataFileDownload.setRequesterOrg(requesterOrg);
+                metadataFileDownload.setRequesterComments(requesterComments);
+                metadataFileDownload.setDownloadDate(downloadDate);
+                metadataFileDownload.setUserName(userName);
+                metadataFileDownload.setFileUploadId(metadataFileUpload.getId());
 
-                    repo.save(metadataFileDownload);
-                }
+                repo.save(metadataFileDownload);
             }
         });
     }

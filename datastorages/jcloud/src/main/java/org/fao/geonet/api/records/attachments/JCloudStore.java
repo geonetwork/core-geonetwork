@@ -251,7 +251,7 @@ public class JCloudStore extends AbstractStore {
 
     }
 
-    protected String getKey(final ServiceContext context, String metadataUuid, int metadataId, MetadataResourceVisibility visibility, String resourceId) {
+    protected String getKey(final ServiceContext context, String metadataUuid, int metadataId, MetadataResourceVisibility visibility, String resourceId) throws IOException {
         checkResourceId(resourceId);
         final String metadataDir = getMetadataDir(context, metadataId);
         return metadataDir + jCloudConfiguration.getFolderDelimiter() + visibility.toString() + jCloudConfiguration.getFolderDelimiter() + getFilename(metadataUuid, resourceId);
@@ -738,7 +738,7 @@ public class JCloudStore extends AbstractStore {
             settingManager.getNodeURL() + "api/records/", metadataResourceExternalManagementProperties, approved);
     }
 
-    private String getMetadataDir(ServiceContext context, final int metadataId) {
+    private String getMetadataDir(ServiceContext context, final int metadataId) throws IOException {
 
         Path metadataFullDir = Lib.resource.getMetadataDir(getDataDirectory(context), metadataId);
         Path baseMetadataDir = getBaseMetadataDir(context, metadataFullDir);

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2024 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -266,7 +266,7 @@ public class FilesystemStore implements PersistentStore {
 
     @Override
     public void setPublished(int metadataId, final boolean published) throws IOException {
-
+        // TODO: Datastore review
         final Path metadataDir = Lib.resource.getMetadataDir(getBaseCacheDir().resolve(PRIVATE), String.valueOf(metadataId));
         if (Files.exists(metadataDir)) {
             Files.walkFileTree(metadataDir, new SimpleFileVisitor<Path>() {
@@ -360,15 +360,15 @@ public class FilesystemStore implements PersistentStore {
         this.geonetworkDataDir = geonetworkDataDir;
     }
 
-    public Path getPrivatePath(Key key) {
+    public Path getPrivatePath(Key key) throws IOException {
         return getCacheFile(key, false);
     }
 
-    public Path getPublicPath(Key key) {
+    public Path getPublicPath(Key key) throws IOException {
         return getCacheFile(key, true);
     }
 
-    private Path getCacheFile(Key key, boolean isPublicCache) {
+    private Path getCacheFile(Key key, boolean isPublicCache) throws IOException {
         final String accessDir = isPublicCache ? PUBLIC : PRIVATE;
         final String sMdId = String.valueOf(key.mdId);
         final Path metadataDir = Lib.resource.getMetadataDir(getBaseCacheDir().resolve(accessDir), sMdId);
