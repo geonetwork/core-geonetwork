@@ -29,6 +29,7 @@ import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.*;
+import org.fao.geonet.exceptions.ILocalizedException;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
@@ -89,7 +90,11 @@ public class AbstractSchematronValidator {
 
             // If an error occurs that prevents to verify schematron rules, add to show in report
             Element errorReport = new Element("schematronVerificationError", Edit.NAMESPACE);
-            errorReport.addContent("Schematron error occurred, rules could not be verified: " + e.getMessage());
+            if (e.getCause() instanceof ILocalizedException) {
+                errorReport.addContent(e.getCause().getLocalizedMessage());
+            } else {
+                errorReport.addContent(e.getMessage());
+            }
             report.addContent(errorReport);
 
             // As the validation failed due to an exception lets identify the metadata as never validated.
