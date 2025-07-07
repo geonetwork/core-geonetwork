@@ -153,6 +153,8 @@
     <entry key="http://publications.europa.eu/resource/authority/file-type/HTML">html</entry>
     <entry key="http://publications.europa.eu/resource/authority/file-type/JPEG">jpeg</entry>
     <entry key="http://publications.europa.eu/resource/authority/file-type/JPEG">jpg</entry>
+    <entry key="http://publications.europa.eu/resource/authority/file-type/JPEG2000">image/jp2</entry>
+    <entry key="http://publications.europa.eu/resource/authority/file-type/JPEG2000">jp2</entry>
     <entry key="http://publications.europa.eu/resource/authority/file-type/JSON">application/json</entry>
     <entry key="http://publications.europa.eu/resource/authority/file-type/GEOJSON">application/vnd.geo+json</entry>
     <entry key="http://publications.europa.eu/resource/authority/file-type/JSON">json</entry>
