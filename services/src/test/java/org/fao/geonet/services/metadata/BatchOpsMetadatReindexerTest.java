@@ -6,15 +6,14 @@ import org.fao.geonet.kernel.search.EsSearchManager;
 import org.fao.geonet.kernel.search.ISearchManager;
 import org.fao.geonet.kernel.search.index.BatchOpsMetadataReindexer;
 import org.fao.geonet.util.ThreadUtils;
+import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
+import org.mockito.Mock;
+import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.jmx.export.MBeanExporter;
 
@@ -26,15 +25,34 @@ import java.util.stream.Collectors;
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertNotSame;
 
-@RunWith(PowerMockRunner.class)
-@PrepareForTest({ThreadUtils.class, ApplicationContextHolder.class})
 public class BatchOpsMetadatReindexerTest {
+
+    EsSearchManager searchManager;
+
+    ConfigurableApplicationContext mockAppContext;
+
+    MBeanExporter mockExporter;
+
+    @Before
+    public void setUpMocks() {
+        mockAppContext = Mockito.mock(ConfigurableApplicationContext.class);
+        mockExporter = Mockito.mock(MBeanExporter.class);
+        Mockito.when(mockAppContext.getBean(Mockito.eq(MBeanExporter.class))).thenReturn(mockExporter);
+        searchManager = Mockito.mock(EsSearchManager.class);
+        Mockito.when(mockAppContext.getBean(Mockito.eq(EsSearchManager.class))).thenReturn(searchManager);
+    }
 
     @Test
     public void syncMonoThread() throws Exception {
         int numberOfAvailableThreads = 1;
+        try (
+            MockedStatic<ThreadUtils> threadUtilsMockedStatic = Mockito.mockStatic(ThreadUtils.class);
+            MockedStatic<ApplicationContextHolder> applicationContextHolderMockedStatic = Mockito.mockStatic(ApplicationContextHolder.class);
+        ) {
+            applicationContextHolderMockedStatic.when(ApplicationContextHolder::get).thenReturn(mockAppContext);
+            threadUtilsMockedStatic.when(ThreadUtils::getNumberOfThreads).thenReturn(numberOfAvailableThreads);
+
         final Set<Thread> usedTread = new HashSet<>();
-        prepareEnvMocks(numberOfAvailableThreads);
         DataManager mockDataMan = createMockDataManager(usedTread);
         Set<Integer> toIndex = createMetadataToIndex();
 
@@ -46,12 +64,19 @@ public class BatchOpsMetadatReindexerTest {
         assertEquals(1, usedTread.size());
         assertNotSame(Thread.currentThread(), usedTread.iterator().next());
     }
+    }
 
     @Test
     public void syncMultiThread() throws Exception {
         int numberOfAvailableThreads = 4;
+        try (
+            MockedStatic<ThreadUtils> threadUtilsMockedStatic = Mockito.mockStatic(ThreadUtils.class);
+            MockedStatic<ApplicationContextHolder> applicationContextHolderMockedStatic = Mockito.mockStatic(ApplicationContextHolder.class);
+        ) {
+            applicationContextHolderMockedStatic.when(ApplicationContextHolder::get).thenReturn(mockAppContext);
+            threadUtilsMockedStatic.when(ThreadUtils::getNumberOfThreads).thenReturn(numberOfAvailableThreads);
+
         final Set<Thread> usedTread = new HashSet<>();
-        prepareEnvMocks(numberOfAvailableThreads);
         DataManager mockDataMan = createMockDataManager(usedTread);
         Set<Integer> toIndex = createMetadataToIndex();
 
@@ -62,12 +87,20 @@ public class BatchOpsMetadatReindexerTest {
         assertEquals("1-2-3-4", metadataIdCaptor.getAllValues().stream().sorted().collect(Collectors.joining("-")));
         assertEquals(4, usedTread.size());
     }
+    }
 
     @Test
     public void syncManyThreadButRunInCurrent() throws Exception {
         int numberOfAvailableThreads = 4;
+
+        try (
+            MockedStatic<ThreadUtils> threadUtilsMockedStatic = Mockito.mockStatic(ThreadUtils.class);
+            MockedStatic<ApplicationContextHolder> applicationContextHolderMockedStatic = Mockito.mockStatic(ApplicationContextHolder.class);
+        ) {
+            applicationContextHolderMockedStatic.when(ApplicationContextHolder::get).thenReturn(mockAppContext);
+            threadUtilsMockedStatic.when(ThreadUtils::getNumberOfThreads).thenReturn(numberOfAvailableThreads);
+
         final Set<Thread> usedTread = new HashSet<>();
-        prepareEnvMocks(numberOfAvailableThreads);
         DataManager mockDataMan = createMockDataManager(usedTread);
         Set<Integer> toIndex = createMetadataToIndex();
 
@@ -79,12 +112,20 @@ public class BatchOpsMetadatReindexerTest {
         assertEquals(1, usedTread.size());
         assertEquals(Thread.currentThread(), usedTread.iterator().next());
     }
+    }
 
     @Test
     public void asyncMonoThread() throws Exception {
         int numberOfAvailableThreads = 1;
+
+        try (
+            MockedStatic<ThreadUtils> threadUtilsMockedStatic = Mockito.mockStatic(ThreadUtils.class);
+            MockedStatic<ApplicationContextHolder> applicationContextHolderMockedStatic = Mockito.mockStatic(ApplicationContextHolder.class);
+        ) {
+            applicationContextHolderMockedStatic.when(ApplicationContextHolder::get).thenReturn(mockAppContext);
+            threadUtilsMockedStatic.when(ThreadUtils::getNumberOfThreads).thenReturn(numberOfAvailableThreads);
+
         final Set<Thread> usedTread = new HashSet<>();
-        prepareEnvMocks(numberOfAvailableThreads);
         CountDownLatch latch = new CountDownLatch(1);
         DataManager mockDataMan = createBlockingMockDataManager(usedTread, latch);
         Set<Integer> toIndex = createMetadataToIndex();
@@ -104,12 +145,20 @@ public class BatchOpsMetadatReindexerTest {
         assertEquals(1, usedTread.size());
         assertNotSame(Thread.currentThread(), usedTread.iterator().next());
     }
+    }
 
     @Test
     public void asyncMultiThread() throws Exception {
         int numberOfAvailableThreads = 4;
+
+        try (
+            MockedStatic<ThreadUtils> threadUtilsMockedStatic = Mockito.mockStatic(ThreadUtils.class);
+            MockedStatic<ApplicationContextHolder> applicationContextHolderMockedStatic = Mockito.mockStatic(ApplicationContextHolder.class);
+        ) {
+            applicationContextHolderMockedStatic.when(ApplicationContextHolder::get).thenReturn(mockAppContext);
+            threadUtilsMockedStatic.when(ThreadUtils::getNumberOfThreads).thenReturn(numberOfAvailableThreads);
+
         final Set<Thread> usedTread = new HashSet<>();
-        prepareEnvMocks(numberOfAvailableThreads);
         CountDownLatch latch = new CountDownLatch(1);
         DataManager mockDataMan = createBlockingMockDataManager(usedTread, latch);
         Set<Integer> toIndex = createMetadataToIndex();
@@ -128,12 +177,20 @@ public class BatchOpsMetadatReindexerTest {
         assertEquals("1-2-3-4", metadataIdCaptor.getAllValues().stream().sorted().collect(Collectors.joining("-")));
         assertEquals(4, usedTread.size());
     }
+    }
 
     @Test
     public void asyncManyThreadButRunInCurrent() throws Exception {
         int numberOfAvailableThreads = 4;
+
+        try (
+            MockedStatic<ThreadUtils> threadUtilsMockedStatic = Mockito.mockStatic(ThreadUtils.class);
+            MockedStatic<ApplicationContextHolder> applicationContextHolderMockedStatic = Mockito.mockStatic(ApplicationContextHolder.class);
+        ) {
+            applicationContextHolderMockedStatic.when(ApplicationContextHolder::get).thenReturn(mockAppContext);
+            threadUtilsMockedStatic.when(ThreadUtils::getNumberOfThreads).thenReturn(numberOfAvailableThreads);
+
         final Set<Thread> usedTread = new HashSet<>();
-        prepareEnvMocks(numberOfAvailableThreads);
         CountDownLatch latch = new CountDownLatch(1);
         DataManager mockDataMan = createBlockingMockDataManager(usedTread, latch);
         Set<Integer> toIndex = createMetadataToIndex();
@@ -142,7 +199,8 @@ public class BatchOpsMetadatReindexerTest {
         Thread currentThread = new Thread(new Runnable() {
             @Override
             public void run() {
-                try {
+                    try (MockedStatic<ThreadUtils> threadUtilsMockedStatic = Mockito.mockStatic(ThreadUtils.class)){
+                        threadUtilsMockedStatic.when(ThreadUtils::getNumberOfThreads).thenReturn(numberOfAvailableThreads);
                     toTest.wrapAsyncProcess("siteId",true);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -164,21 +222,6 @@ public class BatchOpsMetadatReindexerTest {
         assertEquals(1, usedTread.size());
         assertEquals(currentThread, usedTread.iterator().next());
     }
-
-    private void prepareEnvMocks(int numberOfAvailableThreads) {
-        MBeanExporter mockExporter = Mockito.mock(MBeanExporter.class);
-
-        ConfigurableApplicationContext mockAppContext = Mockito.mock(ConfigurableApplicationContext.class);
-        Mockito.when(mockAppContext.getBean(Mockito.eq((MBeanExporter.class)))).thenReturn(mockExporter);
-
-
-        PowerMockito.mockStatic(ApplicationContextHolder.class);
-        PowerMockito.when(ApplicationContextHolder.get()).thenReturn(mockAppContext);
-        EsSearchManager searchManager = Mockito.mock(EsSearchManager.class);
-        Mockito.when(mockAppContext.getBean(Mockito.eq((EsSearchManager.class)))).thenReturn(searchManager);
-
-        PowerMockito.mockStatic(ThreadUtils.class);
-        PowerMockito.when(ThreadUtils.getNumberOfThreads()).thenReturn(numberOfAvailableThreads);
     }
 
     private DataManager createMockDataManager(Set<Thread> usedTread) throws Exception {
