@@ -70,6 +70,8 @@
         source.groupOwner = source.groupOwner || null;
         $scope.source = source;
         $scope.isNew = false;
+        // Used to check if the logo has been updated
+        $scope.originalLogo = true;
 
         $scope.gnSourceForm.$setPristine();
       };
@@ -119,7 +121,7 @@
               uuid: $scope.source.uuid
             });
             if (selectedSource) {
-              $scope.source = selectedSource;
+              $scope.selectSource(selectedSource);
             }
           }
           filterSources();
@@ -209,6 +211,18 @@
           }
         );
       };
+
+      $scope.$watch("source.logo", function (newValue, oldValue) {
+        if (!!newValue && newValue !== oldValue) {
+          // If the source is selected, don't set the form as dirty when the logo is updated.
+          // Only when the user changes it.
+          if ($scope.originalLogo === true) {
+            $scope.originalLogo = false;
+          } else {
+            $scope.gnSourceForm.$setDirty();
+          }
+        }
+      });
 
       var uploadLogoDone = function (e, data) {
         $scope.source.logo = data.files[0].name;
