@@ -520,7 +520,7 @@ public class UserFeedbackAPI {
                     String catalogueName = settingManager.getValue(SYSTEM_SITE_NAME_PATH);
                     String title = XslUtil.getIndexField(null, userFeedbackDto.getMetadataUUID(), "resourceTitleObject", "");
 
-                    if (!toAddress.isEmpty()) {
+                    if (toAddress.size() > 0) {
                         try {
                             Locale[] feedbackLocales = feedbackLanguages.getLocales(locale);
                             String recordUrl = metadataUtils.getDefaultUrl(userFeedbackDto.getMetadataUUID(), locale.getISO3Language());
