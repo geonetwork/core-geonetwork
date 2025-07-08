@@ -368,8 +368,14 @@
                 }
               });
               scope.uf.ratingAVG = Math.floor(total / categoryNumber);
+
+              // Check if all categories have been rated
+              scope.allCategoriesRated = categoryNumber === scope.ratingCategories.length;
             }
           });
+
+          // Initialize allCategoriesRated
+          scope.allCategoriesRated = false;
 
           scope.$watch("userName", function (newValue, oldValue) {
             if (newValue) {

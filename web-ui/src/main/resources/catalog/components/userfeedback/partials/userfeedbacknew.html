@@ -64,6 +64,9 @@
                         class="text-muted"
                         title="{{readonly ? '' : ('clickToRate' | translate)}}"
                       ></div>
+                      <div class="help-block text-danger" data-ng-if="!uf.rating[c.id]">
+                        <p data-translate>fieldRequired</p>
+                      </div>
                     </div>
                   </div>
                   <!-- /.panel-body -->
@@ -245,7 +248,7 @@
             <button
               type="button"
               class="btn btn-primary"
-              data-ng-disabled="!gnUserfeedbackAddcomment.$valid && !gnUserfeedbackAddcomment.dirty"
+              data-ng-disabled="!gnUserfeedbackAddcomment.$valid && !gnUserfeedbackAddcomment.dirty || !allCategoriesRated"
               data-ng-click="submitForm(uf, modal)"
               data-translate=""
             >
