@@ -50,7 +50,7 @@ public class SessionExpirationFilter implements Filter {
     /**
      * Service to retrieve OAuth2 authorized clients inorder to get access token.
      */
-    @Autowired(required = false)
+    @Autowired
     private OAuth2AuthorizedClientManager authorizedClientManager;
 
     private static final org.slf4j.Logger log = LoggerFactory.getLogger(SessionExpirationFilter.class);
