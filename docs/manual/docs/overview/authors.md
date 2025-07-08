@@ -12,46 +12,78 @@ Active developers in GeoNetwork project have taken on responsibility for reviewi
 
 This dedication is reflected in community trust, and a Leadership responsibility to vote on roadmap proposals:
 
+* [David Blasby](https://github.com/davidblasby): [Active Maintainer](https://github.com/geonetwork/core-geonetwork/pulls?q=is%3Apr+is%3Aclosed+reviewed-by%3Adavidblasby)
 * [Jose García](https://github.com/josegar74): [Active Maintainer](https://github.com/geonetwork/core-geonetwork/pulls?q=is%3Apr+is%3Aclosed+reviewed-by%3Ajosegar74)
-* [Olivia Guyot](https://github.com/jahow): [Active Maintainer](https://github.com/geonetwork/core-geonetwork/pulls?q=is%3Apr+is%3Aclosed++reviewed-by%3Ajahow)
-* [Jody Garnett](https://github.com/jodygarnett): [Active Maintainer](https://github.com/geonetwork/core-geonetwork/pulls?q=is%3Apr+is%3Aclosed++reviewed-by%3Ajodygarnett)
-* [Tyler McHugh](https://github.com/tylerjmchugh): [Active Maintainer](https://github.com/geonetwork/core-geonetwork/pulls?q=is%3Apr+is%3Aclosed+reviewed-by%3Atylerjmchugh)
+* [Jody Garnett](https://github.com/jodygarnett): [Active Maintainer](https://github.com/geonetwork/core-geonetwork/pulls?q=is%3Apr+is%3Aclosed+reviewed-by%3Ajodygarnett)
 * [François Prunayre](https://github.com/fxprunayre): [Active Maintainer](https://github.com/geonetwork/core-geonetwork/pulls?q=is%3Apr+is%3Aclosed++reviewed-by%3Afxprunayre)
 * [Juan Luis Rodríguez Ponce](https://github.com/juanluisrp): [Active Maintainer](https://github.com/geonetwork/core-geonetwork/pulls?q=is%3Apr+is%3Aclosed+reviewed-by%3Ajuanluisrp)
-* [Jeroen Ticheler](https://github.com/ticheler) - [OSGeo Project Officer](https://www.osgeo.org/about/board/)
 * [Ian Wallen](https://github.com/ianwallen): [Active Maintainer](https://github.com/geonetwork/core-geonetwork/pulls?q=is%3Apr+is%3Aclosed+reviewed-by%3Aianwallen)
 
-Active maintainer statistics are determined over six months, with the goal of an effective leadership team between 5 and 10 individuals.
+Chair:
 
-* GN4: [is:pr is:closed  reviewed-by:@me](https://github.com/geonetwork/core-geonetwork/pulls?q=is%3Apr+is%3Aclosed++reviewed-by%3A%40me)
-* GN5: [is:pr is:closed  reviewed-by:@me](https://github.com/geonetwork/geonetwork/pulls?q=is%3Apr+is%3Aclosed++reviewed-by%3A%40me)
+* [Jeroen Ticheler](https://github.com/ticheler) - [OSGeo Project Officer](https://www.osgeo.org/about/board/)
 
-```bash
-gh pr list --repo geonetwork/core-geonetwork --state closed --search "reviewed-by:@me"
-gh pr list --repo geonetwork/geonetwork --state closed --search "reviewed-by:@me"
-```
+!!! note
 
-Jeroen Ticheler is our Open Source Geospatial Foundation representative, acting as "chair" for the leadership team, and is available to cast a tie breaking vote if required 
+    Jeroen Ticheler is our Open Source Geospatial Foundation ["project officer"](https://www.osgeo.org/about/board/) representative.
+    
+    As acting as "chair" for the leadership team, Jeroen is available to cast a tie breaking vote if required.
+
+!!! note
+
+    Maintainer activity are determined over six months:
+    
+    Using GitHub API for reviewers in the last 6 months, avoiding double counting, and sorting the results: [maintainers.sh](maintainers.sh){:download}
+    ```
+    Reviews since 2025-01-01
+     65 josegar74
+     29 fxprunayre
+     15 jodygarnett
+     15 ianwallen
+     12 davidblasby
+     11 juanluisrp
+      7 tylerjmchugh
+      6 wangf1122
+      6 joachimnielandt
+      5 jahow
+      3 xiechangning20
+      3 PascalLike
+      3 github-advanced-security[bot]
+      2 Guillaume-d-o
+      1 sebr72
+      1 cmangeat
+    ```
+
+    We aim for an effective leadership team around 5 individuals.
+    
+!!! note
+
+    To check your own activity:
+    
+    * GN4: [is:pr is:closed  reviewed-by:@me](https://github.com/geonetwork/core-geonetwork/pulls?q=is%3Apr+is%3Aclosed++reviewed-by%3A%40me+base%3Amain+merged%3A%3E%3D2025-01-01)
+    * GN5: [is:pr is:closed  reviewed-by:@me](https://github.com/geonetwork/geonetwork/pulls?q=is%3Apr+is%3Aclosed++reviewed-by%3A%40me+base%3Amain+merged%3A%3E%3D2025-01-01)
+
+    ```bash
+    gh pr list --repo geonetwork/core-geonetwork --state closed --search "merged:>=$(date -v -6m +%Y-%m-01) reviewed-by:@me base:main"
+    gh pr list --repo geonetwork/geonetwork --state closed --search "merged:>=$(date -v -6m +%Y-%m-01) reviewed-by:@me base:main"
+    ```
 
 ## Developer Roles
 
-Developer roles are based on trust given the level of responsibility required. If you are interested in participating please speak up on the developer forum and start by testing and reviewing pull-requests. 
+Developer roles are based on trust given the level of responsibility required. If you are interested in participating please speak up on the [developer forum](https://discourse.osgeo.org/c/geonetwork/developer/58) and start by testing and reviewing pull-requests. 
 
 Developers are nominated for a role, self nomination is fine, reflecting ongoing commitment and community trust.
 
-Roles reflect increased project access
+Roles reflect increased project access as indicated by the GitHub Teams below:
 
-| Role  | Responsibility | Trust | Project Access | Roadmap |
+| GitHub Team | Responsibility | Trust | Project Access | Roadmap |
 | ----- | -------------- | ----- | -------------- | ------- |
-| build | build, automations, and release | Low | Access to mange workflows, branches and package releases | Non-voting |
-| security | Review security vulnerabilities | High | Security advisories | Non-voting |
-| maintainer | Review pull-requests | Highest | Merge pull requests | Voting |
+| [Wiki](https://github.com/orgs/geonetwork/teams/wiki) | edit wikit | Low | Enough commit permission to edit wiki | Non-voting |
+| [Build](https://github.com/orgs/geonetwork/teams/build) | build, automations, and release | Low | Access to manage workflows, branches and package releases | Non-voting |
+| [Security](https://github.com/orgs/geonetwork/teams/security) | Review security vulnerabilities | High | Security advisories | Non-voting |
+| [Maintainer](https://github.com/orgs/geonetwork/teams/maintainer)] | Review pull-requests | Highest | Merge pull requests | Voting |
 
 We ask that maintainers remain active, meeting responsibilities to review pull requests, address security vulnerabilities, and vote on roadmap proposals. As maintainers we understand that life can get in the way of community particpation – you are welcome to rejoin as your availability permits you to meet the responsibilities.
-
-Reference:
-
-- [Active Maintainer](https://github.com/orgs/geonetwork/teams/active-maintainer) (GitHub Team)
 
 ## Contributors
 
