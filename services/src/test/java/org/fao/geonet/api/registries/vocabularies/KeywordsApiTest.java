@@ -43,6 +43,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import javax.servlet.http.HttpSession;
+import java.nio.file.Path;
 import java.util.List;
 
 import static org.fao.geonet.csw.common.Csw.NAMESPACE_DC;
@@ -266,7 +267,7 @@ public class KeywordsApiTest extends AbstractServiceIntegrationTest {
             // the thesaurus already exists.  This will clean up and there will not be a problem on the next run.
             // This is typically only an issue if you are running the test locally - on the build server it gets a
             // new, clean, filesystem so there isn't a problem.
-            var uploadedThesauras = geonetworkDataDirectory.resolveWebResource(
+            Path uploadedThesauras = geonetworkDataDirectory.resolveWebResource(
                 "WEB-INF/data/config/codelist/external/thesauri/theme/mobility-theme.rdf");
             Files.deleteIfExists(uploadedThesauras);
         }
