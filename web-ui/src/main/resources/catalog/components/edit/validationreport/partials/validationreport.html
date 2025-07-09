@@ -139,10 +139,19 @@
               data-ng-if="type.total === '?'"
             >
               <ng-pluralize
+                data-ng-if="type.requirement !== 'REPORT_ONLY'"
                 count="type.error"
                 when="{'0': '0 ' + ('error' | translate),
                             '1': '1 ' +  ('error' | translate),
                             'other': '{} ' +  ('errors' | translate)}"
+              >
+              </ng-pluralize>
+              <ng-pluralize
+                data-ng-if="type.requirement === 'REPORT_ONLY'"
+                count="type.error"
+                when="{'0': '0 ' + ('warning' | translate),
+                            '1': '1 ' +  ('warning' | translate),
+                            'other': '{} ' +  ('warnings' | translate)}"
               >
               </ng-pluralize>
             </span>
@@ -165,9 +174,18 @@
             >
               <ng-pluralize
                 count="type.error"
+                data-ng-if="type.requirement !== 'REPORT_ONLY'"
                 when="{'0': '0 ' + ('error' | translate),
                             '1': '1 ' +  ('error' | translate),
                             'other': '{} ' +  ('errors' | translate)}"
+              >
+              </ng-pluralize>
+              <ng-pluralize
+                count="type.error"
+                data-ng-if="type.requirement === 'REPORT_ONLY'"
+                when="{'0': '0 ' + ('warning' | translate),
+                            '1': '1 ' +  ('warning' | translate),
+                            'other': '{} ' +  ('warnings' | translate)}"
               >
               </ng-pluralize>
             </span>
