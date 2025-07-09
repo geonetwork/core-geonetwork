@@ -17,7 +17,6 @@ This dedication is reflected in community trust, and a Leadership responsibility
 * [Jody Garnett](https://github.com/jodygarnett): [Active Maintainer](https://github.com/geonetwork/core-geonetwork/pulls?q=is%3Apr+is%3Aclosed+reviewed-by%3Ajodygarnett)
 * [François Prunayre](https://github.com/fxprunayre): [Active Maintainer](https://github.com/geonetwork/core-geonetwork/pulls?q=is%3Apr+is%3Aclosed++reviewed-by%3Afxprunayre)
 * [Juan Luis Rodríguez Ponce](https://github.com/juanluisrp): [Active Maintainer](https://github.com/geonetwork/core-geonetwork/pulls?q=is%3Apr+is%3Aclosed+reviewed-by%3Ajuanluisrp)
-* [Ian Wallen](https://github.com/ianwallen): [Active Maintainer](https://github.com/geonetwork/core-geonetwork/pulls?q=is%3Apr+is%3Aclosed+reviewed-by%3Aianwallen)
 
 Chair:
 
