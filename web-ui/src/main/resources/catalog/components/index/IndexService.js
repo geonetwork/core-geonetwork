@@ -42,43 +42,45 @@
         }
 
         function getIndexReport(uuid) {
-          return $http.post("../api/search/records/_search", {
-            query: {
-              bool: {
-                must: [
-                  {
-                    match: {
-                      uuid: uuid
-                    }
-                  },
-                  { terms: { draft: ["n", "y", "e"] } },
-                  { terms: { isTemplate: ["n", "y", "s"] } }
-                ]
-              }
-            },
-            _source: ["indexingErrorMsg"]
-          }).then(function (response) {
-            var hits = response.data.hits;
-            if (hits.total.value) {
-              var messages = hits.hits[0]._source.indexingErrorMsg || [];
-              var report = {
-                warningMessages: [],
-                errorMessages: []
-              }
-
-              messages.forEach(function (msg) {
-                if (!msg) return;
-                if (msg.type === "warning") {
-                  report.warningMessages.push(msg);
-                } else if (msg.type === "error") {
-                  report.errorMessages.push(msg);
+          return $http
+            .post("../api/search/records/_search", {
+              query: {
+                bool: {
+                  must: [
+                    {
+                      match: {
+                        uuid: uuid
+                      }
+                    },
+                    { terms: { draft: ["n", "y", "e"] } },
+                    { terms: { isTemplate: ["n", "y", "s"] } }
+                  ]
                 }
-              });
+              },
+              _source: ["indexingErrorMsg"]
+            })
+            .then(function (response) {
+              var hits = response.data.hits;
+              if (hits.total.value) {
+                var messages = hits.hits[0]._source.indexingErrorMsg || [];
+                var report = {
+                  warningMessages: [],
+                  errorMessages: []
+                };
 
-              return report;
-            }
-            throw new Error("No metadata found for UUID: " + uuid);
-          });
+                messages.forEach(function (msg) {
+                  if (!msg) return;
+                  if (msg.type === "warning") {
+                    report.warningMessages.push(msg);
+                  } else if (msg.type === "error") {
+                    report.errorMessages.push(msg);
+                  }
+                });
+
+                return report;
+              }
+              throw new Error("No metadata found for UUID: " + uuid);
+            });
         }
 
         return {
