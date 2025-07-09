@@ -29,8 +29,7 @@
   module.provider("gnIndexService", function () {
     this.$get = [
       "$http",
-      "Metadata",
-      function ($http, Metadata) {
+      function ($http) {
         // FIXME: this is not used
         function deleteDocs(filter) {
           return $http.delete(
