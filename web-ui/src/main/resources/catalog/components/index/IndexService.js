@@ -42,7 +42,7 @@
           );
         }
 
-        function getDoc(uuid) {
+        function getIndexReport(uuid) {
           return $http.post("../api/search/records/_search", {
             query: {
               bool: {
@@ -56,24 +56,24 @@
                   { terms: { isTemplate: ["n", "y", "s"] } }
                 ]
               }
-            }
-          });
-        }
+            },
+            _source: ["indexingErrorMsg"]
+          }).then(function (response) {
+            var hits = response.data.hits;
+            if (hits.total.value) {
+              var messages = hits.hits[0]._source.indexingErrorMsg || [];
+              var report = {
+                warningMessages: [],
+                errorMessages: []
+              }
 
-        function getIndexReport(uuid) {
-          return this.getDoc(uuid).then(function (r) {
-            if (r.data.hits.total.value !== 0) {
-              var metadata = new Metadata(r.data.hits.hits[0]);
-
-              var report = {};
-              report.allMessages = [].concat(metadata.indexingErrorMsg || []);
-
-              report.warningMessages = report.allMessages.filter(function (msg) {
-                return msg && msg.type === "warning";
-              });
-
-              report.errorMessages = report.allMessages.filter(function (msg) {
-                return msg && msg.type === "error";
+              messages.forEach(function (msg) {
+                if (!msg) return;
+                if (msg.type === "warning") {
+                  report.warningMessages.push(msg);
+                } else if (msg.type === "error") {
+                  report.errorMessages.push(msg);
+                }
               });
 
               return report;
@@ -84,7 +84,6 @@
 
         return {
           deleteDocs: deleteDocs,
-          getDoc: getDoc,
           getIndexReport: getIndexReport
         };
       }
