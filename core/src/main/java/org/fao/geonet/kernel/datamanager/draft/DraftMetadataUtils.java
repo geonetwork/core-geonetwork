@@ -641,8 +641,6 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
 
     @Override
     public void cancelEditingSession(ServiceContext context, String id) throws Exception {
-        // Restore the draft to the state it was in before editing
-        super.cancelEditingSession(context, id);
 
         int intId = Integer.parseInt(id);
 
@@ -682,6 +680,10 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
             } catch (Exception e) {
                 Log.error(Geonet.DATA_MANAGER, "Couldn't cleanup draft " + id, e);
             }
+        } else {
+            // If the draft was not created, then we just restore the state it was in before editing
+            // without deleting the draft.
+            super.cancelEditingSession(context, id);
         }
     }
 
