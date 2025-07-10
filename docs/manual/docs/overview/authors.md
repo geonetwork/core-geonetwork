@@ -1,6 +1,6 @@
 # Author {#authors}
 
-GeoNetwork was started in 2001 as project of the Food and Agriculture Organization of the United Nations (FAO-UN), United Nations World Food Programme (WFP) and United Nations Environment Programme (UNEP).
+GeoNetwork was started by Jeroen Ticheler in 2001 as project of the Food and Agriculture Organization of the United Nations (FAO-UN), United Nations World Food Programme (WFP) and United Nations Environment Programme (UNEP).
 
 The open-source project was initially managed by Jeroen Ticheler and then donated to the Open Source Geospatial Foundation. GeoNetwork [graduated](https://www.osgeo.org/foundation-news/geonetwork-opensource-graduates-osgeo-incubation/) as full Open Source Geospatial project in 2008 and has been managed by a project steering committee and active committers in subsequent years.
 
@@ -8,7 +8,7 @@ The open-source project was initially managed by Jeroen Ticheler and then donate
 
 The GeoNetwork project roadmap is managed using a proposal process, with the GeoNetwork leadership team voting on proposals made by members of our community. This process has moved from mailing list to a [project board](https://github.com/orgs/geonetwork/projects/2).
 
-Active developers in GeoNetwork project have taken on responsibility for reviewing community contributions, making releases, handling security vulnerability reports.
+Active maintainers in GeoNetwork project have taken on responsibility for reviewing community contributions, making releases, handling security vulnerability reports.
 
 This dedication is reflected in community trust, and a Leadership responsibility to vote on roadmap proposals:
 
@@ -26,7 +26,7 @@ Chair:
 
     Jeroen Ticheler is our Open Source Geospatial Foundation ["project officer"](https://www.osgeo.org/about/board/) representative.
     
-    As acting as "chair" for the leadership team, Jeroen is available to cast a tie breaking vote if required.
+    As acting "chair" for the leadership team, Jeroen is available to cast a tie breaking vote if required.
 
 !!! note
 
@@ -61,7 +61,8 @@ Chair:
     
     * GN4: [is:pr is:closed  reviewed-by:@me](https://github.com/geonetwork/core-geonetwork/pulls?q=is%3Apr+is%3Aclosed++reviewed-by%3A%40me+base%3Amain+merged%3A%3E%3D2025-01-01)
     * GN5: [is:pr is:closed  reviewed-by:@me](https://github.com/geonetwork/geonetwork/pulls?q=is%3Apr+is%3Aclosed++reviewed-by%3A%40me+base%3Amain+merged%3A%3E%3D2025-01-01)
-
+    
+    Using the `gh` command line:
     ```bash
     gh pr list --repo geonetwork/core-geonetwork --state closed --search "merged:>=$(date -v -6m +%Y-%m-01) reviewed-by:@me base:main"
     gh pr list --repo geonetwork/geonetwork --state closed --search "merged:>=$(date -v -6m +%Y-%m-01) reviewed-by:@me base:main"
@@ -77,12 +78,18 @@ Roles reflect increased project access as indicated by the GitHub Teams below:
 
 | GitHub Team | Responsibility | Trust | Project Access | Roadmap |
 | ----- | -------------- | ----- | -------------- | ------- |
-| [Wiki](https://github.com/orgs/geonetwork/teams/wiki) | edit wikit | Low | Enough commit permission to edit wiki | Non-voting |
+| [Wiki](https://github.com/orgs/geonetwork/teams/wiki) | edit wiki | Low | Enough commit permission to edit wiki | Non-voting |
 | [Build](https://github.com/orgs/geonetwork/teams/build) | build, automations, and release | Low | Access to manage workflows, branches and package releases | Non-voting |
+| [Project](https://github.com/orgs/geonetwork/teams/project) | project board | Low | Project board and issue triage | Non-voting |
 | [Security](https://github.com/orgs/geonetwork/teams/security) | Review security vulnerabilities | High | Security advisories | Non-voting |
-| [Maintainer](https://github.com/orgs/geonetwork/teams/maintainer)] | Review pull-requests | Highest | Merge pull requests | Voting |
+| [Maintainer](https://github.com/orgs/geonetwork/teams/maintainer) | Review pull-requests | Highest | Merge pull requests | Voting |
 
-We ask that maintainers remain active, meeting responsibilities to review pull requests, address security vulnerabilities, and vote on roadmap proposals. As maintainers we understand that life can get in the way of community particpation – you are welcome to rejoin as your availability permits you to meet the responsibilities.
+
+!!! note
+   
+    Maintainers are expected remain active, meeting responsibilities to review pull requests, address security vulnerabilities, and vote on roadmap proposals.
+    
+    We understand that life can get in the way of community particpation – you are welcome to rejoin as your availability permits you to meet the responsibilities.
 
 ## Contributors
 
