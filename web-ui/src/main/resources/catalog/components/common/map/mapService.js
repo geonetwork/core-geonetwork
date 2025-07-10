@@ -2316,14 +2316,23 @@
             var addToMapLayerNameUrlParam =
               gnGlobalSettings.gnCfg.mods.search.addWMSLayersToMap.urlLayerParam;
 
+            var type = "wms";
+            if (link.protocol.indexOf("WMTS") > -1) {
+              type = "wmts";
+            } else if (
+              link.protocol === "ESRI:REST" ||
+              link.protocol.startsWith("ESRI REST")
+            ) {
+              type = "esrirest";
+            } else if (link.protocol === "OGC:3DTILES") {
+              type = "3dtiles";
+            } else if (link.protocol === "OGC:COG") {
+              type = "cog";
+            }
+
             var config = {
               uuid: md ? md.uuid : null,
-              type:
-                link.protocol.indexOf("WMTS") > -1
-                  ? "wmts"
-                  : link.protocol == "ESRI:REST" || link.protocol.startsWith("ESRI REST")
-                  ? "esrirest"
-                  : "wms",
+              type: type,
               url: $filter("gnLocalized")(link.url) || link.url
             };
 
@@ -2373,6 +2382,19 @@
               );
               return;
             }
+
+            // no support for COG or 3DTiles for now
+            if (config.type === "cog" || config.type === "3dtiles") {
+              gnAlertService.addAlert({
+                msg: $translate.instant("layerProtocolNotSupported", {
+                  type: link.protocol
+                }),
+                delay: 20,
+                type: "warning"
+              });
+              return;
+            }
+
             return config;
           },
 
