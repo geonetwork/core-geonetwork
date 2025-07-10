@@ -166,7 +166,7 @@
           création a été décidée par le Gouvernement wallon le 19 septembre 2005.</dct:description>
       <adms:status>
          <skos:Concept rdf:about="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#onGoing">
-            <skos:prefLabel xml:lang="fre">Mis à jour continue</skos:prefLabel>
+            <skos:prefLabel xml:lang="fr">Mis à jour continue</skos:prefLabel>
          </skos:Concept>
       </adms:status>
       <dct:creator>
@@ -202,7 +202,7 @@
       <geodcatap:custodian>
          <rdf:Description>
             <rdf:type rdf:resource="http://www.w3.org/2006/vcard/ns#Organization"/>
-            <vcard:fn>Thierry Berthet</vcard:fn>
+            <vcard:fn xml:lang="fr">Thierry Berthet</vcard:fn>
             <vcard:org>
                <rdf:Description>
                   <vcard:organisation-name xml:lang="fre">Direction du Développement territorial (SPW - Territoire, Logement, Patrimoine,
@@ -216,7 +216,7 @@
       <geodcatap:custodian>
          <rdf:Description rdf:about="https://orcid.org/jb98765">
             <rdf:type rdf:resource="http://www.w3.org/2006/vcard/ns#Organization"/>
-            <vcard:fn>Jean Berthet</vcard:fn>
+            <vcard:fn xml:lang="fr">Jean Berthet</vcard:fn>
             <vcard:org>
                <rdf:Description>
                   <vcard:organisation-name xml:lang="fre">Direction du Développement territorial (SPW - Territoire, Logement, Patrimoine,
@@ -486,9 +486,9 @@
          </rdf:Description>
       </geodcatap:referenceSystem>
         <geodcatap:topicCategory rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/TopicCategory/planningCadastre"/>
-      
+
         <geodcatap:topicCategory rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/TopicCategory/imageryBaseMapsEarthCover"/>
-      
+
         <geodcatap:topicCategory rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/TopicCategory/location"/>
       <dcat:spatialResolutionInMeters rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.01</dcat:spatialResolutionInMeters>
       <dcat:temporalResolution rdf:datatype="http://www.w3.org/2001/XMLSchema#duration">P0Y2M0DT0H0M0S</dcat:temporalResolution>

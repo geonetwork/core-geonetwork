@@ -41,7 +41,9 @@
         restrict: "A",
         templateUrl:
           "../../catalog/components/edit/onlinesrc/" + "partials/fileUploader.html",
-        scope: {},
+        scope: {
+          editableThumbnail: "@"
+        },
         link: function (scope, element, attrs) {
           scope.relations = {};
           scope.uuid = undefined;
@@ -2237,6 +2239,10 @@
                   };
 
                   $(scope.popupid).modal("show");
+
+                  $("#linktomd-search input").val("");
+                  scope.searchObj.any = "";
+
                   var searchParams =
                     scope.config.sources && scope.config.sources.metadataStore
                       ? scope.config.sources.metadataStore.params || {}
@@ -2341,13 +2347,14 @@
 
                   $(scope.popupid).modal("show");
 
-                  scope.$broadcast("resetSearch");
+                  scope.clearSearch();
                   scope.selection = [];
                 });
 
                 // Clear the search params and input
                 scope.clearSearch = function () {
                   $("#siblingdd input").val("");
+                  scope.searchObj.any = "";
                   scope.$broadcast("resetSearch");
                 };
 

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  ~ Copyright (C) 2001-2024 Food and Agriculture Organization of the
+  ~ Copyright (C) 2001-2025 Food and Agriculture Organization of the
   ~ United Nations (FAO-UN), United Nations World Food Programme (WFP)
   ~ and United Nations Environment Programme (UNEP)
   ~
@@ -22,14 +22,34 @@
   ~ Rome - Italy. email: geonetwork@osgeo.org
   -->
 
-<geonet>
-  <services package="org.fao.geonet">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <parent>
+    <artifactId>geonetwork</artifactId>
+    <groupId>org.geonetwork-opensource</groupId>
+    <version>4.4.9-SNAPSHOT</version>
+  </parent>
+  <modelVersion>4.0.0</modelVersion>
 
-    <service name="rdf.metadata.public.get">
-      <documentation>Return all public metadata in RDF/DCAT format.</documentation>
-      <class name="org.fao.geonet.services.rdf.GetPublicMetadataAsRdf">
-      </class>
-      <output file="true" contentType="application/rdf+xml; charset=UTF-8"/>
-    </service>
-  </services>
-</geonet>
+  <groupId>org.geonetwork-opensource.plugins</groupId>
+  <artifactId>gn-plugins</artifactId>
+  <name>GeoNetwork Plugins</name>
+  <packaging>pom</packaging>
+
+  <profiles>
+    <profile>
+      <id>datahub-integration</id>
+      <activation>
+        <property>
+          <!-- include when making a release -->
+          <name>release</name>
+        </property>
+      </activation>
+      <modules>
+        <module>datahub-integration</module>
+      </modules>
+    </profile>
+  </profiles>
+
+</project>

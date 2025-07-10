@@ -90,12 +90,12 @@ public class Page extends GeonetEntity implements Serializable {
     }
 
     public enum PageFormat {
-        LINK, HTML, HTMLPAGE, TEXT;
+        LINK, HTML, HTMLPAGE, TEXT, EMAILLINK;
     }
 
     // These are the sections where is shown the link to the Page object
     public enum PageSection {
-        TOP, FOOTER, MENU, SUBMENU, CUSTOM_MENU1, CUSTOM_MENU2, CUSTOM_MENU3;
+        TOP, FOOTER, MENU, SUBMENU, RECORD_VIEW_MENU, CUSTOM_MENU1, CUSTOM_MENU2, CUSTOM_MENU3;
     }
 
     public enum PageExtension {

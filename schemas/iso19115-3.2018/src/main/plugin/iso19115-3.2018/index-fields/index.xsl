@@ -1193,18 +1193,16 @@
             <xsl:if test="$stepDateTimeZulu != ''">
               ,"date": "<xsl:value-of select="mrl:stepDateTime//gml:timePosition/text()"/>"
             </xsl:if>
-            <xsl:if test="normalize-space(mrl:source) != ''">
-              ,"source": [
-              <xsl:for-each select="mrl:source/*[mrl:description/gco:CharacterString != '']">
-                {
-                "descriptionObject": <xsl:value-of
-                select="gn-fn-index:add-multilingual-field(
-                                            'description', mrl:description, $allLanguages, true())"/>
-                }
-                <xsl:if test="position() != last()">,</xsl:if>
-              </xsl:for-each>
-              ]
-            </xsl:if>
+            ,"source": [
+            <xsl:for-each select="mrl:source/*[mrl:description/gco:CharacterString != '']">
+              {
+              "descriptionObject": <xsl:value-of
+              select="gn-fn-index:add-multilingual-field(
+                                          'description', mrl:description, $allLanguages, true())"/>
+              }
+              <xsl:if test="position() != last()">,</xsl:if>
+            </xsl:for-each>
+            ]
 
             <xsl:variable name="processor"
                           select="mrl:processor/*[.//cit:CI_Organisation/cit:name != '']"/>
@@ -1450,7 +1448,7 @@
     <xsl:variable name="email"
                   select="(.//cit:contactInfo/*/cit:address/*/cit:electronicMailAddress/gco:CharacterString)[1]"/>
     <xsl:variable name="phone"
-                  select="(./cit:contactInfo/*/cit:phone/*/cit:number[normalize-space(.) != '']/*/text())[1]"/>
+                  select="(.//cit:contactInfo/*/cit:phone/*/cit:number[normalize-space(.) != '']/*/text())[1]"/>
     <xsl:variable name="individualName"
                   select="(.//cit:CI_Individual/cit:name/gco:CharacterString/text())[1]"/>
     <xsl:variable name="positionName"

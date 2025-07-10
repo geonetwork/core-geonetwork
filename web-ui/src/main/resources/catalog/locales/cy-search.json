@@ -552,6 +552,7 @@
     "addLayerPrefix": "Ychwanegu haen",
     "addLayerPostfix": "i'r map",
     "submit": "Cyflwyno",
+    "additionalLinks": "Additional Links",
     "indexingErrorMsg-invalidBounds": "Rhybudd / Maes resourceTemporalDateRange / Terfynau isaf ac uchaf yn wag neu ddim yn ddilys. Nid yw'r ystod dyddiad wedi'i mynegeio.",
     "indexingErrorMsg-invalidDateFormat": "Rhybudd / Nid oedd dyddiad {{dateType}} gyda gwerth '{{date}}' yn fformat dyddiad dilys.",
     "indexingErrorMsg-keywordNotFoundInThesaurus": "Rhybudd / Allweddair {{keyword}} heb ei ganfod yn {{thesaurus}}.",

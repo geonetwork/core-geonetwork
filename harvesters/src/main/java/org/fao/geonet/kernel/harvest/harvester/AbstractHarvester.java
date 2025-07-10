@@ -45,7 +45,9 @@ import org.fao.geonet.exceptions.OperationAbortedEx;
 import org.fao.geonet.exceptions.UnknownHostEx;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.MetadataIndexerProcessor;
+import org.fao.geonet.kernel.datamanager.IMetadataIndexer;
 import org.fao.geonet.kernel.datamanager.IMetadataManager;
+import org.fao.geonet.kernel.datamanager.IMetadataSchemaUtils;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.harvest.Common.OperResult;
 import org.fao.geonet.kernel.harvest.Common.Status;
@@ -118,7 +120,12 @@ public abstract class AbstractHarvester<T extends HarvestResult, P extends Abstr
     /**
      * Should we cancel the harvester?
      */
-    protected volatile AtomicBoolean cancelMonitor = new AtomicBoolean(false);
+    protected final AtomicBoolean cancelMonitor = new AtomicBoolean(false);
+
+    /**
+     * Contains all the errors that were thrown during harvesting and that may have caused the harvesting to abort
+     */
+    protected final List<HarvestError> errors = Collections.synchronizedList(new LinkedList<>());
 
     protected ServiceContext context;
 
@@ -128,6 +135,8 @@ public abstract class AbstractHarvester<T extends HarvestResult, P extends Abstr
     protected DataManager dataMan;
     protected IMetadataManager metadataManager;
     protected IMetadataUtils metadataUtils;
+    protected IMetadataSchemaUtils metadataSchemaUtils;
+    protected IMetadataIndexer metadataIndexer;
 
     protected P params;
     protected T result;
@@ -145,10 +154,6 @@ public abstract class AbstractHarvester<T extends HarvestResult, P extends Abstr
      * Exception that aborted the harvesting
      */
     private Throwable error;
-    /**
-     * Contains all the warnings and errors that didn't abort the execution, but were thrown during harvesting
-     */
-    private List<HarvestError> errors = Collections.synchronizedList(new LinkedList<>());
     private volatile boolean running = false;
 
     public static AbstractHarvester<?, ?> create(String type, ServiceContext context) throws BadParameterEx, OperationAbortedEx {
@@ -172,6 +177,8 @@ public abstract class AbstractHarvester<T extends HarvestResult, P extends Abstr
         this.harvesterSettingsManager = context.getBean(HarvesterSettingsManager.class);
         this.settingManager = context.getBean(SettingManager.class);
         this.metadataManager = context.getBean(IMetadataManager.class);
+        this.metadataSchemaUtils = context.getBean(IMetadataSchemaUtils.class);
+        this.metadataIndexer = context.getBean(IMetadataIndexer.class);
     }
 
     public void add(Element node) throws BadInputEx, SQLException {
@@ -538,7 +545,7 @@ public abstract class AbstractHarvester<T extends HarvestResult, P extends Abstr
      * Nested class to handle harvesting with fast indexing.
      */
     public class HarvestWithIndexProcessor extends MetadataIndexerProcessor {
-        Logger logger;
+        private final Logger logger;
 
         public HarvestWithIndexProcessor(DataManager dm, Logger logger) {
             super(dm);
@@ -657,11 +664,6 @@ public abstract class AbstractHarvester<T extends HarvestResult, P extends Abstr
                         logger.error(t);
                         error = t;
                         errors.add(new HarvestError(context, t));
-                    } finally {
-                        List<HarvestError> harvesterErrors = getErrors();
-                        if (harvesterErrors != null) {
-                            errors.addAll(harvesterErrors);
-                        }
                     }
 
                     long elapsedTime = TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis() - startTime);
@@ -758,14 +760,8 @@ public abstract class AbstractHarvester<T extends HarvestResult, P extends Abstr
         return res;
     }
 
-    /**
-     * Should be overriden to get a better insight on harvesting
-     * <p/>
-     * Returns the list of exceptions that ocurred during the harvesting but
-     * didn't really stop and abort the harvest.
-     */
     public List<HarvestError> getErrors() {
-        return Collections.synchronizedList(errors);
+        return Collections.unmodifiableList(errors);
     }
 
     public final String getType() {

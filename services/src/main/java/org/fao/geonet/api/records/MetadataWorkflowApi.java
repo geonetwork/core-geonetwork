@@ -65,6 +65,7 @@ import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.languages.FeedbackLanguages;
 import org.fao.geonet.repository.*;
 import org.fao.geonet.util.MetadataPublicationMailNotifier;
+import org.fao.geonet.util.WorkflowUtil;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
@@ -266,7 +267,7 @@ public class MetadataWorkflowApi {
 
             if (!minimumAllowedProfile.getProfileAndAllParents().contains(userProfile)) {
                 // If the user profile is not at least the minimum profile, then the user is not allowed to view record workflow status
-                String message = getMustBeProfileOrOwnerMessage(minimumAllowedProfileName, messages);
+                String message = getMustBeProfileOrOwnerMessage(minimumAllowedProfileName, messages, locale);
                 Log.debug(API.LOG_MODULE_NAME, message);
                 throw new NotAllowedException(message);
             }
@@ -516,6 +517,31 @@ public class MetadataWorkflowApi {
                 .withDescriptionKey("exception.resourceNotEnabled.workflow.description");
         }
 
+        // If the metadata workflow status is unset and the new status is DRAFT, workflow is being enabled
+        if (metadataStatus.getStatus(metadata.getId()) == null) {
+            // Retrieve the group owner ID from the metadata source information
+            Integer groupOwnerId = metadata.getSourceInfo().getGroupOwner();
+
+            // Find the group owner by ID from the group repository
+            // If the group owner is not found, throw a ResourceNotFoundException with a formatted message
+            Group groupOwner = groupRepository.findById(groupOwnerId).orElseThrow(
+                () -> new ResourceNotFoundException(
+                    MessageFormat.format(
+                        messages.getString("api.groups.group_not_found"),
+                        groupOwnerId
+                    )
+                )
+            );
+
+            // Check if the group has an enabled workflow
+            // If not, throw a FeatureNotEnabledException with an appropriate message
+            if (!WorkflowUtil.isGroupWithEnabledWorkflow(groupOwner.getName())) {
+                throw new FeatureNotEnabledException("Metadata workflow is disabled for group '" + groupOwner.getName() + "', metadata status can not be set")
+                    .withMessageKey("exception.resourceNotEnabled.groupWorkflow", new Object[]{groupOwner.getName()})
+                    .withDescriptionKey("exception.resourceNotEnabled.groupWorkflow.description", new Object[]{groupOwner.getName()});
+            }
+        }
+
         // --- only allow the owner of the record to set its status
         if (!accessManager.isOwner(context, String.valueOf(metadata.getId()))) {
             throw new SecurityException(
@@ -740,6 +766,7 @@ public class MetadataWorkflowApi {
         Integer size,
         HttpServletRequest request) throws Exception {
         ServiceContext context = ApiUtils.createServiceContext(request);
+        Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
         ResourceBundle messages = ApiUtils.getMessagesResourceBundle(request.getLocales());
 
         Profile userProfile = context.getUserSession().getProfile();
@@ -749,7 +776,7 @@ public class MetadataWorkflowApi {
         );
         Profile minimumAllowedProfile = Profile.valueOf(minimumAllowedProfileName);
         boolean isMinimumAllowedProfile = minimumAllowedProfile.getProfileAndAllParents().contains(userProfile);
-        String mustBeProfileOrOwnerMessage = getMustBeProfileOrOwnerMessage(minimumAllowedProfileName, messages);
+        String mustBeProfileOrOwnerMessage = getMustBeProfileOrOwnerMessage(minimumAllowedProfileName, messages, locale);
 
         if (userProfile != Profile.Administrator) {
             if (CollectionUtils.isEmpty(recordIdentifier) &&
@@ -1392,8 +1419,8 @@ public class MetadataWorkflowApi {
      * @param minimumAllowedProfileName The name of the minimum allowed profile.
      * @return A formatted message indicating the required profile or ownership.
      */
-    private String getMustBeProfileOrOwnerMessage(String minimumAllowedProfileName, ResourceBundle messages) {
-        Translator jsonLocTranslator = translatorFactory.getTranslator("apploc:", messages.getLocale().getISO3Language());
+    private String getMustBeProfileOrOwnerMessage(String minimumAllowedProfileName, ResourceBundle messages, Locale locale) {
+        Translator jsonLocTranslator = translatorFactory.getTranslator("apploc:", locale.getISO3Language());
         return MessageFormat.format(
             messages.getString("exception.notAllowed.mustBeProfileOrOwner"),
             jsonLocTranslator.translate(minimumAllowedProfileName)
