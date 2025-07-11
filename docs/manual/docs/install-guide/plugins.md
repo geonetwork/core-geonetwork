@@ -35,6 +35,45 @@ The [Datahub application](https://geonetwork.github.io/geonetwork-ui/main/docs/a
 
 Simply unzip the [gn-plugin-datahub-integration](https://sourceforge.net/projects/geonetwork/files/GeoNetwork_opensource/v4.4.6/gn-plugin-datahub-integration-4.4.6-0.zip) archive and copy its content in the `WEB-INF/lib` folder of your GeoNetwork installation.
 
+### Plugin deploymeht with Docker
+
+Similarly to the above the plugin can be added as part of a Docker build, see example `Dockerfile` for v4.4.8 below. 
+
+```
+# Use the official GeoNetwork v4.4.8 image as the base
+FROM geonetwork:4.4.8
+
+# Set arguments for plugin version for easy updates
+ARG GEONETWORK_VERSION=4.4.8
+ARG PLUGIN_VERSION=${GEONETWORK_VERSION}
+ARG PLUGIN_DOWNLOAD_URL="https://sourceforge.net/projects/geonetwork/files/GeoNetwork_opensource/v${GEONETWORK_VERSION}/gn-datahub-integration-${PLUGIN_VERSION}-0.zip/download"
+
+# Switch to root user temporarily to install packages
+USER root
+# Install necessary tools: wget for downloading and unzip for extracting
+# The base image already installs curl and unzip, but wget is still useful for direct downloads
+# We'll re-run apt-get to be safe, but it will mostly verify existing packages.
+RUN apt-get update && \
+    apt-get install -y \
+    wget \
+    unzip && \
+    rm -rf /var/lib/apt/lists/*
+
+# Switch back to the 'jetty' user as that's how the base image operates GeoNetwork
+USER jetty
+
+# # Set the working directory to the GeoNetwork installation directory
+# # This is where the geonetwork.war was unzipped in the base image.
+# WORKDIR /opt/geonetwork
+
+# Download, unzip, copy only the plugin JAR, and clean up—all in one layer
+RUN wget -O /tmp/gn-plugin-datahub-integration.zip ${PLUGIN_DOWNLOAD_URL} \
+    && unzip /tmp/gn-plugin-datahub-integration.zip -d /tmp/plugin \
+    && cp /tmp/plugin/gn-datahub-integration-${PLUGIN_VERSION}-0/lib/*.jar /opt/geonetwork/WEB-INF/lib/ \
+    && rm -rf /tmp/plugin /tmp/gn-plugin-datahub-integration.zip
+```
+This will add datahub to the default catalogue `ROOT/geonetwork/srv/datahub/news`. Subportals are configured as outlined below. 
+
 ### Configuration
 
 Please refer to the [Portal configuration page](../administrator-guide/configuring-the-catalog/portal-configuration.md#configuring-a-datahub-interface-for-a-sub-portal) to set up a Datahub interface once the plugin is enabled on your GeoNetwork installation,
