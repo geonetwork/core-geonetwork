@@ -4,13 +4,13 @@ GeoNetwork was started by Jeroen Ticheler in 2001 as project of the Food and Agr
 
 The open-source project was initially managed by Jeroen Ticheler and then donated to the Open Source Geospatial Foundation. GeoNetwork [graduated](https://www.osgeo.org/foundation-news/geonetwork-opensource-graduates-osgeo-incubation/) as full Open Source Geospatial project in 2008 and has been managed by a project steering committee and active committers in subsequent years.
 
-## Project Leadership
+## Leadership team
 
 The GeoNetwork project roadmap is managed using a proposal process, with the GeoNetwork leadership team voting on proposals made by members of our community. This process has moved from mailing list to a [project board](https://github.com/orgs/geonetwork/projects/2).
 
 Active maintainers in GeoNetwork project have taken on responsibility for reviewing community contributions, making releases, handling security vulnerability reports.
 
-This dedication is reflected in community trust, and a Leadership responsibility to vote on roadmap proposals:
+This dedication is reflected in community trust, and a Leadership role with oppertunity to vote on roadmap proposals:
 
 * [David Blasby](https://github.com/davidblasby): [Active Maintainer](https://github.com/geonetwork/core-geonetwork/pulls?q=is%3Apr+is%3Aclosed+reviewed-by%3Adavidblasby)
 * [Jose García](https://github.com/josegar74): [Active Maintainer](https://github.com/geonetwork/core-geonetwork/pulls?q=is%3Apr+is%3Aclosed+reviewed-by%3Ajosegar74)
@@ -24,9 +24,7 @@ Chair:
 
 !!! note
 
-    Jeroen Ticheler is our Open Source Geospatial Foundation ["project officer"](https://www.osgeo.org/about/board/) representative.
-    
-    As acting "chair" for the leadership team, Jeroen is available to cast a tie breaking vote if required.
+    Jeroen Ticheler is our Open Source Geospatial Foundation ["project officer"](https://www.osgeo.org/about/board/) representative. As acting chair, Jeroen is available to cast a tie breaking vote if required.
 
 !!! note
 
@@ -70,7 +68,7 @@ Chair:
 
 ## Developer Roles
 
-Developer roles are based on trust given the level of responsibility required. If you are interested in participating please speak up on the [developer forum](https://discourse.osgeo.org/c/geonetwork/developer/58) and start by testing and reviewing pull-requests. 
+Developer roles are based on trust given the level of responsibility required. If you are interested in participating please contact the [developer forum](https://discourse.osgeo.org/c/geonetwork/developer/58).
 
 Developers are nominated for a role, self nomination is fine, reflecting ongoing commitment and community trust.
 
@@ -84,10 +82,9 @@ Roles reflect increased project access as indicated by the GitHub Teams below:
 | [Security](https://github.com/orgs/geonetwork/teams/security) | Review security vulnerabilities | High | Security advisories | Non-voting |
 | [Maintainer](https://github.com/orgs/geonetwork/teams/maintainer) | Review pull-requests | Highest | Merge pull requests | Voting |
 
-
 !!! note
    
-    Maintainers are expected remain active, meeting responsibilities to review pull requests, address security vulnerabilities, and vote on roadmap proposals.
+    Developers are expected remain active, meeting responsibilities to review pull requests, address security vulnerabilities, and vote on roadmap proposals.
     
     We understand that life can get in the way of community particpation – you are welcome to rejoin as your availability permits you to meet the responsibilities.
 
@@ -105,20 +102,19 @@ Reference:
 
 ## Thanks
 
-We would like to thank prior contributors, committers, and leadership for their role in making GeoNetwork a success:
+We would like to thank prior contributors, committers, and leadership team for their role in making GeoNetwork a success:
 
-* Andrea Carboni - Leadership
+* Andrea Carboni
 * Antonio Cerciello
-* Jo Cook - Leadership
-* Jesse Eichar - Leadership
+* Jo Cook
+* Jesse Eichar
 * Michel Gabriel
-* Florent Gravin - Leadership
+* Florent Gravin
 * Craig Jones
 * Pierre Mauduit
-* Patrizia Monteduro - Leadership
-* Simon Pigot - Leadership
-* Francois Prunayre - Leadership
-* Emanuele Tajariol - Leadership
+* Patrizia Monteduro
+* Simon Pigot
+* Emanuele Tajariol
 * Archie Warnock
 * Maria de Reyna Arias
-* Paul van Genuchten - Leadership
+* Paul van Genuchten
