@@ -523,7 +523,6 @@ public class UserFeedbackAPI {
                     if (toAddress.size() > 0) {
                         try {
                             Locale[] feedbackLocales = feedbackLanguages.getLocales(locale);
-                            String recordUrl = metadataUtils.getDefaultUrl(userFeedbackDto.getMetadataUUID(), locale.getISO3Language());
 
                             LocalizedEmailComponent emailSubjectComponent = new LocalizedEmailComponent(SUBJECT, "new_user_rating", KeyType.MESSAGE_KEY, POSITIONAL_FORMAT);
                             LocalizedEmailComponent emailMessageComponent = new LocalizedEmailComponent(MESSAGE, "new_user_rating_text", KeyType.MESSAGE_KEY, POSITIONAL_FORMAT);
@@ -537,7 +536,7 @@ public class UserFeedbackAPI {
 
                                 emailMessageComponent.addParameters(
                                     feedbackLocale,
-                                    new LocalizedEmailParameter(ParameterType.RAW_VALUE, 1, recordUrl)
+                                    new LocalizedEmailParameter(ParameterType.RAW_VALUE, 1, metadataUtils.getDefaultUrl(userFeedbackDto.getMetadataUUID(), feedbackLocale.getISO3Language()))
                                 );
                             }
 
