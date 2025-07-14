@@ -161,7 +161,7 @@
       >
         <a
           href=""
-          data-ng-click="mdService.openUpdateStatusPanel(getScope(md), 'task', t)"
+          data-ng-click="mdService.openUpdateStatusPanel(getScope(), md, 'task', t, null, null, taskConfiguration[t.name].dueDate ? taskConfiguration[t.name].dueDate(md) : null)"
         >
           <span class="fa fa-fw"></span>&nbsp;
           <span>{{t.label | gnLocalized}}</span>

@@ -259,6 +259,25 @@
                   JSON.parse(md.isHarvested) === false
                 );
               }
+            },
+            scheduledPublicationTask: {
+              isVisible: function (md) {
+                return md && !md.isPublished();
+              },
+              isApplicable: function (md) {
+                // TODO: Would be good to return why a task is not applicable as tooltip
+                return (
+                  md &&
+                  !md.isPublished() &&
+                  md.isTemplate === "n" &&
+                  JSON.parse(md.isHarvested) === false
+                );
+              },
+              dueDate: function (md) {
+                return md && md.publicationDateForResource
+                  ? md.publicationDateForResource[0]
+                  : null;
+              }
             }
           };
 
