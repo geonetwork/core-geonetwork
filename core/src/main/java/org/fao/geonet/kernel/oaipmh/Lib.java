@@ -28,24 +28,21 @@ import co.elastic.clients.elasticsearch.core.search.Hit;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.util.Map;
-import java.util.stream.Collectors;
-import jeeves.constants.Jeeves;
-import jeeves.server.context.ServiceContext;
-
-import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.kernel.search.EsSearchManager;
-import org.fao.geonet.schema.iso19139.ISO19139SchemaPlugin;
-import org.fao.geonet.utils.Xml;
-import org.fao.oaipmh.exceptions.OaiPmhException;
-import org.jdom.Element;
-
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
-
+import java.util.Map;
+import java.util.stream.Collectors;
+import jeeves.constants.Jeeves;
+import jeeves.server.context.ServiceContext;
+import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.kernel.search.EsSearchManager;
 import static org.fao.geonet.kernel.search.EsSearchManager.FIELDLIST_CORE;
+import org.fao.geonet.utils.Log;
+import org.fao.geonet.utils.Xml;
+import org.fao.oaipmh.exceptions.OaiPmhException;
+import org.jdom.Element;
 
 public class Lib {
     public static final String SESSION_OBJECT = "oai-list-records-result";
@@ -73,7 +70,7 @@ public class Lib {
                     }
                 });
             } catch (Exception e) {
-                // Ignore errors
+                Log.warning(Geonet.OAI_HARVESTER, "OAI / Exception while retrieving converters " + e.getMessage());
             }
         }
         return result;
