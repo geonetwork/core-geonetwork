@@ -32,7 +32,6 @@ import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.MetadataStatus;
 import org.fao.geonet.domain.Profile;
-import org.fao.geonet.domain.StatusValueType;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.repository.MetadataStatusRepository;
@@ -47,7 +46,6 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.scheduling.quartz.QuartzJobBean;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -58,6 +56,7 @@ public class ScheduledMetadataPublication extends QuartzJobBean {
     @Autowired
     protected ServiceManager serviceManager;
 
+    @Autowired
     private ConfigurableApplicationContext applicationContext;
 
     @Autowired
@@ -81,10 +80,8 @@ public class ScheduledMetadataPublication extends QuartzJobBean {
      */
     @Override
     protected void executeInternal(JobExecutionContext jobContext) throws JobExecutionException {
-        applicationContext = ApplicationContextHolder.get();
+        ApplicationContextHolder.set(this.applicationContext);
         ServiceContext serviceContext = createServiceContext();
-        List<StatusValueType> types = new ArrayList<>();
-        types.add(StatusValueType.task);
 
         // Get current date without time part
         ISODate now = new ISODate(new ISODate().getDateAsString() + "T00:00:00.000Z");
