@@ -301,7 +301,7 @@ public class AttachmentsApi {
                 response.setHeader(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + filename + "\"");
                 response.setHeader(HttpHeaders.CONTENT_TYPE, contentType);
 
-                long lastModified = Files.getLastModifiedTime(filePath).toMillis();
+                long lastModified = file.getMetadata().getLastModification().getTime();
                 response.setDateHeader(HttpHeaders.LAST_MODIFIED, lastModified);
 
                 long fileSize = Files.size(filePath);
