@@ -47,15 +47,6 @@
                   </cit:CI_Contact>
                 </cit:contactInfo>
               </xsl:if>
-              <xsl:if test="description">
-                <cit:individual>
-                  <cit:CI_Individual>
-                    <cit:name>
-                      <gco:CharacterString><xsl:value-of select="description"/></gco:CharacterString>
-                    </cit:name>
-                  </cit:CI_Individual>
-                </cit:individual>
-              </xsl:if>
             </cit:CI_Organisation>
           </cit:party>
         </cit:CI_Responsibility>
