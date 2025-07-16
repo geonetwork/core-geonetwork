@@ -276,6 +276,11 @@ public class Aligner extends BaseAligner<SimpleUrlParams> {
 
         applyBatchEdits(ri.getKey(), md, schema, params.getBatchEdits(), context, null);
 
+        // Translate metadata
+        if (params.isTranslateContent()) {
+            md = translateMetadataContent(context, md, schema);
+        }
+
         final AbstractMetadata metadata = metadataManager.updateMetadata(context, id, md, validate, ufo,
             language, dateModified, true, IndexingMode.none);
 

@@ -34,6 +34,8 @@
       role="presentation"
       data-ng-show="!isDownloadingRecord && validationNode"
       data-ng-repeat="(key,value) in testsuites"
+      data-ng-class="{'disabled': !md.isPublished()}"
+      title="{{md.isPublished() ? '' : 'inspireValidationUsingPortalOnlyForPublicRecord' | translate}}"
     >
       <a
         role="menuitem"

@@ -539,14 +539,19 @@
        */
       this.publish = function (md, bucket, flag, scope, publicationType) {
         if (md) {
+          // Determine the publication flag based on current publication state
           flag = md.isPublished(publicationType) ? "off" : "on";
         }
 
         scope.isMdWorkflowEnable = gnConfig["metadata.workflow.enable"];
 
-        //Warn about possible workflow changes on batch changes
-        // or when record is not approved
-        if ((!md || md.mdStatus != 2) && flag === "on" && scope.isMdWorkflowEnable) {
+        // Warn about possible workflow changes on batch changes or when record is not approved
+        if (
+          (!md || (md.mdStatus != 2 && md.isWorkflowEnabled())) &&
+          flag === "on" &&
+          scope.isMdWorkflowEnable
+        ) {
+          // Show confirmation dialog to the user
           if (!confirm($translate.instant("warnPublishDraft"))) {
             return;
           }
@@ -746,6 +751,33 @@
         var crs = (crsDetails.codeSpace && crsDetails.codeSpace + ":") + crsDetails.code;
         if (crsDetails.name) return crsDetails.name + " (" + crs + ")";
         else return crs;
+      };
+
+      /**
+       * Retrieves the name of a group given its ID.
+       *
+       * @param {number} groupId - The ID of the group to retrieve the name for.
+       * @returns {Promise<string>} - A promise that resolves to the name of the group.
+       */
+      this.getGroupName = function (groupId) {
+        return $http.get("../api/groups/" + groupId).then(function (data) {
+          return data.data.name;
+        });
+      };
+
+      /**
+       * Checks if the given group name matches the workflow group matching regex.
+       *
+       * @param {string} groupName - The name of the group to check.
+       * @returns {boolean} - True if the group name matches the workflow group matching regex, false otherwise.
+       */
+      this.isGroupWithWorkflowEnabled = function (groupName) {
+        var workflowGroupMatchingRegex = gnConfig["metadata.workflow.draftWhenInGroup"];
+        return (
+          groupName &&
+          workflowGroupMatchingRegex &&
+          !!groupName.match(workflowGroupMatchingRegex)
+        );
       };
     }
   ]);

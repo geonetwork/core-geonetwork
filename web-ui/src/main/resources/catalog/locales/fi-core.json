@@ -588,5 +588,6 @@
     "mapLegend": "Selite",
     "quality": "Laatu",
     "download": "Download",
-    "links": "Linkit"
+    "links": "Linkit",
+    "saveToFile": "Save to file."
 }

@@ -38,12 +38,7 @@
       >
       <span class="caret"></span>
     </button>
-    <ul
-      class="dropdown-menu"
-      role="menu"
-      data-ng-if="!operationOnSelectionInProgress"
-      data-ng-init="translateValues = {selectedCount: searchResults.selectedCount}"
-    >
+    <ul class="dropdown-menu" role="menu" data-ng-if="!operationOnSelectionInProgress">
       <li data-ng-show="!excludePattern.test('exportMEF')">
         <a
           href=""
@@ -162,7 +157,7 @@
         <a
           href=""
           data-ng-click="mdService.validateMd(undefined, searchResults.selectionBucket)"
-          data-gn-confirm-click="{{'validateSelectedRecordConfirm' | translate:translateValues}}"
+          data-gn-confirm-click="{{'validateSelectedRecordConfirm' | translate:({selectedCount: searchResults.selectedCount})}}"
         >
           <i class="fa fa-fw fa-check"></i>&nbsp;<span translate>validate</span>
         </a>
@@ -174,7 +169,7 @@
         <a
           href=""
           data-ng-click="mdService.validateMdLinks(searchResults.selectionBucket)"
-          data-gn-confirm-click="{{'validateLinksSelectedRecordConfirm' | translate:translateValues}}"
+          data-gn-confirm-click="{{'validateLinksSelectedRecordConfirm' | translate:({selectedCount: searchResults.selectedCount})}}"
         >
           <i class="fa fa-fw fa-link"></i>&nbsp;<span translate>validateLinks</span>
         </a>
@@ -186,7 +181,7 @@
         <a
           href=""
           data-ng-click="mdService.validateMdInspire(searchResults.selectionBucket)"
-          data-gn-confirm-click="{{'validateSelectedRecordINSPIREConfirm' | translate:translateValues}}"
+          data-gn-confirm-click="{{'validateSelectedRecordINSPIREConfirm' | translate:({selectedCount: searchResults.selectedCount})}}"
         >
           <i class="fa fa-fw fa-inspire"></i>&nbsp;<span translate>validateInspire</span>
         </a>
@@ -198,7 +193,7 @@
         <a
           href=""
           data-ng-click="mdService.validateMdInspire(searchResults.selectionBucket, validationNode)"
-          data-gn-confirm-click="{{'validateSelectedRecordINSPIREConfirm' | translate:translateValues}}"
+          data-gn-confirm-click="{{'validateSelectedRecordINSPIREConfirm' | translate:({selectedCount: searchResults.selectedCount})}}"
         >
           <i class="fa fa-fw fa-inspire"></i>&nbsp;<span translate
             >validateInspireUsingNode</span

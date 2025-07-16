@@ -138,6 +138,23 @@
               </cit:dateType>
             </cit:CI_Date>
           </cit:date>
+          <cit:identifier>
+            <mcc:MD_Identifier>
+              <mcc:code>
+                <gco:CharacterString>4bef2af5-422a-45b0-9e9a-fa692fb0f18c</gco:CharacterString>
+              </mcc:code>
+              <mcc:codeSpace>
+                <gco:CharacterString>http://geodata.wallonie.be/id/</gco:CharacterString>
+              </mcc:codeSpace>
+            </mcc:MD_Identifier>
+          </cit:identifier>
+          <cit:identifier>
+            <mcc:MD_Identifier>
+              <mcc:code>
+                <gco:CharacterString>https://doi.org/10.1234/ABC</gco:CharacterString>
+              </mcc:code>
+            </mcc:MD_Identifier>
+          </cit:identifier>
         </cit:CI_Citation>
       </mri:citation>
       <mri:abstract>
@@ -320,7 +337,18 @@
   <mdb:distributionInfo>
     <mrd:MD_Distribution>
       <mrd:transferOptions>
-        <mrd:MD_DigitalTransferOptions></mrd:MD_DigitalTransferOptions>
+        <mrd:MD_DigitalTransferOptions>
+          <mrd:onLine>
+            <cit:CI_OnlineResource>
+              <cit:linkage>
+                <gco:CharacterString>https://doi.org/10.1234/ABC</gco:CharacterString>
+              </cit:linkage>
+              <cit:protocol>
+                <gco:CharacterString>DOI</gco:CharacterString>
+              </cit:protocol>
+            </cit:CI_OnlineResource>
+          </mrd:onLine>
+        </mrd:MD_DigitalTransferOptions>
       </mrd:transferOptions>
     </mrd:MD_Distribution>
   </mdb:distributionInfo>

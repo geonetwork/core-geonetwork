@@ -1289,8 +1289,8 @@
               codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#DS_AssociationTypeCode"
               codeListValue="largerWorkCitation"/>
           </mri:associationType>
-          <mri:metadataReference uuidref="ffc45d44-1cc2-4924-bb8c-214096eb9058"
-                                 xlink:href="http://localhost:8080/geonetwork/srv/api/records/ffc45d44-1cc2-4924-bb8c-214096eb9058?language=all"
+          <mri:metadataReference uuidref="ffc45d44-1cc2-4924-bb8c-214096eb9058lwc"
+                                 xlink:href="https://metawal.wallonie.be/geonetwork/srv/api/records/ffc45d44-1cc2-4924-bb8c-214096eb9058lwc"
                                  xlink:title="INSPIRE - Sites protégés en Wallonie (BE)"/>
         </mri:MD_AssociatedResource>
       </mri:associatedResource>
@@ -1301,8 +1301,10 @@
               codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#DS_AssociationTypeCode"
               codeListValue="partOfSeamlessDatabase"/>
           </mri:associationType>
-          <mri:metadataReference uuidref="da165110-88fd-11da-a88f-000d939bc5d8"
-                                 xlink:href="http://localhost:8080/geonetwork/srv/api/records/da165110-88fd-11da-a88f-000d939bc5d8"/>
+          <!-- Use a non-existing metadata UUID, so dcat:inSeries is not generated.
+               When using an existing UUID, the expected RDF files require to be updated to include dcat:inSeries -->
+          <mri:metadataReference uuidref="aaaa"
+                                 xlink:href="http://localhost:8080/geonetwork/srv/api/aaaa"/>
         </mri:MD_AssociatedResource>
       </mri:associatedResource>
       <mri:defaultLocale>
