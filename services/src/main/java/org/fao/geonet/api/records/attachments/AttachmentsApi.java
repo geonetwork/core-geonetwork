@@ -36,6 +36,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
@@ -68,9 +69,7 @@ import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -89,6 +88,7 @@ import java.util.List;
 public class AttachmentsApi {
     public static final Integer MIN_IMAGE_SIZE = 1;
     public static final Integer MAX_IMAGE_SIZE = 2048;
+    public static final Integer BUFFER_SIZE = 8192;
     private final ApplicationContext appContext = ApplicationContextHolder.get();
     private Store store;
 
@@ -260,8 +260,11 @@ public class AttachmentsApi {
     // @PreAuthorize("permitAll")
     @RequestMapping(value = "/{resourceId:.+}", method = RequestMethod.GET)
     @ResponseStatus(value = HttpStatus.OK)
-    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Record attachment.",
-        content = @Content(schema = @Schema(type = "string", format = "binary"))),
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Record attachment.",
+            content = @Content(schema = @Schema(type = "string", format = "binary"))),
+        @ApiResponse(responseCode = "206", description = "Partial content for resumable downloads.",
+            content = @Content(schema = @Schema(type = "string", format = "binary"))),
         @ApiResponse(responseCode = "403", description = "Operation not allowed. "
             + "User needs to be able to download the resource.")})
     public void getResource(
@@ -273,40 +276,21 @@ public class AttachmentsApi {
         @Parameter(hidden = true) HttpServletResponse response
     ) throws Exception {
         ServiceContext context = ApiUtils.createServiceContext(request);
+
+        ApiUtils.canViewRecord(metadataUuid, request);
+
         try (Store.ResourceHolder file = store.getResource(context, metadataUuid, resourceId, approved)) {
+            response.setHeader(HttpHeaders.CACHE_CONTROL, "no-cache");
 
-            ApiUtils.canViewRecord(metadataUuid, request);
-
-            String originalFilename = file.getMetadata().getFilename();
-            String contentType = getFileContentType(file.getPath());
-            String dispositionFilename = originalFilename;
+            Path filePath = file.getPath();
+            String filename = file.getMetadata().getFilename();
+            String contentType = getFileContentType(filePath);
 
             // If the image is being resized, always return as PNG and update
             // filename and content-type accordingly
             if (contentType.startsWith("image/") && size != null) {
                 if (size >= MIN_IMAGE_SIZE && size <= MAX_IMAGE_SIZE) {
-                    // Set content type to PNG
-                    contentType = "image/png";
-                    // Change file extension to .png
-                    int dotIdx = originalFilename.lastIndexOf('.');
-                    if (dotIdx > 0) {
-                        dispositionFilename = originalFilename.substring(0, dotIdx) + ".png";
-                    } else {
-                        dispositionFilename = originalFilename + ".png";
-                    }
-                    response.setHeader(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + dispositionFilename + "\"");
-                    response.setHeader(HttpHeaders.CACHE_CONTROL, "no-cache");
-                    response.setHeader(HttpHeaders.CONTENT_TYPE, contentType);
-
-                    // Read, resize, and write the image as PNG, and set Content-Length
-                    BufferedImage image = ImageIO.read(file.getPath().toFile());
-                    BufferedImage resized = ImageUtil.resize(image, size);
-                    // Write to a byte array first to get the length
-                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                    ImageIO.write(resized, "png", baos);
-                    byte[] pngBytes = baos.toByteArray();
-                    response.setContentLengthLong(pngBytes.length);
-                    response.getOutputStream().write(pngBytes);
+                    serveResizedImage(response, filePath, filename, size);
                 } else {
                     throw new IllegalArgumentException(String.format(
                         "Image can only be resized from %d to %d. You requested %d.",
@@ -314,13 +298,34 @@ public class AttachmentsApi {
                 }
             } else {
                 // For all other files, use the original content type and filename
-                response.setHeader(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + dispositionFilename + "\"");
-                response.setHeader(HttpHeaders.CACHE_CONTROL, "no-cache");
+                response.setHeader(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + filename + "\"");
                 response.setHeader(HttpHeaders.CONTENT_TYPE, contentType);
-                response.setContentLengthLong(Files.size(file.getPath()));
 
-                try (InputStream inputStream = Files.newInputStream(file.getPath())) {
-                    StreamUtils.copy(inputStream, response.getOutputStream());
+                long lastModified = Files.getLastModifiedTime(filePath).toMillis();
+                response.setDateHeader(HttpHeaders.LAST_MODIFIED, lastModified);
+
+                long fileSize = Files.size(filePath);
+
+                // Create an ETag
+                String etagValue = "\"" + DigestUtils.md5Hex(filePath.toString() + lastModified + fileSize) + "\"";
+                response.setHeader(HttpHeaders.ETAG, etagValue);
+
+                // Set headers for range requests to enable resumable downloads
+                response.setHeader(HttpHeaders.ACCEPT_RANGES, "bytes");
+
+                // Get the range header for resumable downloads
+                String rangeHeader = request.getHeader(HttpHeaders.RANGE);
+
+                if (rangeHeader != null && rangeHeader.startsWith("bytes=")) {
+                    // Handle range requests for resumable downloads
+                    serveAttachmentWithRange(response, filePath, rangeHeader, fileSize);
+                } else {
+                    // Handle full downloads
+                    response.setContentLengthLong(fileSize);
+                    try (InputStream inputStream = Files.newInputStream(filePath);
+                         BufferedInputStream bufferedStream = new BufferedInputStream(inputStream, BUFFER_SIZE)) {
+                        StreamUtils.copy(bufferedStream, response.getOutputStream());
+                    }
                 }
             }
         }
@@ -366,4 +371,103 @@ public class AttachmentsApi {
                 .publish(ApplicationContextHolder.get());
         }
     }
+
+    /**
+     * Serves a resized image in PNG format.
+     *
+     * @param response HTTP response to write the image to
+     * @param imagePath Path to the original image file
+     * @param originalFilename Original filename of the image
+     * @param size Desired size for the resized image (in pixels)
+     * @throws IOException If an I/O error occurs while reading or writing the image
+     */
+    private void serveResizedImage(HttpServletResponse response, Path imagePath,
+                                   String originalFilename, int size) throws IOException {
+        // Set headers before processing image
+        String filename = originalFilename.substring(0, originalFilename.lastIndexOf('.')) + ".png";
+        response.setHeader(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + filename + "\"");
+        response.setHeader(HttpHeaders.CONTENT_TYPE, "image/png");
+
+        // Use ByteArrayOutputStream to capture the image data first
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+
+        try (InputStream input = new BufferedInputStream(Files.newInputStream(imagePath))) {
+            // Process and resize the image
+            BufferedImage resized = ImageUtil.resize(ImageIO.read(input), size);
+
+            // Write to the byte array first to determine size
+            ImageIO.write(resized, "png", byteArrayOutputStream);
+
+            // Now we know the content length
+            byte[] imageData = byteArrayOutputStream.toByteArray();
+            response.setContentLength(imageData.length);
+
+            // Write the data to the actual response
+            response.getOutputStream().write(imageData);
+        }
+    }
+
+    /**
+     * Handles range requests for partial content delivery.
+     * Supports resumable downloads by serving only the requested byte range.
+     *
+     * @param response HTTP response to write the content to
+     * @param filePath Path to the file being served
+     * @param rangeHeader Range header from the request (e.g. "bytes=0-499")
+     * @param fileSize Size of the file being served
+     * @throws IOException If an I/O error occurs while reading or writing the file
+     */
+    private void serveAttachmentWithRange(HttpServletResponse response, Path filePath,
+                                          String rangeHeader, long fileSize) throws IOException {
+        // Parse the range header (format: "bytes=start-end" or "bytes=start-")
+        String range = rangeHeader.substring("bytes=".length());
+        String[] parts = range.split("-");
+
+        long start = 0;
+        long end = fileSize - 1;
+
+        if (parts.length > 0 && !parts[0].isEmpty()) {
+            start = Long.parseLong(parts[0]);
+        }
+
+        if (parts.length > 1 && !parts[1].isEmpty()) {
+            end = Long.parseLong(parts[1]);
+        }
+
+        // Validate range
+        if (start < 0 || start >= fileSize || start > end) {
+            response.setStatus(HttpServletResponse.SC_REQUESTED_RANGE_NOT_SATISFIABLE);
+            response.setHeader(HttpHeaders.CONTENT_RANGE, "bytes */" + fileSize);
+            return;
+        }
+
+        // Adjust end if necessary
+        if (end >= fileSize) {
+            end = fileSize - 1;
+        }
+
+        // Calculate content length
+        long contentLength = end - start + 1;
+
+        // Set partial content response headers
+        response.setStatus(HttpServletResponse.SC_PARTIAL_CONTENT);
+        response.setHeader(HttpHeaders.CONTENT_RANGE, "bytes " + start + "-" + end + "/" + fileSize);
+        response.setContentLengthLong(contentLength);
+
+        // Stream the requested byte range with appropriate buffer size
+        try (InputStream inputStream = Files.newInputStream(filePath);
+             BufferedInputStream bufferedStream = new BufferedInputStream(inputStream, BUFFER_SIZE)) {
+            bufferedStream.skip(start);
+            byte[] buffer = new byte[BUFFER_SIZE];
+            long bytesRemaining = contentLength;
+            int bytesRead;
+
+            while (bytesRemaining > 0 && (bytesRead = bufferedStream.read(buffer, 0,
+                (int) Math.min(buffer.length, bytesRemaining))) != -1) {
+                response.getOutputStream().write(buffer, 0, bytesRead);
+                bytesRemaining -= bytesRead;
+            }
+        }
+    }
+
 }
