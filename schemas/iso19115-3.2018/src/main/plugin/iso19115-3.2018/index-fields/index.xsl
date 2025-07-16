@@ -379,8 +379,8 @@
 
           <xsl:for-each select="cit:identifier/*[string(mcc:code/*)]">
             <resourceIdentifier type="object">{
-              "code": "<xsl:value-of select="mcc:code/(gco:CharacterString|gcx:Anchor)"/>",
-              "codeSpace": "<xsl:value-of select="mcc:codeSpace/(gco:CharacterString|gcx:Anchor)"/>",
+              "code": "<xsl:value-of select="gn-fn-index:json-escape(mcc:code/(gco:CharacterString|gcx:Anchor))"/>",
+              "codeSpace": "<xsl:value-of select="gn-fn-index:json-escape(mcc:codeSpace/(gco:CharacterString|gcx:Anchor))"/>",
               "link": "<xsl:value-of select="mcc:code/gcx:Anchor/@xlink:href"/>"
               }</resourceIdentifier>
           </xsl:for-each>
