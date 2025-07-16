@@ -1001,9 +1001,87 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#upgrading-from-geonetwork-30-guidance" class="md-nav__link">
+  <a href="#configuration" class="md-nav__link">
     <span class="md-ellipsis">
-      Upgrading from GeoNetwork 3.0 Guidance
+      Configuration
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#requests" class="md-nav__link">
+    <span class="md-ellipsis">
+      Requests
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Requests">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#identify-operation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Identify operation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#listmetadataformats-operation" class="md-nav__link">
+    <span class="md-ellipsis">
+      ListMetadataFormats operation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#listsets-operation" class="md-nav__link">
+    <span class="md-ellipsis">
+      ListSets operation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#listrecords-operation" class="md-nav__link">
+    <span class="md-ellipsis">
+      ListRecords operation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#listidentifiers-operation" class="md-nav__link">
+    <span class="md-ellipsis">
+      ListIdentifiers operation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#getrecord-operation" class="md-nav__link">
+    <span class="md-ellipsis">
+      GetRecord operation
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      Reference
     </span>
   </a>
   
@@ -1320,9 +1398,87 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#upgrading-from-geonetwork-30-guidance" class="md-nav__link">
+  <a href="#configuration" class="md-nav__link">
     <span class="md-ellipsis">
-      Upgrading from GeoNetwork 3.0 Guidance
+      Configuration
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#requests" class="md-nav__link">
+    <span class="md-ellipsis">
+      Requests
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Requests">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#identify-operation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Identify operation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#listmetadataformats-operation" class="md-nav__link">
+    <span class="md-ellipsis">
+      ListMetadataFormats operation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#listsets-operation" class="md-nav__link">
+    <span class="md-ellipsis">
+      ListSets operation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#listrecords-operation" class="md-nav__link">
+    <span class="md-ellipsis">
+      ListRecords operation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#listidentifiers-operation" class="md-nav__link">
+    <span class="md-ellipsis">
+      ListIdentifiers operation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#getrecord-operation" class="md-nav__link">
+    <span class="md-ellipsis">
+      GetRecord operation
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      Reference
     </span>
   </a>
   
@@ -1361,20 +1517,140 @@
 
 
 <h1 id="oai-pmh">Open Archive Initiative (OAI)</h1>
-<div class="admonition warning">
-<p class="admonition-title">Warning</p>
-<p>Unavailable since version 4.0.0.</p>
-<p>There is some interest migrating OAI-PMH to Elasticsearch engine used by GeoNetwork 4.
-Interested parties are encouraged to contact the project team for direction on this topic.</p>
-</div>
 <p>The Open Archives Initiative Protocol for Metadata Harvesting (OAI-PMH) standard exposes the metadata records in your catalog in an XML format defined by version 2.0 of the OAI-PMH protocol.</p>
-<p>Reference:</p>
+<h2 id="configuration">Configuration</h2>
+<p>The following URL is the standard end point for the catalog (substitute your GeoNetwork URL): <a href="http://localhost:8080/geonetwork/srv/api/oaipmh">http://localhost:8080/geonetwork/srv/api/oaipmh</a>?</p>
+<h2 id="requests">Requests</h2>
+<p>Standard OAI-PMH requests can be done using the url above and the 6 verbs provided by the standard:</p>
 <ul>
-<li><a href="https://www.openarchives.org/OAI/openarchivesprotocol.html">Open Archives Initiative Protocol for Metadata Harvesting (OAI-PMH)</a></li>
+<li>Identify</li>
+<li>ListMetadataFormats</li>
+<li>ListSets</li>
+<li>ListRecords</li>
+<li>ListIdentifiers</li>
+<li>GetRecord</li>
 </ul>
-<h2 id="upgrading-from-geonetwork-30-guidance">Upgrading from GeoNetwork 3.0 Guidance</h2>
-<p>The OAI-PMH API is no longer available.</p>
-<p>Recommend migrating to use of <a href="../csw/">Catalog Service for the Web (CSW)</a> API which provides XML document access.</p>
+<h3 id="identify-operation">Identify operation</h3>
+<p>This verb is used to retrieve information about a repository.</p>
+<p>http://localhost:8080/geonetwork/srv/api/oaipmh?verb=Identify</p>
+<div class="language-xml highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nt">&lt;OAI-PMH</span><span class="w"> </span><span class="na">xmlns=</span><span class="s">&quot;http://www.openarchives.org/OAI/2.0/&quot;</span><span class="w"> </span><span class="na">xmlns:xsi=</span><span class="s">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">         </span><span class="na">xsi:schemaLocation=</span><span class="s">&quot;http://www.openarchives.org/OAI/2.0/ http://www.openarchives.org/OAI/2.0/OAI-PMH.xsd&quot;</span><span class="nt">&gt;</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span><span class="nt">&lt;responseDate&gt;</span>2025-06-03T13:03:08.054227ZZ<span class="nt">&lt;/responseDate&gt;</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">  </span><span class="nt">&lt;request</span><span class="w"> </span><span class="na">verb=</span><span class="s">&quot;Identify&quot;</span><span class="nt">&gt;</span>http://localhost:8080/geonetwork/srv/api/oaipmh<span class="nt">&lt;/request&gt;</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">  </span><span class="nt">&lt;Identify&gt;</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">    </span><span class="nt">&lt;repositoryName&gt;</span>My<span class="w"> </span>GeoNetwork<span class="w"> </span>catalogue<span class="nt">&lt;/repositoryName&gt;</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">    </span><span class="nt">&lt;baseURL&gt;</span>http://localhost:8080/geonetwork/srv/api/oaipmh<span class="nt">&lt;/baseURL&gt;</span>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">    </span><span class="nt">&lt;protocolVersion&gt;</span>2.0<span class="nt">&lt;/protocolVersion&gt;</span>
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">    </span><span class="nt">&lt;adminEmail&gt;</span>root@localhost<span class="nt">&lt;/adminEmail&gt;</span>
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">    </span><span class="nt">&lt;earliestDatestamp&gt;</span>2005-03-31T17:13:30ZZ<span class="nt">&lt;/earliestDatestamp&gt;</span>
+</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">    </span><span class="nt">&lt;deletedRecord&gt;</span>no<span class="nt">&lt;/deletedRecord&gt;</span>
+</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="w">    </span><span class="nt">&lt;granularity&gt;</span>YYYY-MM-DDThh:mm:ssZ<span class="nt">&lt;/granularity&gt;</span>
+</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="w">  </span><span class="nt">&lt;/Identify&gt;</span>
+</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="nt">&lt;/OAI-PMH&gt;</span>
+</span></code></pre></div>
+<p><a href="https://www.openarchives.org/OAI/openarchivesprotocol.html#Identify">More information</a>.</p>
+<h3 id="listmetadataformats-operation">ListMetadataFormats operation</h3>
+<p>This verb is used to retrieve the metadata formats available from a repository.</p>
+<p>In the catalogue, this corresponds to the schema plugins that are installed.</p>
+<p>http://localhost:8080/geonetwork/srv/api/oaipmh?verb=ListMetadataFormats</p>
+<div class="language-xml highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="cp">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nt">&lt;OAI-PMH</span><span class="w"> </span><span class="na">xmlns=</span><span class="s">&quot;http://www.openarchives.org/OAI/2.0/&quot;</span><span class="w"> </span><span class="na">xmlns:xsi=</span><span class="s">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span><span class="w"> </span><span class="na">xsi:schemaLocation=</span><span class="s">&quot;http://www.openarchives.org/OAI/2.0/ http://www.openarchives.org/OAI/2.0/OAI-PMH.xsd&quot;</span><span class="nt">&gt;</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span><span class="nt">&lt;responseDate&gt;</span>2025-06-04T06:12:54.543994ZZ<span class="nt">&lt;/responseDate&gt;</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span><span class="nt">&lt;request</span><span class="w"> </span><span class="na">verb=</span><span class="s">&quot;ListMetadataFormats&quot;</span><span class="nt">&gt;</span>http://localhost:8080/geonetwork/srv/api/oaipmh<span class="nt">&lt;/request&gt;</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span><span class="nt">&lt;ListMetadataFormats&gt;</span>
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">    </span><span class="nt">&lt;metadataFormat&gt;</span>
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">      </span><span class="nt">&lt;metadataPrefix&gt;</span>iso19115-3.2018<span class="nt">&lt;/metadataPrefix&gt;</span>
+</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">      </span><span class="nt">&lt;schema&gt;</span>https://schemas.isotc211.org/19115/-3/mdb/2.0/mdb.xsd<span class="nt">&lt;/schema&gt;</span>
+</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">      </span><span class="nt">&lt;metadataNamespace&gt;</span>http://standards.iso.org/iso/19115/-3/mdb/2.0<span class="nt">&lt;/metadataNamespace&gt;</span>
+</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">    </span><span class="nt">&lt;/metadataFormat&gt;</span>
+</span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">    </span><span class="nt">&lt;metadataFormat&gt;</span>
+</span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="w">      </span><span class="nt">&lt;metadataPrefix&gt;</span>iso19139<span class="nt">&lt;/metadataPrefix&gt;</span>
+</span><span id="__span-1-13"><a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="w">      </span><span class="nt">&lt;schema&gt;</span>http://schemas.opengis.net/csw/2.0.2/profiles/apiso/1.0.0/apiso.xsd<span class="nt">&lt;/schema&gt;</span>
+</span><span id="__span-1-14"><a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="w">      </span><span class="nt">&lt;metadataNamespace&gt;</span>http://www.isotc211.org/2005/gmd<span class="nt">&lt;/metadataNamespace&gt;</span>
+</span><span id="__span-1-15"><a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="w">    </span><span class="nt">&lt;/metadataFormat&gt;</span>
+</span><span id="__span-1-16"><a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="w">    </span><span class="nt">&lt;metadataFormat&gt;</span>
+</span><span id="__span-1-17"><a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="w">      </span><span class="nt">&lt;metadataPrefix&gt;</span>dublin-core<span class="nt">&lt;/metadataPrefix&gt;</span>
+</span><span id="__span-1-18"><a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="w">      </span><span class="nt">&lt;schema&gt;</span>http://localhost:8080/geonetwork/xml/schemas/dublin-core/schema.xsd<span class="nt">&lt;/schema&gt;</span>
+</span><span id="__span-1-19"><a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="w">      </span><span class="nt">&lt;metadataNamespace</span><span class="w"> </span><span class="nt">/&gt;</span>
+</span><span id="__span-1-20"><a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="w">    </span><span class="nt">&lt;/metadataFormat&gt;</span>
+</span><span id="__span-1-21"><a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a><span class="w">    </span><span class="nt">&lt;metadataFormat&gt;</span>
+</span><span id="__span-1-22"><a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a><span class="w">      </span><span class="nt">&lt;metadataPrefix&gt;</span>iso19110<span class="nt">&lt;/metadataPrefix&gt;</span>
+</span><span id="__span-1-23"><a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a><span class="w">      </span><span class="nt">&lt;schema&gt;</span>http://www.isotc211.org/2005/gfc/gfc.xsd<span class="nt">&lt;/schema&gt;</span>
+</span><span id="__span-1-24"><a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a><span class="w">      </span><span class="nt">&lt;metadataNamespace&gt;</span>http://www.isotc211.org/2005/gfc<span class="nt">&lt;/metadataNamespace&gt;</span>
+</span><span id="__span-1-25"><a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a><span class="w">    </span><span class="nt">&lt;/metadataFormat&gt;</span>
+</span><span id="__span-1-26"><a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a><span class="w">    </span><span class="nt">&lt;metadataFormat&gt;</span>
+</span><span id="__span-1-27"><a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a><span class="w">      </span><span class="nt">&lt;metadataPrefix&gt;</span>oai_dc<span class="nt">&lt;/metadataPrefix&gt;</span>
+</span><span id="__span-1-28"><a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a><span class="w">      </span><span class="nt">&lt;schema&gt;</span>http://www.openarchives.org/OAI/2.0/oai_dc.xsd<span class="nt">&lt;/schema&gt;</span>
+</span><span id="__span-1-29"><a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a><span class="w">      </span><span class="nt">&lt;metadataNamespace&gt;</span>http://www.openarchives.org/OAI/2.0/<span class="nt">&lt;/metadataNamespace&gt;</span>
+</span><span id="__span-1-30"><a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a><span class="w">    </span><span class="nt">&lt;/metadataFormat&gt;</span>
+</span><span id="__span-1-31"><a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a><span class="w">  </span><span class="nt">&lt;/ListMetadataFormats&gt;</span>
+</span><span id="__span-1-32"><a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a><span class="nt">&lt;/OAI-PMH&gt;</span>
+</span></code></pre></div>
+<p><a href="https://www.openarchives.org/OAI/openarchivesprotocol.html#ListMetadataFormats">More information</a>.</p>
+<h3 id="listsets-operation">ListSets operation</h3>
+<p>This verb is used to retrieve the set structure of a repository, useful for selective harvesting.</p>
+<p>In the catalogue, this corresponds to the categories.</p>
+<p>http://localhost:8080/geonetwork/srv/api/oaipmh?verb=ListSets</p>
+<div class="language-xml highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="cp">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nt">&lt;OAI-PMH</span><span class="w"> </span><span class="na">xmlns=</span><span class="s">&quot;http://www.openarchives.org/OAI/2.0/&quot;</span><span class="w"> </span><span class="na">xmlns:xsi=</span><span class="s">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span><span class="w"> </span><span class="na">xsi:schemaLocation=</span><span class="s">&quot;http://www.openarchives.org/OAI/2.0/ http://www.openarchives.org/OAI/2.0/OAI-PMH.xsd&quot;</span><span class="nt">&gt;</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span><span class="nt">&lt;responseDate&gt;</span>2025-06-04T06:13:43.916077ZZ<span class="nt">&lt;/responseDate&gt;</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span><span class="nt">&lt;request</span><span class="w"> </span><span class="na">verb=</span><span class="s">&quot;ListSets&quot;</span><span class="nt">&gt;</span>http://localhost:8080/geonetwork/srv/api/oaipmh<span class="nt">&lt;/request&gt;</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span><span class="nt">&lt;ListSets&gt;</span>
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">    </span><span class="nt">&lt;set&gt;</span>
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">      </span><span class="nt">&lt;setSpec&gt;</span>maps<span class="nt">&lt;/setSpec&gt;</span>
+</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">      </span><span class="nt">&lt;setName&gt;</span>Cartes<span class="w"> </span><span class="ni">&amp;amp;</span><span class="w"> </span>graphiques<span class="nt">&lt;/setName&gt;</span>
+</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">    </span><span class="nt">&lt;/set&gt;</span>
+</span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">    </span><span class="nt">&lt;set&gt;</span>
+</span><span id="__span-2-11"><a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">      </span><span class="nt">&lt;setSpec&gt;</span>datasets<span class="nt">&lt;/setSpec&gt;</span>
+</span><span id="__span-2-12"><a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="w">      </span><span class="nt">&lt;setName&gt;</span>Jeux<span class="w"> </span>de<span class="w"> </span>données<span class="nt">&lt;/setName&gt;</span>
+</span><span id="__span-2-13"><a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="w">    </span><span class="nt">&lt;/set&gt;</span>
+</span><span id="__span-2-14"><a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>...
+</span></code></pre></div>
+<p><a href="https://www.openarchives.org/OAI/openarchivesprotocol.html#ListSets">More information</a>.</p>
+<h3 id="listrecords-operation">ListRecords operation</h3>
+<p>This verb is used to harvest records from a repository.</p>
+<p>http://localhost:8080/geonetwork/srv/api/oaipmh?verb=ListRecords&amp;metadataPrefix=oai_dc
+http://localhost:8080/geonetwork/srv/api/oaipmh?verb=ListRecords&amp;metadataPrefix=iso19139
+http://localhost:8080/geonetwork/srv/api/oaipmh?verb=ListRecords&amp;metadataPrefix=datacite</p>
+<p><code>metadataPrefix</code> is the metadata format to be returned, it can be a schema plugin identifier such as <code>iso19139</code>, <code>iso19115-3.2018</code>, ...
+or a conversion defined in each schema plugin <code>formatter</code> folder (eg. <code>oai_dc</code>).</p>
+<p>If the conversion is not available, the response will skip the record and continue with the next one.</p>
+<div class="language-xml highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="cp">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nt">&lt;OAI-PMH</span><span class="w"> </span><span class="na">xmlns=</span><span class="s">&quot;http://www.openarchives.org/OAI/2.0/&quot;</span><span class="w"> </span><span class="na">xmlns:xsi=</span><span class="s">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span><span class="w"> </span><span class="na">xsi:schemaLocation=</span><span class="s">&quot;http://www.openarchives.org/OAI/2.0/ http://www.openarchives.org/OAI/2.0/OAI-PMH.xsd&quot;</span><span class="nt">&gt;</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span><span class="nt">&lt;responseDate&gt;</span>2025-06-04T07:03:18.211967ZZ<span class="nt">&lt;/responseDate&gt;</span>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span><span class="nt">&lt;request</span><span class="w"> </span><span class="na">identifier=</span><span class="s">&quot;da165110-88fd-11da-a88f-000d939bc5d8&quot;</span><span class="w"> </span><span class="na">metadataPrefix=</span><span class="s">&quot;oai_dc&quot;</span><span class="w"> </span><span class="na">verb=</span><span class="s">&quot;GetRecord&quot;</span><span class="nt">&gt;</span>http://localhost:8080/geonetwork/srv/api/oaipmh<span class="nt">&lt;/request&gt;</span>
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">  </span><span class="nt">&lt;GetRecord&gt;</span>
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">    </span><span class="nt">&lt;record&gt;</span>
+</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">      </span><span class="nt">&lt;header&gt;</span>
+</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">        </span><span class="nt">&lt;identifier&gt;</span>da165110-88fd-11da-a88f-000d939bc5d8<span class="nt">&lt;/identifier&gt;</span>
+</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">        </span><span class="nt">&lt;datestamp&gt;</span>2007-11-06T11:13:00ZZ<span class="nt">&lt;/datestamp&gt;</span>
+</span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w">        </span><span class="nt">&lt;setSpec&gt;</span>maps<span class="nt">&lt;/setSpec&gt;</span>
+</span><span id="__span-3-11"><a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="w">        </span><span class="nt">&lt;setSpec&gt;</span>datasets<span class="nt">&lt;/setSpec&gt;</span>
+</span><span id="__span-3-12"><a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="w">        </span><span class="nt">&lt;setSpec&gt;</span>interactiveResources<span class="nt">&lt;/setSpec&gt;</span>
+</span><span id="__span-3-13"><a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="w">      </span><span class="nt">&lt;/header&gt;</span>
+</span><span id="__span-3-14"><a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="w">      </span><span class="nt">&lt;metadata&gt;</span>
+</span><span id="__span-3-15"><a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="w">        </span><span class="nt">&lt;oai_dc:dc</span><span class="w"> </span><span class="na">xmlns:oai_dc=</span><span class="s">&quot;http://www.openarchives.org/OAI/2.0/oai_dc/&quot;</span><span class="w"> </span><span class="na">xmlns:dc=</span><span class="s">&quot;http://purl.org/dc/elements/1.1/&quot;</span><span class="w"> </span><span class="na">xsi:schemaLocation=</span><span class="s">&quot;http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd&quot;</span><span class="nt">&gt;</span>
+</span><span id="__span-3-16"><a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="w">          </span><span class="nt">&lt;dc:identifier&gt;</span>da165110-88fd-11da-a88f-000d939bc5d8<span class="nt">&lt;/dc:identifier&gt;</span>
+</span><span id="__span-3-17"><a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="w">          </span><span class="nt">&lt;dc:date&gt;</span>2007-11-06T11:13:00Z<span class="nt">&lt;/dc:date&gt;</span>
+</span><span id="__span-3-18"><a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a><span class="w">          </span><span class="nt">&lt;dc:title&gt;</span>Hydrological<span class="w"> </span>Basins<span class="w"> </span>in<span class="w"> </span>Africa<span class="w"> </span>(Sample<span class="w"> </span>record,<span class="w"> </span>please<span class="w"> </span>remove!)<span class="nt">&lt;/dc:title&gt;</span>
+</span><span id="__span-3-19"><a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a><span class="w">          </span><span class="nt">&lt;dc:subject&gt;</span>watersheds<span class="nt">&lt;/dc:subject&gt;</span>
+</span><span id="__span-3-20"><a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a><span class="w">          </span><span class="nt">&lt;dc:subject&gt;</span>river<span class="w"> </span>basins<span class="nt">&lt;/dc:subject&gt;</span>
+</span><span id="__span-3-21"><a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>...
+</span></code></pre></div>
+<p>The maximum number of records in the response is limited by the setting <code>system/oai/maxrecords</code>.</p>
+<p>To paginate over records use the <code>resumptionToken</code> parameter in the request. The response will include a <code>resumptionToken</code> element if there are more records to retrieve.</p>
+<p>http://localhost:8080/geonetwork/srv/api/oaipmh?verb=ListRecords&amp;metadataPrefix=oai_dc&amp;resumptionToken=/-/oai_dc/-//-//-/7ucugfvmh534od2bzcz267oay/-/1</p>
+<p><a href="https://www.openarchives.org/OAI/openarchivesprotocol.html#ListRecords">More information</a>.</p>
+<h3 id="listidentifiers-operation">ListIdentifiers operation</h3>
+<p>This verb is an abbreviated form of ListRecords, retrieving only headers rather than records.</p>
+<p>http://localhost:8080/geonetwork/srv/api/oaipmh?verb=ListIdentifiers&amp;metadataPrefix=iso19139</p>
+<p><a href="https://www.openarchives.org/OAI/openarchivesprotocol.html#ListIdentifiers">More information</a>.</p>
+<h3 id="getrecord-operation">GetRecord operation</h3>
+<p>This verb is used to retrieve an individual metadata record from a repository.</p>
+<p>http://localhost:8080/geonetwork/srv/api/oaipmh?verb=GetRecord&amp;identifier=da165110-88fd-11da-a88f-000d939bc5d8&amp;metadataPrefix=iso19139</p>
+<p><a href="https://www.openarchives.org/OAI/openarchivesprotocol.html#GetRecord">More information</a>.</p>
+<h2 id="reference">Reference</h2>
+<p>Please see <a href="https://www.openarchives.org/OAI/openarchivesprotocol.html">https://www.openarchives.org/OAI/openarchivesprotocol.html</a> for further details.</p>
 
 
 
