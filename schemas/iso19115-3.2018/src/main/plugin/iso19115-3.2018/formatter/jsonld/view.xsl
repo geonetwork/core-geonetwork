@@ -9,10 +9,12 @@
 
   <xsl:include href="iso19115-3.2018-to-jsonld.xsl"/>
 
+  <xsl:variable name="metadata" select="/root/mdb:MD_Metadata|/mdb:MD_Metadata"/>
+
   <xsl:template match="/">
     <textResponse>
       <xsl:apply-templates mode="getJsonLD"
-                           select="*/mdb:MD_Metadata"/>
+                           select="$metadata"/>
     </textResponse>
   </xsl:template>
 </xsl:stylesheet>
