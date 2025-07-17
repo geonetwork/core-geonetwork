@@ -150,6 +150,9 @@
             </gco:CharacterString>
           </mri:abstract>
           <xsl:variable name="thumbnailAssets" select="assets/*[roles[contains(., 'thumbnail')]]" />
+          <mri:topicCategory>
+            <mri:MD_TopicCategoryCode>imageryBaseMapsEarthCover</mri:MD_TopicCategoryCode>
+         </mri:topicCategory>
           <mri:extent>
             <gex:EX_Extent>
               <xsl:choose>
