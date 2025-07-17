@@ -498,9 +498,14 @@
 
 
   <!-- Some elements are only containers so bypass them
-  unless they are flat mode exceptions -->
+       unless they are flat mode exceptions.
+       Excluded mrd:MD_DigitalTransferOptions, otherwise is rendered differently
+       when contains 1 or more mrd:onLine elements. Probably template affects
+       other similar container elements.
+  -->
   <xsl:template mode="render-field"
                 match="*[
+                          name() != 'mrd:MD_DigitalTransferOptions' and
                           count(*[name() != 'lan:PT_FreeText']) = 1 and
                           count(*/@codeListValue) = 0
                           ]"
@@ -519,6 +524,7 @@
   * if part of fieldsWithFieldset exception
   * has content
   * only if more than one child to be displayed (non flat mode only) bypass container elements
+  * digital transfer options (mrd:transferOptions/*)
   . -->
   <xsl:template mode="render-field"
                 match="*[$isFlatMode = true() and not(gco:CharacterString) and (
@@ -527,7 +533,7 @@
                        *[$isFlatMode = false() and not(gco:CharacterString) and (
                             name() = $configuration/editor/fieldsWithFieldset/name
                             or @gco:isoType = $configuration/editor/fieldsWithFieldset/name
-                            or count(*) > 1)]"
+                            or count(*) > 1)]|mrd:transferOptions/*"
                 priority="100">
 
     <xsl:variable name="content">
@@ -836,7 +842,7 @@
 
   <!-- Linkage -->
   <xsl:template mode="render-field"
-                match="*[cit:CI_OnlineResource and */cit:linkage/* != '']"
+                match="*[cit:CI_OnlineResource]"
                 priority="100">
     <dl class="gn-link">
       <dt>
@@ -849,10 +855,20 @@
           <xsl:apply-templates mode="render-value"
                                select="*/cit:description"/>
         </xsl:variable>
-        <a href="{*/cit:linkage/*}" target="_blank">
-          <xsl:apply-templates mode="render-value"
-                               select="if (*/cit:name != '') then */cit:name else */cit:linkage"/>
-        </a>
+
+        <xsl:choose>
+          <xsl:when test="string(*/cit:linkage/*)">
+            <a href="{*/cit:linkage/*}" target="_blank">
+              <xsl:apply-templates mode="render-value"
+                                   select="if (*/cit:name != '') then */cit:name else */cit:linkage"/>
+            </a>
+          </xsl:when>
+          <xsl:otherwise>
+            <span>
+              <xsl:value-of select="if (*/cit:name != '') then */cit:name else */cit:linkage"/>
+            </span>
+          </xsl:otherwise>
+        </xsl:choose>
         <p>
           <xsl:value-of select="normalize-space($linkDescription)"/>
         </p>
