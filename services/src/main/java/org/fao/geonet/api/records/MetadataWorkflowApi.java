@@ -427,7 +427,7 @@ public class MetadataWorkflowApi {
                 AbstractMetadata metadata = metadataUtils.findOneByUuid(uuid);
                 if (metadata == null) {
                     report.incrementNullRecords();
-                } else if (!accessManager.isOwner(
+                } else if (!accessManager.canEdit(
                     ApiUtils.createServiceContext(request), String.valueOf(metadata.getId()))) {
                     report.addNotEditableMetadataId(metadata.getId());
                 } else {
@@ -542,8 +542,20 @@ public class MetadataWorkflowApi {
             }
         }
 
-        // --- only allow the owner of the record to set its status
-        if (!accessManager.isOwner(context, String.valueOf(metadata.getId()))) {
+        // --- check permission to change status based on the target status
+        boolean canChangeStatus = false;
+        if (status.getStatus() == Integer.parseInt(StatusValue.Status.SUBMITTED)) {
+            // For SUBMITTED status, allow editors to submit records for review
+            canChangeStatus = accessManager.canEdit(context, String.valueOf(metadata.getId()));
+        } else if (status.getStatus() == Integer.parseInt(StatusValue.Status.APPROVED)) {
+            // For APPROVED status, only reviewers can approve
+            canChangeStatus = accessManager.hasReviewPermission(context, metadata);
+        } else {
+            // For other statuses, only owners can change status
+            canChangeStatus = accessManager.isOwner(context, String.valueOf(metadata.getId()));
+        }
+
+        if (!canChangeStatus) {
             throw new SecurityException(
                 messages.getString("api.metadata.status.errorSetStatusNotAllowed"));
         }
