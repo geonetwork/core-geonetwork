@@ -307,7 +307,7 @@ public class AttachmentsApi {
                 long fileSize = Files.size(filePath);
 
                 // Create an ETag
-                String etagValue = "\"" + DigestUtils.md5Hex(filePath.toString() + lastModified + fileSize) + "\"";
+                String etagValue = "\"" + DigestUtils.md5Hex(filename + lastModified + fileSize) + "\"";
                 response.setHeader(HttpHeaders.ETAG, etagValue);
 
                 // Set headers for range requests to enable resumable downloads
