@@ -69,7 +69,7 @@
   </xsl:template>
 
 
-  <xsl:template mode="citation" match="citation[lower-case($format) = 'bibtex']">
+  <xsl:template mode="citation" match="citation[lower-case($format) = 'bibtex']" name="citation-bibtex">
     <!-- https://en.wikipedia.org/wiki/BibTeX -->
     <textResponse>@misc{<xsl:value-of select="uuid"/>,
       author = {<xsl:value-of select="normalize-space(string-join(authorsNameAndOrgList/*, ', '))"/>},
