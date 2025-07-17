@@ -309,6 +309,11 @@ public class AttachmentsApi {
                 // Create an ETag
                 String etagValue = "\"" + DigestUtils.md5Hex(filename + lastModified + fileSize) + "\"";
                 response.setHeader(HttpHeaders.ETAG, etagValue);
+                String ifNoneMatch = request.getHeader(HttpHeaders.IF_NONE_MATCH);
+                if (ifNoneMatch != null && ifNoneMatch.equals(etagValue)) {
+                    response.setStatus(HttpServletResponse.SC_NOT_MODIFIED); // 304
+                    return;
+                }
 
                 // Set headers for range requests to enable resumable downloads
                 response.setHeader(HttpHeaders.ACCEPT_RANGES, "bytes");
@@ -457,7 +462,13 @@ public class AttachmentsApi {
         // Stream the requested byte range with appropriate buffer size
         try (InputStream inputStream = Files.newInputStream(filePath);
              BufferedInputStream bufferedStream = new BufferedInputStream(inputStream, BUFFER_SIZE)) {
-            bufferedStream.skip(start);
+        long skipped = 0;
+        while (skipped < start) {
+            long toSkip = start - skipped;
+            long actuallySkipped = bufferedStream.skip(toSkip);
+            if (actuallySkipped <= 0) break; // EOF
+            skipped += actuallySkipped;
+        }
             byte[] buffer = new byte[BUFFER_SIZE];
             long bytesRemaining = contentLength;
             int bytesRead;
