@@ -67,7 +67,7 @@ public abstract class AbstractStore implements Store {
     private static final Logger log = LoggerFactory.getLogger(AbstractStore.class);
 
     @Value("${api.params.maxUploadSize}")
-    protected int maxUploadSize;
+    protected long maxUploadSize;
 
     @Override
     public final List<MetadataResource> getResources(final ServiceContext context, final String metadataUuid, final Sort sort,
