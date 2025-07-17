@@ -38,13 +38,6 @@
               codeListValue="{java-xsl-util:threeCharLangCode(
                                 (language)[1])}" />
           </lan:language>
-          <mdb:hierarchyLevel>
-            <mdb:MD_ScopeCode codeListValue="series"
-              codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_ScopeCode" />
-          </mdb:hierarchyLevel>
-          <mdb:hierarchyLevelName>
-            <gco:CharacterString>Data collection</gco:CharacterString>
-          </mdb:hierarchyLevelName>
           <lan:characterEncoding>
             <lan:MD_CharacterSetCode codeList="codeListLocation#MD_CharacterSetCode"
               codeListValue="utf8" />
@@ -64,7 +57,6 @@
           </mdb:name>
         </mdb:MD_MetadataScope>
       </mdb:metadataScope>
-
       <xsl:choose>
         <xsl:when test="contacts or contact or providers">
           <xsl:for-each select="contacts">
@@ -111,63 +103,32 @@
                           </cit:CI_Contact>
                         </cit:contactInfo>
                       </xsl:if>
-                      <xsl:if test="description">
-                        <cit:individual>
-                          <cit:CI_Individual>
-                            <cit:name>
-                              <gco:CharacterString>
-                                <xsl:value-of select="description" />
-                              </gco:CharacterString>
-                            </cit:name>
-                          </cit:CI_Individual>
-                        </cit:individual>
-                      </xsl:if>
                     </cit:CI_Organisation>
                   </cit:party>
                 </cit:CI_Responsibility>
               </mdb:contact>
             </xsl:for-each>
           </xsl:if>
-
         </xsl:when>
       </xsl:choose>
 
+      <mdb:dateInfo>
+        <cit:CI_Date>
+          <cit:date>
+            <gco:DateTime>
+              <xsl:value-of select="current-dateTime()" />
+            </gco:DateTime>
+          </cit:date>
+          <cit:dateType>
+            <cit:CI_DateTypeCode
+              codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_DateTypeCode"
+              codeListValue="creation" />
+          </cit:dateType>
+        </cit:CI_Date>
+      </mdb:dateInfo>
+
       <mdb:identificationInfo>
         <mri:MD_DataIdentification>
-          <xsl:variable name="thumbnailAssets" select="assets/*[roles[contains(., 'thumbnail')]]" />
-          <xsl:if test="count($thumbnailAssets) > 0">
-            <mri:graphicOverview>
-              <mcc:MD_BrowseGraphic>
-                <mcc:fileName>
-                  <gco:CharacterString>
-                    <xsl:value-of select="$thumbnailAssets[1]/href" />
-                  </gco:CharacterString>
-                </mcc:fileName>
-                <mcc:fileDescription>
-                  <gco:CharacterString>
-                    <xsl:choose>
-                      <xsl:when test="$thumbnailAssets[1]/title and $thumbnailAssets[1]/description">
-                        <xsl:value-of
-                          select="concat($thumbnailAssets[1]/title, ' - ', $thumbnailAssets[1]/description)" />
-                      </xsl:when>
-                      <xsl:when test="$thumbnailAssets[1]/title">
-                        <xsl:value-of select="$thumbnailAssets[1]/title" />
-                      </xsl:when>
-                      <xsl:when test="$thumbnailAssets[1]/description">
-                        <xsl:value-of select="$thumbnailAssets[1]/description" />
-                      </xsl:when>
-                      <xsl:otherwise>Preview image</xsl:otherwise>
-                    </xsl:choose>
-                  </gco:CharacterString>
-                </mcc:fileDescription>
-                <mcc:fileType>
-                  <gco:CharacterString>
-                    <xsl:value-of select="$thumbnailAssets[1]/type" />
-                  </gco:CharacterString>
-                </mcc:fileType>
-              </mcc:MD_BrowseGraphic>
-            </mri:graphicOverview>
-          </xsl:if>
           <mri:citation>
             <cit:CI_Citation>
               <cit:title>
@@ -188,13 +149,7 @@
                                     else 'STAC Collection harvested via STAC API'" />
             </gco:CharacterString>
           </mri:abstract>
-
-          <xsl:choose>
-            <xsl:when test="contacts or contact or providers">
-              <xsl:call-template name="map-stac-providers" />
-            </xsl:when>
-          </xsl:choose>
-
+          <xsl:variable name="thumbnailAssets" select="assets/*[roles[contains(., 'thumbnail')]]" />
           <mri:extent>
             <gex:EX_Extent>
               <xsl:choose>
@@ -237,29 +192,64 @@
 
               <xsl:if test="extent/temporal/interval">
                 <xsl:for-each select="extent/temporal/interval">
-                  <gex:temporalElement>
-                    <gex:EX_TemporalExtent>
-                      <gex:extent>
-                        <gml:TimePeriod>
-                          <xsl:if test="*[1] and *[1] != 'null' and *[1] != ''">
-                            <gml:beginPosition>
-                              <xsl:value-of select="*[1]" />
-                            </gml:beginPosition>
-                          </xsl:if>
-                          <xsl:if test="*[2] and *[2] != 'null' and *[2] != ''">
-                            <gml:endPosition>
-                              <xsl:value-of select="*[2]" />
-                            </gml:endPosition>
-                          </xsl:if>
-                        </gml:TimePeriod>
-                      </gex:extent>
-                    </gex:EX_TemporalExtent>
-                  </gex:temporalElement>
+                  <xsl:if
+                    test="(*[1] and *[1] != 'null' and *[1] != '') or (*[2] and *[2] != 'null' and *[2] != '')">
+                    <gex:temporalElement>
+                      <gex:EX_TemporalExtent>
+                        <gex:extent>
+                          <gml:TimePeriod>
+                            <xsl:if test="*[1] and *[1] != 'null' and *[1] != ''">
+                              <gml:beginPosition>
+                                <xsl:value-of select="*[1]" />
+                              </gml:beginPosition>
+                            </xsl:if>
+                            <xsl:if test="*[2] and *[2] != 'null' and *[2] != ''">
+                              <gml:endPosition>
+                                <xsl:value-of select="*[2]" />
+                              </gml:endPosition>
+                            </xsl:if>
+                          </gml:TimePeriod>
+                        </gex:extent>
+                      </gex:EX_TemporalExtent>
+                    </gex:temporalElement>
+                  </xsl:if>
                 </xsl:for-each>
               </xsl:if>
             </gex:EX_Extent>
           </mri:extent>
-
+          <xsl:if test="count($thumbnailAssets) > 0">
+            <mri:graphicOverview>
+              <mcc:MD_BrowseGraphic>
+                <mcc:fileName>
+                  <gco:CharacterString>
+                    <xsl:value-of select="$thumbnailAssets[1]/href" />
+                  </gco:CharacterString>
+                </mcc:fileName>
+                <mcc:fileDescription>
+                  <gco:CharacterString>
+                    <xsl:choose>
+                      <xsl:when test="$thumbnailAssets[1]/title and $thumbnailAssets[1]/description">
+                        <xsl:value-of
+                          select="concat($thumbnailAssets[1]/title, ' - ', $thumbnailAssets[1]/description)" />
+                      </xsl:when>
+                      <xsl:when test="$thumbnailAssets[1]/title">
+                        <xsl:value-of select="$thumbnailAssets[1]/title" />
+                      </xsl:when>
+                      <xsl:when test="$thumbnailAssets[1]/description">
+                        <xsl:value-of select="$thumbnailAssets[1]/description" />
+                      </xsl:when>
+                      <xsl:otherwise>Preview image</xsl:otherwise>
+                    </xsl:choose>
+                  </gco:CharacterString>
+                </mcc:fileDescription>
+                <mcc:fileType>
+                  <gco:CharacterString>
+                    <xsl:value-of select="$thumbnailAssets[1]/type" />
+                  </gco:CharacterString>
+                </mcc:fileType>
+              </mcc:MD_BrowseGraphic>
+            </mri:graphicOverview>
+          </xsl:if>
           <xsl:variable name="keywords"
             select="keywords" />
           <xsl:if test="$keywords">
@@ -275,7 +265,6 @@
               </mri:MD_Keywords>
             </mri:descriptiveKeywords>
           </xsl:if>
-
           <mri:resourceConstraints>
             <mco:MD_LegalConstraints>
               <mco:accessConstraints>
@@ -344,6 +333,4 @@
       </mdb:distributionInfo>
     </mdb:MD_Metadata>
   </xsl:template>
-
-
 </xsl:stylesheet>
