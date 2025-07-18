@@ -149,10 +149,11 @@ nav:
     - overview/authors.md
     - 'Changelog':
       - overview/change-log/index.md
-      - overview/change-log/version-4.4.6.md
-      - overview/change-log/version-4.2.11.md
+      - overview/change-log/version-4.4.8.md
+      - overview/change-log/version-4.2.13.md
       - 'Release History':
         - overview/change-log/history/index.md
+        - overview/change-log/version-4.4.7.md
         - overview/change-log/version-4.4.6.md
         - overview/change-log/version-4.4.5.md
         - overview/change-log/version-4.4.4.md
@@ -160,8 +161,8 @@ nav:
         - overview/change-log/version-4.4.2.md
         - overview/change-log/version-4.4.1.md
         - overview/change-log/version-4.4.0.md
-      - 'Release History':
-        - overview/change-log/history/index.md
+        - overview/change-log/version-4.2.13.md
+        - overview/change-log/version-4.2.12.md
         - overview/change-log/version-4.2.11.md
         - overview/change-log/version-4.2.10.md
         - overview/change-log/version-4.2.9.md
@@ -305,6 +306,7 @@ nav:
       - user-guide/harvesting/harvesting-thredds.md
       - user-guide/harvesting/harvesting-webdav.md
       - user-guide/harvesting/harvesting-wfs-features.md
+      - user-guide/harvesting/harvesting-database.md
     - user-guide/export/index.md
     - 'Administration':
       - administrator-guide/index.md
@@ -345,6 +347,7 @@ nav:
             - install-guide/installing-from-war-file.md
             - install-guide/installing-with-docker.md
             - install-guide/installing-from-source-code.md
+            - install-guide/plugins.md
           - 'Configuration':
             - install-guide/configuring-database.md
             - install-guide/customizing-data-directory.md

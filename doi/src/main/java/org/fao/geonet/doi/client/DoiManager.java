@@ -496,6 +496,7 @@ public class DoiManager {
 
         Map<String, Object> params = new HashMap<>();
         params.put(DOI_ID_PARAMETER, doi);
+        params.put("doiServerId", doiServer.getId() + "");
         return Xml.transform(md, styleSheet, params);
     }
 

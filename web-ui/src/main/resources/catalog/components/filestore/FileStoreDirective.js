@@ -61,12 +61,33 @@
               ? "public"
               : attrs["visibility"];
             scope.queue = [];
+            scope.singleUpload = true;
+
+            var input = element.find("input");
+            if (
+              angular.isDefined(scope.uploadOptions) &&
+              scope.uploadOptions.singleUpload === false
+            ) {
+              input.attr("multiple", "multiple");
+            }
+
+            var droparea = $(".file-drop-area");
+
+            // highlight drag area
+            input.on("dragenter focus click", function () {
+              droparea.addClass("is-active");
+            });
+
+            // back to normal state
+            input.on("dragleave blur drop", function () {
+              droparea.removeClass("is-active");
+            });
 
             var uploadFile = function () {
               scope.queue = [];
               scope.filestoreUploadOptions = angular.extend(
                 {
-                  singleUpload: true,
+                  singleUpload: scope.singleUpload,
                   autoUpload: scope.autoUpload,
                   url:
                     "../api/records/" +
@@ -74,6 +95,7 @@
                     "/attachments?visibility=" +
                     (scope.visibility || "public"),
                   dropZone: $("#gn-upload-" + scope.id),
+                  pasteZone: null,
                   // TODO: acceptFileTypes: /(\.|\/)(xml|skos|rdf)$/i,
                   done: uploadResourceSuccess,
                   fail: uploadResourceFailed,
@@ -219,6 +241,17 @@
           link: function (scope, element, attrs, controller) {
             scope.autoUpload =
               angular.isUndefined(attrs["autoUpload"]) || attrs["autoUpload"] == "true";
+
+            scope.filestoreUploadOptions = {
+              autoUpload: scope.autoUpload,
+              singleUpload: false
+            };
+
+            scope.filestoreUploadOptionsSetResource = {
+              autoUpload: scope.autoUpload,
+              singleUpload: true
+            };
+
             var defaultStatus = angular.isUndefined(attrs["defaultStatus"])
               ? "public"
               : attrs["defaultStatus"];
@@ -295,15 +328,6 @@
                 scope.loadMetadataResources();
 
                 scope.queue = [];
-                scope.filestoreUploadOptions = {
-                  autoUpload: scope.autoUpload,
-                  url:
-                    "../api/records/" +
-                    scope.uuid +
-                    "/attachments?visibility=" +
-                    defaultStatus,
-                  singleUpload: false
-                };
               }
             });
             if (angular.isDefined(scope.uuid)) {

@@ -6,6 +6,10 @@
                 xmlns:mrl="http://standards.iso.org/iso/19115/-3/mrl/2.0"
                 xmlns:cit="http://standards.iso.org/iso/19115/-3/cit/2.0"
                 xmlns:lan="http://standards.iso.org/iso/19115/-3/lan/1.0"
+                xmlns:mrd="http://standards.iso.org/iso/19115/-3/mrd/1.0"
+                xmlns:mco="http://standards.iso.org/iso/19115/-3/mco/1.0"
+                xmlns:mri="http://standards.iso.org/iso/19115/-3/mri/1.0"
+                xmlns:xlink="http://www.w3.org/1999/xlink"
                 xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
                 xmlns:dct="http://purl.org/dc/terms/"
                 exclude-result-prefixes="#all">
@@ -87,7 +91,7 @@
       <xsl:copy-of select="$additionalProperties"/>
 
       <dct:conformsTo>
-        <dct:Standard rdf:about="http://data.europa.eu/r5r/"/>
+        <dct:Standard rdf:about="https://www.w3.org/TR/vocab-dcat/"/>
       </dct:conformsTo>
     </xsl:variable>
 
@@ -146,5 +150,37 @@
         </xsl:call-template>
       </dct:ProvenanceStatement>
     </dct:provenance>
+  </xsl:template>
+
+
+
+  <!--
+  applicable legislation	Legal Resource	1..*	The legislation that mandates the creation or management of the Data Service.
+  **For HVD the value MUST include the ELI http://data.europa.eu/eli/reg_impl/2023/138/oj.**
+  As multiple legislations may apply to the resource the maximum cardinality is not limited.
+
+  See DCAT-AP
+  applicable legislation	Legal Resource	0..*	The legislation that mandates the creation or management of the Catalog.
+
+  To create valid HVD document, a keyword anchor or a title href of mri:resourceConstraints/mco:MD_LegalConstraints/mco:reference
+  in the ISO record MUST define the ELI http://data.europa.eu/eli/reg_impl/2023/138/oj.
+  -->
+
+
+  <xsl:template mode="iso19115-3-to-dcat"
+                match="mdb:distributionInfo//mrd:onLine">
+    <xsl:call-template name="iso19115-3-to-dcat-distribution">
+      <xsl:with-param name="additionalProperties">
+        <!-- In HVD applicable legislation	Legal Resource	1..* -->
+        <xsl:apply-templates mode="iso19115-3-to-dcat"
+                             select="ancestor::mdb:MD_Metadata/mdb:identificationInfo/*/mri:descriptiveKeywords/*/mri:keyword[starts-with(*/@xlink:href, 'http://data.europa.eu/eli')]"/>
+
+
+        <xsl:if test="$isCopyingDatasetInfoToDistribution = false()">
+          <xsl:apply-templates mode="iso19115-3-to-dcat"
+                               select="ancestor::mdb:MD_Metadata/mdb:identificationInfo/*/mri:resourceConstraints/mco:MD_LegalConstraints/mco:reference"/>
+        </xsl:if>
+      </xsl:with-param>
+    </xsl:call-template>
   </xsl:template>
 </xsl:stylesheet>

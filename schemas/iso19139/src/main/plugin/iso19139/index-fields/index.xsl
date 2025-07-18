@@ -658,7 +658,11 @@
           <maintenance type="object">{
             "frequency": "<xsl:value-of select="*:maintenanceAndUpdateFrequency/*/@codeListValue"/>"
             <xsl:for-each select="gmd:dateOfNextUpdate[*/text() != '']">
+              <xsl:variable name="dateOfNextUpdateZulu"
+                            select="date-util:convertToISOZuluDateTime(*/text())"/>
+              <xsl:if test="$dateOfNextUpdateZulu != ''">
               ,"nextUpdateDate": "<xsl:value-of select="*/text()"/>"
+              </xsl:if>
             </xsl:for-each>
             <xsl:for-each select="gmd:userDefinedMaintenanceFrequency[*/text() != '']">
               ,"userDefinedFrequency": "<xsl:value-of select="*/text()"/>"
@@ -1071,18 +1075,16 @@
             <xsl:if test="$stepDateTimeZulu != ''">
               ,"date": "<xsl:value-of select="gmd:dateTime/gco:*/text()"/>"
             </xsl:if>
-            <xsl:if test="normalize-space(gmd:source) != ''">
-              ,"source": [
-              <xsl:for-each select="gmd:source/*[gmd:description/gco:CharacterString != '']">
-                {
-                  "descriptionObject": <xsl:value-of
-                                          select="gn-fn-index:add-multilingual-field(
-                                            'description', gmd:description, $allLanguages, true())"/>
-                }
-                <xsl:if test="position() != last()">,</xsl:if>
-              </xsl:for-each>
-              ]
-            </xsl:if>
+            ,"source": [
+            <xsl:for-each select="gmd:source/*[gmd:description/gco:CharacterString != '']">
+              {
+                "descriptionObject": <xsl:value-of
+                                        select="gn-fn-index:add-multilingual-field(
+                                          'description', gmd:description, $allLanguages, true())"/>
+              }
+              <xsl:if test="position() != last()">,</xsl:if>
+            </xsl:for-each>
+            ]
 
             <xsl:variable name="processors"
                           select="gmd:processor/*[gmd:organisationName/gco:CharacterString != '']"/>

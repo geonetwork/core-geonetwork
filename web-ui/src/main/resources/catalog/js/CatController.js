@@ -109,6 +109,7 @@
               ita: "it",
               dut: "nl",
               kor: "ko",
+              pol: "pl",
               por: "pt",
               rum: "ro",
               rus: "ru",
@@ -906,8 +907,10 @@
             // and redirecting to the catalogue to view metadata record
             // appUrl: "https://sextant.ifremer.fr/Donnees/Catalogue",
             isSocialbarEnabled: true,
+            isDefaultContactViewEnabled: false,
             showStatusWatermarkFor: "",
             showStatusTopBarFor: "",
+            recordviewCustomMenu: [], // List of static pages identifiers to display
             showCitation: {
               enabled: false,
               // if: {'documentStandard': ['iso19115-3.2018']}
@@ -1739,7 +1742,8 @@
         swe: "Svenska",
         ukr: "українська",
         dan: "Dansk",
-        wel: "Cymraeg"
+        wel: "Cymraeg",
+        pol: "Polski"
       };
       $scope.url = "";
       $scope.gnUrl = gnGlobalSettings.gnUrl;
@@ -2037,6 +2041,17 @@
                       return true;
                     }
                     return false;
+                  };
+                  me["is" + profile + "OrMoreForGroup"] = function (groupId) {
+                    if ("Administrator" == profile) {
+                      return me.admin;
+                    }
+                    var allowedProfiles = $scope.profiles.slice(
+                      $scope.profiles.indexOf(profile)
+                    );
+                    return allowedProfiles.some(function (p) {
+                      return me["is" + p + "ForGroup"](groupId);
+                    });
                   };
                 });
                 angular.extend($scope.user, me);

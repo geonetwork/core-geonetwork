@@ -170,7 +170,6 @@
       $scope.defaultConfigId = "srv";
 
       $scope.loadTplReport = null;
-      $scope.atomFeedType = "";
 
       $scope.isGroupPublicationNotificationLevel = false;
       $scope.isGroupLocalRatingNotificationLevel = false;
@@ -240,6 +239,13 @@
 
             $scope.inspireApiUrl = undefined;
             $scope.inspireApiKey = undefined;
+
+            // Ensure settings are sorted by position property.
+            // The API response is sorted by name but the list
+            // is displayed by section and then by position.
+            $scope.settings.sort(function (a, b) {
+              return a.position - b.position;
+            });
 
             for (var i = 0; i < $scope.settings.length; i++) {
               if ($scope.settings[i].name == "metadata/workflow/enable") {

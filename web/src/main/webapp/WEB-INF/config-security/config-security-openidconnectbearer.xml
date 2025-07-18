@@ -200,29 +200,59 @@
     <property name="filterProcessesUrl" value="/signout"/>
   </bean>
 
+  <bean id="sessionExpirationFilter" class="org.fao.geonet.kernel.security.openidconnect.SessionExpirationFilter"/>
+
+  <bean id="geonetworkOidcPreAuthActionsLoginFilter" class="org.fao.geonet.kernel.security.openidconnect.GeonetworkOidcPreAuthActionsLoginFilter"/>
+
+  <bean id="oAuth2Configuration" class="org.fao.geonet.kernel.security.openidconnect.OAuth2Configuration"/>
 
   <bean id="filterChainFilters" class="java.util.ArrayList">
-    <constructor-arg>
-      <list>
-        <ref bean="securityContextPersistenceFilter"/>
-        <!-- To disable csrf security (not recommended) comment the following line -->
-        <ref bean="csrfFilter" />
-        <!-- To disable csrf security (not recommended) comment the upper line -->
+    <constructor-arg
+      ref="#{ openidconnectConfiguration.loginType == 'autologin' ? 'openidConnectFilterChanFiltersInclusive' : 'openidConnectFilterChanFiltersExclusive' }">
 
-        <ref bean="openidconnectOAuth2AuthorizationRequestRedirectFilter"/>
-        <ref bean="openidconnectOAuth2LoginAuthenticationFilter"/>
-        <ref bean="logoutFilter"/>
-
-        <ref bean="openidconnectBearerTokenAuthenticationFilter"/>
-        <!--        <ref bean="openidconnect_GeonetworkBearerTokenAuthenticationFilter"/>-->
-
-        <ref bean="requestCacheFilter"/>
-        <ref bean="anonymousFilter"/>
-        <ref bean="sessionMgmtFilter"/>
-        <ref bean="exceptionTranslationFilter"/>
-        <ref bean="filterSecurityInterceptor"/>
-      </list>
     </constructor-arg>
   </bean>
+  <util:list id="openidConnectFilterChanFiltersExclusive">
 
+    <ref bean="securityContextPersistenceFilter"/>
+    <!-- To disable csrf security (not recommended) comment the following line -->
+    <ref bean="csrfFilter" />
+    <!-- To disable csrf security (not recommended) comment the upper line -->
+
+    <ref bean="openidconnectOAuth2AuthorizationRequestRedirectFilter"/>
+    <ref bean="openidconnectOAuth2LoginAuthenticationFilter"/>
+    <ref bean="logoutFilter"/>
+
+    <ref bean="openidconnectBearerTokenAuthenticationFilter"/>
+    <!--        <ref bean="openidconnect_GeonetworkBearerTokenAuthenticationFilter"/>-->
+
+    <ref bean="requestCacheFilter"/>
+    <ref bean="anonymousFilter"/>
+    <ref bean="sessionMgmtFilter"/>
+    <ref bean="exceptionTranslationFilter"/>
+    <ref bean="filterSecurityInterceptor"/>
+
+  </util:list>
+
+  <util:list id="openidConnectFilterChanFiltersInclusive">
+
+    <ref bean="securityContextPersistenceFilter"/>
+    <ref bean="csrfFilter" />
+
+    <ref bean="openidconnectOAuth2AuthorizationRequestRedirectFilter"/>
+    <ref bean="openidconnectOAuth2LoginAuthenticationFilter"/>
+    <ref bean="logoutFilter"/>
+    <ref bean="sessionExpirationFilter"/>
+    <!--     include a pre login filter-->
+    <ref bean="geonetworkOidcPreAuthActionsLoginFilter"/>
+
+    <ref bean="openidconnectBearerTokenAuthenticationFilter"/>
+
+    <ref bean="requestCacheFilter"/>
+    <ref bean="anonymousFilter"/>
+    <ref bean="sessionMgmtFilter"/>
+    <ref bean="exceptionTranslationFilter"/>
+    <ref bean="filterSecurityInterceptor"/>
+
+  </util:list>
 </beans>

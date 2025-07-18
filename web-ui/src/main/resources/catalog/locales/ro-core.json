@@ -126,6 +126,7 @@
     "featureCatalog": "Catalog de caracteristici",
     "frequency": "Frecvență",
     "feebackSent": "Mesajul dvs. a fost trimis managerului de catalog.",
+    "feebackSentError": "An error occurred sending your to the catalog manager. Please try again later, contact the service provider, or report this issue.",
     "feedbackNotEnable": "Feedback-ul nu este activat.",
     "filter": "Filtru",
     "filterSearch": "Afișează opțiunile de căutare",
@@ -170,7 +171,7 @@
     "needAnAccount": "Nevoie de un cont?",
     "needAnAccountInfo": "Apoi înscrieți-vă imediat, durează doar un minut.",
     "needHelp": "Nevoie de ajutor",
-    "newAccountInfo": "Când solicitați un cont, vi se va trimite un e-mail cu detaliile dvs. de utilizator. Dacă este solicitat un profil de utilizator avansat, administratorul catalogului vă va analiza solicitarea și vă va reveni.",
+    "newAccountInfo": "When registering, an email will be sent to you with account details. The catalogue administrator will review group and profile requests.",
     "next": "Următorul",
     "noFileSelected": "Niciun fisier selectat",
     "noRecordFound": "Nicio inregistrare gasita.",
@@ -234,6 +235,7 @@
     "register": "Inregistreaza-te",
     "rememberMe": "Ține-mă minte",
     "requestedProfile": "Profil solicitat",
+    "requestedGroup": "Requested group",
     "resetPassword": "Reseteaza parola",
     "resetPasswordTitle": "Resetați parola {{user}}.",
     "resetPasswordError": "A apărut o eroare la resetarea parolei",
@@ -266,7 +268,7 @@
     "spatialRepresentationType": "Tipul de reprezentare",
     "cl_spatialRepresentationType": "Tipul de reprezentare",
     "state": "Stat",
-    "map-static": "Harta statica",
+    "map-static": "Static map",
     "surname": "Nume de familie",
     "title": "Titlu",
     "to": "La",
@@ -586,5 +588,6 @@
     "mapLegend": "Legendă",
     "quality": "Calitate",
     "download": "Descarca",
-    "links": "Legături"
+    "links": "Legături",
+    "saveToFile": "Save to file."
 }

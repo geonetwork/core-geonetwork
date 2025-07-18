@@ -23,6 +23,7 @@
 package org.fao.geonet.kernel.security.openidconnect;
 
 import org.apache.commons.lang.LocaleUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.utils.Log;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,6 +47,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.IllformedLocaleException;
+import java.util.Locale;
 
 /**
  * This is a OAuth2LoginAuthenticationFilter successfulAuthentication method.
@@ -128,9 +131,16 @@ public class GeonetworkOAuth2LoginAuthenticationFilter extends OAuth2LoginAuthen
         }
 
         // Set users preferred locale if it exists. - cf. keycloak
-        if (oidcUser.getLocale() != null) {
+        String localeString = oidcUser.getLocale();
+        if (!StringUtils.isEmpty(localeString)) {
             try {
-                response.setLocale(LocaleUtils.toLocale(oidcUser.getLocale()));
+                try {
+                    //Try to parse the locale as a languageTag i.e. en-CA
+                    response.setLocale(new Locale.Builder().setLanguageTag(localeString).build());
+                } catch (IllformedLocaleException e) {
+                    // If there are any exceptions try a different approach as it may be in the format of en_CA or simply en
+                    response.setLocale(LocaleUtils.toLocale(localeString));
+                }
             } catch (IllegalArgumentException e) {
                 Log.warning(Geonet.SECURITY, "Unable to parse oidc locale " + oidcUser.getLocale() + ": " + e.getMessage());
             }

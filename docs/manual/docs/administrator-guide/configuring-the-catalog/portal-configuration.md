@@ -42,6 +42,22 @@ The list of sub-portal available is at <http://localhost:8080/geonetwork/srv/api
 
 ![](img/portal-list.png)
 
+### Configuring a Datahub interface for a sub-portal
+
+If the [Datahub Integration Plugin](../../install-guide/plugins.md#datahub-integration-gn-datahub-integration) is installed, a Datahub interface can be configured for a sub-portal. Two settings are available for this:
+
+* Datahub enabled (checkbox)
+* Datahub configuration (text field in TOML format)
+
+![datahub-config.png](img/datahub-config.png)
+
+Please refer to the [GeoNetwork-UI Configuration guide](https://geonetwork.github.io/geonetwork-ui/main/docs/guide/configure.html) for a complete documentation on what each setting does.
+
+!!! note
+
+    If no configuration is given for a portal or sub-portal, the default configuration will be used.
+
+
 ## Example of usage
 
 To find the lucene element terms available for filtering you can query a record in your ElasticSearch instance: 

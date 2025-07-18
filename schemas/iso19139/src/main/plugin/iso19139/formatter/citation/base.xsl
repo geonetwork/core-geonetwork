@@ -62,6 +62,9 @@
     <xsl:variable name="langId"
                   select="gn-fn-iso19139:getLangId($metadata, $language)"/>
 
+    <xsl:variable name="datasetLanguage"
+                  select="$metadata/gmd:identificationInfo/*/gmd:language/*/@codeListValue"/>
+
     <xsl:variable name="authors"
                   select="$metadata/gmd:identificationInfo/*/gmd:pointOfContact/
                                 *[gmd:role/*/@codeListValue = $authorRolesList]"/>
@@ -167,6 +170,7 @@
       <doiUrl><xsl:value-of select="$doiUrl"/></doiUrl>
       <xsl:copy-of select="$translatedKeywords"/>
       <additionalCitation><xsl:value-of select="$additionalCitation"/></additionalCitation>
+      <language><xsl:value-of select="$datasetLanguage" /></language>
     </citation>
   </xsl:template>
 </xsl:stylesheet>

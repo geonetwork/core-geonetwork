@@ -236,6 +236,7 @@
     "onlineUseDQReport": "Informe de qualitat de les dades",
     "onlineUseDQTOR": "Especificació de qualitat de les dades",
     "onlineUseDQProdReport": "Informe de producció de qualitat de les dades",
+    "onlineUseMap": "Mapa",
     "onlineUseLegend": "Llegenda del recurs",
     "onlineUseLegendLYR": "Estil del recurs en format ArcGIS (LYR)",
     "onlineUseStyleSLD": "Estil del recurs en format SLD",
@@ -441,6 +442,8 @@
     "addOnlinesrc#API-help": "eg. view service, REST API",
     "addOnlinesrc#onlineDownload|localNetwork": "Add download",
     "addOnlinesrc#onlineDownload|localNetwork-help": "eg. file, download service, local network links",
+    "addOnlinesrc#onlineUseMap": "Add map",
+    "addOnlinesrc#onlineUseMap-help": "eg. PDF static maps or OGC Web Map Context interactive maps",
     "addOnlinesrc#onlineUseLegend": "Add portrayal",
     "addOnlinesrc#onlineUseLegend-help": "eg. LYR, QML, SLD files",
     "addOnlinesrc#links": "Afegir enllaços",
@@ -454,5 +457,10 @@
     "associated-fcats": "Catàleg d'Objectes Geogràfics",
     "associated-siblings": "Recursos associats",
     "associated-hasfeaturecats": "Utilitzant aquest catàleg d'objectes geogràfics",
-    "associatedResourcesPanel": "Recursos associats"
+    "associatedResourcesPanel": "Recursos associats",
+    "validationSuccessLabel": "success",
+    "validationErrorLabel": "errors",
+    "metadataDuplicatedField-title": "The metadata title is used in another metadata record.",
+    "metadataDuplicatedField-altTitle": "The metadata alternate title is used in another metadata record.",
+    "metadataDuplicatedField-identifier": "The metadata resource identifier is used in another metadata record."
 }

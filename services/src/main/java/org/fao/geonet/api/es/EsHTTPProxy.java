@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018-2025 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2025 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -453,7 +453,7 @@ public class EsHTTPProxy {
                         }
                     }
                 }
-                requestBody.append(jsonNode.toString()).append(System.lineSeparator());
+                requestBody.append(jsonNode).append(System.lineSeparator());
             }
             handleRequest(context, httpSession, request, response, url, endPoint,
                 requestBody.toString(), true, selectionBucket, relatedTypes);
@@ -694,11 +694,20 @@ public class EsHTTPProxy {
                 if (doc.has("_source")) {
                     ObjectNode sourceNode = (ObjectNode) doc.get("_source");
 
-                    String metadataSchema = doc.get("_source").get("documentStandard").asText();
-                    MetadataSchema mds = schemaManager.getSchema(metadataSchema);
+                    if (sourceNode.has(Geonet.IndexFieldNames.SCHEMA)) {
+                        String metadataSchema = sourceNode.get(Geonet.IndexFieldNames.SCHEMA).asText();
+                        try {
+                            MetadataSchema mds = schemaManager.getSchema(metadataSchema);
 
-                    // Apply metadata schema filters to remove non-allowed fields
-                    processMetadataSchemaFilters(context, mds, doc);
+                            // Apply metadata schema filters to remove non-allowed fields
+                            processMetadataSchemaFilters(context, mds, doc);
+                        } catch (IllegalArgumentException e) {
+                            LOGGER.error("Failed to load metadata schema for {}. Error is: {}",
+                                getSourceString(doc, Geonet.IndexFieldNames.UUID),
+                                e.getMessage()
+                            );
+                        }
+                    }
 
                     // Remove fields with privileges info
                     for (ReservedOperation o : ReservedOperation.values()) {

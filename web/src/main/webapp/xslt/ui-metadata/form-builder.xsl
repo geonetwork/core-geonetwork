@@ -602,9 +602,10 @@
                     </xsl:if>
                   </button>
                   <xsl:if test="$hasMultipleChoice">
-                    <!-- A combo with the list of snippet available -->
+                    <!-- A combo with the list of snippets available -->
                     <ul class="dropdown-menu">
                       <xsl:for-each select="$snippets">
+                        <xsl:sort select="if(current()/@sortLabel != '') then current()/@sortLabel else (if ($strings/*[name() = current()/@label] != '') then $strings/*[name() = current()/@label] else current()/@label)"/>
                         <xsl:variable name="label" select="@label"/>
                         <li><a id="{concat($id, $label)}">
                           <xsl:value-of select="if ($strings/*[name() = $label] != '') then $strings/*[name() = $label] else $label"/>
@@ -934,11 +935,24 @@
         id="gn-el-{$id}"
         data-gn-cardinality="{$childEditInfo/@min}-{$childEditInfo/@max}"
         data-gn-field-highlight="">
-        <label class="col-sm-2 control-label"
-               data-gn-field-tooltip="{$schema}|{$qualifiedName}|{$parentName}|">
-          <xsl:value-of select="if (normalize-space($label) != '')
+
+        <xsl:choose>
+          <xsl:when test="$viewConfig/@displayTooltipsMode = 'icon'">
+            <!-- Avoid displaying the help icon next to buttons when the toolstip mode is icon -->
+            <label class="col-sm-2 control-label">
+              <xsl:value-of select="if (normalize-space($label) != '')
                                 then $label else '&#160;'"/>
-        </label>
+            </label>
+          </xsl:when>
+          <xsl:otherwise>
+            <label class="col-sm-2 control-label"
+                   data-gn-field-tooltip="{$schema}|{$qualifiedName}|{$parentName}|">
+              <xsl:value-of select="if (normalize-space($label) != '')
+                                then $label else '&#160;'"/>
+            </label>
+          </xsl:otherwise>
+        </xsl:choose>
+
         <div class="col-sm-9">
 
           <xsl:variable name="addDirective" select="$directive/@addDirective != ''"/>
