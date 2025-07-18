@@ -1,6 +1,10 @@
 <div data-ng-show="publicationStatus !== null" class="bg-info see-draft-alert">
-  Record is scheduled for publication at {{ publicationDate }}
+  <i class="fa fa-fw fa-clock"></i>
+  <span data-translate="" data-translate-values="{'publicationDate': publicationDate}"
+    >taskPublicationStatus</span
+  >
   <button class="btn btn-default" data-ng-click="cancelPublication()">
-    Cancel publication
+    <i class="fa fa-fw fa-times"></i>
+    <span data-translate="">cancelPublication</span>
   </button>
 </div>

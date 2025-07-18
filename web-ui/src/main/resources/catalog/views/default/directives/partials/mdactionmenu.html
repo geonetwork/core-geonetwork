@@ -163,7 +163,11 @@
           href=""
           data-ng-click="mdService.openUpdateStatusPanel(getScope(), md, 'task', t, null, null, taskConfiguration[t.name].dueDate ? taskConfiguration[t.name].dueDate(md) : null)"
         >
-          <span class="fa fa-fw"></span>&nbsp;
+          <span
+            class="fa fa-fw"
+            data-ng-class="{'fa-clock': t.name === 'scheduledPublicationTask'}"
+          ></span
+          >&nbsp;
           <span>{{t.label | gnLocalized}}</span>
         </a>
       </li>

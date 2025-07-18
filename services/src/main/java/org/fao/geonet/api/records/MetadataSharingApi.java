@@ -216,7 +216,6 @@ public class MetadataSharingApi {
             publicationType = DEFAULT_PUBLICATION_TYPE_NAME;
         }
 
-        //shareMetadataWithReservedGroup(metadataUuid, true, publicationType, session, request);
         AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
         metadataPublicationService.shareMetadataWithReservedGroup(serviceContext, metadata, true, publicationType);
 
@@ -263,7 +262,6 @@ public class MetadataSharingApi {
             publicationType = DEFAULT_PUBLICATION_TYPE_NAME;
         }
 
-        //shareMetadataWithReservedGroup(metadataUuid, false, publicationType, session, request);
         AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
         metadataPublicationService.shareMetadataWithReservedGroup(serviceContext, metadata, false, publicationType);
 

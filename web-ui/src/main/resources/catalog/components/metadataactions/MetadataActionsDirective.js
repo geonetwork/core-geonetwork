@@ -218,7 +218,10 @@
           var metadataId = scope.md.id;
           var defaultType = "workflow";
 
-          var dueDate = new Date(moment(scope.dueDate).format("YYYY-MM-DD")) || null;
+          scope.minDate = new Date();
+          var requestedDueDate = new Date(moment(scope.dueDate).format("YYYY-MM-DD"));
+          var dueDate =
+            requestedDueDate > scope.minDate ? requestedDueDate : scope.minDate;
 
           scope.statusType = scope.statusType || defaultType;
           scope.lang = scope.$parent.lang;

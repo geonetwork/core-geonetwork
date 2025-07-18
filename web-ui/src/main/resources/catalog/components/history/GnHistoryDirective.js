@@ -310,6 +310,7 @@
             if (scope.md) {
               var filter = {
                 types: { task: true },
+                statusId: 101, // Scheduled publication task
                 ownerFilter: null,
                 authorFilter: null,
                 recordFilter: scope.md.id,
@@ -321,10 +322,7 @@
 
               gnRecordHistoryService.search(filter).then(function (r) {
                 var publicationStatuses = _.filter(r.data, function (item) {
-                  return (
-                    item.closeDate === null &&
-                    item.statusValue.name === "scheduledPublicationTask"
-                  );
+                  return item.closeDate === null;
                 });
 
                 if (publicationStatuses.length > 0) {
