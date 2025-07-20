@@ -562,11 +562,6 @@
       <artifactId>autolink</artifactId>
       <version>0.6.0</version>
     </dependency>
-    <dependency>
-      <groupId>org.powermock</groupId>
-      <artifactId>powermock-module-junit4</artifactId>
-      <scope>test</scope>
-    </dependency>
     <!--
     Required for DB migration test
     like AdvancedSearchFormMigrationTest
