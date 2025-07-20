@@ -35,9 +35,8 @@
     <constructor-arg index="0" value="eng"/>
   </bean>
 
-  <bean id="pdfOrHtmlResponseWriter" class="org.mockito.Mockito" factory-method="spy" primary="true">
-    <constructor-arg value="org.fao.geonet.api.records.formatters.PdfOrHtmlResponseWriter" type="java.lang.Class"/>
-  </bean>
+  <bean id="pdfOrHtmlResponseWriterMokitoSpyFactory" class="org.fao.geonet.api.records.formatters.PdfOrHtmlResponseWriterMokitoSpyFactory"/>
+  <bean id="pdfOrHtmlResponseWriter" factory-bean="pdfOrHtmlResponseWriterMokitoSpyFactory" factory-method="createSpy" primary="true"/>
 
   <util:set id="formatterRemoteFormatAllowedHosts" value-type="java.lang.String">
     <value>FormatIntegrationTest.com</value>
