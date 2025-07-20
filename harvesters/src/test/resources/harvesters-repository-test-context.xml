@@ -28,7 +28,7 @@
 
   <bean id="httpRequestFactory" class="org.fao.geonet.MockRequestFactoryGeonet"/>
 
-  <bean id="esSearchManagerMockFactory" class="org.fao.geonet.kernel.harvest.EsSearchManagerMockFactory"/>
-  <bean id="esSearchManagerMock" factory-bean="esSearchManagerMockFactory" factory-method="createMock" primary="true"/>
+  <bean id="esSearchManagerMokitoMockFactory" class="org.fao.geonet.kernel.search.EsSearchManagerMokitoMockFactory"/>
+  <bean id="esSearchManagerMock" factory-bean="esSearchManagerMokitoMockFactory" factory-method="createMock" primary="true"/>
 
 </beans>
