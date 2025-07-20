@@ -27,7 +27,6 @@
        xmlns="http://www.springframework.org/schema/beans"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-  <bean id="localInvokerMock" class="org.mockito.Mockito" factory-method="mock" primary="true">
-    <constructor-arg value="org.fao.geonet.kernel.SpringLocalServiceInvoker" />
-  </bean>
+  <bean id="localInvokerMockFactory" class="org.fao.geonet.kernel.LocalInvokerMockFactory"/>
+  <bean id="localInvokerMock" factory-bean="localInvokerMockFactory" factory-method="createMock" primary="true"/>
 </beans>
