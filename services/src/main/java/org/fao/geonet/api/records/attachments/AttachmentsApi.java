@@ -298,7 +298,7 @@ public class AttachmentsApi {
                 }
             } else {
                 // For all other files, use the original content type and filename
-                response.setHeader(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + filename + "\"");
+                response.setHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + filename + "\"");
                 response.setHeader(HttpHeaders.CONTENT_TYPE, contentType);
 
                 long lastModified = file.getMetadata().getLastModification().getTime();
@@ -390,7 +390,7 @@ public class AttachmentsApi {
                                    String originalFilename, int size) throws IOException {
         // Set headers before processing image
         String filename = originalFilename.substring(0, originalFilename.lastIndexOf('.')) + ".png";
-        response.setHeader(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + filename + "\"");
+        response.setHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + filename + "\"");
         response.setHeader(HttpHeaders.CONTENT_TYPE, "image/png");
 
         // Use ByteArrayOutputStream to capture the image data first
