@@ -462,13 +462,13 @@ public class AttachmentsApi {
         // Stream the requested byte range with appropriate buffer size
         try (InputStream inputStream = Files.newInputStream(filePath);
              BufferedInputStream bufferedStream = new BufferedInputStream(inputStream, BUFFER_SIZE)) {
-        long skipped = 0;
-        while (skipped < start) {
-            long toSkip = start - skipped;
-            long actuallySkipped = bufferedStream.skip(toSkip);
-            if (actuallySkipped <= 0) break; // EOF
-            skipped += actuallySkipped;
-        }
+            long skipped = 0;
+            while (skipped < start) {
+                long toSkip = start - skipped;
+                long actuallySkipped = bufferedStream.skip(toSkip);
+                if (actuallySkipped <= 0) break; // EOF
+                skipped += actuallySkipped;
+            }
             byte[] buffer = new byte[BUFFER_SIZE];
             long bytesRemaining = contentLength;
             int bytesRead;
