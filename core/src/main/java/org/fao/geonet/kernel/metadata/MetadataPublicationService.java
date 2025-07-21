@@ -132,6 +132,7 @@ public class MetadataPublicationService {
     @Autowired
     private IPublicationConfig publicationConfig;
 
+    @Autowired
     private ApplicationEventPublisher eventPublisher;
 
     @Autowired
