@@ -69,7 +69,12 @@ A *reviewer* / *editor* can edit a metadata if:
 
 ## Setting Privileges on a metadata record
 
-A button to access the Privileges page for a metadata record displays in the search results or when you are viewing the record for:
+
+To publish or unpublish metadata, you can use the Publish button in the metadata record view.
+
+![](img/publish.png)
+
+For more detailed sharing options, you can use the Privileges button in the metadata record view displayed for:
 
 -   All Administrators
 -   All Reviewers that are member of one of the groups assigned to the metadata owner.
@@ -88,3 +93,24 @@ The following rules apply:
 -   the groups are those that the user belongs to
 -   the privileges specified will only be applied to records that the user has ownership or administration rights on - any other records will be skipped
 -   the current records privileges will be reset and replaced by the selected privilege
+
+
+
+# Schedule publication
+
+Record not yet published can be scheduled for publication:
+
+![](img/schedulepublication-button.png)
+
+By default, if a publication date of the resource is set, this date is proposed but user can select another date:
+
+![](img/schedulepublication-panel.png)
+
+Once scheduled, the task can be canceled from the record view:
+
+![](img/schedulepublication-cancel.png)
+
+The history panel in the admin console report the status of the task.
+
+![](img/schedulepublication-admin.png)
+
