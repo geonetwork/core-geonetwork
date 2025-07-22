@@ -418,6 +418,8 @@ public interface Store {
      */
     MetadataResource getResourceMetadata(ServiceContext context, String metadataUuid, String resourceId, Boolean approved) throws Exception;
 
+    MetadataResource renameResource(ServiceContext context, String metadataUuid, String resourceId, String newName, Boolean approved) throws Exception;
+
     interface ResourceHolder extends Closeable {
         Resource getResource();
         MetadataResource getMetadata();

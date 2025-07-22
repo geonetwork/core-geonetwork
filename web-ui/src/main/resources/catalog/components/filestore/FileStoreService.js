@@ -52,6 +52,15 @@
         },
         delete: function (resource) {
           return $http.delete(resource.url);
+        },
+        updateResourceName: function (metadataUuid, resource, newName) {
+          return $http.put("../api/records/" + resource.id + "/rename", null, {
+            params: {
+              approved: resource.approved,
+              newName: newName,
+              visibility: resource.visibility == "PRIVATE" ? "public" : "private"
+            }
+          });
         }
       };
     }
