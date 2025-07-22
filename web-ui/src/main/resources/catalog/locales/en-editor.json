@@ -469,5 +469,6 @@
     "metadataDuplicatedField-identifier": "The metadata resource identifier is used in another metadata record.",
     "indexingIssues": "Indexing issues",
     "indexingErrors": "Errors",
-    "indexingWarnings": "Warnings"
+    "indexingWarnings": "Warnings",
+    "fileStoreDuplicatedFilename": "The filename is already used in the file store."
 }

@@ -1,6 +1,6 @@
 /*
  * =============================================================================
- * ===	Copyright (C) 2001-2023 Food and Agriculture Organization of the
+ * ===	Copyright (C) 2001-2025 Food and Agriculture Organization of the
  * ===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * ===	and United Nations Environment Programme (UNEP)
  * ===
@@ -41,6 +41,8 @@ import org.fao.geonet.kernel.thumbnail.ThumbnailMaker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
@@ -137,5 +139,22 @@ public class AttachmentsActionsApi {
                 FileUtils.deleteQuietly(thumbnailFile.toFile());
             }
         }
+    }
+
+    @io.swagger.v3.oas.annotations.Operation(summary = "Rename a metadata resource name")
+    @PreAuthorize("hasAuthority('Editor')")
+    @ApiResponses(value = {@ApiResponse(responseCode = "201", description = "Resource name updated."),
+        @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)})
+    @RequestMapping(value = "/{portal}/api/records/{metadataUuid}/attachments/{resourceId:.+}/rename", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(value = HttpStatus.CREATED)
+    @ResponseBody
+    public MetadataResource renameResource(
+        @Parameter(description = "The metadata UUID", required = true, example = "43d7c186-2187-4bcd-8843-41e575a5ef56") @PathVariable String metadataUuid,
+        @Parameter(description = "The resource identifier (ie. filename)", required = true) @PathVariable String resourceId,
+        @Parameter(description = "The new name for the resource", required = true) @RequestParam(required = true) String newName,
+        @Parameter(description = "Use approved version or not", example = "true") @RequestParam(required = false, defaultValue = "false") Boolean approved,
+        @Parameter(hidden = true) HttpServletRequest request) throws Exception {
+        ServiceContext context = ApiUtils.createServiceContext(request);
+        return store.renameResource(context, metadataUuid, resourceId, newName, approved);
     }
 }

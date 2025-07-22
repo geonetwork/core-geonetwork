@@ -259,7 +259,59 @@
             scope.gnCurrentEdit = gnCurrentEdit;
             scope.selectOptions = { current: undefined };
             scope.metadataResources = [];
+            scope.editingResource = false;
 
+            function updateVisibilityEditingPanel(index, editing) {
+              if (editing) {
+                $("#resource_" + index).addClass("hidden");
+                $("#resource_edit_" + index).removeClass("hidden");
+              } else {
+                $("#resource_" + index).removeClass("hidden");
+                $("#resource_edit_" + index).addClass("hidden");
+              }
+            }
+            scope.editResource = function (r, index) {
+              r.filename_edit = r.filename;
+              scope.editingResource = true;
+              scope.duplicatedFilename = false;
+
+              updateVisibilityEditingPanel(index, true);
+            };
+
+            scope.cancelEditResource = function (r, index) {
+              delete r.filename_edit;
+              scope.duplicatedFilename = false;
+              updateVisibilityEditingPanel(index, false);
+            };
+
+            scope.saveEditResource = function (r, index) {
+              // TODO: check if the resource is already in the list and update it in the backend
+
+              gnfilestoreService.get(scope.gnCurrentEdit.uuid, "").then(function (data) {
+                var files = data.data;
+                var fileNameExists = false;
+                for (var i = 0; i < files.length; i++) {
+                  if (files[i].filename == r.filename_edit) {
+                    fileNameExists = true;
+                    break;
+                  }
+                }
+
+                if (!fileNameExists) {
+                  scope.duplicatedFilename = false;
+
+                  gnfilestoreService
+                    .updateResourceName(scope.gnCurrentEdit.uuid, r, r.filename_edit)
+                    .then(function (response) {
+                      scope.editingResource = false;
+                      updateVisibilityEditingPanel(index, false);
+                      scope.loadMetadataResources();
+                    });
+                } else {
+                  scope.duplicatedFilename = true;
+                }
+              });
+            };
             scope.setResource = function (r) {
               scope.selectCallback({ selected: r });
             };

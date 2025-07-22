@@ -36,15 +36,46 @@
 
     <table class="table gn-data-store">
       <tbody>
-        <tr data-ng-repeat="r in metadataResources">
+        <tr data-ng-repeat="r in metadataResources track by $index">
           <td>
             <a
               href=""
+              id="resource_{{$index}}"
               title="{{'clickToAddResource' | translate}}"
               data-ng-click="setResource(r)"
             >
               {{r.id.split('/').splice(2).join('/') | decodeURIComponent}}
             </a>
+
+            <div id="resource_edit_{{$index}}" class="hidden">
+              <input
+                type="text"
+                name="fileName"
+                class="form-control"
+                data-ng-model="r.filename_edit"
+              />
+
+              <a
+                class="btn btn-link"
+                title="{{'save' | translate}}"
+                data-ng-click="saveEditResource(r, $index)"
+                data-ng-disabled="r.filename_edit == r.filename"
+              >
+                <span class="fa fa-save"></span>
+              </a>
+
+              <a
+                class="btn btn-link"
+                title="{{'cancel' | translate}}"
+                data-ng-click="cancelEditResource(r, $index)"
+              >
+                <span class="fa fa-cancel"></span>
+              </a>
+
+              <div data-ng-show="duplicatedFilename" data-translate="">
+                fileStoreDuplicatedFilename
+              </div>
+            </div>
           </td>
           <td data-ng-if="r.version.length > 0">{{r.version}}</td>
           <td
@@ -81,6 +112,16 @@
                 data-ng-class="{'fa-lock text-danger': r.visibility == 'PRIVATE',
                                'fa-lock-open text-success': r.visibility == 'PUBLIC'}"
               ></i>
+            </a>
+          </td>
+          <td>
+            <a
+              class="btn btn-link"
+              title="{{'renameResource' | translate}}"
+              data-ng-click="editResource(r, $index)"
+              data-ng-disabled="editingResource"
+            >
+              <i class="fa fa-edit"></i>
             </a>
           </td>
           <td>
