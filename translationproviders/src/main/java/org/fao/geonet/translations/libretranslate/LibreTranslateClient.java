@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2024 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2025 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -23,43 +23,34 @@
 
 package org.fao.geonet.translations.libretranslate;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Function;
-import com.google.common.io.CharStreams;
-import org.apache.http.HttpEntity;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpStatus;
-import org.apache.http.NameValuePair;
-import org.apache.http.auth.AuthScope;
-import org.apache.http.auth.UsernamePasswordCredentials;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpUriRequest;
-import org.apache.http.impl.client.BasicCredentialsProvider;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicHeader;
-import org.apache.http.message.BasicNameValuePair;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.utils.GeonetHttpRequestFactory;
 import org.fao.geonet.utils.Log;
+import org.json.JSONObject;
 import org.springframework.http.client.ClientHttpResponse;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.List;
 
 public class LibreTranslateClient {
     private static final String LOGGER_NAME = "geonetwork.translate";
 
-    private String serviceUrl;
-    private String apiKey;
+    private final String serviceUrl;
+    private final String apiKey;
 
-    private GeonetHttpRequestFactory requestFactory;
+    private final GeonetHttpRequestFactory requestFactory;
 
     public LibreTranslateClient(String serviceUrl, String apiKey) {
         this.serviceUrl = serviceUrl;
@@ -72,32 +63,28 @@ public class LibreTranslateClient {
         throws LibreTranslateClientException {
         HttpPost postMethod = new HttpPost(this.serviceUrl);
 
-        ((HttpUriRequest) postMethod).addHeader( new BasicHeader("Content-Type",  "application/x-www-form-urlencoded") );
+        postMethod.addHeader(new BasicHeader("Content-Type", "application/json"));
+        postMethod.addHeader(new BasicHeader("Accept", "application/json"));
 
-        List<NameValuePair> urlParameters = new ArrayList<>();
-        urlParameters.add(new BasicNameValuePair("q", text));
-        urlParameters.add(new BasicNameValuePair("source", fromLanguage));
-        urlParameters.add(new BasicNameValuePair("target", toLanguage));
-        urlParameters.add(new BasicNameValuePair("format", "text"));
-        urlParameters.add(new BasicNameValuePair("api_key", this.apiKey));
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("q", text);
+        jsonObject.put("source", fromLanguage);
+        jsonObject.put("target", toLanguage);
+        jsonObject.put("format", "text");
+        jsonObject.put("api_key", this.apiKey);
 
-        try {
-            HttpEntity postParams = new UrlEncodedFormEntity(urlParameters);
-            postMethod.setEntity(postParams);
-
-        } catch (UnsupportedEncodingException ex) {
-            throw new LibreTranslateClientException(ex.getMessage());
-        }
+        StringEntity entity = new StringEntity(jsonObject.toString(), StandardCharsets.UTF_8.name());
+        postMethod.setEntity(entity);
 
         try (ClientHttpResponse httpResponse = executeRequest(postMethod)) {
             int status = httpResponse.getRawStatusCode();
 
             Log.debug(LOGGER_NAME, "   -- Request status code: " + status);
 
-            String responseBody = CharStreams.toString(new InputStreamReader(httpResponse.getBody()));
+            String responseBody = IOUtils.toString(httpResponse.getBody(), StandardCharsets.UTF_8);
 
+            ObjectMapper mapper = new ObjectMapper();
             if (status != HttpStatus.SC_OK) {
-                ObjectMapper mapper = new ObjectMapper();
                 LibreTranslateErrorResponse errorMessage = mapper.readValue(responseBody, LibreTranslateErrorResponse.class);
                 String message = String.format(
                     "Failed to create translate text '%s' from '%s' to '%s'. Status is %d. Error is %s. Response body: %s",
@@ -106,7 +93,6 @@ public class LibreTranslateClient {
                 Log.info(LOGGER_NAME, message);
                 throw new LibreTranslateClientException(message);
             } else {
-                ObjectMapper mapper = new ObjectMapper();
                 return mapper.readValue(responseBody, LibreTranslateResponse.class);
             }
         } catch (LibreTranslateClientException ex) {
