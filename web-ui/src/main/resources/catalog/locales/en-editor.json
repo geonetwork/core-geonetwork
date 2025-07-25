@@ -10,6 +10,7 @@
     "contactRole": "Contact role",
     "addConcept": "Add concept to keyword list",
     "moveToTopConcept": "Display top concepts",
+    "browseThesaurus": "Browse vocabulary",
     "addContact": "Add contact",
     "addContactAsLink-help": "Add a link to the contact in the contact directory. The contact will be updated if updated in the directory.",
     "addContactAsText-help": "Default mode. Add the contact into the record.",
