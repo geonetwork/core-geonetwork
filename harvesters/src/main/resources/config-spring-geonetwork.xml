@@ -42,7 +42,7 @@
     <property name="harvesterRefreshIntervalMinutes" value="${harvester.refresh.interval.minutes}"/>
   </bean>
 
-  <bean id="GeonetworkClient" class="org.fao.geonet.kernel.harvest.harvester.geonet40.GeoNetworkApiClient"/>
+  <bean id="GeonetworkClient" class="org.fao.geonet.kernel.harvest.harvester.geonet40.client.GeoNetworkApiClient"/>
 
   <!-- The id of the beans is the same as the type in the harvester settings table and thus should not be changed -->
   <bean id="geonetwork" class="org.fao.geonet.kernel.harvest.harvester.geonet.GeonetHarvester"
@@ -76,7 +76,7 @@
         class="org.fao.geonet.kernel.harvest.harvester.simpleurl.SimpleUrlHarvester"
         scope="prototype"/>
   <bean id="geonetwork40"
-        class="org.fao.geonet.kernel.harvest.harvester.geonet40.Geonet40Harvester"
+        class="org.fao.geonet.kernel.harvest.harvester.geonet40.Geonet40Harvester" />
   <bean id="database" class="org.fao.geonet.kernel.harvest.harvester.database.DatabaseHarvester"
         scope="prototype"/>
 </beans>

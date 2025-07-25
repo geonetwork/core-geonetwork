@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2023 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2025 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -25,8 +25,6 @@ package org.fao.geonet.kernel.harvest.harvester.geonet40;
 
 import com.google.common.collect.Lists;
 import jeeves.server.context.ServiceContext;
-import org.elasticsearch.action.search.SearchResponse;
-import org.elasticsearch.search.SearchHit;
 import org.fao.geonet.Logger;
 import org.fao.geonet.domain.Source;
 import org.fao.geonet.domain.SourceType;
@@ -35,6 +33,9 @@ import org.fao.geonet.kernel.harvest.harvester.HarvestError;
 import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
 import org.fao.geonet.kernel.harvest.harvester.IHarvester;
 import org.fao.geonet.kernel.harvest.harvester.RecordInfo;
+import org.fao.geonet.kernel.harvest.harvester.geonet40.client.GeoNetworkApiClient;
+import org.fao.geonet.kernel.harvest.harvester.geonet40.client.SearchResponse;
+import org.fao.geonet.kernel.harvest.harvester.geonet40.client.SearchResponseHit;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.SourceRepository;
@@ -103,7 +104,7 @@ class Harvester implements IHarvester<HarvestResult> {
 
         //--- perform all searches
 
-        // Use a TreeSet because in the align phase we need to check if a given UUID is already in the set..
+        // Use a TreeSet because in the align phase we need to check if a given UUID is already in the set.
         SortedSet<RecordInfo> records = new TreeSet<>(Comparator.comparing(RecordInfo::getUuid));
 
         boolean error = false;
@@ -128,9 +129,9 @@ class Harvester implements IHarvester<HarvestResult> {
             while (from < resultCount && !error) {
                 try {
                     SearchResponse searchResponse = doSearch(s);
-                    resultCount = searchResponse.getHits().getTotalHits().value;
+                    resultCount = searchResponse.getTotal();
 
-                    records.addAll(processSearchResult(searchResponse.getHits().getHits()));
+                    records.addAll(processSearchResult(searchResponse.getHits()));
                 } catch (Exception t) {
                     error = true;
                     log.error("Unknown error trying to harvest");
@@ -178,18 +179,18 @@ class Harvester implements IHarvester<HarvestResult> {
         return result;
     }
 
-    private Set<RecordInfo> processSearchResult(SearchHit[] searchHits) {
-        Set<RecordInfo> records = new HashSet<>(searchHits.length);
-        for (SearchHit md : searchHits) {
+    private Set<RecordInfo> processSearchResult(Set<SearchResponseHit> searchHits) throws Exception {
+        Set<RecordInfo> records = new HashSet<>(searchHits.size()); //(searchHits.length);
+        for (SearchResponseHit md : searchHits) {
             if (cancelMonitor.get()) {
                 return Collections.emptySet();
             }
 
             try {
-                String uuid = md.getSourceAsMap().get("uuid").toString();
-                String schema = md.getSourceAsMap().get("documentStandard").toString();
-                String changeDate = md.getSourceAsMap().get("dateStamp").toString();
-                String source = md.getSourceAsMap().get("sourceCatalogue").toString();
+                String uuid = md.getUuid();
+                String schema = md.getSchema();
+                String changeDate = md.getChangeDate();
+                String source = md.getSource();
                 records.add(new RecordInfo(uuid, changeDate, schema, source));
 
             } catch (Exception e) {

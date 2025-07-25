@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2023 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2025 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -21,10 +21,12 @@
 //===	Rome - Italy. email: geonetwork@osgeo.org
 //==============================================================================
 
-package org.fao.geonet.kernel.harvest.harvester.geonet40;
+package org.fao.geonet.kernel.harvest.harvester.geonet40.client;
 
+import com.fasterxml.jackson.core.Version;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.google.common.base.Function;
 import com.google.common.io.CharStreams;
 import org.apache.commons.lang.StringUtils;
@@ -46,18 +48,6 @@ import org.apache.http.impl.client.BasicAuthCache;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicHeader;
-import org.elasticsearch.action.search.SearchResponse;
-import org.elasticsearch.search.aggregations.Aggregation;
-import org.elasticsearch.search.aggregations.bucket.histogram.DateHistogramAggregationBuilder;
-import org.elasticsearch.search.aggregations.bucket.terms.ParsedStringTerms;
-import org.elasticsearch.search.aggregations.bucket.terms.StringTerms;
-import org.elasticsearch.search.aggregations.metrics.ParsedTopHits;
-import org.elasticsearch.search.aggregations.metrics.TopHitsAggregationBuilder;
-import org.elasticsearch.xcontent.ContextParser;
-import org.elasticsearch.xcontent.NamedXContentRegistry;
-import org.elasticsearch.xcontent.ParseField;
-import org.elasticsearch.xcontent.XContentParser;
-import org.elasticsearch.xcontent.json.JsonXContent;
 import org.fao.geonet.domain.Group;
 import org.fao.geonet.domain.Source;
 import org.fao.geonet.exceptions.BadParameterEx;
@@ -79,7 +69,6 @@ import java.nio.file.StandardCopyOption;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @Component
 public class GeoNetworkApiClient {
@@ -146,10 +135,15 @@ public class GeoNetworkApiClient {
         try (ClientHttpResponse httpResponse = doExecute(httpMethod, user, password)) {
             String jsonResponse = CharStreams.toString(new InputStreamReader(httpResponse.getBody()));
 
-            return getSearchResponseFromJson(jsonResponse);
+            ObjectMapper objectMapper = new ObjectMapper();
+            SimpleModule module =
+                new SimpleModule("CustomSearchResponseDeserializer", new Version(1, 0, 0, null, null, null));
+            module.addDeserializer(SearchResponse.class, new SearchResponseDeserializer());
+            objectMapper.registerModule(module);
+            return objectMapper.readValue(jsonResponse, SearchResponse.class);
+
         }
     }
-
 
     /**
      * Retrieves a metadata MEF file from the GeoNetwork server.
@@ -181,7 +175,6 @@ public class GeoNetworkApiClient {
         return tempFile;
     }
 
-
     private URI createUrl(String jsonUrl) throws URISyntaxException {
         return new URI(jsonUrl);
     }
@@ -203,23 +196,6 @@ public class GeoNetworkApiClient {
     private String addUrlSlash(String url) {
         return url + (!url.endsWith("/") ? "/" : "");
     }
-
-    private List<NamedXContentRegistry.Entry> getDefaultNamedXContents() {
-        Map<String, ContextParser<Object, ? extends Aggregation>> map = new HashMap<>();
-        map.put(TopHitsAggregationBuilder.NAME, (p, c) -> ParsedTopHits.fromXContent(p, (String) c));
-        map.put(StringTerms.NAME, (p, c) -> ParsedStringTerms.fromXContent(p, (String) c));
-        map.put(DateHistogramAggregationBuilder.NAME,(p, c) -> ParsedStringTerms.fromXContent(p, (String) c));
-        return map.entrySet().stream()
-            .map(entry -> new NamedXContentRegistry.Entry(Aggregation.class, new ParseField(entry.getKey()), entry.getValue()))
-            .collect(Collectors.toList());
-    }
-
-    SearchResponse getSearchResponseFromJson(String jsonResponse) throws IOException {
-        NamedXContentRegistry registry = new NamedXContentRegistry(getDefaultNamedXContents());
-        XContentParser parser = JsonXContent.jsonXContent.createParser(registry, null, jsonResponse);
-        return SearchResponse.fromXContent(parser);
-    }
-
 
     protected ClientHttpResponse doExecute(HttpUriRequest method, String username, String password) throws IOException {
         final String requestHost = method.getURI().getHost();

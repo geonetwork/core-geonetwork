@@ -23,10 +23,15 @@
 
 package org.fao.geonet.kernel.harvest.harvester.geonet40;
 
-import org.elasticsearch.action.search.SearchResponse;
+import com.fasterxml.jackson.core.Version;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.module.SimpleModule;
 import org.fao.geonet.domain.Group;
 import org.fao.geonet.domain.Source;
 import org.fao.geonet.exceptions.BadParameterEx;
+import org.fao.geonet.kernel.harvest.harvester.geonet40.client.SearchResponseDeserializer;
+import org.fao.geonet.kernel.harvest.harvester.geonet40.client.GeoNetworkApiClient;
+import org.fao.geonet.kernel.harvest.harvester.geonet40.client.SearchResponse;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -207,8 +212,13 @@ public class GeoNetworkApiClientTest {
                 "    }\n" +
                 "}";
 
-            SearchResponse searchResponse = geoNetworkApiClient.getSearchResponseFromJson(queryResult);
+            ObjectMapper mapper = new ObjectMapper();
+            SimpleModule module =
+                new SimpleModule("CustomSearchResponseDeserializer", new Version(1, 0, 0, null, null, null));
+            module.addDeserializer(SearchResponse.class, new SearchResponseDeserializer());
+            mapper.registerModule(module);
 
+            SearchResponse searchResponse = mapper.readValue(queryResult, SearchResponse.class);
             when(geoNetworkApiClient.query("http://localhost:8080/geonetwork", query, "", "")).thenReturn(searchResponse);
             when(geoNetworkApiClient.query("invalidURL", query, "", "")).thenThrow(BadParameterEx.class);
 

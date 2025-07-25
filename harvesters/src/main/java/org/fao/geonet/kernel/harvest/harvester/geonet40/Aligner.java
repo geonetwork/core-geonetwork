@@ -41,6 +41,7 @@ import org.fao.geonet.kernel.UpdateDatestamp;
 import org.fao.geonet.kernel.datamanager.*;
 import org.fao.geonet.kernel.harvest.BaseAligner;
 import org.fao.geonet.kernel.harvest.harvester.*;
+import org.fao.geonet.kernel.harvest.harvester.geonet40.client.GeoNetworkApiClient;
 import org.fao.geonet.kernel.mef.*;
 import org.fao.geonet.kernel.search.IndexingMode;
 import org.fao.geonet.kernel.setting.SettingManager;
@@ -183,9 +184,8 @@ public class Aligner extends BaseAligner<GeonetParams> {
                 // and ISO19139 so we could be able to import them as far as
                 // ISO19139 schema is installed by default.
                 if (!metadataSchemaUtils.existsSchema(ri.schema) && !ri.schema.startsWith("iso19139.")) {
-                    if (log.isDebugEnabled())
-                        log.debug("  - Metadata skipped due to unknown schema. uuid:" + ri.uuid
-                            + ", schema:" + ri.schema);
+                    log.info("  - Metadata skipped due to unknown schema. uuid:" + ri.uuid
+                        + ", schema:" + ri.schema);
                     result.unknownSchema++;
                 } else {
                     String id = metadataUtils.getMetadataId(ri.uuid);
@@ -417,8 +417,9 @@ public class Aligner extends BaseAligner<GeonetParams> {
 
                 private void handleFile(String file, String changeDate, InputStream is, int index, MetadataResourceVisibility visibility) throws Exception {
                     if (id[index] == null) return;
-                    if (log.isDebugEnabled())
+                    if (log.isDebugEnabled()) {
                         log.debug("    - Adding remote " + visibility + " file with name: " + file);
+                    }
                     final Store store = context.getBean("resourceStore", Store.class);
                     final String metadataUuid = metadataUtils.getMetadataUuid(id[index]);
                     store.putResource(context, metadataUuid, file, is, new ISODate(changeDate).toDate(), visibility, true);
@@ -438,8 +439,8 @@ public class Aligner extends BaseAligner<GeonetParams> {
             });
         } catch (Exception e) {
             //--- we ignore the exception here. Maybe the metadata has been removed just now
-            if (log.isDebugEnabled())
-                log.debug("  - Skipped unretrievable metadata (maybe has been removed) with uuid:" + ri.uuid);
+            log.info("  - Skipped unretrievable metadata (maybe has been removed) with uuid:" + ri.uuid);
+
             result.unretrievable++;
             log.error(e);
         } finally {
@@ -462,7 +463,9 @@ public class Aligner extends BaseAligner<GeonetParams> {
         if ("true".equals(isTemplate)) isTemplate = "y";
         else isTemplate = "n";
 
-        if (log.isDebugEnabled()) log.debug("  - Adding metadata with remote uuid:" + ri.uuid);
+        if (log.isDebugEnabled()) {
+            log.debug("  - Adding metadata with remote uuid:" + ri.uuid);
+        }
 
         try {
             Integer groupIdVal = null;
@@ -622,10 +625,14 @@ public class Aligner extends BaseAligner<GeonetParams> {
 
             //--- allow only: view, download, dynamic, featured
             if (opId == 0 || opId == 1 || opId == 5 || opId == 6) {
-                if (log.isDebugEnabled()) log.debug("       --> " + opName);
+                if (log.isDebugEnabled()) {
+                    log.debug("       --> " + opName);
+                }
                 metadataOperations.setOperation(context, id, groupId, opId + "");
             } else {
-                if (log.isDebugEnabled()) log.debug("       --> " + opName + " (skipped)");
+                if (log.isDebugEnabled()) {
+                    log.debug("       --> " + opName + " (skipped)");
+                }
             }
         }
     }
@@ -669,8 +676,7 @@ public class Aligner extends BaseAligner<GeonetParams> {
         final Element[] privateFiles = {null};
 
         if (localUuids.getID(ri.uuid) == null && !force) {
-            if (log.isDebugEnabled())
-                log.debug("  - Skipped metadata managed by another harvesting node. uuid:" + ri.uuid + ", name:" + params.getName());
+            log.info("  - Skipped metadata managed by another harvesting node. uuid:" + ri.uuid + ", name:" + params.getName());
         } else {
             if (force || !useChangeDate || ri.isMoreRecentThan(localChangeDate)) {
                 Path mefFile = null;
@@ -771,8 +777,7 @@ public class Aligner extends BaseAligner<GeonetParams> {
 
         Metadata metadata;
         if (!force && !ri.isMoreRecentThan(date)) {
-            if (log.isDebugEnabled())
-                log.debug("  - XML not changed for local metadata with uuid:" + ri.uuid);
+            log.info("  - XML not changed for local metadata with uuid:" + ri.uuid);
             result.unchangedMetadata++;
             metadata = metadataRepository.findOneById(Integer.valueOf(id));
             if (metadata == null) {
@@ -791,8 +796,9 @@ public class Aligner extends BaseAligner<GeonetParams> {
                     md, processName, processParams);
             }
             // update metadata
-            if (log.isDebugEnabled())
+            if (log.isDebugEnabled()) {
                 log.debug("  - Updating local metadata with id=" + id);
+            }
 
             boolean validate = false;
             boolean ufo = params.mefFormatFull;
@@ -851,8 +857,9 @@ public class Aligner extends BaseAligner<GeonetParams> {
     private void handleFile(String id, String file, MetadataResourceVisibility visibility, String changeDate,
                             InputStream is, Element files) throws Exception {
         if (files == null) {
-            if (log.isDebugEnabled())
+            if (log.isDebugEnabled()) {
                 log.debug("  - No file found in info.xml. Cannot update file:" + file);
+            }
         } else {
             final Store store = context.getBean("resourceStore", Store.class);
             final String metadataUuid = metadataUtils.getMetadataUuid(id);
@@ -924,6 +931,5 @@ public class Aligner extends BaseAligner<GeonetParams> {
         // TreeSet.contains can be used more efficiently instead of doing a loop over all the recordInfo elements.
         RecordInfo recordToTest = new RecordInfo(uuid, null);
         return records.contains(recordToTest);
-
     }
 }

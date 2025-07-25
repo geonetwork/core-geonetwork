@@ -762,7 +762,7 @@
 
       $scope.geonetworkGetSources2 = function (url) {
         $http
-          .get($scope.proxyUrl + encodeURIComponent(url + "/srv/api/sources/portal"))
+          .get($scope.proxyUrl + encodeURIComponent(url + "/srv/api/sources?type=portal"))
           .then(
             function (response) {
               $scope.geonetworkSources = [];
@@ -776,7 +776,8 @@
 
               $http
                 .get(
-                  $scope.proxyUrl + encodeURIComponent(url + "/srv/api/sources/harvester")
+                  $scope.proxyUrl +
+                    encodeURIComponent(url + "/srv/api/sources?type=harvester")
                 )
                 .then(
                   function (response) {
