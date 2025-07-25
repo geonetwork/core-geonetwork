@@ -669,6 +669,16 @@
             toISOConversion: "schema:iso19115-3.2018:convert/fromJsonOpenDataSoft"
           }
         },
+        "STAC Collection": {
+          defaultValues: {
+            loopElement: "/collections",
+            numberOfRecordPath: "",
+            pageSizeParam: "limit",
+            pageFromParam: "page",
+            recordIdPath: "/id",
+            toISOConversion: "schema:iso19115-3.2018:convert/stac-to-iso19115-3"
+          }
+        },
         "XML (ISO19115-3)": {
           defaultValues: {
             loopElement: ".",
