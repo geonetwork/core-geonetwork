@@ -754,21 +754,26 @@
                 i++;
               });
             },
-            function (response) {
-              // TODO
+            function (error) {
+              $rootScope.$broadcast("StatusUpdated", {
+                title: $translate.instant("harvesterErrorRetrieveSources"),
+                error: error.data.message || error.data.error.message,
+                timeout: 3,
+                type: "danger"
+              });
             }
           );
       };
 
-      $scope.geonetworkGetSources2 = function (url) {
+      $scope.geonetworkGetSourcesGn4 = function (url) {
         $http
           .get($scope.proxyUrl + encodeURIComponent(url + "/srv/api/sources?type=portal"))
           .then(
             function (response) {
-              $scope.geonetworkSources = [];
+              var sourcesList = [];
 
               angular.forEach(response.data, function (source) {
-                $scope.geonetworkSources.push({
+                sourcesList.push({
                   uuid: source.uuid,
                   name: source.name
                 });
@@ -781,6 +786,9 @@
                 )
                 .then(
                   function (response) {
+                    $scope.geonetworkSources = [];
+                    $scope.geonetworkSources = sourcesList;
+
                     angular.forEach(response.data, function (source) {
                       $scope.geonetworkSources.push({
                         uuid: source.uuid,
@@ -788,13 +796,23 @@
                       });
                     });
                   },
-                  function (response) {
-                    // TODO
+                  function (error) {
+                    $rootScope.$broadcast("StatusUpdated", {
+                      title: $translate.instant("harvesterErrorRetrieveSources"),
+                      error: error.data.message || error.data.error.message,
+                      timeout: 3,
+                      type: "danger"
+                    });
                   }
                 );
             },
-            function (response) {
-              // TODO
+            function (error) {
+              $rootScope.$broadcast("StatusUpdated", {
+                title: $translate.instant("harvesterErrorRetrieveSources"),
+                error: error.data.message || error.data.error.message,
+                timeout: 3,
+                type: "danger"
+              });
             }
           );
       };
