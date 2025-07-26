@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2007 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2025 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -21,7 +21,7 @@
 //===	Rome - Italy. email: geonetwork@osgeo.org
 //==============================================================================
 
-package org.fao.geonet.kernel.harvest.harvester.geonet;
+package org.fao.geonet.kernel.harvest.harvester.geonet.v21_3;
 
 import com.google.common.collect.Lists;
 import jeeves.server.context.ServiceContext;
@@ -45,7 +45,6 @@ import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.SourceRepository;
 import org.fao.geonet.resources.Resources;
 import org.fao.geonet.utils.GeonetHttpRequestFactory;
-import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Xml;
 import org.fao.geonet.utils.XmlRequest;
 import org.jdom.Element;
@@ -54,12 +53,10 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.Path;
-import java.sql.SQLException;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -92,7 +89,7 @@ class Harvester implements IHarvester<HarvestResult> {
     public HarvestResult harvest(Logger log) throws Exception {
         this.log = log;
         String host = params.host;
-        if (new URL(host).getPath().equals("")) {
+        if (new URL(host).getPath().isEmpty()) {
             // Needed to make it work when harvesting from a GN deployed at ROOT ("/")
             host += "/";
         }
@@ -141,7 +138,7 @@ class Harvester implements IHarvester<HarvestResult> {
 
         //--- perform all searches
 
-        // Use a TreeSet because in the align phase we need to check if a given UUID is already in the set..
+        // Use a TreeSet because in the align phase we need to check if a given UUID is already in the set.
         SortedSet<RecordInfo> records = new TreeSet<>(Comparator.comparing(RecordInfo::getUuid));
 
         // Do a search and set from=1 and to=2, try to find out maxPageSize
@@ -194,7 +191,7 @@ class Harvester implements IHarvester<HarvestResult> {
                 try {
                     Element searchResult = doSearch(req, s);
                     Element summary = searchResult.getChild(Geonet.Elem.SUMMARY);
-                    resultCount = Integer.valueOf(summary.getAttributeValue("count"));
+                    resultCount = Integer.parseInt(summary.getAttributeValue("count"));
 
                     @SuppressWarnings("unchecked")
                     List<Element> metadataResultList = searchResult.getChildren("metadata");
@@ -349,7 +346,7 @@ class Harvester implements IHarvester<HarvestResult> {
         if (sources == null)
             throw new BadServerResponseEx(info);
 
-        Map<String, Source> map = new HashMap<String, Source>();
+        Map<String, Source> map = new HashMap<>();
 
         for (Object o : sources.getChildren()) {
             Element sourceEl = (Element) o;
@@ -357,11 +354,11 @@ class Harvester implements IHarvester<HarvestResult> {
             String uuid = sourceEl.getChildText("uuid");
             String name = sourceEl.getChildText("name");
 
-            Source source = new Source(uuid, name, new HashMap<String, String>(), SourceType.harvester);
+            Source source = new Source(uuid, name, new HashMap<>(), SourceType.harvester);
             // If translation element provided and has values, use it.
             // Otherwise use the default ones from the name of the source
             if ((sourceEl.getChild("label") != null) &&
-                (sourceEl.getChild("label").getChildren().size() > 0)) {
+                (!sourceEl.getChild("label").getChildren().isEmpty())) {
                 source.setLabelTranslationsFromElement(sourceEl.getChild("label").getChildren());
             }
             map.put(uuid, source);
@@ -395,7 +392,7 @@ class Harvester implements IHarvester<HarvestResult> {
                     retrieveLogo(context, resources, params.host, sourceUuid);
                 } else {
                     String sourceName = "(unknown)";
-                    source = new Source(sourceUuid, sourceName, new HashMap<String, String>(), SourceType.harvester);
+                    source = new Source(sourceUuid, sourceName, new HashMap<>(), SourceType.harvester);
                     resources.copyUnknownLogo(context, sourceUuid);
                 }
 
