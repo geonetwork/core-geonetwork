@@ -29,9 +29,9 @@ import com.fasterxml.jackson.databind.module.SimpleModule;
 import org.fao.geonet.domain.Group;
 import org.fao.geonet.domain.Source;
 import org.fao.geonet.exceptions.BadParameterEx;
-import org.fao.geonet.kernel.harvest.harvester.geonet40.client.SearchResponseDeserializer;
-import org.fao.geonet.kernel.harvest.harvester.geonet40.client.GeoNetworkApiClient;
-import org.fao.geonet.kernel.harvest.harvester.geonet40.client.SearchResponse;
+import org.fao.geonet.kernel.harvest.harvester.geonet.v4.client.SearchResponseDeserializer;
+import org.fao.geonet.kernel.harvest.harvester.geonet.v4.client.GeoNetwork4ApiClient;
+import org.fao.geonet.kernel.harvest.harvester.geonet.v4.client.SearchResponse;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -49,7 +49,7 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class GeoNetworkApiClientTest {
     @Mock
-    private GeoNetworkApiClient geoNetworkApiClient;
+    private GeoNetwork4ApiClient geoNetworkApiClient;
 
     @Test
     public void testRetrieveGroups() {

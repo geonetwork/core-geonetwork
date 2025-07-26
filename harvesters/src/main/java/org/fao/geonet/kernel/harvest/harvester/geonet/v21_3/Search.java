@@ -21,7 +21,7 @@
 //===	Rome - Italy. email: geonetwork@osgeo.org
 //==============================================================================
 
-package org.fao.geonet.kernel.harvest.harvester.geonet;
+package org.fao.geonet.kernel.harvest.harvester.geonet.v21_3;
 
 import com.google.common.base.Splitter;
 import org.apache.commons.lang.builder.ToStringBuilder;
@@ -29,6 +29,7 @@ import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.exceptions.BadParameterEx;
 import org.fao.geonet.exceptions.OperationAbortedEx;
+import org.fao.geonet.kernel.harvest.harvester.geonet.BaseSearch;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
@@ -38,67 +39,27 @@ import java.util.Iterator;
 
 //=============================================================================
 
-class Search {
-    public int from;
-    public int to;
-    public String freeText;
+class Search extends BaseSearch {
 
-    //---------------------------------------------------------------------------
-    public String title;
-
-    //----------------------------------------------------	-----------------------
-    //---
-    //--- API methods
-    //---
-    //---------------------------------------------------------------------------
-    public String abstrac;
-
-    //---------------------------------------------------------------------------
-    public String keywords;
-
-    //---------------------------------------------------------------------------
     public boolean digital;
-
-    //---------------------------------------------------------------------------
-    //---
-    //--- Private methods
-    //---
-    //---------------------------------------------------------------------------
     public boolean hardcopy;
-
-    //---------------------------------------------------------------------------
-    //---
-    //--- Variables
-    //---
-    //---------------------------------------------------------------------------
-    public String sourceUuid;
     public String sourceName;
     public String anyField;
     public String anyValue;
 
-    //---------------------------------------------------------------------------
-    //---
-    //--- Constructor
-    //---
-    //---------------------------------------------------------------------------
     public Search() {
+        super();
     }
 
     public Search(Element search) throws BadParameterEx {
-        freeText = Util.getParam(search, "freeText", "");
-        title = Util.getParam(search, "title", "");
-        abstrac = Util.getParam(search, "abstract", "");
-        keywords = Util.getParam(search, "keywords", "");
+        super(search);
         digital = Util.getParam(search, "digital", false);
         hardcopy = Util.getParam(search, "hardcopy", false);
         anyField = Util.getParam(search, "anyField", "");
         anyValue = Util.getParam(search, "anyValue", "");
 
         Element source = search.getChild("source");
-
-        sourceUuid = Util.getParam(source, "uuid", "");
         sourceName = Util.getParam(source, "name", "");
-
     }
 
     public static Search createEmptySearch(int from, int to) throws BadParameterEx {
@@ -168,7 +129,7 @@ class Search {
     }
 
     private void add(Element req, String name, String value) {
-        if (value.length() != 0)
+        if (!value.isEmpty())
             req.addContent(new Element(name).setText(value));
     }
 

@@ -21,7 +21,7 @@
 //===	Rome - Italy. email: geonetwork@osgeo.org
 //==============================================================================
 
-package org.fao.geonet.kernel.harvest.harvester.geonet40.client;
+package org.fao.geonet.kernel.harvest.harvester.geonet.v4.client;
 
 import com.fasterxml.jackson.core.Version;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -71,7 +71,7 @@ import java.util.List;
 import java.util.Map;
 
 @Component
-public class GeoNetworkApiClient {
+public class GeoNetwork4ApiClient {
     @Autowired
     private GeonetHttpRequestFactory requestFactory;
 

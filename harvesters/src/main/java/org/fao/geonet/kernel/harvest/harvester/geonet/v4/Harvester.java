@@ -21,7 +21,7 @@
 //===	Rome - Italy. email: geonetwork@osgeo.org
 //==============================================================================
 
-package org.fao.geonet.kernel.harvest.harvester.geonet40;
+package org.fao.geonet.kernel.harvest.harvester.geonet.v4;
 
 import com.google.common.collect.Lists;
 import jeeves.server.context.ServiceContext;
@@ -33,9 +33,9 @@ import org.fao.geonet.kernel.harvest.harvester.HarvestError;
 import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
 import org.fao.geonet.kernel.harvest.harvester.IHarvester;
 import org.fao.geonet.kernel.harvest.harvester.RecordInfo;
-import org.fao.geonet.kernel.harvest.harvester.geonet40.client.GeoNetworkApiClient;
-import org.fao.geonet.kernel.harvest.harvester.geonet40.client.SearchResponse;
-import org.fao.geonet.kernel.harvest.harvester.geonet40.client.SearchResponseHit;
+import org.fao.geonet.kernel.harvest.harvester.geonet.v4.client.GeoNetwork4ApiClient;
+import org.fao.geonet.kernel.harvest.harvester.geonet.v4.client.SearchResponse;
+import org.fao.geonet.kernel.harvest.harvester.geonet.v4.client.SearchResponseHit;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.SourceRepository;
@@ -60,7 +60,7 @@ class Harvester implements IHarvester<HarvestResult> {
     private GeonetParams params;
     private ServiceContext context;
 
-    private GeoNetworkApiClient geoNetworkApiClient;
+    private GeoNetwork4ApiClient geoNetworkApiClient;
 
     /**
      * Contains a list of accumulated errors during the executing of this harvest.
@@ -79,7 +79,7 @@ class Harvester implements IHarvester<HarvestResult> {
     public HarvestResult harvest(Logger log) throws Exception {
         this.log = log;
 
-        geoNetworkApiClient = context.getBean(GeoNetworkApiClient.class);
+        geoNetworkApiClient = context.getBean(GeoNetwork4ApiClient.class);
 
         //--- login
         String username;

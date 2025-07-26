@@ -21,7 +21,7 @@
 //===	Rome - Italy. email: geonetwork@osgeo.org
 //==============================================================================
 
-package org.fao.geonet.kernel.harvest.harvester.geonet40.client;
+package org.fao.geonet.kernel.harvest.harvester.geonet.v4.client;
 
 /**
  * Stores the information used by the harvester, for an Elasticsearch search result.

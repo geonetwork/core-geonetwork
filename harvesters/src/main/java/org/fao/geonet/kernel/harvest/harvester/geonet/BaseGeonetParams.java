@@ -36,7 +36,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 
-public class GeonetParams extends AbstractParams {
+public abstract class BaseGeonetParams<S extends BaseSearch> extends AbstractParams {
     public String host;
 
     public boolean createRemoteCategory;
@@ -52,19 +52,18 @@ public class GeonetParams extends AbstractParams {
      */
     public String xslfilter;
 
-    private String node;
+    protected String node;
 
-    private Boolean useChangeDateForUpdate;
+    protected Boolean useChangeDateForUpdate;
 
-    private ArrayList<Search> alSearches = new ArrayList<>();
+    protected ArrayList<S> alSearches = new ArrayList<>();
 
-    private ArrayList<Group> alCopyPolicy = new ArrayList<>();
+    protected ArrayList<Group> alCopyPolicy = new ArrayList<>();
 
-    public GeonetParams(DataManager dm) {
+    public BaseGeonetParams(DataManager dm) {
         super(dm);
     }
 
-    @Override
     public void create(Element node) throws BadInputEx {
         super.create(node);
 
@@ -81,11 +80,11 @@ public class GeonetParams extends AbstractParams {
         mefFormatFull = Util.getParam(site, "mefFormatFull", false);
         xslfilter = Util.getParam(site, "xslfilter", "");
 
+        //checkPort(port);
         addSearches(searches);
         addCopyPolicy(policy);
     }
 
-    @Override
     public void update(Element node) throws BadInputEx {
         super.update(node);
 
@@ -100,6 +99,8 @@ public class GeonetParams extends AbstractParams {
         mefFormatFull = Util.getParam(site, "mefFormatFull", mefFormatFull);
         xslfilter = Util.getParam(site, "xslfilter", "");
 
+        //checkPort(port);
+
         //--- if some search queries are given, we drop the previous ones and
         //--- set these new ones
 
@@ -110,7 +111,7 @@ public class GeonetParams extends AbstractParams {
             addCopyPolicy(policy);
     }
 
-    public Iterable<Search> getSearches() {
+    public Iterable<S> getSearches() {
         return alSearches;
     }
 
@@ -134,51 +135,7 @@ public class GeonetParams extends AbstractParams {
         return alSearches.isEmpty();
     }
 
-    public GeonetParams copy() {
-        GeonetParams copy = new GeonetParams(dm);
-        copyTo(copy);
-
-        copy.host = host;
-        copy.node = node;
-        copy.useChangeDateForUpdate = useChangeDateForUpdate;
-        copy.createRemoteCategory = createRemoteCategory;
-        copy.mefFormatFull = mefFormatFull;
-        copy.xslfilter = xslfilter;
-
-        for (Search s : alSearches)
-            copy.alSearches.add(s.copy());
-
-        for (Group g : alCopyPolicy)
-            copy.alCopyPolicy.add(g.copy());
-
-        return copy;
-    }
-
-    private void addSearches(Element searches) throws BadInputEx {
-        alSearches.clear();
-
-        if (searches == null)
-            return;
-
-        for (Object o : searches.getChildren("search")) {
-            Element search = (Element) o;
-
-            alSearches.add(new Search(search));
-        }
-    }
-
-    private void addCopyPolicy(Element policy) throws BadInputEx {
-        alCopyPolicy.clear();
-
-        if (policy == null)
-            return;
-
-        for (Object o : policy.getChildren("group")) {
-            Element group = (Element) o;
-
-            alCopyPolicy.add(new Group(group));
-        }
-    }
+    public abstract BaseGeonetParams<S> copy();
 
     public String getNode() {
         if (this.node == null) {
@@ -209,5 +166,21 @@ public class GeonetParams extends AbstractParams {
     @Override
     public String getIcon() {
         return null;
+    }
+
+
+    protected abstract void addSearches(Element searches) throws BadInputEx;
+
+    protected void addCopyPolicy(Element policy) throws BadInputEx {
+        alCopyPolicy.clear();
+
+        if (policy == null)
+            return;
+
+        for (Object o : policy.getChildren("group")) {
+            Element group = (Element) o;
+
+            alCopyPolicy.add(new Group(group));
+        }
     }
 }

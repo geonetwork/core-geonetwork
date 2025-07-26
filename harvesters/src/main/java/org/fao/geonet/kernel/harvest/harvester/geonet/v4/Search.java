@@ -21,40 +21,27 @@
 //===	Rome - Italy. email: geonetwork@osgeo.org
 //==============================================================================
 
-package org.fao.geonet.kernel.harvest.harvester.geonet40;
+package org.fao.geonet.kernel.harvest.harvester.geonet.v4;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.ToStringBuilder;
-import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.exceptions.BadParameterEx;
+import org.fao.geonet.kernel.harvest.harvester.geonet.BaseSearch;
 import org.fao.geonet.utils.Log;
 import org.jdom.Element;
 
 
 //=============================================================================
 
-class Search {
-    public int from;
-    public int to;
-    public String freeText;
-    public String title;
-    public String abstrac;
-    public String keywords;
-    public String sourceUuid;
+class Search extends BaseSearch {
 
     public Search() {
+        super();
     }
 
     public Search(Element search) throws BadParameterEx {
-        freeText = Util.getParam(search, "freeText", "");
-        title = Util.getParam(search, "title", "");
-        abstrac = Util.getParam(search, "abstract", "");
-        keywords = Util.getParam(search, "keywords", "");
-
-        Element source = search.getChild("source");
-
-        sourceUuid = Util.getParam(source, "uuid", "");
+        super(search);
     }
 
     public static Search createEmptySearch(int from, int to) throws BadParameterEx {

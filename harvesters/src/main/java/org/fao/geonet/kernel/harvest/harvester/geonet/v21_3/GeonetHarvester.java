@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2023 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2025 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -21,17 +21,18 @@
 //===	Rome - Italy. email: geonetwork@osgeo.org
 //==============================================================================
 
-package org.fao.geonet.kernel.harvest.harvester.geonet40;
+package org.fao.geonet.kernel.harvest.harvester.geonet.v21_3;
 
 import org.fao.geonet.Logger;
 import org.fao.geonet.kernel.harvest.harvester.AbstractHarvester;
 import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
+import org.fao.geonet.kernel.harvest.harvester.geonet.Group;
 import org.jdom.Element;
 
 import java.sql.SQLException;
 
-public class Geonet40Harvester extends AbstractHarvester<HarvestResult, GeonetParams> {
-    public static final String TYPE = "geonetwork40";
+public class GeonetHarvester extends AbstractHarvester<HarvestResult, GeonetParams> {
+    public static final String TYPE = "geonetwork";
 
     @Override
     protected GeonetParams createParams() {
@@ -39,7 +40,6 @@ public class Geonet40Harvester extends AbstractHarvester<HarvestResult, GeonetPa
     }
 
 
-    @Override
     protected void storeNodeExtra(GeonetParams params, String path,
                                   String siteId, String optionsId) throws SQLException {
         setParams(params);
@@ -60,7 +60,12 @@ public class Geonet40Harvester extends AbstractHarvester<HarvestResult, GeonetPa
             harvesterSettingsManager.add("id:" + searchID, "title", s.title);
             harvesterSettingsManager.add("id:" + searchID, "abstract", s.abstrac);
             harvesterSettingsManager.add("id:" + searchID, "keywords", s.keywords);
+            harvesterSettingsManager.add("id:" + searchID, "digital", s.digital);
+            harvesterSettingsManager.add("id:" + searchID, "hardcopy", s.hardcopy);
             harvesterSettingsManager.add("id:" + searchID, "sourceUuid", s.sourceUuid);
+            harvesterSettingsManager.add("id:" + searchID, "sourceName", s.sourceName);
+            harvesterSettingsManager.add("id:" + searchID, "anyField", s.anyField);
+            harvesterSettingsManager.add("id:" + searchID, "anyValue", s.anyValue);
         }
 
         //--- store group mapping
@@ -73,7 +78,6 @@ public class Geonet40Harvester extends AbstractHarvester<HarvestResult, GeonetPa
         }
     }
 
-    @Override
     public void addHarvestInfo(Element info, String id, String uuid) {
         super.addHarvestInfo(info, id, uuid);
 
@@ -88,7 +92,7 @@ public class Geonet40Harvester extends AbstractHarvester<HarvestResult, GeonetPa
     }
 
     public void doHarvest(Logger log) throws Exception {
-        Harvester h = new Harvester(cancelMonitor, log, context, params);
+        Harvester h = new Harvester(cancelMonitor, log, context, params, errors);
         result = h.harvest(log);
     }
 }
