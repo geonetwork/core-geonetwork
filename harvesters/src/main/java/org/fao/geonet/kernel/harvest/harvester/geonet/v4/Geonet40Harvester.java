@@ -89,7 +89,7 @@ public class Geonet40Harvester extends AbstractHarvester<HarvestResult, GeonetPa
     }
 
     public void doHarvest(Logger log) throws Exception {
-        Harvester h = new Harvester(cancelMonitor, log, context, params);
+        Harvester h = new Harvester(cancelMonitor, log, context, params, errors);
         result = h.harvest(log);
     }
 }

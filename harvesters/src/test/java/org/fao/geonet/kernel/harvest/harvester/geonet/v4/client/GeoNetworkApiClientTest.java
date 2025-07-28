@@ -21,7 +21,7 @@
 //===	Rome - Italy. email: geonetwork@osgeo.org
 //==============================================================================
 
-package org.fao.geonet.kernel.harvest.harvester.geonet40;
+package org.fao.geonet.kernel.harvest.harvester.geonet.v4.client;
 
 import com.fasterxml.jackson.core.Version;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -29,9 +29,6 @@ import com.fasterxml.jackson.databind.module.SimpleModule;
 import org.fao.geonet.domain.Group;
 import org.fao.geonet.domain.Source;
 import org.fao.geonet.exceptions.BadParameterEx;
-import org.fao.geonet.kernel.harvest.harvester.geonet.v4.client.SearchResponseDeserializer;
-import org.fao.geonet.kernel.harvest.harvester.geonet.v4.client.GeoNetwork4ApiClient;
-import org.fao.geonet.kernel.harvest.harvester.geonet.v4.client.SearchResponse;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
