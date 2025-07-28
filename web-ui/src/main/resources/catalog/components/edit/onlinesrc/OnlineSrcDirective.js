@@ -2035,6 +2035,7 @@
                       scope.srcParams.remote = false;
                       if (links.length > 0) {
                         scope.onlineSrcLink = links[0].url;
+                        scope.srcParams.name = links[0].name || "";
                         scope.srcParams.protocol = links[0].protocol || "OGC:WMS";
                         scope.loadCurrentLink(scope.onlineSrcLink);
                         scope.srcParams.url = scope.onlineSrcLink;
