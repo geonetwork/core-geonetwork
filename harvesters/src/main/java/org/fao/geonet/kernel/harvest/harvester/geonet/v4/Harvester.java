@@ -27,54 +27,25 @@ import com.google.common.collect.Lists;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.Logger;
 import org.fao.geonet.domain.Source;
-import org.fao.geonet.domain.SourceType;
 import org.fao.geonet.exceptions.*;
 import org.fao.geonet.kernel.harvest.harvester.HarvestError;
 import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
 import org.fao.geonet.kernel.harvest.harvester.IHarvester;
 import org.fao.geonet.kernel.harvest.harvester.RecordInfo;
+import org.fao.geonet.kernel.harvest.harvester.geonet.BaseGeoNetworkHarvester;
 import org.fao.geonet.kernel.harvest.harvester.geonet.v4.client.GeoNetwork4ApiClient;
 import org.fao.geonet.kernel.harvest.harvester.geonet.v4.client.SearchResponse;
 import org.fao.geonet.kernel.harvest.harvester.geonet.v4.client.SearchResponseHit;
-import org.fao.geonet.kernel.setting.SettingManager;
-import org.fao.geonet.lib.Lib;
-import org.fao.geonet.repository.SourceRepository;
-import org.fao.geonet.resources.Resources;
-import org.fao.geonet.utils.GeonetHttpRequestFactory;
-import org.fao.geonet.utils.Log;
-import org.fao.geonet.utils.XmlRequest;
 
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.nio.file.Path;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-class Harvester implements IHarvester<HarvestResult> {
-    public static final String LOGGER_NAME = "geonetwork.harvester.geonetwork40";
-
-    private final AtomicBoolean cancelMonitor;
-    private Logger log;
-
-    private GeonetParams params;
-    private ServiceContext context;
-
+class Harvester extends BaseGeoNetworkHarvester<GeonetParams> implements IHarvester<HarvestResult> {
     private GeoNetwork4ApiClient geoNetworkApiClient;
 
-    /**
-     * Contains a list of accumulated errors during the executing of this harvest.
-     */
-    private List<HarvestError> errors;
-
-    //---------------------------------------------------------------------------
 
     public Harvester(AtomicBoolean cancelMonitor, Logger log, ServiceContext context, GeonetParams params, List<HarvestError> errors) {
-        this.cancelMonitor = cancelMonitor;
-        this.log = log;
-        this.context = context;
-        this.params = params;
-        this.errors = errors;
+       super(cancelMonitor, log, context, params, errors);
     }
 
     public HarvestResult harvest(Logger log) throws Exception {
@@ -180,8 +151,9 @@ class Harvester implements IHarvester<HarvestResult> {
         return result;
     }
 
-    private Set<RecordInfo> processSearchResult(Set<SearchResponseHit> searchHits) throws Exception {
-        Set<RecordInfo> records = new HashSet<>(searchHits.size()); //(searchHits.length);
+    private Set<RecordInfo> processSearchResult(Set<SearchResponseHit> searchHits) {
+        Set<RecordInfo> records = new HashSet<>(searchHits.size());
+
         for (SearchResponseHit md : searchHits) {
             if (cancelMonitor.get()) {
                 return Collections.emptySet();
@@ -225,71 +197,13 @@ class Harvester implements IHarvester<HarvestResult> {
             String queryBody = s.createElasticsearchQuery();
             return geoNetworkApiClient.query(getServerUrl(), queryBody, username, password);
         } catch (Exception ex) {
-            Log.error(LOGGER_NAME, ex.getMessage(), ex);
+            log.error(ex.getMessage(), ex);
             HarvestError harvestError = new HarvestError(context, ex);
             harvestError.setDescription("Error while searching on "
                 + params.getName() + ". ");
             harvestError.setHint("Check with your administrator.");
             this.errors.add(harvestError);
             throw new OperationAbortedEx("Raised exception when searching", ex);
-        }
-    }
-
-    private void updateSources(SortedSet<RecordInfo> records,
-                               Map<String, Source> remoteSources) throws MalformedURLException {
-        log.info("Aligning source logos from for : " + params.getName());
-
-        //--- collect all different sources that have been harvested
-
-        Set<String> sources = new HashSet<>();
-
-        for (RecordInfo ri : records) {
-            sources.add(ri.source);
-        }
-
-        //--- update local sources and retrieve logos (if the case)
-
-        String siteId = context.getBean(SettingManager.class).getSiteId();
-        final Resources resources = context.getBean(Resources.class);
-
-        for (String sourceUuid : sources) {
-            if (!siteId.equals(sourceUuid)) {
-                Source source = remoteSources.get(sourceUuid);
-
-                if (source != null) {
-                    retrieveLogo(context, resources, params.host, sourceUuid);
-                } else {
-                    String sourceName = "(unknown)";
-                    source = new Source(sourceUuid, sourceName, new HashMap<>(), SourceType.harvester);
-                    resources.copyUnknownLogo(context, sourceUuid);
-                }
-
-                context.getBean(SourceRepository.class).save(source);
-            }
-        }
-    }
-
-    private void retrieveLogo(ServiceContext context, final Resources resources, String url, String uuid) throws MalformedURLException {
-        String logo = uuid + ".gif";
-        String baseUrl = url;
-        if (!new URL(baseUrl).getPath().endsWith("/")) {
-            // Needed to make it work when harvesting from a GN deployed at ROOT ("/")
-            baseUrl += "/";
-        }
-        XmlRequest req = context.getBean(GeonetHttpRequestFactory.class).createXmlRequest(new URL(baseUrl));
-        Lib.net.setupProxy(context, req);
-        req.setAddress(req.getAddress() + "images/logos/" + logo);
-
-        final Path logoDir = resources.locateLogosDir(context);
-
-        try {
-            resources.createImageFromReq(context, logoDir, logo, req);
-        } catch (IOException e) {
-            context.warning("Cannot retrieve logo file from : " + url);
-            context.warning("  (C) Logo  : " + logo);
-            context.warning("  (C) Excep : " + e.getMessage());
-
-            resources.copyUnknownLogo(context, uuid);
         }
     }
 
