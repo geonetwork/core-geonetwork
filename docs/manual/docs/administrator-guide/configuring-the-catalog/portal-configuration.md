@@ -85,7 +85,7 @@ You can use the Query string syntax search `+tag.default:"BIRDS"` as the filter 
 
 You can use the `+` + (this term must be present) and `-` (this term must not be present).
 
-**ElasticSearch 8 documention**: [Query String Syntax](https://www.elastic.co/guide/en/elasticsearch/reference/8.18/query-dsl-query-string-query.html#query-string-syntax).
+**ElasticSearch 8 documentation**: [Query String Syntax](https://www.elastic.co/guide/en/elasticsearch/reference/8.18/query-dsl-query-string-query.html#query-string-syntax).
 
 <details>
 <summary>Example of filters:</summary>
@@ -104,15 +104,15 @@ Records from "My agency" with open data keywords:
 `OrgObject.\\*: "My agency" AND keyword:("OPEN DATA" OR "open data" OR "opendata")`
 
 Records from either "New York" or "GN":
-`OrgObject.\\*:"New York" OR _orgName:"GN"`
+`OrgObject.\\*:"New York" OR OrgObject.\\*:"GN"`
 
 ### Filter by Harvester
 
 Records harvested by a specific harvester:
 `+harvesterUuid: e04c8cba-64d9-4495-9c38-fc91119cfa1a`
 
-Records from a harvester, excluding drafts:
-`+harvesterUuid: b37387af-89e8-4a37-a882-1c2105bdf859 AND NOT tag.default: DRAFT`
+Records from a harvester, excluding under development status:
+`+harvesterUuid: b37387af-89e8-4a37-a882-1c2105bdf859 AND NOT cl_status.key: underDevelopment`
 
 ### Filter by Topic Category
 
