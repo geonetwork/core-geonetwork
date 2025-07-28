@@ -291,6 +291,7 @@ nav:
       - user-guide/harvesting/harvesting-oaipmh.md
       - user-guide/harvesting/harvesting-ogcwxs.md
       - user-guide/harvesting/harvesting-sde.md
+      - user-guide/harvesting/harvesting-sftp.md
       - user-guide/harvesting/harvesting-simpleurl.md
       - user-guide/harvesting/harvesting-thredds.md
       - user-guide/harvesting/harvesting-webdav.md
