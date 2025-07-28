@@ -106,7 +106,7 @@
       <artifactId>jaxen</artifactId>
     </dependency>
     <dependency>
-      <groupId>jsch</groupId>
+      <groupId>com.github.mwiede</groupId>
       <artifactId>jsch</artifactId>
     </dependency>
     <dependency>
