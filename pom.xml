@@ -860,9 +860,9 @@
 
       <!-- Security stuff -->
       <dependency>
-        <groupId>jsch</groupId>
+        <groupId>com.github.mwiede</groupId>
         <artifactId>jsch</artifactId>
-        <version>0.1.8</version> <!-- TODO check version, latest from public repository -->
+        <version>2.27.2</version>
       </dependency>
       <dependency>
         <groupId>globus</groupId>
