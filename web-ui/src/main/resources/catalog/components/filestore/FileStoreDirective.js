@@ -306,6 +306,10 @@
                       scope.editingResource = false;
                       updateVisibilityEditingPanel(index, false);
                       scope.loadMetadataResources();
+
+                      // Refresh the onlinesrc service to update the resource list and the metadata form
+                      // with the new resource name.
+                      gnOnlinesrc.refresh();
                     });
                 } else {
                   scope.duplicatedFilename = true;
