@@ -327,9 +327,9 @@ public class AttachmentsApi {
     }
 
 
-    @io.swagger.v3.oas.annotations.Operation(summary = "Update the metadata resource visibility")
+    @io.swagger.v3.oas.annotations.Operation(summary = "Update the metadata resource visibility and/or the resource name")
     @PreAuthorize("hasAuthority('Editor')")
-    @ApiResponses(value = {@ApiResponse(responseCode = "201", description = "Attachment visibility updated."),
+    @ApiResponses(value = {@ApiResponse(responseCode = "201", description = "Attachment updated."),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)})
     @RequestMapping(value = "/{resourceId:.+}", method = RequestMethod.PATCH, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.CREATED)
@@ -337,11 +337,24 @@ public class AttachmentsApi {
     public MetadataResource patchResource(
         @Parameter(description = "The metadata UUID", required = true, example = "43d7c186-2187-4bcd-8843-41e575a5ef56") @PathVariable String metadataUuid,
         @Parameter(description = "The resource identifier (ie. filename)", required = true) @PathVariable String resourceId,
-        @Parameter(description = "The visibility", required = true, example = "public") @RequestParam(required = true) MetadataResourceVisibility visibility,
+        @Parameter(description = "The visibility", required = true, example = "public") @RequestParam(required = false) MetadataResourceVisibility visibility,
+        @Parameter(description = "The visibility", required = true, example = "public") @RequestParam(required = false) String newResourceName,
         @Parameter(description = "Use approved version or not", example = "true") @RequestParam(required = false, defaultValue = "false") Boolean approved,
         @Parameter(hidden = true) HttpServletRequest request) throws Exception {
         ServiceContext context = ApiUtils.createServiceContext(request);
-        return store.patchResourceStatus(context, metadataUuid, resourceId, visibility, approved);
+
+        if (visibility == null && newResourceName == null) {
+            throw new IllegalArgumentException("Either visibility or new resource name must be provided.");
+        }
+
+        MetadataResource metadataResource = null;
+        if (newResourceName != null) {
+            metadataResource = store.renameResource(context, metadataUuid, resourceId, newResourceName, approved);
+        }
+        if (visibility != null) {
+            metadataResource = store.patchResourceStatus(context, metadataUuid, resourceId, visibility, approved);
+        }
+        return metadataResource;
     }
 
     @io.swagger.v3.oas.annotations.Operation(summary = "Delete a metadata resource")

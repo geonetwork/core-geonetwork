@@ -36,13 +36,10 @@ import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.domain.MetadataResource;
 import org.fao.geonet.domain.MetadataResourceVisibility;
-import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.thumbnail.ThumbnailMaker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
@@ -63,8 +60,7 @@ import static org.fao.geonet.api.ApiParams.API_PARAM_RECORD_UUID;
     description = API_CLASS_RECORD_OPS)
 public class AttachmentsActionsApi {
     private final ApplicationContext appContext = ApplicationContextHolder.get();
-    @Autowired
-    DataManager dataMan;
+
     @Autowired
     ThumbnailMaker thumbnailMaker;
     private Store store;
@@ -139,22 +135,5 @@ public class AttachmentsActionsApi {
                 FileUtils.deleteQuietly(thumbnailFile.toFile());
             }
         }
-    }
-
-    @io.swagger.v3.oas.annotations.Operation(summary = "Rename a metadata resource name")
-    @PreAuthorize("hasAuthority('Editor')")
-    @ApiResponses(value = {@ApiResponse(responseCode = "201", description = "Resource name updated."),
-        @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)})
-    @RequestMapping(value = "/{portal}/api/records/{metadataUuid}/attachments/{resourceId:.+}/rename", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseStatus(value = HttpStatus.CREATED)
-    @ResponseBody
-    public MetadataResource renameResource(
-        @Parameter(description = "The metadata UUID", required = true, example = "43d7c186-2187-4bcd-8843-41e575a5ef56") @PathVariable String metadataUuid,
-        @Parameter(description = "The resource identifier (ie. filename)", required = true) @PathVariable String resourceId,
-        @Parameter(description = "The new name for the resource", required = true) @RequestParam(required = true) String newName,
-        @Parameter(description = "Use approved version or not", example = "true") @RequestParam(required = false, defaultValue = "false") Boolean approved,
-        @Parameter(hidden = true) HttpServletRequest request) throws Exception {
-        ServiceContext context = ApiUtils.createServiceContext(request);
-        return store.renameResource(context, metadataUuid, resourceId, newName, approved);
     }
 }
