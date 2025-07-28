@@ -41,11 +41,15 @@ import org.apache.commons.codec.digest.DigestUtils;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
+import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.MetadataResource;
 import org.fao.geonet.domain.MetadataResourceVisibility;
 import org.fao.geonet.domain.MetadataResourceVisibilityConverter;
 import org.fao.geonet.events.history.AttachmentAddedEvent;
 import org.fao.geonet.events.history.AttachmentDeletedEvent;
+import org.fao.geonet.kernel.datamanager.IMetadataIndexer;
+import org.fao.geonet.kernel.datamanager.IMetadataManager;
+import org.fao.geonet.kernel.search.IndexingMode;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.util.FileMimetypeChecker;
@@ -100,6 +104,10 @@ public class AttachmentsApi {
     FileMimetypeChecker fileMimetypeChecker;
     @Autowired
     SettingManager settingManager;
+    @Autowired
+    private IMetadataManager metadataManager;
+    @Autowired
+    private IMetadataIndexer metadataIndexer;
 
     public AttachmentsApi() {
     }
@@ -381,13 +389,22 @@ public class AttachmentsApi {
         @Parameter(hidden = true) HttpServletRequest request) throws Exception {
         ServiceContext context = ApiUtils.createServiceContext(request);
 
+        AbstractMetadata metadata = ApiUtils.canViewRecord(metadataUuid, request);
+
         if (visibility == null && newResourceName == null) {
             throw new IllegalArgumentException("Either visibility or new resource name must be provided.");
         }
 
         MetadataResource metadataResource = null;
         if (newResourceName != null) {
+            Store.ResourceHolder metadataResourceToUpdate = store.getResource(context, metadataUuid, resourceId, approved);
             metadataResource = store.renameResource(context, metadataUuid, resourceId, newResourceName, approved);
+
+            // Update the metadata references to the resource
+            metadata.setData(metadata.getData().replaceAll(metadataResourceToUpdate.getMetadata().getUrl(), metadataResource.getUrl()));
+            metadataManager.save(metadata);
+            metadataIndexer.indexMetadata(String.valueOf(metadata.getId()), true, IndexingMode.full);
+
         }
         if (visibility != null) {
             metadataResource = store.patchResourceStatus(context, metadataUuid, resourceId, visibility, approved);
