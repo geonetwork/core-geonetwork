@@ -156,7 +156,7 @@
     <legend id="gn-harvest-settings-gn-advanced-title">
       <i class="fa fa-fw fa-cogs"></i
       ><span data-translate="">harvesterResponseProcessing</span>
-      {{harvesterSelected['@type'] | translate}}
+      {{('harvester-' + harvesterSelected['@type']) | translate}}
     </legend>
 
     <div data-gn-harvester-extras="harvesterSelected"></div>
