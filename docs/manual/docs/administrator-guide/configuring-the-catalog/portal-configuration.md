@@ -90,93 +90,115 @@ You can use the `+` + (this term must be present) and `-` (this term must not be
 <details>
 <summary>Example of filters:</summary>
 
-### Filter by Source Catalogue and Organization
+<h4>Filter by Source Catalogue and Organization</h4>
 
 Records from a specific source catalogue and organization:
-`sourceCatalogue:972b12aa-08dc-4d29-8a10-ff44ecef1dda AND OrgForResourceObject.default:("My organisation")`
+<br><code>sourceCatalogue:972b12aa-08dc-4d29-8a10-ff44ecef1dda AND OrgForResourceObject.default:("My organisation")</code>
+<br>
 
 Records from a specific organization:
-`+OrgForResourceObject.default:("My organization name")`
+<br><code>+OrgForResourceObject.default:("My organization name")</code>
+<br>
 
-### Filter by Organization Name and Keywords
+<h4>Filter by Organization Name and Keywords</h4>
 
 Records from "My agency" with open data keywords:
-`OrgObject.\\*: "My agency" AND keyword:("OPEN DATA" OR "open data" OR "opendata")`
+<br><code>OrgObject.\\*: "My agency" AND keyword:("OPEN DATA" OR "open data" OR "opendata")</code>
+<br>
 
 Records from either "New York" or "GN":
-`OrgObject.\\*:"New York" OR OrgObject.\\*:"GN"`
+<br><code>OrgObject.\\*:"New York" OR OrgObject.\\*:"GN"</code>
+<br>
 
-### Filter by Harvester
+<h4>Filter by Harvester</h4>
 
 Records harvested by a specific harvester:
-`+harvesterUuid: e04c8cba-64d9-4495-9c38-fc91119cfa1a`
+<br><code>+harvesterUuid: e04c8cba-64d9-4495-9c38-fc91119cfa1a</code>
+<br>
 
 Records from a harvester, excluding under development status:
-`+harvesterUuid: b37387af-89e8-4a37-a882-1c2105bdf859 AND NOT cl_status.key: underDevelopment`
+<br><code>+harvesterUuid: b37387af-89e8-4a37-a882-1c2105bdf859 AND NOT cl_status.key: underDevelopment</code>
+<br>
 
-### Filter by Topic Category
+<h4>Filter by Topic Category</h4>
 
 Filter by topic key named biota:
-`+cl_topic.key:"biota"`
+<br><code>+cl_topic.key:"biota"</code>
+<br>
 
 Climatology, Meteorology, Atmosphere:
-`+cl_topic.key:(society OR transportation)`
+<br><code>+cl_topic.key:(society OR transportation)</code>
+<br>
 
-**NOT** Society topic:
-`-cl_topic.key:"society"`
+<b>NOT</b> Society topic:
+<br><code>-cl_topic.key:"society"</code>
+<br>
 
-### Filter by Group
+<h4>Filter by Group</h4>
 
 Records owned by group 108:
-`+groupOwner:(108)`
+<br><code>+groupOwner:(108)</code>
+<br>
 
 Records owned by group 104 or 105:
-`groupOwner:(104 OR 105)`
+<br><code>groupOwner:(104 OR 105)</code>
+<br>
 
-### Filter by Tag (Country Example)
+<h4>Filter by Tag (Country Example)</h4>
 
 Records tagged with Thailand, Cambodia, or Laos:
-`+(tag.default:Thailand OR tag.default:Cambodia)`
+<br><code>+(tag.default:Thailand OR tag.default:Cambodia)</code>
+<br>
 
 Records with any tag containing "Geo":
-`+tag.\\*:"Geo"`
+<br><code>+tag.\\*:"Geo"</code>
+<br>
 
-### Filter by Record Owner
+<h4>Filter by Record Owner</h4>
 
 Records owned by "<owner>":
-`+recordOwner:"<owner>"`
+<br><code>+recordOwner:"<owner>"</code>
+<br>
 
-### Filter by Thesaurus Keyword Presence
+<h4>Filter by Thesaurus Keyword Presence</h4>
 Filter records referencing any keyword from a specific thesaurus:
-`+th_otherKeywords-theme:*`
+<br><code>+th_otherKeywords-theme:*</code>
+<br>
 (where `otherKeywords-theme` is the thesaurus identifier)
 
 For INSPIRE themes:
-`+th_httpinspireeceuropaeutheme-theme:*`
+<br><code>+th_httpinspireeceuropaeutheme-theme:*</code>
+<br>
 
-### Filter by Specific Keyword
+<h4>Filter by Specific Keyword</h4>
 
 By default translation:
-`+tag.default:inspire`
+<br><code>+tag.default:inspire</code>
+<br>
 
 By tag key:
-`+tag.key:"http://inspire.ec.europa.eu/theme/ps"`
+<br><code>+tag.key:"http://inspire.ec.europa.eu/theme/ps"</code>
+<br>
 
 By Slovak translation:
-`+tag.langslo:jaskyne`
+<br><code>+tag.langslo:jaskyne</code>
+<br>
 
-### Free Text Search
+<h4>Free Text Search</h4>
 
 Search for "Open?ata":
-`+any.default:Open?ata`
+<br><code>+any.default:Open?ata</code>
+<br>
 
 Regex search for "OpenData" (case-insensitive):
-`+any.default:/[Oo]pen[Dd]ata/`
+<br><code>+any.default:/[Oo]pen[Dd]ata/</code>
+<br>
 
-### Filter by Contact Organization (for data)
+<h4>Filter by Contact Organization (for data)</h4>
 
 All organizations starting with "GN":
-`+OrgForResourceObject.default:GN*`
+<br><code>+OrgForResourceObject.default:GN*</code>
+<br>
 
 </details>
 
