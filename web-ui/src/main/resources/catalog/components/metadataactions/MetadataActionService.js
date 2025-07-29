@@ -52,6 +52,7 @@
     "$http",
     "gnConfig",
     "gnLangs",
+    "gnRecordHistoryService",
     function (
       $rootScope,
       $timeout,
@@ -69,7 +70,8 @@
       $q,
       $http,
       gnConfig,
-      gnLangs
+      gnLangs,
+      gnRecordHistoryService
     ) {
       var windowName = "geonetwork";
       var windowOption = "";
@@ -332,9 +334,19 @@
         );
       };
 
-      this.openUpdateStatusPanel = function (scope, statusType, t, statusToBe, label) {
+      this.openUpdateStatusPanel = function (
+        scope,
+        md,
+        statusType,
+        t,
+        statusToBe,
+        label
+      ) {
         scope.task = t;
         scope.statusToSelect = statusToBe;
+        var dueDate = md.publicationDateForResource
+          ? md.publicationDateForResource[0]
+          : null;
         gnUtilityService.openModal(
           {
             title: label ? "mdStatusTitle-" + label : "status-" + t.id,
@@ -344,6 +356,8 @@
               statusToBe +
               '" data-status-type="' +
               statusType +
+              '" data-due-date="' +
+              dueDate +
               '" task="task"></div>'
           },
           scope,
