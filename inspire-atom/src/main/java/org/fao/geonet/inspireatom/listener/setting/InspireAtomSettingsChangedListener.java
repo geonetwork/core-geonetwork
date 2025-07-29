@@ -22,6 +22,8 @@
  */
 package org.fao.geonet.inspireatom.listener.setting;
 
+import java.util.List;
+import java.util.Optional;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
@@ -32,9 +34,6 @@ import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.utils.Log;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
-
-import java.util.List;
-import java.util.Optional;
 
 @Component
 public class InspireAtomSettingsChangedListener implements ApplicationListener<SettingsChanged> {
@@ -61,14 +60,13 @@ public class InspireAtomSettingsChangedListener implements ApplicationListener<S
                 }
             } else {
                 // If the type is still "remote", we check if the schedule has changed to reschedule the harvester.
-                if (newSettingInspireTypeValue.equalsIgnoreCase("remote")) {
-                    if (!oldSettingInspireScheduleValue.equalsIgnoreCase(newSettingInspireScheduleValue)) {
-                        enableInspireAtomHarvester(newSettingInspireScheduleValue);
-                    }
+                if (newSettingInspireTypeValue.equalsIgnoreCase("remote")
+                    && !oldSettingInspireScheduleValue.equalsIgnoreCase(newSettingInspireScheduleValue)) {
+                    enableInspireAtomHarvester(newSettingInspireScheduleValue);
                 }
             }
-        // INSPIRE setting disabled
         } else {
+            // INSPIRE setting disabled
             disableInspireAtomHarvester();
         }
     }
@@ -93,9 +91,9 @@ public class InspireAtomSettingsChangedListener implements ApplicationListener<S
     /**
      * Returns the value of a setting by its name from a list of settings.
      *
-     * @param settings      List of settings to search in.
-     * @param settingName   Setting name to look for.
-     * @return              The value of the setting if found, otherwise an empty string.
+     * @param settings    List of settings to search in.
+     * @param settingName Setting name to look for.
+     * @return The value of the setting if found, otherwise an empty string.
      */
     private String value(List<Setting> settings, String settingName) {
         Optional<Setting> settingOptional = settings.stream().filter(setting -> setting.getName().equalsIgnoreCase(settingName)).findFirst();
