@@ -462,8 +462,7 @@ public class SiteApi implements ApplicationEventPublisherAware {
         if (MediaType.APPLICATION_JSON_VALUE.equals(request.getContentType()) && allRequestParams.isEmpty()) {
             BufferedReader reader = request.getReader();
             ObjectMapper mapper = new ObjectMapper();
-            allRequestParams = mapper.readValue(reader, new TypeReference<>() {
-            });
+            allRequestParams = mapper.readValue(reader, new TypeReference<Map<String, String>>() {});
         }
 
         ApplicationContext applicationContext = ApplicationContextHolder.get();

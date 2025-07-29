@@ -22,10 +22,9 @@
  */
 package org.fao.geonet.events.setting;
 
+import java.util.List;
 import org.fao.geonet.domain.Setting;
 import org.springframework.context.ApplicationEvent;
-
-import java.util.List;
 
 public class SettingsChanged extends ApplicationEvent {
     private final List<Setting> newSettings;
