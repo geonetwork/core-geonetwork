@@ -651,19 +651,7 @@ public class BaseMetadataManager implements IMetadataManager {
             String schema = metadataSchemaUtils.getMetadataSchema(id);
 
             // Inflate metadata
-            Path inflateStyleSheet = metadataSchemaUtils.getSchemaDir(schema).resolve(Geonet.File.INFLATE_METADATA);
-            if (Files.exists(inflateStyleSheet)) {
-                // --- setup environment
-                Element env = new Element("env");
-                env.addContent(new Element("lang").setText(srvContext.getLanguage()));
-
-                // add original metadata to result
-                Element result = new Element("root");
-                result.addContent(metadataXml);
-                result.addContent(env);
-
-                metadataXml = Xml.transform(result, inflateStyleSheet);
-            }
+            metadataXml = inflateMetadata(metadataXml, schema, srvContext.getLanguage());
 
             if (withEditorValidationErrors) {
                 final Pair<Element, String> versionAndReport = metadataValidator
@@ -1348,6 +1336,32 @@ public class BaseMetadataManager implements IMetadataManager {
     boolean hasReferencingMetadata(ServiceContext context, AbstractMetadata metadata) throws Exception {
         StringBuilder query = new StringBuilder(String.format("xlink:\"%s\"", metadata.getUuid()));
         return this.searchManager.query(query.toString(), null, 0, 0).hits().total().value() > 0;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Element inflateMetadata(Element metadataXml, String schema, String lang) throws Exception {
+        // Resolve the path to the XSLT stylesheet based on the schema.
+        Path styleSheet = metadataSchemaUtils.getSchemaDir(schema).resolve(Geonet.File.INFLATE_METADATA);
+
+        // If the stylesheet does not exist, return the original metadata.
+        if (!Files.exists(styleSheet)) {
+            return metadataXml; // No stylesheet to apply, return original metadata
+        }
+
+        // Create an environment element to pass additional parameters to the transformation.
+        Element env = new Element("env");
+        env.addContent(new Element("lang").setText(lang)); // Add the language parameter.
+
+        // Prepare the root element containing the metadata and the environment.
+        Element result = new Element("root");
+        result.addContent(metadataXml); // Add the original metadata.
+        result.addContent(env); // Add the environment.
+
+        // Apply the XSLT transformation and return the transformed metadata.
+        return Xml.transform(result, styleSheet);
     }
 
 }

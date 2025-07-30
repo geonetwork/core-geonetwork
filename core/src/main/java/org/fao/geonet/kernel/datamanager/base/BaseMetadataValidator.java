@@ -364,7 +364,7 @@ public class BaseMetadataValidator implements org.fao.geonet.kernel.datamanager.
      * @param lang     Language from context
      */
     @Override
-    public Pair<Element, Boolean> doValidate(AbstractMetadata metadata, String lang) {
+    public Pair<Element, Boolean> doValidate(AbstractMetadata metadata, String lang) throws Exception {
         String schema = metadata.getDataInfo().getSchemaId();
         int metadataId = metadata.getId();
         Element errorReport = new Element("report", Edit.NAMESPACE);
@@ -376,6 +376,9 @@ public class BaseMetadataValidator implements org.fao.geonet.kernel.datamanager.
         } catch (IOException | JDOMException e) {
             return Pair.read(errorReport, false);
         }
+
+        // Inflate the metadata so that it contains all the necessary information for validation.
+        md = metadataManager.inflateMetadata(md, schema, lang);
 
         List<MetadataValidation> validations = new ArrayList<>();
         boolean valid = true;
@@ -408,7 +411,7 @@ public class BaseMetadataValidator implements org.fao.geonet.kernel.datamanager.
 
             // Apply custom schematron rules
             Element schemaTronReport = applyCustomSchematronRules(schema, metadataId, md, lang, validations);
-            if (valid && schemaTronReport != null) {
+            if (schemaTronReport != null) {
                 List<Namespace> theNSs = new ArrayList<Namespace>();
                 theNSs.add(Namespace.getNamespace("geonet", "http://www.fao.org/geonetwork"));
                 theNSs.add(Namespace.getNamespace("svrl", "http://purl.oclc.org/dsdl/svrl"));
