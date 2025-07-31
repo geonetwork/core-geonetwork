@@ -46,6 +46,9 @@ import javax.persistence.RollbackException;
  * Created by Jesse on 3/10/14.
  */
 public class TransactionManager {
+
+    public static ThreadLocal<TransactionStatus> transactionInitiatedByJeeves = new ThreadLocal();
+
     public static <V> V runInTransaction(String name,
                                          ApplicationContext context,
                                          TransactionRequirement transactionRequirement,
@@ -71,7 +74,7 @@ public class TransactionManager {
                     listener.newTransaction(transaction);
                 }
             }
-
+            transactionInitiatedByJeeves.set(transaction);
             result = action.doInTransaction(transaction);
 
 
