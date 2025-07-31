@@ -72,7 +72,7 @@ import static org.fao.geonet.kernel.HarvestValidationEnum.NOVALIDATION;
 /**
  * @author Jesse on 11/6/2014.
  */
-class LocalFsHarvesterFileVisitor extends SimpleFileVisitor<Path> {
+class LocalFsHarvesterFileVisitor extends SimpleFileVisitor<Path> implements AutoCloseable {
 
     private final LocalFilesystemParams params;
     private final DataManager dataMan;
@@ -502,5 +502,10 @@ class LocalFsHarvesterFileVisitor extends SimpleFileVisitor<Path> {
 
     public Set<Integer> getListOfRecordsToIndex() {
         return listOfRecordsToIndex;
+    }
+
+    @Override
+    public void close() throws Exception {
+        this.aligner.close();
     }
 }

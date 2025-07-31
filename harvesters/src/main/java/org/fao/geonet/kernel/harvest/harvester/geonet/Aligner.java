@@ -44,6 +44,7 @@ import org.fao.geonet.kernel.harvest.BaseAligner;
 import org.fao.geonet.kernel.harvest.harvester.*;
 import org.fao.geonet.kernel.mef.*;
 import org.fao.geonet.kernel.search.IndexingMode;
+import org.fao.geonet.kernel.search.submission.batch.BatchingDeletionSubmitter;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.GroupRepository;
@@ -150,24 +151,26 @@ public class Aligner extends BaseAligner<GeonetParams> {
         //-----------------------------------------------------------------------
         //--- remove old metadata
 
-        for (String uuid : localUuids.getUUIDs()) {
-            if (cancelMonitor.get()) {
-                return this.result;
-            }
-
-            try {
-                if (!exists(records, uuid)) {
-                    String id = localUuids.getID(uuid);
-
-                    if (log.isDebugEnabled()) log.debug("  - Removing old metadata with id:" + id);
-                    metadataManager.deleteMetadata(context, id);
-
-                    result.locallyRemoved++;
+        try (BatchingDeletionSubmitter submitter = new BatchingDeletionSubmitter()) {
+            for (String uuid : localUuids.getUUIDs()) {
+                if (cancelMonitor.get()) {
+                    return this.result;
                 }
-            } catch (Exception t) {
-                log.error("Couldn't remove metadata with uuid " + uuid);
-                log.error(t);
-                result.unchangedMetadata++;
+
+                try {
+                    if (!exists(records, uuid)) {
+                        String id = localUuids.getID(uuid);
+
+                        if (log.isDebugEnabled()) log.debug("  - Removing old metadata with id:" + id);
+                        metadataManager.deleteMetadata(context, id, submitter);
+
+                        result.locallyRemoved++;
+                    }
+                } catch (Exception t) {
+                    log.error("Couldn't remove metadata with uuid " + uuid);
+                    log.error(t);
+                    result.unchangedMetadata++;
+                }
             }
         }
         //--- insert/update new metadata
@@ -254,8 +257,6 @@ public class Aligner extends BaseAligner<GeonetParams> {
                 result.unchangedMetadata++;
             }
         }
-
-        dataMan.forceIndexChanges();
 
         log.info("End of alignment for : " + params.getName());
 
@@ -517,7 +518,7 @@ public class Aligner extends BaseAligner<GeonetParams> {
 
         addCategories(metadata, params.getCategories(), localCateg, context, null, false);
 
-        metadata = metadataManager.insertMetadata(context, metadata, md, IndexingMode.none, ufo, UpdateDatestamp.NO, false, false);
+        metadata = metadataManager.insertMetadata(context, metadata, md, IndexingMode.none, ufo, UpdateDatestamp.NO, false, this.batchingIndexSubmitter);
 
         String id = String.valueOf(metadata.getId());
 
@@ -546,7 +547,7 @@ public class Aligner extends BaseAligner<GeonetParams> {
         }
         context.getBean(IMetadataManager.class).save(metadata);
 
-        dataMan.indexMetadata(id, Math.random() < 0.01);
+        dataMan.indexMetadata(id, this.batchingIndexSubmitter);
         result.addedMetadata++;
 
         return id;
@@ -843,7 +844,7 @@ public class Aligner extends BaseAligner<GeonetParams> {
         metadataManager.save(metadata);
 //        dataMan.flush();
 
-        dataMan.indexMetadata(id, Math.random() < 0.01);
+        dataMan.indexMetadata(id, this.batchingIndexSubmitter);
     }
 
     private void handleFile(String id, String file, MetadataResourceVisibility visibility, String changeDate,
