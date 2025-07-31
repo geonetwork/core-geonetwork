@@ -23,6 +23,7 @@
 
 package org.fao.geonet.util;
 
+import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.kernel.search.JSONLocCacheLoader;
 import org.fao.geonet.kernel.setting.SettingManager;
@@ -361,12 +362,18 @@ public class LocalizedEmailComponent {
 
         SettingManager settingManager = ApplicationContextHolder.get().getBean(SettingManager.class);
 
+        // Get the emailRecordViewFormatter from the UI configuration
+        String emailRecordViewFormatter = XslUtil.getUiConfigurationJsonProperty(null, "mods.search.emailRecordViewFormatter");
+
+        // Set the recordViewFormatter parameter if emailRecordViewFormatter is present
+        String emailRecordViewFormatterParameter = StringUtils.isNotBlank(emailRecordViewFormatter) ? "?recordViewFormatter=" + emailRecordViewFormatter : "";
+
         String newPlaceholder;
         if (replaceLinksWithHtmlFormat) {
             newPlaceholder = "{{index:uuid}}";
         } else {
             newPlaceholder = "'{{'index:uuid'}}'";
         }
-        return message.replace("{{link}}", settingManager.getNodeURL() + "api/records/" + newPlaceholder);
+        return message.replace("{{link}}", settingManager.getNodeURL() + "api/records/" + newPlaceholder + emailRecordViewFormatterParameter);
     }
 }
