@@ -252,6 +252,16 @@
                   </mri:abstract>
 
                   <xsl:for-each select="gn-fn-sparql:getObject($root,
+                                                  'http://purl.org/dc/terms/bibliographicCitation',
+                                                  $resourceUri)/sr:literal">
+                    <mri:credit>
+                      <gco:CharacterString>
+                        <xsl:value-of select="current()"/>
+                      </gco:CharacterString>
+                    </mri:credit>
+                  </xsl:for-each>
+                  
+                  <xsl:for-each select="gn-fn-sparql:getObject($root,
                                                   'http://www.w3.org/ns/dcat#contactPoint',
                                                   $resourceUri)/sr:bnode">
                     <xsl:call-template name="build-contact">
