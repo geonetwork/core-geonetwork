@@ -1,6 +1,6 @@
 /*
  * =============================================================================
- * ===	Copyright (C) 2001-2023 Food and Agriculture Organization of the
+ * ===	Copyright (C) 2001-2025 Food and Agriculture Organization of the
  * ===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * ===	and United Nations Environment Programme (UNEP)
  * ===
@@ -36,7 +36,6 @@ import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.domain.MetadataResource;
 import org.fao.geonet.domain.MetadataResourceVisibility;
-import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.thumbnail.ThumbnailMaker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -61,8 +60,7 @@ import static org.fao.geonet.api.ApiParams.API_PARAM_RECORD_UUID;
     description = API_CLASS_RECORD_OPS)
 public class AttachmentsActionsApi {
     private final ApplicationContext appContext = ApplicationContextHolder.get();
-    @Autowired
-    DataManager dataMan;
+
     @Autowired
     ThumbnailMaker thumbnailMaker;
     private Store store;
