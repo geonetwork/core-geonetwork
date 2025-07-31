@@ -136,9 +136,7 @@
               params.url,
               addLayersInUrl + "=" + names.join(",")
             );
-          }
-
-          if (params.wmsResources.addLayerNamesMode == "resourcename") {
+          } else {
             angular.extend(params, {
               name: names.join(",")
             });
