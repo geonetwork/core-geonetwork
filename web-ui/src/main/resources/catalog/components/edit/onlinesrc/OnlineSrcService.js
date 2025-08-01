@@ -130,13 +130,19 @@
 
           var addLayersInUrl = params.addLayersInUrl;
 
-          if (addLayersInUrl != "" && params.protocol.indexOf("OGC:WMS") >= 0) {
-            params.url = gnUrlUtils.remove(params.url, [addLayersInUrl], true);
-            params.url = gnUrlUtils.append(
-              params.url,
-              addLayersInUrl + "=" + names.join(",")
-            );
+          if (addLayersInUrl != undefined && addLayersInUrl != "") {
+            // Add layers in the resource URL
+
+            if (params.protocol.indexOf("OGC:WMS") >= 0) {
+              params.url = gnUrlUtils.remove(params.url, [addLayersInUrl], true);
+              params.url = gnUrlUtils.append(
+                params.url,
+                addLayersInUrl + "=" + names.join(",")
+              );
+            }
           } else {
+            // Add layers in resource name
+
             angular.extend(params, {
               name: names.join(",")
             });
