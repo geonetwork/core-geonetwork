@@ -183,7 +183,7 @@ public class MetadataApi {
         @PathVariable
         String metadataUuid,
         @Parameter(description = "Formatter to use on the record view page. " +
-            "If not specified, no redirect to the record view page is performed.")
+            "If invalid or not specified, no redirect to the record view page is performed.")
         @RequestParam(required = false)
         String recordViewFormatter,
         HttpServletResponse response,
