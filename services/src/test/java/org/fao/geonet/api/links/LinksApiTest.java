@@ -125,7 +125,7 @@ public class LinksApiTest extends AbstractServiceIntegrationTest {
             .andExpect(jsonPath("$.content[0].url").value(equalTo("http://services.sandre.eaufrance.fr/geo/ouvrage")))
             .andExpect(jsonPath("$.content[0].records", hasSize(1)))
             .andExpect(jsonPath("$.content[0].records[0].metadataId").value(equalTo(this.id)))
-            .andExpect(jsonPath("$.content[0].records[0].metadataUuid").value(equalTo(md.getUuid())));;
+            .andExpect(jsonPath("$.content[0].records[0].metadataUuid").value(equalTo(md.getUuid())));
 
         this.mockMvc.perform(delete("/srv/api/records/links")
             .session(httpSession)

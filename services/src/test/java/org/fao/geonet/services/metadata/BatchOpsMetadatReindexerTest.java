@@ -52,18 +52,18 @@ public class BatchOpsMetadatReindexerTest {
             applicationContextHolderMockedStatic.when(ApplicationContextHolder::get).thenReturn(mockAppContext);
             threadUtilsMockedStatic.when(ThreadUtils::getNumberOfThreads).thenReturn(numberOfAvailableThreads);
 
-        final Set<Thread> usedTread = new HashSet<>();
-        DataManager mockDataMan = createMockDataManager(usedTread);
-        Set<Integer> toIndex = createMetadataToIndex();
+            final Set<Thread> usedTread = new HashSet<>();
+            DataManager mockDataMan = createMockDataManager(usedTread);
+            Set<Integer> toIndex = createMetadataToIndex();
 
-        BatchOpsMetadataReindexer toTest = new BatchOpsMetadataReindexer(mockDataMan, toIndex);
-        toTest.process("siteId", false);
+            BatchOpsMetadataReindexer toTest = new BatchOpsMetadataReindexer(mockDataMan, toIndex);
+            toTest.process("siteId", false);
 
-        ArgumentCaptor<String> metadataIdCaptor = captureIndexationLaunched(mockDataMan);
-        assertEquals("1-2-3-4", metadataIdCaptor.getAllValues().stream().collect(Collectors.joining("-")));
-        assertEquals(1, usedTread.size());
-        assertNotSame(Thread.currentThread(), usedTread.iterator().next());
-    }
+            ArgumentCaptor<String> metadataIdCaptor = captureIndexationLaunched(mockDataMan);
+            assertEquals("1-2-3-4", metadataIdCaptor.getAllValues().stream().collect(Collectors.joining("-")));
+            assertEquals(1, usedTread.size());
+            assertNotSame(Thread.currentThread(), usedTread.iterator().next());
+        }
     }
 
     @Test
@@ -76,17 +76,17 @@ public class BatchOpsMetadatReindexerTest {
             applicationContextHolderMockedStatic.when(ApplicationContextHolder::get).thenReturn(mockAppContext);
             threadUtilsMockedStatic.when(ThreadUtils::getNumberOfThreads).thenReturn(numberOfAvailableThreads);
 
-        final Set<Thread> usedTread = new HashSet<>();
-        DataManager mockDataMan = createMockDataManager(usedTread);
-        Set<Integer> toIndex = createMetadataToIndex();
+            final Set<Thread> usedTread = new HashSet<>();
+            DataManager mockDataMan = createMockDataManager(usedTread);
+            Set<Integer> toIndex = createMetadataToIndex();
 
-        BatchOpsMetadataReindexer toTest = new BatchOpsMetadataReindexer(mockDataMan, toIndex);
-        toTest.process("siteId", false);
+            BatchOpsMetadataReindexer toTest = new BatchOpsMetadataReindexer(mockDataMan, toIndex);
+            toTest.process("siteId", false);
 
-        ArgumentCaptor<String> metadataIdCaptor = captureIndexationLaunched(mockDataMan);
-        assertEquals("1-2-3-4", metadataIdCaptor.getAllValues().stream().sorted().collect(Collectors.joining("-")));
-        assertEquals(4, usedTread.size());
-    }
+            ArgumentCaptor<String> metadataIdCaptor = captureIndexationLaunched(mockDataMan);
+            assertEquals("1-2-3-4", metadataIdCaptor.getAllValues().stream().sorted().collect(Collectors.joining("-")));
+            assertEquals(4, usedTread.size());
+        }
     }
 
     @Test
@@ -100,18 +100,18 @@ public class BatchOpsMetadatReindexerTest {
             applicationContextHolderMockedStatic.when(ApplicationContextHolder::get).thenReturn(mockAppContext);
             threadUtilsMockedStatic.when(ThreadUtils::getNumberOfThreads).thenReturn(numberOfAvailableThreads);
 
-        final Set<Thread> usedTread = new HashSet<>();
-        DataManager mockDataMan = createMockDataManager(usedTread);
-        Set<Integer> toIndex = createMetadataToIndex();
+            final Set<Thread> usedTread = new HashSet<>();
+            DataManager mockDataMan = createMockDataManager(usedTread);
+            Set<Integer> toIndex = createMetadataToIndex();
 
-        BatchOpsMetadataReindexer toTest = new BatchOpsMetadataReindexer(mockDataMan, toIndex);
-        toTest.process("siteId", true);
+            BatchOpsMetadataReindexer toTest = new BatchOpsMetadataReindexer(mockDataMan, toIndex);
+            toTest.process("siteId", true);
 
-        ArgumentCaptor<String> metadataIdCaptor = captureIndexationLaunched(mockDataMan);
-        assertEquals("1-2-3-4", metadataIdCaptor.getAllValues().stream().sorted().collect(Collectors.joining("-")));
-        assertEquals(1, usedTread.size());
-        assertEquals(Thread.currentThread(), usedTread.iterator().next());
-    }
+            ArgumentCaptor<String> metadataIdCaptor = captureIndexationLaunched(mockDataMan);
+            assertEquals("1-2-3-4", metadataIdCaptor.getAllValues().stream().sorted().collect(Collectors.joining("-")));
+            assertEquals(1, usedTread.size());
+            assertEquals(Thread.currentThread(), usedTread.iterator().next());
+        }
     }
 
     @Test
@@ -125,26 +125,26 @@ public class BatchOpsMetadatReindexerTest {
             applicationContextHolderMockedStatic.when(ApplicationContextHolder::get).thenReturn(mockAppContext);
             threadUtilsMockedStatic.when(ThreadUtils::getNumberOfThreads).thenReturn(numberOfAvailableThreads);
 
-        final Set<Thread> usedTread = new HashSet<>();
-        CountDownLatch latch = new CountDownLatch(1);
-        DataManager mockDataMan = createBlockingMockDataManager(usedTread, latch);
-        Set<Integer> toIndex = createMetadataToIndex();
+            final Set<Thread> usedTread = new HashSet<>();
+            CountDownLatch latch = new CountDownLatch(1);
+            DataManager mockDataMan = createBlockingMockDataManager(usedTread, latch);
+            Set<Integer> toIndex = createMetadataToIndex();
 
-        BatchOpsMetadataReindexer toTest = new BatchOpsMetadataReindexer(mockDataMan, toIndex);
-        assertEquals(0, toTest.getProcessed());
-        assertEquals(4, toTest.getToProcessCount());
+            BatchOpsMetadataReindexer toTest = new BatchOpsMetadataReindexer(mockDataMan, toIndex);
+            assertEquals(0, toTest.getProcessed());
+            assertEquals(4, toTest.getToProcessCount());
 
-        toTest.wrapAsyncProcess("siteId", false);
+            toTest.wrapAsyncProcess("siteId", false);
 
-        latch.countDown();
-        Thread.sleep(500);
+            latch.countDown();
+            Thread.sleep(500);
 
-        assertEquals(4, toTest.getProcessed());
-        ArgumentCaptor<String> metadataIdCaptor = captureIndexationLaunched(mockDataMan);
-        assertEquals("1-2-3-4", metadataIdCaptor.getAllValues().stream().collect(Collectors.joining("-")));
-        assertEquals(1, usedTread.size());
-        assertNotSame(Thread.currentThread(), usedTread.iterator().next());
-    }
+            assertEquals(4, toTest.getProcessed());
+            ArgumentCaptor<String> metadataIdCaptor = captureIndexationLaunched(mockDataMan);
+            assertEquals("1-2-3-4", metadataIdCaptor.getAllValues().stream().collect(Collectors.joining("-")));
+            assertEquals(1, usedTread.size());
+            assertNotSame(Thread.currentThread(), usedTread.iterator().next());
+        }
     }
 
     @Test
@@ -158,25 +158,25 @@ public class BatchOpsMetadatReindexerTest {
             applicationContextHolderMockedStatic.when(ApplicationContextHolder::get).thenReturn(mockAppContext);
             threadUtilsMockedStatic.when(ThreadUtils::getNumberOfThreads).thenReturn(numberOfAvailableThreads);
 
-        final Set<Thread> usedTread = new HashSet<>();
-        CountDownLatch latch = new CountDownLatch(1);
-        DataManager mockDataMan = createBlockingMockDataManager(usedTread, latch);
-        Set<Integer> toIndex = createMetadataToIndex();
+            final Set<Thread> usedTread = new HashSet<>();
+            CountDownLatch latch = new CountDownLatch(1);
+            DataManager mockDataMan = createBlockingMockDataManager(usedTread, latch);
+            Set<Integer> toIndex = createMetadataToIndex();
 
-        BatchOpsMetadataReindexer toTest = new BatchOpsMetadataReindexer(mockDataMan, toIndex);
+            BatchOpsMetadataReindexer toTest = new BatchOpsMetadataReindexer(mockDataMan, toIndex);
 
-        assertEquals(0, toTest.getProcessed());
-        assertEquals(4, toTest.getToProcessCount());
-        toTest.wrapAsyncProcess("siteId",false);
+            assertEquals(0, toTest.getProcessed());
+            assertEquals(4, toTest.getToProcessCount());
+            toTest.wrapAsyncProcess("siteId", false);
 
-        latch.countDown();
-        Thread.sleep(500);
+            latch.countDown();
+            Thread.sleep(500);
 
-        assertEquals(4, toTest.getProcessed());
-        ArgumentCaptor<String> metadataIdCaptor = captureIndexationLaunched(mockDataMan);
-        assertEquals("1-2-3-4", metadataIdCaptor.getAllValues().stream().sorted().collect(Collectors.joining("-")));
-        assertEquals(4, usedTread.size());
-    }
+            assertEquals(4, toTest.getProcessed());
+            ArgumentCaptor<String> metadataIdCaptor = captureIndexationLaunched(mockDataMan);
+            assertEquals("1-2-3-4", metadataIdCaptor.getAllValues().stream().sorted().collect(Collectors.joining("-")));
+            assertEquals(4, usedTread.size());
+        }
     }
 
     @Test
@@ -190,38 +190,38 @@ public class BatchOpsMetadatReindexerTest {
             applicationContextHolderMockedStatic.when(ApplicationContextHolder::get).thenReturn(mockAppContext);
             threadUtilsMockedStatic.when(ThreadUtils::getNumberOfThreads).thenReturn(numberOfAvailableThreads);
 
-        final Set<Thread> usedTread = new HashSet<>();
-        CountDownLatch latch = new CountDownLatch(1);
-        DataManager mockDataMan = createBlockingMockDataManager(usedTread, latch);
-        Set<Integer> toIndex = createMetadataToIndex();
+            final Set<Thread> usedTread = new HashSet<>();
+            CountDownLatch latch = new CountDownLatch(1);
+            DataManager mockDataMan = createBlockingMockDataManager(usedTread, latch);
+            Set<Integer> toIndex = createMetadataToIndex();
 
-        BatchOpsMetadataReindexer toTest = new BatchOpsMetadataReindexer(mockDataMan, toIndex);
-        Thread currentThread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                    try (MockedStatic<ThreadUtils> threadUtilsMockedStatic = Mockito.mockStatic(ThreadUtils.class)){
+            BatchOpsMetadataReindexer toTest = new BatchOpsMetadataReindexer(mockDataMan, toIndex);
+            Thread currentThread = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try (MockedStatic<ThreadUtils> threadUtilsMockedStatic = Mockito.mockStatic(ThreadUtils.class)) {
                         threadUtilsMockedStatic.when(ThreadUtils::getNumberOfThreads).thenReturn(numberOfAvailableThreads);
-                    toTest.wrapAsyncProcess("siteId",true);
-                } catch (Exception e) {
-                    e.printStackTrace();
+                        toTest.wrapAsyncProcess("siteId", true);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
-            }
-        });
-        currentThread.start();
+            });
+            currentThread.start();
 
-        Thread.sleep(500);
-        assertEquals(0, toTest.getProcessed());
-        assertEquals(4, toTest.getToProcessCount());
+            Thread.sleep(500);
+            assertEquals(0, toTest.getProcessed());
+            assertEquals(4, toTest.getToProcessCount());
 
-        latch.countDown();
-        Thread.sleep(500);
+            latch.countDown();
+            Thread.sleep(500);
 
-        assertEquals(4, toTest.getProcessed());
-        ArgumentCaptor<String> metadataIdCaptor = captureIndexationLaunched(mockDataMan);
-        assertEquals("1-2-3-4", metadataIdCaptor.getAllValues().stream().sorted().collect(Collectors.joining("-")));
-        assertEquals(1, usedTread.size());
-        assertEquals(currentThread, usedTread.iterator().next());
-    }
+            assertEquals(4, toTest.getProcessed());
+            ArgumentCaptor<String> metadataIdCaptor = captureIndexationLaunched(mockDataMan);
+            assertEquals("1-2-3-4", metadataIdCaptor.getAllValues().stream().sorted().collect(Collectors.joining("-")));
+            assertEquals(1, usedTread.size());
+            assertEquals(currentThread, usedTread.iterator().next());
+        }
     }
 
     private DataManager createMockDataManager(Set<Thread> usedTread) throws Exception {
