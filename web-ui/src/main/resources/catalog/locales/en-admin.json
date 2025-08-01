@@ -1174,6 +1174,8 @@
     "ui-formatter-conditional-views": "Conditional views",
     "ui-formatter-help": "Configure which formatter to use and optionally add conditional views to load formatter depending on record properties. eg. [\n  {\n    \"if\": {\n      \"standardName\": [\n        \"ISO 19115:2003/19139 - EMODNET - BATHYMETRY\",\n        \"ISO 19115:2003/19139 - EMODNET - HYDROGRAPHY\"\n      ]\n    },\n    \"url\": \"/formatters/xsl-view?root=div&view=emodnetHydrography\"}]",
     "ui-downloadFormatter": "List of formatter for record export",
+    "ui-emailRecordViewFormatter": "Formatter for email record links",
+    "ui-emailRecordViewFormatter-help": "Specifies which record view formatter to use when generating links to records in emails. <ul><li>If not set or invalid, the default landing page will be used.</li><li>If set to a valid formatter for the record view page, the link will redirect the user to the record view page using the specified formatter.</li></ul>",
     "ui-linkTypes": "List of link types",
     "ui-mod-map": "Map application",
     "ui-map": "Default map context to use",
