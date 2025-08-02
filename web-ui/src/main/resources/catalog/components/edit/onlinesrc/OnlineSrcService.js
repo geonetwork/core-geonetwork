@@ -41,6 +41,44 @@
    * The `gnOnlinesrc` service provides all tools required to manage
    * online resources like method to link or remove all kind of resources.
    */
+  module.constant("gnOnlinesrcConfig", {
+    searchObj: {
+      internal: true,
+      any: "",
+      hitsperpageValues: [50],
+      sortbyValues: [
+        {
+          sortBy: "relevance",
+          sortOrder: ""
+        },
+        {
+          sortBy: "referenceDate",
+          sortOrder: "desc"
+        },
+        {
+          sortBy: "changeDate",
+          sortOrder: "desc"
+        },
+        {
+          sortBy: "createDate",
+          sortOrder: "desc"
+        },
+        {
+          sortBy: "resourceTitleObject.default.sort",
+          sortOrder: ""
+        }
+      ],
+      defaultParams: {
+        any: "",
+        isTemplate: "n",
+        sortBy: "relevance",
+        sortOrder: "",
+        from: 1,
+        to: 50
+      }
+    }
+  });
+
   module.factory("gnOnlinesrc", [
     "gnBatchProcessing",
     "gnHttp",
@@ -55,6 +93,7 @@
     "Metadata",
     "gnUrlUtils",
     "gnGlobalSettings",
+    "gnOnlinesrcConfig",
     function (
       gnBatchProcessing,
       gnHttp,
@@ -68,7 +107,8 @@
       $filter,
       Metadata,
       gnUrlUtils,
-      gnGlobalSettings
+      gnGlobalSettings,
+      gnOnlinesrcConfig
     ) {
       var reload = false;
       var openCb = {};
@@ -228,6 +268,12 @@
          * to reload online resources list when it is true
          */
         reload: reload,
+
+        getSearchConfig: function () {
+          var searchObj = angular.extend({}, gnOnlinesrcConfig.searchObj);
+          searchObj.params = angular.extend({}, searchObj.defaultParams);
+          return searchObj;
+        },
 
         /**
          * @ngdoc method

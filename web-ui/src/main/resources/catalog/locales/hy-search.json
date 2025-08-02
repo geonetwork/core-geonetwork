@@ -552,6 +552,7 @@
     "addLayerPrefix": "Ավելացրեք շերտ",
     "addLayerPostfix": "դեպի քարտեզ",
     "submit": "Ներկայացնել",
+    "additionalLinks": "Additional Links",
     "indexingErrorMsg-invalidBounds": "Զգուշացում / Դաշտային ռեսուրսTemporalDateRange / Ստորին և վերին սահմանները դատարկ են կամ անվավեր ամսաթվեր: Ամսաթվերի միջակայքը ինդեքսավորված չէ:",
     "indexingErrorMsg-invalidDateFormat": "Զգուշացում / Ամսաթիվը {{dateType}} «{{date}}» արժեքով վավեր ամսաթվի ձևաչափ չէ:",
     "indexingErrorMsg-keywordNotFoundInThesaurus": "Զգուշացում / Հիմնաբառը {{հիմնաբառ}} չի գտնվել {{thesaurus}}-ում:",

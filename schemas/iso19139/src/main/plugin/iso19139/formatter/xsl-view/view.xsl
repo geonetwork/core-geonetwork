@@ -201,7 +201,7 @@
             <xsl:value-of select="$schemaStrings/spatialExtent"/>
           </span>
         </h2>
-  
+
         <xsl:choose>
           <xsl:when test=".//gmd:EX_BoundingPolygon">
             <xsl:copy-of select="gn-fn-render:extent($metadataUuid)"/>
@@ -507,9 +507,14 @@
   </xsl:template>
 
 
-  <!-- Some elements are only containers so bypass them -->
+  <!-- Some elements are only containers so bypass them
+       Excluded gmd:MD_DigitalTransferOptions, otherwise is rendered differently
+       when contains 1 or more gmd:onLine elements. Probably template affects
+       other similar container elements.
+  -->
   <xsl:template mode="render-field"
                 match="*[
+                          name() != 'gmd:MD_DigitalTransferOptions' and
                           count(gmd:*[name() != 'gmd:PT_FreeText']) = 1 and
                           count(*/@codeListValue) = 0
                         ]"
@@ -525,6 +530,7 @@
       gmd:report/*|
       gmd:result/*|
       gmd:extent[name(..)!='gmd:EX_TemporalExtent']|
+      gmd:transferOptions/*|
       *[$isFlatMode = false() and gmd:* and
         not(gco:CharacterString) and not(gmd:URL)]">
     <div class="entry name">
@@ -767,7 +773,7 @@
 
   <!-- Linkage -->
   <xsl:template mode="render-field"
-                match="*[gmd:CI_OnlineResource and */gmd:linkage/gmd:URL != '']"
+                match="*[gmd:CI_OnlineResource]"
                 priority="100">
     <dl class="gn-link">
       <dt>
@@ -793,11 +799,22 @@
             </xsl:otherwise>
           </xsl:choose>
         </xsl:variable>
+
+        <xsl:choose>
+          <xsl:when test="string($linkUrl)">
         <a href="{$linkUrl}" title="{$linkName}">
           <span>
             <xsl:value-of select="$linkName"/>
           </span>
         </a>
+          </xsl:when>
+          <xsl:otherwise>
+            <span>
+              <xsl:value-of select="$linkName"/>
+            </span>
+          </xsl:otherwise>
+        </xsl:choose>
+
         <xsl:if test="*/gmd:protocol[normalize-space(gco:CharacterString|gmx:Anchor) != '']">
           (<span>
           <xsl:apply-templates mode="render-value-no-breaklines"

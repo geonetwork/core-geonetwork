@@ -41,7 +41,9 @@
         restrict: "A",
         templateUrl:
           "../../catalog/components/edit/onlinesrc/" + "partials/fileUploader.html",
-        scope: {},
+        scope: {
+          editableThumbnail: "@"
+        },
         link: function (scope, element, attrs) {
           scope.relations = {};
           scope.uuid = undefined;
@@ -1857,12 +1859,7 @@
           compile: function compile(tElement, tAttrs, transclude) {
             return {
               pre: function preLink(scope) {
-                scope.searchObj = {
-                  internal: true,
-                  params: {
-                    isTemplate: "n"
-                  }
-                };
+                scope.searchObj = gnOnlinesrc.getSearchConfig();
                 scope.modelOptions = angular.copy(gnGlobalSettings.modelOptions);
               },
               post: function postLink(scope, iElement, iAttrs) {
@@ -2130,11 +2127,7 @@
           compile: function compile(tElement, tAttrs, transclude) {
             return {
               pre: function preLink(scope) {
-                scope.searchObj = {
-                  internal: true,
-                  any: "",
-                  params: {}
-                };
+                scope.searchObj = gnOnlinesrc.getSearchConfig();
                 scope.modelOptions = angular.copy(gnGlobalSettings.modelOptions);
                 scope.selectRecords = [];
               },
@@ -2196,6 +2189,10 @@
                   };
 
                   $(scope.popupid).modal("show");
+
+                  $("#linktomd-search input").val("");
+                  scope.searchObj.any = "";
+
                   var searchParams =
                     scope.config.sources && scope.config.sources.metadataStore
                       ? scope.config.sources.metadataStore.params || {}
@@ -2231,7 +2228,8 @@
     .directive("gnLinkToSibling", [
       "gnOnlinesrc",
       "gnGlobalSettings",
-      function (gnOnlinesrc, gnGlobalSettings) {
+      "gnOnlinesrcConfig",
+      function (gnOnlinesrc, gnGlobalSettings, gnOnlinesrcConfig) {
         return {
           restrict: "A",
           scope: {},
@@ -2241,20 +2239,7 @@
             return {
               pre: function preLink(scope) {
                 scope.ctrl = {};
-                scope.searchObj = {
-                  internal: true,
-                  any: "",
-                  defaultParams: {
-                    any: "",
-                    isTemplate: "n",
-                    from: 1,
-                    to: 50
-                  }
-                };
-                scope.searchObj.params = angular.extend(
-                  {},
-                  scope.searchObj.defaultParams
-                );
+                scope.searchObj = gnOnlinesrc.getSearchConfig();
 
                 // Define configuration to restrict search
                 // to a subset of records when an initiative type
@@ -2300,13 +2285,14 @@
 
                   $(scope.popupid).modal("show");
 
-                  scope.$broadcast("resetSearch");
+                  scope.clearSearch();
                   scope.selection = [];
                 });
 
                 // Clear the search params and input
                 scope.clearSearch = function () {
                   $("#siblingdd input").val("");
+                  scope.searchObj.any = "";
                   scope.$broadcast("resetSearch");
                 };
 
@@ -2388,6 +2374,15 @@
                       });
                     }
                   }
+                };
+
+                scope.isInSelection = function (uuid) {
+                  for (var i = 0; i < scope.selection.length; ++i) {
+                    if (scope.selection[i].md._id === uuid) {
+                      return true;
+                    }
+                  }
+                  return false;
                 };
 
                 /**

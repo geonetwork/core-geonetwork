@@ -177,9 +177,6 @@
                 priority="2">
     <xsl:call-template name="iso19115-3-to-dcat-resource"/>
 
-    <xsl:apply-templates mode="iso19115-3-to-eu-dcat-ap"
-                         select="mdb:resourceLineage/*/mrl:source"/>
-
     <xsl:call-template name="rdf-eu-dcat-ap-theme"/>
   </xsl:template>
 
@@ -276,15 +273,6 @@
     </xsl:for-each>
   </xsl:template>
 
-
-  <xsl:template mode="iso19115-3-to-eu-dcat-ap"
-                match="mrl:source">
-    <dct:source>
-      <xsl:call-template name="rdf-object-ref-attribute">
-        <xsl:with-param name="isAbout" select="false()"/>
-      </xsl:call-template>
-    </dct:source>
-  </xsl:template>
 
   <!--
    sh:resultMessage              "maxCount[1]: Invalid cardinality: expected max 1: Got count = 2" ;

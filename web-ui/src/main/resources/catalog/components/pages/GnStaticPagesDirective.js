@@ -153,7 +153,13 @@
                   $scope.page = $scope.pagesMenu[0];
                   $scope.isSubmenu = $scope.page.type === "submenu";
                   $scope.isExternalLink =
-                    $scope.page.format == "LINK" || $scope.page.format == "HTMLPAGE";
+                    $scope.page.format === "LINK" ||
+                    $scope.page.format === "EMAILLINK" ||
+                    $scope.page.format === "HTMLPAGE";
+
+                  if ($scope.page.format === "EMAILLINK") {
+                    $scope.page.link = "mailto:" + $scope.page.link;
+                  }
                 }
               },
               function (response) {

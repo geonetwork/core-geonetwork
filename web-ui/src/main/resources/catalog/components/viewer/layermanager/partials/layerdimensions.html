@@ -2,7 +2,7 @@
   <div
     data-ng-if="dimensions[dimension]"
     data-ng-init="config = dimensions[dimension]"
-    class="input-group input-group-sm"
+    class="input-group input-group-sm width-100"
   >
     <div class="btn-group">
       <div class="btn-group">
@@ -52,7 +52,7 @@
       >
         <i class="fa fa-fw fa-backward"></i>
       </a>
-      <div class="btn-group">
+      <div class="btn-group width-50">
         <button
           type="button"
           class="btn btn-default dropdown-toggle"
@@ -142,6 +142,7 @@
       max="{{config.filteredValues.length - 1}}"
       data-ng-change="setIndex(dimension, config.idx)"
       data-ng-model="config.idx"
+      data-ng-model-options="{ debounce: 500 }"
     />
     <datalist id="tickmarks{{dimension}}">
       <option
