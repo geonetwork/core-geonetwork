@@ -10,3 +10,4 @@
 [submodule "plugins/datahub-integration/geonetwork-ui"]
 	path = plugins/datahub-integration/geonetwork-ui
 	url = https://github.com/geonetwork/geonetwork-ui.git
+	tag = v2.6.0
