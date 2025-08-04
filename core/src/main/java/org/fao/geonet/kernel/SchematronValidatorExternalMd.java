@@ -84,7 +84,7 @@ public class SchematronValidatorExternalMd extends AbstractSchematronValidator {
         for (Schematron schematron : schematronList) {
             final ApplicableSchematron applicable = getApplicableSchematron(md, metadataSchema, schematron, groupOwnerId);
 
-            if (applicable.requirement != SchematronRequirement.DISABLED) {
+            if (applicable.getRequirement() != SchematronRequirement.DISABLED) {
                 if (Log.isDebugEnabled(Geonet.DATA_MANAGER)) {
                     Log.debug(Geonet.DATA_MANAGER, " - rule:" + schematron.getRuleName());
                 }
