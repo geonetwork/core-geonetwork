@@ -49,6 +49,20 @@ public class DatahubController {
         String defaultConfig = FileUtils.readFromInputStream(new FileInputStream(configFile));
         JSONObject body = new JSONObject();
         body.put("defaultConfig", defaultConfig);
+
+        try {
+            File packageJsonFile = new File("web/src/main/geonetwork-ui/package.json");
+            if (packageJsonFile.exists()) {
+                String packageJsonContent = FileUtils.readFromInputStream(new FileInputStream(packageJsonFile));
+                JSONObject packageJson = new JSONObject(packageJsonContent);
+                if (packageJson.has("version")) {
+                    body.put("datahubVersion", packageJson.getString("version"));
+                }
+            }
+        } catch (Exception e) {
+            // Log ou ignorer si le fichier n'est pas trouvé
+        }
+
         return ResponseEntity
                 .ok()
                 .contentType(MediaType.APPLICATION_JSON)
