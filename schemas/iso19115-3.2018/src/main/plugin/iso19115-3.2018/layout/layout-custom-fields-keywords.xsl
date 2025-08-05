@@ -77,7 +77,7 @@
         <!-- Create form for all existing attribute (not in gn namespace)
         and all non existing attributes not already present. -->
         <xsl:apply-templates mode="render-for-field-for-attribute"
-          select="
+                             select="
           @*|
           gn:attribute[not(@name = parent::node()/@*/name())]">
           <xsl:with-param name="ref" select="gn:element/@ref"/>
@@ -109,7 +109,7 @@
       <xsl:otherwise>
         <xsl:call-template name="render-boxed-element">
           <xsl:with-param name="label"
-            select="if ($thesaurusTitle != '')
+                          select="if ($thesaurusTitle != '')
                     then $thesaurusTitle
                     else gn-fn-metadata:getLabel($schema, name(), $labels, name(..), $isoType, $xpath)/label"/>
           <xsl:with-param name="editInfo" select="gn:element"/>
@@ -160,7 +160,7 @@
           get it from the list of thesaurus based on its title.
           -->
         <xsl:variable name="thesaurusInternalKey"
-          select="if ($thesaurusIdentifier)
+                      select="if ($thesaurusIdentifier)
                   then $thesaurusIdentifier
                   else $thesaurusConfig/key"/>
         <xsl:variable name="thesaurusKey"
@@ -182,6 +182,8 @@
                   if ($guiLangId and mri:keyword//*[@locale = concat('#', $guiLangId)][*/text() != ''])
                   then mri:keyword//*[@locale = concat('#', $guiLangId)][. != '']/replace(text(), ',', ',,')
                   else mri:keyword/*[1][. != '']/replace(text(), ',', ',,'), ',')"/>
+        <xsl:variable name="keywordIds"
+                      select="string-join(mri:keyword/*:Anchor/@xlink:href, ',')"/>
 
         <!-- Define the list of transformation mode available. -->
         <xsl:variable name="listOfTransformation"
@@ -203,7 +205,7 @@
         <!-- Current transformation is the editor configuration if only one mode is allowed
          and if not then the mode is based on the XML fragment analysis -->
         <xsl:variable name="transformation"
-          select="if (count($listOfTransformation) = 1)
+                      select="if (count($listOfTransformation) = 1)
                   then $listOfTransformation[1]
                   else if (parent::node()/@xlink:href)
                   then 'to-iso19115-3.2018-keyword-as-xlink'
@@ -253,6 +255,7 @@
              data-thesaurus-title="{$thesaurusTitle}"
              data-thesaurus-key="{$thesaurusKey}"
              data-keywords="{$keywords}"
+             data-keyword-ids="{$keywordIds}"
              data-transformations="{$transformations}"
              data-current-transformation="{$transformation}"
              data-max-tags="{$maxTags}"
