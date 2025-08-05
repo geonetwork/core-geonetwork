@@ -40,7 +40,11 @@
       and https://docs.mlcommons.org/croissant/docs/croissant-spec.html
 
 
-      Tested with https://search.google.com/structured-data/testing-tool
+      Tested with
+      https://search.google.com/structured-data/testing-tool
+      https://huggingface.co/spaces/luisoala/croissant-checker
+
+
 
       TODO: Add support to translation https://bib.schema.org/workTranslation
     -->
@@ -161,7 +165,8 @@
     {
         "@context": {
             "@language": "<xsl:value-of select="util:twoCharLangCode($defaultLanguage)"/>",
-            "@vocab": "http://schema.org/",
+            "@vocab": "https://schema.org/",
+            "schema": "https://schema.org/",
             "sc": "https://schema.org/",
             "cr": "http://mlcommons.org/croissant/",
             "rai": "http://mlcommons.org/croissant/RAI/",
@@ -522,6 +527,7 @@
                     "description":
                     <xsl:apply-templates mode="toJsonLDLocalized" select="cit:description"/>
                 </xsl:if>
+                <!-- At least one of these properties should be defined: ['md5', 'sha256']. -->
                 }
                 <xsl:if test="position() != last()">,</xsl:if>
             </xsl:for-each>
