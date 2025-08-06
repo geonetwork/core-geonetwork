@@ -5,7 +5,7 @@
     3.2
 
 
-If documents are not available, editors can upload attachments to a metadata record. The document is added to the filestore. The filestore can contains any kind of files.
+If documents are not available, editors can upload attachments to a metadata record. The attachment is added to the filestore. The filestore can contain any kind of files.
 
 ![](img/filestore.png)
 
@@ -25,4 +25,10 @@ A file uploaded in this way will be exported in the metadata export file (MEF). 
 
 ## Filestore configuration
 
-By default, the maximum file size is set to 100Mb. This limit is set in `/services/src/main/resources/config-spring-geonetwork.xml` with the parameter `maxUploadSize`.
+By default, the maximum file size is set to 100 MB. This limit is set in `/services/src/main/resources/config-spring-geonetwork.xml` with the parameter `maxUploadSize`.
+
+During startup of the application, this limit can be adjusted by adding the following option to **CATALINA_OPTS**. The value is to be specified in bytes, thus, the following example configures an upload size of maximal 1 GB:
+
+```
+-Dapi.params.maxUploadSize=1000000000
+```
