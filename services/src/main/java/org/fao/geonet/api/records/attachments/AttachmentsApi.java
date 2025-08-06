@@ -307,7 +307,7 @@ public class AttachmentsApi {
             // Spring automatically handles range requests when returning ResponseEntity<Resource> to support resumable downloads.
             return ResponseEntity.ok()
                 .headers(responseHeaders)
-                .body(new PathResource(file.getPath()));
+                .body(new ByteArrayResource(Files.readAllBytes(file.getPath())));
         }
     }
 
