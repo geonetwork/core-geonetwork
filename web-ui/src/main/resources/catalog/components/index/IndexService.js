@@ -68,13 +68,18 @@
                   errorMessages: []
                 };
 
-                messages.forEach(function (msg) {
-                  if (!msg) return;
-                  if (msg.type === "warning") {
-                    report.warningMessages.push(msg);
-                  } else if (msg.type === "error") {
-                    report.errorMessages.push(msg);
-                  }
+                var warningPrefix = "Warning / ";
+
+                report.warningMessages = messages
+                  .filter(function (msg) {
+                    return msg && msg.indexOf(warningPrefix) === 0;
+                  })
+                  .map(function (msg) {
+                    return msg.replace(warningPrefix, "");
+                  });
+
+                report.errorMessages = messages.filter(function (msg) {
+                  return msg && msg.indexOf(warningPrefix) !== 0;
                 });
 
                 return report;
