@@ -76,7 +76,6 @@
                   })
                   .map(function (msg) {
                     return msg.replace(warningPrefix, "");
-
                   });
 
                 report.errorMessages = messages.filter(function (msg) {
