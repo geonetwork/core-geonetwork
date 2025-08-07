@@ -51,6 +51,7 @@ import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.PathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.*;
+import org.springframework.lang.NonNull;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.WebDataBinder;
@@ -277,38 +278,60 @@ public class AttachmentsApi {
 
         ApiUtils.canViewRecord(metadataUuid, request);
 
-        try (Store.ResourceHolder file = store.getResource(context, metadataUuid, resourceId, approved)) {
-            long fileSize = Files.size(file.getPath());
-            long fileLastModified = file.getMetadata().getLastModification().getTime();
-            MediaType fileMediaType = MediaType.parseMediaType(getFileContentType(file.getPath()));
-            String fileETag = "\"" + DigestUtils.md5Hex(file.getMetadata().getFilename() + fileLastModified + fileSize) + "\"";
+        // Get the resource holder for the requested resource
+        Store.ResourceHolder file = store.getResource(context, metadataUuid, resourceId, approved);
 
-            // Set common headers
-            HttpHeaders responseHeaders = new HttpHeaders();
-            responseHeaders.setCacheControl(CacheControl.noCache());
-            responseHeaders.setLastModified(fileLastModified);
-            responseHeaders.setETag(fileETag);
+        // Get the resource properties
+        long fileSize = Files.size(file.getPath());
+        long fileLastModified = file.getMetadata().getLastModification().getTime();
+        MediaType fileMediaType = MediaType.parseMediaType(getFileContentType(file.getPath()));
+        String fileETag = "\"" + DigestUtils.md5Hex(file.getMetadata().getFilename() + fileLastModified + fileSize) + "\"";
 
-            // Check if the request is not modified based on ETag or Last-Modified
-            if (new ServletWebRequest(request).checkNotModified(fileETag, fileLastModified)) {
-                return ResponseEntity.status(HttpStatus.NOT_MODIFIED).headers(responseHeaders).build();
-            }
+        // Set common headers
+        HttpHeaders responseHeaders = new HttpHeaders();
+        responseHeaders.setCacheControl(CacheControl.noCache());
+        responseHeaders.setLastModified(fileLastModified);
+        responseHeaders.setETag(fileETag);
 
-            // Check if the file is an image and if a size is requested
-            if (fileMediaType.getType().equals("image") && size != null) {
-                return serveResizedImage(file.getPath(), file.getMetadata().getFilename(), responseHeaders, size);
-            }
-
-            // Set headers for downloads
-            responseHeaders.setContentType(fileMediaType);
-            responseHeaders.setContentDisposition(ContentDisposition.attachment().filename(file.getMetadata().getFilename()).build());
-            responseHeaders.setContentLength(fileSize);
-
-            // Spring automatically handles range requests when returning ResponseEntity<Resource> to support resumable downloads.
-            return ResponseEntity.ok()
-                .headers(responseHeaders)
-                .body(new ByteArrayResource(Files.readAllBytes(file.getPath())));
+        // Check if the request is not modified based on ETag or Last-Modified
+        if (new ServletWebRequest(request).checkNotModified(fileETag, fileLastModified)) {
+            return ResponseEntity.status(HttpStatus.NOT_MODIFIED).headers(responseHeaders).build();
         }
+
+        // Check if the file is an image and if a size is requested
+        if (fileMediaType.getType().equals("image") && size != null) {
+            return serveResizedImage(file.getPath(), file.getMetadata().getFilename(), responseHeaders, size);
+        }
+
+        // Set headers for downloads
+        responseHeaders.setContentType(fileMediaType);
+        responseHeaders.setContentDisposition(ContentDisposition.attachment().filename(file.getMetadata().getFilename()).build());
+        responseHeaders.setContentLength(fileSize);
+
+        // Wrap a PathResource so that closing its InputStream also closes the holder
+        // Auto-closing will not work here as it will prematurely delete the temporary file for jcloud
+        PathResource resource = new PathResource(file.getPath()) {
+            @Override
+            @NonNull
+            public InputStream getInputStream() throws IOException {
+                InputStream delegate = super.getInputStream();
+                return new FilterInputStream(delegate) {
+                    @Override
+                    public void close() throws IOException {
+                        try {
+                            super.close();
+                        } finally {
+                            file.close();
+                        }
+                    }
+                };
+            }
+        };
+
+        // Spring automatically handles range requests when returning ResponseEntity<Resource> with a PathResource
+        return ResponseEntity.ok()
+            .headers(responseHeaders)
+            .body(resource);
     }
 
 
