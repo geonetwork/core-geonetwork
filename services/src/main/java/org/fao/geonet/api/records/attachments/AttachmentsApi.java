@@ -309,7 +309,7 @@ public class AttachmentsApi {
         responseHeaders.setContentLength(fileSize);
 
         // Wrap a PathResource so that closing its InputStream also closes the holder
-        // Auto-closing will not work here as it will prematurely delete the temporary file for jcloud
+        // Auto-closing will not work here as it will prematurely delete the temporary file for storage implementations that use temporary files.
         PathResource resource = new PathResource(file.getPath()) {
             @Override
             @NonNull
