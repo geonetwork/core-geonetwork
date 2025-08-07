@@ -1208,7 +1208,7 @@ public class SearchManager implements ISearchManager {
     }
 
     public void releaseIndexReader(IndexAndTaxonomy reader) throws InterruptedException, IOException {
-        reader.indexReader.releaseToNRTManager();
+        reader.close();
     }
 
     /**
