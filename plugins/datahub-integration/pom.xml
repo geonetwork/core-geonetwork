@@ -166,6 +166,27 @@
               </resources>
             </configuration>
           </execution>
+          <execution>
+            <id>copy-package-json</id>
+            <phase>generate-resources</phase>
+            <goals>
+              <goal>copy-resources</goal>
+            </goals>
+            <configuration>
+              <overwrite>true</overwrite>
+              <encoding>UTF-8</encoding>
+              <outputDirectory>target/resources/datahub</outputDirectory>
+              <resources>
+                <resource>
+                  <directory>geonetwork-ui</directory>
+                  <includes>
+                    <include>package.json</include>
+                  </includes>
+                  <filtering>false</filtering>
+                </resource>
+              </resources>
+            </configuration>
+          </execution>
         </executions>
       </plugin>
 

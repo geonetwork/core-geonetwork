@@ -50,7 +50,7 @@ public class DatahubController {
         JSONObject body = new JSONObject();
         body.put("defaultConfig", defaultConfig);
 
-        File packageJsonFile = new File("web/src/main/geonetwork-ui/package.json");
+        File packageJsonFile = FileUtils.getFileFromJar( DATAHUB_FILES_PATH + "package.json");
         String packageJsonContent = FileUtils.readFromInputStream(new FileInputStream(packageJsonFile));
         JSONObject packageJson = new JSONObject(packageJsonContent);
         body.put("datahubVersion", packageJson.getString("version"));
