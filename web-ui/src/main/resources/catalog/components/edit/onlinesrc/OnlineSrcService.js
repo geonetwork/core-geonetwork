@@ -488,6 +488,10 @@
           openCb[type] = fn;
         },
 
+        refresh: function () {
+          refreshForm(this);
+        },
+
         /**
          * @ngdoc method
          * @methodOf gn_onlinesrc.service:gnOnlinesrc

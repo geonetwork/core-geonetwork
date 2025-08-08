@@ -274,4 +274,13 @@ public class ResourceLoggerStore extends AbstractStore {
         }
 
     }
+
+    @Override
+    public MetadataResource renameResource(ServiceContext context, String metadataUuid, String resourceId, String newName, Boolean approved) throws Exception {
+        if (decoratedStore != null) {
+            return decoratedStore.renameResource(context, metadataUuid, resourceId, newName, approved);
+        }
+
+        return null;
+    }
 }
