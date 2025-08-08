@@ -49,6 +49,12 @@ public class DatahubController {
         String defaultConfig = FileUtils.readFromInputStream(new FileInputStream(configFile));
         JSONObject body = new JSONObject();
         body.put("defaultConfig", defaultConfig);
+
+        File packageJsonFile = FileUtils.getFileFromJar( DATAHUB_FILES_PATH + "package.json");
+        String packageJsonContent = FileUtils.readFromInputStream(new FileInputStream(packageJsonFile));
+        JSONObject packageJson = new JSONObject(packageJsonContent);
+        body.put("datahubVersion", packageJson.getString("version"));
+
         return ResponseEntity
                 .ok()
                 .contentType(MediaType.APPLICATION_JSON)

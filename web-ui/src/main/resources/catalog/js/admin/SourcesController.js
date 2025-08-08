@@ -103,6 +103,7 @@
           .then(function (response) {
             $scope.datahubAvailable = true;
             $scope.defaultConfig = response.data.defaultConfig;
+            $scope.datahubVersion = response.data.datahubVersion;
           })
           .catch(function () {
             $scope.datahubAvailable = false;

@@ -163,6 +163,13 @@
                   <directory>geonetwork-ui/dist/apps/datahub</directory>
                   <filtering>false</filtering>
                 </resource>
+                <resource>
+                  <directory>geonetwork-ui</directory>
+                  <includes>
+                    <include>package.json</include>
+                  </includes>
+                  <filtering>false</filtering>
+                </resource>
               </resources>
             </configuration>
           </execution>
