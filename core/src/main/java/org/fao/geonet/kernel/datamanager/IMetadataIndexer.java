@@ -32,6 +32,7 @@ import org.jdom.Element;
 import org.springframework.data.jpa.domain.Specification;
 
 import jeeves.server.context.ServiceContext;
+import org.springframework.transaction.TransactionStatus;
 
 /**
  * Interface to handle all indexing operations
@@ -76,6 +77,16 @@ public interface IMetadataIndexer {
      * @param metadataIds the metadata ids to index
      */
     void batchIndexInThreadPool(ServiceContext context, List<?> metadataIds);
+
+    /**
+     * Index multiple metadata in a separate thread. Wait until the current transaction commits before starting threads (to make sure that
+     * all metadata are committed).
+     *
+     * @param context context object
+     * @param metadataIds the metadata ids to index
+     * @param transactionStatus status of transaction which must complete before indexation take place
+     */
+    void batchIndexInThreadPool(ServiceContext context, List<?> metadataIds, TransactionStatus transactionStatus);
 
     /**
      * Is the platform currently indexing?
