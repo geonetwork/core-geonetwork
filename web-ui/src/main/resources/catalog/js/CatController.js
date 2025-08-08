@@ -776,6 +776,7 @@
                 class: "fa-file-code-o"
               }*/
             ],
+            emailRecordViewFormatter: "",
             // Deprecated (use configuration on resultViewTpls)
             grid: {
               related: ["parent", "children", "services", "datasets"]
@@ -1307,6 +1308,7 @@
           "resultViewTpls",
           "formatter",
           "downloadFormatter",
+          "emailRecordViewFormatter",
           "related",
           "linkTypes",
           "usersearches",
