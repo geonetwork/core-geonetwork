@@ -1,0 +1,161 @@
+<div data-ng-show="validationReport">
+  <div
+    class="panel panel-default"
+    data-ng-class="validationReportWarning ? 'panel-warning' : 'panel-success'"
+  >
+    <div class="panel-heading gn-padding-left gn-padding-right">
+      <strong>
+        <span data-translate="">batchValidationReport</span>
+      </strong>
+    </div>
+    <div
+      class="
+        panel-body
+        gn-nopadding-top gn-nopadding-right gn-nopadding-bottom gn-nopadding-left
+      "
+    >
+      <table class="table table-striped">
+        <tr>
+          <td class="gn-padding-left">
+            {{('batchValidationReportRecordsToValidate') | translate}}
+          </td>
+          <td class="text-right gn-padding-right">
+            {{validationReport.numberOfRecords}}
+          </td>
+        </tr>
+        <tr>
+          <td class="gn-padding-left">
+            {{('batchValidationReportRecordsValidated') | translate}}
+          </td>
+          <td class="text-right gn-padding-right">
+            {{validationReport.numberOfRecordsProcessed}}
+          </td>
+        </tr>
+        <tr>
+          <td class="gn-padding-left">
+            {{('batchValidationReportValidRecords') | translate}}
+          </td>
+          <td class="text-right gn-padding-right">
+            {{validationReport.numberOfValidRecords}}
+          </td>
+        </tr>
+        <tr>
+          <td class="gn-padding-left">
+            {{('batchValidationReportRecordsWithErrors') | translate}}
+          </td>
+          <td class="text-right gn-padding-right">
+            {{validationReport.numberOfInvalidRecords}}
+          </td>
+        </tr>
+        <tr>
+          <td class="gn-padding-left">
+            {{('batchValidationReportRecordsWithWarnings') | translate}}
+          </td>
+          <td class="text-right gn-padding-right">
+            {{validationReport.numberOfRecordsWithValidationWarnings}}
+          </td>
+        </tr>
+        <tr>
+          <td class="gn-padding-left">
+            {{('batchValidationReportRecordsNotFound') | translate}}
+          </td>
+          <td class="text-right gn-padding-right">
+            {{validationReport.numberOfNullRecords}}
+          </td>
+        </tr>
+        <tr>
+          <td class="gn-padding-left">
+            {{('batchValidationReportRecordsNotEditable') | translate}}
+          </td>
+          <td class="text-right gn-padding-right">
+            {{validationReport.numberOfRecordsNotEditable}}
+          </td>
+        </tr>
+        <tr>
+          <td class="gn-padding-left">
+            {{('batchValidationReportDuration') | translate}}
+          </td>
+          <td class="text-right gn-padding-right">
+            ({{validationReport.startIsoDateTime}}
+            <span data-ng-show="validationReport.running">...</span>
+            <span data-ng-hide="validationReport.running">
+              - {{validationReport.endIsoDateTime}}</span
+            >) = {{validationReport.totalTimeInSeconds}}s
+          </td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+  <div
+    class="panel panel-default panel-danger"
+    data-ng-show="validationReport.numberOfInvalidRecords > 0"
+  >
+    <div class="panel-heading gn-padding-left gn-padding-right">
+      <span data-translate="">batchValidationReportValidationErrors</span>
+    </div>
+    <div
+      class="
+        panel-body
+        gn-nopadding-top gn-nopadding-right gn-nopadding-bottom gn-nopadding-left
+      "
+    >
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th class="gn-padding-left" data-translate="">
+              batchValidationReportMetadataId
+            </th>
+            <th data-translate="">batchValidationReportSchematron</th>
+            <th data-translate="">batchValidationReportPattern</th>
+            <th data-translate="">batchValidationReportError</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr data-ng-repeat="error in flatValidationErrors">
+            <td class="gn-padding-left">#{{error.metadataId}}</td>
+            <td>{{error.schematron}}</td>
+            <td>{{error.pattern}}</td>
+            <td>{{error.message}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div
+    class="panel panel-default panel-warning"
+    data-ng-show="validationReport.numberOfRecordsWithValidationWarnings > 0"
+  >
+    <div class="panel-heading gn-padding-left gn-padding-right">
+      <span data-translate="">batchValidationReportValidationWarnings</span>
+    </div>
+    <div
+      class="
+        panel-body
+        gn-nopadding-top gn-nopadding-right gn-nopadding-bottom gn-nopadding-left
+      "
+    >
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th class="gn-padding-left" data-translate="">
+              batchValidationReportMetadataId
+            </th>
+            <th data-translate="">batchValidationReportSchematron</th>
+            <th data-translate="">batchValidationReportPattern</th>
+            <th data-translate="">batchValidationReportWarning</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr data-ng-repeat="warning in flatValidationWarnings">
+            <td class="gn-padding-left">#{{warning.metadataId}}</td>
+            <td>{{warning.schematron}}</td>
+            <td>{{warning.pattern}}</td>
+            <td>{{warning.message}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
