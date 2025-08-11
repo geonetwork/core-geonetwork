@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2021 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2023 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -1676,13 +1676,6 @@
                */
               scope.$watchCollection("params.selectedLayers", function (n, o) {
                 if (
-                  scope.config &&
-                  scope.config.wmsResources.addLayerNamesMode != "resourcename"
-                ) {
-                  return;
-                }
-
-                if (
                   o !== n &&
                   scope.params.selectedLayers &&
                   scope.params.selectedLayers.length > 0
@@ -1698,19 +1691,67 @@
                     descs = [];
 
                   angular.forEach(scope.params.selectedLayers, function (layer) {
-                    names.push(layer.Name || layer.name);
-                    descs.push(layer.Title || layer.title);
+                    if (scope.config.wmsResources.addLayerNamesMode == "resourcename") {
+                      names.push(layer.Name || layer.name);
+                      descs.push(layer.Title || layer.title);
+                    } else {
+                      // In resourceurl mode check with WMS field use for the resource name
+                      // and the resource description
+                      if (scope.config.wmsResources.resourceName === "layerName") {
+                        names.push(layer.Name || layer.name);
+                      } else if (
+                        scope.config.wmsResources.resourceName === "layerTitle"
+                      ) {
+                        names.push(layer.Title || layer.title);
+                      }
+
+                      if (scope.config.wmsResources.resourceDescription === "layerName") {
+                        descs.push(layer.Name || layer.name);
+                      } else if (
+                        scope.config.wmsResources.resourceDescription === "layerTitle"
+                      ) {
+                        descs.push(layer.Title || layer.title);
+                      }
+                    }
                   });
 
-                  if (scope.isMdMultilingual) {
-                    var langCode = scope.mdLangs[scope.mdLang];
-                    scope.params.name[langCode] = names.join(",");
-                    scope.params.desc[langCode] = descs.join(",");
+                  if (scope.config.wmsResources.addLayerNamesMode == "resourcename") {
+                    if (scope.isMdMultilingual) {
+                      var langCode = scope.mdLangs[scope.mdLang];
+                      scope.params.name[langCode] = names.join(",");
+                      scope.params.desc[langCode] = descs.join(",");
+                    } else {
+                      angular.extend(scope.params, {
+                        name: names.join(","),
+                        desc: descs.join(",")
+                      });
+                    }
                   } else {
-                    angular.extend(scope.params, {
-                      name: names.join(","),
-                      desc: descs.join(",")
-                    });
+                    if (scope.isMdMultilingual) {
+                      if (names.length > 0) {
+                        angular.forEach(scope.mdLangs, function (value, key) {
+                          scope.params.name[value] = names.join(",");
+                        });
+                      }
+
+                      if (descs.length > 0) {
+                        angular.forEach(scope.mdLangs, function (value, key) {
+                          scope.params.desc[value] = descs.join(",");
+                        });
+                      }
+                    } else {
+                      if (names.length > 0) {
+                        angular.extend(scope.params, {
+                          name: names.join(",")
+                        });
+                      }
+
+                      if (descs.length > 0) {
+                        angular.extend(scope.params, {
+                          desc: descs.join(",")
+                        });
+                      }
+                    }
                   }
                 }
               });
