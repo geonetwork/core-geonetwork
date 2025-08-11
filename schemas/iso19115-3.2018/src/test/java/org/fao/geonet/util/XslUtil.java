@@ -22,11 +22,29 @@
  */
 package org.fao.geonet.util;
 
+import org.jsoup.Jsoup;
+
+/**
+ * Copy of some utility functions required for testing XSL files.
+ * Dependency to XslUtil in core would create a circular dependency.
+ */
 public class XslUtil {
     public static String twoCharLangCode(String iso3code) {
         return iso3code.substring(0, 2);
     }
     public static String threeCharLangCode(String iso2code) {
         return "fre";
+    }
+    public static String htmlElement2textReplacer(String html) {
+        return html
+            .replaceAll("<br */?>", System.getProperty("line.separator"))
+            .replaceAll("<li>(.*)</li>", System.getProperty("line.separator") + "* $1");
+    }
+    public static String html2text(String html) {
+        return Jsoup.parse(html).wholeText();
+    }
+    public static String html2text(String html, boolean substituteHtmlToTextLayoutElement) {
+        return html2text(
+            substituteHtmlToTextLayoutElement ? htmlElement2textReplacer(html) : html);
     }
 }
