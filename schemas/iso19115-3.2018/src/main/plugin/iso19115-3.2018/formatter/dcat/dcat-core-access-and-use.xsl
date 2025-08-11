@@ -142,7 +142,7 @@
                             select="replace($httpUriInAnchorOrText,'https?://','')"/>
               <xsl:variable name="euDcatLicense"
                             select="$euLicenses/rdf:RDF/skos:Concept[
-                                                  matches(skos:exactMatch/@rdf:resource,
+                                                  some $match in skos:exactMatch satisfies matches($match/@rdf:resource,
                                                           concat('https?://', $licenseUriWithoutHttp, '/?'))
                                                   or matches(@rdf:about,
                                                           concat('https?://', $licenseUriWithoutHttp, '/?'))]"/>
