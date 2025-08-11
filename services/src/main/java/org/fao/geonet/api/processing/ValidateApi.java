@@ -23,8 +23,7 @@
 
 package org.fao.geonet.api.processing;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -35,6 +34,7 @@ import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
+import org.fao.geonet.api.processing.report.MetadataValidationProcessingReport;
 import org.fao.geonet.api.processing.report.SimpleMetadataProcessingReport;
 import org.fao.geonet.api.processing.report.registry.IProcessingReportRegistry;
 import org.fao.geonet.domain.AbstractMetadata;
@@ -53,9 +53,7 @@ import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.MetadataValidationRepository;
 import org.fao.geonet.kernel.search.index.BatchOpsMetadataReindexer;
-import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
-import org.jdom.Namespace;
 import org.jdom.filter.Filter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -72,8 +70,6 @@ import javax.annotation.PostConstruct;
 import javax.management.MalformedObjectNameException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.util.ArrayDeque;
-import java.util.Set;
 
 import static org.fao.geonet.api.ApiParams.*;
 import static org.fao.geonet.api.records.InspireValidationApi.API_PARAM_INSPIRE_VALIDATION_MODE;
@@ -143,7 +139,7 @@ public class ValidateApi {
     })
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
-    public SimpleMetadataProcessingReport validateRecords(
+    public MetadataValidationProcessingReport validateRecords(
         @Parameter(description = API_PARAM_RECORD_UUIDS_OR_SELECTION,
             required = false,
             example = "")
@@ -168,8 +164,8 @@ public class ValidateApi {
     ) throws Exception {
         UserSession userSession = ApiUtils.getUserSession(session);
 
-        SimpleMetadataProcessingReport report =
-            new SimpleMetadataProcessingReport();
+        MetadataValidationProcessingReport report =
+            new MetadataValidationProcessingReport();
         try {
             ApplicationContext applicationContext = ApplicationContextHolder.get();
             ServiceContext serviceContext = ApiUtils.createServiceContext(request);
@@ -197,28 +193,23 @@ public class ValidateApi {
                         } else {
                             Pair<Element, String> validationPair = validator.doValidate(userSession, record.getDataInfo().getSchemaId(), Integer.toString(record.getId()), xmlSerializer.select(serviceContext, String.valueOf(record.getId())), serviceContext.getLanguage(), false);
                             boolean isValid = !validationPair.one().getDescendants(ErrorFinder).hasNext();
+                            Element schemaTronReport = validationPair.one();
+                            if (schemaTronReport != null) {
+                                // If the schematron report is not null, add any warnings to the MetadataValidationProcessingReport
+                                report.addAllReportsMatchingRequirement(record, schemaTronReport, SchematronRequirement.REPORT_ONLY);
+                            }
                             if (isValid) {
-                                report.addMetadataInfos(record, "Is valid");
+                                // If the record is valid, we add it to the valid metadata list
+                                report.addValidMetadata(record);
                                 new RecordValidationTriggeredEvent(record.getId(), ApiUtils.getUserSession(request.getSession()).getUserIdAsInt(), "1").publish(applicationContext);
                             } else {
-                                report.addMetadataError(record, "(" + record.getUuid() + ") Is invalid");
-                                Element schemaTronReport = validationPair.one();
+                                // If the record is not valid, we add it to the invalid metadata list
+                                if (!report.getInvalidMetadata().containsKey(record.getId())) {
+                                    report.addInvalidMetadata(record);
+                                }
                                 if (schemaTronReport != null) {
-                                    List<Namespace> theNSs = new ArrayList<Namespace>();
-                                    theNSs.add(Namespace.getNamespace("geonet", "http://www.fao.org/geonetwork"));
-                                    theNSs.add(Namespace.getNamespace("svrl", "http://purl.oclc.org/dsdl/svrl"));
-
-                                    // Extract all the know errors that exists in the report as List of Text
-                                    List<?> schemaTronReportErrors = Xml.selectNodes(schemaTronReport,
-                                        "geonet:xsderrors/geonet:error/geonet:message[normalize-space(.) != '']" +
-                                            "| geonet:schematronerrors/geonet:report[@geonet:required = '" + SchematronRequirement.REQUIRED + "']/svrl:schematron-output/svrl:failed-assert/svrl:text[normalize-space(.) != '']" +
-                                            "| geonet:schematronerrors/geonet:report[@geonet:required = '" + SchematronRequirement.REQUIRED + "']/geonet:schematronVerificationError[normalize-space(.) != '']",
-                                        theNSs);
-
-                                    for (Object schemaTronReportError :schemaTronReportErrors) {
-                                        // Add normalized string to the report.
-                                        report.addMetadataError(record, Xml.selectString((Element) schemaTronReportError, "normalize-space(.)",  theNSs));
-                                    }
+                                    // If the schematron report is not null, add any errors to the MetadataValidationProcessingReport
+                                    report.addAllReportsMatchingRequirement(record, schemaTronReport, SchematronRequirement.REQUIRED);
                                 }
 
                                 new RecordValidationTriggeredEvent(record.getId(), ApiUtils.getUserSession(request.getSession()).getUserIdAsInt(), "0").publish(applicationContext);
