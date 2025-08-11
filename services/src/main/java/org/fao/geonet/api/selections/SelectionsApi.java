@@ -22,12 +22,20 @@
  */
 package org.fao.geonet.api.selections;
 
+import co.elastic.clients.elasticsearch.core.SearchResponse;
+import co.elastic.clients.elasticsearch.core.search.Hit;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jeeves.server.UserSession;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
+import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.SelectionManager;
+import org.fao.geonet.kernel.search.EsSearchManager;
+import org.fao.geonet.utils.Log;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -36,11 +44,17 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import static org.fao.geonet.api.ApiParams.API_PARAM_RECORD_UUIDS;
+import static org.fao.geonet.kernel.SelectionManager.DEFAULT_MAXHITS;
+import static org.fao.geonet.kernel.search.EsSearchManager.FIELDLIST_UUID;
 
 /**
  * Select a list of elements stored in session.
@@ -52,6 +66,9 @@ import static org.fao.geonet.api.ApiParams.API_PARAM_RECORD_UUIDS;
     description = "Selection related operations")
 @Controller("selections")
 public class SelectionsApi {
+
+    @Autowired
+    private EsSearchManager esSearchManager;
 
     @io.swagger.v3.oas.annotations.Operation(summary = "Get current selections")
     @RequestMapping(
@@ -178,5 +195,72 @@ public class SelectionsApi {
             ApiUtils.createServiceContext(request));
 
         return new ResponseEntity<>(nbSelected, HttpStatus.OK);
+    }
+
+    @io.swagger.v3.oas.annotations.Operation(summary = "Get current selection resource types")
+    @RequestMapping(
+        method = RequestMethod.GET,
+        value = "/{bucket}/statistics",
+        produces = {
+            MediaType.APPLICATION_JSON_VALUE
+        })
+    public
+    @ResponseBody
+    @ResponseStatus(HttpStatus.OK)
+    Map<String, Integer> getSelectionFieldStatistics(
+        @Parameter(description = "Bucket name",
+            required = true,
+            example = "metadata")
+        @PathVariable
+        String bucket,
+        @Parameter(description = "Field name to get the statistics",
+            required = true,
+            example = "resourceType")
+        @RequestParam
+        String field,
+        @Parameter(hidden = true)
+        HttpSession httpSession
+    )
+        throws Exception {
+        SelectionManager selectionManager =
+            SelectionManager.getManager(ApiUtils.getUserSession(httpSession));
+
+        Map<String, Integer> resourceTypes = new HashMap<>();
+
+        // TODO: Support additional fields
+        if (!field.equals("resourceType")) {
+            field = "resourceType";
+        }
+
+        synchronized (selectionManager.getSelection(bucket)) {
+            UserSession session = ApiUtils.getUserSession(httpSession);
+            JsonNode request = (JsonNode) session.getProperty(Geonet.Session.SEARCH_REQUEST + bucket);
+            if (request != null) {
+                final SearchResponse searchResponse;
+                Set<String> fields = new HashSet<>();
+                fields.addAll(FIELDLIST_UUID);
+                fields.add(field);
+
+                try {
+                    searchResponse = esSearchManager.query(request.get("query"), fields, 0, DEFAULT_MAXHITS);
+
+                    ObjectMapper objectMapper = new ObjectMapper();
+                    for (Hit h : (List<Hit>) searchResponse.hits().hits()) {
+                        List<String> resourceTypesList = (ArrayList<String>) objectMapper.convertValue(h.source(), Map.class).get("resourceType");
+
+                        resourceTypesList.forEach(resourceType -> {
+                            int resourceTypeCount = resourceTypes.getOrDefault(resourceType, 0);
+                            resourceTypes.put(resourceType, resourceTypeCount + 1);
+                        });
+                    }
+
+                } catch (Exception e) {
+                    Log.error(Geonet.GEONETWORK,
+                        "Select all - query error: " + e.getMessage(), e);
+                }
+            }
+
+            return resourceTypes;
+        }
     }
 }
