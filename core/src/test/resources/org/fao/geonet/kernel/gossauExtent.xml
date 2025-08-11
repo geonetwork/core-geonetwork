@@ -1,0 +1,55 @@
+<gmd:EX_Extent xmlns:gmd="http://www.isotc211.org/2005/gmd">
+  <gmd:description xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="gmd:PT_FreeText_PropertyType">
+    <gco:CharacterString xmlns:gco="http://www.isotc211.org/2005/gco">Gossau (ZH)</gco:CharacterString>
+    <gmd:PT_FreeText>
+      <gmd:textGroup>
+        <gmd:LocalisedCharacterString locale="#EN">Gossau (ZH)</gmd:LocalisedCharacterString>
+      </gmd:textGroup>
+      <gmd:textGroup>
+        <gmd:LocalisedCharacterString locale="#DE">Gossau (ZH)</gmd:LocalisedCharacterString>
+      </gmd:textGroup>
+      <gmd:textGroup>
+        <gmd:LocalisedCharacterString locale="#FR">Gossau (ZH)</gmd:LocalisedCharacterString>
+      </gmd:textGroup>
+      <gmd:textGroup>
+        <gmd:LocalisedCharacterString locale="#IT">Gossau (ZH)</gmd:LocalisedCharacterString>
+      </gmd:textGroup>
+      <gmd:textGroup>
+        <gmd:LocalisedCharacterString locale="#RM">Gossau (ZH)</gmd:LocalisedCharacterString>
+      </gmd:textGroup>
+    </gmd:PT_FreeText>
+  </gmd:description>
+  <gmd:geographicElement>
+    <gmd:EX_GeographicBoundingBox>
+      <gmd:westBoundLongitude>
+        <gco:Decimal xmlns:gco="http://www.isotc211.org/2005/gco">8.726725</gco:Decimal>
+      </gmd:westBoundLongitude>
+      <gmd:eastBoundLongitude>
+        <gco:Decimal xmlns:gco="http://www.isotc211.org/2005/gco">8.812675</gco:Decimal>
+      </gmd:eastBoundLongitude>
+      <gmd:southBoundLatitude>
+        <gco:Decimal xmlns:gco="http://www.isotc211.org/2005/gco">47.276073</gco:Decimal>
+      </gmd:southBoundLatitude>
+      <gmd:northBoundLatitude>
+        <gco:Decimal xmlns:gco="http://www.isotc211.org/2005/gco">47.327496</gco:Decimal>
+      </gmd:northBoundLatitude>
+    </gmd:EX_GeographicBoundingBox>
+  </gmd:geographicElement>
+  <gmd:geographicElement>
+    <gmd:EX_BoundingPolygon>
+      <gmd:polygon>
+        <gml:MultiSurface xmlns:gml="http://www.opengis.net/gml/3.2" xmlns="http://www.opengis.net/gml/3.2" gml:id="d448548e77" srsDimension="2">
+          <gml:surfaceMember>
+            <gml:Polygon gml:id="d448548e79">
+              <gml:exterior>
+                <gml:LinearRing>
+                  <gml:posList>8.7637299 47.3268749 8.7716608 47.3223397 8.7761428 47.3164226 8.7793514 47.3177707 8.7805659 47.3160923 8.7849611 47.3157083 8.7867996 47.3115128 8.7948856 47.3070011 8.7931779 47.3058967 8.7966933 47.3006018 8.8061037 47.2993661 8.808769 47.296042 8.8126748 47.2921273 8.8080764 47.2927578 8.8008587 47.2897127 8.8065674 47.2859838 8.8045613 47.2845683 8.8085347 47.2827939 8.7984941 47.2794134 8.7941528 47.2760731 8.7901446 47.276471 8.7876779 47.2824281 8.7800721 47.2832995 8.7725564 47.2893779 8.7627959 47.2929808 8.7567099 47.2928256 8.7560084 47.2911874 8.7496748 47.2927889 8.7444783 47.2900771 8.7394846 47.2924095 8.7371147 47.2890178 8.7302765 47.2899942 8.7267245 47.2923728 8.7290055 47.2953879 8.7357834 47.2962564 8.7360921 47.2948136 8.7401337 47.2973408 8.7374786 47.3012569 8.7409194 47.30353 8.7294691 47.3085433 8.7369859 47.312534 8.7344737 47.3147482 8.7418237 47.3178139 8.7410944 47.3215373 8.7453878 47.3245293 8.7574078 47.327496 8.7637299 47.3268749</gml:posList>
+                </gml:LinearRing>
+              </gml:exterior>
+            </gml:Polygon>
+          </gml:surfaceMember>
+        </gml:MultiSurface>
+      </gmd:polygon>
+    </gmd:EX_BoundingPolygon>
+  </gmd:geographicElement>
+</gmd:EX_Extent>
