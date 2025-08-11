@@ -602,8 +602,8 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
             return String.valueOf(finalId);
         } catch (Throwable t) {
             Log.error(Geonet.DATA_MANAGER, "Editing instance creation failed", t);
+            throw t;
         }
-        return templateId;
     }
 
     @Override
