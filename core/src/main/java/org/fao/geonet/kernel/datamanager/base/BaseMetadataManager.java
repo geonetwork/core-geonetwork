@@ -304,6 +304,7 @@ public class BaseMetadataManager implements IMetadataManager {
         int intId = Integer.parseInt(id);
         metadataRatingByIpRepository.deleteAllById_MetadataId(intId);
         metadataValidationRepository.deleteAllById_MetadataId(intId);
+        metadataStatusRepository.deleteAllById_MetadataId(intId);
         userSavedSelectionRepository.deleteAllByUuid(metadataUtils.getMetadataUuid(id));
 
         // Logical delete for metadata file uploads
