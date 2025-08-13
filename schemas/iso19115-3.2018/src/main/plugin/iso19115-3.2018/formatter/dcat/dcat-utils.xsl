@@ -8,6 +8,7 @@
                 xmlns:lan="http://standards.iso.org/iso/19115/-3/lan/1.0"
                 xmlns:cit="http://standards.iso.org/iso/19115/-3/cit/2.0"
                 xmlns:mri="http://standards.iso.org/iso/19115/-3/mri/1.0"
+                xmlns:gmd="http://www.isotc211.org/2005/gmd"
                 xmlns:dct="http://purl.org/dc/terms/"
                 xmlns:dcat="http://www.w3.org/ns/dcat#"
                 xmlns:foaf="http://xmlns.com/foaf/0.1/"
@@ -17,10 +18,150 @@
                 xmlns:owl="http://www.w3.org/2002/07/owl#"
                 xmlns:adms="http://www.w3.org/ns/adms#"
                 xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+                xmlns:mdb="http://standards.iso.org/iso/19115/-3/mdb/2.0"
                 xmlns:util="java:org.fao.geonet.util.XslUtil"
                 xmlns:gn-fn-dcat="http://geonetwork-opensource.org/xsl/functions/dcat"
                 xmlns:xlink="http://www.w3.org/1999/xlink"
                 exclude-result-prefixes="#all">
+
+  <xsl:variable name="resourcePrefix"
+                select="concat(util:getSettingValue('nodeUrl'), 'api/records/')"
+                as="xs:string"/>
+
+
+  <!-- Extract languages from ISO19115.3-2018 mdb:MD_Metadata -->
+  <xsl:template mode="get-language"
+                match="mdb:MD_Metadata"
+                as="node()*">
+    <xsl:variable name="defaultLanguage"
+                  select="$metadata/mdb:defaultLocale/*"/>
+    <xsl:for-each select="$defaultLanguage">
+      <xsl:variable name="iso3code"
+                    as="xs:string?"
+                    select="lan:language/*/@codeListValue"/>
+      <language id="{@id}"
+                iso3code="{$iso3code}"
+                iso2code="{util:twoCharLangCode($iso3code)}"
+                default=""/>
+    </xsl:for-each>
+    <xsl:for-each select="$metadata/mdb:otherLocale/*[not(@id = $defaultLanguage/@id)]">
+      <language id="{@id}"
+                iso3code="{lan:language/*/@codeListValue}"
+                iso2code="{util:twoCharLangCode(lan:language/*/@codeListValue)}"/>
+    </xsl:for-each>
+  </xsl:template>
+
+  <!-- Extract languages from ISO19139 gmd:MD_Metadata -->
+  <xsl:template mode="get-language"
+                match="gmd:MD_Metadata"
+                as="node()*">
+    <xsl:variable name="defaultLanguage"
+                  select="$metadata/gmd:language"/>
+
+    <xsl:for-each select="$defaultLanguage">
+      <xsl:variable name="iso3code"
+                    as="xs:string?"
+                    select="gmd:LanguageCode/@codeListValue"/>
+      <language id="{util:twoCharLangCode($iso3code)}"
+                iso3code="{$iso3code}"
+                iso2code="{util:twoCharLangCode($iso3code)}"
+                default=""/>
+    </xsl:for-each>
+    <xsl:for-each select="$metadata/gmd:locale/*[not(@id = $defaultLanguage/@id)]">
+      <language id="{util:twoCharLangCode(gmd:languageCode/*/@codeListValue)}"
+                iso3code="{gmd:languageCode/*/@codeListValue}"
+                iso2code="{util:twoCharLangCode(gmd:languageCode/*/@codeListValue)}"/>
+    </xsl:for-each>
+  </xsl:template>
+
+  <xsl:variable name="languages"
+                as="node()*">
+    <xsl:apply-templates mode="get-language"
+                         select="$metadata"/>
+  </xsl:variable>
+
+  <!--
+  RDF Property:	dcterms:identifier
+  Definition:	A unique identifier of the resource being described or cataloged.
+  Range:	rdfs:Literal
+  Usage note:	The identifier might be used as part of the IRI of the resource, but still having it represented explicitly is useful.
+  Usage note:	The identifier is a text string which is assigned to the resource to provide an unambiguous reference within a particular context.
+  -->
+  <xsl:template mode="iso19115-3-to-dcat"
+                name="iso19115-3-to-dcat-identifier"
+                match="mdb:metadataIdentifier
+                      |mdb:identificationInfo/*/mri:citation/*/cit:identifier
+                      |cit:identifier">
+    <xsl:variable name="code"
+                  select="*/mcc:code/*/text()"/>
+    <xsl:variable name="codeAnchor"
+                  select="*/mcc:code/*/@xlink:href"/>
+    <xsl:variable name="codeSpace"
+                  select="*/mcc:codeSpace/*/text()"/>
+    <xsl:variable name="isUrn"
+                  as="xs:boolean"
+                  select="starts-with($codeSpace, 'urn:')"/>
+    <xsl:variable name="separator"
+                  as="xs:string"
+                  select="if ($isUrn) then ':' else '/'"/>
+
+    <xsl:variable name="codeWithPrefix"
+                  select="if (string($codeSpace))
+                          then concat($codeSpace,
+                                      (if (ends-with($codeSpace, $separator)) then '' else $separator),
+                                      $code)
+                          else if ($codeAnchor) then $codeAnchor
+                          else $code"/>
+
+    <xsl:variable name="codeType"
+                  select="if (matches($codeWithPrefix, '^https?://|urn:'))
+                          then 'anyURI' else 'string'"/>
+    <dct:identifier rdf:datatype="http://www.w3.org/2001/XMLSchema#{$codeType}">
+      <xsl:value-of select="$codeWithPrefix"/>
+    </dct:identifier>
+  </xsl:template>
+
+
+  <xsl:function name="gn-fn-dcat:getRecordUri" as="xs:string">
+    <xsl:param name="metadata" as="node()"/>
+
+    <xsl:variable name="metadataLinkage"
+                  select="$metadata/mdb:metadataLinkage/*/cit:linkage/(gco:CharacterString|gcx:Anchor)/text()"
+                  as="xs:string?"/>
+
+    <xsl:variable name="metadataIdentifier"
+                  as="node()?">
+      <xsl:apply-templates mode="iso19115-3-to-dcat"
+                           select="$metadata/mdb:metadataIdentifier"/>
+    </xsl:variable>
+    <!-- TODO: Should we consider DOI? It may be encoded in metadata linkage (not available in ISO19139) -->
+
+    <xsl:value-of select="if($metadataLinkage) then $metadataLinkage
+                            else if (string($metadataIdentifier) and starts-with($metadataIdentifier, 'http')) then $metadataIdentifier
+                            else if (string($metadataIdentifier)) then concat($resourcePrefix, encode-for-uri($metadataIdentifier))
+                            else concat($resourcePrefix, encode-for-uri($metadata/mdb:metadataIdentifier/*/mcc:code/*/text()))"
+    />
+  </xsl:function>
+
+  <xsl:function name="gn-fn-dcat:getResourceUri" as="xs:string">
+    <xsl:param name="metadata" as="node()"/>
+
+    <xsl:variable name="catalogRecordUri"
+                  select="gn-fn-dcat:getRecordUri($metadata)"
+                  as="xs:string"/>
+
+    <xsl:variable name="resourceIdentifier"
+                  as="node()?">
+      <xsl:for-each select="($metadata/mdb:identificationInfo/*/mri:citation/*/cit:identifier[starts-with(*/mcc:codeSpace/*/text(), 'http')])[1]">
+        <xsl:call-template name="iso19115-3-to-dcat-identifier"/>
+      </xsl:for-each>
+    </xsl:variable>
+
+    <xsl:value-of select="if(string($resourceIdentifier) and starts-with($resourceIdentifier, 'http')) then $resourceIdentifier
+                                      else concat($catalogRecordUri, '#resource')"
+    />
+  </xsl:function>
+
 
   <xsl:template name="create-node-with-info">
     <xsl:param name="message" as="xs:string?"/>
