@@ -114,7 +114,11 @@
         </thead>
         <tbody>
           <tr data-ng-repeat="error in flatValidationErrors">
-            <td class="gn-padding-left">#{{error.metadataId}}</td>
+            <td class="gn-padding-left">
+              <a target="_blank" href="./catalog.search?#/metadata/{{error.metadataId}}"
+                >#{{error.metadataId}}</a
+              >
+            </td>
             <td>{{error.schematron}}</td>
             <td>{{error.pattern}}</td>
             <td>{{error.message}}</td>
@@ -151,7 +155,11 @@
         </thead>
         <tbody>
           <tr data-ng-repeat="warning in flatValidationWarnings">
-            <td class="gn-padding-left">#{{warning.metadataId}}</td>
+            <td class="gn-padding-left">
+              <a target="_blank" href="./catalog.search?#/metadata/{{warning.metadataId}}"
+                >#{{warning.metadataId}}</a
+              >
+            </td>
             <td>{{warning.schematron}}</td>
             <td>{{warning.pattern}}</td>
             <td>{{warning.message}}</td>
