@@ -25,15 +25,12 @@ package org.fao.geonet.api.processing.report;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import com.google.common.collect.Lists;
-import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.SchematronRequirement;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.Namespace;
-import org.jdom.filter.ElementFilter;
 
 import java.util.*;
 
@@ -59,26 +56,6 @@ import java.util.*;
     "numberOfRecordsWithErrors", "numberOfRecordNotFound"
 })
 public class MetadataValidationProcessingReport extends MetadataProcessingReport {
-
-    /**
-     * XML element name for the active pattern in schematron reports
-     */
-    public static final String EL_ACTIVE_PATTERN = "active-pattern";
-
-    /**
-     * XML element name for fired rules in schematron reports
-     */
-    public static final String EL_FIRED_RULE = "fired-rule";
-
-    /**
-     * XML attribute name for context in schematron reports
-     */
-    public static final String ATT_CONTEXT = "context";
-
-    /**
-     * Default context value when none is provided in schematron reports
-     */
-    public static final String DEFAULT_CONTEXT = "??";
 
     /**
      * Map of valid metadata records keyed by metadata ID.
@@ -339,8 +316,6 @@ public class MetadataValidationProcessingReport extends MetadataProcessingReport
         namespaces.add(Namespace.getNamespace("geonet", "http://www.fao.org/geonetwork"));
         namespaces.add(Namespace.getNamespace("svrl", "http://purl.oclc.org/dsdl/svrl"));
 
-        restructureReportToHavePatternRuleHierarchy(schemaTronReport);
-
         if (SchematronRequirement.REQUIRED.equals(requirement)) {
             // Extract all the xsd errors
             List<?> xsdErrors = Xml.selectNodes(
@@ -414,76 +389,6 @@ public class MetadataValidationProcessingReport extends MetadataProcessingReport
                     null,
                     schematronName,
                     SchematronRequirement.REQUIRED);
-            }
-        }
-    }
-
-    /**
-     * Restructures a schematron validation report to create a hierarchical structure.
-     *
-     * <p>Schematron report has an odd structure where pattern elements, fired rules,
-     * and assertions/reports are all siblings. This method restructures the XML to create
-     * a more logical hierarchy where patterns contain fired rules, which in turn contain
-     * assertions and reports.</p>
-     *
-     * <p>The input structure looks like:
-     * <pre>
-     * <code>
-     * &lt;svrl:active-pattern  ... />
-     * &lt;svrl:fired-rule  ... />
-     * &lt;svrl:failed-assert ... />
-     * &lt;svrl:successful-report ... />
-     * </code>
-     * </pre>
-     * </p>
-     *
-     * <p>The output structure looks like:
-     * <pre>
-     * <code>
-     * &lt;svrl:active-pattern  ... >
-     *     &lt;svrl:fired-rule  ... >
-     *         &lt;svrl:failed-assert ... />
-     *         &lt;svrl:successful-report ... />
-     *     &lt;svrl:fired-rule  ... >
-     * &lt;svrl:active-pattern>
-     * </code>
-     * </pre>
-     * </p>
-     *
-     * @param errorReport The schematron validation report element to restructure
-     */
-    public static void restructureReportToHavePatternRuleHierarchy(Element errorReport) {
-        final Iterator patternFilter = errorReport
-            .getDescendants(new ElementFilter(EL_ACTIVE_PATTERN, Geonet.Namespaces.SVRL));
-        @SuppressWarnings("unchecked")
-        List<Element> patterns = Lists.newArrayList(patternFilter);
-        for (Element pattern : patterns) {
-            final Element parentElement = pattern.getParentElement();
-            Element currentRule = null;
-            @SuppressWarnings("unchecked") final List<Element> children = parentElement.getChildren();
-
-            int index = children.indexOf(pattern) + 1;
-            while (index < children.size() && !children.get(index).getName().equals(EL_ACTIVE_PATTERN)) {
-                Element next = children.get(index);
-                if (EL_FIRED_RULE.equals(next.getName())) {
-                    currentRule = next;
-                    next.detach();
-                    pattern.addContent(next);
-                } else {
-                    if (currentRule == null) {
-                        // odd but could happen I suppose
-                        currentRule = new Element(EL_FIRED_RULE, Geonet.Namespaces.SVRL).setAttribute(ATT_CONTEXT,
-                            DEFAULT_CONTEXT);
-                        pattern.addContent(currentRule);
-                    }
-
-                    next.detach();
-                    currentRule.addContent(next);
-
-                }
-            }
-            if (pattern.getChildren().isEmpty()) {
-                pattern.detach();
             }
         }
     }
