@@ -56,6 +56,7 @@ import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -97,7 +98,7 @@ public class OidcBackchannelLogoutFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
                                     FilterChain filterChain)
-        throws IOException {
+        throws IOException, ServletException {
         RequestMatcher.MatchResult result = requestMatcher.matcher(request);
         if(!result.isMatch()){
             Log.debug(Geonet.SECURITY,"Request does not match OIDC backchannel logout filter, skipping.");
