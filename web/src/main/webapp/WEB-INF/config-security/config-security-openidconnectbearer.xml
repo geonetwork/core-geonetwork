@@ -76,6 +76,7 @@
     <constructor-arg ref ="openidconnectClientRegistrationRepository" />
     <constructor-arg ref ="openidconnectInMemoryOAuth2AuthorizedClientService" />
     <property name="authenticationManager" ref="openidconnectProviderManager"/>
+    <property name="sessionAuthenticationStrategy" ref="sessionAuthenticationStrategy"/>
   </bean>
 
   <bean id="openidconnectBearerTokenAuthenticationFilter" class="org.springframework.security.oauth2.server.resource.web.BearerTokenAuthenticationFilter">
@@ -212,6 +213,23 @@
 
     </constructor-arg>
   </bean>
+
+  <bean id="oidcSessionRegistry" class="org.fao.geonet.kernel.security.openidconnect.oidclogout.InMemoryOidcSessionRegistry"/>
+  <bean id="sessionAuthenticationStrategy"
+        class="org.fao.geonet.kernel.security.openidconnect.oidclogout.OidcSessionRegistryAuthenticationStrategy"/>
+
+  <bean id="sessionMgmtFilter"
+        class="org.springframework.security.web.session.SessionManagementFilter">
+    <constructor-arg ref="securityContextRepository"/>
+    <constructor-arg ref="sessionAuthenticationStrategy"/>
+  </bean>
+
+  <bean id="backchannellogoutFilter"
+        class="org.fao.geonet.kernel.security.openidconnect.oidclogout.OidcBackchannelLogoutFilter">
+    <constructor-arg ref="csrfFilter" />
+    <constructor-arg ref="geonetworkCsrfSecurityRequestMatcher" />
+  </bean>
+
   <util:list id="openidConnectFilterChanFiltersExclusive">
 
     <ref bean="securityContextPersistenceFilter"/>
@@ -221,6 +239,7 @@
 
     <ref bean="openidconnectOAuth2AuthorizationRequestRedirectFilter"/>
     <ref bean="openidconnectOAuth2LoginAuthenticationFilter"/>
+    <ref bean="backchannellogoutFilter"/>
     <ref bean="logoutFilter"/>
 
     <ref bean="openidconnectBearerTokenAuthenticationFilter"/>
@@ -241,6 +260,7 @@
 
     <ref bean="openidconnectOAuth2AuthorizationRequestRedirectFilter"/>
     <ref bean="openidconnectOAuth2LoginAuthenticationFilter"/>
+    <ref bean="backchannellogoutFilter"/>
     <ref bean="logoutFilter"/>
     <ref bean="sessionExpirationFilter"/>
     <!--     include a pre login filter-->

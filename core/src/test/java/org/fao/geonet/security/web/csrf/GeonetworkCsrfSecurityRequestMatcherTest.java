@@ -30,6 +30,8 @@ import org.keycloak.adapters.springsecurity.filter.KeycloakCsrfRequestMatcher;
 import org.keycloak.constants.AdapterConstants;
 import org.springframework.http.HttpMethod;
 import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.security.web.util.matcher.NegatedRequestMatcher;
 
 import java.util.Set;
 
@@ -177,6 +179,19 @@ public class GeonetworkCsrfSecurityRequestMatcherTest {
         prepareRequest(HttpMethod.POST, SUB_CONTEXT_PATH, AdapterConstants.K_TEST_AVAILABLE);
         assertFalse(matcher.matches(request));
 
+    }
+
+    @Test
+    public void testOidcBackchannellogoutCsrfilter(){
+        matcher.addRequestMatcher(new NegatedRequestMatcher(new AntPathRequestMatcher("/**/logout/connect/back-channel/{registrationId}", HttpMethod.POST.name())));
+        prepareRequest(HttpMethod.POST, ROOT_CONTEXT_PATH, "logout/connect/back-channel/myRegistrationId");
+        assertFalse(matcher.matches(request));
+        prepareRequest(HttpMethod.POST, SUB_CONTEXT_PATH, "/myapplication/logout/connect/back-channel/myRegistrationId2");
+        assertFalse(matcher.matches(request));
+        prepareRequest(HttpMethod.POST, SUB_CONTEXT_PATH, "/myapplication/logout/connect/back-channel/myRegistrationId2/extra path");
+        assertTrue(matcher.matches(request));
+        prepareRequest(HttpMethod.POST, SUB_CONTEXT_PATH, "myapplication/logout/connect/back-channel/myRegistrationId2");
+        assertFalse(matcher.matches(request));
     }
 
     private void prepareRequest(HttpMethod method, String contextPath, String uri) {

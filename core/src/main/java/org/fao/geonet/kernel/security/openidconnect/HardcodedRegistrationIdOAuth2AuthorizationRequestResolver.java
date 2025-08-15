@@ -38,7 +38,7 @@ import static org.fao.geonet.kernel.security.openidconnect.GeonetworkClientRegis
  * Spring's oauth allows for multiple oauth providers - and the /signin/... path would normally indicate which one
  * (by the name).
  * <p>
- * We're only using one provider (called CLIENTREGISTRATION_NAME - "geonetwork-oicd") and it works better in GN if
+ * We're only using one provider (called CLIENTREGISTRATION_NAME - "geonetwork-oidc") and it works better in GN if
  * you just use a simple "/signin" URL instead of a more complicated one.
  * <p>
  * This class bridges between the two methods (spring and GN's).
