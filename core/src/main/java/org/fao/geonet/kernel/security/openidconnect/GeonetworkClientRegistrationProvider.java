@@ -63,7 +63,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
  */
 public class GeonetworkClientRegistrationProvider {
 
-    public static String CLIENTREGISTRATION_NAME = "geonetwork-oicd";
+    public static String CLIENTREGISTRATION_NAME = "geonetwork-oidc";
 
     ClientRegistration clientRegistration;
 

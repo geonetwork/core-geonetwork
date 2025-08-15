@@ -381,6 +381,7 @@
         <value>/[a-zA-Z0-9_\-]+/[a-z]{2,3}/csw!?.*</value>
         <value>/[a-zA-Z0-9_\-]+/api/search/.*</value>
         <value>/[a-zA-Z0-9_\-]+/api/site</value>
+        <value>/signout</value>
       </set>
     </constructor-arg>
   </bean>

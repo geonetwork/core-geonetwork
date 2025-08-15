@@ -76,6 +76,7 @@
     <constructor-arg ref ="openidconnectClientRegistrationRepository" />
     <constructor-arg ref ="openidconnectInMemoryOAuth2AuthorizedClientService" />
     <property name="authenticationManager" ref="openidconnectProviderManager"/>
+    <property name="sessionAuthenticationStrategy" ref="sessionAuthenticationStrategy"/>
   </bean>
 
   <bean id="openidconnectDefaultAuthorizationCodeTokenResponseClient" class="org.springframework.security.oauth2.client.endpoint.DefaultAuthorizationCodeTokenResponseClient"/>
@@ -117,6 +118,18 @@
     <constructor-arg ref="openidconnectLogoutSuccessHandlerBase"/>
   </bean>
 
+  <bean id="oidcSessionRegistry" class="org.fao.geonet.kernel.security.openidconnect.oidclogout.InMemoryOidcSessionRegistry"/>
+  <bean id="sessionAuthenticationStrategy"
+        class="org.fao.geonet.kernel.security.openidconnect.oidclogout.OidcSessionRegistryAuthenticationStrategy"/>
+
+  <bean id="sessionMgmtFilter"
+        class="org.springframework.security.web.session.SessionManagementFilter">
+    <constructor-arg ref="securityContextRepository"/>
+    <constructor-arg ref="sessionAuthenticationStrategy"/>
+  </bean>
+  <bean id="backchannellogoutFilter"
+        class="org.fao.geonet.kernel.security.openidconnect.oidclogout.OidcBackchannelLogoutFilter"/>
+
   <bean id="logoutFilter"
         class="org.springframework.security.web.authentication.logout.LogoutFilter">
     <constructor-arg ref="openidconnectLogoutSuccessHandler"/>
@@ -150,6 +163,7 @@
 
         <ref bean="openidconnectOAuth2AuthorizationRequestRedirectFilter"/>
         <ref bean="openidconnectOAuth2LoginAuthenticationFilter"/>
+        <ref bean="backchannellogoutFilter"/>
         <ref bean="logoutFilter"/>
 
 
