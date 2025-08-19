@@ -20,7 +20,7 @@
       
       
       <link rel="icon" href="../../../assets/images/geonetwork-logo.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.16">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.17">
     
     
       
@@ -3335,7 +3335,7 @@
 <ol>
 <li>Configure your IDP Server (i.e. Keycloak or Azure AD)<ol>
 <li>Ensure that the ID Token provides role/group information</li>
-<li>Authorize your Geonetwork URLs for redirects (i.e. <code>http://localhost:8080/geonetwork/login/oauth2/code/geonetwork-oicd</code>)</li>
+<li>Authorize your Geonetwork URLs for redirects (i.e. <code>http://localhost:8080/geonetwork/login/oauth2/code/geonetwork-oidc</code>)</li>
 <li>Record the Client ID</li>
 <li>Record the Client Secret</li>
 <li>Get the Server's JSON metadata document</li>
@@ -3451,7 +3451,7 @@
 <p>Setup the Azure Application:</p>
 <ol>
 <li>Create a new <code>App Registration</code></li>
-<li>use <code>http://localhost:8080/geonetwork/login/oauth2/code/geonetwork-oicd</code> as a redirect URIs</li>
+<li>use <code>http://localhost:8080/geonetwork/login/oauth2/code/geonetwork-oidc</code> as a redirect URIs</li>
 <li>On the "Certificates &amp; Secrets" add a new secret and record it (make sure you get the secret value and NOT the object id)</li>
 <li>Make sure the groups are in the ID token - on the "Manifest" tab, edit the JSON so that "groupMembershipClaims": "SecurityGroup" is set</li>
 <li>On the summary page, get the Application (client) ID</li>
@@ -3483,7 +3483,7 @@
 <p>Setup the Azure Application:</p>
 <ol>
 <li>Create a new Enterprise application</li>
-<li>use <code>http://localhost:8080/geonetwork/login/oauth2/code/geonetwork-oicd</code> as a redirect URIs</li>
+<li>use <code>http://localhost:8080/geonetwork/login/oauth2/code/geonetwork-oidc</code> as a redirect URIs</li>
 <li>On the "Certificates &amp; Secrets" add a new secret and record it (make sure you get the secret value and NOT the object id)</li>
 <li>Make sure the groups are in the ID token - on the "Manifest" tab, edit the JSON so that "groupMembershipClaims": "ApplicationGroup" is set</li>
 <li>On the summary page, get the Application (client) ID</li>
@@ -4054,10 +4054,10 @@ For the first filter, use the environment variables defined above (ie. <code>JWT
     
     
       
-      <script id="__config" type="application/json">{"base": "../../..", "features": ["toc.follow", "navigation.tracking", "navigation.top", "navigation.tabs", "navigation.prune", "navigation.indexes", "navigation.footer", "header.autohide", "content.tabs.link", "content.code.copy", "content.action.view", "content.action.edit", "announce.dismiss"], "search": "../../../assets/javascripts/workers/search.d50fe291.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"alias": true, "default": "stable", "provider": "mike"}}</script>
+      <script id="__config" type="application/json">{"base": "../../..", "features": ["toc.follow", "navigation.tracking", "navigation.top", "navigation.tabs", "navigation.prune", "navigation.indexes", "navigation.footer", "header.autohide", "content.tabs.link", "content.code.copy", "content.action.view", "content.action.edit", "announce.dismiss"], "search": "../../../assets/javascripts/workers/search.973d3a69.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"alias": true, "default": "stable", "provider": "mike"}}</script>
     
     
-      <script src="../../../assets/javascripts/bundle.50899def.min.js"></script>
+      <script src="../../../assets/javascripts/bundle.92b07e13.min.js"></script>
       
     
   </body>
