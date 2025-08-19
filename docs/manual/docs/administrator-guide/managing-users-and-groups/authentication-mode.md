@@ -483,7 +483,7 @@ Basic Setup Steps:
 
 1.  Configure your IDP Server (i.e. Keycloak or Azure AD)
     1.  Ensure that the ID Token provides role/group information
-    2.  Authorize your Geonetwork URLs for redirects (i.e. `http://localhost:8080/geonetwork/login/oauth2/code/geonetwork-oicd`)
+    2.  Authorize your Geonetwork URLs for redirects (i.e. `http://localhost:8080/geonetwork/login/oauth2/code/geonetwork-oidc`)
     3.  Record the Client ID
     4.  Record the Client Secret
     5.  Get the Server's JSON metadata document
@@ -640,7 +640,7 @@ There are two ways to setup Azure AD. The first is with user and groups (a more 
 Setup the Azure Application:
 
 1.  Create a new `App Registration`
-2.  use `http://localhost:8080/geonetwork/login/oauth2/code/geonetwork-oicd` as a redirect URIs
+2.  use `http://localhost:8080/geonetwork/login/oauth2/code/geonetwork-oidc` as a redirect URIs
 3.  On the "Certificates & Secrets" add a new secret and record it (make sure you get the secret value and NOT the object id)
 4.  Make sure the groups are in the ID token - on the "Manifest" tab, edit the JSON so that "groupMembershipClaims": "SecurityGroup" is set
 5.  On the summary page, get the Application (client) ID
@@ -678,7 +678,7 @@ OPENIDCONNECT_ROLECONVERTER='3a94275f-7d53-4205-8d78-11f39e9ffa5a=Administrator,
 Setup the Azure Application:
 
 1.  Create a new Enterprise application
-2.  use `http://localhost:8080/geonetwork/login/oauth2/code/geonetwork-oicd` as a redirect URIs
+2.  use `http://localhost:8080/geonetwork/login/oauth2/code/geonetwork-oidc` as a redirect URIs
 3.  On the "Certificates & Secrets" add a new secret and record it (make sure you get the secret value and NOT the object id)
 4.  Make sure the groups are in the ID token - on the "Manifest" tab, edit the JSON so that "groupMembershipClaims": "ApplicationGroup" is set
 5.  On the summary page, get the Application (client) ID
