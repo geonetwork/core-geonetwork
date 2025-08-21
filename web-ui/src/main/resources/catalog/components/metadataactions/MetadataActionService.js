@@ -250,7 +250,7 @@
               gnUtilityService.openModal(
                 {
                   title: translations.metadataValidated,
-                  content: '<div gn-batch-report="processReport"></div>',
+                  content: '<div gn-batch-validation-report="processReport"></div>',
                   className: "gn-validation-popup",
                   onCloseCallback: function () {
                     $rootScope.$broadcast("operationOnSelectionStop");
