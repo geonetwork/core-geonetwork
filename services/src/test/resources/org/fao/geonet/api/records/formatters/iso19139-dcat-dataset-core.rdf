@@ -108,6 +108,11 @@
       <dcat:Distribution>
         <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2024-11-26</dct:modified>
         <dcat:accessURL rdf:resource="https://download.geodata-utrecht.nl/download/vector/d6b08cf9-fdf1-4fe9-b906-02d0feb39e4e"/>
+        <dct:format>
+           <dct:MediaTypeOrExtent>
+              <rdfs:label>File Geodatabase Feature Class</rdfs:label>
+           </dct:MediaTypeOrExtent>
+        </dct:format>
       </dcat:Distribution>
     </dcat:distribution>
     <dcat:distribution>
@@ -125,6 +130,11 @@
             </dct:conformsTo>
           </rdf:Description>
         </dcat:accessService>
+        <dct:format>
+           <dct:MediaTypeOrExtent>
+              <rdfs:label>File Geodatabase Feature Class</rdfs:label>
+           </dct:MediaTypeOrExtent>
+        </dct:format>
       </dcat:Distribution>
     </dcat:distribution>
     <dcat:distribution>
@@ -142,6 +152,11 @@
             </dct:conformsTo>
           </rdf:Description>
         </dcat:accessService>
+        <dct:format>
+          <dct:MediaTypeOrExtent>
+            <rdfs:label>File Geodatabase Feature Class</rdfs:label>
+          </dct:MediaTypeOrExtent>
+        </dct:format>
       </dcat:Distribution>
     </dcat:distribution>
   </rdf:Description>
