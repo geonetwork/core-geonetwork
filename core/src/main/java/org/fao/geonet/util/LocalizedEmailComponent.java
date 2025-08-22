@@ -368,6 +368,7 @@ public class LocalizedEmailComponent {
             newPlaceholder = "'{{'index:uuid'}}'";
         }
         // todo - change url here? eng/catalog.search#/metadata/ instead of api/records/
-        return message.replace("{{link}}", settingManager.getNodeURL() + "api/records/" + newPlaceholder);
+        return message.replace("{{link}}", settingManager.getNodeURL() + "eng/catalog.search#/metadata/" + newPlaceholder);
+        // return message.replace("{{link}}", settingManager.getNodeURL() + "api/records/" + newPlaceholder);
     }
 }
