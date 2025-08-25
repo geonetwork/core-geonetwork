@@ -8,7 +8,7 @@
     <tbody>
       <tr data-ng-repeat="r in displayedRecords track by $index">
         <td data-ng-repeat="c in columnsConfig track by $index">
-          <span data-ng-if="$index === 0">
+          <span data-ng-if="c === 'resourceTitle'">
             <a
               data-ng-hide="r.md.remoteUrl"
               gn-metadata-open="r.md"
@@ -26,16 +26,31 @@
             </a>
           </span>
 
-          <span data-ng-if="$index > 0 && !isArray(r[c])">{{r[c]}}</span>
+          <span data-ng-if="c !== 'resourceTitle' && !isArray(r[c])">
+            <div
+              data-ng-if="c === 'mdStatus' && user.isEditorOrMore() && r.md.mdStatus < 50 && isMdWorkflowEnable"
+              class="text-muted badge"
+              data-ng-class="{'text-success': r.md.mdStatus == 2, 'text-warning': r.md.mdStatus == 4 }"
+            >
+              {{('status-' + r.md.mdStatus) | translate}}
+            </div>
+            <span data-ng-if="c !== 'mdStatus'"> {{r[c]}} </span>
+          </span>
 
           <span data-ng-if="isArray(r[c])">
             <div
-              data-ng-if="!c.startsWith('link')
+              data-ng-if="c !=='resourceType'
+                              && !c.startsWith('link')
                               && !c.startsWith('cl')
+                              && !c.startsWith('mdStatus')
                               && !c.startsWith('format')"
               data-ng-repeat="l in r[c]"
             >
               {l}}
+            </div>
+
+            <div data-ng-if="c === 'resourceType'">
+              <i class="fa gn-icon-{{r.resourceType[0]}}"></i>
             </div>
 
             <div data-ng-if="c.startsWith('cl_status[0].key')" data-ng-repeat="l in r[c]">

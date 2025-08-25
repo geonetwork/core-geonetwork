@@ -1195,8 +1195,10 @@
 
   module.directive("gnRecordsTable", [
     "Metadata",
-    "gnRelatedService",
-    function (Metadata, gnRelatedService) {
+    "gnConfigService",
+    "gnConfig",
+    "$rootScope",
+    function (Metadata, gnConfigService, gnConfig, $rootScope) {
       return {
         restrict: "A",
         templateUrl: function (elem, attrs) {
@@ -1217,11 +1219,16 @@
         },
         link: function (scope, element, attrs, controller) {
           var initialized = false;
+          scope.user = $rootScope.user;
           scope.columnsConfig = scope.columns.split(",");
           scope.data = [];
           scope.displayedRecords = [];
           scope.headers = [];
           scope.isArray = angular.isArray;
+
+          gnConfigService.load().then(function (c) {
+            scope.isMdWorkflowEnable = gnConfig["metadata.workflow.enable"];
+          });
 
           if (scope.labels) {
             scope.headers = scope.labels.split(",");
