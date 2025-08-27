@@ -59,10 +59,10 @@ public class SchemaLocalizationsTest {
         return sort;
     }
 
-    private static Element createLabelElement(String name, String parentName, String label, String desc) {
+    private static Element createLabelElement(String name, String parentNameOrXpath, String label, String desc) {
         final Element element = new Element("element");
-        if (parentName != null) {
-            element.setAttribute("context", parentName);
+        if (parentNameOrXpath != null) {
+            element.setAttribute("context", parentNameOrXpath);
         }
         return element.setAttribute("name", name).addContent(Arrays.asList(
             new Element("label").setText(label),
@@ -116,6 +116,7 @@ public class SchemaLocalizationsTest {
                 Map<String, XmlFile> schemaInfo = Maps.newHashMap();
                 schemaInfo.put("labels.xml", createXmlFile(new Element("labels").addContent(Arrays.asList(
                     createLabelElement("elem1", "parent", "Element One", "Desc Element One"),
+                    createLabelElement("elem1", "/path1/subpath1", "Element One XPath", "Desc Element One XPath"),
                     createLabelElement("elem1", null, "Element One No Parent", "Desc Element One No Parent"),
                     createLabelElement("elem2", null, "Element Two", "Desc Element Two")
                 ))));
@@ -148,6 +149,11 @@ public class SchemaLocalizationsTest {
         assertEquals("Element One", localizations.nodeLabel("elem1", "parent"));
         assertEquals("Element One No Parent", localizations.nodeLabel("elem1", null));
         assertEquals("Desc Element One No Parent", localizations.nodeDesc("elem1", null));
+
+        // If exact match on parent xpath then return that label
+        assertEquals("Element One XPath", localizations.nodeLabel("elem1", null, "/path1/subpath1"));
+
+        // If no exact match on parent or xpath then return the label without parent or xpath
         assertEquals("Desc Element One No Parent", localizations.nodeDesc("elem1", "random parent"));
         assertEquals("Desc Element Two", localizations.nodeDesc("elem2", "random parent"));
     }
