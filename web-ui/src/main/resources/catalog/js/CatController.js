@@ -1004,8 +1004,14 @@
               "indexingErrorMsg.type": {
                 filters: {
                   filters: {
-                    "indexingErrorMsg.type-warning": { query_string: { query: "indexingErrorMsg:Warning*" } },
-                    "indexingErrorMsg.type-error":   { query_string: { query: "(+indexingErrorMsg:* AND -indexingErrorMsg:Warning*)" } }
+                    "indexingErrorMsg.type-warning": {
+                      query_string: { query: "indexingErrorMsg:Warning*" }
+                    },
+                    "indexingErrorMsg.type-error": {
+                      query_string: {
+                        query: "(+indexingErrorMsg:* AND -indexingErrorMsg:Warning*)"
+                      }
+                    }
                   }
                 },
                 aggs: {
