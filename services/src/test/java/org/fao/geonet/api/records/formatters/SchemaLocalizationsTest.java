@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2025 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -29,13 +29,11 @@ import org.fao.geonet.domain.IsoLanguage;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.repository.IsoLanguageRepository;
 import org.jdom.Element;
-import org.jdom.JDOMException;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.springframework.context.ApplicationContext;
 
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Map;
@@ -43,6 +41,7 @@ import java.util.Map;
 import static org.fao.geonet.api.records.formatters.SchemaLocalizations.LANG_CODELIST_NS;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 public class SchemaLocalizationsTest {
 
@@ -60,10 +59,10 @@ public class SchemaLocalizationsTest {
         return sort;
     }
 
-    private static Element createLabelElement(String name, String parentName, String label, String desc) {
+    private static Element createLabelElement(String name, String parentNameOrXpath, String label, String desc) {
         final Element element = new Element("element");
-        if (parentName != null) {
-            element.setAttribute("context", parentName);
+        if (parentNameOrXpath != null) {
+            element.setAttribute("context", parentNameOrXpath);
         }
         return element.setAttribute("name", name).addContent(Arrays.asList(
             new Element("label").setText(label),
@@ -87,7 +86,7 @@ public class SchemaLocalizationsTest {
             setAttribute(jeeves.constants.ConfigFile.Xml.Attr.BASE, "loc");
         return new XmlFile(config, "eng", true) {
             @Override
-            public Element getXml(ApplicationContext context, String lang, boolean makeCopy) throws JDOMException, IOException {
+            public Element getXml(ApplicationContext context, String lang, boolean makeCopy) {
                 return xml;
             }
         };
@@ -112,12 +111,12 @@ public class SchemaLocalizationsTest {
 
         localizations = new SchemaLocalizations(appContext, env, SCHEMA, null) {
             @Override
-            protected Map<String, SchemaLocalization> getSchemaLocalizations(ApplicationContext context, SchemaManager schemaManager)
-                throws IOException, JDOMException {
+            protected Map<String, SchemaLocalization> getSchemaLocalizations(ApplicationContext context, SchemaManager schemaManager) {
                 Map<String, SchemaLocalization> localizations = Maps.newHashMap();
                 Map<String, XmlFile> schemaInfo = Maps.newHashMap();
                 schemaInfo.put("labels.xml", createXmlFile(new Element("labels").addContent(Arrays.asList(
                     createLabelElement("elem1", "parent", "Element One", "Desc Element One"),
+                    createLabelElement("elem1", "/path1/subpath1", "Element One XPath", "Desc Element One XPath"),
                     createLabelElement("elem1", null, "Element One No Parent", "Desc Element One No Parent"),
                     createLabelElement("elem2", null, "Element Two", "Desc Element Two")
                 ))));
@@ -139,7 +138,7 @@ public class SchemaLocalizationsTest {
             }
 
             @Override
-            protected ConfigFile getConfigFile(SchemaManager schemaManager, String schema) throws IOException {
+            protected ConfigFile getConfigFile(SchemaManager schemaManager, String schema) {
                 return Mockito.mock(ConfigFile.class);
             }
         };
@@ -150,6 +149,11 @@ public class SchemaLocalizationsTest {
         assertEquals("Element One", localizations.nodeLabel("elem1", "parent"));
         assertEquals("Element One No Parent", localizations.nodeLabel("elem1", null));
         assertEquals("Desc Element One No Parent", localizations.nodeDesc("elem1", null));
+
+        // If exact match on parent xpath then return that label
+        assertEquals("Element One XPath", localizations.nodeLabel("elem1", null, "/path1/subpath1"));
+
+        // If no exact match on parent or xpath then return the label without parent or xpath
         assertEquals("Desc Element One No Parent", localizations.nodeDesc("elem1", "random parent"));
         assertEquals("Desc Element Two", localizations.nodeDesc("elem2", "random parent"));
     }
@@ -171,7 +175,7 @@ public class SchemaLocalizationsTest {
         assertEquals("German", localizations.codelistValueLabel(LANG_CODELIST_NS, "deu"));
         assertEquals("xyz", localizations.codelistValueLabel(LANG_CODELIST_NS, "xyz"));
         assertEquals("dd", localizations.codelistValueLabel(LANG_CODELIST_NS, "dd"));
-        assertEquals(null, localizations.codelistValueLabel(LANG_CODELIST_NS, null));
+        assertNull(localizations.codelistValueLabel(LANG_CODELIST_NS, null));
     }
 
     @Test

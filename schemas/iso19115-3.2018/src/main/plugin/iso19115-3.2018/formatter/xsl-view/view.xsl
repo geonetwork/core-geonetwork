@@ -61,6 +61,7 @@
   <xsl:include href="../jsonld/iso19115-3.2018-to-jsonld.xsl"/>
   <xsl:include href="../citation/base.xsl"/>
   <xsl:include href="../citation/common.xsl"/>
+  <xsl:include href="./common.xsl"/>
 
   <!-- The core formatter XSL layout based on the editor configuration -->
   <xsl:include href="sharedFormatterDir/xslt/render-layout.xsl"/>
@@ -447,7 +448,9 @@
     <xsl:variable name="name"
                   select="name()"/>
 
-    <xsl:variable name="context"
+    <xsl:variable name="contextXpath"
+                  select="gn-fn-metadata:getXPath(.)" />
+    <xsl:variable name="contextParent"
                   select="name(..)"/>
 
     <xsl:choose>
@@ -455,7 +458,7 @@
       <xsl:when test="$fieldName = '' and $language = 'all' and count($languages/lang) > 0">
         <xsl:for-each select="$languages/lang">
           <div xml:lang="{@code}">
-            <xsl:value-of select="tr:nodeLabel(tr:create($schema, @code), $name, $context)"/>
+            <xsl:value-of select="tr:nodeLabel(tr:create($schema, @code), $name, $contextParent, $contextXpath)"/>
             <xsl:if test="$contextLabel">
               <xsl:variable name="extraLabel">
                 <xsl:apply-templates mode="render-value"
@@ -476,7 +479,7 @@
           <xsl:variable name="lang3"
                         select="$metadata//mdb:otherLocale/*[@id = $id]/lan:languageCode/*/@codeListValue"/>
           <div xml:lang="{$lang3}">
-            <xsl:value-of select="tr:nodeLabel(tr:create($schema, $lang3), $name, $context)"/>
+            <xsl:value-of select="tr:nodeLabel(tr:create($schema, $lang3), $name, $contextParent, $contextXpath)"/>
           </div>
         </xsl:for-each>
       </xsl:when>
@@ -484,7 +487,7 @@
         <!-- Overriden label or element name in current UI language. -->
         <xsl:value-of select="if ($fieldName)
                                 then $fieldName
-                                else tr:nodeLabel(tr:create($schema), $name, $context)"/>
+                                else tr:nodeLabel(tr:create($schema), $name, $contextParent, $contextXpath)"/>
         <xsl:if test="$contextLabel">
           <xsl:variable name="extraLabel">
             <xsl:apply-templates mode="render-value"
