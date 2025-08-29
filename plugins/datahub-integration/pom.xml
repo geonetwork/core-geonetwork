@@ -148,7 +148,7 @@
                 <NX_DAEMON>false</NX_DAEMON>
               </environmentVariables>
               <arguments>
-                run nx -- run datahub:build:production --base-href=/geonetwork/datahub/
+                run nx -- build datahub --base-href=/geonetwork/datahub/
               </arguments>
               <workingDirectory>geonetwork-ui</workingDirectory>
               <installDirectory>${basedir}</installDirectory>
@@ -166,7 +166,7 @@
                 <NX_DAEMON>false</NX_DAEMON>
               </environmentVariables>
               <arguments>
-                run nx -- run metadata-editor:build:production --base-href=/geonetwork/metadata-editor/
+                run nx -- build metadata-editor --base-href=/geonetwork/metadata-editor/
               </arguments>
               <workingDirectory>geonetwork-ui</workingDirectory>
               <installDirectory>${basedir}</installDirectory>
