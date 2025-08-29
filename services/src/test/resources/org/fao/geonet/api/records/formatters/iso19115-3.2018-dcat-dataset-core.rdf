@@ -479,6 +479,16 @@
                   <dcat:endpointURL rdf:resource="https://geoservices.wallonie.be/arcgis/rest/services/AMENAGEMENT_TERRITOIRE/PDS/MapServer"/>
                </rdf:Description>
             </dcat:accessService>
+            <dct:format>
+               <dct:MediaTypeOrExtent>
+                  <rdfs:label>ESRI Shapefile (.shp)</rdfs:label>
+               </dct:MediaTypeOrExtent>
+            </dct:format>
+            <dct:format>
+               <dct:MediaTypeOrExtent>
+                  <rdfs:label>ESRI File Geodatabase (.fgdb)</rdfs:label>
+               </dct:MediaTypeOrExtent>
+            </dct:format>
          </dcat:Distribution>
       </dcat:distribution>
       <dcat:distribution>
@@ -506,6 +516,16 @@
                   </dct:conformsTo>
                </rdf:Description>
             </dcat:accessService>
+            <dct:format>
+               <dct:MediaTypeOrExtent>
+                  <rdfs:label>ESRI Shapefile (.shp)</rdfs:label>
+               </dct:MediaTypeOrExtent>
+            </dct:format>
+            <dct:format>
+               <dct:MediaTypeOrExtent>
+                  <rdfs:label>ESRI File Geodatabase (.fgdb)</rdfs:label>
+               </dct:MediaTypeOrExtent>
+            </dct:format>
          </dcat:Distribution>
       </dcat:distribution>
       <foaf:page>
