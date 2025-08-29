@@ -53,7 +53,7 @@
     "database-server": "Server",
     "database-serverHelp": "The database server hostname",
     "database-tableName": "Table name",
-    "database-tableNameHelp": "Table name with the metadata. The name must begin with a letter (a-z) or underscore (_). Subsequent characters in a name can be letters, digits (0-9), or underscores.",
+    "database-tableNameHelp": "Table field name that contains the metadata. The name must begin with a letter (a-z) or underscore (_). Subsequent characters in a name can be letters, digits (0-9), or underscores. It can be a qualified table name (e.g. schema.table).",
     "database-metadataField": "Metadata field name",
     "database-metadataFieldHelp": "Table field name that contains the metadata. The name must begin with a letter (a-z) or underscore (_). Subsequent characters in a name can be letters, digits (0-9), or underscores.",
     "database-filterField": "Filter field",
