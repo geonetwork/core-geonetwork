@@ -1,0 +1,14 @@
+[global]
+geonetwork4_api_url = "/geonetwork/srv/api"
+datahub_url = "/datahub"
+proxy_path = ""
+
+[theme]
+primary_color = "#c82850"
+secondary_color = "#001638"
+main_color = "#555"
+background_color = "#fdfbff"
+
+[search]
+
+[map]
