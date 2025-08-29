@@ -110,6 +110,19 @@
               <npmVersion>10.7.0</npmVersion>
             </configuration>
           </execution>
+          <!--   Install Angular DevKit dependency explicitly   -->
+          <execution>
+            <id>npm-install-angular-devkit</id>
+            <phase>initialize</phase>
+            <goals>
+              <goal>npm</goal>
+            </goals>
+            <configuration>
+              <arguments>install @angular-devkit/architect @angular-devkit/build-angular @angular-devkit/core @angular-devkit/schematics --legacy-peer-deps</arguments>
+              <workingDirectory>geonetwork-ui</workingDirectory>
+              <installDirectory>${basedir}</installDirectory>
+            </configuration>
+          </execution>
           <!--   Install geonetwork-ui dependencies   -->
           <execution>
             <id>npm-install</id>
@@ -118,7 +131,7 @@
               <goal>npm</goal>
             </goals>
             <configuration>
-              <arguments>ci --loglevel error</arguments>
+              <arguments>install --no-audit --legacy-peer-deps</arguments>
               <workingDirectory>geonetwork-ui</workingDirectory>
               <installDirectory>${basedir}</installDirectory>
             </configuration>
@@ -135,7 +148,25 @@
                 <NX_DAEMON>false</NX_DAEMON>
               </environmentVariables>
               <arguments>
-                run nx -- build datahub --base-href=./
+                run nx -- run datahub:build:production --base-href=/geonetwork/datahub/
+              </arguments>
+              <workingDirectory>geonetwork-ui</workingDirectory>
+              <installDirectory>${basedir}</installDirectory>
+            </configuration>
+          </execution>
+          <!--   Build metadata-editor app   -->
+          <execution>
+            <id>npm-build-metadata-editor</id>
+            <phase>generate-resources</phase>
+            <goals>
+              <goal>npm</goal>
+            </goals>
+            <configuration>
+              <environmentVariables>
+                <NX_DAEMON>false</NX_DAEMON>
+              </environmentVariables>
+              <arguments>
+                run nx -- run metadata-editor:build:production --base-href=/geonetwork/metadata-editor/
               </arguments>
               <workingDirectory>geonetwork-ui</workingDirectory>
               <installDirectory>${basedir}</installDirectory>
@@ -161,6 +192,31 @@
               <resources>
                 <resource>
                   <directory>geonetwork-ui/dist/apps/datahub</directory>
+                  <filtering>false</filtering>
+                </resource>
+                <resource>
+                  <directory>geonetwork-ui</directory>
+                  <includes>
+                    <include>package.json</include>
+                  </includes>
+                  <filtering>false</filtering>
+                </resource>
+              </resources>
+            </configuration>
+          </execution>
+          <execution>
+            <id>copy-metadata-editor-resources</id>
+            <phase>generate-resources</phase>
+            <goals>
+              <goal>copy-resources</goal>
+            </goals>
+            <configuration>
+              <overwrite>true</overwrite>
+              <encoding>UTF-8</encoding>
+              <outputDirectory>target/resources/metadata-editor</outputDirectory>
+              <resources>
+                <resource>
+                  <directory>geonetwork-ui/dist/apps/metadata-editor</directory>
                   <filtering>false</filtering>
                 </resource>
                 <resource>
