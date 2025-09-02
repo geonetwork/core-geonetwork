@@ -463,13 +463,6 @@ public class BaseMetadataValidator implements org.fao.geonet.kernel.datamanager.
         String version = null;
         LOGGER.debug("Creating validation report for record #{} [schema: {}].", metadataId, schema);
 
-        Element sessionReport = (Element) session.getProperty(Geonet.Session.VALIDATION_REPORT + metadataId);
-        if (sessionReport != null && !forEditing) {
-            LOGGER.debug("  Validation report available in session.");
-            sessionReport.detach();
-            return Pair.read(sessionReport, version);
-        }
-
         List<MetadataValidation> validations = new ArrayList<>();
         Element errorReport = new Element("report", Edit.NAMESPACE);
         errorReport.setAttribute("id", metadataId, Edit.NAMESPACE);
@@ -523,8 +516,6 @@ public class BaseMetadataValidator implements org.fao.geonet.kernel.datamanager.
         }
 
         saveValidationStatus(intMetadataId, validations);
-
-        session.setProperty(Geonet.Session.VALIDATION_REPORT + metadataId, errorReport);
 
         return Pair.read(errorReport, version);
     }
