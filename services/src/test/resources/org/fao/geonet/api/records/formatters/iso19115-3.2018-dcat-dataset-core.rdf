@@ -422,6 +422,26 @@
          </foaf:Document>
       </foaf:page>
       <dcat:distribution>
+          <dcat:Distribution>
+              <dct:format>
+                  <dct:MediaTypeOrExtent>
+                      <rdfs:label>ESRI Shapefile
+                          (.shp)</rdfs:label>
+                  </dct:MediaTypeOrExtent>
+              </dct:format>
+          </dcat:Distribution>
+      </dcat:distribution>
+      <dcat:distribution>
+          <dcat:Distribution>
+              <dct:format>
+                  <dct:MediaTypeOrExtent>
+                      <rdfs:label>ESRI File
+                          Geodatabase (.fgdb)</rdfs:label>
+                  </dct:MediaTypeOrExtent>
+              </dct:format>
+          </dcat:Distribution>
+      </dcat:distribution>
+      <dcat:distribution>
          <dcat:Distribution>
               <dct:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2023-02-21</dct:issued>
 
@@ -479,16 +499,6 @@
                   <dcat:endpointURL rdf:resource="https://geoservices.wallonie.be/arcgis/rest/services/AMENAGEMENT_TERRITOIRE/PDS/MapServer"/>
                </rdf:Description>
             </dcat:accessService>
-            <dct:format>
-               <dct:MediaTypeOrExtent>
-                  <rdfs:label>ESRI Shapefile (.shp)</rdfs:label>
-               </dct:MediaTypeOrExtent>
-            </dct:format>
-            <dct:format>
-               <dct:MediaTypeOrExtent>
-                  <rdfs:label>ESRI File Geodatabase (.fgdb)</rdfs:label>
-               </dct:MediaTypeOrExtent>
-            </dct:format>
          </dcat:Distribution>
       </dcat:distribution>
       <dcat:distribution>
@@ -516,16 +526,6 @@
                   </dct:conformsTo>
                </rdf:Description>
             </dcat:accessService>
-            <dct:format>
-               <dct:MediaTypeOrExtent>
-                  <rdfs:label>ESRI Shapefile (.shp)</rdfs:label>
-               </dct:MediaTypeOrExtent>
-            </dct:format>
-            <dct:format>
-               <dct:MediaTypeOrExtent>
-                  <rdfs:label>ESRI File Geodatabase (.fgdb)</rdfs:label>
-               </dct:MediaTypeOrExtent>
-            </dct:format>
          </dcat:Distribution>
       </dcat:distribution>
       <foaf:page>

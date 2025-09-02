@@ -110,6 +110,15 @@
     </foaf:page>
   </xsl:template>
 
+  <xsl:template mode="iso19115-3-to-dcat"
+                match="mdb:distributionInfo/mrd:MD_Distribution/mrd:distributionFormat">
+    <dcat:distribution>
+      <dcat:Distribution>
+        <xsl:apply-templates mode="iso19115-3-to-dcat-distribution" select="*/mrd:formatSpecificationCitation"/>
+      </dcat:Distribution>
+    </dcat:distribution>
+  </xsl:template>
+
   <!--
   RDF Property:	dcat:distribution
   Definition:	An available distribution of the dataset.
@@ -366,16 +375,14 @@
                   </xsl:when>
                   <xsl:otherwise>
                     <xsl:apply-templates mode="iso19115-3-to-dcat-distribution"
-                                         select="ancestor::mrd:MD_Distribution/mrd:distributionFormat/*/mrd:formatSpecificationCitation |
-                                       ancestor::mrd:MD_DigitalTransferOptions/mrd:distributionFormat/*/mrd:formatSpecificationCitation"/>
+                                         select="ancestor::mrd:MD_DigitalTransferOptions/mrd:distributionFormat/*/mrd:formatSpecificationCitation"/>
                   </xsl:otherwise>
                 </xsl:choose>
               </xsl:otherwise>
             </xsl:choose>
 
             <xsl:apply-templates mode="iso19115-3-to-dcat-distribution"
-                                 select="ancestor::mrd:MD_Distribution/mrd:distributionFormat/*/mrd:fileDecompressionTechnique |
-                               ancestor::mrd:MD_DigitalTransferOptions/mrd:distributionFormat/*/mrd:fileDecompressionTechnique"/>
+                                 select="ancestor::mrd:MD_DigitalTransferOptions/mrd:distributionFormat/*/mrd:fileDecompressionTechnique"/>
 
 
             <xsl:if test="$isCopyingDatasetInfoToDistribution">
