@@ -44,7 +44,6 @@ public class IndexAndTaxonomy implements Closeable {
     @Override
     public void close() throws IOException {
         indexReader.releaseToNRTManager();
-        //TODO: this has a taxonomyReader in it, and it should be "closed" (decrement a ref)
-        // However, since it's public, not sure if we can do that or not since someone else might be using it...
+        taxonomyReader.decRef();
     }
 }
