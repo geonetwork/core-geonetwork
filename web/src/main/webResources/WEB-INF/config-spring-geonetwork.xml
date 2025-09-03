@@ -44,6 +44,7 @@
   <import resource="config-db/initial_data.xml"/>
   <import resource="config-print/config-spring-print.xml"/>
   <import resource="config-etf-validator.xml"/>
+  <import resource="config-shacl-validator.xml"/>
 
   <!-- For database configuration look in the config-node configuration files (config-node/srv.xml) -->
 
