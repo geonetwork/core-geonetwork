@@ -544,7 +544,7 @@
   <xsl:template name="svrl-text">
     <svrl:text>
       <xsl:choose>
-        <xsl:when test="contains(., '$loc/strings/')">
+        <xsl:when test="starts-with(., '$loc') or contains(., '$loc/strings/')">
           <xsl:element name="xsl:copy-of">
             <xsl:attribute name="select">
               <xsl:apply-templates mode="text"/>
@@ -589,7 +589,7 @@
       <xsl:if test=" string( $name )">
         <axsl:attribute name="name">
           <xsl:choose>
-            <xsl:when test="contains($name, '$loc/strings/')">
+            <xsl:when test="starts-with(., '$loc') or contains($name, '$loc/strings/')">
               <axsl:value-of>
                 <xsl:attribute name="select">
                   <xsl:value-of select="$name"/>

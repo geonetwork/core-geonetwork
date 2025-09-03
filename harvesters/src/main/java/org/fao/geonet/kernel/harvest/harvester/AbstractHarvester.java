@@ -784,7 +784,7 @@ public abstract class AbstractHarvester<T extends HarvestResult, P extends Abstr
         params.create(node);
     }
 
-    private void doDestroy(final Resources resources) {
+    protected void doDestroy(final Resources resources) {
         removeIcon(resources, getParams().getUuid());
 
         context.getBean(SourceRepository.class).deleteById(getParams().getUuid());

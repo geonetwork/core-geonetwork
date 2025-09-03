@@ -1580,6 +1580,7 @@
     "userHistoryFieldUnset": "Valeur du champ {{fieldName}} remise à zéro",
     "noUserHistory": "Aucun historique utilisateur disponible",
     "datahubConfiguration": "Configuration du Datahub",
+    "datahubVersion": "Version du Datahub",
     "sourceDatahubConfiguration-help": "Vous pouvez configurer les paramètres du Datahub ici. Pour plus d'informations, consultez le<a href='https://geonetwork.github.io/geonetwork-ui/main/docs/guide/configure.html' target='_blank'>guide de configuration du projet GeoNetwork-UI (EN)</a> . La configuration par défaut du Datahub est disponible <a href='https://github.com/geonetwork/geonetwork-ui/blob/main/conf/default.toml' target='_blank'>ici</a>. <br>Remarque : si vous laissez ce champ vide, la configuration du portail principal sera utilisée.",
     "datahubEnabled": "Activer le Datahub pour ce portail",
     "datahubInfo": "L'interface du Datahub est accessible <a href='../../{{uuid}}/datahub'>ici</a>.",

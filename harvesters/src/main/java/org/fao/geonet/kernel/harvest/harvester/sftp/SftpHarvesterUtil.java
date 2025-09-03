@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2007 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2025 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -20,42 +20,29 @@
 //===	Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
 //===	Rome - Italy. email: geonetwork@osgeo.org
 //==============================================================================
+package org.fao.geonet.kernel.harvest.harvester.sftp;
 
-package org.fao.geonet.services.main;
-
-import jeeves.interfaces.Service;
-import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import org.fao.geonet.GeonetContext;
-import org.fao.geonet.constants.Geonet;
-import org.jdom.Element;
+import org.fao.geonet.kernel.GeonetworkDataDirectory;
 
 import java.nio.file.Path;
+import java.nio.file.Paths;
 
-//=============================================================================
-
-public class OaiPmhDispatcher implements Service {
-    //--------------------------------------------------------------------------
-    //---
-    //--- Init
-    //---
-    //--------------------------------------------------------------------------
-
-    public void init(Path appPath, ServiceConfig config) throws Exception {
+public class SftpHarvesterUtil {
+    private SftpHarvesterUtil() {
+        throw new UnsupportedOperationException();
     }
 
-    //--------------------------------------------------------------------------
-    //---
-    //--- Service
-    //---
-    //--------------------------------------------------------------------------
+    public static Path getPrivateKeyFilePath(ServiceContext context, String harvesterUuid) {
+        GeonetworkDataDirectory geonetworkDataDirectory = context.getBean(GeonetworkDataDirectory.class);
+        String configDir = geonetworkDataDirectory.getConfigDir().toString();
 
-    public Element exec(Element params, ServiceContext context) throws Exception {
-        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+        return Paths.get(configDir, "privatekey-sftpharvester-" + harvesterUuid);
+    }
+    public static Path getPublicKeyFilePath(ServiceContext context, String harvesterUuid) {
+        GeonetworkDataDirectory geonetworkDataDirectory = context.getBean(GeonetworkDataDirectory.class);
+        String configDir = geonetworkDataDirectory.getConfigDir().toString();
 
-        return gc.getBean(org.fao.geonet.kernel.oaipmh.OaiPmhDispatcher.class).dispatch(params, context);
+        return Paths.get(configDir, "publickey-sftpharvester-" + harvesterUuid);
     }
 }
-
-//=============================================================================
-

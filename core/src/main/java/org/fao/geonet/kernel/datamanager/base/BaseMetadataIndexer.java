@@ -245,12 +245,18 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
      */
     @Override
     public void batchIndexInThreadPool(ServiceContext context, List<?> metadataIds) {
+        batchIndexInThreadPool(context, metadataIds, null);
+    }
 
-        TransactionStatus transactionStatus = null;
-        try {
-            transactionStatus = TransactionAspectSupport.currentTransactionStatus();
-        } catch (NoTransactionException e) {
-            // not in a transaction so we can go ahead.
+    @Override
+    public void batchIndexInThreadPool(ServiceContext context, List<?> metadataIds, TransactionStatus pTransactionStatus) {
+        TransactionStatus transactionStatus = pTransactionStatus;
+        if (transactionStatus == null) {
+            try {
+                transactionStatus = TransactionAspectSupport.currentTransactionStatus();
+            } catch (NoTransactionException e) {
+                // not in a transaction so we can go ahead.
+            }
         }
         // split reindexing task according to number of processors we can assign
         int threadCount = ThreadUtils.getNumberOfThreads();

@@ -95,6 +95,7 @@ public class BatchOpsMetadataReindexer extends MetadataIndexerProcessor implemen
     private final AtomicInteger inError = new AtomicInteger();
     private CompletableFuture<Void> allCompleted;
     private final MBeanExporter exporter;
+    private final EsSearchManager esSearchManager;
 
     public BatchOpsMetadataReindexer(DataManager dm, Set<Integer> metadata) {
         super(dm);

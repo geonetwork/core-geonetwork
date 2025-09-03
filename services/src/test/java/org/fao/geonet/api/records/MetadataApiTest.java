@@ -28,8 +28,12 @@ import org.fao.geonet.NodeInfo;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.kernel.SpringLocalServiceInvoker;
+import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.services.AbstractServiceIntegrationTest;
+import org.fao.geonet.utils.Xml;
+import org.jdom.Attribute;
 import org.jdom.Element;
 import org.junit.Assert;
 import org.junit.Before;
@@ -67,9 +71,12 @@ public class MetadataApiTest extends AbstractServiceIntegrationTest {
     private EntityManager _entityManager;
     @Autowired
     private MetadataRepository metadataRepository;
+    @Autowired
+    private SettingManager settingManager;
 
     private int id;
     private String uuid;
+    private String mdWithSubtemplateUuid;
     private ServiceContext context;
 
     @Before
@@ -83,6 +90,11 @@ public class MetadataApiTest extends AbstractServiceIntegrationTest {
         AbstractMetadata metadata = injectMetadataInDb(getSampleMetadataXml(), context);
         id = metadata.getId();
         uuid = metadata.getUuid();
+        AbstractMetadata subtemplate = insertTemplateResourceInDb(getSample("kernel/babarContact.xml"), context);
+        Element metadataWithSubtemplate = getSample("kernel/vicinityMap.xml");
+        Attribute href = (Attribute) Xml.selectElement(metadataWithSubtemplate, "gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact").getAttributes().get(0);
+        href.setValue(href.getValue().replace("@contact_uuid@", subtemplate.getUuid()));
+        mdWithSubtemplateUuid = injectMetadataInDb(metadataWithSubtemplate, context, true).getUuid();
     }
 
     @Test
@@ -260,6 +272,27 @@ public class MetadataApiTest extends AbstractServiceIntegrationTest {
             .andExpect(content().string(containsString(this.uuid)))
             .andExpect(content().string(not(containsString(".xsd"))))
             .andExpect(xpath("/MD_Metadata/fileIdentifier/CharacterString").string(this.uuid));
+    }
+
+    @Test
+    public void getRecordWithSubtemplateFullViewIta() throws Exception {
+        try {
+            settingManager.setValue(Settings.SYSTEM_XLINKRESOLVER_ENABLE, true);
+
+            MockMvc mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+            MockHttpSession mockHttpSession = loginAsAdmin();
+
+            mockMvc.perform(get("/srv/api/records/" + this.mdWithSubtemplateUuid + "/formatters/xsl-view")
+                    .param("view", "advanced")
+                    .param("root", "div")
+                    .session(mockHttpSession)
+                    .accept(MediaType.APPLICATION_XHTML_XML)
+                    .locale(Locale.ITALY))
+                .andExpect(content().string(containsString("Identificatore del file di metadati")))
+                .andExpect(status().isOk());
+        } finally {
+            settingManager.setValue(Settings.SYSTEM_XLINKRESOLVER_ENABLE, false);
+        }
     }
 
     @Test
