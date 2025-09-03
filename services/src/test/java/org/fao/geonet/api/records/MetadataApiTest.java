@@ -94,7 +94,7 @@ public class MetadataApiTest extends AbstractServiceIntegrationTest {
         Element metadataWithSubtemplate = getSample("kernel/vicinityMap.xml");
         Attribute href = (Attribute) Xml.selectElement(metadataWithSubtemplate, "gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact").getAttributes().get(0);
         href.setValue(href.getValue().replace("@contact_uuid@", subtemplate.getUuid()));
-        mdWithSubtemplateUuid = injectMetadataInDb(metadataWithSubtemplate, context, true).getUuid();
+        mdWithSubtemplateUuid = injectMetadataInDb(metadataWithSubtemplate, context).getUuid();
     }
 
     @Test

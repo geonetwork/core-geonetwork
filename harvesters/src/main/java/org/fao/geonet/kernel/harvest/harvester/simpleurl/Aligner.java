@@ -303,7 +303,7 @@ public class Aligner extends BaseAligner<SimpleUrlParams> {
         metadata.getCategories().clear();
         addCategories(metadata, params.getCategories(), localCateg, context, null, true);
 
-        metadataIndexer.indexMetadata(id, true, IndexingMode.full);
+        metadataIndexer.indexMetadata(id, batchingIndexSubmitter, IndexingMode.full);
         result.updatedMetadata++;
         return true;
     }

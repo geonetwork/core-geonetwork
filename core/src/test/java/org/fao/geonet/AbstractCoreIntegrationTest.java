@@ -391,7 +391,7 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
         return injectMetadataOrSubtemplateInDb(sampleMetadataXml, context, MetadataType.METADATA);
     }
 
-    protected AbstractMetadata injectMetadataInDb(Element element, ServiceContext serviceContext, boolean refreshHeader) throws Exception {
+    protected AbstractMetadata injectMetadataInDb(Element element, ServiceContext serviceContext) throws Exception {
         return injectMetadataOrSubtemplateInDb(element, serviceContext, MetadataType.METADATA);
     }
 
