@@ -359,21 +359,19 @@ public class LocalizedEmailComponent {
     }
 
     private String replaceLinks(String message) {
-
         SettingManager settingManager = ApplicationContextHolder.get().getBean(SettingManager.class);
 
-        // Get the emailRecordViewFormatter from the UI configuration
-        String emailRecordViewFormatter = XslUtil.getUiConfigurationJsonProperty(null, "mods.search.emailRecordViewFormatter");
+        // Get the recordLinkFormatter from the UI configuration
+        String recordLinkFormatter = XslUtil.getUiConfigurationJsonProperty(null, "mods.search.formatter.recordLinkFormatter");
 
-        // Set the recordViewFormatter parameter if emailRecordViewFormatter is present
-        String emailRecordViewFormatterParameter = StringUtils.isNotBlank(emailRecordViewFormatter) ? "?recordViewFormatter=" + emailRecordViewFormatter : "";
+        // Add the uuid placeholder to the link in the specified format
+        String link = settingManager.getNodeURL() + "api/records/" + (replaceLinksWithHtmlFormat ? "{{index:uuid}}" : "'{{'index:uuid'}}'");
 
-        String newPlaceholder;
-        if (replaceLinksWithHtmlFormat) {
-            newPlaceholder = "{{index:uuid}}";
-        } else {
-            newPlaceholder = "'{{'index:uuid'}}'";
+        // If the recordLinkFormatter is set add it as a parameter to the link
+        if (StringUtils.isNotBlank(recordLinkFormatter)) {
+            link += ("?recordViewFormatter=" + recordLinkFormatter);
         }
-        return message.replace("{{link}}", settingManager.getNodeURL() + "api/records/" + newPlaceholder + emailRecordViewFormatterParameter);
+
+        return message.replace("{{link}}", link);
     }
 }
