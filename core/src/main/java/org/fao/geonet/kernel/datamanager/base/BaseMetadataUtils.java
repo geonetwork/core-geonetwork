@@ -49,6 +49,7 @@ import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.*;
 import org.fao.geonet.repository.reports.MetadataReportsQueries;
 import org.fao.geonet.repository.specification.OperationAllowedSpecs;
+import org.fao.geonet.util.XslUtil;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.fao.geonet.web.DefaultLanguage;
@@ -344,7 +345,25 @@ public class BaseMetadataUtils implements IMetadataUtils {
         String sitemapLinkUrl = settingManager.getValue(METADATA_URL_SITEMAPLINKURL);
         String defaultLink = settingManager.getNodeURL() + "api/records/" + uuid + "?language=all";
         String permalink = buildUrl(uuid, language, sitemapLinkUrl);
-        return StringUtils.isNotEmpty(permalink) ? permalink : defaultLink;
+
+        // If the permalink template has been modified use the configured permalink template
+        // otherwise use the defaultLink
+        String link;
+        if (StringUtils.isNotEmpty(permalink) && !defaultLink.equals(permalink)) {
+            link = permalink;
+        } else {
+            link = defaultLink;
+
+            // Get the recordLinkFormatter from the UI configuration
+            String recordLinkFormatter = XslUtil.getUiConfigurationJsonProperty(null, "mods.search.formatter.recordLinkFormatter");
+
+            // If the recordLinkFormatter is defined append it to the defaultLink
+            if (StringUtils.isNotBlank(recordLinkFormatter)) {
+                link += ((defaultLink.contains("?") ? '&' : '?') + "recordViewFormatter=" + recordLinkFormatter);
+            }
+        }
+
+        return link;
     }
 
     @Override
