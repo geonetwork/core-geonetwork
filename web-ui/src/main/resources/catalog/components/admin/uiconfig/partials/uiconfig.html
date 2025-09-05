@@ -422,6 +422,14 @@
                       <tr data-ng-repeat="opt in mCfg[key].list track by $index">
                         <td>
                           <div class="input-group">
+                            <span class="input-group-addon" style="background: white">
+                              <input
+                                title="{{'useFormatterForRecordLinks'|translate}}"
+                                type="radio"
+                                data-ng-model="mCfg[key].recordLinkFormatter"
+                                data-ng-value="opt.label"
+                              />
+                            </span>
                             <span class="input-group-addon">Label </span>
                             <input
                               type="text"
@@ -436,17 +444,6 @@
                               id="ui-formatterURL-{{$index}}"
                               data-ng-model="opt.url"
                             />
-                          </div>
-
-                          <div class="row gn-nopadding-bottom">
-                            <label class="control-label">
-                              <input
-                                type="radio"
-                                data-ng-model="mCfg[key].recordLinkFormatter"
-                                data-ng-value="opt.label"
-                              />
-                              <span data-translate="">useFormatterForRecordLinks</span>
-                            </label>
                           </div>
 
                           <div class="row">
