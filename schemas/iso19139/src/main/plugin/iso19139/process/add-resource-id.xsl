@@ -29,24 +29,27 @@
                 xmlns:xs="http://www.w3.org/2001/XMLSchema"
                 xmlns:gn-fn-iso19139="http://geonetwork-opensource.org/xsl/functions/profiles/iso19139"
                 xmlns:util="java:org.fao.geonet.util.XslUtil"
+                xmlns:util-uuid="java:java.util.UUID"
                 version="2.0" exclude-result-prefixes="#all">
 
   <xsl:import href="../../iso19139/process/process-utility.xsl"/>
 
   <!-- i18n information -->
   <xsl:variable name="add-resource-id-loc">
-    <msg id="a" xml:lang="eng">Current record does not contain resource identifier. Add the
-      following identifier:
-    </msg>
-    <msg id="a" xml:lang="fre">Cette fiche ne contient pas d'identifiant pour la ressource. Ajouter
-      l'identifiant suivant :
-    </msg>
-    <msg id="a" xml:lang="dut">Het huidige record bevat geen resource-ID. Voeg deze identifier toe: </msg>
+    <msg id="a" xml:lang="eng">Current record does not contain resource identifier. Compute a resource identifier.</msg>
+    <msg id="a" xml:lang="fre">Cette fiche ne contient pas d'identifiant pour la ressource. Calculer un identifiant de ressource.</msg>
+    <msg id="a" xml:lang="dut">Het huidige record bevat geen resource-ID. Bereken een bronidentificatie.</msg>
   </xsl:variable>
 
 
-  <xsl:variable name="resource-id-url-prefix"
+  <xsl:variable name="resource-id-url-prefix-tmp"
                 select="util:getSettingValue('metadata/resourceIdentifierPrefix')"/>
+
+  <xsl:variable name="resource-id-url-prefix"
+                select="if (ends-with($resource-id-url-prefix-tmp, '/'))
+                            then $resource-id-url-prefix-tmp
+                            else concat($resource-id-url-prefix-tmp, '/')"/>
+
 
 
   <xsl:template name="list-add-resource-id">
@@ -62,14 +65,11 @@
                   select="count($root//gmd:identificationInfo/*/gmd:citation/
             gmd:CI_Citation/gmd:identifier/*/gmd:code[gco:CharacterString != '']) > 0"/>
 
-    <xsl:variable name="code"
-                  select="gn-fn-iso19139:resource-id-generate($root/*/gmd:fileIdentifier/gco:CharacterString)"/>
     <xsl:if test="not($hasResourceId)">
       <suggestion process="add-resource-id" id="{generate-id()}" category="identification"
                   target="identification">
         <name>
-          <xsl:value-of select="geonet:i18n($add-resource-id-loc, 'a', $guiLang)"/><xsl:text> </xsl:text><xsl:value-of
-          select="$code"/>.
+          <xsl:value-of select="geonet:i18n($add-resource-id-loc, 'a', $guiLang)"/>
         </name>
         <operational>true</operational>
       </suggestion>
@@ -89,13 +89,13 @@
   <xsl:template match="geonet:*" priority="2"/>
 
   <xsl:function name="gn-fn-iso19139:resource-id-generate" as="xs:string">
-    <xsl:param name="fileIdentifier" as="xs:string"/>
+    <xsl:param name="resourceIdentifier" as="xs:string"/>
 
     <!-- Create resource identifier based on metadata record identifier -->
     <xsl:variable name="urlWithoutLang" select="substring-before($catalogUrl, $nodeId)"/>
     <xsl:variable name="prefix"
                   select="if ($resource-id-url-prefix != '') then $resource-id-url-prefix else $urlWithoutLang"/>
-    <xsl:value-of select="concat($prefix, $fileIdentifier)"/>
+    <xsl:value-of select="concat($prefix, $resourceIdentifier)"/>
   </xsl:function>
 
   <xsl:template
@@ -112,10 +112,10 @@
                 gmd:edition|
                 gmd:editionDate"/>
 
-      <xsl:variable name="code"
-                    select="gn-fn-iso19139:resource-id-generate(/*/gmd:fileIdentifier/gco:CharacterString)"/>
+      <xsl:variable name="code" select="gn-fn-iso19139:resource-id-generate(util-uuid:toString(util-uuid:randomUUID()))" />
+
       <xsl:copy-of
-        select="gmd:identifier[gmd:MD_Identifier/gmd:code/gco:CharacterString != $code]"/>
+        select="gmd:identifier"/>
       <gmd:identifier>
         <gmd:MD_Identifier>
           <gmd:code>
