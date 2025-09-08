@@ -46,7 +46,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 
-import static org.fao.geonet.api.records.attachments.AttachmentsApi.getFileContentType;
+import static org.fao.geonet.api.records.attachments.AttachmentsApi.getMediaType;
 
 public class DefaultResourceDownloadHandler implements IResourceDownloadHandler {
 
@@ -76,7 +76,7 @@ public class DefaultResourceDownloadHandler implements IResourceDownloadHandler 
             MultiValueMap<String, String> headers = new HttpHeaders();
             headers.add("Content-Disposition", "inline; filename=\"" + fileName + "\"");
             headers.add("Cache-Control", "no-cache");
-            headers.add("Content-Type", getFileContentType(file));
+            headers.add("Content-Type", getMediaType(file.getFileName().toString()).toString());
 
             return new HttpEntity<>(Files.readAllBytes(file), headers);
 

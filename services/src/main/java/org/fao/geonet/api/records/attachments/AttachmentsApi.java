@@ -66,6 +66,7 @@ import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
+import javax.activation.MimetypesFileTypeMap;
 import javax.annotation.PostConstruct;
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
@@ -101,40 +102,17 @@ public class AttachmentsApi {
     }
 
     /**
-     * Based on the file content or file extension return an appropiate mime type.
+     * Based on the file extension return an appropriate mime type.
      *
      * @return The mime type or application/{{file_extension}} if none found.
      */
-    public static String getFileContentType(Path file) throws IOException {
-        String contentType = Files.probeContentType(file);
-        if (contentType == null) {
-            String ext = com.google.common.io.Files.getFileExtension(file.getFileName().toString()).toLowerCase();
-            switch (ext) {
-                case "png":
-                case "gif":
-                case "bmp":
-                    contentType = "image/" + ext;
-                    break;
-                case "tif":
-                case "tiff":
-                    contentType = "image/tiff";
-                    break;
-                case "jpg":
-                case "jpeg":
-                    contentType = "image/jpeg";
-                    break;
-                case "txt":
-                    contentType = "text/plain";
-                    break;
-                case "htm":
-                case "html":
-                    contentType = "text/html";
-                    break;
-                default:
-                    contentType = "application/" + ext;
-            }
+    public static MediaType getMediaType(String filename) {
+        String mimeType = null;
+
+        if (filename != null) {
+            mimeType = new MimetypesFileTypeMap().getContentType(filename);
         }
-        return contentType;
+        return (mimeType != null ? MediaType.parseMediaType(mimeType) : MediaType.APPLICATION_OCTET_STREAM);
     }
 
     public Store getStore() {
