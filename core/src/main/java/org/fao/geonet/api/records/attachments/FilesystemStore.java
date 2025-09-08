@@ -26,6 +26,7 @@
 package org.fao.geonet.api.records.attachments;
 
 import jeeves.server.context.ServiceContext;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.fao.geonet.api.exception.InputStreamLimitExceededException;
 import org.fao.geonet.api.exception.ResourceAlreadyExistException;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
@@ -39,6 +40,8 @@ import org.fao.geonet.lib.Lib;
 import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Log;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.PathResource;
+import org.springframework.core.io.Resource;
 
 import javax.annotation.Nullable;
 import java.io.IOException;
@@ -103,6 +106,10 @@ public class FilesystemStore extends AbstractStore {
         return resourceList;
     }
 
+    private String getEtag(Path path) throws IOException {
+        return "\"" + DigestUtils.md5Hex(path.getFileName().toString() + Files.getLastModifiedTime(path).toMillis() + Files.size(path)) + "\"";
+    }
+
     @Override
     public ResourceHolder getResource(final ServiceContext context, final String metadataUuid, final MetadataResourceVisibility visibility,
                                       final String resourceId, Boolean approved) throws Exception {
@@ -113,13 +120,37 @@ public class FilesystemStore extends AbstractStore {
                 resolve(getFilename(metadataUuid, resourceId));
 
         if (Files.exists(resourceFile)) {
-            return new ResourceHolderImpl(resourceFile, getResourceDescription(context, metadataUuid, visibility, resourceFile, approved));
+            return new FilesystemResourceHolder(resourceFile, getResourceDescription(context, metadataUuid, visibility, resourceFile, approved));
         } else {
             throw new ResourceNotFoundException(
                 String.format("Metadata resource '%s' not found for metadata '%s'", resourceId, metadataUuid))
                 .withMessageKey("exception.resourceNotFound.resource", new String[]{ resourceId })
                 .withDescriptionKey("exception.resourceNotFound.resource.description", new String[]{ resourceId, metadataUuid });
         }
+    }
+
+    @Override
+    public MetadataResource getResourceMetadata(ServiceContext context, String metadataUuid, MetadataResourceVisibility visibility, String resourceId, Boolean approved) throws Exception {
+        int metadataId = canDownload(context, metadataUuid, visibility, approved);
+        checkResourceId(resourceId);
+
+        final Path resourceFile = Lib.resource.getDir(visibility.toString(), metadataId).
+            resolve(getFilename(metadataUuid, resourceId));
+
+        if (Files.exists(resourceFile)) {
+            return getResourceDescription(context, metadataUuid, visibility, resourceFile, approved);
+        } else {
+            throw new ResourceNotFoundException(
+                String.format("Metadata resource '%s' not found for metadata '%s'", resourceId, metadataUuid))
+                .withMessageKey("exception.resourceNotFound.resource", new String[]{ resourceId })
+                .withDescriptionKey("exception.resourceNotFound.resource.description", new String[]{ resourceId, metadataUuid });
+        }
+    }
+
+    @Override
+    public ResourceHolder getResourceWithRange(ServiceContext context, String metadataUuid, MetadataResourceVisibility visibility, String resourceId, Boolean approved, long start, long end) throws Exception {
+        // For filesystem store the range is handled by spring so we just return the resource
+        return getResource(context, metadataUuid, visibility, resourceId, approved);
     }
 
 
@@ -136,7 +167,7 @@ public class FilesystemStore extends AbstractStore {
             resolve(getFilename(metadataUuid, resourceId));
 
         if (Files.exists(resourceFile)) {
-            return new ResourceHolderImpl(resourceFile, null);
+            return new FilesystemResourceHolder(resourceFile, null);
         } else {
             throw new ResourceNotFoundException(
                 String.format("Metadata resource '%s' not found for metadata '%s'", resourceId, metadataUuid));
@@ -252,8 +283,8 @@ public class FilesystemStore extends AbstractStore {
     public String delResource(ServiceContext context, String metadataUuid, String resourceId, Boolean approved) throws Exception {
         int metadataId = canEdit(context, metadataUuid, approved);
 
-        try (ResourceHolder filePath = getResource(context, metadataUuid, resourceId, approved)) {
-            Files.deleteIfExists(filePath.getPath());
+        try (ResourceHolder resourceHolder = getResource(context, metadataUuid, resourceId, approved)) {
+            Files.deleteIfExists(resourceHolder.getResource().getFile().toPath());
             Log.info(Geonet.RESOURCES,
                 String.format("Resource '%s' removed for metadata %d (%s).", resourceId, metadataId, metadataUuid));
             return String.format("Metadata resource '%s' removed.", resourceId);
@@ -269,8 +300,8 @@ public class FilesystemStore extends AbstractStore {
                               final String resourceId, Boolean approved) throws Exception {
         int metadataId = canEdit(context, metadataUuid, approved);
 
-        try (ResourceHolder filePath = getResource(context, metadataUuid, visibility, resourceId, approved)) {
-            Files.deleteIfExists(filePath.getPath());
+        try (ResourceHolder resourceHolder = getResource(context, metadataUuid, visibility, resourceId, approved)) {
+            Files.deleteIfExists(resourceHolder.getResource().getFile().toPath());
             Log.info(Geonet.RESOURCES,
                 String.format("Resource '%s' removed for metadata %d (%s).", resourceId, metadataId, metadataUuid));
             return String.format("Metadata resource '%s' removed.", resourceId);
@@ -287,14 +318,14 @@ public class FilesystemStore extends AbstractStore {
                                                 MetadataResourceVisibility visibility, Boolean approved) throws Exception {
         int metadataId = canEdit(context, metadataUuid, approved);
 
-        ResourceHolder filePath = getResource(context, metadataUuid, resourceId, approved);
-        if (filePath.getMetadata().getVisibility() == visibility) {
+        ResourceHolder resourceHolder = getResource(context, metadataUuid, resourceId, approved);
+        if (resourceHolder.getMetadata().getVisibility() == visibility) {
             // already the wanted visibility
-            return filePath.getMetadata();
+            return resourceHolder.getMetadata();
         }
         final Path newFolderPath = ensureDirectory(context, metadataId, resourceId, visibility);
-        Path newFilePath = newFolderPath.resolve(filePath.getPath().getFileName());
-        Files.move(filePath.getPath(), newFilePath);
+        Path newFilePath = newFolderPath.resolve(resourceHolder.getMetadata().getFilename());
+        Files.move(resourceHolder.getResource().getFile().toPath(), newFilePath);
         return getResourceDescription(context, metadataUuid, visibility, newFilePath, approved);
     }
 
@@ -318,18 +349,18 @@ public class FilesystemStore extends AbstractStore {
         return context.getBean(GeonetworkDataDirectory.class);
     }
 
-    private static class ResourceHolderImpl implements ResourceHolder {
-        private final Path path;
-        private MetadataResource metadata;
+    private static class FilesystemResourceHolder implements ResourceHolder {
+        private final PathResource resource;
+        private final MetadataResource metadata;
 
-        private ResourceHolderImpl(Path path, final MetadataResource metadata) {
-            this.path = path;
+        private FilesystemResourceHolder(Path path, final MetadataResource metadata) {
+            this.resource = new PathResource(path);
             this.metadata = metadata;
         }
 
         @Override
-        public Path getPath() {
-            return path;
+        public Resource getResource() {
+            return resource;
         }
 
         @Override
