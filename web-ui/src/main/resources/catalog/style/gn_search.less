@@ -281,7 +281,6 @@
   margin-left: -7px;
   padding: 8px 0;
   background-color: #fff;
-  border: 1px solid #ccc;
   border: 1px solid rgba(0, 0, 0, 0.2);
   -webkit-border-radius: 4px;
   -moz-border-radius: 4px;
@@ -299,8 +298,7 @@
 }
 
 .tt-suggestion p {
-  margin: 0;
-  margin-top: 2px;
+  margin: 2px 0 0 0;
   line-height: normal;
 }
 .tt-hint {
@@ -514,10 +512,8 @@
     margin: 0.8em -0.3em 0 0.8em;
   }
 
-  .input-group.gn-form-any {
-    .btn {
-      border-radius: 0px;
-    }
+  .input-group.gn-form-any .btn {
+      border-radius: 0;
   }
 
   .panel-heading {
@@ -590,12 +586,10 @@
   border-radius: 6px 0 6px 6px;
 }
 
-.relatedMd {
-  .relatedRecord {
+.relatedMd .relatedRecord {
     float: left;
     padding: 8px;
     cursor: pointer;
-  }
 }
 
 .cookie-warning {
@@ -603,7 +597,7 @@
   width: 100%;
   span {
     font-weight: bolder;
-    font-color: #428bca;
+    color: #428bca;
     cursor: pointer;
   }
 }
@@ -745,7 +739,7 @@ button.active [role="tooltip"] {
 .search-filter-tags {
   .panel-body {
     font-size: 14px;
-    padding-left: 0px;
+    padding-left: 0;
   }
   .gn-filter-negative {
     color: @brand-danger;

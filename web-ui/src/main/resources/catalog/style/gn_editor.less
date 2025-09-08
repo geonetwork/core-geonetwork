@@ -51,7 +51,7 @@ select {
 #gn-directory-container {
   .gn-facet-dropdown {
     min-width: 300px;
-    padding: 0px 10px;
+    padding: 0 10px;
     .badge {
       background-color: #777777;
     }
@@ -82,8 +82,8 @@ select {
   }
 
   .directory-entries-list {
-    margin: 0.7em 0em;
-    padding: 0px;
+    margin: 0.7em 0;
+    padding: 0;
 
     & > li {
       @padding: 6px;
@@ -118,7 +118,7 @@ select {
         margin: -7px -12px -7px 6px;
       }
       .entry-editor-title {
-        min-width: 0px;
+        min-width: 0;
         overflow: hidden;
         white-space: nowrap;
         text-overflow: ellipsis;
@@ -187,7 +187,7 @@ form.gn-editor {
   }
 
   div.well {
-    margin-bottom: 0px;
+    margin-bottom: 0;
   }
 
   div[data-gn-toggle] {
@@ -199,7 +199,7 @@ form.gn-editor {
       background-color: @brand-primary;
       color: white;
       -webkit-border-radius: 15px;
-      border-width: 0px;
+      border-width: 0;
       i {
         padding-left: 3px;
         padding-top: 4px;
@@ -239,7 +239,7 @@ form.gn-editor {
   }
 
   .form-group {
-    margin-bottom: 0px;
+    margin-bottom: 0;
   }
   div.well {
     .form-group {
@@ -258,7 +258,7 @@ form.gn-editor {
   }
 
   .gn-textarea-xml {
-    font-family: courier;
+    font-family: courier, serif;
     font-size: 12px;
     min-height: 700px;
   }
@@ -270,16 +270,8 @@ form.gn-editor {
   .control-label {
     color: #6a6a6a;
     font-weight: 200;
-    padding-top: 0px;
+    padding-top: 0;
     line-height: 22px;
-  }
-
-  .gn-required > label {
-    //   color: #333333;
-  }
-
-  .gn-move {
-    //    .pull-right();
   }
 
   legend > div.gn-move {
@@ -323,13 +315,13 @@ form.gn-editor {
     > input.gn-time.hidden,
     > select.gn-timezone.hidden,
     > input.gn-timezone.hidden {
-      width: 0% !important;
+      width: 0 !important;
     }
     .gn-indeterminate-position {
       display: table-cell;
       > select {
-        border-bottom-right-radius: 0px;
-        border-top-right-radius: 0px;
+        border-bottom-right-radius: 0;
+        border-top-right-radius: 0;
       }
     }
     &.gn-time-with-ind-position {
@@ -349,8 +341,8 @@ form.gn-editor {
    * to properly align radios
    */
   .helper .help-block {
-    margin-top: 0px;
-    margin-bottom: 0px;
+    margin-top: 0;
+    margin-bottom: 0;
   }
 
   /* Avoid white on white when i:hover
@@ -403,7 +395,7 @@ form.gn-editor {
   }
   .gn-field {
     border-radius: 3px;
-    margin: 0px;
+    margin: 0;
     padding-top: 4px;
     padding-bottom: 4px;
   }
@@ -424,10 +416,10 @@ form.gn-editor {
     visibility: visible;
   }
   .gn-value .col-xs-8 {
-    padding-left: 0px;
+    padding-left: 0;
   }
   .gn-value .col-xs-4 {
-    padding-right: 0px;
+    padding-right: 0;
   }
 
   div.th-inner {
@@ -454,12 +446,12 @@ form.gn-editor {
   }
   legend.gn-required:after {
     font-size: 24px;
-    margin: 0px;
+    margin: 0;
   }
 
   .form-horizontal .form-group {
-    margin-left: 0px;
-    margin-right: 0px;
+    margin-left: 0;
+    margin-right: 0;
   }
 
   /* Multilingual badge positionning when
@@ -565,7 +557,7 @@ form.gn-tab-inspire {
     margin-bottom: 15px;
     box-shadow: none;
     [data-gn-slide-toggle]:before {
-      margin-left: 0px;
+      margin-left: 0;
     }
     .panel-heading {
       background: none;
@@ -692,7 +684,7 @@ table.gn-data-store {
   word-wrap: break-word;
 }
 .navbar-collapse {
-  padding-right: 0px;
+  padding-right: 0;
 }
 
 .open > .dropdown-menu {
@@ -706,7 +698,7 @@ table.gn-data-store {
 
 .gn-batch-editor {
   .gn-resultview li.list-group-item {
-    margin-bottom: 0px;
+    margin-bottom: 0;
     padding: 4px;
   }
   li.gn-batch-editor-info {
@@ -717,17 +709,15 @@ table.gn-data-store {
   }
 }
 
-form.gn-tab-xml {
-  div[data-gn-toggle] {
+form.gn-tab-xml div[data-gn-toggle] {
     display: none;
-  }
 }
 
 .gn-table {
   /* Compact gn-fields displayed in table mode.
   Label and remove control are hidden. */
   :not(.gn-table-label) div.gn-field {
-    padding: 0px !important;
+    padding: 0 !important;
     label,
     .col-sm-1.gn-control {
       display: none;
@@ -787,7 +777,7 @@ form.gn-tab-xml {
   min-height: 800px;
 }
 #gn-directory-container #xmleditor {
-  top: 0px;
+  top: 0;
   position: relative;
 }
 
@@ -818,13 +808,13 @@ form.gn-tab-xml {
     border-radius: 0;
     border: none;
     margin: 8px;
-    box-shadow: 0px 2px 3px rgba(0, 0, 0, 0.4);
+    box-shadow: 0 2px 3px rgba(0, 0, 0, 0.4);
     &.active {
       background-color: #5384e6;
     }
     &:hover {
       cursor: pointer;
-      box-shadow: 0px 2px 3px rgba(66, 139, 202, 0.4);
+      box-shadow: 0 2px 3px rgba(66, 139, 202, 0.4);
     }
     strong {
       font-weight: normal;
@@ -935,10 +925,10 @@ gn-md-type-inspire-validation-widget {
       content: "";
       background-color: rgba(255, 255, 255, 0.25);
       position: absolute;
-      top: 0px;
+      top: 0;
       height: 50%;
-      left: 0px;
-      right: 0px;
+      left: 0;
+      right: 0;
     }
   }
 }
@@ -977,10 +967,10 @@ gn-draft-validation-widget {
       content: "";
       background-color: rgba(255, 255, 255, 0.25);
       position: absolute;
-      top: 0px;
+      top: 0;
       height: 50%;
-      left: 0px;
-      right: 0px;
+      left: 0;
+      right: 0;
     }
   }
 }
@@ -1013,7 +1003,7 @@ gn-bounding-polygon {
   label {
     font-size: 0.9em;
     line-height: 0.8em;
-    margin-bottom: 0px;
+    margin-bottom: 0;
   }
 
   textarea {

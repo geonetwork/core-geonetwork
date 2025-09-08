@@ -86,6 +86,7 @@ web/src/main/webapp/WEB-INF/data_*
 web/src/main/webapp/WEB-INF/metadata_subversion/
 web/src/main/webapp/WEB-INF/prebuilt
 web/src/main/webapp/data/
-web/src/main/webapp/doc/en
-web/src/main/webapp/doc/fr
-web/src/main/webapp/WEB-INF/data/data/resources/schemapublication
+
+# macOS folder icon files
+Icon?
+
