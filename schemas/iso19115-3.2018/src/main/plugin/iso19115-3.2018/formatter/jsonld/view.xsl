@@ -7,9 +7,9 @@
   exclude-result-prefixes="#all"
   version="2.0">
 
-  <xsl:output method="text"/>
-
   <xsl:include href="iso19115-3.2018-to-jsonld.xsl"/>
+
+  <xsl:output method="text"/>
 
   <xsl:template match="/">
     <textResponse>

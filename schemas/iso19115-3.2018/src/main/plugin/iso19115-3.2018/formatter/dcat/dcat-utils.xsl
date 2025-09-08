@@ -126,7 +126,7 @@
     <xsl:param name="metadata" as="node()"/>
 
     <xsl:variable name="metadataLinkage"
-                  select="$metadata/mdb:metadataLinkage/*/cit:linkage/(gco:CharacterString|gcx:Anchor)/text()"
+                  select="($metadata/mdb:metadataLinkage/*/cit:linkage/(gco:CharacterString|gcx:Anchor)/text())[1]"
                   as="xs:string?"/>
 
     <xsl:variable name="metadataIdentifier"

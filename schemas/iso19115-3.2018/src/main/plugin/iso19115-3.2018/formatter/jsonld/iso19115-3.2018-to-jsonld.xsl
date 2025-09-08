@@ -51,6 +51,7 @@
 
     <!-- Used for json escape string -->
     <xsl:import href="common/index-utils.xsl"/>
+    <xsl:import href="jsonld-utils.xsl"/>
 
     <xsl:import href="../dcat/dcat-utils.xsl"/>
 
@@ -155,7 +156,7 @@
     <xsl:for-each select="$record">
       {
       "@context": {
-        "@language": "<xsl:value-of select="util:twoCharLangCode($defaultLanguage)"/>",
+        "@language": <xsl:value-of select="schema-org-fn:toJsonText(util:twoCharLangCode($defaultLanguage))"/>,
         "@vocab": "https://schema.org/",
         "schema": "https://schema.org/",
         "sc": "https://schema.org/",
@@ -202,7 +203,7 @@
       <xsl:variable name="hierarchyLevels"
                     select="distinct-values(mdb:metadataScope/*/mdb:resourceScope/*/@codeListValue[. != ''])"/>
       <xsl:for-each select="$hierarchyLevels">
-        "@type": "<xsl:value-of select="schema-org-fn:getType(., 'schema:')"/>",
+        "@type": <xsl:value-of select="schema-org-fn:toJsonText(schema-org-fn:getType(., 'schema:'))"/>,
       </xsl:for-each>
       <xsl:if test="count($hierarchyLevels) = 0">
         "@type": "schema:Dataset",
@@ -211,17 +212,17 @@
       <xsl:variable name="resourceUri"
                     select="gn-fn-dcat:getResourceUri(.)"/>
 
-      "@id": "<xsl:value-of select="$resourceUri"/>",
+      "@id": <xsl:value-of select="schema-org-fn:toJsonText($resourceUri)"/>,
 
       <!--
       The URL of the dataset. This generally corresponds to the Web page for the dataset.
       -->
-      "url": "<xsl:value-of select="$resourceUri"/>",
+      "url": <xsl:value-of select="schema-org-fn:toJsonText($resourceUri)"/>,
 
       "includedInDataCatalog": [{
       "@type": "DataCatalog",
-      "url": "<xsl:value-of select="$baseUrl"/>",
-      "name": "<xsl:value-of select="$catalogueName"/>"
+      "url": <xsl:value-of select="schema-org-fn:toJsonText($baseUrl)"/>,
+      "name": <xsl:value-of select="schema-org-fn:toJsonText($catalogueName)"/>
       }],
 
       <!-- The language of the content  -->
@@ -230,7 +231,7 @@
       <xsl:if test="$resourceLanguages">
         "inLanguage": [
         <xsl:for-each select="$resourceLanguages">
-          "<xsl:value-of select="util:twoCharLangCode(current())"/>"
+          <xsl:value-of select="schema-org-fn:toJsonText(util:twoCharLangCode(current()))"/>
           <xsl:if test="position() != last()">,</xsl:if>
         </xsl:for-each>],
       </xsl:if>
@@ -329,9 +330,9 @@
                       select="mdb:identificationInfo/*/mri:citation/*/cit:date[*/cit:dateType/*/@codeListValue = current()/@key]/*/cit:date/*/text()"/>
 
         <xsl:if test="$datesForType">
-          "<xsl:value-of select="current()/text()"/>": [
+          <xsl:value-of select="schema-org-fn:toJsonText(current()/text())"/>: [
           <xsl:for-each select="$datesForType">
-            "<xsl:value-of select="."/>"
+            <xsl:value-of select="schema-org-fn:toJsonText(.)"/>
             <xsl:if test="position() != last()">,</xsl:if>
           </xsl:for-each>
           ],
@@ -340,7 +341,7 @@
 
 
       <xsl:for-each select="mdb:identificationInfo/*/mri:citation/*/cit:edition/gco:CharacterString[. != '']">
-        "version": "<xsl:value-of select="util:escapeForJson(.)"/>",
+        "version": <xsl:value-of select="schema-org-fn:toJsonText(.)"/>,
       </xsl:for-each>
 
 
@@ -350,7 +351,7 @@
         <xsl:value-of select="schema-org-fn:toJsonLDLocalized(., $requestedLanguage, $requestedLanguageId)"/>
         <xsl:if test="position() != last()">,</xsl:if>
       </xsl:for-each>
-      ],
+      ]
 
 
       <xsl:variable name="isoRoleToSchemaOrg" as="node()*">
@@ -382,15 +383,16 @@
 
       <xsl:for-each-group select="$contactList" group-by="../cit:role/*/@codeListValue">
         <xsl:variable name="contactType"
+                      as="node()?"
                       select="$isoRoleToSchemaOrg[@key = current-grouping-key()]"/>
 
-        <xsl:if test="$contactType != ''">
-          "<xsl:value-of select="$contactType/text()"/>": [
+        <xsl:if test="$contactType">
+          ,<xsl:value-of select="schema-org-fn:toJsonText($contactType/text())"/>: [
           <xsl:for-each select="current-group()">
             <xsl:variable name="id"
                           select=".//cit:electronicMailAddress/*/text()[1]"/>
             {
-            "@id":"<xsl:value-of select="$id"/>",
+            "@id": <xsl:value-of select="schema-org-fn:toJsonText($id)"/>,
             "@type":"Organization"
             <xsl:for-each select=".//cit:CI_Organisation/cit:name">
               ,"name":  <xsl:value-of select="schema-org-fn:toJsonLDLocalized(., $requestedLanguage, $requestedLanguageId)"/>
@@ -406,29 +408,28 @@
 
             <!-- TODO: only if children available -->
             ,"contactPoint": {
-            "@type" : "PostalAddress"
-            <xsl:for-each select="cit:contactInfo/*/cit:address/*/cit:country">
-              ,"addressCountry":
-              <xsl:value-of select="schema-org-fn:toJsonLDLocalized(., $requestedLanguage, $requestedLanguageId)"/>
-            </xsl:for-each>
-            <xsl:for-each select="cit:contactInfo/*/cit:address/*/cit:city">
-              ,"addressLocality":
-              <xsl:value-of select="schema-org-fn:toJsonLDLocalized(., $requestedLanguage, $requestedLanguageId)"/>
-            </xsl:for-each>
-            <xsl:for-each select="cit:contactInfo/*/cit:address/*/cit:postalCode">
-              ,"postalCode":
-              <xsl:value-of select="schema-org-fn:toJsonLDLocalized(., $requestedLanguage, $requestedLanguageId)"/>
-            </xsl:for-each>
-            <xsl:for-each select="cit:contactInfo/*/cit:address/*/cit:deliveryPoint">
-              ,"streetAddress":
-              <xsl:value-of select="schema-org-fn:toJsonLDLocalized(., $requestedLanguage, $requestedLanguageId)"/>
-            </xsl:for-each>
-            }
+              "@type" : "PostalAddress"
+              <xsl:for-each select="cit:contactInfo/*/cit:address/*/cit:country">
+                ,"addressCountry":
+                <xsl:value-of select="schema-org-fn:toJsonLDLocalized(., $requestedLanguage, $requestedLanguageId)"/>
+              </xsl:for-each>
+              <xsl:for-each select="cit:contactInfo/*/cit:address/*/cit:city">
+                ,"addressLocality":
+                <xsl:value-of select="schema-org-fn:toJsonLDLocalized(., $requestedLanguage, $requestedLanguageId)"/>
+              </xsl:for-each>
+              <xsl:for-each select="cit:contactInfo/*/cit:address/*/cit:postalCode">
+                ,"postalCode":
+                <xsl:value-of select="schema-org-fn:toJsonLDLocalized(., $requestedLanguage, $requestedLanguageId)"/>
+              </xsl:for-each>
+              <xsl:for-each select="cit:contactInfo/*/cit:address/*/cit:deliveryPoint">
+                ,"streetAddress":
+                <xsl:value-of select="schema-org-fn:toJsonLDLocalized(., $requestedLanguage, $requestedLanguageId)"/>
+              </xsl:for-each>
+              }
             }
             <xsl:if test="position() != last()">,</xsl:if>
           </xsl:for-each>
           ]
-          <xsl:if test="position() != last()">,</xsl:if>
         </xsl:if>
       </xsl:for-each-group>
 
@@ -459,17 +460,17 @@
         <xsl:for-each select=".//mrd:onLine/* except $fileObjects">
           {
           "@type":"DataDownload",
-          "@id": "<xsl:value-of select="util:escapeForJson((cit:linkage/*/text())[1])"/>",
-          "contentUrl": "<xsl:value-of select="util:escapeForJson((cit:linkage/*/text())[1])"/>"
+          "@id": <xsl:value-of select="schema-org-fn:toJsonText((cit:linkage/*/text())[1])"/>,
+          "contentUrl": <xsl:value-of select="schema-org-fn:toJsonText((cit:linkage/*/text())[1])"/>
           <!--      File size in (mega/kilo/…)bytes. Defaults to bytes if a unit is not specified.
                     "contentSize"-->
           <xsl:if test="cit:protocol">,
             <xsl:variable name="protocol" select="normalize-space(cit:protocol/*/text())"/>
-            "encodingFormat": "<xsl:value-of
-              select="util:escapeForJson(
+            "encodingFormat": <xsl:value-of
+              select="schema-org-fn:toJsonText(
                                                     if (cit:protocol/*/@xlink:href != '')
                                                     then cit:protocol/*/@xlink:href
-                                                    else $protocol)"/>"
+                                                    else $protocol)"/>
           </xsl:if>
           <xsl:if test="cit:name">,
             "name":
@@ -490,18 +491,18 @@
                         select="if (exists($mimeType)) then $mimeType else substring-after($protocol, 'WWW:DOWNLOAD:')"/>
           {
           "@type": "cr:FileObject",
-          "@id": "<xsl:value-of select="util:escapeForJson((cit:linkage/*/text())[1])"/>",
-          "contentUrl": "<xsl:value-of select="util:escapeForJson((cit:linkage/*/text())[1])"/>"
+          "@id": <xsl:value-of select="schema-org-fn:toJsonText((cit:linkage/*/text())[1])"/>,
+          "contentUrl": "<xsl:value-of select="schema-org-fn:toJsonText((cit:linkage/*/text())[1])"/>
           <!--      File size in (mega/kilo/…)bytes. Defaults to bytes if a unit is not specified.
                     "contentSize"-->
           <xsl:if test="cit:protocol">,
-            "encodingFormat": "<xsl:value-of
-              select="util:escapeForJson(
+            "encodingFormat": <xsl:value-of
+              select="schema-org-fn:toJsonText(
                                                 if (cit:protocol/*/@xlink:href != '')
                                                 then cit:protocol/*/@xlink:href
                                                 else if ($format != '')
                                                 then $format
-                                                else $protocol)"/>"
+                                                else $protocol)"/>
           </xsl:if>
           <xsl:if test="cit:name">,
             "name":
@@ -559,7 +560,7 @@
                         as="xs:string?"/>
           {
           "@type": "cr:RecordSet",
-          "@id": "<xsl:value-of select="$featureTypeId"/>",
+          "@id": <xsl:value-of select="schema-org-fn:toJsonText($featureTypeId)"/>,
           <!--
           https://docs.mlcommons.org/croissant/docs/croissant-spec.html#typing-recordsets
           Not 100% sure how a geometry type should be defined. For now, is one column is of type geometry,
@@ -578,26 +579,26 @@
                         select="(gfc:carrierOfCharacteristics/*[gfc:cardinality/*/text() = ('1..1')])[1]"/>
 
           <xsl:if test="$idColumn">
-            "key": [{ "@id": "<xsl:value-of select="schema-org-fn:buildColumnId($featureTypeId, $idColumn, gfc:carrierOfCharacteristics/*[generate-id() = $idColumn/generate-id()]/count(../preceding-sibling::gfc:carrierOfCharacteristics) + 1)"/>" }],
+            "key": [{ "@id": <xsl:value-of select="schema-org-fn:toJsonText(schema-org-fn:buildColumnId($featureTypeId, $idColumn, gfc:carrierOfCharacteristics/*[generate-id() = $idColumn/generate-id()]/count(../preceding-sibling::gfc:carrierOfCharacteristics) + 1))"/> }],
           </xsl:if>
           "field": [
           <xsl:for-each select="gfc:carrierOfCharacteristics/*">
             {
             "@type": "cr:Field",
-            "@id": "<xsl:value-of select="schema-org-fn:buildColumnId($featureTypeId, current(), position())"/>",
+            "@id": <xsl:value-of select="schema-org-fn:toJsonText(schema-org-fn:buildColumnId($featureTypeId, current(), position()))"/>,
 
             <xsl:variable name="valueType"
                           select="gfc:valueType/*/gco:aName/*/text()"/>
-            "dataType": "<xsl:value-of select="($isoToCroissantDataType[@key = $valueType],  $valueType)[1]"/>"
+            "dataType": <xsl:value-of select="schema-org-fn:toJsonText(($isoToCroissantDataType[@key = $valueType],  $valueType)[1])"/>
             <xsl:if test="gfc:memberName">,
-              "name": "<xsl:value-of select="util:escapeForJson(gfc:memberName/text())"/>"
+              "name": <xsl:value-of select="schema-org-fn:toJsonText(gfc:memberName/text())"/>
             </xsl:if>
             <xsl:if test="gfc:definition">,
               "description":
               <xsl:value-of select="schema-org-fn:toJsonLDLocalized(gfc:definition, $requestedLanguage, $requestedLanguageId)"/>
             </xsl:if>
             ,"source": {
-            "fileObject": { "@id": "<xsl:value-of select="$fileObjectId"/>" }
+            "fileObject": { "@id": <xsl:value-of select="schema-org-fn:toJsonText($fileObjectId)"/> }
             }
             }<xsl:if test="position() != last()">,</xsl:if>
           </xsl:for-each>
@@ -619,12 +620,12 @@
         "geo": [
         <xsl:for-each select="gex:geographicElement/gex:EX_GeographicBoundingBox">
           {"@type":"GeoShape",
-          "box": "<xsl:value-of select="string-join((
+          "box": <xsl:value-of select="schema-org-fn:toJsonText(string-join((
                                               gex:southBoundLatitude/gco:Decimal,
                                               gex:westBoundLongitude/gco:Decimal,
                                               gex:northBoundLatitude/gco:Decimal,
                                               gex:eastBoundLongitude/gco:Decimal
-                                              ), ' ')"/>"
+                                              ), ' '))"/>
           }
           <xsl:if test="position() != last()">,</xsl:if>
         </xsl:for-each>
@@ -639,11 +640,11 @@
       <xsl:if test="$temporalCoverage">
         ,"temporalCoverage": [
         <xsl:for-each select="$temporalCoverage">
-          "<xsl:value-of select="concat(
+          <xsl:value-of select="schema-org-fn:toJsonText(concat(
                                                       gml:TimePeriod/gml:beginPosition,
                                                       '/',
                                                       gml:TimePeriod/gml:endPosition
-          )"/>"
+          ))"/>
           <xsl:if test="position() != last()">,</xsl:if>
           <!-- TODO: handle
           "temporalCoverage" : "2013-12-19/.."
@@ -660,59 +661,58 @@
     </xsl:for-each>
   </xsl:template>
 
+  <xsl:function name="schema-org-fn:toJsonLDLocalized" as="xs:string">
+      <xsl:param name="node" as="node()?"/>
+      <xsl:param name="requestedLanguage"/>
+      <xsl:param name="requestedLanguageId"/>
 
-    <xsl:function name="schema-org-fn:toJsonLDLocalized" as="xs:string">
-        <xsl:param name="node" as="node()?"/>
-        <xsl:param name="requestedLanguage"/>
-        <xsl:param name="requestedLanguageId"/>
+      <xsl:choose>
+          <!--
+          This https://json-ld.org/spec/latest/json-ld/#string-internationalization
+          should be supported in JSON-LD for multilingual content but does not
+          seems to be supported yet by https://search.google.com/structured-data/testing-tool
 
-        <xsl:choose>
-            <!--
-            This https://json-ld.org/spec/latest/json-ld/#string-internationalization
-            should be supported in JSON-LD for multilingual content but does not
-            seems to be supported yet by https://search.google.com/structured-data/testing-tool
+          Error is not a valid type for property.
 
-            Error is not a valid type for property.
+          So for now, JSON-LD format will only provide one language.
+          The main one or the requested and if not found, the default.
 
-            So for now, JSON-LD format will only provide one language.
-            The main one or the requested and if not found, the default.
-
-            <xsl:when test="gmd:PT_FreeText">
-              &lt;!&ndash; An array of object with all translations &ndash;&gt;
-              <xsl:if test="$asArray">[</xsl:if>
-              <xsl:for-each select="gmd:PT_FreeText/gmd:textGroup">
-                <xsl:variable name="languageId"
-                              select="gmd:LocalisedCharacterString/@locale"/>
-                <xsl:variable name="languageCode"
-                              select="$metadata/gmd:locale/*[concat('#', @id) = $languageId]/gmd:languageCode/*/@codeListValue"/>
-                {
-                <xsl:value-of select="concat('&quot;@value&quot;: &quot;',
-                                    util:escapeForJson(gmd:LocalisedCharacterString/text()),
-                                    '&quot;')"/>,
-                <xsl:value-of select="concat('&quot;@language&quot;: &quot;',
-                                    $languageCode,
-                                    '&quot;')"/>
-                }
-                <xsl:if test="position() != last()">,</xsl:if>
-              </xsl:for-each>
-              <xsl:if test="$asArray">]</xsl:if>
-              &lt;!&ndash;<xsl:if test="position() != last()">,</xsl:if>&ndash;&gt;
-            </xsl:when>-->
-            <xsl:when test="$requestedLanguage != ''">
-                <xsl:variable name="requestedValue"
-                              select="$node/lan:PT_FreeText/*/lan:LocalisedCharacterString[@id = $requestedLanguageId]/text()"/>
-                <xsl:value-of select="concat('&quot;',
-                              util:escapeForJson(
-                                if ($requestedValue != '') then $requestedValue else ($node/(gco:CharacterString|gcx:Anchor))),
-                              '&quot;')"/>
-            </xsl:when>
-            <xsl:otherwise>
-                <!-- A simple property value -->
-                <xsl:value-of select="concat('&quot;',
-                              util:escapeForJson($node/(gco:CharacterString|gcx:Anchor)),
-                              '&quot;')"/>
-            </xsl:otherwise>
-        </xsl:choose>
+          <xsl:when test="gmd:PT_FreeText">
+            &lt;!&ndash; An array of object with all translations &ndash;&gt;
+            <xsl:if test="$asArray">[</xsl:if>
+            <xsl:for-each select="gmd:PT_FreeText/gmd:textGroup">
+              <xsl:variable name="languageId"
+                            select="gmd:LocalisedCharacterString/@locale"/>
+              <xsl:variable name="languageCode"
+                            select="$metadata/gmd:locale/*[concat('#', @id) = $languageId]/gmd:languageCode/*/@codeListValue"/>
+              {
+              <xsl:value-of select="concat('&quot;@value&quot;: &quot;',
+                                  util:escapeForJson(gmd:LocalisedCharacterString/text()),
+                                  '&quot;')"/>,
+              <xsl:value-of select="concat('&quot;@language&quot;: &quot;',
+                                  $languageCode,
+                                  '&quot;')"/>
+              }
+              <xsl:if test="position() != last()">,</xsl:if>
+            </xsl:for-each>
+            <xsl:if test="$asArray">]</xsl:if>
+            &lt;!&ndash;<xsl:if test="position() != last()">,</xsl:if>&ndash;&gt;
+          </xsl:when>-->
+          <xsl:when test="$requestedLanguage != ''">
+              <xsl:variable name="requestedValue"
+                            select="$node/lan:PT_FreeText/*/lan:LocalisedCharacterString[@id = $requestedLanguageId]/text()"/>
+              <xsl:value-of select="concat('&quot;',
+                            util:escapeForJson(
+                              if ($requestedValue != '') then $requestedValue else ($node/(gco:CharacterString|gcx:Anchor))),
+                            '&quot;')"/>
+          </xsl:when>
+          <xsl:otherwise>
+              <!-- A simple property value -->
+              <xsl:value-of select="concat('&quot;',
+                            util:escapeForJson($node/(gco:CharacterString|gcx:Anchor)),
+                            '&quot;')"/>
+          </xsl:otherwise>
+      </xsl:choose>
     </xsl:function>
 
 
@@ -733,36 +733,33 @@
             <entry key="services"></entry>
         </xsl:variable>
 
-        <xsl:for-each select="$associations/relations/*">
-            <xsl:sort select="local-name()"/>
-
+        <xsl:for-each-group select="$associations/relations/*" group-by="local-name()">
             <xsl:variable name="relationType"
-                          select="local-name()"/>
+                          select="current-grouping-key()"/>
 
-            <xsl:if test="count(preceding-sibling::*[local-name() = $relationType]) = 0">
-                <xsl:variable name="schemaOrgType"
-                              select="$relationTypeToSchemaOrg [@key = $relationType]"/>
+            <xsl:variable name="schemaOrgType"
+                          select="$relationTypeToSchemaOrg [@key = $relationType]"/>
 
-                <xsl:if test="$schemaOrgType/text() != ''">
-                    ,"<xsl:value-of select="$schemaOrgType/text()"/>": [
-                    <xsl:for-each select="../*[local-name() = $relationType]">
-                        <xsl:sort select="@url"/>
-                        <xsl:variable name="resourceIdentifierWithHttpCodeSpace"
-                                      select="(root/resourceIdentifier[starts-with(codeSpace, 'http')])[1]"/>
-                        <xsl:variable name="recordUri"
-                                      select="if ($resourceIdentifierWithHttpCodeSpace)
-                                           then concat($resourceIdentifierWithHttpCodeSpace/codeSpace, $resourceIdentifierWithHttpCodeSpace/code)
-                                           else @url" />
-                        {
-                            "@type": "CreativeWork",
-                            "url": "<xsl:value-of select="$recordUri"/>",
-                            "name": "<xsl:value-of select="util:escapeForJson(root/resourceTitleObject/default)"/>"
-                        }
-                        <xsl:if test="position() != last()">,</xsl:if>
-                    </xsl:for-each>
-                    ]
-                </xsl:if>
+            <xsl:if test="$schemaOrgType/text() != ''">
+                ,<xsl:value-of select="schema-org-fn:toJsonText($schemaOrgType/text())"/>: [
+                <xsl:for-each select="../*[local-name() = $relationType]">
+                    <xsl:sort select="@url"/>
+                    <xsl:variable name="resourceIdentifierWithHttpCodeSpace"
+                                  select="(root/resourceIdentifier[starts-with(codeSpace, 'http')])[1]"/>
+                    <xsl:variable name="recordUri"
+                                  select="if ($resourceIdentifierWithHttpCodeSpace)
+                                       then concat($resourceIdentifierWithHttpCodeSpace/codeSpace, $resourceIdentifierWithHttpCodeSpace/code)
+                                       else if (@url) then @url
+                                        else concat($baseUrl, 'api/records/', @uuid)" />
+                    {
+                        "@type": "CreativeWork",
+                        "url": <xsl:value-of select="schema-org-fn:toJsonText($recordUri)"/>,
+                        "name": <xsl:value-of select="schema-org-fn:toJsonText(root/resourceTitleObject/default)"/>
+                    }
+                    <xsl:if test="position() != last()">,</xsl:if>
+                </xsl:for-each>
+                ]
             </xsl:if>
-        </xsl:for-each>
+        </xsl:for-each-group>
     </xsl:template>
 </xsl:stylesheet>
