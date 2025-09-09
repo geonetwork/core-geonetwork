@@ -360,6 +360,8 @@ public interface Store {
      */
     void copyResources(ServiceContext context, String sourceUuid, String targetUuid, MetadataResourceVisibility metadataResourceVisibility, boolean sourceApproved, boolean targetApproved) throws Exception;
 
+    MetadataResource renameResource(ServiceContext context, String metadataUuid, String resourceId, String newName, Boolean approved) throws Exception;
+
     interface ResourceHolder extends Closeable {
         Path getPath();
         MetadataResource getMetadata();
