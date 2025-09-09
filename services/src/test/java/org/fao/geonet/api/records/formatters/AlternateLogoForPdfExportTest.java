@@ -53,7 +53,7 @@ public class AlternateLogoForPdfExportTest extends AbstractServiceIntegrationTes
     public void createTestData() throws Exception {
         context = createServiceContext();
         loginAsAdmin(context);
-        metadata = injectMetadataInDbDoNotRefreshHeader(getSampleISO19139MetadataXml(), context);
+        metadata = injectMetadataInDb(getSampleISO19139MetadataXml(), context);
     }
 
     @Before
