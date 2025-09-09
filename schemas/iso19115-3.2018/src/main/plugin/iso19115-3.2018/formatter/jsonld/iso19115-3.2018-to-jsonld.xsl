@@ -390,7 +390,7 @@
           ,<xsl:value-of select="schema-org-fn:toJsonText($contactType/text())"/>: [
           <xsl:for-each select="current-group()">
             <xsl:variable name="id"
-                          select=".//cit:electronicMailAddress/*/text()[1]"/>
+                          select="(.//cit:electronicMailAddress/*/text())[1]"/>
             {
             "@id": <xsl:value-of select="schema-org-fn:toJsonText($id)"/>,
             "@type":"Organization"
@@ -492,7 +492,7 @@
           {
           "@type": "cr:FileObject",
           "@id": <xsl:value-of select="schema-org-fn:toJsonText((cit:linkage/*/text())[1])"/>,
-          "contentUrl": "<xsl:value-of select="schema-org-fn:toJsonText((cit:linkage/*/text())[1])"/>
+          "contentUrl": <xsl:value-of select="schema-org-fn:toJsonText((cit:linkage/*/text())[1])"/>
           <!--      File size in (mega/kilo/…)bytes. Defaults to bytes if a unit is not specified.
                     "contentSize"-->
           <xsl:if test="cit:protocol">,
