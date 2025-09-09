@@ -49,7 +49,7 @@
   "url" : "https://sextant.ifremer.fr/geonetwork/srv/api/records/58318f0e-9ffe-428e-b453-6c39bbaf7467#resource",
   "includedInDataCatalog" : [ {
     "@type" : "DataCatalog",
-    "url" : "http://localhost:8080/geonetwork/srv/",
+    "url" : "http://localhost:8080/srv/",
     "name" : "My GeoNetwork catalogue"
   } ],
   "inLanguage" : [ "en" ],
@@ -60,7 +60,7 @@
     "@type" : "CreativeWork",
     "name" : ""
   }, " https://creativecommons.org/licenses/by-nd/4.0/ " ],
-  "citeAs" : " @misc{58318f0e-9ffe-428e-b453-6c39bbaf7467,\n      author = {Bertin Stéphane (UMR 6538 Geo-Ocean)},\n      publisher = {Sextant (Ifremer)},\n      title = {Paramètres moyens état de mer du SNO DYNALIT - La Palue & Lostmarc'h},\n      year = {2025},\n      url = {http://localhost:8080/geonetwork/srv/api/records/58318f0e-9ffe-428e-b453-6c39bbaf7467}\n      } ",
+  "citeAs" : " @misc{{uuid},\n      author = {Bertin Stéphane (UMR 6538 Geo-Ocean)},\n      publisher = {Sextant (Ifremer)},\n      title = {Paramètres moyens état de mer du SNO DYNALIT - La Palue & Lostmarc'h},\n      year = {2025},\n      url = {http://localhost:8080/srv/api/records/{uuid}}\n      } ",
   "keywords" : [ "/Milieu physique/Hydrodynamique côtière", "Caractéristiques géographiques océanographiques", "Vagues", "IR-ILICO", "/Données d'observation/in-situ", "SNO-Dynalit" ],
   "publisher" : [ {
     "@id" : "sextant@ifremer.fr",
