@@ -6,21 +6,21 @@
 }
 
 blockquote {
-  padding: 0px;
-  margin: 20px 0px 0px 0px;
+  padding: 0;
+  margin: 20px 0 0 0;
   font-size: 100%;
   border: none;
 
   h2 {
     font-size: 16px !important;
-    margin: 0px !important;
+    margin: 0 !important;
   }
-  div.col-md-3 {
+  .col-md-3 {
     color: #ebecec;
     font-size: 75px;
   }
-  div.col-md-9 {
-    padding: 20px 20px;
+  .col-md-9 {
+    padding: 20px;
     background-color: #ebecec;
     p {
       display: inline;
@@ -44,11 +44,10 @@ header div.gn-abstract {
   margin-bottom: 1em;
 }
 
-[data-gn-more-like-this] {
-  span {
-    word-break: break-word;
-  }
+[data-gn-more-like-this] span {
+  word-break: break-word;
 }
+
 
 /* Angular view */
 .gn-md-view {
@@ -439,7 +438,6 @@ img.graphic-overview.large {
 }
 
 img.graphic-overview:not(.large):hover {
-  cursor: pointer;
   cursor: hand;
 }
 
@@ -506,7 +504,6 @@ ul.md-value-list > li {
 ul.md-value-list > li:hover,
 ul.container-list > li:hover {
   cursor: default;
-  background: #eeeeee;
   background-color: #eeeeee;
 }
 
@@ -689,7 +686,7 @@ ul.container-list {
 
   .gn-md-view .gallery {
     border: 1px solid #ccc;
-    padding: 4px 4px 0px 0px;
+    padding: 4px 4px 0 0;
     width: 33%;
     height: 300px;
     float: right;
