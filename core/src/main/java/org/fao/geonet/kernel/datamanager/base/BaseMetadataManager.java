@@ -23,6 +23,10 @@
 
 package org.fao.geonet.kernel.datamanager.base;
 
+import co.elastic.clients.elasticsearch.core.search.Hit;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Function;
 import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
@@ -33,6 +37,7 @@ import jeeves.transaction.TransactionManager;
 import jeeves.transaction.TransactionTask;
 import jeeves.xlink.Processor;
 import org.apache.commons.lang.StringUtils;
+import co.elastic.clients.elasticsearch.core.SearchResponse;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.records.attachments.Store;
 import org.fao.geonet.constants.Edit;
@@ -41,6 +46,7 @@ import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.*;
 import org.fao.geonet.events.history.RecordDeletedEvent;
 import org.fao.geonet.events.md.MetadataPreRemove;
+import org.fao.geonet.exceptions.TooManyMDsForThisSubTemplateException;
 import org.fao.geonet.exceptions.UnAuthorizedException;
 import org.fao.geonet.kernel.*;
 import org.fao.geonet.kernel.datamanager.*;
@@ -88,6 +94,7 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static org.springframework.data.jpa.domain.Specification.where;
 
@@ -107,8 +114,6 @@ public class BaseMetadataManager implements IMetadataManager {
     private IMetadataSchemaUtils metadataSchemaUtils;
     @Autowired
     private GroupRepository groupRepository;
-    @Autowired
-    private MetadataStatusRepository metadataStatusRepository;
     @Autowired
     private MetadataValidationRepository metadataValidationRepository;
     @Autowired
@@ -145,6 +150,10 @@ public class BaseMetadataManager implements IMetadataManager {
 
     @Autowired
     private ApplicationContext _applicationContext;
+
+    @VisibleForTesting
+    public int maxMdsReferencingSubTemplate = 10000;
+
     @PersistenceContext
     private EntityManager _entityManager;
 
@@ -582,7 +591,11 @@ public class BaseMetadataManager implements IMetadataManager {
 
         // Check if the schema is allowed by settings
         String mdImportSetting = settingManager.getValue(Settings.METADATA_IMPORT_RESTRICT);
-        if (mdImportSetting != null && !mdImportSetting.equals("")) {
+        if (mdImportSetting != null) {
+            // Remove spaces from the list so that "iso19115-3.2018, dublin-core" will also work
+            mdImportSetting = mdImportSetting.replace(" ", "");
+        }
+        if (!StringUtils.isBlank(mdImportSetting)) {
             if (!newMetadata.getHarvestInfo().isHarvested() && !Arrays.asList(mdImportSetting.split(",")).contains(schema)) {
                 throw new IllegalArgumentException("The system setting '" + Settings.METADATA_IMPORT_RESTRICT
                     + "' doesn't allow to import " + schema
@@ -647,19 +660,7 @@ public class BaseMetadataManager implements IMetadataManager {
             String schema = metadataSchemaUtils.getMetadataSchema(id);
 
             // Inflate metadata
-            Path inflateStyleSheet = metadataSchemaUtils.getSchemaDir(schema).resolve(Geonet.File.INFLATE_METADATA);
-            if (Files.exists(inflateStyleSheet)) {
-                // --- setup environment
-                Element env = new Element("env");
-                env.addContent(new Element("lang").setText(srvContext.getLanguage()));
-
-                // add original metadata to result
-                Element result = new Element("root");
-                result.addContent(metadataXml);
-                result.addContent(env);
-
-                metadataXml = Xml.transform(result, inflateStyleSheet);
-            }
+            metadataXml = inflateMetadata(metadataXml, schema, srvContext.getLanguage());
 
             if (withEditorValidationErrors) {
                 final Pair<Element, String> versionAndReport = metadataValidator
@@ -786,18 +787,11 @@ public class BaseMetadataManager implements IMetadataManager {
                     getSearchManager().delete(String.format("+uuid:\"%s\"", uuidBeforeUfo));
                 }
                 metadataIndexer.indexMetadata(metadataId, true, indexingMode);
+                if (metadata.getDataInfo().getType() == MetadataType.SUB_TEMPLATE) {
+                    indexMdsReferencingSubTemplate(context, metadata);
+                }
             }
         }
-
-//		  TODO: TODOES Searhc for related records with an XLink pointing to this subtemplate
-//        if (metadata.getDataInfo().getType() == MetadataType.SUB_TEMPLATE) {
-//            MetaSearcher searcher = searcherForReferencingMetadata(context, metadata);
-//            Map<Integer, AbstractMetadata> result = ((LuceneSearcher) searcher).getAllMdInfo(context, 500);
-//            for (Integer id : result.keySet()) {
-//                IndexingList list = context.getBean(IndexingList.class);
-//                list.add(id);
-//            }
-//        }
 
         Log.trace(Geonet.DATA_MANAGER, "Finishing update of record with id " + metadataId);
         // Return an up to date metadata record
@@ -1346,4 +1340,49 @@ public class BaseMetadataManager implements IMetadataManager {
         return this.searchManager.query(query.toString(), null, 0, 0).hits().total().value() > 0;
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Element inflateMetadata(Element metadataXml, String schema, String lang) throws Exception {
+        // Resolve the path to the XSLT stylesheet based on the schema.
+        Path styleSheet = metadataSchemaUtils.getSchemaDir(schema).resolve(Geonet.File.INFLATE_METADATA);
+
+        // If the stylesheet does not exist, return the original metadata.
+        if (!Files.exists(styleSheet)) {
+            return metadataXml; // No stylesheet to apply, return original metadata
+        }
+
+        // Create an environment element to pass additional parameters to the transformation.
+        Element env = new Element("env");
+        env.addContent(new Element("lang").setText(lang)); // Add the language parameter.
+
+        // Prepare the root element containing the metadata and the environment.
+        Element result = new Element("root");
+        result.addContent(metadataXml); // Add the original metadata.
+        result.addContent(env); // Add the environment.
+
+        // Apply the XSLT transformation and return the transformed metadata.
+        return Xml.transform(result, styleSheet);
+    }
+
+    private void indexMdsReferencingSubTemplate(ServiceContext context, AbstractMetadata subTemplate) throws Exception {
+        String query = String.format("xlink:*%s*", subTemplate.getUuid());
+        SearchResponse response = this.searchManager.query(query, null, Set.of("id"),0, maxMdsReferencingSubTemplate);
+        if (response.hits().total().value() > maxMdsReferencingSubTemplate) {
+            LOGGER_DATA_MANAGER.warn("Too many mds referencing subtemplate {}. Max allowed is {}.", subTemplate.getUuid(), maxMdsReferencingSubTemplate);
+            throw new TooManyMDsForThisSubTemplateException("To avoid running out of resources, this exception is thrown when the maximum number of subtemplates referencing a metadata record has been reached (" + maxMdsReferencingSubTemplate + ").");
+        }
+        Stream<Hit<?>> hits = response.hits().hits().stream();
+        List<String> toIndex = hits
+            .map(Hit::source)
+            .filter(ObjectNode.class::isInstance)
+            .map(ObjectNode.class::cast)
+            .map(x -> x.get("id"))
+            .filter(Objects::nonNull)
+            .map(JsonNode::asText)
+            .collect(Collectors.toList());
+
+        metadataIndexer.batchIndexInThreadPool(context, toIndex, TransactionManager.transactionInitiatedByJeeves.get());
+    }
 }

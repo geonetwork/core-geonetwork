@@ -170,10 +170,11 @@
       $scope.defaultConfigId = "srv";
 
       $scope.loadTplReport = null;
-      $scope.atomFeedType = "";
 
       $scope.isGroupPublicationNotificationLevel = false;
       $scope.isGroupLocalRatingNotificationLevel = false;
+      $scope.isTranslationProviderSelected = false;
+      $scope.translationProviders = [];
 
       $scope.changeLocalRatingNotificationLevel = function (value) {
         $scope.isGroupLocalRatingNotificationLevel = value === "recordGroupEmail";
@@ -181,6 +182,10 @@
 
       $scope.changePublicationNotificationLevel = function (value) {
         $scope.isGroupPublicationNotificationLevel = value === "recordGroupEmail";
+      };
+
+      $scope.changeTranslationProvider = function (value) {
+        $scope.isTranslationProviderSelected = value !== null && value !== "";
       };
 
       /**
@@ -195,6 +200,10 @@
         $http.get("../api/site/info/proxy").then(function (response) {
           $scope.isProxyConfiguredInSystemProperties =
             response.data.proxyConfiguredInSystemProperties;
+        });
+
+        $http.get("../api/translationproviders").then(function (response) {
+          $scope.translationProviders = response.data;
         });
 
         $http.get("../api/site/info/build").then(function (response) {
@@ -231,6 +240,13 @@
             $scope.inspireApiUrl = undefined;
             $scope.inspireApiKey = undefined;
 
+            // Ensure settings are sorted by position property.
+            // The API response is sorted by name but the list
+            // is displayed by section and then by position.
+            $scope.settings.sort(function (a, b) {
+              return a.position - b.position;
+            });
+
             for (var i = 0; i < $scope.settings.length; i++) {
               if ($scope.settings[i].name == "metadata/workflow/enable") {
                 $scope.workflowEnable = $scope.settings[i].value == "true";
@@ -257,6 +273,9 @@
                 $scope.settings[i].name == "system/inspire/remotevalidation/apikey"
               ) {
                 $scope.inspireApiKey = $scope.settings[i].value;
+              } else if ($scope.settings[i].name == "system/translation/provider") {
+                $scope.isTranslationProviderSelected =
+                  $scope.settings[i].value !== null && $scope.settings[i].value !== "";
               }
 
               var tokens = $scope.settings[i].name.split("/");
@@ -320,7 +339,7 @@
           var data = response.data;
 
           for (var i = 0; i < data.length; i++) {
-            data[i].configuration == angular.toJson(data[i].configuration);
+            data[i].configuration = angular.fromJson(data[i].configuration || {});
 
             // Select last one updated or created
             if (
@@ -397,7 +416,11 @@
               "../api/ui" + (isUpdate ? "/" + newid : ""),
               {
                 id: newid,
-                configuration: isUpdate ? $scope.uiConfiguration.configuration : null
+                configuration: isUpdate
+                  ? typeof $scope.uiConfiguration.configuration === "string"
+                    ? $scope.uiConfiguration.configuration
+                    : JSON.stringify($scope.uiConfiguration.configuration, null, 2)
+                  : null
               },
               { responseType: "text" }
             )

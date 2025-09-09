@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration status="warn" dest="out">
   <Properties>
-    <Property name="log_dir">.</Property>
+    <Property name="logs_dir">logs</Property>
   </Properties>
   <Appenders>
     <Console name="Console" target="SYSTEM_OUT">
       <PatternLayout pattern="%date{ISO8601} %-5level [%logger] - %message%n"/>
     </Console>
     <RollingFile name="File">
-      <filename>${sys:log_dir:-log_dir}/logs/geonetwork.log</filename>
-      <filePattern>${sys:log_dir:-log_dir}/logs/geonetwork.log-%i.log</filePattern>
+      <filename>${sys:log_dir:-${logs_dir}}/geonetwork.log</filename>
+      <filePattern>${sys:log_dir:-${logs_dir}}/geonetwork.log-%i.log</filePattern>
       <PatternLayout pattern="%date{ISO8601} %-5level [%logger] - %message%n"/>
       <Policies>
         <SizeBasedTriggeringPolicy size="10 MB" />
@@ -20,7 +20,7 @@
       <Routes pattern="$${ctx:logfile}">
         <!-- value dynamically determines the name of the log file. -->
         <Route>
-          <File name="harvester-${ctx:harvester}" fileName="${sys:log_dir:-log_dir}/${ctx:logfile:-harvester_default.log}">
+          <File name="harvester-${ctx:harvester}" fileName="${sys:log_dir:-${logs_dir}}/${ctx:logfile:-harvester_default.log}">
             <PatternLayout>
               <pattern>%date{ISO8601}{${ctx:timeZone}} %-5level [%logger] - %message%n</pattern>
             </PatternLayout>
@@ -34,7 +34,6 @@
     <Logger name="geonetwork" level="debug" additivity="false">
       <AppenderRef ref="Console"/>
       <AppenderRef ref="File"/>
-      <AppenderRef ref="Harvester"/>
     </Logger>
     <Logger name="geonetwork.accessmanager" level="debug"/>
     <Logger name="geonetwork.atom" level="debug"/>
@@ -56,7 +55,9 @@
     <Logger name="geonetwork.geoserver.publisher" level="debug"/>
     <Logger name="geonetwork.geoserver.rest" level="debug"/>
     <Logger name="geonetwork.harvest.wfs.features"/>
-    <Logger name="geonetwork.harvester" level="debug"/>
+    <Logger name="geonetwork.harvester" level="debug">
+      <AppenderRef ref="Harvester"/>
+    </Logger>
     <Logger name="geonetwork.harvest-man" level="info"/>
     <Logger name="geonetwork.index" level="debug"/>
     <Logger name="geonetwork.ldap" level="debug"/>

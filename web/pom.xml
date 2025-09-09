@@ -30,7 +30,7 @@
   <parent>
     <groupId>org.geonetwork-opensource</groupId>
     <artifactId>geonetwork</artifactId>
-    <version>4.4.4-SNAPSHOT</version>
+    <version>4.4.9-SNAPSHOT</version>
   </parent>
 
 
@@ -411,6 +411,18 @@
       <version>${project.version}</version>
     </dependency>
 
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>gn-translationproviders</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>gn-auditable</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+
     <!-- Handled locally by a temporarly repository -->
     <dependency>
       <groupId>dlib</groupId>
@@ -564,11 +576,6 @@
       <artifactId>autolink</artifactId>
       <version>0.6.0</version>
     </dependency>
-    <dependency>
-      <groupId>org.powermock</groupId>
-      <artifactId>powermock-module-junit4</artifactId>
-      <scope>test</scope>
-    </dependency>
     <!--
     Required for DB migration test
     like AdvancedSearchFormMigrationTest
@@ -623,6 +630,7 @@
       <version>${xmlunit.version}</version>
       <scope>test</scope>
     </dependency>
+
   </dependencies>
 
   <build>
@@ -1039,6 +1047,16 @@
   </build>
 
   <profiles>
+    <profile>
+      <id>datahub-integration</id>
+      <dependencies>
+        <dependency>
+          <groupId>org.geonetwork-opensource.plugins</groupId>
+          <artifactId>gn-datahub-integration</artifactId>
+          <version>${project.version}</version>
+        </dependency>
+      </dependencies>
+    </profile>
     <profile>
       <id>wro4j-prebuild-cache</id>
       <activation>

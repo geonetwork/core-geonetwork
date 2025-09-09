@@ -30,9 +30,13 @@ import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Selection;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.languages.FeedbackLanguages;
 import org.fao.geonet.repository.SelectionRepository;
 import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.repository.UserSavedSelectionRepository;
+import org.fao.geonet.util.LocalizedEmail;
+import org.fao.geonet.util.LocalizedEmailParameter;
+import org.fao.geonet.util.LocalizedEmailComponent;
 import org.fao.geonet.util.MailUtil;
 import org.fao.geonet.utils.Log;
 import org.quartz.JobExecutionContext;
@@ -44,6 +48,10 @@ import org.springframework.scheduling.quartz.QuartzJobBean;
 import java.util.*;
 
 import static org.fao.geonet.kernel.setting.Settings.SYSTEM_USER_LASTNOTIFICATIONDATE;
+import static org.fao.geonet.util.LocalizedEmailComponent.ComponentType.*;
+import static org.fao.geonet.util.LocalizedEmailComponent.KeyType;
+import static org.fao.geonet.util.LocalizedEmailComponent.ReplacementType.*;
+import static org.fao.geonet.util.LocalizedEmailParameter.ParameterType;
 
 /**
  * Task checking on a regular basis the list of records
@@ -53,15 +61,13 @@ public class WatchListNotifier extends QuartzJobBean {
 
     private String lastNotificationDate;
     private String nextLastNotificationDate;
-    private String subject;
-    private String message;
-    private String recordMessage;
     private String updatedRecordPermalink;
     private String language = "eng";
     private SettingManager settingManager;
     private ApplicationContext appContext;
     private UserSavedSelectionRepository userSavedSelectionRepository;
     private UserRepository userRepository;
+    private FeedbackLanguages feedbackLanguages;
 
     @Value("${usersavedselection.watchlist.searchurl}")
     private String permalinkApp = "catalog.search#/search?_uuid={{filter}}";
@@ -92,20 +98,7 @@ public class WatchListNotifier extends QuartzJobBean {
     protected void executeInternal(JobExecutionContext jobContext) throws JobExecutionException {
         appContext = ApplicationContextHolder.get();
         settingManager = appContext.getBean(SettingManager.class);
-
-        ResourceBundle messages = ResourceBundle.getBundle("org.fao.geonet.api.Messages",
-            new Locale(
-                language
-            ));
-
-        try {
-            subject = messages.getString("user_watchlist_subject");
-            message = messages.getString("user_watchlist_message");
-            recordMessage = messages.getString("user_watchlist_message_record").
-                replace("{{link}}",
-                    settingManager.getNodeURL() + permalinkRecordApp);
-        } catch (Exception e) {
-        }
+        feedbackLanguages = appContext.getBean(FeedbackLanguages.class);
 
         updatedRecordPermalink = settingManager.getSiteURL(language);
 
@@ -166,6 +159,9 @@ public class WatchListNotifier extends QuartzJobBean {
     }
 
     private void notify(Integer selectionId, Integer userId) {
+
+        Locale[] feedbackLocales = feedbackLanguages.getLocales(new Locale(language));
+
         // Get metadata with changes since last notification
         // TODO: Could be relevant to get versionning system info once available
         // and report deleted records too.
@@ -188,27 +184,50 @@ public class WatchListNotifier extends QuartzJobBean {
             // TODO: We should send email depending on user language
             Optional<User> user = userRepository.findById(userId);
             if (user.isPresent() && StringUtils.isNotEmpty(user.get().getEmail())) {
-
-                // Build message
-                StringBuffer listOfUpdateMessage = new StringBuffer();
-                for (String record : updatedRecords) {
-                    try {
-                        listOfUpdateMessage.append(
-                            MailUtil.compileMessageWithIndexFields(recordMessage, record, this.language)
-                        );
-                    } catch (Exception e) {
-                        Log.error(Geonet.USER_WATCHLIST, e.getMessage(), e);
-                    }
-                }
-
                 String url = updatedRecordPermalink +
                     permalinkApp.replace("{{filter}}", String.join(" or ", updatedRecords));
-                String mailSubject = String.format(subject,
-                    settingManager.getSiteName(), updatedRecords.size(), lastNotificationDate);
-                String htmlMessage = String.format(message,
-                    listOfUpdateMessage.toString(),
-                    lastNotificationDate,
-                    url, url);
+
+                LocalizedEmailComponent emailSubjectComponent = new LocalizedEmailComponent(SUBJECT, "user_watchlist_subject", KeyType.MESSAGE_KEY, POSITIONAL_FORMAT);
+                LocalizedEmailComponent emailMessageComponent = new LocalizedEmailComponent(MESSAGE, "user_watchlist_message", KeyType.MESSAGE_KEY, POSITIONAL_FORMAT);
+
+                for (Locale feedbackLocale : feedbackLocales) {
+
+                    // Build message
+                    StringBuffer listOfUpdateMessage = new StringBuffer();
+                    for (String record : updatedRecords) {
+                        LocalizedEmailComponent recordMessageComponent = new LocalizedEmailComponent(NESTED, "user_watchlist_message_record", KeyType.MESSAGE_KEY, NAMED_FORMAT);
+                        recordMessageComponent.enableCompileWithIndexFields(record);
+                        recordMessageComponent.enableReplaceLinks(true);
+                        try {
+                            listOfUpdateMessage.append(
+                                recordMessageComponent.parseMessage(feedbackLocale)
+                            );
+                        } catch (Exception e) {
+                            Log.error(Geonet.USER_WATCHLIST, e.getMessage(), e);
+                        }
+                    }
+
+                    emailSubjectComponent.addParameters(
+                        feedbackLocale,
+                        new LocalizedEmailParameter(ParameterType.RAW_VALUE, 1, settingManager.getSiteName()),
+                        new LocalizedEmailParameter(ParameterType.RAW_VALUE, 2, updatedRecords.size()),
+                        new LocalizedEmailParameter(ParameterType.RAW_VALUE, 3, lastNotificationDate)
+                    );
+
+                    emailMessageComponent.addParameters(
+                        feedbackLocale,
+                        new LocalizedEmailParameter(ParameterType.RAW_VALUE, 1, listOfUpdateMessage.toString()),
+                        new LocalizedEmailParameter(ParameterType.RAW_VALUE, 2, lastNotificationDate),
+                        new LocalizedEmailParameter(ParameterType.RAW_VALUE, 3, url)
+                        );
+
+                }
+
+                LocalizedEmail localizedEmail = new LocalizedEmail(true);
+                localizedEmail.addComponents(emailSubjectComponent, emailMessageComponent);
+
+                String mailSubject = localizedEmail.getParsedSubject(feedbackLocales);
+                String htmlMessage = localizedEmail.getParsedMessage(feedbackLocales);
 
                 if (Log.isDebugEnabled(Geonet.USER_WATCHLIST)) {
                     Log.debug(Geonet.USER_WATCHLIST, String.format(

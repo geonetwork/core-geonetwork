@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2024 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -28,6 +28,8 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.MetadataCategory;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.GeonetworkDataDirectory;
+import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.kernel.harvest.harvester.AbstractHarvester;
 import org.fao.geonet.kernel.harvest.harvester.AbstractParams;
@@ -35,14 +37,20 @@ import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
 import org.fao.geonet.kernel.harvest.harvester.GroupMapper;
 import org.fao.geonet.kernel.harvest.harvester.Privileges;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.MetadataCategoryRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
+import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -62,7 +70,7 @@ public abstract class BaseAligner<P extends AbstractParams> extends AbstractAlig
 
     public final AtomicBoolean cancelMonitor;
 
-    public BaseAligner(AtomicBoolean cancelMonitor) {
+    protected BaseAligner(AtomicBoolean cancelMonitor) {
         this.cancelMonitor = cancelMonitor;
     }
 
@@ -71,7 +79,7 @@ public abstract class BaseAligner<P extends AbstractParams> extends AbstractAlig
                               String serverCategory, boolean saveMetadata) {
 
         MetadataCategoryRepository metadataCategoryRepository = context.getBean(MetadataCategoryRepository.class);
-        Map<String, MetadataCategory> nameToCategoryMap = new HashMap<String, MetadataCategory>();
+        Map<String, MetadataCategory> nameToCategoryMap = new HashMap<>();
         for (MetadataCategory metadataCategory : metadataCategoryRepository.findAll()) {
             nameToCategoryMap.put("" + metadataCategory.getId(), metadataCategory);
         }
@@ -133,4 +141,97 @@ public abstract class BaseAligner<P extends AbstractParams> extends AbstractAlig
             }
         }
     }
+
+    /**
+     * Applies a xslt process (schema_folder/process/translate.xsl) to translate create the metadata
+     * fields configured in the harvester to the languages configured, using the translation provider
+     * configured in the application settings.
+     *
+     * If no translation provider is configured or if the schema doesn't have the translation xslt,
+     * the translation process is not applied to the metadata.
+     *
+     * @param context
+     * @param md
+     * @param schema
+     * @return
+     */
+    public Element translateMetadataContent(ServiceContext context,
+                                            Element md,
+                                            String schema) {
+
+        SettingManager settingManager = context.getBean(SettingManager.class);
+
+        String translationProvider = settingManager.getValue(Settings.SYSTEM_TRANSLATION_PROVIDER);
+
+        if (!StringUtils.hasLength(translationProvider)) {
+            LOGGER.warn("     metadata content can't be translated. Translation provider not configured.");
+            return md;
+        }
+
+        if (!StringUtils.hasLength(params.getTranslateContentLangs()) ||
+            !StringUtils.hasLength(params.getTranslateContentFields())) {
+            LOGGER.warn("     metadata content can't be translated. No languages or fields provided to translate.");
+            return md;
+        }
+
+        SchemaManager schemaManager = context.getBean(SchemaManager.class);
+
+        Path filePath = schemaManager.getSchemaDir(schema).resolve("process").resolve( "translate.xsl");
+
+        if (!Files.exists(filePath)) {
+            LOGGER.debug(String.format("     metadata content translation process not available for schema %s", schema));
+        } else {
+            Element processedMetadata;
+            try {
+                Map<String, Object> processParams = new HashMap<>();
+                List<String> langs = Arrays.asList(params.getTranslateContentLangs().split(","));
+                processParams.put("languages", langs);
+
+                List<String> fields = Arrays.asList(params.getTranslateContentFields().split("\\n"));
+                processParams.put("fieldsToTranslate", fields);
+
+                processedMetadata = Xml.transform(md, filePath, processParams);
+                LOGGER.debug("     metadata content translated.");
+                md = processedMetadata;
+            } catch (Exception e) {
+                LOGGER.warn(String.format("     metadata content translated error: %s", e.getMessage()));
+            }
+        }
+        return md;
+    }
+
+
+    /**
+     * Filter the metadata if process parameter is set and corresponding XSL transformation
+     * exists in xsl/conversion/import.
+     *
+     * @param context
+     * @param md
+     * @param processName
+     * @param processParams
+     * @param log
+     * @return
+     */
+    protected Element applyXSLTProcessToMetadata(ServiceContext context,
+                                    Element md,
+                                    String processName,
+                                    Map<String, Object> processParams,
+                                                 org.fao.geonet.Logger log) {
+        Path filePath = context.getBean(GeonetworkDataDirectory.class).getXsltConversion(processName);
+        if (!Files.exists(filePath)) {
+            log.debug("     processing instruction  " + processName + ". Metadata not filtered.");
+        } else {
+            Element processedMetadata;
+            try {
+                processedMetadata = Xml.transform(md, filePath, processParams);
+                log.debug("     metadata filtered.");
+                md = processedMetadata;
+            } catch (Exception e) {
+                log.warning("     processing error " + processName + ": " + e.getMessage());
+            }
+        }
+        return md;
+    }
+
+
 }

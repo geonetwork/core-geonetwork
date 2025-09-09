@@ -43,7 +43,7 @@ public class Lib {
         root.setAttribute("schemaLocation", OaiPmh.SCHEMA_LOCATION, OaiPmh.Namespaces.XSI);
 
         Element date = new Element("responseDate", OaiPmh.Namespaces.OAI_PMH)
-            .setText(new ISODate().getDateAndTime() + "Z");
+            .setText(new ISODate().getDateAndTime());
 
         root.addContent(date);
 

@@ -1473,7 +1473,7 @@
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
     <entry>
       <code>nonGeographicDataset</code>
-      <label>Jeux de données non géographiques</label>
+      <label>Jeu de données non géographique</label>
       <description>Informations appliquées aux caractéristiques de jeux de données non
         géographiques
       </description>
@@ -1558,12 +1558,12 @@
       <description></description>
     </entry>
     <entry>
-      <code>staticMap</code>
+      <code>map-static</code>
       <label>Carte statique</label>
       <description></description>
     </entry>
     <entry>
-      <code>interactiveMap</code>
+      <code>map-interactive</code>
       <label>Carte interactive</label>
       <description></description>
     </entry>
@@ -1845,7 +1845,7 @@
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
     <entry>
       <code>nonGeographicDataset</code>
-      <label>Jeux de données non géographiques</label>
+      <label>Jeu de données non géographique</label>
       <description>Informations appliquées aux caractéristiques de jeux de données non
         géographiques
       </description>

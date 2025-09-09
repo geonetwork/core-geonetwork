@@ -364,9 +364,6 @@ public class MailUtil {
             email.setAuthenticator(new DefaultAuthenticator(username, password));
         }
 
-
-        email.setDebug(true);
-
         if (tls != null && tls) {
             email.setStartTLSEnabled(tls);
             email.setStartTLSRequired(tls);
@@ -380,6 +377,8 @@ public class MailUtil {
                 email.setSslSmtpPort(smtpPort + "");
             }
         }
+
+        email.setCharset(EmailConstants.UTF_8);
 
         if (ignoreSslCertificateErrors != null && ignoreSslCertificateErrors) {
             try {

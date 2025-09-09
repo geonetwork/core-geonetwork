@@ -178,6 +178,8 @@
       "$http",
       "gnEsriUtils",
       "gnMapServicesCache",
+      "$filter",
+      "gnExternalViewer",
       function (
         olDecorateLayer,
         gnOwsCapabilities,
@@ -199,7 +201,9 @@
         gnAlertService,
         $http,
         gnEsriUtils,
-        gnMapServicesCache
+        gnMapServicesCache,
+        $filter,
+        gnExternalViewer
       ) {
         /**
          * @description
@@ -747,10 +751,10 @@
                 extent[1] +
                 ", " +
                 "East " +
-                extent[0] +
+                extent[2] +
                 ", " +
                 "West " +
-                extent[2];
+                extent[0];
               if (location) {
                 dc += ". " + location;
               }
@@ -900,7 +904,17 @@
                   imageTile.getImage().src = src;
                 },
                 function (r) {
-                  if (r.status === 414) {
+                  // Apache may not set CORS header in case of HTTP errors
+                  // This depends on virtual hosts configuration,
+                  // usage of Header always set Access-Control-Allow-Origin "*",
+                  // and virtual host resolution (by server name, ip or wildcard).
+                  // On CORS error, status is -1.
+                  // Check client side if the URI is too large according to default Apache LimitRequestFieldSize
+                  // and switch to POST in this case.
+                  var uriTooLarge =
+                    (r.status === undefined || r.status === -1) && src.length >= 8190;
+
+                  if (r.status === 414 || uriTooLarge) {
                     // Request URI too large, try POST
                     convertGetMapRequestToPost(src, function (response) {
                       var arrayBufferView = new Uint8Array(response.data);
@@ -1235,7 +1249,8 @@
                   if (dimension.name == "elevation") {
                     layer.set("elevation", {
                       units: dimension.units,
-                      values: dimension.values.split(",")
+                      values: dimension.values.split(","),
+                      default: dimension.default
                     });
 
                     if (dimension.default) {
@@ -1257,7 +1272,8 @@
 
                     layer.set("time", {
                       units: dimension.units,
-                      values: dimensionValues
+                      values: dimensionValues,
+                      default: dimension.default
                     });
 
                     if (dimension.default) {
@@ -1380,7 +1396,7 @@
               } else {
                 gnAlertService.addAlert({
                   msg: $translate.instant("layerCRSNotFound"),
-                  delay: 5000,
+                  delay: 5,
                   type: "warning"
                 });
               }
@@ -1390,7 +1406,7 @@
                   msg: $translate.instant("layerNotAvailableInMapProj", {
                     proj: mapProjection
                   }),
-                  delay: 5000,
+                  delay: 5,
                   type: "warning"
                 });
               }
@@ -1660,7 +1676,7 @@
                     var _url = url.split("/");
                     _url = _url[0] + "/" + _url[1] + "/" + _url[2] + "/";
                     if (
-                      $.inArray(_url, gnGlobalSettings.requireProxy) >= 0 &&
+                      $.inArray(_url + "#GET", gnGlobalSettings.requireProxy) >= 0 &&
                       url.indexOf(gnGlobalSettings.proxyUrl) != 0
                     ) {
                       capL.useProxy = true;
@@ -1835,13 +1851,25 @@
               .then(function (results) {
                 var layerInfo = results[0];
                 var legendUrl = results[1];
+
+                var layerExtent;
+
+                // Scale the layer extent. See https://github.com/geonetwork/core-geonetwork/issues/8025
+                if (layerInfo.extent) {
+                  layerExtent = [
+                    layerInfo.extent.xmin,
+                    layerInfo.extent.ymin,
+                    layerInfo.extent.xmax,
+                    layerInfo.extent.ymax
+                  ];
+
+                  var geomExtent = ol.geom.Polygon.fromExtent(layerExtent);
+                  geomExtent.scale(1.1);
+                  layerExtent = geomExtent.getExtent();
+                }
+
                 var extent = layerInfo.extent
-                  ? [
-                      layerInfo.extent.xmin,
-                      layerInfo.extent.ymin,
-                      layerInfo.extent.xmax,
-                      layerInfo.extent.ymax
-                    ]
+                  ? layerExtent
                   : map.getView().calculateExtent();
                 if (
                   layerInfo.extent &&
@@ -1959,7 +1987,7 @@
                         type: "wmts",
                         url: encodeURIComponent(url)
                       }),
-                      delay: 20000,
+                      delay: 20,
                       type: "warning"
                     });
                     var o = {
@@ -2057,7 +2085,7 @@
                       type: "wfs",
                       url: encodeURIComponent(url)
                     }),
-                    delay: 20000,
+                    delay: 20,
                     type: "warning"
                   });
                   var o = {
@@ -2137,7 +2165,7 @@
               } catch (e) {
                 gnAlertService.addAlert({
                   msg: $translate.instant("wmtsLayerNoUsableMatrixSet"),
-                  delay: 5000,
+                  delay: 5,
                   type: "danger"
                 });
                 return;
@@ -2274,6 +2302,105 @@
           },
 
           /**
+           * @ngdoc
+           * @methodOf gn_map.service:gnMap
+           * @name gnMap#buildAddToMapConfig
+           *
+           * @description
+           * Builds a configuration object for adding a WMS/WMTS/ESRI service layer to the map,
+           * or hands off to an external viewer if one is enabled.
+           *
+           * @param link
+           * @param {Object=} md
+           * @returns {Object|undefined}
+           */
+          buildAddToMapConfig: function (link, md) {
+            var addToMapLayerNameUrlParam =
+              gnGlobalSettings.gnCfg.mods.search.addWMSLayersToMap.urlLayerParam;
+
+            var type = "wms";
+            if (link.protocol.indexOf("WMTS") > -1) {
+              type = "wmts";
+            } else if (
+              link.protocol === "ESRI:REST" ||
+              link.protocol.startsWith("ESRI REST")
+            ) {
+              type = "esrirest";
+            } else if (link.protocol === "OGC:3DTILES") {
+              type = "3dtiles";
+            } else if (link.protocol === "OGC:COG") {
+              type = "cog";
+            }
+
+            var config = {
+              uuid: md ? md.uuid : null,
+              type: type,
+              url: $filter("gnLocalized")(link.url) || link.url
+            };
+
+            var title = link.title;
+
+            var name;
+
+            if (addToMapLayerNameUrlParam !== "") {
+              var params = gnUrlUtils.parseKeyValue(config.url.split("?")[1]);
+              name = params[addToMapLayerNameUrlParam];
+
+              if (angular.isUndefined(name)) {
+                name = link.name;
+              }
+            } else {
+              name = link.name;
+            }
+
+            if (angular.isObject(link.title)) {
+              title = $filter("gnLocalized")(link.title);
+            }
+            if (angular.isObject(name)) {
+              name = $filter("gnLocalized")(name);
+            }
+
+            if (name && name !== "") {
+              config.name = name;
+              config.group = link.group;
+              // Related service return a property title for the name
+            } else if (title) {
+              config.name = title;
+            }
+
+            // if an external viewer is defined, use it here
+            if (gnExternalViewer.isEnabled()) {
+              gnExternalViewer.viewService(
+                {
+                  id: md ? md.id : null,
+                  uuid: config.uuid
+                },
+                {
+                  type: config.type,
+                  url: config.url,
+                  name: config.name,
+                  title: title
+                }
+              );
+              return;
+            }
+
+            // no support for COG or 3DTiles for now
+            if (config.type === "cog" || config.type === "3dtiles") {
+              gnAlertService.addAlert({
+                msg: $translate.instant("layerProtocolNotSupported", {
+                  type: link.protocol
+                }),
+                delay: 20,
+                type: "warning"
+              });
+              return;
+            }
+
+            return config;
+          },
+
+          /**
            * @ngdoc method
            * @methodOf gn_map.service:gnMap
            * @name gnMap#createLayerForType
@@ -2301,7 +2428,8 @@
                   source: new ol.source.XYZ({
                     url: opt.url
                   }),
-                  title: title || "TMS Layer"
+                  title: title || "TMS Layer",
+                  name: opt.name
                 });
               case "bing_aerial":
                 return new ol.layer.Tile({

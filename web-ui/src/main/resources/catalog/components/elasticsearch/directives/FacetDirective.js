@@ -187,6 +187,72 @@
     }
   ]);
 
+  module.service("gnFacetMetaLabel", [
+    "$translate",
+    "$filter",
+    function ($translate, $filter) {
+      var translateKey = function (key) {
+        try {
+          var facetKeyTranslatorFilter = $filter("facetKeyTranslator");
+          var t = facetKeyTranslatorFilter(key);
+          return t;
+        } catch (e) {
+          return key;
+        }
+      };
+
+      /**
+       * Retrieves the facet label.
+       *
+       * If the facet has a meta-property label defined with the current UI language, retrieves the translation
+       * from the facet configuration; otherwise it uses the provided translation key to retrieve the translation
+       * from the application translation files.
+       *
+       * {
+       *   "facetConfig": {
+       *     "resourceType": {
+       *       "terms": {
+       *         "field": "resourceType"
+       *       },
+       *       "meta": {
+       *         "labels": {
+       *           "eng": "Hierarchy level",
+       *           "spa": "Nivel jerárquico",
+       *           ...
+       *         },
+       *         ...
+       *
+       * @param facet facet configuration.
+       * @param key   translation key.
+       * @returns {*|null}
+       */
+      this.getFacetLabel = function (facet, key) {
+        if (!facet || !facet.meta || !facet.meta.labels) {
+          return translateKey(key);
+        }
+        var currentLang = $translate.use();
+        return facet.meta.labels[currentLang] || translateKey(key);
+      };
+    }
+  ]);
+
+  module.filter("facetTooltip", [
+    "$translate",
+    "$filter",
+    function ($translate, $filter) {
+      return function (item) {
+        if (item.definition) {
+          var key = item.definition + "-tooltip",
+            tooltip = $translate.instant(key);
+          if (tooltip !== key) {
+            return tooltip;
+          }
+        }
+        return $filter("facetTranslator")(item.value);
+      };
+    }
+  ]);
+
   module.filter("facetTranslator", [
     "$translate",
     "$filter",
@@ -249,7 +315,8 @@
   module.directive("esFacets", [
     "gnFacetSorter",
     "gnSearchSettings",
-    function (gnFacetSorter, gnSearchSettings) {
+    "gnFacetMetaLabel",
+    function (gnFacetSorter, gnSearchSettings, gnFacetMetaLabel) {
       return {
         restrict: "A",
         controllerAs: "ctrl",
@@ -274,6 +341,7 @@
           // Directive tab field property
           scope.isTabMode = scope.ctrl.tabField !== undefined;
           scope.facetSorter = gnFacetSorter.sortByTranslation;
+          scope.getFacetLabel = gnFacetMetaLabel.getFacetLabel;
         }
       };
     }
@@ -284,8 +352,10 @@
    * @param $scope
    * @constructor
    */
-  var FacetController = function ($scope) {
+  var FacetController = function ($scope, $translate, $filter) {
     this.$scope = $scope;
+    this.$translate = $translate;
+    this.$filter = $filter;
   };
 
   FacetController.prototype.$onInit = function () {
@@ -331,7 +401,7 @@
     this.filter(this.facet, item);
   };
 
-  FacetController.$inject = ["$scope"];
+  FacetController.$inject = ["$scope", "$translate", "$filter"];
 
   module.directive("esFacet", [
     "gnLangs",
@@ -417,7 +487,9 @@
   ]);
 
   module.filter("facetSearchUrlBuilder", [
-    function () {
+    "gnGlobalSettings",
+    "$filter",
+    function (gnGlobalSettings, $filter) {
       return function (facetValue, key, response, config, missingValue) {
         var field = (response.meta && response.meta.field) || key,
           filter = config.filters
@@ -426,7 +498,8 @@
           value = response.meta && response.meta.wildcard ? facetValue + "*" : facetValue;
 
         return (
-          '#/search?query_string={"' +
+          $filter("setUrlPlaceholder")(gnGlobalSettings.gnCfg.mods.search.appUrl) +
+          '?query_string={"' +
           field +
           '": {"' +
           (value === missingValue ? "%23MISSING%23" : value) +

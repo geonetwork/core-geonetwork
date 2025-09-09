@@ -24,6 +24,8 @@
 package org.fao.geonet.api.identifiers;
 
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -61,9 +63,9 @@ public class IdentifiersApi {
     @io.swagger.v3.oas.annotations.Operation(
         summary = "Get identifier templates",
         description = "Identifier templates are used to create record UUIDs " +
-            "havind a particular structure. The template will be used " +
-            "when user creates a new record. The template identifier to " +
-            "use is defined in the administration > settings."
+            "having a particular structure. The template will be used " +
+            "when user creates a new record. The identifier template to " +
+            "use is defined in the admin console > metadata and templates."
         //       authorizations = {
         //           @Authorization(value = "basicAuth")
         //      })
@@ -153,7 +155,7 @@ public class IdentifiersApi {
     )
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "204", description = "Identifier template updated."),
+        @ApiResponse(responseCode = "204", description = "Identifier template updated.", content = {@Content(schema = @Schema(hidden = true))}),
         @ApiResponse(responseCode = "404", description = "Resource not found."),
         @ApiResponse(responseCode = "403", description = "Operation not allowed. Only Editor can access it.")
     })
@@ -198,7 +200,7 @@ public class IdentifiersApi {
     )
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "204", description = "Template identifier removed."),
+        @ApiResponse(responseCode = "204", description = "Template identifier removed.", content = {@Content(schema = @Schema(hidden = true))}),
         @ApiResponse(responseCode = "404", description = "Resource not found."),
         @ApiResponse(responseCode = "403", description = "Operation not allowed. Only Editor can access it.")
     })

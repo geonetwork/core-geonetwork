@@ -7,14 +7,14 @@
           when="{'0 ': ('noRecordFound' | translate),
                 'one': '1 ' +  ('record' | translate),
                 'other': '{} ' +  ('records' | translate)}"
-        />
+        ></ng-pluralize>
       </strong>
     </div>
     <div data-ng-show="options.selection.mode.indexOf('local') === -1">
       <div class="btn-group pull-right" data-ng-show="searchResults.count > 0">
         <button type="button" class="btn dropdown-toggle" data-toggle="dropdown">
           {{selection.length}} <span data-translate="">selected</span
-          ><span class="caret" />
+          ><span class="caret"></span>
         </button>
         <ul class="dropdown-menu">
           <li>
@@ -27,6 +27,7 @@
       </div>
     </div>
   </div>
+
   <!-- Results List -->
   <div>
     <div class="list-group fixed">
@@ -66,7 +67,7 @@
             <i
               class="fa gn-icon-{{md.resourceType[0]}}"
               title="{{md.resourceType[0] | translate}}"
-            />
+            ></i>
             <strong>{{md.resourceTitle}}</strong>
             <p ng-if="::md.resourceAbstract" class="small">
               {{md.resourceAbstract | characters:200}}
@@ -76,7 +77,7 @@
         <div data-ng-if="options.mode == 'directory'">
           <div class="flex-row flex-align-center">
             <gn-md-type-widget metadata="md"></gn-md-type-widget>
-            <div class="flex-spacer" />
+            <div class="flex-spacer"></div>
             <strong>{{md.resourceTitle}}</strong>
           </div>
           <p ng-if="::md.resourceAbstract" class="small">
@@ -86,5 +87,8 @@
       </li>
     </div>
   </div>
-  <div data-gn-pagination="paginationInfo" />
+  <div
+    data-gn-pagination="paginationInfo"
+    data-hits-values="searchObj.hitsperpageValues"
+  ></div>
 </div>

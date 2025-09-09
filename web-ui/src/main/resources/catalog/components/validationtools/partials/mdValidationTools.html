@@ -5,8 +5,8 @@
     title="{{'validate-help'|translate}}"
     data-gn-click-and-spin="save(true, true)"
   >
-    <i data-ng-show="!isDownloadingRecord" class="fa fa-check" />
-    <i data-ng-show="isDownloadingRecord" class="fa fa-spinner fa-spin" />
+    <i data-ng-show="!isDownloadingRecord" class="fa fa-check"></i>
+    <i data-ng-show="isDownloadingRecord" class="fa fa-spinner fa-spin"></i>
     <span class="visible-lg" data-translate="" title="{{'validate-help' | translate}}"
       >validate</span
     >
@@ -34,17 +34,19 @@
       role="presentation"
       data-ng-show="!isDownloadingRecord && validationNode"
       data-ng-repeat="(key,value) in testsuites"
+      data-ng-class="{'disabled': !md.isPublished()}"
+      title="{{md.isPublished() ? '' : 'inspireValidationUsingPortalOnlyForPublicRecord' | translate}}"
     >
       <a
         role="menuitem"
         tabindex="-1"
         data-gn-click-and-spin="validateInspire(key, validationNode)"
       >
-        <i class="fa fa-chevron-right" />&nbsp;
+        <i class="fa fa-chevron-right"></i>&nbsp;
         <span>{{key}} ({{'usingCswFromNode' | translate}} {{validationNode}})</span>
       </a>
     </li>
-    <li class="divider" />
+    <li class="divider"></li>
     <li
       role="presentation"
       data-ng-show="!isDownloadingRecord"
@@ -56,7 +58,7 @@
         data-gn-click-and-spin="validateInspire(key)"
         title="{{'validate-inspire-help' | translate}} {{value.join(', ')}}"
       >
-        <i class="fa fa-chevron-right" />&nbsp;
+        <i class="fa fa-chevron-right"></i>&nbsp;
 
         <span>{{key}}</span>
       </a>
@@ -68,7 +70,7 @@
         data-gn-click-and-spin="validateInspire()"
         title="{{'validate-inspire-help' | translate}}"
       >
-        <i class="fa fa-spinner fa-spin" />&nbsp;
+        <i class="fa fa-spinner fa-spin"></i>&nbsp;
         <span class="visible-lg" data-translate="">reportGeneration</span>
       </a>
     </li>
@@ -80,7 +82,7 @@
         href="{{reportURL}}"
         title="{{'validate-inspire-help' | translate}}"
       >
-        <i class="fa fa-fw fa-file fa-inspire" />&nbsp;
+        <i class="fa fa-fw fa-file fa-inspire"></i>&nbsp;
         <span class="visible-lg" data-translate="">reportLink</span> - {{reportStatus}}
       </a>
     </li>

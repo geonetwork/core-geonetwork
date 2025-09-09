@@ -45,9 +45,8 @@
       <!-- <fileIdentifier/>  Will be set by UFO -->
 
       <gmd:language>
-        <gco:CharacterString>
-          <xsl:value-of select="$lang"/>
-        </gco:CharacterString>
+        <gmd:LanguageCode codeList="http://www.loc.gov/standards/iso639-2/"
+                           codeListValue="{$lang}"/>
         <!-- English is default. Not available in Web Map Context or OWS. Selected by user from GUI -->
       </gmd:language>
 
@@ -75,45 +74,7 @@
       <!--  Assign a specific user with the info provided by the webservice -->
       <xsl:if test="$currentuser_name != ''">
         <gmd:contact>
-          <gmd:CI_ResponsibleParty>
-            <gmd:individualName>
-              <gco:CharacterString>
-                <xsl:value-of select="$currentuser_name"/>
-              </gco:CharacterString>
-            </gmd:individualName>
-            <gmd:organisationName>
-              <gco:CharacterString>
-                <xsl:value-of select="$currentuser_org"/>
-              </gco:CharacterString>
-            </gmd:organisationName>
-            <gmd:contactInfo>
-              <gmd:CI_Contact>
-                <!--<gmd:phone>
-                  <gmd:CI_Telephone>
-                    <gmd:voice>
-                      <gco:CharacterString>
-                        <xsl:value-of select="$currentuser_phone" />
-                      </gco:CharacterString>
-                    </gmd:voice>
-                  </gmd:CI_Telephone>
-                </gmd:phone>-->
-                <gmd:address>
-                  <gmd:CI_Address>
-                    <gmd:electronicMailAddress>
-                      <gco:CharacterString>
-                        <xsl:value-of select="$currentuser_mail"/>
-                      </gco:CharacterString>
-                    </gmd:electronicMailAddress>
-                  </gmd:CI_Address>
-                </gmd:address>
-              </gmd:CI_Contact>
-            </gmd:contactInfo>
-            <gmd:role>
-              <gmd:CI_RoleCode
-                codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_RoleCode"
-                codeListValue="author"/>
-            </gmd:role>
-          </gmd:CI_ResponsibleParty>
+          <xsl:call-template name="build-current-user"/>
         </gmd:contact>
       </xsl:if>
 
@@ -318,4 +279,45 @@
     <xsl:copy-of select="saxon:parse($reprojected)"/>
   </xsl:template>
 
+  <xsl:template name="build-current-user">
+    <gmd:CI_ResponsibleParty>
+      <gmd:individualName>
+        <gco:CharacterString>
+          <xsl:value-of select="$currentuser_name"/>
+        </gco:CharacterString>
+      </gmd:individualName>
+      <gmd:organisationName>
+        <gco:CharacterString>
+          <xsl:value-of select="$currentuser_org"/>
+        </gco:CharacterString>
+      </gmd:organisationName>
+      <gmd:contactInfo>
+        <gmd:CI_Contact>
+          <!--<gmd:phone>
+            <gmd:CI_Telephone>
+              <gmd:voice>
+                <gco:CharacterString>
+                  <xsl:value-of select="$currentuser_phone" />
+                </gco:CharacterString>
+              </gmd:voice>
+            </gmd:CI_Telephone>
+          </gmd:phone>-->
+          <gmd:address>
+            <gmd:CI_Address>
+              <gmd:electronicMailAddress>
+                <gco:CharacterString>
+                  <xsl:value-of select="$currentuser_mail"/>
+                </gco:CharacterString>
+              </gmd:electronicMailAddress>
+            </gmd:CI_Address>
+          </gmd:address>
+        </gmd:CI_Contact>
+      </gmd:contactInfo>
+      <gmd:role>
+        <gmd:CI_RoleCode
+                codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_RoleCode"
+                codeListValue="author"/>
+      </gmd:role>
+    </gmd:CI_ResponsibleParty>
+  </xsl:template>
 </xsl:stylesheet>

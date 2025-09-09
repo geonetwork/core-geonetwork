@@ -52,8 +52,10 @@
     "gnMapsManager",
     "gnGlobalSettings",
     "gnConfig",
+    "gnConfigService",
     "gnClipboard",
     "gnSearchSettings",
+    "gnLanguageService",
     function (
       $scope,
       $q,
@@ -68,8 +70,10 @@
       gnMapsManager,
       gnGlobalSettings,
       gnConfig,
+      gnConfigService,
       gnClipboard,
-      gnSearchSettings
+      gnSearchSettings,
+      gnLanguageService
     ) {
       $scope.searchObj = {
         internal: true,
@@ -92,6 +96,7 @@
       $scope.harvesterNew = false;
       $scope.harvesterHistory = {};
       $scope.isLoadingOneHarvester = false;
+
       $scope.harvesterHistoryPaging = {
         page: 1,
         size: 3,
@@ -120,6 +125,11 @@
               gnUtilityService.parseBoolean($scope.harvesterSelected);
             }
             $scope.isLoadingOneHarvester = false;
+
+            // The backend returns an empty array in json serialization if the field is empty, instead of a string
+            if (angular.isArray($scope.harvesterSelected.content.translateContentLangs)) {
+              $scope.harvesterSelected.content.translateContentLangs = "";
+            }
 
             if (
               $scope.harvesterSelected.content &&
@@ -432,6 +442,8 @@
             h.options.outputSchemaOnCollectionsDIF !== "" ? "DIF" : "UNIDATA";
         }
 
+        $scope.harvesterSelected = null;
+
         $scope.harvesterSelected = h;
         $scope.harvesterUpdated = false;
         $scope.harvesterNew = false;
@@ -655,6 +667,16 @@
             pageFromParam: "offset",
             recordIdPath: "/dataset/dataset_id",
             toISOConversion: "schema:iso19115-3.2018:convert/fromJsonOpenDataSoft"
+          }
+        },
+        "STAC Collection": {
+          defaultValues: {
+            loopElement: "/collections",
+            numberOfRecordPath: "",
+            pageSizeParam: "limit",
+            pageFromParam: "page",
+            recordIdPath: "/id",
+            toISOConversion: "schema:iso19115-3.2018:convert/stac-to-iso19115-3"
           }
         },
         "XML (ISO19115-3)": {

@@ -5,20 +5,22 @@
                      || harvester['@type'] == 'geonetwork'
                      || harvester['@type'] == 'csw'
                      || harvester['@type'] == 'oaipmh'
-                     || harvester['@type'] == 'filesystem'"
+                     || harvester['@type'] == 'filesystem'
+                     || harvester['@type'] == 'sftp'
+                     || harvester['@type'] == 'database'"
   >
     <label class="control-label">
-      <span data-translate="">{{"harvesterOverrideUUID" | translate}}</span>
+      <span>{{"harvesterOverrideUUID" | translate}}</span>
     </label>
     <select data-ng-model="harvester.options.overrideUuid" class="form-control">
       <option value="SKIP">
-        <span data-translate="">{{"harvesterOverrideUUID-skip" | translate}}</span>
+        <span>{{"harvesterOverrideUUID-skip" | translate}}</span>
       </option>
       <option value="OVERRIDE">
-        <span data-translate="">{{"harvesterOverrideUUID-overwrite" | translate}}</span>
+        <span>{{"harvesterOverrideUUID-overwrite" | translate}}</span>
       </option>
       <option value="RANDOM">
-        <span data-translate="">{{"harvesterOverrideUUID-random" | translate}}</span>
+        <span>{{"harvesterOverrideUUID-random" | translate}}</span>
       </option>
     </select>
     <span class="help-block ng-scope" data-translate="">harvesterOverrideUUIDHelp</span>

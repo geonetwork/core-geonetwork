@@ -43,6 +43,7 @@
     "gnMetadataManager",
     "gnConfigService",
     "gnConfig",
+    "gnESFacet",
     "Metadata",
     function (
       $scope,
@@ -56,6 +57,7 @@
       gnMetadataManager,
       gnConfigService,
       gnConfig,
+      gnESFacet,
       Metadata
     ) {
       $scope.isTemplate = false;
@@ -79,7 +81,7 @@
         featureCatalog: "gn-icon-featureCatalog",
         service: "gn-icon-service",
         map: "gn-icon-maps",
-        staticMap: "gn-icon-staticMap",
+        "map-static": "gn-icon-map-static",
         dataset: "gn-icon-dataset",
         series: "gn-icon-series"
       };
@@ -117,7 +119,7 @@
             resourceType: {
               terms: {
                 field: "resourceType",
-                exclude: ["map/static", "theme", "place"],
+                exclude: ["map-static", "theme", "place"],
                 missing: "other"
               }
             }
@@ -135,6 +137,7 @@
                   must: query
                 }
               },
+              _source: gnESFacet.configs.editor.source,
               from: 0,
               size: 1000
             })

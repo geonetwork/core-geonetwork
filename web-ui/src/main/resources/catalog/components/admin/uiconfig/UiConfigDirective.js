@@ -46,8 +46,9 @@
   module.directive("gnUiConfig", [
     "gnGlobalSettings",
     "gnProjService",
+    "gnConfig",
     "$translate",
-    function (gnGlobalSettings, gnProjService, $translate) {
+    function (gnGlobalSettings, gnProjService, gnConfig, $translate) {
       return {
         restrict: "A",
         scope: {
@@ -194,11 +195,16 @@
             true
           );
 
+          $("gn-app-frame") && $("gn-app-frame").attr("url", gnConfig.env.url);
           scope.$watch(
             "jsonConfig",
             function (n) {
               scope.config = JSON.stringify(n, null, 2);
               buildFinalConfig();
+
+              if (scope.config && $("gn-app-frame")) {
+                $("gn-app-frame").attr("config", scope.config);
+              }
             },
             true
           );
@@ -348,6 +354,51 @@
             }
             angular.merge(scope.value, newObj);
           }
+          internalUpdate = true;
+        });
+      }
+    };
+  });
+  module.directive("gnTomlEdit", function () {
+    return {
+      restrict: "E",
+      scope: {
+        value: "=model"
+      },
+      template:
+        '<div style="height: {{height}}"' +
+        '          ui-ace="{' +
+        "  useWrapMode:true, " +
+        "  showGutter:true, " +
+        "  mode:'toml'," +
+        "  require: ['ace/ext/language_tools'],\n" +
+        "  advanced: {\n" +
+        "      enableSnippets: true,\n" +
+        "      enableBasicAutocompletion: true,\n" +
+        "      enableLiveAutocompletion: true\n" +
+        '  }}"' +
+        '          data-ng-model="asText"></div>',
+
+      link: function (scope, element, attrs) {
+        scope.height = (attrs.height || "300") + "px";
+
+        var internalUpdate = false;
+
+        // Watch for model changes
+        scope.$watch("value", function (value) {
+          if (internalUpdate) {
+            internalUpdate = false;
+            return;
+          }
+          scope.asText = value || "";
+        });
+
+        // Watch for editor changes
+        scope.$watch("asText", function (text) {
+          if (!text || text === scope.value) {
+            return;
+          }
+          scope.value = text;
           internalUpdate = true;
         });
       }

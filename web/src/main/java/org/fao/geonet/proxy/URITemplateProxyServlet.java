@@ -72,6 +72,8 @@ import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 import java.util.stream.Collectors;
 
+import static org.apache.commons.lang3.StringUtils.isBlank;
+
 /**
  * This is a class extending the real proxy to make sure we can tweak specifics like removing the CSRF token on requests
  *
@@ -95,11 +97,15 @@ public class URITemplateProxyServlet extends ProxyServlet {
     private static final long serialVersionUID = 4847856943273604410L;
     private static final String P_SECURITY_MODE = "securityMode";
     private static final String P_IS_SECURED = "isSecured";
+    private static final String P_DISALLOW_HEADERS = "disallowHeaders";
+
     private static final String TARGET_URI_NAME = "targetUri";
     private static final String P_EXCLUDE_HOSTS = "excludeHosts";
     private static final String P_ALLOW_PORTS = "allowPorts";
     private static final String ATTR_QUERY_STRING =
         URITemplateProxyServlet.class.getSimpleName() + ".queryString";
+
+    protected List<String> disallowHeaders = new ArrayList<>();
 
     /*
      * These are the "hop-by-hop" headers that should not be copied.
@@ -133,6 +139,15 @@ public class URITemplateProxyServlet extends ProxyServlet {
     // Allowed ports allowed to access through the proxy
     private Set<Integer> allowPorts = new HashSet<>(Arrays.asList(80, 443));
 
+    @Override
+    protected void copyRequestHeader(HttpServletRequest servletRequest, HttpRequest proxyRequest,
+                                     String headerName) {
+        if (disallowHeaders.contains(headerName)) {
+            return; // dont copy
+        }
+        super.copyRequestHeader(servletRequest,proxyRequest,headerName);
+    }
+
     /**
      * Init some properties from the servlet's init parameters. They try to be resolved the same way other GeoNetwork
      * configuration properties are resolved. If after checking externally no configuration can be found it relies into
@@ -159,6 +174,11 @@ public class URITemplateProxyServlet extends ProxyServlet {
      */
     @Override
     protected void initTarget() throws ServletException {
+        //parse the disallowHeaders
+        if (!isBlank(getConfigParam(P_DISALLOW_HEADERS))) {
+            disallowHeaders =  Arrays.asList(getConfigParam(P_DISALLOW_HEADERS).split(","));
+        }
+
         securityMode = SECURITY_MODE.parse(getConfigParam(P_SECURITY_MODE));
         String doForwardHostString = getConfigParam(P_FORWARDEDHOST);
         if (doForwardHostString != null) {
@@ -173,7 +193,7 @@ public class URITemplateProxyServlet extends ProxyServlet {
         targetUriTemplate = getConfigValue(TARGET_URI_NAME);
 
         // If not set externally try to use the value from web.xml
-        if (StringUtils.isBlank(targetUriTemplate)) {
+        if (isBlank(targetUriTemplate)) {
             targetUriTemplate = getConfigParam(P_TARGET_URI);
             if (targetUriTemplate == null) {
                 throw new ServletException(P_TARGET_URI + "  is required in web.xml or set externally");
@@ -185,7 +205,7 @@ public class URITemplateProxyServlet extends ProxyServlet {
 
         this.username = getConfigValue("username");
         this.password = getConfigValue("password");
-        if (StringUtils.isBlank(this.username)) {
+        if (isBlank(this.username)) {
             this.username = getConfigParam("username");
             this.password = getConfigParam("password");
         }
@@ -196,7 +216,7 @@ public class URITemplateProxyServlet extends ProxyServlet {
         }
 
         String excludeHosts = getConfigValue(P_EXCLUDE_HOSTS);
-        if (StringUtils.isBlank(excludeHosts)) {
+        if (isBlank(excludeHosts)) {
             excludeHosts = getConfigParam(P_EXCLUDE_HOSTS);
         }
 
@@ -209,7 +229,7 @@ public class URITemplateProxyServlet extends ProxyServlet {
         }
 
         String additionalAllowPorts = getConfigValue(P_ALLOW_PORTS);
-        if (StringUtils.isBlank(additionalAllowPorts)) {
+        if (isBlank(additionalAllowPorts)) {
             additionalAllowPorts = getConfigParam(P_ALLOW_PORTS);
         }
 
@@ -236,7 +256,7 @@ public class URITemplateProxyServlet extends ProxyServlet {
         result = resolveConfigValue(webappName + "." + getServletName() + "." + suffix);
 
 
-        if (StringUtils.isBlank(result)) {
+        if (isBlank(result)) {
             // GEONETWORK is the default prefix
 
             LOGGER.info(
@@ -400,10 +420,7 @@ public class URITemplateProxyServlet extends ProxyServlet {
 
         // Check that the url host or port is not forbidden to access by the proxy
         if (!isUrlAllowed(servletRequest)) {
-            String message = String.format(
-                "The proxy does not allow to access '%s' .",
-                servletRequest.getParameter("url")
-            );
+            String message = "The proxy does not allow to access to the provided URL.";
             servletResponse.sendError(HttpServletResponse.SC_FORBIDDEN, message);
             return;
         }
@@ -452,8 +469,7 @@ public class URITemplateProxyServlet extends ProxyServlet {
                         proxyCallAllowed = linksFound > 0;
                     } catch (URISyntaxException e) {
                         throw new IllegalArgumentException(String.format(
-                            "'%s' is invalid. Error is: '%s'",
-                            servletRequest.getParameter("url"),
+                            "The provided URL is invalid. Error is: '%s'",
                             e.getMessage()
                         ));
                     }
@@ -468,7 +484,7 @@ public class URITemplateProxyServlet extends ProxyServlet {
 
     private boolean isUrlAllowed(HttpServletRequest servletRequest) {
         String url = servletRequest.getParameter("url");
-        if (StringUtils.isBlank(url)) {
+        if (isBlank(url)) {
             return true;
         }
 
@@ -489,8 +505,7 @@ public class URITemplateProxyServlet extends ProxyServlet {
             return (port == -1) || this.allowPorts.contains(port);
         } catch (URISyntaxException e) {
             throw new IllegalArgumentException(String.format(
-                "'%s' is invalid. Error is: '%s'",
-                url,
+                "The provided URL is invalid. Error is: '%s'",
                 e.getMessage()
             ));
         }

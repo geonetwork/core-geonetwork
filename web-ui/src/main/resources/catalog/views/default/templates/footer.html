@@ -12,9 +12,14 @@
       <span data-translate="">about</span>
     </a>
   </li>
+  <li ng-show="::getContactusVisible()">
+    <a href="contact.us">
+      <span data-translate="">contact</span>
+    </a>
+  </li>
   <li class="hidden-sm">
     <a href="https://github.com/geonetwork/core-geonetwork">
-      <span class="fa fa-fw fa-github"></span>
+      <span class="fa fa-fw fa-brands fa-github"></span>
       <span data-translate="">github</span>
     </a>
   </li>
@@ -39,7 +44,7 @@
       title="{{'shareOnTwitter' | translate}}"
       aria-label="{{'shareOnTwitter' | translate}}"
     >
-      <span class="fa fa-twitter"></span>
+      <span class="fa-brands fa-x-twitter"></span>
     </a>
   </li>
   <li>
@@ -49,7 +54,7 @@
       title="{{'shareOnFacebook' | translate}}"
       aria-label="{{'shareOnFacebook' | translate}}"
     >
-      <span class="fa fa-facebook"></span>
+      <span class="fa-brands fa-facebook-f"></span>
     </a>
   </li>
   <li>
@@ -59,7 +64,7 @@
       title="{{'shareOnLinkedIn' | translate}}"
       aria-label="{{'shareOnLinkedIn' | translate}}"
     >
-      <span class="fa fa-linkedin"></span>
+      <span class="fa-brands fa-linkedin-in"></span>
     </a>
   </li>
   <li>
@@ -92,7 +97,7 @@
       aria-label="{{rssFeed.label | translate}}"
     >
       <span data-ng-if="rssFeeds.length > 1"> {{rssFeed.label | translate}} </span>
-      <span class="fa fa-fw fa-rss" />
+      <span class="fa fa-fw fa-rss"></span>
     </a>
   </li>
 </ul>

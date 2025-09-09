@@ -359,7 +359,10 @@
       n’est pas respectée.
     </help>
     <condition/>
-
+  </element>
+  <element name="gmd:DQ_EvaluationMethodTypeCode">
+    <label>Code du type de méthode d'évaluation</label>
+    <description>Type de méthode d'évaluation d'une mesure de qualité de données identifiée</description>
   </element>
   <element name="gmd:DQ_FormatConsistency" id="114.0">
     <label>Cohérence du format</label>
@@ -2489,14 +2492,6 @@ version en tant que mot-clé complémentaire(s). Le numéro de version doit comp
     <description>Distance de référence, mesurée au sol</description>
     <help>Résolution au sol</help>
     <condition>Saisir une distance si pas d'échelle</condition>
-    <helper relAtt="uom">
-      <option value="0.10" title="m">10 cm</option>
-      <option value="0.25" title="m">25 cm</option>
-      <option value="0.50" title="m">50 cm</option>
-      <option value="1" title="m">1 m</option>
-      <option value="30" title="m">30 m</option>
-      <option value="100" title="m">100 m</option>
-    </helper>
   </element>
 
   <element name="gmd:distributionFormat" id="271.0">

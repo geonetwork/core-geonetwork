@@ -38,6 +38,12 @@ public final class ExpandFactor implements Comparable<ExpandFactor> {
     double proportion;
     double factor;
 
+    /**
+     * If true, the image will be square.  If false, the image will be proportional to the geometry.
+     * Usually, use square image when factor is high (geometry will be small).
+     */
+    boolean squareImage = false;
+
     public double getProportion() {
         return proportion;
     }
@@ -52,6 +58,14 @@ public final class ExpandFactor implements Comparable<ExpandFactor> {
 
     public void setFactor(double factor) {
         this.factor = factor;
+    }
+
+    public boolean isSquareImage() {
+        return squareImage;
+    }
+
+    public void setSquareImage(boolean squareImage) {
+        this.squareImage = squareImage;
     }
 
     @Override

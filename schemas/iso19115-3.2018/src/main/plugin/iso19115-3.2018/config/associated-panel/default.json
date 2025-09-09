@@ -800,6 +800,59 @@
         }
       },
       {
+        "group": "onlineUseMap",
+        "label": "map-interactive",
+        "copyLabel": "name",
+        "sources": {
+          "filestore": true
+        },
+        "fileStoreFilter": "*.{xml,XML}",
+        "icon": "fa fa-map",
+        "process": "onlinesrc-add",
+        "fields": {
+          "url": {
+            "isMultilingual": false
+          },
+          "name": {},
+          "function": {
+            "value": "browsing",
+            "hidden": true,
+            "isMultilingual": false
+          },
+          "protocol": {
+            "value": "OGC:OWS-C",
+            "hidden": true,
+            "isMultilingual": false
+          }
+        }
+      },
+      {
+        "group": "onlineUseMap",
+        "label": "map-static",
+        "copyLabel": "name",
+        "sources": {
+          "filestore": true
+        },
+        "fileStoreFilter": "*.{pdf,PDF}",
+        "icon": "fa fa-map",
+        "process": "onlinesrc-add",
+        "fields": {
+          "url": {
+            "isMultilingual": false
+          },
+          "name": {},
+          "function": {
+            "value": "browsing",
+            "hidden": true,
+            "isMultilingual": false
+          },
+          "protocol": {
+            "value": "PDF:MAP",
+            "isMultilingual": false
+          }
+        }
+      },
+      {
         "group": "onlineUseLegend",
         "label": "onlineUseLegendLYR",
         "copyLabel": "name",
@@ -993,6 +1046,20 @@
       }
     ],
     "associatedResourcesTypes": [{
+      "type": "parent",
+      "label": "linkToParent",
+      "config": {
+        "fields": {"associationType": "partOfSeamlessDatabase", "initiativeType": "" },
+        "sources": {
+          "metadataStore": {
+            "params": {
+              "isTemplate": "n"
+            }
+          },
+          "remoteurl": {"multiple": true}
+        }
+      }
+    }, {
       "type": "siblings",
       "label": "linkToSibling",
       "config": {

@@ -32,7 +32,7 @@ public class RecordGroupOwnerChangeListener extends GenericMetadataEventListener
         implements ApplicationListener<RecordGroupOwnerChangeEvent> {
 
     private String changeMessage = "";
-    private String eventType = StatusValue.Events.RECORDGROUPOWNERCHANGE;
+    private final StatusValue.Events eventType = StatusValue.Events.RECORDGROUPOWNERCHANGE;
 
     @Override
     public String getChangeMessage() {
@@ -41,7 +41,7 @@ public class RecordGroupOwnerChangeListener extends GenericMetadataEventListener
 
     @Override
     public String getEventType() {
-        return eventType;
+        return eventType.getCode();
     }
 
     @Override

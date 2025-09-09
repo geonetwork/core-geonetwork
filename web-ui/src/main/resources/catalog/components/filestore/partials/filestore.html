@@ -13,7 +13,7 @@
     <div
       data-gn-data-uploader-button="'chooseOnlinesrc'"
       data-after-upload-cb="setResource"
-      data-upload-options="filestoreUploadOptions"
+      data-upload-options="filestoreUploadOptionsSetResource"
     ></div>
   </div>
   <div data-ng-if="layout !== 'select'">
@@ -31,7 +31,7 @@
       data-ng-show="metadataResources.length > 0"
       data-gn-click-and-spin="loadMetadataResources()"
     >
-      <i class="fa fa-fw fa-refresh" />
+      <i class="fa fa-fw fa-refresh"></i>
     </a>
 
     <table class="table gn-data-store">

@@ -174,7 +174,10 @@
             } else {
               query.query = {
                 function_score: {
-                  random_score: { seed: Math.floor(Math.random() * 10000) },
+                  random_score: {
+                    seed: Math.floor(Math.random() * 10000),
+                    field: "uuid"
+                  },
                   query: query.query
                 }
               };
@@ -501,7 +504,10 @@
            * Load list on init to fill the dropdown
            */
           gnRegionService.loadList().then(function (data) {
-            scope.regionTypes = angular.copy(data);
+            var dataFiltered = _.filter(data, function (o) {
+              return o.id !== "metadata";
+            });
+            scope.regionTypes = angular.copy(dataFiltered);
             if (addGeonames) {
               scope.regionTypes.unshift({
                 name: "Geonames",
@@ -898,6 +904,7 @@
         restrict: "A",
         link: function (scope, element, attrs) {
           scope.prefix = attrs["prefix"] || "";
+          scope.showHintsOnFocus = attrs.showHintsOnFocus === "true"; // displays all the values on focus, default shows only the selected value
           element.attr("placeholder", "...");
           element.on("focus", function () {
             $http
@@ -942,7 +949,8 @@
                 $(element).typeahead(
                   {
                     minLength: 0,
-                    highlight: true
+                    highlight: true,
+                    showHintsOnFocus: scope.showHintsOnFocus
                   },
                   {
                     name: "isoLanguages",
@@ -955,8 +963,150 @@
                     }
                   }
                 );
+                // Since the typeahead is initialized on focus the first focus will not trigger the hints
+                // So we blur then refocus to trigger the hints
+                $(element).blur();
+                $(element).focus();
               });
             element.unbind("focus");
+          });
+        }
+      };
+    }
+  ]);
+
+  /**
+   * @ngdoc directive
+   * @name gn_utility.directive:gnDataPicker
+   * @function
+   *
+   * @description
+   * A generic directive that allows to select values from the provided source (Bloodhound object).
+   *
+   * The selected values are returned as a comma separated string in the 'value' scope property.
+   *
+   * Data model:
+   *   - code: Value to select.
+   *   - name: Label to display.
+   *
+   */
+  module.directive("gnDataPicker", [
+    "$timeout",
+    function ($timeout) {
+      return {
+        restrict: "A",
+        replace: true,
+        transclude: true,
+        templateUrl: "../../catalog/components/utility/partials/dataselector.html",
+        scope: {
+          source: "<",
+          elementId: "@",
+          value: "=",
+          maxTags: "@"
+        },
+        link: function (scope, element, attrs) {
+          scope.prefix = attrs["prefix"] || "";
+          scope.selected = [];
+          scope.initialValues = [];
+          scope.initialised = false;
+
+          var id = "#tagsinput_" + scope.elementId;
+
+          var initTagsInput = function () {
+            $timeout(function () {
+              try {
+                $(id).tagsinput({
+                  itemValue: "code",
+                  itemText: "name",
+                  maxTags: scope.maxTags
+                });
+
+                var source = scope.source;
+
+                scope.$watch("value", function (newValue, oldValue) {
+                  if (
+                    newValue !== oldValue ||
+                    (scope.initialValues.length == 0 && newValue)
+                  ) {
+                    scope.initialValues = newValue.split(",");
+
+                    scope.selected = [];
+                    $(id).tagsinput("removeAll");
+
+                    angular.forEach(scope.initialValues, function (value) {
+                      scope.selected = scope.selected.concat(
+                        _.filter(source.local, ["code", value])
+                      );
+                    });
+
+                    // Add selection to the list of tags
+                    angular.forEach(scope.selected, function (keyword) {
+                      $(id).tagsinput("add", keyword);
+                    });
+                  }
+                });
+
+                function allOrSearchFn(q, sync) {
+                  if (q === "") {
+                    sync(source.all());
+                  } else {
+                    source.search(q, sync);
+                  }
+                }
+
+                var field = $(id).tagsinput("input");
+
+                field
+                  .typeahead(
+                    {
+                      minLength: 0,
+                      highlight: true
+                    },
+                    {
+                      name: "datapicker",
+                      displayKey: "code",
+                      source: allOrSearchFn,
+                      limit: Infinity,
+                      templates: {
+                        suggestion: function (datum) {
+                          return "<p>" + datum.name + " (" + datum.code + ")</p>";
+                        }
+                      }
+                    }
+                  )
+                  .bind(
+                    "typeahead:selected",
+                    $.proxy(function (obj, keyword) {
+                      // Add to tags
+                      this.tagsinput("add", keyword);
+
+                      // Update selection and snippet
+                      angular.copy(this.tagsinput("items"), scope.selected);
+                      scope.value = _.map(scope.selected, "code").join(",");
+
+                      // Clear typeahead
+                      this.tagsinput("input").typeahead("val", "");
+                      field.blur();
+                      field.triggerHandler("input"); // force angular to see changes
+                    }, $(id))
+                  );
+
+                $(id).on("itemRemoved", function () {
+                  angular.copy($(this).tagsinput("items"), scope.selected);
+                  scope.value = _.map(scope.selected, "code").join(",");
+                  field.blur();
+                  field.triggerHandler("input"); // force angular to see changes
+                });
+              } catch (e) {
+                console.warn("No tagsinput for " + id + ", error: " + e.message);
+              }
+            });
+          };
+
+          scope.$watch("source", function (newValue, oldValue) {
+            if (newValue && newValue != oldValue) {
+              initTagsInput();
+            }
           });
         }
       };
@@ -1002,45 +1152,35 @@
       return {
         copy: function (toCopy) {
           var deferred = $q.defer();
-          navigator.permissions.query({ name: "clipboard-write" }).then(
-            function (result) {
-              if (result.state == "granted" || result.state == "prompt") {
-                navigator.clipboard.writeText(toCopy).then(
-                  function () {
-                    deferred.resolve();
-                  },
-                  function (r) {
-                    console.warn(r);
-                    deferred.reject();
-                  }
-                );
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(toCopy).then(
+              function () {
+                deferred.resolve();
+              },
+              function (r) {
+                console.warn(r);
+                deferred.reject();
               }
-            },
-            function () {
-              deferred.reject();
-            }
-          );
+            );
+          } else {
+            deferred.reject();
+          }
           return deferred.promise;
         },
         paste: function () {
           var deferred = $q.defer();
-          navigator.permissions.query({ name: "clipboard-read" }).then(
-            function (result) {
-              if (result.state == "granted" || result.state == "prompt") {
-                navigator.clipboard.readText().then(
-                  function (text) {
-                    deferred.resolve(text);
-                  },
-                  function () {
-                    deferred.reject();
-                  }
-                );
+          if (navigator.clipboard && navigator.clipboard.readText) {
+            navigator.clipboard.readText().then(
+              function (text) {
+                deferred.resolve(text);
+              },
+              function () {
+                deferred.reject();
               }
-            },
-            function () {
-              deferred.reject();
-            }
-          );
+            );
+          } else {
+            deferred.reject();
+          }
           return deferred.promise;
         }
       };
@@ -1054,12 +1194,12 @@
    *
    * The code to be used in a HTML page:
    *
-   * <span gn-copy-to-clipboard=""></span>
+   * <span gn-copy-to-clipboard-button=""></span>
    *  eg. for citation
    *
    * or
    *
-   * <span gn-copy-to-clipboard="" data-text="{{::r.locUrl}}" gn-copy-button-only="true"></span>
+   * <span gn-copy-to-clipboard-button="" data-text="{{::r.locUrl}}" gn-copy-button-only="true"></span>
    *  eg. copy UUID or link URL
    *
    * or
@@ -1082,7 +1222,7 @@
           '           href=""' +
           '           title="{{::title | translate}}">' +
           '  <i class="fa fa-fw" ' +
-          "   ng-class=\"{'fa-copy': !copied, 'fa-check': copied}\"/>" +
+          "   ng-class=\"{'fa-copy': !copied, 'fa-check': copied}\"></i>" +
           "</a>",
         scope: {
           btnClass: "@",
@@ -1114,6 +1254,67 @@
                   console.warn("Failed to copy to clipboard.");
                 }
               );
+            });
+          };
+        }
+      };
+    }
+  ]);
+
+  /*
+   * @description
+   * Save a file with a string in an input field, the parent element text
+   * or the results of a promise.
+   *
+   * The code to be used in a HTML page:
+   *
+   * <span gn-save-text-button="" data-file-name="citation.txt"></span>
+   *  eg. for citation
+   *
+   * <span gn-save-text-button="" data-text="{{::r.locUrl}}"></span>
+   *  eg. save UUID or link URL
+   *
+   * or
+   *
+   * <button gn-save-text-button="" get-text-fn="getListOfUuids()"/>
+   *  eg. UUID of record with indexing errors
+   */
+  module.directive("gnSaveTextButton", [
+    "$q",
+    function ($q) {
+      return {
+        restrict: "A",
+        replace: true,
+        template:
+          "<a class=\"{{::btnClass || 'btn btn-default btn-xs'}}\" " +
+          '           ng-click="save()" ' +
+          '           href=""' +
+          '           title="{{::title | translate}}">' +
+          '  <i class="fa fa-download"></i>' +
+          "</a>",
+        scope: {
+          btnClass: "@",
+          getTextFn: "&?",
+          fileName: "@"
+        },
+        link: function linkFn(scope, element, attr) {
+          scope.title = attr["tooltip"] || "saveToFile";
+          scope.fileName = scope.fileName || "file.txt";
+          scope.save = function () {
+            var promise = undefined;
+
+            if (angular.isFunction(scope.getTextFn)) {
+              promise = scope.getTextFn();
+            } else {
+              promise = $q.when(
+                attr["text"] ? attr["text"] : element.parent().text().trim()
+              );
+            }
+
+            promise.then(function (text) {
+              var blob = new Blob([text], { type: "text/plain;charset=utf-8" });
+              // Bootstrap FileSaver
+              saveAs(blob, scope.fileName);
             });
           };
         }
@@ -1219,7 +1420,7 @@
         restrict: "A",
         template:
           "<button title=\"{{'gnToggle' | translate}}\">" +
-          '<i class="fa fa-fw fa-angle-double-up"/>&nbsp;' +
+          '<i class="fa fa-fw fa-angle-double-up"></i>&nbsp;' +
           "</button>",
         link: function linkFn(scope, element, attr) {
           var collapsing = true,
@@ -1268,8 +1469,8 @@
         transclude: true,
         template:
           '<a href=\'#/search?query_string=%7B"{{field}}":%7B"{{::filter | encodeURIComponent}}":true%7D%7D\'>' +
-          '  <i class="fa fa-fw fa-filter"/>' +
-          "  <span>{{(label || 'focusOn') | translate}} <ng-transclude/></span>" +
+          '  <i class="fa fa-fw fa-filter"></i>' +
+          "  <span>{{(label || 'focusOn') | translate}} <ng-transclude></ng-transclude></span>" +
           "</a>",
         scope: {
           field: "@gnSearchFilterLink",
@@ -1473,7 +1674,22 @@
       };
     }
   ]);
-
+  /**
+   * @ngdoc directive
+   *
+   * @description
+   * Directive to include a template and replace the element with its content.
+   * ng-include always append the content.
+   */
+  module.directive("gnIncludeAndReplace", function () {
+    return {
+      require: "ngInclude",
+      restrict: "A",
+      link: function (scope, el, attrs) {
+        el.replaceWith(el.children());
+      }
+    };
+  });
   /**
    * @ngdoc directive
    * @name gn_utility.directive:gnAutogrow
@@ -2143,11 +2359,11 @@
    * to the parent element (required to highlight
    * element in navbar)
    */
+
   module.directive("gnActiveTbItem", [
     "$location",
-    "gnLangs",
-    "gnConfig",
-    function ($location, gnLangs, gnConfig) {
+    "$filter",
+    function ($location, $filter) {
       return {
         restrict: "A",
         link: function (scope, element, attrs) {
@@ -2155,30 +2371,29 @@
             href,
             isCurrentService = false;
 
-          // Replace lang in link (three character language code i.e. eng, fre)
-          link = link.replace("{{lang}}", gnLangs.getCurrent());
-          // Replace standard ISO lang in link (two character language code i.e. en, fr)
-          link = link.replace("{{isoLang}}", gnLangs.getIso2Lang(gnLangs.getCurrent()));
-          link = link.replace("{{node}}", gnConfig.env.node);
+          function updateHref() {
+            link = $filter("setUrlPlaceholder")(link);
 
-          // Insert debug mode between service and route
-          if (link.indexOf("#") !== -1) {
-            var tokens = link.split("#");
-            isCurrentService =
-              window.location.pathname.match(".*" + tokens[0] + "$") !== null;
-            href =
-              (isCurrentService ? "" : tokens[0] + (scope.isDebug ? "?debug" : "")) +
-              "#" +
-              tokens[1];
-          } else {
-            isCurrentService = window.location.pathname.match(".*" + link + "$") !== null;
-            href = isCurrentService ? "#/" : link + (scope.isDebug ? "?debug" : "");
+            // Insert debug mode between service and route
+            if (link.indexOf("#") !== -1) {
+              var tokens = link.split("#");
+              isCurrentService =
+                window.location.pathname.match(".*" + tokens[0] + "$") !== null;
+              href =
+                (isCurrentService ? "" : tokens[0] + (scope.isDebug ? "?debug" : "")) +
+                "#" +
+                tokens[1];
+            } else {
+              isCurrentService =
+                window.location.pathname.match(".*" + link + "$") !== null;
+              href = isCurrentService ? "#/" : link + (scope.isDebug ? "?debug" : "");
+            }
+
+            // Set the href attribute for the element
+            // with the link containing the debug mode
+            // or not
+            element.attr("href", href);
           }
-
-          // Set the href attribute for the element
-          // with the link containing the debug mode
-          // or not
-          element.attr("href", href);
 
           function checkActive() {
             // regexps for getting the service & path
@@ -2204,21 +2419,38 @@
 
           scope.$on("$locationChangeSuccess", checkActive);
 
+          // Watch for changes in the link attribute
+          attrs.$observe("gnActiveTbItem", function (newLink) {
+            link = newLink;
+            updateHref();
+            checkActive();
+          });
+
+          updateHref();
           checkActive();
         }
       };
     }
   ]);
-  module.filter("signInLink", [
-    "$location",
+  module.filter("setUrlPlaceholder", [
     "gnLangs",
     "gnConfig",
-    function ($location, gnLangs, gnConfig) {
+    function (gnLangs, gnConfig) {
+      return function (url) {
+        return url
+          .replace("{{lang}}", gnLangs.getCurrent())
+          .replace("{{isoLang}}", gnLangs.getIso2Lang(gnLangs.getCurrent()))
+          .replace("{{node}}", gnConfig.env.node);
+      };
+    }
+  ]);
+  module.filter("signInLink", [
+    "$location",
+    "$filter",
+    function ($location, $filter) {
       return function (href) {
         href =
-          href
-            .replace("{{lang}}", gnLangs.getCurrent())
-            .replace("{{node}}", gnConfig.env.node) +
+          $filter("setUrlPlaceholder")(href) +
           "?redirect=" +
           encodeURIComponent(window.location.href);
         return href;
@@ -2242,6 +2474,9 @@
     "$translate",
     function ($translate) {
       return function (workflowStatus) {
+        if (!workflowStatus) {
+          return;
+        }
         var split = workflowStatus.split("-");
         // the status of the record
         var metadataStatus = $translate.instant("status-" + split[0]);
@@ -2258,6 +2493,69 @@
       };
     }
   ]);
+
+  /**
+   * Compute a translated status label for an associated record
+   * based on initiative type and association type.
+   *
+   * If association type is crossReference,
+   * then "Cross reference" is used as a label in english.
+   * If an initiative type is provided eg. study,
+   * then "Cross reference (Study)" is returned
+   * If a custom translation is set in the translation file,
+   * eg. "crossReference-study": "Publication"
+   * then "Publication" is returned.
+   */
+  module.filter("getAssociatedRecordLabel", [
+    "$translate",
+    function ($translate) {
+      return function (associationType, initiativeType) {
+        if (!associationType) {
+          return;
+        }
+        var translationKey = associationType + "-" + initiativeType;
+        var translation = $translate.instant(translationKey);
+        if (translationKey === translation) {
+          return (
+            $translate.instant(associationType) +
+            (initiativeType ? " (" + $translate.instant(initiativeType) + ")" : "")
+          );
+        } else {
+          return translation;
+        }
+      };
+    }
+  ]);
+
+  module.directive("gnAssociatedRecordLabel", [
+    "$translate",
+    function ($translate) {
+      return {
+        restrict: "A",
+        scope: {
+          type: "=gnAssociatedRecordLabel"
+        },
+        templateUrl:
+          "../../catalog/components/utility/partials/associated-record-label.html",
+        link: function (scope) {
+          function updateCustomLabel(n, o) {
+            var translationKey =
+              scope.type.associationType + "-" + scope.type.initiativeType;
+            var translation = $translate.instant(translationKey);
+            if (translationKey !== translation) {
+              scope.customLabel = translation;
+            } else {
+              scope.customLabel = undefined;
+            }
+          }
+          scope.icon = "fa-puzzle-piece";
+          scope.$watch("type.associationType", updateCustomLabel);
+          scope.$watch("type.initiativeType", updateCustomLabel);
+        }
+      };
+    }
+  ]);
+
   /**
    * Append size parameter to request a smaller thumbnail.
    */
@@ -2384,7 +2682,7 @@
                   '">' +
                   '<div class="modal-dialog gn-img-modal in">' +
                   '  <button type=button class="btn btn-danger gn-btn-modal-img">' +
-                  '<i class="fa fa-times"/></button>' +
+                  '<i class="fa fa-times"></i></button>' +
                   '  <img src="' +
                   (attr.ngSrc || img.lUrl || img.url || img.id) +
                   '"/>' +

@@ -29,6 +29,46 @@
                           else $key"/>
   </xsl:function>
 
+  <xsl:function name="gn-fn-render:bboxes">
+    <xsl:param name="boundingBoxes" as="node()*"/>
+
+    <xsl:variable name="coordinates" as="node()*">
+      <xsl:for-each select="$boundingBoxes[*:eastBoundLongitude/*:Decimal castable as xs:double
+                                           and *:southBoundLatitude/*:Decimal castable as xs:double
+                                           and *:westBoundLongitude/*:Decimal castable as xs:double
+                                           and *:northBoundLatitude/*:Decimal castable as xs:double]">
+        <coords east="{xs:double(*:eastBoundLongitude/*:Decimal)}"
+                south="{xs:double(*:southBoundLatitude/*:Decimal)}"
+                west="{xs:double(*:westBoundLongitude/*:Decimal)}"
+                north="{xs:double(*:northBoundLatitude/*:Decimal)}"/>
+      </xsl:for-each>
+    </xsl:variable>
+
+    <xsl:variable name="points"
+                  select="$coordinates[@east = @west and @south = @north]"/>
+
+    <xsl:variable name="boxes"
+                  select="$coordinates[@east != @west and @south != @north]"/>
+
+    <xsl:variable name="geometryCollection"
+                  select="concat('GEOMETRYCOLLECTION(',
+                              string-join($points/concat('POINT(', @east, '%20', @south, ')'), ','),
+                              if (count($points) > 0 and count($boxes) > 0) then ',' else '',
+                              string-join($boxes/concat('POLYGON((',
+                                @east, '%20', @south, ',',
+                                @east, '%20', @north, ',',
+                                @west, '%20', @north, ',',
+                                @west, '%20', @south, ',',
+                                @east, '%20', @south, '))'), ','),
+                             ')')"/>
+    <xsl:variable name="numberFormat" select="'0.00'"/>
+
+    <div class="thumbnail extent">
+      <xsl:copy-of select="gn-fn-render:geometry($geometryCollection)"/>
+    </div>
+  </xsl:function>
+
+
   <!-- Render coordinates of bbox and an images of the geometry
   using the region API -->
   <xsl:function name="gn-fn-render:bbox">
@@ -122,7 +162,7 @@
   <xsl:function name="gn-fn-render:getMetadataTitle">
     <xsl:param name="uuid" as="xs:string"/>
     <xsl:param name="language" as="xs:string"/>
-    <!-- TODOES: Fallback to default language -->
+
     <xsl:variable name="metadataTitle"
                   select="util:getIndexField(
                   $language,
@@ -131,20 +171,7 @@
                   $language)"/>
     <xsl:choose>
       <xsl:when test="$metadataTitle=''">
-        <xsl:variable name="metadataDefaultTitle"
-                      select="util:getIndexField(
-                      $language,
-                      $uuid,
-                      'resourceTitleObject',
-                      $language)"/>
-        <xsl:choose>
-          <xsl:when test="$metadataDefaultTitle=''">
-            <xsl:value-of select="$uuid"/>
-          </xsl:when>
-          <xsl:otherwise>
-            <xsl:value-of select="$metadataDefaultTitle"/>
-          </xsl:otherwise>
-        </xsl:choose>
+        <xsl:value-of select="$uuid"/>
       </xsl:when>
       <xsl:otherwise>
         <xsl:value-of select="$metadataTitle"/>

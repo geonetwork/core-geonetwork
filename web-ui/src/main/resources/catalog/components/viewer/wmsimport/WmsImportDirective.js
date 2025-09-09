@@ -87,7 +87,7 @@
               var url = $scope.url.split("/");
               getCapLayer.useProxy = false;
               url = url[0] + "/" + url[1] + "/" + url[2] + "/";
-              if ($.inArray(url, gnGlobalSettings.requireProxy) >= 0) {
+              if ($.inArray(url + "#GET", gnGlobalSettings.requireProxy) >= 0) {
                 getCapLayer.useProxy = true;
               }
               if ($scope.format == "wms") {
@@ -105,7 +105,7 @@
                     }),
                     type: "success"
                   },
-                  4
+                  15
                 );
                 gnMap.feedLayerMd(layer);
                 return layer;
@@ -643,10 +643,13 @@
           onClick: "&gnLayerStylesOnClick",
           current: "=gnLayerStylesCurrent",
           // 'select' or default is list
-          layout: "@gnLayerStylesLayout"
+          layout: "@gnLayerStylesLayout",
+          // dropdown open to the left or right
+          dropdownDirection: "@gnLayerStylesDropdownDirection"
         },
         link: function (scope) {
           scope.data = { currentStyle: scope.current };
+          scope.dropdownDirection = scope.dropdownDirection || "left";
           scope.$watch("data.currentStyle", function (n, o) {
             if (n && n !== o) {
               scope.clickFn(n);

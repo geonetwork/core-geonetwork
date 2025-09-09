@@ -1,5 +1,5 @@
 //=============================================================================
-//===    Copyright (C) 2001-2023 Food and Agriculture Organization of the
+//===    Copyright (C) 2001-2024 Food and Agriculture Organization of the
 //===    United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===    and United Nations Environment Programme (UNEP)
 //===
@@ -216,7 +216,6 @@ public class Aligner extends BaseAligner<GeonetParams> {
                                     params.useChangeDateForUpdate(),
                                     localUuids.getChangeDate(ri.uuid), true);
                                 log.info("Overriding record with uuid " + ri.uuid);
-                                result.updatedMetadata++;
 
                                 if (params.isIfRecordExistAppendPrivileges()) {
                                     addPrivileges(id, params.getPrivileges(), localGroups, context);
@@ -462,6 +461,11 @@ public class Aligner extends BaseAligner<GeonetParams> {
         else isTemplate = "n";
 
         if (log.isDebugEnabled()) log.debug("  - Adding metadata with remote uuid:" + ri.uuid);
+
+        // Translate metadata
+        if (params.isTranslateContent()) {
+            md = translateMetadataContent(context, md, schema);
+        }
 
         try {
             Integer groupIdVal = null;
@@ -743,6 +747,11 @@ public class Aligner extends BaseAligner<GeonetParams> {
                                 Element info, boolean localRating, boolean force) throws Exception {
         String date = localUuids.getChangeDate(ri.uuid);
 
+
+        // Translate metadata
+        if (params.isTranslateContent()) {
+            md = translateMetadataContent(context, md, ri.schema);
+        }
 
         try {
             Integer groupIdVal = null;

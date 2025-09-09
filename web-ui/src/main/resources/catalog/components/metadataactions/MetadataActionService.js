@@ -51,6 +51,7 @@
     "$q",
     "$http",
     "gnConfig",
+    "gnLangs",
     function (
       $rootScope,
       $timeout,
@@ -67,7 +68,8 @@
       $translate,
       $q,
       $http,
-      gnConfig
+      gnConfig,
+      gnLangs
     ) {
       var windowName = "geonetwork";
       var windowOption = "";
@@ -154,7 +156,7 @@
           if (params.sortOrder) {
             url += "&sortOrder=" + params.sortOrder;
           }
-          url += "&bucket=" + bucket;
+          url += "&bucket=" + bucket + "&language=" + gnLangs.current;
           location.replace(url);
         } else if (angular.isString(params)) {
           gnMdFormatter.getFormatterUrl(null, null, params).then(function (url) {
@@ -194,7 +196,11 @@
       };
 
       this.exportCSV = function (bucket) {
-        window.open("../api/records/csv" + "?bucket=" + bucket, windowName, windowOption);
+        window.open(
+          "../api/records/csv" + "?bucket=" + bucket + "&language=" + gnLangs.current,
+          windowName,
+          windowOption
+        );
       };
       this.validateMdLinks = function (bucket) {
         $rootScope.$broadcast("operationOnSelectionStart");
@@ -275,20 +281,28 @@
           );
         } else {
           $rootScope.$broadcast("operationOnSelectionStart");
-          $http.delete("../api/records?" + "bucket=" + bucket).then(
-            function (data) {
-              $rootScope.$broadcast("mdSelectNone");
-              $rootScope.$broadcast("operationOnSelectionStop");
-              $rootScope.$broadcast("search");
-              $timeout(function () {
+          $http
+            .delete("../api/records?" + "bucket=" + bucket)
+            .then(
+              function (data) {
+                $rootScope.$broadcast("mdSelectNone");
                 $rootScope.$broadcast("search");
-              }, 5000);
-              deferred.resolve(data);
-            },
-            function (data) {
-              deferred.reject(data);
-            }
-          );
+                $timeout(function () {
+                  $rootScope.$broadcast("search");
+                }, 5000);
+                deferred.resolve(data);
+              },
+              function (data) {
+                gnAlertService.addAlert({
+                  msg: data.data.message || data.data.description,
+                  type: "danger"
+                });
+                deferred.reject(data);
+              }
+            )
+            .finally(function () {
+              $rootScope.$broadcast("operationOnSelectionStop");
+            });
         }
         return deferred.promise;
       };
@@ -464,14 +478,19 @@
        */
       this.publish = function (md, bucket, flag, scope, publicationType) {
         if (md) {
+          // Determine the publication flag based on current publication state
           flag = md.isPublished(publicationType) ? "off" : "on";
         }
 
         scope.isMdWorkflowEnable = gnConfig["metadata.workflow.enable"];
 
-        //Warn about possible workflow changes on batch changes
-        // or when record is not approved
-        if ((!md || md.mdStatus != 2) && flag === "on" && scope.isMdWorkflowEnable) {
+        // Warn about possible workflow changes on batch changes or when record is not approved
+        if (
+          (!md || (md.mdStatus != 2 && md.isWorkflowEnabled())) &&
+          flag === "on" &&
+          scope.isMdWorkflowEnable
+        ) {
+          // Show confirmation dialog to the user
           if (!confirm($translate.instant("warnPublishDraft"))) {
             return;
           }
@@ -523,6 +542,7 @@
               }
 
               if (md) {
+                gnMetadataManager.updateMdObj(md);
                 md.publish(publicationType);
               }
             },
@@ -640,8 +660,10 @@
           })
           .then(function (data) {
             $rootScope.$broadcast("inspireMdValidationStop");
-            $rootScope.$broadcast("operationOnSelectionStop");
             $rootScope.$broadcast("search");
+          })
+          .finally(function () {
+            $rootScope.$broadcast("operationOnSelectionStop");
           });
       };
 
@@ -653,8 +675,10 @@
             method: "DELETE"
           })
           .then(function (data) {
-            $rootScope.$broadcast("operationOnSelectionStop");
             $rootScope.$broadcast("search");
+          })
+          .finally(function () {
+            $rootScope.$broadcast("operationOnSelectionStop");
           });
       };
 
@@ -666,6 +690,33 @@
         var crs = (crsDetails.codeSpace && crsDetails.codeSpace + ":") + crsDetails.code;
         if (crsDetails.name) return crsDetails.name + " (" + crs + ")";
         else return crs;
+      };
+
+      /**
+       * Retrieves the name of a group given its ID.
+       *
+       * @param {number} groupId - The ID of the group to retrieve the name for.
+       * @returns {Promise<string>} - A promise that resolves to the name of the group.
+       */
+      this.getGroupName = function (groupId) {
+        return $http.get("../api/groups/" + groupId).then(function (data) {
+          return data.data.name;
+        });
+      };
+
+      /**
+       * Checks if the given group name matches the workflow group matching regex.
+       *
+       * @param {string} groupName - The name of the group to check.
+       * @returns {boolean} - True if the group name matches the workflow group matching regex, false otherwise.
+       */
+      this.isGroupWithWorkflowEnabled = function (groupName) {
+        var workflowGroupMatchingRegex = gnConfig["metadata.workflow.draftWhenInGroup"];
+        return (
+          groupName &&
+          workflowGroupMatchingRegex &&
+          !!groupName.match(workflowGroupMatchingRegex)
+        );
       };
     }
   ]);

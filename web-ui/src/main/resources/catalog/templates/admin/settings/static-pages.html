@@ -33,7 +33,7 @@
           class="btn btn-primary btn-block"
           data-ng-click="addStaticPage()"
         >
-          <i class="fa fa-plus" />
+          <i class="fa fa-plus"></i>
           <span data-translate="">newStaticPage</span>
         </button>
       </div>
@@ -178,7 +178,7 @@
             </div>
           </div>
 
-          <div class="form-group" data-ng-show="staticPageSelected.format === 'LINK'">
+          <div class="form-group" data-ng-show="isLinkFormat(staticPageSelected.format)">
             <label class="control-label col-sm-3" data-translate="">pageLink</label>
 
             <div class="col-sm-9">
@@ -186,7 +186,7 @@
                 type="text"
                 name="link"
                 class="form-control"
-                data-ng-required="staticPageSelected.format === 'LINK'"
+                data-ng-required="isLinkFormat(staticPageSelected.format)"
                 data-ng-model="staticPageSelected.link"
               />
             </div>
@@ -194,7 +194,7 @@
 
           <!-- Upload panel -->
           <div
-            data-ng-show="staticPageSelected.format !== 'LINK'"
+            data-ng-show="!isLinkFormat(staticPageSelected.format)"
             id="gn-staticpage-uploadfile-row"
             class="form-group"
           >
@@ -213,8 +213,8 @@
               >
                 {{staticPageSelected.link}}
                 <a href="" data-ng-click="deleteContent()"
-                  ><i class="fa fa-fw fa-trash"
-                /></a>
+                  ><i class="fa fa-fw fa-trash"></i
+                ></a>
               </div>
             </div>
 
@@ -234,7 +234,7 @@
               <div class="panel panel-default">
                 <div class="panel-body">
                   <span class="btn btn-success btn-block fileinput-button">
-                    <i class="fa fa-plus fa-white" />
+                    <i class="fa fa-plus fa-white"></i>
                     <span data-translate="">chooseStaticPageFile</span>
                     <input type="file" id="md-staticpage-file" name="data" />
                   </span>
@@ -260,7 +260,7 @@
             </div>
           </div>
 
-          <div class="form-group" data-ng-show="staticPageSelected.format !== 'LINK'">
+          <div class="form-group" data-ng-show="!isLinkFormat(staticPageSelected.format)">
             <label class="control-label col-sm-3" data-translate="">pageContent</label>
 
             <div class="col-sm-9">
@@ -306,12 +306,33 @@
                 class="form-control"
                 required=""
                 data-ng-model="staticPageSelected.status"
+                data-ng-change="updateGroupSelection()"
               >
                 <option value="HIDDEN">{{'staticPageStatus-HIDDEN' | translate }}</option>
                 <option value="PRIVATE">
                   {{'staticPageStatus-PRIVATE' | translate }}
                 </option>
+                <option value="GROUPS">{{'staticPageStatus-GROUPS' | translate }}</option>
                 <option value="PUBLIC">{{'staticPageStatus-PUBLIC' | translate }}</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="control-label col-sm-3" data-translate="">groups</label>
+
+            <div class="col-sm-9">
+              <select
+                name="groups"
+                class="form-control"
+                data-ng-disabled="!isGroupEnabled"
+                data-ng-readonly="!isGroupEnabled"
+                data-ng-model="staticPageSelected.groups"
+                multiple
+              >
+                <option data-ng-repeat="g in groups" value="{{g.name}}">
+                  {{g.label[lang]|empty:g.name}}
+                </option>
               </select>
             </div>
           </div>

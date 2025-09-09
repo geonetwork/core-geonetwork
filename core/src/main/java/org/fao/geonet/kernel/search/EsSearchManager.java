@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2023 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2025 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -29,8 +29,8 @@ import co.elastic.clients.elasticsearch.core.*;
 import co.elastic.clients.elasticsearch.core.bulk.BulkOperation;
 import co.elastic.clients.elasticsearch.core.bulk.UpdateOperation;
 import co.elastic.clients.elasticsearch.core.search.Hit;
-import co.elastic.clients.elasticsearch.indices.*;
 import co.elastic.clients.elasticsearch.indices.ExistsRequest;
+import co.elastic.clients.elasticsearch.indices.*;
 import co.elastic.clients.transport.endpoints.BooleanResponse;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -73,8 +73,7 @@ import java.nio.file.StandardOpenOption;
 import java.util.*;
 
 import static org.fao.geonet.constants.Geonet.IndexFieldNames.IS_TEMPLATE;
-import static org.fao.geonet.kernel.search.IndexFields.INDEXING_ERROR_FIELD;
-import static org.fao.geonet.kernel.search.IndexFields.INDEXING_ERROR_MSG;
+import static org.fao.geonet.kernel.search.IndexFields.*;
 
 
 public class EsSearchManager implements ISearchManager {
@@ -137,12 +136,14 @@ public class EsSearchManager implements ISearchManager {
             .add(Geonet.IndexFieldNames.GROUP_OWNER)
             .add(Geonet.IndexFieldNames.RESOURCEABSTRACT)
             .add(Geonet.IndexFieldNames.RESOURCEABSTRACT + "Object")
+            .add("resourceIdentifier")
             .add("operatesOn")
             .build();
 
         FIELDLIST_RELATED_SCRIPTED = ImmutableMap.<String, String>builder()
             // Elasticsearch scripted field to get the first overview url. Scripted fields must return single values.
             .put("overview", "return params['_source'].overview == null ? [] : params['_source'].overview.stream().map(f -> f.url).findFirst().orElse('');")
+            .put("overview_data", "return params['_source'].overview == null ? [] : params['_source'].overview.stream().map(f -> f.data).filter(Objects::nonNull).findFirst().orElse('');")
             .build();
     }
 
@@ -216,7 +217,6 @@ public class EsSearchManager implements ISearchManager {
             doc.addContent(new Element(INDEXING_ERROR_FIELD).setText("true"));
             doc.addContent(createIndexingErrorMsgElement("indexingErrorMsg-indexingStyleSheetError", "error",
                 Map.of("message", e.getMessage())));
-            doc.addContent(new Element(IndexFields.DRAFT).setText("n"));
         }
     }
 
@@ -225,7 +225,7 @@ public class EsSearchManager implements ISearchManager {
         fields.entries().forEach(e -> {
             Element newElement = new Element(e.getKey())
                 .setText(String.valueOf(e.getValue()));
-            if(objectFields.contains(e.getKey())) {
+            if (objectFields.contains(e.getKey())) {
                 newElement.setAttribute("type", "object");
             }
             doc.addContent(newElement);
@@ -349,6 +349,7 @@ public class EsSearchManager implements ISearchManager {
         fields.asMap().forEach((e, v) -> fieldMap.put(e, v.toArray()));
         return updateFields(id, fieldMap, fieldsToRemove);
     }
+
     public BulkResponse updateFields(String id, Map<String, Object> fieldMap, Set<String> fieldsToRemove) throws IOException {
         fieldMap.put(Geonet.IndexFieldNames.INDEXING_DATE, new Date());
 
@@ -404,7 +405,7 @@ public class EsSearchManager implements ISearchManager {
                 if (exception != null) {
                     LOGGER.error("Failed to index {}", exception);
                 } else {
-                    LOGGER.info("Updated fields for document {}",  id);
+                    LOGGER.info("Updated fields for document {}", id);
                 }
             });
     }
@@ -479,7 +480,7 @@ public class EsSearchManager implements ISearchManager {
             } catch (Exception e) {
                 LOGGER.error(
                     "An error occurred while indexing {} documents in current indexing list. Error is {}.",
-                        listOfDocumentsToIndex.size(), e.getMessage());
+                    listOfDocumentsToIndex.size(), e.getMessage());
             } finally {
                 // TODO: Trigger this async ?
                 documents.keySet().forEach(uuid -> overviewFieldUpdater.process(uuid));
@@ -502,6 +503,7 @@ public class EsSearchManager implements ISearchManager {
                     String id = "";
                     String uuid = "";
                     String isTemplate = "";
+                    String isDraft = "";
 
                     String failureDoc = documents.get(e.id());
                     try {
@@ -510,13 +512,14 @@ public class EsSearchManager implements ISearchManager {
                         id = node.get(IndexFields.DBID).asText();
                         uuid = node.get("uuid").asText();
                         isTemplate = node.get(IS_TEMPLATE).asText();
+                        isDraft = node.get(DRAFT).asText();
                     } catch (Exception ignoredException) {
                     }
                     docWithErrorInfo.put(IndexFields.DBID, id);
                     docWithErrorInfo.put("uuid", uuid);
                     docWithErrorInfo.put(IndexFields.RESOURCE_TITLE, resourceTitle);
                     docWithErrorInfo.put(IS_TEMPLATE, isTemplate);
-                    docWithErrorInfo.put(IndexFields.DRAFT, "n");
+                    docWithErrorInfo.put(IndexFields.DRAFT, isDraft);
                     docWithErrorInfo.put(INDEXING_ERROR_FIELD, true);
                     ArrayNode errors = docWithErrorInfo.putArray(INDEXING_ERROR_MSG);
                     errors.add(createIndexingErrorMsgObject(e.error().reason(), "error", Map.of()));
@@ -539,7 +542,7 @@ public class EsSearchManager implements ISearchManager {
                 BulkResponse response = client.bulkRequest(defaultIndex, listErrorOfDocumentsToIndex);
                 if (response.errors()) {
                     LOGGER.error("Failed to save error documents {}.",
-                            Arrays.toString(errorDocumentIds.toArray()));
+                        Arrays.toString(errorDocumentIds.toArray()));
                 }
             }
         }
@@ -573,6 +576,7 @@ public class EsSearchManager implements ISearchManager {
             .add("status_text")
             .add("coordinateSystem")
             .add("identifier")
+            .add("maintenance")
             .add("responsibleParty")
             .add("mdLanguage")
             .add("otherLanguage")
@@ -585,7 +589,7 @@ public class EsSearchManager implements ISearchManager {
             .add("MD_SecurityConstraintsUseLimitation")
             .add("MD_SecurityConstraintsUseLimitationObject")
             .add("overview")
-            .add("sourceDescription")
+            .add("sourceDescriptionObject")
             .add("MD_ConstraintsUseLimitation")
             .add("MD_ConstraintsUseLimitationObject")
             .add("resourceType")
@@ -674,7 +678,7 @@ public class EsSearchManager implements ISearchManager {
                                 mapper.readTree(node.getTextNormalize()));
                         } catch (IOException e) {
                             LOGGER.error("Parsing invalid JSON node {} for property {}. Error is: {}",
-                                    node.getTextNormalize(), propertyName, e.getMessage());
+                                node.getTextNormalize(), propertyName, e.getMessage());
                         }
                     } else {
                         arrayNode.add(
@@ -693,7 +697,7 @@ public class EsSearchManager implements ISearchManager {
                         ));
                 } catch (IOException e) {
                     LOGGER.error("Parsing invalid JSON node {} for property {}. Error is: {}",
-                            nodeElements.get(0).getTextNormalize(), propertyName, e.getMessage());
+                        nodeElements.get(0).getTextNormalize(), propertyName, e.getMessage());
                 }
             } else {
                 doc.put(propertyName,
@@ -706,7 +710,8 @@ public class EsSearchManager implements ISearchManager {
     }
 
 
-    /** Field starting with _ not supported in Kibana
+    /**
+     * Field starting with _ not supported in Kibana
      * Those are usually GN internal fields
      */
     private String getPropertyName(String name) {
@@ -811,8 +816,8 @@ public class EsSearchManager implements ISearchManager {
         return client.query(defaultIndex, jsonRequest, null, includedFields, from, size);
     }
 
-    public Map<String, String> getFieldsValues(String id, Set<String> fields) throws IOException {
-        return client.getFieldsValues(defaultIndex, id, fields);
+    public Map<String, String> getFieldsValues(String id, Set<String> fields, String language) throws Exception {
+        return client.getFieldsValues(defaultIndex, id, fields, language);
     }
 
 
@@ -934,12 +939,12 @@ public class EsSearchManager implements ISearchManager {
         String indexBlockRead = "index.blocks.read_only_allow_delete";
 
         GetIndicesSettingsRequest request = GetIndicesSettingsRequest.of(
-                b -> b.index(indexName)
-                        .name(indexBlockRead)
+            b -> b.index(indexName)
+                .name(indexBlockRead)
         );
 
         GetIndicesSettingsResponse settings = this.client.getClient()
-                .indices().getSettings(request);
+            .indices().getSettings(request);
 
         IndexState indexState = settings.get(indexBlockRead);
 
@@ -950,7 +955,7 @@ public class EsSearchManager implements ISearchManager {
     /**
      * Make a JSON Object that properly represents an indexingErrorMsg, to be used in the index.
      *
-     * @param type either 'error' or 'warning'
+     * @param type   either 'error' or 'warning'
      * @param string a string that is translatable (see, e.g., en-search.json)
      * @param values values that replace the placeholders in the `string` parameter
      * @return a json object that represents an indexingErrorMsg
@@ -961,7 +966,7 @@ public class EsSearchManager implements ISearchManager {
         indexingErrorMsg.put("string", string);
         indexingErrorMsg.put("type", type);
         ObjectNode valuesObject = objectMapper.createObjectNode();
-        values.forEach((k,v) -> valuesObject.put(k, String.valueOf(v)));
+        values.forEach((k, v) -> valuesObject.put(k, String.valueOf(v)));
         indexingErrorMsg.set("values", valuesObject);
         return indexingErrorMsg;
     }
@@ -969,7 +974,7 @@ public class EsSearchManager implements ISearchManager {
     /**
      * Create an Element that represents an indexingErrorMsg object, to be used in the index.
      *
-     * @param type either 'error' or 'warning'
+     * @param type   either 'error' or 'warning'
      * @param string a string that is translatable (see, e.g., en-search.json)
      * @param values values that replace the placeholders in the `string` parameter
      * @return an Element that represents an indexingErrorMsg

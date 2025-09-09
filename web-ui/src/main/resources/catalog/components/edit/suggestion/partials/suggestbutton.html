@@ -5,7 +5,7 @@
   title="{{sugg.name}}"
   data-ng-click="gnSuggestion.onSuggestionClick(sugg)"
 >
-  <i class="fa fa-fw {{icon || 'fa-lightbulb'}}" />
+  <i class="fa fa-fw {{icon || 'fa-lightbulb'}}"></i>
   <span data-ng-if="!name">{{sugg.name}}</span>
   <span data-ng-if="name">{{('suggest-' + processId) | translate}}</span>
 </button>

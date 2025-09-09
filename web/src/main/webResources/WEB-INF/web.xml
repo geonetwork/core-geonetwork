@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <!--
-  ~ Copyright (C) 2001-2016 Food and Agriculture Organization of the
+  ~ Copyright (C) 2001-2024 Food and Agriculture Organization of the
   ~ United Nations (FAO-UN), United Nations World Food Programme (WFP)
   ~ and United Nations Environment Programme (UNEP)
   ~
@@ -75,10 +75,6 @@
   <filter>
     <filter-name>springSecurityFilterChain</filter-name>
     <filter-class>jeeves.config.springutil.JeevesDelegatingFilterProxy</filter-class>
-    <init-param>
-      <param-name>loginService</param-name>
-      <param-value>signin</param-value>
-    </init-param>
   </filter>
 
   <filter-mapping>
@@ -86,43 +82,45 @@
     <url-pattern>/*</url-pattern>
   </filter-mapping>
 
+
   <!-- Filter to verify the portal parameter in the URL is a valid portal defined in GeoNetwork.
        If a non-valid value is provided, it redirects to the same URL in the default portal (srv).
   -->
   <filter>
     <filter-name>portalCheckFilter</filter-name>
     <filter-class>org.fao.geonet.web.GeoNetworkPortalFilter</filter-class>
-    <init-param>
+  </filter>
+
+  <context-param>
+    <param-name>excludedPaths</param-name>
+    <param-value>
       <!-- List of Ant style patterns that should be not checked for application URL paths -->
       <!-- https://docs.spring.io/spring-security/site/docs/5.7.3/api/org/springframework/security/web/util/matcher/AntPathRequestMatcher.html -->
-      <param-name>excludedPaths</param-name>
-      <param-value>
-        /catalog/**,
-        /api/**,
-        /static/**,
-        /images/**,
-        /index/features/**,
-        /htmlcache/**,
-        /config/**,
-        /jolokia/**,
-        /dashboards/**,
-        /criticalhealthcheck/**,
-        /warninghealthcheck/**,
-        /expensivehealthcheck/**,
-        /monitor/**,
-        /doc/**,
-        /map/**,
-        /pdf/**,
-        /xml/**,
-        /xsl/**,
-        /read/**,
-        /opensearch/**,
-        /.*.jsp,
-        /*.html,
-        /*.css
-      </param-value>
-    </init-param>
-  </filter>
+      /catalog/**,
+      /api/**,
+      /static/**,
+      /images/**,
+      /index/features/**,
+      /htmlcache/**,
+      /config/**,
+      /jolokia/**,
+      /dashboards/**,
+      /criticalhealthcheck/**,
+      /warninghealthcheck/**,
+      /expensivehealthcheck/**,
+      /monitor/**,
+      /doc/**,
+      /map/**,
+      /pdf/**,
+      /xml/**,
+      /xsl/**,
+      /read/**,
+      /opensearch/**,
+      /.*.jsp,
+      /*.html,
+      /*.css
+    </param-value>
+  </context-param>
 
   <filter-mapping>
     <filter-name>portalCheckFilter</filter-name>
@@ -409,6 +407,15 @@
       <param-value>false</param-value>
     </init-param>
     <init-param>
+      <param-name>disallowHeaders</param-name>
+      <!-- comma separated list of header to NOT send to the remote proxy-ed server -->
+      <!--
+           This is the standard gn5->gn4 security header name. It should not be sent to
+           external services!
+       -->
+      <param-value>gn5.to.gn4.trusted.json.auth</param-value>
+    </init-param>
+    <init-param>
       <param-name>http.protocol.handle-redirects</param-name>
       <param-value>true</param-value>
     </init-param>
@@ -468,7 +475,7 @@
     <servlet-class>org.fao.geonet.proxy.URITemplateProxyServlet</servlet-class>
     <init-param>
       <param-name>targetUri</param-name>
-      <param-value>${es.url}/${es.index.features}/{_}</param-value>
+      <param-value>${es.protocol}://${es.host}:${es.port}/${es.index.features}/_search</param-value>
     </init-param>
     <init-param>
       <param-name>log</param-name>

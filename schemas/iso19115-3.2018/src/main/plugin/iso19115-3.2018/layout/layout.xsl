@@ -18,7 +18,6 @@
   xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0"
   xmlns:gfc="http://standards.iso.org/iso/19110/gfc/1.1"
   xmlns:gmx="http://standards.iso.org/iso/19115/-3/gmx"
-  xmlns:gts="http://www.isotc211.org/2005/gts"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xmlns:gml="http://www.opengis.net/gml/3.2"
   xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -35,11 +34,12 @@
   <xsl:include href="layout-custom-fields-date.xsl"/>
   <xsl:include href="layout-custom-fields-contact.xsl"/>
   <xsl:include href="layout-custom-fields-keywords.xsl"/>
+  <xsl:include href="layout-custom-feature-catalogue.xsl"/>
 
   <!-- Visit all XML tree recursively -->
   <xsl:template mode="mode-iso19115-3.2018"
                 match="mds:*|mcc:*|mri:*|mrs:*|mrc:*|mrd:*|mco:*|msr:*|lan:*|
-                       gcx:*|gex:*|dqm:*|mdq:*|cit:*|srv:*|gml:*|gts:*|gfc:*"
+                       gcx:*|gex:*|dqm:*|mdq:*|cit:*|srv:*|gml:*|gfc:*"
                 priority="2">
     <xsl:param name="schema" select="$schema" required="no"/>
     <xsl:param name="labels" select="$labels" required="no"/>
@@ -140,6 +140,7 @@
       * and not(gco:CharacterString): Don't take into account those having gco:CharacterString (eg. multilingual elements)
   -->
   <xsl:template mode="mode-iso19115-3.2018" priority="200"
+                name="mode-iso19115-3.2018-fieldset"
                 match="*[name() = $editorConfig/editor/fieldsWithFieldset/name
                           or @gco:isoType = $editorConfig/editor/fieldsWithFieldset/name]|
                         *[namespace-uri(.) != $gnUri and $isFlatMode = false() and
@@ -203,7 +204,7 @@
                 match="*[gco:CharacterString|gcx:Anchor|gco:Integer|gco:UnlimitedInteger|gco:Decimal|
        gco:Boolean|gco:Real|gco:Measure|gco:Length|gco:Distance|gco:Angle|gmx:FileName|
        gco:Scale|gco:RecordType|gcx:MimeFileType|gco:LocalName|gco:ScopedName|gco:RecordType|
-       gco:Record|lan:PT_FreeText|mcc:URI|gco:TM_PeriodDuration]">
+       gco:Record|lan:PT_FreeText|mcc:URI|gco:TM_PeriodDuration|gco:UomIdentifier]">
     <xsl:param name="schema" select="$schema" required="no"/>
     <xsl:param name="labels" select="$labels" required="no"/>
     <xsl:param name="overrideLabel" select="''" required="no"/>
@@ -271,7 +272,7 @@
                           gco:Distance|gco:Angle|gmx:FileName|
                           gco:Scale|gco:RecordType|gcx:MimeFileType|
                           gco:LocalName|gco:ScopedName|gco:RecordType|
-                          gco:Record|mcc:URI|gco:TM_PeriodDuration"/>
+                          gco:Record|mcc:URI|gco:TM_PeriodDuration|gco:UomIdentifier"/>
     <xsl:variable name="theElement"
                   select="if ($isMultilingualElement and $hasOnlyPTFreeText or not($monoLingualValue))
                           then lan:PT_FreeText
@@ -302,11 +303,21 @@
       </xsl:apply-templates>
       <xsl:apply-templates mode="render-for-field-for-attribute"
                            select="
-        */@*|
+        */@*[name() != 'uom']|
         */gn:attribute[not(@name = parent::node()/@*/name())]">
         <xsl:with-param name="ref" select="$theElement/gn:element/@ref"/>
         <xsl:with-param name="insertRef" select="$theElement/gn:element/@ref"/>
       </xsl:apply-templates>
+    </xsl:variable>
+
+    <xsl:variable name="inputGroup" as="node()*">
+      <xsl:for-each select="gco:Measure/@uom|gco:Length/@uom|gco:Distance/@uom|gco:Angle/@uom">
+        <xsl:apply-templates mode="render-for-field-for-attribute"
+                             select=".">
+          <xsl:with-param name="ref" select="$theElement/gn:element/@ref"/>
+          <xsl:with-param name="inputOnly" select="true()"/>
+        </xsl:apply-templates>
+      </xsl:for-each>
     </xsl:variable>
 
     <xsl:variable name="errors">
@@ -372,11 +383,24 @@
             <label><xsl:value-of select="$overrideLabel"/></label>
           </element>
         </xsl:when>
+        <xsl:when test="gco:Measure|gco:Length|gco:Distance|gco:Angle">
+          <xsl:variable name="valueNodeLabel"
+                        as="node()?"
+                        select="gn-fn-metadata:getLabel($schema, name(gco:Measure|gco:Length|gco:Distance|gco:Angle), $labels, name(.), $isoType, $xpath)"/>
+          <element>
+            <xsl:copy-of select="$labelConfig/@*"/>
+            <label><xsl:value-of select="$labelConfig/label"/>
+              <xsl:if test="$valueNodeLabel"> (<xsl:value-of select="$valueNodeLabel/label"/>)</xsl:if>
+            </label>
+            <xsl:copy-of select="$labelConfig/*[name() != 'label']"/>
+          </element>
+        </xsl:when>
         <xsl:otherwise>
           <xsl:copy-of select="$labelConfig"/>
         </xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
+
 
     <xsl:call-template name="render-element">
       <xsl:with-param name="label" select="$labelCfg/*"/>
@@ -386,6 +410,7 @@
       <!--<xsl:with-param name="widget"/>
         <xsl:with-param name="widgetParams"/>-->
       <xsl:with-param name="xpath" select="$xpath"/>
+      <xsl:with-param name="inputGroup" select="$inputGroup"/>
       <xsl:with-param name="attributesSnippet" select="$attributes"/>
       <xsl:with-param name="type"
                       select="if ($config and $config/@use != '')

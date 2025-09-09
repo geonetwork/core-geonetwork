@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2024 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -69,6 +69,7 @@
         },
         mods: {
           global: {
+            hotkeys: true,
             humanizeDates: true,
             dateFormat: "DD-MM-YYYY",
             timezone: "Browser" // Default to browser timezone
@@ -93,11 +94,14 @@
           header: {
             enabled: true,
             languages: {
+              arm: "hy",
+              aze: "az",
               eng: "en",
               cat: "ca",
               chi: "zh",
               cze: "cs",
               dan: "da",
+              geo: "ka",
               ger: "de",
               fre: "fr",
               spa: "es",
@@ -105,10 +109,13 @@
               ita: "it",
               dut: "nl",
               kor: "ko",
+              pol: "pl",
               por: "pt",
+              rum: "ro",
               rus: "ru",
               slo: "sk",
               fin: "fi",
+              ukr: "uk",
               swe: "sv",
               wel: "cy"
             },
@@ -128,6 +135,7 @@
           home: {
             enabled: true,
             appUrl: "../../{{node}}/{{lang}}/catalog.search#/home",
+            showSearch: true,
             showSocialBarInFooter: true,
             showMosaic: true,
             showMaps: true,
@@ -181,6 +189,37 @@
                 }
               }
             },
+            info: [
+              {
+                type: "search",
+                title: "lastRecords",
+                active: true,
+                params: {
+                  isTemplate: "n",
+                  sortBy: "createDate",
+                  sortOrder: "desc",
+                  from: 1,
+                  to: 12
+                }
+              },
+              {
+                type: "search",
+                title: "preferredRecords",
+                params: {
+                  isTemplate: "n",
+                  sortBy: "popularity",
+                  sortOrder: "desc",
+                  from: 1,
+                  to: 12
+                }
+              },
+              {
+                type: "featuredUserSearches"
+              },
+              {
+                type: "Comments"
+              }
+            ],
             fluidLayout: true
           },
           search: {
@@ -295,7 +334,7 @@
                 // Start boosting down records more than 3 months old
                 {
                   gauss: {
-                    dateStamp: {
+                    changeDate: {
                       scale: "365d",
                       offset: "90d",
                       decay: 0.5
@@ -332,6 +371,8 @@
               size: 20
             },
             moreLikeThisSameType: true,
+            moreLikeThisFilter:
+              "-cl_status.key:(obsolete OR historicalArchive OR superseded)",
             moreLikeThisConfig: {
               more_like_this: {
                 fields: [
@@ -403,6 +444,14 @@
                     }
                   }
                 },
+                aggs: {
+                  keep_nonzero: {
+                    bucket_selector: {
+                      buckets_path: { count: "_count" },
+                      script: "params.count > 0"
+                    }
+                  }
+                },
                 meta: {
                   decorator: {
                     type: "icon",
@@ -415,9 +464,9 @@
                 }
               },
               // GEMET configuration for non multilingual catalog
-              "th_gemet_tree.default": {
+              "th_gemet_tree.key": {
                 terms: {
-                  field: "th_gemet_tree.default",
+                  field: "th_gemet_tree.key",
                   size: 100,
                   order: { _key: "asc" },
                   include: "[^^]+^?[^^]+"
@@ -629,7 +678,7 @@
                 sortOrder: ""
               },
               {
-                sortBy: "dateStamp",
+                sortBy: "changeDate",
                 sortOrder: "desc"
               },
               {
@@ -786,14 +835,17 @@
             is3DModeAllowed: false,
             singleTileWMS: true,
             isSaveMapInCatalogAllowed: true,
-            isExportMapAsImageEnabled: false,
+            isExportMapAsImageEnabled: true,
             isAccessible: false,
             storage: "sessionStorage",
             bingKey: "",
             listOfServices: {
               wms: [],
-              wmts: []
+              wmts: [],
+              wps: []
             },
+            // wpsSource: ["list", "url", "recent"],
+            wpsSource: ["url", "recent"],
             projection: "EPSG:3857",
             projectionList: [
               {
@@ -824,7 +876,8 @@
               graticule: false,
               mousePosition: true,
               syncAllLayers: false,
-              drawVector: false
+              drawVector: false,
+              scaleLine: false
             },
             defaultTool: "layers",
             defaultToolAfterMapLoad: "layers",
@@ -841,9 +894,9 @@
               geodesicExtents: false
             },
             "map-editor": {
-              context: "",
+              context: "../../map/config-viewer.xml",
               extent: [0, 0, 0, 0],
-              layers: [{ type: "osm" }]
+              layers: []
             },
             "map-thumbnail": {
               context: "../../map/config-viewer.xml",
@@ -857,9 +910,15 @@
             appUrl: "https://secure.geonames.org/searchJSON"
           },
           recordview: {
+            // To use to redirect to another application for rendering record
+            // eg. when embedding simple search results using a web component
+            // and redirecting to the catalogue to view metadata record
+            // appUrl: "https://sextant.ifremer.fr/Donnees/Catalogue",
             isSocialbarEnabled: true,
+            isDefaultContactViewEnabled: false,
             showStatusWatermarkFor: "",
             showStatusTopBarFor: "",
+            recordviewCustomMenu: [], // List of static pages identifiers to display
             showCitation: {
               enabled: false,
               // if: {'documentStandard': ['iso19115-3.2018']}
@@ -891,6 +950,7 @@
                     "protocol:OGC:WFS|OGC:WCS|.*DOWNLOAD.*|DB:.*|FILE:.*|OGC API Features|OGC API Coverages",
                   title: "download"
                 },
+                { filter: "protocol:OGC:OWS-C", title: "map" },
                 { filter: "function:legend", title: "mapLegend" },
                 {
                   filter: "function:featureCatalogue",
@@ -945,6 +1005,7 @@
             createPageTpl: "../../catalog/templates/editor/new-metadata-horizontal.html",
             editorIndentType: "",
             allowRemoteRecordLink: true,
+            workflowSearchRecordTypes: ["n", "e"],
             facetConfig: {
               resourceType: {
                 terms: {
@@ -985,6 +1046,23 @@
                 },
                 meta: {
                   collapsed: true
+                }
+              },
+              "indexingErrorMsg.type": {
+                terms: {
+                  field: "indexingErrorMsg.type",
+                  size: 2
+                },
+                meta: {
+                  collapsed: true,
+                  decorator: {
+                    type: "icon",
+                    prefix: "fa fa-fw ",
+                    map: {
+                      error: "fa-exclamation-circle",
+                      warning: "fa-exclamation-triangle"
+                    }
+                  }
                 }
               },
               sourceCatalogue: {
@@ -1108,7 +1186,7 @@
                 sortOrder: ""
               },
               {
-                sortBy: "dateStamp",
+                sortBy: "changeDate",
                 sortOrder: "desc"
               },
               {
@@ -1182,6 +1260,14 @@
                       }
                     }
                   }
+                },
+                aggs: {
+                  keep_nonzero: {
+                    bucket_selector: {
+                      buckets_path: { count: "_count" },
+                      script: "params.count > 0"
+                    }
+                  }
                 }
               },
               resourceType: {
@@ -1250,6 +1336,7 @@
           "languageWhitelist",
           "hitsperpageValues",
           "sortbyValues",
+          "wpsSource",
           "resultViewTpls",
           "formatter",
           "downloadFormatter",
@@ -1273,6 +1360,7 @@
           "geocoder",
           "disabledTools",
           "filters",
+          "info",
           "scoreConfig",
           "autocompleteConfig",
           "moreLikeThisConfig",
@@ -1283,6 +1371,7 @@
           "distributionConfig",
           "collectionTableConfig",
           "queryBaseOptions",
+          "workflowSearchRecordTypes",
           "workflowAssistApps"
         ],
         current: null,
@@ -1555,6 +1644,7 @@
     "gnExternalViewer",
     "gnAlertService",
     "gnESFacet",
+    "gnFacetMetaLabel",
     function (
       $scope,
       $http,
@@ -1575,7 +1665,8 @@
       $cookies,
       gnExternalViewer,
       gnAlertService,
-      gnESFacet
+      gnESFacet,
+      gnFacetMetaLabel
     ) {
       $scope.version = "0.0.1";
       var defaultNode = "srv";
@@ -1604,6 +1695,10 @@
 
       $scope.getApplicationInfoVisible = function () {
         return gnGlobalSettings.gnCfg.mods.footer.showApplicationInfoAndLinksInFooter;
+      };
+
+      $scope.getContactusVisible = function () {
+        return gnConfig[gnConfig.key.isFeedbackEnabled];
       };
 
       function detectNode(detector) {
@@ -1646,6 +1741,7 @@
       gnConfig.env.node = $scope.nodeId;
       gnConfig.env.defaultNode = defaultNode;
       gnConfig.env.baseURL = detectBaseURL(gnGlobalSettings.gnCfg.baseURLDetector);
+      gnConfig.env.url = location.origin + gnConfig.env.baseURL;
 
       $scope.signoutUrl =
         gnGlobalSettings.gnCfg.mods.authentication.signoutUrl +
@@ -1657,9 +1753,12 @@
 
       // Lang names to be displayed in language selector
       $scope.langLabels = {
+        arm: "հայերեն",
+        aze: "Azərbaycan dili",
         eng: "English",
         dut: "Nederlands",
         fre: "Français",
+        geo: "ქართული",
         ger: "Deutsch",
         kor: "한국의",
         spa: "Español",
@@ -1669,12 +1768,15 @@
         ita: "Italiano",
         fin: "Suomeksi",
         ice: "Íslenska",
+        rum: "Română",
         rus: "русский",
         chi: "中文",
         slo: "Slovenčina",
         swe: "Svenska",
+        ukr: "українська",
         dan: "Dansk",
-        wel: "Cymraeg"
+        wel: "Cymraeg",
+        pol: "Polski"
       };
       $scope.url = "";
       $scope.gnUrl = gnGlobalSettings.gnUrl;
@@ -1690,6 +1792,7 @@
       $scope.isExternalViewerEnabled = gnExternalViewer.isEnabled();
       $scope.externalViewerUrl = gnExternalViewer.getBaseUrl();
       $scope.publicationOptions = [];
+      $scope.getFacetLabel = gnFacetMetaLabel.getFacetLabel;
 
       $http.get("../api/records/sharing/options").then(function (response) {
         $scope.publicationOptions = response.data;
@@ -1862,6 +1965,17 @@
                   : "";
             return angular.isFunction(this[fnName]) ? this[fnName]() : false;
           },
+          canViewMetadataHistory: function () {
+            var profile = gnConfig["metadata.history.accesslevel"] || "Editor",
+              fnName =
+                profile !== ""
+                  ? "is" + profile[0].toUpperCase() + profile.substring(1) + "OrMore"
+                  : "";
+            if (profile === "RegisteredUser") {
+              return true;
+            }
+            return angular.isFunction(this[fnName]) ? this[fnName]() : false;
+          },
           canDeletePublishedMetadata: function () {
             var profile =
                 gnConfig["metadata.delete.profilePublishedMetadata"] || "Editor",
@@ -1960,6 +2074,17 @@
                       return true;
                     }
                     return false;
+                  };
+                  me["is" + profile + "OrMoreForGroup"] = function (groupId) {
+                    if ("Administrator" == profile) {
+                      return me.admin;
+                    }
+                    var allowedProfiles = $scope.profiles.slice(
+                      $scope.profiles.indexOf(profile)
+                    );
+                    return allowedProfiles.some(function (p) {
+                      return me["is" + p + "ForGroup"](groupId);
+                    });
                   };
                 });
                 angular.extend($scope.user, me);

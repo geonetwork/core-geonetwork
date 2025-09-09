@@ -27,7 +27,7 @@
   <parent>
     <artifactId>geonetwork</artifactId>
     <groupId>org.geonetwork-opensource</groupId>
-    <version>4.4.4-SNAPSHOT</version>
+    <version>4.4.9-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
@@ -89,6 +89,10 @@
     <dependency>
       <groupId>org.springframework.data</groupId>
       <artifactId>spring-data-jpa</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.data</groupId>
+      <artifactId>spring-data-envers</artifactId>
     </dependency>
     <dependency>
       <groupId>org.springframework</groupId>

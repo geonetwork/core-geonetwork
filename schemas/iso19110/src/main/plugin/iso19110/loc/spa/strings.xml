@@ -29,4 +29,7 @@
   <advanced>Completo</advanced>
   <default>Simple</default>
   <xml>XML</xml>
+  <selectFeaturetype>Select a feature type</selectFeaturetype>
+  <missingFeatureTypeName>New feature type</missingFeatureTypeName>
+
 </strings>

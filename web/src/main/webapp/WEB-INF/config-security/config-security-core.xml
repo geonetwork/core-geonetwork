@@ -65,8 +65,14 @@
         <ref bean="coreFilterChain"/>
       </list>
     </constructor-arg>
+
+    <property name="firewall" ref="httpFirewall"/>
   </bean>
 
+  <!-- HttpFirewall that parses UTF8 header values -->
+  <bean id="httpFirewall"
+         class="org.fao.geonet.web.GeoNetworkStrictHttpFirewall">
+  </bean>
 
   <bean id="coreFilterChain"
         class="org.springframework.security.web.DefaultSecurityFilterChain">
@@ -375,6 +381,7 @@
         <value>/[a-zA-Z0-9_\-]+/[a-z]{2,3}/csw!?.*</value>
         <value>/[a-zA-Z0-9_\-]+/api/search/.*</value>
         <value>/[a-zA-Z0-9_\-]+/api/site</value>
+        <value>/signout</value>
       </set>
     </constructor-arg>
   </bean>

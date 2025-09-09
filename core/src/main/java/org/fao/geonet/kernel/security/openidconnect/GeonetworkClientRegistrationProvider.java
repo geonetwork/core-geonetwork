@@ -63,7 +63,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
  */
 public class GeonetworkClientRegistrationProvider {
 
-    public static String CLIENTREGISTRATION_NAME = "geonetwork-oicd";
+    public static String CLIENTREGISTRATION_NAME = "geonetwork-oidc";
 
     ClientRegistration clientRegistration;
 
@@ -119,7 +119,6 @@ public class GeonetworkClientRegistrationProvider {
     //get the JSON from an inputstream (i.e. from a file, string, or resource)
     public GeonetworkClientRegistrationProvider(InputStream inputStream,
                                                 OIDCConfiguration oidcConfiguration) throws IOException, ParseException {
-        this.oidcConfiguration = oidcConfiguration;
         this.oidcConfiguration = oidcConfiguration;
         String clientId = oidcConfiguration.clientId;
         String clientSecret = oidcConfiguration.clientSecret;
@@ -246,7 +245,7 @@ public class GeonetworkClientRegistrationProvider {
         Map<String, Object> configurationMetadata = new LinkedHashMap<>(oidcMetadata.toJSONObject());
 
         ClientRegistration.Builder builder = ClientRegistration.withRegistrationId(CLIENTREGISTRATION_NAME)
-            .userNameAttributeName(IdTokenClaimNames.SUB)
+            .userNameAttributeName(this.oidcConfiguration.getUserNameAttribute())
             .scope(scopes)
             .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
             .clientAuthenticationMethod(method)

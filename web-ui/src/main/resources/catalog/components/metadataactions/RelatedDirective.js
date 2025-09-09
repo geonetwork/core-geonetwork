@@ -197,6 +197,7 @@
     function () {
       return {
         restrict: "A",
+        transclude: true,
         templateUrl: function (elem, attrs) {
           return (
             attrs.template ||
@@ -784,14 +785,21 @@
                   scope.relations.siblings = [];
                   siblings
                     .map(function (r) {
-                      return (r.properties && r.properties.initiativeType) || "";
+                      return r.properties
+                        ? r.properties.associationType + "-" + r.properties.initiativeType
+                        : "";
                     })
                     .filter(function (value, index, self) {
                       return self.indexOf(value) === index;
                     })
                     .forEach(function (type) {
                       scope.relations["siblings" + type] = siblings.filter(function (r) {
-                        return r.properties && r.properties.initiativeType === type;
+                        var key = r.properties
+                          ? r.properties.associationType +
+                            "-" +
+                            r.properties.initiativeType
+                          : "";
+                        return key === type;
                       });
                       siblingsCount += scope.relations["siblings" + type].length;
                     });
@@ -881,7 +889,8 @@
   module.directive("gnRecordsFilters", [
     "$rootScope",
     "gnGlobalSettings",
-    function ($rootScope, gnGlobalSettings) {
+    "gnFacetMetaLabel",
+    function ($rootScope, gnGlobalSettings, gnFacetMetaLabel) {
       return {
         restrict: "A",
         templateUrl: function (elem, attrs) {
@@ -903,6 +912,7 @@
           scope.criteria = { p: {} };
           scope.relatedFacetConfig =
             gnGlobalSettings.gnCfg.mods.recordview.relatedFacetConfig;
+          scope.getFacetLabel = gnFacetMetaLabel.getFacetLabel;
 
           function removeEmptyFilters(filters, agg) {
             var cleanFilterPos = [];
@@ -1065,6 +1075,8 @@
             if (md.overview && md.overview.length > 0) {
               return md.overview[0].url;
               // Related records contain the first overview in the properties.overview property
+            } else if (md.properties && md.properties.overview_data) {
+              return md.properties.overview_data;
             } else if (md.properties && md.properties.overview) {
               return md.properties.overview;
             }
@@ -1299,6 +1311,7 @@
     function (gnCurrentEdit) {
       return {
         restrict: "A",
+        transclude: true,
         templateUrl: function (elem, attrs) {
           return (
             attrs.template ||

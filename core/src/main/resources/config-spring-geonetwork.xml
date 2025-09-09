@@ -238,6 +238,8 @@
     </property>
   </bean>
 
+  <bean id="FeedbackLanguages" class="org.fao.geonet.languages.FeedbackLanguages"/>
+
   <!-- Resource Storage -->
   <!-- geonetwork.store.type can be supplied
   using the -Dgeonetwork.store.type

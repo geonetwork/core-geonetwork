@@ -87,11 +87,19 @@
         link: function ($scope) {
           $scope.pagesMenu = [];
 
-          var configKey = $scope.section === "footer" ? "footer" : "header";
-          $scope.pagesConfig =
-            gnGlobalSettings.gnCfg.mods[configKey][$scope.section + "CustomMenu"];
-
-          if ($scope.pagesConfig && $scope.pagesConfig.length === 0) {
+          if ($scope.section === "header" || $scope.section === "footer") {
+            $scope.pagesConfig =
+              gnGlobalSettings.gnCfg.mods[$scope.section][$scope.section + "CustomMenu"];
+            if ($scope.pagesConfig && $scope.pagesConfig.length === 0) {
+              gnStaticPagesService
+                .loadPages($scope.language, $scope.section)
+                .then(function (response) {
+                  $scope.pagesConfig = response.data.map(function (p) {
+                    return p.pageId;
+                  });
+                });
+            }
+          } else {
             gnStaticPagesService
               .loadPages($scope.language, $scope.section)
               .then(function (response) {
@@ -145,7 +153,13 @@
                   $scope.page = $scope.pagesMenu[0];
                   $scope.isSubmenu = $scope.page.type === "submenu";
                   $scope.isExternalLink =
-                    $scope.page.format == "LINK" || $scope.page.format == "HTMLPAGE";
+                    $scope.page.format === "LINK" ||
+                    $scope.page.format === "EMAILLINK" ||
+                    $scope.page.format === "HTMLPAGE";
+
+                  if ($scope.page.format === "EMAILLINK") {
+                    $scope.page.link = "mailto:" + $scope.page.link;
+                  }
                 }
               },
               function (response) {

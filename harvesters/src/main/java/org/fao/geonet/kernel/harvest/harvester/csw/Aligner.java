@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2007 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2024 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -232,7 +232,7 @@ public class Aligner extends BaseAligner<CswParams> {
                 }
 
                 result.totalMetadata++;
-            } catch (Throwable t) {
+            } catch (Exception t) {
                 errors.add(new HarvestError(this.context, t));
                 log.error("Unable to process record from csw (" + this.params.getName() + ")");
                 log.error("   Record failed: " + ri.uuid + ". Error is: " + t.getMessage());
@@ -285,7 +285,6 @@ public class Aligner extends BaseAligner<CswParams> {
         Element md = retrieveMetadata(ri.uuid);
 
         if (md == null) {
-            result.unretrievable++;
             return;
         }
 
@@ -311,7 +310,7 @@ public class Aligner extends BaseAligner<CswParams> {
         // use that uuid (newMdUuid) for the new metadata to add to the catalogue.
         String newMdUuid = null;
         if (!params.xslfilter.equals("")) {
-            md = processMetadata(context, md, processName, processParams);
+            md = applyXSLTProcessToMetadata(context, md, processName, processParams, log);
             schema = dataMan.autodetectSchema(md);
             // Get new uuid if modified by XSLT process
             newMdUuid = metadataUtils.extractUUID(schema, md);
@@ -324,6 +323,11 @@ public class Aligner extends BaseAligner<CswParams> {
         } else {
             applyBatchEdits(newMdUuid, md, schema, params.getBatchEdits(), context, log);
 
+        }
+
+        // Translate metadata
+        if (params.isTranslateContent()) {
+            md = translateMetadataContent(context, md, schema);
         }
 
         //
@@ -399,7 +403,7 @@ public class Aligner extends BaseAligner<CswParams> {
                     if (StringUtils.isNotEmpty(batchEditParameter.getCondition())) {
                         applyEdit = false;
                         final Object node = Xml.selectSingle(md, batchEditParameter.getCondition(), metadataSchema.getNamespaces());
-                        if (node != null && node instanceof Boolean && (Boolean)node == true) {
+                        if (node instanceof Boolean && Boolean.TRUE.equals(node)) {
                             applyEdit = true;
                         }
                     }
@@ -419,7 +423,7 @@ public class Aligner extends BaseAligner<CswParams> {
             }
         }
     }
-    private void updateMetadata(RecordInfo ri, String id, Boolean force) throws Exception {
+    private void updateMetadata(RecordInfo ri, String id, boolean force) throws Exception {
         String date = localUuids.getChangeDate(ri.uuid);
 
         if (date == null && !force) {
@@ -438,11 +442,10 @@ public class Aligner extends BaseAligner<CswParams> {
         }
     }
     @Transactional(value = TxType.REQUIRES_NEW)
-    boolean updatingLocalMetadata(RecordInfo ri, String id, Boolean force) throws Exception {
+    boolean updatingLocalMetadata(RecordInfo ri, String id, boolean force) throws Exception {
         Element md = retrieveMetadata(ri.uuid);
 
         if (md == null) {
-            result.unchangedMetadata++;
             return false;
         }
 
@@ -460,7 +463,7 @@ public class Aligner extends BaseAligner<CswParams> {
 
         boolean updateSchema = false;
         if (!params.xslfilter.equals("")) {
-            md = processMetadata(context, md, processName, processParams);
+            md = applyXSLTProcessToMetadata(context, md, processName, processParams, log);
             String newSchema = dataMan.autodetectSchema(md);
             updateSchema = !newSchema.equals(schema);
             schema = newSchema;
@@ -468,6 +471,10 @@ public class Aligner extends BaseAligner<CswParams> {
 
         applyBatchEdits(ri.uuid, md, schema, params.getBatchEdits(), context, log);
 
+        // Translate metadata
+        if (params.isTranslateContent()) {
+            md = translateMetadataContent(context, md, schema);
+        }
 
         boolean validate = false;
         boolean ufo = false;
@@ -480,9 +487,11 @@ public class Aligner extends BaseAligner<CswParams> {
                 metadata.getHarvestInfo().setUuid(params.getUuid());
                 metadata.getSourceInfo().setSourceId(params.getUuid());
             }
+
             if (updateSchema) {
                 metadata.getDataInfo().setSchemaId(schema);
             }
+
             metadataManager.save(metadata);
         }
 
@@ -495,8 +504,11 @@ public class Aligner extends BaseAligner<CswParams> {
     }
 
     /**
-     * Does CSW GetRecordById request. If validation is requested and the metadata does not
-     * validate, null is returned.
+     * Does CSW GetRecordById request. Returns null on error conditions:
+     *  - If validation is requested and the metadata does not validate.
+     *  - No metadata is retrieved.
+     *  - If metadata resource is duplicated.
+     *  - An exception occurs retrieving the metadata.
      *
      * @param uuid uuid of metadata to request
      * @return metadata the metadata
@@ -519,6 +531,7 @@ public class Aligner extends BaseAligner<CswParams> {
             //--- maybe the metadata has been removed
 
             if (list.isEmpty()) {
+                result.unretrievable++;
                 return null;
             }
 
@@ -534,16 +547,15 @@ public class Aligner extends BaseAligner<CswParams> {
 
                 params.getValidate().validate(dataMan, context, response, groupIdVal);
             } catch (Exception e) {
-                log.debug("Ignoring invalid metadata with uuid " + uuid);
+                log.info("Ignoring invalid metadata with uuid " + uuid);
                 result.doesNotValidate++;
                 return null;
             }
 
-            if (params.rejectDuplicateResource) {
-                if (foundDuplicateForResource(uuid, response)) {
+            if (params.rejectDuplicateResource && (foundDuplicateForResource(uuid, response))) {
                     result.unchangedMetadata++;
                     return null;
-                }
+
             }
 
             return response;
@@ -607,41 +619,11 @@ public class Aligner extends BaseAligner<CswParams> {
                         }
                     }
                 }
-            } catch (Throwable e) {
+            } catch (Exception e) {
                 log.warning("      - Error when searching for resource duplicate " + uuid + ". Error is: " + e.getMessage());
             }
         }
         return false;
-    }
-
-    /**
-     * Filter the metadata if process parameter is set and corresponding XSL transformation
-     * exists in xsl/conversion/import.
-     *
-     * @param context
-     * @param md
-     * @param processName
-     * @param processParams
-     * @return
-     */
-    private Element processMetadata(ServiceContext context,
-                                    Element md,
-                                    String processName,
-                                    Map<String, Object> processParams) {
-        Path filePath = context.getBean(GeonetworkDataDirectory.class).getXsltConversion(processName);
-        if (!Files.exists(filePath)) {
-            log.debug("     processing instruction  " + processName + ". Metadata not filtered.");
-        } else {
-            Element processedMetadata;
-            try {
-                processedMetadata = Xml.transform(md, filePath, processParams);
-                log.debug("     metadata filtered.");
-                md = processedMetadata;
-            } catch (Exception e) {
-                log.warning("     processing error " + processName + ": " + e.getMessage());
-            }
-        }
-        return md;
     }
 
     /**

@@ -321,8 +321,7 @@
             // properly without removing them. There is maybe
             // references to DOM objects in the JS code which
             // make those objects not reachable by GC.
-            $(gnCurrentEdit.containerId).find("*").remove();
-
+            $(gnCurrentEdit.containerId).empty();
             $(gnCurrentEdit.containerId).replaceWith(snippet);
 
             if (gnCurrentEdit.compileScope) {
@@ -414,9 +413,10 @@
             version: getInputValue("version"),
             tab: getInputValue("currTab"),
             geoPublisherConfig: angular.fromJson(getInputValue("geoPublisherConfig")),
-            resourceContainerDescription: angular.fromJson(
-              getInputValue("resourceContainerDescription")
-            ),
+            resourceContainerDescription:
+              getInputValue("resourceContainerDescription") == ""
+                ? null
+                : angular.fromJson(getInputValue("resourceContainerDescription")),
             resourceManagementExternalProperties: angular.fromJson(
               getInputValue("resourceManagementExternalProperties")
             ),
@@ -668,12 +668,12 @@
 
             // For each existing up/down control transfer
             // the hidden class between the two elements.
-            angular.forEach(switchWithElementCtrl, function (ctrl, idx) {
-              var ctrl2 = currentElementCtrl[idx];
-              var ctrlHidden = $(ctrl).hasClass("invisible");
-              var ctrl2Hidden = $(ctrl2).hasClass("invisible");
-              $(ctrl).toggleClass("invisible", ctrl2Hidden);
-              $(ctrl2).toggleClass("invisible", ctrlHidden);
+            angular.forEach(switchWithElementCtrl, function (switchedElement, idx) {
+              var movedElement = currentElementCtrl[idx];
+              var switchHidden = $(switchedElement).hasClass("hidden");
+              var movedHidden = $(movedElement).hasClass("hidden");
+              $(switchedElement).toggleClass("hidden", movedHidden);
+              $(movedElement).toggleClass("hidden", switchHidden);
             });
 
             var hasClass = currentElement.hasClass("gn-extra-field");

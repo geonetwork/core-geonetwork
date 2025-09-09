@@ -4,8 +4,6 @@
 
 This module contains a web user interface for GeoNetwork opensource based on AngularJS, Bootstrap and d3.js librairies.
 
-
-
 ## Compile
 
 Wro4j is is used to compile and manage JS dependencies.
@@ -17,17 +15,33 @@ Maven build is using Prettier to format JS and HTML code.
 
 ## Translate client app
 
-Generate a transifex token API from https://www.transifex.com/user/settings/api/
+1. Generate a transifex token API from https://www.transifex.com/user/settings/api/
 
-Install transifex client:
+   The token is to be saved in ``~/.transifexrc`` .
 
-```shell script
-curl -o- https://raw.githubusercontent.com/transifex/cli/master/install.sh | bash
-```
+2. Install transifex ``tx`` client from https://developers.transifex.com/docs/cli
 
-Download translations from transifex:
+   Recommend installing in ``~`` home folder:
 
-```shell script
-cd web-ui
-./download-from-transifex.sh
-```
+   ```bash
+   cd ~
+   curl -o- https://raw.githubusercontent.com/transifex/cli/master/install.sh | bash
+   ```
+   
+   You will need to restart your shell after ``tx`` client is added to path.
+
+3. Download translations from transifex:
+
+   ```bash
+   cd web-ui
+   ./download-from-transifex.sh
+   ```
+
+4. Commit the changed files:
+   
+   ```bash
+   git add .
+   git commit -m "Transifix update"
+   ```
+   
+   And submit as a pull-request.

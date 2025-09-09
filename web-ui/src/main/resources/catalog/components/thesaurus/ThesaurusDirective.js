@@ -246,6 +246,7 @@
           wrapper: "@",
           thesaurusKey: "@",
           keywords: "@",
+          keywordIds: "@",
           transformations: "@",
           currentTransformation: "@",
           lang: "@",
@@ -256,10 +257,10 @@
           // on keyword.
           maxTags: "@",
           thesaurusTitle: "@",
-          browsable: "@"
+          browsable: "@",
+          required: "@"
         },
-        templateUrl:
-          "../../catalog/components/thesaurus/" + "partials/keywordselector.html",
+        templateUrl: "../../catalog/components/thesaurus/partials/keywordselector.html",
         link: function (scope, element, attrs) {
           $compile(element.contents())(scope);
           // pick up skos browser directive with compiler
@@ -285,7 +286,9 @@
           scope.foundKeywords = [];
           scope.selected = [];
           scope.initialKeywords = [];
-          if (scope.keywords) {
+          if (scope.keywordIds) {
+            scope.initialKeywords = scope.keywordIds.split(",");
+          } else if (scope.keywords) {
             var buffer = "";
             for (var i = 0; i < scope.keywords.length; i++) {
               var next = scope.keywords.charAt(i);
@@ -661,7 +664,7 @@
           scope.orderById = attrs.orderById || "false";
           scope.max = gnThesaurusService.DEFAULT_NUMBER_OF_RESULTS;
           scope.fauxMultilingual = scope.fauxMultilingual === "true"; //default false
-          scope.showHintsOnFocus = attrs.showHintsOnFocus === "true"; // displays all the values on focus, default shows only the selected value
+          scope.showHintsOnFocus = attrs.showHintsOnFocus === "true"; // displays all the values on focus and adds a dropdown caret icon, default shows only the selected value
 
           // Configuration only required when using the directive in template fields.
           //
@@ -866,7 +869,7 @@
                 var conceptIdElement = angular.element(
                   '<div class="well well-sm gn-keyword-picker-concept-id row">' +
                     '  <div class="form-group">' +
-                    '    <label class="col-sm-4"><i class="fa fa-link fa-fw"/><span data-translate>URL</span></label>' +
+                    '    <label class="col-sm-4"><i class="fa fa-link fa-fw"></i><span data-translate>URL</span></label>' +
                     '    <div class="col-sm-6"><input ' +
                     inputPropertyName +
                     '="' +
@@ -874,7 +877,7 @@
                     '" ' +
                     '       class="gn-field-link form-control"/>' +
                     "    </div>" +
-                    '    <div class="col-sm-2"><a class="btn btn-link" title="{{\'resetUrl\' | translate}}" data-ng-click="resetUrl()"><i class="fa fa-times text-danger"/></a></div>' +
+                    '    <div class="col-sm-2"><a class="btn btn-link" title="{{\'resetUrl\' | translate}}" data-ng-click="resetUrl()"><i class="fa fa-times text-danger"></i></a></div>' +
                     "  </div>" +
                     "</div>"
                 );

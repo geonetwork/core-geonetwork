@@ -12,7 +12,7 @@ jobs:
     strategy:
       matrix:
         include:
-          - os: ubuntu-22.04
+          - os: ubuntu-24.04
             jdk: 11
     steps:
     - uses: actions/checkout@v4
@@ -22,7 +22,7 @@ jobs:
         submodules: 'recursive'
         show-progress: 'false'
     - name: Set up JDK
-      uses: actions/setup-java@v4.1.0
+      uses: actions/setup-java@v4.2.1
       with:
         distribution: 'temurin'
         java-version: ${{ matrix.jdk }}
@@ -46,7 +46,7 @@ jobs:
         find ~/.m2/repository -name "*SNAPSHOT*" -type d | xargs rm -rf {}
 
   QA:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
     - uses: actions/checkout@v4
       with:
@@ -55,7 +55,7 @@ jobs:
         submodules: 'recursive'
         show-progress: 'false'
     - name: Set up JDK
-      uses: actions/setup-java@v4.1.0
+      uses: actions/setup-java@v4.2.1
       with:
         distribution: 'temurin'
         java-version: 11
@@ -68,6 +68,13 @@ jobs:
       run: |
         mvn -B resources:resources@copy-index-schema-to-source -f web
         mvn -B -ntp -V -fae verify -Drelesae -Pit
+    - name: Check for uncommitted changes such as formatting changes
+      run: |
+        if [[ -n "$(git status -s)" ]]; then
+           echo "Uncommitted changes"
+           git status -s
+           exit 1
+        fi
     - name: Remove SNAPSHOT jars from repository
       run: |
         find ~/.m2/repository -name "*SNAPSHOT*" -type d | xargs rm -rf {}

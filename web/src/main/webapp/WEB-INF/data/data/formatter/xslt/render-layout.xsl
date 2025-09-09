@@ -20,7 +20,8 @@
   <xsl:import href="render-functions.xsl"/>
   <xsl:import href="render-layout-fields.xsl"/>
 
-  <xsl:output method="html"/>
+  <xsl:output omit-xml-declaration="yes" method="xhtml" doctype-system="html" indent="yes"
+              encoding="UTF-8"/>
 
   <!-- Those templates should be overriden in the schema plugin - start -->
   <xsl:template mode="getMetadataTitle" match="*"/>
@@ -155,8 +156,14 @@
 
             <header>
               <h1>
-                <i class="fa gn-icon-{$type}"><xsl:comment select="'icon'"/></i>
+                <i class="fa fa-fw gn-icon-{$type}"/>
                 <xsl:copy-of select="$title"/>
+                <xsl:if test="$root = 'div'">
+                  <span class="text-muted badge"
+                        data-ng-class="{{ 'text-success': md.mdStatus == 2, 'text-warning': md.mdStatus == 4 }}"
+                        data-ng-if="user.isEditorOrMore() &amp;&amp; md.mdStatus &lt; 50 &amp;&amp; isMdWorkflowEnable"
+                  >{{('status-' + md.mdStatus) | translate}}</span>
+                </xsl:if>
               </h1>
 
               <xsl:call-template name="render-language-switcher"/>
@@ -167,7 +174,7 @@
                 <div gn-related="md"
                      data-user="user"
                      data-layout="card"
-                     data-types="{$related}"><xsl:comment select="'icon'"/></div>
+                     data-types="{$related}"></div>
               </xsl:if>
             </header>
 
@@ -210,7 +217,7 @@
             <br/>
             <section class="gn-md-side-providedby">
               <h2>
-                <i class="fa fa-fw fa-cog"><xsl:comment select="'icon'"/></i>
+                <i class="fa fa-fw fa-cog"></i>
                 <span><xsl:value-of select="$schemaStrings/providedBy"/></span>
               </h2>
               <img class="gn-source-logo"
@@ -221,32 +228,32 @@
             <xsl:if test="$isSocialbarEnabled">
               <section class="gn-md-side-social">
                 <h2>
-                  <i class="fa fa-fw fa-share-square-o"><xsl:comment select="'icon'"/></i>
+                  <i class="fa fa-fw fa-share-square-o"></i>
                   <span><xsl:value-of select="$schemaStrings/shareOnSocialSite"/></span>
                 </h2>
                 <a href="https://twitter.com/share?url={encode-for-uri($nodeUrl)}api%2Frecords%2F{$metadataUuid}"
                    target="_blank"
                    aria-label="Twitter"
                    class="btn btn-default">
-                  <i class="fa fa-fw fa-twitter"><xsl:comment select="'icon'"/></i>
+                  <i class="fa-fw fa-brands fa-x-twitter"></i>
                 </a>
                 <a href="https://www.facebook.com/sharer.php?u={encode-for-uri($nodeUrl)}api%2Frecords%2F{$metadataUuid}"
                    target="_blank"
                    aria-label="Facebook"
                    class="btn btn-default">
-                  <i class="fa fa-fw fa-facebook"><xsl:comment select="'icon'"/></i>
+                  <i class="fa-fw fa-brands fa-facebook-f"></i>
                 </a>
                 <a href="http://www.linkedin.com/shareArticle?mini=true&amp;summary=&amp;url={encode-for-uri($nodeUrl)}api%2Frecords%2F{$metadataUuid}"
                    target="_blank"
                    aria-label="LinkedIn"
                    class="btn btn-default">
-                  <i class="fa fa-fw fa-linkedin"><xsl:comment select="'icon'"/></i>
+                  <i class="fa-fw fa-brands fa-linkedin-in"></i>
                 </a>
                 <a href="mailto:?subject={$title}&amp;body={encode-for-uri($nodeUrl)}api%2Frecords%2F{$metadataUuid}"
                    target="_blank"
                    aria-label="Email"
                    class="btn btn-default">
-                  <i class="fa fa-fw fa-envelope-o"><xsl:comment select="'icon'"/></i>
+                  <i class="fa fa-fw fa-envelope-o"></i>
                 </a>
               </section>
             </xsl:if>
@@ -256,7 +263,7 @@
             <xsl:if test="$viewMenu = 'true'">
               <section class="gn-md-side-viewmode">
                 <h2>
-                  <i class="fa fa-fw fa-eye"><xsl:comment select="'icon'"/></i>
+                  <i class="fa fa-fw fa-eye"></i>
                   <span><xsl:value-of select="$schemaStrings/viewMode"/></span>
                 </h2>
                 <xsl:for-each select="$configuration/editor/views/view[not(@disabled)]">
@@ -287,7 +294,7 @@
                  href="{if ($portalLink != '')
                         then replace($portalLink, '\$\{uuid\}', $metadataUuid)
                         else utils:getDefaultUrl($metadataUuid, $language)}">
-                <i class="fa fa-fw fa-link"><xsl:comment select="'icon'"/></i>
+                <i class="fa fa-fw fa-link"></i>
                 <xsl:value-of select="$schemaStrings/linkToPortal"/>
               </a>
               <div class="hidden-xs hidden-sm">
@@ -299,7 +306,7 @@
             <xsl:if test="$sideRelated != '' and $root != 'html'">
               <section class="gn-md-side-associated">
                 <h2>
-                  <i class="fa fa-fw fa-link"><xsl:comment select="'icon'"/></i>
+                  <i class="fa fa-fw fa-link"></i>
                   <span><xsl:value-of select="$schemaStrings/associatedResources"/></span>
                 </h2>
                 <div gn-related="md"
@@ -320,7 +327,6 @@
              data-watch=""
              data-filter="div > h3"/>-->
         <footer>
-          <xsl:comment>Not yet</xsl:comment>
         </footer>
       </article>
       <br/>
@@ -403,7 +409,7 @@
     <xsl:if test="$isDisplayed">
       <div id="gn-view-{generate-id()}" class="gn-tab-content">
         <xsl:apply-templates mode="render-view" select="@xpath"/>
-        <xsl:comment select="'icon'"/>
+
       </div>
     </xsl:if>
   </xsl:template>
@@ -419,7 +425,7 @@
     <xsl:if test="$isDisplayed">
       <xsl:variable name="content">
         <xsl:apply-templates mode="render-view"
-                             select="section|field|xsl"/>&#160;
+                             select="section|field|xsl|list"/>&#160;
       </xsl:variable>
 
       <xsl:if test="count($content/*) > 0">
@@ -459,7 +465,7 @@
 
   <!-- Render metadata elements defined by XPath -->
   <xsl:template mode="render-view"
-                match="field[not(template)]">
+                match="field[not(template)]|list[@xpath]">
     <xsl:param name="base" select="$metadata"/>
 
     <!-- Matching nodes -->

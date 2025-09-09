@@ -1,0 +1,52 @@
+================================================================================
+===
+=== GeoNetwork 4.4.8-SNAPSHOT: List of changes
+===
+================================================================================
+- Release notes for 4.4.8.
+- Release / Add missing changes.
+- Release notes for 4.2.13
+- Fix layer styles dropdown open direction. (#8807)
+- Fix ES search for Portuguese (#8802)
+- Fix the logs directory (#8808)
+- Feature indexing / Restrict client to _search API.
+- Fix issue with parsing the oidc local (#8819)
+- OpenID Connect - Fix Login failure with empty address info (#8817)
+- Security / Exclude properly unused handlebars dependency from WRO4J
+- Admin console / Settings / Ensure section order (#8813)
+- Fix typo in ESFeaturesProxy configuration.
+- Automatic formatting
+- Update z-index for citation buttons (#8805)
+- Update to GeoTools 32.3
+- Minor upgrade of FontAwesome to version 6.4.2 and update Twitter icon (#8781)
+- WebDav harvester / update database change date when updating a metadata. (#8788)
+- Contact full view vs icon view configuration on record summary page (#8780)
+- Add new recordProfileUserAdmin notification level (#8779)
+- Remove ES 6 code and prettier formatting. (#8782)
+- setting option to enable/disable backup during delete record (#8728)
+- Record view / fix permalink option. (#8777)
+- Fix map list "add to map" function (#8774)
+- Fix localized watchlist emails (#8772)
+- Fix md is null in record view (#8768)
+- Update the excludedPaths from portalCheckFilter in web.xml to be sharable for other configs (#8769)
+- OIDC Improvements and bug fixes (#8761)
+- Fix submenu still displays with no children (#8762)
+- Doc / Schematron can be reloaded using API
+- dh - attach frontend plugin executions to earlier phases (#8765)
+- Allow to configure the Elasticsearch connection in environment variables (#8585)
+- API / WFSHarvesterApi / Restrict to Editor (#8757)
+- fix iso19115-3 phone indexation
+- Standard / ISO19115-3 / Duplicate record / Remove record date. (#8747)
+- INSPIRE validation / Clarification on CSW mode and add processing for default mode.
+- DOI / Validation / Failing on organisation encoded using Anchor.
+- Database harvester supporting PostgreSQL and Oracle JDBC connections (#8247)
+- Search / Avoid breaking search when schema not indexed or not available (#7470)
+- remove dead code (#8698)
+- static page for record view menu (#7802)
+- Hide contactForResource header when there is are none (#8730)
+- Update AudienceAccessTokenValidator.java (#8709)
+- Translate roles in the feedback form (#8732)
+- Avoid null pointer in es painless script (#8733)
+- Remove wrong field name in  DOI server database migration (#8735)
+- document the manual steps still required with script assistance (#8734)
+- Update version to 4.4.8-SNAPSHOT

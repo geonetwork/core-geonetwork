@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2024 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2025 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -29,6 +29,7 @@ import org.apache.commons.lang.math.NumberUtils;
 import org.apache.commons.text.StringEscapeUtils;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.csw.services.getrecords.IFieldMapper;
+import org.fao.geonet.utils.DateUtil;
 import org.fao.geonet.utils.Log;
 import org.geotools.api.filter.*;
 import org.geotools.api.filter.expression.Expression;
@@ -145,19 +146,36 @@ public class CswFilter2Es extends AbstractFilterVisitor {
 
     protected static String convertLikePattern(PropertyIsLike filter) {
         String result = filter.getLiteral();
-        if (!filter.getWildCard().equals("*")) {
-            final String wildcardRe =
-                StringUtils.isNotEmpty(filter.getEscape())
-                    ? Pattern.quote(filter.getEscape() + filter.getWildCard())
-                    : filter.getWildCard();
-            result = result.replaceAll(wildcardRe, "*");
+
+        String wildcardChar = filter.getWildCard();
+        String escapeWildcardDefault = filter.getEscape() + "*";
+
+        // Replace wildcard character with default wildcard (asterisk)
+        // For example, if the wildcard is % and the escape character is \:
+        //  - %afr\%ca% becomes *afr\*ca*
+        result = result.replaceAll(Pattern.quote(wildcardChar), "*");
+        // Replace the escaped wildcard character with the wildcard character
+        // For example, if the wildcard is % and the escape character is \:
+        //  - in the previous replacement %afr\%ca% becomes *afr\*ca*
+        //  - and with this replacement *afr\*ca* becomes *afr\%ca*
+        result = result.replaceAll(Pattern.quote(escapeWildcardDefault), wildcardChar);
+
+        if (wildcardChar.equals("%")) {
+            // Escape % for String.format used in SearchController to process the csw filter
+            result = result.replace( wildcardChar, "%%");
         }
+
         if (!filter.getSingleChar().equals("?")) {
-            final String singleCharRe =
-                StringUtils.isNotEmpty(filter.getEscape())
-                    ? Pattern.quote(filter.getEscape() + filter.getSingleChar())
-                    : filter.getSingleChar();
-            result = result.replaceAll(singleCharRe, "?");
+            // Analog processing as for the wildcard character
+            String singleChar = filter.getSingleChar();
+            String escapeSinglecharDefault = filter.getEscape() + "?";
+
+            result = result.replaceAll(Pattern.quote(singleChar), "?");
+            result = result.replaceAll(Pattern.quote(escapeSinglecharDefault), singleChar);
+
+            if (singleChar.equals("%")) {
+                result = result.replace( singleChar, "%%");
+            }
         }
 
         result = StringEscapeUtils.escapeJson(escapeLikeLiteral(result));
@@ -338,7 +356,11 @@ public class CswFilter2Es extends AbstractFilterVisitor {
         String dataPropertyValue = stack.pop();
         String dataPropertyName = stack.pop();
 
-        if (!NumberUtils.isNumber(dataPropertyValue)) {
+        boolean isDate = (DateUtil.parseBasicOrFullDateTime(dataPropertyValue) != null);
+
+        if (isDate) {
+            dataPropertyValue = CswFilter2Es.quoteString(dataPropertyValue);
+        } else if (!NumberUtils.isNumber(dataPropertyValue)) {
             dataPropertyValue = StringEscapeUtils.escapeJson(CswFilter2Es.quoteString(dataPropertyValue));
         }
 

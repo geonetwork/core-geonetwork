@@ -7,7 +7,7 @@
     <div class="list-group fixed gn-nopadding-left gn-nopadding-right">
       <div class="input-group" id="siblingdd">
         <span class="input-group-addon">
-          <i class="fa fa-search" />
+          <i class="fa fa-search"></i>
         </span>
         <input
           id="doiapisearch"
@@ -17,6 +17,7 @@
           data-ng-model-options="{ debounce: 1000 }"
           data-ng-readonly="isSearching"
           type="text"
+          title="{{'selectDOIResource' | translate}} - {{doiQueryPattern}}"
           autocomplete="off"
           placeholder="{{'anyPlaceHolder' | translate}}"
           aria-label="{{'anyPlaceHolder' | translate}}"
@@ -28,7 +29,7 @@
         </span>
       </div>
 
-      <i data-ng-show="isSearching" class="fa fa-spinner fa-spin gn-margin-top-sm" />
+      <i data-ng-show="isSearching" class="fa fa-spinner fa-spin gn-margin-top-sm"></i>
       <p
         class="gn-margin-top-sm"
         data-ng-show="!isSearching && results.length == 0"

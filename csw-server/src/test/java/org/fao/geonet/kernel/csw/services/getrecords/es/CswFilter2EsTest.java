@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2024 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2025 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -182,7 +182,7 @@ class CswFilter2EsTest {
             "<Filter xmlns=\"http://www.opengis.net/ogc\">\n" //
                 + "    <PropertyIsLike wildCard=\"%\" singleChar=\"_\" escapeChar=\"\\\">\n" //
                 + "          <PropertyName>AnyText</PropertyName>\n" //
-                + "          <Literal>s\\_rvice\\%</Literal>\n" //
+                + "          <Literal>s_rvice%</Literal>\n" //
                 + "    </PropertyIsLike>\n" //
                 + "      </Filter>";
 
@@ -219,7 +219,7 @@ class CswFilter2EsTest {
             "<Filter xmlns=\"http://www.opengis.net/ogc\">\n" //
                 + "    <PropertyIsLike wildCard=\"%\" singleChar=\"_\" escapeChar=\"\\\">\n" //
                 + "          <PropertyName>AnyText</PropertyName>\n" //
-                + "          <Literal>OGC:WMS\\%</Literal>\n" //
+                + "          <Literal>OGC:WMS%</Literal>\n" //
                 + "    </PropertyIsLike>\n" //
                 + "      </Filter>";
 
@@ -380,5 +380,28 @@ class CswFilter2EsTest {
         assertNotNull(result);
 
         assertEquals(expected, MAPPER.readTree(new StringReader(result)));
+    }
+
+
+    @Test
+    void testPropertyIsGreaterThanDateValue() throws IOException {
+
+        // INPUT:
+        final String input =
+                "      <ogc:Filter xmlns:ogc=\"http://www.opengis.net/ogc\">\n" +
+                "        <ogc:PropertyIsGreaterThan>\n" +
+                "          <ogc:PropertyName>Modified</ogc:PropertyName>\n" +
+                "          <ogc:Literal>1910-02-05</ogc:Literal>\n" +
+                "        </ogc:PropertyIsGreaterThan>\n" +
+                "      </ogc:Filter>";
+
+        // EXPECTED:
+        final ObjectNode expected = EsJsonHelper.boolbdr(). //
+            must(array(range("Modified",  "gt", "1910-02-05"))). //
+            filter(queryStringPart()). //
+            bld();
+
+
+        assertFilterEquals(expected, input);
     }
 }

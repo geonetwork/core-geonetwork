@@ -1,3 +1,25 @@
+/*
+ * Copyright (C) 2001-2024 Food and Agriculture Organization of the
+ * United Nations (FAO-UN), United Nations World Food Programme (WFP)
+ * and United Nations Environment Programme (UNEP)
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or (at
+ * your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
+ *
+ * Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
+ * Rome - Italy. email: geonetwork@osgeo.org
+ */
 package org.fao.geonet.schema;
 
 import org.fao.geonet.schema.iso19115_3_2018.ISO19115_3_2018SchemaPlugin;
@@ -14,9 +36,6 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
 import static org.xmlunit.matchers.EvaluateXPathMatcher.hasXPath;
 
-/**
- * Created by francois on 3/24/14.
- */
 public class LanguageXslProcessTest extends XslProcessTest {
 
     public LanguageXslProcessTest() {
@@ -43,7 +62,7 @@ public class LanguageXslProcessTest extends XslProcessTest {
     public void testSetDefaultLanguage() throws Exception {
         Element inputElement = Xml.loadFile(xmlFile);
         String resultString = Xml.getString(inputElement);
-        check(resultString, "eng", new String[]{}, 177, 0);
+        check(resultString, "eng", new String[]{}, 193, 0);
 //        TODO: We need to update Mockito for static method probably
 //        XslUtil xslUtil = Mockito.mock(XslUtil.class);
 //        Mockito.when(xslUtil.twoCharLangCode("eng")).thenReturn("en");
@@ -53,7 +72,7 @@ public class LanguageXslProcessTest extends XslProcessTest {
         params.put("defaultLanguage", "fre");
         Element resultElement = Xml.transform(inputElement, xslFile, params);
         resultString = Xml.getString(resultElement);
-        check(resultString, "fre", new String[]{}, 177, 0);
+        check(resultString, "fre", new String[]{}, 193, 0);
     }
 
     @Test

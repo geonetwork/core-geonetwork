@@ -21,8 +21,8 @@
                 xmlns:cit="http://standards.iso.org/iso/19115/-3/cit/2.0"
                 xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0"
                 xmlns:mac="http://standards.iso.org/iso/19115/-3/mac/2.0"
+                xmlns:cat="http://standards.iso.org/iso/19115/-3/cat/1.0"
                 xmlns:gfc="http://standards.iso.org/iso/19110/gfc/1.1"
-                xmlns:gts="http://www.isotc211.org/2005/gts"
                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                 xmlns:gml="http://www.opengis.net/gml/3.2"
                 xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -38,7 +38,7 @@
     <xsl:param name="in"/>
     <!-- <xsl:message>in xml <xsl:copy-of select="$base"></xsl:copy-of></xsl:message>
      <xsl:message>search for <xsl:copy-of select="$in"></xsl:copy-of></xsl:message>-->
-    <xsl:variable name="nodeOrAttribute" select="saxon:evaluate(concat('$p1', $in), $base)"/>
+    <xsl:variable name="nodeOrAttribute" select="saxon:evaluate(concat('$p1', $in), $base, $request, $service)"/>
 
     <xsl:choose>
       <xsl:when test="$nodeOrAttribute instance of text()+">
@@ -61,7 +61,7 @@
     <xsl:param name="base" as="node()"/>
     <xsl:param name="in"/>
 
-    <xsl:value-of select="saxon:evaluate(concat('$p1', $in), $base)"/>
+    <xsl:value-of select="saxon:evaluate(concat('$p1', $in), $base, $request, $service)"/>
   </xsl:template>
 
 </xsl:stylesheet>

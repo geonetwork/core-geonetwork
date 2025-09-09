@@ -27,6 +27,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -206,15 +208,17 @@ public class MetadataInsertDeleteApi {
         + "from the index and then from the database.")
     @RequestMapping(value = "/{metadataUuid}", method = RequestMethod.DELETE)
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "204", description = "Record deleted."),
+        @ApiResponse(responseCode = "204", description = "Record deleted.", content = {@Content(schema = @Schema(hidden = true))}),
         @ApiResponse(responseCode = "401", description = "This template is referenced"),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)
     })
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteRecord(
         @Parameter(description = API_PARAM_RECORD_UUID, required = true) @PathVariable String metadataUuid,
-        @Parameter(description = API_PARAM_BACKUP_FIRST, required = false) @RequestParam(required = false, defaultValue = "true") boolean withBackup,
+        @Parameter(description = API_PARAM_BACKUP_FIRST, required = false) @RequestParam(required = false) Boolean withBackup,
         HttpServletRequest request) throws Exception {
+        boolean doBackup = withDeleteBackup(withBackup, request);
+
         AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
         ServiceContext context = ApiUtils.createServiceContext(request);
         Store store = context.getBean("resourceStore", Store.class);
@@ -223,7 +227,7 @@ public class MetadataInsertDeleteApi {
         ApplicationContextHolder.get().publishEvent(preRemoveEvent);
 
         if (metadata.getDataInfo().getType() != MetadataType.SUB_TEMPLATE
-            && metadata.getDataInfo().getType() != MetadataType.TEMPLATE_OF_SUB_TEMPLATE && withBackup) {
+            && metadata.getDataInfo().getType() != MetadataType.TEMPLATE_OF_SUB_TEMPLATE && doBackup) {
             MEFLib.backupRecord(metadata, context);
         }
 
@@ -706,6 +710,9 @@ public class MetadataInsertDeleteApi {
         @Parameter(description = "Publish record.", required = false) @RequestParam(required = false, defaultValue = "false") final boolean publishToAll,
         @Parameter(description = API_PARAM_RECORD_UUID_PROCESSING, required = false) @RequestParam(required = false, defaultValue = "NOTHING") final MEFLib.UuidAction uuidProcessing,
         @Parameter(description = API_PARAM_RECORD_GROUP, required = false) @RequestParam(required = false) final String group,
+        @Parameter(description = "Schema", required = false)
+        @RequestParam(required = false, defaultValue = "iso19139")
+        final String schema,
         HttpServletRequest request) throws Exception {
         if (StringUtils.isEmpty(xml) && StringUtils.isEmpty(url)) {
             throw new IllegalArgumentException("A context as XML or a remote URL MUST be provided.");
@@ -716,12 +723,17 @@ public class MetadataInsertDeleteApi {
         }
 
         ServiceContext context = ApiUtils.createServiceContext(request);
-        Path styleSheetWmc = dataDirectory.getXsltConversion("schema:iso19139:convert/fromOGCWMC-OR-OWSC");
+        Path styleSheetWmc = dataDirectory.getXsltConversion(
+                String.format("schema:%s:convert/fromOGCWMC-OR-OWSC",
+                schema));
 
         FilePathChecker.verify(filename);
 
+        String uuid = UUID.randomUUID().toString();
+
         // Convert the context in an ISO19139 records
         Map<String, Object> xslParams = new HashMap<>();
+        xslParams.put("uuid", uuid);
         xslParams.put("viewer_url", viewerUrl);
         xslParams.put("map_url", url);
         xslParams.put("topic", topic);
@@ -747,7 +759,6 @@ public class MetadataInsertDeleteApi {
 
         // 4. Inserts the metadata (does basically the same as the metadata.insert.paste
         // service (see Insert.java)
-        String uuid = UUID.randomUUID().toString();
 
         String date = new ISODate().toString();
         SimpleMetadataProcessingReport report = new SimpleMetadataProcessingReport();
@@ -758,7 +769,7 @@ public class MetadataInsertDeleteApi {
         md.add(transformedMd);
 
         // Import record
-        Importer.importRecord(uuid, uuidProcessing, md, "iso19139", 0, settingManager.getSiteId(),
+        Importer.importRecord(uuid, uuidProcessing, md, schema, 0, settingManager.getSiteId(),
             settingManager.getSiteName(), null, context, id, date, date, group, MetadataType.METADATA);
 
         final Store store = context.getBean("resourceStore", Store.class);
@@ -777,7 +788,7 @@ public class MetadataInsertDeleteApi {
             onlineSrcParams.put("name", filename);
             onlineSrcParams.put("desc", title);
             transformedMd = Xml.transform(transformedMd,
-                schemaManager.getSchemaDir("iso19139").resolve("process").resolve("onlinesrc-add.xsl"),
+                schemaManager.getSchemaDir(schema).resolve("process").resolve("onlinesrc-add.xsl"),
                 onlineSrcParams);
             dataManager.updateMetadata(context, id.get(0), transformedMd, false, true, context.getLanguage(),
                 null, true, IndexingMode.none);
@@ -792,7 +803,7 @@ public class MetadataInsertDeleteApi {
             onlineSrcParams.put("thumbnail_url", settingManager.getNodeURL()
                 + String.format("api/records/%s/attachments/%s", uuid, overviewFilename));
             transformedMd = Xml.transform(transformedMd,
-                schemaManager.getSchemaDir("iso19139").resolve("process").resolve("thumbnail-add.xsl"),
+                schemaManager.getSchemaDir(schema).resolve("process").resolve("thumbnail-add.xsl"),
                 onlineSrcParams);
             dataManager.updateMetadata(context, id.get(0), transformedMd, false, true, context.getLanguage(),
                 null, true, IndexingMode.none);
@@ -950,7 +961,7 @@ public class MetadataInsertDeleteApi {
         }
 
         if (uuidProcessing == MEFLib.UuidAction.NOTHING) {
-            AbstractMetadata md = metadataRepository.findOneByUuid(uuid);
+            AbstractMetadata md = metadataUtils.findOneByUuid(uuid);
             if (md != null) {
                 throw new IllegalArgumentException(
                     String.format(messages.getString("api.metadata.import.errorDuplicatedUUIDDetailed"), uuid));
@@ -1008,13 +1019,50 @@ public class MetadataInsertDeleteApi {
 
         if (rejectIfInvalid) {
             // Persist the validation status
-            AbstractMetadata metadata = metadataRepository.findOneById(iId);
+            AbstractMetadata metadata = metadataUtils.findOne(iId);
 
             metadataValidator.doValidate(metadata, context.getLanguage());
         }
 
         dataManager.indexMetadata(id.get(0), true);
         return Pair.read(Integer.valueOf(id.get(0)), uuid);
+    }
+
+    /**
+     * Determine if the metadata backup is needed during delete API.<br/>
+     * 1) The withBackup flag missing from the API, will only overide if setting as ForceNoBackup, otherwise default to true<br/>
+     * 2) The withBackup flag designated as true from the API, will throw an error if system setting for ForceNoBackup
+     * 3) The withbackup flag designated as false from the API, will throw an error if system setting for ForceBackup
+     *
+     * @param withBackup API parameter from the client side
+     * @param request HTTP Request
+     * @return boolean of metadata backup and defaulted to true
+     */
+    private boolean withDeleteBackup (Boolean withBackup, HttpServletRequest request) {
+        ResourceBundle messages = ApiUtils.getMessagesResourceBundle(request.getLocales());
+        String mdDeleteBackupOption = settingManager.getValue(Settings.METADATA_DELETE_BACKUPOPTIONS);
+        if (withBackup == null) {
+            if (StringUtils.equals(mdDeleteBackupOption, "ForceNoBackup")) {
+                return false;
+            }
+            // Will default to true if setting set to UseAPIParameter, ForceBackup or empty
+            return true;
+        } else if (withBackup == true) {
+            if (StringUtils.equals(mdDeleteBackupOption, "ForceNoBackup")) {
+                throw new IllegalArgumentException(
+                    String.format(messages.getString("api.metadata.delete.errorForceBackup"), withBackup));
+            }
+            return true;
+        } else if (withBackup = false) {
+            if (StringUtils.equals(mdDeleteBackupOption, "ForceBackup")) {
+                throw new IllegalArgumentException(
+                    String.format(messages.getString("api.metadata.delete.errorForceNoBackup"), withBackup));
+            }
+            return false;
+        }
+
+        return true;
+
     }
 
 }

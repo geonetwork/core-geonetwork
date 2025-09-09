@@ -1,5 +1,5 @@
 //==============================================================================
-//===	Copyright (C) 2001-2008 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2025 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -84,6 +84,8 @@ import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.*;
 import java.util.concurrent.Callable;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static com.google.common.io.Files.getNameWithoutExtension;
 import static org.fao.geonet.api.ApiParams.API_PARAM_RECORD_UUID;
@@ -112,6 +114,9 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
 
     @Autowired
     PdfOrHtmlResponseWriter writer;
+
+    @Autowired
+    SchemaManager schemaManager;
 
     /**
      * Map (canonical path to formatter dir -> Element containing all xml files in Formatter
@@ -152,7 +157,7 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
 
     public void copyNewerFilesToDataDir(final Path fromDir, final Path toDir) throws IOException {
         if (Files.exists(fromDir)) {
-            Files.walkFileTree(fromDir, new SimpleFileVisitor<Path>() {
+            Files.walkFileTree(fromDir, new SimpleFileVisitor<>() {
                 @Override
                 public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
                     final Path path = IO.relativeFile(fromDir, file, toDir);
@@ -165,6 +170,41 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
                 }
             });
         }
+    }
+
+    @GetMapping(value =
+        "/{portal}/api/records/{metadataUuid}/formatters",
+        produces = MediaType.APPLICATION_JSON_VALUE)
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Get the list of formatters available for a metadata record"
+    )
+    @ResponseBody
+    public Set<String> getRecordFormatters(
+        @Parameter(
+            description = API_PARAM_RECORD_UUID,
+            required = true)
+        @PathVariable
+        String metadataUuid,
+        final HttpServletRequest servletRequest) throws Exception {
+
+        AbstractMetadata metadata = ApiUtils.canViewRecord(metadataUuid, true, servletRequest);
+
+        Path styleSheetPath = schemaManager.getSchemaDir(metadata.getDataInfo().getSchemaId()).resolve("formatter");
+
+        Set<String> formatters = new HashSet<>();
+        // Add the default formatters
+        formatters.add("xml");
+        formatters.add("zip");
+
+        try (Stream<Path> paths = Files.list(styleSheetPath)) {
+            formatters.addAll(paths
+                .filter(Files::isDirectory)
+                .map(Path::getFileName)
+                .map(Path::toString)
+                .collect(Collectors.toSet()));
+        }
+
+        return formatters;
     }
 
     @RequestMapping(value = {
@@ -233,6 +273,9 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
             acceptHeader = MediaType.TEXT_HTML_VALUE;
         }
         if (formatType == null) {
+            formatType = FormatType.findByFormatterKey(formatterId);
+        }
+        if (formatType == null) {
             formatType = FormatType.find(acceptHeader);
         }
         if (formatType == null) {
@@ -252,7 +295,7 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
             language = isoLanguagesMapper.iso639_2T_to_iso639_2B(locale.getISO3Language());
         }
 
-        AbstractMetadata metadata = ApiUtils.canViewRecord(metadataUuid, servletRequest);
+        AbstractMetadata metadata = ApiUtils.canViewRecord(metadataUuid, approved, servletRequest);
 
         if (approved) {
             metadata = ApplicationContextHolder.get().getBean(MetadataRepository.class).findOneByUuid(metadataUuid);

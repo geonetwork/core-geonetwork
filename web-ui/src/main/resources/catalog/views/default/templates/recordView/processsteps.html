@@ -30,7 +30,7 @@
               <br data-ng-if="p.date || p.processor" />
               {{p.description}}
             </div>
-            <div class="timeline-body" data-ng-if="p.source">
+            <div class="timeline-body" data-ng-if="p.source.length">
               <span data-translate="">sourceDescription</span>
               <p data-ng-repeat="s in p.source">{{s.description}}</p>
             </div>
@@ -43,7 +43,8 @@
       data-ng-if="mdView.current.record.contactForProcessing"
       data-gn-metadata-contacts="mdView.current.record.contactForProcessing"
       data-gn-mode="default"
+      data-type="processing"
       data-layout="icon"
-    />
+    ></div>
   </div>
 </div>

@@ -79,6 +79,16 @@
     <xsl:value-of select="."/>
   </xsl:template>
 
+  <!--
+  Feature Catalogue cardinality is changed from a gco:Multiplicity to a CharacterString
+  -->
+  <xsl:template match="gfcold:cardinality" priority="5" mode="from19139to19115-3.2018">
+    <gfc:cardinality>
+      <gco:CharacterString>
+        <xsl:value-of select="concat(*/gcoold:range/*/gcoold:lower/*/text(), '..', */gcoold:range/*/gcoold:upper/*/text())"/>
+      </gco:CharacterString>
+    </gfc:cardinality>
+  </xsl:template>
 
   <xsl:template match="gmd:language|gmd:locale" priority="5" mode="from19139to19115-3.2018">
     <xsl:variable name="nameSpacePrefix">
@@ -592,8 +602,8 @@
           <xsl:variable name="uuidref"
                         select="gmd:MD_AggregateInformation/gmd:aggregateDataSetIdentifier/*/gmd:code/*/@uuidref"/>
           <mri:metadataReference>
-            <xsl:copy-of select="gmd:MD_AggregateInformation/gmd:aggregateDataSetIdentifier/*/gmd:code/gmx:Anchor/@xlink:href"/>
-            <xsl:copy-of select="if ($uuidref != '') then $uuidref else gmd:MD_AggregateInformation/gmd:aggregateDataSetIdentifier/*/gmd:code/*/text()"/>
+            <xsl:copy-of select="gmd:MD_AggregateInformation/gmd:aggregateDataSetIdentifier/*/gmd:code/gmx:Anchor/@xlink:*"/>
+            <xsl:attribute name="uuidref" select="if ($uuidref != '') then $uuidref else gmd:MD_AggregateInformation/gmd:aggregateDataSetIdentifier/*/gmd:code/*/text()"/>
           </mri:metadataReference>
         </xsl:if>
 

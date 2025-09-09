@@ -27,6 +27,7 @@ import com.google.common.base.Optional;
 import com.google.common.collect.Sets;
 import jeeves.server.context.ServiceContext;
 import org.eclipse.jetty.io.RuntimeIOException;
+import org.fao.geonet.api.records.attachments.Store;
 import org.fao.geonet.api.records.attachments.StoreUtils;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.*;
@@ -53,6 +54,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionSynchronization;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 import javax.annotation.Nonnull;
 import javax.persistence.EntityNotFoundException;
@@ -419,6 +424,7 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
      * This needs improvements.
      */
     @Override
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public Integer startEditingSession(ServiceContext context, String id) throws Exception {
         // Check id
         AbstractMetadata md = findOne(Integer.valueOf(id));
@@ -589,7 +595,7 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
 
                     List<MetadataStatus> listOfStatusChange = new ArrayList<>(1);
                     listOfStatusChange.add(metadataStatus);
-                    sa.onStatusChange(listOfStatusChange);
+                    sa.onStatusChange(listOfStatusChange, true);
                 }
             }
 
@@ -635,7 +641,6 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
 
     @Override
     public void cancelEditingSession(ServiceContext context, String id) throws Exception {
-        super.cancelEditingSession(context, id);
 
         int intId = Integer.parseInt(id);
 
@@ -655,9 +660,30 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
 
                 // Unset METADATA_EDITING_CREATED_DRAFT flag
                 context.getUserSession().removeProperty(Geonet.Session.METADATA_EDITING_CREATED_DRAFT);
+
+                // Get the resource store
+                Store store = context.getBean("resourceStore", Store.class);
+
+                // Register synchronization to delete resources after commit
+                TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
+                    @Override
+                    public void afterCommit() {
+                        try {
+                            // Delete resources from the store
+                            store.delResources(context, intId);
+                        } catch (Exception e) {
+                            Log.error(Geonet.DATA_MANAGER, "Couldn't delete resources for draft " + id, e);
+                        }
+                    }
+                });
+
             } catch (Exception e) {
                 Log.error(Geonet.DATA_MANAGER, "Couldn't cleanup draft " + id, e);
             }
+        } else {
+            // If the draft was not created, then we just restore the state it was in before editing
+            // without deleting the draft.
+            super.cancelEditingSession(context, id);
         }
     }
 
@@ -677,6 +703,7 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
             metadataFileUpload.setFileSize(mfu.getFileSize());
             metadataFileUpload.setUploadDate(mfu.getUploadDate());
             metadataFileUpload.setUserName(mfu.getUserName());
+            metadataFileUpload.setDeletedDate(mfu.getDeletedDate());
 
             repo.save(metadataFileUpload);
         }
@@ -688,5 +715,32 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
 
     public Set<String> getListOfStatusCreatingDraft() {
         return listOfStatusToTriggerDraftCreation;
+    }
+
+    @Override
+    public String selectOneWithSearchAndReplace(String uuid, String search, String replace) {
+        String updatedXml = metadataDraftRepository.selectOneWithSearchAndReplace(uuid, search, replace);
+        if (updatedXml == null) {
+            updatedXml = super.selectOneWithSearchAndReplace(uuid, search, replace);
+        }
+        return updatedXml;
+    }
+
+    @Override
+    public String selectOneWithRegexSearchAndReplaceWithFlags(String uuid, String search, String replace, String flags) {
+        String updatedXml = metadataDraftRepository.selectOneWithRegexSearchAndReplaceWithFlags(uuid, search, replace, flags);
+        if (updatedXml == null) {
+            updatedXml = super.selectOneWithRegexSearchAndReplaceWithFlags(uuid, search, replace, flags);
+        }
+        return updatedXml;
+    }
+
+    @Override
+    public String selectOneWithRegexSearchAndReplace(String uuid, String search, String replace) {
+        String updatedXml = metadataDraftRepository.selectOneWithRegexSearchAndReplace(uuid, search, replace);
+        if (updatedXml == null) {
+            updatedXml = super.selectOneWithRegexSearchAndReplace(uuid, search, replace);
+        }
+        return updatedXml;
     }
 }
