@@ -80,6 +80,7 @@ public class FormatterApiTest extends AbstractServiceIntegrationTest {
         data.add(new String[]{"iso19139", "citation", "?format=text", "iso19139", "text.txt"});
         data.add(new String[]{"iso19139", "citation", "?format=html", "iso19139", "html.html"});
         data.add(new String[]{"iso19139", "citation", "?format=?", "iso19115-3.2018", "formats.txt"});
+        data.add(new String[]{"iso19115-3.2018-jsonld", "jsonld", "", "iso19115-3.2018", "jsonld.json"});
         data.add(new String[]{"iso19115-3.2018", "citation", "?format=ris", "iso19115-3.2018", "ris.txt"});
         data.add(new String[]{"iso19115-3.2018", "citation", "?format=bibtex", "iso19115-3.2018", "bibtex.txt"});
         data.add(new String[]{"iso19115-3.2018", "citation", "?format=text", "iso19115-3.2018", "text.txt"});

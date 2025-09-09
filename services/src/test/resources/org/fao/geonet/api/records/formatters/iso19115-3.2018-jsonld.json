@@ -1,0 +1,314 @@
+{
+  "@context" : {
+    "@language" : "fr",
+    "@vocab" : "https://schema.org/",
+    "schema" : "https://schema.org/",
+    "sc" : "https://schema.org/",
+    "cr" : "http://mlcommons.org/croissant/",
+    "rai" : "http://mlcommons.org/croissant/RAI/",
+    "dct" : "http://purl.org/dc/terms/",
+    "citeAs" : "cr:citeAs",
+    "column" : "cr:column",
+    "conformsTo" : "dct:conformsTo",
+    "data" : {
+      "@id" : "cr:data",
+      "@type" : "@json"
+    },
+    "dataType" : {
+      "@id" : "cr:dataType",
+      "@type" : "@vocab"
+    },
+    "examples" : {
+      "@id" : "cr:examples",
+      "@type" : "@json"
+    },
+    "extract" : "cr:extract",
+    "field" : "cr:field",
+    "fileProperty" : "cr:fileProperty",
+    "fileObject" : "cr:fileObject",
+    "fileSet" : "cr:fileSet",
+    "format" : "cr:format",
+    "includes" : "cr:includes",
+    "isLiveDataset" : "cr:isLiveDataset",
+    "jsonPath" : "cr:jsonPath",
+    "key" : "cr:key",
+    "md5" : "cr:md5",
+    "parentField" : "cr:parentField",
+    "path" : "cr:path",
+    "recordSet" : "cr:recordSet",
+    "references" : "cr:references",
+    "regex" : "cr:regex",
+    "repeated" : "cr:repeated",
+    "replace" : "cr:replace",
+    "separator" : "cr:separator",
+    "source" : "cr:source",
+    "subField" : "cr:subField"
+  },
+  "@type" : "schema:Dataset",
+  "@id" : "https://sextant.ifremer.fr/geonetwork/srv/api/records/58318f0e-9ffe-428e-b453-6c39bbaf7467#resource",
+  "url" : "https://sextant.ifremer.fr/geonetwork/srv/api/records/58318f0e-9ffe-428e-b453-6c39bbaf7467#resource",
+  "includedInDataCatalog" : [ {
+    "@type" : "DataCatalog",
+    "url" : "http://localhost:8080/geonetwork/srv/",
+    "name" : "My GeoNetwork catalogue"
+  } ],
+  "inLanguage" : [ "en" ],
+  "name" : "Paramètres moyens état de mer du SNO DYNALIT - La Palue & Lostmarc'h",
+  "description" : "Le SNO DYNALIT collecte et met à disposition les paramètres moyens de l'état de mer issus du traitement de données de capteurs de pression installés devant les sites-atelier.",
+  "conformsTo" : "http://mlcommons.org/croissant/1.0",
+  "license" : [ {
+    "@type" : "CreativeWork",
+    "name" : ""
+  }, " https://creativecommons.org/licenses/by-nd/4.0/ " ],
+  "citeAs" : " @misc{58318f0e-9ffe-428e-b453-6c39bbaf7467,\n      author = {Bertin Stéphane (UMR 6538 Geo-Ocean)},\n      publisher = {Sextant (Ifremer)},\n      title = {Paramètres moyens état de mer du SNO DYNALIT - La Palue & Lostmarc'h},\n      year = {2025},\n      url = {http://localhost:8080/geonetwork/srv/api/records/58318f0e-9ffe-428e-b453-6c39bbaf7467}\n      } ",
+  "keywords" : [ "/Milieu physique/Hydrodynamique côtière", "Caractéristiques géographiques océanographiques", "Vagues", "IR-ILICO", "/Données d'observation/in-situ", "SNO-Dynalit" ],
+  "publisher" : [ {
+    "@id" : "sextant@ifremer.fr",
+    "@type" : "Organization",
+    "name" : "Ifremer",
+    "email" : [ "sextant@ifremer.fr" ],
+    "contactPoint" : {
+      "@type" : "PostalAddress"
+    }
+  } ],
+  "author" : [ {
+    "@id" : "stephane.bertin@univ-brest.fr",
+    "@type" : "Organization",
+    "name" : "UMR 6538 Geo-Ocean",
+    "email" : [ "stephane.bertin@univ-brest.fr" ],
+    "contactPoint" : {
+      "@type" : "PostalAddress"
+    }
+  } ],
+  "distribution" : [ {
+    "@type" : "DataDownload",
+    "@id" : "https://www.dynalit.fr/",
+    "contentUrl" : "https://www.dynalit.fr/",
+    "encodingFormat" : "WWW:LINK",
+    "name" : "Adresse internet (URL)",
+    "description" : ""
+  }, {
+    "@type" : "cr:FileObject",
+    "@id" : "https://sextant.ifremer.fr/sextant_data/SNO_DYNALIT/La_Palue_Lostmarch/Etat_de_mer/Wavebulk_PT_LaPalue_21March2024_31December2024.csv",
+    "contentUrl" : "https://sextant.ifremer.fr/sextant_data/SNO_DYNALIT/La_Palue_Lostmarch/Etat_de_mer/Wavebulk_PT_LaPalue_21March2024_31December2024.csv",
+    "encodingFormat" : "WWW:DOWNLOAD",
+    "name" : "Wavebulk_PT_LaPalue_21March2024_31December2024.csv",
+    "description" : "Wavebulk PT La Palue & Lostmarc'h - 21/03/2024-31/12/2024 (csv)"
+  } ],
+  "encodingFormat" : [ ],
+  "recordSet" : [ {
+    "@type" : "cr:RecordSet",
+    "@id" : "PARAM_AVG",
+    "key" : [ {
+      "@id" : "PARAM_AVG/15"
+    } ],
+    "field" : [ {
+      "@type" : "cr:Field",
+      "@id" : "PARAM_AVG/1",
+      "dataType" : "REAL",
+      "name" : "Lon PT",
+      "description" : "Longitude (en degrés décimaux)",
+      "source" : {
+        "fileObject" : {
+          "@id" : "https:\\/\\/sextant.ifremer.fr\\/sextant_data\\/SNO_DYNALIT\\/La_Palue_Lostmarch\\/Etat_de_mer\\/Wavebulk_PT_LaPalue_21March2024_31December2024.csv"
+        }
+      }
+    }, {
+      "@type" : "cr:Field",
+      "@id" : "PARAM_AVG/2",
+      "dataType" : "REAL",
+      "name" : "Lat PT",
+      "description" : "Latitude (en degrés décimaux)",
+      "source" : {
+        "fileObject" : {
+          "@id" : "https:\\/\\/sextant.ifremer.fr\\/sextant_data\\/SNO_DYNALIT\\/La_Palue_Lostmarch\\/Etat_de_mer\\/Wavebulk_PT_LaPalue_21March2024_31December2024.csv"
+        }
+      }
+    }, {
+      "@type" : "cr:Field",
+      "@id" : "PARAM_AVG/3",
+      "dataType" : "INTEGER",
+      "name" : "yyyy",
+      "description" : "Année",
+      "source" : {
+        "fileObject" : {
+          "@id" : "https:\\/\\/sextant.ifremer.fr\\/sextant_data\\/SNO_DYNALIT\\/La_Palue_Lostmarch\\/Etat_de_mer\\/Wavebulk_PT_LaPalue_21March2024_31December2024.csv"
+        }
+      }
+    }, {
+      "@type" : "cr:Field",
+      "@id" : "PARAM_AVG/4",
+      "dataType" : "INTEGER",
+      "name" : "mm",
+      "description" : "Mois",
+      "source" : {
+        "fileObject" : {
+          "@id" : "https:\\/\\/sextant.ifremer.fr\\/sextant_data\\/SNO_DYNALIT\\/La_Palue_Lostmarch\\/Etat_de_mer\\/Wavebulk_PT_LaPalue_21March2024_31December2024.csv"
+        }
+      }
+    }, {
+      "@type" : "cr:Field",
+      "@id" : "PARAM_AVG/5",
+      "dataType" : "INTEGER",
+      "name" : "dd",
+      "description" : "Jour",
+      "source" : {
+        "fileObject" : {
+          "@id" : "https:\\/\\/sextant.ifremer.fr\\/sextant_data\\/SNO_DYNALIT\\/La_Palue_Lostmarch\\/Etat_de_mer\\/Wavebulk_PT_LaPalue_21March2024_31December2024.csv"
+        }
+      }
+    }, {
+      "@type" : "cr:Field",
+      "@id" : "PARAM_AVG/6",
+      "dataType" : "INTEGER",
+      "name" : "HH",
+      "description" : "Heure",
+      "source" : {
+        "fileObject" : {
+          "@id" : "https:\\/\\/sextant.ifremer.fr\\/sextant_data\\/SNO_DYNALIT\\/La_Palue_Lostmarch\\/Etat_de_mer\\/Wavebulk_PT_LaPalue_21March2024_31December2024.csv"
+        }
+      }
+    }, {
+      "@type" : "cr:Field",
+      "@id" : "PARAM_AVG/7",
+      "dataType" : "INTEGER",
+      "name" : "MM",
+      "description" : "Minutes",
+      "source" : {
+        "fileObject" : {
+          "@id" : "https:\\/\\/sextant.ifremer.fr\\/sextant_data\\/SNO_DYNALIT\\/La_Palue_Lostmarch\\/Etat_de_mer\\/Wavebulk_PT_LaPalue_21March2024_31December2024.csv"
+        }
+      }
+    }, {
+      "@type" : "cr:Field",
+      "@id" : "PARAM_AVG/8",
+      "dataType" : "INTEGER",
+      "name" : "SS",
+      "description" : "Secondes",
+      "source" : {
+        "fileObject" : {
+          "@id" : "https:\\/\\/sextant.ifremer.fr\\/sextant_data\\/SNO_DYNALIT\\/La_Palue_Lostmarch\\/Etat_de_mer\\/Wavebulk_PT_LaPalue_21March2024_31December2024.csv"
+        }
+      }
+    }, {
+      "@type" : "cr:Field",
+      "@id" : "PARAM_AVG/9",
+      "dataType" : "REAL",
+      "name" : "Water depth",
+      "description" : "Hauteur d'eau moyenne",
+      "source" : {
+        "fileObject" : {
+          "@id" : "https:\\/\\/sextant.ifremer.fr\\/sextant_data\\/SNO_DYNALIT\\/La_Palue_Lostmarch\\/Etat_de_mer\\/Wavebulk_PT_LaPalue_21March2024_31December2024.csv"
+        }
+      }
+    }, {
+      "@type" : "cr:Field",
+      "@id" : "PARAM_AVG/10",
+      "dataType" : "REAL",
+      "name" : "Hm0",
+      "description" : "Hauteur significative spectrale des vagues",
+      "source" : {
+        "fileObject" : {
+          "@id" : "https:\\/\\/sextant.ifremer.fr\\/sextant_data\\/SNO_DYNALIT\\/La_Palue_Lostmarch\\/Etat_de_mer\\/Wavebulk_PT_LaPalue_21March2024_31December2024.csv"
+        }
+      }
+    }, {
+      "@type" : "cr:Field",
+      "@id" : "PARAM_AVG/11",
+      "dataType" : "REAL",
+      "name" : "Tm01",
+      "description" : "Période moyenne spectrale des vagues Tm01",
+      "source" : {
+        "fileObject" : {
+          "@id" : "https:\\/\\/sextant.ifremer.fr\\/sextant_data\\/SNO_DYNALIT\\/La_Palue_Lostmarch\\/Etat_de_mer\\/Wavebulk_PT_LaPalue_21March2024_31December2024.csv"
+        }
+      }
+    }, {
+      "@type" : "cr:Field",
+      "@id" : "PARAM_AVG/12",
+      "dataType" : "REAL",
+      "name" : "Tm02",
+      "description" : "Période moyenne spectrale des vagues Tm02",
+      "source" : {
+        "fileObject" : {
+          "@id" : "https:\\/\\/sextant.ifremer.fr\\/sextant_data\\/SNO_DYNALIT\\/La_Palue_Lostmarch\\/Etat_de_mer\\/Wavebulk_PT_LaPalue_21March2024_31December2024.csv"
+        }
+      }
+    }, {
+      "@type" : "cr:Field",
+      "@id" : "PARAM_AVG/13",
+      "dataType" : "REAL",
+      "name" : "Tp",
+      "description" : "Période au pic des vagues",
+      "source" : {
+        "fileObject" : {
+          "@id" : "https:\\/\\/sextant.ifremer.fr\\/sextant_data\\/SNO_DYNALIT\\/La_Palue_Lostmarch\\/Etat_de_mer\\/Wavebulk_PT_LaPalue_21March2024_31December2024.csv"
+        }
+      }
+    }, {
+      "@type" : "cr:Field",
+      "@id" : "PARAM_AVG/14",
+      "dataType" : "REAL",
+      "name" : "Tpc",
+      "description" : "Période au pic continue des vagues",
+      "source" : {
+        "fileObject" : {
+          "@id" : "https:\\/\\/sextant.ifremer.fr\\/sextant_data\\/SNO_DYNALIT\\/La_Palue_Lostmarch\\/Etat_de_mer\\/Wavebulk_PT_LaPalue_21March2024_31December2024.csv"
+        }
+      }
+    }, {
+      "@type" : "cr:Field",
+      "@id" : "PARAM_AVG/15",
+      "dataType" : "REAL",
+      "name" : "Hm0_IG",
+      "description" : "Hauteur significative spectrale des vagues dans la bande infragravitaire",
+      "source" : {
+        "fileObject" : {
+          "@id" : "https:\\/\\/sextant.ifremer.fr\\/sextant_data\\/SNO_DYNALIT\\/La_Palue_Lostmarch\\/Etat_de_mer\\/Wavebulk_PT_LaPalue_21March2024_31December2024.csv"
+        }
+      }
+    }, {
+      "@type" : "cr:Field",
+      "@id" : "PARAM_AVG/16",
+      "dataType" : "REAL",
+      "name" : "Tm02_IG",
+      "description" : "Période moyenne des vagues dans la bande infragravitaire par analyse spectrale",
+      "source" : {
+        "fileObject" : {
+          "@id" : "https:\\/\\/sextant.ifremer.fr\\/sextant_data\\/SNO_DYNALIT\\/La_Palue_Lostmarch\\/Etat_de_mer\\/Wavebulk_PT_LaPalue_21March2024_31December2024.csv"
+        }
+      }
+    }, {
+      "@type" : "cr:Field",
+      "@id" : "PARAM_AVG/17",
+      "dataType" : "REAL",
+      "name" : "F_min",
+      "description" : "Fréquence de coupure minimum",
+      "source" : {
+        "fileObject" : {
+          "@id" : "https:\\/\\/sextant.ifremer.fr\\/sextant_data\\/SNO_DYNALIT\\/La_Palue_Lostmarch\\/Etat_de_mer\\/Wavebulk_PT_LaPalue_21March2024_31December2024.csv"
+        }
+      }
+    }, {
+      "@type" : "cr:Field",
+      "@id" : "PARAM_AVG/18",
+      "dataType" : "REAL",
+      "name" : "F_max",
+      "description" : "Fréquence de coupure maximum",
+      "source" : {
+        "fileObject" : {
+          "@id" : "https:\\/\\/sextant.ifremer.fr\\/sextant_data\\/SNO_DYNALIT\\/La_Palue_Lostmarch\\/Etat_de_mer\\/Wavebulk_PT_LaPalue_21March2024_31December2024.csv"
+        }
+      }
+    } ]
+  } ],
+  "spatialCoverage" : [ {
+    "@type" : "Place",
+    "description" : [ ],
+    "geo" : [ {
+      "@type" : "GeoShape",
+      "box" : "48.2053 -4.5677 48.2053 -4.5677"
+    } ]
+  } ],
+  "temporalCoverage" : [ "2024-03-21T08:00:00+00:00/" ]
+}
