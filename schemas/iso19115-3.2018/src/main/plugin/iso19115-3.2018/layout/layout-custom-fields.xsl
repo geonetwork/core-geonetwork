@@ -7,6 +7,7 @@
   xmlns:cit="http://standards.iso.org/iso/19115/-3/cit/2.0"
   xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0"
   xmlns:mrs="http://standards.iso.org/iso/19115/-3/mrs/1.0"
+  xmlns:msr="http://standards.iso.org/iso/19115/-3/msr/2.0"
   xmlns:gml="http://www.opengis.net/gml/3.2"
   xmlns:xlink="http://www.w3.org/1999/xlink"
   xmlns:gn="http://www.fao.org/geonetwork"
@@ -140,7 +141,7 @@
 
 
   <!-- Measure elements, gco:Distance, gco:Angle, gco:Scale, gco:Length, ... -->
-  <xsl:template mode="mode-iso19115-3.2018" priority="2000" match="mri:*[gco:*/@uom]">
+  <xsl:template mode="mode-iso19115-3.2018" priority="2000" match="mri:*[gco:*/@uom]|msr:*[gco:*/@uom]">
     <xsl:param name="schema" select="$schema" required="no"/>
     <xsl:param name="labels" select="$labels" required="no"/>
     <xsl:param name="refToDelete" select="''" required="no"/>
