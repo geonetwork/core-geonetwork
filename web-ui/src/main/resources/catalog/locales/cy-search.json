@@ -357,7 +357,7 @@
     "KMLfileURL": "URL ffeil KML",
     "refineSearch": "Mireinio Chwilio",
     "backToList": "Yn ôl i'r Rhestr",
-    "privilegesBatchAlert": "<span class='text-danger'>Bydd y breintiau yn cael eu diweddaru ar gyfer yr holl gofnodion y gellir eu golygu yn y dewis. Mae'r ffurflen fraint yn wag ac nid yw'n adlewyrchu breintiau cyfredol y cofnodion a ddewiswyd! Mae breintiau yn cael eu hailosod a'u disodli gan yr un newydd. <br/><br/>Bydd clicio ar <strong>Merge selected</strong> yn ychwanegu (checked with <strong>+</strong>) neu’n tynnu (checkbox with <strong>-</strong>) breintiau wedi’u dewis. <br/><br/>Bydd clicio ar <strong>Replace by selected</strong> yn cael gwared ar gategorïau cofnodion ac yna ychwanegu (checked with <strong>+</strong>) neu dynnu (blwch gwirio gyda <strong>-</strong>) breintiau wedi’u dewis.",
+    "privilegesBatchAlert": "<span class='text-danger'>Bydd y breintiau yn cael eu diweddaru ar gyfer yr holl gofnodion y gellir eu golygu yn y dewis. Mae'r ffurflen fraint yn wag ac nid yw'n adlewyrchu breintiau cyfredol y cofnodion a ddewiswyd! Mae breintiau yn cael eu hailosod a'u disodli gan yr un newydd. <br/><br/>Bydd clicio ar <strong>Merge selected</strong> yn ychwanegu (checked with <strong>+</strong>) neu’n tynnu (checkbox with <strong>-</strong>) breintiau wedi’u dewis. <br/><br/>Bydd clicio ar <strong>Update</strong> yn cael gwared ar freintiau cofnodion ac yna ychwanegu (checked with <strong>+</strong>) neu dynnu (blwch gwirio gyda <strong>-</strong>) breintiau wedi’u dewis.",
     "permalink": "Permalink",
     "permalinkTo": "Permalinkl i {{title}}",
     "shareOnTwitter": "Rhannu ar Twitter",
