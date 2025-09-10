@@ -39,7 +39,7 @@
 
 ## Manual installation
 
-1. Download Kibana 8.14.3 from https://www.elastic.co/downloads/kibana
+1. Download Kibana 8.19.3 from https://www.elastic.co/downloads/kibana
 
 2. Set Kibana base path and index name in config/kibana.yml:
 
@@ -81,7 +81,7 @@ Visit Kibana in a browser using one of the above links and go to 'Saved Objects'
 
 ### Production Use
 
-Kibana can be installed from the debian files, and Kibana 8.14.3 is confirmed as working with Geonetwork 4.4.x.
+Kibana can be installed from the debian files, and Kibana 8.19.3 is confirmed as working with Geonetwork 4.4.x.
 
 Set Kibana to start when the server starts up, using the instructions at https://www.elastic.co/guide/en/kibana/current/start-stop.html
 

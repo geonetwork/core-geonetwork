@@ -364,11 +364,9 @@ public class EsSearchManager implements ISearchManager {
                     .scriptedUpsert(true)
                     .upsert(Map.of())
                     .script(script -> script
-                        .inline(inlineScript -> inlineScript
                             .lang("painless")
                             .source(scriptSource.toString())
                         )
-                    )
                 )
         );
 

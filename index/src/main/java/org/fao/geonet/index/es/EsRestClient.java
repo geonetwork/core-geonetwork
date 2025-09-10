@@ -344,7 +344,7 @@ public class EsRestClient implements InitializingBean {
         if (MapUtils.isNotEmpty(scriptedFields)) {
             for (Map.Entry<String, String> scriptedField: scriptedFields.entrySet()) {
                 ScriptField scriptField = ScriptField.of(
-                    b -> b.script(sb -> sb.inline(is -> is.source(scriptedField.getValue())))
+                    b -> b.script(sb -> sb.source(scriptedField.getValue()))
                 );
 
                 searchRequestBuilder.scriptFields(scriptedField.getKey(), scriptField);
