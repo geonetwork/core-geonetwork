@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2023 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2025 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -24,8 +24,14 @@
 package org.fao.geonet.util;
 
 import co.elastic.clients.elasticsearch.core.search.Hit;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.PropertyName;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.introspect.Annotated;
+import com.fasterxml.jackson.databind.introspect.AnnotatedMember;
+import com.fasterxml.jackson.databind.introspect.JacksonAnnotationIntrospector;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
@@ -49,11 +55,13 @@ import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.Constants;
 import org.fao.geonet.SystemInfo;
 import org.fao.geonet.analytics.WebAnalyticsConfiguration;
+import org.fao.geonet.annotations.IndexIgnore;
 import org.fao.geonet.api.records.attachments.FilesystemStoreResourceContainer;
 import org.fao.geonet.api.records.attachments.Store;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.*;
 import org.fao.geonet.kernel.*;
+import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.datamanager.base.BaseMetadataUtils;
 import org.fao.geonet.kernel.search.CodeListTranslator;
 import org.fao.geonet.kernel.search.EsSearchManager;
@@ -78,6 +86,7 @@ import org.geotools.referencing.CRS;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.geotools.referencing.crs.DefaultProjectedCRS;
 import org.geotools.xsd.Parser;
+import org.jdom.DocType;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
@@ -537,8 +546,10 @@ public final class XslUtil {
                 httpResponse.getEntity().getContent(),
                 String.valueOf(StandardCharsets.UTF_8)).trim();
             Element element = getXmlFromJSON(jsonResponse);
-            DOMOutputter outputter = new DOMOutputter();
-            return outputter.output(new Document(element));
+            if (element != null) {
+                DOMOutputter outputter = new DOMOutputter();
+                return outputter.output(new Document(element));
+            }
         } catch (IOException | JDOMException e) {
             e.printStackTrace();
         }
@@ -666,6 +677,63 @@ public final class XslUtil {
     }
 
     /**
+     * get resource properties to be used in the index.
+     *
+     * @return json object representing the resource properties to be added to the index.
+     */
+    public static String getIndexableAttachmentProperties(String metadataId) {
+        if (StringUtils.isEmpty(metadataId)) {
+            return null;
+        }
+        if (!metadataId.matches("\\d+")) {
+            Log.error(Geonet.GEONETWORK, String.format(
+                "Resource for metadata '%s' needs a numeric metadata id. Skipping index.", metadataId));
+            return null;
+        }
+        IMetadataUtils metadataRepository = ApplicationContextHolder.get().getBean(IMetadataUtils.class);
+        AbstractMetadata metadata = metadataRepository.findOne(metadataId);
+
+        Store store = BeanFactoryAnnotationUtils.qualifiedBeanOfType(ApplicationContextHolder.get().getBeanFactory(), Store.class, "filesystemStore");
+        try {
+            List<MetadataResource> metadataResources = store.getResources(
+                ServiceContext.get(),
+                metadata.getUuid(),
+                MetadataResourceVisibility.PUBLIC,
+                null, !(metadata instanceof MetadataDraft));
+
+            if (metadataResources == null || metadataResources.isEmpty()) {
+                return null;
+            }
+
+            ObjectMapper objectMapper = new ObjectMapper();
+            objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+            objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+
+            // Exclude fields with the index ignore annotation
+            objectMapper.setAnnotationIntrospector(new JacksonAnnotationIntrospector() {
+                @Override
+                public boolean hasIgnoreMarker(AnnotatedMember member)
+                {
+                    return member.hasAnnotation(IndexIgnore.class) || super.hasIgnoreMarker(member);
+                }
+
+                @Override
+                public PropertyName findNameForSerialization(Annotated annotated)
+                {
+                    if(annotated.hasAnnotation(IndexIgnore.class)) return null;
+                    return super.findNameForSerialization(annotated);
+                }
+            });
+            return objectMapper.writeValueAsString(metadataResources);
+        } catch (Exception e) {
+            Log.warning(Geonet.GEONETWORK, String.format(
+                "Resource for metadata '%s'(%s) is not accessible or cannot be found. Skipping index. Error is: %s",
+                metadata.getUuid(), metadataId, e.getMessage()));
+            return null;
+        }
+    }
+
+    /**
      * Optimistically check if user can access a given url.  If not possible to determine then the
      * methods will return true.  So only use to show url links, not check if a user has access for
      * certain.  Spring security should ensure that users cannot access restricted urls though.
@@ -701,12 +769,45 @@ public final class XslUtil {
      */
     public static String xmlToJson(Object xml) {
         try {
-            return Xml.getJSON(xml.toString());
+            if (xml instanceof Node) {
+                try {
+                    return Xml.getJSON(Xml.getString((Node) xml));
+                } catch (Exception e) {
+                    throw new IOException(e);
+                }
+            } else if (xml instanceof Document) {
+                return Xml.getJSON(Xml.getString((Document) xml));
+            } else if (xml instanceof Element) {
+                return Xml.getJSON(Xml.getString((Element) xml));
+            } else if (xml instanceof DocType) {
+                return Xml.getJSON(Xml.getString((DocType) xml));
+            } else {
+                return Xml.getJSON(xml.toString());
+            }
         } catch (IOException e) {
             Log.error(Geonet.GEONETWORK, "XMLtoJSON conversion I/O error. Error is " + e.getMessage() + ". XML is " + xml.toString());
         }
         return "";
     }
+
+    /**
+     * Convert a serialized JSON to XML Element
+     */
+    public static Node jsonToXml(String json) {
+        if (StringUtils.isEmpty(json)) {
+            return null;
+        }
+        try {
+            Element element = getXmlFromJSON(json);
+            DOMOutputter outputter = new DOMOutputter();
+            return outputter.output(new Document(element));
+        } catch (Exception e) {
+            Log.error(Geonet.GEONETWORK,
+                "Get converting json to xml: " + e.getMessage(), e);
+        }
+        return null;
+    }
+
 
     /**
      * Try to preserve some HTML layout to text layout.

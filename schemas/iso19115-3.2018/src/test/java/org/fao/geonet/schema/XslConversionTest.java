@@ -30,6 +30,8 @@ import org.fao.geonet.schemas.XslProcessTest;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+
 import org.junit.Test;
 import org.xmlunit.builder.DiffBuilder;
 import org.xmlunit.builder.Input;
@@ -71,5 +73,23 @@ public class XslConversionTest extends XslProcessTest {
         assertFalse(
             String.format("Differences: %s", diff.toString()),
             diff.hasDifferences());
+    }
+
+    @Test
+    public void testArrayConversion() throws Exception {
+        String jsonString = "[{\"Test\":\"value1\"},{\"Test\":\"value2\"}]";
+        Element xmlFromJSON = Xml.getXmlFromJSON(jsonString);
+
+        String expectedElement = "<root><array><Test>value1</Test></array><array><Test>value2</Test></array></root>";
+
+        Diff diff = DiffBuilder
+            .compare(Input.fromString(expectedElement))
+            .withTest(Input.fromString(Xml.getString(xmlFromJSON)))
+            .withNodeMatcher(new DefaultNodeMatcher(ElementSelectors.byName))
+            .normalizeWhitespace()
+            .ignoreComments()
+            .checkForSimilar()
+            .build();
+        assertFalse(diff.toString(), diff.hasDifferences());
     }
 }

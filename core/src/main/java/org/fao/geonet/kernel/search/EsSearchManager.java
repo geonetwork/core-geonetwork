@@ -198,11 +198,15 @@ public class EsSearchManager implements ISearchManager {
 
     private void addMDFields(Element doc, Path schemaDir,
                              Element metadata, MetadataType metadataType,
-                             IndexingMode indexingMode) {
+                             IndexingMode indexingMode,
+                             Multimap<String, Object> dbFields) {
         final Path styleSheet = getXSLTForIndexing(schemaDir, metadataType);
         try {
             Map<String, Object> indexParams = new HashMap<>();
             indexParams.put("fastIndexMode", indexingMode.equals(IndexingMode.core));
+            if (dbFields.containsKey("id")) {
+                indexParams.put("metadataId", dbFields.get("id").iterator().next());
+            }
 
             Element fields = Xml.transform(metadata, styleSheet, indexParams);
             /* Generates something like that:
@@ -434,7 +438,7 @@ public class EsSearchManager implements ISearchManager {
 
         Element docs = new Element("doc");
         if (schemaDir != null) {
-            addMDFields(docs, schemaDir, metadata, metadataType, indexingMode);
+            addMDFields(docs, schemaDir, metadata, metadataType, indexingMode, dbFields);
         }
         addMoreFields(docs, dbFields);
 

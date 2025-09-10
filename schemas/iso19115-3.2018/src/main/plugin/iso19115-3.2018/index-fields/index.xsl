@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  ~ Copyright (C) 2001-2020 Food and Agriculture Organization of the
+  ~ Copyright (C) 2001-2025 Food and Agriculture Organization of the
   ~ United Nations (FAO-UN), United Nations World Food Programme (WFP)
   ~ and United Nations Environment Programme (UNEP)
   ~
@@ -66,6 +66,7 @@
               escape-uri-attributes="yes"/>
 
   <xsl:param name="fastIndexMode" select="false()"/>
+  <xsl:param name="metadataId"/>
 
 
   <!-- If identification creation, publication and revision date
@@ -104,6 +105,9 @@
   <xsl:variable name="maxFieldLength" select="32000" as="xs:integer"/>
 
   <xsl:variable name="siteUrl" select="util:getSiteUrl()" />
+
+  <!-- Get resources attachment properties which will be used in online resources and overviews -->
+  <xsl:variable name="attachmentPropertiesElements" select="util:jsonToXml(util:getIndexableAttachmentProperties($metadataId))"/>
 
   <xsl:template match="/">
     <xsl:apply-templates mode="index"/>
@@ -454,10 +458,19 @@
 
         <xsl:for-each select="$overviews">
           <overview type="object">{
-            "url": "<xsl:value-of select="if (local-name() = 'FileName') then util:escapeForJson(@src) else util:escapeForJson(normalize-space(.))"/>"
+            <xsl:variable name="obverviewUrl" select="if (local-name() = 'FileName') then @src else normalize-space(.)"/>
+            "url": "<xsl:value-of select="util:escapeForJson($obverviewUrl)"/>"
             <xsl:if test="normalize-space(../../mcc:fileDescription) != ''">,
               "nameObject":
               <xsl:value-of select="gn-fn-index:add-multilingual-field('name', ../../mcc:fileDescription, $allLanguages, true())"/>
+            </xsl:if>
+            <!-- Include attachment properties -->
+            <xsl:variable name="matchAttachmentProperties" select="$attachmentPropertiesElements/root/array[url=$obverviewUrl]"/>
+            <xsl:if test="$matchAttachmentProperties">
+              <xsl:variable name="attachmentPropertiesJson" select="util:xmlToJson($matchAttachmentProperties)"/>
+              <xsl:if test="$attachmentPropertiesJson">,
+                "attachmentProperties": <xsl:value-of select="$attachmentPropertiesJson"/>
+              </xsl:if>
             </xsl:if>
             }</overview>
         </xsl:for-each>
@@ -1159,6 +1172,14 @@
           </xsl:if>
           "applicationProfile": "<xsl:value-of select="util:escapeForJson(
                                         applicationProfile/text())"/>"
+          <!-- Include attachment properties -->
+          <xsl:variable name="matchAttachmentProperties" select="$attachmentPropertiesElements/root/array[url=normalize-space(current()/url/cit:linkage/gco:CharacterString)]"/>
+          <xsl:if test="$matchAttachmentProperties">
+            <xsl:variable name="attachmentPropertiesJson" select="util:xmlToJson($matchAttachmentProperties)"/>
+            <xsl:if test="$attachmentPropertiesJson">,
+              "attachmentProperties": <xsl:value-of select="$attachmentPropertiesJson"/>
+            </xsl:if>
+          </xsl:if>
           }
         </link>
       </xsl:for-each>
@@ -1343,6 +1364,14 @@
             "function":"<xsl:value-of select="cit:function/cit:CI_OnLineFunctionCode/@codeListValue"/>",
             "applicationProfile":"<xsl:value-of select="util:escapeForJson(cit:applicationProfile/(gco:CharacterString|gcx:Anchor)/text())"/>",
             "group": <xsl:value-of select="$transferGroup"/>
+            <!-- Include attachment properties -->
+            <xsl:variable name="matchAttachmentProperties" select="$attachmentPropertiesElements/root/array[url=normalize-space(current()/cit:linkage/gco:CharacterString)]"/>
+            <xsl:if test="$matchAttachmentProperties">
+              <xsl:variable name="attachmentPropertiesJson" select="util:xmlToJson($matchAttachmentProperties)"/>
+              <xsl:if test="$attachmentPropertiesJson">,
+                "attachmentProperties": <xsl:value-of select="$attachmentPropertiesJson"/>
+              </xsl:if>
+            </xsl:if>
             }
           </link>
 

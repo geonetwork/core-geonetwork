@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  ~ Copyright (C) 2001-2020 Food and Agriculture Organization of the
+  ~ Copyright (C) 2001-2025 Food and Agriculture Organization of the
   ~ United Nations (FAO-UN), United Nations World Food Programme (WFP)
   ~ and United Nations Environment Programme (UNEP)
   ~
@@ -45,6 +45,8 @@
               encoding="utf-8"
               escape-uri-attributes="yes"/>
 
+  <xsl:param name="metadataId"/>
+
   <xsl:variable name="dateFormat" as="xs:string"
                 select="'[Y0001]-[M01]-[D01]T[H01]:[m01]:[s01][ZN]'"/>
 
@@ -55,6 +57,9 @@
   in field="resourceAbstract" (whose UTF8 encoding is longer
   than the max length 32766. -->
   <xsl:variable name="maxFieldLength" select="32000" as="xs:integer"/>
+
+  <!-- Get resources attachment properties which will be used in online resources and overviews -->
+  <xsl:variable name="attachmentPropertiesElements" select="util:jsonToXml(util:getIndexableAttachmentProperties($metadataId))"/>
 
   <xsl:template match="/">
     <xsl:apply-templates mode="index"/>
@@ -231,6 +236,14 @@
           "nameObject":{"default": "<xsl:value-of select="util:escapeForJson($name)"/>"},
           "descriptionObject":{"default": ""},
           "function": ""
+          <!-- Include attachment properties -->
+          <xsl:variable name="matchAttachmentProperties" select="$attachmentPropertiesElements/root/array[url=normalize-space(current())]"/>
+          <xsl:if test="$matchAttachmentProperties">
+            <xsl:variable name="attachmentPropertiesJson" select="util:xmlToJson($matchAttachmentProperties)"/>
+            <xsl:if test="$attachmentPropertiesJson">,
+              "attachmentProperties": <xsl:value-of select="$attachmentPropertiesJson"/>
+            </xsl:if>
+          </xsl:if>
           }</link>
       </xsl:for-each>
 
@@ -249,6 +262,14 @@
                           select="util:buildDataUrl(., 140)"/>
             <xsl:if test="$data != ''">,
               "data": "<xsl:value-of select="$data"/>"
+            </xsl:if>
+          </xsl:if>
+          <!-- Include attachment properties -->
+          <xsl:variable name="matchAttachmentProperties" select="$attachmentPropertiesElements/root/array[url=current()]"/>
+          <xsl:if test="$matchAttachmentProperties">
+            <xsl:variable name="attachmentPropertiesJson" select="util:xmlToJson($matchAttachmentProperties)"/>
+            <xsl:if test="$attachmentPropertiesJson">,
+              "attachmentProperties": <xsl:value-of select="$attachmentPropertiesJson"/>
             </xsl:if>
           </xsl:if>
           }</overview>

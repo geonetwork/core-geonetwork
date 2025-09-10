@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  ~ Copyright (C) 2001-2020 Food and Agriculture Organization of the
+  ~ Copyright (C) 2001-2025 Food and Agriculture Organization of the
   ~ United Nations (FAO-UN), United Nations World Food Programme (WFP)
   ~ and United Nations Environment Programme (UNEP)
   ~
@@ -53,6 +53,7 @@
               escape-uri-attributes="yes"/>
 
   <xsl:param name="fastIndexMode" select="false()"/>
+  <xsl:param name="metadataId"/>
 
   <!-- If identification creation, publication and revision date
     should be indexed as a temporal extent information (eg. in INSPIRE
@@ -71,6 +72,9 @@
   Define which association type should be considered as parent. -->
   <xsl:variable name="parentAssociatedResourceType" select="'partOfSeamlessDatabase'"/>
   <xsl:variable name="childrenAssociatedResourceType" select="'isComposedOf'"/>
+
+  <!-- Get resources attachment properties which will be used in online resources and overviews -->
+  <xsl:variable name="attachmentPropertiesElements" select="util:jsonToXml(util:getIndexableAttachmentProperties($metadataId))"/>
 
   <xsl:template match="/">
     <xsl:apply-templates mode="index"/>
@@ -384,6 +388,14 @@
             "url": "<xsl:value-of select="util:escapeForJson(normalize-space(.))"/>"
             <xsl:if test="normalize-space(../../gmd:fileDescription) != ''">,
               "nameObject": <xsl:value-of select="gn-fn-index:add-multilingual-field('name', ../../gmd:fileDescription, $allLanguages, true())"/>
+            </xsl:if>
+            <!-- Include attachment properties -->
+            <xsl:variable name="matchAttachmentProperties" select="$attachmentPropertiesElements/root/array[url=current()]"/>
+            <xsl:if test="$matchAttachmentProperties">
+              <xsl:variable name="attachmentPropertiesJson" select="util:xmlToJson($matchAttachmentProperties)"/>
+              <xsl:if test="$attachmentPropertiesJson">,
+                 "attachmentProperties": <xsl:value-of select="$attachmentPropertiesJson"/>
+              </xsl:if>
             </xsl:if>
             }</overview>
         </xsl:for-each>
@@ -1191,6 +1203,15 @@
             "function":"<xsl:value-of select="gmd:function/gmd:CI_OnLineFunctionCode/@codeListValue"/>",
             "applicationProfile":"<xsl:value-of select="util:escapeForJson(gmd:applicationProfile/(gco:CharacterString|gmx:Anchor)/text())"/>",
             "group": <xsl:value-of select="$transferGroup"/>
+            <!-- Include attachment properties -->
+            <xsl:variable name="matchAttachmentProperties" select="$attachmentPropertiesElements/root/array[url=normalize-space(current()/gmd:linkage/gmd:URL)]"/>
+            <xsl:if test="$matchAttachmentProperties">
+              <xsl:variable name="attachmentPropertiesJson" select="util:xmlToJson($matchAttachmentProperties)"/>
+              <xsl:if test="$attachmentPropertiesJson">,
+                "attachmentProperties": <xsl:value-of select="$attachmentPropertiesJson"/>
+              </xsl:if>
+            </xsl:if>
+
             }
             <!--Link object in Angular used to be
             //     name: linkInfos[0],
