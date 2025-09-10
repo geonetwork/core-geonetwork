@@ -44,6 +44,8 @@
   -->
 
 
+  <xsl:import href="../jsonld/iso19115-3.2018-to-jsonld.xsl"/>
+
 
   <!-- Load the editor configuration to be able
   to render the different views -->
@@ -58,9 +60,6 @@
   <xsl:include href="../../layout/evaluate.xsl"/>
   <xsl:include href="../../layout/utility-tpl-multilingual.xsl"/>
   <xsl:include href="../../layout/utility-fn.xsl"/>
-  <xsl:include href="../jsonld/iso19115-3.2018-to-jsonld.xsl"/>
-  <xsl:include href="../citation/base.xsl"/>
-  <xsl:include href="../citation/common.xsl"/>
 
   <!-- The core formatter XSL layout based on the editor configuration -->
   <xsl:include href="sharedFormatterDir/xslt/render-layout.xsl"/>
@@ -292,8 +291,22 @@
 
     <xsl:if test="$withJsonLd = 'true'">
       <script type="application/ld+json">
-        <xsl:apply-templates mode="getJsonLD"
-                             select="$metadata"/>
+        <xsl:variable name="defaultLanguage"
+                      select="((mdb:defaultLocale/*/lan:language/*/@codeListValue, 'eng')[. != ''])[1]"/>
+
+        <xsl:variable name="requestedLanguageExist"
+                      select="$lang != ''
+                          and count(mdb:otherLocale/*[lan:language/*/@codeListValue = $lang]/@id) > 0"/>
+
+        <xsl:variable name="requestedLanguage"
+                      select="if ($requestedLanguageExist)
+                          then $lang
+                          else $defaultLanguage"/>
+
+        <xsl:call-template name="iso19115-3.2018toJsonLD">
+          <xsl:with-param name="record" select="."/>
+          <xsl:with-param name="requestedLanguage" select="$requestedLanguage"/>
+        </xsl:call-template>
       </script>
     </xsl:if>
   </xsl:template>

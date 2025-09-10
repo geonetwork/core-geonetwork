@@ -52,6 +52,9 @@
   3 levels of priority are defined: 100, 50, none
 
   -->
+  <xsl:import href="../jsonld/iso19139-to-jsonld.xsl"/>
+  <xsl:import href="../citation/base.xsl"/>
+
  <!-- tr is defined at  core-geonetwork/services/src/main/java/org/fao/geonet/api/records/formatters/SchemaLocalizations.java -->
 
   <!-- Load the editor configuration to be able
@@ -67,9 +70,6 @@
   <xsl:include href="../../layout/evaluate.xsl"/>
   <xsl:include href="../../layout/utility-tpl-multilingual.xsl"/>
   <xsl:include href="../../layout/utility-fn.xsl"/>
-  <xsl:include href="../../formatter/jsonld/iso19139-to-jsonld.xsl"/>
-  <xsl:include href="../../formatter/citation/base.xsl"/>
-  <xsl:include href="../../../iso19115-3.2018/formatter/citation/common.xsl"/>
 
   <!-- The core formatter XSL layout based on the editor configuration -->
   <xsl:include href="sharedFormatterDir/xslt/render-layout.xsl"/>
@@ -264,8 +264,10 @@
 
     <xsl:if test="$withJsonLd = 'true'">
       <script type="application/ld+json">
-        <xsl:apply-templates mode="getJsonLD"
-                             select="$metadata"/>
+        <xsl:call-template name="iso19139toJsonLD">
+          <xsl:with-param name="record" select="."/>
+          <xsl:with-param name="lang" select="$lang"/>
+        </xsl:call-template>
       </script>
     </xsl:if>
   </xsl:template>

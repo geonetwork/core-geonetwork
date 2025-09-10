@@ -114,14 +114,14 @@
 
     <!-- Electronic Retrieval Location -->
     <xsl:variable name="doiInResourceIdentifier"
-                  select="(//mdb:identificationInfo/*/mri:citation/*/
+                  select="($metadata/mdb:identificationInfo/*/mri:citation/*/
                               cit:identifier/*/mcc:code[
                                 contains(*/text(), 'datacite.org/doi/')
                                 or contains(*/text(), 'doi.org')
                                 or contains(*/@xlink:href, 'doi.org')]/*/(@xlink:href|text()))[1]"/>
 
     <xsl:variable name="doiInOnline"
-                  select="//mdb:distributionInfo//mrd:onLine/*[
+                  select="$metadata/mdb:distributionInfo//mrd:onLine/*[
                               matches(cit:protocol/gco:CharacterString,
                                $doiProtocolRegex)]/cit:linkage/gco:CharacterString[. != '']"/>
 
