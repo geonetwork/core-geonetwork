@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2011 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2025 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -23,6 +23,14 @@
 
 package org.fao.geonet.kernel.datamanager.base;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.PropertyName;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.introspect.Annotated;
+import com.fasterxml.jackson.databind.introspect.AnnotatedMember;
+import com.fasterxml.jackson.databind.introspect.JacksonAnnotationIntrospector;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 import com.yammer.metrics.core.TimerContext;
@@ -34,6 +42,7 @@ import jeeves.server.context.ServiceContext;
 import jeeves.xlink.Processor;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
+import org.fao.geonet.annotations.IndexIgnore;
 import org.fao.geonet.api.records.attachments.Store;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.*;
@@ -532,6 +541,9 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
                 int savedCount = userSavedSelectionRepository.countTimesUserSavedMetadata(uuid, 0);
                 fields.put(Geonet.IndexFieldNames.USER_SAVED_COUNT, savedCount);
 
+                // Add metadata file store information
+                fields.putAll(indexMetadataFileStore(fullMd));
+
                 fields.putAll(addExtraFields(fullMd));
 
                 if (fullMd != null) {
@@ -659,5 +671,51 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
 
     public void setApplicationEventPublisher(ApplicationEventPublisher publisher) {
         this.publisher = publisher;
+    }
+
+    /**
+     * Get file store properties to be used in the index.
+     *
+     * @return multimap object representing the file store resources to be added to the index.
+     */
+    public Multimap<String, Object> indexMetadataFileStore(AbstractMetadata fullMd) {
+        Multimap<String, Object> indexMetadataFileStoreFields = ArrayListMultimap.create();
+        try {
+            List<MetadataResource> metadataResources = store.getResources(
+                ServiceContext.get(),
+                fullMd.getUuid(),
+                (org.fao.geonet.api.records.attachments.Sort) null,
+                null,
+                !(fullMd instanceof MetadataDraft));
+
+            if (metadataResources != null && !metadataResources.isEmpty()) {
+
+                ObjectMapper objectMapper = new ObjectMapper();
+                objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+                objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+
+                // Exclude fields with the index ignore annotation
+                objectMapper.setAnnotationIntrospector(new JacksonAnnotationIntrospector() {
+                    @Override
+                    public boolean hasIgnoreMarker(AnnotatedMember member) {
+                        return member.hasAnnotation(IndexIgnore.class) || super.hasIgnoreMarker(member);
+                    }
+
+                    @Override
+                    public PropertyName findNameForSerialization(Annotated annotated) {
+                        if (annotated.hasAnnotation(IndexIgnore.class)) return null;
+                        return super.findNameForSerialization(annotated);
+                    }
+                });
+
+                JsonNode jsonNode = objectMapper.valueToTree(metadataResources);
+                indexMetadataFileStoreFields.put("fileStore", jsonNode);
+            }
+        } catch (Exception e) {
+            Log.warning(Geonet.INDEX_ENGINE, String.format(
+                "Resource for metadata '%s'(%d) is not accessible or cannot be found. Skipping index. Error is: %s",
+                fullMd.getUuid(), fullMd.getId(), e.getMessage()));
+        }
+        return indexMetadataFileStoreFields;
     }
 }
