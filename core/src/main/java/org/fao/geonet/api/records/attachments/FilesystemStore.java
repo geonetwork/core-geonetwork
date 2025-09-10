@@ -50,6 +50,7 @@ import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
+import java.nio.file.FileSystem;
 import java.nio.file.attribute.FileTime;
 import java.util.ArrayList;
 import java.util.Date;
@@ -104,10 +105,6 @@ public class FilesystemStore extends AbstractStore {
         resourceList.sort(MetadataResourceVisibility.sortByFileName);
 
         return resourceList;
-    }
-
-    private String getEtag(Path path) throws IOException {
-        return "\"" + DigestUtils.md5Hex(path.getFileName().toString() + Files.getLastModifiedTime(path).toMillis() + Files.size(path)) + "\"";
     }
 
     @Override
@@ -284,7 +281,7 @@ public class FilesystemStore extends AbstractStore {
         int metadataId = canEdit(context, metadataUuid, approved);
 
         try (ResourceHolder resourceHolder = getResource(context, metadataUuid, resourceId, approved)) {
-            Files.deleteIfExists(resourceHolder.getResource().getFile().toPath());
+            Files.deleteIfExists(getResourcePath(resourceHolder.getResource(), context));
             Log.info(Geonet.RESOURCES,
                 String.format("Resource '%s' removed for metadata %d (%s).", resourceId, metadataId, metadataUuid));
             return String.format("Metadata resource '%s' removed.", resourceId);
@@ -301,7 +298,7 @@ public class FilesystemStore extends AbstractStore {
         int metadataId = canEdit(context, metadataUuid, approved);
 
         try (ResourceHolder resourceHolder = getResource(context, metadataUuid, visibility, resourceId, approved)) {
-            Files.deleteIfExists(resourceHolder.getResource().getFile().toPath());
+            Files.deleteIfExists(getResourcePath(resourceHolder.getResource(), context));
             Log.info(Geonet.RESOURCES,
                 String.format("Resource '%s' removed for metadata %d (%s).", resourceId, metadataId, metadataUuid));
             return String.format("Metadata resource '%s' removed.", resourceId);
@@ -325,7 +322,7 @@ public class FilesystemStore extends AbstractStore {
         }
         final Path newFolderPath = ensureDirectory(context, metadataId, resourceId, visibility);
         Path newFilePath = newFolderPath.resolve(resourceHolder.getMetadata().getFilename());
-        Files.move(resourceHolder.getResource().getFile().toPath(), newFilePath);
+        Files.move(getResourcePath(resourceHolder.getResource(), context), newFilePath);
         return getResourceDescription(context, metadataUuid, visibility, newFilePath, approved);
     }
 
@@ -347,6 +344,28 @@ public class FilesystemStore extends AbstractStore {
 
     private GeonetworkDataDirectory getDataDirectory(ServiceContext context) {
         return context.getBean(GeonetworkDataDirectory.class);
+    }
+
+    /**
+     * Retrieves the file system path of a given resource.
+     * This method is required for unit tests which use an in-memory filesystem.
+     *
+     * @param resource The resource to retrieve the path for. Must be of type `PathResource`.
+     * @param context The service context, used to access the data directory.
+     * @return The `Path` object representing the file system path of the resource.
+     * @throws IOException If an I/O error occurs while retrieving the path.
+     * @throws IllegalArgumentException If the provided resource is not of type `PathResource`.
+     */
+    public Path getResourcePath(Resource resource, ServiceContext context) throws IOException {
+        if (!(resource instanceof PathResource)) {
+            // This should never happen
+            throw new IllegalArgumentException(
+                "The resource should be of type PathResource. It is of type " + resource.getClass().getName());
+        }
+
+        PathResource pathResource = (PathResource) resource;
+        FileSystem fileSystem = getDataDirectory(context).getMetadataDataDir().getFileSystem();
+        return  fileSystem.getPath(pathResource.getPath());
     }
 
     private static class FilesystemResourceHolder implements ResourceHolder {
