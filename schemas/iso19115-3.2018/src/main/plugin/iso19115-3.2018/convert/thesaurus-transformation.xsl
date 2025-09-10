@@ -98,17 +98,17 @@
                         select="util:getSettingValue('system/xlinkResolver/localXlinkEnable')"/>
           <xsl:variable name="prefixUrl"
                         select="if ($isLocalXlink = 'true')
-                              then  concat('local://', /root/gui/language)
+                              then  concat('local://', $node, '/')
                               else $serviceUrl"/>
 
           <xsl:attribute name="xlink:href"
                          select="concat($prefixUrl,
                                   'api/registries/vocabularies/keyword?skipdescriptivekeywords=true&amp;thesaurus=',
                                    if (thesaurus/key) then thesaurus/key else /root/request/thesaurus,
-                                  '&amp;amp;id=', encode-for-uri(/root/request/id),
-                                  '&amp;amp;multiple=', $multiple,
-                                  if (/root/request/lang) then concat('&amp;amp;lang=', /root/request/lang) else '',
-                                  if ($textgroupOnly) then '&amp;amp;textgroupOnly' else '')"/>
+                                  '&amp;id=', encode-for-uri(/root/request/id),
+                                  '&amp;multiple=', $multiple,
+                                  if (/root/request/lang) then concat('&amp;lang=', /root/request/lang) else '',
+                                  if ($textgroupOnly) then '&amp;textgroupOnly' else '')"/>
         </xsl:when>
         <xsl:otherwise>
           <xsl:call-template name="to-iso19115-3.2018-md-keywords">
