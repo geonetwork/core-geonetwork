@@ -48,6 +48,7 @@ Administrators can define the type of group being created. There are three group
 
 - **Description**: This group type is used to manage system-level privileges. It cannot own metadata records or have privileges assigned to them.
 - **Use Case**: Designed for administrative purposes where system-level access is required without metadata ownership.
+- **Profiles**: Users are not assigned profiles in System Privilege Groups, since their purpose is to grant system-level privileges to all members. Instead, users in these groups are automatically given the Registered User profile behind the scenes.
 
 ### Group Type and Operations Allowed Matrix
 
