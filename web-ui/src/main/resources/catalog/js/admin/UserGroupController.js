@@ -489,7 +489,7 @@
       };
 
       $scope.$watch("groupSelected.type", function (newValue) {
-        if (newValue === "System") {
+        if (newValue === "SystemPrivilege") {
           $scope.groupSelected.minimumProfileForPrivileges = null;
         }
       });
