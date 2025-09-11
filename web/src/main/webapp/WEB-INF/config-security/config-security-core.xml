@@ -386,5 +386,5 @@
     </constructor-arg>
   </bean>
 
-  <bean id="authenticatedUserFilter" class="org.fao.geonet.security.AuthenticathedUserFilter"/>
+  <bean id="authenticatedUserFilter" class="org.fao.geonet.security.AuthenticatedUserFilter"/>
 </beans>
