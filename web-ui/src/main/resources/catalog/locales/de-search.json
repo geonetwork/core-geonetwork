@@ -398,7 +398,7 @@
     "fbEmail": "E-Mail",
     "fbFeedback": "Feedback",
     "fbCategory": "Kategorie",
-    "fbComments": "Kommentar",
+    "fbComments": "Kommentare",
     "fbQuestion": "Frage",
     "fbError": "Fehler",
     "fbCatMetadataContents": "Metadateninhalte",
@@ -547,5 +547,12 @@
     "addLayerPrefix": "Ebene hinzufügen",
     "addLayerPostfix": "zur Karte",
     "submit": "übertragen",
-    "additionalLinks": "Weiterführende Links"
+    "additionalLinks": "Weiterführende Links",
+    "indexingErrorMsg-invalidBounds": "Warnung / Feld resourceTemporalDateRange / Untere und obere Grenzen leer oder mit ungültige Daten. Datumsbereich nicht indiziert.",
+    "indexingErrorMsg-invalidDateFormat": "Warnung / Das Datum {{dateType}} mit dem Wert '{{date}}'  hatte kein gültiges Datumsformat.",
+    "indexingErrorMsg-keywordNotFoundInThesaurus": "Warnung / Schlagwort {{keyword}} nicht im {{thesaurus}} gefunden.",
+    "indexingErrorMsg-temporalDateRangeLowerGreaterThanUpper": "Warnung / Feld resourceTemporalDateRange / Die untere Bereichsgrenze {{lowerBound}} kann nicht größer als die obere Grenze {{upperBound}} sein. Datumsbereich nicht indiziert.",
+    "indexingErrorMsg-temporalRangeLowerGreaterThanUpper": "Warnung/Feld resourceTemporalDateRange/Untere Bereichsgrenze {{lowerBound}} kann nicht größer sein als die obere Grenze {{upperBound}}.",
+    "indexingErrorMsg-schemaNotRegistered": "Datensatz {{record}} / Schema „{{schema}}“ ist in diesem Katalog nicht registriert. Installieren Sie es oder entfernen Sie diese Datensätze. Datensatz ist indexiert als  Indexierungs-Fehler bzw. einer Fehler-Flag.",
+    "indexingErrorMsg-indexingStyleSheetError": "Das Indizierungs-Stylesheet enthält Fehler: {{message}}\nDie Metadaten werden als _indexingError=1 im Index markiert."
 }

@@ -123,7 +123,11 @@
     "directory": "Sökväg",
     "directoryEntries": "Tillägg",
     "error": "Fel",
-    "errors": "Fel",
+    "errors": "errors",
+    "success": "success",
+    "successes": "successes",
+    "warning": "warning",
+    "warnings": "warnings",
     "serviceDetachedToCurrentRecord": "Fristående tjänst till aktuell post",
     "featureCatalog": "Objekttypskatalog",
     "file": "File",
@@ -332,7 +336,8 @@
     "validationReport": "Validation",
     "runValidation": "Run validation check",
     "validationServiceError": "Server error",
-    "validationServiceErrorDetail": "Please check server's log files for more information.",
+    "validationServiceErrorHeader": "Schematron error occurred, rules could not be verified.",
+    "validationServiceErrorDetail": "More information about this issue can be found in the server logs.",
     "fixedOnTop": "Always on top",
     "whoCanAccess": "Who has access",
     "wmsServiceUrl": "Service URL",
@@ -432,5 +437,8 @@
     "validationErrorLabel": "errors",
     "metadataDuplicatedField-title": "The metadata title is used in another metadata record.",
     "metadataDuplicatedField-altTitle": "The metadata alternate title is used in another metadata record.",
-    "metadataDuplicatedField-identifier": "The metadata resource identifier is used in another metadata record."
+    "metadataDuplicatedField-identifier": "The metadata resource identifier is used in another metadata record.",
+    "indexingIssues": "Indexing issues",
+    "indexingErrors": "Errors",
+    "indexingWarnings": "Warnings"
 }
