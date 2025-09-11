@@ -123,7 +123,11 @@
     "directory": "Dateipfad",
     "directoryEntries": "Einträge",
     "error": "Fehler",
-    "errors": "Fehler (mehrere)",
+    "errors": "Fehler",
+    "success": "erfolgreich",
+    "successes": "successes",
+    "warning": "warning",
+    "warnings": "warnings",
     "serviceDetachedToCurrentRecord": "Dienst von aktuellem Datensatz abgetrennt",
     "featureCatalog": "Objektarten-Katalog",
     "file": "Datei",
@@ -335,7 +339,8 @@
     "validationReport": "Validierung",
     "runValidation": "Validierung starten",
     "validationServiceError": "Serverfehler",
-    "validationServiceErrorDetail": "In den Logfiles des Servers finden Sie weitere Informationen.",
+    "validationServiceErrorHeader": "Schematron error occurred, rules could not be verified.",
+    "validationServiceErrorDetail": "More information about this issue can be found in the server logs.",
     "fixedOnTop": "immer oben",
     "whoCanAccess": "Wer hat Zugriff?",
     "wmsServiceUrl": "Service URL",
@@ -462,5 +467,8 @@
     "validationErrorLabel": "Fehler",
     "metadataDuplicatedField-title": "Der Metadatentitel wird bereits in einem anderen Metadatensatz verwendet.",
     "metadataDuplicatedField-altTitle": "Der Kurz-Titel (Alternativtitel) wird bereits in einem anderen Metadatensatz verwendet.",
-    "metadataDuplicatedField-identifier": "Der Ressourcenidentifikator (MD_Identifier/code) wird bereits in einem anderen Metadatensatz verwendet."
+    "metadataDuplicatedField-identifier": "Der Ressourcenidentifikator (MD_Identifier/code) wird bereits in einem anderen Metadatensatz verwendet.",
+    "indexingIssues": "Indexing issues",
+    "indexingErrors": "Errors",
+    "indexingWarnings": "Warnings"
 }
