@@ -91,7 +91,7 @@ public class JeevesEngine {
     private Vector<ApplicationHandler> _appHandlers = new Vector<ApplicationHandler>();
     private List<Element> _dbServices = new ArrayList<Element>();
     private Path _appPath;
-    private int _maxUploadSize;
+    private long _maxUploadSize;
 
 
     public static void handleStartupError(Throwable e) {
@@ -325,7 +325,7 @@ public class JeevesEngine {
         info("Initializing general configuration...");
 
         try {
-            _maxUploadSize = Integer.parseInt(Util.getParam(general, ConfigFile.General.Child.MAX_UPLOAD_SIZE));
+            _maxUploadSize = Long.parseLong(Util.getParam(general, ConfigFile.General.Child.MAX_UPLOAD_SIZE));
         } catch (Exception e) {
             _maxUploadSize = DEFAULT_MAX_UPLOAD_SIZE_MD;
             error("Maximum upload size not properly configured in config.xml. Using default size of 50MB");
@@ -544,7 +544,7 @@ public class JeevesEngine {
 
     //---------------------------------------------------------------------------
 
-    public int getMaxUploadSize() {
+    public long getMaxUploadSize() {
         return _maxUploadSize;
     }
 
