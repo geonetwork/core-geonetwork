@@ -124,6 +124,10 @@
     "directoryEntries": "Éléments",
     "error": "Erreur",
     "errors": "erreurs",
+    "success": "succès",
+    "successes": "successes",
+    "warning": "warning",
+    "warnings": "warnings",
     "serviceDetachedToCurrentRecord": "Le service n'est plus associé à la fiche en cours d'édition.",
     "featureCatalog": "Catalogue d'attributs",
     "file": "Fichier",
@@ -335,7 +339,8 @@
     "validationReport": "Validation",
     "runValidation": "Valider la fiche",
     "validationServiceError": "Erreur de l'application",
-    "validationServiceErrorDetail": "Vérifier les fichiers journaux pour plus d'information.",
+    "validationServiceErrorHeader": "Schematron error occurred, rules could not be verified.",
+    "validationServiceErrorDetail": "More information about this issue can be found in the server logs.",
     "fixedOnTop": "Toujours par dessus",
     "whoCanAccess": "Qui a accès ?",
     "wmsServiceUrl": "URL du service",
@@ -462,5 +467,8 @@
     "validationErrorLabel": "erreurs",
     "metadataDuplicatedField-title": "Le titre de la fiche de métadonnée est utilisé dans une autre fiche.",
     "metadataDuplicatedField-altTitle": "Le titre alternatif de la fiche de métadonnée est utilisé dans une autre fiche.",
-    "metadataDuplicatedField-identifier": "L'identifiant de ressource de la fiche de métadonnée est utilisé dans une autre fiche."
+    "metadataDuplicatedField-identifier": "L'identifiant de ressource de la fiche de métadonnée est utilisé dans une autre fiche.",
+    "indexingIssues": "Indexing issues",
+    "indexingErrors": "Errors",
+    "indexingWarnings": "Warnings"
 }

@@ -123,7 +123,11 @@
     "directory": "Թղթապանակի ուղին",
     "directoryEntries": "Գրառումներ",
     "error": "Սխալ",
-    "errors": "Սխալ(ներ)",
+    "errors": "errors",
+    "success": "success",
+    "successes": "successes",
+    "warning": "warning",
+    "warnings": "warnings",
     "serviceDetachedToCurrentRecord": "Ծառայությունը անջատված է ընթացիկ գրառումից",
     "featureCatalog": "Հատկանիշների կատալոգ",
     "file": "Ֆայլ",
@@ -335,7 +339,8 @@
     "validationReport": "Վավերացում",
     "runValidation": "Գործարկել վավերացման ստուգում",
     "validationServiceError": "Սերվերի սխալ",
-    "validationServiceErrorDetail": "Խնդրում ենք ստուգել սերվերի գրանցամատյանների ֆայլերը լրացուցիչ տեղեկությունների համար:",
+    "validationServiceErrorHeader": "Schematron error occurred, rules could not be verified.",
+    "validationServiceErrorDetail": "More information about this issue can be found in the server logs.",
     "fixedOnTop": "Միշտ վերևում",
     "whoCanAccess": "Ով ունի մուտք",
     "wmsServiceUrl": "Ծառայության URL",
@@ -462,5 +467,8 @@
     "validationErrorLabel": "errors",
     "metadataDuplicatedField-title": "The metadata title is used in another metadata record.",
     "metadataDuplicatedField-altTitle": "The metadata alternate title is used in another metadata record.",
-    "metadataDuplicatedField-identifier": "The metadata resource identifier is used in another metadata record."
+    "metadataDuplicatedField-identifier": "The metadata resource identifier is used in another metadata record.",
+    "indexingIssues": "Indexing issues",
+    "indexingErrors": "Errors",
+    "indexingWarnings": "Warnings"
 }

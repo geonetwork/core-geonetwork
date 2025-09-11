@@ -123,7 +123,11 @@
     "directory": "Cesta ku zložke",
     "directoryEntries": "Položky",
     "error": "Chyba",
-    "errors": "Chyba(y)",
+    "errors": "errors",
+    "success": "success",
+    "successes": "successes",
+    "warning": "warning",
+    "warnings": "warnings",
     "serviceDetachedToCurrentRecord": "Service detached from current record",
     "featureCatalog": "Katalóg prvkov",
     "file": "Súbor",
@@ -335,7 +339,8 @@
     "validationReport": "Overovanie",
     "runValidation": "Spustiť kontrolu validácie",
     "validationServiceError": "Server error",
-    "validationServiceErrorDetail": "Please check server's log files for more information.",
+    "validationServiceErrorHeader": "Schematron error occurred, rules could not be verified.",
+    "validationServiceErrorDetail": "More information about this issue can be found in the server logs.",
     "fixedOnTop": "Always on top",
     "whoCanAccess": "Kto má prístup",
     "wmsServiceUrl": "URL služba",
@@ -462,5 +467,8 @@
     "validationErrorLabel": "errors",
     "metadataDuplicatedField-title": "The metadata title is used in another metadata record.",
     "metadataDuplicatedField-altTitle": "The metadata alternate title is used in another metadata record.",
-    "metadataDuplicatedField-identifier": "The metadata resource identifier is used in another metadata record."
+    "metadataDuplicatedField-identifier": "The metadata resource identifier is used in another metadata record.",
+    "indexingIssues": "Indexing issues",
+    "indexingErrors": "Errors",
+    "indexingWarnings": "Warnings"
 }

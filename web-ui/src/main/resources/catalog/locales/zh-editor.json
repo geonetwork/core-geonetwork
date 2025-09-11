@@ -123,7 +123,11 @@
     "directory": "文件夹路径",
     "directoryEntries": "入口",
     "error": "错误",
-    "errors": "错误",
+    "errors": "errors",
+    "success": "success",
+    "successes": "successes",
+    "warning": "warning",
+    "warnings": "warnings",
     "serviceDetachedToCurrentRecord": "Service detached from current record",
     "featureCatalog": "要素目录",
     "file": "文件",
@@ -335,7 +339,8 @@
     "validationReport": "验证",
     "runValidation": "运行验证检查",
     "validationServiceError": "服务器错误",
-    "validationServiceErrorDetail": "查看服务器的日志文件以获取更多信息。",
+    "validationServiceErrorHeader": "Schematron error occurred, rules could not be verified.",
+    "validationServiceErrorDetail": "More information about this issue can be found in the server logs.",
     "fixedOnTop": "总是置顶",
     "whoCanAccess": "谁有访问权限",
     "wmsServiceUrl": "服务网址",
@@ -462,5 +467,8 @@
     "validationErrorLabel": "errors",
     "metadataDuplicatedField-title": "The metadata title is used in another metadata record.",
     "metadataDuplicatedField-altTitle": "The metadata alternate title is used in another metadata record.",
-    "metadataDuplicatedField-identifier": "The metadata resource identifier is used in another metadata record."
+    "metadataDuplicatedField-identifier": "The metadata resource identifier is used in another metadata record.",
+    "indexingIssues": "Indexing issues",
+    "indexingErrors": "Errors",
+    "indexingWarnings": "Warnings"
 }
