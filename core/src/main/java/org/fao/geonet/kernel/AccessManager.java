@@ -30,6 +30,7 @@ import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.*;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
+import org.fao.geonet.kernel.security.ViewMdGrantedAuthority;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.*;
@@ -40,6 +41,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.sql.SQLException;
 import java.util.*;
@@ -109,6 +111,8 @@ public class AccessManager {
                 results.add(operationRepository.findReservedOperation(ReservedOperation.view));
             }
         }
+
+        processViewMdGrantedAuthorityIfAny(mdId, results);
 
         return results;
     }
@@ -657,4 +661,21 @@ public class AccessManager {
     private boolean isUserAuthenticated(UserSession us) {
         return us != null && us.isAuthenticated();
     }
+
+    private void processViewMdGrantedAuthorityIfAny(String mdId, Set<Operation> results) {
+        SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream()
+                .filter(ViewMdGrantedAuthority.class::isInstance)
+                .map(ViewMdGrantedAuthority.class::cast)
+                .map(ViewMdGrantedAuthority::getAuthority)
+                .map(uuid -> {
+                    try {
+                        return metadataUtils.getMetadataId(uuid);
+                    } catch (Exception e) {
+                        return null;
+                    }
+                })
+                .filter(mdId::equals)
+                .forEach(grantedAuthority -> results.add(operationRepository.findReservedOperation(ReservedOperation.view)));
+    }
+
 }
