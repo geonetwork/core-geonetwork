@@ -119,31 +119,38 @@ public class DoiServerDatabaseMigration extends DatabaseMigrationTask {
                     throw new Error(e);
                 }
 
-
-                try (PreparedStatement delete = connection.prepareStatement(
-                    "DELETE FROM Settings WHERE name LIKE 'system/publication/doi%' and name != 'system/publication/doi/doienabled'")
-                ) {
-                    delete.execute();
-                } catch (java.sql.BatchUpdateException e) {
-                    connection.rollback();
-                    Log.error(Geonet.GEONETWORK, "Error occurred while creating the DOI server:" + e.getMessage(), e);
-                    SQLException next = e.getNextException();
-                    while (next != null) {
-                        Log.error(Geonet.GEONETWORK, "Next error: " + next.getMessage(), next);
-                        next = e.getNextException();
-                    }
-
-                    throw new RuntimeException(e);
-                } catch (Exception e) {
-                    connection.rollback();
-
-                    throw new Error(e);
-                }
+                deleteDoiSettings(connection);
 
                 connection.commit();
 
                 Log.info(Geonet.DB, "Migration: migrated DOI server");
             }
+        } else {
+            deleteDoiSettings(connection);
+            connection.commit();
+            Log.info(Geonet.DB, "Migration: deleted DOI settings");
+        }
+    }
+
+    private void deleteDoiSettings(Connection connection) throws SQLException {
+        try (PreparedStatement delete = connection.prepareStatement(
+            "DELETE FROM Settings WHERE name LIKE 'system/publication/doi%' and name != 'system/publication/doi/doienabled'")
+        ) {
+            delete.execute();
+        } catch (java.sql.BatchUpdateException e) {
+            connection.rollback();
+            Log.error(Geonet.GEONETWORK, "Error occurred while deleting the DOI old settings:" + e.getMessage(), e);
+            SQLException next = e.getNextException();
+            while (next != null) {
+                Log.error(Geonet.GEONETWORK, "Next error: " + next.getMessage(), next);
+                next = e.getNextException();
+            }
+
+            throw new RuntimeException(e);
+        } catch (Exception e) {
+            connection.rollback();
+
+            throw new Error(e);
         }
     }
 }
