@@ -1248,11 +1248,12 @@ public final class XslUtil {
                 BufferedImage image;
                 if (m.find()) {
                     Store store = ApplicationContextHolder.get().getBean("filesystemStore", Store.class);
-                    try (Store.ResourceHolder file = store.getResourceInternal(
+                    try (Store.ResourceHolder resourceHolder = store.getResourceInternal(
                         URLDecoder.decode(m.group(1), Constants.ENCODING),
                         MetadataResourceVisibility.PUBLIC,
-                        URLDecoder.decode(m.group(2), Constants.ENCODING), true)) {
-                        image = ImageIO.read(file.getPath().toFile());
+                        URLDecoder.decode(m.group(2), Constants.ENCODING), true);
+                        InputStream is = resourceHolder.getResource().getInputStream()) {
+                        image = ImageIO.read(is);
                     }
                 } else {
                     URL imageUrl = new URL(url);

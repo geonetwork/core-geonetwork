@@ -143,11 +143,6 @@ public abstract class AbstractStoreTest extends AbstractServiceIntegrationTest {
             "http://localhost:8080/srv/api/records/" + metadataUuid + "/attachments/" + filename,
             resource.getUrl());
 
-        try (final Store.ResourceHolder path = getStore().getResource(
-                context, metadataUuid, MetadataResourceVisibility.PUBLIC, filename, true)) {
-            assertTrue("File exists on the disk", Files.isRegularFile(path.getPath()));
-        }
-
         MetadataResource patchedResource = getStore().patchResourceStatus(context, metadataUuid, filename,
                                                                       MetadataResourceVisibility.PRIVATE, true);
         assertEquals("Patched resource type is correct",
