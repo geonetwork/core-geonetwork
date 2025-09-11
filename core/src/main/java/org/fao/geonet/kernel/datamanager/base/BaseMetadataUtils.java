@@ -63,6 +63,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -348,22 +349,22 @@ public class BaseMetadataUtils implements IMetadataUtils {
 
         // If the permalink template has been modified use the configured permalink template
         // otherwise use the defaultLink
-        String link;
+        UriComponentsBuilder uriComponentsBuilder;
         if (StringUtils.isNotEmpty(permalink) && !defaultLink.equals(permalink)) {
-            link = permalink;
+            uriComponentsBuilder = UriComponentsBuilder.fromUriString(permalink);
         } else {
-            link = defaultLink;
+            uriComponentsBuilder = UriComponentsBuilder.fromUriString(defaultLink);
 
             // Get the recordLinkFormatter from the UI configuration
             String recordLinkFormatter = XslUtil.getUiConfigurationJsonProperty(null, "mods.search.formatter.recordLinkFormatter");
 
             // If the recordLinkFormatter is defined append it to the defaultLink
             if (StringUtils.isNotBlank(recordLinkFormatter)) {
-                link += ((defaultLink.contains("?") ? '&' : '?') + "recordViewFormatter=" + recordLinkFormatter);
+                uriComponentsBuilder.queryParam("recordLinkFormatter", recordLinkFormatter);
             }
         }
 
-        return link;
+        return uriComponentsBuilder.build().toString();
     }
 
     @Override
