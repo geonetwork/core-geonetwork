@@ -26,14 +26,10 @@ package org.fao.geonet.kernel.harvest.harvester.database;
 import org.fao.geonet.Logger;
 import org.fao.geonet.kernel.harvest.harvester.AbstractHarvester;
 import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
-import org.springframework.util.StringUtils;
 
 import java.sql.SQLException;
 
 public class DatabaseHarvester  extends AbstractHarvester<HarvestResult, DatabaseHarvesterParams> {
-    private final static String REGEX_NAME_PREFIX_INVALID_CHARS = "^[^_a-zA-Z]+";
-    private final static String REGEX_NAME_INVALID_CHARS = "[^_a-zA-Z0-9]";
-
     @Override
     protected DatabaseHarvesterParams createParams() {
         return new DatabaseHarvesterParams(dataMan);
@@ -42,9 +38,9 @@ public class DatabaseHarvester  extends AbstractHarvester<HarvestResult, Databas
     @Override
     protected void storeNodeExtra(DatabaseHarvesterParams params, String path, String siteId, String optionsId) throws SQLException {
         // Remove non-valid characters
-        params.setTableName(sanitizeTableName(params.getTableName()));
-        params.setMetadataField(sanitizeFieldName(params.getMetadataField()));
-        params.setFilterField(sanitizeFieldName(params.getFilterField()));
+        params.setTableName(DatabaseHarvesterUtil.sanitizeTableName(params.getTableName()));
+        params.setMetadataField(DatabaseHarvesterUtil.sanitizeFieldName(params.getMetadataField()));
+        params.setFilterField(DatabaseHarvesterUtil.sanitizeFieldName(params.getFilterField()));
 
         setParams(params);
 
@@ -71,52 +67,5 @@ public class DatabaseHarvester  extends AbstractHarvester<HarvestResult, Databas
         DatabaseHarvesterAligner h = new DatabaseHarvesterAligner(cancelMonitor, log, context, params, errors);
         result = h.harvest(log);
         log.info("Database harvester end");
-    }
-
-    /**
-     * Sanitize field names removing invalid characters: The field name should start with a letter or underscore and
-     * can contain letters, digits, and underscores.
-     *
-     * @param fieldName Table field name to sanitize
-     * @return Sanitized field name
-     */
-    private String sanitizeFieldName(String fieldName) {
-        return sanitizeValue(fieldName);
-    }
-
-    /**
-     * Sanitize table name removing invalid characters: The table name should start with a letter or
-     * underscore and can contain letters, digits, underscores, and a dot for a qualified table name (schema.table).
-     *
-     * @param tableName Table name to sanitize, which can be a qualified name (schema.table)
-     * @return Sanitized table name
-     */
-    private String sanitizeTableName(String tableName) {
-        if (StringUtils.hasLength(tableName)) {
-            String[] parts = tableName.split("\\.", -1);
-            if (parts.length == 2) {
-                String schema = sanitizeValue(parts[0]);
-                String table = sanitizeValue(parts[1]);
-                return schema + "." + table;
-            } else {
-                return sanitizeValue(tableName);
-            }
-        } else {
-            return "";
-        }
-    }
-
-    /**
-     * Sanitize a value for a table nable or field name by removing invalid characters.
-     *
-     * @param value The value to sanitize
-     * @return Sanitized value
-     */
-    private String sanitizeValue(String value) {
-        if (StringUtils.hasLength(value)) {
-            return value.replaceAll(REGEX_NAME_PREFIX_INVALID_CHARS, "").replaceAll(REGEX_NAME_INVALID_CHARS, "");
-        } else {
-            return "";
-        }
     }
 }
