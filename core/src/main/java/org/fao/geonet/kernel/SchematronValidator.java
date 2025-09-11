@@ -105,7 +105,7 @@ public class SchematronValidator extends AbstractSchematronValidator {
             final ApplicableSchematron applicable = getApplicableSchematron(metadataId, md, metadataSchema, schematron);
 
 
-            if (applicable.requirement != SchematronRequirement.DISABLED) {
+            if (applicable.getRequirement() != SchematronRequirement.DISABLED) {
                 if (Log.isDebugEnabled(Geonet.DATA_MANAGER)) {
                     Log.debug(Geonet.DATA_MANAGER, " - rule:" + schematron.getRuleName());
                 }
