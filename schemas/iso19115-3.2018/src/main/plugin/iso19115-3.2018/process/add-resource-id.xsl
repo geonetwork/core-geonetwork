@@ -8,14 +8,16 @@
                 xmlns:cit="http://standards.iso.org/iso/19115/-3/cit/2.0"
                 xmlns:mdb="http://standards.iso.org/iso/19115/-3/mdb/2.0"
                 xmlns:mri="http://standards.iso.org/iso/19115/-3/mri/1.0"
+                xmlns:util="java:org.fao.geonet.util.XslUtil"
+                xmlns:util-uuid="java:java.util.UUID"
                 version="2.0" exclude-result-prefixes="#all">
 
   <xsl:import href="../../iso19139/process/process-utility.xsl"/>
 
   <!-- i18n information -->
   <xsl:variable name="add-resource-id-loc">
-    <msg id="a" xml:lang="eng">Current record does not contain resource identifier. Compute resource identifier from metadata record identifier.</msg>
-    <msg id="a" xml:lang="fre">Cette fiche ne contient pas d'identifiant pour la ressource. Calculer l'identifiant à partir de l'identifiant de la fiche.</msg>
+    <msg id="a" xml:lang="eng">Current record does not contain resource identifier. Compute a resource identifier.</msg>
+    <msg id="a" xml:lang="fre">Cette fiche ne contient pas d'identifiant pour la ressource.  Calculer un identifiant de ressource.</msg>
   </xsl:variable>
 
 
@@ -72,10 +74,19 @@
                 cit:edition|
                 cit:editionDate"/>
 
-      <!-- Create resource identifier based on metadata record identifier -->
-      <xsl:variable name="urlWithoutLang" select="substring-before($catalogUrl, $nodeId)"/>
-      <xsl:variable name="prefix" select="if ($resource-id-url-prefix != '') then $resource-id-url-prefix else $urlWithoutLang"/>
-      <xsl:variable name="code" select="concat($prefix, /*/mdb:metadataIdentifier/mcc:MD_Identifier/mcc:code/gco:CharacterString)"/>
+      <!-- Create a random resource identifier -->
+      <xsl:variable name="resource-id-url-prefix-tmp"
+                    select="util:getSettingValue('metadata/resourceIdentifierPrefix')"/>
+
+      <xsl:variable name="resource-id-url-prefix-local"
+                    select="if (ends-with($resource-id-url-prefix-tmp, '/'))
+                            then $resource-id-url-prefix-tmp
+                            else concat($resource-id-url-prefix-tmp, '/')"/>
+
+
+      <xsl:variable name="resourceUuid" select="util-uuid:toString(util-uuid:randomUUID())" />
+      <xsl:variable name="prefix" select="if ($resource-id-url-prefix != '') then $resource-id-url-prefix else $resource-id-url-prefix-local"/>
+      <xsl:variable name="code" select="concat($prefix, $resourceUuid)"/>
 
       <xsl:copy-of
               select="cit:identifier[mcc:MD_Identifier/mcc:code/gco:CharacterString != $code]"/>
