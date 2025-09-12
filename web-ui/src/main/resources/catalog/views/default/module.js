@@ -365,8 +365,6 @@
             return;
           }
 
-          gnWebAnalyticsService.trackLink(config.url, link.protocol);
-
           $location.path("map").search({
             add: encodeURIComponent(angular.toJson([config]))
           });
@@ -431,9 +429,6 @@
           if (config.length === 0) {
             return;
           }
-          config.forEach(function (c) {
-            gnWebAnalyticsService.trackLink(c.url, c.type);
-          });
           $location.path("map").search({
             add: encodeURIComponent(angular.toJson(config))
           });
