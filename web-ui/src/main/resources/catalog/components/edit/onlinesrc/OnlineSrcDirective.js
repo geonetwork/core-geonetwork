@@ -2549,7 +2549,7 @@
               });
             };
             var dataciteQuery = function () {
-              return scope.queryValue && scope.queryValue !== ''
+              return scope.queryValue && scope.queryValue !== ""
                 ? scope.doiQueryPattern.replaceAll(
                     "{query}",
                     encodeURIComponent(scope.queryValue)
@@ -2557,7 +2557,6 @@
                 : "";
             };
 
-            
             var crossrefQuery = function () {
               if (!scope.queryValue) {
                 return "";
