@@ -764,6 +764,8 @@
     "system/users": "Groups & users",
     "system/users/identicon": "User identicon",
     "system/users/identicon-help": "Set to '' for no icon. Use 'gravatar' to use default gravatar mode. Icon type can be defined using: mp, identicon, monsterid, wavatar, retro, robohash and forced using configuration like 'gravatar:identicon' or 'gravatar:retro:y' to force usage of default icon. See <a href='https://en.gravatar.com/site/implement/images/'>Gravatar documentation</a> for more options.",
+    "system/metadata/edit/supportedFileMimetypes": "Allowed file mime types to attach to a metadata record",
+    "system/metadata/edit/supportedFileMimetypes-help": "A pipe (|) separated list of file mime types allowed to be attached to a metadata record. For example, to support image files (PNG, GIF and JPEG), text, xml and pdf files: image/png|image/gif|image/jpeg|text/plain|application/xml|application/pdf",
     "system/metadata/allThesaurus": "Virtual 'All' Thesaurus",
     "system/metadata/thesaurusNamespace": "Local thesaurus namespace pattern",
     "system/metadata/thesaurusNamespace-help": "Based on this pattern, when creating a new thesaurus a namespace will be suggested. The pattern can contain \\{\\{type\\}\\} and \\{\\{filename\\}\\} placeholder for substitution.",

@@ -39,7 +39,7 @@ import java.util.Map;
 
 public class FileMimetypeCheckerTest {
 
-    private static String resources = AbstractCoreIntegrationTest.getClassFile(FileMimetypeCheckerTest.class).getParent();
+    private static final String resources = AbstractCoreIntegrationTest.getClassFile(FileMimetypeCheckerTest.class).getParent();
 
     @Test
     public void testValidImageMimetype() throws Exception {
@@ -77,7 +77,7 @@ public class FileMimetypeCheckerTest {
             fileMimetypeChecker.checkValidImageMimeType(multipartFile);
             Assert.fail("\"report.csv\" is not an image file");
         } catch (IllegalArgumentException ex) {
-            Assert.assertEquals("File 'report.csv' with type 'text/plain' is not supported", ex.getMessage());
+            Assert.assertEquals("File 'report.csv' with type 'text/plain' is not supported. To allow this file type, configure it in System Settings > Allowed file mime types to attach to a metadata record.", ex.getMessage());
         }
     }
 
@@ -110,7 +110,7 @@ public class FileMimetypeCheckerTest {
             fileMimetypeChecker.checkValidCsvMimeType(multipartFile);
             Assert.fail("\"test.png\" is not a CSV file");
         } catch (IllegalArgumentException ex) {
-            Assert.assertEquals("File 'test.png' with type 'image/png' is not supported", ex.getMessage());
+            Assert.assertEquals("File 'test.png' with type 'image/png' is not supported. To allow this file type, configure it in System Settings > Allowed file mime types to attach to a metadata record.", ex.getMessage());
         }
     }
 
@@ -143,7 +143,7 @@ public class FileMimetypeCheckerTest {
             fileMimetypeChecker.checkValidThesaurusMimeType(multipartFile);
             Assert.fail("\"report.csv\" is not a thesaurus file");
         } catch (IllegalArgumentException ex) {
-            Assert.assertEquals("File 'report.csv' with type 'text/plain' is not supported", ex.getMessage());
+            Assert.assertEquals("File 'report.csv' with type 'text/plain' is not supported. To allow this file type, configure it in System Settings > Allowed file mime types to attach to a metadata record.", ex.getMessage());
         }
     }
 
@@ -177,7 +177,7 @@ public class FileMimetypeCheckerTest {
             fileMimetypeChecker.checkValidMimeType(multipartFile, new String[] {"text/plain"});
             Assert.fail("\"template.pdf\" is not a text file");
         } catch (IllegalArgumentException ex) {
-            Assert.assertEquals("File 'template.pdf' with type 'application/pdf' is not supported", ex.getMessage());
+            Assert.assertEquals("File 'template.pdf' with type 'application/pdf' is not supported. To allow this file type, configure it in System Settings > Allowed file mime types to attach to a metadata record.", ex.getMessage());
         }
     }
 }

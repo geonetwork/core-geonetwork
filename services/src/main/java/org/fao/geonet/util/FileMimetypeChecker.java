@@ -55,7 +55,7 @@ public class FileMimetypeChecker {
         String mimeType = tika.detect(file.getInputStream());
 
         if (Arrays.stream(validMimeTypes).noneMatch(m -> m.equals(mimeType))) {
-            throw new IllegalArgumentException(String.format("File '%s' with type '%s' is not supported", file.getOriginalFilename(), mimeType));
+            throw new IllegalArgumentException(String.format("File '%s' with type '%s' is not supported. To allow this file type, configure it in System Settings > Allowed file mime types to attach to a metadata record.", file.getOriginalFilename(), mimeType));
         }
     }
 
