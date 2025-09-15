@@ -74,6 +74,14 @@
         $scope.generateUuid = gnConfig["system.metadatacreate.generateUuid"];
         $scope.ownerGroup = gnConfig["system.metadatacreate.preferredGroup"];
         $scope.preferredTemplate = gnConfig["system.metadatacreate.preferredTemplate"];
+        $scope.defaultPublishForGroupEditorsSetting =
+          gnConfig["system.metadatacreate.publishForGroupEditors"];
+        $scope.defaultCopyAttachmentsOfSourceSetting =
+          gnConfig["system.metadatacreate.copyAttachments"];
+        $scope.skipMetadataCreationPageSetting =
+          gnConfig["system.metadatacreate.skipMetadataCreationPage"];
+        $scope.publishForGroupEditors = $scope.defaultPublishForGroupEditorsSetting;
+        $scope.copyAttachmentsOfSource = $scope.defaultCopyAttachmentsOfSourceSetting;
       });
 
       // A map of icon to use for each types
@@ -88,7 +96,6 @@
 
       var defaultType = "dataset";
       var unknownType = "unknownType";
-      var fullPrivileges = true;
 
       $scope.getTypeIcon = function (type) {
         return icons[type] || "fa-square-o";
@@ -99,11 +106,12 @@
           gnMetadataManager.create(
             $routeParams.id,
             $routeParams.group,
-            fullPrivileges,
+            $scope.defaultPublishForGroupEditorsSetting,
             $routeParams.template,
             false,
             $routeParams.tab,
-            true
+            true,
+            $scope.defaultCopyAttachmentsOfSourceSetting
           );
         } else {
           // Metadata creation could be on a template
@@ -211,9 +219,13 @@
           if (
             $scope.mdList.length === 1 &&
             $scope.groups.length === 1 &&
-            $scope.generateUuid === true
+            $scope.generateUuid === true &&
+            $scope.skipMetadataCreationPageSetting === true
           ) {
-            $scope.createNewMetadata(false);
+            $scope.createNewMetadata(
+              $scope.defaultPublishForGroupEditorsSetting,
+              $scope.defaultCopyAttachmentsOfSourceSetting
+            );
           }
           unregisterFn();
           unregisterMdListFn();
@@ -284,7 +296,7 @@
         gnUtilityService.goBack("/board");
       };
 
-      $scope.createNewMetadata = function (isPublic) {
+      $scope.createNewMetadata = function (isPublic, hasAttachmentsOfSource) {
         var metadataUuid = "";
 
         // If no auto-generated metadata identifier, get the value
@@ -311,12 +323,13 @@
           .create(
             $scope.activeTpl.id,
             $scope.ownerGroup,
-            isPublic || false,
+            isPublic,
             $scope.isTemplate,
             $routeParams.childOf ? true : false,
             undefined,
             metadataUuid,
-            true
+            true,
+            hasAttachmentsOfSource
           )
           .catch(function (response) {
             var data = response.data;
