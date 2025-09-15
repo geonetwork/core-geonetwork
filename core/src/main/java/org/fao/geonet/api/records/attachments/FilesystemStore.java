@@ -341,7 +341,7 @@ public class FilesystemStore extends AbstractStore {
         return newFolderPath;
     }
 
-    private GeonetworkDataDirectory getDataDirectory(ServiceContext context) {
+    private static GeonetworkDataDirectory getDataDirectory(ServiceContext context) {
         return context.getBean(GeonetworkDataDirectory.class);
     }
 
@@ -355,7 +355,7 @@ public class FilesystemStore extends AbstractStore {
      * @throws IOException If an I/O error occurs while retrieving the path.
      * @throws IllegalArgumentException If the provided resource is not of type `PathResource`.
      */
-    public Path getResourcePath(Resource resource, ServiceContext context) throws IOException {
+    public static Path getResourcePath(Resource resource, ServiceContext context) throws IOException {
         if (!(resource instanceof PathResource)) {
             // This should never happen
             throw new IllegalArgumentException(

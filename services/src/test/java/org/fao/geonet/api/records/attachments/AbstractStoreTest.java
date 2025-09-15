@@ -55,10 +55,10 @@ import static org.junit.Assert.assertTrue;
  */
 public abstract class AbstractStoreTest extends AbstractServiceIntegrationTest {
 
-    private static String resources =
+    protected static String resources =
         AbstractCoreIntegrationTest.getClassFile(MetadataResourceDatabaseMigrationTest.class).getParent();
     @Autowired
-    private IMetadataUtils metadataUtils;
+    protected IMetadataUtils metadataUtils;
     @Autowired
     private MetadataRepository _metadataRepo;
 
@@ -89,7 +89,7 @@ public abstract class AbstractStoreTest extends AbstractServiceIntegrationTest {
                        "http://foo.bar/" + filename + urlParameters, handler);
     }
 
-    private String importMetadata(ServiceContext context) throws Exception {
+    protected String importMetadata(ServiceContext context) throws Exception {
         final MEFLibIntegrationTest.ImportMetadata importMetadata =
             new MEFLibIntegrationTest.ImportMetadata(this, context).invoke();
 
