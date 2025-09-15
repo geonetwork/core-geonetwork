@@ -302,7 +302,7 @@ public class AttachmentsApi {
             if (ifRange.startsWith("W/")) {
                 range = null; // weak ETag -> serve full resource
             } else if (ifRange.startsWith("\"")) {
-                if (fileETag == null || !fileETag.equals(ifRange)) {
+                if (!fileETag.equals(ifRange)) {
                     range = null; // strong ETag mismatch -> serve full resource
                 }
             } else {
