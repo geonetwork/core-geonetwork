@@ -55,7 +55,7 @@ class Search extends BaseSearch {
 
         s.freeText = freeText;
         s.title = title;
-        s.abstrac = abstrac;
+        s.abstractText = abstractText;
         s.keywords = keywords;
         s.sourceUuid = sourceUuid;
         s.from = from;
@@ -81,8 +81,8 @@ class Search extends BaseSearch {
         }
 
         String abstractFilter = "";
-        if (StringUtils.isNotEmpty(abstrac)) {
-            abstractFilter = String.format(",{\"query_string\": {\"query\": \"(resourceAbstractObject.\\\\*:(%s))\", \"default_operator\": \"AND\"}}", abstrac);
+        if (StringUtils.isNotEmpty(abstractText)) {
+            abstractFilter = String.format(",{\"query_string\": {\"query\": \"(resourceAbstractObject.\\\\*:(%s))\", \"default_operator\": \"AND\"}}", abstractText);
         }
 
         String keywordFilter = "";
@@ -126,7 +126,7 @@ class Search extends BaseSearch {
             .append("to", to)
             .append("freeText", freeText)
             .append("title", title)
-            .append("abstrac", abstrac)
+            .append("abstrac", abstractText)
             .append("keywords", keywords)
             .append("sourceUuid", sourceUuid)
             .toString();
