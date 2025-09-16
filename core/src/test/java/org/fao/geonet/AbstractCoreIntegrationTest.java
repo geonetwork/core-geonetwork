@@ -308,7 +308,7 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
         return session;
     }
 
-    private Element getSample(String resource) throws IOException, JDOMException {
+    protected Element getSample(String resource) throws IOException, JDOMException {
         final URL resourceUrl = AbstractCoreIntegrationTest.class.getResource(resource);
         return Xml.loadStream(resourceUrl.openStream());
     }
@@ -387,38 +387,44 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
     }
 
     protected AbstractMetadata injectMetadataInDbDoNotRefreshHeader(Element sampleMetadataXml, ServiceContext context) throws Exception {
-        return injectMetadataInDb(sampleMetadataXml, context, false);
+        return injectMetadataOrSubtemplateInDb(sampleMetadataXml, context, false, MetadataType.METADATA);
     }
 
-    protected AbstractMetadata injectMetadataInDb(Element sampleMetadataXml, ServiceContext context, boolean resfreshHeader) throws Exception {
+    protected AbstractMetadata injectMetadataInDb(Element element, ServiceContext serviceContext, boolean refreshHeader) throws Exception {
+        return injectMetadataOrSubtemplateInDb(element, serviceContext, refreshHeader, MetadataType.METADATA);
+    }
+
+    protected AbstractMetadata insertTemplateResourceInDb(Element element, ServiceContext serviceContext) throws Exception {
+        return injectMetadataOrSubtemplateInDb(element, serviceContext, false, MetadataType.SUB_TEMPLATE);
+    }
+
+    private AbstractMetadata injectMetadataOrSubtemplateInDb(Element sampleMetadataXml, ServiceContext context, boolean refreshHeader, MetadataType type) throws Exception {
         String uuid = UUID.randomUUID().toString();
         String schema = schemaManager.autodetectSchema(sampleMetadataXml);
-        Xml.selectElement(sampleMetadataXml,
-                "iso19139".equals(schema)
-                    ? "gmd:fileIdentifier/gco:CharacterString"
-                    : "mdb:metadataIdentifier/*/mcc:code/*",
-                "iso19139".equals(schema)
-                    ? ISO19139SchemaPlugin.allNamespaces.asList()
-                    : ISO19115_3_2018SchemaPlugin.allNamespaces.asList())
+        if (type.equals(MetadataType.METADATA)) {
+            Xml.selectElement(sampleMetadataXml,
+                "iso19139".equals(schema) ? "gmd:fileIdentifier/gco:CharacterString" : "mdb:metadataIdentifier/*/mcc:code/*",
+                "iso19139".equals(schema) ? ISO19139SchemaPlugin.allNamespaces.asList() : ISO19115_3_2018SchemaPlugin.allNamespaces.asList())
             .setText(uuid);
+        }
 
-        String source = sourceRepository.findAll().get(0).getUuid();
-        final Metadata metadata = new Metadata();
+        Metadata metadata = new Metadata();
         metadata
-            .setDataAndFixCR(sampleMetadataXml)
-            .setUuid(uuid);
+                .setDataAndFixCR(sampleMetadataXml)
+                .setUuid(uuid);
         metadata.getDataInfo()
-            .setRoot(sampleMetadataXml.getQualifiedName())
-            .setSchemaId(schema)
-            .setType(MetadataType.METADATA)
-            .setPopularity(1000);
+                .setRoot(sampleMetadataXml.getQualifiedName())
+                .setSchemaId(schema)
+                .setType(type)
+                .setPopularity(1000);
         metadata.getSourceInfo()
-            .setOwner(1)
-            .setSourceId(source);
+                .setOwner(1)
+                .setSourceId(sourceRepository.findAll().get(0).getUuid());
         metadata.getHarvestInfo()
-            .setHarvested(false);
+                .setHarvested(false);
 
         return metadataManager.insertMetadata(context, metadata, sampleMetadataXml, IndexingMode.none, false, UpdateDatestamp.NO,
-            false, resfreshHeader);
+                false, refreshHeader);
     }
+
 }

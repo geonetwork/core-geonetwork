@@ -77,6 +77,8 @@
         scope="prototype"/>
   <bean id="geonetwork40"
         class="org.fao.geonet.kernel.harvest.harvester.geonet.v4.Geonet40Harvester" />
+  <bean id="sftp" class="org.fao.geonet.kernel.harvest.harvester.sftp.SftpHarvester"
+        scope="prototype"/>
   <bean id="database" class="org.fao.geonet.kernel.harvest.harvester.database.DatabaseHarvester"
         scope="prototype"/>
 </beans>

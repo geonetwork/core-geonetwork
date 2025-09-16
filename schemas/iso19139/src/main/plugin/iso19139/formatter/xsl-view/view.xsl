@@ -70,6 +70,7 @@
   <xsl:include href="../../formatter/jsonld/iso19139-to-jsonld.xsl"/>
   <xsl:include href="../../formatter/citation/base.xsl"/>
   <xsl:include href="../../../iso19115-3.2018/formatter/citation/common.xsl"/>
+  <xsl:include href="../../../iso19115-3.2018/formatter/xsl-view/common.xsl"/>
 
   <!-- The core formatter XSL layout based on the editor configuration -->
   <xsl:include href="sharedFormatterDir/xslt/render-layout.xsl"/>
@@ -84,7 +85,6 @@
   <xsl:variable name="allLanguages">
     <xsl:call-template name="get-iso19139-other-languages"/>
   </xsl:variable>
-
 
   <!-- Ignore some fields displayed in header or in right column -->
   <xsl:template mode="render-field"
@@ -201,7 +201,7 @@
             <xsl:value-of select="$schemaStrings/spatialExtent"/>
           </span>
         </h2>
-  
+
         <xsl:choose>
           <xsl:when test=".//gmd:EX_BoundingPolygon">
             <xsl:copy-of select="gn-fn-render:extent($metadataUuid)"/>
@@ -457,7 +457,9 @@
     <xsl:variable name="name"
                   select="name()"/>
 
-    <xsl:variable name="context"
+    <xsl:variable name="contextXpath"
+                  select="gn-fn-metadata:getXPath(.)" />
+    <xsl:variable name="contextParent"
                   select="name(..)"/>
 
     <xsl:choose>
@@ -465,7 +467,7 @@
       <xsl:when test="$fieldName = '' and $language = 'all' and count($languages/lang) > 0">
         <xsl:for-each select="$languages/lang">
           <div xml:lang="{@code}">
-            <xsl:value-of select="tr:nodeLabel(tr:create($schema, @code), $name, $context)"/>
+            <xsl:value-of select="tr:nodeLabel(tr:create($schema, @code), $name, $contextParent, $contextXpath)"/>
             <xsl:if test="$contextLabel">
               <xsl:variable name="extraLabel">
                 <xsl:apply-templates mode="render-value"
@@ -486,7 +488,7 @@
           <xsl:variable name="lang3"
                         select="$metadata//gmd:locale/*[@id = $id]/gmd:languageCode/*/@codeListValue"/>
           <div xml:lang="{$lang3}">
-            <xsl:value-of select="tr:nodeLabel(tr:create($schema, $lang3), $name, $context)"/>
+            <xsl:value-of select="tr:nodeLabel(tr:create($schema, $lang3), $name, $contextParent, $contextXpath)"/>
           </div>
         </xsl:for-each>
       </xsl:when>
@@ -494,7 +496,7 @@
         <!-- Overriden label or element name in current UI language. -->
         <xsl:value-of select="if ($fieldName)
                                 then $fieldName
-                                else tr:nodeLabel(tr:create($schema), $name, $context)"/>
+                                else  tr:nodeLabel(tr:create($schema), $name, $contextParent, $contextXpath)"/>
         <xsl:if test="$contextLabel">
           <xsl:variable name="extraLabel">
             <xsl:apply-templates mode="render-value"
@@ -507,9 +509,14 @@
   </xsl:template>
 
 
-  <!-- Some elements are only containers so bypass them -->
+  <!-- Some elements are only containers so bypass them
+       Excluded gmd:MD_DigitalTransferOptions, otherwise is rendered differently
+       when contains 1 or more gmd:onLine elements. Probably template affects
+       other similar container elements.
+  -->
   <xsl:template mode="render-field"
                 match="*[
+                          name() != 'gmd:MD_DigitalTransferOptions' and
                           count(gmd:*[name() != 'gmd:PT_FreeText']) = 1 and
                           count(*/@codeListValue) = 0
                         ]"
@@ -525,6 +532,7 @@
       gmd:report/*|
       gmd:result/*|
       gmd:extent[name(..)!='gmd:EX_TemporalExtent']|
+      gmd:transferOptions/*|
       *[$isFlatMode = false() and gmd:* and
         not(gco:CharacterString) and not(gmd:URL)]">
     <div class="entry name">
@@ -767,7 +775,7 @@
 
   <!-- Linkage -->
   <xsl:template mode="render-field"
-                match="*[gmd:CI_OnlineResource and */gmd:linkage/gmd:URL != '']"
+                match="*[gmd:CI_OnlineResource]"
                 priority="100">
     <dl class="gn-link">
       <dt>
@@ -793,11 +801,22 @@
             </xsl:otherwise>
           </xsl:choose>
         </xsl:variable>
+
+        <xsl:choose>
+          <xsl:when test="string($linkUrl)">
         <a href="{$linkUrl}" title="{$linkName}">
           <span>
             <xsl:value-of select="$linkName"/>
           </span>
         </a>
+          </xsl:when>
+          <xsl:otherwise>
+            <span>
+              <xsl:value-of select="$linkName"/>
+            </span>
+          </xsl:otherwise>
+        </xsl:choose>
+
         <xsl:if test="*/gmd:protocol[normalize-space(gco:CharacterString|gmx:Anchor) != '']">
           (<span>
           <xsl:apply-templates mode="render-value-no-breaklines"
