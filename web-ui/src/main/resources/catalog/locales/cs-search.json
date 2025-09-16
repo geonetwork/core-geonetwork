@@ -547,5 +547,12 @@
     "addLayerPrefix": "Přidat vrstvu",
     "addLayerPostfix": "do mapy",
     "submit": "Odeslat",
-    "additionalLinks": "Additional Links"
+    "additionalLinks": "Additional Links",
+    "indexingErrorMsg-invalidBounds": "Upozornění / Pole resourceTemporalDateRange / Dolní a horní hranice prázdné nebo neplatné datum. Časové období není indexováno.",
+    "indexingErrorMsg-invalidDateFormat": "Upozornění / Datum {{dateType}} s hodnotou '{{date}}' nebyl platný formát data.",
+    "indexingErrorMsg-keywordNotFoundInThesaurus": "Upozornění / Klíčové slovo {{keyword}} nebylo v {{thesaurus}} nalezeno.",
+    "indexingErrorMsg-temporalDateRangeLowerGreaterThanUpper": "Upozornění / pole resourceTemporalDateRange / Dolní hranice rozsahu {{lowerBound}} nemůže být větší než horní hranice {{upperBound}}. Časové období není indexováno.",
+    "indexingErrorMsg-temporalRangeLowerGreaterThanUpper": "Upozornění / pole resourceTemporalDateRange / dolní hranice rozsahu {{lowerBound}} nemůže být větší než horní hranice {{upperBound}}.",
+    "indexingErrorMsg-schemaNotRegistered": "Záznam {{record}} / Schéma '{{schema}}' není registrován v tomto katalogu. Nainstalujte jej nebo tyto záznamy odstraňte. Záznam je indexovaný příznak chyby indexování.",
+    "indexingErrorMsg-indexingStyleSheetError": "Šablona stylů indexování obsahuje chyby: {{message}}\n Označení metadat jako _indexingError=1 v indexu."
 }
