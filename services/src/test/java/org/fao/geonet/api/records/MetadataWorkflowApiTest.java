@@ -56,10 +56,10 @@ public class MetadataWorkflowApiTest  extends AbstractServiceIntegrationTest {
         settingManager.setValue(Settings.METADATA_WORKFLOW_ENABLE, true);
         settingManager.setValue(Settings.METADATA_WORKFLOW_DRAFT_WHEN_IN_GROUP, ".*");
 
-        AbstractMetadata metadata = injectMetadataInDbDoNotRefreshHeader(getSampleMetadataXml(), context);
+        AbstractMetadata metadata = injectMetadataInDb(getSampleMetadataXml(), context);
         injectStatusForMetadata(metadata, DRAFT);
         uuid = metadata.getUuid();
-        AbstractMetadata metadata2 = injectMetadataInDbDoNotRefreshHeader(getSampleMetadataXml(), context);
+        AbstractMetadata metadata2 = injectMetadataInDb(getSampleMetadataXml(), context);
         injectStatusForMetadata(metadata2, APPROVED);
         uuid2 = metadata2.getUuid();
     }
