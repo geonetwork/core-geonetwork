@@ -82,10 +82,10 @@ public class GeonetHarvester extends AbstractHarvester<HarvestResult, GeonetPara
         super.addHarvestInfo(info, id, uuid);
 
         String small = context.getBaseUrl() + "/" + params.getNode()
-            + "/en/resources.get?access=public&id=" + id + "&fname=";
+            + "/api/records/" + uuid + "/attachments/";
 
         String large = context.getBaseUrl() + "/" + params.getNode()
-            + "/en/graphover.show?access=public&id=" + id + "&fname=";
+            + "/api/records/" + uuid + "/attachments/";
 
         info.addContent(new Element("smallThumbnail").setText(small));
         info.addContent(new Element("largeThumbnail").setText(large));
