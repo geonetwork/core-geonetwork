@@ -45,6 +45,7 @@ import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.api.processing.report.MetadataProcessingReport;
 import org.fao.geonet.api.processing.report.SimpleMetadataProcessingReport;
 import org.fao.geonet.api.records.model.*;
+import org.fao.geonet.api.records.model.MetadataPublicationNotificationInfo;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.domain.*;
@@ -517,9 +518,8 @@ public class MetadataWorkflowApi {
                 .withDescriptionKey("exception.resourceNotEnabled.workflow.description");
         }
 
-        // If the metadata workflow status is unset and the new status is a workflow status, workflow is being enabled
-        if (metadataStatusValue.getStatusValue().getType() == StatusValueType.workflow
-            && metadataStatus.getStatus(metadata.getId()) == null) {
+        // If the metadata workflow status is unset and the new status is DRAFT, workflow is being enabled
+        if (metadataStatusValue.getStatusValue().getType() == StatusValueType.workflow && metadataStatus.getStatus(metadata.getId()) == null) {
             // Retrieve the group owner ID from the metadata source information
             Integer groupOwnerId = metadata.getSourceInfo().getGroupOwner();
 
