@@ -367,21 +367,33 @@
       // in default mode.
       function loadFormatter(n, o) {
         if (n === true) {
-          $scope.recordFormatterList = gnMdFormatter.getFormatterForRecord(
-            $scope.mdView.current.record
-          );
+          gnMdFormatter
+            .getAvailableFormattersForRecord($scope.mdView.current.record)
+            .then(function (availableFormatters) {
+              var formattersForRecord = gnMdFormatter.getFormatterForRecord(
+                $scope.mdView.current.record
+              );
 
-          checkIfCitationIsDisplayed($scope.mdView.current.record);
+              $scope.recordFormatterList =
+                gnMdFormatter.calculateValidFormattersForRecord(
+                  formattersForRecord,
+                  availableFormatters
+                );
 
-          var f = gnSearchLocation.getFormatterPath($scope.recordFormatterList[0].url);
-          $scope.currentFormatter = "";
+              checkIfCitationIsDisplayed($scope.mdView.current.record);
 
-          gnMdViewObj.usingFormatter = f !== undefined;
+              var f = gnSearchLocation.getFormatterPath(
+                $scope.recordFormatterList[0].url
+              );
+              $scope.currentFormatter = "";
 
-          if (f != undefined) {
-            $scope.currentFormatter = f.replace(/.*(\/formatters.*)/, "$1");
-            $scope.loadFormatter(f);
-          }
+              gnMdViewObj.usingFormatter = f !== undefined;
+
+              if (f != undefined) {
+                $scope.currentFormatter = f.replace(/.*(\/formatters.*)/, "$1");
+                $scope.loadFormatter(f);
+              }
+            });
         }
       }
       $scope.$watch("mdView.recordsLoaded", loadFormatter);

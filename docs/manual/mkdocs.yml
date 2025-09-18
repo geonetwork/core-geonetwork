@@ -296,12 +296,14 @@ nav:
       - user-guide/harvesting/index.md
       - user-guide/harvesting/harvesting-csw.md
       - user-guide/harvesting/harvesting-filesystem.md
+      - user-guide/harvesting/harvesting-geonetwork-4.md
       - user-guide/harvesting/harvesting-geonetwork.md
       - user-guide/harvesting/harvesting-geonetwork-2.md
       - user-guide/harvesting/harvesting-geoportal.md
       - user-guide/harvesting/harvesting-oaipmh.md
       - user-guide/harvesting/harvesting-ogcwxs.md
       - user-guide/harvesting/harvesting-sde.md
+      - user-guide/harvesting/harvesting-sftp.md
       - user-guide/harvesting/harvesting-simpleurl.md
       - user-guide/harvesting/harvesting-thredds.md
       - user-guide/harvesting/harvesting-webdav.md

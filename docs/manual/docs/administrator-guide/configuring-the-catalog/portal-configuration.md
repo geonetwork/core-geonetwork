@@ -60,7 +60,7 @@ Please refer to the [GeoNetwork-UI Configuration guide](https://geonetwork.githu
 
 ## Example of usage
 
-To find the lucene element terms available for filtering you can query a record in your ElasticSearch instance: 
+To find terms available for filtering you can query a record in your ElasticSearch instance: 
 
 `POST /gn-records*/_search
 {"query":{"query_string":{"query":"+uuid:\"EXT_DS120344\""}}}`
@@ -81,7 +81,126 @@ This shows elements such as keywords are grouped together under a "tag" element.
 ]
 ```
 
-You can use the lucene search `+tag.default:"BIRDS"` as the filter for a sub-portal.
+You can use the Query string syntax search `+tag.default:"BIRDS"` as the filter for a sub-portal.
+
+You can use the `+` + (this term must be present) and `-` (this term must not be present).
+
+**ElasticSearch 8 documentation**: [Query String Syntax](https://www.elastic.co/guide/en/elasticsearch/reference/8.18/query-dsl-query-string-query.html#query-string-syntax).
+
+<details>
+<summary>Example of filters:</summary>
+
+<h4>Filter by Source Catalogue and Organization</h4>
+
+Records from a specific source catalogue and organization:
+<br><code>sourceCatalogue:972b12aa-08dc-4d29-8a10-ff44ecef1dda AND OrgForResourceObject.default:("My organisation")</code>
+<br>
+
+Records from a specific organization:
+<br><code>+OrgForResourceObject.default:("My organization name")</code>
+<br>
+
+<h4>Filter by Organization Name and Keywords</h4>
+
+Records from "My agency" with open data keywords:
+<br><code>OrgObject.\\*: "My agency" AND keyword:("OPEN DATA" OR "open data" OR "opendata")</code>
+<br>
+
+Records from either "New York" or "GN":
+<br><code>OrgObject.\\*:"New York" OR OrgObject.\\*:"GN"</code>
+<br>
+
+<h4>Filter by Harvester</h4>
+
+Records harvested by a specific harvester:
+<br><code>+harvesterUuid: e04c8cba-64d9-4495-9c38-fc91119cfa1a</code>
+<br>
+
+Records from a harvester, excluding under development status:
+<br><code>+harvesterUuid: b37387af-89e8-4a37-a882-1c2105bdf859 AND NOT cl_status.key: underDevelopment</code>
+<br>
+
+<h4>Filter by Topic Category</h4>
+
+Filter by topic key named biota:
+<br><code>+cl_topic.key:"biota"</code>
+<br>
+
+Climatology, Meteorology, Atmosphere:
+<br><code>+cl_topic.key:(society OR transportation)</code>
+<br>
+
+<b>NOT</b> Society topic:
+<br><code>-cl_topic.key:"society"</code>
+<br>
+
+<h4>Filter by Group</h4>
+
+Records owned by group 108:
+<br><code>+groupOwner:(108)</code>
+<br>
+
+Records owned by group 104 or 105:
+<br><code>groupOwner:(104 OR 105)</code>
+<br>
+
+<h4>Filter by Tag (Country Example)</h4>
+
+Records tagged with Thailand, Cambodia, or Laos:
+<br><code>+(tag.default:Thailand OR tag.default:Cambodia)</code>
+<br>
+
+Records with any tag containing "Geo":
+<br><code>+tag.\\*:"Geo"</code>
+<br>
+
+<h4>Filter by Record Owner</h4>
+
+Records owned by "<owner>":
+<br><code>+recordOwner:"<owner>"</code>
+<br>
+
+<h4>Filter by Thesaurus Keyword Presence</h4>
+Filter records referencing any keyword from a specific thesaurus:
+<br><code>+th_otherKeywords-theme:*</code>
+<br>
+(where `otherKeywords-theme` is the thesaurus identifier)
+
+For INSPIRE themes:
+<br><code>+th_httpinspireeceuropaeutheme-theme:*</code>
+<br>
+
+<h4>Filter by Specific Keyword</h4>
+
+By default translation:
+<br><code>+tag.default:inspire</code>
+<br>
+
+By tag key:
+<br><code>+tag.key:"http://inspire.ec.europa.eu/theme/ps"</code>
+<br>
+
+By Slovak translation:
+<br><code>+tag.langslo:jaskyne</code>
+<br>
+
+<h4>Free Text Search</h4>
+
+Search for "Open?ata":
+<br><code>+any.default:Open?ata</code>
+<br>
+
+Regex search for "OpenData" (case-insensitive):
+<br><code>+any.default:/[Oo]pen[Dd]ata/</code>
+<br>
+
+<h4>Filter by Contact Organization (for data)</h4>
+
+All organizations starting with "GN":
+<br><code>+OrgForResourceObject.default:GN*</code>
+<br>
+
+</details>
 
 ### Creating an INSPIRE directive sub-portal
 

@@ -202,7 +202,7 @@ public class MetadataSharingApi {
         @Parameter(
             description = "Publication type",
             required = false)
-        String publicationType,
+        @RequestParam(required = false) String publicationType,
         @Parameter(hidden = true)
         HttpSession session,
         HttpServletRequest request
@@ -248,7 +248,7 @@ public class MetadataSharingApi {
         @Parameter(
             description = "Publication type",
             required = false)
-        String publicationType,
+        @RequestParam(required = false) String publicationType,
         @Parameter(hidden = true)
         HttpSession session,
         HttpServletRequest request
@@ -367,7 +367,7 @@ public class MetadataSharingApi {
         @Parameter(
             description = "Publication type",
             required = false)
-        String publicationType,
+        @RequestParam(required = false)  String publicationType,
         @Parameter(hidden = true)
         HttpSession session,
         HttpServletRequest request
@@ -416,7 +416,7 @@ public class MetadataSharingApi {
         @Parameter(
             description = "Publication type",
             required = false)
-        String publicationType,
+        @RequestParam(required = false) String publicationType,
         @Parameter(hidden = true)
         HttpSession session,
         HttpServletRequest request
