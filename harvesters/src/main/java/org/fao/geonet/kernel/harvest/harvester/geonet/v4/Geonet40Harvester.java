@@ -23,14 +23,18 @@
 
 package org.fao.geonet.kernel.harvest.harvester.geonet.v4;
 
+import java.sql.SQLException;
 import org.fao.geonet.Logger;
 import org.fao.geonet.kernel.harvest.harvester.AbstractHarvester;
 import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
 import org.fao.geonet.kernel.harvest.harvester.geonet.Group;
 import org.jdom.Element;
 
-import java.sql.SQLException;
-
+/**
+ * The Geonet40Harvester class is responsible for harvesting metadata from a GeoNetwork 4.x server.
+ * It extends the AbstractHarvester to provide specific functionality related to interacting
+ * with GeoNetwork version 4.x, including parameter management and storing harvested node details.
+ */
 public class Geonet40Harvester extends AbstractHarvester<HarvestResult, GeonetParams> {
     public static final String TYPE = "geonetwork40";
 

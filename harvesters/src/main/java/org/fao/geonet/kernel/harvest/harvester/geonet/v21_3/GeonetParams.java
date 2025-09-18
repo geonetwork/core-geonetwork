@@ -30,6 +30,15 @@ import org.fao.geonet.kernel.harvest.harvester.geonet.Group;
 import org.jdom.Element;
 
 
+/**
+ * GeonetParams is a subclass of BaseGeonetParams specialized for the configuration
+ * of a GeoNetwork >= 2.1.x to 3.12.x harvester. It provides functionality to manage
+ * and configure harvesting parameters, including searches and group copy policies.
+ * <p>
+ * This class extends the base functionality for handling searches and associated
+ * configurations specific to GeoNetwork harvesting, ensuring a robust and flexible
+ * way to handle and copy harvesting-related parameters.
+ */
 public class GeonetParams extends BaseGeonetParams<Search> {
     public GeonetParams(DataManager dm) {
         super(dm);

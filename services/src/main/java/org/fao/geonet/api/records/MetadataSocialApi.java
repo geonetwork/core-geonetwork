@@ -23,10 +23,12 @@
 
 package org.fao.geonet.api.records;
 
+import javax.servlet.http.HttpServletRequest;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.net.URL;
 import jeeves.server.context.ServiceContext;
 import jeeves.services.ReadWriteController;
 import org.fao.geonet.ApplicationContextHolder;
@@ -53,14 +55,24 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
-import javax.servlet.http.HttpServletRequest;
-import java.net.URL;
-
-import static org.fao.geonet.api.ApiParams.*;
+import static org.fao.geonet.api.ApiParams.API_CLASS_RECORD_OPS;
+import static org.fao.geonet.api.ApiParams.API_CLASS_RECORD_TAG;
+import static org.fao.geonet.api.ApiParams.API_PARAM_RECORD_UUID;
 import static org.fao.geonet.kernel.setting.Settings.SYSTEM_LOCALRATING_ENABLE;
 
+/**
+ * The MetadataSocialApi class defines endpoints for interacting with and managing
+ * user-generated ratings for metadata records. This class handles operations
+ * related to rating metadata, supporting both local and remote ratings based on the
+ * system and metadata configurations.
+ */
 @RequestMapping(value = {
     "/{portal}/api/records"
 })
@@ -69,9 +81,6 @@ import static org.fao.geonet.kernel.setting.Settings.SYSTEM_LOCALRATING_ENABLE;
 @Controller("recordSocial")
 @ReadWriteController
 public class MetadataSocialApi {
-
-    @Autowired
-    LanguageUtils languageUtils;
 
 
     @io.swagger.v3.oas.annotations.Operation(
@@ -99,7 +108,7 @@ public class MetadataSocialApi {
             description = API_PARAM_RECORD_UUID,
             required = true)
         @PathVariable
-            String metadataUuid,
+        String metadataUuid,
         @Parameter(
             description = "Rating",
             required = true
@@ -107,7 +116,7 @@ public class MetadataSocialApi {
         @RequestBody(
             required = true
         )
-            Integer rating,
+        Integer rating,
         HttpServletRequest request
     )
         throws Exception {
@@ -122,7 +131,7 @@ public class MetadataSocialApi {
 
         if (rating < 0 || rating > 5) {
             throw new BadParameterEx(String.format(
-                "Parameter rating MUST be between 1 and 5. Value %s is invalid."), rating);
+                "Parameter rating MUST be between 1 and 5. Value %s is invalid.", rating), rating);
         }
 
         String harvUuid = metadata.getHarvestInfo().getUuid();

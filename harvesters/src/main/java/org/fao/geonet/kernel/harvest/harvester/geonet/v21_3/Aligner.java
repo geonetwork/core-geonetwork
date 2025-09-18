@@ -23,20 +23,20 @@
 
 package org.fao.geonet.kernel.harvest.harvester.geonet.v21_3;
 
-import jeeves.server.context.ServiceContext;
-import org.fao.geonet.Logger;
-import org.fao.geonet.constants.Geonet;
-
-import org.fao.geonet.kernel.harvest.harvester.geonet.BaseGeoNetworkAligner;
-import org.fao.geonet.utils.XmlRequest;
-import org.jdom.Element;
-
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
+import jeeves.server.context.ServiceContext;
+import org.fao.geonet.Logger;
+import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.kernel.harvest.harvester.geonet.BaseGeoNetworkAligner;
+import org.fao.geonet.utils.XmlRequest;
+import org.jdom.Element;
 
 
 public class Aligner extends BaseGeoNetworkAligner<GeonetParams> {
@@ -81,6 +81,16 @@ public class Aligner extends BaseGeoNetworkAligner<GeonetParams> {
         }
     }
 
+    /**
+     * Retrieves a MEF (Metadata Exchange Format) file associated with a given UUID.
+     * The method sets up necessary request parameters, sends the request to a
+     * remote GN service, and stores the result in a temporary file.
+     *
+     * @param uuid the unique identifier of the metadata record to be exported
+     * @return the path to the temporary file containing the retrieved MEF data
+     * @throws URISyntaxException if the constructed request URI is invalid
+     * @throws IOException if an I/O error occurs during file creation or data transfer
+     */
     @Override
     protected Path retrieveMEF(String uuid) throws URISyntaxException, IOException {
         request.clearParams();
@@ -89,7 +99,7 @@ public class Aligner extends BaseGeoNetworkAligner<GeonetParams> {
 
         // Request MEF2 format - if remote node is old
         // it will ignore this parameter and return a MEF1 format
-        // which will be handle in addMetadata/updateMetadata.
+        // which will be handled in addMetadata/updateMetadata.
         request.addParam("version", "2");
         request.addParam("relation", "false");
         request.setAddress(params.getServletPath() + "/" + params.getNode()

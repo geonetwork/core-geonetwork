@@ -26,11 +26,24 @@ package org.fao.geonet.kernel.harvest.harvester.geonet.v4.client;
 import java.util.Set;
 
 /**
- * Stores the information used by the harvester, for an Elasticsearch search.
+ * Represents the response from a search operation, typically involving
+ * an Elasticsearch query. This response contains the total number of hits
+ * and a set of individual search result hits.
  */
 public class SearchResponse {
     private final long total;
     private final Set<SearchResponseHit> hits;
+
+    /**
+     * Constructs a new SearchResponse instance.
+     *
+     * @param total the total number of search hits returned
+     * @param hits  a set of individual search result hits
+     */
+    public SearchResponse(long total, Set<SearchResponseHit> hits) {
+        this.total = total;
+        this.hits = hits;
+    }
 
     public long getTotal() {
         return total;
@@ -38,16 +51,5 @@ public class SearchResponse {
 
     public Set<SearchResponseHit> getHits() {
         return hits;
-    }
-
-    /**
-     * Constructor for SearchResponse.
-     *
-     * @param total the total number of hits found
-     * @param hits  the set of hits returned in the response
-     */
-    public SearchResponse(long total, Set<SearchResponseHit> hits) {
-        this.total = total;
-        this.hits = hits;
     }
 }

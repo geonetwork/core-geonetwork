@@ -23,6 +23,22 @@
 
 package org.fao.geonet.kernel.harvest.harvester.geonet;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URISyntaxException;
+import java.nio.file.DirectoryStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.NoSuchElementException;
+import java.util.Set;
+import java.util.SortedSet;
+import java.util.UUID;
+import java.util.concurrent.atomic.AtomicBoolean;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.io.FileUtils;
@@ -75,44 +91,50 @@ import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URISyntaxException;
-import java.nio.file.DirectoryStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.NoSuchElementException;
-import java.util.Set;
-import java.util.SortedSet;
-import java.util.UUID;
-import java.util.concurrent.atomic.AtomicBoolean;
-
+/**
+ * The BaseGeoNetworkAligner class is an abstract base class that provides functionality and
+ * utility methods for aligning remote metadata with the local GeoNetwork metadata catalog
+ * during harvesting processes.
+ * <p>
+ * This class supports various metadata alignment tasks, including handling metadata updates,
+ * managing privileges, synchronizing resources, and ensuring metadata integrity based
+ * on various configurations and conditions.
+ * <p>
+ * It leverages several GeoNetwork services and utilities for metadata handling, such as
+ * metadata managers, schema utilities, access managers, and resource management.
+ *
+ */
 public abstract class BaseGeoNetworkAligner<P extends BaseGeonetParams> extends BaseAligner<P> {
+    public static final String GENERAL = "general";
     protected final Logger log;
     protected final ServiceContext context;
-    protected CategoryMapper localCateg;
-    protected GroupMapper localGroups;
-    protected UUIDMapper localUuids;
-    protected String processName;
-    protected String preferredSchema;
-    protected Map<String, Object> processParams = new HashMap<>();
     protected final DataManager dataMan;
     protected final IMetadataManager metadataManager;
     protected final IMetadataIndexer metadataIndexer;
     protected final IMetadataOperations metadataOperations;
     protected final IMetadataUtils metadataUtils;
-    protected HarvestResult result;
     protected final IMetadataSchemaUtils metadataSchemaUtils;
     protected final MetadataRepository metadataRepository;
-    protected Map<String, Map<String, String>> hmRemoteGroups = new HashMap<>();
     protected final SettingManager settingManager;
     protected final AccessManager accessManager;
+    protected CategoryMapper localCategory;
+    protected GroupMapper localGroups;
+    protected UUIDMapper localUuids;
+    protected String processName;
+    protected String preferredSchema;
+    protected Map<String, Object> processParams = new HashMap<>();
+    protected HarvestResult result;
+    protected Map<String, Map<String, String>> hmRemoteGroups = new HashMap<>();
 
+    /**
+     * Constructs an instance of BaseGeoNetworkAligner, initializing required dependencies and settings
+     * for metadata alignment operations within the geonetwork harvesting process.
+     *
+     * @param cancelMonitor an AtomicBoolean used to monitor cancellation requests during alignment
+     * @param log           the Logger instance used to log debug, info, warning, and error messages
+     * @param context       the ServiceContext providing access to GeoNetwork application context and resources
+     * @param params        parameters of type P that represent the configuration used for the alignment process
+     */
     public BaseGeoNetworkAligner(AtomicBoolean cancelMonitor, Logger log, ServiceContext context, P params) {
         super(cancelMonitor);
         this.log = log;
@@ -133,6 +155,16 @@ public abstract class BaseGeoNetworkAligner<P extends BaseGeonetParams> extends 
         result = new HarvestResult();
     }
 
+    /**
+     * Aligns the provided records from a remote source with the local metadata catalog, performing
+     * necessary add, update, or removal operations based on the current state of the catalog.
+     *
+     * @param records a sorted set of {@link RecordInfo} objects representing metadata records from a remote source
+     * @param errors  a list of {@link HarvestError} to be populated with errors encountered during the alignment process
+     * @return a {@link HarvestResult} object capturing the result of the alignment, including counts of added, updated,
+     * removed, and unchanged records, among other metrics
+     * @throws Exception if an error occurs during the alignment process
+     */
     public HarvestResult align(SortedSet<RecordInfo> records, List<HarvestError> errors) throws Exception {
         log.info("Start of alignment for : " + params.getName());
 
@@ -140,7 +172,7 @@ public abstract class BaseGeoNetworkAligner<P extends BaseGeonetParams> extends 
         //--- retrieve all local categories and groups
         //--- retrieve harvested uuids for given harvesting node
 
-        localCateg = new CategoryMapper(context);
+        localCategory = new CategoryMapper(context);
         localGroups = new GroupMapper(context);
         localUuids = new UUIDMapper(context.getBean(IMetadataUtils.class), params.getUuid());
 
@@ -148,9 +180,7 @@ public abstract class BaseGeoNetworkAligner<P extends BaseGeonetParams> extends 
         processName = filter.one();
         processParams = filter.two();
 
-        //-----------------------------------------------------------------------
         //--- remove old metadata
-
         for (String uuid : localUuids.getUUIDs()) {
             if (cancelMonitor.get()) {
                 return this.result;
@@ -171,6 +201,7 @@ public abstract class BaseGeoNetworkAligner<P extends BaseGeonetParams> extends 
                 result.unchangedMetadata++;
             }
         }
+
         //--- insert/update new metadata
         // Load preferred schema and set to iso19139 by default
         preferredSchema = context.getBean(ServiceConfig.class).getMandatoryValue("preferredSchema");
@@ -184,11 +215,10 @@ public abstract class BaseGeoNetworkAligner<P extends BaseGeonetParams> extends 
             }
 
             try {
-
                 result.totalMetadata++;
 
-                // Mef full format provides ISO19139 records in both the profile
-                // and ISO19139 so we could be able to import them as far as
+                // MEF full format provides ISO19139 records in both the profile
+                // and ISO19139, so we could be able to import them as far as
                 // ISO19139 schema is installed by default.
                 if (!metadataSchemaUtils.existsSchema(ri.schema) && !ri.schema.startsWith("iso19139.")) {
                     log.info("  - Metadata skipped due to unknown schema. uuid:" + ri.uuid
@@ -197,7 +227,7 @@ public abstract class BaseGeoNetworkAligner<P extends BaseGeonetParams> extends 
                 } else {
                     String id = metadataUtils.getMetadataId(ri.uuid);
 
-                    // look up value of localrating/enable
+                    // look up the value of localrating/enable
                     String localRating = settingManager.getValue(Settings.SYSTEM_LOCALRATING_ENABLE);
 
                     if (id == null) {
@@ -230,6 +260,7 @@ public abstract class BaseGeoNetworkAligner<P extends BaseGeonetParams> extends 
                             case SKIP:
                                 log.debug("Skipping record with uuid " + ri.uuid);
                                 result.uuidSkipped++;
+                                break;
                             default:
                                 break;
                         }
@@ -263,18 +294,21 @@ public abstract class BaseGeoNetworkAligner<P extends BaseGeonetParams> extends 
     }
 
     /**
-     * Updates the record on the database. The force parameter allows you to force an update even
-     * if the date is not more updated, to make sure transformation and attributes assigned by the
-     * harvester are applied. Also, it changes the ownership of the record so it is assigned to the
-     * new harvester that last updated it.
+     * Updates the record in the database. The `force` parameter allows you to force an update even if the date
+     * is not more recent, ensuring that transformations and attributes assigned by the harvester are applied.
+     * Additionally, it changes the ownership of the record so it is assigned to the new harvester that last
+     * updated it.
+     * <br>
+     * If certain conditions such as change date comparison and forced update flags are met, the method
+     * retrieves, processes, and aligns the metadata from a remote source.
      *
-     * @param ri
-     * @param id
-     * @param localRating
-     * @param useChangeDate
-     * @param localChangeDate
-     * @param force
-     * @throws Exception
+     * @param ri              the {@link RecordInfo} object containing metadata record details such as UUID and change date
+     * @param id              the identifier of the metadata record being updated
+     * @param localRating     a boolean indicating whether local ratings are enabled for the metadata record
+     * @param useChangeDate   a boolean specifying whether to compare change dates for synchronized updates
+     * @param localChangeDate the change date of the existing local metadata for comparison
+     * @param force           a Boolean flag to enforce the metadata update regardless of conditions (e.g., ownership check)
+     * @throws Exception if an error occurs while retrieving or processing the metadata
      */
     private void updateMetadata(final RecordInfo ri, final String id, final boolean localRating,
                                 final boolean useChangeDate, String localChangeDate, Boolean force) throws Exception {
@@ -299,12 +333,12 @@ public abstract class BaseGeoNetworkAligner<P extends BaseGeonetParams> extends 
 
                     IVisitor visitor = fileType.equals("mef2") ? new MEF2Visitor() : new MEFVisitor();
 
+                    //
                     MEFLib.visit(mefFile, visitor, new IMEFVisitor() {
                         public void handleMetadata(Element mdata, int index) throws Exception {
                             md[index] = mdata;
                         }
 
-                        //-----------------------------------------------------------------
 
                         public void handleMetadataFiles(DirectoryStream<Path> files, Element info, int index) throws Exception {
                             // Import valid metadata
@@ -320,8 +354,6 @@ public abstract class BaseGeoNetworkAligner<P extends BaseGeonetParams> extends 
                             publicFiles[index] = info.getChild("public");
                             privateFiles[index] = info.getChild("private");
                         }
-
-                        //-----------------------------------------------------------------
 
                         public void handlePublicFile(String file, String changeDate, InputStream is, int index) throws Exception {
                             handleFile(id, file, MetadataResourceVisibility.PUBLIC, changeDate, is, publicFiles[index]);
@@ -353,6 +385,19 @@ public abstract class BaseGeoNetworkAligner<P extends BaseGeonetParams> extends 
         }
     }
 
+    /**
+     * Updates the metadata record in the local catalog with the provided XML document and related information.
+     * This method performs validation, processing, category assignment, privilege updates, and indexing for
+     * the metadata record. It handles both forced updates and regular synchronization based on change dates.
+     *
+     * @param ri          the {@link RecordInfo} object containing metadata record details, such as UUID and schema
+     * @param id          the unique identifier of the metadata record being updated in the local database
+     * @param md          the {@link Element} representing the metadata XML document to be used for updating
+     * @param info        the {@link Element} containing additional metadata information, such as rating and popularity
+     * @param localRating a boolean indicating whether local rating values should be preserved or replaced
+     * @param force       a boolean flag indicating whether the update should occur regardless of change date or other conditions
+     * @throws Exception if there are issues with metadata validation, processing, database operations, or indexing
+     */
     private void updateMetadata(RecordInfo ri, String id, Element md,
                                 Element info, boolean localRating, boolean force) throws Exception {
         String date = localUuids.getChangeDate(ri.uuid);
@@ -382,7 +427,7 @@ public abstract class BaseGeoNetworkAligner<P extends BaseGeonetParams> extends 
         } else {
             if (params.mefFormatFull && ri.schema.startsWith(ISO19139SchemaPlugin.IDENTIFIER)) {
                 // In GeoNetwork 3.x, links to resources changed:
-                // * thumbnails contains full URL instead of file name only
+                // * thumbnails contain full URL instead of file name only
                 // * API mode change old URL structure.
                 MetadataResourceDatabaseMigration.updateMetadataResourcesLink(md, null, settingManager);
             }
@@ -414,10 +459,10 @@ public abstract class BaseGeoNetworkAligner<P extends BaseGeonetParams> extends 
         }
 
         metadata.getCategories().clear();
-        addCategories(metadata, params.getCategories(), localCateg, context, null, true);
+        addCategories(metadata, params.getCategories(), localCategory, context, null, true);
         metadata = metadataRepository.findOneById(Integer.parseInt(id));
 
-        Element general = info.getChild("general");
+        Element general = info.getChild(GENERAL);
 
         String popularity = general.getChildText("popularity");
 
@@ -441,7 +486,7 @@ public abstract class BaseGeoNetworkAligner<P extends BaseGeonetParams> extends 
 
         if (((ArrayList<Group>) params.getGroupCopyPolicy()).isEmpty()) {
             addPrivileges(id, params.getPrivileges(), localGroups, context);
-        } else if (info != null){
+        } else {
             addPrivilegesFromGroupPolicy(id, info.getChild("privileges"));
         }
 
@@ -450,9 +495,23 @@ public abstract class BaseGeoNetworkAligner<P extends BaseGeonetParams> extends 
         metadataIndexer.indexMetadata(id, true, IndexingMode.full);
     }
 
-    protected void removeOldFile(ServiceContext context, Logger log, Store store, String metadataUuid, Element infoFiles, MetadataResourceVisibility visibility) throws Exception {
+    /**
+     * Removes old files associated with the specified metadata UUID from the store if they are not
+     * present in the provided list of information files. This operation ensures that redundant or
+     * outdated resources are cleaned up, maintaining consistency with the metadata state.
+     *
+     * @param context      the service context providing access to application-level resources and configurations
+     * @param log          the logger used to track and debug the removal process details
+     * @param store        the storage mechanism handling metadata resource operations (e.g., retrieval, deletion)
+     * @param metadataUuid the unique identifier of the metadata record whose files are being processed
+     * @param infoFiles    an XML element containing a list of currently valid file references for comparison
+     * @param visibility   the visibility level of the resources to manage (e.g., public, private)
+     * @throws Exception if an error occurs during the process of retrieving or deleting metadata resources
+     */
+    protected void removeOldFile(ServiceContext context, Logger log, Store store, String metadataUuid, Element infoFiles,
+                                 MetadataResourceVisibility visibility) throws Exception {
         final List<MetadataResource> resources = store.getResources(context, metadataUuid, visibility, null, true);
-        for (MetadataResource resource: resources) {
+        for (MetadataResource resource : resources) {
             if (infoFiles != null && !existsFile(resource.getId(), infoFiles)) {
                 if (log.isDebugEnabled()) {
                     log.debug("  - Removing old " + metadataUuid + " file with name=" + resource.getFilename());
@@ -463,11 +522,15 @@ public abstract class BaseGeoNetworkAligner<P extends BaseGeonetParams> extends 
     }
 
     /**
-     * Return true if the uuid is present in the remote node
+     * Return true if the uuid is present in the remote node.
+     *
+     * @param records a sorted set of {@link RecordInfo} objects, which are ordered by their UUID attribute
+     * @param uuid    the unique identifier of the record to be checked for existence
+     * @return true if a record with the specified UUID exists in the provided set, false otherwise
      */
     protected boolean exists(SortedSet<RecordInfo> records, String uuid) {
         // Records is a TreeSet sorted by uuid attribute.
-        // Method equals of RecordInfo only checks equality using `uuid` attribute.
+        // Method equals of RecordInfo only checks equality using the ` uuid ` attribute.
         // TreeSet.contains can be used more efficiently instead of doing a loop over all the recordInfo elements.
         RecordInfo recordToTest = new RecordInfo(uuid, null);
         return records.contains(recordToTest);
@@ -475,12 +538,21 @@ public abstract class BaseGeoNetworkAligner<P extends BaseGeonetParams> extends 
     }
 
 
+    /**
+     * Adds privileges to a metadata record based on the group policies defined in the provided element.
+     * This method processes group policies, creates local groups if necessary, and assigns privileges accordingly,
+     * ensuring alignment between remote and local groups.
+     *
+     * @param id     the unique identifier of the metadata record to which privileges are to be assigned
+     * @param privil the {@link Element} containing the group policies and associated privileges
+     * @throws Exception if an error occurs while processing group policies, creating groups, or assigning privileges
+     */
     protected void addPrivilegesFromGroupPolicy(String id, Element privil) throws Exception {
         Map<String, Set<String>> groupOper = buildPrivileges(privil);
 
         Iterable<Group> iterable = params.getGroupCopyPolicy();
         for (Group remoteGroup : iterable) {
-            //--- get operations allowed to remote group
+            //--- get operations allowed to the remote group
             Set<String> oper = groupOper.get(remoteGroup.name);
 
             //--- if we don't find any match, maybe the remote group has been removed
@@ -523,6 +595,17 @@ public abstract class BaseGeoNetworkAligner<P extends BaseGeonetParams> extends 
         }
     }
 
+    /**
+     * Adds specific operations or privileges to metadata records for a specific group.
+     * Only certain operations (view, download, dynamic, featured) are allowed, and others are skipped.
+     * This method interacts with the {@link AccessManager} to retrieve operation IDs
+     * and uses {@link IMetadataOperations} to assign them to the metadata.
+     *
+     * @param id      the unique identifier of the metadata record to which the operations are being added
+     * @param groupId the identifier of the group to which the operations are assigned
+     * @param oper    a set of operation names (as strings) to assign to the metadata for the specified group
+     * @throws Exception if an error occurs during operation ID retrieval or assignment
+     */
     protected void addOperations(String id, String groupId, Set<String> oper) throws Exception {
         for (String opName : oper) {
             int opId = accessManager.getPrivilegeId(opName);
@@ -541,6 +624,14 @@ public abstract class BaseGeoNetworkAligner<P extends BaseGeonetParams> extends 
         }
     }
 
+    /**
+     * Creates a new group with the specified name, assigns translations to it,
+     * saves it to the repository, and updates the localGroups mapping with the generated group ID.
+     *
+     * @param name the name of the group to be created
+     * @return the unique identifier (as a String) of the newly created group, or null if the group name
+     * does not exist in the remote groups mapping
+     */
     protected String createGroup(String name) {
         Map<String, String> hm = hmRemoteGroups.get(name);
 
@@ -559,6 +650,16 @@ public abstract class BaseGeoNetworkAligner<P extends BaseGeonetParams> extends 
         return id + "";
     }
 
+    /**
+     * Builds a map of privileges by processing the given XML element that contains group and operation definitions.
+     * Each group is mapped to a set of operations as specified in the provided element.
+     *
+     * @param privil the {@link Element} representing the root XML element containing group and operation details.
+     *               Each group is expected to have a "name" attribute, and operations within the group are expected
+     *               to have a "name" attribute.
+     * @return a {@link Map} where each key is a group name (as a {@link String}), and the value is a {@link Set}
+     * of operation names (as {@link String}) associated with that group.
+     */
     protected Map<String, Set<String>> buildPrivileges(Element privil) {
         Map<String, Set<String>> map = new HashMap<>();
 
@@ -579,6 +680,13 @@ public abstract class BaseGeoNetworkAligner<P extends BaseGeonetParams> extends 
         return map;
     }
 
+    /**
+     * Checks if a file with the specified name exists within the provided XML element.
+     *
+     * @param fileName the name of the file being searched for
+     * @param files    the XML element containing a list of file elements
+     * @return true if a file with the given name exists, otherwise false
+     */
     protected boolean existsFile(String fileName, Element files) {
         @SuppressWarnings("unchecked")
         List<Element> list = files.getChildren("file");
@@ -594,8 +702,24 @@ public abstract class BaseGeoNetworkAligner<P extends BaseGeonetParams> extends 
         return false;
     }
 
+    /**
+     * Saves a file to the specified storage location if the change date indicates
+     * that the file requires updating or does not already exist. The method checks
+     * the file's metadata for its last modification date and compares it to the
+     * provided date to determine if the file needs to be updated.
+     *
+     * @param store        the storage system where the file will be saved
+     * @param metadataUuid the unique identifier for the metadata associated with the file
+     * @param file         the name of the file to be saved
+     * @param visibility   the visibility scope for the file being saved
+     * @param changeDate   the change date as a string, used to compare with the
+     *                     file's last modification date
+     * @param is           an InputStream containing the data of the file
+     * @throws Exception if an error occurs while saving the file or interacting
+     *                   with the storage system
+     */
     protected void saveFile(final Store store, String metadataUuid, String file,
-                          MetadataResourceVisibility visibility, String changeDate, InputStream is) throws Exception {
+                            MetadataResourceVisibility visibility, String changeDate, InputStream is) throws Exception {
         ISODate remIsoDate = new ISODate(changeDate);
         boolean saveFile;
 
@@ -626,8 +750,20 @@ public abstract class BaseGeoNetworkAligner<P extends BaseGeonetParams> extends 
         }
     }
 
+    /**
+     * Handles the processing of a file, including updating or saving the file in the resource store
+     * and removing any old file references.
+     *
+     * @param id         the identifier of the metadata to which the file belongs
+     * @param file       the name of the file to be processed
+     * @param visibility the visibility level of the resource, determining its accessibility
+     * @param changeDate the date of the modification or update to the file
+     * @param is         the input stream of the file content to be processed
+     * @param files      the XML element containing file information to assist with the file update
+     * @throws Exception if any error occurs during the processing of the file
+     */
     protected void handleFile(String id, String file, MetadataResourceVisibility visibility, String changeDate,
-                            InputStream is, Element files) throws Exception {
+                              InputStream is, Element files) throws Exception {
         if (files == null) {
             if (log.isDebugEnabled())
                 log.debug("  - No file found in info.xml. Cannot update file:" + file);
@@ -641,9 +777,30 @@ public abstract class BaseGeoNetworkAligner<P extends BaseGeonetParams> extends 
     }
 
 
+    /**
+     * Retrieves a metadata exchange format (MEF) file path for the given unique identifier (UUID).
+     * This method is abstract and must be implemented by subclasses to define the specific retrieval logic.
+     *
+     * @param uuid the unique identifier of the metadata resource to retrieve
+     * @return the file path of the retrieved MEF file
+     * @throws URISyntaxException if the URI syntax of the resource is invalid
+     * @throws IOException        if an I/O error occurs during retrieval
+     */
     protected abstract Path retrieveMEF(String uuid) throws URISyntaxException, IOException;
 
 
+    /**
+     * Adds metadata to the system by processing a metadata exchange format (MEF) file.
+     * The method imports metadata, processes associated files, and handles schema information
+     * for the provided UUID. It uses visitor patterns to traverse and extract metadata, public and private
+     * files, and related information from the MEF structure.
+     *
+     * @param ri          The record information object containing details about the metadata record to be added.
+     * @param localRating Indicates whether the metadata should be locally rated or not.
+     * @param uuid        The unique identifier associated with the metadata being imported.
+     * @throws Exception If an error occurs while processing the MEF file, extracting metadata,
+     *                   or performing operations on the metadata resources.
+     */
     protected void addMetadata(final RecordInfo ri, final boolean localRating, String uuid) throws Exception {
         final String[] id = {null};
         final Element[] md = {null};
@@ -666,8 +823,6 @@ public abstract class BaseGeoNetworkAligner<P extends BaseGeonetParams> extends 
                     md[index] = mdata;
                 }
 
-                //--------------------------------------------------------------------
-
                 public void handleMetadataFiles(DirectoryStream<Path> files, Element info, int index) throws Exception {
                     // Import valid metadata
                     Element metadataValidForImport = extractValidMetadataForImport(files, info);
@@ -677,14 +832,12 @@ public abstract class BaseGeoNetworkAligner<P extends BaseGeonetParams> extends 
                     }
                 }
 
-                //--------------------------------------------------------------------
-
                 public void handleInfo(Element info, int index) throws Exception {
 
                     final Element metadata = md[index];
                     String schema = metadataSchemaUtils.autodetectSchema(metadata, null);
                     if (info != null && info.getContentSize() != 0) {
-                        Element general = info.getChild("general");
+                        Element general = info.getChild(GENERAL);
                         if (general != null && general.getContentSize() != 0) {
                             Element schemaInfo = general.getChild("schema");
                             if (schemaInfo != null) {
@@ -696,8 +849,6 @@ public abstract class BaseGeoNetworkAligner<P extends BaseGeonetParams> extends 
                         id[index] = addMetadata(ri, md[index], info, localRating, uuid);
                     }
                 }
-
-                //--------------------------------------------------------------------
 
                 public void handlePublicFile(String file, String changeDate, InputStream is, int index) throws Exception {
                     handleFile(file, changeDate, is, index, MetadataResourceVisibility.PUBLIC);
@@ -738,8 +889,21 @@ public abstract class BaseGeoNetworkAligner<P extends BaseGeonetParams> extends 
         }
     }
 
+    /**
+     * Adds metadata to the system, handling various preprocessing steps
+     * such as validation, schema processing, and privilege application.
+     * It saves the metadata into the database and indexes it.
+     *
+     * @param ri          Information about the record to be added, including the remote UUID and schema details.
+     * @param md          The metadata element to be added, typically in XML format.
+     * @param info        Additional information related to the metadata, including general metadata details.
+     * @param localRating Indicates whether the rating is to be resolved locally or taken from the remote information.
+     * @param uuid        The unique universal identifier for the metadata to be added.
+     * @return The ID of the added metadata as a String, or null if the metadata validation fails.
+     * @throws Exception If an error occurs during the metadata insertion or processing.
+     */
     private String addMetadata(RecordInfo ri, Element md, Element info, boolean localRating, String uuid) throws Exception {
-        Element general = info.getChild("general");
+        Element general = info.getChild(GENERAL);
 
         String createDate = general.getChildText("createDate");
         String changeDate = general.getChildText("changeDate");
@@ -748,8 +912,11 @@ public abstract class BaseGeoNetworkAligner<P extends BaseGeonetParams> extends 
         String popularity = general.getChildText("popularity");
         String schema = general.getChildText("schema");
 
-        if ("true".equals(isTemplate)) isTemplate = "y";
-        else isTemplate = "n";
+        if ("true".equals(isTemplate)) {
+            isTemplate = "y";
+        } else {
+            isTemplate = "n";
+        }
 
         if (log.isDebugEnabled()) {
             log.debug("  - Adding metadata with remote uuid:" + ri.uuid);
@@ -770,8 +937,8 @@ public abstract class BaseGeoNetworkAligner<P extends BaseGeonetParams> extends 
 
         if (params.mefFormatFull && ri.schema.startsWith(ISO19139SchemaPlugin.IDENTIFIER)) {
             // In GeoNetwork 3.x, links to resources changed:
-            // * thumbnails contains full URL instead of file name only
-            // * API mode change old URL structure.
+            // * thumbnails contain full URL instead of file name only
+            // * API mode changes the old URL structure.
             MetadataResourceDatabaseMigration.updateMetadataResourcesLink(md, null, settingManager);
         }
 
@@ -803,7 +970,7 @@ public abstract class BaseGeoNetworkAligner<P extends BaseGeonetParams> extends 
         } catch (NumberFormatException e) {
         }
 
-        addCategories(metadata, params.getCategories(), localCateg, context, null, false);
+        addCategories(metadata, params.getCategories(), localCategory, context, null, false);
 
         metadata = metadataManager.insertMetadata(context, metadata, md, IndexingMode.none, ufo, UpdateDatestamp.NO, false, false);
 
@@ -840,17 +1007,30 @@ public abstract class BaseGeoNetworkAligner<P extends BaseGeonetParams> extends 
         return id;
     }
 
+    /**
+     * Extracts a valid metadata element suitable for import based on the provided schema preferences
+     * and metadata attributes from a collection of files.
+     * <br>
+     * This method iterates through a directory stream of metadata files, attempts to autodetect
+     * their schemas, and prioritizes them based on the schema defined in the provided info element,
+     * followed by a preferred schema, and finally defaults to the first valid metadata file detected.
+     * If no suitable metadata is found, the method will return null.
+     *
+     * @param files a directory stream containing metadata files to be processed
+     * @param info  an element containing metadata information, including the schema used for prioritization
+     * @return an Element corresponding to the valid metadata extracted for import, or null if no valid metadata is found
+     * @throws IOException   if an I/O error occurs while processing the files
+     * @throws JDOMException if an error occurs while handling XML content
+     */
     private Element extractValidMetadataForImport(DirectoryStream<Path> files, Element info) throws IOException, JDOMException {
         Element metadataValidForImport;
         final String finalPreferredSchema = preferredSchema;
 
         String infoSchema = "_none_";
         if (info != null && info.getContentSize() != 0) {
-            Element general = info.getChild("general");
-            if (general != null && general.getContentSize() != 0) {
-                if (general.getChildText("schema") != null) {
-                    infoSchema = general.getChildText("schema");
-                }
+            Element general = info.getChild(GENERAL);
+            if (general != null && general.getContentSize() != 0 && general.getChildText("schema") != null) {
+                infoSchema = general.getChildText("schema");
             }
         }
 
@@ -868,8 +1048,8 @@ public abstract class BaseGeoNetworkAligner<P extends BaseGeonetParams> extends 
                     Path parent = file.getParent();
                     Path parent2 = parent.getParent();
                     String metadataSchema = metadataSchemaUtils.autodetectSchema(metadata, null);
-                    // If local node doesn't know metadata
-                    // schema try to load next xml file.
+                    // If the local node doesn't know metadata
+                    // schema try to load the next XML file.
                     if (metadataSchema == null) {
                         continue;
                     }
@@ -903,7 +1083,7 @@ public abstract class BaseGeoNetworkAligner<P extends BaseGeonetParams> extends 
             return null;
         }
 
-        // 1st: Select metadata with schema in info file
+        // 1st: Select metadata with schema in an info file
         Pair<String, Element> mdInform = mdFiles.get(infoSchema);
         if (mdInform != null) {
             log.debug(mdInform.one()

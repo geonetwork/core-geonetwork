@@ -23,6 +23,9 @@
 
 package org.fao.geonet.kernel.harvest.harvester.geonet;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.ArrayList;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
@@ -32,15 +35,18 @@ import org.fao.geonet.kernel.harvest.harvester.AbstractParams;
 import org.fao.geonet.utils.Log;
 import org.jdom.Element;
 
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.ArrayList;
-
+/**
+ * BaseGeonetParams is an abstract class that extends {@link AbstractParams} and provides
+ * a framework for managing parameters related to GeoNetwork harvesting and configuration.
+ * This class supports the handling of searches, group copy policies, and various
+ * configuration options for GeoNetwork-based harvesting processes.
+ *
+ * @param <S> A type parameter extending BaseSearch, representing the search-related configuration.
+ */
 public abstract class BaseGeonetParams<S extends BaseSearch> extends AbstractParams {
+
     public String host;
-
     public boolean createRemoteCategory;
-
     public boolean mefFormatFull;
 
     /**
@@ -53,17 +59,15 @@ public abstract class BaseGeonetParams<S extends BaseSearch> extends AbstractPar
     public String xslfilter;
 
     protected String node;
-
     protected Boolean useChangeDateForUpdate;
-
     protected ArrayList<S> alSearches = new ArrayList<>();
-
     protected ArrayList<Group> alCopyPolicy = new ArrayList<>();
 
     public BaseGeonetParams(DataManager dm) {
         super(dm);
     }
 
+    @Override
     public void create(Element node) throws BadInputEx {
         super.create(node);
 
@@ -80,11 +84,11 @@ public abstract class BaseGeonetParams<S extends BaseSearch> extends AbstractPar
         mefFormatFull = Util.getParam(site, "mefFormatFull", false);
         xslfilter = Util.getParam(site, "xslfilter", "");
 
-        //checkPort(port);
         addSearches(searches);
         addCopyPolicy(policy);
     }
 
+    @Override
     public void update(Element node) throws BadInputEx {
         super.update(node);
 
@@ -99,11 +103,9 @@ public abstract class BaseGeonetParams<S extends BaseSearch> extends AbstractPar
         mefFormatFull = Util.getParam(site, "mefFormatFull", mefFormatFull);
         xslfilter = Util.getParam(site, "xslfilter", "");
 
-        //checkPort(port);
 
         //--- if some search queries are given, we drop the previous ones and
         //--- set these new ones
-
         if (searches != null)
             addSearches(searches);
 

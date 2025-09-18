@@ -23,12 +23,23 @@
 
 package org.fao.geonet.kernel.harvest.harvester.geonet.v4.client;
 
+import javax.annotation.Nullable;
 import com.fasterxml.jackson.core.Version;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.google.common.base.Function;
 import com.google.common.io.CharStreams;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.Header;
 import org.apache.http.HttpHeaders;
@@ -58,18 +69,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Nullable;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+/**
+ * This class acts as a client for interacting with GeoNetwork version 4 REST API. It provides functionalities
+ * for executing HTTP requests to retrieve and manipulate data from a GeoNetwork server.
+ * <p>
+ * It can use authentication credentials for accessing secured endpoints of the GeoNetwork server.
+ * The class interacts with sources, groups, records, and metadata stored on the server, retrieving data in
+ * JSON or MEF formats as applicable.
+ */
 @Component
 public class GeoNetwork4ApiClient {
     @Autowired
@@ -79,19 +86,21 @@ public class GeoNetwork4ApiClient {
     private SettingManager settingManager;
 
     /**
-     * Retrieves the list of sources from the GeoNetwork server and creates a Map using the source uuid as the key.
+     * Retrieves a map of sources from the GeoNetwork 4.x server. The sources are identified by their UUIDs.
      *
-     * @param serverUrl     GeoNetwork server URL.
-     * @return              Map of sources using the source uuid as the key.
-     * @throws URISyntaxException
-     * @throws IOException
+     * @param serverUrl the URL of the GeoNetwork server.
+     * @param user the username for authentication with the GeoNetwork server.
+     * @param password the password for authentication with the GeoNetwork server.
+     * @return a map where the keys are UUIDs of the sources, and the values are Source objects.
+     * @throws URISyntaxException if the server URL is malformed.
+     * @throws IOException if an error occurs during communication with the GeoNetwork server.
      */
     public Map<String, Source> retrieveSources(String serverUrl, String user, String password) throws URISyntaxException, IOException {
         String sourcesJson = retrieveUrl(addUrlSlash(serverUrl) + "api/sources", user, password);
 
         ObjectMapper objectMapper = new ObjectMapper();
         List<Source> sourceList
-            = objectMapper.readValue(sourcesJson, new TypeReference<>(){});
+            = objectMapper.readValue(sourcesJson, new TypeReference<>() { });
 
         Map<String, Source> sourceMap = new HashMap<>();
         sourceList.forEach(s -> sourceMap.put(s.getUuid(), s));
@@ -100,28 +109,32 @@ public class GeoNetwork4ApiClient {
 
 
     /**
-     * Retrieves the list of groups from the GeoNetwork server.
+     * Retrieves a list of groups from the GeoNetwork 4.x server.
      *
-     * @param serverUrl     GeoNetwork server URL.
-     * @return              List of groups.
-     * @throws URISyntaxException
-     * @throws IOException
+     * @param serverUrl the URL of the GeoNetwork server.
+     * @param user the username for authentication with the GeoNetwork server.
+     * @param password the password for authentication with the GeoNetwork server.
+     * @return a list of groups retrieved from the GeoNetwork server.
+     * @throws URISyntaxException if the server URL is malformed.
+     * @throws IOException if an error occurs during communication with the GeoNetwork server.
      */
     public List<Group> retrieveGroups(String serverUrl, String user, String password) throws URISyntaxException, IOException {
         String groupsJson = retrieveUrl(addUrlSlash(serverUrl) + "api/groups", user, password);
 
         ObjectMapper objectMapper = new ObjectMapper();
-        return objectMapper.readValue(groupsJson, new TypeReference<>(){});
+        return objectMapper.readValue(groupsJson, new TypeReference<>() { });
     }
 
     /**
-     * Queries the GeoNetwork server and returns the results.
+     * Executes a search query against a GeoNetwork server and retrieves the search results.
      *
-     * @param serverUrl     GeoNetwork server URL.
-     * @param query         ElasticSearch query.
-     * @return
-     * @throws URISyntaxException
-     * @throws IOException
+     * @param serverUrl the URL of the GeoNetwork server.
+     * @param query the search query in JSON format.
+     * @param user the username for authentication with the GeoNetwork server.
+     * @param password the password for authentication with the GeoNetwork server.
+     * @return a {@code SearchResponse} object containing the total number of results and the set of result hits.
+     * @throws URISyntaxException if the server URL is malformed.
+     * @throws IOException if an error occurs during communication with the GeoNetwork server.
      */
     public SearchResponse query(String serverUrl, String query, String user, String password) throws URISyntaxException, IOException {
         HttpPost httpMethod = new HttpPost(createUrl(addUrlSlash(serverUrl) + "api/search/records/_search"));
@@ -146,13 +159,16 @@ public class GeoNetwork4ApiClient {
     }
 
     /**
-     * Retrieves a metadata MEF file from the GeoNetwork server.
+     * Downloads a Metadata Exchange Format (MEF) file from a GeoNetwork server for a specific record
+     * identified by its UUID. The MEF file is stored in a temporary location on the filesystem.
      *
-     * @param serverUrl     GeoNetwork server URL.
-     * @param uuid          Metadata UUID to retrieve.
-     * @return
-     * @throws URISyntaxException
-     * @throws IOException
+     * @param serverUrl the URL of the GeoNetwork server
+     * @param uuid      the unique identifier (UUID) of the record to retrieve
+     * @param user      the username for authentication with the GeoNetwork server
+     * @param password  the password for authentication with the GeoNetwork server
+     * @return a {@code Path} representing the location of the downloaded MEF file
+     * @throws URISyntaxException if the URL of the GeoNetwork server is malformed
+     * @throws IOException        if any network or file operation fails
      */
     public Path retrieveMEF(String serverUrl, String uuid, String user, String password) throws URISyntaxException, IOException {
         if (!Lib.net.isUrlValid(serverUrl)) {
@@ -168,7 +184,7 @@ public class GeoNetwork4ApiClient {
         final Header header = new BasicHeader(HttpHeaders.ACCEPT, "application/x-gn-mef-2-zip");
         httpMethod.addHeader(header);
 
-        try (ClientHttpResponse httpResponse = doExecute(httpMethod, user, password)){
+        try (ClientHttpResponse httpResponse = doExecute(httpMethod, user, password)) {
             Files.copy(httpResponse.getBody(), tempFile, StandardCopyOption.REPLACE_EXISTING);
         }
 
@@ -188,7 +204,7 @@ public class GeoNetwork4ApiClient {
         final Header header = new BasicHeader(HttpHeaders.ACCEPT, ContentType.APPLICATION_JSON.toString());
         httpMethod.addHeader(header);
 
-        try ( ClientHttpResponse httpResponse = doExecute(httpMethod, user, password)){
+        try (ClientHttpResponse httpResponse = doExecute(httpMethod, user, password)) {
             return CharStreams.toString(new InputStreamReader(httpResponse.getBody()));
         }
     }

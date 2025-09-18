@@ -23,13 +23,12 @@
 
 package org.fao.geonet.kernel.harvest.harvester.geonet.v21_3;
 
+import java.sql.SQLException;
 import org.fao.geonet.Logger;
 import org.fao.geonet.kernel.harvest.harvester.AbstractHarvester;
 import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
 import org.fao.geonet.kernel.harvest.harvester.geonet.Group;
 import org.jdom.Element;
-
-import java.sql.SQLException;
 
 public class GeonetHarvester extends AbstractHarvester<HarvestResult, GeonetParams> {
     public static final String TYPE = "geonetwork";
@@ -40,6 +39,7 @@ public class GeonetHarvester extends AbstractHarvester<HarvestResult, GeonetPara
     }
 
 
+    @Override
     protected void storeNodeExtra(GeonetParams params, String path,
                                   String siteId, String optionsId) throws SQLException {
         setParams(params);
@@ -78,6 +78,7 @@ public class GeonetHarvester extends AbstractHarvester<HarvestResult, GeonetPara
         }
     }
 
+    @Override
     public void addHarvestInfo(Element info, String id, String uuid) {
         super.addHarvestInfo(info, id, uuid);
 

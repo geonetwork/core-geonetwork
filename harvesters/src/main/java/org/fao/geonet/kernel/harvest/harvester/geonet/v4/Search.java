@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2023 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2025 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -23,8 +23,8 @@
 
 package org.fao.geonet.kernel.harvest.harvester.geonet.v4;
 
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.builder.ToStringBuilder;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.exceptions.BadParameterEx;
 import org.fao.geonet.kernel.harvest.harvester.geonet.BaseSearch;
@@ -32,8 +32,11 @@ import org.fao.geonet.utils.Log;
 import org.jdom.Element;
 
 
-//=============================================================================
-
+/**
+ * The {@code Search} class extends the functionality of {@link BaseSearch}
+ * and provides additional methods for handling search operations, such as
+ * constructing custom Elasticsearch queries and managing search ranges.
+ */
 class Search extends BaseSearch {
 
     public Search() {
@@ -64,29 +67,37 @@ class Search extends BaseSearch {
         return s;
     }
 
+    /**
+     * Generates an Elasticsearch query string based on the defined search parameters and filters.
+     * The query includes various filters such as source UUID filter, free text filter,
+     * title filter, abstract filter, and keyword filter. It also specifies pagination parameters
+     * and the list of fields to be included in the response.
+     *
+     * @return A string representation of the Elasticsearch query formatted as a JSON object.
+     */
     public String createElasticsearchQuery() {
         String sourceFilter = "";
-        if (StringUtils.isNotEmpty(sourceUuid)) {
+        if (StringUtils.isNotBlank(sourceUuid)) {
             sourceFilter = String.format(",{\"term\": {\"sourceCatalogue\": \"%s\"}}", sourceUuid);
         }
 
         String freeTextFilter = "";
-        if (StringUtils.isNotEmpty(freeText)) {
+        if (StringUtils.isNotBlank(freeText)) {
             freeTextFilter = String.format(",{\"query_string\": {\"query\": \"(any.\\\\*:(%s) OR any.common:(%s))\", \"default_operator\": \"AND\"}}", freeText, freeText);
         }
 
         String titleFilter = "";
-        if (StringUtils.isNotEmpty(title)) {
+        if (StringUtils.isNotBlank(title)) {
             titleFilter = String.format(",{\"query_string\": {\"query\": \"(resourceTitleObject.\\\\*:(%s))\", \"default_operator\": \"AND\"}}", title);
         }
 
         String abstractFilter = "";
-        if (StringUtils.isNotEmpty(abstractText)) {
+        if (StringUtils.isNotBlank(abstractText)) {
             abstractFilter = String.format(",{\"query_string\": {\"query\": \"(resourceAbstractObject.\\\\*:(%s))\", \"default_operator\": \"AND\"}}", abstractText);
         }
 
         String keywordFilter = "";
-        if (StringUtils.isNotEmpty(keywords)) {
+        if (StringUtils.isNotBlank(keywords)) {
             abstractFilter = String.format(",{\"term\": {\"tag.default\": \"%s\"}}", keywords);
         }
 

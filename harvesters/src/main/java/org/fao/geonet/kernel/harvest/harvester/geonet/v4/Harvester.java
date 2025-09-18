@@ -24,10 +24,20 @@
 package org.fao.geonet.kernel.harvest.harvester.geonet.v4;
 
 import com.google.common.collect.Lists;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
+import java.util.concurrent.atomic.AtomicBoolean;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.Logger;
+import org.fao.geonet.domain.Group;
 import org.fao.geonet.domain.Source;
-import org.fao.geonet.exceptions.*;
+import org.fao.geonet.exceptions.OperationAbortedEx;
 import org.fao.geonet.kernel.harvest.harvester.HarvestError;
 import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
 import org.fao.geonet.kernel.harvest.harvester.IHarvester;
@@ -37,15 +47,34 @@ import org.fao.geonet.kernel.harvest.harvester.geonet.v4.client.GeoNetwork4ApiCl
 import org.fao.geonet.kernel.harvest.harvester.geonet.v4.client.SearchResponse;
 import org.fao.geonet.kernel.harvest.harvester.geonet.v4.client.SearchResponseHit;
 
-import java.util.*;
-import java.util.concurrent.atomic.AtomicBoolean;
-
+/**
+ * The Harvester class is responsible for managing and executing the harvest
+ * process, including retrieving information about sources, groups, and records,
+ * handling search requests, processing the search results, and aligning the
+ * harvested records with the local node.
+ * <p>
+ * This class extends {@link BaseGeoNetworkHarvester} using {@link GeonetParams}
+ * as the parameter type, and implements the {@link IHarvester} interface with
+ * {@link HarvestResult} as the return type.
+ * <p>
+ * The Harvester interacts with the GeoNetwork API client and supports advanced
+ * operations like search execution, processing of large data sets, and managing
+ * errors during the harvest. It also supports cancellation through a monitor.
+ * <p>
+ * Key functionalities include:
+ <ul>
+     <li>Performing searches based on parameters.</li>
+     <li>Processing search results to extract record information.</li>
+     <li>Handling errors during various phases of the harvest process.</li>
+     <li>Aligning harvested data with the local database and updating sources.</li>
+ </ul>
+ */
 class Harvester extends BaseGeoNetworkHarvester<GeonetParams> implements IHarvester<HarvestResult> {
     private GeoNetwork4ApiClient geoNetworkApiClient;
 
 
     public Harvester(AtomicBoolean cancelMonitor, Logger log, ServiceContext context, GeonetParams params, List<HarvestError> errors) {
-       super(cancelMonitor, log, context, params, errors);
+        super(cancelMonitor, log, context, params, errors);
     }
 
     public HarvestResult harvest(Logger log) throws Exception {
@@ -72,7 +101,7 @@ class Harvester extends BaseGeoNetworkHarvester<GeonetParams> implements IHarves
         String serverUrl = getServerUrl();
         Map<String, Source> sources = geoNetworkApiClient.retrieveSources(serverUrl, username, password);
 
-        List<org.fao.geonet.domain.Group> groupList = geoNetworkApiClient.retrieveGroups(serverUrl, username, password);
+        List<Group> groupList = geoNetworkApiClient.retrieveGroups(serverUrl, username, password);
 
         //--- perform all searches
 

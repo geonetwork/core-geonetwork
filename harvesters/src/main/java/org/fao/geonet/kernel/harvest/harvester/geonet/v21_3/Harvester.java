@@ -24,6 +24,18 @@
 package org.fao.geonet.kernel.harvest.harvester.geonet.v21_3;
 
 import com.google.common.collect.Lists;
+import java.io.IOException;
+import java.net.URL;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
+import java.util.concurrent.atomic.AtomicBoolean;
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.Logger;
@@ -47,19 +59,17 @@ import org.fao.geonet.utils.Xml;
 import org.fao.geonet.utils.XmlRequest;
 import org.jdom.Element;
 
-import java.io.IOException;
-import java.net.URL;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.SortedSet;
-import java.util.TreeSet;
-import java.util.concurrent.atomic.AtomicBoolean;
-
+/**
+ * Class representing a Harvester, which operates as an extension of the {@link BaseGeoNetworkHarvester}
+ * and implements the {@link IHarvester} interface. The Harvester class is responsible for performing harvesting
+ * operations to fetch metadata records, process them, and align them within the current system.
+ * <p>
+ * The Harvester communicates with remote GeoNetwork servers and uses the provided configuration parameters
+ * to perform search operations, retrieve metadata records, and process the data accordingly.
+ * This process involves handling remote requests, logging in with appropriate credentials,
+ * retrieving information such as categories and groups, performing metadata searches,
+ * and aligning the retrieved records into the local environment.
+ */
 class Harvester extends BaseGeoNetworkHarvester<GeonetParams> implements IHarvester<HarvestResult> {
     public Harvester(AtomicBoolean cancelMonitor, Logger log, ServiceContext context, GeonetParams params, List<HarvestError> errors) {
         super(cancelMonitor, log, context, params, errors);
@@ -121,8 +131,8 @@ class Harvester extends BaseGeoNetworkHarvester<GeonetParams> implements IHarves
         SortedSet<RecordInfo> records = new TreeSet<>(Comparator.comparing(RecordInfo::getUuid));
 
         // Do a search and set from=1 and to=2, try to find out maxPageSize
-        // xml.search service returns maxPageSize in 3.8.x onwards, if not set then
-        // use 100. If set but is greater than the one defined by client use the client one.
+        // xml.search service returns maxPageSize in 3.8.x onwards. If not set, then
+        // use 100. If set but is greater than the one defined by client, then use the client one.
         int pageSize = 100;
 
         try {
@@ -137,7 +147,6 @@ class Harvester extends BaseGeoNetworkHarvester<GeonetParams> implements IHarves
                 } else {
                     log.info("Page size returned by the server is greater than the default one for the harvester. " +
                         "Using the client harvester default page size (" + pageSize + ")");
-
                 }
             } else {
                 log.info("Client didn't respond with page size so using page size of " + pageSize);

@@ -48,11 +48,22 @@ import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.when;
 
+/**
+ * Unit test class for GeoNetworkApiClient to test various operations such as
+ * retrieving groups, sources, MEF files, and executing queries.
+ */
 @RunWith(MockitoJUnitRunner.class)
 public class GeoNetworkApiClientTest {
     @Mock
     private GeoNetwork4ApiClient geoNetworkApiClient;
 
+    /**
+     * Tests the functionality of retrieving groups from a GeoNetwork API endpoint.
+     * <p>
+     * This method verifies the proper handling of group retrieval from a given endpoint URL
+     * while also asserting exception handling for invalid URL cases. It uses mock behavior to ensure
+     * the method's logic is tested without actual API calls.
+     */
     @Test
     public void testRetrieveGroups() {
         List<Group> groupList = new ArrayList<>();
@@ -80,6 +91,14 @@ public class GeoNetworkApiClientTest {
     }
 
 
+    /**
+     * Tests the functionality of retrieving sources from a GeoNetwork API endpoint.
+     * <p>
+     * This method verifies the correct behavior of the `retrieveSources` method in the GeoNetwork API
+     * client when provided with valid and invalid endpoint URLs. It uses mock behavior to simulate the
+     * interaction with the API without making real network calls. The test ensures that the method
+     * returns the expected source map for valid inputs and throws an appropriate exception for invalid inputs.
+     */
     @Test
     public void testRetrieveSources() {
         Map<String, Source> sourceMap = new HashMap<>();
@@ -106,6 +125,16 @@ public class GeoNetworkApiClientTest {
         }
     }
 
+    /**
+     * Tests the functionality of the `retrieveMEF` method of the `GeoNetworkApiClient` class.
+     * <p>
+     * The test uses mock behavior to simulate the behavior of the GeoNetwork API client without making
+     * actual network calls. It also ensures correctness by asserting equality between the expected and
+     * actual file paths and verifying that exceptions are thrown for invalid cases.
+     *
+     * @throws IOException        if there is an error during temporary file creation or file operations
+     * @throws URISyntaxException if there is an error constructing the URL during the mock behavior
+     */
     @Test
     public void testRetrieveMEF() {
         try {
@@ -123,6 +152,15 @@ public class GeoNetworkApiClientTest {
         }
     }
 
+    /**
+     * Tests the behavior of querying a GeoNetwork API endpoint.
+     * <p>
+     * This method verifies the following functionalities:
+     * - Correct handling of creating and executing a search query against the API.
+     * - Parsing and deserialization of the query response into a `SearchResponse` object using a custom deserializer.
+     * - Ensuring the returned response matches the expected result for valid URLs.
+     * - Validating that the method throws a `BadParameterEx` exception for invalid URLs.
+     */
     @Test
     public void testQuery() {
         try {

@@ -24,6 +24,7 @@
 package org.fao.geonet.kernel.harvest.harvester.geonet.v21_3;
 
 import com.google.common.base.Splitter;
+import java.util.Iterator;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
@@ -35,9 +36,6 @@ import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 
-import java.util.Iterator;
-
-//=============================================================================
 
 class Search extends BaseSearch {
 
@@ -145,7 +143,7 @@ class Search extends BaseSearch {
             .append("to", to)
             .append("freeText", freeText)
             .append("title", title)
-            .append("abstrac", abstractText)
+            .append("abstractText", abstractText)
             .append("keywords", keywords)
             .append("digital", digital)
             .append("hardcopy", hardcopy)

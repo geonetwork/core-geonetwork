@@ -24,7 +24,9 @@
 package org.fao.geonet.kernel.harvest.harvester.geonet.v4.client;
 
 /**
- * Stores the information used by the harvester, for an Elasticsearch search result.
+ * Represents an individual result from a search operation. This class encapsulates
+ * metadata about a specific search hit, including its unique identifier, associated
+ * schema, the date of the last change, and the source of the record.
  */
 public class SearchResponseHit {
     private final String uuid;
@@ -49,12 +51,13 @@ public class SearchResponseHit {
     }
 
     /**
-     * Constructor for SearchResponseHit.
+     * Constructs a new instance of SearchResponseHit, representing an individual result
+     * from a search operation, and encapsulates metadata about the search hit.
      *
-     * @param uuid       the unique identifier of the metadata record
-     * @param schema     the schema of the metadata record
-     * @param changeDate the date when the metadata record was last changed
-     * @param source     the source of the metadata record
+     * @param uuid       the unique identifier of the search hit
+     * @param schema     the schema associated with the search hit
+     * @param changeDate the last modification date of the search hit
+     * @param source     the source of the search hit
      */
     public SearchResponseHit(String uuid, String schema, String changeDate, String source) {
         this.uuid = uuid;
