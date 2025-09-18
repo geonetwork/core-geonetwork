@@ -97,6 +97,11 @@ public class SchemaLocalizations {
     public static SchemaLocalizations create(String schema) throws IOException, JDOMException {
         Object obj = RequestContextHolder.getRequestAttributes();
 
+        if (obj == null) {
+            // Jobs don't have servlet request attributes so use the default locale language.
+            return create(schema, Locale.getDefault().getISO3Language());
+        }
+
         ServletRequestAttributes attributes = (ServletRequestAttributes) obj;
         HttpServletRequest request = attributes.getRequest();
 
