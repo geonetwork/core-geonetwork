@@ -155,7 +155,7 @@ public abstract class StoreUtils {
             try (
               Store.ResourceHolder holder = store.getResource(context, metadataUuid, resource.getVisibility(),
                     resource.getFilename(), approved);
-              InputStream inputStream = Files.newInputStream(holder.getPath())
+              InputStream inputStream = holder.getResource().getInputStream();
             ) {
                 Files.copy(inputStream, destinationDir.resolve(resource.getFilename()));
             }
