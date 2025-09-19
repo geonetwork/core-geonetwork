@@ -94,7 +94,7 @@ public class ResourceLibCheckPrivilegeTest extends AbstractIntegrationTestWithMo
 		AbstractMetadata md2 = insertMdInDb();
 
 		SecurityContextHolder.setContext(anonymousWithAuthoritySecurityContext);
-		viewMdGrantedAuthority.setMdUuid(md1.getUuid());
+		viewMdGrantedAuthority.setMdId(Integer.toString(md1.getId()));
 
 		new ResourceLib().checkPrivilege(anonymousWithAuthorityServiceContext, String.valueOf(md1.getId()), ReservedOperation.view);
 		assertThrows(OperationNotAllowedEx.class, () -> new ResourceLib().checkPrivilege(anonymousWithAuthorityServiceContext, String.valueOf(md1.getId()), ReservedOperation.editing));
