@@ -667,13 +667,6 @@ public class AccessManager {
                 .filter(ViewMdGrantedAuthority.class::isInstance)
                 .map(ViewMdGrantedAuthority.class::cast)
                 .map(ViewMdGrantedAuthority::getAuthority)
-                .map(uuid -> {
-                    try {
-                        return metadataUtils.getMetadataId(uuid);
-                    } catch (Exception e) {
-                        return null;
-                    }
-                })
                 .filter(mdId::equals)
                 .forEach(grantedAuthority -> results.add(operationRepository.findReservedOperation(ReservedOperation.view)));
     }
