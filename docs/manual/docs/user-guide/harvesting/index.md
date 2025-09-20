@@ -6,6 +6,7 @@ Harvesting is the process of ingesting metadata from remote sources and storing 
 
 The following sources can be harvested:
 
+-   [GeoNetwork 4.X Harvester](harvesting-geonetwork-4.md)
 -   [GeoNetwork 2.1-3.X Harvester](harvesting-geonetwork.md)
 -   [GeoNetwork 2.0 Harvester](harvesting-geonetwork-2.md)
 -   [Harvesting CSW services](harvesting-csw.md)
@@ -18,6 +19,7 @@ The following sources can be harvested:
 -   [GeoPortal REST Harvesting](harvesting-geoportal.md)
 -   [THREDDS Harvesting](harvesting-thredds.md)
 -   [WFS GetFeature Harvesting](harvesting-wfs-features.md)
+-   [SFTP Server Harvesting](harvesting-sftp.md)
 -   [Database Harvesting](harvesting-database.md)
 
 ## Mechanism overview

@@ -11,7 +11,9 @@
   >
     <label id="gn-harvest-settings-selected-name-label" class="control-label">
       <span data-translate="">harvesterName</span>
-      <span data-ng-hide="harvester['@type'] == 'geonetwork'" data-translate=""
+      <span
+        data-ng-hide="harvester['@type'] == 'geonetwork' || harvester['@type'] == 'geonetwork40'"
+        data-translate=""
         >andNodeLogo</span
       >
     </label>
@@ -52,7 +54,7 @@
     id="gn-harvest-settings-selected-name-list"
     class="gn-margin-bottom"
     gn-logo-picker="harvester.site.icon"
-    data-ng-hide="harvester['@type'] == 'geonetwork' || harvester['@type'] == 'geonetwork20'"
+    data-ng-hide="harvester['@type'] == 'geonetwork' || harvester['@type'] == 'geonetwork40' || harvester['@type'] == 'geonetwork20'"
   ></div>
   <div
     id="gn-harvest-settings-selected-group-row"

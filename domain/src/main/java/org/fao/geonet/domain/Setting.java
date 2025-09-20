@@ -23,6 +23,8 @@
 
 package org.fao.geonet.domain;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.fao.geonet.entitylistener.SettingEntityListenerManager;
 import org.hibernate.annotations.Type;
@@ -251,4 +253,12 @@ public class Setting extends GeonetEntity {
         return "Setting{'" + name + "' = '" + value + "'}";
     }
 
+    public static Setting createDeepCopy(Setting setting) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            return objectMapper.readValue(objectMapper.writeValueAsString(setting), Setting.class);
+        } catch (JsonProcessingException e) {
+            throw new IllegalArgumentException(e);
+        }
+    }
 }
