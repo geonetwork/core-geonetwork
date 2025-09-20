@@ -1,6 +1,7 @@
 package org.fao.geonet.security;
 
 import org.fao.geonet.AbstractCoreIntegrationTest;
+import org.fao.geonet.domain.AnonymousAccessLink;
 import org.fao.geonet.kernel.security.ViewMdGrantedAuthority;
 import org.fao.geonet.repository.AnonymousAccessLinkRepository;
 import org.junit.Test;
@@ -22,7 +23,7 @@ import static org.mockito.ArgumentMatchers.argThat;
 
 public class GrantViewAuthorityFilterTest extends AbstractCoreIntegrationTest {
 
-	private Integer mdId;
+	private int mdId;
 	private String hash;
 	private MockHttpServletRequest requestMock;
 	private MockFilterChain filterChainMock;
@@ -41,7 +42,7 @@ public class GrantViewAuthorityFilterTest extends AbstractCoreIntegrationTest {
 				.filter(ViewMdGrantedAuthority.class::isInstance) //
 				.map(ViewMdGrantedAuthority.class::cast).findFirst();
 		assertTrue(extraAuth.isPresent());
-		assertEquals(mdId.toString(), extraAuth.get().getAuthority());
+		assertEquals(mdId, extraAuth.get().getAnonymousAccessLink().getMetadataId());
 	}
 
 	@Test
@@ -79,20 +80,22 @@ public class GrantViewAuthorityFilterTest extends AbstractCoreIntegrationTest {
 
 		toTest.doFilter(requestMock, responseMock, filterChainMock);
 		filterChainMock.reset();
-		Mockito.when(repositoryMock.getAuthorities(argThat("hush-hush"::equals))).thenReturn(Optional.of(123));
+		Mockito.when(repositoryMock.findOneByHash(argThat("hush-hush"::equals))).thenReturn(
+				new AnonymousAccessLink().setMetadataId(123));
 		requestMock.setParameter("hash", "hush-hush");
 		toTest.doFilter(requestMock, responseMock, filterChainMock);
 
 		assertEquals(requestMock, filterChainMock.getRequest());
 		assertEquals(responseMock, filterChainMock.getResponse());
-		List<String> extraAuth = SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream() //
+		List<Integer> extraAuth = SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream() //
 				.filter(ViewMdGrantedAuthority.class::isInstance) //
 				.map(ViewMdGrantedAuthority.class::cast) //
-				.map(ViewMdGrantedAuthority::getAuthority) //
+				.map(ViewMdGrantedAuthority::getAnonymousAccessLink)
+				.map(AnonymousAccessLink::getMetadataId)//
 				.collect(Collectors.toList());
 		assertEquals(2, extraAuth.size());
-		assertTrue(extraAuth.contains(mdId.toString()));
-		assertTrue(extraAuth.contains("123"));
+		assertTrue(extraAuth.contains(mdId));
+		assertTrue(extraAuth.contains(123));
 	}
 
 	@Test
@@ -113,7 +116,7 @@ public class GrantViewAuthorityFilterTest extends AbstractCoreIntegrationTest {
 		hash = "hash-hash";
 		mdId = 666;
 		repositoryMock = Mockito.mock(AnonymousAccessLinkRepository.class);
-		Mockito.when(repositoryMock.getAuthorities(argThat(hash::equals))).thenReturn(Optional.of(mdId));
+		Mockito.when(repositoryMock.findOneByHash(argThat(hash::equals))).thenReturn(new AnonymousAccessLink().setMetadataId(mdId));
 		GrantViewMdAuthorityFilter toTest = new GrantViewMdAuthorityFilter();
 		toTest.anonymousAccessLinkRepository = repositoryMock;
 		requestMock = new MockHttpServletRequest();
