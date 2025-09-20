@@ -666,7 +666,9 @@ public class AccessManager {
         SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream()
                 .filter(ViewMdGrantedAuthority.class::isInstance)
                 .map(ViewMdGrantedAuthority.class::cast)
-                .map(ViewMdGrantedAuthority::getAuthority)
+                .map(ViewMdGrantedAuthority::getAnonymousAccessLink)
+                .map(AnonymousAccessLink::getMetadataId)
+                .map(id -> Integer.toString(id))
                 .filter(mdId::equals)
                 .forEach(grantedAuthority -> results.add(operationRepository.findReservedOperation(ReservedOperation.view)));
     }
