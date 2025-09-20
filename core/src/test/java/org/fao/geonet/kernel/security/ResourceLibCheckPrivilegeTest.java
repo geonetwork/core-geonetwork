@@ -3,6 +3,7 @@ package org.fao.geonet.kernel.security;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.dispatchers.ServiceManager;
 import org.fao.geonet.domain.AbstractMetadata;
+import org.fao.geonet.domain.AnonymousAccessLink;
 import org.fao.geonet.domain.ReservedGroup;
 import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.exceptions.OperationNotAllowedEx;
@@ -94,7 +95,7 @@ public class ResourceLibCheckPrivilegeTest extends AbstractIntegrationTestWithMo
 		AbstractMetadata md2 = insertMdInDb();
 
 		SecurityContextHolder.setContext(anonymousWithAuthoritySecurityContext);
-		viewMdGrantedAuthority.setMdId(Integer.toString(md1.getId()));
+		viewMdGrantedAuthority.setAnonymousAccessLink(new AnonymousAccessLink().setMetadataId(md1.getId()));
 
 		new ResourceLib().checkPrivilege(anonymousWithAuthorityServiceContext, String.valueOf(md1.getId()), ReservedOperation.view);
 		assertThrows(OperationNotAllowedEx.class, () -> new ResourceLib().checkPrivilege(anonymousWithAuthorityServiceContext, String.valueOf(md1.getId()), ReservedOperation.editing));

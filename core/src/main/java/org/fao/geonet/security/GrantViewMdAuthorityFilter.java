@@ -1,5 +1,6 @@
 package org.fao.geonet.security;
 
+import org.fao.geonet.domain.AnonymousAccessLink;
 import org.fao.geonet.kernel.security.ViewMdGrantedAuthority;
 import org.fao.geonet.repository.AnonymousAccessLinkRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +17,6 @@ import javax.servlet.ServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 public class GrantViewMdAuthorityFilter extends GenericFilterBean {
 
@@ -32,22 +32,22 @@ public class GrantViewMdAuthorityFilter extends GenericFilterBean {
             return;
         }
         String hash = servletRequest.getParameter("hash");
-        Optional<Integer> authority = anonymousAccessLinkRepository.getAuthorities(hash);
-        if (authority.isEmpty()) {
+        AnonymousAccessLink authority = anonymousAccessLinkRepository.findOneByHash(hash);
+        if (authority == null) {
             filterChain.doFilter(servletRequest, servletResponse);
             return;
         }
         boolean alreadyGranted = authentication.getAuthorities().stream() //
                 .filter(ViewMdGrantedAuthority.class::isInstance) //
                 .map(ViewMdGrantedAuthority.class::cast) //
-                .map(ViewMdGrantedAuthority::getAuthority) //
-                .anyMatch(authority.get().toString()::equals);
+                .map(ViewMdGrantedAuthority::getAnonymousAccessLink) //
+                .anyMatch(authority::equals);
         if (alreadyGranted){
             filterChain.doFilter(servletRequest, servletResponse);
             return;
         }
         List<GrantedAuthority> authorities = new ArrayList<>(authentication.getAuthorities());
-        authorities.add(new ViewMdGrantedAuthority().setMdId(authority.get().toString()));
+        authorities.add(new ViewMdGrantedAuthority().setAnonymousAccessLink(authority));
         AnonymousAuthenticationToken token = new AnonymousAuthenticationToken(authentication.getName(), authentication.getPrincipal(), authorities);
         SecurityContextHolder.getContext().setAuthentication(token);
         filterChain.doFilter(servletRequest, servletResponse);
