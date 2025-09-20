@@ -1,6 +1,5 @@
 package org.fao.geonet.kernel.security;
 
-import com.google.common.annotations.VisibleForTesting;
 import org.springframework.security.core.GrantedAuthority;
 
 public final class ViewMdGrantedAuthority implements GrantedAuthority {
@@ -13,8 +12,8 @@ public final class ViewMdGrantedAuthority implements GrantedAuthority {
 		return mdId;
 	}
 
-	@VisibleForTesting
-	public void setMdId(String mdId) {
+	public ViewMdGrantedAuthority setMdId(String mdId) {
 		this.mdId = mdId;
+		return this;
 	}
 }
