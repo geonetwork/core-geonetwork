@@ -2,11 +2,20 @@
   <div>
     <p data-ng-bind-html="getMetadataDeleteConfirmMessage()"></p>
 
+    <p data-translate="">metadataDeleteConfirmActionWordLabel</p>
+    <input
+      class="form-control"
+      type="text"
+      data-ng-model="userInput"
+      placeholder="{{'typeToConfirm' | translate}}"
+    />
+
     <div class="modal-footer-inline clearfix">
       <div class="btn-toolbar pull-right">
         <button
           class="btn btn-primary"
           data-gn-click-and-spin="deleteMd()"
+          data-ng-disabled="disableConfirmButton()"
           data-translate=""
         >
           confirm

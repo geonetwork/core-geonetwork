@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2025 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -880,6 +880,21 @@
           selectionBucket: "@"
         },
         link: function (scope, element, attrs) {
+          scope.confirmActionWord = "DELETE";
+
+          // User input for confirm action word
+          scope.userInput = "";
+
+          /**
+           * Checks to disable the confirm button if a confirm action word
+           * is defined and the user input does not match it.
+           *
+           * @returns {boolean}
+           */
+          scope.disableConfirmButton = function () {
+            return scope.userInput !== scope.confirmActionWord;
+          };
+
           scope.deleteMd = function () {
             return gnMetadataActions.deleteMd(null, scope.selectionBucket).then(
               function () {
