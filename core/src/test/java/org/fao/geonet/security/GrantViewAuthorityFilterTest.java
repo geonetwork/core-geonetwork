@@ -12,7 +12,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 
 import javax.servlet.ServletException;
 import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -20,25 +22,105 @@ import static org.mockito.ArgumentMatchers.argThat;
 
 public class GrantViewAuthorityFilterTest extends AbstractCoreIntegrationTest {
 
+	private Integer mdId;
+	private String hash;
+	private MockHttpServletRequest requestMock;
+	private MockFilterChain filterChainMock;
+	private MockHttpServletResponse responseMock;
+	private AnonymousAccessLinkRepository repositoryMock;
+
 	@Test
 	public void nominal() throws ServletException, IOException {
-		String hash = "hash-hash";
-		Integer mdId = 666;
-		AnonymousAccessLinkRepository repositoryMock = Mockito.mock(AnonymousAccessLinkRepository.class);
-		Mockito.when(repositoryMock.getAuthorities(argThat(hash::equals))).thenReturn(Optional.of(mdId));
-		GrantViewMdAuthorityFilter toTest = new GrantViewMdAuthorityFilter();
-		MockHttpServletRequest request = new MockHttpServletRequest();
-		request.setSession(loginAsAnonymous());
-		MockHttpServletResponse response = new MockHttpServletResponse();
-		MockFilterChain filterChain = new MockFilterChain();
+		GrantViewMdAuthorityFilter toTest = prepareToTest();
 
-		toTest.doFilter(request, response, filterChain);
+		toTest.doFilter(requestMock, responseMock, filterChainMock);
 
+		assertEquals(requestMock, filterChainMock.getRequest());
+		assertEquals(responseMock, filterChainMock.getResponse());
 		Optional<ViewMdGrantedAuthority> extraAuth = SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream() //
 				.filter(ViewMdGrantedAuthority.class::isInstance) //
-				.map(ViewMdGrantedAuthority.class::cast) //
-				.findFirst();
+				.map(ViewMdGrantedAuthority.class::cast).findFirst();
 		assertTrue(extraAuth.isPresent());
 		assertEquals(mdId.toString(), extraAuth.get().getAuthority());
+	}
+
+	@Test
+	public void hashIgnoredWhenNotAnonymous() throws ServletException, IOException {
+		GrantViewMdAuthorityFilter toTest = prepareToTest();
+		requestMock.setSession(loginAsAdmin());
+
+		toTest.doFilter(requestMock, responseMock, filterChainMock);
+
+		assertEquals(requestMock, filterChainMock.getRequest());
+		assertEquals(responseMock, filterChainMock.getResponse());
+		long extraAuthCount = SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream() //
+				.filter(ViewMdGrantedAuthority.class::isInstance).count();
+		assertEquals(0, extraAuthCount);
+	}
+
+	@Test
+	public void viewMdAuthorityCanBeAddedOnce() throws ServletException, IOException {
+		GrantViewMdAuthorityFilter toTest = prepareToTest();
+
+		toTest.doFilter(requestMock, responseMock, filterChainMock);
+		filterChainMock.reset();
+		toTest.doFilter(requestMock, responseMock, filterChainMock);
+
+		assertEquals(requestMock, filterChainMock.getRequest());
+		assertEquals(responseMock, filterChainMock.getResponse());
+		long extraAuthCount = SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream() //
+				.filter(ViewMdGrantedAuthority.class::isInstance).count();
+		assertEquals(1, extraAuthCount);
+	}
+
+	@Test
+	public void canViewManyDifferentMds() throws ServletException, IOException {
+		GrantViewMdAuthorityFilter toTest = prepareToTest();
+
+		toTest.doFilter(requestMock, responseMock, filterChainMock);
+		filterChainMock.reset();
+		Mockito.when(repositoryMock.getAuthorities(argThat("hush-hush"::equals))).thenReturn(Optional.of(123));
+		requestMock.setParameter("hash", "hush-hush");
+		toTest.doFilter(requestMock, responseMock, filterChainMock);
+
+		assertEquals(requestMock, filterChainMock.getRequest());
+		assertEquals(responseMock, filterChainMock.getResponse());
+		List<String> extraAuth = SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream() //
+				.filter(ViewMdGrantedAuthority.class::isInstance) //
+				.map(ViewMdGrantedAuthority.class::cast) //
+				.map(ViewMdGrantedAuthority::getAuthority) //
+				.collect(Collectors.toList());
+		assertEquals(2, extraAuth.size());
+		assertTrue(extraAuth.contains(mdId.toString()));
+		assertTrue(extraAuth.contains("123"));
+	}
+
+	@Test
+	public void unknownHashIgnored() throws ServletException, IOException {
+		GrantViewMdAuthorityFilter toTest = prepareToTest();
+
+		requestMock.setParameter("hash", "hush-hush");
+		toTest.doFilter(requestMock, responseMock, filterChainMock);
+
+		assertEquals(requestMock, filterChainMock.getRequest());
+		assertEquals(responseMock, filterChainMock.getResponse());
+		long extraAuthCount = SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream() //
+				.filter(ViewMdGrantedAuthority.class::isInstance).count();
+		assertEquals(0, extraAuthCount);
+	}
+
+	private GrantViewMdAuthorityFilter prepareToTest() {
+		hash = "hash-hash";
+		mdId = 666;
+		repositoryMock = Mockito.mock(AnonymousAccessLinkRepository.class);
+		Mockito.when(repositoryMock.getAuthorities(argThat(hash::equals))).thenReturn(Optional.of(mdId));
+		GrantViewMdAuthorityFilter toTest = new GrantViewMdAuthorityFilter();
+		toTest.anonymousAccessLinkRepository = repositoryMock;
+		requestMock = new MockHttpServletRequest();
+		requestMock.setParameter("hash", hash);
+		responseMock = new MockHttpServletResponse();
+		filterChainMock = new MockFilterChain();
+		requestMock.setSession(loginAsAnonymous());
+		return toTest;
 	}
 }
