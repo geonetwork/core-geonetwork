@@ -5,8 +5,7 @@
     data-ng-if="mdView.current.record.draft != 'y'"
     data-ng-show="(!mdView.current.record.isPublished() || (mdView.current.record.isPublished() && user.canDeletePublishedMetadata()) ) && user.canEditRecord(mdView.current.record)
                             && (user.isReviewerOrMore() || mdView.current.record.mdStatus != 4 || !isMdWorkflowEnable)"
-    data-gn-click-and-spin="deleteRecord(mdView.current.record)"
-    data-gn-confirm-click="{{'deleteRecordConfirm' | translate: {resourceTitle: (mdView.current.record.resourceTitle | json)} }}"
+    data-ng-click="removeMetadata()"
     title="{{'delete' | translate}}"
   >
     <span class="fa fa-fw fa-times"></span>
