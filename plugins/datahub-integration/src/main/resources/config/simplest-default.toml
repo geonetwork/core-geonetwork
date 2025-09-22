@@ -1,3 +1,6 @@
+# Full configuration reference can be found here: https://geonetwork.github.io/geonetwork-ui/main/docs/guide/configure.html#toml-file
+# All configurations parameters may not be available as it depends on datahub version embedded in the plugin.
+
 [global]
 proxy_path = ""
 
