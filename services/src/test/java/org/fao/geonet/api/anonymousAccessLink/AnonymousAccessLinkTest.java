@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.AnonymousAccessLink;
+import org.fao.geonet.kernel.schema.AssociatedResourcesSchemaPlugin;
 import org.fao.geonet.repository.AnonymousAccessLinkRepository;
 import org.fao.geonet.services.AbstractServiceIntegrationTest;
 import org.junit.Test;
@@ -15,8 +16,14 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertTrue;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -38,15 +45,10 @@ public class AnonymousAccessLinkTest extends AbstractServiceIntegrationTest {
 		MockHttpSession session = loginAs(loginAsAdmin(context));
 		AbstractMetadata md = injectMetadataInDb(getSampleMetadataXml(), context, true);
 		ObjectMapper mapper = new ObjectMapper();
-		String content =
-				"{\"id\" : 12345," +
-				"\"metadataId\" : 12345," +
-				"\"metadataUuid\" : \"" + md.getUuid() + "\"," +
-				"\"hash\" : \"this hash will not be taken into account\"}";
 
 		MvcResult result = this.mockMvc.perform(post("/srv/api/anonymousAccessLink")
 						.session(session)
-						.content(content)
+						.content(jsonRequestBodyForCreate(md))
 						.contentType(MediaType.parseMediaType("application/json"))
 						.accept(MediaType.parseMediaType("application/json")))
 				.andExpect(status().isOk())
@@ -55,15 +57,59 @@ public class AnonymousAccessLinkTest extends AbstractServiceIntegrationTest {
 				.andReturn();
 
 		String json = result.getResponse().getContentAsString();
-		AnonymousAccessLink createdAccesLink = mapper.readValue(json, AnonymousAccessLink.class);
-		assertEquals(md.getId(), createdAccesLink.getMetadataId());
-		assertEquals(md.getUuid(), createdAccesLink.getMetadataUuid());
-		assertEquals(md.getUuid() + "_hash", createdAccesLink.getHash());
-		assertEquals(0, createdAccesLink.getId());
+		AnonymousAccessLink createdAccessLink = mapper.readValue(json, AnonymousAccessLink.class);
+		assertEquals(md.getId(), createdAccessLink.getMetadataId());
+		assertEquals(md.getUuid(), createdAccessLink.getMetadataUuid());
+		assertEquals(md.getUuid() + "_hash", createdAccessLink.getHash());
+		assertEquals(0, createdAccessLink.getId());
 
-		AnonymousAccessLink inDb = anonymousAccessLinkRepository.findOneByHash(createdAccesLink.getHash());
+		AnonymousAccessLink inDb = anonymousAccessLinkRepository.findOneByHash(createdAccessLink.getHash());
 		assertEquals(md.getId(), inDb.getMetadataId());
 		assertEquals(md.getUuid(), inDb.getMetadataUuid());
 		assertEquals(md.getUuid() + "_hash", inDb.getHash());
-		assertNotEquals(0, inDb.getId());	}
+		assertNotEquals(0, inDb.getId());
+	}
+
+	@Test
+	public void listAnonymousAccessLink() throws Exception {
+		this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+		ServiceContext context = createServiceContext();
+		MockHttpSession session = loginAs(loginAsAdmin(context));
+		AbstractMetadata md1 = injectMetadataInDb(getSampleMetadataXml(), context, true);
+		AbstractMetadata md2 = injectMetadataInDb(getSampleMetadataXml(), context, true);
+		ObjectMapper mapper = new ObjectMapper();
+		this.mockMvc.perform(post("/srv/api/anonymousAccessLink")
+					.session(session)
+					.content(jsonRequestBodyForCreate(md1))
+					.contentType(MediaType.parseMediaType("application/json"))
+					.accept(MediaType.parseMediaType("application/json")))
+				.andExpect(status().isOk());
+		this.mockMvc.perform(post("/srv/api/anonymousAccessLink")
+						.session(session)
+						.content(jsonRequestBodyForCreate(md2))
+						.contentType(MediaType.parseMediaType("application/json"))
+						.accept(MediaType.parseMediaType("application/json")))
+				.andExpect(status().isOk());
+
+		MvcResult result = this.mockMvc.perform(get("/srv/api/anonymousAccessLink")
+						.session(session)
+						.accept(MediaType.parseMediaType("application/json")))
+				.andExpect(status().isOk())
+				.andReturn();
+
+		String json = result.getResponse().getContentAsString();
+		AnonymousAccessLink[] accessLinks = mapper.readValue(json, AnonymousAccessLink[].class);
+		List<String> referencedMd = Arrays.stream(accessLinks) //
+				.map(AnonymousAccessLink::getMetadataUuid).collect(Collectors.toList());
+		assertTrue(accessLinks.length >= 2);
+		assertTrue(referencedMd.contains(md1.getUuid()));
+		assertTrue(referencedMd.contains(md2.getUuid()));
+	}
+
+	private static String jsonRequestBodyForCreate(AbstractMetadata md) {
+		return "{\"id\" : 12345," +
+				"\"metadataId\" : 12345," +
+				"\"metadataUuid\" : \"" + md.getUuid() + "\"," +
+				"\"hash\" : \"this hash will not be taken into account\"}";
+	}
 }
