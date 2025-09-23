@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 Food and Agriculture Organization of the
+ * Copyright (C) 2025 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -31,7 +31,7 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 
-import static org.fao.geonet.kernel.security.openidconnect.GeonetworkClientRegistrationProvider.CLIENTREGISTRATION_NAME;
+import static org.fao.geonet.kernel.security.openidconnect.GeonetworkClientRegistrationProvider.CLIENT_REGISTRATION_NAME;
 
 /**
  * This is to make things work well in Geonetwork.
@@ -80,7 +80,7 @@ public class HardcodedRegistrationIdOAuth2AuthorizationRequestResolver implement
                 return value;
             }
         };
-        return wrappedResolver.resolve(wrappedRequest, CLIENTREGISTRATION_NAME);
+        return wrappedResolver.resolve(wrappedRequest, CLIENT_REGISTRATION_NAME);
     }
 
     //defaults the "action" to "authorize" and uses the GN default oidc provider name
@@ -101,7 +101,7 @@ public class HardcodedRegistrationIdOAuth2AuthorizationRequestResolver implement
                 return value;
             }
         };
-        return wrappedResolver.resolve(wrappedRequest, CLIENTREGISTRATION_NAME);
+        return wrappedResolver.resolve(wrappedRequest, CLIENT_REGISTRATION_NAME);
     }
 
 }

@@ -70,12 +70,12 @@ public class AudienceAccessTokenValidator implements AccessTokenValidator {
     public void verifyToken(Map claimsJWT, Map userInfoClaims) throws Exception {
         //azp from keycloak
         if ((claimsJWT.get(KEYCLOAK_AUDIENCE_CLAIM_NAME) != null)
-            && claimsJWT.get(KEYCLOAK_AUDIENCE_CLAIM_NAME).equals(oidcConfiguration.getClientId())) {
+            && claimsJWT.get(KEYCLOAK_AUDIENCE_CLAIM_NAME).equals(oidcConfiguration.getClientConfig().getClientId())) {
             return;
         }
 
         if ((claimsJWT.get(APPID_CLAIM_NAME) != null)
-            && claimsJWT.get(APPID_CLAIM_NAME).equals(oidcConfiguration.getClientId())) {
+            && claimsJWT.get(APPID_CLAIM_NAME).equals(oidcConfiguration.getClientConfig().getClientId())) {
             return; //azure specific
         }
 
@@ -83,12 +83,12 @@ public class AudienceAccessTokenValidator implements AccessTokenValidator {
         Object aud = claimsJWT.get(AUDIENCE_CLAIM_NAME);
         if (aud != null) {
             if (aud instanceof String) {
-                if (((String) aud).equals(oidcConfiguration.getClientId()))
+                if (((String) aud).equals(oidcConfiguration.getClientConfig().getClientId()))
                     return;
             } else if (aud instanceof List) {
                 List auds = (List) aud;
                 for (Object o : auds) {
-                    if ((o instanceof String) && (o.equals(oidcConfiguration.getClientId()))) {
+                    if ((o instanceof String) && (o.equals(oidcConfiguration.getClientConfig().getClientId()))) {
                         return;
                     }
                 }

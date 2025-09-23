@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 Food and Agriculture Organization of the
+ * Copyright (C) 2025 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -74,7 +74,7 @@ public class OIDCRoleProcessor {
      */
     public Map<Profile, List<String>> getProfileGroups(OidcIdToken idToken) {
         List<String> oidcOriginalRoleNames = getTokenRoles(idToken);
-        oidcOriginalRoleNames.add(oidcConfiguration.minimumProfile);
+        oidcOriginalRoleNames.add(oidcConfiguration.getMinimumProfile().name());
         List<String> roleNames = simpleConvertRoles(oidcOriginalRoleNames);
 
         return getProfileGroups(roleNames);
@@ -82,7 +82,7 @@ public class OIDCRoleProcessor {
 
     public Map<Profile, List<String>> getProfileGroups(Map attributes) {
         List<String> oidcOriginalRoleNames = getTokenRoles(attributes);
-        oidcOriginalRoleNames.add(oidcConfiguration.minimumProfile);
+        oidcOriginalRoleNames.add(oidcConfiguration.getMinimumProfile().name());
         List<String> roleNames = simpleConvertRoles(oidcOriginalRoleNames);
 
         return getProfileGroups(roleNames);
@@ -96,7 +96,7 @@ public class OIDCRoleProcessor {
      */
     public Map<Profile, List<String>> getProfileGroups(OAuth2User user) {
         List<String> oidcOriginalRoleNames = getTokenRoles(user);
-        oidcOriginalRoleNames.add(oidcConfiguration.minimumProfile);
+        oidcOriginalRoleNames.add(oidcConfiguration.getMinimumProfile().name());
         List<String> roleNames = simpleConvertRoles(oidcOriginalRoleNames);
 
         return getProfileGroups(roleNames);
@@ -155,7 +155,7 @@ public class OIDCRoleProcessor {
      */
     public List<String> simpleConvertRoles(List<String> originalRoleNames) {
         return originalRoleNames.stream()
-            .map(x -> oidcConfiguration.roleConverter.get(x) == null ? x : oidcConfiguration.roleConverter.get(x))
+            .map(x -> oidcConfiguration.getRoleConverter().get(x) == null ? x : oidcConfiguration.getRoleConverter().get(x))
             .distinct()
             .collect(Collectors.toList());
     }
@@ -186,7 +186,7 @@ public class OIDCRoleProcessor {
     }
 
     public Collection<? extends GrantedAuthority> createAuthorities(RoleHierarchy roleHierarchy, List<String> oidcOriginalRoleNames) {
-        oidcOriginalRoleNames.add(oidcConfiguration.minimumProfile);
+        oidcOriginalRoleNames.add(oidcConfiguration.getMinimumProfile().name());
 
         List<String> roleNames = simpleConvertRoles(oidcOriginalRoleNames);
         Map<Profile, List<String>> profileGroups = getProfileGroups(roleNames);
@@ -206,7 +206,7 @@ public class OIDCRoleProcessor {
      */
     public Profile getProfile(Map<String, Object> attributes) {
         List<String> oidcOriginalRoleNames = getTokenRoles(attributes);
-        oidcOriginalRoleNames.add(oidcConfiguration.minimumProfile);
+        oidcOriginalRoleNames.add(oidcConfiguration.getMinimumProfile().name());
 
         List<String> roleNames = simpleConvertRoles(oidcOriginalRoleNames);
 
@@ -248,7 +248,7 @@ public class OIDCRoleProcessor {
     //from GN keycloak plugin
     public Map<Profile, List<String>> getProfileGroups(List<String> rolesInToken) {
 
-        String roleGroupSeparator = oidcConfiguration.groupPermissionSeparator;
+        String roleGroupSeparator = oidcConfiguration.getGroupPermissionSeparator();
         Map<Profile, List<String>> profileGroups = new HashMap<>();
 
         Set<String> roleGroupList = new HashSet<>();
