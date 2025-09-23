@@ -46,7 +46,7 @@ public class ResourceLibCheckPrivilegeTest extends AbstractIntegrationTestWithMo
 	private ViewMdGrantedAuthority viewMdGrantedAuthority;
 
 	@Before
-	public void initAdminContext() throws Exception {
+	public void initUserContexts() throws Exception {
 		adminServiceContext = createServiceContext();
 		loginAsAdmin(adminServiceContext);
 		adminSecurityContext = SecurityContextHolder.getContext();
@@ -72,7 +72,7 @@ public class ResourceLibCheckPrivilegeTest extends AbstractIntegrationTestWithMo
 	}
 
 	@Test
-	public void anonymousWithAuthorityCanViewPrivateMd() throws Exception {
+	public void anonymousCanViewMdIfAllowedOperationInDb() throws Exception {
 		SecurityContextHolder.setContext(adminSecurityContext);
 		AbstractMetadata md = insertMdInDb();
 
@@ -89,7 +89,7 @@ public class ResourceLibCheckPrivilegeTest extends AbstractIntegrationTestWithMo
 	}
 
 	@Test
-	public void anonymousCanViewPrivateMdIfAllowedOperationInSession() throws Exception {
+	public void anonymousCanViewMdIfAllowedOperationInSession() throws Exception {
 		SecurityContextHolder.setContext(adminSecurityContext);
 		AbstractMetadata md1 = insertMdInDb();
 		AbstractMetadata md2 = insertMdInDb();
