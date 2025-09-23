@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+import java.util.List;
+
 @RequestMapping(value = {
 		"/{portal}/api/anonymousAccessLink"
 })
@@ -41,5 +43,16 @@ public class AnonymousAccessLinkApi {
 		anonymousAccessLinkRepository.save(anonymousAccessLinkToCreate);
 		return anonymousAccessLinkToCreate;
 	}
+
+	@RequestMapping(
+			produces = MediaType.APPLICATION_JSON_VALUE,
+			method = RequestMethod.GET)
+	@ResponseStatus(value = HttpStatus.OK)
+	@PreAuthorize("hasRole('Administrator')")
+	@ResponseBody
+	public List<AnonymousAccessLink> getAnonymousAccessLinks() {
+		return anonymousAccessLinkRepository.findAll();
+	}
+
 
 }
