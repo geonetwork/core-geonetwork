@@ -1,5 +1,6 @@
 package org.fao.geonet.api.anonymousAccessLink;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.fao.geonet.domain.AnonymousAccessLink;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.repository.AnonymousAccessLinkRepository;
@@ -20,6 +21,7 @@ import java.util.List;
 		"/{portal}/api/anonymousAccessLink"
 })
 @Controller("anonymousAccessLink")
+@Tag(name = "anonymous access links", description = "'permalinks to not published mds'")
 public class AnonymousAccessLinkApi {
 
 	@Autowired
@@ -34,7 +36,12 @@ public class AnonymousAccessLinkApi {
 	@ResponseStatus(value = HttpStatus.OK)
 	@PreAuthorize("hasRole('Administrator')")
 	@ResponseBody
-	public AnonymousAccessLink createAnonymousAccessLink(@RequestBody AnonymousAccessLink anonymousAccessLink) {
+	@io.swagger.v3.oas.annotations.Operation(
+			summary = "Create anonymous access link",
+			description = "")
+	public AnonymousAccessLink createAnonymousAccessLink(
+			@io.swagger.v3.oas.annotations.parameters.RequestBody(description = "at least {\"metadataUuid\":\"...\"}")
+			@RequestBody AnonymousAccessLink anonymousAccessLink) {
 		String uuid = anonymousAccessLink.getMetadataUuid();
 		AnonymousAccessLink anonymousAccessLinkToCreate = new AnonymousAccessLink() //
 				.setMetadataId(metadataUtils.findOneByUuid(uuid).getId()) //
@@ -50,6 +57,9 @@ public class AnonymousAccessLinkApi {
 	@ResponseStatus(value = HttpStatus.OK)
 	@PreAuthorize("hasRole('Administrator')")
 	@ResponseBody
+	@io.swagger.v3.oas.annotations.Operation(
+			summary = "List all anonymous access links",
+			description = "")
 	public List<AnonymousAccessLink> getAnonymousAccessLinks() {
 		return anonymousAccessLinkRepository.findAll();
 	}
@@ -59,8 +69,12 @@ public class AnonymousAccessLinkApi {
 	@ResponseStatus(value = HttpStatus.OK)
 	@PreAuthorize("hasRole('Administrator')")
 	@ResponseBody
-	public void deleteAccessLinks(@RequestBody AnonymousAccessLink anonymousAccessLink) {
+	@io.swagger.v3.oas.annotations.Operation(
+			summary = "Delete an anonymous access link",
+			description = "")
+	public void deleteAccessLinks(
+			@io.swagger.v3.oas.annotations.parameters.RequestBody(description = "at least {\"hash\":\"...\"}")
+		  	@RequestBody AnonymousAccessLink anonymousAccessLink) {
 		anonymousAccessLinkRepository.delete(anonymousAccessLinkRepository.findOneByHash(anonymousAccessLink.getHash()));
 	}
-
 }
