@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2024 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2025 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -51,6 +51,8 @@ import org.fao.geonet.kernel.datamanager.IMetadataSchemaUtils;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.harvest.Common.OperResult;
 import org.fao.geonet.kernel.harvest.Common.Status;
+import org.fao.geonet.kernel.security.SecurityProviderConfiguration;
+import org.fao.geonet.kernel.security.SecurityProviderUtil;
 import org.fao.geonet.kernel.setting.HarvesterSettingsManager;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
@@ -564,6 +566,20 @@ public abstract class AbstractHarvester<T extends HarvestResult, P extends Abstr
      */
     private void login() throws Exception {
 
+        this.context.setIpAddress(null);
+
+        SecurityProviderUtil securityProviderUtil = SecurityProviderConfiguration.getSecurityProviderUtil();
+
+        // If the configuration has support for service account then login as the service account.
+        if (securityProviderUtil != null) {
+            if (securityProviderUtil.loginServiceAccount()) {
+                UserSession userSession = this.context.getUserSession();
+                if (userSession != null && userSession.isAuthenticated()) {
+                    return;
+                }
+            };
+        }
+
         String ownerId = getParams().getOwnerId();
         if (log.isDebugEnabled()) {
             log.debug("AbstractHarvester login: ownerId = " + ownerId);
@@ -594,8 +610,6 @@ public abstract class AbstractHarvester<T extends HarvestResult, P extends Abstr
         UserSession session = new UserSession();
         session.loginAs(user);
         this.context.setUserSession(session);
-
-        this.context.setIpAddress(null);
     }
 
     /**
