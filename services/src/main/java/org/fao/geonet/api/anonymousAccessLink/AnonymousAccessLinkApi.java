@@ -34,7 +34,7 @@ public class AnonymousAccessLinkApi {
 			produces = MediaType.APPLICATION_JSON_VALUE,
 			method = RequestMethod.POST)
 	@ResponseStatus(value = HttpStatus.OK)
-	@PreAuthorize("hasRole('Administrator')")
+	@PreAuthorize("hasAuthority('Administrator')")
 	@ResponseBody
 	@io.swagger.v3.oas.annotations.Operation(
 			summary = "Create anonymous access link",
@@ -55,7 +55,7 @@ public class AnonymousAccessLinkApi {
 			produces = MediaType.APPLICATION_JSON_VALUE,
 			method = RequestMethod.GET)
 	@ResponseStatus(value = HttpStatus.OK)
-	@PreAuthorize("hasRole('Administrator')")
+	@PreAuthorize("hasAuthority('Administrator')")
 	@ResponseBody
 	@io.swagger.v3.oas.annotations.Operation(
 			summary = "List all anonymous access links",
@@ -67,7 +67,7 @@ public class AnonymousAccessLinkApi {
 	@RequestMapping(
 			method = RequestMethod.DELETE)
 	@ResponseStatus(value = HttpStatus.OK)
-	@PreAuthorize("hasRole('Administrator')")
+	@PreAuthorize("hasAuthority('Administrator')")
 	@ResponseBody
 	@io.swagger.v3.oas.annotations.Operation(
 			summary = "Delete an anonymous access link",
