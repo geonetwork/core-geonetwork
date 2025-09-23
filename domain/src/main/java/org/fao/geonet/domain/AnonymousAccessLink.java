@@ -1,5 +1,7 @@
 package org.fao.geonet.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.annotation.Nonnull;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -30,6 +32,7 @@ public class AnonymousAccessLink {
 	}
 
 	@Nonnull
+	@JsonIgnore
 	public AnonymousAccessLink setId(int id) {
 		this.id = id;
 		return this;
