@@ -13,6 +13,8 @@ import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
@@ -21,8 +23,11 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -72,12 +77,11 @@ public class AnonymousAccessLinkTest extends AbstractServiceIntegrationTest {
 
 	@Test
 	public void listAnonymousAccessLink() throws Exception {
-		this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
 		ServiceContext context = createServiceContext();
-		MockHttpSession session = loginAs(loginAsAdmin(context));
 		AbstractMetadata md1 = injectMetadataInDb(getSampleMetadataXml(), context, true);
 		AbstractMetadata md2 = injectMetadataInDb(getSampleMetadataXml(), context, true);
-		ObjectMapper mapper = new ObjectMapper();
+		this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+		MockHttpSession session = loginAs(loginAsAdmin(context));
 		this.mockMvc.perform(post("/srv/api/anonymousAccessLink")
 					.session(session)
 					.content(jsonRequestBodyForCreate(md1))
@@ -98,12 +102,50 @@ public class AnonymousAccessLinkTest extends AbstractServiceIntegrationTest {
 				.andReturn();
 
 		String json = result.getResponse().getContentAsString();
+		ObjectMapper mapper = new ObjectMapper();
 		AnonymousAccessLink[] accessLinks = mapper.readValue(json, AnonymousAccessLink[].class);
 		List<String> referencedMd = Arrays.stream(accessLinks) //
 				.map(AnonymousAccessLink::getMetadataUuid).collect(Collectors.toList());
 		assertTrue(accessLinks.length >= 2);
 		assertTrue(referencedMd.contains(md1.getUuid()));
 		assertTrue(referencedMd.contains(md2.getUuid()));
+	}
+
+	@Test
+	public void deleteAccessLink() throws Exception {
+		ObjectMapper mapper = new ObjectMapper();
+		ServiceContext context = createServiceContext();
+		AbstractMetadata md = injectMetadataInDb(getSampleMetadataXml(), context, true);
+		this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+		MockHttpSession session = loginAs(loginAsAdmin(context));
+		MvcResult result = this.mockMvc.perform(post("/srv/api/anonymousAccessLink")
+						.session(session)
+						.content(jsonRequestBodyForCreate(md))
+						.contentType(MediaType.parseMediaType("application/json"))
+						.accept(MediaType.parseMediaType("application/json")))
+				.andExpect(status().isOk())
+				.andReturn();
+		AnonymousAccessLink createdAccessLink = mapper.readValue(result.getResponse().getContentAsString(), AnonymousAccessLink.class);
+
+		String requestBody = "{\"hash\" : \"" + createdAccessLink.getHash() + "\"}";
+		this.mockMvc.perform(delete("/srv/api/anonymousAccessLink")
+						.session(session)
+						.content(requestBody)
+						.contentType(MediaType.parseMediaType("application/json")))
+				.andExpect(status().isOk())
+				.andReturn();
+
+		result = this.mockMvc.perform(MockMvcRequestBuilders.get("/srv/api/anonymousAccessLink")
+						.session(session)
+						.accept(MediaType.parseMediaType("application/json")))
+				.andExpect(MockMvcResultMatchers.status().isOk())
+				.andReturn();
+		String json = result.getResponse().getContentAsString();
+		AnonymousAccessLink[] accessLinks = mapper.readValue(json, AnonymousAccessLink[].class);
+		List<String> referencedMd = Arrays.stream(accessLinks) //
+				.map(AnonymousAccessLink::getMetadataUuid).collect(Collectors.toList());
+		assertFalse(referencedMd.contains(md.getUuid()));
+		assertNull(anonymousAccessLinkRepository.findOneByHash(createdAccessLink.getHash()));
 	}
 
 	private static String jsonRequestBodyForCreate(AbstractMetadata md) {

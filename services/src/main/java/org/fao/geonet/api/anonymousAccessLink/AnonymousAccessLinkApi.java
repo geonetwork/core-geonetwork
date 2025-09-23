@@ -54,5 +54,13 @@ public class AnonymousAccessLinkApi {
 		return anonymousAccessLinkRepository.findAll();
 	}
 
+	@RequestMapping(
+			method = RequestMethod.DELETE)
+	@ResponseStatus(value = HttpStatus.OK)
+	@PreAuthorize("hasRole('Administrator')")
+	@ResponseBody
+	public void deleteAccessLinks(@RequestBody AnonymousAccessLink anonymousAccessLink) {
+		anonymousAccessLinkRepository.delete(anonymousAccessLinkRepository.findOneByHash(anonymousAccessLink.getHash()));
+	}
 
 }
