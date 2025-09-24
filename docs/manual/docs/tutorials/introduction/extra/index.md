@@ -20,6 +20,25 @@ Read more about the usage of kibana at <https://www.elastic.co/guide/en/kibana/c
 
 ## Search engines
 
-Search engines provide a good mechanism for wide data discovery for public portals. The process of having catalogue content ingested by search engine crawlers requires some attention. The search engine expects to find robots.txt, at the root of the domain. Robots.txt contains a reference to the sitemap /srv/api/sitemap. Alternatively you can register the sitemap manually at individual search engines.
+Search engines provide a good mechanism for wide data discovery for public portals. The process of having catalogue content ingested by search engine crawlers requires some attention. The search engine expects to find `robots.txt`, at the root of the domain. The catalogue provide a `robots.txt` file at http://localhost:8080/geonetwork/srv/api/robots.txt. 
 
-GeoNetwork includes on any html representation of a metadata record a representation of that record in schema.org encoded as json-ld. This enables the search engine to extract the information in a structured way.
+```shell
+User-agent: *
+Disallow: /geonetwork/catalog/
+Disallow: /geonetwork/static/
+Sitemap: http://localhost:8080/geonetwork/srv/api/sitemap
+```
+
+This file contains references to the sitemap which register all record landing pages available for indexing. The sitemap is paginated if needed. For better indexing, you may need to register the sitemap manually at individual search engines.
+
+```xml
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dct="http://purl.org/dc/terms/" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 https://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+  <url>
+    <loc>http://localhost:8080/geonetwork/srv/api/records/da165110-88fd-11da-a88f-000d939bc5d8?language=all</loc>
+    <lastmod>2024-06-04</lastmod>
+  </url>
+```
+
+GeoNetwork includes on any html representation of a metadata record a representation of that record in [schema.org](https://schema.org/) encoded as `json-ld`. The `json-ld` representation is embedded in the html page as a script element and contains also [Croissant extension](https://docs.mlcommons.org/croissant/). "Croissant 🥐 is a high-level format for machine learning datasets that combines metadata, resource file descriptions, data structure, and default ML semantics into a single file; it works with existing datasets to make them easier to find, use, and support with tools. Croissant builds on schema.org, and its Dataset vocabulary, a widely used format to represent datasets on the Web, and make them searchable." It covers data model aspects (ISO19110) and additional details about distributions not covered by schema.org.
+
+This enables the search engine to extract the information in a structured way.
