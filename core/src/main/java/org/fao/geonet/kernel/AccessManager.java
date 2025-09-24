@@ -45,6 +45,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.sql.SQLException;
 import java.util.*;
+import java.util.stream.Stream;
 
 import static org.fao.geonet.kernel.setting.Settings.SYSTEM_INTRANET_IP_SEPARATOR;
 import static org.fao.geonet.kernel.setting.Settings.SYSTEM_METADATAPRIVS_PUBLICATIONBYGROUPOWNERONLY;
@@ -80,6 +81,13 @@ public class AccessManager {
 
     @Autowired
     UserRepository userRepository;
+
+    public static Stream<AnonymousAccessLink> anonymousAccessLinkStreamFromSecurityContext() {
+        return SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream()
+                .filter(ViewMdGrantedAuthority.class::isInstance)
+                .map(ViewMdGrantedAuthority.class::cast)
+                .map(ViewMdGrantedAuthority::getAnonymousAccessLink);
+    }
 
     /**
      * Given a user(session) a list of groups and a metadata returns all operations that user can
@@ -663,10 +671,7 @@ public class AccessManager {
     }
 
     private void processViewMdGrantedAuthorityIfAny(String mdId, Set<Operation> results) {
-        SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream()
-                .filter(ViewMdGrantedAuthority.class::isInstance)
-                .map(ViewMdGrantedAuthority.class::cast)
-                .map(ViewMdGrantedAuthority::getAnonymousAccessLink)
+        anonymousAccessLinkStreamFromSecurityContext()
                 .map(AnonymousAccessLink::getMetadataId)
                 .map(id -> Integer.toString(id))
                 .filter(mdId::equals)
