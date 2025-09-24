@@ -107,6 +107,9 @@ public class MEF2Visitor implements IVisitor {
                             // Handle binaries
                             handleBin(file, v, info, nbMetadata);
 
+                            // Index the record so that the resources are included
+                            v.indexMetadata(nbMetadata);
+
                             nbMetadata++;
                         }
                     }
