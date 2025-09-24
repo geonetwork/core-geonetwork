@@ -65,14 +65,14 @@ public class AnonymousAccessLinkTest extends AbstractServiceIntegrationTest {
 		AnonymousAccessLink createdAccessLink = mapper.readValue(json, AnonymousAccessLink.class);
 		assertEquals(md.getId(), createdAccessLink.getMetadataId());
 		assertEquals(md.getUuid(), createdAccessLink.getMetadataUuid());
-		assertEquals(md.getUuid() + "_hash", createdAccessLink.getHash());
 		assertEquals(0, createdAccessLink.getId());
 
 		AnonymousAccessLink inDb = anonymousAccessLinkRepository.findOneByHash(createdAccessLink.getHash());
 		assertEquals(md.getId(), inDb.getMetadataId());
 		assertEquals(md.getUuid(), inDb.getMetadataUuid());
-		assertEquals(md.getUuid() + "_hash", inDb.getHash());
 		assertNotEquals(0, inDb.getId());
+
+		assertEquals(createdAccessLink.getHash(), inDb.getHash());
 	}
 
 	@Test

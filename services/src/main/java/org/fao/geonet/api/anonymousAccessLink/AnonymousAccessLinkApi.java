@@ -46,7 +46,7 @@ public class AnonymousAccessLinkApi {
 		AnonymousAccessLink anonymousAccessLinkToCreate = new AnonymousAccessLink() //
 				.setMetadataId(metadataUtils.findOneByUuid(uuid).getId()) //
 				.setMetadataUuid(uuid) //
-				.setHash(uuid + "_hash");
+				.setHash(AnonymousAccessLink.getRandomHash());
 		anonymousAccessLinkRepository.save(anonymousAccessLinkToCreate);
 		return anonymousAccessLinkToCreate;
 	}
