@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2007 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2025 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -21,9 +21,21 @@
 //===	Rome - Italy. email: geonetwork@osgeo.org
 //==============================================================================
 
-package org.fao.geonet.kernel.harvest.harvester.geonet;
+package org.fao.geonet.kernel.harvest.harvester.geonet.v21_3;
 
 import com.google.common.collect.Lists;
+import java.io.IOException;
+import java.net.URL;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
+import java.util.concurrent.atomic.AtomicBoolean;
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.Logger;
@@ -40,59 +52,33 @@ import org.fao.geonet.kernel.harvest.harvester.HarvestError;
 import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
 import org.fao.geonet.kernel.harvest.harvester.IHarvester;
 import org.fao.geonet.kernel.harvest.harvester.RecordInfo;
-import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.kernel.harvest.harvester.geonet.BaseGeoNetworkHarvester;
 import org.fao.geonet.lib.Lib;
-import org.fao.geonet.repository.SourceRepository;
-import org.fao.geonet.resources.Resources;
 import org.fao.geonet.utils.GeonetHttpRequestFactory;
-import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Xml;
 import org.fao.geonet.utils.XmlRequest;
 import org.jdom.Element;
 
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.nio.file.Path;
-import java.sql.SQLException;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.SortedSet;
-import java.util.TreeSet;
-import java.util.concurrent.atomic.AtomicBoolean;
-
-class Harvester implements IHarvester<HarvestResult> {
-    private final AtomicBoolean cancelMonitor;
-    private Logger log;
-
-    private final GeonetParams params;
-    private final ServiceContext context;
-
-    /**
-     * Contains a list of accumulated errors during the executing of this harvest.
-     */
-    private final List<HarvestError> errors;
-
-    //---------------------------------------------------------------------------
-
+/**
+ * Class representing a Harvester, which operates as an extension of the {@link BaseGeoNetworkHarvester}
+ * and implements the {@link IHarvester} interface. The Harvester class is responsible for performing harvesting
+ * operations to fetch metadata records, process them, and align them within the current system.
+ * <p>
+ * The Harvester communicates with remote GeoNetwork servers and uses the provided configuration parameters
+ * to perform search operations, retrieve metadata records, and process the data accordingly.
+ * This process involves handling remote requests, logging in with appropriate credentials,
+ * retrieving information such as categories and groups, performing metadata searches,
+ * and aligning the retrieved records into the local environment.
+ */
+class Harvester extends BaseGeoNetworkHarvester<GeonetParams> implements IHarvester<HarvestResult> {
     public Harvester(AtomicBoolean cancelMonitor, Logger log, ServiceContext context, GeonetParams params, List<HarvestError> errors) {
-        this.cancelMonitor = cancelMonitor;
-        this.log = log;
-        this.context = context;
-        this.params = params;
-        this.errors = errors;
+        super(cancelMonitor, log, context, params, errors);
     }
 
     public HarvestResult harvest(Logger log) throws Exception {
         this.log = log;
         String host = params.host;
-        if (new URL(host).getPath().equals("")) {
+        if (new URL(host).getPath().isEmpty()) {
             // Needed to make it work when harvesting from a GN deployed at ROOT ("/")
             host += "/";
         }
@@ -141,12 +127,12 @@ class Harvester implements IHarvester<HarvestResult> {
 
         //--- perform all searches
 
-        // Use a TreeSet because in the align phase we need to check if a given UUID is already in the set..
+        // Use a TreeSet because in the align phase we need to check if a given UUID is already in the set.
         SortedSet<RecordInfo> records = new TreeSet<>(Comparator.comparing(RecordInfo::getUuid));
 
         // Do a search and set from=1 and to=2, try to find out maxPageSize
-        // xml.search service returns maxPageSize in 3.8.x onwards, if not set then
-        // use 100. If set but is greater than the one defined by client use the client one.
+        // xml.search service returns maxPageSize in 3.8.x onwards. If not set, then
+        // use 100. If set but is greater than the one defined by client, then use the client one.
         int pageSize = 100;
 
         try {
@@ -161,7 +147,6 @@ class Harvester implements IHarvester<HarvestResult> {
                 } else {
                     log.info("Page size returned by the server is greater than the default one for the harvester. " +
                         "Using the client harvester default page size (" + pageSize + ")");
-
                 }
             } else {
                 log.info("Client didn't respond with page size so using page size of " + pageSize);
@@ -194,7 +179,7 @@ class Harvester implements IHarvester<HarvestResult> {
                 try {
                     Element searchResult = doSearch(req, s);
                     Element summary = searchResult.getChild(Geonet.Elem.SUMMARY);
-                    resultCount = Integer.valueOf(summary.getAttributeValue("count"));
+                    resultCount = Integer.parseInt(summary.getAttributeValue("count"));
 
                     @SuppressWarnings("unchecked")
                     List<Element> metadataResultList = searchResult.getChildren("metadata");
@@ -349,7 +334,7 @@ class Harvester implements IHarvester<HarvestResult> {
         if (sources == null)
             throw new BadServerResponseEx(info);
 
-        Map<String, Source> map = new HashMap<String, Source>();
+        Map<String, Source> map = new HashMap<>();
 
         for (Object o : sources.getChildren()) {
             Element sourceEl = (Element) o;
@@ -357,74 +342,16 @@ class Harvester implements IHarvester<HarvestResult> {
             String uuid = sourceEl.getChildText("uuid");
             String name = sourceEl.getChildText("name");
 
-            Source source = new Source(uuid, name, new HashMap<String, String>(), SourceType.harvester);
-            // If translation element provided and has values, use it.
-            // Otherwise use the default ones from the name of the source
+            Source source = new Source(uuid, name, new HashMap<>(), SourceType.harvester);
+            // If the translation element provided and has values, use it.
+            // Otherwise, use the default ones from the name of the source
             if ((sourceEl.getChild("label") != null) &&
-                (sourceEl.getChild("label").getChildren().size() > 0)) {
+                (!sourceEl.getChild("label").getChildren().isEmpty())) {
                 source.setLabelTranslationsFromElement(sourceEl.getChild("label").getChildren());
             }
             map.put(uuid, source);
         }
 
         return map;
-    }
-
-    private void updateSources(SortedSet<RecordInfo> records,
-                               Map<String, Source> remoteSources) throws MalformedURLException {
-        log.info("Aligning source logos from for : " + params.getName());
-
-        //--- collect all different sources that have been harvested
-
-        Set<String> sources = new HashSet<>();
-
-        for (RecordInfo ri : records) {
-            sources.add(ri.source);
-        }
-
-        //--- update local sources and retrieve logos (if the case)
-
-        String siteId = context.getBean(SettingManager.class).getSiteId();
-        final Resources resources = context.getBean(Resources.class);
-
-        for (String sourceUuid : sources) {
-            if (!siteId.equals(sourceUuid)) {
-                Source source = remoteSources.get(sourceUuid);
-
-                if (source != null) {
-                    retrieveLogo(context, resources, params.host, sourceUuid);
-                } else {
-                    String sourceName = "(unknown)";
-                    source = new Source(sourceUuid, sourceName, new HashMap<String, String>(), SourceType.harvester);
-                    resources.copyUnknownLogo(context, sourceUuid);
-                }
-
-                context.getBean(SourceRepository.class).save(source);
-            }
-        }
-    }
-
-    private void retrieveLogo(ServiceContext context, final Resources resources, String url, String uuid) throws MalformedURLException {
-        String logo = uuid + ".gif";
-        String baseUrl = url;
-        if (!new URL(baseUrl).getPath().endsWith("/")) {
-            // Needed to make it work when harvesting from a GN deployed at ROOT ("/")
-            baseUrl += "/";
-        }
-        XmlRequest req = context.getBean(GeonetHttpRequestFactory.class).createXmlRequest(new URL(baseUrl));
-        Lib.net.setupProxy(context, req);
-        req.setAddress(req.getAddress() + "images/logos/" + logo);
-
-        final Path logoDir = resources.locateLogosDir(context);
-
-        try {
-            resources.createImageFromReq(context, logoDir, logo, req);
-        } catch (IOException e) {
-            context.warning("Cannot retrieve logo file from : " + url);
-            context.warning("  (C) Logo  : " + logo);
-            context.warning("  (C) Excep : " + e.getMessage());
-
-            resources.copyUnknownLogo(context, uuid);
-        }
     }
 }

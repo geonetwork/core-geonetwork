@@ -1,104 +1,63 @@
 //=============================================================================
-//===	Copyright (C) 2001-2007 Food and Agriculture Organization of the
-//===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
-//===	and United Nations Environment Programme (UNEP)
+//===    Copyright (C) 2001-2025 Food and Agriculture Organization of the
+//===    United Nations (FAO-UN), United Nations World Food Programme (WFP)
+//===    and United Nations Environment Programme (UNEP)
 //===
-//===	This program is free software; you can redistribute it and/or modify
-//===	it under the terms of the GNU General Public License as published by
-//===	the Free Software Foundation; either version 2 of the License, or (at
-//===	your option) any later version.
+//===    This program is free software; you can redistribute it and/or modify
+//===    it under the terms of the GNU General Public License as published by
+//===    the Free Software Foundation; either version 2 of the License, or (at
+//===    your option) any later version.
 //===
-//===	This program is distributed in the hope that it will be useful, but
-//===	WITHOUT ANY WARRANTY; without even the implied warranty of
-//===	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
-//===	General Public License for more details.
+//===    This program is distributed in the hope that it will be useful, but
+//===    WITHOUT ANY WARRANTY; without even the implied warranty of
+//===    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+//===    General Public License for more details.
 //===
-//===	You should have received a copy of the GNU General Public License
-//===	along with this program; if not, write to the Free Software
-//===	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
+//===    You should have received a copy of the GNU General Public License
+//===    along with this program; if not, write to the Free Software
+//===    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
 //===
-//===	Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
-//===	Rome - Italy. email: geonetwork@osgeo.org
+//===    Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
+//===    Rome - Italy. email: geonetwork@osgeo.org
 //==============================================================================
 
-package org.fao.geonet.kernel.harvest.harvester.geonet;
+package org.fao.geonet.kernel.harvest.harvester.geonet.v21_3;
 
 import com.google.common.base.Splitter;
+import java.util.Iterator;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.exceptions.BadParameterEx;
 import org.fao.geonet.exceptions.OperationAbortedEx;
+import org.fao.geonet.kernel.harvest.harvester.geonet.BaseSearch;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 
-import java.util.Iterator;
 
-//=============================================================================
+class Search extends BaseSearch {
 
-class Search {
-    public int from;
-    public int to;
-    public String freeText;
-
-    //---------------------------------------------------------------------------
-    public String title;
-
-    //----------------------------------------------------	-----------------------
-    //---
-    //--- API methods
-    //---
-    //---------------------------------------------------------------------------
-    public String abstrac;
-
-    //---------------------------------------------------------------------------
-    public String keywords;
-
-    //---------------------------------------------------------------------------
     public boolean digital;
-
-    //---------------------------------------------------------------------------
-    //---
-    //--- Private methods
-    //---
-    //---------------------------------------------------------------------------
     public boolean hardcopy;
-
-    //---------------------------------------------------------------------------
-    //---
-    //--- Variables
-    //---
-    //---------------------------------------------------------------------------
-    public String sourceUuid;
     public String sourceName;
     public String anyField;
     public String anyValue;
 
-    //---------------------------------------------------------------------------
-    //---
-    //--- Constructor
-    //---
-    //---------------------------------------------------------------------------
     public Search() {
+        super();
     }
 
     public Search(Element search) throws BadParameterEx {
-        freeText = Util.getParam(search, "freeText", "");
-        title = Util.getParam(search, "title", "");
-        abstrac = Util.getParam(search, "abstract", "");
-        keywords = Util.getParam(search, "keywords", "");
+        super(search);
         digital = Util.getParam(search, "digital", false);
         hardcopy = Util.getParam(search, "hardcopy", false);
         anyField = Util.getParam(search, "anyField", "");
         anyValue = Util.getParam(search, "anyValue", "");
 
         Element source = search.getChild("source");
-
-        sourceUuid = Util.getParam(source, "uuid", "");
         sourceName = Util.getParam(source, "name", "");
-
     }
 
     public static Search createEmptySearch(int from, int to) throws BadParameterEx {
@@ -112,7 +71,7 @@ class Search {
 
         s.freeText = freeText;
         s.title = title;
-        s.abstrac = abstrac;
+        s.abstractText = abstractText;
         s.keywords = keywords;
         s.digital = digital;
         s.hardcopy = hardcopy;
@@ -132,7 +91,7 @@ class Search {
         add(req, "to", Integer.toString(to));
         add(req, "any", freeText);
         add(req, "title", title);
-        add(req, "abstract", abstrac);
+        add(req, "abstract", abstractText);
         add(req, "themekey", keywords);
         add(req, "siteId", sourceUuid);
 
@@ -168,7 +127,7 @@ class Search {
     }
 
     private void add(Element req, String name, String value) {
-        if (value.length() != 0)
+        if (!value.isEmpty())
             req.addContent(new Element(name).setText(value));
     }
 
@@ -184,7 +143,7 @@ class Search {
             .append("to", to)
             .append("freeText", freeText)
             .append("title", title)
-            .append("abstrac", abstrac)
+            .append("abstractText", abstractText)
             .append("keywords", keywords)
             .append("digital", digital)
             .append("hardcopy", hardcopy)
