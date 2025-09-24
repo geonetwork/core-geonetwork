@@ -1,6 +1,8 @@
 package org.fao.geonet.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.springframework.security.crypto.keygen.BytesKeyGenerator;
+import org.springframework.security.crypto.keygen.KeyGenerators;
 
 import javax.annotation.Nonnull;
 import javax.persistence.Column;
@@ -9,6 +11,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
+import java.util.Base64;
 import java.util.Objects;
 
 
@@ -75,5 +78,10 @@ public class AnonymousAccessLink {
 	@Override
 	public int hashCode() {
 		return Objects.hash(id, metadataId, metadataUuid, hash);
+	}
+
+	public static String getRandomHash() {
+		BytesKeyGenerator generator = KeyGenerators.secureRandom(64);
+		return Base64.getUrlEncoder().encodeToString(generator.generateKey());
 	}
 }
