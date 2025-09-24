@@ -5,9 +5,11 @@ import org.fao.geonet.kernel.security.ViewMdGrantedAuthority;
 import org.fao.geonet.repository.AnonymousAccessLinkRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.authentication.AuthenticationTrustResolver;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.web.filter.GenericFilterBean;
 
 import javax.servlet.FilterChain;
@@ -22,6 +24,23 @@ public class GrantViewMdAuthorityFilter extends GenericFilterBean {
 
     @Autowired
     AnonymousAccessLinkRepository anonymousAccessLinkRepository;
+
+    private HttpSessionSecurityContextRepository repo;
+
+    public GrantViewMdAuthorityFilter(HttpSessionSecurityContextRepository httpSessionSecurityContextRepository) {
+        this.repo = httpSessionSecurityContextRepository;
+        this.repo.setTrustResolver(new AuthenticationTrustResolver() {
+            @Override
+            public boolean isAnonymous(Authentication authentication) {
+                return false;
+            }
+
+            @Override
+            public boolean isRememberMe(Authentication authentication) {
+                return false;
+            }
+        });
+    }
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {

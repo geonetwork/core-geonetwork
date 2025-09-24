@@ -10,6 +10,7 @@ import org.springframework.mock.web.MockFilterChain;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 
 import javax.servlet.ServletException;
 import java.io.IOException;
@@ -20,6 +21,7 @@ import java.util.stream.Collectors;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.argThat;
+import static org.mockito.Mockito.mock;
 
 public class GrantViewAuthorityFilterTest extends AbstractCoreIntegrationTest {
 
@@ -115,9 +117,9 @@ public class GrantViewAuthorityFilterTest extends AbstractCoreIntegrationTest {
 	private GrantViewMdAuthorityFilter prepareToTest() {
 		hash = "hash-hash";
 		mdId = 666;
-		repositoryMock = Mockito.mock(AnonymousAccessLinkRepository.class);
+		repositoryMock = mock(AnonymousAccessLinkRepository.class);
 		Mockito.when(repositoryMock.findOneByHash(argThat(hash::equals))).thenReturn(new AnonymousAccessLink().setMetadataId(mdId));
-		GrantViewMdAuthorityFilter toTest = new GrantViewMdAuthorityFilter();
+		GrantViewMdAuthorityFilter toTest = new GrantViewMdAuthorityFilter(mock(HttpSessionSecurityContextRepository.class));
 		toTest.anonymousAccessLinkRepository = repositoryMock;
 		requestMock = new MockHttpServletRequest();
 		requestMock.setParameter("hash", hash);

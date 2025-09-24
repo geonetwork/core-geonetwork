@@ -101,6 +101,7 @@
         <ref bean="formLoginFilter"/>
         <ref bean="requestCacheFilter"/>
         <ref bean="anonymousFilter"/>
+        <ref bean="grantViewMdAuthorityFilter"/>
         <ref bean="sessionMgmtFilter"/>
         <ref bean="exceptionTranslationFilter"/>
         <ref bean="filterSecurityInterceptor"/>
@@ -113,6 +114,10 @@
   <bean id="securityContextPersistenceFilter"
         class="org.springframework.security.web.context.SecurityContextPersistenceFilter">
     <!-- repo -->
+    <constructor-arg ref="securityContextRepository"/>
+  </bean>
+
+  <bean id="grantViewMdAuthorityFilter" class="org.fao.geonet.security.GrantViewMdAuthorityFilter">
     <constructor-arg ref="securityContextRepository"/>
   </bean>
 
