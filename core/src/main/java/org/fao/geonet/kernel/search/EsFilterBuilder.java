@@ -59,10 +59,7 @@ public class EsFilterBuilder {
                 // OR member of groupOwner
                 // TODOES
             } else {
-                filters.add(SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream()
-                        .filter(ViewMdGrantedAuthority.class::isInstance)
-                        .map(ViewMdGrantedAuthority.class::cast)
-                        .map(ViewMdGrantedAuthority::getAnonymousAccessLink)
+                filters.add(AccessManager.anonymousAccessLinkStreamFromSecurityContext()
                         .map(AnonymousAccessLink::getMetadataUuid)
                         .map(uuid -> String.format("_id:%s", uuid))
                         .collect(Collectors.joining(" ")));
