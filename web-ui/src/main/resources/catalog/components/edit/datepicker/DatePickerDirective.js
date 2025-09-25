@@ -68,7 +68,8 @@
           indeterminatePosition: "@",
           required: "@",
           hideTime: "@",
-          hideDateMode: "@"
+          hideDateMode: "@",
+          readonly: "@"
         },
         templateUrl:
           "../../catalog/components/edit/datepicker/partials/" + "datepicker.html",
