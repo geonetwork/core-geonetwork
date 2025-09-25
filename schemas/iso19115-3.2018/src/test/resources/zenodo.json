@@ -1,0 +1,425 @@
+{
+  "access": {
+    "embargo": {
+      "active": false,
+      "reason": null
+    },
+    "files": "public",
+    "record": "public",
+    "status": "open"
+  },
+  "created": "2022-07-12T10:12:39.836086+00:00",
+  "custom_fields": {},
+  "deletion_status": {
+    "is_deleted": false,
+    "status": "P"
+  },
+  "files": {
+    "count": 4,
+    "enabled": true,
+    "entries": {
+      "argopy-0.1.12.tar.gz": {
+        "access": {
+          "hidden": false
+        },
+        "checksum": "md5:bf9c8011113bdec1d0b02e93a3eb4218",
+        "ext": "gz",
+        "id": "e2f49b5f-0f18-42f5-a508-7ca6221e3c7b",
+        "key": "argopy-0.1.12.tar.gz",
+        "links": {
+          "content": "https://zenodo.org/api/records/6343858/files/argopy-0.1.12.tar.gz/content",
+          "self": "https://zenodo.org/api/records/6343858/files/argopy-0.1.12.tar.gz"
+        },
+        "metadata": null,
+        "mimetype": "application/gzip",
+        "size": 5918014,
+        "storage_class": "L"
+      },
+      "argopy-0.1.12.zip": {
+        "access": {
+          "hidden": false
+        },
+        "checksum": "md5:68cab1686b96e9f62063279c5639a8b8",
+        "ext": "zip",
+        "id": "1298f601-088b-4706-ab91-3d02e0afca8c",
+        "key": "argopy-0.1.12.zip",
+        "links": {
+          "content": "https://zenodo.org/api/records/6343858/files/argopy-0.1.12.zip/content",
+          "self": "https://zenodo.org/api/records/6343858/files/argopy-0.1.12.zip"
+        },
+        "metadata": null,
+        "mimetype": "application/zip",
+        "size": 6015494,
+        "storage_class": "L"
+      },
+      "argopy-0.1.6.tar.gz": {
+        "access": {
+          "hidden": false
+        },
+        "checksum": "md5:39d71a6550c63ae2b213b865461bb906",
+        "ext": "gz",
+        "id": "7557b858-2cc4-4365-a6d5-e8db4475cfcb",
+        "key": "argopy-0.1.6.tar.gz",
+        "links": {
+          "content": "https://zenodo.org/api/records/6343858/files/argopy-0.1.6.tar.gz/content",
+          "self": "https://zenodo.org/api/records/6343858/files/argopy-0.1.6.tar.gz"
+        },
+        "metadata": null,
+        "mimetype": "application/gzip",
+        "size": 2121754,
+        "storage_class": "L"
+      },
+      "argopy-0.1.6.zip": {
+        "access": {
+          "hidden": false
+        },
+        "checksum": "md5:750d35f17154b76df9b42c42971f8ad2",
+        "ext": "zip",
+        "id": "fb23ee41-ab79-4327-83cd-f3b284431242",
+        "key": "argopy-0.1.6.zip",
+        "links": {
+          "content": "https://zenodo.org/api/records/6343858/files/argopy-0.1.6.zip/content",
+          "self": "https://zenodo.org/api/records/6343858/files/argopy-0.1.6.zip"
+        },
+        "metadata": null,
+        "mimetype": "application/zip",
+        "size": 2182473,
+        "storage_class": "L"
+      }
+    },
+    "order": [],
+    "total_bytes": 16237735
+  },
+  "id": "6343858",
+  "is_draft": false,
+  "is_published": true,
+  "links": {
+    "access": "https://zenodo.org/api/records/6343858/access",
+    "access_grants": "https://zenodo.org/api/records/6343858/access/grants",
+    "access_links": "https://zenodo.org/api/records/6343858/access/links",
+    "access_request": "https://zenodo.org/api/records/6343858/access/request",
+    "access_users": "https://zenodo.org/api/records/6343858/access/users",
+    "archive": "https://zenodo.org/api/records/6343858/files-archive",
+    "archive_media": "https://zenodo.org/api/records/6343858/media-files-archive",
+    "communities": "https://zenodo.org/api/records/6343858/communities",
+    "communities-suggestions": "https://zenodo.org/api/records/6343858/communities-suggestions",
+    "doi": "https://doi.org/10.5281/zenodo.6343858",
+    "draft": "https://zenodo.org/api/records/6343858/draft",
+    "files": "https://zenodo.org/api/records/6343858/files",
+    "latest": "https://zenodo.org/api/records/6343858/versions/latest",
+    "latest_html": "https://zenodo.org/records/6343858/latest",
+    "media_files": "https://zenodo.org/api/records/6343858/media-files",
+    "parent": "https://zenodo.org/api/records/4009263",
+    "parent_doi": "https://doi.org/10.5281/zenodo.4009263",
+    "parent_doi_html": "https://zenodo.org/doi/10.5281/zenodo.4009263",
+    "parent_html": "https://zenodo.org/records/4009263",
+    "requests": "https://zenodo.org/api/records/6343858/requests",
+    "reserve_doi": "https://zenodo.org/api/records/6343858/draft/pids/doi",
+    "self": "https://zenodo.org/api/records/6343858",
+    "self_doi": "https://doi.org/10.5281/zenodo.6343858",
+    "self_doi_html": "https://zenodo.org/doi/10.5281/zenodo.6343858",
+    "self_html": "https://zenodo.org/records/6343858",
+    "self_iiif_manifest": "https://zenodo.org/api/iiif/record:6343858/manifest",
+    "self_iiif_sequence": "https://zenodo.org/api/iiif/record:6343858/sequence/default",
+    "versions": "https://zenodo.org/api/records/6343858/versions"
+  },
+  "media_files": {
+    "count": 0,
+    "enabled": false,
+    "entries": {},
+    "order": [],
+    "total_bytes": 0
+  },
+  "metadata": {
+    "contributors": [
+      {
+        "person_or_org": {
+          "family_name": "Tucker",
+          "given_name": "Tyler",
+          "identifiers": [
+            {
+              "identifier": "0000-0002-0560-9777",
+              "scheme": "orcid"
+            }
+          ],
+          "name": "Tucker, Tyler",
+          "type": "personal"
+        },
+        "role": {
+          "id": "researchgroup",
+          "title": {
+            "de": "Forschungsgruppe",
+            "en": "Research group"
+          }
+        }
+      },
+      {
+        "person_or_org": {
+          "family_name": "Fernandes",
+          "given_name": "Filipe",
+          "identifiers": [
+            {
+              "identifier": "0000-0003-4165-2913",
+              "scheme": "orcid"
+            }
+          ],
+          "name": "Fernandes, Filipe",
+          "type": "personal"
+        },
+        "role": {
+          "id": "researchgroup",
+          "title": {
+            "de": "Forschungsgruppe",
+            "en": "Research group"
+          }
+        }
+      }
+    ],
+    "creators": [
+      {
+        "affiliations": [
+          {
+            "name": "Ifremer"
+          }
+        ],
+        "person_or_org": {
+          "family_name": "Maze",
+          "given_name": "Guillaume",
+          "identifiers": [
+            {
+              "identifier": "0000-0001-7231-2095",
+              "scheme": "orcid"
+            }
+          ],
+          "name": "Maze, Guillaume",
+          "type": "personal"
+        }
+      },
+      {
+        "affiliations": [
+          {
+            "name": "Ifremer"
+          }
+        ],
+        "person_or_org": {
+          "family_name": "Balem",
+          "given_name": "Kevin",
+          "identifiers": [
+            {
+              "identifier": "0000-0002-4956-8698",
+              "scheme": "orcid"
+            }
+          ],
+          "name": "Balem, Kevin",
+          "type": "personal"
+        }
+      }
+    ],
+    "description": "<p>Argo is a real-time global ocean in situ observing system. It provides thousands of highly accurate ocean measurements every day. The Argo dataset has now accumulated more than 2.3 million vertical ocean profiles and accessing it for scientific analysis remains a challenge.</p>\n\n<p>The Argo expert community, focused on delivering a curated dataset of the best scientific quality possible, has never provided its user base with a Python software package to easily access and manipulate Argo measurements: the argopy software aims to fill this gap. <strong>The argopy software can be used to easily fetch and manipulate measurements from Argo floats</strong>. It is dedicated to scientists without knowledge of the Argo data management system but is also designed to accommodate expert requirements.</p>",
+    "funding": [
+      {
+        "award": {
+          "acronym": "Euro-Argo RISE",
+          "id": "00k4n6c32::824131",
+          "identifiers": [
+            {
+              "identifier": "https://cordis.europa.eu/projects/824131",
+              "scheme": "url"
+            }
+          ],
+          "number": "824131",
+          "program": "H2020-EU.1.4.",
+          "title": {
+            "en": "Euro-Argo Research Infrastructure Sustainability and Enhancement"
+          }
+        },
+        "funder": {
+          "id": "00k4n6c32",
+          "name": "European Commission"
+        }
+      }
+    ],
+    "languages": [
+      {
+        "id": "eng",
+        "title": {
+          "en": "English"
+        }
+      }
+    ],
+    "publication_date": "2020-08-31",
+    "publisher": "Zenodo",
+    "related_identifiers": [
+      {
+        "identifier": "10.21105/joss.02425",
+        "relation_type": {
+          "id": "isdocumentedby",
+          "title": {
+            "de": "Wird dokumentiert von",
+            "en": "Is documented by"
+          }
+        },
+        "resource_type": {
+          "id": "publication-article",
+          "title": {
+            "de": "Zeitschriftenartikel",
+            "en": "Journal article"
+          }
+        },
+        "scheme": "doi"
+      }
+    ],
+    "resource_type": {
+      "id": "software",
+      "title": {
+        "de": "Software",
+        "en": "Software"
+      }
+    },
+    "rights": [
+      {
+        "description": {
+          "en": "A permissive license whose main conditions require preservation of copyright and license notices. Contributors provide an express grant of patent rights. Licensed works, modifications, and larger works may be distributed under different terms and without source code."
+        },
+        "id": "apache-2.0",
+        "props": {
+          "scheme": "spdx",
+          "url": "http://www.apache.org/licenses/LICENSE-2.0"
+        },
+        "title": {
+          "en": "Apache License 2.0"
+        }
+      }
+    ],
+    "subjects": [
+      {
+        "subject": "data"
+      },
+      {
+        "subject": "oceanography"
+      }
+    ],
+    "title": "argopy: A Python library for Argo ocean data analysis",
+    "version": "v0.1.12"
+  },
+  "parent": {
+    "access": {
+      "owned_by": {
+        "user": "26362"
+      }
+    },
+    "communities": {
+      "entries": [
+        {
+          "access": {
+            "member_policy": "open",
+            "members_visibility": "restricted",
+            "record_submission_policy": "open",
+            "review_policy": "closed",
+            "visibility": "public"
+          },
+          "children": {
+            "allow": true
+          },
+          "created": "2022-11-23T15:53:29.436323+00:00",
+          "custom_fields": {},
+          "deletion_status": {
+            "is_deleted": false,
+            "status": "P"
+          },
+          "id": "f0a8b890-f97a-4eb2-9eac-8b8a712d3a6c",
+          "links": {},
+          "metadata": {
+            "curation_policy": "<h2>Curation policy</h2>\n<p>The EU Open Research Repository serves as a repository for research outputs (data, software, posters, presentations, publications, etc) which have been funded under an EU research funding programme such as Horizon Europe, Euratom or earlier Framework Programmes.</p>\n<p>The community is managed by CERN on behalf of the European Commission.&nbsp;</p>\n<p><a href=\"https://about.zenodo.org/policies/\">Zenodo&rsquo;s general policies</a> and <a href=\"https://about.zenodo.org/terms/\">Terms of Use</a> apply to all content.</p>\n<h3>Scope</h3>\n<p>The EU Open Research Repository accepts all digital research objects which is a research output stemming from one of EU&rsquo;s research and innovation funding programmes. The funding programmes currently include:</p>\n<ul>\n<li>\n<p>Horizon Europe (including ERC, MSCA), earlier Framework Programmes (eg Horizon 2020) as well as Euratom.</p>\n</li>\n</ul>\n<p>In line with the principle as open as possible, as closed as necessary both public and restricted content is accepted. See note on how <a href=\"https://about.zenodo.org/infrastructure/\">Zenodo handles restricted content</a>.</p>\n<h3>Content submission</h3>\n<p>EU programme beneficiaries are eligible to submit content to the community. The community supports three types of content submissions:</p>\n<ul>\n<li>\n<p>Submission via an EU Project Community (through user interface or programmatic APIs).</p>\n</li>\n<li>\n<p>Submission directly to the EU Open Research Repository.</p>\n</li>\n<li>\n<p>Automated harvesting from existing Zenodo content.</p>\n</li>\n</ul>\n<h4>Project community (preferred)</h4>\n<p>A representative of an EU project may request an EU Project Community and invite other project participants as members of the community. The project community is linked to one or more European Commission grants. All records in the project community are automatically integrated into the EU Open Research Repository immediately upon acceptance into the project community.&nbsp;</p>\n<h4>Direct submission</h4>\n<p>Any user may submit a record directly to the EU Open Research Repository. The submission will be moderated by Zenodo staff for compliance with the minimal required metadata requirements and its correctness.</p>\n<h4>Automated harvesting</h4>\n<p>Records found among Zenodo&rsquo;s existing content will on a regular basis automatically be integrated if they are found to comply with the requirements. The submissions through this method are integrated into the EU Open Research Repository with delay in a fully automated way.</p>\n<h3>Descriptive information</h3>\n<h4>Minimal metadata requirements</h4>\n<p>Records in the EU Open Research Repository are required to comply with the following minimal metadata requirements:</p>\n<ul>\n<li>\n<p>Visibility: Both public and restricted (with or without embargo and/or access request)</p>\n</li>\n<li>\n<p>Resource types: All resource types.</p>\n</li>\n<li>\n<p>Licenses: Public and embargoed records MUST specify a license.</p>\n</li>\n<li>\n<p>Funding information: Records MUST specify at least one grant from the European Commission.</p>\n</li>\n<li>\n<p>Creators: Creators SHOULD be identified with a persistent identifier (e.g. ORCID, GND, &hellip;), and affiliations SHOULD be identified with a persistent identifier (e.g. ROR, ISNI, &hellip;)</p>\n</li>\n<li>\n<p>Subjects: Records SHOULD specify one or more fields of science from the <a href=\"https://op.europa.eu/en/web/eu-vocabularies/euroscivoc\">European Science Vocabulary</a>.</p>\n</li>\n</ul>\n<h3>Review &amp; moderation</h3>\n<p>All submissions will undergo automated curation checks for compliance with the policy. Submissions through project communities are reviewed by the project community. Submission directly to the EU Open Research Repository is reviewed by Zenodo staff.</p>\n<p>Community curators may at any point edit metadata of the records in the community without notice through human or automated processing. The curators may at their sole discretion remove records from the community that are deemed not to comply with the content and curation policy or which are deemed of insufficient quality.</p>\n<h3>Updates</h3>\n<p>The content and curation policy is subject to change by the community owner at any time and without notice, other than through updating this page.</p>",
+            "description": "Open repository for EU-funded research outputs from Horizon Europe, Euratom, and earlier Framework Programmes.",
+            "funding": [
+              {
+                "funder": {
+                  "id": "00k4n6c32"
+                }
+              }
+            ],
+            "organizations": [
+              {
+                "id": "00k4n6c32"
+              }
+            ],
+            "page": "<h2>About</h2>\n<p>The EU Open Research Repository is a Zenodo-community dedicated to fostering open science and enhancing the visibility and accessibility of research outputs funded by the European Union. The community is managed by CERN on behalf of the European Commission.</p>\n<h3>Mission</h3>\n<p>The mission of the repository is to support the implementation of the EU's open science policy, providing a trusted and comprehensive space for researchers to share their research outputs such as data, software, reports, presentations, posters and more. The EU Open Research Repository simplifies the process of complying with open science requirements, ensuring that research outputs from Horizon Europe, Euratom, and earlier Framework Programmes are freely accessible, thereby accelerating scientific discovery and innovation.</p>\n<h3>EU Open Research Repository vs Open Research Europe (ORE)</h3>\n<p>The EU Open Research Repository serves as a complementary platform to the <a href=\"https://open-research-europe.ec.europa.eu/\">Open Research Europe</a> (ORE) publishing platform. Open Research Europe focuses on providing a publishing venue for peer-reviewed articles, ensuring that research meets rigorous academic standards. The EU Open Research Repository provides a space for all the other research outputs including data sets, software, posters, and presentations that are out of scope for ORE. This holistic approach enables researchers to not only publish their findings but also share the underlying data and materials that support their work, fostering transparency and reproducibility in the scientific process.&nbsp;</p>\n<h3>Funding</h3>\n<p>The EU Open Research Repository is funded by the European Union under grant agreement no. <a href=\"https://cordis.europa.eu/project/id/101122956\">101122956</a>(HORIZON-ZEN). For more information about the project see <a href=\"https://about.zenodo.org/projects/horizon-zen/\">https://about.zenodo.org/projects/horizon-zen/.</a></p>",
+            "title": "EU Open Research Repository",
+            "type": {
+              "id": "organization"
+            },
+            "website": "https://research-and-innovation.ec.europa.eu"
+          },
+          "revision_id": 20,
+          "slug": "eu",
+          "theme": {
+            "brand": "horizon",
+            "enabled": true,
+            "style": {
+              "font": {
+                "family": "Arial, sans-serif",
+                "size": "16px",
+                "weight": 600
+              },
+              "mainHeaderBackgroundColor": "#FFFFFF",
+              "primaryColor": "#004494",
+              "primaryTextColor": "#FFFFFF",
+              "secondaryColor": "#FFD617",
+              "secondaryTextColor": "#000000",
+              "tertiaryColor": "#e3eefd",
+              "tertiaryTextColor": "#1c5694"
+            }
+          },
+          "updated": "2024-10-18T07:28:14.565467+00:00"
+        }
+      ],
+      "ids": [
+        "f0a8b890-f97a-4eb2-9eac-8b8a712d3a6c"
+      ]
+    },
+    "id": "4009263",
+    "pids": {
+      "doi": {
+        "client": "datacite",
+        "identifier": "10.5281/zenodo.4009263",
+        "provider": "datacite"
+      }
+    }
+  },
+  "pids": {
+    "doi": {
+      "client": "datacite",
+      "identifier": "10.5281/zenodo.6343858",
+      "provider": "datacite"
+    },
+    "oai": {
+      "identifier": "oai:zenodo.org:6343858",
+      "provider": "oai"
+    }
+  },
+  "revision_id": 2,
+  "stats": {
+    "all_versions": {
+      "data_volume": 152032665.0,
+      "downloads": 53,
+      "unique_downloads": 47,
+      "unique_views": 310,
+      "views": 333
+    },
+    "this_version": {
+      "data_volume": 74799455.0,
+      "downloads": 17,
+      "unique_downloads": 14,
+      "unique_views": 72,
+      "views": 82
+    }
+  },
+  "status": "published",
+  "swh": {},
+  "updated": "2022-07-12T13:48:31.951600+00:00",
+  "versions": {
+    "index": 3,
+    "is_latest": true
+  }
+}
