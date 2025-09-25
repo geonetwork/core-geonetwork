@@ -547,5 +547,12 @@
     "addLayerPrefix": "Tilføj lag",
     "addLayerPostfix": "til kortet",
     "submit": "Indsend",
-    "additionalLinks": "Additional Links"
+    "additionalLinks": "Yderligere links",
+    "indexingErrorMsg-invalidBounds": "Advarsel / FeltresourceTemporalDateRange / Nedre og øvre grænser tomme eller ugyldige datoer. Datointerval ikke indekseret.",
+    "indexingErrorMsg-invalidDateFormat": "Advarsel/dato {{dateType}} med værdien &#39;{{date}}&#39; var ikke et gyldigt datoformat.",
+    "indexingErrorMsg-keywordNotFoundInThesaurus": "Advarsel / nøgleord {{ nøgleord }} ikke fundet i {{synonymordbog}}.",
+    "indexingErrorMsg-temporalDateRangeLowerGreaterThanUpper": "Advarsel / Field resourceTemporalDateRange / Nedre områdegrænse {{lowerBound}} kan ikke være større end øvre grænse {{upperBound}}. Datointerval ikke indekseret.",
+    "indexingErrorMsg-temporalRangeLowerGreaterThanUpper": "Advarsel / Field resourceTemporalDateRange / Nedre områdegrænse {{lowerBound}} kan ikke være større end øvre grænse {{upperBound}}.",
+    "indexingErrorMsg-schemaNotRegistered": "instans {{ instans }} / Skema &#39;{{skema}}&#39; er ikke registreret i dette katalog. Installer den eller fjern poster . instans er indekseret indekseringsfejlflag.",
+    "indexingErrorMsg-indexingStyleSheetError": "Indeksering stylesheet indeholder fejl: {{message}}\n Markering af metadata som _indexingError=1 i indeks."
 }
