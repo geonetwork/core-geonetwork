@@ -783,6 +783,8 @@
     "system/metadataprivs/publication/notificationLevel-help": "Define which users to alert when a metadata is published / unpublished",
     "system/metadataprivs/publication/notificationGroups": "Groups to notify when a metadata is published / unpublished",
     "system/metadataprivs/publication/notificationGroups-help": "List of groups, separated by the char |, to notify when a metadata is published / unpublished (for 'Notify the group(s) emails' notification level)",
+    "system/metadataprivs/userAlwaysCanEditOwnedMetadata": "Users can always edit their own metadata",
+    "system/metadataprivs/userAlwaysCanEditOwnedMetadata-help": "If enabled (default) a user can always edit the metadata records he owns. Otherwise, a user can only edit metadata if they have edit permissions for the metadata in the groups in which the user has the Editor role.",
     "system/metadatacreate" : "Metadata create",
     "system/metadatacreate/generateUuid" : "Generate UUID",
     "system/metadatacreate/generateUuid-help" : "GeoNetwork assigns a random metadata UUID to the metadata created by a user (default). To assign the metadata UUID manually disable this option and fill the metadata UUID prefix.",
