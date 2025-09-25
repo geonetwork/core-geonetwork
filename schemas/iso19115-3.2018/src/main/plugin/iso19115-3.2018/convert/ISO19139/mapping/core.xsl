@@ -115,6 +115,7 @@
               <xsl:with-param name="elementName" select="'lan:characterEncoding'"/>
               <xsl:with-param name="codeListName" select="'lan:MD_CharacterSetCode'"/>
               <xsl:with-param name="codeListValue" select="../gmd:characterSet/gmd:MD_CharacterSetCode/@codeListValue"/>
+              <xsl:with-param name="codeListText" select="../gmd:characterSet/gmd:MD_CharacterSetCode/text()"/>
             </xsl:call-template>
           </xsl:when>
           <xsl:otherwise>
@@ -140,6 +141,7 @@
               <xsl:with-param name="elementName" select="'lan:characterEncoding'"/>
               <xsl:with-param name="codeListName" select="'lan:MD_CharacterSetCode'"/>
               <xsl:with-param name="codeListValue" select="gmd:MD_CharacterSetCode/@codeListValue"/>
+              <xsl:with-param name="codeListText" select="gmd:MD_CharacterSetCode/text()"/>
             </xsl:call-template>
           </lan:PT_Locale>
         </xsl:element>
@@ -208,6 +210,7 @@
           <xsl:with-param name="elementName" select="'mcc:level'"/>
           <xsl:with-param name="codeListName" select="'mcc:MD_ScopeCode'"/>
           <xsl:with-param name="codeListValue" select="gmd:MD_ScopeCode/@codeListValue"/>
+          <xsl:with-param name="codeListText" select="gmd:MD_ScopeCode/text()"/>
         </xsl:call-template>
       </mcc:MD_Scope>
     </mmi:maintenanceScope>
@@ -225,6 +228,8 @@
           <xsl:with-param name="codeListName" select="'mcc:MD_ScopeCode'"/>
           <xsl:with-param name="codeListValue" select="gmd:MD_ScopeCode/@codeListValue|
                                   gmx:MX_ScopeCode/@codeListValue"/>
+          <xsl:with-param name="codeListText" select="gmd:MD_ScopeCode/@codeListValue|
+                                  gmx:MX_ScopeCode/text()"/>
         </xsl:call-template>
         <xsl:if test="../gmd:hierarchyLevelName">
           <mdb:name>
@@ -347,8 +352,9 @@
           <xsl:apply-templates select="gmd:credit" mode="from19139to19115-3.2018"/>
           <xsl:call-template name="writeCodelistElement">
             <xsl:with-param name="elementName" select="'mri:status'"/>
-            <xsl:with-param name="codeListValue" select="gmd:status/gmd:MD_ProgressCode/@codeListValue"/>
             <xsl:with-param name="codeListName" select="'mcc:MD_ProgressCode'"/>
+            <xsl:with-param name="codeListValue" select="gmd:status/gmd:MD_ProgressCode/@codeListValue"/>
+            <xsl:with-param name="codeListText" select="gmd:status/gmd:MD_ProgressCode/text()"/>
           </xsl:call-template>
           <xsl:apply-templates select="gmd:pointOfContact" mode="from19139to19115-3.2018"/>
             <xsl:call-template name="writeCodelistElement">
@@ -396,6 +402,7 @@
               <xsl:with-param name="elementName" select="'srv:couplingType'"/>
               <xsl:with-param name="codeListName" select="'srv:SV_CouplingType'"/>
               <xsl:with-param name="codeListValue" select="srvold:couplingType/srvold:SV_CouplingType/@codeListValue"/>
+              <xsl:with-param name="codeListText" select="srvold:couplingType/srvold:SV_CouplingType/text()"/>
             </xsl:call-template>
             <xsl:apply-templates select="srvold:containsOperations" mode="from19139to19115-3.2018"/>
             <xsl:apply-templates select="srvold:operatesOn" mode="from19139to19115-3.2018"/>
@@ -591,11 +598,13 @@
           <xsl:with-param name="elementName" select="'mri:associationType'"/>
           <xsl:with-param name="codeListName" select="'mri:DS_AssociationTypeCode'"/>
           <xsl:with-param name="codeListValue" select="gmd:MD_AggregateInformation/gmd:associationType/gmd:DS_AssociationTypeCode/@codeListValue"/>
+          <xsl:with-param name="codeListText" select="gmd:MD_AggregateInformation/gmd:associationType/gmd:DS_AssociationTypeCode/text()"/>
         </xsl:call-template>
         <xsl:call-template name="writeCodelistElement">
           <xsl:with-param name="elementName" select="'mri:initiativeType'"/>
           <xsl:with-param name="codeListName" select="'mri:DS_InitiativeTypeCode'"/>
           <xsl:with-param name="codeListValue" select="gmd:MD_AggregateInformation/gmd:initiativeType/gmd:DS_InitiativeTypeCode/@codeListValue"/>
+          <xsl:with-param name="codeListText" select="gmd:MD_AggregateInformation/gmd:initiativeType/gmd:DS_InitiativeTypeCode/text()"/>
         </xsl:call-template>
 
         <xsl:if test="$associatedResourceAsMetadataReferenceOnly">
