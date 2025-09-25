@@ -595,7 +595,7 @@
     <dependency>
       <groupId>net.bytebuddy</groupId>
       <artifactId>byte-buddy</artifactId>
-      <version>1.10.10</version>
+      <version>1.14.3</version>
     </dependency>
 
     <!-- Add dependencies to built-in schema plugin having a custom bean to be loaded. -->
@@ -1195,9 +1195,7 @@
                       <fileset dir="${basedir}/../schemas/">
                         <include name="**/src/main/plugin/**"/>
                       </fileset>
-                      <regexpmapper handledirsep="yes"
-                        from="^[-_\.a-zA-Z0-9]+/src/main/plugin/(.*)"
-                          to="\1" />
+                      <regexpmapper handledirsep="yes" from="^[-_\.a-zA-Z0-9]+/src/main/plugin/(.*)" to="\1"/>
                     </copy>
                   </target>
                 </configuration>
