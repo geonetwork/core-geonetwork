@@ -123,7 +123,11 @@
     "directory": "Cesta ke složce",
     "directoryEntries": "Položky",
     "error": "Chyba",
-    "errors": "Chyba(y)",
+    "errors": "chyby",
+    "success": "úspěch",
+    "successes": "successes",
+    "warning": "warning",
+    "warnings": "warnings",
     "serviceDetachedToCurrentRecord": "Služba odpojena od aktuálního záznamu",
     "featureCatalog": "Katalog prvků",
     "file": "Soubor",
@@ -335,7 +339,8 @@
     "validationReport": "Ověřování",
     "runValidation": "Spustit kontrolu validace",
     "validationServiceError": "Chyba serveru",
-    "validationServiceErrorDetail": "Další informace naleznete v souborech protokolu serveru.",
+    "validationServiceErrorHeader": "Schematron error occurred, rules could not be verified.",
+    "validationServiceErrorDetail": "More information about this issue can be found in the server logs.",
     "fixedOnTop": "Vždy nahoře",
     "whoCanAccess": "Kdo má přístup",
     "wmsServiceUrl": "URL služba",
@@ -462,5 +467,8 @@
     "validationErrorLabel": "chyby",
     "metadataDuplicatedField-title": "Název metadat se používá v jiném záznamu metadat.",
     "metadataDuplicatedField-altTitle": "Alternativní název metadat se používá v jiném záznamu metadat.",
-    "metadataDuplicatedField-identifier": "Identifikátor zdroje metadat se používá v jiném záznamu metadat."
+    "metadataDuplicatedField-identifier": "Identifikátor zdroje metadat se používá v jiném záznamu metadat.",
+    "indexingIssues": "Indexing issues",
+    "indexingErrors": "Errors",
+    "indexingWarnings": "Warnings"
 }
