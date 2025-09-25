@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2025 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -45,12 +45,40 @@
             title: ""
           };
         }
+
+        // Checks if requires a confirm action word to enable the confirm button
+        scope.hasConfirmActionWord = angular.isDefined(scope.options.confirmActionWord);
+
+        // User input for confirm action word
+        scope.userInput = "";
+
         element.addClass("gn-popup modal fade");
 
         // handle close callback
         if (scope.options.closeCallback) {
-          element.on("hidden.bs.modal", scope.options.closeCallback);
+          element.on("hidden.bs.modal", function () {
+            scope.userInput = "";
+            scope.options.closeCallback();
+          });
+        } else {
+          element.on("hidden.bs.modal", function () {
+            scope.userInput = "";
+          });
         }
+
+        /**
+         * Checks to disable the confirm button if a confirm action word
+         * is defined and the user input does not match it.
+         *
+         * @returns {boolean}
+         */
+        scope.disableConfirmButton = function () {
+          if (scope.hasConfirmActionWord && scope.options.confirmActionWord !== "") {
+            return scope.userInput !== scope.options.confirmActionWord;
+          }
+
+          return false;
+        };
       }
     };
   });
