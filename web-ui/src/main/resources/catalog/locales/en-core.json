@@ -308,6 +308,8 @@
     "taskDueDate": "Due date",
     "taskCloseDate": "Close date",
     "taskMessage": "Message",
+    "taskPublicationStatus": "Record is scheduled for publication at {{ publicationDate }}",
+    "cancelPublication": "Cancel publication",
     "restore": "Restore",
     "viewPreviousVersion": "View Previous Version",
     "viewChangedVersion": "View Changed Version",

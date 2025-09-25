@@ -532,6 +532,7 @@ INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (61,'ukr','Record del
 INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (62,'ukr','Record imported.');
 INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (63,'ukr','Record restored.');
 INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (100,'ukr','DOI creation request');
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (101,'ukr','Scheduled publication');
 
 
 INSERT INTO SelectionsDes (iddes, langid, label) VALUES (0,'ukr','Preferred records');

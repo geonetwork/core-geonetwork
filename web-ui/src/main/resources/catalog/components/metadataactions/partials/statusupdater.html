@@ -35,7 +35,7 @@
 
       <div
         class="form-group"
-        data-ng-hide="task.notificationLevel === 'catalogueAdministrator'"
+        data-ng-hide="task.notificationLevel === 'catalogueAdministrator' || task.name === 'scheduledPublicationTask'"
       >
         <label for="gn-task-owner" data-translate="">taskOwner</label>
         <input
@@ -48,16 +48,16 @@
 
       <div class="form-group">
         <label for="gn-task-dueDate" data-translate="">taskDueDate</label>
-        <!-- Due date is after now - add check. -->
         <input
           class="form-control"
           id="gn-task-dueDate"
           type="date"
+          min="{{minDate | date:'yyyy-MM-dd'}}"
           data-ng-model="newStatus.dueDate"
         />
       </div>
 
-      <div class="form-group">
+      <div class="form-group" data-ng-hide="task.name === 'scheduledPublicationTask'">
         <label for="gn-task-message" data-translate="">taskMessage</label>
         <textarea
           class="form-control"

@@ -186,6 +186,27 @@
         gnSearchLocation.setSearch({ query_string: angular.toJson(params) });
       };
 
+      $scope.cancelPublication = function (md) {
+        return gnMetadataActions.cancelPublication(md).then(
+          function (data) {
+            gnAlertService.addAlert({
+              msg: $translate.instant("metadataCancelPublication", {
+                title: md.resourceTitle
+              }),
+              type: "success"
+            });
+          },
+          function (reason) {
+            // Data needs improvements
+            // See https://github.com/geonetwork/core-geonetwork/issues/723
+            gnAlertService.addAlert({
+              msg: reason.data.message || reason.data.description,
+              type: "danger"
+            });
+          }
+        );
+      };
+
       $scope.deleteRecord = function (md) {
         return gnMetadataActions.deleteMd(md).then(
           function (data) {
