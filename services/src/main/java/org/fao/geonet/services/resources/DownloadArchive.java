@@ -120,7 +120,7 @@ public class DownloadArchive implements Service {
             String fname = Util.getParam(params, Params.FNAME);
             FilePathChecker.verify(fname);
             try (Store.ResourceHolder resource = store.getResource(context, uuid, MetadataResourceVisibility.PUBLIC, fname, true)) {
-                return BinaryFile.encode(200, resource.getPath(), false).getElement();
+                return BinaryFile.encode(200, resource.getResource(), resource.getMetadata().getMetadataId(), resource.getMetadata().getFilename(), false).getElement();
             }
         }
 
@@ -187,7 +187,7 @@ public class DownloadArchive implements Service {
                     true)) {
                     Element fileInfo = new Element("file");
 
-                    BinaryFile details = BinaryFile.encode(200, resource.getPath(), false);
+                    BinaryFile details = BinaryFile.encode(200, resource.getResource(), resource.getMetadata().getMetadataId(), resource.getMetadata().getFilename(), false);
                     String remoteURL = details.getElement().getAttributeValue("remotepath");
                     if (remoteURL != null) {
                         if (context.isDebugEnabled())
@@ -196,7 +196,7 @@ public class DownloadArchive implements Service {
                         fileInfo.setAttribute("datemodified", "unknown");
                         fileInfo.setAttribute("name", remoteURL);
                         notifyAndLog(doNotify, id, info.getUuid(), access, username,
-                            remoteURL + " (local config: " + resource.getPath() + ")", context);
+                            remoteURL + " (local config: " + resource.getMetadata().getFilename() + ")", context);
                         fname = details.getElement().getAttributeValue("remotefile");
                     } else {
                         if (context.isDebugEnabled())
@@ -204,7 +204,7 @@ public class DownloadArchive implements Service {
                         fileInfo.setAttribute("size", Long.toString(resource.getMetadata().getSize()));
                         fileInfo.setAttribute("name", fname);
                         fileInfo.setAttribute("datemodified", sdf.format(resource.getMetadata().getLastModification()));
-                        notifyAndLog(doNotify, id, info.getUuid(), access, username, resource.getPath().toString(), context);
+                        notifyAndLog(doNotify, id, info.getUuid(), access, username, resource.getMetadata().getFilename(), context);
                     }
                     final Path dest = zipFs.getPath(fname);
                     try (OutputStream zos = Files.newOutputStream(dest)) {
