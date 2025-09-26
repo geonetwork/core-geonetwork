@@ -297,6 +297,33 @@
           };
 
           /**
+           * Display the anonymous access option.
+           *
+           * Checks:
+           * - The user is logged in.
+           * - The metadata record is not null.
+           * - The user owns the metadata
+           *   or the user is reviewer for the metadata group
+           *   or the user is administrator or more.
+           * - The metadata is not published.
+           *
+           * @param {Object} md - The metadata record to check.
+           * @param {Object} user - The user for whom the check is being performed.
+           * @param {Object} pubOption - The publication option to check against.
+           * @returns {boolean} - True if the anonymous access option should be displayed, false otherwise.
+           */
+          scope.displayAnonymousAccessOption = function (md, user, pubOption) {
+            return (
+              user.id &&
+              md &&
+              (md.getOwnerId() == user.id ||
+                user.isReviewerForGroup(md.groupOwner) ||
+                user.isAdministratorOrMore()) &&
+              !md.isPublished(pubOption)
+            );
+          };
+
+          /**
            * Checks if the workflow option for the specified step should be displayed for the given user.
            *
            * Checks:

@@ -27,8 +27,14 @@
   goog.require("gn_category");
   goog.require("gn_popup");
   goog.require("gn_share");
+  //goog.require("gn_sharez");
+  goog.require("gn_anonymous_access");
+  //goog.require("gn_lbn");
 
   var module = angular.module("gn_mdactions_service", [
+    //"gn_lbn",
+    "gn_anonymous_access",
+    //"gn_sharez",
     "gn_share",
     "gn_category",
     "gn_popup"
@@ -559,6 +565,25 @@
               });
             }
           );
+      };
+
+      this.openAnonymousAccessPanel = function (md, scope) {
+        /* gnUtilityService.openModal(
+          {
+            title: $translate.instant("sharez") + " - " + md.resourceTitle,
+            content: '<div gn-sharez="' + md.id + '"></div>'
+          },
+          scope,
+          "AnonymousAccessDone"
+        ); */
+        gnUtilityService.openModal(
+          {
+            title: $translate.instant("anonymousAccess") + " - " + md.resourceTitle,
+            content: '<div gn-anonymous-access="' + md.id + '"></div>'
+          },
+          scope,
+          "AnonymousAccessDone"
+        );
       };
 
       this.assignGroup = function (metadataId, groupId) {

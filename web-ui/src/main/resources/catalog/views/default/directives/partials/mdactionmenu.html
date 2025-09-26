@@ -92,6 +92,14 @@
         </a>
       </li>
 
+      <!-- Anonymous access -->
+      <li role="menuitem" data-ng-if="displayAnonymousAccessOption(md, user, pubOption)">
+        <a href="" data-ng-click="mdService.openAnonymousAccessPanel(md, getCatScope())">
+          <span class="fa fa-fw fa-eye"></span>&nbsp;
+          <span data-translate="">anonymousAccess</span>
+        </a>
+      </li>
+
       <!-- Workflow -->
       <li
         role="menuitem"
