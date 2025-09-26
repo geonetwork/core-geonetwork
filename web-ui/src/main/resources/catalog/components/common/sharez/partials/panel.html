@@ -1,0 +1,194 @@
+<h5 translate>whoCanAccess</h5>
+
+<!--Message alert-->
+<p
+  ng-if="alertMsg"
+  role="alert"
+  class="help-block gn-margin-top gn-margin-bottom gn-padding-bottom"
+  translate
+>
+  privilegesBatchAlert
+</p>
+
+<!--Search inpup-->
+<div class="col-md-4 input-group input-group-sm gn-searchgroup-input">
+  <span class="input-group-addon" translate>filter</span>
+  <input
+    type="text"
+    class="form-control input-sm"
+    ng-model="pFilter"
+    ng-model-options="{debounce: 300}"
+    placeholder="{{'filterGroup' | translate}}"
+  />
+</div>
+
+<!-- TODO: simplify layout if only one group -->
+<div class="gn-share-grid">
+  <i class="fa fa-spinner fa-spin" data-ng-hide="privileges.length > 0"></i>
+  <form name="opsForm" id="opsForm" data-ng-class="{'gn-sharing-batch': batch}">
+    <input type="hidden" name="_csrf" value="{{csrf}}" />
+    <table class="table table-striped" data-ng-show="privileges.length > 0">
+      <thead>
+        <tr>
+          <th>
+            <a href="" ng-click="setSorter('g')">
+              <span translate>groupOwners</span>&nbsp;
+              <i
+                data-ng-if="sorter.predicate == 'g'"
+                class="fa"
+                ng-class="sorter.reverse ? 'fa-long-arrow-up' : 'fa-long-arrow-down'"
+              ></i>
+            </a>
+          </th>
+          <th data-ng-repeat="key in ::operations">
+            <a href="" ng-click="setSorter(key)">
+              <i class="fa {{icons[key] || fa-fw}}"></i>
+              <span class="hidden-xs">&nbsp;{{('op-' + key) | translate}}&nbsp;</span>
+              <i
+                data-ng-if="sorter.predicate == key"
+                class="fa"
+                data-ng-class="sorter.reverse ? 'fa-long-arrow-down' : 'fa-long-arrow-up'"
+              ></i>
+            </a>
+          </th>
+          <th data-ng-if="!disableAllCol">
+            <span class="visible-xs">
+              <i class="fa fa-fw fa-lock"></i>
+            </span>
+            <span class="hidden-xs" translate>setall</span>
+          </th>
+          <th data-ng-if="displayProfile">
+            <a href="" ng-click="setSorter('p')">
+              <span translate>profile</span>&nbsp;
+              <i
+                data-ng-if="sorter.predicate == 'p'"
+                class="fa"
+                ng-class="sorter.reverse ? 'fa-long-arrow-up' : 'fa-long-arrow-down'"
+              ></i>
+            </a>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          class="info"
+          data-ng-repeat="g in privileges | filter:{reserved: true} | orderBy:'id':true"
+          title="{{!isAdminOrReviewer ?
+            (('privilegesNeededForPublicationRecordGroupOnly-' + publicationbyrevieweringroupowneronly) | translate)
+            : ''}}"
+        >
+          <td><strong>{{('group-' + g.group) | translate}}</strong></td>
+          <td data-ng-repeat="key in ::operations" class="text-center">
+            <input
+              type="checkbox"
+              name="{{g.group + '-' + key}}"
+              data-ng-disabled="::!enabledReservedGroups(g.operations[key])"
+              title="{{::tooltipReservedGroups(g.operations[key])}}"
+              data-ng-click="selectPrivilege()"
+              data-ng-class="internalGroups.indexOf(g.group) != -1 &&
+                                internalOperations.indexOf(key) != -1 ? 'hidden' : ''"
+              data-ng-model="g.operations[key]"
+            />
+            <i
+              class="fa fa-fw fa-plus text-success"
+              data-ng-class="internalGroups.indexOf(g.group) != -1 &&
+                                internalOperations.indexOf(key) != -1 ? 'hidden' : ''"
+              data-ng-show="batch && opsForm[g.group + '-' + key].$dirty && opsForm[g.group + '-' + key].$viewValue"
+            ></i>
+            <i
+              class="fa fa-fw fa-minus text-danger"
+              data-ng-class="internalGroups.indexOf(g.group) != -1 &&
+                                internalOperations.indexOf(key) != -1 ? 'hidden' : ''"
+              data-ng-show="batch && opsForm[g.group + '-' + key].$dirty && !opsForm[g.group + '-' + key].$viewValue"
+            ></i>
+          </td>
+          <td data-ng-if="!disableAllCol">
+            <input
+              type="checkbox"
+              data-ng-disabled="::!enabledReservedGroupsSelectAll()"
+              data-ng-change="checkAll(g)"
+              data-ng-model="g.isCheckedAll"
+            />
+          </td>
+          <td class="text-center" data-ng-if="displayProfile"></td>
+        </tr>
+        <tr
+          data-ng-repeat="g in privileges | filter:{reserved: false} | filter:pFilterFn | orderBy:sortGroups:sorter.reverse"
+          data-ng-show="(onlyUserGroup == true && g.userGroup == true) ||
+                       onlyUserGroup == false"
+          data-ng-class="g.restricted ? 'warning' : ''"
+        >
+          <td><strong>{{::('group-' + g.group) | translate}}</strong></td>
+          <td data-ng-repeat="key in ::operations" class="text-center">
+            <input
+              type="checkbox"
+              name="{{g.group + '-' + key}}"
+              data-ng-click="selectPrivilege()"
+              data-ng-disabled="g.privileges[key].disabled || g.restricted"
+              data-ng-model="g.operations[key]"
+            />
+            <i
+              class="fa fa-fw fa-plus text-success"
+              data-ng-show="batch && opsForm[g.group + '-' + key].$dirty && opsForm[g.group + '-' + key].$viewValue"
+            ></i>
+            <i
+              class="fa fa-fw fa-minus text-danger"
+              data-ng-show="batch && opsForm[g.group + '-' + key].$dirty && !opsForm[g.group + '-' + key].$viewValue"
+            ></i>
+          </td>
+          <td data-ng-if="::!disableAllCol">
+            <input
+              type="checkbox"
+              data-ng-change="checkAll(g)"
+              data-ng-model="g.isCheckedAll"
+              data-ng-disabled="g.restricted"
+            />
+          </td>
+          <td class="text-center" data-ng-if="displayProfile">
+            <span data-ng-repeat="p in g.userProfiles">
+              {{user.isAdministrator() ? ('Administrator' | translate) : (p |
+              translate)}}&nbsp;
+            </span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </form>
+</div>
+
+<div class="btn-toolbar pull-right">
+  <div data-gn-need-help="publishing-home" data-icon-only="true"></div>
+  <button
+    type="button"
+    class="btn btn-primary"
+    id="gn-share-btn-replace"
+    title="{{'replaceByThoseOperations-help' | translate}}"
+    data-gn-click-and-spin="save(true)"
+  >
+    <i class="fa fa-eraser"></i>&nbsp;
+    <span data-translate="">replaceByThoseOperations</span>
+  </button>
+  <button
+    type="button"
+    class="btn btn-primary"
+    id="gn-share-btn-add"
+    title="{{'addThoseOperations-help' | translate}}"
+    data-gn-click-and-spin="save(false)"
+    data-ng-show="batch"
+  >
+    <i class="fa fa-save"></i>&nbsp;
+    <span data-translate="">addThoseOperations</span>
+  </button>
+  <button
+    type="button"
+    class="btn btn-default"
+    id="gn-share-btn-reset"
+    title="{{'clearCheckboxFormChanges' | translate}}"
+    data-ng-click="reset()"
+    data-ng-show="batch"
+    data-ng-disabled="!privilegeIsSelected"
+    title="{{'resetOps' | translate}}"
+  >
+    <i class="fa fa-undo"></i>&nbsp;
+  </button>
+</div>
