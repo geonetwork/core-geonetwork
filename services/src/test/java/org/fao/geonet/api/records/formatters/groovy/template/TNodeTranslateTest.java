@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2025 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -47,8 +47,8 @@ public class TNodeTranslateTest extends AbstractTemplateParserTest {
         Mockito.when(mock.codelistTranslation("testString", null, "name")).thenReturn("translation codelist null name");
         Mockito.when(mock.codelistTranslation("testString", "context1", "desc")).thenReturn("translation codelist desc context1");
         Mockito.when(mock.codelistTranslation("testString", "context2", "desc")).thenReturn("translation codelist desc context2");
-        Mockito.when(mock.nodeTranslation("testString", "context", "name")).thenReturn("translation node name context");
-        Mockito.when(mock.nodeTranslation("testString", null, "desc")).thenReturn("translation node desc null");
+        Mockito.when(mock.nodeTranslation("testString", "context", null, "name")).thenReturn("translation node name context");
+        Mockito.when(mock.nodeTranslation("testString", null, null, "desc")).thenReturn("translation node desc null");
         new TransformationContext(null, mock, null).setThreadLocal();
 
         final TemplateParser parser = createTestParser(SystemInfo.STAGE_TESTING);

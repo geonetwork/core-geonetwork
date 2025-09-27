@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2025 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -109,7 +109,7 @@ class TNodeTranslate extends TNode {
 
         public TextBlock translate(String text) throws Exception {
             final Functions functions = TransformationContext.getContext().getFunctions();
-            final String translation = functions.nodeTranslation(text, context, type);
+            final String translation = functions.nodeTranslation(text, context, null, type);
             return textContentParser.parse(translation);
         }
     }
