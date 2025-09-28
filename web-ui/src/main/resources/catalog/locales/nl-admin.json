@@ -53,7 +53,7 @@
     "database-server": "Server",
     "database-serverHelp": "Hostnaam of adres van de database server",
     "database-tableName": "Tabelnaam",
-    "database-tableNameHelp": "Naam van de metadata tabel. De naam moet beginnen met een letter (a-z) of underscore (_). Achtereenvolgende tekens mogen letters, cijfers (0-9), of underscores zijn.",
+    "database-tableNameHelp": "Table field name that contains the metadata. The name must begin with a letter (a-z) or underscore (_). Subsequent characters in a name can be letters, digits (0-9), or underscores. It can be a qualified table name (e.g. schema.table).",
     "database-metadataField": "Metadata veldnaam",
     "database-metadataFieldHelp": "Veldnaam in de opgegeven tabel welke de metadata bevat. De naam moet beginnen met een letter (a-z) of underscore (_). Achtereenvolgende tekens mogen letters, cijfers (0-9), of underscores zijn.",
     "database-filterField": "Filter veldnaam",
@@ -295,6 +295,7 @@
     "geonetwork-customCriteriaHelp": "Definieer een willekeurig criterium dat wordt ondersteund door de externe node en niet al via een standaard filter beschikbaar is (bv. 'similarity' = '1' fvoor non fuzzy search). Je mag meer criteria opgeven gescheiden door ';' (bv. _schema;siteId met waarden iso19139;7fc45be3-9aba-4198-920c-b8737112d522)",
     "geonetwork-host": "Catalogus URL",
     "geonetwork-hostHelp": "URL met alleen de catalogus naam. Bijvoorbeeld http://www.fao.org/geonetwork.",
+    "geonetwork-nodeHelp": "Name of the remote portal. The default portal is the srv one. If you have multiple portals, you can set the name of the portal to harvest from.",
     "geonetwork-mefFormatFull": "Gebruik volledig MEF formaat",
     "geonetwork-mefFormatFullHelp": "Aanbevolen om externe bestanden op te halen .",
     "geonetwork-useChangeDateForUpdate": "Gebruik wijzigingsdatum om te vergelijken",
@@ -351,7 +352,9 @@
     "harvester-geonetwork": "GeoNetwork (van 2.1 tot 3.x)",
     "harvester-geonetwork20": "GeoNetwork (2.0)",
     "harvester-geonetwork20Help": "Harvest GeoNetwork catalogus in versie 2.0 of lager. Let op: het harvesten van oude GeoNetwork catalogi is riskant. De oude nodes hebben geen unieke site-id's en dit kan onvoorspelbare resultaten (zoals het verwijderen van knooppunten van andere harvestings) veroorzaken .",
-    "harvester-geonetworkHelp": "Harvest van een ander GeoNetwork catalogus.",
+    "harvester-geonetworkHelp": "Harvest from another GeoNetwork 3.x catalog.",
+    "harvester-geonetwork40": "GeoNetwork (4.0)",
+    "harvester-geonetwork40Help": "Harvest from another GeoNetwork catalog (from 4.x)",
     "harvester-oaipmh": "OAI/PMH",
     "harvester-oaipmhHelp": "Harvest met behulp van het OAI Protocol voor metadata harvesting 2.0",
     "harvester-ogcwxs": "OGC Web Services",
@@ -1606,5 +1609,6 @@
     "datahubVersion": "Datahub version",
     "datahubEnabled": "Enable Datahub interface for this portal",
     "datahubInfo": "This Datahub interface is accessible <a href='../../{{uuid}}/datahub'>here</a>.",
-    "datahubPluginNotInstalled-help": "The Datahub plugin is not installed. Please refer to <a href='https://docs.geonetwork-opensource.org/4.4/install-guide/plugins/#datahub-integration-gn-datahub-integration' target='_blank'>the related documentation for more information</a> on installation and usage."
+    "datahubPluginNotInstalled-help": "The Datahub plugin is not installed. Please refer to <a href='https://docs.geonetwork-opensource.org/4.4/install-guide/plugins/#datahub-integration-gn-datahub-integration' target='_blank'>the related documentation for more information</a> on installation and usage.",
+    "harvesterErrorRetrieveSources": "Error retrieving remote catalogs"
 }

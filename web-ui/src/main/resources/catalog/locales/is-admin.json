@@ -53,7 +53,7 @@
     "database-server": "Þjónn",
     "database-serverHelp": "The database server hostname",
     "database-tableName": "Table name",
-    "database-tableNameHelp": "Table name with the metadata. The name must begin with a letter (a-z) or underscore (_). Subsequent characters in a name can be letters, digits (0-9), or underscores.",
+    "database-tableNameHelp": "Table field name that contains the metadata. The name must begin with a letter (a-z) or underscore (_). Subsequent characters in a name can be letters, digits (0-9), or underscores. It can be a qualified table name (e.g. schema.table).",
     "database-metadataField": "Metadata field name",
     "database-metadataFieldHelp": "Table field name that contains the metadata. The name must begin with a letter (a-z) or underscore (_). Subsequent characters in a name can be letters, digits (0-9), or underscores.",
     "database-filterField": "Filter field",
@@ -295,6 +295,7 @@
     "geonetwork-customCriteriaHelp": "Skilgreina hvaða viðmið eru studd af ytri nóðu og ekki í boði í skilgreindum síum (t.d. 'similarity' set to '1' for non fuzzy search). Þú gætir skilgreint mörg viðmið aðskilin af ';' (eg. _schema;siteId with values iso19139;7fc45be3-9aba-4198-920c-b8737112d522)",
     "geonetwork-host": "Efnisskrá URL",
     "geonetwork-hostHelp": "URL aðeins með nafni efnisskráar t.d. http://www.fao.org/geonetwork.",
+    "geonetwork-nodeHelp": "Name of the remote portal. The default portal is the srv one. If you have multiple portals, you can set the name of the portal to harvest from.",
     "geonetwork-mefFormatFull": "Nota fullt MEF format",
     "geonetwork-mefFormatFullHelp": "Recommended to retrieve remote files.",
     "geonetwork-useChangeDateForUpdate": "Nota breytingardagsetningu til samanburðar",
@@ -351,7 +352,9 @@
     "harvester-geonetwork": "GeoNetwork (from 2.1 to 3.x)",
     "harvester-geonetwork20": "GeoNetwork (2.0)",
     "harvester-geonetwork20Help": "Harvest GeoNetwork node in 2.0 or lower version. Please note that harvesting old GeoNetwork nodes is unsafe. The old nodes do not have unique site ids and this could cause unpredictable results (like removing nodes from other harvestings).",
-    "harvester-geonetworkHelp": "Safna frá öðrum GeoNetwork catalog.",
+    "harvester-geonetworkHelp": "Harvest from another GeoNetwork 3.x catalog.",
+    "harvester-geonetwork40": "GeoNetwork (4.0)",
+    "harvester-geonetwork40Help": "Harvest from another GeoNetwork catalog (from 4.x)",
     "harvester-oaipmh": "OAI/PMH",
     "harvester-oaipmhHelp": "Safnað með því að nota OAI Protocol for metadata harvesting 2.0",
     "harvester-ogcwxs": "OGC Vefþjónustur",
@@ -1606,5 +1609,6 @@
     "datahubVersion": "Datahub version",
     "datahubEnabled": "Enable Datahub interface for this portal",
     "datahubInfo": "This Datahub interface is accessible <a href='../../{{uuid}}/datahub'>here</a>.",
-    "datahubPluginNotInstalled-help": "The Datahub plugin is not installed. Please refer to <a href='https://docs.geonetwork-opensource.org/4.4/install-guide/plugins/#datahub-integration-gn-datahub-integration' target='_blank'>the related documentation for more information</a> on installation and usage."
+    "datahubPluginNotInstalled-help": "The Datahub plugin is not installed. Please refer to <a href='https://docs.geonetwork-opensource.org/4.4/install-guide/plugins/#datahub-integration-gn-datahub-integration' target='_blank'>the related documentation for more information</a> on installation and usage.",
+    "harvesterErrorRetrieveSources": "Error retrieving remote catalogs"
 }

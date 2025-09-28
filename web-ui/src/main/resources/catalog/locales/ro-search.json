@@ -357,7 +357,7 @@
     "KMLfileURL": "Adresa URL a unui fișier KML",
     "refineSearch": "Rafinați căutarea",
     "backToList": "Înapoi la listă",
-    "privilegesBatchAlert": "<span class='text-danger'>Privilegiile vor fi actualizate pentru toate înregistrările editabile din selecție. Formularul de privilegii este gol și nu reflectă privilegiile curente ale înregistrărilor selectate! Privilegiile sunt resetate și înlocuite cu cele noi.</span><br/><br/> Făcând clic pe <strong>Îmbinare selectată,</strong> se vor adăuga (bifați cu <strong>+</strong> ) sau eliminați (căsuța de selectare cu <strong>-</strong> ) privilegiile selectate.<br/><br/> Făcând clic pe <strong>Înlocuire prin selectat,</strong> se vor elimina categoriile de înregistrare și apoi se vor adăuga (bifate cu <strong>+</strong> ) sau vor elimina (căsuța de selectare cu <strong>-</strong> ) privilegiile selectate.",
+    "privilegesBatchAlert": "<span class='text-danger'>Privilegiile vor fi actualizate pentru toate înregistrările editabile din selecție. Formularul de privilegii este gol și nu reflectă privilegiile curente ale înregistrărilor selectate! Privilegiile sunt resetate și înlocuite cu cele noi.</span><br/><br/> Făcând clic pe <strong>Îmbinare selectată,</strong> se vor adăuga (bifați cu <strong>+</strong> ) sau eliminați (căsuța de selectare cu <strong>-</strong> ) privilegiile selectate.<br/><br/> Făcând clic pe <strong>Actualizați,</strong> se vor elimina categoriile de înregistrare și apoi se vor adăuga (bifate cu <strong>+</strong> ) sau vor elimina (căsuța de selectare cu <strong>-</strong> ) privilegiile selectate.",
     "permalink": "Permalink",
     "permalinkTo": "Permalink către {{title}}",
     "shareOnTwitter": "Distribuie pe Twitter",

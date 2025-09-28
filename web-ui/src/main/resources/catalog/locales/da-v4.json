@@ -215,7 +215,7 @@
   "addThoseOperations-help": "Tilføj (markeret med +) eller fjern (felt markeret med -) de udvalgte privilegier.",
   "privilegesNeededForPublicationRecordGroupOnly-true": "For at udgive en instans, skal du være administrator eller korrekturlæser for instansens gruppe.",
   "privilegesNeededForPublicationRecordGroupOnly-false": "For at udgive en Instans skal du være administrator- eller korrektur-berettiget til instansgruppen eller  korrektur berettiget i en gruppe med redigeringsrettigheder.",
-  "replaceByThoseOperations-help": "Fjern adgangsrettigheder til instanser og tilføj(markeret med +) eller fjern(felt markeret med -) dernæst de udvalgte adgangsrettigheder.",
+  "replaceByThoseOperations-help": "Remove record privileges and then add (checked with +) or remove (checkbox with -) selected privileges.",
   "chooseASelection": "Vælg et udvalg",
   "e101": "Valg af redigeringsværktøjspanelet [e101]",
   "s101": "Søg i udvalget af apps [s101]",

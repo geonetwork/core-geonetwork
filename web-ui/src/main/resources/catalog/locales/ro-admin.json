@@ -53,7 +53,7 @@
     "database-server": "Server",
     "database-serverHelp": "The database server hostname",
     "database-tableName": "Table name",
-    "database-tableNameHelp": "Table name with the metadata. The name must begin with a letter (a-z) or underscore (_). Subsequent characters in a name can be letters, digits (0-9), or underscores.",
+    "database-tableNameHelp": "Table field name that contains the metadata. The name must begin with a letter (a-z) or underscore (_). Subsequent characters in a name can be letters, digits (0-9), or underscores. It can be a qualified table name (e.g. schema.table).",
     "database-metadataField": "Metadata field name",
     "database-metadataFieldHelp": "Table field name that contains the metadata. The name must begin with a letter (a-z) or underscore (_). Subsequent characters in a name can be letters, digits (0-9), or underscores.",
     "database-filterField": "Filter field",
@@ -295,6 +295,7 @@
     "geonetwork-customCriteriaHelp": "Definiți orice criterii acceptate de nodul de la distanță și care nu sunt disponibile în filtrele predefinite (de exemplu, „similaritate” setat la „1” pentru căutarea nefuzzy). Puteți specifica mai multe criterii separate prin „;” (de ex. _schema;siteId cu valorile iso19139;7fc45be3-9aba-4198-920c-b8737112d522)",
     "geonetwork-host": "Adresa URL a catalogului",
     "geonetwork-hostHelp": "URL doar cu numele catalogului, de ex. http://www.fao.org/geonetwork.",
+    "geonetwork-nodeHelp": "Name of the remote portal. The default portal is the srv one. If you have multiple portals, you can set the name of the portal to harvest from.",
     "geonetwork-mefFormatFull": "Utilizați formatul MEF complet",
     "geonetwork-mefFormatFullHelp": "Recomandat pentru a prelua fișiere de la distanță.",
     "geonetwork-useChangeDateForUpdate": "Utilizați data modificării pentru comparație",
@@ -351,7 +352,9 @@
     "harvester-geonetwork": "GeoNetwork (de la 2.1 la 3.x)",
     "harvester-geonetwork20": "GeoNetwork (2.0)",
     "harvester-geonetwork20Help": "Nodul Harvest GeoNetwork în versiunea 2.0 sau mai mică. Vă rugăm să rețineți că recoltarea vechilor noduri GeoNetwork este nesigură. Nodurile vechi nu au ID-uri unice de site și acest lucru ar putea cauza rezultate imprevizibile (cum ar fi eliminarea nodurilor din alte recoltări).",
-    "harvester-geonetworkHelp": "Recoltați dintr-un alt catalog GeoNetwork.",
+    "harvester-geonetworkHelp": "Harvest from another GeoNetwork 3.x catalog.",
+    "harvester-geonetwork40": "GeoNetwork (4.0)",
+    "harvester-geonetwork40Help": "Harvest from another GeoNetwork catalog (from 4.x)",
     "harvester-oaipmh": "OAI/PMH",
     "harvester-oaipmhHelp": "Recoltare folosind Protocolul OAI pentru recoltarea metadatelor 2.0",
     "harvester-ogcwxs": "Servicii web OGC",
@@ -1606,5 +1609,6 @@
     "datahubVersion": "Datahub version",
     "datahubEnabled": "Enable Datahub interface for this portal",
     "datahubInfo": "This Datahub interface is accessible <a href='../../{{uuid}}/datahub'>here</a>.",
-    "datahubPluginNotInstalled-help": "The Datahub plugin is not installed. Please refer to <a href='https://docs.geonetwork-opensource.org/4.4/install-guide/plugins/#datahub-integration-gn-datahub-integration' target='_blank'>the related documentation for more information</a> on installation and usage."
+    "datahubPluginNotInstalled-help": "The Datahub plugin is not installed. Please refer to <a href='https://docs.geonetwork-opensource.org/4.4/install-guide/plugins/#datahub-integration-gn-datahub-integration' target='_blank'>the related documentation for more information</a> on installation and usage.",
+    "harvesterErrorRetrieveSources": "Error retrieving remote catalogs"
 }

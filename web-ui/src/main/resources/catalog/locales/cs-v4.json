@@ -215,7 +215,7 @@
   "addThoseOperations-help": "Přidat (zaškrtnuto pomocí +) nebo odebrat (zaškrtávací políčko s -) vybranými oprávněními.",
   "privilegesNeededForPublicationRecordGroupOnly-true": "Chcete-li publikovat záznam, musíte být správcem nebo recenzentem skupiny záznamů",
   "privilegesNeededForPublicationRecordGroupOnly-false": "Chcete-li publikovat záznam, musíte být správcem nebo recenzentem skupiny záznamů nebo recenzentem skupiny s právy úprav.",
-  "replaceByThoseOperations-help": "Odebrat oprávnění záznamu a poté přidat (zaškrtnuto pomocí +) nebo odebrat (zaškrtávací políčko s -) vybranými oprávněními.",
+  "replaceByThoseOperations-help": "Remove record privileges and then add (checked with +) or remove (checkbox with -) selected privileges.",
   "chooseASelection": "Vyberte výběr",
   "e101": "Výběr redakční rady [e101]",
   "s101": "Vyhledat výběr aplikace [s101]",

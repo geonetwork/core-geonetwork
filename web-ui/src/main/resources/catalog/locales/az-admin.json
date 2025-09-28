@@ -53,7 +53,7 @@
     "database-server": "Server",
     "database-serverHelp": "The database server hostname",
     "database-tableName": "Table name",
-    "database-tableNameHelp": "Table name with the metadata. The name must begin with a letter (a-z) or underscore (_). Subsequent characters in a name can be letters, digits (0-9), or underscores.",
+    "database-tableNameHelp": "Table field name that contains the metadata. The name must begin with a letter (a-z) or underscore (_). Subsequent characters in a name can be letters, digits (0-9), or underscores. It can be a qualified table name (e.g. schema.table).",
     "database-metadataField": "Metadata field name",
     "database-metadataFieldHelp": "Table field name that contains the metadata. The name must begin with a letter (a-z) or underscore (_). Subsequent characters in a name can be letters, digits (0-9), or underscores.",
     "database-filterField": "Filter field",
@@ -295,6 +295,7 @@
     "geonetwork-customCriteriaHelp": "Uzaq qovşaq tərəfindən dəstəklənən və əvvəlcədən təyin edilmiş filtrlərdə mövcud olmayan meyarları müəyyən edin (məsələn, qeyri-səlis axtarış üçün “oxşarlıq” “1”ə təyin olundu). Siz &#39;;&#39; ilə ayrılmış bir neçə meyar təyin edə bilərsiniz. (məs. _schema;siteId dəyərləri iso19139;7fc45be3-9aba-4198-920c-b8737112d522)",
     "geonetwork-host": "Kataloq URL",
     "geonetwork-hostHelp": "Yalnız kataloq adı olan URL, məsələn. http://www.fao.org/geonetwork.",
+    "geonetwork-nodeHelp": "Name of the remote portal. The default portal is the srv one. If you have multiple portals, you can set the name of the portal to harvest from.",
     "geonetwork-mefFormatFull": "Tam MEF formatından istifadə edin",
     "geonetwork-mefFormatFullHelp": "Uzaqdan faylları əldə etmək tövsiyə olunur.",
     "geonetwork-useChangeDateForUpdate": "Müqayisə üçün dəyişiklik tarixindən istifadə edin",
@@ -351,7 +352,9 @@
     "harvester-geonetwork": "GeoNetwork (2.1-dən 3.x-ə qədər)",
     "harvester-geonetwork20": "GeoNetwork (2.0)",
     "harvester-geonetwork20Help": "GeoNetwork qovşağını 2.0 və ya daha aşağı versiyada yığın. Nəzərə alın ki, köhnə GeoNetwork qovşaqlarının yığılması təhlükəlidir. Köhnə qovşaqların unikal sayt identifikatorları yoxdur və bu, gözlənilməz nəticələrə səbəb ola bilər (məsələn, digər yığımlardan qovşaqların çıxarılması).",
-    "harvester-geonetworkHelp": "Başqa bir GeoNetwork kataloqundan məhsul toplayın.",
+    "harvester-geonetworkHelp": "Harvest from another GeoNetwork 3.x catalog.",
+    "harvester-geonetwork40": "GeoNetwork (4.0)",
+    "harvester-geonetwork40Help": "Harvest from another GeoNetwork catalog (from 4.x)",
     "harvester-oaipmh": "OAI/PMH",
     "harvester-oaipmhHelp": "Metaməlumatların toplanması üçün OAI Protokolundan istifadə edərək məhsul yığımı 2.0",
     "harvester-ogcwxs": "OGC Veb Xidmətləri",
@@ -1606,5 +1609,6 @@
     "datahubVersion": "Datahub version",
     "datahubEnabled": "Enable Datahub interface for this portal",
     "datahubInfo": "This Datahub interface is accessible <a href='../../{{uuid}}/datahub'>here</a>.",
-    "datahubPluginNotInstalled-help": "The Datahub plugin is not installed. Please refer to <a href='https://docs.geonetwork-opensource.org/4.4/install-guide/plugins/#datahub-integration-gn-datahub-integration' target='_blank'>the related documentation for more information</a> on installation and usage."
+    "datahubPluginNotInstalled-help": "The Datahub plugin is not installed. Please refer to <a href='https://docs.geonetwork-opensource.org/4.4/install-guide/plugins/#datahub-integration-gn-datahub-integration' target='_blank'>the related documentation for more information</a> on installation and usage.",
+    "harvesterErrorRetrieveSources": "Error retrieving remote catalogs"
 }

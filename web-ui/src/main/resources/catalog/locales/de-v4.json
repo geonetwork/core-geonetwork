@@ -215,7 +215,7 @@
   "addThoseOperations-help": "Anhängen (+) oder Entfernen (-) ausgewählter Berechtigungen.",
   "privilegesNeededForPublicationRecordGroupOnly-true": "Um einen Datensatz zu veröffentlichen, müssen Sie Administrator oder Reviewer der Katalog-Gruppe sein",
   "privilegesNeededForPublicationRecordGroupOnly-false": "Um einen Datensatz zu veröffentlichen, müssen Sie Administrator oder Reviewer einer Katalog-Gruppe oder Reviewer einer Katalog-Gruppe mit Bearbeitungsrechten sein.",
-  "replaceByThoseOperations-help": "Entfernen Sie Datensatz-Privilegien und fügen Sie dann ausgewählte Berechtigungen hinzu (+) oder entfernen Sie die (-).",
+  "replaceByThoseOperations-help": "Remove record privileges and then add (checked with +) or remove (checkbox with -) selected privileges.",
   "chooseASelection": "Wählen Sie eine Auswahl",
   "e101": "Auswahl der Editoroberfläche [e101]",
   "s101": "App-Auswahl durchsuchen [s101]",

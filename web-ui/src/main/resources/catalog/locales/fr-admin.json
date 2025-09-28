@@ -53,7 +53,7 @@
     "database-server": "Serveur",
     "database-serverHelp": "The database server hostname",
     "database-tableName": "Table name",
-    "database-tableNameHelp": "Table name with the metadata. The name must begin with a letter (a-z) or underscore (_). Subsequent characters in a name can be letters, digits (0-9), or underscores.",
+    "database-tableNameHelp": "Table field name that contains the metadata. The name must begin with a letter (a-z) or underscore (_). Subsequent characters in a name can be letters, digits (0-9), or underscores. It can be a qualified table name (e.g. schema.table).",
     "database-metadataField": "Metadata field name",
     "database-metadataFieldHelp": "Table field name that contains the metadata. The name must begin with a letter (a-z) or underscore (_). Subsequent characters in a name can be letters, digits (0-9), or underscores.",
     "database-filterField": "Filter field",
@@ -295,6 +295,7 @@
     "geonetwork-customCriteriaHelp": "Défini les critères pris en charge par un nœud et non disponibles dans les filtres pré-définis (exemple: \"similarité\" appliquée à \"1\" pour une recherche de type floue). Vous pouvez spécifier des critères multiples en les séparant par \";\" (exemple: _schema;siteId with values iso19139;7fc45be3-9aba-4198-920c-b8737112d522)",
     "geonetwork-host": "URL du catalogue",
     "geonetwork-hostHelp": "L'URL doit contenir le nom du catalogue eg. http://www.fao.org/geonetwork.",
+    "geonetwork-nodeHelp": "Name of the remote portal. The default portal is the srv one. If you have multiple portals, you can set the name of the portal to harvest from.",
     "geonetwork-mefFormatFull": "Utiliser le format MEF complet",
     "geonetwork-mefFormatFullHelp": "Recommandé pour récupérer les fichiers associés (eg. aperçus).",
     "geonetwork-useChangeDateForUpdate": "Utiliser la date de mise à jour pour la comparaison",
@@ -351,7 +352,9 @@
     "harvester-geonetwork": "GeoNetwork (from 2.1 to 3.x)",
     "harvester-geonetwork20": "GeoNetwork (2.0)",
     "harvester-geonetwork20Help": "Moissoner un nœud GeoNetwork de version 2.0 ou inférieur. Veuillez noter que le moissonnage d'anciens nœuds est dangereux. Les anciens nœuds n'ont pas d'identifiants uniques de sites, ce qui pourrait entraîner des résultats imprévisibles (comme la suppression de nœuds d'autres moissonnages).",
-    "harvester-geonetworkHelp": "Moissonnage d'un autre catalogue GeoNetwork.",
+    "harvester-geonetworkHelp": "Harvest from another GeoNetwork 3.x catalog.",
+    "harvester-geonetwork40": "GeoNetwork (4.0)",
+    "harvester-geonetwork40Help": "Harvest from another GeoNetwork catalog (from 4.x)",
     "harvester-oaipmh": "Serveur OAI/PMH",
     "harvester-oaipmhHelp": "Moissonnage utilisant le protocole OAI pour les métadonnées moissonnées 2.0",
     "harvester-ogcwxs": "Service web OGC",
@@ -1606,5 +1609,6 @@
     "datahubVersion": "Datahub version",
     "datahubEnabled": "Activer le Datahub pour ce portail",
     "datahubInfo": "L'interface du Datahub est accessible <a href='../../{{uuid}}/datahub'>ici</a>.",
-    "datahubPluginNotInstalled-help": "Le plugin d'intégration du Datahub n'est pas installé. Veuillez consulter <a href='https://docs.geonetwork-opensource.org/4.4/install-guide/plugins/#datahub-integration-gn-datahub-integration' target='_blank'>la documentation associée pour plus d'informations</a> sur l'installation et l'utilisation de ce plugin."
+    "datahubPluginNotInstalled-help": "Le plugin d'intégration du Datahub n'est pas installé. Veuillez consulter <a href='https://docs.geonetwork-opensource.org/4.4/install-guide/plugins/#datahub-integration-gn-datahub-integration' target='_blank'>la documentation associée pour plus d'informations</a> sur l'installation et l'utilisation de ce plugin.",
+    "harvesterErrorRetrieveSources": "Error retrieving remote catalogs"
 }

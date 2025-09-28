@@ -215,7 +215,7 @@
   "addThoseOperations-help": "Append (checked with +) or remove (checkbox with -) selected privileges.",
   "privilegesNeededForPublicationRecordGroupOnly-true": "To publish a record, you need to be administrator or reviewer of record group",
   "privilegesNeededForPublicationRecordGroupOnly-false": "To publish a record, you need to be administrator or reviewer of record group or reviewer of a group with editing rights.",
-  "replaceByThoseOperations-help": "Remove record priviliges and then add (checked with +) or remove (checkbox with -) selected privileges.",
+  "replaceByThoseOperations-help": "Remove record privileges and then add (checked with +) or remove (checkbox with -) selected privileges.",
   "chooseASelection": "Choose a selection",
   "e101": "Editor board selection [e101]",
   "s101": "Search app selection [s101]",

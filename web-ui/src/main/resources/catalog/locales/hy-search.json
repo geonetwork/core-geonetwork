@@ -357,7 +357,7 @@
     "KMLfileURL": "KML ֆայլի URL",
     "refineSearch": "Բարելավել որոնումը",
     "backToList": "Վերադառնալ ցուցակին",
-    "privilegesBatchAlert": "<span class='text-danger'>Արտոնությունները կթարմացվեն ընտրության բոլոր խմբագրվող գրառումների համար: Արտոնության ձևը դատարկ է և չի արտացոլում ընտրված գրառումների ընթացիկ արտոնությունները: Արտոնությունները վերակայվում են և փոխարինվում նորով։</span><br/><br/> Սեղմելով <strong>«Միաձուլել ընտրվածը»</strong> կավելացվեն (նշված է <strong>+</strong> ) կամ կհեռացվեն (վանդակը <strong>-</strong> ով) ընտրված արտոնությունները:<br/><br/> Սեղմելով <strong>Փոխարինել ընտրվածի վրա</strong> ՝ կհեռացվեն գրառումների կատեգորիաները, այնուհետև կավելացվեն (նշված է <strong>+</strong> ) կամ կհեռացվեն (վանդակը <strong>-</strong> ով) ընտրված արտոնությունները:",
+    "privilegesBatchAlert": "<span class='text-danger'>The privileges will be updated for all editable records in the selection. The privilege form is empty and does not reflect the selected records current privileges! Privileges are reset and replaced by the new one.</span><br/><br/>Clicking on <strong>Merge selected</strong> will add (checked with <strong>+</strong>) or remove (checkbox with <strong>-</strong>) selected privileges.<br/><br/>Clicking on <strong>Update</strong> will remove record privileges and then add (checked with <strong>+</strong>) or remove (checkbox with <strong>-</strong>) selected privileges.",
     "permalink": "Մշտական հղում",
     "permalinkTo": "Մշտական հղում դեպի {{title}}",
     "shareOnTwitter": "Կիսվեք Twitter-ում",

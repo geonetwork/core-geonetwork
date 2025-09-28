@@ -53,7 +53,7 @@
     "database-server": "Server",
     "database-serverHelp": "Databaseserverens  værtsnavn",
     "database-tableName": "Tabelnavn",
-    "database-tableNameHelp": "Tabelnavn med metadata . Navnet skal begynde med et bogstav (az) eller en understregning (_). Efterfølgende tegn i et navn kan være bogstaver, cifre (0-9) eller understregninger.",
+    "database-tableNameHelp": "Table field name that contains the metadata. The name must begin with a letter (a-z) or underscore (_). Subsequent characters in a name can be letters, digits (0-9), or underscores. It can be a qualified table name (e.g. schema.table).",
     "database-metadataField": "Metadata feltnavn",
     "database-metadataFieldHelp": "Tabelfeltnavn, der indeholder metadata . Navnet skal begynde med et bogstav (az) eller en understregning (_). Efterfølgende tegn i et navn kan være bogstaver, cifre (0-9) eller understregninger.",
     "database-filterField": "Filterfelt",
@@ -295,6 +295,7 @@
     "geonetwork-customCriteriaHelp": "Definer hvilke kriterier der understøttes af fjern-knudepunktet og hvilke der ikke tilgængelige i de prædefinerede filtre (f.eks. 'similairty' sat til '1' for at opnå en præcis søgning). Du kan angive flere kriterier adskilt af ';' (f.eks. _schema;siteId med værdier iso19139;7fc45be3-9aba-4198-920c-b8737112d522)",
     "geonetwork-host": "Katalog URL",
     "geonetwork-hostHelp": "URL med kun katalognavn f.eks. http://www.fao.org/geonetwork.",
+    "geonetwork-nodeHelp": "Name of the remote portal. The default portal is the srv one. If you have multiple portals, you can set the name of the portal to harvest from.",
     "geonetwork-mefFormatFull": "Brug hele MEF format",
     "geonetwork-mefFormatFullHelp": "Det bliver anbefalet at hente fjerneplacerede filer.",
     "geonetwork-useChangeDateForUpdate": "Brug ændringsdato til sammenligning",
@@ -351,7 +352,9 @@
     "harvester-geonetwork": "GeoNetwork (fra 2.1 til 3.x)",
     "harvester-geonetwork20": "GeoNetwork (2.0)",
     "harvester-geonetwork20Help": "Høst GeoNetwork knudepunkt(node) i 2.0 eller lavere version. Vær opmærksom på at høst af gamle GeoNetwork noder er usikkert. De gamle noder har ikke unikke 'site id's', hvilket kan medføre uforudsigelige resultater (som at fjerne noder fra andre høster).",
-    "harvester-geonetworkHelp": "Høst fra et andet GeoNetwork katalog.",
+    "harvester-geonetworkHelp": "Harvest from another GeoNetwork 3.x catalog.",
+    "harvester-geonetwork40": "GeoNetwork (4.0)",
+    "harvester-geonetwork40Help": "Harvest from another GeoNetwork catalog (from 4.x)",
     "harvester-oaipmh": "OAI / PMH",
     "harvester-oaipmhHelp": "Høst ved hjælp af OAI-protokol for metadatahøstning 2.0",
     "harvester-ogcwxs": "OGC Web Services",
@@ -1606,5 +1609,6 @@
     "datahubVersion": "Datahub version",
     "datahubEnabled": "Aktivér Datahub-grænsefladen for denne portal",
     "datahubInfo": "Denne Datahub-grænseflade er tilgængelig <a href='../../{{uuid}}/datahub'>her</a> .",
-    "datahubPluginNotInstalled-help": "Datahub-plugin&#39;et er ikke installeret. Se <a href='https://docs.geonetwork-opensource.org/4.4/install-guide/plugins/#datahub-integration-gn-datahub-integration' target='_blank'>den relaterede dokumentation for yderligere oplysninger</a> om installation og brug."
+    "datahubPluginNotInstalled-help": "Datahub-plugin&#39;et er ikke installeret. Se <a href='https://docs.geonetwork-opensource.org/4.4/install-guide/plugins/#datahub-integration-gn-datahub-integration' target='_blank'>den relaterede dokumentation for yderligere oplysninger</a> om installation og brug.",
+    "harvesterErrorRetrieveSources": "Error retrieving remote catalogs"
 }

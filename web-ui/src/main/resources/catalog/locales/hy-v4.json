@@ -215,7 +215,7 @@
   "addThoseOperations-help": "Ավելացրեք (նշված է +-ով) կամ հեռացրեք (վանդակը -ով) ընտրված արտոնությունները:",
   "privilegesNeededForPublicationRecordGroupOnly-true": "Գրառում հրապարակելու համար դուք պետք է լինեք ձայնագրությունների խմբի ադմինիստրատոր կամ գրախոս",
   "privilegesNeededForPublicationRecordGroupOnly-false": "Գրառում հրապարակելու համար դուք պետք է լինեք ձայնագրությունների խմբի ադմինիստրատոր կամ գրախոս կամ խմբագրման իրավունք ունեցող խմբի գրախոս:",
-  "replaceByThoseOperations-help": "Հեռացրեք ձայնագրության արտոնությունները, այնուհետև ավելացրեք (նշված է +-ով) կամ հեռացրեք (վանդակը -ով) ընտրված արտոնությունները:",
+  "replaceByThoseOperations-help": "Remove record privileges and then add (checked with +) or remove (checkbox with -) selected privileges.",
   "chooseASelection": "Ընտրեք ընտրություն",
   "e101": "Խմբագիր խորհրդի ընտրություն [e101]",
   "s101": "Որոնել հավելվածների ընտրություն [s101]",

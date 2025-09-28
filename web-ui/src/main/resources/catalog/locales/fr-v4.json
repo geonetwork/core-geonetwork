@@ -215,7 +215,7 @@
   "addThoseOperations-help": "Ajoute (case à cocher avec +) ou supprime (case à cocher avec -) les privilèges sélectionnés.",
   "privilegesNeededForPublicationRecordGroupOnly-true": "Pour publier une fiche, vous devez être administrateur ou relecteur du groupe de la fiche",
   "privilegesNeededForPublicationRecordGroupOnly-false": "Pour publier une fiche, vous devez être administrateur ou relecteur du groupe de la fiche ou relecteur d'un groupe ayant les privilèges d'édition.",
-  "replaceByThoseOperations-help": "Supprime les privilèges et ensuite ajoute (case à cocher avec +) ou supprime (case à cocher avec -) les privilèges sélectionnées.",
+  "replaceByThoseOperations-help": "Remove record privileges and then add (checked with +) or remove (checkbox with -) selected privileges.",
   "chooseASelection": "Choisir une sélection",
   "e101": "Sélection du tableau de bord d'édition [e101]",
   "s101": "Sélection de la page de recherche [s101]",

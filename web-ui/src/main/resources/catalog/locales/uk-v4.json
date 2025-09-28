@@ -215,7 +215,7 @@
   "addThoseOperations-help": "Додати (позначено +) або видалити (прапорець з -) вибрані привілеї.",
   "privilegesNeededForPublicationRecordGroupOnly-true": "Щоб опублікувати запис, вам потрібно бути адміністратором або рецензентом групи записів",
   "privilegesNeededForPublicationRecordGroupOnly-false": "Щоб опублікувати запис, вам потрібно бути адміністратором або рецензентом групи записів або рецензентом групи з правами редагування.",
-  "replaceByThoseOperations-help": "Видалити привілеї запису, а потім додати (позначено +) або видалити (прапорець з -) вибрані привілеї.",
+  "replaceByThoseOperations-help": "Remove record privileges and then add (checked with +) or remove (checkbox with -) selected privileges.",
   "chooseASelection": "Виберіть вибір",
   "e101": "Вибір редколегії [e101]",
   "s101": "Вибір програми пошуку [s101]",
