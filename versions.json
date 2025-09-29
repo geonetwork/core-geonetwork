@@ -1,12 +1,5 @@
 [
   {
-    "version": "https://geonetwork.github.io/geonetwork/5.0/",
-    "title": "5.0",
-    "aliases": [
-      "devel"
-    ]
-  },
-  {
     "version": "4.4",
     "title": "4.4",
     "aliases": [
