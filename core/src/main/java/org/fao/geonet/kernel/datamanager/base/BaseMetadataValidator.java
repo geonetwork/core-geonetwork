@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2011 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2025 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -148,15 +148,16 @@ public class BaseMetadataValidator implements org.fao.geonet.kernel.datamanager.
 
             if ((!failedAssert.isEmpty()) || (!failedSchematronVerification.isEmpty())) {
                 StringBuilder errorReport = new StringBuilder();
+                String errorReportSeparator = "";
 
                 Iterator reports = schemaTronReport.getDescendants(ReportFinder);
                 while (reports.hasNext()) {
                     Element report = (Element) reports.next();
                     Element schematronVerificationError = report.getChild("schematronVerificationError", Edit.NAMESPACE);
 
-
                     if (schematronVerificationError != null) {
-                        errorReport.append("schematronVerificationError: " + schematronVerificationError.getTextTrim());
+                        errorReport.append(errorReportSeparator).append("schematronVerificationError: " + schematronVerificationError.getTextTrim());
+                        errorReportSeparator = ", ";
                     } else {
                         Iterator errors = report.getDescendants(ErrorFinder);
                         while (errors.hasNext()) {
@@ -182,14 +183,15 @@ public class BaseMetadataValidator implements org.fao.geonet.kernel.datamanager.
                             }
 
                             if (msg.length() > 0) {
-                                errorReport.append(reportType).append(':').append(msg);
+                                errorReport.append(errorReportSeparator).append(reportType).append(':').append(msg);
+                                errorReportSeparator = ", ";
                             }
                         }
                     }
                 }
 
                 throw new SchematronValidationErrorEx(
-                    "Schematron errors detected for file " + fileName + " - " + errorReport + " for more details", schemaTronReport);
+                    "Schematron errors detected for file '" + fileName + "' - " + errorReport, schemaTronReport);
             }
         }
 
