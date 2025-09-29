@@ -357,7 +357,7 @@
     "KMLfileURL": "URL souboru KML",
     "refineSearch": "Zúžit výběr",
     "backToList": "Zpátky na seznam",
-    "privilegesBatchAlert": "<span class='text-danger'>Oprávnění budou aktualizována pro všechny upravitelné záznamy ve výběru. Formulář oprávnění je prázdný a neodráží aktuální oprávnění vybraných záznamů! Oprávnění jsou resetována a nahrazena novým.</span><br/><br/> Kliknutím na <strong>Sloučit vybrané</strong> přidáte (zaškrtnuto pomocí <strong>+</strong> ) nebo odeberete (zaškrtávací políčko s <strong>-</strong> ) vybranými oprávněními.<br/><br/> Kliknutím na <strong>Nahradit vybraným</strong> odstraníte kategorie záznamů a poté přidáte (zaškrtnuto pomocí <strong>+</strong> ) nebo odeberete (zaškrtávací políčko <strong>-</strong> ) vybraná oprávnění.",
+    "privilegesBatchAlert": "<span class='text-danger'>Oprávnění budou aktualizována pro všechny upravitelné záznamy ve výběru. Formulář oprávnění je prázdný a neodráží aktuální oprávnění vybraných záznamů! Oprávnění jsou resetována a nahrazena novým.</span><br/><br/> Kliknutím na <strong>Sloučit vybrané</strong> přidáte (zaškrtnuto pomocí <strong>+</strong> ) nebo odeberete (zaškrtávací políčko s <strong>-</strong> ) vybranými oprávněními.<br/><br/> Kliknutím na <strong>Aktualizovat</strong> odstraníte kategorie záznamů a poté přidáte (zaškrtnuto pomocí <strong>+</strong> ) nebo odeberete (zaškrtávací políčko <strong>-</strong> ) vybraná oprávnění.",
     "permalink": "Permalink",
     "permalinkTo": "Trvalý odkaz na {{title}}",
     "shareOnTwitter": "Sdílet na Twitter",

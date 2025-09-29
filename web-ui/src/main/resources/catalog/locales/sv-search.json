@@ -357,7 +357,7 @@
     "KMLfileURL": "URL för en KML-fil",
     "refineSearch": "Förfina sökningen",
     "backToList": "Tillbaka till listan",
-    "privilegesBatchAlert": "<span class='text-danger'>Behörigheterna kommer att uppdateras för alla redigerbara poster i urvalet. Behörighetsformuläret är tomt och återspeglar inte de valda posternas nuvarande behörigheter! Behörigheter återställs och ersätts av de nya.</span><br/><br/> Om du klickar på <strong>Sammanfoga valda</strong> läggs till (markeras med <strong>+</strong> ) eller tas bort (kryssruta med <strong>-</strong> ) valda behörigheter.<br/><br/> Om du klickar på <strong>Ersätt med markerad</strong> tas postkategorier bort och läggs sedan till (markeras med <strong>+</strong> ) eller tar bort (kryssruta med <strong>-</strong> ) valda behörigheter.",
+    "privilegesBatchAlert": "<span class='text-danger'>Behörigheterna kommer att uppdateras för alla redigerbara poster i urvalet. Behörighetsformuläret är tomt och återspeglar inte de valda posternas nuvarande behörigheter! Behörigheter återställs och ersätts av de nya.</span><br/><br/> Om du klickar på <strong>Slå samman de valda</strong> läggs till (markeras med <strong>+</strong> ) eller tas bort (kryssruta med <strong>-</strong> ) valda behörigheter.<br/><br/> Om du klickar på <strong>Uppdatering</strong> tas postkategorier bort och läggs sedan till (markeras med <strong>+</strong> ) eller tar bort (kryssruta med <strong>-</strong> ) valda behörigheter.",
     "permalink": "Permalänk",
     "permalinkTo": "Permalänk till {{title}}",
     "shareOnTwitter": "Dela på Twitter",
