@@ -32,10 +32,12 @@
   <bean id="Harvest" class="org.fao.geonet.component.harvester.csw.Harvest"/>
   <bean id="HarvestManager" class="org.fao.geonet.kernel.harvest.HarvestManagerImpl"/>
 
+  <bean id="GeonetworkClient" class="org.fao.geonet.kernel.harvest.harvester.geonet.v4.client.GeoNetwork4ApiClient"/>
+
   <!-- The id of the beans is the same as the type in the harvester settings table and thus should not be changed -->
-  <bean id="geonetwork" class="org.fao.geonet.kernel.harvest.harvester.geonet.GeonetHarvester"
+  <bean id="geonetwork" class="org.fao.geonet.kernel.harvest.harvester.geonet.v21_3.GeonetHarvester"
         scope="prototype"/>
-  <bean id="geonetwork20" class="org.fao.geonet.kernel.harvest.harvester.geonet20.Geonet20Harvester"
+  <bean id="geonetwork20" class="org.fao.geonet.kernel.harvest.harvester.geonet.v20.Geonet20Harvester"
         scope="prototype"/>
   <bean id="geoPREST" class="org.fao.geonet.kernel.harvest.harvester.geoPREST.GeoPRESTHarvester"
         scope="prototype"/>
@@ -63,6 +65,8 @@
   <bean id="simpleurl"
         class="org.fao.geonet.kernel.harvest.harvester.simpleurl.SimpleUrlHarvester"
         scope="prototype"/>
+  <bean id="geonetwork40"
+        class="org.fao.geonet.kernel.harvest.harvester.geonet.v4.Geonet40Harvester" />
   <bean id="sftp" class="org.fao.geonet.kernel.harvest.harvester.sftp.SftpHarvester"
         scope="prototype"/>
   <bean id="database" class="org.fao.geonet.kernel.harvest.harvester.database.DatabaseHarvester"

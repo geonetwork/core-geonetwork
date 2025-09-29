@@ -10,7 +10,7 @@ repo_url: https://github.com/geonetwork/core-geonetwork
 edit_uri: edit/main/docs/manual/docs
 
 # Copyright
-copyright: Copyright &copy; 2001 - 2024 FAO-UN and others
+copyright: Copyright &copy; 2001 - 2025 FAO-UN and others
 
 extra_css:
   - assets/stylesheets/extra.css
@@ -285,6 +285,7 @@ nav:
       - user-guide/harvesting/index.md
       - user-guide/harvesting/harvesting-csw.md
       - user-guide/harvesting/harvesting-filesystem.md
+      - user-guide/harvesting/harvesting-geonetwork-4.md
       - user-guide/harvesting/harvesting-geonetwork.md
       - user-guide/harvesting/harvesting-geonetwork-2.md
       - user-guide/harvesting/harvesting-geoportal.md
