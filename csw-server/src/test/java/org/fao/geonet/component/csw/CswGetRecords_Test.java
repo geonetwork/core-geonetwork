@@ -49,9 +49,7 @@ public class CswGetRecords_Test extends AbstractCoreIntegrationTest {
     @Autowired
     private GetRecords _getRecords;
 
-    // TODOES
     @Test
-    @Ignore
     public void test_IsEqualIsNotEqualTo() throws Exception {
         final ServiceContext serviceContext = createServiceContext();
         serviceContext.setLanguage(null);
@@ -166,9 +164,10 @@ public class CswGetRecords_Test extends AbstractCoreIntegrationTest {
                 .addContent(new Element("ElementSetName", Csw.NAMESPACE_CSW).setText("summary"))
             );
         try {
-            result = _getRecords.execute(request, serviceContext);
-        } catch (InvalidParameterValueEx ex) {
-            Assert.assertTrue(true);
+            _getRecords.execute(request, serviceContext);
+            Assert.fail("Expected exception not thrown");
+        } catch (RuntimeException ex) {
+            Assert.assertEquals(InvalidParameterValueEx.class, ex.getCause().getClass());
         }
 
 
