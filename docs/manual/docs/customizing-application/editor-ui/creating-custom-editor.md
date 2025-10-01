@@ -205,6 +205,7 @@ displayIfRecord and displayIfServiceInfo could be combined. An AND operator is u
 Child elements:
 
 -   **tab**, One or more (see [Defining a tab](creating-custom-editor.md#creating-custom-editor-tab))
+-   **sidePanel**, (See [Configuring the side panel](creating-custom-editor.md#creating-custom-editor-sidePanel))
 -   **flatModeExceptions**, Optional element (see [Configuring complex element display](creating-custom-editor.md#creating-custom-editor-flatModeExceptions))
 -   **thesaurusList**, Optional element (see [Customizing thesaurus](creating-custom-editor.md#creating-custom-editor-thesaurusList))
 
@@ -330,6 +331,75 @@ e.g. only 2 INSPIRE themes:
              fieldset="false"
              transformations=""/>
 </thesaurusList>
+```
+
+## Configuring the side panel {#creating-custom-editor-sidePanel}
+
+The side panel is configured by adding `<text>` elements or `<directive>` elements to the `<sidePanel>` element within a `<view>`.
+
+A good default config with all directives is:
+```XML
+<sidePanel>
+  <directive gn-geo-publisher=""
+             data-ng-if="gnCurrentEdit.geoPublisherConfig"
+             data-config="{{gnCurrentEdit.geoPublisherConfig}}"
+             data-lang="lang"/>
+  <directive data-gn-validation-report=""/>
+  <directive data-gn-index-report=""/>
+  <directive data-gn-suggestion-list=""/>
+  <directive data-gn-need-help="creating-metadata"/>
+  <directive data-gn-onlinesrc-list="" types="thumbnail|onlinesrc|parent|dataset|service|source|sibling|associated|fcats"/>
+</sidePanel>
+```
+
+To include a text block use the following:
+
+```XML
+    <text ref="defaultviewdesc"></text>
+```
+There are several directives that can be added to the side panel:
+
+### Validation Report
+
+#### Directive: `gnValidationReport`
+
+#### Attributes:
+-   **initial-show-errors** (Optional) Fixed value: **true**
+  Show errors by default when the validation report is loaded.
+-  **initial-show-successes** (Optional) Fixed value: **true**
+  Show successes by default when the validation report is loaded.
+-  **initial-section-states** (Optional)
+  Initial state of the sections in the validation report. Possible values are `closed` or `open`. Default is `closed`.
+
+#### Sample:
+```XML
+<directive data-gn-validation-report="" data-initial-show-errors="true" data-initial-show-successes="true" data-initial-section-states="closed"/>
+```
+
+### Index Report
+
+#### Directive: `gnIndexReport`
+
+#### Attributes:
+-   **initial-section-states** (Optional)
+  Initial state of the sections in the index report. Possible values are `closed` or `open`. Default is `closed`.
+
+#### Sample:
+```XML
+  <directive data-gn-index-report="" data-initial-section-states="closed"/>
+```
+
+### Online Resource List
+
+#### Directive: `gnOnlinesrcList`
+
+#### Attributes:
+-   **types** (Optional)
+  A pipe-separated list of types to display in the online source list. Possible values are `thumbnail`, `onlinesrc`, `parent`, `dataset`, `service`, `source`, `sibling`, `associated`, and `fcats`. Default is all types.
+
+#### Sample:
+```XML
+<directive data-gn-onlinesrc-list="" data-types="thumbnail|onlinesrc|parent|dataset|source|sibling|associated"/>
 ```
 
 ## Adding a section to a tab {#creating-custom-editor-section}

@@ -15,8 +15,7 @@ cd core-geonetwork
 mvn clean install -DskipTests
 ```
 
-Submodules
-----------
+## Submodules
 
 GeoNetwork use submodules, these were initialized by the ``--recursive`` option when cloning the repository.
 

@@ -27,10 +27,12 @@
   goog.require("gn_index_data_view_directive");
   goog.require("gn_index_requestmanager");
   goog.require("gn_index_service");
+  goog.require("gn_index_report_directive");
 
   angular.module("gn_index", [
     "gn_index_data_view_directive",
     "gn_index_service",
-    "gn_index_requestmanager"
+    "gn_index_requestmanager",
+    "gn_index_report_directive"
   ]);
 })();

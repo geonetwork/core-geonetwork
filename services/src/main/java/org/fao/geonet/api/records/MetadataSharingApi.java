@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2024 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2025 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -247,7 +247,7 @@ public class MetadataSharingApi implements ApplicationEventPublisherAware
         @Parameter(
             description = "Publication type",
             required = false)
-        String publicationType,
+        @RequestParam(required = false) String publicationType,
         @Parameter(hidden = true)
         HttpSession session,
         HttpServletRequest request
@@ -292,7 +292,7 @@ public class MetadataSharingApi implements ApplicationEventPublisherAware
         @Parameter(
             description = "Publication type",
             required = false)
-        String publicationType,
+        @RequestParam(required = false) String publicationType,
         @Parameter(hidden = true)
         HttpSession session,
         HttpServletRequest request
@@ -412,7 +412,7 @@ public class MetadataSharingApi implements ApplicationEventPublisherAware
         @Parameter(
             description = "Publication type",
             required = false)
-        String publicationType,
+        @RequestParam(required = false)  String publicationType,
         @Parameter(hidden = true)
         HttpSession session,
         HttpServletRequest request
@@ -461,7 +461,7 @@ public class MetadataSharingApi implements ApplicationEventPublisherAware
         @Parameter(
             description = "Publication type",
             required = false)
-        String publicationType,
+        @RequestParam(required = false) String publicationType,
         @Parameter(hidden = true)
         HttpSession session,
         HttpServletRequest request

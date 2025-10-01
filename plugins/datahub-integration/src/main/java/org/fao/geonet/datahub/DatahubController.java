@@ -38,17 +38,23 @@ import static org.fao.geonet.kernel.schema.SchemaPlugin.LOGGER_NAME;
 public class DatahubController {
     public static final String INDEX_PATH = "/datahub/index.html";
     public static final String DATAHUB_FILES_PATH = "/datahub/";
-    public static final String DEFAULT_CONFIGURATION_FILE_PATH = DATAHUB_FILES_PATH + "assets/configuration/default.toml";
+    public static final String DEFAULT_CONFIGURATION_FILE_PATH = "/config/simplest-default.toml";
 
     @Autowired
     SourceRepository sourceRepository;
 
     @GetMapping("/datahub/status")
     public ResponseEntity<String> getDatahubStatus() throws IOException {
-        File configFile = FileUtils.getFileFromJar(DEFAULT_CONFIGURATION_FILE_PATH);
-        String defaultConfig = FileUtils.readFromInputStream(new FileInputStream(configFile));
+        InputStream configStream = getClass().getResourceAsStream(DEFAULT_CONFIGURATION_FILE_PATH);
+        String defaultConfig = FileUtils.readFromInputStream(configStream);
         JSONObject body = new JSONObject();
         body.put("defaultConfig", defaultConfig);
+
+        File packageJsonFile = FileUtils.getFileFromJar( DATAHUB_FILES_PATH + "package.json");
+        String packageJsonContent = FileUtils.readFromInputStream(new FileInputStream(packageJsonFile));
+        JSONObject packageJson = new JSONObject(packageJsonContent);
+        body.put("datahubVersion", packageJson.getString("version"));
+
         return ResponseEntity
                 .ok()
                 .contentType(MediaType.APPLICATION_JSON)
@@ -199,8 +205,8 @@ public class DatahubController {
         }
         // 3. fallback: read from default.toml file in resource
         else {
-            File defaultConfig = FileUtils.getFileFromJar(DEFAULT_CONFIGURATION_FILE_PATH);
-            return FileUtils.readFromInputStream(new FileInputStream(defaultConfig));
+            InputStream configStream = getClass().getResourceAsStream(DEFAULT_CONFIGURATION_FILE_PATH);
+            return FileUtils.readFromInputStream(configStream);
         }
     }
 

@@ -27,6 +27,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.oauth2.client.*;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
+import org.springframework.security.oauth2.client.web.AuthenticatedPrincipalOAuth2AuthorizedClientRepository;
+import org.springframework.security.oauth2.client.web.OAuth2AuthorizedClientRepository;
 
 public class OAuth2Configuration {
 
@@ -38,6 +40,16 @@ public class OAuth2Configuration {
 
     @Autowired
     private OAuth2AuthorizedClientService oAuth2AuthorizedClientService;
+
+    /**
+     * This method is used to obtain the OAuth2 authorized client repository
+     * which is used to persist the OAuth2 authorized clients
+     */
+    @Bean
+    public OAuth2AuthorizedClientRepository authorizedClientRepository(
+        OAuth2AuthorizedClientService service) {
+        return new AuthenticatedPrincipalOAuth2AuthorizedClientRepository(service);
+    }
 
     /**
      * This method is used to obtain the OAuth2 authorized clients

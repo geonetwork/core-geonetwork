@@ -1,6 +1,6 @@
 # Tools
 
-GeoNetwork is a Java Web Application, developed using Java 8, Maven.
+GeoNetwork is a Java Web Application, developed using Java and Maven.
 
 Documentation makes use of the python Sphinx build system.
 
@@ -68,7 +68,7 @@ Maven repository is available at repo.osgeo.org:
 
 GeoNetwork Reference
 
-* [software_development/building](BUIDLING.md)
+* [software_development/building](BUILDING.md)
 * [web](../web/README.md)
 
 Reference:
