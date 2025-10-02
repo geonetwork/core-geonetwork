@@ -10,6 +10,7 @@
     "contactRole": "연락처 역할",
     "addConcept": "키워드 목록에 개념 추가",
     "moveToTopConcept": "상위 개념 보기",
+    "browseThesaurus": "Browse vocabulary",
     "addContact": "연락처 추가",
     "addContactAsLink-help": "연락처 디렉토리에 있는 연락처에 링크를 추가합니다. 디렉토리에 업데이트한 경우에 연락처가 업데이트 됩니다.",
     "addContactAsText-help": "기본 모드. 레코드에 연락처를 추가합니다.",

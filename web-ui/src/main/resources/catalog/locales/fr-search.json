@@ -552,7 +552,7 @@
     "addLayerPrefix": "Ajouter une couche",
     "addLayerPostfix": "à la carte",
     "submit": "Soumettre",
-    "additionalLinks": "Additional Links",
+    "additionalLinks": "Liens supplémentaires",
     "indexingErrorMsg-invalidBounds": "Attention / Champ ressourceTemporalDateRange / Limites inférieure et supérieure vides ou dates non valides. Plage de dates non indexée.",
     "indexingErrorMsg-invalidDateFormat": "Avertissement / La date {{dateType}} avec la valeur '{{date}}' n'était pas un format de date valide.",
     "indexingErrorMsg-keywordNotFoundInThesaurus": "Avertissement / Mot-clé {{keyword}} introuvable dans {{thesaurus}}.",

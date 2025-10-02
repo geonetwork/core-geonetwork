@@ -10,6 +10,7 @@
     "contactRole": "Yhteystahon rooli",
     "addConcept": "Lisää käsite avainsanaluetteloon",
     "moveToTopConcept": "Näytä yläkäsitteet",
+    "browseThesaurus": "Browse vocabulary",
     "addContact": "Lisää yhteystaho",
     "addContactAsLink-help": "Lisää yhteystaholinkki yhteystahohakemistossa. Yhteystahon tiedot päivitetään hakemiston päivityksen yhteydessä.",
     "addContactAsText-help": "Oletustila. Lisää yhteystaho dokumenttiin.",

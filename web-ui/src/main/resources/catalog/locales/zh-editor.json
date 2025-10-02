@@ -10,6 +10,7 @@
     "contactRole": "联系人角色",
     "addConcept": "添加内容至关键字列表",
     "moveToTopConcept": "显示顶部概念",
+    "browseThesaurus": "Browse vocabulary",
     "addContact": "增加联系人",
     "addContactAsLink-help": "为联系人目录中联系人添加链接。如果目录更新，联系人将被更新。",
     "addContactAsText-help": "默认模式。将联系人添加到记录中。",

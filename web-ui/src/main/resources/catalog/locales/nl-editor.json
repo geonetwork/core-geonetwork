@@ -10,6 +10,7 @@
     "contactRole": "Rol contactgegevens",
     "addConcept": "Voeg concept toe aan trefwoorden lijst",
     "moveToTopConcept": "Toon belangrijkste trefwoorden",
+    "browseThesaurus": "Browse vocabulary",
     "addContact": "Contact toevoegen",
     "addContactAsLink-help": "Voeg een link aan het contact in het xml fragment toe. Het fragment wordt automatisch bijgewerkt als de collectie wordt bijgewerkt.",
     "addContactAsText-help": "Standaardmodus. Voeg de contactpersoon toe aan het record.",

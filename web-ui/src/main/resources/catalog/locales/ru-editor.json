@@ -10,6 +10,7 @@
     "contactRole": "Роль контакта",
     "addConcept": "Добавить концепцию в список ключевых слов",
     "moveToTopConcept": "Показать лучшие концепции",
+    "browseThesaurus": "Browse vocabulary",
     "addContact": "Добавить контакт",
     "addContactAsLink-help": "Добавить ссылку контакта в контактный каталог. Контакт будет обновляться если его обновить в каталоге.",
     "addContactAsText-help": "Режим по умолчанию. Добавьте контакт в запись.",

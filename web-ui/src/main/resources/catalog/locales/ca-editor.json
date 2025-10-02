@@ -10,6 +10,7 @@
     "contactRole": "Rol del contacte",
     "addConcept": "Afegir concepte a la llista de paraules clau",
     "moveToTopConcept": "Mostrar conceptes principals",
+    "browseThesaurus": "Browse vocabulary",
     "addContact": "Afegir contacte",
     "addContactAsLink-help": "Afegir un enllaç al contacte al directori del contactes. El contacte s'actualitzarà si s'edita al directori.",
     "addContactAsText-help": "Mode per defecte. Afegeix el contacte a l'entrada.",
