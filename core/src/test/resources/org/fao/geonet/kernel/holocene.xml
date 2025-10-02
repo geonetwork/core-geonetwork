@@ -1,9 +1,9 @@
-<gmd:MD_Metadata xmlns:gmd="http://www.isotc211.org/2005/gmd"
+<gmd:MD_Metadata xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                 xmlns:gmd="http://www.isotc211.org/2005/gmd"
                  xmlns:gco="http://www.isotc211.org/2005/gco"
-                 xmlns:gmx="http://www.isotc211.org/2005/gmx"
-                 xmlns:gml="http://www.opengis.net/gml/3.2"
-                 xmlns:xlink="http://www.w3.org/1999/xlink"
-                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+                 xmlns:gml="http://www.opengis.net/gml"
+                 xsi:schemaLocation="http://www.isotc211.org/2005/gmd https://www.isotc211.org/2005/gmd/gmd.xsd
+  http://www.opengis.net/gml https://www.opengis.net/gml/gml.xsd">
   <gmd:fileIdentifier>
     <gco:CharacterString>4d2794d4-447e-4bbe-89ba-ab11cfdfc7b8</gco:CharacterString>
   </gmd:fileIdentifier>
@@ -100,9 +100,6 @@
   <gmd:metadataStandardName>
     <gco:CharacterString>ISO 19115/19119</gco:CharacterString>
   </gmd:metadataStandardName>
-  <gmd:metadataStandardVersion>
-    <gco:CharacterString/>
-  </gmd:metadataStandardVersion>
   <gmd:locale>
     <gmd:PT_Locale id="DE">
       <gmd:languageCode>
@@ -260,7 +257,7 @@
       <gmd:status>
         <gmd:MD_ProgressCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_ProgressCode" codeListValue="onGoing" />
       </gmd:status>
-      <gmd:pointOfContact xmlns:gts="http://www.isotc211.org/2005/gts" xmlns:srv="http://www.isotc211.org/2005/srv">
+      <gmd:pointOfContact>
         <gmd:CI_ResponsibleParty>
           <gmd:organisationName xsi:type="gmd:PT_FreeText_PropertyType">
             <gco:CharacterString>Atlas of Switzerland</gco:CharacterString>
@@ -338,7 +335,7 @@
           </gmd:role>
         </gmd:CI_ResponsibleParty>
       </gmd:pointOfContact>
-      <gmd:pointOfContact xmlns:gts="http://www.isotc211.org/2005/gts" xmlns:srv="http://www.isotc211.org/2005/srv">
+      <gmd:pointOfContact>
         <gmd:CI_ResponsibleParty>
           <gmd:organisationName xsi:type="gmd:PT_FreeText_PropertyType">
             <gco:CharacterString>Smithsonian Institution's Global Volcanism Program</gco:CharacterString>
@@ -640,6 +637,26 @@
           </gmd:useLimitation>
         </gmd:MD_Constraints>
       </gmd:resourceConstraints>
+      <gmd:resourceConstraints>
+        <gmd:MD_LegalConstraints>
+          <gmd:accessConstraints>
+            <gmd:MD_RestrictionCode codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#MD_RestrictionCode" codeListValue="otherRestrictions" />
+          </gmd:accessConstraints>
+          <gmd:otherConstraints>
+            <gco:CharacterString>There are no limitations on public access to spatial data sets and services.</gco:CharacterString>
+          </gmd:otherConstraints>
+        </gmd:MD_LegalConstraints>
+      </gmd:resourceConstraints>
+      <gmd:resourceConstraints>
+        <gmd:MD_LegalConstraints>
+          <gmd:useConstraints>
+            <gmd:MD_RestrictionCode codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#MD_RestrictionCode" codeListValue="otherRestrictions" />
+          </gmd:useConstraints>
+          <gmd:otherConstraints>
+            <gco:CharacterString>The conditions applying to access and use are unknown.</gco:CharacterString>
+          </gmd:otherConstraints>
+        </gmd:MD_LegalConstraints>
+      </gmd:resourceConstraints>
       <gmd:aggregationInfo>
         <gmd:MD_AggregateInformation>
           <gmd:aggregateDataSetIdentifier>
@@ -724,7 +741,7 @@
           <gmd:temporalElement>
             <gmd:EX_TemporalExtent>
               <gmd:extent>
-                <gml:TimePeriod gml:id="timePeriod1">
+                <gml:TimePeriod id="timePeriod1">
                   <gml:beginPosition>-10000-01-01T00:00:00</gml:beginPosition>
                   <gml:endPosition>2021-12-31T23:59:59</gml:endPosition>
                 </gml:TimePeriod>
@@ -804,34 +821,34 @@
                 <gmd:CI_Citation>
                   <gmd:title xsi:type="gmd:PT_FreeText_PropertyType">
                     <gco:CharacterString>COMMISSION REGULATION (EU) No 1089/2010 of 23 November 2010
-                                            implementing Directive 2007/2/EC of the European Parliament and of the
-                                            Council as regards interoperability of spatial data sets and services</gco:CharacterString>
+                      implementing Directive 2007/2/EC of the European Parliament and of the
+                      Council as regards interoperability of spatial data sets and services</gco:CharacterString>
                     <gmd:PT_FreeText>
                       <gmd:textGroup>
                         <gmd:LocalisedCharacterString locale="#DE">VERORDNUNG (EG) Nr. 1089/2010
-                                                    DER KOMMISSION vom 23. November 2010 zur Durchführung der Richtlinie
-                                                    2007/2/EG des Europäischen Parlaments und des Rates hinsichtlich der
-                                                    Interoperabilität von Geodatensätzen und -diensten</gmd:LocalisedCharacterString>
+                          DER KOMMISSION vom 23. November 2010 zur Durchführung der Richtlinie
+                          2007/2/EG des Europäischen Parlaments und des Rates hinsichtlich der
+                          Interoperabilität von Geodatensätzen und -diensten</gmd:LocalisedCharacterString>
                       </gmd:textGroup>
                       <gmd:textGroup>
                         <gmd:LocalisedCharacterString locale="#FR">RÈGLEMENT (UE) No 1089/2010
-                                                    DE LA COMMISSION du 23 novembre 2010 portant modalités d'application
-                                                    de la directive 2007/2/CE du Parlement européen et du Conseil en ce
-                                                    qui concerne l'interopérabilité des séries et des services de
-                                                    données géographiques</gmd:LocalisedCharacterString>
+                          DE LA COMMISSION du 23 novembre 2010 portant modalités d'application
+                          de la directive 2007/2/CE du Parlement européen et du Conseil en ce
+                          qui concerne l'interopérabilité des séries et des services de
+                          données géographiques</gmd:LocalisedCharacterString>
                       </gmd:textGroup>
                       <gmd:textGroup>
                         <gmd:LocalisedCharacterString locale="#IT">REGOLAMENTO (UE) N. 1089/2010
-                                                    DELLA COMMISSIONE del 23 novembre 2010 recante attuazione della
-                                                    direttiva 2007/2/CE del Parlamento europeo e del Consiglio per
-                                                    quanto riguarda l'interoperabilità dei set di dati territoriali e
-                                                    dei servizi di dati territoriali</gmd:LocalisedCharacterString>
+                          DELLA COMMISSIONE del 23 novembre 2010 recante attuazione della
+                          direttiva 2007/2/CE del Parlamento europeo e del Consiglio per
+                          quanto riguarda l'interoperabilità dei set di dati territoriali e
+                          dei servizi di dati territoriali</gmd:LocalisedCharacterString>
                       </gmd:textGroup>
                       <gmd:textGroup>
                         <gmd:LocalisedCharacterString locale="#EN">COMMISSION REGULATION (EU) No
-                                                    1089/2010 of 23 November 2010 implementing Directive 2007/2/EC of
-                                                    the European Parliament and of the Council as regards
-                                                    interoperability of spatial data sets and services</gmd:LocalisedCharacterString>
+                          1089/2010 of 23 November 2010 implementing Directive 2007/2/EC of
+                          the European Parliament and of the Council as regards
+                          interoperability of spatial data sets and services</gmd:LocalisedCharacterString>
                       </gmd:textGroup>
                     </gmd:PT_FreeText>
                   </gmd:title>
@@ -878,19 +895,19 @@
             <gmd:PT_FreeText>
               <gmd:textGroup>
                 <gmd:LocalisedCharacterString locale="#DE">Ursprungsdaten: Smithsonian Institution's Global Volcanism Program, National Oceanic and Atmospheric Administration.
-                                    Datenverarbeitung: Atlas der Schweiz</gmd:LocalisedCharacterString>
+                  Datenverarbeitung: Atlas der Schweiz</gmd:LocalisedCharacterString>
               </gmd:textGroup>
               <gmd:textGroup>
                 <gmd:LocalisedCharacterString locale="#FR">Données originales: Smithsonian Institution's Global Volcanism Program, National Oceanic and Atmospheric Administration.
-                                    Traitement de données: Atlas de la Suisse</gmd:LocalisedCharacterString>
+                  Traitement de données: Atlas de la Suisse</gmd:LocalisedCharacterString>
               </gmd:textGroup>
               <gmd:textGroup>
                 <gmd:LocalisedCharacterString locale="#IT">Dati di origine: Smithsonian Institution's Global Volcanism Program, National Oceanic and Atmospheric Administration.
-                                    Trattamento dei dati: Atlante della Svizzera</gmd:LocalisedCharacterString>
+                  Trattamento dei dati: Atlante della Svizzera</gmd:LocalisedCharacterString>
               </gmd:textGroup>
               <gmd:textGroup>
                 <gmd:LocalisedCharacterString locale="#EN">Source data: Smithsonian Institution's Global Volcanism Program, National Oceanic and Atmospheric Administration. Data
-                                    processing: Atlas of Switzerland</gmd:LocalisedCharacterString>
+                  processing: Atlas of Switzerland</gmd:LocalisedCharacterString>
               </gmd:textGroup>
             </gmd:PT_FreeText>
           </gmd:statement>
