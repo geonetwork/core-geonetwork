@@ -482,6 +482,11 @@
     "clickToSelect": "Clique para selecionar ou cancelar a seleção",
     "filterDataDescription": "Selecione uma camada no mapa para começar a filtrar feições WFS associadas (se existirem). Feições devem antes terem sido indexadas por um administrador.",
     "WPSDescription": "Entre com uma URL WPS para começar a usar o processo por um formulário dinâmico. Processos WPS usados recentemente são mostrados na segunda aba.",
+    "noRecentProcessFound": "No process used recently.",
+    "localStorageNotSupported": "Browser local storage not supported",
+    "wpsProcesslist": "Processing services",
+    "wpsProcessurl": "By URL",
+    "wpsProcessrecent": "Recent services",
     "noLayersFound": "Nenhuma camada encontrada",
     "featuredUserSearches": "Pesquisas em destaque",
     "userSearches": "Pesquisas de usuário",
@@ -547,5 +552,12 @@
     "addLayerPrefix": "Add layer",
     "addLayerPostfix": "to the map",
     "submit": "Enviar",
-    "additionalLinks": "Additional Links"
+    "additionalLinks": "Additional Links",
+    "indexingErrorMsg-invalidBounds": "Warning / Field resourceTemporalDateRange / Lower and upper bounds empty or not valid dates. Date range not indexed.",
+    "indexingErrorMsg-invalidDateFormat": "Warning / Date {{dateType}} with value '{{date}}' was not a valid date format.",
+    "indexingErrorMsg-keywordNotFoundInThesaurus": "Warning / Keyword {{keyword}} not found in {{thesaurus}}.",
+    "indexingErrorMsg-temporalDateRangeLowerGreaterThanUpper": "Warning / Field resourceTemporalDateRange / Lower range bound {{lowerBound}} can not be greater than upper bound {{upperBound}}. Date range not indexed.",
+    "indexingErrorMsg-temporalRangeLowerGreaterThanUpper": "Warning / Field resourceTemporalDateRange / Lower range bound {{lowerBound}} can not be greater than upper bound {{upperBound}}.",
+    "indexingErrorMsg-schemaNotRegistered": "Record {{record}} / Schema '{{schema}}' is not registered in this catalog. Install it or remove those records. Record is indexed indexing error flag.",
+    "indexingErrorMsg-indexingStyleSheetError": "Indexing stylesheet contains errors: {{message}} \n  Marking the metadata as _indexingError=1 in index."
 }
