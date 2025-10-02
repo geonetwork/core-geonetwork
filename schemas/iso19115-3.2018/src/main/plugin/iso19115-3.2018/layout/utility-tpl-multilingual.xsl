@@ -23,7 +23,7 @@
           <xsl:for-each select="distinct-values($metadata//lan:LocalisedCharacterString/@locale)">
             <xsl:variable name="locale" select="string(.)" />
             <xsl:variable name="langId" select="xslutil:threeCharLangCode(substring($locale,2,2))" />
-            <lang><xsl:value-of select="concat('&quot;', $langId, '&quot;:&quot;#', ., '&quot;')"/></lang>
+            <lang><xsl:value-of select="concat('&quot;', $langId, '&quot;:&quot;', ., '&quot;')"/></lang>
           </xsl:for-each>
         </xsl:when>
         <xsl:otherwise>
@@ -59,7 +59,7 @@
         <xsl:for-each select="distinct-values($metadata//lan:LocalisedCharacterString/@locale)">
           <xsl:variable name="locale" select="string(.)" />
           <xsl:variable name="langId" select="xslutil:threeCharLangCode(substring($locale, 2, 2))" />
-          <lang id="{.}" code="{$langId}"/>
+          <lang id="{substring(., 2, 2)}" code="{$langId}"/>
         </xsl:for-each>
       </xsl:when>
       <xsl:otherwise>
