@@ -222,6 +222,9 @@
     "passwordOld": "Old password",
     "passwordRepeat": "비밀번호 재입력",
     "groupNameMaxlength": "Group name can not exceed 255 characters!",
+    "categoryNameMaxlength": "Category name can not exceed 255 characters!",
+    "portalNameMaxlength": "Portal name can not exceed 255 characters!",
+    "portalIdMaxlength": "Portal identifier can not exceed 255 characters!",
     "groupDescriptionMaxlength": "Group description can not exceed 255 characters!",
     "groupEmailMaxlength": "Group email can not exceed 128 characters!",
     "pol": "폴란드어",
@@ -383,6 +386,7 @@
     "layerNotAvailableInMapProj": "The service does not provide the layer in the map projection '{{proj}}'. The layer will be added to the map but may not be displayed properly.",
     "layerCRSNotFound": "레이어가 좌표체계를 제공하지 않습니다. 이 문제는 1.3.0 이하의 WMS 버전과 관련이 있을 수 있습니다.",
     "layerTileLoadError": "'{{layer}}' 레이어의 <a href='{{url}}' target='_blank'>'{{url | limitTo: 30}} ...'</a> 타일을 불러오는 중 문제가 발생했습니다.",
+    "layerProtocolNotSupported": "The following protocol is not supported yet in the map viewer: {{type}}",
     "getCapFailure": "WMS getCapabilities 요청에 실패했습니다",
     "standards": "메타데이터 표준",
     "documentStandard": "메타데이터 표준",
@@ -551,6 +555,7 @@
     "cancelWorkingCopy": "Cancel working copy",
     "deleteWorkingCopyRecordConfirm": "Do you really want to remove the working copy '{{resourceTitle}}'?",
     "workingCopy": "Working copy",
+    "approvedRecord": "Approved record",
     "onTheWeb": "More online information",
     "pdfReportTocTitle": "Contents",
     "metadataValidated": "Metadata validated.",
@@ -584,5 +589,6 @@
     "mapLegend": "범례",
     "quality": "품질",
     "download": "Download",
-    "links": "링크"
+    "links": "링크",
+    "saveToFile": "Save to file."
 }

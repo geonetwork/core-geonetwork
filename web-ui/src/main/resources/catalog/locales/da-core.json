@@ -5,7 +5,7 @@
     "addToSelection": "tilføj til ...",
     "removeFromSelection": "Fjern fra ...",
     "AnonymousUserlist": "Foretrukne poster",
-    "MapLayerlist": "Map list",
+    "MapLayerlist": "Kort-liste",
     "basket": "Kurv",
     "emptyBasket": "Intet i kurven",
     "searchSelectedRecord": "Søg poster",
@@ -222,6 +222,9 @@
     "passwordOld": "Gammelt kodeord",
     "passwordRepeat": "Gentag adgangskode",
     "groupNameMaxlength": "Gruppenavn må ikke overstige 255 karakterer!",
+    "categoryNameMaxlength": "Kategorinavn må ikke overstige 255 karakterer!",
+    "portalNameMaxlength": "Navn på portal må ikke overstige 255 karakterer!",
+    "portalIdMaxlength": "Identifikator af portal må ikke overstige 255 karakterer!",
     "groupDescriptionMaxlength": "Gruppebeskrivelsen må ikke overstige 255 tegn!",
     "groupEmailMaxlength": "Gruppe-e-mail må ikke overstige 128 tegn!",
     "pol": "Polski",
@@ -383,6 +386,7 @@
     "layerNotAvailableInMapProj": "Tjenesten leverer ikke laget i kortprojektionen '{{proj}}'. Laget føjes til kortet, men vises muligvis ikke korrekt.",
     "layerCRSNotFound": "Laget giver ikke oplysninger om koordinatreferencesystem. Dette kan være relateret til en WMS-version, der er lavere end 1.3.0.",
     "layerTileLoadError": "Noget er gået galt under indlæsningen af 'tile' <a href='{{url}}' target='_blank'>'{{url | limitTo: 30}} ...'1</a> for laget '{{layer}}'.",
+    "layerProtocolNotSupported": "Følgende protokol understøttes endnu ikke i map : {{type}}",
     "getCapFailure": "WMS getCapabilities-anmodningen mislykkedes",
     "standards": "Metadata standard",
     "documentStandard": "Metadata standard",
@@ -551,6 +555,7 @@
     "cancelWorkingCopy": "Annuller arbejdskopi",
     "deleteWorkingCopyRecordConfirm": "Vil du virkelig fjerne arbejdskopien &#39;{{resourceTitle}}&#39;?",
     "workingCopy": "Arbejdskopi",
+    "approvedRecord": "Godkendt post",
     "onTheWeb": "Mere online information",
     "pdfReportTocTitle": "Indhold",
     "metadataValidated": "Metadata valideret.",
@@ -584,5 +589,6 @@
     "mapLegend": "Signaturforklaring",
     "quality": "Kvalitet",
     "download": "Download",
-    "links": "Links"
+    "links": "Links",
+    "saveToFile": "Gem til fil."
 }

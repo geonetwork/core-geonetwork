@@ -222,6 +222,9 @@
     "passwordOld": "Gammalt lösenord",
     "passwordRepeat": "Upprepa lösenord",
     "groupNameMaxlength": "Group name can not exceed 255 characters!",
+    "categoryNameMaxlength": "Category name can not exceed 255 characters!",
+    "portalNameMaxlength": "Portal name can not exceed 255 characters!",
+    "portalIdMaxlength": "Portal identifier can not exceed 255 characters!",
     "groupDescriptionMaxlength": "Gruppbeskrivningen får inte överstiga 255 tecken!",
     "groupEmailMaxlength": "Gruppmail-adress kan inte överstiga 128 tecken!",
     "pol": "Polska",
@@ -383,6 +386,7 @@
     "layerNotAvailableInMapProj": "Tjänsten tillhandahåller inte lagret i kartprojektionen '{{proj}}'. Skiktet läggs till på kartan men visas kanske inte korrekt.",
     "layerCRSNotFound": "Lagret ger ingen information om referenssystemet för koordinaterna. Detta kan bero på en WMS-version lägre än 1.3.0.",
     "layerTileLoadError": "Något gick fel vid laddning av tile <a href='{{url}}' target='_blank'> '{{url | limitTo: 30}} ... '</a> för lager' {{layer}} '.",
+    "layerProtocolNotSupported": "The following protocol is not supported yet in the map viewer: {{type}}",
     "getCapFailure": "WMS-anropet getCapabilities misslyckades",
     "standards": "Metadatastandard",
     "documentStandard": "Metadatastandard",
@@ -551,6 +555,7 @@
     "cancelWorkingCopy": "Avbryt arbetskopian",
     "deleteWorkingCopyRecordConfirm": "Do you really want to remove the working copy '{{resourceTitle}}'?",
     "workingCopy": "Arbetskopia",
+    "approvedRecord": "Approved record",
     "onTheWeb": "Mer information online",
     "pdfReportTocTitle": "Innehåll",
     "metadataValidated": "Metadata validerade.",
@@ -584,5 +589,6 @@
     "mapLegend": "Legend",
     "quality": "Kvalitet",
     "download": "Download",
-    "links": "Länkar"
+    "links": "Länkar",
+    "saveToFile": "Save to file."
 }

@@ -5,7 +5,7 @@
     "addToSelection": "Afegir a...",
     "removeFromSelection": "Remove from ...",
     "AnonymousUserlist": "Preferred records",
-    "MapLayerlist": "Map list",
+    "MapLayerlist": "Llista de mapes",
     "basket": "Basket",
     "emptyBasket": "Nothing in basket",
     "searchSelectedRecord": "Search records",
@@ -222,6 +222,9 @@
     "passwordOld": "Old password",
     "passwordRepeat": "Repeteix la contrasenya",
     "groupNameMaxlength": "Group name can not exceed 255 characters!",
+    "categoryNameMaxlength": "Category name can not exceed 255 characters!",
+    "portalNameMaxlength": "Portal name can not exceed 255 characters!",
+    "portalIdMaxlength": "Portal identifier can not exceed 255 characters!",
     "groupDescriptionMaxlength": "Group description can not exceed 255 characters!",
     "groupEmailMaxlength": "Group email can not exceed 128 characters!",
     "pol": "Polac",
@@ -383,6 +386,7 @@
     "layerNotAvailableInMapProj": "The service does not provide the layer in the map projection '{{proj}}'. The layer will be added to the map but may not be displayed properly.",
     "layerCRSNotFound": "La capa no conté informació del sistema de coordenades. Això podria ser degut a una versió de WMS anterior a 1.3.0.",
     "layerTileLoadError": "Something went wrong while loading tile <a href='{{url}}' target='_blank'>'{{url | limitTo: 30}} ...'</a> for layer '{{layer}}'.",
+    "layerProtocolNotSupported": "The following protocol is not supported yet in the map viewer: {{type}}",
     "getCapFailure": "La petició WMS GetCapabilities ha fallat",
     "standards": "Estàndard de metadades",
     "documentStandard": "Estàndard de metadades",
@@ -551,6 +555,7 @@
     "cancelWorkingCopy": "Cancel working copy",
     "deleteWorkingCopyRecordConfirm": "Do you really want to remove the working copy '{{resourceTitle}}'?",
     "workingCopy": "Working copy",
+    "approvedRecord": "Approved record",
     "onTheWeb": "More online information",
     "pdfReportTocTitle": "Contents",
     "metadataValidated": "Metadata validated.",
@@ -584,5 +589,6 @@
     "mapLegend": "Llegenda",
     "quality": "Qualitat",
     "download": "Download",
-    "links": "Enllaços"
+    "links": "Enllaços",
+    "saveToFile": "Save to file."
 }

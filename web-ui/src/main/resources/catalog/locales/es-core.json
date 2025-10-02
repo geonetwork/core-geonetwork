@@ -222,6 +222,9 @@
     "passwordOld": "Contraseña anterior",
     "passwordRepeat": "Repetir la contraseña",
     "groupNameMaxlength": "Group name can not exceed 255 characters!",
+    "categoryNameMaxlength": "Category name can not exceed 255 characters!",
+    "portalNameMaxlength": "Portal name can not exceed 255 characters!",
+    "portalIdMaxlength": "Portal identifier can not exceed 255 characters!",
     "groupDescriptionMaxlength": "¡La descripción del grupo no puede superar los 255 caracteres!",
     "groupEmailMaxlength": "¡El correo electrónico de grupo no puede exceder los 128 caracteres!",
     "pol": "Polski",
@@ -383,6 +386,7 @@
     "layerNotAvailableInMapProj": "El servicio no proporciona la capa en la proyección del mapa '{{proj}}'. La capa se agregará al mapa, pero es posible que no se muestre correctamente.",
     "layerCRSNotFound": "La capa no contiene información del sistema de coordenadas. Esto podría ser debido a una versión de WMS anterior a 1.3.0.",
     "layerTileLoadError": "Algo salió mal al cargar el tile <a href='{{url}}' target='_blank'> '{{url | limitTo: 30}} ... '</a> para la capa' {{layer}} '.",
+    "layerProtocolNotSupported": "The following protocol is not supported yet in the map viewer: {{type}}",
     "getCapFailure": "La petición WMS getCapabilities falló",
     "standards": "Estándar del metadato",
     "documentStandard": "Estándar del metadato",
@@ -551,6 +555,7 @@
     "cancelWorkingCopy": "Cancelar copia de trabajo",
     "deleteWorkingCopyRecordConfirm": "Do you really want to remove the working copy '{{resourceTitle}}'?",
     "workingCopy": "Copia de trabajo",
+    "approvedRecord": "Approved record",
     "onTheWeb": "Más información en línea",
     "pdfReportTocTitle": "Contenido",
     "metadataValidated": "Metadatos validados.",
@@ -584,5 +589,6 @@
     "mapLegend": "Leyenda",
     "quality": "Calidad",
     "download": "Download",
-    "links": "Enlaces"
+    "links": "Enlaces",
+    "saveToFile": "Save to file."
 }

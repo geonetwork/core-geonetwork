@@ -222,6 +222,9 @@
     "passwordOld": "Oud wachtwoord",
     "passwordRepeat": "Herhaal wachtwoord",
     "groupNameMaxlength": "De groepsnaam kan niet langer zijn dan 255 tekens!",
+    "categoryNameMaxlength": "De categorienaam kan niet langer zijn dan 255 tekens!",
+    "portalNameMaxlength": "De portaalnaam kan niet langer zijn dan 255 tekens!",
+    "portalIdMaxlength": "De portaalidentificatie kan niet langer zijn dan 255 tekens!",
     "groupDescriptionMaxlength": "De groepsomschrijving kan niet langer zijn dan 255 karakters.",
     "groupEmailMaxlength": "De groeps-e-mail kan niet langer zijn dan 128 karakters.",
     "pol": "Polski",
@@ -383,6 +386,7 @@
     "layerNotAvailableInMapProj": "The service biedt geen laag in de kaartprojectie '{{proj}}' aan. De laag wordt aan de kaart toegevoegd, maar wordt misschien vervormd of op een onjuiste plek weergegeven.",
     "layerCRSNotFound": "De service bevat geen projectie-informatie. Mogelijk hangt dit samen met een WMS versie lager dan 1.3.0.",
     "layerTileLoadError": "Er is iets mis gegaan bij het laden van tegel <a href='{{url}}' target='_blank'>'{{url | limitTo: 30}} ...'</a> voor laag '{{layer}}'.",
+    "layerProtocolNotSupported": "Het protocol {{type}} wordt (nog) niet ondersteund door de kaartviewer",
     "getCapFailure": "Het was niet mogelijk verbinding te leggen met de WMS service.  Het WMS GetCapabilities request faalde.",
     "standards": "Metadata-standaard",
     "documentStandard": "Metadata-standaard",
@@ -551,6 +555,7 @@
     "cancelWorkingCopy": "Annuleer concept versie",
     "deleteWorkingCopyRecordConfirm": "Weet u zeker dat u het werkexemplaar '{{title}}' wilt verwijderen?",
     "workingCopy": "Concept versie",
+    "approvedRecord": "Goedgekeurd record",
     "onTheWeb": "Meer informatie online",
     "pdfReportTocTitle": "Inhoudsopgave",
     "metadataValidated": "Record gevalideerd",
@@ -584,5 +589,6 @@
     "mapLegend": "Legenda",
     "quality": "Kwaliteit",
     "download": "Download",
-    "links": "Links"
+    "links": "Links",
+    "saveToFile": "Bestand opslaan."
 }

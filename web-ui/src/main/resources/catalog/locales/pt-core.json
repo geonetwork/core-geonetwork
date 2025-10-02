@@ -5,7 +5,7 @@
     "addToSelection": "Adicionar à ...",
     "removeFromSelection": "Remover de ...",
     "AnonymousUserlist": "Registros preferidos",
-    "MapLayerlist": "Lista de mapas",
+    "MapLayerlist": "Map list",
     "basket": "Cesta",
     "emptyBasket": "Nada na cesta",
     "searchSelectedRecord": "Registros de pesquisa",
@@ -222,6 +222,9 @@
     "passwordOld": "Old password",
     "passwordRepeat": "Repetir senha",
     "groupNameMaxlength": "Group name can not exceed 255 characters!",
+    "categoryNameMaxlength": "Category name can not exceed 255 characters!",
+    "portalNameMaxlength": "Portal name can not exceed 255 characters!",
+    "portalIdMaxlength": "Portal identifier can not exceed 255 characters!",
     "groupDescriptionMaxlength": "Group description can not exceed 255 characters!",
     "groupEmailMaxlength": "Group email can not exceed 128 characters!",
     "pol": "Polonês",
@@ -383,6 +386,7 @@
     "layerNotAvailableInMapProj": "O serviço não fornece a camada na projeção \"{{proj}}\". A camada será adicionada ao mapa, mas pode não ser exibida corretamente.",
     "layerCRSNotFound": "A camada não fornece informação de sistema de coordenadas de referência. Pode estar relacionado a uma versão de WMS abaixo de 1.3.0.",
     "layerTileLoadError": "Algo deu errado ao carregar o bloco <a href='{{url}}' target='_blank'> '{{url | limitTo: 30}} ... '</a> para camada' {{layer}} '.",
+    "layerProtocolNotSupported": "The following protocol is not supported yet in the map viewer: {{type}}",
     "getCapFailure": "A requisição WMS getCapabilities falhou",
     "standards": "Padrão de metadado",
     "documentStandard": "Padrão de metadado",
@@ -551,6 +555,7 @@
     "cancelWorkingCopy": "Cancelar Cópia de Trabalho",
     "deleteWorkingCopyRecordConfirm": "Do you really want to remove the working copy '{{resourceTitle}}'?",
     "workingCopy": "Cópia de Trabalho",
+    "approvedRecord": "Approved record",
     "onTheWeb": "Mais informações online",
     "pdfReportTocTitle": "Contents",
     "metadataValidated": "Metadata validated.",
@@ -584,5 +589,6 @@
     "mapLegend": "Legenda",
     "quality": "Qualidade",
     "download": "Download",
-    "links": "Links"
+    "links": "Links",
+    "saveToFile": "Save to file."
 }
