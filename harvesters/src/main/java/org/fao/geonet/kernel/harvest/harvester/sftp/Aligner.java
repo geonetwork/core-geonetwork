@@ -367,6 +367,11 @@ public class Aligner extends BaseAligner<SftpParams> {
             String newSchema = metadataSchemaUtils.autodetectSchema(md);
             updateSchema = !newSchema.equals(schema);
             schema = newSchema;
+        } else {
+            if (!ri.schema.equals(schema)) {
+                log.warning("  - Detected schema '" + schema + "' is different from the one of the metadata in the catalog '" + ri.schema + "'. Using the detected one.");
+                updateSchema = true;
+            }
         }
 
         boolean validate = false;
