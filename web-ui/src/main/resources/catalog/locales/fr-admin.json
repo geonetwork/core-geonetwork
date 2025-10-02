@@ -65,7 +65,7 @@
     "database-like": "LIKE",
     "database-notlike": "NOT LIKE",
     "database-connection": "Type de base de données",
-    "database-connectionHelp": "Sélectionnez le type de base de données à moisonner.",
+    "database-connectionHelp": "Sélectionnez le type de base de données à moissonner.",
     "database-oracle": "Oracle",
     "database-postgres": "Postgres",
     "database-xslfilter": "Filtre XSL à appliquer",
