@@ -43,6 +43,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.Set;
 
@@ -74,7 +75,7 @@ public class MetadataIndexApi {
         method = RequestMethod.GET,
         produces = MediaType.APPLICATION_JSON_VALUE
     )
-    @PreAuthorize("hasAuthority('Administrator')")
+    @PreAuthorize("hasAuthority('Editor')")
     @ResponseStatus(HttpStatus.OK)
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Record indexed."),
@@ -96,6 +97,8 @@ public class MetadataIndexApi {
         )
             String bucket,
         @Parameter(hidden = true)
+            HttpServletRequest request,
+        @Parameter(hidden = true)
             HttpSession httpSession
     )
         throws Exception {
@@ -107,6 +110,7 @@ public class MetadataIndexApi {
         int index = 0;
 
         for (String uuid : records) {
+            ApiUtils.canEditRecord(uuid, request);
             try {
                 metadataUtils.findAllByUuid(uuid).forEach(m -> ids.add(m.getId()));
             } catch (Exception e) {
