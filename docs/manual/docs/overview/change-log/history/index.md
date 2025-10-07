@@ -30,6 +30,7 @@ This series is under **active use** by our community, with regular improvements,
 
 ### 4.2
 
+- [Version 4.2.13](../version-4.2.13.md)
 - [Version 4.2.12](../version-4.2.12.md)
 - [Version 4.2.11](../version-4.2.11.md)
 - [Version 4.2.10](../version-4.2.10.md)
