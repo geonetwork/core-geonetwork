@@ -148,8 +148,9 @@ nav:
     - overview/authors.md
     - 'Changelog':
       - overview/change-log/index.md
-      - overview/change-log/version-4.2.13.md
+      - overview/change-log/version-4.2.14.md
       - 'Release History':
+        - overview/change-log/version-4.2.13.md
         - overview/change-log/version-4.2.12.md
         - overview/change-log/history/index.md
         - overview/change-log/version-4.2.11.md
