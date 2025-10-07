@@ -6,5 +6,6 @@ public interface AnonymousAccessLinkRepository extends GeonetRepository<Anonymou
 
 	AnonymousAccessLink findOneByHash(String hash);
 
+	AnonymousAccessLink findOneByMetadataUuid(String uuid);
 
 }
