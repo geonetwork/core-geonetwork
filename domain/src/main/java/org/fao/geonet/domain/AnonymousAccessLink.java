@@ -6,6 +6,7 @@ import org.springframework.security.crypto.keygen.KeyGenerators;
 
 import javax.annotation.Nonnull;
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -59,10 +60,12 @@ public class AnonymousAccessLink {
 		return this;
 	}
 
+	@Convert(converter = AnonymousAccessLinkHashConverter.class)
 	public String getHash() {
 		return hash;
 	}
 
+	@Convert(converter = AnonymousAccessLinkHashConverter.class)
 	public AnonymousAccessLink setHash(String hash) {
 		this.hash = hash;
 		return this;
