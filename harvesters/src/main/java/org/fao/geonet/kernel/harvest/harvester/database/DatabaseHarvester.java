@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2024 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2025 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -30,9 +30,6 @@ import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
 import java.sql.SQLException;
 
 public class DatabaseHarvester  extends AbstractHarvester<HarvestResult, DatabaseHarvesterParams> {
-    private static final String TABLE_NAME_PATTERN = "([_a-zA-Z]+[_a-zA-Z0-9]*)";
-    private static final String FIELD_NAME_PATTERN = "([_a-zA-Z]+[_a-zA-Z0-9]*)";
-
     @Override
     protected DatabaseHarvesterParams createParams() {
         return new DatabaseHarvesterParams(dataMan);
@@ -41,9 +38,9 @@ public class DatabaseHarvester  extends AbstractHarvester<HarvestResult, Databas
     @Override
     protected void storeNodeExtra(DatabaseHarvesterParams params, String path, String siteId, String optionsId) throws SQLException {
         // Remove non-valid characters
-        params.setTableName(params.getTableName().replaceAll("[^" + TABLE_NAME_PATTERN + "]", ""));
-        params.setMetadataField(params.getMetadataField().replaceAll("[^" + FIELD_NAME_PATTERN + "]", ""));
-        params.setFilterField(params.getFilterField().replaceAll("[^" + FIELD_NAME_PATTERN + "]", ""));
+        params.setTableName(DatabaseHarvesterUtil.sanitizeTableName(params.getTableName()));
+        params.setMetadataField(DatabaseHarvesterUtil.sanitizeFieldName(params.getMetadataField()));
+        params.setFilterField(DatabaseHarvesterUtil.sanitizeFieldName(params.getFilterField()));
 
         setParams(params);
 

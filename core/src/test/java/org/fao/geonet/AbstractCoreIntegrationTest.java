@@ -388,18 +388,22 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
     }
 
     protected AbstractMetadata injectMetadataInDbDoNotRefreshHeader(Element sampleMetadataXml, ServiceContext context) throws Exception {
-        return injectMetadataOrSubtemplateInDb(sampleMetadataXml, context, MetadataType.METADATA);
+        return injectMetadataOrSubtemplateInDb(sampleMetadataXml, context, MetadataType.METADATA, IndexingMode.none);
     }
 
     protected AbstractMetadata injectMetadataInDb(Element element, ServiceContext serviceContext) throws Exception {
-        return injectMetadataOrSubtemplateInDb(element, serviceContext, MetadataType.METADATA);
+        return injectMetadataOrSubtemplateInDb(element, serviceContext, MetadataType.METADATA, IndexingMode.none);
+    }
+
+    protected AbstractMetadata injectMetadataInDb(Element element, ServiceContext serviceContext, boolean refreshHeader, IndexingMode indexingMode) throws Exception {
+        return injectMetadataOrSubtemplateInDb(element, serviceContext, refreshHeader, MetadataType.METADATA, indexingMode);
     }
 
     protected AbstractMetadata insertTemplateResourceInDb(Element element, ServiceContext serviceContext) throws Exception {
-        return injectMetadataOrSubtemplateInDb(element, serviceContext, MetadataType.SUB_TEMPLATE);
+        return injectMetadataOrSubtemplateInDb(element, serviceContext, MetadataType.SUB_TEMPLATE, IndexingMode.none);
     }
 
-    private AbstractMetadata injectMetadataOrSubtemplateInDb(Element sampleMetadataXml, ServiceContext context, MetadataType type) throws Exception {
+    private AbstractMetadata injectMetadataOrSubtemplateInDb(Element sampleMetadataXml, ServiceContext context, MetadataType type, IndexingMode indexingMode) throws Exception {
         String uuid = UUID.randomUUID().toString();
         String schema = schemaManager.autodetectSchema(sampleMetadataXml);
         if (type.equals(MetadataType.METADATA)) {
@@ -424,7 +428,7 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
         metadata.getHarvestInfo()
                 .setHarvested(false);
 
-        return metadataManager.insertMetadata(context, metadata, sampleMetadataXml, IndexingMode.none, false, UpdateDatestamp.NO,
+        return metadataManager.insertMetadata(context, metadata, sampleMetadataXml, indexingMode, false, UpdateDatestamp.NO,
             false, DirectIndexSubmitter.INSTANCE);
     }
 

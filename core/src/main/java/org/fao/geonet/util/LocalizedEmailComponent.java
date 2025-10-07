@@ -23,9 +23,11 @@
 
 package org.fao.geonet.util;
 
+import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.kernel.search.JSONLocCacheLoader;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.text.MessageFormat;
 import java.util.*;
@@ -358,15 +360,22 @@ public class LocalizedEmailComponent {
     }
 
     private String replaceLinks(String message) {
-
         SettingManager settingManager = ApplicationContextHolder.get().getBean(SettingManager.class);
 
-        String newPlaceholder;
-        if (replaceLinksWithHtmlFormat) {
-            newPlaceholder = "{{index:uuid}}";
-        } else {
-            newPlaceholder = "'{{'index:uuid'}}'";
+        // Get the recordLinkFormatter from the UI configuration
+        String recordLinkFormatter = XslUtil.getUiConfigurationJsonProperty(null, "mods.search.formatter.recordLinkFormatter");
+
+        // Build the link to replace the {{link}} placeholder
+        // Add the uuid placeholder to the link in the specified format
+        UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder
+            .fromHttpUrl(settingManager.getNodeURL())
+            .pathSegment("api", "records", replaceLinksWithHtmlFormat ? "{{index:uuid}}" : "'{{'index:uuid'}}'");
+
+        // If recordLinkFormatter is configured add it as a query parameter
+        if (StringUtils.isNotBlank(recordLinkFormatter)) {
+            uriComponentsBuilder.queryParam("recordLinkFormatter", recordLinkFormatter);
         }
-        return message.replace("{{link}}", settingManager.getNodeURL() + "api/records/" + newPlaceholder);
+
+        return message.replace("{{link}}", uriComponentsBuilder.build().toString());
     }
 }
