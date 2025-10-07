@@ -73,8 +73,8 @@ public class AnonymousAccessLinkApi {
 			summary = "Delete an anonymous access link",
 			description = "")
 	public void deleteAccessLinks(
-			@io.swagger.v3.oas.annotations.parameters.RequestBody(description = "at least {\"hash\":\"...\"}")
+			@io.swagger.v3.oas.annotations.parameters.RequestBody(description = "at least {\"metadataUuid\":\"...\"}")
 		  	@RequestBody AnonymousAccessLink anonymousAccessLink) {
-		anonymousAccessLinkRepository.delete(anonymousAccessLinkRepository.findOneByHash(anonymousAccessLink.getHash()));
+		anonymousAccessLinkRepository.delete(anonymousAccessLinkRepository.findOneByMetadataUuid(anonymousAccessLink.getMetadataUuid()));
 	}
 }

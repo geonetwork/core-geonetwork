@@ -126,7 +126,7 @@ public class AnonymousAccessLinkApiTest extends AbstractServiceIntegrationTest {
 				.andReturn();
 		AnonymousAccessLink createdAccessLink = mapper.readValue(result.getResponse().getContentAsString(), AnonymousAccessLink.class);
 
-		String requestBody = "{\"hash\" : \"" + createdAccessLink.getHash() + "\"}";
+		String requestBody = "{\"metadataUuid\" : \"" + createdAccessLink.getMetadataUuid() + "\"}";
 		this.mockMvc.perform(delete("/srv/api/anonymousAccessLink")
 						.session(session)
 						.content(requestBody)
