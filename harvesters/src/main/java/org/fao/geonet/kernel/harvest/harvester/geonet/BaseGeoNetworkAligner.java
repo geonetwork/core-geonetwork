@@ -494,7 +494,7 @@ public abstract class BaseGeoNetworkAligner<P extends BaseGeonetParams> extends 
 
         metadataManager.save(metadata);
 
-        metadataIndexer.indexMetadata(id, true, IndexingMode.full, this.batchingIndexSubmitter);
+        metadataIndexer.indexMetadata(id, this.batchingIndexSubmitter, IndexingMode.full);
     }
 
     /**
@@ -974,7 +974,7 @@ public abstract class BaseGeoNetworkAligner<P extends BaseGeonetParams> extends 
 
         addCategories(metadata, params.getCategories(), localCategory, context, null, false);
 
-        metadata = metadataManager.insertMetadata(context, metadata, md, IndexingMode.none, ufo, UpdateDatestamp.NO, false, false);
+        metadata = metadataManager.insertMetadata(context, metadata, md, IndexingMode.none, ufo, UpdateDatestamp.NO, false, this.batchingIndexSubmitter);
 
         String id = String.valueOf(metadata.getId());
 
@@ -1003,7 +1003,7 @@ public abstract class BaseGeoNetworkAligner<P extends BaseGeonetParams> extends 
         }
         context.getBean(IMetadataManager.class).save(metadata);
 
-        metadataIndexer.indexMetadata(id, true, IndexingMode.full, this.batchingIndexSubmitter);
+        metadataIndexer.indexMetadata(id, this.batchingIndexSubmitter, IndexingMode.full);
         result.addedMetadata++;
 
         return id;
