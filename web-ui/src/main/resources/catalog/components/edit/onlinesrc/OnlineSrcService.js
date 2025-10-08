@@ -411,19 +411,15 @@
          *
          * @param {string} type of the directive that calls it.
          */
-        onOpenPopup: function (type, additionalParams) {
-          if (
-            type === "parent" &&
-            additionalParams.fields &&
-            additionalParams.fields.associationType
-          ) {
+        onOpenPopup: function (type, config, existingRelations) {
+          if (type === "parent" && config.fields && config.fields.associationType) {
             // In ISO19115-3, parents are usually encoded using the association records
             // Configured in config/associated-panel/default.json
             type = "siblings";
           }
           var fn = openCb[type];
           if (angular.isFunction(fn)) {
-            openCb[type](additionalParams);
+            openCb[type].apply(null, Array.prototype.slice.call(arguments, 1));
           } else {
             console.warn(
               "No callback functions available for '" + type + "'. Check the type value."
