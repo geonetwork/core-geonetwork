@@ -49,6 +49,7 @@ import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.kernel.mef.Importer;
 import org.fao.geonet.kernel.mef.MEFLib;
 import org.fao.geonet.kernel.search.IndexingMode;
+import org.fao.geonet.kernel.search.submission.DirectIndexSubmitter;
 import org.fao.geonet.repository.AbstractSpringDataTest;
 import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.SourceRepository;
@@ -350,7 +351,7 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
             id, createDate, createDate,
             "" + groupId, metadataType);
 
-        dataManager.indexMetadata(id.get(0), true);
+        dataManager.indexMetadata(id.get(0), DirectIndexSubmitter.INSTANCE);
         return Integer.parseInt(id.get(0));
     }
 
@@ -387,22 +388,22 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
     }
 
     protected AbstractMetadata injectMetadataInDbDoNotRefreshHeader(Element sampleMetadataXml, ServiceContext context) throws Exception {
-        return injectMetadataOrSubtemplateInDb(sampleMetadataXml, context, false, MetadataType.METADATA, IndexingMode.none);
+        return injectMetadataOrSubtemplateInDb(sampleMetadataXml, context, MetadataType.METADATA, IndexingMode.none);
     }
 
-    protected AbstractMetadata injectMetadataInDb(Element element, ServiceContext serviceContext, boolean refreshHeader) throws Exception {
-        return injectMetadataOrSubtemplateInDb(element, serviceContext, refreshHeader, MetadataType.METADATA, IndexingMode.none);
+    protected AbstractMetadata injectMetadataInDb(Element element, ServiceContext serviceContext) throws Exception {
+        return injectMetadataOrSubtemplateInDb(element, serviceContext, MetadataType.METADATA, IndexingMode.none);
     }
 
-    protected AbstractMetadata injectMetadataInDb(Element element, ServiceContext serviceContext, boolean refreshHeader, IndexingMode indexingMode) throws Exception {
-        return injectMetadataOrSubtemplateInDb(element, serviceContext, refreshHeader, MetadataType.METADATA, indexingMode);
+    protected AbstractMetadata injectMetadataInDb(Element element, ServiceContext serviceContext, IndexingMode indexingMode) throws Exception {
+        return injectMetadataOrSubtemplateInDb(element, serviceContext, MetadataType.METADATA, indexingMode);
     }
 
     protected AbstractMetadata insertTemplateResourceInDb(Element element, ServiceContext serviceContext) throws Exception {
-        return injectMetadataOrSubtemplateInDb(element, serviceContext, false, MetadataType.SUB_TEMPLATE, IndexingMode.none);
+        return injectMetadataOrSubtemplateInDb(element, serviceContext, MetadataType.SUB_TEMPLATE, IndexingMode.none);
     }
 
-    private AbstractMetadata injectMetadataOrSubtemplateInDb(Element sampleMetadataXml, ServiceContext context, boolean refreshHeader, MetadataType type, IndexingMode indexingMode) throws Exception {
+    private AbstractMetadata injectMetadataOrSubtemplateInDb(Element sampleMetadataXml, ServiceContext context, MetadataType type, IndexingMode indexingMode) throws Exception {
         String uuid = UUID.randomUUID().toString();
         String schema = schemaManager.autodetectSchema(sampleMetadataXml);
         if (type.equals(MetadataType.METADATA)) {
@@ -428,7 +429,7 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
                 .setHarvested(false);
 
         return metadataManager.insertMetadata(context, metadata, sampleMetadataXml, indexingMode, false, UpdateDatestamp.NO,
-                false, refreshHeader);
+            false, DirectIndexSubmitter.INSTANCE);
     }
 
 }
