@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2007 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2025 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -28,7 +28,6 @@ import java.net.URL;
 import java.nio.file.Path;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -64,7 +63,6 @@ import org.fao.geonet.kernel.search.IndexingMode;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.MetadataValidationRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
-import org.fao.geonet.repository.Updater;
 import org.fao.geonet.repository.specification.MetadataValidationSpecs;
 import org.fao.geonet.utils.GeonetHttpRequestFactory;
 import org.fao.geonet.utils.Xml;
@@ -81,7 +79,6 @@ import org.jdom.JDOMException;
 
 import jeeves.server.context.ServiceContext;
 
-import javax.annotation.Nonnull;
 
 //=============================================================================
 
@@ -317,7 +314,7 @@ class Harvester extends BaseAligner<OaiPmhParams> implements IHarvester<HarvestR
                     switch (params.getOverrideUuid()) {
                         case OVERRIDE:
                             processParams.put("mdChangeDate", ri.changeDate);
-                            updateMetadata(t, ri, Integer.toString(metadataUtils.findOneByUuid(ri.id).getId()),
+                            updateMetadata(t, ri, metadataUtils.findOneByUuid(ri.id),
                                 processName, processParams, true);
                             result.updatedMetadata++;
                             break;
@@ -340,7 +337,7 @@ class Harvester extends BaseAligner<OaiPmhParams> implements IHarvester<HarvestR
                     //record exists and belongs to this harvester
                     String id = localUuids.getID(ri.id);
                     processParams.put("mdChangeDate", ri.changeDate);
-                    updateMetadata(t, ri, id, processName, processParams, false);
+                    updateMetadata(t, ri, metadataUtils.findOne(id), processName, processParams, false);
                 }
                 result.totalMetadata++;
             } catch (Throwable tr) {
@@ -534,7 +531,8 @@ class Harvester extends BaseAligner<OaiPmhParams> implements IHarvester<HarvestR
         }
     }
 
-    private void updateMetadata(XmlRequest t, RecordInfo ri, String id, String processName, Map<String, Object> processParams, boolean force) throws Exception {
+    private void updateMetadata(XmlRequest t, RecordInfo ri, AbstractMetadata originalMetadata, String processName, Map<String, Object> processParams, boolean force) throws Exception {
+        String id = Integer.toString(originalMetadata.getId());
         String date = localUuids.getChangeDate(ri.id);
 
         if (!force && !ri.isMoreRecentThan(date)) {
@@ -565,6 +563,11 @@ class Harvester extends BaseAligner<OaiPmhParams> implements IHarvester<HarvestR
 
                 schema = dataMan.autodetectSchema(md);
                 updateSchema = true;
+            } else {
+                if (!originalMetadata.getDataInfo().getSchemaId().equals(schema)) {
+                    log.warning("  - Detected schema '" + schema + "' is different from the one of the metadata in the catalog '" + originalMetadata.getDataInfo().getSchemaId() + "'. Using the detected one.");
+                    updateSchema = true;
+                }
             }
 
             // Translate metadata
@@ -585,12 +588,7 @@ class Harvester extends BaseAligner<OaiPmhParams> implements IHarvester<HarvestR
                     context.getBean(MetadataValidationRepository.class);
 
                 final String newSchema = schema;
-                metadataManager.update(Integer.parseInt(id), new Updater<AbstractMetadata>() {
-                    @Override
-                    public void apply(@Nonnull AbstractMetadata entity) {
-                        entity.getDataInfo().setSchemaId(newSchema);
-                    }
-                });
+                metadataManager.update(Integer.parseInt(id), entity -> entity.getDataInfo().setSchemaId(newSchema));
 
                 metadataValidationRepository.deleteAll(MetadataValidationSpecs.hasMetadataId(Integer.parseInt(id)));
             }
