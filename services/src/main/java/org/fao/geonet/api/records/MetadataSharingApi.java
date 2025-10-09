@@ -66,9 +66,11 @@ import org.fao.geonet.util.MetadataPublicationMailNotifier;
 import org.fao.geonet.util.UserUtil;
 import org.fao.geonet.util.WorkflowUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
+import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
@@ -101,8 +103,18 @@ public class MetadataSharingApi implements ApplicationEventPublisherAware
 {
     private static final String DEFAULT_PUBLICATION_TYPE_NAME = "default";
 
+    /**
+     * Language utils used to detect the requested language.
+     */
     @Autowired
     LanguageUtils languageUtils;
+
+    /**
+     * Message source.
+     */
+    @Autowired
+    @Qualifier("apiMessages")
+    ResourceBundleMessageSource messages;
 
     @Autowired
     FeedbackLanguages feedbackLanguages;
@@ -527,6 +539,7 @@ public class MetadataSharingApi implements ApplicationEventPublisherAware
         boolean notifyByMail) throws Exception {
         if (privileges != null) {
 
+            Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
             ResourceBundle messages = ApiUtils.getMessagesResourceBundle(request.getLocales());
 
             boolean sharingChanges = false;
@@ -586,17 +599,20 @@ public class MetadataSharingApi implements ApplicationEventPublisherAware
             }
 
             for (GroupOperations p : privileges) {
+                Integer groupId = p.getGroup();
                 for (Map.Entry<String, Boolean> o : p.getOperations().entrySet()) {
                     Integer opId = operationMap.get(o.getKey());
-                    // Never set editing for reserved group
-                    if (opId == ReservedOperation.editing.getId() &&
-                        ReservedGroup.isReserved(p.getGroup())) {
+                    // Never set editing for reserved group or any privileges for system groups
+                    if (
+                        groupIsType(groupId, GroupType.SystemPrivilege, locale) ||
+                        (opId == ReservedOperation.editing.getId() && ReservedGroup.isReserved(groupId))
+                    ) {
                         continue;
                     }
 
                     if (Boolean.TRUE.equals(o.getValue())) {
                         // For privileges to ALL group, check if it's allowed or not to publish invalid metadata
-                        if ((p.getGroup() == ReservedGroup.all.getId())) {
+                        if ((groupId == ReservedGroup.all.getId())) {
                             try {
                                 checkCanPublishToAllGroup(context, messages, metadata,
                                     allowPublishInvalidMd, allowPublishNonApprovedMd);
@@ -613,11 +629,11 @@ public class MetadataSharingApi implements ApplicationEventPublisherAware
 
                         }
                         dataMan.setOperation(
-                            context, metadata.getId(), p.getGroup(), opId);
+                            context, metadata.getId(), groupId, opId);
                         sharingChanges = true;
                     } else if (!sharing.isClear() && Boolean.TRUE.equals(!o.getValue())) {
                         dataMan.unsetOperation(
-                            context, metadata.getId(), p.getGroup(), opId);
+                            context, metadata.getId(), groupId, opId);
                         sharingChanges = true;
                     }
                 }
@@ -744,6 +760,9 @@ public class MetadataSharingApi implements ApplicationEventPublisherAware
                     && g.getId() == ReservedGroup.intranet.getId()) {
                     continue;
                 }
+                if (g.getType() == GroupType.SystemPrivilege) {
+                    continue;
+                }
                 GroupPrivilege groupPrivilege = new GroupPrivilege();
                 groupPrivilege.setGroup(g.getId());
                 groupPrivilege.setReserved(g.isReserved());
@@ -821,6 +840,11 @@ public class MetadataSharingApi implements ApplicationEventPublisherAware
         HttpServletRequest request
     )
         throws Exception {
+
+        Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
+
+        checkGroupIsWorkspace(groupIdentifier, locale);
+
         AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
         ApplicationContext appContext = ApplicationContextHolder.get();
 
@@ -894,9 +918,14 @@ public class MetadataSharingApi implements ApplicationEventPublisherAware
                 && g.getId() == ReservedGroup.intranet.getId()) {
                 continue;
             }
+            if (g.getType() == GroupType.SystemPrivilege) {
+                continue;
+            }
             GroupPrivilege groupPrivilege = new GroupPrivilege();
             groupPrivilege.setGroup(g.getId());
             groupPrivilege.setReserved(g.isReserved());
+            // Restrict changing privileges for groups with a minimum profile for setting privileges set
+            groupPrivilege.setRestricted(!canUserChangePrivilegesForGroup(context, g));
             groupPrivilege.setUserGroup(userGroups.contains(g.getId()));
 
             Map<String, Boolean> operations = new HashMap<>(allOperations.size());
@@ -960,6 +989,15 @@ public class MetadataSharingApi implements ApplicationEventPublisherAware
         HttpServletRequest request
     )
         throws Exception {
+
+        Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
+
+        // If the group is reserved, there is no need to check if it's a workspace as the group will not be changed.
+        // This is required for transferring ownership to an administrator
+        if (!ReservedGroup.isReserved(groupIdentifier)) {
+            checkGroupIsWorkspace(groupIdentifier, locale);
+        }
+
         MetadataProcessingReport report = new SimpleMetadataProcessingReport();
 
         try {
@@ -1030,6 +1068,15 @@ public class MetadataSharingApi implements ApplicationEventPublisherAware
         HttpServletRequest request
     )
         throws Exception {
+
+        Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
+
+        // If the group is reserved, there is no need to check if it's a workspace as the group will not be changed.
+        // This is required for transferring ownership to an administrator
+        if (!ReservedGroup.isReserved(groupIdentifier)) {
+            checkGroupIsWorkspace(groupIdentifier, locale);
+        }
+
         MetadataProcessingReport report = new SimpleMetadataProcessingReport();
 
         ApiUtils.canEditRecord(metadataUuid, request);
@@ -1550,6 +1597,39 @@ public class MetadataSharingApi implements ApplicationEventPublisherAware
         }
 
         return privilegeStatuses.stream().filter(p -> p.publishedBefore != p.publishedAfter).collect(Collectors.toList());
+    }
+
+    /**
+     * Checks if the given group is of type Workspace.
+     *
+     * @param groupId the identifier of the group to check
+     * @param locale the locale to use for error messages
+     * @throws ResourceNotFoundException if the group is not found
+     * @throws IllegalArgumentException if the group is not of type Workspace
+     */
+    private void checkGroupIsWorkspace(Integer groupId, Locale locale) throws ResourceNotFoundException {
+        if (!groupIsType(groupId, GroupType.Workspace, locale)) {
+            throw new IllegalArgumentException(messages.getMessage("api.groups.group_not_workspace", new
+                Object[]{groupId}, locale));
+        }
+    }
+
+    /**
+     * Checks if the given group is of the specified type.
+     *
+     * @param groupId the identifier of the group to check
+     * @param groupType the type to check against
+     * @param locale the locale to use for error messages
+     * @return true if the group is of the specified type, false otherwise
+     * @throws ResourceNotFoundException if the group is not found
+     */
+    private boolean groupIsType(Integer groupId, GroupType groupType, Locale locale) throws ResourceNotFoundException {
+        Group group = groupRepository.findById(groupId).orElse(null);
+        if (group == null) {
+            throw new ResourceNotFoundException(messages.getMessage("api.groups.group_not_found", new
+                Object[]{groupId}, locale));
+        }
+        return group.getType() == groupType;
     }
 
     /**

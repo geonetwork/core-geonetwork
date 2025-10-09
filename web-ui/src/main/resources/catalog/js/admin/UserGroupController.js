@@ -104,6 +104,7 @@
       // List of catalog groups
       $scope.groups = null;
       $scope.groupSelected = { id: $routeParams.userOrGroup };
+      $scope.nonSystemGroups = null;
       // On going changes group ...
       $scope.groupUpdated = false;
       $scope.groupSearch = {};
@@ -167,6 +168,12 @@
         $scope.categories = [nullTag].concat(categoriesSorted);
       });
 
+      $scope.groupTypes = [
+        { id: "Workspace", label: "groupTypeWorkspace" },
+        { id: "RecordPrivilege", label: "groupTypeRecordPrivilege" },
+        { id: "SystemPrivilege", label: "groupTypeSystemPrivilege" }
+      ];
+
       function loadGroups() {
         $scope.isLoadingGroups = true;
         // If not send profile, all groups are returned
@@ -177,6 +184,9 @@
             $scope.groups = response.data;
             angular.forEach($scope.groups, function (u) {
               u.langlabel = getLabel(u);
+            });
+            $scope.nonSystemGroups = $scope.groups.filter(function (g) {
+              return g.type !== "SystemPrivilege";
             });
             $scope.isLoadingGroups = false;
 
@@ -478,6 +488,12 @@
         $scope.groupsByProfile = res;
       };
 
+      $scope.$watch("groupSelected.type", function (newValue) {
+        if (newValue === "SystemPrivilege") {
+          $scope.groupSelected.minimumProfileForPrivileges = null;
+        }
+      });
+
       $scope.$watch("userGroups", function (groups) {
         updateGroupsByProfile(groups);
       });
@@ -681,6 +697,8 @@
           label: {},
           description: "",
           email: "",
+          type: "Workspace",
+          minimumProfileForPrivileges: null,
           enableAllowedCategories: false,
           allowedCategories: [],
           defaultCategory: null,
@@ -739,10 +757,6 @@
           $scope.groupSelected.defaultCategory.id == null
         ) {
           $scope.groupSelected.defaultCategory = null;
-        }
-        // Ensure that the minimum profile for privileges is not an empty string
-        if ($scope.groupSelected.minimumProfileForPrivileges == "") {
-          $scope.groupSelected.minimumProfileForPrivileges = null;
         }
         $http
           .put(
