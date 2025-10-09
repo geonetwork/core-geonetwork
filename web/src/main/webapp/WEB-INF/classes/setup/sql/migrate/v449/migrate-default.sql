@@ -5,7 +5,4 @@ INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system
 DELETE FROM Settings WHERE name LIKE 'system/publication/doi%' and name != 'system/publication/doi/doienabled';
 
 UPDATE Settings SET value='4.4.9' WHERE name='system/platform/version';
-UPDATE Settings SET value='SNAPSHOT' WHERE name='system/platform/subVersion';
-
-UPDATE groups SET type='RecordPrivilege' WHERE id<2 AND type IS NULL;
-UPDATE groups SET type='Workspace' WHERE id>=2 AND type IS NULL;
+UPDATE Settings SET value='0' WHERE name='system/platform/subVersion';

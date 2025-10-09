@@ -357,7 +357,7 @@
     "KMLfileURL": "URL de un fichero KML",
     "refineSearch": "Refinar Búsqueda",
     "backToList": "Volver a la Lista",
-     "privilegesBatchAlert": "<span class='text-danger'>Los privilegios se actualizarán para todos los registros editables en la selección. El formulario de privilegios está vacío y no refleja los privilegios actuales de los registros seleccionados. ¡Los privilegios se restablecen y se reemplazan por los nuevos!</span><br/><br/>Al hacer clic en <strong>Combinar seleccionados</strong> se añadirán (marcado con <strong>+</strong>) o eliminarán (casilla con <strong>-</strong>) los privilegios seleccionados.<br/><br/>Al hacer clic en <strong>Actualizar</strong> se eliminarán los privilegios de los registros y luego se añadirán (marcado con <strong>+</strong>) o eliminarán (casilla con <strong>-</strong>) los privilegios seleccionados.",
+    "privilegesBatchAlert": "<span class='text-danger'>Los privilegios se actualizarán para todos los registros editables en la selección. El formulario de privilegios está vacío y no refleja los privilegios actuales de los registros seleccionados. ¡Los privilegios se restablecen y se reemplazan por los nuevos!</span><br/><br/>Al hacer clic en <strong>Combinar seleccionados</strong> se añadirán (marcado con <strong>+</strong>) o eliminarán (casilla con <strong>-</strong>) los privilegios seleccionados.<br/><br/>Al hacer clic en <strong>Actualizar</strong> se eliminarán los privilegios de los registros y luego se añadirán (marcado con <strong>+</strong>) o eliminarán (casilla con <strong>-</strong>) los privilegios seleccionados.",
     "permalink": "Enlace Permanente",
     "permalinkTo": "Enlace permanente a {{title}}",
     "shareOnTwitter": "Compartir en Twitter",
