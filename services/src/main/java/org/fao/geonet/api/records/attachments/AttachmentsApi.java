@@ -40,12 +40,17 @@ import org.apache.commons.codec.digest.DigestUtils;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
+import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.MetadataResource;
 import org.fao.geonet.domain.MetadataResourceVisibility;
 import org.fao.geonet.domain.MetadataResourceVisibilityConverter;
 import org.fao.geonet.events.history.AttachmentAddedEvent;
 import org.fao.geonet.events.history.AttachmentDeletedEvent;
+import org.fao.geonet.kernel.datamanager.IMetadataIndexer;
+import org.fao.geonet.kernel.datamanager.IMetadataManager;
+import org.fao.geonet.kernel.search.IndexingMode;
 import org.fao.geonet.util.ImageUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.PathResource;
@@ -92,6 +97,12 @@ public class AttachmentsApi {
     public static final Integer BUFFER_SIZE = 8192;
     private final ApplicationContext appContext = ApplicationContextHolder.get();
     private Store store;
+
+    @Autowired
+    private IMetadataManager metadataManager;
+
+    @Autowired
+    private IMetadataIndexer metadataIndexer;
 
     public AttachmentsApi() {
     }
@@ -335,9 +346,9 @@ public class AttachmentsApi {
     }
 
 
-    @io.swagger.v3.oas.annotations.Operation(summary = "Update the metadata resource visibility")
+    @io.swagger.v3.oas.annotations.Operation(summary = "Update the metadata resource visibility and/or the resource name")
     @PreAuthorize("hasAuthority('Editor')")
-    @ApiResponses(value = {@ApiResponse(responseCode = "201", description = "Attachment visibility updated."),
+    @ApiResponses(value = {@ApiResponse(responseCode = "201", description = "Attachment updated."),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)})
     @RequestMapping(value = "/{resourceId:.+}", method = RequestMethod.PATCH, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.CREATED)
@@ -345,11 +356,33 @@ public class AttachmentsApi {
     public MetadataResource patchResource(
         @Parameter(description = "The metadata UUID", required = true, example = "43d7c186-2187-4bcd-8843-41e575a5ef56") @PathVariable String metadataUuid,
         @Parameter(description = "The resource identifier (ie. filename)", required = true) @PathVariable String resourceId,
-        @Parameter(description = "The visibility", required = true, example = "public") @RequestParam(required = true) MetadataResourceVisibility visibility,
+        @Parameter(description = "The visibility", required = true, example = "public") @RequestParam(required = false) MetadataResourceVisibility visibility,
+        @Parameter(description = "The visibility", required = true, example = "public") @RequestParam(required = false) String newResourceName,
         @Parameter(description = "Use approved version or not", example = "true") @RequestParam(required = false, defaultValue = "false") Boolean approved,
         @Parameter(hidden = true) HttpServletRequest request) throws Exception {
         ServiceContext context = ApiUtils.createServiceContext(request);
-        return store.patchResourceStatus(context, metadataUuid, resourceId, visibility, approved);
+
+        AbstractMetadata metadata = ApiUtils.canViewRecord(metadataUuid, request);
+
+        if (visibility == null && newResourceName == null) {
+            throw new IllegalArgumentException("Either visibility or new resource name must be provided.");
+        }
+
+        MetadataResource metadataResource = null;
+        if (newResourceName != null) {
+            Store.ResourceHolder metadataResourceToUpdate = store.getResource(context, metadataUuid, resourceId, approved);
+            metadataResource = store.renameResource(context, metadataUuid, resourceId, newResourceName, approved);
+
+            // Update the metadata references to the resource
+            metadata.setData(metadata.getData().replaceAll(metadataResourceToUpdate.getMetadata().getUrl(), metadataResource.getUrl()));
+            metadataManager.save(metadata);
+            metadataIndexer.indexMetadata(String.valueOf(metadata.getId()), true, IndexingMode.full);
+
+        }
+        if (visibility != null) {
+            metadataResource = store.patchResourceStatus(context, metadataUuid, resourceId, visibility, approved);
+        }
+        return metadataResource;
     }
 
     @io.swagger.v3.oas.annotations.Operation(summary = "Delete a metadata resource")
