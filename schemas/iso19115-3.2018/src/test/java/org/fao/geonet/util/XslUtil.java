@@ -29,4 +29,30 @@ public class XslUtil {
     public static String threeCharLangCode(String iso2code) {
         return "fre";
     }
+
+    public static String getSettingValue(String key) {
+        switch (key) {
+            case "system/metadata/validation/removeSchemaLocation":
+                return "false";
+            default:
+                return "true";
+        }
+    }
+
+    public static String twoCharLangCode(String iso3code, String defaultValue) {
+        switch (iso3code) {
+            case "fre":
+                return "fr";
+            case "ita":
+                return "it";
+            case "eng":
+                return "en";
+            case "ger":
+                return "de";
+            case "roh":
+                return "rm";
+            default:
+                return defaultValue;
+        }
+    }
 }

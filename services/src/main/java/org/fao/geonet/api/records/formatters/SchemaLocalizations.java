@@ -39,6 +39,7 @@ import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.locationtech.jts.util.Assert;
 import org.springframework.context.ApplicationContext;
+import org.springframework.util.StringUtils;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
@@ -97,14 +98,23 @@ public class SchemaLocalizations {
     public static SchemaLocalizations create(String schema) throws IOException, JDOMException {
         Object obj = RequestContextHolder.getRequestAttributes();
 
-        ServletRequestAttributes attributes = (ServletRequestAttributes) obj;
-        HttpServletRequest request = attributes.getRequest();
+        String lang3 = null;
+        if (obj instanceof ServletRequestAttributes) {
 
-        final ApplicationContext appContext = ApplicationContextHolder.get();
-        final ServiceContext serviceContext = ServiceContext.get();
-        final String lang3 = serviceContext != null ?
-            serviceContext.getLanguage() :
-            appContext.getBean(LanguageUtils.class).getIso3langCode(request.getLocales());
+            ServletRequestAttributes attributes = (ServletRequestAttributes) obj;
+            HttpServletRequest request = attributes.getRequest();
+
+            final ApplicationContext appContext = ApplicationContextHolder.get();
+            final ServiceContext serviceContext = ServiceContext.get();
+            lang3 = serviceContext != null ?
+                serviceContext.getLanguage() :
+                appContext.getBean(LanguageUtils.class).getIso3langCode(request.getLocales());
+        }
+        if (!StringUtils.hasLength(lang3)) {
+            // It may be null if executed from a jobs which don't have servlet request attributes.
+            // Use the system default locale when language not detected.
+            lang3 = Locale.getDefault().getISO3Language();
+        }
         return create(schema, lang3);
     }
 
