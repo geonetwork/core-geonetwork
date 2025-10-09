@@ -24,6 +24,10 @@
 package org.fao.geonet.api.records;
 
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.Explode;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.enums.ParameterStyle;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -167,7 +171,15 @@ public class MetadataProcessApi {
     public @ResponseBody
     ResponseEntity processRecord(
         @Parameter(description = API_PARAM_RECORD_UUID, required = true) @PathVariable String metadataUuid,
-        @Parameter(description = ApiParams.API_PARAM_PROCESS_ID) @PathVariable String process, HttpServletRequest request)
+        @Parameter(description = ApiParams.API_PARAM_PROCESS_ID, example = "thumbnail-add") @PathVariable String process,
+        @Parameter(name = "processParams", description = "Parameters to pass to the process",
+            in = ParameterIn.QUERY,
+            required = false,
+            schema = @Schema(type = "object", additionalProperties = Schema.AdditionalPropertiesValue.TRUE, example = "{\"thumbnail_url\":\"http://\",\"thumbnail_desc\":\"Dataset overview\"}"),
+            style = ParameterStyle.FORM,
+            explode = Explode.TRUE)
+        @RequestParam(required = false) Map<String,String> processParams,
+        HttpServletRequest request)
         throws Exception {
         AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
         boolean save = true;
