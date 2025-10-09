@@ -64,8 +64,7 @@ cd core-geonetwork
 mvn clean install -DskipTests
 
 cd es
-mvn install -Pes-download
-mvn exec:exec -Des-start
+docker-compose up
 
 cd web
 mvn jetty:run
