@@ -85,10 +85,8 @@
     }
   }
 }
-.bootstrap-table {
-  a {
+.bootstrap-table a {
     word-break: break-all;
-  }
 }
 
 .harvester-logo {
@@ -168,8 +166,8 @@ ul.error-message {
   pre {
     margin-left: 5px;
     margin-right: 5px;
-    padding-bottom: 0px;
-    margin-bottom: 0px;
+    padding-bottom: 0;
+    margin-bottom: 0;
     dd > span {
       padding-left: 10px;
     }
@@ -253,16 +251,20 @@ ul.pager {
 .list-group-interne {
   background-color: #d9edf7;
 }
-ul > li > a.privilege-check-order {
-  margin-right: 20px;
-}
-ul > li.list-group-item > input {
-  margin-right: 40px;
-  margin-left: 30px;
+
+ul {
+  & > li {
+    & > a.privilege-check-order {
+      margin-right: 20px;
+    }
+
+    &.list-group-item > input {
+      margin-right: 40px;
+      margin-left: 30px;
+    }
+  }
 }
 
-.gn-env {
-  table tr td:first-child {
+.gn-env table tr td:first-child {
     width: 33%;
-  }
 }
