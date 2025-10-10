@@ -45,6 +45,7 @@ import java.util.stream.Collectors;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -89,6 +90,38 @@ public class AnonymousAccessLinkApiTest extends AbstractServiceIntegrationTest {
 		assertEquals(md.getId(), createdAccessLink.getMetadataId());
 		assertEquals(md.getUuid(), createdAccessLink.getMetadataUuid());
 		assertNotNull(createdAccessLink.getHash());
+	}
+
+	@Test
+	public void doesAnonymousAccessLinkExist() throws Exception {
+		AbstractMetadata md = injectMetadataInDb(getSampleMetadataXml(), context, true);
+
+		MvcResult result = this.mockMvc.perform(get("/srv/api/anonymousAccessLink/{uuid}", md.getUuid())
+						.session(session)
+						.accept(MediaType.parseMediaType("application/json")))
+				.andExpect(status().isOk())
+				.andReturn();
+
+		assertEquals("", result.getResponse().getContentAsString());
+
+		this.mockMvc.perform(post("/srv/api/anonymousAccessLink")
+						.session(session)
+						.content(jsonRequestBodyForCreate(md))
+						.contentType(MediaType.parseMediaType("application/json"))
+						.accept(MediaType.parseMediaType("application/json")))
+				.andExpect(status().isOk());
+
+		result = this.mockMvc.perform(get("/srv/api/anonymousAccessLink/{uuid}", md.getUuid())
+						.session(session)
+						.accept(MediaType.parseMediaType("application/json")))
+				.andExpect(status().isOk())
+				.andReturn();
+
+		String json = result.getResponse().getContentAsString();
+		AnonymousAccessLinkDto createdAccessLink = mapper.readValue(json, AnonymousAccessLinkDto.class);
+		assertEquals(md.getId(), createdAccessLink.getMetadataId());
+		assertEquals(md.getUuid(), createdAccessLink.getMetadataUuid());
+		assertNull(createdAccessLink.getHash());
 	}
 
 	@Test
