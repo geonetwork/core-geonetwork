@@ -185,7 +185,11 @@ public class DatahubController {
     InputStream readConfiguration(String portalName) throws IOException {
         String configuration = getPortalConfiguration(portalName);
         configuration = configuration.replaceAll("\ngeonetwork4_api_url\\s?=.+", "\n")
-                .replace("[global]", "[global]\ngeonetwork4_api_url = \"/geonetwork/" + portalName + "/api\"");
+                    .replaceAll("\nweb_component_embedder_url\\s?=.+", "\n")
+                    .replace("[global]", 
+                        "[global]\n" +
+                        "geonetwork4_api_url = \"/geonetwork/" + portalName + "/api\"\n" +
+                        "web_component_embedder_url = \"/geonetwork/" + portalName + "/datahub/wc-embedder.html\"");
         return new ByteArrayInputStream(configuration.getBytes());
     }
 
