@@ -37,6 +37,7 @@ import org.jdom.Text;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.springframework.context.support.GenericApplicationContext;
+import sun.misc.IOUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -201,7 +202,7 @@ public class XmlTest {
         System.arraycopy(payload, 0, input, bom.length, payload.length);
         try (InputStream in = new java.io.ByteArrayInputStream(input);
              java.io.PushbackInputStream processed = Xml.processBOMMarker(in, "test.xml")) {
-            byte[] readAll = processed.readAllBytes();
+            byte[] readAll = IOUtils.readAllBytes(processed);
             String s = new String(readAll, Constants.CHARSET);
             assertEquals("<a>data</a>", s);
         }
@@ -212,7 +213,7 @@ public class XmlTest {
         byte[] payload = "ABCDEF".getBytes(Constants.CHARSET);
         try (InputStream in = new java.io.ByteArrayInputStream(payload);
              java.io.PushbackInputStream processed = Xml.processBOMMarker(in, "")) {
-            byte[] readAll = processed.readAllBytes();
+            byte[] readAll = IOUtils.readAllBytes(processed);
             String s = new String(readAll, Constants.CHARSET);
             assertEquals("ABCDEF", s);
         }
@@ -223,7 +224,7 @@ public class XmlTest {
         byte[] payload = new byte[] { 'X' }; // less than 3 bytes
         try (InputStream in = new java.io.ByteArrayInputStream(payload);
              java.io.PushbackInputStream processed = Xml.processBOMMarker(in, null)) {
-            byte[] readAll = processed.readAllBytes();
+            byte[] readAll = IOUtils.readAllBytes(processed);
             assertEquals(1, readAll.length);
             assertEquals('X', readAll[0]);
         }
