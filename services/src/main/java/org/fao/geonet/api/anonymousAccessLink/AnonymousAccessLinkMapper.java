@@ -33,6 +33,9 @@ import java.util.stream.Collectors;
 public class AnonymousAccessLinkMapper {
 
     public AnonymousAccessLinkDto toDto(AnonymousAccessLink entity) {
+        if (entity == null) {
+            return null;
+        }
         return new AnonymousAccessLinkDto()
                 .setMetadataId(entity.getMetadataId())
                 .setMetadataUuid(entity.getMetadataUuid());
