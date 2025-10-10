@@ -35,15 +35,13 @@ public class AnonymousAccessLinkMapper {
     public AnonymousAccessLinkDto toDto(AnonymousAccessLink entity) {
         return new AnonymousAccessLinkDto()
                 .setMetadataId(entity.getMetadataId())
-                .setMetadataUuid(entity.getMetadataUuid())
-                .setHash(entity.getHash());
+                .setMetadataUuid(entity.getMetadataUuid());
     }
 
     public AnonymousAccessLink toEntity(AnonymousAccessLinkDto dto) {
         return new AnonymousAccessLink()
                 .setMetadataId(dto.getMetadataId())
-                .setMetadataUuid(dto.getMetadataUuid())
-                .setHash(dto.getHash());
+                .setMetadataUuid(dto.getMetadataUuid());
     }
 
     public List<AnonymousAccessLinkDto> toDtoList(List<AnonymousAccessLink> entities) {

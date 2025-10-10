@@ -45,12 +45,13 @@ public class AnonymousAccessLinkService {
 
     public AnonymousAccessLinkDto createAnonymousAccessLink(AnonymousAccessLinkDto anonymousAccessLinkDto) {
         String uuid = anonymousAccessLinkDto.getMetadataUuid();
+        String randomHash = AnonymousAccessLink.getRandomHash();
         AnonymousAccessLink anonymousAccessLinkToCreate = new AnonymousAccessLink()
                 .setMetadataId(metadataUtils.findOneByUuid(uuid).getId())
                 .setMetadataUuid(uuid)
-                .setHash(AnonymousAccessLink.getRandomHash());
+                .setHash(randomHash);
         anonymousAccessLinkRepository.save(anonymousAccessLinkToCreate);
-        return mapper.toDto(anonymousAccessLinkToCreate);
+        return mapper.toDto(anonymousAccessLinkToCreate).setHash(randomHash);
     }
 
     public List<AnonymousAccessLinkDto> getAllAnonymousAccessLinks() {
