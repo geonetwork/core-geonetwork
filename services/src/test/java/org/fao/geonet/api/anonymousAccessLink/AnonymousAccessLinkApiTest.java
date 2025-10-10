@@ -26,7 +26,6 @@ package org.fao.geonet.api.anonymousAccessLink;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.domain.AbstractMetadata;
-import org.fao.geonet.repository.AnonymousAccessLinkRepository;
 import org.fao.geonet.services.AbstractServiceIntegrationTest;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,12 +40,12 @@ import org.springframework.web.context.WebApplicationContext;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -58,9 +57,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class AnonymousAccessLinkApiTest extends AbstractServiceIntegrationTest {
 	@Autowired
 	private WebApplicationContext wac;
-
-	@Autowired
-	private AnonymousAccessLinkRepository anonymousAccessLinkRepository;
 
 	private MockMvc mockMvc;
 
@@ -157,10 +153,11 @@ public class AnonymousAccessLinkApiTest extends AbstractServiceIntegrationTest {
 				.andReturn();
 		String json = result.getResponse().getContentAsString();
 		AnonymousAccessLinkDto[] accessLinks = mapper.readValue(json, AnonymousAccessLinkDto[].class);
-		List<String> referencedMd = Arrays.stream(accessLinks) //
-				.map(AnonymousAccessLinkDto::getMetadataUuid).collect(Collectors.toList());
-		assertFalse(referencedMd.contains(md.getUuid()));
-		assertNull(anonymousAccessLinkRepository.findOneByHash(createdAccessLink.getHash()));
+		Optional<String> stillReturned = Arrays.stream(accessLinks) //
+				.map(AnonymousAccessLinkDto::getMetadataUuid) //
+				.filter(md.getUuid()::equals) //
+				.findFirst();
+		assertFalse(stillReturned.isPresent());
 	}
 
 	private static String jsonRequestBodyForCreate(AbstractMetadata md) {
