@@ -29,6 +29,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -60,6 +61,20 @@ public class AnonymousAccessLinkApi {
             @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "at least {\"metadataUuid\":\"...\"}")
             @RequestBody AnonymousAccessLinkDto anonymousAccessLinkDto) {
         return anonymousAccessLinkService.createAnonymousAccessLink(anonymousAccessLinkDto);
+    }
+
+    @RequestMapping(
+            produces = MediaType.APPLICATION_JSON_VALUE,
+            method = RequestMethod.GET,
+            value = "/{uuid}")
+    @ResponseStatus(value = HttpStatus.OK)
+    @PreAuthorize("hasAuthority('Administrator')")
+    @ResponseBody
+    @io.swagger.v3.oas.annotations.Operation(
+            summary = "get one anonymous access link or empty",
+            description = "")
+    public AnonymousAccessLinkDto getAnonymousAccessLink(@io.swagger.v3.oas.annotations.Parameter(description = "md uuid", required = true) @PathVariable(value = "uuid") String uuid) {
+        return  anonymousAccessLinkService.getAnonymousAccessLink(new AnonymousAccessLinkDto().setMetadataUuid(uuid));
     }
 
     @RequestMapping(
