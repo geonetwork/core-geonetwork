@@ -42,6 +42,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
@@ -116,6 +117,7 @@ public class AnonymousAccessLinkApiTest extends AbstractServiceIntegrationTest {
 				.andReturn();
 
 		String json = result.getResponse().getContentAsString();
+		assertFalse(json.contains("\"hash\""));
 		AnonymousAccessLinkDto createdAccessLink = mapper.readValue(json, AnonymousAccessLinkDto.class);
 		assertEquals(md.getId(), createdAccessLink.getMetadataId());
 		assertEquals(md.getUuid(), createdAccessLink.getMetadataUuid());
