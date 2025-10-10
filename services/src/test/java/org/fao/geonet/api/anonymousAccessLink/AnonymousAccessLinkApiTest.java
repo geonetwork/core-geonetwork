@@ -75,9 +75,7 @@ public class AnonymousAccessLinkApiTest extends AbstractServiceIntegrationTest {
 		AbstractMetadata md = injectMetadataInDb(getSampleMetadataXml(), context, true);
 
 		MvcResult result = this.mockMvc.perform(post("/srv/api/anonymousAccessLink/{uuid}", md.getUuid())
-						.session(session)
-						.contentType(MediaType.parseMediaType("application/json"))
-						.accept(MediaType.parseMediaType("application/json")))
+						.session(session).accept(MediaType.parseMediaType("application/json")))
 				.andExpect(status().isOk())
 				.andExpect(content().contentType(API_JSON_EXPECTED_ENCODING))
 				.andExpect(jsonPath("$.id").doesNotExist())
@@ -95,22 +93,18 @@ public class AnonymousAccessLinkApiTest extends AbstractServiceIntegrationTest {
 		AbstractMetadata md = injectMetadataInDb(getSampleMetadataXml(), context, true);
 
 		MvcResult result = this.mockMvc.perform(get("/srv/api/anonymousAccessLink/{uuid}", md.getUuid())
-						.session(session)
-						.accept(MediaType.parseMediaType("application/json")))
+						.session(session).accept(MediaType.parseMediaType("application/json")))
 				.andExpect(status().isOk())
 				.andReturn();
 
 		assertEquals("", result.getResponse().getContentAsString());
 
 		this.mockMvc.perform(post("/srv/api/anonymousAccessLink/{uuid}", md.getUuid())
-						.session(session)
-						.contentType(MediaType.parseMediaType("application/json"))
-						.accept(MediaType.parseMediaType("application/json")))
+						.session(session).accept(MediaType.parseMediaType("application/json")))
 				.andExpect(status().isOk());
 
 		result = this.mockMvc.perform(get("/srv/api/anonymousAccessLink/{uuid}", md.getUuid())
-						.session(session)
-						.accept(MediaType.parseMediaType("application/json")))
+						.session(session).accept(MediaType.parseMediaType("application/json")))
 				.andExpect(status().isOk())
 				.andReturn();
 
@@ -127,19 +121,14 @@ public class AnonymousAccessLinkApiTest extends AbstractServiceIntegrationTest {
 		AbstractMetadata md1 = injectMetadataInDb(getSampleMetadataXml(), context, true);
 		AbstractMetadata md2 = injectMetadataInDb(getSampleMetadataXml(), context, true);
 		this.mockMvc.perform(post("/srv/api/anonymousAccessLink/{uuid}", md1.getUuid())
-					.session(session)
-					.contentType(MediaType.parseMediaType("application/json"))
-					.accept(MediaType.parseMediaType("application/json")))
+					.session(session).accept(MediaType.parseMediaType("application/json")))
 				.andExpect(status().isOk());
 		this.mockMvc.perform(post("/srv/api/anonymousAccessLink/{uuid}", md2.getUuid())
-						.session(session)
-						.contentType(MediaType.parseMediaType("application/json"))
-						.accept(MediaType.parseMediaType("application/json")))
+						.session(session).accept(MediaType.parseMediaType("application/json")))
 				.andExpect(status().isOk());
 
 		MvcResult result = this.mockMvc.perform(get("/srv/api/anonymousAccessLink")
-						.session(session)
-						.accept(MediaType.parseMediaType("application/json")))
+						.session(session).accept(MediaType.parseMediaType("application/json")))
 				.andExpect(status().isOk())
 				.andReturn();
 
@@ -156,22 +145,16 @@ public class AnonymousAccessLinkApiTest extends AbstractServiceIntegrationTest {
 	public void deleteAccessLink() throws Exception {
 		AbstractMetadata md = injectMetadataInDb(getSampleMetadataXml(), context, true);
 		this.mockMvc.perform(post("/srv/api/anonymousAccessLink/{uuid}", md.getUuid())
-						.session(session)
-						.contentType(MediaType.parseMediaType("application/json"))
-						.accept(MediaType.parseMediaType("application/json")))
+						.session(session).accept(MediaType.parseMediaType("application/json")))
 				.andExpect(status().isOk())
 				.andReturn();
 
 		this.mockMvc.perform(delete("/srv/api/anonymousAccessLink/{uuid}", md.getUuid())
-						.session(session)
-						.content("{\"metadataUuid\" : \"" + md.getUuid() + "\"}")
-						.contentType(MediaType.parseMediaType("application/json")))
-				.andExpect(status().isOk())
-				.andReturn();
+						.session(session).contentType(MediaType.parseMediaType("application/json")))
+				.andExpect(status().isOk());
 
 		MvcResult result = this.mockMvc.perform(get("/srv/api/anonymousAccessLink/{uuid}", md.getUuid())
-						.session(session)
-						.accept(MediaType.parseMediaType("application/json")))
+						.session(session).accept(MediaType.parseMediaType("application/json")))
 				.andExpect(status().isOk())
 				.andReturn();
 		assertEquals("", result.getResponse().getContentAsString());
