@@ -27,14 +27,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.services.AbstractServiceIntegrationTest;
+import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
@@ -58,15 +57,22 @@ public class AnonymousAccessLinkApiTest extends AbstractServiceIntegrationTest {
 	@Autowired
 	private WebApplicationContext wac;
 
+	private ServiceContext context;
+	private MockHttpSession session;
 	private MockMvc mockMvc;
+
+	private ObjectMapper mapper = new ObjectMapper();
+
+	@Before
+	public void initWacContextAndSession() throws Exception {
+		this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+		context = createServiceContext();
+		session = loginAs(loginAsAdmin(context));
+	}
 
 	@Test
 	public void createAnonymousAccessLink() throws Exception {
-		this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
-		ServiceContext context = createServiceContext();
-		MockHttpSession session = loginAs(loginAsAdmin(context));
 		AbstractMetadata md = injectMetadataInDb(getSampleMetadataXml(), context, true);
-		ObjectMapper mapper = new ObjectMapper();
 
 		MvcResult result = this.mockMvc.perform(post("/srv/api/anonymousAccessLink")
 						.session(session)
@@ -87,11 +93,8 @@ public class AnonymousAccessLinkApiTest extends AbstractServiceIntegrationTest {
 
 	@Test
 	public void listAnonymousAccessLink() throws Exception {
-		ServiceContext context = createServiceContext();
 		AbstractMetadata md1 = injectMetadataInDb(getSampleMetadataXml(), context, true);
 		AbstractMetadata md2 = injectMetadataInDb(getSampleMetadataXml(), context, true);
-		this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
-		MockHttpSession session = loginAs(loginAsAdmin(context));
 		this.mockMvc.perform(post("/srv/api/anonymousAccessLink")
 					.session(session)
 					.content(jsonRequestBodyForCreate(md1))
@@ -112,7 +115,6 @@ public class AnonymousAccessLinkApiTest extends AbstractServiceIntegrationTest {
 				.andReturn();
 
 		String json = result.getResponse().getContentAsString();
-		ObjectMapper mapper = new ObjectMapper();
 		AnonymousAccessLinkDto[] accessLinks = mapper.readValue(json, AnonymousAccessLinkDto[].class);
 		List<String> referencedMd = Arrays.stream(accessLinks) //
 				.map(AnonymousAccessLinkDto::getMetadataUuid).collect(Collectors.toList());
@@ -123,33 +125,26 @@ public class AnonymousAccessLinkApiTest extends AbstractServiceIntegrationTest {
 
 	@Test
 	public void deleteAccessLink() throws Exception {
-		ObjectMapper mapper = new ObjectMapper();
-		ServiceContext context = createServiceContext();
 		AbstractMetadata md = injectMetadataInDb(getSampleMetadataXml(), context, true);
-		this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
-		MockHttpSession session = loginAs(loginAsAdmin(context));
-		MvcResult result = this.mockMvc.perform(post("/srv/api/anonymousAccessLink")
+		this.mockMvc.perform(post("/srv/api/anonymousAccessLink")
 						.session(session)
 						.content(jsonRequestBodyForCreate(md))
 						.contentType(MediaType.parseMediaType("application/json"))
 						.accept(MediaType.parseMediaType("application/json")))
 				.andExpect(status().isOk())
 				.andReturn();
-		AnonymousAccessLinkDto createdAccessLink = //
-				mapper.readValue(result.getResponse().getContentAsString(), AnonymousAccessLinkDto.class);
 
-		String requestBody = "{\"metadataUuid\" : \"" + createdAccessLink.getMetadataUuid() + "\"}";
 		this.mockMvc.perform(delete("/srv/api/anonymousAccessLink")
 						.session(session)
-						.content(requestBody)
+						.content("{\"metadataUuid\" : \"" + md.getUuid() + "\"}")
 						.contentType(MediaType.parseMediaType("application/json")))
 				.andExpect(status().isOk())
 				.andReturn();
 
-		result = this.mockMvc.perform(MockMvcRequestBuilders.get("/srv/api/anonymousAccessLink")
+		MvcResult result = this.mockMvc.perform(get("/srv/api/anonymousAccessLink")
 						.session(session)
 						.accept(MediaType.parseMediaType("application/json")))
-				.andExpect(MockMvcResultMatchers.status().isOk())
+				.andExpect(status().isOk())
 				.andReturn();
 		String json = result.getResponse().getContentAsString();
 		AnonymousAccessLinkDto[] accessLinks = mapper.readValue(json, AnonymousAccessLinkDto[].class);
