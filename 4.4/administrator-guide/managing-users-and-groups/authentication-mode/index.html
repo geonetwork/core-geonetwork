@@ -1692,6 +1692,15 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#service_account_configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      Service account Configuration
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#other-providers" class="md-nav__link">
     <span class="md-ellipsis">
       Other Providers
@@ -2675,6 +2684,15 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#service_account_configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      Service account Configuration
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#other-providers" class="md-nav__link">
     <span class="md-ellipsis">
       Other Providers
@@ -3549,6 +3567,22 @@
 <li>If you are using Azure AD (MS Graph API for the user's groups), then then uncomment the <code>MSGraphUserRolesResolver</code> bean and comment out the <code>UserInfoAccessTokenRolesResolver</code> bean.</li>
 </ol>
 <p>The easiest way to test is to obtain a Bearer Token, and then use a browser plugin to add the <code>Authorization: Bearer &lt;token&gt;</code> header to all requests. When you visit the Geonetwork website, you should see yourself logged in with the appropriate permissions.</p>
+<h4 id="service_account_configuration">Service account Configuration</h4>
+<p>If using background jobs such as harvester and there is a requirement to connect to external services which are also authenticated by the same provider then service accounts may be required.</p>
+<p>To enable service accounts use <code>OPENIDCONNECT_SERVICE_ACCOUNT_ENABLED=true</code>. </p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This will currently only work with <code>GEONETWORK_SECURITY_TYPE=openidconnectbearer</code></p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The service account client must be configured in the IDP to allow the <code>client_credentials</code> grant type.</p>
+</div>
+<p>By default the same client as used for user authentication will be used for service accounts. To configure a different client for service accounts then use the following environment variables:</p>
+<p><div class="language-properties highlight"><pre><span></span><code><span id="__span-30-1"><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a><span class="na">OPENIDCONNECT_SERVICE_ACCOUNT_CLIENTSECRET</span><span class="o">=</span><span class="s">&#39;...&#39;</span>
+</span><span id="__span-30-2"><a id="__codelineno-30-2" name="__codelineno-30-2" href="#__codelineno-30-2"></a><span class="na">OPENIDCONNECT_SERVICE_ACCOUNT_CLIENTID</span><span class="o">=</span><span class="s">&#39;...&#39;</span>
+</span></code></pre></div>
+If special scope is required for the service account then the following environment variable can be used <code>OPENIDCONNECT_SERVICE_ACCOUNT_SCOPES</code></p>
 <h4 id="other-providers">Other Providers</h4>
 <p>This has been tested with Azure AD (groups in the MS Graph API) and KeyCloak (groups in the <code>userinfo</code>).</p>
 <p>For other IDP, you might have to make some modifications.</p>
@@ -3560,11 +3594,11 @@
 <p><a href="https://keycloak.org">Keycloak</a> is a software solution to facilitate storage of authentication details, user federation, identity brokering and social login. GeoNetwork can be set up to use a keycloak instance for authentication.</p>
 <p>Install keycloak from its instructions or use this example setup in docker <a href="https://www.keycloak.org/getting-started/getting-started-docker">https://www.keycloak.org/getting-started/getting-started-docker</a></p>
 <p>Keycloak details are defined via environment variables</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-30-1"><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a>KEYCLOAK_AUTH_SERVER_URL={keycloak url}
-</span><span id="__span-30-2"><a id="__codelineno-30-2" name="__codelineno-30-2" href="#__codelineno-30-2"></a>KEYCLOAK_REALM={realm name}
-</span><span id="__span-30-3"><a id="__codelineno-30-3" name="__codelineno-30-3" href="#__codelineno-30-3"></a>KEYCLOAK_RESOURCE={client name}
-</span><span id="__span-30-4"><a id="__codelineno-30-4" name="__codelineno-30-4" href="#__codelineno-30-4"></a>KEYCLOAK_SECRET={client secret}
-</span><span id="__span-30-5"><a id="__codelineno-30-5" name="__codelineno-30-5" href="#__codelineno-30-5"></a>KEYCLOAK_DISABLE_TRUST_MANAGER={true|false}
+<div class="language-text highlight"><pre><span></span><code><span id="__span-31-1"><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a>KEYCLOAK_AUTH_SERVER_URL={keycloak url}
+</span><span id="__span-31-2"><a id="__codelineno-31-2" name="__codelineno-31-2" href="#__codelineno-31-2"></a>KEYCLOAK_REALM={realm name}
+</span><span id="__span-31-3"><a id="__codelineno-31-3" name="__codelineno-31-3" href="#__codelineno-31-3"></a>KEYCLOAK_RESOURCE={client name}
+</span><span id="__span-31-4"><a id="__codelineno-31-4" name="__codelineno-31-4" href="#__codelineno-31-4"></a>KEYCLOAK_SECRET={client secret}
+</span><span id="__span-31-5"><a id="__codelineno-31-5" name="__codelineno-31-5" href="#__codelineno-31-5"></a>KEYCLOAK_DISABLE_TRUST_MANAGER={true|false}
 </span></code></pre></div>
 <p>You can setup more advance keycloak settings by editing the file <strong><code>WEB-INF/config-security/keycloak.json</code></strong></p>
 <h3 id="geonetwork-client-url-configuration">Geonetwork client URL configuration</h3>
@@ -3572,13 +3606,13 @@
 <h3 id="sample-userrolegroup-setup">Sample user/role/group setup</h3>
 <h4 id="sample-role-setup">Sample Role setup</h4>
 <p>In your client role settings (clients -&gt; myclient -&gt; roles). Add the following roles</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-31-1"><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a>Administrator
-</span><span id="__span-31-2"><a id="__codelineno-31-2" name="__codelineno-31-2" href="#__codelineno-31-2"></a>RegisteredUser
-</span><span id="__span-31-3"><a id="__codelineno-31-3" name="__codelineno-31-3" href="#__codelineno-31-3"></a>Guest
-</span><span id="__span-31-4"><a id="__codelineno-31-4" name="__codelineno-31-4" href="#__codelineno-31-4"></a>sample:UserAdmin
-</span><span id="__span-31-5"><a id="__codelineno-31-5" name="__codelineno-31-5" href="#__codelineno-31-5"></a>sample:Reviewer
-</span><span id="__span-31-6"><a id="__codelineno-31-6" name="__codelineno-31-6" href="#__codelineno-31-6"></a>sample:Editor
-</span><span id="__span-31-7"><a id="__codelineno-31-7" name="__codelineno-31-7" href="#__codelineno-31-7"></a>sample:RegisteredUser
+<div class="language-text highlight"><pre><span></span><code><span id="__span-32-1"><a id="__codelineno-32-1" name="__codelineno-32-1" href="#__codelineno-32-1"></a>Administrator
+</span><span id="__span-32-2"><a id="__codelineno-32-2" name="__codelineno-32-2" href="#__codelineno-32-2"></a>RegisteredUser
+</span><span id="__span-32-3"><a id="__codelineno-32-3" name="__codelineno-32-3" href="#__codelineno-32-3"></a>Guest
+</span><span id="__span-32-4"><a id="__codelineno-32-4" name="__codelineno-32-4" href="#__codelineno-32-4"></a>sample:UserAdmin
+</span><span id="__span-32-5"><a id="__codelineno-32-5" name="__codelineno-32-5" href="#__codelineno-32-5"></a>sample:Reviewer
+</span><span id="__span-32-6"><a id="__codelineno-32-6" name="__codelineno-32-6" href="#__codelineno-32-6"></a>sample:Editor
+</span><span id="__span-32-7"><a id="__codelineno-32-7" name="__codelineno-32-7" href="#__codelineno-32-7"></a>sample:RegisteredUser
 </span></code></pre></div>
 <h4 id="sample-group-configuration">Sample Group configuration</h4>
 <ol>
@@ -3631,7 +3665,7 @@
 </ol>
 <h4 id="configuration-options">Configuration Options</h4>
 <p>You must turn on JWT Header Support by setting the <code>GEONETWORK_SECURITY_TYPE</code> environment variable to <code>jwt-headers</code>.</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-32-1"><a id="__codelineno-32-1" name="__codelineno-32-1" href="#__codelineno-32-1"></a>GEONETWORK_SECURITY_TYPE=jwt-headers
+<div class="language-text highlight"><pre><span></span><code><span id="__span-33-1"><a id="__codelineno-33-1" name="__codelineno-33-1" href="#__codelineno-33-1"></a>GEONETWORK_SECURITY_TYPE=jwt-headers
 </span></code></pre></div>
 <p>Please see these files for more detailed configuration:
 * <code>config-security-jwt-header.xml</code>
@@ -3667,13 +3701,13 @@
 </ul>
 <p>Here are some example values;</p>
 <p>STRING
-<div class="language-text highlight"><pre><span></span><code><span id="__span-33-1"><a id="__codelineno-33-1" name="__codelineno-33-1" href="#__codelineno-33-1"></a>OIDC_preferred_username: david.blasby@geocat.net
+<div class="language-text highlight"><pre><span></span><code><span id="__span-34-1"><a id="__codelineno-34-1" name="__codelineno-34-1" href="#__codelineno-34-1"></a>OIDC_preferred_username: david.blasby@geocat.net
 </span></code></pre></div></p>
 <p>JSON
-<div class="language-text highlight"><pre><span></span><code><span id="__span-34-1"><a id="__codelineno-34-1" name="__codelineno-34-1" href="#__codelineno-34-1"></a>OIDC_id_token_payload: {&quot;exp&quot;:1708555947,&quot;iat&quot;:1708555647,&quot;auth_time&quot;:1708555288,&quot;jti&quot;:&quot;42ee833e-89d3-4779-bd9d-06b979329c9f&quot;,&quot;iss&quot;:&quot;http://localhost:7777/realms/dave-test2&quot;,&quot;aud&quot;:&quot;live-key2&quot;,&quot;sub&quot;:&quot;98cfe060-f980-4a05-8612-6c609219ffe9&quot;,&quot;typ&quot;:&quot;ID&quot;,&quot;azp&quot;:&quot;live-key2&quot;,&quot;nonce&quot;:&quot;4PhqmZSJ355KBtJPbAP_PdwqiLnc7B1lA2SGpB0zXr4&quot;,&quot;session_state&quot;:&quot;7712b364-339a-4053-ae0c-7d3adfca9005&quot;,&quot;at_hash&quot;:&quot;2Tyw8q4ZMewuYrD38alCug&quot;,&quot;acr&quot;:&quot;0&quot;,&quot;sid&quot;:&quot;7712b364-339a-4053-ae0c-7d3adfca9005&quot;,&quot;upn&quot;:&quot;david.blasby@geocat.net&quot;,&quot;resource_access&quot;:{&quot;live-key2&quot;:{&quot;roles&quot;:[&quot;GeonetworkAdministrator&quot;,&quot;GeoserverAdministrator&quot;]}},&quot;email_verified&quot;:false,&quot;address&quot;:{},&quot;name&quot;:&quot;david blasby&quot;,&quot;groups&quot;:[&quot;default-roles-dave-test2&quot;,&quot;offline_access&quot;,&quot;uma_authorization&quot;],&quot;preferred_username&quot;:&quot;david.blasby@geocat.net&quot;,&quot;given_name&quot;:&quot;david&quot;,&quot;family_name&quot;:&quot;blasby&quot;,&quot;email&quot;:&quot;david.blasby@geocat.net&quot;}
+<div class="language-text highlight"><pre><span></span><code><span id="__span-35-1"><a id="__codelineno-35-1" name="__codelineno-35-1" href="#__codelineno-35-1"></a>OIDC_id_token_payload: {&quot;exp&quot;:1708555947,&quot;iat&quot;:1708555647,&quot;auth_time&quot;:1708555288,&quot;jti&quot;:&quot;42ee833e-89d3-4779-bd9d-06b979329c9f&quot;,&quot;iss&quot;:&quot;http://localhost:7777/realms/dave-test2&quot;,&quot;aud&quot;:&quot;live-key2&quot;,&quot;sub&quot;:&quot;98cfe060-f980-4a05-8612-6c609219ffe9&quot;,&quot;typ&quot;:&quot;ID&quot;,&quot;azp&quot;:&quot;live-key2&quot;,&quot;nonce&quot;:&quot;4PhqmZSJ355KBtJPbAP_PdwqiLnc7B1lA2SGpB0zXr4&quot;,&quot;session_state&quot;:&quot;7712b364-339a-4053-ae0c-7d3adfca9005&quot;,&quot;at_hash&quot;:&quot;2Tyw8q4ZMewuYrD38alCug&quot;,&quot;acr&quot;:&quot;0&quot;,&quot;sid&quot;:&quot;7712b364-339a-4053-ae0c-7d3adfca9005&quot;,&quot;upn&quot;:&quot;david.blasby@geocat.net&quot;,&quot;resource_access&quot;:{&quot;live-key2&quot;:{&quot;roles&quot;:[&quot;GeonetworkAdministrator&quot;,&quot;GeoserverAdministrator&quot;]}},&quot;email_verified&quot;:false,&quot;address&quot;:{},&quot;name&quot;:&quot;david blasby&quot;,&quot;groups&quot;:[&quot;default-roles-dave-test2&quot;,&quot;offline_access&quot;,&quot;uma_authorization&quot;],&quot;preferred_username&quot;:&quot;david.blasby@geocat.net&quot;,&quot;given_name&quot;:&quot;david&quot;,&quot;family_name&quot;:&quot;blasby&quot;,&quot;email&quot;:&quot;david.blasby@geocat.net&quot;}
 </span></code></pre></div></p>
 <p>JWT
-<div class="language-text highlight"><pre><span></span><code><span id="__span-35-1"><a id="__codelineno-35-1" name="__codelineno-35-1" href="#__codelineno-35-1"></a>OIDC_access_token: eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICItb0QyZXphcjF3ZHBUUmZCS0NqMFY4cm5ZVkJGQmxJLW5ldzFEREJCNTJrIn0.eyJleHAiOjE3MDg1NTU5NDcsImlhdCI6MTcwODU1NTY0NywiYXV0aF90aW1lIjoxNzA4NTU1Mjg4LCJqdGkiOiI0M2UyYjUwZS1hYjJkLTQ2OWQtYWJjOC01Nzc1YTY0MTMwNTkiLCJpc3MiOiJodHRwOi8vbG9jYWxob3N0Ojc3NzcvcmVhbG1zL2RhdmUtdGVzdDIiLCJhdWQiOiJhY2NvdW50Iiwic3ViIjoiOThjZmUwNjAtZjk4MC00YTA1LTg2MTItNmM2MDkyMTlmZmU5IiwidHlwIjoiQmVhcmVyIiwiYXpwIjoibGl2ZS1rZXkyIiwibm9uY2UiOiI0UGhxbVpTSjM1NUtCdEpQYkFQX1Bkd3FpTG5jN0IxbEEyU0dwQjB6WHI0Iiwic2Vzc2lvbl9zdGF0ZSI6Ijc3MTJiMzY0LTMzOWEtNDA1My1hZTBjLTdkM2FkZmNhOTAwNSIsImFjciI6IjAiLCJyZWFsbV9hY2Nlc3MiOnsicm9sZXMiOlsiZGVmYXVsdC1yb2xlcy1kYXZlLXRlc3QyIiwib2ZmbGluZV9hY2Nlc3MiLCJ1bWFfYXV0aG9yaXphdGlvbiJdfSwicmVzb3VyY2VfYWNjZXNzIjp7ImxpdmUta2V5MiI6eyJyb2xlcyI6WyJHZW9uZXR3b3JrQWRtaW5pc3RyYXRvciIsIkdlb3NlcnZlckFkbWluaXN0cmF0b3IiXX0sImFjY291bnQiOnsicm9sZXMiOlsibWFuYWdlLWFjY291bnQiLCJtYW5hZ2UtYWNjb3VudC1saW5rcyIsInZpZXctcHJvZmlsZSJdfX0sInNjb3BlIjoib3BlbmlkIHBob25lIG9mZmxpbmVfYWNjZXNzIG1pY3JvcHJvZmlsZS1qd3QgcHJvZmlsZSBhZGRyZXNzIGVtYWlsIiwic2lkIjoiNzcxMmIzNjQtMzM5YS00MDUzLWFlMGMtN2QzYWRmY2E5MDA1IiwidXBuIjoiZGF2aWQuYmxhc2J5QGdlb2NhdC5uZXQiLCJlbWFpbF92ZXJpZmllZCI6ZmFsc2UsImFkZHJlc3MiOnt9LCJuYW1lIjoiZGF2aWQgYmxhc2J5IiwiZ3JvdXBzIjpbImRlZmF1bHQtcm9sZXMtZGF2ZS10ZXN0MiIsIm9mZmxpbmVfYWNjZXNzIiwidW1hX2F1dGhvcml6YXRpb24iXSwicHJlZmVycmVkX3VzZXJuYW1lIjoiZGF2aWQuYmxhc2J5QGdlb2NhdC5uZXQiLCJnaXZlbl9uYW1lIjoiZGF2aWQiLCJmYW1pbHlfbmFtZSI6ImJsYXNieSIsImVtYWlsIjoiZGF2aWQuYmxhc2J5QGdlb2NhdC5uZXQifQ.Iq8YJ99s_HBd-gU2zaDqGbJadCE--7PlS2kRHaegYTil7WoNKfjfcH-K-59mHGzJm-V_SefE-iWG63z2c6ChddzhvG8I_O5vDNFoGlGOQFunZC379SqhqhCEdwscEUDkNA3iTTXvK9vn0muStDiv9OzpJ1zcpqYqsgxGbolGgLJgeuK8yNDH7kzDtoRzHiHw2rx4seeVpxUYAjyg_cCkEjRt3wzud7H3xlfQWRx75YfpJ0pnVphuXYR7Z8x9p6hCPtrBfDeriudm-wkwXtcV2LNlXrZ2zpKS_6Zdxzza2lN30q_6DQXHGo8EAIr8SiiQrxPQulNiX9r8XmQ917Ep0g
+<div class="language-text highlight"><pre><span></span><code><span id="__span-36-1"><a id="__codelineno-36-1" name="__codelineno-36-1" href="#__codelineno-36-1"></a>OIDC_access_token: eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICItb0QyZXphcjF3ZHBUUmZCS0NqMFY4cm5ZVkJGQmxJLW5ldzFEREJCNTJrIn0.eyJleHAiOjE3MDg1NTU5NDcsImlhdCI6MTcwODU1NTY0NywiYXV0aF90aW1lIjoxNzA4NTU1Mjg4LCJqdGkiOiI0M2UyYjUwZS1hYjJkLTQ2OWQtYWJjOC01Nzc1YTY0MTMwNTkiLCJpc3MiOiJodHRwOi8vbG9jYWxob3N0Ojc3NzcvcmVhbG1zL2RhdmUtdGVzdDIiLCJhdWQiOiJhY2NvdW50Iiwic3ViIjoiOThjZmUwNjAtZjk4MC00YTA1LTg2MTItNmM2MDkyMTlmZmU5IiwidHlwIjoiQmVhcmVyIiwiYXpwIjoibGl2ZS1rZXkyIiwibm9uY2UiOiI0UGhxbVpTSjM1NUtCdEpQYkFQX1Bkd3FpTG5jN0IxbEEyU0dwQjB6WHI0Iiwic2Vzc2lvbl9zdGF0ZSI6Ijc3MTJiMzY0LTMzOWEtNDA1My1hZTBjLTdkM2FkZmNhOTAwNSIsImFjciI6IjAiLCJyZWFsbV9hY2Nlc3MiOnsicm9sZXMiOlsiZGVmYXVsdC1yb2xlcy1kYXZlLXRlc3QyIiwib2ZmbGluZV9hY2Nlc3MiLCJ1bWFfYXV0aG9yaXphdGlvbiJdfSwicmVzb3VyY2VfYWNjZXNzIjp7ImxpdmUta2V5MiI6eyJyb2xlcyI6WyJHZW9uZXR3b3JrQWRtaW5pc3RyYXRvciIsIkdlb3NlcnZlckFkbWluaXN0cmF0b3IiXX0sImFjY291bnQiOnsicm9sZXMiOlsibWFuYWdlLWFjY291bnQiLCJtYW5hZ2UtYWNjb3VudC1saW5rcyIsInZpZXctcHJvZmlsZSJdfX0sInNjb3BlIjoib3BlbmlkIHBob25lIG9mZmxpbmVfYWNjZXNzIG1pY3JvcHJvZmlsZS1qd3QgcHJvZmlsZSBhZGRyZXNzIGVtYWlsIiwic2lkIjoiNzcxMmIzNjQtMzM5YS00MDUzLWFlMGMtN2QzYWRmY2E5MDA1IiwidXBuIjoiZGF2aWQuYmxhc2J5QGdlb2NhdC5uZXQiLCJlbWFpbF92ZXJpZmllZCI6ZmFsc2UsImFkZHJlc3MiOnt9LCJuYW1lIjoiZGF2aWQgYmxhc2J5IiwiZ3JvdXBzIjpbImRlZmF1bHQtcm9sZXMtZGF2ZS10ZXN0MiIsIm9mZmxpbmVfYWNjZXNzIiwidW1hX2F1dGhvcml6YXRpb24iXSwicHJlZmVycmVkX3VzZXJuYW1lIjoiZGF2aWQuYmxhc2J5QGdlb2NhdC5uZXQiLCJnaXZlbl9uYW1lIjoiZGF2aWQiLCJmYW1pbHlfbmFtZSI6ImJsYXNieSIsImVtYWlsIjoiZGF2aWQuYmxhc2J5QGdlb2NhdC5uZXQifQ.Iq8YJ99s_HBd-gU2zaDqGbJadCE--7PlS2kRHaegYTil7WoNKfjfcH-K-59mHGzJm-V_SefE-iWG63z2c6ChddzhvG8I_O5vDNFoGlGOQFunZC379SqhqhCEdwscEUDkNA3iTTXvK9vn0muStDiv9OzpJ1zcpqYqsgxGbolGgLJgeuK8yNDH7kzDtoRzHiHw2rx4seeVpxUYAjyg_cCkEjRt3wzud7H3xlfQWRx75YfpJ0pnVphuXYR7Z8x9p6hCPtrBfDeriudm-wkwXtcV2LNlXrZ2zpKS_6Zdxzza2lN30q_6DQXHGo8EAIr8SiiQrxPQulNiX9r8XmQ917Ep0g
 </span></code></pre></div></p>
 <p>It is recommended to either use the <code>OIDC_id_token_payload</code> (JSON) or <code>OIDC_access_token</code> (JWT) header.</p>
 <p>For <code>OIDC_id_token_payload</code>:</p>
@@ -3713,42 +3747,42 @@
 </tbody>
 </table>
 <p>Using the example <code>OIDC_id_token_payload</code> (JSON) or <code>OIDC_access_token</code> (JWT) shown above, the claims are:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-36-1"><a id="__codelineno-36-1" name="__codelineno-36-1" href="#__codelineno-36-1"></a>   {
-</span><span id="__span-36-2"><a id="__codelineno-36-2" name="__codelineno-36-2" href="#__codelineno-36-2"></a>       &quot;exp&quot;: 1708555947,
-</span><span id="__span-36-3"><a id="__codelineno-36-3" name="__codelineno-36-3" href="#__codelineno-36-3"></a>       &quot;iat&quot;: 1708555647,
-</span><span id="__span-36-4"><a id="__codelineno-36-4" name="__codelineno-36-4" href="#__codelineno-36-4"></a>       &quot;auth_time&quot;: 1708555288,
-</span><span id="__span-36-5"><a id="__codelineno-36-5" name="__codelineno-36-5" href="#__codelineno-36-5"></a>       &quot;jti&quot;: &quot;42ee833e-89d3-4779-bd9d-06b979329c9f&quot;,
-</span><span id="__span-36-6"><a id="__codelineno-36-6" name="__codelineno-36-6" href="#__codelineno-36-6"></a>       &quot;iss&quot;: &quot;http://localhost:7777/realms/dave-test2&quot;,
-</span><span id="__span-36-7"><a id="__codelineno-36-7" name="__codelineno-36-7" href="#__codelineno-36-7"></a>       &quot;aud&quot;: &quot;live-key2&quot;,
-</span><span id="__span-36-8"><a id="__codelineno-36-8" name="__codelineno-36-8" href="#__codelineno-36-8"></a>       &quot;sub&quot;: &quot;98cfe060-f980-4a05-8612-6c609219ffe9&quot;,
-</span><span id="__span-36-9"><a id="__codelineno-36-9" name="__codelineno-36-9" href="#__codelineno-36-9"></a>       &quot;typ&quot;: &quot;ID&quot;,
-</span><span id="__span-36-10"><a id="__codelineno-36-10" name="__codelineno-36-10" href="#__codelineno-36-10"></a>       &quot;azp&quot;: &quot;live-key2&quot;,
-</span><span id="__span-36-11"><a id="__codelineno-36-11" name="__codelineno-36-11" href="#__codelineno-36-11"></a>       &quot;nonce&quot;: &quot;4PhqmZSJ355KBtJPbAP_PdwqiLnc7B1lA2SGpB0zXr4&quot;,
-</span><span id="__span-36-12"><a id="__codelineno-36-12" name="__codelineno-36-12" href="#__codelineno-36-12"></a>       &quot;session_state&quot;: &quot;7712b364-339a-4053-ae0c-7d3adfca9005&quot;,
-</span><span id="__span-36-13"><a id="__codelineno-36-13" name="__codelineno-36-13" href="#__codelineno-36-13"></a>       &quot;at_hash&quot;: &quot;2Tyw8q4ZMewuYrD38alCug&quot;,
-</span><span id="__span-36-14"><a id="__codelineno-36-14" name="__codelineno-36-14" href="#__codelineno-36-14"></a>       &quot;acr&quot;: &quot;0&quot;,
-</span><span id="__span-36-15"><a id="__codelineno-36-15" name="__codelineno-36-15" href="#__codelineno-36-15"></a>       &quot;sid&quot;: &quot;7712b364-339a-4053-ae0c-7d3adfca9005&quot;,
-</span><span id="__span-36-16"><a id="__codelineno-36-16" name="__codelineno-36-16" href="#__codelineno-36-16"></a>       &quot;upn&quot;: &quot;david.blasby@geocat.net&quot;,
-</span><span id="__span-36-17"><a id="__codelineno-36-17" name="__codelineno-36-17" href="#__codelineno-36-17"></a>       &quot;resource_access&quot;:
-</span><span id="__span-36-18"><a id="__codelineno-36-18" name="__codelineno-36-18" href="#__codelineno-36-18"></a>       {
-</span><span id="__span-36-19"><a id="__codelineno-36-19" name="__codelineno-36-19" href="#__codelineno-36-19"></a>           &quot;live-key2&quot;:
-</span><span id="__span-36-20"><a id="__codelineno-36-20" name="__codelineno-36-20" href="#__codelineno-36-20"></a>           {
-</span><span id="__span-36-21"><a id="__codelineno-36-21" name="__codelineno-36-21" href="#__codelineno-36-21"></a>                &quot;roles&quot;: 
-</span><span id="__span-36-22"><a id="__codelineno-36-22" name="__codelineno-36-22" href="#__codelineno-36-22"></a>                    [
-</span><span id="__span-36-23"><a id="__codelineno-36-23" name="__codelineno-36-23" href="#__codelineno-36-23"></a>                        &quot;GeonetworkAdministrator&quot;, 
-</span><span id="__span-36-24"><a id="__codelineno-36-24" name="__codelineno-36-24" href="#__codelineno-36-24"></a>                        &quot;GeoserverAdministrator&quot;
-</span><span id="__span-36-25"><a id="__codelineno-36-25" name="__codelineno-36-25" href="#__codelineno-36-25"></a>                    ]
-</span><span id="__span-36-26"><a id="__codelineno-36-26" name="__codelineno-36-26" href="#__codelineno-36-26"></a>           }
-</span><span id="__span-36-27"><a id="__codelineno-36-27" name="__codelineno-36-27" href="#__codelineno-36-27"></a>       },
-</span><span id="__span-36-28"><a id="__codelineno-36-28" name="__codelineno-36-28" href="#__codelineno-36-28"></a>       &quot;email_verified&quot;: false,
-</span><span id="__span-36-29"><a id="__codelineno-36-29" name="__codelineno-36-29" href="#__codelineno-36-29"></a>       &quot;address&quot;: { },
-</span><span id="__span-36-30"><a id="__codelineno-36-30" name="__codelineno-36-30" href="#__codelineno-36-30"></a>       &quot;name&quot;: &quot;david blasby&quot;,
-</span><span id="__span-36-31"><a id="__codelineno-36-31" name="__codelineno-36-31" href="#__codelineno-36-31"></a>       &quot;groups&quot;: [&quot;default-roles-dave-test2&quot;, &quot;offline_access&quot;, &quot;uma_authorization&quot;],
-</span><span id="__span-36-32"><a id="__codelineno-36-32" name="__codelineno-36-32" href="#__codelineno-36-32"></a>       &quot;preferred_username&quot;: &quot;david.blasby@geocat.net&quot;,
-</span><span id="__span-36-33"><a id="__codelineno-36-33" name="__codelineno-36-33" href="#__codelineno-36-33"></a>       &quot;given_name&quot;: &quot;david&quot;,
-</span><span id="__span-36-34"><a id="__codelineno-36-34" name="__codelineno-36-34" href="#__codelineno-36-34"></a>       &quot;family_name&quot;: &quot;blasby&quot;,
-</span><span id="__span-36-35"><a id="__codelineno-36-35" name="__codelineno-36-35" href="#__codelineno-36-35"></a>       &quot;email&quot;: &quot;david.blasby@geocat.net&quot;
-</span><span id="__span-36-36"><a id="__codelineno-36-36" name="__codelineno-36-36" href="#__codelineno-36-36"></a>   }
+<div class="language-text highlight"><pre><span></span><code><span id="__span-37-1"><a id="__codelineno-37-1" name="__codelineno-37-1" href="#__codelineno-37-1"></a>   {
+</span><span id="__span-37-2"><a id="__codelineno-37-2" name="__codelineno-37-2" href="#__codelineno-37-2"></a>       &quot;exp&quot;: 1708555947,
+</span><span id="__span-37-3"><a id="__codelineno-37-3" name="__codelineno-37-3" href="#__codelineno-37-3"></a>       &quot;iat&quot;: 1708555647,
+</span><span id="__span-37-4"><a id="__codelineno-37-4" name="__codelineno-37-4" href="#__codelineno-37-4"></a>       &quot;auth_time&quot;: 1708555288,
+</span><span id="__span-37-5"><a id="__codelineno-37-5" name="__codelineno-37-5" href="#__codelineno-37-5"></a>       &quot;jti&quot;: &quot;42ee833e-89d3-4779-bd9d-06b979329c9f&quot;,
+</span><span id="__span-37-6"><a id="__codelineno-37-6" name="__codelineno-37-6" href="#__codelineno-37-6"></a>       &quot;iss&quot;: &quot;http://localhost:7777/realms/dave-test2&quot;,
+</span><span id="__span-37-7"><a id="__codelineno-37-7" name="__codelineno-37-7" href="#__codelineno-37-7"></a>       &quot;aud&quot;: &quot;live-key2&quot;,
+</span><span id="__span-37-8"><a id="__codelineno-37-8" name="__codelineno-37-8" href="#__codelineno-37-8"></a>       &quot;sub&quot;: &quot;98cfe060-f980-4a05-8612-6c609219ffe9&quot;,
+</span><span id="__span-37-9"><a id="__codelineno-37-9" name="__codelineno-37-9" href="#__codelineno-37-9"></a>       &quot;typ&quot;: &quot;ID&quot;,
+</span><span id="__span-37-10"><a id="__codelineno-37-10" name="__codelineno-37-10" href="#__codelineno-37-10"></a>       &quot;azp&quot;: &quot;live-key2&quot;,
+</span><span id="__span-37-11"><a id="__codelineno-37-11" name="__codelineno-37-11" href="#__codelineno-37-11"></a>       &quot;nonce&quot;: &quot;4PhqmZSJ355KBtJPbAP_PdwqiLnc7B1lA2SGpB0zXr4&quot;,
+</span><span id="__span-37-12"><a id="__codelineno-37-12" name="__codelineno-37-12" href="#__codelineno-37-12"></a>       &quot;session_state&quot;: &quot;7712b364-339a-4053-ae0c-7d3adfca9005&quot;,
+</span><span id="__span-37-13"><a id="__codelineno-37-13" name="__codelineno-37-13" href="#__codelineno-37-13"></a>       &quot;at_hash&quot;: &quot;2Tyw8q4ZMewuYrD38alCug&quot;,
+</span><span id="__span-37-14"><a id="__codelineno-37-14" name="__codelineno-37-14" href="#__codelineno-37-14"></a>       &quot;acr&quot;: &quot;0&quot;,
+</span><span id="__span-37-15"><a id="__codelineno-37-15" name="__codelineno-37-15" href="#__codelineno-37-15"></a>       &quot;sid&quot;: &quot;7712b364-339a-4053-ae0c-7d3adfca9005&quot;,
+</span><span id="__span-37-16"><a id="__codelineno-37-16" name="__codelineno-37-16" href="#__codelineno-37-16"></a>       &quot;upn&quot;: &quot;david.blasby@geocat.net&quot;,
+</span><span id="__span-37-17"><a id="__codelineno-37-17" name="__codelineno-37-17" href="#__codelineno-37-17"></a>       &quot;resource_access&quot;:
+</span><span id="__span-37-18"><a id="__codelineno-37-18" name="__codelineno-37-18" href="#__codelineno-37-18"></a>       {
+</span><span id="__span-37-19"><a id="__codelineno-37-19" name="__codelineno-37-19" href="#__codelineno-37-19"></a>           &quot;live-key2&quot;:
+</span><span id="__span-37-20"><a id="__codelineno-37-20" name="__codelineno-37-20" href="#__codelineno-37-20"></a>           {
+</span><span id="__span-37-21"><a id="__codelineno-37-21" name="__codelineno-37-21" href="#__codelineno-37-21"></a>                &quot;roles&quot;: 
+</span><span id="__span-37-22"><a id="__codelineno-37-22" name="__codelineno-37-22" href="#__codelineno-37-22"></a>                    [
+</span><span id="__span-37-23"><a id="__codelineno-37-23" name="__codelineno-37-23" href="#__codelineno-37-23"></a>                        &quot;GeonetworkAdministrator&quot;, 
+</span><span id="__span-37-24"><a id="__codelineno-37-24" name="__codelineno-37-24" href="#__codelineno-37-24"></a>                        &quot;GeoserverAdministrator&quot;
+</span><span id="__span-37-25"><a id="__codelineno-37-25" name="__codelineno-37-25" href="#__codelineno-37-25"></a>                    ]
+</span><span id="__span-37-26"><a id="__codelineno-37-26" name="__codelineno-37-26" href="#__codelineno-37-26"></a>           }
+</span><span id="__span-37-27"><a id="__codelineno-37-27" name="__codelineno-37-27" href="#__codelineno-37-27"></a>       },
+</span><span id="__span-37-28"><a id="__codelineno-37-28" name="__codelineno-37-28" href="#__codelineno-37-28"></a>       &quot;email_verified&quot;: false,
+</span><span id="__span-37-29"><a id="__codelineno-37-29" name="__codelineno-37-29" href="#__codelineno-37-29"></a>       &quot;address&quot;: { },
+</span><span id="__span-37-30"><a id="__codelineno-37-30" name="__codelineno-37-30" href="#__codelineno-37-30"></a>       &quot;name&quot;: &quot;david blasby&quot;,
+</span><span id="__span-37-31"><a id="__codelineno-37-31" name="__codelineno-37-31" href="#__codelineno-37-31"></a>       &quot;groups&quot;: [&quot;default-roles-dave-test2&quot;, &quot;offline_access&quot;, &quot;uma_authorization&quot;],
+</span><span id="__span-37-32"><a id="__codelineno-37-32" name="__codelineno-37-32" href="#__codelineno-37-32"></a>       &quot;preferred_username&quot;: &quot;david.blasby@geocat.net&quot;,
+</span><span id="__span-37-33"><a id="__codelineno-37-33" name="__codelineno-37-33" href="#__codelineno-37-33"></a>       &quot;given_name&quot;: &quot;david&quot;,
+</span><span id="__span-37-34"><a id="__codelineno-37-34" name="__codelineno-37-34" href="#__codelineno-37-34"></a>       &quot;family_name&quot;: &quot;blasby&quot;,
+</span><span id="__span-37-35"><a id="__codelineno-37-35" name="__codelineno-37-35" href="#__codelineno-37-35"></a>       &quot;email&quot;: &quot;david.blasby@geocat.net&quot;
+</span><span id="__span-37-36"><a id="__codelineno-37-36" name="__codelineno-37-36" href="#__codelineno-37-36"></a>   }
 </span></code></pre></div>
 <p>In this JSON set of claims (mirrored in the JWT claims of the Access Token), and the two roles from the IDP are  "GeonetworkAdministrator", and "GeoserverAdministrator".  The JSON path to the roles is <code>resource_access.live-key2.roles</code>.</p>
 <h4 id="role-conversion">Role Conversion</h4>
@@ -3778,10 +3812,10 @@
 <h3 id="jwt-validation">JWT Validation</h3>
 <p>If you are using Apache's <code>mod_auth_openidc</code> module, then you do <em>not</em> have to do JWT validation - Apache will ensure they are valid when it attaches the headers to the request.</p>
 <p>However, if you are using robot access to GeoNetwork, you can attach an Access Token to the request header for access.</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-37-1"><a id="__codelineno-37-1" name="__codelineno-37-1" href="#__codelineno-37-1"></a>Authentication: Bearer `base64 JWT Access Token`
+<div class="language-text highlight"><pre><span></span><code><span id="__span-38-1"><a id="__codelineno-38-1" name="__codelineno-38-1" href="#__codelineno-38-1"></a>Authentication: Bearer `base64 JWT Access Token`
 </span></code></pre></div>
 <p>OR </p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-38-1"><a id="__codelineno-38-1" name="__codelineno-38-1" href="#__codelineno-38-1"></a>Authentication: `base64 JWT Access Token`
+<div class="language-text highlight"><pre><span></span><code><span id="__span-39-1"><a id="__codelineno-39-1" name="__codelineno-39-1" href="#__codelineno-39-1"></a>Authentication: `base64 JWT Access Token`
 </span></code></pre></div>
 <p>You would then setup the user name to come from a JWT token in the <code>Authentication</code> header with a JSON path like <code>preferred_username</code>.</p>
 <p>You can also extract roles from the Access Token in a similar manner - make sure your IDP imbeds roles inside the Access Token.</p>
@@ -3859,7 +3893,7 @@
 <p>Using the above configuration, you can configure JWT Headers for either OIDC-based browser access (i.e. with Apache <code>mod_auth_openidc</code>) <strong><em>or</em></strong> for OAUTH2 based Bearer Token access.  However, you cannot do both at the same time.</p>
 <p>To configure JWT Headers to simultaneously provide OIDC and OAUTH2 access, you can use the <code>jwt-headers-multi</code> configuration.</p>
 <p>To use this, set the <code>GEONETWORK_SECURITY_TYPE</code> to <code>jwt-headers-multi</code></p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-39-1"><a id="__codelineno-39-1" name="__codelineno-39-1" href="#__codelineno-39-1"></a>GEONETWORK_SECURITY_TYPE=jwt-headers-multi
+<div class="language-text highlight"><pre><span></span><code><span id="__span-40-1"><a id="__codelineno-40-1" name="__codelineno-40-1" href="#__codelineno-40-1"></a>GEONETWORK_SECURITY_TYPE=jwt-headers-multi
 </span></code></pre></div>
 <p>Please see these files for more detailed configuration:
 * <code>config-security-jwt-header-multi.xml</code>
@@ -3870,12 +3904,12 @@ For the first filter, use the environment variables defined above (ie. <code>JWT
 <h2 id="authentication-ecas">Configuring EU Login</h2>
 <p>EU Login is the central login mechanism of the European Commission. You can enable login against that central service in case your intended users have ar can acquire a EU Login.</p>
 <p>To enable EU Login, set up authentication by including <code>WEB-INF/config-security/config-security-ecas.xml</code> in <code>WEB-INF/config-security/config-security.xml</code>, uncommenting the following line:</p>
-<div class="language-xml highlight"><pre><span></span><code><span id="__span-40-1"><a id="__codelineno-40-1" name="__codelineno-40-1" href="#__codelineno-40-1"></a><span class="nt">&lt;import</span><span class="w"> </span><span class="na">resource=</span><span class="s">&quot;config-security-ecas.xml&quot;</span><span class="nt">/&gt;</span>
+<div class="language-xml highlight"><pre><span></span><code><span id="__span-41-1"><a id="__codelineno-41-1" name="__codelineno-41-1" href="#__codelineno-41-1"></a><span class="nt">&lt;import</span><span class="w"> </span><span class="na">resource=</span><span class="s">&quot;config-security-ecas.xml&quot;</span><span class="nt">/&gt;</span>
 </span></code></pre></div>
 <p>EU-login requires an ecas-plugin provided by the European Union. The ecas plugin is available via <a href="https://citnet.tech.ec.europa.eu/CITnet/nexus">CITnet</a> for various java containers, such as Tomcat and JBoss.</p>
 <p>For tomcat, add two files to the tomcat lib folder: ecas-tomcat-x.y.z.jar and log4j-x.y.z.jar. Inside the lib folder copy two folders from <strong><code>eulogin-tomcat-x.y.z-config.zip</code></strong>: <strong><code>org/apache/catalina/authenticator</code></strong> and <strong><code>org/apache/catalina/startup</code></strong>. The mbeans folder contains a file <strong><code>mbeans-descriptors.xml</code></strong>. The startup folder contains a file <strong><code>Authenticators.properties</code></strong>. Verify that the JDK trusts the <a href="https://webgate.ec.europa.eu/CITnet/confluence/display/IAM/Downloads-Certificates">ECAS certificates</a> else import them on the keystore of the JVM.</p>
 <p>The EU Login configuration is defined in <strong><code>WEB-INF/config-security/config-security.properties</code></strong>. You can configure your environment by updating the previous file or by defining property overrides in the file <strong><code>WEB-INF/config-security/config-security-overrides.properties</code></strong>:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-41-1"><a id="__codelineno-41-1" name="__codelineno-41-1" href="#__codelineno-41-1"></a>cas.baseURL=https://webgate.ec.europa.eu/cas
+<div class="language-text highlight"><pre><span></span><code><span id="__span-42-1"><a id="__codelineno-42-1" name="__codelineno-42-1" href="#__codelineno-42-1"></a>cas.baseURL=https://webgate.ec.europa.eu/cas
 </span></code></pre></div>
 <p>Restart the service and check the authentication menchanism.</p>
 <h2 id="authentication-shibboleth">Configuring Shibboleth</h2>
