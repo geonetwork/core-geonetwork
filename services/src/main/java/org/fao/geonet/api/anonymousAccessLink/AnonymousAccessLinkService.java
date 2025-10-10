@@ -43,8 +43,7 @@ public class AnonymousAccessLinkService {
     @Autowired
     private AnonymousAccessLinkMapper mapper;
 
-    public AnonymousAccessLinkDto createAnonymousAccessLink(AnonymousAccessLinkDto anonymousAccessLinkDto) {
-        String uuid = anonymousAccessLinkDto.getMetadataUuid();
+    public AnonymousAccessLinkDto createAnonymousAccessLink(String uuid) {
         String randomHash = AnonymousAccessLink.getRandomHash();
         AnonymousAccessLink anonymousAccessLinkToCreate = new AnonymousAccessLink()
                 .setMetadataId(metadataUtils.findOneByUuid(uuid).getId())
@@ -58,13 +57,12 @@ public class AnonymousAccessLinkService {
         return mapper.toDtoList(anonymousAccessLinkRepository.findAll());
     }
 
-    public AnonymousAccessLinkDto getAnonymousAccessLink(AnonymousAccessLinkDto anonymousAccessLinkDto) {
-        return mapper.toDto(anonymousAccessLinkRepository.findOneByMetadataUuid(anonymousAccessLinkDto.getMetadataUuid()));
+    public AnonymousAccessLinkDto getAnonymousAccessLink(String uuid) {
+        return mapper.toDto(anonymousAccessLinkRepository.findOneByMetadataUuid(uuid));
     }
 
-    public void deleteAnonymousAccessLink(AnonymousAccessLinkDto anonymousAccessLinkDto) {
-        AnonymousAccessLink linkToDelete = anonymousAccessLinkRepository
-                .findOneByMetadataUuid(anonymousAccessLinkDto.getMetadataUuid());
+    public void deleteAnonymousAccessLink(String uuid) {
+        AnonymousAccessLink linkToDelete = anonymousAccessLinkRepository.findOneByMetadataUuid(uuid);
         if (linkToDelete != null) {
             anonymousAccessLinkRepository.delete(linkToDelete);
         }
