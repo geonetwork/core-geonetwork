@@ -51,4 +51,16 @@ public class AnonymousAccessLinkServiceTest extends AbstractServiceIntegrationTe
 		assertNull(returned.getHash());
 	}
 
+	@Test
+	public void deleteAnonymousAccessLink() throws Exception {
+		ServiceContext context = createServiceContext();
+		loginAsAdmin(context);
+		AbstractMetadata md = injectMetadataInDb(getSampleMetadataXml(), context, true);
+		toTest.createAnonymousAccessLink(new AnonymousAccessLinkDto().setMetadataUuid(md.getUuid()));
+
+		toTest.deleteAnonymousAccessLink(new AnonymousAccessLinkDto().setMetadataUuid(md.getUuid()));
+
+		assertNull(anonymousAccessLinkRepository.findOneByMetadataUuid(md.getUuid()));
+	}
+
 }
