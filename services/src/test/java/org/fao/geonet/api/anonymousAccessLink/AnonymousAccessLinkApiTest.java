@@ -39,11 +39,9 @@ import org.springframework.web.context.WebApplicationContext;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
@@ -174,18 +172,12 @@ public class AnonymousAccessLinkApiTest extends AbstractServiceIntegrationTest {
 				.andExpect(status().isOk())
 				.andReturn();
 
-		MvcResult result = this.mockMvc.perform(get("/srv/api/anonymousAccessLink")
+		MvcResult result = this.mockMvc.perform(get("/srv/api/anonymousAccessLink/{uuid}", md.getUuid())
 						.session(session)
 						.accept(MediaType.parseMediaType("application/json")))
 				.andExpect(status().isOk())
 				.andReturn();
-		String json = result.getResponse().getContentAsString();
-		AnonymousAccessLinkDto[] accessLinks = mapper.readValue(json, AnonymousAccessLinkDto[].class);
-		Optional<String> stillReturned = Arrays.stream(accessLinks) //
-				.map(AnonymousAccessLinkDto::getMetadataUuid) //
-				.filter(md.getUuid()::equals) //
-				.findFirst();
-		assertFalse(stillReturned.isPresent());
+		assertEquals("", result.getResponse().getContentAsString());
 	}
 
 	private static String jsonRequestBodyForCreate(AbstractMetadata md) {
