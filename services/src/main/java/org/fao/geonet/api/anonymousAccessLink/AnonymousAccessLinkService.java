@@ -58,6 +58,10 @@ public class AnonymousAccessLinkService {
         return mapper.toDtoList(anonymousAccessLinkRepository.findAll());
     }
 
+    public AnonymousAccessLinkDto getAnonymousAccessLink(AnonymousAccessLinkDto anonymousAccessLinkDto) {
+        return mapper.toDto(anonymousAccessLinkRepository.findOneByMetadataUuid(anonymousAccessLinkDto.getMetadataUuid()));
+    }
+
     public void deleteAnonymousAccessLink(AnonymousAccessLinkDto anonymousAccessLinkDto) {
         AnonymousAccessLink linkToDelete = anonymousAccessLinkRepository
                 .findOneByMetadataUuid(anonymousAccessLinkDto.getMetadataUuid());
@@ -65,5 +69,4 @@ public class AnonymousAccessLinkService {
             anonymousAccessLinkRepository.delete(linkToDelete);
         }
     }
-
 }

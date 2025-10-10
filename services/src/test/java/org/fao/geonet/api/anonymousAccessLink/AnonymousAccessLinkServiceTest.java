@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
 public class AnonymousAccessLinkServiceTest extends AbstractServiceIntegrationTest {
@@ -63,4 +64,17 @@ public class AnonymousAccessLinkServiceTest extends AbstractServiceIntegrationTe
 		assertNull(anonymousAccessLinkRepository.findOneByMetadataUuid(md.getUuid()));
 	}
 
+	@Test
+	public void getAnonymousAccessLink() throws Exception {
+		ServiceContext context = createServiceContext();
+		loginAsAdmin(context);
+		AbstractMetadata md = injectMetadataInDb(getSampleMetadataXml(), context, true);
+		toTest.createAnonymousAccessLink(new AnonymousAccessLinkDto().setMetadataUuid(md.getUuid()));
+
+		assertNotNull(toTest.getAnonymousAccessLink(new AnonymousAccessLinkDto().setMetadataUuid(md.getUuid())));
+
+		toTest.deleteAnonymousAccessLink(new AnonymousAccessLinkDto().setMetadataUuid(md.getUuid()));
+
+		assertNull(toTest.getAnonymousAccessLink(new AnonymousAccessLinkDto().setMetadataUuid(md.getUuid())));
+	}
 }
