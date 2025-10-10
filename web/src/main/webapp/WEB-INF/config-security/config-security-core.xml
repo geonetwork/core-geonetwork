@@ -60,6 +60,7 @@
         <sec:filter-chain pattern="/xml/csw/test/*" filters=""/>
         <sec:filter-chain pattern="/xml/schemas/**" filters=""/>
         <sec:filter-chain pattern="/xsl/harvesting/**" filters=""/>
+        <sec:filter-chain pattern="/srv/fre/images/harvesting/**" filters=""/>
         <sec:filter-chain pattern="/xsl/ownership/**" filters=""/>
         <sec:filter-chain pattern="/config/**" filters=""/>
         <ref bean="coreFilterChain"/>
@@ -101,6 +102,7 @@
         <ref bean="formLoginFilter"/>
         <ref bean="requestCacheFilter"/>
         <ref bean="anonymousFilter"/>
+        <ref bean="grantViewMdAuthorityFilter"/>
         <ref bean="sessionMgmtFilter"/>
         <ref bean="exceptionTranslationFilter"/>
         <ref bean="filterSecurityInterceptor"/>
@@ -113,6 +115,10 @@
   <bean id="securityContextPersistenceFilter"
         class="org.springframework.security.web.context.SecurityContextPersistenceFilter">
     <!-- repo -->
+    <constructor-arg ref="securityContextRepository"/>
+  </bean>
+
+  <bean id="grantViewMdAuthorityFilter" class="org.fao.geonet.security.GrantViewMdAuthorityFilter">
     <constructor-arg ref="securityContextRepository"/>
   </bean>
 
@@ -386,5 +392,5 @@
     </constructor-arg>
   </bean>
 
-  <bean id="authenticatedUserFilter" class="org.fao.geonet.security.AuthenticathedUserFilter"/>
+  <bean id="authenticatedUserFilter" class="org.fao.geonet.security.AuthenticatedUserFilter"/>
 </beans>
