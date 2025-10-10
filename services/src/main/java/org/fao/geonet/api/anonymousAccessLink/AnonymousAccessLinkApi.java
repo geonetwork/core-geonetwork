@@ -50,7 +50,8 @@ public class AnonymousAccessLinkApi {
 
     @RequestMapping(
             produces = MediaType.APPLICATION_JSON_VALUE,
-            method = RequestMethod.POST)
+            method = RequestMethod.POST,
+            value = "/{uuid}")
     @ResponseStatus(value = HttpStatus.OK)
     @PreAuthorize("hasAuthority('Administrator')")
     @ResponseBody
@@ -58,9 +59,8 @@ public class AnonymousAccessLinkApi {
             summary = "Create anonymous access link",
             description = "")
     public AnonymousAccessLinkDto createAnonymousAccessLink(
-            @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "at least {\"metadataUuid\":\"...\"}")
-            @RequestBody AnonymousAccessLinkDto anonymousAccessLinkDto) {
-        return anonymousAccessLinkService.createAnonymousAccessLink(anonymousAccessLinkDto);
+            @io.swagger.v3.oas.annotations.Parameter(description = "md uuid", required = true) @PathVariable(value = "uuid") String uuid) {
+        return anonymousAccessLinkService.createAnonymousAccessLink(uuid);
     }
 
     @RequestMapping(
@@ -74,7 +74,7 @@ public class AnonymousAccessLinkApi {
             summary = "get one anonymous access link or empty",
             description = "")
     public AnonymousAccessLinkDto getAnonymousAccessLink(@io.swagger.v3.oas.annotations.Parameter(description = "md uuid", required = true) @PathVariable(value = "uuid") String uuid) {
-        return  anonymousAccessLinkService.getAnonymousAccessLink(new AnonymousAccessLinkDto().setMetadataUuid(uuid));
+        return  anonymousAccessLinkService.getAnonymousAccessLink(uuid);
     }
 
     @RequestMapping(
@@ -91,7 +91,8 @@ public class AnonymousAccessLinkApi {
     }
 
     @RequestMapping(
-            method = RequestMethod.DELETE)
+            method = RequestMethod.DELETE,
+            value = "/{uuid}")
     @ResponseStatus(value = HttpStatus.OK)
     @PreAuthorize("hasAuthority('Administrator')")
     @ResponseBody
@@ -99,8 +100,7 @@ public class AnonymousAccessLinkApi {
             summary = "Delete an anonymous access link",
             description = "")
     public void deleteAccessLinks(
-            @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "at least {\"metadataUuid\":\"...\"}")
-            @RequestBody AnonymousAccessLinkDto anonymousAccessLinkDto) {
-        anonymousAccessLinkService.deleteAnonymousAccessLink(anonymousAccessLinkDto);
+            @io.swagger.v3.oas.annotations.Parameter(description = "md uuid", required = true) @PathVariable(value = "uuid") String uuid) {
+        anonymousAccessLinkService.deleteAnonymousAccessLink(uuid);
     }
 }
