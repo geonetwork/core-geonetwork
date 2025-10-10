@@ -23,6 +23,9 @@
 
 package org.fao.geonet.api.anonymousAccessLink;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class AnonymousAccessLinkDto {
 
     private int metadataId;
