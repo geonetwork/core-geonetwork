@@ -28,8 +28,7 @@ public class AnonymousAccessLinkServiceTest extends AbstractServiceIntegrationTe
 		loginAsAdmin(context);
 		AbstractMetadata md = injectMetadataInDb(getSampleMetadataXml(), context, true);
 
-		AnonymousAccessLinkDto created = //
-				toTest.createAnonymousAccessLink(new AnonymousAccessLinkDto().setMetadataUuid(md.getUuid()));
+		AnonymousAccessLinkDto created = toTest.createAnonymousAccessLink(md.getUuid());
 
 		AnonymousAccessLink stored = anonymousAccessLinkRepository.findOneByMetadataUuid(md.getUuid());
 		assertEquals(stored.getMetadataUuid(), created.getMetadataUuid());
@@ -42,7 +41,7 @@ public class AnonymousAccessLinkServiceTest extends AbstractServiceIntegrationTe
 		ServiceContext context = createServiceContext();
 		loginAsAdmin(context);
 		AbstractMetadata md = injectMetadataInDb(getSampleMetadataXml(), context, true);
-			toTest.createAnonymousAccessLink(new AnonymousAccessLinkDto().setMetadataUuid(md.getUuid()));
+			toTest.createAnonymousAccessLink(md.getUuid());
 
 		List<AnonymousAccessLinkDto> listed = toTest.getAllAnonymousAccessLinks();
 		AnonymousAccessLinkDto returned = listed.stream() //
@@ -57,9 +56,9 @@ public class AnonymousAccessLinkServiceTest extends AbstractServiceIntegrationTe
 		ServiceContext context = createServiceContext();
 		loginAsAdmin(context);
 		AbstractMetadata md = injectMetadataInDb(getSampleMetadataXml(), context, true);
-		toTest.createAnonymousAccessLink(new AnonymousAccessLinkDto().setMetadataUuid(md.getUuid()));
+		toTest.createAnonymousAccessLink(md.getUuid());
 
-		toTest.deleteAnonymousAccessLink(new AnonymousAccessLinkDto().setMetadataUuid(md.getUuid()));
+		toTest.deleteAnonymousAccessLink(md.getUuid());
 
 		assertNull(anonymousAccessLinkRepository.findOneByMetadataUuid(md.getUuid()));
 	}
@@ -69,12 +68,12 @@ public class AnonymousAccessLinkServiceTest extends AbstractServiceIntegrationTe
 		ServiceContext context = createServiceContext();
 		loginAsAdmin(context);
 		AbstractMetadata md = injectMetadataInDb(getSampleMetadataXml(), context, true);
-		toTest.createAnonymousAccessLink(new AnonymousAccessLinkDto().setMetadataUuid(md.getUuid()));
+		toTest.createAnonymousAccessLink(md.getUuid());
 
-		assertNotNull(toTest.getAnonymousAccessLink(new AnonymousAccessLinkDto().setMetadataUuid(md.getUuid())));
+		assertNotNull(toTest.getAnonymousAccessLink(md.getUuid()));
 
-		toTest.deleteAnonymousAccessLink(new AnonymousAccessLinkDto().setMetadataUuid(md.getUuid()));
+		toTest.deleteAnonymousAccessLink(md.getUuid());
 
-		assertNull(toTest.getAnonymousAccessLink(new AnonymousAccessLinkDto().setMetadataUuid(md.getUuid())));
+		assertNull(toTest.getAnonymousAccessLink(md.getUuid()));
 	}
 }
