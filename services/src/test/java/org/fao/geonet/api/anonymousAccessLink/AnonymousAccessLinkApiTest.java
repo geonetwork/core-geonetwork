@@ -148,8 +148,7 @@ public class AnonymousAccessLinkApiTest extends AbstractServiceIntegrationTest {
 	}
 
 	private static String jsonRequestBodyForCreate(AbstractMetadata md) {
-		return "{\"id\" : 12345," +
-				"\"metadataId\" : 12345," +
+		return "{\"metadataId\" : 12345," +
 				"\"metadataUuid\" : \"" + md.getUuid() + "\"," +
 				"\"hash\" : \"this hash will not be taken into account\"}";
 	}
