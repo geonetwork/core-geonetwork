@@ -1,6 +1,5 @@
 package org.fao.geonet.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.security.crypto.keygen.BytesKeyGenerator;
 import org.springframework.security.crypto.keygen.KeyGenerators;
 
@@ -36,7 +35,6 @@ public class AnonymousAccessLink {
 	}
 
 	@Nonnull
-	@JsonIgnore
 	public AnonymousAccessLink setId(int id) {
 		this.id = id;
 		return this;
