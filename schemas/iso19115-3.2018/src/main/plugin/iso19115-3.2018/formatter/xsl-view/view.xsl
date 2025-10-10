@@ -860,8 +860,14 @@
         </xsl:variable>
 
         <xsl:choose>
-          <xsl:when test="string(*/cit:linkage/*)">
-            <a href="{*/cit:linkage/*}" target="_blank">
+          <xsl:when test="*/cit:linkage/*[. != '']">
+            <xsl:variable name="linkUrl">
+              <xsl:apply-templates mode="localised" select="*/cit:linkage">
+                <xsl:with-param name="langId" select="$langId"/>
+              </xsl:apply-templates>
+            </xsl:variable>
+
+            <a href="{$linkUrl}" target="_blank">
               <xsl:apply-templates mode="render-value"
                                    select="if (*/cit:name != '') then */cit:name else */cit:linkage"/>
             </a>
