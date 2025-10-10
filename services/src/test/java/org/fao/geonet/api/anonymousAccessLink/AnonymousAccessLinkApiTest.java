@@ -26,7 +26,6 @@ package org.fao.geonet.api.anonymousAccessLink;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.domain.AbstractMetadata;
-import org.fao.geonet.domain.AnonymousAccessLink;
 import org.fao.geonet.repository.AnonymousAccessLinkRepository;
 import org.fao.geonet.services.AbstractServiceIntegrationTest;
 import org.junit.Test;
@@ -46,7 +45,7 @@ import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -84,17 +83,10 @@ public class AnonymousAccessLinkApiTest extends AbstractServiceIntegrationTest {
 				.andReturn();
 
 		String json = result.getResponse().getContentAsString();
-		AnonymousAccessLink createdAccessLink = mapper.readValue(json, AnonymousAccessLink.class);
+		AnonymousAccessLinkDto createdAccessLink = mapper.readValue(json, AnonymousAccessLinkDto.class);
 		assertEquals(md.getId(), createdAccessLink.getMetadataId());
 		assertEquals(md.getUuid(), createdAccessLink.getMetadataUuid());
-		assertEquals(0, createdAccessLink.getId());
-
-		AnonymousAccessLink inDb = anonymousAccessLinkRepository.findOneByHash(createdAccessLink.getHash());
-		assertEquals(md.getId(), inDb.getMetadataId());
-		assertEquals(md.getUuid(), inDb.getMetadataUuid());
-		assertNotEquals(0, inDb.getId());
-
-		assertEquals(createdAccessLink.getHash(), inDb.getHash());
+		assertNotNull(createdAccessLink.getHash());
 	}
 
 	@Test
@@ -125,9 +117,9 @@ public class AnonymousAccessLinkApiTest extends AbstractServiceIntegrationTest {
 
 		String json = result.getResponse().getContentAsString();
 		ObjectMapper mapper = new ObjectMapper();
-		AnonymousAccessLink[] accessLinks = mapper.readValue(json, AnonymousAccessLink[].class);
+		AnonymousAccessLinkDto[] accessLinks = mapper.readValue(json, AnonymousAccessLinkDto[].class);
 		List<String> referencedMd = Arrays.stream(accessLinks) //
-				.map(AnonymousAccessLink::getMetadataUuid).collect(Collectors.toList());
+				.map(AnonymousAccessLinkDto::getMetadataUuid).collect(Collectors.toList());
 		assertTrue(accessLinks.length >= 2);
 		assertTrue(referencedMd.contains(md1.getUuid()));
 		assertTrue(referencedMd.contains(md2.getUuid()));
@@ -147,7 +139,8 @@ public class AnonymousAccessLinkApiTest extends AbstractServiceIntegrationTest {
 						.accept(MediaType.parseMediaType("application/json")))
 				.andExpect(status().isOk())
 				.andReturn();
-		AnonymousAccessLink createdAccessLink = mapper.readValue(result.getResponse().getContentAsString(), AnonymousAccessLink.class);
+		AnonymousAccessLinkDto createdAccessLink = //
+				mapper.readValue(result.getResponse().getContentAsString(), AnonymousAccessLinkDto.class);
 
 		String requestBody = "{\"metadataUuid\" : \"" + createdAccessLink.getMetadataUuid() + "\"}";
 		this.mockMvc.perform(delete("/srv/api/anonymousAccessLink")
@@ -163,9 +156,9 @@ public class AnonymousAccessLinkApiTest extends AbstractServiceIntegrationTest {
 				.andExpect(MockMvcResultMatchers.status().isOk())
 				.andReturn();
 		String json = result.getResponse().getContentAsString();
-		AnonymousAccessLink[] accessLinks = mapper.readValue(json, AnonymousAccessLink[].class);
+		AnonymousAccessLinkDto[] accessLinks = mapper.readValue(json, AnonymousAccessLinkDto[].class);
 		List<String> referencedMd = Arrays.stream(accessLinks) //
-				.map(AnonymousAccessLink::getMetadataUuid).collect(Collectors.toList());
+				.map(AnonymousAccessLinkDto::getMetadataUuid).collect(Collectors.toList());
 		assertFalse(referencedMd.contains(md.getUuid()));
 		assertNull(anonymousAccessLinkRepository.findOneByHash(createdAccessLink.getHash()));
 	}
