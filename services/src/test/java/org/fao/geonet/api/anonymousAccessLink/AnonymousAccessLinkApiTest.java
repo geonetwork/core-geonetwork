@@ -74,9 +74,8 @@ public class AnonymousAccessLinkApiTest extends AbstractServiceIntegrationTest {
 	public void createAnonymousAccessLink() throws Exception {
 		AbstractMetadata md = injectMetadataInDb(getSampleMetadataXml(), context, true);
 
-		MvcResult result = this.mockMvc.perform(post("/srv/api/anonymousAccessLink")
+		MvcResult result = this.mockMvc.perform(post("/srv/api/anonymousAccessLink/{uuid}", md.getUuid())
 						.session(session)
-						.content(jsonRequestBodyForCreate(md))
 						.contentType(MediaType.parseMediaType("application/json"))
 						.accept(MediaType.parseMediaType("application/json")))
 				.andExpect(status().isOk())
@@ -103,9 +102,8 @@ public class AnonymousAccessLinkApiTest extends AbstractServiceIntegrationTest {
 
 		assertEquals("", result.getResponse().getContentAsString());
 
-		this.mockMvc.perform(post("/srv/api/anonymousAccessLink")
+		this.mockMvc.perform(post("/srv/api/anonymousAccessLink/{uuid}", md.getUuid())
 						.session(session)
-						.content(jsonRequestBodyForCreate(md))
 						.contentType(MediaType.parseMediaType("application/json"))
 						.accept(MediaType.parseMediaType("application/json")))
 				.andExpect(status().isOk());
@@ -128,15 +126,13 @@ public class AnonymousAccessLinkApiTest extends AbstractServiceIntegrationTest {
 	public void listAnonymousAccessLink() throws Exception {
 		AbstractMetadata md1 = injectMetadataInDb(getSampleMetadataXml(), context, true);
 		AbstractMetadata md2 = injectMetadataInDb(getSampleMetadataXml(), context, true);
-		this.mockMvc.perform(post("/srv/api/anonymousAccessLink")
+		this.mockMvc.perform(post("/srv/api/anonymousAccessLink/{uuid}", md1.getUuid())
 					.session(session)
-					.content(jsonRequestBodyForCreate(md1))
 					.contentType(MediaType.parseMediaType("application/json"))
 					.accept(MediaType.parseMediaType("application/json")))
 				.andExpect(status().isOk());
-		this.mockMvc.perform(post("/srv/api/anonymousAccessLink")
+		this.mockMvc.perform(post("/srv/api/anonymousAccessLink/{uuid}", md2.getUuid())
 						.session(session)
-						.content(jsonRequestBodyForCreate(md2))
 						.contentType(MediaType.parseMediaType("application/json"))
 						.accept(MediaType.parseMediaType("application/json")))
 				.andExpect(status().isOk());
@@ -159,15 +155,14 @@ public class AnonymousAccessLinkApiTest extends AbstractServiceIntegrationTest {
 	@Test
 	public void deleteAccessLink() throws Exception {
 		AbstractMetadata md = injectMetadataInDb(getSampleMetadataXml(), context, true);
-		this.mockMvc.perform(post("/srv/api/anonymousAccessLink")
+		this.mockMvc.perform(post("/srv/api/anonymousAccessLink/{uuid}", md.getUuid())
 						.session(session)
-						.content(jsonRequestBodyForCreate(md))
 						.contentType(MediaType.parseMediaType("application/json"))
 						.accept(MediaType.parseMediaType("application/json")))
 				.andExpect(status().isOk())
 				.andReturn();
 
-		this.mockMvc.perform(delete("/srv/api/anonymousAccessLink")
+		this.mockMvc.perform(delete("/srv/api/anonymousAccessLink/{uuid}", md.getUuid())
 						.session(session)
 						.content("{\"metadataUuid\" : \"" + md.getUuid() + "\"}")
 						.contentType(MediaType.parseMediaType("application/json")))
@@ -182,9 +177,4 @@ public class AnonymousAccessLinkApiTest extends AbstractServiceIntegrationTest {
 		assertEquals("", result.getResponse().getContentAsString());
 	}
 
-	private static String jsonRequestBodyForCreate(AbstractMetadata md) {
-		return "{\"metadataId\" : 12345," +
-				"\"metadataUuid\" : \"" + md.getUuid() + "\"," +
-				"\"hash\" : \"this hash will not be taken into account\"}";
-	}
 }
