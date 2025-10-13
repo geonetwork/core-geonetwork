@@ -30,12 +30,12 @@ import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+import java.io.IOException;
 import java.util.List;
 
 @RequestMapping(value = {
@@ -84,10 +84,10 @@ public class AnonymousAccessLinkApi {
     @PreAuthorize("hasAuthority('Administrator')")
     @ResponseBody
     @io.swagger.v3.oas.annotations.Operation(
-            summary = "List all anonymous access links",
+            summary = "List all anonymous access links with md infos",
             description = "")
-    public List<AnonymousAccessLinkDto> getAnonymousAccessLinks() {
-        return anonymousAccessLinkService.getAllAnonymousAccessLinks();
+    public List<AnonymousAccessLinkDto> getAnonymousAccessLinksWithMdInfos() throws IOException {
+        return anonymousAccessLinkService.getAllAnonymousAccessLinksWithMdInfos();
     }
 
     @RequestMapping(

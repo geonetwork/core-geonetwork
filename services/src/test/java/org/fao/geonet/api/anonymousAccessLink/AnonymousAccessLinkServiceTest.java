@@ -3,11 +3,14 @@ package org.fao.geonet.api.anonymousAccessLink;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.AnonymousAccessLink;
+import org.fao.geonet.kernel.search.IndexingMode;
 import org.fao.geonet.repository.AnonymousAccessLinkRepository;
 import org.fao.geonet.services.AbstractServiceIntegrationTest;
+import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.HashMap;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -22,10 +25,16 @@ public class AnonymousAccessLinkServiceTest extends AbstractServiceIntegrationTe
 	@Autowired
 	private AnonymousAccessLinkRepository anonymousAccessLinkRepository;
 
+	private ServiceContext context;
+
+	@Before
+	public void initContext() throws Exception {
+		context = createServiceContext();
+		loginAsAdmin(context);
+	}
+
 	@Test
 	public void createAnonymousAccessLink() throws Exception {
-		ServiceContext context = createServiceContext();
-		loginAsAdmin(context);
 		AbstractMetadata md = injectMetadataInDb(getSampleMetadataXml(), context, true);
 
 		AnonymousAccessLinkDto created = toTest.createAnonymousAccessLink(md.getUuid());
@@ -37,24 +46,38 @@ public class AnonymousAccessLinkServiceTest extends AbstractServiceIntegrationTe
 	}
 
 	@Test
-	public void listAnonymousAccessLink() throws Exception {
-		ServiceContext context = createServiceContext();
-		loginAsAdmin(context);
-		AbstractMetadata md = injectMetadataInDb(getSampleMetadataXml(), context, true);
-			toTest.createAnonymousAccessLink(md.getUuid());
+	public void listAnonymousAccessLinkWithDocs() throws Exception {
+		AbstractMetadata indexedMd1 = injectMetadataInDb(getSampleMetadataXml(), context, true, IndexingMode.full);
+		toTest.createAnonymousAccessLink(indexedMd1.getUuid());
+		AbstractMetadata notIndexedMd2 = injectMetadataInDb(getSampleMetadataXml(), context, true);
+		toTest.createAnonymousAccessLink(notIndexedMd2.getUuid());
+		AbstractMetadata indexedMd3 = injectMetadataInDb(getSampleMetadataXml(), context, true, IndexingMode.full);
+		toTest.createAnonymousAccessLink(indexedMd3.getUuid());
 
-		List<AnonymousAccessLinkDto> listed = toTest.getAllAnonymousAccessLinks();
-		AnonymousAccessLinkDto returned = listed.stream() //
-				.filter(dto -> md.getUuid().equals(dto.getMetadataUuid())).findFirst().get();
+		List<AnonymousAccessLinkDto> listed = toTest.getAllAnonymousAccessLinksWithMdInfos();
+		AnonymousAccessLinkDto linkForMd1 = listed.stream() //
+				.filter(dto -> indexedMd1.getUuid().equals(dto.getMetadataUuid())).findFirst().get();
+		AnonymousAccessLinkDto linkForMd2 = listed.stream() //
+				.filter(dto -> notIndexedMd2.getUuid().equals(dto.getMetadataUuid())).findFirst().get();
+		AnonymousAccessLinkDto linkForMd3 = listed.stream() //
+				.filter(dto -> indexedMd3.getUuid().equals(dto.getMetadataUuid())).findFirst().get();
 
-		assertEquals(md.getId(), returned.getMetadataId());
-		assertNull(returned.getHash());
+		assertNull(linkForMd1.getHash());
+		assertNotNull(linkForMd1.getGetResultSource());
+		assertEquals("Title",
+				((HashMap)((HashMap) linkForMd1.getGetResultSource()).get("resourceTitleObject")).get("default"));
+		assertEquals("Abstract {uuid}",
+				((HashMap)((HashMap)linkForMd1.getGetResultSource()).get("resourceAbstractObject")).get("default"));
+		assertEquals("admin admin", ((HashMap)linkForMd1.getGetResultSource()).get("recordOwner"));
+		assertEquals("2012-01-18T14:04:43.000Z", ((HashMap)linkForMd1.getGetResultSource()).get("dateStamp"));
+		assertNull(linkForMd2.getGetResultSource());
+		assertNotNull(linkForMd3.getGetResultSource());
+		assertEquals("Title",
+				((HashMap)((HashMap) linkForMd3.getGetResultSource()).get("resourceTitleObject")).get("default"));
 	}
 
 	@Test
 	public void deleteAnonymousAccessLink() throws Exception {
-		ServiceContext context = createServiceContext();
-		loginAsAdmin(context);
 		AbstractMetadata md = injectMetadataInDb(getSampleMetadataXml(), context, true);
 		toTest.createAnonymousAccessLink(md.getUuid());
 
@@ -65,8 +88,6 @@ public class AnonymousAccessLinkServiceTest extends AbstractServiceIntegrationTe
 
 	@Test
 	public void getAnonymousAccessLink() throws Exception {
-		ServiceContext context = createServiceContext();
-		loginAsAdmin(context);
 		AbstractMetadata md = injectMetadataInDb(getSampleMetadataXml(), context, true);
 		toTest.createAnonymousAccessLink(md.getUuid());
 

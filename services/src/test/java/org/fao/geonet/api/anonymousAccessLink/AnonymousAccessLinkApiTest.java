@@ -26,6 +26,7 @@ package org.fao.geonet.api.anonymousAccessLink;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.domain.AbstractMetadata;
+import org.fao.geonet.kernel.search.IndexingMode;
 import org.fao.geonet.services.AbstractServiceIntegrationTest;
 import org.junit.Before;
 import org.junit.Test;
@@ -38,6 +39,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -118,10 +120,10 @@ public class AnonymousAccessLinkApiTest extends AbstractServiceIntegrationTest {
 
 	@Test
 	public void listAnonymousAccessLink() throws Exception {
-		AbstractMetadata md1 = injectMetadataInDb(getSampleMetadataXml(), context, true);
+		AbstractMetadata md1 = injectMetadataInDb(getSampleMetadataXml(), context, true, IndexingMode.full);
 		AbstractMetadata md2 = injectMetadataInDb(getSampleMetadataXml(), context, true);
 		this.mockMvc.perform(post("/srv/api/anonymousAccessLink/{uuid}", md1.getUuid())
-					.session(session).accept(MediaType.parseMediaType("application/json")))
+						.session(session).accept(MediaType.parseMediaType("application/json")))
 				.andExpect(status().isOk());
 		this.mockMvc.perform(post("/srv/api/anonymousAccessLink/{uuid}", md2.getUuid())
 						.session(session).accept(MediaType.parseMediaType("application/json")))
@@ -134,11 +136,15 @@ public class AnonymousAccessLinkApiTest extends AbstractServiceIntegrationTest {
 
 		String json = result.getResponse().getContentAsString();
 		AnonymousAccessLinkDto[] accessLinks = mapper.readValue(json, AnonymousAccessLinkDto[].class);
-		List<String> referencedMd = Arrays.stream(accessLinks) //
-				.map(AnonymousAccessLinkDto::getMetadataUuid).collect(Collectors.toList());
-		assertTrue(accessLinks.length >= 2);
-		assertTrue(referencedMd.contains(md1.getUuid()));
-		assertTrue(referencedMd.contains(md2.getUuid()));
+		AnonymousAccessLinkDto linkForMd1 = Arrays.stream(accessLinks)
+				.filter(x -> md1.getUuid().equals(x.getMetadataUuid()))
+				.findFirst().get();
+		AnonymousAccessLinkDto linkForMd2 = Arrays.stream(accessLinks)
+				.filter(x -> md2.getUuid().equals(x.getMetadataUuid()))
+				.findFirst().get();
+		assertEquals("Title",
+				((HashMap)((HashMap) linkForMd1.getGetResultSource()).get("resourceTitleObject")).get("default"));
+		assertNull(linkForMd2.getGetResultSource());
 	}
 
 	@Test

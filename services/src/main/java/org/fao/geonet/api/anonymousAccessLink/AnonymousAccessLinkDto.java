@@ -31,6 +31,7 @@ public class AnonymousAccessLinkDto {
     private int metadataId;
     private String metadataUuid;
     private String hash;
+    private Object getResultSource;
 
     public AnonymousAccessLinkDto() {
     }
@@ -62,4 +63,12 @@ public class AnonymousAccessLinkDto {
         return this;
     }
 
+    public Object getGetResultSource() {
+        return getResultSource;
+    }
+
+    public AnonymousAccessLinkDto setGetResultSource(Object getResultSource) {
+        this.getResultSource = getResultSource;
+        return this;
+    }
 }
