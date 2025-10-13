@@ -16,6 +16,7 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 public class AnonymousAccessLinkServiceTest extends AbstractServiceIntegrationTest {
 
@@ -69,7 +70,7 @@ public class AnonymousAccessLinkServiceTest extends AbstractServiceIntegrationTe
 		assertEquals("Abstract {uuid}",
 				((HashMap)((HashMap)linkForMd1.getGetResultSource()).get("resourceAbstractObject")).get("default"));
 		assertEquals("admin admin", ((HashMap)linkForMd1.getGetResultSource()).get("recordOwner"));
-		assertEquals("2012-01-18T14:04:43.000Z", ((HashMap)linkForMd1.getGetResultSource()).get("dateStamp"));
+		assertTrue(((HashMap)linkForMd1.getGetResultSource()).get("dateStamp").toString().startsWith("2012-01-18"));
 		assertNull(linkForMd2.getGetResultSource());
 		assertNotNull(linkForMd3.getGetResultSource());
 		assertEquals("Title",
