@@ -23,13 +23,20 @@
 
 package org.fao.geonet.api.anonymousAccessLink;
 
+import co.elastic.clients.elasticsearch.core.MgetRequest;
+import co.elastic.clients.elasticsearch.core.MgetResponse;
 import org.fao.geonet.domain.AnonymousAccessLink;
+import org.fao.geonet.index.es.EsRestClient;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.repository.AnonymousAccessLinkRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @Service
 public class AnonymousAccessLinkService {
@@ -39,6 +46,12 @@ public class AnonymousAccessLinkService {
 
     @Autowired
     private AnonymousAccessLinkRepository anonymousAccessLinkRepository;
+
+    @Autowired
+    private EsRestClient esRestClient;
+
+    @Value("${es.index.records:gn-records}")
+    private String defaultIndex = "records";
 
     @Autowired
     private AnonymousAccessLinkMapper mapper;
@@ -53,8 +66,20 @@ public class AnonymousAccessLinkService {
         return mapper.toDto(anonymousAccessLinkToCreate).setHash(randomHash);
     }
 
-    public List<AnonymousAccessLinkDto> getAllAnonymousAccessLinks() {
-        return mapper.toDtoList(anonymousAccessLinkRepository.findAll());
+    public List<AnonymousAccessLinkDto> getAllAnonymousAccessLinksWithMdInfos() throws IOException {
+        List<AnonymousAccessLink> anonymousAccessLinks = anonymousAccessLinkRepository.findAll();
+
+        List<String> uuids = anonymousAccessLinks.stream().map(AnonymousAccessLink::getMetadataUuid).collect(Collectors.toList());
+        MgetRequest request = new MgetRequest.Builder()
+                .ids(uuids)
+                .index(defaultIndex)
+                .sourceIncludes("resourceTitleObject", "recordOwner", "dateStamp", "resourceAbstractObject")
+                .build();
+        MgetResponse<Object> response = esRestClient.getClient().mget(request, Object.class);
+
+        return IntStream.range(0, anonymousAccessLinks.size()) //
+                .mapToObj(i -> mapper.toDto(anonymousAccessLinks.get(i)).setGetResultSource(response.docs().get(i).result().source()))
+                .collect(Collectors.toList());
     }
 
     public AnonymousAccessLinkDto getAnonymousAccessLink(String uuid) {
