@@ -170,6 +170,13 @@
                   </includes>
                   <filtering>false</filtering>
                 </resource>
+                <resource>
+                  <directory>geonetwork-ui/tools/webcomponent</directory>
+                  <includes>
+                    <include>wc-embedder.html</include>
+                  </includes>
+                  <filtering>false</filtering>
+                </resource>
               </resources>
             </configuration>
           </execution>
