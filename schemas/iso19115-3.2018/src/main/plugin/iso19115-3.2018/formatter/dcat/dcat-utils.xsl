@@ -17,6 +17,7 @@
                 xmlns:owl="http://www.w3.org/2002/07/owl#"
                 xmlns:adms="http://www.w3.org/ns/adms#"
                 xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+                xmlns:prov="http://www.w3.org/ns/prov#"
                 xmlns:util="java:org.fao.geonet.util.XslUtil"
                 xmlns:gn-fn-dcat="http://geonetwork-opensource.org/xsl/functions/dcat"
                 xmlns:xlink="http://www.w3.org/1999/xlink"

@@ -218,7 +218,7 @@ public class GroupsApi {
                             // webRequest.checkNotModified sets the right HTTP headers
                             return;
                         }
-                        response.setContentType(AttachmentsApi.getMediaType(image.getPath().getFileName().toString()).toString());
+                        response.setContentType(AttachmentsApi.getFileContentType(image.getPath().getFileName().toString()));
                         response.setContentLength((int) Files.size(image.getPath()));
                         response.addHeader("Cache-Control", "max-age=" + SIX_HOURS + ", public");
                         FileUtils.copyFile(image.getPath().toFile(), response.getOutputStream());

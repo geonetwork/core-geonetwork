@@ -36,6 +36,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
+import org.apache.tika.Tika;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.ApiParams;
@@ -45,7 +46,11 @@ import org.fao.geonet.domain.MetadataResourceVisibility;
 import org.fao.geonet.domain.MetadataResourceVisibilityConverter;
 import org.fao.geonet.events.history.AttachmentAddedEvent;
 import org.fao.geonet.events.history.AttachmentDeletedEvent;
+import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.kernel.setting.Settings;
+import org.fao.geonet.util.FileMimetypeChecker;
 import org.fao.geonet.util.ImageUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
@@ -64,7 +69,6 @@ import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
-import javax.activation.MimetypesFileTypeMap;
 import javax.annotation.PostConstruct;
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
@@ -72,6 +76,7 @@ import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.URL;
 import java.time.ZonedDateTime;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -91,6 +96,11 @@ public class AttachmentsApi {
     private final ApplicationContext appContext = ApplicationContextHolder.get();
     private Store store;
 
+    @Autowired
+    FileMimetypeChecker fileMimetypeChecker;
+    @Autowired
+    SettingManager settingManager;
+
     public AttachmentsApi() {
     }
 
@@ -99,17 +109,13 @@ public class AttachmentsApi {
     }
 
     /**
-     * Based on the file extension return an appropriate mime type.
+     * Based on the file name return an appropriate mime type.
      *
-     * @return The mime type or application/{{file_extension}} if none found.
+     * @return The mime type.
      */
-    public static MediaType getMediaType(String filename) {
-        String mimeType = null;
-
-        if (filename != null) {
-            mimeType = new MimetypesFileTypeMap().getContentType(filename);
-        }
-        return (mimeType != null ? MediaType.parseMediaType(mimeType) : MediaType.APPLICATION_OCTET_STREAM);
+    public static String getFileContentType(String filename) {
+        Tika tika = new Tika();
+        return tika.detect(filename);
     }
 
     public Store getStore() {
@@ -134,7 +140,7 @@ public class AttachmentsApi {
     }
 
     public List<MetadataResource> getResources() {
-        return null;
+        return Collections.emptyList();
     }
 
     @io.swagger.v3.oas.annotations.Operation(summary = "List all metadata attachments", description = "<a href='https://docs.geonetwork-opensource.org/latest/user-guide/associating-resources/using-filestore/'>More info</a>")
@@ -191,6 +197,10 @@ public class AttachmentsApi {
         @Parameter(description = "Use approved version or not", example = "true") @RequestParam(required = false, defaultValue = "false") Boolean approved,
         @Parameter(hidden = true) HttpServletRequest request) throws Exception {
         ServiceContext context = ApiUtils.createServiceContext(request);
+
+        String supportedFileMimetypes = settingManager.getValue(Settings.METADATA_EDIT_SUPPORTEDFILEMIMETYPES);
+        fileMimetypeChecker.checkValidMimeType(file, supportedFileMimetypes.split("\\|"));
+
         MetadataResource resource = store.putResource(context, metadataUuid, file, visibility, approved);
 
         String metadataIdString = ApiUtils.getInternalId(metadataUuid, approved);
@@ -263,7 +273,7 @@ public class AttachmentsApi {
         String fileName = resourceMetadata.getFilename();
         long fileLastModifiedDate = resourceMetadata.getLastModification().getTime();
         long fileSize = resourceMetadata.getSize();
-        MediaType fileMediaType = getMediaType(fileName);
+        MediaType fileMediaType = MediaType.parseMediaType(getFileContentType(fileName));
         String fileETag = "\"" + DigestUtils.md5Hex(fileName + fileSize + resourceMetadata.getVersion() + fileLastModifiedDate) + "\"";
 
         // Set common headers

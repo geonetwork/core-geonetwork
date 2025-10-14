@@ -1,43 +1,40 @@
-<div class="skos-concept">
-  <div class="top top-alt">
-    <div class="btn-group pull-right">
-      <button
-        class="btn btn-default"
+<div title="{{'browseThesaurus' | translate}}">
+  <div data-gn-slide-toggle="true">{{'browseThesaurus' | translate}}</div>
+  <ol class="breadcrumb">
+    <li>
+      <a
+        class="btn btn-xs btn-link"
         title="{{'moveToTopConcept' | translate}}"
         ng-click="topConcept(concept.thesaurus)"
       >
-        <i class="fa fa-level-up"></i>
-      </button>
-      <button
-        class="btn btn-default dropdown-toggle"
-        type="button"
-        id="previous"
-        data-toggle="dropdown"
-        data-ng-disabled="!concept.previous"
-        title="{{'previousKeywords' | translate}}"
+        <i class="fa fa-home"></i>
+      </a>
+    </li>
+    <li ng-repeat="c in concept.previous.slice(1).reverse()">
+      <a
+        class="skos-concept-relation-previous"
+        ng-click="navigateConcept(c, true, $index)"
       >
-        <i class="fa fa-angle-left"></i>
-        <span class="caret"></span>
-      </button>
-      <ul class="dropdown-menu" role="menu" aria-labelledby="previous">
-        <li role="presentation" ng-repeat="c in concept.previous">
-          <a class="skos-concept-relation-previous" ng-click="navigateConcept(c, true)">
-            <span role="menuitem" tabindex="-1" skos-label="c" lang="{{language}}"></span>
-          </a>
-        </li>
-      </ul>
-    </div>
-    <strong>{{'currentConcept' | translate}}</strong>
-    <button
-      class="btn btn-link"
-      data-ng-disabled="concept.prefLabel[language] == 'topConcepts'"
-      ng-click="addConcept(concept)"
-    >
+        <span
+          role="menuitem"
+          tabindex="-1"
+          ng-if="prefLabel"
+          skos-label="c"
+          lang="{{language}}"
+        ></span>
+      </a>
+    </li>
+    <li class="active" data-ng-hide="concept.prefLabel['eng'] == 'topConcepts'">
       <span ng-if="prefLabel" skos-label="concept" lang="{{language}}"></span>
-      <i class="fa fa-plus-circle"></i>
-    </button>
-    <hr />
-  </div>
+      <button
+        class="skos-btn-icons btn-small btn-link"
+        title="{{'addConcept' | translate}}"
+        ng-click="addConcept(concept)"
+      >
+        <i class="fa fa-plus-circle"></i>
+      </button>
+    </li>
+  </ol>
 
   <!-- TODO: use language, too -->
   <div ng-if="altLabel.length" class="skos-concept-altlabel">
@@ -52,80 +49,50 @@
       </li>
     </ul>
   </div>
+
   <div
-    ng-if="broader.length || narrower.length || related.length"
-    class="skos-concept-connected"
+    class="row"
+    data-ng-repeat="(key, value) in {broader: 'parent', narrower: 'moreSpecific', related: 'associated'}"
   >
-    <div ng-if="broader.length">
-      <strong>{{'parentConcept' | translate}}</strong>
-      <hr />
+    <div class="col-md-12" data-ng-if="concept[key].length">
+      <label
+        class="control-label"
+        data-ng-show="concept.prefLabel['eng'] == 'topConcepts'"
+        >{{'topConcepts' | translate}}</label
+      >
+      <label
+        class="control-label"
+        data-ng-hide="concept.prefLabel['eng'] == 'topConcepts'"
+        >{{(value + 'Concept') | translate}}</label
+      >
       <ul>
-        <li ng-repeat="c in broader" data-ng-mouseover="initConceptNavigationHelp(c)">
-          <a class="skos-btn-icons btn-small btn-link" ng-click="addConcept(c)">
-            <i class="fa fa-plus-circle" title="{{'addConcept' | translate}}"></i> </a
-          >&nbsp;
+        <li
+          ng-repeat="c in concept[key]"
+          data-ng-mouseover="initConceptNavigationHelp(c)"
+        >
           <a
             class="btn-small btn-link"
             ng-click="navigateConcept(c)"
             ng-mouseenter="c.over = true"
             ng-mouseleave="c.over = false"
           >
-            <i title="{{c.help.broader}}"></i>
+            <i title="{{c.help[key]}}"></i>
             <span title="{{'makeConceptCurrent' | translate}}">
               {{c.prefLabel[mainLanguage] || c.prefLabel['eng']}}
             </span>
           </a>
-        </li>
-      </ul>
-    </div>
-    <div ng-if="narrower.length">
-      <strong>{{'moreSpecificConcept' | translate}}</strong>
-      <hr />
-      <ul>
-        <li ng-repeat="c in narrower" data-ng-mouseover="initConceptNavigationHelp(c)">
-          <a class="skos-btn-icons btn-small btn-link" ng-click="addConcept(c)">
-            <i class="fa fa-plus-circle" title="{{'addConcept' | translate}}"></i> </a
-          >&nbsp;
           <a
-            class="btn-small btn-link"
-            ng-click="navigateConcept(c)"
-            ng-mouseenter="c.over = true"
-            ng-mouseleave="c.over = false"
+            class="skos-btn-icons btn-small btn-link"
+            title="{{'addConcept' | translate}}"
+            ng-click="addConcept(c)"
           >
-            <i title="{{c.help.narrower}}"></i>
-            <span title="{{'makeConceptCurrent' | translate}}">
-              {{c.prefLabel[mainLanguage] || c.prefLabel['eng']}}
-            </span>
-          </a>
-        </li>
-      </ul>
-    </div>
-    <div ng-if="related.length">
-      <strong>{{'associatedConcept' | translate}}</strong>
-      <hr />
-      <ul>
-        <li ng-repeat="c in related" data-ng-mouseover="initConceptNavigationHelp(c)">
-          <a class="skos-btn-icons btn-small btn-link" ng-click="addConcept(c)">
-            <i class="fa fa-plus-circle" title="{{'addConcept' | translate}}"></i> </a
+            <i class="fa fa-plus-circle"></i> </a
           >&nbsp;
-          <a
-            class="btn-small btn-link"
-            ng-click="navigateConcept(c)"
-            ng-mouseenter="c.over = true"
-            ng-mouseleave="c.over = false"
-          >
-            <i title="{{c.help.related}}"></i>
-            <span
-              skos-label="c"
-              lang="{{mainLanguage}}"
-              title="{{'makeConceptCurrent' | translate}}"
-            ></span>
-          </a>
         </li>
       </ul>
     </div>
   </div>
-  <!-- TODO: select by language, only show a limited number -->
+
   <div ng-if="!isEmptyObject(note)" style="margin-top: 10px">
     <div
       ng-repeat="note in note.en"
