@@ -687,7 +687,7 @@
         <xsl:call-template name="writeCodelistElement">
           <xsl:with-param name="elementName" select="'cit:dateType'"/>
           <xsl:with-param name="codeListName" select="'cit:CI_DateTypeCode'"/>
-          <xsl:with-param name="codeListValue" select="'update'"/>
+          <xsl:with-param name="codeListValue" select="'nextUpdate'"/>
         </xsl:call-template>
       </cit:CI_Date>
     </mmi:maintenanceDate>
