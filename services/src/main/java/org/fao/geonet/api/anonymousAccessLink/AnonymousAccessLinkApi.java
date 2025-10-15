@@ -24,6 +24,7 @@
 package org.fao.geonet.api.anonymousAccessLink;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.fao.geonet.api.exception.ResourceAlreadyExistException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -59,7 +60,7 @@ public class AnonymousAccessLinkApi {
             summary = "Create anonymous access link",
             description = "")
     public AnonymousAccessLinkDto createAnonymousAccessLink(
-            @io.swagger.v3.oas.annotations.Parameter(description = "md uuid", required = true) @PathVariable(value = "uuid") String uuid) {
+            @io.swagger.v3.oas.annotations.Parameter(description = "md uuid", required = true) @PathVariable(value = "uuid") String uuid) throws ResourceAlreadyExistException {
         return anonymousAccessLinkService.createAnonymousAccessLink(uuid);
     }
 
