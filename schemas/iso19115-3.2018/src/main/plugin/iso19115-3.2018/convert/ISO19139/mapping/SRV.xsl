@@ -69,6 +69,8 @@
               <xsl:with-param name="codeListName" select="'srv:DCPList'"/>
               <xsl:with-param name="codeListValue" select="srvold:SV_OperationMetadata/srvold:DCP/
                                         srvold:DCPList/@codeListValue"/>
+              <xsl:with-param name="codeListText" select="srvold:SV_OperationMetadata/srvold:DCP/
+                                        srvold:DCPList/text()"/>
             </xsl:call-template>
           </xsl:when>
           <xsl:otherwise>
