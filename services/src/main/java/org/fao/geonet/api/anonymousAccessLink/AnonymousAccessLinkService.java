@@ -27,9 +27,12 @@ import co.elastic.clients.elasticsearch.core.MgetRequest;
 import co.elastic.clients.elasticsearch.core.MgetResponse;
 import org.fao.geonet.api.exception.ResourceAlreadyExistException;
 import org.fao.geonet.domain.AnonymousAccessLink;
+import org.fao.geonet.domain.ReservedGroup;
+import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.index.es.EsRestClient;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.repository.AnonymousAccessLinkRepository;
+import org.fao.geonet.repository.OperationAllowedRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -57,13 +60,20 @@ public class AnonymousAccessLinkService {
     @Autowired
     private AnonymousAccessLinkMapper mapper;
 
+    @Autowired
+    private OperationAllowedRepository opAllowedRepo;
+
     public AnonymousAccessLinkDto createAnonymousAccessLink(String uuid) throws ResourceAlreadyExistException {
         if (anonymousAccessLinkRepository.findOneByMetadataUuid(uuid) != null) {
             throw new ResourceAlreadyExistException();
         }
+        int mdId = metadataUtils.findOneByUuid(uuid).getId();
+        if (opAllowedRepo.findOneById_GroupIdAndId_MetadataIdAndId_OperationId( ReservedGroup.all.getId(), mdId, ReservedOperation.view.getId()) != null) {
+            return null;
+        }
         String randomHash = AnonymousAccessLink.getRandomHash();
         AnonymousAccessLink anonymousAccessLinkToCreate = new AnonymousAccessLink()
-                .setMetadataId(metadataUtils.findOneByUuid(uuid).getId())
+                .setMetadataId(mdId)
                 .setMetadataUuid(uuid)
                 .setHash(randomHash);
         anonymousAccessLinkRepository.save(anonymousAccessLinkToCreate);
