@@ -71,6 +71,7 @@ public class AnonymousAccessLink {
 		return this;
 	}
 
+	@Column(unique=true)
 	public String getMetadataUuid() {
 		return metadataUuid;
 	}

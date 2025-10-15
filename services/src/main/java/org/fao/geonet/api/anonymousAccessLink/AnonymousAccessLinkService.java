@@ -25,6 +25,7 @@ package org.fao.geonet.api.anonymousAccessLink;
 
 import co.elastic.clients.elasticsearch.core.MgetRequest;
 import co.elastic.clients.elasticsearch.core.MgetResponse;
+import org.fao.geonet.api.exception.ResourceAlreadyExistException;
 import org.fao.geonet.domain.AnonymousAccessLink;
 import org.fao.geonet.index.es.EsRestClient;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
@@ -56,7 +57,10 @@ public class AnonymousAccessLinkService {
     @Autowired
     private AnonymousAccessLinkMapper mapper;
 
-    public AnonymousAccessLinkDto createAnonymousAccessLink(String uuid) {
+    public AnonymousAccessLinkDto createAnonymousAccessLink(String uuid) throws ResourceAlreadyExistException {
+        if (anonymousAccessLinkRepository.findOneByMetadataUuid(uuid) != null) {
+            throw new ResourceAlreadyExistException();
+        }
         String randomHash = AnonymousAccessLink.getRandomHash();
         AnonymousAccessLink anonymousAccessLinkToCreate = new AnonymousAccessLink()
                 .setMetadataId(metadataUtils.findOneByUuid(uuid).getId())
