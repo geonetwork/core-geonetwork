@@ -121,6 +121,8 @@
         class="org.fao.geonet.api.records.formatters.cache.FormatterCachePublishListener"/>
   <bean id="formatterCacheDeletionListener"
         class="org.fao.geonet.api.records.formatters.cache.FormatterCacheDeletionListener"/>
+  <bean id="anonymousAccessLinkPublishListener"
+        class="org.fao.geonet.api.anonymousAccessLink.AnonymousAccessLinkPublishListener"/>
 
   <bean id="processingReportRegistry"
         class="org.fao.geonet.api.processing.report.registry.ProcessingReportRegistry"/>
