@@ -1,6 +1,7 @@
 package org.fao.geonet.api.anonymousAccessLink;
 
 import jeeves.server.context.ServiceContext;
+import org.fao.geonet.api.exception.ResourceAlreadyExistException;
 import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.AnonymousAccessLink;
 import org.fao.geonet.kernel.search.IndexingMode;
@@ -12,10 +13,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.assertTrue;
 
 public class AnonymousAccessLinkServiceTest extends AbstractServiceIntegrationTest {
@@ -98,4 +101,18 @@ public class AnonymousAccessLinkServiceTest extends AbstractServiceIntegrationTe
 
 		assertNull(toTest.getAnonymousAccessLink(md.getUuid()));
 	}
+
+	@Test
+	public void cannotBindTwoLinksToTheSameMd() throws Exception {
+		AbstractMetadata md = injectMetadataInDb(getSampleMetadataXml(), context, true);
+		toTest.createAnonymousAccessLink(md.getUuid());
+
+		assertThrows(ResourceAlreadyExistException.class, () -> toTest.createAnonymousAccessLink(md.getUuid()));
+
+		List<AnonymousAccessLinkDto> listed = toTest.getAllAnonymousAccessLinksWithMdInfos();
+		List<AnonymousAccessLinkDto> linksForMd = listed.stream() //
+				.filter(dto -> md.getUuid().equals(dto.getMetadataUuid())).collect(Collectors.toList());
+		assertEquals(1, linksForMd.size());
+	}
+
 }
