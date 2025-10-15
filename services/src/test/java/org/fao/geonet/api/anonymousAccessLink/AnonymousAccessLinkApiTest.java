@@ -40,14 +40,12 @@ import org.springframework.web.context.WebApplicationContext;
 
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -88,6 +86,23 @@ public class AnonymousAccessLinkApiTest extends AbstractServiceIntegrationTest {
 		assertEquals(md.getId(), createdAccessLink.getMetadataId());
 		assertEquals(md.getUuid(), createdAccessLink.getMetadataUuid());
 		assertNotNull(createdAccessLink.getHash());
+	}
+
+	@Test
+	public void cannotBindTwoLinksToTheSameMd() throws Exception {
+		AbstractMetadata md = injectMetadataInDb(getSampleMetadataXml(), context, true);
+		this.mockMvc.perform(post("/srv/api/anonymousAccessLink/{uuid}", md.getUuid())
+						.session(session).accept(MediaType.parseMediaType("application/json")))
+				.andExpect(status().isOk());
+
+		MvcResult result = this.mockMvc.perform(post("/srv/api/anonymousAccessLink/{uuid}", md.getUuid())
+						.session(session).accept(MediaType.parseMediaType("application/json")))
+				.andExpect(status().is4xxClientError())
+				.andExpect(content().contentType(API_JSON_EXPECTED_ENCODING))
+				.andReturn();
+
+		String json = result.getResponse().getContentAsString();
+		assertEquals("Resource already exists",  mapper.readValue(json, Map.class).get("message"));
 	}
 
 	@Test
