@@ -43,25 +43,25 @@ import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.resources.JCloudConfiguration;
 import org.fao.geonet.util.LimitedInputStream;
-import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Log;
 import org.jclouds.blobstore.ContainerNotFoundException;
 import org.jclouds.blobstore.domain.*;
 import org.jclouds.blobstore.options.CopyOptions;
+import org.jclouds.blobstore.options.GetOptions;
 import org.jclouds.blobstore.options.ListContainerOptions;
 import org.jclouds.http.HttpResponseException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.Resource;
 import org.springframework.util.StringUtils;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.FileSystems;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.PathMatcher;
 import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -221,7 +221,56 @@ public class JCloudStore extends AbstractStore {
                     .withMessageKey("exception.resourceNotFound.resource", new String[]{resourceId})
                     .withDescriptionKey("exception.resourceNotFound.resource.description", new String[]{resourceId, metadataUuid});
             }
-            return new ResourceHolderImpl(object, createResourceDescription(context, metadataUuid, visibility, resourceId,
+            return new JCloudResourceHolder(object, createResourceDescription(context, metadataUuid, visibility, resourceId,
+                object.getMetadata(), metadataId, approved));
+        } catch (ContainerNotFoundException e) {
+            throw new ResourceNotFoundException(
+                String.format("Metadata container for resource '%s' not found for metadata '%s'", resourceId, metadataUuid))
+                .withMessageKey("exception.resourceNotFound.resource", new String[]{resourceId})
+                .withDescriptionKey("exception.resourceNotFound.resource.description", new String[]{resourceId, metadataUuid});
+        }
+    }
+
+    @Override
+    public MetadataResource getResourceMetadata(final ServiceContext context, final String metadataUuid, final MetadataResourceVisibility visibility,
+                                                final String resourceId, Boolean approved) throws Exception {
+        // Those characters should not be allowed by URL structure
+        int metadataId = canDownload(context, metadataUuid, visibility, approved);
+        try {
+            final BlobMetadata metadata = jCloudConfiguration.getClient().getBlobStore().blobMetadata(
+                jCloudConfiguration.getContainerName(), getKey(context, metadataUuid, metadataId, visibility, resourceId));
+            if (metadata == null) {
+                throw new ResourceNotFoundException(
+                    String.format("Metadata resource '%s' not found for metadata '%s'", resourceId, metadataUuid))
+                    .withMessageKey("exception.resourceNotFound.resource", new String[]{resourceId})
+                    .withDescriptionKey("exception.resourceNotFound.resource.description", new String[]{resourceId, metadataUuid});
+            }
+            return createResourceDescription(context, metadataUuid, visibility, resourceId,
+                metadata, metadataId, approved);
+        } catch (ContainerNotFoundException e) {
+            throw new ResourceNotFoundException(
+                String.format("Metadata container for resource '%s' not found for metadata '%s'", resourceId, metadataUuid))
+                .withMessageKey("exception.resourceNotFound.resource", new String[]{resourceId})
+                .withDescriptionKey("exception.resourceNotFound.resource.description", new String[]{resourceId, metadataUuid});
+        }
+    }
+
+    @Override
+    public ResourceHolder getResourceWithRange(ServiceContext context, String metadataUuid, MetadataResourceVisibility metadataResourceVisibility, String resourceId, Boolean approved, long start, long end) throws Exception {
+        GetOptions getOptions = new GetOptions().range(start, end);
+
+        // Those characters should not be allowed by URL structure
+        int metadataId = canDownload(context, metadataUuid, metadataResourceVisibility, approved);
+        try {
+            final Blob object = jCloudConfiguration.getClient().getBlobStore().getBlob(
+                jCloudConfiguration.getContainerName(), getKey(context, metadataUuid, metadataId, metadataResourceVisibility, resourceId), getOptions);
+            if (object == null) {
+                throw new ResourceNotFoundException(
+                    String.format("Metadata resource '%s' not found for metadata '%s'", resourceId, metadataUuid))
+                    .withMessageKey("exception.resourceNotFound.resource", new String[]{resourceId})
+                    .withDescriptionKey("exception.resourceNotFound.resource.description", new String[]{resourceId, metadataUuid});
+            }
+            return new JCloudResourceHolder(object, createResourceDescription(context, metadataUuid, metadataResourceVisibility, resourceId,
                 object.getMetadata(), metadataId, approved));
         } catch (ContainerNotFoundException e) {
             throw new ResourceNotFoundException(
@@ -240,7 +289,7 @@ public class JCloudStore extends AbstractStore {
             ServiceContext context = ServiceContext.get();
             final Blob object = jCloudConfiguration.getClient().getBlobStore().getBlob(
                 jCloudConfiguration.getContainerName(), getKey(context, metadataUuid, metadataId, visibility, resourceId));
-            return new ResourceHolderImpl(object, createResourceDescription(context, metadataUuid, visibility, resourceId,
+            return new JCloudResourceHolder(object, createResourceDescription(context, metadataUuid, visibility, resourceId,
                 object.getMetadata(), metadataId, approved));
         } catch (ContainerNotFoundException e) {
             throw new ResourceNotFoundException(
@@ -708,6 +757,8 @@ public class JCloudStore extends AbstractStore {
         }
     }
 
+
+
     @Override
     public MetadataResource getResourceDescription(final ServiceContext context, final String metadataUuid,
                                                    final MetadataResourceVisibility visibility, final String filename, Boolean approved) throws Exception {
@@ -930,38 +981,31 @@ public class JCloudStore extends AbstractStore {
         };
     }
 
-    protected static class ResourceHolderImpl implements ResourceHolder {
-        private Path tempFolderPath;
-        private Path path;
-        private final MetadataResource metadataResource;
+    protected static class JCloudResourceHolder implements ResourceHolder {
+        private final InputStreamResource resource;
+        private final MetadataResource metadata;
+        private final InputStream inputStream;
 
-        public ResourceHolderImpl(final Blob object, MetadataResource metadataResource) throws IOException {
-            // Preserve filename by putting the files into a temporary folder and using the same filename.
-            tempFolderPath = Files.createTempDirectory("gn-meta-res-" + metadataResource.getMetadataId() + "-");
-            tempFolderPath.toFile().deleteOnExit();
-            path = tempFolderPath.resolve(getFilename(object.getMetadata().getName()));
-            this.metadataResource = metadataResource;
-            try (InputStream in = object.getPayload().openStream()) {
-                Files.copy(in, path, StandardCopyOption.REPLACE_EXISTING);
-            }
+        public JCloudResourceHolder(final Blob object, MetadataResource metadata) throws IOException {
+            this.metadata = metadata;
+            this.inputStream = object.getPayload().openStream();
+            this.resource = new InputStreamResource(inputStream);
         }
 
         @Override
-        public Path getPath() {
-            return path;
+        public Resource getResource() {
+            return resource;
         }
 
         @Override
         public MetadataResource getMetadata() {
-            return metadataResource;
+            return metadata;
         }
 
         @Override
         public void close() throws IOException {
-            // Delete temporary file and folder.
-            IO.deleteFileOrDirectory(tempFolderPath, true);
-            path = null;
-            tempFolderPath = null;
+            inputStream.close();
         }
     }
+
 }

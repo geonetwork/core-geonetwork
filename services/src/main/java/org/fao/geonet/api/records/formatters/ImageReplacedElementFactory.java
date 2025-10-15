@@ -338,12 +338,13 @@ public class ImageReplacedElementFactory implements ReplacedElementFactory {
         public Image loadImage() throws Exception {
             Store store = ApplicationContextHolder.get().getBean("filesystemStore", Store.class);
             BufferedImage bufferedImage;
-            try (Store.ResourceHolder imageFile = store.getResourceInternal(
+            try (Store.ResourceHolder resourceHolder = store.getResourceInternal(
                 this.uuid,
                 MetadataResourceVisibility.PUBLIC,
-                this.file, true)) {
+                this.file, true);
+            InputStream is = resourceHolder.getResource().getInputStream()) {
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                bufferedImage = ImageIO.read(imageFile.getPath().toFile());
+                bufferedImage = ImageIO.read(is);
                 ImageIO.write(bufferedImage, "png", baos);
                 return Image.getInstance(baos.toByteArray());
             }

@@ -53,10 +53,8 @@ import org.fao.geonet.util.ImageUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.ByteArrayResource;
-import org.springframework.core.io.PathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.*;
-import org.springframework.lang.NonNull;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.WebDataBinder;
@@ -77,8 +75,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Path;
+import java.time.ZonedDateTime;
 import java.util.Collections;
 import java.util.List;
 
@@ -112,13 +109,13 @@ public class AttachmentsApi {
     }
 
     /**
-     * Based on the file content return an appropiate mime type.
+     * Based on the file name return an appropriate mime type.
      *
      * @return The mime type.
      */
-    public static String getFileContentType(Path file) throws IOException {
+    public static String getFileContentType(String filename) {
         Tika tika = new Tika();
-        return tika.detect(file);
+        return tika.detect(filename);
     }
 
     public Store getStore() {
@@ -263,63 +260,111 @@ public class AttachmentsApi {
         @Parameter(hidden = true) HttpServletRequest request
     ) throws Exception {
         ServiceContext context = ApiUtils.createServiceContext(request);
-
         ApiUtils.canViewRecord(metadataUuid, request);
 
-        // Get the resource holder for the requested resource
-        Store.ResourceHolder file = store.getResource(context, metadataUuid, resourceId, approved);
+        // Get the resource metadata
+        // We need size, last modified date and etag for the conditional headers
+        MetadataResource resourceMetadata = store.getResourceMetadata(context, metadataUuid, resourceId, approved);
 
-        // Get the resource properties
-        long fileSize = Files.size(file.getPath());
-        long fileLastModified = file.getMetadata().getLastModification().getTime();
-        MediaType fileMediaType = MediaType.parseMediaType(getFileContentType(file.getPath()));
-        String fileETag = "\"" + DigestUtils.md5Hex(file.getMetadata().getFilename() + fileLastModified + fileSize) + "\"";
+        if (resourceMetadata == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+
+        String fileName = resourceMetadata.getFilename();
+        long fileLastModifiedDate = resourceMetadata.getLastModification().getTime();
+        long fileSize = resourceMetadata.getSize();
+        MediaType fileMediaType = MediaType.parseMediaType(getFileContentType(fileName));
+        String fileETag = "\"" + DigestUtils.md5Hex(fileName + fileSize + resourceMetadata.getVersion() + fileLastModifiedDate) + "\"";
 
         // Set common headers
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.setCacheControl(CacheControl.noCache());
-        responseHeaders.setLastModified(fileLastModified);
+        responseHeaders.setLastModified(fileLastModifiedDate);
         responseHeaders.setETag(fileETag);
+        responseHeaders.set(HttpHeaders.ACCEPT_RANGES, "bytes");
 
         // Check if the request is not modified based on ETag or Last-Modified
-        if (new ServletWebRequest(request).checkNotModified(fileETag, fileLastModified)) {
+        if (new ServletWebRequest(request).checkNotModified(fileETag, fileLastModifiedDate)) {
             return ResponseEntity.status(HttpStatus.NOT_MODIFIED).headers(responseHeaders).build();
         }
 
-        // Check if the file is an image and if a size is requested
+        HttpRange range = null;
+        try {
+            List<HttpRange> ranges = HttpRange.parseRanges(request.getHeader(HttpHeaders.RANGE));
+            if (!ranges.isEmpty()) {
+                range = ranges.get(0);
+                if (range.getRangeStart(fileSize) >= fileSize) {
+                    throw new IllegalArgumentException("Range start (" + range.getRangeStart(fileSize) +
+                        ") must be lower than file size (" + fileSize + ").");
+                }
+            }
+        } catch (IllegalArgumentException e) {
+            // invalid range -> 416 with real size
+            return ResponseEntity.status(HttpStatus.REQUESTED_RANGE_NOT_SATISFIABLE)
+                .header(HttpHeaders.CONTENT_RANGE, "bytes */" + fileSize)
+                .headers(responseHeaders)
+                .build();
+        }
+
+        // If the request is a range request, check the If-Range header
+        String ifRange = request.getHeader(HttpHeaders.IF_RANGE);
+        if (range != null && ifRange != null) {
+            if (ifRange.startsWith("W/")) {
+                range = null; // weak ETag -> serve full resource
+            } else if (ifRange.startsWith("\"")) {
+                if (!fileETag.equals(ifRange)) {
+                    range = null; // strong ETag mismatch -> serve full resource
+                }
+            } else {
+                try {
+                    long ifRangeMillis = ZonedDateTime
+                        .parse(ifRange, java.time.format.DateTimeFormatter.RFC_1123_DATE_TIME)
+                        .toInstant().toEpochMilli();
+                    if (fileLastModifiedDate > ifRangeMillis) {
+                        range = null; // newer -> serve full resource
+                    }
+                } catch (Exception ignored) {
+                    range = null; // invalid date -> full
+                }
+            }
+        }
+
+        // If the resource is an image and a size is requested, resize the image and return it
         if (fileMediaType.getType().equals("image") && size != null) {
-            return serveResizedImage(file.getPath(), file.getMetadata().getFilename(), responseHeaders, size);
+            Store.ResourceHolder resourceHolder = store.getResource(context, metadataUuid, resourceId, approved);
+            return serveResizedImage(resourceHolder.getResource(), fileName, responseHeaders, size);
         }
 
         // Set headers for downloads
         responseHeaders.setContentType(fileMediaType);
-        responseHeaders.setContentDisposition(ContentDisposition.attachment().filename(file.getMetadata().getFilename()).build());
-        responseHeaders.setContentLength(fileSize);
+        responseHeaders.setContentDisposition(ContentDisposition.attachment().filename(fileName).build());
 
-        // Wrap a PathResource so that closing its InputStream also closes the holder
-        // Auto-closing will not work here as it will prematurely delete the temporary file for storage implementations that use temporary files.
-        PathResource resource = new PathResource(file.getPath()) {
-            @Override
-            @NonNull
-            public InputStream getInputStream() throws IOException {
-                InputStream delegate = super.getInputStream();
-                return new FilterInputStream(delegate) {
-                    @Override
-                    public void close() throws IOException {
-                        try {
-                            super.close();
-                        } finally {
-                            file.close();
-                        }
-                    }
-                };
+        // Get the resource or a range of it
+        Store.ResourceHolder resourceHolder;
+        if (range != null) {
+            // Get the range start and end
+            long start = range.getRangeStart(fileSize);
+            long end = range.getRangeEnd(fileSize);
+            // Get the resource for the requested range
+            resourceHolder = store.getResourceWithRange(context, metadataUuid, resourceId, approved, start, end);
+            // If the resource is not a file (ie. a stream) we must serve it manually
+            if (!resourceHolder.getResource().isFile()) {
+                responseHeaders.setContentLength(end - start + 1);
+                responseHeaders.set(HttpHeaders.CONTENT_RANGE, "bytes " + start + "-" + end + "/" + fileSize);
+                return ResponseEntity.status(HttpStatus.PARTIAL_CONTENT)
+                    .headers(responseHeaders)
+                    .body(resourceHolder.getResource());
             }
-        };
+        } else {
+            // Get the full resource
+            resourceHolder = store.getResource(context, metadataUuid, resourceId, approved);
+            responseHeaders.setContentLength(fileSize);
+        }
 
-        // Spring automatically handles range requests when returning ResponseEntity<Resource> with a PathResource
+        // If no range is requested or the resource is a file we can let Spring handle the range request
         return ResponseEntity.ok()
             .headers(responseHeaders)
-            .body(resource);
+            .body(resourceHolder.getResource());
     }
 
 
@@ -366,36 +411,41 @@ public class AttachmentsApi {
     /**
      * Serves a resized image in PNG format.
      *
-     * @param imagePath Path to the original image file
+     * @param resource Resource representing the original image
      * @param originalImageName Original filename of the image
      * @param responseHeaders HTTP headers to be set in the response
      * @param size Desired size for the resized image (in pixels)
      * @throws IOException If an I/O error occurs while reading or writing the image
      */
-    private ResponseEntity<Resource> serveResizedImage(Path imagePath,
-                                   String originalImageName, HttpHeaders responseHeaders, int size) throws IOException {
+    private ResponseEntity<Resource> serveResizedImage(Resource resource,
+                                                       String originalImageName, HttpHeaders responseHeaders, int size) throws IOException {
         if (size < MIN_IMAGE_SIZE || size > MAX_IMAGE_SIZE) {
             throw new IllegalArgumentException(String.format(
                 "Image can only be resized from %d to %d. You requested %d.",
                 MIN_IMAGE_SIZE, MAX_IMAGE_SIZE, size));
         }
 
-        // Resize the image
-        BufferedImage originalImage = ImageIO.read(imagePath.toFile());
-        BufferedImage resizedImage = ImageUtil.resize(originalImage, size);
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        ImageIO.write(resizedImage, "png", outputStream);
-        ByteArrayResource imgResource = new ByteArrayResource(outputStream.toByteArray());
+        try (InputStream inputStream = resource.getInputStream()) {
+            // Resize the image
+            BufferedImage resizedImage = ImageUtil.resize(ImageIO.read(inputStream), size);
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            ImageIO.write(resizedImage, "png", outputStream);
 
-        // Generate a new filename for the resized image
-        // Use the original filename without extension and append .png
-        String pngFilename = originalImageName.substring(0, originalImageName.lastIndexOf('.')) + ".png";
+            // Generate a new filename for the resized image
+            // Use the original filename without extension and append .png
+            String pngFilename = originalImageName.substring(0, originalImageName.lastIndexOf('.')) + ".png";
 
-        // Resized image headers
-        responseHeaders.setContentType(MediaType.IMAGE_PNG);
-        responseHeaders.setContentDisposition(ContentDisposition.attachment().filename(pngFilename).build());
-        responseHeaders.setContentLength(imgResource.contentLength());
+            // Resized image headers
+            responseHeaders.setContentType(MediaType.IMAGE_PNG);
+            responseHeaders.setContentDisposition(ContentDisposition.attachment().filename(pngFilename).build());
+            responseHeaders.setContentLength(outputStream.size());
+            responseHeaders.setLastModified(System.currentTimeMillis());
 
-        return ResponseEntity.ok().headers(responseHeaders).body(imgResource);
+            // Generate a new ETag based on the original ETag and the size
+            String originalETag = responseHeaders.getETag();
+            responseHeaders.setETag("\"" + DigestUtils.md5Hex(originalETag + size) + "\"");
+
+            return ResponseEntity.ok().headers(responseHeaders).body(new ByteArrayResource(outputStream.toByteArray()));
+        }
     }
 }
