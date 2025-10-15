@@ -38,4 +38,15 @@ public class AnonymousAccessLinkPublishListenerTest extends AbstractServiceInteg
 		assertNull(anonymousAccessLinkService.getAnonymousAccessLink(md.getUuid()));
 	}
 
+	@Test
+	public void createAnonymousAccessLinkDoesNotOperateForPublishedMd() throws Exception {
+		AbstractMetadata md = injectMetadataInDb(getSampleMetadataXml(), context, true);
+		baseMetadataOperations.setOperation(context, md.getId(), ReservedGroup.all.getId(), ReservedOperation.view.getId());
+
+		AnonymousAccessLinkDto created = anonymousAccessLinkService.createAnonymousAccessLink(md.getUuid());
+
+		assertNull(created);
+		assertNull(anonymousAccessLinkService.getAnonymousAccessLink(md.getUuid()));
+	}
+
 }
