@@ -115,4 +115,11 @@ public class AnonymousAccessLinkServiceTest extends AbstractServiceIntegrationTe
 		assertEquals(1, linksForMd.size());
 	}
 
+	@Test
+	public void deleteAnonymousAccessLinkDoNotErrorWhenLinkDoesNotExist() throws Exception {
+		AbstractMetadata md = injectMetadataInDb(getSampleMetadataXml(), context, true);
+
+		toTest.deleteAnonymousAccessLink(md.getUuid());
+	}
+
 }
