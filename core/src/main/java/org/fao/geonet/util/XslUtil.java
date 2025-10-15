@@ -563,9 +563,6 @@ public final class XslUtil {
 	public static boolean isDisableLoginForm() {
         SecurityProviderConfiguration securityProviderConfiguration = SecurityProviderConfiguration.get();
 
-        if ("gn5".equals(System.getProperty("geonetwork.security.type"))) {
-            return false;
-        }
         if (securityProviderConfiguration != null) {
             // No login form if providing a link or autologin
             return securityProviderConfiguration.getLoginType().equals(SecurityProviderConfiguration.LoginType.AUTOLOGIN.toString().toLowerCase())
