@@ -29,6 +29,7 @@ import org.fao.geonet.repository.AnonymousAccessLinkRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationTrustResolver;
+import org.springframework.security.authentication.AuthenticationTrustResolverImpl;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -51,16 +52,20 @@ public class GrantViewMdAuthorityFilter extends GenericFilterBean {
     private HttpSessionSecurityContextRepository repo;
 
     public GrantViewMdAuthorityFilter(HttpSessionSecurityContextRepository httpSessionSecurityContextRepository) {
-        this.repo = httpSessionSecurityContextRepository;
-        this.repo.setTrustResolver(new AuthenticationTrustResolver() {
+        httpSessionSecurityContextRepository.setTrustResolver(new AuthenticationTrustResolver() {
+            AuthenticationTrustResolver delegate = new AuthenticationTrustResolverImpl();
+
             @Override
             public boolean isAnonymous(Authentication authentication) {
-                return false;
+                if (authentication.getAuthorities().stream().anyMatch(ViewMdGrantedAuthority.class::isInstance)) {
+                    return false;
+                }
+                return delegate.isAnonymous(authentication);
             }
 
             @Override
             public boolean isRememberMe(Authentication authentication) {
-                return false;
+                return delegate.isRememberMe(authentication);
             }
         });
     }
