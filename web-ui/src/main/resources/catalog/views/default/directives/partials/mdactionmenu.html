@@ -185,11 +185,11 @@
           <span data-translate="">duplicate</span>
         </a>
       </li>
-      <li class="divider" data-ng-if="user.isAdministrator()" role="menuitem"></li>
+      <li class="divider" data-ng-if="user.canEditRecord(md)" role="menuitem"></li>
       <li role="menuitem">
         <a
           data-ng-click="mdService.indexMd(md)"
-          data-ng-if="user.isAdministrator()"
+          data-ng-if="user.canEditRecord(md)"
           href=""
         >
           <span class="fa fa-fw fa-cogs"></span>&nbsp;
