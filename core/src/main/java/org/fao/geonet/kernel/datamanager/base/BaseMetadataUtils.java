@@ -358,9 +358,9 @@ public class BaseMetadataUtils implements IMetadataUtils {
             // Get the recordLinkFormatter from the UI configuration
             String recordLinkFormatter = XslUtil.getUiConfigurationJsonProperty(null, "mods.search.formatter.recordLinkFormatter");
 
-            // If the recordLinkFormatter is defined append it to the defaultLink
+            // If recordLinkFormatter is configured add the recordViewFormatter query parameter
             if (StringUtils.isNotBlank(recordLinkFormatter)) {
-                uriComponentsBuilder.queryParam("recordLinkFormatter", recordLinkFormatter);
+                uriComponentsBuilder.queryParam("recordViewFormatter", recordLinkFormatter);
             }
         }
 
