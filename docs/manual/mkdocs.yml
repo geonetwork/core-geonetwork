@@ -149,10 +149,11 @@ nav:
     - overview/authors.md
     - 'Changelog':
       - overview/change-log/index.md
-      - overview/change-log/version-4.4.8.md
-      - overview/change-log/version-4.2.13.md
+      - overview/change-log/version-4.4.9.md
+      - overview/change-log/version-4.2.14.md
       - 'Release History':
         - overview/change-log/history/index.md
+        - overview/change-log/version-4.4.8.md
         - overview/change-log/version-4.4.7.md
         - overview/change-log/version-4.4.6.md
         - overview/change-log/version-4.4.5.md
@@ -161,6 +162,7 @@ nav:
         - overview/change-log/version-4.4.2.md
         - overview/change-log/version-4.4.1.md
         - overview/change-log/version-4.4.0.md
+        - overview/change-log/version-4.2.14.md
         - overview/change-log/version-4.2.13.md
         - overview/change-log/version-4.2.12.md
         - overview/change-log/version-4.2.11.md

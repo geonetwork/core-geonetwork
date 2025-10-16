@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 Food and Agriculture Organization of the
+ * Copyright (C) 2025 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -50,11 +50,11 @@ public class OIDCRoleProcessorTest {
         OIDCRoleProcessor result = new OIDCRoleProcessor();
 
         result.oidcConfiguration = new OIDCConfiguration();
-        result.oidcConfiguration.roleConverter = new HashMap<String, String>() {{
+        result.oidcConfiguration.setRoleConverter(new HashMap<String, String>() {{
             put("CHANGEME", "CHANGED");
-        }};
-        result.oidcConfiguration.idTokenRoleLocation = "resource_access.gn-key.roles";
-        result.oidcConfiguration.minimumProfile = "RegisteredUser";
+        }});
+        result.oidcConfiguration.setIdTokenRoleLocation("resource_access.gn-key.roles");
+        result.oidcConfiguration.setMinimumProfile("RegisteredUser");
 
         return result;
     }

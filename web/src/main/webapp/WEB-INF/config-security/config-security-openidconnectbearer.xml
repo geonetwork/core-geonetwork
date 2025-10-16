@@ -1,5 +1,5 @@
 <!--
-  ~ Copyright (C) 2022 Food and Agriculture Organization of the
+  ~ Copyright (C) 2025 Food and Agriculture Organization of the
   ~ United Nations (FAO-UN), United Nations World Food Programme (WFP)
   ~ and United Nations Environment Programme (UNEP)
   ~
@@ -48,11 +48,18 @@
     <constructor-arg ref="openidconnectConfiguration"/>
   </bean>
 
-
+  <!-- Reads from the .json file and creates a Service Account ClientRegistration -->
+  <bean id="openidconnectClientServiceAccountRegistration" class="org.fao.geonet.kernel.security.openidconnect.bearer.GeonetworkClientServiceAccountRegistrationProvider">
+    <constructor-arg value="${OPENIDCONNECT_SERVERMETADATA_SERVICE_ACCOUNT_FNAME:${OPENIDCONNECT_SERVERMETADATA_FNAME:#{''}}}"/>
+    <constructor-arg value="${OPENIDCONNECT_SERVERMETADATA_SERVICE_ACCOUNT_JSON_TEXT:${OPENIDCONNECT_SERVERMETADATA_JSON_TEXT:#{''}}}"/>
+    <constructor-arg value="${OPENIDCONNECT_SERVERMETADATA_SERVICE_ACCOUNT_CONFIG_URL:${OPENIDCONNECT_SERVERMETADATA_CONFIG_URL:#{''}}}"/>
+    <constructor-arg ref="openidconnectConfiguration"/>
+  </bean>
 
   <!-- Provides a hardcoded  ClientRegistrationRepository with exactly one  ClientRegistration-->
   <bean id="openidconnectClientRegistrationRepository" class="org.fao.geonet.kernel.security.openidconnect.GeonetworkClientRegistrationRepository">
     <constructor-arg ref="openidconnectClientRegistration"/>
+    <constructor-arg ref="openidconnectClientServiceAccountRegistration"/>
   </bean>
 
   <bean id="openidconnectAuthorizationRequestResolver" class="org.fao.geonet.kernel.security.openidconnect.HardcodedRegistrationIdOAuth2AuthorizationRequestResolver">
@@ -217,6 +224,8 @@
   <bean id="oidcSessionRegistry" class="org.fao.geonet.kernel.security.openidconnect.oidclogout.InMemoryOidcSessionRegistry"/>
   <bean id="sessionAuthenticationStrategy"
         class="org.fao.geonet.kernel.security.openidconnect.oidclogout.OidcSessionRegistryAuthenticationStrategy"/>
+
+  <bean id="oidcServiceAccountLogin" class="org.fao.geonet.kernel.security.openidconnect.bearer.OIDCServiceAccountLogin"/>
 
   <bean id="sessionMgmtFilter"
         class="org.springframework.security.web.session.SessionManagementFilter">

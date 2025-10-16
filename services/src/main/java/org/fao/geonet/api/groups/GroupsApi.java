@@ -33,7 +33,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
-import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.exception.ExceptionUtils;
@@ -219,7 +218,7 @@ public class GroupsApi {
                             // webRequest.checkNotModified sets the right HTTP headers
                             return;
                         }
-                        response.setContentType(AttachmentsApi.getFileContentType(image.getPath()));
+                        response.setContentType(AttachmentsApi.getFileContentType(image.getPath().getFileName().toString()));
                         response.setContentLength((int) Files.size(image.getPath()));
                         response.addHeader("Cache-Control", "max-age=" + SIX_HOURS + ", public");
                         FileUtils.copyFile(image.getPath().toFile(), response.getOutputStream());
