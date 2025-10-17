@@ -1428,7 +1428,7 @@
     "sourceName": "naam",
     "sourceName-help": "Korte portaalnaam. MOET alleen uit letters, cijfers, '-' en '_' bestaan. Eenmaal gemaakt, gebruikt u de vertalingen om labels te definiëren die in de werkbalk moeten worden weergegeven.",
     "sourceFilter": "Zoekfilter",
-    "sourceFilter-help": "Aanvullende zoekcriteria die moeten worden toegevoegd aan alle zoekopdrachten in het portaal. Dit is een <a href='https://lucene.apache.org/core/2_9_4/queryparsersyntax.html'>Lucene expressie</a> . bijv. +keyword:inspire",
+    "sourceFilter-help": "Aanvullende zoekcriteria die moeten worden toegevoegd aan alle zoekopdrachten in het portaal. Dit is een <a href='https://www.elastic.co/guide/en/elasticsearch/reference/8.18/query-dsl-query-string-query.html#query-string-syntax'>Elasticsearch expressie</a> . bijv. +keyword:inspire",
     "displayInHeaderSwitcher": "Toon in de portaal kiezer",
     "displayInHeaderSwitcher-help": "Indien ingeschakeld zal het portaal getoond worden in de lijst van beschikbare portalen in de site header portaal selector",
     "sourceLogo": "logo",
