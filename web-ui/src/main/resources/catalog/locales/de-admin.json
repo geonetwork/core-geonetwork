@@ -1428,7 +1428,7 @@
     "sourceName": "Name",
     "sourceName-help": "Kurzname des Portals. Darf nur aus Buchstaben, Zahlen, '-'  und '_' bestehen. Nach der Erstellung können Sie mithilfe der Übersetzungsoberfläche Beschriftungen in den gewünschten Sprachen definieren. Diese werden dann in der Symbolleiste angezeigt werden.",
     "sourceFilter": "Suchfilter",
-    "sourceFilter-help": "Zusätzliche Suchkriterien, die Suchanfragen im Portal hinzugefügt werden. Dies ist ein <a href='https://lucene.apache.org/core/2_9_4/queryparsersyntax.html'>Lucene-Ausdruck</a> . z. B. +keyword:inspire",
+    "sourceFilter-help": "Zusätzliche Suchkriterien, die Suchanfragen im Portal hinzugefügt werden. Dies ist ein <a href='https://www.elastic.co/guide/en/elasticsearch/reference/8.18/query-dsl-query-string-query.html#query-string-syntax'>Elasticsearch-Ausdruck</a> . z. B. +keyword:inspire",
     "displayInHeaderSwitcher": "Anzeige im Portal-Switcher",
     "displayInHeaderSwitcher-help": "Wenn diese Option aktiviert ist, wird das Portal in der Liste der verfügbaren Portale in der Portalauswahl im Site-Header angezeigt",
     "sourceLogo": "Logo",

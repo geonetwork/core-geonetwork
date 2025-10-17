@@ -1428,7 +1428,7 @@
     "sourceName": "Nafn",
     "sourceName-help": "Portal short name. MUST be composed of letters, numbers, '-' and '_' only. Once created, use the translations to define labels to be displayed in the toolbar.",
     "sourceFilter": "Leitarsía",
-    "sourceFilter-help": "Viðbótar leitarviðmið til að bæta við allar leitir sem gerðar eru í portal. Þetta er <a href='https://lucene.apache.org/core/2_9_4/queryparsersyntax.html'>lucene expression1</a>. t.d. +keyword:inspire",
+    "sourceFilter-help": "Viðbótar leitarviðmið til að bæta við allar leitir sem gerðar eru í portal. Þetta er <a href='https://www.elastic.co/guide/en/elasticsearch/reference/8.18/query-dsl-query-string-query.html#query-string-syntax'>Elasticsearch expression1</a>. t.d. +keyword:inspire",
     "displayInHeaderSwitcher": "Display in the portal switcher",
     "displayInHeaderSwitcher-help": "If enabled the portal will displayed on the list of available portals in the site header portal selector",
     "sourceLogo": "Logo",

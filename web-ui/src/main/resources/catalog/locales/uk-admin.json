@@ -1428,7 +1428,7 @@
     "sourceName": "Ім&#39;я",
     "sourceName-help": "Коротка назва порталу. ПОВИНЕН складатися лише з літер, цифр, «-» та «_». Після створення використовуйте переклади, щоб визначити мітки, які відображатимуться на панелі інструментів.",
     "sourceFilter": "Пошуковий фільтр",
-    "sourceFilter-help": "Додаткові критерії пошуку, які будуть додані до будь-яких пошуків на порталі. Це <a href='https://lucene.apache.org/core/2_9_4/queryparsersyntax.html'>люценський вираз</a> . напр. +ключове слово:надихнути",
+    "sourceFilter-help": "Додаткові критерії пошуку, які будуть додані до будь-яких пошуків на порталі. Це <a href='https://www.elastic.co/guide/en/elasticsearch/reference/8.18/query-dsl-query-string-query.html#query-string-syntax'>рядок запиту Elasticsearch</a> . напр. +ключове слово:надихнути",
     "displayInHeaderSwitcher": "Відображення в комутаторі порталу",
     "displayInHeaderSwitcher-help": "Якщо ввімкнено, портал відображатиметься в списку доступних порталів у селекторі порталу заголовка сайту",
     "sourceLogo": "логотип",

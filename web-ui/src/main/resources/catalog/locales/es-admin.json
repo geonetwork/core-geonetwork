@@ -1428,7 +1428,7 @@
     "sourceName": "Nombre",
     "sourceName-help": "Nombre corto del portal. DEBE estar compuesto por letras, números, &#39;-&#39; y &#39;_&#39; únicamente. Una vez creadas, utilice las traducciones para definir las etiquetas que se mostrarán en la barra de herramientas.",
     "sourceFilter": "Filtro de búsqueda",
-    "sourceFilter-help": "Criterios de búsqueda adicionales que se agregarán a las búsquedas realizadas en el portal. Esta es una <a href='https://lucene.apache.org/core/2_9_4/queryparsersyntax.html'>expresión lucena</a> . p.ej. + palabra clave: inspirar",
+    "sourceFilter-help": "Criterios de búsqueda adicionales que se agregarán a las búsquedas realizadas en el portal. Esta es una <a href='https://www.elastic.co/guide/en/elasticsearch/reference/8.18/query-dsl-query-string-query.html#query-string-syntax'>expresión Elasticsearch</a> . p.ej. + palabra clave: inspirar",
     "displayInHeaderSwitcher": "Display in the portal switcher",
     "displayInHeaderSwitcher-help": "If enabled the portal will displayed on the list of available portals in the site header portal selector",
     "sourceLogo": "Logo",
