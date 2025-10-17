@@ -31,7 +31,7 @@ import org.springframework.security.oauth2.client.OAuth2AuthorizeRequest;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClientManager;
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
-import org.springframework.security.oauth2.server.resource.BearerTokenAuthenticationToken;
+import org.springframework.security.oauth2.server.resource.authentication.BearerTokenAuthenticationToken;
 
 import static org.fao.geonet.kernel.security.openidconnect.bearer.GeonetworkClientServiceAccountRegistrationProvider.CLIENT_SERVICE_ACCOUNT_REGISTRATION_NAME;
 
