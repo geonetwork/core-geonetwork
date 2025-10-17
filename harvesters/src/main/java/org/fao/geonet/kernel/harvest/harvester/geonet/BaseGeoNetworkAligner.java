@@ -370,6 +370,9 @@ public abstract class BaseGeoNetworkAligner<P extends BaseGeonetParams> extends 
                             handleFile(id, file, MetadataResourceVisibility.PRIVATE, changeDate, is, privateFiles[index]);
                         }
 
+                        public void indexMetadata(int index) throws Exception {
+                            metadataIndexer.indexMetadata(id, true, IndexingMode.full);
+                        }
                     });
                 } catch (Exception e) {
                     //--- we ignore the exception here. Maybe the metadata has been removed just now
@@ -874,6 +877,10 @@ public abstract class BaseGeoNetworkAligner<P extends BaseGeonetParams> extends 
                     if (params.mefFormatFull) {
                         handleFile(file, changeDate, is, index, MetadataResourceVisibility.PRIVATE);
                     }
+                }
+
+                public void indexMetadata(int index) throws Exception {
+                    metadataIndexer.indexMetadata(id[index], true, IndexingMode.full);
                 }
             });
         } catch (Exception e) {
