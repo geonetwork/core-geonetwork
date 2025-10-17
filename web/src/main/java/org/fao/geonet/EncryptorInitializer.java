@@ -27,6 +27,7 @@ import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.AnonymousAccessLinkHashConverter;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Env;
@@ -211,6 +212,7 @@ public class EncryptorInitializer {
             HibernatePBEEncryptorRegistry.getInstance();
         registry.registerPBEStringEncryptor("STRING_ENCRYPTOR", encryptor);
 
+        AnonymousAccessLinkHashConverter.init(encryptor);
     }
 
     private void updateDb(StandardPBEStringEncryptor previousEncryptor) throws SQLException {

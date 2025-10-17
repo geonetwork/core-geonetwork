@@ -24,9 +24,15 @@
 package org.fao.geonet.services;
 
 import org.fao.geonet.AbstractCoreIntegrationTest;
+import org.fao.geonet.domain.AnonymousAccessLinkHashConverter;
+import org.jasypt.encryption.pbe.PBEStringCleanablePasswordEncryptor;
+import org.mockito.Mockito;
+import org.mockito.stubbing.Answer;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.web.WebAppConfiguration;
+
+import static org.mockito.ArgumentMatchers.anyString;
 
 /**
  * Adds extra bean required for services tests.
@@ -41,4 +47,13 @@ public abstract class AbstractServiceIntegrationTest extends AbstractCoreIntegra
     public static final String API_JSON_EXPECTED_ENCODING = "application/json";
     public static final String API_XML_EXPECTED_ENCODING = "application/xml";
     public static final String API_PNG_EXPECTED_ENCODING = "image/png";
+    public static final String API_HTML_EXPECTED_ENCODING = "text/html";
+
+    static {
+        PBEStringCleanablePasswordEncryptor encryptorMock = Mockito.mock(PBEStringCleanablePasswordEncryptor.class);
+        Answer<String> identityAnswer = invocation -> invocation.getArguments()[0].toString();
+        Mockito.doAnswer(identityAnswer).when(encryptorMock).encrypt(anyString());
+        Mockito.doAnswer(identityAnswer).when(encryptorMock).decrypt(anyString());
+        AnonymousAccessLinkHashConverter.init(encryptorMock);
+    }
 }

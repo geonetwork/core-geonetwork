@@ -24,17 +24,22 @@
 package org.fao.geonet.repository;
 
 import org.fao.geonet.domain.AnonymousAccessLink;
+import org.fao.geonet.domain.AnonymousAccessLinkHashConverter;
+import org.jasypt.encryption.pbe.PBEStringCleanablePasswordEncryptor;
 import org.junit.After;
+import org.junit.BeforeClass;
 import org.junit.Test;
+import org.mockito.Mockito;
+import org.mockito.stubbing.Answer;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
-import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.anyString;
 
 public class AnonymousAccessLinkRepositoryTest extends AbstractSpringDataTest {
 	@Autowired
@@ -43,6 +48,15 @@ public class AnonymousAccessLinkRepositoryTest extends AbstractSpringDataTest {
 	@After
 	public void cleanRepo() {
 		anonymousAccessLinkRepository.deleteAll();
+	}
+
+	@BeforeClass
+	public static void initMock() {
+		PBEStringCleanablePasswordEncryptor encryptorMock = Mockito.mock(PBEStringCleanablePasswordEncryptor.class);
+		Answer<String> identityAnswer = invocation -> invocation.getArguments()[0].toString();
+		Mockito.doAnswer(identityAnswer).when(encryptorMock).encrypt(anyString());
+		Mockito.doAnswer(identityAnswer).when(encryptorMock).decrypt(anyString());
+		AnonymousAccessLinkHashConverter.init(encryptorMock);
 	}
 
 	@Test
