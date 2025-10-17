@@ -371,9 +371,9 @@ public class LocalizedEmailComponent {
             .fromHttpUrl(settingManager.getNodeURL())
             .pathSegment("api", "records", replaceLinksWithHtmlFormat ? "{{index:uuid}}" : "'{{'index:uuid'}}'");
 
-        // If recordLinkFormatter is configured add it as a query parameter
+        // If recordLinkFormatter is configured add the recordViewFormatter query parameter
         if (StringUtils.isNotBlank(recordLinkFormatter)) {
-            uriComponentsBuilder.queryParam("recordLinkFormatter", recordLinkFormatter);
+            uriComponentsBuilder.queryParam("recordViewFormatter", recordLinkFormatter);
         }
 
         return message.replace("{{link}}", uriComponentsBuilder.build().toString());
