@@ -2316,6 +2316,82 @@
       },
       "standardVersion": {
         "type": "text"
+      },
+      "mac_instrument": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "keyword",
+            "copy_to": "any.common"
+          },
+          "mountedOn": {
+            "type": "keyword",
+            "copy_to": "any.common"
+          },
+          "descriptionObject": {
+            "type": "object"
+          }
+        }
+      },
+      "mac_platform": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "keyword",
+            "copy_to": "any.common"
+          },
+          "descriptionObject": {
+            "type": "object"
+          }
+        }
+      },
+      "mac_acquisitionPlan": {
+        "type": "object",
+        "properties": {
+          "cl_type": {
+            "type": "object"
+          },
+          "cl_status": {
+            "type": "object"
+          }
+        }
+      },
+      "mac_environmentalConditions": {
+        "type": "object",
+        "properties": {
+          "cl_type": {
+            "type": "object"
+          },
+          "cl_status": {
+            "type": "object"
+          }
+        }
+      },
+      "imageDescription": {
+        "type": "object",
+        "properties": {
+          "processingLevelCode": {
+            "type": "keyword"
+          },
+          "imageQualityCode": {
+            "type": "keyword"
+          },
+          "illuminationElevationAngle": {
+            "type": "double"
+          },
+          "illuminationAzimuthAngle": {
+            "type": "double"
+          },
+          "cloudCoverPercentage": {
+            "type": "double"
+          },
+          "cl_status": {
+            "type": "object"
+          }
+        }
+      },
+      "processingLevelCode": {
+        "type": "keyword"
       }
     }
   }
