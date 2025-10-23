@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2024 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2025 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -39,6 +39,7 @@ import org.fao.geonet.api.users.model.UserDto;
 import org.fao.geonet.api.users.validation.PasswordResetDtoValidator;
 import org.fao.geonet.api.users.validation.UserDtoValidator;
 import org.fao.geonet.auditable.UserAuditableService;
+import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.*;
 import org.fao.geonet.domain.auditable.UserAuditable;
 import org.fao.geonet.exceptions.UserNotFoundEx;
@@ -90,6 +91,11 @@ import static org.springframework.data.jpa.domain.Specification.where;
     description = "User operations")
 @Controller("users")
 public class UsersApi {
+    /**
+     * Username pattern with allowed chars. Username may only contain alphanumeric characters or single hyphens,
+     * single at signs or single dots. Cannot begin or end with a hyphen, at sign or dot.
+     */
+    private static final String USERNAME_PATTERN = "^[a-zA-Z0-9]+([_\\-:.@]{1}[a-zA-Z0-9]+)*$";
 
     @Autowired
     SettingManager settingManager;
@@ -472,6 +478,13 @@ public class UsersApi {
             throw new IllegalArgumentException(errorMessage);
         }
 
+        if (!userDto.getUsername().matches(USERNAME_PATTERN)) {
+            throw new IllegalArgumentException(Params.USERNAME
+                + " may only contain alphanumeric characters or single hyphens, single colons, single at signs or single dots. "
+                + "Cannot begin or end with a hyphen, colon, at sign or dot."
+            );
+        }
+
         // If userProfileUpdateEnabled is not enabled, the user password are managed by the security provider so allow null passwords.
         // Otherwise the password cannot be null.
         if (userDto.getPassword() == null
@@ -574,6 +587,12 @@ public class UsersApi {
                 "Another user with username '%s' ignore case already exists", user.getUsername()));
         }
 
+        if (!userDto.getUsername().matches(USERNAME_PATTERN)) {
+            throw new IllegalArgumentException(Params.USERNAME
+                + " may only contain alphanumeric characters or single hyphens, single colons, single at signs or single dots. "
+                + "Cannot begin or end with a hyphen, colon, at sign or dot."
+            );
+        }
 
         if (!myProfile.getProfileAndAllChildren().contains(profile)) {
             throw new IllegalArgumentException(
@@ -636,7 +655,7 @@ public class UsersApi {
         if (securityProviderConfiguration == null || securityProviderConfiguration.isUserGroupUpdateEnabled()) {
             setUserGroups(user, groups);
         }
-        
+
         List<UserGroup> userGroups = userGroupRepository.findAll(UserGroupSpecs
             .hasUserId(user.getId()));
 

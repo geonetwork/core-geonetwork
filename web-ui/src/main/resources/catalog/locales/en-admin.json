@@ -547,6 +547,8 @@
     "oneRunOnlyHelp": "This harvester will run once only.",
     "os.arch": "System architecture",
     "os.name": "System name",
+    "patternGroupName": "Group name may only contain alphanumeric characters or single hyphens. Cannot begin or end with a hyphen.",
+    "patternUserName": "Usernames may contain only alphanumeric characters, single hyphens, single at signs, single colons, or single dots. They cannot begin or end with a hyphen, colon, at sign, or dot.",
     "prefix": "Prefix",
     "process":"process",
     "properties": "Field",
