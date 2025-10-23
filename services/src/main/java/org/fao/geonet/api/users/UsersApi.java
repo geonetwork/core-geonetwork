@@ -90,8 +90,8 @@ import static org.springframework.data.jpa.domain.Specification.where;
 @Controller("users")
 public class UsersApi {
     /**
-     * Username pattern with allowed chars. Username may only contain alphanumeric characters or single hyphens,
-     * single at signs or single dots. Cannot begin or end with a hyphen, at sign or dot.
+     * Username pattern with allowed chars: Username may only contain alphanumeric characters or hyphens,
+     * dots or colons or at-arrow (not consecutive). Cannot begin or end with an hyphen, colon or at-arrow.
      */
     private static final String USERNAME_PATTERN = "^[a-zA-Z0-9]+([_\\-:.@]{1}[a-zA-Z0-9]+)*$";
 
@@ -462,18 +462,18 @@ public class UsersApi {
             throw new IllegalArgumentException(errorMessage);
         }
 
-        if (!userDto.getUsername().matches(USERNAME_PATTERN)) {
-            throw new IllegalArgumentException(Params.USERNAME
-                + " may only contain alphanumeric characters or single hyphens, single colons, single at signs or single dots. "
-                + "Cannot begin or end with a hyphen, colon, at sign or dot."
-            );
-        }
-
         // If userProfileUpdateEnabled is not enabled, the user password are managed by the security provider so allow null passwords.
         // Otherwise the password cannot be null.
         if (userDto.getPassword() == null
             && (securityProviderConfiguration == null || securityProviderConfiguration.isUserProfileUpdateEnabled())) {
             throw new IllegalArgumentException("Users password must be supplied");
+        }
+
+        if (!userDto.getUsername().matches(USERNAME_PATTERN)) {
+            throw new IllegalArgumentException(Params.USERNAME
+                + " may only contain alphanumeric characters or single hyphens, single colons, single at signs or single dots. "
+                + "Cannot begin or end with a hyphen, colon, at sign or dot."
+            );
         }
 
         List<User> existingUsers = userRepository.findByUsernameIgnoreCase(userDto.getUsername());
