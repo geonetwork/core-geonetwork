@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<record>
+    <extent>
+        <spatial>
+            <bbox>
+                <array>-5.719358444214</array>
+                <array>41.456241607666</array>
+                <array>10.354447364807</array>
+                <array>51.451183319092</array>
+            </bbox>
+        </spatial>
+        <temporal>
+            <interval>
+                <array>2015-07-04T10:18:58.537000Z</array>
+                <array>2025-10-11T10:59:35.504000Z</array>
+            </interval>
+        </temporal>
+    </extent>
+    <license>CC-BY-SA</license>
+    <stac_version>1.1.0</stac_version>
+    <assets>
+        <ql>
+            <roles>thumbnail</roles>
+            <href>https://i.ibb.co/jkp9zxC/sentinel-2-indices-quicklook.png</href>
+            <type>image/png</type>
+            <title>Rendered preview</title>
+        </ql>
+    </assets>
+    <description>Radiometric indices computed from THEIA's sentinel-2 Level 2A images</description>
+    <links>
+        <rel>items</rel>
+        <href>https://stacapi-cdos.apps.okd.crocc.meso.umontpellier.fr/collections/sentinel-2-radiometric-indices/items</href>
+        <type>application/geo+json</type>
+    </links>
+    <links>
+        <rel>parent</rel>
+        <href>https://stacapi-cdos.apps.okd.crocc.meso.umontpellier.fr/</href>
+        <type>application/json</type>
+    </links>
+    <links>
+        <rel>root</rel>
+        <href>https://stacapi-cdos.apps.okd.crocc.meso.umontpellier.fr/</href>
+        <type>application/json</type>
+    </links>
+    <links>
+        <rel>self</rel>
+        <href>https://stacapi-cdos.apps.okd.crocc.meso.umontpellier.fr/collections/sentinel-2-radiometric-indices</href>
+        <type>application/json</type>
+    </links>
+    <links>
+        <rel>http://www.opengis.net/def/rel/ogc/1.0/queryables</rel>
+        <href>https://stacapi-cdos.apps.okd.crocc.meso.umontpellier.fr/collections/sentinel-2-radiometric-indices/queryables</href>
+        <type>application/schema+json</type>
+        <title>Queryables</title>
+    </links>
+    <id>sentinel-2-radiometric-indices</id>
+    <type>Collection</type>
+    <title>Sentinel-2 Level 2A radiometric indices</title>
+    <stac_extensions>https://forge.inrae.fr/teledec/stac-extensions/schemas/-/raw/main/production/v1.1.0/schema.json</stac_extensions>
+    <stac_extensions>https://stac-extensions.github.io/projection/v2.0.0/schema.json</stac_extensions>
+    <stac_extensions>https://stac-extensions.github.io/raster/v1.1.0/schema.json</stac_extensions>
+    <stac_extensions>https://stac-extensions.github.io/eo/v1.1.0/schema.json</stac_extensions>
+    <stac_extensions>https://stac-extensions.github.io/sentinel-2/v1.0.0/schema.json</stac_extensions>
+    <stac_extensions>https://stac-extensions.github.io/contacts/v0.1.1/schema.json</stac_extensions>
+    <contacts>
+        <organization>INRAE</organization>
+        <name>Rémi Cresson</name>
+    </contacts>
+    <uuid>sentinel-2-radiometric-indices</uuid>
+    <apiUrl>https://stacapi-cdos.apps.okd.crocc.meso.umontpellier.fr/collections</apiUrl>
+    <nodeUrl>https://stacapi-cdos.apps.okd.crocc.meso.umontpellier.fr</nodeUrl>
+</record>
