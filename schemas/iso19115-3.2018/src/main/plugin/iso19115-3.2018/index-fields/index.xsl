@@ -737,7 +737,7 @@
         <xsl:for-each select="*:resourceMaintenance/*">
           <maintenance type="object">{
             "frequency": "<xsl:value-of select="*:maintenanceAndUpdateFrequency/*/@codeListValue"/>"
-            <xsl:for-each select="*:dateOfNextUpdate[*/text() != '']">
+            <xsl:for-each select="*:maintenanceDate/*/cit:date[*/text() != '']">
               <xsl:variable name="dateOfNextUpdateZulu"
                             select="date-util:convertToISOZuluDateTime(*/text())"/>
               <xsl:if test="$dateOfNextUpdateZulu != ''">
