@@ -164,6 +164,22 @@
               </cit:description>
             </cit:CI_OnlineResource>
           </mrd:onLine>
+          <mrd:onLine>
+            <cit:CI_OnlineResource>
+              <cit:linkage>
+                <gco:CharacterString>https://stacapi-cdos.apps.okd.crocc.meso.umontpellier.fr/collections/sentinel-2-radiometric-indices/items</gco:CharacterString>
+              </cit:linkage>
+              <cit:protocol>
+                <gco:CharacterString>STAC Items</gco:CharacterString>
+              </cit:protocol>
+              <cit:name>
+                <gco:CharacterString>sentinel-2-radiometric-indices</gco:CharacterString>
+              </cit:name>
+              <cit:description>
+                <gco:CharacterString>STAC Items</gco:CharacterString>
+              </cit:description>
+            </cit:CI_OnlineResource>
+          </mrd:onLine>
         </mrd:MD_DigitalTransferOptions>
       </mrd:transferOptions>
     </mrd:MD_Distribution>

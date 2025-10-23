@@ -330,6 +330,28 @@
                   </cit:CI_OnlineResource>
                 </mrd:onLine>
               </xsl:for-each>
+              <xsl:for-each select="links[rel = 'items']">
+                <mrd:onLine>
+                  <cit:CI_OnlineResource>
+                    <cit:linkage>
+                      <gco:CharacterString>
+                        <xsl:value-of select="href" />
+                      </gco:CharacterString>
+                    </cit:linkage>
+                    <cit:protocol>
+                      <gco:CharacterString>STAC Items</gco:CharacterString>
+                    </cit:protocol>
+                    <cit:name>
+                      <gco:CharacterString>
+                        <xsl:value-of select="tokenize(href,'/')[last()-1]" />
+                      </gco:CharacterString>
+                    </cit:name>
+                    <cit:description>
+                      <gco:CharacterString>STAC Items</gco:CharacterString>
+                    </cit:description>
+                  </cit:CI_OnlineResource>
+                </mrd:onLine>
+              </xsl:for-each>
             </mrd:MD_DigitalTransferOptions>
           </mrd:transferOptions>
         </mrd:MD_Distribution>
