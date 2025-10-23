@@ -544,7 +544,7 @@ eg.
       <datacite:version>4.1</datacite:version>
       -->
   <xsl:template mode="toDatacite"
-                match="cit:edition[*/text() != '']">
+                match="mdb:identificationInfo/*/mri:citation/*/cit:edition[*/text() != '']">
     <datacite:version><xsl:value-of select="gco:CharacterString"/></datacite:version>
   </xsl:template>
 
