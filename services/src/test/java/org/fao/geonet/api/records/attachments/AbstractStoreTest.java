@@ -55,10 +55,10 @@ import static org.junit.Assert.assertTrue;
  */
 public abstract class AbstractStoreTest extends AbstractServiceIntegrationTest {
 
-    private static String resources =
+    protected static String resources =
         AbstractCoreIntegrationTest.getClassFile(MetadataResourceDatabaseMigrationTest.class).getParent();
     @Autowired
-    private IMetadataUtils metadataUtils;
+    protected IMetadataUtils metadataUtils;
     @Autowired
     private MetadataRepository _metadataRepo;
 
@@ -89,7 +89,7 @@ public abstract class AbstractStoreTest extends AbstractServiceIntegrationTest {
                        "http://foo.bar/" + filename + urlParameters, handler);
     }
 
-    private String importMetadata(ServiceContext context) throws Exception {
+    protected String importMetadata(ServiceContext context) throws Exception {
         final MEFLibIntegrationTest.ImportMetadata importMetadata =
             new MEFLibIntegrationTest.ImportMetadata(this, context).invoke();
 
@@ -142,11 +142,6 @@ public abstract class AbstractStoreTest extends AbstractServiceIntegrationTest {
         assertEquals("Resource URL is correct",
             "http://localhost:8080/srv/api/records/" + metadataUuid + "/attachments/" + filename,
             resource.getUrl());
-
-        try (final Store.ResourceHolder path = getStore().getResource(
-                context, metadataUuid, MetadataResourceVisibility.PUBLIC, filename, true)) {
-            assertTrue("File exists on the disk", Files.isRegularFile(path.getPath()));
-        }
 
         MetadataResource patchedResource = getStore().patchResourceStatus(context, metadataUuid, filename,
                                                                       MetadataResourceVisibility.PRIVATE, true);

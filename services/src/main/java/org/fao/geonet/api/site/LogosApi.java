@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2024 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -41,6 +41,7 @@ import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.resources.Resources;
+import org.fao.geonet.util.FileMimetypeChecker;
 import org.fao.geonet.utils.FilePathChecker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -71,6 +72,7 @@ import java.util.stream.Collectors;
 @Controller("siteLogos")
 public class LogosApi {
     private static final String[] iconExt = {".gif", ".png", ".jpg", ".jpeg"};
+
     @Autowired
     GeonetworkDataDirectory dataDirectory;
     @Autowired
@@ -78,19 +80,20 @@ public class LogosApi {
 
     @Autowired
     GroupRepository groupRepository;
-    private final DirectoryStream.Filter<Path> iconFilter = new DirectoryStream.Filter<Path>() {
-        @Override
-        public boolean accept(Path file) {
-            if (file == null || (Files.exists(file) && !Files.isRegularFile(file)))
-                return false;
-            if (file.getFileName() != null) {
-                String name = file.getFileName().toString();
-                for (String ext : iconExt)
-                    if (name.endsWith(ext))
-                        return true;
-            }
+
+    @Autowired
+    FileMimetypeChecker fileMimetypeChecker;
+
+    private final DirectoryStream.Filter<Path> iconFilter = file -> {
+        if (file == null || (Files.exists(file) && !Files.isRegularFile(file)))
             return false;
+        if (file.getFileName() != null) {
+            String name = file.getFileName().toString();
+            for (String ext : iconExt)
+                if (name.endsWith(ext))
+                    return true;
         }
+        return false;
     };
 
     @io.swagger.v3.oas.annotations.Operation(
@@ -162,8 +165,9 @@ public class LogosApi {
         final Path directoryPath = resources.locateHarvesterLogosDirSMVC(appContext);
 
         for (MultipartFile f : file) {
-            String fileName = f.getOriginalFilename();
+            fileMimetypeChecker.checkValidImageMimeType(f);
 
+            String fileName = f.getOriginalFilename();
             checkFileName(fileName);
 
             try (Resources.ResourceHolder holder = resources.getWritableImage(serviceContext, fileName, directoryPath)) {
@@ -264,7 +268,7 @@ public class LogosApi {
         try (Resources.ResourceHolder image = resources.getImage(serviceContext, file, nodeLogoDirectory)) {
             if (image != null) {
                 final List<Group> groups = groupRepository.findByLogo(file);
-                if (groups != null && groups.size() > 0) {
+                if (groups != null && !groups.isEmpty()) {
                     final List<String> groupIds =
                         groups.stream().map(Group::getName).collect(Collectors.toList());
                     throw new IllegalArgumentException(String.format(

@@ -29,6 +29,7 @@ import jeeves.server.context.ServiceContext;
 import org.fao.geonet.domain.MetadataResource;
 import org.fao.geonet.domain.MetadataResourceContainer;
 import org.fao.geonet.domain.MetadataResourceVisibility;
+import org.springframework.core.io.Resource;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.Closeable;
@@ -38,9 +39,6 @@ import java.nio.file.Path;
 import java.util.Date;
 import java.util.List;
 import javax.annotation.Nullable;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * A store allows user to upload resources (eg. files) to a metadata record and retrieve them.
@@ -104,7 +102,7 @@ public interface Store {
     List<MetadataResource> getResources(ServiceContext context, String metadataUuid, MetadataResourceVisibility metadataResourceVisibility, String filter, Boolean approved) throws Exception;
 
     /**
-     * Retrieve a metadata resource path.
+     * Retrieve a resource.
      *
      *
      * @param context
@@ -116,7 +114,7 @@ public interface Store {
     ResourceHolder getResource(ServiceContext context, String metadataUuid, String resourceId) throws Exception;
 
     /**
-     * Retrieve a metadata resource path.
+     * Retrieve a resource.
      *
      *
      * @param context
@@ -129,7 +127,7 @@ public interface Store {
             String resourceId, Boolean approved) throws Exception;
 
     /**
-     * Retrieve a metadata resource path.
+     * Retrieve a resource.
      *
      *
      * @param context
@@ -141,12 +139,41 @@ public interface Store {
     ResourceHolder getResource(ServiceContext context, String metadataUuid, String resourceId, Boolean approved) throws Exception;
 
     /**
-     * Retrieve a metadata resource path (for internal use eg. indexing)
+     * Retrieve a resource (for internal use eg. indexing)
      */
     ResourceHolder getResourceInternal(String metadataUuid,
                                        final MetadataResourceVisibility visibility,
                                        String resourceId,
                                        Boolean approved) throws Exception;
+
+
+    /**
+     * Retrieve the metadata of a resource.
+     *
+     *
+     * @param context       The service context
+     * @param metadataUuid  The metadata UUID
+     * @param visibility    The type of sharing policy {@link MetadataResourceVisibility}
+     * @param resourceId    The resource identifier of its filename
+     * @return The resource
+     */
+    MetadataResource getResourceMetadata(ServiceContext context, String metadataUuid, MetadataResourceVisibility visibility,
+                                         String resourceId, Boolean approved) throws Exception;
+
+    /**
+     * Retrieve a range of bytes from a resource.
+     *
+     *
+     * @param context       The service context
+     * @param metadataUuid  The metadata UUID
+     * @param visibility    The type of sharing policy {@link MetadataResourceVisibility}
+     * @param resourceId    The resource identifier of its filename
+     * @param start         The start byte
+     * @param end           The end byte
+     * @return The specified range of the resource
+     */
+    ResourceHolder getResourceWithRange(ServiceContext context, String metadataUuid, MetadataResourceVisibility visibility,
+                                        String resourceId, Boolean approved, long start, long end) throws Exception;
 
     /**
      * Add a new resource from a file.
@@ -192,30 +219,30 @@ public interface Store {
         throws Exception;
 
     /**
-     * Add a new resource from a local file path.
+     * Add a new resource.
      *
      *
      * @param context
      * @param metadataUuid               The metadata UUID
-     * @param filePath                   The resource local filepath
+     * @param resource                   The resource
      * @param metadataResourceVisibility The type of sharing policy {@link MetadataResourceVisibility}
-     * @param approved   Return the approved version or not
+     * @param approved                   Return the approved version or not
      * @return The resource description
      */
-    MetadataResource putResource(ServiceContext context, String metadataUuid, Path filePath, MetadataResourceVisibility metadataResourceVisibility, Boolean approved) throws Exception;
+    MetadataResource putResource(ServiceContext context, String metadataUuid, Resource resource, MetadataResourceVisibility metadataResourceVisibility, Boolean approved) throws Exception;
 
     /**
-     * Add a new resource from a local file path.
+     * Add a new resource.
      *
      *
      * @param context
      * @param metadataUuid               The metadata UUID
-     * @param filePath                   The resource local filepath
+     * @param resource                   The resource
      * @param metadataResourceVisibility The type of sharing policy {@link MetadataResourceVisibility}
      * @return The resource description
      */
-	@Deprecated
-    MetadataResource putResource(ServiceContext context, String metadataUuid, Path filePath, MetadataResourceVisibility metadataResourceVisibility) throws Exception;
+    @Deprecated
+    MetadataResource putResource(ServiceContext context, String metadataUuid, Resource resource, MetadataResourceVisibility metadataResourceVisibility) throws Exception;
 
     /**
      * Add a new resource from a URL.
@@ -360,8 +387,32 @@ public interface Store {
      */
     void copyResources(ServiceContext context, String sourceUuid, String targetUuid, MetadataResourceVisibility metadataResourceVisibility, boolean sourceApproved, boolean targetApproved) throws Exception;
 
+    /**
+     * Retrieve a range of bytes from a resource.
+     *
+     *
+     * @param context       The service context
+     * @param metadataUuid  The metadata UUID
+     * @param resourceId    The resource identifier of its filename
+     * @param start         The start byte
+     * @param end           The end byte
+     * @return The specified range of the resource
+     */
+    ResourceHolder getResourceWithRange(ServiceContext context, String metadataUuid, String resourceId, Boolean approved, long start, long end) throws Exception;
+
+    /**
+     * Retrieve the metadata of a resource.
+     *
+     *
+     * @param context       The service context
+     * @param metadataUuid  The metadata UUID
+     * @param resourceId    The resource identifier of its filename
+     * @return The metadata of the resource
+     */
+    MetadataResource getResourceMetadata(ServiceContext context, String metadataUuid, String resourceId, Boolean approved) throws Exception;
+
     interface ResourceHolder extends Closeable {
-        Path getPath();
+        Resource getResource();
         MetadataResource getMetadata();
     }
 

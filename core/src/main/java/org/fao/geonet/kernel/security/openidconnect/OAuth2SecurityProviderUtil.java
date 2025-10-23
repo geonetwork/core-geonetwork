@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 Food and Agriculture Organization of the
+ * Copyright (C) 2025 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -22,10 +22,13 @@
  */
 package org.fao.geonet.kernel.security.openidconnect;
 
+import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.security.SecurityProviderUtil;
+import org.fao.geonet.kernel.security.openidconnect.bearer.OIDCServiceAccountLogin;
 import org.fao.geonet.utils.Log;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -53,6 +56,11 @@ public class OAuth2SecurityProviderUtil implements SecurityProviderUtil {
     @Autowired
     private OAuth2AuthorizedClientManager authorizedClientManager;
 
+    /**
+     * OIDC configuration Service
+     */
+    @Autowired
+    OIDCConfiguration oidcConfiguration;
 
    // setup for BEARER authentication
     public String getSSOAuthenticationHeaderValue() {
@@ -102,5 +110,20 @@ public class OAuth2SecurityProviderUtil implements SecurityProviderUtil {
         }
     }
 
+
+    @Override
+    public boolean loginServiceAccount() {
+        if (!oidcConfiguration.getServiceAccountConfig().isEnabled()) {
+            return false;
+        }
+        final ConfigurableApplicationContext applicationContext = ApplicationContextHolder.get();
+        OIDCServiceAccountLogin serviceAccountLogin;
+        try {
+            serviceAccountLogin = applicationContext.getBean(OIDCServiceAccountLogin.class);
+        } catch (Exception e) {
+            return false;
+        }
+        return serviceAccountLogin.loginServiceAccount();
+    }
 
 }

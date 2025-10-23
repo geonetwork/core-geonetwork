@@ -638,6 +638,85 @@
     }
   ]);
 
+  module.directive("gnBatchValidationReport", [
+    function () {
+      return {
+        restrict: "A",
+        replace: true,
+        scope: {
+          validationReport: "=gnBatchValidationReport"
+        },
+        templateUrl: function ($element, $attrs) {
+          return (
+            $attrs.templateUrl ||
+            "../../catalog/components/utility/" + "partials/batchvalidationreport.html"
+          );
+        },
+        link: function (scope, element, attrs) {
+          function compareByIdThenSchematron(a, b) {
+            var idA = +a.metadataId,
+              idB = +b.metadataId;
+            if (idA < idB) return -1;
+            if (idA > idB) return 1;
+            return a.schematron.localeCompare(b.schematron);
+          }
+
+          function flatten(map) {
+            var out = [];
+            map = map || {};
+            angular.forEach(map, function (schematronValidationReports, metadataId) {
+              angular.forEach(
+                schematronValidationReports,
+                function (schematronValidationReport) {
+                  angular.forEach(
+                    schematronValidationReport.messages,
+                    function (messages, pattern) {
+                      angular.forEach(messages, function (message) {
+                        if (pattern === "NO_PATTERN_TITLE") {
+                          out.push({
+                            metadataId: metadataId,
+                            schematron: schematronValidationReport.schematron,
+                            message: message
+                          });
+                        } else {
+                          out.push({
+                            metadataId: metadataId,
+                            pattern: pattern,
+                            schematron: schematronValidationReport.schematron,
+                            message: message
+                          });
+                        }
+                      });
+                    }
+                  );
+                }
+              );
+            });
+            return out;
+          }
+
+          scope.$watch("validationReport", function (report) {
+            if (!report) {
+              return;
+            }
+
+            scope.flatValidationErrors = flatten(report.validationErrors).sort(
+              compareByIdThenSchematron
+            );
+            scope.flatValidationWarnings = flatten(report.validationWarnings).sort(
+              compareByIdThenSchematron
+            );
+
+            scope.validationReportWarning =
+              report.numberOfInvalidRecords > 0 ||
+              report.numberOfNullRecords > 0 ||
+              report.numberOfRecordsNotEditable;
+          });
+        }
+      };
+    }
+  ]);
+
   module.directive("gnDuplicateCheck", [
     "$translate",
     "$http",
