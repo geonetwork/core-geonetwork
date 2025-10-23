@@ -92,4 +92,24 @@ public class XslConversionTest extends XslProcessTest {
             .build();
         assertFalse(diff.toString(), diff.hasDifferences());
     }
+
+    /**
+     * Tests the conversion of a JSON object to an XML representation and validates
+     * the resulting XML against an expected XML representation.
+     */
+    @Test
+    public void testObjectConversion() throws Exception {
+        String jsonString = "{\"Test\":\"value\", \"nestedObject\": {\"nestedField\": 433}}";
+        String expectedElement = "<root><Test>value</Test><nestedObject><nestedField>433</nestedField></nestedObject></root>";
+        Element xmlFromJSON = Xml.getXmlFromJSON(jsonString);
+        Diff diff = DiffBuilder
+            .compare(Input.fromString(expectedElement))
+            .withTest(Input.fromString(Xml.getString(xmlFromJSON)))
+            .withNodeMatcher(new DefaultNodeMatcher(ElementSelectors.byName))
+            .normalizeWhitespace()
+            .ignoreComments()
+            .checkForSimilar()
+            .build();
+        assertFalse(diff.toString(), diff.hasDifferences());
+    }
 }
