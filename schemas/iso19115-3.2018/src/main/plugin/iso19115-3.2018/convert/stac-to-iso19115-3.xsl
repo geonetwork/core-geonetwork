@@ -317,11 +317,11 @@
                       </gco:CharacterString>
                     </cit:linkage>
                     <cit:protocol>
-                      <gco:CharacterString>STAC</gco:CharacterString>
+                      <gco:CharacterString>WWW:LINK-1.0-http--link</gco:CharacterString>
                     </cit:protocol>
                     <cit:name>
                       <gco:CharacterString>
-                        <xsl:value-of select="title" />
+                        <xsl:value-of select="tokenize(href,'/')[last()]" />
                       </gco:CharacterString>
                     </cit:name>
                     <cit:description>
