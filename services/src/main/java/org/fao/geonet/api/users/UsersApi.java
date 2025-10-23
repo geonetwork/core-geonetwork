@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2021 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2025 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -38,6 +38,7 @@ import org.fao.geonet.api.users.model.PasswordResetDto;
 import org.fao.geonet.api.users.model.UserDto;
 import org.fao.geonet.api.users.validation.PasswordResetDtoValidator;
 import org.fao.geonet.api.users.validation.UserDtoValidator;
+import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.*;
 import org.fao.geonet.exceptions.UserNotFoundEx;
 import org.fao.geonet.kernel.DataManager;
@@ -88,6 +89,11 @@ import static org.springframework.data.jpa.domain.Specification.where;
     description = "User operations")
 @Controller("users")
 public class UsersApi {
+    /**
+     * Username pattern with allowed chars. Username may only contain alphanumeric characters or single hyphens,
+     * single at signs or single dots. Cannot begin or end with a hyphen, at sign or dot.
+     */
+    private static final String USERNAME_PATTERN = "^[a-zA-Z0-9]+([_\\-:.@]{1}[a-zA-Z0-9]+)*$";
 
     @Autowired
     SettingManager settingManager;
@@ -393,7 +399,7 @@ public class UsersApi {
                 return new ResponseEntity<>(HttpStatus.OK);
             }
         } else {
-            throw new IllegalArgumentException(String.format("Property '%s' is not supported. You can only check username and email"));
+            throw new IllegalArgumentException("Property is not supported. You can only check username and email");
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
@@ -454,6 +460,13 @@ public class UsersApi {
         String errorMessage = ApiUtils.processRequestValidation(bindingResult, messages);
         if (StringUtils.isNotEmpty(errorMessage)) {
             throw new IllegalArgumentException(errorMessage);
+        }
+
+        if (!userDto.getUsername().matches(USERNAME_PATTERN)) {
+            throw new IllegalArgumentException(Params.USERNAME
+                + " may only contain alphanumeric characters or single hyphens, single colons, single at signs or single dots. "
+                + "Cannot begin or end with a hyphen, colon, at sign or dot."
+            );
         }
 
         // If userProfileUpdateEnabled is not enabled, the user password are managed by the security provider so allow null passwords.
@@ -552,6 +565,12 @@ public class UsersApi {
                 "Another user with username '%s' ignore case already exists", user.getUsername()));
         }
 
+        if (!userDto.getUsername().matches(USERNAME_PATTERN)) {
+            throw new IllegalArgumentException(Params.USERNAME
+                + " may only contain alphanumeric characters or single hyphens, single colons, single at signs or single dots. "
+                + "Cannot begin or end with a hyphen, colon, at sign or dot."
+            );
+        }
 
         if (!myProfile.getProfileAndAllChildren().contains(profile)) {
             throw new IllegalArgumentException(
@@ -667,8 +686,8 @@ public class UsersApi {
         Profile myProfile = session.getProfile();
         String myUserId = session.getUserId();
 
-        if (!Profile.Administrator.equals(myProfile) 
-            && !Profile.UserAdmin.equals(myProfile) 
+        if (!Profile.Administrator.equals(myProfile)
+            && !Profile.UserAdmin.equals(myProfile)
             && !myUserId.equals(Integer.toString(userIdentifier))) {
             throw new IllegalArgumentException("You don't have rights to do this");
         }
@@ -793,7 +812,7 @@ public class UsersApi {
             .hasUserId(user.getId()));
 
         // Have a quick reference of existing groups and profiles for this user
-        Set<String> listOfAddedProfiles = new HashSet<String>();
+        Set<String> listOfAddedProfiles = new HashSet<>();
         for (UserGroup ug : all) {
             String key = ug.getProfile().name() + ug.getGroup().getId();
             listOfAddedProfiles.add(key);
@@ -801,11 +820,11 @@ public class UsersApi {
 
         // We start removing all old usergroup objects. We will remove the
         // explicitly defined for this call
-        Collection<UserGroup> toRemove = new ArrayList<UserGroup>();
+        Collection<UserGroup> toRemove = new ArrayList<>();
         toRemove.addAll(all);
 
         // New pairs of group-profile we need to add
-        Collection<UserGroup> toAdd = new ArrayList<UserGroup>();
+        Collection<UserGroup> toAdd = new ArrayList<>();
 
         // For each of the parameters on the request, make sure the group is
         // updated.
@@ -865,7 +884,7 @@ public class UsersApi {
 
 
     private List<GroupElem> processGroups(List<String> groupsToProcessList, Profile profile) {
-        List<GroupElem> groups = new LinkedList<GroupElem>();
+        List<GroupElem> groups = new LinkedList<>();
         for (String g : groupsToProcessList) {
             groups.add(new GroupElem(profile.name(), Integer.parseInt(g)));
         }
