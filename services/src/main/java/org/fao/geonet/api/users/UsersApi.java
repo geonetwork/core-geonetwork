@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2024 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2025 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -27,6 +27,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.util.regex.Pattern;
 import jeeves.server.UserSession;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
@@ -39,6 +40,7 @@ import org.fao.geonet.api.users.model.UserDto;
 import org.fao.geonet.api.users.validation.PasswordResetDtoValidator;
 import org.fao.geonet.api.users.validation.UserDtoValidator;
 import org.fao.geonet.auditable.UserAuditableService;
+import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.*;
 import org.fao.geonet.domain.auditable.UserAuditable;
 import org.fao.geonet.exceptions.UserNotFoundEx;
@@ -90,6 +92,12 @@ import static org.springframework.data.jpa.domain.Specification.where;
     description = "User operations")
 @Controller("users")
 public class UsersApi {
+    /**
+     * Username pattern with allowed chars: Username may only contain alphanumeric characters or hyphens,
+     * dots or colons or at-arrow (not consecutive). Cannot begin or end with an hyphen, colon or at-arrow.
+     */
+    private static final Pattern USERNAME_PATTERN_REGEX = Pattern.compile("^[a-zA-Z0-9]+([_\\-:.@]{1}[a-zA-Z0-9]+)*$");
+    public static final int MAX_USERNAME_LENGTH = 255;
 
     @Autowired
     SettingManager settingManager;
@@ -472,11 +480,18 @@ public class UsersApi {
             throw new IllegalArgumentException(errorMessage);
         }
 
-        // If userProfileUpdateEnabled is not enabled, the user password are managed by the security provider so allow null passwords.
-        // Otherwise the password cannot be null.
+        // If userProfileUpdateEnabled is not enabled, the user password is managed by the security provider so allow null passwords.
+        // Otherwise, the password cannot be null.
         if (userDto.getPassword() == null
             && (securityProviderConfiguration == null || securityProviderConfiguration.isUserProfileUpdateEnabled())) {
             throw new IllegalArgumentException("Users password must be supplied");
+        }
+
+        if (!USERNAME_PATTERN_REGEX.matcher(userDto.getUsername()).matches()) {
+            throw new IllegalArgumentException(Params.USERNAME
+                + " may only contain alphanumeric characters or single hyphens, single colons, single at signs or single dots. "
+                + "Cannot begin or end with a hyphen, colon, at sign or dot."
+            );
         }
 
         List<User> existingUsers = userRepository.findByUsernameIgnoreCase(userDto.getUsername());
@@ -574,6 +589,16 @@ public class UsersApi {
                 "Another user with username '%s' ignore case already exists", user.getUsername()));
         }
 
+        if (userDto.getUsername().length() > MAX_USERNAME_LENGTH) {
+            throw new IllegalArgumentException(
+                String.format("username must be less or equals than %d characters length", MAX_USERNAME_LENGTH));
+        }
+        if (!USERNAME_PATTERN_REGEX.matcher(userDto.getUsername()).matches()) {
+            throw new IllegalArgumentException(Params.USERNAME
+                + " may only contain alphanumeric characters or single hyphens, single colons, single at signs or single dots. "
+                + "Cannot begin or end with a hyphen, colon, at sign or dot."
+            );
+        }
 
         if (!myProfile.getProfileAndAllChildren().contains(profile)) {
             throw new IllegalArgumentException(
@@ -636,7 +661,7 @@ public class UsersApi {
         if (securityProviderConfiguration == null || securityProviderConfiguration.isUserGroupUpdateEnabled()) {
             setUserGroups(user, groups);
         }
-        
+
         List<UserGroup> userGroups = userGroupRepository.findAll(UserGroupSpecs
             .hasUserId(user.getId()));
 
