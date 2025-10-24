@@ -25,7 +25,8 @@ package org.fao.geonet.api.groups;
 import com.google.common.collect.Lists;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import junit.framework.Assert;
+import java.util.List;
+import java.util.Optional;
 import org.fao.geonet.api.FieldNameExclusionStrategy;
 import org.fao.geonet.api.JsonFieldNamingStrategy;
 import org.fao.geonet.domain.Group;
@@ -33,6 +34,7 @@ import org.fao.geonet.domain.Profile;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.domain.UserGroup;
 import org.fao.geonet.services.AbstractServiceIntegrationTest;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,12 +45,15 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import java.util.List;
-import java.util.Optional;
-
-import static org.hamcrest.Matchers.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.is;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
  * Test class for GroupsApi.
@@ -75,8 +80,8 @@ public class GroupsApiTest extends AbstractServiceIntegrationTest {
         this.mockHttpSession = loginAsAdmin();
 
         this.mockMvc.perform(get("/srv/api/groups")
-            .session(this.mockHttpSession)
-            .accept(MediaType.APPLICATION_JSON_VALUE))
+                .session(this.mockHttpSession)
+                .accept(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$", hasSize(1)))
             .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING));
@@ -89,8 +94,8 @@ public class GroupsApiTest extends AbstractServiceIntegrationTest {
         this.mockHttpSession = loginAsAdmin();
 
         MvcResult result = this.mockMvc.perform(get("/srv/api/groups?withReservedGroup=true")
-            .session(this.mockHttpSession)
-            .accept(MediaType.parseMediaType("application/json")))
+                .session(this.mockHttpSession)
+                .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$[*].name", hasItem("GUEST")))
             .andExpect(jsonPath("$[*].name", hasItem("all")))
@@ -107,8 +112,8 @@ public class GroupsApiTest extends AbstractServiceIntegrationTest {
         this.mockHttpSession = loginAsAdmin();
 
         this.mockMvc.perform(get("/srv/api/groups/2")
-            .session(this.mockHttpSession)
-            .accept(MediaType.parseMediaType("application/json")))
+                .session(this.mockHttpSession)
+                .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.name", is("sample")))
             .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING));
@@ -125,8 +130,8 @@ public class GroupsApiTest extends AbstractServiceIntegrationTest {
         this.mockHttpSession = loginAsAdmin();
 
         this.mockMvc.perform(get("/srv/api/groups/" + sampleGroup.getId() + "/users")
-            .session(this.mockHttpSession)
-            .accept(MediaType.parseMediaType("application/json")))
+                .session(this.mockHttpSession)
+                .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$", hasSize(2)))
             .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING));
@@ -142,8 +147,8 @@ public class GroupsApiTest extends AbstractServiceIntegrationTest {
         this.mockHttpSession = loginAsAdmin();
 
         this.mockMvc.perform(get("/srv/api/groups/222/users")
-            .session(this.mockHttpSession)
-            .accept(MediaType.parseMediaType("application/json")))
+                .session(this.mockHttpSession)
+                .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().is(404));
     }
 
@@ -158,18 +163,18 @@ public class GroupsApiTest extends AbstractServiceIntegrationTest {
         this.mockHttpSession = loginAsAdmin();
 
         this.mockMvc.perform(delete("/srv/api/groups/" + sampleGroup.getId())
-            .session(this.mockHttpSession)
-            .accept(MediaType.parseMediaType("application/json")))
+                .session(this.mockHttpSession)
+                .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().is(403));
 
         this.mockMvc.perform(delete("/srv/api/groups/" + sampleGroup.getId() + "?force=true")
-            .session(this.mockHttpSession)
-            .accept(MediaType.parseMediaType("application/json")))
+                .session(this.mockHttpSession)
+                .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().is(204));
 
         this.mockMvc.perform(get("/srv/api/groups/" + sampleGroup.getId())
-            .session(this.mockHttpSession)
-            .accept(MediaType.parseMediaType("application/json")))
+                .session(this.mockHttpSession)
+                .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().is(404));
 
         sampleGroup = _groupRepo.findByName("sample");
@@ -186,8 +191,8 @@ public class GroupsApiTest extends AbstractServiceIntegrationTest {
         this.mockHttpSession = loginAsAdmin();
 
         this.mockMvc.perform(delete("/srv/api/groups/222")
-            .session(this.mockHttpSession)
-            .accept(MediaType.parseMediaType("application/json")))
+                .session(this.mockHttpSession)
+                .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().is(404))
             .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING));
     }
@@ -212,10 +217,10 @@ public class GroupsApiTest extends AbstractServiceIntegrationTest {
         this.mockHttpSession = loginAsAdmin();
 
         this.mockMvc.perform(put("/srv/api/groups/" + groupToUpdate.getId())
-            .content(json)
-            .contentType(API_JSON_EXPECTED_ENCODING)
-            .session(this.mockHttpSession)
-            .accept(MediaType.parseMediaType("application/json")))
+                .content(json)
+                .contentType(API_JSON_EXPECTED_ENCODING)
+                .session(this.mockHttpSession)
+                .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().is(204));
     }
 
@@ -225,7 +230,7 @@ public class GroupsApiTest extends AbstractServiceIntegrationTest {
             ".invalidName", "invalidName.", "@invalidName", "invalidName@", "invalid@Name", "?nvalidName", "invälidName");
 
         Group groupToUpdate = _groupRepo.findByName("sample");
-        org.junit.Assert.assertNotNull(groupToUpdate);
+        Assert.assertNotNull(groupToUpdate);
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
         this.mockHttpSession = loginAsAdmin();
 
@@ -245,7 +250,6 @@ public class GroupsApiTest extends AbstractServiceIntegrationTest {
             String json = gson.toJson(groupToUpdate);
 
 
-
             this.mockMvc.perform(put("/srv/api/groups/" + groupToUpdate.getId())
                     .content(json)
                     .contentType(API_JSON_EXPECTED_ENCODING)
@@ -257,7 +261,7 @@ public class GroupsApiTest extends AbstractServiceIntegrationTest {
                     }
                 })
                 .andExpect(status().is(400))
-                .andExpect(jsonPath("$.description", is("Group name may only contain alphanumeric "
+                .andExpect(jsonPath("$.message", is("Group name may only contain alphanumeric "
                     + "characters or single hyphens. Cannot begin or end with a hyphen.")));
         }
     }
@@ -284,10 +288,10 @@ public class GroupsApiTest extends AbstractServiceIntegrationTest {
         this.mockHttpSession = loginAsAdmin();
 
         this.mockMvc.perform(put("/srv/api/groups/" + groupToUpdate.getId())
-            .content(json)
-            .contentType(API_JSON_EXPECTED_ENCODING)
-            .session(this.mockHttpSession)
-            .accept(MediaType.parseMediaType("application/json")))
+                .content(json)
+                .contentType(API_JSON_EXPECTED_ENCODING)
+                .session(this.mockHttpSession)
+                .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().is(404));
     }
 
@@ -315,10 +319,10 @@ public class GroupsApiTest extends AbstractServiceIntegrationTest {
         this.mockHttpSession = loginAsAdmin();
 
         this.mockMvc.perform(put("/srv/api/groups")
-            .content(json)
-            .contentType(API_JSON_EXPECTED_ENCODING)
-            .session(this.mockHttpSession)
-            .accept(MediaType.parseMediaType("application/json")))
+                .content(json)
+                .contentType(API_JSON_EXPECTED_ENCODING)
+                .session(this.mockHttpSession)
+                .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().is(201));
 
         Group groupAdded = _groupRepo.findByName("test-group");
@@ -336,7 +340,7 @@ public class GroupsApiTest extends AbstractServiceIntegrationTest {
         for (String groupName : namesToTest) {
             Group groupToAdd = _groupRepo.findByName(groupName);
 
-            org.junit.Assert.assertNull(groupToAdd);
+            Assert.assertNull(groupToAdd);
 
             groupToAdd = new Group();
             // TODO: Would be better that id is an Integer to use null for new records
@@ -364,7 +368,7 @@ public class GroupsApiTest extends AbstractServiceIntegrationTest {
                     }
                 })
                 .andExpect(status().is(400))
-                .andExpect(jsonPath("$.description", is("Group name may only contain alphanumeric "
+                .andExpect(jsonPath("$.message", is("Group name may only contain alphanumeric "
                     + "characters or single hyphens. Cannot begin or end with a hyphen.")));
         }
     }
@@ -393,10 +397,10 @@ public class GroupsApiTest extends AbstractServiceIntegrationTest {
         this.mockHttpSession = loginAsAdmin();
 
         this.mockMvc.perform(put("/srv/api/groups")
-            .content(json)
-            .contentType(API_JSON_EXPECTED_ENCODING)
-            .session(this.mockHttpSession)
-            .accept(MediaType.parseMediaType("application/json")))
+                .content(json)
+                .contentType(API_JSON_EXPECTED_ENCODING)
+                .session(this.mockHttpSession)
+                .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().is(400))
             .andExpect(jsonPath("$.message", is("A group with name 'sample' already exist.")));
     }
