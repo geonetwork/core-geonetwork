@@ -74,7 +74,7 @@
             type="button"
             class="btn btn-primary pull-right"
             data-ng-hide="!user.isUserAdminOrMore()"
-            data-ng-disabled="!gnGroupEdit.$valid && !gnGroupEdit.dirty"
+            data-ng-disabled="!gnGroupEdit.$valid || !gnGroupEdit.$dirty"
             data-ng-click="saveGroup('#gn-group-edit', '#group-logo-upload')"
             id="gn-btn-group-save"
           >
@@ -123,6 +123,7 @@
                 class="form-control"
                 data-ng-disabled="!user.isAdministratorOrMore()"
                 data-ng-model="groupSelected.name"
+                data-ng-pattern="/^[a-zA-Z0-9]+([_\-]{1}[a-zA-Z0-9]+)*$/"
                 data-ng-maxlength="32"
                 data-ng-required="true"
               />
@@ -134,6 +135,13 @@
                   data-translate=""
                   >groupNameMaxlength</span
                 >
+              </p>
+              <p
+                class="help-block"
+                ng-if="gnGroupEdit.name.$error.pattern"
+                data-translate=""
+              >
+                patternGroupName
               </p>
             </div>
 
