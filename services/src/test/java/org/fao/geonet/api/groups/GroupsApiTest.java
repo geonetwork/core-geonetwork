@@ -27,6 +27,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import java.util.List;
 import java.util.Optional;
+import org.apache.commons.lang3.StringUtils;
 import org.fao.geonet.api.FieldNameExclusionStrategy;
 import org.fao.geonet.api.JsonFieldNamingStrategy;
 import org.fao.geonet.domain.Group;
@@ -327,6 +328,45 @@ public class GroupsApiTest extends AbstractServiceIntegrationTest {
 
         Group groupAdded = _groupRepo.findByName("test-group");
         Assert.assertNotNull(groupAdded);
+    }
+
+    @Test
+    public void addGroupTooLong() throws Exception {
+        String groupName = StringUtils.repeat("a", 300);
+        Group groupToAdd = _groupRepo.findByName(groupName);
+        Assert.assertNull(groupToAdd);
+
+        groupToAdd = new Group();
+        // TODO: Would be better that id is an Integer to use null for new records
+        groupToAdd.setId(-99);
+        groupToAdd.setName(groupName);
+        groupToAdd.setEmail("group@mail.com");
+        groupToAdd.setDescription("A test group");
+        groupToAdd.setWebsite("http://link");
+
+        Gson gson = new GsonBuilder()
+            .setFieldNamingStrategy(new JsonFieldNamingStrategy())
+            .setExclusionStrategies(new FieldNameExclusionStrategy("_labelTranslations"))
+            .create();
+        String json = gson.toJson(groupToAdd);
+
+        this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+
+        this.mockHttpSession = loginAsAdmin();
+
+        this.mockMvc.perform(put("/srv/api/groups")
+                .content(json)
+                .contentType(API_JSON_EXPECTED_ENCODING)
+                .session(this.mockHttpSession)
+                .accept(MediaType.parseMediaType("application/json")))
+            .andDo(result -> {
+                if (result.getResponse().getStatus() != 400) {
+                    System.err.println(groupName + " has been accepted as group name and it shouldn't (too long)");
+                }
+            })
+            .andExpect(status().is(400))
+            .andExpect(jsonPath("$.message",
+                is(String.format("Group name cannot be longer than %d characters.", GroupsApi.GROUPNAME_MAX_LENGHT))));
     }
 
     @Test
