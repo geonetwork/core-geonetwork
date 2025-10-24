@@ -36,7 +36,6 @@ import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 
-
 public class FileMimetypeCheckerTest {
 
     private static final String resources = AbstractCoreIntegrationTest.getClassFile(FileMimetypeCheckerTest.class).getParent();
@@ -71,13 +70,13 @@ public class FileMimetypeCheckerTest {
         File file = Paths.get(resources, "report.csv").toFile();
         FileInputStream input = new FileInputStream(file);
         MultipartFile multipartFile = new MockMultipartFile("file",
-            file.getName(), "text/plain", IOUtils.toByteArray(input));
+            file.getName(), "text/csv", IOUtils.toByteArray(input));
 
         try {
             fileMimetypeChecker.checkValidImageMimeType(multipartFile);
             Assert.fail("\"report.csv\" is not an image file");
         } catch (IllegalArgumentException ex) {
-            Assert.assertEquals("File 'report.csv' with type 'text/plain' is not supported. To allow this file type, configure it in System Settings > Allowed file mime types to attach to a metadata record.", ex.getMessage());
+            Assert.assertEquals("File 'report.csv' with type 'text/csv' is not supported. To allow this file type, configure it in System Settings > Allowed file mime types to attach to a metadata record.", ex.getMessage());
         }
     }
 
@@ -88,7 +87,7 @@ public class FileMimetypeCheckerTest {
         File file = Paths.get(resources, "report.csv").toFile();
         FileInputStream input = new FileInputStream(file);
         MultipartFile multipartFile = new MockMultipartFile("file",
-            file.getName(), "text/plain", IOUtils.toByteArray(input));
+            file.getName(), "text/csv", IOUtils.toByteArray(input));
 
         try {
             fileMimetypeChecker.checkValidCsvMimeType(multipartFile);
@@ -137,13 +136,13 @@ public class FileMimetypeCheckerTest {
         File file = Paths.get(resources, "report.csv").toFile();
         FileInputStream input = new FileInputStream(file);
         MultipartFile multipartFile = new MockMultipartFile("file",
-            file.getName(), "text/plain", IOUtils.toByteArray(input));
+            file.getName(), "text/csv", IOUtils.toByteArray(input));
 
         try {
             fileMimetypeChecker.checkValidThesaurusMimeType(multipartFile);
             Assert.fail("\"report.csv\" is not a thesaurus file");
         } catch (IllegalArgumentException ex) {
-            Assert.assertEquals("File 'report.csv' with type 'text/plain' is not supported. To allow this file type, configure it in System Settings > Allowed file mime types to attach to a metadata record.", ex.getMessage());
+            Assert.assertEquals("File 'report.csv' with type 'text/csv' is not supported. To allow this file type, configure it in System Settings > Allowed file mime types to attach to a metadata record.", ex.getMessage());
         }
     }
 
@@ -178,6 +177,99 @@ public class FileMimetypeCheckerTest {
             Assert.fail("\"template.pdf\" is not a text file");
         } catch (IllegalArgumentException ex) {
             Assert.assertEquals("File 'template.pdf' with type 'application/pdf' is not supported. To allow this file type, configure it in System Settings > Allowed file mime types to attach to a metadata record.", ex.getMessage());
+        }
+    }
+
+    @Test
+    public void testAllValidMimetype() throws Exception {
+        FileMimetypeChecker fileMimetypeChecker = new FileMimetypeChecker();
+
+        File file = Paths.get(resources, "template.pdf").toFile();
+        FileInputStream input = new FileInputStream(file);
+        MultipartFile multipartFile = new MockMultipartFile("file",
+            file.getName(), "application/pdf", IOUtils.toByteArray(input));
+
+        try {
+            fileMimetypeChecker.checkValidMimeType(multipartFile, new String[] {"*/*"});
+            fileMimetypeChecker.checkValidMimeType(multipartFile, new String[] {"*"});
+        } catch (IllegalArgumentException ex) {
+            Assert.fail(ex.getMessage());
+        }
+    }
+
+    @Test
+    public void testValidWildcardMimetype() throws Exception {
+        FileMimetypeChecker fileMimetypeChecker = new FileMimetypeChecker();
+
+        File file = Paths.get(resources, "template.pdf").toFile();
+        FileInputStream input = new FileInputStream(file);
+        MultipartFile multipartFile = new MockMultipartFile("file",
+            file.getName(), "application/pdf", IOUtils.toByteArray(input));
+
+        try {
+            fileMimetypeChecker.checkValidMimeType(multipartFile, new String[] {"application/*"});
+        } catch (IllegalArgumentException ex) {
+            Assert.fail(ex.getMessage());
+        }
+    }
+
+    @Test
+    public void testNoValidWildcardMimetype() throws Exception {
+        FileMimetypeChecker fileMimetypeChecker = new FileMimetypeChecker();
+
+        File file = Paths.get(resources, "template.pdf").toFile();
+        FileInputStream input = new FileInputStream(file);
+        MultipartFile multipartFile = new MockMultipartFile("file",
+            file.getName(), "application/pdf", IOUtils.toByteArray(input));
+
+        try {
+            fileMimetypeChecker.checkValidMimeType(multipartFile, new String[]{"image/*"});
+            Assert.fail("\"template.pdf\" is not an image file");
+        } catch (IllegalArgumentException ex) {
+            Assert.assertEquals("File 'template.pdf' with type 'application/pdf' is not supported. To allow this file type, configure it in System Settings > Allowed file mime types to attach to a metadata record.", ex.getMessage());
+        }
+    }
+
+    @Test
+    public void testValidMimetypeCheckIsDirectional() throws Exception {
+        FileMimetypeChecker fileMimetypeChecker = new FileMimetypeChecker();
+
+        File file = Paths.get(resources, "template.pdf").toFile();
+        FileInputStream input = new FileInputStream(file);
+        MultipartFile multipartFile = new MockMultipartFile("file",
+            file.getName(), "application/pdf", IOUtils.toByteArray(input));
+
+        try {
+            fileMimetypeChecker.checkValidMimeType(multipartFile, new String[]{"application/json"});
+            Assert.fail("\"template.pdf\" is not a json file");
+        } catch (IllegalArgumentException ex) {
+            Assert.assertEquals("File 'template.pdf' with type 'application/pdf' is not supported. To allow this file type, configure it in System Settings > Allowed file mime types to attach to a metadata record.", ex.getMessage());
+        }
+    }
+
+    @Test
+    public void testNoValidMimetypesConfigured() throws Exception {
+        FileMimetypeChecker fileMimetypeChecker = new FileMimetypeChecker();
+
+        File file = Paths.get(resources, "template.pdf").toFile();
+        FileInputStream input = new FileInputStream(file);
+        MultipartFile multipartFile = new MockMultipartFile("file",
+            file.getName(), "application/pdf", IOUtils.toByteArray(input));
+
+        final String expectedMessage = "No allowed MIME types are configured. Please configure them in System Settings. To allow this file type, configure it in System Settings > Allowed file mime types to attach to a metadata record.";
+
+        try {
+            fileMimetypeChecker.checkValidMimeType(multipartFile, null);
+            Assert.fail("\"template.pdf\" is not an image file");
+        } catch (IllegalArgumentException ex) {
+            Assert.assertEquals(expectedMessage, ex.getMessage());
+        }
+
+        try {
+            fileMimetypeChecker.checkValidMimeType(multipartFile, new String[]{});
+            Assert.fail("\"template.pdf\" is not an image file");
+        } catch (IllegalArgumentException ex) {
+            Assert.assertEquals(expectedMessage, ex.getMessage());
         }
     }
 }
