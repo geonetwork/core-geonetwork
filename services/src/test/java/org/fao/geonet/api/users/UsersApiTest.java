@@ -338,6 +338,36 @@ public class UsersApiTest extends AbstractServiceIntegrationTest {
     }
 
     @Test
+    public void createUserUsernameTooLong() throws Exception {
+        String username = StringUtils.repeat("a", UsersApi.MAX_USERNAME_LENGTH + 1);
+        UserDto user = new UserDto();
+        user.setName("new");
+        user.setUsername(username);
+        user.setProfile(Profile.Editor.name());
+        user.setGroupsEditor(Collections.singletonList("2"));
+        user.setEmail(Collections.singletonList("mail@test.com"));
+        user.setPassword("Password1$");
+        user.setEnabled(true);
+
+        Gson gson = new Gson();
+        String json = gson.toJson(user);
+
+        this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+
+        this.mockHttpSession = loginAsAdmin();
+
+        // Check 400 is returned and a message indicating that username is required
+        this.mockMvc.perform(put("/srv/api/users")
+                .content(json)
+                .contentType(API_JSON_EXPECTED_ENCODING)
+                .session(this.mockHttpSession)
+                .accept(MediaType.parseMediaType("application/json")))
+            .andExpect(jsonPath("$.message",
+                is(String.format("username size should be less or equals than %d characters", UsersApi.MAX_USERNAME_LENGTH))))
+            .andExpect(status().is(400));
+    }
+
+    @Test
     public void resetPassword() throws Exception {
         User user = _userRepo.findOneByUsername("testuser-editor");
         Assert.assertNotNull(user);

@@ -27,6 +27,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.util.regex.Pattern;
 import jeeves.server.UserSession;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
@@ -93,7 +94,8 @@ public class UsersApi {
      * Username pattern with allowed chars: Username may only contain alphanumeric characters or hyphens,
      * dots or colons or at-arrow (not consecutive). Cannot begin or end with an hyphen, colon or at-arrow.
      */
-    private static final String USERNAME_PATTERN = "^[a-zA-Z0-9]+([_\\-:.@]{1}[a-zA-Z0-9]+)*$";
+    private static final Pattern USERNAME_PATTERN_REGEX = Pattern.compile("^[a-zA-Z0-9]+([_\\-:.@]{1}[a-zA-Z0-9]+)*$");
+    public static final int MAX_USERNAME_LENGTH = 255;
 
     @Autowired
     SettingManager settingManager;
@@ -462,14 +464,14 @@ public class UsersApi {
             throw new IllegalArgumentException(errorMessage);
         }
 
-        // If userProfileUpdateEnabled is not enabled, the user password are managed by the security provider so allow null passwords.
-        // Otherwise the password cannot be null.
+        // If userProfileUpdateEnabled is not enabled, the user password is managed by the security provider so allow null passwords.
+        // Otherwise, the password cannot be null.
         if (userDto.getPassword() == null
             && (securityProviderConfiguration == null || securityProviderConfiguration.isUserProfileUpdateEnabled())) {
             throw new IllegalArgumentException("Users password must be supplied");
         }
 
-        if (!userDto.getUsername().matches(USERNAME_PATTERN)) {
+        if (!USERNAME_PATTERN_REGEX.matcher(userDto.getUsername()).matches()) {
             throw new IllegalArgumentException(Params.USERNAME
                 + " may only contain alphanumeric characters or single hyphens, single colons, single at signs or single dots. "
                 + "Cannot begin or end with a hyphen, colon, at sign or dot."
@@ -565,7 +567,11 @@ public class UsersApi {
                 "Another user with username '%s' ignore case already exists", user.getUsername()));
         }
 
-        if (!userDto.getUsername().matches(USERNAME_PATTERN)) {
+        if (userDto.getUsername().length() > MAX_USERNAME_LENGTH) {
+            throw new IllegalArgumentException(
+                String.format("username must be less or equals than %d characters length", MAX_USERNAME_LENGTH));
+        }
+        if (!USERNAME_PATTERN_REGEX.matcher(userDto.getUsername()).matches()) {
             throw new IllegalArgumentException(Params.USERNAME
                 + " may only contain alphanumeric characters or single hyphens, single colons, single at signs or single dots. "
                 + "Cannot begin or end with a hyphen, colon, at sign or dot."
