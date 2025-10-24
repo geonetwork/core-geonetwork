@@ -1428,7 +1428,7 @@
     "sourceName": "Nume",
     "sourceName-help": "Nume scurt al portalului. TREBUIE să fie compus numai din litere, cifre, „-” și „_”. Odată creat, utilizați traducerile pentru a defini etichetele care vor fi afișate în bara de instrumente.",
     "sourceFilter": "Filtrul de căutare",
-    "sourceFilter-help": "Criterii de căutare suplimentare pentru a fi adăugate la orice căutări efectuate în portal. Aceasta este o <a href='https://lucene.apache.org/core/2_9_4/queryparsersyntax.html'>expresie lucene</a> . de exemplu. +cuvânt cheie:inspira",
+    "sourceFilter-help": "Criterii de căutare suplimentare pentru a fi adăugate la orice căutări efectuate în portal. Aceasta este o <a href='https://www.elastic.co/guide/en/elasticsearch/reference/8.18/query-dsl-query-string-query.html#query-string-syntax'>expresie Elasticsearch</a> . de exemplu. +cuvânt cheie:inspira",
     "displayInHeaderSwitcher": "Afișare în comutatorul portal",
     "displayInHeaderSwitcher-help": "Dacă este activat, portalul va fi afișat pe lista de portaluri disponibile în selectorul de portal din antetul site-ului",
     "sourceLogo": "Siglă",
