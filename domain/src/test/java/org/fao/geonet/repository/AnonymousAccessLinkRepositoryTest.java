@@ -29,11 +29,8 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
-import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 public class AnonymousAccessLinkRepositoryTest extends AbstractSpringDataTest {
@@ -64,24 +61,6 @@ public class AnonymousAccessLinkRepositoryTest extends AbstractSpringDataTest {
 
 		accesses = anonymousAccessLinkRepository.findAll();
 		assertEquals(0, accesses.size());
-	}
-
-	@Test
-	public void findByHash() {
-		AnonymousAccessLink anonymousAccessLink = new AnonymousAccessLink() //
-				.setMetadataId(666) //
-				.setMetadataUuid("uuid") //
-				.setHash("hash");
-		anonymousAccessLinkRepository.save(anonymousAccessLink);
-
-		AnonymousAccessLink auth = anonymousAccessLinkRepository.findOneByHash("hash");
-
-		assertNotNull(auth);
-		assertEquals(666, auth.getMetadataId());
-
-		auth = anonymousAccessLinkRepository.findOneByHash("hush");
-
-		assertNull(auth);
 	}
 
 }

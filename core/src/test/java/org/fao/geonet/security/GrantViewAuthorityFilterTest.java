@@ -33,6 +33,7 @@ import org.springframework.mock.web.MockFilterChain;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 
 import javax.servlet.ServletException;
@@ -45,10 +46,12 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class GrantViewAuthorityFilterTest extends AbstractCoreIntegrationTest {
 
 	private int mdId;
+	private String uuid;
 	private String hash;
 	private MockHttpServletRequest requestMock;
 	private MockFilterChain filterChainMock;
@@ -105,9 +108,9 @@ public class GrantViewAuthorityFilterTest extends AbstractCoreIntegrationTest {
 
 		toTest.doFilter(requestMock, responseMock, filterChainMock);
 		filterChainMock.reset();
-		Mockito.when(repositoryMock.findOneByHash(argThat("hush-hush"::equals))).thenReturn(
-				new AnonymousAccessLink().setMetadataId(123));
-		requestMock.setParameter("hash", "hush-hush");
+		Mockito.when(repositoryMock.findOneByMetadataUuid(argThat("uuid2"::equals))).thenReturn(
+				new AnonymousAccessLink().setMetadataId(123).setMetadataUuid("uuid2").setHash("Y".repeat(AnonymousAccessLink.getRandomHashLength())));
+		requestMock.setParameter("hash", "Y".repeat(AnonymousAccessLink.getRandomHashLength()) + "uuid2");
 		toTest.doFilter(requestMock, responseMock, filterChainMock);
 
 		assertEquals(requestMock, filterChainMock.getRequest());
@@ -127,7 +130,7 @@ public class GrantViewAuthorityFilterTest extends AbstractCoreIntegrationTest {
 	public void unknownHashIgnored() throws ServletException, IOException {
 		GrantViewMdAuthorityFilter toTest = prepareToTest();
 
-		requestMock.setParameter("hash", "hush-hush");
+		requestMock.setParameter("hash", "Y".repeat(AnonymousAccessLink.getRandomHashLength()) + uuid);
 		toTest.doFilter(requestMock, responseMock, filterChainMock);
 
 		assertEquals(requestMock, filterChainMock.getRequest());
@@ -138,17 +141,26 @@ public class GrantViewAuthorityFilterTest extends AbstractCoreIntegrationTest {
 	}
 
 	private GrantViewMdAuthorityFilter prepareToTest() {
-		hash = "hash-hash";
+		uuid = "uuid";
+		hash = "X".repeat(AnonymousAccessLink.getRandomHashLength()) + uuid;
 		mdId = 666;
 		repositoryMock = mock(AnonymousAccessLinkRepository.class);
-		Mockito.when(repositoryMock.findOneByHash(argThat(hash::equals))).thenReturn(new AnonymousAccessLink().setMetadataId(mdId));
+		Mockito.when(repositoryMock.findOneByMetadataUuid(argThat(uuid::equals))).thenReturn(
+				new AnonymousAccessLink().setMetadataId(mdId).setMetadataUuid(uuid).setHash("X".repeat(AnonymousAccessLink.getRandomHashLength())));
+		PasswordEncoder encodeMock = Mockito.mock(PasswordEncoder.class);
+		when(encodeMock.matches("X".repeat(AnonymousAccessLink.getRandomHashLength()), "X".repeat(AnonymousAccessLink.getRandomHashLength()))).thenReturn(true);
+		when(encodeMock.encode("X".repeat(AnonymousAccessLink.getRandomHashLength()))).thenReturn("X".repeat(AnonymousAccessLink.getRandomHashLength()));
+		when(encodeMock.matches("Y".repeat(AnonymousAccessLink.getRandomHashLength()), "Y".repeat(AnonymousAccessLink.getRandomHashLength()))).thenReturn(true);
+		when(encodeMock.encode("Y".repeat(AnonymousAccessLink.getRandomHashLength()))).thenReturn("Y".repeat(AnonymousAccessLink.getRandomHashLength()));
 		GrantViewMdAuthorityFilter toTest = new GrantViewMdAuthorityFilter(mock(HttpSessionSecurityContextRepository.class));
 		toTest.anonymousAccessLinkRepository = repositoryMock;
+		toTest.encoder = encodeMock;
 		requestMock = new MockHttpServletRequest();
 		requestMock.setParameter("hash", hash);
 		responseMock = new MockHttpServletResponse();
 		filterChainMock = new MockFilterChain();
 		requestMock.setSession(loginAsAnonymous());
+
 		return toTest;
 	}
 }

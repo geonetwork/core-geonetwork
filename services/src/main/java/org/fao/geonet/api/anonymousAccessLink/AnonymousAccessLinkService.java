@@ -33,8 +33,11 @@ import org.fao.geonet.index.es.EsRestClient;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.repository.AnonymousAccessLinkRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
+import org.fao.geonet.util.PasswordUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -63,6 +66,10 @@ public class AnonymousAccessLinkService {
     @Autowired
     private OperationAllowedRepository opAllowedRepo;
 
+    @Autowired
+    @Qualifier(PasswordUtil.ENCODER_ID)
+    private PasswordEncoder encoder;
+
     public AnonymousAccessLinkDto createAnonymousAccessLink(String uuid) throws ResourceAlreadyExistException {
         if (anonymousAccessLinkRepository.findOneByMetadataUuid(uuid) != null) {
             throw new ResourceAlreadyExistException();
@@ -75,15 +82,19 @@ public class AnonymousAccessLinkService {
         AnonymousAccessLink anonymousAccessLinkToCreate = new AnonymousAccessLink()
                 .setMetadataId(mdId)
                 .setMetadataUuid(uuid)
-                .setHash(randomHash);
+                .setHash(encoder.encode(randomHash));
         anonymousAccessLinkRepository.save(anonymousAccessLinkToCreate);
-        return mapper.toDto(anonymousAccessLinkToCreate).setHash(randomHash);
+        return mapper.toDto(anonymousAccessLinkToCreate).setHash(String.format("%s%s", randomHash, uuid));
     }
 
     public List<AnonymousAccessLinkDto> getAllAnonymousAccessLinksWithMdInfos() throws IOException {
         List<AnonymousAccessLink> anonymousAccessLinks = anonymousAccessLinkRepository.findAll();
 
         List<String> uuids = anonymousAccessLinks.stream().map(AnonymousAccessLink::getMetadataUuid).collect(Collectors.toList());
+        if (uuids.isEmpty()) {
+            return List.of();
+        }
+
         MgetRequest request = new MgetRequest.Builder()
                 .ids(uuids)
                 .index(defaultIndex)

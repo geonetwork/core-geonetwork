@@ -102,8 +102,11 @@ public class AnonymousAccessLink {
 		return Objects.hash(id, metadataId, metadataUuid, hash);
 	}
 
+	public static int getRandomHashLength() {
+		return 43;
+	}
 	public static String getRandomHash() {
-		BytesKeyGenerator generator = KeyGenerators.secureRandom(64);
-		return Base64.getUrlEncoder().encodeToString(generator.generateKey());
+		BytesKeyGenerator generator = KeyGenerators.secureRandom(32);
+		return Base64.getUrlEncoder().withoutPadding().encodeToString(generator.generateKey());
 	}
 }

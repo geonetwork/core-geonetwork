@@ -27,8 +27,6 @@ import org.fao.geonet.domain.AnonymousAccessLink;
 
 public interface AnonymousAccessLinkRepository extends GeonetRepository<AnonymousAccessLink, Integer> {
 
-	AnonymousAccessLink findOneByHash(String hash);
-
 	AnonymousAccessLink findOneByMetadataUuid(String uuid);
 
 }

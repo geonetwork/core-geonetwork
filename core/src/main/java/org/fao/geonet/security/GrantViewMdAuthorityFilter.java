@@ -26,13 +26,16 @@ package org.fao.geonet.security;
 import org.fao.geonet.domain.AnonymousAccessLink;
 import org.fao.geonet.kernel.security.ViewMdGrantedAuthority;
 import org.fao.geonet.repository.AnonymousAccessLinkRepository;
+import org.fao.geonet.util.PasswordUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationTrustResolver;
 import org.springframework.security.authentication.AuthenticationTrustResolverImpl;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.web.filter.GenericFilterBean;
 
@@ -48,6 +51,10 @@ public class GrantViewMdAuthorityFilter extends GenericFilterBean {
 
     @Autowired
     AnonymousAccessLinkRepository anonymousAccessLinkRepository;
+
+    @Autowired
+    @Qualifier(PasswordUtil.ENCODER_ID)
+    PasswordEncoder encoder;
 
     private HttpSessionSecurityContextRepository repo;
 
@@ -78,9 +85,15 @@ public class GrantViewMdAuthorityFilter extends GenericFilterBean {
             filterChain.doFilter(servletRequest, servletResponse);
             return;
         }
-        String hash = servletRequest.getParameter("hash");
-        AnonymousAccessLink authority = anonymousAccessLinkRepository.findOneByHash(hash);
-        if (authority == null) {
+        String hashParam = servletRequest.getParameter("hash");
+        if (hashParam == null || hashParam.length() < AnonymousAccessLink.getRandomHashLength() + 1) {
+            filterChain.doFilter(servletRequest, servletResponse);
+            return;
+        }
+        String hash = hashParam.substring(0, AnonymousAccessLink.getRandomHashLength());
+        String uuid = hashParam.substring(AnonymousAccessLink.getRandomHashLength());
+        AnonymousAccessLink authority = anonymousAccessLinkRepository.findOneByMetadataUuid(uuid);
+        if (authority == null || !encoder.matches(hash, authority.getHash())) {
             filterChain.doFilter(servletRequest, servletResponse);
             return;
         }
