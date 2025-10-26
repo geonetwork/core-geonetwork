@@ -69,7 +69,7 @@ public class AnonymousAccessLinkServiceTest extends AbstractServiceIntegrationTe
 		AnonymousAccessLink stored = anonymousAccessLinkRepository.findOneByMetadataUuid(md.getUuid());
 		assertEquals(stored.getMetadataUuid(), created.getMetadataUuid());
 		assertEquals(stored.getMetadataId(), created.getMetadataId());
-		assertEquals(stored.getHash(), created.getHash());
+		assertEquals(stored.getHash() + stored.getMetadataUuid(), created.getHash());
 	}
 
 	@Test
