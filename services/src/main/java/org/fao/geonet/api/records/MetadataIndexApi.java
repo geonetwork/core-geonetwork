@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2023 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2025 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -43,6 +43,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.Set;
 
@@ -74,11 +75,11 @@ public class MetadataIndexApi {
         method = RequestMethod.GET,
         produces = MediaType.APPLICATION_JSON_VALUE
     )
-    @PreAuthorize("hasAuthority('Administrator')")
+    @PreAuthorize("hasAuthority('Editor')")
     @ResponseStatus(HttpStatus.OK)
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Record indexed."),
-        @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_ADMIN)
+        @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)
     })
     public
     @ResponseBody
@@ -96,6 +97,8 @@ public class MetadataIndexApi {
         )
             String bucket,
         @Parameter(hidden = true)
+            HttpServletRequest request,
+        @Parameter(hidden = true)
             HttpSession httpSession
     )
         throws Exception {
@@ -104,9 +107,9 @@ public class MetadataIndexApi {
 
         Set<String> records = ApiUtils.getUuidsParameterOrSelection(uuids, bucket, session);
         Set<Integer> ids = Sets.newHashSet();
-        int index = 0;
 
         for (String uuid : records) {
+            ApiUtils.canEditRecord(uuid, request);
             try {
                 metadataUtils.findAllByUuid(uuid).forEach(m -> ids.add(m.getId()));
             } catch (Exception e) {
@@ -117,7 +120,7 @@ public class MetadataIndexApi {
                 }
             }
         }
-        index = ids.size();
+        int index = ids.size();
         new BatchOpsMetadataReindexer(dataManager, ids)
             .process(settingManager.getSiteId(), false);
 
