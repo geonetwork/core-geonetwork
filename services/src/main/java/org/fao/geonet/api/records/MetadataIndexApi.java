@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2023 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2025 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -80,7 +80,7 @@ public class MetadataIndexApi {
     @ResponseStatus(HttpStatus.OK)
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Record indexed."),
-        @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_ADMIN)
+        @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)
     })
     public
     @ResponseBody
@@ -108,7 +108,6 @@ public class MetadataIndexApi {
 
         Set<String> records = ApiUtils.getUuidsParameterOrSelection(uuids, bucket, session);
         Set<Integer> ids = Sets.newHashSet();
-        int index = 0;
 
         for (String uuid : records) {
             ApiUtils.canEditRecord(uuid, request);
@@ -122,7 +121,7 @@ public class MetadataIndexApi {
                 }
             }
         }
-        index = ids.size();
+        int index = ids.size();
 
         if (index > 0) {
             // clean XLink Cache so that cache and index remain in sync
