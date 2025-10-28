@@ -1640,10 +1640,10 @@
           '             viewBox="0 0 500 500">' +
           "    <defs>" +
           '      <pattern id="image{{imageId}}" x="0" y="0" patternUnits="userSpaceOnUse" height="100%" width="100%">' +
-          '        <image ng-if="hasIcon" x="0" y="0" height="100%" width="100%" xlink:href="{{\'../../images/harvesting/\' + orgKey + \'.png\'}}"></image>' +
+          '        <image ng-if="hasIcon" x="0" y="0" height="100%" width="100%" ng-attr-href="{{\'../api/logos/\' + orgKey + \'.png\'}}"></image>' +
           "      </pattern>" +
           "    </defs>" +
-          '    <circle fill="url(\'#image{{imageId}}\')" style="stroke-miterlimit:10;" cx="250" cy="250" r="240"/>' +
+          '    <circle fill="url(#image{{imageId}})" style="stroke-miterlimit:10;" cx="250" cy="250" r="240"/>' +
           '    <text x="50%" y="50%"' +
           '          text-anchor="middle" alignment-baseline="central" dominant-baseline="central"' +
           "          font-size=\"300\">{{hasIcon ? '' : org.substr(0, 1).toUpperCase()}}</text>" +

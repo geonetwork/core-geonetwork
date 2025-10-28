@@ -123,7 +123,8 @@
                 class="form-control"
                 data-ng-disabled="!user.isAdministratorOrMore()"
                 data-ng-model="groupSelected.name"
-                data-ng-maxlength="255"
+                data-ng-pattern="/^[a-zA-Z0-9]+([_\-]{1}[a-zA-Z0-9]+)*$/"
+                data-ng-maxlength="32"
                 data-ng-required="true"
               />
               <p class="help-block" data-translate="">groupNameHelp</p>
@@ -134,6 +135,13 @@
                   data-translate=""
                   >groupNameMaxlength</span
                 >
+              </p>
+              <p
+                class="help-block"
+                ng-if="gnGroupEdit.name.$error.pattern"
+                data-translate=""
+              >
+                patternGroupName
               </p>
             </div>
 
