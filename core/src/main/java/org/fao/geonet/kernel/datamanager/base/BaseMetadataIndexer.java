@@ -132,10 +132,29 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
 
     private ApplicationEventPublisher publisher;
 
+    private ObjectMapper indexObjectMapper;
+
     @Autowired
     private UserSavedSelectionRepository userSavedSelectionRepository;
 
     public BaseMetadataIndexer() {
+        indexObjectMapper = new ObjectMapper();
+        indexObjectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+        indexObjectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+
+        // Exclude fields with the index ignore annotation
+        indexObjectMapper.setAnnotationIntrospector(new JacksonAnnotationIntrospector() {
+            @Override
+            public boolean hasIgnoreMarker(AnnotatedMember member) {
+                return member.hasAnnotation(IndexIgnore.class) || super.hasIgnoreMarker(member);
+            }
+
+            @Override
+            public PropertyName findNameForSerialization(Annotated annotated) {
+                if (annotated.hasAnnotation(IndexIgnore.class)) return null;
+                return super.findNameForSerialization(annotated);
+            }
+        });
     }
 
     public void init(ServiceContext context, Boolean force) throws Exception {
@@ -689,26 +708,7 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
                 !(fullMd instanceof MetadataDraft));
 
             if (metadataResources != null && !metadataResources.isEmpty()) {
-
-                ObjectMapper objectMapper = new ObjectMapper();
-                objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-                objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-
-                // Exclude fields with the index ignore annotation
-                objectMapper.setAnnotationIntrospector(new JacksonAnnotationIntrospector() {
-                    @Override
-                    public boolean hasIgnoreMarker(AnnotatedMember member) {
-                        return member.hasAnnotation(IndexIgnore.class) || super.hasIgnoreMarker(member);
-                    }
-
-                    @Override
-                    public PropertyName findNameForSerialization(Annotated annotated) {
-                        if (annotated.hasAnnotation(IndexIgnore.class)) return null;
-                        return super.findNameForSerialization(annotated);
-                    }
-                });
-
-                JsonNode jsonNode = objectMapper.valueToTree(metadataResources);
+                JsonNode jsonNode = indexObjectMapper.valueToTree(metadataResources);
                 indexMetadataFileStoreFields.put("fileStore", jsonNode);
             }
         } catch (Exception e) {
