@@ -739,7 +739,7 @@ public final class Xml {
      */
     public static String getString(Node data) {
         try {
-            TransformerFactory tf = TransformerFactory.newInstance();
+            TransformerFactory tf = TransformerFactoryFactory.getTransformerFactory();
             Transformer transformer = tf.newTransformer();
             transformer.setOutputProperty(OutputKeys.INDENT, "yes");
             StringWriter writer = new StringWriter();
