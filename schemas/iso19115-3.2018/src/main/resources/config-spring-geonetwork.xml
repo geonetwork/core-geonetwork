@@ -25,6 +25,8 @@
       <util:list value-type="java.lang.String">
         <value>mdb:identificationInfo/*/mri:citation/*/cit:title/gco:CharacterString</value>
         <value>mdb:identificationInfo/*/mri:citation/*/cit:title/*/lan:textGroup/lan:LocalisedCharacterString</value>
+        <!-- Feature catalogue metadata title -->
+        <value>mdb:contentInfo/mrc:MD_FeatureCatalogue/mrc:featureCatalogue/gfc:FC_FeatureCatalogue/cat:name/gco:CharacterString</value>
       </util:list>
     </property>
     <!--
