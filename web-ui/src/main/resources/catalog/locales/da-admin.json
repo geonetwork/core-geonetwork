@@ -1428,7 +1428,7 @@
     "sourceName": "Navn",
     "sourceName-help": "Portal kort navn. SKAL kun være sammensat af bogstaver, tal, '-' og '_'. Når de er oprettet, skal du bruge oversættelserne til at definere etiketter, der skal vises på værktøjslinjen.",
     "sourceFilter": "Søgefilter",
-    "sourceFilter-help": "Yderligere søgekriterier, der skal tilføjes til eventuelle søgninger foretaget i portalen. Dette er et <a href='https://lucene.apache.org/core/2_9_4/queryparsersyntax.html'>Lucene-udtryk</a>, fx +keyword:inspire",
+    "sourceFilter-help": "Yderligere søgekriterier, der skal tilføjes til eventuelle søgninger foretaget i portalen. Dette er et <a href='https://www.elastic.co/guide/en/elasticsearch/reference/8.18/query-dsl-query-string-query.html#query-string-syntax'>Elasticsearch-udtryk</a>, fx +keyword:inspire",
     "displayInHeaderSwitcher": "Vises i portalvælgeren",
     "displayInHeaderSwitcher-help": "Hvis aktiveret, vil portalen blive vist på listen over tilgængelige portaler i sidehovedportalvælgeren",
     "sourceLogo": "Logo",

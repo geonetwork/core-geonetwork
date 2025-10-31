@@ -1428,7 +1428,7 @@
     "sourceName": "Nom",
     "sourceName-help": "Nom court du portail. Doit être composé de lettres, nombres, '-' ou '_' uniquement. Une fois créé, utilisez les traductions pour ajouter un libellé long à afficher dans l'en-tête.",
     "sourceFilter": "Filtre de recherche",
-    "sourceFilter-help": "Critère de recherche à ajouter à toutes les recherches faites sur le portail. Utilisez pour cela <a href='https://lucene.apache.org/core/2_9_4/queryparsersyntax.html'>une expression Lucene </a>. eg. +keyword:inspire",
+    "sourceFilter-help": "Critère de recherche à ajouter à toutes les recherches faites sur le portail. Utilisez pour cela <a href='https://www.elastic.co/guide/en/elasticsearch/reference/8.18/query-dsl-query-string-query.html#query-string-syntax'>une expression Elasticsearch </a>. eg. +keyword:inspire",
     "displayInHeaderSwitcher": "Afficher dans le commutateur de portail",
     "displayInHeaderSwitcher-help": "S'il est activé, le portail s'affichera dans la liste des portails disponibles dans le commutateur de portail de l'en-tête du site",
     "sourceLogo": "Logo",
