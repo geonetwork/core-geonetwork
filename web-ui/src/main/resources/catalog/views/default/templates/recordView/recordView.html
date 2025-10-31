@@ -45,7 +45,7 @@
       <span
         data-ng-hide="user"
         data-translate=""
-        data-translate-values="{signInFormAction: '{{signInFormAction}}', csrf: '{{csrf}}', redirectUrlAfterSign: '{{redirectUrlAfterSign}}'}"
+        data-translate-values="{signInFormAction: '{{signInFormLinkWithHash | signInLink}}}', csrf: '{{csrf}}', redirectUrlAfterSign: '{{redirectUrlAfterSign}}'}"
       >
         trySignIn
       </span>
