@@ -82,7 +82,12 @@ public class LogUtil {
         ThreadContext.put("logfile", logfile);
         ThreadContext.put("timeZone", timeZoneSetting);
 
-        return getHarvesterLogfilePath();
+        try {
+            return getHarvesterLogfilePath();
+        } catch (Exception e) {
+            Log.error("Error retrieving harvester logfile path. Defaulting to base file name.", e);
+            return logfile;
+        }
     }
 
     /**
@@ -90,7 +95,7 @@ public class LogUtil {
      *
      * @return the path to the harvester logfile
      */
-    public static String getHarvesterLogfilePath() {
+    private static String getHarvesterLogfilePath() {
         // Get the top-level log directory
         Path logDir = Paths.get(Log.getLogfile().getParent());
 
