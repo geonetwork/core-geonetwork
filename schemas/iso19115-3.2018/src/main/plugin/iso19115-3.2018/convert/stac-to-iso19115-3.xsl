@@ -9,6 +9,8 @@
   xmlns:mri="http://standards.iso.org/iso/19115/-3/mri/1.0"
   xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0"
   xmlns:gex="http://standards.iso.org/iso/19115/-3/gex/1.0"
+  xmlns:gcx="http://standards.iso.org/iso/19115/-3/gcx/1.0"
+  xmlns:xlink="http://www.w3.org/1999/xlink"
   xmlns:gml="http://www.opengis.net/gml/3.2"
   xmlns:java-xsl-util="java:org.fao.geonet.util.XslUtil"
   exclude-result-prefixes="#all">
@@ -144,6 +146,21 @@
               </cit:title>
             </cit:CI_Citation>
           </mri:citation>
+          <xsl:if test="sci_doi">
+            <cit:identifier>
+              <mcc:MD_Identifier>
+                <mcc:code>
+                  <gcx:Anchor xlink:href="{concat('https://doi.org/', sci_doi)}"><xsl:value-of select="sci_doi"/></gcx:Anchor>
+                </mcc:code>
+                <mcc:codeSpace>
+                  <gco:CharacterString>doi.org</gco:CharacterString>
+                </mcc:codeSpace>
+                <mcc:description>
+                  <gco:CharacterString>Digital Object Identifier (DOI)</gco:CharacterString>
+                </mcc:description>
+              </mcc:MD_Identifier>
+            </cit:identifier>
+          </xsl:if>
           <mri:abstract>
             <gco:CharacterString>
               <xsl:value-of

@@ -78,6 +78,19 @@
           </cit:title>
         </cit:CI_Citation>
       </mri:citation>
+      <cit:identifier>
+        <mcc:MD_Identifier>
+          <mcc:code>
+            <gcx:Anchor xlink:href="https://doi.org/10.5281/zenodo.15489231">10.5281/zenodo.15489231</gcx:Anchor>
+          </mcc:code>
+          <mcc:codeSpace>
+            <gco:CharacterString>doi.org</gco:CharacterString>
+          </mcc:codeSpace>
+          <mcc:description>
+            <gco:CharacterString>Digital Object Identifier (DOI)</gco:CharacterString>
+          </mcc:description>
+        </mcc:MD_Identifier>
+      </cit:identifier>
       <mri:abstract>
         <gco:CharacterString>FORMS-T : Height, aboveground biomass and wood volume density time-series at 10 to 30 m resolution over france (2018-2024)</gco:CharacterString>
       </mri:abstract>
