@@ -248,6 +248,19 @@
               </cit:description>
             </cit:CI_OnlineResource>
           </mrd:onLine>
+          <mrd:onLine>
+            <cit:CI_OnlineResource>
+              <cit:linkage>
+                <gco:CharacterString>https://doi.org/10.5281/zenodo.15489231</gco:CharacterString>
+              </cit:linkage>
+              <cit:protocol>
+                <gco:CharacterString>DOI</gco:CharacterString>
+              </cit:protocol>
+              <cit:name>
+                <gco:CharacterString>Digital Object Identifier (DOI)</gco:CharacterString>
+              </cit:name>
+            </cit:CI_OnlineResource>
+          </mrd:onLine>
         </mrd:MD_DigitalTransferOptions>
       </mrd:transferOptions>
     </mrd:MD_Distribution>

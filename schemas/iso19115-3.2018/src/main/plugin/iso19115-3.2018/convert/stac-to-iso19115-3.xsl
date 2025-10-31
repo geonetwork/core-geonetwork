@@ -372,6 +372,21 @@
                   </cit:CI_OnlineResource>
                 </mrd:onLine>
               </xsl:for-each>
+              <xsl:if test="sci_doi">
+                <mrd:onLine>
+                  <cit:CI_OnlineResource>
+                    <cit:linkage>
+                      <gco:CharacterString><xsl:value-of select="concat('https://doi.org/', sci_doi)"/></gco:CharacterString>
+                    </cit:linkage>
+                    <cit:protocol>
+                      <gco:CharacterString>DOI</gco:CharacterString>
+                    </cit:protocol>
+                    <cit:name>
+                      <gco:CharacterString>Digital Object Identifier (DOI)</gco:CharacterString>
+                    </cit:name>
+                  </cit:CI_OnlineResource>
+                </mrd:onLine>
+              </xsl:if>
             </mrd:MD_DigitalTransferOptions>
           </mrd:transferOptions>
         </mrd:MD_Distribution>
