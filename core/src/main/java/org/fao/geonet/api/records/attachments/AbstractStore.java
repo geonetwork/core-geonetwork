@@ -249,6 +249,13 @@ public abstract class AbstractStore implements Store {
         if (contentDisposition != null) {
             filename = ContentDisposition.parse(contentDisposition).getFilename();
         }
+        // If follow redirect, get the filename from the redirected URL
+        if (filename == null && connection.getInstanceFollowRedirects()) {
+            URL redirectUrl = connection.getURL();
+            if (redirectUrl != null) {
+                filename = getFilenameFromUrl(redirectUrl);
+            }
+        }
         if (filename == null || filename.isEmpty()) {
             filename = getFilenameFromUrl(fileUrl);
         }
