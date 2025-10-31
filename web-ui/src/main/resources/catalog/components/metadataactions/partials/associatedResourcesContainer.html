@@ -11,7 +11,7 @@
           title="{{(config.type + '-help') | translate}}"
           class="btn btn-default btn-xs pull-right"
           data-ng-if="config.allowToAddRelation"
-          data-ng-click="onlinesrcService.onOpenPopup(config.type, config.config)"
+          data-ng-click="onlinesrcService.onOpenPopup(config.type, config.config, config.relations, gnCurrentEdit.uuid)"
         >
           <i class="fa fa-fw fa-plus"></i>
           <span>{{ config.label | translate}}</span>
