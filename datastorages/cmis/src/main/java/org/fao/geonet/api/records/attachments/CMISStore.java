@@ -573,6 +573,9 @@ public class CMISStore extends AbstractStore {
                 Log.info(Geonet.RESOURCES, String.format("Copying %s to %s" , sourceResourceTypeDir+cmisConfiguration.getFolderDelimiter()+sourceDocument.getName(), targetResourceTypeDir));
                 // Get cmis properties from the source document
                 Map<String, Object> sourceProperties = getProperties(sourceDocument);
+
+                setCmisMetadataUUIDPrimary(sourceProperties, targetUuid);
+
                 putResource(context, targetUuid, sourceDocument.getName(), sourceDocument.getContentStream().getStream(), null, metadataResourceVisibility, targetApproved, sourceProperties);
 
             }
