@@ -95,7 +95,7 @@ public class LogUtil {
      *
      * @return the path to the harvester logfile
      */
-    private static String getHarvesterLogfilePath() {
+    public static String getHarvesterLogfilePath() {
         // Get the top-level log directory
         Path logDir = Paths.get(Log.getLogfile().getParent());
 
