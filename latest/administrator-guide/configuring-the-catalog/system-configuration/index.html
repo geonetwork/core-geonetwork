@@ -1630,6 +1630,75 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#metadata-create" class="md-nav__link">
+    <span class="md-ellipsis">
+      Metadata create
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Metadata create">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#generate-uuid" class="md-nav__link">
+    <span class="md-ellipsis">
+      Generate UUID
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#publish-for-group-editors" class="md-nav__link">
+    <span class="md-ellipsis">
+      Publish for group editors
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#copy-attachments" class="md-nav__link">
+    <span class="md-ellipsis">
+      Copy attachments
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#skip-metadata-creation-page" class="md-nav__link">
+    <span class="md-ellipsis">
+      Skip metadata creation page
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#preferred-metadata-group-owner" class="md-nav__link">
+    <span class="md-ellipsis">
+      Preferred metadata group owner
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#preferred-metadata-template" class="md-nav__link">
+    <span class="md-ellipsis">
+      Preferred metadata template
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#editing_harvested_records" class="md-nav__link">
     <span class="md-ellipsis">
       Metadata import
@@ -2545,6 +2614,75 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#metadata-create" class="md-nav__link">
+    <span class="md-ellipsis">
+      Metadata create
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Metadata create">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#generate-uuid" class="md-nav__link">
+    <span class="md-ellipsis">
+      Generate UUID
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#publish-for-group-editors" class="md-nav__link">
+    <span class="md-ellipsis">
+      Publish for group editors
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#copy-attachments" class="md-nav__link">
+    <span class="md-ellipsis">
+      Copy attachments
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#skip-metadata-creation-page" class="md-nav__link">
+    <span class="md-ellipsis">
+      Skip metadata creation page
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#preferred-metadata-group-owner" class="md-nav__link">
+    <span class="md-ellipsis">
+      Preferred metadata group owner
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#preferred-metadata-template" class="md-nav__link">
+    <span class="md-ellipsis">
+      Preferred metadata template
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#editing_harvested_records" class="md-nav__link">
     <span class="md-ellipsis">
       Metadata import
@@ -2812,6 +2950,45 @@ type=&quot;application/opensearchdescription+xml&quot; title=&quot;Open Search 
 <p>Note: this option is only available for databases that have been tested. Those databases are PostGIS and Oracle. You should also carefully consider how many connections to the database you allocate in the database configuration as each thread could tie up one database connection for the duration of a long indexing session (for example). See the advanced configuration for more details of how to configure the number of connections in the database connection pool.</p>
 <h2 id="metadata-privileges">Metadata Privileges</h2>
 <p><em>Only set privileges to user's groups</em>: If enabled then only the groups that the user belongs to will be displayed in the metadata privileges page (unless the user is an Administrator). At the moment this option cannot be disabled and is likely to be deprecated in the next version of GeoNetwork.</p>
+<h2 id="metadata-create">Metadata create</h2>
+<h3 id="generate-uuid">Generate UUID</h3>
+<p>When enabled, GeoNetwork automatically assigns a <strong>random UUID</strong> to each new metadata record.</p>
+<ul>
+<li>This ensures that every record has a unique and globally identifiable ID.</li>
+<li>Disable this option if you want to assign metadata UUIDs manually.</li>
+<li>When disabled, you must specify a <strong>metadata UUID prefix</strong> that will be used when generating the record's UUID.</li>
+</ul>
+<h3 id="publish-for-group-editors">Publish for group editors</h3>
+<p>When enabled, newly created metadata records are <strong>automatically published</strong> and made editable by <strong>editors in the group that owns the record</strong> (the group in which the record was created).</p>
+<ul>
+<li>Enables collaborative editing within the owning group without requiring manual sharing after creation.</li>
+<li>You can <strong>override this behavior</strong> on the metadata creation page if a specific record should not be editable.</li>
+</ul>
+<h3 id="copy-attachments">Copy attachments</h3>
+<p>When enabled, <strong>attachments</strong> (e.g., documents, images, or data files) from the <strong>source template or record</strong> are automatically copied into the new record.</p>
+<ul>
+<li>Useful when creating similar metadata records that share supporting files.</li>
+<li>Disable this option if you prefer to start with an empty record.</li>
+<li>You can <strong>override this behavior</strong> on the metadata creation page if a specific record’s attachments should not be copied.</li>
+</ul>
+<h3 id="skip-metadata-creation-page">Skip metadata creation page</h3>
+<p>When enabled, if there is <strong>only one available group</strong> and <strong>one available template</strong>, the system automatically creates the metadata record using default options and skips the creation page.</p>
+<ul>
+<li>Speeds up creation in environments with a single group or standardized template.</li>
+<li>If multiple groups or templates exist, the creation page will still appear.</li>
+</ul>
+<h3 id="preferred-metadata-group-owner">Preferred metadata group owner</h3>
+<p>Specifies the <strong>default group owner</strong> that will be preselected on the metadata creation page.</p>
+<ul>
+<li>Helps users who frequently create records under the same group avoid repetitive selection.</li>
+<li>You can still choose a different group when creating a record if needed.</li>
+</ul>
+<h3 id="preferred-metadata-template">Preferred metadata template</h3>
+<p>Specifies the <strong>default template</strong> that will be preselected on the metadata creation page.</p>
+<ul>
+<li>Useful when most new records are based on the same template type.</li>
+<li>You can still select a different template when creating a record if required.</li>
+</ul>
 <h2 id="editing_harvested_records">Metadata import</h2>
 <ul>
 <li><strong>Restrict import to schemas</strong> List of all allowed schemas for metadata to be imported. If the metadata schema is not allowed, then the import is not done. Use an empty value to allow all schemas.</li>
