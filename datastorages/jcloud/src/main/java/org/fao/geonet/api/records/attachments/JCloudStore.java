@@ -684,6 +684,8 @@ public class JCloudStore extends AbstractStore {
                         // Copy existing properties.
                         Map<String, String> targetProperties = new HashMap<>(blobMetadata.getUserMetadata());
 
+                        setMetadataUUID(targetProperties, targetUuid);
+
                         // Check if target exists.
                         StorageMetadata targetStorageMetadata = null;
 

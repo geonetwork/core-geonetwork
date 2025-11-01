@@ -65,16 +65,16 @@ import static org.mockito.Mockito.verify;
  *  &lt;/beans&gt;
  * </pre>
  */
-public class JCloudStoreTest extends AbstractStoreTest {
+public class CMISStoreTest extends AbstractStoreTest {
     @Autowired
     private GenericApplicationContext context;
 
     @Autowired(required = false)
-    private JCloudStore store;
+    private CMISStore store;
 
     @Override
     protected Store getStore() {
-        Assume.assumeTrue("Cannot load jcloud-test-context.xml => skipped test", store != null);
+        Assume.assumeTrue("Cannot load cmis-test-context.xml => skipped test", store != null);
         return store;
     }
 
@@ -100,7 +100,7 @@ public class JCloudStoreTest extends AbstractStoreTest {
 
     @Test
     public void testCopyResourcesShouldResetMetadataUuid() throws Exception {
-        JCloudStore jcloudStoreSpy = spy(store);
+        CMISStore cmisStoreSpy = spy(store);
 
         final ServiceContext context = createServiceContext();
         loginAsAdmin(context);
@@ -114,8 +114,8 @@ public class JCloudStoreTest extends AbstractStoreTest {
         String targetMetadataUuid = metadataUtils.getMetadataUuid(targetMetadataId);
 
         // Clean up any existing resources
-        jcloudStoreSpy.delResources(context, sourceMetadataUuid, true);
-        jcloudStoreSpy.delResources(context, targetMetadataUuid, true);
+        cmisStoreSpy.delResources(context, sourceMetadataUuid, true);
+        cmisStoreSpy.delResources(context, targetMetadataUuid, true);
 
         // Add a resource to source metadata
         String filename = "record-with-old-links.xml";
@@ -124,16 +124,17 @@ public class JCloudStoreTest extends AbstractStoreTest {
             "application/xml",
             Files.newInputStream(Paths.get(resources, filename)));
 
-        jcloudStoreSpy.putResource(context, sourceMetadataUuid, file, MetadataResourceVisibility.PUBLIC, true);
+        cmisStoreSpy.putResource(context, sourceMetadataUuid, file, MetadataResourceVisibility.PUBLIC, true);
 
         // Copy resources from source to target
-        jcloudStoreSpy.copyResources(context, sourceMetadataUuid, targetMetadataUuid,
+        cmisStoreSpy.copyResources(context, sourceMetadataUuid, targetMetadataUuid,
             MetadataResourceVisibility.PUBLIC, true, true);
 
-        verify(jcloudStoreSpy).setMetadataUUID(any(), any());
+        verify(cmisStoreSpy).setCmisMetadataUUIDPrimary(any(), any());
 
         // Clean up
-        jcloudStoreSpy.delResources(context, sourceMetadataUuid, true);
-        jcloudStoreSpy.delResources(context, targetMetadataUuid, true);
+        cmisStoreSpy.delResources(context, sourceMetadataUuid, true);
+        cmisStoreSpy.delResources(context, targetMetadataUuid, true);
     }
 }
+
