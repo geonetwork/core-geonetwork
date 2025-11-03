@@ -39,8 +39,13 @@ import java.net.URL;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-//=============================================================================
 
+/**
+ * The Geonet20Harvester class is responsible for harvesting metadata from
+ * GeoNetwork 2.0 servers. It extends the AbstractHarvester class to provide
+ * the specific logic for connecting to, searching, and aligning metadata from
+ * GeoNetwork nodes.
+ */
 public class Geonet20Harvester extends AbstractHarvester<HarvestResult, GeonetParams> {
 
     private GeonetResult result;
