@@ -189,6 +189,10 @@ public abstract class CatalogRequest {
         client.setPreemptiveBasicAuth(true);
     }
 
+    public void setApiKey(String apiKey) {
+        client.setApiKey(apiKey);
+    }
+
     //---------------------------------------------------------------------------
 
     protected abstract String getRequestName();
