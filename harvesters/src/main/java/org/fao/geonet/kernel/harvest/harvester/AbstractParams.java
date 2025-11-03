@@ -190,7 +190,8 @@ public abstract class AbstractParams implements Cloneable {
         setUseAccount(Util.getParam(account, "use", false));
         setUsername(Util.getParam(account, "username", ""));
         setPassword(Util.getParam(account, "password", ""));
-        setApiKey(Util.getParam(account, "apiKey", ""));
+        
+        setApiKey(Util.getParam(site, "apiKey", ""));
 
         setEvery(Util.getParam(opt, "every", "0 0 0 * * ?"));
 
@@ -275,7 +276,8 @@ public abstract class AbstractParams implements Cloneable {
         setUseAccount(Util.getParam(account, "use", isUseAccount()));
         setUsername(Util.getParam(account, "username", getUsername()));
         setPassword(Util.getParam(account, "password", getPassword()));
-        setApiKey(Util.getParam(account, "apiKey", getApiKey()));
+
+        setApiKey(Util.getParam(site, "apiKey", getApiKey()));
 
         setEvery(Util.getParam(opt, "every", getEvery()));
         setOneRunOnly(Util.getParam(opt, "oneRunOnly", isOneRunOnly()));
