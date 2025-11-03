@@ -75,6 +75,7 @@ public class AbstractHttpRequest {
     protected int port;
     protected String protocol;
     protected boolean useSOAP;
+    protected String apiKey;
     protected String sentData;
     private String address;
     private String query;
@@ -117,6 +118,14 @@ public class AbstractHttpRequest {
 
     public void setPort(int port) {
         this.port = port;
+    }
+
+    public String getApiKey() {
+        return apiKey;
+    }
+
+    public void setApiKey(String apiKey) {
+        this.apiKey = apiKey;
     }
 
     public String getAddress() {
@@ -329,6 +338,10 @@ public class AbstractHttpRequest {
             }
 
             httpMethod = post;
+        }
+
+        if (apiKey != null && !apiKey.trim().isEmpty()) {
+            httpMethod.addHeader("Authorization", apiKey);
         }
 
         try {
