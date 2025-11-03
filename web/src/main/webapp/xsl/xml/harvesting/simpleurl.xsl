@@ -13,6 +13,9 @@
     <loopElement>
       <xsl:value-of select="loopElement/value"/>
     </loopElement>
+    <apiKey>
+      <xsl:value-of select="apiKey/value"/>
+    </apiKey>
     <numberOfRecordPath>
       <xsl:value-of select="numberOfRecordPath/value"/>
     </numberOfRecordPath>
