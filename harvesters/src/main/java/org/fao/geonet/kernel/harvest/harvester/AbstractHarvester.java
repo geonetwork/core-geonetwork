@@ -911,6 +911,8 @@ public abstract class AbstractHarvester<T extends HarvestResult, P extends Abstr
         harvesterSettingsManager.add(ID_PREFIX + useAccId, "username", params.getUsername());
         harvesterSettingsManager.add(ID_PREFIX + useAccId, "password", params.getPassword(), true);
 
+        harvesterSettingsManager.add(ID_PREFIX + useAccId, "apiKey", params.getApiKey(), true);
+
         //--- setup options node ---------------------------------------
 
         harvesterSettingsManager.add(ID_PREFIX + optionsId, "every", params.getEvery());

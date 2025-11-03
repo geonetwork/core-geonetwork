@@ -85,6 +85,7 @@ public abstract class AbstractParams implements Cloneable {
     private boolean useAccount;
     private String username;
     private String password;
+    private String apiKey;
     private String every;
     private boolean oneRunOnly;
     private HarvestValidationEnum validate;
@@ -190,6 +191,7 @@ public abstract class AbstractParams implements Cloneable {
         setUseAccount(Util.getParam(account, "use", false));
         setUsername(Util.getParam(account, "username", ""));
         setPassword(Util.getParam(account, "password", ""));
+        setApiKey(Util.getParam(account, "apiKey", ""));
 
         setEvery(Util.getParam(opt, "every", "0 0 0 * * ?"));
 
@@ -274,6 +276,7 @@ public abstract class AbstractParams implements Cloneable {
         setUseAccount(Util.getParam(account, "use", isUseAccount()));
         setUsername(Util.getParam(account, "username", getUsername()));
         setPassword(Util.getParam(account, "password", getPassword()));
+        setApiKey(Util.getParam(account, "apiKey", getApiKey()));
 
         setEvery(Util.getParam(opt, "every", getEvery()));
         setOneRunOnly(Util.getParam(opt, "oneRunOnly", isOneRunOnly()));
@@ -332,6 +335,7 @@ public abstract class AbstractParams implements Cloneable {
         copy.setUseAccount(isUseAccount());
         copy.setUsername(getUsername());
         copy.setPassword(getPassword());
+        copy.setApiKey(getApiKey());
 
         copy.setEvery(getEvery());
         copy.setOneRunOnly(isOneRunOnly());
@@ -556,6 +560,14 @@ public abstract class AbstractParams implements Cloneable {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getApiKey() {
+        return apiKey;
+    }
+
+    public void setApiKey(String apiKey) {
+        this.apiKey = apiKey;
     }
 
     public String getEvery() {
