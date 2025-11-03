@@ -18,6 +18,7 @@ var gnHarvestersimpleurl = {
           "password" : []
         },
         "url" : "http://",
+        "apiKey" : "",
         "loopElement" : "",
         "numberOfRecordPath": "",
         "pageSizeParam": "",
@@ -87,6 +88,7 @@ var gnHarvestersimpleurl = {
       + '      <username>' + h.site.account.username + '</username>'
       + '      <password>' + h.site.account.password + '</password>'
       + '    </account>'
+      + '    <apiKey>' + h.site.apiKey + '</apiKey>'
       + '    <loopElement>' + h.site.loopElement + '</loopElement>'
       + '    <numberOfRecordPath>' + h.site.numberOfRecordPath + '</numberOfRecordPath>'
       + '    <recordIdPath>' + h.site.recordIdPath + '</recordIdPath>'

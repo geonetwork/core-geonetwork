@@ -44,6 +44,19 @@
       data-gn-harvester-account="harvesterSelected"
     ></div>
 
+    <div id="gn-harvest-settings-apiKey-row">
+      <label id="gn-harvest-settings-apiKey-label" class="control-label" data-translate=""
+        >apiKey</label
+      >
+      <input
+        id="gn-harvest-settings-apiKey-input"
+        type="text"
+        class="form-control"
+        data-ng-model="harvesterSelected.site.apiKey"
+      />
+      <p class="help-block" data-translate="">simpleurl-apiKeyHelp</p>
+    </div>
+
     <div class="well">
       <span data-translate="">simpleurl-configHelper</span>
       <div class="btn-group" role="group" aria-label="...">
