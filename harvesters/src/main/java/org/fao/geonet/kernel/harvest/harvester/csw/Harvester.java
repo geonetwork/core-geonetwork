@@ -235,9 +235,9 @@ class Harvester implements IHarvester<HarvestResult> {
             request.setCredentials(params.getUsername(), params.getPassword());
         }
 
-        if (params.getApiKey() != null && !params.getApiKey().trim().isEmpty()) {
-            log.debug("Using apiKey (" + params.getApiKey() + ")");
-            request.setApiKey(params.getApiKey());
+        if (params.getApiKey() != null && !params.getApiKey().isBlank()) {
+            log.debug("Using apiKey to authenticate");
+            request.setApiKey(params.getApiKeyHeader(), params.getApiKey());
         }
         // Simple fallback mechanism. Try search with PREFERRED_HTTP_METHOD method, if fails change it
         try {
