@@ -144,23 +144,23 @@
                                         else 'STAC Collection'" />
                 </gco:CharacterString>
               </cit:title>
+              <xsl:if test="sci_doi">
+                <cit:identifier>
+                  <mcc:MD_Identifier>
+                    <mcc:code>
+                      <gcx:Anchor xlink:href="{concat('https://doi.org/', sci_doi)}"><xsl:value-of select="sci_doi"/></gcx:Anchor>
+                    </mcc:code>
+                    <mcc:codeSpace>
+                      <gco:CharacterString>doi.org</gco:CharacterString>
+                    </mcc:codeSpace>
+                    <mcc:description>
+                      <gco:CharacterString>Digital Object Identifier (DOI)</gco:CharacterString>
+                    </mcc:description>
+                  </mcc:MD_Identifier>
+                </cit:identifier>
+              </xsl:if>
             </cit:CI_Citation>
           </mri:citation>
-          <xsl:if test="sci_doi">
-            <cit:identifier>
-              <mcc:MD_Identifier>
-                <mcc:code>
-                  <gcx:Anchor xlink:href="{concat('https://doi.org/', sci_doi)}"><xsl:value-of select="sci_doi"/></gcx:Anchor>
-                </mcc:code>
-                <mcc:codeSpace>
-                  <gco:CharacterString>doi.org</gco:CharacterString>
-                </mcc:codeSpace>
-                <mcc:description>
-                  <gco:CharacterString>Digital Object Identifier (DOI)</gco:CharacterString>
-                </mcc:description>
-              </mcc:MD_Identifier>
-            </cit:identifier>
-          </xsl:if>
           <mri:abstract>
             <gco:CharacterString>
               <xsl:value-of
