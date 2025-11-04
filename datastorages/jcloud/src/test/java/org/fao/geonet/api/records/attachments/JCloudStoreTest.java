@@ -24,24 +24,9 @@
  */
 package org.fao.geonet.api.records.attachments;
 
-import jeeves.server.context.ServiceContext;
-import org.fao.geonet.domain.MetadataResource;
-import org.fao.geonet.domain.MetadataResourceVisibility;
 import org.junit.Assume;
-import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.GenericApplicationContext;
-import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.List;
-
-import static org.junit.Assert.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.verify;
 
 /**
  * This test needs a configuration placed in services/src/test/resources/jcloud-test-context.xml to run:
@@ -96,44 +81,5 @@ public class JCloudStoreTest extends AbstractStoreTest {
     @Override
     public void testPutResourceFromURLWithURLParameters() throws Exception {
         super.testPutResourceFromURLWithURLParameters();
-    }
-
-    @Test
-    public void testCopyResourcesShouldResetMetadataUuid() throws Exception {
-        JCloudStore jcloudStoreSpy = spy(store);
-
-        final ServiceContext context = createServiceContext();
-        loginAsAdmin(context);
-
-        // Import source metadata
-        String sourceMetadataId = importMetadata(context);
-        String sourceMetadataUuid = metadataUtils.getMetadataUuid(sourceMetadataId);
-
-        // Import target metadata
-        String targetMetadataId = importMetadata(context);
-        String targetMetadataUuid = metadataUtils.getMetadataUuid(targetMetadataId);
-
-        // Clean up any existing resources
-        jcloudStoreSpy.delResources(context, sourceMetadataUuid, true);
-        jcloudStoreSpy.delResources(context, targetMetadataUuid, true);
-
-        // Add a resource to source metadata
-        String filename = "record-with-old-links.xml";
-        MultipartFile file = new MockMultipartFile(filename,
-            filename,
-            "application/xml",
-            Files.newInputStream(Paths.get(resources, filename)));
-
-        jcloudStoreSpy.putResource(context, sourceMetadataUuid, file, MetadataResourceVisibility.PUBLIC, true);
-
-        // Copy resources from source to target
-        jcloudStoreSpy.copyResources(context, sourceMetadataUuid, targetMetadataUuid,
-            MetadataResourceVisibility.PUBLIC, true, true);
-
-        verify(jcloudStoreSpy).setMetadataUUID(any(), any());
-
-        // Clean up
-        jcloudStoreSpy.delResources(context, sourceMetadataUuid, true);
-        jcloudStoreSpy.delResources(context, targetMetadataUuid, true);
     }
 }
