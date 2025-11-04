@@ -76,7 +76,7 @@ public class HarvestManagerImpl implements HarvestInfoProvider, HarvestManager {
         Arrays.asList("harvesting", "node", "site", "name", "uuid",
             "url", "capabUrl", "baseUrl", "host", "useAccount",
             "ogctype", "options", "status", "info", "lastRun",
-            "ownerGroup", "ownerUser", "apiKey");
+            "ownerGroup", "ownerUser", "apiKey", "apiKeyHeader");
     private HarvesterSettingsManager settingMan;
     private DataManager dataMan;
     private Path xslPath;

@@ -906,7 +906,8 @@ public abstract class AbstractHarvester<T extends HarvestResult, P extends Abstr
         /* Group selected by user who created or updated this node. */
         harvesterSettingsManager.add(ID_PREFIX + siteId, "ownerGroup", params.getOwnerIdGroup());
 
-       harvesterSettingsManager.add(ID_PREFIX + siteId, "apiKey", params.getApiKey());
+        harvesterSettingsManager.add(ID_PREFIX + siteId, "apiKeyHeader", params.getApiKeyHeader());
+        harvesterSettingsManager.add(ID_PREFIX + siteId, "apiKey", params.getApiKey(), true);
 
         String useAccId = harvesterSettingsManager.add(ID_PREFIX + siteId, "useAccount", params.isUseAccount());
 
