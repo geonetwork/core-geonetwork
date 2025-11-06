@@ -375,15 +375,22 @@ public interface Store {
     MetadataResourceContainer getResourceContainerDescription(final ServiceContext context, final String metadataUuid, Boolean approved) throws Exception;
 
     /**
-     * Copy all resources from none approved (draft working copy) to approved folder.
+     * Copies all resources from a source metadata record to a target metadata record.
      *
+     * <p>Resources can be copied between the approved and draft versions of the source and target
+     * metadata records, as determined by the {@code sourceApproved} and {@code targetApproved} flags.</p>
      *
-     * @param context
-     * @param sourceUuid               The source metadata UUID
-     * @param targetUuid               The target metadata UUID
-     * @param sourceApproved
-     * @param metadataResourceVisibility The type of sharing policy {@link MetadataResourceVisibility}
+     * <p><b>Implementation note:</b> If an implementation also copies resource properties,
+     * it must ensure that any property referencing the owning metadata record UUID
+     * is updated to {@code targetUuid}.</p>
      *
+     * @param context                    the service context
+     * @param sourceUuid                 the UUID of the source metadata record
+     * @param targetUuid                 the UUID of the target metadata record
+     * @param metadataResourceVisibility the resource sharing policy {@link MetadataResourceVisibility}
+     * @param sourceApproved             whether to copy resources from the approved version of the source record
+     * @param targetApproved             whether to copy resources to the approved version of the target record
+     * @throws Exception if the resource copy fails
      */
     void copyResources(ServiceContext context, String sourceUuid, String targetUuid, MetadataResourceVisibility metadataResourceVisibility, boolean sourceApproved, boolean targetApproved) throws Exception;
 
