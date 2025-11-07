@@ -1428,7 +1428,7 @@
     "sourceName": "ad",
     "sourceName-help": "Portalın qısa adı. Yalnız hərflərdən, rəqəmlərdən, &#39;-&#39; və &#39;_&#39; hərflərindən ibarət olmalıdır. Yaradılandan sonra alətlər panelində göstəriləcək etiketləri müəyyən etmək üçün tərcümələrdən istifadə edin.",
     "sourceFilter": "Axtarış filtri",
-    "sourceFilter-help": "Portalda edilən hər hansı axtarışa əlavə ediləcək əlavə axtarış meyarları. Bu <a href='https://lucene.apache.org/core/2_9_4/queryparsersyntax.html'>lucene ifadəsidir</a> . məs. + açar söz: ruhlandırmaq",
+    "sourceFilter-help": "Portalda edilən hər hansı axtarışa əlavə ediləcək əlavə axtarış meyarları. Bu <a href='https://www.elastic.co/guide/en/elasticsearch/reference/8.18/query-dsl-query-string-query.html#query-string-syntax'>Elasticsearch ifadəsidir</a> . məs. + açar söz: ruhlandırmaq",
     "displayInHeaderSwitcher": "Portal dəyişdiricisində göstərin",
     "displayInHeaderSwitcher-help": "Aktivləşdirildikdə portal sayt başlığı portal seçicisində mövcud portallar siyahısında göstəriləcək",
     "sourceLogo": "Logo",

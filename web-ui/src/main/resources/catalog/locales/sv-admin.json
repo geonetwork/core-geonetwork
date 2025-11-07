@@ -1428,7 +1428,7 @@
     "sourceName": "Namn",
     "sourceName-help": "Portalens korta namn. MÅSTE bara bestå av bokstäver, siffror, '-' och '_'. När du skapat använder du översättningarna för att definiera etiketter som ska visas i verktygsfältet.",
     "sourceFilter": "Sökfilter",
-    "sourceFilter-help": "Ytterligare sökkriterier som ska läggas till i alla sökningar som görs i portalen. Det är en <a href='https://lucene.apache.org/core/2_9_4/queryparsersyntax.html'>lucene expression</a>. eg. +keyword:inspire.",
+    "sourceFilter-help": "Ytterligare sökkriterier som ska läggas till i alla sökningar som görs i portalen. Det är en <a href='https://www.elastic.co/guide/en/elasticsearch/reference/8.18/query-dsl-query-string-query.html#query-string-syntax'>Elasticsearch expression</a>. eg. +keyword:inspire.",
     "displayInHeaderSwitcher": "Display in the portal switcher",
     "displayInHeaderSwitcher-help": "If enabled the portal will displayed on the list of available portals in the site header portal selector",
     "sourceLogo": "Logotyp",
