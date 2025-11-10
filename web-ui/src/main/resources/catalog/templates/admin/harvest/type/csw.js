@@ -17,6 +17,8 @@ var gnHarvestercsw = {
           "username" : [],
           "password" : []
         },
+        "apiKeyHeader" : "",
+        "apiKey" : "",
         "capabilitiesUrl" : "http://",
         "xpathFilter" : "",
         "rejectDuplicateResource" : false,
@@ -107,6 +109,8 @@ var gnHarvestercsw = {
       + '      <username>' + h.site.account.username + '</username>'
       + '      <password>' + h.site.account.password + '</password>'
       + '    </account>'
+      + '    <apiKeyHeader>' + h.site.apiKeyHeader + '</apiKeyHeader>'
+      + '    <apiKey>' + h.site.apiKey + '</apiKey>'
       + '    <xpathFilter>' + h.site.xpathFilter + '</xpathFilter>'
       + '    <xslfilter>' + _.escape(h.site.xslfilter) + '</xslfilter>'
       + '    <outputSchema>' + h.site.outputSchema + '</outputSchema>'
