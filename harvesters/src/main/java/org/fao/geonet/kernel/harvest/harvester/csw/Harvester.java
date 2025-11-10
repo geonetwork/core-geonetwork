@@ -235,7 +235,7 @@ class Harvester implements IHarvester<HarvestResult> {
             request.setCredentials(params.getUsername(), params.getPassword());
         }
 
-        if (StringUtils.isNotBlank(params.getApiKey())) { {
+        if (StringUtils.isNotBlank(params.getApiKey())) { 
             log.debug("Using apiKey to authenticate");
             request.setApiKey(params.getApiKeyHeader(), params.getApiKey());
         }
