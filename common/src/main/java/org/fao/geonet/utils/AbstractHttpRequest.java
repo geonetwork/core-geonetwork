@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2023 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2025 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -25,6 +25,7 @@ package org.fao.geonet.utils;
 
 import com.google.common.base.Function;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpHost;
@@ -349,10 +350,8 @@ public class AbstractHttpRequest {
             httpMethod = post;
         }
 
-        if (apiKey != null && !apiKey.isBlank()) {
-            String headerName = (apiKeyHeader != null && !apiKeyHeader.isBlank())
-                ? apiKeyHeader
-                : "Authorization";
+        if (StringUtils.isNotBlank(apiKey)) {
+            String headerName = StringUtils.defaultIfBlank(apiKeyHeader, "Authorization");
             httpMethod.addHeader(headerName, apiKey);
         }
 

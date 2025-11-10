@@ -412,10 +412,8 @@ class Harvester implements IHarvester<HarvestResult> {
 
         try {
             httpMethod = new HttpGet(createUrl(url));
-            if (params.getApiKey() != null && !params.getApiKey().trim().isEmpty()) {
-                String headerName = (params.getApiKeyHeader() != null && !params.getApiKeyHeader().isBlank())
-                    ? params.getApiKeyHeader()
-                    : "Authorization";
+            if (StringUtils.isNotBlank(params.getApiKey())) {
+                String headerName = StringUtils.defaultIfBlank(StringUtils.trim(params.getApiKeyHeader()), "Authorization");
                 httpMethod.addHeader(headerName, params.getApiKey());
             }
 
