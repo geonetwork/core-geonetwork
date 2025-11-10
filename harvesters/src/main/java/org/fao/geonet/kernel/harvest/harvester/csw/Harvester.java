@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2007 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2025 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -233,6 +233,11 @@ class Harvester implements IHarvester<HarvestResult> {
         if (params.isUseAccount()) {
             log.debug("Logging into server (" + params.getUsername() + ")");
             request.setCredentials(params.getUsername(), params.getPassword());
+        }
+
+        if (StringUtils.isNotBlank(params.getApiKey())) { 
+            log.debug("Using apiKey to authenticate");
+            request.setApiKey(params.getApiKeyHeader(), params.getApiKey());
         }
         // Simple fallback mechanism. Try search with PREFERRED_HTTP_METHOD method, if fails change it
         try {

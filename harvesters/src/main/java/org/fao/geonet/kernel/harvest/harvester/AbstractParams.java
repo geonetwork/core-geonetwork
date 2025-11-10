@@ -84,6 +84,8 @@ public abstract class AbstractParams implements Cloneable {
     private boolean useAccount;
     private String username;
     private String password;
+    private String apiKeyHeader;
+    private String apiKey;
     private String every;
     private boolean oneRunOnly;
     private HarvestValidationEnum validate;
@@ -189,6 +191,9 @@ public abstract class AbstractParams implements Cloneable {
         setUseAccount(Util.getParam(account, "use", false));
         setUsername(Util.getParam(account, "username", ""));
         setPassword(Util.getParam(account, "password", ""));
+        
+        setApiKeyHeader(Util.getParam(site, "apiKeyHeader", ""));
+        setApiKey(Util.getParam(site, "apiKey", ""));
 
         setEvery(Util.getParam(opt, "every", "0 0 0 * * ?"));
 
@@ -274,6 +279,9 @@ public abstract class AbstractParams implements Cloneable {
         setUsername(Util.getParam(account, "username", getUsername()));
         setPassword(Util.getParam(account, "password", getPassword()));
 
+        setApiKeyHeader(Util.getParam(site, "apiKeyHeader", getApiKeyHeader()));
+        setApiKey(Util.getParam(site, "apiKey", getApiKey()));
+
         setEvery(Util.getParam(opt, "every", getEvery()));
         setOneRunOnly(Util.getParam(opt, "oneRunOnly", isOneRunOnly()));
 
@@ -331,6 +339,8 @@ public abstract class AbstractParams implements Cloneable {
         copy.setUseAccount(isUseAccount());
         copy.setUsername(getUsername());
         copy.setPassword(getPassword());
+        copy.setApiKeyHeader(getApiKeyHeader());
+        copy.setApiKey(getApiKey());
 
         copy.setEvery(getEvery());
         copy.setOneRunOnly(isOneRunOnly());
@@ -544,6 +554,22 @@ public abstract class AbstractParams implements Cloneable {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getApiKeyHeader() {
+        return apiKeyHeader;
+    }
+
+    public void setApiKeyHeader(String apiKeyHeader) {
+        this.apiKeyHeader = apiKeyHeader;
+    }
+
+    public String getApiKey() {
+        return apiKey;
+    }
+
+    public void setApiKey(String apiKey) {
+        this.apiKey = apiKey;
     }
 
     public String getEvery() {

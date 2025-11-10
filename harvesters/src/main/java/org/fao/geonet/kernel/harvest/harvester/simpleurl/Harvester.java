@@ -412,6 +412,11 @@ class Harvester implements IHarvester<HarvestResult> {
 
         try {
             httpMethod = new HttpGet(createUrl(url));
+            if (StringUtils.isNotBlank(params.getApiKey())) {
+                String headerName = StringUtils.defaultIfBlank(StringUtils.trim(params.getApiKeyHeader()), "Authorization");
+                httpMethod.addHeader(headerName, params.getApiKey());
+            }
+
             httpResponse = requestFactory.execute(httpMethod);
             int status = httpResponse.getRawStatusCode();
             Log.debug(LOGGER_NAME, "Request status code: " + status);
