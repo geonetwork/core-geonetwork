@@ -20,10 +20,10 @@ Provide the following information:
 - **Configure connection to OGC CSW 2.0.2**
     - *Service URL*: The URL of the capabilities document of the CSW server to be harvested. eg. <http://geonetwork-site.com/srv/eng/csw?service=CSW&request=GetCapabilities&version=2.0.2>. This document is used to discover the location of the services to call to query and retrieve metadata.
     - *Remote authentication*: If checked, provide credentials for basic HTTP authentication on the CSW server.
-    - **API Key authentication**:  
+    - *API Key authentication*:  
       Optionally, provide an API Key for authentication and specify the header name.  
-        - **API Key value**: The API key or token string as provided by the CSW service.
-        - **API Key header name**: The HTTP header to use (default is `Authorization`).  
+        - *API Key value*: The API key or token string as provided by the CSW service.
+        - *API Key header name*: The HTTP header to use (default is `Authorization`).  
       If both Basic Auth and API Key are configured, both will be sent in requests as headers. This supports servers that require or accept multiple authentication schemes.
     - *Search filter*: (Optional) Define the search criteria to restrict the records to harvest.
     - *Search options*:
