@@ -20,10 +20,10 @@ Provide the following information:
 - **Configure connection to Simple URL**
     - *URL* - The URL of the server to be harvested. This can include pagination params like `?start=0&rows=20`
     - *Remote authentication*: If checked, provide credentials for basic HTTP authentication on the server.
-    - **API Key authentication**:  
+    - *API Key authentication*:  
       You can optionally provide an API Key to be sent with each request to the remote server for authentication or authorization:
-        - **API Key value**: The API key or token string as provided by the external service.
-        - **API Key header name**: The HTTP header name to use (default is `Authorization`).  
+        - *API Key value*: The API key or token string as provided by the external service.
+        - *API Key header name*: The HTTP header name to use (default is `Authorization`).  
       If both Basic Auth and API Key are configured, both will be sent in the request as headers. This supports servers that require or accept multiple authentication schemes.
     - *Element to loop on*: Property/element containing a list of the record entries. (Indicated as an absolute path from the document root.) eg. `/datasets`
     - *Element for the UUID of each record* : Property containing the record id. eg. `datasetid`
