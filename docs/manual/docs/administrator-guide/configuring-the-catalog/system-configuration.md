@@ -278,6 +278,20 @@ Specifies the **default template** that will be preselected on the metadata crea
 - Useful when most new records are based on the same template type.
 - You can still select a different template when creating a record if required.
 
+## Metadata configuration {#metadata_configuration}
+
+### Allowed file mime types to attach to a metadata record
+
+Specifies the **file types** that can be attached to a metadata record.
+
+- Enter a **pipe (|)** separated list of MIME types.
+- Supports **exact** and **wildcard** patterns (e.g. `image/*` for all images, `*/*` for all types).
+- If left **empty**, file uploads are **not allowed**.
+
+**Examples:**
+- `image/*|text/plain|application/xml|application/pdf` — allows images, text, XML, and PDF files.
+- `*/*` — allows all file types.
+
 ## Metadata import {#editing_harvested_records}
 
 -   **Restrict import to schemas** List of all allowed schemas for metadata to be imported. If the metadata schema is not allowed, then the import is not done. Use an empty value to allow all schemas.
