@@ -1863,6 +1863,34 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#metadata_configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Metadata configuration
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Metadata configuration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#allowed-file-mime-types-to-attach-to-a-metadata-record" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Allowed file mime types to attach to a metadata record
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#editing_harvested_records" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2983,6 +3011,34 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#metadata_configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Metadata configuration
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Metadata configuration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#allowed-file-mime-types-to-attach-to-a-metadata-record" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Allowed file mime types to attach to a metadata record
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#editing_harvested_records" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3300,6 +3356,17 @@ type=&quot;application/opensearchdescription+xml&quot; title=&quot;Open Search 
 <li>Useful when most new records are based on the same template type.</li>
 <li>You can still select a different template when creating a record if required.</li>
 </ul>
+<h2 id="metadata_configuration">Metadata configuration</h2>
+<h3 id="allowed-file-mime-types-to-attach-to-a-metadata-record">Allowed file mime types to attach to a metadata record</h3>
+<p>Specifies the <strong>file types</strong> that can be attached to a metadata record.</p>
+<ul>
+<li>Enter a <strong>pipe (|)</strong> separated list of MIME types.</li>
+<li>Supports <strong>exact</strong> and <strong>wildcard</strong> patterns (e.g. <code>image/*</code> for all images, <code>*/*</code> for all types).</li>
+<li>If left <strong>empty</strong>, file uploads are <strong>not allowed</strong>.</li>
+</ul>
+<p><strong>Examples:</strong>
+- <code>image/*|text/plain|application/xml|application/pdf</code> — allows images, text, XML, and PDF files.
+- <code>*/*</code> — allows all file types.</p>
 <h2 id="editing_harvested_records">Metadata import</h2>
 <ul>
 <li><strong>Restrict import to schemas</strong> List of all allowed schemas for metadata to be imported. If the metadata schema is not allowed, then the import is not done. Use an empty value to allow all schemas.</li>
