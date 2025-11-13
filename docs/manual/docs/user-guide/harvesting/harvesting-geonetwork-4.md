@@ -35,8 +35,8 @@ dedicated GeoNetwork 4.x harvester type.
   - **Abstract**: Filter by abstract.
   - **Keyword**: Filter by keyword.
   - **Categories**: Combine multiple categories with `AND` or `OR` (e.g., `cat1 AND cat2`, `cat1 OR cat2`).
-  - **Scheme**: Specify the metadata standards (e.g., `iso19139 OR iso19115-3.2018`).
-  - **Group Owner**: List one or more group (owners of the metadata) numeric IDs, comma-separated.
+  - **Metadata standard**: Specify the metadata standards (e.g., `iso19139 OR iso19115-3.2018`).
+  - **Groups**: List one or more groups (owners of the metadata) numeric IDs, comma-separated.
   - **Catalog**: Identify a source sub-catalogue, if needed.
 
 ### Response Processing
