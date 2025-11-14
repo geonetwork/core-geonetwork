@@ -470,7 +470,7 @@ public class Importer {
             }
 
             public void indexMetadata(int index) throws Exception {
-                metadataIndexer.indexMetadata(metadataIdMap.get(index), true, IndexingMode.full);
+                metadataIndexer.indexMetadata(metadataIdMap.get(index), DirectIndexSubmitter.INSTANCE, IndexingMode.full);
             }
 
         });

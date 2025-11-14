@@ -373,7 +373,7 @@ public abstract class BaseGeoNetworkAligner<P extends BaseGeonetParams> extends 
                         }
 
                         public void indexMetadata(int index) throws Exception {
-                            metadataIndexer.indexMetadata(id, true, IndexingMode.full);
+                            metadataIndexer.indexMetadata(id, batchingIndexSubmitter, IndexingMode.full);
                         }
                     });
                 } catch (Exception e) {
@@ -882,7 +882,7 @@ public abstract class BaseGeoNetworkAligner<P extends BaseGeonetParams> extends 
                 }
 
                 public void indexMetadata(int index) throws Exception {
-                    metadataIndexer.indexMetadata(id[index], true, IndexingMode.full);
+                    metadataIndexer.indexMetadata(id[index], batchingIndexSubmitter, IndexingMode.full);
                 }
             });
         } catch (Exception e) {
