@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2017 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2025 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -106,5 +106,12 @@ public class KeycloakUtil implements SecurityProviderUtil {
             return null;
         }
 
+    }
+
+    @Override
+    public boolean loginServiceAccount() {
+        // Todo: returning false to keep old functionality the same.  If needed, this could login as a service account which could be used by the harvester or any other jobs.
+        //       Note: It is suggested that openidconnectbearer is used instead of keycloak if this functionality is required as keycloak driver will be deprecated soon.
+        return false;
     }
 }

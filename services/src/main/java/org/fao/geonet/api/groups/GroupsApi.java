@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2025 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -31,9 +31,9 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.util.regex.Pattern;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
-import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.exception.ExceptionUtils;
@@ -100,6 +100,16 @@ public class GroupsApi {
     public static final String API_PARAM_GROUP_DETAILS = "Group details";
     public static final String API_PARAM_GROUP_IDENTIFIER = "Group identifier";
     public static final String MSG_GROUP_WITH_IDENTIFIER_NOT_FOUND = "Group with identifier '%d' not found";
+
+    /**
+     * Group name pattern with allowed chars: Group name may only contain alphanumeric characters or
+     * hyphens (not consecutive). Cannot begin or end with a hyphen.
+     *
+     */
+    private static final Pattern GROUPNAME_PATTERN_REGEX = Pattern.compile("^[a-zA-Z0-9]+([_\\-]{1}[a-zA-Z0-9]+)*$");
+    public static final int GROUPNAME_MAX_LENGHT = 32;
+
+
     /**
      * API logo note.
      */
@@ -173,9 +183,9 @@ public class GroupsApi {
     }
 
     /**
-     * Writes the group logo image to the response. If no image is found it
-     * writes a 1x1 transparent PNG. If the request contain cache related
-     * headers it checks if the resource has changed and return a 304 Not
+     * Writes the group logo image to the response. If no image is found, it
+     * writes a 1x1 transparent PNG. If the request contains cache-related
+     * headers, it checks if the resource has changed and returns a 304 Not
      * Modified response if not changed.
      *
      * @param groupId    the group identifier.
@@ -219,7 +229,7 @@ public class GroupsApi {
                             // webRequest.checkNotModified sets the right HTTP headers
                             return;
                         }
-                        response.setContentType(AttachmentsApi.getFileContentType(image.getPath()));
+                        response.setContentType(AttachmentsApi.getFileContentType(image.getPath().getFileName().toString()));
                         response.setContentLength((int) Files.size(image.getPath()));
                         response.addHeader("Cache-Control", "max-age=" + SIX_HOURS + ", public");
                         FileUtils.copyFile(image.getPath().toFile(), response.getOutputStream());
@@ -334,6 +344,16 @@ public class GroupsApi {
                 "A group with name '%s' already exist.",
                 group.getName()
             ));
+        }
+
+        if(group.getName().length() > GROUPNAME_MAX_LENGHT) {
+            throw new IllegalArgumentException(String.format("Group name cannot be longer than %d characters.", GROUPNAME_MAX_LENGHT));
+        }
+
+        if (!GROUPNAME_PATTERN_REGEX.matcher(group.getName()).matches()) {
+            throw new IllegalArgumentException("Group name may only contain alphanumeric characters "
+                + "or single hyphens. Cannot begin or end with a hyphen."
+            );
         }
 
         // Populate languages if not already set
@@ -462,6 +482,16 @@ public class GroupsApi {
                 MSG_GROUP_WITH_IDENTIFIER_NOT_FOUND, groupIdentifier
             ));
         } else {
+            if(group.getName().length() > GROUPNAME_MAX_LENGHT) {
+                throw new IllegalArgumentException(String.format("Group name cannot be longer than %d characters.", GROUPNAME_MAX_LENGHT));
+            }
+
+            if (GROUPNAME_PATTERN_REGEX.matcher(group.getName()).matches() == false) {
+                throw new IllegalArgumentException("Group name may only contain alphanumeric characters "
+                    + "or single hyphens. Cannot begin or end with a hyphen."
+                );
+            }
+
             // Rebuild translation pack cache if there are changes in the translations
             boolean clearTranslationPackCache =
                 !existing.get().getLabelTranslations().equals(group.getLabelTranslations());

@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2005 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2025 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -26,6 +26,7 @@ package org.fao.geonet.utils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.annotations.VisibleForTesting;
 import net.sf.json.JSON;
 import net.sf.json.xml.XMLSerializer;
 import net.sf.saxon.Configuration;
@@ -48,16 +49,20 @@ import org.jdom.output.XMLOutputter;
 import org.jdom.transform.JDOMResult;
 import org.jdom.transform.JDOMSource;
 import org.jdom.xpath.XPath;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.XML;
 import org.mozilla.universalchardet.UniversalDetector;
+import org.springframework.util.StringUtils;
+import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 
 import javax.xml.XMLConstants;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.transform.*;
+import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.sax.SAXResult;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
@@ -94,6 +99,7 @@ public final class Xml {
 
     public static final Namespace xsiNS = Namespace.getNamespace("xsi", XMLConstants.W3C_XML_SCHEMA_INSTANCE_NS_URI);
     public static final NioPathAwareEntityResolver PATH_RESOLVER = new NioPathAwareEntityResolver();
+    private static final byte[] BOM_MARKER_TEMPLATE = { (byte) 0xEF, (byte) 0xBB, (byte) 0xBF };
 
     // http://www.w3.org/TR/REC-xml/#charsets
     public static final String XML10_ILLEGAL_CHAR_PATTERN = "[^"
@@ -219,8 +225,8 @@ public final class Xml {
 
                 // no charset detection and conversion allowed
             } else {
-                try (InputStream in = IO.newInputStream(file)) {
-                    Document jdoc = builder.build(in);
+                try (InputStream in = IO.newInputStream(file); PushbackInputStream f = processBOMMarker(in, file.getFileName().toString())) {
+                    Document jdoc = builder.build(f);
                     return (Element) jdoc.getRootElement().detach();
                 }
             }
@@ -329,12 +335,44 @@ public final class Xml {
      * Loads xml from an input stream and returns its root node.
      */
     public static Element loadStream(InputStream input) throws IOException, JDOMException {
+        try (PushbackInputStream f = processBOMMarker(input, "")) {
         SAXBuilder builder = getSAXBuilderWithPathXMLResolver(false, null); //new SAXBuilder();
         builder.setFeature("http://apache.org/xml/features/validation/schema", false);
         builder.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
-        Document jdoc = builder.build(input);
+            Document jdoc = builder.build(f);
 
         return (Element) jdoc.getRootElement().detach();
+    }
+    }
+
+    /**
+     * Removes UTF-8 BOM marker if it exists.
+     *
+     * @param input InputStream to process.
+     * @param file  File name (for logging purposes).
+     * @return PushbackInputStream without the BOM marker.
+     *
+     * @throws IOException
+     */
+    @VisibleForTesting
+    protected static PushbackInputStream processBOMMarker(InputStream input, String file) throws IOException {
+        PushbackInputStream f = new PushbackInputStream(input, 3);
+
+        byte[] bomMarkerToCheck = new byte[3];
+
+        int c = f.read(bomMarkerToCheck, 0, bomMarkerToCheck.length);
+
+        if (Arrays.equals(bomMarkerToCheck, BOM_MARKER_TEMPLATE)) {
+            if (StringUtils.hasLength(file)) {
+                Log.debug(Log.ENGINE, "Found UTF-8 BOM marker in XML file " + file + ", skipping");
+            } else {
+                Log.debug(Log.ENGINE, "Found UTF-8 BOM marker in XML document, skipping");
+                }
+        } else {
+            f.unread(bomMarkerToCheck, 0, c);
+        }
+
+        return f;
     }
 
     //--------------------------------------------------------------------------
@@ -620,14 +658,26 @@ public final class Xml {
     }
 
     public static Element getXmlFromJSON(String jsonAsString) {
+        if (!StringUtils.hasLength(jsonAsString)) {
+            return null;
+        }
         ObjectMapper objectMapper = new ObjectMapper();
         try {
-            JsonNode json = objectMapper.readTree(jsonAsString);
-            String recordAsXml = XML.toString(
-                new JSONObject(
-                    objectMapper.writeValueAsString(json)), "root");
+            JsonNode jsonNode = objectMapper.readTree(jsonAsString);
+
+            String recordAsXml;
+            String jsonString = objectMapper.writeValueAsString(jsonNode);
+            if (jsonAsString.trim().startsWith("[")) {
+                recordAsXml = "<root>" + XML.toString(new JSONArray(jsonString)) + "</root>";
+            } else {
+                recordAsXml = XML.toString(new JSONObject(jsonString), "root");
+            }
             recordAsXml = Xml.stripNonValidXMLCharacters(recordAsXml);
-            return Xml.loadString(recordAsXml, false);
+            if (StringUtils.hasLength(recordAsXml)) {
+                Element xml = Xml.loadString(recordAsXml, false);
+                xml.detach();
+                return xml;
+            }
         } catch (JSONException e) {
             e.printStackTrace();
         } catch (JsonProcessingException e) {
@@ -680,6 +730,24 @@ public final class Xml {
         XMLOutputter outputter = new XMLOutputter(Format.getPrettyFormat());
 
         return outputter.outputString(data);
+    }
+
+    /**
+     *
+     * @param data
+     * @return
+     */
+    public static String getString(Node data) {
+        try {
+            TransformerFactory tf = TransformerFactoryFactory.getTransformerFactory();
+            Transformer transformer = tf.newTransformer();
+            transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+            StringWriter writer = new StringWriter();
+            transformer.transform(new DOMSource(data), new StreamResult(writer));
+            return writer.toString();
+        } catch (TransformerException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     //---------------------------------------------------------------------------

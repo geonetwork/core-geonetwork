@@ -219,6 +219,10 @@
         <artifactId>httpmime</artifactId>
     </dependency>
     <dependency>
+      <groupId>org.apache.tika</groupId>
+      <artifactId>tika-core</artifactId>
+    </dependency>
+    <dependency>
       <groupId>org.nibor.autolink</groupId>
       <artifactId>autolink</artifactId>
       <version>0.6.0</version>

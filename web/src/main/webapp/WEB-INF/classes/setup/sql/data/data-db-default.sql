@@ -656,8 +656,13 @@ INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('metada
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/metadata/validation/removeSchemaLocation', 'false', 2, 9170, 'n');
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('metadata/history/enabled', 'false', 2, 9171, 'n');
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/metadatacreate/generateUuid', 'true', 2, 9100, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/metadatacreate/publishForGroupEditors', 'false', 2, 9101, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/metadatacreate/copyAttachments', 'true', 2, 9102, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/metadatacreate/skipMetadataCreationPage', 'false', 2, 9103, 'n');
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/metadatacreate/preferredGroup', '', 1, 9105, 'n');
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/metadatacreate/preferredTemplate', '', 0, 9106, 'n');
+
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/metadata/edit/supportedFileMimetypes', 'image/png|image/gif|image/jpeg|text/plain|application/xml|application/pdf', 0, 9107, 'n');
 
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/metadataprivs/usergrouponly', 'false', 2, 9180, 'n');
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/metadataprivs/publicationbyrevieweringroupowneronly', 'true', 2, 9181, 'n');

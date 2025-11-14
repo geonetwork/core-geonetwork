@@ -469,6 +469,10 @@ public class Importer {
                 saveFile(context, metadataIdMap.get(index), MetadataResourceVisibility.PRIVATE, file, changeDate, is);
             }
 
+            public void indexMetadata(int index) throws Exception {
+                metadataIndexer.indexMetadata(metadataIdMap.get(index), true, IndexingMode.full);
+            }
+
         });
 
         return metadataIdMap;

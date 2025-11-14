@@ -131,7 +131,7 @@ public class AddLimitations implements Service {
 
             Element fileInfo = new Element("file");
             try (Store.ResourceHolder resource = store.getResource(context, info.getUuid(), fname)) {
-                BinaryFile bFile = BinaryFile.encode(200, resource.getPath(), false);
+                BinaryFile bFile = BinaryFile.encode(200, resource.getResource(), resource.getMetadata().getMetadataId(), resource.getMetadata().getFilename(), false);
                 Element details = bFile.getElement();
                 String remoteURL = details.getAttributeValue("remotepath");
                 if (remoteURL != null) {

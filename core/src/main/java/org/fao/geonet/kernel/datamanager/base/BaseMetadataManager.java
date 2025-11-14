@@ -738,7 +738,6 @@ public class BaseMetadataManager implements IMetadataManager {
         // when invoked from harvesters, session is null?
         UserSession session = context.getUserSession();
         if (session != null) {
-            session.removeProperty(Geonet.Session.VALIDATION_REPORT + metadataId);
         }
         String schema = metadataSchemaUtils.getMetadataSchema(metadataId);
 

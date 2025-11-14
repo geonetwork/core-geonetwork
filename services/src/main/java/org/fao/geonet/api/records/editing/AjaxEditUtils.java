@@ -326,7 +326,6 @@ public class AjaxEditUtils extends EditUtils {
         if (Log.isDebugEnabled(Geonet.EDITOR))
             Log.debug(Geonet.EDITOR, "Removing metadata from session " + session.getUserId());
         session.removeProperty(Geonet.Session.METADATA_EDITING + id);
-        session.removeProperty(Geonet.Session.VALIDATION_REPORT + id);
     }
 
     /**
