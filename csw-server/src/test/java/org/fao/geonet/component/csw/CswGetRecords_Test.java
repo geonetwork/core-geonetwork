@@ -225,7 +225,7 @@ public class CswGetRecords_Test extends AbstractCoreIntegrationTest {
             final ServiceContext serviceContext = createServiceContext();
             serviceContext.setLanguage(null);
             loginAsAdmin(serviceContext);
-            injectMetadataInDb(getSampleISO19115MetadataXml(), serviceContext, true, IndexingMode.full);
+            injectMetadataInDb(getSampleISO19115MetadataXml(), serviceContext, IndexingMode.full);
             Element request = new Element("GetRecords", Csw.NAMESPACE_CSW)
                     .setAttribute("service", "CSW")
                     .setAttribute("version", "2.0.2")
