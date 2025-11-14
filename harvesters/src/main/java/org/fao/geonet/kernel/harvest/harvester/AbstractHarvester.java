@@ -906,11 +906,15 @@ public abstract class AbstractHarvester<T extends HarvestResult, P extends Abstr
         /* Group selected by user who created or updated this node. */
         harvesterSettingsManager.add(ID_PREFIX + siteId, "ownerGroup", params.getOwnerIdGroup());
 
+        harvesterSettingsManager.add(ID_PREFIX + siteId, "apiKeyHeader", params.getApiKeyHeader());
+        harvesterSettingsManager.add(ID_PREFIX + siteId, "apiKey", params.getApiKey(), true);
+
         String useAccId = harvesterSettingsManager.add(ID_PREFIX + siteId, "useAccount", params.isUseAccount());
 
         harvesterSettingsManager.add(ID_PREFIX + useAccId, "username", params.getUsername());
         harvesterSettingsManager.add(ID_PREFIX + useAccId, "password", params.getPassword(), true);
 
+ 
         //--- setup options node ---------------------------------------
 
         harvesterSettingsManager.add(ID_PREFIX + optionsId, "every", params.getEvery());

@@ -15,7 +15,11 @@ Contact your administrator if you don't have the correct profile.
 
     ![](img/add-new-record.png)
 
-2.  From the metadata template list, select a template (see [Managing templates](managing-templates.md)), choose a group from the dropdown and click *Create*.
+!!! Note
+
+    If only one group is defined in the catalog, and only one template is available, the system settings can be configured to skip the following step and directly open the editor with the selected template and group.
+
+2.  From the metadata template list, select a template (see [Managing templates](managing-templates.md)), choose a group from the group dropdown, configure the creation options in the Create button’s dropdown, and then click Create.
 
     ![](img/creating-metadata.png)
 
