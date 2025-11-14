@@ -8,7 +8,7 @@ The open-source project was initially managed by Jeroen Ticheler and then donate
 
 The GeoNetwork project roadmap is managed using a proposal process, with the GeoNetwork leadership team voting on proposals made by members of our community. This process has moved from mailing list to a [project board](https://github.com/orgs/geonetwork/projects/2).
 
-Active maintainers in GeoNetwork project have taken on responsibility for reviewing community contributions, making releases, handling security vulnerability reports.
+Active maintainers in the GeoNetwork project have taken on responsibility for reviewing community contributions, making releases, handling security vulnerability reports.
 
 This dedication is reflected in community trust, and a Leadership role with oppertunity to vote on roadmap proposals:
 
@@ -86,7 +86,7 @@ Roles reflect increased project access as indicated by the GitHub Teams below:
    
     Developers are expected remain active, meeting responsibilities to review pull requests, address security vulnerabilities, and vote on roadmap proposals.
     
-    We understand that life can get in the way of community particpation – you are welcome to rejoin as your availability permits you to meet the responsibilities.
+    We understand that life can get in the way of community participation – you are welcome to rejoin as your availability permits you to meet the responsibilities.
 
 ## Contributors
 
