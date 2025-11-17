@@ -1367,6 +1367,7 @@
           scope.gnCurrentEdit = gnCurrentEdit;
           scope.relations = [];
           scope.relatedConfigUI = [];
+          gnCurrentEdit.relatedConfigUI = scope.relatedConfigUI;
           scope.relatedResourcesConfig = gnRelatedResources;
           if ($injector.has("gnOnlinesrc")) {
             scope.onlinesrcService = $injector.get("gnOnlinesrc");

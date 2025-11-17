@@ -2142,9 +2142,10 @@
      */
     .directive("gnLinkToMetadata", [
       "gnOnlinesrc",
+      "gnCurrentEdit",
       "$translate",
       "gnGlobalSettings",
-      function (gnOnlinesrc, $translate, gnGlobalSettings) {
+      function (gnOnlinesrc, gnCurrentEdit, $translate, gnGlobalSettings) {
         return {
           restrict: "A",
           scope: {},
@@ -2205,47 +2206,46 @@
                  * Register a method on popup open to reset
                  * the search form and trigger a search.
                  */
-                gnOnlinesrc.register(
-                  scope.mode,
-                  function (config, existingRelations, currentUuid) {
-                    if (config && !angular.isObject(config)) {
-                      config = angular.fromJson(config);
-                    }
-
-                    scope.config = {
-                      sources: config && config.sources
-                    };
-
-                    $(scope.popupid).modal("show");
-
-                    $("#linktomd-search input").val("");
-                    scope.searchObj.any = "";
-
-                    scope.uuidsAlreadyLinked = currentUuid ? [currentUuid] : [];
-                    if (existingRelations && existingRelations.length) {
-                      for (var i = 0; i < existingRelations.length; i++) {
-                        scope.uuidsAlreadyLinked.push(existingRelations[i].uuid);
-                      }
-                    }
-                    if (scope.uuidsAlreadyLinked.length > 0) {
-                      scope.searchObj.filters = [
-                        {
-                          query_string: {
-                            query:
-                              '-_id:("' + scope.uuidsAlreadyLinked.join('" OR "') + '")'
-                          }
-                        }
-                      ];
-                    }
-
-                    var searchParams =
-                      scope.config.sources && scope.config.sources.metadataStore
-                        ? scope.config.sources.metadataStore.params || {}
-                        : {};
-                    scope.$broadcast("resetSearch", searchParams);
-                    scope.selectRecords = [];
+                gnOnlinesrc.register(scope.mode, function (config) {
+                  if (config && !angular.isObject(config)) {
+                    config = angular.fromJson(config);
                   }
-                );
+
+                  scope.config = {
+                    sources: config && config.sources
+                  };
+
+                  $(scope.popupid).modal("show");
+
+                  $("#linktomd-search input").val("");
+                  scope.searchObj.any = "";
+
+                  scope.uuidsAlreadyLinked = [gnCurrentEdit.uuid];
+                  var existingRelations = gnCurrentEdit.getRelations(scope.mode);
+
+                  if (existingRelations && existingRelations.length) {
+                    for (var i = 0; i < existingRelations.length; i++) {
+                      scope.uuidsAlreadyLinked.push(existingRelations[i].uuid);
+                    }
+                  }
+                  if (scope.uuidsAlreadyLinked.length > 0) {
+                    scope.searchObj.filters = [
+                      {
+                        query_string: {
+                          query:
+                            '-_id:("' + scope.uuidsAlreadyLinked.join('" OR "') + '")'
+                        }
+                      }
+                    ];
+                  }
+
+                  var searchParams =
+                    scope.config.sources && scope.config.sources.metadataStore
+                      ? scope.config.sources.metadataStore.params || {}
+                      : {};
+                  scope.$broadcast("resetSearch", searchParams);
+                  scope.selectRecords = [];
+                });
                 scope.gnOnlinesrc = gnOnlinesrc;
               }
             };
@@ -2273,9 +2273,10 @@
      */
     .directive("gnLinkToSibling", [
       "gnOnlinesrc",
+      "gnCurrentEdit",
       "gnGlobalSettings",
       "gnOnlinesrcConfig",
-      function (gnOnlinesrc, gnGlobalSettings, gnOnlinesrcConfig) {
+      function (gnOnlinesrc, gnCurrentEdit, gnGlobalSettings, gnOnlinesrcConfig) {
         return {
           restrict: "A",
           scope: {},
@@ -2310,51 +2311,49 @@
                  * Register a method on popup open to reset
                  * the search form and trigger a search.
                  */
-                gnOnlinesrc.register(
-                  "siblings",
-                  function (config, existingRelations, currentUuid) {
-                    if (config && !angular.isObject(config)) {
-                      config = angular.fromJson(config);
-                    }
-
-                    scope.uuidsAlreadyLinked = currentUuid ? [currentUuid] : [];
-                    if (existingRelations && existingRelations.length) {
-                      for (var i = 0; i < existingRelations.length; i++) {
-                        scope.uuidsAlreadyLinked.push(existingRelations[i].uuid);
-                      }
-                    }
-                    if (scope.uuidsAlreadyLinked.length > 0) {
-                      scope.searchObj.filters = [
-                        {
-                          query_string: {
-                            query:
-                              '-_id:("' + scope.uuidsAlreadyLinked.join('" OR "') + '")'
-                          }
-                        }
-                      ];
-                    }
-
-                    scope.config = {
-                      associationTypeForced: angular.isDefined(
-                        config && config.fields && config.fields.associationType
-                      ),
-                      associationType:
-                        (config && config.fields && config.fields.associationType) ||
-                        null,
-                      initiativeTypeForced: angular.isDefined(
-                        config && config.fields && config.fields.initiativeType
-                      ),
-                      initiativeType:
-                        (config && config.fields && config.fields.initiativeType) || null,
-                      sources: config && config.sources
-                    };
-
-                    $(scope.popupid).modal("show");
-
-                    scope.clearSearch();
-                    scope.selection = [];
+                gnOnlinesrc.register("siblings", function (config) {
+                  if (config && !angular.isObject(config)) {
+                    config = angular.fromJson(config);
                   }
-                );
+
+                  scope.uuidsAlreadyLinked = [gnCurrentEdit.uuid];
+                  var existingRelations = gnCurrentEdit.getRelations("siblings");
+
+                  if (existingRelations && existingRelations.length) {
+                    for (var i = 0; i < existingRelations.length; i++) {
+                      scope.uuidsAlreadyLinked.push(existingRelations[i].uuid);
+                    }
+                  }
+                  if (scope.uuidsAlreadyLinked.length > 0) {
+                    scope.searchObj.filters = [
+                      {
+                        query_string: {
+                          query:
+                            '-_id:("' + scope.uuidsAlreadyLinked.join('" OR "') + '")'
+                        }
+                      }
+                    ];
+                  }
+
+                  scope.config = {
+                    associationTypeForced: angular.isDefined(
+                      config && config.fields && config.fields.associationType
+                    ),
+                    associationType:
+                      (config && config.fields && config.fields.associationType) || null,
+                    initiativeTypeForced: angular.isDefined(
+                      config && config.fields && config.fields.initiativeType
+                    ),
+                    initiativeType:
+                      (config && config.fields && config.fields.initiativeType) || null,
+                    sources: config && config.sources
+                  };
+
+                  $(scope.popupid).modal("show");
+
+                  scope.clearSearch();
+                  scope.selection = [];
+                });
 
                 // Clear the search params and input
                 scope.clearSearch = function () {
