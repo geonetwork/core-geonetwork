@@ -1898,7 +1898,7 @@
                       searchParams["-resourceType"] = "service";
                     }
 
-                    scope.uuidsAlreadyLinked = [currentUuid];
+                    scope.uuidsAlreadyLinked = currentUuid ? [currentUuid] : [];
                     if (existingRelations && existingRelations.length) {
                       for (var i = 0; i < existingRelations.length; i++) {
                         scope.uuidsAlreadyLinked.push(existingRelations[i].uuid);
@@ -2221,7 +2221,7 @@
                     $("#linktomd-search input").val("");
                     scope.searchObj.any = "";
 
-                    scope.uuidsAlreadyLinked = [currentUuid];
+                    scope.uuidsAlreadyLinked = currentUuid ? [currentUuid] : [];
                     if (existingRelations && existingRelations.length) {
                       for (var i = 0; i < existingRelations.length; i++) {
                         scope.uuidsAlreadyLinked.push(existingRelations[i].uuid);
@@ -2317,7 +2317,7 @@
                       config = angular.fromJson(config);
                     }
 
-                    scope.uuidsAlreadyLinked = [currentUuid];
+                    scope.uuidsAlreadyLinked = currentUuid ? [currentUuid] : [];
                     if (existingRelations && existingRelations.length) {
                       for (var i = 0; i < existingRelations.length; i++) {
                         scope.uuidsAlreadyLinked.push(existingRelations[i].uuid);
