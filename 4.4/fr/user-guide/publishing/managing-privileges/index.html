@@ -2002,6 +2002,10 @@
 <h1 id="managing-privileges">Managing privileges</h1>
 <p>To manage privileges to your metadata record and any attached data, you will need to identify User Groups and the privileges you want to assign to users in these groups. eg. Viewing the metadata, downloading the data attached to the record, etc.</p>
 <p>For example, you can specify that the metadata and related services are visible to all (Internet users) or just to internal users only (Intranet). Privileges are assigned on a per group basis. Depending on the user profile (Guest, Registered User, Editor, Admin etc.) access to these functions may differ on a per user basis.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><a href="../../../administrator-guide/managing-users-and-groups/creating-group/#3-system-privilege-group">System Privilege Groups</a> are special groups which cannot have privileges set for specific metadata records.</p>
+</div>
 <h2 id="assigning-privileges">Assigning privileges</h2>
 <p>To assign privileges, follow these steps:</p>
 <ol>
@@ -2063,7 +2067,8 @@
 <p><img alt="" src="../../../../user-guide/publishing/img/set-selection-privileges.png" /></p>
 <p>The following rules apply:</p>
 <ul>
-<li>the groups are those that the user belongs to</li>
+<li>If the "<a href="../../../administrator-guide/configuring-the-catalog/system-configuration/#metadata-privileges">Only set privileges to user's groups</a>" setting is set, only the groups the user is a member of will be shown in the list.</li>
+<li><a href="../../../administrator-guide/managing-users-and-groups/creating-group/#3-system-privilege-group">System Privilege Groups</a> are not shown</li>
 <li>the privileges specified will only be applied to records that the user has ownership or administration rights on - any other records will be skipped</li>
 <li>the current records privileges will be reset and replaced by the selected privilege</li>
 </ul>

@@ -1656,6 +1656,67 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#group-type" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Group Type
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Group Type">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-workspace-group" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Workspace Group
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-record-privilege-group" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Record Privilege Group
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-system-privilege-group" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. System Privilege Group
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#group-type-and-operations-allowed-matrix" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Group Type and Operations Allowed Matrix
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#minimum-user-profile-allowed-to-set-privileges" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2316,6 +2377,67 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#group-type" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Group Type
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Group Type">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-workspace-group" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Workspace Group
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-record-privilege-group" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Record Privilege Group
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-system-privilege-group" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. System Privilege Group
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#group-type-and-operations-allowed-matrix" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Group Type and Operations Allowed Matrix
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#minimum-user-profile-allowed-to-set-privileges" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2430,8 +2552,78 @@
 <p>Additional settings:
 - <strong>Editing</strong>: Specifies which groups can edit the metadata record.
 - <strong>Notify</strong>: Determines which groups are notified when a file managed by GeoNetwork is downloaded.</p>
+<h2 id="group-type">Group Type</h2>
+<p>Administrators can define the type of group being created. There are three group types available, each with specific characteristics and use cases:</p>
+<h3 id="1-workspace-group">1. Workspace Group</h3>
+<ul>
+<li><strong>Description</strong>: This is the default group type. It allows the group to own metadata records and have privileges assigned to them.</li>
+<li><strong>Use Case</strong>: Suitable for groups that need full control over metadata records, including creation, import, and transfer.</li>
+</ul>
+<h3 id="2-record-privilege-group">2. Record Privilege Group</h3>
+<ul>
+<li><strong>Description</strong>: This group type can have privileges assigned to specific metadata records but cannot own metadata records.</li>
+<li><strong>Use Case</strong>: Ideal for groups that require access to metadata records without ownership rights.</li>
+</ul>
+<h3 id="3-system-privilege-group">3. System Privilege Group</h3>
+<ul>
+<li><strong>Description</strong>: This group type is used to manage system-level privileges. It cannot own metadata records or have privileges assigned to them.</li>
+<li><strong>Use Case</strong>: Designed for administrative purposes where system-level access is required without metadata ownership.</li>
+<li><strong>Profiles</strong>: Users are not assigned profiles in System Privilege Groups, since their purpose is to grant system-level privileges to all members. Instead, users in these groups are automatically given the Registered User profile behind the scenes.</li>
+</ul>
+<h3 id="group-type-and-operations-allowed-matrix">Group Type and Operations Allowed Matrix</h3>
+<p>The table below summarizes the operations allowed for each group type:</p>
+<table>
+<thead>
+<tr>
+<th><strong>Group Type</strong></th>
+<th style="text-align: center;"><strong>Can Create Records in Group</strong></th>
+<th style="text-align: center;"><strong>Can Import Records in Group</strong></th>
+<th style="text-align: center;"><strong>Can Transfer Records to Group</strong></th>
+<th style="text-align: center;"><strong>Can Group Have Privileges on a Record</strong></th>
+<th style="text-align: center;"><strong>Group Has Profiles</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Workspace</strong></td>
+<td style="text-align: center;">✔</td>
+<td style="text-align: center;">✔</td>
+<td style="text-align: center;">✔</td>
+<td style="text-align: center;">✔</td>
+<td style="text-align: center;">✔</td>
+</tr>
+<tr>
+<td><strong>Record Privilege</strong></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✔</td>
+<td style="text-align: center;">✔</td>
+</tr>
+<tr>
+<td><strong>System Privilege</strong></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul>
+<li><strong>Workspace Group</strong>: Provides the most flexibility and is the default choice for most use cases.</li>
+<li><strong>Record Privilege Group</strong>: Focused on access control without ownership.</li>
+<li><strong>System Privilege Group</strong>: Reserved for system-level operations and does not interact with metadata records directly.</li>
+</ul>
+</div>
 <h2 id="minimum-user-profile-allowed-to-set-privileges">Minimum user profile allowed to set privileges</h2>
 <p>This setting allows administrators to control the minimum user profile required to assign privileges for a group. It provides enhanced control over who can manage sensitive privileges for users within the group.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This setting is unset and disabled when the group is a <strong>System Privilege Group</strong>. System privilege groups do not have profiles and cannot have privileges assigned to them.</p>
+</div>
 <h3 id="default-setting">Default setting</h3>
 <p>By default, the <strong>"Minimum User Profile Allowed to Set Privileges"</strong> is set to <strong>No Restrictions</strong>. This means that any user with permission to manage privileges for a metadata record can assign privileges for users in this group.</p>
 <h3 id="restricted-setting">Restricted setting</h3>
