@@ -764,7 +764,7 @@
             scope.selectedGroup = group;
           };
           $http
-            .get("../api/users/groups")
+            .get("../api/users/groups?onlyIncludeWorkspaces=true")
             .then(function (response) {
               var uniqueUserGroups = {};
               angular.forEach(response.data, function (g) {
@@ -825,32 +825,42 @@
                   "&groupIdentifier=" +
                   scope.selectedUserGroup.groupId
               )
-              .then(function (r) {
-                var msg = $translate.instant("transfertPrivilegesFinished", {
-                  metadata: r.data.numberOfRecordsProcessed
-                });
+              .then(
+                function (r) {
+                  var msg = $translate.instant("transfertPrivilegesFinished", {
+                    metadata: r.data.numberOfRecordsProcessed
+                  });
 
-                scope.processReport = r.data;
+                  scope.processReport = r.data;
 
-                // A report is returned
-                gnUtilityService.openModal(
-                  {
-                    title: msg,
-                    content: '<div gn-batch-report="processReport"></div>',
-                    className: "gn-privileges-popup",
-                    onCloseCallback: function () {
-                      if (bucket != "null") {
-                        scope.$emit("search", true);
-                        scope.$broadcast("operationOnSelectionStop");
+                  // A report is returned
+                  gnUtilityService.openModal(
+                    {
+                      title: msg,
+                      content: '<div gn-batch-report="processReport"></div>',
+                      className: "gn-privileges-popup",
+                      onCloseCallback: function () {
+                        if (bucket != "null") {
+                          scope.$emit("search", true);
+                          scope.$broadcast("operationOnSelectionStop");
+                        }
+                        scope.$emit("TransferOwnershipDone", true);
+                        scope.processReport = null;
                       }
-                      scope.$emit("TransferOwnershipDone", true);
-                      scope.processReport = null;
-                    }
-                  },
-                  scope,
-                  "TransferOwnershipDone"
-                );
-              });
+                    },
+                    scope,
+                    "TransferOwnershipDone"
+                  );
+                },
+                function (r) {
+                  $rootScope.$broadcast("StatusUpdated", {
+                    title: $translate.instant("transferOwnershipError"),
+                    error: r.data,
+                    timeout: 0,
+                    type: "danger"
+                  });
+                }
+              );
           };
         }
       };
