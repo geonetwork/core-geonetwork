@@ -1869,93 +1869,75 @@
                 scope.layerSelectionMode = "multiple";
                 scope.onlineSrcLink = "";
                 scope.addOnlineSrcInDataset = true;
-                scope.uuidsAlreadyLinked = [];
 
-                gnOnlinesrc.register(
-                  scope.mode,
-                  function (config, existingRelations, currentUuid) {
-                    if (config && !angular.isObject(config)) {
-                      config = angular.fromJson(config);
-                    }
+                gnOnlinesrc.register(scope.mode, function (config) {
+                  if (config && !angular.isObject(config)) {
+                    config = angular.fromJson(config);
+                  }
 
-                    scope.config = {
-                      sources: config && config.sources
-                    };
+                  scope.config = {
+                    sources: config && config.sources
+                  };
 
-                    $(scope.popupid).modal("show");
+                  $(scope.popupid).modal("show");
 
-                    // parameters of the online resource form
-                    scope.srcParams = { selectedLayers: [] };
+                  // parameters of the online resource form
+                  scope.srcParams = { selectedLayers: [] };
 
-                    var searchParams = {
-                      isTemplate: "n"
-                    };
-                    if (scope.mode === "service") {
-                      searchParams.type = scope.mode;
+                  var searchParams = {
+                    isTemplate: "n"
+                  };
+                  if (scope.mode === "service") {
+                    searchParams.type = scope.mode;
+                  } else {
+                    // Any records which are not services
+                    // ie. dataset, series, ...
+                    searchParams["-resourceType"] = "service";
+                  }
+
+                  scope.searchObj.filters = gnOnlinesrc.getSearchFilterForType(
+                    gnCurrentEdit,
+                    scope.mode
+                  );
+
+                  scope.$broadcast("resetSearch", searchParams);
+                  scope.layers = [];
+
+                  // Load service layers on load
+                  if (scope.mode !== "service") {
+                    // If linking a dataset and the service is a WMS
+                    // List all layers. The service WMS link can be added
+                    // as online source in the target dataset.
+                    // TODO: list all URLs if many
+                    // TODO: If service URL is added, user need to reload
+                    // editor to get URL or current record.
+                    var links = [];
+                    links = links.concat(
+                      gnCurrentEdit.metadata.getLinksByType("ogc", "atom")
+                    );
+                    if (links.length > 0) {
+                      scope.onlineSrcLink = links[0].url;
+                      scope.srcParams.protocol = links[0].protocol || "";
+                      scope.loadCurrentLink(scope.onlineSrcLink);
+                      scope.srcParams.url = scope.onlineSrcLink;
+                      scope.srcParams.uuidSrv = gnCurrentEdit.uuid;
+
+                      scope.addOnlineSrcInDataset = true;
                     } else {
-                      // Any records which are not services
-                      // ie. dataset, series, ...
-                      searchParams["-resourceType"] = "service";
-                    }
+                      scope.alertMsg = $translate.instant("linkToServiceWithoutURLError");
 
-                    scope.uuidsAlreadyLinked = currentUuid ? [currentUuid] : [];
-                    if (existingRelations && existingRelations.length) {
-                      for (var i = 0; i < existingRelations.length; i++) {
-                        scope.uuidsAlreadyLinked.push(existingRelations[i].uuid);
-                      }
-                    }
-                    if (scope.uuidsAlreadyLinked.length > 0) {
-                      scope.searchObj.filters = [
-                        {
-                          query_string: {
-                            query:
-                              '-_id:("' + scope.uuidsAlreadyLinked.join('" OR "') + '")'
-                          }
-                        }
-                      ];
-                    }
+                      // If no WMS found, suggest to add a link to the service landing page
+                      // Default is false.
+                      // Build a link to the service metadata record
+                      scope.onlineSrcLink =
+                        gnConfigService.getServiceURL() +
+                        "api/records/" +
+                        gnCurrentEdit.uuid;
 
-                    scope.$broadcast("resetSearch", searchParams);
-                    scope.layers = [];
-
-                    // Load service layers on load
-                    if (scope.mode !== "service") {
-                      // If linking a dataset and the service is a WMS
-                      // List all layers. The service WMS link can be added
-                      // as online source in the target dataset.
-                      // TODO: list all URLs if many
-                      // TODO: If service URL is added, user need to reload
-                      // editor to get URL or current record.
-                      var links = [];
-                      links = links.concat(
-                        gnCurrentEdit.metadata.getLinksByType("ogc", "atom")
-                      );
-                      if (links.length > 0) {
-                        scope.onlineSrcLink = links[0].url;
-                        scope.srcParams.protocol = links[0].protocol || "";
-                        scope.loadCurrentLink(scope.onlineSrcLink);
-                        scope.srcParams.url = scope.onlineSrcLink;
-                        scope.srcParams.uuidSrv = gnCurrentEdit.uuid;
-
-                        scope.addOnlineSrcInDataset = true;
-                      } else {
-                        scope.alertMsg = $translate.instant(
-                          "linkToServiceWithoutURLError"
-                        );
-
-                        // If no WMS found, suggest to add a link to the service landing page
-                        // Default is false.
-                        // Build a link to the service metadata record
-                        scope.onlineSrcLink =
-                          gnConfigService.getServiceURL() +
-                          "api/records/" +
-                          gnCurrentEdit.uuid;
-
-                        scope.addOnlineSrcInDataset = false;
-                      }
+                      scope.addOnlineSrcInDataset = false;
                     }
                   }
-                );
+                });
 
                 // This object is used to share value between this
                 // directive and the SearchFormController scope that
@@ -2161,7 +2143,6 @@
                 scope.mode = iAttrs["gnLinkToMetadata"];
                 scope.popupid = "#linkto" + scope.mode + "-popup";
                 scope.btn = {};
-                scope.uuidsAlreadyLinked = [];
 
                 scope.updateParams = function () {
                   scope.searchObj.params.any = scope.searchObj.any;
@@ -2220,24 +2201,10 @@
                   $("#linktomd-search input").val("");
                   scope.searchObj.any = "";
 
-                  scope.uuidsAlreadyLinked = [gnCurrentEdit.uuid];
-                  var existingRelations = gnCurrentEdit.getRelations(scope.mode);
-
-                  if (existingRelations && existingRelations.length) {
-                    for (var i = 0; i < existingRelations.length; i++) {
-                      scope.uuidsAlreadyLinked.push(existingRelations[i].uuid);
-                    }
-                  }
-                  if (scope.uuidsAlreadyLinked.length > 0) {
-                    scope.searchObj.filters = [
-                      {
-                        query_string: {
-                          query:
-                            '-_id:("' + scope.uuidsAlreadyLinked.join('" OR "') + '")'
-                        }
-                      }
-                    ];
-                  }
+                  scope.searchObj.filters = gnOnlinesrc.getSearchFilterForType(
+                    gnCurrentEdit,
+                    scope.mode
+                  );
 
                   var searchParams =
                     scope.config.sources && scope.config.sources.metadataStore
@@ -2275,8 +2242,7 @@
       "gnOnlinesrc",
       "gnCurrentEdit",
       "gnGlobalSettings",
-      "gnOnlinesrcConfig",
-      function (gnOnlinesrc, gnCurrentEdit, gnGlobalSettings, gnOnlinesrcConfig) {
+      function (gnOnlinesrc, gnCurrentEdit, gnGlobalSettings) {
         return {
           restrict: "A",
           scope: {},
@@ -2306,7 +2272,6 @@
               },
               post: function postLink(scope, iElement, iAttrs) {
                 scope.popupid = iAttrs["gnLinkToSibling"];
-                scope.uuidsAlreadyLinked = [];
                 /**
                  * Register a method on popup open to reset
                  * the search form and trigger a search.
@@ -2316,24 +2281,10 @@
                     config = angular.fromJson(config);
                   }
 
-                  scope.uuidsAlreadyLinked = [gnCurrentEdit.uuid];
-                  var existingRelations = gnCurrentEdit.getRelations("siblings");
-
-                  if (existingRelations && existingRelations.length) {
-                    for (var i = 0; i < existingRelations.length; i++) {
-                      scope.uuidsAlreadyLinked.push(existingRelations[i].uuid);
-                    }
-                  }
-                  if (scope.uuidsAlreadyLinked.length > 0) {
-                    scope.searchObj.filters = [
-                      {
-                        query_string: {
-                          query:
-                            '-_id:("' + scope.uuidsAlreadyLinked.join('" OR "') + '")'
-                        }
-                      }
-                    ];
-                  }
+                  scope.searchObj.filters = gnOnlinesrc.getSearchFilterForType(
+                    gnCurrentEdit,
+                    "siblings"
+                  );
 
                   scope.config = {
                     associationTypeForced: angular.isDefined(
