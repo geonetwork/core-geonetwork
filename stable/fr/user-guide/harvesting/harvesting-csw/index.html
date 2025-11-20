@@ -1433,7 +1433,7 @@
   <span class="md-ellipsis">
     
   
-    GeoNetwork 4.X Harvester
+    GeoNetwork 4.x Harvester
   
 
     
@@ -2314,10 +2314,10 @@
 <ul>
 <li><em>Service URL</em>: The URL of the capabilities document of the CSW server to be harvested. eg. <a href="http://geonetwork-site.com/srv/eng/csw?service=CSW&amp;request=GetCapabilities&amp;version=2.0.2">http://geonetwork-site.com/srv/eng/csw?service=CSW&amp;request=GetCapabilities&amp;version=2.0.2</a>. This document is used to discover the location of the services to call to query and retrieve metadata.</li>
 <li><em>Remote authentication</em>: If checked, provide credentials for basic HTTP authentication on the CSW server.</li>
-<li><strong>API Key authentication</strong>:<br />
+<li><em>API Key authentication</em>:<br />
   Optionally, provide an API Key for authentication and specify the header name.  <ul>
-<li><strong>API Key value</strong>: The API key or token string as provided by the CSW service.</li>
-<li><strong>API Key header name</strong>: The HTTP header to use (default is <code>Authorization</code>).<br />
+<li><em>API Key value</em>: The API key or token string as provided by the CSW service.</li>
+<li><em>API Key header name</em>: The HTTP header to use (default is <code>Authorization</code>).<br />
   If both Basic Auth and API Key are configured, both will be sent in requests as headers. This supports servers that require or accept multiple authentication schemes.</li>
 </ul>
 </li>
