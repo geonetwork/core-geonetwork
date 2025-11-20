@@ -55,7 +55,6 @@
   <!-- Ignore all gn element -->
   <xsl:template mode="mode-iso19115-3.2018" match="gn:*|@gn:*|@*" priority="1000"/>
 
-
   <!-- Template to display non existing element ie. geonet:child element
 	of the metadocument. Display in editing mode only and if
   the editor mode is not flat mode. -->
@@ -171,32 +170,70 @@
       </xsl:if>
     </xsl:variable>
 
-    <xsl:call-template name="render-boxed-element">
-      <xsl:with-param name="label"
-                      select="if ($overrideLabel != '')
+
+    <!-- In ISO, all elements are structured as container/object type. eg.
+          <mri:citation>
+            <cit:CI_Citation>
+          Do not display fieldset for object type.
+          Combine labels for container.
+          Object type always start with uppercase letter.
+    -->
+    <xsl:variable name="isObjectTypeElement"
+                  select="matches(substring(local-name(.), 1, 1), '[A-Z]')"/>
+    <xsl:variable name="isContainerOnlyElement"
+                  select="not($isObjectTypeElement) and count(*[matches(substring(local-name(.), 1, 1), '[A-Z]')]) = 1"/>
+    <xsl:variable name="label"
+                    select="if ($overrideLabel != '')
                               then $overrideLabel
                               else gn-fn-metadata:getLabel($schema, name(), $labels, name(..), $isoType, $xpath)/label"/>
-      <xsl:with-param name="editInfo" select="gn:element"/>
-      <xsl:with-param name="errors" select="$errors"/>
-      <xsl:with-param name="cls" select="local-name()"/>
-      <xsl:with-param name="xpath" select="$xpath"/>
-      <xsl:with-param name="attributesSnippet" select="$attributes"/>
-      <xsl:with-param name="subTreeSnippet">
-        <!-- Process child of those element. Propagate schema
-        and labels to all subchilds (eg. needed like iso19110 elements
-        contains gmd:* child. -->
+
+    <xsl:variable name="containerAndObjectLabel">
+      <xsl:choose>
+      <xsl:when test="$isContainerOnlyElement">
+        <xsl:variable name="objectTypeLabel"
+                      select="gn-fn-metadata:getLabel($schema, name(*[1]), $labels, name(.), $isoType, $xpath)/label"/>
+        <xsl:value-of select="if ($label != $objectTypeLabel) then string-join(($label, $objectTypeLabel), ' / ') else $label"/>
+      </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="$label"/>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+
+    <xsl:choose>
+      <xsl:when test="$isObjectTypeElement">
         <xsl:apply-templates mode="mode-iso19115-3.2018" select="*">
           <xsl:with-param name="schema" select="$schema"/>
           <xsl:with-param name="labels" select="$labels"/>
         </xsl:apply-templates>
-      </xsl:with-param>
-      <xsl:with-param name="collapsible"
-                      select="if ($config and $config/@collapsible != '')
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:call-template name="render-boxed-element">
+          <xsl:with-param name="label"
+                          select="$containerAndObjectLabel"/>
+          <xsl:with-param name="editInfo" select="gn:element"/>
+          <xsl:with-param name="errors" select="$errors"/>
+          <xsl:with-param name="cls" select="local-name()"/>
+          <xsl:with-param name="xpath" select="$xpath"/>
+          <xsl:with-param name="attributesSnippet" select="$attributes"/>
+          <xsl:with-param name="subTreeSnippet">
+            <!-- Process child of those element. Propagate schema
+            and labels to all subchilds (eg. needed like iso19110 elements
+            contains gmd:* child. -->
+            <xsl:apply-templates mode="mode-iso19115-3.2018" select="*">
+              <xsl:with-param name="schema" select="$schema"/>
+              <xsl:with-param name="labels" select="$labels"/>
+            </xsl:apply-templates>
+          </xsl:with-param>
+          <xsl:with-param name="collapsible"
+                          select="if ($config and $config/@collapsible != '')
                               then xs:boolean($config/@collapsible) else true()"/>
-      <xsl:with-param name="collapsed"
-                      select="if ($config and $config/@collapsed != '')
+          <xsl:with-param name="collapsed"
+                          select="if ($config and $config/@collapsed != '')
                               then xs:boolean($config/@collapsed) else false()"/>
-    </xsl:call-template>
+        </xsl:call-template>
+      </xsl:otherwise>
+    </xsl:choose>
   </xsl:template>
 
   <!-- Render simple element which usually match a form field -->
