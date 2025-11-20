@@ -31,7 +31,7 @@
     
     
       
-        <title>GeoNetwork 4.X Harvester - GeoNetwork opensource</title>
+        <title>GeoNetwork 4.x Harvester - GeoNetwork opensource</title>
       
     
     
@@ -131,7 +131,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              GeoNetwork 4.X Harvester
+              GeoNetwork 4.x Harvester
             
           </span>
         </div>
@@ -1384,7 +1384,7 @@
   <span class="md-ellipsis">
     
   
-    GeoNetwork 4.X Harvester
+    GeoNetwork 4.x Harvester
   
 
     
@@ -1402,7 +1402,7 @@
   <span class="md-ellipsis">
     
   
-    GeoNetwork 4.X Harvester
+    GeoNetwork 4.x Harvester
   
 
     
@@ -1428,13 +1428,74 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#adding-a-geonetwork-4x-harvester" class="md-nav__link">
+  <a href="#how-to-add-a-geonetwork-4x-harvester" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Adding a GeoNetwork 4.x Harvester
+        How to Add a GeoNetwork 4.x Harvester
       
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="How to Add a GeoNetwork 4.x Harvester">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#identification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Identification
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#schedule" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Schedule
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#connection-to-geonetwork" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Connection to GeoNetwork
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#response-processing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Response Processing
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#privileges" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Privileges
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -2248,13 +2309,74 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#adding-a-geonetwork-4x-harvester" class="md-nav__link">
+  <a href="#how-to-add-a-geonetwork-4x-harvester" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Adding a GeoNetwork 4.x Harvester
+        How to Add a GeoNetwork 4.x Harvester
       
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="How to Add a GeoNetwork 4.x Harvester">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#identification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Identification
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#schedule" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Schedule
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#connection-to-geonetwork" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Connection to GeoNetwork
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#response-processing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Response Processing
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#privileges" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Privileges
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -2291,46 +2413,60 @@
   
 
 
-<h1 id="gn4_harvester">GeoNetwork 4.X Harvester</h1>
-<p>GeoNetwork 4.x changed the search engine to Elasticsearch, which is not compatible with previous versions. To harvest a catalogue based on GeoNetwork 4.x, this harvesting type is required.</p>
-<h2 id="adding-a-geonetwork-4x-harvester">Adding a GeoNetwork 4.x Harvester</h2>
-<p>To create a GeoNetwork 4.X harvester, go to <code>Admin console</code> &gt; <code>Harvesting</code> and select <code>Harvest from</code> &gt; <code>GeoNetwork (from 4.x)</code>:</p>
-<p><img alt="" src="../img/add-geonetwork-3-harvester.png" /></p>
-<p>Provide the following information:
-- <strong>Identification</strong> - Options describing the remote site.
-  - <em>Name</em> - A short description of the remote site. It will be shown on the harvesting main page as the name for this instance of the harvester.
-  - <em>Group</em> - Group that owns the harvested metadata.
-  - <em>User</em> - User that owns the harvested metadata.
-- <strong>Schedule</strong> - Schedule configuration to execute the harvester.
-- <strong>Configure connection to GeoNetwork</strong>:
-  - <em>Catalog URL</em> - The URL of the GeoNetwork server from which metadata will be harvested.
-  - <em>Node name</em> - GeoNetwork node name to harvest, by default <code>srv</code>.
-  - <em>Search filter</em> - This allows you to select metadata records for harvest based on certain criteria:
-    - <em>Full text</em>
-    - <em>Title</em>
-    - <em>Abstract</em>
-    - <em>Keyword</em>
-    - <em>Catalog</em> - Allows you to select a source to filter the metadata to harvest.</p>
+<h1 id="gn4_harvester">GeoNetwork 4.x Harvester</h1>
+<p>GeoNetwork 4.x uses <strong>Elasticsearch</strong> as its search engine, breaking compatibility with previous protocols 
+from older GeoNetwork releases. To harvest metadata from a GeoNetwork 4.x catalogue, you must use the 
+dedicated GeoNetwork 4.x harvester type.</p>
+<hr />
+<h2 id="how-to-add-a-geonetwork-4x-harvester">How to Add a GeoNetwork 4.x Harvester</h2>
+<ol>
+<li><strong>Go to</strong>: <code>Admin console</code> &gt; <code>Harvesting</code></li>
+<li><strong>Select</strong>: <code>Harvest from</code> &gt; <code>GeoNetwork (from 4.x)</code></li>
+<li><strong>Complete the configuration panels as described below</strong></li>
+</ol>
+<p><img alt="" src="../img/add-geonetwork-4-harvester.png" /></p>
+<h3 id="identification">Identification</h3>
 <ul>
-<li><strong>Configure response processing</strong></li>
-<li><em>Action on UUID collision</em> - Allows you to configure the action when a harvester finds the same UUID on a record collected by another method (another harvester, importer, dashboard editor, etc.).<ul>
-<li>skipped (default)</li>
-<li>overridden</li>
-<li>generate a new UUID</li>
+<li><strong>Name</strong>: Provide a short, descriptive name for your remote GeoNetwork instance. This name will appear in the main page as the name for this instance of the harvester.</li>
+<li><strong>Group</strong>: Assign the group that will own the harvested metadata records.</li>
+<li><strong>User</strong>: Select the user (owner) for the harvested records.</li>
 </ul>
-</li>
-<li><em>Remote authentication</em></li>
-<li><em>Use full MEF format</em></li>
-<li><em>Use change date for comparison</em></li>
-<li><em>Set category if it exists locally</em></li>
-<li><em>Category for harvested records</em></li>
-<li><em>XSL filter name to apply</em></li>
-<li>
-<p><em>Validate records before import</em></p>
-</li>
-<li>
-<p><strong>Privileges</strong> - Assign privileges to harvested metadata.</p>
-</li>
+<h3 id="schedule">Schedule</h3>
+<ul>
+<li><strong>Schedule</strong>: Set how often the harvester should run (e.g., daily, weekly), using cron syntax or the built-in scheduler.
+  You may also run the harvester manually from the interface.</li>
+</ul>
+<h3 id="connection-to-geonetwork">Connection to GeoNetwork</h3>
+<ul>
+<li><strong>Catalog URL</strong>: Enter the full URL of the remote GeoNetwork 4.x server.</li>
+<li><strong>Node name</strong>: Specify the catalogue node to harvest (typically <code>srv</code>).</li>
+<li><strong>Search filter</strong>: Define filters to limit harvested metadata using criteria like:</li>
+<li><strong>Full text</strong>: Matches all text fields.</li>
+<li><strong>Title</strong>: Filter by title.</li>
+<li><strong>Abstract</strong>: Filter by abstract.</li>
+<li><strong>Keyword</strong>: Filter by keyword.</li>
+<li><strong>Categories</strong>: Combine multiple categories with <code>AND</code> or <code>OR</code> (e.g., <code>cat1 AND cat2</code>, <code>cat1 OR cat2</code>).</li>
+<li><strong>Metadata standard</strong>: Specify the metadata standards (e.g., <code>iso19139 OR iso19115-3.2018</code>).</li>
+<li><strong>Groups</strong>: List one or more groups (owners of the metadata) numeric IDs, comma-separated.</li>
+<li><strong>Catalog</strong>: Identify a source sub-catalogue, if needed.</li>
+</ul>
+<h3 id="response-processing">Response Processing</h3>
+<ul>
+<li><strong>Action on UUID collision</strong>: Choose how to configure the action when a harvester finds the same UUID on a record collected by another method (another harvester, importer, dashboard editor, etc.):</li>
+<li><strong>Skipped</strong> (default): Leave duplicates unchanged.</li>
+<li><strong>Overridden</strong>: Replace with new record.</li>
+<li><strong>Generate a new UUID</strong>: Assign a new unique identifier and keep both and old records.</li>
+<li><strong>Remote Authentication</strong>: Configure if credentials are required for the source catalogue.</li>
+<li><strong>Use Full MEF Format</strong>: Enable to transfer all metadata fields and resources.</li>
+<li><strong>Use Change Date for Comparison</strong>: Updates only if the change date differs.</li>
+<li><strong>Set Category If Exists Locally</strong>: Assign categories if matched in local catalogue.</li>
+<li><strong>Category for Harvested Records</strong>: Set the default category for imported entries.</li>
+<li><strong>XSL Filter Name to Apply</strong>: Specify custom XSL transformations if needed.</li>
+<li><strong>Validate Records Before Import</strong>: Toggle to validate metadata against the expected schema before import.</li>
+</ul>
+<h3 id="privileges">Privileges</h3>
+<ul>
+<li>Assign viewing, editing, or publishing privileges for harvested records.</li>
 </ul>
 
 
