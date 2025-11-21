@@ -29,6 +29,7 @@ import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
+import org.jdom.xpath.XPath;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -37,7 +38,7 @@ import java.nio.file.Path;
 import static org.fao.geonet.schema.TestSupport.getResource;
 import static org.fao.geonet.schema.TestSupport.getResourceInsideSchema;
 
-public class ToIsoKeywordTest {
+public class StacConversionTest {
 
 	private static final boolean GENERATE_EXPECTED_FILE = false;
 
@@ -47,20 +48,23 @@ public class ToIsoKeywordTest {
 	}
 
 	@Test
-	public void toKeywordWithXLink() throws Exception {
-		transformAndCompare("to19115-3.2018-keyword-as-xlink-call.xsl", "to19115-3.2018-keyword-as-xlink-input.xml", "to19115-3.2018-keyword-as-xlink-output.xml");
+	public void sentinel2RadiometricIndices() throws Exception {
+		transformAndCompare("convert/stac-to-iso19115-3.xsl", "sentinel-2-radiometric-indices-input.xml", "sentinel-2-radiometric-indices-output.xml");
 	}
 
 	private void transformAndCompare(String scriptName, String inputFileName, String expectedFileName) throws Exception {
 		Path xslFile = getResourceInsideSchema(scriptName);
-		Path xmlFile = getResource(inputFileName);
+		Path xmlFile = getResource("stacHarvester/" + inputFileName);
 		Element md = Xml.loadFile(xmlFile);
 
-		Element cswRecord = Xml.transform(md, xslFile);
+		Element mdIso19115_3 = Xml.transform(md, xslFile);
+
+		XPath xPath = XPath.newInstance(".//mdb:dateInfo/cit:CI_Date/cit:date/gco:DateTime");
+		((Element)xPath.selectNodes(mdIso19115_3).get(0)).setText("2025-10-23T13:41:06.565+02:00");
 
 		XMLOutputter xmlOutputter = new XMLOutputter(Format.getPrettyFormat().setLineSeparator("\n"));
-		String actual = xmlOutputter.outputString(new Document(cswRecord));
-		TestSupport.assertGeneratedDataByteMatchExpected(expectedFileName, actual, GENERATE_EXPECTED_FILE);
+		String actual = xmlOutputter.outputString(new Document(mdIso19115_3));
+		TestSupport.assertGeneratedDataByteMatchExpected("stacHarvester/" + expectedFileName, actual, GENERATE_EXPECTED_FILE);
 	}
 
 }
