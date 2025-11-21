@@ -283,6 +283,12 @@
         return $http.delete("../api/selections/" + (bucket || "metadata"));
       };
 
+      var selectionStatistics = function (field, bucket) {
+        return $http.get(
+          "../api/selections/" + (bucket || "metadata") + "/statistics?field=" + field
+        );
+      };
+
       return {
         search: search,
         format: format,
@@ -293,7 +299,8 @@
         unselect: unselect,
         selectAll: selectAll,
         selectNone: selectNone,
-        indexSetOfRecords: indexSetOfRecords
+        indexSetOfRecords: indexSetOfRecords,
+        selectionStatistics: selectionStatistics
       };
     }
   ]);
