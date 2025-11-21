@@ -154,7 +154,7 @@
                 <gco:CharacterString>https://stacapi-cdos.apps.okd.crocc.meso.umontpellier.fr/collections/sentinel-2-radiometric-indices</gco:CharacterString>
               </cit:linkage>
               <cit:protocol>
-                <gco:CharacterString>WWW:LINK-1.0-http--link</gco:CharacterString>
+                <gco:CharacterString>STAC Collection</gco:CharacterString>
               </cit:protocol>
               <cit:name>
                 <gco:CharacterString>sentinel-2-radiometric-indices</gco:CharacterString>

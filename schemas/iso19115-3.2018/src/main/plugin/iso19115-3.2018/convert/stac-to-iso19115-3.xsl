@@ -20,6 +20,9 @@
   <xsl:strip-space elements="*" />
 
   <xsl:template match="/record|*">
+    <xsl:variable name="id">
+      <xsl:value-of select="id[1]" />
+    </xsl:variable>
     <mdb:MD_Metadata>
       <xsl:call-template name="add-iso19115-3.2018-namespaces" />
       <mdb:metadataIdentifier>
@@ -317,11 +320,11 @@
                       </gco:CharacterString>
                     </cit:linkage>
                     <cit:protocol>
-                      <gco:CharacterString>WWW:LINK-1.0-http--link</gco:CharacterString>
+                      <gco:CharacterString>STAC Collection</gco:CharacterString>
                     </cit:protocol>
                     <cit:name>
                       <gco:CharacterString>
-                        <xsl:value-of select="tokenize(href,'/')[last()]" />
+                        <xsl:value-of select="$id" />
                       </gco:CharacterString>
                     </cit:name>
                     <cit:description>
@@ -343,7 +346,7 @@
                     </cit:protocol>
                     <cit:name>
                       <gco:CharacterString>
-                        <xsl:value-of select="tokenize(href,'/')[last()-1]" />
+                        <xsl:value-of select="$id" />
                       </gco:CharacterString>
                     </cit:name>
                     <cit:description>
