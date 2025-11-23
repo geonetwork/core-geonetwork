@@ -49,6 +49,7 @@ import org.fao.geonet.kernel.harvest.harvester.UUIDMapper;
 import org.fao.geonet.kernel.harvest.harvester.sftp.client.SftpClient;
 import org.fao.geonet.kernel.harvest.harvester.sftp.client.SftpFileInfo;
 import org.fao.geonet.kernel.search.IndexingMode;
+import org.fao.geonet.kernel.search.submission.batch.BatchingDeletionSubmitter;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.specification.MetadataSpecs;
 import org.fao.geonet.utils.Xml;
@@ -176,14 +177,16 @@ public class Aligner extends BaseAligner<SftpParams> {
             "from the same source if they " +
             " were not in this harvesting result...");
         List<Integer> existingMetadata = context.getBean(MetadataRepository.class).findIdsBy((Specification<Metadata>) MetadataSpecs.hasHarvesterUuid(params.getUuid()));
-        for (Integer existingId : existingMetadata) {
-            if (cancelMonitor.get()) {
-                return this.result;
-            }
-            if (!idsForHarvestingResult.contains(existingId)) {
-                log.debug("  Removing: " + existingId);
-                metadataManager.deleteMetadata(context, existingId.toString());
-                result.locallyRemoved++;
+        try (BatchingDeletionSubmitter deletionSubmitter = new BatchingDeletionSubmitter()) {
+            for (Integer existingId : existingMetadata) {
+                if (cancelMonitor.get()) {
+                    return this.result;
+                }
+                if (!idsForHarvestingResult.contains(existingId)) {
+                    log.debug("  Removing: " + existingId);
+                    metadataManager.deleteMetadata(context, existingId.toString(), deletionSubmitter);
+                    result.locallyRemoved++;
+                }
             }
         }
 
@@ -320,13 +323,13 @@ public class Aligner extends BaseAligner<SftpParams> {
 
         addCategories(metadata, params.getCategories(), localCateg, context, null, false);
 
-        metadata = metadataManager.insertMetadata(context, metadata, md, IndexingMode.none, false, UpdateDatestamp.NO, false, false);
+        metadata = metadataManager.insertMetadata(context, metadata, md, IndexingMode.none, false, UpdateDatestamp.NO, false, batchingIndexSubmitter);
 
         String id = String.valueOf(metadata.getId());
 
         addPrivileges(id, params.getPrivileges(), localGroups, context);
 
-        metadataIndexer.indexMetadata(id, true, IndexingMode.full);
+        metadataIndexer.indexMetadata(id, batchingIndexSubmitter, IndexingMode.full);
         result.addedMetadata++;
         idsForHarvestingResult.add(metadata.getId());
     }
@@ -343,7 +346,7 @@ public class Aligner extends BaseAligner<SftpParams> {
             } else {
                 log.debug("  - Updating local metadata for uuid:" + ri.uuid);
                 if (updatingLocalMetadata(ri, id, md, force)) {
-                    metadataIndexer.indexMetadata(id, true, IndexingMode.full);
+                    metadataIndexer.indexMetadata(id, batchingIndexSubmitter, IndexingMode.full);
                     result.updatedMetadata++;
                 }
             }

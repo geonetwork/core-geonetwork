@@ -111,7 +111,7 @@ public class EsRestClient implements InitializingBean {
         return client;
     }
 
-    public ElasticsearchAsyncClient getAsynchClient() {
+    public ElasticsearchAsyncClient getAsyncClient() {
         return asyncClient;
     }
 
@@ -219,12 +219,14 @@ public class EsRestClient implements InitializingBean {
         return this;
     }
 
-    public static final String ROUTING_KEY = "101";
-
-    public BulkResponse bulkRequest(String index, Map<String, String> docs) throws IOException {
+    private void checkActivated() {
         if (!activated) {
-            throw new IOException("Index not yet activated.");
+            throw new IllegalStateException("Index not yet activated.");
         }
+    }
+
+    public BulkRequest buildIndexBulkRequest(String index, Map<String, String> docs) {
+        checkActivated();
 
         BulkRequest.Builder requestBuilder = new BulkRequest.Builder()
             .index(index)
@@ -233,10 +235,7 @@ public class EsRestClient implements InitializingBean {
         JsonpMapper jsonpMapper = client._transport().jsonpMapper();
         JsonProvider jsonProvider = jsonpMapper.jsonProvider();
 
-        Iterator<Map.Entry<String, String>> iterator = docs.entrySet().iterator();
-        while (iterator.hasNext()) {
-            Map.Entry<String, String> entry = iterator.next();
-
+        for (Map.Entry<String, String> entry : docs.entrySet()) {
             JsonData jd = JsonData.from(jsonProvider.createParser(new StringReader(entry.getValue())), jsonpMapper);
 
             requestBuilder
@@ -245,25 +244,32 @@ public class EsRestClient implements InitializingBean {
                     .document(jd)));
         }
 
-        BulkRequest request = requestBuilder.build();
-
-        try {
-            return client.bulk(request);
-        } catch (IOException e) {
-            e.printStackTrace();
-            throw e;
-        }
+        return requestBuilder.build();
     }
 
-//
-//    public void bulkRequestAsync(Bulk.Builder bulk , JestResultHandler<BulkResult> handler) {
-//        client.executeAsync(bulk.build(), handler);
-//
-//    }
-//
-//    public BulkResult bulkRequestSync(Bulk.Builder bulk) throws IOException {
-//        return client.execute(bulk.build());
-//    }
+    public BulkRequest buildDeleteBulkRequest(String index, List<String> deletionUUIDs) {
+        checkActivated();
+
+        BulkRequest.Builder requestBuilder = new BulkRequest.Builder()
+            .index(index)
+            .refresh(Refresh.True);
+
+        for (String uuid : deletionUUIDs) {
+            requestBuilder.operations(op -> op.delete(del -> del.index(index)
+                .id(uuid)));
+        }
+
+        return requestBuilder.build();
+    }
+
+    public DeleteByQueryRequest buildDeleteByQuery(String index, String query) {
+        checkActivated();
+
+        return DeleteByQueryRequest.of(
+            b -> b.index(index)
+                .q(query)
+                .refresh(true));
+    }
 
 
     /**
@@ -366,34 +372,6 @@ public class EsRestClient implements InitializingBean {
             Log.error("geonetwork.index", String.format(
                 "Error during querying index. %s", esException.error().toString()));
             throw esException;
-        }
-    }
-
-
-    public String deleteByQuery(String index, String query) throws Exception {
-        if (!activated) {
-            return "";
-        }
-
-        DeleteByQueryRequest request = DeleteByQueryRequest.of(
-            b -> b.index(new ArrayList<>(Arrays.asList(index)))
-                .q(query)
-                .refresh(true));
-
-        final DeleteByQueryResponse deleteByQueryResponse =
-            client.deleteByQuery(request);
-
-
-        if (deleteByQueryResponse.deleted() >= 0) {
-            return String.format("Record removed. %s.", deleteByQueryResponse.deleted());
-        } else {
-            StringBuilder stringBuilder = new StringBuilder();
-
-            deleteByQueryResponse.failures().forEach(f -> stringBuilder.append(f.toString()));
-
-            throw new IOException(String.format(
-                "Error during removal. Errors are '%s'.", stringBuilder
-            ));
         }
     }
 
