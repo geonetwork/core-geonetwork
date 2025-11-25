@@ -33,12 +33,12 @@ import org.fao.geonet.domain.LDAPUser;
 import org.fao.geonet.domain.Profile;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.domain.UserGroup;
+import org.fao.geonet.kernel.security.BaseUserUtils;
 import org.fao.geonet.kernel.security.GeonetworkAuthenticationProvider;
 import org.fao.geonet.kernel.security.WritableUserDetailsContextMapper;
 import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.UserGroupRepository;
 import org.fao.geonet.repository.UserRepository;
-import org.fao.geonet.repository.specification.UserGroupSpecs;
 import org.fao.geonet.utils.Log;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -56,7 +56,7 @@ import java.util.Set;
  * @author ETj (etj at geo-solutions.it)
  * @author María Arias de Reyna (delawen)
  */
-public class ShibbolethUserUtils {
+public class ShibbolethUserUtils extends BaseUserUtils {
     private UserDetailsManager userDetailsManager;
     private WritableUserDetailsContextMapper udetailsmapper;
 
@@ -236,13 +236,7 @@ public class ShibbolethUserUtils {
 
             String group = tmp[0];
 
-            Group g = groupRepository.findByName(group);
-
-            if (g == null) {
-                g = new Group();
-                g.setName(group);
-                groupRepository.save(g);
-            }
+            Group g = getOrCreateGroup(group);
 
             UserGroup usergroup = new UserGroup();
             usergroup.setGroup(g);
