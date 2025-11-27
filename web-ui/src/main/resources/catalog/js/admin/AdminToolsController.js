@@ -125,7 +125,7 @@
           $scope.editors = response.data;
         });
         $http
-          .get("../api/users/groups?onlyIncludeWorkspaces=true")
+          .get("../api/users/groups?groupTypes=Workspace")
           .then(function (response) {
             var uniqueUserGroups = {};
             angular.forEach(response.data, function (g) {
