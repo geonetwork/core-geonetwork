@@ -764,7 +764,7 @@
             scope.selectedGroup = group;
           };
           $http
-            .get("../api/users/groups?onlyIncludeWorkspaces=true")
+            .get("../api/users/groups?groupTypes=Workspace")
             .then(function (response) {
               var uniqueUserGroups = {};
               angular.forEach(response.data, function (g) {

@@ -35,9 +35,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 /**
  * test the OIDCRoleProcessor
@@ -109,7 +107,7 @@ public class OIDCRoleProcessorTest {
 
         claims.put("abc", "ABC");
 
-        //resource_access.gn-key.roles -> ["Reviewer","Administrator","blah"]
+        //resource_access.gn-key.roles -> ["Reviewer","Administrator","SystemGroup1"]
         Map<String, Map> resource_access = new HashMap<>();
         Map<String, List> gn_key = new HashMap<>();
 
@@ -125,7 +123,7 @@ public class OIDCRoleProcessorTest {
 
         claims.put("abc", "ABC");
 
-        //resource_access.gn-key.roles -> ["Reviewer","Administrator","blah"]
+        //resource_access.gn-key.roles -> ["Reviewer","Administrator","SystemGroup1"]
         Map<String, Map> resource_access = new HashMap<>();
         Map<String, Map> gn_key = new HashMap<>();
 
@@ -142,7 +140,7 @@ public class OIDCRoleProcessorTest {
 
         claims.put("abc", "ABC");
 
-        //resource_access.gn-key.roles -> ["Reviewer","Administrator","blah"]
+        //resource_access.gn-key.roles -> ["Reviewer","Administrator","SystemGroup1"]
         Map<String, Map> resource_access = new HashMap<>();
 
 
@@ -178,7 +176,7 @@ public class OIDCRoleProcessorTest {
         claims.put("abc", "ABC");
         List<String> resource_access = new ArrayList();
         resource_access.add("Reviewer");
-        resource_access.add("blah");
+        resource_access.add("SystemGroup1");
         resource_access.add("GROUP1:UserAdmin");
         resource_access.add("GROUP2:Editor");
 
@@ -193,13 +191,13 @@ public class OIDCRoleProcessorTest {
 
         claims.put("abc", "ABC");
 
-        //resource_access.gn-key.roles -> ["Reviewer","Administrator","blah"]
+        //resource_access.gn-key.roles -> ["Reviewer","Administrator","SystemGroup1"]
         Map<String, Map> resource_access = new HashMap<>();
         Map<String, List> gn_key = new HashMap<>();
         List roles = new ArrayList();
         roles.add("Reviewer");
         roles.add("Administrator");
-        roles.add("blah");
+        roles.add("SystemGroup1");
         gn_key.put("roles", roles);
         resource_access.put("gn-key", gn_key);
         claims.put("resource_access", resource_access);
@@ -212,7 +210,7 @@ public class OIDCRoleProcessorTest {
 
         claims.put("abc", "ABC");
 
-        //resource_access.gn-key.roles -> ["Reviewer","Administrator","blah"]
+        //resource_access.gn-key.roles -> ["Reviewer","Administrator","SystemGroup1"]
         Map<String, Map> resource_access = new HashMap<>();
         Map<String, List> gn_key = new HashMap<>();
 
@@ -228,12 +226,12 @@ public class OIDCRoleProcessorTest {
 
         claims.put("abc", "ABC");
 
-        //resource_access.gn-key.roles -> ["Reviewer","blah","GROUP1:UserAdmin","GROUP2:Editor"]
+        //resource_access.gn-key.roles -> ["Reviewer","SystemGroup1","GROUP1:UserAdmin","GROUP2:Editor"]
         Map<String, Map> resource_access = new HashMap<>();
         Map<String, List> gn_key = new HashMap<>();
         List roles = new ArrayList();
         roles.add("Reviewer");
-        roles.add("blah");
+        roles.add("SystemGroup1");
         roles.add("GROUP1:UserAdmin");
         roles.add("GROUP2:Editor");
         gn_key.put("roles", roles);
@@ -254,7 +252,7 @@ public class OIDCRoleProcessorTest {
         assertEquals(3, roles.size());
         assertEquals("Reviewer", roles.get(0));
         assertEquals("Administrator", roles.get(1));
-        assertEquals("blah", roles.get(2));
+        assertEquals("SystemGroup1", roles.get(2));
     }
 
 
@@ -300,7 +298,7 @@ public class OIDCRoleProcessorTest {
 
         assertEquals(4, roles.size());
         assertEquals("Reviewer", roles.get(0));
-        assertEquals("blah", roles.get(1));
+        assertEquals("SystemGroup1", roles.get(1));
         assertEquals("GROUP1:UserAdmin", roles.get(2));
         assertEquals("GROUP2:Editor", roles.get(3));
     }
@@ -310,8 +308,8 @@ public class OIDCRoleProcessorTest {
     public void testGetProfileGroupsNone() {
         OIDCRoleProcessor oidcRoleProcessor = getOIDCRoleProcessor();
 
-        //blah will be removed (its not a profile)
-        List<String> roles = Arrays.asList("Reviewer", "blah", "Administrator");
+        // SystemGroup1 will be removed as system groups are excluded
+        List<String> roles = Arrays.asList("Reviewer", "SystemGroup1", "Administrator");
         Map<Profile, List<String>> profileGroups = oidcRoleProcessor.getProfileGroups(roles);
 
         assertEquals(2, profileGroups.size());
@@ -324,8 +322,8 @@ public class OIDCRoleProcessorTest {
     public void testGetProfileGroups() {
         OIDCRoleProcessor oidcRoleProcessor = getOIDCRoleProcessor();
 
-        //blah will be removed (its not a profile)
-        List<String> roles = Arrays.asList("Reviewer", "blah", "Administrator", "GROUP1:UserAdmin", "GROUP2:Editor", "GROUP1:Editor");
+        // SystemGroup1 will be removed as system groups are excluded
+        List<String> roles = Arrays.asList("Reviewer", "SystemGroup1", "Administrator", "GROUP1:UserAdmin", "GROUP2:Editor", "GROUP1:Editor");
         Map<Profile, List<String>> profileGroups = oidcRoleProcessor.getProfileGroups(roles);
 
         assertEquals(4, profileGroups.size());
@@ -344,8 +342,8 @@ public class OIDCRoleProcessorTest {
     public void testMaxProfile1() {
         OIDCRoleProcessor oidcRoleProcessor = getOIDCRoleProcessor();
 
-        //blah will be removed (its not a profile)
-        List<String> roles = Arrays.asList("Reviewer", "blah", "Administrator", "GROUP1:UserAdmin", "GROUP2:Editor", "GROUP1:Editor");
+        // SystemGroup1 will be removed as system groups are excluded
+        List<String> roles = Arrays.asList("Reviewer", "SystemGroup1", "Administrator", "GROUP1:UserAdmin", "GROUP2:Editor", "GROUP1:Editor");
         Map<Profile, List<String>> profileGroups = oidcRoleProcessor.getProfileGroups(roles);
 
         Profile profile = oidcRoleProcessor.getMaxProfile(profileGroups);
@@ -357,8 +355,8 @@ public class OIDCRoleProcessorTest {
     public void testMaxProfile2() {
         OIDCRoleProcessor oidcRoleProcessor = getOIDCRoleProcessor();
 
-        //blah will be removed (its not a profile)
-        List<String> roles = Arrays.asList("Reviewer", "blah", "GROUP1:UserAdmin", "GROUP2:Editor", "GROUP1:Editor");
+        // SystemGroup1 will be removed as system groups are excluded
+        List<String> roles = Arrays.asList("Reviewer", "SystemGroup1", "GROUP1:UserAdmin", "GROUP2:Editor", "GROUP1:Editor");
         Map<Profile, List<String>> profileGroups = oidcRoleProcessor.getProfileGroups(roles);
 
         Profile profile = oidcRoleProcessor.getMaxProfile(profileGroups);
@@ -394,8 +392,8 @@ public class OIDCRoleProcessorTest {
     public void testMaxProfile5() {
         OIDCRoleProcessor oidcRoleProcessor = getOIDCRoleProcessor();
 
-        //blah will be removed (its not a profile)
-        List<String> roles = Arrays.asList("blah");
+        // SystemGroup1 will be removed as system groups are excluded
+        List<String> roles = Arrays.asList("SystemGroup1");
         Map<Profile, List<String>> profileGroups = oidcRoleProcessor.getProfileGroups(roles);
 
         Profile profile = oidcRoleProcessor.getMaxProfile(profileGroups);
@@ -477,5 +475,34 @@ public class OIDCRoleProcessorTest {
         assertTrue(authorities.contains(new SimpleGrantedAuthority(Profile.Editor.toString())));
         assertTrue(authorities.contains(new SimpleGrantedAuthority(Profile.RegisteredUser.toString())));
         assertTrue(authorities.contains(new SimpleGrantedAuthority(Profile.Guest.toString())));
+    }
+
+    @Test
+    public void getSystemGroups_withValidSystemGroups_returnsSystemGroups() {
+        OIDCRoleProcessor oidcRoleProcessor = getOIDCRoleProcessor();
+
+        List<String> roles = Arrays.asList("externalPublicationRequester", "GroupB:Editor", "Administrator");
+        List<String> systemGroups = oidcRoleProcessor.getSystemGroups(roles);
+
+        assertFalse(systemGroups.contains("GroupB:Editor"));
+        assertFalse(systemGroups.contains("Administrator"));
+
+        assertEquals(1, systemGroups.size());
+        assertTrue(systemGroups.contains("externalPublicationRequester"));
+    }
+
+    @Test
+    public void getSystemGroups_withNoSystemGroups_returnsEmptyList() {
+        OIDCRoleProcessor oidcRoleProcessor = getOIDCRoleProcessor();
+
+        List<String> roles = Arrays.asList("GroupB:Editor", "Administrator");
+        List<String> systemGroups = oidcRoleProcessor.getSystemGroups(roles);
+
+        assertTrue(systemGroups.isEmpty());
+
+        List<String> emptyRoles = new ArrayList<>();
+        List<String> emptySystemGroups = oidcRoleProcessor.getSystemGroups(emptyRoles);
+
+        assertTrue(emptySystemGroups.isEmpty());
     }
 }

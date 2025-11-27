@@ -23,17 +23,12 @@
 package org.fao.geonet.kernel.security.openidconnect;
 
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.Group;
-import org.fao.geonet.domain.Language;
-import org.fao.geonet.domain.Profile;
-import org.fao.geonet.domain.User;
-import org.fao.geonet.domain.UserGroup;
+import org.fao.geonet.domain.*;
+import org.fao.geonet.kernel.security.BaseUserUtils;
 import org.fao.geonet.kernel.security.GeonetworkAuthenticationProvider;
 import org.fao.geonet.repository.GroupRepository;
-import org.fao.geonet.repository.LanguageRepository;
 import org.fao.geonet.repository.UserGroupRepository;
 import org.fao.geonet.repository.UserRepository;
-import org.fao.geonet.repository.specification.UserGroupSpecs;
 import org.fao.geonet.utils.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -64,7 +59,7 @@ public class OidcUser2GeonetworkUser {
     @Autowired
     protected GroupRepository groupRepository;
     @Autowired
-    protected LanguageRepository langRepository;
+    protected BaseUserUtils baseUserUtils;
     @Autowired
     protected UserGroupRepository userGroupRepository;
     @Autowired
@@ -100,13 +95,15 @@ public class OidcUser2GeonetworkUser {
             user.setProfile(oidcRoleProcessor.getProfile(attributes));
         }
 
+        List<String> systemGroups = oidcRoleProcessor.getSystemGroups(attributes);
+
         //Apply changes to database is required.
         if (withDbUpdate) {
             if (newUserFlag || oidcConfiguration.isUpdateProfile()) {
                 userRepository.save(user);
             }
             if (newUserFlag || oidcConfiguration.isUpdateGroup()) {
-                updateGroups(profileGroups, user);
+                updateGroups(systemGroups, profileGroups, user);
             }
         }
         return user;
@@ -155,6 +152,7 @@ public class OidcUser2GeonetworkUser {
             user.setProfile(oidcRoleProcessor.getProfile(idToken));
         }
 
+        List<String> systemGroups = oidcRoleProcessor.getSystemGroups(idToken);
 
         //Apply changes to database is required.
         if (withDbUpdate) {
@@ -162,7 +160,7 @@ public class OidcUser2GeonetworkUser {
                 userRepository.save(user);
             }
             if (newUserFlag || oidcConfiguration.isUpdateGroup()) {
-                updateGroups(profileGroups, user);
+                updateGroups(systemGroups, profileGroups, user);
             }
         }
         return user;
@@ -175,27 +173,31 @@ public class OidcUser2GeonetworkUser {
      * @param user          to apply the changes to.
      */
     //from keycloak
-    protected void updateGroups(Map<Profile, List<String>> profileGroups, User user) {
+    protected void updateGroups(List<String> systemGroups, Map<Profile, List<String>> profileGroups, User user) {
         Set<UserGroup> userGroups = new HashSet<>();
 
-        // Now we add the groups
+        // Now we add the system groups
+        for (String rgGroup : systemGroups) {
+            Group group = baseUserUtils.getOrCreateGroup(rgGroup, GroupType.SystemPrivilege);
+
+            // TODO: What do we do if the returned group is not of type SystemPrivilege?
+
+            UserGroup usergroup = new UserGroup();
+            usergroup.setGroup(group);
+            usergroup.setUser(user);
+            usergroup.setProfile(Profile.RegisteredUser);
+
+            userGroups.add(usergroup);
+        }
+
+        // Now we add the profile groups
         for (Profile p : profileGroups.keySet()) {
-            List<String> groups = profileGroups.get(p);
-            for (String rgGroup : groups) {
+            List<String> currentProfileGroups = profileGroups.get(p);
+            for (String rgGroup : currentProfileGroups) {
 
-                Group group = groupRepository.findByName(rgGroup);
+                Group group = baseUserUtils.getOrCreateGroup(rgGroup);
 
-                if (group == null) {
-                    group = new Group();
-                    group.setName(rgGroup);
-
-                    // Populate languages for the group
-                    for (Language l : langRepository.findAll()) {
-                        group.getLabelTranslations().put(l.getId(), group.getName());
-                    }
-
-                    groupRepository.save(group);
-                }
+                // TODO: What do we do if the returned group is not of type Workspace?
 
                 UserGroup usergroup = new UserGroup();
                 usergroup.setGroup(group);

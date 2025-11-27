@@ -553,26 +553,34 @@
               </label>
 
               <div data-ng-show="userSelected.profile != 'Administrator'">
+                <h3 data-translate="">SystemPrivileges</h3>
+
+                <div
+                  readonly-mode="!isUserGroupUpdateEnabled"
+                  data-gn-multiselect="groupsWithoutProfilesByType['SystemPrivilege']"
+                  data-choices="groupsWithoutProfiles"
+                ></div>
+
                 <h3 data-translate="">RegisteredUser</h3>
 
                 <div
                   readonly-mode="!isUserGroupUpdateEnabled"
                   data-gn-multiselect="groupsByProfile['RegisteredUser']"
-                  data-choices="groups"
+                  data-choices="groupsWithProfiles"
                 ></div>
 
                 <h3 data-translate="">Editor</h3>
                 <div
                   readonly-mode="!isUserGroupUpdateEnabled"
                   data-gn-multiselect="groupsByProfile['Editor']"
-                  data-choices="nonSystemGroups"
+                  data-choices="groupsWithProfiles"
                 ></div>
 
                 <h3 data-translate="">Reviewer</h3>
                 <div
                   readonly-mode="!isUserGroupUpdateEnabled"
                   data-gn-multiselect="groupsByProfile['Reviewer']"
-                  data-choices="nonSystemGroups"
+                  data-choices="groupsWithProfiles"
                 ></div>
 
                 <p class="help-block" data-translate="">
@@ -583,7 +591,7 @@
                 <div
                   readonly-mode="!isUserGroupUpdateEnabled"
                   data-gn-multiselect="groupsByProfile['UserAdmin']"
-                  data-choices="nonSystemGroups"
+                  data-choices="groupsWithProfiles"
                 ></div>
 
                 <p class="help-block" data-translate="">useCtrlClickToUnselect</p>
