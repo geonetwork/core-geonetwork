@@ -65,7 +65,7 @@ public class BaseUserUtils {
      * @return the group (either existing or newly created).
      */
     public Group getOrCreateGroup(String groupName) {
-        return getOrCreateGroup(groupName, GroupType.Workspace);
+        return getOrCreateGroup(groupName, null);
     }
 
     /**
@@ -85,7 +85,7 @@ public class BaseUserUtils {
      * @param newGroupType the type of the group to be used if creating a new group. Must not be null.
      * @return the group (either existing or newly created).
      */
-    public Group getOrCreateGroup(String groupName, @Nonnull GroupType newGroupType) {
+    public Group getOrCreateGroup(String groupName, GroupType newGroupType) {
         Group group = groupRepository.findByName(groupName);
 
         if (group != null && group.getType() != null && !group.getType().equals(newGroupType)) {
@@ -95,7 +95,9 @@ public class BaseUserUtils {
         } else if (group == null) {
             group = new Group();
             group.setName(groupName);
-            group.setType(newGroupType);
+            if (newGroupType != null) {
+                group.setType(newGroupType);
+            }
 
             // Populate languages for the group
             for (Language l : langRepository.findAll()) {

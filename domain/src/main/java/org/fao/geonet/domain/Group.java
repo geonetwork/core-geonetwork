@@ -87,7 +87,7 @@ public class Group extends Localized implements Serializable {
     private List<MetadataCategory> allowedCategories;
     private Boolean enableAllowedCategories;
     private Profile minimumProfileForPrivileges;
-    private GroupType type;
+    private GroupType type = GroupType.Workspace;
 
     /**
      * Get the id of the group.
