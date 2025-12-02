@@ -26,6 +26,7 @@
                 xmlns:mdb="http://standards.iso.org/iso/19115/-3/mdb/2.0"
                 xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
                 xmlns:gmd="http://www.isotc211.org/2005/gmd"
+                exclude-result-prefixes="#all"
                 version="2.0">
   <xsl:import href="../../../iso19139/formatter/eu-geodcat-ap-semiceu/view.xsl"/>
   <xsl:import href="../../convert/ISO19139/toISO19139.xsl"/>

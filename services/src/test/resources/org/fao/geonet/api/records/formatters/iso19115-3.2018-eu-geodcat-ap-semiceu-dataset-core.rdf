@@ -1,0 +1,1082 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+   <rdf:Description rdf:about="http://geodata.wallonie.be/id/7fe2f305-1302-4297-b67e-792f55acd834">
+      <foaf:isPrimaryTopicOf xmlns:foaf="http://xmlns.com/foaf/0.1/">
+         <rdf:Description>
+            <rdf:type rdf:resource="http://www.w3.org/ns/dcat#CatalogRecord"/>
+            <foaf:primaryTopic rdf:resource="http://geodata.wallonie.be/id/7fe2f305-1302-4297-b67e-792f55acd834"/>
+            <dct:conformsTo xmlns:dct="http://purl.org/dc/terms/">
+               <dct:Standard rdf:about="http://data.europa.eu/930/"/>
+            </dct:conformsTo>
+            <dct:language xmlns:dct="http://purl.org/dc/terms/">
+               <dct:LinguisticSystem rdf:about="http://publications.europa.eu/resource/authority/language/FRE"/>
+            </dct:language>
+            <dct:modified xmlns:dct="http://purl.org/dc/terms/"
+                          rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2023-12-08T12:26:19.337626Z</dct:modified>
+            <dcat:contactPoint xmlns:dcat="http://www.w3.org/ns/dcat#">
+               <rdf:Description>
+                  <rdf:type rdf:resource="http://www.w3.org/2006/vcard/ns#Organization"/>
+                  <vcard:fn xmlns:vcard="http://www.w3.org/2006/vcard/ns#" xml:lang="fr">Direction de la gestion des informations territoriales (SPW - Territoire, Logement, Patrimoine, Énergie - Département de l'Aménagement du territoire et de l'Urbanisme - Direction de la gestion des informations territoriales)</vcard:fn>
+                  <vcard:hasEmail xmlns:vcard="http://www.w3.org/2006/vcard/ns#"
+                                  rdf:resource="mailto:donnees.dgo4@spw.wallonie.be"/>
+               </rdf:Description>
+            </dcat:contactPoint>
+            <prov:qualifiedAttribution xmlns:prov="http://www.w3.org/ns/prov#">
+               <prov:Attribution>
+                  <prov:agent>
+                     <rdf:Description>
+                        <rdf:type rdf:resource="http://xmlns.com/foaf/0.1/Organization"/>
+                        <rdf:type rdf:resource="http://www.w3.org/ns/prov#Agent"/>
+                        <foaf:name xml:lang="fr">Direction de la gestion des informations territoriales (SPW - Territoire, Logement, Patrimoine, Énergie - Département de l'Aménagement du territoire et de l'Urbanisme - Direction de la gestion des informations territoriales)</foaf:name>
+                        <foaf:mbox rdf:resource="mailto:donnees.dgo4@spw.wallonie.be"/>
+                     </rdf:Description>
+                  </prov:agent>
+                  <dct:type xmlns:dct="http://purl.org/dc/terms/"
+                            rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/ResponsiblePartyRole/pointOfContact"/>
+                  <dcat:hadRole xmlns:dcat="http://www.w3.org/ns/dcat#">
+                     <dcat:Role rdf:about="http://inspire.ec.europa.eu/metadata-codelist/ResponsiblePartyRole/pointOfContact"/>
+                  </dcat:hadRole>
+               </prov:Attribution>
+            </prov:qualifiedAttribution>
+            <dct:identifier xmlns:dct="http://purl.org/dc/terms/"
+                            rdf:datatype="http://www.w3.org/2001/XMLSchema#string">{uuid}</dct:identifier>
+            <dct:source xmlns:dct="http://purl.org/dc/terms/" rdf:parseType="Resource">
+               <rdf:type rdf:resource="http://www.w3.org/ns/dcat#CatalogRecord"/>
+               <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2023-12-08T12:26:19.337626Z</dct:modified>
+               <cnt:characterEncoding xmlns:cnt="http://www.w3.org/2011/content#"
+                                      rdf:datatype="http://www.w3.org/2001/XMLSchema#string">UTF-8</cnt:characterEncoding>
+               <dct:conformsTo rdf:parseType="Resource">
+                  <rdf:type rdf:resource="http://purl.org/dc/terms/Standard"/>
+                  <dct:title xml:lang="fr">ISO 19115</dct:title>
+                  <owl:versionInfo xmlns:owl="http://www.w3.org/2002/07/owl#" xml:lang="fr">2003/Cor 1:2006</owl:versionInfo>
+               </dct:conformsTo>
+            </dct:source>
+         </rdf:Description>
+      </foaf:isPrimaryTopicOf>
+      <rdf:type rdf:resource="http://www.w3.org/ns/dcat#Dataset"/>
+      <geodcatap:resourceType xmlns:geodcatap="http://data.europa.eu/930/"
+                              rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/ResourceType/dataset"/>
+      <dct:title xmlns:dct="http://purl.org/dc/terms/" xml:lang="fr">Plan de secteur en vigueur (version coordonnée vectorielle)</dct:title>
+      <dct:description xmlns:dct="http://purl.org/dc/terms/" xml:lang="fr">Le plan de secteur est un outil réglementaire d'aménagement du territoire et d'urbanisme régional wallon constitué de plusieurs couches de données spatiales. Le plan de secteur organise l'espace territorial wallon et en définit les différentes affectations afin d'assurer le développement des activités humaines de manière harmonieuse et d'éviter la consommation abusive d'espace. Il dispose d'une pleine valeur réglementaire et constitue ainsi la colonne vertébrale d’un développement territorial efficace, cohérent et concerté. Cet aspect est renforcé par la réforme engendrée par l'entrée en vigueur du Code du Développement Territorial (CoDT). La Région wallonne est couverte par 23 plans de secteur, adoptés entre 1977 et 1987. Le plan de secteur est divisé en zones destinées à l'urbanisation (zone d'habitat, de loisirs, d'activité économique, etc.) et en zones non destinées à l'urbanisation (zones agricoles, forestières, espaces verts, etc.). Plusieurs couches de données spatiales constituent le plan de secteur. Elles sont définies dans le CoDT. Outre la détermination des différentes zones d'affectation du territoire wallon, il contient : - les limites communales du PdS; - les révisions (infrastructures en révision, périmètres de révisions partielles du PdS, mesures d'aménagement, prescriptions supplémentaires); - les infrastructures (réseau routier, ferroviaire, voies navigables, lignes électriques haute tension, canalisations); - les périmètres de protection (périmètres de liaison écologique, d'intérêt paysager, d'intérêt culture, historique ou esthétique, les points de vue remarquable et leur périmètre, les réservations d'infrastructure principale, les extension de zone d'extraction); - la référence au Plan de Secteur d'origine; - les étiquettes des secteurs d'aménagement de 1978. Ces différentes couches de données sont présentées sous format vectoriel (point, ligne ou polygone). Si le plan de secteur a valeur réglementaire, il n’est pas figé pour autant. Les modalités de révision sont formalisées dans des procédures qui ont été simplifiées et rationalisées dans le CoDT. Cette version constitue la version la plus récente des couches de données et intègre les mises à jour faisant suite à la mise en œuvre du CoDT. A ce jour, la gestion du plan de secteur relève de la Direction de l’Aménagement régional (DAR) qui est en charge de l'outil "plan de secteur" : évolution au regard des objectifs régionaux, notamment du développement économique dans une perspective durable, information, sensibilisation, lien avec la planification stratégique régionale et avec les outils communaux. Les révisions sont instruites par la DAR, à l'exception de celles qui ont été attribuées à la cellule de développement territorial (CDT), également dénommée "ESPACE", dont la création a été décidée par le Gouvernement wallon le 19 septembre 2005.</dct:description>
+      <dct:accrualPeriodicity xmlns:dct="http://purl.org/dc/terms/">
+         <dct:Frequency rdf:about="http://publications.europa.eu/resource/authority/frequency/MONTHLY"/>
+      </dct:accrualPeriodicity>
+      <dct:accrualPeriodicity xmlns:dct="http://purl.org/dc/terms/">
+         <dct:Frequency rdf:about="http://publications.europa.eu/resource/authority/frequency/AS_NEEDED"/>
+      </dct:accrualPeriodicity>
+      <geodcatap:topicCategory xmlns:geodcatap="http://data.europa.eu/930/"
+                               rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/TopicCategory/planningCadastre"/>
+      <geodcatap:topicCategory xmlns:geodcatap="http://data.europa.eu/930/"
+                               rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/TopicCategory/imageryBaseMapsEarthCover"/>
+      <geodcatap:topicCategory xmlns:geodcatap="http://data.europa.eu/930/"
+                               rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/TopicCategory/location"/>
+      <dcat:theme xmlns:dcat="http://www.w3.org/ns/dcat#"
+                  rdf:resource="https://metawal.wallonie.be/thesaurus/theme-geoportail-wallon#SubThemesGeoportailWallon/6020"/>
+      <dcat:theme xmlns:dcat="http://www.w3.org/ns/dcat#"
+                  rdf:resource="https://metawal.wallonie.be/thesaurus/theme-geoportail-wallon#ThemesGeoportailWallon/60"/>
+      <dcat:theme xmlns:dcat="http://www.w3.org/ns/dcat#"
+                  rdf:resource="https://metawal.wallonie.be/thesaurus/theme-geoportail-wallon#ThemesGeoportailWallon/20"/>
+      <dcat:theme xmlns:dcat="http://www.w3.org/ns/dcat#"
+                  rdf:resource="https://metawal.wallonie.be/thesaurus/theme-geoportail-wallon#SubThemesGeoportailWallon/2010"/>
+      <dcat:theme xmlns:dcat="http://www.w3.org/ns/dcat#" rdf:parseType="Resource">
+         <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+         <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">espace</skos:prefLabel>
+         <skos:inScheme xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+                        rdf:resource="http://geonetwork-opensource.org/gemet-theme"/>
+      </dcat:theme>
+      <dcat:theme xmlns:dcat="http://www.w3.org/ns/dcat#" rdf:parseType="Resource">
+         <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+         <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">zones naturelles, paysages, écosystèmes</skos:prefLabel>
+         <skos:inScheme xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+                        rdf:resource="http://geonetwork-opensource.org/gemet-theme"/>
+      </dcat:theme>
+      <dcat:theme xmlns:dcat="http://www.w3.org/ns/dcat#" rdf:parseType="Resource">
+         <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+         <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">législation</skos:prefLabel>
+         <skos:inScheme xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+                        rdf:resource="http://geonetwork-opensource.org/gemet-theme"/>
+      </dcat:theme>
+      <dcat:theme xmlns:dcat="http://www.w3.org/ns/dcat#" rdf:parseType="Resource">
+         <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+         <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">géographie</skos:prefLabel>
+         <skos:inScheme xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+                        rdf:resource="http://geonetwork-opensource.org/gemet-theme"/>
+      </dcat:theme>
+      <dcat:theme xmlns:dcat="http://www.w3.org/ns/dcat#" rdf:parseType="Resource">
+         <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+         <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">agriculture</skos:prefLabel>
+         <skos:inScheme xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+                        rdf:resource="http://geonetwork-opensource.org/gemet-theme"/>
+      </dcat:theme>
+      <dcat:theme xmlns:dcat="http://www.w3.org/ns/dcat#" rdf:parseType="Resource">
+         <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+         <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">aménagement du paysage</skos:prefLabel>
+         <skos:inScheme xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+                        rdf:resource="http://geonetwork-opensource.org/gemet"/>
+      </dcat:theme>
+      <dcat:theme xmlns:dcat="http://www.w3.org/ns/dcat#" rdf:parseType="Resource">
+         <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+         <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">réseau ferroviaire</skos:prefLabel>
+         <skos:inScheme xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+                        rdf:resource="http://geonetwork-opensource.org/gemet"/>
+      </dcat:theme>
+      <dcat:theme xmlns:dcat="http://www.w3.org/ns/dcat#" rdf:parseType="Resource">
+         <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+         <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">planification écologique</skos:prefLabel>
+         <skos:inScheme xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+                        rdf:resource="http://geonetwork-opensource.org/gemet"/>
+      </dcat:theme>
+      <dcat:theme xmlns:dcat="http://www.w3.org/ns/dcat#" rdf:parseType="Resource">
+         <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+         <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">plan d'aménagement</skos:prefLabel>
+         <skos:inScheme xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+                        rdf:resource="http://geonetwork-opensource.org/gemet"/>
+      </dcat:theme>
+      <dcat:theme xmlns:dcat="http://www.w3.org/ns/dcat#" rdf:parseType="Resource">
+         <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+         <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">extraction</skos:prefLabel>
+         <skos:inScheme xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+                        rdf:resource="http://geonetwork-opensource.org/gemet"/>
+      </dcat:theme>
+      <dcat:theme xmlns:dcat="http://www.w3.org/ns/dcat#" rdf:parseType="Resource">
+         <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+         <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">habitat rural</skos:prefLabel>
+         <skos:inScheme xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+                        rdf:resource="http://geonetwork-opensource.org/gemet"/>
+      </dcat:theme>
+      <dcat:theme xmlns:dcat="http://www.w3.org/ns/dcat#" rdf:parseType="Resource">
+         <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+         <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">gestion et planification rurale</skos:prefLabel>
+         <skos:inScheme xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+                        rdf:resource="http://geonetwork-opensource.org/gemet"/>
+      </dcat:theme>
+      <dcat:theme xmlns:dcat="http://www.w3.org/ns/dcat#" rdf:parseType="Resource">
+         <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+         <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">secteur d'activité</skos:prefLabel>
+         <skos:inScheme xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+                        rdf:resource="http://geonetwork-opensource.org/gemet"/>
+      </dcat:theme>
+      <dcat:theme xmlns:dcat="http://www.w3.org/ns/dcat#" rdf:parseType="Resource">
+         <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+         <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">infrastructure</skos:prefLabel>
+         <skos:inScheme xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+                        rdf:resource="http://geonetwork-opensource.org/gemet"/>
+      </dcat:theme>
+      <dcat:theme xmlns:dcat="http://www.w3.org/ns/dcat#" rdf:parseType="Resource">
+         <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+         <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">plan de gestion</skos:prefLabel>
+         <skos:inScheme xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+                        rdf:resource="http://geonetwork-opensource.org/gemet"/>
+      </dcat:theme>
+      <dcat:theme xmlns:dcat="http://www.w3.org/ns/dcat#" rdf:parseType="Resource">
+         <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+         <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">planification rurale</skos:prefLabel>
+         <skos:inScheme xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+                        rdf:resource="http://geonetwork-opensource.org/gemet"/>
+      </dcat:theme>
+      <dcat:theme xmlns:dcat="http://www.w3.org/ns/dcat#" rdf:parseType="Resource">
+         <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+         <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">planification économique</skos:prefLabel>
+         <skos:inScheme xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+                        rdf:resource="http://geonetwork-opensource.org/gemet"/>
+      </dcat:theme>
+      <dcat:theme xmlns:dcat="http://www.w3.org/ns/dcat#" rdf:parseType="Resource">
+         <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+         <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">plan</skos:prefLabel>
+         <skos:inScheme xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+                        rdf:resource="http://geonetwork-opensource.org/gemet"/>
+      </dcat:theme>
+      <dcat:theme xmlns:dcat="http://www.w3.org/ns/dcat#" rdf:parseType="Resource">
+         <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+         <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">développement du territoire</skos:prefLabel>
+         <skos:inScheme xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+                        rdf:resource="http://geonetwork-opensource.org/gemet"/>
+      </dcat:theme>
+      <dcat:theme xmlns:dcat="http://www.w3.org/ns/dcat#" rdf:parseType="Resource">
+         <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+         <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">infrastructure routière</skos:prefLabel>
+         <skos:inScheme xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+                        rdf:resource="http://geonetwork-opensource.org/gemet"/>
+      </dcat:theme>
+      <dcat:theme xmlns:dcat="http://www.w3.org/ns/dcat#" rdf:parseType="Resource">
+         <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+         <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">plan d'occupation des sols</skos:prefLabel>
+         <skos:inScheme xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+                        rdf:resource="http://geonetwork-opensource.org/gemet"/>
+      </dcat:theme>
+      <dcat:theme xmlns:dcat="http://www.w3.org/ns/dcat#" rdf:parseType="Resource">
+         <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+         <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">activité économique</skos:prefLabel>
+         <skos:inScheme xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+                        rdf:resource="http://geonetwork-opensource.org/gemet"/>
+      </dcat:theme>
+      <dcat:theme xmlns:dcat="http://www.w3.org/ns/dcat#" rdf:parseType="Resource">
+         <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+         <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">réseau routier</skos:prefLabel>
+         <skos:inScheme xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+                        rdf:resource="http://geonetwork-opensource.org/gemet"/>
+      </dcat:theme>
+      <dcat:theme xmlns:dcat="http://www.w3.org/ns/dcat#" rdf:parseType="Resource">
+         <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+         <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">planification urbaine</skos:prefLabel>
+         <skos:inScheme xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+                        rdf:resource="http://geonetwork-opensource.org/gemet"/>
+      </dcat:theme>
+      <dcat:theme xmlns:dcat="http://www.w3.org/ns/dcat#" rdf:parseType="Resource">
+         <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+         <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">loisirs</skos:prefLabel>
+         <skos:inScheme xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+                        rdf:resource="http://geonetwork-opensource.org/gemet"/>
+      </dcat:theme>
+      <dcat:theme xmlns:dcat="http://www.w3.org/ns/dcat#" rdf:parseType="Resource">
+         <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+         <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">canalisation</skos:prefLabel>
+         <skos:inScheme xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+                        rdf:resource="http://geonetwork-opensource.org/gemet"/>
+      </dcat:theme>
+      <dcat:theme xmlns:dcat="http://www.w3.org/ns/dcat#" rdf:parseType="Resource">
+         <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+         <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">habitat urbain</skos:prefLabel>
+         <skos:inScheme xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+                        rdf:resource="http://geonetwork-opensource.org/gemet"/>
+      </dcat:theme>
+      <dcat:theme xmlns:dcat="http://www.w3.org/ns/dcat#" rdf:parseType="Resource">
+         <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+         <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">mesure d'aménagement du territoire</skos:prefLabel>
+         <skos:inScheme xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+                        rdf:resource="http://geonetwork-opensource.org/gemet"/>
+      </dcat:theme>
+      <dcat:theme xmlns:dcat="http://www.w3.org/ns/dcat#" rdf:parseType="Resource">
+         <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+         <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">territoire</skos:prefLabel>
+         <skos:inScheme xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+                        rdf:resource="http://geonetwork-opensource.org/gemet"/>
+      </dcat:theme>
+      <dcat:theme xmlns:dcat="http://www.w3.org/ns/dcat#" rdf:parseType="Resource">
+         <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+         <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">planification régionale</skos:prefLabel>
+         <skos:inScheme xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+                        rdf:resource="http://geonetwork-opensource.org/gemet"/>
+      </dcat:theme>
+      <dcat:theme xmlns:dcat="http://www.w3.org/ns/dcat#" rdf:parseType="Resource">
+         <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+         <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">habitat</skos:prefLabel>
+         <skos:inScheme xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+                        rdf:resource="http://geonetwork-opensource.org/gemet"/>
+      </dcat:theme>
+      <dcat:theme xmlns:dcat="http://www.w3.org/ns/dcat#" rdf:parseType="Resource">
+         <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+         <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">PanierTelechargementGeoportail</skos:prefLabel>
+         <skos:inScheme xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+                        rdf:resource="https://metawal.wallonie.be/thesaurus/infrasig"/>
+      </dcat:theme>
+      <dcat:theme xmlns:dcat="http://www.w3.org/ns/dcat#" rdf:parseType="Resource">
+         <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+         <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">Open Data</skos:prefLabel>
+         <skos:inScheme xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+                        rdf:resource="https://metawal.wallonie.be/thesaurus/infrasig"/>
+      </dcat:theme>
+      <dcat:theme xmlns:dcat="http://www.w3.org/ns/dcat#" rdf:parseType="Resource">
+         <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+         <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">WalOnMap</skos:prefLabel>
+         <skos:inScheme xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+                        rdf:resource="https://metawal.wallonie.be/thesaurus/infrasig"/>
+      </dcat:theme>
+      <dcat:theme xmlns:dcat="http://www.w3.org/ns/dcat#" rdf:parseType="Resource">
+         <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+         <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">Extraction_DIG</skos:prefLabel>
+         <skos:inScheme xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+                        rdf:resource="https://metawal.wallonie.be/thesaurus/infrasig"/>
+      </dcat:theme>
+      <dcat:theme xmlns:dcat="http://www.w3.org/ns/dcat#" rdf:parseType="Resource">
+         <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+         <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">BDInfraSIGNO</skos:prefLabel>
+         <skos:inScheme xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+                        rdf:resource="https://metawal.wallonie.be/thesaurus/infrasig"/>
+      </dcat:theme>
+      <dcat:keyword xmlns:dcat="http://www.w3.org/ns/dcat#" xml:lang="fr">aménagement du territoire</dcat:keyword>
+      <dcat:keyword xmlns:dcat="http://www.w3.org/ns/dcat#" xml:lang="fr">plan de secteur</dcat:keyword>
+      <dcat:keyword xmlns:dcat="http://www.w3.org/ns/dcat#" xml:lang="fr">point remarquable</dcat:keyword>
+      <dcat:keyword xmlns:dcat="http://www.w3.org/ns/dcat#" xml:lang="fr">PDS</dcat:keyword>
+      <dcat:keyword xmlns:dcat="http://www.w3.org/ns/dcat#" xml:lang="fr">CoDT</dcat:keyword>
+      <dcat:keyword xmlns:dcat="http://www.w3.org/ns/dcat#" xml:lang="fr">Point de vue</dcat:keyword>
+      <dcat:keyword xmlns:dcat="http://www.w3.org/ns/dcat#" xml:lang="fr">centre d'enfouissement</dcat:keyword>
+      <dcat:keyword xmlns:dcat="http://www.w3.org/ns/dcat#" xml:lang="fr">servitude</dcat:keyword>
+      <dcat:keyword xmlns:dcat="http://www.w3.org/ns/dcat#" xml:lang="fr">Code du Développement Territorial</dcat:keyword>
+      <dcat:theme xmlns:dcat="http://www.w3.org/ns/dcat#"
+                  rdf:resource="http://inspire.ec.europa.eu/theme/el"/>
+      <dcat:theme xmlns:dcat="http://www.w3.org/ns/dcat#"
+                  rdf:resource="http://inspire.ec.europa.eu/theme/mf"/>
+      <dcat:theme xmlns:dcat="http://www.w3.org/ns/dcat#"
+                  rdf:resource="http://inspire.ec.europa.eu/theme/of"/>
+      <dcat:theme xmlns:dcat="http://www.w3.org/ns/dcat#"
+                  rdf:resource="http://inspire.ec.europa.eu/theme/ac"/>
+      <dcat:theme xmlns:dcat="http://www.w3.org/ns/dcat#"
+                  rdf:resource="http://inspire.ec.europa.eu/theme/gn"/>
+      <dcat:theme xmlns:dcat="http://www.w3.org/ns/dcat#"
+                  rdf:resource="http://inspire.ec.europa.eu/theme/ge"/>
+      <dcat:theme xmlns:dcat="http://www.w3.org/ns/dcat#"
+                  rdf:resource="http://inspire.ec.europa.eu/theme/hy"/>
+      <dcat:theme xmlns:dcat="http://www.w3.org/ns/dcat#"
+                  rdf:resource="http://inspire.ec.europa.eu/theme/af"/>
+      <dcat:theme xmlns:dcat="http://www.w3.org/ns/dcat#"
+                  rdf:resource="http://inspire.ec.europa.eu/theme/sr"/>
+      <dcat:theme xmlns:dcat="http://www.w3.org/ns/dcat#"
+                  rdf:resource="http://inspire.ec.europa.eu/theme/sd"/>
+      <dcat:theme xmlns:dcat="http://www.w3.org/ns/dcat#"
+                  rdf:resource="http://inspire.ec.europa.eu/theme/mr"/>
+      <dcat:theme xmlns:dcat="http://www.w3.org/ns/dcat#"
+                  rdf:resource="http://inspire.ec.europa.eu/theme/hh"/>
+      <dcat:theme xmlns:dcat="http://www.w3.org/ns/dcat#" rdf:parseType="Resource">
+         <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+         <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">Mobilité</skos:prefLabel>
+         <skos:inScheme xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+                        rdf:resource="http://data.europa.eu/bna/asd487ae75"/>
+      </dcat:theme>
+      <dcat:theme xmlns:dcat="http://www.w3.org/ns/dcat#" rdf:parseType="Resource">
+         <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+         <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">Observation de la terre et environnement</skos:prefLabel>
+         <skos:inScheme xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+                        rdf:resource="http://data.europa.eu/bna/asd487ae75"/>
+      </dcat:theme>
+      <dcat:theme xmlns:dcat="http://www.w3.org/ns/dcat#"
+                  rdf:resource="http://data.europa.eu/eli/reg/2014/1143/oj"/>
+      <dcatap:applicableLegislation xmlns:dcatap="http://data.europa.eu/r5r/"
+                                    rdf:resource="http://data.europa.eu/eli/reg_impl/2023/138/oj"/>
+      <dct:identifier xmlns:dct="http://purl.org/dc/terms/"
+                      rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">http://geodata.wallonie.be/id/7fe2f305-1302-4297-b67e-792f55acd834</dct:identifier>
+      <dct:identifier xmlns:dct="http://purl.org/dc/terms/"
+                      rdf:datatype="http://www.w3.org/2001/XMLSchema#string">BE.SPW.INFRASIG.CARTON/DGATLPE__PDS</dct:identifier>
+      <dct:language xmlns:dct="http://purl.org/dc/terms/">
+         <dct:LinguisticSystem rdf:about="http://publications.europa.eu/resource/authority/language/FRE"/>
+      </dct:language>
+      <dct:spatial xmlns:dct="http://purl.org/dc/terms/" rdf:parseType="Resource">
+         <rdf:type rdf:resource="http://purl.org/dc/terms/Location"/>
+         <locn:geometry xmlns:locn="http://www.w3.org/ns/locn#"
+                        rdf:datatype="http://www.opengis.net/ont/geosparql#wktLiteral"><![CDATA[POLYGON((2.75 50.85,6.5 50.85,6.5 49.45,2.75 49.45,2.75 50.85))]]></locn:geometry>
+         <locn:geometry xmlns:locn="http://www.w3.org/ns/locn#"
+                        rdf:datatype="http://www.opengis.net/ont/geosparql#gmlLiteral"><![CDATA[<gml:Envelope srsName="http://www.opengis.net/def/crs/OGC/1.3/CRS84"><gml:lowerCorner>2.75 49.45</gml:lowerCorner><gml:upperCorner>6.5 50.85</gml:upperCorner></gml:Envelope>]]></locn:geometry>
+         <locn:geometry xmlns:locn="http://www.w3.org/ns/locn#"
+                        rdf:datatype="https://www.iana.org/assignments/media-types/application/vnd.geo+json"><![CDATA[{"type":"Polygon","coordinates":[[[2.75,50.85],[6.5,50.85],[6.5,49.45],[2.75,49.45],[2.75,50.85]]]}]]></locn:geometry>
+         <locn:geometry xmlns:locn="http://www.w3.org/ns/locn#"
+                        rdf:datatype="http://www.opengis.net/ont/geosparql#geoJSONLiteral"><![CDATA[{"type":"Polygon","coordinates":[[[2.75,50.85],[6.5,50.85],[6.5,49.45],[2.75,49.45],[2.75,50.85]]]}]]></locn:geometry>
+         <dcat:bbox xmlns:dcat="http://www.w3.org/ns/dcat#"
+                    rdf:datatype="http://www.opengis.net/ont/geosparql#wktLiteral"><![CDATA[POLYGON((2.75 50.85,6.5 50.85,6.5 49.45,2.75 49.45,2.75 50.85))]]></dcat:bbox>
+         <dcat:bbox xmlns:dcat="http://www.w3.org/ns/dcat#"
+                    rdf:datatype="http://www.opengis.net/ont/geosparql#gmlLiteral"><![CDATA[<gml:Envelope srsName="http://www.opengis.net/def/crs/OGC/1.3/CRS84"><gml:lowerCorner>2.75 49.45</gml:lowerCorner><gml:upperCorner>6.5 50.85</gml:upperCorner></gml:Envelope>]]></dcat:bbox>
+         <dcat:bbox xmlns:dcat="http://www.w3.org/ns/dcat#"
+                    rdf:datatype="https://www.iana.org/assignments/media-types/application/vnd.geo+json"><![CDATA[{"type":"Polygon","coordinates":[[[2.75,50.85],[6.5,50.85],[6.5,49.45],[2.75,49.45],[2.75,50.85]]]}]]></dcat:bbox>
+         <dcat:bbox xmlns:dcat="http://www.w3.org/ns/dcat#"
+                    rdf:datatype="http://www.opengis.net/ont/geosparql#geoJSONLiteral"><![CDATA[{"type":"Polygon","coordinates":[[[2.75,50.85],[6.5,50.85],[6.5,49.45],[2.75,49.45],[2.75,50.85]]]}]]></dcat:bbox>
+      </dct:spatial>
+      <dct:spatial xmlns:dct="http://purl.org/dc/terms/">
+         <dct:Location rdf:about="https://en.wikipedia.org/wiki/Wallonia"/>
+      </dct:spatial>
+      <dct:spatial xmlns:dct="http://purl.org/dc/terms/" rdf:parseType="Resource">
+         <rdf:type rdf:resource="http://purl.org/dc/terms/Location"/>
+         <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">Région wallonne</skos:prefLabel>
+      </dct:spatial>
+      <dct:modified xmlns:dct="http://purl.org/dc/terms/"
+                    rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2023-03-31</dct:modified>
+      <dct:issued xmlns:dct="http://purl.org/dc/terms/"
+                  rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2023-02-21</dct:issued>
+      <dct:provenance xmlns:dct="http://purl.org/dc/terms/">
+         <dct:ProvenanceStatement>
+            <dct:description xml:lang="fr">La version numérique vectorielle du plan de secteur se base sur la version papier originale digitalisée par l'Institut Wallon en juin 1994 (fond de plan au 1/10.000) qui a été complétée en mai 2001 par ce même institut. La donnée intègre la légende actuellement en vigueur et est mise à jour en continu par la DGO4 depuis 2001. L'intégration des nouveaux dossiers, la correction d'erreurs et la suppression des dossiers abrogés se font au fur et à mesure de la réception des informations. Les données publiées sont mises à jour mensuellement sur base des données de travail. Depuis leur adoption, les plans de secteur ont fait l’objet de nombreuses révisions. Le Gouvernement wallon a en effet estimé nécessaire de les adapter pour y inscrire de nouveaux projets: routes, lignes électriques à haute tension, tracé TGV, nouvelles zones d'activité économique, zones d’extraction, etc. La procédure de révision et la légende ont été modifiées à plusieurs reprises. Suite à l'entrée en vigueur du CoDT, des changements sont à noter : - Trois nouvelles zones destinées à l'urbanisation : Zone de dépendance d’extraction destinée à accueillir les dépôts et dépendances industrielles (transformation des matières) à l’activité d’extraction, la zone d'enjeu communal (ZEC) et la zone d'enjeu régional (ZER). Les ZEC et ZER sont toutes deux accompagnées d'une carte d'affectation des sols à valeur indicative - une nouvelle zone non destinée à l'urbanisation : zone d'extraction (ZE).</dct:description>
+         </dct:ProvenanceStatement>
+      </dct:provenance>
+      <geodcatap:referenceSystem xmlns:geodcatap="http://data.europa.eu/930/">
+         <rdf:Description rdf:about="http://www.opengis.net/def/crs/EPSG/0/31370">
+            <rdf:type rdf:resource="http://purl.org/dc/terms/Standard"/>
+            <dct:type xmlns:dct="http://purl.org/dc/terms/"
+                      rdf:resource="http://inspire.ec.europa.eu/glossary/SpatialReferenceSystem"/>
+         </rdf:Description>
+      </geodcatap:referenceSystem>
+      <dqv:hasQualityMeasurement xmlns:dqv="http://www.w3.org/ns/dqv#">
+         <dqv:QualityMeasurement>
+            <dqv:isMeasurementOf>
+               <dqv:Metric rdf:about="http://data.europa.eu/930/spatialResolutionAsScale"/>
+            </dqv:isMeasurementOf>
+            <dqv:value rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.0001</dqv:value>
+         </dqv:QualityMeasurement>
+      </dqv:hasQualityMeasurement>
+      <rdfs:comment xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xml:lang="en">
+              Spatial resolution (distance): 1 cm</rdfs:comment>
+      <dcat:spatialResolutionInMeters xmlns:dcat="http://www.w3.org/ns/dcat#"
+                                      rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">30</dcat:spatialResolutionInMeters>
+      <dcat:spatialResolutionInMeters xmlns:dcat="http://www.w3.org/ns/dcat#"
+                                      rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.3048</dcat:spatialResolutionInMeters>
+      <prov:wasUsedBy xmlns:prov="http://www.w3.org/ns/prov#">
+         <prov:Activity>
+            <prov:used>
+               <prov:Entity rdf:about="http://geodata.wallonie.be/id/7fe2f305-1302-4297-b67e-792f55acd834"/>
+            </prov:used>
+            <prov:qualifiedAssociation rdf:parseType="Resource">
+               <rdf:type rdf:resource="http://www.w3.org/ns/prov#Association"/>
+               <prov:hadPlan rdf:parseType="Resource">
+                  <rdf:type rdf:resource="http://www.w3.org/ns/prov#Plan"/>
+                  <prov:wasDerivedFrom>
+                     <prov:Entity rdf:about="http://data.europa.eu/eli/reg/2010/1089false"/>
+                  </prov:wasDerivedFrom>
+               </prov:hadPlan>
+            </prov:qualifiedAssociation>
+            <prov:generated rdf:parseType="Resource">
+               <rdf:type rdf:resource="http://www.w3.org/ns/prov#Entity"/>
+               <dct:type xmlns:dct="http://purl.org/dc/terms/"
+                         rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/DegreeOfConformity/notConformant"/>
+               <dct:description xmlns:dct="http://purl.org/dc/terms/" xml:lang="fr">Voir la spécification référencée</dct:description>
+            </prov:generated>
+         </prov:Activity>
+      </prov:wasUsedBy>
+      <prov:wasUsedBy xmlns:prov="http://www.w3.org/ns/prov#">
+         <prov:Activity>
+            <prov:used>
+               <prov:Entity rdf:about="http://geodata.wallonie.be/id/7fe2f305-1302-4297-b67e-792f55acd834"/>
+            </prov:used>
+            <prov:qualifiedAssociation rdf:parseType="Resource">
+               <rdf:type rdf:resource="http://www.w3.org/ns/prov#Association"/>
+               <prov:hadPlan rdf:parseType="Resource">
+                  <rdf:type rdf:resource="http://www.w3.org/ns/prov#Plan"/>
+                  <prov:wasDerivedFrom>
+                     <prov:Entity rdf:about="http://data.europa.eu/eli/reg/2010/1089"/>
+                  </prov:wasDerivedFrom>
+               </prov:hadPlan>
+            </prov:qualifiedAssociation>
+            <prov:generated rdf:parseType="Resource">
+               <rdf:type rdf:resource="http://www.w3.org/ns/prov#Entity"/>
+               <dct:type xmlns:dct="http://purl.org/dc/terms/"
+                         rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/DegreeOfConformity/conformant"/>
+               <dct:description xmlns:dct="http://purl.org/dc/terms/" xml:lang="fr">Voir la spécification référencée</dct:description>
+            </prov:generated>
+         </prov:Activity>
+      </prov:wasUsedBy>
+      <prov:wasUsedBy xmlns:prov="http://www.w3.org/ns/prov#">
+         <prov:Activity>
+            <prov:used>
+               <prov:Entity rdf:about="http://geodata.wallonie.be/id/7fe2f305-1302-4297-b67e-792f55acd834"/>
+            </prov:used>
+            <prov:qualifiedAssociation rdf:parseType="Resource">
+               <rdf:type rdf:resource="http://www.w3.org/ns/prov#Association"/>
+               <prov:hadPlan rdf:parseType="Resource">
+                  <rdf:type rdf:resource="http://www.w3.org/ns/prov#Plan"/>
+                  <prov:wasDerivedFrom>
+                     <prov:Entity rdf:about="https://inspire.ec.europa.eu/id/document/tg/tn"/>
+                  </prov:wasDerivedFrom>
+               </prov:hadPlan>
+            </prov:qualifiedAssociation>
+            <prov:generated rdf:parseType="Resource">
+               <rdf:type rdf:resource="http://www.w3.org/ns/prov#Entity"/>
+               <dct:type xmlns:dct="http://purl.org/dc/terms/"
+                         rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/DegreeOfConformity/conformant"/>
+               <dct:description xmlns:dct="http://purl.org/dc/terms/" xml:lang="fr">Voir la spécification référencée</dct:description>
+            </prov:generated>
+         </prov:Activity>
+      </prov:wasUsedBy>
+      <prov:wasUsedBy xmlns:prov="http://www.w3.org/ns/prov#">
+         <prov:Activity>
+            <prov:used>
+               <prov:Entity rdf:about="http://geodata.wallonie.be/id/7fe2f305-1302-4297-b67e-792f55acd834"/>
+            </prov:used>
+            <prov:qualifiedAssociation rdf:parseType="Resource">
+               <rdf:type rdf:resource="http://www.w3.org/ns/prov#Association"/>
+               <prov:hadPlan rdf:parseType="Resource">
+                  <rdf:type rdf:resource="http://www.w3.org/ns/prov#Plan"/>
+                  <prov:wasDerivedFrom rdf:parseType="Resource">
+                     <rdf:type rdf:resource="http://www.w3.org/ns/prov#Entity"/>
+                     <dct:title xmlns:dct="http://purl.org/dc/terms/" xml:lang="fr">INSPIRE Data Specification on Transport Networks – Technical Guidelines, version 3.2</dct:title>
+                     <dct:issued xmlns:dct="http://purl.org/dc/terms/"
+                                 rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2014-04-17</dct:issued>
+                  </prov:wasDerivedFrom>
+               </prov:hadPlan>
+            </prov:qualifiedAssociation>
+            <prov:generated rdf:parseType="Resource">
+               <rdf:type rdf:resource="http://www.w3.org/ns/prov#Entity"/>
+               <dct:type xmlns:dct="http://purl.org/dc/terms/"
+                         rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/DegreeOfConformity/conformant"/>
+               <dct:description xmlns:dct="http://purl.org/dc/terms/" xml:lang="fr">Voir la spécification référencée</dct:description>
+            </prov:generated>
+         </prov:Activity>
+      </prov:wasUsedBy>
+      <dct:conformsTo xmlns:dct="http://purl.org/dc/terms/">
+         <dct:Standard rdf:about="http://data.europa.eu/eli/reg/2010/1089"/>
+      </dct:conformsTo>
+      <prov:wasUsedBy xmlns:prov="http://www.w3.org/ns/prov#">
+         <prov:Activity>
+            <prov:used>
+               <prov:Entity rdf:about="http://geodata.wallonie.be/id/7fe2f305-1302-4297-b67e-792f55acd834"/>
+            </prov:used>
+            <prov:qualifiedAssociation rdf:parseType="Resource">
+               <rdf:type rdf:resource="http://www.w3.org/ns/prov#Association"/>
+               <prov:hadPlan rdf:parseType="Resource">
+                  <rdf:type rdf:resource="http://www.w3.org/ns/prov#Plan"/>
+                  <prov:wasDerivedFrom>
+                     <prov:Entity rdf:about="http://data.europa.eu/eli/reg/2010/1089false"/>
+                  </prov:wasDerivedFrom>
+               </prov:hadPlan>
+            </prov:qualifiedAssociation>
+            <prov:generated rdf:parseType="Resource">
+               <rdf:type rdf:resource="http://www.w3.org/ns/prov#Entity"/>
+               <dct:type xmlns:dct="http://purl.org/dc/terms/"
+                         rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/DegreeOfConformity/notConformant"/>
+               <dct:description xmlns:dct="http://purl.org/dc/terms/" xml:lang="fr">Voir la spécification référencée</dct:description>
+            </prov:generated>
+         </prov:Activity>
+      </prov:wasUsedBy>
+      <prov:wasUsedBy xmlns:prov="http://www.w3.org/ns/prov#">
+         <prov:Activity>
+            <prov:used>
+               <prov:Entity rdf:about="http://geodata.wallonie.be/id/7fe2f305-1302-4297-b67e-792f55acd834"/>
+            </prov:used>
+            <prov:qualifiedAssociation rdf:parseType="Resource">
+               <rdf:type rdf:resource="http://www.w3.org/ns/prov#Association"/>
+               <prov:hadPlan rdf:parseType="Resource">
+                  <rdf:type rdf:resource="http://www.w3.org/ns/prov#Plan"/>
+                  <prov:wasDerivedFrom>
+                     <prov:Entity rdf:about="http://data.europa.eu/eli/reg/2010/1089"/>
+                  </prov:wasDerivedFrom>
+               </prov:hadPlan>
+            </prov:qualifiedAssociation>
+            <prov:generated rdf:parseType="Resource">
+               <rdf:type rdf:resource="http://www.w3.org/ns/prov#Entity"/>
+               <dct:type xmlns:dct="http://purl.org/dc/terms/"
+                         rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/DegreeOfConformity/conformant"/>
+               <dct:description xmlns:dct="http://purl.org/dc/terms/" xml:lang="fr">Voir la spécification référencée</dct:description>
+            </prov:generated>
+         </prov:Activity>
+      </prov:wasUsedBy>
+      <prov:wasUsedBy xmlns:prov="http://www.w3.org/ns/prov#">
+         <prov:Activity>
+            <prov:used>
+               <prov:Entity rdf:about="http://geodata.wallonie.be/id/7fe2f305-1302-4297-b67e-792f55acd834"/>
+            </prov:used>
+            <prov:qualifiedAssociation rdf:parseType="Resource">
+               <rdf:type rdf:resource="http://www.w3.org/ns/prov#Association"/>
+               <prov:hadPlan rdf:parseType="Resource">
+                  <rdf:type rdf:resource="http://www.w3.org/ns/prov#Plan"/>
+                  <prov:wasDerivedFrom>
+                     <prov:Entity rdf:about="https://inspire.ec.europa.eu/id/document/tg/tn"/>
+                  </prov:wasDerivedFrom>
+               </prov:hadPlan>
+            </prov:qualifiedAssociation>
+            <prov:generated rdf:parseType="Resource">
+               <rdf:type rdf:resource="http://www.w3.org/ns/prov#Entity"/>
+               <dct:type xmlns:dct="http://purl.org/dc/terms/"
+                         rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/DegreeOfConformity/conformant"/>
+               <dct:description xmlns:dct="http://purl.org/dc/terms/" xml:lang="fr">Voir la spécification référencée</dct:description>
+            </prov:generated>
+         </prov:Activity>
+      </prov:wasUsedBy>
+      <prov:wasUsedBy xmlns:prov="http://www.w3.org/ns/prov#">
+         <prov:Activity>
+            <prov:used>
+               <prov:Entity rdf:about="http://geodata.wallonie.be/id/7fe2f305-1302-4297-b67e-792f55acd834"/>
+            </prov:used>
+            <prov:qualifiedAssociation rdf:parseType="Resource">
+               <rdf:type rdf:resource="http://www.w3.org/ns/prov#Association"/>
+               <prov:hadPlan rdf:parseType="Resource">
+                  <rdf:type rdf:resource="http://www.w3.org/ns/prov#Plan"/>
+                  <prov:wasDerivedFrom rdf:parseType="Resource">
+                     <rdf:type rdf:resource="http://www.w3.org/ns/prov#Entity"/>
+                     <dct:title xmlns:dct="http://purl.org/dc/terms/" xml:lang="fr">INSPIRE Data Specification on Transport Networks – Technical Guidelines, version 3.2</dct:title>
+                     <dct:issued xmlns:dct="http://purl.org/dc/terms/"
+                                 rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2014-04-17</dct:issued>
+                  </prov:wasDerivedFrom>
+               </prov:hadPlan>
+            </prov:qualifiedAssociation>
+            <prov:generated rdf:parseType="Resource">
+               <rdf:type rdf:resource="http://www.w3.org/ns/prov#Entity"/>
+               <dct:type xmlns:dct="http://purl.org/dc/terms/"
+                         rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/DegreeOfConformity/conformant"/>
+               <dct:description xmlns:dct="http://purl.org/dc/terms/" xml:lang="fr">Voir la spécification référencée</dct:description>
+            </prov:generated>
+         </prov:Activity>
+      </prov:wasUsedBy>
+      <dct:conformsTo xmlns:dct="http://purl.org/dc/terms/">
+         <dct:Standard rdf:about="https://inspire.ec.europa.eu/id/document/tg/tn"/>
+      </dct:conformsTo>
+      <prov:wasUsedBy xmlns:prov="http://www.w3.org/ns/prov#">
+         <prov:Activity>
+            <prov:used>
+               <prov:Entity rdf:about="http://geodata.wallonie.be/id/7fe2f305-1302-4297-b67e-792f55acd834"/>
+            </prov:used>
+            <prov:qualifiedAssociation rdf:parseType="Resource">
+               <rdf:type rdf:resource="http://www.w3.org/ns/prov#Association"/>
+               <prov:hadPlan rdf:parseType="Resource">
+                  <rdf:type rdf:resource="http://www.w3.org/ns/prov#Plan"/>
+                  <prov:wasDerivedFrom>
+                     <prov:Entity rdf:about="http://data.europa.eu/eli/reg/2010/1089false"/>
+                  </prov:wasDerivedFrom>
+               </prov:hadPlan>
+            </prov:qualifiedAssociation>
+            <prov:generated rdf:parseType="Resource">
+               <rdf:type rdf:resource="http://www.w3.org/ns/prov#Entity"/>
+               <dct:type xmlns:dct="http://purl.org/dc/terms/"
+                         rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/DegreeOfConformity/notConformant"/>
+               <dct:description xmlns:dct="http://purl.org/dc/terms/" xml:lang="fr">Voir la spécification référencée</dct:description>
+            </prov:generated>
+         </prov:Activity>
+      </prov:wasUsedBy>
+      <prov:wasUsedBy xmlns:prov="http://www.w3.org/ns/prov#">
+         <prov:Activity>
+            <prov:used>
+               <prov:Entity rdf:about="http://geodata.wallonie.be/id/7fe2f305-1302-4297-b67e-792f55acd834"/>
+            </prov:used>
+            <prov:qualifiedAssociation rdf:parseType="Resource">
+               <rdf:type rdf:resource="http://www.w3.org/ns/prov#Association"/>
+               <prov:hadPlan rdf:parseType="Resource">
+                  <rdf:type rdf:resource="http://www.w3.org/ns/prov#Plan"/>
+                  <prov:wasDerivedFrom>
+                     <prov:Entity rdf:about="http://data.europa.eu/eli/reg/2010/1089"/>
+                  </prov:wasDerivedFrom>
+               </prov:hadPlan>
+            </prov:qualifiedAssociation>
+            <prov:generated rdf:parseType="Resource">
+               <rdf:type rdf:resource="http://www.w3.org/ns/prov#Entity"/>
+               <dct:type xmlns:dct="http://purl.org/dc/terms/"
+                         rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/DegreeOfConformity/conformant"/>
+               <dct:description xmlns:dct="http://purl.org/dc/terms/" xml:lang="fr">Voir la spécification référencée</dct:description>
+            </prov:generated>
+         </prov:Activity>
+      </prov:wasUsedBy>
+      <prov:wasUsedBy xmlns:prov="http://www.w3.org/ns/prov#">
+         <prov:Activity>
+            <prov:used>
+               <prov:Entity rdf:about="http://geodata.wallonie.be/id/7fe2f305-1302-4297-b67e-792f55acd834"/>
+            </prov:used>
+            <prov:qualifiedAssociation rdf:parseType="Resource">
+               <rdf:type rdf:resource="http://www.w3.org/ns/prov#Association"/>
+               <prov:hadPlan rdf:parseType="Resource">
+                  <rdf:type rdf:resource="http://www.w3.org/ns/prov#Plan"/>
+                  <prov:wasDerivedFrom>
+                     <prov:Entity rdf:about="https://inspire.ec.europa.eu/id/document/tg/tn"/>
+                  </prov:wasDerivedFrom>
+               </prov:hadPlan>
+            </prov:qualifiedAssociation>
+            <prov:generated rdf:parseType="Resource">
+               <rdf:type rdf:resource="http://www.w3.org/ns/prov#Entity"/>
+               <dct:type xmlns:dct="http://purl.org/dc/terms/"
+                         rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/DegreeOfConformity/conformant"/>
+               <dct:description xmlns:dct="http://purl.org/dc/terms/" xml:lang="fr">Voir la spécification référencée</dct:description>
+            </prov:generated>
+         </prov:Activity>
+      </prov:wasUsedBy>
+      <prov:wasUsedBy xmlns:prov="http://www.w3.org/ns/prov#">
+         <prov:Activity>
+            <prov:used>
+               <prov:Entity rdf:about="http://geodata.wallonie.be/id/7fe2f305-1302-4297-b67e-792f55acd834"/>
+            </prov:used>
+            <prov:qualifiedAssociation rdf:parseType="Resource">
+               <rdf:type rdf:resource="http://www.w3.org/ns/prov#Association"/>
+               <prov:hadPlan rdf:parseType="Resource">
+                  <rdf:type rdf:resource="http://www.w3.org/ns/prov#Plan"/>
+                  <prov:wasDerivedFrom rdf:parseType="Resource">
+                     <rdf:type rdf:resource="http://www.w3.org/ns/prov#Entity"/>
+                     <dct:title xmlns:dct="http://purl.org/dc/terms/" xml:lang="fr">INSPIRE Data Specification on Transport Networks – Technical Guidelines, version 3.2</dct:title>
+                     <dct:issued xmlns:dct="http://purl.org/dc/terms/"
+                                 rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2014-04-17</dct:issued>
+                  </prov:wasDerivedFrom>
+               </prov:hadPlan>
+            </prov:qualifiedAssociation>
+            <prov:generated rdf:parseType="Resource">
+               <rdf:type rdf:resource="http://www.w3.org/ns/prov#Entity"/>
+               <dct:type xmlns:dct="http://purl.org/dc/terms/"
+                         rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/DegreeOfConformity/conformant"/>
+               <dct:description xmlns:dct="http://purl.org/dc/terms/" xml:lang="fr">Voir la spécification référencée</dct:description>
+            </prov:generated>
+         </prov:Activity>
+      </prov:wasUsedBy>
+      <dct:conformsTo xmlns:dct="http://purl.org/dc/terms/" rdf:parseType="Resource">
+         <rdf:type rdf:resource="http://purl.org/dc/terms/Standard"/>
+         <dct:title xml:lang="fr">INSPIRE Data Specification on Transport Networks – Technical Guidelines, version 3.2</dct:title>
+         <dct:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2014-04-17</dct:issued>
+      </dct:conformsTo>
+      <prov:wasUsedBy xmlns:prov="http://www.w3.org/ns/prov#">
+         <prov:Activity>
+            <prov:used>
+               <prov:Entity rdf:about="http://geodata.wallonie.be/id/7fe2f305-1302-4297-b67e-792f55acd834"/>
+            </prov:used>
+            <prov:qualifiedAssociation rdf:parseType="Resource">
+               <rdf:type rdf:resource="http://www.w3.org/ns/prov#Association"/>
+               <prov:hadPlan rdf:parseType="Resource">
+                  <rdf:type rdf:resource="http://www.w3.org/ns/prov#Plan"/>
+                  <prov:wasDerivedFrom>
+                     <prov:Entity rdf:about="http://data.europa.eu/eli/reg/2010/1089false"/>
+                  </prov:wasDerivedFrom>
+               </prov:hadPlan>
+            </prov:qualifiedAssociation>
+            <prov:generated rdf:parseType="Resource">
+               <rdf:type rdf:resource="http://www.w3.org/ns/prov#Entity"/>
+               <dct:type xmlns:dct="http://purl.org/dc/terms/"
+                         rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/DegreeOfConformity/notConformant"/>
+               <dct:description xmlns:dct="http://purl.org/dc/terms/" xml:lang="fr">Voir la spécification référencée</dct:description>
+            </prov:generated>
+         </prov:Activity>
+      </prov:wasUsedBy>
+      <prov:wasUsedBy xmlns:prov="http://www.w3.org/ns/prov#">
+         <prov:Activity>
+            <prov:used>
+               <prov:Entity rdf:about="http://geodata.wallonie.be/id/7fe2f305-1302-4297-b67e-792f55acd834"/>
+            </prov:used>
+            <prov:qualifiedAssociation rdf:parseType="Resource">
+               <rdf:type rdf:resource="http://www.w3.org/ns/prov#Association"/>
+               <prov:hadPlan rdf:parseType="Resource">
+                  <rdf:type rdf:resource="http://www.w3.org/ns/prov#Plan"/>
+                  <prov:wasDerivedFrom>
+                     <prov:Entity rdf:about="http://data.europa.eu/eli/reg/2010/1089"/>
+                  </prov:wasDerivedFrom>
+               </prov:hadPlan>
+            </prov:qualifiedAssociation>
+            <prov:generated rdf:parseType="Resource">
+               <rdf:type rdf:resource="http://www.w3.org/ns/prov#Entity"/>
+               <dct:type xmlns:dct="http://purl.org/dc/terms/"
+                         rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/DegreeOfConformity/conformant"/>
+               <dct:description xmlns:dct="http://purl.org/dc/terms/" xml:lang="fr">Voir la spécification référencée</dct:description>
+            </prov:generated>
+         </prov:Activity>
+      </prov:wasUsedBy>
+      <prov:wasUsedBy xmlns:prov="http://www.w3.org/ns/prov#">
+         <prov:Activity>
+            <prov:used>
+               <prov:Entity rdf:about="http://geodata.wallonie.be/id/7fe2f305-1302-4297-b67e-792f55acd834"/>
+            </prov:used>
+            <prov:qualifiedAssociation rdf:parseType="Resource">
+               <rdf:type rdf:resource="http://www.w3.org/ns/prov#Association"/>
+               <prov:hadPlan rdf:parseType="Resource">
+                  <rdf:type rdf:resource="http://www.w3.org/ns/prov#Plan"/>
+                  <prov:wasDerivedFrom>
+                     <prov:Entity rdf:about="https://inspire.ec.europa.eu/id/document/tg/tn"/>
+                  </prov:wasDerivedFrom>
+               </prov:hadPlan>
+            </prov:qualifiedAssociation>
+            <prov:generated rdf:parseType="Resource">
+               <rdf:type rdf:resource="http://www.w3.org/ns/prov#Entity"/>
+               <dct:type xmlns:dct="http://purl.org/dc/terms/"
+                         rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/DegreeOfConformity/conformant"/>
+               <dct:description xmlns:dct="http://purl.org/dc/terms/" xml:lang="fr">Voir la spécification référencée</dct:description>
+            </prov:generated>
+         </prov:Activity>
+      </prov:wasUsedBy>
+      <prov:wasUsedBy xmlns:prov="http://www.w3.org/ns/prov#">
+         <prov:Activity>
+            <prov:used>
+               <prov:Entity rdf:about="http://geodata.wallonie.be/id/7fe2f305-1302-4297-b67e-792f55acd834"/>
+            </prov:used>
+            <prov:qualifiedAssociation rdf:parseType="Resource">
+               <rdf:type rdf:resource="http://www.w3.org/ns/prov#Association"/>
+               <prov:hadPlan rdf:parseType="Resource">
+                  <rdf:type rdf:resource="http://www.w3.org/ns/prov#Plan"/>
+                  <prov:wasDerivedFrom rdf:parseType="Resource">
+                     <rdf:type rdf:resource="http://www.w3.org/ns/prov#Entity"/>
+                     <dct:title xmlns:dct="http://purl.org/dc/terms/" xml:lang="fr">INSPIRE Data Specification on Transport Networks – Technical Guidelines, version 3.2</dct:title>
+                     <dct:issued xmlns:dct="http://purl.org/dc/terms/"
+                                 rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2014-04-17</dct:issued>
+                  </prov:wasDerivedFrom>
+               </prov:hadPlan>
+            </prov:qualifiedAssociation>
+            <prov:generated rdf:parseType="Resource">
+               <rdf:type rdf:resource="http://www.w3.org/ns/prov#Entity"/>
+               <dct:type xmlns:dct="http://purl.org/dc/terms/"
+                         rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/DegreeOfConformity/conformant"/>
+               <dct:description xmlns:dct="http://purl.org/dc/terms/" xml:lang="fr">Voir la spécification référencée</dct:description>
+            </prov:generated>
+         </prov:Activity>
+      </prov:wasUsedBy>
+      <dcat:landingPage xmlns:dcat="http://www.w3.org/ns/dcat#">
+         <foaf:Document xmlns:foaf="http://xmlns.com/foaf/0.1/"
+                        rdf:about="https://geoservices.wallonie.be/arcgis/rest/services/AMENAGEMENT_TERRITOIRE/PDS/MapServer/legend">
+            <dct:title xmlns:dct="http://purl.org/dc/terms/" xml:lang="fr">Légende du Plan de secteur</dct:title>
+            <dct:description xmlns:dct="http://purl.org/dc/terms/" xml:lang="fr">Légende associée au plan de secteur (sur base du service de visualisation)</dct:description>
+         </foaf:Document>
+      </dcat:landingPage>
+      <dcat:landingPage xmlns:dcat="http://www.w3.org/ns/dcat#">
+         <foaf:Document xmlns:foaf="http://xmlns.com/foaf/0.1/"
+                        rdf:about="http://geoapps.wallonie.be/webgisdgo4/#CTX=PDS">
+            <dct:title xmlns:dct="http://purl.org/dc/terms/" xml:lang="fr">Application de consultation des données de la DGO4 - Plan de secteur</dct:title>
+            <dct:description xmlns:dct="http://purl.org/dc/terms/" xml:lang="fr">Application dédiée à la consultation des couches de données relatives au Plan de secteur. Cette application constitue un thème de l'application de consultation des données de la DGO4.</dct:description>
+         </foaf:Document>
+      </dcat:landingPage>
+      <dcat:landingPage xmlns:dcat="http://www.w3.org/ns/dcat#">
+         <foaf:Document xmlns:foaf="http://xmlns.com/foaf/0.1/"
+                        rdf:about="https://geoportail.wallonie.be/walonmap/#ADU=https://geoservices.wallonie.be/arcgis/rest/services/AMENAGEMENT_TERRITOIRE/PDS/MapServer">
+            <dct:title xmlns:dct="http://purl.org/dc/terms/" xml:lang="fr">Application WalOnMap - Toute la Wallonie à la carte</dct:title>
+            <dct:description xmlns:dct="http://purl.org/dc/terms/" xml:lang="fr">Application cartographique du Geoportail (WalOnMap) qui permet de découvrir les données géographiques de la Wallonie.</dct:description>
+         </foaf:Document>
+      </dcat:landingPage>
+      <dcat:landingPage xmlns:dcat="http://www.w3.org/ns/dcat#">
+         <foaf:Document xmlns:foaf="http://xmlns.com/foaf/0.1/"
+                        rdf:about="https://geoservices.wallonie.be/arcgis/rest/services/AMENAGEMENT_TERRITOIRE/PDS/MapServer">
+            <dct:title xmlns:dct="http://purl.org/dc/terms/" xml:lang="fr">Service de visualisation ESRI-REST</dct:title>
+            <dct:description xmlns:dct="http://purl.org/dc/terms/" xml:lang="fr">Ce service ESRI-REST permet de visualiser la série de couches de données "Plan de secteur"</dct:description>
+         </foaf:Document>
+      </dcat:landingPage>
+      <dcat:distribution xmlns:dcat="http://www.w3.org/ns/dcat#">
+         <dcat:Distribution>
+            <dct:title xmlns:dct="http://purl.org/dc/terms/" xml:lang="fr">Service de visualisation WMS</dct:title>
+            <dct:description xmlns:dct="http://purl.org/dc/terms/" xml:lang="fr">Ce service WMS permet de visualiser la série de couches de données "Plan de secteur"</dct:description>
+            <dcat:accessService rdf:parseType="Resource">
+               <rdf:type rdf:resource="http://www.w3.org/ns/dcat#DataService"/>
+               <dct:title xmlns:dct="http://purl.org/dc/terms/" xml:lang="fr">Service de visualisation WMS</dct:title>
+               <dcat:endpointURL rdf:resource="https://geoservices.wallonie.be/arcgis/services/AMENAGEMENT_TERRITOIRE/PDS/MapServer/WMSServer"/>
+               <dcat:endpointDescription rdf:resource="https://geoservices.wallonie.be/arcgis/services/AMENAGEMENT_TERRITOIRE/PDS/MapServer/WMSServer?request=GetCapabilities&amp;service=WMS"/>
+               <geodcatap:serviceProtocol xmlns:geodcatap="http://data.europa.eu/930/">
+                  <dct:Standard xmlns:dct="http://purl.org/dc/terms/"
+                                rdf:about="http://www.opengeospatial.org/standards/wms"/>
+               </geodcatap:serviceProtocol>
+            </dcat:accessService>
+            <dcat:accessURL rdf:resource="https://geoservices.wallonie.be/arcgis/services/AMENAGEMENT_TERRITOIRE/PDS/MapServer/WMSServer?request=GetCapabilities&amp;service=WMS"/>
+            <dct:accessRights xmlns:dct="http://purl.org/dc/terms/">
+               <dct:RightsStatement rdf:about="http://inspire.ec.europa.eu/metadata-codelist/LimitationsOnPublicAccess/noLimitations"/>
+            </dct:accessRights>
+            <dct:rights xmlns:dct="http://purl.org/dc/terms/">
+               <dct:RightsStatement>
+                  <dct:description xml:lang="fr">No limitations to public access</dct:description>
+               </dct:RightsStatement>
+            </dct:rights>
+            <dct:rights xmlns:dct="http://purl.org/dc/terms/">
+               <dct:RightsStatement>
+                  <dct:description xml:lang="fr">Conditions d'accès et d'utilisation spécifiques</dct:description>
+               </dct:RightsStatement>
+            </dct:rights>
+            <dct:license xmlns:dct="http://purl.org/dc/terms/">
+               <dct:LicenseDocument rdf:about="https://geoportail.wallonie.be/files/documents/ConditionsSPW/DataSPW-CGU.pdf"/>
+            </dct:license>
+            <dct:license xmlns:dct="http://purl.org/dc/terms/">
+               <dct:LicenseDocument rdf:about="https://geoportail.wallonie.be/files/documents/ConditionsSPW/DataSPW-CGA.pdf"/>
+            </dct:license>
+            <dct:license xmlns:dct="http://purl.org/dc/terms/">
+               <dct:LicenseDocument rdf:about="https://geoportail.wallonie.be/files/documents/ConditionsSPW/DataSPW-CPU-TypeA.pdf"/>
+            </dct:license>
+            <dct:license xmlns:dct="http://purl.org/dc/terms/">
+               <dct:LicenseDocument rdf:about="https://opensource.org/licenses/BSL-1.0"/>
+            </dct:license>
+            <dct:rights xmlns:dct="http://purl.org/dc/terms/">
+               <dct:RightsStatement>
+                  <dct:description xml:lang="fr">https://opensource.org/licenses/CATOSL-1.1</dct:description>
+               </dct:RightsStatement>
+            </dct:rights>
+            <dct:license xmlns:dct="http://purl.org/dc/terms/">
+               <dct:LicenseDocument rdf:about="https://publications.europa.eu/resource/authority/licence/CC_BY_4_0"/>
+            </dct:license>
+            <adms:representationTechnique xmlns:adms="http://www.w3.org/ns/adms#"
+                                          rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialRepresentationType/vector"/>
+            <dct:format xmlns:dct="http://purl.org/dc/terms/">
+               <dct:MediaType rdf:about="http://inspire.ec.europa.eu/media-types/application/x-shapefile"/>
+            </dct:format>
+            <dct:format xmlns:dct="http://purl.org/dc/terms/">
+               <dct:MediaType rdf:about="http://inspire.ec.europa.eu/media-types/application/x-filegdb"/>
+            </dct:format>
+            <cnt:characterEncoding xmlns:cnt="http://www.w3.org/2011/content#"
+                                   rdf:datatype="http://www.w3.org/2001/XMLSchema#string">UTF-8</cnt:characterEncoding>
+            <cnt:characterEncoding xmlns:cnt="http://www.w3.org/2011/content#"
+                                   rdf:datatype="http://www.w3.org/2001/XMLSchema#string"/>
+         </dcat:Distribution>
+      </dcat:distribution>
+      <foaf:page xmlns:foaf="http://xmlns.com/foaf/0.1/">
+         <foaf:Document rdf:about="http://spw.wallonie.be/dgo4/site_thema/index.php?thema=modif_ps">
+            <dct:title xmlns:dct="http://purl.org/dc/terms/" xml:lang="fr">Base de données du Plan de secteur</dct:title>
+            <dct:description xmlns:dct="http://purl.org/dc/terms/" xml:lang="fr">Site permettant la recherche de Plans de secteur et des modifications dans la base de données</dct:description>
+         </foaf:Document>
+      </foaf:page>
+      <foaf:page xmlns:foaf="http://xmlns.com/foaf/0.1/">
+         <foaf:Document rdf:about="https://lampspw.wallonie.be/dgo4/site_thema/index.php/synthese">
+            <dct:title xmlns:dct="http://purl.org/dc/terms/" xml:lang="fr">Inventaire des données géographiques de la DGO4</dct:title>
+            <dct:description xmlns:dct="http://purl.org/dc/terms/" xml:lang="fr">Inventaire des données géographiques produites ou exploitées à la DGO4.</dct:description>
+         </foaf:Document>
+      </foaf:page>
+      <foaf:page xmlns:foaf="http://xmlns.com/foaf/0.1/">
+         <foaf:Document rdf:about="http://spw.wallonie.be/dgo4/site_amenagement/site/directions/dar">
+            <dct:title xmlns:dct="http://purl.org/dc/terms/" xml:lang="fr">La Direction de l'Aménagement Régional</dct:title>
+            <dct:description xmlns:dct="http://purl.org/dc/terms/" xml:lang="fr">Site de la Direction de l'Aménagement Régional (DAR)</dct:description>
+         </foaf:Document>
+      </foaf:page>
+      <foaf:page xmlns:foaf="http://xmlns.com/foaf/0.1/">
+         <foaf:Document rdf:about="http://geoservices.wallonie.be/geotraitement/spwdatadownload/get/7fe2f305-1302-4297-b67e-792f55acd834/PDS_SHAPE_31370.zip">
+            <dct:title xmlns:dct="http://purl.org/dc/terms/" xml:lang="fr">Plan de Secteur au format SHP</dct:title>
+            <dct:description xmlns:dct="http://purl.org/dc/terms/" xml:lang="fr">Dossier compressé contenant le jeu de données du Plan de Secteur au format shapefile en coordonnées Lambert 72</dct:description>
+         </foaf:Document>
+      </foaf:page>
+      <dct:creator xmlns:dct="http://purl.org/dc/terms/">
+         <rdf:Description>
+            <rdf:type rdf:resource="http://xmlns.com/foaf/0.1/Organization"/>
+            <rdf:type rdf:resource="http://www.w3.org/ns/prov#Agent"/>
+            <foaf:name xmlns:foaf="http://xmlns.com/foaf/0.1/" xml:lang="fr">Helpdesk carto du SPW (SPW - Secrétariat général - SPW Digital - Département de la Géomatique - Direction de l'Intégration des géodonnées)</foaf:name>
+            <foaf:mbox xmlns:foaf="http://xmlns.com/foaf/0.1/"
+                       rdf:resource="mailto:helpdesk.carto@spw.wallonie.be"/>
+         </rdf:Description>
+      </dct:creator>
+      <prov:qualifiedAttribution xmlns:prov="http://www.w3.org/ns/prov#">
+         <prov:Attribution>
+            <prov:agent>
+               <rdf:Description>
+                  <rdf:type rdf:resource="http://xmlns.com/foaf/0.1/Organization"/>
+                  <rdf:type rdf:resource="http://www.w3.org/ns/prov#Agent"/>
+                  <foaf:name xmlns:foaf="http://xmlns.com/foaf/0.1/" xml:lang="fr">Helpdesk carto du SPW (SPW - Secrétariat général - SPW Digital - Département de la Géomatique - Direction de l'Intégration des géodonnées)</foaf:name>
+                  <foaf:mbox xmlns:foaf="http://xmlns.com/foaf/0.1/"
+                             rdf:resource="mailto:helpdesk.carto@spw.wallonie.be"/>
+               </rdf:Description>
+            </prov:agent>
+            <dct:type xmlns:dct="http://purl.org/dc/terms/"
+                      rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/ResponsiblePartyRole/author"/>
+            <dcat:hadRole xmlns:dcat="http://www.w3.org/ns/dcat#">
+               <dcat:Role rdf:about="http://inspire.ec.europa.eu/metadata-codelist/ResponsiblePartyRole/author"/>
+            </dcat:hadRole>
+         </prov:Attribution>
+      </prov:qualifiedAttribution>
+      <dct:publisher xmlns:dct="http://purl.org/dc/terms/">
+         <rdf:Description>
+            <rdf:type rdf:resource="http://xmlns.com/foaf/0.1/Organization"/>
+            <rdf:type rdf:resource="http://www.w3.org/ns/prov#Agent"/>
+            <foaf:name xmlns:foaf="http://xmlns.com/foaf/0.1/" xml:lang="fr">Helpdesk carto du SPW (SPW - Secrétariat général - SPW Digital - Département de la Géomatique - Direction de l'Intégration des géodonnées)</foaf:name>
+            <foaf:mbox xmlns:foaf="http://xmlns.com/foaf/0.1/"
+                       rdf:resource="mailto:helpdesk.carto@spw.wallonie.be"/>
+         </rdf:Description>
+      </dct:publisher>
+      <prov:qualifiedAttribution xmlns:prov="http://www.w3.org/ns/prov#">
+         <prov:Attribution>
+            <prov:agent>
+               <rdf:Description>
+                  <rdf:type rdf:resource="http://xmlns.com/foaf/0.1/Organization"/>
+                  <rdf:type rdf:resource="http://www.w3.org/ns/prov#Agent"/>
+                  <foaf:name xmlns:foaf="http://xmlns.com/foaf/0.1/" xml:lang="fr">Helpdesk carto du SPW (SPW - Secrétariat général - SPW Digital - Département de la Géomatique - Direction de l'Intégration des géodonnées)</foaf:name>
+                  <foaf:mbox xmlns:foaf="http://xmlns.com/foaf/0.1/"
+                             rdf:resource="mailto:helpdesk.carto@spw.wallonie.be"/>
+               </rdf:Description>
+            </prov:agent>
+            <dct:type xmlns:dct="http://purl.org/dc/terms/"
+                      rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/ResponsiblePartyRole/publisher"/>
+            <dcat:hadRole xmlns:dcat="http://www.w3.org/ns/dcat#">
+               <dcat:Role rdf:about="http://inspire.ec.europa.eu/metadata-codelist/ResponsiblePartyRole/publisher"/>
+            </dcat:hadRole>
+         </prov:Attribution>
+      </prov:qualifiedAttribution>
+      <dcat:contactPoint xmlns:dcat="http://www.w3.org/ns/dcat#">
+         <rdf:Description>
+            <rdf:type rdf:resource="http://www.w3.org/2006/vcard/ns#Organization"/>
+            <vcard:fn xmlns:vcard="http://www.w3.org/2006/vcard/ns#" xml:lang="fr">Helpdesk carto du SPW (SPW - Secrétariat général - SPW Digital - Département de la Géomatique - Direction de l'Intégration des géodonnées)</vcard:fn>
+            <vcard:hasEmail xmlns:vcard="http://www.w3.org/2006/vcard/ns#"
+                            rdf:resource="mailto:helpdesk.carto@spw.wallonie.be"/>
+         </rdf:Description>
+      </dcat:contactPoint>
+      <prov:qualifiedAttribution xmlns:prov="http://www.w3.org/ns/prov#">
+         <prov:Attribution>
+            <prov:agent>
+               <rdf:Description>
+                  <rdf:type rdf:resource="http://xmlns.com/foaf/0.1/Organization"/>
+                  <rdf:type rdf:resource="http://www.w3.org/ns/prov#Agent"/>
+                  <foaf:name xmlns:foaf="http://xmlns.com/foaf/0.1/" xml:lang="fr">Helpdesk carto du SPW (SPW - Secrétariat général - SPW Digital - Département de la Géomatique - Direction de l'Intégration des géodonnées)</foaf:name>
+                  <foaf:mbox xmlns:foaf="http://xmlns.com/foaf/0.1/"
+                             rdf:resource="mailto:helpdesk.carto@spw.wallonie.be"/>
+               </rdf:Description>
+            </prov:agent>
+            <dct:type xmlns:dct="http://purl.org/dc/terms/"
+                      rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/ResponsiblePartyRole/pointOfContact"/>
+            <dcat:hadRole xmlns:dcat="http://www.w3.org/ns/dcat#">
+               <dcat:Role rdf:about="http://inspire.ec.europa.eu/metadata-codelist/ResponsiblePartyRole/pointOfContact"/>
+            </dcat:hadRole>
+         </prov:Attribution>
+      </prov:qualifiedAttribution>
+      <geodcatap:custodian xmlns:geodcatap="http://data.europa.eu/930/">
+         <rdf:Description>
+            <rdf:type rdf:resource="http://xmlns.com/foaf/0.1/Person"/>
+            <rdf:type rdf:resource="http://www.w3.org/ns/prov#Agent"/>
+            <foaf:name xmlns:foaf="http://xmlns.com/foaf/0.1/" xml:lang="fr">Thierry Berthet</foaf:name>
+            <org:memberOf xmlns:org="http://www.w3.org/ns/org#">
+               <foaf:Organization xmlns:foaf="http://xmlns.com/foaf/0.1/">
+                  <foaf:name xml:lang="fr">Direction du Développement territorial (SPW - Territoire, Logement, Patrimoine, Énergie - Département de l'Aménagement du territoire et de l'Urbanisme - Direction du Développement territorial)</foaf:name>
+               </foaf:Organization>
+            </org:memberOf>
+            <foaf:mbox xmlns:foaf="http://xmlns.com/foaf/0.1/"
+                       rdf:resource="mailto:developpement.territorial@spw.wallonie.be"/>
+         </rdf:Description>
+      </geodcatap:custodian>
+      <prov:qualifiedAttribution xmlns:prov="http://www.w3.org/ns/prov#">
+         <prov:Attribution>
+            <prov:agent>
+               <rdf:Description>
+                  <rdf:type rdf:resource="http://xmlns.com/foaf/0.1/Person"/>
+                  <rdf:type rdf:resource="http://www.w3.org/ns/prov#Agent"/>
+                  <foaf:name xmlns:foaf="http://xmlns.com/foaf/0.1/" xml:lang="fr">Thierry Berthet</foaf:name>
+                  <org:memberOf xmlns:org="http://www.w3.org/ns/org#">
+                     <foaf:Organization xmlns:foaf="http://xmlns.com/foaf/0.1/">
+                        <foaf:name xml:lang="fr">Direction du Développement territorial (SPW - Territoire, Logement, Patrimoine, Énergie - Département de l'Aménagement du territoire et de l'Urbanisme - Direction du Développement territorial)</foaf:name>
+                     </foaf:Organization>
+                  </org:memberOf>
+                  <foaf:mbox xmlns:foaf="http://xmlns.com/foaf/0.1/"
+                             rdf:resource="mailto:developpement.territorial@spw.wallonie.be"/>
+               </rdf:Description>
+            </prov:agent>
+            <dct:type xmlns:dct="http://purl.org/dc/terms/"
+                      rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/ResponsiblePartyRole/custodian"/>
+            <dcat:hadRole xmlns:dcat="http://www.w3.org/ns/dcat#">
+               <dcat:Role rdf:about="http://inspire.ec.europa.eu/metadata-codelist/ResponsiblePartyRole/custodian"/>
+            </dcat:hadRole>
+         </prov:Attribution>
+      </prov:qualifiedAttribution>
+      <geodcatap:custodian xmlns:geodcatap="http://data.europa.eu/930/">
+         <rdf:Description>
+            <rdf:type rdf:resource="http://xmlns.com/foaf/0.1/Person"/>
+            <rdf:type rdf:resource="http://www.w3.org/ns/prov#Agent"/>
+            <foaf:name xmlns:foaf="http://xmlns.com/foaf/0.1/" xml:lang="fr">Jean Berthet</foaf:name>
+            <org:memberOf xmlns:org="http://www.w3.org/ns/org#">
+               <foaf:Organization xmlns:foaf="http://xmlns.com/foaf/0.1/">
+                  <foaf:name xml:lang="fr">Direction du Développement territorial (SPW - Territoire, Logement, Patrimoine, Énergie - Département de l'Aménagement du territoire et de l'Urbanisme - Direction du Développement territorial)</foaf:name>
+               </foaf:Organization>
+            </org:memberOf>
+            <foaf:mbox xmlns:foaf="http://xmlns.com/foaf/0.1/" rdf:resource="mailto:jean.b@spw.org"/>
+         </rdf:Description>
+      </geodcatap:custodian>
+      <prov:qualifiedAttribution xmlns:prov="http://www.w3.org/ns/prov#">
+         <prov:Attribution>
+            <prov:agent>
+               <rdf:Description>
+                  <rdf:type rdf:resource="http://xmlns.com/foaf/0.1/Person"/>
+                  <rdf:type rdf:resource="http://www.w3.org/ns/prov#Agent"/>
+                  <foaf:name xmlns:foaf="http://xmlns.com/foaf/0.1/" xml:lang="fr">Jean Berthet</foaf:name>
+                  <org:memberOf xmlns:org="http://www.w3.org/ns/org#">
+                     <foaf:Organization xmlns:foaf="http://xmlns.com/foaf/0.1/">
+                        <foaf:name xml:lang="fr">Direction du Développement territorial (SPW - Territoire, Logement, Patrimoine, Énergie - Département de l'Aménagement du territoire et de l'Urbanisme - Direction du Développement territorial)</foaf:name>
+                     </foaf:Organization>
+                  </org:memberOf>
+                  <foaf:mbox xmlns:foaf="http://xmlns.com/foaf/0.1/" rdf:resource="mailto:jean.b@spw.org"/>
+               </rdf:Description>
+            </prov:agent>
+            <dct:type xmlns:dct="http://purl.org/dc/terms/"
+                      rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/ResponsiblePartyRole/custodian"/>
+            <dcat:hadRole xmlns:dcat="http://www.w3.org/ns/dcat#">
+               <dcat:Role rdf:about="http://inspire.ec.europa.eu/metadata-codelist/ResponsiblePartyRole/custodian"/>
+            </dcat:hadRole>
+         </prov:Attribution>
+      </prov:qualifiedAttribution>
+      <dct:rightsHolder xmlns:dct="http://purl.org/dc/terms/">
+         <rdf:Description>
+            <rdf:type rdf:resource="http://xmlns.com/foaf/0.1/Organization"/>
+            <rdf:type rdf:resource="http://www.w3.org/ns/prov#Agent"/>
+            <foaf:name xmlns:foaf="http://xmlns.com/foaf/0.1/" xml:lang="fr">Service public de Wallonie (SPW)</foaf:name>
+            <foaf:mbox xmlns:foaf="http://xmlns.com/foaf/0.1/"
+                       rdf:resource="mailto:helpdesk.carto@spw.wallonie.be"/>
+            <foaf:workplaceHomepage xmlns:foaf="http://xmlns.com/foaf/0.1/"
+                                    rdf:resource="https://geoportail.wallonie.be"/>
+         </rdf:Description>
+      </dct:rightsHolder>
+      <prov:qualifiedAttribution xmlns:prov="http://www.w3.org/ns/prov#">
+         <prov:Attribution>
+            <prov:agent>
+               <rdf:Description>
+                  <rdf:type rdf:resource="http://xmlns.com/foaf/0.1/Organization"/>
+                  <rdf:type rdf:resource="http://www.w3.org/ns/prov#Agent"/>
+                  <foaf:name xmlns:foaf="http://xmlns.com/foaf/0.1/" xml:lang="fr">Service public de Wallonie (SPW)</foaf:name>
+                  <foaf:mbox xmlns:foaf="http://xmlns.com/foaf/0.1/"
+                             rdf:resource="mailto:helpdesk.carto@spw.wallonie.be"/>
+                  <foaf:workplaceHomepage xmlns:foaf="http://xmlns.com/foaf/0.1/"
+                                          rdf:resource="https://geoportail.wallonie.be"/>
+               </rdf:Description>
+            </prov:agent>
+            <dct:type xmlns:dct="http://purl.org/dc/terms/"
+                      rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/ResponsiblePartyRole/owner"/>
+            <dcat:hadRole xmlns:dcat="http://www.w3.org/ns/dcat#">
+               <dcat:Role rdf:about="http://inspire.ec.europa.eu/metadata-codelist/ResponsiblePartyRole/owner"/>
+            </dcat:hadRole>
+         </prov:Attribution>
+      </prov:qualifiedAttribution>
+   </rdf:Description>
+</rdf:RDF>
