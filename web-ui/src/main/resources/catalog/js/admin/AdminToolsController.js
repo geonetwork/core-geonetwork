@@ -124,40 +124,38 @@
         $http.get("../api/users/owners").then(function (response) {
           $scope.editors = response.data;
         });
-        $http
-          .get("../api/users/groups?onlyIncludeWorkspaces=true")
-          .then(function (response) {
-            var uniqueUserGroups = {};
-            angular.forEach(response.data, function (g) {
-              var key = g.groupId + "-" + g.userId;
-              if (!uniqueUserGroups[key]) {
-                uniqueUserGroups[key] = g;
-                uniqueUserGroups[key].groupNameTranslated =
-                  g.groupName === "allAdmins"
-                    ? $translate.instant(g.groupName)
-                    : $translate.instant("group-" + g.groupId);
-              }
-            });
-
-            // Sort by group name and user name
-            var sortedKeys = Object.keys(uniqueUserGroups).sort(function (a, b) {
-              var ka =
-                uniqueUserGroups[a].groupNameTranslated +
-                "|" +
-                uniqueUserGroups[a].userName;
-              var kb =
-                uniqueUserGroups[b].groupNameTranslated +
-                "|" +
-                uniqueUserGroups[b].userName;
-
-              return ka.localeCompare(kb);
-            });
-
-            $scope.userGroups = {};
-            angular.forEach(sortedKeys, function (g) {
-              $scope.userGroups[g] = uniqueUserGroups[g];
-            });
+        $http.get("../api/users/groups?groupTypes=Workspace").then(function (response) {
+          var uniqueUserGroups = {};
+          angular.forEach(response.data, function (g) {
+            var key = g.groupId + "-" + g.userId;
+            if (!uniqueUserGroups[key]) {
+              uniqueUserGroups[key] = g;
+              uniqueUserGroups[key].groupNameTranslated =
+                g.groupName === "allAdmins"
+                  ? $translate.instant(g.groupName)
+                  : $translate.instant("group-" + g.groupId);
+            }
           });
+
+          // Sort by group name and user name
+          var sortedKeys = Object.keys(uniqueUserGroups).sort(function (a, b) {
+            var ka =
+              uniqueUserGroups[a].groupNameTranslated +
+              "|" +
+              uniqueUserGroups[a].userName;
+            var kb =
+              uniqueUserGroups[b].groupNameTranslated +
+              "|" +
+              uniqueUserGroups[b].userName;
+
+            return ka.localeCompare(kb);
+          });
+
+          $scope.userGroups = {};
+          angular.forEach(sortedKeys, function (g) {
+            $scope.userGroups[g] = uniqueUserGroups[g];
+          });
+        });
       }
       $scope.selectUser = function (id) {
         $scope.editorSelectedId = id;

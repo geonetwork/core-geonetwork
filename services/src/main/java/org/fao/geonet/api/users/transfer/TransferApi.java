@@ -142,8 +142,8 @@ public class TransferApi {
     @PreAuthorize("isAuthenticated()")
     @ResponseBody
     public List<UserGroupsResponse> retrieveAllUserGroups(
-        @RequestParam(value = "onlyIncludeWorkspaces", required = false, defaultValue = "false")
-            boolean onlyIncludeWorkspaces,
+        @RequestParam(value = "groupTypes", required = false)
+            List<GroupType> groupTypes,
         @Parameter(hidden = true)
             HttpSession httpSession
     ) throws Exception {
@@ -173,10 +173,10 @@ public class TransferApi {
                 userGroups = userGroupRepository.findAll(UserGroupSpecs.hasGroupIds(myGroups));
             }
 
-            // If the onlyIncludeWorkspaces flag is true, filter out any groups that are not workspaces
-            if (onlyIncludeWorkspaces) {
+            // Apply group type filtering if groupTypes parameter is provided
+            if (groupTypes != null){
                 userGroups = userGroups.stream()
-                    .filter(ug -> ug.getGroup().isWorkspace())
+                    .filter(ug -> groupTypes.contains(ug.getGroup().getType()))
                     .collect(Collectors.toList());
             }
 
