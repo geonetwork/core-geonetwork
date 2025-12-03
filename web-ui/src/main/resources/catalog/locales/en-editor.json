@@ -179,6 +179,7 @@
     "linkUrl": "URL to remove",
     "fileStore": "Metadata file store",
     "filestoreUploadAFile": "or upload a new file",
+    "filestoreUploadFromUrl": "or upload a file from a URL",
     "filestoreChooseAFile": "or choose a file from the filestore",
     "openResource": "Open resource",
     "linkMetadata": "Link metadata",
