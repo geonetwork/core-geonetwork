@@ -30,8 +30,6 @@ import org.fao.geonet.repository.LanguageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Nonnull;
-
 /**
  * Utility class for managing user groups in the GeoNetwork security system.
  * <p>
@@ -82,7 +80,7 @@ public class BaseUserUtils {
      * </p>
      *
      * @param groupName    the name of the group.
-     * @param newGroupType the type of the group to be used if creating a new group. Must not be null.
+     * @param newGroupType the type of the group to be used if creating a new group. May be null to use the default type.
      * @return the group (either existing or newly created).
      */
     public Group getOrCreateGroup(String groupName, GroupType newGroupType) {
