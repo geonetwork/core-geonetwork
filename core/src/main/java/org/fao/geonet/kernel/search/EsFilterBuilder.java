@@ -4,14 +4,19 @@ import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.NodeInfo;
+import org.fao.geonet.domain.AnonymousAccessLink;
 import org.fao.geonet.domain.Profile;
 import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.domain.Source;
 import org.fao.geonet.kernel.AccessManager;
+import org.fao.geonet.kernel.security.ViewMdGrantedAuthority;
 import org.fao.geonet.repository.SourceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -37,23 +42,29 @@ public class EsFilterBuilder {
         if (Profile.Administrator.equals(userSession.getProfile())) {
             return "*:*";
         } else {
+            List<String> filters = new ArrayList<>();
+
             // op0 (ie. view operation) contains one of the ids of your groups
             Set<Integer> groups = accessManager.getUserGroups(userSession, context.getIpAddress(), false);
             final String ids = groups.stream()
                 .map(Object::toString)
                 .map(e -> e.replace("-", "\\\\-"))
                 .collect(Collectors.joining(" OR "));
-            String operationFilter = String.format("op%d:(%s)", ReservedOperation.view.getId(), ids);
+            filters.add(String.format("op%d:(%s)", ReservedOperation.view.getId(), ids));
 
 
-            String ownerFilter = "";
             if (userSession.getUserIdAsInt() > 0) {
                 // OR you are owner
-                ownerFilter = String.format("owner:%d", userSession.getUserIdAsInt());
+                filters.add(String.format("owner:%d", userSession.getUserIdAsInt()));
                 // OR member of groupOwner
                 // TODOES
+            } else {
+                filters.add(AccessManager.anonymousAccessLinkStreamFromSecurityContext()
+                        .map(AnonymousAccessLink::getMetadataUuid)
+                        .map(uuid -> String.format("_id:%s", uuid))
+                        .collect(Collectors.joining(" ")));
             }
-            return String.format("(%s %s)", operationFilter, ownerFilter).trim();
+            return String.format("(%s)", String.join(" ", filters).trim());
         }
     }
     /**
