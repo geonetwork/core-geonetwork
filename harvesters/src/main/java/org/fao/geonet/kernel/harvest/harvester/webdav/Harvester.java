@@ -489,9 +489,18 @@ class Harvester extends BaseAligner<WebDavParams> implements IHarvester<HarvestR
                 md = translateMetadataContent(context, md, schema);
             }
 
+            boolean updateSchema = false;
             if (StringUtils.isNotEmpty(params.xslfilter)) {
                 md = HarvesterUtil.processMetadata(dataMan.getSchema(schema),
                     md, processName, processParams);
+                String newSchema = dataMan.autodetectSchema(md);
+                updateSchema = !newSchema.equals(schema);
+                schema = newSchema;
+            } else {
+                if (!recordInfo.schema.equals(schema)) {
+                    log.warning("  - Detected schema '" + schema + "' is different from the one of the metadata in the catalog '" + recordInfo.schema + "'. Using the detected one.");
+                    updateSchema = true;
+                }
             }
 
             //
@@ -504,10 +513,16 @@ class Harvester extends BaseAligner<WebDavParams> implements IHarvester<HarvestR
             final AbstractMetadata metadata = metadataManager.updateMetadata(context, recordInfo.id, md, validate, ufo, language,
                 date, true, IndexingMode.none);
 
-            if(force) {
-                //change ownership of metadata to new harvester
-                metadata.getHarvestInfo().setUuid(params.getUuid());
-                metadata.getSourceInfo().setSourceId(params.getUuid());
+            if(force || updateSchema) {
+                if (force) {
+                    //change ownership of metadata to new harvester
+                    metadata.getHarvestInfo().setUuid(params.getUuid());
+                    metadata.getSourceInfo().setSourceId(params.getUuid());
+                }
+
+                if (updateSchema) {
+                    metadata.getDataInfo().setSchemaId(schema);
+                }
 
                 context.getBean(IMetadataManager.class).save(metadata);
             }
