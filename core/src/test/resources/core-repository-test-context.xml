@@ -138,10 +138,10 @@
   <bean id="stagingProfile" class="java.lang.String">
     <constructor-arg value="development"/>
   </bean>
-  
+
   <bean id="servletContext" class="org.fao.geonet.GeonetMockServletContext"/>
   <bean id="threadPool" class="org.fao.geonet.TestThreadPool"/>
-
+  
   <bean class="org.fao.geonet.analytics.WebAnalyticsConfiguration" name="webAnalyticsConfiguration">
     <property name="service" value="" />
     <property name="javascriptCode" value="" />
