@@ -61,14 +61,19 @@ import java.util.Map;
 public class ResourcesExternalAdditionalPropertiesService {
 
     /**
-     * The name of the external additional properties field in the merged resource properties.
+     * The name of the metadata resource external management properties field.
      */
-    protected static final String EXTERNAL_ADDITIONAL_PROPERTIES_FIELD_NAME = "externalAdditionalProperties";
+    protected static final String METADATA_RESOURCE_EXTERNAL_MANAGEMENT_PROPERTIES_FIELD_NAME = "metadataResourceExternalManagementProperties";
 
     /**
-     * The JSON pointer to the external resource management identifier field in the resource properties.
+     * The name of the identifier field in the metadata resource external management properties.
      */
-    protected static final String RESOURCE_PROPERTIES_IDENTIFIER_FIELD_POINTER = "/metadataResourceExternalManagementProperties/id";
+    protected static final String METADATA_RESOURCE_EXTERNAL_MANAGEMENT_PROPERTIES_IDENTIFIER_FIELD_NAME = "id";
+
+    /**
+     * The name of the external additional properties field in the metadata resource external management properties.
+     */
+    protected static final String EXTERNAL_ADDITIONAL_PROPERTIES_FIELD_NAME = "externalAdditionalProperties";
 
     /**
      * The URL template to get the external additional properties from the external service.
@@ -147,7 +152,7 @@ public class ResourcesExternalAdditionalPropertiesService {
             }
 
             // Get and check the internal identifier
-            JsonNode idNode = resourceBaseProperties.at(RESOURCE_PROPERTIES_IDENTIFIER_FIELD_POINTER);
+            JsonNode idNode = resourceBaseProperties.get(METADATA_RESOURCE_EXTERNAL_MANAGEMENT_PROPERTIES_IDENTIFIER_FIELD_NAME);
             String id = (idNode.isMissingNode() || idNode.isNull()) ? null : idNode.asText();
             if (StringUtils.isBlank(id)) {
                 Log.warning(Geonet.INDEX_ENGINE,
@@ -159,7 +164,7 @@ public class ResourcesExternalAdditionalPropertiesService {
             // Set the external additional properties if found
             ObjectNode resourceExternalAdditionalProperties = resourcesExternalAdditionalPropertiesById.get(id);
             if (resourceExternalAdditionalProperties != null) {
-                ((ObjectNode) resourceBaseProperties).set(EXTERNAL_ADDITIONAL_PROPERTIES_FIELD_NAME, resourceExternalAdditionalProperties);
+                resourceBaseProperties.withObject(METADATA_RESOURCE_EXTERNAL_MANAGEMENT_PROPERTIES_FIELD_NAME).set(EXTERNAL_ADDITIONAL_PROPERTIES_FIELD_NAME, resourceExternalAdditionalProperties);
             }
         }
     }
