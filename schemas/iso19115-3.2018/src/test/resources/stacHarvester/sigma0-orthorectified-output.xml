@@ -196,6 +196,22 @@
               </cit:description>
             </cit:CI_OnlineResource>
           </mrd:onLine>
+          <mrd:onLine>
+            <cit:CI_OnlineResource>
+              <cit:linkage>
+                <gco:CharacterString>https://browser.stac.teledetection.fr/collections/s1-grd-sigma0-ortho</gco:CharacterString>
+              </cit:linkage>
+              <cit:protocol>
+                <gco:CharacterString>WWW:LINK-1.0-http--link</gco:CharacterString>
+              </cit:protocol>
+              <cit:name>
+                <gco:CharacterString>Open the collection in STAC-Browser</gco:CharacterString>
+              </cit:name>
+              <cit:description>
+                <gco:CharacterString>A single page application to visualize STAC assets</gco:CharacterString>
+              </cit:description>
+            </cit:CI_OnlineResource>
+          </mrd:onLine>
         </mrd:MD_DigitalTransferOptions>
       </mrd:transferOptions>
     </mrd:MD_Distribution>
