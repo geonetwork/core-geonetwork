@@ -26,6 +26,7 @@ package org.fao.geonet.utils;
 import com.google.common.base.Function;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.hc.client5.http.impl.LaxRedirectStrategy;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
 import org.apache.hc.core5.http.Header;
 import org.apache.hc.core5.http.HeaderElement;
@@ -38,13 +39,12 @@ import org.apache.hc.client5.http.impl.auth.BasicCredentialsProvider;
 import org.apache.hc.client5.http.io.HttpClientConnectionManager;
 import org.apache.hc.client5.http.protocol.HttpClientContext;
 import org.apache.hc.core5.http.io.SocketConfig;
-import org.apache.hc.client5.http.ConnectionRequest;
 import org.apache.hc.client5.http.HttpRoute;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
 import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
-import org.apache.hc.client5.http.impl.classic.LaxRedirectStrategy;
 import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager;
 import org.apache.hc.core5.http.protocol.HttpContext;
+import org.apache.hc.core5.io.CloseMode;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.client.AbstractClientHttpResponse;
 import org.springframework.http.client.ClientHttpResponse;
@@ -72,7 +72,7 @@ public class GeonetHttpRequestFactory {
     @PreDestroy
     public synchronized void shutdown() {
         if (connectionManager != null) {
-            connectionManager.shutdown();
+            connectionManager.close();
         }
         connectionManager = null;
     }
@@ -206,37 +206,10 @@ public class GeonetHttpRequestFactory {
             if (connectionManager == null) {
                 connectionManager = new PoolingHttpClientConnectionManager();
                 connectionManager.setMaxTotal(this.numberOfConcurrentRequests);
-                nonShutdownableConnectionManager = new HttpClientConnectionManager() {
-                    public void closeExpiredConnections() {
-                        connectionManager.closeExpiredConnections();
-                    }
-
-                    public ConnectionRequest requestConnection(HttpRoute route, Object state) {
-                        return connectionManager.requestConnection(route, state);
-                    }
-
-                    public void releaseConnection(HttpClientConnection managedConn, Object state, long keepalive, TimeUnit tunit) {
-                        connectionManager.releaseConnection(managedConn, state, keepalive, tunit);
-                    }
-
-                    public void connect(HttpClientConnection managedConn, HttpRoute route, int connectTimeout, HttpContext context) throws IOException {
-                        connectionManager.connect(managedConn, route, connectTimeout, context);
-                    }
-
-                    public void upgrade(HttpClientConnection managedConn, HttpRoute route, HttpContext context) throws IOException {
-                        connectionManager.upgrade(managedConn, route, context);
-                    }
-
-                    public void routeComplete(HttpClientConnection managedConn, HttpRoute route, HttpContext context) throws IOException {
-                        connectionManager.routeComplete(managedConn, route, context);
-                    }
-
-                    public void shutdown() {
-                        // don't shutdown pool
-                    }
-
-                    public void closeIdleConnections(long idleTimeout, TimeUnit tunit) {
-                        connectionManager.closeIdleConnections(idleTimeout, tunit);
+                nonShutdownableConnectionManager = new PoolingHttpClientConnectionManager() {
+                    @Override
+                    public void close(final CloseMode closeMode) {
+                        // do nothing
                     }
                 };
             }
@@ -283,13 +256,14 @@ public class GeonetHttpRequestFactory {
         public HttpHeaders getHeaders() {
             final HttpHeaders httpHeaders = new HttpHeaders();
 
-            final Header[] headers = response.getAllHeaders();
+            final Header[] headers = response.getHeaders();
 
             for (Header header : headers) {
-                final HeaderElement[] elements = header.getElements();
-                for (HeaderElement element : elements) {
-                    httpHeaders.add(header.getName(), element.getValue());
-                }
+//                final HeaderElement[] elements = header.getValue();
+//                for (HeaderElement element : elements) {
+//                    httpHeaders.add(header.getName(), element.getValue());
+//                }
+                httpHeaders.add(header.getName(), header.getValue());
             }
             return httpHeaders;
         }

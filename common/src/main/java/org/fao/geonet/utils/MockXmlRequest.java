@@ -36,6 +36,7 @@ import jakarta.annotation.Nullable;
 
 import java.io.*;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.*;
 import java.util.concurrent.Callable;
 
@@ -106,7 +107,12 @@ public class MockXmlRequest extends XmlRequest {
             if (input == null) {
                 return false;
             }
-            final URI uri = input.getUri();
+            final URI uri;
+            try {
+                uri = input.getUri();
+            } catch (URISyntaxException e) {
+                throw new RuntimeException(e);
+            }
             final boolean equalPath = uri.toString().equalsIgnoreCase(_path);
 
             return input instanceof HttpGet && equalPath;
