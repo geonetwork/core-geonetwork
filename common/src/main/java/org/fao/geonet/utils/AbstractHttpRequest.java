@@ -263,7 +263,12 @@ public class AbstractHttpRequest {
             public Void apply(@Nonnull HttpClientBuilder input) {
                 final BasicCredentialsProvider credentialsProvider = new BasicCredentialsProvider();
                 if (credentials != null) {
-                    final URI uri = httpMethod.getUri();
+                    final URI uri;
+                    try {
+                        uri = httpMethod.getUri();
+                    } catch (URISyntaxException e) {
+                        throw new RuntimeException(e);
+                    }
                     HttpHost hh = new HttpHost(
                         uri.getScheme(),
                         uri.getHost(),
@@ -325,15 +330,23 @@ public class AbstractHttpRequest {
                 "\n\tfragment: '%s'", getClass().getSimpleName(), protocol, userInfo, host, port, address, query, fragment));
         }
 
+        URI uri;
+        try {
+            uri = new URI(protocol, userInfo, host, port, address, queryString, fragment);
+        } catch (URISyntaxException e) {
+            throw new IOException(e);
+        }
+
         HttpUriRequestBase httpMethod;
 
+
         if (method == Method.GET) {
-            HttpGet get = new HttpGet();
+            HttpGet get = new HttpGet(uri);
 
             get.addHeader("Accept", !useSOAP ? "application/xml" : "application/soap+xml");
             httpMethod = get;
         } else {
-            HttpPost post = new HttpPost();
+            HttpPost post = new HttpPost(uri);
 
             if (!useSOAP) {
                 postData = (postParams == null) ? "" : Xml.getString(new Document(postParams));
@@ -355,17 +368,13 @@ public class AbstractHttpRequest {
             httpMethod.addHeader(headerName, apiKey);
         }
 
-        try {
-            URI uri = new URI(protocol, userInfo, host, port, address, queryString, fragment);
-            httpMethod.setURI(uri);
-        } catch (URISyntaxException e) {
-            throw new IOException(e);
-        }
+
 
         final RequestConfig.Builder builder = RequestConfig.custom();
         builder.setAuthenticationEnabled((credentials != null) || (proxyCredentials != null));
         builder.setRedirectsEnabled(true);
-        builder.setRelativeRedirectsAllowed(true);
+
+//        builder.setRelativeRedirectsAllowed(true); //not needed in v5
         builder.setCircularRedirectsAllowed(true);
         builder.setMaxRedirects(3);
         // Relaxed as close fit to BROWSER_COMPATIBILITY
@@ -376,7 +385,12 @@ public class AbstractHttpRequest {
     }
 
     protected String getSentData(HttpUriRequestBase httpMethod) {
-        URI uri = httpMethod.getUri();
+        URI uri = null;
+        try {
+            uri = httpMethod.getUri();
+        } catch (URISyntaxException e) {
+            throw new RuntimeException(e);
+        }
         StringBuilder sentDataValue = new StringBuilder(httpMethod.getMethod()).append(" ").append(uri.getPath());
 
         if (uri.getQuery() != null) {
@@ -385,7 +399,7 @@ public class AbstractHttpRequest {
 
         sentDataValue.append("\r\n");
 
-        for (Header h : httpMethod.getAllHeaders()) {
+        for (Header h : httpMethod.getHeaders()) {
             sentDataValue.append(h);
         }
 

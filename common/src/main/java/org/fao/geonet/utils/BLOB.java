@@ -23,7 +23,8 @@
 
 package org.fao.geonet.utils;
 
-import org.apache.commons.codec.binary.Base64;
+//import org.apache.commons.codec.binary.Base64;
+import org.apache.hc.client5.http.utils.Base64;
 import org.fao.geonet.Constants;
 import org.jdom.Element;
 

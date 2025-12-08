@@ -48,13 +48,15 @@ import javax.annotation.concurrent.NotThreadSafe;
 public class PathHttpEntity extends AbstractHttpEntity implements Cloneable {
 
     protected final Path file;
+    static final int OUTPUT_BUFFER_SIZE = 4096;
+
 
     public PathHttpEntity(final Path file, final ContentType contentType) {
-        super();
+        super(contentType,null);
         this.file = Args.notNull(file, "File");
-        if (contentType != null) {
-            setContentType(contentType.toString());
-        }
+//        if (contentType != null) {
+//            setContentType(contentType.toString());
+//        }
     }
 
     public PathHttpEntity(final Path file) {
@@ -106,4 +108,10 @@ public class PathHttpEntity extends AbstractHttpEntity implements Cloneable {
         return super.clone();
     }
 
+
+    @Override
+    public void close() throws IOException {
+         //TODO: should this do anything?
+
+    }
 } // class FileEntity
