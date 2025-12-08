@@ -47,17 +47,19 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import jakarta.json.spi.JsonProvider;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.hc.client5.http.impl.auth.BasicCredentialsProvider;
-import org.apache.hc.client5.http.ssl.NoopHostnameVerifier;
-import org.apache.hc.client5.http.ssl.SSLConnectionSocketFactory;
-import org.apache.hc.core5.http.HttpHost;
-import org.apache.hc.client5.http.auth.AuthScope;
-import org.apache.hc.client5.http.auth.CredentialsStore;
-import org.apache.hc.client5.http.auth.UsernamePasswordCredentials;
+
 import org.apache.hc.core5.ssl.TrustStrategy;
-import org.apache.hc.core5.http.nio.conn.SchemeIOSessionStrategy;
-import org.apache.hc.core5.http.nio.conn.ssl.SSLIOSessionStrategy;
+
 import org.apache.hc.core5.ssl.SSLContextBuilder;
+import org.apache.http.HttpHost;
+import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.client.CredentialsProvider;
+import org.apache.http.conn.ssl.NoopHostnameVerifier;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.apache.http.impl.client.BasicCredentialsProvider;
+import org.apache.http.nio.conn.SchemeIOSessionStrategy;
+import org.apache.http.nio.conn.ssl.SSLIOSessionStrategy;
 import org.elasticsearch.client.RestClient;
 import org.elasticsearch.client.RestClientBuilder;
 import org.fao.geonet.utils.Log;
@@ -138,7 +140,7 @@ public class EsRestClient implements InitializingBean {
         //build server URL
         serverUrl = serverProtocol + "://" + serverHost + ":" + serverPort;
         if (StringUtils.isNotEmpty(serverUrl)) {
-            RestClientBuilder builder = RestClient.builder(new HttpHost(serverProtocol, serverHost, Integer.parseInt(serverPort)));
+            RestClientBuilder builder = RestClient.builder(new HttpHost(serverHost, Integer.parseInt(serverPort), serverProtocol));
 
             if (serverProtocol.startsWith("https")) {
                 SSLContext sslContext = new SSLContextBuilder().loadTrustMaterial(
@@ -153,9 +155,9 @@ public class EsRestClient implements InitializingBean {
                 SchemeIOSessionStrategy httpsIOSessionStrategy = new SSLIOSessionStrategy(sslContext, hostnameVerifier);
 
                 if (StringUtils.isNotEmpty(username) && StringUtils.isNotEmpty(password)) {
-                    final CredentialsStore credentialsProvider = new BasicCredentialsProvider();
+                    final CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
                     credentialsProvider.setCredentials(new AuthScope(null, -1),
-                        new UsernamePasswordCredentials(username, password.toCharArray()));
+                        new UsernamePasswordCredentials(username, password ));
 
                     builder.setHttpClientConfigCallback(httpClientBuilder -> httpClientBuilder.useSystemProperties().setSSLContext(sslContext).setDefaultCredentialsProvider(credentialsProvider));
                 } else {
@@ -163,9 +165,9 @@ public class EsRestClient implements InitializingBean {
                 }
             } else {
                 if (StringUtils.isNotEmpty(username) && StringUtils.isNotEmpty(password)) {
-                    final CredentialsStore credentialsProvider = new BasicCredentialsProvider();
+                    final CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
                     credentialsProvider.setCredentials(new AuthScope(null, -1),
-                        new UsernamePasswordCredentials(username, password.toCharArray()));
+                        new UsernamePasswordCredentials(username, password));
 
                     builder.setHttpClientConfigCallback(httpClientBuilder -> httpClientBuilder.useSystemProperties().setDefaultCredentialsProvider(credentialsProvider));
                 } else {

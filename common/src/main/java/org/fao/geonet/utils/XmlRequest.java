@@ -34,6 +34,7 @@ import org.springframework.http.client.ClientHttpResponse;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
@@ -119,9 +120,15 @@ public class XmlRequest extends AbstractHttpRequest {
 
         if (httpResponse.getStatusCode().value() > 399) {
             httpMethod.reset();
+            String uri ="ERROR";
+            try {
+                uri = httpMethod.getUri().toString();
+            } catch (URISyntaxException e) {
+                //ignore
+            }
             throw new BadServerResponseEx(httpResponse.getStatusText() +
-                " -- URI: " + httpMethod.getUri() +
-                " -- Response Code: " + httpResponse.getStatusCode().value());
+                " -- URI: " + uri +
+                " -- Response Code: " + httpResponse.getRawStatusCode());
         }
 
         byte[] data;
@@ -130,7 +137,13 @@ public class XmlRequest extends AbstractHttpRequest {
             data = IOUtils.toByteArray(httpResponse.getBody());
             return Xml.loadStream(new ByteArrayInputStream(data));
         } catch (JDOMException e) {
-            throw new BadXmlResponseEx("Invalid XML document from URI: " + httpMethod.getUri());
+            String uri ="ERROR";
+            try {
+                uri = httpMethod.getUri().toString();
+            } catch (URISyntaxException ee) {
+                //ignore
+            }
+            throw new BadXmlResponseEx("Invalid XML document from URI: " +uri);
         } finally {
             httpMethod.reset();
 
