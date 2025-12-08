@@ -707,23 +707,13 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
             String uuid = fullMd.getUuid();
             boolean approved = !(fullMd instanceof MetadataDraft);
 
-            List<MetadataResource> metadataResources = store.getResources(
+            List<MetadataResource> metadataResources = store.getResourcesForIndexing(
                 ServiceContext.get(),
                 uuid,
-                (org.fao.geonet.api.records.attachments.Sort) null,
-                null,
                 approved);
 
             if (metadataResources != null && !metadataResources.isEmpty()) {
                 ArrayNode resourcesProperties = indexObjectMapper.valueToTree(metadataResources);
-
-                // Attempt to merge external additional properties
-                try {
-                    resourcesExternalAdditionalPropertiesService.mergeResourcesExternalAdditionalProperties(uuid, approved, resourcesProperties);
-                } catch (Exception e) {
-                    Log.warning("Could not merge external resource properties", e);
-                }
-
                 indexMetadataFileStoreFields.put("fileStore", resourcesProperties);
             }
         } catch (Exception e) {

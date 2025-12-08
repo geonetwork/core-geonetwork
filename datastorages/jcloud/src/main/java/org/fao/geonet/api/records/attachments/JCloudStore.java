@@ -28,7 +28,6 @@ import static org.jclouds.blobstore.options.PutOptions.Builder.multipart;
 
 import jeeves.server.context.ServiceContext;
 
-import org.apache.commons.collections.MapUtils;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.exception.InputStreamLimitExceededException;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
@@ -42,6 +41,7 @@ import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.resources.JCloudConfiguration;
+import org.fao.geonet.services.util.ResourcesExternalAdditionalPropertiesService;
 import org.fao.geonet.util.LimitedInputStream;
 import org.fao.geonet.utils.Log;
 import org.jclouds.blobstore.ContainerNotFoundException;
@@ -64,13 +64,8 @@ import java.nio.file.PathMatcher;
 import java.nio.file.Paths;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
+import java.util.*;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.TimeZone;
 import java.util.concurrent.ConcurrentHashMap;
 
 import javax.annotation.Nullable;
@@ -100,9 +95,25 @@ public class JCloudStore extends AbstractStore {
     @Autowired
     SettingManager settingManager;
 
+    @Autowired
+    ResourcesExternalAdditionalPropertiesService resourcesExternalAdditionalPropertiesService;
+
+    @Override
+    public List<MetadataResource> getResourcesForIndexing(final ServiceContext context, final String metadataUuid, Boolean approved) throws Exception {
+        Map<String, Map<String, Object>> additionalProperties = resourcesExternalAdditionalPropertiesService.getAdditionalPropertiesMap(metadataUuid, approved, jCloudConfiguration.getExternalResourcesPropertiesUrl(), jCloudConfiguration.getExternalResourcesPropertiesIdentifierFieldName());
+        List<MetadataResource> resourceList = new ArrayList<>(getResources(context, metadataUuid, MetadataResourceVisibility.PUBLIC, null, approved, additionalProperties));
+        resourceList.addAll(getResources(context, metadataUuid, MetadataResourceVisibility.PRIVATE, null, approved, additionalProperties));
+        return resourceList;
+    }
+
     @Override
     public List<MetadataResource> getResources(final ServiceContext context, final String metadataUuid,
                                                final MetadataResourceVisibility visibility, String filter, Boolean approved) throws Exception {
+        return getResources(context, metadataUuid, visibility, filter, approved, null);
+    }
+
+    private List<MetadataResource> getResources(final ServiceContext context, final String metadataUuid,
+                                               final MetadataResourceVisibility visibility, String filter, Boolean approved, Map<String, Map<String, Object>> additionalProperties) throws Exception {
         final int metadataId = canDownload(context, metadataUuid, visibility, approved);
 
         final String resourceTypeDir = getMetadataDir(context, metadataId) + jCloudConfiguration.getFolderDelimiter() + visibility.toString() + jCloudConfiguration.getFolderDelimiter();
@@ -132,7 +143,7 @@ public class JCloudStore extends AbstractStore {
                 Path keyPath = new File(storageMetadata.getName()).toPath().getFileName();
                 if (storageMetadata.getType() == StorageType.BLOB && matcher.matches(keyPath)){
                     final String filename = getFilename(storageMetadata.getName());
-                    MetadataResource resource = createResourceDescription(context, metadataUuid, visibility, filename, storageMetadata, metadataId, approved);
+                    MetadataResource resource = createResourceDescription(context, metadataUuid, visibility, filename, storageMetadata, metadataId, approved, additionalProperties);
                     resourceList.add(resource);
                 }
             }
@@ -148,6 +159,12 @@ public class JCloudStore extends AbstractStore {
     private MetadataResource createResourceDescription(final ServiceContext context, final String metadataUuid,
                                                        final MetadataResourceVisibility visibility, final String resourceId,
                                                        StorageMetadata storageMetadata, int metadataId, boolean approved) {
+        return createResourceDescription(context, metadataUuid, visibility, resourceId, storageMetadata, metadataId, approved, null);
+    }
+
+    private MetadataResource createResourceDescription(final ServiceContext context, final String metadataUuid,
+                                                       final MetadataResourceVisibility visibility, final String resourceId,
+                                                       StorageMetadata storageMetadata, int metadataId, boolean approved, Map<String, Map<String, Object>> additionalProperties) {
         String filename = getFilename(metadataUuid, resourceId);
 
         Date changedDate;
@@ -196,7 +213,7 @@ public class JCloudStore extends AbstractStore {
 
         MetadataResourceExternalManagementProperties metadataResourceExternalManagementProperties =
             getMetadataResourceExternalManagementProperties(context, metadataId, metadataUuid, visibility, resourceId, filename, storageMetadata.getETag(), storageMetadata.getType(),
-                validationStatus);
+                validationStatus, additionalProperties);
 
         return new FilesystemStoreResource(metadataUuid, metadataId, filename,
             settingManager.getNodeURL() + "api/records/", visibility, storageMetadata.getSize(), changedDate, versionValue, metadataResourceExternalManagementProperties, approved);
@@ -309,13 +326,6 @@ public class JCloudStore extends AbstractStore {
     @Override
     public MetadataResource putResource(final ServiceContext context, final String metadataUuid, final String filename,
                                         final InputStream is, @Nullable final Date changeDate, final MetadataResourceVisibility visibility, final Boolean approved)
-            throws Exception {
-        return putResource(context, metadataUuid, filename, is, changeDate, visibility, approved, null);
-    }
-
-    protected MetadataResource putResource(final ServiceContext context, final String metadataUuid, final String filename,
-                                        final InputStream is, @Nullable final Date changeDate, final MetadataResourceVisibility visibility, final Boolean approved,
-                                           Map<String, String> additionalProperties)
         throws Exception {
         final int metadataId = canEdit(context, metadataUuid, approved);
         String key = getKey(context, metadataUuid, metadataId, visibility, filename);
@@ -346,7 +356,7 @@ public class JCloudStore extends AbstractStore {
                     properties = new HashMap<>();
                 }
 
-                setProperties(properties, metadataUuid, changeDate, additionalProperties);
+                setProperties(properties, metadataUuid, changeDate);
 
                 // Update/set version
                 setPropertiesVersion(context, properties, isNewResource, metadataUuid, metadataId, visibility, approved, filename);
@@ -388,12 +398,7 @@ public class JCloudStore extends AbstractStore {
         }
     }
 
-    protected void setProperties(Map<String, String> properties, String metadataUuid, Date changeDate, Map<String, String> additionalProperties) {
-
-        // Add additional properties if exists.
-        if (MapUtils.isNotEmpty(additionalProperties)) {
-            properties.putAll(additionalProperties);
-        }
+    protected void setProperties(Map<String, String> properties, String metadataUuid, Date changeDate) {
 
         // now update metadata uuid and status and change date .
         setMetadataUUID(properties, metadataUuid);
@@ -785,7 +790,7 @@ public class JCloudStore extends AbstractStore {
 
         MetadataResourceExternalManagementProperties metadataResourceExternalManagementProperties =
             getMetadataResourceExternalManagementProperties(context, metadataId, metadataUuid, null, String.valueOf(metadataId), null, null, StorageType.FOLDER,
-                MetadataResourceExternalManagementProperties.ValidationStatus.UNKNOWN);
+                MetadataResourceExternalManagementProperties.ValidationStatus.UNKNOWN, null);
 
         return new FilesystemStoreResourceContainer(metadataUuid, metadataId, metadataUuid,
             settingManager.getNodeURL() + "api/records/", metadataResourceExternalManagementProperties, approved);
@@ -879,7 +884,8 @@ public class JCloudStore extends AbstractStore {
                                                     String filename,
                                                     String version,
                                                     StorageType type,
-                                                    MetadataResourceExternalManagementProperties.ValidationStatus validationStatus
+                                                    MetadataResourceExternalManagementProperties.ValidationStatus validationStatus,
+                                                    Map<String, Map<String, Object>> additionalProperties
     ) {
         String metadataResourceExternalManagementPropertiesUrl = jCloudConfiguration.getExternalResourceManagementUrl();
         String objectId = getResourceManagementExternalPropertiesObjectId((type == null ? "document" : (StorageType.FOLDER.equals(type) ? "folder" : "document")), visibility, metadataId, version,
@@ -946,7 +952,9 @@ public class JCloudStore extends AbstractStore {
             }
         }
 
-        return new MetadataResourceExternalManagementProperties(objectId, metadataResourceExternalManagementPropertiesUrl, validationStatus);
+        Map<String, Object> resourceAdditionalProperties = additionalProperties != null ? additionalProperties.get(objectId) : null;
+
+        return new MetadataResourceExternalManagementProperties(objectId, metadataResourceExternalManagementPropertiesUrl, validationStatus, resourceAdditionalProperties);
     }
 
     public ResourceManagementExternalProperties getResourceManagementExternalProperties() {

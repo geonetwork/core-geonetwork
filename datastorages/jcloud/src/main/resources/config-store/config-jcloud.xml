@@ -46,6 +46,8 @@
         <property name="endpoint" value="${jcloud.endpoint:#{null}}"/>
 
         <property name="externalResourceManagementUrl" value="${jcloud.external.resource.management.url}"/>
+        <property name="externalResourcesPropertiesUrl" value="${jcloud.external.resources.properties.url}"/>
+        <property name="externalResourcesPropertiesIdentifierFieldName" value="${jcloud.external.resources.properties.identifier.field.name}"/>
         <property name="externalResourceManagementWindowParameters" value="${jcloud.external.resource.management.window.parameters}"/>
         <property name="externalResourceManagementModalEnabled" value="${jcloud.external.resource.management.modal.enabled}"/>
         <property name="externalResourceManagementFolderEnabled" value="${jcloud.external.resource.management.folder.enabled}"/>

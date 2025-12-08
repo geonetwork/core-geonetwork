@@ -23,22 +23,20 @@
 
 package org.fao.geonet.services.util;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.security.SecurityProviderUtil;
 import org.fao.geonet.utils.Log;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.Nonnull;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -61,33 +59,6 @@ import java.util.Map;
 public class ResourcesExternalAdditionalPropertiesService {
 
     /**
-     * The name of the metadata resource external management properties field.
-     */
-    protected static final String METADATA_RESOURCE_EXTERNAL_MANAGEMENT_PROPERTIES_FIELD_NAME = "metadataResourceExternalManagementProperties";
-
-    /**
-     * The name of the identifier field in the metadata resource external management properties.
-     */
-    protected static final String METADATA_RESOURCE_EXTERNAL_MANAGEMENT_PROPERTIES_IDENTIFIER_FIELD_NAME = "id";
-
-    /**
-     * The name of the external additional properties field in the metadata resource external management properties.
-     */
-    protected static final String EXTERNAL_ADDITIONAL_PROPERTIES_FIELD_NAME = "externalAdditionalProperties";
-
-    /**
-     * The URL template to get the external additional properties from the external service.
-     */
-    @Value("${resources.external.additional.properties.url.template}")
-    private String externalAdditionalPropertiesUrlTemplate;
-
-    /**
-     * The name of the field in the external additional properties that contains the external resource management identifier.
-     */
-    @Value("${resources.external.additional.properties.identifier.field.name}")
-    private String externalAdditionalPropertiesIdentifierFieldName;
-
-    /**
      * The SecurityProviderUtil for handling authentication.
      *
      * <p>Responsible for managing service account login and retrieving SSO authentication
@@ -98,75 +69,10 @@ public class ResourcesExternalAdditionalPropertiesService {
     @Autowired(required = false)
     private SecurityProviderUtil securityProviderUtil;
 
-    /**
-     * Merges external additional properties into resource base properties.
-     *
-     * <p>This method retrieves additional properties from an external service and merges them with the
-     * provided base properties. Each resource in the base properties array is matched with its corresponding
-     * external properties using the resource's external management identifier. When a match is found, the
-     * external properties are added to the resource under the field "externalAdditionalProperties".</p>
-     *
-     * <p>The method performs the following steps:</p>
-     * <ol>
-     *   <li>Validates that external service configuration is present</li>
-     *   <li>Retrieves external additional properties from the configured external service</li>
-     *   <li>Indexes the external properties by their identifier for efficient lookup</li>
-     *   <li>Iterates through each resource in the base properties and merges matching external properties</li>
-     * </ol>
-     *
-     * <p>If the external service is not configured, no external properties are retrieved, or a resource
-     * cannot be matched, the base properties are left unchanged for that resource.</p>
-     *
-     * @param uuid the UUID of the metadata record associated with the resources
-     * @param approved true to retrieve properties for the approved version of the metadata record,
-     *                 false for the working draft
-     * @param resourcesBaseProperties the array of resource properties to be updated; modified in place
-     *                                to include external additional properties where matches are found
-     */
-    public void mergeResourcesExternalAdditionalProperties(String uuid, boolean approved, ArrayNode resourcesBaseProperties) {
-
-        // If not configured, return the base properties as is
-        if (StringUtils.isBlank(externalAdditionalPropertiesUrlTemplate) || StringUtils.isBlank(externalAdditionalPropertiesIdentifierFieldName)) {
-            return;
-        }
-
-        // Call the external service to get the additional properties
-        ArrayNode resourcesExternalAdditionalProperties = getResourcesExternalAdditionalProperties(uuid, approved);
-
-        // If no external additional properties, return the base properties as is
-        if (resourcesExternalAdditionalProperties.isEmpty()) {
-            return;
-        }
-
-        // Index external additional properties by external identifier
-        Map<String, ObjectNode> resourcesExternalAdditionalPropertiesById = indexResourcesExternalAdditionalPropertiesById(resourcesExternalAdditionalProperties);
-
-        // Loop through each resource in the base properties and merge the external additional properties
-        for (JsonNode resourceBaseProperties : resourcesBaseProperties) {
-            // Check that the resource properties is an ObjectNode
-            if (!(resourceBaseProperties instanceof ObjectNode)) {
-                Log.warning(Geonet.INDEX_ENGINE,
-                    "mergeResourcesExternalAdditionalProperties: resource properties entry is not an ObjectNode: "
-                        + resourceBaseProperties);
-                continue;
-            }
-
-            // Get and check the internal identifier
-            JsonNode idNode = resourceBaseProperties.get(METADATA_RESOURCE_EXTERNAL_MANAGEMENT_PROPERTIES_IDENTIFIER_FIELD_NAME);
-            String id = (idNode.isMissingNode() || idNode.isNull()) ? null : idNode.asText();
-            if (StringUtils.isBlank(id)) {
-                Log.warning(Geonet.INDEX_ENGINE,
-                    "mergeResourcesExternalAdditionalProperties: missing or blank internal identifier for resource: "
-                        + resourceBaseProperties);
-                continue;
-            }
-
-            // Set the external additional properties if found
-            ObjectNode resourceExternalAdditionalProperties = resourcesExternalAdditionalPropertiesById.get(id);
-            if (resourceExternalAdditionalProperties != null) {
-                resourceBaseProperties.withObject(METADATA_RESOURCE_EXTERNAL_MANAGEMENT_PROPERTIES_FIELD_NAME).set(EXTERNAL_ADDITIONAL_PROPERTIES_FIELD_NAME, resourceExternalAdditionalProperties);
-            }
-        }
+    public Map<String, Map<String, Object>> getAdditionalPropertiesMap(String uuid, boolean approved, String urlTemplate, String identifierFieldName) {
+        String url = resolveUrlTemplate(urlTemplate, uuid, approved);
+        List<Map<String, Object>> resourcesExternalAdditionalProperties = fetchAdditionalProperties(url);
+        return mapAdditionalPropertiesById(resourcesExternalAdditionalProperties, identifierFieldName);
     }
 
     /**
@@ -186,31 +92,25 @@ public class ResourcesExternalAdditionalPropertiesService {
      * by {@link #createAuthenticatedRestTemplate()}, which includes necessary authorization
      * headers for accessing protected external service endpoints.</p>
      *
-     * @param uuid the UUID of the metadata record associated with the resources
-     * @param approved true to retrieve properties for the approved version of the metadata record,
-     *                 false for the working draft
      * @return an ArrayNode containing the external additional properties; never null
      * @throws RuntimeException if the external service request fails, returns a non-2xx response,
      *                          or any other exception occurs during the request
      */
     @Nonnull
-    protected ArrayNode getResourcesExternalAdditionalProperties(String uuid, boolean approved) {
-        String externalAdditionalPropertiesEndpointUrl =
-            resolveUrlTemplate(externalAdditionalPropertiesUrlTemplate, uuid, approved);
-
+    protected List<Map<String, Object>> fetchAdditionalProperties(String url) {
         try {
-            ResponseEntity<ArrayNode> responseEntity = createAuthenticatedRestTemplate().getForEntity(externalAdditionalPropertiesEndpointUrl, ArrayNode.class);
+            ResponseEntity<List<Map<String, Object>>> responseEntity = createAuthenticatedRestTemplate().exchange(url, HttpMethod.GET, null, new ParameterizedTypeReference<>() {
+            });
 
             if (responseEntity.getStatusCode().is2xxSuccessful() && responseEntity.getBody() != null) {
                 return responseEntity.getBody();
             }
 
             throw new RuntimeException("Failed to retrieve external additional resource properties. " +
-                "Response code: " + responseEntity.getStatusCodeValue() + ", URL: " + externalAdditionalPropertiesEndpointUrl);
-
+                "Response code: " + responseEntity.getStatusCodeValue() + ", URL: " + url);
         } catch (Exception e) {
             throw new RuntimeException("Failed to retrieve external additional resource properties from: " +
-                externalAdditionalPropertiesEndpointUrl, e);
+                url, e);
         }
     }
 
@@ -266,32 +166,22 @@ public class ResourcesExternalAdditionalPropertiesService {
      * @return a map of external additional properties keyed by their identifier; may be smaller than
      *         the input array if some entries fail validation
      */
-    protected Map<String, ObjectNode> indexResourcesExternalAdditionalPropertiesById(ArrayNode resourcesExternalAdditionalProperties) {
-        Map<String, ObjectNode> result = new HashMap<>(resourcesExternalAdditionalProperties.size());
+    protected Map<String, Map<String, Object>> mapAdditionalPropertiesById(List<Map<String, Object>> resourcesExternalAdditionalProperties, String identifierFieldName) {
+        Map<String, Map<String, Object>> result = new HashMap<>(resourcesExternalAdditionalProperties.size());
 
-        for (JsonNode resourceExternalAdditionalProperties : resourcesExternalAdditionalProperties) {
-            JsonNode idNode = resourceExternalAdditionalProperties.get(externalAdditionalPropertiesIdentifierFieldName);
+        for (Map<String, Object> resourceExternalAdditionalProperties : resourcesExternalAdditionalProperties) {
+            Object id = resourceExternalAdditionalProperties.get(identifierFieldName);
 
-            // Validate the identifier field
-            if (idNode == null || idNode.isMissingNode() || idNode.isNull() || StringUtils.isBlank(idNode.asText())) {
+            if (id == null || StringUtils.isBlank(id.toString())) {
                 Log.warning(Geonet.INDEX_ENGINE,
                     "mergeResourcesExternalAdditionalProperties: missing or blank external identifier in additional properties: "
                         + resourceExternalAdditionalProperties);
                 continue;
             }
 
-            // Validate that the additional properties is an ObjectNode
-            if (!(resourceExternalAdditionalProperties instanceof ObjectNode)) {
-                Log.warning(Geonet.INDEX_ENGINE,
-                    "mergeResourcesExternalAdditionalProperties: additional properties entry is not an ObjectNode: "
-                        + resourceExternalAdditionalProperties);
-                continue;
-            }
-
             // Remove the identifier field from the additional properties and add to the result map
-            ObjectNode resourceExternalAdditionalPropertiesObjectNode = (ObjectNode) resourceExternalAdditionalProperties;
-            resourceExternalAdditionalPropertiesObjectNode.remove(externalAdditionalPropertiesIdentifierFieldName);
-            result.put(idNode.asText(), resourceExternalAdditionalPropertiesObjectNode);
+            resourceExternalAdditionalProperties.remove(identifierFieldName);
+            result.put(id.toString(), resourceExternalAdditionalProperties);
         }
 
         return result;
