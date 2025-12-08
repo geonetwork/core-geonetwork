@@ -27,7 +27,7 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.LDAPUser;
 import org.fao.geonet.domain.Profile;
 import org.fao.geonet.utils.Log;
-import org.springframework.util.StringUtils;
+import org.springframework.util.ObjectUtils;
 
 import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
@@ -145,7 +145,7 @@ public class LDAPUserDetailsContextMapperWithProfileSearchEnhanced extends Abstr
                                             String defaultGroup, Map<String, ArrayList<String>> userInfo,
                                             LDAPUser userDetails) {
 
-        if (!StringUtils.isEmpty(ldapMembershipQuery)) {
+        if (!ObjectUtils.isEmpty(ldapMembershipQuery)) {
             if (Log.isDebugEnabled(Geonet.LDAP)) {
                 StringBuffer sb = new StringBuffer("Group and profile search:");
                 sb.append("\nLDAP Membership Query query: \t" + ldapMembershipQuery);

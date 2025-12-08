@@ -25,7 +25,7 @@ package org.fao.geonet.kernel.security.keycloak;
 
 import org.fao.geonet.exceptions.BadParameterEx;
 import org.fao.geonet.kernel.security.SecurityProviderConfiguration;
-import org.springframework.util.StringUtils;
+import org.springframework.util.ObjectUtils;
 
 import static org.fao.geonet.kernel.security.SecurityProviderConfiguration.LoginType.*;
 
@@ -106,7 +106,7 @@ public class KeycloakConfiguration implements SecurityProviderConfiguration {
     }
 
     public void setRoleGroupSeparator(String roleGroupSeparator) {
-        if(StringUtils.isEmpty(roleGroupSeparator)) {
+        if(ObjectUtils.isEmpty(roleGroupSeparator)) {
             roleGroupSeparator = DEFAULT_ROLE_GROUP_SEPARATOR;
         }
         this.roleGroupSeparator = roleGroupSeparator;

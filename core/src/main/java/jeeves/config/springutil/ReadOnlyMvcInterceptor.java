@@ -27,7 +27,7 @@ import jeeves.services.ReadWriteController;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.method.HandlerMethod;
-import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
+import org.springframework.web.servlet.HandlerInterceptor;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -42,7 +42,7 @@ import static jeeves.config.springutil.JeevesDelegatingFilterProxy.getServletCon
  *
  * @author Jesse on 6/4/2014.
  */
-public class ReadOnlyMvcInterceptor extends HandlerInterceptorAdapter {
+public class ReadOnlyMvcInterceptor implements HandlerInterceptor {
     public static final String SERVLET_CONTEXT_ATTR_KEY = "readOnlyMode";
 
     @Autowired
@@ -63,7 +63,7 @@ public class ReadOnlyMvcInterceptor extends HandlerInterceptorAdapter {
             }
         }
 
-        return super.preHandle(request, response, handler);
+        return true;
     }
 
     private static class InReadOnlyModeException extends RuntimeException {

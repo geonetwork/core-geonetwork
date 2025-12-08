@@ -26,15 +26,15 @@ import com.google.common.base.Function;
 import com.google.common.io.CharStreams;
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.io.IOUtils;
-import org.apache.http.auth.AuthScope;
-import org.apache.http.auth.UsernamePasswordCredentials;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.methods.HttpUriRequest;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.BasicCredentialsProvider;
-import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.message.BasicHeader;
+import org.apache.hc.client5.http.auth.AuthScope;
+import org.apache.hc.client5.http.auth.UsernamePasswordCredentials;
+import org.apache.hc.client5.http.classic.methods.HttpGet;
+import org.apache.hc.client5.http.classic.methods.HttpPost;
+import org.apache.hc.client5.http.classic.methods.HttpUriRequest;
+import org.apache.hc.client5.http.impl.auth.BasicCredentialsProvider;
+import org.apache.hc.core5.http.io.entity.StringEntity;
+import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
+import org.apache.hc.core5.http.message.BasicHeader;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
@@ -113,7 +113,7 @@ public class BaseDoiClient {
 
         } finally {
             if (postMethod != null) {
-                postMethod.releaseConnection();
+                postMethod.reset();
             }
             // Release the connection.
             IOUtils.closeQuietly(httpResponse);
@@ -168,7 +168,7 @@ public class BaseDoiClient {
 
         } finally {
             if (getMethod != null) {
-                getMethod.releaseConnection();
+                getMethod.reset();
             }
             // Release the connection.
             IOUtils.closeQuietly(httpResponse);
@@ -184,7 +184,7 @@ public class BaseDoiClient {
             @Override
             public Void apply(@Nonnull HttpClientBuilder input) {
                 final BasicCredentialsProvider credentialsProvider = new BasicCredentialsProvider();
-                credentialsProvider.setCredentials(AuthScope.ANY, new UsernamePasswordCredentials(username, password));
+                credentialsProvider.setCredentials(new AuthScope(null, -1), new UsernamePasswordCredentials(username, password.toCharArray()));
                 input.setDefaultCredentialsProvider(credentialsProvider);
 
                 Lib.net.setupProxy(ApplicationContextHolder.get().getBean(SettingManager.class), input, requestHost);

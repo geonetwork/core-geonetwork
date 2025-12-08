@@ -26,8 +26,8 @@ package org.fao.geonet.i18n;
 import org.fao.geonet.NodeInfo;
 import org.springframework.beans.propertyeditors.LocaleEditor;
 import org.springframework.util.Assert;
+import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.LocaleResolver;
-import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 import org.springframework.web.servlet.support.RequestContextUtils;
 
 import javax.servlet.http.HttpServletRequest;
@@ -39,7 +39,7 @@ import java.util.Locale;
  *
  * @author delawen
  */
-public class UrlLocaleChangeInterceptor extends HandlerInterceptorAdapter {
+public class UrlLocaleChangeInterceptor implements HandlerInterceptor {
     public static final Integer DEFAULT_URL_POSITION = 2;
     /**
      * Indicates the position of the segment of the Url path that contains

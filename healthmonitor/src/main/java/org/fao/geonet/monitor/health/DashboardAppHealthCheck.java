@@ -27,7 +27,7 @@ import com.yammer.metrics.core.HealthCheck;
 import jeeves.monitor.HealthCheckFactory;
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.lang.StringUtils;
-import org.apache.http.client.methods.HttpGet;
+import org.apache.hc.client5.http.classic.methods.HttpGet;
 import org.fao.geonet.kernel.search.EsSearchManager;
 import org.fao.geonet.utils.GeonetHttpRequestFactory;
 import org.springframework.http.client.ClientHttpResponse;

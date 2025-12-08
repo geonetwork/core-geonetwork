@@ -28,7 +28,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.sql.SQLException;
 
-import org.apache.http.HttpException;
+import org.apache.hc.core5.http.HttpException;
 import org.apache.jcs.access.exception.CacheException;
 
 import org.fao.geonet.constants.Geonet;

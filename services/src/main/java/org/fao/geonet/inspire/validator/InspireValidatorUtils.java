@@ -28,14 +28,14 @@ import com.google.common.io.CharStreams;
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpStatus;
-import org.apache.http.client.methods.*;
-import org.apache.http.entity.ContentType;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.entity.mime.MultipartEntityBuilder;
-import org.apache.http.impl.client.BasicResponseHandler;
-import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.hc.core5.http.HttpEntity;
+import org.apache.hc.core5.http.HttpStatus;
+import org.apache.hc.client5.http.classic.methods.*;
+import org.apache.hc.core5.http.ContentType;
+import org.apache.hc.core5.http.io.entity.StringEntity;
+import org.apache.hc.client5.http.entity.mime.MultipartEntityBuilder;
+import org.apache.hc.client5.http.impl.classic.BasicResponseHandler;
+import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.domain.MetadataValidationStatus;
 import org.fao.geonet.exceptions.ServiceNotFoundEx;
@@ -422,7 +422,7 @@ public class InspireValidatorUtils {
     /**
      * See https://github.com/INSPIRE-MIF/helpdesk-validator/issues/594
      */
-    private void addApiKey(HttpRequestBase request) {
+    private void addApiKey(HttpUriRequestBase request) {
         String apikey =
             settingManager.getValue(SYSTEM_INSPIRE_REMOTE_VALIDATION_APIKEY);
         if (StringUtils.isNotEmpty(apikey)) {

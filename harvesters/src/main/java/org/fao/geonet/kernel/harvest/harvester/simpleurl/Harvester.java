@@ -30,7 +30,7 @@ import com.google.common.io.CharStreams;
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.http.client.methods.HttpGet;
+import org.apache.hc.client5.http.classic.methods.HttpGet;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.Logger;
 import org.fao.geonet.exceptions.BadParameterEx;
@@ -425,7 +425,7 @@ class Harvester implements IHarvester<HarvestResult> {
             return CharStreams.toString(new InputStreamReader(httpResponse.getBody()));
         } finally {
             if (httpMethod != null) {
-                httpMethod.releaseConnection();
+                httpMethod.reset();
             }
             IOUtils.closeQuietly(httpResponse);
         }

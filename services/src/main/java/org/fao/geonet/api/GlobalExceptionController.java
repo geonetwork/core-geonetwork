@@ -45,6 +45,7 @@ import org.springframework.http.InvalidMediaTypeException;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.UnsatisfiedServletRequestParameterException;
@@ -224,10 +225,10 @@ public class GlobalExceptionController {
         storeApiErrorCause(exception);
 
         if (contentTypeNeedsBody(request)) {
-            if (exception instanceof ILocalizedException && StringUtils.isEmpty(((ILocalizedException) exception).getMessageKey())) {
+            if (exception instanceof ILocalizedException && ObjectUtils.isEmpty(((ILocalizedException) exception).getMessageKey())) {
                 ((ILocalizedException) exception).setMessageKey("api.exception.resourceNotFound");
             }
-            if (exception instanceof ILocalizedException && StringUtils.isEmpty(((ILocalizedException) exception).getDescriptionKey())) {
+            if (exception instanceof ILocalizedException && ObjectUtils.isEmpty(((ILocalizedException) exception).getDescriptionKey())) {
                 ((ILocalizedException) exception).setDescriptionKey("api.exception.resourceNotFound.description");
             }
             updateExceptionLocale(exception, request);
@@ -273,10 +274,10 @@ public class GlobalExceptionController {
         storeApiErrorCause(exception);
 
         if (contentTypeNeedsBody(request)) {
-            if (exception instanceof ILocalizedException && StringUtils.isEmpty(((ILocalizedException) exception).getMessageKey())) {
+            if (exception instanceof ILocalizedException && ObjectUtils.isEmpty(((ILocalizedException) exception).getMessageKey())) {
                 ((ILocalizedException) exception).setMessageKey("api.exception.resourceNotFound");
             }
-            if (exception instanceof ILocalizedException && StringUtils.isEmpty(((ILocalizedException) exception).getDescriptionKey())) {
+            if (exception instanceof ILocalizedException && ObjectUtils.isEmpty(((ILocalizedException) exception).getDescriptionKey())) {
                 ((ILocalizedException) exception).setDescriptionKey("api.exception.resourceNotFound.description");
             }
             updateExceptionLocale(exception, request);
@@ -365,10 +366,10 @@ public class GlobalExceptionController {
         storeApiErrorCause(exception);
 
         if (contentTypeNeedsBody(request)) {
-            if (exception instanceof ILocalizedException && StringUtils.isEmpty(((ILocalizedException) exception).getMessageKey())) {
+            if (exception instanceof ILocalizedException && ObjectUtils.isEmpty(((ILocalizedException) exception).getMessageKey())) {
                 ((ILocalizedException) exception).setMessageKey("api.exception.resourceAlreadyExists");
             }
-            if (exception instanceof ILocalizedException && StringUtils.isEmpty(((ILocalizedException) exception).getDescriptionKey())) {
+            if (exception instanceof ILocalizedException && ObjectUtils.isEmpty(((ILocalizedException) exception).getDescriptionKey())) {
                 ((ILocalizedException) exception).setDescriptionKey("api.exception.resourceAlreadyExists.description");
             }
             updateExceptionLocale(exception, request);
@@ -404,10 +405,10 @@ public class GlobalExceptionController {
         storeApiErrorCause(exception);
 
         if (contentTypeNeedsBody(request)) {
-            if (exception instanceof ILocalizedException && StringUtils.isEmpty(((ILocalizedException) exception).getMessageKey())) {
+            if (exception instanceof ILocalizedException && ObjectUtils.isEmpty(((ILocalizedException) exception).getMessageKey())) {
                 ((ILocalizedException) exception).setMessageKey("api.exception.unsatisfiedRequestParameter");
             }
-            if (exception instanceof ILocalizedException && StringUtils.isEmpty(((ILocalizedException) exception).getDescriptionKey())) {
+            if (exception instanceof ILocalizedException && ObjectUtils.isEmpty(((ILocalizedException) exception).getDescriptionKey())) {
                 ((ILocalizedException) exception).setDescriptionKey("api.exception.unsatisfiedRequestParameter.description");
             }
             updateExceptionLocale(exception, request);

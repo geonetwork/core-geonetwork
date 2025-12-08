@@ -1,11 +1,11 @@
 package org.geonetwork.map.wms;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.utils.URIBuilder;
-import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.hc.client5.http.classic.HttpClient;
+import org.apache.hc.core5.http.ClassicHttpResponse;
+import org.apache.hc.core5.net.URIBuilder;
+import org.apache.hc.client5.http.classic.methods.HttpGet;
+import org.apache.hc.client5.http.impl.classic.HttpClients;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.utils.Xml;
 import org.geotools.factory.CommonFactoryFinder;
@@ -52,8 +52,8 @@ public class SLDUtil {
         String requestUrl = SLDUtil.getGetStyleRequest(url, layers);
 
         HttpGet httpGet = new HttpGet(requestUrl);
-        HttpClient client = new DefaultHttpClient();
-        final HttpResponse httpResponse = client.execute(httpGet);
+        HttpClient client = HttpClients.createDefault();
+        final ClassicHttpResponse httpResponse = client.execute(httpGet);
 
         // Set encoding of response from HTTP content-type header
         ContentType contentType = new ContentType(httpResponse.getEntity().getContentType().getValue());

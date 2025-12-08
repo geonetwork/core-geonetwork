@@ -24,30 +24,29 @@
 package org.fao.geonet.utils;
 
 import com.google.common.base.Function;
-
-import org.apache.http.Header;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpHost;
-import org.apache.http.NameValuePair;
-import org.apache.http.auth.AuthScope;
-import org.apache.http.auth.UsernamePasswordCredentials;
-import org.apache.http.client.AuthCache;
-import org.apache.http.client.CookieStore;
-import org.apache.http.client.config.CookieSpecs;
-import org.apache.http.client.config.RequestConfig;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.methods.HttpRequestBase;
-import org.apache.http.client.protocol.HttpClientContext;
-import org.apache.http.entity.ContentType;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.auth.BasicScheme;
-import org.apache.http.impl.client.BasicAuthCache;
-import org.apache.http.impl.client.BasicCredentialsProvider;
-import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.impl.client.LaxRedirectStrategy;
-import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.protocol.HttpContext;
+import org.apache.hc.client5.http.classic.methods.HttpUriRequestBase;
+import org.apache.hc.client5.http.cookie.CookieStore;
+import org.apache.hc.client5.http.cookie.StandardCookieSpec;
+import org.apache.hc.client5.http.impl.LaxRedirectStrategy;
+import org.apache.hc.client5.http.impl.auth.BasicAuthCache;
+import org.apache.hc.client5.http.impl.auth.BasicCredentialsProvider;
+import org.apache.hc.core5.http.Header;
+import org.apache.hc.core5.http.HttpEntity;
+import org.apache.hc.core5.http.HttpHost;
+import org.apache.hc.core5.http.NameValuePair;
+import org.apache.hc.client5.http.auth.AuthCache;
+import org.apache.hc.client5.http.auth.AuthScope;
+import org.apache.hc.client5.http.auth.UsernamePasswordCredentials;
+import org.apache.hc.client5.http.config.RequestConfig;
+import org.apache.hc.client5.http.classic.methods.HttpGet;
+import org.apache.hc.client5.http.classic.methods.HttpPost;
+import org.apache.hc.client5.http.protocol.HttpClientContext;
+import org.apache.hc.core5.http.ContentType;
+import org.apache.hc.core5.http.io.entity.StringEntity;
+import org.apache.hc.client5.http.impl.auth.BasicScheme;
+import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
+import org.apache.hc.core5.http.message.BasicNameValuePair;
+import org.apache.hc.core5.http.protocol.HttpContext;
 import org.fao.geonet.exceptions.BadSoapResponseEx;
 import org.jdom.Document;
 import org.jdom.Element;
@@ -188,7 +187,7 @@ public class AbstractHttpRequest {
         if (username == null || username.trim().length() == 0)
             return;
 
-        this.proxyCredentials = new UsernamePasswordCredentials(username, password);
+        this.proxyCredentials = new UsernamePasswordCredentials(username, password.toCharArray());
     }
 
     public void clearParams() {
@@ -254,21 +253,21 @@ public class AbstractHttpRequest {
 
     public void setCredentials(String username, String password) {
 
-        this.credentials = new UsernamePasswordCredentials(username, password);
+        this.credentials = new UsernamePasswordCredentials(username, password.toCharArray());
     }
 
-    protected ClientHttpResponse doExecute(final HttpRequestBase httpMethod) throws IOException {
+    protected ClientHttpResponse doExecute(final HttpUriRequestBase httpMethod) throws IOException {
         return requestFactory.execute(httpMethod, new Function<HttpClientBuilder, Void>() {
             @Nullable
             @Override
             public Void apply(@Nonnull HttpClientBuilder input) {
                 final BasicCredentialsProvider credentialsProvider = new BasicCredentialsProvider();
                 if (credentials != null) {
-                    final URI uri = httpMethod.getURI();
+                    final URI uri = httpMethod.getUri();
                     HttpHost hh = new HttpHost(
+                        uri.getScheme(),
                         uri.getHost(),
-                        uri.getPort(),
-                        uri.getScheme());
+                        uri.getPort());
                     credentialsProvider.setCredentials(new AuthScope(hh), credentials);
 
                     // Preemptive authentication
@@ -303,7 +302,7 @@ public class AbstractHttpRequest {
         }, this);
     }
 
-    protected HttpRequestBase setupHttpMethod() throws IOException {
+    protected HttpUriRequestBase setupHttpMethod() throws IOException {
         String queryString = query;
 
         if (query == null || query.trim().isEmpty()) {
@@ -326,7 +325,7 @@ public class AbstractHttpRequest {
                 "\n\tfragment: '%s'", getClass().getSimpleName(), protocol, userInfo, host, port, address, query, fragment));
         }
 
-        HttpRequestBase httpMethod;
+        HttpUriRequestBase httpMethod;
 
         if (method == Method.GET) {
             HttpGet get = new HttpGet();
@@ -369,14 +368,15 @@ public class AbstractHttpRequest {
         builder.setRelativeRedirectsAllowed(true);
         builder.setCircularRedirectsAllowed(true);
         builder.setMaxRedirects(3);
-        builder.setCookieSpec(CookieSpecs.BROWSER_COMPATIBILITY);
+        // Relaxed as close fit to BROWSER_COMPATIBILITY
+        builder.setCookieSpec(StandardCookieSpec.RELAXED);
 
         httpMethod.setConfig(builder.build());
         return httpMethod;
     }
 
-    protected String getSentData(HttpRequestBase httpMethod) {
-        URI uri = httpMethod.getURI();
+    protected String getSentData(HttpUriRequestBase httpMethod) {
+        URI uri = httpMethod.getUri();
         StringBuilder sentDataValue = new StringBuilder(httpMethod.getMethod()).append(" ").append(uri.getPath());
 
         if (uri.getQuery() != null) {

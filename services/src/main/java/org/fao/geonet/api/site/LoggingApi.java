@@ -34,7 +34,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.util.StringUtils;
+import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -101,7 +101,7 @@ public class LoggingApi {
                 if (matcher.matches()) {
                     String key = matcher.group(2);
 
-                    if (StringUtils.isEmpty(key))
+                    if (ObjectUtils.isEmpty(key))
                         key = "prod";
                     logFileList.add(
                         new ListLogFilesResponse.LogFileResponse(

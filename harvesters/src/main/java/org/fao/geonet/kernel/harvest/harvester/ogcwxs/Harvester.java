@@ -27,8 +27,8 @@ import com.google.common.base.Function;
 import com.google.common.collect.Lists;
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.lang.StringUtils;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.hc.client5.http.classic.methods.HttpGet;
+import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Logger;
@@ -992,7 +992,7 @@ class Harvester extends BaseAligner<OgcWxSParams> implements IHarvester<HarvestR
         try {
             // Connect
             final GeonetHttpRequestFactory requestFactory = context.getBean(GeonetHttpRequestFactory.class);
-            final String requestHost = req.getURI().getHost();
+            final String requestHost = req.getUri().getHost();
             final ClientHttpResponse httpResponse = requestFactory.execute(req, new Function<HttpClientBuilder, Void>() {
                 @Nullable
                 @Override
@@ -1025,7 +1025,7 @@ class Harvester extends BaseAligner<OgcWxSParams> implements IHarvester<HarvestR
             return null;
         } finally {
             // Release current connection to the connection pool once you are done
-            req.releaseConnection();
+            req.reset();
         }
 
         return file;

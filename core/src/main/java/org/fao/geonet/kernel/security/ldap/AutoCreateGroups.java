@@ -38,7 +38,7 @@ import org.springframework.ldap.core.DirContextAdapter;
 import org.springframework.ldap.core.DistinguishedName;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.security.ldap.LdapUtils;
-import org.springframework.util.StringUtils;
+import org.springframework.util.ObjectUtils;
 
 import java.util.List;
 import java.util.Map;
@@ -106,7 +106,7 @@ public class AutoCreateGroups implements ApplicationListener<GroupCreated> {
             "posixGroup"});
         ctx.setAttributeValue("cn", identifier);
 
-        if (!StringUtils.isEmpty(group.getDescription())) {
+        if (!ObjectUtils.isEmpty(group.getDescription())) {
             ctx.setAttributeValue("description", group.getDescription());
         }
         // Need unique gidNumber value

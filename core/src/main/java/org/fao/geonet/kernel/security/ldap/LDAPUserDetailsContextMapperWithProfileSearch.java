@@ -29,7 +29,7 @@ import org.fao.geonet.domain.LDAPUser;
 import org.fao.geonet.domain.Profile;
 import org.fao.geonet.utils.Log;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.util.StringUtils;
+import org.springframework.util.ObjectUtils;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -77,7 +77,7 @@ public class LDAPUserDetailsContextMapperWithProfileSearch extends
                                             String defaultGroup, Map<String, ArrayList<String>> userInfo,
                                             LDAPUser userDetails) {
 
-        if (!StringUtils.isEmpty(groupQuery)) {
+        if (!ObjectUtils.isEmpty(groupQuery)) {
             if (Log.isDebugEnabled(Geonet.LDAP)) {
                 StringBuffer sb = new StringBuffer("Group and profile search:");
                 sb.append("\nGroup attribute: \t" + groupAttribute);

@@ -28,7 +28,7 @@ import jeeves.server.UserSession;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.utils.Log;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
+import org.springframework.web.servlet.HandlerInterceptor;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
@@ -42,7 +42,7 @@ import java.util.regex.Pattern;
  * In charge of creating a new {@link UserSession} if not existing.
  * Avoid to create any sessions for crawlers.
  */
-public class AllRequestsInterceptor extends HandlerInterceptorAdapter {
+public class AllRequestsInterceptor implements HandlerInterceptor {
 
     /**
      * List of bots to avoid.
@@ -68,7 +68,7 @@ public class AllRequestsInterceptor extends HandlerInterceptorAdapter {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         createSessionForAllButNotCrawlers(request);
-        return super.preHandle(request, response, handler);
+        return true;
     }
 
     /**

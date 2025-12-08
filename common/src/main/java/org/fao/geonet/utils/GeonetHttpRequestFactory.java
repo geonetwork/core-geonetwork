@@ -26,25 +26,25 @@ package org.fao.geonet.utils;
 import com.google.common.base.Function;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.http.Header;
-import org.apache.http.HeaderElement;
-import org.apache.http.HttpClientConnection;
-import org.apache.http.auth.AuthScope;
-import org.apache.http.auth.Credentials;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpUriRequest;
-import org.apache.http.client.protocol.HttpClientContext;
-import org.apache.http.config.SocketConfig;
-import org.apache.http.conn.ConnectionRequest;
-import org.apache.http.conn.HttpClientConnectionManager;
-import org.apache.http.conn.routing.HttpRoute;
-import org.apache.http.impl.client.BasicCookieStore;
-import org.apache.http.impl.client.BasicCredentialsProvider;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.impl.client.LaxRedirectStrategy;
-import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
-import org.apache.http.protocol.HttpContext;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
+import org.apache.hc.core5.http.Header;
+import org.apache.hc.core5.http.HeaderElement;
+import org.apache.hc.core5.http.io.HttpClientConnection;
+import org.apache.hc.client5.http.auth.AuthScope;
+import org.apache.hc.client5.http.auth.Credentials;
+import org.apache.hc.client5.http.classic.methods.HttpUriRequest;
+import org.apache.hc.client5.http.cookie.BasicCookieStore;
+import org.apache.hc.client5.http.impl.auth.BasicCredentialsProvider;
+import org.apache.hc.client5.http.io.HttpClientConnectionManager;
+import org.apache.hc.client5.http.protocol.HttpClientContext;
+import org.apache.hc.core5.http.io.SocketConfig;
+import org.apache.hc.client5.http.ConnectionRequest;
+import org.apache.hc.client5.http.HttpRoute;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
+import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
+import org.apache.hc.client5.http.impl.classic.LaxRedirectStrategy;
+import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager;
+import org.apache.hc.core5.http.protocol.HttpContext;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.client.AbstractClientHttpResponse;
 import org.springframework.http.client.ClientHttpResponse;
@@ -240,7 +240,7 @@ public class GeonetHttpRequestFactory {
                     }
                 };
             }
-            connectionManager.setDefaultSocketConfig(SocketConfig.custom().setSoTimeout((int) TimeUnit.MINUTES.toMillis(3)).build());
+            connectionManager.setDefaultSocketConfig(SocketConfig.custom().setSoTimeout((int) TimeUnit.MINUTES.toMillis(3), TimeUnit.MILLISECONDS).build());
             builder.setConnectionManager(nonShutdownableConnectionManager);
         }
 
@@ -260,12 +260,12 @@ public class GeonetHttpRequestFactory {
 
         @Override
         public int getRawStatusCode() throws IOException {
-            return response.getStatusLine().getStatusCode();
+            return response.getCode();
         }
 
         @Override
         public String getStatusText() throws IOException {
-            return response.getStatusLine().getReasonPhrase();
+            return response.getReasonPhrase();
         }
 
         @Override

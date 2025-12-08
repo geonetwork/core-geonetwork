@@ -49,7 +49,7 @@ import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.util.StringUtils;
+import org.springframework.util.ObjectUtils;
 
 import java.nio.file.Path;
 import java.sql.SQLException;
@@ -164,7 +164,7 @@ public class Info implements Service {
                 String mailServerHost = gc.getBean(SettingManager.class).getValue(Settings.SYSTEM_FEEDBACK_MAILSERVER_HOST);
                 Element mailServerElement = new Element("setting");
                 mailServerElement.setAttribute("name", "system/mail/enable");
-                mailServerElement.setAttribute("value", !StringUtils.isEmpty(mailServerHost) + "");
+                mailServerElement.setAttribute("value", !ObjectUtils.isEmpty(mailServerHost) + "");
                 settingsElement.addContent(mailServerElement);
                 configElement.addContent(settingsElement);
                 result.addContent(configElement);

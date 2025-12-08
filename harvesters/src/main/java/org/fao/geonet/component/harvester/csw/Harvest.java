@@ -28,11 +28,11 @@ import jeeves.server.context.ServiceContext;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPReply;
-import org.apache.http.client.config.RequestConfig;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.DefaultHttpRequestRetryHandler;
-import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.hc.client5.http.config.RequestConfig;
+import org.apache.hc.client5.http.classic.methods.HttpPost;
+import org.apache.hc.core5.http.io.entity.StringEntity;
+import org.apache.hc.client5.http.impl.classic.DefaultHttpRequestRetryHandler;
+import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
 import org.fao.geonet.Constants;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
@@ -949,7 +949,7 @@ public class Harvest extends AbstractOperation implements CatalogService {
                 config.setAuthenticationEnabled(false);
                 method.setConfig(config.build());
 
-                final String requestHost = method.getURI().getHost();
+                final String requestHost = method.getUri().getHost();
                 final ClientHttpResponse httpResponse = applicationContext.getBean(GeonetHttpRequestFactory.class).execute(method,
                     new Function<HttpClientBuilder, Void>() {
                         @Nullable
@@ -957,7 +957,7 @@ public class Harvest extends AbstractOperation implements CatalogService {
                         public Void apply(@Nonnull HttpClientBuilder input) {
                             SettingManager settingManager = applicationContext.getBean(SettingManager.class);
                             Lib.net.setupProxy(settingManager, input, requestHost);
-                            input.setRetryHandler(new DefaultHttpRequestRetryHandler());
+                            input.setRetryStrategy(new DefaultHttpRequestRetryHandler());
                             return null;
                         }
                     });
@@ -969,7 +969,7 @@ public class Harvest extends AbstractOperation implements CatalogService {
                 // never mind, just log it
                 Log.warning(Geonet.CSW_HARVEST, "WARNING: " + x.getMessage() + " (this exception is swallowed)", x);
             } finally {
-                method.releaseConnection();
+                method.reset();
             }
         }
 

@@ -1,6 +1,6 @@
 package org.fao.geonet.kernel.url;
 
-import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.hc.client5.http.classic.methods.HttpUriRequest;
 import org.fao.geonet.domain.LinkStatus;
 import org.fao.geonet.utils.GeonetHttpRequestFactory;
 import org.junit.Test;
