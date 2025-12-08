@@ -1,8 +1,5 @@
 package org.fao.geonet.services.util;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.fao.geonet.kernel.security.SecurityProviderUtil;
 import org.junit.Before;
 import org.junit.Test;
@@ -11,37 +8,29 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.http.client.MockClientHttpRequest;
 import org.springframework.mock.http.client.MockClientHttpResponse;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 import static org.junit.Assert.*;
-import static org.mockito.ArgumentMatchers.anyBoolean;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
-import static org.mockito.Mockito.doReturn;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ResourcesExternalAdditionalPropertiesServiceTest {
 
-    // The names of the fields in ResourcesExternalAdditionalPropertiesService to set via reflection
-    private static final String EXTERNAL_ADDITIONAL_PROPERTIES_IDENTIFIER_FIELD_NAME_CLASS_FIELD_NAME = "externalAdditionalPropertiesIdentifierFieldName";
-    private static final String EXTERNAL_ADDITIONAL_PROPERTIES_URL_TEMPLATE_CLASS_FIELD_NAME = "externalAdditionalPropertiesUrlTemplate";
+    // The name of the field in ResourcesExternalAdditionalPropertiesService to set via reflection
     private static final String SECURITY_PROVIDER_UTIL_CLASS_FIELD_NAME = "securityProviderUtil";
 
-    // The default values of the fields in ResourcesExternalAdditionalPropertiesService to be set via reflection
+    // Test values
     private static final String DEFAULT_EXTERNAL_ADDITIONAL_PROPERTIES_IDENTIFIER_FIELD_NAME = "externalId";
-    private static final String DEFAULT_EXTERNAL_ADDITIONAL_PROPERTIES_URL_TEMPLATE = "http://example.com";
-
-    // The names of fields in the JSON nodes
-    private static final String ID_FIELD_NAME = "id";
-    private static final String METADATA_RESOURCE_EXTERNAL_MANAGEMENT_PROPERTIES_FIELD_NAME = "metadataResourceExternalManagementProperties";
+    private static final String DEFAULT_EXTERNAL_ADDITIONAL_PROPERTIES_URL_TEMPLATE = "http://example.com/api/resources?uuid={uuid}&approved={approved}";
 
     @Mock
     SecurityProviderUtil securityProviderUtilMock;
@@ -49,15 +38,6 @@ public class ResourcesExternalAdditionalPropertiesServiceTest {
     @Spy
     @InjectMocks
     ResourcesExternalAdditionalPropertiesService resourcesExternalAdditionalPropertiesServiceSpy;
-
-    @Before
-    public void setUp() {
-        // Common configuration for merge tests
-        ReflectionTestUtils.setField(resourcesExternalAdditionalPropertiesServiceSpy,
-            EXTERNAL_ADDITIONAL_PROPERTIES_URL_TEMPLATE_CLASS_FIELD_NAME, DEFAULT_EXTERNAL_ADDITIONAL_PROPERTIES_URL_TEMPLATE);
-        ReflectionTestUtils.setField(resourcesExternalAdditionalPropertiesServiceSpy,
-            EXTERNAL_ADDITIONAL_PROPERTIES_IDENTIFIER_FIELD_NAME_CLASS_FIELD_NAME, DEFAULT_EXTERNAL_ADDITIONAL_PROPERTIES_IDENTIFIER_FIELD_NAME);
-    }
 
     // ============================
     // resolveUrlTemplate tests
@@ -106,155 +86,145 @@ public class ResourcesExternalAdditionalPropertiesServiceTest {
     }
 
     // ============================
-    // getResourcesExternalAdditionalProperties tests
+    // fetchAdditionalProperties tests
     // ============================
 
     @Test
-    public void getResourcesExternalAdditionalPropertiesReturnsDataOnSuccessfulRequest() {
+    public void fetchAdditionalPropertiesReturnsDataOnSuccessfulRequest() {
         RestTemplate mockRestTemplate = mock(RestTemplate.class);
-        ArrayNode arrayNode = new ObjectMapper().createArrayNode();
-        ObjectNode objectNode = arrayNode.addObject();
-        objectNode.put(ID_FIELD_NAME, "123");
-        objectNode.put("property", "value");
+        List<Map<String, Object>> responseData = new ArrayList<>();
+        Map<String, Object> item = new HashMap<>();
+        item.put("id", "123");
+        item.put("property", "value");
+        responseData.add(item);
 
-        ResponseEntity<ArrayNode> responseEntity = ResponseEntity.ok(arrayNode);
-        when(mockRestTemplate.getForEntity(anyString(), eq(ArrayNode.class))).thenReturn(responseEntity);
+        ResponseEntity<List<Map<String, Object>>> responseEntity = ResponseEntity.ok(responseData);
+        when(mockRestTemplate.exchange(anyString(), eq(HttpMethod.GET), isNull(), any(ParameterizedTypeReference.class)))
+            .thenReturn(responseEntity);
 
-        doReturn("http://example.com/api/properties").when(resourcesExternalAdditionalPropertiesServiceSpy)
-            .resolveUrlTemplate(anyString(), anyString(), anyBoolean());
         doReturn(mockRestTemplate).when(resourcesExternalAdditionalPropertiesServiceSpy).createAuthenticatedRestTemplate();
 
-        ArrayNode result = resourcesExternalAdditionalPropertiesServiceSpy.getResourcesExternalAdditionalProperties(UUID.randomUUID().toString(), true);
+        List<Map<String, Object>> result = resourcesExternalAdditionalPropertiesServiceSpy.fetchAdditionalProperties("http://example.com/api/properties");
 
         assertEquals(1, result.size());
-        assertEquals("123", result.get(0).get(ID_FIELD_NAME).asText());
+        assertEquals("123", result.get(0).get("id"));
     }
 
     @Test
-    public void getResourcesExternalAdditionalPropertiesThrowsExceptionOnNullResponseBody() {
+    public void fetchAdditionalPropertiesThrowsExceptionOnNullResponseBody() {
         RestTemplate mockRestTemplate = mock(RestTemplate.class);
-        ResponseEntity<ArrayNode> responseEntity = ResponseEntity.ok(null);
-        when(mockRestTemplate.getForEntity(anyString(), eq(ArrayNode.class))).thenReturn(responseEntity);
+        ResponseEntity<List<Map<String, Object>>> responseEntity = ResponseEntity.ok(null);
+        when(mockRestTemplate.exchange(anyString(), eq(HttpMethod.GET), isNull(), any(ParameterizedTypeReference.class)))
+            .thenReturn(responseEntity);
 
-        doReturn("http://example.com/api/properties").when(resourcesExternalAdditionalPropertiesServiceSpy)
-            .resolveUrlTemplate(anyString(), anyString(), anyBoolean());
         doReturn(mockRestTemplate).when(resourcesExternalAdditionalPropertiesServiceSpy).createAuthenticatedRestTemplate();
 
         assertThrows(RuntimeException.class, () ->
-            resourcesExternalAdditionalPropertiesServiceSpy.getResourcesExternalAdditionalProperties(UUID.randomUUID().toString(), true)
+            resourcesExternalAdditionalPropertiesServiceSpy.fetchAdditionalProperties("http://example.com/api/properties")
         );
     }
 
     @Test
-    public void getResourcesExternalAdditionalPropertiesThrowsExceptionOnNonSuccessfulStatusCode() {
+    public void fetchAdditionalPropertiesThrowsExceptionOnNonSuccessfulStatusCode() {
         RestTemplate mockRestTemplate = mock(RestTemplate.class);
-        ArrayNode arrayNode = new ObjectMapper().createArrayNode();
-        ResponseEntity<ArrayNode> responseEntity = ResponseEntity.status(404).body(arrayNode);
-        when(mockRestTemplate.getForEntity(anyString(), eq(ArrayNode.class))).thenReturn(responseEntity);
+        List<Map<String, Object>> responseData = new ArrayList<>();
+        ResponseEntity<List<Map<String, Object>>> responseEntity = ResponseEntity.status(404).body(responseData);
+        when(mockRestTemplate.exchange(anyString(), eq(HttpMethod.GET), isNull(), any(ParameterizedTypeReference.class)))
+            .thenReturn(responseEntity);
 
-        doReturn("http://example.com/api/properties").when(resourcesExternalAdditionalPropertiesServiceSpy)
-            .resolveUrlTemplate(anyString(), anyString(), anyBoolean());
         doReturn(mockRestTemplate).when(resourcesExternalAdditionalPropertiesServiceSpy).createAuthenticatedRestTemplate();
 
         assertThrows(RuntimeException.class, () ->
-            resourcesExternalAdditionalPropertiesServiceSpy.getResourcesExternalAdditionalProperties(UUID.randomUUID().toString(), true)
+            resourcesExternalAdditionalPropertiesServiceSpy.fetchAdditionalProperties("http://example.com/api/properties")
         );
     }
 
     @Test
-    public void getResourcesExternalAdditionalPropertiesThrowsExceptionOnException() {
+    public void fetchAdditionalPropertiesThrowsExceptionOnException() {
         RestTemplate mockRestTemplate = mock(RestTemplate.class);
-        when(mockRestTemplate.getForEntity(anyString(), eq(ArrayNode.class)))
+        when(mockRestTemplate.exchange(anyString(), eq(HttpMethod.GET), isNull(), any(ParameterizedTypeReference.class)))
             .thenThrow(new RuntimeException("Connection error"));
 
-        doReturn("http://example.com/api/properties").when(resourcesExternalAdditionalPropertiesServiceSpy)
-            .resolveUrlTemplate(anyString(), anyString(), anyBoolean());
         doReturn(mockRestTemplate).when(resourcesExternalAdditionalPropertiesServiceSpy).createAuthenticatedRestTemplate();
 
         assertThrows(RuntimeException.class, () ->
-            resourcesExternalAdditionalPropertiesServiceSpy.getResourcesExternalAdditionalProperties(UUID.randomUUID().toString(), false)
+            resourcesExternalAdditionalPropertiesServiceSpy.fetchAdditionalProperties("http://example.com/api/properties")
         );
     }
 
     @Test
-    public void getResourcesExternalAdditionalPropertiesReturnsEmptyArrayWhenResponseIsEmpty() {
+    public void fetchAdditionalPropertiesReturnsEmptyListWhenResponseIsEmpty() {
         RestTemplate mockRestTemplate = mock(RestTemplate.class);
-        ArrayNode emptyArray = new ObjectMapper().createArrayNode();
-        ResponseEntity<ArrayNode> responseEntity = ResponseEntity.ok(emptyArray);
-        when(mockRestTemplate.getForEntity(anyString(), eq(ArrayNode.class))).thenReturn(responseEntity);
+        List<Map<String, Object>> emptyList = new ArrayList<>();
+        ResponseEntity<List<Map<String, Object>>> responseEntity = ResponseEntity.ok(emptyList);
+        when(mockRestTemplate.exchange(anyString(), eq(HttpMethod.GET), isNull(), any(ParameterizedTypeReference.class)))
+            .thenReturn(responseEntity);
 
-        doReturn("http://example.com/api/properties").when(resourcesExternalAdditionalPropertiesServiceSpy)
-            .resolveUrlTemplate(anyString(), anyString(), anyBoolean());
         doReturn(mockRestTemplate).when(resourcesExternalAdditionalPropertiesServiceSpy).createAuthenticatedRestTemplate();
 
-        ArrayNode result = resourcesExternalAdditionalPropertiesServiceSpy.getResourcesExternalAdditionalProperties(UUID.randomUUID().toString(), true);
+        List<Map<String, Object>> result = resourcesExternalAdditionalPropertiesServiceSpy.fetchAdditionalProperties("http://example.com/api/properties");
 
         assertEquals(0, result.size());
     }
 
     @Test
-    public void getResourcesExternalAdditionalPropertiesReturnsMultipleItems() {
+    public void fetchAdditionalPropertiesReturnsMultipleItems() {
         RestTemplate mockRestTemplate = mock(RestTemplate.class);
-        ArrayNode arrayNode = new ObjectMapper().createArrayNode();
-        arrayNode.addObject().put(ID_FIELD_NAME, "123");
-        arrayNode.addObject().put(ID_FIELD_NAME, "456");
+        List<Map<String, Object>> responseData = new ArrayList<>();
+        Map<String, Object> item1 = new HashMap<>();
+        item1.put("id", "123");
+        responseData.add(item1);
+        Map<String, Object> item2 = new HashMap<>();
+        item2.put("id", "456");
+        responseData.add(item2);
 
-        ResponseEntity<ArrayNode> responseEntity = ResponseEntity.ok(arrayNode);
-        when(mockRestTemplate.getForEntity(anyString(), eq(ArrayNode.class))).thenReturn(responseEntity);
+        ResponseEntity<List<Map<String, Object>>> responseEntity = ResponseEntity.ok(responseData);
+        when(mockRestTemplate.exchange(anyString(), eq(HttpMethod.GET), isNull(), any(ParameterizedTypeReference.class)))
+            .thenReturn(responseEntity);
 
-        doReturn("http://example.com/api/properties").when(resourcesExternalAdditionalPropertiesServiceSpy)
-            .resolveUrlTemplate(anyString(), anyString(), anyBoolean());
         doReturn(mockRestTemplate).when(resourcesExternalAdditionalPropertiesServiceSpy).createAuthenticatedRestTemplate();
 
-        ArrayNode result = resourcesExternalAdditionalPropertiesServiceSpy.getResourcesExternalAdditionalProperties(UUID.randomUUID().toString(), true);
+        List<Map<String, Object>> result = resourcesExternalAdditionalPropertiesServiceSpy.fetchAdditionalProperties("http://example.com/api/properties");
 
         assertEquals(2, result.size());
     }
 
-    @Test
-    public void getResourcesExternalAdditionalPropertiesCallsResolveUrlTemplateWithCorrectParameters() {
-        RestTemplate mockRestTemplate = mock(RestTemplate.class);
-        ArrayNode arrayNode = new ObjectMapper().createArrayNode();
-        ResponseEntity<ArrayNode> responseEntity = ResponseEntity.ok(arrayNode);
-        when(mockRestTemplate.getForEntity(anyString(), eq(ArrayNode.class))).thenReturn(responseEntity);
-
-        doReturn("http://example.com/api/properties").when(resourcesExternalAdditionalPropertiesServiceSpy)
-            .resolveUrlTemplate(anyString(), anyString(), anyBoolean());
-        doReturn(mockRestTemplate).when(resourcesExternalAdditionalPropertiesServiceSpy).createAuthenticatedRestTemplate();
-
-        String uuid = UUID.randomUUID().toString();
-
-        resourcesExternalAdditionalPropertiesServiceSpy.getResourcesExternalAdditionalProperties(uuid, false);
-
-        verify(resourcesExternalAdditionalPropertiesServiceSpy).resolveUrlTemplate(anyString(), eq(uuid), eq(false));
-    }
 
     // ============================
-    // indexResourcesExternalAdditionalPropertiesById tests
+    // mapAdditionalPropertiesById tests
     // ============================
 
     @Test
-    public void indexResourcesExternalAdditionalPropertiesByIdReturnsMapWithSingleItem() {
-        ArrayNode arrayNode = new ObjectMapper().createArrayNode();
-        addNewExternalProperty(arrayNode, "ext-123", "property1", "value1");
+    public void mapAdditionalPropertiesByIdReturnsMapWithSingleItem() {
+        List<Map<String, Object>> resourcesList = new ArrayList<>();
+        Map<String, Object> item = new HashMap<>();
+        item.put(DEFAULT_EXTERNAL_ADDITIONAL_PROPERTIES_IDENTIFIER_FIELD_NAME, "ext-123");
+        item.put("property1", "value1");
+        resourcesList.add(item);
 
-        Map<String, ObjectNode> result = resourcesExternalAdditionalPropertiesServiceSpy
-            .indexResourcesExternalAdditionalPropertiesById(arrayNode);
+        Map<String, Map<String, Object>> result = resourcesExternalAdditionalPropertiesServiceSpy
+            .mapAdditionalPropertiesById(resourcesList, DEFAULT_EXTERNAL_ADDITIONAL_PROPERTIES_IDENTIFIER_FIELD_NAME);
 
         assertEquals(1, result.size());
         assertTrue(result.containsKey("ext-123"));
-        assertFalse(result.get("ext-123").has(DEFAULT_EXTERNAL_ADDITIONAL_PROPERTIES_IDENTIFIER_FIELD_NAME));
-        assertEquals("value1", result.get("ext-123").get("property1").asText());
+        assertFalse(result.get("ext-123").containsKey(DEFAULT_EXTERNAL_ADDITIONAL_PROPERTIES_IDENTIFIER_FIELD_NAME));
+        assertEquals("value1", result.get("ext-123").get("property1"));
     }
 
     @Test
-    public void indexResourcesExternalAdditionalPropertiesByIdReturnsMapWithMultipleItems() {
-        ArrayNode arrayNode = new ObjectMapper().createArrayNode();
-        addNewExternalProperty(arrayNode, "ext-123", "property1", "value1");
-        addNewExternalProperty(arrayNode, "ext-456", "property2", "value2");
+    public void mapAdditionalPropertiesByIdReturnsMapWithMultipleItems() {
+        List<Map<String, Object>> resourcesList = new ArrayList<>();
+        Map<String, Object> item1 = new HashMap<>();
+        item1.put(DEFAULT_EXTERNAL_ADDITIONAL_PROPERTIES_IDENTIFIER_FIELD_NAME, "ext-123");
+        item1.put("property1", "value1");
+        resourcesList.add(item1);
+        Map<String, Object> item2 = new HashMap<>();
+        item2.put(DEFAULT_EXTERNAL_ADDITIONAL_PROPERTIES_IDENTIFIER_FIELD_NAME, "ext-456");
+        item2.put("property2", "value2");
+        resourcesList.add(item2);
 
-        Map<String, ObjectNode> result = resourcesExternalAdditionalPropertiesServiceSpy
-            .indexResourcesExternalAdditionalPropertiesById(arrayNode);
+        Map<String, Map<String, Object>> result = resourcesExternalAdditionalPropertiesServiceSpy
+            .mapAdditionalPropertiesById(resourcesList, DEFAULT_EXTERNAL_ADDITIONAL_PROPERTIES_IDENTIFIER_FIELD_NAME);
 
         assertEquals(2, result.size());
         assertTrue(result.containsKey("ext-123"));
@@ -262,69 +232,66 @@ public class ResourcesExternalAdditionalPropertiesServiceTest {
     }
 
     @Test
-    public void indexResourcesExternalAdditionalPropertiesByIdSkipsItemWithMissingIdentifier() {
-        ArrayNode arrayNode = new ObjectMapper().createArrayNode();
-        ObjectNode item = arrayNode.addObject();
+    public void mapAdditionalPropertiesByIdSkipsItemWithMissingIdentifier() {
+        List<Map<String, Object>> resourcesList = new ArrayList<>();
+        Map<String, Object> item = new HashMap<>();
         item.put("property1", "value1");
+        resourcesList.add(item);
 
-        Map<String, ObjectNode> result = resourcesExternalAdditionalPropertiesServiceSpy
-            .indexResourcesExternalAdditionalPropertiesById(arrayNode);
+        Map<String, Map<String, Object>> result = resourcesExternalAdditionalPropertiesServiceSpy
+            .mapAdditionalPropertiesById(resourcesList, DEFAULT_EXTERNAL_ADDITIONAL_PROPERTIES_IDENTIFIER_FIELD_NAME);
 
         assertEquals(0, result.size());
     }
 
     @Test
-    public void indexResourcesExternalAdditionalPropertiesByIdSkipsItemWithNullIdentifier() {
-        ArrayNode arrayNode = new ObjectMapper().createArrayNode();
-        ObjectNode item = arrayNode.addObject();
-        item.putNull(DEFAULT_EXTERNAL_ADDITIONAL_PROPERTIES_IDENTIFIER_FIELD_NAME);
+    public void mapAdditionalPropertiesByIdSkipsItemWithNullIdentifier() {
+        List<Map<String, Object>> resourcesList = new ArrayList<>();
+        Map<String, Object> item = new HashMap<>();
+        item.put(DEFAULT_EXTERNAL_ADDITIONAL_PROPERTIES_IDENTIFIER_FIELD_NAME, null);
         item.put("property1", "value1");
+        resourcesList.add(item);
 
-        Map<String, ObjectNode> result = resourcesExternalAdditionalPropertiesServiceSpy
-            .indexResourcesExternalAdditionalPropertiesById(arrayNode);
-
-        assertEquals(0, result.size());
-    }
-
-    @Test
-    public void indexResourcesExternalAdditionalPropertiesByIdSkipsItemWithBlankIdentifier() {
-        ArrayNode arrayNode = new ObjectMapper().createArrayNode();
-        addNewExternalProperty(arrayNode, "", "property1", "value1");
-
-        Map<String, ObjectNode> result = resourcesExternalAdditionalPropertiesServiceSpy
-            .indexResourcesExternalAdditionalPropertiesById(arrayNode);
+        Map<String, Map<String, Object>> result = resourcesExternalAdditionalPropertiesServiceSpy
+            .mapAdditionalPropertiesById(resourcesList, DEFAULT_EXTERNAL_ADDITIONAL_PROPERTIES_IDENTIFIER_FIELD_NAME);
 
         assertEquals(0, result.size());
     }
 
     @Test
-    public void indexResourcesExternalAdditionalPropertiesByIdSkipsNonObjectNodeEntry() {
-        ArrayNode arrayNode = new ObjectMapper().createArrayNode();
-        arrayNode.add("not-an-object");
+    public void mapAdditionalPropertiesByIdSkipsItemWithBlankIdentifier() {
+        List<Map<String, Object>> resourcesList = new ArrayList<>();
+        Map<String, Object> item = new HashMap<>();
+        item.put(DEFAULT_EXTERNAL_ADDITIONAL_PROPERTIES_IDENTIFIER_FIELD_NAME, "");
+        item.put("property1", "value1");
+        resourcesList.add(item);
 
-        Map<String, ObjectNode> result = resourcesExternalAdditionalPropertiesServiceSpy
-            .indexResourcesExternalAdditionalPropertiesById(arrayNode);
-
-        assertEquals(0, result.size());
-    }
-
-    @Test
-    public void indexResourcesExternalAdditionalPropertiesByIdReturnsEmptyMapForEmptyArray() {
-        ArrayNode arrayNode = new ObjectMapper().createArrayNode();
-
-        Map<String, ObjectNode> result = resourcesExternalAdditionalPropertiesServiceSpy
-            .indexResourcesExternalAdditionalPropertiesById(arrayNode);
+        Map<String, Map<String, Object>> result = resourcesExternalAdditionalPropertiesServiceSpy
+            .mapAdditionalPropertiesById(resourcesList, DEFAULT_EXTERNAL_ADDITIONAL_PROPERTIES_IDENTIFIER_FIELD_NAME);
 
         assertEquals(0, result.size());
     }
 
     @Test
-    public void indexResourcesExternalAdditionalPropertiesByIdHandlesWhitespaceIdentifier() {
-        ArrayNode arrayNode = new ObjectMapper().createArrayNode();
-        addNewExternalProperty(arrayNode, "   ", "property1", "value1");
+    public void mapAdditionalPropertiesByIdReturnsEmptyMapForEmptyList() {
+        List<Map<String, Object>> resourcesList = new ArrayList<>();
 
-        Map<String, ObjectNode> result = resourcesExternalAdditionalPropertiesServiceSpy
-            .indexResourcesExternalAdditionalPropertiesById(arrayNode);
+        Map<String, Map<String, Object>> result = resourcesExternalAdditionalPropertiesServiceSpy
+            .mapAdditionalPropertiesById(resourcesList, DEFAULT_EXTERNAL_ADDITIONAL_PROPERTIES_IDENTIFIER_FIELD_NAME);
+
+        assertEquals(0, result.size());
+    }
+
+    @Test
+    public void mapAdditionalPropertiesByIdHandlesWhitespaceIdentifier() {
+        List<Map<String, Object>> resourcesList = new ArrayList<>();
+        Map<String, Object> item = new HashMap<>();
+        item.put(DEFAULT_EXTERNAL_ADDITIONAL_PROPERTIES_IDENTIFIER_FIELD_NAME, "   ");
+        item.put("property1", "value1");
+        resourcesList.add(item);
+
+        Map<String, Map<String, Object>> result = resourcesExternalAdditionalPropertiesServiceSpy
+            .mapAdditionalPropertiesById(resourcesList, DEFAULT_EXTERNAL_ADDITIONAL_PROPERTIES_IDENTIFIER_FIELD_NAME);
 
         assertEquals(0, result.size());
     }
@@ -392,125 +359,70 @@ public class ResourcesExternalAdditionalPropertiesServiceTest {
     }
 
     // ============================
-    // mergeResourcesExternalAdditionalProperties tests
+    // getAdditionalPropertiesMap tests
     // ============================
 
     @Test
-    public void mergeResourcesExternalAdditionalPropertiesSkipsWhenUrlTemplateNotConfigured() {
-        ReflectionTestUtils.setField(resourcesExternalAdditionalPropertiesServiceSpy,
-            EXTERNAL_ADDITIONAL_PROPERTIES_URL_TEMPLATE_CLASS_FIELD_NAME, "");
+    public void getAdditionalPropertiesMapReturnsMapSuccessfully() {
+        String uuid = UUID.randomUUID().toString();
+        String urlTemplate = DEFAULT_EXTERNAL_ADDITIONAL_PROPERTIES_URL_TEMPLATE;
+        String identifierFieldName = DEFAULT_EXTERNAL_ADDITIONAL_PROPERTIES_IDENTIFIER_FIELD_NAME;
 
-        ArrayNode baseProperties = new ObjectMapper().createArrayNode();
-        resourcesExternalAdditionalPropertiesServiceSpy.mergeResourcesExternalAdditionalProperties(UUID.randomUUID().toString(), true, baseProperties);
+        List<Map<String, Object>> fetchedData = new ArrayList<>();
+        Map<String, Object> item1 = new HashMap<>();
+        item1.put(identifierFieldName, "ext-123");
+        item1.put("property1", "value1");
+        fetchedData.add(item1);
 
-        verify(resourcesExternalAdditionalPropertiesServiceSpy, never()).getResourcesExternalAdditionalProperties(anyString(), anyBoolean());
+        doReturn("http://example.com/resolved").when(resourcesExternalAdditionalPropertiesServiceSpy)
+            .resolveUrlTemplate(urlTemplate, uuid, true);
+        doReturn(fetchedData).when(resourcesExternalAdditionalPropertiesServiceSpy)
+            .fetchAdditionalProperties("http://example.com/resolved");
+
+        Map<String, Map<String, Object>> result = resourcesExternalAdditionalPropertiesServiceSpy
+            .getAdditionalPropertiesMap(uuid, true, urlTemplate, identifierFieldName);
+
+        assertEquals(1, result.size());
+        assertTrue(result.containsKey("ext-123"));
+        assertEquals("value1", result.get("ext-123").get("property1"));
     }
 
     @Test
-    public void mergeResourcesExternalAdditionalPropertiesSkipsWhenIdentifierFieldNotConfigured() {
-        ReflectionTestUtils.setField(resourcesExternalAdditionalPropertiesServiceSpy,
-            EXTERNAL_ADDITIONAL_PROPERTIES_IDENTIFIER_FIELD_NAME_CLASS_FIELD_NAME, "");
+    public void getAdditionalPropertiesMapCallsMethodsInCorrectOrder() {
+        String uuid = UUID.randomUUID().toString();
+        String urlTemplate = DEFAULT_EXTERNAL_ADDITIONAL_PROPERTIES_URL_TEMPLATE;
+        String identifierFieldName = DEFAULT_EXTERNAL_ADDITIONAL_PROPERTIES_IDENTIFIER_FIELD_NAME;
 
-        ArrayNode baseProperties = new ObjectMapper().createArrayNode();
-        resourcesExternalAdditionalPropertiesServiceSpy.mergeResourcesExternalAdditionalProperties(UUID.randomUUID().toString(), true, baseProperties);
+        List<Map<String, Object>> fetchedData = new ArrayList<>();
+        doReturn("http://example.com/resolved").when(resourcesExternalAdditionalPropertiesServiceSpy)
+            .resolveUrlTemplate(urlTemplate, uuid, false);
+        doReturn(fetchedData).when(resourcesExternalAdditionalPropertiesServiceSpy)
+            .fetchAdditionalProperties("http://example.com/resolved");
 
-        verify(resourcesExternalAdditionalPropertiesServiceSpy, never()).getResourcesExternalAdditionalProperties(anyString(), anyBoolean());
+        resourcesExternalAdditionalPropertiesServiceSpy
+            .getAdditionalPropertiesMap(uuid, false, urlTemplate, identifierFieldName);
+
+        verify(resourcesExternalAdditionalPropertiesServiceSpy).resolveUrlTemplate(urlTemplate, uuid, false);
+        verify(resourcesExternalAdditionalPropertiesServiceSpy).fetchAdditionalProperties("http://example.com/resolved");
+        verify(resourcesExternalAdditionalPropertiesServiceSpy).mapAdditionalPropertiesById(fetchedData, identifierFieldName);
     }
 
     @Test
-    public void mergeResourcesExternalAdditionalPropertiesSuccessfullyMergesProperties() {
-        // Create base properties
-        ArrayNode baseProperties = new ObjectMapper().createArrayNode();
-        addNewResourceWithId(baseProperties, "123");
+    public void getAdditionalPropertiesMapHandlesEmptyResponse() {
+        String uuid = UUID.randomUUID().toString();
+        String urlTemplate = DEFAULT_EXTERNAL_ADDITIONAL_PROPERTIES_URL_TEMPLATE;
+        String identifierFieldName = DEFAULT_EXTERNAL_ADDITIONAL_PROPERTIES_IDENTIFIER_FIELD_NAME;
 
-        // Create external properties
-        ArrayNode externalProperties = new ObjectMapper().createArrayNode();
-        addNewExternalProperty(externalProperties, "123", "additionalProp", "value");
+        List<Map<String, Object>> emptyList = new ArrayList<>();
+        doReturn("http://example.com/resolved").when(resourcesExternalAdditionalPropertiesServiceSpy)
+            .resolveUrlTemplate(urlTemplate, uuid, true);
+        doReturn(emptyList).when(resourcesExternalAdditionalPropertiesServiceSpy)
+            .fetchAdditionalProperties("http://example.com/resolved");
 
-        doReturn(externalProperties).when(resourcesExternalAdditionalPropertiesServiceSpy)
-            .getResourcesExternalAdditionalProperties(anyString(), anyBoolean());
+        Map<String, Map<String, Object>> result = resourcesExternalAdditionalPropertiesServiceSpy
+            .getAdditionalPropertiesMap(uuid, true, urlTemplate, identifierFieldName);
 
-        resourcesExternalAdditionalPropertiesServiceSpy.mergeResourcesExternalAdditionalProperties(UUID.randomUUID().toString(), true, baseProperties);
-
-        assertTrue(baseProperties.get(0).has(ResourcesExternalAdditionalPropertiesService.EXTERNAL_ADDITIONAL_PROPERTIES_FIELD_NAME));
-        assertEquals("value", baseProperties.get(0).get(ResourcesExternalAdditionalPropertiesService.EXTERNAL_ADDITIONAL_PROPERTIES_FIELD_NAME).get("additionalProp").asText());
-    }
-
-    @Test
-    public void mergeResourcesExternalAdditionalPropertiesSkipsResourcesWithoutId() {
-        ArrayNode baseProperties = new ObjectMapper().createArrayNode();
-        ObjectNode resource = baseProperties.addObject();
-        resource.put("someProp", "value");
-
-        ArrayNode externalProperties = new ObjectMapper().createArrayNode();
-        doReturn(externalProperties).when(resourcesExternalAdditionalPropertiesServiceSpy)
-            .getResourcesExternalAdditionalProperties(anyString(), anyBoolean());
-
-        resourcesExternalAdditionalPropertiesServiceSpy.mergeResourcesExternalAdditionalProperties(UUID.randomUUID().toString(), true, baseProperties);
-
-        assertFalse(baseProperties.get(0).has(ResourcesExternalAdditionalPropertiesService.EXTERNAL_ADDITIONAL_PROPERTIES_FIELD_NAME));
-    }
-
-    @Test
-    public void mergeResourcesExternalAdditionalPropertiesHandlesNullIdNode() {
-        ArrayNode baseProperties = new ObjectMapper().createArrayNode();
-        addNewResourceWithId(baseProperties, null);
-
-        ArrayNode externalProperties = new ObjectMapper().createArrayNode();
-        doReturn(externalProperties).when(resourcesExternalAdditionalPropertiesServiceSpy)
-            .getResourcesExternalAdditionalProperties(anyString(), anyBoolean());
-
-        resourcesExternalAdditionalPropertiesServiceSpy.mergeResourcesExternalAdditionalProperties(UUID.randomUUID().toString(), true, baseProperties);
-
-        assertFalse(baseProperties.get(0).has(ResourcesExternalAdditionalPropertiesService.EXTERNAL_ADDITIONAL_PROPERTIES_FIELD_NAME));
-    }
-
-    @Test
-    public void mergeResourcesExternalAdditionalPropertiesHandlesWhitespaceId() {
-        ArrayNode baseProperties = new ObjectMapper().createArrayNode();
-        addNewResourceWithId(baseProperties, "   ");
-
-        ArrayNode externalProperties = new ObjectMapper().createArrayNode();
-        doReturn(externalProperties).when(resourcesExternalAdditionalPropertiesServiceSpy)
-            .getResourcesExternalAdditionalProperties(anyString(), anyBoolean());
-
-        resourcesExternalAdditionalPropertiesServiceSpy.mergeResourcesExternalAdditionalProperties(UUID.randomUUID().toString(), true, baseProperties);
-
-        assertFalse(baseProperties.get(0).has(ResourcesExternalAdditionalPropertiesService.EXTERNAL_ADDITIONAL_PROPERTIES_FIELD_NAME));
-    }
-
-    @Test
-    public void mergeResourcesExternalAdditionalPropertiesHandlesPartialMatches() {
-        // Create base properties with 3 resources
-        ArrayNode baseProperties = new ObjectMapper().createArrayNode();
-        addNewResourceWithId(baseProperties, "123");
-        addNewResourceWithId(baseProperties, "456");
-        addNewResourceWithId(baseProperties, "789");
-
-        // Create external properties with only 2 matching resources
-        ArrayNode externalProperties = new ObjectMapper().createArrayNode();
-        addNewExternalProperty(externalProperties, "123", "prop1", "value1");
-        addNewExternalProperty(externalProperties, "789", "prop3", "value3");
-
-        doReturn(externalProperties).when(resourcesExternalAdditionalPropertiesServiceSpy)
-            .getResourcesExternalAdditionalProperties(anyString(), anyBoolean());
-
-        resourcesExternalAdditionalPropertiesServiceSpy.mergeResourcesExternalAdditionalProperties(UUID.randomUUID().toString(), true, baseProperties);
-
-        assertTrue(baseProperties.get(0).has(ResourcesExternalAdditionalPropertiesService.EXTERNAL_ADDITIONAL_PROPERTIES_FIELD_NAME));
-        assertFalse(baseProperties.get(1).has(ResourcesExternalAdditionalPropertiesService.EXTERNAL_ADDITIONAL_PROPERTIES_FIELD_NAME));
-        assertTrue(baseProperties.get(2).has(ResourcesExternalAdditionalPropertiesService.EXTERNAL_ADDITIONAL_PROPERTIES_FIELD_NAME));
-    }
-
-    private static void addNewExternalProperty(ArrayNode externalProperties, String id, String propName, String propValue) {
-        ObjectNode external1 = externalProperties.addObject();
-        external1.put(DEFAULT_EXTERNAL_ADDITIONAL_PROPERTIES_IDENTIFIER_FIELD_NAME, id);
-        external1.put(propName, propValue);
-    }
-
-    private static void addNewResourceWithId(ArrayNode baseProperties, String number) {
-        ObjectNode resource = baseProperties.addObject();
-        resource.putObject(METADATA_RESOURCE_EXTERNAL_MANAGEMENT_PROPERTIES_FIELD_NAME).put(ID_FIELD_NAME, number);
+        assertEquals(0, result.size());
     }
 
 }
