@@ -98,6 +98,19 @@ public abstract class AbstractStore implements Store {
         return resourceList;
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * The abstract implementation retrieves resources for indexing without any external additional properties.
+     * Can be overridden by subclasses to provide external additional properties if needed.
+     */
+    @Override
+    public List<MetadataResource> getResourcesForIndexing(final ServiceContext context, final String metadataUuid, Boolean approved) throws Exception {
+        List<MetadataResource> resourceList = new ArrayList<>(getResources(context, metadataUuid, MetadataResourceVisibility.PUBLIC, null, approved));
+        resourceList.addAll(getResources(context, metadataUuid, MetadataResourceVisibility.PRIVATE, null, approved));
+        return resourceList;
+    }
+
     @Override
     public final ResourceHolder getResource(ServiceContext context, String metadataUuid, String resourceId) throws Exception {
         return getResource(context, metadataUuid, resourceId, true);

@@ -32,6 +32,10 @@
   <bean class="org.fao.geonet.kernel.datamanager.base.BaseMetadataUtils"/>
   <bean class="org.fao.geonet.kernel.datamanager.base.BaseMetadataManager"/>
 
+  <!-- ResourcesExternalAdditionalPropertiesService bean for tests (will no-op with blank config) -->
+  <bean id="resourcesExternalAdditionalPropertiesService"
+        class="org.fao.geonet.services.util.ResourcesExternalAdditionalPropertiesService"/>
+
   <!-- DataManager need ThesaurusManager need SettingManager need a ServletContext-->
   <bean id="servletContext" class="org.fao.geonet.GeonetMockServletContext"/>
 

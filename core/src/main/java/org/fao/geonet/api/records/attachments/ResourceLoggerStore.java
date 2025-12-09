@@ -65,6 +65,14 @@ public class ResourceLoggerStore extends AbstractStore {
     }
 
     @Override
+    public List<MetadataResource> getResourcesForIndexing(final ServiceContext context, final String metadataUuid, Boolean approved) throws Exception {
+        if (decoratedStore != null) {
+            return decoratedStore.getResourcesForIndexing(context, metadataUuid, approved);
+        }
+        return null;
+    }
+
+    @Override
     public List<MetadataResource> getResources(ServiceContext context, String metadataUuid,
                                                MetadataResourceVisibility metadataResourceVisibility, String filter, Boolean approved)
             throws Exception {

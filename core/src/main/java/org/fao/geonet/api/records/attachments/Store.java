@@ -102,6 +102,23 @@ public interface Store {
     List<MetadataResource> getResources(ServiceContext context, String metadataUuid, MetadataResourceVisibility metadataResourceVisibility, String filter, Boolean approved) throws Exception;
 
     /**
+     * Retrieves a list of metadata resources that should be included in the search index.
+     * <p>
+     * This method is used during the indexing process to collect all resources associated
+     * with a metadata record that need to be made searchable. The returned resources
+     * include both public and private attachments.
+     * </p>
+     *
+     * @param context the service context containing user session and application context information
+     * @param metadataUuid the unique identifier (UUID) of the metadata record whose resources are to be indexed
+     * @param approved indicates whether to retrieve resources from the approved version (true) or draft version (false) of the metadata
+     * @return a list of {@link MetadataResource} objects representing all resources to be indexed for the specified metadata
+     * @throws Exception if there is an error retrieving the resources, such as database access issues,
+     *                   permission problems, or if the metadata record cannot be found
+     */
+    List<MetadataResource> getResourcesForIndexing(ServiceContext context, String metadataUuid, Boolean approved) throws Exception;
+
+    /**
      * Retrieve a resource.
      *
      *
