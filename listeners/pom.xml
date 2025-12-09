@@ -31,7 +31,7 @@
     <version>4.4.10-SNAPSHOT</version>
   </parent>
 
-  <name>GeoNetwork Events</name>
+  <name>GeoNetwork Listeners</name>
   <packaging>jar</packaging>
   <artifactId>gn-listeners</artifactId>
   <description>Contains all listeners from events.</description>
