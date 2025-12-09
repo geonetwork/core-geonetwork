@@ -23,7 +23,7 @@
 
 package org.fao.geonet.domain;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 /**
  * Encapsulates the harvest data related to a metadata document. Like whether the metadata was

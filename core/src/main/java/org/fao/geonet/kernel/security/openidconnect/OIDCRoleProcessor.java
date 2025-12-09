@@ -31,6 +31,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.core.oidc.OidcIdToken;
 import org.springframework.security.oauth2.core.user.OAuth2User;
+import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
@@ -336,7 +337,7 @@ public class OIDCRoleProcessor {
         for (String rg : roleGroupList) {
             String[] rg_role_groups = rg.split(roleGroupSeparator);
 
-            if (rg_role_groups.length == 0 || StringUtils.isEmpty(rg_role_groups[0])) {
+            if (rg_role_groups.length == 0 || ObjectUtils.isEmpty(rg_role_groups[0])) {
                 continue;
             }
 

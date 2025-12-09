@@ -25,9 +25,9 @@ package org.fao.geonet.domain;
 
 import org.fao.geonet.entitylistener.OperationEntityListenerManager;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.persistence.*;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
+import jakarta.persistence.*;
 
 import java.util.Map;
 

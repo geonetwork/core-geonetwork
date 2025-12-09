@@ -20,10 +20,10 @@
 
 package org.fao.geonet.kernel.security.shibboleth;
 
-import javax.servlet.ServletRequest;
-import javax.servlet.http.HttpServletRequest;
-import javax.transaction.Transactional;
-import javax.transaction.Transactional.TxType;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.transaction.Transactional;
+import jakarta.transaction.Transactional.TxType;
 
 import org.apache.batik.util.resources.ResourceManager;
 import org.fao.geonet.ApplicationContextHolder;
@@ -43,8 +43,7 @@ import org.fao.geonet.utils.Log;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.provisioning.UserDetailsManager;
-import org.springframework.util.StringUtils;
-
+import org.springframework.util.ObjectUtils;
 import jeeves.component.ProfileManager;
 
 import java.util.ArrayList;
@@ -111,18 +110,18 @@ public class ShibbolethUserUtils extends BaseUserUtils {
         //      - GroupKey header format: sample;sample
         String roleGroup_header = getHeader(req, config.getRoleGroupKey(), "");
         String[] roleGroups = new String[0];
-        if (!StringUtils.isEmpty(roleGroup_header)) {
+        if (!ObjectUtils.isEmpty(roleGroup_header)) {
             roleGroups = roleGroup_header.split(arraySeparator);
         } else {
             String profile_header = getHeader(req, config.getProfileKey(), Profile.Guest.name());
             String[] profiles = new String[0];
-            if (!StringUtils.isEmpty(profile_header)) {
+            if (!ObjectUtils.isEmpty(profile_header)) {
                 profiles = profile_header.split(arraySeparator);
             }
 
             String group_header = getHeader(req, config.getGroupKey(), config.getDefaultGroup());
             String[] groups = new String[0];
-            if (!StringUtils.isEmpty(group_header)) {
+            if (!ObjectUtils.isEmpty(group_header)) {
                 groups = group_header.split(arraySeparator);
             }
 
@@ -142,7 +141,7 @@ public class ShibbolethUserUtils extends BaseUserUtils {
             roleGroups = roleGroupsList.stream().toArray(String[]::new);
         }
 
-        if (!StringUtils.isEmpty(username)) {
+        if (!ObjectUtils.isEmpty(username)) {
 
             // FIXME: needed? only accept the first 256 chars
             if (username.length() > 256) {
@@ -174,7 +173,7 @@ public class ShibbolethUserUtils extends BaseUserUtils {
                 user.setOrganisation(organisation);
 
                 // Add email
-                if (!StringUtils.isEmpty(email)) {
+                if (!ObjectUtils.isEmpty(email)) {
                     user.getEmailAddresses().add(email);
                 }
 
@@ -201,7 +200,7 @@ public class ShibbolethUserUtils extends BaseUserUtils {
 
                     ldapUserDetails.getUser().setProfile(user.getProfile());
                     ldapUserDetails.getUser().getEmailAddresses().clear();
-                    if (StringUtils.isEmpty(email)) {
+                    if (ObjectUtils.isEmpty(email)) {
                         ldapUserDetails.getUser().getEmailAddresses().add(username + "@unknownIdp");
                     } else {
                         ldapUserDetails.getUser().getEmailAddresses().add(email);
@@ -230,7 +229,7 @@ public class ShibbolethUserUtils extends BaseUserUtils {
         for (String rg : role_groups) {
             String[] tmp = rg.split(separator);
 
-            if (tmp.length == 0 || StringUtils.isEmpty(tmp[0])) {
+            if (tmp.length == 0 || ObjectUtils.isEmpty(tmp[0])) {
                 continue;
             }
 

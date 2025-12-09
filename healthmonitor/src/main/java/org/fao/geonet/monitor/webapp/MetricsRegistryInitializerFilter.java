@@ -29,7 +29,7 @@ import com.yammer.metrics.core.MetricsRegistry;
 import jeeves.monitor.MonitorManager;
 import org.fao.geonet.utils.Log;
 
-import javax.servlet.*;
+import jakarta.servlet.*;
 
 import java.io.IOException;
 

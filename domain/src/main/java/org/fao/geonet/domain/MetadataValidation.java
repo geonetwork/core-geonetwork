@@ -26,8 +26,8 @@ package org.fao.geonet.domain;
 import org.fao.geonet.entitylistener.MetadataValidationEntityListenerManager;
 import org.hibernate.annotations.Type;
 
-import javax.annotation.Nonnull;
-import javax.persistence.*;
+import jakarta.annotation.Nonnull;
+import jakarta.persistence.*;
 import java.util.Objects;
 
 /**

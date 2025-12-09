@@ -26,8 +26,8 @@ package org.fao.geonet.kernel.harvest.harvester.csw;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Maps;
 
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.methods.HttpRequestBase;
+import org.apache.hc.client5.http.classic.methods.HttpPost;
+import org.apache.hc.client5.http.classic.methods.HttpUriRequestBase;
 import org.fao.geonet.MockRequestFactoryGeonet;
 import org.fao.geonet.csw.common.Csw;
 import org.fao.geonet.kernel.harvest.AbstractHarvesterIntegrationTest;
@@ -37,7 +37,7 @@ import org.jdom.Element;
 
 import java.util.Map;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * Integration Test for the Csw Harvester class.
@@ -72,12 +72,12 @@ public class CswHarvesterIntegrationTest extends AbstractHarvesterIntegrationTes
             .thenReturn(fileStream("GetRecordById-7e926fbf-00fb-4ff5-a99e-c8576027c4e7.xml"));
         cswServerRequest.when(REQUEST + queryString + "da165110-88fd-11da-a88f-000d939bc5d8")
             .thenReturn(fileStream("GetRecordById-da165110-88fd-11da-a88f-000d939bc5d8.xml"));
-        cswServerRequest.when(new Predicate<HttpRequestBase>() {
+        cswServerRequest.when(new Predicate<HttpUriRequestBase>() {
             @Override
-            public boolean apply(@Nullable HttpRequestBase input) {
+            public boolean apply(@Nullable HttpUriRequestBase input) {
 
                 final boolean isHttpPost = input instanceof HttpPost;
-                final boolean correctPath = input.getURI().toString().startsWith(REQUEST);
+                final boolean correctPath = input.getUri().toString().startsWith(REQUEST);
                 if (!correctPath) {
                     return false;
                 }
@@ -98,7 +98,7 @@ public class CswHarvesterIntegrationTest extends AbstractHarvesterIntegrationTes
                     elementSetName = queryEl.getChild("ElementSetName", Csw.NAMESPACE_CSW).getText();
                     noQueryFilter = queryEl.getChildren().size() == 1;
                 } else {
-                    final String[] params = input.getURI().getQuery().split("\\&");
+                    final String[] params = input.getUri().getQuery().split("\\&");
                     Map<String, String> paramMap = Maps.newHashMap();
                     for (String param : params) {
                         final String[] split = param.split("=");

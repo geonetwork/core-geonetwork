@@ -44,7 +44,7 @@ import org.springframework.context.ConfigurableApplicationContext;
 import java.io.InputStream;
 import java.util.Date;
 import java.util.List;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * Decorate a store and record put/get/delete operations in database for reporting statistics.

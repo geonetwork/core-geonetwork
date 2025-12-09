@@ -27,12 +27,12 @@ import org.fao.geonet.domain.*;
 import org.fao.geonet.utils.Log;
 import org.springframework.data.jpa.domain.Specification;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.Tuple;
-import javax.persistence.criteria.*;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.Tuple;
+import jakarta.persistence.criteria.*;
 
 import java.util.ArrayList;
 import java.util.Collection;

@@ -2,9 +2,9 @@ package org.fao.geonet.api.records.model.validation;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
-import javax.xml.bind.annotation.*;
-import javax.xml.bind.annotation.adapters.CollapsedStringAdapter;
-import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+import jakarta.xml.bind.annotation.*;
+import jakarta.xml.bind.annotation.adapters.CollapsedStringAdapter;
+import jakarta.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.math.BigInteger;
 
 import io.swagger.v3.oas.annotations.media.Schema;

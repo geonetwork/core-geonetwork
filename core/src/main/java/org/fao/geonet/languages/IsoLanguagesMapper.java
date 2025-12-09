@@ -32,7 +32,7 @@ import com.neovisionaries.i18n.LanguageCode;
 import org.fao.geonet.utils.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import javax.annotation.PostConstruct;
+import jakarta.annotation.PostConstruct;
 
 /**
  * TODO javadoc.

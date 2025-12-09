@@ -36,7 +36,7 @@ import org.junit.Test;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 import java.util.Collection;
 import java.util.List;

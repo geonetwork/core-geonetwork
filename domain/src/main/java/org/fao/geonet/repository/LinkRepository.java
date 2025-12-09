@@ -26,7 +26,7 @@ package org.fao.geonet.repository;
 import org.fao.geonet.domain.Link;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.List;
 import java.util.Optional;
 

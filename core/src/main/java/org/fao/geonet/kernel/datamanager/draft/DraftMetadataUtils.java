@@ -59,8 +59,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionSynchronization;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 
-import javax.annotation.Nonnull;
-import javax.persistence.EntityNotFoundException;
+import jakarta.annotation.Nonnull;
+import jakarta.persistence.EntityNotFoundException;
 import java.io.IOException;
 import java.util.*;
 

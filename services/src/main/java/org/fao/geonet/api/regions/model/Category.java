@@ -1,6 +1,6 @@
 package org.fao.geonet.api.regions.model;
 
-import javax.xml.bind.annotation.XmlAttribute;
+import jakarta.xml.bind.annotation.XmlAttribute;
 
 /**
  * Created by francois on 21/06/16.

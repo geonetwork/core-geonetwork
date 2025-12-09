@@ -27,7 +27,7 @@ import org.fao.geonet.domain.HarvesterData;
 import org.fao.geonet.domain.HarvesterDataId;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.List;
 

@@ -28,7 +28,7 @@ import org.fao.geonet.domain.InspireAtomFeed;
 import org.fao.geonet.domain.InspireAtomFeed_;
 import org.springframework.data.jpa.domain.Specification;
 
-import javax.persistence.criteria.*;
+import jakarta.persistence.criteria.*;
 
 public class InspireAtomFeedSpecs {
     private InspireAtomFeedSpecs() {

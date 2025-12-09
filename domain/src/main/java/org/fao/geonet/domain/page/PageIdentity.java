@@ -24,7 +24,7 @@ package org.fao.geonet.domain.page;
 
 import java.io.Serializable;
 
-import javax.persistence.Embeddable;
+import jakarta.persistence.Embeddable;
 
 @Embeddable
 public class PageIdentity implements Serializable {

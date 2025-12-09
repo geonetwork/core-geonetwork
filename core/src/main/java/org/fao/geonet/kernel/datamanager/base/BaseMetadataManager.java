@@ -81,13 +81,13 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.transaction.TransactionStatus;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.annotation.PostConstruct;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.criteria.Root;
-import javax.transaction.Transactional;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
+import jakarta.annotation.PostConstruct;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.criteria.Root;
+import jakarta.transaction.Transactional;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.ZonedDateTime;
@@ -318,7 +318,7 @@ public class BaseMetadataManager implements IMetadataManager {
         // Logical delete for metadata file uploads
         PathSpec<MetadataFileUpload, String> deletedDatePathSpec = new PathSpec<MetadataFileUpload, String>() {
             @Override
-            public javax.persistence.criteria.Path<String> getPath(Root<MetadataFileUpload> root) {
+            public jakarta.persistence.criteria.Path<String> getPath(Root<MetadataFileUpload> root) {
                 return root.get(MetadataFileUpload_.deletedDate);
             }
         };

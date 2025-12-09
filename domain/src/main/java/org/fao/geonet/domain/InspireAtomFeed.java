@@ -28,7 +28,7 @@ import org.hibernate.annotations.Type;
 import org.jdom.Element;
 import org.jdom.Namespace;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;

@@ -21,7 +21,7 @@
 package org.fao.geonet.kernel.security.shibboleth;
 
 import org.fao.geonet.kernel.security.SecurityProviderConfiguration;
-import org.springframework.util.StringUtils;
+import org.springframework.util.ObjectUtils;
 
 /**
  * Some basic configuration info for Shibboleth logins.
@@ -65,7 +65,7 @@ public class ShibbolethUserConfiguration implements SecurityProviderConfiguratio
     }
 
     public void setSurnameKey(String surnameKey) {
-		if(StringUtils.isEmpty(surnameKey)) {
+		if(ObjectUtils.isEmpty(surnameKey)) {
             surnameKey = "";
         }
         this.surnameKey = surnameKey;
@@ -76,7 +76,7 @@ public class ShibbolethUserConfiguration implements SecurityProviderConfiguratio
     }
 
     public void setFirstnameKey(String firstnameKey) {
-		if(StringUtils.isEmpty(firstnameKey)) {
+		if(ObjectUtils.isEmpty(firstnameKey)) {
             firstnameKey = "";
         }
         this.firstnameKey = firstnameKey;
@@ -87,7 +87,7 @@ public class ShibbolethUserConfiguration implements SecurityProviderConfiguratio
     }
 
     public void setOrganisationKey(String organisationKey) {
-        if(StringUtils.isEmpty(organisationKey)) {
+        if(ObjectUtils.isEmpty(organisationKey)) {
             organisationKey = "";
         }
         this.organisationKey = organisationKey;
@@ -98,7 +98,7 @@ public class ShibbolethUserConfiguration implements SecurityProviderConfiguratio
     }
 
     public void setProfileKey(String profileKey) {
-		if(StringUtils.isEmpty(profileKey)) {
+		if(ObjectUtils.isEmpty(profileKey)) {
             profileKey = "";
         }
         this.profileKey = profileKey;
@@ -109,7 +109,7 @@ public class ShibbolethUserConfiguration implements SecurityProviderConfiguratio
     }
 
     public void setGroupKey(String groupKey) {
-		if(StringUtils.isEmpty(groupKey)) {
+		if(ObjectUtils.isEmpty(groupKey)) {
             groupKey = "";
         }
         this.groupKey = groupKey;
@@ -120,7 +120,7 @@ public class ShibbolethUserConfiguration implements SecurityProviderConfiguratio
     }
 
     public void setDefaultGroup(String defaultGroup) {
-		if(StringUtils.isEmpty(defaultGroup)) {
+		if(ObjectUtils.isEmpty(defaultGroup)) {
             defaultGroup = "";
         }
         this.defaultGroup = defaultGroup;
@@ -147,7 +147,7 @@ public class ShibbolethUserConfiguration implements SecurityProviderConfiguratio
     }
 
     public void setEmailKey(String emailKey) {
-		if(StringUtils.isEmpty(emailKey)) {
+		if(ObjectUtils.isEmpty(emailKey)) {
             emailKey = "";
         }
         this.emailKey = emailKey;
@@ -158,7 +158,7 @@ public class ShibbolethUserConfiguration implements SecurityProviderConfiguratio
 	}
 
 	public void setArraySeparator(String arraySeparator) {
-		if(StringUtils.isEmpty(arraySeparator)) {
+		if(ObjectUtils.isEmpty(arraySeparator)) {
 			arraySeparator = ";";
 		}
 		this.arraySeparator = arraySeparator;
@@ -188,7 +188,7 @@ public class ShibbolethUserConfiguration implements SecurityProviderConfiguratio
 	}
 
 	public void setRoleGroupSeparator(String roleGroupSeparator) {
-		if(StringUtils.isEmpty(arraySeparator)) {
+		if(ObjectUtils.isEmpty(arraySeparator)) {
 			arraySeparator = ",";
 		}
 		this.roleGroupSeparator = roleGroupSeparator;

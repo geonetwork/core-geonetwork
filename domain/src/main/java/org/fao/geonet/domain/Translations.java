@@ -28,7 +28,7 @@ import java.io.Serializable;
 import org.fao.geonet.entitylistener.TranslationsEntityListenerManager;
 import org.hibernate.annotations.Type;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 /**
  * Variable substitutions and extra information that goes in a CSW capabilities document. <br/>

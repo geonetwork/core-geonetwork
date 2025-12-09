@@ -27,8 +27,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.collect.Sets;
 import org.fao.geonet.entitylistener.MetadataCategoryEntityListenerManager;
 
-import javax.annotation.Nonnull;
-import javax.persistence.*;
+import jakarta.annotation.Nonnull;
+import jakarta.persistence.*;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Map;

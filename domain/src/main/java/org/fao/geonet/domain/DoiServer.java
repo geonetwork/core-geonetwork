@@ -26,7 +26,7 @@ package org.fao.geonet.domain;
 import org.fao.geonet.entitylistener.DoiServerEntityListenerManager;
 import org.hibernate.annotations.Type;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 

@@ -31,9 +31,9 @@ import org.jdom.Content;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.persistence.*;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
+import jakarta.persistence.*;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;

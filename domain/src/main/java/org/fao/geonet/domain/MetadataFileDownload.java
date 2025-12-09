@@ -23,7 +23,7 @@
 
 package org.fao.geonet.domain;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 /**
  * Entity to model a metadata file download request: metadata identifier, download date, user, file

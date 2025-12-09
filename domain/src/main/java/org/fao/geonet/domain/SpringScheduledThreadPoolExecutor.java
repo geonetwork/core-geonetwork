@@ -25,7 +25,7 @@ package org.fao.geonet.domain;
 
 import org.fao.geonet.utils.Log;
 
-import javax.annotation.PreDestroy;
+import jakarta.annotation.PreDestroy;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;

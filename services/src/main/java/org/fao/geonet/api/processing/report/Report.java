@@ -25,7 +25,7 @@ package org.fao.geonet.api.processing.report;
 
 import org.fao.geonet.domain.ISODate;
 
-import javax.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlElement;
 
 /**
  * A simple report.

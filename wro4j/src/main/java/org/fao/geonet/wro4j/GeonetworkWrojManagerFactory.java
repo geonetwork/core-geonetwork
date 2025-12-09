@@ -35,7 +35,7 @@ import ro.isdc.wro.cache.impl.LruMemoryCacheStrategy;
 import ro.isdc.wro.manager.factory.ConfigurableWroManagerFactory;
 import ro.isdc.wro.model.factory.WroModelFactory;
 
-import javax.servlet.ServletContext;
+import jakarta.servlet.ServletContext;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;

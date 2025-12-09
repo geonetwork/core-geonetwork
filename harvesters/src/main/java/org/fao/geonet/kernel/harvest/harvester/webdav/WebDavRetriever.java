@@ -29,7 +29,7 @@ import com.github.sardine.impl.SardineImpl;
 
 import jeeves.server.context.ServiceContext;
 
-import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
 import org.fao.geonet.Logger;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.utils.GeonetHttpRequestFactory;

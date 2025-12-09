@@ -30,8 +30,8 @@ import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
 import org.springframework.util.Assert;
 
-import javax.annotation.Nonnull;
-import javax.persistence.*;
+import jakarta.annotation.Nonnull;
+import jakarta.persistence.*;
 import java.io.IOException;
 import java.util.*;
 

@@ -26,7 +26,7 @@ package org.fao.geonet.repository;
 import org.fao.geonet.domain.Group;
 import org.fao.geonet.domain.ReservedGroup;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.List;
 

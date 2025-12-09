@@ -28,7 +28,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
-import javax.servlet.ServletContext;
+import jakarta.servlet.ServletContext;
 
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;

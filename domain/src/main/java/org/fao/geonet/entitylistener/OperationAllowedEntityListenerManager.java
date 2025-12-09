@@ -25,7 +25,7 @@ package org.fao.geonet.entitylistener;
 
 import org.fao.geonet.domain.OperationAllowed;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 /**
  * Created with IntelliJ IDEA. OperationAllowed: Jesse Date: 11/26/13 Time: 1:51 PM

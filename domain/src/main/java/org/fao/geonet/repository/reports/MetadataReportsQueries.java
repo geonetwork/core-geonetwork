@@ -26,9 +26,9 @@ package org.fao.geonet.repository.reports;
 import org.fao.geonet.domain.*;
 import org.springframework.data.jpa.domain.Specification;
 
-import javax.annotation.Nonnull;
-import javax.persistence.EntityManager;
-import javax.persistence.criteria.*;
+import jakarta.annotation.Nonnull;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.criteria.*;
 
 import java.util.*;
 

@@ -25,7 +25,7 @@ package org.fao.geonet.entitylistener;
 
 import org.fao.geonet.domain.MetadataIdentifierTemplate;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 /**
  * @author Jose García

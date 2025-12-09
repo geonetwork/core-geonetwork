@@ -27,7 +27,7 @@ import org.fao.geonet.utils.IO;
 
 import java.nio.file.Path;
 
-import javax.servlet.ServletContext;
+import jakarta.servlet.ServletContext;
 
 /**
  * Look up all the paths that the ServletContext is needed to find.

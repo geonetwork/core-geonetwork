@@ -1,6 +1,6 @@
 package org.fao.geonet.domain;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 /**
  * An entity representing a text file with mime type.

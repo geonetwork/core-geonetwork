@@ -3,7 +3,7 @@ package org.geonetwork.messaging;
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.springframework.context.ApplicationEvent;
 
-import javax.jms.*;
+import jakarta.jms.*;
 
 /**
  * Created by francois on 05/11/15.

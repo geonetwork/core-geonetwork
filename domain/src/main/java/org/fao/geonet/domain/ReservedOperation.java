@@ -23,7 +23,7 @@
 
 package org.fao.geonet.domain;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * The system reserved operations. Ids and names are hardcoded and have special meaning in

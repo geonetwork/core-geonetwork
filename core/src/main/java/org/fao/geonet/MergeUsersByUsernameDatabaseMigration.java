@@ -36,9 +36,9 @@ import org.fao.geonet.utils.Log;
 import org.springframework.context.ApplicationContext;
 import org.springframework.data.jpa.domain.Specification;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.transaction.Transactional;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
+import jakarta.transaction.Transactional;
 import java.util.*;
 
 /**

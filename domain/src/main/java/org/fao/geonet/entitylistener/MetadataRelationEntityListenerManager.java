@@ -25,7 +25,7 @@ package org.fao.geonet.entitylistener;
 
 import org.fao.geonet.domain.MetadataRelation;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 /**
  * Created with IntelliJ IDEA. MetadataRelation: Jesse Date: 11/26/13 Time: 1:51 PM

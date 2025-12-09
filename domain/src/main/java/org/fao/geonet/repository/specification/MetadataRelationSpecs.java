@@ -28,7 +28,7 @@ import org.fao.geonet.domain.MetadataRelationId_;
 import org.fao.geonet.domain.MetadataRelation_;
 import org.springframework.data.jpa.domain.Specification;
 
-import javax.persistence.criteria.*;
+import jakarta.persistence.criteria.*;
 
 /**
  * Specification for querying {@link org.fao.geonet.repository.UserRepository}.

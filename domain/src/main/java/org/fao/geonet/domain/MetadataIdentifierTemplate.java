@@ -25,7 +25,7 @@ package org.fao.geonet.domain;
 
 import org.fao.geonet.entitylistener.MetadataIdentifierTemplateListenerManager;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 /**
  * An entity representing metadata identifier template. Metadata identifier templates are used to

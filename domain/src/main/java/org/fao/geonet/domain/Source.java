@@ -29,8 +29,8 @@ import org.fao.geonet.entitylistener.SourceEntityListenerManager;
 import org.fao.geonet.repository.LanguageRepository;
 import org.hibernate.annotations.Type;
 
-import javax.annotation.Nonnull;
-import javax.persistence.*;
+import jakarta.annotation.Nonnull;
+import jakarta.persistence.*;
 import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;

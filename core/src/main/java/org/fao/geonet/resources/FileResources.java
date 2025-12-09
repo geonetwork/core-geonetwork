@@ -19,10 +19,10 @@ import java.nio.file.attribute.FileTime;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.concurrent.TimeUnit;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import javax.imageio.ImageIO;
-import javax.servlet.ServletContext;
+import jakarta.servlet.ServletContext;
 
 public class FileResources extends Resources {
     @Override

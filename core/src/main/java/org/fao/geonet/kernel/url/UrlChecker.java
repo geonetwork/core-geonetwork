@@ -24,10 +24,10 @@ package org.fao.geonet.kernel.url;
 
 import com.google.common.base.Function;
 import org.apache.commons.httpclient.HttpStatus;
-import org.apache.http.client.config.RequestConfig;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpHead;
-import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.hc.client5.http.config.RequestConfig;
+import org.apache.hc.client5.http.classic.methods.HttpGet;
+import org.apache.hc.client5.http.classic.methods.HttpHead;
+import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.LinkStatus;
 import org.fao.geonet.kernel.setting.SettingManager;
@@ -40,11 +40,12 @@ import org.springframework.http.client.ClientHttpResponse;
 import sun.net.ftp.FtpLoginException;
 import org.fao.geonet.utils.Log;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.concurrent.TimeUnit;
 
 public class UrlChecker {
 
@@ -70,9 +71,9 @@ public class UrlChecker {
         @Override
         public Void apply(@Nullable HttpClientBuilder originalConfig) {
             RequestConfig.Builder config = RequestConfig.custom()
-                    .setConnectTimeout(10000)
-                    .setConnectionRequestTimeout(10000)
-                    .setSocketTimeout(10000);
+                    .setConnectTimeout(10000, TimeUnit.MILLISECONDS)
+                    .setConnectionRequestTimeout(10000, TimeUnit.MILLISECONDS)
+                    .setResponseTimeout(10000, TimeUnit.MILLISECONDS);
             RequestConfig requestConfig = config.build();
             originalConfig.setDefaultRequestConfig(requestConfig);
             originalConfig.setUserAgent(getUserAgent());
@@ -156,7 +157,7 @@ public class UrlChecker {
         };
 
         ClientHttpResponse response = requestFactory.execute(head, HTTP_CLIENT_CONFIGURATOR2);
-        if (!shouldTryGetInsteadOfHead(response.getRawStatusCode())) {
+        if (!shouldTryGetInsteadOfHead(response.getStatusCode().value())) {
             return response;
         }
         HttpGet get = new HttpGet(url);
@@ -188,7 +189,7 @@ public class UrlChecker {
 
     private LinkStatus buildStatus(ClientHttpResponse response, boolean failed) throws IOException {
         LinkStatus linkStatus = new LinkStatus();
-        linkStatus.setStatusValue(response.getRawStatusCode() + "");
+        linkStatus.setStatusValue(response.getStatusCode().value() + "");
         linkStatus.setStatusInfo(response.getStatusText());
         linkStatus.setFailing(failed);
         return linkStatus;
@@ -199,7 +200,7 @@ public class UrlChecker {
         try {
             return response.getStatusCode();
         } catch (Exception e) {
-            return org.springframework.http.HttpStatus.valueOf((response.getRawStatusCode() / 100) * 100);
+            return org.springframework.http.HttpStatus.valueOf((response.getStatusCode().value() / 100) * 100);
         }
     }
 }

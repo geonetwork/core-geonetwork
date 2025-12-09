@@ -36,8 +36,8 @@ import org.fao.geonet.utils.Log;
 import org.jdom.Element;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PreDestroy;
-import javax.servlet.ServletContext;
+import jakarta.annotation.PreDestroy;
+import jakarta.servlet.ServletContext;
 
 import java.util.HashMap;
 import java.util.LinkedList;

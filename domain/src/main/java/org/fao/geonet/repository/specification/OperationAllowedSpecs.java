@@ -28,7 +28,7 @@ import org.springframework.data.jpa.domain.Specification;
 
 import java.util.Collection;
 
-import javax.persistence.criteria.*;
+import jakarta.persistence.criteria.*;
 
 public final class OperationAllowedSpecs {
     private OperationAllowedSpecs() {

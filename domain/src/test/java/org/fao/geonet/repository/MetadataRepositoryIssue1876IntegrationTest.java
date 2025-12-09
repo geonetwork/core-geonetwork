@@ -4,8 +4,8 @@ import java.io.IOException;
 import java.net.UnknownHostException;
 import java.util.Set;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataCategory;

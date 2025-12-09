@@ -56,7 +56,7 @@ import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.springframework.data.jpa.domain.Specification;
 
-import javax.transaction.Transactional;
+import jakarta.transaction.Transactional;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.HashMap;

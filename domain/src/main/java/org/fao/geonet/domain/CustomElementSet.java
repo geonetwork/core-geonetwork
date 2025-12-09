@@ -25,7 +25,7 @@ package org.fao.geonet.domain;
 
 import org.fao.geonet.entitylistener.CustomElementSetEntityListenerManager;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 /**
  * Csw custom element set. This is part of the CSW specification related to what elements are

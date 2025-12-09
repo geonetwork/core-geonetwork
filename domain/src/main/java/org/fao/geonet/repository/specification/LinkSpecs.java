@@ -27,7 +27,7 @@ import com.google.common.collect.Sets;
 import org.fao.geonet.domain.*;
 import org.springframework.data.jpa.domain.Specification;
 
-import javax.persistence.criteria.*;
+import jakarta.persistence.criteria.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;

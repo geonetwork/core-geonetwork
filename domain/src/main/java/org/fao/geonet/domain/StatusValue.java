@@ -26,7 +26,7 @@ package org.fao.geonet.domain;
 import org.fao.geonet.entitylistener.StatusValueEntityListenerManager;
 import org.springframework.http.MediaType;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 import java.util.Arrays;
 import java.util.Map;

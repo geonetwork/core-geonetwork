@@ -25,10 +25,10 @@ package org.fao.geonet.wro4j;
 import org.fao.geonet.utils.Log;
 import ro.isdc.wro.http.WroFilter;
 
-import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.FilterConfig;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.SocketException;
 

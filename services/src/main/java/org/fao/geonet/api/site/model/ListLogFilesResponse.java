@@ -28,7 +28,7 @@ import com.google.common.collect.Lists;
 import org.geotools.api.referencing.FactoryException;
 import org.geotools.api.referencing.operation.TransformException;
 
-import javax.xml.bind.annotation.*;
+import jakarta.xml.bind.annotation.*;
 import java.util.Collection;
 import java.util.List;
 

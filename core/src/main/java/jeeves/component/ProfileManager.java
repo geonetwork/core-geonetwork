@@ -39,7 +39,7 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.FilterInvocation;
 
-import javax.servlet.ServletContext;
+import jakarta.servlet.ServletContext;
 
 import java.util.Collection;
 import java.util.Map;

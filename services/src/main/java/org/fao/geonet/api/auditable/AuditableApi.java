@@ -23,7 +23,7 @@
 
 package org.fao.geonet.api.auditable;
 
-import javax.servlet.ServletRequest;
+import jakarta.servlet.ServletRequest;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;

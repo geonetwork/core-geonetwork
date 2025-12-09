@@ -30,7 +30,7 @@ import org.apache.camel.model.dataformat.JaxbDataFormat;
 import org.fao.geonet.harvester.wfsfeatures.model.WFSHarvesterParameter;
 import org.w3c.dom.Document;
 
-import javax.xml.bind.JAXBContext;
+import jakarta.xml.bind.JAXBContext;
 
 /**
  * Created by francois on 28/10/15.

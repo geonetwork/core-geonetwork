@@ -22,7 +22,7 @@
  */
 package org.fao.geonet.domain.mapservices;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;

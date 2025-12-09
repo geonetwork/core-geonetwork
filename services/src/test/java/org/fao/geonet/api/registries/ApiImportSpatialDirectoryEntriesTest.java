@@ -8,7 +8,7 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStreamReader;
 import java.util.List;
 
-import javax.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpSession;
 
 import org.fao.geonet.api.processing.report.SimpleMetadataProcessingReport;
 import org.fao.geonet.domain.AbstractMetadata;

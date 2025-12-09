@@ -25,7 +25,7 @@ package org.fao.geonet.doi.client;
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.http.client.methods.HttpDelete;
+import org.apache.hc.client5.http.classic.methods.HttpDelete;
 import org.fao.geonet.ApplicationContextHolder;
 import static org.fao.geonet.doi.client.DoiManager.DOI_DEFAULT_URL;
 import org.fao.geonet.utils.GeonetHttpRequestFactory;
@@ -171,7 +171,7 @@ public class DoiDataciteClient extends BaseDoiClient implements IDoiClient {
 
             httpResponse = executeRequest(deleteMethod);
 
-            int status = httpResponse.getRawStatusCode();
+            int status = httpResponse.getStatusCode().value();
 
             Log.debug(LOGGER_NAME, "   -- Request status code: " + status);
 
@@ -200,7 +200,7 @@ public class DoiDataciteClient extends BaseDoiClient implements IDoiClient {
 
         } finally {
             if (deleteMethod != null) {
-                deleteMethod.releaseConnection();
+                deleteMethod.reset();
             }
             // Release the connection.
             IOUtils.closeQuietly(httpResponse);
@@ -221,7 +221,7 @@ public class DoiDataciteClient extends BaseDoiClient implements IDoiClient {
 
             httpResponse = executeRequest(deleteMethod);
 
-            int status = httpResponse.getRawStatusCode();
+            int status = httpResponse.getStatusCode().value();
 
             Log.debug(LOGGER_NAME, "   -- Request status code: " + status);
 
@@ -251,7 +251,7 @@ public class DoiDataciteClient extends BaseDoiClient implements IDoiClient {
 
         } finally {
             if (deleteMethod != null) {
-                deleteMethod.releaseConnection();
+                deleteMethod.reset();
             }
             // Release the connection.
             IOUtils.closeQuietly(httpResponse);

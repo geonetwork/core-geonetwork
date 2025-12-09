@@ -24,9 +24,9 @@
   -->
 
 <web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xmlns="http://java.sun.com/xml/ns/j2ee"
+         xmlns="https://jakarta.ee/xml/ns/jakartaee"
          xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd"
-         version="2.4">
+         version="6.0">
 
   <display-name>geonetwork</display-name>
 

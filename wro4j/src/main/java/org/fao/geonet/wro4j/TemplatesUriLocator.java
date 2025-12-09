@@ -3,7 +3,7 @@ package org.fao.geonet.wro4j;
 import ro.isdc.wro.config.Context;
 import ro.isdc.wro.model.resource.locator.UriLocator;
 
-import javax.servlet.ServletContext;
+import jakarta.servlet.ServletContext;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.*;

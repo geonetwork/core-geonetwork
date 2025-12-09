@@ -304,7 +304,6 @@
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>build-helper-maven-plugin</artifactId>
-        <version>3.0.0</version>
         <executions>
           <execution>
             <id>get-cpu-count</id>
@@ -495,13 +494,13 @@
         <version>${jetty.version}</version>
       </dependency>
       <dependency>
-        <groupId>org.eclipse.jetty</groupId>
-        <artifactId>jetty-servlet</artifactId>
+        <groupId>org.eclipse.jetty.ee9</groupId>
+        <artifactId>jetty-ee9-servlet</artifactId>
         <version>${jetty.version}</version>
       </dependency>
       <dependency>
-        <groupId>org.eclipse.jetty</groupId>
-        <artifactId>jetty-webapp</artifactId>
+        <groupId>org.eclipse.jetty.ee9</groupId>
+        <artifactId>jetty-ee9-webapp</artifactId>
         <version>${jetty.version}</version>
       </dependency>
       <dependency>
@@ -540,9 +539,9 @@
         <version>2.7</version>
       </dependency>
       <dependency>
-        <groupId>commons-fileupload</groupId>
-        <artifactId>commons-fileupload</artifactId>
-        <version>1.5</version>
+        <groupId>org.apache.commons</groupId>
+        <artifactId>commons-fileupload2-jakarta-servlet5</artifactId>
+        <version>2.0.0-M4</version>
       </dependency>
       <dependency>
         <groupId>commons-collections</groupId>
@@ -551,8 +550,8 @@
       </dependency>
       <dependency>
         <groupId>org.apache.commons</groupId>
-        <artifactId>commons-email</artifactId>
-        <version>1.5</version>
+        <artifactId>commons-email2-jakarta</artifactId>
+        <version>2.0.x</version>
       </dependency>
       <dependency>
         <groupId>commons-codec</groupId>
@@ -1219,14 +1218,14 @@
         <version>${jackson.version}</version>
       </dependency>
       <dependency>
-        <groupId>javax.xml.bind</groupId>
-        <artifactId>jaxb-api</artifactId>
-        <version>2.3.1</version>
+        <groupId>jakarta.xml.bind</groupId>
+        <artifactId>jakarta.xml.bind-api</artifactId>
+        <version>3.0.1</version>
       </dependency>
       <dependency>
-        <groupId>com.sun.xml.bind</groupId>
-        <artifactId>jaxb-impl</artifactId>
-        <version>2.3.1</version>
+        <groupId>org.glassfish.jaxb</groupId>
+        <artifactId>jaxb-runtime</artifactId>
+        <version>3.0.2</version>
       </dependency>
 
       <dependency>
@@ -1265,9 +1264,9 @@
           <version>1.2</version>
       </dependency>
       <dependency>
-        <groupId>javax.annotation</groupId>
-        <artifactId>javax.annotation-api</artifactId>
-        <version>1.3.2</version>
+        <groupId>jakarta.annotation</groupId>
+        <artifactId>jakarta.annotation-api</artifactId>
+        <version>2.1.1</version>
       </dependency>
 
       <dependency>
@@ -1655,7 +1654,7 @@
      request the list of hosts (but JPA cache db queries). -->
     <cors.allowedHosts>*</cors.allowedHosts>
 
-    <jetty.version>9.4.54.v20240208</jetty.version>
+    <jetty.version>12.0.31</jetty.version>
     <jetty.file>jetty-distribution-${jetty.version}</jetty.file>
     <jetty.download>https://repo1.maven.org/maven2/org/eclipse/jetty/jetty-distribution/${jetty.version}/${jetty.file}.tar.gz</jetty.download>
 
@@ -1665,7 +1664,7 @@
     <jts.version>1.20.0</jts.version>
     <pg.version>42.7.3</pg.version>
 
-    <spring.version>5.3.39</spring.version>
+    <spring.version>6.2.14</spring.version>
     <spring.security.version>5.8.16</spring.security.version>
     <spring.jpa.version>2.7.18</spring.jpa.version>
     <springboot.version>2.7.0</springboot.version>

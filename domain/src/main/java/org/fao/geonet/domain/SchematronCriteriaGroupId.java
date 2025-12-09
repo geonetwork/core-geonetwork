@@ -23,8 +23,8 @@
 
 package org.fao.geonet.domain;
 
-import javax.persistence.Column;
-import javax.persistence.Embeddable;
+import jakarta.persistence.Column;
+import jakarta.persistence.Embeddable;
 
 import java.io.Serializable;
 

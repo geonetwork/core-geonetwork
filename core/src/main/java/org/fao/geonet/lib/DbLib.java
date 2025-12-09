@@ -38,9 +38,9 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
 
-import javax.persistence.EntityManager;
-import javax.persistence.Query;
-import javax.servlet.ServletContext;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.Query;
+import jakarta.servlet.ServletContext;
 import javax.sql.DataSource;
 
 import jeeves.server.context.ServiceContext;

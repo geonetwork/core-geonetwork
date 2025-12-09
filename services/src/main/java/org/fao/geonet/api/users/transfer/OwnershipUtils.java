@@ -37,7 +37,7 @@ import org.fao.geonet.repository.specification.UserSpecs;
 import org.jdom.Element;
 import org.springframework.data.jpa.domain.Specification;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashSet;

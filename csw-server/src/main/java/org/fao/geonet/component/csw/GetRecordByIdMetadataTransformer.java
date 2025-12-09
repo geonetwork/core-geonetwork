@@ -33,7 +33,7 @@ import org.fao.geonet.csw.common.exceptions.NoApplicableCodeEx;
 import org.fao.geonet.kernel.GeonetworkExtension;
 import org.jdom.Element;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * An extension point to allow plugins to transform the metadata returned by {@link GetRecordById}

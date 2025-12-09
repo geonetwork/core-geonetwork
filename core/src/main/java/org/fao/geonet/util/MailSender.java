@@ -24,12 +24,12 @@
 package org.fao.geonet.util;
 
 import jeeves.server.context.ServiceContext;
-import org.apache.commons.mail.EmailException;
-import org.apache.commons.mail.SimpleEmail;
+import org.apache.commons.mail2.jakarta.SimpleEmail;
+import org.apache.commons.mail2.core.EmailException;
 import org.fao.geonet.Logger;
 import org.fao.geonet.Util;
 
-import javax.mail.internet.InternetAddress;
+import jakarta.mail.internet.InternetAddress;
 import java.util.ArrayList;
 import java.util.List;
 

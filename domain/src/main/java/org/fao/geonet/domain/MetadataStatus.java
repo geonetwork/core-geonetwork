@@ -29,8 +29,8 @@ import org.fao.geonet.entitylistener.AbstractEntityListenerManager;
 import org.hibernate.annotations.Type;
 import org.jdom.Element;
 
-import javax.annotation.Nonnull;
-import javax.persistence.*;
+import jakarta.annotation.Nonnull;
+import jakarta.persistence.*;
 import java.util.LinkedHashMap;
 
 /**

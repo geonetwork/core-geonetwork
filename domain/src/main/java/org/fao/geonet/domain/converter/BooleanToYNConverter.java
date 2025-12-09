@@ -16,8 +16,8 @@
 
 package org.fao.geonet.domain.converter;
 
-import javax.persistence.AttributeConverter;
-import javax.persistence.Converter;
+import jakarta.persistence.AttributeConverter;
+import jakarta.persistence.Converter;
 import org.fao.geonet.domain.Constants;
 
 /**

@@ -23,7 +23,7 @@
 
 package org.fao.geonet.api.registries.model;
 
-import javax.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
 
 /**
  * A Coordinate Reference System.

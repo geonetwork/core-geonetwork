@@ -26,7 +26,7 @@ package org.fao.geonet.repository;
 import org.fao.geonet.domain.MetadataFileUpload;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * Data Access object for accessing {@link org.fao.geonet.domain.MetadataFileUpload} entities.

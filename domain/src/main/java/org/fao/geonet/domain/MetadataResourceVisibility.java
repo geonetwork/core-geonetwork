@@ -25,7 +25,7 @@
 
 package org.fao.geonet.domain;
 
-import javax.persistence.Convert;
+import jakarta.persistence.Convert;
 
 import java.util.Comparator;
 

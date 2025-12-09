@@ -27,7 +27,7 @@ import org.fao.geonet.domain.UserGroup;
 import org.fao.geonet.domain.UserGroupId;
 import org.springframework.data.jpa.domain.Specification;
 
-import javax.persistence.metamodel.SingularAttribute;
+import jakarta.persistence.metamodel.SingularAttribute;
 
 import java.util.Collection;
 import java.util.List;

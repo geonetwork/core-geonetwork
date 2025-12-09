@@ -25,7 +25,7 @@ package org.fao.geonet.domain;
 
 import org.apache.commons.lang.StringUtils;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 /**
  * Entity to model a metadata file upload request: metadata identifier, upload date, user, file

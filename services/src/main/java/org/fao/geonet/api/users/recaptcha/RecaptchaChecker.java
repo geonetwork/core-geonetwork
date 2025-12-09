@@ -26,8 +26,8 @@ import net.sf.json.JSONObject;
 import net.sf.json.JSONSerializer;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.http.client.methods.HttpUriRequest;
-import org.apache.http.client.methods.RequestBuilder;
+import org.apache.hc.client5.http.classic.methods.HttpUriRequest;
+import org.apache.hc.core5.http.io.support.ClassicRequestBuilder;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.utils.GeonetHttpRequestFactory;
 import org.springframework.http.client.ClientHttpResponse;
@@ -64,7 +64,7 @@ public class RecaptchaChecker {
 
         ClientHttpResponse httpResponse = null;
         try {
-            HttpUriRequest httpPost = RequestBuilder.post()
+            HttpUriRequest httpPost = ClassicRequestBuilder.post()
                 .setUri(RECAPTCHA_URL)
                 .setHeader("User-Agent", USER_AGENT)
                 .setHeader("Accept-Language", "en-US,en;q=0.5")
@@ -74,7 +74,7 @@ public class RecaptchaChecker {
 
             httpResponse = requestFactory.execute(httpPost);
 
-            if (httpResponse.getRawStatusCode() == 200) {
+            if (httpResponse.getStatusCode().value() == 200) {
                 String responseText = IOUtils.toString(httpResponse.getBody());
 
                 //parse JSON response and return 'success' value

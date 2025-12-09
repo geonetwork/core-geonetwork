@@ -25,8 +25,8 @@ package org.fao.geonet.domain;
 
 import org.jdom.Element;
 
-import javax.annotation.Nonnull;
-import javax.persistence.*;
+import jakarta.annotation.Nonnull;
+import jakarta.persistence.*;
 
 import java.util.ArrayList;
 import java.util.List;

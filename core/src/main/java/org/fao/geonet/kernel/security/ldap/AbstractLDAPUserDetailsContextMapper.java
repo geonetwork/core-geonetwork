@@ -37,10 +37,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.ldap.DefaultSpringSecurityContextSource;
 import org.springframework.security.ldap.userdetails.InetOrgPerson;
 import org.springframework.security.provisioning.UserDetailsManager;
-import org.springframework.util.StringUtils;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.springframework.util.ObjectUtils;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.*;
 
 /**
@@ -211,7 +210,7 @@ public abstract class AbstractLDAPUserDetailsContextMapper implements
                 p.setDn(ldapBaseDnPattern.replace("{0}",
                     userDetails.getUsername()));
                 String surname = userDetails.getUser().getSurname();
-                if (StringUtils.isEmpty(surname)) {
+                if (ObjectUtils.isEmpty(surname)) {
                     //sn is usually mandatory on LDAP
                     surname = userDetails.getUsername();
                 }
@@ -219,7 +218,7 @@ public abstract class AbstractLDAPUserDetailsContextMapper implements
                 p.setUid(userDetails.getUsername());
                 p.setMail(userDetails.getUser().getEmail());
                 String name = userDetails.getUser().getName();
-                if (StringUtils.isEmpty(name)) {
+                if (ObjectUtils.isEmpty(name)) {
                     //displayname is usually mandatory too
                     name = userDetails.getUsername();
                 }

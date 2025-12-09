@@ -45,7 +45,7 @@ import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.xml.transform.stream.StreamResult;
 import java.io.StringWriter;
 import java.nio.file.Files;

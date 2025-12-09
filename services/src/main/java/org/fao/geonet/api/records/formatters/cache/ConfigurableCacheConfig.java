@@ -26,8 +26,8 @@ package org.fao.geonet.api.records.formatters.cache;
 import com.google.common.collect.Sets;
 import org.fao.geonet.api.records.formatters.FormatType;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.HashSet;
 import java.util.Set;
 

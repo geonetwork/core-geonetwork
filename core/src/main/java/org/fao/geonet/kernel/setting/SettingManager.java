@@ -43,11 +43,11 @@ import org.jasypt.encryption.pbe.StandardPBEStringEncryptor;
 import org.jdom.Element;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import javax.annotation.Nonnull;
-import javax.annotation.PostConstruct;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.servlet.ServletContext;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.PostConstruct;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.servlet.ServletContext;
 import java.sql.SQLException;
 import java.time.ZoneId;
 import java.util.ArrayList;

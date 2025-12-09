@@ -34,7 +34,7 @@ import org.fao.geonet.utils.FilePathChecker;
 import org.fao.geonet.utils.Log;
 import org.jdom.Element;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 
 /**
