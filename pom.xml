@@ -266,6 +266,14 @@
             </goals>
             <configuration>
               <rules>
+                <bannedDependencies>
+                    <excludes>
+                        <exclude>xml-apis:xml-apis</exclude>
+                        <exclude>xml-apis:xml-apis-ext</exclude>
+                        <exclude>xml-apis:xmlParserAPIs</exclude>
+                        <exclude>xerces:xmlParserAPIs</exclude>
+                    </excludes>
+                </bannedDependencies>
                 <requireMavenVersion>
                   <version>3.8.3</version>
                 </requireMavenVersion>
@@ -522,7 +530,7 @@
       <dependency>
         <groupId>commons-digester</groupId>
         <artifactId>commons-digester</artifactId>
-        <version>1.6</version>
+        <version>1.8.1</version>
       </dependency>
       <dependency>
         <groupId>org.apache.commons</groupId>
@@ -626,6 +634,13 @@
         <groupId>xml-apis</groupId>
         <artifactId>xml-apis</artifactId>
         <version>1.4.01</version>
+        <scope>provided</scope>
+      </dependency>
+      <dependency>
+        <groupId>xml-apis</groupId>
+        <artifactId>xml-apis-ext</artifactId>
+        <version>1.3.04</version>
+        <scope>provided</scope>
       </dependency>
 
       <dependency>
@@ -850,7 +865,7 @@
       <dependency>
         <groupId>jaxen</groupId>
         <artifactId>jaxen</artifactId>
-        <version>1.1.4</version>
+        <version>1.2.0</version>
       </dependency>
       <dependency>
         <groupId>org.quartz-scheduler</groupId>
@@ -1196,7 +1211,7 @@
       <dependency>
         <groupId>xom</groupId>
         <artifactId>xom</artifactId>
-        <version>1.1</version>
+        <version>1.3.9</version>
       </dependency>
       <dependency>
         <groupId>org.xhtmlrenderer</groupId>
