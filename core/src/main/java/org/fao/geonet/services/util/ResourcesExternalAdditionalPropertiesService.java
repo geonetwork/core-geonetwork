@@ -43,17 +43,7 @@ import java.util.Map;
  * Service for merging external additional properties into resource properties.
  *
  * <p>This service retrieves additional properties for resources from an external service
- * and merges them into the provided resource properties based on matching identifiers.
- * The external service URL and identifier field name are configurable via application
- * properties.</p>
- *
- * <p>Configuration properties:</p>
- * <ul>
- *   <li><b>resources.external.additional.properties.url.template</b> - The URL template for the external service.
- *       It should contain placeholders {uuid} and {approved} to be replaced with actual values.</li>
- *   <li><b>resources.external.additional.properties.identifier.field.name</b> - The name of the field in the
- *       external additional properties that contains the resource identifier.</li>
- * </ul>
+ * and merges them into the provided resource properties based on matching identifiers.</p>
  */
 @Service
 public class ResourcesExternalAdditionalPropertiesService {
