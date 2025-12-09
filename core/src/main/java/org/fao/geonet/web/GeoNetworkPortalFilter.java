@@ -30,9 +30,9 @@ import org.fao.geonet.domain.SourceType;
 import org.fao.geonet.repository.SourceRepository;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
-import javax.servlet.*;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.*;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -45,7 +45,7 @@ import java.util.stream.Collectors;
  * - Default srv portal.
  * - Valid portal defined in the sources table
  */
-public class GeoNetworkPortalFilter implements javax.servlet.Filter {
+public class GeoNetworkPortalFilter implements jakarta.servlet.Filter {
     private static final String EXCLUDED_URL_PATHS = "excludedPaths";
 
     private static final String URL_PATH_SEPARATOR = "/";

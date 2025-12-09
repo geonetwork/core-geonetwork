@@ -26,7 +26,7 @@ package org.fao.geonet.kernel.datamanager;
 import java.util.Map;
 import java.util.Set;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.MetadataSourceInfo;

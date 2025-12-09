@@ -51,9 +51,9 @@ import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.springframework.context.ConfigurableApplicationContext;
 
-import javax.annotation.PreDestroy;
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
+import jakarta.annotation.PreDestroy;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.ServletException;
 import javax.xml.transform.TransformerConfigurationException;
 import java.io.BufferedReader;
 import java.io.File;

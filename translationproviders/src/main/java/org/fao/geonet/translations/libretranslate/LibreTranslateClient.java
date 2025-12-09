@@ -26,12 +26,12 @@ package org.fao.geonet.translations.libretranslate;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Function;
 import org.apache.commons.io.IOUtils;
-import org.apache.http.HttpStatus;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.methods.HttpUriRequest;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.message.BasicHeader;
+import org.apache.hc.core5.http.HttpStatus;
+import org.apache.hc.client5.http.classic.methods.HttpPost;
+import org.apache.hc.client5.http.classic.methods.HttpUriRequest;
+import org.apache.hc.core5.http.io.entity.StringEntity;
+import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
+import org.apache.hc.core5.http.message.BasicHeader;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
@@ -40,8 +40,8 @@ import org.fao.geonet.utils.Log;
 import org.json.JSONObject;
 import org.springframework.http.client.ClientHttpResponse;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
@@ -78,7 +78,7 @@ public class LibreTranslateClient {
         postMethod.setEntity(entity);
 
         try (ClientHttpResponse httpResponse = executeRequest(postMethod)) {
-            int status = httpResponse.getRawStatusCode();
+            int status = httpResponse.getStatusCode().value();
 
             Log.debug(LOGGER_NAME, "   -- Request status code: " + status);
 

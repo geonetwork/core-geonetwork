@@ -25,8 +25,8 @@ package org.fao.geonet.repository;
 
 import org.fao.geonet.domain.Operation;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * Data Access for the {@link Operation} entities

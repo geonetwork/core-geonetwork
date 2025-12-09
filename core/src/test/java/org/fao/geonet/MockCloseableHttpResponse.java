@@ -23,10 +23,13 @@
 
 package org.fao.geonet;
 
-import org.apache.http.*;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.entity.ByteArrayEntity;
-import org.apache.http.message.BasicHttpResponse;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
+import org.apache.hc.core5.http.ClassicHttpResponse;
+import org.apache.hc.core5.http.message.StatusLine;
+import org.apache.hc.core5.http.*;
+import org.apache.hc.core5.http.io.entity.ByteArrayEntity;
+import org.apache.hc.core5.http.message.BasicHttpResponse;
+/* No generic migration for classes in the `org.apache.http.params` package exists, please migrate manually */
 import org.apache.http.params.HttpParams;
 
 import java.io.IOException;
@@ -38,7 +41,7 @@ import java.util.Locale;
  * Created by Jesse on 1/24/14.
  */
 public class MockCloseableHttpResponse implements CloseableHttpResponse {
-    private final HttpResponse _response;
+    private final ClassicHttpResponse _response;
 
     public MockCloseableHttpResponse(int responseCode, String statusReason, byte[] response) {
         _response = new BasicHttpResponse(HttpVersion.HTTP_1_1, responseCode, statusReason);
@@ -52,7 +55,7 @@ public class MockCloseableHttpResponse implements CloseableHttpResponse {
 
     @Override
     public StatusLine getStatusLine() {
-        return _response.getStatusLine();
+        return new StatusLine(_response);
     }
 
     @Override

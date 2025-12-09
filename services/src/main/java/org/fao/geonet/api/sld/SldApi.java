@@ -32,8 +32,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.web.bind.annotation.*;
 
-import javax.mail.internet.ParseException;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.mail.internet.ParseException;
+import jakarta.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;

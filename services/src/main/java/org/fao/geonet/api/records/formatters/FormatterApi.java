@@ -33,8 +33,8 @@ import jeeves.server.context.ServiceContext;
 import jeeves.server.dispatchers.ServiceManager;
 import jeeves.xlink.Processor;
 import org.apache.commons.lang.StringUtils;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.hc.client5.http.classic.methods.HttpGet;
+import org.apache.hc.client5.http.classic.methods.HttpUriRequest;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.Constants;
 import org.fao.geonet.SystemInfo;
@@ -75,8 +75,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.context.request.WebRequest;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -545,7 +545,7 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
 
         GeonetHttpRequestFactory requestFactory = context.getBean(GeonetHttpRequestFactory.class);
         final ClientHttpResponse execute = requestFactory.execute(getXmlRequest);
-        if (execute.getRawStatusCode() != 200) {
+        if (execute.getStatusCode().value() != 200) {
             throw new IllegalArgumentException("Request " + adjustedUrl + " did not succeed.  Response Status: " + execute.getStatusCode() + ", status text: " + execute.getStatusText());
         }
         return new String(ByteStreams.toByteArray(execute.getBody()), Constants.CHARSET);

@@ -25,8 +25,8 @@ package org.fao.geonet.domain;
 
 import org.fao.geonet.entitylistener.OperationAllowedEntityListenerManager;
 
-import javax.annotation.Nonnull;
-import javax.persistence.*;
+import jakarta.annotation.Nonnull;
+import jakarta.persistence.*;
 
 /**
  * An entity that represents the relationship between a metadata, group and the operations that

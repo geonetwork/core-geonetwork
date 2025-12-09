@@ -25,7 +25,7 @@ package org.fao.geonet.domain;
 
 import org.locationtech.jts.util.Assert;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 /**
  * Represents data used by a particular harvester to ensure that only the minimum required data is

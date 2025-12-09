@@ -29,7 +29,7 @@ import org.fao.geonet.api.processing.report.registry.ProcessingReportRegistry;
 import org.fao.geonet.domain.ISODate;
 import org.springframework.context.ApplicationContext;
 
-import javax.xml.bind.annotation.*;
+import jakarta.xml.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;

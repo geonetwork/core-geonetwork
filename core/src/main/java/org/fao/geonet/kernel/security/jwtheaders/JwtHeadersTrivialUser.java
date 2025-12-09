@@ -30,9 +30,8 @@ import org.geoserver.security.jwtheaders.JwtConfiguration;
 import org.geoserver.security.jwtheaders.roles.JwtHeadersRolesExtractor;
 import org.geoserver.security.jwtheaders.token.TokenValidator;
 import org.geoserver.security.jwtheaders.username.JwtHeaderUserNameExtractor;
-import org.springframework.util.StringUtils;
-
-import javax.servlet.http.HttpServletRequest;
+import org.springframework.util.ObjectUtils;
+import jakarta.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -174,7 +173,7 @@ public class JwtHeadersTrivialUser {
         for (String rg : roleGroupList) {
             String[] rg_role_groups = rg.split(ROLE_GROUP_SEPARATOR);
 
-            if (rg_role_groups.length == 0 || StringUtils.isEmpty(rg_role_groups[0])) {
+            if (rg_role_groups.length == 0 || ObjectUtils.isEmpty(rg_role_groups[0])) {
                 continue;
             }
 

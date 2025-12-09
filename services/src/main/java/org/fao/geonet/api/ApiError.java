@@ -22,10 +22,10 @@
  */
 package org.fao.geonet.api;
 
-import javax.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
 
 import org.fao.geonet.exceptions.ILocalizedException;
-import org.springframework.util.StringUtils;
+import org.springframework.util.ObjectUtils;
 
 /**
  * Represents an API error message to be send to the requesting agent.
@@ -78,7 +78,7 @@ public class ApiError {
         if (this.exception != null && this.exception instanceof ILocalizedException) {
             localizedMessage =  ((ILocalizedException)this.exception).getLocalizedMessage();
         }
-        if (StringUtils.isEmpty(localizedMessage)) {
+        if (ObjectUtils.isEmpty(localizedMessage)) {
             return this.message;
         } else {
             return localizedMessage;
@@ -95,7 +95,7 @@ public class ApiError {
         if (this.exception != null && this.exception instanceof ILocalizedException) {
             localizedDescription = ((ILocalizedException)this.exception).getLocalizedDescription();
         }
-        if (StringUtils.isEmpty(localizedDescription)) {
+        if (ObjectUtils.isEmpty(localizedDescription)) {
             return this.description;
         } else {
             return localizedDescription;

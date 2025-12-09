@@ -25,8 +25,8 @@ package org.fao.geonet.kernel.search;
 
 import java.util.List;
 
-import javax.annotation.Nonnegative;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnegative;
+import jakarta.annotation.Nonnull;
 
 import jeeves.server.context.ServiceContext;
 

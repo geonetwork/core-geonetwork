@@ -26,7 +26,7 @@ package org.fao.geonet.repository;
 import org.fao.geonet.domain.Operation;
 import org.fao.geonet.domain.ReservedOperation;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * Custom (Non spring-data) Query methods for {@link Operation} entities.

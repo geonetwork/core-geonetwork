@@ -26,9 +26,9 @@ package org.fao.geonet.monitor.webapp;
 import com.yammer.metrics.Metrics;
 import com.yammer.metrics.core.*;
 
-import javax.servlet.*;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpServletResponseWrapper;
+import jakarta.servlet.*;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletResponseWrapper;
 
 import java.io.IOException;
 import java.util.Map;

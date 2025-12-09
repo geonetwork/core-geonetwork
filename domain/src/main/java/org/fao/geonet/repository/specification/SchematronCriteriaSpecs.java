@@ -29,7 +29,7 @@ import org.fao.geonet.domain.SchematronCriteriaGroup_;
 import org.fao.geonet.domain.SchematronCriteria_;
 import org.springframework.data.jpa.domain.Specification;
 
-import javax.persistence.criteria.*;
+import jakarta.persistence.criteria.*;
 
 /**
  * Specification for selecting {@link org.fao.geonet.domain.SchematronCriteria}

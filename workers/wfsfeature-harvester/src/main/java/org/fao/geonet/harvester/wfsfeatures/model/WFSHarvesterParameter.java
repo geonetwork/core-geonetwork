@@ -23,7 +23,7 @@
 
 package org.fao.geonet.harvester.wfsfeatures.model;
 
-import javax.xml.bind.annotation.*;
+import jakarta.xml.bind.annotation.*;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;

@@ -25,7 +25,7 @@
 
 package org.fao.geonet.domain;
 
-import javax.persistence.AttributeConverter;
+import jakarta.persistence.AttributeConverter;
 
 import java.beans.PropertyEditorSupport;
 import java.util.Arrays;

@@ -26,8 +26,8 @@ package org.fao.geonet.repository;
 import org.fao.geonet.domain.MetadataIdentifierTemplate;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * Data Access object for the {@link MetadataIdentifierTemplate} entities.

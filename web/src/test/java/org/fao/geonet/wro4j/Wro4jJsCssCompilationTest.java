@@ -44,7 +44,7 @@ import ro.isdc.wro.model.group.Group;
 import ro.isdc.wro.model.resource.Resource;
 import ro.isdc.wro.model.resource.ResourceType;
 
-import javax.servlet.FilterConfig;
+import jakarta.servlet.FilterConfig;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.nio.charset.Charset;

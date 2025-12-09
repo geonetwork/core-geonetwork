@@ -28,7 +28,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.fao.geonet.entitylistener.UserGroupEntityListenerManager;
 import org.jdom.Element;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 import java.io.Serializable;
 import java.util.IdentityHashMap;

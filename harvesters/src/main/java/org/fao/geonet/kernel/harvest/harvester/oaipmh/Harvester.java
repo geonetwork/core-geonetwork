@@ -81,7 +81,7 @@ import org.jdom.JDOMException;
 
 import jeeves.server.context.ServiceContext;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 //=============================================================================
 

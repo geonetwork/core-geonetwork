@@ -25,7 +25,7 @@ package org.fao.geonet.entitylistener;
 
 import org.fao.geonet.domain.DoiServer;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 public class DoiServerEntityListenerManager   extends AbstractEntityListenerManager<DoiServer> {
     @PrePersist

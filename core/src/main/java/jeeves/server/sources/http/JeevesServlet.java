@@ -43,15 +43,15 @@ import org.springframework.context.ConfigurableApplicationContext;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
-import static javax.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
+import static jakarta.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
 
 //=============================================================================
 
@@ -199,8 +199,6 @@ public class JeevesServlet extends HttpServlet {
         // Set the language of the request as the preferred language in a cookie
         final Cookie langCookie = new Cookie(Jeeves.LANG_COOKIE, srvReq.getLanguage());
         langCookie.setMaxAge((int) TimeUnit.DAYS.toSeconds(7));
-        langCookie.setComment("Keeps the last language chosen to be the preferred language");
-        langCookie.setVersion(1);
         langCookie.setPath(req.getContextPath());
         langCookie.setHttpOnly(req.getServletContext().getSessionCookieConfig().isHttpOnly());
         langCookie.setSecure(req.getServletContext().getSessionCookieConfig().isSecure());

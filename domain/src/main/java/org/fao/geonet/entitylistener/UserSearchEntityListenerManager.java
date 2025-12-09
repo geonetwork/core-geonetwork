@@ -24,7 +24,7 @@
 package org.fao.geonet.entitylistener;
 
 import org.fao.geonet.domain.UserSearch;
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 public class UserSearchEntityListenerManager extends AbstractEntityListenerManager<UserSearch> {
     @PrePersist

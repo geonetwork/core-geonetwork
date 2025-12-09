@@ -25,12 +25,12 @@ package org.fao.geonet.lib;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.StringUtils;
-import org.apache.http.HttpHost;
-import org.apache.http.auth.AuthScope;
-import org.apache.http.auth.UsernamePasswordCredentials;
-import org.apache.http.client.CredentialsProvider;
-import org.apache.http.impl.client.BasicCredentialsProvider;
-import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.hc.client5.http.impl.auth.BasicCredentialsProvider;
+import org.apache.hc.core5.http.HttpHost;
+import org.apache.hc.client5.http.auth.AuthScope;
+import org.apache.hc.client5.http.auth.CredentialsStore;
+import org.apache.hc.client5.http.auth.UsernamePasswordCredentials;
+import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.setting.SettingManager;
@@ -110,7 +110,7 @@ public class NetLib {
 
     //---------------------------------------------------------------------------
 
-    public CredentialsProvider setupProxy(ServiceContext context, HttpClientBuilder client, String requestHost) {
+    public CredentialsStore setupProxy(ServiceContext context, HttpClientBuilder client, String requestHost) {
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
         SettingManager sm = gc.getBean(SettingManager.class);
 
@@ -120,7 +120,7 @@ public class NetLib {
     /**
      * Setup proxy for http client
      */
-    public CredentialsProvider setupProxy(SettingManager sm, HttpClientBuilder client, String requestHost) {
+    public CredentialsStore setupProxy(SettingManager sm, HttpClientBuilder client, String requestHost) {
         proxyConfiguration.refresh(sm);
 
         boolean enabled = proxyConfiguration.isEnabled();
@@ -130,7 +130,7 @@ public class NetLib {
         String password = proxyConfiguration.getPassword();
         String ignoreHostList = proxyConfiguration.getIgnoreHostList();
 
-        CredentialsProvider provider = new BasicCredentialsProvider();
+        CredentialsStore provider = new BasicCredentialsProvider();
         if (enabled) {
             if (!Lib.type.isInteger(port)) {
                 Log.error(Geonet.GEONETWORK, "Proxy port is not an integer : " + port);
@@ -140,7 +140,7 @@ public class NetLib {
                     client.setProxy(proxy);
 
                     if (username.trim().length() != 0) {
-                        provider.setCredentials(new AuthScope(proxy), new UsernamePasswordCredentials(username, password));
+                        provider.setCredentials(new AuthScope(proxy), new UsernamePasswordCredentials(username, password.toCharArray()));
                         client.setDefaultCredentialsProvider(provider);
                     }
                 } else {

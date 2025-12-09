@@ -44,10 +44,10 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import javax.imageio.ImageIO;
-import javax.servlet.ServletContext;
+import jakarta.servlet.ServletContext;
 
 import static java.nio.file.LinkOption.NOFOLLOW_LINKS;
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
@@ -232,7 +232,7 @@ public abstract class Resources {
                                     byte[] defaultValue, long loadSince) throws IOException;
 
     /**
-     * Load a data image. The "imagesDir" ( {@link #locateResourcesDir(javax.servlet.ServletContext,
+     * Load a data image. The "imagesDir" ( {@link #locateResourcesDir(jakarta.servlet.ServletContext,
      * org.springframework.context.ApplicationContext)} will first be searched for the filename, then
      * the context then finally the appPath+FS+filename. if the image is not in imagesDir but is
      * found in one of the other locations it will be copied to imagesDir for future use.

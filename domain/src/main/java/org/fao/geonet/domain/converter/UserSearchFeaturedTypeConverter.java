@@ -19,8 +19,8 @@ package org.fao.geonet.domain.converter;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.domain.UserSearchFeaturedType;
 
-import javax.persistence.AttributeConverter;
-import javax.persistence.Converter;
+import jakarta.persistence.AttributeConverter;
+import jakarta.persistence.Converter;
 import java.beans.PropertyEditorSupport;
 
 @Converter

@@ -32,8 +32,8 @@ import org.springframework.data.repository.NoRepositoryBean;
 
 import java.io.Serializable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * Methods common to all Geonetwork repositories.

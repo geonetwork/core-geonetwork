@@ -23,8 +23,8 @@
 
 package org.fao.geonet.kernel.security.keycloak;
 
-import javax.transaction.Transactional;
-import javax.transaction.Transactional.TxType;
+import jakarta.transaction.Transactional;
+import jakarta.transaction.Transactional.TxType;
 
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.*;
@@ -38,7 +38,7 @@ import org.keycloak.representations.AccessToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.util.StringUtils;
+import org.springframework.util.ObjectUtils;
 
 import java.util.*;
 import java.util.concurrent.Callable;
@@ -107,7 +107,7 @@ public class KeycloakUserUtils extends BaseUserUtils {
     protected UserDetails getUserDetailsNoCache(AccessToken accessToken, boolean withDbUpdate) {
         BaselUser baselUser = new BaselUser(accessToken, keycloakConfiguration);
 
-        if (!StringUtils.isEmpty(baselUser.getUsername())) {
+        if (!ObjectUtils.isEmpty(baselUser.getUsername())) {
             // Create or update the user
             User user;
             boolean newUserFlag = false;
@@ -120,18 +120,18 @@ public class KeycloakUserUtils extends BaseUserUtils {
                 Log.debug(Geonet.SECURITY, "Adding a new user: " + user);
             }
 
-            if (!StringUtils.isEmpty(baselUser.getSurname())) {
+            if (!ObjectUtils.isEmpty(baselUser.getSurname())) {
                 user.setSurname(baselUser.getSurname());
             }
-            if (!StringUtils.isEmpty(baselUser.getFirstname())) {
+            if (!ObjectUtils.isEmpty(baselUser.getFirstname())) {
                 user.setName(baselUser.getFirstname());
             }
-            if (!StringUtils.isEmpty(baselUser.getOrganisation())) {
+            if (!ObjectUtils.isEmpty(baselUser.getOrganisation())) {
                 user.setOrganisation(baselUser.getOrganisation());
             }
 
             // Only update email if it does not already exist and email is not empty
-            if (!StringUtils.isEmpty(baselUser.getEmail()) && !user.getEmailAddresses().contains(baselUser.getEmail())) {
+            if (!ObjectUtils.isEmpty(baselUser.getEmail()) && !user.getEmailAddresses().contains(baselUser.getEmail())) {
                 // If updating profile then assume emails are in sync with keycloak so replace first email which is all there should be.
                 if (keycloakConfiguration.isUpdateProfile()) {
                     user.getEmailAddresses().clear();
@@ -209,7 +209,7 @@ public class KeycloakUserUtils extends BaseUserUtils {
         for (String rg : roleGroupList) {
             String[] rg_role_groups = rg.split(roleGroupSeparator);
 
-            if (rg_role_groups.length == 0 || StringUtils.isEmpty(rg_role_groups[0])) {
+            if (rg_role_groups.length == 0 || ObjectUtils.isEmpty(rg_role_groups[0])) {
                 continue;
             }
 

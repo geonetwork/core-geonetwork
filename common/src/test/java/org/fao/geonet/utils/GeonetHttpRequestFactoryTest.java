@@ -27,8 +27,8 @@ import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
 
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpRequestBase;
+import org.apache.hc.client5.http.classic.methods.HttpGet;
+import org.apache.hc.client5.http.classic.methods.HttpUriRequestBase;
 import org.jdom.Element;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -166,16 +166,16 @@ public class GeonetHttpRequestFactoryTest {
         final XmlRequest xmlRequest = new GeonetHttpRequestFactory().createXmlRequest(new URL
             ("http://user:pass@host:1234/path?queryString#fragment"));
 
-        final HttpRequestBase httpRequestBase = xmlRequest.setupHttpMethod();
+        final HttpUriRequestBase httpRequestBase = xmlRequest.setupHttpMethod();
 
         assertTrue(httpRequestBase instanceof HttpGet);
-        assertEquals("host", httpRequestBase.getURI().getHost());
-        assertEquals("user:pass", httpRequestBase.getURI().getUserInfo());
-        assertEquals(1234, httpRequestBase.getURI().getPort());
-        assertEquals("http", httpRequestBase.getURI().getScheme());
-        assertEquals("/path", httpRequestBase.getURI().getPath());
-        assertEquals("queryString", httpRequestBase.getURI().getQuery());
-        assertEquals("fragment", httpRequestBase.getURI().getFragment());
+        assertEquals("host", httpRequestBase.getUri().getHost());
+        assertEquals("user:pass", httpRequestBase.getUri().getUserInfo());
+        assertEquals(1234, httpRequestBase.getUri().getPort());
+        assertEquals("http", httpRequestBase.getUri().getScheme());
+        assertEquals("/path", httpRequestBase.getUri().getPath());
+        assertEquals("queryString", httpRequestBase.getUri().getQuery());
+        assertEquals("fragment", httpRequestBase.getUri().getFragment());
     }
 
     @Test
@@ -183,16 +183,16 @@ public class GeonetHttpRequestFactoryTest {
         final XmlRequest xmlRequest = new GeonetHttpRequestFactory().createXmlRequest(new URL
             ("http://host/path?queryString#fragment"));
 
-        final HttpRequestBase httpRequestBase = xmlRequest.setupHttpMethod();
+        final HttpUriRequestBase httpRequestBase = xmlRequest.setupHttpMethod();
 
         assertTrue(httpRequestBase instanceof HttpGet);
-        assertEquals("host", httpRequestBase.getURI().getHost());
+        assertEquals("host", httpRequestBase.getUri().getHost());
         //Expects -1 instead of 80, this sentinal value will remove the :80 from the URI.
-        assertEquals(-1, httpRequestBase.getURI().getPort());
-        assertEquals("http", httpRequestBase.getURI().getScheme());
-        assertEquals("/path", httpRequestBase.getURI().getPath());
-        assertEquals("queryString", httpRequestBase.getURI().getQuery());
-        assertEquals("fragment", httpRequestBase.getURI().getFragment());
+        assertEquals(-1, httpRequestBase.getUri().getPort());
+        assertEquals("http", httpRequestBase.getUri().getScheme());
+        assertEquals("/path", httpRequestBase.getUri().getPath());
+        assertEquals("queryString", httpRequestBase.getUri().getQuery());
+        assertEquals("fragment", httpRequestBase.getUri().getFragment());
     }
 
     @Test
@@ -200,16 +200,16 @@ public class GeonetHttpRequestFactoryTest {
         final XmlRequest xmlRequest = new GeonetHttpRequestFactory().createXmlRequest(new URL
             ("https://host/path?queryString#fragment"));
 
-        final HttpRequestBase httpRequestBase = xmlRequest.setupHttpMethod();
+        final HttpUriRequestBase httpRequestBase = xmlRequest.setupHttpMethod();
 
         assertTrue(httpRequestBase instanceof HttpGet);
-        assertEquals("host", httpRequestBase.getURI().getHost());
+        assertEquals("host", httpRequestBase.getUri().getHost());
         //Expects -1 instead of 80, this sentinal value will remove the :443 from the URI.
-        assertEquals(-1, httpRequestBase.getURI().getPort());
-        assertEquals("https", httpRequestBase.getURI().getScheme());
-        assertEquals("/path", httpRequestBase.getURI().getPath());
-        assertEquals("queryString", httpRequestBase.getURI().getQuery());
-        assertEquals("fragment", httpRequestBase.getURI().getFragment());
+        assertEquals(-1, httpRequestBase.getUri().getPort());
+        assertEquals("https", httpRequestBase.getUri().getScheme());
+        assertEquals("/path", httpRequestBase.getUri().getPath());
+        assertEquals("queryString", httpRequestBase.getUri().getQuery());
+        assertEquals("fragment", httpRequestBase.getUri().getFragment());
     }
 
     @Test(expected = IllegalStateException.class)
@@ -226,59 +226,59 @@ public class GeonetHttpRequestFactoryTest {
     @Test
     public void testAlternateXmlRequestFactoryMethods() throws Exception {
         XmlRequest xmlRequest = new GeonetHttpRequestFactory().createXmlRequest("host", 1234, "http");
-        HttpRequestBase httpRequestBase = xmlRequest.setupHttpMethod();
+        HttpUriRequestBase httpRequestBase = xmlRequest.setupHttpMethod();
 
         assertTrue(httpRequestBase instanceof HttpGet);
-        assertEquals("host", httpRequestBase.getURI().getHost());
-        assertEquals(1234, httpRequestBase.getURI().getPort());
-        assertEquals("http", httpRequestBase.getURI().getScheme());
-        assertEquals("", httpRequestBase.getURI().getPath());
-        assertEquals(null, httpRequestBase.getURI().getQuery());
-        assertEquals(null, httpRequestBase.getURI().getFragment());
+        assertEquals("host", httpRequestBase.getUri().getHost());
+        assertEquals(1234, httpRequestBase.getUri().getPort());
+        assertEquals("http", httpRequestBase.getUri().getScheme());
+        assertEquals("", httpRequestBase.getUri().getPath());
+        assertEquals(null, httpRequestBase.getUri().getQuery());
+        assertEquals(null, httpRequestBase.getUri().getFragment());
 
         xmlRequest = new GeonetHttpRequestFactory().createXmlRequest("host", 1234);
         httpRequestBase = xmlRequest.setupHttpMethod();
 
         assertTrue(httpRequestBase instanceof HttpGet);
-        assertEquals("host", httpRequestBase.getURI().getHost());
-        assertEquals(1234, httpRequestBase.getURI().getPort());
-        assertEquals("http", httpRequestBase.getURI().getScheme());
-        assertEquals("", httpRequestBase.getURI().getPath());
-        assertEquals(null, httpRequestBase.getURI().getQuery());
-        assertEquals(null, httpRequestBase.getURI().getFragment());
+        assertEquals("host", httpRequestBase.getUri().getHost());
+        assertEquals(1234, httpRequestBase.getUri().getPort());
+        assertEquals("http", httpRequestBase.getUri().getScheme());
+        assertEquals("", httpRequestBase.getUri().getPath());
+        assertEquals(null, httpRequestBase.getUri().getQuery());
+        assertEquals(null, httpRequestBase.getUri().getFragment());
 
         xmlRequest = new GeonetHttpRequestFactory().createXmlRequest("host", 443);
         httpRequestBase = xmlRequest.setupHttpMethod();
 
         assertTrue(httpRequestBase instanceof HttpGet);
-        assertEquals("host", httpRequestBase.getURI().getHost());
-        assertEquals(443, httpRequestBase.getURI().getPort());
-        assertEquals("https", httpRequestBase.getURI().getScheme());
-        assertEquals("", httpRequestBase.getURI().getPath());
-        assertEquals(null, httpRequestBase.getURI().getQuery());
-        assertEquals(null, httpRequestBase.getURI().getFragment());
+        assertEquals("host", httpRequestBase.getUri().getHost());
+        assertEquals(443, httpRequestBase.getUri().getPort());
+        assertEquals("https", httpRequestBase.getUri().getScheme());
+        assertEquals("", httpRequestBase.getUri().getPath());
+        assertEquals(null, httpRequestBase.getUri().getQuery());
+        assertEquals(null, httpRequestBase.getUri().getFragment());
 
         xmlRequest = new GeonetHttpRequestFactory().createXmlRequest("host", 80);
         httpRequestBase = xmlRequest.setupHttpMethod();
 
         assertTrue(httpRequestBase instanceof HttpGet);
-        assertEquals("host", httpRequestBase.getURI().getHost());
-        assertEquals(80, httpRequestBase.getURI().getPort());
-        assertEquals("http", httpRequestBase.getURI().getScheme());
-        assertEquals("", httpRequestBase.getURI().getPath());
-        assertEquals(null, httpRequestBase.getURI().getQuery());
-        assertEquals(null, httpRequestBase.getURI().getFragment());
+        assertEquals("host", httpRequestBase.getUri().getHost());
+        assertEquals(80, httpRequestBase.getUri().getPort());
+        assertEquals("http", httpRequestBase.getUri().getScheme());
+        assertEquals("", httpRequestBase.getUri().getPath());
+        assertEquals(null, httpRequestBase.getUri().getQuery());
+        assertEquals(null, httpRequestBase.getUri().getFragment());
 
         xmlRequest = new GeonetHttpRequestFactory().createXmlRequest("host");
         httpRequestBase = xmlRequest.setupHttpMethod();
 
         assertTrue(httpRequestBase instanceof HttpGet);
-        assertEquals("host", httpRequestBase.getURI().getHost());
-        assertEquals(80, httpRequestBase.getURI().getPort());
-        assertEquals("http", httpRequestBase.getURI().getScheme());
-        assertEquals("", httpRequestBase.getURI().getPath());
-        assertEquals(null, httpRequestBase.getURI().getQuery());
-        assertEquals(null, httpRequestBase.getURI().getFragment());
+        assertEquals("host", httpRequestBase.getUri().getHost());
+        assertEquals(80, httpRequestBase.getUri().getPort());
+        assertEquals("http", httpRequestBase.getUri().getScheme());
+        assertEquals("", httpRequestBase.getUri().getPath());
+        assertEquals(null, httpRequestBase.getUri().getQuery());
+        assertEquals(null, httpRequestBase.getUri().getFragment());
 
         xmlRequest = new GeonetHttpRequestFactory().createXmlRequest();
 

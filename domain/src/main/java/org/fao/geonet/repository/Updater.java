@@ -23,7 +23,7 @@
 
 package org.fao.geonet.repository;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * Interface for methods that need to update the an entity in on of the repository APIs.

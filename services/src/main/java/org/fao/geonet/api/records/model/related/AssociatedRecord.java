@@ -26,7 +26,7 @@ package org.fao.geonet.api.records.model.related;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import javax.xml.bind.annotation.*;
+import jakarta.xml.bind.annotation.*;
 import java.util.HashMap;
 import java.util.Map;
 

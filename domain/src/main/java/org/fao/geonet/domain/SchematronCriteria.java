@@ -27,7 +27,7 @@ import org.jdom.Element;
 import org.jdom.Namespace;
 import org.springframework.context.ApplicationContext;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 import java.util.IdentityHashMap;
 import java.util.List;

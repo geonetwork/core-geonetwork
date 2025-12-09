@@ -47,8 +47,8 @@ import org.fao.geonet.kernel.search.IndexingMode;
 import org.fao.geonet.repository.OperationAllowedRepository;
 import org.jdom.Element;
 
-import javax.transaction.Transactional;
-import javax.transaction.Transactional.TxType;
+import jakarta.transaction.Transactional;
+import jakarta.transaction.Transactional.TxType;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Set;

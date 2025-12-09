@@ -30,7 +30,7 @@ import org.fao.geonet.kernel.region.Region;
 import org.geotools.api.referencing.FactoryException;
 import org.geotools.api.referencing.operation.TransformException;
 
-import javax.xml.bind.annotation.*;
+import jakarta.xml.bind.annotation.*;
 import java.util.Collection;
 import java.util.Map;
 

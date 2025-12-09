@@ -27,7 +27,7 @@ import com.yammer.metrics.core.HealthCheck;
 import jeeves.monitor.HealthCheckFactory;
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.lang.StringUtils;
-import org.apache.http.client.methods.HttpGet;
+import org.apache.hc.client5.http.classic.methods.HttpGet;
 import org.fao.geonet.kernel.search.EsSearchManager;
 import org.fao.geonet.utils.GeonetHttpRequestFactory;
 import org.springframework.http.client.ClientHttpResponse;
@@ -51,8 +51,8 @@ public class DashboardAppHealthCheck implements HealthCheckFactory {
                         String url = dashboardAppUrl;
                         httpResponse = httpRequestFactory.execute(new HttpGet(url));
 
-                        if (httpResponse.getRawStatusCode() == 200 // Kibana default config
-                            || httpResponse.getRawStatusCode() == 404 // Kibana alive but probably using a custom basePath
+                        if (httpResponse.getStatusCode().value() == 200 // Kibana default config
+                            || httpResponse.getStatusCode().value() == 404 // Kibana alive but probably using a custom basePath
                         ) {
                             return Result.healthy(
                                 "Dashboard application is running."

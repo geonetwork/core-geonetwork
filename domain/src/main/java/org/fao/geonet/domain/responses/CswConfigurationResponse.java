@@ -25,7 +25,7 @@ package org.fao.geonet.domain.responses;
 
 import org.fao.geonet.domain.Translations;
 
-import javax.xml.bind.annotation.*;
+import jakarta.xml.bind.annotation.*;
 
 import java.io.Serializable;
 import java.util.List;

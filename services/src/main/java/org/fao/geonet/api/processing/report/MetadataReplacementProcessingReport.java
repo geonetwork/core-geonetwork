@@ -23,7 +23,7 @@
 
 package org.fao.geonet.api.processing.report;
 
-import javax.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlElement;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

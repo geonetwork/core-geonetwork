@@ -25,7 +25,7 @@ package org.fao.geonet.domain;
 
 import org.fao.geonet.entitylistener.MetadataRelationEntityListenerManager;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 /**
  * Tables that links related metadata. <p> Object is its own entity so that it is easier to add

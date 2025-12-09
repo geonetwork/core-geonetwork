@@ -27,7 +27,7 @@ import org.fao.geonet.domain.MetadataStatus;
 import org.fao.geonet.domain.StatusValue;
 import org.fao.geonet.domain.User;
 
-import javax.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
 import java.util.List;
 
 @XmlRootElement

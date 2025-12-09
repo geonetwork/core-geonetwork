@@ -55,7 +55,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.XML;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.io.IOException;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;

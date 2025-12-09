@@ -25,9 +25,9 @@ package org.fao.geonet.api.processing.report;
 
 import org.fao.geonet.Util;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlElement;
 
 @XmlAccessorType(XmlAccessType.PUBLIC_MEMBER)
 public class ErrorReport extends Report {

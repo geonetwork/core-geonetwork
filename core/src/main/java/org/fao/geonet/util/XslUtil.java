@@ -41,10 +41,10 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.NotImplementedException;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.text.StringEscapeUtils;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.hc.client5.http.classic.HttpClient;
+import org.apache.hc.client5.http.classic.methods.HttpGet;
+import org.apache.hc.client5.http.impl.classic.HttpClients;
+import org.apache.hc.core5.http.ClassicHttpResponse;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.Constants;
 import org.fao.geonet.SystemInfo;
@@ -103,7 +103,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.imageio.ImageIO;
 import javax.xml.parsers.ParserConfigurationException;
 import java.awt.image.BufferedImage;
@@ -125,7 +125,6 @@ import java.util.regex.Pattern;
 
 import static org.fao.geonet.kernel.setting.Settings.*;
 import static org.fao.geonet.utils.Xml.getXmlFromJSON;
-
 
 
 /**
@@ -530,9 +529,9 @@ public final class XslUtil {
 
     public static Node downloadJsonAsXML(String url) {
         HttpGet httpGet = new HttpGet(url);
-        HttpClient client = new DefaultHttpClient();
+        HttpClient client = HttpClients.createDefault();
         try {
-            final HttpResponse httpResponse = client.execute(httpGet);
+            final ClassicHttpResponse httpResponse = client.execute(httpGet);
             final String jsonResponse = IOUtils.toString(
                 httpResponse.getEntity().getContent(),
                 String.valueOf(StandardCharsets.UTF_8)).trim();

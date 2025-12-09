@@ -28,7 +28,7 @@ import jeeves.monitor.MonitorManager;
 import org.fao.geonet.utils.Log;
 import org.springframework.context.ConfigurableApplicationContext;
 
-import javax.persistence.EntityManager;
+import jakarta.persistence.EntityManager;
 
 import java.util.Hashtable;
 

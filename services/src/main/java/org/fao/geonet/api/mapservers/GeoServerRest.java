@@ -23,14 +23,14 @@
 package org.fao.geonet.api.mapservers;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.http.auth.AuthScope;
-import org.apache.http.auth.AuthenticationException;
-import org.apache.http.auth.UsernamePasswordCredentials;
-import org.apache.http.client.config.RequestConfig;
-import org.apache.http.client.methods.*;
-import org.apache.http.entity.ContentType;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.auth.BasicScheme;
+import org.apache.hc.client5.http.auth.AuthScope;
+import org.apache.hc.client5.http.auth.AuthenticationException;
+import org.apache.hc.client5.http.auth.UsernamePasswordCredentials;
+import org.apache.hc.client5.http.config.RequestConfig;
+import org.apache.hc.client5.http.classic.methods.*;
+import org.apache.hc.core5.http.ContentType;
+import org.apache.hc.core5.http.io.entity.StringEntity;
+import org.apache.hc.client5.http.impl.auth.BasicScheme;
 import org.fao.geonet.Constants;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.csw.common.util.Xml;
@@ -40,7 +40,7 @@ import org.fao.geonet.utils.nio.PathHttpEntity;
 import org.jdom.Element;
 import org.springframework.http.client.ClientHttpResponse;
 
-import javax.annotation.CheckReturnValue;
+import jakarta.annotation.CheckReturnValue;
 import java.io.IOException;
 import java.nio.file.Path;
 
@@ -642,7 +642,7 @@ public class GeoServerRest {
             if (postData != null) Log.debug(LOGGER_NAME, "postData:" + postData);
         }
 
-        HttpRequestBase m;
+        HttpUriRequestBase m;
         if (method.equals(METHOD_PUT)) {
             m = new HttpPut(url);
             if (file != null) {
@@ -675,15 +675,15 @@ public class GeoServerRest {
         // apparently this is needed to preemptively send the auth, for servers that dont require it but
         // dont send the same data if you're authenticated or not.
         try {
-            m.addHeader(new BasicScheme().authenticate(new UsernamePasswordCredentials(username, password), m));
+            m.addHeader(new BasicScheme().authenticate(new UsernamePasswordCredentials(username, password.toCharArray()), m));
         } catch (AuthenticationException a) {
             Log.warning(LOGGER_NAME, "Failed to add the authentication Header, error is: " + a.getMessage());
         }
 
-        final ClientHttpResponse httpResponse = factory.execute(m, new UsernamePasswordCredentials(username, password), AuthScope.ANY);
+        final ClientHttpResponse httpResponse = factory.execute(m, new UsernamePasswordCredentials(username, password.toCharArray()), new AuthScope(null, -1));
 
         try {
-            status = httpResponse.getRawStatusCode();
+            status = httpResponse.getStatusCode().value();
             if (Log.isDebugEnabled(LOGGER_NAME)) {
                 Log.debug(LOGGER_NAME, "status:" + status);
             }

@@ -6,9 +6,9 @@ import com.google.common.io.CharStreams;
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.message.BasicNameValuePair;
+import org.apache.hc.client5.http.entity.UrlEncodedFormEntity;
+import org.apache.hc.client5.http.classic.methods.HttpPost;
+import org.apache.hc.core5.http.message.BasicNameValuePair;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.utils.GeonetHttpRequestFactory;
 import org.fao.geonet.utils.Log;
@@ -29,10 +29,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeoutException;
 
-import org.apache.http.client.methods.HttpGet;
+import org.apache.hc.client5.http.classic.methods.HttpGet;
 
-import javax.annotation.Nullable;
-import org.apache.http.impl.client.HttpClientBuilder;
+import jakarta.annotation.Nullable;
+import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
 import com.google.common.base.Function;
 import org.fao.geonet.lib.Lib;
 import jeeves.server.context.ServiceContext;
@@ -74,7 +74,7 @@ public class SpatineoUtil {
         ServiceContext context = ServiceContext.get();
         final GeonetHttpRequestFactory requestFactory = context.getBean(GeonetHttpRequestFactory.class);
         HttpGet req = new HttpGet(API);
-        final String requestHost = req.getURI().getHost();
+        final String requestHost = req.getUri().getHost();
         HttpPost method = null;
         ObjectMapper mapper = new ObjectMapper();
         String cookie = null;
@@ -104,7 +104,7 @@ public class SpatineoUtil {
                     }
                 });
 
-                int status = httpResponse.getRawStatusCode();
+                int status = httpResponse.getStatusCode().value();
                 i++;
 
                 Log.debug(LOGGER_NAME, String.format(
@@ -152,7 +152,7 @@ public class SpatineoUtil {
             Log.error(LOGGER_NAME, errorMessage);
         } finally {
             if (method != null) {
-                method.releaseConnection();
+                method.reset();
             }
             IOUtils.closeQuietly(httpResponse);
         }

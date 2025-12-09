@@ -35,9 +35,9 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
 
-import javax.annotation.Nullable;
-import javax.persistence.criteria.Path;
-import javax.persistence.criteria.Root;
+import jakarta.annotation.Nullable;
+import jakarta.persistence.criteria.Path;
+import jakarta.persistence.criteria.Root;
 
 import static org.fao.geonet.repository.specification.MetadataSpecs.hasMetadataId;
 import static org.junit.Assert.*;

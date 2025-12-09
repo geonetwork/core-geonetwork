@@ -26,8 +26,8 @@ import org.fao.geonet.domain.converter.UserSearchFeaturedTypeConverter;
 import org.fao.geonet.entitylistener.UserSearchEntityListenerManager;
 import org.hibernate.annotations.Type;
 
-import javax.annotation.Nullable;
-import javax.persistence.*;
+import jakarta.annotation.Nullable;
+import jakarta.persistence.*;
 import java.io.Serializable;
 import java.util.*;
 

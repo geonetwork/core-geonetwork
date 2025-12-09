@@ -26,7 +26,7 @@ package org.fao.geonet.services.resources.handlers;
 import jeeves.server.context.ServiceContext;
 import org.jdom.Element;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 public interface IResourceRemoveHandler {
     /**

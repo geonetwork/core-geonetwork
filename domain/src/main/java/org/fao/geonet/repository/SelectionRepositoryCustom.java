@@ -26,8 +26,8 @@ package org.fao.geonet.repository;
 import org.fao.geonet.domain.MetadataCategory;
 import org.fao.geonet.domain.Selection;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * Custom methods for finding and saving Selection entities.

@@ -30,8 +30,8 @@ import org.fao.geonet.SystemInfo;
 import org.fao.geonet.utils.debug.DebuggingInputStream;
 import org.fao.geonet.utils.debug.DebuggingReader;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;

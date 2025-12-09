@@ -25,7 +25,7 @@ package org.fao.geonet.entitylistener;
 
 import org.fao.geonet.domain.MapServer;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 /**
  * Created with IntelliJ IDEA. MapServer: Francois

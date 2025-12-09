@@ -25,8 +25,8 @@ package org.fao.geonet.repository;
 
 import java.util.List;
 
-import javax.annotation.Nonnull;
-import javax.persistence.metamodel.SingularAttribute;
+import jakarta.annotation.Nonnull;
+import jakarta.persistence.metamodel.SingularAttribute;
 
 import org.fao.geonet.domain.OperationAllowed;
 import org.fao.geonet.domain.OperationAllowedId;

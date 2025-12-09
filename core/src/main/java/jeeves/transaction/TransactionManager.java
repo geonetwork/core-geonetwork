@@ -35,8 +35,8 @@ import org.springframework.web.context.request.RequestContextHolder;
 
 import java.util.Collection;
 
-import javax.annotation.Nullable;
-import javax.persistence.RollbackException;
+import jakarta.annotation.Nullable;
+import jakarta.persistence.RollbackException;
 
 /**
  * Declares the cut-points/places where transactions are needed in Geonetwork.  Each module that

@@ -29,9 +29,9 @@ import org.fao.geonet.domain.User;
 import org.fao.geonet.utils.Log;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import javax.servlet.ServletContext;
-import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletContextListener;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.ServletContextEvent;
+import jakarta.servlet.ServletContextListener;
 import java.io.File;
 import java.sql.Driver;
 import java.sql.DriverManager;

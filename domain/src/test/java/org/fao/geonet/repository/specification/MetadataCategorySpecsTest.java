@@ -37,7 +37,7 @@ import org.springframework.data.jpa.domain.Specification;
 import java.util.Arrays;
 import java.util.List;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;

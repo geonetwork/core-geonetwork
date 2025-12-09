@@ -25,8 +25,8 @@ package org.fao.geonet.domain;
 
 import org.fao.geonet.entitylistener.LanguageEntityListenerManager;
 
-import javax.annotation.Nonnull;
-import javax.persistence.*;
+import jakarta.annotation.Nonnull;
+import jakarta.persistence.*;
 
 /**
  * The enumeration of all languages available in the system.

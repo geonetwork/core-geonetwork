@@ -23,7 +23,7 @@
 
 package org.fao.geonet.api.records.model.related;
 
-import javax.xml.bind.annotation.*;
+import jakarta.xml.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
 

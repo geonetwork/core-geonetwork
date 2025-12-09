@@ -24,7 +24,7 @@
 package org.fao.geonet.utils;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.http.client.methods.HttpRequestBase;
+import org.apache.hc.client5.http.classic.methods.HttpUriRequestBase;
 import org.fao.geonet.exceptions.BadServerResponseEx;
 import org.fao.geonet.exceptions.BadSoapResponseEx;
 import org.fao.geonet.exceptions.BadXmlResponseEx;
@@ -80,7 +80,7 @@ public class XmlRequest extends AbstractHttpRequest {
      */
 
     public final Element execute() throws IOException, BadXmlResponseEx, BadSoapResponseEx {
-        HttpRequestBase httpMethod = setupHttpMethod();
+        HttpUriRequestBase httpMethod = setupHttpMethod();
 
         Element response = executeAndReadResponse(httpMethod);
 
@@ -99,7 +99,7 @@ public class XmlRequest extends AbstractHttpRequest {
      */
 
     public final void executeLarge(Path outFile) throws IOException {
-        HttpRequestBase httpMethod = setupHttpMethod();
+        HttpUriRequestBase httpMethod = setupHttpMethod();
 
         doExecuteLarge(httpMethod, outFile);
     }
@@ -112,16 +112,16 @@ public class XmlRequest extends AbstractHttpRequest {
     //---
     //---------------------------------------------------------------------------
 
-    protected final Element executeAndReadResponse(HttpRequestBase httpMethod) throws IOException, BadXmlResponseEx {
+    protected final Element executeAndReadResponse(HttpUriRequestBase httpMethod) throws IOException, BadXmlResponseEx {
 
 
         final ClientHttpResponse httpResponse = doExecute(httpMethod);
 
-        if (httpResponse.getRawStatusCode() > 399) {
-            httpMethod.releaseConnection();
+        if (httpResponse.getStatusCode().value() > 399) {
+            httpMethod.reset();
             throw new BadServerResponseEx(httpResponse.getStatusText() +
-                " -- URI: " + httpMethod.getURI() +
-                " -- Response Code: " + httpResponse.getRawStatusCode());
+                " -- URI: " + httpMethod.getUri() +
+                " -- Response Code: " + httpResponse.getStatusCode().value());
         }
 
         byte[] data;
@@ -130,9 +130,9 @@ public class XmlRequest extends AbstractHttpRequest {
             data = IOUtils.toByteArray(httpResponse.getBody());
             return Xml.loadStream(new ByteArrayInputStream(data));
         } catch (JDOMException e) {
-            throw new BadXmlResponseEx("Invalid XML document from URI: " + httpMethod.getURI());
+            throw new BadXmlResponseEx("Invalid XML document from URI: " + httpMethod.getUri());
         } finally {
-            httpMethod.releaseConnection();
+            httpMethod.reset();
 
             sentData = getSentData(httpMethod);
         }
@@ -140,13 +140,13 @@ public class XmlRequest extends AbstractHttpRequest {
 
     //---------------------------------------------------------------------------
 
-    protected final Path doExecuteLarge(HttpRequestBase httpMethod, Path outFile) throws IOException {
+    protected final Path doExecuteLarge(HttpUriRequestBase httpMethod, Path outFile) throws IOException {
 
         try (ClientHttpResponse httpResponse = doExecute(httpMethod)) {
             Files.copy(httpResponse.getBody(), outFile, StandardCopyOption.REPLACE_EXISTING);
             return outFile;
         } finally {
-            httpMethod.releaseConnection();
+            httpMethod.reset();
 
             sentData = getSentData(httpMethod);
             //--- we do not save received data because it can be very large

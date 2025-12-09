@@ -25,7 +25,7 @@ package org.fao.geonet.api.records.formatters.cache;
 
 import org.fao.geonet.Constants;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import java.util.concurrent.Callable;
 
 /**

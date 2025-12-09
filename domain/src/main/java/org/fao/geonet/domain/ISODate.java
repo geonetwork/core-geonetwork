@@ -29,12 +29,12 @@ import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.utils.DateUtil;
 import org.jdom.Element;
 
-import javax.annotation.Nonnull;
-import javax.persistence.Embeddable;
-import javax.persistence.Transient;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
-import javax.xml.bind.annotation.XmlValue;
+import jakarta.annotation.Nonnull;
+import jakarta.persistence.Embeddable;
+import jakarta.persistence.Transient;
+import jakarta.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlTransient;
+import jakarta.xml.bind.annotation.XmlValue;
 import java.io.Serializable;
 import java.time.*;
 import java.time.format.DateTimeFormatter;

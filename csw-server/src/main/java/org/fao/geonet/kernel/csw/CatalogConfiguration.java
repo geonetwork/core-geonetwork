@@ -36,7 +36,7 @@ import org.jdom.Element;
 import org.jdom.Namespace;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import javax.servlet.ServletContext;
+import jakarta.servlet.ServletContext;
 import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.HashSet;

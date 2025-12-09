@@ -34,7 +34,7 @@ import org.fao.geonet.repository.SortUtils;
 import org.fao.geonet.repository.Updater;
 import org.jdom.Element;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * Load, edit, delete {@link org.fao.geonet.domain.Schematron} entities.

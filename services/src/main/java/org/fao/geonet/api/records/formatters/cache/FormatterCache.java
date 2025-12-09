@@ -34,8 +34,8 @@ import org.fao.geonet.domain.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.concurrent.CustomizableThreadFactory;
 
-import javax.annotation.Nullable;
-import javax.annotation.PreDestroy;
+import jakarta.annotation.Nullable;
+import jakarta.annotation.PreDestroy;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Collection;

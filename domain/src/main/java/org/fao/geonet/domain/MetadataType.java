@@ -23,7 +23,7 @@
 
 package org.fao.geonet.domain;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * The type of metadata.

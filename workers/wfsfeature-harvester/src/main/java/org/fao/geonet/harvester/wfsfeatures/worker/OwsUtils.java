@@ -23,7 +23,7 @@
 
 package org.fao.geonet.harvester.wfsfeatures.worker;
 
-import org.apache.http.client.utils.URIBuilder;
+import org.apache.hc.core5.net.URIBuilder;
 import org.geotools.api.feature.type.AttributeDescriptor;
 import org.geotools.api.temporal.Instant;
 

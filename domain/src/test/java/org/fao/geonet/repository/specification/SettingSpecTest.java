@@ -34,7 +34,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;

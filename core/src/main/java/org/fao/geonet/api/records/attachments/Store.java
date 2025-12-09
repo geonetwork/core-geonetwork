@@ -38,7 +38,7 @@ import java.net.URL;
 import java.nio.file.Path;
 import java.util.Date;
 import java.util.List;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * A store allows user to upload resources (eg. files) to a metadata record and retrieve them.

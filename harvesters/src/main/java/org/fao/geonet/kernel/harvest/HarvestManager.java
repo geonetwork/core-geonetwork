@@ -34,8 +34,8 @@ import org.springframework.context.ConfigurableApplicationContext;
 
 import java.sql.SQLException;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * API for adding/removing/running harvesters.

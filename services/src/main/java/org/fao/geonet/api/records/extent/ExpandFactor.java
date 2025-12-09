@@ -23,7 +23,7 @@
 
 package org.fao.geonet.api.records.extent;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * Represents how much zoom should be given around a geometry so that there is enough context to see

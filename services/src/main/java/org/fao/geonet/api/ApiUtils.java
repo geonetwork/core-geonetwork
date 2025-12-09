@@ -46,14 +46,15 @@ import org.fao.geonet.utils.XmlRequest;
 import org.springframework.context.ApplicationContext;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
+import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 
 import javax.imageio.ImageIO;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -376,7 +377,7 @@ public class ApiUtils {
                         try {
                             msg = messages.getString(err.getCodes()[i]);
 
-                            if (!StringUtils.isEmpty(msg)) {
+                            if (!ObjectUtils.isEmpty(msg)) {
                                 break;
                             }
                         } catch (MissingResourceException ex) {
@@ -385,7 +386,7 @@ public class ApiUtils {
                     }
                 }
 
-                if (StringUtils.isEmpty(msg)) {
+                if (ObjectUtils.isEmpty(msg)) {
                     msg = err.getDefaultMessage();
                 }
 

@@ -25,14 +25,14 @@ package org.fao.geonet.utils;
 
 import com.google.common.base.Predicate;
 
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpRequestBase;
+import org.apache.hc.client5.http.classic.methods.HttpGet;
+import org.apache.hc.client5.http.classic.methods.HttpUriRequestBase;
 import org.jdom.Element;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.mock.http.client.MockClientHttpResponse;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 import java.io.*;
 import java.net.URI;
@@ -46,8 +46,8 @@ import java.util.concurrent.Callable;
  */
 public class MockXmlRequest extends XmlRequest {
 
-    private Set<Predicate<HttpRequestBase>> _unaccessed = new HashSet<Predicate<HttpRequestBase>>();
-    private Map<Predicate<HttpRequestBase>, Callable<ClientHttpResponse>> _mapping = new LinkedHashMap<Predicate<HttpRequestBase>,
+    private Set<Predicate<HttpUriRequestBase>> _unaccessed = new HashSet<Predicate<HttpUriRequestBase>>();
+    private Map<Predicate<HttpUriRequestBase>, Callable<ClientHttpResponse>> _mapping = new LinkedHashMap<Predicate<HttpUriRequestBase>,
         Callable<ClientHttpResponse>>();
 
     public MockXmlRequest(String host, int port, String protocol) {
@@ -55,9 +55,9 @@ public class MockXmlRequest extends XmlRequest {
     }
 
     @Override
-    protected ClientHttpResponse doExecute(HttpRequestBase httpMethod) throws IOException {
+    protected ClientHttpResponse doExecute(HttpUriRequestBase httpMethod) throws IOException {
 
-        for (Map.Entry<Predicate<HttpRequestBase>, Callable<ClientHttpResponse>> entry : _mapping.entrySet()) {
+        for (Map.Entry<Predicate<HttpUriRequestBase>, Callable<ClientHttpResponse>> entry : _mapping.entrySet()) {
             if (entry.getKey().apply(httpMethod)) {
                 try {
                     _unaccessed.remove(entry.getKey());
@@ -81,19 +81,19 @@ public class MockXmlRequest extends XmlRequest {
     /**
      * Begin mapping a request to a response.
      */
-    public MockXmlRequestWithWhen when(Predicate<HttpRequestBase> predicate) {
+    public MockXmlRequestWithWhen when(Predicate<HttpUriRequestBase> predicate) {
         return new MockXmlRequestWithWhen(predicate);
     }
 
     public List<String> getUnaccessedRequests() {
         List<String> missed = new ArrayList<String>();
-        for (Predicate<HttpRequestBase> predicate : _unaccessed) {
+        for (Predicate<HttpUriRequestBase> predicate : _unaccessed) {
             missed.add(predicate.toString());
         }
         return missed;
     }
 
-    private static class PathMatchingPredicate implements Predicate<HttpRequestBase> {
+    private static class PathMatchingPredicate implements Predicate<HttpUriRequestBase> {
 
         private final String _path;
 
@@ -102,11 +102,11 @@ public class MockXmlRequest extends XmlRequest {
         }
 
         @Override
-        public boolean apply(@Nullable HttpRequestBase input) {
+        public boolean apply(@Nullable HttpUriRequestBase input) {
             if (input == null) {
                 return false;
             }
-            final URI uri = input.getURI();
+            final URI uri = input.getUri();
             final boolean equalPath = uri.toString().equalsIgnoreCase(_path);
 
             return input instanceof HttpGet && equalPath;
@@ -135,13 +135,13 @@ public class MockXmlRequest extends XmlRequest {
      * request mapping.
      */
     public class MockXmlRequestWithWhen {
-        private final Predicate<HttpRequestBase> _predicate;
+        private final Predicate<HttpUriRequestBase> _predicate;
 
         private MockXmlRequestWithWhen(String path) {
             this._predicate = new PathMatchingPredicate(path);
         }
 
-        public MockXmlRequestWithWhen(Predicate<HttpRequestBase> predicate) {
+        public MockXmlRequestWithWhen(Predicate<HttpUriRequestBase> predicate) {
             this._predicate = predicate;
         }
 

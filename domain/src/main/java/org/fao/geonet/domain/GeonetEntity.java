@@ -31,8 +31,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javax.annotation.Nonnull;
-import javax.persistence.Embeddable;
+import jakarta.annotation.Nonnull;
+import jakarta.persistence.Embeddable;
 
 import org.jdom.Element;
 import org.springframework.beans.InvalidPropertyException;

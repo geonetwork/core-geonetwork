@@ -25,9 +25,9 @@ package org.fao.geonet.repository;
 
 import java.util.List;
 
-import javax.annotation.Nonnegative;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnegative;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import org.fao.geonet.domain.OperationAllowed;
 import org.fao.geonet.domain.OperationAllowedId;

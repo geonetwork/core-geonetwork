@@ -28,7 +28,7 @@ import org.fao.geonet.domain.MetadataIdentifierTemplate;
 import org.fao.geonet.domain.MetadataIdentifierTemplate_;
 import org.springframework.data.jpa.domain.Specification;
 
-import javax.persistence.criteria.*;
+import jakarta.persistence.criteria.*;
 
 /**
  * Specification for querying MetadataIdentifierTemplate.

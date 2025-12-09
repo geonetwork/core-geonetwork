@@ -25,7 +25,7 @@ package org.fao.geonet.domain;
 
 import org.fao.geonet.entitylistener.MetadataRatingByIpEntityListenerManager;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 /**
  * An entity that tracks which users have rated a metadata. It currently tracks by Ip address so

@@ -26,7 +26,7 @@ import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.Namespace;
-import org.springframework.util.StringUtils;
+import org.springframework.util.ObjectUtils;
 
 import java.util.List;
 import java.util.regex.Matcher;
@@ -46,7 +46,7 @@ public class RawLinkPatternStreamer <L, M> {
     {
         this.pattern = SEARCH_URL_IN_STRING_REGEX;
         this.linkBuilder = linkBuilder;
-        if (!StringUtils.isEmpty(excludePattern)) {
+        if (!ObjectUtils.isEmpty(excludePattern)) {
             this.excludePattern = Pattern.compile(excludePattern);
         }
     }

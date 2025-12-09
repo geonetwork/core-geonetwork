@@ -25,11 +25,11 @@ package org.fao.geonet.translations.googletranslate;
 
 import com.google.common.base.Function;
 import com.google.common.io.CharStreams;
-import org.apache.http.HttpStatus;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpUriRequest;
-import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.message.BasicHeader;
+import org.apache.hc.core5.http.HttpStatus;
+import org.apache.hc.client5.http.classic.methods.HttpGet;
+import org.apache.hc.client5.http.classic.methods.HttpUriRequest;
+import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
+import org.apache.hc.core5.http.message.BasicHeader;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
@@ -37,8 +37,8 @@ import org.fao.geonet.utils.GeonetHttpRequestFactory;
 import org.fao.geonet.utils.Log;
 import org.springframework.http.client.ClientHttpResponse;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URLEncoder;
@@ -77,7 +77,7 @@ public class GoogleTranslateClient {
 
 
         try (ClientHttpResponse httpResponse = executeRequest(method)) {
-            int status = httpResponse.getRawStatusCode();
+            int status = httpResponse.getStatusCode().value();
 
             Log.debug(LOGGER_NAME, "   -- Request status code: " + status);
 

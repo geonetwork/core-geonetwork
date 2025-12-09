@@ -412,7 +412,7 @@ public class LdapUserDetailsManager implements UserDetailsManager {
     }
 
     public void setAttributesToRetrieve(String[] attributesToRetrieve) {
-        Assert.notNull(attributesToRetrieve);
+        Assert.notNull(attributesToRetrieve, "must not be null");
         this.attributesToRetrieve = Arrays.copyOf(attributesToRetrieve,
             attributesToRetrieve.length);
     }
@@ -429,7 +429,7 @@ public class LdapUserDetailsManager implements UserDetailsManager {
      * @param groupMemberAttributeName the name of the attribute used to store group members.
      */
     public void setGroupMemberAttributeName(String groupMemberAttributeName) {
-        Assert.hasText(groupMemberAttributeName);
+        Assert.hasText(groupMemberAttributeName, "must have text; it must not be null, empty, or blank");
         this.groupMemberAttributeName = groupMemberAttributeName;
         this.groupSearchFilter = "(" + groupMemberAttributeName + "={0})";
     }
@@ -441,7 +441,7 @@ public class LdapUserDetailsManager implements UserDetailsManager {
         } else if (index > 1) {
             index = 1;
         }
-        Assert.hasText(groupMemberAttributeName);
+        Assert.hasText(groupMemberAttributeName, "must have text; it must not be null, empty, or blank");
         this.groupMemberAttributeName = groupMemberAttributeName;
         this.groupSearchFilter = "(" + groupMemberAttributeName + "={" + index
             + "})";

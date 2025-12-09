@@ -26,7 +26,7 @@ package org.fao.geonet.domain;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.entitylistener.AddressEntityListenerManager;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 import java.io.Serializable;
 

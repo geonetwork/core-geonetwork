@@ -23,8 +23,8 @@
 
 package org.fao.geonet.repository;
 
-import javax.persistence.criteria.Path;
-import javax.persistence.criteria.Root;
+import jakarta.persistence.criteria.Path;
+import jakarta.persistence.criteria.Root;
 
 /**
  * Interface for defining a path. User: Jesse Date: 10/2/13 Time: 6:43 PM

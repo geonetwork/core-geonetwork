@@ -28,12 +28,12 @@ import jeeves.server.UserSession;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.utils.Log;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
+import org.springframework.web.servlet.HandlerInterceptor;
 
-import javax.annotation.PostConstruct;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import jakarta.annotation.PostConstruct;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -42,7 +42,7 @@ import java.util.regex.Pattern;
  * In charge of creating a new {@link UserSession} if not existing.
  * Avoid to create any sessions for crawlers.
  */
-public class AllRequestsInterceptor extends HandlerInterceptorAdapter {
+public class AllRequestsInterceptor implements HandlerInterceptor {
 
     /**
      * List of bots to avoid.
@@ -68,7 +68,7 @@ public class AllRequestsInterceptor extends HandlerInterceptorAdapter {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         createSessionForAllButNotCrawlers(request);
-        return super.preHandle(request, response, handler);
+        return true;
     }
 
     /**
@@ -102,7 +102,7 @@ public class AllRequestsInterceptor extends HandlerInterceptorAdapter {
                 ));
             }
             if (httpSession != null) {
-                httpSession.invalidate();
+                request.logout();
             }
         }
     }
