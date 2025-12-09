@@ -26,6 +26,8 @@ package org.fao.geonet.utils;
 import com.google.common.base.Function;
 import org.apache.hc.client5.http.classic.methods.HttpUriRequestBase;
 import org.apache.hc.client5.http.cookie.CookieStore;
+import org.apache.hc.client5.http.cookie.StandardCookieSpec;
+import org.apache.hc.client5.http.impl.LaxRedirectStrategy;
 import org.apache.hc.client5.http.impl.auth.BasicAuthCache;
 import org.apache.hc.client5.http.impl.auth.BasicCredentialsProvider;
 import org.apache.hc.core5.http.Header;
@@ -35,7 +37,6 @@ import org.apache.hc.core5.http.NameValuePair;
 import org.apache.hc.client5.http.auth.AuthCache;
 import org.apache.hc.client5.http.auth.AuthScope;
 import org.apache.hc.client5.http.auth.UsernamePasswordCredentials;
-import org.apache.hc.client5.http.config.CookieSpecs;
 import org.apache.hc.client5.http.config.RequestConfig;
 import org.apache.hc.client5.http.classic.methods.HttpGet;
 import org.apache.hc.client5.http.classic.methods.HttpPost;
@@ -44,7 +45,6 @@ import org.apache.hc.core5.http.ContentType;
 import org.apache.hc.core5.http.io.entity.StringEntity;
 import org.apache.hc.client5.http.impl.auth.BasicScheme;
 import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
-import org.apache.hc.client5.http.impl.classic.LaxRedirectStrategy;
 import org.apache.hc.core5.http.message.BasicNameValuePair;
 import org.apache.hc.core5.http.protocol.HttpContext;
 import org.fao.geonet.exceptions.BadSoapResponseEx;
@@ -377,7 +377,8 @@ public class AbstractHttpRequest {
 //        builder.setRelativeRedirectsAllowed(true); //not needed in v5
         builder.setCircularRedirectsAllowed(true);
         builder.setMaxRedirects(3);
-        builder.setCookieSpec(CookieSpecs.BROWSER_COMPATIBILITY);
+        // Relaxed as close fit to BROWSER_COMPATIBILITY
+        builder.setCookieSpec(StandardCookieSpec.RELAXED);
 
         httpMethod.setConfig(builder.build());
         return httpMethod;
