@@ -29,8 +29,6 @@ import org.apache.commons.io.IOUtils;
 import org.apache.hc.client5.http.impl.LaxRedirectStrategy;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
 import org.apache.hc.core5.http.Header;
-import org.apache.hc.core5.http.HeaderElement;
-import org.apache.hc.core5.http.io.HttpClientConnection;
 import org.apache.hc.client5.http.auth.AuthScope;
 import org.apache.hc.client5.http.auth.Credentials;
 import org.apache.hc.client5.http.classic.methods.HttpUriRequest;
@@ -39,14 +37,12 @@ import org.apache.hc.client5.http.impl.auth.BasicCredentialsProvider;
 import org.apache.hc.client5.http.io.HttpClientConnectionManager;
 import org.apache.hc.client5.http.protocol.HttpClientContext;
 import org.apache.hc.core5.http.io.SocketConfig;
-import org.apache.hc.client5.http.HttpRoute;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
 import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
 import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager;
-import org.apache.hc.core5.http.protocol.HttpContext;
 import org.apache.hc.core5.io.CloseMode;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.client.AbstractClientHttpResponse;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.client.ClientHttpResponse;
 
 import java.io.IOException;
@@ -57,6 +53,7 @@ import java.util.concurrent.TimeUnit;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import jakarta.annotation.PreDestroy;
+import org.springframework.http.client.reactive.AbstractClientHttpResponse;
 
 /**
  * Factory interface for making different kinds of requests.  This is an interface so that tests can
@@ -221,7 +218,7 @@ public class GeonetHttpRequestFactory {
         return builder;
     }
 
-    private static class AdaptingResponse extends AbstractClientHttpResponse {
+    private static class AdaptingResponse implements ClientHttpResponse {
 
         private final CloseableHttpResponse response;
         private final CloseableHttpClient client;
@@ -232,8 +229,8 @@ public class GeonetHttpRequestFactory {
         }
 
         @Override
-        public int getRawStatusCode() throws IOException {
-            return response.getCode();
+        public HttpStatusCode getStatusCode() throws IOException {
+            return HttpStatusCode.valueOf(response.getCode());
         }
 
         @Override
@@ -255,10 +252,9 @@ public class GeonetHttpRequestFactory {
         @Override
         public HttpHeaders getHeaders() {
             final HttpHeaders httpHeaders = new HttpHeaders();
-
             final Header[] headers = response.getHeaders();
-
             for (Header header : headers) {
+                // spring5: previously this handled multiple elements!
 //                final HeaderElement[] elements = header.getValue();
 //                for (HeaderElement element : elements) {
 //                    httpHeaders.add(header.getName(), element.getValue());
