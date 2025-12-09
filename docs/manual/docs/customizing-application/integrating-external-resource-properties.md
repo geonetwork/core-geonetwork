@@ -2,33 +2,37 @@
 
 Add custom resource metadata from an external service directly into GeoNetwork's catalog index.
 
+**Note:** This feature is currently only available when using JCloud-based storage.
+
 ## Quick Start
 
 ### 1. Configure GeoNetwork
 
-Add these properties or environment variables to your `application.properties` or environment variables:
+Add these properties or environment variables to your GeoNetwork configuration:
 
 ```properties
-resources.external.additional.properties.url.template=https://your-api.example.com/resources?uuid={uuid}&approved={approved}
-resources.external.additional.properties.identifier.field.name=externalId
+jcloud.external.resources.properties.url=https://your-api.example.com/resources?uuid={uuid}&approved={approved}
+jcloud.external.resources.properties.identifier.field.name=externalId
 ```
 
 ```bash
-export RESOURCES_EXTERNAL_ADDITIONAL_PROPERTIES_URL_TEMPLATE=https://your-api.example.com/resources?uuid={uuid}&approved={approved}
-export RESOURCES_EXTERNAL_ADDITIONAL_PROPERTIES_IDENTIFIER_FIELD_NAME=externalId
+export JCLOUD_EXTERNAL_RESOURCES_PROPERTIES_URL=https://your-api.example.com/resources?uuid={uuid}&approved={approved}
+export JCLOUD_EXTERNAL_RESOURCES_PROPERTIES_IDENTIFIER_FIELD_NAME=externalId
 ```
 
 **Property Explanations:**
 
-- **`url.template`** - The URL of your external API endpoint
+- **`jcloud.external.resources.properties.url`** - The URL of your external API endpoint
   - Use `{uuid}` as a placeholder for the metadata record UUID
   - Use `{approved}` as a placeholder for the approved status (true/false)
   - Example: `https://api.example.com/resources?uuid={uuid}&approved={approved}`
+  - Environment variable: `JCLOUD_EXTERNAL_RESOURCES_PROPERTIES_URL`
   
-- **`identifier.field.name`** - The field name in your API response that contains the resource identifier
+- **`jcloud.external.resources.properties.identifier.field.name`** - The field name in your API response that contains the resource identifier
   - This identifier is used to match your external properties with GeoNetwork resources
   - Must match the field name you return in your JSON response
   - Example: if your response has `"externalId": "resource-123"`, set this to `externalId`
+  - Environment variable: `JCLOUD_EXTERNAL_RESOURCES_PROPERTIES_IDENTIFIER_FIELD_NAME`
 
 ### 2. Build Your External API Endpoint
 
@@ -41,8 +45,15 @@ Your endpoint must:
 
 ```
 GET /resources?uuid={metadata-uuid}&approved={true|false}
-Authorization: Bearer <token>  (if authentication required)
+Authorization: Bearer <token>  (if authentication is configured)
 ```
+
+**Authentication:**
+
+- When configured, GeoNetwork will automatically log in as a service account before calling your API
+- The authentication token is automatically included in the `Authorization` header
+- If service account login fails, the request will not proceed (error will be thrown)
+- If no security provider is configured, requests are made without authentication
 
 **Expected Response:**
 
@@ -119,6 +130,8 @@ After indexing, resources will contain the `externalAdditionalProperties` field 
 ]
 ```
 
+**Note:** The `metadataResourceExternalManagementProperties.id` matches the identifier field from your API response, allowing GeoNetwork to correctly merge the external properties.
+
 ## How It Works
 
 1. When metadata is indexed, GeoNetwork calls your external API with the UUID and approved flag
@@ -127,3 +140,25 @@ After indexing, resources will contain the `externalAdditionalProperties` field 
 4. The enriched data is indexed and searchable
 
 **Properties are merged automatically during metadata indexing** - no additional setup required once configured.
+
+## Technical Implementation
+
+The external resource properties feature is implemented in the JCloud storage module:
+
+**Configuration:**
+- Properties are configured in `config-jcloud-overrides.properties` or via environment variables
+- Configuration is managed by `JCloudConfiguration` class which reads the properties
+
+**Processing Flow:**
+1. `JCloudStore.getResourcesForIndexing()` is called during metadata indexing
+2. `ResourcesExternalAdditionalPropertiesService.getAdditionalPropertiesMap()` makes the authenticated API call
+3. The service uses `SecurityProviderUtil` for automatic service account authentication when available
+4. Returned properties are matched by identifier and merged into resource metadata
+5. The enriched resources are indexed into the catalog
+
+**Key Classes:**
+- `JCloudConfiguration` - Holds configuration properties
+- `JCloudStore` - Orchestrates resource retrieval and property merging
+- `ResourcesExternalAdditionalPropertiesService` - Handles external API calls and authentication
+
+
