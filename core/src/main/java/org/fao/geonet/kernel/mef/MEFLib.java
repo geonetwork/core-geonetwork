@@ -43,20 +43,14 @@ import java.util.zip.ZipOutputStream;
 import javax.annotation.Nonnull;
 
 import org.apache.commons.io.IOUtils;
+import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.Constants;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.ZipUtil;
+import org.fao.geonet.api.exception.AttachmentsExportLimitExceededException;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.Group;
-import org.fao.geonet.domain.AbstractMetadata;
-import org.fao.geonet.domain.ISODate;
-import org.fao.geonet.domain.MetadataCategory;
-import org.fao.geonet.domain.MetadataResource;
-import org.fao.geonet.domain.MetadataType;
-import org.fao.geonet.domain.Operation;
-import org.fao.geonet.domain.OperationAllowed;
-import org.fao.geonet.domain.Pair;
+import org.fao.geonet.domain.*;
 import org.fao.geonet.exceptions.BadInputEx;
 import org.fao.geonet.exceptions.BadParameterEx;
 import org.fao.geonet.exceptions.MetadataNotFoundEx;
@@ -64,7 +58,9 @@ import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.SchemaManager;
+import org.fao.geonet.kernel.search.EsSearchManager;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
@@ -129,9 +125,9 @@ public class MEFLib {
 
     public static Path doExport(ServiceContext context, Integer id,
                                 String format, boolean skipUUID, boolean resolveXlink,
-                                boolean removeXlinkAttribute, boolean addSchemaLocation) throws Exception {
+                                boolean removeXlinkAttribute, boolean addSchemaLocation, boolean includeAttachments) throws Exception {
         return MEFExporter.doExport(context, id, Format.parse(format),
-            skipUUID, resolveXlink, removeXlinkAttribute, addSchemaLocation);
+            skipUUID, resolveXlink, removeXlinkAttribute, addSchemaLocation, includeAttachments);
     }
 
     // --------------------------------------------------------------------------
@@ -139,11 +135,11 @@ public class MEFLib {
     public static Path doMEF2Export(ServiceContext context,
                                     Set<String> uuids, String format, boolean skipUUID, Path stylePath, boolean resolveXlink,
                                     boolean removeXlinkAttribute, boolean skipError, boolean addSchemaLocation,
-                                    boolean approved)
+                                    boolean approved, boolean includeAttachments)
         throws Exception {
         return MEF2Exporter.doExport(context, uuids, Format.parse(format),
             skipUUID, stylePath, resolveXlink, removeXlinkAttribute,
-            skipError, addSchemaLocation, approved);
+            skipError, addSchemaLocation, approved, includeAttachments);
     }
 
     // --------------------------------------------------------------------------
@@ -725,5 +721,125 @@ public class MEFLib {
         String lowercasedFileName = filename.toLowerCase();
         return lowercasedFileName.endsWith(".xml") ||
             isValidArchiveExtensionForMEF(lowercasedFileName);
+    }
+
+    /**
+     * Checks if the total size of attachments for given metadata records is under the configured size limit.
+     *
+     * @param metadataUuids The UUIDs of the metadata records.
+     * @param approved      Whether to use the approved version of the metadata records.
+     * @throws AttachmentsExportLimitExceededException if the total size of attachments exceeds the configured limit.
+     */
+    public static void checkAttachmentsUnderSizeLimit(Set<String> metadataUuids, boolean approved) throws AttachmentsExportLimitExceededException {
+        if (attachmentsExceedExportLimit(metadataUuids, approved)) {
+            if (metadataUuids.size() == 1) {
+                throw new AttachmentsExportLimitExceededException("Total size of attachments for the selected record exceeds the export limit.")
+                    .withMessageKey("exception.attachmentsExportLimitExceededException")
+                    .withDescriptionKey("exception.attachmentsExportLimitExceededException.single.description");
+            } else {
+                throw new AttachmentsExportLimitExceededException("Total size of attachments across selected records exceeds the export limit.")
+                    .withMessageKey("exception.attachmentsExportLimitExceededException")
+                    .withDescriptionKey("exception.attachmentsExportLimitExceededException.batch.description");
+            }
+        }
+    }
+
+    /**
+     * Checks if the total size of attachments for a given metadata record is under the configured size limit.
+     *
+     * @param metadataUuids The UUIDs of the metadata records.
+     * @param approved      Whether to use the approved version of the metadata records.
+     * @return `true` if the total size of attachments is within the limit or if no limit is configured,
+     *         `false` otherwise.
+     */
+    public static boolean attachmentsExceedExportLimit(Set<String> metadataUuids, boolean approved) {
+        SettingManager settingManager = ApplicationContextHolder.get().getBean(SettingManager.class);
+        EsSearchManager searchManager = ApplicationContextHolder.get().getBean(EsSearchManager.class);
+        return attachmentsExceedExportLimit(metadataUuids, approved, settingManager, searchManager);
+    }
+
+    /**
+     * Checks if the total size of resources for a metadata record is within the configured size limit.
+     *
+     * Retrieves the maximum size limit in bytes from the settings. If no limit is configured, returns
+     * {@code true}. Otherwise, retrieves the resources associated with the metadata UUID from the
+     * Elasticsearch index, computes their total size, and compares against the limit.
+     *
+     * @param metadataUuids    The UUIDs of the metadata records to check.
+     * @param approved         Whether to use the approved version of the metadata records.
+     * @param settingManager  The SettingManager instance for accessing configuration settings.
+     * @param searchManager   The EsSearchManager instance for accessing Elasticsearch resources.
+     * @return {@code true} if the total size of resources is within the limit or no limit is configured,
+     *         {@code false} if the total size exceeds the configured limit.
+     */
+    static boolean attachmentsExceedExportLimit(Set<String> metadataUuids,
+                                              boolean approved,
+                                              SettingManager settingManager,
+                                              EsSearchManager searchManager) {
+
+        Long maxSizeLimit = getMaxAttachmentSizeInBytes(settingManager);
+        if (maxSizeLimit == null) {
+            return false;
+        }
+
+        long totalSize = 0L;
+        for (String metadataUuid : metadataUuids) {
+            List<Map<String, Object>> resources = searchManager.getResourcesFromIndex(metadataUuid, approved);
+            totalSize += getTotalSizeOfAllAttachments(resources);
+        }
+
+        return totalSize > maxSizeLimit;
+    }
+
+    /**
+     * Retrieves the maximum attachment size limit configured in the system settings.
+     *
+     * Attempts to read the {@code METADATA_ZIPEXPORT_MAXSIZEOFRESOURCES} setting from the SettingManager
+     * and converts it from MB to bytes. If the setting value is invalid (non-numeric) or not configured,
+     * a warning is logged and null is returned to indicate no limit should be applied.
+     *
+     * @param settingManager The SettingManager instance used to retrieve configuration settings.
+     * @return The maximum attachment size limit in bytes, or {@code null} if no limit is configured
+     *         or if the configured value is invalid.
+     */
+    static Long getMaxAttachmentSizeInBytes(SettingManager settingManager) {
+        Long maxSizeLimitInMb;
+        try {
+            maxSizeLimitInMb = settingManager.getValueAsLong(Settings.METADATA_ZIPEXPORT_MAXSIZEOFRESOURCES);
+        } catch (NumberFormatException e) {
+            Log.warning(Geonet.INDEX_ENGINE,
+                "Invalid value for setting \"" + Settings.METADATA_ZIPEXPORT_MAXSIZEOFRESOURCES + "\". " +
+                    "No resource size limit will be applied.");
+            return null;
+        }
+
+        if (maxSizeLimitInMb == null || maxSizeLimitInMb < 0) {
+            return null;
+        }
+
+        return maxSizeLimitInMb * 1024 * 1024;
+    }
+
+    /**
+     * Computes the total size of all resources in the provided list.
+     *
+     * Iterates through the resources collection, extracts the "size" field from each resource map,
+     * filters out null values, converts the size values to long integers, and sums them up.
+     * Non-numeric size values are treated as 0.
+     *
+     * @param resources A list of resource maps, each containing at least a "size" key with a numeric value.
+     * @return The total size in bytes of all resources in the list.
+     */
+    // TODO: Consistent naming - resource vs attachment
+    static long getTotalSizeOfAllAttachments(List<Map<String, Object>> resources) {
+        if (resources == null || resources.isEmpty()) {
+            return 0L;
+        }
+
+        return resources.stream()
+            .map(r -> r.get("size"))
+            .filter(Objects::nonNull)
+            .mapToLong(size -> size instanceof Number ? ((Number) size).longValue() : 0L)
+            .sum();
     }
 }
