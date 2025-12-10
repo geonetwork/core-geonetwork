@@ -56,6 +56,7 @@ import org.fao.geonet.kernel.search.index.OverviewIndexFieldUpdater;
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.repository.SourceRepository;
 import org.fao.geonet.repository.specification.MetadataSpecs;
+import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.slf4j.Logger;
@@ -71,6 +72,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static org.fao.geonet.constants.Geonet.IndexFieldNames.IS_TEMPLATE;
 import static org.fao.geonet.kernel.search.IndexFields.*;
@@ -992,5 +994,49 @@ public class EsSearchManager implements ISearchManager {
         return new Element(INDEXING_ERROR_MSG)
             .setText(createIndexingErrorMsgObject(string, type, values).toString())
             .setAttribute("type", "object");
+    }
+
+    /**
+     * Retrieves a list of resources associated with a given metadata UUID using the provided search manager.
+     *
+     * @param metadataUuid The UUID of the metadata record.
+     * @param approved     A boolean indicating whether to retrieve approved resources (true) or draft resources (false).
+     * @return A list of maps representing the resources, or an empty list if no resources are found.
+     */
+    public List<Map<String, Object>> getResourcesFromIndex(String metadataUuid, boolean approved) {
+
+        String indexkey = metadataUuid;
+        if (!approved) {
+            indexkey += "-draft";
+        }
+
+        try {
+            // Retrieve the metadata document from the index
+            Map<String, Object> mdIndexFields = getDocument(indexkey);
+            if (mdIndexFields == null) {
+                return Collections.emptyList();
+            }
+
+            // Extract the "filestore" field from the metadata document
+            Object result = mdIndexFields.get(IndexFields.FILESTORE);
+            if (result instanceof List<?>) {
+                List<?> rawList = (List<?>) result;
+
+                // Ensure each element in the list is a map and return the list
+                return rawList.stream()
+                    .filter(Objects::nonNull)
+                    .filter(Map.class::isInstance)
+                    .map(m -> (Map<String, Object>) m)
+                    .collect(Collectors.toList());
+            }
+        } catch (Exception e) {
+            // Log a warning if an error occurs while retrieving resources
+            Log.warning(Geonet.INDEX_ENGINE,
+                "Failed to get resource information from the \"" + IndexFields.FILESTORE + "\" field for metadata UUID: " + metadataUuid + ", approved: " + approved + ". " +
+                    "No resource size information will be available. Error: " + e.getMessage());
+        }
+
+        // Return an empty list if an error occurs or no resources are found
+        return Collections.emptyList();
     }
 }
