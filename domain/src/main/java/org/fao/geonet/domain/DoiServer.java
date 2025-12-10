@@ -23,9 +23,10 @@
 
 package org.fao.geonet.domain;
 
+import org.fao.geonet.domain.utils.EncryptedStringConverter;
 import org.fao.geonet.entitylistener.DoiServerEntityListenerManager;
-import org.hibernate.annotations.Type;
-
+import org.hibernate.annotations.JdbcTypeCode;
+import java.sql.Types;
 import jakarta.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
@@ -163,7 +164,8 @@ public class DoiServer extends GeonetEntity {
      * @return the password.
      */
     @Column(length = 128)
-    @Type(type="encryptedString")
+    @Convert(converter = EncryptedStringConverter.class)
+    // GN4 @Type(type="encryptedString")
     public String getPassword() {
         return password;
     }

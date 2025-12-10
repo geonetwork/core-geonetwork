@@ -26,8 +26,8 @@ package org.fao.geonet.domain;
 import com.google.common.collect.Sets;
 
 import org.fao.geonet.entitylistener.HarvesterSettingEntityListenerManager;
-import org.hibernate.annotations.Type;
-
+import org.hibernate.annotations.JdbcTypeCode;
+import java.sql.Types;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -163,7 +163,7 @@ public class HarvesterSetting extends GeonetEntity {
      */
     @Lob
     @Column(name = "value", nullable = true)
-    @Type(type = "org.hibernate.type.TextType")
+    @JdbcTypeCode(Types.LONGVARCHAR)
     // this is a work around for postgres so postgres can correctly load clobs
     public
     @Nullable

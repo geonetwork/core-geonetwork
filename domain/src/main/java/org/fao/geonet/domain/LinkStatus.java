@@ -26,8 +26,8 @@ package org.fao.geonet.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.fao.geonet.domain.converter.BooleanToYNConverter;
 import org.fao.geonet.entitylistener.LinkStatusEntityListenerManager;
-import org.hibernate.annotations.Type;
-
+import org.hibernate.annotations.JdbcTypeCode;
+import java.sql.Types;
 import jakarta.persistence.Access;
 import jakarta.persistence.AccessType;
 import jakarta.persistence.AttributeOverride;
@@ -133,7 +133,7 @@ public class LinkStatus extends GeonetEntity implements Comparable<LinkStatus> {
     @Column(nullable = true)
     @Lob
     @Basic(fetch = FetchType.LAZY)
-    @Type(type = "org.hibernate.type.TextType")
+    @JdbcTypeCode(Types.LONGVARCHAR)
     public String getStatusInfo() {
         return statusInfo;
     }

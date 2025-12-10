@@ -22,8 +22,8 @@
  */
 package org.fao.geonet.domain;
 
-import org.hibernate.annotations.Type;
-
+import org.hibernate.annotations.JdbcTypeCode;
+import java.sql.Types;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -76,7 +76,7 @@ public class UiSetting extends GeonetEntity implements Serializable {
 
     @Lob
     @Column(nullable = true)
-    @Type(type = "org.hibernate.type.TextType")
+    @JdbcTypeCode(Types.LONGVARCHAR)
     public String getConfiguration() {
         return configuration;
     }

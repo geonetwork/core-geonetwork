@@ -24,10 +24,10 @@ package org.fao.geonet.domain;
 
 
 import org.apache.commons.lang.StringUtils;
-import org.hibernate.annotations.Type;
+import org.hibernate.annotations.JdbcTypeCode;
 import org.jdom.Element;
 import org.jdom.Namespace;
-
+import java.sql.Types;
 import jakarta.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -168,7 +168,7 @@ public class InspireAtomFeed extends GeonetEntity implements Serializable {
 
     @Column
     @Lob
-    @Type(type = "org.hibernate.type.TextType")
+    @JdbcTypeCode(Types.LONGVARCHAR)
     public String getAtom() {
         return _atom;
     }

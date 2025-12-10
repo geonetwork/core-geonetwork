@@ -46,8 +46,8 @@ import jakarta.persistence.Table;
 
 import org.fao.geonet.domain.GeonetEntity;
 import org.fao.geonet.domain.Group;
-import org.hibernate.annotations.Type;
-
+import org.hibernate.annotations.JdbcTypeCode;
+import java.sql.Types;
 /**
  * A page with content and properties
  */
@@ -119,7 +119,7 @@ public class Page extends GeonetEntity implements Serializable {
 
     @Lob
     @Basic(fetch = FetchType.LAZY)
-    @Type(type = "org.hibernate.type.TextType")
+    @JdbcTypeCode(Types.LONGVARCHAR)
     @Column(unique = true)
     public String getLink() {
         return link;

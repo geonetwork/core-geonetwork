@@ -27,8 +27,8 @@ import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.domain.converter.BooleanToYNConverter;
 import org.fao.geonet.entitylistener.SourceEntityListenerManager;
 import org.fao.geonet.repository.LanguageRepository;
-import org.hibernate.annotations.Type;
-
+import org.hibernate.annotations.JdbcTypeCode;
+import java.sql.Types;
 import jakarta.annotation.Nonnull;
 import jakarta.persistence.*;
 import java.util.Map;
@@ -242,7 +242,7 @@ public class Source extends Localized {
     }
 
     @Lob
-    @Type(type = "org.hibernate.type.TextType")
+    @JdbcTypeCode(Types.LONGVARCHAR)
     public String getDatahubConfiguration() {
         return datahubConfiguration;
     }

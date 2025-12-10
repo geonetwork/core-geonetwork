@@ -28,7 +28,6 @@ import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import org.apache.commons.lang.StringUtils;
-import org.hibernate.jpamodelgen.util.StringUtil;
 
 import java.io.IOException;
 

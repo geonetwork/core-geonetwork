@@ -25,7 +25,7 @@ package org.fao.geonet.kernel.search;
 
 import java.util.List;
 
-import jakarta.annotation.Nonnegative;
+import jakarta.validation.constraints.PositiveOrZero;
 import jakarta.annotation.Nonnull;
 
 import jeeves.server.context.ServiceContext;
@@ -39,5 +39,5 @@ public interface MetadataRecordSelector {
      * @param context context to use during selection
      */
     @Nonnull
-    List<String> getAllUuids(@Nonnegative int maxHits, @Nonnull ServiceContext context) throws Exception;
+    List<String> getAllUuids(@PositiveOrZero int maxHits, @Nonnull ServiceContext context) throws Exception;
 }

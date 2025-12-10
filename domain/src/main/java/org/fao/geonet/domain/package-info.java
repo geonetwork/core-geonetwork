@@ -23,26 +23,11 @@
 
 
 /**
- * Domain objects geonetwork.  These are JPA entities and are configured via javax.persistence
- * annotations.
+ * Domain objects geonetwork.
+ *
+ * The EncryptedString support is now handled by {@link org.fao.geonet.domain.utils.EncryptedStringConverter}
+ * rather than a Hibernate 4 user type.
  *
  * @author Jesse
  */
-@TypeDefs
-    ({
-        @TypeDef(
-            name="encryptedString",
-            typeClass= EncryptedStringType.class,
-            parameters={
-                @Parameter(name="encryptorRegisteredName",
-                    value="STRING_ENCRYPTOR")
-            }
-        )
-    })
-
 package org.fao.geonet.domain;
-
-import org.hibernate.annotations.Parameter;
-import org.hibernate.annotations.TypeDef;
-import org.hibernate.annotations.TypeDefs;
-import org.jasypt.hibernate5.type.EncryptedStringType;

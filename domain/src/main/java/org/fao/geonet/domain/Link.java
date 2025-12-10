@@ -25,8 +25,9 @@ package org.fao.geonet.domain;
 
 import org.fao.geonet.domain.converter.LinkTypeConverter;
 import org.fao.geonet.entitylistener.LinkEntityListenerManager;
+import org.hibernate.annotations.JdbcTypeCode;
+import java.sql.Types;
 import org.hibernate.annotations.SortNatural;
-import org.hibernate.annotations.Type;
 
 import jakarta.persistence.Access;
 import jakarta.persistence.AccessType;
@@ -48,6 +49,7 @@ import jakarta.persistence.OrderBy;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import java.io.Serializable;
+import java.sql.Types;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.TreeSet;
@@ -186,7 +188,9 @@ public class Link implements Serializable {
      */
     @Lob
     @Basic(fetch = FetchType.LAZY)
-    @Type(type = "org.hibernate.type.TextType")
+    @JdbcTypeCode(Types.LONGVARCHAR)
+    // GN4.4 @Type(type = "org.hibernate.type.TextType")
+    // GN5 @Column(name = "url", length = Integer.MAX_VALUE)
     @Column(unique = true)
     public String getUrl() {
         return _url;

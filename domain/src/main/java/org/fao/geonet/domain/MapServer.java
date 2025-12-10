@@ -23,10 +23,12 @@
 
 package org.fao.geonet.domain;
 
+import org.fao.geonet.domain.utils.EncryptedStringConverter;
 import org.fao.geonet.entitylistener.MapServerEntityListenerManager;
-import org.hibernate.annotations.Type;
+import org.hibernate.annotations.JdbcTypeCode;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.Type;
 
 
 /**
@@ -231,7 +233,8 @@ public class MapServer extends GeonetEntity {
      * @return the password.
      */
     @Column(length = 128)
-    @Type(type="encryptedString")
+    @Convert(converter = EncryptedStringConverter.class)
+    // GN4 @Type(org.jasypt.hibernate5.type.EncryptedStringType.class)
     public String getPassword() {
         return _password;
     }

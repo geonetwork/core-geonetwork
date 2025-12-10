@@ -25,7 +25,7 @@ package org.fao.geonet.repository;
 
 import java.util.List;
 
-import jakarta.annotation.Nonnegative;
+import jakarta.validation.constraints.PositiveOrZero;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -129,7 +129,7 @@ public interface OperationAllowedRepository extends GeonetRepository<OperationAl
      * @param metadataId the metadata id
      * @param groupIds    the group id
      */
-    @Nonnegative
+    @PositiveOrZero
     @Transactional
     @Modifying(clearAutomatically=true)
     @Query("DELETE FROM OperationAllowed where metadataId = :metadataId and groupId not in :groupIds")

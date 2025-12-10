@@ -27,8 +27,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.fao.geonet.entitylistener.SettingEntityListenerManager;
-import org.hibernate.annotations.Type;
-
+import org.hibernate.annotations.JdbcTypeCode;
+import java.sql.Types;
 import jakarta.annotation.Nullable;
 import jakarta.persistence.Access;
 import jakarta.persistence.AccessType;
@@ -84,7 +84,7 @@ public class Setting extends GeonetEntity {
 
     @Lob
     @Column(name = "value", nullable = true)
-    @Type(type = "org.hibernate.type.TextType")
+    @JdbcTypeCode(Types.LONGVARCHAR)
     // this is a work around for postgres so postgres can correctly load clobs
     public String getStoredValue() {
         return storedValue;
