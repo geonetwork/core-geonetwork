@@ -114,7 +114,7 @@
         <plugin>
           <groupId>org.bsc.maven</groupId>
           <artifactId>maven-processor-plugin</artifactId>
-          <version>3.3.3</version>
+          <version>5.1</version>
         </plugin>
         <plugin>
           <artifactId>maven-resources-plugin</artifactId>
@@ -277,9 +277,9 @@
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
         <configuration>
-          <source>11</source>
-          <target>11</target>
-          <compilerVersion>11</compilerVersion>
+          <source>17</source>
+          <target>17</target>
+          <compilerVersion>17</compilerVersion>
           <debug>true</debug>   <!-- Whether to include debugging information.   -->
           <encoding>UTF-8</encoding> <!-- The -encoding argument for the Java compiler. -->
           <compilerArgs>
@@ -1131,27 +1131,40 @@
       </dependency>-->
 
       <dependency>
+        <groupId>jakarta.annotation</groupId>
+        <artifactId>jakarta.annotation-api</artifactId>
+        <version>2.1.1</version>
+      </dependency>
+      <dependency>
+        <groupId>jakarta.persistence</groupId>
+        <artifactId>jakarta.persistence-api</artifactId>
+        <version>3.2.0</version>
+      </dependency>
+
+      <dependency>
         <groupId>org.hibernate</groupId>
         <artifactId>hibernate-validator</artifactId>
         <version>5.4.3.Final</version>
       </dependency>
       <dependency>
-        <groupId>org.hibernate</groupId>
+        <groupId>org.hibernate.orm</groupId>
         <artifactId>hibernate-core</artifactId>
         <version>${hibernate.version}</version>
       </dependency>
+      <!--
       <dependency>
         <groupId>org.hibernate</groupId>
         <artifactId>hibernate-ehcache</artifactId>
         <version>${hibernate.version}</version>
       </dependency>
+      -->
       <dependency>
         <groupId>net.sf.ehcache</groupId>
         <artifactId>ehcache</artifactId>
         <version>2.10.9.2</version>
       </dependency>
       <dependency>
-        <groupId>org.hibernate</groupId>
+        <groupId>org.hibernate.orm</groupId>
         <artifactId>hibernate-jpamodelgen</artifactId>
         <version>${hibernate.version}</version>
       </dependency>
@@ -1262,11 +1275,6 @@
           <groupId>org.bitbucket.cowwoc</groupId>
           <artifactId>diff-match-patch</artifactId>
           <version>1.2</version>
-      </dependency>
-      <dependency>
-        <groupId>jakarta.annotation</groupId>
-        <artifactId>jakarta.annotation-api</artifactId>
-        <version>2.1.1</version>
       </dependency>
 
       <dependency>
@@ -1669,7 +1677,7 @@
     <spring.jpa.version>2.7.18</spring.jpa.version>
     <springboot.version>2.7.0</springboot.version>
     <springdoc.version>1.8.0</springdoc.version>
-    <hibernate.version>5.6.15.Final</hibernate.version>
+    <hibernate.version>6.5.3.Final</hibernate.version>
 
     <metrics.version>2.2.0</metrics.version>
     <maven.build.timestamp.format>yyyy-MM-dd'T'HH'\:'mm'\:'ssZ</maven.build.timestamp.format>
