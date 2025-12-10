@@ -323,6 +323,19 @@ public class SettingManager {
     }
 
     /**
+     * Get values of a setting as long
+     *
+     * @param key The setting key
+     * @return The long value of the setting or null
+     */
+    public Long getValueAsLong(String key) {
+        String value = getValue(key);
+        if (value == null || value.trim().isEmpty())
+            return null;
+        return Long.valueOf(value);
+    }
+
+    /**
      * Set the value of a Setting entity
      *
      * @param key   the path/name/key of the setting.

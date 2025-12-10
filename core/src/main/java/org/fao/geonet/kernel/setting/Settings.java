@@ -153,6 +153,7 @@ public class Settings {
     public static final String METADATA_UNPUBLISH_USERPROFILE = "metadata/publication/profileUnpublishMetadata";
     public static final String METADATA_BACKUPARCHIVE_ENABLE = "metadata/backuparchive/enable";
     public static final String METADATA_VCS = "metadata/vcs/enable";
+    public static final String METADATA_ZIPEXPORT_MAXSIZEOFRESOURCES = "metadata/zipExport/maxSizeOfResources";
 
     public static final String SYSTEM_AUDITABLE_ENABLE = "system/auditable/enable";
     public static final String VIRTUAL_SETTINGS_SUFFIX_ISDEFINED = "IsDefined";
