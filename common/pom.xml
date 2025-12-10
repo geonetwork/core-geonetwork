@@ -100,6 +100,16 @@
     <dependency>
       <groupId>xerces</groupId>
       <artifactId>xercesImpl</artifactId>
+      <exclusions>
+        <exclusion>
+          <groupId>xml-apis</groupId>
+          <artifactId>xml-apis</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>xml-apis</groupId>
+          <artifactId>xml-apis-ext</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>xml-resolver</groupId>
@@ -128,6 +138,16 @@
     <dependency>
       <groupId>org.apache.xmlgraphics</groupId>
       <artifactId>fop</artifactId>
+      <exclusions>
+        <exclusion>
+          <groupId>xml-apis</groupId>
+          <artifactId>xml-apis</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>xml-apis</groupId>
+          <artifactId>xml-apis-ext</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>commons-lang</groupId>
@@ -167,6 +187,12 @@
     <dependency>
       <groupId>xom</groupId>
       <artifactId>xom</artifactId>
+      <exclusions>
+        <exclusion>
+          <groupId>xml-apis</groupId>
+          <artifactId>xml-apis</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
