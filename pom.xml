@@ -414,14 +414,7 @@
       <dependency>
         <groupId>com.github.lookfirst</groupId>
         <artifactId>sardine</artifactId>
-        <version>5.1-GEONETWORK</version>
-        <exclusions>
-          <exclusion>
-            <!-- depends on an old version of httpcore, but the new one is backward compatible -->
-            <groupId>org.apache.httpcomponents</groupId>
-            <artifactId>httpcore</artifactId>
-          </exclusion>
-        </exclusions>
+        <version>5.13</version>
       </dependency>
       <dependency>
         <groupId>org.jsoup</groupId>
