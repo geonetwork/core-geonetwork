@@ -12,16 +12,23 @@
   <artifactId>gn-messaging</artifactId>
 
   <dependencies>
+<!--    <dependency>-->
+<!--      <groupId>org.apache.activemq</groupId>-->
+<!--      <artifactId>activemq-core</artifactId>-->
+<!--      <version>${activemq.version}</version>-->
+<!--    </dependency>-->
+<!--    <dependency>-->
+<!--      <groupId>org.apache.activemq</groupId>-->
+<!--      <artifactId>activemq-pool</artifactId>-->
+<!--      <version>${activemq.version}</version>-->
+<!--    </dependency>-->
+
     <dependency>
       <groupId>org.apache.activemq</groupId>
-      <artifactId>activemq-core</artifactId>
-      <version>${activemq.version}</version>
+      <artifactId>activemq-client-jakarta</artifactId>
+      <version>5.19.1</version>
     </dependency>
-    <dependency>
-      <groupId>org.apache.activemq</groupId>
-      <artifactId>activemq-pool</artifactId>
-      <version>${activemq.version}</version>
-    </dependency>
+
   </dependencies>
 
   <build>

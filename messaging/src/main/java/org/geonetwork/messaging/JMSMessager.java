@@ -1,9 +1,16 @@
 package org.geonetwork.messaging;
 
 import org.apache.activemq.ActiveMQConnectionFactory;
-import org.springframework.context.ApplicationEvent;
 
-import jakarta.jms.*;
+import jakarta.jms.Connection;
+import jakarta.jms.Session;
+import jakarta.jms.Destination;
+import jakarta.jms.DeliveryMode;
+import jakarta.jms.ObjectMessage;
+
+import jakarta.jms.MessageProducer;
+
+import java.io.Serializable;
 
 /**
  * Created by francois on 05/11/15.
@@ -19,7 +26,7 @@ public class JMSMessager {
         this.jmsUrl = jmsUrl;
     }
 
-    public void sendMessage(String queue, ApplicationEvent event) {
+    public void sendMessage(String queue, Serializable event) {
         try {
             // Create a ConnectionFactory
             ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory(this.jmsUrl);
