@@ -34,6 +34,24 @@
       <groupId>org.xmlunit</groupId>
       <artifactId>xmlunit-matchers</artifactId>
     </dependency>
+    <dependency>
+      <scope>test</scope>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-text</artifactId>
+      <version>1.13.0</version>
+    </dependency>
+    <dependency>
+      <groupId>org.owasp.esapi</groupId>
+      <artifactId>esapi</artifactId>
+      <version>2.5.4.0</version>
+      <exclusions>
+        <exclusion>
+          <groupId>log4j</groupId>
+          <artifactId>log4j</artifactId>
+        </exclusion>
+      </exclusions>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 
   <build>
@@ -52,6 +70,26 @@
       </testResource>
       <testResource>
         <directory>src/main/plugin/iso19115-3.2018</directory>
+      </testResource>
+      <testResource>
+        <directory>../../web/src/main/webapp</directory>
+        <targetPath>gn-site</targetPath>
+      </testResource>
+      <testResource>
+        <directory>src/main/plugin/iso19115-3.2018</directory>
+        <targetPath>gn-site/WEB-INF/data/config/schema_plugins/iso19115-3.2018</targetPath>
+      </testResource>
+      <testResource>
+        <directory>../iso19139/src/main/plugin/iso19139</directory>
+        <targetPath>gn-site/WEB-INF/data/config/schema_plugins/iso19139</targetPath>
+      </testResource>
+      <testResource>
+        <directory>../dublin-core/src/main/plugin/dublin-core</directory>
+        <targetPath>gn-site/WEB-INF/data/config/schema_plugins/dublin-core</targetPath>
+      </testResource>
+      <testResource>
+        <directory>../iso19110/src/main/plugin/iso19110</directory>
+        <targetPath>gn-site/WEB-INF/data/config/schema_plugins/iso19110</targetPath>
       </testResource>
     </testResources>
 

@@ -860,17 +860,21 @@
         </xsl:variable>
 
         <xsl:choose>
-          <xsl:when test="string(*/cit:linkage/*)">
-            <a href="{*/cit:linkage/*}" target="_blank">
+          <xsl:when test="string(*/cit:linkage/gco:CharacterString)">
+            <xsl:variable name="url">
+              <xsl:apply-templates mode="render-value" select="*/cit:linkage"/>
+            </xsl:variable>
+            <a href="{$url}" target="_blank">
               <xsl:apply-templates mode="render-value"
-                                   select="if (*/cit:name != '') then */cit:name else */cit:linkage"/>
+                                   select="if (normalize-space(*/cit:name) != '') then */cit:name else */cit:linkage"/>
             </a>
           </xsl:when>
-          <xsl:otherwise>
+          <xsl:when test="normalize-space(*/cit:name) != ''">
             <span>
-              <xsl:value-of select="if (*/cit:name != '') then */cit:name else */cit:linkage"/>
+              <xsl:apply-templates mode="render-value" select="*/cit:name"/>
             </span>
-          </xsl:otherwise>
+          </xsl:when>
+          <xsl:otherwise/>
         </xsl:choose>
         <p>
           <xsl:value-of select="normalize-space($linkDescription)"/>
