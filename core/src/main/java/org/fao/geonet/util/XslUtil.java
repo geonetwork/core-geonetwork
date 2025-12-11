@@ -45,6 +45,7 @@ import org.apache.hc.client5.http.classic.HttpClient;
 import org.apache.hc.client5.http.classic.methods.HttpGet;
 import org.apache.hc.client5.http.impl.classic.HttpClients;
 import org.apache.hc.core5.http.ClassicHttpResponse;
+import org.apache.hc.core5.http.io.entity.EntityUtils;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.Constants;
 import org.fao.geonet.SystemInfo;
@@ -531,17 +532,33 @@ public final class XslUtil {
         HttpGet httpGet = new HttpGet(url);
         HttpClient client = HttpClients.createDefault();
         try {
-            final ClassicHttpResponse httpResponse = client.execute(httpGet);
-            final String jsonResponse = IOUtils.toString(
-                httpResponse.getEntity().getContent(),
-                String.valueOf(StandardCharsets.UTF_8)).trim();
-            Element element = getXmlFromJSON(jsonResponse);
-            DOMOutputter outputter = new DOMOutputter();
-            return outputter.output(new Document(element));
-        } catch (IOException | JDOMException e) {
+            Node node = client.execute(httpGet, response -> {
+                String jsonResponse = EntityUtils.toString(response.getEntity());
+                Element element = getXmlFromJSON(jsonResponse);
+                DOMOutputter outputter = new DOMOutputter();
+                try {
+                    return (Node) outputter.output(new Document(element));
+                } catch (JDOMException e) {
+                    e.printStackTrace();
+                }
+                return null;
+            });
+            return node;
+        }  catch (IOException e) {
             e.printStackTrace();
+            return null;
         }
-        return null;
+//        try {
+//            final ClassicHttpResponse httpResponse = client.execute(httpGet);
+//            final String jsonResponse = IOUtils.toString(
+//                httpResponse.getEntity().getContent(),
+//                String.valueOf(StandardCharsets.UTF_8)).trim();
+//            Element element = getXmlFromJSON(jsonResponse);
+//            DOMOutputter outputter = new DOMOutputter();
+//            return outputter.output(new Document(element));
+//        } catch (IOException | JDOMException e) {
+//            e.printStackTrace();
+//        }
     }
 
     /**

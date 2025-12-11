@@ -53,15 +53,28 @@ public class SLDUtil {
 
         HttpGet httpGet = new HttpGet(requestUrl);
         HttpClient client = HttpClients.createDefault();
-        final ClassicHttpResponse httpResponse = client.execute(httpGet);
 
-        // Set encoding of response from HTTP content-type header
-        ContentType contentType = new ContentType(httpResponse.getEntity().getContentType().getValue());
-        String charset = contentType.getParameter("charset");
-        hash.put("charset", charset);
-        hash.put("content", IOUtils.toString(httpResponse.getEntity().getContent(), charset).trim());
+        return client.execute(httpGet, response -> {
+            try {
+                ContentType contentType = new ContentType(response.getEntity().getContentType());
+                String charset = contentType.getParameter("charset");
+                hash.put("charset", charset);
+                hash.put("content", IOUtils.toString(response.getEntity().getContent(), charset).trim());
 
-        return hash;
+                return hash;
+            } catch (ParseException e) {
+                throw new IOException(e);
+            }
+        });
+//        final ClassicHttpResponse httpResponse = client.execute(httpGet);
+//
+//        // Set encoding of response from HTTP content-type header
+//        ContentType contentType = new ContentType(httpResponse.getEntity().getContentType().getValue());
+//        String charset = contentType.getParameter("charset");
+//        hash.put("charset", charset);
+//        hash.put("content", IOUtils.toString(httpResponse.getEntity().getContent(), charset).trim());
+//
+//        return hash;
     }
 
 
