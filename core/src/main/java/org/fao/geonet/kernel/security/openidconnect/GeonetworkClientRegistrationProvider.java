@@ -186,10 +186,10 @@ public class GeonetworkClientRegistrationProvider {
                                                                             List<com.nimbusds.oauth2.sdk.auth.ClientAuthenticationMethod> metadataAuthMethods) {
         if (metadataAuthMethods == null || metadataAuthMethods.contains(com.nimbusds.oauth2.sdk.auth.ClientAuthenticationMethod.CLIENT_SECRET_BASIC)) {
             // If null, the default includes client_secret_basic
-            return ClientAuthenticationMethod.BASIC;
+            return ClientAuthenticationMethod.CLIENT_SECRET_BASIC;
         }
         if (metadataAuthMethods.contains(com.nimbusds.oauth2.sdk.auth.ClientAuthenticationMethod.CLIENT_SECRET_POST)) {
-            return ClientAuthenticationMethod.POST;
+            return ClientAuthenticationMethod.CLIENT_SECRET_POST;
         }
         if (metadataAuthMethods.contains(com.nimbusds.oauth2.sdk.auth.ClientAuthenticationMethod.NONE)) {
             return ClientAuthenticationMethod.NONE;
@@ -286,7 +286,7 @@ public class GeonetworkClientRegistrationProvider {
             .scope(scopes)
             .authorizationGrantType(getAuthorizationGrantType())
             .clientAuthenticationMethod(method)
-            .redirectUriTemplate("{baseUrl}/{action}/oauth2/code/{registrationId}")
+            .redirectUri("{baseUrl}/{action}/oauth2/code/{registrationId}")
             .authorizationUri(oidcMetadata.getAuthorizationEndpointURI().toASCIIString())
             .providerConfigurationMetadata(configurationMetadata)
             .tokenUri(oidcMetadata.getTokenEndpointURI().toASCIIString())

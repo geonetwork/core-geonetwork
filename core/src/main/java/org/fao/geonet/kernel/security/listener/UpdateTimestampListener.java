@@ -29,7 +29,6 @@ import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.utils.Log;
-import org.keycloak.KeycloakPrincipal;
 import org.springframework.context.ApplicationListener;
 import org.springframework.security.authentication.event.AbstractAuthenticationEvent;
 import org.springframework.security.authentication.event.AuthenticationSuccessEvent;
@@ -71,10 +70,7 @@ public class UpdateTimestampListener implements
                 if (principal instanceof UserDetails) {
                     username = ((UserDetails)principal).getUsername();
                 } else {
-                    if (principal instanceof KeycloakPrincipal && ((KeycloakPrincipal) e.getAuthentication().getPrincipal()).getKeycloakSecurityContext().getIdToken() != null) {
-                        username = ((KeycloakPrincipal) e.getAuthentication().getPrincipal()).getKeycloakSecurityContext().getIdToken().getPreferredUsername();
-                    }
-                    else if (principal instanceof OidcUser) {
+                    if (principal instanceof OidcUser) {
                         username =  ((OidcUser)principal).getPreferredUsername();
                     }
                     else if (principal instanceof OAuth2User) {

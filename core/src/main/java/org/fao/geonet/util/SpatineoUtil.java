@@ -23,6 +23,7 @@ import org.w3c.dom.Node;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -36,6 +37,8 @@ import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
 import com.google.common.base.Function;
 import org.fao.geonet.lib.Lib;
 import jeeves.server.context.ServiceContext;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class SpatineoUtil {
     private static final String API = "https://api.spatineo.com/monitor/resolverRequest";
@@ -74,7 +77,12 @@ public class SpatineoUtil {
         ServiceContext context = ServiceContext.get();
         final GeonetHttpRequestFactory requestFactory = context.getBean(GeonetHttpRequestFactory.class);
         HttpGet req = new HttpGet(API);
-        final String requestHost = req.getUri().getHost();
+        final String requestHost;
+        try {
+            requestHost = req.getUri().getHost();
+        } catch (URISyntaxException e) {
+            throw new RuntimeException(e);
+        }
         HttpPost method = null;
         ObjectMapper mapper = new ObjectMapper();
         String cookie = null;
@@ -88,7 +96,7 @@ public class SpatineoUtil {
             method = new HttpPost(API);
             List<BasicNameValuePair> params = new ArrayList<>(1);
             params.add(new BasicNameValuePair("url", url));
-            method.setEntity(new UrlEncodedFormEntity(params, "UTF-8"));
+            method.setEntity(new UrlEncodedFormEntity(params,UTF_8));
 
             while (i < maxTry) {
                 if (StringUtils.isNotEmpty(cookie)) {

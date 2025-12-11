@@ -176,11 +176,11 @@
       <groupId>org.springframework.security</groupId>
       <artifactId>spring-security-cas</artifactId>
     </dependency>
-    <dependency>
-      <groupId>org.keycloak</groupId>
-      <artifactId>keycloak-spring-security-adapter</artifactId>
-      <version>18.0.2</version>
-    </dependency>
+<!--    <dependency>-->
+<!--      <groupId>org.keycloak</groupId>-->
+<!--      <artifactId>keycloak-spring-security-adapter</artifactId>-->
+<!--      <version>26.4.6</version>-->
+<!--    </dependency>-->
 
 
     <dependency>

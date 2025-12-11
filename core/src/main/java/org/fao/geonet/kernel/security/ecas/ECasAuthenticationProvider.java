@@ -28,11 +28,7 @@ import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.cas.ServiceProperties;
-import org.springframework.security.cas.authentication.CasAssertionAuthenticationToken;
-import org.springframework.security.cas.authentication.CasAuthenticationProvider;
-import org.springframework.security.cas.authentication.CasAuthenticationToken;
-import org.springframework.security.cas.authentication.NullStatelessTicketCache;
-import org.springframework.security.cas.authentication.StatelessTicketCache;
+import org.springframework.security.cas.authentication.*;
 import org.springframework.security.cas.web.CasAuthenticationFilter;
 import org.springframework.security.cas.web.authentication.ServiceAuthenticationDetails;
 import org.springframework.security.core.Authentication;
@@ -98,8 +94,8 @@ public class ECasAuthenticationProvider implements AuthenticationProvider,
         }
 
         if (authentication instanceof UsernamePasswordAuthenticationToken
-            && (!CasAuthenticationFilter.CAS_STATEFUL_IDENTIFIER
-            .equals(authentication.getPrincipal().toString()) && !CasAuthenticationFilter.CAS_STATELESS_IDENTIFIER
+            && (!"_cas_stateful_"
+            .equals(authentication.getPrincipal().toString()) && !"_cas_stateless_"
             .equals(authentication.getPrincipal().toString()))) {
             // UsernamePasswordAuthenticationToken not CAS related
             return null;
@@ -129,7 +125,7 @@ public class ECasAuthenticationProvider implements AuthenticationProvider,
         boolean stateless = false;
 
         if (authentication instanceof UsernamePasswordAuthenticationToken
-            && CasAuthenticationFilter.CAS_STATELESS_IDENTIFIER
+            && "_cas_stateless_"
             .equals(authentication.getPrincipal())) {
             stateless = true;
         }
