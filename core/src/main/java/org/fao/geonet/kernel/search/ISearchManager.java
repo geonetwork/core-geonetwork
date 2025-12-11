@@ -28,6 +28,8 @@ import com.google.common.collect.Multimap;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.MetadataType;
+import org.fao.geonet.kernel.search.submission.IDeletionSubmitter;
+import org.fao.geonet.kernel.search.submission.IIndexSubmitter;
 import org.jdom.Element;
 
 import java.io.IOException;
@@ -47,18 +49,11 @@ public interface ISearchManager {
     /**
      * Indexes a metadata record.
      *
-     * @param forceRefreshReaders if true then block all searches until they can obtain a up-to-date
-     *                            reader
+     * @param indexSubmittor The submitter to use
      */
     void index(Path schemaDir, Element metadata, String id, Multimap<String, Object> moreFields,
-               MetadataType metadataType, boolean forceRefreshReaders, IndexingMode indexingMode)
+               MetadataType metadataType, IIndexSubmitter indexSubmittor, IndexingMode indexingMode)
         throws Exception;
-
-    /**
-     * Force the index to wait until all changes are processed and the next reader obtained will get
-     * the latest data.
-     */
-    void forceIndexChanges() throws IOException;
 
 
     /**
@@ -76,14 +71,14 @@ public interface ISearchManager {
     ISODate getDocChangeDate(String mdId) throws Exception;
 
     /**
-     * deletes a document.
+     * deletes a document by a query.
      */
-    void delete(String txt) throws Exception;
+    void deleteByQuery(String query, IDeletionSubmitter submitter) throws Exception;
 
     /**
-     * deletes a list of documents.
+     * deletes a document by its uuid.
      */
-    void delete(List<Integer> metadataIds) throws Exception;
+    void deleteByUuid(String uuid, IDeletionSubmitter submitter) throws Exception;
 
     boolean isIndexWritable(String indexName) throws IOException, ElasticsearchException;
 }
