@@ -26,8 +26,6 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import org.junit.Before;
 import org.junit.Test;
-import org.keycloak.adapters.springsecurity.filter.KeycloakCsrfRequestMatcher;
-import org.keycloak.constants.AdapterConstants;
 import org.springframework.http.HttpMethod;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
@@ -125,61 +123,7 @@ public class GeonetworkCsrfSecurityRequestMatcherTest {
         assertTrue(matcher.matches(request));
     }
 
-    @Test
-    public void testKeycloakCorsFilter() {
-        matcher.addRequestMatcher(new KeycloakCsrfRequestMatcher());
 
-        prepareRequest(HttpMethod.POST, ROOT_CONTEXT_PATH, "some/random/uri");
-        assertTrue(matcher.matches(request));
-        prepareRequest(HttpMethod.POST, SUB_CONTEXT_PATH, "some/random/uri");
-        assertTrue(matcher.matches(request));
-
-        prepareRequest(HttpMethod.POST, ROOT_CONTEXT_PATH, "srv/eng/csw-publication");
-        assertFalse(matcher.matches(request));
-        prepareRequest(HttpMethod.POST, SUB_CONTEXT_PATH, "srv/eng/csw-publication");
-        assertFalse(matcher.matches(request));
-
-        prepareRequest(HttpMethod.POST, ROOT_CONTEXT_PATH, "srv/eng/csw-foo");
-        assertFalse(matcher.matches(request));
-        prepareRequest(HttpMethod.POST, SUB_CONTEXT_PATH, "srv/eng/csw-foo");
-        assertFalse(matcher.matches(request));
-
-        prepareRequest(HttpMethod.POST, ROOT_CONTEXT_PATH, "srv/eng/csw");
-        assertFalse(matcher.matches(request));
-        prepareRequest(HttpMethod.POST, SUB_CONTEXT_PATH, "srv/eng/csw");
-        assertFalse(matcher.matches(request));
-
-        prepareRequest(HttpMethod.POST, ROOT_CONTEXT_PATH, "srv/api/search/foo");
-        assertFalse(matcher.matches(request));
-        prepareRequest(HttpMethod.POST, SUB_CONTEXT_PATH, "srv/api/search/foo");
-        assertFalse(matcher.matches(request));
-
-        prepareRequest(HttpMethod.POST, ROOT_CONTEXT_PATH, "srv/api/site");
-        assertFalse(matcher.matches(request));
-        prepareRequest(HttpMethod.POST, SUB_CONTEXT_PATH, "srv/api/site");
-        assertFalse(matcher.matches(request));
-
-        prepareRequest(HttpMethod.POST, ROOT_CONTEXT_PATH, AdapterConstants.K_LOGOUT);
-        assertFalse(matcher.matches(request));
-        prepareRequest(HttpMethod.POST, SUB_CONTEXT_PATH, AdapterConstants.K_LOGOUT);
-        assertFalse(matcher.matches(request));
-
-        prepareRequest(HttpMethod.POST, ROOT_CONTEXT_PATH, AdapterConstants.K_PUSH_NOT_BEFORE);
-        assertFalse(matcher.matches(request));
-        prepareRequest(HttpMethod.POST, SUB_CONTEXT_PATH, AdapterConstants.K_PUSH_NOT_BEFORE);
-        assertFalse(matcher.matches(request));
-
-        prepareRequest(HttpMethod.POST, ROOT_CONTEXT_PATH, AdapterConstants.K_QUERY_BEARER_TOKEN);
-        assertFalse(matcher.matches(request));
-        prepareRequest(HttpMethod.POST, SUB_CONTEXT_PATH, AdapterConstants.K_QUERY_BEARER_TOKEN);
-        assertFalse(matcher.matches(request));
-
-        prepareRequest(HttpMethod.POST, ROOT_CONTEXT_PATH, AdapterConstants.K_TEST_AVAILABLE);
-        assertFalse(matcher.matches(request));
-        prepareRequest(HttpMethod.POST, SUB_CONTEXT_PATH, AdapterConstants.K_TEST_AVAILABLE);
-        assertFalse(matcher.matches(request));
-
-    }
 
     @Test
     public void testOidcBackchannellogoutCsrfilter(){
