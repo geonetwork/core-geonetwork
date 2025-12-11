@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2025 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2023 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -33,6 +33,8 @@ import co.elastic.clients.elasticsearch.cluster.HealthResponse;
 import co.elastic.clients.elasticsearch.core.*;
 import co.elastic.clients.elasticsearch.indices.AnalyzeRequest;
 import co.elastic.clients.elasticsearch.indices.AnalyzeResponse;
+import co.elastic.clients.elasticsearch.indices.IndicesStatsRequest;
+import co.elastic.clients.elasticsearch.indices.IndicesStatsResponse;
 import co.elastic.clients.elasticsearch.indices.analyze.AnalyzeToken;
 import co.elastic.clients.json.JsonData;
 import co.elastic.clients.json.JsonpMapper;
@@ -518,5 +520,10 @@ public class EsRestClient implements InitializingBean {
         ElasticsearchVersionInfo version = client.info().version();
 
         return version.number();
+    }
+
+    public IndicesStatsResponse getIndexStats(String index) throws IOException {
+        IndicesStatsRequest statsRequest = IndicesStatsRequest.of(b -> b.index(index));
+        return client.indices().stats(statsRequest);
     }
 }

@@ -156,7 +156,7 @@ public abstract class MetadataProcessingReport extends ProcessingReport {
             isMetadataApproved(metadata.getId()), message);
     }
 
-    private boolean isMetadataDraft(int metadataId) {
+    protected boolean isMetadataDraft(int metadataId) {
         boolean metadataDraft = false;
         try {
             metadataDraft = ApplicationContextHolder.get().getBean(IMetadataUtils.class).isMetadataDraft(metadataId);
@@ -166,7 +166,7 @@ public abstract class MetadataProcessingReport extends ProcessingReport {
         return metadataDraft;
     }
 
-    private boolean isMetadataApproved(int metadataId) {
+    protected boolean isMetadataApproved(int metadataId) {
         boolean metadataApproved = false;
         try {
             metadataApproved = ApplicationContextHolder.get().getBean(IMetadataUtils.class).isMetadataApproved(metadataId);

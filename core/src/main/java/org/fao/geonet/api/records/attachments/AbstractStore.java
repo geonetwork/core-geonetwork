@@ -41,19 +41,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
+import org.springframework.core.io.Resource;
 import org.springframework.http.ContentDisposition;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
@@ -113,6 +111,24 @@ public abstract class AbstractStore implements Store {
         } catch (ResourceNotFoundException ignored) {
         }
         return getResource(context, metadataUuid, MetadataResourceVisibility.PRIVATE, resourceId, approved);
+    }
+
+    @Override
+    public final MetadataResource getResourceMetadata(ServiceContext context, String metadataUuid, String resourceId, Boolean approved) throws Exception {
+        try {
+            return getResourceMetadata(context, metadataUuid, MetadataResourceVisibility.PUBLIC, resourceId, approved);
+        } catch (ResourceNotFoundException ignored) {
+        }
+        return getResourceMetadata(context, metadataUuid, MetadataResourceVisibility.PRIVATE, resourceId, approved);
+    }
+
+    @Override
+    public ResourceHolder getResourceWithRange(ServiceContext context, String metadataUuid, String resourceId, Boolean approved, long start, long end) throws Exception {
+        try {
+            return getResourceWithRange(context, metadataUuid, MetadataResourceVisibility.PUBLIC, resourceId, approved, start, end);
+        } catch (ResourceNotFoundException ignored) {
+        }
+        return getResourceWithRange(context, metadataUuid, MetadataResourceVisibility.PRIVATE, resourceId, approved, start, end);
     }
 
     protected static AccessManager getAccessManager(final ServiceContext context) {
@@ -193,16 +209,17 @@ public abstract class AbstractStore implements Store {
     }
 
     @Override
-    public final MetadataResource putResource(final ServiceContext context, final String metadataUuid, final Path file,
+    public final MetadataResource putResource(final ServiceContext context, final String metadataUuid, final Resource resource,
             final MetadataResourceVisibility visibility) throws Exception {
-        return putResource(context, metadataUuid, file, visibility, true);
+        return putResource(context, metadataUuid, resource, visibility, true);
     }
 
     @Override
-    public final MetadataResource putResource(final ServiceContext context, final String metadataUuid, final Path file,
+    public final MetadataResource putResource(final ServiceContext context, final String metadataUuid, final Resource resource,
             final MetadataResourceVisibility visibility, Boolean approved) throws Exception {
-        final InputStream is = new BufferedInputStream(Files.newInputStream(file));
-        return putResource(context, metadataUuid, file.getFileName().toString(), is, null, visibility, approved);
+        try (InputStream is = resource.getInputStream()) {
+            return putResource(context, metadataUuid, resource.getFilename(), is, null, visibility, approved);
+        }
     }
 
     @Override
@@ -275,7 +292,7 @@ public abstract class AbstractStore implements Store {
         final List<MetadataResource> resources = getResources(context, sourceUuid, metadataResourceVisibility, null, sourceApproved);
         for (MetadataResource resource: resources) {
             try (Store.ResourceHolder holder = getResource(context, sourceUuid, metadataResourceVisibility, resource.getFilename(), sourceApproved)) {
-                putResource(context, targetUuid, holder.getPath(), metadataResourceVisibility, targetApproved);
+                putResource(context, targetUuid, holder.getResource(), metadataResourceVisibility, targetApproved);
             }
         }
     }

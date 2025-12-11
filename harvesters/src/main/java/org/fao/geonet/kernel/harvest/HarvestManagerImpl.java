@@ -76,7 +76,7 @@ public class HarvestManagerImpl implements HarvestInfoProvider, HarvestManager {
         Arrays.asList("harvesting", "node", "site", "name", "uuid",
             "url", "capabUrl", "baseUrl", "host", "useAccount",
             "ogctype", "options", "status", "info", "lastRun",
-            "ownerGroup", "ownerUser");
+            "ownerGroup", "ownerUser", "apiKey", "apiKeyHeader");
     private HarvesterSettingsManager settingMan;
     private DataManager dataMan;
     private Path xslPath;
@@ -297,6 +297,7 @@ public class HarvestManagerImpl implements HarvestInfoProvider, HarvestManager {
             return null;
         }
 
+
         // TODO use a parameter in mask to avoid call again in base
         // and use it for call harvesterSettingsManager.get
         // don't forget to clean parameter when update or delete
@@ -461,6 +462,7 @@ public class HarvestManagerImpl implements HarvestInfoProvider, HarvestManager {
         if (Log.isDebugEnabled(Geonet.HARVEST_MAN)) {
             Log.debug(Geonet.HARVEST_MAN, "Updating harvesting node : \n" + Xml.getString(node));
         }
+
         String id = node.getAttributeValue("id");
 
         if (id == null) {

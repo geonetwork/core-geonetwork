@@ -70,7 +70,7 @@
     data-ng-if="!authenticated && service !== 'catalog.signin' && service !== 'new.account' && isShowLoginAsLink"
   >
     <a
-      href="{{signInFormAction}}?_csrf={{csrf}}&redirectUrl={{redirectUrlAfterSign}}"
+      href="{{gnCfg.mods.authentication.signinUrl}}?_csrf={{csrf}}&redirectUrl={{redirectUrlAfterSign}}"
       title="{{'signIn'|translate}}"
       class="gn-menuheader-xs"
       data-ng-keypress="$event"
@@ -86,7 +86,7 @@
     data-ng-if="!authenticated && service !== 'catalog.signin' && service !== 'new.account' && !isShowLoginAsLink && !isDisableLoginForm"
   >
     <a
-      href="{{gnCfg.mods.authentication.signinUrl | signInLink}}"
+      href="{{signInFormLinkWithHash}}"
       title="{{'signIn'|translate}}"
       class="dropdown-toggle gn-menuheader-xs"
       data-ng-keypress="$event"
@@ -102,7 +102,7 @@
       <form
         name="gnSigninForm"
         class="navbar-form"
-        action="{{signInFormAction}}"
+        action="{{signInFormActionWithHash}}"
         method="post"
         role="form"
       >

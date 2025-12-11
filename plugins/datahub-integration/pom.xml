@@ -28,7 +28,7 @@
   <parent>
     <artifactId>gn-plugins</artifactId>
     <groupId>org.geonetwork-opensource.plugins</groupId>
-    <version>4.4.9-SNAPSHOT</version>
+    <version>4.4.10-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
@@ -167,6 +167,13 @@
                   <directory>geonetwork-ui</directory>
                   <includes>
                     <include>package.json</include>
+                  </includes>
+                  <filtering>false</filtering>
+                </resource>
+                <resource>
+                  <directory>geonetwork-ui/tools/webcomponent</directory>
+                  <includes>
+                    <include>wc-embedder.html</include>
                   </includes>
                   <filtering>false</filtering>
                 </resource>

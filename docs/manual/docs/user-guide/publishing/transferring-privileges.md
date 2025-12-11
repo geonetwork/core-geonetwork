@@ -21,3 +21,7 @@ How to open the Transfer Ownership page
         The drop down is filled with all Editors visible to you. If you are not an Administrator, you will view only a subset of all Editors.
 
     -   **Select group**: Select one of the groups this user is a member of. Privileges to groups All and Intranet are not transferable.
+
+    !!! Note
+
+        Ownership of metadata records can only be transfered to [Workspace Groups](../../administrator-guide/managing-users-and-groups/creating-group.md#1-workspace-group). Other group types will not be shown in the list.

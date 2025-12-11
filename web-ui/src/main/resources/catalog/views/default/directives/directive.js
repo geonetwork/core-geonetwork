@@ -142,17 +142,6 @@
           scope.md = scope.$eval(attrs.gnMdActionsMenu);
           scope.formatterList = [];
 
-          gnMdFormatter
-            .getAvailableFormattersForRecord(scope.md)
-            .then(function (availableFormatters) {
-              var formatterList = gnGlobalSettings.gnCfg.mods.search.downloadFormatter;
-
-              scope.formatterList = gnMdFormatter.calculateValidFormattersForRecord(
-                formatterList,
-                availableFormatters
-              );
-            });
-
           scope.tasks = [];
           scope.hasVisibletasks = false;
 
@@ -407,6 +396,18 @@
                   scope.ownerGroupName = name;
                 });
               }
+
+              gnMdFormatter
+                .getAvailableFormattersForRecord(scope.md)
+                .then(function (availableFormatters) {
+                  var formatterList =
+                    gnGlobalSettings.gnCfg.mods.search.downloadFormatter;
+
+                  scope.formatterList = gnMdFormatter.calculateValidFormattersForRecord(
+                    formatterList,
+                    availableFormatters
+                  );
+                });
             }
           });
 

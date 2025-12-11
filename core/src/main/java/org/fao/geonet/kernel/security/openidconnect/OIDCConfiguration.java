@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 Food and Agriculture Organization of the
+ * Copyright (C) 2025 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -22,6 +22,7 @@
  */
 package org.fao.geonet.kernel.security.openidconnect;
 
+import org.apache.jcs.access.exception.InvalidArgumentException;
 import org.fao.geonet.domain.Profile;
 import org.fao.geonet.kernel.security.SecurityProviderConfiguration;
 import org.springframework.util.StringUtils;
@@ -37,74 +38,114 @@ import java.util.Map;
  */
 public class OIDCConfiguration implements SecurityProviderConfiguration {
 
-    public String userNameAttribute = "email";
+    private String userNameAttribute = "email";
 
     /**
      * in the ID token, which property contain's the users organization?
      */
-    public String organizationProperty = "organization";
+    private String organizationProperty = "organization";
 
     /**
      * For role/groups, we allow them to take the form of "GN-group:GN-profile".
      * this defines the ":" separator.
      * Shouldn't need to change this.
      */
-    public String groupPermissionSeparator = ":";
+    private String groupPermissionSeparator = ":";
 
     /**
      * Where, in the id token are the groups/roles stored?
      * This should be a list of group/role names.
      * It can be in the form of "property1.property2"
      */
-    public String idTokenRoleLocation = "groups";
+    private String idTokenRoleLocation = "groups";
 
     /**
      * Converts roles from the OIOC server to GN profiles (or in the form of "GN-group:GN-profile").
      * You can specify via setRoleConverterString in the form:
      * "OIDCServerRole1=GNProfile,OIDCServerRole2=GROUP:PROFILE"
      */
-    public Map<String, String> roleConverter = new HashMap<>();
+    private Map<String, String> roleConverter = new HashMap<>();
 
     /**
      * All users who login via the OIDC will have this profile (at a minimum).
      * This is useful to allow ALL users in an org to login to GN without having to setup all users.
      * Typically, this should be GUEST or REGISTEREDUSER.  But, you can make it higher (i.e. Editor).
      */
-    public String minimumProfile = "Guest";
+    private String minimumProfile = "Guest";
 
     /**
      *  true -> update the DB with the information from OIDC (don't allow user to edit profile in the UI)
      *  false -> don't update the DB (user must edit profile in UI).
      */
-    public boolean updateProfile =true;
+    private boolean updateProfile =true;
 
     /**
      *  true -> update the DB (user's group) with the information from OIDC (don't allow admin to edit user's groups in the UI)
      *  false -> don't update the DB (admin must edit groups in UI).
      */
-    public boolean updateGroup = true;
+    private boolean updateGroup = true;
 
-    public boolean logSensitiveInformation = false;
+    private boolean logSensitiveInformation = false;
 
-    public String clientId;
-    public String clientSecret;
-    public String scopes = null; //null or empty -> all
     public String roleConverterString = null;
-    public LoginType loginType = LoginType.LINK;
 
-    public String getScopes() {
-        return scopes;
+    public static class ClientConfig {
+        private String scopes = null; //null or empty -> all
+        private String clientId;
+        private String clientSecret;
+        private boolean enabled = true;
+
+        public String getScopes() {
+            return scopes;
+        }
+
+        public void setScopes(String scopes) {
+            this.scopes = scopes;
+        }
+
+        public List<String> getScopeSet() {
+            if (!StringUtils.hasText(this.getScopes()))
+                return null;
+            return Arrays.asList(this.getScopes().split(" "));
+        }
+
+        public String getClientId() {
+            return this.clientId;
+        }
+
+        public void setClientId(String clientId) {
+            this.clientId = clientId;
+        }
+
+        public String getClientSecret() {
+            return clientSecret;
+        }
+
+        public void setClientSecret(String clientSecret) {
+            this.clientSecret = clientSecret;
+        }
+
+        public boolean isEnabled() {
+            return enabled;
+        }
+
+        public void setEnabled(boolean enabled) {
+            this.enabled = enabled;
+        }
     }
 
-    public void setScopes(String scopes) {
-        this.scopes = scopes;
+    private final ClientConfig clientconfig = new ClientConfig();
+    private final ClientConfig serviceAccountConfig = new ClientConfig();
+
+    public ClientConfig getClientConfig() {
+        return clientconfig;
     }
 
-    public List<String> getScopeSet() {
-        if (!StringUtils.hasText(scopes))
-            return null;
-        return Arrays.asList(scopes.split(" "));
+    public ClientConfig getServiceAccountConfig() {
+        return serviceAccountConfig;
     }
+
+    private LoginType loginType = LoginType.LINK;
 
     public String getUserNameAttribute() {
         return userNameAttribute;
@@ -170,7 +211,7 @@ public class OIDCConfiguration implements SecurityProviderConfiguration {
     public void setLoginType(String loginType) throws Exception {
         this.loginType = LoginType.parse(loginType);
         if ( !this.loginType.equals(LoginType.AUTOLOGIN) && !this.loginType.equals(LoginType.LINK)) {
-            throw new Exception("Configuration error - login type should only be LINK or AUTOLOGIN");
+            throw new InvalidArgumentException("Configuration error - login type should only be LINK or AUTOLOGIN");
         }
     }
 
@@ -207,23 +248,6 @@ public class OIDCConfiguration implements SecurityProviderConfiguration {
         this.updateGroup = updateGroup;
     }
 
-
-    public String getClientId() {
-        return clientId;
-    }
-
-    public void setClientId(String clientId) {
-        this.clientId = clientId;
-    }
-
-    public String getClientSecret() {
-        return clientSecret;
-    }
-
-    public void setClientSecret(String clientSecret) {
-        this.clientSecret = clientSecret;
-    }
-
     // "group1=role1,group2=role2,..."
     public void updateRoleConverterString(String serialized) {
         Map<String, String> result = new HashMap<>();
@@ -250,15 +274,15 @@ public class OIDCConfiguration implements SecurityProviderConfiguration {
     @Override
     public String toString() {
         String result = "OIDC CONFIG: \n";
-        result += "      idTokenRoleLocation" +"=" +idTokenRoleLocation+  "\n";
-        result += "      updateGroup" +"=" +updateGroup+  "\n";
-        result += "      updateProfile" +"=" +updateProfile+  "\n";
-        result += "      scopes" +"=" +scopes+  "\n";
+        result += "      idTokenRoleLocation" + "=" + idTokenRoleLocation + "\n";
+        result += "      updateGroup" + "=" + updateGroup + "\n";
+        result += "      updateProfile" + "=" + updateProfile + "\n";
+        result += "      scopes" + "=" + getClientConfig().getScopes() + "\n";
 
-        if ( (roleConverter != null) && (!roleConverter.isEmpty()) ){
+        if ((roleConverter != null) && (!roleConverter.isEmpty())) {
             result += "      roleConverter: \n";
             for (Map.Entry<String, String> role : roleConverter.entrySet()) {
-                result += "            + "+ role.getKey()+" -> "+ role.getValue();
+                result += "            + " + role.getKey() + " -> " + role.getValue();
             }
         }
         return result;
