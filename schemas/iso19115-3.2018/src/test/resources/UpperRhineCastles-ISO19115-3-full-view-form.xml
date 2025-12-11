@@ -2502,6 +2502,11 @@
                                     <cit:CI_OnlineResource>
                                         <cit:linkage xsi:type="lan:PT_FreeText_PropertyType">
                                             <gco:CharacterString>http://www.georhena.eu</gco:CharacterString>
+                                            <lan:PT_FreeText>
+                                                <lan:textGroup>
+                                                    <lan:LocalisedCharacterString locale="#FR">http://www.georhena.eu</lan:LocalisedCharacterString>
+                                                </lan:textGroup>
+                                            </lan:PT_FreeText>
                                         </cit:linkage>
                                         <cit:protocol>
                                             <gco:CharacterString>text/html</gco:CharacterString>
@@ -2573,6 +2578,11 @@
             <cit:CI_OnlineResource>
                 <cit:linkage xsi:type="lan:PT_FreeText_PropertyType">
                     <gco:CharacterString>http://localhost:8080/geonetwork/srv/api/records/f74f5451-b198-4edf-abdd-a6b6b7caed81</gco:CharacterString>
+                    <lan:PT_FreeText>
+                        <lan:textGroup>
+                            <lan:LocalisedCharacterString locale="#FR">http://localhost:8080/geonetwork/srv/api/records/f74f5451-b198-4edf-abdd-a6b6b7caed81</lan:LocalisedCharacterString>
+                        </lan:textGroup>
+                    </lan:PT_FreeText>
                 </cit:linkage>
                 <cit:function>
                     <cit:CI_OnLineFunctionCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_OnLineFunctionCode" codeListValue="completeMetadata" />
@@ -2627,6 +2637,100 @@
                                 </cit:dateType>
                             </cit:CI_Date>
                         </cit:date>
+                        <cit:onlineResource>
+                            <cit:CI_OnlineResource>
+                                <cit:linkage xsi:type="lan:PT_FreeText_PropertyType">
+                                    <gco:CharacterString>www.link_alone_default.de</gco:CharacterString>
+                                    <lan:PT_FreeText>
+                                        <lan:textGroup>
+                                            <lan:LocalisedCharacterString locale="#DE">www.link_alone.de</lan:LocalisedCharacterString>
+                                        </lan:textGroup>
+                                        <lan:textGroup>
+                                            <lan:LocalisedCharacterString locale="#FR">www.link_alone.fr</lan:LocalisedCharacterString>
+                                        </lan:textGroup>
+                                        <lan:textGroup>
+                                            <lan:LocalisedCharacterString locale="#EN">www.link_alone.en</lan:LocalisedCharacterString>
+                                        </lan:textGroup>
+                                    </lan:PT_FreeText>
+                                </cit:linkage>
+                                <cit:protocol gco:nilReason="missing">
+                                    <gco:CharacterString/>
+                                </cit:protocol>
+                                <cit:name gco:nilReason="missing" xsi:type="lan:PT_FreeText_PropertyType">
+                                    <gco:CharacterString/>
+                                </cit:name>
+                                <cit:description gco:nilReason="missing" xsi:type="lan:PT_FreeText_PropertyType">
+                                    <gco:CharacterString/>
+                                </cit:description>
+                                <cit:function>
+                                    <cit:CI_OnLineFunctionCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_OnLineFunctionCode" codeListValue=""/>
+                                </cit:function>
+                            </cit:CI_OnlineResource>
+                        </cit:onlineResource>
+                        <cit:onlineResource>
+                            <cit:CI_OnlineResource>
+                                <cit:linkage xsi:type="lan:PT_FreeText_PropertyType">
+                                    <gco:CharacterString>www.name_and_link_default.de</gco:CharacterString>
+                                    <lan:PT_FreeText>
+                                        <lan:textGroup>
+                                            <lan:LocalisedCharacterString locale="#DE">www.name_and_link.de</lan:LocalisedCharacterString>
+                                        </lan:textGroup>
+                                        <lan:textGroup>
+                                            <lan:LocalisedCharacterString locale="#FR">www.name_and_link.fr</lan:LocalisedCharacterString>
+                                        </lan:textGroup>
+                                        <lan:textGroup>
+                                            <lan:LocalisedCharacterString locale="#EN">www.name_and_link.en</lan:LocalisedCharacterString>
+                                        </lan:textGroup>
+                                    </lan:PT_FreeText>
+                                </cit:linkage>
+                                <cit:protocol gco:nilReason="missing">
+                                    <gco:CharacterString/>
+                                </cit:protocol>
+                                <cit:name xsi:type="lan:PT_FreeText_PropertyType">
+                                    <gco:CharacterString>name_and_link</gco:CharacterString>
+                                </cit:name>
+                                <cit:description gco:nilReason="missing" xsi:type="lan:PT_FreeText_PropertyType">
+                                    <gco:CharacterString/>
+                                </cit:description>
+                                <cit:function>
+                                    <cit:CI_OnLineFunctionCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_OnLineFunctionCode" codeListValue=""/>
+                                </cit:function>
+                            </cit:CI_OnlineResource>
+                        </cit:onlineResource>
+                        <cit:onlineResource>
+                            <cit:CI_OnlineResource>
+                                <cit:linkage xsi:type="lan:PT_FreeText_PropertyType"/>
+                                <cit:protocol gco:nilReason="missing">
+                                    <gco:CharacterString/>
+                                </cit:protocol>
+                                <cit:name xsi:type="lan:PT_FreeText_PropertyType">
+                                    <gco:CharacterString>name_no_linkage</gco:CharacterString>
+                                </cit:name>
+                                <cit:description gco:nilReason="missing" xsi:type="lan:PT_FreeText_PropertyType">
+                                    <gco:CharacterString/>
+                                </cit:description>
+                                <cit:function>
+                                    <cit:CI_OnLineFunctionCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_OnLineFunctionCode" codeListValue=""/>
+                                </cit:function>
+                            </cit:CI_OnlineResource>
+                        </cit:onlineResource>
+                        <cit:onlineResource>
+                            <cit:CI_OnlineResource>
+                                <cit:linkage/>
+                                <cit:protocol gco:nilReason="missing">
+                                    <gco:CharacterString/>
+                                </cit:protocol>
+                                <cit:name gco:nilReason="missing" xsi:type="lan:PT_FreeText_PropertyType">
+                                    <gco:CharacterString/>
+                                </cit:name>
+                                <cit:description gco:nilReason="missing" xsi:type="lan:PT_FreeText_PropertyType">
+                                    <gco:CharacterString/>
+                                </cit:description>
+                                <cit:function>
+                                    <cit:CI_OnLineFunctionCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_OnLineFunctionCode" codeListValue=""/>
+                                </cit:function>
+                            </cit:CI_OnlineResource>
+                        </cit:onlineResource>
                     </cit:CI_Citation>
                 </mri:citation>
                 <mri:abstract xsi:type="lan:PT_FreeText_PropertyType">
@@ -2730,6 +2834,11 @@
                                             <cit:CI_OnlineResource>
                                                 <cit:linkage xsi:type="lan:PT_FreeText_PropertyType">
                                                     <gco:CharacterString>https://www.georhena.eu/</gco:CharacterString>
+                                                    <lan:PT_FreeText>
+                                                        <lan:textGroup>
+                                                            <lan:LocalisedCharacterString locale="#FR">https://www.georhena.eu/</lan:LocalisedCharacterString>
+                                                        </lan:textGroup>
+                                                    </lan:PT_FreeText>
                                                 </cit:linkage>
                                                 <cit:protocol>
                                                     <gco:CharacterString>WWW:LINK-1.0-http--link</gco:CharacterString>
@@ -2800,6 +2909,11 @@
                                             <cit:CI_OnlineResource>
                                                 <cit:linkage xsi:type="lan:PT_FreeText_PropertyType">
                                                     <gco:CharacterString>https://www.alsace.eu</gco:CharacterString>
+                                                    <lan:PT_FreeText>
+                                                        <lan:textGroup>
+                                                            <lan:LocalisedCharacterString locale="#FR">https://www.alsace.eu</lan:LocalisedCharacterString>
+                                                        </lan:textGroup>
+                                                    </lan:PT_FreeText>
                                                 </cit:linkage>
                                                 <cit:protocol>
                                                     <gco:CharacterString>WWW:LINK-1.0-http--link</gco:CharacterString>
@@ -3139,6 +3253,11 @@
                             <cit:CI_OnlineResource>
                                 <cit:linkage xsi:type="lan:PT_FreeText_PropertyType">
                                     <gco:CharacterString>https://geoportal.georhena.eu/geoserver/society/ows</gco:CharacterString>
+                                    <lan:PT_FreeText>
+                                        <lan:textGroup>
+                                            <lan:LocalisedCharacterString locale="#FR">https://geoportal.georhena.eu/geoserver/society/ows</lan:LocalisedCharacterString>
+                                        </lan:textGroup>
+                                    </lan:PT_FreeText>
                                 </cit:linkage>
                                 <cit:protocol>
                                     <gco:CharacterString>OGC:WMS</gco:CharacterString>
@@ -3177,6 +3296,11 @@
                             <cit:CI_OnlineResource>
                                 <cit:linkage xsi:type="lan:PT_FreeText_PropertyType">
                                     <gco:CharacterString>https://geoportal.georhena.eu/geoserver/society/ows</gco:CharacterString>
+                                    <lan:PT_FreeText>
+                                        <lan:textGroup>
+                                            <lan:LocalisedCharacterString locale="#FR">https://geoportal.georhena.eu/geoserver/society/ows</lan:LocalisedCharacterString>
+                                        </lan:textGroup>
+                                    </lan:PT_FreeText>
                                 </cit:linkage>
                                 <cit:protocol>
                                     <gco:CharacterString>OGC:WFS</gco:CharacterString>
@@ -3215,6 +3339,11 @@
                             <cit:CI_OnlineResource>
                                 <cit:linkage xsi:type="lan:PT_FreeText_PropertyType">
                                     <gco:CharacterString>https://geoportal.georhena.eu/geoserver/society/ows?request=GetFeature&amp;service=WFS&amp;typeName=chateaux_rhenans&amp;version=1.0.0&amp;outputFormat=SHAPE-ZIP</gco:CharacterString>
+                                    <lan:PT_FreeText>
+                                        <lan:textGroup>
+                                            <lan:LocalisedCharacterString locale="#FR">https://geoportal.georhena.eu/geoserver/society/ows?request=GetFeature&amp;service=WFS&amp;typeName=chateaux_rhenans&amp;version=1.0.0&amp;outputFormat=SHAPE-ZIP</lan:LocalisedCharacterString>
+                                        </lan:textGroup>
+                                    </lan:PT_FreeText>
                                 </cit:linkage>
                                 <cit:protocol>
                                     <gco:CharacterString>WWW:DOWNLOAD-1.0-ftp--download</gco:CharacterString>
@@ -3239,6 +3368,11 @@
                             <cit:CI_OnlineResource>
                                 <cit:linkage xsi:type="lan:PT_FreeText_PropertyType">
                                     <gco:CharacterString>www.chateaux-rhenans.eu</gco:CharacterString>
+                                    <lan:PT_FreeText>
+                                        <lan:textGroup>
+                                            <lan:LocalisedCharacterString locale="#FR">www.chateaux-rhenans.eu</lan:LocalisedCharacterString>
+                                        </lan:textGroup>
+                                    </lan:PT_FreeText>
                                 </cit:linkage>
                                 <cit:protocol>
                                     <gco:CharacterString>WWW:LINK-1.0-http--link</gco:CharacterString>
