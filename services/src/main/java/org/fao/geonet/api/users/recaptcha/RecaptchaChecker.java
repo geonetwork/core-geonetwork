@@ -26,6 +26,7 @@ import net.sf.json.JSONObject;
 import net.sf.json.JSONSerializer;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.hc.client5.http.classic.methods.HttpPost;
 import org.apache.hc.client5.http.classic.methods.HttpUriRequest;
 import org.apache.hc.core5.http.io.support.ClassicRequestBuilder;
 import org.fao.geonet.ApplicationContextHolder;
@@ -64,7 +65,8 @@ public class RecaptchaChecker {
 
         ClientHttpResponse httpResponse = null;
         try {
-            HttpUriRequest httpPost = ClassicRequestBuilder.post()
+            //todo: verify this is still behaves correctly (http4 -> http5)
+            var httpPost =  (HttpPost) ClassicRequestBuilder.post()
                 .setUri(RECAPTCHA_URL)
                 .setHeader("User-Agent", USER_AGENT)
                 .setHeader("Accept-Language", "en-US,en;q=0.5")

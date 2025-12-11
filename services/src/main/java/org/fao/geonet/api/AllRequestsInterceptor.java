@@ -23,6 +23,7 @@
 
 package org.fao.geonet.api;
 
+import jakarta.servlet.ServletException;
 import jeeves.constants.Jeeves;
 import jeeves.server.UserSession;
 import org.apache.commons.lang.StringUtils;
@@ -76,7 +77,7 @@ public class AllRequestsInterceptor implements HandlerInterceptor {
      * <p>
      * If a crawler, check that session is null and if not, invalidate it.
      */
-    private void createSessionForAllButNotCrawlers(HttpServletRequest request) {
+    private void createSessionForAllButNotCrawlers(HttpServletRequest request) throws ServletException {
         String userAgent = request.getHeader("user-agent");
 
         if (!isCrawler(userAgent)) {

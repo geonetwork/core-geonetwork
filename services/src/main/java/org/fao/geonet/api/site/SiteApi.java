@@ -101,7 +101,8 @@ import java.nio.file.StandardCopyOption;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static org.apache.commons.fileupload.util.Streams.checkFileName;
+//import static org.apache.commons.fileupload.util.Streams.checkFileName;
+import static org.apache.commons.fileupload2.core.DiskFileItem.checkFileName;
 import static org.fao.geonet.api.ApiParams.API_CLASS_CATALOG_TAG;
 import static org.fao.geonet.constants.Geonet.Path.IMPORT_STYLESHEETS_SCHEMA_PREFIX;
 import static org.fao.geonet.kernel.setting.Settings.SYSTEM_FEEDBACK_EMAIL;

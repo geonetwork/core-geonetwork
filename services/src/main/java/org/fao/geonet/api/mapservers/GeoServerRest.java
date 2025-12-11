@@ -23,14 +23,21 @@
 package org.fao.geonet.api.mapservers;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.net.util.Base64;
 import org.apache.hc.client5.http.auth.AuthScope;
 import org.apache.hc.client5.http.auth.AuthenticationException;
 import org.apache.hc.client5.http.auth.UsernamePasswordCredentials;
 import org.apache.hc.client5.http.config.RequestConfig;
 import org.apache.hc.client5.http.classic.methods.*;
 import org.apache.hc.core5.http.ContentType;
+import org.apache.hc.core5.http.HttpHeaders;
 import org.apache.hc.core5.http.io.entity.StringEntity;
 import org.apache.hc.client5.http.impl.auth.BasicScheme;
+import org.apache.hc.core5.http.message.BasicHeader;
+import org.apache.http.HttpRequest;
+import org.apache.http.auth.ContextAwareAuthScheme;
+import org.apache.http.auth.Credentials;
+import org.apache.http.protocol.HttpContext;
 import org.fao.geonet.Constants;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.csw.common.util.Xml;
@@ -40,7 +47,8 @@ import org.fao.geonet.utils.nio.PathHttpEntity;
 import org.jdom.Element;
 import org.springframework.http.client.ClientHttpResponse;
 
-import jakarta.annotation.CheckReturnValue;
+//import jakarta.annotation.CheckReturnValue;
+import javax.annotation.CheckReturnValue;
 import java.io.IOException;
 import java.nio.file.Path;
 
@@ -675,7 +683,14 @@ public class GeoServerRest {
         // apparently this is needed to preemptively send the auth, for servers that dont require it but
         // dont send the same data if you're authenticated or not.
         try {
-            m.addHeader(new BasicScheme().authenticate(new UsernamePasswordCredentials(username, password.toCharArray()), m));
+            //TODO might not be proxy aware
+            var credentials5 =  new UsernamePasswordCredentials(username, password.toCharArray());
+            var basicScheme5 = new org.apache.hc.client5.http.impl.auth.BasicScheme();
+            basicScheme5.initPreemptive(credentials5);
+            var auth = basicScheme5.generateAuthResponse(null,null,null);
+            var header5 = new BasicHeader(HttpHeaders.AUTHORIZATION,auth);
+            m.addHeader(header5);
+
         } catch (AuthenticationException a) {
             Log.warning(LOGGER_NAME, "Failed to add the authentication Header, error is: " + a.getMessage());
         }

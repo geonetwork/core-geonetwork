@@ -41,6 +41,7 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.URISyntaxException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 
@@ -102,7 +103,12 @@ public class GoogleTranslateClient {
     }
 
     protected ClientHttpResponse executeRequest(HttpUriRequest method) throws IOException {
-        final String requestHost = method.getURI().getHost();
+        final String requestHost;
+        try {
+            requestHost = method.getUri().getHost();
+        } catch (URISyntaxException e) {
+            throw new IOException(e);
+        }
 
         final Function<HttpClientBuilder, Void> requestConfiguration = new Function<>() {
             @Nullable

@@ -43,6 +43,7 @@ import org.springframework.http.client.ClientHttpResponse;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 
 public class LibreTranslateClient {
@@ -74,7 +75,7 @@ public class LibreTranslateClient {
         jsonObject.put("format", "text");
         jsonObject.put("api_key", this.apiKey);
 
-        StringEntity entity = new StringEntity(jsonObject.toString(), StandardCharsets.UTF_8.name());
+        StringEntity entity = new StringEntity(jsonObject.toString(), StandardCharsets.UTF_8);
         postMethod.setEntity(entity);
 
         try (ClientHttpResponse httpResponse = executeRequest(postMethod)) {
@@ -105,7 +106,12 @@ public class LibreTranslateClient {
     }
 
     protected ClientHttpResponse executeRequest(HttpUriRequest method) throws IOException {
-        final String requestHost = method.getURI().getHost();
+        final String requestHost;
+        try {
+            requestHost = method.getUri().getHost();
+        } catch (URISyntaxException e) {
+            throw new IOException(e);
+        }
 
         final Function<HttpClientBuilder, Void> requestConfiguration = new Function<>() {
             @Nullable

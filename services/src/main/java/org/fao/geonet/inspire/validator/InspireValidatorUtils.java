@@ -34,8 +34,9 @@ import org.apache.hc.client5.http.classic.methods.*;
 import org.apache.hc.core5.http.ContentType;
 import org.apache.hc.core5.http.io.entity.StringEntity;
 import org.apache.hc.client5.http.entity.mime.MultipartEntityBuilder;
-import org.apache.hc.client5.http.impl.classic.BasicResponseHandler;
+//import org.apache.hc.client5.http.impl.classic.BasicResponseHandler;
 import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
+import org.apache.http.impl.client.BasicResponseHandler;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.domain.MetadataValidationStatus;
 import org.fao.geonet.exceptions.ServiceNotFoundEx;
@@ -58,6 +59,7 @@ import jakarta.annotation.Resource;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -257,8 +259,7 @@ public class InspireValidatorUtils {
             response = this.execute(context, request);
 
             if (response.getStatusCode().value() == HttpStatus.SC_OK) {
-
-                new BasicResponseHandler();
+                new BasicResponseHandler(); //todo: this doesn't look like its doing anything.  Sideeffects?
                 String body = CharStreams.toString(new InputStreamReader(response.getBody()));
                 JSONObject jsonRoot = new JSONObject(body);
                 return jsonRoot.getJSONObject("testObject").getString("id");
@@ -750,7 +751,11 @@ public class InspireValidatorUtils {
 
         final Function<HttpClientBuilder, Void> proxyConfiguration = new Function<HttpClientBuilder, Void>() {
             @Nullable @Override public Void apply(@Nonnull HttpClientBuilder input) {
-                Lib.net.setupProxy(context, input, request.getURI().getHost());
+                try {
+                    Lib.net.setupProxy(context, input, request.getUri().getHost());
+                } catch (URISyntaxException e) {
+                    throw new RuntimeException(e);
+                }
                 return null;
             }
         };

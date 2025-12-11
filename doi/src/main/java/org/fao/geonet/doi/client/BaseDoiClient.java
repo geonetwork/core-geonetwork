@@ -32,6 +32,7 @@ import org.apache.hc.client5.http.classic.methods.HttpGet;
 import org.apache.hc.client5.http.classic.methods.HttpPost;
 import org.apache.hc.client5.http.classic.methods.HttpUriRequest;
 import org.apache.hc.client5.http.impl.auth.BasicCredentialsProvider;
+import org.apache.hc.core5.http.ContentType;
 import org.apache.hc.core5.http.io.entity.StringEntity;
 import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
 import org.apache.hc.core5.http.message.BasicHeader;
@@ -76,8 +77,9 @@ public class BaseDoiClient {
 
             StringEntity requestEntity = new StringEntity(
                 body,
-                contentType,
-                "UTF-8");
+                ContentType.create(contentType),
+                "UTF-8",
+                false);
 
             postMethod.setEntity(requestEntity);
 
@@ -177,7 +179,7 @@ public class BaseDoiClient {
 
 
     protected ClientHttpResponse executeRequest(HttpUriRequest method) throws Exception {
-        final String requestHost = method.getURI().getHost();
+        final String requestHost = method.getUri().getHost();
 
         final Function<HttpClientBuilder, Void> requestConfiguration = new Function<HttpClientBuilder, Void>() {
             @Nullable
