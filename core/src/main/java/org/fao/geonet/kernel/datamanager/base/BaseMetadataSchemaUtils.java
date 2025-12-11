@@ -26,7 +26,7 @@ package org.fao.geonet.kernel.datamanager.base;
 import java.nio.file.Path;
 import java.util.Set;
 
-import jakarta.annotation.CheckForNull;
+import javax.annotation.CheckForNull;
 
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.AbstractMetadata;

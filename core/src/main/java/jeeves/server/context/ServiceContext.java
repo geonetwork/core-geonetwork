@@ -45,7 +45,7 @@ import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 
-import jakarta.annotation.CheckForNull;
+import javax.annotation.CheckForNull;
 import jakarta.persistence.EntityManager;
 
 //=============================================================================
