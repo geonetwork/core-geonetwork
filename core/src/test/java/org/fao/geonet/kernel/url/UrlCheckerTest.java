@@ -5,7 +5,7 @@ import org.fao.geonet.domain.LinkStatus;
 import org.fao.geonet.utils.GeonetHttpRequestFactory;
 import org.junit.Test;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.client.AbstractClientHttpResponse;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.client.ClientHttpResponse;
 
 import java.io.IOException;
@@ -33,11 +33,11 @@ public class UrlCheckerTest {
         assertEquals("dummy 451", linkStatus.getStatusInfo());
     }
 
-    private AbstractClientHttpResponse createUnknowStatus() {
-        return new AbstractClientHttpResponse() {
+    private ClientHttpResponse createUnknowStatus() {
+        return new ClientHttpResponse() {
             @Override
-            public int getRawStatusCode() throws IOException {
-                return 451;
+            public HttpStatusCode getStatusCode() throws IOException {
+                return HttpStatusCode.valueOf(451);
             }
 
             @Override

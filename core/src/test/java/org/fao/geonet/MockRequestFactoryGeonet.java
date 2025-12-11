@@ -25,12 +25,14 @@ package org.fao.geonet;
 
 import com.google.common.base.Function;
 
+import org.apache.hc.core5.http.ClassicHttpResponse;
+import org.apache.hc.core5.io.CloseMode;
+import org.apache.http.conn.ClientConnectionManager;
 import org.locationtech.jts.util.Assert;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
 import org.apache.hc.core5.http.HttpHost;
 import org.apache.hc.client5.http.ClientProtocolException;
 import org.apache.hc.client5.http.classic.methods.HttpUriRequest;
-import org.apache.hc.client5.http.ClientConnectionManager;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
 import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
 import org.apache.hc.core5.http.ClassicHttpRequest;
@@ -82,10 +84,14 @@ public class MockRequestFactoryGeonet extends GeonetHttpRequestFactory {
 
     @Override
     public ClientHttpResponse execute(HttpUriRequest request, Function<HttpClientBuilder, Void> configurator) throws IOException {
-        final URI uri = request.getURI();
-        final Request key = new Request(uri.getHost(), uri.getPort(), uri.getScheme(), null);
-        final XmlRequest xmlRequest = (XmlRequest) getRequest(key);
-        return new MockClientHttpResponse(Xml.getString(xmlRequest.execute()).getBytes(Constants.CHARSET), HttpStatus.OK);
+        try {
+            final URI uri = request.getUri();
+            final Request key = new Request(uri.getHost(), uri.getPort(), uri.getScheme(), null);
+            final XmlRequest xmlRequest = (XmlRequest) getRequest(key);
+            return new MockClientHttpResponse(Xml.getString(xmlRequest.execute()).getBytes(Constants.CHARSET), HttpStatus.OK);
+        } catch (URISyntaxException eek) {
+            throw new IOException(eek);
+        }
     }
 
     private Object getRequest(Request key) {
@@ -106,7 +112,7 @@ public class MockRequestFactoryGeonet extends GeonetHttpRequestFactory {
         registerRequestInner(expectedToBeCalled, key, request);
     }
 
-    public void registerRequest(boolean expectedToBeCalled, URI uri, MockCloseableHttpResponse request) {
+    public void registerRequest(boolean expectedToBeCalled, URI uri, ClassicHttpResponse request) {
         final Request key = new Request(uri);
         registerRequestInner(expectedToBeCalled, key, request);
     }
@@ -213,8 +219,8 @@ public class MockRequestFactoryGeonet extends GeonetHttpRequestFactory {
         protected CloseableHttpResponse doExecute(HttpHost target, ClassicHttpRequest request, HttpContext context) throws IOException,
             ClientProtocolException {
             try {
-                final URI uri = new URI(request.getRequestLine().getUri());
 
+                final URI uri = request.getUri();
                 final Request requestKey = new Request(uri);
 
                 return (CloseableHttpResponse) getRequest(requestKey);
@@ -229,13 +235,8 @@ public class MockRequestFactoryGeonet extends GeonetHttpRequestFactory {
         }
 
         @Override
-        public HttpParams getParams() {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public ClientConnectionManager getConnectionManager() {
-            throw new UnsupportedOperationException();
+        public void close(CloseMode closeMode) {
+            // do nothing
         }
     }
 }

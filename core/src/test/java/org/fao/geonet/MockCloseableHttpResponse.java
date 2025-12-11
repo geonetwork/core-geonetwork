@@ -25,6 +25,7 @@ package org.fao.geonet;
 
 import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
 import org.apache.hc.core5.http.ClassicHttpResponse;
+import org.apache.hc.core5.http.message.BasicClassicHttpResponse;
 import org.apache.hc.core5.http.message.StatusLine;
 import org.apache.hc.core5.http.*;
 import org.apache.hc.core5.http.io.entity.ByteArrayEntity;
@@ -33,19 +34,22 @@ import org.apache.hc.core5.http.message.BasicHttpResponse;
 import org.apache.http.params.HttpParams;
 
 import java.io.IOException;
+import java.util.Iterator;
 import java.util.Locale;
 
 /**
- * A Mock for responding to http requests.
+ * A Mock for responding to http requests so we can check status code and
+ * body content.
  *
  * Created by Jesse on 1/24/14.
  */
-public class MockCloseableHttpResponse implements CloseableHttpResponse {
-    private final ClassicHttpResponse _response;
+public class MockCloseableHttpResponse implements ClassicHttpResponse {
+    private final BasicClassicHttpResponse _response;
+    private int code;
 
     public MockCloseableHttpResponse(int responseCode, String statusReason, byte[] response) {
-        _response = new BasicHttpResponse(HttpVersion.HTTP_1_1, responseCode, statusReason);
-        _response.setEntity(new ByteArrayEntity(response));
+        _response = new BasicClassicHttpResponse(responseCode,statusReason);
+        _response.setEntity(new ByteArrayEntity(response,ContentType.APPLICATION_OCTET_STREAM));
     }
 
     @Override
@@ -54,28 +58,18 @@ public class MockCloseableHttpResponse implements CloseableHttpResponse {
     }
 
     @Override
-    public StatusLine getStatusLine() {
-        return new StatusLine(_response);
+    public int getCode() {
+        return _response.getCode();
     }
 
     @Override
-    public void setStatusLine(StatusLine statusline) {
-        _response.setStatusLine(statusline);
+    public void setCode(int code) {
+        _response.setCode(code);
     }
 
     @Override
-    public void setStatusLine(ProtocolVersion ver, int code) {
-        _response.setStatusLine(ver, code);
-    }
-
-    @Override
-    public void setStatusLine(ProtocolVersion ver, int code, String reason) {
-        _response.setStatusLine(ver, code, reason);
-    }
-
-    @Override
-    public void setStatusCode(int code) throws IllegalStateException {
-        _response.setStatusCode(code);
+    public String getReasonPhrase() {
+        return _response.getReasonPhrase();
     }
 
     @Override
@@ -104,13 +98,13 @@ public class MockCloseableHttpResponse implements CloseableHttpResponse {
     }
 
     @Override
-    public ProtocolVersion getProtocolVersion() {
-        return _response.getProtocolVersion();
+    public boolean containsHeader(String name) {
+        return _response.containsHeader(name);
     }
 
     @Override
-    public boolean containsHeader(String name) {
-        return _response.containsHeader(name);
+    public int countHeaders(String name) {
+        return _response.countHeaders(name);
     }
 
     @Override
@@ -124,13 +118,38 @@ public class MockCloseableHttpResponse implements CloseableHttpResponse {
     }
 
     @Override
+    public Header getHeader(String name) throws ProtocolException {
+        return _response.getHeader(name);
+    }
+
+    @Override
+    public Header[] getHeaders() {
+        return _response.getHeaders();
+    }
+
+    @Override
     public Header getLastHeader(String name) {
         return _response.getLastHeader(name);
     }
 
     @Override
-    public Header[] getAllHeaders() {
-        return _response.getAllHeaders();
+    public Iterator<Header> headerIterator() {
+        return _response.headerIterator();
+    }
+
+    @Override
+    public Iterator<Header> headerIterator(String name) {
+        return _response.headerIterator(name);
+    }
+
+    @Override
+    public void setVersion(ProtocolVersion version) {
+        _response.setVersion(version);
+    }
+
+    @Override
+    public ProtocolVersion getVersion() {
+        return _response.getVersion();
     }
 
     @Override
@@ -139,7 +158,7 @@ public class MockCloseableHttpResponse implements CloseableHttpResponse {
     }
 
     @Override
-    public void addHeader(String name, String value) {
+    public void addHeader(String name, Object value) {
         _response.addHeader(name, value);
     }
 
@@ -149,7 +168,7 @@ public class MockCloseableHttpResponse implements CloseableHttpResponse {
     }
 
     @Override
-    public void setHeader(String name, String value) {
+    public void setHeader(String name, Object value) {
         _response.setHeader(name, value);
     }
 
@@ -159,34 +178,13 @@ public class MockCloseableHttpResponse implements CloseableHttpResponse {
     }
 
     @Override
-    public void removeHeader(Header header) {
-        _response.removeHeader(header);
+    public boolean removeHeader(Header header) {
+        return _response.removeHeader(header);
     }
 
     @Override
-    public void removeHeaders(String name) {
-        _response.removeHeaders(name);
+    public boolean removeHeaders(String name) {
+        return _response.removeHeaders(name);
     }
 
-    @Override
-    public HeaderIterator headerIterator() {
-        return _response.headerIterator();
-    }
-
-    @Override
-    public HeaderIterator headerIterator(String name) {
-        return _response.headerIterator(name);
-    }
-
-    @Override
-    @Deprecated
-    public HttpParams getParams() {
-        return _response.getParams();
-    }
-
-    @Override
-    @Deprecated
-    public void setParams(HttpParams params) {
-        _response.setParams(params);
-    }
 }
