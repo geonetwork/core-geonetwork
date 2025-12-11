@@ -100,11 +100,11 @@ public class JeevesContextLoaderListener implements ServletContextListener {
         JeevesApplicationContext jeevesAppContext =
             (JeevesApplicationContext) servletContext.getAttribute(User.NODE_APPLICATION_CONTEXT_KEY);
         if (jeevesAppContext != null) {
-            jeevesAppContext.destroy();
+            jeevesAppContext.close();
         }
 
         Log.info(Log.ENGINE, "Destroying the parent appContext");
-        parentAppContext.destroy();
+        parentAppContext.close();
 
         // De-register JDBC drivers to avoid warnings
         Enumeration<Driver> drivers = DriverManager.getDrivers();

@@ -198,7 +198,7 @@ public class UrlChecker {
 
     private org.springframework.http.HttpStatus buildStatusCode(ClientHttpResponse response) throws IOException {
         try {
-            return response.getStatusCode();
+            return org.springframework.http.HttpStatus.resolve(response.getStatusCode().value());
         } catch (Exception e) {
             return org.springframework.http.HttpStatus.valueOf((response.getStatusCode().value() / 100) * 100);
         }
