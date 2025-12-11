@@ -29,7 +29,20 @@ import com.github.sardine.impl.SardineImpl;
 
 import jeeves.server.context.ServiceContext;
 
-import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
+import org.apache.http.HttpClientConnection;
+import org.apache.http.conn.ConnectionRequest;
+import org.apache.http.conn.HttpClientConnectionManager;
+import org.apache.http.conn.routing.HttpRoute;
+import org.apache.http.impl.client.LaxRedirectStrategy;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
+import org.apache.hc.core5.http.io.SocketConfig;
+import org.apache.hc.core5.io.CloseMode;
+
+//import org.apache.hc.client.impl.LaxRedirectStrategy;
+//import org.apache.hc.client4.http.impl.classic.HttpClientBuilder;
+//import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager;
+import org.apache.http.protocol.HttpContext;
 import org.fao.geonet.Logger;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.utils.GeonetHttpRequestFactory;
@@ -40,6 +53,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 class WebDavRetriever implements RemoteRetriever {
@@ -84,9 +98,65 @@ class WebDavRetriever implements RemoteRetriever {
         this.params = params;
     }
 
+    /**
+     * Replacement for {@link GeonetHttpRequestFactory#getDefaultHttpClientBuilder()} so we can
+     * make use of class apache http 4 client.
+     *
+     * return http client4 builder.
+     */
+    public HttpClientBuilder getDefaultHttpClientBuilder() {
+        final HttpClientBuilder builder = HttpClientBuilder.create();
+        builder.setRedirectStrategy(new LaxRedirectStrategy());
+        builder.disableContentCompression();
+        builder.useSystemProperties();
+
+            var connectionManager = new PoolingHttpClientConnectionManager();
+            connectionManager.setMaxTotal(2);
+
+            HttpClientConnectionManager nonShutdownableConnectionManager = new HttpClientConnectionManager() {
+                public void closeExpiredConnections() {
+                    connectionManager.closeExpiredConnections();
+                }
+
+                public ConnectionRequest requestConnection(HttpRoute route, Object state) {
+                    return connectionManager.requestConnection(route, state);
+                }
+
+                public void releaseConnection(HttpClientConnection managedConn, Object state, long keepalive, TimeUnit tunit) {
+                    connectionManager.releaseConnection(managedConn, state, keepalive, tunit);
+                }
+
+                public void connect(HttpClientConnection managedConn, HttpRoute route, int connectTimeout, HttpContext context) throws IOException {
+                    connectionManager.connect(managedConn, route, connectTimeout, context);
+                }
+
+                public void upgrade(HttpClientConnection managedConn, HttpRoute route, HttpContext context) throws IOException {
+                    connectionManager.upgrade(managedConn, route, context);
+                }
+
+                public void routeComplete(HttpClientConnection managedConn, HttpRoute route, HttpContext context) throws IOException {
+                    connectionManager.routeComplete(managedConn, route, context);
+                }
+
+                public void shutdown() {
+                    // don't shutdown pool
+                }
+
+                public void closeIdleConnections(long idleTimeout, TimeUnit tunit) {
+                    connectionManager.closeIdleConnections(idleTimeout, tunit);
+                }
+            };
+
+        builder.setConnectionManager(nonShutdownableConnectionManager);
+
+
+
+        return builder;
+    }
+
     public List<RemoteFile> retrieve() throws Exception {
 
-        final HttpClientBuilder clientBuilder = context.getBean(GeonetHttpRequestFactory.class).getDefaultHttpClientBuilder();
+        final HttpClientBuilder clientBuilder = getDefaultHttpClientBuilder();
         Lib.net.setupProxy(context, clientBuilder, new URL(params.url).getHost());
 
         if (params.isUseAccount()) {
