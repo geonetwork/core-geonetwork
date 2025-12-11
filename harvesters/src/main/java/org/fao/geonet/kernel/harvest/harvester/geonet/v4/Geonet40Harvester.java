@@ -66,6 +66,9 @@ public class Geonet40Harvester extends AbstractHarvester<HarvestResult, GeonetPa
             harvesterSettingsManager.add("id:" + searchID, "abstract", s.abstractText);
             harvesterSettingsManager.add("id:" + searchID, "keywords", s.keywords);
             harvesterSettingsManager.add("id:" + searchID, "sourceUuid", s.sourceUuid);
+            harvesterSettingsManager.add("id:" + searchID, "categories", s.categories);
+            harvesterSettingsManager.add("id:" + searchID, "schemes", s.schemes);
+            harvesterSettingsManager.add("id:" + searchID, "groupOwners", s.groupOwners);
         }
 
         //--- store group mapping

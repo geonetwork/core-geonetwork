@@ -20,6 +20,9 @@
   <xsl:strip-space elements="*" />
 
   <xsl:template match="/record|*">
+    <xsl:variable name="id">
+      <xsl:value-of select="id[1]" />
+    </xsl:variable>
     <mdb:MD_Metadata>
       <xsl:call-template name="add-iso19115-3.2018-namespaces" />
       <mdb:metadataIdentifier>
@@ -317,15 +320,37 @@
                       </gco:CharacterString>
                     </cit:linkage>
                     <cit:protocol>
-                      <gco:CharacterString>STAC</gco:CharacterString>
+                      <gco:CharacterString>STAC Collection</gco:CharacterString>
                     </cit:protocol>
                     <cit:name>
                       <gco:CharacterString>
-                        <xsl:value-of select="title" />
+                        <xsl:value-of select="$id" />
                       </gco:CharacterString>
                     </cit:name>
                     <cit:description>
                       <gco:CharacterString>STAC Collection</gco:CharacterString>
+                    </cit:description>
+                  </cit:CI_OnlineResource>
+                </mrd:onLine>
+              </xsl:for-each>
+              <xsl:for-each select="links[rel = 'items']">
+                <mrd:onLine>
+                  <cit:CI_OnlineResource>
+                    <cit:linkage>
+                      <gco:CharacterString>
+                        <xsl:value-of select="href" />
+                      </gco:CharacterString>
+                    </cit:linkage>
+                    <cit:protocol>
+                      <gco:CharacterString>STAC Items</gco:CharacterString>
+                    </cit:protocol>
+                    <cit:name>
+                      <gco:CharacterString>
+                        <xsl:value-of select="$id" />
+                      </gco:CharacterString>
+                    </cit:name>
+                    <cit:description>
+                      <gco:CharacterString>STAC Items</gco:CharacterString>
                     </cit:description>
                   </cit:CI_OnlineResource>
                 </mrd:onLine>
