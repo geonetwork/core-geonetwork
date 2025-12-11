@@ -35,6 +35,7 @@ import org.fao.geonet.utils.MockXmlRequest;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 
+import java.net.URISyntaxException;
 import java.util.Map;
 
 import jakarta.annotation.Nullable;
@@ -77,7 +78,12 @@ public class CswHarvesterIntegrationTest extends AbstractHarvesterIntegrationTes
             public boolean apply(@Nullable HttpUriRequestBase input) {
 
                 final boolean isHttpPost = input instanceof HttpPost;
-                final boolean correctPath = input.getUri().toString().startsWith(REQUEST);
+                final boolean correctPath;
+                try {
+                    correctPath = input.getUri().toString().startsWith(REQUEST);
+                } catch (URISyntaxException e) {
+                    throw new RuntimeException(e);
+                }
                 if (!correctPath) {
                     return false;
                 }
@@ -98,7 +104,12 @@ public class CswHarvesterIntegrationTest extends AbstractHarvesterIntegrationTes
                     elementSetName = queryEl.getChild("ElementSetName", Csw.NAMESPACE_CSW).getText();
                     noQueryFilter = queryEl.getChildren().size() == 1;
                 } else {
-                    final String[] params = input.getUri().getQuery().split("\\&");
+                    final String[] params;
+                    try {
+                        params = input.getUri().getQuery().split("\\&");
+                    } catch (URISyntaxException e) {
+                        throw new RuntimeException(e);
+                    }
                     Map<String, String> paramMap = Maps.newHashMap();
                     for (String param : params) {
                         final String[] split = param.split("=");

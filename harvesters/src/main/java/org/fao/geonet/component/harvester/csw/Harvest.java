@@ -30,8 +30,8 @@ import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPReply;
 import org.apache.hc.client5.http.config.RequestConfig;
 import org.apache.hc.client5.http.classic.methods.HttpPost;
+import org.apache.hc.client5.http.impl.DefaultHttpRequestRetryStrategy;
 import org.apache.hc.core5.http.io.entity.StringEntity;
-import org.apache.hc.client5.http.impl.classic.DefaultHttpRequestRetryHandler;
 import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
 import org.fao.geonet.Constants;
 import org.fao.geonet.GeonetContext;
@@ -957,7 +957,7 @@ public class Harvest extends AbstractOperation implements CatalogService {
                         public Void apply(@Nonnull HttpClientBuilder input) {
                             SettingManager settingManager = applicationContext.getBean(SettingManager.class);
                             Lib.net.setupProxy(settingManager, input, requestHost);
-                            input.setRetryStrategy(new DefaultHttpRequestRetryHandler());
+                            input.setRetryStrategy(new DefaultHttpRequestRetryStrategy());
                             return null;
                         }
                     });
@@ -965,7 +965,7 @@ public class Harvest extends AbstractOperation implements CatalogService {
                     // never mind, just log it
                     Log.warning(Geonet.CSW_HARVEST, "WARNING: Failed to send HarvestResponse to responseHandler " + responseHandler + ", HTTP status is " + httpResponse.getStatusText());
                 }
-            } catch (IOException x) {
+            } catch (IOException | URISyntaxException x) {
                 // never mind, just log it
                 Log.warning(Geonet.CSW_HARVEST, "WARNING: " + x.getMessage() + " (this exception is swallowed)", x);
             } finally {

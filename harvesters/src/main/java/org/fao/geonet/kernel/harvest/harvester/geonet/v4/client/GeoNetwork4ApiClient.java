@@ -214,7 +214,13 @@ public class GeoNetwork4ApiClient {
     }
 
     protected ClientHttpResponse doExecute(HttpUriRequest method, String username, String password) throws IOException {
-        final String requestHost = method.getURI().getHost();
+        URI uri;
+        try {
+            uri = method.getUri();
+        } catch (URISyntaxException eek) {
+            throw new IOException(eek);
+        }
+        final String requestHost = uri.getHost();
         HttpClientContext httpClientContext = HttpClientContext.create();
 
         final Function<HttpClientBuilder, Void> requestConfiguration = new Function<>() {
@@ -223,9 +229,9 @@ public class GeoNetwork4ApiClient {
             public Void apply(HttpClientBuilder input) {
                 if (StringUtils.isNotEmpty(username) && StringUtils.isNotEmpty(password)) {
                     HttpHost targetHost = new HttpHost(
-                        method.getURI().getScheme(),
-                        method.getURI().getHost(),
-                        method.getURI().getPort());
+                        uri.getScheme(),
+                        uri.getHost(),
+                        uri.getPort());
 
                     final BasicCredentialsProvider credentialsProvider = new BasicCredentialsProvider();
                     credentialsProvider.setCredentials(
@@ -235,7 +241,6 @@ public class GeoNetwork4ApiClient {
                     final RequestConfig.Builder builder = RequestConfig.custom();
                     builder.setAuthenticationEnabled(true);
                     builder.setRedirectsEnabled(true);
-                    builder.setRelativeRedirectsAllowed(true);
                     builder.setCircularRedirectsAllowed(true);
                     builder.setMaxRedirects(3);
 

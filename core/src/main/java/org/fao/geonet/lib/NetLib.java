@@ -110,6 +110,55 @@ public class NetLib {
 
     //---------------------------------------------------------------------------
 
+    /**
+     * Setup proxy for http 4 client
+     */
+    public org.apache.http.client.CredentialsProvider setupProxy(ServiceContext context, org.apache.http.impl.client.HttpClientBuilder client, String requestHost) {
+        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+        SettingManager sm = gc.getBean(SettingManager.class);
+
+        return setupProxy(sm, client, requestHost);
+    }
+
+    /**
+     * Setup proxy for http 4 client
+     */
+    public org.apache.http.client.CredentialsProvider setupProxy(SettingManager sm, org.apache.http.impl.client.HttpClientBuilder client, String requestHost) {
+        proxyConfiguration.refresh(sm);
+
+        boolean enabled = proxyConfiguration.isEnabled();
+        String host = proxyConfiguration.getHost();
+        String port = proxyConfiguration.getPort();
+        String username = proxyConfiguration.getUsername();
+        String password = proxyConfiguration.getPassword();
+        String ignoreHostList = proxyConfiguration.getIgnoreHostList();
+
+        org.apache.http.client.CredentialsProvider provider = new org.apache.http.impl.client.BasicCredentialsProvider();
+        if (enabled) {
+            if (!Lib.type.isInteger(port)) {
+                Log.error(Geonet.GEONETWORK, "Proxy port is not an integer : " + port);
+            } else {
+                if (!isProxyHostException(requestHost, ignoreHostList)) {
+                    final org.apache.http.HttpHost proxy = new org.apache.http.HttpHost(host, Integer.parseInt(port));
+                    client.setProxy(proxy);
+
+                    if (username.trim().length() != 0) {
+                        provider.setCredentials(new org.apache.http.auth.AuthScope(proxy), new org.apache.http.auth.UsernamePasswordCredentials(username, password));
+                        client.setDefaultCredentialsProvider(provider);
+                    }
+                } else {
+                    client.setProxy(null);
+                }
+
+            }
+        }
+
+        return provider;
+    }
+
+    /**
+     * Setup proxy for http 5 client
+     */
     public CredentialsStore setupProxy(ServiceContext context, HttpClientBuilder client, String requestHost) {
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
         SettingManager sm = gc.getBean(SettingManager.class);
@@ -118,7 +167,7 @@ public class NetLib {
     }
 
     /**
-     * Setup proxy for http client
+     * Setup proxy for http 5 client
      */
     public CredentialsStore setupProxy(SettingManager sm, HttpClientBuilder client, String requestHost) {
         proxyConfiguration.refresh(sm);

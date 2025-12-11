@@ -69,6 +69,7 @@ import jakarta.annotation.Nullable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -1022,6 +1023,10 @@ class Harvester extends BaseAligner<OgcWxSParams> implements IHarvester<HarvestR
         } catch (IOException ioe) {
             log.info(" Unable to connect to '" + req.toString() + "'");
             log.info(ioe.getMessage());
+            return null;
+        } catch (URISyntaxException e) {
+            log.info(" Unable to connect to '" + req.toString() + "'");
+            log.info(e.getMessage());
             return null;
         } finally {
             // Release current connection to the connection pool once you are done

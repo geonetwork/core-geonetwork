@@ -193,6 +193,11 @@ public class GeonetHttpRequestFactory {
         return new AdaptingResponse(httpClient, httpClient.execute(request, context));
     }
 
+    /**
+     * Creates an apache http client5 builder.
+     *
+     * @return http client5 builder.
+     */
     public HttpClientBuilder getDefaultHttpClientBuilder() {
         final HttpClientBuilder builder = HttpClientBuilder.create();
         builder.setRedirectStrategy(new LaxRedirectStrategy());
