@@ -23,9 +23,12 @@
 
 package org.fao.geonet.camelPeriodicProducer;
 
+import org.apache.camel.CamelContext;
+import org.apache.camel.ExtendedCamelContext;
 import org.apache.camel.builder.RouteBuilder;
-import org.apache.camel.component.quartz2.QuartzComponent;
-import org.apache.camel.component.quartz2.QuartzEndpoint;
+import org.apache.camel.component.quartz.QuartzComponent;
+import org.apache.camel.component.quartz.QuartzEndpoint;
+import org.apache.camel.model.ModelCamelContext;
 import org.apache.camel.model.RouteDefinition;
 import org.fao.geonet.harvester.wfsfeatures.worker.WFSHarvesterRouteBuilder;
 import org.fao.geonet.kernel.setting.SettingManager;
@@ -78,27 +81,48 @@ public class MessageProducerFactory {
         quartzComponent.getScheduler().rescheduleJob(toReschedule.getTriggerKey(), trigger);
         Optional<RouteDefinition> route = findRoute(messageProducer.getId());
         if (route.isPresent()) {
-            routeBuilder.getContext().startRoute(route.get().getId());
+            routeBuilder.getContext().getRouteController().startRoute(route.get().getId());
         }
     }
 
     public void changeMessageAndReschedule(MessageProducer messageProducer) throws Exception {
-        Optional<RouteDefinition> route = findRoute(messageProducer.getId());
-        if (route.isPresent()) {
-            routeBuilder.getContext().removeRouteDefinition(route.get());
+        Optional<RouteDefinition> routeDefinition = findRoute(messageProducer.getId());
+        if (routeDefinition.isPresent()) {
+            removeRoute(routeDefinition.get());
         }
         writeRoute(messageProducer);
         reschedule(messageProducer);
+    }
+    private void removeRoute(RouteDefinition routeDefinition) throws Exception {
+        boolean removed = false;
+
+        CamelContext context = routeBuilder.getContext();
+        String routeId = routeDefinition.getId();
+        try {
+            context.getRouteController().stopRoute(routeId);
+            context.removeRoute(routeId);
+        }
+        finally {
+            if (removed) {
+                LOGGER.trace("Route {} was successfully stopped and removed.", routeId);
+            } else {
+                LOGGER.warn("Route {} could not be removed (perhaps it was already stopped).", routeId);
+            }
+        }
     }
 
     public void destroy(Long id) throws Exception {
         Optional<RouteDefinition> route = findRoute(id);
         if (route.isPresent()) {
-            routeBuilder.getContext().removeRouteDefinition(route.get());
+            removeRoute(route.get());
         }
         routeBuilder.getContext().removeEndpoints(buildFrom(id));
     }
 
+    /** RouteID for Quartz identifier.
+     * @param id Numeric quartz identifier
+     * @return RouteID text
+     */
     private String buildFrom(Long id) {
         return String.format("quartz2://%s-%s",
             settingManager.getSiteId(),
@@ -119,11 +143,18 @@ public class MessageProducerFactory {
             .noAutoStartup()
             .setBody(routeBuilder.constant(messageProducer.getMessage()))
             .to(messageProducer.getTargetUri());
-        routeBuilder.getContext().addRouteDefinition(routeDefinition);
+
+        ExtendedCamelContext extendedContext = routeBuilder.getContext().getCamelContextExtension();
+        ModelCamelContext camelContext = extendedContext.getContextPlugin(ModelCamelContext.class);
+
+        camelContext.addRouteDefinition(routeDefinition);
     }
 
     private Optional<RouteDefinition> findRoute(Long id) {
-        return routeBuilder.getContext().getRouteDefinitions()
+        ExtendedCamelContext extendedContext = routeBuilder.getContext().getCamelContextExtension();
+        ModelCamelContext camelContext = extendedContext.getContextPlugin(ModelCamelContext.class);
+
+        return routeBuilder.getRouteCollection().getRoutes()
             .stream()
             .filter(route -> routeInputHasQuart2RouteIdUrl(route, id))
             .map(Optional::ofNullable)
@@ -132,6 +163,9 @@ public class MessageProducerFactory {
     }
 
     private boolean routeInputHasQuart2RouteIdUrl(RouteDefinition route, Long id) {
-        return route.getInputs().size() == 1 && route.getInputs().get(0).getUri().equalsIgnoreCase(buildFrom(id));
+        if( route.getInput() != null ) {
+            return route.getInput().getUri().equalsIgnoreCase( buildFrom(id));
+        }
+        return false;
     }
 }

@@ -24,7 +24,7 @@
 package org.fao.geonet.camelPeriodicProducer;
 
 import org.apache.camel.builder.RouteBuilder;
-import org.apache.camel.component.quartz2.QuartzComponent;
+import org.apache.camel.component.quartz.QuartzComponent;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import jakarta.annotation.PostConstruct;

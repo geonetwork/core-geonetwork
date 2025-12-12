@@ -24,7 +24,7 @@
 package org.fao.geonet.camelPeriodicProducer;
 
 import org.apache.camel.Exchange;
-import org.apache.camel.component.quartz2.QuartzComponent;
+import org.apache.camel.component.quartz.QuartzComponent;
 import org.fao.geonet.api.records.MetadataSavedQueryApi;
 import org.fao.geonet.domain.MessageProducerEntity;
 import org.fao.geonet.domain.WfsHarvesterParamEntity;

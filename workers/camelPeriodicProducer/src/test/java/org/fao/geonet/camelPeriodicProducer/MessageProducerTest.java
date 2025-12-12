@@ -24,8 +24,7 @@
 package org.fao.geonet.camelPeriodicProducer;
 
 import org.apache.camel.Exchange;
-import org.apache.camel.component.quartz2.QuartzComponent;
-import org.apache.camel.component.quartz2.QuartzEndpoint;
+import org.apache.camel.component.quartz.QuartzEndpoint;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.junit.After;
 import org.junit.Before;

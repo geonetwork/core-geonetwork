@@ -25,7 +25,7 @@ package org.fao.geonet.harvester.wfsfeatures.worker;
 
 import org.apache.camel.LoggingLevel;
 import org.apache.camel.builder.RouteBuilder;
-import org.apache.camel.builder.xml.XPathBuilder;
+import org.apache.camel.language.xpath.XPathBuilder;
 import org.apache.camel.model.dataformat.JaxbDataFormat;
 import org.fao.geonet.harvester.wfsfeatures.model.WFSHarvesterParameter;
 import org.w3c.dom.Document;
@@ -77,13 +77,13 @@ public class WFSHarvesterRouteBuilder extends RouteBuilder {
                 .split(xPathWfsConfigBuilder)
                     .parallelProcessing()
                     // Will not stop on exception if one of the splitted task fails
-                    .executorServiceRef("harvest-wfs-thread-pool")
+                    .executorService("harvest-wfs-thread-pool")
                         .unmarshal(jaxb)
                         .setProperty("configuration", simple("${body}"))
 //                        .setProperty("url", xpath("wfs/@url", String.class))
 //                        .setProperty("typeName", xpath("wfs/@typeName", String.class))
                         .log(LoggingLevel.INFO, LOGGER_NAME, "#${property.CamelSplitIndex}. Harvesting ${property.configuration.url} - start (Exchange ${exchangeId}).")
-                        .beanRef("WFSFeatureIndexer", "initialize(*, true)")
+                        .bean("WFSFeatureIndexer", "initialize(*, true)")
                         .to("direct:delete-wfs-featuretype-features")
                         .to("direct:index-wfs")
                         .log(LoggingLevel.INFO, LOGGER_NAME, "#${property.CamelSplitIndex}. Harvesting ${property.configuration.url} - end (Exchange ${exchangeId}).")
@@ -101,7 +101,7 @@ public class WFSHarvesterRouteBuilder extends RouteBuilder {
                 .log(LoggingLevel.INFO, LOGGER_NAME, "Harvest features message received.")
                 .log(LoggingLevel.INFO, LOGGER_NAME, "${body}")
                 .setProperty("configuration", simple("${body.parameters}"))
-                .beanRef("WFSFeatureIndexer", "initialize(*, true)")
+                .bean("WFSFeatureIndexer", "initialize(*, true)")
                 .to("direct:delete-wfs-featuretype-features")
                 .to("direct:index-wfs");
 
@@ -115,13 +115,13 @@ public class WFSHarvesterRouteBuilder extends RouteBuilder {
         from("direct:delete-wfs-featuretype-features")
                 .id("harvest-wfs-delete-features")
                 .log(LoggingLevel.INFO, "Removing features from ${property.url}#${property.typeName} ...")
-                .beanRef("WFSFeatureIndexer", "deleteFeatures")
+                .bean("WFSFeatureIndexer", "deleteFeatures")
                 .log(LoggingLevel.INFO, "All features from ${property.url}#${property.typeName} removed.");
 
         from("direct:index-wfs")
                 .id("harvest-wfs-features")
                 .log(LoggingLevel.INFO, "Indexing features from ${property.url}#${property.typeName} ...")
-                .beanRef("WFSFeatureIndexer", "indexFeatures", false)
+                .bean("WFSFeatureIndexer", "indexFeatures")
                 .log(LoggingLevel.INFO, "All features from ${property.url}#${property.typeName} indexed.");
     }
 }
