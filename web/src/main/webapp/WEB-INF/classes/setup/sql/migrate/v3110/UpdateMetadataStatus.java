@@ -149,7 +149,7 @@ public class UpdateMetadataStatus extends DatabaseMigrationTask {
             statement = connection.createStatement();
             try {
                 rowcount = statement.executeUpdate("update " + MetadataStatus.TABLE_NAME +
-                        " set " + MetadataStatus_.id.getName() + " = " + dialect.getSelectSequenceNextValString(MetadataStatus.ID_SEQ_NAME) +
+                        " set " + MetadataStatus_.id.getName() + " = " + dialect.getSequenceSupport().getSelectSequenceNextValString(MetadataStatus.ID_SEQ_NAME) +
                         " where " + MetadataStatus_.id.getName() + " IS NULL");
             } catch (SQLException e1) {
                 try {
@@ -159,7 +159,7 @@ public class UpdateMetadataStatus extends DatabaseMigrationTask {
                     }
                     statement = connection.createStatement();
                     rowcount = statement.executeUpdate("update " + MetadataStatus.TABLE_NAME +
-                            " set " + MetadataStatus_.id.getName() + " = " + dialect.getSelectSequenceNextValString(HIBERNATE_SEQUENCE) +
+                            " set " + MetadataStatus_.id.getName() + " = " + dialect.getSequenceSupport().getSelectSequenceNextValString(HIBERNATE_SEQUENCE) +
                             " where " + MetadataStatus_.id.getName() + " IS NULL");
                 } catch (SQLException e2) {
                     throw new SQLException("Error updating table \"" + MetadataStatus.TABLE_NAME + "." + MetadataStatus_.id.getName() +

@@ -42,7 +42,7 @@ import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider;
 import org.springframework.core.type.filter.AnnotationTypeFilter;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
@@ -190,7 +190,7 @@ public class UpdateAllSequenceValueToMax extends DatabaseMigrationTask {
 
                 Log.info(Geonet.DB, "  Sequence " + sequenceName + " updated. Currval: " + desiredVal);
             } else {
-                preparedStatement = connection.prepareStatement(dialect.getSequenceNextValString(sequenceName));
+                preparedStatement = connection.prepareStatement(dialect.getSequenceSupport().getSequenceNextValString(sequenceName));
 
                 // There may be a better way to adjust the sequence other than looping though them
                 // but this is the only database agnostic approach that could be found at the moment..
