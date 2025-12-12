@@ -561,7 +561,6 @@
     <dependency>
       <groupId>org.mitre.dsmiley.httpproxy</groupId>
       <artifactId>smiley-http-proxy-servlet</artifactId>
-      <version>1.12.1</version>
     </dependency>
 
     <!--Detect urls in String and transform to html format-->

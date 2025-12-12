@@ -25,21 +25,21 @@ package org.fao.geonet.proxy;
 import jeeves.server.UserSession;
 import jeeves.server.sources.http.ServletPathFinder;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.hc.client5.http.classic.HttpClient;
-import org.apache.hc.client5.http.impl.auth.BasicCredentialsProvider;
-import org.apache.hc.core5.net.URLEncodedUtils;
-import org.apache.hc.core5.http.HttpEntityContainer;
-import org.apache.hc.core5.http.NameValuePair;
-import org.apache.hc.client5.http.auth.AuthScope;
-import org.apache.hc.client5.http.auth.CredentialsStore;
-import org.apache.hc.client5.http.auth.UsernamePasswordCredentials;
-import org.apache.hc.client5.http.utils.URIUtils;
-import org.apache.hc.core5.http.ClassicHttpRequest;
-import org.apache.hc.core5.http.io.entity.BufferedHttpEntity;
-import org.apache.hc.core5.http.io.entity.InputStreamEntity;
-import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
-import org.apache.hc.core5.http.message.BasicHeader;
-import org.apache.hc.core5.http.message.BasicHttpEntityEnclosingRequest;
+import org.apache.http.HttpEntityEnclosingRequest;
+import org.apache.http.HttpRequest;
+import org.apache.http.NameValuePair;
+import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.client.CredentialsProvider;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.utils.URIUtils;
+import org.apache.http.client.utils.URLEncodedUtils;
+import org.apache.http.entity.BufferedHttpEntity;
+import org.apache.http.entity.InputStreamEntity;
+import org.apache.http.impl.client.BasicCredentialsProvider;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.message.BasicHeader;
+import org.apache.http.message.BasicHttpEntityEnclosingRequest;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.Logger;
 import org.fao.geonet.api.ApiUtils;
@@ -140,7 +140,7 @@ public class URITemplateProxyServlet extends ProxyServlet {
     private Set<Integer> allowPorts = new HashSet<>(Arrays.asList(80, 443));
 
     @Override
-    protected void copyRequestHeader(HttpServletRequest servletRequest, ClassicHttpRequest proxyRequest,
+    protected void copyRequestHeader(HttpServletRequest servletRequest, HttpRequest proxyRequest,
                                      String headerName) {
         if (disallowHeaders.contains(headerName)) {
             return; // dont copy
@@ -311,11 +311,11 @@ public class URITemplateProxyServlet extends ProxyServlet {
         }
 
         if (StringUtils.isNotEmpty(username) && StringUtils.isNotEmpty(password)) {
-            CredentialsStore credentialsProvider =
+            CredentialsProvider credentialsProvider =
                 new BasicCredentialsProvider();
             credentialsProvider.setCredentials(
-                new AuthScope(null, -1),
-                new UsernamePasswordCredentials(username, password.toCharArray()));
+                AuthScope.ANY,
+                new UsernamePasswordCredentials(username, password));
             clientBuilder.setDefaultCredentialsProvider(credentialsProvider);
         }
 
@@ -338,7 +338,7 @@ public class URITemplateProxyServlet extends ProxyServlet {
     }
 
     @Override
-    protected void copyRequestHeaders(HttpServletRequest servletRequest, ClassicHttpRequest proxyRequest) {
+    protected void copyRequestHeaders(HttpServletRequest servletRequest, HttpRequest proxyRequest) {
         super.copyRequestHeaders(servletRequest, proxyRequest);
         if (doForwardHost) {
             StringBuffer url = servletRequest.getRequestURL();
@@ -399,8 +399,8 @@ public class URITemplateProxyServlet extends ProxyServlet {
     }
 
     @Override
-    protected ClassicHttpRequest newProxyRequestWithEntity(String method, String proxyRequestUri, HttpServletRequest servletRequest) throws IOException {
-        HttpEntityContainer eProxyRequest = new BasicHttpEntityEnclosingRequest(method, proxyRequestUri);
+    protected HttpRequest newProxyRequestWithEntity(String method, String proxyRequestUri, HttpServletRequest servletRequest) throws IOException {
+        HttpEntityEnclosingRequest eProxyRequest = new BasicHttpEntityEnclosingRequest(method, proxyRequestUri);
         InputStreamEntity entity = new InputStreamEntity(servletRequest.getInputStream(), this.getContentLength(servletRequest));
 
         // https://github.com/mitre/HTTP-Proxy-Servlet/issues/67
