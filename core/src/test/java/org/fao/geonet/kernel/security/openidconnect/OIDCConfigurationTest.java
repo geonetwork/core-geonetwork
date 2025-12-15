@@ -23,7 +23,7 @@
 
 package org.fao.geonet.kernel.security.openidconnect;
 
-import org.apache.jcs.access.exception.InvalidArgumentException;
+import org.apache.commons.jcs3.access.exception.InvalidArgumentException;
 import org.fao.geonet.exceptions.BadParameterEx;
 import org.fao.geonet.kernel.security.SecurityProviderConfiguration;
 import org.junit.Test;

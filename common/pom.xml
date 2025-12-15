@@ -81,10 +81,10 @@
         <groupId>org.apache.logging.log4j</groupId>
         <artifactId>log4j-1.2-api</artifactId>
       </dependency>
-    <dependency>
-      <groupId>org.apache.jcs</groupId>
-      <artifactId>jcs</artifactId>
-    </dependency>
+      <dependency>
+          <groupId>org.apache.commons</groupId>
+          <artifactId>commons-jcs3-core</artifactId>
+      </dependency>
     <dependency>
       <groupId>xalan</groupId>
       <artifactId>serializer</artifactId>
@@ -133,14 +133,17 @@
       <groupId>commons-lang</groupId>
       <artifactId>commons-lang</artifactId>
     </dependency>
-  <dependency>
-   <groupId>org.apache.httpcomponents.client5</groupId>
-   <artifactId>httpclient5</artifactId>
-   <version>5.4.4</version>
-  </dependency>
+    <dependency>
+     <groupId>org.apache.httpcomponents.client5</groupId>
+     <artifactId>httpclient5</artifactId>
+    </dependency>
     <dependency>
       <groupId>com.googlecode.juniversalchardet</groupId>
       <artifactId>juniversalchardet</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>jakarta.servlet</groupId>
+      <artifactId>jakarta.servlet-api</artifactId>
     </dependency>
     <dependency>
       <groupId>org.springframework</groupId>

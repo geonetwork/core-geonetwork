@@ -1,42 +1,42 @@
 # DEFAULT CACHE REGION
 
 jcs.default=DC
-jcs.default.cacheattributes=org.apache.jcs.engine.CompositeCacheAttributes
+jcs.default.cacheattributes=org.apache.commons.jcs3.engine.CompositeCacheAttributes
 jcs.default.cacheattributes.MaxObjects=1000
-jcs.default.cacheattributes.MemoryCacheName=org.apache.jcs.engine.memory.lru.LRUMemoryCache
-        
+jcs.default.cacheattributes.MemoryCacheName=org.apache.commons.jcs3.engine.memory.lru.LRUMemoryCache
+
 jcs.default.cacheattributes.UseMemoryShrinker=true
 jcs.default.cacheattributes.MaxMemoryIdleTimeSeconds=3600
 jcs.default.cacheattributes.ShrinkerIntervalSeconds=60
 jcs.default.cacheattributes.MaxSpoolPerRun=500
-jcs.default.elementattributes=org.apache.jcs.engine.ElementAttributes
+jcs.default.elementattributes=org.apache.commons.jcs3.engine.ElementAttributes
 jcs.default.elementattributes.IsEternal=false
 
-jcs.auxiliary.DC=org.apache.jcs.auxiliary.disk.indexed.IndexedDiskCacheFactory
-jcs.auxiliary.DC.attributes=org.apache.jcs.auxiliary.disk.indexed.IndexedDiskCacheAttributes
+jcs.auxiliary.DC=org.apache.commons.jcs3.auxiliary.disk.indexed.IndexedDiskCacheFactory
+jcs.auxiliary.DC.attributes=org.apache.commons.jcs3.auxiliary.disk.indexed.IndexedDiskCacheAttributes
 jcs.auxiliary.DC.attributes.DiskPath=${java.io.tmpdir}/jcs_caching
 
 # XLink cache
 jcs.region.xlink=DC
-jcs.region.xlink.cacheattributes=org.apache.jcs.engine.CompositeCacheAttributes
+jcs.region.xlink.cacheattributes=org.apache.commons.jcs3.engine.CompositeCacheAttributes
 jcs.region.xlink.cacheattributes.MaxObjects=10000
-jcs.region.xlink.cacheattributes.MemoryCacheName=org.apache.jcs.engine.memory.lru.LRUMemoryCache
+jcs.region.xlink.cacheattributes.MemoryCacheName=org.apache.commons.jcs3.engine.memory.lru.LRUMemoryCache
 # we only want links in the cache to be updated when the Lucene index is
 # updated so by default they are eternal
-jcs.region.xlink.elementattributes=org.apache.jcs.engine.ElementAttributes
+jcs.region.xlink.elementattributes=org.apache.commons.jcs3.engine.ElementAttributes
 jcs.region.xlink.elementattributes.IsEternal=true
 jcs.region.xlink.elementattributes.MaxLifeSeconds=0
 jcs.region.xlink.elementattributes.IdleTime=1800
 jcs.region.xlink.elementattributes.IsSpool=false
 jcs.region.xlink.elementattributes.IsRemote=false
 jcs.region.xlink.elementattributes.IsLateral=true
-        
+
 # SPATIAL Filter FEATURE CACHING
 jcs.region.SpatialFilterCache=DC
-jcs.region.SpatialFilterCache.cacheattributes=org.apache.jcs.engine.CompositeCacheAttributes
+jcs.region.SpatialFilterCache.cacheattributes=org.apache.commons.jcs3.engine.CompositeCacheAttributes
 jcs.region.SpatialFilterCache.cacheattributes.MaxObjects=5000
-jcs.region.SpatialFilterCache.cacheattributes.MemoryCacheName=org.apache.jcs.engine.memory.lru.LRUMemoryCache
-jcs.region.SpatialFilterCache.elementattributes=org.apache.jcs.engine.ElementAttributes
+jcs.region.SpatialFilterCache.cacheattributes.MemoryCacheName=org.apache.commons.jcs3.engine.memory.lru.LRUMemoryCache
+jcs.region.SpatialFilterCache.elementattributes=org.apache.commons.jcs3.engine.ElementAttributes
 jcs.region.SpatialFilterCache.elementattributes.IsEternal=false
 jcs.region.SpatialFilterCache.elementattributes.MaxLifeSeconds=7200
 jcs.region.SpatialFilterCache.elementattributes.IdleTime=1800
@@ -46,10 +46,10 @@ jcs.region.SpatialFilterCache.elementattributes.IsLateral=true
 
 # JeevesCacheManager caches
 jcs.region.JeevesCacheManagerTenSeconds=DC
-jcs.region.JeevesCacheManagerTenSeconds.cacheattributes=org.apache.jcs.engine.CompositeCacheAttributes
+jcs.region.JeevesCacheManagerTenSeconds.cacheattributes=org.apache.commons.jcs3.engine.CompositeCacheAttributes
 jcs.region.JeevesCacheManagerTenSeconds.cacheattributes.MaxObjects=10000
-jcs.region.JeevesCacheManagerTenSeconds.cacheattributes.MemoryCacheName=org.apache.jcs.engine.memory.lru.LRUMemoryCache
-jcs.region.JeevesCacheManagerTenSeconds.elementattributes=org.apache.jcs.engine.ElementAttributes
+jcs.region.JeevesCacheManagerTenSeconds.cacheattributes.MemoryCacheName=org.apache.commons.jcs3.engine.memory.lru.LRUMemoryCache
+jcs.region.JeevesCacheManagerTenSeconds.elementattributes=org.apache.commons.jcs3.engine.ElementAttributes
 jcs.region.JeevesCacheManagerTenSeconds.elementattributes.IsEternal=false
 jcs.region.JeevesCacheManagerTenSeconds.elementattributes.MaxLifeSeconds=10
 jcs.region.JeevesCacheManagerTenSeconds.elementattributes.IdleTime=10
@@ -58,10 +58,10 @@ jcs.region.JeevesCacheManagerTenSeconds.elementattributes.IsRemote=false
 jcs.region.JeevesCacheManagerTenSeconds.elementattributes.IsLateral=true
 
 jcs.region.JeevesCacheManagerETERNAL=DC
-jcs.region.JeevesCacheManagerETERNAL.cacheattributes=org.apache.jcs.engine.CompositeCacheAttributes
+jcs.region.JeevesCacheManagerETERNAL.cacheattributes=org.apache.commons.jcs3.engine.CompositeCacheAttributes
 jcs.region.JeevesCacheManagerETERNAL.cacheattributes.MaxObjects=1000
-jcs.region.JeevesCacheManagerETERNAL.cacheattributes.MemoryCacheName=org.apache.jcs.engine.memory.lru.LRUMemoryCache
-jcs.region.JeevesCacheManagerETERNAL.elementattributes=org.apache.jcs.engine.ElementAttributes
+jcs.region.JeevesCacheManagerETERNAL.cacheattributes.MemoryCacheName=org.apache.commons.jcs3.engine.memory.lru.LRUMemoryCache
+jcs.region.JeevesCacheManagerETERNAL.elementattributes=org.apache.commons.jcs3.engine.ElementAttributes
 jcs.region.JeevesCacheManagerETERNAL.elementattributes.IsEternal=true
 jcs.region.JeevesCacheManagerETERNAL.elementattributes.IsSpool=false
 jcs.region.JeevesCacheManagerETERNAL.elementattributes.IsRemote=false

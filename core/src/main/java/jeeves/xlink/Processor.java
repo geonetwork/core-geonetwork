@@ -27,9 +27,10 @@ import com.google.common.collect.Sets;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.local.LocalServiceRequest;
 import org.apache.commons.lang.StringUtils;
-import org.apache.jcs.access.exception.CacheException;
+import org.apache.commons.jcs3.access.exception.CacheException;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.JeevesJCS;
+import org.fao.geonet.JeevesJCSGroup;
 import org.fao.geonet.kernel.SpringLocalServiceInvoker;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
@@ -195,7 +196,7 @@ public final class Processor {
                 uri = uri.replaceAll("&+", "&");
                 String mappedURI = mapURI(uri);
 
-                JeevesJCS xlinkCache = JeevesJCS.getInstance(XLINK_JCS);
+                JeevesJCSGroup xlinkCache = JeevesJCSGroup.getInstance(XLINK_JCS);
                 remoteFragment = (Element) xlinkCache.getFromGroup(uri.toLowerCase(), mappedURI);
                 if (remoteFragment == null) {
                     Log.info(Log.XLINK_PROCESSOR, "cache MISS on " + uri.toLowerCase());
@@ -271,14 +272,14 @@ public final class Processor {
      * Uncaches an xlink
      */
     public static void uncacheXLinkUri(String uri) throws CacheException {
-        JeevesJCS xlinkCache = JeevesJCS.getInstance(XLINK_JCS);
+        JeevesJCSGroup xlinkCache = JeevesJCSGroup.getInstance(XLINK_JCS);
         String mappedURI = mapURI(uri);
-        Set groupKeys = xlinkCache.getGroupKeys(mappedURI);
+        Set<String> groupKeys = xlinkCache.getGroupKeys(mappedURI);
         if (groupKeys == null || groupKeys.isEmpty()) {
-            xlinkCache.remove(uri);
+            xlinkCache.invalidateGroup(mappedURI);
         } else {
-            for (Object key : groupKeys) {
-                xlinkCache.remove(key, mappedURI);
+            for (String key : groupKeys) {
+                xlinkCache.removeFromGroup(key, mappedURI);
             }
         }
     }

@@ -21,7 +21,7 @@
  */
 package org.fao.geonet.api.userfeedback.service;
 
-import org.apache.jcs.access.exception.ObjectNotFoundException;
+import org.apache.commons.jcs3.access.exception.ObjectNotFoundException;
 import org.fao.geonet.api.userfeedback.UserFeedbackUtils;
 import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.ISODate;

@@ -34,7 +34,7 @@ import java.nio.file.FileSystemNotFoundException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-import org.apache.jcs.access.exception.CacheException;
+import org.apache.commons.jcs3.access.exception.CacheException;
 import org.apache.xerces.dom.DOMInputImpl;
 import org.apache.xerces.util.XMLCatalogResolver;
 import org.fao.geonet.JeevesJCS;
@@ -219,10 +219,11 @@ public class XmlResolver extends XMLCatalogResolver {
      */
     public void addXmlToCache(String uri, Element xml) throws CacheException {
         JeevesJCS xmlCache = JeevesJCS.getInstance(XMLRESOLVER_JCS);
+
         Element cachedXml = (Element) xmlCache.get(uri.toLowerCase());
         if (cachedXml == null) {
             Log.info(Log.XML_RESOLVER, "Caching " + uri.toLowerCase());
-            xmlCache.put(uri.toLowerCase(), xml);
+            xmlCache.put(uri.toLowerCase(),xml);
         }
     }
 

@@ -31,7 +31,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jeeves.server.UserSession;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.jcs.access.exception.ObjectNotFoundException;
+import org.apache.commons.jcs3.access.exception.ObjectNotFoundException;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;

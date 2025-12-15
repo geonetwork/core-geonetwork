@@ -22,7 +22,7 @@
  */
 package org.fao.geonet.kernel.security.openidconnect;
 
-import org.apache.jcs.access.exception.InvalidArgumentException;
+import org.apache.commons.jcs3.access.exception.InvalidArgumentException;
 import org.fao.geonet.domain.Profile;
 import org.fao.geonet.kernel.security.SecurityProviderConfiguration;
 import org.springframework.util.StringUtils;

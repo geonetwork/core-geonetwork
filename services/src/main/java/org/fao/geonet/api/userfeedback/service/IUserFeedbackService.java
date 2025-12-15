@@ -22,7 +22,7 @@
  */
 package org.fao.geonet.api.userfeedback.service;
 
-import org.apache.jcs.access.exception.ObjectNotFoundException;
+import org.apache.commons.jcs3.access.exception.ObjectNotFoundException;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.domain.userfeedback.Rating;
 import org.fao.geonet.domain.userfeedback.UserFeedback;

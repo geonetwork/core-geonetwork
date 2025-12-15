@@ -605,6 +605,11 @@
         <version>${httpcomponents.version}</version>
       </dependency>
       <dependency>
+        <groupId>org.apache.httpcomponents.client5</groupId>
+        <artifactId>httpclient5</artifactId>
+        <version>5.4.4</version>
+      </dependency>
+      <dependency>
         <groupId>org.apache.httpcomponents</groupId>
         <artifactId>httpmime</artifactId>
         <version>${httpcomponents.version}</version>
@@ -640,9 +645,9 @@
         <version>1.2</version>
       </dependency>
       <dependency>
-        <groupId>org.apache.jcs</groupId>
-        <artifactId>jcs</artifactId>
-        <version>1.3</version> <!-- TODO check version -->
+          <groupId>org.apache.commons</groupId>
+          <artifactId>commons-jcs3-core</artifactId>
+          <version>3.2.1</version>
       </dependency>
       <!-- May be required to register connection unwrappers with
            geotools
@@ -1128,6 +1133,7 @@
         <artifactId>jakarta.servlet-api</artifactId>
         <version>5.0.0</version>
       </dependency>
+
       <dependency>
         <groupId>jakarta.annotation</groupId>
         <artifactId>jakarta.annotation-api</artifactId>

@@ -20,7 +20,7 @@
   <Loggers>
     <Logger name="org.springframework.aop.framework.CglibAopProxy" level="error"/>
     <Logger name="net.sf.ehcache.config.ConfigurationFactory" level="error"/>
-    <Logger name="org.apache.jcs.auxiliary" level="error"/>
+    <Logger name="org.apache.commons.jcs3.auxiliary" level="error"/>
     <Logger name="org.hibernate" level="error"/>
     <Logger name="org.hibernate.SQL" level="warn"/>
     <Logger name="org.fao.geonet.database" level="warn"/>

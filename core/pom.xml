@@ -234,8 +234,8 @@
     </dependency>
 
     <dependency>
-      <groupId>org.apache.jcs</groupId>
-      <artifactId>jcs</artifactId>
+        <groupId>org.apache.commons</groupId>
+        <artifactId>commons-jcs3-core</artifactId>
     </dependency>
 
     <dependency>

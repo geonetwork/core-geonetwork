@@ -36,11 +36,11 @@
   </listener>
 
   <!-- shut down java cache used for xlinks and spatial index -->
-  <listener>
+  <!--listener>
     <listener-class>
-      org.apache.jcs.utils.servlet.JCSServletContextListener
+      org.apache.commons.jcs3.utils.servlet.JCSServletContextListener
     </listener-class>
-  </listener>
+  </listener-->
 
   <servlet>
     <servlet-name>gn-servlet</servlet-name>

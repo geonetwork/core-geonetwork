@@ -46,7 +46,7 @@ import com.google.common.collect.ImmutableMap;
 import jakarta.json.spi.JsonProvider;
 import org.apache.camel.Exchange;
 import org.apache.camel.spring.SpringCamelContext;
-import org.apache.jcs.access.exception.InvalidArgumentException;
+import org.apache.commons.jcs3.access.exception.InvalidArgumentException;
 import org.fao.geonet.harvester.wfsfeatures.model.WFSHarvesterParameter;
 import org.fao.geonet.index.es.EsRestClient;
 import org.fao.geonet.kernel.search.EsSearchManager;

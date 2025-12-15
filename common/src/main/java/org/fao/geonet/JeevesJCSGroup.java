@@ -23,13 +23,12 @@
 
 package org.fao.geonet;
 
-import org.apache.commons.jcs3.access.CacheAccess;
+import org.apache.commons.jcs3.access.GroupCacheAccess;
 import org.apache.commons.jcs3.access.exception.CacheException;
 import org.apache.commons.jcs3.engine.behavior.ICompositeCacheAttributes;
 import org.apache.commons.jcs3.engine.control.CompositeCache;
 import org.apache.commons.jcs3.engine.control.CompositeCacheManager;
 import org.fao.geonet.utils.IO;
-import org.jdom.Element;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -37,24 +36,21 @@ import java.nio.file.Path;
 import java.util.Properties;
 
 /**
- * Cache of Object looked up by String.
+ * GroupCache of Object looked up by String.
  *
- * The CacheAccess is intended to store a class of objects, backed by generic type support.
+ * The GroupCacheAccess is intended to store a class of objects, backed by generic type support.
  * By changing to a cache of Object we are subverting this expectation in order to maintain the JCS
  * 1.x contact.
  *
+ * Makes use of CacheManager from {@link JeevesJCS#ensureCacheManager()}.
+ *
  * @author jeichar
  */
-public class JeevesJCS extends CacheAccess<String, Object> {
+public class JeevesJCSGroup extends GroupCacheAccess<String, Object> {
 
-    /**
-     * The manager returns cache instances shared by JeevesJCS and JeevesJCSGroup.
-     */
-    static CompositeCacheManager cacheMgr;
-    private static Path configFilename;
     private final String region;
 
-    protected JeevesJCS(CompositeCache cacheControl, String region)
+    protected JeevesJCSGroup(CompositeCache cacheControl, String region)
     throws CacheException {
         super(cacheControl);
         this.region = region;
@@ -70,11 +66,11 @@ public class JeevesJCS extends CacheAccess<String, Object> {
      * @param region Region that return GeonetworkJCS will provide access to objects
      * @return A GeonetworkJCS which provides access to a given region.
      */
-    public static JeevesJCS getInstance(String region)
+    public static JeevesJCSGroup getInstance(String region)
         throws CacheException {
-        ensureCacheManager();
+        JeevesJCS.ensureCacheManager();
 
-        return new JeevesJCS(cacheMgr.getCache(region), region);
+        return new JeevesJCSGroup(JeevesJCS.cacheMgr.getCache(region), region);
     }
 
     /**
@@ -84,57 +80,17 @@ public class JeevesJCS extends CacheAccess<String, Object> {
      * @param icca   CacheAttributes for region
      * @return A GeonetworkJCS which provides access to a given region.
      */
-    public static JeevesJCS getInstance(String region, ICompositeCacheAttributes icca)
+    public static JeevesJCSGroup getInstance(String region, ICompositeCacheAttributes icca)
         throws CacheException {
-        ensureCacheManager();
 
-        return new JeevesJCS(cacheMgr.getCache(region, icca), region);
-    }
+        JeevesJCS.ensureCacheManager();
 
-    /**
-     * Gets an instance of CompositeCacheManager and stores it in the cacheMgr class field, if it is
-     * not already set. Unlike the implementation in CacheAccess, the cache manager is a
-     * CompositeCacheManager. NOTE: This can will be moved up into GroupCacheAccess.
-     */
-    protected static synchronized void ensureCacheManager() {
-        if (cacheMgr == null) {
-            if (configFilename == null) {
-                cacheMgr = CompositeCacheManager.getInstance();
-            } else {
-                cacheMgr = CompositeCacheManager.getUnconfiguredInstance();
-
-                configure();
-            }
-        }
-    }
-
-
-    private static void configure() {
-
-        Properties props = new Properties();
-
-        try (Reader is = IO.newBufferedReader(configFilename, Constants.CHARSET)) {
-            props.load(is);
-        } catch (IOException e) {
-            throw new IllegalStateException("Unable to load cache configuration from: " + configFilename, e);
-        }
-
-        cacheMgr.configure(props);
-
-    }
-
-    /**
-     * Set the filename that the cache manager will be initialized with. Only matters before the
-     * instance is initialized. <p>
-     */
-    public static void setConfigFilename(Path configFilename) {
-        cacheMgr = null;
-        JeevesJCS.configFilename = configFilename;
+        return new JeevesJCSGroup(JeevesJCS.cacheMgr.getCache(region, icca), region);
     }
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("JeevesJCS{");
+        final StringBuilder sb = new StringBuilder("JeevesJCSGroup{");
         sb.append("region='").append(region).append('\'');
         sb.append('}');
         return sb.toString();

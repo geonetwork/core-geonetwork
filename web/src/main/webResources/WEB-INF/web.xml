@@ -41,11 +41,11 @@
   </listener>
 
   <!-- shut down java cache used for xlinks and spatial index -->
-  <listener>
+  <!--listener>
     <listener-class>
-      org.apache.jcs.utils.servlet.JCSServletContextListener
+      org.apache.commons.jcs3.utils.servlet.JCSServletContextListener
     </listener-class>
-  </listener>
+  </listener-->
   <filter>
     <filter-name>characterEncodingFilter</filter-name>
     <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
@@ -60,7 +60,7 @@
   </filter-mapping>
 
   <listener>
-    <listener-class>org.jasig.cas.client.session.SingleSignOutHttpSessionListener</listener-class>
+    <!--listener-class>org.jasig.cas.client.session.SingleSignOutHttpSessionListener</listener-class-->
   </listener>
 
   <!-- listeter used to send signout event. Used by keycloak-->

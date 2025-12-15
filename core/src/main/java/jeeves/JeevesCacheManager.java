@@ -24,6 +24,7 @@
 package jeeves;
 
 import org.fao.geonet.JeevesJCS;
+import org.jdom.Element;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -34,6 +35,9 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public class JeevesCacheManager {
 
+    /**
+     * Cache region to store
+     */
     private static final String TEN_SECOND_KEY = "JeevesCacheManagerTenSeconds";
     private static final String ETERNAL_KEY = "JeevesCacheManagerETERNAL";
 

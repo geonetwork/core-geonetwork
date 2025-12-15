@@ -28,7 +28,7 @@ import com.google.common.io.ByteStreams;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.apache.commons.io.FileUtils;
-import org.apache.jcs.access.exception.InvalidArgumentException;
+import org.apache.commons.jcs3.access.exception.InvalidArgumentException;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.Constants;
 import org.fao.geonet.ZipUtil;
