@@ -20,7 +20,7 @@
 
   <amq:broker useJmx="false" persistent="false" useShutdownHook="false">
     <amq:transportConnectors>
-      <amq:transportConnector uri="\${jms.url}" />
+      <amq:transportConnector uri="tcp://localhost:61616" />
     </amq:transportConnectors>
   </amq:broker>
   <!--  Embedded ActiveMQ Broker
@@ -57,13 +57,13 @@
         class="org.apache.activemq.camel.component.ActiveMQComponent" destroy-method="shutdown">
     <property name="connectionFactory">
       <bean class="org.apache.activemq.ActiveMQConnectionFactory">
-        <property name="brokerURL" value="\${jms.url}"/>
+        <property name="brokerURL" value="tcp://localhost:61616"/>
       </bean>
     </property>
   </bean>
 
   <bean id="jmsMessager"
         class="org.geonetwork.messaging.JMSMessager">
-    <property name="jmsUrl" value="\${jms.url}"/>
+    <property name="jmsUrl" value="tcp://localhost:61616"/>
   </bean>
 </beans>
