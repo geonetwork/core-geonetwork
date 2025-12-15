@@ -137,21 +137,22 @@ geonetwork.https.url=https://ec.europa.eu:8443/geonetwork
     <property name="statelessTicketCache" ref="casStatelessTicketCache"/>
   </bean>
 
-  <bean id="casTicketValidator" class="org.jasig.cas.client.validation.Cas20ServiceTicketValidator">
+  <!-- bean id="casTicketValidator" class="org.jasig.cas.client.validation.Cas20ServiceTicketValidator"-->
     <!--    <bean id="casTicketValidator" class="org.jasig.cas.client.validation.Cas20ProxyTicketValidator">  -->
     <!-- Geonetwork class in start method will update the baseurl with the one in the settings table -->
     <!-- If baseurlTag is not set then the proxyCallbackURL will not be updated -->
-    <constructor-arg index="0" value="${cas.ticket.validator.url}"/>
+    <!--constructor-arg index="0" value="${cas.ticket.validator.url}"/-->
     <!--        <property name="proxyCallbackUrl" value="${geonetwork.https.url}/cas-security-proxyreceptor" /> -->
     <!--        <property name="proxyGrantingTicketStorage" ref="pgtStorage" /> -->
     <!--        <property name="acceptAnyProxy" value="true"/> -->
-  </bean>
+  <!--/bean-->
   <!-- TODO implement custom storage, maybe that stores in database -->
   <!--    <bean id="pgtStorage" class="org.jasig.cas.client.proxy.ProxyGrantingTicketStorageImpl"/> -->
 
 
   <!-- This filter handles a Single Logout Request from the CAS Server -->
-  <bean id="singleLogoutFilter" class="org.jasig.cas.client.session.SingleSignOutFilter"/>
+  <!-- bean id="singleLogoutFilter" class="org.jasig.cas.client.session.SingleSignOutFilter"/-->
+
   <!-- This filter redirects to the CAS Server to signal Single Logout should be performed -->
   <bean id="requestSingleLogoutFilter"
         class="org.springframework.security.web.authentication.logout.LogoutFilter">
