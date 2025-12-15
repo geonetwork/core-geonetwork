@@ -1662,7 +1662,7 @@
     <kb.url>http://localhost:${kb.port}</kb.url>
 
     <jms.url>tcp://localhost:61616</jms.url>
-    <activemq.version>5.7.0</activemq.version>
+    <activemq.version>6.1.7</activemq.version>
 
     <!-- Avoid to create any sessions for crawlers.
     Define the list of User-Agent to be considered as bot. -->

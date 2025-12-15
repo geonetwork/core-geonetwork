@@ -92,6 +92,7 @@
     </dependency>
 
 
+    <!--
     <dependency>
       <groupId>org.apache.activemq</groupId>
       <artifactId>activemq-core</artifactId>
@@ -106,6 +107,18 @@
       <groupId>org.apache.activemq</groupId>
       <artifactId>activemq-camel</artifactId>
       <version>${activemq.version}</version>
+    </dependency>
+    -->
+    <dependency>
+      <groupId>org.apache.activemq</groupId>
+      <artifactId>activemq-client</artifactId>
+      <version>${activemq.version}</version>
+    </dependency>
+    <dependency>
+        <groupId>org.apache.camel</groupId>
+        <artifactId>camel-activemq6</artifactId>
+        <version>${camel.version}</version>
+        <!-- use the same version as your Camel core version -->
     </dependency>
     <dependency>
       <groupId>org.apache.xbean</groupId>
