@@ -139,6 +139,12 @@
     <dependency>
       <groupId>org.springdoc</groupId>
       <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+      <exclusions>
+         <exclusion>
+           <groupId>org.springframework.boot</groupId>
+           <artifactId>*</artifactId>
+         </exclusion>
+      </exclusions>
     </dependency>
     <!-- Z39.50, SRU  stuff (ie: Spring, CQL, ...)  -->
     <dependency>
