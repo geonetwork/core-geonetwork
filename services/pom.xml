@@ -210,11 +210,7 @@
     </dependency>
     <dependency>
       <groupId>org.springdoc</groupId>
-      <artifactId>springdoc-openapi-webmvc-core</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.springdoc</groupId>
-      <artifactId>springdoc-openapi-common</artifactId>
+      <artifactId>springdoc-openapi-starter-webmvc-api</artifactId>
     </dependency>
     <dependency>
       <groupId>org.apache.tika</groupId>

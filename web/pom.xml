@@ -138,7 +138,7 @@
     </dependency>
     <dependency>
       <groupId>org.springdoc</groupId>
-      <artifactId>springdoc-openapi-webmvc-core</artifactId>
+      <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
     </dependency>
     <!-- Z39.50, SRU  stuff (ie: Spring, CQL, ...)  -->
     <dependency>
@@ -525,13 +525,13 @@
       <scope>test</scope>
     </dependency>
 
-    <dependency>
+    <!--dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>gn-camel-periodic-producer</artifactId>
       <version>${project.version}</version>
-    </dependency>
+    </dependency-->
 
-    <dependency>
+    <!--dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>gn-wfsfeature-harvester</artifactId>
       <version>${project.version}</version>
@@ -553,7 +553,7 @@
           <artifactId>jsp-api-2.1</artifactId>
         </exclusion>
       </exclusions>
-    </dependency>
+    </dependency-->
     <dependency>
       <groupId>org.hibernate</groupId>
       <artifactId>hibernate-validator</artifactId>

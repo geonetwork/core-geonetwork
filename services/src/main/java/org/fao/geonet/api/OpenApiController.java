@@ -30,11 +30,16 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.models.OpenAPI;
 
 import org.springdoc.api.AbstractOpenApiResource;
-import org.springdoc.core.*;
 import org.springdoc.core.customizers.SpringDocCustomizers;
+import org.springdoc.core.properties.SpringDocConfigProperties;
 import org.springdoc.core.providers.ActuatorProvider;
 import org.springdoc.core.providers.SecurityOAuth2Provider;
+import org.springdoc.core.providers.SpringDocProviders;
 import org.springdoc.core.providers.SpringWebProvider;
+import org.springdoc.core.service.AbstractRequestService;
+import org.springdoc.core.service.GenericResponseService;
+import org.springdoc.core.service.OpenAPIService;
+import org.springdoc.core.service.OperationService;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -53,7 +58,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
-import static org.springdoc.core.Constants.*;
+import static org.springdoc.core.utils.Constants.*;
 import static org.springframework.util.AntPathMatcher.DEFAULT_PATH_SEPARATOR;
 
 /**
@@ -212,7 +217,10 @@ public class OpenApiController extends AbstractOpenApiResource {
     protected void calculateServerUrl(HttpServletRequest request, Locale locale) {
         super.initOpenAPIBuilder(locale);
         String calculatedUrl = this.getServerUrl(request);
-        this.openAPIService.setServerBaseUrl(calculatedUrl);
+        // NOTE: Spring 6 can no longer be configured dynamicly using setServiceBaseURL
+        // Much like with this class javadoc use of a property file configuration is recommended.
+        // If this must be dynamic supply our own OpenApiCustomiser from scratch
+        // this.openAPIService.setServerBaseUrl(calculatedUrl);
     }
 
     private String getServerUrl(HttpServletRequest request) {

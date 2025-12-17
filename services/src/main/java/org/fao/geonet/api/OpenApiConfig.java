@@ -36,7 +36,7 @@ import io.swagger.v3.oas.models.servers.ServerVariable;
 import io.swagger.v3.oas.models.servers.ServerVariables;
 import org.fao.geonet.NodeInfo;
 import org.fao.geonet.kernel.setting.SettingManager;
-import org.springdoc.core.SpringDocUtils;
+import org.springdoc.core.utils.SpringDocUtils;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cache.concurrent.ConcurrentMapCacheManager;

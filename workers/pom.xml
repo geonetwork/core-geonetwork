@@ -127,7 +127,7 @@
     </dependency>
     <dependency>
       <groupId>org.springdoc</groupId>
-      <artifactId>springdoc-openapi-common</artifactId>
+      <artifactId>springdoc-openapi-starter-webmvc-api</artifactId>
     </dependency>
 
     <!--Geotools-->
