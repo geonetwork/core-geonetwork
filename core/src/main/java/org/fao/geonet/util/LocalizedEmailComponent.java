@@ -369,7 +369,7 @@ public class LocalizedEmailComponent {
         // Add the uuid placeholder to the link in the specified format
         UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder
             .fromHttpUrl(settingManager.getNodeURL())
-            .pathSegment("api", "records", replaceLinksWithHtmlFormat ? "{{index:uuid}}" : "'{{'index:uuid'}}'");
+            .pathSegment("api", "records", replaceLinksWithHtmlFormat ? "{{index:uuid}}" : "'{{index:uuid}}'");
 
         // When building the record URL, the formatter is passed as the `recordViewFormatter` query parameter
         // because the API expects that parameter name to decide which formatter to use when displaying the record.
