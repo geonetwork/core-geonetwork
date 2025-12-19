@@ -768,6 +768,11 @@
                 class: "fa-file-zip-o"
               },
               {
+                label: "exportMEF-excludeAttachments",
+                url: "/formatters/zip?withRelated=false&includeAttachments=false",
+                class: "fa-file-zip-o"
+              },
+              {
                 label: "exportPDF",
                 url: "/formatters/xsl-view?output=pdf&language=${lang}",
                 class: "fa-file-pdf-o"

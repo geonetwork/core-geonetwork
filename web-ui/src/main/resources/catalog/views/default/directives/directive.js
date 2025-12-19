@@ -155,6 +155,16 @@
             scope.workFlowApps =
               gnGlobalSettings.gnCfg.mods.workflowHelper.workflowAssistApps;
             scope.iso2Lang = gnLangs.getIso2Lang(gnLangs.getCurrent());
+
+            var totalSize = 0;
+            if (scope.md && Array.isArray(scope.md.filestore)) {
+              totalSize = scope.md.filestore.reduce(function (sum, attachment) {
+                return sum + attachment.size;
+              }, 0);
+            }
+
+            scope.attachmentsExceedExportLimit =
+              totalSize > gnConfig["metadata.zipExport.maxSizeOfResources"] * 1024 * 1024;
           });
 
           scope.status = undefined;
