@@ -187,6 +187,13 @@ public class CatalogApi {
             defaultValue = "false")
         boolean withRelated,
         @Parameter(
+            description = "Whether to include file attachments in the exported MEF package."
+        )
+        @RequestParam(
+            required = false,
+            defaultValue = "true")
+        boolean includeAttachments,
+        @Parameter(
             description = "Resolve XLinks in the records.",
             required = false)
         @RequestParam(
@@ -234,6 +241,11 @@ public class CatalogApi {
         if (version == MEFLib.Version.V1) {
             throw new IllegalArgumentException("MEF version 1 only support one record. Use the /records/{uuid}/formatters/zip to retrieve that format");
         } else {
+
+            if (includeAttachments) {
+                MEFLib.checkAttachmentsUnderSizeLimit(uuidList, approved);
+            }
+
             Set<String> allowedUuid = new HashSet<>();
             for (String uuid : uuidList) {
                 try {
@@ -278,7 +290,7 @@ public class CatalogApi {
                 file = MEFLib.doMEF2Export(context, allowedUuid, format.toString(),
                     false, stylePath,
                     withXLinksResolved, withXLinkAttribute,
-                    false, addSchemaLocation, approved);
+                    false, addSchemaLocation, approved, includeAttachments);
 
                 DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HHmmss");
                 String fileName = String.format("%s-%s.zip",

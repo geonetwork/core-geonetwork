@@ -76,7 +76,7 @@ class MEFExporter {
         }
         Pair<AbstractMetadata, String> recordAndMetadata = MEFLib.retrieveMetadata(context, id, resolveXlink,
                 removeXlinkAttribute, addSchemaLocation);
-        return export(context, approved, format, skipUUID, recordAndMetadata);
+        return export(context, approved, format, skipUUID, recordAndMetadata, true/** TODO: includeAttachments */);
     }
 
     /**
@@ -88,17 +88,32 @@ class MEFExporter {
      *
      * @param id     unique ID of the metadata record to export.
      * @param format {@link org.fao.geonet.kernel.mef.MEFLib.Format}
+     * @param includeAttachments If true, include attachments according to the export format and permissions.
+     *                        If false, no attachments are included.
      * @return the path of the generated MEF file.
      */
     public static Path doExport(ServiceContext context, Integer id, Format format, boolean skipUUID,
-                                boolean resolveXlink, boolean removeXlinkAttribute, boolean addSchemaLocation) throws Exception {
+                                boolean resolveXlink, boolean removeXlinkAttribute, boolean addSchemaLocation, boolean includeAttachments) throws Exception {
         Pair<AbstractMetadata, String> recordAndMetadata = MEFLib.retrieveMetadata(context, id, resolveXlink,
             removeXlinkAttribute, addSchemaLocation);
-        return export(context, true/* TODO: not sure*/, format, skipUUID, recordAndMetadata);
+        return export(context, true/* TODO: not sure*/, format, skipUUID, recordAndMetadata, includeAttachments);
     }
 
+    /**
+     * Create a metadata folder according to MEF {@link Version} 1 specification and
+     * return file path.
+     * <p>
+     * Template or subtemplate could not be exported in MEF format. Use XML export
+     * instead.
+     *
+     * @param recordAndMetadata Pair of AbstractMetadata and its XML representation.
+     * @param format            {@link org.fao.geonet.kernel.mef.MEFLib.Format}
+     * @param includeAttachments If true, include attachments according to the export format and permissions.
+     *                        If false, no attachments are included.
+     * @return the path of the generated MEF file.
+     */
     private static Path export(ServiceContext context, boolean approved, Format format, boolean skipUUID,
-                               Pair<AbstractMetadata, String> recordAndMetadata)
+                               Pair<AbstractMetadata, String> recordAndMetadata, boolean includeAttachments)
         throws Exception {
         AbstractMetadata record = recordAndMetadata.one();
         String xmlDocumentAsString = recordAndMetadata.two();
@@ -116,32 +131,33 @@ class MEFExporter {
             byte[] binData = xmlDocumentAsString.getBytes(Constants.ENCODING);
             Files.write(zipFs.getPath(FILE_METADATA), binData);
 
-            final List<MetadataResource> publicResources = store.getResources(context, record.getUuid(), MetadataResourceVisibility.PUBLIC, null,
-                    approved);
-            final List<MetadataResource> privateResources = store.getResources(context, record.getUuid(), MetadataResourceVisibility.PRIVATE, null,
-                    approved);
+            // Add the resources if the size limit and specified format allow it
+            List<MetadataResource> publicResources = List.of();
+            List<MetadataResource> privateResources = List.of();
+            if (includeAttachments) {
+                if (format == Format.PARTIAL || format == Format.FULL) {
+                    publicResources = store.getResources(context, record.getUuid(), MetadataResourceVisibility.PUBLIC, null, approved);
+                    StoreUtils.extract(context, record.getUuid(), publicResources, zipFs.getPath("public"), approved);
+                }
+
+                if (format == Format.FULL) {
+                    privateResources = store.getResources(context, record.getUuid(), MetadataResourceVisibility.PRIVATE, null, approved);
+
+                    try {
+                        Lib.resource.checkPrivilege(context, "" + record.getId(), ReservedOperation.download);
+                        StoreUtils.extract(context, record.getUuid(), privateResources, zipFs.getPath("private"), approved);
+                    } catch (Exception e) {
+                        // Current user could not download private data
+                        Log.warning(Geonet.MEF,
+                            "Error encountered while trying to import private resources of MEF file. MEF ID: " + record.getId(), e);
+                    }
+                }
+            }
 
             // --- save info file
             binData = MEFLib.buildInfoFile(context, record, format, publicResources, privateResources,
                 skipUUID).getBytes(Constants.ENCODING);
             Files.write(zipFs.getPath(FILE_INFO), binData);
-
-
-            if (format == Format.PARTIAL || format == Format.FULL && !publicResources.isEmpty()) {
-                StoreUtils.extract(context, record.getUuid(), publicResources, zipFs.getPath("public"), approved);
-            }
-
-            if (format == Format.FULL && !privateResources.isEmpty()) {
-                try {
-                    Lib.resource.checkPrivilege(context, "" + record.getId(), ReservedOperation.download);
-                    StoreUtils.extract(context, record.getUuid(), privateResources, zipFs.getPath("private"), approved);
-                } catch (Exception e) {
-                    // Current user could not download private data
-                    Log.warning(Geonet.MEF,
-                        "Error encountered while trying to import private resources of MEF file. MEF ID: " + record.getId(), e);
-
-                }
-            }
         } catch (Exception e) {
             FileUtils.deleteQuietly(file.toFile());
             throw e;

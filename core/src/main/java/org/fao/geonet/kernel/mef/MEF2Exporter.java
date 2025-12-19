@@ -65,12 +65,14 @@ class MEF2Exporter {
      *
      * @param uuids  List of records to export.
      * @param format {@link Format} to export.
+     * @param includeAttachments If true, include attachments according to the export format and permissions.
+     *                        If false, no attachments are included.
      * @return MEF2 File
      */
     public static Path doExport(ServiceContext context, Set<String> uuids,
                                 Format format, boolean skipUUID, Path stylePath, boolean resolveXlink,
-                                boolean removeXlinkAttribute, boolean skipError, boolean addSchemaLocation) throws Exception {
-        return doExport(context, uuids, format, skipUUID, stylePath, resolveXlink, removeXlinkAttribute, skipError, addSchemaLocation, false);
+                                boolean removeXlinkAttribute, boolean skipError, boolean addSchemaLocation, boolean includeAttachments) throws Exception {
+        return doExport(context, uuids, format, skipUUID, stylePath, resolveXlink, removeXlinkAttribute, skipError, addSchemaLocation, false, includeAttachments);
     }
 
     /**
@@ -78,12 +80,14 @@ class MEF2Exporter {
      *
      * @param uuids  List of records to export.
      * @param format {@link Format} to export.
+     * @param includeAttachments If true, include attachments according to the export format and permissions.
+     *                        If false, no attachments are included.
      * @return MEF2 File
      */
     public static Path doExport(ServiceContext context, Set<String> uuids,
                                 Format format, boolean skipUUID, Path stylePath, boolean resolveXlink,
                                 boolean removeXlinkAttribute, boolean skipError, boolean addSchemaLocation,
-                                boolean approved) throws Exception {
+                                boolean approved, boolean includeAttachments) throws Exception {
 
         Path file = Files.createTempFile("mef-", ".mef");
         EsSearchManager searchManager = context.getBean(EsSearchManager.class);
@@ -180,7 +184,7 @@ class MEF2Exporter {
                 )));
 
                 createMetadataFolder(context, md, zipFs, skipUUID, stylePath,
-                    format, resolveXlink, removeXlinkAttribute, addSchemaLocation);
+                    format, resolveXlink, removeXlinkAttribute, addSchemaLocation, includeAttachments);
             }
             Files.write(zipFs.getPath("/index.csv"), csvBuilder.toString().getBytes(Constants.CHARSET));
             Files.write(zipFs.getPath("/index.html"), Xml.getString(html).getBytes(Constants.CHARSET));
@@ -211,12 +215,14 @@ class MEF2Exporter {
      * files are included in MEF file. Export relevant information according to format parameter.
      *
      * @param zipFs Zip file to add new record
+     * @param includeAttachments If true, include attachments according to the export format and permissions.
+     *                        If false, no attachments are included.
      */
     private static void createMetadataFolder(ServiceContext context,
                                              AbstractMetadata metadata, FileSystem zipFs, boolean skipUUID,
                                              Path stylePath, Format format, boolean resolveXlink,
                                              boolean removeXlinkAttribute,
-                                             boolean addSchemaLocation) throws Exception {
+                                             boolean addSchemaLocation, boolean includeAttachments) throws Exception {
 
         final Path metadataRootDir = zipFs.getPath(metadata.getUuid());
         Files.createDirectories(metadataRootDir);
@@ -250,24 +256,29 @@ class MEF2Exporter {
         }
 
         final Store store = context.getBean("resourceStore", Store.class);
-        final List<MetadataResource> publicResources = store.getResources(context, metadata.getUuid(),
-            MetadataResourceVisibility.PUBLIC, null, true);
 
-        // --- save thumbnails and maps
+        // Add the resources if the size limit and specified format allow it
+        List<MetadataResource> publicResources = List.of();
+        List<MetadataResource> privateResources = List.of();
+        if (includeAttachments) {
+            if (format == Format.PARTIAL || format == Format.FULL) {
+                // The following line was previously outside the if block, causing public resources to be
+                // always be included in the info file, even when format was SIMPLE. This seems like a bug
+                // as the info file should reflect the actual contents of the MEF package.
+                publicResources = store.getResources(context, metadata.getUuid(),
+                    MetadataResourceVisibility.PUBLIC, null, true);
+                StoreUtils.extract(context, metadata.getUuid(), publicResources, metadataRootDir.resolve("public"), true);
+            }
 
-        if (format == Format.PARTIAL || format == Format.FULL) {
-            StoreUtils.extract(context, metadata.getUuid(), publicResources, metadataRootDir.resolve("public"), true);
-        }
-
-        List<MetadataResource> privateResources = null;
-        if (format == Format.FULL) {
-            try {
-                Lib.resource.checkPrivilege(context, id, ReservedOperation.download);
-                privateResources = store.getResources(context, metadata.getUuid(),
-                    MetadataResourceVisibility.PRIVATE, null, true);
-                StoreUtils.extract(context, metadata.getUuid(), privateResources, metadataRootDir.resolve("private"), true);
-            } catch (Exception e) {
-                // Current user could not download private data
+            if (format == Format.FULL) {
+                try {
+                    Lib.resource.checkPrivilege(context, id, ReservedOperation.download);
+                    privateResources = store.getResources(context, metadata.getUuid(),
+                        MetadataResourceVisibility.PRIVATE, null, true);
+                    StoreUtils.extract(context, metadata.getUuid(), privateResources, metadataRootDir.resolve("private"), true);
+                } catch (Exception e) {
+                    // Current user could not download private data
+                }
             }
         }
 

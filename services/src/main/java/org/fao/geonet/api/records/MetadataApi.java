@@ -499,6 +499,13 @@ public class MetadataApi {
             defaultValue = "true")
         boolean withRelated,
         @Parameter(
+            description = "Whether to include file attachments in the exported MEF package."
+        )
+        @RequestParam(
+            required = false,
+            defaultValue = "true")
+        boolean includeAttachments,
+        @Parameter(
             description = "Resolve XLinks in the records.",
             required = false)
         @RequestParam(
@@ -531,6 +538,11 @@ public class MetadataApi {
             Log.debug(API.LOG_MODULE_NAME, e.getMessage(), e);
             throw new NotAllowedException(ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW);
         }
+        // Check attachment size limit early if attachments are requested
+        if (includeAttachments) {
+            MEFLib.checkAttachmentsUnderSizeLimit(Set.of(metadataUuid), approved);
+        }
+
         Path stylePath = dataDirectory.getWebappDir().resolve(Geonet.Path.SCHEMAS);
         Path file = null;
         ServiceContext serviceContext = ApiUtils.createServiceContext(request);
@@ -551,7 +563,7 @@ public class MetadataApi {
 
                 file = MEFLib.doExport(
                     serviceContext, id, format.toString(),
-                    skipUUID, withXLinksResolved, withXLinkAttribute, addSchemaLocation
+                    skipUUID, withXLinksResolved, withXLinkAttribute, addSchemaLocation, includeAttachments
                 );
                 response.setContentType(MEFLib.Version.Constants.MEF_V1_ACCEPT_TYPE);
             } else {
@@ -577,7 +589,7 @@ public class MetadataApi {
                 Log.info(Geonet.MEF, "Building MEF2 file with " + uuidsToExport.size()
                     + " records.");
 
-                file = MEFLib.doMEF2Export(serviceContext, uuidsToExport, format.toString(), false, stylePath, withXLinksResolved, withXLinkAttribute, false, addSchemaLocation, approved);
+                file = MEFLib.doMEF2Export(serviceContext, uuidsToExport, format.toString(), false, stylePath, withXLinksResolved, withXLinkAttribute, false, addSchemaLocation, approved, includeAttachments);
 
                 response.setContentType(MEFLib.Version.Constants.MEF_V2_ACCEPT_TYPE);
             }
