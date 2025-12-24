@@ -86,7 +86,8 @@ public class GrantViewMdAuthorityFilter extends GenericFilterBean {
             return;
         }
         String hashParam = servletRequest.getParameter("hash");
-        if (hashParam == null || hashParam.length() < AnonymousAccessLink.getRandomHashLength() + 1) {
+        boolean paramCannotBeSplitIntoHashAndUuid = hashParam == null || hashParam.length() < AnonymousAccessLink.getRandomHashLength() + 1;
+        if (paramCannotBeSplitIntoHashAndUuid) {
             filterChain.doFilter(servletRequest, servletResponse);
             return;
         }
