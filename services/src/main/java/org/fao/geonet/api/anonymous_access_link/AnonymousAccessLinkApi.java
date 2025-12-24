@@ -21,7 +21,7 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
-package org.fao.geonet.api.anonymousAccessLink;
+package org.fao.geonet.api.anonymous_access_link;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.fao.geonet.api.exception.ResourceAlreadyExistException;
