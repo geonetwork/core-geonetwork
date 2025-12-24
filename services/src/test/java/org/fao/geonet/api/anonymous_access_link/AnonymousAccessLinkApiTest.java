@@ -21,7 +21,7 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
-package org.fao.geonet.api.anonymousAccessLink;
+package org.fao.geonet.api.anonymous_access_link;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jeeves.server.context.ServiceContext;
