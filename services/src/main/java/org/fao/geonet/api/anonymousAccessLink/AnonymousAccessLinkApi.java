@@ -57,10 +57,10 @@ public class AnonymousAccessLinkApi {
     @PreAuthorize("hasAuthority('Administrator')")
     @ResponseBody
     @io.swagger.v3.oas.annotations.Operation(
-            summary = "Create anonymous access link",
-            description = "")
+            summary = "Create an anonymous access link to a metadata",
+            description = "Given a metadata UUID, creates an anonymous access link.")
     public AnonymousAccessLinkDto createAnonymousAccessLink(
-            @io.swagger.v3.oas.annotations.Parameter(description = "md uuid", required = true) @PathVariable(value = "uuid") String uuid) throws ResourceAlreadyExistException {
+            @io.swagger.v3.oas.annotations.Parameter(description = "metadata uuid", required = true) @PathVariable(value = "uuid") String uuid) throws ResourceAlreadyExistException {
         return anonymousAccessLinkService.createAnonymousAccessLink(uuid);
     }
 
@@ -74,7 +74,7 @@ public class AnonymousAccessLinkApi {
     @io.swagger.v3.oas.annotations.Operation(
             summary = "get one anonymous access link or empty",
             description = "")
-    public AnonymousAccessLinkDto getAnonymousAccessLink(@io.swagger.v3.oas.annotations.Parameter(description = "md uuid", required = true) @PathVariable(value = "uuid") String uuid) {
+    public AnonymousAccessLinkDto getAnonymousAccessLink(@io.swagger.v3.oas.annotations.Parameter(description = "metadata uuid", required = true) @PathVariable(value = "uuid") String uuid) {
         return  anonymousAccessLinkService.getAnonymousAccessLink(uuid);
     }
 
@@ -85,7 +85,7 @@ public class AnonymousAccessLinkApi {
     @PreAuthorize("hasAuthority('Administrator')")
     @ResponseBody
     @io.swagger.v3.oas.annotations.Operation(
-            summary = "List all anonymous access links with md infos",
+            summary = "List all anonymous access links with metadata infos",
             description = "")
     public List<AnonymousAccessLinkDto> getAnonymousAccessLinksWithMdInfos() throws IOException {
         return anonymousAccessLinkService.getAllAnonymousAccessLinksWithMdInfos();
