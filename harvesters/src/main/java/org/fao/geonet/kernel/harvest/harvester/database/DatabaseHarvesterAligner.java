@@ -236,7 +236,7 @@ class DatabaseHarvesterAligner extends BaseAligner<DatabaseHarvesterParams> impl
 
             switch (params.getOverrideUuid()) {
                 case OVERRIDE:
-                    updateMetadata(metadataElement, Integer.toString(metadataUtils.findOneByUuid(uuid).getId()), true);
+                    updateMetadata(metadataElement, metadataUtils.findOneByUuid(uuid), true);
                     log.debug(String.format("Overriding record with uuid %s", uuid));
                     result.updatedMetadata++;
                     break;
@@ -253,14 +253,15 @@ class DatabaseHarvesterAligner extends BaseAligner<DatabaseHarvesterParams> impl
             }
         } else {
             //record exists and belongs to this harvester
-            updateMetadata(metadataElement, id, false);
+            updateMetadata(metadataElement, metadataUtils.findOne(id), false);
             result.updatedMetadata++;
         }
 
         return id;
     }
 
-    private void updateMetadata(Element xml, String id, boolean force) throws Exception {
+    private void updateMetadata(Element xml, AbstractMetadata originalMetadata, boolean force) throws Exception {
+        String id = Integer.toString(originalMetadata.getId());
         log.info("Updating metadata with id: " + id);
 
         //
@@ -288,6 +289,11 @@ class DatabaseHarvesterAligner extends BaseAligner<DatabaseHarvesterParams> impl
             String newSchema = metadataSchemaUtils.autodetectSchema(xml);
             updateSchema = (newSchema != null) && !newSchema.equals(schema);
             schema = newSchema;
+        } else {
+            if (!originalMetadata.getDataInfo().getSchemaId().equals(schema)) {
+                log.warning("  - Detected schema '" + schema + "' is different from the one of the metadata in the catalog '" + originalMetadata.getDataInfo().getSchemaId() + "'. Using the detected one.");
+                updateSchema = true;
+            }
         }
 
         applyBatchEdits(uuid, xml, schema, params.getBatchEdits(), context, log);
