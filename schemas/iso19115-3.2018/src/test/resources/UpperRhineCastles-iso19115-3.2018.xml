@@ -664,7 +664,7 @@ This project is co-financed by the EU as part of the Interreg VI project "Châte
           </lan:characterEncoding>
         </lan:PT_Locale>
       </mri:defaultLocale>
-      <mri:defaultLocale>
+      <mri:otherLocale>
         <lan:PT_Locale>
           <lan:language>
             <lan:LanguageCode codeList="https://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#LanguageCode" codeListValue="ger">ger</lan:LanguageCode>
@@ -673,7 +673,7 @@ This project is co-financed by the EU as part of the Interreg VI project "Châte
             <lan:MD_CharacterSetCode codeList="https://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#MD_CharacterSetCode" codeListValue="utf8">utf8</lan:MD_CharacterSetCode>
           </lan:characterEncoding>
         </lan:PT_Locale>
-      </mri:defaultLocale>
+      </mri:otherLocale>
     </mri:MD_DataIdentification>
   </mdb:identificationInfo>
   <mdb:distributionInfo>
