@@ -301,7 +301,7 @@ public class FormatterApiTest extends AbstractServiceIntegrationTest {
     }
 
     private void loadFile(String key, Element sampleMetadataXml) throws Exception {
-        AbstractMetadata metadata = injectMetadataInDbDoNotRefreshHeader(sampleMetadataXml, context);
+        AbstractMetadata metadata = injectMetadataInDb(sampleMetadataXml, context);
         testDataUuidBySchema.put(key, metadata.getUuid());
     }
 }
