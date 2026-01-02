@@ -40,6 +40,7 @@ import java.lang.reflect.Field;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.util.Map;
+import java.util.TimeZone;
 
 import static org.fao.geonet.schema.TestSupport.getResource;
 
@@ -48,6 +49,7 @@ public class IndexationTest {
 	private static Field resolverMapField;
 
 	private static final boolean GENERATE_EXPECTED_FILE = false;
+	private static TimeZone timeZoneToReset;
 
 	@BeforeClass
 	public static void initOasis() throws NoSuchFieldException, IllegalAccessException, URISyntaxException {
@@ -65,6 +67,17 @@ public class IndexationTest {
 	@AfterClass
 	public static void clearOasis() throws IllegalAccessException {
 		((Map<?,?>) resolverMapField.get(null)).clear();
+	}
+
+	@BeforeClass
+	public static void setTimeZoneUtc() {
+		timeZoneToReset = TimeZone.getDefault();
+		TimeZone.setDefault(TimeZone.getTimeZone("GMT"));
+	}
+
+	@BeforeClass
+	public static void resetTimeZone() {
+		TimeZone.setDefault(timeZoneToReset);
 	}
 
 	@Test

@@ -53,20 +53,20 @@
   <revisionDateForResource>2024-07-15</revisionDateForResource>
   <revisionYearForResource>2024</revisionYearForResource>
   <revisionMonthForResource>2024-07</revisionMonthForResource>
-  <resourceDate type="object">{"type": "creation", "date": "2024-02-14T23:00:00.000Z"}</resourceDate>
-  <resourceDate type="object">{"type": "publication", "date": "2024-03-13T23:00:00.000Z"}</resourceDate>
-  <resourceDate type="object">{"type": "revision", "date": "2024-07-14T22:00:00.000Z"}</resourceDate>
+  <resourceDate type="object">{"type": "creation", "date": "2024-02-15T00:00:00.000Z"}</resourceDate>
+  <resourceDate type="object">{"type": "publication", "date": "2024-03-14T00:00:00.000Z"}</resourceDate>
+  <resourceDate type="object">{"type": "revision", "date": "2024-07-15T00:00:00.000Z"}</resourceDate>
   <resourceTemporalDateRange type="object">{
-                  "gte": "2024-02-14T23:00:00.000Z",
-                  "lte": "2024-02-14T23:00:00.000Z"
+                  "gte": "2024-02-15T00:00:00.000Z",
+                  "lte": "2024-02-15T00:00:00.000Z"
                   }</resourceTemporalDateRange>
   <resourceTemporalDateRange type="object">{
-                  "gte": "2024-03-13T23:00:00.000Z",
-                  "lte": "2024-03-13T23:00:00.000Z"
+                  "gte": "2024-03-14T00:00:00.000Z",
+                  "lte": "2024-03-14T00:00:00.000Z"
                   }</resourceTemporalDateRange>
   <resourceTemporalDateRange type="object">{
-                  "gte": "2024-07-14T22:00:00.000Z",
-                  "lte": "2024-07-14T22:00:00.000Z"
+                  "gte": "2024-07-15T00:00:00.000Z",
+                  "lte": "2024-07-15T00:00:00.000Z"
                   }</resourceTemporalDateRange>
   <resourceAbstractObject type="object">{"default":"Pr\u00E9sentation des ch\u00E2teaux forts du Rhin Sup\u00E9rieur selon des donn\u00E9es d\u2019accessibilit\u00E9 d\u2019itin\u00E9rance, d\u2019int\u00E9r\u00EAt touristique, de billetterie ou encore d\u2019offre de restauration. \nCette action b\u00E9n\u00E9ficie d\u2019un cofinancement de l\u2019UE dans le cadre du projet Interreg VI \u00AB Ch\u00E2teaux rh\u00E9nans \u2013 Burgen am Oberrhein \u00BB.\n\nSite web du projet \"Ch\u00E2teaux rh\u00E9nans\" : www.chateaux-rhenans.eu\/fr", "langfre":"Pr\u00E9sentation des ch\u00E2teaux forts du Rhin Sup\u00E9rieur selon des donn\u00E9es d\u2019accessibilit\u00E9 d\u2019itin\u00E9rance, d\u2019int\u00E9r\u00EAt touristique, de billetterie ou encore d\u2019offre de restauration. \nCette action b\u00E9n\u00E9ficie d\u2019un cofinancement de l\u2019UE dans le cadre du projet Interreg VI \u00AB Ch\u00E2teaux rh\u00E9nans \u2013 Burgen am Oberrhein \u00BB.\n\nSite web du projet \"Ch\u00E2teaux rh\u00E9nans\" : www.chateaux-rhenans.eu\/fr", "langger":"Vorstellung der Burgen am Oberrhein anhand von Daten zur Zug\u00E4nglichkeit der Wanderwege, zum touristischen Interesse, zum Ticketverkauf oder auch zum Gastronomieangebot. \nDiese Aktion wird von der EU im Rahmen des Interreg VI-Projekts \"Rheinische Burgen - Burgen am Oberrhein\" kofinanziert.\n\nWebsite des Projekts \"Burgen am Oberrhein\" : www.chateaux-rhenans.eu\/de", "langeng":"Presentation of the fortified castles of the Upper Rhine according to data on accessibility, itinerancy, tourist interest, ticketing and catering facilities. \nThis project is co-financed by the EU as part of the Interreg VI project \"Ch\u00E2teaux rh\u00E9nans - Burgen am Oberrhein\".\n\n\"Ch\u00E2teaux rh\u00E9nans \u2013 Burgen am Oberrhein\" project website: www.chateaux-rhenans.eu"}</resourceAbstractObject>
   <cl_resourceCharacterSet type="object">{"key":"utf8","default":"lan:MD_CharacterSetCode--utf8--fre","langfre":"lan:MD_CharacterSetCode--utf8--fre","langger":"lan:MD_CharacterSetCode--utf8--ger","langeng":"lan:MD_CharacterSetCode--utf8--eng","langfre":"lan:MD_CharacterSetCode--utf8--fre","link":"https:\/\/standards.iso.org\/iso\/19115\/resources\/Codelists\/cat\/codelists.xml#MD_CharacterSetCode","text":"utf8"}</cl_resourceCharacterSet>
@@ -274,15 +274,15 @@
   <MD_LegalConstraintsOtherConstraintsObject type="object">{"default":"Pas d'autre limitation", "langfre":"Pas d'autre limitation", "langger":"Keine andere Einschr\u00E4nkung", "langeng":"No other limitation"}</MD_LegalConstraintsOtherConstraintsObject>
   <licenseObject type="object">{"default":"Pas d'autre limitation", "langfre":"Pas d'autre limitation", "langger":"Keine andere Einschr\u00E4nkung", "langeng":"No other limitation"}</licenseObject>
   <resourceTemporalDateRange type="object">{
-                  "gte": "2023-12-14T23:00:00.000Z"
+                  "gte": "2023-12-15T00:00:00.000Z"
                   
-                    ,"lte": "2024-02-14T23:00:00.000Z"
+                    ,"lte": "2024-02-15T00:00:00.000Z"
                   
                   }</resourceTemporalDateRange>
   <resourceTemporalExtentDateRange type="object">{
-                  "gte": "2023-12-14T23:00:00.000Z"
+                  "gte": "2023-12-15T00:00:00.000Z"
                   
-                    ,"lte": "2024-02-14T23:00:00.000Z"
+                    ,"lte": "2024-02-15T00:00:00.000Z"
                   
                 }</resourceTemporalExtentDateRange>
   <resourceTemporalExtentDetails type="object">{
