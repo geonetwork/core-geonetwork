@@ -116,6 +116,7 @@
             
             }</overview>
   <resourceLanguage>fre</resourceLanguage>
+  <resourceLanguage>ger</resourceLanguage>
   <tag type="object">[
       {
       "default":"Rhin Sup\u00E9rieur", "langfre":"Rhin Sup\u00E9rieur", "langger":"Oberrhein", "langeng":"Upper Rhine"
