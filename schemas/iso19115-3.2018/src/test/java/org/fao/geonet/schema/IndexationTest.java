@@ -47,7 +47,6 @@ import static org.fao.geonet.schema.TestSupport.getResource;
 public class IndexationTest {
 
 	private static Field resolverMapField;
-
 	private static final boolean GENERATE_EXPECTED_FILE = false;
 	private static TimeZone timeZoneToReset;
 
