@@ -570,6 +570,8 @@
     "recordsStatistics": "Metadatenstatistiken",
     "recordsType": "Art der Metadatensätze",
     "refreshHarvester": "Harvester aktualisieren",
+    "reindexHarvesterRecords": "Reindexieren von <strong>{{records}}</strong> Datensätzen",
+    "reindexHarvesterRecordsHelp": "Reindexiert alle Datensätze eines Harvesters.",
     "reindexRecords": "Reindexieren {{records}} verknüpfter Datensätze",
     "reindexRecords-help": "Nach dem Aktualisieren von Schlagwörtern und wenn Datensätze XLinks verwenden, sollten Datensätze, die diesen Thesaurus verwenden, neu indiziert werden (aufgrund des XLinks-Cache-Systems).",
     "related": "Verknüpft",

@@ -528,6 +528,25 @@
             }
           );
       };
+      $scope.reindexHarvesterRecord = function () {
+        return $http
+          .get(
+            "admin.harvester.reindex?_content_type=json&id=" +
+              $scope.harvesterSelected["@id"]
+          )
+          .then(
+            function (response) {
+              $scope.harvesterSelected = {};
+              $scope.harvesterUpdated = false;
+              $scope.harvesterNew = false;
+              $scope.$parent.loadHarvesters();
+            },
+            function (response) {
+              console.log(response.data);
+            }
+          );
+      };
+
       $scope.assignHarvestedRecordToLocalNode = function () {
         $http
           .post(
