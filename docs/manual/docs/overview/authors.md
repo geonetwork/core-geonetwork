@@ -109,13 +109,14 @@ Reference:
 
 ## Thanks
 
-We would like to thank prior contributors, committers, and leadership team for their role in making GeoNetwork a success:
+We would like to thank prior leadership for their role in making GeoNetwork a success:
 
 * Andrea Carboni
 * Antonio Cerciello
 * Jo Cook
 * Jesse Eichar
 * Michel Gabriel
+* Jody Garnett
 * Florent Gravin
 * Craig Jones
 * Pierre Mauduit
