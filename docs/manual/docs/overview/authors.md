@@ -14,7 +14,7 @@ This dedication is reflected in community trust, and a Leadership role with oppe
 
 * [David Blasby](https://github.com/davidblasby): [Active Maintainer](https://github.com/geonetwork/core-geonetwork/pulls?q=is%3Apr+is%3Aclosed+reviewed-by%3Adavidblasby)
 * [Jose García](https://github.com/josegar74): [Active Maintainer](https://github.com/geonetwork/core-geonetwork/pulls?q=is%3Apr+is%3Aclosed+reviewed-by%3Ajosegar74)
-* [Jody Garnett](https://github.com/jodygarnett): [Active Maintainer](https://github.com/geonetwork/core-geonetwork/pulls?q=is%3Apr+is%3Aclosed+reviewed-by%3Ajodygarnett)
+* [Olivia Guyot](https://github.com/jahow): [Active Maintainer](https://github.com/geonetwork/core-geonetwork/pulls?q=is%3Apr+is%3Aclosed+reviewed-by%3Ajahow)
 * [François Prunayre](https://github.com/fxprunayre): [Active Maintainer](https://github.com/geonetwork/core-geonetwork/pulls?q=is%3Apr+is%3Aclosed++reviewed-by%3Afxprunayre)
 * [Juan Luis Rodríguez Ponce](https://github.com/juanluisrp): [Active Maintainer](https://github.com/geonetwork/core-geonetwork/pulls?q=is%3Apr+is%3Aclosed+reviewed-by%3Ajuanluisrp)
 
@@ -32,23 +32,30 @@ Chair:
     
     Using GitHub API for reviewers in the last 6 months, avoiding double counting, and sorting the results: [maintainers.sh](maintainers.sh){:download}
     ```
-    Reviews since 2025-01-01
-     65 josegar74
-     29 fxprunayre
-     15 jodygarnett
-     15 ianwallen
-     12 davidblasby
-     11 juanluisrp
-      7 tylerjmchugh
-      6 wangf1122
-      6 joachimnielandt
-      5 jahow
-      3 xiechangning20
-      3 PascalLike
-      3 github-advanced-security[bot]
-      2 Guillaume-d-o
-      1 sebr72
-      1 cmangeat
+    Reviews since 2025-07-01
+      43 josegar74
+      23 juanluisrp
+      23 fxprunayre
+      21 jahow
+      20 davidblasby
+      18 ianwallen
+      15 tylerjmchugh
+      10 PascalLike
+      10 jodygarnett
+       3 xiechangning20
+       3 github-advanced-security[bot]
+       3 cmangeat
+       2 sebr72
+       2 joachimnielandt
+       2 Guillaume-d-o
+       2 GeoSander
+       1 ticheler
+       1 Rosspetcsiro
+       1 RobineSavert
+       1 pmauduit
+       1 LHBruneton-C2C
+       1 fvanderbiest
+       1 f-necas
     ```
 
     We aim for an effective leadership team around 5 individuals.
