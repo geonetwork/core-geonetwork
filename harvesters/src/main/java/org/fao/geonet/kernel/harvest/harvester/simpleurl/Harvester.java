@@ -221,17 +221,19 @@ class Harvester implements IHarvester<HarvestResult> {
         JsonNode nodes = jsonObj.at(params.loopElement);
         log.debug(String.format("%d records found in JSON response.", nodes.size()));
 
+        SimpleUrlPathMode mode = params.recordIdPathMode;
+        if (mode == null || mode == SimpleUrlPathMode.AUTO) {
+            // auto or unset means we choose JSONPOINTER
+            mode = SimpleUrlPathMode.JSONPOINTER;
+        }
+
         Function<JsonNode, String> uuidExtractor;
-        try {
+        if (mode == SimpleUrlPathMode.JSONPOINTER) {
             uuidExtractor = buildJsonPointerExtractor();
-        } catch (IllegalArgumentException pointerException) {
-            try {
-                uuidExtractor = buildJsonPathExtractor();
-            } catch (JsonPathException pathException) {
-                RuntimeException exception = new RuntimeException("Failed to compile recordIdPath as either JsonPointer or JsonPath!", pathException);
-                exception.addSuppressed(pointerException);
-                throw exception;
-            }
+        } else if (mode == SimpleUrlPathMode.JSONPATH) {
+            uuidExtractor = buildJsonPathExtractor();
+        } else {
+            throw new IllegalStateException("Unsupported recordIdPathMode " + mode + " for JSON input!");
         }
 
         for (JsonNode jsonRecord : nodes) {
@@ -284,6 +286,18 @@ class Harvester implements IHarvester<HarvestResult> {
             log.error(String.format("Failed to find records in RDF graph. Error is: %s",
                 e.getMessage()));
         }
+
+        SimpleUrlPathMode mode = params.recordIdPathMode;
+        if (mode == null || mode == SimpleUrlPathMode.AUTO) {
+            // auto or unset means we choose XPATH
+            mode = SimpleUrlPathMode.XPATH;
+        }
+
+        if (mode != SimpleUrlPathMode.XPATH) {
+            // XML input -> only accept XML
+            throw new IllegalStateException("Unsupported recordIdPathMode " + mode + " for RDFXML input!");
+        }
+
         if (rdfNodes != null) {
             log.debug(String.format("%d records found in RDFXML response.", rdfNodes.size()));
 
@@ -310,6 +324,17 @@ class Harvester implements IHarvester<HarvestResult> {
         } catch (JDOMException e) {
             log.error(String.format("Failed to query records using %s. Error is: %s",
                 params.loopElement, e.getMessage()));
+        }
+
+        SimpleUrlPathMode mode = params.recordIdPathMode;
+        if (mode == null || mode == SimpleUrlPathMode.AUTO) {
+            // auto or unset means we choose XPATH
+            mode = SimpleUrlPathMode.XPATH;
+        }
+
+        if (mode != SimpleUrlPathMode.XPATH) {
+            // XML input -> only accept XML
+            throw new IllegalStateException("Unsupported recordIdPathMode " + mode + " for XML input!");
         }
 
         if (xmlNodes != null) {
