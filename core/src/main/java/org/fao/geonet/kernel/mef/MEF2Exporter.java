@@ -257,7 +257,7 @@ class MEF2Exporter {
 
         final Store store = context.getBean("resourceStore", Store.class);
 
-        // Add the resources if the size limit and specified format allow it
+        // Add the resources if the specified format allows it
         List<MetadataResource> publicResources = List.of();
         List<MetadataResource> privateResources = List.of();
         if (includeAttachments) {

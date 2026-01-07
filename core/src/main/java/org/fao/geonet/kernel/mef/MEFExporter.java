@@ -131,7 +131,7 @@ class MEFExporter {
             byte[] binData = xmlDocumentAsString.getBytes(Constants.ENCODING);
             Files.write(zipFs.getPath(FILE_METADATA), binData);
 
-            // Add the resources if the size limit and specified format allow it
+            // Add the resources if the specified format allows it
             List<MetadataResource> publicResources = List.of();
             List<MetadataResource> privateResources = List.of();
             if (includeAttachments) {
