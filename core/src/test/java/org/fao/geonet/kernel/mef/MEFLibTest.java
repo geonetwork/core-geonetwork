@@ -1,24 +1,27 @@
 package org.fao.geonet.kernel.mef;
 
 
+import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.exception.AttachmentsExportLimitExceededException;
 import org.fao.geonet.kernel.search.EsSearchManager;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.junit.Test;
-import org.mockito.ArgumentCaptor;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
+import org.springframework.context.ConfigurableApplicationContext;
 
 import java.util.*;
 
-import static junit.framework.Assert.assertEquals;
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
 public class MEFLibTest {
 
-private static final long ATTACHMENTS_SIZE_LIMIT_BYTES = 1000L;
+    private static final long ATTACHMENTS_SIZE_LIMIT_BYTES = 1000L;
+
+    private static final SettingManager settingManagerMock = mock(SettingManager.class);
+    private static final EsSearchManager searchManagerMock = mock(EsSearchManager.class);
 
     @Test
     public void checkAttachmentsUnderSizeLimit_shouldDoNothing_whenAttachmentsAreUnderSizeLimit() throws AttachmentsExportLimitExceededException {
@@ -50,7 +53,7 @@ private static final long ATTACHMENTS_SIZE_LIMIT_BYTES = 1000L;
                 .thenReturn(true);
 
             AttachmentsExportLimitExceededException exception = assertThrows(AttachmentsExportLimitExceededException.class, () ->
-                MEFLib.checkAttachmentsUnderSizeLimit(Set.of(UUID.randomUUID().toString()), false)
+                MEFLib.checkAttachmentsUnderSizeLimit(Set.of(UUID.randomUUID().toString(), UUID.randomUUID().toString()), false)
             );
 
             assertEquals("exception.attachmentsExportLimitExceededException.batch.description", exception.getDescriptionKey());
@@ -60,10 +63,17 @@ private static final long ATTACHMENTS_SIZE_LIMIT_BYTES = 1000L;
     @Test
     public void attachmentsExceedExportLimit_shouldCall_attachmentsExceedExportLimit_withCorrectParameters() {
         Set<String> recordUuids = Set.of(UUID.randomUUID().toString(), UUID.randomUUID().toString());
+        ConfigurableApplicationContext applicationContextMock = mock(ConfigurableApplicationContext.class);
 
+        try (MockedStatic<ApplicationContextHolder> applicationContextHolderMock = mockStatic(ApplicationContextHolder.class, Mockito.CALLS_REAL_METHODS);
+                MockedStatic<MEFLib> mefLibMock = mockStatic(MEFLib.class, Mockito.CALLS_REAL_METHODS)) {
 
-        try (MockedStatic<MEFLib> mefLibMock = mockStatic(MEFLib.class, Mockito.CALLS_REAL_METHODS)) {
-            mefLibMock.when(() -> MEFLib.attachmentsExceedExportLimit(anySet(), anyBoolean()))
+            applicationContextHolderMock.when(ApplicationContextHolder::get).thenReturn(applicationContextMock);
+
+            when(applicationContextMock.getBean(SettingManager.class)).thenReturn(settingManagerMock);
+            when(applicationContextMock.getBean(EsSearchManager.class)).thenReturn(searchManagerMock);
+
+            mefLibMock.when(() -> MEFLib.attachmentsExceedExportLimit(anySet(), anyBoolean(), any(SettingManager.class), any(EsSearchManager.class)))
                 .thenReturn(false);
 
             MEFLib.attachmentsExceedExportLimit(recordUuids, true);
@@ -78,7 +88,7 @@ private static final long ATTACHMENTS_SIZE_LIMIT_BYTES = 1000L;
             mefLibMock.when(() -> MEFLib.getMaxAttachmentSizeInBytes(any(SettingManager.class)))
                 .thenReturn(null);
 
-            boolean result = MEFLib.attachmentsExceedExportLimit(Set.of(UUID.randomUUID().toString()), false);
+            boolean result = MEFLib.attachmentsExceedExportLimit(Set.of(UUID.randomUUID().toString()), false, settingManagerMock, searchManagerMock);
 
             assertFalse(result);
         }
@@ -108,7 +118,7 @@ private static final long ATTACHMENTS_SIZE_LIMIT_BYTES = 1000L;
             mefLibMock.when(() -> MEFLib.getMaxAttachmentSizeInBytes(any(SettingManager.class)))
                 .thenReturn(ATTACHMENTS_SIZE_LIMIT_BYTES);
 
-            assertFalse(MEFLib.attachmentsExceedExportLimit(recordsAndResources.keySet(), false));
+            assertFalse(MEFLib.attachmentsExceedExportLimit(recordsAndResources.keySet(), false, settingManagerMock, searchManagerMock));
         }
     }
 
@@ -136,7 +146,7 @@ private static final long ATTACHMENTS_SIZE_LIMIT_BYTES = 1000L;
             mefLibMock.when(() -> MEFLib.getMaxAttachmentSizeInBytes(any(SettingManager.class)))
                 .thenReturn(ATTACHMENTS_SIZE_LIMIT_BYTES);
 
-            assertTrue(MEFLib.attachmentsExceedExportLimit(recordsAndResources.keySet(), false));
+            assertTrue(MEFLib.attachmentsExceedExportLimit(recordsAndResources.keySet(), false, settingManagerMock, searchManagerMock));
         }
     }
 
