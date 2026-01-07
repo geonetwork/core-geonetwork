@@ -63,7 +63,7 @@ class MEFExporter {
      */
     public static Path doExport(ServiceContext context, String uuid, Format format, boolean skipUUID,
                                 boolean resolveXlink, boolean removeXlinkAttribute, boolean addSchemaLocation,
-                                boolean approved) throws Exception {
+                                boolean approved, boolean includeAttachments) throws Exception {
 
         //Search by ID, not by UUID
         final int id;
@@ -76,7 +76,7 @@ class MEFExporter {
         }
         Pair<AbstractMetadata, String> recordAndMetadata = MEFLib.retrieveMetadata(context, id, resolveXlink,
                 removeXlinkAttribute, addSchemaLocation);
-        return export(context, approved, format, skipUUID, recordAndMetadata, true/** TODO: includeAttachments */);
+        return export(context, approved, format, skipUUID, recordAndMetadata, includeAttachments);
     }
 
     /**

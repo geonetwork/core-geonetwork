@@ -262,9 +262,7 @@ class MEF2Exporter {
         List<MetadataResource> privateResources = List.of();
         if (includeAttachments) {
             if (format == Format.PARTIAL || format == Format.FULL) {
-                // The following line was previously outside the if block, causing public resources to be
-                // always be included in the info file, even when format was SIMPLE. This seems like a bug
-                // as the info file should reflect the actual contents of the MEF package.
+                // Include public resources only for PARTIAL and FULL formats so the info file matches the MEF contents.
                 publicResources = store.getResources(context, metadata.getUuid(),
                     MetadataResourceVisibility.PUBLIC, null, true);
                 StoreUtils.extract(context, metadata.getUuid(), publicResources, metadataRootDir.resolve("public"), true);

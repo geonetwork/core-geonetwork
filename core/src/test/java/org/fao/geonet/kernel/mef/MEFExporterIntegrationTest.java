@@ -48,7 +48,7 @@ public class MEFExporterIntegrationTest extends AbstractCoreIntegrationTest {
         importMetadata.getMefFilesToLoad().add("mef2-example-2md.zip");
         importMetadata.invoke();
 
-        Path path = MEFExporter.doExport(context, "da165110-88fd-11da-a88f-000d939bc5d8", MEFLib.Format.FULL, false, false, false, false, true);
+        Path path = MEFExporter.doExport(context, "da165110-88fd-11da-a88f-000d939bc5d8", MEFLib.Format.FULL, false, false, false, false, true, true);
 
         try (FileSystem zipFs = ZipUtil.openZipFs(path)) {
             assertTrue(Files.exists(zipFs.getPath("metadata.xml")));
@@ -59,7 +59,7 @@ public class MEFExporterIntegrationTest extends AbstractCoreIntegrationTest {
         } finally {
             Files.delete(path);
         }
-        path = MEFExporter.doExport(context, "0e1943d6-64e8-4430-827c-b465c3e9e55c", MEFLib.Format.FULL, false, false, false, false, true);
+        path = MEFExporter.doExport(context, "0e1943d6-64e8-4430-827c-b465c3e9e55c", MEFLib.Format.FULL, false, false, false, false, true, true);
 
         try (FileSystem zipFs = ZipUtil.openZipFs(path)) {
             assertTrue(Files.exists(zipFs.getPath("metadata.xml")));

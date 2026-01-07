@@ -116,9 +116,9 @@ public class MEFLib {
     public static Path doExport(ServiceContext context, String uuid,
                                 String format, boolean skipUUID, boolean resolveXlink,
                                 boolean removeXlinkAttribute, boolean addSchemaLocation,
-                                boolean approved) throws Exception {
+                                boolean approved, boolean includeAttachments) throws Exception {
         return MEFExporter.doExport(context, uuid, Format.parse(format),
-            skipUUID, resolveXlink, removeXlinkAttribute, addSchemaLocation, approved);
+            skipUUID, resolveXlink, removeXlinkAttribute, addSchemaLocation, approved, includeAttachments);
     }
 
     // --------------------------------------------------------------------------
@@ -541,7 +541,7 @@ public class MEFLib {
 
         Path file = null;
         try {
-            file = doExport(context, metadata.getUuid(), "full", false, true, false, false, true);
+            file = doExport(context, metadata.getUuid(), "full", false, true, false, false, true, true);
             Files.createDirectories(outDir);
             try (InputStream is = IO.newInputStream(file);
                  OutputStream os = Files.newOutputStream(outFile)) {
@@ -749,8 +749,7 @@ public class MEFLib {
      *
      * @param metadataUuids The UUIDs of the metadata records.
      * @param approved      Whether to use the approved version of the metadata records.
-     * @return `true` if the total size of attachments is within the limit or if no limit is configured,
-     *         `false` otherwise.
+     * @return `true` if the total size of attachments exceeds the configured limit, `false` otherwise.
      */
     public static boolean attachmentsExceedExportLimit(Set<String> metadataUuids, boolean approved) {
         SettingManager settingManager = ApplicationContextHolder.get().getBean(SettingManager.class);
@@ -769,8 +768,7 @@ public class MEFLib {
      * @param approved         Whether to use the approved version of the metadata records.
      * @param settingManager  The SettingManager instance for accessing configuration settings.
      * @param searchManager   The EsSearchManager instance for accessing Elasticsearch resources.
-     * @return {@code true} if the total size of resources is within the limit or no limit is configured,
-     *         {@code false} if the total size exceeds the configured limit.
+     * @return {@code true} if the total size of resources exceeds the configured limit, {@code false} otherwise.
      */
     static boolean attachmentsExceedExportLimit(Set<String> metadataUuids,
                                               boolean approved,
@@ -794,7 +792,7 @@ public class MEFLib {
     /**
      * Retrieves the maximum attachment size limit configured in the system settings.
      *
-     * Attempts to read the {@code METADATA_ZIPEXPORT_MAXSIZEOFRESOURCES} setting from the SettingManager
+     * Attempts to read the {@code METADATA_ZIPEXPORT_ATTACHMENTSSIZELIMIT} setting from the SettingManager
      * and converts it from MB to bytes. If the setting value is invalid (non-numeric) or not configured,
      * a warning is logged and null is returned to indicate no limit should be applied.
      *
@@ -805,10 +803,10 @@ public class MEFLib {
     static Long getMaxAttachmentSizeInBytes(SettingManager settingManager) {
         Long maxSizeLimitInMb;
         try {
-            maxSizeLimitInMb = settingManager.getValueAsLong(Settings.METADATA_ZIPEXPORT_MAXSIZEOFRESOURCES);
+            maxSizeLimitInMb = settingManager.getValueAsLong(Settings.METADATA_ZIPEXPORT_ATTACHMENTSSIZELIMIT);
         } catch (NumberFormatException e) {
             Log.warning(Geonet.INDEX_ENGINE,
-                "Invalid value for setting \"" + Settings.METADATA_ZIPEXPORT_MAXSIZEOFRESOURCES + "\". " +
+                "Invalid value for setting \"" + Settings.METADATA_ZIPEXPORT_ATTACHMENTSSIZELIMIT + "\". " +
                     "No resource size limit will be applied.");
             return null;
         }
@@ -827,10 +825,9 @@ public class MEFLib {
      * filters out null values, converts the size values to long integers, and sums them up.
      * Non-numeric size values are treated as 0.
      *
-     * @param resources A list of resource maps, each containing at least a "size" key with a numeric value.
+     * @param resources A list of resource property maps, each containing at least a "size" key with a numeric value.
      * @return The total size in bytes of all resources in the list.
      */
-    // TODO: Consistent naming - resource vs attachment
     static long getTotalSizeOfAllAttachments(List<Map<String, Object>> resources) {
         if (resources == null || resources.isEmpty()) {
             return 0L;

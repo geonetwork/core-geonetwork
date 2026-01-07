@@ -4,7 +4,7 @@ INSERT INTO Settings (name, value, datatype, position, internal) SELECT distinct
 
 INSERT INTO Settings (name, value, datatype, position, internal) SELECT distinct 'system/metadata/edit/supportedFileMimetypes', 'image/png|image/gif|image/jpeg|text/plain|application/xml|application/pdf', 0, 9107, 'n' from settings WHERE NOT EXISTS (SELECT name FROM Settings WHERE name = 'system/metadata/edit/supportedFileMimetypes');
 
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('metadata/zipExport/maxSizeOfResources', '' , 1, 12700, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal) SELECT distinct 'metadata/zipExport/attachmentsSizeLimit', NULL, 1, 12700, 'n' from settings WHERE NOT EXISTS (SELECT name FROM Settings WHERE name = 'metadata/zipExport/attachmentsSizeLimit');
 
 UPDATE groups SET type='RecordPrivilege' WHERE id<2 AND type IS NULL;
 UPDATE groups SET type='Workspace' WHERE id>=2 AND type IS NULL;

@@ -327,8 +327,9 @@ public class SettingManager {
      *
      * @param key The setting key
      * @return The long value of the setting or null
+     * @throws NumberFormatException if the value cannot be converted to a Long
      */
-    public Long getValueAsLong(String key) {
+    public Long getValueAsLong(String key) throws NumberFormatException {
         String value = getValue(key);
         if (value == null || value.trim().isEmpty())
             return null;

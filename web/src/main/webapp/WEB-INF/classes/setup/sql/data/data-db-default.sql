@@ -732,7 +732,7 @@ INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('metada
 
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('metadata/csvReport/csvName', 'metadata_{datetime}.csv', 0, 12607, 'n');
 
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('metadata/zipExport/maxSizeOfResources', '' , 1, 12700, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('metadata/zipExport/attachmentsSizeLimit', NULL , 1, 12700, 'n');
 
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/ui/defaultView', 'default', 0, 10100, 'n');
 

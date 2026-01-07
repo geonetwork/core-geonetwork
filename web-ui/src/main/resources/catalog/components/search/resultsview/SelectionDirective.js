@@ -120,10 +120,12 @@
               angular.isString(gnConfig["system.inspire.remotevalidation.url"]);
             scope.validationNode = gnConfig["system.inspire.remotevalidation.nodeid"];
             scope.isMdWorkflowEnable = gnConfig["metadata.workflow.enable"];
-            scope.maxSizeOfResources = gnConfig["metadata.zipExport.maxSizeOfResources"];
+            scope.attachmentsSizeLimit = Number(
+              gnConfig["metadata.zipExport.attachmentsSizeLimit"]
+            );
           });
 
-          var setAttachmentsExceedExportLimit = function (selectedUuids) {
+          var updateAttachmentsExceedExportLimit = function (selectedUuids) {
             if (!selectedUuids.length) {
               // No selection implies total size is 0
               scope.attachmentsExceedExportLimit = false;
@@ -163,11 +165,20 @@
                   totalAttachmentsSize =
                     resp.data.aggregations.total_filestore_bytes.value || 0;
                 }
-                scope.attachmentsExceedExportLimit =
-                  totalAttachmentsSize > scope.maxSizeOfResources * 1024 * 1024;
+                if (
+                  scope.attachmentsSizeLimit > 0 &&
+                  isFinite(scope.attachmentsSizeLimit)
+                ) {
+                  var attachmentsSizeLimitBytes =
+                    scope.attachmentsSizeLimit * 1024 * 1024;
+                  scope.attachmentsExceedExportLimit =
+                    totalAttachmentsSize > attachmentsSizeLimitBytes;
+                } else {
+                  scope.attachmentsExceedExportLimit = false;
+                }
               })
               .catch(function (err) {
-                console.error("Failed to update attachments size:", err);
+                console.error("Failed to update total attachments size:", err);
                 scope.attachmentsExceedExportLimit = false;
               });
           };
@@ -183,7 +194,7 @@
             gnSearchManagerService
               .selected(scope.searchResults.selectionBucket)
               .then(function (response) {
-                setAttachmentsExceedExportLimit(
+                updateAttachmentsExceedExportLimit(
                   angular.isArray(response.data) ? response.data : []
                 );
               });
@@ -195,7 +206,7 @@
             .then(function (response) {
               if (angular.isArray(response.data)) {
                 scope.searchResults.selectedCount = response.data.length;
-                setAttachmentsExceedExportLimit(
+                updateAttachmentsExceedExportLimit(
                   angular.isArray(response.data) ? response.data : []
                 );
               }

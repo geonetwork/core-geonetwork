@@ -155,16 +155,28 @@
             scope.workFlowApps =
               gnGlobalSettings.gnCfg.mods.workflowHelper.workflowAssistApps;
             scope.iso2Lang = gnLangs.getIso2Lang(gnLangs.getCurrent());
+            scope.attachmentsSizeLimit = Number(
+              gnConfig["metadata.zipExport.attachmentsSizeLimit"]
+            );
 
-            var totalSize = 0;
+            var totalAttachmentsSize = 0;
             if (scope.md && Array.isArray(scope.md.filestore)) {
-              totalSize = scope.md.filestore.reduce(function (sum, attachment) {
+              totalAttachmentsSize = scope.md.filestore.reduce(function (
+                sum,
+                attachment
+              ) {
                 return sum + attachment.size;
-              }, 0);
+              },
+              0);
             }
 
-            scope.attachmentsExceedExportLimit =
-              totalSize > gnConfig["metadata.zipExport.maxSizeOfResources"] * 1024 * 1024;
+            if (scope.attachmentsSizeLimit > 0 && isFinite(scope.attachmentsSizeLimit)) {
+              var attachmentsSizeLimitBytes = scope.attachmentsSizeLimit * 1024 * 1024;
+              scope.attachmentsExceedExportLimit =
+                totalAttachmentsSize > attachmentsSizeLimitBytes;
+            } else {
+              scope.attachmentsExceedExportLimit = false;
+            }
           });
 
           scope.status = undefined;
