@@ -257,6 +257,14 @@ class MEF2Exporter {
 
         final Store store = context.getBean("resourceStore", Store.class);
 
+        // Get the paths to the public and private resources directories
+        Path publicResourcesPath = metadataRootDir.resolve("public");
+        Path privateResourcesPath = metadataRootDir.resolve("private");
+
+        // Create the resources directories
+        Files.createDirectories(publicResourcesPath);
+        Files.createDirectories(privateResourcesPath);
+
         // Add the resources if the specified format allows it
         List<MetadataResource> publicResources = List.of();
         List<MetadataResource> privateResources = List.of();
@@ -265,7 +273,7 @@ class MEF2Exporter {
                 // Include public resources only for PARTIAL and FULL formats so the info file matches the MEF contents.
                 publicResources = store.getResources(context, metadata.getUuid(),
                     MetadataResourceVisibility.PUBLIC, null, true);
-                StoreUtils.extract(context, metadata.getUuid(), publicResources, metadataRootDir.resolve("public"), true);
+                StoreUtils.extract(context, metadata.getUuid(), publicResources, publicResourcesPath, true);
             }
 
             if (format == Format.FULL) {
@@ -273,7 +281,7 @@ class MEF2Exporter {
                     Lib.resource.checkPrivilege(context, id, ReservedOperation.download);
                     privateResources = store.getResources(context, metadata.getUuid(),
                         MetadataResourceVisibility.PRIVATE, null, true);
-                    StoreUtils.extract(context, metadata.getUuid(), privateResources, metadataRootDir.resolve("private"), true);
+                    StoreUtils.extract(context, metadata.getUuid(), privateResources, privateResourcesPath, true);
                 } catch (Exception e) {
                     // Current user could not download private data
                 }

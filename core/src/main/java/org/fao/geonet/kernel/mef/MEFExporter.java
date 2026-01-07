@@ -131,13 +131,21 @@ class MEFExporter {
             byte[] binData = xmlDocumentAsString.getBytes(Constants.ENCODING);
             Files.write(zipFs.getPath(FILE_METADATA), binData);
 
+            // Get the paths to the public and private resources directories
+            Path publicResourcesPath = zipFs.getPath("public");
+            Path privateResourcesPath = zipFs.getPath("private");
+
+            // Create the resources directories
+            Files.createDirectories(publicResourcesPath);
+            Files.createDirectories(privateResourcesPath);
+
             // Add the resources if the specified format allows it
             List<MetadataResource> publicResources = List.of();
             List<MetadataResource> privateResources = List.of();
             if (includeAttachments) {
                 if (format == Format.PARTIAL || format == Format.FULL) {
                     publicResources = store.getResources(context, record.getUuid(), MetadataResourceVisibility.PUBLIC, null, approved);
-                    StoreUtils.extract(context, record.getUuid(), publicResources, zipFs.getPath("public"), approved);
+                    StoreUtils.extract(context, record.getUuid(), publicResources, publicResourcesPath, approved);
                 }
 
                 if (format == Format.FULL) {
@@ -145,7 +153,7 @@ class MEFExporter {
 
                     try {
                         Lib.resource.checkPrivilege(context, "" + record.getId(), ReservedOperation.download);
-                        StoreUtils.extract(context, record.getUuid(), privateResources, zipFs.getPath("private"), approved);
+                        StoreUtils.extract(context, record.getUuid(), privateResources, privateResourcesPath, approved);
                     } catch (Exception e) {
                         // Current user could not download private data
                         Log.warning(Geonet.MEF,
