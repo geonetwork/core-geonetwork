@@ -333,7 +333,7 @@ Allows to configure the user profile allowed to publish and un-publish metadata.
 
 Allows to configure the zip export of metadata records and their attachments.
 
--   **Total size of attachments allowed in zip export (MB)** Maximum total size of attachments allowed in zip export (in MB). If the total size of attachments linked to the metadata is above this value, the attachments won't be included in the export. Leave empty for no limit.
+-   **Total size of attachments allowed in zip export (MB)** Maximum total size of attachments allowed in zip export (in MB). If the total size of attachments linked to the selected metadata is above this value, exporting as zip (with attachments) is not allowed. Leave empty for no limit.
 
 ## Harvesting
 
