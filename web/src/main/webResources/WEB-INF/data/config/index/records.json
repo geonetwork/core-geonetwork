@@ -2390,6 +2390,40 @@
           }
         }
       },
+      "spatialRepresentationInfo": {
+        "type": "object",
+        "properties": {
+          "numberOfDimensions": {
+            "type": "integer"
+          },
+          "axesDimensionProperties": {
+            "type": "object",
+            "properties": {
+              "dimensionName": {
+                "type": "keyword"
+              },
+              "dimensionSize": {
+                "type": "integer"
+              },
+              "resolution": {
+                "type": "keyword"
+              }
+            }
+          },
+          "transformationParameterAvailability": {
+            "type": "boolean"
+          },
+          "controlPointAvailability": {
+            "type": "boolean"
+          },
+          "orientationParameterAvailability": {
+            "type": "boolean"
+          },
+          "cl_cellGeometry": {
+            "type": "object"
+          }
+        }
+      },
       "processingLevelCode": {
         "type": "keyword"
       }
