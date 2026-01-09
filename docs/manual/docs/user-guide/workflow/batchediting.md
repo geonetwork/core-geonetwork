@@ -182,3 +182,64 @@ Batch editing can also be applied using the API: ``doc/api/index.html#/records/b
     ```
 
 -   XML (N/A)
+
+
+### Add a metadata contact if not present
+
+Note the organisation name containing `'` use `"` to quote the name in the XPath.
+
+```json
+{
+  "field": "Add a metadata contact if not present",
+  "insertMode": "gn_add",
+  "xpath": "/",
+  "value": "<mdb:contact  xmlns:mdb=\"http://standards.iso.org/iso/19115/-3/mdb/2.0\" xmlns:cit=\"http://standards.iso.org/iso/19115/-3/cit/2.0\" xmlns:gco=\"http://standards.iso.org/iso/19115/-3/gco/1.0\">\n      <cit:CI_Responsibility>\n         <cit:role>\n            <cit:CI_RoleCode codeList=\"http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_RoleCode\"\n                             codeListValue=\"pointOfContact\"/>\n         </cit:role>\n         <cit:party>\n            <cit:CI_Organisation>\n               <cit:name>\n                  <gco:CharacterString>Direction de la Promotion de l'Energie Durable (SPW - SPW Aménagement du Territoire, Logement, Patrimoine et Energie - Département de l'Énergie et du Bâtiment durable)</gco:CharacterString>\n               </cit:name>\n               <cit:contactInfo>\n                  <cit:CI_Contact>\n                     <cit:address>\n                        <cit:CI_Address>\n                           <cit:electronicMailAddress>\n                              <gco:CharacterString>energie@spw.wallonie.be</gco:CharacterString>\n                           </cit:electronicMailAddress>\n                        </cit:CI_Address>\n                     </cit:address>\n                  </cit:CI_Contact>\n               </cit:contactInfo>\n            </cit:CI_Organisation>\n         </cit:party>\n      </cit:CI_Responsibility>\n  </mdb:contact>",
+  "isXpath": true,
+  "condition": "count(./mdb:contact[contains(*/cit:party/cit:CI_Organisation/cit:name/*/text(), \"Direction de la Promotion de l'Energie Durable (SPW - SPW Aménagement du Territoire, Logement, Patrimoine et Energie - Département de l'Énergie et du Bâtiment durable)\")]) = 0"}
+```
+
+### Replace resource constraints
+
+
+- Remove existing constraints
+
+```json
+{
+  "field": "Remove existing constraints",
+  "insertMode": "gn_delete",
+  "xpath": "/mdb:MD_Metadata/mdb:identificationInfo/*/mri:resourceConstraints",
+  "value": "",
+  "isXpath": true,
+  "condition": ""
+}
+```
+
+- Add a new access constraints statement
+
+```json
+{
+  "field": "Add a new access constraints statement",
+  "insertMode": "gn_add",
+  "xpath": "/mdb:MD_Metadata/mdb:identificationInfo/*",
+  "value": "<mri:resourceConstraints xmlns:mri=\"http://standards.iso.org/iso/19115/-3/mri/1.0\" xmlns:mco=\"http://standards.iso.org/iso/19115/-3/mco/1.0\" xmlns:gcx=\"http://standards.iso.org/iso/19115/-3/gcx/1.0\" xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n            <mco:MD_LegalConstraints >\n               <mco:accessConstraints>\n                  <mco:MD_RestrictionCode codeList=\"http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#MD_RestrictionCode\"\n                                          codeListValue=\"otherRestrictions\"/>\n               </mco:accessConstraints>\n               <mco:otherConstraints>\n                  <gcx:Anchor xlink:href=\"http://inspire.ec.europa.eu/metadata-codelist/LimitationsOnPublicAccess/noLimitations\">No limitations to public access</gcx:Anchor>\n               </mco:otherConstraints>\n            </mco:MD_LegalConstraints>\n         </mri:resourceConstraints>",
+  "isXpath": true,
+  "condition": ""
+}
+```
+
+
+- Add a new use constraints statement
+
+```json
+{
+  "field": "Add a new use constraints statement",
+  "insertMode": "gn_add",
+  "xpath": "/mdb:MD_Metadata/mdb:identificationInfo/*",
+  "value": "<mri:resourceConstraints xmlns:mri=\"http://standards.iso.org/iso/19115/-3/mri/1.0\" xmlns:mco=\"http://standards.iso.org/iso/19115/-3/mco/1.0\" xmlns:gcx=\"http://standards.iso.org/iso/19115/-3/gcx/1.0\" xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n            <mco:MD_LegalConstraints>\n               <mco:accessConstraints>\n                  <mco:MD_RestrictionCode codeList=\"http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#MD_RestrictionCode\"\n                                          codeListValue=\"unrestricted\"/>\n               </mco:accessConstraints>\n               <mco:useConstraints>\n                  <mco:MD_RestrictionCode codeList=\"http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#MD_RestrictionCode\"\n                                          codeListValue=\"otherRestrictions\"/>\n               </mco:useConstraints>\n               <mco:otherConstraints>\n                  <gcx:Anchor xlink:href=\"https://creativecommons.org/licenses/by/4.0/legalcode.fr\">Ces données sont disponibles sous licence CC-BY 4.0. Un résumé de cette licence est disponible à l'adresse https://creativecommons.org/licenses/by/4.0/deed.fr . Ce résumé ne se substitue pas à la licence complète. Crédits : Service public de Wallonie (2022)</gcx:Anchor>\n               </mco:otherConstraints>\n            </mco:MD_LegalConstraints>\n         </mri:resourceConstraints>",
+  "isXpath": true,
+  "condition": ""
+}
+```
+
+
+
