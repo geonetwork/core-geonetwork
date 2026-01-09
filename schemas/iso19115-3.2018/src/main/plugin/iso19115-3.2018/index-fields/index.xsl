@@ -1446,24 +1446,10 @@
       <imageDescription type="object">[
         <xsl:for-each select="$imageDescription">
           {
-          <xsl:for-each select="*:processingLevelCode|*:imageQualityCode|*[gco:Real castable as xs:double]|*[gco:Boolean != '']|*[*/@codeListValue != '']">
-            "<xsl:value-of select="local-name()"/>":
-            <xsl:choose>
-              <xsl:when test="gco:Real">
-                <xsl:value-of select="gco:Real"/>
-              </xsl:when>
-              <xsl:when test="gco:Boolean">
-                <xsl:value-of select="if (gco:Boolean = 'true') then 'true' else 'false'"/>
-              </xsl:when>
-              <xsl:when test="*/@codeListValue">
-                <xsl:copy-of select="gn-fn-index:add-codelist-field(
-                               local-name(), *, $allLanguages, true())"/>
-              </xsl:when>
-              <xsl:otherwise>
-                "<xsl:value-of select="*/*:code/*/text()"/>"
-              </xsl:otherwise>
-            </xsl:choose>
-            <xsl:if test="position() != last()">,</xsl:if>
+          <xsl:for-each select="*:processingLevelCode|*:imageQualityCode|*[gco:Integer  != '' and gco:Integer castable as xs:integer]|*[gco:Real != '' and gco:Real castable as xs:double]|*[gco:Boolean != '']|*[*/@codeListValue != '']">
+            <xsl:call-template name="index-properties-as-json">
+              <xsl:with-param name="allLanguages" select="$allLanguages"/>
+            </xsl:call-template>
           </xsl:for-each>
           }
           <xsl:if test="position() != last()">,</xsl:if>
@@ -1471,6 +1457,50 @@
         ]
       </imageDescription>
     </xsl:if>
+
+
+    <xsl:variable name="spatialRepresentationInfo"
+                  select="*:spatialRepresentationInfo/(*:MD_Georeferenceable|*:MD_GridSpatialRepresentation)"/>
+    <xsl:if test="$spatialRepresentationInfo">
+    <spatialRepresentationInfo type="object">[
+      <xsl:for-each select="$spatialRepresentationInfo">
+        {
+        <xsl:variable name="representationPropeties"
+                      select="*[gco:Integer  != '' and gco:Integer castable as xs:integer]|*[gco:Real != '' and gco:Real castable as xs:double]|*[gco:Boolean != '']|*[*/@codeListValue != '']|*[gco:CharacterString != '']"/>
+        <xsl:for-each select="$representationPropeties">
+          <xsl:call-template name="index-properties-as-json">
+            <xsl:with-param name="allLanguages" select="$allLanguages"/>
+          </xsl:call-template>
+        </xsl:for-each>
+
+        <xsl:variable name="axis"
+                       select="*:axisDimensionProperties"/>
+        <xsl:if test="$axis">
+          <xsl:if test="$representationPropeties">,</xsl:if>
+          "axisDimensionProperties": [
+            <xsl:for-each select="*:axisDimensionProperties">
+              <xsl:variable name="properties"
+                            select="*:MD_Dimension/(*[gco:Integer  != '' and gco:Integer castable as xs:integer]|*[gco:Real != '' and gco:Real castable as xs:double]|*[gco:Boolean != '']|*[gco:Measure != '']|*[*/@codeListValue != '']|*[gco:CharacterString != ''])"/>
+              <xsl:if test="$properties">
+                {
+                  <xsl:for-each select="$properties">
+                    <xsl:call-template name="index-properties-as-json">
+                      <xsl:with-param name="allLanguages" select="$allLanguages"/>
+                    </xsl:call-template>
+                  </xsl:for-each>
+                }
+                <xsl:if test="position() != last()">,</xsl:if>
+              </xsl:if>
+            </xsl:for-each>
+          ]
+        </xsl:if>
+        }
+        <xsl:if test="position() != last()">,</xsl:if>
+      </xsl:for-each>
+      ]
+    </spatialRepresentationInfo>
+    </xsl:if>
+
 
 
     <xsl:variable name="instruments"
@@ -1578,6 +1608,43 @@
     </xsl:if>
   </xsl:template>
 
+
+  <xsl:template name="index-properties-as-json">
+    <xsl:param name="allLanguages"/>
+
+    <xsl:variable name="value">
+      <xsl:choose>
+        <xsl:when test="gco:Integer">
+          <xsl:value-of select="gco:Integer"/>
+        </xsl:when>
+        <xsl:when test="gco:Real">
+          <xsl:value-of select="gco:Real"/>
+        </xsl:when>
+        <xsl:when test="gco:Boolean">
+          <xsl:value-of select="if (gco:Boolean = 'true') then 'true' else 'false'"/>
+        </xsl:when>
+        <xsl:when test="gco:Measure">
+          "<xsl:value-of select="util:escapeForJson(concat(gco:Measure, ' ', gco:Measure/@uom))"/>"
+        </xsl:when>
+        <xsl:when test="*/@codeListValue">
+          <xsl:copy-of select="gn-fn-index:add-codelist-field(
+                                 local-name(), *, $allLanguages, true())"/>
+        </xsl:when>
+        <xsl:when test="*/*:code">
+          "<xsl:value-of select="util:escapeForJson(normalize-space(*/*:code))"/>"
+        </xsl:when>
+        <xsl:when test="*:CharacterString[. != '']">
+          <xsl:value-of select="gn-fn-index:add-multilingual-field(local-name(), ., $allLanguages, true())"/>
+        </xsl:when>
+        <xsl:otherwise/>
+      </xsl:choose>
+    </xsl:variable>
+
+    <xsl:if test="$value != ''">
+      "<xsl:value-of select="local-name()"/>": <xsl:value-of select="$value"/>
+      <xsl:if test="position() != last()">,</xsl:if>
+    </xsl:if>
+  </xsl:template>
 
 
   <!-- TODO: here is a limited vision of 1 org with first individual.
