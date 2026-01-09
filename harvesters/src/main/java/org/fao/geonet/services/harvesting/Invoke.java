@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2007 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2023 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -44,6 +44,7 @@ import java.nio.file.Path;
  * "Invoke" service will run a harvester directly, i.e. synchronously. The main purpose for this
  * service is testing, i.e. get results immmediately returned in a test script.
  */
+@Deprecated
 public class Invoke implements Service {
     //--------------------------------------------------------------------------
     //---
