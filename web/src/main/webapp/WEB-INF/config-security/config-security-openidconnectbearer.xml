@@ -1,5 +1,5 @@
 <!--
-  ~ Copyright (C) 2022 Food and Agriculture Organization of the
+  ~ Copyright (C) 2025 Food and Agriculture Organization of the
   ~ United Nations (FAO-UN), United Nations World Food Programme (WFP)
   ~ and United Nations Environment Programme (UNEP)
   ~
@@ -48,11 +48,18 @@
     <constructor-arg ref="openidconnectConfiguration"/>
   </bean>
 
-
+  <!-- Reads from the .json file and creates a Service Account ClientRegistration -->
+  <bean id="openidconnectClientServiceAccountRegistration" class="org.fao.geonet.kernel.security.openidconnect.bearer.GeonetworkClientServiceAccountRegistrationProvider">
+    <constructor-arg value="${OPENIDCONNECT_SERVERMETADATA_SERVICE_ACCOUNT_FNAME:${OPENIDCONNECT_SERVERMETADATA_FNAME:#{''}}}"/>
+    <constructor-arg value="${OPENIDCONNECT_SERVERMETADATA_SERVICE_ACCOUNT_JSON_TEXT:${OPENIDCONNECT_SERVERMETADATA_JSON_TEXT:#{''}}}"/>
+    <constructor-arg value="${OPENIDCONNECT_SERVERMETADATA_SERVICE_ACCOUNT_CONFIG_URL:${OPENIDCONNECT_SERVERMETADATA_CONFIG_URL:#{''}}}"/>
+    <constructor-arg ref="openidconnectConfiguration"/>
+  </bean>
 
   <!-- Provides a hardcoded  ClientRegistrationRepository with exactly one  ClientRegistration-->
   <bean id="openidconnectClientRegistrationRepository" class="org.fao.geonet.kernel.security.openidconnect.GeonetworkClientRegistrationRepository">
     <constructor-arg ref="openidconnectClientRegistration"/>
+    <constructor-arg ref="openidconnectClientServiceAccountRegistration"/>
   </bean>
 
   <bean id="openidconnectAuthorizationRequestResolver" class="org.fao.geonet.kernel.security.openidconnect.HardcodedRegistrationIdOAuth2AuthorizationRequestResolver">
@@ -76,6 +83,7 @@
     <constructor-arg ref ="openidconnectClientRegistrationRepository" />
     <constructor-arg ref ="openidconnectInMemoryOAuth2AuthorizedClientService" />
     <property name="authenticationManager" ref="openidconnectProviderManager"/>
+    <property name="sessionAuthenticationStrategy" ref="sessionAuthenticationStrategy"/>
   </bean>
 
   <bean id="openidconnectBearerTokenAuthenticationFilter" class="org.springframework.security.oauth2.server.resource.web.BearerTokenAuthenticationFilter">
@@ -167,6 +175,8 @@
 
   <bean id="openidconnectOAuth2SecurityProviderUtil" class="org.fao.geonet.kernel.security.openidconnect.OAuth2SecurityProviderUtil"/>
 
+  <bean id="baseUserUtils" class="org.fao.geonet.kernel.security.BaseUserUtils"/>
+
   <bean id="openidconnectOidcUser2GeonetworkUser" class="org.fao.geonet.kernel.security.openidconnect.OidcUser2GeonetworkUser"/>
 
   <bean id="openidconnectLogoutSuccessHandlerBase" class="org.springframework.security.oauth2.client.oidc.web.logout.OidcClientInitiatedLogoutSuccessHandler">
@@ -199,6 +209,9 @@
     </constructor-arg>
     <property name="filterProcessesUrl" value="/signout"/>
   </bean>
+
+  <bean id="sessionExpirationFilter" class="org.fao.geonet.kernel.security.openidconnect.SessionExpirationFilter"/>
+
   <bean id="geonetworkOidcPreAuthActionsLoginFilter" class="org.fao.geonet.kernel.security.openidconnect.GeonetworkOidcPreAuthActionsLoginFilter"/>
 
   <bean id="oAuth2Configuration" class="org.fao.geonet.kernel.security.openidconnect.OAuth2Configuration"/>
@@ -209,6 +222,25 @@
 
     </constructor-arg>
   </bean>
+
+  <bean id="oidcSessionRegistry" class="org.fao.geonet.kernel.security.openidconnect.oidclogout.InMemoryOidcSessionRegistry"/>
+  <bean id="sessionAuthenticationStrategy"
+        class="org.fao.geonet.kernel.security.openidconnect.oidclogout.OidcSessionRegistryAuthenticationStrategy"/>
+
+  <bean id="oidcServiceAccountLogin" class="org.fao.geonet.kernel.security.openidconnect.bearer.OIDCServiceAccountLogin"/>
+
+  <bean id="sessionMgmtFilter"
+        class="org.springframework.security.web.session.SessionManagementFilter">
+    <constructor-arg ref="securityContextRepository"/>
+    <constructor-arg ref="sessionAuthenticationStrategy"/>
+  </bean>
+
+  <bean id="backchannellogoutFilter"
+        class="org.fao.geonet.kernel.security.openidconnect.oidclogout.OidcBackchannelLogoutFilter">
+    <constructor-arg ref="csrfFilter" />
+    <constructor-arg ref="geonetworkCsrfSecurityRequestMatcher" />
+  </bean>
+
   <util:list id="openidConnectFilterChanFiltersExclusive">
 
     <ref bean="securityContextPersistenceFilter"/>
@@ -218,6 +250,7 @@
 
     <ref bean="openidconnectOAuth2AuthorizationRequestRedirectFilter"/>
     <ref bean="openidconnectOAuth2LoginAuthenticationFilter"/>
+    <ref bean="backchannellogoutFilter"/>
     <ref bean="logoutFilter"/>
 
     <ref bean="openidconnectBearerTokenAuthenticationFilter"/>
@@ -238,7 +271,9 @@
 
     <ref bean="openidconnectOAuth2AuthorizationRequestRedirectFilter"/>
     <ref bean="openidconnectOAuth2LoginAuthenticationFilter"/>
+    <ref bean="backchannellogoutFilter"/>
     <ref bean="logoutFilter"/>
+    <ref bean="sessionExpirationFilter"/>
     <!--     include a pre login filter-->
     <ref bean="geonetworkOidcPreAuthActionsLoginFilter"/>
 

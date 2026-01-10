@@ -49,6 +49,7 @@ import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.*;
 import org.fao.geonet.repository.reports.MetadataReportsQueries;
 import org.fao.geonet.repository.specification.OperationAllowedSpecs;
+import org.fao.geonet.util.XslUtil;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.fao.geonet.web.DefaultLanguage;
@@ -62,6 +63,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -344,7 +346,26 @@ public class BaseMetadataUtils implements IMetadataUtils {
         String sitemapLinkUrl = settingManager.getValue(METADATA_URL_SITEMAPLINKURL);
         String defaultLink = settingManager.getNodeURL() + "api/records/" + uuid + "?language=all";
         String permalink = buildUrl(uuid, language, sitemapLinkUrl);
-        return StringUtils.isNotEmpty(permalink) ? permalink : defaultLink;
+
+        // If the permalink template has been modified use the configured permalink template
+        // otherwise use the defaultLink
+        UriComponentsBuilder uriComponentsBuilder;
+        if (StringUtils.isNotEmpty(permalink) && !defaultLink.equals(permalink)) {
+            uriComponentsBuilder = UriComponentsBuilder.fromUriString(permalink);
+        } else {
+            uriComponentsBuilder = UriComponentsBuilder.fromUriString(defaultLink);
+
+            // Get the formatter configured for *links* to records (recordLinkFormatter) from the UI configuration.
+            String recordLinkFormatter = XslUtil.getUiConfigurationJsonProperty(null, "mods.search.formatter.recordLinkFormatter");
+
+            // When building the record URL, the formatter is passed as the `recordViewFormatter` query parameter
+            // because the API expects that parameter name to decide which formatter to use when displaying the record.
+            if (StringUtils.isNotBlank(recordLinkFormatter)) {
+                uriComponentsBuilder.queryParam("recordViewFormatter", recordLinkFormatter);
+            }
+        }
+
+        return uriComponentsBuilder.build().toString();
     }
 
     @Override

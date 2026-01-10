@@ -23,8 +23,8 @@
 
 package org.fao.geonet.api.processing;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import com.google.common.collect.Lists;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -35,9 +35,10 @@ import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
+import org.fao.geonet.api.processing.report.MetadataValidationProcessingReport;
 import org.fao.geonet.api.processing.report.SimpleMetadataProcessingReport;
 import org.fao.geonet.api.processing.report.registry.IProcessingReportRegistry;
-import org.fao.geonet.inspire.validator.InspireValidatorUtils;
+import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.MetadataValidation;
 import org.fao.geonet.domain.Pair;
@@ -47,15 +48,16 @@ import org.fao.geonet.inspire.validator.MInspireEtfValidateProcess;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SchemaManager;
+import org.fao.geonet.kernel.XmlSerializer;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.datamanager.IMetadataValidator;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.MetadataValidationRepository;
 import org.fao.geonet.kernel.search.index.BatchOpsMetadataReindexer;
-import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
-import org.jdom.Namespace;
+import org.jdom.filter.ElementFilter;
+import org.jdom.filter.Filter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
@@ -71,8 +73,6 @@ import javax.annotation.PostConstruct;
 import javax.management.MalformedObjectNameException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.util.ArrayDeque;
-import java.util.Set;
 
 import static org.fao.geonet.api.ApiParams.*;
 import static org.fao.geonet.api.records.InspireValidationApi.API_PARAM_INSPIRE_VALIDATION_MODE;
@@ -86,6 +86,27 @@ import static org.fao.geonet.api.records.InspireValidationApi.API_PARAM_INSPIRE_
 @Controller("processValidate")
 public class ValidateApi {
     private static final int NUMBER_OF_SUBSEQUENT_PROCESS_MBEAN_TO_KEEP = 1;
+
+    /**
+     * XML element name for the active pattern in schematron reports
+     */
+    public static final String EL_ACTIVE_PATTERN = "active-pattern";
+
+    /**
+     * XML element name for fired rules in schematron reports
+     */
+    public static final String EL_FIRED_RULE = "fired-rule";
+
+    /**
+     * XML attribute name for context in schematron reports
+     */
+    public static final String ATT_CONTEXT = "context";
+
+    /**
+     * Default context value when none is provided in schematron reports
+     */
+    public static final String DEFAULT_CONTEXT = "??";
+
     @Autowired
     protected ApplicationContext appContext;
     @Autowired
@@ -99,8 +120,6 @@ public class ValidateApi {
     @Autowired
     IMetadataUtils metadataRepository;
     @Autowired
-    InspireValidatorUtils inspireValidatorUtils;
-    @Autowired
     SchemaManager schemaManager;
     @Autowired
     SettingManager settingManager;
@@ -110,6 +129,8 @@ public class ValidateApi {
     IMetadataUtils metadataUtils;
     @Autowired
     MBeanExporter mBeanExporter;
+    @Autowired
+    protected XmlSerializer xmlSerializer;
 
     private final ArrayDeque<SelfNaming> mAnalyseProcesses = new ArrayDeque<>(NUMBER_OF_SUBSEQUENT_PROCESS_MBEAN_TO_KEEP);
 
@@ -142,7 +163,7 @@ public class ValidateApi {
     })
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
-    public SimpleMetadataProcessingReport validateRecords(
+    public MetadataValidationProcessingReport validateRecords(
         @Parameter(description = API_PARAM_RECORD_UUIDS_OR_SELECTION,
             required = false,
             example = "")
@@ -167,8 +188,8 @@ public class ValidateApi {
     ) throws Exception {
         UserSession userSession = ApiUtils.getUserSession(session);
 
-        SimpleMetadataProcessingReport report =
-            new SimpleMetadataProcessingReport();
+        MetadataValidationProcessingReport report =
+            new MetadataValidationProcessingReport();
         try {
             ApplicationContext applicationContext = ApplicationContextHolder.get();
             ServiceContext serviceContext = ApiUtils.createServiceContext(request);
@@ -194,30 +215,27 @@ public class ValidateApi {
                         if (!accessMan.canEdit(serviceContext, String.valueOf(record.getId()))) {
                             report.addNotEditableMetadataId(record.getId());
                         } else {
-                            final Pair<Element, Boolean> validationPair = validator.doValidate(record, serviceContext.getLanguage());
-                            boolean isValid = validationPair.two();
+                            Pair<Element, String> validationPair = validator.doValidate(userSession, record.getDataInfo().getSchemaId(), Integer.toString(record.getId()), xmlSerializer.select(serviceContext, String.valueOf(record.getId())), serviceContext.getLanguage(), false);
+                            boolean isValid = !validationPair.one().getDescendants(ErrorFinder).hasNext();
+                            Element schemaTronReport = validationPair.one();
+                            if (schemaTronReport != null) {
+                                // If the schematron report is not null, we restructure it to have a pattern-rule hierarchy
+                                restructureReportToHavePatternRuleHierarchy(schemaTronReport);
+                                // And add any warnings to the MetadataValidationProcessingReport
+                                report.addAllReportsMatchingRequirement(record, schemaTronReport, SchematronRequirement.REPORT_ONLY);
+                            }
                             if (isValid) {
-                                report.addMetadataInfos(record, "Is valid");
+                                // If the record is valid, we add it to the valid metadata list
+                                report.addValidMetadata(record);
                                 new RecordValidationTriggeredEvent(record.getId(), ApiUtils.getUserSession(request.getSession()).getUserIdAsInt(), "1").publish(applicationContext);
                             } else {
-                                report.addMetadataError(record, "(" + record.getUuid() + ") Is invalid");
-                                Element schemaTronReport = validationPair.one();
+                                // If the record is not valid, we add it to the invalid metadata list
+                                if (!report.getInvalidMetadata().containsKey(record.getId())) {
+                                    report.addInvalidMetadata(record);
+                                }
                                 if (schemaTronReport != null) {
-                                    List<Namespace> theNSs = new ArrayList<Namespace>();
-                                    theNSs.add(Namespace.getNamespace("geonet", "http://www.fao.org/geonetwork"));
-                                    theNSs.add(Namespace.getNamespace("svrl", "http://purl.oclc.org/dsdl/svrl"));
-
-                                    // Extract all the know errors that exists in the report as List of Text
-                                    List<?> schemaTronReportErrors = Xml.selectNodes(schemaTronReport,
-                                        "geonet:xsderrors/geonet:error/geonet:message[normalize-space(.) != '']" +
-                                            "| geonet:schematronerrors/geonet:report[@geonet:required = '" + SchematronRequirement.REQUIRED + "']/svrl:schematron-output/svrl:failed-assert/svrl:text[normalize-space(.) != '']" +
-                                            "| geonet:schematronerrors/geonet:report[@geonet:required = '" + SchematronRequirement.REQUIRED + "']/geonet:schematronVerificationError[normalize-space(.) != '']",
-                                        theNSs);
-
-                                    for (Object schemaTronReportError :schemaTronReportErrors) {
-                                        // Add normalized string to the report.
-                                        report.addMetadataError(record, Xml.selectString((Element) schemaTronReportError, "normalize-space(.)",  theNSs));
-                                    }
+                                    // If the schematron report is not null, add any errors to the MetadataValidationProcessingReport
+                                    report.addAllReportsMatchingRequirement(record, schemaTronReport, SchematronRequirement.REQUIRED);
                                 }
 
                                 new RecordValidationTriggeredEvent(record.getId(), ApiUtils.getUserSession(request.getSession()).getUserIdAsInt(), "0").publish(applicationContext);
@@ -385,5 +403,91 @@ public class ValidateApi {
         }
         mAnalyseProcesses.addFirst(mAnalyseProcess);
         return mAnalyseProcess;
+    }
+
+    public static final Filter ErrorFinder = new Filter() {
+        @Override
+        public boolean matches(Object obj) {
+            if (obj instanceof Element) {
+                Element element = (Element) obj;
+                String name = element.getName();
+                if (name.equals("error")) {
+                    return true;
+                } else if (name.equals("failed-assert")) {
+                    return true;
+                }
+            }
+            return false;
+        }
+    };
+
+    /**
+     * Restructures a schematron validation report to create a hierarchical structure.
+     *
+     * <p>Schematron report has an odd structure where pattern elements, fired rules,
+     * and assertions/reports are all siblings. This method restructures the XML to create
+     * a more logical hierarchy where patterns contain fired rules, which in turn contain
+     * assertions and reports.</p>
+     *
+     * <p>The input structure looks like:
+     * <pre>
+     * <code>
+     * &lt;svrl:active-pattern  ... />
+     * &lt;svrl:fired-rule  ... />
+     * &lt;svrl:failed-assert ... />
+     * &lt;svrl:successful-report ... />
+     * </code>
+     * </pre>
+     * </p>
+     *
+     * <p>The output structure looks like:
+     * <pre>
+     * <code>
+     * &lt;svrl:active-pattern  ... >
+     *     &lt;svrl:fired-rule  ... >
+     *         &lt;svrl:failed-assert ... />
+     *         &lt;svrl:successful-report ... />
+     *     &lt;svrl:fired-rule  ... >
+     * &lt;svrl:active-pattern>
+     * </code>
+     * </pre>
+     * </p>
+     *
+     * @param errorReport The schematron validation report element to restructure
+     */
+    private static void restructureReportToHavePatternRuleHierarchy(Element errorReport) {
+        final Iterator patternFilter = errorReport
+            .getDescendants(new ElementFilter(EL_ACTIVE_PATTERN, Geonet.Namespaces.SVRL));
+        @SuppressWarnings("unchecked")
+        List<Element> patterns = Lists.newArrayList(patternFilter);
+        for (Element pattern : patterns) {
+            final Element parentElement = pattern.getParentElement();
+            Element currentRule = null;
+            @SuppressWarnings("unchecked") final List<Element> children = parentElement.getChildren();
+
+            int index = children.indexOf(pattern) + 1;
+            while (index < children.size() && !children.get(index).getName().equals(EL_ACTIVE_PATTERN)) {
+                Element next = children.get(index);
+                if (EL_FIRED_RULE.equals(next.getName())) {
+                    currentRule = next;
+                    next.detach();
+                    pattern.addContent(next);
+                } else {
+                    if (currentRule == null) {
+                        // odd but could happen I suppose
+                        currentRule = new Element(EL_FIRED_RULE, Geonet.Namespaces.SVRL).setAttribute(ATT_CONTEXT,
+                            DEFAULT_CONTEXT);
+                        pattern.addContent(currentRule);
+                    }
+
+                    next.detach();
+                    currentRule.addContent(next);
+
+                }
+            }
+            if (pattern.getChildren().isEmpty()) {
+                pattern.detach();
+            }
+        }
     }
 }

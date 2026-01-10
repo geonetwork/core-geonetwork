@@ -122,6 +122,7 @@
     "gnConfigService",
     "gnGlobalSettings",
     "gnLangs",
+    "gnMdFormatter",
     function (
       gnMetadataActions,
       $http,
@@ -129,7 +130,8 @@
       gnConfig,
       gnConfigService,
       gnGlobalSettings,
-      gnLangs
+      gnLangs,
+      gnMdFormatter
     ) {
       return {
         restrict: "A",
@@ -138,7 +140,7 @@
         link: function linkFn(scope, element, attrs) {
           scope.mdService = gnMetadataActions;
           scope.md = scope.$eval(attrs.gnMdActionsMenu);
-          scope.formatterList = gnGlobalSettings.gnCfg.mods.search.downloadFormatter;
+          scope.formatterList = [];
 
           scope.tasks = [];
           scope.hasVisibletasks = false;
@@ -156,6 +158,49 @@
           });
 
           scope.status = undefined;
+
+          scope.statusEffects = {
+            editor: [
+              {
+                from: "draft",
+                to: "submitted"
+              },
+              {
+                from: "retired",
+                to: "draft"
+              },
+              {
+                from: "submitted",
+                to: "draft"
+              }
+            ],
+            reviewer: [
+              {
+                from: "draft",
+                to: "submitted"
+              },
+              {
+                from: "submitted",
+                to: "approved"
+              },
+              {
+                from: "submitted",
+                to: "draft"
+              },
+              {
+                from: "draft",
+                to: "approved"
+              },
+              {
+                from: "approved",
+                to: "retired"
+              },
+              {
+                from: "retired",
+                to: "draft"
+              }
+            ]
+          };
 
           scope.buildFormatter = function (url, uuid, isDraft) {
             if (url.indexOf("${uuid}") !== -1) {
@@ -180,49 +225,6 @@
                 response.data.forEach(function (s) {
                   scope.status[s.name] = s.id;
                 });
-
-                scope.statusEffects = {
-                  editor: [
-                    {
-                      from: "draft",
-                      to: "submitted"
-                    },
-                    {
-                      from: "retired",
-                      to: "draft"
-                    },
-                    {
-                      from: "submitted",
-                      to: "draft"
-                    }
-                  ],
-                  reviewer: [
-                    {
-                      from: "draft",
-                      to: "submitted"
-                    },
-                    {
-                      from: "submitted",
-                      to: "approved"
-                    },
-                    {
-                      from: "submitted",
-                      to: "draft"
-                    },
-                    {
-                      from: "draft",
-                      to: "approved"
-                    },
-                    {
-                      from: "approved",
-                      to: "retired"
-                    },
-                    {
-                      from: "retired",
-                      to: "draft"
-                    }
-                  ]
-                };
               });
           }
 
@@ -394,6 +396,18 @@
                   scope.ownerGroupName = name;
                 });
               }
+
+              gnMdFormatter
+                .getAvailableFormattersForRecord(scope.md)
+                .then(function (availableFormatters) {
+                  var formatterList =
+                    gnGlobalSettings.gnCfg.mods.search.downloadFormatter;
+
+                  scope.formatterList = gnMdFormatter.calculateValidFormattersForRecord(
+                    formatterList,
+                    availableFormatters
+                  );
+                });
             }
           });
 

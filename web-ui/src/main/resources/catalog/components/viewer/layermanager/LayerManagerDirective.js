@@ -309,7 +309,7 @@
                   defaultValueIdx = i;
                 }
               }
-              if (currentLayerValue && !idx) {
+              if (currentLayerValue && idx === undefined) {
                 console.warn(
                   "Dimension value " +
                     currentLayerValue +
@@ -317,7 +317,7 @@
                     dimensionConfig.values[defaultValueIdx]
                 );
               }
-              idx = idx || defaultValueIdx;
+              idx = idx === undefined ? defaultValueIdx : idx;
 
               scope.dimensions[dimension] = {
                 current: dimensionConfig.values[idx],

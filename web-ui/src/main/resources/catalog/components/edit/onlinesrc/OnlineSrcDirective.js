@@ -41,7 +41,9 @@
         restrict: "A",
         templateUrl:
           "../../catalog/components/edit/onlinesrc/" + "partials/fileUploader.html",
-        scope: {},
+        scope: {
+          editableThumbnail: "@"
+        },
         link: function (scope, element, attrs) {
           scope.relations = {};
           scope.uuid = undefined;
@@ -1857,12 +1859,7 @@
           compile: function compile(tElement, tAttrs, transclude) {
             return {
               pre: function preLink(scope) {
-                scope.searchObj = {
-                  internal: true,
-                  params: {
-                    isTemplate: "n"
-                  }
-                };
+                scope.searchObj = gnOnlinesrc.getSearchConfig();
                 scope.modelOptions = angular.copy(gnGlobalSettings.modelOptions);
               },
               post: function postLink(scope, iElement, iAttrs) {
@@ -2033,6 +2030,7 @@
                       scope.srcParams.remote = false;
                       if (links.length > 0) {
                         scope.onlineSrcLink = links[0].url;
+                        scope.srcParams.name = links[0].name || "";
                         scope.srcParams.protocol = links[0].protocol || "OGC:WMS";
                         scope.loadCurrentLink(scope.onlineSrcLink);
                         scope.srcParams.url = scope.onlineSrcLink;
@@ -2130,11 +2128,7 @@
           compile: function compile(tElement, tAttrs, transclude) {
             return {
               pre: function preLink(scope) {
-                scope.searchObj = {
-                  internal: true,
-                  any: "",
-                  params: {}
-                };
+                scope.searchObj = gnOnlinesrc.getSearchConfig();
                 scope.modelOptions = angular.copy(gnGlobalSettings.modelOptions);
                 scope.selectRecords = [];
               },
@@ -2196,6 +2190,10 @@
                   };
 
                   $(scope.popupid).modal("show");
+
+                  $("#linktomd-search input").val("");
+                  scope.searchObj.any = "";
+
                   var searchParams =
                     scope.config.sources && scope.config.sources.metadataStore
                       ? scope.config.sources.metadataStore.params || {}
@@ -2231,7 +2229,8 @@
     .directive("gnLinkToSibling", [
       "gnOnlinesrc",
       "gnGlobalSettings",
-      function (gnOnlinesrc, gnGlobalSettings) {
+      "gnOnlinesrcConfig",
+      function (gnOnlinesrc, gnGlobalSettings, gnOnlinesrcConfig) {
         return {
           restrict: "A",
           scope: {},
@@ -2241,20 +2240,7 @@
             return {
               pre: function preLink(scope) {
                 scope.ctrl = {};
-                scope.searchObj = {
-                  internal: true,
-                  any: "",
-                  defaultParams: {
-                    any: "",
-                    isTemplate: "n",
-                    from: 1,
-                    to: 50
-                  }
-                };
-                scope.searchObj.params = angular.extend(
-                  {},
-                  scope.searchObj.defaultParams
-                );
+                scope.searchObj = gnOnlinesrc.getSearchConfig();
 
                 // Define configuration to restrict search
                 // to a subset of records when an initiative type
@@ -2300,13 +2286,14 @@
 
                   $(scope.popupid).modal("show");
 
-                  scope.$broadcast("resetSearch");
+                  scope.clearSearch();
                   scope.selection = [];
                 });
 
                 // Clear the search params and input
                 scope.clearSearch = function () {
                   $("#siblingdd input").val("");
+                  scope.searchObj.any = "";
                   scope.$broadcast("resetSearch");
                 };
 
@@ -2390,6 +2377,15 @@
                   }
                 };
 
+                scope.isInSelection = function (uuid) {
+                  for (var i = 0; i < scope.selection.length; ++i) {
+                    if (scope.selection[i].md._id === uuid) {
+                      return true;
+                    }
+                  }
+                  return false;
+                };
+
                 /**
                  * Remove a record from the selection
                  */
@@ -2452,7 +2448,8 @@
      */
     .directive("gnDoiSearchPanel", [
       "gnDoiSearchService",
-      function (gnDoiSearchService) {
+      "$q",
+      function (gnDoiSearchService, $q) {
         return {
           restrict: "A",
           replace: true,
@@ -2460,6 +2457,8 @@
             doiUrl: "=?",
             doiPrefix: "=?",
             doiQueryPattern: "=?",
+            doiCrossrefUrl: "=?",
+            doiCrossrefQueryPattern: "=?",
             mode: "@",
             addToSelectionCb: "&?",
             removeFromSelectionCb: "&?"
@@ -2469,6 +2468,7 @@
           link: function (scope, element, attrs) {
             // select (single value) / add mode (used in siblings dialog)
             scope.mode = scope.mode || "select";
+            scope.searchedValue = false;
             scope.updateSelection = angular.isFunction(scope.addToSelectionCb)
               ? function (md) {
                   if (scope.isSelected(md)) {
@@ -2491,48 +2491,145 @@
             scope.isSearching = false;
 
             scope.clearSearch = function () {
+              scope.searchedValue = false;
               scope.queryValue = "";
               scope.results = [];
             };
 
             scope.$on("resetSearch", scope.clearSearch);
 
-            scope.search = function () {
-              var searchQuery =
-                scope.queryValue !== ""
-                  ? scope.doiQueryPattern.replaceAll("{query}", scope.queryValue)
-                  : "";
+            var processResultsDatacite = function (resultsDatacite) {
+              var results = [];
+
+              angular.forEach(resultsDatacite, function (r) {
+                results.push({
+                  uuid: r.id,
+                  remoteUrl: r.attributes.url,
+                  resourceTitle:
+                    r.attributes.titles.length > 0 ? r.attributes.titles[0].title : r.url,
+                  title:
+                    r.attributes.titles.length > 0 ? r.attributes.titles[0].title : r.url,
+                  description:
+                    r.attributes.descriptions.length > 0
+                      ? r.attributes.descriptions[0].descriptions
+                      : "",
+                  source: "Datacite"
+                });
+              });
+
+              return results;
+            };
+
+            var processResultsCrossref = function (resultsCrossref) {
+              var results = [];
+
+              angular.forEach(resultsCrossref, function (r) {
+                results.push({
+                  uuid: r.DOI,
+                  remoteUrl: r.URL,
+                  resourceTitle: r.title && r.title.length > 0 ? r.title[0] : "",
+                  title: r.title && r.title.length > 0 ? r.title[0] : "",
+                  description: r.abstract && r.abstract.length > 0 ? r.abstract[0] : "",
+                  source: "Crossref"
+                });
+              });
+
+              return results;
+            };
+
+            var sortResults = function () {
+              scope.results.sort(function (a, b) {
+                if (a.resourceTitle < b.resourceTitle) {
+                  return -1;
+                }
+                if (a.resourceTitle > b.resourceTitle) {
+                  return 1;
+                }
+                return 0;
+              });
+            };
+            var dataciteQuery = function () {
+              return scope.queryValue && scope.queryValue !== ""
+                ? scope.doiQueryPattern.replaceAll(
+                    "{query}",
+                    encodeURIComponent(scope.queryValue)
+                  )
+                : "";
+            };
+
+            var crossrefQuery = function () {
+              if (!scope.queryValue) {
+                return "";
+              }
+
+              // https://api.crossref.org/swagger-ui/index.html#/Works/get_works
+              // Crossref query does not allow a search to be done on the title (or other search field)
+              // and DOI which is a filter eg. filter=doi:10.prefix/suffix.
+              // If the query value is a DOI, we will use the DOI filter.
+              var isDoi = scope.queryValue.match(/10\..+\/[^ ]+$/);
+              if (isDoi) {
+                return "filter=doi:" + scope.queryValue;
+              }
+
+              return scope.queryValue !== ""
+                ? scope.doiCrossrefQueryPattern
+                    .replaceAll("{query}", encodeURIComponent(scope.queryValue))
+                    .replaceAll("{prefix}", scope.doiPrefix)
+                : "";
+            };
+
+            var internalSearch = function (doDataciteSearch, doCrossrefSearch) {
               scope.isSearching = true;
-              gnDoiSearchService.search(scope.doiUrl, scope.doiPrefix, searchQuery).then(
+              var results = [];
+              var promises = [];
+              if (doDataciteSearch) {
+                promises.push(
+                  gnDoiSearchService.search(
+                    scope.doiUrl,
+                    scope.doiPrefix,
+                    dataciteQuery()
+                  )
+                );
+              }
+              if (doCrossrefSearch) {
+                promises.push(
+                  gnDoiSearchService.searchCrossref(
+                    scope.doiCrossrefUrl,
+                    scope.doiPrefix,
+                    crossrefQuery()
+                  )
+                );
+              }
+              $q.all(promises).then(
                 function (response) {
-                  scope.isSearching = false;
-                  var results = [];
-
-                  angular.forEach(response.data.data, function (r) {
-                    results.push({
-                      uuid: r.id,
-                      remoteUrl: r.attributes.url,
-                      resourceTitle:
-                        r.attributes.titles.length > 0
-                          ? r.attributes.titles[0].title
-                          : r.url,
-                      title:
-                        r.attributes.titles.length > 0
-                          ? r.attributes.titles[0].title
-                          : r.url,
-                      description:
-                        r.attributes.descriptions.length > 0
-                          ? r.attributes.descriptions[0].descriptions
-                          : ""
-                    });
-                  });
-
-                  scope.results = results;
+                  for (var i = 0; i < response.length; i++) {
+                    if (response[i].data.data) {
+                      results = results.concat(
+                        processResultsDatacite(response[i].data.data)
+                      );
+                    } else if (response[i].data.message.items) {
+                      results = results.concat(
+                        processResultsCrossref(response[i].data.message.items)
+                      );
+                    }
+                    scope.results = results;
+                    sortResults();
+                    scope.isSearching = false;
+                  }
                 },
                 function (response) {
                   scope.isSearching = false;
                 }
               );
+            };
+
+            scope.search = function () {
+              scope.searchedValue = true;
+
+              var doDataciteSearch = !!scope.doiUrl;
+              var doCrossrefSearch = !!scope.doiCrossrefUrl;
+
+              internalSearch(doDataciteSearch, doCrossrefSearch);
             };
           }
         };

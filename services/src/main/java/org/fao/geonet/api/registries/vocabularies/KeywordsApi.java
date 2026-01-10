@@ -55,6 +55,7 @@ import org.fao.geonet.kernel.search.keyword.*;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.lib.Lib;
+import org.fao.geonet.util.FileMimetypeChecker;
 import org.fao.geonet.utils.*;
 import org.jdom.Document;
 import org.jdom.Element;
@@ -108,6 +109,7 @@ import static org.fao.geonet.kernel.rdf.Selectors.SKOS_NAMESPACE;
     name = ApiParams.API_CLASS_REGISTRIES_TAG,
     description = ApiParams.API_CLASS_REGISTRIES_OPS)
 public class KeywordsApi {
+    private static final String[] validVocabularyMimeTypes = {"application/rdf+xml"};
 
     @Autowired
     SettingManager settingManager;
@@ -133,6 +135,9 @@ public class KeywordsApi {
      */
     @Autowired
     ThesaurusManager thesaurusManager;
+
+    @Autowired
+    FileMimetypeChecker fileMimetypeChecker;
 
     List<String> allowedExtensions = Arrays.asList("rdf", "owl", "xml", "sdmx");
 
@@ -748,6 +753,8 @@ public class KeywordsApi {
 
             Log.debug(Geonet.THESAURUS, "Uploading thesaurus file: " + file.getOriginalFilename());
 
+            fileMimetypeChecker.checkValidThesaurusMimeType(file);
+
             tempDir = Files.createTempDirectory("thesaurus").toFile();
 
             Path tempFilePath = tempDir.toPath().resolve(file.getOriginalFilename());
@@ -903,6 +910,9 @@ public class KeywordsApi {
 
         String fname = file.getOriginalFilename();
         Log.debug(Geonet.THESAURUS, "Uploading CSV file: " + fname);
+
+        fileMimetypeChecker.checkValidCsvMimeType(file);
+
         File tempDir = Files.createTempDirectory("thesaurus").toFile();
         Path tempFilePath = tempDir.toPath().resolve(file.getOriginalFilename());
         File convFile = tempFilePath.toFile();

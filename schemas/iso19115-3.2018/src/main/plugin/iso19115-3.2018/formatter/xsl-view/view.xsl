@@ -61,6 +61,7 @@
   <xsl:include href="../jsonld/iso19115-3.2018-to-jsonld.xsl"/>
   <xsl:include href="../citation/base.xsl"/>
   <xsl:include href="../citation/common.xsl"/>
+  <xsl:include href="./common.xsl"/>
 
   <!-- The core formatter XSL layout based on the editor configuration -->
   <xsl:include href="sharedFormatterDir/xslt/render-layout.xsl"/>
@@ -447,7 +448,9 @@
     <xsl:variable name="name"
                   select="name()"/>
 
-    <xsl:variable name="context"
+    <xsl:variable name="contextXpath"
+                  select="gn-fn-metadata:getXPath(.)" />
+    <xsl:variable name="contextParent"
                   select="name(..)"/>
 
     <xsl:choose>
@@ -455,7 +458,7 @@
       <xsl:when test="$fieldName = '' and $language = 'all' and count($languages/lang) > 0">
         <xsl:for-each select="$languages/lang">
           <div xml:lang="{@code}">
-            <xsl:value-of select="tr:nodeLabel(tr:create($schema, @code), $name, $context)"/>
+            <xsl:value-of select="tr:nodeLabel(tr:create($schema, @code), $name, $contextParent, $contextXpath)"/>
             <xsl:if test="$contextLabel">
               <xsl:variable name="extraLabel">
                 <xsl:apply-templates mode="render-value"
@@ -476,7 +479,7 @@
           <xsl:variable name="lang3"
                         select="$metadata//mdb:otherLocale/*[@id = $id]/lan:languageCode/*/@codeListValue"/>
           <div xml:lang="{$lang3}">
-            <xsl:value-of select="tr:nodeLabel(tr:create($schema, $lang3), $name, $context)"/>
+            <xsl:value-of select="tr:nodeLabel(tr:create($schema, $lang3), $name, $contextParent, $contextXpath)"/>
           </div>
         </xsl:for-each>
       </xsl:when>
@@ -484,7 +487,7 @@
         <!-- Overriden label or element name in current UI language. -->
         <xsl:value-of select="if ($fieldName)
                                 then $fieldName
-                                else tr:nodeLabel(tr:create($schema), $name, $context)"/>
+                                else tr:nodeLabel(tr:create($schema), $name, $contextParent, $contextXpath)"/>
         <xsl:if test="$contextLabel">
           <xsl:variable name="extraLabel">
             <xsl:apply-templates mode="render-value"
@@ -498,9 +501,14 @@
 
 
   <!-- Some elements are only containers so bypass them
-  unless they are flat mode exceptions -->
+       unless they are flat mode exceptions.
+       Excluded mrd:MD_DigitalTransferOptions, otherwise is rendered differently
+       when contains 1 or more mrd:onLine elements. Probably template affects
+       other similar container elements.
+  -->
   <xsl:template mode="render-field"
                 match="*[
+                          name() != 'mrd:MD_DigitalTransferOptions' and
                           count(*[name() != 'lan:PT_FreeText']) = 1 and
                           count(*/@codeListValue) = 0
                           ]"
@@ -519,6 +527,7 @@
   * if part of fieldsWithFieldset exception
   * has content
   * only if more than one child to be displayed (non flat mode only) bypass container elements
+  * digital transfer options (mrd:transferOptions/*)
   . -->
   <xsl:template mode="render-field"
                 match="*[$isFlatMode = true() and not(gco:CharacterString) and (
@@ -527,7 +536,7 @@
                        *[$isFlatMode = false() and not(gco:CharacterString) and (
                             name() = $configuration/editor/fieldsWithFieldset/name
                             or @gco:isoType = $configuration/editor/fieldsWithFieldset/name
-                            or count(*) > 1)]"
+                            or count(*) > 1)]|mrd:transferOptions/*"
                 priority="100">
 
     <xsl:variable name="content">
@@ -836,7 +845,7 @@
 
   <!-- Linkage -->
   <xsl:template mode="render-field"
-                match="*[cit:CI_OnlineResource and */cit:linkage/* != '']"
+                match="*[cit:CI_OnlineResource]"
                 priority="100">
     <dl class="gn-link">
       <dt>
@@ -849,10 +858,24 @@
           <xsl:apply-templates mode="render-value"
                                select="*/cit:description"/>
         </xsl:variable>
-        <a href="{*/cit:linkage/*}" target="_blank">
-          <xsl:apply-templates mode="render-value"
-                               select="if (*/cit:name != '') then */cit:name else */cit:linkage"/>
-        </a>
+
+        <xsl:choose>
+          <xsl:when test="string(*/cit:linkage/gco:CharacterString)">
+            <xsl:variable name="url">
+              <xsl:apply-templates mode="render-value" select="*/cit:linkage"/>
+            </xsl:variable>
+            <a href="{$url}" target="_blank">
+              <xsl:apply-templates mode="render-value"
+                                   select="if (normalize-space(*/cit:name) != '') then */cit:name else */cit:linkage"/>
+            </a>
+          </xsl:when>
+          <xsl:when test="normalize-space(*/cit:name) != ''">
+            <span>
+              <xsl:apply-templates mode="render-value" select="*/cit:name"/>
+            </span>
+          </xsl:when>
+          <xsl:otherwise/>
+        </xsl:choose>
         <p>
           <xsl:value-of select="normalize-space($linkDescription)"/>
         </p>

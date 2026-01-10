@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 Food and Agriculture Organization of the
+ * Copyright (C) 2025 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -67,39 +67,99 @@ public class OIDCRoleProcessor {
     public OIDCConfiguration oidcConfiguration;
 
     /**
+     * given an id Token, compute the list of groups
+     *
+     * @param idToken - from OIDC token for the user
+     * @return all groups from the token.
+     */
+    private List<String> getGroups(OidcIdToken idToken) {
+        List<String> oidcRoleNames = getTokenRoles(idToken);
+        oidcRoleNames.add(oidcConfiguration.getMinimumProfile().name());
+        return simpleConvertRoles(oidcRoleNames);
+    }
+
+    /**
+     * given an map of attributes, compute the list of groups
+     *
+     * @param attributes - map containing the groups
+     * @return all groups from the map.
+     */
+    private List<String> getGroups(Map attributes) {
+        List<String> oidcOriginalRoleNames = getTokenRoles(attributes);
+        oidcOriginalRoleNames.add(oidcConfiguration.getMinimumProfile().name());
+        return simpleConvertRoles(oidcOriginalRoleNames);
+    }
+
+    /**
+     * given an oauth2 user, compute the list of groups
+     *
+     * @param user - oauth2 user from OIDC
+     * @return all groups from the user.
+     */
+    private List<String> getGroups(OAuth2User user) {
+        List<String> oidcOriginalRoleNames = getTokenRoles(user);
+        oidcOriginalRoleNames.add(oidcConfiguration.getMinimumProfile().name());
+        return simpleConvertRoles(oidcOriginalRoleNames);
+    }
+
+    /**
      * given an id Token, compute the profileGroups
      *
      * @param idToken - from OIDC for the user
-     * @return
+     * @return profile groups
      */
     public Map<Profile, List<String>> getProfileGroups(OidcIdToken idToken) {
-        List<String> oidcOriginalRoleNames = getTokenRoles(idToken);
-        oidcOriginalRoleNames.add(oidcConfiguration.minimumProfile);
-        List<String> roleNames = simpleConvertRoles(oidcOriginalRoleNames);
-
-        return getProfileGroups(roleNames);
+        return getProfileGroups(getGroups(idToken));
     }
 
-    public Map<Profile, List<String>> getProfileGroups(Map attributes) {
-        List<String> oidcOriginalRoleNames = getTokenRoles(attributes);
-        oidcOriginalRoleNames.add(oidcConfiguration.minimumProfile);
-        List<String> roleNames = simpleConvertRoles(oidcOriginalRoleNames);
+    /**
+     * given an id Token, compute the system groups
+     *
+     * @param idToken - from OIDC for the user
+     * @return system groups
+     */
+    public List<String> getSystemGroups(OidcIdToken idToken) {
+        return getSystemGroups(getGroups(idToken));
+    }
 
-        return getProfileGroups(roleNames);
+    /**
+     * given a set of attributes, compute the profileGroups
+     *
+     * @param attributes - from OIDC for the user
+     * @return profile groups
+     */
+    public Map<Profile, List<String>> getProfileGroups(Map attributes) {
+        return getProfileGroups(getGroups(attributes));
+    }
+
+    /**
+     * given a set of attributes, compute the system groups
+     *
+     * @param attributes - from OIDC for the user
+     * @return system groups
+     */
+    public List<String> getSystemGroups(Map attributes) {
+        return getSystemGroups(getGroups(attributes));
     }
 
     /**
      * given an oauth2 user, compute the profileGroups (i.e. from the user's attributes)
      *
      * @param user - oauth2 user from OIDC
-     * @return
+     * @return profile groups
      */
     public Map<Profile, List<String>> getProfileGroups(OAuth2User user) {
-        List<String> oidcOriginalRoleNames = getTokenRoles(user);
-        oidcOriginalRoleNames.add(oidcConfiguration.minimumProfile);
-        List<String> roleNames = simpleConvertRoles(oidcOriginalRoleNames);
+        return getProfileGroups(getGroups(user));
+    }
 
-        return getProfileGroups(roleNames);
+    /**
+     * given an oauth2 user, compute the system groups
+     *
+     * @param user - oauth2 user from OIDC
+     * @return system groups
+     */
+    public List<String> getSystemGroups(OAuth2User user) {
+        return getSystemGroups(getGroups(user));
     }
 
     /**
@@ -155,7 +215,7 @@ public class OIDCRoleProcessor {
      */
     public List<String> simpleConvertRoles(List<String> originalRoleNames) {
         return originalRoleNames.stream()
-            .map(x -> oidcConfiguration.roleConverter.get(x) == null ? x : oidcConfiguration.roleConverter.get(x))
+            .map(x -> oidcConfiguration.getRoleConverter().get(x) == null ? x : oidcConfiguration.getRoleConverter().get(x))
             .distinct()
             .collect(Collectors.toList());
     }
@@ -180,17 +240,13 @@ public class OIDCRoleProcessor {
      * @return
      */
     public Collection<? extends GrantedAuthority> createAuthorities(RoleHierarchy roleHierarchy, Map<String, Object> claims) {
-        List<String> oidcOriginalRoleNames = getTokenRoles(claims);
-
-        return createAuthorities(roleHierarchy, oidcOriginalRoleNames);
+        return createAuthorities(roleHierarchy, getGroups(claims));
     }
 
-    public Collection<? extends GrantedAuthority> createAuthorities(RoleHierarchy roleHierarchy, List<String> oidcOriginalRoleNames) {
-        oidcOriginalRoleNames.add(oidcConfiguration.minimumProfile);
-
-        List<String> roleNames = simpleConvertRoles(oidcOriginalRoleNames);
+    public Collection<? extends GrantedAuthority> createAuthorities(RoleHierarchy roleHierarchy, List<String> roleNames) {
         Map<Profile, List<String>> profileGroups = getProfileGroups(roleNames);
 
+        // Add profile-based authorities
         List<SimpleGrantedAuthority> authorities = profileGroups.keySet().stream()
             .map(x -> new SimpleGrantedAuthority(x.toString()))
             .collect(Collectors.toList());
@@ -206,7 +262,7 @@ public class OIDCRoleProcessor {
      */
     public Profile getProfile(Map<String, Object> attributes) {
         List<String> oidcOriginalRoleNames = getTokenRoles(attributes);
-        oidcOriginalRoleNames.add(oidcConfiguration.minimumProfile);
+        oidcOriginalRoleNames.add(oidcConfiguration.getMinimumProfile().name());
 
         List<String> roleNames = simpleConvertRoles(oidcOriginalRoleNames);
 
@@ -240,15 +296,23 @@ public class OIDCRoleProcessor {
     }
 
     /**
-     * Get the profiles, and the list of groups for that profile, from the access token.
+     * Extracts profiles and their associated groups from a list of roles.
+     * <p>
+     * This method processes a list of roles to identify profiles and their corresponding groups.
+     * Roles that follow the "group:role" format are treated as group-profile pairs, while roles
+     * that match known profiles are added without duplication. The method returns a map where
+     * each profile is associated with a list of groups.
+     * </p>
      *
-     * @param rolesInToken list of roles for the user
-     * @return map object with the profile and related groups.
+     * @param rolesInToken A list of roles for the user, which may include group-profile pairs
+     *                     or standalone profiles.
+     * @return A map where the keys are profiles and the values are lists of groups associated
+     *         with those profiles.
      */
     //from GN keycloak plugin
     public Map<Profile, List<String>> getProfileGroups(List<String> rolesInToken) {
 
-        String roleGroupSeparator = oidcConfiguration.groupPermissionSeparator;
+        String roleGroupSeparator = oidcConfiguration.getGroupPermissionSeparator();
         Map<Profile, List<String>> profileGroups = new HashMap<>();
 
         Set<String> roleGroupList = new HashSet<>();
@@ -256,6 +320,7 @@ public class OIDCRoleProcessor {
         // Get role that are in the format of group:role format access
         // Todo Reevaluate to see if this is how we want to get role groups. It may not be a good idea to place separator in group name and parse it this way.
         for (String role : rolesInToken) {
+            // Only add profile groups which have a separator.
             if (role.contains(roleGroupSeparator)) {
                 Log.debug(Geonet.SECURITY, "Identified group:profile (" + role + ") from user token.");
                 roleGroupList.add(role);
@@ -267,7 +332,6 @@ public class OIDCRoleProcessor {
                 }
             }
         }
-
 
         for (String rg : roleGroupList) {
             String[] rg_role_groups = rg.split(roleGroupSeparator);
@@ -300,6 +364,32 @@ public class OIDCRoleProcessor {
         return profileGroups;
     }
 
+    /**
+     * Extracts a list of system groups from the provided roles.
+     * <p>
+     * System groups are roles that do not follow the "group:role" format and are not recognized as profiles.
+     * This method filters out roles that contain the group-role separator or match any known profiles.
+     * </p>
+     *
+     * @param roles A list of roles to process.
+     * @return A list of system groups extracted from the roles.
+     */
+    public List<String> getSystemGroups(List<String> roles) {
+
+        String roleGroupSeparator = oidcConfiguration.getGroupPermissionSeparator();
+
+        List<String> groups = new ArrayList<>();
+
+        // Get role that are not in the format of group:role format access. These will be system roles or profiles.
+        for (String role : roles) {
+            // Only add system groups (Roles that do not have a separator and are not a profile).
+            if (!role.contains(roleGroupSeparator) && Profile.findProfileIgnoreCase(role) == null) {
+                groups.add(role);
+            }
+        }
+
+        return groups;
+    }
 
     /**
      * This extracts a list of roles from the token.
@@ -343,6 +433,4 @@ public class OIDCRoleProcessor {
         Log.debug(Geonet.SECURITY, "oidc: pathToRoles - couldn't find role list - " + pathToRoles);
         return new ArrayList<>(); // unexpected...
     }
-
-
 }

@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<root>
+  <request>
+    <thesaurus>local.theme.geocat.ch</thesaurus>
+    <textgroupOnly>false</textgroupOnly>
+    <id>http://geocat.ch/concept#100</id>
+    <langMap>{"ger":"#DE","fre":"#FR"}</langMap>
+    <transformation>to-iso19115-3.2018-keyword-as-xlink</transformation>
+    <lang>ger,fre</lang>
+    <languageConversions>
+      <conversion from="ger" to="DE"/>
+      <conversion from="fre" to="FR"/>
+    </languageConversions>
+  </request>
+
+  <descKeys>
+    <keyword>
+      <selected>false</selected>
+      <id>0</id>
+      <value language="ger">Geologische Karte</value>
+      <definition language="ger">Geologie, Boden, naturbedingte Risiken</definition>
+      <defaultLang>ger</defaultLang>
+      <thesaurus>
+        <key>local.theme.geocat.ch</key>
+        <title>geocat.ch</title>
+        <date>2025-09-30</date>
+        <type>theme</type>
+        <url>http://localhost:8080/geonetwork/srv/api/registries/vocabularies/local.theme.geocat.ch</url>
+      </thesaurus>
+      <uri>http://geocat.ch/concept#100</uri>
+      <values>
+        <value language="ger">Geologische Karte</value>
+        <value language="fre">carte géologique</value>
+        <value language="eng">geologic map</value>
+      </values>
+      <definitions>
+        <definition language="ger">Geologie, Boden, naturbedingte Risiken</definition>
+        <definition language="fre"/>
+        <definition language="eng"/>
+      </definitions>
+    </keyword>
+  </descKeys>
+
+  <gui>
+    <thesaurus>
+      <thesauri>
+        <thesaurus>
+          <key>local.theme.geocat.ch</key>
+          <dname>theme</dname>
+          <description/>
+          <filename>geocat.ch.rdf</filename>
+          <title>geocat.ch</title>
+          <multilingualTitles/>
+          <dublinCoreMultilinguals/>
+          <multilingualDescriptions/>
+          <date>2025-09-30</date>
+          <createdDate/>
+          <issuedDate/>
+          <modifiedDate/>
+          <url>http://localhost:8080/geonetwork/srv/api/registries/vocabularies/local.theme.geocat.ch</url>
+          <defaultNamespace>http://www.geocat.ch/concept</defaultNamespace>
+          <type>local</type>
+        </thesaurus>
+      </thesauri>
+    </thesaurus>
+  </gui>
+  <nodeUrl>http://localhost:8080/geonetwork/srv/</nodeUrl>
+  <nodeId>srv</nodeId>
+</root>

@@ -26,3 +26,6 @@ A file uploaded in this way will be exported in the metadata export file (MEF). 
 ## Filestore configuration
 
 By default, the maximum file size is set to 100Mb. This limit is set in `/services/src/main/resources/config-spring-geonetwork.xml` with the parameter `maxUploadSize`.
+
+Types of attachments allowed to be uploaded can be configured in the system settings.  
+See [Metadata configuration](../../administrator-guide/configuring-the-catalog/system-configuration.md#metadata_configuration) for more details.

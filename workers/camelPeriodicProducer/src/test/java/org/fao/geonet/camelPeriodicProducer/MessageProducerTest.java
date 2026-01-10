@@ -39,12 +39,14 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -170,16 +172,16 @@ public class MessageProducerTest extends AbstractJUnit4SpringContextTests {
         }
     }
 
-    static public class MessageConsumer {
+    public static class MessageConsumer {
 
-        private Integer count = 0;
-        private CompletableFuture<List<String>> future = new CompletableFuture();
-        private String uri;
-
-        private List<String> receivedContent = new ArrayList();
+        private final String uri;
+        private AtomicInteger count;
+        private CompletableFuture<List<String>> future;
+        private List<String> receivedContent;
 
         public MessageConsumer(String uri) {
             this.uri = uri;
+            reset();
         }
 
         public String getUri() {
@@ -189,9 +191,8 @@ public class MessageProducerTest extends AbstractJUnit4SpringContextTests {
         public void consume(Exchange exchange) {
             TestMessage msg = (TestMessage) exchange.getProperty("configuration");
             receivedContent.add(msg.getContent());
-            count++;
-            if (count > 4) {
-                future.complete(receivedContent);
+            if (count.incrementAndGet() > 4) {
+                future.complete(new ArrayList<>(receivedContent));
             }
         }
 
@@ -200,9 +201,9 @@ public class MessageProducerTest extends AbstractJUnit4SpringContextTests {
         }
 
         public void reset() {
-            count = 0;
-            receivedContent = new ArrayList();
-            future = new CompletableFuture();
+            count = new AtomicInteger(0);
+            receivedContent = Collections.synchronizedList(new ArrayList<>());
+            future = new CompletableFuture<>();
         }
     }
 }

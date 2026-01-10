@@ -56,7 +56,7 @@ public class ClosureRequireDependencyManager {
     public Node addFile(@Nonnull String path, @Nonnull String javascript, @Nonnull Set<String> notMinimized) {
         boolean isMinimized = true;
         for (String s : notMinimized) {
-            if (path.endsWith(s)) {
+            if (path.endsWith(s) || path.endsWith(s.replace('/', '\\'))) {
                 isMinimized = false;
                 break;
             }

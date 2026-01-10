@@ -669,6 +669,16 @@
             toISOConversion: "schema:iso19115-3.2018:convert/fromJsonOpenDataSoft"
           }
         },
+        "STAC Collection": {
+          defaultValues: {
+            loopElement: "/collections",
+            numberOfRecordPath: "",
+            pageSizeParam: "limit",
+            pageFromParam: "page",
+            recordIdPath: "/id",
+            toISOConversion: "schema:iso19115-3.2018:convert/stac-to-iso19115-3"
+          }
+        },
         "XML (ISO19115-3)": {
           defaultValues: {
             loopElement: ".",
@@ -744,8 +754,65 @@
                 i++;
               });
             },
+            function (error) {
+              $rootScope.$broadcast("StatusUpdated", {
+                title: $translate.instant("harvesterErrorRetrieveSources"),
+                error: error.data.message || error.data.error.message,
+                timeout: 3,
+                type: "danger"
+              });
+            }
+          );
+      };
+
+      $scope.geonetworkGetSourcesGn4 = function (url) {
+        $http
+          .get($scope.proxyUrl + encodeURIComponent(url + "/srv/api/sources?type=portal"))
+          .then(
             function (response) {
-              // TODO
+              var sourcesList = [];
+
+              angular.forEach(response.data, function (source) {
+                sourcesList.push({
+                  uuid: source.uuid,
+                  name: source.name
+                });
+              });
+
+              $http
+                .get(
+                  $scope.proxyUrl +
+                    encodeURIComponent(url + "/srv/api/sources?type=harvester")
+                )
+                .then(
+                  function (response) {
+                    $scope.geonetworkSources = [];
+                    $scope.geonetworkSources = sourcesList;
+
+                    angular.forEach(response.data, function (source) {
+                      $scope.geonetworkSources.push({
+                        uuid: source.uuid,
+                        name: source.name
+                      });
+                    });
+                  },
+                  function (error) {
+                    $rootScope.$broadcast("StatusUpdated", {
+                      title: $translate.instant("harvesterErrorRetrieveSources"),
+                      error: error.data.message || error.data.error.message,
+                      timeout: 3,
+                      type: "danger"
+                    });
+                  }
+                );
+            },
+            function (error) {
+              $rootScope.$broadcast("StatusUpdated", {
+                title: $translate.instant("harvesterErrorRetrieveSources"),
+                error: error.data.message || error.data.error.message,
+                timeout: 3,
+                type: "danger"
+              });
             }
           );
       };

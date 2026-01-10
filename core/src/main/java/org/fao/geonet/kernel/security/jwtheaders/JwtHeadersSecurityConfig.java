@@ -22,7 +22,10 @@
  */
 package org.fao.geonet.kernel.security.jwtheaders;
 
+import org.fao.geonet.exceptions.BadParameterEx;
 import org.fao.geonet.kernel.security.SecurityProviderConfiguration;
+import static org.fao.geonet.kernel.security.SecurityProviderConfiguration.LoginType.AUTOLOGIN;
+import static org.fao.geonet.kernel.security.SecurityProviderConfiguration.LoginType.parse;
 
 /**
  * GeoNetwork only allows one SecurityProviderConfiguration bean.
@@ -32,8 +35,8 @@ import org.fao.geonet.kernel.security.SecurityProviderConfiguration;
  */
 public class JwtHeadersSecurityConfig implements SecurityProviderConfiguration {
 
+    private String loginType = AUTOLOGIN.toString();
 
-    public SecurityProviderConfiguration.LoginType loginType = SecurityProviderConfiguration.LoginType.AUTOLOGIN;
     /**
      * true -> update the DB with the information from OIDC (don't allow user to edit profile in the UI)
      * false -> don't update the DB (user must edit profile in UI).
@@ -50,7 +53,27 @@ public class JwtHeadersSecurityConfig implements SecurityProviderConfiguration {
 
 
     public JwtHeadersSecurityConfig() {
+    }
 
+    @Override
+    public String getLoginType() {
+        return loginType;
+    }
+
+    public void setLoginType(String loginType) {
+        LoginType parsedLoginType = parse(loginType);
+        switch(parsedLoginType) {
+            case FORM:
+            case AUTOLOGIN:
+                break;
+            case DEFAULT:
+                parsedLoginType= AUTOLOGIN;
+                break;
+            default:
+                // Currently don't support anything else
+                throw new BadParameterEx("loginType", parsedLoginType.toString());
+        }
+        this.loginType = parsedLoginType.toString();
     }
 
     public boolean isUpdateProfile() {
@@ -72,11 +95,6 @@ public class JwtHeadersSecurityConfig implements SecurityProviderConfiguration {
         this.updateGroup = updateGroup;
     }
 
-    //@Override
-    public String getLoginType() {
-        return loginType.toString();
-    }
-
     // @Override
     public String getSecurityProvider() {
         return "JWT-HEADERS";
@@ -88,12 +106,9 @@ public class JwtHeadersSecurityConfig implements SecurityProviderConfiguration {
         return !updateProfile;
     }
 
-    //========================================================================
-
     // @Override
     public boolean isUserGroupUpdateEnabled() {
         // If updating group from the security provider then disable the group updates in the interface
         return !updateGroup;
     }
-
 }
