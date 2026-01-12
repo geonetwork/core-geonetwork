@@ -1511,7 +1511,7 @@
          <es.platform>windows-x86_64</es.platform>
          <es.installer.extension>zip</es.installer.extension>
          <kb.executable>kibana.bat</kb.executable>
-         <kb.platform>windows-x86</kb.platform>
+         <kb.platform>windows-x86_64</kb.platform>
          <kb.installer.extension>zip</kb.installer.extension>
        </properties>
      </profile>

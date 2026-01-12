@@ -14,7 +14,7 @@
 3. Check that it is running using your browser:
    
    * Elasticsearch: http://localhost:9200
-   * Kabana: http://localhost:5601
+   * Kibana: http://localhost:5601/api/status
 
 ## Maven installation
 
@@ -24,14 +24,21 @@
    * initialize collection
    * start
 
-2. Use maven to download:
+2. Use Maven to download:
 
    ```
-   cd es/es-dashboard
+   cd es/es-dashboards
    mvn install -Pkb-download
    ```
 
-3. Run locally:
+3. Set Kibana base path in config/kibana.yml:
+
+   ```
+   server.basePath: "/geonetwork/dashboards"
+   server.rewriteBasePath: false
+   ```
+
+4. Run locally:
 
    ```
    mvn exec:exec -Dkb-start
@@ -41,7 +48,7 @@
 
 1. Download Kibana 8.14.3 from https://www.elastic.co/downloads/kibana
 
-2. Set Kibana base path and index name in config/kibana.yml:
+2. Set Kibana base path in config/kibana.yml:
 
    ```
    server.basePath: "/geonetwork/dashboards"
@@ -59,10 +66,10 @@
 
 ## Import Configuration
 
-1. Kibana should be running from:
+1. The Kibana status details should be available at:
 
    ```
-   http://localhost:5601
+   http://localhost:5601/api/status
    ```
 
 2. And should be visible within the geonetwork interface at:
