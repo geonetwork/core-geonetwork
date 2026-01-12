@@ -320,17 +320,12 @@
           }
 
           return $http
-            .put(
-              "../api/userselections/" +
-                selection.id,
-              null,
-              {
-                params: {
-                  userIdentifier: this.userId,
-                  uuid: uuid
-                }
+            .put("../api/userselections/" + selection.id, null, {
+              params: {
+                userIdentifier: this.userId,
+                uuid: uuid
               }
-            )
+            })
             .then(function (r) {
               ctrl.init(ctrl.userId);
             });
@@ -344,16 +339,12 @@
         var ctrl = this;
         if (selection.id > -1) {
           return $http
-            .delete(
-              "../api/userselections/" +
-                selection.id,
-              {
-                params: {
-                  userIdentifier: this.userId,
-                  uuid: uuid
-                }
+            .delete("../api/userselections/" + selection.id, {
+              params: {
+                userIdentifier: this.userId,
+                uuid: uuid
               }
-            )
+            })
             .then(function (r) {
               ctrl.init(ctrl.userId);
             });
