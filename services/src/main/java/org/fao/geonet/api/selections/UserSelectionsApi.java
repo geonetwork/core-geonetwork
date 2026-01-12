@@ -237,8 +237,9 @@ public class UserSelectionsApi {
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 
-
-    @io.swagger.v3.oas.annotations.Operation(summary = "Get record in a user selection set")
+    // This deprecated end-point maintains the existing API, so backwards compatibility is preserved.
+    @Deprecated
+    @io.swagger.v3.oas.annotations.Operation(summary = "Get record in a user selection set. Deprecated, use /{selectionIdentifier}/items")
     @RequestMapping(
         method = RequestMethod.GET,
         value = "/{selectionIdentifier}/{userIdentifier}",
@@ -262,6 +263,36 @@ public class UserSelectionsApi {
             HttpSession httpSession
     )
         throws Exception {
+        return getUserSelectionRecords(selectionIdentifier, userIdentifier, httpSession);
+    }
+
+    @io.swagger.v3.oas.annotations.Operation(summary = "Get record in a user selection set")
+    @RequestMapping(
+        method = RequestMethod.GET,
+        value = "/{selectionIdentifier}/items",
+        produces = {
+            MediaType.APPLICATION_JSON_VALUE
+        })
+    @PreAuthorize("hasAuthority('Guest')")
+    public
+    @ResponseBody
+    @ResponseStatus(HttpStatus.OK)
+    List<String> getUserSelectionRecords(
+        @Parameter(description = "Selection identifier",
+            required = true)
+        @PathVariable
+            Integer selectionIdentifier,
+        @Parameter(description = "User identifier")
+        @RequestParam(required = false)
+            Integer userIdentifier,
+        @Parameter(hidden = true)
+            HttpSession httpSession
+    )
+        throws Exception {
+        if (userIdentifier == null) {
+            final UserSession us = ApiUtils.getUserSession(httpSession);
+            userIdentifier = us.getUserIdAsInt();
+        }
         Optional<User> user = checkUserAllowed(httpSession, userIdentifier);
 
         Optional<Selection> selection = selectionRepository.findById(selectionIdentifier);
@@ -276,8 +307,9 @@ public class UserSelectionsApi {
 
     }
 
-
-    @io.swagger.v3.oas.annotations.Operation(summary = "Add items to a user selection set")
+    // This deprecated end-point maintains the existing API, so backwards compatibility is preserved.
+    @Deprecated
+    @io.swagger.v3.oas.annotations.Operation(summary = "Add items to a user selection set. Deprecated, use /{selectionIdentifier}/items")
     @RequestMapping(
         method = RequestMethod.PUT,
         value = "/{selectionIdentifier}/{userIdentifier}",
@@ -309,6 +341,45 @@ public class UserSelectionsApi {
             HttpSession httpSession
     )
         throws Exception {
+        Log.warning(API.LOG_MODULE_NAME, "UserSelectionsApi - Called deprecated api - should use /{selectionIdentifier}/items instead");
+        return addUserSelectionRecords(selectionIdentifier, userIdentifier, uuid, httpSession);
+    }
+
+    @io.swagger.v3.oas.annotations.Operation(summary = "Add items to a user selection set")
+    @RequestMapping(
+        method = RequestMethod.PUT,
+        value = "/{selectionIdentifier}/items",
+        produces = {
+            MediaType.APPLICATION_JSON_VALUE
+        })
+    @PreAuthorize("hasAuthority('Guest')")
+    public
+    @ResponseBody
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "201", description = "Records added to selection set."),
+        @ApiResponse(responseCode = "404", description = "Selection or user or at least one UUID not found."),
+        @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_USER_ADMIN)
+    })
+    ResponseEntity<String> addUserSelectionRecords(
+        @Parameter(description = "Selection identifier",
+            required = true)
+        @PathVariable
+            Integer selectionIdentifier,
+        @Parameter(description = "User identifier")
+        @RequestParam(required = false)
+            Integer userIdentifier,
+        @Parameter(description = "One or more record UUIDs.")
+        @RequestParam(required = false)
+            String[] uuid,
+        @Parameter(hidden = true)
+            HttpSession httpSession
+    )
+        throws Exception {
+
+        if (userIdentifier == null) {
+            final UserSession us = ApiUtils.getUserSession(httpSession);
+            userIdentifier = us.getUserIdAsInt();
+        }
         Optional<User> user = checkUserAllowed(httpSession, userIdentifier);
 
         Optional<Selection> selection = selectionRepository.findById(selectionIdentifier);
@@ -338,8 +409,8 @@ public class UserSelectionsApi {
 
     }
 
-
-    @io.swagger.v3.oas.annotations.Operation(summary = "Remove items to a user selection set")
+    @Deprecated
+    @io.swagger.v3.oas.annotations.Operation(summary = "Remove items to a user selection set. Deprecated, use /{selectionIdentifier}/items")
     @RequestMapping(
         method = RequestMethod.DELETE,
         value = "/{selectionIdentifier}/{userIdentifier}",
@@ -371,6 +442,45 @@ public class UserSelectionsApi {
             HttpSession httpSession
     )
         throws Exception {
+        Log.warning(API.LOG_MODULE_NAME, "UserSelectionsApi - Called deprecated api - should use /{selectionIdentifier}/items instead");
+        return deleteUserSelectionRecords(selectionIdentifier, userIdentifier, uuid, httpSession);
+    }
+
+
+    @io.swagger.v3.oas.annotations.Operation(summary = "Remove items to a user selection set")
+    @RequestMapping(
+        method = RequestMethod.DELETE,
+        value = "/{selectionIdentifier}/items",
+        produces = {
+            MediaType.APPLICATION_JSON_VALUE
+        })
+    @PreAuthorize("hasAuthority('Guest')")
+    public
+    @ResponseBody
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "204", description = "Items removed from a set.", content = {@Content(schema = @Schema(hidden = true))}),
+        @ApiResponse(responseCode = "404", description = "Selection or user not found."),
+        @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_USER_ADMIN)
+    })
+    ResponseEntity deleteUserSelectionRecords(
+        @Parameter(description = "Selection identifier",
+            required = true)
+        @PathVariable
+            Integer selectionIdentifier,
+        @Parameter(description = "User identifier")
+        @RequestParam(required = false)
+            Integer userIdentifier,
+        @Parameter(description = "One or more record UUIDs. If null, remove all.")
+        @RequestParam(required = false)
+            String[] uuid,
+        @Parameter(hidden = true)
+            HttpSession httpSession
+    )
+        throws Exception {
+        if (userIdentifier == null) {
+            final UserSession us = ApiUtils.getUserSession(httpSession);
+            userIdentifier = us.getUserIdAsInt();
+        }
         Optional<User> user = checkUserAllowed(httpSession, userIdentifier);
 
         Optional<Selection> selection = selectionRepository.findById(selectionIdentifier);
