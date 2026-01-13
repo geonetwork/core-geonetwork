@@ -61,11 +61,10 @@ import org.fao.geonet.utils.Xml;
 import org.jdom.Attribute;
 import org.jdom.Element;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationContext;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.context.support.ResourceBundleMessageSource;
+import org.springframework.http.*;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -110,6 +109,10 @@ public class MetadataApi {
 
     @Autowired
     GeonetworkDataDirectory dataDirectory;
+
+    @Autowired
+    @Qualifier("apiMessages")
+    private ResourceBundleMessageSource messages;
 
     private ApplicationContext context;
 
@@ -531,6 +534,7 @@ public class MetadataApi {
         HttpServletRequest request
     )
         throws Exception {
+        Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
         AbstractMetadata metadata;
         try {
             metadata = ApiUtils.canViewRecord(metadataUuid, request);
@@ -593,10 +597,10 @@ public class MetadataApi {
 
                 response.setContentType(MEFLib.Version.Constants.MEF_V2_ACCEPT_TYPE);
             }
-            response.setHeader(HttpHeaders.CONTENT_DISPOSITION, String.format(
-                "inline; filename=\"%s.zip\"",
-                metadata.getUuid()
-            ));
+            String suffix = includeAttachments ? "" : "-" + messages.getMessage("api.metadata.export.filename.withoutAttachmentsSuffix", null, locale);
+            String filename = metadata.getUuid() + suffix + ".zip";
+            ContentDisposition contentDisposition = ContentDisposition.inline().filename(filename).build();
+            response.setHeader(HttpHeaders.CONTENT_DISPOSITION, contentDisposition.toString());
             response.setHeader(HttpHeaders.CONTENT_LENGTH, String.valueOf(Files.size(file)));
             FileUtils.copyFile(file.toFile(), response.getOutputStream());
         } finally {
