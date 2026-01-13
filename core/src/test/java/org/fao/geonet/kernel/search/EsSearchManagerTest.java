@@ -1,20 +1,26 @@
 package org.fao.geonet.kernel.search;
 
+import co.elastic.clients.elasticsearch._types.aggregations.*;
+import co.elastic.clients.elasticsearch.core.SearchRequest;
+import co.elastic.clients.elasticsearch.core.SearchResponse;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.junit.Assert.assertThrows;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
 import org.fao.geonet.index.es.EsRestClient;
+import org.mockito.ArgumentCaptor;
 import org.jdom.Element;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.util.*;
 
 public class EsSearchManagerTest {
@@ -71,142 +77,156 @@ public class EsSearchManagerTest {
     }
 
     @Test
-    public void getResourcesFromIndexReturnsListWhenFileStoreExists() throws Exception {
-        String metadataUuid = "test-uuid";
-        Map<String, Object> resource1 = new HashMap<>();
-        resource1.put("name", "file1.txt");
-        resource1.put("size", 1024);
-        Map<String, Object> resource2 = new HashMap<>();
-        resource2.put("name", "file2.txt");
-        resource2.put("size", 2048);
+    public void getTotalSizeOfResourcesApprovedReturnsSumOfApprovedDocuments() throws IOException {
+        EsRestClient mockClient = mock(EsRestClient.class);
+        SearchResponse<Void> response = setupResponse(5120.0);
 
-        Map<String, Object> mdIndexFields = new HashMap<>();
-        mdIndexFields.put(IndexFields.FILESTORE, Arrays.asList(resource1, resource2));
+        when(mockClient.getClient().search(any(SearchRequest.class), eq(Void.class))).thenReturn(response);
 
         EsSearchManager manager = new EsSearchManager();
-        EsRestClient mockClient = mock(EsRestClient.class);
         manager.setClient(mockClient);
-        when(mockClient.getDocument(anyString(), anyString())).thenReturn(mdIndexFields);
 
-        List<Map<String, Object>> result = manager.getResourcesFromIndex(metadataUuid, true);
-
-        assertEquals(2, result.size());
-        assertEquals("file1.txt", result.get(0).get("name"));
-        assertEquals("file2.txt", result.get(1).get("name"));
+        // Approved mode filters draft in {"n", "e"}
+        assertEquals(5120L, manager.getTotalSizeOfResources(Set.of("uuid1", "uuid2"), true).longValue());
     }
 
     @Test
-    public void getResourcesFromIndexReturnsEmptyListWhenDocumentNotFound() throws Exception {
-        String metadataUuid = "nonexistent-uuid";
+    public void getTotalSizeOfResourcesReturnsZeroWhenNoDocumentsExist() throws IOException {
+        EsRestClient mockClient = mock(EsRestClient.class);
+        SearchResponse<Void> response = setupResponse(0.0);
+
+        when(mockClient.getClient().search(any(SearchRequest.class), eq(Void.class))).thenReturn(response);
 
         EsSearchManager manager = new EsSearchManager();
-        EsRestClient mockClient = mock(EsRestClient.class);
         manager.setClient(mockClient);
-        when(mockClient.getDocument(anyString(), eq("nonexistent-uuid"))).thenReturn(null);
 
-        List<Map<String, Object>> result = manager.getResourcesFromIndex(metadataUuid, true);
-
-        assertEquals(0, result.size());
+        // Both modes return 0 when ES returns 0
+        assertEquals(0L, manager.getTotalSizeOfResources(Set.of("uuid1"), true).longValue());
+        assertEquals(0L, manager.getTotalSizeOfResources(Set.of("uuid1"), false).longValue());
     }
 
     @Test
-    public void getResourcesFromIndexReturnsEmptyListWhenFileStoreFieldMissing() throws Exception {
-        String metadataUuid = "test-uuid";
-        Map<String, Object> mdIndexFields = new HashMap<>();
+    public void getTotalSizeOfResourcesHandlesEmptyUuidSet() throws IOException {
+        EsRestClient mockClient = mock(EsRestClient.class);
+        SearchResponse<Void> response = setupResponse(0.0);
+
+        when(mockClient.getClient().search(any(SearchRequest.class), eq(Void.class))).thenReturn(response);
 
         EsSearchManager manager = new EsSearchManager();
-        EsRestClient mockClient = mock(EsRestClient.class);
         manager.setClient(mockClient);
-        when(mockClient.getDocument(anyString(), anyString())).thenReturn(mdIndexFields);
 
-        List<Map<String, Object>> result = manager.getResourcesFromIndex(metadataUuid, true);
-
-        assertEquals(0, result.size());
+        // Works for both modes since it's the same aggregation logic
+        assertEquals(0L, manager.getTotalSizeOfResources(Set.of(), true).longValue());
+        assertEquals(0L, manager.getTotalSizeOfResources(Set.of(), false).longValue());
     }
 
     @Test
-    public void getResourcesFromIndexUsesDraftKeyWhenNotApproved() throws Exception {
-        String metadataUuid = "test-uuid";
-        Map<String, Object> mdIndexFields = new HashMap<>();
-        mdIndexFields.put(IndexFields.FILESTORE, new ArrayList<>());
+    public void getTotalSizeOfResourcesHandlesLargeFileSizes() throws IOException {
+        EsRestClient mockClient = mock(EsRestClient.class);
+        // Test with 100GB = 107,374,182,400 bytes
+        double largeSize = 107374182400.0;
+        SearchResponse<Void> response = setupResponse(largeSize);
+
+        when(mockClient.getClient().search(any(SearchRequest.class), eq(Void.class))).thenReturn(response);
 
         EsSearchManager manager = new EsSearchManager();
-        EsRestClient mockClient = mock(EsRestClient.class);
         manager.setClient(mockClient);
-        when(mockClient.getDocument(anyString(), eq("test-uuid-draft"))).thenReturn(mdIndexFields);
 
-        manager.getResourcesFromIndex(metadataUuid, false);
-
-        verify(mockClient).getDocument(anyString(), eq("test-uuid-draft"));
+        // Works for both modes since it's the same aggregation logic
+        assertEquals(107374182400L, manager.getTotalSizeOfResources(Set.of("uuid1"), true).longValue());
     }
 
     @Test
-    public void getResourcesFromIndexFiltersNullElements() throws Exception {
-        String metadataUuid = "test-uuid";
-        Map<String, Object> resource1 = new HashMap<>();
-        resource1.put("name", "file1.txt");
+    public void getTotalSizeOfResourcesPreferDraftReturnsSum() throws IOException {
+        EsRestClient mockClient = mock(EsRestClient.class);
+        SearchResponse<Void> response = setupResponse(8000.0);
 
-        Map<String, Object> mdIndexFields = new HashMap<>();
-        mdIndexFields.put(IndexFields.FILESTORE, Arrays.asList(resource1, null));
+        when(mockClient.getClient().search(any(SearchRequest.class), eq(Void.class))).thenReturn(response);
 
         EsSearchManager manager = new EsSearchManager();
-        EsRestClient mockClient = mock(EsRestClient.class);
         manager.setClient(mockClient);
-        when(mockClient.getDocument(anyString(), anyString())).thenReturn(mdIndexFields);
 
-        List<Map<String, Object>> result = manager.getResourcesFromIndex(metadataUuid, true);
-
-        assertEquals(1, result.size());
-        assertEquals("file1.txt", result.get(0).get("name"));
+        // Prefer-draft mode filters draft in {"y", "n"}
+        assertEquals(8000L, manager.getTotalSizeOfResources(Set.of("uuid1", "uuid2"), false).longValue());
     }
 
     @Test
-    public void getResourcesFromIndexFiltersNonMapElements() throws Exception {
-        String metadataUuid = "test-uuid";
-        Map<String, Object> resource1 = new HashMap<>();
-        resource1.put("name", "file1.txt");
+    public void getTotalSizeOfResourcesThrowsRuntimeExceptionOnIOError() throws IOException {
+        Set<String> uuids = Set.of("uuid1", "uuid2");
 
-        Map<String, Object> mdIndexFields = new HashMap<>();
-        mdIndexFields.put(IndexFields.FILESTORE, Arrays.asList(resource1, "invalid", 123));
+        EsRestClient mockClient = mock(EsRestClient.class);
+        when(mockClient.getClient().search(any(SearchRequest.class), eq(Void.class)))
+            .thenThrow(new IOException("Connection failed"));
 
         EsSearchManager manager = new EsSearchManager();
-        EsRestClient mockClient = mock(EsRestClient.class);
         manager.setClient(mockClient);
-        when(mockClient.getDocument(anyString(), anyString())).thenReturn(mdIndexFields);
 
-        List<Map<String, Object>> result = manager.getResourcesFromIndex(metadataUuid, true);
+        // Test both modes - same error handling path
+        RuntimeException exception1 = assertThrows(RuntimeException.class,
+            () -> manager.getTotalSizeOfResources(uuids, true));
+        assertEquals("Failed to get total size of resources for uuids: uuid1, uuid2", exception1.getMessage());
 
-        assertEquals(1, result.size());
-        assertEquals("file1.txt", result.get(0).get("name"));
+        RuntimeException exception2 = assertThrows(RuntimeException.class,
+            () -> manager.getTotalSizeOfResources(uuids, false));
+        assertEquals("Failed to get total size of resources for uuids: uuid1, uuid2", exception2.getMessage());
     }
 
     @Test
-    public void getResourcesFromIndexReturnsEmptyListOnException() throws Exception {
-        String metadataUuid = "test-uuid";
+    public void getTotalSizeOfResourcesApprovedUsesCorrectDraftFilter() throws IOException {
+        EsRestClient mockClient = mock(EsRestClient.class);
+        SearchResponse<Void> response = setupResponse(1000.0);
+
+        ArgumentCaptor<SearchRequest> requestCaptor = ArgumentCaptor.forClass(SearchRequest.class);
+        when(mockClient.getClient().search(requestCaptor.capture(), eq(Void.class))).thenReturn(response);
 
         EsSearchManager manager = new EsSearchManager();
-        EsRestClient mockClient = mock(EsRestClient.class);
         manager.setClient(mockClient);
-        when(mockClient.getDocument(anyString(), anyString())).thenThrow(new RuntimeException("Test exception"));
 
-        List<Map<String, Object>> result = manager.getResourcesFromIndex(metadataUuid, true);
+        manager.getTotalSizeOfResources(Set.of("uuid1"), true);
 
-        assertEquals(0, result.size());
+        // Verify the query structure
+        SearchRequest capturedRequest = requestCaptor.getValue();
+        String queryString = capturedRequest.toString();
+
+        // Approved mode should filter draft in {"n", "e"}
+        assertTrue("Query should contain draft filter with 'n'", queryString.contains("\"n\""));
+        assertTrue("Query should contain draft filter with 'e'", queryString.contains("\"e\""));
     }
 
     @Test
-    public void getResourcesFromIndexReturnsEmptyListWhenFileStoreIsNotList() throws Exception {
-        String metadataUuid = "test-uuid";
-        Map<String, Object> mdIndexFields = new HashMap<>();
-        mdIndexFields.put(IndexFields.FILESTORE, "not a list");
+    public void getTotalSizeOfResourcesPreferDraftUsesCorrectDraftFilter() throws IOException {
+        EsRestClient mockClient = mock(EsRestClient.class);
+        SearchResponse<Void> response = setupResponse(1000.0);
+
+        ArgumentCaptor<SearchRequest> requestCaptor = ArgumentCaptor.forClass(SearchRequest.class);
+        when(mockClient.getClient().search(requestCaptor.capture(), eq(Void.class))).thenReturn(response);
 
         EsSearchManager manager = new EsSearchManager();
-        EsRestClient mockClient = mock(EsRestClient.class);
         manager.setClient(mockClient);
-        when(mockClient.getDocument(anyString(), anyString())).thenReturn(mdIndexFields);
 
-        List<Map<String, Object>> result = manager.getResourcesFromIndex(metadataUuid, true);
+        manager.getTotalSizeOfResources(Set.of("uuid1"), false);
 
-        assertEquals(0, result.size());
+        // Verify the query structure
+        SearchRequest capturedRequest = requestCaptor.getValue();
+        String queryString = capturedRequest.toString();
+
+        // Prefer-draft mode should filter draft in {"y", "n"}
+        assertTrue("Query should contain draft filter with 'y'", queryString.contains("\"y\""));
+        assertTrue("Query should contain draft filter with 'n'", queryString.contains("\"n\""));
     }
+
+    private static Aggregate sumAgg(double value) {
+        return Aggregate.of(a -> a.sum(s -> s.value(value)));
+    }
+
+    private static SearchResponse<Void> setupResponse(double totalSize) {
+        @SuppressWarnings("unchecked")
+        SearchResponse<Void> response = mock(SearchResponse.class);
+        when(response.aggregations()).thenReturn(Map.of(
+            "total_resources_size", sumAgg(totalSize)
+        ));
+        return response;
+    }
+
+
 }

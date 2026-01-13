@@ -780,11 +780,7 @@ public class MEFLib {
             return false;
         }
 
-        long totalSize = 0L;
-        for (String metadataUuid : metadataUuids) {
-            List<Map<String, Object>> resources = searchManager.getResourcesFromIndex(metadataUuid, approved);
-            totalSize += getTotalSizeOfAllAttachments(resources);
-        }
+        long totalSize = searchManager.getTotalSizeOfResources(metadataUuids, approved);
 
         return totalSize > maxSizeLimit;
     }
@@ -816,27 +812,5 @@ public class MEFLib {
         }
 
         return maxSizeLimitInMb * 1024 * 1024;
-    }
-
-    /**
-     * Computes the total size of all resources in the provided list.
-     *
-     * Iterates through the resources collection, extracts the "size" field from each resource map,
-     * filters out null values, converts the size values to long integers, and sums them up.
-     * Non-numeric size values are treated as 0.
-     *
-     * @param resources A list of resource property maps, each containing at least a "size" key with a numeric value.
-     * @return The total size in bytes of all resources in the list.
-     */
-    static long getTotalSizeOfAllAttachments(List<Map<String, Object>> resources) {
-        if (resources == null || resources.isEmpty()) {
-            return 0L;
-        }
-
-        return resources.stream()
-            .map(r -> r.get("size"))
-            .filter(Objects::nonNull)
-            .mapToLong(size -> size instanceof Number ? ((Number) size).longValue() : 0L)
-            .sum();
     }
 }
