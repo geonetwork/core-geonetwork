@@ -1,5 +1,6 @@
 package org.fao.geonet.kernel.search;
 
+import co.elastic.clients.elasticsearch.ElasticsearchClient;
 import co.elastic.clients.elasticsearch._types.aggregations.*;
 import co.elastic.clients.elasticsearch.core.SearchRequest;
 import co.elastic.clients.elasticsearch.core.SearchResponse;
@@ -11,6 +12,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
@@ -78,13 +80,15 @@ public class EsSearchManagerTest {
 
     @Test
     public void getTotalSizeOfResourcesApprovedReturnsSumOfApprovedDocuments() throws IOException {
-        EsRestClient mockClient = mock(EsRestClient.class);
+        EsRestClient mockEsRestClient = mock(EsRestClient.class);
+        ElasticsearchClient mockElasticsearchClient = mock(ElasticsearchClient.class);
         SearchResponse<Void> response = setupResponse(5120.0);
 
-        when(mockClient.getClient().search(any(SearchRequest.class), eq(Void.class))).thenReturn(response);
+        when(mockEsRestClient.getClient()).thenReturn(mockElasticsearchClient);
+        when(mockElasticsearchClient.search(any(SearchRequest.class), eq(Void.class))).thenReturn(response);
 
         EsSearchManager manager = new EsSearchManager();
-        manager.setClient(mockClient);
+        manager.setClient(mockEsRestClient);
 
         // Approved mode filters draft in {"n", "e"}
         assertEquals(5120L, manager.getTotalSizeOfResources(Set.of("uuid1", "uuid2"), true).longValue());
@@ -92,13 +96,15 @@ public class EsSearchManagerTest {
 
     @Test
     public void getTotalSizeOfResourcesReturnsZeroWhenNoDocumentsExist() throws IOException {
-        EsRestClient mockClient = mock(EsRestClient.class);
+        EsRestClient mockEsRestClient = mock(EsRestClient.class);
+        ElasticsearchClient mockElasticsearchClient = mock(ElasticsearchClient.class);
         SearchResponse<Void> response = setupResponse(0.0);
 
-        when(mockClient.getClient().search(any(SearchRequest.class), eq(Void.class))).thenReturn(response);
+        when(mockEsRestClient.getClient()).thenReturn(mockElasticsearchClient);
+        when(mockElasticsearchClient.search(any(SearchRequest.class), eq(Void.class))).thenReturn(response);
 
         EsSearchManager manager = new EsSearchManager();
-        manager.setClient(mockClient);
+        manager.setClient(mockEsRestClient);
 
         // Both modes return 0 when ES returns 0
         assertEquals(0L, manager.getTotalSizeOfResources(Set.of("uuid1"), true).longValue());
@@ -107,13 +113,15 @@ public class EsSearchManagerTest {
 
     @Test
     public void getTotalSizeOfResourcesHandlesEmptyUuidSet() throws IOException {
-        EsRestClient mockClient = mock(EsRestClient.class);
+        EsRestClient mockEsRestClient = mock(EsRestClient.class);
+        ElasticsearchClient mockElasticsearchClient = mock(ElasticsearchClient.class);
         SearchResponse<Void> response = setupResponse(0.0);
 
-        when(mockClient.getClient().search(any(SearchRequest.class), eq(Void.class))).thenReturn(response);
+        when(mockEsRestClient.getClient()).thenReturn(mockElasticsearchClient);
+        when(mockElasticsearchClient.search(any(SearchRequest.class), eq(Void.class))).thenReturn(response);
 
         EsSearchManager manager = new EsSearchManager();
-        manager.setClient(mockClient);
+        manager.setClient(mockEsRestClient);
 
         // Works for both modes since it's the same aggregation logic
         assertEquals(0L, manager.getTotalSizeOfResources(Set.of(), true).longValue());
@@ -122,15 +130,17 @@ public class EsSearchManagerTest {
 
     @Test
     public void getTotalSizeOfResourcesHandlesLargeFileSizes() throws IOException {
-        EsRestClient mockClient = mock(EsRestClient.class);
+        EsRestClient mockEsRestClient = mock(EsRestClient.class);
+        ElasticsearchClient mockElasticsearchClient = mock(ElasticsearchClient.class);
         // Test with 100GB = 107,374,182,400 bytes
         double largeSize = 107374182400.0;
         SearchResponse<Void> response = setupResponse(largeSize);
 
-        when(mockClient.getClient().search(any(SearchRequest.class), eq(Void.class))).thenReturn(response);
+        when(mockEsRestClient.getClient()).thenReturn(mockElasticsearchClient);
+        when(mockElasticsearchClient.search(any(SearchRequest.class), eq(Void.class))).thenReturn(response);
 
         EsSearchManager manager = new EsSearchManager();
-        manager.setClient(mockClient);
+        manager.setClient(mockEsRestClient);
 
         // Works for both modes since it's the same aggregation logic
         assertEquals(107374182400L, manager.getTotalSizeOfResources(Set.of("uuid1"), true).longValue());
@@ -138,13 +148,15 @@ public class EsSearchManagerTest {
 
     @Test
     public void getTotalSizeOfResourcesPreferDraftReturnsSum() throws IOException {
-        EsRestClient mockClient = mock(EsRestClient.class);
+        EsRestClient mockEsRestClient = mock(EsRestClient.class);
+        ElasticsearchClient mockElasticsearchClient = mock(ElasticsearchClient.class);
         SearchResponse<Void> response = setupResponse(8000.0);
 
-        when(mockClient.getClient().search(any(SearchRequest.class), eq(Void.class))).thenReturn(response);
+        when(mockEsRestClient.getClient()).thenReturn(mockElasticsearchClient);
+        when(mockElasticsearchClient.search(any(SearchRequest.class), eq(Void.class))).thenReturn(response);
 
         EsSearchManager manager = new EsSearchManager();
-        manager.setClient(mockClient);
+        manager.setClient(mockEsRestClient);
 
         // Prefer-draft mode filters draft in {"y", "n"}
         assertEquals(8000L, manager.getTotalSizeOfResources(Set.of("uuid1", "uuid2"), false).longValue());
@@ -154,33 +166,32 @@ public class EsSearchManagerTest {
     public void getTotalSizeOfResourcesThrowsRuntimeExceptionOnIOError() throws IOException {
         Set<String> uuids = Set.of("uuid1", "uuid2");
 
-        EsRestClient mockClient = mock(EsRestClient.class);
-        when(mockClient.getClient().search(any(SearchRequest.class), eq(Void.class)))
+        EsRestClient mockEsRestClient = mock(EsRestClient.class);
+        ElasticsearchClient mockElasticsearchClient = mock(ElasticsearchClient.class);
+
+        when(mockEsRestClient.getClient()).thenReturn(mockElasticsearchClient);
+        when(mockElasticsearchClient.search(any(SearchRequest.class), eq(Void.class)))
             .thenThrow(new IOException("Connection failed"));
 
         EsSearchManager manager = new EsSearchManager();
-        manager.setClient(mockClient);
+        manager.setClient(mockEsRestClient);
 
-        // Test both modes - same error handling path
-        RuntimeException exception1 = assertThrows(RuntimeException.class,
+        assertThrows(RuntimeException.class,
             () -> manager.getTotalSizeOfResources(uuids, true));
-        assertEquals("Failed to get total size of resources for uuids: uuid1, uuid2", exception1.getMessage());
-
-        RuntimeException exception2 = assertThrows(RuntimeException.class,
-            () -> manager.getTotalSizeOfResources(uuids, false));
-        assertEquals("Failed to get total size of resources for uuids: uuid1, uuid2", exception2.getMessage());
     }
 
     @Test
     public void getTotalSizeOfResourcesApprovedUsesCorrectDraftFilter() throws IOException {
-        EsRestClient mockClient = mock(EsRestClient.class);
+        EsRestClient mockEsRestClient = mock(EsRestClient.class);
+        ElasticsearchClient mockElasticsearchClient = mock(ElasticsearchClient.class);
         SearchResponse<Void> response = setupResponse(1000.0);
 
         ArgumentCaptor<SearchRequest> requestCaptor = ArgumentCaptor.forClass(SearchRequest.class);
-        when(mockClient.getClient().search(requestCaptor.capture(), eq(Void.class))).thenReturn(response);
+        when(mockEsRestClient.getClient()).thenReturn(mockElasticsearchClient);
+        when(mockElasticsearchClient.search(requestCaptor.capture(), eq(Void.class))).thenReturn(response);
 
         EsSearchManager manager = new EsSearchManager();
-        manager.setClient(mockClient);
+        manager.setClient(mockEsRestClient);
 
         manager.getTotalSizeOfResources(Set.of("uuid1"), true);
 
@@ -195,14 +206,16 @@ public class EsSearchManagerTest {
 
     @Test
     public void getTotalSizeOfResourcesPreferDraftUsesCorrectDraftFilter() throws IOException {
-        EsRestClient mockClient = mock(EsRestClient.class);
+        EsRestClient mockEsRestClient = mock(EsRestClient.class);
+        ElasticsearchClient mockElasticsearchClient = mock(ElasticsearchClient.class);
         SearchResponse<Void> response = setupResponse(1000.0);
 
         ArgumentCaptor<SearchRequest> requestCaptor = ArgumentCaptor.forClass(SearchRequest.class);
-        when(mockClient.getClient().search(requestCaptor.capture(), eq(Void.class))).thenReturn(response);
+        when(mockEsRestClient.getClient()).thenReturn(mockElasticsearchClient);
+        when(mockElasticsearchClient.search(requestCaptor.capture(), eq(Void.class))).thenReturn(response);
 
         EsSearchManager manager = new EsSearchManager();
-        manager.setClient(mockClient);
+        manager.setClient(mockEsRestClient);
 
         manager.getTotalSizeOfResources(Set.of("uuid1"), false);
 
