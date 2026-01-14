@@ -292,6 +292,19 @@ Specifies the **file types** that can be attached to a metadata record.
 - `image/*|text/plain|application/xml|application/pdf` — allows images, text, XML, and PDF files.
 - `*/*` — allows all file types.
 
+## Metadata History
+
+Allows to view metadata history
+
+![](img/metadata_history.png)
+
+-   **Minimum user profile allowed to view metadata history** Minimum user profile allowed to delete metadata (`Registered User`, `Editor` or `Administrator`). The default value is `Editor`.
+    ![](img/metadata_history_config.png)
+
+-   **Registered User Configuration** The user who has granted view permission to the metadata record can view the history.
+-   **Editor Configuration** The user who has granted editing permission to the metadata record can view the history.
+-   **Administrator Configuration** The user who has granted system administrator permission can view the history.
+
 ## Metadata import {#editing_harvested_records}
 
 -   **Restrict import to schemas** List of all allowed schemas for metadata to be imported. If the metadata schema is not allowed, then the import is not done. Use an empty value to allow all schemas.
@@ -316,18 +329,11 @@ Allows to configure the user profile allowed to publish and un-publish metadata.
 
 ![](img/metadata-publication.png)
 
-## Metadata History
+## Metadata selection - zip export
 
-Allows to view metadata history
+Allows to configure the zip export of metadata records and their attachments.
 
-![](img/metadata_history.png)
-
--   **Minimum user profile allowed to view metadata history** Minimum user profile allowed to delete metadata (`Registered User`, `Editor` or `Administrator`). The default value is `Editor`.
-![](img/metadata_history_config.png)
-
--   **Registered User Configuration** The user who has granted view permission to the metadata record can view the history.
--   **Editor Configuration** The user who has granted editing permission to the metadata record can view the history.
--   **Administrator Configuration** The user who has granted system administrator permission can view the history.
+-   **Total size of attachments allowed in zip export (MB)** Maximum total size of attachments allowed in zip export (in MB). If the total size of attachments linked to the selected metadata is above this value, exporting as zip (with attachments) is not allowed. Leave empty for no limit.
 
 ## Harvesting
 
