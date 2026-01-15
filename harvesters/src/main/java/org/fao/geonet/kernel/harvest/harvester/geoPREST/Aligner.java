@@ -51,6 +51,7 @@ import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
 import org.fao.geonet.kernel.harvest.harvester.RecordInfo;
 import org.fao.geonet.kernel.harvest.harvester.UUIDMapper;
 import org.fao.geonet.kernel.search.IndexingMode;
+import org.fao.geonet.kernel.search.submission.batch.BatchingDeletionSubmitter;
 import org.fao.geonet.repository.OperationAllowedRepository;
 import org.fao.geonet.utils.GeonetHttpRequestFactory;
 import org.fao.geonet.utils.Xml;
@@ -105,21 +106,23 @@ public class Aligner extends BaseAligner<GeoPRESTParams> {
         //-----------------------------------------------------------------------
         //--- remove old metadata
 
-        for (String uuid : localUuids.getUUIDs()) {
-            if (cancelMonitor.get()) {
-                return result;
-            }
+        try (BatchingDeletionSubmitter submitter = new BatchingDeletionSubmitter()) {
+            for (String uuid : localUuids.getUUIDs()) {
+                if (cancelMonitor.get()) {
+                    return result;
+                }
 
-            if (!exists(records, uuid)) {
-                String id = localUuids.getID(uuid);
+                if (!exists(records, uuid)) {
+                    String id = localUuids.getID(uuid);
 
-                if (log.isDebugEnabled())
-                    log.debug("  - Removing old metadata with local id:" + id);
-                metadataManager.deleteMetadata(context, id);
+                    if (log.isDebugEnabled())
+                        log.debug("  - Removing old metadata with local id:" + id);
+                    metadataManager.deleteMetadata(context, id, submitter);
 
-                metadataManager.flush();
+                    metadataManager.flush();
 
-                result.locallyRemoved++;
+                    result.locallyRemoved++;
+                }
             }
         }
 
@@ -144,8 +147,6 @@ public class Aligner extends BaseAligner<GeoPRESTParams> {
                 log.error("   Record failed: " + ri.uuid);
             }
         }
-
-        dataMan.forceIndexChanges();
 
         log.info("End of alignment for : " + params.getName());
 
@@ -191,13 +192,13 @@ public class Aligner extends BaseAligner<GeoPRESTParams> {
 
         addCategories(metadata, params.getCategories(), localCateg, context, null, false);
 
-        metadata = metadataManager.insertMetadata(context, metadata, md, IndexingMode.none, false, UpdateDatestamp.NO, false, false);
+        metadata = metadataManager.insertMetadata(context, metadata, md, IndexingMode.none, false, UpdateDatestamp.NO, false, batchingIndexSubmitter);
 
         String id = String.valueOf(metadata.getId());
 
         addPrivileges(id, params.getPrivileges(), localGroups, context);
 
-        dataMan.indexMetadata(id, Math.random() < 0.01);
+        dataMan.indexMetadata(id, batchingIndexSubmitter);
         result.addedMetadata++;
     }
 
@@ -241,7 +242,7 @@ public class Aligner extends BaseAligner<GeoPRESTParams> {
                 addCategories(metadata, params.getCategories(), localCateg, context, null, true);
                 metadataManager.flush();
 
-                dataMan.indexMetadata(id, Math.random() < 0.01);
+                dataMan.indexMetadata(id, batchingIndexSubmitter);
                 result.updatedMetadata++;
             }
         }

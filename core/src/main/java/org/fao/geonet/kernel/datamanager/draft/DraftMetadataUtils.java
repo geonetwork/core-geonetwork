@@ -42,6 +42,8 @@ import org.fao.geonet.kernel.metadata.StatusActions;
 import org.fao.geonet.kernel.metadata.StatusActionsFactory;
 import org.fao.geonet.kernel.search.EsSearchManager;
 import org.fao.geonet.kernel.search.IndexingMode;
+import org.fao.geonet.kernel.search.submission.DirectDeletionSubmitter;
+import org.fao.geonet.kernel.search.submission.DirectIndexSubmitter;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.*;
 import org.fao.geonet.repository.specification.MetadataFileUploadSpecs;
@@ -527,7 +529,7 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
 
         try {
             newMetadata = (MetadataDraft) metadataManager.insertMetadata(context, newMetadata, xml, IndexingMode.full, true,
-                UpdateDatestamp.YES, false, true);
+                UpdateDatestamp.YES, false, DirectIndexSubmitter.INSTANCE);
 
             Integer finalId = newMetadata.getId();
 
@@ -656,7 +658,7 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
 
                 // --- remove metadata
                 xmlSerializer.delete(id, ServiceContext.get());
-                searchManager.delete(String.format("+id:%s", id));
+                searchManager.deleteByQuery(String.format("+id:%s", id), DirectDeletionSubmitter.INSTANCE);
 
                 // Unset METADATA_EDITING_CREATED_DRAFT flag
                 context.getUserSession().removeProperty(Geonet.Session.METADATA_EDITING_CREATED_DRAFT);

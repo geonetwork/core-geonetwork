@@ -105,105 +105,106 @@ class Harvester implements IHarvester<HarvestResult> {
 
         String[] urlList = params.url.split("\n");
         boolean error = false;
-        Aligner aligner = new Aligner(cancelMonitor, context, params, log);
-        Set<String> listOfUuids = new HashSet<>();
+        try (Aligner aligner = new Aligner(cancelMonitor, context, params, log)) {
+            Set<String> listOfUuids = new HashSet<>();
 
-        for (String url : urlList) {
-            log.debug("Loading URL: " + url);
-            String content = retrieveUrl(url);
-            if (cancelMonitor.get()) {
-                return new HarvestResult();
-            }
-            log.debug("Response is: " + content);
-
-            int numberOfRecordsToHarvest = -1;
-
-            ObjectMapper objectMapper = new ObjectMapper();
-            JsonNode jsonObj = null;
-            Element xmlObj = null;
-            SimpleUrlResourceType type;
-
-            if (isRDFLike(content)) type = SimpleUrlResourceType.RDFXML;
-            else if (isXMLLike(content)) type = SimpleUrlResourceType.XML;
-            else type = SimpleUrlResourceType.JSON;
-
-            if (type == SimpleUrlResourceType.XML
-                || type == SimpleUrlResourceType.RDFXML) {
-                xmlObj = Xml.loadString(content, false);
-            } else {
-                jsonObj = objectMapper.readTree(content);
-            }
-
-            // TODO: Add page support for Hydra in RDFXML feeds ?
-            if (StringUtils.isNotEmpty(params.numberOfRecordPath)) {
-                try {
-                    if (type == SimpleUrlResourceType.XML) {
-                        Object element = Xml.selectSingle(xmlObj, params.numberOfRecordPath, xmlObj.getAdditionalNamespaces());
-                        if (element != null) {
-                            String s = getXmlElementTextValue(element);
-                            numberOfRecordsToHarvest = Integer.parseInt(s);
-                        }
-                    } else if (type == SimpleUrlResourceType.JSON) {
-                        numberOfRecordsToHarvest = jsonObj.at(params.numberOfRecordPath).asInt();
-                    }
-                    log.debug("Number of records to harvest: " + numberOfRecordsToHarvest);
-                } catch (Exception e) {
-                    errors.add(new HarvestError(context, e));
-                    log.error(String.format("Failed to extract total in response at path %s. Error is: %s",
-                        params.numberOfRecordPath, e.getMessage()));
+            for (String url : urlList) {
+                log.debug("Loading URL: " + url);
+                String content = retrieveUrl(url);
+                if (cancelMonitor.get()) {
+                    return new HarvestResult();
                 }
-            }
-            try {
-                List<String> listOfUrlForPages = buildListOfUrl(params, numberOfRecordsToHarvest);
-                for (int i = 0; i < listOfUrlForPages.size(); i++) {
-                    if (i != 0) {
-                        content = retrieveUrl(listOfUrlForPages.get(i));
+                log.debug("Response is: " + content);
+
+                int numberOfRecordsToHarvest = -1;
+
+                ObjectMapper objectMapper = new ObjectMapper();
+                JsonNode jsonObj = null;
+                Element xmlObj = null;
+                SimpleUrlResourceType type;
+
+                if (isRDFLike(content)) type = SimpleUrlResourceType.RDFXML;
+                else if (isXMLLike(content)) type = SimpleUrlResourceType.XML;
+                else type = SimpleUrlResourceType.JSON;
+
+                if (type == SimpleUrlResourceType.XML
+                    || type == SimpleUrlResourceType.RDFXML) {
+                    xmlObj = Xml.loadString(content, false);
+                } else {
+                    jsonObj = objectMapper.readTree(content);
+                }
+
+                // TODO: Add page support for Hydra in RDFXML feeds ?
+                if (StringUtils.isNotEmpty(params.numberOfRecordPath)) {
+                    try {
                         if (type == SimpleUrlResourceType.XML) {
-                            xmlObj = Xml.loadString(content, false);
-                        } else {
-                            jsonObj = objectMapper.readTree(content);
-                        }
-                    }
-                    if (StringUtils.isNotEmpty(params.loopElement)
-                        || type == SimpleUrlResourceType.RDFXML) {
-                        Map<String, Element> uuids = new HashMap<>();
-                        try {
-                            if (type == SimpleUrlResourceType.XML) {
-                                collectRecordsFromXml(xmlObj, uuids, aligner);
-                            } else if (type == SimpleUrlResourceType.RDFXML) {
-                                collectRecordsFromRdf(xmlObj, uuids, aligner);
-                            } else if (type == SimpleUrlResourceType.JSON) {
-                                collectRecordsFromJson(jsonObj, uuids, aligner);
+                            Object element = Xml.selectSingle(xmlObj, params.numberOfRecordPath, xmlObj.getAdditionalNamespaces());
+                            if (element != null) {
+                                String s = getXmlElementTextValue(element);
+                                numberOfRecordsToHarvest = Integer.parseInt(s);
                             }
-                            aligner.align(uuids, errors);
-                            listOfUuids.addAll(uuids.keySet());
-                        } catch (Exception e) {
-                            errors.add(new HarvestError(this.context, e));
-                            log.error(String.format("Failed to collect record in response at path %s. Error is: %s",
-                                params.loopElement, e.getMessage()));
+                        } else if (type == SimpleUrlResourceType.JSON) {
+                            numberOfRecordsToHarvest = jsonObj.at(params.numberOfRecordPath).asInt();
                         }
+                        log.debug("Number of records to harvest: " + numberOfRecordsToHarvest);
+                    } catch (Exception e) {
+                        errors.add(new HarvestError(context, e));
+                        log.error(String.format("Failed to extract total in response at path %s. Error is: %s",
+                            params.numberOfRecordPath, e.getMessage()));
                     }
                 }
-            } catch (Exception t) {
-                error = true;
-                log.error("Unknown error trying to harvest");
-                log.error(t.getMessage());
-                log.error(t);
-                errors.add(new HarvestError(context, t));
-            } catch (Throwable t) {
-                error = true;
-                log.fatal("Something unknown and terrible happened while harvesting");
-                log.fatal(t.getMessage());
-                errors.add(new HarvestError(context, t));
-            }
+                try {
+                    List<String> listOfUrlForPages = buildListOfUrl(params, numberOfRecordsToHarvest);
+                    for (int i = 0; i < listOfUrlForPages.size(); i++) {
+                        if (i != 0) {
+                            content = retrieveUrl(listOfUrlForPages.get(i));
+                            if (type == SimpleUrlResourceType.XML) {
+                                xmlObj = Xml.loadString(content, false);
+                            } else {
+                                jsonObj = objectMapper.readTree(content);
+                            }
+                        }
+                        if (StringUtils.isNotEmpty(params.loopElement)
+                            || type == SimpleUrlResourceType.RDFXML) {
+                            Map<String, Element> uuids = new HashMap<>();
+                            try {
+                                if (type == SimpleUrlResourceType.XML) {
+                                    collectRecordsFromXml(xmlObj, uuids, aligner);
+                                } else if (type == SimpleUrlResourceType.RDFXML) {
+                                    collectRecordsFromRdf(xmlObj, uuids, aligner);
+                                } else if (type == SimpleUrlResourceType.JSON) {
+                                    collectRecordsFromJson(jsonObj, uuids, aligner);
+                                }
+                                aligner.align(uuids, errors);
+                                listOfUuids.addAll(uuids.keySet());
+                            } catch (Exception e) {
+                                errors.add(new HarvestError(this.context, e));
+                                log.error(String.format("Failed to collect record in response at path %s. Error is: %s",
+                                    params.loopElement, e.getMessage()));
+                            }
+                        }
+                    }
+                } catch (Exception t) {
+                    error = true;
+                    log.error("Unknown error trying to harvest");
+                    log.error(t.getMessage());
+                    log.error(t);
+                    errors.add(new HarvestError(context, t));
+                } catch (Throwable t) {
+                    error = true;
+                    log.fatal("Something unknown and terrible happened while harvesting");
+                    log.fatal(t.getMessage());
+                    errors.add(new HarvestError(context, t));
+                }
 
-            log.info("Total records processed in all searches :" + listOfUuids.size());
-            if (error) {
-                log.warning("Due to previous errors the align process has not been called");
+                log.info("Total records processed in all searches :" + listOfUuids.size());
+                if (error) {
+                    log.warning("Due to previous errors the align process has not been called");
+                }
             }
+            aligner.cleanupRemovedRecords(listOfUuids);
+            return aligner.getResult();
         }
-        aligner.cleanupRemovedRecords(listOfUuids);
-        return aligner.getResult();
     }
 
     private void collectRecordsFromJson(JsonNode jsonObj,

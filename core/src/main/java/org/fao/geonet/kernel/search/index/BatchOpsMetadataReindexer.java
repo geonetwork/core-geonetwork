@@ -45,12 +45,11 @@ import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.RemovalNotification;
 import com.google.common.collect.Lists;
-import com.google.common.util.concurrent.MoreExecutors;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.MetadataIndexerProcessor;
-import org.fao.geonet.kernel.search.EsSearchManager;
+import org.fao.geonet.kernel.search.submission.batch.BatchingIndexSubmitter;
 import org.fao.geonet.util.ThreadUtils;
 import org.fao.geonet.utils.Log;
 import org.springframework.jmx.export.MBeanExporter;
@@ -58,8 +57,10 @@ import org.springframework.jmx.export.annotation.ManagedAttribute;
 import org.springframework.jmx.export.annotation.ManagedResource;
 
 import javax.management.ObjectName;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
+import java.util.WeakHashMap;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -74,11 +75,17 @@ import java.util.concurrent.atomic.AtomicInteger;
 @ManagedResource()
 public class BatchOpsMetadataReindexer extends MetadataIndexerProcessor implements Runnable {
 
-    private static final JmxRemovalListener removalListener = new JmxRemovalListener();
+    private static final JmxRemovalListener REMOVAL_LISTENER = new JmxRemovalListener();
     private static final Cache<ObjectName, ObjectName> PROBE_CACHE = CacheBuilder.newBuilder()
         .expireAfterWrite(1, TimeUnit.MINUTES)
-        .removalListener(removalListener)
+        .removalListener(REMOVAL_LISTENER)
         .build();
+    private static final Set<CompletableFuture<Void>> RUNNING_INDEXERS = Collections.synchronizedSet(Collections.newSetFromMap(new WeakHashMap<>()));
+
+    public static boolean isIndexing() {
+        RUNNING_INDEXERS.removeIf(CompletableFuture::isDone);
+        return !RUNNING_INDEXERS.isEmpty();
+    }
 
     private final Set<Integer> metadata;
     private ExecutorService executor = null;
@@ -88,15 +95,13 @@ public class BatchOpsMetadataReindexer extends MetadataIndexerProcessor implemen
     private final AtomicInteger inError = new AtomicInteger();
     private CompletableFuture<Void> allCompleted;
     private final MBeanExporter exporter;
-    private final EsSearchManager esSearchManager;
 
     public BatchOpsMetadataReindexer(DataManager dm, Set<Integer> metadata) {
         super(dm);
         this.metadata = metadata;
         this.toProcessCount = metadata.size();
         exporter = ApplicationContextHolder.get().getBean(MBeanExporter.class);
-        esSearchManager = ApplicationContextHolder.get().getBean(EsSearchManager.class);
-        removalListener.setExporter(exporter);
+        REMOVAL_LISTENER.setExporter(exporter);
     }
 
     @ManagedAttribute
@@ -131,14 +136,8 @@ public class BatchOpsMetadataReindexer extends MetadataIndexerProcessor implemen
         return processAsync(runInCurrentThread);
     }
 
-    private String processAsync(boolean runInCurrentThread) throws Exception {
+    private String processAsync(boolean runInCurrentThread) {
         int threadCount = ThreadUtils.getNumberOfThreads();
-
-        if (runInCurrentThread) {
-            executor = MoreExecutors.newDirectExecutorService();
-        } else {
-            executor = Executors.newFixedThreadPool(threadCount);
-        }
 
         int[] ids = metadata.stream().mapToInt(i -> i).toArray();
 
@@ -163,20 +162,38 @@ public class BatchOpsMetadataReindexer extends MetadataIndexerProcessor implemen
             index += count;
         }
 
-        List<CompletableFuture> submitList = Lists.newArrayList();
-        for (BatchOpsCallable job : jobs) {
-            CompletableFuture completed = CompletableFuture.runAsync(job, executor);
-            submitList.add(completed);
-        }
+        if (runInCurrentThread) {
+            allCompleted = new CompletableFuture<>();
+            try {
+                RUNNING_INDEXERS.add(allCompleted);
+                for (BatchOpsCallable job : jobs) {
+                    job.run();
+                }
+            }
+            finally {
+                allCompleted.complete(null);
+            }
+        } else {
+            List<CompletableFuture<Void>> submitList = Lists.newArrayList();
+            executor = Executors.newFixedThreadPool(threadCount);
 
-        allCompleted = CompletableFuture.allOf(submitList.toArray(new CompletableFuture[submitList.size()]));
+            for (BatchOpsCallable job : jobs) {
+                CompletableFuture<Void> completed = CompletableFuture.runAsync(job, executor);
+                submitList.add(completed);
+            }
+
+            allCompleted = CompletableFuture.allOf(submitList.toArray(new CompletableFuture[0]));
+            RUNNING_INDEXERS.add(allCompleted);
+        }
         allCompleted.thenRun(this);
         return probeName.toString();
     }
 
     @Override
     public void run() {
-        executor.shutdown();
+        if (executor != null) {
+            executor.shutdown();
+        }
         PROBE_CACHE.cleanUp();
         PROBE_CACHE.put(probeName, probeName);
     }
@@ -210,20 +227,21 @@ public class BatchOpsMetadataReindexer extends MetadataIndexerProcessor implemen
                 "Indexing range [%d-%d]/%d by threads %s.",
                 beginIndex, beginIndex + count, ids.length, Thread.currentThread().getId()));
             long start = System.currentTimeMillis();
-            for (int i = beginIndex; i < beginIndex + count; i++) {
-                try {
-                    dm.indexMetadata(ids[i] + "", false);
-                    processed.incrementAndGet();
-                } catch (Exception e) {
-                    inError.incrementAndGet();
+            try (BatchingIndexSubmitter batchingIndexSubmittor = new BatchingIndexSubmitter(count)) {
+                for (int i = beginIndex; i < beginIndex + count; i++) {
+                    try {
+                        dm.indexMetadata(ids[i] + "", batchingIndexSubmittor);
+                        processed.incrementAndGet();
+                    } catch (Exception e) {
+                        inError.incrementAndGet();
+                    }
                 }
+                Log.warning(Geonet.INDEX_ENGINE, String.format(
+                    "Indexing range [%d-%d]/%d completed in %dms by threads %s.",
+                    beginIndex, beginIndex + count, ids.length,
+                    System.currentTimeMillis() - start,
+                    Thread.currentThread().getId()));
             }
-            Log.warning(Geonet.INDEX_ENGINE, String.format(
-                "Indexing range [%d-%d]/%d completed in %dms by threads %s.",
-                beginIndex, beginIndex + count, ids.length,
-                System.currentTimeMillis() - start,
-                Thread.currentThread().getId()));
-            esSearchManager.forceIndexChanges();
         }
     }
 }

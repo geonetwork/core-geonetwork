@@ -32,13 +32,14 @@ import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.datamanager.base.BaseMetadataIndexer;
 import org.fao.geonet.kernel.mef.MEFLibIntegrationTest;
 import org.fao.geonet.kernel.search.IndexingMode;
+import org.fao.geonet.kernel.search.submission.DirectIndexSubmitter;
+import org.fao.geonet.kernel.search.submission.IIndexSubmitter;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.SelectionRepository;
 import org.fao.geonet.services.AbstractServiceIntegrationTest;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
-import org.mockito.Spy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpSession;
@@ -51,8 +52,7 @@ import org.springframework.web.context.WebApplicationContext;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.hamcrest.Matchers.hasItem;
-import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -232,7 +232,7 @@ public class UserSelectionsApiTest extends AbstractServiceIntegrationTest {
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().isCreated());
 
-        verify(this.metadataIndexerSpy, times(1)).indexMetadata(eq(metadataId), any(Boolean.class), eq(IndexingMode.full));
+        verify(this.metadataIndexerSpy, times(1)).indexMetadata(eq(metadataId), eq(DirectIndexSubmitter.INSTANCE), eq(IndexingMode.full));
 
         this.mockMvc.perform(get("/srv/api/userselections/" + createdSelection.getId() + "/1")
             .session(this.mockHttpSession)
@@ -247,7 +247,7 @@ public class UserSelectionsApiTest extends AbstractServiceIntegrationTest {
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().isNoContent());
 
-        verify(this.metadataIndexerSpy, times(2)).indexMetadata(eq(metadataId), any(Boolean.class), eq(IndexingMode.full));
+        verify(this.metadataIndexerSpy, times(2)).indexMetadata(eq(metadataId), any(IIndexSubmitter.class), eq(IndexingMode.full));
 
         // Delete
         this.mockMvc.perform(delete("/srv/api/userselections/" + createdSelection.getId())

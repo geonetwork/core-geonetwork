@@ -55,6 +55,7 @@ import org.fao.geonet.kernel.datamanager.base.BaseMetadataStatus;
 import org.fao.geonet.kernel.metadata.StatusActions;
 import org.fao.geonet.kernel.metadata.StatusActionsFactory;
 import org.fao.geonet.kernel.search.IndexingMode;
+import org.fao.geonet.kernel.search.submission.DirectIndexSubmitter;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.*;
@@ -486,7 +487,7 @@ public class MetadataEditingApi {
 
             if (reindex) {
                 Log.trace(Geonet.DATA_MANAGER, " > Reindexing record");
-                metadataIndexer.indexMetadata(id, true, IndexingMode.full);
+                metadataIndexer.indexMetadata(id, DirectIndexSubmitter.INSTANCE, IndexingMode.full);
             }
 
             // Reindex the metadata table record to update the field _statusWorkflow that contains the composite
@@ -495,7 +496,7 @@ public class MetadataEditingApi {
                 Metadata metadataApproved = metadataRepository.findOneByUuid(metadata.getUuid());
 
                 if (metadataApproved != null) {
-                    metadataIndexer.indexMetadata(String.valueOf(metadataApproved.getId()), true, IndexingMode.full);
+                    metadataIndexer.indexMetadata(String.valueOf(metadataApproved.getId()), DirectIndexSubmitter.INSTANCE, IndexingMode.full);
                 }
             }
 

@@ -150,9 +150,9 @@ class Harvester implements IHarvester<HarvestResult> {
 
         //--- align local node
 
-        Aligner aligner = new Aligner(cancelMonitor, log, context, params);
-
-        return aligner.align(records, errors);
+        try (Aligner aligner = new Aligner(cancelMonitor, log, context, params)) {
+            return aligner.align(records, errors);
+        }
     }
 
     /**

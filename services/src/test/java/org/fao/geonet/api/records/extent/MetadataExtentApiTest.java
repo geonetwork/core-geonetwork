@@ -24,7 +24,6 @@
 package org.fao.geonet.api.records.extent;
 
 import jeeves.server.context.ServiceContext;
-import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataType;
@@ -32,6 +31,7 @@ import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.UpdateDatestamp;
 import org.fao.geonet.kernel.search.IndexingMode;
+import org.fao.geonet.kernel.search.submission.DirectIndexSubmitter;
 import org.fao.geonet.repository.SourceRepository;
 import org.fao.geonet.services.AbstractServiceIntegrationTest;
 import org.fao.geonet.utils.Xml;
@@ -55,14 +55,11 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.TimeZone;
 import java.util.UUID;
 
-import static org.fao.geonet.schema.iso19139.ISO19139Namespaces.GCO;
-import static org.fao.geonet.schema.iso19139.ISO19139Namespaces.GMD;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertEquals;
@@ -339,7 +336,7 @@ public class MetadataExtentApiTest extends AbstractServiceIntegrationTest {
             .setHarvested(false);
 
         dataManager.insertMetadata(context, metadata, sampleMetadataXml, IndexingMode.full, false, UpdateDatestamp.NO,
-            false, false).getId();
+            false, DirectIndexSubmitter.INSTANCE).getId();
 
         return uuid;
     }
