@@ -1622,7 +1622,7 @@
     <es.index.max_result_window.limit>15000</es.index.max_result_window.limit>
     <es.index.max_inner_result_window.limit>200</es.index.max_inner_result_window.limit>
 
-    <es.index.mapping.total_fields.limit>4000</es.index.mapping.total_fields.limit>
+    <es.index.mapping.total_fields.limit>5000</es.index.mapping.total_fields.limit>
     <es.index.ignore_above>2000</es.index.ignore_above>
 
     <!-- If elasticsearch security is on,

@@ -1421,11 +1421,163 @@
           <xsl:element name="{concat('agg_associated_', $associationType)}"><xsl:value-of select="$code"/></xsl:element>
         </xsl:if>
       </xsl:for-each>
+
+
+      <xsl:call-template name="index-imagery">
+        <xsl:with-param name="allLanguages" select="$allLanguages"/>
+      </xsl:call-template>
     </doc>
 
     <!-- Index more documents for this element -->
     <xsl:apply-templates mode="index-extra-documents" select="."/>
   </xsl:template>
+
+
+  <xsl:template name="index-imagery">
+    <xsl:param name="allLanguages"/>
+    <xsl:for-each select="mdb:contentInfo/*/mrc:processingLevelCode/*/mcc:code/*/text()">
+      <processingLevelCode><xsl:value-of select="util:escapeForJson(.)"/></processingLevelCode>
+    </xsl:for-each>
+
+
+    <xsl:variable name="imageDescription"
+                  select="*:contentInfo/*:MD_ImageDescription"/>
+    <xsl:if test="$imageDescription">
+      <imageDescription type="object">[
+        <xsl:for-each select="$imageDescription">
+          {
+          <xsl:for-each select="*:processingLevelCode|*:imageQualityCode|*[gco:Real castable as xs:double]|*[gco:Boolean != '']|*[*/@codeListValue != '']">
+            "<xsl:value-of select="local-name()"/>":
+            <xsl:choose>
+              <xsl:when test="gco:Real">
+                <xsl:value-of select="gco:Real"/>
+              </xsl:when>
+              <xsl:when test="gco:Boolean">
+                <xsl:value-of select="if (gco:Boolean = 'true') then 'true' else 'false'"/>
+              </xsl:when>
+              <xsl:when test="*/@codeListValue">
+                <xsl:copy-of select="gn-fn-index:add-codelist-field(
+                               local-name(), *, $allLanguages, true())"/>
+              </xsl:when>
+              <xsl:otherwise>
+                "<xsl:value-of select="*/*:code/*/text()"/>"
+              </xsl:otherwise>
+            </xsl:choose>
+            <xsl:if test="position() != last()">,</xsl:if>
+          </xsl:for-each>
+          }
+          <xsl:if test="position() != last()">,</xsl:if>
+        </xsl:for-each>
+        ]
+      </imageDescription>
+    </xsl:if>
+
+
+    <xsl:variable name="instruments"
+                  select="*:acquisitionInformation/*/*:instrument/*"/>
+    <xsl:if test="$instruments">
+      <mac_instrument type="object">[
+        <xsl:for-each select="$instruments">
+          {
+              <xsl:for-each select="*:identifier">
+                "code": "<xsl:value-of select="*/*:code/*/text()"/>"
+              </xsl:for-each>
+              <xsl:for-each select="*:mountedOn/*/*:identifier">
+                ,"mountedOn": "<xsl:value-of select="*/*:code/*/text()"/>"
+              </xsl:for-each>
+              <xsl:if test="normalize-space(*:description) != ''">
+                ,"descriptionObject": <xsl:value-of select="gn-fn-index:add-multilingual-field(
+                                    'description', *:description, $allLanguages, true())"/>
+              </xsl:if>
+          }
+          <xsl:if test="position() != last()">,</xsl:if>
+        </xsl:for-each>
+        ]
+      </mac_instrument>
+    </xsl:if>
+
+
+    <xsl:variable name="operations"
+                  select="*:acquisitionInformation/*/*:operation/*"/>
+    <xsl:if test="$operations">
+      <mac_operation type="object">[
+        <xsl:for-each select="$operations">
+          <xsl:if test="normalize-space(*:description) != ''">
+            {
+              "descriptionObject": <xsl:value-of select="gn-fn-index:add-multilingual-field(
+                                    'description', *:description, $allLanguages, true())"/>
+            }
+          </xsl:if>
+          <xsl:if test="position() != last()">,</xsl:if>
+        </xsl:for-each>
+        ]
+      </mac_operation>
+    </xsl:if>
+
+
+    <xsl:variable name="platforms"
+                  select="*:acquisitionInformation/*/*:platform/*"/>
+
+    <xsl:if test="$platforms">
+      <mac_platform type="object">[
+        <xsl:for-each select="$platforms">
+          {
+          <xsl:for-each select="*:identifier">
+            "code": "<xsl:value-of select="*/*:code/*/text()"/>"
+          </xsl:for-each>
+          <xsl:if test="normalize-space(*:description) != ''">
+            ,"descriptionObject": <xsl:value-of select="gn-fn-index:add-multilingual-field(
+                                    'description', *:description, $allLanguages, true())"/>
+          </xsl:if>
+          }
+          <xsl:if test="position() != last()">,</xsl:if>
+        </xsl:for-each>
+        ]
+      </mac_platform>
+    </xsl:if>
+
+    <xsl:variable name="acquisitionPlans"
+                  select="*:acquisitionInformation/*/*:acquisitionPlan/*"/>
+    <xsl:if test="$acquisitionPlans">
+      <mac_acquisitionPlan type="object">[
+        <xsl:for-each select="$acquisitionPlans">
+          {
+          <xsl:for-each select="*/*[@codeListValue != '']">
+            <xsl:variable name="fieldName"
+                          select="concat('cl_', local-name(..))"/>
+            "<xsl:value-of select="$fieldName"/>": <xsl:copy-of select="gn-fn-index:add-codelist-field(
+                               $fieldName, ., $allLanguages, true())"/>
+            <xsl:if test="position() != last()">,</xsl:if>
+          </xsl:for-each>
+          }
+          <xsl:if test="position() != last()">,</xsl:if>
+        </xsl:for-each>
+        ]
+      </mac_acquisitionPlan>
+    </xsl:if>
+
+
+    <xsl:variable name="environmentalConditions"
+                  select="*:acquisitionInformation/*/*:environmentalConditions/*"/>
+
+    <xsl:if test="$environmentalConditions">
+      <mac_environmentalConditions type="object">[
+        <xsl:for-each select="$environmentalConditions">
+          {
+            <xsl:for-each select="*[gco:Real != '' or gco:CharacterString != '']">
+              "<xsl:value-of select="local-name()"/>": <xsl:value-of select="if (gco:CharacterString)
+                                          then gn-fn-index:add-multilingual-field(local-name(), ., $allLanguages, true())
+                                          else gco:Real"/>
+              <xsl:if test="position() != last()">,</xsl:if>
+            </xsl:for-each>
+          }
+          <xsl:if test="position() != last()">,</xsl:if>
+        </xsl:for-each>
+        ]
+      </mac_environmentalConditions>
+    </xsl:if>
+  </xsl:template>
+
 
 
   <!-- TODO: here is a limited vision of 1 org with first individual.
