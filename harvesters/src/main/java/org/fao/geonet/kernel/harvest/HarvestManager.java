@@ -117,6 +117,13 @@ public interface HarvestManager {
     boolean update(Element node, String ownerId) throws BadInputEx, SQLException, SchedulerException;
 
     /**
+     * Reindexes all metadata associated to one harvester.
+     *
+     * @param id of the harvester
+     */
+    Common.OperResult reindexBatch(String id) throws Exception;
+
+    /**
      * Remove all metadata associated to one harvester
      *
      * @param id of the harvester

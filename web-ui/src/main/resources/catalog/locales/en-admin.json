@@ -581,6 +581,8 @@
     "recordsStatistics": "Metadata statistics",
     "recordsType": "Type of metadata records",
     "refreshHarvester": "Refresh harvester",
+    "reindexHarvesterRecords": "Reindex <strong>{{records}}</strong> records",
+    "reindexHarvesterRecordsHelp": "Reindex all records of the harvester.",
     "reindexRecords": "Reindex {{records}} related record(s)",
     "reindexRecords-help": "After updating keywords and when records are using XLinks, records using this thesaurus should be reindexed (due to the XLinks cache system).",
     "related": "Related",
