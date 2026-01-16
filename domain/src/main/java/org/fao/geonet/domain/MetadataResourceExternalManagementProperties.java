@@ -26,9 +26,12 @@
 package org.fao.geonet.domain;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
+import java.util.HashMap;
+import java.util.Map;
 
 @XmlRootElement(name = "metadataResourceExternalManagementProperties")
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -36,12 +39,20 @@ public class MetadataResourceExternalManagementProperties {
     private final String id;
     private final String url;
     private ValidationStatus validationStatus = ValidationStatus.UNKNOWN;
+    private Map<String, Object> additionalProperties = new HashMap<>();
 
     public MetadataResourceExternalManagementProperties(@Nonnull String id, @Nonnull String url, @Nonnull ValidationStatus validationStatus) {
+        this(id, url, validationStatus, null);
+    }
+
+    public MetadataResourceExternalManagementProperties(@Nonnull String id, @Nonnull String url, @Nonnull ValidationStatus validationStatus, @Nullable Map<String, Object> additionalProperties) {
         this.id = id;
         this.url = url;
         if (validationStatus != null) {
             this.validationStatus = validationStatus;
+        }
+        if (additionalProperties != null) {
+            this.additionalProperties = additionalProperties;
         }
     }
 
@@ -82,6 +93,10 @@ public class MetadataResourceExternalManagementProperties {
         public int getValue () {
             return statusValue;
         }
+    }
+
+    public Map<String, Object> getAdditionalProperties() {
+        return additionalProperties;
     }
 }
 

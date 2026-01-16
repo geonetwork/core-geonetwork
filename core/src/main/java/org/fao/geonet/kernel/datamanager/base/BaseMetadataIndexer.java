@@ -24,13 +24,13 @@
 package org.fao.geonet.kernel.datamanager.base;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyName;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.introspect.Annotated;
 import com.fasterxml.jackson.databind.introspect.AnnotatedMember;
 import com.fasterxml.jackson.databind.introspect.JacksonAnnotationIntrospector;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 import com.yammer.metrics.core.TimerContext;
@@ -63,6 +63,7 @@ import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.*;
 import org.fao.geonet.repository.userfeedback.UserFeedbackRepository;
 import org.fao.geonet.resources.Resources;
+import org.fao.geonet.services.util.ResourcesExternalAdditionalPropertiesService;
 import org.fao.geonet.util.ThreadUtils;
 import org.fao.geonet.utils.Log;
 import org.jdom.Attribute;
@@ -126,6 +127,8 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
     private Store store;
     @Autowired
     private Resources resources;
+    @Autowired
+    private ResourcesExternalAdditionalPropertiesService resourcesExternalAdditionalPropertiesService;
 
     // FIXME remove when get rid of Jeeves
     private ServiceContext servContext;
@@ -700,16 +703,18 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
     public Multimap<String, Object> indexMetadataFileStore(AbstractMetadata fullMd) {
         Multimap<String, Object> indexMetadataFileStoreFields = ArrayListMultimap.create();
         try {
-            List<MetadataResource> metadataResources = store.getResources(
+
+            String uuid = fullMd.getUuid();
+            boolean approved = !(fullMd instanceof MetadataDraft);
+
+            List<MetadataResource> metadataResources = store.getResourcesForIndexing(
                 ServiceContext.get(),
-                fullMd.getUuid(),
-                (org.fao.geonet.api.records.attachments.Sort) null,
-                null,
-                !(fullMd instanceof MetadataDraft));
+                uuid,
+                approved);
 
             if (metadataResources != null && !metadataResources.isEmpty()) {
-                JsonNode jsonNode = indexObjectMapper.valueToTree(metadataResources);
-                indexMetadataFileStoreFields.put("fileStore", jsonNode);
+                ArrayNode resourcesProperties = indexObjectMapper.valueToTree(metadataResources);
+                indexMetadataFileStoreFields.put("fileStore", resourcesProperties);
             }
         } catch (Exception e) {
             Log.warning(Geonet.INDEX_ENGINE, String.format(

@@ -58,6 +58,8 @@ public class JCloudConfiguration {
      * Url used for managing enhanced resource properties related to the metadata.
      */
     private String externalResourceManagementUrl;
+    private String externalResourcesPropertiesUrl;
+    private String externalResourcesPropertiesIdentifierFieldName;
     private String externalResourceManagementWindowParameters;
     private Boolean externalResourceManagementModalEnabled;
     private Boolean externalResourceManagementFolderEnabled;
@@ -174,6 +176,24 @@ public class JCloudConfiguration {
 
     public void setExternalResourceManagementUrl(String externalResourceManagementUrl) {
         this.externalResourceManagementUrl = externalResourceManagementUrl;
+    }
+
+    @Nonnull
+    public String getExternalResourcesPropertiesUrl() {
+        return externalResourcesPropertiesUrl;
+    }
+
+    public void setExternalResourcesPropertiesUrl(String externalResourcesPropertiesUrl) {
+        this.externalResourcesPropertiesUrl = externalResourcesPropertiesUrl;
+    }
+
+    @Nonnull
+    public String getExternalResourcesPropertiesIdentifierFieldName() {
+        return externalResourcesPropertiesIdentifierFieldName;
+    }
+
+    public void setExternalResourcesPropertiesIdentifierFieldName(String externalResourcesPropertiesIdentifierFieldName) {
+        this.externalResourcesPropertiesIdentifierFieldName = externalResourcesPropertiesIdentifierFieldName;
     }
 
     @Nonnull
