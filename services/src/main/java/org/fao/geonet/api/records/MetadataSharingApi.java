@@ -837,16 +837,20 @@ public class MetadataSharingApi implements ApplicationEventPublisherAware
             required = true
         )
         Integer groupIdentifier,
+        @Parameter(hidden = true)
+        HttpSession session,
         HttpServletRequest request
     )
         throws Exception {
+
+        ServiceContext context = ApiUtils.createServiceContext(request);
+        ApplicationContext appContext = ApplicationContextHolder.get();
 
         Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
 
         checkGroupIsWorkspace(groupIdentifier, locale);
 
         AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
-        ApplicationContext appContext = ApplicationContextHolder.get();
 
         java.util.Optional<Group> group = groupRepository.findById(groupIdentifier);
         if (!group.isPresent()) {
@@ -861,14 +865,126 @@ public class MetadataSharingApi implements ApplicationEventPublisherAware
             oldGroup = groupRepository.findById(previousGroup).get();
         }
 
+        //update group ownership
         metadata.getSourceInfo().setGroupOwner(groupIdentifier);
         metadataManager.save(metadata);
+
+        //need to update permissions.
+        // 1. drop ALL permissions for the "old" group
+        // 2. ADD these permissions to the new group.
+
+        // get the current set of privileges
+        SharingResponse sharingResponse = getRecordSharingSettings(metadataUuid, session, request);
+
+        //copy so we can publish the diff (we are modifying sharingResponse with updated permissions)
+        var originalSharingResponse = new SharingResponse();
+        originalSharingResponse.setGroupOwner(sharingResponse.getGroupOwner());
+        originalSharingResponse.setOwner(sharingResponse.getOwner());
+        var copyPrivs = sharingResponse.getPrivileges().stream()
+                .map(x-> {
+                    var result = new GroupPrivilege();
+                    result.setGroup(x.getGroup());
+                    result.setReserved(x.isReserved());
+                    result.setRestricted(x.isRestricted());
+                    result.setUserGroup(x.isUserGroup());
+                    result.setUserProfile(x.getUserProfiles());
+                    result.setOperations(new HashMap<>(x.getOperations()));
+                    return result;
+                })
+                .collect(Collectors.toList());
+        originalSharingResponse.setPrivileges(copyPrivs);
+
+
+        //old permissions
+        Integer sourceUsr = metadata.getSourceInfo().getOwner();
+        String metadataId = String.valueOf(metadata.getId());
+        Vector<OperationAllowedId> oldPriv = retrievePrivileges(context, metadataId, sourceUsr, oldGroup.getId());
+
+
+        //modify the sharingResponse (current permissions from DB) with new privileges (group XFER).
+        for(var groupPriv : sharingResponse.getPrivileges()) {
+            if (Objects.equals(groupPriv.getGroup(), previousGroup)) {
+                //old group: permissions - remove them (set all false)
+                var ops=groupPriv.getOperations();
+                ops.replaceAll((o, v) -> false);
+            } else if (Objects.equals(groupPriv.getGroup(), groupIdentifier)) {
+                //new group: permissions - ADD the old groups permissions
+                var ops=groupPriv.getOperations();
+                for(var addOp : oldPriv) {
+                    var opName = ReservedOperation.lookup(addOp.getOperationId());
+                    ops.put(opName.toString(), true);
+                }
+            }
+        }
+
+        //convert object for the two apis (getRecordSharingSettings vs setOperations)
+        var newPrivileges = sharingResponse.getPrivileges().stream()
+            .map(p -> {
+                var result = new GroupOperations();
+                result.setGroup(p.getGroup());
+                result.setOperations(p.getOperations());
+                return result;
+            })
+            .collect(Collectors.toList());
+
+
+        SharingParameter sharingParameter = new SharingParameter();
+        sharingParameter.setClear(true); // remove all permissions then add the new ones
+        sharingParameter.setPrivileges(newPrivileges);
+
+        List<Operation> operationList = operationRepository.findAll();
+        Map<String, Integer> operationMap = new HashMap<>(operationList.size());
+        for (Operation o : operationList) {
+            operationMap.put(o.getName(), o.getId());
+        }
+        List<GroupOperations> privileges = sharingParameter.getPrivileges();
+
+        //--- in case of owner, privileges for groups 0,1 and GUEST are disabled
+        //--- and are not sent to the server. So we cannot remove them
+        boolean skipAllReservedGroup = !accessManager.hasReviewPermission(context, Integer.toString(metadata.getId()));
+
+        MetadataProcessingReport metadataProcessingReport = null;
+        List<MetadataPublicationNotificationInfo> metadataListToNotifyPublication = new ArrayList<>();
+        boolean notifyByEmail = StringUtils.isNoneEmpty(sm.getValue(SYSTEM_METADATAPRIVS_PUBLICATION_NOTIFICATIONLEVEL));
+        Locale[] feedbackLocales = feedbackLanguages.getLocales(request.getLocale());
+
+        //actually update DB
+        setOperations(sharingParameter,
+            this.dataManager,
+            context,
+            appContext,
+            metadata,
+            operationMap,
+            privileges,
+            sourceUsr,
+            skipAllReservedGroup,
+            metadataProcessingReport,
+            request,
+            metadataListToNotifyPublication,
+            notifyByEmail
+            );
+
+        if (notifyByEmail && !metadataListToNotifyPublication.isEmpty()) {
+            metadataPublicationMailNotifier.notifyPublication(feedbackLocales,
+                metadataListToNotifyPublication);
+        }
+
+
+
         dataManager.indexMetadata(String.valueOf(metadata.getId()), true);
 
+        //publish group change
         new RecordGroupOwnerChangeEvent(metadata.getId(),
                                         ApiUtils.getUserSession(request.getSession()).getUserIdAsInt(),
                                         ObjectJSONUtils.convertObjectInJsonObject(oldGroup, RecordGroupOwnerChangeEvent.FIELD),
                                         ObjectJSONUtils.convertObjectInJsonObject(group.get(), RecordGroupOwnerChangeEvent.FIELD)).publish(appContext);
+
+        //publish permissions change
+        new RecordPrivilegesChangeEvent(metadata.getId(),
+            ApiUtils.getUserSession(request.getSession()).getUserIdAsInt(),
+            ObjectJSONUtils.convertObjectInJsonObject(originalSharingResponse.getPrivileges(), RecordPrivilegesChangeEvent.FIELD),
+            ObjectJSONUtils.convertObjectInJsonObject(newPrivileges, RecordPrivilegesChangeEvent.FIELD)).publish(appContext);
+
     }
 
     @io.swagger.v3.oas.annotations.Operation(
@@ -895,10 +1011,12 @@ public class MetadataSharingApi implements ApplicationEventPublisherAware
     )
         throws Exception {
         ServiceContext context = ApiUtils.createServiceContext(request);
-        UserSession userSession = ApiUtils.getUserSession(session);
 
         SharingResponse sharingResponse = new SharingResponse();
-        sharingResponse.setOwner(userSession.getUserId());
+        if (session != null) {
+            UserSession userSession = ApiUtils.getUserSession(session);
+            sharingResponse.setOwner(userSession.getUserId());
+        }
 
         List<Operation> allOperations = operationRepository.findAll();
 
