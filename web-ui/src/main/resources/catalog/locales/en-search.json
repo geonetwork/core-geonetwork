@@ -562,7 +562,7 @@
   "indexingErrorMsg-temporalRangeLowerGreaterThanUpper": "Warning / Field resourceTemporalDateRange / Lower range bound {{lowerBound}} can not be greater than upper bound {{upperBound}}.",
   "indexingErrorMsg-schemaNotRegistered": "Record {{record}} / Schema '{{schema}}' is not registered in this catalog. Install it or remove those records. Record is indexed indexing error flag.",
   "indexingErrorMsg-indexingStyleSheetError": "Indexing stylesheet contains errors: {{message}} \n  Marking the metadata as _indexingError=1 in index.",
-  "createAnonymousAccess": "Create anonymous access",
-  "deleteAnonymousAccess": "Delete anonymous access",
+  "createAnonymousAccess": "Share unpublished record preview",
+  "deleteAnonymousAccess": "Revoke unpublished record preview",
   "anonymousAccessTo": "Anonymous access to {{title}}"
 }
