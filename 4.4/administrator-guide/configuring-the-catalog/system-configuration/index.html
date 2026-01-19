@@ -1891,6 +1891,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#metadata-history" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Metadata History
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#editing_harvested_records" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1924,10 +1935,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#metadata-history" class="md-nav__link">
+  <a href="#metadata-selection-zip-export" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Metadata History
+        Metadata selection - zip export
       
     </span>
   </a>
@@ -3039,6 +3050,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#metadata-history" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Metadata History
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#editing_harvested_records" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3072,10 +3094,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#metadata-history" class="md-nav__link">
+  <a href="#metadata-selection-zip-export" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Metadata History
+        Metadata selection - zip export
       
     </span>
   </a>
@@ -3367,6 +3389,20 @@ type=&quot;application/opensearchdescription+xml&quot; title=&quot;Open Search 
 <p><strong>Examples:</strong>
 - <code>image/*|text/plain|application/xml|application/pdf</code> — allows images, text, XML, and PDF files.
 - <code>*/*</code> — allows all file types.</p>
+<h2 id="metadata-history">Metadata History</h2>
+<p>Allows to view metadata history</p>
+<p><img alt="" src="../img/metadata_history.png" /></p>
+<ul>
+<li>
+<p><strong>Minimum user profile allowed to view metadata history</strong> Minimum user profile allowed to delete metadata (<code>Registered User</code>, <code>Editor</code> or <code>Administrator</code>). The default value is <code>Editor</code>.
+    <img alt="" src="../img/metadata_history_config.png" /></p>
+</li>
+<li>
+<p><strong>Registered User Configuration</strong> The user who has granted view permission to the metadata record can view the history.</p>
+</li>
+<li><strong>Editor Configuration</strong> The user who has granted editing permission to the metadata record can view the history.</li>
+<li><strong>Administrator Configuration</strong> The user who has granted system administrator permission can view the history.</li>
+</ul>
 <h2 id="editing_harvested_records">Metadata import</h2>
 <ul>
 <li><strong>Restrict import to schemas</strong> List of all allowed schemas for metadata to be imported. If the metadata schema is not allowed, then the import is not done. Use an empty value to allow all schemas.</li>
@@ -3386,19 +3422,10 @@ type=&quot;application/opensearchdescription+xml&quot; title=&quot;Open Search 
 <li><strong>Minimum user profile allowed to un-publish metadata</strong> Minimum user profile allowed to un-publish metadata (<code>Reviewer</code> or <code>Administrator</code>). The default value is <code>Reviewer</code>.</li>
 </ul>
 <p><img alt="" src="../img/metadata-publication.png" /></p>
-<h2 id="metadata-history">Metadata History</h2>
-<p>Allows to view metadata history</p>
-<p><img alt="" src="../img/metadata_history.png" /></p>
+<h2 id="metadata-selection-zip-export">Metadata selection - zip export</h2>
+<p>Allows to configure the zip export of metadata records and their attachments.</p>
 <ul>
-<li>
-<p><strong>Minimum user profile allowed to view metadata history</strong> Minimum user profile allowed to delete metadata (<code>Registered User</code>, <code>Editor</code> or <code>Administrator</code>). The default value is <code>Editor</code>.
-<img alt="" src="../img/metadata_history_config.png" /></p>
-</li>
-<li>
-<p><strong>Registered User Configuration</strong> The user who has granted view permission to the metadata record can view the history.</p>
-</li>
-<li><strong>Editor Configuration</strong> The user who has granted editing permission to the metadata record can view the history.</li>
-<li><strong>Administrator Configuration</strong> The user who has granted system administrator permission can view the history.</li>
+<li><strong>Total size of attachments allowed in zip export (MB)</strong> Maximum total size of attachments allowed in zip export (in MB). If the total size of attachments linked to the selected metadata is above this value, exporting as zip (with attachments) is not allowed. Leave empty for no limit.</li>
 </ul>
 <h2 id="harvesting">Harvesting</h2>
 <p><em>Allow editing on harvested records</em>: Enables/Disables editing of harvested records in the catalogue. By default, harvested records cannot be edited.</p>
