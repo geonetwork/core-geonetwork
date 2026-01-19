@@ -1610,5 +1610,9 @@
     "datahubEnabled": "Activer le Datahub pour ce portail",
     "datahubInfo": "L'interface du Datahub est accessible <a href='../../{{uuid}}/datahub'>ici</a>.",
     "datahubPluginNotInstalled-help": "Le plugin d'intégration du Datahub n'est pas installé. Veuillez consulter <a href='https://docs.geonetwork-opensource.org/4.4/install-guide/plugins/#datahub-integration-gn-datahub-integration' target='_blank'>la documentation associée pour plus d'informations</a> sur l'installation et l'utilisation de ce plugin.",
-    "harvesterErrorRetrieveSources": "Erreur lors de la récupération des catalogues distants"
+    "harvesterErrorRetrieveSources": "Erreur lors de la récupération des catalogues distants",
+    "anonymousAccessList": "Liste des accès anonymes à des fiches non publiées",
+    "anonymousAccessListDelete": "Retirer l'accès anonyme",
+    "anonymousAccessListEmpty": "Aucun accès anonyme configuré",
+    "anonymousAccessDeleted": "Accès anonyme supprimé"
 }
