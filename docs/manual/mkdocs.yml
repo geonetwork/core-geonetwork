@@ -340,6 +340,11 @@ nav:
         - administrator-guide/managing-metadata-standards/configure-validation.md
         - administrator-guide/managing-metadata-standards/metadata-identifier.md
         - administrator-guide/managing-metadata-standards/standards.md
+      - 'Managing Anonymous Links':
+        - administrator-guide/managing-anonymous-links/index.md
+        - administrator-guide/managing-anonymous-links/create-link.md
+        - administrator-guide/managing-anonymous-links/manage-links.md
+        - administrator-guide/managing-anonymous-links/delete-link.md
 
   - 'Maintainer Guide':
       - maintainer-guide/index.md
