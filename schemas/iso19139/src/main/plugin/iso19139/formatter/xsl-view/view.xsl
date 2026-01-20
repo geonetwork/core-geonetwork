@@ -118,70 +118,73 @@
   <xsl:template mode="getTags" match="gmd:MD_Metadata|*[@gco:isoType = 'gmd:MD_Metadata']">
     <xsl:param name="byThesaurus" select="false()"/>
 
-    <section class="gn-md-side-social">
-      <h2>
-        <i class="fa fa-fw fa-tag"></i>
-        <span>
-          <xsl:value-of select="$schemaStrings/noThesaurusName"/>
-        </span>
-      </h2>
-      <xsl:variable name="tags">
-        <xsl:for-each select="$metadata/gmd:identificationInfo/*/gmd:descriptiveKeywords/
+    <xsl:variable name="tags">
+      <xsl:for-each select="$metadata/gmd:identificationInfo/*/gmd:descriptiveKeywords/
                                           *[
                                           gmd:type/*/@codeListValue != 'place'
                                             and normalize-space(string-join(gmd:keyword//text(), '')) != ''
                                             and (not(gmd:thesaurusName/*/gmd:identifier/*/gmd:code)
                                             or gmd:thesaurusName/*/gmd:identifier/*/gmd:code/*/
                                                 text() != '')]">
-          <xsl:variable name="thesaurusTitle">
-            <xsl:for-each select="gmd:thesaurusName/*/gmd:title">
-              <xsl:call-template name="localised">
-                <xsl:with-param name="langId" select="$langId"/>
-              </xsl:call-template>
-            </xsl:for-each>
-          </xsl:variable>
-          <xsl:for-each select="gmd:keyword">
-            <tag thesaurus="{$thesaurusTitle}">
-              <xsl:call-template name="localised">
-                <xsl:with-param name="langId" select="$langId"/>
-              </xsl:call-template>
-            </tag>
+        <xsl:variable name="thesaurusTitle">
+          <xsl:for-each select="gmd:thesaurusName/*/gmd:title">
+            <xsl:call-template name="localised">
+              <xsl:with-param name="langId" select="$langId"/>
+            </xsl:call-template>
           </xsl:for-each>
+        </xsl:variable>
+        <xsl:for-each select="gmd:keyword">
+          <tag thesaurus="{$thesaurusTitle}">
+            <xsl:call-template name="localised">
+              <xsl:with-param name="langId" select="$langId"/>
+            </xsl:call-template>
+          </tag>
         </xsl:for-each>
-      </xsl:variable>
+      </xsl:for-each>
+    </xsl:variable>
 
-      <xsl:choose>
-        <xsl:when test="$byThesaurus">
-          <xsl:for-each-group select="$tags/tag" group-by="@thesaurus">
-            <xsl:sort select="@thesaurus"/>
-            <xsl:if test="current-grouping-key() != ''">
-              <xsl:value-of select="current-grouping-key()"/><br/>
-            </xsl:if>
+    <xsl:if test="count($tags/tag) > 0">
+      <section class="gn-md-side-social">
+        <h2>
+          <i class="fa fa-fw fa-tag"></i>
+          <span>
+            <xsl:value-of select="$schemaStrings/noThesaurusName"/>
+          </span>
+        </h2>
 
-            <xsl:for-each select="current-group()">
+        <xsl:choose>
+          <xsl:when test="$byThesaurus">
+            <xsl:for-each-group select="$tags/tag" group-by="@thesaurus">
+              <xsl:sort select="@thesaurus"/>
+              <xsl:if test="current-grouping-key() != ''">
+                <xsl:value-of select="current-grouping-key()"/><br/>
+              </xsl:if>
+
+              <xsl:for-each select="current-group()">
+                <xsl:sort select="."/>
+                <a class="btn btn-default btn-xs"
+                   href='#/search?query_string=%7B"tag.\\*":%7B"{.}":true%7D%7D'>
+                  <xsl:copy-of select="."/>
+                </a>
+              </xsl:for-each>
+              <xsl:if test="position() != last()">
+                <hr/>
+              </xsl:if>
+            </xsl:for-each-group>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:for-each select="$tags/tag">
               <xsl:sort select="."/>
               <a class="btn btn-default btn-xs"
                  href='#/search?query_string=%7B"tag.\\*":%7B"{.}":true%7D%7D'>
                 <xsl:copy-of select="."/>
               </a>
             </xsl:for-each>
-            <xsl:if test="position() != last()">
-              <hr/>
-            </xsl:if>
-          </xsl:for-each-group>
-        </xsl:when>
-        <xsl:otherwise>
-          <xsl:for-each select="$tags/tag">
-            <xsl:sort select="."/>
-            <a class="btn btn-default btn-xs"
-               href='#/search?query_string=%7B"tag.\\*":%7B"{.}":true%7D%7D'>
-              <xsl:copy-of select="."/>
-            </a>
-          </xsl:for-each>
-        </xsl:otherwise>
-      </xsl:choose>
+          </xsl:otherwise>
+        </xsl:choose>
 
-    </section>
+      </section>
+    </xsl:if>
   </xsl:template>
 
   <xsl:template mode="getMetadataHierarchyLevel" match="gmd:MD_Metadata|*[@gco:isoType = 'gmd:MD_Metadata']">
@@ -948,32 +951,36 @@
   <xsl:template mode="render-field"
                 match="gmd:distributionFormat[1]"
                 priority="100">
-    <dl class="gn-format">
-      <dt>
-        <xsl:call-template name="render-field-label">
-          <xsl:with-param name="languages" select="$allLanguages"/>
-        </xsl:call-template>
-      </dt>
-      <dd>
-        <ul>
-          <xsl:for-each select="parent::node()/gmd:distributionFormat">
-            <xsl:if test="*/gmd:name[. != '']">
-              <li>
-                <xsl:apply-templates mode="render-value-no-breaklines"
-                                    select="*/gmd:name"/>
-                (<xsl:apply-templates mode="render-value-no-breaklines"
-                                      select="*/gmd:version"/>)
-                <p>
-                  <xsl:apply-templates mode="render-field"
-                                      select="*/(gmd:amendmentNumber|gmd:specification|
+    <xsl:if test="count(parent::node()/gmd:distributionFormat/*/gmd:name/*[text() != '']) > 0">
+      <dl class="gn-format">
+        <dt>
+          <xsl:call-template name="render-field-label">
+            <xsl:with-param name="languages" select="$allLanguages"/>
+          </xsl:call-template>
+        </dt>
+        <dd>
+          <ul>
+            <xsl:for-each select="parent::node()/gmd:distributionFormat">
+              <xsl:if test="*/gmd:name/*[text() != '']">
+                <li>
+                  <xsl:apply-templates mode="render-value-no-breaklines"
+                                       select="*/gmd:name"/>
+                  <xsl:if test="*/gmd:version/*[text() != '']">
+                    (<xsl:apply-templates mode="render-value-no-breaklines"
+                                          select="*/gmd:version"/>)
+                  </xsl:if>
+                  <p>
+                    <xsl:apply-templates mode="render-field"
+                                         select="*/(gmd:amendmentNumber|gmd:specification|
                                 gmd:fileDecompressionTechnique|gmd:formatDistributor)"/>
-                </p>
-              </li>
-            </xsl:if>
-          </xsl:for-each>
-        </ul>
-      </dd>
-    </dl>
+                  </p>
+                </li>
+              </xsl:if>
+            </xsl:for-each>
+          </ul>
+        </dd>
+      </dl>
+    </xsl:if>
   </xsl:template>
 
 
