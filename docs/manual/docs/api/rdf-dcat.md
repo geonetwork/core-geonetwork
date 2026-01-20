@@ -194,6 +194,18 @@ When encoding in ISO datasets in the context of DCAT HVD, consider encoding the 
 
 See [DCAT AP HVD specification](https://semiceu.github.io/DCAT-AP/releases/2.2.0-hvd/) for other requirements.
 
+For HVD validation, a dedicated set of rules can be enabled/disabled in the admin console > Metadata > Validation > `schematron-rules-dcat-ap-hvd`. 
+To enable it only when the HVD regulation is set in the metadata, use the following criteria:
+
+![dcat-hvd-validation-configuration.png](img/dcat-hvd-validation-configuration.png)
+
+```xpath2
+.//*[local-name() = 'keyword'][*/@xlink:href = 'http://data.europa.eu/eli/reg_impl/2023/138/oj']
+```
+
+Validation rules are described in `schemas/iso19115-3.2018/src/main/plugin/iso19115-3.2018/schematron/schematron-rules-dcat-ap-hvd.sch`.
+
+
 ### EU DCAT mobility 
 
 When encoding in ISO datasets in the context of DCAT Mobility, consider encoding the following properties:
