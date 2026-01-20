@@ -121,6 +121,9 @@ public class BaseMetadataUtils implements IMetadataUtils {
 
     protected IMetadataManager metadataManager;
 
+    @Autowired
+    private NodeInfo nodeInfo;
+
     @Override
     public void setMetadataManager(IMetadataManager metadataManager) {
         this.metadataManager = metadataManager;
