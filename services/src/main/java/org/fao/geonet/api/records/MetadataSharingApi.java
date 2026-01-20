@@ -898,7 +898,8 @@ public class MetadataSharingApi implements ApplicationEventPublisherAware
         //old permissions
         Integer sourceUsr = metadata.getSourceInfo().getOwner();
         String metadataId = String.valueOf(metadata.getId());
-        Vector<OperationAllowedId> oldPriv = retrievePrivileges(context, metadataId, sourceUsr, oldGroup.getId());
+        Integer oldGroupId = oldGroup != null ? oldGroup.getId() : null;
+        Vector<OperationAllowedId> oldPriv = retrievePrivileges(context, metadataId, sourceUsr, oldGroupId);
 
 
         //modify the sharingResponse (current permissions from DB) with new privileges (group XFER).
