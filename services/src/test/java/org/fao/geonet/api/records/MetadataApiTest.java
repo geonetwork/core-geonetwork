@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2024 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -27,10 +27,15 @@ import jeeves.server.context.ServiceContext;
 import org.fao.geonet.NodeInfo;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.domain.AbstractMetadata;
+import org.fao.geonet.domain.Source;
+import org.fao.geonet.domain.SourceType;
 import org.fao.geonet.kernel.SpringLocalServiceInvoker;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
+import org.fao.geonet.kernel.datamanager.IMetadataIndexer;
+import org.fao.geonet.kernel.search.IndexingMode;
 import org.fao.geonet.repository.MetadataRepository;
+import org.fao.geonet.repository.SourceRepository;
 import org.fao.geonet.services.AbstractServiceIntegrationTest;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Attribute;
@@ -72,6 +77,12 @@ public class MetadataApiTest extends AbstractServiceIntegrationTest {
     @Autowired
     private MetadataRepository metadataRepository;
     @Autowired
+    private IMetadataIndexer metadataIndexer;
+    @Autowired
+    private SourceRepository sourceRepository;
+    @Autowired
+    private NodeInfo nodeInfo;
+    @Autowired
     private SettingManager settingManager;
 
     private int id;
@@ -90,11 +101,23 @@ public class MetadataApiTest extends AbstractServiceIntegrationTest {
         AbstractMetadata metadata = injectMetadataInDb(getSampleMetadataXml(), context, true);
         id = metadata.getId();
         uuid = metadata.getUuid();
+
         AbstractMetadata subtemplate = insertTemplateResourceInDb(getSample("kernel/babarContact.xml"), context);
         Element metadataWithSubtemplate = getSample("kernel/vicinityMap.xml");
         Attribute href = (Attribute) Xml.selectElement(metadataWithSubtemplate, "gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact").getAttributes().get(0);
         href.setValue(href.getValue().replace("@contact_uuid@", subtemplate.getUuid()));
         mdWithSubtemplateUuid = injectMetadataInDb(metadataWithSubtemplate, context, true).getUuid();
+
+
+
+        metadataIndexer.indexMetadata(String.valueOf(id), true, IndexingMode.full);
+
+        Source subportal = new Source();
+        subportal.setName("external");
+        subportal.setType(SourceType.subportal);
+        subportal.setFilter("-uuid:" + uuid);
+        subportal.setUuid(UUID.randomUUID().toString());
+        sourceRepository.save(subportal);
     }
 
     @Test
@@ -362,6 +385,35 @@ public class MetadataApiTest extends AbstractServiceIntegrationTest {
             .andExpect(xpath("/apiError/code").string(equalTo("forbidden")))
             .andExpect(xpath("/apiError/message").string(equalTo(ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW)));
     }
+
+    @Test
+    public void getNonAvailableRecordInSubportalAsXml() throws Exception {
+        MockMvc mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+        MockHttpSession mockHttpSession = loginAsAdmin();
+
+        // Set the current node to the subportal
+        Source subportal = sourceRepository.findOneByName("external");
+        Assert.assertNotNull(subportal);
+        nodeInfo.setId(subportal.getUuid());
+        nodeInfo.setDefaultNode(false);
+
+        mockMvc.perform(get("/external/api/records/" + this.uuid + "/formatters/json")
+                .session(mockHttpSession)
+                .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isNotFound())
+            .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING))
+            .andExpect(jsonPath("$.code").value(equalTo("resource_not_found")))
+            .andExpect(jsonPath("$.message").value(equalTo("Metadata not found")));
+
+        mockMvc.perform(get("/external/api/records/" + this.uuid + "/formatters/xml")
+                .session(mockHttpSession)
+                .accept(MediaType.APPLICATION_XML))
+            .andExpect(status().isNotFound())
+            .andExpect(content().contentType(MediaType.APPLICATION_XML))
+            .andExpect(xpath("/apiError/code").string(equalTo("resource_not_found")))
+            .andExpect(xpath("/apiError/message").string(equalTo("Metadata not found")));
+    }
+
 
     @Test
     public void getNonExistentRecordAsXml() throws Exception {

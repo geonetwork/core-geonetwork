@@ -111,37 +111,9 @@ public class SearchController {
                                     boolean checkMetadataAvailableInPortal) throws CatalogException {
 
         if (checkMetadataAvailableInPortal) {
-            // Check if the metadata is available in the portal
-            String elasticSearchQuery = "{ \"bool\": {\n" +
-                "            \"must\": [\n" +
-                "        {" +
-                "          \"term\": {" +
-                "            \"id\": {" +
-                "              \"value\": \"%s\"" +
-                "            }" +
-                "          }" +
-                "        } " +
-                "            ]\n" +
-                "          ,\"filter\":{\"query_string\":{\"query\":\"%s\"}}}}";
-
-            JsonNode esJsonQuery;
-
-            try {
-                String filterQueryString = esFilterBuilder.build(context, "metadata", false, node);
-                String jsonQuery = String.format(elasticSearchQuery, id, filterQueryString);
-
-                ObjectMapper objectMapper = new ObjectMapper();
-                esJsonQuery = objectMapper.readTree(jsonQuery);
-
-                TotalHits total = searchManager.query(esJsonQuery, new HashSet<>(), 0, 0).hits().total();
-
-                if (Optional.ofNullable(total).map(TotalHits::value).orElse(0L) == 0) {
-                    return null;
-                }
-            } catch (Exception e) {
-                throw new RuntimeException(e);
+            if (!metadataUtils.isMetadataAvailableInPortal(Integer.parseInt(id))) {
+                return null;
             }
-
         }
 
         try {
