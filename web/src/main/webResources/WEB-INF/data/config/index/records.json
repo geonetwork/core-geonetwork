@@ -1496,6 +1496,21 @@
                 "type": "keyword",
                 "copy_to": ["any.default"]
               },
+              "identifiers": {
+                "type": "nested",
+                "properties": {
+                  "code": {
+                    "type": "keyword",
+                    "copy_to": ["any.default"]
+                  },
+                  "codeSpace": {
+                    "type": "keyword"
+                  },
+                  "link": {
+                    "type": "keyword"
+                  }
+                }
+              },
               "role": {
                 "type": "keyword"
               }
