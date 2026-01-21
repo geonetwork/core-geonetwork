@@ -90,11 +90,15 @@
     </gfc:cardinality>
   </xsl:template>
 
-  <xsl:template match="gmd:language|gmd:locale" priority="5" mode="from19139to19115-3.2018">
+  <xsl:variable name="mainLanguage" select="*/gmd:language/*/@codeListValue"/>
+
+  <xsl:template match="gmd:locale[*/gmd:languageCode/*/@codeListValue = $mainLanguage]" priority="5" mode="from19139to19115-3.2018"/>
+
+  <xsl:template match="gmd:language|gmd:locale|gmd:locale[*/gmd:languageCode/*/@codeListValue != $mainLanguage]" priority="5" mode="from19139to19115-3.2018">
     <xsl:variable name="nameSpacePrefix">
       <xsl:call-template name="getNamespacePrefix"/>
     </xsl:variable>
-    <xsl:variable name="elementName" select="if (local-name() = 'language') then 'defaultLocale' else 'otherLocale'"/>
+    <xsl:variable name="elementName" select="if (local-name() = 'language' and gmd:LanguageCode/@codeListValue = $mainLanguage) then 'defaultLocale' else 'otherLocale'"/>
     <xsl:element name="{concat($nameSpacePrefix, ':', $elementName)}">
       <!--<xsl:element name="{'mdb:defaultLocale'}">-->
       <xsl:apply-templates select="@*" mode="from19139to19115-3.2018"/>
