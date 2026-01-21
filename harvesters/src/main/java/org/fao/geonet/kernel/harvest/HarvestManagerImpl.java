@@ -679,19 +679,6 @@ public class HarvestManagerImpl implements HarvestInfoProvider, HarvestManager {
         this.readOnly = readOnly;
     }
 
-    public OperResult reindexBatch(String id) throws Exception {
-        if (Log.isDebugEnabled(Geonet.HARVEST_MAN))
-            Log.debug(Geonet.HARVEST_MAN, "Reindexing harvesting with id : " + id);
-
-        AbstractHarvester<?, ?> ah = hmHarvesters.get(id);
-
-        if (ah == null) {
-            return OperResult.NOT_FOUND;
-        }
-
-        return ah.reindex();
-    }
-
     public synchronized OperResult clearBatch(String id) throws Exception {
         if (Log.isDebugEnabled(Geonet.HARVEST_MAN))
             Log.debug(Geonet.HARVEST_MAN, "Clearing harvesting with id : " + id);

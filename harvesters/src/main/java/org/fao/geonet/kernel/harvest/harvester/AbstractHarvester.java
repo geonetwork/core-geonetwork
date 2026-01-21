@@ -504,13 +504,18 @@ public abstract class AbstractHarvester<T extends HarvestResult, P extends Abstr
         }
     }
 
-    public OperResult reindex() throws Exception {
+    /**
+     * Reindexes all records of this harvester
+     * @return False is another harvester was running, True if the reindexing was successful
+     * @throws Exception If the indexing failed
+     */
+    public boolean reindex() throws Exception {
         String harvesterUUID = getParams().getUuid();
         final Specification<Metadata> specification = (Specification<Metadata>) MetadataSpecs.hasHarvesterUuid(harvesterUUID);
 
         var wasRunning = reindexing.compareAndExchange(false, true);
         if (wasRunning) {
-            return OperResult.ALREADY_RUNNING;
+            return false;
         }
 
         try {
@@ -520,7 +525,7 @@ public abstract class AbstractHarvester<T extends HarvestResult, P extends Abstr
         } finally {
             reindexing.compareAndExchange(true, false);
         }
-        return OperResult.OK;
+        return true;
     }
 
     public String getID() {

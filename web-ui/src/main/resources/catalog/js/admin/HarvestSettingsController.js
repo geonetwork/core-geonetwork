@@ -530,9 +530,11 @@
       };
       $scope.reindexHarvesterRecord = function () {
         return $http
-          .get(
-            "admin.harvester.reindex?_content_type=json&id=" +
-              $scope.harvesterSelected["@id"]
+          .post(
+            "../api/harvesters/" +
+              $scope.harvesterSelected.site.uuid +
+              "/reindex?source=" +
+              gnConfig["system.site.siteId"]
           )
           .then(
             function (response) {

@@ -116,8 +116,6 @@
                            access="hasAuthority('UserAdmin')"/>
         <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.harvester.log!?.*"
                            access="hasAuthority('UserAdmin')"/>
-        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.harvester.reindex!?.*"
-                           access="hasAuthority('UserAdmin')"/>
         <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.harvester.notifier.save!?.*"
                            access="hasAuthority('UserAdmin')"/>
         <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.harvester.notifier.get!?.*"

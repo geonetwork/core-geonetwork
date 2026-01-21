@@ -127,13 +127,6 @@
       <class name=".services.harvesting.Log"/>
       <output file="true" contentType="text/plain"/>
     </service>
-    
-    <service name="admin.harvester.reindex">
-      <documentation><![CDATA[
-              Reindexes all records of an harvester.
-              ]]></documentation>
-      <class name=".services.harvesting.Reindex"/>
-    </service>
 
     <service name="admin.harvester.notifier.save">
       <class name=".services.harvesting.notifier.SaveNotificationSettings"/>
