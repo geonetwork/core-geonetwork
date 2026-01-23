@@ -590,11 +590,19 @@ public class EditLib {
                                 value);
                         } else if (elem instanceof Element) {
                             Element element = (Element) elem;
+                            final String predicateAndSuffix = xpathProperty.substring(indexOfRequiredPortion);
 
-                            isUpdated = createAndAddFromXPath(element,
-                                metadataSchema,
-                                xpathProperty.substring(indexOfRequiredPortion),
-                                value);
+                            if (containsOnlyPredicates(predicateAndSuffix)) {
+                                isUpdated = createAndAddFromXPath(metadataRecord,
+                                    metadataSchema,
+                                    requiredXPath,
+                                    value);
+                            } else {
+                                isUpdated = createAndAddFromXPath(element,
+                                    metadataSchema,
+                                    predicateAndSuffix,
+                                    value);
+                            }
                         } else {
                             isUpdated = false;
                         }
@@ -1817,6 +1825,33 @@ public class EditLib {
 
             md.addContent(attribute);
         }
+    }
+
+    private boolean containsOnlyPredicates(String xpath) {
+        if (xpath == null) {
+            return false;
+        }
+        String trimmed = xpath.trim();
+        if (trimmed.isEmpty() || trimmed.charAt(0) != '[') {
+            return false;
+        }
+        boolean seenPredicate = false;
+        int depth = 0;
+        for (int i = 0; i < trimmed.length(); i++) {
+            char c = trimmed.charAt(i);
+            if (c == '[') {
+                depth++;
+                seenPredicate = true;
+            } else if (c == ']') {
+                if (depth == 0) {
+                    return false;
+                }
+                depth--;
+            } else if (depth == 0 && !Character.isWhitespace(c)) {
+                return false;
+            }
+        }
+        return seenPredicate && depth == 0;
     }
 
     /**
