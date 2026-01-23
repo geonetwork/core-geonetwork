@@ -190,11 +190,29 @@ public class SiteApi implements ApplicationEventPublisherAware {
         summary = "Get site (or portal) description",
         description = "")
     @RequestMapping(
+        consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.ALL_VALUE},
         produces = MediaType.APPLICATION_JSON_VALUE,
         method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Site description.")
+        @ApiResponse(responseCode = "200", description = "Site description.",
+        content = {
+            @Content(schema = @Schema(
+                type = "object",
+                additionalPropertiesSchema = String.class
+            ),
+                examples = @ExampleObject(value = "{\n" +
+                "  \"system/site/name\": \"My GeoNetwork catalogue\",\n" +
+                "  \"system/site/organization\": \"My organization\",\n" +
+                "  \"system/site/siteId\": \"33bc8c82-7ac2-49b6-a22b-af7376dbcf10\",\n" +
+                "  \"system/platform/version\": \"4.4.7\",\n" +
+                "  \"system/platform/subVersion\": \"SNAPSHOT\",\n" +
+                "  \"node/default\": \"true\",\n" +
+                "  \"node/id\": \"33bc8c82-7ac2-49b6-a22b-af7376dbcf10\",\n" +
+                "  \"node/name\": \"My GeoNetwork catalogue\",\n" +
+                "  \"microservices/enabled\": false\n" +
+                "}"))
+        })
     })
     @ResponseBody
     public SettingsListResponse getSiteOrPortalDescription(
