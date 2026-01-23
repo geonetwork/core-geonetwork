@@ -1,7 +1,7 @@
 .timeline {
   list-style: none;
   margin-top: 10px;
-  padding: 0px 0 0px;
+  padding: 0;
   position: relative;
   a {
     cursor: pointer;
@@ -63,10 +63,6 @@
   display: table;
 }
 
-.timeline > li:after {
-  clear: both;
-}
-
 .timeline > li > .timeline-panel {
   //  width: 46%;
   float: left;
@@ -114,11 +110,9 @@
   margin-left: -25px;
   background-color: #999999;
   z-index: 100;
-  border-top-right-radius: 50%;
-  border-top-left-radius: 50%;
-  border-bottom-right-radius: 50%;
-  border-bottom-left-radius: 50%;
+  border-radius: 50%;
 }
+
 .timeline > li > .timeline-badge-small {
   width: 30px;
   height: 30px;

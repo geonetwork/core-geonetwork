@@ -10,16 +10,20 @@
   text-align: center;
   vertical-align: bottom;
   width: 60px;
+
+  &-type {
+    background: @brand-success;
+  }
+
+  &-topic {
+    background: @brand-primary;
+  }
+
+  &-inspire {
+    background: white;
+  }
 }
-.badge-result-type {
-  background: @brand-success;
-}
-.badge-result-topic {
-  background: @brand-primary;
-}
-.badge-result-inspire {
-  background: white;
-}
+
 .badge-icon {
   min-width: 65px;
   a {
@@ -27,6 +31,7 @@
     cursor: pointer;
   }
 }
+
 .badge-text {
   height: 100%;
   line-height: 100%;
@@ -49,8 +54,5 @@
   }
 }
 .chips-card {
-  padding-bottom: 10px;
-  padding-left: 0px;
-  padding-right: 0px;
-  padding-top: 5px;
+  padding: 5px 0 10px;
 }

@@ -84,7 +84,7 @@ ul.ancestors li {
 .skos-concept-thesaurus ul{
     margin:3px;
     list-style-type:none;
-    padding-left:0px;
+    padding-left:0;
 }
 .skos-concept-thesaurus li:hover {
     background-color:lightgrey;
@@ -100,7 +100,7 @@ ul.ancestors li {
     margin-bottom:10px;
     margin-top:10px;
     border:1px solid #ddd;
-    padding:0px 3px 0px 3px;
+    padding:0 3px 0 3px;
     border-radius:3px;
     background-color:#eee;
     display:inline-block;
@@ -114,19 +114,13 @@ ul.ancestors li {
     padding:3px;
     min-width:250px;
 }
-.skos-concept{
-    /*padding:10px 15px;*/
-    /*margin-bottom:8px;*/
-}
 
 .skos-concept ul{
     list-style-type:none;
     margin-bottom:2px;
     padding-left:0px;
 }
-.skos-concept li{
-    /*display:inline-block;*/
-}
+
 /* 'skos-concept' altLabel display*/
 .skos-concept-altlabel{
     margin:4px 0px 5px 6px;
