@@ -28,6 +28,9 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.google.common.io.ByteStreams;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.dispatchers.ServiceManager;
@@ -38,6 +41,7 @@ import org.apache.http.client.methods.HttpUriRequest;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.Constants;
 import org.fao.geonet.SystemInfo;
+import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.records.formatters.cache.*;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
@@ -124,7 +128,7 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
      */
     private final WeakHashMap<String, Element> pluginLocs = new WeakHashMap<>();
     private final Map<Path, Boolean> isFormatterInSchemaPluginMap = Maps.newHashMap();
-
+    
     /**
      * We will copy all formatter files to the data directory so that the formatters should always
      * compile in data directory without administrators manually keeping all the formatter
@@ -213,7 +217,12 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
         method = RequestMethod.GET,
         produces = {
             MediaType.TEXT_HTML_VALUE,
+            MediaType.TEXT_PLAIN_VALUE,
+            MediaType.APPLICATION_JSON_VALUE,
+            "application/vnd.schemaorg.ld+json",
+            MediaType.APPLICATION_XML_VALUE,
             MediaType.APPLICATION_XHTML_XML_VALUE,
+            "application/rdf+xml",
             "application/pdf",
             MediaType.ALL_VALUE
             // TODO: PDF
@@ -221,6 +230,30 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
     @io.swagger.v3.oas.annotations.Operation(
         summary = "Get a formatted metadata record"
     )
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200",
+            description = "Formatted metadata record.",
+            // Added because when ALL_VALUE is in produces, Swagger UI shows no response content type
+            content = {
+                @io.swagger.v3.oas.annotations.media.Content(mediaType = MediaType.TEXT_HTML_VALUE,
+                    schema = @Schema(type = "string")),
+                @io.swagger.v3.oas.annotations.media.Content(mediaType = MediaType.TEXT_PLAIN_VALUE,
+                    schema = @Schema(type = "string")),
+                @io.swagger.v3.oas.annotations.media.Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                    schema = @Schema(type = "string")),
+                @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/vnd.schemaorg.ld+json",
+                    schema = @Schema(type = "string")),
+                @io.swagger.v3.oas.annotations.media.Content(mediaType = MediaType.APPLICATION_XML_VALUE,
+                    schema = @Schema(type = "string")),
+                @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/rdf+xml",
+                    schema = @Schema(type = "string")),
+                @io.swagger.v3.oas.annotations.media.Content(mediaType = MediaType.APPLICATION_XHTML_XML_VALUE,
+                    schema = @Schema(type = "string")),
+                @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/pdf",
+                    schema = @Schema(type = "string", format = "binary"))
+            }
+        )
+    })
     @ResponseBody
     public void getRecordFormattedBy(
         @Parameter(
@@ -255,6 +288,17 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
             required = false)
         @RequestParam(required = false, defaultValue = "true")
             boolean approved,
+        @Parameter(
+            description = "Additional parameters for the formatter. Can be used to pass any key-value pairs.",
+            required = false,
+            schema = @io.swagger.v3.oas.annotations.media.Schema(
+                type = "object",
+                additionalProperties = Schema.AdditionalPropertiesValue.USE_ADDITIONAL_PROPERTIES_ANNOTATION,
+                additionalPropertiesSchema = String.class
+            )
+        )
+        @RequestParam(required = false)
+        Map<String, String> allRequestParameters,
         @Parameter(hidden = true) final NativeWebRequest request,
         final HttpServletRequest servletRequest) throws Exception {
 
