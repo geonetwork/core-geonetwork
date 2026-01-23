@@ -307,7 +307,7 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
             formatType,
             request.getNativeRequest(HttpServletRequest.class));
 
-        Boolean hideWithheld = !context.getBean(AccessManager.class).canEdit(context, String.valueOf(metadata.getId()));
+        boolean hideWithheld = !context.getBean(AccessManager.class).canEdit(context, String.valueOf(metadata.getId()));
         Key key = new Key(metadata.getId(), language, formatType, formatterId, hideWithheld, width);
         final boolean skipPopularityBool = false;
 
@@ -603,13 +603,8 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
         fparams.formatterInSchemaPlugin = isFormatterInSchemaPlugin(formatDir, schemaDir);
 
         Path viewXslFile = formatDir.resolve(FormatterConstants.VIEW_XSL_FILENAME);
-        FormatterImpl formatter;
-        if (Files.exists(viewXslFile)) {
-            fparams.viewFile = viewXslFile.toRealPath();
-            formatter = context.getBean(XsltFormatter.class);
-        } else {
-            throw new IllegalArgumentException("The 'xsl' parameter must be a valid id of a formatter");
-        }
+        FormatterImpl formatter = FormatterFactory.getFormatter(context, viewXslFile, xslid);
+        fparams.viewFile = viewXslFile.toRealPath();
 
         return Pair.read(formatter, fparams);
     }
@@ -648,8 +643,7 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
 
     }
 
-    private boolean isCompatibleMetadata(String schemaName, ConfigFile config) throws Exception {
-
+    private boolean isCompatibleMetadata(String schemaName, ConfigFile config) {
         List<String> applicable = config.listOfApplicableSchemas();
         return applicable.contains(schemaName) || applicable.contains("all");
     }
@@ -781,6 +775,7 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
             FormatterParams fparams = result.two();
             final String formattedMetadata = formatter.format(fparams);
             byte[] bytes = formattedMetadata.getBytes(Constants.CHARSET);
+
             long changeDate = fparams.metadataInfo.getDataInfo().getChangeDate().toDate().getTime();
             final Specification<OperationAllowed> isPublished = OperationAllowedSpecs.isPublic(ReservedOperation.view);
             final Specification<OperationAllowed> hasMdId = OperationAllowedSpecs.hasMetadataId(key.mdId);
