@@ -728,7 +728,7 @@
               "../api/registries/vocabularies/keyword",
               gnUrlUtils.toKeyValue({
                 thesaurus: thesaurus || fieldId.replace(/th_(.*)_tree.key/, "$1"),
-                id: encodeURIComponent(uris.join(",")),
+                id: uris.join(","),
                 lang: gnLangs.getCurrent() + "," + Object.keys(gnLangs.langs).join(",")
               }),
               {
