@@ -122,7 +122,68 @@
               angular.isString(gnConfig["system.inspire.remotevalidation.url"]);
             scope.validationNode = gnConfig["system.inspire.remotevalidation.nodeid"];
             scope.isMdWorkflowEnable = gnConfig["metadata.workflow.enable"];
+            scope.attachmentsSizeLimit = Number(
+              gnConfig["metadata.zipExport.attachmentsSizeLimit"]
+            );
           });
+
+          var updateAttachmentsExceedExportLimit = function (selectedUuids) {
+            if (!selectedUuids.length) {
+              // No selection implies total size is 0
+              scope.attachmentsExceedExportLimit = false;
+              return;
+            }
+
+            return $http
+              .post(
+                "../api/search/records/_search?bucket=" +
+                  scope.searchResults.selectionBucket,
+                {
+                  size: 0, // return no documents
+                  _source: false, // return no _source
+                  query: {
+                    bool: {
+                      filter: [
+                        // Restrict aggregation to currently selected records
+                        { terms: { uuid: selectedUuids } }
+                      ]
+                    }
+                  },
+                  aggs: {
+                    total_filestore_bytes: {
+                      sum: { field: "filestore.size" }
+                    }
+                  }
+                }
+              )
+              .then(function (resp) {
+                var totalAttachmentsSize = 0;
+                if (
+                  resp &&
+                  resp.data &&
+                  resp.data.aggregations &&
+                  resp.data.aggregations.total_filestore_bytes
+                ) {
+                  totalAttachmentsSize =
+                    resp.data.aggregations.total_filestore_bytes.value || 0;
+                }
+                if (
+                  scope.attachmentsSizeLimit > 0 &&
+                  isFinite(scope.attachmentsSizeLimit)
+                ) {
+                  var attachmentsSizeLimitBytes =
+                    scope.attachmentsSizeLimit * 1024 * 1024;
+                  scope.attachmentsExceedExportLimit =
+                    totalAttachmentsSize > attachmentsSizeLimitBytes;
+                } else {
+                  scope.attachmentsExceedExportLimit = false;
+                }
+              })
+              .catch(function (err) {
+                console.error("Failed to update total attachments size:", err);
+                scope.attachmentsExceedExportLimit = false;
+              });
+          };
 
           scope.$on("operationOnSelectionStart", function () {
             scope.operationOnSelectionInProgress = true;
@@ -131,12 +192,25 @@
             scope.operationOnSelectionInProgress = false;
           });
 
+          scope.$on("selectedRecordsUpdated", function () {
+            gnSearchManagerService
+              .selected(scope.searchResults.selectionBucket)
+              .then(function (response) {
+                updateAttachmentsExceedExportLimit(
+                  angular.isArray(response.data) ? response.data : []
+                );
+              });
+          });
+
           // initial state
           gnSearchManagerService
             .selected(scope.searchResults.selectionBucket)
             .then(function (response) {
               if (angular.isArray(response.data)) {
                 scope.searchResults.selectedCount = response.data.length;
+                updateAttachmentsExceedExportLimit(
+                  angular.isArray(response.data) ? response.data : []
+                );
               }
             });
 
@@ -292,12 +366,11 @@
               ) {
                 scope.md.selected = element[0].checked;
                 scope.results.selectedCount = parseInt(response.data, 10);
-
-                if (method == "select") {
-                  $rootScope.$broadcast("metadataSelected", scope.md);
-                } else {
-                  $rootScope.$broadcast("metadataUnselected", scope.md);
-                }
+                scope.$root.$broadcast("selectedRecordsUpdated", {
+                  md: scope.md,
+                  bucket: scope.bucket,
+                  results: scope.results
+                });
               });
               e.stopPropagation();
             });

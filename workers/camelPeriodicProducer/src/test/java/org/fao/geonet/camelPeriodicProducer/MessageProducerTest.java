@@ -192,7 +192,7 @@ public class MessageProducerTest extends AbstractJUnit4SpringContextTests {
             TestMessage msg = (TestMessage) exchange.getProperty("configuration");
             receivedContent.add(msg.getContent());
             if (count.incrementAndGet() > 4) {
-                future.complete(receivedContent);
+                future.complete(new ArrayList<>(receivedContent));
             }
         }
 

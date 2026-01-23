@@ -299,7 +299,8 @@
             groups: "=",
             disabled: "=?",
             optional: "@?",
-            excludeSpecialGroups: "="
+            excludeSpecialGroups: "=",
+            onlyIncludeWorkspaces: "="
           },
 
           link: function (scope, element, attrs) {
@@ -321,19 +322,21 @@
             }
 
             $http.get(url, { cache: true }).then(function (response) {
-              var data = response.data;
+              scope.groups = response.data;
 
               //data-ng-if is not correctly updating groups.
               //So we do the filter here
               if (scope.excludeSpecialGroups) {
-                scope.groups = [];
-                angular.forEach(data, function (g) {
-                  if (g.id > 1) {
-                    scope.groups.push(g);
-                  }
+                scope.groups = scope.groups.filter(function (group) {
+                  return group.id > 1;
                 });
-              } else {
-                scope.groups = data;
+              }
+
+              //Filter out non-workspace groups
+              if (scope.onlyIncludeWorkspaces) {
+                scope.groups = scope.groups.filter(function (group) {
+                  return group.type === "Workspace";
+                });
               }
 
               if (optional) {

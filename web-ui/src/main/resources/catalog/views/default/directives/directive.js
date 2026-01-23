@@ -142,17 +142,6 @@
           scope.md = scope.$eval(attrs.gnMdActionsMenu);
           scope.formatterList = [];
 
-          gnMdFormatter
-            .getAvailableFormattersForRecord(scope.md)
-            .then(function (availableFormatters) {
-              var formatterList = gnGlobalSettings.gnCfg.mods.search.downloadFormatter;
-
-              scope.formatterList = gnMdFormatter.calculateValidFormattersForRecord(
-                formatterList,
-                availableFormatters
-              );
-            });
-
           scope.tasks = [];
           scope.hasVisibletasks = false;
 
@@ -166,6 +155,28 @@
             scope.workFlowApps =
               gnGlobalSettings.gnCfg.mods.workflowHelper.workflowAssistApps;
             scope.iso2Lang = gnLangs.getIso2Lang(gnLangs.getCurrent());
+            scope.attachmentsSizeLimit = Number(
+              gnConfig["metadata.zipExport.attachmentsSizeLimit"]
+            );
+
+            var totalAttachmentsSize = 0;
+            if (scope.md && Array.isArray(scope.md.filestore)) {
+              totalAttachmentsSize = scope.md.filestore.reduce(function (
+                sum,
+                attachment
+              ) {
+                return sum + attachment.size;
+              },
+              0);
+            }
+
+            if (scope.attachmentsSizeLimit > 0 && isFinite(scope.attachmentsSizeLimit)) {
+              var attachmentsSizeLimitBytes = scope.attachmentsSizeLimit * 1024 * 1024;
+              scope.attachmentsExceedExportLimit =
+                totalAttachmentsSize > attachmentsSizeLimitBytes;
+            } else {
+              scope.attachmentsExceedExportLimit = false;
+            }
           });
 
           scope.status = undefined;
@@ -407,6 +418,18 @@
                   scope.ownerGroupName = name;
                 });
               }
+
+              gnMdFormatter
+                .getAvailableFormattersForRecord(scope.md)
+                .then(function (availableFormatters) {
+                  var formatterList =
+                    gnGlobalSettings.gnCfg.mods.search.downloadFormatter;
+
+                  scope.formatterList = gnMdFormatter.calculateValidFormattersForRecord(
+                    formatterList,
+                    availableFormatters
+                  );
+                });
             }
           });
 

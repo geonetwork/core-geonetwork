@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2024 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2025 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -53,13 +53,13 @@ import static org.fao.geonet.kernel.harvest.harvester.csw.Aligner.applyBatchEdit
 
 class DatabaseHarvesterAligner extends BaseAligner<DatabaseHarvesterParams> implements IHarvester<HarvestResult> {
     private Logger log;
-    private ServiceContext context;
-    private DataManager dataMan;
-    private IMetadataManager metadataManager;
-    private IMetadataUtils metadataUtils;
-    private IMetadataIndexer metadataIndexer;
-    private IMetadataSchemaUtils metadataSchemaUtils;
-    private MetadataRepository metadataRepository;
+    private final ServiceContext context;
+    private final DataManager dataMan;
+    private final IMetadataManager metadataManager;
+    private final IMetadataUtils metadataUtils;
+    private final IMetadataIndexer metadataIndexer;
+    private final IMetadataSchemaUtils metadataSchemaUtils;
+    private final MetadataRepository metadataRepository;
     private HarvestResult result;
     private CategoryMapper localCateg;
     private GroupMapper localGroups;
@@ -236,7 +236,7 @@ class DatabaseHarvesterAligner extends BaseAligner<DatabaseHarvesterParams> impl
 
             switch (params.getOverrideUuid()) {
                 case OVERRIDE:
-                    updateMetadata(metadataElement, Integer.toString(metadataUtils.findOneByUuid(uuid).getId()), true);
+                    updateMetadata(metadataElement, metadataUtils.findOneByUuid(uuid), true);
                     log.debug(String.format("Overriding record with uuid %s", uuid));
                     result.updatedMetadata++;
                     break;
@@ -253,14 +253,15 @@ class DatabaseHarvesterAligner extends BaseAligner<DatabaseHarvesterParams> impl
             }
         } else {
             //record exists and belongs to this harvester
-            updateMetadata(metadataElement, id, false);
+            updateMetadata(metadataElement, metadataUtils.findOne(id), false);
             result.updatedMetadata++;
         }
 
         return id;
     }
 
-    private void updateMetadata(Element xml, String id, boolean force) throws Exception {
+    private void updateMetadata(Element xml, AbstractMetadata originalMetadata, boolean force) throws Exception {
+        String id = Integer.toString(originalMetadata.getId());
         log.info("Updating metadata with id: " + id);
 
         //
@@ -288,6 +289,11 @@ class DatabaseHarvesterAligner extends BaseAligner<DatabaseHarvesterParams> impl
             String newSchema = metadataSchemaUtils.autodetectSchema(xml);
             updateSchema = (newSchema != null) && !newSchema.equals(schema);
             schema = newSchema;
+        } else {
+            if (!originalMetadata.getDataInfo().getSchemaId().equals(schema)) {
+                log.warning("  - Detected schema '" + schema + "' is different from the one of the metadata in the catalog '" + originalMetadata.getDataInfo().getSchemaId() + "'. Using the detected one.");
+                updateSchema = true;
+            }
         }
 
         applyBatchEdits(uuid, xml, schema, params.getBatchEdits(), context, log);

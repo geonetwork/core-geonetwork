@@ -23,8 +23,15 @@
 
 package org.fao.geonet.kernel.harvest.harvester.geonet.v4;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.exceptions.BadParameterEx;
 import org.fao.geonet.kernel.harvest.harvester.geonet.BaseSearch;
@@ -39,12 +46,19 @@ import org.jdom.Element;
  */
 class Search extends BaseSearch {
 
+    public String categories;
+    public String schemes;
+    public String groupOwners;
+
     public Search() {
         super();
     }
 
     public Search(Element search) throws BadParameterEx {
         super(search);
+        categories = Util.getParam(search, "categories", "");
+        schemes = Util.getParam(search, "schemes", "");
+        groupOwners = Util.getParam(search, "groupOwners", "");
     }
 
     public static Search createEmptySearch(int from, int to) throws BadParameterEx {
@@ -63,6 +77,9 @@ class Search extends BaseSearch {
         s.sourceUuid = sourceUuid;
         s.from = from;
         s.to = to;
+        s.categories = categories;
+        s.groupOwners = groupOwners;
+        s.schemes = schemes;
 
         return s;
     }
@@ -76,36 +93,60 @@ class Search extends BaseSearch {
      * @return A string representation of the Elasticsearch query formatted as a JSON object.
      */
     public String createElasticsearchQuery() {
-        String sourceFilter = "";
+
+        List<String> filters = new ArrayList<>();
+
         if (StringUtils.isNotBlank(sourceUuid)) {
-            sourceFilter = String.format(",{\"term\": {\"sourceCatalogue\": \"%s\"}}", sourceUuid);
+            filters.add(String.format("{\"term\": {\"sourceCatalogue\": \"%s\"}}", sourceUuid));
         }
 
-        String freeTextFilter = "";
         if (StringUtils.isNotBlank(freeText)) {
-            freeTextFilter = String.format(",{\"query_string\": {\"query\": \"(any.\\\\*:(%s) OR any.common:(%s))\", \"default_operator\": \"AND\"}}", freeText, freeText);
+            filters.add(String.format("{\"query_string\": {\"query\": \"(any.\\\\*:(%s) OR any.common:(%s))\", \"default_operator\": \"AND\"}}", freeText, freeText));
         }
 
-        String titleFilter = "";
         if (StringUtils.isNotBlank(title)) {
-            titleFilter = String.format(",{\"query_string\": {\"query\": \"(resourceTitleObject.\\\\*:(%s))\", \"default_operator\": \"AND\"}}", title);
+            filters.add(String.format("{\"query_string\": {\"query\": \"(resourceTitleObject.\\\\*:(%s))\", \"default_operator\": \"AND\"}}", title));
         }
 
-        String abstractFilter = "";
         if (StringUtils.isNotBlank(abstractText)) {
-            abstractFilter = String.format(",{\"query_string\": {\"query\": \"(resourceAbstractObject.\\\\*:(%s))\", \"default_operator\": \"AND\"}}", abstractText);
+            filters.add(String.format("{\"query_string\": {\"query\": \"(resourceAbstractObject.\\\\*:(%s))\", \"default_operator\": \"AND\"}}", abstractText));
         }
 
-        String keywordFilter = "";
         if (StringUtils.isNotBlank(keywords)) {
-            abstractFilter = String.format(",{\"term\": {\"tag.default\": \"%s\"}}", keywords);
+             filters.add(String.format("{\"term\": {\"tag.default\": \"%s\"}}", keywords));
+        }
+
+        if (StringUtils.isNotBlank(categories)) {
+            filters.add(String.format("{\"query_string\": {\"query\": \"cat:(%s)\"}}", categories));
+        }
+
+        if (StringUtils.isNotBlank(schemes)) {
+            filters.add(String.format("{\"query_string\": {\"query\": \"documentStandard:(%s)\", \"default_operator\": \"OR\"}}", schemes));
+        }
+
+        if (StringUtils.isNotBlank(groupOwners)) {
+            try {
+                List<String> groupOwners = Arrays.stream(this.groupOwners.split(","))
+                    .map(String::trim)  // Remove extra spaces
+                    .collect(Collectors.toList());
+                String groupOwnersJson = new ObjectMapper().writeValueAsString(groupOwners); // Outputs: ["group1","group2"]
+                filters.add(String.format("{\"terms\": {\"groupOwner\": %s}}", groupOwnersJson));
+
+            } catch (JsonProcessingException e) {
+                Log.debug(Geonet.HARVEST_MAN, "Error creating criteria for ownerGroup. Ignoring this filter.");
+            }
+        }
+
+        String queryFilter = String.join(",", filters);
+        if (StringUtils.isNotBlank(queryFilter)) {
+            queryFilter = "," + queryFilter;
         }
 
         String queryBody = String.format("{\n" +
             "    \"from\": %d,\n" +
             "    \"size\": %d,\n" +
             "    \"sort\": [\"_score\"],\n" +
-            "    \"query\": {\"bool\": {\"must\": [{\"terms\": {\"isTemplate\": [\"n\"]}}%s%s%s%s%s]}},\n" +
+            "    \"query\": {\"bool\": {\"must\": [{\"terms\": {\"isTemplate\": [\"n\"]}}%s]}},\n" +
             "    \"_source\": {\"includes\": [\n" +
             "        \"uuid\",\n" +
             "        \"id\",\n" +
@@ -115,7 +156,8 @@ class Search extends BaseSearch {
             "        \"documentStandard\"\n" +
             "    ]},\n" +
             "    \"track_total_hits\": true\n" +
-            "}", from, to, sourceFilter, freeTextFilter, titleFilter, abstractFilter, keywordFilter);
+            "}",
+            from, to, queryFilter);
 
 
         if (Log.isDebugEnabled(Geonet.HARVEST_MAN)) {
@@ -139,6 +181,9 @@ class Search extends BaseSearch {
             .append("title", title)
             .append("abstrac", abstractText)
             .append("keywords", keywords)
+            .append("categories", categories)
+            .append("schemes", schemes)
+            .append("groupOwners", groupOwners)
             .append("sourceUuid", sourceUuid)
             .toString();
     }

@@ -34,7 +34,6 @@ import org.fao.geonet.domain.MetadataFileUpload;
 import org.fao.geonet.domain.MetadataResource;
 import org.fao.geonet.domain.MetadataResourceContainer;
 import org.fao.geonet.domain.MetadataResourceVisibility;
-import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.repository.MetadataFileDownloadRepository;
 import org.fao.geonet.repository.MetadataFileUploadRepository;
 import org.fao.geonet.util.ThreadPool;
@@ -80,6 +79,27 @@ public class ResourceLoggerStore extends AbstractStore {
                                       final String resourceId, Boolean approved) throws Exception {
         if (decoratedStore != null) {
             ResourceHolder holder = decoratedStore.getResource(context, metadataUuid, visibility, resourceId, approved);
+            if (holder != null) {
+                // TODO: Add Requester details which may have been provided by a form ?
+                storeGetRequest(context, metadataUuid, holder.getMetadata().getId(), "", "", "", "", new ISODate().toString(), approved);
+            }
+            return holder;
+        }
+        return null;
+    }
+
+    @Override
+    public MetadataResource getResourceMetadata(ServiceContext context, String metadataUuid, MetadataResourceVisibility visibility, String resourceId, Boolean approved) throws Exception {
+        if (decoratedStore != null) {
+            return decoratedStore.getResourceMetadata(context, metadataUuid, visibility, resourceId, approved);
+        }
+        return null;
+    }
+
+    @Override
+    public ResourceHolder getResourceWithRange(ServiceContext context, String metadataUuid, MetadataResourceVisibility visibility, String resourceId, Boolean approved, long start, long end) throws Exception {
+        if (decoratedStore != null) {
+            ResourceHolder holder = decoratedStore.getResourceWithRange(context, metadataUuid, visibility, resourceId, approved, start, end);
             if (holder != null) {
                 // TODO: Add Requester details which may have been provided by a form ?
                 storeGetRequest(context, metadataUuid, holder.getMetadata().getId(), "", "", "", "", new ISODate().toString(), approved);

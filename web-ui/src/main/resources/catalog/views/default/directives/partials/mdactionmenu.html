@@ -185,11 +185,11 @@
           <span data-translate="">duplicate</span>
         </a>
       </li>
-      <li class="divider" data-ng-if="user.isAdministrator()" role="menuitem"></li>
+      <li class="divider" data-ng-if="user.canEditRecord(md)" role="menuitem"></li>
       <li role="menuitem">
         <a
           data-ng-click="mdService.indexMd(md)"
-          data-ng-if="user.isAdministrator()"
+          data-ng-if="user.canEditRecord(md)"
           href=""
         >
           <span class="fa fa-fw fa-cogs"></span>&nbsp;
@@ -218,7 +218,12 @@
           <span data-translate="">permalink</span>
         </a>
       </li>
-      <li role="menuitem" data-ng-repeat="f in formatterList">
+      <li
+        role="menuitem"
+        data-ng-repeat="f in formatterList"
+        data-ng-class="{'disabled': f.label === 'exportMEF' && attachmentsExceedExportLimit}"
+        data-ng-attr-title="{{f.label === 'exportMEF' && attachmentsExceedExportLimit ? ('attachmentsExportLimitExceededSingle' | translate) : ''}}"
+      >
         <a
           data-ng-if="!!f.url"
           data-ng-href="{{::buildFormatter(f.url, md.uuid, mdView.current.record.draft)}}"

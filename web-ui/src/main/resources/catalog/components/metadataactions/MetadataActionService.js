@@ -235,11 +235,14 @@
        * one metadata, else export the whole selection.
        * @param {string} uuid
        */
-      this.metadataMEF = function (uuid, bucket, approved) {
+      this.metadataMEF = function (uuid, bucket, approved, includeAttachments) {
         var url = "../api/records/zip?";
         url += angular.isDefined(uuid) ? "&uuids=" + uuid : "";
         url += angular.isDefined(bucket) ? "&bucket=" + bucket : "";
         url += angular.isDefined(approved) ? "&approved=" + approved : "";
+        url += angular.isDefined(includeAttachments)
+          ? "&includeAttachments=" + includeAttachments
+          : "";
 
         location.replace(url);
       };
@@ -299,7 +302,7 @@
               gnUtilityService.openModal(
                 {
                   title: translations.metadataValidated,
-                  content: '<div gn-batch-report="processReport"></div>',
+                  content: '<div gn-batch-validation-report="processReport"></div>',
                   className: "gn-validation-popup",
                   onCloseCallback: function () {
                     $rootScope.$broadcast("operationOnSelectionStop");

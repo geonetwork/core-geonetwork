@@ -124,7 +124,7 @@
         $http.get("../api/users/owners").then(function (response) {
           $scope.editors = response.data;
         });
-        $http.get("../api/users/groups").then(function (response) {
+        $http.get("../api/users/groups?groupTypes=Workspace").then(function (response) {
           var uniqueUserGroups = {};
           angular.forEach(response.data, function (g) {
             var key = g.groupId + "-" + g.userId;
@@ -162,7 +162,8 @@
         $http.get("../api/users/" + id + "/groups").then(function (response) {
           var uniqueGroup = {};
           angular.forEach(response.data, function (g) {
-            if (!uniqueGroup[g.group.id]) {
+            // Only include workspace groups
+            if (g.group.type === "Workspace" && !uniqueGroup[g.group.id]) {
               uniqueGroup[g.group.id] = g.group;
             }
           });
@@ -199,7 +200,12 @@
               params.running = false;
             },
             function (response) {
-              // TODO
+              $rootScope.$broadcast("StatusUpdated", {
+                title: $translate.instant("transfertPrivilegesError"),
+                error: response.data,
+                timeout: 0,
+                type: "danger"
+              });
               params.running = false;
             }
           );

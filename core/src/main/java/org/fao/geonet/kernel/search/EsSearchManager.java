@@ -24,7 +24,9 @@
 package org.fao.geonet.kernel.search;
 
 import co.elastic.clients.elasticsearch._types.ElasticsearchException;
+import co.elastic.clients.elasticsearch._types.FieldValue;
 import co.elastic.clients.elasticsearch._types.SortOptions;
+import co.elastic.clients.elasticsearch._types.aggregations.*;
 import co.elastic.clients.elasticsearch.core.*;
 import co.elastic.clients.elasticsearch.core.bulk.BulkOperation;
 import co.elastic.clients.elasticsearch.core.bulk.UpdateOperation;
@@ -39,7 +41,6 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
@@ -71,6 +72,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static org.fao.geonet.constants.Geonet.IndexFieldNames.IS_TEMPLATE;
 import static org.fao.geonet.kernel.search.IndexFields.*;
@@ -221,15 +223,24 @@ public class EsSearchManager implements ISearchManager {
     }
 
     private void addMoreFields(Element doc, Multimap<String, Object> fields) {
-        ArrayList<String> objectFields = Lists.newArrayList(INDEXING_ERROR_MSG);
-        fields.entries().forEach(e -> {
-            Element newElement = new Element(e.getKey())
-                .setText(String.valueOf(e.getValue()));
-            if (objectFields.contains(e.getKey())) {
-                newElement.setAttribute("type", "object");
-            }
-            doc.addContent(newElement);
-        });
+        fields.entries().forEach(e -> doc.addContent(getNewElement(e.getKey(), e.getValue())
+            .setText(String.valueOf(e.getValue()))));
+    }
+
+    /**
+     * Create a new element with the key as name. If the object is a JsonNode, we set the type attribute to object
+     * Added the type as object will cause it to keep the json structure
+     * @param key the name of the element
+     * @param obj object to check if it is a JsonNode
+     * @return new Element with the key as name
+     */
+    // If the object is a JsonNode, we set the type attribute to object
+    private Element getNewElement(String key, Object obj) {
+        Element element =  new Element(key);
+        if (obj instanceof JsonNode) {
+            element.setAttribute("type", "object");
+        }
+        return element;
     }
 
     public Element makeField(String name, String value) {
@@ -983,5 +994,78 @@ public class EsSearchManager implements ISearchManager {
         return new Element(INDEXING_ERROR_MSG)
             .setText(createIndexingErrorMsgObject(string, type, values).toString())
             .setAttribute("type", "object");
+    }
+
+    /**
+     * Calculates the total size of all resources ({@code filestore.size}) for the given metadata records.
+     *
+     * <p>This method delegates version selection to Elasticsearch by filtering on the {@code draft}
+     * field and summing the resulting resource sizes.</p>
+     *
+     * <h3>Draft field semantics</h3>
+     * <ul>
+     *   <li><b>{@code "n"}</b> – Only one version exists (approved-only or draft-only)</li>
+     *   <li><b>{@code "e"}</b> – Approved version when both approved and draft exist</li>
+     *   <li><b>{@code "y"}</b> – Draft version when both approved and draft exist</li>
+     * </ul>
+     *
+     * <h3>Query behavior</h3>
+     * <ul>
+     *   <li>
+     *     <b>Prefer approved copies ({@code preferApprovedCopy = true}):</b>
+     *     Includes records with {@code draft} values {@code ["e", "n"]}.
+     *   </li>
+     *   <li>
+     *     <b>Prefer draft copies ({@code preferApprovedCopy = false}):</b>
+     *     Includes records with {@code draft} values {@code ["y", "n"]}.
+     *   </li>
+     * </ul>
+     *
+     * <p>The total size is computed using an Elasticsearch {@code sum} aggregation over
+     * {@code filestore.size}. If {@code uuids} is empty, the query returns a total size of {@code 0}.</p>
+     *
+     * @param uuids
+     *     Set of metadata UUIDs for which to calculate the total resource size.
+     * @param preferApprovedCopy
+     *     If {@code true}, include approved versions when both approved and draft copies exist;
+     *     if {@code false}, include draft versions instead.
+     * @return
+     *     Total size in bytes of all resources associated with the selected metadata records.
+     * @throws RuntimeException
+     *     If the Elasticsearch query fails, wrapping the underlying {@link IOException}.
+     */
+    public Long getTotalSizeOfResources(Set<String> uuids, boolean preferApprovedCopy) {
+
+        List<FieldValue> uuidFieldValues = uuids.stream()
+            .map(FieldValue::of)
+            .collect(Collectors.toList());
+
+        final List<FieldValue> preferApprovedModeDraftFieldValues = List.of(
+            FieldValue.of("e"),
+            FieldValue.of("n")
+        );
+
+        final List<FieldValue> preferDraftModeDraftFieldValues = List.of(
+            FieldValue.of("y"),
+            FieldValue.of("n")
+        );
+
+        SearchRequest request = new SearchRequest.Builder()
+            .index(defaultIndex)
+            .size(0)
+            .query(q -> q.bool(b -> b
+                .filter(f -> f.terms(t -> t.field("uuid").terms(ts -> ts.value(uuidFieldValues))))
+                .filter(f -> f.terms(t -> t.field("draft").terms(ts -> ts.value(preferApprovedCopy ? preferApprovedModeDraftFieldValues : preferDraftModeDraftFieldValues))) )
+            ))
+            .aggregations("total_resources_size", a -> a.sum(sa -> sa.field("filestore.size")))
+            .build();
+
+        try {
+            SearchResponse<Void> response = client.getClient().search(request, Void.class);
+            return (long) response.aggregations().get("total_resources_size").sum().value();
+        } catch (IOException e) {
+            throw new RuntimeException(
+                "Failed to get total size of resources for uuids: " + String.join(", ", uuids), e);
+        }
     }
 }

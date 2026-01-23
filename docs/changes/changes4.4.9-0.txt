@@ -1,0 +1,114 @@
+================================================================================
+===
+=== GeoNetwork 4.4.9-SNAPSHOT: List of changes
+===
+================================================================================
+- Update transifex translations for version 4.4.9 (#9017)
+- Editor / Skos thesaurus browser / Improve UI. (#8925)
+- Standard / ISO19115-3 / ISO19139 mapping improvement (#8979)
+- Csw query filter, better type names support  (#9050)
+- Schema fixes 2 (other schema fixes) (#9009)
+- Use default locale for harvester validation. (#9033)
+- Explicitly set a tolerant ES type for resourceEdition, resourceEditionDate and standardVersion (#7506)
+- Use the artifact identifier id naming convention (only lowercase...) (#9049)
+- simplify the default configuration for datahub (#9003)
+- Always delete the old DOI configuration in the DB migration (#9016)
+- Update batch privileges dialog texts (#8726)
+- Database harvester / support qualified table names (schema.table) and improve sanitize of table / field names (#8930)
+- Corrected the formatting on validation log messages. (#9031)
+- Applied some missing beans to config-security-openidconnect.xml (#9037)
+- DCAT formatter / Add prov namespace in dcat-utils.xsl
+- GeoNetwork 4.x harvester (#7579)
+- change single quote for double (#9025)
+- Enable redirection from landing page to record view page (#8966)
+- Remove copyright header from csw test request samples (#9015)
+- Update map list saved selections label (#9014)
+- Editor / Associated resources panel / Extend DOI to support Crossref in addition to Datacite searches (#8610)
+- Record page / Update metadata full view formatter to Use context information with xpath from labels.xml (#9000)
+- DCAT / Update Licence EU Vocabulary (#8865)
+- DOI / Send mail notifications to DOI task owner (#8721)
+- Harvester / Simple URL / DCAT support improvements (#8903)
+- Sharing API / fix publication type parameter to be optional
+- Add key "dan" for "Dansk" (Danish) (#9008)
+- Standard / ISO19115-3 / Fix typos in French codelists descriptions (#8999)
+- Add index status facet to editor board (#8986)
+- Update nonGeographicDataset French translation (#8997)
+- Added missing logs for OIDC login (#8995)
+- Add service associated resource. Fix add link from service distribution section. (#8958)
+- Editor / Keywords / Use keyword id when available. (#8973)
+- Fix SessionExpirationFilter (#8988)
+- Implement OIDC logout & fix oidc typo (#8989)
+- Subtemplates fixes (#8893)
+- fix GNUI version and display it (#8971)
+- Fix attachment download for jcloud (#8978)
+- Facets / Fix removal of values encoded as 0 in facet filter objects (#8975)
+- Update schematron exceptions to support internationalization (#8821)
+- Fix caching issue and simplify partial download logic (#8959)
+- Update mokito to version 4 (#8842)
+- Fix batch validation issues (#8963)
+- Metadata page / Improve distribution section in full view (#8895)
+- Edit sub portal documentation to add examples for filtering (#8955)
+- Workflow / Check workflow only when setting a workflow status
+- Editor / Associated panel improvements
+- Map / WMS with dimension improvement
+- Correct funding typo
+- Remote INSPIRE Atom harvester / fix scheduling (#8945)
+- Update LibreTranslate client to fix issues with character encoding (#8954)
+- SFTP harvester (#8672)
+- Simple URL harvester / Index the metadata when updated (#8952)
+- Resume attachment downloads (#8940)
+- Support attachments greater than 2GB (#8946)
+- Add new STAC Collection Harvester  (#8870)
+- Settings / Fix INSPIRE Atom type setting value selected (#8943)
+- Adjust the image modal dynamically to the image size (#8935)
+- Standard / ISO19115-3 / From ISO19139 conversion / Fix metadatareference (#8755)
+- Indexing / ISO19115-3 / Resource identifier may contain character to escape
+- Migrate OAIPMH server to Elasticsearch / Spring MVC (#8841)
+- Index error reporting in the editor (#8887)
+- Delete resources when a new working copy is cancelled (#8460)
+- Fix url is not multilingual in rating email (#8929)
+- Active maintainer leadership team (#8880)
+- Add back removed types (#8923)
+- Fix WMS cannot be added to map via map list (#8866)
+- Multilingual rating emails (#8916)
+- Fix user appears logged out in ratings panel (#8918)
+- Record page / restrict formatters to view / export metadata to those supported by the metadata schema (#8849)
+- Validation report / Show schema validation after optional rules (#8907)
+- Update bearer token auth to use access token in OAuth2SecurityProviderUtil (#8905)
+- Metadata editor / validation report / display errors for optional schematrons as warnings (#8911)
+- additional fix for whitespace issue in gn-comma-list
+- Formatter / DCAT / Improve dct:references and mime type mapping (#8850)
+- CSW Server / Fix processing of wildcard queries (#8832)
+- Portal improvements (#8871)
+- Access manager / fix published group label key (#8873)
+- DCAT formatter improvements: (#8836)
+- Metadata editor / Avoid displaying the tooltip icon next to buttons to add new elements, when the tooltips mode is icon (#8664)
+- Fix issue with oidc invalid session by adding session filter (#8875)
+- Fix content type and filename for resized image attachments (#8894)
+- Metadata page / fix javascript error related to #8699 (#8881)
+- Static pages / add support for mail links (#8605)
+- Ignore generated WEB-INF/data/config/codelist/external/thesauri/theme/mobility-theme.rdf
+- Workflow to account for formatting changes
+- Commit the formatting changes for CatCongtroller.js and ResultsviewDirective.js
+- Schematron validation message: restore the logic to resolve validation messages starting with '$loc' (#8878)
+- Metadata editor / add configurable thumbnail edit option (#8879)
+- Lineage / handle process steps with multiple sources (#8874)
+- Fix code paths that cause errors on Windows (#8355)
+- Simple URL harvester - replace % char from property names (#8863)
+- Editor / Associated panel / Reset search on popup open.
+- Standard / ISO19115-3 / Suggestion / Add feature catalogue from WFS lose metadata contact
+- fixed utf-8 for sent mails
+- fix: remove SQL changes for Datahub plugin to avoid migration failure (#8855)
+- Remove include for config-service-dcat-rdf.xml. (#8862)
+- Fix in the metadata selection widget the number of metadata selected
+- Documentation / User guide - searching information improvements (#8846)
+- Remove RDF searcher and related APIs.
+- Update Spring Security to version 5.8.16 (#8796)
+- Font awesome 6.4.2 - reverted wrongly in #8820 (#8839)
+- Update localization bundles to be utf-8 so that we don't need to escape French character. (#8820)
+- Fix metadata feedback email text (#8833)
+- Improve error logging of exceptions when building the metadata schema validation rules (#8826)
+- Hide enable workflow button when group owner does not match workflow group matching regex (#8699)
+- DCAT formatter improvements (#8642)
+- Enable overwrite for workflow records (#8804)
+- Update version to 4.4.9-SNAPSHOT

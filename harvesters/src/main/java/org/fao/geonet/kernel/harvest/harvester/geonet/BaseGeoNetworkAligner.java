@@ -370,6 +370,9 @@ public abstract class BaseGeoNetworkAligner<P extends BaseGeonetParams> extends 
                             handleFile(id, file, MetadataResourceVisibility.PRIVATE, changeDate, is, privateFiles[index]);
                         }
 
+                        public void indexMetadata(int index) throws Exception {
+                            metadataIndexer.indexMetadata(id, true, IndexingMode.full);
+                        }
                     });
                 } catch (Exception e) {
                     //--- we ignore the exception here. Maybe the metadata has been removed just now
@@ -432,10 +435,22 @@ public abstract class BaseGeoNetworkAligner<P extends BaseGeonetParams> extends 
                 MetadataResourceDatabaseMigration.updateMetadataResourcesLink(md, null, settingManager);
             }
 
+            String schema = dataMan.autodetectSchema(md, null);
+            boolean updateSchema = false;
+
             if (!params.xslfilter.isEmpty()) {
                 md = HarvesterUtil.processMetadata(metadataSchemaUtils.getSchema(ri.schema),
                     md, processName, processParams);
+                String newSchema = dataMan.autodetectSchema(md);
+                updateSchema = !newSchema.equals(schema);
+                schema = newSchema;
+            } else {
+                if (!ri.schema.equals(schema)) {
+                    log.warning("  - Detected schema '" + schema + "' is different from the one of the metadata in the catalog '" + ri.schema + "'. Using the detected one.");
+                    updateSchema = true;
+                }
             }
+
             // update metadata
             if (log.isDebugEnabled()) {
                 log.debug("  - Updating local metadata with id=" + id);
@@ -449,10 +464,16 @@ public abstract class BaseGeoNetworkAligner<P extends BaseGeonetParams> extends 
                 updateDateStamp, IndexingMode.none);
             metadata = metadataRepository.findOneById(Integer.parseInt(id));
             result.updatedMetadata++;
-            if (force) {
-                //change ownership of metadata to new harvester
-                metadata.getHarvestInfo().setUuid(params.getUuid());
-                metadata.getSourceInfo().setSourceId(params.getUuid());
+            if (force || updateSchema) {
+                if (force) {
+                    //change ownership of metadata to new harvester
+                    metadata.getHarvestInfo().setUuid(params.getUuid());
+                    metadata.getSourceInfo().setSourceId(params.getUuid());
+                }
+
+                if (updateSchema) {
+                    metadata.getDataInfo().setSchemaId(schema);
+                }
 
                 metadataManager.save(metadata);
             }
@@ -874,6 +895,10 @@ public abstract class BaseGeoNetworkAligner<P extends BaseGeonetParams> extends 
                     if (params.mefFormatFull) {
                         handleFile(file, changeDate, is, index, MetadataResourceVisibility.PRIVATE);
                     }
+                }
+
+                public void indexMetadata(int index) throws Exception {
+                    metadataIndexer.indexMetadata(id[index], true, IndexingMode.full);
                 }
             });
         } catch (Exception e) {

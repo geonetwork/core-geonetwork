@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2025 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -31,9 +31,9 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.util.regex.Pattern;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
-import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.exception.ExceptionUtils;
@@ -100,6 +100,16 @@ public class GroupsApi {
     public static final String API_PARAM_GROUP_DETAILS = "Group details";
     public static final String API_PARAM_GROUP_IDENTIFIER = "Group identifier";
     public static final String MSG_GROUP_WITH_IDENTIFIER_NOT_FOUND = "Group with identifier '%d' not found";
+
+    /**
+     * Group name pattern with allowed chars: Group name may only contain alphanumeric characters or
+     * hyphens (not consecutive). Cannot begin or end with a hyphen.
+     *
+     */
+    private static final Pattern GROUPNAME_PATTERN_REGEX = Pattern.compile("^[a-zA-Z0-9]+([_\\-]{1}[a-zA-Z0-9]+)*$");
+    public static final int GROUPNAME_MAX_LENGHT = 32;
+
+
     /**
      * API logo note.
      */
@@ -173,9 +183,9 @@ public class GroupsApi {
     }
 
     /**
-     * Writes the group logo image to the response. If no image is found it
-     * writes a 1x1 transparent PNG. If the request contain cache related
-     * headers it checks if the resource has changed and return a 304 Not
+     * Writes the group logo image to the response. If no image is found, it
+     * writes a 1x1 transparent PNG. If the request contains cache-related
+     * headers, it checks if the resource has changed and returns a 304 Not
      * Modified response if not changed.
      *
      * @param groupId    the group identifier.
@@ -219,7 +229,7 @@ public class GroupsApi {
                             // webRequest.checkNotModified sets the right HTTP headers
                             return;
                         }
-                        response.setContentType(AttachmentsApi.getFileContentType(image.getPath()));
+                        response.setContentType(AttachmentsApi.getFileContentType(image.getPath().getFileName().toString()));
                         response.setContentLength((int) Files.size(image.getPath()));
                         response.addHeader("Cache-Control", "max-age=" + SIX_HOURS + ", public");
                         FileUtils.copyFile(image.getPath().toFile(), response.getOutputStream());
@@ -334,6 +344,16 @@ public class GroupsApi {
                 "A group with name '%s' already exist.",
                 group.getName()
             ));
+        }
+
+        if(group.getName().length() > GROUPNAME_MAX_LENGHT) {
+            throw new IllegalArgumentException(String.format("Group name cannot be longer than %d characters.", GROUPNAME_MAX_LENGHT));
+        }
+
+        if (!GROUPNAME_PATTERN_REGEX.matcher(group.getName()).matches()) {
+            throw new IllegalArgumentException("Group name may only contain alphanumeric characters "
+                + "or single hyphens. Cannot begin or end with a hyphen."
+            );
         }
 
         // Populate languages if not already set
@@ -454,29 +474,78 @@ public class GroupsApi {
             description = API_PARAM_GROUP_DETAILS
         )
         @RequestBody
-            Group group
+            Group group,
+        @Parameter(hidden = true)
+            ServletRequest request
     ) throws Exception {
-        final Optional<Group> existing = groupRepository.findById(groupIdentifier);
-        if (!existing.isPresent()) {
-            throw new ResourceNotFoundException(String.format(
-                MSG_GROUP_WITH_IDENTIFIER_NOT_FOUND, groupIdentifier
-            ));
-        } else {
-            // Rebuild translation pack cache if there are changes in the translations
-            boolean clearTranslationPackCache =
-                !existing.get().getLabelTranslations().equals(group.getLabelTranslations());
 
-            try {
-                groupRepository.saveAndFlush(group);
-            } catch (Exception ex) {
-                Log.error(API.LOG_MODULE_NAME, ExceptionUtils.getStackTrace(ex));
-                throw new RuntimeException(ex.getMessage());
+        Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
+
+        final Group existingGroup = groupRepository.findById(groupIdentifier)
+            .orElseThrow(() -> new ResourceNotFoundException(String.format(
+                MSG_GROUP_WITH_IDENTIFIER_NOT_FOUND, groupIdentifier)));
+
+        if (group.getName().length() > GROUPNAME_MAX_LENGHT) {
+            throw new IllegalArgumentException(String.format("Group name cannot be longer than %d characters.", GROUPNAME_MAX_LENGHT));
+        }
+
+        if (!GROUPNAME_PATTERN_REGEX.matcher(group.getName()).matches()) {
+            throw new IllegalArgumentException("Group name may only contain alphanumeric characters "
+                + "or single hyphens. Cannot begin or end with a hyphen."
+            );
+        }
+
+        GroupType existingGroupType = existingGroup.getType();
+        GroupType newGroupType = group.getType();
+
+        // If changing a workspace group to a non-workspace group
+        if (existingGroupType == GroupType.Workspace && newGroupType != GroupType.Workspace) {
+            // Check if the group owns any metadata
+            final long metadataCount = metadataRepository.count(where((Specification<Metadata>)
+                MetadataSpecs.isOwnedByOneOfFollowingGroups(Arrays.asList(group.getId()))));
+            if (metadataCount > 0) {
+                throw new NotAllowedException(messages.getMessage("api.groups.unset_workspace.owns_metadata", new
+                    Object[]{group.getName()}, locale));
             }
+        }
 
-
-            if (clearTranslationPackCache) {
-                translationPackBuilder.clearCache();
+        // If changing a group to a system group
+        if (existingGroupType != GroupType.SystemPrivilege && newGroupType == GroupType.SystemPrivilege) {
+            // Check if the group has any users associated with it that are not registered users
+            final long invalidProfileCount = userGroupRepository.count(UserGroupSpecs.hasGroupId(group.getId())
+                .and(Specification.not(UserGroupSpecs.hasProfile(Profile.RegisteredUser))));
+            if (invalidProfileCount > 0) {
+                throw new NotAllowedException(messages.getMessage("api.groups.set_system.invalid_profile",
+                    new Object[]{group.getName()}, locale));
             }
+            // Check if the group has any privileges associated with it
+            final long operationAllowedCount = operationAllowedRepo.count(OperationAllowedSpecs.hasGroupId(group.getId()));
+            if (operationAllowedCount > 0) {
+                throw new NotAllowedException(messages.getMessage("api.groups.set_system.has_privileges",
+                    new Object[]{group.getName()}, locale));
+            }
+        }
+
+        // If the group is a system group, it cannot have a minimum profile for privileges
+        if (newGroupType == GroupType.SystemPrivilege && group.getMinimumProfileForPrivileges() != null) {
+            throw new IllegalArgumentException(messages.getMessage("api.groups.system_group_has_minimum_profile",
+                new Object[]{group.getName()}, locale));
+        }
+
+        // Rebuild translation pack cache if there are changes in the translations
+        boolean clearTranslationPackCache =
+            !existingGroup.getLabelTranslations().equals(group.getLabelTranslations());
+
+        try {
+            groupRepository.saveAndFlush(group);
+        } catch (Exception ex) {
+            Log.error(API.LOG_MODULE_NAME, ExceptionUtils.getStackTrace(ex));
+            throw new RuntimeException(ex.getMessage());
+        }
+
+
+        if (clearTranslationPackCache) {
+            translationPackBuilder.clearCache();
         }
     }
 
@@ -515,14 +584,14 @@ public class GroupsApi {
     ) throws Exception {
         Optional<Group> group = groupRepository.findById(groupIdentifier);
 
+        Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
+
         if (group.isPresent()) {
             final long metadataCount = metadataRepository.count(where((Specification<Metadata>)
                 MetadataSpecs.isOwnedByOneOfFollowingGroups(Arrays.asList(group.get().getId()))));
             if (metadataCount > 0) {
-                throw new NotAllowedException(String.format(
-                    "Group %s owns metadata. To remove the group you should transfer first the metadata to another group.",
-                    group.get().getName()
-                ));
+                throw new NotAllowedException(messages.getMessage("api.groups.delete.owns_metadata", new
+                    Object[]{group.get().getName()}, locale));
             }
 
             List<Integer> reindex = operationAllowedRepo.findAllIds(OperationAllowedSpecs.hasGroupId(groupIdentifier),

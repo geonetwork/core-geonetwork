@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 Food and Agriculture Organization of the
+ * Copyright (C) 2025 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -63,7 +63,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-import static org.fao.geonet.kernel.security.openidconnect.GeonetworkClientRegistrationProvider.CLIENTREGISTRATION_NAME;
+import static org.fao.geonet.kernel.security.openidconnect.GeonetworkClientRegistrationProvider.CLIENT_REGISTRATION_NAME;
 import static org.fao.geonet.kernel.security.openidconnect.bearer.RoleInserter.insertRoles;
 
 /**
@@ -173,7 +173,7 @@ public class GeonetworkJwtAuthenticationProvider implements AuthenticationProvid
         }
 
         //execute the userinfo endpoint
-        ClientRegistration clientRegistration = clientRegistrationRepository.findByRegistrationId(CLIENTREGISTRATION_NAME);
+        ClientRegistration clientRegistration = clientRegistrationRepository.findByRegistrationId(CLIENT_REGISTRATION_NAME);
         OAuth2AccessToken accessToken = new OAuth2AccessToken(
             OAuth2AccessToken.TokenType.BEARER,
             bearer.getToken(),
@@ -223,6 +223,10 @@ public class GeonetworkJwtAuthenticationProvider implements AuthenticationProvid
      */
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
+        return authenticate(authentication, CLIENT_REGISTRATION_NAME);
+    }
+
+    public Authentication authenticate(Authentication authentication, String registrationName) throws AuthenticationException {
         BearerTokenAuthenticationToken bearer = (BearerTokenAuthenticationToken) authentication;
 
         // has this access token been evaluated before?
@@ -236,7 +240,7 @@ public class GeonetworkJwtAuthenticationProvider implements AuthenticationProvid
         // final result
         OAuth2User user = item.getUser();
         Collection<? extends GrantedAuthority> authorities = item.getAuthorities();
-        OAuth2AuthenticationToken authenticationResult = new OAuth2AuthenticationToken(user, authorities, CLIENTREGISTRATION_NAME);
+        OAuth2AuthenticationToken authenticationResult = new OAuth2AuthenticationToken(user, authorities, registrationName);
         authenticationResult.setDetails(authentication.getDetails());
 
         // user logs in event

@@ -49,6 +49,15 @@
           <keywords>
             <xsl:value-of select="children/keywords/value"/>
           </keywords>
+          <categories>
+            <xsl:value-of select="children/categories/value"/>
+          </categories>
+          <schemes>
+            <xsl:value-of select="children/schemes/value"/>
+          </schemes>
+          <groupOwners>
+            <xsl:value-of select="children/groupOwners/value"/>
+          </groupOwners>
           <source>
             <uuid>
               <xsl:value-of select="children/sourceUuid/value"/>
