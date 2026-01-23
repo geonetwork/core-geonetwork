@@ -1894,6 +1894,12 @@
                     // ie. dataset, series, ...
                     searchParams["-resourceType"] = "service";
                   }
+
+                  scope.searchObj.filters = gnOnlinesrc.getSearchFilterForType(
+                    gnCurrentEdit,
+                    scope.mode
+                  );
+
                   scope.$broadcast("resetSearch", searchParams);
                   scope.layers = [];
 
@@ -2118,9 +2124,10 @@
      */
     .directive("gnLinkToMetadata", [
       "gnOnlinesrc",
+      "gnCurrentEdit",
       "$translate",
       "gnGlobalSettings",
-      function (gnOnlinesrc, $translate, gnGlobalSettings) {
+      function (gnOnlinesrc, gnCurrentEdit, $translate, gnGlobalSettings) {
         return {
           restrict: "A",
           scope: {},
@@ -2194,6 +2201,11 @@
                   $("#linktomd-search input").val("");
                   scope.searchObj.any = "";
 
+                  scope.searchObj.filters = gnOnlinesrc.getSearchFilterForType(
+                    gnCurrentEdit,
+                    scope.mode
+                  );
+
                   var searchParams =
                     scope.config.sources && scope.config.sources.metadataStore
                       ? scope.config.sources.metadataStore.params || {}
@@ -2228,9 +2240,9 @@
      */
     .directive("gnLinkToSibling", [
       "gnOnlinesrc",
+      "gnCurrentEdit",
       "gnGlobalSettings",
-      "gnOnlinesrcConfig",
-      function (gnOnlinesrc, gnGlobalSettings, gnOnlinesrcConfig) {
+      function (gnOnlinesrc, gnCurrentEdit, gnGlobalSettings) {
         return {
           restrict: "A",
           scope: {},
@@ -2260,7 +2272,6 @@
               },
               post: function postLink(scope, iElement, iAttrs) {
                 scope.popupid = iAttrs["gnLinkToSibling"];
-
                 /**
                  * Register a method on popup open to reset
                  * the search form and trigger a search.
@@ -2269,6 +2280,11 @@
                   if (config && !angular.isObject(config)) {
                     config = angular.fromJson(config);
                   }
+
+                  scope.searchObj.filters = gnOnlinesrc.getSearchFilterForType(
+                    gnCurrentEdit,
+                    "siblings"
+                  );
 
                   scope.config = {
                     associationTypeForced: angular.isDefined(
