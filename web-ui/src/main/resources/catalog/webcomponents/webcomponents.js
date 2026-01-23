@@ -40,7 +40,7 @@ customElements.define(
       var div = document.createElement("div");
       div.setAttribute(
         "data-ng-include",
-        "'" + baseUrl + "/catalog/views/default/templates/index.html'"
+        "'../../catalog/views/default/templates/index.html'"
       );
       div.setAttribute("class", "gn-full");
       app.appendChild(div);
