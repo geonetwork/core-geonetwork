@@ -136,12 +136,16 @@
       $scope.confirmRemoveMetadata = function () {
         $scope.deleteRecord($scope.metadataToDelete).then(function () {
           $scope.metadataToDelete = null;
+          $("#gn-confirm-remove-metadata").modal("hide");
           $rootScope.$broadcast("search");
         });
       };
 
       $scope.getMetadataDeleteConfirmMessage = function () {
-        if (!$scope.metadataToDelete) return "";
+        if (!$scope.metadataToDelete) {
+          $("#gn-confirm-remove-metadata").modal("hide");
+          return "";
+        }
 
         return $translate.instant("metadataDeleteConfirm", {
           title: $scope.metadataToDelete.resourceTitle

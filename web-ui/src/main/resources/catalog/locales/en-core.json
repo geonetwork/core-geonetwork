@@ -616,5 +616,5 @@
     "batchDeleteTitle": "Batch metadata delete",
     "metadataDeletedWithNoErrors": "Metadata deleted successfully",
     "typeToConfirm": "Type the confirmation action word.",
-    "metadataDeleteConfirmActionWordLabel": "Write <strong>DELETE</strong> to confirm the metadata removal. The action will take action inmediately.",
+    "metadataDeleteConfirmActionWordLabel": "Write <strong>DELETE</strong> to confirm the metadata removal. The action will take action inmediately."
 }

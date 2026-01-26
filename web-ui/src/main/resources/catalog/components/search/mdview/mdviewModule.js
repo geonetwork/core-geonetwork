@@ -60,7 +60,6 @@
     "$filter",
     "gnUtilityService",
     "$window",
-    "$timeout",
     function (
       $scope,
       $http,
@@ -80,8 +79,7 @@
       $rootScope,
       $filter,
       gnUtilityService,
-      $window,
-      $timeout
+      $window
     ) {
       $scope.formatter = gnSearchSettings.formatter;
       $scope.gnMetadataActions = gnMetadataActions;
@@ -181,14 +179,18 @@
        * Remove the metadata and refresh the list when done.
        */
       $scope.confirmRemoveMetadata = function () {
-        // Required to close the confirm dialog properly when redirecting to the search page
-        $timeout(function () {
-          $scope.deleteRecord($scope.mdView.current.record).then(function () {});
-        }, 100);
+        // Close the confirm dialog properly before redirecting to the search page
+        $scope.deleteRecord($scope.mdView.current.record).then(function () {
+          $("#gn-confirm-remove-metadata").modal("hide");
+          $scope.closeRecord(md);
+        });
       };
 
       $scope.getMetadataDeleteConfirmMessage = function () {
-        if (!$scope.mdView.current.record) return "";
+        if (!$scope.mdView.current.record) {
+          $("#gn-confirm-remove-metadata").modal("hide");
+          return "";
+        }
 
         return $translate.instant("metadataDeleteConfirm", {
           title: $scope.mdView.current.record.resourceTitle
@@ -220,7 +222,6 @@
               msg: $translate.instant("metadataRemoved", { title: md.resourceTitle }),
               type: "success"
             });
-            $scope.closeRecord(md);
           },
           function (reason) {
             // Data needs improvements
@@ -229,6 +230,7 @@
               msg: reason.data.message || reason.data.description,
               type: "danger"
             });
+            throw reason;
           }
         );
       };
