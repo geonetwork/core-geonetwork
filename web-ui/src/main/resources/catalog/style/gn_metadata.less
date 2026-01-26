@@ -447,6 +447,21 @@ img.graphic-overview.large.dropdown-menu {
   margin-top: -200px;
 }
 
+.container-fluid,
+.container {
+  // Fixes gn-modal windows; TODO: fix this globally in gn-popup style
+  [gn-modal] {
+    max-width: none;
+    max-height: none;
+
+    @media (min-width: 992px) {
+      .modal-dialog {
+        width: 650px;
+      }
+    }
+  }
+}
+
 .container img.logo {
   max-width: 128px;
   float: left;

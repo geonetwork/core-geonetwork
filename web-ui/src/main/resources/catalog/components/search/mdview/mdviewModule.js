@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2023 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2026 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -60,6 +60,7 @@
     "$filter",
     "gnUtilityService",
     "$window",
+    "$timeout",
     function (
       $scope,
       $http,
@@ -79,7 +80,8 @@
       $rootScope,
       $filter,
       gnUtilityService,
-      $window
+      $window,
+      $timeout
     ) {
       $scope.formatter = gnSearchSettings.formatter;
       $scope.gnMetadataActions = gnMetadataActions;
@@ -167,6 +169,31 @@
         }
         return list;
       }
+
+      /**
+       * Ask for confirmation to delete a metadata.
+       */
+      $scope.removeMetadata = function () {
+        $("#gn-confirm-remove-metadata").modal("show");
+      };
+
+      /**
+       * Remove the metadata and refresh the list when done.
+       */
+      $scope.confirmRemoveMetadata = function () {
+        // Required to close the confirm dialog properly when redirecting to the search page
+        $timeout(function () {
+          $scope.deleteRecord($scope.mdView.current.record).then(function () {});
+        }, 100);
+      };
+
+      $scope.getMetadataDeleteConfirmMessage = function () {
+        if (!$scope.mdView.current.record) return "";
+
+        return $translate.instant("metadataDeleteConfirm", {
+          title: $scope.mdView.current.record.resourceTitle
+        });
+      };
 
       $scope.recordFormatterList = gnMdFormatter.getFormatterForRecord(
         $scope.mdView.current.record

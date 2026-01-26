@@ -253,8 +253,7 @@
       >
         <a
           href=""
-          data-ng-click="mdService.deleteMd(undefined, searchResults.selectionBucket)"
-          data-gn-confirm-click="{{'deleteSelectedRecordConfirm' | translate:({selectedCount: searchResults.selectedCount})}}"
+          data-ng-click="mdService.deleteBatch(searchResults.selectionBucket, selectedMetadataTypes, getCatScope())"
         >
           <i class="fa fa-fw fa-times"></i>&nbsp;<span translate>delete</span>
         </a>
