@@ -1,18 +1,9 @@
-INSERT INTO Languages (id, name, isinspire) VALUES ('ukr','українська', 'n');
+--liquibase formatted sql
+--changeset francois:00025
+--preconditions onFail:MARK_RAN onError:HALT
+--precondition-sql-check expectedResult:0 SELECT COUNT(*) FROM Languages WHERE id = 'ukr';
 
--- Take care to table ID (related to other loc files)
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (1,'ukr','Maps & graphics');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (2,'ukr','Datasets');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (3,'ukr','Interactive resources');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (4,'ukr','Applications');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (5,'ukr','Case studies, best practices');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (6,'ukr','Conference proceedings');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (7,'ukr','Photo');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (8,'ukr','Audio/Video');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (9,'ukr','Directories');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (10,'ukr','Other information resources');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (12,'ukr','Registers');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (13,'ukr','Physical Samples');
+INSERT INTO Languages (id, name, isinspire) VALUES ('ukr','українська', 'n');
 
 INSERT INTO GroupsDes (iddes, langid, label) VALUES (-1,'ukr','Guest');
 INSERT INTO GroupsDes (iddes, langid, label) VALUES (0,'ukr','Intranet');

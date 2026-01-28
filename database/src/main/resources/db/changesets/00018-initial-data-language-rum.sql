@@ -1,18 +1,9 @@
-INSERT INTO Languages (id, name, isinspire) VALUES ('rum','Română', 'y');
+--liquibase formatted sql
+--changeset francois:00019
+--preconditions onFail:MARK_RAN onError:HALT
+--precondition-sql-check expectedResult:0 SELECT COUNT(*) FROM Languages WHERE id = 'rum';
 
--- Take care to table ID (related to other loc files)
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (1,'rum','Maps & graphics');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (2,'rum','Datasets');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (3,'rum','Interactive resources');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (4,'rum','Applications');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (5,'rum','Case studies, best practices');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (6,'rum','Conference proceedings');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (7,'rum','Photo');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (8,'rum','Audio/Video');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (9,'rum','Directories');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (10,'rum','Other information resources');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (12,'rum','Registers');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (13,'rum','Physical Samples');
+INSERT INTO Languages (id, name, isinspire) VALUES ('rum','Română', 'y');
 
 INSERT INTO GroupsDes (iddes, langid, label) VALUES (-1,'rum','Guest');
 INSERT INTO GroupsDes (iddes, langid, label) VALUES (0,'rum','Intranet');

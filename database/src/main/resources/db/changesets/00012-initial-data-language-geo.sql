@@ -1,18 +1,9 @@
-INSERT INTO Languages (id, name, isinspire) VALUES ('geo','ქართული', 'n');
+--liquibase formatted sql
+--changeset francois:00013
+--preconditions onFail:MARK_RAN onError:HALT
+--precondition-sql-check expectedResult:0 SELECT COUNT(*) FROM Languages WHERE id = 'geo';
 
--- Take care to table ID (related to other loc files)
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (1,'geo','Maps & graphics');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (2,'geo','Datasets');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (3,'geo','Interactive resources');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (4,'geo','Applications');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (5,'geo','Case studies, best practices');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (6,'geo','Conference proceedings');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (7,'geo','Photo');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (8,'geo','Audio/Video');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (9,'geo','Directories');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (10,'geo','Other information resources');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (12,'geo','Registers');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (13,'geo','Physical Samples');
+INSERT INTO Languages (id, name, isinspire) VALUES ('geo','ქართული', 'n');
 
 INSERT INTO GroupsDes (iddes, langid, label) VALUES (-1,'geo','Guest');
 INSERT INTO GroupsDes (iddes, langid, label) VALUES (0,'geo','Intranet');

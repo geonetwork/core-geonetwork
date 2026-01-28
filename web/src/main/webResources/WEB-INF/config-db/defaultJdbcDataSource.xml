@@ -60,5 +60,4 @@
     <property name="defaultAutoCommit" value="${jdbc.basic.defaultAutoCommit}"/>
     <property name="initialSize" value="${jdbc.basic.initialSize}"/>
   </bean>
-
 </beans>

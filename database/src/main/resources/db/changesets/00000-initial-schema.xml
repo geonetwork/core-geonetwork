@@ -1,0 +1,1613 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+  xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.29.xsd"
+  objectQuotingStrategy="QUOTE_ONLY_RESERVED_WORDS">
+  <preConditions onFail="WARN" onFailMessage="Metadata table exists, no need to create database schema">
+    <not>
+      <tableExists tableName="metadata"/>
+    </not>
+  </preConditions>
+  <changeSet id="1769523766490-1" author="francois">
+    <createSequence incrementBy="1" sequenceName="address_id_seq" startValue="100"/>
+  </changeSet>
+  <changeSet id="1769523766490-2" author="francois">
+    <createSequence incrementBy="1" sequenceName="csw_server_capabilities_info_id_seq" startValue="100"/>
+  </changeSet>
+  <changeSet id="1769523766490-3" author="francois">
+    <createSequence incrementBy="1" sequenceName="doiserver_id_seq" startValue="100"/>
+  </changeSet>
+  <changeSet id="1769523766490-4" author="francois">
+    <createSequence incrementBy="1" sequenceName="files_id_seq" startValue="1"/>
+  </changeSet>
+  <changeSet id="1769523766490-5" author="francois">
+    <createSequence incrementBy="1" sequenceName="group_id_seq" startValue="100"/>
+  </changeSet>
+  <changeSet id="1769523766490-6" author="francois">
+    <createSequence incrementBy="1" sequenceName="gufkey_id_seq" startValue="100"/>
+  </changeSet>
+  <changeSet id="1769523766490-7" author="francois">
+    <createSequence incrementBy="1" sequenceName="gufrat_id_seq" startValue="100"/>
+  </changeSet>
+  <changeSet id="1769523766490-8" author="francois">
+    <createSequence incrementBy="1" sequenceName="harvest_history_id_seq" startValue="100"/>
+  </changeSet>
+  <changeSet id="1769523766490-9" author="francois">
+    <createSequence incrementBy="1" sequenceName="harvester_setting_id_seq" startValue="100"/>
+  </changeSet>
+  <changeSet id="1769523766490-10" author="francois">
+    <createSequence incrementBy="1" sequenceName="hibernate_sequence" startValue="1"/>
+  </changeSet>
+  <changeSet id="1769523766490-11" author="francois">
+    <createSequence incrementBy="1" sequenceName="inspire_atom_feed_id_seq" startValue="100"/>
+  </changeSet>
+  <changeSet id="1769523766490-12" author="francois">
+    <createSequence incrementBy="1" sequenceName="iso_language_id_seq" startValue="10000"/>
+  </changeSet>
+  <changeSet id="1769523766490-13" author="francois">
+    <createSequence incrementBy="1" sequenceName="link_id_seq" startValue="1"/>
+  </changeSet>
+  <changeSet id="1769523766490-14" author="francois">
+    <createSequence incrementBy="1" sequenceName="linkstatus_id_seq" startValue="1"/>
+  </changeSet>
+  <changeSet id="1769523766490-15" author="francois">
+    <createSequence incrementBy="1" sequenceName="mapserver_id_seq" startValue="100"/>
+  </changeSet>
+  <changeSet id="1769523766490-16" author="francois">
+    <createSequence incrementBy="1" sequenceName="message_producer_entity_id_seq" startValue="100"/>
+  </changeSet>
+  <changeSet id="1769523766490-17" author="francois">
+    <createSequence incrementBy="1" sequenceName="metadata_category_id_seq" startValue="100"/>
+  </changeSet>
+  <changeSet id="1769523766490-18" author="francois">
+    <createSequence incrementBy="1" sequenceName="metadata_filedownload_id_seq" startValue="100"/>
+  </changeSet>
+  <changeSet id="1769523766490-19" author="francois">
+    <createSequence incrementBy="1" sequenceName="metadata_fileupload_id_seq" startValue="100"/>
+  </changeSet>
+  <changeSet id="1769523766490-20" author="francois">
+    <createSequence incrementBy="1" sequenceName="metadata_id_seq" startValue="100"/>
+  </changeSet>
+  <changeSet id="1769523766490-21" author="francois">
+    <createSequence incrementBy="1" sequenceName="metadata_identifier_template_id_seq" startValue="100"/>
+  </changeSet>
+  <changeSet id="1769523766490-22" author="francois">
+    <createSequence incrementBy="1" sequenceName="metadatastatus_id_seq" startValue="100"/>
+  </changeSet>
+  <changeSet id="1769523766490-23" author="francois">
+    <createSequence incrementBy="1" sequenceName="operation_id_seq" startValue="100"/>
+  </changeSet>
+  <changeSet id="1769523766490-24" author="francois">
+    <createSequence incrementBy="1" sequenceName="rating_criteria_id_seq" startValue="100"/>
+  </changeSet>
+  <changeSet id="1769523766490-25" author="francois">
+    <createSequence incrementBy="1" sequenceName="schematron_criteria_id_seq" startValue="100"/>
+  </changeSet>
+  <changeSet id="1769523766490-26" author="francois">
+    <createSequence incrementBy="1" sequenceName="schematron_id_seq" startValue="100"/>
+  </changeSet>
+  <changeSet id="1769523766490-27" author="francois">
+    <createSequence incrementBy="1" sequenceName="selection_id_seq" startValue="100"/>
+  </changeSet>
+  <changeSet id="1769523766490-28" author="francois">
+    <createSequence incrementBy="1" sequenceName="status_value_id_seq" startValue="100"/>
+  </changeSet>
+  <changeSet id="1769523766490-29" author="francois">
+    <createSequence incrementBy="1" sequenceName="user_id_seq" startValue="100"/>
+  </changeSet>
+  <changeSet id="1769523766490-30" author="francois">
+    <createSequence incrementBy="1" sequenceName="user_search_id_seq" startValue="100"/>
+  </changeSet>
+  <changeSet id="1769523766490-31" author="francois">
+    <createTable tableName="address">
+      <column name="id" type="INT">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="address_pkey"/>
+      </column>
+      <column name="address" type="VARCHAR(255)"/>
+      <column name="city" type="VARCHAR(255)"/>
+      <column name="country" type="VARCHAR(255)"/>
+      <column name="state" type="VARCHAR(255)"/>
+      <column name="zip" type="VARCHAR(16)"/>
+    </createTable>
+  </changeSet>
+  <changeSet id="1769523766490-32" author="francois">
+    <createTable tableName="categories">
+      <column name="id" type="INT">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="categories_pkey"/>
+      </column>
+      <column name="name" type="VARCHAR(255)">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+  </changeSet>
+  <changeSet id="1769523766490-33" author="francois">
+    <createTable tableName="categoriesdes">
+      <column name="iddes" type="INT">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="categoriesdes_pkey"/>
+      </column>
+      <column name="label" type="VARCHAR(255)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="langid" type="VARCHAR(5)">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="categoriesdes_pkey"/>
+      </column>
+    </createTable>
+  </changeSet>
+  <changeSet id="1769523766490-34" author="francois">
+    <createTable tableName="customelementset">
+      <column name="xpathhashcode" type="INT">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="customelementset_pkey"/>
+      </column>
+      <column name="xpath" type="VARCHAR(1000)">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+  </changeSet>
+  <changeSet id="1769523766490-35" author="francois">
+    <createTable tableName="doiservers">
+      <column name="id" type="INT">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="doiservers_pkey"/>
+      </column>
+      <column name="description" type="VARCHAR(255)"/>
+      <column name="landingpagetemplate" type="VARCHAR(255)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="name" type="VARCHAR(32)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="password" type="VARCHAR(128)"/>
+      <column name="pattern" type="VARCHAR(255)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="prefix" type="VARCHAR(15)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="publicurl" type="VARCHAR(255)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="url" type="VARCHAR(255)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="username" type="VARCHAR(128)"/>
+    </createTable>
+  </changeSet>
+  <changeSet id="1769523766490-36" author="francois">
+    <createTable tableName="doiservers_group">
+      <column name="doiserver_id" type="INT">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="doiservers_group_pkey"/>
+      </column>
+      <column name="group_id" type="INT">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="doiservers_group_pkey"/>
+      </column>
+    </createTable>
+  </changeSet>
+  <changeSet id="1769523766490-37" author="francois">
+    <createTable tableName="email">
+      <column name="user_id" type="INT">
+        <constraints nullable="false"/>
+      </column>
+      <column name="email" type="VARCHAR(255)"/>
+    </createTable>
+  </changeSet>
+  <changeSet id="1769523766490-38" author="francois">
+    <createTable tableName="files">
+      <column name="id" type="INT">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="files_pkey"/>
+      </column>
+      <column name="content" type="CLOB">
+        <constraints nullable="false"/>
+      </column>
+      <column name="mimetype" type="VARCHAR(255)">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+  </changeSet>
+  <changeSet id="1769523766490-39" author="francois">
+    <createTable tableName="group_category">
+      <column name="group_id" type="INT">
+        <constraints nullable="false"/>
+      </column>
+      <column name="category_id" type="INT">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+  </changeSet>
+  <changeSet id="1769523766490-40" author="francois">
+    <createTable tableName="groups">
+      <column name="id" type="INT">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="groups_pkey"/>
+      </column>
+      <column name="description" type="VARCHAR(255)"/>
+      <column name="email" type="VARCHAR(128)"/>
+      <column defaultValue="n" name="enablecategoriesrestriction" type="CHAR"/>
+      <column name="logo" type="VARCHAR(255)"/>
+      <column name="minimumprofileforprivileges" type="VARCHAR(255)"/>
+      <column name="name" type="VARCHAR(255)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="referrer" type="INT"/>
+      <column name="type" type="VARCHAR(255)"/>
+      <column name="website" type="VARCHAR(255)"/>
+      <column name="defaultcategory_id" type="INT"/>
+    </createTable>
+  </changeSet>
+  <changeSet id="1769523766490-41" author="francois">
+    <createTable tableName="groupsdes">
+      <column name="iddes" type="INT">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="groupsdes_pkey"/>
+      </column>
+      <column name="label" type="VARCHAR(255)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="langid" type="VARCHAR(5)">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="groupsdes_pkey"/>
+      </column>
+    </createTable>
+  </changeSet>
+  <changeSet id="1769523766490-42" author="francois">
+    <createTable tableName="guf_keywords">
+      <column name="id" type="BIGINT">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="guf_keywords_pkey"/>
+      </column>
+      <column name="value" type="VARCHAR(255)"/>
+    </createTable>
+  </changeSet>
+  <changeSet id="1769523766490-43" author="francois">
+    <createTable tableName="guf_rating">
+      <column name="id" type="BIGINT">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="guf_rating_pkey"/>
+      </column>
+      <column name="rating" type="INT"/>
+      <column name="criteria_id" type="INT"/>
+      <column name="userfeedback_id" type="VARCHAR(255)"/>
+    </createTable>
+  </changeSet>
+  <changeSet id="1769523766490-44" author="francois">
+    <createTable tableName="guf_ratingcriteria">
+      <column name="id" type="INT">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="guf_ratingcriteria_pkey"/>
+      </column>
+      <column defaultValue="y" name="isinternal" type="CHAR">
+        <constraints nullable="false"/>
+      </column>
+      <column name="name" type="VARCHAR(32)">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+  </changeSet>
+  <changeSet id="1769523766490-45" author="francois">
+    <createTable tableName="guf_ratingcriteriades">
+      <column name="iddes" type="INT">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="guf_ratingcriteriades_pkey"/>
+      </column>
+      <column name="label" type="VARCHAR(2000)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="langid" type="VARCHAR(5)">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="guf_ratingcriteriades_pkey"/>
+      </column>
+    </createTable>
+  </changeSet>
+  <changeSet id="1769523766490-46" author="francois">
+    <createTable tableName="guf_userfeedback_keyword">
+      <column name="userfeedback_uuid" type="VARCHAR(255)">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="guf_userfeedback_keyword_pkey"/>
+      </column>
+      <column name="keyword_id" type="BIGINT">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="guf_userfeedback_keyword_pkey"/>
+      </column>
+    </createTable>
+  </changeSet>
+  <changeSet id="1769523766490-47" author="francois">
+    <createTable tableName="guf_userfeedbacks">
+      <column name="uuid" type="VARCHAR(255)">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="guf_userfeedbacks_pkey"/>
+      </column>
+      <column name="authoremail" type="VARCHAR(255)"/>
+      <column name="authorname" type="VARCHAR(255)"/>
+      <column name="authororganization" type="VARCHAR(255)"/>
+      <column name="authorprivacy" type="INT"/>
+      <column name="commenttext" type="VARCHAR(255)"/>
+      <column name="creationdate" type="timestamp"/>
+      <column name="status" type="VARCHAR(255)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="approver_id" type="INT"/>
+      <column name="author_id" type="INT"/>
+      <column name="metadata_uuid" type="VARCHAR(255)"/>
+      <column name="parent_uuid" type="VARCHAR(255)"/>
+    </createTable>
+  </changeSet>
+  <changeSet id="1769523766490-48" author="francois">
+    <createTable tableName="guf_userfeedbacks_guf_rating">
+      <column name="guf_userfeedback_uuid" type="VARCHAR(255)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="detailedratinglist_id" type="BIGINT">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+  </changeSet>
+  <changeSet id="1769523766490-49" author="francois">
+    <createTable tableName="harvesterdata">
+      <column name="harvesteruuid" type="VARCHAR(255)">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="harvesterdata_pkey"/>
+      </column>
+      <column name="keyvalue" type="VARCHAR(255)">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="harvesterdata_pkey"/>
+      </column>
+      <column name="value" type="VARCHAR(255)">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+  </changeSet>
+  <changeSet id="1769523766490-50" author="francois">
+    <createTable tableName="harvestersettings">
+      <column name="id" type="INT">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="harvestersettings_pkey"/>
+      </column>
+      <column defaultValue="n" name="encrypted" type="CHAR">
+        <constraints nullable="false"/>
+      </column>
+      <column name="name" type="VARCHAR(255)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="value" type="CLOB"/>
+      <column name="parentid" type="INT"/>
+    </createTable>
+  </changeSet>
+  <changeSet id="1769523766490-51" author="francois">
+    <createTable tableName="harvesthistory">
+      <column name="id" type="INT">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="harvesthistory_pkey"/>
+      </column>
+      <column name="deleted" type="CHAR">
+        <constraints nullable="false"/>
+      </column>
+      <column name="elapsedtime" type="INT"/>
+      <column name="harvestdate" type="VARCHAR(30)"/>
+      <column name="harvestername" type="VARCHAR(255)"/>
+      <column name="harvestertype" type="VARCHAR(255)"/>
+      <column name="harvesteruuid" type="VARCHAR(255)"/>
+      <column name="info" type="CLOB"/>
+      <column name="params" type="CLOB"/>
+    </createTable>
+  </changeSet>
+  <changeSet id="1769523766490-52" author="francois">
+    <createTable tableName="inspireatomfeed">
+      <column name="id" type="INT">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="inspireatomfeed_pkey"/>
+      </column>
+      <column name="atom" type="CLOB"/>
+      <column name="atomdatasetid" type="VARCHAR(255)"/>
+      <column name="atomdatasetns" type="VARCHAR(255)"/>
+      <column name="atomurl" type="VARCHAR(255)"/>
+      <column name="authoremail" type="VARCHAR(255)"/>
+      <column name="authorname" type="VARCHAR(255)"/>
+      <column name="lang" type="VARCHAR(3)"/>
+      <column name="metadataid" type="INT">
+        <constraints nullable="false"/>
+      </column>
+      <column name="rights" type="VARCHAR(255)"/>
+      <column name="subtitle" type="VARCHAR(255)"/>
+      <column name="title" type="VARCHAR(255)"/>
+    </createTable>
+  </changeSet>
+  <changeSet id="1769523766490-53" author="francois">
+    <createTable tableName="inspireatomfeed_entrylist">
+      <column name="inspireatomfeed_id" type="INT">
+        <constraints nullable="false"/>
+      </column>
+      <column name="crs" type="VARCHAR(255)"/>
+      <column name="id" type="INT">
+        <constraints nullable="false"/>
+      </column>
+      <column name="lang" type="VARCHAR(3)"/>
+      <column name="title" type="VARCHAR(255)"/>
+      <column name="type" type="VARCHAR(255)"/>
+      <column name="url" type="VARCHAR(255)"/>
+    </createTable>
+  </changeSet>
+  <changeSet id="1769523766490-54" author="francois">
+    <createTable tableName="isolanguages">
+      <column name="id" type="INT">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="isolanguages_pkey"/>
+      </column>
+      <column name="code" type="VARCHAR(3)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="shortcode" type="VARCHAR(2)"/>
+    </createTable>
+  </changeSet>
+  <changeSet id="1769523766490-55" author="francois">
+    <createTable tableName="isolanguagesdes">
+      <column name="iddes" type="INT">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="isolanguagesdes_pkey"/>
+      </column>
+      <column name="label" type="VARCHAR(255)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="langid" type="VARCHAR(5)">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="isolanguagesdes_pkey"/>
+      </column>
+    </createTable>
+  </changeSet>
+  <changeSet id="1769523766490-56" author="francois">
+    <createTable tableName="languages">
+      <column name="id" type="VARCHAR(5)">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="languages_pkey"/>
+      </column>
+      <column name="isinspire" type="CHAR"/>
+      <column name="name" type="VARCHAR(255)">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+  </changeSet>
+  <changeSet id="1769523766490-57" author="francois">
+    <createTable tableName="links">
+      <column name="id" type="INT">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="links_pkey"/>
+      </column>
+      <column name="dateandtime" type="VARCHAR(30)"/>
+      <column name="laststate" type="INT"/>
+      <column name="linktype" type="VARCHAR(255)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="protocol" type="VARCHAR(255)"/>
+      <column name="url" type="CLOB"/>
+    </createTable>
+  </changeSet>
+  <changeSet id="1769523766490-58" author="francois">
+    <createTable tableName="linkstatus">
+      <column name="id" type="INT">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="linkstatus_pkey"/>
+      </column>
+      <column name="batchkey" type="VARCHAR(255)"/>
+      <column name="checkdate" type="VARCHAR(30)"/>
+      <column defaultValue="y" name="failing" type="CHAR">
+        <constraints nullable="false"/>
+      </column>
+      <column name="statusinfo" type="CLOB"/>
+      <column name="statusvalue" type="VARCHAR(255)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="link" type="INT">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+  </changeSet>
+  <changeSet id="1769523766490-59" author="francois">
+    <createTable tableName="mapservers">
+      <column name="id" type="INT">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="mapservers_pkey"/>
+      </column>
+      <column name="configurl" type="VARCHAR(255)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="description" type="VARCHAR(255)"/>
+      <column name="name" type="VARCHAR(32)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="namespace" type="VARCHAR(255)"/>
+      <column name="namespaceprefix" type="VARCHAR(255)"/>
+      <column name="password" type="VARCHAR(128)"/>
+      <column name="pushstyleinworkspace" type="CHAR"/>
+      <column name="stylerurl" type="VARCHAR(255)"/>
+      <column name="username" type="VARCHAR(128)"/>
+      <column name="wcsurl" type="VARCHAR(255)"/>
+      <column name="wfsurl" type="VARCHAR(255)"/>
+      <column name="wmsurl" type="VARCHAR(255)"/>
+    </createTable>
+  </changeSet>
+  <changeSet id="1769523766490-60" author="francois">
+    <createTable tableName="messageproducerentity">
+      <column name="id" type="BIGINT">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="messageproducerentity_pkey"/>
+      </column>
+      <column name="cronexpression" type="VARCHAR(255)"/>
+      <column name="metadatauuid" type="VARCHAR(255)"/>
+      <column name="strategy" type="VARCHAR(255)"/>
+      <column name="typename" type="VARCHAR(255)"/>
+      <column name="url" type="VARCHAR(255)"/>
+    </createTable>
+  </changeSet>
+  <changeSet id="1769523766490-61" author="francois">
+    <createTable tableName="metadata">
+      <column name="id" type="INT">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="metadata_pkey"/>
+      </column>
+      <column name="data" type="CLOB">
+        <constraints nullable="false"/>
+      </column>
+      <column name="changedate" type="VARCHAR(30)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="createdate" type="VARCHAR(30)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="displayorder" type="INT"/>
+      <column name="doctype" type="VARCHAR(255)"/>
+      <column name="extra" type="VARCHAR(255)"/>
+      <column name="popularity" type="INT">
+        <constraints nullable="false"/>
+      </column>
+      <column name="rating" type="INT">
+        <constraints nullable="false"/>
+      </column>
+      <column name="root" type="VARCHAR(255)"/>
+      <column name="schemaid" type="VARCHAR(32)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="title" type="VARCHAR(255)"/>
+      <column name="istemplate" type="CHAR">
+        <constraints nullable="false"/>
+      </column>
+      <column name="isharvested" type="CHAR">
+        <constraints nullable="false"/>
+      </column>
+      <column name="harvesturi" type="VARCHAR(512)"/>
+      <column name="harvestuuid" type="VARCHAR(255)"/>
+      <column name="groupowner" type="INT"/>
+      <column name="owner" type="INT">
+        <constraints nullable="false"/>
+      </column>
+      <column name="source" type="VARCHAR(255)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="uuid" type="VARCHAR(255)">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+  </changeSet>
+  <changeSet id="1769523766490-62" author="francois">
+    <createTable tableName="metadatacateg">
+      <column name="metadataid" type="INT">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="metadatacateg_pkey"/>
+      </column>
+      <column name="categoryid" type="INT">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="metadatacateg_pkey"/>
+      </column>
+    </createTable>
+  </changeSet>
+  <changeSet id="1769523766490-63" author="francois">
+    <createTable tableName="metadatadraft">
+      <column name="id" type="INT">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="metadatadraft_pkey"/>
+      </column>
+      <column name="data" type="CLOB">
+        <constraints nullable="false"/>
+      </column>
+      <column name="changedate" type="VARCHAR(30)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="createdate" type="VARCHAR(30)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="displayorder" type="INT"/>
+      <column name="doctype" type="VARCHAR(255)"/>
+      <column name="extra" type="VARCHAR(255)"/>
+      <column name="popularity" type="INT">
+        <constraints nullable="false"/>
+      </column>
+      <column name="rating" type="INT">
+        <constraints nullable="false"/>
+      </column>
+      <column name="root" type="VARCHAR(255)"/>
+      <column name="schemaid" type="VARCHAR(32)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="title" type="VARCHAR(255)"/>
+      <column name="istemplate" type="CHAR">
+        <constraints nullable="false"/>
+      </column>
+      <column name="isharvested" type="CHAR">
+        <constraints nullable="false"/>
+      </column>
+      <column name="harvesturi" type="VARCHAR(512)"/>
+      <column name="harvestuuid" type="VARCHAR(255)"/>
+      <column name="groupowner" type="INT"/>
+      <column name="owner" type="INT">
+        <constraints nullable="false"/>
+      </column>
+      <column name="source" type="VARCHAR(255)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="uuid" type="VARCHAR(255)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="approvedversion_id" type="INT">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+  </changeSet>
+  <changeSet id="1769523766490-64" author="francois">
+    <createTable tableName="metadatafiledownloads">
+      <column name="id" type="INT">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="metadatafiledownloads_pkey"/>
+      </column>
+      <column name="downloaddate" type="VARCHAR(255)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="filename" type="VARCHAR(255)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="fileuploadid" type="INT">
+        <constraints nullable="false"/>
+      </column>
+      <column name="metadataid" type="INT">
+        <constraints nullable="false"/>
+      </column>
+      <column name="requestercomments" type="VARCHAR(255)"/>
+      <column name="requestermail" type="VARCHAR(255)"/>
+      <column name="requestername" type="VARCHAR(255)"/>
+      <column name="requesterorg" type="VARCHAR(255)"/>
+      <column name="username" type="VARCHAR(255)"/>
+    </createTable>
+  </changeSet>
+  <changeSet id="1769523766490-65" author="francois">
+    <createTable tableName="metadatafileuploads">
+      <column name="id" type="INT">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="metadatafileuploads_pkey"/>
+      </column>
+      <column name="deleteddate" type="VARCHAR(255)"/>
+      <column name="filename" type="VARCHAR(255)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="filesize" type="DOUBLE precision">
+        <constraints nullable="false"/>
+      </column>
+      <column name="metadataid" type="INT">
+        <constraints nullable="false"/>
+      </column>
+      <column name="uploaddate" type="VARCHAR(255)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="username" type="VARCHAR(255)">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+  </changeSet>
+  <changeSet id="1769523766490-66" author="francois">
+    <createTable tableName="metadataidentifiertemplate">
+      <column name="id" type="INT">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="metadataidentifiertemplate_pkey"/>
+      </column>
+      <column name="name" type="VARCHAR(32)">
+        <constraints nullable="false"/>
+      </column>
+      <column defaultValue="n" name="isprovided" type="CHAR">
+        <constraints nullable="false"/>
+      </column>
+      <column name="template" type="VARCHAR(255)">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+  </changeSet>
+  <changeSet id="1769523766490-67" author="francois">
+    <createTable tableName="metadatalink">
+      <column name="linkid" type="INT">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="metadatalink_pkey"/>
+      </column>
+      <column name="metadataid" type="INT">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="metadatalink_pkey"/>
+      </column>
+      <column name="metadatauuid" type="VARCHAR(255)"/>
+    </createTable>
+  </changeSet>
+  <changeSet id="1769523766490-68" author="francois">
+    <createTable tableName="metadatarating">
+      <column name="ipaddress" type="VARCHAR(45)">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="metadatarating_pkey"/>
+      </column>
+      <column name="metadataid" type="INT">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="metadatarating_pkey"/>
+      </column>
+      <column name="rating" type="INT">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+  </changeSet>
+  <changeSet id="1769523766490-69" author="francois">
+    <createTable tableName="metadatastatus">
+      <column name="id" type="INT">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="metadatastatus_pkey"/>
+      </column>
+      <column name="changedate" type="VARCHAR(30)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="changemessage" type="VARCHAR(2048)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="closedate" type="VARCHAR(30)"/>
+      <column name="currentstate" type="CLOB"/>
+      <column name="duedate" type="VARCHAR(30)"/>
+      <column name="metadataid" type="INT">
+        <constraints nullable="false"/>
+      </column>
+      <column name="owner" type="INT">
+        <constraints nullable="false"/>
+      </column>
+      <column name="previousstate" type="CLOB"/>
+      <column name="titles" type="CLOB"/>
+      <column name="userid" type="INT">
+        <constraints nullable="false"/>
+      </column>
+      <column name="uuid" type="VARCHAR(255)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="relatedmetadatastatusid" type="INT"/>
+      <column name="statusid" type="INT">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+  </changeSet>
+  <changeSet id="1769523766490-70" author="francois">
+    <createTable tableName="operationallowed">
+      <column name="groupid" type="INT">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="operationallowed_pkey"/>
+      </column>
+      <column name="metadataid" type="INT">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="operationallowed_pkey"/>
+      </column>
+      <column name="operationid" type="INT">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="operationallowed_pkey"/>
+      </column>
+    </createTable>
+  </changeSet>
+  <changeSet id="1769523766490-71" author="francois">
+    <createTable tableName="operations">
+      <column name="id" type="INT">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="operations_pkey"/>
+      </column>
+      <column name="name" type="VARCHAR(32)">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+  </changeSet>
+  <changeSet id="1769523766490-72" author="francois">
+    <createTable tableName="operationsdes">
+      <column name="iddes" type="INT">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="operationsdes_pkey"/>
+      </column>
+      <column name="label" type="VARCHAR(255)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="langid" type="VARCHAR(5)">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="operationsdes_pkey"/>
+      </column>
+    </createTable>
+  </changeSet>
+  <changeSet id="1769523766490-73" author="francois">
+    <createTable tableName="relations">
+      <column name="id" type="INT">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="relations_pkey"/>
+      </column>
+      <column name="relatedid" type="INT">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="relations_pkey"/>
+      </column>
+    </createTable>
+  </changeSet>
+  <changeSet id="1769523766490-74" author="francois">
+    <createTable tableName="revinfo">
+      <column name="rev" type="INT">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="revinfo_pkey"/>
+      </column>
+      <column name="revtstmp" type="BIGINT"/>
+    </createTable>
+  </changeSet>
+  <changeSet id="1769523766490-75" author="francois">
+    <createTable tableName="schematron">
+      <column name="id" type="INT">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="schematron_pkey"/>
+      </column>
+      <column name="displaypriority" type="INT">
+        <constraints nullable="false"/>
+      </column>
+      <column name="filename" type="VARCHAR(255)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="schemaname" type="VARCHAR(255)">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+  </changeSet>
+  <changeSet id="1769523766490-76" author="francois">
+    <createTable tableName="schematroncriteria">
+      <column name="id" type="INT">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="schematroncriteria_pkey"/>
+      </column>
+      <column name="type" type="VARCHAR(255)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="uitype" type="VARCHAR(255)"/>
+      <column name="uivalue" type="VARCHAR(255)"/>
+      <column name="value" type="VARCHAR(255)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="group_name" type="VARCHAR(255)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="group_schematronid" type="INT">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+  </changeSet>
+  <changeSet id="1769523766490-77" author="francois">
+    <createTable tableName="schematroncriteriagroup">
+      <column name="name" type="VARCHAR(255)">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="schematroncriteriagroup_pkey"/>
+      </column>
+      <column name="schematronid" type="INT">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="schematroncriteriagroup_pkey"/>
+      </column>
+      <column name="requirement" type="VARCHAR(255)">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+  </changeSet>
+  <changeSet id="1769523766490-78" author="francois">
+    <createTable tableName="schematrondes">
+      <column name="iddes" type="INT">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="schematrondes_pkey"/>
+      </column>
+      <column name="label" type="VARCHAR(255)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="langid" type="VARCHAR(5)">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="schematrondes_pkey"/>
+      </column>
+    </createTable>
+  </changeSet>
+  <changeSet id="1769523766490-79" author="francois">
+    <createTable tableName="selections">
+      <column name="id" type="INT">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="selections_pkey"/>
+      </column>
+      <column name="name" type="VARCHAR(255)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="iswatchable" type="CHAR">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+  </changeSet>
+  <changeSet id="1769523766490-80" author="francois">
+    <createTable tableName="selectionsdes">
+      <column name="iddes" type="INT">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="selectionsdes_pkey"/>
+      </column>
+      <column name="label" type="VARCHAR(255)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="langid" type="VARCHAR(5)">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="selectionsdes_pkey"/>
+      </column>
+    </createTable>
+  </changeSet>
+  <changeSet id="1769523766490-81" author="francois">
+    <createTable tableName="settings">
+      <column name="name" type="VARCHAR(255)">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="settings_pkey"/>
+      </column>
+      <column name="datatype" type="INT"/>
+      <column defaultValue="y" name="editable" type="CHAR">
+        <constraints nullable="false"/>
+      </column>
+      <column defaultValue="n" name="encrypted" type="CHAR">
+        <constraints nullable="false"/>
+      </column>
+      <column defaultValue="y" name="internal" type="CHAR">
+        <constraints nullable="false"/>
+      </column>
+      <column defaultValueNumeric="0" name="position" type="INT">
+        <constraints nullable="false"/>
+      </column>
+      <column name="value" type="CLOB"/>
+    </createTable>
+  </changeSet>
+  <changeSet id="1769523766490-82" author="francois">
+    <createTable tableName="settings_cssstyle">
+      <column name="variable" type="VARCHAR(255)">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="settings_cssstyle_pkey"/>
+      </column>
+      <column name="value" type="VARCHAR(255)"/>
+    </createTable>
+  </changeSet>
+  <changeSet id="1769523766490-83" author="francois">
+    <createTable tableName="settings_ui">
+      <column name="id" type="VARCHAR(255)">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="settings_ui_pkey"/>
+      </column>
+      <column name="configuration" type="CLOB"/>
+    </createTable>
+  </changeSet>
+  <changeSet id="1769523766490-84" author="francois">
+    <createTable tableName="sources">
+      <column name="uuid" type="VARCHAR(255)">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="sources_pkey"/>
+      </column>
+      <column name="creationdate" type="VARCHAR(30)"/>
+      <column name="datahubconfiguration" type="CLOB"/>
+      <column name="datahubenabled" type="BOOLEAN"/>
+      <column name="filter" type="VARCHAR(255)"/>
+      <column name="groupowner" type="INT"/>
+      <column defaultValue="y" name="islistableinheaderselector" type="CHAR">
+        <constraints nullable="false"/>
+      </column>
+      <column name="logo" type="VARCHAR(255)"/>
+      <column name="name" type="VARCHAR(255)"/>
+      <column name="servicerecord" type="VARCHAR(255)"/>
+      <column name="type" type="VARCHAR(255)"/>
+      <column name="uiconfig" type="VARCHAR(255)"/>
+    </createTable>
+  </changeSet>
+  <changeSet id="1769523766490-85" author="francois">
+    <createTable tableName="sourcesdes">
+      <column name="iddes" type="VARCHAR(255)">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="sourcesdes_pkey"/>
+      </column>
+      <column name="label" type="VARCHAR(255)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="langid" type="VARCHAR(5)">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="sourcesdes_pkey"/>
+      </column>
+    </createTable>
+  </changeSet>
+  <changeSet id="1769523766490-86" author="francois">
+    <createTable tableName="spg_page">
+      <column name="language" type="VARCHAR(255)">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="spg_page_pkey"/>
+      </column>
+      <column name="linktext" type="VARCHAR(255)">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="spg_page_pkey"/>
+      </column>
+      <column name="data" type="CLOB"/>
+      <column name="format" type="VARCHAR(255)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="icon" type="VARCHAR(255)"/>
+      <column name="label" type="VARCHAR(255)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="link" type="CLOB"/>
+      <column name="status" type="VARCHAR(255)">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+  </changeSet>
+  <changeSet id="1769523766490-87" author="francois">
+    <createTable tableName="spg_page_group">
+      <column name="language" type="VARCHAR(255)">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="spg_page_group_pkey"/>
+      </column>
+      <column name="linktext" type="VARCHAR(255)">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="spg_page_group_pkey"/>
+      </column>
+      <column name="groupid" type="INT">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="spg_page_group_pkey"/>
+      </column>
+    </createTable>
+  </changeSet>
+  <changeSet id="1769523766490-88" author="francois">
+    <createTable tableName="spg_sections">
+      <column name="spg_page_language" type="VARCHAR(255)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="spg_page_linktext" type="VARCHAR(255)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="section" type="VARCHAR(255)"/>
+    </createTable>
+  </changeSet>
+  <changeSet id="1769523766490-89" author="francois">
+    <createTable tableName="statusvalues">
+      <column name="id" type="INT">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="statusvalues_pkey"/>
+      </column>
+      <column name="displayorder" type="INT"/>
+      <column name="name" type="VARCHAR(255)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="notificationlevel" type="VARCHAR(255)"/>
+      <column name="reserved" type="CHAR">
+        <constraints nullable="false"/>
+      </column>
+      <column name="type" type="VARCHAR(255)"/>
+    </createTable>
+  </changeSet>
+  <changeSet id="1769523766490-90" author="francois">
+    <createTable tableName="statusvaluesdes">
+      <column name="iddes" type="INT">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="statusvaluesdes_pkey"/>
+      </column>
+      <column name="label" type="VARCHAR(255)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="langid" type="VARCHAR(5)">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="statusvaluesdes_pkey"/>
+      </column>
+    </createTable>
+  </changeSet>
+  <changeSet id="1769523766490-91" author="francois">
+    <createTable tableName="translations">
+      <column name="idfield" type="INT">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="translations_pkey"/>
+      </column>
+      <column name="field" type="VARCHAR(255)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="langid" type="VARCHAR(5)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="label" type="CLOB"/>
+    </createTable>
+  </changeSet>
+  <changeSet id="1769523766490-92" author="francois">
+    <createTable tableName="useraddress">
+      <column name="userid" type="INT">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="useraddress_pkey"/>
+      </column>
+      <column name="addressid" type="INT">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="useraddress_pkey"/>
+      </column>
+    </createTable>
+  </changeSet>
+  <changeSet id="1769523766490-93" author="francois">
+    <createTable tableName="userauditable">
+      <column name="id" type="INT">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="userauditable_pkey"/>
+      </column>
+      <column name="createdby" type="VARCHAR(255)"/>
+      <column name="createddate" type="timestamp"/>
+      <column name="lastmodifiedby" type="VARCHAR(255)"/>
+      <column name="lastmodifieddate" type="timestamp"/>
+      <column name="address" type="VARCHAR(255)"/>
+      <column name="city" type="VARCHAR(255)"/>
+      <column name="country" type="VARCHAR(255)"/>
+      <column name="emailaddress" type="VARCHAR(255)"/>
+      <column name="enabled" type="BOOLEAN">
+        <constraints nullable="false"/>
+      </column>
+      <column name="groupseditor" type="VARCHAR(255)"/>
+      <column name="groupsregistereduser" type="VARCHAR(255)"/>
+      <column name="groupsreviewer" type="VARCHAR(255)"/>
+      <column name="groupsuseradmin" type="VARCHAR(255)"/>
+      <column name="kind" type="VARCHAR(255)"/>
+      <column name="name" type="VARCHAR(255)"/>
+      <column name="organisation" type="VARCHAR(255)"/>
+      <column name="profile" type="VARCHAR(255)"/>
+      <column name="state" type="VARCHAR(255)"/>
+      <column name="surname" type="VARCHAR(255)"/>
+      <column name="username" type="VARCHAR(255)"/>
+      <column name="zip" type="VARCHAR(255)"/>
+    </createTable>
+  </changeSet>
+  <changeSet id="1769523766490-94" author="francois">
+    <createTable tableName="userauditable_aud">
+      <column name="id" type="INT">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="userauditable_aud_pkey"/>
+      </column>
+      <column name="rev" type="INT">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="userauditable_aud_pkey"/>
+      </column>
+      <column name="revtype" type="TINYINT"/>
+      <column name="createdby" type="VARCHAR(255)"/>
+      <column name="createddate" type="timestamp"/>
+      <column name="lastmodifiedby" type="VARCHAR(255)"/>
+      <column name="lastmodifieddate" type="timestamp"/>
+      <column name="address" type="VARCHAR(255)"/>
+      <column name="address_mod" type="BOOLEAN"/>
+      <column name="city" type="VARCHAR(255)"/>
+      <column name="city_mod" type="BOOLEAN"/>
+      <column name="country" type="VARCHAR(255)"/>
+      <column name="country_mod" type="BOOLEAN"/>
+      <column name="emailaddress" type="VARCHAR(255)"/>
+      <column name="emailaddress_mod" type="BOOLEAN"/>
+      <column name="enabled" type="BOOLEAN"/>
+      <column name="enabled_mod" type="BOOLEAN"/>
+      <column name="groupseditor" type="VARCHAR(255)"/>
+      <column name="groupseditor_mod" type="BOOLEAN"/>
+      <column name="groupsregistereduser" type="VARCHAR(255)"/>
+      <column name="groupsregistereduser_mod" type="BOOLEAN"/>
+      <column name="groupsreviewer" type="VARCHAR(255)"/>
+      <column name="groupsreviewer_mod" type="BOOLEAN"/>
+      <column name="groupsuseradmin" type="VARCHAR(255)"/>
+      <column name="groupsuseradmin_mod" type="BOOLEAN"/>
+      <column name="kind" type="VARCHAR(255)"/>
+      <column name="kind_mod" type="BOOLEAN"/>
+      <column name="name" type="VARCHAR(255)"/>
+      <column name="name_mod" type="BOOLEAN"/>
+      <column name="organisation" type="VARCHAR(255)"/>
+      <column name="organisation_mod" type="BOOLEAN"/>
+      <column name="profile" type="VARCHAR(255)"/>
+      <column name="profile_mod" type="BOOLEAN"/>
+      <column name="state" type="VARCHAR(255)"/>
+      <column name="state_mod" type="BOOLEAN"/>
+      <column name="surname" type="VARCHAR(255)"/>
+      <column name="surname_mod" type="BOOLEAN"/>
+      <column name="username" type="VARCHAR(255)"/>
+      <column name="username_mod" type="BOOLEAN"/>
+      <column name="zip" type="VARCHAR(255)"/>
+      <column name="zip_mod" type="BOOLEAN"/>
+    </createTable>
+  </changeSet>
+  <changeSet id="1769523766490-95" author="francois">
+    <createTable tableName="usergroups">
+      <column name="groupid" type="INT">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="usergroups_pkey"/>
+      </column>
+      <column name="profile" type="INT">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="usergroups_pkey"/>
+      </column>
+      <column name="userid" type="INT">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="usergroups_pkey"/>
+      </column>
+    </createTable>
+  </changeSet>
+  <changeSet id="1769523766490-96" author="francois">
+    <createTable tableName="users">
+      <column name="id" type="INT">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="users_pkey"/>
+      </column>
+      <column defaultValue="y" name="isenabled" type="CHAR">
+        <constraints nullable="false"/>
+      </column>
+      <column name="kind" type="VARCHAR(16)"/>
+      <column name="lastlogindate" type="VARCHAR(255)"/>
+      <column name="name" type="VARCHAR(255)"/>
+      <column name="organisation" type="VARCHAR(255)"/>
+      <column name="profile" type="INT">
+        <constraints nullable="false"/>
+      </column>
+      <column name="authtype" type="VARCHAR(32)"/>
+      <column name="nodeid" type="VARCHAR(255)"/>
+      <column name="password" type="VARCHAR(120)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="security" type="VARCHAR(128)"/>
+      <column name="surname" type="VARCHAR(255)"/>
+      <column name="username" type="VARCHAR(255)">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+  </changeSet>
+  <changeSet id="1769523766490-97" author="francois">
+    <createTable tableName="usersavedselections">
+      <column name="metadatauuid" type="VARCHAR(255)">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="usersavedselections_pkey"/>
+      </column>
+      <column name="selectionid" type="INT">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="usersavedselections_pkey"/>
+      </column>
+      <column name="userid" type="INT">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="usersavedselections_pkey"/>
+      </column>
+    </createTable>
+  </changeSet>
+  <changeSet id="1769523766490-98" author="francois">
+    <createTable tableName="usersearch">
+      <column name="id" type="INT">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="usersearch_pkey"/>
+      </column>
+      <column name="creationdate" type="timestamp"/>
+      <column name="featuredtype" type="CHAR"/>
+      <column name="logo" type="VARCHAR(255)"/>
+      <column name="url" type="CLOB"/>
+      <column name="creator_id" type="INT"/>
+    </createTable>
+  </changeSet>
+  <changeSet id="1769523766490-99" author="francois">
+    <createTable tableName="usersearch_group">
+      <column name="usersearch_id" type="INT">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="usersearch_group_pkey"/>
+      </column>
+      <column name="group_id" type="INT">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="usersearch_group_pkey"/>
+      </column>
+    </createTable>
+  </changeSet>
+  <changeSet id="1769523766490-100" author="francois">
+    <createTable tableName="usersearchdes">
+      <column name="iddes" type="INT">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="usersearchdes_pkey"/>
+      </column>
+      <column name="label" type="VARCHAR(255)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="langid" type="VARCHAR(5)">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="usersearchdes_pkey"/>
+      </column>
+    </createTable>
+  </changeSet>
+  <changeSet id="1769523766490-101" author="francois">
+    <createTable tableName="validation">
+      <column name="metadataid" type="INT">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="validation_pkey"/>
+      </column>
+      <column name="valtype" type="VARCHAR(128)">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="validation_pkey"/>
+      </column>
+      <column name="failed" type="INT"/>
+      <column name="tested" type="INT"/>
+      <column name="reportcontent" type="CLOB"/>
+      <column name="reporturl" type="VARCHAR(255)"/>
+      <column name="required" type="BOOLEAN"/>
+      <column name="status" type="INT">
+        <constraints nullable="false"/>
+      </column>
+      <column name="valdate" type="VARCHAR(30)"/>
+    </createTable>
+  </changeSet>
+  <changeSet id="1769523766490-102" author="francois">
+    <addUniqueConstraint columnNames="url, typename" constraintName="uk2cyob0hg1dx0ety6fw4osout9"
+                         tableName="messageproducerentity"/>
+  </changeSet>
+  <changeSet id="1769523766490-103" author="francois">
+    <addUniqueConstraint columnNames="username" constraintName="uk_23y4gd49ajvbqgl3psjsvhff6" tableName="users"/>
+  </changeSet>
+  <changeSet id="1769523766490-104" author="francois">
+    <addUniqueConstraint columnNames="detailedratinglist_id" constraintName="uk_53dsw4x938m53yxgfwk8ee636"
+                         tableName="guf_userfeedbacks_guf_rating"/>
+  </changeSet>
+  <changeSet id="1769523766490-105" author="francois">
+    <addUniqueConstraint columnNames="addressid" constraintName="uk_8te6nqcuovmv45ej1oej73hg3"
+                         tableName="useraddress"/>
+  </changeSet>
+  <changeSet id="1769523766490-106" author="francois">
+    <addUniqueConstraint columnNames="uuid" constraintName="uk_e9w46i6v429h02tmynm3eefiy" tableName="metadata"/>
+  </changeSet>
+  <changeSet id="1769523766490-107" author="francois">
+    <addUniqueConstraint columnNames="uuid" constraintName="uk_fuc1tr6xyyrbjrxg0feavofb2"
+                         tableName="metadatadraft"/>
+  </changeSet>
+  <changeSet id="1769523766490-110" author="francois">
+    <addUniqueConstraint columnNames="approvedversion_id" constraintName="uk_itccbjhvevxbh1g4axknj8n24"
+                         tableName="metadatadraft"/>
+  </changeSet>
+  <changeSet id="1769523766490-111" author="francois">
+    <addUniqueConstraint columnNames="schemaname, filename" constraintName="ukk7c29i3x0x6p5hbvb0qsdmuek"
+                         tableName="schematron"/>
+  </changeSet>
+  <changeSet id="1769523766490-112" author="francois">
+    <addUniqueConstraint columnNames="field, langid" constraintName="ukl29iu1rtihaxn070vb0j2g3hw"
+                         tableName="translations"/>
+  </changeSet>
+  <changeSet id="1769523766490-113" author="francois">
+    <createIndex indexName="idx_inspireatomfeed_atomdatasetid" tableName="inspireatomfeed">
+      <column name="atomdatasetid"/>
+    </createIndex>
+  </changeSet>
+  <changeSet id="1769523766490-114" author="francois">
+    <createIndex indexName="idx_inspireatomfeed_atomdatasetns" tableName="inspireatomfeed">
+      <column name="atomdatasetns"/>
+    </createIndex>
+  </changeSet>
+  <changeSet id="1769523766490-115" author="francois">
+    <createIndex indexName="idx_inspireatomfeed_metadataid" tableName="inspireatomfeed">
+      <column name="metadataid"/>
+    </createIndex>
+  </changeSet>
+  <changeSet id="1769523766490-116" author="francois">
+    <createIndex indexName="idx_linkstatus_isfailing" tableName="linkstatus">
+      <column name="failing"/>
+    </createIndex>
+  </changeSet>
+  <changeSet id="1769523766490-118" author="francois">
+    <createIndex indexName="idx_metadatalink_metadataid" tableName="metadatalink">
+      <column name="metadataid"/>
+    </createIndex>
+  </changeSet>
+  <changeSet id="1769523766490-119" author="francois">
+    <createIndex indexName="idx_metadatastatus_changedate" tableName="metadatastatus">
+      <column name="changedate"/>
+    </createIndex>
+  </changeSet>
+  <changeSet id="1769523766490-120" author="francois">
+    <createIndex indexName="idx_metadatastatus_metadataid" tableName="metadatastatus">
+      <column name="metadataid"/>
+    </createIndex>
+  </changeSet>
+  <changeSet id="1769523766490-121" author="francois">
+    <createIndex indexName="idx_metadatastatus_owner" tableName="metadatastatus">
+      <column name="owner"/>
+    </createIndex>
+  </changeSet>
+  <changeSet id="1769523766490-123" author="francois">
+    <createIndex indexName="idx_metadatastatus_userid" tableName="metadatastatus">
+      <column name="userid"/>
+    </createIndex>
+  </changeSet>
+  <changeSet id="1769523766490-124" author="francois">
+    <createIndex indexName="idx_translations_lang" tableName="translations">
+      <column name="langid"/>
+    </createIndex>
+  </changeSet>
+  <changeSet id="1769523766490-125" author="francois">
+    <createIndex indexName="idx_usersavedselections_metadatauuid" tableName="usersavedselections">
+      <column name="metadatauuid"/>
+    </createIndex>
+  </changeSet>
+  <changeSet id="1769523766490-126" author="francois">
+    <createIndex indexName="idx_validation_metadataid" tableName="validation">
+      <column name="metadataid"/>
+    </createIndex>
+  </changeSet>
+  <changeSet id="1769523766490-127" author="francois">
+    <createIndex indexName="ix_metadatafiledownloads_mdid" tableName="metadatafiledownloads">
+      <column name="metadataid"/>
+    </createIndex>
+  </changeSet>
+  <changeSet id="1769523766490-128" author="francois">
+    <createIndex indexName="ix_metadatafileuploads_mdid" tableName="metadatafileuploads">
+      <column name="metadataid"/>
+    </createIndex>
+  </changeSet>
+  <changeSet id="1769523766490-129" author="francois">
+    <createIndex indexName="ix_operationallowed_mdid" tableName="operationallowed">
+      <column name="metadataid"/>
+    </createIndex>
+  </changeSet>
+  <changeSet id="1769523766490-130" author="francois">
+    <addForeignKeyConstraint baseColumnNames="iddes" baseTableName="schematrondes"
+                             constraintName="fk134nfqy1njol3whafs4452o7p" onDelete="NO ACTION"
+                             referencedColumnNames="id" referencedTableName="schematron"/>
+  </changeSet>
+  <changeSet id="1769523766490-131" author="francois">
+    <addForeignKeyConstraint baseColumnNames="selectionid" baseTableName="usersavedselections"
+                             constraintName="fk1dlybmn1uw13o92d59ubg9l3o" onDelete="NO ACTION"
+                             referencedColumnNames="id" referencedTableName="selections"/>
+  </changeSet>
+  <changeSet id="1769523766490-132" author="francois">
+    <addForeignKeyConstraint baseColumnNames="parent_uuid" baseTableName="guf_userfeedbacks"
+                             constraintName="fk1dywlancj7y3cial42sm1rkr7" onDelete="NO ACTION"
+                             referencedColumnNames="uuid" referencedTableName="guf_userfeedbacks"/>
+  </changeSet>
+  <changeSet id="1769523766490-133" author="francois">
+    <addForeignKeyConstraint baseColumnNames="parentid" baseTableName="harvestersettings"
+                             constraintName="fk2cqc1oca0gov1xjjs45yc0y3v" onDelete="CASCADE"
+                             referencedColumnNames="id" referencedTableName="harvestersettings"/>
+  </changeSet>
+  <changeSet id="1769523766490-134" author="francois">
+    <addForeignKeyConstraint baseColumnNames="group_name,group_schematronid" baseTableName="schematroncriteria"
+                             constraintName="fk3tno1j5h8lla4ad6con5x7xrs" onDelete="NO ACTION"
+                             referencedColumnNames="name,schematronid"
+                             referencedTableName="schematroncriteriagroup"/>
+  </changeSet>
+  <changeSet id="1769523766490-135" author="francois">
+    <addForeignKeyConstraint baseColumnNames="detailedratinglist_id" baseTableName="guf_userfeedbacks_guf_rating"
+                             constraintName="fk4e2gfvv6vvjsf1fwhv5fm8qug" onDelete="NO ACTION"
+                             referencedColumnNames="id" referencedTableName="guf_rating"/>
+  </changeSet>
+  <changeSet id="1769523766490-136" author="francois">
+    <addForeignKeyConstraint baseColumnNames="author_id" baseTableName="guf_userfeedbacks"
+                             constraintName="fk5fs31wee12rnvk4uq3futtwx8" onDelete="NO ACTION"
+                             referencedColumnNames="id" referencedTableName="users"/>
+  </changeSet>
+  <changeSet id="1769523766490-137" author="francois">
+    <addForeignKeyConstraint baseColumnNames="doiserver_id" baseTableName="doiservers_group"
+                             constraintName="fk68kkdbdvxs6np07y6p3gfff5b" onDelete="NO ACTION"
+                             referencedColumnNames="id" referencedTableName="doiservers"/>
+  </changeSet>
+  <changeSet id="1769523766490-138" author="francois">
+    <addForeignKeyConstraint baseColumnNames="iddes" baseTableName="guf_ratingcriteriades"
+                             constraintName="fk7fgytrvbd2p0wq68uu52fvw77" onDelete="NO ACTION"
+                             referencedColumnNames="id" referencedTableName="guf_ratingcriteria"/>
+  </changeSet>
+  <changeSet id="1769523766490-139" author="francois">
+    <addForeignKeyConstraint baseColumnNames="iddes" baseTableName="usersearchdes"
+                             constraintName="fk8bvpbpbvt880m9cnb3c46oi61" onDelete="NO ACTION"
+                             referencedColumnNames="id" referencedTableName="usersearch"/>
+  </changeSet>
+  <changeSet id="1769523766490-140" author="francois">
+    <addForeignKeyConstraint baseColumnNames="language,linktext" baseTableName="spg_page_group"
+                             constraintName="fk9mlx8ch2q2f67w745pjx5ggvg" onDelete="NO ACTION"
+                             referencedColumnNames="language,linktext" referencedTableName="spg_page"/>
+  </changeSet>
+  <changeSet id="1769523766490-141" author="francois">
+    <addForeignKeyConstraint baseColumnNames="userfeedback_id" baseTableName="guf_rating"
+                             constraintName="fkac2ja64p75d9wt5dnqkh1ak3d" onDelete="NO ACTION"
+                             referencedColumnNames="uuid" referencedTableName="guf_userfeedbacks"/>
+  </changeSet>
+  <changeSet id="1769523766490-142" author="francois">
+    <addForeignKeyConstraint baseColumnNames="groupid" baseTableName="spg_page_group"
+                             constraintName="fkb1kxiuynecb84x003nwsrbifs" onDelete="NO ACTION"
+                             referencedColumnNames="id" referencedTableName="groups"/>
+  </changeSet>
+  <changeSet id="1769523766490-143" author="francois">
+    <addForeignKeyConstraint baseColumnNames="approvedversion_id" baseTableName="metadatadraft"
+                             constraintName="fkb9t4gg74qa9arfjbhtd8k8rjd" onDelete="NO ACTION"
+                             referencedColumnNames="id" referencedTableName="metadata"/>
+  </changeSet>
+  <changeSet id="1769523766490-144" author="francois">
+    <addForeignKeyConstraint baseColumnNames="spg_page_language,spg_page_linktext" baseTableName="spg_sections"
+                             constraintName="fkc1igxctl66s2y0lybilfxyr1u" onDelete="NO ACTION"
+                             referencedColumnNames="language,linktext" referencedTableName="spg_page"/>
+  </changeSet>
+  <changeSet id="1769523766490-145" author="francois">
+    <addForeignKeyConstraint baseColumnNames="group_id" baseTableName="usersearch_group"
+                             constraintName="fke4vw2pb2yy1s5gl1fjw39pbwy" onDelete="NO ACTION"
+                             referencedColumnNames="id" referencedTableName="groups"/>
+  </changeSet>
+  <changeSet id="1769523766490-146" author="francois">
+    <addForeignKeyConstraint baseColumnNames="inspireatomfeed_id" baseTableName="inspireatomfeed_entrylist"
+                             constraintName="fke50emwo62bs4rebxuipq5reux" onDelete="NO ACTION"
+                             referencedColumnNames="id" referencedTableName="inspireatomfeed"/>
+  </changeSet>
+  <changeSet id="1769523766490-147" author="francois">
+    <addForeignKeyConstraint baseColumnNames="creator_id" baseTableName="usersearch"
+                             constraintName="fkelx0lms0v5rv3xlvamxtbb4ar" onDelete="NO ACTION"
+                             referencedColumnNames="id" referencedTableName="users"/>
+  </changeSet>
+  <changeSet id="1769523766490-148" author="francois">
+    <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="email"
+                             constraintName="fkemafd9x1hmt6f2v4dr5qgks79" onDelete="NO ACTION"
+                             referencedColumnNames="id" referencedTableName="users"/>
+  </changeSet>
+  <changeSet id="1769523766490-149" author="francois">
+    <addForeignKeyConstraint baseColumnNames="userid" baseTableName="useraddress"
+                             constraintName="fkfmhko1hdo84edmaylhlikax1w" onDelete="NO ACTION"
+                             referencedColumnNames="id" referencedTableName="users"/>
+  </changeSet>
+  <changeSet id="1769523766490-150" author="francois">
+    <addForeignKeyConstraint baseColumnNames="iddes" baseTableName="operationsdes"
+                             constraintName="fkfrwne5bgphqcf5ujidkjb4x21" onDelete="NO ACTION"
+                             referencedColumnNames="id" referencedTableName="operations"/>
+  </changeSet>
+  <changeSet id="1769523766490-151" author="francois">
+    <addForeignKeyConstraint baseColumnNames="statusid" baseTableName="metadatastatus"
+                             constraintName="fkgf12fblfohqs5f8ln9ymj8bph" onDelete="NO ACTION"
+                             referencedColumnNames="id" referencedTableName="statusvalues"/>
+
+    <createIndex indexName="idx_metadatastatus_statusid" tableName="metadatastatus">
+      <column name="statusid"/>
+    </createIndex>
+  </changeSet>
+  <changeSet id="1769523766490-152" author="francois">
+    <addForeignKeyConstraint baseColumnNames="group_id" baseTableName="group_category"
+                             constraintName="fkgohj7i0hd3j39ck4gpd9yciyd" onDelete="NO ACTION"
+                             referencedColumnNames="id" referencedTableName="groups"/>
+  </changeSet>
+  <changeSet id="1769523766490-153" author="francois">
+    <addForeignKeyConstraint baseColumnNames="iddes" baseTableName="statusvaluesdes"
+                             constraintName="fkgw4mleubu37tior3ctorjoqrj" onDelete="NO ACTION"
+                             referencedColumnNames="id" referencedTableName="statusvalues"/>
+  </changeSet>
+  <changeSet id="1769523766490-154" author="francois">
+    <addForeignKeyConstraint baseColumnNames="guf_userfeedback_uuid" baseTableName="guf_userfeedbacks_guf_rating"
+                             constraintName="fkh3ed3wakehxpnry31tslimy7f" onDelete="NO ACTION"
+                             referencedColumnNames="uuid" referencedTableName="guf_userfeedbacks"/>
+  </changeSet>
+  <changeSet id="1769523766490-155" author="francois">
+    <addForeignKeyConstraint baseColumnNames="keyword_id" baseTableName="guf_userfeedback_keyword"
+                             constraintName="fkh9mgx854gcod9pu6bm4ss811t" onDelete="NO ACTION"
+                             referencedColumnNames="id" referencedTableName="guf_keywords"/>
+  </changeSet>
+  <changeSet id="1769523766490-156" author="francois">
+    <addForeignKeyConstraint baseColumnNames="iddes" baseTableName="sourcesdes"
+                             constraintName="fkhbf76tinp79xw11hf1m4isp8c" onDelete="NO ACTION"
+                             referencedColumnNames="uuid" referencedTableName="sources"/>
+  </changeSet>
+  <changeSet id="1769523766490-157" author="francois">
+    <addForeignKeyConstraint baseColumnNames="usersearch_id" baseTableName="usersearch_group"
+                             constraintName="fkhtcu5iot2xe0y5yhxvof7mjam" onDelete="NO ACTION"
+                             referencedColumnNames="id" referencedTableName="usersearch"/>
+  </changeSet>
+  <changeSet id="1769523766490-158" author="francois">
+    <addForeignKeyConstraint baseColumnNames="defaultcategory_id" baseTableName="groups"
+                             constraintName="fkj3jp00tlvelfgsg1vjp5l3nf" onDelete="NO ACTION"
+                             referencedColumnNames="id" referencedTableName="categories"/>
+  </changeSet>
+  <changeSet id="1769523766490-159" author="francois">
+    <addForeignKeyConstraint baseColumnNames="iddes" baseTableName="groupsdes"
+                             constraintName="fkjrp9gmobxptqovx4vhnncv147" onDelete="NO ACTION"
+                             referencedColumnNames="id" referencedTableName="groups"/>
+  </changeSet>
+  <changeSet id="1769523766490-160" author="francois">
+    <addForeignKeyConstraint baseColumnNames="group_id" baseTableName="doiservers_group"
+                             constraintName="fkk9nywysss6bm8hgccdqoqqyti" onDelete="NO ACTION"
+                             referencedColumnNames="id" referencedTableName="groups"/>
+  </changeSet>
+  <changeSet id="1769523766490-161" author="francois">
+    <addForeignKeyConstraint baseColumnNames="userid" baseTableName="usergroups"
+                             constraintName="fkml33uht6cka05y27o7tai781y" onDelete="NO ACTION"
+                             referencedColumnNames="id" referencedTableName="users"/>
+  </changeSet>
+  <changeSet id="1769523766490-162" author="francois">
+    <addForeignKeyConstraint baseColumnNames="categoryid" baseTableName="metadatacateg"
+                             constraintName="fknk98usj3vi3et8ko6lfmuh1g0" onDelete="NO ACTION"
+                             referencedColumnNames="id" referencedTableName="categories"/>
+  </changeSet>
+  <changeSet id="1769523766490-163" author="francois">
+    <addForeignKeyConstraint baseColumnNames="addressid" baseTableName="useraddress"
+                             constraintName="fko00ntdyv9mj4lwywrp2hs8bj0" onDelete="NO ACTION"
+                             referencedColumnNames="id" referencedTableName="address"/>
+  </changeSet>
+  <changeSet id="1769523766490-164" author="francois">
+    <addForeignKeyConstraint baseColumnNames="userfeedback_uuid" baseTableName="guf_userfeedback_keyword"
+                             constraintName="fko3b1k9bho6p740haq47g1fab7" onDelete="NO ACTION"
+                             referencedColumnNames="uuid" referencedTableName="guf_userfeedbacks"/>
+  </changeSet>
+  <changeSet id="1769523766490-165" author="francois">
+    <addForeignKeyConstraint baseColumnNames="rev" baseTableName="userauditable_aud"
+                             constraintName="fko4k6fftaj6wriots1r1tnihlp" onDelete="NO ACTION"
+                             referencedColumnNames="rev" referencedTableName="revinfo"/>
+  </changeSet>
+  <changeSet id="1769523766490-166" author="francois">
+    <addForeignKeyConstraint baseColumnNames="link" baseTableName="linkstatus"
+                             constraintName="fkp5kjknw6whjr91s4h9xtadgv6" onDelete="NO ACTION"
+                             referencedColumnNames="id" referencedTableName="links"/>
+  </changeSet>
+  <changeSet id="1769523766490-167" author="francois">
+    <addForeignKeyConstraint baseColumnNames="category_id" baseTableName="group_category"
+                             constraintName="fkp8fp2e2ihonmmyp9wsyx748t3" onDelete="NO ACTION"
+                             referencedColumnNames="id" referencedTableName="categories"/>
+  </changeSet>
+  <changeSet id="1769523766490-168" author="francois">
+    <addForeignKeyConstraint baseColumnNames="linkid" baseTableName="metadatalink"
+                             constraintName="fkpjuqhhlh09cdpl9bfgb1e0756" onDelete="NO ACTION"
+                             referencedColumnNames="id" referencedTableName="links"/>
+
+    <createIndex indexName="idx_metadatalink_linkid" tableName="metadatalink">
+      <column name="linkid"/>
+    </createIndex>
+  </changeSet>
+  <changeSet id="1769523766490-169" author="francois">
+    <addForeignKeyConstraint baseColumnNames="groupid" baseTableName="usergroups"
+                             constraintName="fkpvt3pynb0pfi5ouvk2m4uvrwp" onDelete="NO ACTION"
+                             referencedColumnNames="id" referencedTableName="groups"/>
+  </changeSet>
+  <changeSet id="1769523766490-170" author="francois">
+    <addForeignKeyConstraint baseColumnNames="criteria_id" baseTableName="guf_rating"
+                             constraintName="fkpwjtc2mefxb8n08mq12ug0gko" onDelete="NO ACTION"
+                             referencedColumnNames="id" referencedTableName="guf_ratingcriteria"/>
+  </changeSet>
+  <changeSet id="1769523766490-171" author="francois">
+    <addForeignKeyConstraint baseColumnNames="userid" baseTableName="usersavedselections"
+                             constraintName="fkq971r8i90nbrn42wgw43f71bd" onDelete="NO ACTION"
+                             referencedColumnNames="id" referencedTableName="users"/>
+  </changeSet>
+  <changeSet id="1769523766490-172" author="francois">
+    <addForeignKeyConstraint baseColumnNames="metadataid" baseTableName="metadatacateg"
+                             constraintName="fkrymar8yhocdu09m6erb49b1bo" onDelete="NO ACTION"
+                             referencedColumnNames="id" referencedTableName="metadata"/>
+  </changeSet>
+  <changeSet id="1769523766490-173" author="francois">
+    <addForeignKeyConstraint baseColumnNames="approver_id" baseTableName="guf_userfeedbacks"
+                             constraintName="fks2f484931snpkem6kl4wm3wmd" onDelete="NO ACTION"
+                             referencedColumnNames="id" referencedTableName="users"/>
+  </changeSet>
+  <changeSet id="1769523766490-174" author="francois">
+    <addForeignKeyConstraint baseColumnNames="iddes" baseTableName="selectionsdes"
+                             constraintName="fksajphs09xp3bsyvnactn7nuda" onDelete="NO ACTION"
+                             referencedColumnNames="id" referencedTableName="selections"/>
+  </changeSet>
+  <changeSet id="1769523766490-175" author="francois">
+    <addForeignKeyConstraint baseColumnNames="iddes" baseTableName="categoriesdes"
+                             constraintName="fkso3adnjy8lpuw1fvpdws0o36n" onDelete="NO ACTION"
+                             referencedColumnNames="id" referencedTableName="categories"/>
+  </changeSet>
+  <changeSet id="1769523766490-176" author="francois">
+    <addForeignKeyConstraint baseColumnNames="metadata_uuid" baseTableName="guf_userfeedbacks"
+                             constraintName="fkt4wa27oh82hshey01c4o8pv5b" onDelete="NO ACTION"
+                             referencedColumnNames="uuid" referencedTableName="metadata"/>
+  </changeSet>
+  <changeSet id="1769523766490-177" author="francois">
+    <addForeignKeyConstraint baseColumnNames="schematronid" baseTableName="schematroncriteriagroup"
+                             constraintName="fkt8avbrgs5j8xvoros154qim3k" onDelete="NO ACTION"
+                             referencedColumnNames="id" referencedTableName="schematron"/>
+  </changeSet>
+  <changeSet id="1769523766490-178" author="francois">
+    <addForeignKeyConstraint baseColumnNames="iddes" baseTableName="isolanguagesdes"
+                             constraintName="fktclc2b6qjjptx7lgll1dd5e3y" onDelete="NO ACTION"
+                             referencedColumnNames="id" referencedTableName="isolanguages"/>
+  </changeSet>
+  <changeSet id="1769523766490-179" author="francois">
+    <addForeignKeyConstraint baseColumnNames="relatedmetadatastatusid" baseTableName="metadatastatus"
+                             constraintName="fktih0k768u8kuwxsp8dnm9kru3" onDelete="NO ACTION"
+                             referencedColumnNames="id" referencedTableName="metadatastatus"/>
+  </changeSet>
+
+</databaseChangeLog>
