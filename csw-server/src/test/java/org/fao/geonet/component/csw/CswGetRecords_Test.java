@@ -250,4 +250,35 @@ public class CswGetRecords_Test extends AbstractCoreIntegrationTest {
         assertEquals(1, mdIdsInResult.size());
     }
 
+    @Test
+    public void test_cqlfilter_with_nbsp_in_gn_before4410 () throws Exception {
+        final ServiceContext serviceContext = createServiceContext();
+
+        // CQL may contain non-breaking space characters (U+00A0) which was causing GeoTools CQL parser to fail.
+        // "org.geotools.filter.text.cql2.CQLException: Lexical error at line 1, column 32.
+        // Encountered: "\u00a0" (160), after : "" Parsing : inspireTheme <> 'buildings' And inspireTheme <>...
+        String CQL = "inspireTheme <> 'buildings' And\u00a0inspireTheme <> 'administrative units' And\u00a0inspireTheme <> 'transport network' And\u00a0inspireTheme <> 'cadastral parcels' And\u00a0resourceType = 'dataset' And\u00a0documentStandard <> 'dublin-core'";
+
+        Element request = new Element("GetRecords", Csw.NAMESPACE_CSW)
+            .setAttribute("service", "CSW")
+            .setAttribute("version", "2.0.2")
+            .setAttribute("resultType", "results")
+            .setAttribute("startPosition", "3")
+            .setAttribute("maxRecords", "1")
+            .setAttribute("outputSchema", "csw:Record")
+            .addContent(new Element("Query", Csw.NAMESPACE_CSW)
+                .addContent(new Element("ElementSetName", Csw.NAMESPACE_CSW).setText("summary"))
+                .addContent(
+                    new Element("Constraint", Csw.NAMESPACE_CSW)
+                        .setAttribute("version", "1.1.0")
+                        .addContent(
+                            new Element("CqlText", Csw.NAMESPACE_CSW)
+                                .setText(CQL)
+                        )
+                ));
+        Element result = _getRecords.execute(request, serviceContext);
+        // No NoApplicableCode exception
+        String nextRecord = result.getChild("SearchResults", Csw.NAMESPACE_CSW).getAttributeValue("nextRecord");
+        Assert.assertEquals("0", nextRecord);
+    }
 }
