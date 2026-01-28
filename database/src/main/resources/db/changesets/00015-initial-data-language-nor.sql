@@ -1,18 +1,9 @@
-INSERT INTO Languages (id, name, isinspire) VALUES ('nor','norsk', 'n');
+--liquibase formatted sql
+--changeset francois:00016
+--preconditions onFail:MARK_RAN onError:HALT
+--precondition-sql-check expectedResult:0 SELECT COUNT(*) FROM Languages WHERE id = 'nor';
 
--- Take care to table ID (related to other loc files)
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (1,'nor','Kart og grafikk');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (2,'nor','Datasett');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (3,'nor','Interakive ressurser');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (4,'nor','Applikasjoner');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (5,'nor','Studier og anbefalinger');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (6,'nor','Konferanseresultater');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (7,'nor','Fotografier');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (8,'nor','Audio/Video');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (9,'nor','Kataloger');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (10,'nor','Andre ressurser');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (12,'nor','Registers');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (13,'nor','Physical Samples');
+INSERT INTO Languages (id, name, isinspire) VALUES ('nor','norsk', 'n');
 
 INSERT INTO GroupsDes (iddes, langid, label) VALUES (-1,'nor','Gjest');
 INSERT INTO GroupsDes (iddes, langid, label) VALUES (0,'nor','Intranett');
