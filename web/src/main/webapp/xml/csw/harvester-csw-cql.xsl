@@ -41,7 +41,7 @@
                 </xsl:call-template>
             </xsl:variable>
 
-            <xsl:if test="string($condition)"><xsl:value-of select="$condition" />&#160;</xsl:if>
+          <xsl:if test="string($condition)"><xsl:value-of select="$condition" /><xsl:text> </xsl:text></xsl:if>
 
             <xsl:call-template name="processFilter">
               <xsl:with-param name="filter" select="$filter" />
