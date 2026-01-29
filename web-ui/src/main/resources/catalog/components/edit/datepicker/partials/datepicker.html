@@ -49,6 +49,7 @@
         data-ng-model="date"
         data-ng-class="hideTime == 'true' ? 'gn-notime' : ''"
         data-ng-show="mode === ''"
+        data-ng-disabled="withIndeterminatePosition && (indeterminatePosition === 'now' || indeterminatePosition === 'unknown')"
       />
       <input
         type="time"
@@ -56,6 +57,7 @@
         data-ng-class="hideTime == 'true' ? 'hidden' : ''"
         data-ng-model="time"
         data-ng-show="mode === ''"
+        data-ng-disabled="withIndeterminatePosition && (indeterminatePosition === 'now' || indeterminatePosition === 'unknown')"
       />
       <select
         class="form-control gn-timezone"
