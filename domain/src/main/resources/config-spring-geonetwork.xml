@@ -45,8 +45,18 @@
   <bean id="harvesterSettingValueSetter"
         class="org.fao.geonet.entitylistener.HarvesterSettingValueSetter"/>
 
+
+  <bean id="liquibase" class="liquibase.integration.spring.SpringLiquibase">
+    <property name="dataSource" ref="jdbcDataSource" />
+    <property name="changeLog" value="classpath:db/changelog.xml" />
+    <property name="contexts" value="production" />
+    <property name="shouldRun" value="true" />
+  </bean>
+
+
   <bean id="entityManagerFactory"
-        class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+        class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean"
+        depends-on="liquibase">
     <property name="dataSource" ref="jdbcDataSource"/>
     <property name="packagesToScan" value="org.fao.geonet.domain"/>
     <property name="jpaVendorAdapter" ref="jpaVendorAdapter"/>
@@ -60,7 +70,8 @@
 
   <bean id="jpaVendorAdapter"
         class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter"
-        lazy-init="true">
+        lazy-init="true"
+        depends-on="liquibase">
     <property name="generateDdl" ref="generateDdl"/>
     <property name="showSql" value="false"/>
     <property name="database" ref="jpaVendorAdapterDatabaseParam"/>

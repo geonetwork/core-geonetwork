@@ -1167,6 +1167,17 @@
         <version>${spring.jpa.version}</version>
       </dependency>
       <dependency>
+        <groupId>org.liquibase</groupId>
+        <artifactId>liquibase-core</artifactId>
+        <version>4.29.2</version>
+        <exclusions>
+          <exclusion>
+            <groupId>org.liquibase</groupId>
+            <artifactId>liquibase-commercial</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+      <dependency>
         <groupId>com.fasterxml.jackson.datatype</groupId>
         <artifactId>jackson-datatype-hibernate5</artifactId>
         <version>${jackson.version}</version>
@@ -1403,6 +1414,7 @@
     <module>common</module>
     <module>cachingxslt</module>
     <module>sde</module>
+    <module>database</module>
     <module>domain</module>
     <module>oaipmh</module>
     <module>events</module>

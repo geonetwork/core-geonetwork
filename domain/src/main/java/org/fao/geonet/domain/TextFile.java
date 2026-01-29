@@ -1,6 +1,7 @@
 package org.fao.geonet.domain;
 
 import javax.persistence.*;
+import org.hibernate.annotations.Type;
 
 /**
  * An entity representing a text file with mime type.
@@ -27,6 +28,7 @@ public class TextFile extends GeonetEntity {
 
     @Column(nullable = false)
     @Lob
+    @Type(type = "org.hibernate.type.TextType")
     public String getContent() {
         return this._content;
     }

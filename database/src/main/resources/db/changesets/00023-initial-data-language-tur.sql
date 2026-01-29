@@ -1,18 +1,9 @@
-INSERT INTO Languages (id, name, isinspire) VALUES ('tur','Türkçe', 'n');
+--liquibase formatted sql
+--changeset francois:00024
+--preconditions onFail:MARK_RAN onError:HALT
+--precondition-sql-check expectedResult:0 SELECT COUNT(*) FROM Languages WHERE id = 'tur';
 
--- Take care to table ID (related to other loc files)
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (1,'tur','Haritalar & grafikler');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (2,'tur','Verisetleri');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (3,'tur','Interaktif kaynaklar');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (4,'tur','Uygulamalar');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (5,'tur','Örnek çalışmalar, başarılı uygulamalar');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (6,'tur','Konferans bildirileri');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (7,'tur','Fotoğraf');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (8,'tur','Ses/Video');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (9,'tur','Dizinler');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (10,'tur','Diğer bilgi kaynakları');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (12,'tur','Kayıtlar');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (13,'tur','Fiziksel Örnekleri');
+INSERT INTO Languages (id, name, isinspire) VALUES ('tur','Türkçe', 'n');
 
 
 INSERT INTO GroupsDes (iddes, langid, label) VALUES (-1,'tur','Misafir');

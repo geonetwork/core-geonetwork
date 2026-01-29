@@ -1,18 +1,9 @@
-INSERT INTO Languages (id, name, isinspire) VALUES ('spa','español', 'y');
+--liquibase formatted sql
+--changeset francois:00022
+--preconditions onFail:MARK_RAN onError:HALT
+--precondition-sql-check expectedResult:0 SELECT COUNT(*) FROM Languages WHERE id = 'spa';
 
--- Take care to table ID (related to other loc files)
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (2,'spa','Conjuntos de datos');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (3,'spa','Recursos interactivos');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (5,'spa','Casos de Uso, buenas prácticas');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (4,'spa','Aplicaciones');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (6,'spa','Resúmenes de conferencias');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (7,'spa','Fotografías');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (9,'spa','Directorios');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (8,'spa','Audio/Vídeo');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (10,'spa','Otros recursos de información');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (1,'spa','Mapas & gráficos');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (12,'spa','Registers');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (13,'spa','Muestras físicas');
+INSERT INTO Languages (id, name, isinspire) VALUES ('spa','español', 'y');
 
 INSERT INTO GroupsDes (iddes, langid, label) VALUES (-1,'spa','Guest');
 INSERT INTO GroupsDes (iddes, langid, label) VALUES (0,'spa','Intranet');
