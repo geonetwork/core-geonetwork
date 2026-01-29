@@ -59,7 +59,7 @@ public class JCloudConfiguration {
      * List of field names that are copied from the storage metadata into the geonetwork index.
      * Can be set as a comma-separated string which will be automatically parsed into a List.
      */
-    private List<String> additionalProperties;
+    private List<String> additionalIndexedProperties;
     /**
      * Url used for managing enhanced resource properties related to the metadata.
      */
@@ -295,28 +295,28 @@ public class JCloudConfiguration {
     }
 
     /**
-     * Gets the additional properties as a list of field names.
+     * Gets the additional indexed properties as a list of field names.
      *
      * @return List of field names
      */
-    public List<String> getAdditionalProperties() {
-        return this.additionalProperties;
+    public List<String> getAdditionalIndexedProperties() {
+        return this.additionalIndexedProperties;
     }
 
     /**
-     * Sets the additional properties from a comma-separated string.
+     * Sets the additional indexed properties from a comma-separated string.
      * Empty values are filtered out.
      *
-     * @param additionalProperties Comma-separated list of field names
+     * @param additionalIndexedProperties Comma-separated list of field names
      */
-    public void setAdditionalProperties(String additionalProperties) {
-        if (StringUtils.hasLength(additionalProperties)) {
-            this.additionalProperties = java.util.Arrays.stream(additionalProperties.split(","))
+    public void setAdditionalIndexedProperties(String additionalIndexedProperties) {
+        if (StringUtils.hasLength(additionalIndexedProperties)) {
+            this.additionalIndexedProperties = java.util.Arrays.stream(additionalIndexedProperties.split(","))
                 .map(String::trim)
                 .filter(s -> !s.isEmpty())
                 .collect(java.util.stream.Collectors.toList());
         } else {
-            this.additionalProperties = null;
+            this.additionalIndexedProperties = null;
         }
     }
 

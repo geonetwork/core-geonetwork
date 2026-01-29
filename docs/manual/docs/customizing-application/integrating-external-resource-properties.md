@@ -9,19 +9,19 @@ Add custom metadata properties to resources stored in JCloud-based storage. Thes
 Add this property or environment variable to your GeoNetwork configuration to specify which metadata fields from cloud storage should be included in the catalog index:
 
 ```properties
-jcloud.additional.properties=field1,field2,field3
+jcloud.additional.indexed.properties=field1,field2,field3
 ```
 
 ```bash
-export JCLOUD_ADDITIONAL_PROPERTIES=field1,field2,field3
+export JCLOUD_ADDITIONAL_INDEXED_PROPERTIES=field1,field2,field3
 ```
 
 **Property Explanation:**
 
-- **`jcloud.additional.properties`** - Comma-separated list of metadata field names to copy from cloud storage into the catalog index
+- **`jcloud.additional.indexed.properties`** - Comma-separated list of metadata field names to copy from cloud storage into the catalog index
   - Each field name must correspond to a metadata property that you store with your resources in cloud storage
-  - Example: `jcloud.additional.properties=department,owner,budget,status`
-  - Environment variable: `JCLOUD_ADDITIONAL_PROPERTIES`
+  - Example: `jcloud.additional.indexed.properties=department,owner,budget,status`
+  - Environment variable: `JCLOUD_ADDITIONAL_INDEXED_PROPERTIES`
   - Properties are optional - if not configured, only standard resource metadata is indexed
 
 ### 2. Store Metadata with Your Resources
@@ -40,7 +40,7 @@ Metadata Properties:
 ```
 
 **Metadata Requirements:**
-- Property names must match exactly those configured in `jcloud.additional.properties`
+- Property names must match exactly those configured in `jcloud.additional.indexed.properties`
 - Property values should be simple types (strings, numbers, booleans)
 - Properties are optional - resources without configured properties will simply not include those fields
 
@@ -72,7 +72,7 @@ After indexing, resources will contain the custom properties in the `additionalP
 ## How It Works
 
 1. When resources are retrieved for indexing, GeoNetwork reads the metadata properties stored with each blob in cloud storage
-2. For any properties that match the configured `jcloud.additional.properties` names, the values are extracted
+2. For any properties that match the configured `jcloud.additional.indexed.properties` names, the values are extracted
 3. These properties are stored in the `additionalProperties` map within the `MetadataResourceExternalManagementProperties` object
 4. The enriched resource data is indexed and becomes searchable in the catalog
 

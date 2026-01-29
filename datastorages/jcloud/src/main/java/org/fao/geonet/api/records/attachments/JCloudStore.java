@@ -193,21 +193,21 @@ public class JCloudStore extends AbstractStore {
 
         MetadataResourceExternalManagementProperties metadataResourceExternalManagementProperties;
         if (includeAdditionalIndexedProperties) {
-            Map<String, Object> additionalProperties = new HashMap<>();
-            if (jCloudConfiguration.getAdditionalProperties() != null && !jCloudConfiguration.getAdditionalProperties().isEmpty()) {
-                for (String propertyName : jCloudConfiguration.getAdditionalProperties()) {
+            Map<String, Object> additionalIndexedProperties = new HashMap<>();
+            if (jCloudConfiguration.getAdditionalIndexedProperties() != null && !jCloudConfiguration.getAdditionalIndexedProperties().isEmpty()) {
+                for (String propertyName : jCloudConfiguration.getAdditionalIndexedProperties()) {
                     String propertyValue = null;
                     if (storageMetadata.getUserMetadata().containsKey(propertyName)) {
                         propertyValue = storageMetadata.getUserMetadata().get(propertyName);
                     }
                     if (StringUtils.hasLength(propertyValue)) {
-                        additionalProperties.put(propertyName, propertyValue);
+                        additionalIndexedProperties.put(propertyName, propertyValue);
                     }
                 }
             }
             metadataResourceExternalManagementProperties =
                 getIndexedMetadataResourceExternalManagementProperties(context, metadataId, metadataUuid, visibility, resourceId, filename, storageMetadata.getETag(), storageMetadata.getType(),
-                    validationStatus, additionalProperties);
+                    validationStatus, additionalIndexedProperties);
         } else {
             metadataResourceExternalManagementProperties =
                 getMetadataResourceExternalManagementProperties(context, metadataId, metadataUuid, visibility, resourceId, filename, storageMetadata.getETag(), storageMetadata.getType(),
