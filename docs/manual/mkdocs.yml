@@ -396,8 +396,9 @@ nav:
       - customizing-application/configuring-faceted-search.md
       - customizing-application/advanced-configuration.md
       - customizing-application/adding-static-pages.md
-      - customizing-application/characterset.md
       - customizing-application/implementing-a-schema-plugin.md
+      - customizing-application/integrating-external-resource-properties.md
+      - customizing-application/characterset.md
       - customizing-application/misc.md
     - 'Contributing':
       - contributing/index.md
