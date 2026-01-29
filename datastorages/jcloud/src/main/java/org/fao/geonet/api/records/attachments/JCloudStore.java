@@ -33,10 +33,7 @@ import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.exception.InputStreamLimitExceededException;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.MetadataResource;
-import org.fao.geonet.domain.MetadataResourceContainer;
-import org.fao.geonet.domain.MetadataResourceExternalManagementProperties;
-import org.fao.geonet.domain.MetadataResourceVisibility;
+import org.fao.geonet.domain.*;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.languages.IsoLanguagesMapper;
@@ -102,7 +99,7 @@ public class JCloudStore extends AbstractStore {
 
     @Override
     public List<MetadataResource> getResources(final ServiceContext context, final String metadataUuid,
-                                               final MetadataResourceVisibility visibility, String filter, Boolean approved) throws Exception {
+                                               final MetadataResourceVisibility visibility, String filter, Boolean approved, boolean includeAdditionalIndexedProperties) throws Exception {
         final int metadataId = canDownload(context, metadataUuid, visibility, approved);
 
         final String resourceTypeDir = getMetadataDir(context, metadataId) + jCloudConfiguration.getFolderDelimiter() + visibility.toString() + jCloudConfiguration.getFolderDelimiter();
@@ -132,7 +129,7 @@ public class JCloudStore extends AbstractStore {
                 Path keyPath = new File(storageMetadata.getName()).toPath().getFileName();
                 if (storageMetadata.getType() == StorageType.BLOB && matcher.matches(keyPath)){
                     final String filename = getFilename(storageMetadata.getName());
-                    MetadataResource resource = createResourceDescription(context, metadataUuid, visibility, filename, storageMetadata, metadataId, approved);
+                    MetadataResource resource = createResourceDescription(context, metadataUuid, visibility, filename, storageMetadata, metadataId, approved, includeAdditionalIndexedProperties);
                     resourceList.add(resource);
                 }
             }
@@ -147,7 +144,7 @@ public class JCloudStore extends AbstractStore {
 
     private MetadataResource createResourceDescription(final ServiceContext context, final String metadataUuid,
                                                        final MetadataResourceVisibility visibility, final String resourceId,
-                                                       StorageMetadata storageMetadata, int metadataId, boolean approved) {
+                                                       StorageMetadata storageMetadata, int metadataId, boolean approved, boolean includeAdditionalIndexedProperties) {
         String filename = getFilename(metadataUuid, resourceId);
 
         Date changedDate;
@@ -194,9 +191,28 @@ public class JCloudStore extends AbstractStore {
             }
         }
 
-        MetadataResourceExternalManagementProperties metadataResourceExternalManagementProperties =
-            getMetadataResourceExternalManagementProperties(context, metadataId, metadataUuid, visibility, resourceId, filename, storageMetadata.getETag(), storageMetadata.getType(),
-                validationStatus);
+        MetadataResourceExternalManagementProperties metadataResourceExternalManagementProperties;
+        if (includeAdditionalIndexedProperties) {
+            Map<String, Object> additionalProperties = new HashMap<>();
+            if (jCloudConfiguration.getAdditionalProperties() != null && !jCloudConfiguration.getAdditionalProperties().isEmpty()) {
+                for (String propertyName : jCloudConfiguration.getAdditionalProperties()) {
+                    String propertyValue = null;
+                    if (storageMetadata.getUserMetadata().containsKey(propertyName)) {
+                        propertyValue = storageMetadata.getUserMetadata().get(propertyName);
+                    }
+                    if (StringUtils.hasLength(propertyValue)) {
+                        additionalProperties.put(propertyName, propertyValue);
+                    }
+                }
+            }
+            metadataResourceExternalManagementProperties =
+                getIndexedMetadataResourceExternalManagementProperties(context, metadataId, metadataUuid, visibility, resourceId, filename, storageMetadata.getETag(), storageMetadata.getType(),
+                    validationStatus, additionalProperties);
+        } else {
+            metadataResourceExternalManagementProperties =
+                getMetadataResourceExternalManagementProperties(context, metadataId, metadataUuid, visibility, resourceId, filename, storageMetadata.getETag(), storageMetadata.getType(),
+                    validationStatus);
+        }
 
         return new FilesystemStoreResource(metadataUuid, metadataId, filename,
             settingManager.getNodeURL() + "api/records/", visibility, storageMetadata.getSize(), changedDate, versionValue, metadataResourceExternalManagementProperties, approved);
@@ -222,7 +238,7 @@ public class JCloudStore extends AbstractStore {
                     .withDescriptionKey("exception.resourceNotFound.resource.description", new String[]{resourceId, metadataUuid});
             }
             return new JCloudResourceHolder(object, createResourceDescription(context, metadataUuid, visibility, resourceId,
-                object.getMetadata(), metadataId, approved));
+                object.getMetadata(), metadataId, approved, false));
         } catch (ContainerNotFoundException e) {
             throw new ResourceNotFoundException(
                 String.format("Metadata container for resource '%s' not found for metadata '%s'", resourceId, metadataUuid))
@@ -246,7 +262,7 @@ public class JCloudStore extends AbstractStore {
                     .withDescriptionKey("exception.resourceNotFound.resource.description", new String[]{resourceId, metadataUuid});
             }
             return createResourceDescription(context, metadataUuid, visibility, resourceId,
-                metadata, metadataId, approved);
+                metadata, metadataId, approved, false);
         } catch (ContainerNotFoundException e) {
             throw new ResourceNotFoundException(
                 String.format("Metadata container for resource '%s' not found for metadata '%s'", resourceId, metadataUuid))
@@ -271,7 +287,7 @@ public class JCloudStore extends AbstractStore {
                     .withDescriptionKey("exception.resourceNotFound.resource.description", new String[]{resourceId, metadataUuid});
             }
             return new JCloudResourceHolder(object, createResourceDescription(context, metadataUuid, metadataResourceVisibility, resourceId,
-                object.getMetadata(), metadataId, approved));
+                object.getMetadata(), metadataId, approved, false));
         } catch (ContainerNotFoundException e) {
             throw new ResourceNotFoundException(
                 String.format("Metadata container for resource '%s' not found for metadata '%s'", resourceId, metadataUuid))
@@ -290,7 +306,7 @@ public class JCloudStore extends AbstractStore {
             final Blob object = jCloudConfiguration.getClient().getBlobStore().getBlob(
                 jCloudConfiguration.getContainerName(), getKey(context, metadataUuid, metadataId, visibility, resourceId));
             return new JCloudResourceHolder(object, createResourceDescription(context, metadataUuid, visibility, resourceId,
-                object.getMetadata(), metadataId, approved));
+                object.getMetadata(), metadataId, approved, false));
         } catch (ContainerNotFoundException e) {
             throw new ResourceNotFoundException(
                 String.format("Metadata resource '%s' not found for metadata '%s'", resourceId, metadataUuid))
@@ -381,7 +397,7 @@ public class JCloudStore extends AbstractStore {
                 }
                 Blob blobResults = jCloudConfiguration.getClient().getBlobStore().getBlob(jCloudConfiguration.getContainerName(), key);
 
-                return createResourceDescription(context, metadataUuid, visibility, filename, blobResults.getMetadata(), metadataId, approved);
+                return createResourceDescription(context, metadataUuid, visibility, filename, blobResults.getMetadata(), metadataId, approved, false);
             } finally {
                 locks.remove(key);
             }
@@ -547,7 +563,7 @@ public class JCloudStore extends AbstractStore {
                         break;
                     } else {
                         // already the good visibility
-                        return createResourceDescription(context, metadataUuid, visibility, resourceId, storageMetadata, metadataId, approved);
+                        return createResourceDescription(context, metadataUuid, visibility, resourceId, storageMetadata, metadataId, approved, false);
                     }
                 }
             } catch (ContainerNotFoundException ignored) {
@@ -562,7 +578,7 @@ public class JCloudStore extends AbstractStore {
 
             Blob blobResults = jCloudConfiguration.getClient().getBlobStore().getBlob(jCloudConfiguration.getContainerName(), targetKey);
 
-            return createResourceDescription(context, metadataUuid, visibility, resourceId, blobResults.getMetadata(), metadataId, approved);
+            return createResourceDescription(context, metadataUuid, visibility, resourceId, blobResults.getMetadata(), metadataId, approved, false);
         } else {
             Log.warning(Geonet.RESOURCES,
                 String.format("Could not update permissions. Metadata resource '%s' not found for metadata '%s'", resourceId, metadataUuid));
@@ -772,7 +788,7 @@ public class JCloudStore extends AbstractStore {
                 return null;
             } else {
                 final StorageMetadata metadata = object.getMetadata();
-                return createResourceDescription(context, metadataUuid, visibility, filename, metadata, metadataId, approved);
+                return createResourceDescription(context, metadataUuid, visibility, filename, metadata, metadataId, approved, false);
             }
         } catch (ContainerNotFoundException e) {
             return null;
@@ -854,23 +870,23 @@ public class JCloudStore extends AbstractStore {
     }
 
     /**
-     * get external resource management for the supplied resource.
-     * Replace the following
-     * {objectId}  type:visibility:metadataId:version:resourceId in base64 encoding
-     * {id}  resource id
-     * {type} // If the type is folder then type "folder" will be displayed else if document then "document" will be displayed
-     * {uuid}  metadatauuid
-     * {metadataid}  metadataid
-     * {visibility}  visibility
-     * {filename}  filename
-     * {version}  version
-     * {lang}  ISO639-1 2 char language
-     * {iso3lang}  ISO 639-2/T language
-     * <p>
-     * Sample url for custom app
-     * http://localhost:8080/artifact?filename={filename}&version={version}&lang={lang}
+     * Creates external resource management properties for the specified resource.
+     *
+     * <p>This method generates an object ID and constructs an external management URL
+     * for a metadata resource, encapsulating them in a {@link MetadataResourceExternalManagementProperties} object.</p>
+     *
+     * @param context the service context providing access to application services
+     * @param metadataId the unique identifier of the metadata record
+     * @param metadataUuid the UUID of the metadata record
+     * @param visibility the visibility level of the resource (e.g., public, private)
+     * @param resourceId the unique identifier of the resource
+     * @param filename the name of the file resource (may be null)
+     * @param version the version identifier of the resource (may be null)
+     * @param type the storage type (FOLDER or document); null defaults to document
+     * @param validationStatus the validation status of the resource
+     * @return a new {@link MetadataResourceExternalManagementProperties} instance containing
+     *         the object ID, URL, and validation status
      */
-
     private MetadataResourceExternalManagementProperties getMetadataResourceExternalManagementProperties(ServiceContext context,
                                                     int metadataId,
                                                     final String metadataUuid,
@@ -881,72 +897,170 @@ public class JCloudStore extends AbstractStore {
                                                     StorageType type,
                                                     MetadataResourceExternalManagementProperties.ValidationStatus validationStatus
     ) {
-        String metadataResourceExternalManagementPropertiesUrl = jCloudConfiguration.getExternalResourceManagementUrl();
         String objectId = getResourceManagementExternalPropertiesObjectId((type == null ? "document" : (StorageType.FOLDER.equals(type) ? "folder" : "document")), visibility, metadataId, version,
             resourceId);
-        if (StringUtils.hasLength(metadataResourceExternalManagementPropertiesUrl)) {
-            // {objectid}  objectId // It will be the type:visibility:metadataId:version:resourceId in base64
-            // i.e. folder::100::100                     # Folder in resource 100
-            // i.e. document:public:100:v1:sample.jpg    # public document 100 version v1 name sample.jpg
-            if (metadataResourceExternalManagementPropertiesUrl.contains("{objectid}")) {
-                metadataResourceExternalManagementPropertiesUrl = metadataResourceExternalManagementPropertiesUrl.replaceAll("(\\{objectid\\})", objectId);
-            }
-            // {id}  id
-            if (metadataResourceExternalManagementPropertiesUrl.contains("{id}")) {
-                metadataResourceExternalManagementPropertiesUrl = metadataResourceExternalManagementPropertiesUrl.replaceAll("(\\{id\\})", resourceId);
-            }
-            // {type} // If the type is folder then type "folder" will be displayed else if document then "document" will be displayed
-            if (metadataResourceExternalManagementPropertiesUrl.contains("{type}")) {
-                metadataResourceExternalManagementPropertiesUrl = metadataResourceExternalManagementPropertiesUrl.replaceAll("(\\{type\\})",
-                    (type == null ? "document" : (StorageType.FOLDER.equals(type) ? "folder" : "document")));
-            }
-            // {uuid}  metadata uuid
-            if (metadataResourceExternalManagementPropertiesUrl.contains("{uuid}")) {
-                metadataResourceExternalManagementPropertiesUrl = metadataResourceExternalManagementPropertiesUrl.replaceAll("(\\{uuid\\})", (metadataUuid == null ? "" : metadataUuid));
-            }
-            // {metadataid}  metadataId
-            if (metadataResourceExternalManagementPropertiesUrl.contains("{metadataid}")) {
-                metadataResourceExternalManagementPropertiesUrl = metadataResourceExternalManagementPropertiesUrl.replaceAll("(\\{metadataid\\})", String.valueOf(metadataId));
-            }
-            //    {visibility}  visibility
-            if (metadataResourceExternalManagementPropertiesUrl.contains("{visibility}")) {
-                metadataResourceExternalManagementPropertiesUrl =
-                    metadataResourceExternalManagementPropertiesUrl.replaceAll("(\\{visibility\\})", (visibility == null ? "" : visibility.toString().toLowerCase()));
-            }
-            //    {filename}  filename
-            if (metadataResourceExternalManagementPropertiesUrl.contains("{filename}")) {
-                metadataResourceExternalManagementPropertiesUrl = metadataResourceExternalManagementPropertiesUrl.replaceAll("(\\{filename\\})", (filename == null ? "" : filename));
-            }
-            // {version}  version
-            if (metadataResourceExternalManagementPropertiesUrl.contains("{version}")) {
-                metadataResourceExternalManagementPropertiesUrl = metadataResourceExternalManagementPropertiesUrl.replaceAll("(\\{version\\})", (version == null ? "" : version));
-            }
+        String url = buildExternalManagementUrl(context, metadataId, metadataUuid, visibility, resourceId, filename, version, type);
+        return new MetadataResourceExternalManagementProperties(objectId, url, validationStatus);
+    }
 
-            if (metadataResourceExternalManagementPropertiesUrl.contains("{lang}") || metadataResourceExternalManagementPropertiesUrl.contains("{ISO3lang}")) {
-                final IsoLanguagesMapper mapper = context.getBean(IsoLanguagesMapper.class);
-                String contextLang = context.getLanguage() == null ? Geonet.DEFAULT_LANGUAGE : context.getLanguage();
-                String lang;
-                String iso3Lang;
+    /**
+     * Creates indexed external resource management properties for the specified resource.
+     *
+     * <p>This method extends the functionality of {@link #getMetadataResourceExternalManagementProperties}
+     * by including additional custom properties that can be indexed. It generates an object ID
+     * and constructs an external management URL for a metadata resource, along with custom
+     * metadata properties.</p>
+     *
+     * @param context the service context providing access to application services
+     * @param metadataId the unique identifier of the metadata record
+     * @param metadataUuid the UUID of the metadata record
+     * @param visibility the visibility level of the resource (e.g., public, private)
+     * @param resourceId the unique identifier of the resource
+     * @param filename the name of the file resource (may be null)
+     * @param version the version identifier of the resource (may be null)
+     * @param type the storage type (FOLDER or document); null defaults to document
+     * @param validationStatus the validation status of the resource
+     * @param additionalProperties a map of custom properties to be included with the resource metadata
+     * @return a new {@link IndexedMetadataResourceExternalManagementProperties} instance containing
+     *         the object ID, URL, validation status, and additional indexed properties
+     */
+    private IndexedMetadataResourceExternalManagementProperties getIndexedMetadataResourceExternalManagementProperties(ServiceContext context,
+                                                                                                         int metadataId,
+                                                                                                         final String metadataUuid,
+                                                                                                         final MetadataResourceVisibility visibility,
+                                                                                                         final String resourceId,
+                                                                                                         String filename,
+                                                                                                         String version,
+                                                                                                         StorageType type,
+                                                                                                         MetadataResourceExternalManagementProperties.ValidationStatus validationStatus,
+                                                                                                         Map<String, Object> additionalProperties
+    ) {
+        String objectId = getResourceManagementExternalPropertiesObjectId((type == null ? "document" : (StorageType.FOLDER.equals(type) ? "folder" : "document")), visibility, metadataId, version,
+            resourceId);
+        String url = buildExternalManagementUrl(context, metadataId, metadataUuid, visibility, resourceId, filename, version, type);
+        return new IndexedMetadataResourceExternalManagementProperties(objectId, url, validationStatus, additionalProperties);
+    }
 
-                if (contextLang.length() == 2) {
-                    lang = contextLang;
-                    iso3Lang = mapper.iso639_1_to_iso639_2(contextLang);
-                } else {
-                    lang = mapper.iso639_2_to_iso639_1(contextLang);
-                    iso3Lang = contextLang;
-                }
-                // {lang}  ISO639-1 2 char language
-                if (metadataResourceExternalManagementPropertiesUrl.contains("{lang}")) {
-                    metadataResourceExternalManagementPropertiesUrl = metadataResourceExternalManagementPropertiesUrl.replaceAll("(\\{lang\\})", lang);
-                }
-                // {iso3lang}  ISO 639-2/T language
-                if (metadataResourceExternalManagementPropertiesUrl.contains("{iso3lang}")) {
-                    metadataResourceExternalManagementPropertiesUrl = metadataResourceExternalManagementPropertiesUrl.replaceAll("(\\{iso3lang\\})", iso3Lang);
-                }
+    /**
+     * Builds the external management URL by replacing template placeholders with actual values.
+     *
+     * <p>This method constructs a URL from a configured template by performing token substitution
+     * for various metadata and resource properties. If no external resource management URL is
+     * configured, an empty string is returned.</p>
+     *
+     * <h3>Supported Placeholders:</h3>
+     * <ul>
+     *   <li><strong>{objectid}</strong> - Base64-encoded string in format: {@code type:visibility:metadataId:version:resourceId}
+     *       <br>Examples:
+     *       <ul>
+     *         <li>{@code folder::100::100} - Folder in resource 100</li>
+     *         <li>{@code document:public:100:v1:sample.jpg} - Public document 100, version v1, name sample.jpg</li>
+     *       </ul>
+     *   </li>
+     *   <li><strong>{id}</strong> - The resource identifier</li>
+     *   <li><strong>{type}</strong> - Resource type: "folder" for folders, "document" for documents</li>
+     *   <li><strong>{uuid}</strong> - The metadata UUID</li>
+     *   <li><strong>{metadataid}</strong> - The numeric metadata identifier</li>
+     *   <li><strong>{visibility}</strong> - The resource visibility level (lowercase)</li>
+     *   <li><strong>{filename}</strong> - The resource filename</li>
+     *   <li><strong>{version}</strong> - The resource version identifier</li>
+     *   <li><strong>{lang}</strong> - ISO 639-1 two-character language code</li>
+     *   <li><strong>{iso3lang}</strong> - ISO 639-2/T three-character language code</li>
+     * </ul>
+     *
+     * <h3>Example URL Templates:</h3>
+     * <pre>
+     * http://localhost:8080/artifact?filename={filename}&amp;version={version}&amp;lang={lang}
+     * https://example.com/resources/{uuid}/{id}?type={type}&amp;visibility={visibility}
+     * </pre>
+     *
+     * @param context the service context providing access to application services and language settings
+     * @param metadataId the unique identifier of the metadata record
+     * @param metadataUuid the UUID of the metadata record
+     * @param visibility the visibility level of the resource (e.g., public, private)
+     * @param resourceId the unique identifier of the resource
+     * @param filename the name of the file resource (may be null, replaced with empty string)
+     * @param version the version identifier of the resource (may be null, replaced with empty string)
+     * @param type the storage type (FOLDER or document); null defaults to document
+     * @return the constructed URL with all placeholders replaced, or an empty string if no URL template is configured
+     */
+    private String buildExternalManagementUrl(ServiceContext context,
+                                             int metadataId,
+                                             final String metadataUuid,
+                                             final MetadataResourceVisibility visibility,
+                                             final String resourceId,
+                                             String filename,
+                                             String version,
+                                             StorageType type) {
+        String url = jCloudConfiguration.getExternalResourceManagementUrl();
+
+        if (!StringUtils.hasLength(url)) {
+            return url;
+        }
+
+        String typeString = type == null ? "document" : (StorageType.FOLDER.equals(type) ? "folder" : "document");
+        String objectId = getResourceManagementExternalPropertiesObjectId((typeString), visibility, metadataId, version,
+            resourceId);
+
+        // {objectid}  objectId // It will be the type:visibility:metadataId:version:resourceId in base64
+        // i.e. folder::100::100                     # Folder in resource 100
+        // i.e. document:public:100:v1:sample.jpg    # public document 100 version v1 name sample.jpg
+        if (url.contains("{objectid}")) {
+            url = url.replaceAll("(\\{objectid\\})", objectId);
+        }
+        // {id}  id
+        if (url.contains("{id}")) {
+            url = url.replaceAll("(\\{id\\})", resourceId);
+        }
+        // {type} // If the type is folder then type "folder" will be displayed else if document then "document" will be displayed
+        if (url.contains("{type}")) {
+            url = url.replaceAll("(\\{type\\})", typeString);
+        }
+        // {uuid}  metadata uuid
+        if (url.contains("{uuid}")) {
+            url = url.replaceAll("(\\{uuid\\})", (metadataUuid == null ? "" : metadataUuid));
+        }
+        // {metadataid}  metadataId
+        if (url.contains("{metadataid}")) {
+            url = url.replaceAll("(\\{metadataid\\})", String.valueOf(metadataId));
+        }
+        //    {visibility}  visibility
+        if (url.contains("{visibility}")) {
+            url = url.replaceAll("(\\{visibility\\})", (visibility == null ? "" : visibility.toString().toLowerCase()));
+        }
+        //    {filename}  filename
+        if (url.contains("{filename}")) {
+            url = url.replaceAll("(\\{filename\\})", (filename == null ? "" : filename));
+        }
+        // {version}  version
+        if (url.contains("{version}")) {
+            url = url.replaceAll("(\\{version\\})", (version == null ? "" : version));
+        }
+
+        if (url.contains("{lang}") || url.contains("{ISO3lang}")) {
+            final IsoLanguagesMapper mapper = context.getBean(IsoLanguagesMapper.class);
+            String contextLang = context.getLanguage() == null ? Geonet.DEFAULT_LANGUAGE : context.getLanguage();
+            String lang;
+            String iso3Lang;
+
+            if (contextLang.length() == 2) {
+                lang = contextLang;
+                iso3Lang = mapper.iso639_1_to_iso639_2(contextLang);
+            } else {
+                lang = mapper.iso639_2_to_iso639_1(contextLang);
+                iso3Lang = contextLang;
+            }
+            // {lang}  ISO639-1 2 char language
+            if (url.contains("{lang}")) {
+                url = url.replaceAll("(\\{lang\\})", lang);
+            }
+            // {iso3lang}  ISO 639-2/T language
+            if (url.contains("{iso3lang}")) {
+                url = url.replaceAll("(\\{iso3lang\\})", iso3Lang);
             }
         }
 
-        return new MetadataResourceExternalManagementProperties(objectId, metadataResourceExternalManagementPropertiesUrl, validationStatus);
+        return url;
     }
 
     public ResourceManagementExternalProperties getResourceManagementExternalProperties() {

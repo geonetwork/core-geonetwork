@@ -61,6 +61,9 @@
         <property name="externalResourceManagementVersionPropertyName" value="${jcloud.external.resource.management.version.property.name}"/>
 
         <property name="metadataUUIDPropertyName" value="${jcloud.metadata.uuid.property.name}"/>
+
+        <!-- List of field names to be copied from storage metadata into the geonetwork index (comma-separated) -->
+        <property name="additionalProperties" value="${jcloud.additional.properties}"/>
     </bean>
     <bean id="filesystemStore" class="org.fao.geonet.api.records.attachments.JCloudStore" />
     <bean id="resourceStore"

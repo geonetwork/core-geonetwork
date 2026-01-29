@@ -80,15 +80,27 @@ public abstract class AbstractStore implements Store {
     }
 
     @Override
+    public List<MetadataResource> getResources(ServiceContext context, String metadataUuid, MetadataResourceVisibility metadataResourceVisibility, String filter, Boolean approved)
+            throws Exception {
+        return getResources(context, metadataUuid, metadataResourceVisibility, filter, approved, false);
+    }
+
+    @Override
     public List<MetadataResource> getResources(ServiceContext context, String metadataUuid, Sort sort, String filter, Boolean approved)
             throws Exception {
+        return getResources(context, metadataUuid, sort, filter, approved, false);
+    }
+
+    @Override
+    public List<MetadataResource> getResources(ServiceContext context, String metadataUuid, Sort sort, String filter, Boolean approved, boolean includeAdditionalIndexedProperties)
+        throws Exception {
         int metadataId = getAndCheckMetadataId(metadataUuid, approved);
         boolean canEdit = getAccessManager(context).canEdit(context, String.valueOf(metadataId));
 
         List<MetadataResource> resourceList = new ArrayList<>(
-                getResources(context, metadataUuid, MetadataResourceVisibility.PUBLIC, filter, approved));
+            getResources(context, metadataUuid, MetadataResourceVisibility.PUBLIC, filter, approved, includeAdditionalIndexedProperties));
         if (canEdit) {
-            resourceList.addAll(getResources(context, metadataUuid, MetadataResourceVisibility.PRIVATE, filter, approved));
+            resourceList.addAll(getResources(context, metadataUuid, MetadataResourceVisibility.PRIVATE, filter, approved, includeAdditionalIndexedProperties));
         }
 
         if (sort == Sort.name) {
@@ -289,7 +301,7 @@ public abstract class AbstractStore implements Store {
 
     @Override
     public void copyResources(ServiceContext context, String sourceUuid, String targetUuid, MetadataResourceVisibility metadataResourceVisibility, boolean sourceApproved, boolean targetApproved) throws Exception {
-        final List<MetadataResource> resources = getResources(context, sourceUuid, metadataResourceVisibility, null, sourceApproved);
+        final List<MetadataResource> resources = getResources(context, sourceUuid, metadataResourceVisibility, null, sourceApproved, false);
         for (MetadataResource resource: resources) {
             try (Store.ResourceHolder holder = getResource(context, sourceUuid, metadataResourceVisibility, resource.getFilename(), sourceApproved)) {
                 putResource(context, targetUuid, holder.getResource(), metadataResourceVisibility, targetApproved);
