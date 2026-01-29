@@ -106,6 +106,7 @@
 
     <xsl:param name="isReadOnly" required="no" as="xs:boolean" select="false()"/>
 
+
     <xsl:variable name="isMultilingual" select="count($value/values) > 0"/>
 
     <xsl:variable name="isoType" select="if (../@gco:isoType) then ../@gco:isoType else ''"/>
@@ -370,6 +371,7 @@
         <xsl:with-param name="name" select="name()"/>
       </xsl:call-template>
     </xsl:if>
+
   </xsl:template>
 
 
@@ -504,14 +506,6 @@
     <xsl:param name="btnClass" required="no" as="xs:string?" select="''"/>
 
     <xsl:variable name="tagId" select="generate-id()"/>
-
-    <!-- <xsl:message>!render-element-template-field <xsl:copy-of select="$keyValues"/>
-        <xsl:value-of select="$name"/>/tpl:
-        <xsl:copy-of select="$template"/>/
-        <xsl:value-of select="$id"/>/
-        <xsl:value-of select="$isExisting"/>/
-        <xsl:value-of select="$id"/>
-      </xsl:message>-->
 
     <xsl:variable name="firstFieldKey"
                   select="$template/values/key[position() = 1]/@label"/>
@@ -866,6 +860,7 @@
         </div>
       </xsl:if>
     </div>
+
   </xsl:template>
 
   <xsl:template name="build-snippet" as="xs:string?">

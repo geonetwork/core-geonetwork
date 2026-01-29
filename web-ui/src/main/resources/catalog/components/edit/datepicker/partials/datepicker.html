@@ -49,12 +49,15 @@
         class="form-control"
         data-ng-model="date"
         data-ng-show="mode === DATE_MODE.DATE || mode === DATE_MODE.DATETIME"
+        data-ng-class="hideTime == 'true' ? 'gn-notime' : ''"
+        data-ng-disabled="withIndeterminatePosition && (indeterminatePosition === 'now' || indeterminatePosition === 'unknown')"
       />
       <!-- Time input -->
       <input
         type="time"
-        class="form-control"
+        class="form-control gn-time"
         data-ng-model="time"
+        data-ng-disabled="withIndeterminatePosition && (indeterminatePosition === 'now' || indeterminatePosition === 'unknown')"
         data-ng-show="mode === DATE_MODE.DATETIME && !hideTime"
       />
       <!-- Timezone selector (only if time is to be displayed) -->

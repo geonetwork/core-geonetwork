@@ -10,3 +10,7 @@
 [submodule "plugins/datahub-integration/geonetwork-ui"]
 	path = plugins/datahub-integration/geonetwork-ui
 	url = https://github.com/geonetwork/geonetwork-ui.git
+[submodule "schemas/iso19139.ca.HNAP"]
+	path = schemas/iso19139.ca.HNAP
+	url = https://github.com/metadata101/iso19139.ca.HNAP
+	branch = 4.4.x
