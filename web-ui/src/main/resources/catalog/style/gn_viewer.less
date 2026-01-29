@@ -6,7 +6,8 @@
 @gn-popup-max-width: 1200px;
 
 [data-gn-layer-styles] {
-  word-break: break-all;
+  word-break: break-word;
+  overflow-wrap: anywhere; // breaks long "unbreakable" strings if necessary
 }
 
 [gn-main-viewer],
@@ -391,6 +392,10 @@
         }
       }
     }
+    //li.list-group-item.list-group-item-warning {
+    //  display: flex;
+    //  flex-wrap: wrap;
+    //}
     .gn-facet-container {
       .list-group-item {
         border: 0;
@@ -454,7 +459,6 @@
       }
     }
     h4 {
-      margin: 1em 0 0 0;
       font-size: 16px;
     }
     h5 {

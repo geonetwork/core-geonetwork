@@ -3,7 +3,7 @@
     class="flex-row width-100 flex-align-stretch"
     data-ng-class="{'active': layer.showInfo}"
   >
-    <div class="flex-col">
+    <div class="flex-self-center">
       <a
         href=""
         class="btn btn-sm btn-link gn-layer-radio"
@@ -16,7 +16,7 @@
         ></i>
       </a>
     </div>
-    <div class="flex-col">
+    <div class="flex-self-center">
       <input
         type="checkbox"
         id="layer-{{$index}}"
@@ -27,31 +27,29 @@
 
     <div class="flex-spacer"></div>
 
-    <div class="flex-col flex-grow">
-      <div class="width-100 flex-grow">
-        <label
-          class="gn-map-layer"
-          for="layer-{{$index}}"
-          data-ng-class="{'gn-map-layer-selected': layer.showInfo}"
+    <div class="flex-self-center flex-grow gn-break-anywhere">
+      <label
+        class="gn-map-layer"
+        for="layer-{{$index}}"
+        data-ng-class="{'gn-map-layer-selected': layer.showInfo}"
+      >
+        <span
+          class="clickable"
+          data-ng-class="layer.get('errors').length > 0 ? 'text-danger' : ''"
+          title="{{layer.get('label')}}"
         >
+          {{layer.get('layerTitleFromMetadata') || layer.get('label')}}
           <span
-            class="clickable"
-            data-ng-class="layer.get('errors').length > 0 ? 'text-danger' : ''"
-            title="{{layer.get('label')}}"
-          >
-            {{layer.get('layerTitleFromMetadata') || layer.get('label')}}
-            <span
-              ><em>
-                {{layer.get('currentStyle') ? '(' + (layer.get('currentStyle').Title ||
-                layer.get('currentStyle').Name) + ')' : ''}}
-              </em>
-            </span>
+            ><em>
+              {{layer.get('currentStyle') ? '(' + (layer.get('currentStyle').Title ||
+              layer.get('currentStyle').Name) + ')' : ''}}
+            </em>
           </span>
-        </label>
-      </div>
+        </span>
+      </label>
     </div>
 
-    <div class="flex-col flex-self-center">
+    <div class="flex-self-center gn-padding-vertical-sm">
       <div class="dropdown dropdown-left">
         <button
           class="btn btn-default dropdown-toggle"
