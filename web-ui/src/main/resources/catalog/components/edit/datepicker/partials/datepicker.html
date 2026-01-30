@@ -7,7 +7,7 @@
     data-ng-class="label ? 'col-sm-9' : 'col-sm-12'"
     class="gn-nopadding-left gn-nopadding-right"
   >
-    <!-- The hidden field with the value. -->
+    <!-- Hidden field with the actual date value -->
     <input
       type="hidden"
       class="form-control"
@@ -15,6 +15,7 @@
       value="{{xmlSnippet}}"
     />
 
+    <!-- Date type supported: use our own gnDatePicker -->
     <div
       class="input-group gn-date-picker"
       data-ng-class="{'gn-time-with-ind-position': withIndeterminatePosition}"
@@ -30,57 +31,56 @@
         data-init-on-load="true"
         lang="lang"
       ></div>
-
+      <!-- Year, month+year or date input -->
       <input
         type="number"
         class="form-control"
         data-ng-model="year"
-        data-ng-show="mode === 'year'"
+        data-ng-show="mode === DATE_MODE.YEAR"
       />
       <input
         type="month"
         class="form-control"
         data-ng-model="month"
-        data-ng-show="mode === 'month'"
+        data-ng-show="mode === DATE_MODE.MONTH"
       />
       <input
         type="date"
-        class="form-control gn-date"
+        class="form-control"
         data-ng-model="date"
-        data-ng-class="hideTime == 'true' ? 'gn-notime' : ''"
-        data-ng-show="mode === ''"
+        data-ng-show="mode === DATE_MODE.DATE || mode === DATE_MODE.DATETIME"
       />
+      <!-- Time input -->
       <input
         type="time"
-        class="form-control gn-time"
-        data-ng-class="hideTime == 'true' ? 'hidden' : ''"
+        class="form-control"
         data-ng-model="time"
-        data-ng-show="mode === ''"
+        data-ng-show="mode === DATE_MODE.DATETIME && !hideTime"
       />
+      <!-- Timezone selector (if time is to be displayed) -->
       <select
         class="form-control gn-timezone"
-        data-ng-class="hideTime == 'true' ? 'hidden' : ''"
         data-ng-model="timezone"
-        data-ng-hide="hideTimezone"
+        data-ng-show="mode === DATE_MODE.DATETIME && !(hideTime || hideTimezone)"
         data-ng-options="t.offset as (t.name + ' ' + t.offset) for t in timezoneNames"
       ></select>
-
+      <!-- Readonly timezone (if time is displayed but timezone selector is hidden) -->
       <input
         type="text"
-        class="form-control gn-timezone"
+        class="form-control"
         readonly="readonly"
-        data-ng-class="hideTime == 'true' ? 'hidden' : ''"
-        data-ng-hide="mode !== '' || !hideTimezone"
+        data-ng-show="mode === DATE_MODE.DATETIME && hideTimezone && !hideTime"
         data-ng-model="timezone"
       />
 
+      <!-- Date mode selector -->
       <div class="input-group-btn" data-ng-show="!hideDateMode">
         <button
           type="button"
           class="btn btn-default dropdown-toggle"
           data-toggle="dropdown"
         >
-          <i class="fa fa-clock-o"></i>&nbsp;<span class="caret"></span>
+          <i class="fa fa-cog"></i>&nbsp;<span class="caret"></span>
         </button>
         <ul
           class="dropdown-menu pull-right"
@@ -88,21 +88,34 @@
           aria-labelledby="{{'chooseOtherTypeOfDate' | translate}}"
         >
           <li role="presentation">
-            <a role="menuitem" data-translate="" data-ng-click="setMode('')">dateMode</a>
+            <a role="menuitem" data-translate="" data-ng-click="setMode(DATE_MODE.DATE)"
+              >dateOnlyMode</a
+            >
+          </li>
+          <li role="presentation" data-ng-if="!hideTime">
+            <!-- Only present this option if hideTimeInCalendar is false -->
+            <a
+              role="menuitem"
+              data-translate=""
+              data-ng-click="setMode(DATE_MODE.DATETIME)"
+              >dateTimeMode</a
+            >
           </li>
           <li role="presentation">
-            <a role="menuitem" data-translate="" data-ng-click="setMode('month')"
+            <a role="menuitem" data-translate="" data-ng-click="setMode(DATE_MODE.MONTH)"
               >yearAndMonthMode</a
             >
           </li>
           <li role="presentation">
-            <a role="menuitem" data-translate="" data-ng-click="setMode('year')"
+            <a role="menuitem" data-translate="" data-ng-click="setMode(DATE_MODE.YEAR)"
               >yearMode</a
             >
           </li>
         </ul>
       </div>
     </div>
+
+    <!-- Date type not supported: use default AngularJS datetimepicker -->
     <div class="input-group gn-date-picker" data-ng-show="dateTypeSupported !== true">
       <div
         class="input-group gn-indeterminate-position"
@@ -125,7 +138,7 @@
           class="btn btn-default dropdown-toggle"
           data-toggle="dropdown"
         >
-          <i class="fa fa-calendar"></i>&nbsp;
+          <i class="fa fa-cog"></i>&nbsp;<span class="caret"></span>
         </button>
         <ul class="dropdown-menu pull-right">
           <datetimepicker
