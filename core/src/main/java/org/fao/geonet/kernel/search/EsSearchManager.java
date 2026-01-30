@@ -26,7 +26,7 @@ package org.fao.geonet.kernel.search;
 import co.elastic.clients.elasticsearch._types.ElasticsearchException;
 import co.elastic.clients.elasticsearch._types.FieldValue;
 import co.elastic.clients.elasticsearch._types.SortOptions;
-import co.elastic.clients.elasticsearch._types.aggregations.*;
+import co.elastic.clients.elasticsearch._types.aggregations.Aggregation;
 import co.elastic.clients.elasticsearch.core.*;
 import co.elastic.clients.elasticsearch.core.bulk.BulkOperation;
 import co.elastic.clients.elasticsearch.core.bulk.UpdateOperation;
@@ -825,6 +825,10 @@ public class EsSearchManager implements ISearchManager {
                                 int from, int size) throws Exception {
         // TODO: Review postFilterBuilder
         return client.query(defaultIndex, jsonRequest, null, includedFields, from, size);
+    }
+
+    public SearchResponse<Void> searchWithAggregations(JsonNode jsonQuery, Map<String, Aggregation> aggregations) throws IOException {
+        return client.searchWithAggregations(defaultIndex, jsonQuery, aggregations);
     }
 
     public Map<String, String> getFieldsValues(String id, Set<String> fields, String language) throws Exception {

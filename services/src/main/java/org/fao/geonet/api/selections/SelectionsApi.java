@@ -22,10 +22,15 @@
  */
 package org.fao.geonet.api.selections;
 
+import co.elastic.clients.elasticsearch._types.aggregations.Aggregation;
+import co.elastic.clients.elasticsearch._types.aggregations.StringTermsAggregate;
+import co.elastic.clients.elasticsearch._types.aggregations.StringTermsBucket;
+import co.elastic.clients.elasticsearch.core.SearchRequest;
 import co.elastic.clients.elasticsearch.core.SearchResponse;
-import co.elastic.clients.elasticsearch.core.search.Hit;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.StringReader;
+import java.io.StringWriter;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jeeves.server.UserSession;
@@ -226,37 +231,47 @@ public class SelectionsApi {
             SelectionManager.getManager(ApiUtils.getUserSession(httpSession));
 
         Map<String, Integer> resourceTypes = new HashMap<>();
+        
+        final String aggregationField;
+        final String aggName;
 
-        // TODO: Support additional fields
-        if (!field.equals("resourceType")) {
-            field = "resourceType";
+        switch (field) {
+            case "resourceType":
+                aggregationField = "resourceType";
+                aggName = "resourceTypes";
+                break;
+
+            default:
+                throw new IllegalArgumentException("The value field '" + field + "' is not supported.");
         }
 
         synchronized (selectionManager.getSelection(bucket)) {
             UserSession session = ApiUtils.getUserSession(httpSession);
             JsonNode request = (JsonNode) session.getProperty(Geonet.Session.SEARCH_REQUEST + bucket);
             if (request != null) {
-                final SearchResponse searchResponse;
-                Set<String> fields = new HashSet<>();
-                fields.addAll(FIELDLIST_UUID);
-                fields.add(field);
-
                 try {
-                    searchResponse = esSearchManager.query(request.get("query"), fields, 0, DEFAULT_MAXHITS);
+                    Aggregation aggregation = Aggregation.of(a -> a
+                        .terms(t -> t
+                            .field(aggregationField)
+                        )
+                    );
+                    Map<String, Aggregation> aggregations = new HashMap<>();
+                    aggregations.put(aggName, aggregation);
 
-                    ObjectMapper objectMapper = new ObjectMapper();
-                    for (Hit h : (List<Hit>) searchResponse.hits().hits()) {
-                        List<String> resourceTypesList = (ArrayList<String>) objectMapper.convertValue(h.source(), Map.class).get("resourceType");
-
-                        resourceTypesList.forEach(resourceType -> {
-                            int resourceTypeCount = resourceTypes.getOrDefault(resourceType, 0);
-                            resourceTypes.put(resourceType, resourceTypeCount + 1);
-                        });
+                    JsonNode queryJson = request.get("query");
+                    if (queryJson == null) {
+                        return resourceTypes;
                     }
 
+                    SearchResponse<Void> searchResponse = esSearchManager.searchWithAggregations(queryJson, aggregations);
+
+                    StringTermsAggregate terms = searchResponse.aggregations().get(aggName).sterms();
+                    for (StringTermsBucket b : terms.buckets().array()) {
+                        resourceTypes.put(b.key().stringValue(), (int) b.docCount());
+                    }
                 } catch (Exception e) {
                     Log.error(Geonet.GEONETWORK,
-                        "Select all - query error: " + e.getMessage(), e);
+                        "Error getting selection statistics: " + e.getMessage(), e);
                 }
             }
 
