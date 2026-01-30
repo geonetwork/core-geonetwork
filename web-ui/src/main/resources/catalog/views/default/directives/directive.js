@@ -147,6 +147,8 @@
 
           scope.doiServers = [];
 
+          scope.anonymousAccessExists = false;
+
           gnConfigService.load().then(function (c) {
             scope.isMdWorkflowEnable = gnConfig["metadata.workflow.enable"];
 
@@ -308,6 +310,26 @@
           };
 
           /**
+           * Display the anonymous access option.
+           *
+           * Checks:
+           * - The user is logged in.
+           * - The user is administrator or more.
+           * - The metadata record is not null.
+           * - The metadata is not published.
+           *
+           * @param {Object} md - The metadata record to check.
+           * @param {Object} user - The user for whom the check is being performed.
+           * @param {Object} pubOption - The publication option to check against.
+           * @returns {boolean} - True if the anonymous access option should be displayed, false otherwise.
+           */
+          scope.displayAnonymousAccessOption = function (md, user, pubOption) {
+            return (
+              user.id && user.isAdministratorOrMore() && md && !md.isPublished(pubOption)
+            );
+          };
+
+          /**
            * Checks if the workflow option for the specified step should be displayed for the given user.
            *
            * Checks:
@@ -412,6 +434,11 @@
                 .then(function (response) {
                   scope.doiServers = response.data;
                 });
+              $http
+                .get("../api/anonymousAccessLink/" + scope.md.uuid)
+                .then(function (response) {
+                  scope.anonymousAccessExists = response.data;
+                });
               if (scope.md.groupOwner) {
                 // Load the group owner name when the metadata record changes
                 gnMetadataActions.getGroupName(scope.md.groupOwner).then(function (name) {
@@ -431,6 +458,14 @@
                   );
                 });
             }
+          });
+
+          scope.$on("AnonymousAccessCreated", function () {
+            scope.anonymousAccessExists = true;
+          });
+
+          scope.$on("AnonymousAccessDeleted", function () {
+            scope.anonymousAccessExists = false;
           });
 
           scope.getScope = function () {
