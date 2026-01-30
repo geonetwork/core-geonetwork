@@ -39,13 +39,28 @@
       <span class="caret"></span>
     </button>
     <ul class="dropdown-menu" role="menu" data-ng-if="!operationOnSelectionInProgress">
-      <li data-ng-show="!excludePattern.test('exportMEF')">
+      <li
+        data-ng-show="!excludePattern.test('exportMEF')"
+        data-ng-class="{'disabled': attachmentsExceedExportLimit}"
+        data-ng-attr-title="{{attachmentsExceedExportLimit ? ('attachmentsExportLimitExceededBatch' | translate) : ''}}"
+      >
         <a
           href=""
           data-ng-disabled="operationOnSelectionInProgress"
-          data-ng-click="mdService.metadataMEF(undefined, searchResults.selectionBucket)"
+          data-ng-click="mdService.metadataMEF(undefined, searchResults.selectionBucket, undefined, true)"
         >
           <i class="fa fa-fw fa-file-zip-o"></i>&nbsp;<span translate>exportMEF</span>
+        </a>
+      </li>
+      <li data-ng-show="!excludePattern.test('exportMEF-excludeAttachments')">
+        <a
+          href=""
+          data-ng-disabled="operationOnSelectionInProgress"
+          data-ng-click="mdService.metadataMEF(undefined, searchResults.selectionBucket, undefined, false)"
+        >
+          <i class="fa fa-fw fa-file-zip-o"></i>&nbsp;<span translate
+            >exportMEF-excludeAttachments</span
+          >
         </a>
       </li>
       <li data-ng-show="!excludePattern.test('exportPDF')">

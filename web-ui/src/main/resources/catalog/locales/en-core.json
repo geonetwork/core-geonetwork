@@ -611,4 +611,6 @@
     "saveToFile": "Save to file.",
     "anonymousAccessCreatedError": "Error occurred while creating anonymous access: {{errorDescription}}",
     "anonymousAccessCreatedWarning": "Make sure to copy the anonymous access link. You won't be able to see it again!"
+    "attachmentsExportLimitExceededSingle": "Attachments exceed the export size limit for this record.",
+    "attachmentsExportLimitExceededBatch": "Attachments exceed the export size limit for the selected records."
 }
