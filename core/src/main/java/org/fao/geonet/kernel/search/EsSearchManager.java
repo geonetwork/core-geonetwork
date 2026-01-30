@@ -827,8 +827,8 @@ public class EsSearchManager implements ISearchManager {
         return client.query(defaultIndex, jsonRequest, null, includedFields, from, size);
     }
 
-    public SearchResponse<Void> searchWithAggregations(JsonNode jsonQuery, Map<String, Aggregation> aggregations) throws IOException {
-        return client.searchWithAggregations(defaultIndex, jsonQuery, aggregations);
+    public SearchResponse<Void> aggregate(JsonNode jsonQuery, Map<String, Aggregation> aggregations) throws IOException {
+        return client.aggregate(defaultIndex, jsonQuery, aggregations);
     }
 
     public Map<String, String> getFieldsValues(String id, Set<String> fields, String language) throws Exception {

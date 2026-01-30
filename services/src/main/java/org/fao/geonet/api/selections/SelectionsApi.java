@@ -263,7 +263,7 @@ public class SelectionsApi {
                         return resourceTypes;
                     }
 
-                    SearchResponse<Void> searchResponse = esSearchManager.searchWithAggregations(queryJson, aggregations);
+                    SearchResponse<Void> searchResponse = esSearchManager.aggregate(queryJson, aggregations);
 
                     StringTermsAggregate terms = searchResponse.aggregations().get(aggName).sterms();
                     for (StringTermsBucket b : terms.buckets().array()) {
