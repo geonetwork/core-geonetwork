@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2025 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2026 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -24,6 +24,7 @@
 package org.fao.geonet.kernel.harvest.harvester.geonet.v4;
 
 import com.google.common.collect.Lists;
+
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
@@ -33,6 +34,7 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.concurrent.atomic.AtomicBoolean;
+
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.Logger;
 import org.fao.geonet.domain.Group;
@@ -62,12 +64,12 @@ import org.fao.geonet.kernel.harvest.harvester.geonet.v4.client.SearchResponseHi
  * errors during the harvest. It also supports cancellation through a monitor.
  * <p>
  * Key functionalities include:
- <ul>
-     <li>Performing searches based on parameters.</li>
-     <li>Processing search results to extract record information.</li>
-     <li>Handling errors during various phases of the harvest process.</li>
-     <li>Aligning harvested data with the local database and updating sources.</li>
- </ul>
+ * <ul>
+ * <li>Performing searches based on parameters.</li>
+ * <li>Processing search results to extract record information.</li>
+ * <li>Handling errors during various phases of the harvest process.</li>
+ * <li>Aligning harvested data with the local database and updating sources.</li>
+ * </ul>
  */
 class Harvester extends BaseGeoNetworkHarvester<GeonetParams> implements IHarvester<HarvestResult> {
     private GeoNetwork4ApiClient geoNetworkApiClient;
@@ -77,6 +79,9 @@ class Harvester extends BaseGeoNetworkHarvester<GeonetParams> implements IHarves
         super(cancelMonitor, log, context, params, errors);
     }
 
+    /**
+     * Orchestrates harvest: searches, aligns, and updates sources
+     */
     public HarvestResult harvest(Logger log) throws Exception {
         this.log = log;
 
@@ -121,8 +126,7 @@ class Harvester extends BaseGeoNetworkHarvester<GeonetParams> implements IHarves
             }
             log.info(String.format("Processing search with these parameters %s", s.toString()));
             int from = 0;
-            int to = from + (pageSize - 1);
-            s.setRange(from, to);
+            s.setRange(from, pageSize);
 
             long resultCount = Integer.MAX_VALUE;
             log.info("Searching on : " + params.getName());
@@ -148,8 +152,7 @@ class Harvester extends BaseGeoNetworkHarvester<GeonetParams> implements IHarves
                 }
 
                 from = from + pageSize;
-                to = to + pageSize;
-                s.setRange(from, to);
+                s.setRange(from, pageSize);
 
             }
         }
@@ -208,7 +211,6 @@ class Harvester extends BaseGeoNetworkHarvester<GeonetParams> implements IHarves
         return records;
     }
 
-    //---------------------------------------------------------------------------
 
     private SearchResponse doSearch(Search s) throws OperationAbortedEx {
         try {
