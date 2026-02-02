@@ -166,30 +166,7 @@
                 match="gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:temporalElement"
                 priority="30000">
     <xsl:variable name="xpath" select="gn-fn-metadata:getXPath(.)"/>
-    <xsl:variable name="value" select="normalize-space(text())"/>
     <xsl:variable name="isoType" select="if (../@gco:isoType) then ../@gco:isoType else ''"/>
-    <xsl:variable name="labelConfig" select="gn-fn-metadata:getLabel($schema, name(), $labels, name(..), $isoType, $xpath)"/>
-    <xsl:variable name="attributes">
-      <xsl:if test="$isEditing">
-        <!-- Create form for all existing attribute (not in gn namespace)
-        and all non existing attributes not already present. -->
-
-        <xsl:apply-templates mode="render-for-field-for-attribute"
-                             select="             @*|           gn:attribute[not(@name = parent::node()/@*/name())]">
-          <xsl:with-param name="ref" select="gn:element/@ref"/>
-          <xsl:with-param name="insertRef" select="gn:element/@ref"/>
-        </xsl:apply-templates>
-
-      </xsl:if>
-    </xsl:variable>
-
-    <xsl:variable name="indeterminatePosition" select="@indeterminatePosition" />
-
-    <xsl:variable name="directiveAttributes">
-      <directiveAttributes
-        data-tag-name="{name()}"
-        data-indeterminate-position="eval#gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/*/gml:beginPosition/@indeterminatePosition"/>
-    </xsl:variable>
 
 
     <xsl:variable name="configName" select="'temporalRangeSection'"/>
