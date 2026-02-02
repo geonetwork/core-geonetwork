@@ -866,8 +866,32 @@ public class MetadataSharingApi implements ApplicationEventPublisherAware
         }
 
         //update group ownership
-        metadata.getSourceInfo().setGroupOwner(groupIdentifier);
-        metadataManager.save(metadata);
+        // When workflow is enabled, there may be a draft and an approved version.
+        // Both need to be updated.
+        List<Integer> allMetadataIds = this.metadataUtils.findAllIdsBy(
+            MetadataSpecs.hasMetadataUuid(metadata.getUuid()));
+
+        if(!allMetadataIds.isEmpty()) {
+            for (Integer mdId : allMetadataIds) {
+                AbstractMetadata md = metadataUtils.findOne(mdId);
+                if (md != null) {
+                    if (!accessManager.canEdit(context, String.valueOf(md.getId()))) {
+                        throw new NotAllowedException(
+                            "User does not have permission to edit all versions of metadata " + metadataUuid);
+                    }
+                    md.getSourceInfo().setGroupOwner(groupIdentifier);
+                    metadataManager.save(md);
+                } else {
+                    throw new ResourceNotFoundException(String.format(
+                        "Metadata with uuid '%s' and identifier '%s' not found.", metadataUuid, mdId.toString()
+                    ));
+                }
+            }
+        } else {
+            throw new ResourceNotFoundException(String.format(
+                "Metadata with uuid '%s' not found.", metadataUuid
+            ));
+        }
 
         //need to update permissions.
         // 1. drop ALL permissions for the "old" group
