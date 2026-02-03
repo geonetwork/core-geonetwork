@@ -4,8 +4,10 @@ This function allows storing the HTML content of static pages and displaying lin
 
 To add new static pages go to **Admin Console** -->  **Settings** -->  **Static Pages** and select the **+ New Static Page** option, providing the following information:
 
-- **Language**: User interface language in which the static page will be displayed.
-- **Page identifier**: A unique text identifier for the page.
+- **Language**: User interface language in which the static page will be displayed.  
+  (3 letters like 'eng', 'ita', 'fra' ...)
+- **Page identifier**: A unique text identifier for the page.  
+  This value should be encoded
 - **Page label**: Label to display on the link.
 - **Page icon**: (Optional) Icon to display next to the link label.
 - **Format**: Format of the static page:
@@ -18,7 +20,7 @@ To add new static pages go to **Admin Console** -->  **Settings** -->  **Static 
 
 - **Link**: Available for **Web link** / **Email link** formats.
 
-    - For **Web link** the link to a web page.
+    - For **Web link** the URL link to another web page.  The URL should be encoded.
     - For **Email link**, the email address to which the email will be sent.
 
 - **Page content file**: For formats other than **Web link** or **Email link**, allows uploading a file with the HTML content / text to be displayed.
