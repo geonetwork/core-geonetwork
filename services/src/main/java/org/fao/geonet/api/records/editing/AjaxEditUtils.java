@@ -151,8 +151,12 @@ public class AjaxEditUtils extends EditUtils {
                 continue;
             }
 
-            // Ignore element if ref starts with "P" or "X"
-            if (originalRef.startsWith("X") || originalRef.startsWith("P")) {
+            // No pre processes for ref starting
+            // with "P" (for XPath mode)
+            // or "X" (for XML mode)
+            // or "lang_" (for multilingual fields)
+            // Updates for these refs are handled in next step
+            if (originalRef.startsWith("X") || originalRef.startsWith("P") || originalRef.startsWith("lang_")) {
                 continue;
             }
 
@@ -190,9 +194,8 @@ public class AjaxEditUtils extends EditUtils {
             if (ref.startsWith("X")) {
                 ref = ref.substring(1);
                 xmlInputs.put(ref, value);
-                continue;
             } else if (ref.startsWith("P") && ref.endsWith("_xml")) {
-                continue;
+                // P{key}=xpath works with P{key}_xml=XML snippet, see next condition
             } else if (ref.startsWith("P") && !ref.endsWith("_xml")) {
                 // Catch element starting with a P for xpath update mode
                 String snippet = changes.get(ref + "_xml");
@@ -207,45 +210,42 @@ public class AjaxEditUtils extends EditUtils {
                 } else {
                     Log.warning(Geonet.EDITOR, "No XML snippet or value found for xpath " + value + " and element ref " + ref);
                 }
-                continue;
-            }
-
-            if (updatedLocalizedTextElement(md, schema, ref, value, editLib)) {
-                continue;
-            }
-
-            int at = ref.indexOf('_');
-            if (at != -1) {
-                attribute = ref.substring(at + 1);
-                ref = ref.substring(0, at);
-            }
-
-            Element el = editLib.findElement(md, ref);
-            if (el == null) {
-                Log.error(Geonet.EDITOR, EditLib.MSG_ELEMENT_NOT_FOUND_AT_REF + ref);
-                continue;
-            }
-
-            // Process attribute
-            if (attribute != null) {
-                Pair<Namespace, String> attInfo = parseAttributeName(attribute, EditLib.COLON_SEPARATOR, id, md, editLib);
-                String localname = attInfo.two();
-                Namespace attrNS = attInfo.one();
-                if (el.getAttribute(localname, attrNS) != null) {
-                    el.setAttribute(new Attribute(localname, value, attrNS));
-                }
+            } else if (ref.startsWith("lang_")) {
+                updatedLocalizedTextElement(md, schema, ref, value, editLib);
             } else {
-                // Process element value
-                @SuppressWarnings("unchecked")
-                List<Content> content = el.getContent();
-
-                for (Iterator<Content> iterator = content.iterator(); iterator.hasNext(); ) {
-                    Content content2 = iterator.next();
-                    if (content2 instanceof Text) {
-                        iterator.remove();
-                    }
+                int at = ref.indexOf('_');
+                if (at != -1) {
+                    attribute = ref.substring(at + 1);
+                    ref = ref.substring(0, at);
                 }
-                el.addContent(value);
+
+                Element el = editLib.findElement(md, ref);
+                if (el == null) {
+                    Log.error(Geonet.EDITOR, EditLib.MSG_ELEMENT_NOT_FOUND_AT_REF + ref);
+                    continue;
+                }
+
+                // Process attribute
+                if (attribute != null) {
+                    Pair<Namespace, String> attInfo = parseAttributeName(attribute, EditLib.COLON_SEPARATOR, id, md, editLib);
+                    String localname = attInfo.two();
+                    Namespace attrNS = attInfo.one();
+                    if (el.getAttribute(localname, attrNS) != null) {
+                        el.setAttribute(new Attribute(localname, value, attrNS));
+                    }
+                } else {
+                    // Process element value
+                    @SuppressWarnings("unchecked")
+                    List<Content> content = el.getContent();
+
+                    for (Iterator<Content> iterator = content.iterator(); iterator.hasNext(); ) {
+                        Content content2 = iterator.next();
+                        if (content2 instanceof Text) {
+                            iterator.remove();
+                        }
+                    }
+                    el.addContent(value);
+                }
             }
         }
 
