@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2025 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2026 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -25,10 +25,12 @@ package org.fao.geonet.kernel.harvest.harvester.geonet.v4;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.fao.geonet.Util;
@@ -46,6 +48,7 @@ import org.jdom.Element;
  */
 class Search extends BaseSearch {
 
+    public int size;
     public String categories;
     public String schemes;
     public String groupOwners;
@@ -61,9 +64,9 @@ class Search extends BaseSearch {
         groupOwners = Util.getParam(search, "groupOwners", "");
     }
 
-    public static Search createEmptySearch(int from, int to) throws BadParameterEx {
+    public static Search createEmptySearch(int from, int size) throws BadParameterEx {
         Search s = new Search(new Element("search"));
-        s.setRange(from, to);
+        s.setRange(from, size);
         return s;
     }
 
@@ -76,7 +79,7 @@ class Search extends BaseSearch {
         s.keywords = keywords;
         s.sourceUuid = sourceUuid;
         s.from = from;
-        s.to = to;
+        s.size = size;
         s.categories = categories;
         s.groupOwners = groupOwners;
         s.schemes = schemes;
@@ -113,7 +116,7 @@ class Search extends BaseSearch {
         }
 
         if (StringUtils.isNotBlank(keywords)) {
-             filters.add(String.format("{\"term\": {\"tag.default\": \"%s\"}}", keywords));
+            filters.add(String.format("{\"term\": {\"tag.default\": \"%s\"}}", keywords));
         }
 
         if (StringUtils.isNotBlank(categories)) {
@@ -143,21 +146,21 @@ class Search extends BaseSearch {
         }
 
         String queryBody = String.format("{\n" +
-            "    \"from\": %d,\n" +
-            "    \"size\": %d,\n" +
-            "    \"sort\": [\"_score\"],\n" +
-            "    \"query\": {\"bool\": {\"must\": [{\"terms\": {\"isTemplate\": [\"n\"]}}%s]}},\n" +
-            "    \"_source\": {\"includes\": [\n" +
-            "        \"uuid\",\n" +
-            "        \"id\",\n" +
-            "        \"isTemplate\",\n" +
-            "        \"sourceCatalogue\",\n" +
-            "        \"dateStamp\",\n" +
-            "        \"documentStandard\"\n" +
-            "    ]},\n" +
-            "    \"track_total_hits\": true\n" +
-            "}",
-            from, to, queryFilter);
+                "    \"from\": %d,\n" +
+                "    \"size\": %d,\n" +
+                "    \"sort\": [\"_score\"],\n" +
+                "    \"query\": {\"bool\": {\"must\": [{\"terms\": {\"isTemplate\": [\"n\"]}}%s]}},\n" +
+                "    \"_source\": {\"includes\": [\n" +
+                "        \"uuid\",\n" +
+                "        \"id\",\n" +
+                "        \"isTemplate\",\n" +
+                "        \"sourceCatalogue\",\n" +
+                "        \"dateStamp\",\n" +
+                "        \"documentStandard\"\n" +
+                "    ]},\n" +
+                "    \"track_total_hits\": true\n" +
+                "}",
+            from, size, queryFilter);
 
 
         if (Log.isDebugEnabled(Geonet.HARVEST_MAN)) {
@@ -167,16 +170,22 @@ class Search extends BaseSearch {
         return queryBody;
     }
 
-    public void setRange(int from, int to) {
+    /**
+     * Sets the pagination parameters for the Elasticsearch query.
+     *
+     * @param from the starting offset (0-based index of the first record to return)
+     * @param size the number of records to return per page
+     */
+    public void setRange(int from, int size) {
         this.from = from;
-        this.to = to;
+        this.size = size;
     }
 
     @Override
     public String toString() {
         return new ToStringBuilder(this)
             .append("from", from)
-            .append("to", to)
+            .append("size", size)
             .append("freeText", freeText)
             .append("title", title)
             .append("abstrac", abstractText)
