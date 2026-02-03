@@ -24,7 +24,7 @@
 (function () {
   goog.provide("gn_date_picker_directive");
 
-  const module = angular.module("gn_date_picker_directive", []);
+  var module = angular.module("gn_date_picker_directive", []);
 
   /**
    *  Create a widget to handle date composed of
@@ -74,7 +74,7 @@
           "../../catalog/components/edit/datepicker/partials/" + "datepicker.html",
         link: function (scope, element, attrs) {
           // Define DATE_MODE constant
-          const DATE_MODE = {
+          var DATE_MODE = {
             DATE: "date",
             DATETIME: "datetime",
             MONTH: "month",
@@ -83,7 +83,7 @@
           // Expose DATE_MODE to scope
           scope.DATE_MODE = DATE_MODE;
 
-          const coerceBool = function (val) {
+          var coerceBool = function (val) {
             return val !== "false" && !!val;
           };
 
@@ -99,30 +99,30 @@
 
           // Watch for external changes and re-coerce
           scope.$watch("hideTime", function (newVal) {
-            const coerced = coerceBool(newVal);
+            var coerced = coerceBool(newVal);
             if (newVal !== coerced) {
               scope.hideTime = coerced;
             }
           });
           scope.$watch("hideDateMode", function (newVal) {
-            const coerced = coerceBool(newVal);
+            var coerced = coerceBool(newVal);
             if (newVal !== coerced) {
               scope.hideTime = coerced;
             }
           });
 
-          const userTimezone = moment.tz.guess();
-          const uiTimezone = gnGlobalSettings.gnCfg.mods.global.timezone;
-          const serverTimezone = gnConfig["system.server.timeZone"];
-          const datePattern = new RegExp(
+          var userTimezone = moment.tz.guess();
+          var uiTimezone = gnGlobalSettings.gnCfg.mods.global.timezone;
+          var serverTimezone = gnConfig["system.server.timeZone"];
+          var datePattern = new RegExp(
             "^\\d{4}$|" +
               "^\\d{4}-\\d{2}$|" +
               "^\\d{4}-\\d{2}-\\d{2}$|" +
               "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}$"
           );
 
-          const getTimeZoneOffset = function (timeZone) {
-            let actualTz = timeZone;
+          var getTimeZoneOffset = function (timeZone) {
+            var actualTz = timeZone;
             if (timeZone && timeZone.trim().toLowerCase() === "browser") {
               actualTz = userTimezone;
             }
@@ -138,8 +138,8 @@
 
           // Format date when datetimepicker is used.
           scope.formatFromDatePicker = function (date) {
-            const format = "YYYY-MM-DDTHH:mm:ss";
-            const dateTime = moment(date);
+            var format = "YYYY-MM-DDTHH:mm:ss";
+            var dateTime = moment(date);
             scope.dateInput = dateTime.format(format);
           };
 
@@ -209,8 +209,8 @@
             scope.hideTimezone = true;
           } else {
             // Value is a date or datetime
-            const isDateTime = scope.value.indexOf("T") !== -1;
-            const tokens = scope.value.split("T");
+            var isDateTime = scope.value.indexOf("T") !== -1;
+            var tokens = scope.value.split("T");
 
             // Default to empty string and prevent 'Invalid Date' string to xmlSnippet
             scope.date = "";
@@ -223,7 +223,7 @@
             }
 
             // Process time part (if defined)
-            let time = tokens[1];
+            var time = tokens[1];
             if (time !== undefined) {
               scope.time = isDateTime ? moment(time, "HH:mm:ss").toDate() : undefined;
               console.log("parsed time:", scope.time);
@@ -249,7 +249,7 @@
             scope.hideTimezone = mode === DATE_MODE.YEAR || mode === DATE_MODE.MONTH;
           };
 
-          const resetDateIfNeeded = function () {
+          var resetDateIfNeeded = function () {
             // Reset date if indeterminate position is now or unknown
             if (
               scope.withIndeterminatePosition &&
@@ -266,9 +266,9 @@
           };
 
           // Build xml snippet based on input date.
-          const buildDate = function () {
-            let tag = scope.tagName !== undefined ? scope.tagName : "gco:Date";
-            const namespace = tag.split(":")[0];
+          var buildDate = function () {
+            var tag = scope.tagName !== undefined ? scope.tagName : "gco:Date";
+            var namespace = tag.split(":")[0];
 
             if (!scope.dateTypeSupported) {
               // Check date against simple date pattern
@@ -293,7 +293,7 @@
               scope.dateTime = $filter("date")(scope.month, "yyyy-MM");
             } else if (scope.mode === DATE_MODE.DATETIME && scope.time) {
               tag = scope.tagName !== undefined ? scope.tagName : "gco:DateTime";
-              let time = $filter("date")(scope.time, "HH:mm:ss");
+              var time = $filter("date")(scope.time, "HH:mm:ss");
               // TODO: Set seconds, Timezone ?
               scope.dateTime = $filter("date")(scope.date, "yyyy-MM-dd");
               scope.dateTime += "T" + time + scope.timezone;
@@ -303,7 +303,7 @@
             if (tag === "") {
               scope.xmlSnippet = scope.dateTime;
             } else {
-              let attribute = "";
+              var attribute = "";
               if (scope.withIndeterminatePosition && scope.indeterminatePosition !== "") {
                 attribute =
                   ' indeterminatePosition="' + scope.indeterminatePosition + '"';
