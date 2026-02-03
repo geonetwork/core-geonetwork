@@ -21,7 +21,8 @@ Support for these data storage interfaces is available through the following plu
 * S3: `gn-datastorage-s3`  
   [See the detailed documentation here](./customizing-data-directory.md#using-a-s3-object-storage)
 * CMIS: `gn-datastorage-cmis`
-* Jcloud: `gn-datastorage-jcloud`
+* JCloud: `gn-datastorage-jcloud`  
+  [See the detailed documentation here](./customizing-data-directory.md#using-a-generic-cloud-object-storage-jcloud)
 
 ## Datahub integration: `gn-datahub-integration`
 
