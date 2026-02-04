@@ -1,18 +1,9 @@
-INSERT INTO Languages (id, name, isinspire) VALUES ('chi','中文', 'n');
+--liquibase formatted sql
+--changeset francois:00007
+--preconditions onFail:MARK_RAN onError:HALT
+--precondition-sql-check expectedResult:0 SELECT COUNT(*) FROM Languages WHERE id = 'chi';
 
--- Take care to table ID (related to other loc files)
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (1,'chi','Maps & graphics');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (2,'chi','Datasets');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (3,'chi','Interactive resources');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (4,'chi','Applications');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (5,'chi','Case studies, best practices');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (6,'chi','Conference proceedings');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (7,'chi','Photo');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (8,'chi','Audio/Video');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (9,'chi','Directories');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (10,'chi','Other information resources');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (12,'chi','Registers');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (13,'chi','Physical Samples');
+INSERT INTO Languages (id, name, isinspire) VALUES ('chi','中文', 'n');
 
 INSERT INTO GroupsDes (iddes, langid, label) VALUES (-1,'chi','Guest');
 INSERT INTO GroupsDes (iddes, langid, label) VALUES (0,'chi','Intranet');

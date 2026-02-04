@@ -1,33 +1,12 @@
-
--- ======================================================================
--- === Table: Categories
--- ======================================================================
-
-INSERT INTO Categories (id, name) VALUES (1,'maps');
-INSERT INTO Categories (id, name) VALUES (2,'datasets');
-INSERT INTO Categories (id, name) VALUES (3,'interactiveResources');
-INSERT INTO Categories (id, name) VALUES (4,'applications');
-INSERT INTO Categories (id, name) VALUES (5,'caseStudies');
-INSERT INTO Categories (id, name) VALUES (6,'proceedings');
-INSERT INTO Categories (id, name) VALUES (7,'photo');
-INSERT INTO Categories (id, name) VALUES (8,'audioVideo');
-INSERT INTO Categories (id, name) VALUES (9,'directories');
-INSERT INTO Categories (id, name) VALUES (10,'otherResources');
-INSERT INTO Categories (id, name) VALUES (12,'registers');
-INSERT INTO Categories (id, name) VALUES (13,'physicalSamples');
-
--- ======================================================================
--- === Table: Groups
--- ======================================================================
+--liquibase formatted sql
+--changeset francois:00001
+--preconditions onFail:MARK_RAN onError:HALT
+--precondition-sql-check expectedResult:0 SELECT COUNT(*) FROM settings
 
 INSERT INTO Groups (id, name, description, email, referrer, type) VALUES (-1,'GUEST','self-registered users',NULL,NULL, 'RecordPrivilege');
 INSERT INTO Groups (id, name, description, email, referrer, type) VALUES (0,'intranet',NULL,NULL,NULL, 'RecordPrivilege');
 INSERT INTO Groups (id, name, description, email, referrer, type) VALUES (1,'all',NULL,NULL,NULL, 'RecordPrivilege');
 INSERT INTO Groups (id, name, description, email, referrer, type) VALUES (2,'sample',NULL,NULL,NULL, 'Workspace');
-
--- ======================================================================
--- === Table: IsoLanguages
--- ======================================================================
 
 INSERT INTO IsoLanguages (id, code, shortcode) VALUES  (1,'aar', 'aa');
 INSERT INTO IsoLanguages (id, code, shortcode) VALUES (2,'abk', 'ab');
@@ -514,28 +493,18 @@ INSERT INTO IsoLanguages (id, code, shortcode) VALUES  (482,'zxx', NULL);
 INSERT INTO IsoLanguages (id, code, shortcode) VALUES  (483,'nqo', NULL);
 INSERT INTO IsoLanguages (id, code, shortcode) VALUES  (484,'zza', NULL);
 
--- ======================================================================
--- === Table: IsoLanguages (id, code, shortcode)
--- ======================================================================
 
 
--- ======================================================================
--- === Table: StatusValues
--- ======================================================================
-
--- Workflow
 INSERT INTO StatusValues (id, name, reserved, displayorder, type, notificationLevel) VALUES  (1,'draft','y', 1, 'workflow', 'recordUserAuthor');
 INSERT INTO StatusValues (id, name, reserved, displayorder, type, notificationLevel) VALUES  (2,'approved','y', 3, 'workflow', 'recordUserAuthor');
 INSERT INTO StatusValues (id, name, reserved, displayorder, type, notificationLevel) VALUES  (3,'retired','y', 5, 'workflow', 'recordUserAuthor');
 INSERT INTO StatusValues (id, name, reserved, displayorder, type, notificationLevel) VALUES  (4,'submitted','y', 2, 'workflow', 'recordProfileReviewer');
+
 -- Deprecated, kept for retro-compatibility
 INSERT INTO StatusValues (id, name, reserved, displayorder, type, notificationLevel) VALUES  (5,'rejected','y', 4, 'workflow', null);
 INSERT INTO StatusValues (id, name, reserved, displayorder, type, notificationLevel) VALUES  (0,'unknown','y', 0, 'workflow', null);
 
--- Task
 INSERT INTO StatusValues (id, name, reserved, displayorder, type, notificationLevel) VALUES  (100,'doiCreationTask','n', 100, 'task', 'statusUserOwner');
-
--- Event
 INSERT INTO StatusValues (id, name, reserved, displayorder, type, notificationLevel) VALUES  (50,'recordcreated','y', 50, 'event', null);
 INSERT INTO StatusValues (id, name, reserved, displayorder, type, notificationLevel) VALUES  (51,'recordupdated','y', 51, 'event', null);
 INSERT INTO StatusValues (id, name, reserved, displayorder, type, notificationLevel) VALUES  (52,'attachmentadded','y', 52, 'event', null);
@@ -551,13 +520,7 @@ INSERT INTO StatusValues (id, name, reserved, displayorder, type, notificationLe
 INSERT INTO StatusValues (id, name, reserved, displayorder, type, notificationLevel) VALUES  (62,'recordimported','y', 62, 'event', null);
 INSERT INTO StatusValues (id, name, reserved, displayorder, type, notificationLevel) VALUES  (63,'recordrestored','y', 63, 'event', null);
 
--- ======================================================================
--- === Table: StatusValuesDes
--- ======================================================================
 
--- ======================================================================
--- === Table: Operations
--- ======================================================================
 
 INSERT INTO Operations (id, name) VALUES  (0,'view');
 INSERT INTO Operations (id, name) VALUES  (1,'download');
@@ -566,10 +529,6 @@ INSERT INTO Operations (id, name) VALUES  (3,'notify');
 INSERT INTO Operations (id, name) VALUES  (5,'dynamic');
 INSERT INTO Operations (id, name) VALUES  (6,'featured');
 
-
--- ======================================================================
--- === Table: Settings
--- ======================================================================
 
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/site/name', 'My GeoNetwork catalogue', 0, 110, 'n');
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/site/siteId', '', 0, 120, 'n');
@@ -674,20 +633,14 @@ INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/inspire/remotevalidation/urlquery', '', 0, 7212, 'n');
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/inspire/remotevalidation/nodeid', '', 0, 7213, 'n');
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/inspire/remotevalidation/apikey', '', 0, 7214, 'y');
-
-
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/translation/provider', '', 0, 7301, 'n');
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/translation/serviceUrl', '', 0, 7302, 'n');
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/translation/apiKey', '', 0, 7303, 'y');
-
-
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('region/getmap/background', 'osm', 0, 9590, 'n');
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('region/getmap/width', '500', 0, 9590, 'n');
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('region/getmap/summaryWidth', '500', 0, 9590, 'n');
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('region/getmap/mapproj', 'EPSG:3857', 0, 9590, 'n');
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('region/getmap/useGeodesicExtents', 'false', 2, 9591, 'n');
-
-
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('metadata/url/sitemapLinkUrl', NULL, 0, 9165, 'y');
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('metadata/url/sitemapDoiFirst', 'false', 2, 9166, 'y');
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('metadata/url/dynamicAppLinkUrl', NULL, 0, 9167, 'y');
@@ -695,8 +648,6 @@ INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('metada
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('metadata/resourceIdentifierPrefix', 'http://localhost:8080/geonetwork/srv/resources', 0, 10001, 'n');
 
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('metadata/import/restrict', '', 0, 11000, 'y');
-
-
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('metadata/workflow/enable', 'false', 2, 100002, 'n');
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('metadata/workflow/draftWhenInGroup', '', 0, 100003, 'n');
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('metadata/workflow/allowSubmitApproveInvalidMd', 'true', 2, 100004, 'n');
@@ -718,8 +669,6 @@ INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('metada
 
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('metadata/publication/profilePublishMetadata', 'Reviewer', 0, 12021, 'n');
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('metadata/publication/profileUnpublishMetadata', 'Reviewer', 0, 12022, 'n');
-
-
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('metadata/pdfReport/coverPdf', '', 0, 12500, 'y');
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('metadata/pdfReport/introPdf', '', 0, 12501, 'y');
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('metadata/pdfReport/tocPage', 'false', 2, 12502, 'y');
@@ -735,8 +684,6 @@ INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('metada
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('metadata/zipExport/attachmentsSizeLimit', NULL , 1, 12700, 'n');
 
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/ui/defaultView', 'default', 0, 10100, 'n');
-
-
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/userSelfRegistration/recaptcha/enable', 'false', 2, 1910, 'n');
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/userSelfRegistration/recaptcha/publickey', '', 0, 1910, 'n');
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/userSelfRegistration/recaptcha/secretkey', '', 0, 1910, 'y');
@@ -764,10 +711,6 @@ INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system
 
 INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES  (1,NULL,'harvesting',NULL);
 
--- ======================================================================
--- === Table: Users
--- ======================================================================
-
 INSERT INTO Users (id, username, password, name, surname, profile, kind, organisation, security, authtype, isenabled) VALUES  (0,'nobody','','nobody','nobody',4,'','','','', 'n');
 INSERT INTO Address (id, address, city, country, state, zip) VALUES  (0, '', '', '', '', '');
 INSERT INTO UserAddress (userid, addressid) VALUES  (0, 0);
@@ -777,17 +720,11 @@ INSERT INTO Address (id, address, city, country, state, zip) VALUES  (1, '', '',
 INSERT INTO UserAddress (userid, addressid) VALUES  (1, 1);
 
 
--- ======================================================================
--- === Table: MetadataURNTemplates
--- ======================================================================
-
 INSERT INTO MetadataIdentifierTemplate (id, name, template, isprovided) VALUES  (0, 'Custom URN', ' ', 'y');
 INSERT INTO MetadataIdentifierTemplate (id, name, template, isprovided) VALUES  (1, 'Autogenerated URN', ' ', 'y');
 
 INSERT INTO Selections (id, name, isWatchable) VALUES (0, 'PreferredList', 'n');
 INSERT INTO Selections (id, name, isWatchable) VALUES (1, 'WatchList', 'y');
-
-
 INSERT INTO GUF_RatingCriteria (id, name, isinternal) VALUES (-1, 'Average', 'y');
 INSERT INTO GUF_RatingCriteria (id, name, isinternal) VALUES (0, 'Completeness', 'n');
 INSERT INTO GUF_RatingCriteria (id, name, isinternal) VALUES (1, 'Discoverability', 'n');

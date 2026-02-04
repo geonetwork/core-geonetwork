@@ -1,18 +1,9 @@
-INSERT INTO Languages (id, name, isinspire) VALUES ('slo','Slovenčina', 'n');
+--liquibase formatted sql
+--changeset francois:00021
+--preconditions onFail:MARK_RAN onError:HALT
+--precondition-sql-check expectedResult:0 SELECT COUNT(*) FROM Languages WHERE id = 'slo';
 
--- Take care to table ID (related to other loc files)
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (1,'slo','Maps & graphics [SK]');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (2,'slo','Datasets [SK]');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (3,'slo','Interactive resources [SK]');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (4,'slo','Applications [SK]');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (5,'slo','Case studies, best practices [SK]');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (6,'slo','Conference proceedings [SK]');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (7,'slo','Photo [SK]');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (8,'slo','Audio/Video [SK]');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (9,'slo','Directories [SK]');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (10,'slo','Other information resources [SK]');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (12,'slo','Registers [SK]');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (13,'slo','Physical Samples [SK]');
+INSERT INTO Languages (id, name, isinspire) VALUES ('slo','Slovenčina', 'n');
 
 INSERT INTO GroupsDes (iddes, langid, label) VALUES (-1,'slo','Guest [SK]');
 INSERT INTO GroupsDes (iddes, langid, label) VALUES (0,'slo','Intranet [SK]');
