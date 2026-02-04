@@ -309,7 +309,7 @@
                   <i class="fa fa-fw fa-link"></i>
                   <span><xsl:value-of select="$schemaStrings/associatedResources"/></span>
                 </h2>
-                <div gn-related="md"
+                <div gn-related="mdView.current.record"
                      data-user="user"
                      data-layout="card"
                      data-types="{$sideRelated}">
