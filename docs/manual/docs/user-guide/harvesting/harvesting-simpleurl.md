@@ -26,7 +26,7 @@ Provide the following information:
         - *API Key header name*: The HTTP header name to use (default is `Authorization`).  
       If both Basic Auth and API Key are configured, both will be sent in the request as headers. This supports servers that require or accept multiple authentication schemes.
     - *Element to loop on*: Property/element containing a list of the record entries. (Indicated as an absolute path from the document root.) eg. `/datasets`
-    - *Element for the UUID of each record* : Property containing the record id. eg. `datasetid`
+    - *Element for the UUID of each record* : Property containing the record id. eg. `/datasetid`
     - *Pagination parameters*: (optional)
         - *Element for the number of records to collect*: Property indicating the total count of record entries. (Indicated as an absolute path from the document root.) eg. `/nhits`
         - *From URL parameter*: Property indicating the first record item on the current "page" eg. `start`
@@ -57,11 +57,20 @@ If Basic Auth is also set, both forms of authentication will be sent.
 
 ## Sample configurations
 
-### Sample configuration for opendatasoft
+### Sample configuration for opendatasoft v1
 
 - *Element to loop on* - `/datasets`
 - *Element for the number of records to collect* : `/nhits`
-- *Element for the UUID of each record* : `datasetid`
+- *Element for the UUID of each record* : `/datasetid`
+- *From URL parameter* : `start`
+- *Size URL parameter* : `rows`
+- *XSL transformation to apply* : `OPENDATASOFT-to-ISO19115-3-2018`
+
+### Sample configuration for opendatasoft v2
+
+- *Element to loop on* - `/datasets`
+- *Element for the number of records to collect* : `/nhits`
+- *Element for the UUID of each record* : `/dataset/datasetid`
 - *From URL parameter* : `start`
 - *Size URL parameter* : `rows`
 - *XSL transformation to apply* : `OPENDATASOFT-to-ISO19115-3-2018`
@@ -70,7 +79,7 @@ If Basic Auth is also set, both forms of authentication will be sent.
 
 - *Element to loop on* - `/dataset`
 - *Element for the number of records to collect* : `/result/count`
-- *Element for the UUID of each record* : `landingPage`
+- *Element for the UUID of each record* : `/landingPage`
 - *From URL parameter* : `start`
 - *Size URL parameter* : `rows`
 - *XSL transformation to apply* : `ESRIDCAT-to-ISO19115-3-2018`
@@ -79,7 +88,7 @@ If Basic Auth is also set, both forms of authentication will be sent.
 
 - *Element to loop on* - `/result/0`
 - *Element for the number of records to collect* : `/result/count`
-- *Element for the UUID of each record* : `id`
+- *Element for the UUID of each record* : `/id`
 - *From URL parameter* : `start`
 - *Size URL parameter* : `rows`
 - *XSL transformation to apply* : `DKAN-to-ISO19115-3-2018`
