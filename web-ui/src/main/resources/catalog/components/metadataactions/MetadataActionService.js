@@ -75,7 +75,7 @@
       var windowOption = "";
       var translations = null;
       var selectedMetadataTypes = [];
-      
+
       $translate([
         "metadataPublished",
         "metadataUnpublished",
