@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2026 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -861,6 +861,68 @@
                   });
                 }
               );
+          };
+        }
+      };
+    }
+  ]);
+
+  /**
+   * @ngdoc directive
+   * @name gn_mdactions_directive.directive:gnMetadataBatchDelete
+   * @restrict A
+   *
+   * @description
+   * The `gnMetadataBatchDelete` directive provides a
+   * dialog to confirm the deletion of a metadata selection.
+   *
+   */
+  module.directive("gnMetadataBatchDelete", [
+    "$translate",
+    "gnMetadataActions",
+    function ($translate, gnMetadataActions) {
+      return {
+        restrict: "A",
+        replace: false,
+        templateUrl:
+          "../../catalog/components/metadataactions/partials/" + "batchdelete.html",
+        scope: {
+          selectionBucket: "@"
+        },
+        link: function (scope, element, attrs) {
+          scope.confirmActionWord = "DELETE";
+
+          // User input for confirm action word
+          scope.userInput = "";
+
+          /**
+           * Checks to disable the confirm button if a confirm action word
+           * is defined and the user input does not match it.
+           *
+           * @returns {boolean}
+           */
+          scope.disableConfirmButton = function () {
+            return scope.userInput !== scope.confirmActionWord;
+          };
+
+          scope.deleteMd = function () {
+            return gnMetadataActions.deleteMd(null, scope.selectionBucket).then(
+              function () {
+                scope.$emit("MetadataDeleted");
+                scope.$emit("StatusUpdated", {
+                  msg: $translate.instant("metadataDeletedWithNoErrors"),
+                  timeout: 2,
+                  type: "success"
+                });
+              },
+              function () {
+                scope.$emit("MetadataDeleted");
+              }
+            );
+          };
+
+          scope.getMetadataDeleteConfirmMessage = function () {
+            return $translate.instant("metadataBatchDeleteConfirm");
           };
         }
       };

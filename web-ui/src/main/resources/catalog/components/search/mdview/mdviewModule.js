@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2023 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2026 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -168,6 +168,35 @@
         return list;
       }
 
+      /**
+       * Ask for confirmation to delete a metadata.
+       */
+      $scope.removeMetadata = function () {
+        $("#gn-confirm-remove-metadata").modal("show");
+      };
+
+      /**
+       * Remove the metadata and refresh the list when done.
+       */
+      $scope.confirmRemoveMetadata = function () {
+        // Close the confirm dialog properly before redirecting to the search page
+        $scope.deleteRecord($scope.mdView.current.record).then(function () {
+          $("#gn-confirm-remove-metadata").modal("hide");
+          $scope.closeRecord(md);
+        });
+      };
+
+      $scope.getMetadataDeleteConfirmMessage = function () {
+        if (!$scope.mdView.current.record) {
+          $("#gn-confirm-remove-metadata").modal("hide");
+          return "";
+        }
+
+        return $translate.instant("metadataDeleteConfirm", {
+          title: $scope.mdView.current.record.resourceTitle
+        });
+      };
+
       $scope.recordFormatterList = gnMdFormatter.getFormatterForRecord(
         $scope.mdView.current.record
       );
@@ -193,7 +222,6 @@
               msg: $translate.instant("metadataRemoved", { title: md.resourceTitle }),
               type: "success"
             });
-            $scope.closeRecord(md);
           },
           function (reason) {
             // Data needs improvements
@@ -202,6 +230,7 @@
               msg: reason.data.message || reason.data.description,
               type: "danger"
             });
+            throw reason;
           }
         );
       };

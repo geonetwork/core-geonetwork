@@ -131,6 +131,18 @@
       </div>
 
       <div
+        gn-modal
+        class="gn-confirm-delete"
+        gn-popup-options="{title: 'confirmDialogTitle',
+                          confirmCallback: confirmRemoveMetadata,
+                          confirmActionWord: 'DELETE',
+                          confirmActionWordLabel: 'metadataDeleteConfirmActionWordLabel'}"
+        id="gn-confirm-remove-metadata"
+      >
+        <p data-ng-bind-html="getMetadataDeleteConfirmMessage()"></p>
+      </div>
+
+      <div
         data-ng-show="gnMdViewObj.usingFormatter"
         id="gn-metadata-display"
         class="gn-metadata-display"

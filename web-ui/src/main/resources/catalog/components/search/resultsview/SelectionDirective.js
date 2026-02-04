@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2026 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -29,6 +29,7 @@
   module.directive("gnSelectionWidget", [
     "$translate",
     "$http",
+    "$rootScope",
     "hotkeys",
     "gnAlertService",
     "gnHttp",
@@ -42,6 +43,7 @@
     function (
       $translate,
       $http,
+      $rootScope,
       hotkeys,
       gnAlertService,
       gnHttp,
@@ -277,6 +279,7 @@
               .select(uuids, scope.searchResults.selectionBucket)
               .then(function (response) {
                 scope.searchResults.selectedCount = parseInt(response.data, 10);
+                $rootScope.$broadcast("metadataSelected", scope.searchResults.records);
               });
           };
 
@@ -288,6 +291,14 @@
                 scope.searchResults.records.forEach(function (record) {
                   record.selected = true;
                 });
+                gnSearchManagerService
+                  .selectionStatistics(
+                    "resourceType",
+                    scope.searchResults.selectionBucket
+                  )
+                  .then(function (response) {
+                    $rootScope.$broadcast("metadataSelectedAll", response);
+                  });
               });
           };
 
@@ -299,6 +310,7 @@
                 scope.searchResults.records.forEach(function (record) {
                   record.selected = false;
                 });
+                $rootScope.$broadcast("metadataSelectedClear");
               });
           };
 
@@ -333,7 +345,8 @@
 
   module.directive("gnSelectionMd", [
     "gnSearchManagerService",
-    function (gnSearchManagerService) {
+    "$rootScope",
+    function (gnSearchManagerService, $rootScope) {
       return {
         restrict: "A",
         scope: {
