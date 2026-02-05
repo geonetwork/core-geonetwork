@@ -25,7 +25,7 @@ public abstract class AbstractIntegrationTestWithMockedSingletons extends Abstra
     private static final int TEST_OWNER_ID = 42;
 
     @Autowired
-    private IMetadataManager metadataManager;
+    protected IMetadataManager metadataManager;
 
     @Autowired
     private SchemaManager schemaManager;
