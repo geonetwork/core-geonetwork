@@ -122,6 +122,8 @@
     "datasetNotFound": "Dataset not found - 404",
     "datasets": "Datasets",
     "dateMode": "Date or date time",
+    "dateOnlyMode": "Date",
+    "dateTimeMode": "Date and time",
     "description": "Description",
     "directory": "Folder path",
     "directoryEntries": "Entries",
