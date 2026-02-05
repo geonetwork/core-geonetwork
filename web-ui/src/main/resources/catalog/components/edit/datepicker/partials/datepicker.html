@@ -57,21 +57,13 @@
         data-ng-model="time"
         data-ng-show="mode === DATE_MODE.DATETIME && !hideTime"
       />
-      <!-- Timezone selector (if time is to be displayed) -->
+      <!-- Timezone selector (only if time is to be displayed) -->
       <select
         class="form-control gn-timezone"
-        data-ng-model="timezone"
-        data-ng-show="mode === DATE_MODE.DATETIME && !(hideTime || hideTimezone)"
-        data-ng-options="t.offset as (t.name + ' ' + t.offset) for t in timezoneNames"
+        data-ng-model="timezoneObj"
+        data-ng-show="mode === DATE_MODE.DATETIME && !hideTime"
+        data-ng-options="t as (t.name + ' ' + t.offset) for t in timezoneNames"
       ></select>
-      <!-- Readonly timezone (if time is displayed but timezone selector is hidden) -->
-      <input
-        type="text"
-        class="form-control"
-        readonly="readonly"
-        data-ng-show="mode === DATE_MODE.DATETIME && hideTimezone && !hideTime"
-        data-ng-model="timezone"
-      />
 
       <!-- Date mode selector -->
       <div class="input-group-btn" data-ng-show="!hideDateMode">
