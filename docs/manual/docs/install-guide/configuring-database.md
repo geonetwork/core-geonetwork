@@ -84,7 +84,7 @@ Alternative environment variables are also supported for non-container (WAR-file
     GEONETWORK_DB_PORT=5432
   ```
 
-Based on compile-time default settings: https://github.com/geonetwork/core-geonetwork/blob/4.2.13/pom.xml#L1515-L1520 that are used to set these https://github.com/geonetwork/core-geonetwork/blob/4.2.13/web/src/main/webResources/WEB-INF/config-db/jdbc.properties#L24-L28.
+Based on compile-time default settings: https://github.com/geonetwork/core-geonetwork/blob/e8cee088ca714789788d9de0cb8f143d09a8e9ba/pom.xml#L1556-L1562 that are used to set these https://github.com/geonetwork/core-geonetwork/blob/e8cee088ca714789788d9de0cb8f143d09a8e9ba/web/src/main/webResources/WEB-INF/config-db/jdbc.properties#L24-L28
 
 ## Logging
 
