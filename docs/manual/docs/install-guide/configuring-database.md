@@ -18,7 +18,7 @@ By default, a [H2](https://www.h2database.com/html/main.html) database is config
 
 ## Configuring a database via config files
 
-The database dialect is configured in **`/WEB-INF/config-node/srv.xml`**. Uncomment the dialect to use or use Java System property to configure it with `-Dgeonetwork.db.type=postgres` as described in https://github.com/geonetwork/core-geonetwork/blob/4.2.13/web/src/main/webResources/WEB-INF/config-node/srv.xml#L36.
+The database dialect is configured in **`/WEB-INF/config-node/srv.xml`**. Uncomment the dialect to use or use Java System property to configure it with `-Dgeonetwork.db.type=postgres` as described in https://github.com/geonetwork/core-geonetwork/blob/e8cee088ca714789788d9de0cb8f143d09a8e9ba/web/src/main/webResources/WEB-INF/config-node/srv.xml#L36.
 
 A jdbc driver is included for PostgreSQL, Oracle and H2. Other dialects require a jdbc driver to be installed. Download the jdbc library for the dialect and place it in `/WEB-INF/lib` or in the tomcat or GeoNetwork lib folder.
 
