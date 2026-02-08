@@ -6,7 +6,29 @@ This section describes several methods for configuring Elasticsearch for develop
 
 These configurations should not be used for a production deployment.
 
-### Docker installation (Recommended)
+
+### Docker compose installation (Recommended)
+
+> [!CAUTION]
+> Ensure you have at least 10% free disk space - see [Disk space threshold](#Disk-space-threshold) to disable this. 
+
+1. Use docker compose with the provided [docker-compose.yml](docker-compose.yml):
+
+   ```
+   cd es
+   docker-compose up
+   ```
+
+3. Check that it is running using your browser:
+   
+   * Elasticsearch: http://localhost:9200
+   * Kibana: http://localhost:5601
+
+### Docker installation
+
+
+> [!CAUTION]
+> Ensure you have at least 10% free disk space - see [Disk space threshold](#Disk-space-threshold) to disable this. 
 
 1. Use docker pull to download the image (you can check version in the :file:`pom.xml` file):
 
@@ -26,23 +48,13 @@ These configurations should not be used for a production deployment.
 
 3. Check that elasticsearch is running by visiting http://localhost:9200 in a browser
 
-### Docker compose installation
-
-1. Use docker compose with the provided [docker-compose.yml](docker-compose.yml):
-
-   ```
-   cd es
-   docker-compose up
-   ```
-
-3. Check that it is running using your browser:
-   
-   * Elasticsearch: http://localhost:9200
-   * Kibana: http://localhost:5601
 
 ### Maven installation
 
 Maven installation ensure you always are using the ``es.version`` version specified in ``pom.xml``.
+
+> [!CAUTION]
+> Ensure you have at least 10% free disk space - see [Disk space threshold](#Disk-space-threshold) to disable this. 
 
 1. Maven can take care of the installation steps:
 
@@ -50,14 +62,31 @@ Maven installation ensure you always are using the ``es.version`` version specif
    * initialize collection
    * start
 
-2. Use the following commands:
+2. Use the following commands to download ES:
 
    ```shell script
    cd es
-   mvn install -Pes-download
+   mvn install -Pes-download 
+   ```
+
+3. Modify the Elastic Security Settings (for development)
+   
+   Elasticsearch 8 has security enabled by default. To disable this configuration for development, update the file `elasticsearch-<version>/config/elasticsearch.yml` and MODIFY these EXISTING entries to `false`:
+
+      ```
+      xpack.security.enabled: false
+      xpack.security.enrollment.enabled: false
+      ```
+
+4. Start ElasticSearch
+
+   ```shell script
    mvn exec:exec -Des-start
    ```
-3. Check that elasticsearch is running by visiting http://localhost:9200 in a browser
+
+5. Check that elasticsearch is running by visiting http://localhost:9200 in a browser
+
+
 
 ## Manual installation
 
@@ -66,7 +95,7 @@ and copy to the ES module, e.g., ``es/elasticsearch-8.14.3`
 
 2. Disable the security
 
-   Elasticsearch 8 has security enabled by default. To disable this configuration for development, update the file `config/elasticsearch.yml` adding at the end:
+   Elasticsearch 8 has security enabled by default. To disable this configuration for development, update the file `elasticsearch-<version>/config/elasticsearch.yml` and MODIFY these EXISTING entries to `false`:
 
    ```
    xpack.security.enabled: false
@@ -132,6 +161,25 @@ Don't hesitate to propose a Pull Request with the new language.
 
 # Troubleshoot
 
+The first step is to look at the ES logs - there will often be some help regarding issues here.
+
+Second steps in checking on the ES health is to go to these ElasticSearch URLS:
+
+* http://localhost:9200/  This will tell you if ES is running and what version.
+* http://localhost:9200/gn-records See the main GeoNetwork index
+* http://localhost:9200/_cluster/health/  If your status is "red" then your ES is in trouble.
+   * http://localhost:9200/_cluster/allocation/explain might give an explaination of why the cluster is "red" 
+   * "yellow" is expected on a single-node cluster (and is not necessarily a problem)
+
+The third step is to get more information from GeoNetwork:
+
+* http://localhost:8800/geonetwork/criticalhealthcheck
+* http://localhost:8800/geonetwork/warninghealthcheck
+
+
+
+One of the most common issues is insufficient disk space available - see [Disk space threshold](#Disk-space-threshold).
+
 ## Max number of fields
 
 Max number of fields: As we are using dynamic fields, when having a large number of records, the system may reach the maximum number of fields in Elasticsearch. In this situation, Elasticsearch is reporting: 
@@ -172,7 +220,7 @@ The other option is to increase `indices.query.bool.max_clause_count`.
 
 ## Disk space threshold
 
-The server application will refuse to write new content unless there is enough free space available (by default 1/4 of your hard drive).
+The server application will refuse to write new content unless there is enough free space available (by default 1/4 of your hard drive).  This is often described as "disk_threshold".
 
 To turn off this check:
 
@@ -187,3 +235,17 @@ To recover:
 ```
 curl -XPUT -H "Content-Type: application/json" http://localhost:9200/_all/_settings -d '{"index.blocks.read_only_allow_delete": null}'
 ```
+
+## Notes
+
+* GeoNetwork uses the ElasticSearch v8 library.  This is compatible with ES v8 and v7.17.15.
+* ES v8, by default, turns on security (username/password to connect to ES).  The `xpack.security.*` options, used above, turns this off (no username/password required).  If you have an ES username/password, you can configure GeoNetwork to use this with `-Des.username=<ES username>   -Des.password=<ES password>`.  To configure the ES docker container to use a specific ES password, add `- ELASTIC_PASSWORD=<ES password>` to the docker-compose.yml `env` section.
+* The `docker-compose.yml` mounts the directory `es-dashboards/data/index` into the ES container (to save the ES index over container restarts). However, you might want to reset this (`rm -rf es-dashboards/data/index`) if you change the docker container version.
+* If there is a major problem with ES (i.e. GeoNetwork cannot connect to it), then the main GeoNetwork search webpage will display a yellow box saying "No search service available currently!".  Suggestion is to go to http://localhost:9200/_cluster/health/ and http://localhost:9200/_cluster/allocation/explain for more details.  GeoNetwork might give more information from http://localhost:8800/geonetwork/criticalhealthcheck and http://localhost:8800/geonetwork/warninghealthcheck
+* You may go to the search website and see a red pop-up saying "Query returned an error. Check the console for details.".  If this happens, open the Browser's devtools, and reload the page.  Look at the Network and the Console for some details.  This can be caused when there are no records in the ElasticSearch index - try to add some records to GeoNetwork and delete-and-reindex:
+   * When you first run GeoNetwork (with no records in the Geonetwork Index), you will get an ElasticSearch Query error on the main GeoNetwork search HTML page.  This is normal - add more records to your GeoNetwork (i.e. go to "Admin Console" -> "Metadata and templates" and load the iso19139 samples)
+   * Use the admin tools to delete and re-index metadata (i.e. go to "Admin Console" -> "Tools" and then "Delete Index and Reindex")
+
+
+
+
