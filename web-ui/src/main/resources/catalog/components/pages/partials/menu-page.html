@@ -40,7 +40,7 @@
       <a
         data-ng-show="submenuExternalLink"
         title="{{page.label}}"
-        href="{{page.link}}"
+        href="{{page.link | replaceLinkPlaceholders:context}}"
         target="{{page.link.indexOf('http') === 0 ? '_blank' : '_self'}}"
       >
         <span
@@ -67,7 +67,7 @@
     data-ng-if="!isSubmenu && page"
     data-ng-show="isExternalLink"
     title="{{page.label}}"
-    href="{{page.link}}"
+    href="{{page.link | replaceLinkPlaceholders:context}}"
     target="_blank"
   >
     <span

@@ -123,7 +123,8 @@
         scope: {
           pageId: "=gnStaticPageMenu",
           language: "@language",
-          section: "@section"
+          section: "@section",
+          context: "=?"
         },
         templateUrl: function (elem, attr) {
           return "../../catalog/components/pages/partials/menu-page.html";
