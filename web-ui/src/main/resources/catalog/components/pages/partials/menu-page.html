@@ -1,10 +1,12 @@
 <li
-  data-ng-class="{'dropdown': isSubmenu}"
+  data-ng-class="{'dropdown': isSubmenu, 'btn-group': renderAsButton}"
   role="menuitem"
   data-ng-hide="isSubmenu && page.pages.length < 1"
 >
+  <!-- Submenu dropdown toggle -->
   <a
-    data-ng-if="isSubmenu && section!='record_view_menu'"
+    data-ng-if="isSubmenu"
+    data-ng-class="{'btn btn-default': renderAsButton}"
     class="dropdown-toggle gn-menuheader-xs"
     role="button"
     data-toggle="dropdown"
@@ -19,17 +21,7 @@
     <span class="caret hidden-xs"></span>
   </a>
 
-  <button
-    data-ng-if="section=='record_view_menu'"
-    type="button"
-    class="btn btn-default dropdown-toggle"
-    data-toggle="dropdown"
-    aria-label="{{'additionalLinks' | translate}}"
-    aria-expanded="false"
-  >
-    <span data-translate="" class="hidden-sm hidden-xs">{{page.label}}</span>
-    <span class="caret"></span>
-  </button>
+  <!-- Submenu dropdown items -->
   <ul data-ng-if="isSubmenu" class="dropdown-menu gn-menu-xs clearfix">
     <li
       data-ng-repeat="page in page.pages"
@@ -63,9 +55,11 @@
       </a>
     </li>
   </ul>
+
+  <!--   Single page external link -->
   <a
-    data-ng-if="!isSubmenu && page"
-    data-ng-show="isExternalLink"
+    data-ng-if="!isSubmenu && page && isExternalLink"
+    data-ng-class="{'btn btn-default': renderAsButton}"
     title="{{page.label}}"
     href="{{page.link | replaceLinkPlaceholders:context}}"
     target="_blank"
@@ -76,9 +70,11 @@
     ></span>
     <span>{{page.label}}</span>
   </a>
+
+  <!-- Single page internal link -->
   <a
-    data-ng-if="!isSubmenu && page"
-    data-ng-show="!isExternalLink"
+    data-ng-if="!isSubmenu && page && !isExternalLink"
+    data-ng-class="{'btn btn-default': renderAsButton}"
     data-gn-active-tb-item="{{gnCfg.mods.page.appUrl + '/' + page.pageId}}?page={{page.pageId}}"
     title="{{page.pageId}}"
     data-ng-click="changePage($event)"
