@@ -27,8 +27,10 @@
   goog.require("gn_category");
   goog.require("gn_popup");
   goog.require("gn_share");
+  goog.require("gn_anonymous_access");
 
   var module = angular.module("gn_mdactions_service", [
+    "gn_anonymous_access",
     "gn_share",
     "gn_category",
     "gn_popup"
@@ -45,6 +47,7 @@
     "gnGlobalSettings",
     "gnUtilityService",
     "gnShareService",
+    "gnAnonymousAccessService",
     "gnPopup",
     "gnMdFormatter",
     "$translate",
@@ -63,6 +66,7 @@
       gnGlobalSettings,
       gnUtilityService,
       gnShareService,
+      gnAnonymousAccessService,
       gnPopup,
       gnMdFormatter,
       $translate,
@@ -625,6 +629,55 @@
               });
             }
           );
+      };
+
+      this.createAnonymousAccess = function (md, scope) {
+        return gnAnonymousAccessService
+          .create(angular.isDefined(md) ? md.uuid : undefined)
+          .then(
+            function (response) {
+              scope.$broadcast("AnonymousAccessCreated");
+              scope.hash = response;
+              scope.uuid = md.uuid;
+
+              // A hash is returned
+              gnUtilityService.openModal(
+                {
+                  title: $translate.instant("anonymousAccessTo", {
+                    title: md.resourceTitle
+                  }),
+                  content:
+                    '<div gn-anonymous-access="uuid" gn-anonymous-access-hash="hash"></div>',
+                  onCloseCallback: function () {
+                    scope.hash = null;
+                  }
+                },
+                scope,
+                "AnonymousAccessDone"
+              );
+            },
+            function (response) {
+              gnAlertService.addAlert({
+                msg: $translate.instant("anonymousAccessCreatedError", {
+                  errorDescription: response.data.description
+                }),
+                type: "danger"
+              });
+            }
+          );
+      };
+
+      this.deleteAnonymousAccess = function (md, scope) {
+        return gnAnonymousAccessService
+          .delete(angular.isDefined(md) ? md.uuid : undefined)
+          .then(function (response) {
+            scope.$broadcast("AnonymousAccessDeleted");
+            $rootScope.$broadcast("StatusUpdated", {
+              msg: $translate.instant("anonymousAccessDeleted"),
+              timeout: 2,
+              type: "success"
+            });
+          });
       };
 
       this.assignGroup = function (metadataId, groupId) {

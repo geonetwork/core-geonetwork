@@ -92,6 +92,26 @@
         </a>
       </li>
 
+      <!-- Anonymous access -->
+      <li role="menuitem" data-ng-if="displayAnonymousAccessOption(md, user, pubOption)">
+        <a
+          href=""
+          data-ng-if="!anonymousAccessExists"
+          data-ng-click="mdService.createAnonymousAccess(md, getCatScope())"
+        >
+          <span class="fa fa-fw fa-eye"></span>&nbsp;
+          <span data-translate="">createAnonymousAccess</span>
+        </a>
+        <a
+          href=""
+          data-ng-if="anonymousAccessExists"
+          data-ng-click="mdService.deleteAnonymousAccess(md, getCatScope())"
+        >
+          <span class="fa fa-fw fa-eye-slash"></span>&nbsp;
+          <span data-translate="">deleteAnonymousAccess</span>
+        </a>
+      </li>
+
       <!-- Workflow -->
       <li
         role="menuitem"

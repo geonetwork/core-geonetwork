@@ -82,6 +82,7 @@
     "gnUtilityService",
     "gnSearchSettings",
     "gnGlobalSettings",
+    "gnLangs",
 
     function (
       $scope,
@@ -97,7 +98,8 @@
       gnConfigService,
       gnUtilityService,
       gnSearchSettings,
-      gnGlobalSettings
+      gnGlobalSettings,
+      gnLangs
     ) {
       $scope.modelOptions = angular.copy(gnGlobalSettings.modelOptions);
 
@@ -116,6 +118,12 @@
             label: "transfertPrivs",
             icon: "fa-user",
             href: "#/tools/transferownership"
+          },
+          {
+            type: "anonymousaccess",
+            label: "anonymousAccessList",
+            icon: "fa-eye",
+            href: "#/tools/anonymousaccess"
           }
         ]
       };
@@ -360,6 +368,46 @@
             type: "success"
           });
         });
+      };
+
+      $scope.recordsWithAnonymousAccess = [];
+
+      function loadAnonymousAccessList() {
+        $http.get("../api/anonymousAccessLink").then(function (response) {
+          var flattened = response.data.map((item) => {
+            return {
+              id: item.metadataId,
+              uuid: item.metadataUuid,
+              resourceTitle:
+                item.getResultSource.resourceTitleObject["lang" + gnLangs.current] ||
+                item.getResultSource.resourceTitleObject.default,
+              resourceAbstract:
+                item.getResultSource.resourceAbstractObject["lang" + gnLangs.current] ||
+                item.getResultSource.resourceAbstractObject.default,
+              recordOwner: item.getResultSource.recordOwner,
+              changeDate: item.getResultSource.dateStamp
+            };
+          });
+          $scope.recordsWithAnonymousAccess = flattened;
+        });
+      }
+
+      loadAnonymousAccessList();
+
+      $scope.deleteAnonymousAccess = function (metadataUuid) {
+        return $http.delete("../api/anonymousAccessLink/" + metadataUuid).then(
+          function () {
+            loadAnonymousAccessList();
+            $rootScope.$broadcast("StatusUpdated", {
+              msg: $translate.instant("anonymousAccessDeleted"),
+              timeout: 2,
+              type: "success"
+            });
+          },
+          function () {
+            loadAnonymousAccessList();
+          }
+        );
       };
     }
   ]);

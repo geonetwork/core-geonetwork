@@ -590,5 +590,7 @@
     "quality": "Qualité",
     "download": "Téléchargement",
     "links": "Liens",
-    "saveToFile": "Enregistrer dans un fichier."
+    "saveToFile": "Enregistrer dans un fichier.",
+    "anonymousAccessCreatedError": "Une erreur s'est produite à la création de l'accès anonyme: {{errorDescription}}",
+    "anonymousAccessCreatedWarning": "Veuillez copier le lien. Vous n'aurez pas d'autre occasion!"
 }
