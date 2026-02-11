@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<record>
+    <extent>
+        <spatial>
+            <bbox>
+                <array>-5.859595786155143</array>
+                <array>40.08242510778443</array>
+                <array>11.175837021340103</array>
+                <array>51.130598314425725</array>
+            </bbox>
+        </spatial>
+        <temporal>
+            <interval>
+                <array>2018-01-01T00:00:00Z</array>
+                <array>2024-12-30T00:00:00Z</array>
+            </interval>
+        </temporal>
+    </extent>
+    <stac_version>1.1.0</stac_version>
+    <sci_doi>10.5281/zenodo.15489231</sci_doi>
+    <keywords>forest</keywords>
+    <keywords>biomass</keywords>
+    <keywords>height</keywords>
+    <keywords>volume</keywords>
+    <keywords>France</keywords>
+    <keywords>remote sensing</keywords>
+    <keywords>LIDAR</keywords>
+    <keywords>Sentinel</keywords>
+    <keywords>GEDI</keywords>
+    <description>FORMS-T : Height, aboveground biomass and wood volume density time-series at 10 to 30 m resolution over france (2018-2024)</description>
+    <sci_citation>Schwartz, M. (2025). FORMS-T: Forest Multiple Source height, wood volume, and biomass time-series (2018-2024) in France at 10 to 30 m resolution [Data set]. Zenodo. https://doi.org/10.5281/zenodo.15489231</sci_citation>
+    <type>Collection</type>
+    <title>FORMS-T</title>
+    <license>other</license>
+    <assets>
+        <QL>
+            <roles>thumbnail</roles>
+            <description>collection thumbnail</description>
+            <href>https://i.ibb.co/PvjGX01V/France-visu.png</href>
+        </QL>
+    </assets>
+    <contact>
+        <organization>Laboratoire des Sciences du Climat et de l'Environnement, LSCE/IPSL,CEA-CNRS-UVSQ, Université Paris-Saclay,Gif-sur-Yvette,91191, France</organization>
+        <name>Martin Schwartz</name>
+        <email>martin.schwartz@lsce.ipsl.fr</email>
+    </contact>
+    <links>
+        <rel>items</rel>
+        <href>https://stacapi-cdos.apps.okd.crocc.meso.umontpellier.fr/collections/forms-t/items</href>
+        <type>application/geo+json</type>
+    </links>
+    <links>
+        <rel>parent</rel>
+        <href>https://stacapi-cdos.apps.okd.crocc.meso.umontpellier.fr/</href>
+        <type>application/json</type>
+    </links>
+    <links>
+        <rel>root</rel>
+        <href>https://stacapi-cdos.apps.okd.crocc.meso.umontpellier.fr/</href>
+        <type>application/json</type>
+    </links>
+    <links>
+        <rel>self</rel>
+        <href>https://stacapi-cdos.apps.okd.crocc.meso.umontpellier.fr/collections/forms-t</href>
+        <type>application/json</type>
+    </links>
+    <links>
+        <rel>items</rel>
+        <href>https://api.stac.teledetection.fr/collections/forms-t/items</href>
+        <type>application/geo+json</type>
+    </links>
+    <links>
+        <rel>http://www.opengis.net/def/rel/ogc/1.0/queryables</rel>
+        <href>https://api.stac.teledetection.fr/collections/forms-t/queryables</href>
+        <type>application/schema+json</type>
+        <title>Queryables</title>
+    </links>
+    <links>
+        <rel>http://www.opengis.net/def/rel/ogc/1.0/queryables</rel>
+        <href>https://stacapi-cdos.apps.okd.crocc.meso.umontpellier.fr/collections/forms-t/queryables</href>
+        <type>application/schema+json</type>
+        <title>Queryables</title>
+    </links>
+    <id>forms-t</id>
+    <stac_extensions>https://stac-extensions.github.io/scientific/v1.0.0/schema.json</stac_extensions>
+    <providers>
+        <roles>producer</roles>
+        <name>Laboratoire des Sciences du Climat et de l'Environnement</name>
+        <url>https://www.lsce.ipsl.fr/</url>
+    </providers>
+</record>
