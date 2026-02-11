@@ -71,6 +71,34 @@
         <xhtml:link rel="alternate" hreflang="fr" href="https://docs.geonetwork-opensource.org/4.4fr/administrator-guide/configuring-the-catalog/user-interface-configuration/"/>
     </url>
     <url>
+        <loc>https://docs.geonetwork-opensource.org/4.4/administrator-guide/managing-anonymous-links/</loc>
+        <lastmod>2026-02-11</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://docs.geonetwork-opensource.org/4.4/administrator-guide/managing-anonymous-links/"/>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://docs.geonetwork-opensource.org/4.4fr/administrator-guide/managing-anonymous-links/"/>
+    </url>
+    <url>
+        <loc>https://docs.geonetwork-opensource.org/4.4/administrator-guide/managing-anonymous-links/create-link/</loc>
+        <lastmod>2026-02-11</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://docs.geonetwork-opensource.org/4.4/administrator-guide/managing-anonymous-links/create-link/"/>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://docs.geonetwork-opensource.org/4.4fr/administrator-guide/managing-anonymous-links/create-link/"/>
+    </url>
+    <url>
+        <loc>https://docs.geonetwork-opensource.org/4.4/administrator-guide/managing-anonymous-links/delete-link/</loc>
+        <lastmod>2026-02-11</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://docs.geonetwork-opensource.org/4.4/administrator-guide/managing-anonymous-links/delete-link/"/>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://docs.geonetwork-opensource.org/4.4fr/administrator-guide/managing-anonymous-links/delete-link/"/>
+    </url>
+    <url>
+        <loc>https://docs.geonetwork-opensource.org/4.4/administrator-guide/managing-anonymous-links/manage-links/</loc>
+        <lastmod>2026-02-11</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://docs.geonetwork-opensource.org/4.4/administrator-guide/managing-anonymous-links/manage-links/"/>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://docs.geonetwork-opensource.org/4.4fr/administrator-guide/managing-anonymous-links/manage-links/"/>
+    </url>
+    <url>
         <loc>https://docs.geonetwork-opensource.org/4.4/administrator-guide/managing-classification-systems/</loc>
         <lastmod>2026-02-11</lastmod>
         <changefreq>daily</changefreq>
@@ -1959,6 +1987,34 @@
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="fr" href="https://docs.geonetwork-opensource.org/4.4/fr/administrator-guide/configuring-the-catalog/user-interface-configuration/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://docs.geonetwork-opensource.org/4.4administrator-guide/configuring-the-catalog/user-interface-configuration/"/>
+    </url>
+    <url>
+        <loc>https://docs.geonetwork-opensource.org/4.4/fr/administrator-guide/managing-anonymous-links/</loc>
+        <lastmod>2026-02-11</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://docs.geonetwork-opensource.org/4.4/fr/administrator-guide/managing-anonymous-links/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://docs.geonetwork-opensource.org/4.4administrator-guide/managing-anonymous-links/"/>
+    </url>
+    <url>
+        <loc>https://docs.geonetwork-opensource.org/4.4/fr/administrator-guide/managing-anonymous-links/create-link/</loc>
+        <lastmod>2026-02-11</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://docs.geonetwork-opensource.org/4.4/fr/administrator-guide/managing-anonymous-links/create-link/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://docs.geonetwork-opensource.org/4.4administrator-guide/managing-anonymous-links/create-link/"/>
+    </url>
+    <url>
+        <loc>https://docs.geonetwork-opensource.org/4.4/fr/administrator-guide/managing-anonymous-links/delete-link/</loc>
+        <lastmod>2026-02-11</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://docs.geonetwork-opensource.org/4.4/fr/administrator-guide/managing-anonymous-links/delete-link/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://docs.geonetwork-opensource.org/4.4administrator-guide/managing-anonymous-links/delete-link/"/>
+    </url>
+    <url>
+        <loc>https://docs.geonetwork-opensource.org/4.4/fr/administrator-guide/managing-anonymous-links/manage-links/</loc>
+        <lastmod>2026-02-11</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://docs.geonetwork-opensource.org/4.4/fr/administrator-guide/managing-anonymous-links/manage-links/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://docs.geonetwork-opensource.org/4.4administrator-guide/managing-anonymous-links/manage-links/"/>
     </url>
     <url>
         <loc>https://docs.geonetwork-opensource.org/4.4/fr/administrator-guide/managing-classification-systems/</loc>
