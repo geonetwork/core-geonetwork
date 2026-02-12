@@ -31,12 +31,11 @@ hosts:
     dummy: true
 
   - !ipMatch
-    host: 127.0.0.1
+    ip: 127.0.0.1
     # Allow to all hosts
     mask: 0.0.0.0
 
-outputFilename:'map_${yyyy-MM-dd}.pdf'
-
+outputFilename: 'map_${yyyy-MM-dd}.pdf'
 layouts:
   portrait:
     mainPage:
@@ -60,7 +59,6 @@ layouts:
           condition: hasTitle
           backgroundColor: #000000
           width: 547
-          height: 517
           absoluteX: 24
           absoluteY: 782
           items:
@@ -73,7 +71,6 @@ layouts:
           condition: hasTitle
           backgroundColor: #ffffff
           width: 544
-          height: 700
           absoluteX: 25
           absoluteY: 780
           items:
@@ -87,13 +84,12 @@ layouts:
           spacingAfter: 10
           width: 545
           height: 700
-          absoluteX:25
-          absoluteY:780
+          absoluteX: 25
+          absoluteY: 780
         - !columns
           condition: hasNoTitle
           backgroundColor: #000000
           width: 547
-          height: 517
           absoluteX: 24
           absoluteY: 817
           items:
@@ -106,7 +102,6 @@ layouts:
           condition: hasNoTitle
           backgroundColor: #ffffff
           width: 544
-          height: 745
           absoluteX: 25
           absoluteY: 816
           items:
@@ -120,13 +115,14 @@ layouts:
           spacingAfter: 10
           width: 545
           height: 746
-          absoluteX:25
-          absoluteY:816
+          absoluteX: 25
+          absoluteY: 816
         - !columns
           condition: hasAttribution
           absoluteX: 170
           absoluteY: 55
           width: 100
+
           items:
             - !text
                 font: Helvetica
@@ -211,7 +207,6 @@ layouts:
           backgroundColor: #000000
           spacingAfter: 10
           width: 962
-          height: 518
           absoluteX: 23
           absoluteY: 589
           items:
@@ -224,7 +219,6 @@ layouts:
           condition: hasNoTitle
           backgroundColor: #ffffff
           width: 958
-          height: 516
           absoluteX: 25
           absoluteY: 588
           items:
@@ -236,7 +230,6 @@ layouts:
         - !columns
           condition: hasTitle
           width: 962
-          height: 518
           absoluteX: 23
           absoluteY: 553
           items:
@@ -249,7 +242,6 @@ layouts:
           condition: hasTitle
           backgroundColor: #ffffff
           width: 958
-          height: 481
           absoluteX: 25
           absoluteY: 552
           items:
