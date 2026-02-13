@@ -66,6 +66,7 @@
         <xsl:param name="elementName"/>
         <xsl:param name="codeListName"/>
         <xsl:param name="codeListValue"/>
+        <xsl:param name="codeListText" select="''"/>
         <!-- The correct codeList Location goes here -->
         <xsl:variable name="codeListLocation" select="'https://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml'"/>
 
@@ -84,7 +85,7 @@
                           <!-- commented out for testing -->
                           <xsl:value-of select="."/>
                       </xsl:attribute>
-                      <xsl:value-of select="."/>
+                      <xsl:value-of select="if ($codeListText[position()] != '') then $codeListText[position()] else ."/>
                   </xsl:element>
               </xsl:element>
               <!--<xsl:if test="@*">
