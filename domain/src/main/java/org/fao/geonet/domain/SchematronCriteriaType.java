@@ -35,11 +35,16 @@ import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.repository.specification.MetadataSpecs;
 import org.jdom.Element;
 import org.jdom.Namespace;
+import org.keycloak.KeycloakPrincipal;
 import org.springframework.context.ApplicationContext;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.oauth2.core.oidc.StandardClaimNames;
+import org.springframework.security.oauth2.core.oidc.user.OidcUser;
+import org.springframework.security.oauth2.core.user.OAuth2User;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 
 /**
  * Used on {@link SchematronCriteria}
@@ -105,13 +110,29 @@ public enum SchematronCriteriaType {
             final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             if (authentication != null) {
                 final Object principal = authentication.getPrincipal();
+                String username;
                 if (principal instanceof UserDetails) {
-                    final UserDetails userDetails = (UserDetails) principal;
-                    UserRepository userRepo = applicationContext.getBean(UserRepository.class);
-                    User user = userRepo.findOneByUsername(userDetails.getUsername());
-                    if (profiles.contains(user.getProfile().name())) {
-                        return true;
-                    }
+                    username = ((UserDetails)principal).getUsername();
+                } else if (principal instanceof KeycloakPrincipal && ((KeycloakPrincipal) authentication.getPrincipal()).getKeycloakSecurityContext().getIdToken() != null) {
+                    username = ((KeycloakPrincipal) authentication.getPrincipal()).getKeycloakSecurityContext().getIdToken().getPreferredUsername();
+                }
+                else if (principal instanceof OidcUser) {
+                    username =  ((OidcUser)principal).getPreferredUsername();
+                }
+                else if (principal instanceof OAuth2User) {
+                    username =  ((OAuth2User)principal).getAttribute(StandardClaimNames.PREFERRED_USERNAME);
+                }
+                else if (authentication instanceof JwtAuthenticationToken) {
+                    username = authentication.getName();
+                }
+                else {
+                    username = principal.toString();
+                }
+
+                UserRepository userRepo = applicationContext.getBean(UserRepository.class);
+                User user = userRepo.findOneByUsername(username);
+                if (profiles.contains(user.getProfile().name())) {
+                    return true;
                 }
             }
             return false;
