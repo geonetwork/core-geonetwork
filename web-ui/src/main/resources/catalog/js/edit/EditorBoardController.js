@@ -147,9 +147,23 @@
           return "";
         }
 
-        return $translate.instant("metadataDeleteConfirm", {
+        var translation = $translate.instant("metadataDeleteConfirm", {
           title: $scope.metadataToDelete.resourceTitle
         });
+
+        var translationMetadataResourceTypeKey =
+          "metadataDelete-" + $scope.metadataToDelete.resourceType;
+
+        var translationResourceType = $translate.instant(
+          translationMetadataResourceTypeKey
+        );
+
+        // If there is a message for the specific metadata resource type, append it to the generic message.
+        if (translationResourceType !== translationMetadataResourceTypeKey) {
+          translation += "<br/>" + translationResourceType;
+        }
+
+        return translation;
       };
 
       $scope.deleteRecord = function (md) {
