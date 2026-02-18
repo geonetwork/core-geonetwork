@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2023 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2026 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -56,6 +56,7 @@ import org.apache.http.conn.ssl.NoopHostnameVerifier;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.conn.ssl.TrustStrategy;
 import org.apache.http.impl.client.BasicCredentialsProvider;
+import org.apache.http.impl.nio.client.HttpAsyncClientBuilder;
 import org.apache.http.nio.conn.SchemeIOSessionStrategy;
 import org.apache.http.nio.conn.ssl.SSLIOSessionStrategy;
 import org.apache.http.ssl.SSLContextBuilder;
@@ -171,7 +172,7 @@ public class EsRestClient implements InitializingBean {
 
                     builder.setHttpClientConfigCallback(httpClientBuilder -> httpClientBuilder.useSystemProperties().setDefaultCredentialsProvider(credentialsProvider));
                 } else {
-                    builder.setHttpClientConfigCallback(httpClientBuilder -> httpClientBuilder.useSystemProperties());
+                    builder.setHttpClientConfigCallback(HttpAsyncClientBuilder::useSystemProperties);
                 }
             }
 
@@ -235,10 +236,7 @@ public class EsRestClient implements InitializingBean {
         JsonpMapper jsonpMapper = client._transport().jsonpMapper();
         JsonProvider jsonProvider = jsonpMapper.jsonProvider();
 
-        Iterator<Map.Entry<String, String>> iterator = docs.entrySet().iterator();
-        while (iterator.hasNext()) {
-            Map.Entry<String, String> entry = iterator.next();
-
+        for (Map.Entry<String, String> entry : docs.entrySet()) {
             JsonData jd = JsonData.from(jsonProvider.createParser(new StringReader(entry.getValue())), jsonpMapper);
 
             requestBuilder
@@ -256,16 +254,6 @@ public class EsRestClient implements InitializingBean {
             throw e;
         }
     }
-
-//
-//    public void bulkRequestAsync(Bulk.Builder bulk , JestResultHandler<BulkResult> handler) {
-//        client.executeAsync(bulk.build(), handler);
-//
-//    }
-//
-//    public BulkResult bulkRequestSync(Bulk.Builder bulk) throws IOException {
-//        return client.execute(bulk.build());
-//    }
 
 
     /**
@@ -348,7 +336,7 @@ public class EsRestClient implements InitializingBean {
         if (MapUtils.isNotEmpty(scriptedFields)) {
             for (Map.Entry<String, String> scriptedField: scriptedFields.entrySet()) {
                 ScriptField scriptField = ScriptField.of(
-                    b -> b.script(sb -> sb.inline(is -> is.source(scriptedField.getValue())))
+                    b -> b.script(sb -> sb.source(scriptedField.getValue()))
                 );
 
                 searchRequestBuilder.scriptFields(scriptedField.getKey(), scriptField);
