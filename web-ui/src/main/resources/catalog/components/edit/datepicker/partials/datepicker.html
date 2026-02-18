@@ -37,12 +37,14 @@
         class="form-control"
         data-ng-model="year"
         data-ng-show="mode === DATE_MODE.YEAR"
+        data-ng-disabled="withIndeterminatePosition && (indeterminatePosition === 'now' || indeterminatePosition === 'unknown')"
       />
       <input
         type="month"
         class="form-control"
         data-ng-model="month"
         data-ng-show="mode === DATE_MODE.MONTH"
+        data-ng-disabled="withIndeterminatePosition && (indeterminatePosition === 'now' || indeterminatePosition === 'unknown')"
       />
       <input
         type="date"
@@ -51,6 +53,7 @@
         data-ng-show="mode === DATE_MODE.DATE || mode === DATE_MODE.DATETIME"
         data-ng-class="hideTime == 'true' ? 'gn-notime' : ''"
         data-ng-disabled="withIndeterminatePosition && (indeterminatePosition === 'now' || indeterminatePosition === 'unknown')"
+        style="width: 100%"
       />
       <!-- Time input -->
       <input
@@ -66,6 +69,7 @@
         data-ng-model="timezoneObj"
         data-ng-show="mode === DATE_MODE.DATETIME && !hideTime"
         data-ng-options="t as (t.name + ' ' + t.offset) for t in timezoneNames"
+        data-ng-disabled="withIndeterminatePosition && (indeterminatePosition === 'now' || indeterminatePosition === 'unknown')"
       ></select>
 
       <!-- Date mode selector -->
@@ -74,6 +78,7 @@
           type="button"
           class="btn btn-default dropdown-toggle"
           data-toggle="dropdown"
+          data-ng-disabled="withIndeterminatePosition && (indeterminatePosition === 'now' || indeterminatePosition === 'unknown')"
         >
           <i class="fa fa-cog"></i>&nbsp;<span class="caret"></span>
         </button>
