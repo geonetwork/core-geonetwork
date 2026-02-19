@@ -22,21 +22,27 @@
 
         <table id="harvestReport" class="table table-striped">
           <tr>
+            <th data-translate="">lastRun</th>
             <th data-translate="">harvesterName</th>
             <th data-translate="">serviceUrl</th>
             <th data-translate="">harvesterType</th>
-            <th data-translate="">lastRun</th>
             <th data-translate="">totalNonTemplateMetadata</th>
           </tr>
-          <tr data-ng-repeat="h in $parent.harvesters">
-            <td>{{h.site.name | translate}}</td>
-            <td class="gn-break">
-              {{h.site.url || h.site.baseUrl || h.site.capabilitiesUrl || h.site.host}}
-            </td>
-            <td>{{('harvester-' + h['@type']) | translate}}</td>
+          <tr
+            data-ng-repeat="h in $parent.harvesters | orderBy:'-info.lastRun'"
+            data-ng-class="{'danger': h.error !== undefined}"
+            title="{{h.error.message}}"
+          >
             <td>
               {{h.info.lastRun.length === 0 ? '' : (h.info.lastRun | date:'medium')}}
             </td>
+            <td><strong>{{h.site.name | translate}}</strong></td>
+            <td
+              class="gn-break"
+              style="width: 30%"
+              ng-bind-html="(h.site.url || h.site.baseUrl || h.site.capabilitiesUrl || h.site.host) | linky:'_blank'"
+            ></td>
+            <td>{{('harvester-' + h['@type']) | translate}}</td>
             <td>{{h.info.result.total}}</td>
           </tr>
         </table>
