@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2023 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2026 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -1690,12 +1690,43 @@
                   var names = [],
                     descs = [];
 
+                  var isResourceNameMode =
+                    scope.config.wmsResources.addLayerNamesMode == "resourcename";
+
+                  // Validate url-mode config values and warn if config contain wrong values
+                  if (!isResourceNameMode) {
+                    var resName = scope.config.wmsResources.resourceName;
+                    var resDesc = scope.config.wmsResources.resourceDescription;
+                    if (
+                      resName !== undefined &&
+                      resName != "layerName" &&
+                      resName != "layerTitle"
+                    ) {
+                      console.warn(
+                        "wmsResources.resourceName has invalid value '" +
+                          resName +
+                          "'. Allowed values: 'layerName', 'layerTitle'."
+                      );
+                    }
+                    if (
+                      resDesc !== undefined &&
+                      resDesc != "layerName" &&
+                      resDesc != "layerTitle"
+                    ) {
+                      console.warn(
+                        "wmsResources.resourceDescription has invalid value '" +
+                          resDesc +
+                          "'. Allowed values: 'layerName', 'layerTitle'."
+                      );
+                    }
+                  }
+
                   angular.forEach(scope.params.selectedLayers, function (layer) {
-                    if (scope.config.wmsResources.addLayerNamesMode == "resourcename") {
+                    if (isResourceNameMode) {
                       names.push(layer.Name || layer.name);
                       descs.push(layer.Title || layer.title);
                     } else {
-                      // In resourceurl mode check with WMS field use for the resource name
+                      // In url mode, check which WMS field to use for the resource name
                       // and the resource description
                       if (scope.config.wmsResources.resourceName === "layerName") {
                         names.push(layer.Name || layer.name);
@@ -1715,8 +1746,10 @@
                     }
                   });
 
-                  if (scope.config.wmsResources.addLayerNamesMode == "resourcename") {
+                  if (isResourceNameMode) {
                     if (scope.isMdMultilingual) {
+                      // resourcename mode: only the current UI language is updated,
+                      // as the user may manage translations independently
                       var langCode = scope.mdLangs[scope.mdLang];
                       scope.params.name[langCode] = names.join(",");
                       scope.params.desc[langCode] = descs.join(",");
@@ -1728,14 +1761,16 @@
                     }
                   } else {
                     if (scope.isMdMultilingual) {
+                      // url mode: all languages are updated because WMS layer info
+                      // (name/title) is language-neutral
                       if (names.length > 0) {
-                        angular.forEach(scope.mdLangs, function (value, key) {
+                        angular.forEach(scope.mdLangs, function (value) {
                           scope.params.name[value] = names.join(",");
                         });
                       }
 
                       if (descs.length > 0) {
-                        angular.forEach(scope.mdLangs, function (value, key) {
+                        angular.forEach(scope.mdLangs, function (value) {
                           scope.params.desc[value] = descs.join(",");
                         });
                       }
