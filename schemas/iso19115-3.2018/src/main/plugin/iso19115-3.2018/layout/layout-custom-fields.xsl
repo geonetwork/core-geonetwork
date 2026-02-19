@@ -198,6 +198,7 @@
 
     <xsl:variable name="xpath" select="gn-fn-metadata:getXPath(.)"/>
     <xsl:variable name="isoType" select="if (../@gco:isoType) then ../@gco:isoType else ''"/>
+    <xsl:variable name="readonly" select="ancestor-or-self::node()[@xlink:href] != ''"/>
 
     <xsl:call-template name="render-boxed-element">
       <xsl:with-param name="label"
@@ -211,7 +212,8 @@
           data-hright-ref="_{gex:eastBoundLongitude/gco:Decimal/gn:element/@ref}"
           data-hbottom-ref="_{gex:southBoundLatitude/gco:Decimal/gn:element/@ref}"
           data-htop-ref="_{gex:northBoundLatitude/gco:Decimal/gn:element/@ref}"
-          data-lang="lang"></div>
+          data-lang="lang"
+          data-read-only="{$readonly}"></div>
       </xsl:with-param>
     </xsl:call-template>
   </xsl:template>
