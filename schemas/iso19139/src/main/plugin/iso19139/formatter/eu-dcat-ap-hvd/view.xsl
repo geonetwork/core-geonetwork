@@ -21,7 +21,7 @@
     </xsl:variable>
 
     <rdf:RDF>
-      <xsl:call-template name="create-namespaces"/>
+      <xsl:call-template name="create-namespaces-eu-dcat-ap"/>
       <xsl:apply-templates mode="iso19115-3-to-dcat"
                            select="$iso19115-3metadata"/>
     </rdf:RDF>

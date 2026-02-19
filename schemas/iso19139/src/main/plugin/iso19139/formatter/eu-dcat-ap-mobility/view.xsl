@@ -6,9 +6,8 @@
                 exclude-result-prefixes="#all">
 
   <xsl:import href="../../../iso19115-3.2018/convert/ISO19139/fromISO19139.xsl"/>
-  <xsl:import href="../../../iso19115-3.2018/formatter/eu-dcat-ap/eu-dcat-ap-core.xsl"/>
+  <xsl:import href="../../../iso19115-3.2018/formatter/eu-dcat-ap-mobility/mobility-dcat-ap-core.xsl"/>
   <xsl:import href="../dcat/dcat-utils.xsl"/>
-
 
   <xsl:template match="/">
     <xsl:apply-templates mode="dcat" select="root[gmd:MD_Metadata]|/gmd:MD_Metadata"/>
@@ -22,7 +21,7 @@
     </xsl:variable>
 
     <rdf:RDF>
-      <xsl:call-template name="create-namespaces-eu-dcat-ap"/>
+      <xsl:call-template name="create-namespaces-eu-dcat-mobilitydcatap"/>
       <xsl:apply-templates mode="iso19115-3-to-dcat"
                            select="$iso19115-3metadata"/>
     </rdf:RDF>
