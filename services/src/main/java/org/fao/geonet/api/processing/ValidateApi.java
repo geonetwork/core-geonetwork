@@ -216,29 +216,20 @@ public class ValidateApi {
                             report.addNotEditableMetadataId(record.getId());
                         } else {
                             Pair<Element, String> validationPair = validator.doValidate(userSession, record.getDataInfo().getSchemaId(), Integer.toString(record.getId()), xmlSerializer.select(serviceContext, String.valueOf(record.getId())), serviceContext.getLanguage(), false);
-                            boolean isValid = !validationPair.one().getDescendants(ErrorFinder).hasNext();
                             Element schemaTronReport = validationPair.one();
                             if (schemaTronReport != null) {
-                                // If the schematron report is not null, we restructure it to have a pattern-rule hierarchy
                                 restructureReportToHavePatternRuleHierarchy(schemaTronReport);
-                                // And add any warnings to the MetadataValidationProcessingReport
                                 report.addAllReportsMatchingRequirement(record, schemaTronReport, SchematronRequirement.REPORT_ONLY);
-                            }
-                            if (isValid) {
-                                // If the record is valid, we add it to the valid metadata list
-                                report.addValidMetadata(record);
-                                new RecordValidationTriggeredEvent(record.getId(), ApiUtils.getUserSession(request.getSession()).getUserIdAsInt(), "1").publish(applicationContext);
-                            } else {
-                                // If the record is not valid, we add it to the invalid metadata list
-                                if (!report.getInvalidMetadata().containsKey(record.getId())) {
-                                    report.addInvalidMetadata(record);
+                                report.addAllReportsMatchingRequirement(record, schemaTronReport, SchematronRequirement.REQUIRED);
+                                if (!report.getMetadataErrors().containsKey(record.getId())) {
+                                    report.addValidMetadata(record);
+                                    new RecordValidationTriggeredEvent(record.getId(), ApiUtils.getUserSession(request.getSession()).getUserIdAsInt(), "1").publish(applicationContext);
+                                } else {
+                                    if (!report.getInvalidMetadata().containsKey(record.getId())) {
+                                        report.addInvalidMetadata(record);
+                                    }
+                                    new RecordValidationTriggeredEvent(record.getId(), ApiUtils.getUserSession(request.getSession()).getUserIdAsInt(), "0").publish(applicationContext);
                                 }
-                                if (schemaTronReport != null) {
-                                    // If the schematron report is not null, add any errors to the MetadataValidationProcessingReport
-                                    report.addAllReportsMatchingRequirement(record, schemaTronReport, SchematronRequirement.REQUIRED);
-                                }
-
-                                new RecordValidationTriggeredEvent(record.getId(), ApiUtils.getUserSession(request.getSession()).getUserIdAsInt(), "0").publish(applicationContext);
                             }
                             report.addMetadataId(record.getId());
                             report.incrementProcessedRecords();
