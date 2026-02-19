@@ -27,7 +27,7 @@
       
       
       <link rel="icon" href="../../../../assets/images/geonetwork-logo.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.2">
     
     
       
@@ -1193,6 +1193,62 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Linking a WMS layer">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#wms-layer-name-config" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuring WMS layer name and description
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Configuring WMS layer name and description">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#addlayernamesmode" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        addLayerNamesMode
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#resourcename-and-resourcedescription-url-mode-only" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        resourceName and resourceDescription (url mode only)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#multilingual-records" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Multilingual records
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -2190,6 +2246,62 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Linking a WMS layer">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#wms-layer-name-config" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuring WMS layer name and description
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Configuring WMS layer name and description">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#addlayernamesmode" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        addLayerNamesMode
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#resourcename-and-resourcedescription-url-mode-only" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        resourceName and resourceDescription (url mode only)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#multilingual-records" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Multilingual records
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -2295,6 +2407,71 @@
 <li>choose one or more layer in the list or set it manually.</li>
 </ul>
 <p><img alt="" src="../../../../user-guide/associating-resources/img/addonlinesrcwms.png" /></p>
+<h3 id="wms-layer-name-config">Configuring WMS layer name and description</h3>
+<p>When one or more WMS layers are selected, GeoNetwork automatically populates the online
+resource <strong>Name</strong> and <strong>Description</strong> fields. The behaviour is controlled by the
+<code>wmsResources</code> object in the schema's associated-panel configuration file:</p>
+<p><code>schemas/iso19139/src/main/plugin/iso19139/config/associated-panel/default.json</code></p>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nt">&quot;wmsResources&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span><span class="nt">&quot;addLayerNamesMode&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;resourcename&quot;</span><span class="p">,</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span><span class="nt">&quot;resourceName&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;layerName&quot;</span><span class="p">,</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span><span class="nt">&quot;resourceDescription&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;layerTitle&quot;</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="p">}</span>
+</span></code></pre></div>
+<h4 id="addlayernamesmode"><code>addLayerNamesMode</code></h4>
+<table>
+<thead>
+<tr>
+<th>Value</th>
+<th>Behaviour</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>resourcename</code></td>
+<td><em>(default)</em> The WMS layer <strong>Name</strong> (identifier) is stored in the online resource name field and the layer <strong>Title</strong> in the description field. <code>resourceName</code> and <code>resourceDescription</code> are ignored.</td>
+</tr>
+<tr>
+<td><code>url</code></td>
+<td>The fields populated in the online resource are controlled individually by <code>resourceName</code> and <code>resourceDescription</code> (see below).</td>
+</tr>
+</tbody>
+</table>
+<h4 id="resourcename-and-resourcedescription-url-mode-only"><code>resourceName</code> and <code>resourceDescription</code> (url mode only)</h4>
+<p>Both properties accept the same values:</p>
+<table>
+<thead>
+<tr>
+<th>Value</th>
+<th>WMS field used</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>layerName</code></td>
+<td>The layer <strong>Name</strong> (machine identifier, e.g. <code>cad_cadastre.cadsubdivisionsection</code>)</td>
+</tr>
+<tr>
+<td><code>layerTitle</code></td>
+<td>The layer <strong>Title</strong> (human-readable label)</td>
+</tr>
+</tbody>
+</table>
+<p>Example — store the human-readable title as both name and description:</p>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nt">&quot;wmsResources&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span><span class="nt">&quot;addLayerNamesMode&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;url&quot;</span><span class="p">,</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span><span class="nt">&quot;resourceName&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;layerTitle&quot;</span><span class="p">,</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span><span class="nt">&quot;resourceDescription&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;layerTitle&quot;</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="p">}</span>
+</span></code></pre></div>
+<h4 id="multilingual-records">Multilingual records</h4>
+<p>The two modes also differ in how multilingual records are handled:</p>
+<ul>
+<li><strong><code>resourcename</code> mode</strong> — only the <em>current UI language</em> is updated. Other language
+  translations are left unchanged so the editor can manage them independently.</li>
+<li><strong><code>url</code> mode</strong> — <em>all configured languages</em> are set to the same value, because WMS layer
+  names and titles are language-neutral identifiers.</li>
+</ul>
 <h2 id="linking-online-resources-georesource">Linking a database table or a GIS file on the network</h2>
 <p>To reference a GIS file or a database table, user can upload or link to a that resource (see <a href="./#linking-online-resources-doc">Linking a document</a>). The type of protocol depends on the type of resource associated:</p>
 <table>
@@ -2370,21 +2547,21 @@
 </div>
 <h2 id="linking-data-using-atom-feed">Linking data using ATOM feeds</h2>
 <p>If your organisation provides ATOM feeds to facilitate access to the data, metadata records can link to these feeds. Users can link to a service feed in a service record and to a dataset feed in a dataset record.</p>
-<div class="language-xml highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nt">&lt;gmd:MD_DigitalTransferOptions&gt;</span>
-</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w"> </span><span class="nt">&lt;gmd:onLine&gt;</span>
-</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span><span class="nt">&lt;gmd:CI_OnlineResource&gt;</span>
-</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">   </span><span class="nt">&lt;gmd:linkage&gt;</span>
-</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">    </span><span class="nt">&lt;gmd:URL&gt;</span>http://www.broinspireservices.nl/atom/awp.atom<span class="nt">&lt;/gmd:URL&gt;</span>
-</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">   </span><span class="nt">&lt;/gmd:linkage&gt;</span>
-</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">   </span><span class="nt">&lt;gmd:protocol&gt;</span>
-</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">    </span><span class="nt">&lt;gco:CharacterString&gt;</span>INSPIRE<span class="w"> </span>Atom<span class="nt">&lt;/gco:CharacterString&gt;</span>
-</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">   </span><span class="nt">&lt;/gmd:protocol&gt;</span>
-</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">   </span><span class="nt">&lt;gmd:name&gt;</span>
-</span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">    </span><span class="nt">&lt;gco:CharacterString&gt;</span>gdn.Aardwarmtepotentie<span class="nt">&lt;/gco:CharacterString&gt;</span>
-</span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="w">   </span><span class="nt">&lt;/gmd:name&gt;</span>
-</span><span id="__span-1-13"><a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="w">  </span><span class="nt">&lt;/gmd:CI_OnlineResource&gt;</span>
-</span><span id="__span-1-14"><a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="w"> </span><span class="nt">&lt;/gmd:onLine&gt;</span>
-</span><span id="__span-1-15"><a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="nt">&lt;/gmd:MD_DigitalTransferOptions&gt;</span>
+<div class="language-xml highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nt">&lt;gmd:MD_DigitalTransferOptions&gt;</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w"> </span><span class="nt">&lt;gmd:onLine&gt;</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span><span class="nt">&lt;gmd:CI_OnlineResource&gt;</span>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">   </span><span class="nt">&lt;gmd:linkage&gt;</span>
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">    </span><span class="nt">&lt;gmd:URL&gt;</span>http://www.broinspireservices.nl/atom/awp.atom<span class="nt">&lt;/gmd:URL&gt;</span>
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">   </span><span class="nt">&lt;/gmd:linkage&gt;</span>
+</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">   </span><span class="nt">&lt;gmd:protocol&gt;</span>
+</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">    </span><span class="nt">&lt;gco:CharacterString&gt;</span>INSPIRE<span class="w"> </span>Atom<span class="nt">&lt;/gco:CharacterString&gt;</span>
+</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">   </span><span class="nt">&lt;/gmd:protocol&gt;</span>
+</span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w">   </span><span class="nt">&lt;gmd:name&gt;</span>
+</span><span id="__span-3-11"><a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="w">    </span><span class="nt">&lt;gco:CharacterString&gt;</span>gdn.Aardwarmtepotentie<span class="nt">&lt;/gco:CharacterString&gt;</span>
+</span><span id="__span-3-12"><a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="w">   </span><span class="nt">&lt;/gmd:name&gt;</span>
+</span><span id="__span-3-13"><a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="w">  </span><span class="nt">&lt;/gmd:CI_OnlineResource&gt;</span>
+</span><span id="__span-3-14"><a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="w"> </span><span class="nt">&lt;/gmd:onLine&gt;</span>
+</span><span id="__span-3-15"><a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="nt">&lt;/gmd:MD_DigitalTransferOptions&gt;</span>
 </span></code></pre></div>
 <p>Once registered in the metadata, the ATOM feed will be displayed on the record view:</p>
 <p><img alt="" src="../../../../user-guide/associating-resources/img/atom-choose-feed.png" /></p>
@@ -2395,39 +2572,39 @@
 <li><a href="https://www.nationaalgeoregister.nl/geonetwork/srv/dut/catalog.search#/search?any=atom&amp;fast=index">NGR National Georegister</a>, <a href="https://www.nationaalgeoregister.nl/geonetwork/srv/dut/catalog.search#/metadata/a657f732-e1b3-4638-9933-67cab10d9081">Statistics Netherlands Land Use 2015 ATOM</a></li>
 </ul>
 <p>The catalog also provides the capability to produce ATOM feeds for services and datasets from metadata records. To enable this, check the ATOM API (see <a href="../../../api/opensearch/">OpenSearch and INSPIRE ATOM</a>). A GML dataset can be exposed using the following encoding in order to be published in a dataset ATOM feed:</p>
-<div class="language-xml highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nt">&lt;gmd:transferOptions&gt;</span>
-</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">   </span><span class="nt">&lt;gmd:MD_DigitalTransferOptions&gt;</span>
-</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">      </span><span class="nt">&lt;gmd:unitsOfDistribution&gt;</span>
-</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">         </span><span class="nt">&lt;gco:CharacterString&gt;</span>B<span class="nt">&lt;/gco:CharacterString&gt;</span>
-</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">      </span><span class="nt">&lt;/gmd:unitsOfDistribution&gt;</span>
-</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">      </span><span class="nt">&lt;gmd:transferSize&gt;</span>
-</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">         </span><span class="nt">&lt;gco:Real&gt;</span>428973180<span class="nt">&lt;/gco:Real&gt;</span>
-</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">      </span><span class="nt">&lt;/gmd:transferSize&gt;</span>
-</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">      </span><span class="nt">&lt;gmd:onLine&gt;</span>
-</span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">         </span><span class="nt">&lt;gmd:CI_OnlineResource&gt;</span>
-</span><span id="__span-2-11"><a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">            </span><span class="nt">&lt;gmd:linkage&gt;</span>
-</span><span id="__span-2-12"><a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="w">               </span><span class="nt">&lt;gmd:URL&gt;</span>https://download.data.public.lu/resources/inspire-annex-i-theme-addresses-addresses/20191118-115245/ad.address.gml<span class="nt">&lt;/gmd:URL&gt;</span>
-</span><span id="__span-2-13"><a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="w">            </span><span class="nt">&lt;/gmd:linkage&gt;</span>
-</span><span id="__span-2-14"><a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="w">            </span><span class="nt">&lt;gmd:protocol&gt;</span>
-</span><span id="__span-2-15"><a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="w">               </span><span class="nt">&lt;gco:CharacterString&gt;</span>WWW:DOWNLOAD-1.0-http--download<span class="nt">&lt;/gco:CharacterString&gt;</span>
-</span><span id="__span-2-16"><a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="w">            </span><span class="nt">&lt;/gmd:protocol&gt;</span>
-</span><span id="__span-2-17"><a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="w">            </span><span class="nt">&lt;gmd:applicationProfile&gt;</span>
-</span><span id="__span-2-18"><a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="w">               </span><span class="nt">&lt;gco:CharacterString&gt;</span>INSPIRE-Download-Atom<span class="nt">&lt;/gco:CharacterString&gt;</span>
-</span><span id="__span-2-19"><a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="w">            </span><span class="nt">&lt;/gmd:applicationProfile&gt;</span>
-</span><span id="__span-2-20"><a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a><span class="w">            </span><span class="nt">&lt;gmd:name&gt;</span>
-</span><span id="__span-2-21"><a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a><span class="w">               </span><span class="nt">&lt;gmx:MimeFileType</span><span class="w"> </span><span class="na">type=</span><span class="s">&quot;application/octet-stream&quot;</span><span class="nt">&gt;</span>AD.Address.gml<span class="nt">&lt;/gmx:MimeFileType&gt;</span>
-</span><span id="__span-2-22"><a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a><span class="w">            </span><span class="nt">&lt;/gmd:name&gt;</span>
-</span><span id="__span-2-23"><a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a><span class="w">            </span><span class="nt">&lt;gmd:description&gt;</span>
-</span><span id="__span-2-24"><a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a><span class="w">               </span><span class="nt">&lt;gco:CharacterString&gt;&lt;/gco:CharacterString&gt;</span>
-</span><span id="__span-2-25"><a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a><span class="w">            </span><span class="nt">&lt;/gmd:description&gt;</span>
-</span><span id="__span-2-26"><a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a><span class="w">            </span><span class="nt">&lt;gmd:function&gt;</span>
-</span><span id="__span-2-27"><a id="__codelineno-2-27" name="__codelineno-2-27" href="#__codelineno-2-27"></a><span class="w">               </span><span class="nt">&lt;gmd:CI_OnLineFunctionCode</span><span class="w"> </span><span class="na">codeList=</span><span class="s">&quot;http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_OnLineFunctionCode&quot;</span>
-</span><span id="__span-2-28"><a id="__codelineno-2-28" name="__codelineno-2-28" href="#__codelineno-2-28"></a><span class="w">                                          </span><span class="na">codeListValue=</span><span class="s">&quot;download&quot;</span><span class="nt">&gt;</span>download<span class="nt">&lt;/gmd:CI_OnLineFunctionCode&gt;</span>
-</span><span id="__span-2-29"><a id="__codelineno-2-29" name="__codelineno-2-29" href="#__codelineno-2-29"></a><span class="w">            </span><span class="nt">&lt;/gmd:function&gt;</span>
-</span><span id="__span-2-30"><a id="__codelineno-2-30" name="__codelineno-2-30" href="#__codelineno-2-30"></a><span class="w">         </span><span class="nt">&lt;/gmd:CI_OnlineResource&gt;</span>
-</span><span id="__span-2-31"><a id="__codelineno-2-31" name="__codelineno-2-31" href="#__codelineno-2-31"></a><span class="w">      </span><span class="nt">&lt;/gmd:onLine&gt;</span>
-</span><span id="__span-2-32"><a id="__codelineno-2-32" name="__codelineno-2-32" href="#__codelineno-2-32"></a><span class="w">   </span><span class="nt">&lt;/gmd:MD_DigitalTransferOptions&gt;</span>
-</span><span id="__span-2-33"><a id="__codelineno-2-33" name="__codelineno-2-33" href="#__codelineno-2-33"></a><span class="nt">&lt;/gmd:transferOptions&gt;</span>
+<div class="language-xml highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nt">&lt;gmd:transferOptions&gt;</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">   </span><span class="nt">&lt;gmd:MD_DigitalTransferOptions&gt;</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">      </span><span class="nt">&lt;gmd:unitsOfDistribution&gt;</span>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">         </span><span class="nt">&lt;gco:CharacterString&gt;</span>B<span class="nt">&lt;/gco:CharacterString&gt;</span>
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">      </span><span class="nt">&lt;/gmd:unitsOfDistribution&gt;</span>
+</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">      </span><span class="nt">&lt;gmd:transferSize&gt;</span>
+</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">         </span><span class="nt">&lt;gco:Real&gt;</span>428973180<span class="nt">&lt;/gco:Real&gt;</span>
+</span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">      </span><span class="nt">&lt;/gmd:transferSize&gt;</span>
+</span><span id="__span-4-9"><a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">      </span><span class="nt">&lt;gmd:onLine&gt;</span>
+</span><span id="__span-4-10"><a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="w">         </span><span class="nt">&lt;gmd:CI_OnlineResource&gt;</span>
+</span><span id="__span-4-11"><a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="w">            </span><span class="nt">&lt;gmd:linkage&gt;</span>
+</span><span id="__span-4-12"><a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="w">               </span><span class="nt">&lt;gmd:URL&gt;</span>https://download.data.public.lu/resources/inspire-annex-i-theme-addresses-addresses/20191118-115245/ad.address.gml<span class="nt">&lt;/gmd:URL&gt;</span>
+</span><span id="__span-4-13"><a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="w">            </span><span class="nt">&lt;/gmd:linkage&gt;</span>
+</span><span id="__span-4-14"><a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="w">            </span><span class="nt">&lt;gmd:protocol&gt;</span>
+</span><span id="__span-4-15"><a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="w">               </span><span class="nt">&lt;gco:CharacterString&gt;</span>WWW:DOWNLOAD-1.0-http--download<span class="nt">&lt;/gco:CharacterString&gt;</span>
+</span><span id="__span-4-16"><a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="w">            </span><span class="nt">&lt;/gmd:protocol&gt;</span>
+</span><span id="__span-4-17"><a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a><span class="w">            </span><span class="nt">&lt;gmd:applicationProfile&gt;</span>
+</span><span id="__span-4-18"><a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a><span class="w">               </span><span class="nt">&lt;gco:CharacterString&gt;</span>INSPIRE-Download-Atom<span class="nt">&lt;/gco:CharacterString&gt;</span>
+</span><span id="__span-4-19"><a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a><span class="w">            </span><span class="nt">&lt;/gmd:applicationProfile&gt;</span>
+</span><span id="__span-4-20"><a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a><span class="w">            </span><span class="nt">&lt;gmd:name&gt;</span>
+</span><span id="__span-4-21"><a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a><span class="w">               </span><span class="nt">&lt;gmx:MimeFileType</span><span class="w"> </span><span class="na">type=</span><span class="s">&quot;application/octet-stream&quot;</span><span class="nt">&gt;</span>AD.Address.gml<span class="nt">&lt;/gmx:MimeFileType&gt;</span>
+</span><span id="__span-4-22"><a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a><span class="w">            </span><span class="nt">&lt;/gmd:name&gt;</span>
+</span><span id="__span-4-23"><a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a><span class="w">            </span><span class="nt">&lt;gmd:description&gt;</span>
+</span><span id="__span-4-24"><a id="__codelineno-4-24" name="__codelineno-4-24" href="#__codelineno-4-24"></a><span class="w">               </span><span class="nt">&lt;gco:CharacterString&gt;&lt;/gco:CharacterString&gt;</span>
+</span><span id="__span-4-25"><a id="__codelineno-4-25" name="__codelineno-4-25" href="#__codelineno-4-25"></a><span class="w">            </span><span class="nt">&lt;/gmd:description&gt;</span>
+</span><span id="__span-4-26"><a id="__codelineno-4-26" name="__codelineno-4-26" href="#__codelineno-4-26"></a><span class="w">            </span><span class="nt">&lt;gmd:function&gt;</span>
+</span><span id="__span-4-27"><a id="__codelineno-4-27" name="__codelineno-4-27" href="#__codelineno-4-27"></a><span class="w">               </span><span class="nt">&lt;gmd:CI_OnLineFunctionCode</span><span class="w"> </span><span class="na">codeList=</span><span class="s">&quot;http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_OnLineFunctionCode&quot;</span>
+</span><span id="__span-4-28"><a id="__codelineno-4-28" name="__codelineno-4-28" href="#__codelineno-4-28"></a><span class="w">                                          </span><span class="na">codeListValue=</span><span class="s">&quot;download&quot;</span><span class="nt">&gt;</span>download<span class="nt">&lt;/gmd:CI_OnLineFunctionCode&gt;</span>
+</span><span id="__span-4-29"><a id="__codelineno-4-29" name="__codelineno-4-29" href="#__codelineno-4-29"></a><span class="w">            </span><span class="nt">&lt;/gmd:function&gt;</span>
+</span><span id="__span-4-30"><a id="__codelineno-4-30" name="__codelineno-4-30" href="#__codelineno-4-30"></a><span class="w">         </span><span class="nt">&lt;/gmd:CI_OnlineResource&gt;</span>
+</span><span id="__span-4-31"><a id="__codelineno-4-31" name="__codelineno-4-31" href="#__codelineno-4-31"></a><span class="w">      </span><span class="nt">&lt;/gmd:onLine&gt;</span>
+</span><span id="__span-4-32"><a id="__codelineno-4-32" name="__codelineno-4-32" href="#__codelineno-4-32"></a><span class="w">   </span><span class="nt">&lt;/gmd:MD_DigitalTransferOptions&gt;</span>
+</span><span id="__span-4-33"><a id="__codelineno-4-33" name="__codelineno-4-33" href="#__codelineno-4-33"></a><span class="nt">&lt;/gmd:transferOptions&gt;</span>
 </span></code></pre></div>
 <p>Examples:</p>
 <ul>
