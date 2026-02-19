@@ -23,10 +23,18 @@
 
 package org.fao.geonet.kernel.harvest.harvester.simpleurl;
 
+import com.fasterxml.jackson.core.JsonPointer;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.io.CharStreams;
+import com.jayway.jsonpath.Configuration;
+import com.jayway.jsonpath.JsonPath;
+import com.jayway.jsonpath.JsonPathException;
+import com.jayway.jsonpath.spi.json.JacksonJsonNodeJsonProvider;
+import com.jayway.jsonpath.spi.json.JacksonJsonProvider;
+import com.jayway.jsonpath.spi.mapper.JacksonMappingProvider;
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
@@ -60,6 +68,7 @@ import java.net.URL;
 import java.nio.file.Path;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Function;
 
 import static org.fao.geonet.utils.Xml.isRDFLike;
 import static org.fao.geonet.utils.Xml.isXMLLike;
@@ -212,25 +221,58 @@ class Harvester implements IHarvester<HarvestResult> {
         JsonNode nodes = jsonObj.at(params.loopElement);
         log.debug(String.format("%d records found in JSON response.", nodes.size()));
 
-        nodes.forEach(jsonRecord -> {
+        SimpleUrlPathMode mode = params.recordIdPathMode;
+        if (mode == null || mode == SimpleUrlPathMode.AUTO) {
+            // auto or unset means we choose JSONPOINTER
+            mode = SimpleUrlPathMode.JSONPOINTER;
+        }
+
+        Function<JsonNode, String> uuidExtractor;
+        if (mode == SimpleUrlPathMode.JSONPOINTER) {
+            uuidExtractor = buildJsonPointerExtractor();
+        } else if (mode == SimpleUrlPathMode.JSONPATH) {
+            uuidExtractor = buildJsonPathExtractor();
+        } else {
+            throw new IllegalStateException("Unsupported recordIdPathMode " + mode + " for JSON input!");
+        }
+
+        for (JsonNode jsonRecord : nodes) {
             String uuid = null;
             try {
-                uuid = this.extractUuidFromIdentifier(jsonRecord.at(params.recordIdPath).asText());
+                uuid = this.extractUuidFromIdentifier(uuidExtractor.apply(jsonRecord));
             } catch (Exception e) {
                 log.error(String.format("Failed to collect record UUID at path %s. Error is: %s",
-                    params.recordIdPath, e.getMessage()));
+                        params.recordIdPath, e.getMessage()));
             }
             String apiUrlPath = params.url.split("\\?")[0];
             try {
                 URL apiUrl = new URL(apiUrlPath);
-                String nodeUrl = new StringBuilder(apiUrl.getProtocol()).append("://").append(apiUrl.getAuthority()).toString();
+                String nodeUrl = apiUrl.getProtocol() + "://" + apiUrl.getAuthority();
                 Element xml = convertJsonRecordToXml(jsonRecord, uuid, apiUrlPath, nodeUrl);
                 uuids.put(uuid, xml);
             } catch (MalformedURLException e) {
                 errors.add(new HarvestError(this.context, e));
                 log.warning(String.format("Failed to parse JSON source URL. Error is: %s", e.getMessage()));
             }
-        });
+        }
+    }
+
+    private Function<JsonNode, String> buildJsonPointerExtractor() {
+        JsonPointer pointer = JsonPointer.compile(params.recordIdPath);
+        return record -> record.at(pointer).asText();
+    }
+
+    private Function<JsonNode, String> buildJsonPathExtractor() {
+        JsonPath path = JsonPath.compile(params.recordIdPath);
+        Configuration configuration = Configuration.defaultConfiguration()
+                .jsonProvider(new JacksonJsonNodeJsonProvider())
+                .mappingProvider(new JacksonMappingProvider());
+        return record -> {
+            // as per RFC9535, the result of a JsonPath is always an array
+            ArrayNode node = path.read(record, configuration);
+            // always return the first element
+            return node.get(0).asText();
+        };
     }
 
     private void collectRecordsFromRdf(Element xmlObj,
@@ -244,6 +286,18 @@ class Harvester implements IHarvester<HarvestResult> {
             log.error(String.format("Failed to find records in RDF graph. Error is: %s",
                 e.getMessage()));
         }
+
+        SimpleUrlPathMode mode = params.recordIdPathMode;
+        if (mode == null || mode == SimpleUrlPathMode.AUTO) {
+            // auto or unset means we choose XPATH
+            mode = SimpleUrlPathMode.XPATH;
+        }
+
+        if (mode != SimpleUrlPathMode.XPATH) {
+            // XML input -> only accept XML
+            throw new IllegalStateException("Unsupported recordIdPathMode " + mode + " for RDFXML input!");
+        }
+
         if (rdfNodes != null) {
             log.debug(String.format("%d records found in RDFXML response.", rdfNodes.size()));
 
@@ -270,6 +324,17 @@ class Harvester implements IHarvester<HarvestResult> {
         } catch (JDOMException e) {
             log.error(String.format("Failed to query records using %s. Error is: %s",
                 params.loopElement, e.getMessage()));
+        }
+
+        SimpleUrlPathMode mode = params.recordIdPathMode;
+        if (mode == null || mode == SimpleUrlPathMode.AUTO) {
+            // auto or unset means we choose XPATH
+            mode = SimpleUrlPathMode.XPATH;
+        }
+
+        if (mode != SimpleUrlPathMode.XPATH) {
+            // XML input -> only accept XML
+            throw new IllegalStateException("Unsupported recordIdPathMode " + mode + " for XML input!");
         }
 
         if (xmlNodes != null) {
