@@ -11,7 +11,7 @@ These configurations should not be used for a production deployment.
 1. Use docker pull to download the image (you can check version in the :file:`pom.xml` file):
 
    ```
-   docker pull docker.elastic.co/elasticsearch/elasticsearch:8.14.3
+   docker pull docker.elastic.co/elasticsearch/elasticsearch:8.19.11
    ```
 
 2. Use docker run, leaving 9200 available:
@@ -21,7 +21,7 @@ These configurations should not be used for a production deployment.
       -e "discovery.type=single-node" \
       -e "xpack.security.enabled=false" \
       -e "xpack.security.enrollment.enabled=false" \ 
-      docker.elastic.co/elasticsearch/elasticsearch:8.14.3
+      docker.elastic.co/elasticsearch/elasticsearch:8.19.11
    ```
 
 3. Check that elasticsearch is running by visiting http://localhost:9200 in a browser
@@ -61,8 +61,8 @@ Maven installation ensure you always are using the ``es.version`` version specif
 
 ## Manual installation
 
-1. Download Elasticsearch 8.14.3 from https://www.elastic.co/downloads/elasticsearch
-and copy to the ES module, e.g., ``es/elasticsearch-8.14.3`
+1. Download Elasticsearch 8.19.11 from https://www.elastic.co/downloads/elasticsearch
+and copy to the ES module, e.g., ``es/elasticsearch-8.19.11`
 
 2. Disable the security
 
@@ -127,7 +127,7 @@ Don't hesitate to propose a Pull Request with the new language.
 
 1. Configure ES to start on server startup. It is recommended to protect `gn-records` index from the Internet access.
 
-   * Note that for debian-based servers the current deb download (8.14.3) can be installed rather than installing manually and can be configured to run as a service using the instructions here: https://www.elastic.co/guide/en/elasticsearch/reference/current/starting-elasticsearch.html
+   * Note that for debian-based servers the current deb download (8.19.11) can be installed rather than installing manually and can be configured to run as a service using the instructions here: https://www.elastic.co/guide/en/elasticsearch/reference/current/starting-elasticsearch.html
 
 
 # Troubleshoot

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2025 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2026 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -375,13 +375,12 @@ public class EsSearchManager implements ISearchManager {
                     .scriptedUpsert(true)
                     .upsert(Map.of())
                     .script(script -> script
-                        .inline(inlineScript -> inlineScript
-                            .lang("painless")
-                            .source(scriptSource.toString())
-                        )
+                        .source(scriptSource.toString())
+                        .lang("painless")
                     )
                 )
-        );
+            );
+
 
         UpdateOperation addFieldRequestOperation = UpdateOperation.of(
             b -> b.id(id)
