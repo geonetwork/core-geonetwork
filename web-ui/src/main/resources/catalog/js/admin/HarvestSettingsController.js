@@ -528,6 +528,27 @@
             }
           );
       };
+      $scope.reindexHarvesterRecord = function () {
+        return $http
+          .post(
+            "../api/harvesters/" +
+              $scope.harvesterSelected.site.uuid +
+              "/reindex?source=" +
+              gnConfig["system.site.siteId"]
+          )
+          .then(
+            function (response) {
+              $scope.harvesterSelected = {};
+              $scope.harvesterUpdated = false;
+              $scope.harvesterNew = false;
+              $scope.$parent.loadHarvesters();
+            },
+            function (response) {
+              console.log(response.data);
+            }
+          );
+      };
+
       $scope.assignHarvestedRecordToLocalNode = function () {
         $http
           .post(
