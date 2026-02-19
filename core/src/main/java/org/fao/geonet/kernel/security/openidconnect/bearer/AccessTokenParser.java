@@ -22,12 +22,19 @@
  */
 package org.fao.geonet.kernel.security.openidconnect.bearer;
 
-import java.util.Map;
+import org.springframework.security.oauth2.jwt.Jwt;
 
 /**
  * interface for access token parsers (i.e. one that validates signature, one that doesnt)
  */
 public interface AccessTokenParser {
 
-    Map parseToken(String token) throws Exception;
+    /**
+     * Parses the token and returns the Jwt object.
+     *
+     * @param token the access token to parse
+     * @return the parsed Jwt object
+     * @throws Exception if the token is invalid or cannot be parsed
+     */
+    Jwt parseToken(String token) throws Exception;
 }

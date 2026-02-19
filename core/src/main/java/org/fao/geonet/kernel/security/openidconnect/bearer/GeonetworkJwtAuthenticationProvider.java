@@ -27,17 +27,15 @@ import org.fao.geonet.kernel.security.openidconnect.OIDCConfiguration;
 import org.fao.geonet.kernel.security.openidconnect.OIDCRoleProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.core.convert.converter.Converter;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
-import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.authentication.event.InteractiveAuthenticationSuccessEvent;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserRequest;
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
@@ -49,22 +47,20 @@ import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.OAuth2Error;
 import org.springframework.security.oauth2.core.oidc.OidcUserInfo;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
-import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.server.resource.authentication.BearerTokenAuthenticationToken;
 import org.springframework.security.oauth2.server.resource.BearerTokenError;
 import org.springframework.security.oauth2.server.resource.BearerTokenErrorCodes;
-import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.util.Assert;
 
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
 import static org.fao.geonet.kernel.security.openidconnect.GeonetworkClientRegistrationProvider.CLIENT_REGISTRATION_NAME;
-import static org.fao.geonet.kernel.security.openidconnect.bearer.RoleInserter.insertRoles;
 
 /**
  * This is the main class that does all the work.
@@ -76,7 +72,6 @@ import static org.fao.geonet.kernel.security.openidconnect.bearer.RoleInserter.i
  */
 public class GeonetworkJwtAuthenticationProvider implements AuthenticationProvider {
     static UserInfoCache userInfoCache = new UserInfoCache();
-    private final OAuth2UserService<OidcUserRequest, OidcUser> userService;
     AccessTokenParser accessTokenParser;
     UserRolesResolver userRolesResolver;
     List<AccessTokenValidator> accessTokenValidators;
@@ -90,8 +85,8 @@ public class GeonetworkJwtAuthenticationProvider implements AuthenticationProvid
     OIDCConfiguration oidcConfiguration;
     @Autowired
     ClientRegistrationRepository clientRegistrationRepository;
-    private OAuth2UserService<OAuth2UserRequest, OAuth2User> oauth2UserService = new DefaultOAuth2UserService();
-    private Converter<Jwt, ? extends AbstractAuthenticationToken> jwtAuthenticationConverter = new JwtAuthenticationConverter();
+
+    private final OAuth2UserService<OAuth2UserRequest, OAuth2User> oauth2UserService = new DefaultOAuth2UserService();
 
     public GeonetworkJwtAuthenticationProvider(AccessTokenParser accessTokenParser,
                                                OAuth2UserService<OidcUserRequest, OidcUser> userService,
@@ -104,7 +99,6 @@ public class GeonetworkJwtAuthenticationProvider implements AuthenticationProvid
 
         this.userRolesResolver = userRolesResolver;
         this.accessTokenParser = accessTokenParser;
-        this.userService = userService;
         this.accessTokenValidators = accessTokenValidators;
     }
 
@@ -140,35 +134,67 @@ public class GeonetworkJwtAuthenticationProvider implements AuthenticationProvid
         }
     }
 
+    /**
+     * Extracts the username from the JWT claims or userInfo.
+     * Uses the configured username attribute from oidcConfiguration.
+     *
+     * @param jwt the decoded JWT token
+     * @param userInfo the userInfo from the userinfo endpoint
+     * @return the principal name, or null if not found
+     */
+    private String extractUsername(Jwt jwt, OidcUserInfo userInfo) {
+        List<Object> possibleUsernameAttributes = new ArrayList<>();
+        String configuredAttribute = oidcConfiguration.getUserNameAttribute();
+        Map<String, Object> userInfoClaims = userInfo.getClaims();
+
+        // Try to get the username from the JWT claims first
+        possibleUsernameAttributes.add(jwt.getClaims().get(configuredAttribute));
+
+        // Fall back to userInfo claims
+        possibleUsernameAttributes.add(userInfoClaims.get(configuredAttribute));
+
+        // If configured attribute not found, try preferred_username
+        possibleUsernameAttributes.add(userInfoClaims.get("preferred_username"));
+
+        // If still not found, try email
+        possibleUsernameAttributes.add(userInfoClaims.get("email"));
+
+        // As a last resort, return the 'sub' claim (standard JWT subject)
+        possibleUsernameAttributes.add(jwt.getClaims().get("sub"));
+
+        for (Object possibleUsername : possibleUsernameAttributes) {
+            if (possibleUsername instanceof String) {
+                return (String) possibleUsername;
+            }
+        }
+
+        return null;
+    }
+
 
     /**
      * First time using the token, we have to do quite a bit of work.
      * i.e. call the userinfo endpoint (and for azure the graph api).
      * We cache the results since they shouldn't change over the lifetime of the token.
      *
-     * @param authentication
-     * @return
+     * @param token the raw token as string
+     * @return a cache item with all the relevant information extracted from the token and userinfo endpoint, and also the user's authorities (roles) for use in spring security.
      */
-    public UserInfoCacheItem createCacheItem(Authentication authentication) {
-        //this is the actual access token
-        BearerTokenAuthenticationToken bearer = (BearerTokenAuthenticationToken) authentication;
+    public UserInfoCacheItem createCacheItem(String token) {
 
-        Map jwt;
+        Jwt jwt;
         try {
             //parse it (using either the signature checking or non-signature checking version).
             //NOTE: we will use this token with the userinfo endpoint, so the server will signature-validate it
             //      (meaning its not a big deal if we don't).
-            jwt = accessTokenParser.parseToken(bearer.getToken());
+            jwt = accessTokenParser.parseToken(token);
         } catch (Exception failed) {
             OAuth2Error invalidToken = invalidToken(failed.getMessage());
             throw new OAuth2AuthenticationException(invalidToken, invalidToken.getDescription(), failed);
         }
 
-        //when is this token valid until
-        Instant expireTime = Instant.ofEpochMilli((Long) jwt.get("exp") * 1000);
-
         //if expired, throw
-        if (expireTime.compareTo(Instant.now()) < 0) {
+        if (jwt.getExpiresAt() != null && jwt.getExpiresAt().compareTo(Instant.now()) < 0) {
             throw new OAuth2AuthenticationException(invalidToken("access token has expired"));
         }
 
@@ -176,41 +202,37 @@ public class GeonetworkJwtAuthenticationProvider implements AuthenticationProvid
         ClientRegistration clientRegistration = clientRegistrationRepository.findByRegistrationId(CLIENT_REGISTRATION_NAME);
         OAuth2AccessToken accessToken = new OAuth2AccessToken(
             OAuth2AccessToken.TokenType.BEARER,
-            bearer.getToken(),
-            Instant.ofEpochMilli((Long) jwt.get("iat") * 1000)//issuedAt
-            , Instant.ofEpochMilli((Long) jwt.get("exp") * 1000)//ExpiresAt
+            token,
+            jwt.getIssuedAt(), //issuedAt
+            jwt.getExpiresAt() //expiresAt
         );
         OAuth2UserRequest oAuth2UserRequest = new OAuth2UserRequest(clientRegistration, accessToken);
         OAuth2User oAuth2User = oauth2UserService.loadUser(oAuth2UserRequest); //executes userinfo endpoint
 
-
         OidcUserInfo userInfo = new OidcUserInfo(oAuth2User.getAttributes());
 
         try {
-            verifyToken(jwt, userInfo.getClaims()); //verify token with all the configured validators
+            verifyToken(jwt.getClaims(), userInfo.getClaims()); //verify token with all the configured validators
         } catch (Exception failed) {
             OAuth2Error invalidToken = invalidToken(failed.getMessage());
             throw new OAuth2AuthenticationException(invalidToken, invalidToken.getDescription(), failed);
         }
 
-
-        List<String> userRoles = null;
+        List<String> userRoles;
         try {
             //get  the list of roles (either from the jwt or the userInfo).  Or, you can contact an external API (i.e. MS Graph)
-            userRoles = userRolesResolver.resolveRoles(bearer.getToken(), jwt, userInfo);
-            // inject the roles inside the userInfo
-            userInfo = insertRoles(oidcConfiguration.getIdTokenRoleLocation(), userInfo, userRoles);
+            userRoles = userRolesResolver.resolveRoles(token, jwt.getClaims(), userInfo);
         } catch (Exception e) {
             throw new InternalAuthenticationServiceException("userRolesResolver.resolveRoles exception", e);
         }
         //user's GrantedAuthorities (i.e. "Administrator" -> ["Administrator","Reviewer","Editor", "RegisteredUser", "Guest"]
         Collection<? extends GrantedAuthority> authorities = oidcRoleProcessor.createAuthorities(roleHierarchy, userRoles);
 
-        //final user
-        OAuth2User user = new DefaultOAuth2User(authorities, userInfo.getClaims(), oidcConfiguration.getUserNameAttribute());
+        // Extract the principal name using the configured username attribute
+        String principalName = extractUsername(jwt, userInfo);
 
         // create a cachable item for storing all this information
-        return new UserInfoCacheItem(bearer.getToken(), expireTime, user, authorities);
+        return new UserInfoCacheItem(token, jwt, authorities, principalName);
     }
 
     /**
@@ -223,24 +245,17 @@ public class GeonetworkJwtAuthenticationProvider implements AuthenticationProvid
      */
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-        return authenticate(authentication, CLIENT_REGISTRATION_NAME);
-    }
-
-    public Authentication authenticate(Authentication authentication, String registrationName) throws AuthenticationException {
         BearerTokenAuthenticationToken bearer = (BearerTokenAuthenticationToken) authentication;
 
         // has this access token been evaluated before?
         UserInfoCacheItem item = userInfoCache.getItem(bearer.getToken());
         if (item == null) {
             // never used - re-create
-            item = createCacheItem(authentication);
+            item = createCacheItem(bearer.getToken());
             userInfoCache.putItem(item); //store in cache
         }
 
-        // final result
-        OAuth2User user = item.getUser();
-        Collection<? extends GrantedAuthority> authorities = item.getAuthorities();
-        OAuth2AuthenticationToken authenticationResult = new OAuth2AuthenticationToken(user, authorities, registrationName);
+        JwtAuthenticationToken authenticationResult = new JwtAuthenticationToken(item.getJwt(), item.getAuthorities(), item.getUsername());
         authenticationResult.setDetails(authentication.getDetails());
 
         // user logs in event
