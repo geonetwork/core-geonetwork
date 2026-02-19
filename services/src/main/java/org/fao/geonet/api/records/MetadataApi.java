@@ -185,10 +185,14 @@ public class MetadataApi {
             required = true)
         @PathVariable
         String metadataUuid,
-        @Parameter(description = "Formatter to use on the record view page. " +
-            "If invalid or not specified, no redirect to the record view page is performed.")
-        @RequestParam(required = false)
-        String recordViewFormatter,
+        @Parameter(description = "Language used for localization of the record and response (e.g. 'eng', 'fre').",
+            required = false)
+        String language,
+        @Parameter(description = "Whether to redirect to the record view page instead of directly returning the record content. " +
+            "If true, the redirection is done before checking the Accept header.",
+            required = false)
+        @RequestParam(required = false, defaultValue = "false")
+        Boolean redirectToRecordView,
         HttpServletResponse response,
         HttpServletRequest request
     )
@@ -200,12 +204,18 @@ public class MetadataApi {
             throw new NotAllowedException(ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW);
         }
 
-        // Check if a redirect to the record view page is required.
-        String redirect = getRedirect(recordViewFormatter, languageUtils.getIso3langCode(request.getLocales()), metadataUuid);
+        if (redirectToRecordView) {
+            // Check if the language query parameter is a real language supported by the system. If not, fallback to the request language.
+            String resolvedLanguage = language.toLowerCase();
+            if (!languageUtils.getUiLanguages().contains(resolvedLanguage)) {
+                resolvedLanguage = languageUtils.getIso3langCode(request.getLocales());
+            }
 
-        // If a redirect is required, perform it.
-        if (redirect != null) {
-            return redirect;
+            String redirect = getRedirect(resolvedLanguage, metadataUuid);
+
+            if (redirect != null) {
+                return redirect;
+            }
         }
 
         String acceptHeader = StringUtils.isBlank(request.getHeader(HttpHeaders.ACCEPT)) ? MediaType.APPLICATION_XML_VALUE : request.getHeader(HttpHeaders.ACCEPT);
@@ -896,20 +906,18 @@ public class MetadataApi {
     }
 
     /**
-     * Constructs a redirect string based on the provided formatter label, language, and metadata UUID
+     * Constructs a redirect string based on the provided formatter flag, language, and metadata UUID
      *
-     * @param recordViewFormatter The label of the formatter to use on the record view page
-     * @param language            The language code to include in the URL
-     * @param metadataUuid        The unique identifier of the metadata record
-     * @return A redirect string if a matching formatter is found, or null if no formatter matches the provided label
+     * @param language      The language code to include in the URL
+     * @param metadataUuid  The unique identifier of the metadata record
+     * @return A redirect string if the flag is true and a valid formatter is configured, or null otherwise
      */
-    private String getRedirect(@Nullable String recordViewFormatter, String language, String metadataUuid) {
-        if (StringUtils.isBlank(recordViewFormatter)) {
-            return null; // If no formatter is specified, return null
-        }
-
+    private String getRedirect(String language, String metadataUuid) {
         // Parse the UI configuration
         JsonObject uiConfig = JsonParser.parseString(XslUtil.getUiConfiguration(null)).getAsJsonObject();
+
+        // Get the formatter label for record links from the UI configuration
+        String recordViewFormatter = XslUtil.getUiConfigurationJsonProperty(null, "mods.search.formatter.recordLinkFormatter");
 
         // Navigate through the JSON structure to retrieve the array of record view page formatters
         JsonArray formatterArray = Optional.ofNullable(uiConfig)
