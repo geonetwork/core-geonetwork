@@ -34,6 +34,9 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 public class XmlSerializerTest {
+    private static final int GROUP_ID_1 = 10;
+    private static final int GROUP_ID_2 = 20;
+    private static final int GROUP_ID_3 = 30;
 
     private ConfigurableApplicationContext mockContext;
     private AccessManager mockAccessManager;
@@ -92,7 +95,7 @@ public class XmlSerializerTest {
         when(metadata.getDataInfo()).thenReturn(dataInfo);
         when(metadata.getSourceInfo()).thenReturn(sourceInfo);
         when(dataInfo.getSchemaId()).thenReturn("iso19139");
-        when(sourceInfo.getGroupOwner()).thenReturn(10);
+        when(sourceInfo.getGroupOwner()).thenReturn(GROUP_ID_1);
 
         MetadataSchema mockSchema = mock(MetadataSchema.class);
         when(mockDataManager.getSchema("iso19139")).thenReturn(mockSchema);
@@ -105,7 +108,7 @@ public class XmlSerializerTest {
         ServiceContext realServiceContext = setupServiceContextWithUserSession(mockUserSession);
 
         // Case 1: User IS in the owner group
-        when(mockUserGroupRepository.findGroupIds(ArgumentMatchers.<Specification<UserGroup>>any())).thenReturn(Arrays.asList(10, 20));
+        when(mockUserGroupRepository.findGroupIds(ArgumentMatchers.<Specification<UserGroup>>any())).thenReturn(Arrays.asList(GROUP_ID_1, GROUP_ID_2));
 
         Element metadataXml1 = new Element("MD_Metadata", gmd);
         Element hiddenElement1 = new Element("hidden", gmd);
@@ -116,7 +119,7 @@ public class XmlSerializerTest {
         assertNotNull(result1.getChild("hidden", gmd));
 
         // Case 2: User IS NOT in the owner group
-        when(mockUserGroupRepository.findGroupIds(ArgumentMatchers.<Specification<UserGroup>>any())).thenReturn(Arrays.asList(20, 30));
+        when(mockUserGroupRepository.findGroupIds(ArgumentMatchers.<Specification<UserGroup>>any())).thenReturn(Arrays.asList(GROUP_ID_2, GROUP_ID_3));
 
         Element metadataXml2 = new Element("MD_Metadata", gmd);
         Element hiddenElement2 = new Element("hidden", gmd);
