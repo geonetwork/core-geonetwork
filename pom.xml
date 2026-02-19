@@ -1311,6 +1311,17 @@
         <artifactId>json</artifactId>
         <version>20240205</version>
       </dependency>
+      <dependency>
+        <groupId>com.zaxxer</groupId>
+        <artifactId>HikariCP</artifactId>
+        <version>7.0.2</version>
+        <exclusions>
+          <exclusion>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
     </dependencies>
   </dependencyManagement>
 
@@ -1538,7 +1549,7 @@
     <app.properties>WEB-INF/config.properties</app.properties>
     <!--<app.properties>file:/${geonetwork.dir}/config.properties</app.properties>-->
     <!-- Configure database config file to use. Could be
-     h2, postgres, sqlserver, mysql, oracle, db2, postgres-postgis, jndi
+     h2, postgres, sqlserver, mysql, oracle, db2, postgres-postgis, jndi, postgres-postgis-hikari
      -->
     <!--
     The following environment variable can also be set for connecting to the database.
