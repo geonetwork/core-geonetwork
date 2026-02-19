@@ -1,18 +1,9 @@
-INSERT INTO Languages (id, name, isinspire) VALUES ('wel','Cymraeg', 'y');
+--liquibase formatted sql
+--changeset francois:00027
+--preconditions onFail:MARK_RAN onError:HALT
+--precondition-sql-check expectedResult:0 SELECT COUNT(*) FROM Languages WHERE id = 'wel';
 
--- Take care to table ID (related to other loc files)
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (1,'wel','Mapiau & graffeg');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (2,'wel','Setiau data');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (3,'wel','Adnoddau rhyngweithiol');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (4,'wel','Ceisiadau');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (5,'wel','Astudiaethau achos, arferion gorau');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (6,'wel','Trafodion y gynhadledd');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (7,'wel','Llun');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (8,'wel','Sain/Fideo');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (9,'wel','Cyfeirlyfrau');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (10,'wel','Adnoddau gwybodaeth eraill');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (12,'wel','Cofrestri');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (13,'wel','Samplau Corfforol');
+INSERT INTO Languages (id, name, isinspire) VALUES ('wel','Cymraeg', 'y');
 
 INSERT INTO GroupsDes (iddes, langid, label) VALUES (-1,'wel','Gwestai');
 INSERT INTO GroupsDes (iddes, langid, label) VALUES (0,'wel','Mewnrwyd');

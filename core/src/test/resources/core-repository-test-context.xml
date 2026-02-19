@@ -87,7 +87,7 @@
       <bean class="org.fao.geonet.TestDatabasePopulator">
         <property name="interpolatedScripts">
           <list>
-            <value>classpath:cleanoutdatabase.sql</value>
+            <!--<value>classpath:cleanoutdatabase.sql</value>
             <value>file:/${webapp}/WEB-INF/classes/setup/sql/data/data-db-default.sql</value>
             <value>file:/${webapp}/WEB-INF/classes/setup/sql/data/loc-ara-default.sql</value>
             <value>file:/${webapp}/WEB-INF/classes/setup/sql/data/loc-cat-default.sql</value>
@@ -104,7 +104,7 @@
             <value>file:/${webapp}/WEB-INF/classes/setup/sql/data/loc-rus-default.sql</value>
             <value>file:/${webapp}/WEB-INF/classes/setup/sql/data/loc-spa-default.sql</value>
             <value>file:/${webapp}/WEB-INF/classes/setup/sql/data/loc-tur-default.sql</value>
-            <value>file:/${webapp}/WEB-INF/classes/setup/sql/data/loc-vie-default.sql</value>
+            <value>file:/${webapp}/WEB-INF/classes/setup/sql/data/loc-vie-default.sql</value>-->
           </list>
         </property>
       </bean>
@@ -141,7 +141,7 @@
 
   <bean id="servletContext" class="org.fao.geonet.GeonetMockServletContext"/>
   <bean id="threadPool" class="org.fao.geonet.TestThreadPool"/>
-  
+
   <bean class="org.fao.geonet.analytics.WebAnalyticsConfiguration" name="webAnalyticsConfiguration">
     <property name="service" value="" />
     <property name="javascriptCode" value="" />

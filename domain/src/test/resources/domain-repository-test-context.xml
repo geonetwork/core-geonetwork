@@ -43,6 +43,13 @@
     <constructor-arg index="0" value="true"/>
   </bean>
 
+  <bean id="liquibase" class="liquibase.integration.spring.SpringLiquibase">
+    <property name="dataSource" ref="jdbcDataSource" />
+    <property name="changeLog" value="classpath:db/changelog.xml" />
+    <property name="contexts" value="production" />
+    <property name="shouldRun" value="true" />
+  </bean>
+
   <!--<jdbc:embedded-database type="H2" id="jdbcDataSource" />-->
   <bean id="jdbcDataSource"
         class="org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseFactoryBean">

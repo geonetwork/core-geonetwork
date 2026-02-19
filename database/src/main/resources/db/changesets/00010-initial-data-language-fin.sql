@@ -1,18 +1,9 @@
-INSERT INTO Languages (id, name, isinspire) VALUES ('fin','suomi', 'y');
+--liquibase formatted sql
+--changeset francois:00011
+--preconditions onFail:MARK_RAN onError:HALT
+--precondition-sql-check expectedResult:0 SELECT COUNT(*) FROM Languages WHERE id = 'fin';
 
--- Take care to table ID (related to other loc files)
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (1,'fin','Kartat & kuvat');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (2,'fin','Tietoaineistot');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (3,'fin','Vuorovaikutteiset resurssit');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (4,'fin','Sovellukset');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (5,'fin','Esimerkkitapaukset, parhaat käytännöt');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (6,'fin','Konferenssijulkaisut');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (7,'fin','Valokuvat');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (8,'fin','Äänitteet / Videot');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (9,'fin','Hakemistot');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (10,'fin','Other information resources');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (12,'fin','Registers');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (13,'fin','Fyysisiä näytteitä');
+INSERT INTO Languages (id, name, isinspire) VALUES ('fin','suomi', 'y');
 
 INSERT INTO GroupsDes (iddes, langid, label) VALUES (-1,'fin','Vierailija');
 INSERT INTO GroupsDes (iddes, langid, label) VALUES (0,'fin','Intranet');

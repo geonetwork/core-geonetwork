@@ -1,18 +1,9 @@
-INSERT INTO Languages (id, name, isinspire) VALUES ('rus','русский язык', 'n');
+--liquibase formatted sql
+--changeset francois:00020
+--preconditions onFail:MARK_RAN onError:HALT
+--precondition-sql-check expectedResult:0 SELECT COUNT(*) FROM Languages WHERE id = 'rus';
 
--- Take care to table ID (related to other loc files)
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (1,'rus','Карты и графика');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (2,'rus','Наборы данных');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (3,'rus','Интерактивные ресурсы');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (4,'rus','Компьютерные программы');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (5,'rus','Практические ситуации');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (6,'rus','Материалы конференций');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (7,'rus','Фотографии');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (8,'rus','Аудио/Видео');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (9,'rus','Каталоги/справочники');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (10,'rus','Другие ресурсы');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (12,'rus','Registers');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (13,'rus','Физические образцы');
+INSERT INTO Languages (id, name, isinspire) VALUES ('rus','русский язык', 'n');
 
 INSERT INTO GroupsDes (iddes, langid, label) VALUES (-1,'rus','Guest');
 INSERT INTO GroupsDes (iddes, langid, label) VALUES (0,'rus','Пример группы');
