@@ -365,10 +365,10 @@ public class BaseMetadataUtils implements IMetadataUtils {
             // Get the formatter configured for *links* to records (recordLinkFormatter) from the UI configuration.
             String recordLinkFormatter = XslUtil.getUiConfigurationJsonProperty(null, "mods.search.formatter.recordLinkFormatter");
 
-            // When building the record URL, the formatter is passed as the `recordViewFormatter` query parameter
-            // because the API expects that parameter name to decide which formatter to use when displaying the record.
+            // If there is a formatter configured for links to records, add the redirectToRecordView parameter to the
+            // permalink so that the record view will be used to display the record instead of the metadata api view.
             if (StringUtils.isNotBlank(recordLinkFormatter)) {
-                uriComponentsBuilder.queryParam("recordViewFormatter", recordLinkFormatter);
+                uriComponentsBuilder.queryParam("redirectToRecordView", true);
             }
         }
 
