@@ -11,5 +11,6 @@
 -   [Advanced configuration](advanced-configuration.md)
 -   [Adding static pages](adding-static-pages.md)
 -   [Implementing schema plugins](implementing-a-schema-plugin.md)
+-   [Integrating External Resource Properties](integrating-external-resource-properties.md)
 -   [Characterset](characterset.md)
 -   [Miscellaneous](misc.md)
