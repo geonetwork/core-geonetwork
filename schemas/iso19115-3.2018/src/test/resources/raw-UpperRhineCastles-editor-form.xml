@@ -722,9 +722,9 @@
         <div class="form-group gn-field gn-description  gn- " id="gn-el-281" data-gn-field-highlight="">
           <label for="gn-field-281" class="col-sm-2 control-label">Description</label>
           <div class="col-sm-9 col-xs-11 gn-value nopadding-in-table" data-gn-multilingual-field="{&quot;fre&quot;:&quot;#FR&quot;,&quot;ger&quot;:&quot;#DE&quot;,&quot;eng&quot;:&quot;#EN&quot;}" data-main-language="fre" data-expanded="false">
-            <textarea class="form-control hidden" id="gn-field-281" name="_284" data-gn-autogrow="" data-gn-field-tooltip="iso19115-3.2018|gex:description|gex:EX_Extent|/mdb:MD_Metadata/mdb:identificationInfo/mri:MD_DataIdentification/mri:extent/gex:EX_Extent/gex:description" lang="EN">Walensee</textarea>
-            <textarea class="form-control hidden" id="gn-field-281" name="_286" data-gn-autogrow="" data-gn-field-tooltip="iso19115-3.2018|gex:description|gex:EX_Extent|/mdb:MD_Metadata/mdb:identificationInfo/mri:MD_DataIdentification/mri:extent/gex:EX_Extent/gex:description" lang="DE">Walensee</textarea>
-            <textarea class="form-control hidden" id="gn-field-281" name="_288" data-gn-autogrow="" data-gn-field-tooltip="iso19115-3.2018|gex:description|gex:EX_Extent|/mdb:MD_Metadata/mdb:identificationInfo/mri:MD_DataIdentification/mri:extent/gex:EX_Extent/gex:description" lang="FR">Walensee</textarea>
+            <textarea class="form-control hidden" id="gn-field-281" name="_284" data-gn-autogrow="" disabled="disabled" data-gn-field-tooltip="iso19115-3.2018|gex:description|gex:EX_Extent|/mdb:MD_Metadata/mdb:identificationInfo/mri:MD_DataIdentification/mri:extent/gex:EX_Extent/gex:description" lang="EN">Walensee</textarea>
+            <textarea class="form-control hidden" id="gn-field-281" name="_286" data-gn-autogrow="" disabled="disabled" data-gn-field-tooltip="iso19115-3.2018|gex:description|gex:EX_Extent|/mdb:MD_Metadata/mdb:identificationInfo/mri:MD_DataIdentification/mri:extent/gex:EX_Extent/gex:description" lang="DE">Walensee</textarea>
+            <textarea class="form-control hidden" id="gn-field-281" name="_288" data-gn-autogrow="" disabled="disabled" data-gn-field-tooltip="iso19115-3.2018|gex:description|gex:EX_Extent|/mdb:MD_Metadata/mdb:identificationInfo/mri:MD_DataIdentification/mri:extent/gex:EX_Extent/gex:description" lang="FR">Walensee</textarea>
             <div class="gn-move">
               <a class="fa fa-angle-up hidden" data-gn-editor-control-move="280" data-domelement-to-move="281" data-direction="up" href="" tabindex="-1" />
               <a class="fa fa-angle-down hidden" data-gn-editor-control-move="280" data-domelement-to-move="281" data-direction="down" href="" tabindex="-1" />
@@ -736,11 +736,7 @@
               </button>
             </div>
           </div>
-          <div class="col-sm-1 col-xs-1 gn-control">
-            <a class="btn pull-right" data-gn-click-and-spin="remove(280, 279, 281)" data-gn-field-highlight-remove="281" data-toggle="tooltip" data-placement="top" title="{{'deleteField' | translate}}">
-              <i class="fa fa-times text-danger gn-control" />
-            </a>
-          </div>
+          <div class="col-sm-1 col-xs-1 gn-control" />
         </div>
         <fieldset id="gn-el-289" data-gn-field-highlight="" class=" gn-EX_GeographicBoundingBox">
           <legend class="EX_GeographicBoundingBox" data-gn-field-tooltip="iso19115-3.2018|gex:EX_GeographicBoundingBox|gex:geographicElement|" data-gn-slide-toggle="false">
@@ -750,7 +746,7 @@
               <a class="fa fa-angle-down " data-gn-editor-control-move="289" data-domelement-to-move="289" data-direction="down" href="" tabindex="-1" />
             </div>
           </legend>
-          <div gn-draw-bbox="" data-hleft="9.098841" data-hright="9.302102" data-hbottom="47.112094" data-htop="47.139194" data-hleft-ref="_292" data-hright-ref="_294" data-hbottom-ref="_296" data-htop-ref="_298" data-lang="lang" />
+          <div gn-draw-bbox="" data-hleft="9.098841" data-hright="9.302102" data-hbottom="47.112094" data-htop="47.139194" data-hleft-ref="_292" data-hright-ref="_294" data-hbottom-ref="_296" data-htop-ref="_298" data-lang="lang" data-read-only="true" />
         </fieldset>
         <fieldset id="gn-el-299" data-gn-field-highlight="" class=" gn-polygon">
           <legend class="polygon" data-gn-field-tooltip="iso19115-3.2018|gex:polygon|gex:EX_BoundingPolygon|" data-gn-slide-toggle="false">
@@ -1589,9 +1585,9 @@
           <div class="form-group gn-field gn-title gn-required gn-Obligatoire " id="gn-el-447" data-gn-field-highlight="">
             <label for="gn-field-447" class="col-sm-2 control-label">Nom du format</label>
             <div class="col-sm-9 col-xs-11 gn-value nopadding-in-table" data-gn-multilingual-field="{&quot;fre&quot;:&quot;#FR&quot;,&quot;ger&quot;:&quot;#DE&quot;,&quot;eng&quot;:&quot;#EN&quot;}" data-main-language="fre" data-expanded="true">
-              <input class="form-control hidden" id="gn-field-447" name="_450" data-gn-field-tooltip="iso19115-3.2018|cit:title|cit:CI_Citation|/mdb:MD_Metadata/mdb:distributionInfo/mrd:MD_Distribution/mrd:distributionFormat/mrd:MD_Format/mrd:formatSpecificationCitation/cit:CI_Citation/cit:title" required="required" lang="EN" type="text" value="FlatGeobuf e" />
-              <input class="form-control hidden" id="gn-field-447" name="_452" data-gn-field-tooltip="iso19115-3.2018|cit:title|cit:CI_Citation|/mdb:MD_Metadata/mdb:distributionInfo/mrd:MD_Distribution/mrd:distributionFormat/mrd:MD_Format/mrd:formatSpecificationCitation/cit:CI_Citation/cit:title" required="required" lang="DE" type="text" value="FlatGeobuf d" />
-              <input class="form-control hidden" id="gn-field-447" name="_454" data-gn-field-tooltip="iso19115-3.2018|cit:title|cit:CI_Citation|/mdb:MD_Metadata/mdb:distributionInfo/mrd:MD_Distribution/mrd:distributionFormat/mrd:MD_Format/mrd:formatSpecificationCitation/cit:CI_Citation/cit:title" required="required" data-gn-check="#gn-el-447" lang="FR" type="text" value="FlatGeobuf f" />
+              <input class="form-control hidden" id="gn-field-447" name="_450" data-gn-field-tooltip="iso19115-3.2018|cit:title|cit:CI_Citation|/mdb:MD_Metadata/mdb:distributionInfo/mrd:MD_Distribution/mrd:distributionFormat/mrd:MD_Format/mrd:formatSpecificationCitation/cit:CI_Citation/cit:title" required="required" disabled="disabled" lang="EN" type="text" value="FlatGeobuf e" />
+              <input class="form-control hidden" id="gn-field-447" name="_452" data-gn-field-tooltip="iso19115-3.2018|cit:title|cit:CI_Citation|/mdb:MD_Metadata/mdb:distributionInfo/mrd:MD_Distribution/mrd:distributionFormat/mrd:MD_Format/mrd:formatSpecificationCitation/cit:CI_Citation/cit:title" required="required" disabled="disabled" lang="DE" type="text" value="FlatGeobuf d" />
+              <input class="form-control hidden" id="gn-field-447" name="_454" data-gn-field-tooltip="iso19115-3.2018|cit:title|cit:CI_Citation|/mdb:MD_Metadata/mdb:distributionInfo/mrd:MD_Distribution/mrd:distributionFormat/mrd:MD_Format/mrd:formatSpecificationCitation/cit:CI_Citation/cit:title" required="required" data-gn-check="#gn-el-447" disabled="disabled" lang="FR" type="text" value="FlatGeobuf f" />
               <textarea id="_447_config" class="hidden">{
   "@relElementRef": "",
   "option":   [
@@ -1690,7 +1686,7 @@
           <div class="form-group gn-field gn-edition  gn- " id="gn-el-457" data-gn-field-highlight="">
             <label for="gn-field-457" class="col-sm-2 control-label">Edition</label>
             <div class="col-sm-9 col-xs-11 gn-value nopadding-in-table">
-              <input class="form-control " id="gn-field-457" name="_457" data-gn-field-tooltip="iso19115-3.2018|cit:edition|cit:CI_Citation|/mdb:MD_Metadata/mdb:distributionInfo/mrd:MD_Distribution/mrd:distributionFormat/mrd:MD_Format/mrd:formatSpecificationCitation/cit:CI_Citation/cit:edition" type="text" value="-" />
+              <input class="form-control " id="gn-field-457" name="_457" data-gn-field-tooltip="iso19115-3.2018|cit:edition|cit:CI_Citation|/mdb:MD_Metadata/mdb:distributionInfo/mrd:MD_Distribution/mrd:distributionFormat/mrd:MD_Format/mrd:formatSpecificationCitation/cit:CI_Citation/cit:edition" disabled="disabled" type="text" value="-" />
               <div class="gn-move">
                 <a class="fa fa-angle-up hidden" data-gn-editor-control-move="456" data-domelement-to-move="457" data-direction="up" href="" tabindex="-1" />
                 <a class="fa fa-angle-down hidden" data-gn-editor-control-move="456" data-domelement-to-move="457" data-direction="down" href="" tabindex="-1" />
@@ -1715,11 +1711,7 @@
                 </div>
               </div>
             </div>
-            <div class="col-sm-1 col-xs-1 gn-control">
-              <a class="btn pull-right" data-gn-click-and-spin="remove(456, 445, 457)" data-gn-field-highlight-remove="457" data-toggle="tooltip" data-placement="top" title="{{'deleteField' | translate}}">
-                <i class="fa fa-times text-danger gn-control" />
-              </a>
-            </div>
+            <div class="col-sm-1 col-xs-1 gn-control" />
           </div>
         </fieldset>
         <fieldset id="gn-el-d67e16799" data-gn-field-highlight="" class=" gn-distributorContact">
