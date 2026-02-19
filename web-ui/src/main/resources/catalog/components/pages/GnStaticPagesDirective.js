@@ -123,7 +123,9 @@
         scope: {
           pageId: "=gnStaticPageMenu",
           language: "@language",
-          section: "@section"
+          section: "@section",
+          renderAsButton: "@?",
+          context: "=?"
         },
         templateUrl: function (elem, attr) {
           return "../../catalog/components/pages/partials/menu-page.html";
@@ -134,6 +136,9 @@
           $scope.pagesConfig = angular.isArray($scope.pageId)
             ? $scope.pageId
             : [$scope.pageId];
+
+          // Set button style based on explicit parameter (defaults to false)
+          $scope.renderAsButton = $scope.renderAsButton === "true";
 
           if ($scope.pagesConfig.length > 0) {
             gnStaticPagesService.loadPages($scope.language, $scope.section).then(
