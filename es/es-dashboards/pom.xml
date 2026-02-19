@@ -139,7 +139,7 @@
             <artifactId>exec-maven-plugin</artifactId>
             <inherited>false</inherited>
             <configuration>
-              <executable>kibana-${es.version}-${kb.platform}/bin/${kb.executable}</executable>
+              <executable>kibana-${es.version}/bin/${kb.executable}</executable>
             </configuration>
           </plugin>
         </plugins>
@@ -147,7 +147,6 @@
     </profile>
   </profiles>
   <properties>
-    <kb.executable>kibana</kb.executable>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
 </project>
