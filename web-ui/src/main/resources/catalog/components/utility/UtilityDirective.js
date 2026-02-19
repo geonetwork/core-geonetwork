@@ -2523,6 +2523,7 @@
       };
     }
   ]);
+
   module.filter("signInLink", [
     "$location",
     "$filter",
@@ -2536,6 +2537,23 @@
       };
     }
   ]);
+
+  module.filter("isHtml", [
+    "$location",
+    "$filter",
+    function ($location, $filter) {
+      return function (str) {
+        var a = new DOMParser().parseFromString(str, "text/html");
+
+        for (var c = a.body.childNodes, i = c.length; i--; ) {
+          if (c[i].nodeType == 1) return true;
+        }
+
+        return false;
+      };
+    }
+  ]);
+
   module.filter("getMailDomain", [
     function () {
       return function (mail) {
