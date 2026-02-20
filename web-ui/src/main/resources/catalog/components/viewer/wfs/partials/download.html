@@ -55,7 +55,7 @@
           <span>{{type.label}}</span>
           <span class="caret"></span>
         </button>
-        <ul class="dropdown-menu">
+        <ul class="dropdown-menu gn-wfs-formats-menu">
           <li class="dropdown-header" data-translate="">downloadAllIn</li>
           <li data-ng-repeat="f in formats | orderBy:f track by $index">
             <a
@@ -114,7 +114,7 @@
             <span>{{ftSelected.name.localPart}}</span>
             <span class="caret"></span>
           </button>
-          <ul class="dropdown-menu">
+          <ul class="dropdown-menu gn-wfs-formats-menu">
             <li data-ng-repeat="format in formats | orderBy:format">
               <a
                 data-gn-click-and-spin="downloadFeatureType(ftSelected,
