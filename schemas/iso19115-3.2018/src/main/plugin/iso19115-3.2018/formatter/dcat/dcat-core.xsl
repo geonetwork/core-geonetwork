@@ -239,27 +239,98 @@
   </xsl:template>
 
 
-  <xsl:template mode="iso19115-3-to-dcat"
-                match="mdb:dateInfo/*/cit:date
-                      |cit:CI_Citation/cit:date/*/cit:date
-                      |mrd:distributionOrderProcess/*/mrd:plannedAvailableDateTime">
+  <!-- Gets a list of date nodes and outputs the most recent date
+     based on the dateType. The dateType is used to determine the dcat element name.
+
+     If no matching dcat element name is found, a warning is logged.
+  -->
+  <xsl:template name="iso19115-3-to-dcat-date-info">
+    <xsl:param name="values"
+               as="node()*" />
     <xsl:param name="dateType"
-                  as="xs:string?"
-                  select="../cit:dateType/*/@codeListValue"/>
+               as="xs:string" />
     <xsl:variable name="dcatElementName"
                   as="xs:string?"
                   select="$isoDateTypeToDcatCommonNames[. = $dateType]/@key"/>
 
     <xsl:choose>
       <xsl:when test="string($dcatElementName)">
-        <xsl:call-template name="rdf-date">
-          <xsl:with-param name="nodeName" select="$dcatElementName"/>
-        </xsl:call-template>
+
+        <xsl:for-each select="$values/*">
+          <xsl:sort select="." order="descending" />
+
+          <xsl:if test="string($dcatElementName) and position() = 1">
+            <xsl:call-template name="rdf-date">
+              <xsl:with-param name="nodeName" select="$dcatElementName"/>
+            </xsl:call-template>
+          </xsl:if>
+        </xsl:for-each>
       </xsl:when>
       <xsl:otherwise>
         <xsl:message>WARNING: Unmatched date type <xsl:value-of select="$dateType"/>. If needed, add this type in dcat-variables.xsl and add the element to map to in isoDateTypeToDcatCommonNames.</xsl:message>
       </xsl:otherwise>
     </xsl:choose>
+  </xsl:template>
+
+  <!-- Process all metadata / dataset dates and keep the most recent date -->
+  <xsl:template mode="iso19115-3-to-dcat"
+                match="mdb:dateInfo|cit:CI_Citation/cit:date[*/cit:date]">
+
+    <xsl:variable name="elementName" select="name()" />
+
+    <!-- Process all dates when processing the first date -->
+    <xsl:if test="count(preceding-sibling::*[name() = $elementName]) = 0">
+      <xsl:variable name="issuedDateTypes" select="$isoDateTypeToDcatCommonNames[@key='dct:issued']" />
+
+      <!-- issued dates -->
+      <xsl:variable name="issuedDates">
+        <xsl:for-each select="../*[name() = $elementName]/*/cit:date">
+          <xsl:sort select="." order="descending" />
+
+          <xsl:variable name="dateType"
+                        as="xs:string?"
+                        select="../cit:dateType/*/@codeListValue"/>
+          <xsl:variable name="dcatElementName"
+                        as="xs:string?"
+                        select="$issuedDateTypes[. = $dateType]/@key"/>
+          <xsl:if test="string($dcatElementName)">
+            <xsl:call-template name="rdf-date">
+              <xsl:with-param name="nodeName" select="$dcatElementName"/>
+            </xsl:call-template>
+          </xsl:if>
+        </xsl:for-each>
+      </xsl:variable>
+
+      <xsl:copy-of select="$issuedDates/*[1]"/>
+      <xsl:if test="count($issuedDates/*) = 0">
+        <xsl:message>WARNING: No issued date found for this resource.</xsl:message>
+      </xsl:if>
+
+      <!-- modified dates -->
+      <xsl:variable name="modifiedDateTypes" select="$isoDateTypeToDcatCommonNames[@key='dct:modified']" />
+
+      <xsl:variable name="modifiedDates">
+        <xsl:for-each select="../*[name() = $elementName]/*/cit:date">
+          <xsl:sort select="." order="descending" />
+          <xsl:variable name="dateType"
+                        as="xs:string?"
+                        select="../cit:dateType/*/@codeListValue"/>
+          <xsl:variable name="dcatElementName"
+                        as="xs:string?"
+                        select="$modifiedDateTypes[. = $dateType]/@key"/>
+          <xsl:if test="string($dcatElementName)">
+            <xsl:call-template name="rdf-date">
+              <xsl:with-param name="nodeName" select="$dcatElementName"/>
+            </xsl:call-template>
+          </xsl:if>
+        </xsl:for-each>
+      </xsl:variable>
+
+      <xsl:copy-of select="$modifiedDates/*[1]"/>
+      <xsl:if test="count($modifiedDates/*) = 0">
+        <xsl:message>WARNING: No modifiedDate date found for this resource.</xsl:message>
+      </xsl:if>
+    </xsl:if>
   </xsl:template>
 
 
@@ -372,14 +443,14 @@
           </xsl:when>
           <xsl:otherwise>
             <rdf:type rdf:resource="http://purl.org/dc/terms/Standard"/>
-            <xsl:for-each select="*/mdq:specification/*">
-              <xsl:for-each select="cit:title">
+            <xsl:for-each select="*/mdq:specification">
+              <xsl:for-each select="cit:CI_Citation/cit:title">
                 <xsl:call-template name="rdf-localised">
                   <xsl:with-param name="nodeName" select="'rdfs:label'"/>
                 </xsl:call-template>
               </xsl:for-each>
               <xsl:apply-templates mode="iso19115-3-to-dcat"
-                                   select="cit:date/*[cit:dateType/*/@codeListValue = $isoDateTypeToDcatCommonNames/text()]/cit:date"/>
+                                   select="cit:CI_Citation/cit:date"/>
             </xsl:for-each>
           </xsl:otherwise>
         </xsl:choose>
