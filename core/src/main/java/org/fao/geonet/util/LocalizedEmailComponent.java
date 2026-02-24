@@ -362,9 +362,6 @@ public class LocalizedEmailComponent {
     private String replaceLinks(String message, Locale locale) {
         SettingManager settingManager = ApplicationContextHolder.get().getBean(SettingManager.class);
 
-        // Get the formatter configured for *links* to records (recordLinkFormatter) from the UI configuration.
-        String recordLinkFormatter = XslUtil.getUiConfigurationJsonProperty(null, "mods.search.formatter.recordLinkFormatter");
-
         // Build the link to replace the {{link}} placeholder
         // Add the uuid placeholder to the link in the specified format
         UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder
@@ -372,12 +369,6 @@ public class LocalizedEmailComponent {
             .pathSegment("api", "records", replaceLinksWithHtmlFormat ? "{{index:uuid}}" : "'{{index:uuid}}'");
 
         uriComponentsBuilder.queryParam("language", locale.getISO3Language());
-
-        // If there is a formatter configured for links to records, add the redirectToRecordView parameter to the
-        // permalink so that the record view will be used to display the record instead of the metadata api view.
-        if (StringUtils.isNotBlank(recordLinkFormatter)) {
-            uriComponentsBuilder.queryParam("redirectToRecordView", true);
-        }
 
         return message.replace("{{link}}", uriComponentsBuilder.build().toString());
     }
