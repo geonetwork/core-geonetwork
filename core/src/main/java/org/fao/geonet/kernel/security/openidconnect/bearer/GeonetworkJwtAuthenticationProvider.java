@@ -36,7 +36,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
-import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserRequest;
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
@@ -46,7 +45,6 @@ import org.springframework.security.oauth2.core.OAuth2AccessToken;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.OAuth2Error;
 import org.springframework.security.oauth2.core.oidc.OidcUserInfo;
-import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.server.resource.authentication.BearerTokenAuthenticationToken;
@@ -89,12 +87,10 @@ public class GeonetworkJwtAuthenticationProvider implements AuthenticationProvid
     private final OAuth2UserService<OAuth2UserRequest, OAuth2User> oauth2UserService = new DefaultOAuth2UserService();
 
     public GeonetworkJwtAuthenticationProvider(AccessTokenParser accessTokenParser,
-                                               OAuth2UserService<OidcUserRequest, OidcUser> userService,
                                                UserRolesResolver userRolesResolver,
                                                List<AccessTokenValidator> accessTokenValidators
     ) {
         Assert.notNull(accessTokenParser, "accessTokenParser cannot be null");
-        Assert.notNull(userService, "userService cannot be null");
         Assert.notNull(accessTokenValidators, "accessTokenValidators cannot be null");
 
         this.userRolesResolver = userRolesResolver;
