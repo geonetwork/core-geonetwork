@@ -197,6 +197,10 @@
           );
       };
 
+      this.getSelectedMetadataTypes = function () {
+        return selectedMetadataTypes;
+      };
+
       /**
        * Export as PDF (one or selection). If params is search object, we check
        * for sortBy and sortOrder to process the print. If it is a string

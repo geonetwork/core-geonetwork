@@ -922,7 +922,25 @@
           };
 
           scope.getMetadataDeleteConfirmMessage = function () {
-            return $translate.instant("metadataBatchDeleteConfirm");
+            var metadataTypes = gnMetadataActions.getSelectedMetadataTypes();
+            var translationsMetadataTypes = "";
+
+            // check for additional texts to display depending on the metadata type(s) selected.
+            for (var i = 0; i < metadataTypes.length; i++) {
+              var messageKey = "metadataDelete-" + metadataTypes[i].type;
+
+              var textMetadataType = $translate.instant(messageKey);
+
+              if (textMetadataType !== messageKey) {
+                translationsMetadataTypes += "<br/>" + textMetadataType;
+              }
+            }
+
+            var translation =
+              $translate.instant("metadataBatchDeleteConfirm") +
+              translationsMetadataTypes;
+
+            return translation;
           };
         }
       };

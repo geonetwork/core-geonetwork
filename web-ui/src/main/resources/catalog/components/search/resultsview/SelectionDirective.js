@@ -368,6 +368,12 @@
                   bucket: scope.bucket,
                   results: scope.results
                 });
+
+                if (method == "select") {
+                  $rootScope.$broadcast("metadataSelected", scope.md);
+                } else {
+                  $rootScope.$broadcast("metadataUnselected", scope.md);
+                }
               });
               e.stopPropagation();
             });
