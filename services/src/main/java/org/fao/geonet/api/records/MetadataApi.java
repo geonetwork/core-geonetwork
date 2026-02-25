@@ -208,7 +208,8 @@ public class MetadataApi {
         String acceptHeader = StringUtils.isBlank(request.getHeader(HttpHeaders.ACCEPT)) ? MediaType.APPLICATION_XML_VALUE : request.getHeader(HttpHeaders.ACCEPT);
         List<String> accept = Arrays.asList(acceptHeader.split(","));
 
-        String defaultFormatter = "xsl-view";
+        String formatterBasePath = metadataUuid + "/formatters/";
+        String defaultFormatterPath = formatterBasePath + "xsl-view";
         if (accept.contains(MediaType.TEXT_HTML_VALUE) || accept.contains(MediaType.APPLICATION_XHTML_XML_VALUE)) {
             // Check if the language query parameter is a real language supported by the system. If not, fallback to the request language.
             String resolvedLanguage = (StringUtils.isNotBlank(language) && languageUtils.getUiLanguages().contains(language.toLowerCase()))
@@ -216,22 +217,25 @@ public class MetadataApi {
                 : languageUtils.getIso3langCode(request.getLocales());
             // If there is a redirect to a record view formatter configured use it, otherwise fallback to the default xsl-view formatter.
             String redirect = getRecordViewFormatterRedirect(resolvedLanguage, metadataUuid, recordViewFormatter);
-            return redirect != null ? redirect : "forward:" + (metadataUuid + "/formatters/" + defaultFormatter);
+            if (StringUtils.isNotBlank(redirect)) {
+                return redirect;
+            }
+            return "forward:" + defaultFormatterPath;
         } else if (accept.contains("application/pdf")) {
-            return "forward:" + (metadataUuid + "/formatters/" + defaultFormatter);
+            return "forward:" + defaultFormatterPath;
         } else if (accept.contains(MediaType.APPLICATION_XML_VALUE)) {
-            return "forward:" + (metadataUuid + "/formatters/xml");
+            return "forward:" + (formatterBasePath + "xml");
         } else if (accept.contains(MediaType.APPLICATION_JSON_VALUE)) {
-            return "forward:" + (metadataUuid + "/formatters/json");
+            return "forward:" + (formatterBasePath + "json");
         } else if (accept.contains("application/zip")
             || accept.contains(MEF_V1_ACCEPT_TYPE)
             || accept.contains(MEF_V2_ACCEPT_TYPE)) {
-            return "forward:" + (metadataUuid + "/formatters/zip");
+            return "forward:" + (formatterBasePath + "zip");
         } else {
             // FIXME this else is never reached because any of the accepted medias match one of the previous if conditions.
             response.setHeader(HttpHeaders.ACCEPT, MediaType.APPLICATION_XHTML_XML_VALUE);
             //response.sendRedirect(metadataUuid + "/formatters/" + defaultFormatter);
-            return "forward:" + (metadataUuid + "/formatters/" + defaultFormatter);
+            return "forward:" + defaultFormatterPath;
         }
     }
 
