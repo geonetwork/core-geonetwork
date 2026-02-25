@@ -198,8 +198,9 @@ public class MetadataApi {
         HttpServletRequest request
     )
         throws Exception {
+        AbstractMetadata metadata;
         try {
-            ApiUtils.canViewRecord(metadataUuid, request);
+            metadata = ApiUtils.canViewRecord(metadataUuid, request);
         } catch (SecurityException e) {
             Log.debug(API.LOG_MODULE_NAME, e.getMessage(), e);
             throw new NotAllowedException(ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW);
@@ -208,7 +209,8 @@ public class MetadataApi {
         String acceptHeader = StringUtils.isBlank(request.getHeader(HttpHeaders.ACCEPT)) ? MediaType.APPLICATION_XML_VALUE : request.getHeader(HttpHeaders.ACCEPT);
         List<String> accept = Arrays.asList(acceptHeader.split(","));
 
-        String formatterBasePath = metadataUuid + "/formatters/";
+        // Use the uuid from the abstract metadata instead of the path variable to address URL forwarding vulnerabilities
+        String formatterBasePath = metadata.getUuid() + "/formatters/";
         String defaultFormatterPath = formatterBasePath + "xsl-view";
         if (accept.contains(MediaType.TEXT_HTML_VALUE) || accept.contains(MediaType.APPLICATION_XHTML_XML_VALUE)) {
             // Check if the language query parameter is a real language supported by the system. If not, fallback to the request language.
@@ -216,7 +218,7 @@ public class MetadataApi {
                 ? language.toLowerCase()
                 : languageUtils.getIso3langCode(request.getLocales());
             // If there is a redirect to a record view formatter configured use it, otherwise fallback to the default xsl-view formatter.
-            String redirect = getRecordViewFormatterRedirect(resolvedLanguage, metadataUuid, recordViewFormatter);
+            String redirect = getRecordViewFormatterRedirect(resolvedLanguage, metadata.getUuid(), recordViewFormatter);
             if (StringUtils.isNotBlank(redirect)) {
                 return redirect;
             }
