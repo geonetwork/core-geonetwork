@@ -27,72 +27,60 @@ import org.fao.geonet.schemas.XslProcessTest;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
 import org.xmlunit.builder.DiffBuilder;
 import org.xmlunit.builder.Input;
 import org.xmlunit.diff.DefaultNodeMatcher;
 import org.xmlunit.diff.Diff;
 import org.xmlunit.diff.ElementSelectors;
 
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
+import java.util.Collection;
 
 import static org.junit.Assert.assertFalse;
 
-public class XslConversionTest extends XslProcessTest {
-    public XslConversionTest() {
+@RunWith(Parameterized.class)
+public class OdsConversionTest extends XslProcessTest {
+
+    private String jsonFilename;
+
+    public OdsConversionTest(String xmlFilename, String jsonFilename) {
         super();
         this.setNs(ISO19115_3_2018SchemaPlugin.allNamespaces);
+        this.xmlFilename = xmlFilename;
+        this.jsonFilename = jsonFilename;
+    }
+
+    @Parameterized.Parameters(name = "{index}: xml={0}, json={1}")
+    public static Collection<Object[]> data() {
+        return Arrays.asList(new Object[][] {
+            { "ods.xml", "ods.json" },
+            { "ods_v1.xml", "ods_v1.json" },
+            { "ods_v2.0.xml", "ods_v2.0.json" },
+            { "ods_v2.0.xml", "ods_v2.1.json" },
+            { "ods_asset.xml", "ods_asset.json" }
+        });
     }
 
     @Test
-    public void testArrayConversion() throws Exception {
-        String jsonString = "[{\"Test\":\"value1\"},{\"Test\":\"value2\"}]";
+    public void testOdsConversion() throws Exception {
+        xslFile = Paths.get(testClass.getClassLoader().getResource("convert/fromJsonOpenDataSoft.xsl").toURI());
+        // xmlFile is initialized by parent setup() method because we set xmlFilename in constructor
+
+        Path jsonFile = Paths.get(testClass.getClassLoader().getResource(jsonFilename).toURI());
+        String jsonString = Files.readString(jsonFile);
         Element xmlFromJSON = Xml.getXmlFromJSON(jsonString);
+        xmlFromJSON.setName("record");
+        xmlFromJSON.addContent(new Element("nodeUrl").setText("https://www.odwb.be"));
 
-        String expectedElement = "<root><array><Test>value1</Test></array><array><Test>value2</Test></array></root>";
-
-        Diff diff = DiffBuilder
-            .compare(Input.fromString(expectedElement))
-            .withTest(Input.fromString(Xml.getString(xmlFromJSON)))
-            .withNodeMatcher(new DefaultNodeMatcher(ElementSelectors.byName))
-            .normalizeWhitespace()
-            .ignoreComments()
-            .checkForSimilar()
-            .build();
-        assertFalse(diff.toString(), diff.hasDifferences());
-    }
-
-    /**
-     * Tests the conversion of a JSON object to an XML representation and validates
-     * the resulting XML against an expected XML representation.
-     */
-    @Test
-    public void testObjectConversion() throws Exception {
-        String jsonString = "{\"Test\":\"value\", \"nestedObject\": {\"nestedField\": 433}}";
-        String expectedElement = "<root><Test>value</Test><nestedObject><nestedField>433</nestedField></nestedObject></root>";
-        Element xmlFromJSON = Xml.getXmlFromJSON(jsonString);
-        Diff diff = DiffBuilder
-            .compare(Input.fromString(expectedElement))
-            .withTest(Input.fromString(Xml.getString(xmlFromJSON)))
-            .withNodeMatcher(new DefaultNodeMatcher(ElementSelectors.byName))
-            .normalizeWhitespace()
-            .ignoreComments()
-            .checkForSimilar()
-            .build();
-        assertFalse(diff.toString(), diff.hasDifferences());
-    }
-
-
-    @Test
-    public void testDataciteConversion() throws Exception {
-        xslFile = Paths.get(testClass.getClassLoader().getResource("convert/fromDatacite.xsl").toURI());
-        xmlFile = Paths.get(testClass.getClassLoader().getResource("metadata-datacite.xml").toURI());
-        Path expectedFile = Paths.get(testClass.getClassLoader().getResource("metadata-datacite-after-conversion.xml").toURI());
-
-        Element inputElement = Xml.loadFile(expectedFile);
+        Element inputElement = Xml.loadFile(xmlFile);
         String expectedXml = Xml.getString(inputElement);
 
-        Element resultElement = Xml.transform(Xml.loadFile(xmlFile), xslFile);
+        Element resultElement = Xml.transform(xmlFromJSON, xslFile);
         String resultOfConversion = Xml.getString(resultElement);
 
         Diff diff = DiffBuilder
