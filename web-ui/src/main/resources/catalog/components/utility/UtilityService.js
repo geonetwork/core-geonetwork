@@ -623,7 +623,7 @@
             };
           } else {
             return {
-              title: fromNow,
+              title: date,
               value: format ? parsedDate.format(format) : parsedDate.toString()
             };
           }
