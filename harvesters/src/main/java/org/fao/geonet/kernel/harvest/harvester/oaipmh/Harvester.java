@@ -327,7 +327,7 @@ class Harvester extends BaseAligner<OaiPmhParams> implements IHarvester<HarvestR
                             addMetadata(t, ri, processName, processParams, newRandomUuid);
                             break;
                         case SKIP:
-                            log.debug("Skipping record with uuid " + ri.id);
+                            log.info("Skipping record with uuid " + ri.id);
                             result.uuidSkipped++;
                             break;
                         default:
