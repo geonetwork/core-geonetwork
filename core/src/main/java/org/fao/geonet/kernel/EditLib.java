@@ -1909,7 +1909,17 @@ public class EditLib {
         String DELETE = "gn_delete";
 
         /**
-         * Multiple target updates
+         * Multiple target updates.
+         *
+         * <p>
+         * When using this mode, a gn_delete operation is applied first,
+         * then gn_create is applied for each element.
+         * </p>
+         *
+         * <p>
+         * If a predicate is used, the predicate is applied to the gn_delete operation.
+         * Therefor the gn_create will only create the element targeting the xpath without the predicate.
+         * </p>
          */
         String REPLACE_ALL = "gn_replace_all";
     }
