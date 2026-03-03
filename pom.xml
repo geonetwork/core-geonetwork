@@ -1090,6 +1090,26 @@
         <version>${spring.security.version}</version>
       </dependency>
       <dependency>
+        <groupId>org.springframework.security</groupId>
+        <artifactId>spring-security-oauth2-client</artifactId>
+        <version>${spring.security.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework.security</groupId>
+        <artifactId>spring-security-oauth2-jose</artifactId>
+        <version>${spring.security.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework.security</groupId>
+        <artifactId>spring-security-oauth2-resource-server</artifactId>
+        <version>${spring.security.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.keycloak</groupId>
+        <artifactId>keycloak-spring-security-adapter</artifactId>
+        <version>${keycloak.version}</version>
+      </dependency>
+      <dependency>
         <groupId>org.springframework</groupId>
         <artifactId>spring-test</artifactId>
         <version>${spring.version}</version>
@@ -1670,6 +1690,7 @@
     <spring.jpa.version>2.7.18</spring.jpa.version>
     <springboot.version>2.7.0</springboot.version>
     <springdoc.version>1.8.0</springdoc.version>
+    <keycloak.version>18.0.2</keycloak.version>
     <hibernate.version>5.6.15.Final</hibernate.version>
 
     <metrics.version>2.2.0</metrics.version>

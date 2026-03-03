@@ -85,7 +85,7 @@ public class OIDCServiceAccountLogin {
 
         BearerTokenAuthenticationToken bearerTokenAuthenticationToken = new BearerTokenAuthenticationToken(client.getAccessToken().getTokenValue());
 
-        Authentication authentication = geonetworkJwtAuthenticationProvider.authenticate(bearerTokenAuthenticationToken, clientRegistration.getRegistrationId());
+        Authentication authentication = geonetworkJwtAuthenticationProvider.authenticate(bearerTokenAuthenticationToken);
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
