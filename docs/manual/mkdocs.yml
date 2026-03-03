@@ -267,6 +267,7 @@ nav:
         - user-guide/associating-resources/linking-feature-catalog.md
         - user-guide/associating-resources/linking-others.md
         - user-guide/associating-resources/linking-remote-records.md
+        - user-guide/associating-resources/linking-panel-configuration.md
       - user-guide/associating-resources/doi.md
       - user-guide/associating-resources/cite.md
     - 'Tag information':
