@@ -27,7 +27,7 @@
       
       
       <link rel="icon" href="../../../assets/images/geonetwork-logo.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.2">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.3">
     
     
       
@@ -1046,6 +1046,8 @@
       
         
       
+        
+      
     
     
     
@@ -1284,6 +1286,34 @@
     
   
     Linking to a remote record
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../linking-panel-configuration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Associated resources panel configuration
   
 
     
@@ -2199,10 +2229,23 @@
 
 
 <h1 id="linking-others">Other types of resources (eg. sensor, publication)</h1>
-<div class="admonition info">
-<p class="admonition-title">Todo</p>
-<p>Add aggregates details</p>
-</div>
+<p>In ISO, associated resource allows to link to record defining the type of relation with:
+* association type (mandatory)
+* initiative type</p>
+<p>Codelist values for association types are:</p>
+<ul>
+<li>Cross reference</li>
+<li>Larger work citation</li>
+<li>Part of seamless database</li>
+<li>Stereo mate</li>
+<li>Is composed of</li>
+<li>Collective Title</li>
+<li>Series</li>
+<li>Dependency</li>
+<li>Revision Of</li>
+</ul>
+<p>In ISO19115-3, by default parent relations are defined with association type set to <code>partOfSeamlessDatabase</code>. This can be customized with <a href="../linking-panel-configuration/">the panel configuration</a>.</p>
+<p><img alt="" src="../img/iso-associated-resources.png" /></p>
 
 
 
