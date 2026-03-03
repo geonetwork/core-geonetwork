@@ -106,7 +106,7 @@
             </div>
           </div>
 
-          <div>
+          <div data-ng-show="searchResults.records.length > 0">
             <div class="list-group fixed gn-nopadding-left gn-nopadding-right">
               <div class="list-group-item" data-ng-repeat="md in searchResults.records">
                 <a
@@ -130,6 +130,7 @@
             </div>
           </div>
           <div
+            data-ng-show="searchResults.records.length > 0"
             data-gn-pagination="paginationInfo"
             data-hits-values="searchObj.hitsperpageValues"
           ></div>
