@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <schema xmlns="http://geonetwork-opensource.org/schemas/schema-ident"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:gex="http://standards.iso.org/iso/19115/-3/gex/1.0"
         xsi:schemaLocation="http://geonetwork-opensource.org/schemas/schema-ident http://geonetwork-opensource.org/schemas/schema-ident/schema-ident.xsd">
   <name>iso19115-3.2018</name>
   <id>93f66207-621a-4610-813f-38494a51d121</id>
@@ -119,6 +120,7 @@ Ce schéma est également composé des normes :
       <mco:MD_Constraints/>
       <mco:MD_LegalConstraints/>
       <mco:MD_SecurityConstraints/>
+      <gex:EX_Extent/>
       <!-- TODO: Add subtemplate roots -->
     </elements>
   </autodetect>
