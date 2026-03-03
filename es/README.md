@@ -38,7 +38,7 @@ These configurations should not be used for a production deployment.
 3. Check that it is running using your browser:
    
    * Elasticsearch: http://localhost:9200
-   * Kibana: http://localhost:5601
+   * Kibana: http://localhost:5601/api/status
 
 ### Maven installation
 
