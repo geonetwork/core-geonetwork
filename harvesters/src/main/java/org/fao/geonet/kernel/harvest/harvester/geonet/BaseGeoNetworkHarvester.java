@@ -1,5 +1,5 @@
 //=============================================================================
-//===    Copyright (C) 2001-2025 Food and Agriculture Organization of the
+//===    Copyright (C) 2001-2026 Food and Agriculture Organization of the
 //===    United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===    and United Nations Environment Programme (UNEP)
 //===
@@ -54,7 +54,7 @@ import org.fao.geonet.utils.XmlRequest;
  * records during the harvesting process.
  *
  * @param <P> A type parameter extending BaseGeonetParams, representing the specific
- *            configuration or parameters utilized by the harvester.
+ *            configuration or parameters used by the harvester.
  */
 public abstract class BaseGeoNetworkHarvester<P extends BaseGeonetParams> {
     protected final AtomicBoolean cancelMonitor;
@@ -115,7 +115,7 @@ public abstract class BaseGeoNetworkHarvester<P extends BaseGeonetParams> {
                 Source source = remoteSources.get(sourceUuid);
 
                 if (source != null) {
-                    retrieveLogo(context, resources, params.host, sourceUuid);
+                    retrieveLogo(context, resources, params.host, source);
                 } else {
                     String sourceName = "(unknown)";
                     source = new Source(sourceUuid, sourceName, new HashMap<>(), SourceType.harvester);
@@ -134,30 +134,55 @@ public abstract class BaseGeoNetworkHarvester<P extends BaseGeonetParams> {
      * @param context the {@link ServiceContext} instance providing access to system-level resources and services
      * @param resources the {@link Resources} object used to locate and manipulate the logos directory
      * @param url the base URL from which the logo file is retrieved
-     * @param uuid the unique identifier corresponding to the logo, typically used as the logo's filename
-     * @throws MalformedURLException if the constructed URL for the logo retrieval or proxy setup is malformed
+     * @param source the metadata source from which the logo is retrieved
      */
-    protected void retrieveLogo(ServiceContext context, final Resources resources, String url, String uuid) throws MalformedURLException {
-        String logo = uuid + ".gif";
+    protected void retrieveLogo(ServiceContext context, final Resources resources, final String url, final Source source)  {
+
+        if (source.getLogo() != null) {
+            // trust the logo name
+            try {
+                createLogoImage(resources, source.getLogo(), url);
+            } catch (IOException e) {
+                context.warning(String.format("Cannot retrieve logo file from : %s", url));
+                context.warning(String.format("  (C) Logo  : %s", source.getLogo()));
+                context.warning(String.format("  (C) Excep : %s",  e.getMessage()));
+
+                resources.copyUnknownLogo(context, source.getLogo());
+            }
+        } else {
+            String[] allowedLogoFileExtensions = {".png", ".gif", ".jpg", ".jpeg"};
+
+            for (String logoFileExtension : allowedLogoFileExtensions) {
+                String logo = source.getUuid() + logoFileExtension;
+                try {
+                    createLogoImage(resources, logo, url);
+                    return;
+                } catch (IOException e) {
+                    // Ignore the exception
+                }
+            }
+
+            // No logo found, use the default logo
+            context.warning(String.format("Cannot retrieve logo file from : %s for logo '%s' with the file extensions '%s'",
+                url, source.getUuid(), String.join(",", allowedLogoFileExtensions)));
+            context.warning(String.format("Cannot retrieve logo file from : %s", url));
+            resources.copyUnknownLogo(context, source.getLogo());
+        }
+    }
+
+    private void createLogoImage(final Resources resources, final String logo, final String url) throws IOException {
+        final Path logoDir = resources.locateLogosDir(context);
+
         String baseUrl = url;
         if (!new URL(baseUrl).getPath().endsWith("/")) {
             // Needed to make it work when harvesting from a GN deployed at ROOT ("/")
             baseUrl += "/";
         }
+
         XmlRequest req = context.getBean(GeonetHttpRequestFactory.class).createXmlRequest(new URL(baseUrl));
         Lib.net.setupProxy(context, req);
         req.setAddress(req.getAddress() + "images/logos/" + logo);
 
-        final Path logoDir = resources.locateLogosDir(context);
-
-        try {
-            resources.createImageFromReq(context, logoDir, logo, req);
-        } catch (IOException e) {
-            context.warning("Cannot retrieve logo file from : " + url);
-            context.warning("  (C) Logo  : " + logo);
-            context.warning("  (C) Excep : " + e.getMessage());
-
-            resources.copyUnknownLogo(context, uuid);
-        }
+        resources.createImageFromReq(context, logoDir, logo, req);
     }
 }
