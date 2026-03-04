@@ -594,36 +594,41 @@
     "gnGlobalSettings",
     function (gnGlobalSettings) {
       return function (date, format, contextAllowToUseFromNow) {
-        function isDateGmlFormat(date) {
-          return date.match("[Zz]$") !== null;
-        }
-        var settingAllowToUseFromNow = gnGlobalSettings.gnCfg.mods.global.humanizeDates,
-          timezone = gnGlobalSettings.gnCfg.mods.global.timezone;
+        const isDateGmlFormat = /[Zz]$/.test(date);
+        const isDateTimeFormat = date.includes("T");
+        var settingAllowToUseFromNow = gnGlobalSettings.gnCfg.mods.global.humanizeDates;
+        var timezone = gnGlobalSettings.gnCfg.mods.global.timezone;
         var parsedDate = null;
-        if (isDateGmlFormat(date)) {
+
+        if (isDateGmlFormat) {
           parsedDate = moment(date, "YYYY-MM-DDtHH-mm-SSSZ");
-        } else {
+        } else if (isDateTimeFormat) {
           parsedDate = moment(date);
+        } else {
+          parsedDate = moment.utc(date); // Date only
         }
+
         if (parsedDate.isValid()) {
           if (!!timezone) {
             parsedDate = parsedDate.tz(
               timezone === "Browser" ? moment.tz.guess() : timezone
             );
           }
-          var fromNow = parsedDate.fromNow();
 
           if (date.length === 4) {
-            format = "YYYY";
-          }
+            format = "YYYY"; // Year only format
+          } // Otherwise defaults to the format provided as input
+
+          var fromNow = parsedDate.fromNow();
+
           if (settingAllowToUseFromNow && contextAllowToUseFromNow) {
             return {
-              value: fromNow,
-              title: format ? parsedDate.format(format) : parsedDate.toString()
+              title: format ? parsedDate.format(format) : parsedDate.toString(),
+              value: fromNow
             };
           } else {
             return {
-              title: date,
+              title: isDateTimeFormat ? parsedDate.toString() : fromNow,
               value: format ? parsedDate.format(format) : parsedDate.toString()
             };
           }
