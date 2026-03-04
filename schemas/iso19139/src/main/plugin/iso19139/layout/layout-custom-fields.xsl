@@ -151,6 +151,239 @@
 
 -->
 
+  <xsl:template mode="mode-iso19139"
+                match="gml320:TimeInstant[gml320:timePosition]|gml:TimeInstant[gml:timePosition]"
+                priority="50000">
+
+    <xsl:variable name="configName" select="concat(local-name(..),'Position')"/>
+        <!-- 'temporalRangeSection' this is the name of the section (defined elsewhere)
+             and uses to find the translated tag for the section in the UI -->
+        <xsl:variable name="translation"
+                      select="$strings/*[name() = $configName]"/>
+        <xsl:variable name="name"
+                      select="if ($translation != '')
+                                    then $translation
+                                    else $configName"/>
+
+        <xsl:variable name="id" select="concat('_X', gn:element/@ref, '_replace')"/>
+
+    <xsl:variable name="isFirst" select="position() = 1"/>
+    <xsl:variable name="originalNode"
+                  select="gn-fn-metadata:getOriginalNode($metadata, .)"/>
+    <xsl:variable name="del" select="./@del"/>
+
+    <xsl:variable name="refToDelete">
+      <xsl:call-template name="get-ref-element-to-delete">
+        <xsl:with-param name="node" select="$originalNode"/>
+        <xsl:with-param name="delXpath" select="$del"/>
+      </xsl:call-template>
+    </xsl:variable>
+
+    <xsl:variable name="parent_parent" select="."/>
+
+    <!-- look at the actual XML's gml namespace URI
+         if its GML 32, then that matches most of the implicit
+         assumptions inside GN.  Especially the JS, which assumes that
+         an element with a "gml:" prefix is GML 3.2.
+         However, this is a really bad assumption - all the iso19139 sample data
+         has "gml:" as the old (NOT GML 3.2).
+         Also, in this XSLT;
+         "gml:" - version 3.2
+         "gml320:" - OLD VERSION (!!!!!!!!)
+     -->
+    <xsl:variable name="element_ns_uri" select="namespace-uri()"/>
+    <xsl:variable name="element_ns_prefix" select="prefix-from-QName(node-name(.))"/>
+    <xsl:variable name="gml_is_32" select="$element_ns_uri = 'http://www.opengis.net/gml/3.2'"/>
+    <xsl:variable name="timeinstance_id" select="@*[local-name() = 'id']"/>
+
+    <xsl:variable name="prefix_to_use">gml</xsl:variable>
+
+    <xsl:variable name="prefix_to_use_select">
+      <xsl:choose>
+        <xsl:when test="$gml_is_32">gml</xsl:when>
+        <xsl:otherwise>gml320</xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+
+
+    <xsl:variable name="label_node" select="local-name(..)"/>
+
+
+    <xsl:variable name="template">
+          <template  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:gn="http://www.fao.org/geonetwork" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gmx="http://www.isotc211.org/2005/gmx" xmlns:srv="http://www.isotc211.org/2005/srv"  xmlns:xlink="http://www.w3.org/1999/xlink">
+            <values>
+              <key
+                   xpath="."
+                   use="gn-date-picker"
+                   tooltip="gmd:extent|gmd:EX_TemporalExtent">
+                <xsl:attribute name="label" select="$label_node"/>
+
+                <directiveAttributes
+                        data-assume-gml-ns="true"
+                >
+                  <xsl:attribute name="data-indeterminate-position" select="concat('eval#',$prefix_to_use_select,':timePosition/@indeterminatePosition')"/>
+                  <xsl:attribute name="data-tag-name" select="concat($prefix_to_use,':timePosition')"/>
+
+                </directiveAttributes>
+              </key>
+            </values>
+            <snippet>
+              <!-- this is more explicitly done, below -->
+              <gml:TimeInstant>
+              {{<xsl:copy-of select="local-name(..)"/>}}
+              </gml:TimeInstant>
+            </snippet>
+          </template>
+        </xsl:variable>
+
+    <xsl:variable name="keyValues">
+          <xsl:call-template name="build-key-value-configuration">
+            <xsl:with-param name="template" select="$template/template"/>
+            <xsl:with-param name="currentNode" select="$parent_parent"/>
+            <xsl:with-param name="readonly" select="'false'"/>
+          </xsl:call-template>
+        </xsl:variable>
+
+    <xsl:variable name="templateCombinedWithNode" as="node()">
+      <template>
+        <xsl:copy-of select="$template/template/values"/>
+
+        <xsl:element name="snippet" inherit-namespaces="no">
+          <xsl:attribute name="data-remove-gn-ns-def">true</xsl:attribute>
+
+            <xsl:element name="gml:TimeInstant"  namespace="{$element_ns_uri}" inherit-namespaces="no">
+                <xsl:attribute  namespace="{$element_ns_uri}" name="gml:id"><xsl:value-of select="$timeinstance_id"/></xsl:attribute>
+              {{<xsl:copy-of select="local-name(..)"/>}}
+            </xsl:element>
+
+
+        </xsl:element>
+      </template>
+    </xsl:variable>
+
+
+    <xsl:call-template name="render-element-template-field">
+      <xsl:with-param name="name" select="$name"/>
+      <xsl:with-param name="id" select="$id"/>
+      <xsl:with-param name="isExisting" select="true()"/>
+      <xsl:with-param name="template" select="$templateCombinedWithNode"/>
+      <xsl:with-param name="keyValues" select="$keyValues"/>
+      <xsl:with-param name="refToDelete" select="$refToDelete/gn:element"/>
+      <xsl:with-param name="isFirst" select="$isFirst"/>
+    </xsl:call-template>
+  </xsl:template>
+ 
+  <!---
+    For temporal extent, we want a more complicated control.
+    This will allow the <beginPosition   indeterminatePosition="now"></beginPosition>
+    It also sets up the DatePicker so it has the indeterminatePosition drop-down, plus
+    a calendar date selector, a time selector, a timezone selector, and "mode" selector (i.e. only year, year + month, date & time).
+
+    This is basically a replacement for https://github.com/geonetwork/core-geonetwork/blob/5f6571e72e2bd39237394caf1f076a6cc0dc8758/schemas/iso19139/src/main/plugin/iso19139/layout/config-editor.xml#L1471-L1513
+    See the "template" variable, below.
+
+    This is basically a stand-in for the  <field name="temporalRangeSection"> and uses the same template to do the controls.
+  -->
+  <xsl:template mode="mode-iso19139"
+                match="gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:temporalElement[//gml:beginPosition]"
+                priority="30000">
+    <xsl:variable name="xpath" select="gn-fn-metadata:getXPath(.)"/>
+    <xsl:variable name="isoType" select="if (../@gco:isoType) then ../@gco:isoType else ''"/>
+
+
+    <xsl:variable name="configName" select="'temporalRangeSection'"/>
+    <!-- 'temporalRangeSection' this is the name of the section (defined elsewhere)
+         and uses to find the translated tag for the section in the UI -->
+    <xsl:variable name="translation"
+                  select="$strings/*[name() = $configName]"/>
+    <xsl:variable name="name"
+                  select="if ($translation != '')
+                                then $translation
+                                else $configName"/>
+
+    <xsl:variable name="id" select="concat('_X', gn:element/@ref, '_replace')"/>
+
+    <xsl:variable name="template">
+      <template  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:gn="http://www.fao.org/geonetwork" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gmx="http://www.isotc211.org/2005/gmx" xmlns:srv="http://www.isotc211.org/2005/srv" xmlns:gml="http://www.opengis.net/gml/3.2" xmlns:xlink="http://www.w3.org/1999/xlink">
+      <values>
+        <!-- -Need a * for gml:TimePeriodTypeCHOICE_ELEMENT2 added by editor enumerated tree
+              but this will make the XSLT formatter fails. Using // to access the element in both case. -->
+        <key label="beginPosition"
+             xpath="gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod//gml:beginPosition"
+             use="gn-date-picker"
+             tooltip="gmd:extent|gmd:EX_TemporalExtent">
+          <directiveAttributes
+            data-tag-name="gml:beginPosition"
+            data-indeterminate-position="eval#gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/*/gml:beginPosition/@indeterminatePosition"/>
+        </key>
+        <key label="endPosition"
+             xpath="gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod//gml:endPosition"
+             use="gn-date-picker"
+             tooltip="gmd:extent|gmd:EX_TemporalExtent">
+          <directiveAttributes
+            data-tag-name="gml:endPosition"
+            data-indeterminate-position="eval#gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/*/gml:endPosition/@indeterminatePosition"/>
+        </key>
+      </values>
+      <snippet>
+        <gmd:temporalElement>
+          <gmd:EX_TemporalExtent>
+            <gmd:extent>
+              <gml:TimePeriod gml:id="">
+                {{beginPosition}}
+                {{endPosition}}
+              </gml:TimePeriod>
+            </gmd:extent>
+          </gmd:EX_TemporalExtent>
+        </gmd:temporalElement>
+      </snippet>
+    </template>
+    </xsl:variable>
+    <xsl:variable name="isFirst" select="position() = 1"/>
+    <xsl:variable name="originalNode"
+                  select="gn-fn-metadata:getOriginalNode($metadata, .)"/>
+    <xsl:variable name="del" select="./@del"/>
+
+    <xsl:variable name="refToDelete">
+      <xsl:call-template name="get-ref-element-to-delete">
+        <xsl:with-param name="node" select="$originalNode"/>
+        <xsl:with-param name="delXpath" select="$del"/>
+      </xsl:call-template>
+    </xsl:variable>
+
+    <xsl:variable name="parent_parent" select="."/>
+
+    <xsl:variable name="keyValues">
+      <xsl:call-template name="build-key-value-configuration">
+        <xsl:with-param name="template" select="$template/template"/>
+        <xsl:with-param name="currentNode" select="$parent_parent"/>
+        <xsl:with-param name="readonly" select="'false'"/>
+      </xsl:call-template>
+    </xsl:variable>
+
+
+    <xsl:variable name="templateCombinedWithNode" as="node()">
+      <template>
+        <xsl:copy-of select="$template/template/values"/>
+        <snippet>
+          <xsl:apply-templates mode="gn-merge" select="$template/template/snippet/*|$editorConfig/editor/snippets/list[@name = $template/template/snippets/@name]/snippet/*">
+            <xsl:with-param name="node-to-merge" select="$parent_parent"/>
+          </xsl:apply-templates>
+        </snippet>
+      </template>
+    </xsl:variable>
+
+    <xsl:call-template name="render-element-template-field">
+      <xsl:with-param name="name" select="$name"/>
+      <xsl:with-param name="id" select="$id"/>
+      <xsl:with-param name="isExisting" select="true()"/>
+      <xsl:with-param name="template" select="$templateCombinedWithNode"/>
+      <xsl:with-param name="keyValues" select="$keyValues"/>
+      <xsl:with-param name="refToDelete" select="$refToDelete/gn:element"/>
+      <xsl:with-param name="isFirst" select="$isFirst"/>
+    </xsl:call-template>
+
+  </xsl:template>
 
 
   <!-- ===================================================================== -->
@@ -158,10 +391,9 @@
   <!-- ===================================================================== -->
 
   <xsl:template mode="mode-iso19139"
-                match="gml:beginPosition|gml:endPosition|gml:timePosition|
-                       gml320:beginPosition|gml320:endPosition|gml320:timePosition"
+                match="gml:beginPosition|gml:endPosition|
+                       gml320:beginPosition|gml320:endPosition"
                 priority="200">
-
 
     <xsl:variable name="xpath" select="gn-fn-metadata:getXPath(.)"/>
     <xsl:variable name="value" select="normalize-space(text())"/>
@@ -181,7 +413,6 @@
       </xsl:if>
     </xsl:variable>
 
-
     <xsl:call-template name="render-element">
       <xsl:with-param name="label"
                       select="$labelConfig"/>
@@ -189,6 +420,7 @@
       <xsl:with-param name="value" select="text()"/>
       <xsl:with-param name="cls" select="local-name()"/>
       <xsl:with-param name="xpath" select="$xpath"/>
+
       <!--
           Default field type is Date.
 
