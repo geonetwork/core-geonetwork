@@ -62,6 +62,7 @@ import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.SelectionManager;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
+import org.fao.geonet.kernel.schema.MetadataOperationFilterType;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.schema.MetadataSchemaOperationFilter;
 import org.fao.geonet.kernel.search.EsFilterBuilder;
@@ -877,7 +878,7 @@ public class EsHTTPProxy {
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode sourceNode = (ObjectNode) doc.get("_source");
 
-        MetadataSchemaOperationFilter authenticatedFilter = mds.getOperationFilter("authenticated");
+        MetadataSchemaOperationFilter authenticatedFilter = mds.getOperationFilter(MetadataOperationFilterType.authenticated.name());
 
         List<String> jsonpathFilters = new ArrayList<>();
 
@@ -885,7 +886,7 @@ public class EsHTTPProxy {
             jsonpathFilters.add(authenticatedFilter.getJsonpath());
         }
         //do the same for groupOwner
-        MetadataSchemaOperationFilter groupOwnerFilter = mds.getOperationFilter("groupOwner");
+        MetadataSchemaOperationFilter groupOwnerFilter = mds.getOperationFilter(MetadataOperationFilterType.groupOwner.name());
 
         if (groupOwnerFilter != null) {
             List<Integer> userGroups = AccessManager.getGroups(context.getUserSession(), Profile.Editor);

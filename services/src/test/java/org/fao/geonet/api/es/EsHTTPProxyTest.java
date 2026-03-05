@@ -30,6 +30,7 @@ import jeeves.server.context.ServiceContext;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.SchemaManager;
+import org.fao.geonet.kernel.schema.MetadataOperationFilterType;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.schema.MetadataSchemaOperationFilter;
 import org.fao.geonet.repository.UserGroupRepository;
@@ -96,7 +97,7 @@ public class EsHTTPProxyTest {
         // Mock MetadataSchema
         MetadataSchema mds = mock(MetadataSchema.class);
         MetadataSchemaOperationFilter groupOwnerFilter = new MetadataSchemaOperationFilter(null, "$.someField", null);
-        when(mds.getOperationFilter("groupOwner")).thenReturn(groupOwnerFilter);
+        when(mds.getOperationFilter(MetadataOperationFilterType.groupOwner.name())).thenReturn(groupOwnerFilter);
 
         // Mock AccessManager.getGroups via UserGroupRepository
         // When user is in group 1

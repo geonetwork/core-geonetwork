@@ -32,6 +32,7 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.*;
 import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
+import org.fao.geonet.kernel.schema.MetadataOperationFilterType;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.schema.MetadataSchemaOperationFilter;
 import org.fao.geonet.kernel.setting.SettingManager;
@@ -176,14 +177,14 @@ public abstract class XmlSerializer {
                     }
                 }
 
-                MetadataSchemaOperationFilter authenticatedFilter = mds.getOperationFilter("authenticated");
+                MetadataSchemaOperationFilter authenticatedFilter = mds.getOperationFilter(MetadataOperationFilterType.authenticated.name());
                 if (authenticatedFilter != null) {
                     boolean isAuthenticated = context.getUserSession().isAuthenticated();
                     if (!isAuthenticated) {
                         removeFilteredElement(metadataXml, authenticatedFilter, namespaces);
                     }
                 }
-                MetadataSchemaOperationFilter groupOwnerFilter = mds.getOperationFilter("groupOwner");
+                MetadataSchemaOperationFilter groupOwnerFilter = mds.getOperationFilter(MetadataOperationFilterType.groupOwner.name());
                 if (groupOwnerFilter != null) {
 
                     List<Integer> userGroups = AccessManager.getGroups(context.getUserSession(), Profile.Editor);
