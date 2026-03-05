@@ -267,6 +267,7 @@
           <xs:enumeration value="download"/>
           <xs:enumeration value="dynamic"/>
           <xs:enumeration value="authenticated" />
+          <xs:enumeration value="groupOwner" />
         </xs:restriction>
       </xs:simpleType>
     </xs:attribute>
