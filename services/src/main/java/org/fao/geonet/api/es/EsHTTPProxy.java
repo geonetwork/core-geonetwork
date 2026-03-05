@@ -889,12 +889,14 @@ public class EsHTTPProxy {
         MetadataSchemaOperationFilter groupOwnerFilter = mds.getOperationFilter(MetadataOperationFilterType.groupOwner.name());
 
         if (groupOwnerFilter != null) {
-            List<Integer> userGroups = AccessManager.getGroups(context.getUserSession(), Profile.Editor);
-            Integer groupOwner = getSourceInteger(doc, Geonet.IndexFieldNames.GROUP_OWNER);
-            boolean isGroupOwner = groupOwner != null && userGroups.contains(groupOwner);
+            if (context.getUserSession().getProfile() != Profile.Administrator) {
+                List<Integer> userGroups = AccessManager.getGroups(context.getUserSession(), Profile.Editor);
+                Integer groupOwner = getSourceInteger(doc, Geonet.IndexFieldNames.GROUP_OWNER);
+                boolean isGroupOwner = groupOwner != null && userGroups.contains(groupOwner);
 
-            if (!isGroupOwner) {
-                jsonpathFilters.add(groupOwnerFilter.getJsonpath());
+                if (!isGroupOwner) {
+                    jsonpathFilters.add(groupOwnerFilter.getJsonpath());
+                }
             }
         }
 
