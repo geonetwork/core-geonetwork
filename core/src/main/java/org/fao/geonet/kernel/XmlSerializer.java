@@ -186,12 +186,13 @@ public abstract class XmlSerializer {
                 MetadataSchemaOperationFilter groupOwnerFilter = mds.getOperationFilter("groupOwner");
                 if (groupOwnerFilter != null) {
 
-                    List<Integer> userGroups = AccessManager.getGroups(context.getUserSession(), Profile.Editor);
-                    boolean isGroupOwnerFilter = userGroups.contains(metadata.getSourceInfo().getGroupOwner());
-
-                    if (!isGroupOwnerFilter) {
-                        removeFilteredElement(metadataXml, groupOwnerFilter, namespaces);
-                    }
+                    if (context.getUserSession().getProfile() != Profile.Administrator) {
+                        List<Integer> userGroups = AccessManager.getGroups(context.getUserSession(), Profile.Editor);
+                        boolean isGroupOwnerFilter = userGroups.contains(metadata.getSourceInfo().getGroupOwner());
+                        if (!isGroupOwnerFilter) {
+                            removeFilteredElement(metadataXml, groupOwnerFilter, namespaces);
+                        }
+                    }                    
                 }
 
                 MetadataSchemaOperationFilter downloadFilter = mds.getOperationFilter(ReservedOperation.download);
