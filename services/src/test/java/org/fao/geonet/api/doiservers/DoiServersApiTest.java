@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2024 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2026 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -25,14 +25,15 @@ package org.fao.geonet.api.doiservers;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import junit.framework.Assert;
 import org.fao.geonet.api.JsonFieldNamingStrategy;
 import org.fao.geonet.api.doiservers.model.DoiServerDto;
 import org.fao.geonet.domain.*;
 import org.fao.geonet.repository.DoiServerRepository;
 import org.fao.geonet.repository.DoiServerRepositoryTest;
-import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.GroupRepositoryTest;
+import org.fao.geonet.repository.MetadataRepository;
+import org.fao.geonet.repository.MetadataRepositoryTest;
+import org.fao.geonet.repository.UserRepositoryTest;
 import org.fao.geonet.services.AbstractServiceIntegrationTest;
 import org.jasypt.encryption.pbe.StandardPBEStringEncryptor;
 import org.jasypt.hibernate5.encryptor.HibernatePBEEncryptorRegistry;
@@ -49,11 +50,12 @@ import org.springframework.web.context.WebApplicationContext;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -67,13 +69,12 @@ public class DoiServersApiTest extends AbstractServiceIntegrationTest {
     private DoiServerRepository doiServerRepository;
 
     @Autowired
-    private GroupRepository groupRepository;
+    private MetadataRepository metadataRepository;
 
     private MockMvc mockMvc;
 
     private MockHttpSession mockHttpSession;
 
-    private AtomicInteger inc = new AtomicInteger();
 
     @BeforeClass
     public static void init() {
@@ -123,6 +124,124 @@ public class DoiServersApiTest extends AbstractServiceIntegrationTest {
     }
 
     @Test
+    public void getDoiServerForMetadataAdministrator() throws Exception {
+        this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+
+        Metadata metadata = metadataRepository.findAll().get(0);
+        Optional<Group> ownerGroup = _groupRepo.findById(metadata.getSourceInfo().getGroupOwner());
+        assertTrue(ownerGroup.isPresent());
+
+        List<DoiServer> doiServers = doiServerRepository.findAll();
+        Optional<DoiServer> doiServerToRetrieve = doiServers.stream().filter(doiServer ->
+                doiServer.getPublicationGroups().contains(ownerGroup.get()))
+            .findFirst();
+        assertTrue(doiServerToRetrieve.isPresent());
+
+        this.mockHttpSession = loginAsAdmin();
+
+        this.mockMvc.perform(get("/srv/api/doiservers/metadata/" + metadata.getId())
+                .session(this.mockHttpSession)
+                .accept(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$", hasSize(1)))
+            .andExpect(jsonPath("$[0    ].name", is(doiServerToRetrieve.get().getName())))
+            .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING));
+    }
+
+    @Test
+    public void getDoiServerForMetadataOwner() throws Exception {
+        this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+
+        Optional<User> metadataOwnerUser = _userRepo.findAll().stream().filter(u -> u.getProfile() == Profile.Editor
+            && u.getUsername().equals("metadataowner")).findFirst();
+        assertTrue(metadataOwnerUser.isPresent());
+
+        Metadata metadata = metadataRepository.findAll().get(0);
+        assertEquals((int) metadata.getSourceInfo().getOwner(), metadataOwnerUser.get().getId());
+
+        Optional<Group> metadataOwnerGroup = _groupRepo.findById(metadata.getSourceInfo().getGroupOwner());
+        assertTrue(metadataOwnerGroup.isPresent());
+
+        List<DoiServer> doiServers = doiServerRepository.findAll();
+        Optional<DoiServer> doiServerToRetrieve = doiServers.stream().filter(doiServer ->
+                doiServer.getPublicationGroups().contains(metadataOwnerGroup.get()))
+            .findFirst();
+        assertTrue(doiServerToRetrieve.isPresent());
+
+        this.mockHttpSession = loginAs(metadataOwnerUser.get());
+
+        this.mockMvc.perform(get("/srv/api/doiservers/metadata/" + metadata.getId())
+                .session(this.mockHttpSession)
+                .accept(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$", hasSize(1)))
+            .andExpect(jsonPath("$[0    ].name", is(doiServerToRetrieve.get().getName())))
+            .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING));
+    }
+
+    @Test
+    public void getDoiServerForMetadataReviewer() throws Exception {
+        this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+
+        Optional<User> metadataReviewerUser = _userRepo.findAll().stream().filter(u -> u.getProfile() == Profile.Reviewer).findFirst();
+        assertTrue(metadataReviewerUser.isPresent());
+
+        Metadata metadata = metadataRepository.findAll().get(0);
+
+        Optional<Group> metadataOwnerGroup = _groupRepo.findById(metadata.getSourceInfo().getGroupOwner());
+        assertTrue(metadataOwnerGroup.isPresent());
+
+        Optional<UserGroup> metadataReviewerUserGroupInfo = _userGroupRepo.findAll().stream().filter(ug ->
+            ug.getUser().getId() == metadataReviewerUser.get().getId() &&
+                ug.getProfile() == metadataReviewerUser.get().getProfile() &&
+                ug.getGroup().equals(metadataOwnerGroup.get())).findFirst();
+        assertTrue(metadataReviewerUserGroupInfo.isPresent());
+
+        List<DoiServer> doiServers = doiServerRepository.findAll();
+        Optional<DoiServer> doiServerToRetrieve = doiServers.stream().filter(doiServer ->
+                doiServer.getPublicationGroups().contains(metadataOwnerGroup.get()))
+            .findFirst();
+        assertTrue(doiServerToRetrieve.isPresent());
+
+        this.mockHttpSession = loginAs(metadataReviewerUser.get());
+
+        this.mockMvc.perform(get("/srv/api/doiservers/metadata/" + metadata.getId())
+                .session(this.mockHttpSession)
+                .accept(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$", hasSize(1)))
+            .andExpect(jsonPath("$[0].name", is(doiServerToRetrieve.get().getName())))
+            .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING));
+    }
+
+    @Test
+    public void getDoiServerForMetadataNotOwnerOrReviewer() throws Exception {
+        this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+
+        Optional<User> metadataEditorUser = _userRepo.findAll().stream().filter(u -> u.getProfile() == Profile.Editor
+            && u.getUsername().equals("metadataeditor")).findFirst();
+        assertTrue(metadataEditorUser.isPresent());
+
+        Metadata metadata = metadataRepository.findAll().get(0);
+        assertNotEquals((int) metadata.getSourceInfo().getOwner(), metadataEditorUser.get().getId());
+
+        Optional<Group> metadataGroupOwner = _groupRepo.findById(metadata.getSourceInfo().getGroupOwner());
+        assertTrue(metadataGroupOwner.isPresent());
+
+        List<DoiServer> doiServers = doiServerRepository.findAll();
+        Optional<DoiServer> doiServerToRetrieve = doiServers.stream().filter(doiServer -> doiServer.getPublicationGroups().contains(metadataGroupOwner.get()))
+            .findFirst();
+        assertTrue(doiServerToRetrieve.isPresent());
+
+        this.mockHttpSession = loginAs(metadataEditorUser.get());
+
+        this.mockMvc.perform(get("/srv/api/doiservers/metadata/" + metadata.getId())
+                .session(this.mockHttpSession)
+                .accept(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(status().isForbidden());
+    }
+
+    @Test
     public void deleteDoiServer() throws Exception {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
 
@@ -143,7 +262,7 @@ public class DoiServersApiTest extends AbstractServiceIntegrationTest {
             .andExpect(status().isNotFound());
 
         Optional<DoiServer> doiServerOpt = doiServerRepository.findOneById(doiServerToDelete.getId());
-        Assert.assertTrue(doiServerOpt.isEmpty());
+        assertTrue(doiServerOpt.isEmpty());
     }
 
     @Test
@@ -151,7 +270,7 @@ public class DoiServersApiTest extends AbstractServiceIntegrationTest {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
 
         Optional<DoiServer> doiServerToDelete = doiServerRepository.findOneById(222);
-        Assert.assertFalse(doiServerToDelete.isPresent());
+        assertFalse(doiServerToDelete.isPresent());
 
         this.mockHttpSession = loginAsAdmin();
 
@@ -199,9 +318,9 @@ public class DoiServersApiTest extends AbstractServiceIntegrationTest {
     @Test
     public void updateNonExistingDoiServer() throws Exception {
         Optional<DoiServer> doiServerToUpdateOptional = doiServerRepository.findOneById(222);
-        Assert.assertFalse(doiServerToUpdateOptional.isPresent());
+        assertFalse(doiServerToUpdateOptional.isPresent());
 
-        DoiServer doiServerToUpdate = DoiServerRepositoryTest.newDoiServer(inc);
+        DoiServer doiServerToUpdate = DoiServerRepositoryTest.newDoiServer(_inc);
         doiServerToUpdate.setId(222);
         DoiServerDto doiServerToUpdateDto = DoiServerDto.from(doiServerToUpdate);
 
@@ -242,7 +361,7 @@ public class DoiServersApiTest extends AbstractServiceIntegrationTest {
 
     @Test
     public void addDoiServer() throws Exception {
-        DoiServer doiServerToAdd = DoiServerRepositoryTest.newDoiServer(inc);
+        DoiServer doiServerToAdd = DoiServerRepositoryTest.newDoiServer(_inc);
         DoiServerDto doiServerToAddDto = DoiServerDto.from(doiServerToAdd);
 
         Gson gson = new GsonBuilder()
@@ -264,18 +383,47 @@ public class DoiServersApiTest extends AbstractServiceIntegrationTest {
 
         int createdDoiServerId = Integer.parseInt(result.getResponse().getContentAsString());
         Optional<DoiServer> doiServerAdded = doiServerRepository.findOneById(createdDoiServerId);
-        Assert.assertTrue(doiServerAdded.isPresent());
+        assertTrue(doiServerAdded.isPresent());
     }
 
     private void createTestData() {
-        Group group1 = GroupRepositoryTest.newGroup(_inc);
-        groupRepository.save(group1);
+        Group groupForDOIServer = GroupRepositoryTest.newGroup(_inc);
+        _groupRepo.save(groupForDOIServer);
 
-        DoiServer doiServer1 = DoiServerRepositoryTest.newDoiServer(inc);
-        doiServer1.getPublicationGroups().add(group1);
+
+        DoiServer doiServer1 = DoiServerRepositoryTest.newDoiServer(_inc);
+        doiServer1.getPublicationGroups().add(groupForDOIServer);
         doiServerRepository.save(doiServer1);
 
-        DoiServer doiServer2 = DoiServerRepositoryTest.newDoiServer(inc);
+        DoiServer doiServer2 = DoiServerRepositoryTest.newDoiServer(_inc);
         doiServerRepository.save(doiServer2);
+
+        User metadataOwner = UserRepositoryTest.newUser(_inc);
+        metadataOwner.setUsername("metadataowner");
+        metadataOwner.setProfile(Profile.Editor);
+        _userRepo.save(metadataOwner);
+
+        _userGroupRepo.save(new UserGroup().setGroup(groupForDOIServer).setProfile(Profile.Editor).setUser(metadataOwner));
+
+        User metadataReviewer = UserRepositoryTest.newUser(_inc);
+        metadataReviewer.setUsername("metadatareviewer");
+        metadataReviewer.setProfile(Profile.Reviewer);
+        _userRepo.save(metadataReviewer);
+
+        _userGroupRepo.save(new UserGroup().setGroup(groupForDOIServer).setProfile(Profile.Reviewer).setUser(metadataReviewer));
+
+        Metadata metadata = MetadataRepositoryTest.newMetadata(_inc);
+        metadata.getSourceInfo().setOwner(metadataOwner.getId());
+        metadata.getSourceInfo().setGroupOwner(groupForDOIServer.getId());
+        metadataRepository.save(metadata);
+
+        // Editor user, not owner
+        User otherEditorUser = UserRepositoryTest.newUser(_inc);
+        otherEditorUser.setUsername("metadataeditor");
+        otherEditorUser.setProfile(Profile.Editor);
+        _userRepo.save(otherEditorUser);
+
+        _userGroupRepo.save(new UserGroup().setGroup(groupForDOIServer).setProfile(Profile.Editor).setUser(otherEditorUser));
+
     }
 }
