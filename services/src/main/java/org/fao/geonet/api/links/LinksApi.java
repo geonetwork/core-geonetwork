@@ -158,7 +158,7 @@ public class LinksApi {
         Integer[] groupOwnerIdFilter,
         @Parameter(description = "Optional, filter links to http status.")
         @RequestParam(required = false)
-        Integer[] httpErrorStatusValueFilter,
+        Integer[] httpStatusValueFilter,
         @Parameter(description = "Optional, filter links excluding harvested metadata.")
         @RequestParam(required = false, defaultValue = "false")
         boolean excludeHarvestedMetadataFilter,
@@ -170,7 +170,7 @@ public class LinksApi {
         HttpServletRequest request) throws Exception {
 
         final UserSession userSession = ApiUtils.getUserSession(session);
-        return getLinks(filter, groupIdFilter, groupOwnerIdFilter, httpErrorStatusValueFilter, excludeHarvestedMetadataFilter, pageRequest, userSession);
+        return getLinks(filter, groupIdFilter, groupOwnerIdFilter, httpStatusValueFilter, excludeHarvestedMetadataFilter, pageRequest, userSession);
     }
 
     @io.swagger.v3.oas.annotations.Operation(
