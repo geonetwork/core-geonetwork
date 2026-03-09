@@ -294,7 +294,13 @@ public class MetadataSharingApiTest extends AbstractServiceIntegrationTest {
     private void publishMetadata() {
         OperationAllowed op = new OperationAllowed();
         op.getId().setMetadataId(metadataId).setGroupId(ReservedGroup.all.getId()).setOperationId(ReservedOperation.view.getId());
+        operationAllowedRepository.save(op);
+
+        op = new OperationAllowed();
         op.getId().setMetadataId(metadataId).setGroupId(ReservedGroup.all.getId()).setOperationId(ReservedOperation.download.getId());
+        operationAllowedRepository.save(op);
+
+        op = new OperationAllowed();
         op.getId().setMetadataId(metadataId).setGroupId(ReservedGroup.all.getId()).setOperationId(ReservedOperation.dynamic.getId());
         operationAllowedRepository.save(op);
     }
