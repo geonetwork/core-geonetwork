@@ -181,11 +181,12 @@ public class MAnalyseProcess implements SelfNaming {
         public void run() {
             try {
                 testLink(links);
-                finishDate.set(System.currentTimeMillis());
-                processFinished.set(Boolean.TRUE);
             } catch (Exception ex) {
                 Log.error(LOGGER, String.format("Error processing metadata links in process '%s'",
                     probeName), ex);
+            } finally {
+                finishDate.set(System.currentTimeMillis());
+                processFinished.set(Boolean.TRUE);
             }
         }
 
@@ -226,11 +227,12 @@ public class MAnalyseProcess implements SelfNaming {
         public void run() {
             try {
                 processMetadataAndTestLink(testLink, ids);
-                finishDate.set(System.currentTimeMillis());
-                processFinished.set(Boolean.TRUE);
             } catch (Exception ex) {
                 Log.error(LOGGER, String.format("Error processing metadata links in process '%s'",
                     probeName), ex);
+            } finally {
+                finishDate.set(System.currentTimeMillis());
+                processFinished.set(Boolean.TRUE);
             }
         }
 
