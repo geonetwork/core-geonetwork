@@ -1,8 +1,12 @@
 # Database module
 
+[Liquibase](https://www.liquibase.com/) is used to manage database schema creation and changes on a per-feature basis.
+
+Documentation about Liquibase can be found in the [Liquibase documentation](https://docs.liquibase.com/oss/implementation-guide-4-33/intro-to-liquibase).
+
 ## Database initialization
 
-Liquibase is used to manage database schema creation and changes and the configuration is made in [`changelog.xml`](src/main/resources/db/changelog.xml).
+The configuration is made in [`changelog.xml`](src/main/resources/db/changelog.xml).
 
 When adding new entities or making changes to existing ones, please make sure 
 to update the database changelog accordingly by adding a new file in the [`changesets directory`](src/main/resources/db/changesets).
@@ -15,10 +19,31 @@ eg. `main` can contain changesets 001 to 010, while `4.2.x` contains changesets 
 Liquibase track changes applied to the current database in the `DATABASECHANGELOG` and `DATABASECHANGELOGLOCK` tables.
 
 
+## Databases tested
+
+Currently, Liquibase is tested with the following databases:
+* Postgres
+* H2 (needed for test in GN4)
+
+
+## Generating change logs from existing database
+
+Use [Liquibase command line tool](https://docs.liquibase.com/oss/implementation-guide-4-33/generate-changelog-from-existing-database) support to generate change logs from an existing database.
+
+In Intellij, you can generate change logs from an existing database using the following steps:
+1. Open the Database tool window (View | Tool Windows | Database).
+2. Select the database connection for which you want to generate the change log.
+3. Right-click on the database connection and select "Generate Liquibase Changelog".
+4. In the "Generate Liquibase Changelog" dialog, specify the output file for the change log and select the options for the generation process.
+5. Click "OK" to generate the change log file.
+
+![intellij-liquibase-generate.png](intellij-liquibase-generate.png)
+
+
 ## Old database initialization and migration system proposal
 
-GeoNetwork using its own mechanism based on Java and SQL to migrate from version to version.
-This mechanism does not work well when backporting changes to previous versions and does not support all possible migration paths.
+GeoNetwork was using its own mechanism based on Java and SQL to migrate from version to version.
+This mechanism was not working well when backporting changes to previous versions and does not support all possible migration paths.
 
 It is proposed the following strategy to move to Liquibase: **Old GeoNetwork system is used until version 4.4.x, then starting from version 4.6.x Liquibase only is used.**
 
@@ -44,7 +69,8 @@ Draft experiment to implement initial database creation and initial data loading
 - [x] [Schema creation](src/main/resources/db/changesets/00000-initial-schema.xml) / Precondition: no table metadata exists
 - [x] [Initial data](src/main/resources/db/changesets/00001-initial-data.sql) / Precondition: table settings is empty
 - [x] [Initial languages](src/main/resources/db/changesets/00002-initial-data-languages-eng.sql) / Precondition: table language does not have eng
-- [ ] Other languages
+- [x] Other languages
+- [ ] Configure log level for liquibase
 - [ ] Remove past database migrations 
 - [ ] Remove old configuration `initial_data.xml` and `database_migration.xml`
 - [ ] Remove `db.migration_onstartup` property / Hibernate `hbm2ddl` property set to `none`
