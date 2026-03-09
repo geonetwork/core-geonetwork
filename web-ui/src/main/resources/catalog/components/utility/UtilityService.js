@@ -594,22 +594,20 @@
     "gnGlobalSettings",
     function (gnGlobalSettings) {
       return function (date, format, contextAllowToUseFromNow) {
-        const isDateGmlFormat = /[Zz]$/.test(date);
-        const isDateTimeFormat = date.includes("T");
+        var isDateGmlFormat = /[Zz]$/.test(date);
+        var isDateTimeFormat = date.includes("T");
         var settingAllowToUseFromNow = gnGlobalSettings.gnCfg.mods.global.humanizeDates;
         var timezone = gnGlobalSettings.gnCfg.mods.global.timezone;
         var parsedDate = null;
 
         if (isDateGmlFormat) {
           parsedDate = moment(date, "YYYY-MM-DDtHH-mm-SSSZ");
-        } else if (isDateTimeFormat) {
-          parsedDate = moment(date);
         } else {
-          parsedDate = moment.utc(date); // Date only
+          parsedDate = moment(date);
         }
 
         if (parsedDate.isValid()) {
-          if (!!timezone) {
+          if (!!timezone && isDateTimeFormat) {
             parsedDate = parsedDate.tz(
               timezone === "Browser" ? moment.tz.guess() : timezone
             );
@@ -628,7 +626,7 @@
             };
           } else {
             return {
-              title: isDateTimeFormat ? parsedDate.toString() : fromNow,
+              title: settingAllowToUseFromNow  ? fromNow : date,
               value: format ? parsedDate.format(format) : parsedDate.toString()
             };
           }
