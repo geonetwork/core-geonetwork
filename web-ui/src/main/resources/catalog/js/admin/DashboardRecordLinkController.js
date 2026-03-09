@@ -468,7 +468,7 @@
                     return b.AnalyseMdDate - a.AnalyseMdDate;
                   });
 
-                  var processesFinished = false;
+                  var anyProcessRunning = false;
 
                   probes.forEach(function (probe) {
                     var probeName = probe.ObjectName.objectName;
@@ -482,8 +482,6 @@
                       var addProbe = true;
 
                       if (probe.ProcessFinished) {
-                        processesFinished = true;
-
                         var finishDate = moment(new Date(probe.FinishDate));
                         var now = moment();
 
@@ -491,7 +489,7 @@
 
                         addProbe = diff <= 5;
                       } else {
-                        processesFinished = false;
+                        anyProcessRunning = true;
                       }
 
                       if (addProbe) {
@@ -531,10 +529,10 @@
                     }
                   });
 
-                  if (processesFinished) {
-                    $scope.processesFinishedCallback();
-                  } else {
+                  if (anyProcessRunning) {
                     setTimeout(me.refresh, 5000);
+                  } else {
+                    $scope.processesFinishedCallback();
                   }
                 });
             };

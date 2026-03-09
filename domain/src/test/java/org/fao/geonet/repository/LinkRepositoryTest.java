@@ -34,7 +34,7 @@ import java.util.List;
 import java.util.Optional;
 
 
-public class LinkRespositoryTest extends AbstractSpringDataTest {
+public class LinkRepositoryTest extends AbstractSpringDataTest {
 
     @Autowired
     private LinkRepository repository;

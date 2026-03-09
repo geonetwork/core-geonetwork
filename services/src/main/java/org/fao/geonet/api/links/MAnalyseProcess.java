@@ -169,7 +169,31 @@ public class MAnalyseProcess implements SelfNaming {
     }
 
     /**
-     * Test a list of links.
+     * Test a list of links. If links is null, all links in the repository are tested.
+     */
+    private void checkLinks(List<String> links) {
+        List<Link> linkList;
+        if (links == null) {
+            linkList = linkRepository.findAll();
+        } else {
+            linkList = linkRepository.findAllByUrlIn(links);
+        }
+        urlToCheckCount.set(linkList.size());
+
+        for (int i = 0; i < urlToCheckCount.get(); i++) {
+            Link link = linkList.get(i);
+            runInNewTransaction("manalyseprocess-testlink", transaction -> {
+                testLinkDate.set(System.currentTimeMillis());
+                urlAnalyser.testLink(link);
+                urlChecked.getAndIncrement();
+
+                return null;
+            });
+        }
+    }
+
+    /**
+     * Runnable that tests a list of links by URL.
      */
     private final class LinksCheckUrlCallable implements Runnable {
         private final List<String> links;
@@ -180,7 +204,7 @@ public class MAnalyseProcess implements SelfNaming {
         @Override
         public void run() {
             try {
-                testLink(links);
+                checkLinks(links);
             } catch (Exception ex) {
                 Log.error(LOGGER, String.format("Error processing metadata links in process '%s'",
                     probeName), ex);
@@ -189,31 +213,10 @@ public class MAnalyseProcess implements SelfNaming {
                 processFinished.set(Boolean.TRUE);
             }
         }
-
-        private void testLink(List<String> links) {
-            List<Link> linkList;
-            if (links == null) {
-                linkList = linkRepository.findAll();
-            } else {
-                linkList = linkRepository.findAllByUrlIn(links);
-            }
-            urlToCheckCount.set(linkList.size());
-
-            for(int i = 0; i < urlToCheckCount.get(); i++) {
-                Link link = linkList.get(i);
-                runInNewTransaction("manalyseprocess-testlink", transaction -> {
-                    testLinkDate.set(System.currentTimeMillis());
-                    urlAnalyser.testLink(link);
-                    urlChecked.getAndIncrement();
-
-                    return null;
-                });
-            }
-        }
     }
 
     /**
-     * Test a list of links for the metadata provided.
+     * Runnable that processes metadata and optionally tests links.
      */
     private final class LinksCheckCallable implements Runnable {
         private final boolean testLink;
@@ -273,29 +276,7 @@ public class MAnalyseProcess implements SelfNaming {
             }
 
             if (testLink) {
-                testLink(null);
-            }
-        }
-
-        private void testLink(List<String> links) {
-            List<Link> linkList;
-            if (links == null) {
-                linkList = linkRepository.findAll();
-            } else {
-                linkList = linkRepository.findAllByUrlIn(links);
-            }
-
-            urlToCheckCount.set(linkList.size());
-
-            for(int i = 0; i < urlToCheckCount.get(); i++) {
-                Link link = linkList.get(i);
-                runInNewTransaction("manalyseprocess-testlink", transaction -> {
-                    testLinkDate.set(System.currentTimeMillis());
-                    urlAnalyser.testLink(link);
-                    urlChecked.getAndIncrement();
-
-                    return null;
-                });
+                checkLinks(null);
             }
         }
     }

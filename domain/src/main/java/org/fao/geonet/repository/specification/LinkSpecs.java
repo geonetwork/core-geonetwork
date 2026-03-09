@@ -81,6 +81,8 @@ public class LinkSpecs {
                 query.distinct(true);
             }
 
+            // Positive values match links with that HTTP status (e.g. 200, 404).
+            // Negative values exclude links with that status (e.g. -200 excludes status 200).
             if (httpStatusValueFilter != null && httpStatusValueFilter.length > 0) {
                 Join<Link, LinkStatus> linkLinkStatusJoin = root.join(Link_.linkStatus, JoinType.LEFT);
 
