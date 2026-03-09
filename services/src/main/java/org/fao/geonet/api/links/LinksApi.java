@@ -492,7 +492,9 @@ public class LinksApi {
             Iterator<SelfNaming> it = processToRemove.iterator();
 
             while (it.hasNext()) {
-                mBeanExporter.unregisterManagedResource(it.next().getObjectName());
+                SelfNaming process = it.next();
+                mBeanExporter.unregisterManagedResource(process.getObjectName());
+                mAnalyseProcesses.remove(process);
             }
         } catch (MalformedObjectNameException e) {
             Log.error(LOGGER, String.format("Error unregistering metadata links analysis process '%s'",
