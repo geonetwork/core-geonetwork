@@ -626,7 +626,7 @@
             };
           } else {
             return {
-              title: settingAllowToUseFromNow  ? fromNow : date,
+              title: settingAllowToUseFromNow ? fromNow : date,
               value: format ? parsedDate.format(format) : parsedDate.toString()
             };
           }
