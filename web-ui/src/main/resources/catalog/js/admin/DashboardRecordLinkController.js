@@ -140,7 +140,7 @@
               ? "&groupOwnerIdFilter=" + $scope.groupOwnerIdFilter
               : "") +
             ($scope.excludeHarvestedMetadataFilter
-              ? "excludeHarvestedMetadataFilter=" + $scope.excludeHarvestedMetadataFilter
+              ? "&excludeHarvestedMetadataFilter=" + $scope.excludeHarvestedMetadataFilter
               : "") +
             (!!$scope.filter.filter && $scope.filter.filter != "undefined"
               ? "&filter=" + encodeURIComponent($scope.filter.filter)
