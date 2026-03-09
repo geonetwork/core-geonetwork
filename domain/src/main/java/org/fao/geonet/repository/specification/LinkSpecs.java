@@ -48,6 +48,7 @@ public class LinkSpecs {
 
         return (root, query, cb) -> {
             List<Predicate> predicates = new ArrayList<>();
+            Join<Link, MetadataLink> metadataJoin = root.join(Link_.records, JoinType.INNER);
 
             if (state != null) {
                 Path<Integer> statePath = root.get(Link_.lastState);
@@ -62,13 +63,10 @@ public class LinkSpecs {
             }
 
             if (associatedRecords != null) {
-                Join<Link, MetadataLink> metadataJoin = root.join(Link_.records, JoinType.INNER);
                 predicates.add(metadataJoin.get("metadataUuid").in(associatedRecords));
             }
 
             if (excludeHarvestedMetadataFilter) {
-                Join<Link, MetadataLink> metadataJoin = root.join(Link_.records, JoinType.INNER);
-
                 Subquery<Integer> subquery = query.subquery(Integer.class);
                 final Root<Metadata> metadataRoot = subquery.from(Metadata.class);
                 Path<Character> isHarvestedAttributePath = metadataRoot.get(AbstractMetadata_.harvestInfo).get(MetadataHarvestInfo_.harvested_JPAWorkaround);
@@ -106,7 +104,6 @@ public class LinkSpecs {
                 }
             }
 
-            Join<Link, MetadataLink> metadataJoin = root.join(Link_.records, JoinType.INNER);
             Subquery<Integer> subquery = query.subquery(Integer.class);
             final Root<OperationAllowed> opAllowRoot = subquery.from(OperationAllowed.class);
             final Root<Metadata> metadataRoot = subquery.from(Metadata.class);
