@@ -76,6 +76,6 @@ public class ApiParams {
     public static final String API_PARAM_BUCKET_NAME = "Selection bucket name";
     public static final String API_PARAM_UPDATE_DATESTAMP = "If true updates the DateStamp (or equivalent in standards different to ISO 19139) " +
         "field in the metadata with the current timestamp";
-    public static final String API_RESPONSE_NOT_ALLOWED_METADATA_DOI = "Operation not allowed. Only administrators, the owner of the metadata " +
-        "a reviewer in the metadata group owner or the can access it";
+    public static final String API_RESPONSE_NOT_ALLOWED_METADATA_DOI = "Operation not allowed. Only administrators, the owner of the metadata, " +
+        "or a reviewer in the metadata group owner can access it.";
 }

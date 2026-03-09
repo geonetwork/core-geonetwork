@@ -144,7 +144,7 @@ public class DoiServersApiTest extends AbstractServiceIntegrationTest {
                 .accept(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$", hasSize(1)))
-            .andExpect(jsonPath("$[0    ].name", is(doiServerToRetrieve.get().getName())))
+            .andExpect(jsonPath("$[0].name", is(doiServerToRetrieve.get().getName())))
             .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING));
     }
 
@@ -175,7 +175,7 @@ public class DoiServersApiTest extends AbstractServiceIntegrationTest {
                 .accept(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$", hasSize(1)))
-            .andExpect(jsonPath("$[0    ].name", is(doiServerToRetrieve.get().getName())))
+            .andExpect(jsonPath("$[0].name", is(doiServerToRetrieve.get().getName())))
             .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING));
     }
 
@@ -239,6 +239,21 @@ public class DoiServersApiTest extends AbstractServiceIntegrationTest {
                 .session(this.mockHttpSession)
                 .accept(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(status().isForbidden());
+    }
+
+    @Test
+    public void getDoiServerForMetadataNotFound() throws Exception {
+        this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+
+        int nonExistingMetadataId = 99999;
+        assertTrue(metadataRepository.findById(nonExistingMetadataId).isEmpty());
+
+        this.mockHttpSession = loginAsAdmin();
+
+        this.mockMvc.perform(get("/srv/api/doiservers/metadata/" + nonExistingMetadataId)
+                .session(this.mockHttpSession)
+                .accept(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(status().isNotFound());
     }
 
     @Test

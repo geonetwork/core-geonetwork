@@ -111,7 +111,8 @@ public class DoiServersApi {
     @PreAuthorize("hasAuthority('Editor')")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "List of all DOI servers where a metadata can be published."),
-        @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_METADATA_DOI)
+        @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_METADATA_DOI),
+        @ApiResponse(responseCode = "404", description = ApiParams.API_RESPONSE_RESOURCE_NOT_FOUND)
     })
     List<AnonymousDoiServer> getDoiServers(
         @Parameter(description = "Metadata UUID",
@@ -128,6 +129,11 @@ public class DoiServersApi {
         ServiceContext serviceContext = ApiUtils.createServiceContext(request);
 
         AbstractMetadata metadata = metadataUtils.findOne(metadataId);
+        if (metadata == null) {
+            throw new ResourceNotFoundException(String.format("Metadata with id '%d' not found.", metadataId))
+                .withMessageKey("exception.resourceNotFound.metadata");
+        }
+
         Integer groupOwner = metadata.getSourceInfo().getGroupOwner();
         Profile userProfile = ApiUtils.getUserSession(httpSession).getProfile();
 
@@ -341,9 +347,9 @@ public class DoiServersApi {
     }
 
     private boolean isMetadataOwnerOrReviewer(ServiceContext serviceContext, Integer metadataId,
-                                              Integer groupOwner, Profile userProfile) throws Exception{
+                                              Integer groupOwner, Profile userProfile) throws Exception {
 
-        return (userProfile == Profile.Administrator)  || accessManager.isOwner(serviceContext, String.valueOf(metadataId))
+        return (userProfile == Profile.Administrator) || accessManager.isOwner(serviceContext, String.valueOf(metadataId))
             || accessManager.isProfileOrMoreOnGroup(serviceContext, Profile.Reviewer, groupOwner);
     }
 }
