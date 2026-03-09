@@ -115,6 +115,42 @@ public class MetadataSharingApiTest extends AbstractServiceIntegrationTest {
         assertEquals(3, countPrivilegesToSampleGroup);
     }
 
+    /**
+     * Test for issue #9196: Editor user can not change privileges when the metadata is published.
+     * <p>
+     * Scenario: A Reviewer publishes a record, then an Editor modifies non-publication
+     * privileges on that already-published record. The Editor should be able to set
+     * group privileges without affecting the existing publication privileges.
+     */
+    @Test
+    public void sharePublishedMetadataWithEditorUser() throws Exception {
+        MockMvc mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+
+        publishMetadata();
+
+        MockHttpSession mockHttpSession = loginAs(editorUser);
+
+        SharingParameter privilegesRequest = createPrivilegesRequest(false);
+
+        Gson gson = new Gson();
+        String json = gson.toJson(privilegesRequest);
+
+        mockMvc.perform(put("/srv/api/records/" + metadataUuid + "/sharing")
+                .session(mockHttpSession)
+                .content(json)
+                .contentType(API_JSON_EXPECTED_ENCODING)
+                .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isNoContent());
+
+        List<OperationAllowed> metadataOperations = operationAllowedRepository.findAllById_MetadataId(metadataId);
+
+        long countPrivilegesToSampleGroup2 = metadataOperations.stream().filter(op -> op.getId().getGroupId() == SAMPLE_GROUP_ID).count();
+        assertEquals(3, countPrivilegesToSampleGroup2);
+
+        boolean hasReservedGroupPrivileges2 = metadataOperations.stream().anyMatch(op -> ReservedGroup.isReserved(op.getId().getGroupId()));
+        assertTrue("Publication privileges set by the Reviewer should be preserved", hasReservedGroupPrivileges2);
+    }
+
     @Test
     public void shareMetadataForPublicationWithEditorUser() throws Exception {
         MockMvc mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
