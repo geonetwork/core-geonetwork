@@ -39,11 +39,13 @@ import org.fao.geonet.domain.ReservedGroup;
 import org.fao.geonet.domain.Source;
 import org.fao.geonet.domain.SourceType;
 import org.fao.geonet.domain.User;
+import static org.fao.geonet.domain.userfeedback.Rating_.category;
 import org.fao.geonet.kernel.search.EsSearchManager;
 import org.fao.geonet.kernel.search.IndexingMode;
 import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.SourceRepository;
 import org.fao.geonet.repository.specification.MetadataSpecs;
+import org.fao.geonet.utils.CachedTransformer;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.jdom.Namespace;
@@ -124,9 +126,10 @@ public class DataManagerIntegrationTest extends AbstractDataManagerIntegrationTe
         ServiceContext serviceContext = createContextAndLogAsAdmin();
         User principal = serviceContext.getUserSession().getPrincipal();
         Group group = groupRepository.findAll().get(0);
-        MetadataCategory category = metadataCategoryRepository.findAll().get(0);
         Source source = sourceRepository.save(new Source().setType(SourceType.portal).setName("GN").setUuid("sourceuuid"));
-
+        MetadataCategory category = new MetadataCategory();
+        category.setName("category");
+        metadataCategoryRepository.save(category);
         Element sampleMetadataXml = super.getSampleMetadataXml();
         AbstractMetadata metadata = new Metadata()
                 .setDataAndFixCR(sampleMetadataXml)
