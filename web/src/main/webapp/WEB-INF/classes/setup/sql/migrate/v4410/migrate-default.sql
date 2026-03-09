@@ -9,5 +9,7 @@ INSERT INTO Settings (name, value, datatype, position, internal) SELECT distinct
 UPDATE groups SET type='RecordPrivilege' WHERE id<2 AND type IS NULL;
 UPDATE groups SET type='Workspace' WHERE id>=2 AND type IS NULL;
 
+INSERT INTO Settings (name, value, datatype, position, internal) SELECT distinct 'system/metadataprivs/userAlwaysCanEditOwnedMetadata', 'true', 2, 9184, 'n' from settings WHERE NOT EXISTS (SELECT name FROM Settings WHERE name = 'system/metadataprivs/userAlwaysCanEditOwnedMetadata');
+
 UPDATE Settings SET value='4.4.10' WHERE name='system/platform/version';
 UPDATE Settings SET value='SNAPSHOT' WHERE name='system/platform/subVersion';
