@@ -86,6 +86,7 @@
     <property name="changeLog" value="classpath:db/changelog.xml" />
     <property name="contexts" value="production" />
     <property name="shouldRun" value="true" />
+    <property name="dropFirst" value="true"/>
   </bean>
 
   <!-- <bean lazy-init="false" id="initializeDatabaseWithTestData"

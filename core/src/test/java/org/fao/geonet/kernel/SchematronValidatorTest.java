@@ -49,7 +49,6 @@ import static org.junit.Assert.assertEquals;
 /**
  * @author Jesse on 4/1/2015.
  */
-@Ignore
 public class SchematronValidatorTest extends AbstractCoreIntegrationTest {
     @Autowired
     SchematronValidator schematronValidator;
