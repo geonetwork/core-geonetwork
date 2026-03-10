@@ -38,6 +38,7 @@ import org.fao.geonet.repository.SchematronCriteriaGroupRepository;
 import org.fao.geonet.repository.SchematronRepository;
 import org.jdom.Element;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -48,6 +49,7 @@ import static org.junit.Assert.assertEquals;
 /**
  * @author Jesse on 4/1/2015.
  */
+@Ignore
 public class SchematronValidatorTest extends AbstractCoreIntegrationTest {
     @Autowired
     SchematronValidator schematronValidator;

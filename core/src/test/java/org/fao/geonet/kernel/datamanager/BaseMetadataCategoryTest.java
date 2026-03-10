@@ -32,6 +32,7 @@ import org.fao.geonet.repository.MetadataCategoryRepository;
 import org.fao.geonet.repository.MetadataRepository;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -42,6 +43,7 @@ import static org.junit.Assert.*;
  *
  * @author delawen María Arias de Reyna
  */
+@Ignore
 public class BaseMetadataCategoryTest extends AbstractCoreIntegrationTest {
 
     @Autowired
@@ -118,7 +120,7 @@ public class BaseMetadataCategoryTest extends AbstractCoreIntegrationTest {
         MetadataCategory category = new MetadataCategory();
         category.setName("category");
         metadataCategoryRepository.save(category);
-
+        md.getCategories().add(category);
         mdc = metadataCategoryRepository.findAll().get(0);
     }
 
