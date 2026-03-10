@@ -26,21 +26,7 @@ Currently, Liquibase is tested with the following databases:
 * H2 (needed for test in GN4)
 
 
-## Generating change logs from existing database
-
-Use [Liquibase command line tool](https://docs.liquibase.com/oss/implementation-guide-4-33/generate-changelog-from-existing-database) support to generate change logs from an existing database.
-
-In Intellij, you can generate change logs from an existing database using the following steps:
-1. Open the Database tool window (View | Tool Windows | Database).
-2. Select the database connection for which you want to generate the change log.
-3. Right-click on the database connection and select "Generate Liquibase Changelog".
-4. In the "Generate Liquibase Changelog" dialog, specify the output file for the change log and select the options for the generation process.
-5. Click "OK" to generate the change log file.
-
-![intellij-liquibase-generate.png](intellij-liquibase-generate.png)
-
-
-## Custom database initialization and migration system proposal
+## Custom GeoNetwork 4.4.x database initialization and migration system proposal 
 
 GeoNetwork 4.4.x is using a custom mechanism based on Java and SQL to migrate from version to version.
 This mechanism does not work well when backporting changes to previous versions and does not support all possible migration paths.
@@ -57,6 +43,108 @@ This approach avoid to migrate all existing migration steps to Liquibase, which 
 * Complexity to test all migration paths (which are not even working well with the old system)
 
 
+
+## Liquibase utilities
+
+From the database module, liquibase command line tool can be used:
+
+```bash
+mvn liquibase:help
+```
+### Populating a database
+
+To populate a database using liquibase, configure the database connection in `liquibase.properties` (or set command parameters) and run:
+
+```bash
+mvn liquibase:update -Dliquibase.logLevel=info
+```
+
+### Testing connection
+
+Testing liquibase connection to a database can be done using:
+
+```bash
+mvn liquibase:status \
+  -Dliquibase.url=jdbc:postgresql://localhost:5432/geonetwork \
+  -Dliquibase.username=www-data \
+  -Dliquibase.password=www-data
+```
+
+
+### Diff between 2 databases
+
+Use [Liquibase command line tool](https://docs.liquibase.com/oss/implementation-guide-4-33/generate-changelog-from-existing-database) support to generate change logs from an existing database.
+
+```bash
+mvn liquibase:diff
+```
+or
+```bash
+mvn liquibase:diff \
+  -Dliquibase.url=jdbc:postgresql://localhost:5432/geonetwork-dev \
+  -Dliquibase.username=www-data \
+  -Dliquibase.password=www-data \
+  -Dliquibase.referenceUrl=jdbc:postgresql://localhost:5432/geonetwork-prod \
+  -Dliquibase.referenceUsername=www-data
+  -Dliquibase.referencePassword=www-data
+```
+
+Diff Results:
+
+```
+Reference Database: www-data @ jdbc:postgresql://localhost:5432/geonetwork-prod (Default Schema: public)
+Comparison Database: www-data @ jdbc:postgresql://localhost:5432/geonetwork-dev (Default Schema: public)
+Compared Schemas: public'
+Unexpected Column(s): 
+     public.newtable.column_name
+...
+Unexpected Table(s): 
+     newtable
+...
+```
+
+### Generating change logs from existing database using Liquibase command line tool
+
+Use the following to generate change logs from an existing database using Liquibase command line tool:
+
+```bash
+mvn liquibase:generateChangeLog \
+  -Dliquibase.url=jdbc:postgresql://localhost:5432/geonetwork-dev \
+  -Dliquibase.username=www-data \
+  -Dliquibase.password=www-data \
+  -Dliquibase.outputChangeLogFile=your_changelog.xml
+```
+
+Output change log file extension can be `.xml`, `.json` or `.yaml` depending on the format you want to use for your change log file.
+
+### Generating change logs from existing database in Intellij
+
+In Intellij, you can generate change logs from an existing database using the following steps:
+1. Open the Database tool window (View | Tool Windows | Database).
+2. Select the database connection for which you want to generate the change log.
+3. Right-click on the database connection and select "Generate Liquibase Changelog".
+4. In the "Generate Liquibase Changelog" dialog, specify the output file for the change log and select the options for the generation process.
+5. Click "OK" to generate the change log file.
+
+![intellij-liquibase-generate.png](intellij-liquibase-generate.png)
+
+
+### Generating a changeset
+
+For every change in the database, add your changeset to [changesets](src/main/resources/db/changesets).
+
+Create it manually in one of the supported formats (XML, JSON, SQL or YAML) or use the Liquibase command line tool to generate it from an existing database (see above).
+
+
+
+## Liquibase logging
+
+To test:
+
+* `-Dliquibase.logLevel=INFO` or `LIQUIBASE_LOG_LEVEL=WARNING`
+* [`liquibase-slf4j` dependency](https://github.com/mattbertolini/liquibase-slf4j) is used to log Liquibase output using SLF4J.
+
+
 ## Liquibase implementation status
 
 Draft experiment to implement initial database creation and initial data loading using Liquibase.
@@ -70,13 +158,11 @@ Draft experiment to implement initial database creation and initial data loading
 - [x] [Initial data](src/main/resources/db/changesets/00001-initial-data.sql) / Precondition: table settings is empty
 - [x] [Initial languages](src/main/resources/db/changesets/00002-initial-data-languages-eng.sql) / Precondition: table language does not have eng
 - [x] Other languages
-- [ ] Test to check
-  - core/src/test/java/org/fao/geonet/kernel/SchematronValidatorTest.java 
-  - core/src/test/java/org/fao/geonet/kernel/datamanager/BaseMetadataCategoryTest.java 
+- [x] Test ok 
 - [ ] Configure log level for liquibase https://docs.liquibase.com/oss/user-guide-4-33/use-environment-variables-to-control-log-level
 - [ ] For test, populate database with minimal data? (eg. only one or 2 language?)
 - [ ] Some test requires db with no data eg. domain - see changelog-nodata.xml - can we use context for that?
-- [ ] Check how to make changelog https://docs.liquibase.com/oss/implementation-guide-4-33/track-and-append-manual-changes-with-snapshots-and-diff-changelog
+- [x] Check how to make changelog https://docs.liquibase.com/oss/implementation-guide-4-33/track-and-append-manual-changes-with-snapshots-and-diff-changelog
 - [ ] Can we use property substitution to create a database with host, port, name configured on db creation? https://docs.liquibase.com/oss/user-guide-4-33/what-is-property-substitution
 - [ ] Any benefit of using CSV for loading data? https://docs.liquibase.com/pro/reference-guide-4-33/change-types/loaddata
 - [ ] Document how to create database without the app running
@@ -140,12 +226,4 @@ To enable liquibase in GeoNetwork 5 by:
 
 Then both GeoNetwork 4 and GeoNetwork 5 can use Liquibase to initialize the database schema and data. 
 Liquibase has a lock mechanism to avoid multiple instances to apply changes at the same time.
-
-
-## Questions
-
-To be investigated:
-* Check context and labels to flag GN4/GN5 changesets? (See https://docs.liquibase.com/reference-guide/changelog-attributes/what-are-contexts)
-* Define process to manage changes from GN4 and GN5?
-* How to generate changelogs? Intellij has support for liquibase https://www.jetbrains.com/help/idea/liquibase.html
 
