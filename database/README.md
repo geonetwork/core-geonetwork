@@ -70,9 +70,11 @@ Draft experiment to implement initial database creation and initial data loading
 - [x] [Initial data](src/main/resources/db/changesets/00001-initial-data.sql) / Precondition: table settings is empty
 - [x] [Initial languages](src/main/resources/db/changesets/00002-initial-data-languages-eng.sql) / Precondition: table language does not have eng
 - [x] Other languages
-- [ ] Configure log level for liquibase
+- [ ] Configure log level for liquibase https://docs.liquibase.com/oss/user-guide-4-33/use-environment-variables-to-control-log-level
 - [ ] For test, populate database with minimal data? (eg. only one or 2 language?)
 - [ ] Check how to make changelog https://docs.liquibase.com/oss/implementation-guide-4-33/track-and-append-manual-changes-with-snapshots-and-diff-changelog
+- [ ] Can we use property substitution to create a database with host, port, name configured on db creation? https://docs.liquibase.com/oss/user-guide-4-33/what-is-property-substitution
+- [ ] Any benefit of using CSV for loading data? https://docs.liquibase.com/oss/user-guide-4-33/work-with-uuid
 - [ ] Remove past database migrations 
 - [ ] Remove old configuration `initial_data.xml` and `database_migration.xml`
 - [ ] Remove `db.migration_onstartup` property / Hibernate `hbm2ddl` property set to `none`
