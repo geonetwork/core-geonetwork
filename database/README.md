@@ -51,13 +51,6 @@ From the database module, liquibase command line tool can be used:
 ```bash
 mvn liquibase:help
 ```
-### Populating a database
-
-To populate a database using liquibase, configure the database connection in `liquibase.properties` (or set command parameters) and run:
-
-```bash
-mvn liquibase:update -Dliquibase.logLevel=info
-```
 
 ### Testing connection
 
@@ -68,6 +61,18 @@ mvn liquibase:status \
   -Dliquibase.url=jdbc:postgresql://localhost:5432/geonetwork \
   -Dliquibase.username=www-data \
   -Dliquibase.password=www-data
+```
+
+### Populating a database
+
+To populate a database using liquibase, configure the database connection in `liquibase.properties` (or set command parameters) and run:
+
+```bash
+mvn liquibase:update \
+  -Dliquibase.url=jdbc:postgresql://localhost:5432/geonetwork \
+  -Dliquibase.username=www-data \
+  -Dliquibase.password=www-data \
+  -Dliquibase.logLevel=info
 ```
 
 
@@ -135,7 +140,21 @@ For every change in the database, add your changeset to [changesets](src/main/re
 
 Create it manually in one of the supported formats (XML, JSON, SQL or YAML) or use the Liquibase command line tool to generate it from an existing database (see above).
 
+Changeset can have a `context` which can be used to specify in which context the changeset should be applied. Current values are:
+* `schema-only` to only apply schema changes (eg. create table, add column, etc.). It is used by [`gn-domain` module for tests](../domain/src/test/resources/domain-repository-test-context.xml)
+* `test` to only load main data for tests. It is used by [core-repository-test-context.xml](../core/src/test/resources/core-repository-test-context.xml) to only load English language during testing.
+* `prod`
 
+
+```bash
+mvn liquibase:update \
+  -Dliquibase.changeLogFile=src/main/resources/db/changelog.xml \
+  -Dliquibase.url=jdbc:postgresql://localhost:5432/gnliquibasetest \
+  -Dliquibase.username=www-data \
+  -Dliquibase.password=www-data \
+  -Dliquibase.logLevel=info \
+  -Dliquibase.contexts=prod
+```
 
 ## Liquibase logging
 
@@ -159,13 +178,12 @@ Draft experiment to implement initial database creation and initial data loading
 - [x] [Initial languages](src/main/resources/db/changesets/00002-initial-data-languages-eng.sql) / Precondition: table language does not have eng
 - [x] Other languages
 - [x] Test ok 
+- [x] Check how to make changelog https://docs.liquibase.com/oss/implementation-guide-4-33/track-and-append-manual-changes-with-snapshots-and-diff-changelog
+- [x] Document how to create database without the app running
 - [ ] Configure log level for liquibase https://docs.liquibase.com/oss/user-guide-4-33/use-environment-variables-to-control-log-level
 - [ ] For test, populate database with minimal data? (eg. only one or 2 language?)
 - [ ] Some test requires db with no data eg. domain - see changelog-nodata.xml - can we use context for that?
-- [x] Check how to make changelog https://docs.liquibase.com/oss/implementation-guide-4-33/track-and-append-manual-changes-with-snapshots-and-diff-changelog
 - [ ] Can we use property substitution to create a database with host, port, name configured on db creation? https://docs.liquibase.com/oss/user-guide-4-33/what-is-property-substitution
-- [ ] Any benefit of using CSV for loading data? https://docs.liquibase.com/pro/reference-guide-4-33/change-types/loaddata
-- [ ] Document how to create database without the app running
 - [ ] Remove past database migrations 
 - [ ] Remove old configuration `initial_data.xml` and `database_migration.xml`
 - [ ] Remove `db.migration_onstartup` property / Hibernate `hbm2ddl` property set to `none`

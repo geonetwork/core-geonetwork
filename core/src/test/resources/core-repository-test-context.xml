@@ -84,7 +84,7 @@
   <bean id="liquibase" class="liquibase.integration.spring.SpringLiquibase">
     <property name="dataSource" ref="jdbcDataSource" />
     <property name="changeLog" value="classpath:db/changelog.xml" />
-    <property name="contexts" value="production" />
+    <property name="contexts" value="test" />
     <property name="shouldRun" value="true" />
     <property name="dropFirst" value="true"/>
   </bean>

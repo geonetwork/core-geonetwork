@@ -4,7 +4,7 @@
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.29.xsd"
-  objectQuotingStrategy="QUOTE_ONLY_RESERVED_WORDS">
+  objectQuotingStrategy="QUOTE_ONLY_RESERVED_WORDS" context="prod,test,schema-only">
   <preConditions onFail="WARN" onFailMessage="Metadata table exists, no need to create database schema">
     <not>
       <tableExists tableName="metadata"/>

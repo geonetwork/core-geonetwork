@@ -1,5 +1,5 @@
 --liquibase formatted sql
---changeset francois:00020
+--changeset francois:00020 context:prod
 --preconditions onFail:MARK_RAN onError:HALT
 --precondition-sql-check expectedResult:0 SELECT COUNT(*) FROM Languages WHERE id = 'rus';
 

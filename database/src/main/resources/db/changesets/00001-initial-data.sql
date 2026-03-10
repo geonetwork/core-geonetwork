@@ -1,5 +1,5 @@
 --liquibase formatted sql
---changeset francois:00001
+--changeset francois:00001 context:prod,test
 --preconditions onFail:MARK_RAN onError:HALT
 --precondition-sql-check expectedResult:0 SELECT COUNT(*) FROM settings
 
