@@ -32,6 +32,7 @@ import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.UpdateDatestamp;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.search.IndexingMode;
+import org.fao.geonet.kernel.url.UrlAnalyzer;
 import org.fao.geonet.repository.LinkRepository;
 import org.fao.geonet.repository.MetadataLinkRepository;
 import org.fao.geonet.repository.SourceRepository;
@@ -59,7 +60,6 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -90,6 +90,9 @@ public class LinksApiTest extends AbstractServiceIntegrationTest {
     @Autowired
     private IMetadataUtils metadataRepository;
 
+    @Autowired
+    private UrlAnalyzer urlAnalyzer;
+
     private String uuid;
     private int id;
     private AbstractMetadata md;
@@ -105,14 +108,9 @@ public class LinksApiTest extends AbstractServiceIntegrationTest {
 
     @Test
     public void getLinks() throws Exception {
-        Long operationsCount = linkRepository.count();
         final MockHttpSession httpSession = this.loginAsAdmin();
 
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
-        this.mockMvc.perform(post("/srv/api/records/links/analyze?uuid=" + this.uuid)
-            .session(httpSession)
-            .accept(MediaType.parseMediaType("application/json")))
-            .andExpect(status().isCreated());
 
         Assert.assertEquals(1, linkRepository.count());
 
@@ -158,6 +156,9 @@ public class LinksApiTest extends AbstractServiceIntegrationTest {
 
         dataManager.indexMetadata(Lists.newArrayList("" + this.id));
         this.md = metadataRepository.findOne(this.id);
+
+        Element xmlData = ((Metadata) this.md).getXmlData(false);
+        urlAnalyzer.processMetadata(xmlData, (Metadata) this.md);
     }
 
 }
