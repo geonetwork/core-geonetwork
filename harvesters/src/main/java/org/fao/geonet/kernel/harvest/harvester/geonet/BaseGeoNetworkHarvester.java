@@ -34,16 +34,21 @@ import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.concurrent.atomic.AtomicBoolean;
+
+import bsh.StringUtil;
 import jeeves.server.context.ServiceContext;
+import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.Logger;
 import org.fao.geonet.domain.Source;
 import org.fao.geonet.domain.SourceType;
+import org.fao.geonet.exceptions.BadParameterEx;
 import org.fao.geonet.kernel.harvest.harvester.HarvestError;
 import org.fao.geonet.kernel.harvest.harvester.RecordInfo;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.SourceRepository;
 import org.fao.geonet.resources.Resources;
+import org.fao.geonet.utils.FilePathChecker;
 import org.fao.geonet.utils.GeonetHttpRequestFactory;
 import org.fao.geonet.utils.XmlRequest;
 
@@ -137,36 +142,47 @@ public abstract class BaseGeoNetworkHarvester<P extends BaseGeonetParams> {
      * @param source the metadata source from which the logo is retrieved
      */
     protected void retrieveLogo(ServiceContext context, final Resources resources, final String url, final Source source)  {
+        if (StringUtils.isNotEmpty(source.getLogo())) {
+            // use the source logo name
+            String logoFileName = source.getLogo();
 
-        if (source.getLogo() != null) {
-            // trust the logo name
             try {
-                createLogoImage(resources, source.getLogo(), url);
-            } catch (IOException e) {
+                FilePathChecker.verify(logoFileName);
+
+                createLogoImage(resources, logoFileName, url);
+            } catch (IOException | BadParameterEx e) {
                 context.warning(String.format("Cannot retrieve logo file from : %s", url));
-                context.warning(String.format("  (C) Logo  : %s", source.getLogo()));
+                context.warning(String.format("  (C) Logo  : %s", logoFileName));
                 context.warning(String.format("  (C) Excep : %s",  e.getMessage()));
 
-                resources.copyUnknownLogo(context, source.getLogo());
+                resources.copyUnknownLogo(context, logoFileName);
             }
         } else {
             String[] allowedLogoFileExtensions = {".png", ".gif", ".jpg", ".jpeg"};
 
             for (String logoFileExtension : allowedLogoFileExtensions) {
-                String logo = source.getUuid() + logoFileExtension;
+                String logoFileName = source.getUuid() + logoFileExtension;
                 try {
-                    createLogoImage(resources, logo, url);
+                    FilePathChecker.verify(logoFileName);
+
+                    createLogoImage(resources, logoFileName, url);
                     return;
-                } catch (IOException e) {
+                } catch (IOException | BadParameterEx e)  {
                     // Ignore the exception
                 }
             }
 
-            // No logo found, use the default logo
-            context.warning(String.format("Cannot retrieve logo file from : %s for logo '%s' with the file extensions '%s'",
-                url, source.getUuid(), String.join(",", allowedLogoFileExtensions)));
-            context.warning(String.format("Cannot retrieve logo file from : %s", url));
-            resources.copyUnknownLogo(context, source.getLogo());
+            try {
+                // No logo found, use the default logo
+                FilePathChecker.verify(source.getLogo());
+
+                context.warning(String.format("Cannot retrieve logo file from : %s for logo '%s' with the file extensions '%s'",
+                    url, source.getUuid(), String.join(",", allowedLogoFileExtensions)));
+                context.warning(String.format("Cannot retrieve logo file from : %s", url));
+                resources.copyUnknownLogo(context, source.getLogo());
+            } catch (BadParameterEx e)  {
+                // Ignore the exception
+            }
         }
     }
 
