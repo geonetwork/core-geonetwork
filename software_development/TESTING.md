@@ -43,3 +43,19 @@ The following list provides a few tips:
   be used to mock responses when performing tests.
 
 * Integration tests are disabled by default. Use the `it` maven profile to use them.
+
+* Integration tests are starting Elasticsearch on port 9200, so make sure to stop any existing Elasticsearch instance before running the tests.
+
+
+To run all integration tests:
+
+```shell
+mvn clean install -Pit 
+```
+
+To run one integration test: 
+
+```shell
+cd ../core
+mvn integration-test -Pit -Dtest=None -DfailIfNoTests=false -DskipIntegrationTests=false -DskipTests=false -Dit.test=org.fao.geonet.kernel.datamanager.BaseMetadataCategoryTest 
+```
