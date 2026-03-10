@@ -40,12 +40,12 @@ In Intellij, you can generate change logs from an existing database using the fo
 ![intellij-liquibase-generate.png](intellij-liquibase-generate.png)
 
 
-## Old database initialization and migration system proposal
+## Custom database initialization and migration system proposal
 
-GeoNetwork was using its own mechanism based on Java and SQL to migrate from version to version.
-This mechanism was not working well when backporting changes to previous versions and does not support all possible migration paths.
+GeoNetwork 4.4.x is using a custom mechanism based on Java and SQL to migrate from version to version.
+This mechanism does not work well when backporting changes to previous versions and does not support all possible migration paths.
 
-It is proposed the following strategy to move to Liquibase: **Old GeoNetwork system is used until version 4.4.x, then starting from version 4.6.x Liquibase only is used.**
+It is proposed the following strategy to move to Liquibase: **Custom GeoNetwork system is used until version 4.4.x, then starting from version 4.6.x Liquibase only is used.**
 
 This means:
 * Users upgrading to version 4.6.x will first have to migrate to the latest 4.4.x version using the old system, then upgrade to 4.6.x which will use Liquibase.
@@ -70,11 +70,16 @@ Draft experiment to implement initial database creation and initial data loading
 - [x] [Initial data](src/main/resources/db/changesets/00001-initial-data.sql) / Precondition: table settings is empty
 - [x] [Initial languages](src/main/resources/db/changesets/00002-initial-data-languages-eng.sql) / Precondition: table language does not have eng
 - [x] Other languages
+- [ ] Test to check
+  - core/src/test/java/org/fao/geonet/kernel/SchematronValidatorTest.java 
+  - core/src/test/java/org/fao/geonet/kernel/datamanager/BaseMetadataCategoryTest.java 
 - [ ] Configure log level for liquibase https://docs.liquibase.com/oss/user-guide-4-33/use-environment-variables-to-control-log-level
 - [ ] For test, populate database with minimal data? (eg. only one or 2 language?)
+- [ ] Some test requires db with no data eg. domain - see changelog-nodata.xml - can we use context for that?
 - [ ] Check how to make changelog https://docs.liquibase.com/oss/implementation-guide-4-33/track-and-append-manual-changes-with-snapshots-and-diff-changelog
 - [ ] Can we use property substitution to create a database with host, port, name configured on db creation? https://docs.liquibase.com/oss/user-guide-4-33/what-is-property-substitution
-- [ ] Any benefit of using CSV for loading data? https://docs.liquibase.com/oss/user-guide-4-33/work-with-uuid
+- [ ] Any benefit of using CSV for loading data? https://docs.liquibase.com/pro/reference-guide-4-33/change-types/loaddata
+- [ ] Document how to create database without the app running
 - [ ] Remove past database migrations 
 - [ ] Remove old configuration `initial_data.xml` and `database_migration.xml`
 - [ ] Remove `db.migration_onstartup` property / Hibernate `hbm2ddl` property set to `none`
