@@ -71,6 +71,8 @@ Draft experiment to implement initial database creation and initial data loading
 - [x] [Initial languages](src/main/resources/db/changesets/00002-initial-data-languages-eng.sql) / Precondition: table language does not have eng
 - [x] Other languages
 - [ ] Configure log level for liquibase
+- [ ] For test, populate database with minimal data? (eg. only one or 2 language?)
+- [ ] Check how to make changelog https://docs.liquibase.com/oss/implementation-guide-4-33/track-and-append-manual-changes-with-snapshots-and-diff-changelog
 - [ ] Remove past database migrations 
 - [ ] Remove old configuration `initial_data.xml` and `database_migration.xml`
 - [ ] Remove `db.migration_onstartup` property / Hibernate `hbm2ddl` property set to `none`

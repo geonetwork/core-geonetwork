@@ -1189,7 +1189,7 @@
       <dependency>
         <groupId>org.liquibase</groupId>
         <artifactId>liquibase-core</artifactId>
-        <version>4.29.2</version>
+        <version>${liquibase.version}</version>
         <exclusions>
           <exclusion>
             <groupId>org.liquibase</groupId>
@@ -1704,6 +1704,7 @@
     <springdoc.version>1.8.0</springdoc.version>
     <keycloak.version>18.0.2</keycloak.version>
     <hibernate.version>5.6.15.Final</hibernate.version>
+    <liquibase.version>4.29.2</liquibase.version>
 
     <metrics.version>2.2.0</metrics.version>
     <maven.build.timestamp.format>yyyy-MM-dd'T'HH'\:'mm'\:'ssZ</maven.build.timestamp.format>
