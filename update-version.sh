@@ -101,7 +101,28 @@ sed $sedopt "s/version=.*/version=${new_version_main}/g" release/build.propertie
 sed $sedopt "s/subVersion=.*/subVersion=${sub_version}/g" release/build.properties
 echo
 
-# TODO: Liquibase migration
+echo 'Database'
+echo '  * Adding a new changeset to database/src/main/resources/db/changesets'
+
+CHANGESETS_DIR="database/src/main/resources/db/changesets"
+LAST_FILE=$(ls -1 "$CHANGESETS_DIR" | sort | tail -n 1)
+# Extract number, e.g. 00026 from 00026-some-name.sql
+LAST_NUM=${LAST_FILE%%-*}
+# Increment using base 10 to avoid octal interpretation
+NEXT_NUM=$(printf "%05d" $((10#$LAST_NUM + 1)))
+
+NEW_CHANGESET_FILE="$CHANGESETS_DIR/$NEXT_NUM-update-version-to-$new_version.sql"
+
+echo "    Creating $NEW_CHANGESET_FILE"
+
+cat <<EOF > "$NEW_CHANGESET_FILE"
+--liquibase formatted sql
+--changeset geonetwork:update-version-to-$new_version context:prod,test
+
+UPDATE Settings SET value='$new_version_main' WHERE name='system/platform/version';
+UPDATE Settings SET value='$sub_version' WHERE name='system/platform/subVersion';
+EOF
+echo
 
 # Update version pom files
 mvn versions:set-property -Dproperty=gn.project.version -DnewVersion=${new_version}
