@@ -20,7 +20,11 @@ Liquibase track changes applied to the current database in the `DATABASECHANGELO
 
 
 If required, database values can be customized using variables. Variables are defined in [geonetwork_db.properties](src/main/resources/db/geonetwork_db.properties).
-Variables can then be used in changesets and can be overridden using JVM args or env vars when starting the application or liquibase utility eg. `-Dgeonetwork.system.server.host=data.myorg.org -Dgeonetwork.system.server.protocol=https -Dgeonetwork.system.server.port=443`.
+Variables can then be used in changesets and can be overridden using JVM args or env vars when starting the application or liquibase utility.
+
+eg.
+* `-Dgeonetwork.settings.system.server.host=data.myorg.org -Dgeonetwork.settings.system.server.protocol=https -Dgeonetwork.settings.system.server.port=443`.
+* `-Dgeonetwork.users.admin.username=XYZ -Dgeonetwork.users.admin.passwordhash=1eB2....`
 
 
 ## Databases tested
