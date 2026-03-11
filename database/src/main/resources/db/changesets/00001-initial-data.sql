@@ -530,176 +530,176 @@ INSERT INTO Operations (id, name) VALUES  (5,'dynamic');
 INSERT INTO Operations (id, name) VALUES  (6,'featured');
 
 
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/site/name', 'My GeoNetwork catalogue', 0, 110, 'n');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/site/siteId', '', 0, 120, 'n');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/site/organization', 'My organization', 0, 130, 'n');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/platform/version', '4.4.10', 0, 150, 'n');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/platform/subVersion', 'SNAPSHOT', 0, 160, 'n');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/site/svnUuid', '', 0, 170, 'y');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/site/name', '${geonetwork.system.site.name}', 0, 110, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/site/siteId', '${geonetwork.system.site.siteId}', 0, 120, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/site/organization', '${geonetwork.system.site.organization}', 0, 130, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/platform/version', '${geonetwork.system.platform.version}', 0, 150, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/platform/subVersion', '${geonetwork.system.platform.subVersion}', 0, 160, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/site/svnUuid', '${geonetwork.system.site.svnUuid}', 0, 170, 'y');
 
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/server/host', 'localhost', 0, 210, 'n');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/server/protocol', 'http', 0, 220, 'n');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/server/port', '8080', 1, 230, 'n');
-INSERT INTO settings (name, value, datatype, position, internal) VALUES ('system/server/log','log4j2.xml', 0, 250, 'y');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/server/timeZone', '', 0, 260, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/server/host', '${geonetwork.system.server.host}', 0, 210, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/server/protocol', '${geonetwork.system.server.protocol}', 0, 220, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/server/port', '${geonetwork.system.server.port}', 1, 230, 'n');
+INSERT INTO settings (name, value, datatype, position, internal) VALUES ('system/server/log', '${geonetwork.system.server.log}', 0, 250, 'y');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/server/timeZone', '${geonetwork.system.server.timeZone}', 0, 260, 'n');
 
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/intranet/network', '127.0.0.1', 0, 310, 'y');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/intranet/netmask', '255.0.0.0', 0, 320, 'y');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/proxy/use', 'false', 2, 510, 'y');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/proxy/host', NULL, 0, 520, 'y');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/proxy/port', NULL, 1, 530, 'y');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/proxy/username', NULL, 0, 540, 'y');
-INSERT INTO Settings (name, value, datatype, position, internal, encrypted) VALUES ('system/proxy/password', NULL, 0, 550, 'y', 'y');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/proxy/ignorehostlist', NULL, 0, 560, 'y');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/cors/allowedHosts', '*', 0, 561, 'y');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/documentation/url', 'https://docs.geonetwork-opensource.org/{{version}}/{{lang}}', 0, 570, 'n');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/feedback/email', 'root@localhost', 0, 610, 'y');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/feedback/mailServer/host', '', 0, 630, 'y');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/feedback/mailServer/port', '25', 1, 640, 'y');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/feedback/mailServer/username', '', 0, 642, 'y');
-INSERT INTO Settings (name, value, datatype, position, internal, encrypted) VALUES ('system/feedback/mailServer/password', '', 0, 643, 'y', 'y');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/feedback/mailServer/ssl', 'false', 2, 641, 'y');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/feedback/mailServer/tls', 'false', 2, 644, 'y');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/feedback/mailServer/ignoreSslCertificateErrors', 'false', 2, 645, 'y');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/feedback/languages', '', 0, 646, 'n');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/feedback/translationFollowsText', '', 0, 647, 'n');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/selectionmanager/maxrecords', '1000', 1, 910, 'y');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/csw/enable', 'true', 2, 1210, 'y');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/csw/enabledWhenIndexing', 'true', 2, 1211, 'y');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/csw/capabilityRecordUuid', '-1', 0, 1220, 'y');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/csw/metadataPublic', 'false', 2, 1310, 'y');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/csw/transactionUpdateCreateXPath', 'true', 2, 1320, 'y');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/userSelfRegistration/enable', 'false', 2, 1910, 'n');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/userFeedback/enable', 'false', 2, 1911, 'n');
-INSERT INTO Settings (name, value, datatype, position, internal, editable) VALUES ('system/userFeedback/lastNotificationDate', '', 0, 1912, 'y', 'n');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/userFeedback/metadata/enable', 'false', 2, 1913, 'n');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/clickablehyperlinks/enable', 'true', 2, 2010, 'y');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/localrating/enable', 'advanced', 0, 2110, 'n');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/localrating/notificationLevel', 'catalogueAdministrator', 0, 2111, 'n');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/localrating/notificationGroups', '', 0, 2112, 'n');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/xlinkResolver/enable', 'false', 2, 2310, 'n');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/xlinkResolver/localXlinkEnable', 'true', 2, 2311, 'n');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/xlinkResolver/ignore', 'operatesOn,featureCatalogueCitation,Anchor,source,parentIdentifier', 0, 2312, 'n');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/xlinkResolver/referencedDeletionAllowed', 'true', 2, 2313, 'n');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/hidewithheldelements/enableLogging', 'false', 2, 2320, 'y');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/autofixing/enable', 'true', 2, 2410, 'y');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/searchStats/enable', 'false', 2, 2510, 'n');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/oai/mdmode', '1', 0, 7010, 'y');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/oai/tokentimeout', '3600', 1, 7020, 'y');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/oai/cachesize', '60', 1, 7030, 'y');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/oai/maxrecords', '10', 1, 7040, 'y');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/inspire/enable', 'false', 2, 7210, 'n');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/inspire/atom', 'disabled', 0, 7230, 'y');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/inspire/atomSchedule', '0 0 0 * * ?', 0, 7240, 'y');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/inspire/atomProtocol', 'INSPIRE-ATOM', 0, 7250, 'y');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/harvester/enableEditing', 'false', 2, 9010, 'n');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/harvester/enablePrivilegesManagement', 'false', 2, 9010, 'n');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/harvester/disabledHarvesterTypes', '', 0, 9011, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/intranet/network', '${geonetwork.system.intranet.network}', 0, 310, 'y');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/intranet/netmask', '${geonetwork.system.intranet.netmask}', 0, 320, 'y');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/proxy/use', '${geonetwork.system.proxy.use}', 2, 510, 'y');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/proxy/host', '${geonetwork.system.proxy.host}', 0, 520, 'y');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/proxy/port', '${geonetwork.system.proxy.port}', 1, 530, 'y');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/proxy/username', '${geonetwork.system.proxy.username}', 0, 540, 'y');
+INSERT INTO Settings (name, value, datatype, position, internal, encrypted) VALUES ('system/proxy/password', '${geonetwork.system.proxy.password}', 0, 550, 'y', 'y');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/proxy/ignorehostlist', '${geonetwork.system.proxy.ignorehostlist}', 0, 560, 'y');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/cors/allowedHosts', '${geonetwork.system.cors.allowedHosts}', 0, 561, 'y');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/documentation/url', '${geonetwork.system.documentation.url}', 0, 570, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/feedback/email', '${geonetwork.system.feedback.email}', 0, 610, 'y');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/feedback/mailServer/host', '${geonetwork.system.feedback.mailServer.host}', 0, 630, 'y');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/feedback/mailServer/port', '${geonetwork.system.feedback.mailServer.port}', 1, 640, 'y');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/feedback/mailServer/username', '${geonetwork.system.feedback.mailServer.username}', 0, 642, 'y');
+INSERT INTO Settings (name, value, datatype, position, internal, encrypted) VALUES ('system/feedback/mailServer/password', '${geonetwork.system.feedback.mailServer.password}', 0, 643, 'y', 'y');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/feedback/mailServer/ssl', '${geonetwork.system.feedback.mailServer.ssl}', 2, 641, 'y');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/feedback/mailServer/tls', '${geonetwork.system.feedback.mailServer.tls}', 2, 644, 'y');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/feedback/mailServer/ignoreSslCertificateErrors', '${geonetwork.system.feedback.mailServer.ignoreSslCertificateErrors}', 2, 645, 'y');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/feedback/languages', '${geonetwork.system.feedback.languages}', 0, 646, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/feedback/translationFollowsText', '${geonetwork.system.feedback.translationFollowsText}', 0, 647, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/selectionmanager/maxrecords', '${geonetwork.system.selectionmanager.maxrecords}', 1, 910, 'y');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/csw/enable', '${geonetwork.system.csw.enable}', 2, 1210, 'y');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/csw/enabledWhenIndexing', '${geonetwork.system.csw.enabledWhenIndexing}', 2, 1211, 'y');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/csw/capabilityRecordUuid', '${geonetwork.system.csw.capabilityRecordUuid}', 0, 1220, 'y');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/csw/metadataPublic', '${geonetwork.system.csw.metadataPublic}', 2, 1310, 'y');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/csw/transactionUpdateCreateXPath', '${geonetwork.system.csw.transactionUpdateCreateXPath}', 2, 1320, 'y');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/userSelfRegistration/enable', '${geonetwork.system.userSelfRegistration.enable}', 2, 1910, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/userFeedback/enable', '${geonetwork.system.userFeedback.enable}', 2, 1911, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal, editable) VALUES ('system/userFeedback/lastNotificationDate', '${geonetwork.system.userFeedback.lastNotificationDate}', 0, 1912, 'y', 'n');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/userFeedback/metadata/enable', '${geonetwork.system.userFeedback.metadata.enable}', 2, 1913, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/clickablehyperlinks/enable', '${geonetwork.system.clickablehyperlinks.enable}', 2, 2010, 'y');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/localrating/enable', '${geonetwork.system.localrating.enable}', 0, 2110, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/localrating/notificationLevel', '${geonetwork.system.localrating.notificationLevel}', 0, 2111, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/localrating/notificationGroups', '${geonetwork.system.localrating.notificationGroups}', 0, 2112, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/xlinkResolver/enable', '${geonetwork.system.xlinkResolver.enable}', 2, 2310, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/xlinkResolver/localXlinkEnable', '${geonetwork.system.xlinkResolver.localXlinkEnable}', 2, 2311, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/xlinkResolver/ignore', '${geonetwork.system.xlinkResolver.ignore}', 0, 2312, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/xlinkResolver/referencedDeletionAllowed', '${geonetwork.system.xlinkResolver.referencedDeletionAllowed}', 2, 2313, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/hidewithheldelements/enableLogging', '${geonetwork.system.hidewithheldelements.enableLogging}', 2, 2320, 'y');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/autofixing/enable', '${geonetwork.system.autofixing.enable}', 2, 2410, 'y');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/searchStats/enable', '${geonetwork.system.searchStats.enable}', 2, 2510, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/oai/mdmode', '${geonetwork.system.oai.mdmode}', 0, 7010, 'y');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/oai/tokentimeout', '${geonetwork.system.oai.tokentimeout}', 1, 7020, 'y');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/oai/cachesize', '${geonetwork.system.oai.cachesize}', 1, 7030, 'y');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/oai/maxrecords', '${geonetwork.system.oai.maxrecords}', 1, 7040, 'y');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/inspire/enable', '${geonetwork.system.inspire.enable}', 2, 7210, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/inspire/atom', '${geonetwork.system.inspire.atom}', 0, 7230, 'y');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/inspire/atomSchedule', '${geonetwork.system.inspire.atomSchedule}', 0, 7240, 'y');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/inspire/atomProtocol', '${geonetwork.system.inspire.atomProtocol}', 0, 7250, 'y');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/harvester/enableEditing', '${geonetwork.system.harvester.enableEditing}', 2, 9010, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/harvester/enablePrivilegesManagement', '${geonetwork.system.harvester.enablePrivilegesManagement}', 2, 9010, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/harvester/disabledHarvesterTypes', '${geonetwork.system.harvester.disabledHarvesterTypes}', 0, 9011, 'n');
 
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/harvesting/mail/recipient', NULL, 0, 9020, 'y');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/harvesting/mail/template', '', 0, 9021, 'y');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/harvesting/mail/templateError', 'There was an error on the harvesting: $$errorMsg$$', 0, 9022, 'y');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/harvesting/mail/templateWarning', '', 0, 9023, 'y');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/harvesting/mail/subject', '[$$harvesterType$$] $$harvesterName$$ finished harvesting', 0, 9024, 'y');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/harvesting/mail/enabled', 'false', 2, 9025, 'y');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/harvesting/mail/level1', 'false', 2, 9026, 'y');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/harvesting/mail/level2', 'false', 2, 9027, 'y');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/harvesting/mail/level3', 'false', 2, 9028, 'y');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/users/identicon', 'gravatar:mp', 0, 9110, 'n');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/metadata/prefergrouplogo', 'true', 2, 9111, 'n');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/metadata/allThesaurus', 'false', 2, 9160, 'n');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/metadata/thesaurusNamespace', 'https://registry.geonetwork-opensource.org/{{type}}/{{filename}}', 0, 9161, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/harvesting/mail/recipient', '${geonetwork.system.harvesting.mail.recipient}', 0, 9020, 'y');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/harvesting/mail/template', '${geonetwork.system.harvesting.mail.template}', 0, 9021, 'y');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/harvesting/mail/templateError', '${geonetwork.system.harvesting.mail.templateError}', 0, 9022, 'y');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/harvesting/mail/templateWarning', '${geonetwork.system.harvesting.mail.templateWarning}', 0, 9023, 'y');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/harvesting/mail/subject', '${geonetwork.system.harvesting.mail.subject}', 0, 9024, 'y');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/harvesting/mail/enabled', '${geonetwork.system.harvesting.mail.enabled}', 2, 9025, 'y');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/harvesting/mail/level1', '${geonetwork.system.harvesting.mail.level1}', 2, 9026, 'y');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/harvesting/mail/level2', '${geonetwork.system.harvesting.mail.level2}', 2, 9027, 'y');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/harvesting/mail/level3', '${geonetwork.system.harvesting.mail.level3}', 2, 9028, 'y');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/users/identicon', '${geonetwork.system.users.identicon}', 0, 9110, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/metadata/prefergrouplogo', '${geonetwork.system.metadata.prefergrouplogo}', 2, 9111, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/metadata/allThesaurus', '${geonetwork.system.metadata.allThesaurus}', 2, 9160, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/metadata/thesaurusNamespace', '${geonetwork.system.metadata.thesaurusNamespace}', 0, 9161, 'n');
 
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('metadata/vcs/enable', 'false', 2, 9161, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('metadata/vcs/enable', '${geonetwork.metadata.vcs.enable}', 2, 9161, 'n');
 
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/metadata/validation/removeSchemaLocation', 'false', 2, 9170, 'n');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('metadata/history/enabled', 'false', 2, 9171, 'n');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/metadatacreate/generateUuid', 'true', 2, 9100, 'n');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/metadatacreate/publishForGroupEditors', 'false', 2, 9101, 'n');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/metadatacreate/copyAttachments', 'true', 2, 9102, 'n');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/metadatacreate/skipMetadataCreationPage', 'false', 2, 9103, 'n');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/metadatacreate/preferredGroup', '', 1, 9105, 'n');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/metadatacreate/preferredTemplate', '', 0, 9106, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/metadata/validation/removeSchemaLocation', '${geonetwork.system.metadata.validation.removeSchemaLocation}', 2, 9170, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('metadata/history/enabled', '${geonetwork.metadata.history.enabled}', 2, 9171, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/metadatacreate/generateUuid', '${geonetwork.system.metadatacreate.generateUuid}', 2, 9100, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/metadatacreate/publishForGroupEditors', '${geonetwork.system.metadatacreate.publishForGroupEditors}', 2, 9101, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/metadatacreate/copyAttachments', '${geonetwork.system.metadatacreate.copyAttachments}', 2, 9102, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/metadatacreate/skipMetadataCreationPage', '${geonetwork.system.metadatacreate.skipMetadataCreationPage}', 2, 9103, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/metadatacreate/preferredGroup', '${geonetwork.system.metadatacreate.preferredGroup}', 1, 9105, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/metadatacreate/preferredTemplate', '${geonetwork.system.metadatacreate.preferredTemplate}', 0, 9106, 'n');
 
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/metadata/edit/supportedFileMimetypes', 'image/png|image/gif|image/jpeg|text/plain|application/xml|application/pdf', 0, 9107, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/metadata/edit/supportedFileMimetypes', '${geonetwork.system.metadata.edit.supportedFileMimetypes}', 0, 9107, 'n');
 
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/metadataprivs/usergrouponly', 'false', 2, 9180, 'n');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/metadataprivs/publicationbyrevieweringroupowneronly', 'true', 2, 9181, 'n');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/metadataprivs/publication/notificationLevel', '', 0, 9182, 'n');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/metadataprivs/publication/notificationGroups', '', 0, 9183, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/metadataprivs/usergrouponly', '${geonetwork.system.metadataprivs.usergrouponly}', 2, 9180, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/metadataprivs/publicationbyrevieweringroupowneronly', '${geonetwork.system.metadataprivs.publicationbyrevieweringroupowneronly}', 2, 9181, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/metadataprivs/publication/notificationLevel', '${geonetwork.system.metadataprivs.publication.notificationLevel}', 0, 9182, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/metadataprivs/publication/notificationGroups', '${geonetwork.system.metadataprivs.publication.notificationGroups}', 0, 9183, 'n');
 
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/threadedindexing/maxthreads', '1', 1, 9210, 'y');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/inspire/remotevalidation/url', '', 0, 7211, 'n');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/inspire/remotevalidation/urlquery', '', 0, 7212, 'n');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/inspire/remotevalidation/nodeid', '', 0, 7213, 'n');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/inspire/remotevalidation/apikey', '', 0, 7214, 'y');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/translation/provider', '', 0, 7301, 'n');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/translation/serviceUrl', '', 0, 7302, 'n');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/translation/apiKey', '', 0, 7303, 'y');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('region/getmap/background', 'osm', 0, 9590, 'n');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('region/getmap/width', '500', 0, 9590, 'n');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('region/getmap/summaryWidth', '500', 0, 9590, 'n');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('region/getmap/mapproj', 'EPSG:3857', 0, 9590, 'n');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('region/getmap/useGeodesicExtents', 'false', 2, 9591, 'n');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('metadata/url/sitemapLinkUrl', NULL, 0, 9165, 'y');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('metadata/url/sitemapDoiFirst', 'false', 2, 9166, 'y');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('metadata/url/dynamicAppLinkUrl', NULL, 0, 9167, 'y');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/threadedindexing/maxthreads', '${geonetwork.system.threadedindexing.maxthreads}', 1, 9210, 'y');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/inspire/remotevalidation/url', '${geonetwork.system.inspire.remotevalidation.url}', 0, 7211, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/inspire/remotevalidation/urlquery', '${geonetwork.system.inspire.remotevalidation.urlquery}', 0, 7212, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/inspire/remotevalidation/nodeid', '${geonetwork.system.inspire.remotevalidation.nodeid}', 0, 7213, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/inspire/remotevalidation/apikey', '${geonetwork.system.inspire.remotevalidation.apikey}', 0, 7214, 'y');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/translation/provider', '${geonetwork.system.translation.provider}', 0, 7301, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/translation/serviceUrl', '${geonetwork.system.translation.serviceUrl}', 0, 7302, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/translation/apiKey', '${geonetwork.system.translation.apiKey}', 0, 7303, 'y');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('region/getmap/background', '${geonetwork.region.getmap.background}', 0, 9590, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('region/getmap/width', '${geonetwork.region.getmap.width}', 0, 9590, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('region/getmap/summaryWidth', '${geonetwork.region.getmap.summaryWidth}', 0, 9590, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('region/getmap/mapproj', '${geonetwork.region.getmap.mapproj}', 0, 9590, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('region/getmap/useGeodesicExtents', '${geonetwork.region.getmap.useGeodesicExtents}', 2, 9591, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('metadata/url/sitemapLinkUrl', '${geonetwork.metadata.url.sitemapLinkUrl}', 0, 9165, 'y');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('metadata/url/sitemapDoiFirst', '${geonetwork.metadata.url.sitemapDoiFirst}', 2, 9166, 'y');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('metadata/url/dynamicAppLinkUrl', '${geonetwork.metadata.url.dynamicAppLinkUrl}', 0, 9167, 'y');
 
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('metadata/resourceIdentifierPrefix', 'http://localhost:8080/geonetwork/srv/resources', 0, 10001, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('metadata/resourceIdentifierPrefix', '${geonetwork.metadata.resourceIdentifierPrefix}', 0, 10001, 'n');
 
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('metadata/import/restrict', '', 0, 11000, 'y');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('metadata/workflow/enable', 'false', 2, 100002, 'n');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('metadata/workflow/draftWhenInGroup', '', 0, 100003, 'n');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('metadata/workflow/allowSubmitApproveInvalidMd', 'true', 2, 100004, 'n');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('metadata/workflow/allowPublishNonApprovedMd', 'true', 2, 100005, 'n');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('metadata/workflow/allowPublishInvalidMd', 'true', 2, 100006, 'n');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('metadata/workflow/automaticUnpublishInvalidMd', 'false', 2, 100007, 'n');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('metadata/workflow/forceValidationOnMdSave', 'false', 2, 100008, 'n');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('metadata/backuparchive/enable', 'false', 2, 12000, 'n');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('metadata/link/excludedUrlPattern', '', 0, 12010, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('metadata/import/restrict', '${geonetwork.metadata.import.restrict}', 0, 11000, 'y');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('metadata/workflow/enable', '${geonetwork.metadata.workflow.enable}', 2, 100002, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('metadata/workflow/draftWhenInGroup', '${geonetwork.metadata.workflow.draftWhenInGroup}', 0, 100003, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('metadata/workflow/allowSubmitApproveInvalidMd', '${geonetwork.metadata.workflow.allowSubmitApproveInvalidMd}', 2, 100004, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('metadata/workflow/allowPublishNonApprovedMd', '${geonetwork.metadata.workflow.allowPublishNonApprovedMd}', 2, 100005, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('metadata/workflow/allowPublishInvalidMd', '${geonetwork.metadata.workflow.allowPublishInvalidMd}', 2, 100006, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('metadata/workflow/automaticUnpublishInvalidMd', '${geonetwork.metadata.workflow.automaticUnpublishInvalidMd}', 2, 100007, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('metadata/workflow/forceValidationOnMdSave', '${geonetwork.metadata.workflow.forceValidationOnMdSave}', 2, 100008, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('metadata/backuparchive/enable', '${geonetwork.metadata.backuparchive.enable}', 2, 12000, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('metadata/link/excludedUrlPattern', '${geonetwork.metadata.link.excludedUrlPattern}', 0, 12010, 'n');
 
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('metadata/import/userprofile', 'Editor', 0, 12001, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('metadata/import/userprofile', '${geonetwork.metadata.import.userprofile}', 0, 12001, 'n');
 
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('metadata/batchediting/accesslevel', 'Editor', 0, 12020, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('metadata/batchediting/accesslevel', '${geonetwork.metadata.batchediting.accesslevel}', 0, 12020, 'n');
 
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('metadata/history/accesslevel', 'Editor', 0, 12021, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('metadata/history/accesslevel', '${geonetwork.metadata.history.accesslevel}', 0, 12021, 'n');
 
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('metadata/delete/profilePublishedMetadata', 'Editor', 0, 12011, 'n');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('metadata/delete/backupOptions', 'UseAPIParameter', 0, 12012, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('metadata/delete/profilePublishedMetadata', '${geonetwork.metadata.delete.profilePublishedMetadata}', 0, 12011, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('metadata/delete/backupOptions', '${geonetwork.metadata.delete.backupOptions}', 0, 12012, 'n');
 
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('metadata/publication/profilePublishMetadata', 'Reviewer', 0, 12021, 'n');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('metadata/publication/profileUnpublishMetadata', 'Reviewer', 0, 12022, 'n');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('metadata/pdfReport/coverPdf', '', 0, 12500, 'y');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('metadata/pdfReport/introPdf', '', 0, 12501, 'y');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('metadata/pdfReport/tocPage', 'false', 2, 12502, 'y');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('metadata/pdfReport/headerLeft', '{siteInfo}', 0, 12503, 'y');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('metadata/pdfReport/headerRight', '', 0, 12504, 'y');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('metadata/pdfReport/footerLeft', '', 0, 12505, 'y');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('metadata/pdfReport/footerRight', '{date}', 0, 12506, 'y');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('metadata/pdfReport/pdfName', 'metadata_{datetime}.pdf', 0, 12507, 'n');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('metadata/pdfReport/headerLogoFileName', '', 0, 12508, 'y');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('metadata/publication/profilePublishMetadata', '${geonetwork.metadata.publication.profilePublishMetadata}', 0, 12021, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('metadata/publication/profileUnpublishMetadata', '${geonetwork.metadata.publication.profileUnpublishMetadata}', 0, 12022, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('metadata/pdfReport/coverPdf', '${geonetwork.metadata.pdfReport.coverPdf}', 0, 12500, 'y');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('metadata/pdfReport/introPdf', '${geonetwork.metadata.pdfReport.introPdf}', 0, 12501, 'y');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('metadata/pdfReport/tocPage', '${geonetwork.metadata.pdfReport.tocPage}', 2, 12502, 'y');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('metadata/pdfReport/headerLeft', '${geonetwork.metadata.pdfReport.headerLeft}', 0, 12503, 'y');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('metadata/pdfReport/headerRight', '${geonetwork.metadata.pdfReport.headerRight}', 0, 12504, 'y');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('metadata/pdfReport/footerLeft', '${geonetwork.metadata.pdfReport.footerLeft}', 0, 12505, 'y');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('metadata/pdfReport/footerRight', '${geonetwork.metadata.pdfReport.footerRight}', 0, 12506, 'y');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('metadata/pdfReport/pdfName', '${geonetwork.metadata.pdfReport.pdfName}', 0, 12507, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('metadata/pdfReport/headerLogoFileName', '${geonetwork.metadata.pdfReport.headerLogoFileName}', 0, 12508, 'y');
 
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('metadata/csvReport/csvName', 'metadata_{datetime}.csv', 0, 12607, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('metadata/csvReport/csvName', '${geonetwork.metadata.csvReport.csvName}', 0, 12607, 'n');
 
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('metadata/zipExport/attachmentsSizeLimit', NULL , 1, 12700, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('metadata/zipExport/attachmentsSizeLimit', '${geonetwork.metadata.zipExport.attachmentsSizeLimit}', 1, 12700, 'n');
 
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/ui/defaultView', 'default', 0, 10100, 'n');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/userSelfRegistration/recaptcha/enable', 'false', 2, 1910, 'n');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/userSelfRegistration/recaptcha/publickey', '', 0, 1910, 'n');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/userSelfRegistration/recaptcha/secretkey', '', 0, 1910, 'y');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/userSelfRegistration/domainsAllowed', '', 0, 1911, 'y');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/ui/defaultView', '${geonetwork.system.ui.defaultView}', 0, 10100, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/userSelfRegistration/recaptcha/enable', '${geonetwork.system.userSelfRegistration.recaptcha.enable}', 2, 1910, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/userSelfRegistration/recaptcha/publickey', '${geonetwork.system.userSelfRegistration.recaptcha.publickey}', 0, 1910, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/userSelfRegistration/recaptcha/secretkey', '${geonetwork.system.userSelfRegistration.recaptcha.secretkey}', 0, 1910, 'y');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/userSelfRegistration/domainsAllowed', '${geonetwork.system.userSelfRegistration.domainsAllowed}', 0, 1911, 'y');
 
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/publication/doi/doienabled', 'false', 2, 100191, 'n');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/publication/doi/doimailnotification', 'false', 2, 100192, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/publication/doi/doienabled', '${geonetwork.system.publication.doi.doienabled}', 2, 100191, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/publication/doi/doimailnotification', '${geonetwork.system.publication.doi.doimailnotification}', 2, 100192, 'n');
 
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/security/passwordEnforcement/minLength', '6', 1, 12000, 'n');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/security/passwordEnforcement/maxLength', '20', 1, 12001, 'n');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/security/passwordEnforcement/usePattern', 'true', 2, 12002, 'n');
-INSERT INTO Settings (name, value, datatype, position, internal, editable) VALUES ('system/security/passwordEnforcement/pattern', '^((?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*(_|[^\w])).*)$', 0, 12003, 'n', 'n');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/security/passwordEnforcement/minLength', '${geonetwork.system.security.passwordEnforcement.minLength}', 1, 12000, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/security/passwordEnforcement/maxLength', '${geonetwork.system.security.passwordEnforcement.maxLength}', 1, 12001, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/security/passwordEnforcement/usePattern', '${geonetwork.system.security.passwordEnforcement.usePattern}', 2, 12002, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal, editable) VALUES ('system/security/passwordEnforcement/pattern', '${geonetwork.system.security.passwordEnforcement.pattern}', 0, 12003, 'n', 'n');
 
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/banner/enable', 'false', 2, 1920, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/banner/enable', '${geonetwork.system.banner.enable}', 2, 1920, 'n');
 
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/auditable/enable', 'false', 2, 12010, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/auditable/enable', '${geonetwork.system.auditable.enable}', 2, 12010, 'n');
 
 
 
@@ -707,7 +707,7 @@ INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system
 -- users to be able to reset user password. If you have mail server configured
 -- user can reset password directly. If not, then you may want to add that settings
 -- if you don't have access to the database.
--- INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/security/password/allowAdminReset', 'false', 2, 12004, 'n');
+-- INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/security/password/allowAdminReset', '${geonetwork.system.security.password.allowAdminReset}', 2, 12004, 'n');
 
 INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES  (1,NULL,'harvesting',NULL);
 
