@@ -19,6 +19,10 @@ eg. `main` can contain changesets 001 to 010, while `4.2.x` contains changesets 
 Liquibase track changes applied to the current database in the `DATABASECHANGELOG` and `DATABASECHANGELOGLOCK` tables.
 
 
+If required, database values can be customized using variables. Variables are defined in [geonetwork_db.properties](src/main/resources/db/geonetwork_db.properties).
+Variables can then be used in changesets and can be overridden using JVM args or env vars when starting the application or liquibase utility eg. `-Dgeonetwork.system.server.host=data.myorg.org -Dgeonetwork.system.server.protocol=https -Dgeonetwork.system.server.port=443`.
+
+
 ## Databases tested
 
 Currently, Liquibase is tested with the following databases:
@@ -72,7 +76,8 @@ mvn liquibase:update \
   -Dliquibase.url=jdbc:postgresql://localhost:5432/geonetwork \
   -Dliquibase.username=www-data \
   -Dliquibase.password=www-data \
-  -Dliquibase.logLevel=info
+  -Dliquibase.logLevel=info \
+  -Dgeonetwork.system.site.name="My catalogue"
 ```
 
 
@@ -203,6 +208,8 @@ Draft experiment to implement initial database creation and initial data loading
   - [x] Generate change logs from existing database in Intellij
 - [ ] Configure log level for liquibase https://docs.liquibase.com/oss/user-guide-4-33/use-environment-variables-to-control-log-level
 - [ ] Can we use property substitution to create a database with host, port, name configured on db creation? https://docs.liquibase.com/oss/user-guide-4-33/what-is-property-substitution
+- [ ] Release 
+  - [ ] Create changeset
 - [ ] Cleanup
   - [x] Remove past database migrations 
   - [x] Remove old configuration `initial_data.xml` and `database_migration.xml`
