@@ -90,7 +90,7 @@ mvn liquibase:diff \
   -Dliquibase.username=www-data \
   -Dliquibase.password=www-data \
   -Dliquibase.referenceUrl=jdbc:postgresql://localhost:5432/geonetwork-prod \
-  -Dliquibase.referenceUsername=www-data
+  -Dliquibase.referenceUsername=www-data \
   -Dliquibase.referencePassword=www-data
 ```
 
@@ -100,11 +100,22 @@ Diff Results:
 Reference Database: www-data @ jdbc:postgresql://localhost:5432/geonetwork-prod (Default Schema: public)
 Comparison Database: www-data @ jdbc:postgresql://localhost:5432/geonetwork-dev (Default Schema: public)
 Compared Schemas: public'
-Unexpected Column(s): 
-     public.newtable.column_name
-...
-Unexpected Table(s): 
-     newtable
+Changed Index(s): NONE
+Missing Primary Key(s): 
+     anonymousaccesslink_pkey on public.anonymousaccesslink(id)
+Unexpected Primary Key(s): 
+     databasechangeloglock_pkey on public.databasechangeloglock(id)
+Changed Primary Key(s): NONE
+Missing Schema(s): NONE
+Unexpected Schema(s): NONE
+Changed Schema(s): NONE
+Missing Sequence(s): 
+     anonymous_access_link_id_seq
+Unexpected Sequence(s): NONE
+Changed Sequence(s): NONE
+Missing Table(s): 
+     anonymousaccesslink
+
 ...
 ```
 
@@ -172,22 +183,31 @@ Draft experiment to implement initial database creation and initial data loading
   - [x] Postgres
   - [x] H2 (needed for test in GN4)
   - [ ] Other - discuss which database do we support and test?
-- [x] [Liquibase bean configuration](../domain/src/main/resources/config-spring-geonetwork.xml) with  [`changelog.xml`](src/main/resources/db/changelog.xml) as main changelog file
-- [x] [Schema creation](src/main/resources/db/changesets/00000-initial-schema.xml) / Precondition: no table metadata exists
-- [x] [Initial data](src/main/resources/db/changesets/00001-initial-data.sql) / Precondition: table settings is empty
-- [x] [Initial languages](src/main/resources/db/changesets/00002-initial-data-languages-eng.sql) / Precondition: table language does not have eng
-- [x] Other languages
-- [x] Test ok 
-- [x] Check how to make changelog https://docs.liquibase.com/oss/implementation-guide-4-33/track-and-append-manual-changes-with-snapshots-and-diff-changelog
-- [x] Document how to create database without the app running
+- [ ] Database creation
+  - [x] Document how to create database without the app running
+  - [ ] Check creation in non default schema]
+  - [x] [Liquibase bean configuration](../domain/src/main/resources/config-spring-geonetwork.xml) with  [`changelog.xml`](src/main/resources/db/changelog.xml) as main changelog file
+  - [x] [Schema creation](src/main/resources/db/changesets/00000-initial-schema.xml) / Precondition: no table metadata exists
+  - [x] [Initial data](src/main/resources/db/changesets/00001-initial-data.sql) / Precondition: table settings is empty
+  - [x] [Initial languages](src/main/resources/db/changesets/00002-initial-data-languages-eng.sql) / Precondition: table language does not have eng
+  - [x] Other languages
+- [ ] Testing 
+  - [x] Test and integration test ok 
+  - [ ] For test, populate database with minimal data? (eg. only one or 2 language?)
+  - [ ] Some test requires db with no data eg. domain - see changelog-nodata.xml - can we use context for that?
+- [ ] Liquibase utility
+  - [x] Test connection
+  - [x] Populate database
+  - [x] Diff between 2 databases
+  - [x] Generate change logs from existing database using Liquibase command line tool
+  - [x] Generate change logs from existing database in Intellij
 - [ ] Configure log level for liquibase https://docs.liquibase.com/oss/user-guide-4-33/use-environment-variables-to-control-log-level
-- [ ] For test, populate database with minimal data? (eg. only one or 2 language?)
-- [ ] Some test requires db with no data eg. domain - see changelog-nodata.xml - can we use context for that?
 - [ ] Can we use property substitution to create a database with host, port, name configured on db creation? https://docs.liquibase.com/oss/user-guide-4-33/what-is-property-substitution
-- [ ] Remove past database migrations 
-- [ ] Remove old configuration `initial_data.xml` and `database_migration.xml`
-- [ ] Remove `db.migration_onstartup` property / Hibernate `hbm2ddl` property set to `none`
-- [ ] Remove `TestDatabasePopulator`
+- [ ] Cleanup
+  - [ ] Remove past database migrations 
+  - [ ] Remove old configuration `initial_data.xml` and `database_migration.xml`
+  - [ ] Remove `db.migration_onstartup` property / Hibernate `hbm2ddl` property set to `none`
+  - [ ] Remove `TestDatabasePopulator`
 - [ ] ...
 
 ## GeoNetwork 5 and Liquibase
