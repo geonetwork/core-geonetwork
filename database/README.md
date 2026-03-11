@@ -204,10 +204,11 @@ Draft experiment to implement initial database creation and initial data loading
 - [ ] Configure log level for liquibase https://docs.liquibase.com/oss/user-guide-4-33/use-environment-variables-to-control-log-level
 - [ ] Can we use property substitution to create a database with host, port, name configured on db creation? https://docs.liquibase.com/oss/user-guide-4-33/what-is-property-substitution
 - [ ] Cleanup
-  - [ ] Remove past database migrations 
-  - [ ] Remove old configuration `initial_data.xml` and `database_migration.xml`
-  - [ ] Remove `db.migration_onstartup` property / Hibernate `hbm2ddl` property set to `none`
-  - [ ] Remove `TestDatabasePopulator`
+  - [x] Remove past database migrations 
+  - [x] Remove old configuration `initial_data.xml` and `database_migration.xml`
+  - [x] Remove `db.migration_onstartup` property / Hibernate `hbm2ddl` property set to `none`
+  - [x] Remove `TestDatabasePopulator`
+  - [x] Remove tests related to old Java database migrations.
 - [ ] ...
 
 ## GeoNetwork 5 and Liquibase

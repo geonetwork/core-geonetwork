@@ -53,7 +53,6 @@ import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.kernel.thumbnail.ThumbnailMaker;
 import org.fao.geonet.languages.IsoLanguagesMapper;
-import org.fao.geonet.lib.DatabaseType;
 import org.fao.geonet.lib.DbLib;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.MetadataRepository;

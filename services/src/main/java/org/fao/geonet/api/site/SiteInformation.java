@@ -208,8 +208,7 @@ public class SiteInformation {
 
     private void loadEnvInfo(){
         String[] variables = {
-            "harvester.scheduler.enabled",
-            "db.migration_onstartup"
+            "harvester.scheduler.enabled"
         };
         for (String variable : variables) {
             String value = Env.getPropertyFromEnv(variable, "");
