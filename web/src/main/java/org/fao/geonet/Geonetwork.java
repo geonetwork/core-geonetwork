@@ -23,6 +23,7 @@
 
 package org.fao.geonet;
 
+import java.util.UUID;
 import jeeves.config.springutil.ServerBeanPropertyUpdater;
 import jeeves.constants.Jeeves;
 import jeeves.interfaces.ApplicationHandler;
@@ -170,6 +171,14 @@ public class Geonetwork implements ApplicationHandler {
         logger.info("  - Setting manager...");
 
         SettingManager settingMan = this._applicationContext.getBean(SettingManager.class);
+        String siteId = settingMan.getSiteId();
+        if (StringUtils.isEmpty(siteId)) {
+            siteId = UUID.randomUUID().toString();
+            settingMan.setSiteUuid(siteId);
+            logger.info("    - New site ID generated for this catalogue: " + siteId);
+        } else {
+            logger.info("    - Catalogue site ID: " + siteId);
+        }
 
         //--- initialize ThreadUtils with setting manager and rm props
         final DataSource dataSource = context.getBean(DataSource.class);
