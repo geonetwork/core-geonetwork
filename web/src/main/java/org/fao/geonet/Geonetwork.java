@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2023 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2026 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -47,13 +47,10 @@ import org.fao.geonet.kernel.*;
 import org.fao.geonet.kernel.csw.CswHarvesterResponseExecutionService;
 import org.fao.geonet.kernel.harvest.HarvestManager;
 import org.fao.geonet.kernel.oaipmh.OaiPmhDispatcher;
-import org.fao.geonet.kernel.search.EsSearchManager;
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.kernel.thumbnail.ThumbnailMaker;
-import org.fao.geonet.languages.IsoLanguagesMapper;
-import org.fao.geonet.lib.DbLib;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.SettingRepository;
@@ -68,9 +65,7 @@ import org.fao.geonet.wro4j.GeonetWro4jFilter;
 import org.jdom.Element;
 import org.quartz.SchedulerException;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.mock.web.MockFilterChain;
@@ -82,14 +77,10 @@ import org.springframework.web.context.request.ServletWebRequest;
 import javax.servlet.ServletContext;
 import javax.sql.DataSource;
 import java.io.File;
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.sql.Connection;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
-import java.util.UUID;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -100,8 +91,6 @@ import java.util.concurrent.TimeUnit;
  */
 public class Geonetwork implements ApplicationHandler {
     private Logger logger;
-    private Path appPath;
-    private EsSearchManager searchMan;
     private ConfigurableApplicationContext _applicationContext;
     private OaiPmhDispatcher oaipmhDis;
 
@@ -132,7 +121,7 @@ public class Geonetwork implements ApplicationHandler {
         ConfigurableListableBeanFactory beanFactory = context.getApplicationContext().getBeanFactory();
 
         ServletPathFinder finder = new ServletPathFinder(this._applicationContext.getBean(ServletContext.class));
-        appPath = finder.getAppPath();
+        Path appPath = finder.getAppPath();
         String baseURL = context.getBaseUrl();
         String webappName = "";
         if (StringUtils.isNotEmpty(baseURL)) {
@@ -169,8 +158,6 @@ public class Geonetwork implements ApplicationHandler {
         final EncryptorInitializer encryptorInitializer = _applicationContext.getBean(EncryptorInitializer.class);
         encryptorInitializer.init(dataDirectory);
 
-        importDatabaseData(context);
-
         JeevesJCS.setConfigFilename(appPath.resolve("WEB-INF/classes/cache.ccf"));
 
         // force caches to be config'd so shutdown hook works correctly
@@ -186,14 +173,8 @@ public class Geonetwork implements ApplicationHandler {
 
         //--- initialize ThreadUtils with setting manager and rm props
         final DataSource dataSource = context.getBean(DataSource.class);
-        Connection conn = null;
-        try {
-            conn = dataSource.getConnection();
+        try (Connection conn = dataSource.getConnection()) {
             ThreadUtils.init(conn.getMetaData().getURL(), settingMan);
-        } finally {
-            if (conn != null) {
-                conn.close();
-            }
         }
 
         //------------------------------------------------------------------------
@@ -202,14 +183,9 @@ public class Geonetwork implements ApplicationHandler {
         logger.info("  - SRU...");
 
         try {
-				  String[] configs = { Geonet.File.JZKITAPPLICATIONCONTEXT };
-          ApplicationContext app_context = new  ClassPathXmlApplicationContext( configs, _applicationContext );
-
-          // to have access to the GN context in spring-managed objects
-          ContextContainer cc = (ContextContainer)_applicationContext.getBean("ContextGateway");
-          cc.setSrvctx(context);
-
-
+            // to have access to the GN context in spring-managed objects
+            ContextContainer cc = (ContextContainer)_applicationContext.getBean("ContextGateway");
+            cc.setSrvctx(context);
         } catch (Exception e) {
           logger.error("     SRU initialization failed - cannot pass context to SRU subsystem, SRU searches will not work! Error is:" + Util.getStackTrace(e));
         }
@@ -235,8 +211,6 @@ public class Geonetwork implements ApplicationHandler {
         logger.info("  - Search...");
 
         SettingInfo settingInfo = context.getBean(SettingInfo.class);
-        searchMan = _applicationContext.getBean(EsSearchManager.class);
-
 
         // if the validator exists the proxyCallbackURL needs to have the external host and
         // servlet name added so that the cas knows where to send the validation notice
@@ -255,7 +229,7 @@ public class Geonetwork implements ApplicationHandler {
         SvnManager svnManager = _applicationContext.getBean(SvnManager.class);
         XmlSerializer xmlSerializer = _applicationContext.getBean(XmlSerializer.class);
 
-        if (xmlSerializer instanceof XmlSerializerSvn && svnManager != null) {
+        if (xmlSerializer instanceof XmlSerializerSvn) {
             svnManager.setContext(context);
             Path subversionPath = dataDirectory.getMetadataRevisionDir().toAbsolutePath().normalize();
             svnManager.setSubversionPath(subversionPath.toString());
@@ -290,7 +264,7 @@ public class Geonetwork implements ApplicationHandler {
         // Add local site to the source table
         SourceRepository sourceRepository = _applicationContext.getBean(SourceRepository.class);
         if (sourceRepository.findOneByUuid(settingMan.getSiteId()) == null) {
-            final Source source = sourceRepository.save(
+            sourceRepository.save(
                 new Source(settingMan.getSiteId(),
                     settingMan.getSiteName(),
                     null,
@@ -300,7 +274,7 @@ public class Geonetwork implements ApplicationHandler {
         // Creates a default site logo, only if the logo image doesn't exists
         // This can happen if the application has been updated with a new version preserving the database and
         // images/logos folder is not copied from old application
-        createSiteLogo(settingMan.getSiteId(), context, context.getAppPath());
+        createSiteLogo(settingMan.getSiteId(), context);
 
         //-- Initialize the proxy configuration if required
         Lib.net.setupProxy(settingMan);
@@ -314,9 +288,8 @@ public class Geonetwork implements ApplicationHandler {
             String proxyPort = Lib.net.getProxyConfiguration().getPort();
             String username = Lib.net.getProxyConfiguration().getUsername();
             String password = Lib.net.getProxyConfiguration().getPassword();
-            pi.setProxyInfo(proxyHost, Integer.valueOf(proxyPort), username, password);
+            pi.setProxyInfo(proxyHost, Integer.parseInt(proxyPort), username, password);
         }
-
 
         boolean inspireEnable = settingMan.getValueAsBool(Settings.SYSTEM_INSPIRE_ENABLE, false);
 
@@ -358,49 +331,46 @@ public class Geonetwork implements ApplicationHandler {
     private void fillCaches(final ServiceContext context) {
         final FormatterApi formatService = context.getBean(FormatterApi.class); // this will initialize the formatter
 
-        Thread fillCaches = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                final ServletContext servletContext = context.getServlet().getServletContext();
-                context.setAsThreadLocal();
-                ApplicationContextHolder.set(_applicationContext);
-                GeonetWro4jFilter filter = (GeonetWro4jFilter) servletContext.getAttribute(GeonetWro4jFilter.GEONET_WRO4J_FILTER_KEY);
+        Thread fillCaches = new Thread(() -> {
+            final ServletContext servletContext = context.getServlet().getServletContext();
+            context.setAsThreadLocal();
+            ApplicationContextHolder.set(_applicationContext);
+            GeonetWro4jFilter filter = (GeonetWro4jFilter) servletContext.getAttribute(GeonetWro4jFilter.GEONET_WRO4J_FILTER_KEY);
 
+            @SuppressWarnings("unchecked")
+            List<String> wro4jUrls = _applicationContext.getBean("wro4jUrlsToInitialize", List.class);
+
+            for (String wro4jUrl : wro4jUrls) {
+                Log.info(Geonet.GEONETWORK, "Initializing the WRO4J group: " + wro4jUrl + " cache");
+                final MockHttpServletRequest servletRequest = new MockHttpServletRequest(servletContext, "GET", "/static/" + wro4jUrl);
+                final MockHttpServletResponse response = new MockHttpServletResponse();
+                try {
+                    filter.doFilter(servletRequest, response, new MockFilterChain());
+                } catch (Throwable t) {
+                    Log.info(Geonet.GEONETWORK, "Error while initializing the WRO4J group: " + wro4jUrl + " cache", t);
+                }
+            }
+
+
+            final Page<Metadata> metadatas = _applicationContext.getBean(MetadataRepository.class).findAll(PageRequest.of(0, 1));
+            if (metadatas.getNumberOfElements() > 0) {
+                int mdId = metadatas.getContent().get(0).getId();
+                context.getUserSession().loginAs(new User().setName("admin").setProfile(Profile.Administrator).setUsername("admin"));
                 @SuppressWarnings("unchecked")
-                List<String> wro4jUrls = _applicationContext.getBean("wro4jUrlsToInitialize", List.class);
+                List<String> formattersToInitialize = _applicationContext.getBean("formattersToInitialize", List.class);
 
-                for (String wro4jUrl : wro4jUrls) {
-                    Log.info(Geonet.GEONETWORK, "Initializing the WRO4J group: " + wro4jUrl + " cache");
-                    final MockHttpServletRequest servletRequest = new MockHttpServletRequest(servletContext, "GET", "/static/" + wro4jUrl);
+                for (String formatterName : formattersToInitialize) {
+                    Log.info(Geonet.GEONETWORK, "Initializing the Formatter with id: " + formatterName);
+                    final MockHttpSession servletSession = new MockHttpSession(servletContext);
+                    servletSession.setAttribute(Jeeves.Elem.SESSION,  context.getUserSession());
+                    final MockHttpServletRequest servletRequest = new MockHttpServletRequest(servletContext);
+                    servletRequest.setSession(servletSession);
                     final MockHttpServletResponse response = new MockHttpServletResponse();
                     try {
-                        filter.doFilter(servletRequest, response, new MockFilterChain());
+                        formatService.exec("eng", FormatType.html.toString(), Integer.toString(mdId), null, formatterName,
+                            Boolean.TRUE.toString(), FormatterWidth._100, new ServletWebRequest(servletRequest, response));
                     } catch (Throwable t) {
-                        Log.info(Geonet.GEONETWORK, "Error while initializing the WRO4J group: " + wro4jUrl + " cache", t);
-                    }
-                }
-
-
-                final Page<Metadata> metadatas = _applicationContext.getBean(MetadataRepository.class).findAll(PageRequest.of(0, 1));
-                if (metadatas.getNumberOfElements() > 0) {
-                    Integer mdId = metadatas.getContent().get(0).getId();
-                    context.getUserSession().loginAs(new User().setName("admin").setProfile(Profile.Administrator).setUsername("admin"));
-                    @SuppressWarnings("unchecked")
-                    List<String> formattersToInitialize = _applicationContext.getBean("formattersToInitialize", List.class);
-
-                    for (String formatterName : formattersToInitialize) {
-                        Log.info(Geonet.GEONETWORK, "Initializing the Formatter with id: " + formatterName);
-                        final MockHttpSession servletSession = new MockHttpSession(servletContext);
-                        servletSession.setAttribute(Jeeves.Elem.SESSION,  context.getUserSession());
-                        final MockHttpServletRequest servletRequest = new MockHttpServletRequest(servletContext);
-                        servletRequest.setSession(servletSession);
-                        final MockHttpServletResponse response = new MockHttpServletResponse();
-                        try {
-                            formatService.exec("eng", FormatType.html.toString(), mdId.toString(), null, formatterName,
-                                Boolean.TRUE.toString(), FormatterWidth._100, new ServletWebRequest(servletRequest, response));
-                        } catch (Throwable t) {
-                            Log.info(Geonet.GEONETWORK, "Error while initializing the Formatter with id: " + formatterName, t);
-                        }
+                        Log.info(Geonet.GEONETWORK, "Error while initializing the Formatter with id: " + formatterName, t);
                     }
                 }
             }
@@ -409,57 +379,6 @@ public class Geonetwork implements ApplicationHandler {
         fillCaches.setName("Fill Caches Thread");
         fillCaches.setPriority(Thread.MIN_PRIORITY);
         fillCaches.start();
-    }
-
-    private void importDatabaseData(final ServiceContext context) {
-        // check if database has any data
-        final SettingRepository settingRepository = context.getBean(SettingRepository.class);
-        final long count = settingRepository.count();
-        if (count == 0) {
-            try {
-                // Set setFirstInitialSetupFlag to true for the encryptorInitializer as this is a new installation.
-                EncryptorInitializer encryptorInitializer = context.getBean(EncryptorInitializer.class);
-                encryptorInitializer.setFirstInitialSetupFlag(true);
-
-                // import data from init files
-                List<Pair<String, String>> importData = context.getBean("initial-data", List.class);
-                Set<String> applicationLanguages = (Set<String>) ApplicationContextHolder.get().getBean("languages");
-
-                final DbLib dbLib = new DbLib();
-                for (Pair<String, String> pair : importData) {
-                    String folderPath = pair.one();
-                    String sqlFilePath = pair.two();
-                    Path appPath = context.getAppPath();
-                    ServletContext servletContext = context.getServlet().getServletContext();
-
-                    List<String> filePaths = new ArrayList<>();
-                    if (sqlFilePath.contains("{lang}")) {
-                        for (String lang : applicationLanguages) {
-                            filePaths.add(sqlFilePath.replace("{lang}", lang));
-                        }
-                    } else {
-                        filePaths.add(sqlFilePath);
-                    }
-
-                    for (String filePathStr : filePaths) {
-                        Log.debug(Geonet.DB, "Executing SQL from: " + folderPath + " " + filePathStr);
-                        try {
-                            dbLib.insertData(servletContext, context, appPath, Path.of(folderPath), filePathStr);
-                        } catch (IOException ioe) {
-                            Log.warning(Geonet.DB, "File not found during initialization. For language add required files if needed. " + ioe.getMessage());
-                        }
-                    }
-                }
-                String siteUuid = UUID.randomUUID().toString();
-                context.getBean(SettingManager.class).setSiteUuid(siteUuid);
-
-            } catch (Throwable t) {
-                Log.error(Geonet.DB, "Error occurred while trying to execute SQL", t);
-                throw new RuntimeException(t);
-            }
-
-            context.getBean(IsoLanguagesMapper.class).init();
-        }
     }
 
     /**
@@ -479,14 +398,14 @@ public class Geonetwork implements ApplicationHandler {
                     HarvestManager hm = gc.getBean(HarvestManager.class);
                     if (readOnly && canWrite) {
                         logger.warning("GeoNetwork can write to the database, switching to read-write mode");
-                        readOnly = false;
-                        gc.setReadOnly(readOnly);
-                        hm.setReadOnly(readOnly);
+
+                        gc.setReadOnly(false);
+                        hm.setReadOnly(false);
                     } else if (!readOnly && !canWrite) {
                         logger.warning("GeoNetwork can not write to the database, switching to read-only mode");
-                        readOnly = true;
-                        gc.setReadOnly(readOnly);
-                        hm.setReadOnly(readOnly);
+
+                        gc.setReadOnly(true);
+                        hm.setReadOnly(true);
                     } else {
                         if (readOnly) {
                             logger.info("GeoNetwork remains in read-only mode");
@@ -519,7 +438,7 @@ public class Geonetwork implements ApplicationHandler {
     /**
      * Creates a default site logo, only if the logo image doesn't exists
      */
-    private void createSiteLogo(String nodeUuid, ServiceContext context, Path appPath) {
+    private void createSiteLogo(String nodeUuid, ServiceContext context) {
         try {
             final Resources resources = context.getBean(Resources.class);
             Path logosDir = resources.locateLogosDir(context);
@@ -546,7 +465,7 @@ public class Geonetwork implements ApplicationHandler {
         //--- Set mime-mappings
         String mimeProp = System.getProperty("mime-mappings");
         if (mimeProp == null) mimeProp = "";
-        if (!mimeProp.equals("")) {
+        if (!mimeProp.isEmpty()) {
             logger.info("Overriding mime-mappings property (was set to " + mimeProp + ")");
         }
         mimeProp = webInf.resolve("mime-types.properties").toString();
