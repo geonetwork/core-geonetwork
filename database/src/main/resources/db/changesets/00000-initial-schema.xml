@@ -482,7 +482,7 @@
       <column name="linktext" type="VARCHAR(255)">
         <constraints nullable="false" primaryKey="true" primaryKeyName="spg_page_pkey"/>
       </column>
-      <column name="data" type="OID"/>
+      <column name="data" type="TEXT"/>
       <column name="format" type="VARCHAR(255)">
         <constraints nullable="false"/>
       </column>
@@ -871,7 +871,7 @@
       <column name="id" type="INTEGER">
         <constraints nullable="false" primaryKey="true" primaryKeyName="files_pkey"/>
       </column>
-      <column name="content" type="OID">
+      <column name="content" type="TEXT">
         <constraints nullable="false"/>
       </column>
       <column name="mimetype" type="VARCHAR(255)">
