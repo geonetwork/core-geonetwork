@@ -638,9 +638,19 @@
                          tableName="metadatadraft"/>
   </changeSet>
   <changeSet author="liquibase (generated)" id="1773214888028-52">
+    <preConditions onFail="CONTINUE">
+      <not>
+        <dbms type="h2" />
+      </not>
+    </preConditions>
     <addUniqueConstraint columnNames="url" constraintName="uk_fwi9l3n3vcxonf7c3x1ntdivx" tableName="links"/>
   </changeSet>
   <changeSet author="liquibase (generated)" id="1773214888028-53">
+    <preConditions onFail="CONTINUE">
+      <not>
+        <dbms type="h2" />
+      </not>
+    </preConditions>
     <addUniqueConstraint columnNames="link" constraintName="uk_gifmlyjmyfwsra7xn1crud03t" tableName="spg_page"/>
   </changeSet>
   <changeSet author="liquibase (generated)" id="1773214888028-54">
