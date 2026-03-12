@@ -105,6 +105,12 @@
       <mdb:metadataScope>
         <mdb:MD_MetadataScope>
           <mdb:resourceScope>
+            <!--eg.
+            <resourceType resourceTypeGeneral="Dataset" >dataset/Dataset</resourceType>
+            <resourceType resourceTypeGeneral="Dataset">series/Series</resourceType>
+            <resourceType resourceTypeGeneral="ComputationalNotebook">Jupyter</resourceType>
+            <resourceType resourceTypeGeneral="Other" ></resourceType>
+            -->
             <xsl:variable name="resourceTypeGeneral" select="string(datacite:resourceType/@resourceTypeGeneral)"/>
             <xsl:variable name="code">
               <xsl:choose>
@@ -112,6 +118,7 @@
                   <xsl:value-of select="substring-before(datacite:resourceType, '/')"/>
                 </xsl:when>
                 <xsl:when test="$resourceTypeGeneral = 'Software'">software</xsl:when>
+                <xsl:when test="$resourceTypeGeneral = 'ComputationalNotebook'">software</xsl:when>
                 <xsl:when test="$resourceTypeGeneral = 'Service'">service</xsl:when>
                 <xsl:when test="$resourceTypeGeneral = 'Model'">model</xsl:when>
                 <xsl:when test="$resourceTypeGeneral = 'Image'">tile</xsl:when>
@@ -119,6 +126,12 @@
                 <xsl:when test="$resourceTypeGeneral = 'Event'">fieldSession</xsl:when>
                 <xsl:when test="$resourceTypeGeneral = 'PhysicalObject'">feature</xsl:when>
                 <xsl:when test="$resourceTypeGeneral = 'Text'">document</xsl:when>
+                <xsl:when test="$resourceTypeGeneral = 'Book'">document</xsl:when>
+                <xsl:when test="$resourceTypeGeneral = 'ConferencePaper'">document</xsl:when>
+                <xsl:when test="$resourceTypeGeneral = 'DataPaper'">document</xsl:when>
+                <xsl:when test="$resourceTypeGeneral = 'Dissertation'">document</xsl:when>
+                <xsl:when test="$resourceTypeGeneral = 'Journal'">document</xsl:when>
+                <xsl:when test="$resourceTypeGeneral = 'Report'">document</xsl:when>
                 <xsl:otherwise>dataset</xsl:otherwise>
               </xsl:choose>
             </xsl:variable>
