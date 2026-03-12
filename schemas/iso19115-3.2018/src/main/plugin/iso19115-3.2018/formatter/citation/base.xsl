@@ -50,15 +50,15 @@
             </xsl:for-each>
           </xsl:variable>
 
-          <xsl:variable name="displayAffiliation"
-                        select="$withAffiliation = 'true'"/>
           <xsl:choose>
-            <xsl:when test="normalize-space($listOfNames) != '' and $displayAffiliation">
-              (<xsl:value-of select="$affiliation"/>)
+            <xsl:when test="normalize-space($listOfNames) != ''">
+              <xsl:if test="$withAffiliation = 'true' and normalize-space($affiliation) != ''">
+                (<xsl:value-of select="$affiliation"/>)
+              </xsl:if>
             </xsl:when>
-            <xsl:when test="normalize-space($listOfNames) = ''">
+            <xsl:otherwise>
               <xsl:value-of select="$affiliation"/>
-            </xsl:when>
+            </xsl:otherwise>
           </xsl:choose>
         </author>
       </xsl:for-each>
