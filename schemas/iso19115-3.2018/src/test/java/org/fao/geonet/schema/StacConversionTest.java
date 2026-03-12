@@ -57,6 +57,12 @@ public class StacConversionTest {
 		transformAndCompare("convert/stac-to-iso19115-3.xsl", "biomass-and-wood-input.xml", "biomass-and-wood-output.xml");
 	}
 
+	@Test
+	public void sigma0Orthorectified() throws Exception {
+		transformAndCompare("convert/stac-to-iso19115-3.xsl", "sigma0-orthorectified-input.xml", "sigma0-orthorectified-output.xml");
+	}
+
+
 	private void transformAndCompare(String scriptName, String inputFileName, String expectedFileName) throws Exception {
 		Path xslFile = getResourceInsideSchema(scriptName);
 		Path xmlFile = getResource("stacHarvester/" + inputFileName);
