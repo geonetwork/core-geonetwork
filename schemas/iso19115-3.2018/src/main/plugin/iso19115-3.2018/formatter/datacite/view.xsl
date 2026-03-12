@@ -411,9 +411,9 @@ eg.
     <entry key="rightsHolder">RightsHolder</entry>
     <entry key="funder">Sponsor</entry>
     <entry key="custodian">Supervisor</entry>
-    <entry key="">Translator</entry>
+<!--    <entry key="">Translator</entry>
     <entry key="">WorkPackageLeader</entry>
-    <entry key="">Other</entry>
+    <entry key="">Other</entry>-->
   </xsl:variable>
 
   <xsl:variable name="notContributorRoles"
@@ -767,10 +767,10 @@ eg.
     <entry key="superseded">Withdrawn</entry>
     <entry key="deprecated">Withdrawn</entry>
     <entry key="distribution">Available</entry>
-    <entry key="">Copyrighted</entry>
+<!--    <entry key="">Copyrighted</entry>
     <entry key="">Collected</entry>
     <entry key="">Coverage</entry>
-    <entry key="">Other</entry>
+    <entry key="">Other</entry>-->
   </xsl:variable>
 
   <xsl:template mode="toDatacite"
