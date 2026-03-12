@@ -21,88 +21,24 @@
   ~ Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
   ~ Rome - Italy. email: geonetwork@osgeo.org
   -->
-<!-- Conversion from iso19115-3.2018 to Datacite
-
-
-    See http://schema.datacite.org/meta/kernel-4.1/doc/DataCite-MetadataKernel_v4.1.pdf
-
-    Mandatory elements / There is no check that those elements are present in the record
-    ID Property Obligation
-1 Identifier (with mandatory type sub-property) M
-2 Creator (with optional given name, family name, name identifier and affiliation sub-properties) M
-3 Title (with optional type sub-properties) M
-4 Publisher M
-5 PublicationYear M
-10 ResourceType (with mandatory general type description subproperty) M
-
-
-
-    The following elements are not mapped
-    * alternateIdentifiers: Not sure if there is requirements for this
-      <datacite:alternateIdentifiers>
-        <datacite:alternateIdentifier alternateIdentifierType="URL">https://schema.datacite.org/meta/kernel-4.1/example/datacite-example-full-v4.1.xml</datacite:alternateIdentifier>
-      </datacite:alternateIdentifiers>
-
-    * relatedIdentifiers: Would make sense if target relation is also a DOI ?
-      <datacite:relatedIdentifiers>
-        <datacite:relatedIdentifier relatedIdentifierType="URL" relationType="HasMetadata" relatedMetadataScheme="citeproc+json" schemeURI="https://github.com/citation-style-language/schema/raw/master/csl-data.json">https://data.datacite.org/application/citeproc+json/10.5072/example-full</datacite:relatedIdentifier>
-        <datacite:relatedIdentifier relatedIdentifierType="arXiv" relationType="IsReviewedBy" resourceTypeGeneral="Text">arXiv:0706.0001</datacite:relatedIdentifier>
-      </datacite:relatedIdentifiers>
-
-    * sizes
-      <datacite:sizes>
-        <datacite:size>4 kB</datacite:size>
-      </datacite:sizes>
-
-    * fundingReferences
-      <datacite:fundingReferences>
-        <datacite:fundingReference>
-          <datacite:funderName>National Science Foundation</datacite:funderName>
-          <datacite:funderIdentifier funderIdentifierType="Crossref Funder ID">https://doi.org/10.13039/100000001</datacite:funderIdentifier>
-          <datacite:awardNumber>CBET-106</datacite:awardNumber>
-          <datacite:awardTitle>Full DataCite XML Example</datacite:awardTitle>
-        </datacite:fundingReference>
-      </datacite:fundingReferences>
-
-     To retrieve a record:
-     http://localhost:8080/geonetwork/srv/api/records/ff8d8cd6-c753-4581-99a3-af23fe4c996b/formatters/datacite?output=xml
--->
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-                xmlns:cat="http://standards.iso.org/iso/19115/-3/cat/1.0"
                 xmlns:cit="http://standards.iso.org/iso/19115/-3/cit/2.0"
                 xmlns:gcx="http://standards.iso.org/iso/19115/-3/gcx/1.0"
                 xmlns:gex="http://standards.iso.org/iso/19115/-3/gex/1.0"
                 xmlns:lan="http://standards.iso.org/iso/19115/-3/lan/1.0"
-                xmlns:srv="http://standards.iso.org/iso/19115/-3/srv/2.0"
-                xmlns:mac="http://standards.iso.org/iso/19115/-3/mac/2.0"
-                xmlns:mas="http://standards.iso.org/iso/19115/-3/mas/1.0"
                 xmlns:mcc="http://standards.iso.org/iso/19115/-3/mcc/1.0"
                 xmlns:mco="http://standards.iso.org/iso/19115/-3/mco/1.0"
-                xmlns:mda="http://standards.iso.org/iso/19115/-3/mda/1.0"
                 xmlns:mdb="http://standards.iso.org/iso/19115/-3/mdb/2.0"
-                xmlns:mdt="http://standards.iso.org/iso/19115/-3/mdt/2.0"
-                xmlns:mex="http://standards.iso.org/iso/19115/-3/mex/1.0"
-                xmlns:mic="http://standards.iso.org/iso/19115/-3/mic/1.0"
-                xmlns:mil="http://standards.iso.org/iso/19115/-3/mil/1.0"
-                xmlns:mrl="http://standards.iso.org/iso/19115/-3/mrl/2.0"
-                xmlns:mds="http://standards.iso.org/iso/19115/-3/mds/2.0"
-                xmlns:mmi="http://standards.iso.org/iso/19115/-3/mmi/1.0"
-                xmlns:mpc="http://standards.iso.org/iso/19115/-3/mpc/1.0"
-                xmlns:mrc="http://standards.iso.org/iso/19115/-3/mrc/2.0"
                 xmlns:mrd="http://standards.iso.org/iso/19115/-3/mrd/1.0"
                 xmlns:mri="http://standards.iso.org/iso/19115/-3/mri/1.0"
-                xmlns:mrs="http://standards.iso.org/iso/19115/-3/mrs/1.0"
-                xmlns:msr="http://standards.iso.org/iso/19115/-3/msr/2.0"
-                xmlns:mai="http://standards.iso.org/iso/19115/-3/mai/1.0"
-                xmlns:mdq="http://standards.iso.org/iso/19157/-2/mdq/1.0"
+                xmlns:mrl="http://standards.iso.org/iso/19115/-3/mrl/2.0"
                 xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0"
-                xmlns:gml="http://www.opengis.net/gml/3.2"
                 xmlns:xlink="http://www.w3.org/1999/xlink"
-                xmlns:xs="http://www.w3.org/2001/XMLSchema"
                 xmlns:datacite="http://datacite.org/schema/kernel-4"
-                xmlns:tr="java:org.fao.geonet.api.records.formatters.SchemaLocalizations"
                 xmlns:saxon="http://saxon.sf.net/"
-                xmlns:gn="http://www.fao.org/geonetwork"
+                xmlns:xs="http://www.w3.org/2001/XMLSchema"
+                xmlns:mdUtil="java:org.fao.geonet.api.records.MetadataUtils"
+                xmlns:java="java:org.fao.geonet.util.XslUtil"
                 version="2.0"
                 extension-element-prefixes="saxon"
                 exclude-result-prefixes="#all">
@@ -126,31 +62,33 @@
   <xsl:variable name="metadataUuid"
                 select="$metadata/mdb:metadataIdentifier/*/mcc:code/*/text()"/>
 
+  <xsl:variable name="standardName"
+                select="$metadata/mdb:metadataStandard/cit:CI_Citation/cit:title"/>
+
+
   <!-- TODO: Convert language code eng > en_US ? -->
   <xsl:variable name="metadataLanguage"
-                select="//mdb:MD_Metadata/mdb:defaultLocale/*/lan:language/*/@codeListValue"/>
+                select="$metadata/mdb:defaultLocale/*/lan:language/*/@codeListValue"/>
 
 
   <xsl:template match="/">
     <datacite:resource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                       xsi:schemaLocation="http://datacite.org/schema/kernel-4 https://schema.datacite.org/meta/kernel-4.1/metadata.xsd">
+                       xsi:schemaLocation="http://datacite.org/schema/kernel-4 https://schema.datacite.org/meta/kernel-4.6/metadata.xsd">
       <xsl:apply-templates select="$metadata"
                            mode="toDatacite"/>
+
+      <xsl:call-template name="transfer-size"/>
+
+      <xsl:call-template name="related-records"/>
     </datacite:resource>
   </xsl:template>
 
-
-
   <!--
-  The Identifier is a unique
-  string that identifies a
-  resource. For software,
-  determine whether the
-  identifier is for a specific
-  version of a piece of software,
-  (per the Force11 Software
-  Citation Principles13), or for all
-  versions.
+  The Identifier is a unique string that identifies a resource. For software,
+  determine whether the identifier is for a specific version of a piece of software,
+  (per the Force11 Software Citation Principles13), or for all versions.
+
+  metadataUuid is not provided but is usually part of the DOI.
   -->
   <xsl:template mode="toDatacite"
                 match="mdb:MD_Metadata/mdb:metadataIdentifier/*/mcc:code/*/text()">
@@ -188,7 +126,7 @@
           </xsl:if>
         </xsl:when>
         <xsl:otherwise>
-          <!-- Build a new one -->
+          <!-- Build a new one from the one provided in the XSL parameter -->
           <xsl:value-of select="$doiId"/>
         </xsl:otherwise>
       </xsl:choose>
@@ -206,15 +144,14 @@
     language codes.
     Examples: en, de, fr
     -->
-    <datacite:language><xsl:value-of select="."/></datacite:language>
+    <datacite:language>
+      <xsl:value-of select="."/>
+    </datacite:language>
   </xsl:template>
 
 
   <!--
-  A name or title by which a
-  resource is known. May be
-  the title of a dataset or the
-  name of a piece of software.
+  A name or title by which a resource is known. May be the title of a dataset or the name of a piece of software.
   -->
   <xsl:template mode="toDatacite"
                 match="mdb:MD_Metadata/mdb:identificationInfo/*/mri:citation/*/cit:title">
@@ -236,11 +173,44 @@
   </xsl:template>
 
 
+
   <!--
-  All additional information that
-  does not fit in any of the other
-  categories. May be used for
-  technical information.
+  AlternateIdentifier
+
+  An identifier other than the primary Identifier applied to the resource being registered.
+  This may be any alphanumeric string which is unique within its domain of issue. May be used for
+  local identifiers, a serial number of an instrument or an inventory number. The AlternateIdentifier
+  should be an additional identifier for the same instance of the resource (i.e., same location, same
+  file).
+  -->
+  <xsl:template mode="toDatacite"
+                match="mdb:MD_Metadata/mdb:identificationInfo/*/mri:citation/*/cit:identifier[1]">
+    <xsl:variable name="identifiers"
+                  select="../cit:identifier/*[mcc:codeSpace/gco:CharacterString != '']"/>
+
+    <xsl:if test="$identifiers">
+      <datacite:alternateIdentifiers>
+        <xsl:for-each select="$identifiers">
+          <datacite:alternateIdentifier alternateIdentifierType="{mcc:codeSpace/gco:CharacterString}">
+            <xsl:value-of select="mcc:code/(gco:CharacterString|gcx:Anchor)"/>
+          </datacite:alternateIdentifier>
+        </xsl:for-each>
+      </datacite:alternateIdentifiers>
+    </xsl:if>
+  </xsl:template>
+
+
+  <xsl:template mode="toDatacite"
+                match="mdb:MD_Metadata/mdb:identificationInfo/*/mri:citation/*/cit:edition/gco:CharacterString[. != '']">
+    <datacite:version>
+      <xsl:value-of select="."/>
+    </datacite:version>
+  </xsl:template>
+
+
+  <!--
+  All additional information that does not fit in any of the other categories.
+  May be used for technical information.
   -->
   <xsl:template mode="toDatacite"
                 match="mdb:MD_Metadata/mdb:identificationInfo/*/mri:abstract">
@@ -251,6 +221,24 @@
           <datacite:description descriptionType="Abstract"/>
         </xsl:with-param>
       </xsl:call-template>
+
+      <xsl:variable name="purpose" select="../(mri:purpose|mri:supplementalInformation)[gco:CharacterString != '']"/>
+        <xsl:for-each select="$purpose">
+        <xsl:call-template name="toDataciteLocalized">
+          <xsl:with-param name="template">
+            <datacite:description descriptionType="Other"/>
+          </xsl:with-param>
+        </xsl:call-template>
+      </xsl:for-each>
+
+      <xsl:variable name="lineage" select="ancestor::mdb:MD_Metadata/mdb:resourceLineage/*/mrl:statement[gco:CharacterString != '']"/>
+      <xsl:for-each select="$lineage">
+        <xsl:call-template name="toDataciteLocalized">
+          <xsl:with-param name="template">
+            <datacite:description descriptionType="Methods"/>
+          </xsl:with-param>
+        </xsl:call-template>
+      </xsl:for-each>
     </datacite:descriptions>
   </xsl:template>
 
@@ -260,7 +248,9 @@
     <datacite:geoLocations>
       <xsl:for-each select="$metadata/mdb:identificationInfo//gex:EX_GeographicBoundingBox">
         <datacite:geoLocation>
-          <!--TODO: <datacite:geoLocationPlace>Atlantic Ocean</datacite:geoLocationPlace>-->
+          <xsl:for-each select="ancestor::gex:EX_Extent/gex:description/gco:CharacterString[. != '']">
+            <datacite:geoLocationPlace><xsl:value-of select="."/></datacite:geoLocationPlace>
+          </xsl:for-each>
           <datacite:geoLocationBox>
             <datacite:westBoundLongitude>
               <xsl:value-of select="gex:westBoundLongitude/*/text()"/>
@@ -332,7 +322,7 @@
   See Appendix for definitions and
   examples.
   -->
-  <xsl:variable name="scopeMapping">
+  <xsl:variable name="scopeMapping" as="node()*">
     <entry key="attribute">Model</entry>
     <entry key="attributeType">Model</entry>
     <entry key="featureType">Model</entry>
@@ -351,81 +341,34 @@
     <entry key="software">Software</entry>
     <entry key="application">Software</entry>
   </xsl:variable>
+
   <xsl:template mode="toDatacite"
                 match="mdb:metadataScope/*/mdb:resourceScope/*/@codeListValue">
     <xsl:variable name="key"
                   select="."/>
     <xsl:variable name="type"
                   select="concat(upper-case(substring(.,1,1)), substring(., 2))"/>
-    <datacite:resourceType resourceTypeGeneral="{($scopeMapping//*[@key = $key]/text(), 'Other')[1]}">
+    <datacite:resourceType resourceTypeGeneral="{($scopeMapping[@key = $key]/text(), 'Other')[1]}">
       <xsl:value-of select="concat($key, '/', $type)"/>
     </datacite:resourceType>
   </xsl:template>
 
 
   <!--
-   The main researchers involved
-    in producing the data, or the
-    authors of the publication, in
-    priority order. To supply
-    multiple creators, repeat this
-    property.
+   The main researchers involved in producing the data, or the authors of the publication, in
+    priority order. To supply multiple creators, repeat this property.
    -->
-  <xsl:template mode="toDatacite"
-                match="mdb:MD_Metadata/mdb:identificationInfo/*/
-                          mri:pointOfContact[1]">
-    <datacite:creators>
-      <!-- [cit:role/*/@codeListValue = $roles] TODO: Restrict on roles ?-->
-      <xsl:for-each select="../mri:pointOfContact/*[cit:role/*/@codeListValue = ('pointOfContact', 'custodian')]">
-        <datacite:creator>
-          <!--
-          Expect the entry point to be CI_Organisation
-          The full name of the creator. -->
-          <xsl:choose>
-            <xsl:when test="cit:party/*/cit:individual/*/cit:name/*/text() != ''">
-              <datacite:creatorName nameType="Personal">
-                <xsl:value-of select="cit:party/*/cit:individual/*/cit:name/*/text()"/>
-              </datacite:creatorName>
-            </xsl:when>
-            <xsl:otherwise>
-              <datacite:creatorName nameType="Organizational">
-              <xsl:value-of select="cit:party/*/cit:name/*/text()"/>
-              </datacite:creatorName>
-            </xsl:otherwise>
-          </xsl:choose>
-
-          <!--
-          <datacite:givenName>Elizabeth</datacite:givenName>
-          <datacite:familyName>Miller</datacite:familyName>
-          <datacite:nameIdentifier schemeURI="http://orcid.org/" nameIdentifierScheme="ORCID">0000-0001-5000-0007</datacite:nameIdentifier>
-          -->
-          <xsl:apply-templates mode="toDataciteLocalized" select="cit:party/*/cit:name">
-            <xsl:with-param name="template">
-              <datacite:affiliation/>
-            </xsl:with-param>
-          </xsl:apply-templates>
-        </datacite:creator>
-      </xsl:for-each>
-    </datacite:creators>
-  </xsl:template>
+  <xsl:variable name="creatorRoles"
+                select="('author', 'coAuthor')"/>
 
 
-  <!-- TODO: contributors
-  The institution or person
-  responsible for collecting,
-  managing, distributing, or
-  otherwise contributing to the
-  development of the resource.
-  To supply multiple contributors,
-  repeat this property.
-  For software, if there is an
-  alternate entity that "holds,
-  archives, publishes, prints,
-  distributes, releases, issues, or
-  produces" the code, use the
-  contributorType
-  "hostingInstitution" for the code
-  repository.
+  <!-- Contributors
+  The institution or person responsible for collecting, managing, distributing, or
+  otherwise contributing to the development of the resource.
+  To supply multiple contributors, repeat this property.
+  For software, if there is an alternate entity that "holds, archives, publishes, prints,
+  distributes, releases, issues, or produces" the code, use the contributorType
+  "hostingInstitution" for the code repository.
 
 eg.
       <datacite:contributors>
@@ -440,50 +383,156 @@ eg.
 
    If Contributor is used, then contributorType is mandatory.
     Controlled List Values:
-    ContactPerson
-    DataCollector
-    DataCurator
-    DataManager
-    Distributor
-    Editor
-    HostingInstitution
-    Producer
-    ProjectLeader
-    ProjectManager
-    ProjectMember
-    RegistrationAgency
-    RegistrationAuthority
-    RelatedPerson
-    Researcher
-    ResearchGroup
-    RightsHolder
-    Sponsor
-    Supervisor
-    WorkPackageLeader
-    Other
   -->
+  <xsl:variable name="contributorTypes" as="node()*">
+    <entry key="pointOfContact">ContactPerson</entry>
+    <entry key="editor">DataCollector</entry>
+    <entry key="">DataCurator</entry>
+    <entry key="author">DataManager</entry>
+    <entry key="coAuthor">DataManager</entry>
+    <entry key="resourceProvider">Distributor</entry>
+    <entry key="distributor">Distributor</entry>
+    <entry key="publisher">Distributor</entry>
+    <entry key="processor">Editor</entry>
+    <entry key="">HostingInstitution</entry>
+    <entry key="originator">Producer</entry>
+    <entry key="principalInvestigator">ProjectLeader</entry>
+    <entry key="">ProjectManager</entry>
+    <entry key="">ProjectMember</entry>
+    <entry key="">RegistrationAgency</entry>
+    <entry key="">RegistrationAuthority</entry>
+    <entry key="collaborator">RelatedPerson</entry>
+    <entry key="mediator">RelatedPerson</entry>
+    <entry key="contributor">RelatedPerson</entry>
+    <entry key="stakeholder">RelatedPerson</entry>
+    <entry key="">Researcher</entry>
+    <entry key="">ResearchGroup</entry>
+    <entry key="owner">RightsHolder</entry>
+    <entry key="rightsHolder">RightsHolder</entry>
+    <entry key="funder">Sponsor</entry>
+    <entry key="custodian">Supervisor</entry>
+<!--    <entry key="">Translator</entry>
+    <entry key="">WorkPackageLeader</entry>
+    <entry key="">Other</entry>-->
+  </xsl:variable>
+
+  <xsl:variable name="notContributorRoles"
+                select="$creatorRoles, $publisherRoles"/>
 
 
+  <xsl:template mode="toDatacite"
+                match="mdb:MD_Metadata/mdb:identificationInfo/*/mri:pointOfContact[1]">
+
+    <datacite:creators>
+      <xsl:for-each select="../mri:pointOfContact/*[cit:role/*/@codeListValue = $creatorRoles]">
+        <datacite:creator>
+          <!--
+          Expect the entry point to be CI_Organisation
+          The full name of the creator. -->
+          <xsl:choose>
+            <xsl:when test="cit:party/*/cit:individual/*/cit:name/*/text() != ''">
+              <datacite:creatorName nameType="Personal">
+                <xsl:value-of select="cit:party/*/cit:individual/*/cit:name/*/text()"/>
+              </datacite:creatorName>
+            </xsl:when>
+            <xsl:otherwise>
+              <datacite:creatorName nameType="Organizational">
+                <xsl:value-of select="cit:party/*/cit:name/*/text()"/>
+              </datacite:creatorName>
+            </xsl:otherwise>
+          </xsl:choose>
+
+          <!--
+          Not supported
+          <datacite:givenName>Elizabeth</datacite:givenName> See datacite:creatorName
+          <datacite:familyName>Miller</datacite:familyName> See datacite:creatorName
+          -->
+
+          <!-- TODO: Add support for individual identifier in creator and org one in affiliation -->
+          <xsl:for-each select="cit:party//cit:partyIdentifier/*[mcc:code/(gco:CharacterString|gcx:Anchor) != '']">
+            <datacite:nameIdentifier nameIdentifierScheme="{mcc:codeSpace/gco:CharacterString}">
+              <xsl:value-of select="mcc:code/(gco:CharacterString|gcx:Anchor)"/>
+            </datacite:nameIdentifier>
+          </xsl:for-each>
+
+          <xsl:apply-templates mode="toDataciteLocalized" select="cit:party/*/cit:name">
+            <xsl:with-param name="template">
+              <datacite:affiliation/>
+            </xsl:with-param>
+          </xsl:apply-templates>
+        </datacite:creator>
+      </xsl:for-each>
+    </datacite:creators>
+
+
+
+    <datacite:contributors>
+      <xsl:for-each select="../mri:pointOfContact/*[not(cit:role/*/@codeListValue = $notContributorRoles)]">
+        <xsl:variable name="contributorType"
+                      select="$contributorTypes[@key = current()/cit:role/*/@codeListValue]"/>
+        <datacite:contributor>
+          <xsl:attribute name="contributorType" select="$contributorType"/>
+          <xsl:choose>
+            <xsl:when test="cit:party/*/cit:individual/*/cit:name/*/text() != ''">
+              <datacite:contributorName nameType="Personal">
+                <xsl:value-of select="cit:party/*/cit:individual/*/cit:name/*/text()"/>
+              </datacite:contributorName>
+            </xsl:when>
+            <xsl:otherwise>
+              <datacite:contributorName nameType="Organizational">
+                <xsl:value-of select="cit:party/*/cit:name/*/text()"/>
+              </datacite:contributorName>
+            </xsl:otherwise>
+          </xsl:choose>
+
+          <xsl:for-each select="cit:party//cit:partyIdentifier/*[mcc:code/(gco:CharacterString|gcx:Anchor) != '']">
+            <datacite:nameIdentifier nameIdentifierScheme="{mcc:codeSpace/gco:CharacterString}">
+              <xsl:value-of select="mcc:code/(gco:CharacterString|gcx:Anchor)"/>
+            </datacite:nameIdentifier>
+          </xsl:for-each>
+
+          <xsl:apply-templates mode="toDataciteLocalized" select="cit:party/*/cit:name">
+            <xsl:with-param name="template">
+              <datacite:affiliation/>
+            </xsl:with-param>
+          </xsl:apply-templates>
+        </datacite:contributor>
+      </xsl:for-each>
+    </datacite:contributors>
+
+
+    <datacite:fundingReferences>
+      <xsl:for-each select="../mri:pointOfContact/*[cit:role/*/@codeListValue = 'funder']">
+        <datacite:fundingReference>
+          <xsl:choose>
+            <xsl:when test="cit:party/*/cit:individual/*/cit:name/*/text() != ''">
+              <datacite:funderName>
+                <xsl:value-of select="cit:party/*/cit:individual/*/cit:name/*/text()"/>
+              </datacite:funderName>
+            </xsl:when>
+            <xsl:otherwise>
+              <datacite:funderName>
+                <xsl:value-of select="cit:party/*/cit:name/*/text()"/>
+              </datacite:funderName>
+            </xsl:otherwise>
+          </xsl:choose>
+
+          <xsl:for-each select="cit:party//cit:partyIdentifier/*[mcc:code/(gco:CharacterString|gcx:Anchor) != '']">
+            <datacite:funderIdentifier funderIdentifierType="{mcc:codeSpace/gco:CharacterString}">
+              <xsl:value-of select="mcc:code/(gco:CharacterString|gcx:Anchor)"/>
+            </datacite:funderIdentifier>
+          </xsl:for-each>
+        </datacite:fundingReference>
+      </xsl:for-each>
+    </datacite:fundingReferences>
+  </xsl:template>
 
   <!--
-  The name of the entity that
-  holds, archives, publishes
-  prints, distributes, releases,
-  issues, or produces the
-  resource. This property will be
-  used to formulate the citation,
-  so consider the prominence of
-  the role. For software, use
-  Publisher for the code
-  repository. If there is an entity
-  other than a code repository,
-  that "holds, archives,
-  publishes, prints, distributes,
-  releases, issues, or produces"
-  the code, use the property
-  Contributor/contributorType/
-  hostingInstitution for the code
-  repository.
+  The name of the entity that holds, archives, publishes prints, distributes, releases, issues, or produces the resource.
+  This property will be used to formulate the citation, so consider the prominence of the role. For software,
+  use Publisher for the code repository. If there is an entity other than a code repository,
+  that "holds, archives, publishes, prints, distributes, releases, issues, or produces" the code,
+  use the property Contributor/contributorType/ hostingInstitution for the code repository.
   eg.
       <datacite:publisher>DataCite</datacite:publisher>
       <datacite:publicationYear>2014</datacite:publicationYear>
@@ -491,39 +540,47 @@ eg.
   publisher is the first distributor contact
   or the first point of contact having the role "distributor"
   -->
+
+  <xsl:variable name="publisherRoles"
+                select="('publisher')"/>
+
   <xsl:template mode="toDatacite"
                 match="mdb:distributionInfo[1]">
-    <datacite:publisher>
-      <xsl:variable name="publisher"
-                    select="if ($metadata//mrd:distributorContact)
-                            then $metadata//mrd:distributorContact
-                            else $metadata/mdb:identificationInfo/*/mri:pointOfContact[*/cit:role/*/@codeListValue = 'distributor']"/>
-      <xsl:value-of select="$publisher[1]/*/cit:party//cit:CI_Organisation/cit:name/*/text()"/>
-    </datacite:publisher>
+    <xsl:variable name="publishers"
+                  select="($metadata//(mdb:identificationInfo|mdb:distributionInfo)
+                                              //cit:CI_Responsibility[cit:role/*/@codeListValue = $publisherRoles]
+                                                //cit:CI_Organisation)"/>
+    <xsl:for-each select="$publishers[1]">
+      <xsl:variable name="identifier"
+                    select="current()/cit:partyIdentifier/*"/>
+      <datacite:publisher>
+        <xsl:if test="$identifier">
+          <xsl:attribute name="publisherIdentifier" select="$identifier/mcc:code/(gco:CharacterString|gcx:Anchor)"/>
+          <xsl:attribute name="publisherIdentifierScheme" select="$identifier/mcc:codeSpace/gco:CharacterString"/>
+        </xsl:if>
+        <xsl:value-of select="current()/cit:name/(gco:CharacterString|gcx:Anchor)/text()"/>
+      </datacite:publisher>
+    </xsl:for-each>
+
 
     <!--
-    The year when the data was
-    or will be made publicly
-    available. In the case of
-    resources such as software or
-    dynamic data where there
-    may be multiple releases in
-    one year, include the
-    Date/dateType/
-    dateInformation property and
-    sub-properties to provide
-    more information about the
-    publication or release date
-    details
-    -->
-    <xsl:variable name="publicationDate"
-                  select="$metadata/mdb:identificationInfo/*/mri:citation/*/cit:date/*[cit:dateType/*/@codeListValue = 'publication']/cit:date/substring(*, 1, 4)"/>
-    <xsl:if test="$publicationDate != ''">
-      <datacite:publicationYear>
-        <xsl:value-of select="$publicationDate"/>
-      </datacite:publicationYear>
-    </xsl:if>
+    The year when the data was or will be made publicly available. In the case of
+    resources such as software or dynamic data where there may be multiple releases in
+    one year, include the Date/dateType/dateInformation property and
+    sub-properties to provide more information about the publication or release date details
 
+    Only one is allowed.
+    -->
+    <xsl:variable name="publicationDates"
+                  select="$metadata/mdb:identificationInfo/*/mri:citation/*/cit:date/*[cit:dateType/*/@codeListValue = 'publication']/cit:date[* != '']/substring(*, 1, 4)"/>
+    <xsl:for-each select="$publicationDates">
+      <xsl:sort select="." order="descending"/>
+      <xsl:if test="position() = 1">
+        <datacite:publicationYear>
+          <xsl:value-of select="current()"/>
+        </datacite:publicationYear>
+      </xsl:if>
+    </xsl:for-each>
 
     <!--
     Technical format of the resource.
@@ -532,21 +589,14 @@ eg.
         </datacite:formats>
         -->
     <datacite:formats>
-      <xsl:for-each select="$metadata//mrd:distributorFormat/*/mrd:formatSpecificationCitation/*/cit:title[*/text() != '']">
-        <datacite:format><xsl:value-of select="gco:CharacterString"/></datacite:format>
+      <xsl:for-each select="$metadata//mrd:formatSpecificationCitation/*/cit:title[*/text() != '']">
+        <datacite:format>
+          <xsl:value-of select="gco:CharacterString|gcx:Anchor"/>
+        </datacite:format>
       </xsl:for-each>
     </datacite:formats>
   </xsl:template>
 
-
-  <!--
-  The version number of the resource.
-      <datacite:version>4.1</datacite:version>
-      -->
-  <xsl:template mode="toDatacite"
-                match="mdb:identificationInfo/*/mri:citation/*/cit:edition[*/text() != '']">
-    <datacite:version><xsl:value-of select="gco:CharacterString"/></datacite:version>
-  </xsl:template>
 
 
   <!--
@@ -561,9 +611,9 @@ eg.
       </datacite:rightsList>
       -->
   <xsl:template mode="toDatacite"
-                match="mri:resourceConstraints[1]">
+                match="mdb:identificationInfo/*/mri:resourceConstraints[1]">
     <datacite:rightsList>
-      <xsl:for-each select="$metadata//mco:useLimitation[*/text() != '']">
+      <xsl:for-each select="$metadata/mdb:identificationInfo//(mco:useLimitation|mco:otherConstraints)[*/text() != '']">
         <xsl:apply-templates mode="toDataciteLocalized" select=".">
           <xsl:with-param name="template">
             <datacite:rights>
@@ -576,6 +626,120 @@ eg.
         </xsl:apply-templates>
       </xsl:for-each>
     </datacite:rightsList>
+  </xsl:template>
+
+
+  <xsl:template name="related-records">
+
+    <xsl:variable name="associations"
+                  select="mdUtil:getAssociatedAsXml($metadataUuid)"
+                  as="node()?"/>
+
+    <xsl:variable name="isoAssociatedTypesToDcatCommonNames"
+                  as="node()*">
+      <entry associationType="crossReference" initiativeType="collection">isPartOf</entry>
+      <entry associationType="partOfSeamlessDatabase">isPartOf</entry>
+      <entry associationType="series">isPartOf</entry>
+      <entry associationType="crossReference">references</entry>
+      <entry associationType="isComposedOf">hasPart</entry>
+      <entry associationType="revisionOf">isVersionOf</entry>
+    </xsl:variable>
+
+    <xsl:if test="$associations/relations/*">
+      <datacite:relatedIdentifiers>
+        <xsl:for-each select="$associations/relations/*">
+          <xsl:sort select="@url"/>
+
+          <xsl:variable name="permalink"
+                        select="java:getPermalink(@uuid, 'all')"/>
+          <xsl:variable name="resourceIdentifierWithHttpCodeSpace"
+                        select="(root/resourceIdentifier[starts-with(codeSpace, 'http')])[1]"/>
+          <xsl:variable name="recordUri"
+                        select="if ($permalink)
+                                      then $permalink
+                                      else if ($resourceIdentifierWithHttpCodeSpace)
+                                      then concat($resourceIdentifierWithHttpCodeSpace/codeSpace, $resourceIdentifierWithHttpCodeSpace/code)
+                                      else @url" />
+
+          <xsl:variable name="relationType" as="xs:string">
+            <xsl:choose>
+              <xsl:when test="local-name() = 'parent'">
+                isPartOf
+              </xsl:when>
+              <xsl:when test="local-name() = 'children'">
+                hasPart
+              </xsl:when>
+              <xsl:when test="local-name() = 'brothersAndSisters'">
+                references
+              </xsl:when>
+              <xsl:when test="local-name() = 'sources'">
+                isDerivedFrom
+              </xsl:when>
+              <xsl:when test="local-name() = 'datasets'">
+                hasPart
+              </xsl:when>
+              <xsl:when test="local-name() = 'services'">
+                isPublishedIn
+              </xsl:when>
+              <xsl:when test="local-name() = 'siblings' and not(@uuid = (../children/@uuid))">
+                <xsl:variable name="associationType"
+                              select="@associationType"/>
+                <xsl:variable name="initiativeType"
+                              select="@initiativeType"/>
+                <xsl:variable name="dcTypeForAssociationAndInitiative"
+                              as="xs:string?"
+                              select="$isoAssociatedTypesToDcatCommonNames[@associationType = $associationType and @initiativeType = $initiativeType]/text()"/>
+                <xsl:variable name="dcTypeForAssociation"
+                              as="xs:string?"
+                              select="$isoAssociatedTypesToDcatCommonNames[@associationType = $associationType and not(@initiativeType)]/text()"/>
+                <xsl:variable name="elementType"
+                              as="xs:string"
+                              select="if ($dcTypeForAssociationAndInitiative)
+                          then $dcTypeForAssociationAndInitiative
+                          else if ($dcTypeForAssociation)
+                          then $dcTypeForAssociation
+                          else 'references'"/>
+
+                <xsl:value-of select="$elementType"/>
+              </xsl:when>
+              <xsl:otherwise>references</xsl:otherwise>
+            </xsl:choose>
+          </xsl:variable>
+
+          <xsl:variable name="resourceTypeGeneral" as="xs:string?">
+            <xsl:choose>
+              <xsl:when test="local-name() = 'services'">
+                Service
+              </xsl:when>
+              <xsl:otherwise>Dataset</xsl:otherwise>
+            </xsl:choose>
+          </xsl:variable>
+
+          <datacite:relatedIdentifier relatedIdentifierType="URL"
+                             relationType="{normalize-space($relationType)}">
+            <xsl:if test="$resourceTypeGeneral">
+              <xsl:attribute name="resourceTypeGeneral" select="normalize-space($resourceTypeGeneral)"/>
+            </xsl:if>
+            <xsl:value-of select="$recordUri"/>
+          </datacite:relatedIdentifier>
+        </xsl:for-each>
+      </datacite:relatedIdentifiers>
+    </xsl:if>
+  </xsl:template>
+
+
+  <xsl:template name="transfer-size">
+    <xsl:variable name="transferSizes"
+                  select=".//mrd:MD_DigitalTransferOptions/mrd:transferSize/*[. castable as xs:double]"/>
+    <xsl:if test="$transferSizes">
+      <datacite:sizes>
+        <xsl:for-each select="$transferSizes">
+          <datacite:size>
+            <xsl:value-of select="concat(., ' MB')"/>
+          </datacite:size>
+        </xsl:for-each>
+      </datacite:sizes>
+    </xsl:if>
   </xsl:template>
 
 
@@ -592,19 +756,30 @@ eg.
   Valid
   Other
 -->
-  <xsl:variable name="dateMapping">
+  <xsl:variable name="dateMapping" as="node()*">
     <entry key="creation">Created</entry>
     <entry key="revision">Updated</entry>
-    <!--<entry key="publication"></entry> is in publicationYear -->
+    <entry key="publication">Issued</entry>
+    <entry key="adopted">Accepted</entry>
+    <entry key="released">Submitted</entry>
+    <entry key="validityBegins">Valid</entry>
+    <entry key="expiry">Withdrawn</entry>
+    <entry key="superseded">Withdrawn</entry>
+    <entry key="deprecated">Withdrawn</entry>
+    <entry key="distribution">Available</entry>
+<!--    <entry key="">Copyrighted</entry>
+    <entry key="">Collected</entry>
+    <entry key="">Coverage</entry>
+    <entry key="">Other</entry>-->
   </xsl:variable>
 
   <xsl:template mode="toDatacite"
                 match="mdb:identificationInfo/*/mri:citation/*/cit:date[1]">
     <datacite:dates>
-      <xsl:for-each select="../cit:date/*[cit:dateType/*/@codeListValue = $dateMapping/entry/@key]">
+      <xsl:for-each select="../cit:date/*[cit:dateType/*/@codeListValue = $dateMapping/@key]">
         <xsl:variable name="key"
                       select="cit:dateType/*/@codeListValue"/>
-        <datacite:date dateType="{$dateMapping//*[@key = $key]/text()}">
+        <datacite:date dateType="{$dateMapping[@key = $key]/text()}" dateInformation="{$key}">
           <xsl:value-of select="cit:date/*/text()"/>
         </datacite:date>
       </xsl:for-each>
@@ -616,13 +791,14 @@ eg.
   <xsl:template name="toDataciteLocalized"
                 mode="toDataciteLocalized" match="*">
     <xsl:param name="template" as="node()"/>
+
     <xsl:choose>
       <xsl:when test="lan:PT_FreeText">
         <xsl:for-each select="lan:PT_FreeText/lan:textGroup/*">
           <xsl:variable name="languageId"
                         select="@locale"/>
           <xsl:variable name="languageCode"
-                        select="$metadata/mdb:otherLocale/*[concat('#', @id) = $languageId]/lan:language/*/@codeListValue"/>
+                        select="$metadata/(mdb:otherLocale|mdb:defaultLocale)/*[concat('#', @id) = $languageId]/lan:language/*/@codeListValue"/>
           <xsl:element name="{name($template/*)}">
             <xsl:attribute name="xml:lang" select="$languageCode"/>
             <xsl:copy-of select="$template/*/@*"/>

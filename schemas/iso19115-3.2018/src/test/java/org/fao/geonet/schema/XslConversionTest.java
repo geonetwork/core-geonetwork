@@ -112,4 +112,30 @@ public class XslConversionTest extends XslProcessTest {
             .build();
         assertFalse(diff.toString(), diff.hasDifferences());
     }
+
+
+    @Test
+    public void testDataciteConversion() throws Exception {
+        xslFile = Paths.get(testClass.getClassLoader().getResource("convert/fromDatacite.xsl").toURI());
+        xmlFile = Paths.get(testClass.getClassLoader().getResource("metadata-datacite.xml").toURI());
+        Path expectedFile = Paths.get(testClass.getClassLoader().getResource("metadata-datacite-after-conversion.xml").toURI());
+
+        Element inputElement = Xml.loadFile(expectedFile);
+        String expectedXml = Xml.getString(inputElement);
+
+        Element resultElement = Xml.transform(Xml.loadFile(xmlFile), xslFile);
+        String resultOfConversion = Xml.getString(resultElement);
+
+        Diff diff = DiffBuilder
+            .compare(Input.fromString(resultOfConversion))
+            .withTest(Input.fromString(expectedXml))
+            .withNodeMatcher(new DefaultNodeMatcher(ElementSelectors.byName))
+            .normalizeWhitespace()
+            .ignoreComments()
+            .checkForSimilar()
+            .build();
+        assertFalse(
+            String.format("Differences: %s", diff.toString()),
+            diff.hasDifferences());
+    }
 }
