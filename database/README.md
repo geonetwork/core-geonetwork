@@ -184,43 +184,13 @@ To test:
 * [`liquibase-slf4j` dependency](https://github.com/mattbertolini/liquibase-slf4j) is used to log Liquibase output using SLF4J.
 
 
-## Liquibase implementation status
+## Language data
 
-Actions: 
+Language data is loaded using Liquibase changesets `db/changesets/000X-initial-data-language-{iso3code}`.
+This is also used in admin > settings > languages.
 
-- [ ] Databases tested (test: first run works, restart works)
-  - [x] Postgres
-  - [x] H2 (needed for test in GN4)
-  - [ ] Other - discuss which database do we support and test?
-- [x] Database creation
-  - [x] Document how to create database without the app running
-  - [x] Check creation in non default schema - currentSchema=gn in JDBC URL works
-  - [x] Database settings and admin user can be initialized with variables
-  - [x] [Liquibase bean configuration](../domain/src/main/resources/config-spring-geonetwork.xml) with  [`changelog.xml`](src/main/resources/db/changelog.xml) as main changelog file
-  - [x] [Schema creation](src/main/resources/db/changesets/00000-initial-schema.xml) / Precondition: no table metadata exists
-  - [x] [Initial data](src/main/resources/db/changesets/00001-initial-data.sql) / Precondition: table settings is empty
-  - [x] [Initial languages](src/main/resources/db/changesets/00002-initial-data-languages-eng.sql) / Precondition: table language does not have eng
-  - [x] Other languages
-- [x] Testing 
-  - [x] Test and integration test ok 
-  - [x] For test, populate database with minimal data (ie. only one language) - see context=test
-  - [x] Some test requires db with no data eg. domain - see context=schema-only
-- [ ] Liquibase utility
-  - [x] Test connection
-  - [x] Populate database
-  - [x] Diff between 2 databases
-  - [x] Generate change logs from existing database using Liquibase command line tool
-  - [x] Generate change logs from existing database in Intellij
-  - [ ] Generate a changeset file directly from a ref and a target
-- [x] Release 
-  - [x] Create changeset when making a release
-- [x] Cleanup
-  - [x] Remove past database migrations 
-  - [x] Remove old configuration `initial_data.xml` and `database_migration.xml`
-  - [x] Remove `db.migration_onstartup` property / Hibernate `hbm2ddl` property set to `none`
-  - [x] Remove `TestDatabasePopulator`
-  - [x] Remove tests related to old Java database migrations.
-- [ ] Configure log level for liquibase https://docs.liquibase.com/oss/user-guide-4-33/use-environment-variables-to-control-log-level
+
+Q: One limitation in future changes, is how do we load additional language specific data not in initial changeset?
 
 
 ## GeoNetwork 5 and Liquibase
