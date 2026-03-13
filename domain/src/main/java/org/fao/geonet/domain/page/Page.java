@@ -112,6 +112,7 @@ public class Page extends GeonetEntity implements Serializable {
     @Column
     @Nullable
     @Lob
+    @Type(type = "org.hibernate.type.TextType")
     @Basic(fetch = FetchType.LAZY)
     public byte[] getData() {
         return data;

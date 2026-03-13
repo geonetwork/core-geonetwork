@@ -41,7 +41,6 @@
   <import resource="config-security/config-security.xml"/>
   <import resource="classpath:JZkitApplicationContext.xml"/>
 
-  <import resource="config-db/initial_data.xml"/>
   <import resource="config-print/config-spring-print.xml"/>
   <import resource="config-etf-validator.xml"/>
 
@@ -124,7 +123,7 @@
     <entry key="hibernate.enable_lazy_load_no_trans" value="true"/>
     <!-- If db migration is off, disable automatic updates, but notify changes using validate -->
     <!-- options: none, validate, update, create, create-drop, create-only -->
-    <entry key="hibernate.hbm2ddl.auto" value="#{'\${db.migration_onstartup}' ? 'update' : 'validate'}"/>
+    <entry key="hibernate.hbm2ddl.auto" value="none"/>
 
     <!-- If a specific schema has to be used
     <entry key="hibernate.default_schema" value="catalog"/>
