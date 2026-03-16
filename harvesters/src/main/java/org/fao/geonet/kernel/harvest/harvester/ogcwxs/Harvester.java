@@ -912,7 +912,7 @@ class Harvester extends BaseAligner<OgcWxSParams> implements IHarvester<HarvestR
             Path filename = getMapThumbnail(layer);
 
             // Add downloaded file to metadata store
-            Store store = context.getBean(FilesystemStore.class);
+            Store store = context.getBean("filesystemStore", Store.class);
             try {
                 store.delResource(context, layer.uuid, filename.getFileName().toString());
             } catch (Exception e) {}
