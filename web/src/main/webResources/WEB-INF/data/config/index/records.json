@@ -1043,7 +1043,7 @@
         "conformTo": {
           "match": "conformTo_*",
           "mapping": {
-            "type": "keyword"
+            "type": "boolean"
           }
         }
       },
@@ -1385,6 +1385,13 @@
                 "type": "keyword"
               }
             }
+          }
+        }
+      }, {
+        "th_number": {
+          "match": "th_*Number",
+          "mapping": {
+            "type": "integer"
           }
         }
       },
@@ -1747,10 +1754,51 @@
           }
         }
       },
+      "resourceTemporalExtentDetails": {
+        "properties": {
+          "end": {
+            "properties": {
+              "date": {
+                "type": "date",
+                "format": "date_optional_time"
+              },
+              "calendarEraName": {
+                "type": "keyword"
+              },
+              "frame": {
+                "type": "keyword"
+              },
+              "indeterminatePosition": {
+                "type": "keyword"
+              }
+            }
+          },
+          "start": {
+            "properties": {
+              "date": {
+                "type": "date",
+                "format": "date_optional_time"
+              },
+              "calendarEraName": {
+                "type": "keyword"
+              },
+              "frame": {
+                "type": "keyword"
+              },
+              "indeterminatePosition": {
+                "type": "keyword"
+              }
+            }
+          }
+        }
+      },
       "dateStamp": {
         "type": "date"
       },
       "changeDate": {
+        "type": "date"
+      },
+      "indexingDate": {
         "type": "date"
       },
       "document": {
@@ -1758,6 +1806,9 @@
         "index": false
       },
       "documentStandard": {
+        "type": "keyword"
+      },
+      "shapeParsingError": {
         "type": "keyword"
       },
       "docType": {
@@ -1824,7 +1875,10 @@
         "type": "boolean"
       },
       "isOpenData": {
-        "type": "keyword"
+        "type": "boolean"
+      },
+      "inspireConformResource": {
+        "type": "boolean"
       },
       "resolutionScaleDenominator": {
         "type": "integer"
@@ -1956,6 +2010,22 @@
           }
         }
       },
+      "crsDetails": {
+        "properties": {
+          "code": {
+            "type": "keyword"
+          },
+          "codeSpace": {
+            "type": "keyword"
+          },
+          "name": {
+            "type": "keyword"
+          },
+          "url": {
+            "type": "keyword"
+          }
+        }
+      },
       "accessConstraints": {
         "type": "text",
         "fields": {
@@ -1971,10 +2041,13 @@
       "otherLanguage": {
         "type": "keyword"
       },
+      "otherLanguageId": {
+        "type": "keyword"
+      },
       "metadataIdentifier": {
         "type": "keyword"
       },
-      "otherConstraints": {
+      "overviewUrl": {
         "type": "text",
         "fields": {
           "keyword": {
@@ -1983,12 +2056,24 @@
           }
         }
       },
-      "overviewUrl": {
-        "type": "text",
-        "fields": {
-          "keyword": {
+      "overview": {
+        "type": "nested",
+        "properties": {
+          "data": {
+            "enabled": false
+          },
+          "url": {
             "type": "keyword",
-            "ignore_above": ${es.index.ignore_above}
+            "copy_to": "any.common"
+          },
+          "nameObject": {
+            "type": "object",
+            "properties": {
+              "default": {
+                "type": "keyword",
+                "copy_to": "any.common"
+              }
+            }
           }
         }
       },
@@ -2044,6 +2129,9 @@
         "type": "keyword"
       },
       "resourceType": {
+        "type": "keyword"
+      },
+      "resourceEdition": {
         "type": "keyword"
       },
       "resourceTypeNameObject": {
@@ -2135,10 +2223,10 @@
       "serviceType": {
         "type": "keyword"
       },
-      "format": {
+      "serviceTypeVersion": {
         "type": "keyword"
       },
-      "spatialRepresentationType": {
+      "format": {
         "type": "keyword"
       },
       "schema": {
