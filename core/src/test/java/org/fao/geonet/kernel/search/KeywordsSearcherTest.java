@@ -56,6 +56,7 @@ public class KeywordsSearcherTest extends AbstractThesaurusBasedTest {
     private ThesaurusFinder thesaurusFinder;
     private Thesaurus thesaurusBlah;
     private Thesaurus thesaurusFoo;
+    private AllThesaurus allThesaurus;
     private int smallWords = 20;
 
     private Map<String, Thesaurus> thesaurusMap = new HashMap<>();
@@ -69,6 +70,7 @@ public class KeywordsSearcherTest extends AbstractThesaurusBasedTest {
     public synchronized void createExtraThesauri() throws Exception {
     	thesaurusBlah = createThesaurus("blah");
         thesaurusFoo = createThesaurus("foo");
+        allThesaurus = new AllThesaurus();
 
         this.thesaurusFinder = new ThesaurusFinder() {
             {
@@ -100,6 +102,9 @@ public class KeywordsSearcherTest extends AbstractThesaurusBasedTest {
                 return getThesauriMap().containsKey(name);
             }
         };
+
+        allThesaurus.init("siteUrl");
+        allThesaurus.setThesaurusFinder(thesaurusFinder);
     }
 
     private Thesaurus createThesaurus(String string) throws Exception {
@@ -173,6 +178,19 @@ public class KeywordsSearcherTest extends AbstractThesaurusBasedTest {
 
         searcher.search(null, params.toXmlParams());
         assertSearchNoContextEngLangNoSearchAllThesauri(searcher);
+    }
+
+    @Test
+    public void searchAllThesaurusFirstDoNotCorruptThesaurusCache() {
+        String thesaurusKey = "test.test.testThesaurus";
+        String uri = "http://abstract.thesaurus.test#0";
+        String allThesaurusUri = AllThesaurus.buildKeywordUri(thesaurusKey, uri);
+        allThesaurus.getKeyword(allThesaurusUri, "eng");
+
+        KeywordBean keyword = thesaurus.getKeyword(uri, "eng");
+
+        assertEquals(thesaurusKey, keyword.getThesaurusKey());
+        assertEquals(uri, keyword.getUriCode());
     }
 
     private void assertSearchNoContextEngLangNoSearchAllThesauri(KeywordsSearcher searcher) {
