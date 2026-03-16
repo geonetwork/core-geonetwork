@@ -1159,7 +1159,7 @@ public class Thesaurus {
 
         KeywordBean keywordBean = keywords.get(0);
         THESAURUS_SEARCH_CACHE.put(cacheKey, keywordBean);
-        return keywordBean;
+        return new KeywordBean(keywordBean);
     }
 
     /**
