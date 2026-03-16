@@ -81,7 +81,7 @@ public class CMISStore extends AbstractStore {
 
     @Override
     public List<MetadataResource> getResources(final ServiceContext context, final String metadataUuid,
-                                               final MetadataResourceVisibility visibility, String filter, Boolean approved) throws Exception {
+                                               final MetadataResourceVisibility visibility, String filter, Boolean approved, boolean includeAdditionalIndexedProperties) throws Exception {
         final int metadataId = canDownload(context, metadataUuid, visibility, approved);
 
         final String resourceTypeDir = getMetadataDir(context, metadataId) + cmisConfiguration.getFolderDelimiter() + visibility.toString();
