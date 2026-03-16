@@ -191,6 +191,13 @@ public class KeywordsSearcherTest extends AbstractThesaurusBasedTest {
 
         assertEquals(thesaurusKey, keyword.getThesaurusKey());
         assertEquals(uri, keyword.getUriCode());
+
+        allThesaurus.getKeyword(allThesaurusUri, "eng");
+
+        keyword = thesaurus.getKeyword(uri, "eng");
+
+        assertEquals(thesaurusKey, keyword.getThesaurusKey());
+        assertEquals(uri, keyword.getUriCode());
     }
 
     private void assertSearchNoContextEngLangNoSearchAllThesauri(KeywordsSearcher searcher) {
