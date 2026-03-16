@@ -62,7 +62,7 @@
 
     <xsl:template match="gmd:CI_ResponsibleParty" mode="from19139to19115-3.2018">
         <xsl:choose>
-            <xsl:when test="count(gmd:individualName/gcoold:CharacterString) + count(gmd:organisationName/(gcoold:CharacterString|gmx:Anchor)) + count(gmd:positionName/gcoold:CharacterString) > 0">
+            <xsl:when test="count(gmd:individualName/gcoold:CharacterString) + count(gmd:organisationName/gcoold:CharacterString) + count(gmd:positionName/gcoold:CharacterString) > 0">
                 <!--
                 CI_ResponsibleParties that include name elements (individualName, organisationName, or positionName) are translated to CI_Responsibilities.
                 CI_ResponsibleParties without name elements are assummed to be placeholders for CI_OnlineResources. They are transformed later in the process
@@ -76,6 +76,7 @@
                                 <xsl:with-param name="elementName" select="'cit:role'"/>
                                 <xsl:with-param name="codeListName" select="'cit:CI_RoleCode'"/>
                                 <xsl:with-param name="codeListValue" select="gmd:role/gmd:CI_RoleCode/@codeListValue"/>
+                                <xsl:with-param name="codeListText" select="gmd:role/gmd:CI_RoleCode/text()"/>
                             </xsl:call-template>
                         </xsl:when>
                         <xsl:when test="./gmd:role/@*">
