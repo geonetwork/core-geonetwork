@@ -7,11 +7,11 @@ GeoNetwork requires an [Elasticsearch](https://www.elastic.co/products/elasticse
 
 ## Elasticsearch compatibility
 
-Elasticsearch Java client version: 8.14.3
+Elasticsearch Java client version: 8.19.11
 
 | Elasticsearch Version | Compatibility |
 |-----------------------| ------------- |
-| Elasticsearch 8.14.3  | recommended   |
+| Elasticsearch 8.19.11 | recommended   |
 | Elasticsearch 8.14.x  | minimum       |
 
 Older version may be supported but are untested.
@@ -21,23 +21,23 @@ Older version may be supported but are untested.
 
 === "Manual installation"
         
-    1. **Download:** Elasticsearch `8.14.3` from <https://www.elastic.co/downloads/elasticsearch> and unzip the file.
+    1. **Download:** Elasticsearch `8.19.11` from <https://www.elastic.co/downloads/elasticsearch> and unzip the file.
 
         ``` shell
-        wget https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-8.14.3.tar.gz
-        tar xvfz elasticsearch-8.14.3.tar.gz
+        wget https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-8.19.11.tar.gz
+        tar xvfz elasticsearch-8.19.11.tar.gz
         ```
 
     2. **Start**: Manually start Elasticsearch using:
 
         ``` shell
-        elasticsearch-8.14.3/bin/elasticsearch
+        elasticsearch-8.19.11/bin/elasticsearch
         ```
 
     3. **Stop**: Manually stop Elasticsearch using:
 
         ``` shell
-        elasticsearch-8.14.3/bin/elasticsearch stop
+        elasticsearch-8.19.11/bin/elasticsearch stop
         ```
         
 === "Install using Maven"

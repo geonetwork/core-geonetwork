@@ -33,9 +33,9 @@
                       esVersion = "${es.version}";
                       print("Scanning README for " + esVersion);
 
-                      docker = Pattern.compile("elasticsearch:(\\d.\\d\\d.\\d)");
-                      download = Pattern.compile("Download Elasticsearch (\\d.\\d\\d.\\d)");
-                      folder = Pattern.compile("es/elasticsearch-(\\d.\\d\\d.\\d)");
+                      docker = Pattern.compile("elasticsearch:(\\d+\\.\\d+\\.\\d+)");
+                      download = Pattern.compile("Download Elasticsearch (\\d+\\.\\d+\\.\\d+)");
+                      folder = Pattern.compile("es/elasticsearch-(\\d+\\.\\d+\\.\\d+)");
 
                       patterns = new Pattern[]{ docker, download, folder};
 
@@ -77,8 +77,8 @@
                         esVersion = "${es.version}";
                         print("Scanning "+filename+" for " + esVersion);
 
-                        docker = Pattern.compile("elasticsearch:(\\d.\\d\\d.\\d)");
-                        kibana = Pattern.compile("kibana:(\\d.\\d\\d.\\d)");
+                        docker = Pattern.compile("elasticsearch:(\\d\\d+.\\d\\d+.\\d\\d+)");
+                        kibana = Pattern.compile("kibana:(\\d\\d+.\\d\\d+.\\d\\d+)");
                         patterns = new Pattern[]{ docker, kibana};
 
                         String baseDir = new File(java.net.URI.create("${project.baseUri}")).getAbsolutePath().toString();
