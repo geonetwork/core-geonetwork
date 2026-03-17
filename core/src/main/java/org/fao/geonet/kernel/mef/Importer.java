@@ -42,7 +42,6 @@ import org.fao.geonet.exceptions.UnAuthorizedException;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.datamanager.*;
-import org.fao.geonet.kernel.datamanager.draft.DraftMetadataUtils;
 import org.fao.geonet.kernel.search.IndexingMode;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
@@ -284,19 +283,7 @@ public class Importer {
                     throw new Exception("Unknown schema");
 
                 if (isTemplate[0] == null) {
-                    Element generalElem = info.getChild("general");
-                    if (generalElem != null) {
-                        String isTemplateStr = generalElem.getChildText("isTemplate");
-                        if (isTemplateStr != null && !isTemplateStr.trim().isEmpty()) {
-                            if ("false".equalsIgnoreCase(isTemplateStr.trim())) {
-                                isTemplate[0] = MetadataType.METADATA;
-                            } else if ("true".equalsIgnoreCase(isTemplateStr.trim())) {
-                                isTemplate[0] = MetadataType.TEMPLATE;
-                            } else {
-                                isTemplate[0] = org.fao.geonet.domain.MetadataType.lookup(isTemplateStr.trim());
-                            }
-                        }
-                    }
+                    readTypeFromInfo(info, isTemplate);
                 }
                 // Handle non MEF files insertion
                 if (info.getChildren().isEmpty()) {
@@ -729,6 +716,21 @@ public class Importer {
         return Xml.loadString(data.replace(oldUuid, newUuid), false);
     }
 
+    private static void readTypeFromInfo(Element info, MetadataType[] isTemplate) {
+        Element generalElem = info.getChild("general");
+        if (generalElem != null) {
+            String isTemplateStr = generalElem.getChildText("isTemplate");
+            if (isTemplateStr != null && !isTemplateStr.trim().isEmpty()) {
+                if ("false".equalsIgnoreCase(isTemplateStr.trim())) {
+                    isTemplate[0] = MetadataType.METADATA;
+                } else if ("true".equalsIgnoreCase(isTemplateStr.trim())) {
+                    isTemplate[0] = MetadataType.TEMPLATE;
+                } else {
+                    isTemplate[0] = MetadataType.lookup(isTemplateStr.trim());
+                }
+            }
+        }
+    }
 }
 
 // =============================================================================
