@@ -16,6 +16,7 @@ Ask in a comment if you have troubles with any of them. -->
 - [ ] *User documentation* provided for new features or enhancements in [manual](https://github.com/geonetwork/core-geonetwork/tree/main/docs/manual)
 - [ ] *Build documentation* provided for development instructions in `README.md` files
 - [ ] *Library management* using `pom.xml` dependency management. Update build documentation with intended library use and library tutorials or documentation
+- [ ] I have thoroughly **reviewed and appropriated any AI/LLM generated content** in this contribution (leave blank if none)
 
 <!--Submitting the PR does not require you to check all items, but by the time it gets merged, they should be either satisfied or not applicable.-->
 
