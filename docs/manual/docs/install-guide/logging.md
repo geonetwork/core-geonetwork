@@ -26,12 +26,13 @@ using Tomcat).
 
 ## Setting the Loglevel
 
-GeoNetwork by default has 4 log levels: PROD, INDEX, SEARCH, DEV.
+GeoNetwork by default has 5 log levels: PROD, INDEX, SEARCH, DEV, JSON.
 
 -   PROD is the default option, it will only log critical errors.
 -   INDEX is similar to PROD, but with extended logging around the indexation process.
 -   Search is similar to PROD, but with extended logging around the search process.
 -   DEV is the most extended level, all debug messages will be logged.
+-   JSON outputs structured JSON logs suitable for log aggregation tools such as Elasticsearch/Kibana (ELK stack).
 
 You can set the log level from the Admin --> Settings page.
 
@@ -41,7 +42,23 @@ You can set the log level from the Admin --> Settings page.
 
 GeoNetwork uses [Apache log4j](https://logging.apache.org/log4j) for logging. 
 The log4j configuration files are located in the **`/WEB-INF/classes`** directory of the GeoNetwork web application:
-**`/WEB-INF/classes/log4j2.xml`**, **`/WEB-INF/classes/log4j2-dev.xml`** and **`/WEB-INF/classes/log4j2-index.xml`**.
+**`/WEB-INF/classes/log4j2.xml`**, **`/WEB-INF/classes/log4j2-dev.xml`**, **`/WEB-INF/classes/log4j2-index.xml`** and **`/WEB-INF/classes/log4j2-json.xml`**.
 The configuration file configures for each debug level at what severity messages will be logged.
 
 The file used is determined by the log level set in the *Admin* → *Settings* page.
+
+## JSON logging
+
+The **JSON** log level uses `log4j2-json.xml` which replaces the default `PatternLayout` with Log4j2's `JsonTemplateLayout`. This produces structured JSON output on both the console and the rolling log file, making it suitable for ingestion by log aggregation tools such as the ELK stack (Elasticsearch, Logstash, Kibana).
+
+Each log event is output as a JSON object with the following fields:
+
+-   `@timestamp` — event timestamp in ISO 8601 format
+-   `level` — log level (e.g. ERROR, INFO, DEBUG)
+-   `loggerName` — the logger that produced the event
+-   `message` — the log message
+-   `exception` — stack trace, if present
+
+To activate JSON logging, go to *Admin* → *Settings* and select **JSON** from the log level dropdown.
+
+The `JsonTemplateLayout` is provided by the `log4j-layout-template-json` library which is included in GeoNetwork's dependencies. Harvester logs continue to use plain-text `PatternLayout` as they are consumed separately.
