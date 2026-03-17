@@ -110,9 +110,10 @@ public final class Xml {
         + "]";
     public static final String XML_VERSION_HEADER = "<\\?xml version=['\"]1.0['\"] encoding=['\"].*['\"]\\?>\\s*";
 
-    // cf. https://github.com/geonetwork/core-geonetwork/pull/8994
+    // see documentation, advanced-configuration.md.
     // switching from tiny (1) to tinyc (2) saxon tree model
-    // default being tiny, but tinyc is faster
+    // (when saxon version does not support tinyc, asking for 2 will default to linked (0))
+    // default being tiny, but tinyc (or linked) is faster
     public static final int SAXON_TREE_MODEL = Integer.parseInt(System.getProperty("SAXON_TREE_MODEL", "2"));
 
     public static SAXBuilder getSAXBuilder(boolean validate) {
