@@ -283,7 +283,11 @@ public class Importer {
                     throw new Exception("Unknown schema");
 
                 if (isTemplate[0] == null) {
-                    readTypeFromInfo(info, isTemplate);
+                    try {
+                        readTypeFromInfo(info, isTemplate);
+                    } catch (RuntimeException e) {
+                        isTemplate[0] = MetadataType.METADATA;
+                    }
                 }
                 // Handle non MEF files insertion
                 if (info.getChildren().isEmpty()) {
