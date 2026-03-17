@@ -79,7 +79,7 @@ public class Importer {
         String style = Util.getParam(params, Params.STYLESHEET, "_none_");
         String uuidAction = Util.getParam(params, Params.UUID_ACTION, Params.NOTHING);
         String source = Util.getParam(params, Params.SITE_ID, context.getBean(SettingManager.class).getSiteId());
-        MetadataType isTemplate = MetadataType.lookup(Util.getParam(params, Params.TEMPLATE, "n"));
+        MetadataType isTemplate = Util.getParam(params, Params.TEMPLATE, null) == null ? null : MetadataType.lookup(Util.getParam(params, Params.TEMPLATE));
         String category = Util.getParam(params, Params.CATEGORY, "");
         String groupId = Util.getParam(params, Params.GROUP, "");
         boolean validate = Util.getParam(params, Params.VALIDATE, "off").equals("on");
@@ -283,20 +283,21 @@ public class Importer {
                 if (schema == null)
                     throw new Exception("Unknown schema");
 
-                Element generalElem = info.getChild("general");
-                if (generalElem != null) {
-                    String isTemplateStr = generalElem.getChildText("isTemplate");
-                    if (isTemplateStr != null && !isTemplateStr.trim().isEmpty()) {
-                        if ("false".equalsIgnoreCase(isTemplateStr.trim())) {
-                            isTemplate[0] = MetadataType.METADATA;
-                        } else if ("true".equalsIgnoreCase(isTemplateStr.trim())) {
-                            isTemplate[0] = MetadataType.TEMPLATE;
-                        } else {
-                            isTemplate[0] = org.fao.geonet.domain.MetadataType.lookup(isTemplateStr.trim());
+                if (isTemplate[0] == null) {
+                    Element generalElem = info.getChild("general");
+                    if (generalElem != null) {
+                        String isTemplateStr = generalElem.getChildText("isTemplate");
+                        if (isTemplateStr != null && !isTemplateStr.trim().isEmpty()) {
+                            if ("false".equalsIgnoreCase(isTemplateStr.trim())) {
+                                isTemplate[0] = MetadataType.METADATA;
+                            } else if ("true".equalsIgnoreCase(isTemplateStr.trim())) {
+                                isTemplate[0] = MetadataType.TEMPLATE;
+                            } else {
+                                isTemplate[0] = org.fao.geonet.domain.MetadataType.lookup(isTemplateStr.trim());
+                            }
                         }
                     }
                 }
-
                 // Handle non MEF files insertion
                 if (info.getChildren().isEmpty()) {
                     if (category != null) {
