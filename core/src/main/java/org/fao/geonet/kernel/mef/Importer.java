@@ -718,17 +718,13 @@ public class Importer {
 
     private static void readTypeFromInfo(Element info, MetadataType[] isTemplate) {
         Element generalElem = info.getChild("general");
-        if (generalElem != null) {
-            String isTemplateStr = generalElem.getChildText("isTemplate");
-            if (isTemplateStr != null && !isTemplateStr.trim().isEmpty()) {
-                if ("false".equalsIgnoreCase(isTemplateStr.trim())) {
-                    isTemplate[0] = MetadataType.METADATA;
-                } else if ("true".equalsIgnoreCase(isTemplateStr.trim())) {
-                    isTemplate[0] = MetadataType.TEMPLATE;
-                } else {
-                    isTemplate[0] = MetadataType.lookup(isTemplateStr.trim());
-                }
-            }
+        String isTemplateStr = generalElem.getChildText("isTemplate");
+        if ("false".equalsIgnoreCase(isTemplateStr.trim())) {
+            isTemplate[0] = MetadataType.METADATA;
+        } else if ("true".equalsIgnoreCase(isTemplateStr.trim())) {
+            isTemplate[0] = MetadataType.TEMPLATE;
+        } else {
+            isTemplate[0] = MetadataType.lookup(isTemplateStr.trim());
         }
     }
 }
