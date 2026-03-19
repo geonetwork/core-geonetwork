@@ -91,7 +91,7 @@ public class AllThesaurus extends Thesaurus {
     }
 
     @VisibleForTesting
-    static String buildKeywordUri(String thesaurusKey, String uri) {
+    public static String buildKeywordUri(String thesaurusKey, String uri) {
         try {
             thesaurusKey = URLEncoder.encode(thesaurusKey, Constants.ENCODING);
 //            uri = URLEncoder.encode(uri, Constants.ENCODING);

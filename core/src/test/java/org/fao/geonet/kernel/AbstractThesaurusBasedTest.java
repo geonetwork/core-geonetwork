@@ -93,7 +93,7 @@ public abstract class AbstractThesaurusBasedTest {
 
         this.thesaurusFile = directory.resolve("testThesaurus.rdf");
         this.thesaurus = new Thesaurus(isoLangMapper, thesaurusFile.getFileName().toString(), null, null, "test", "test",
-            thesaurusFile, "http://concept", true, 0);
+            thesaurusFile, "http://concept", true, 5);
         this.thesaurus.initRepository();
     }
 
