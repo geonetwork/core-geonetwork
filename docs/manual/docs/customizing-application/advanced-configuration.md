@@ -11,3 +11,12 @@ Default session timeout is set to 35 minutes (See [User session](../administrato
 ```
 
 For developers, the timeout is defined as a build property and can be customized in filters. See `web/src/main/filters/dev.properties#L20`
+
+## Saxon tree model configuration
+By default, Saxon uses the TinyTree model to represent XML documents in memory. This is a compact and efficient representation suitable for most applications.
+In the case of GN, it can be measured (running edit.xsl transformation), that linked or tinyc tree models are faster than tiny tree model.
+So Saxon is configured to use tinyc if available, and linked if tinyc not available.
+
+One can choose to use tiny tree model by setting SAXON_TREE_MODEL system property to 1 at startup.
+
+
