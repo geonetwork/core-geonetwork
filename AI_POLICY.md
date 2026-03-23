@@ -2,22 +2,22 @@
 
 ## Summary
 
-* Contributors must appropriate the output of the AI/LLM tools
+* Contributors must take full ownership of the output of AI/LLM tools
 * Contributors must disclose which parts of their contributions were done by AI/LLM tools
-* Failure to show accountability or answer questions will result in a rebuttal of the submission
+* Failure to show accountability or answer questions will result in a rejection of the submission
 * Agents that take action in our digital spaces (e.g. `@copilot`) without human approval are banned
 
 ## Policy
 
-GeoNetwork's policy is that contributors can use whatever tools they would like to craft their contributions, but the
-output of these tools must be **appropriated by said contributors** before submission.
+GeoNetwork's policy is that contributors can use whatever tools they would like to craft their contributions, but **they have to take full ownership of the
+output of these tools** before submission.
 This means that contributors must carefully read and review all AI (Artificial Intelligence) / Large Language Model (LLM)-generated code or text before they ask other project members to review it.
 
 The contributor is always the author and is **fully accountable** for their contributions.
 Contributors should be sufficiently confident that the contribution is high enough quality that asking for a review is a
 good use of scarce maintainer time, and they should be **able to answer questions about their work** during review. "The LLM said so" is *not* an acceptable answer.
 
-Failure to prove accountability or provide answers will result in a **straightforward rebuttal** of the proposed
+Failure to prove accountability or provide answers will result in a **straightforward rejection** of the proposed
 contribution for further improvement.
 
 We aspire to be a welcoming community that helps new contributors grow their expertise, but learning involves taking
@@ -53,7 +53,7 @@ As another example, using an LLM to generate documentation, which a contributor 
 
 ## Extractive Contributions
 
-The reason for our "appropriation" contribution policy is that processing
+The reason for our "taking ownership" contribution policy is that processing
 PRs, comments, issues, proposals to GeoNetwork is not free -- it takes a lot of maintainer
 time and energy to review those contributions. Sending the
 unreviewed output of an LLM to open source project maintainers *extracts* work
