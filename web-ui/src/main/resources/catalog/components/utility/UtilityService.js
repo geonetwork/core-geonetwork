@@ -594,17 +594,10 @@
     "gnGlobalSettings",
     function (gnGlobalSettings) {
       return function (date, format, contextAllowToUseFromNow) {
-        var isDateGmlFormat = /[Zz]$/.test(date);
         var isDateTimeFormat = date.includes("T");
         var settingAllowToUseFromNow = gnGlobalSettings.gnCfg.mods.global.humanizeDates;
         var timezone = gnGlobalSettings.gnCfg.mods.global.timezone;
-        var parsedDate = null;
-
-        if (isDateGmlFormat) {
-          parsedDate = moment(date, "YYYY-MM-DDtHH-mm-SSSZ");
-        } else {
-          parsedDate = moment(date);
-        }
+        var parsedDate = moment(date);
 
         if (parsedDate.isValid()) {
           if (!!timezone && isDateTimeFormat) {
