@@ -1844,9 +1844,10 @@
               scope.selectUploadedResource = function (res) {
                 if (res && res.url) {
                   var o = {
-                    url: res.url
+                    url: res.url,
+                    name: res.filename
                   };
-                  ["url"].forEach(function (pName) {
+                  ["url", "name"].forEach(function (pName) {
                     setParameterValue(pName, o[pName]);
                   });
                   scope.params.protocol = scope.params.protocol || "WWW:DOWNLOAD";
