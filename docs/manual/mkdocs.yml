@@ -275,7 +275,6 @@ nav:
       - 'Updating a set of records':
         - user-guide/workflow/batchupdate/index.md
         - user-guide/workflow/batchediting.md
-        - user-guide/workflow/batchupdate-from-admin.md
         - user-guide/workflow/batchupdate-xsl.md
       - user-guide/workflow/geopublication.md
       - user-guide/workflow/life-cycle.md

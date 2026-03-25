@@ -2,30 +2,14 @@
 
 ## Applying changes {#batch-process-apply}
 
-Administrator user can use the catalog API to update a set of records with an XSLT transformation. The steps are the following:
+Editor users can use the catalog API to update a set of records with an XSLT transformation. The steps are the following:
 
--   Sign in as admin user
--   Search records to be updated using the `q` service eg. select all templates in a specific standard: <http://localhost:8080/geonetwork/srv/eng/q?_schema=iso19115-3&_isTemplate=y>
--   Select all records matching the search with <http://localhost:8080/geonetwork/srv/eng/metadata.select?selected=add-all>
--   Trigger the process with <http://localhost:8080/geonetwork/srv/eng/md.processing.batch?process=my-custom-process>
--   Check the progress report with <http://localhost:8080/geonetwork/srv/eng/md.processing.batch.report>
-
-At the end of the process, a summary describes:
-
--   Number of records to process
--   Number of records to processed
--   Number of records not found (in case one record gets deleted since the selection)
--   Number of records with errors
--   Number of records with process not defined in its standard
--   Number of records that current user can't edit
-
-A process can also be applied to one metadata record using the `md.processing` service. eg. <http://localhost:8080/geonetwork/srv/eng/md.processing?uuid=46eac9e4-33cb-45b7-a104-7bcc8e654c98&process=keywords-mapper&search=water&replace=Water>
-
-Parameters are:
-
--   uuid or id: the metadata UUID or the metadata internal identifier
--   process: The process identifier
--   add other extra parameters depending on the process (see below).
+-   Sign in as editor user or higher profile.
+-   In the search page or the editor board page, select the metadata to be updated.
+-   In the API page, use the process API http://localhost:8080/geonetwork/doc/api/index.html#/processes/processRecords where you can configure:
+    - a set of metadata UUIDs to be updated or a search selection bucket. If you have done the selection from the search page use the bucket name `s101` or `e101` if you have done the selection from the editor board page and 
+    - the process to apply. 
+-   You can also use first in the API page, the preview API http://localhost:8080/geonetwork/doc/api/index.html#/processes/previewProcessRecords to preview the changes that will be applied, using the same parameters.
 
 ## Adding batch process {#batch-process-add}
 
