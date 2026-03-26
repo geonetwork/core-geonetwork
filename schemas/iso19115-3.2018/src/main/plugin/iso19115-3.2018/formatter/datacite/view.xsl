@@ -455,76 +455,79 @@ eg.
             </datacite:nameIdentifier>
           </xsl:for-each>
 
-          <xsl:apply-templates mode="toDataciteLocalized" select="cit:party/*/cit:name">
-            <xsl:with-param name="template">
-              <datacite:affiliation/>
-            </xsl:with-param>
-          </xsl:apply-templates>
+          <xsl:apply-templates mode="toDataciteAffiliation"
+                               select="cit:party/cit:CI_Organisation/cit:name"/>
         </datacite:creator>
       </xsl:for-each>
     </datacite:creators>
 
 
 
-    <datacite:contributors>
-      <xsl:for-each select="../mri:pointOfContact/*[not(cit:role/*/@codeListValue = $notContributorRoles)]">
-        <xsl:variable name="contributorType"
-                      select="$contributorTypes[@key = current()/cit:role/*/@codeListValue]"/>
-        <datacite:contributor>
-          <xsl:attribute name="contributorType" select="$contributorType"/>
-          <xsl:choose>
-            <xsl:when test="cit:party/*/cit:individual/*/cit:name/*/text() != ''">
-              <datacite:contributorName nameType="Personal">
-                <xsl:value-of select="cit:party/*/cit:individual/*/cit:name/*/text()"/>
-              </datacite:contributorName>
-            </xsl:when>
-            <xsl:otherwise>
-              <datacite:contributorName nameType="Organizational">
-                <xsl:value-of select="cit:party/*/cit:name/*/text()"/>
-              </datacite:contributorName>
-            </xsl:otherwise>
-          </xsl:choose>
+    <xsl:variable name="contributors"
+                  select="../mri:pointOfContact/*[not(cit:role/*/@codeListValue = $notContributorRoles)]"/>
+    <xsl:if test="$contributors">
+      <datacite:contributors>
+        <xsl:for-each select="$contributors">
+          <xsl:variable name="contributorType"
+                        select="$contributorTypes[@key = current()/cit:role/*/@codeListValue]"/>
+          <datacite:contributor>
+            <xsl:attribute name="contributorType" select="$contributorType"/>
+            <xsl:choose>
+              <xsl:when test="cit:party/*/cit:individual/*/cit:name/*/text() != ''">
+                <datacite:contributorName nameType="Personal">
+                  <xsl:value-of select="cit:party/*/cit:individual/*/cit:name/*/text()"/>
+                </datacite:contributorName>
+              </xsl:when>
+              <xsl:otherwise>
+                <datacite:contributorName nameType="Organizational">
+                  <xsl:value-of select="cit:party/*/cit:name/*/text()"/>
+                </datacite:contributorName>
+              </xsl:otherwise>
+            </xsl:choose>
 
-          <xsl:for-each select="cit:party//cit:partyIdentifier/*[mcc:code/(gco:CharacterString|gcx:Anchor) != '']">
-            <datacite:nameIdentifier nameIdentifierScheme="{mcc:codeSpace/gco:CharacterString}">
-              <xsl:value-of select="mcc:code/(gco:CharacterString|gcx:Anchor)"/>
-            </datacite:nameIdentifier>
-          </xsl:for-each>
+            <xsl:for-each select="cit:party//cit:partyIdentifier/*[mcc:code/(gco:CharacterString|gcx:Anchor) != '']">
+              <datacite:nameIdentifier nameIdentifierScheme="{mcc:codeSpace/gco:CharacterString}">
+                <xsl:value-of select="mcc:code/(gco:CharacterString|gcx:Anchor)"/>
+              </datacite:nameIdentifier>
+            </xsl:for-each>
 
-          <xsl:apply-templates mode="toDataciteLocalized" select="cit:party/*/cit:name">
-            <xsl:with-param name="template">
-              <datacite:affiliation/>
-            </xsl:with-param>
-          </xsl:apply-templates>
-        </datacite:contributor>
-      </xsl:for-each>
-    </datacite:contributors>
+            <xsl:apply-templates mode="toDataciteAffiliation"
+                                 select="cit:party/cit:CI_Organisation/cit:name"/>
+          </datacite:contributor>
+        </xsl:for-each>
+      </datacite:contributors>
+    </xsl:if>
 
 
-    <datacite:fundingReferences>
-      <xsl:for-each select="../mri:pointOfContact/*[cit:role/*/@codeListValue = 'funder']">
-        <datacite:fundingReference>
-          <xsl:choose>
-            <xsl:when test="cit:party/*/cit:individual/*/cit:name/*/text() != ''">
-              <datacite:funderName>
-                <xsl:value-of select="cit:party/*/cit:individual/*/cit:name/*/text()"/>
-              </datacite:funderName>
-            </xsl:when>
-            <xsl:otherwise>
-              <datacite:funderName>
-                <xsl:value-of select="cit:party/*/cit:name/*/text()"/>
-              </datacite:funderName>
-            </xsl:otherwise>
-          </xsl:choose>
+    <xsl:variable name="funders"
+                  select="../mri:pointOfContact/*[cit:role/*/@codeListValue = 'funder']"/>
 
-          <xsl:for-each select="cit:party//cit:partyIdentifier/*[mcc:code/(gco:CharacterString|gcx:Anchor) != '']">
-            <datacite:funderIdentifier funderIdentifierType="{mcc:codeSpace/gco:CharacterString}">
-              <xsl:value-of select="mcc:code/(gco:CharacterString|gcx:Anchor)"/>
-            </datacite:funderIdentifier>
-          </xsl:for-each>
-        </datacite:fundingReference>
-      </xsl:for-each>
-    </datacite:fundingReferences>
+    <xsl:if test="$funders">
+      <datacite:fundingReferences>
+        <xsl:for-each select="$funders">
+          <datacite:fundingReference>
+            <xsl:choose>
+              <xsl:when test="cit:party/*/cit:individual/*/cit:name/*/text() != ''">
+                <datacite:funderName>
+                  <xsl:value-of select="cit:party/*/cit:individual/*/cit:name/*/text()"/>
+                </datacite:funderName>
+              </xsl:when>
+              <xsl:otherwise>
+                <datacite:funderName>
+                  <xsl:value-of select="cit:party/*/cit:name/*/text()"/>
+                </datacite:funderName>
+              </xsl:otherwise>
+            </xsl:choose>
+
+            <xsl:for-each select="cit:party//cit:partyIdentifier/*[mcc:code/(gco:CharacterString|gcx:Anchor) != '']">
+              <datacite:funderIdentifier funderIdentifierType="{mcc:codeSpace/gco:CharacterString}">
+                <xsl:value-of select="mcc:code/(gco:CharacterString|gcx:Anchor)"/>
+              </datacite:funderIdentifier>
+            </xsl:for-each>
+          </datacite:fundingReference>
+        </xsl:for-each>
+      </datacite:fundingReferences>
+    </xsl:if>
   </xsl:template>
 
   <!--
@@ -542,7 +545,7 @@ eg.
   -->
 
   <xsl:variable name="publisherRoles"
-                select="('publisher')"/>
+                select="('publisher', 'custodian')"/>
 
   <xsl:template mode="toDatacite"
                 match="mdb:distributionInfo[1]">
@@ -597,6 +600,20 @@ eg.
     </datacite:formats>
   </xsl:template>
 
+
+  <xsl:template mode="toDataciteAffiliation"
+                match="cit:CI_Organisation/cit:name">
+    <xsl:apply-templates mode="toDataciteLocalized" select="current()">
+      <xsl:with-param name="template">
+        <datacite:affiliation>
+          <xsl:if test="gcx:Anchor/@xlink:href">
+            <xsl:attribute name="affiliationIdentifier"
+                           select="gcx:Anchor/@xlink:href"/>
+          </xsl:if>
+        </datacite:affiliation>
+      </xsl:with-param>
+    </xsl:apply-templates>
+  </xsl:template>
 
 
   <!--
@@ -761,12 +778,12 @@ eg.
     <entry key="revision">Updated</entry>
     <entry key="publication">Issued</entry>
     <entry key="adopted">Accepted</entry>
-    <entry key="released">Submitted</entry>
+<!--    <entry key="released">Submitted</entry>-->
     <entry key="validityBegins">Valid</entry>
     <entry key="expiry">Withdrawn</entry>
     <entry key="superseded">Withdrawn</entry>
     <entry key="deprecated">Withdrawn</entry>
-    <entry key="distribution">Available</entry>
+    <entry key="released">Available</entry>
 <!--    <entry key="">Copyrighted</entry>
     <entry key="">Collected</entry>
     <entry key="">Coverage</entry>

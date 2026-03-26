@@ -317,6 +317,17 @@
               </cit:dateType>
             </cit:CI_Date>
           </cit:date>
+          <cit:date>
+            <cit:CI_Date>
+              <cit:date>
+                <gco:Date>2025-01-17</gco:Date>
+              </cit:date>
+              <cit:dateType>
+                <cit:CI_DateTypeCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_DateTypeCode"
+                                     codeListValue="released"/>
+              </cit:dateType>
+            </cit:CI_Date>
+          </cit:date>
           <cit:edition>
             <gco:CharacterString>1.0</gco:CharacterString>
           </cit:edition>
@@ -679,6 +690,38 @@
                   </mcc:codeSpace>
                 </mcc:MD_Identifier>
               </cit:partyIdentifier>
+            </cit:CI_Organisation>
+          </cit:party>
+        </cit:CI_Responsibility>
+      </mri:pointOfContact>
+      <mri:pointOfContact>
+        <cit:CI_Responsibility>
+          <cit:role>
+            <cit:CI_RoleCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_RoleCode"
+                             codeListValue="collaborator"/>
+          </cit:role>
+          <cit:party>
+            <cit:CI_Organisation>
+              <cit:name>
+                <gcx:Anchor xlink:href="https://ror.org/05hnb7x64">BRGM</gcx:Anchor>
+              </cit:name>
+              <cit:partyIdentifier>
+                <mcc:MD_Identifier>
+                  <mcc:code>
+                    <gco:CharacterString>https://ror.org/05hnb7x64</gco:CharacterString>
+                  </mcc:code>
+                  <mcc:codeSpace>
+                    <gco:CharacterString>ROR</gco:CharacterString>
+                  </mcc:codeSpace>
+                </mcc:MD_Identifier>
+              </cit:partyIdentifier>
+              <cit:individual>
+                <cit:CI_Individual>
+                  <cit:name>
+                    <gco:CharacterString>COURIER Entin</gco:CharacterString>
+                  </cit:name>
+                </cit:CI_Individual>
+              </cit:individual>
             </cit:CI_Organisation>
           </cit:party>
         </cit:CI_Responsibility>
