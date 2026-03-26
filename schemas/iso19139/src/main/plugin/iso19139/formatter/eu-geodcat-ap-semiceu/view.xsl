@@ -84,6 +84,7 @@
   xmlns:vcard  = "http://www.w3.org/2006/vcard/ns#"
   xmlns:wdrs   = "http://www.w3.org/2007/05/powder-s#"
   xmlns:xlink  = "http://www.w3.org/1999/xlink"
+    xmlns:xs     = "http://www.w3.org/2001/XMLSchema"
   xmlns:xsi    = "http://www.w3.org/2001/XMLSchema-instance"
   xmlns:xsl    = "http://www.w3.org/1999/XSL/Transform"
   exclude-result-prefixes="#all"
@@ -190,6 +191,24 @@
       </xsl:otherwise>
     </xsl:choose>
   </xsl:variable>
+
+<!-- Parameter $locale-prefix -->
+<!--
+  This parameter specifies the prefix (can be empty) used in ISO 19139 language tags
+-->
+
+<!--  <xsl:param name="locale-prefix">locale-</xsl:param>-->
+  <!-- GeoNetwork does not set any prefix by default.
+  Another approach would be to get the language id ref from the metadata language elements.  -->
+  <xsl:param name="locale-prefix"></xsl:param>
+
+<!-- Parameter $locale-default-lang -->
+<!--
+  This parameter specifies the default language tag used in ISO 19139 language tags
+-->
+
+  <xsl:param name="locale-default-lang">en</xsl:param>
+
 
   <!-- Parameter $include-deprecated -->
   <!--
@@ -424,6 +443,9 @@
   -->
   <xsl:function name="local:getTextContent">
     <xsl:param name="element"/>
+
+    <xsl:variable name="localeId" select="concat('#', $locale-prefix, $locale-default-lang)"/>
+
     <xsl:choose>
       <!-- Handle gmx:Anchor -->
       <xsl:when test="$element/gmx:Anchor">
@@ -436,8 +458,10 @@
       <!-- Handle PT_FreeText with LocalisedCharacterStrings -->
       <xsl:when test="$element/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString">
         <xsl:choose>
-          <!-- Try to find English locale first -->
-          <xsl:when test="$element/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[@locale='#locale-en']">
+<!--          <xsl:when test="$element/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[@locale = $localeId]">
+            <xsl:value-of select="normalize-space($element/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[@locale = $localeId][1])"/>
+          </xsl:when>-->
+      <xsl:when test="$element/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[@locale='#locale-en']">
             <xsl:value-of select="normalize-space($element/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[@locale='#locale-en'][1])"/>
           </xsl:when>
           <!-- Otherwise use the first available LocalisedCharacterString -->
@@ -636,20 +660,22 @@
     </xsl:param>
 
     <!-- Resource language: corresponding Alpha-2 codes -->
-
-    <xsl:param name="orrlang">
-      <!-- TODO: Add support for more than one -->
-      <xsl:variable name="resourceFirstLanguage"
-                    select="gmd:identificationInfo/*/gmd:language[1]"/>
+    <xsl:param name="orrlang" as="xs:string*">
       <xsl:choose>
-        <xsl:when test="$resourceFirstLanguage/gmd:LanguageCode/@codeListValue != ''">
-          <xsl:value-of select="translate($resourceFirstLanguage/gmd:LanguageCode/@codeListValue,$uppercase,$lowercase)"/>
+        <xsl:when test="gmd:identificationInfo/*/gmd:language[1]/gmd:LanguageCode/@codeListValue">
+          <xsl:for-each select="gmd:identificationInfo/*/gmd:language/gmd:LanguageCode/@codeListValue">
+            <xsl:sequence select="translate(.,$uppercase,$lowercase)"/>
+          </xsl:for-each>
         </xsl:when>
-        <xsl:when test="$resourceFirstLanguage/gmd:LanguageCode != ''">
-          <xsl:value-of select="translate($resourceFirstLanguage/gmd:LanguageCode,$uppercase,$lowercase)"/>
+        <xsl:when test="gmd:identificationInfo/*/gmd:language[1]/gmd:LanguageCode">
+          <xsl:for-each select="gmd:identificationInfo/*/gmd:language/gmd:LanguageCode">
+            <xsl:sequence select="translate(.,$uppercase,$lowercase)"/>
+          </xsl:for-each>
         </xsl:when>
-        <xsl:when test="$resourceFirstLanguage/gco:CharacterString != ''">
-          <xsl:value-of select="translate($resourceFirstLanguage/gco:CharacterString,$uppercase,$lowercase)"/>
+        <xsl:when test="gmd:identificationInfo/*/gmd:language[1]/gco:CharacterString">
+          <xsl:for-each select="gmd:identificationInfo/*/gmd:language/gco:CharacterString">
+            <xsl:sequence select="translate(.,$uppercase,$lowercase)"/>
+          </xsl:for-each>
         </xsl:when>
       </xsl:choose>
     </xsl:param>
@@ -781,7 +807,7 @@
     <xsl:param name="ResourceAbstract">
       <xsl:for-each select="gmd:identificationInfo[1]/*/gmd:abstract">
         <dct:description xml:lang="{$MetadataLanguage}">
-          <xsl:value-of select="normalize-space(gco:CharacterString)"/>
+          <xsl:value-of select="gco:CharacterString"/>
         </dct:description>
         <xsl:call-template name="LocalisedString">
           <xsl:with-param name="term">dct:description</xsl:with-param>
@@ -808,7 +834,7 @@
       <xsl:for-each select="gmd:dataQualityInfo/*/gmd:lineage/*/gmd:statement">
         <dct:provenance>
           <dct:ProvenanceStatement>
-            <dct:description xml:lang="{$MetadataLanguage}"><xsl:value-of select="normalize-space(gco:CharacterString)"/></dct:description>
+            <dct:description xml:lang="{$MetadataLanguage}"><xsl:value-of select="gco:CharacterString"/></dct:description>
             <xsl:call-template name="LocalisedString">
               <xsl:with-param name="term">dct:description</xsl:with-param>
             </xsl:call-template>
@@ -829,19 +855,6 @@
           <xsl:value-of select="normalize-space(gmd:dateStamp/gco:DateTime/text())"/>
         </xsl:when>
       </xsl:choose>
-    </xsl:param>
-
-    <xsl:param name="UniqueResourceIdentifier">
-      <xsl:for-each select="gmd:identificationInfo[1]/*/gmd:citation/*/gmd:identifier/*">
-        <xsl:choose>
-          <xsl:when test="gmd:codeSpace/gco:CharacterString/text() != ''">
-            <xsl:value-of select="concat(gmd:codeSpace/gco:CharacterString/text(),gmd:code/gco:CharacterString/text())"/>
-          </xsl:when>
-          <xsl:otherwise>
-            <xsl:value-of select="gmd:code/gco:CharacterString/text()"/>
-          </xsl:otherwise>
-        </xsl:choose>
-      </xsl:for-each>
     </xsl:param>
 
     <xsl:param name="ConstraintsRelatedToAccessAndUse">
@@ -960,7 +973,7 @@
         <xsl:variable name="explanation">
           <xsl:for-each select="../../gmd:explanation">
             <dct:description xml:lang="{$MetadataLanguage}">
-              <xsl:value-of select="normalize-space(gco:CharacterString)"/>
+              <xsl:value-of select="gco:CharacterString"/>
             </dct:description>
             <xsl:call-template name="LocalisedString">
               <xsl:with-param name="term">dct:description</xsl:with-param>
@@ -1239,7 +1252,7 @@
       <xsl:copy-of select="$ResourceTitle"/>
       <!--
             <dct:description xml:lang="{$MetadataLanguage}">
-              <xsl:value-of select="normalize-space($ResourceAbstract)"/>
+        <xsl:value-of select="$ResourceAbstract"/>
             </dct:description>
       -->
       <xsl:copy-of select="$ResourceAbstract"/>
@@ -1283,10 +1296,12 @@
       <!-- Resource Language -->
       <xsl:if test="$ResourceType = 'dataset' or $ResourceType = 'series'">
         <xsl:choose>
-          <xsl:when test="$orrlang != ''">
-            <dct:language>
-              <dct:LinguisticSystem rdf:about="{concat($oplang,translate($orrlang,$lowercase,$uppercase))}"/>
-            </dct:language>
+          <xsl:when test="$orrlang[1]">
+            <xsl:for-each select="$orrlang">
+              <dct:language>
+                  <dct:LinguisticSystem rdf:about="{concat($oplang,translate(.,$lowercase,$uppercase))}"/>
+              </dct:language>
+            </xsl:for-each>
           </xsl:when>
           <xsl:otherwise>
             <!-- To be decided (when the resource language is not specified, it defaults to the metadata language): -->
@@ -1329,7 +1344,7 @@
                 <dct:provenance>
                   <dct:ProvenanceStatement>
                     <rdfs:label xml:lang="{$MetadataLanguage}">
-                      <xsl:value-of select="normalize-space($Lineage)"/>
+              <xsl:value-of select="$Lineage"/>
                     </rdfs:label>
                   </dct:ProvenanceStatement>
                 </dct:provenance>
@@ -1379,11 +1394,27 @@
 
       <xsl:for-each select="gmd:distributionInfo/gmd:MD_Distribution">
         <!-- Encoding -->
-        <xsl:variable name="Encoding">
+        <xsl:variable name="DistributionFormat">
           <xsl:apply-templates mode="iso19139-to-dcatap" select="gmd:distributionFormat/gmd:MD_Format/gmd:name/*"/>
         </xsl:variable>
         <!-- Resource locators (access / download URLs) -->
-        <xsl:for-each select="gmd:transferOptions/*/gmd:onLine/*">
+        <xsl:for-each select="(gmd:transferOptions | gmd:distributor/gmd:MD_Distributor/gmd:distributorTransferOptions)/*/gmd:onLine/*">
+
+          <xsl:variable name="DistributorFormat">
+            <xsl:if test="../../../../gmd:distributorFormat">
+              <xsl:apply-templates mode="iso19139-to-dcatap" select="../../../../gmd:distributorFormat/gmd:MD_Format/gmd:name/*"/>
+            </xsl:if>
+          </xsl:variable>
+          <xsl:variable name="Encoding">
+            <xsl:choose>
+              <xsl:when test="$DistributorFormat != ''">
+                <xsl:copy-of select="$DistributorFormat"/>
+              </xsl:when>
+              <xsl:otherwise>
+                <xsl:copy-of select="$DistributionFormat"/>
+              </xsl:otherwise>
+            </xsl:choose>
+          </xsl:variable>
 
           <xsl:variable name="url" select="gmd:linkage/gmd:URL"/>
 
@@ -1407,7 +1438,7 @@
           <xsl:variable name="Description">
             <xsl:for-each select="gmd:description">
               <dct:description xml:lang="{$MetadataLanguage}">
-                <xsl:value-of select="normalize-space(*)"/>
+                <xsl:value-of select="*"/>
               </dct:description>
               <xsl:call-template name="LocalisedString">
                 <xsl:with-param name="term">dct:description</xsl:with-param>
@@ -1439,6 +1470,14 @@
               <xsl:otherwise>
                 <xsl:text>N/A</xsl:text>
               </xsl:otherwise>
+            </xsl:choose>
+          </xsl:variable>
+
+          <xsl:variable name="FileSize">
+            <xsl:choose>
+              <xsl:when test="../../gmd:transferSize/gco:Real != ''">
+                <dcat:byteSize rdf:datatype="{$xsd}nonNegativeInteger"><xsl:value-of select="format-number(round(../../gmd:transferSize/gco:Real * 1000000), '#')"/></dcat:byteSize>
+              </xsl:when>
             </xsl:choose>
           </xsl:variable>
 
@@ -1510,6 +1549,8 @@
                       <xsl:if test="$profile = $extended">
                         <xsl:copy-of select="$SpatialRepresentationType"/>
                       </xsl:if>
+<!-- File size -->
+                      <xsl:copy-of select="$FileSize"/>
                       <!-- Encoding -->
                       <xsl:copy-of select="$Encoding"/>
                       <!-- Resource character encoding -->
@@ -1624,8 +1665,14 @@
     <xsl:param name="code">
       <xsl:value-of select="gmd:code/gco:CharacterString"/>
     </xsl:param>
+    <xsl:param name="anchor">
+      <xsl:value-of select="gmd:code/gmx:Anchor"/>
+    </xsl:param>
     <xsl:param name="id">
       <xsl:choose>
+        <xsl:when test="$anchor != ''">
+          <xsl:value-of select="$anchor"/>
+        </xsl:when>
         <xsl:when test="$ns != ''">
           <xsl:choose>
             <xsl:when test="substring($ns,string-length($ns),1) = '/'">
@@ -3431,7 +3478,9 @@
 
   <!-- Encoding -->
 
-  <xsl:template mode="iso19139-to-dcatap" name="Encoding" match="gmd:distributionFormat/gmd:MD_Format/gmd:name/*">
+  <xsl:template mode="iso19139-to-dcatap" name="Encoding"
+                match="gmd:distributionFormat/gmd:MD_Format/gmd:name/*
+                            |gmd:distributorFormat/gmd:MD_Format/gmd:name/*">
     <xsl:param name="format-label">
       <xsl:value-of select="normalize-space(.)"/>
     </xsl:param>
@@ -4161,7 +4210,7 @@
       <xsl:variable name="value" select="normalize-space(.)"/>
       <xsl:variable name="langs">
         <xsl:call-template name="Alpha3-to-Alpha2">
-          <xsl:with-param name="lang" select="substring-after(translate(translate(@locale, $uppercase, $lowercase), '#', ''), 'locale-')"/>
+          <xsl:with-param name="lang" select="substring-after(translate(translate(@locale, $uppercase, $lowercase), '#', ''), $locale-prefix)"/>
         </xsl:call-template>
       </xsl:variable>
       <xsl:if test="$value != ''">
