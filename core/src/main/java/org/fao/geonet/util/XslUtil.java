@@ -708,15 +708,7 @@ public final class XslUtil {
         return "";
     }
 
-    public static String html2text(String html) {
-        return Jsoup.parse(html).wholeText();
-    }
-
-    public static String html2text(String htmlRaw, boolean substituteHtmlToTextLayoutElement) {
-        if (!substituteHtmlToTextLayoutElement) {
-            return html2text(htmlRaw);
-        }
-
+    public static String htmlElement2textReplacer(String htmlRaw) {
         String separator = "\n";
         String htmlWithoutNewlines = htmlRaw.replaceAll("[\n\r]", "");
         org.jsoup.nodes.Document doc = Jsoup.parse(htmlWithoutNewlines);
@@ -738,11 +730,15 @@ public final class XslUtil {
                 element.text(text + " (" + link + ")");
             }
         }
-
         return doc.wholeText().trim();
-
     }
-
+    public static String html2text(String html) {
+        return Jsoup.parse(html).wholeText();
+    }
+    public static String html2text(String html, boolean substituteHtmlToTextLayoutElement) {
+        return html2text(
+            substituteHtmlToTextLayoutElement ? htmlElement2textReplacer(html) : html);
+    }
     public static String html2textNormalized(String html) {
         return Jsoup.parse(html).text();
     }
