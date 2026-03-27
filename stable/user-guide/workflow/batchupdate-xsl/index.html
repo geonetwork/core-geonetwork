@@ -13,7 +13,7 @@
         <link rel="canonical" href="https://docs.geonetwork-opensource.org/4.2/user-guide/workflow/batchupdate-xsl/">
       
       
-        <link rel="prev" href="../batchupdate-from-admin/">
+        <link rel="prev" href="../batchediting/">
       
       
         <link rel="next" href="../geopublication/">
@@ -27,7 +27,7 @@
       
       
       <link rel="icon" href="../../../assets/images/geonetwork-logo.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.4">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
     
     
       
@@ -1236,8 +1236,6 @@
       
         
       
-        
-      
     
     
     
@@ -1307,34 +1305,6 @@
     
   
     Update records from edit console
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../batchupdate-from-admin/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Updating records from Admin console
   
 
     
@@ -2390,29 +2360,16 @@
 
 <h1 id="batchupdate_xsl">Update records using XSLT</h1>
 <h2 id="batch-process-apply">Applying changes</h2>
-<p>Administrator user can use the catalog API to update a set of records with an XSLT transformation. The steps are the following:</p>
+<p>Editor users can use the catalog API to update a set of records with an XSLT transformation. The steps are the following:</p>
 <ul>
-<li>Sign in as admin user</li>
-<li>Search records to be updated using the <code>q</code> service eg. select all templates in a specific standard: <a href="http://localhost:8080/geonetwork/srv/eng/q?_schema=iso19115-3&amp;_isTemplate=y">http://localhost:8080/geonetwork/srv/eng/q?_schema=iso19115-3&amp;_isTemplate=y</a></li>
-<li>Select all records matching the search with <a href="http://localhost:8080/geonetwork/srv/eng/metadata.select?selected=add-all">http://localhost:8080/geonetwork/srv/eng/metadata.select?selected=add-all</a></li>
-<li>Trigger the process with <a href="http://localhost:8080/geonetwork/srv/eng/md.processing.batch?process=my-custom-process">http://localhost:8080/geonetwork/srv/eng/md.processing.batch?process=my-custom-process</a></li>
-<li>Check the progress report with <a href="http://localhost:8080/geonetwork/srv/eng/md.processing.batch.report">http://localhost:8080/geonetwork/srv/eng/md.processing.batch.report</a></li>
+<li>Sign in as editor user or higher profile.</li>
+<li>In the search page or the editor board page, select the metadata to be updated.</li>
+<li>In the API page, use the process API http://localhost:8080/geonetwork/doc/api/index.html#/processes/processRecords where you can configure:<ul>
+<li>a set of metadata UUIDs to be updated or a search selection bucket. If you have done the selection from the search page use the bucket name <code>s101</code> or <code>e101</code> if you have done the selection from the editor board page and </li>
+<li>the process to apply. </li>
 </ul>
-<p>At the end of the process, a summary describes:</p>
-<ul>
-<li>Number of records to process</li>
-<li>Number of records to processed</li>
-<li>Number of records not found (in case one record gets deleted since the selection)</li>
-<li>Number of records with errors</li>
-<li>Number of records with process not defined in its standard</li>
-<li>Number of records that current user can't edit</li>
-</ul>
-<p>A process can also be applied to one metadata record using the <code>md.processing</code> service. eg. <a href="http://localhost:8080/geonetwork/srv/eng/md.processing?uuid=46eac9e4-33cb-45b7-a104-7bcc8e654c98&amp;process=keywords-mapper&amp;search=water&amp;replace=Water">http://localhost:8080/geonetwork/srv/eng/md.processing?uuid=46eac9e4-33cb-45b7-a104-7bcc8e654c98&amp;process=keywords-mapper&amp;search=water&amp;replace=Water</a></p>
-<p>Parameters are:</p>
-<ul>
-<li>uuid or id: the metadata UUID or the metadata internal identifier</li>
-<li>process: The process identifier</li>
-<li>add other extra parameters depending on the process (see below).</li>
+</li>
+<li>You can also use first in the API page, the preview API http://localhost:8080/geonetwork/doc/api/index.html#/processes/previewProcessRecords to preview the changes that will be applied, using the same parameters.</li>
 </ul>
 <h2 id="batch-process-add">Adding batch process</h2>
 <h3 id="creating-the-processing-file">Creating the processing file</h3>
@@ -2551,7 +2508,7 @@
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../batchupdate-from-admin/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Updating records from Admin console">
+          <a href="../batchediting/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Update records from edit console">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
@@ -2561,7 +2518,7 @@
                 Previous
               </span>
               <div class="md-ellipsis">
-                Updating records from Admin console
+                Update records from edit console
               </div>
             </div>
           </a>
