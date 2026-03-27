@@ -247,7 +247,7 @@
                     <xsl:when test="$dateType = 'Submitted'">released</xsl:when>
                     <xsl:when test="$dateType = 'Valid'">validityBegins</xsl:when>
                     <xsl:when test="$dateType = 'Withdrawn'">expiry</xsl:when>
-                    <xsl:when test="$dateType = 'Available'">distribution</xsl:when>
+                    <xsl:when test="$dateType = 'Available'">released</xsl:when>
                     <xsl:otherwise>creation</xsl:otherwise>
                   </xsl:choose>
                 </xsl:variable>

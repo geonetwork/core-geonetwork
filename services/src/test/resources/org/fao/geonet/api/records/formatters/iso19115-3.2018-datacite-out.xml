@@ -12,6 +12,7 @@
   <datacite:dates>
     <datacite:date dateType="Created" dateInformation="creation">2010-12-01</datacite:date>
     <datacite:date dateType="Issued" dateInformation="publication">2025-01-07</datacite:date>
+      <datacite:date dateType="Available" dateInformation="released">2025-01-17</datacite:date>
   </datacite:dates>
   <datacite:version>1.0</datacite:version>
   <datacite:alternateIdentifiers>
@@ -73,6 +74,11 @@
       <datacite:nameIdentifier nameIdentifierScheme="ROR">https://ror.org/05hnb7x64</datacite:nameIdentifier>
       <datacite:affiliation xml:lang="fre">BRGM</datacite:affiliation>
     </datacite:contributor>
+      <datacite:contributor contributorType="RelatedPerson">
+         <datacite:contributorName nameType="Personal">COURIER Entin</datacite:contributorName>
+         <datacite:nameIdentifier nameIdentifierScheme="ROR">https://ror.org/05hnb7x64</datacite:nameIdentifier>
+         <datacite:affiliation xml:lang="fre" affiliationIdentifier="https://ror.org/05hnb7x64">BRGM</datacite:affiliation>
+      </datacite:contributor>
   </datacite:contributors>
   <datacite:fundingReferences>
     <datacite:fundingReference>
