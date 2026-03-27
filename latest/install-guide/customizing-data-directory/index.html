@@ -1163,6 +1163,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#using-a-generic-cloud-object-storage-jcloud" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Using a generic cloud object storage (JCLoud)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#structure-of-the-data-directory" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1715,6 +1726,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#using-a-generic-cloud-object-storage-jcloud" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Using a generic cloud object storage (JCLoud)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#structure-of-the-data-directory" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1891,26 +1913,72 @@
 <li>AWS_ACCESS_KEY_ID</li>
 <li>AWS_SECRET_ACCESS_KEY</li>
 </ul>
+<h2 id="using-a-generic-cloud-object-storage-jcloud">Using a generic cloud object storage (JCLoud)</h2>
+<p>If your infrastructure doesn't have a persistent storage available, you can configure
+GeoNetwork to use a cloud object storage to store the images and data.
+The JCloud implementation supports the following <a href="https://jclouds.apache.org/reference/providers/">providers</a></p>
+<p>In order to do that, you must use a custom bean configuration. Replace the
+<code>filesystemStore</code>, <code>resourceStore</code> and <code>resources</code> beans in
+<strong><code>core/src/main/resources/config-spring-geonetwork.xml</code></strong> with something like this:</p>
+<p>Azure Blob sample</p>
+<div class="language-xml highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="nt">&lt;bean</span><span class="w"> </span><span class="na">id=</span><span class="s">&quot;jcloudcredentials&quot;</span><span class="w"> </span><span class="na">class=</span><span class="s">&quot;org.fao.geonet.resources.JCloudCredentials&quot;</span><span class="nt">&gt;</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">  </span><span class="nt">&lt;property</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;provider&quot;</span><span class="w"> </span><span class="na">value=</span><span class="s">&quot;eu-west-1&quot;</span><span class="nt">/&gt;</span>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span><span class="nt">&lt;property</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;containerName&quot;</span><span class="w"> </span><span class="na">value=</span><span class="s">&quot;geonetwork-test&quot;</span><span class="nt">/&gt;</span>
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span><span class="nt">&lt;property</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;baseFolder&quot;</span><span class="w"> </span><span class="na">value=</span><span class="s">&quot;geonetwork&quot;</span><span class="nt">/&gt;</span>
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">  </span><span class="nt">&lt;property</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;storageAccountName&quot;</span><span class="w"> </span><span class="na">value=</span><span class="s">&quot;MyAccessKey&quot;</span><span class="nt">/&gt;</span>
+</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">  </span><span class="nt">&lt;property</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;storageAccountKey&quot;</span><span class="w"> </span><span class="na">value=</span><span class="s">&quot;MySecretKey&quot;</span><span class="nt">/&gt;</span>
+</span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="nt">&lt;/bean&gt;</span>
+</span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="nt">&lt;bean</span><span class="w"> </span><span class="na">id=</span><span class="s">&quot;filesystemStore&quot;</span><span class="w"> </span><span class="na">class=</span><span class="s">&quot;org.fao.geonet.api.records.attachments.JCloudStore&quot;</span><span class="w"> </span><span class="nt">/&gt;</span>
+</span><span id="__span-5-9"><a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="nt">&lt;bean</span><span class="w"> </span><span class="na">id=</span><span class="s">&quot;resourceStore&quot;</span>
+</span><span id="__span-5-10"><a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="w">      </span><span class="na">class=</span><span class="s">&quot;org.fao.geonet.api.records.attachments.ResourceLoggerStore&quot;</span><span class="nt">&gt;</span>
+</span><span id="__span-5-11"><a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="w">  </span><span class="nt">&lt;constructor-arg</span><span class="w"> </span><span class="na">index=</span><span class="s">&quot;0&quot;</span><span class="w"> </span><span class="na">ref=</span><span class="s">&quot;filesystemStore&quot;</span><span class="nt">/&gt;</span>
+</span><span id="__span-5-12"><a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="nt">&lt;/bean&gt;</span>
+</span><span id="__span-5-13"><a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="nt">&lt;bean</span><span class="w"> </span><span class="na">id=</span><span class="s">&quot;resources&quot;</span><span class="w"> </span><span class="na">class=</span><span class="s">&quot;org.fao.geonet.resources.JCloudResources&quot;</span><span class="nt">/&gt;</span>
+</span></code></pre></div>
+<p>AWS S3 sample
+<div class="language-text highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>&lt;bean id=&quot;jcloudcredentials&quot; class=&quot;org.fao.geonet.resources.JCloudCredentials&quot;&gt;
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>  &lt;property name=&quot;provider&quot; value=&quot;aws-s3&quot;/&gt;
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>  &lt;property name=&quot;containerName&quot; value=&quot;geonetwork-test&quot;/&gt;
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>  &lt;property name=&quot;baseFolder&quot; value=&quot;geonetwork&quot;/&gt;
+</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>  &lt;property name=&quot;storageAccountName&quot; value=&quot;MyAccessKey&quot;/&gt;
+</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>  &lt;property name=&quot;storageAccountKey&quot; value=&quot;MySecretKey&quot;/&gt;
+</span><span id="__span-6-7"><a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>&lt;/bean&gt;
+</span><span id="__span-6-8"><a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>&lt;bean id=&quot;filesystemStore&quot; class=&quot;org.fao.geonet.api.records.attachments.JCloudStore&quot; /&gt;
+</span><span id="__span-6-9"><a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>&lt;bean id=&quot;resourceStore&quot;
+</span><span id="__span-6-10"><a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>      class=&quot;org.fao.geonet.api.records.attachments.ResourceLoggerStore&quot;&gt;
+</span><span id="__span-6-11"><a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>  &lt;constructor-arg index=&quot;0&quot; ref=&quot;filesystemStore&quot;/&gt;
+</span><span id="__span-6-12"><a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>&lt;/bean&gt;
+</span><span id="__span-6-13"><a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>&lt;bean id=&quot;resources&quot; class=&quot;org.fao.geonet.resources.JCloudResources&quot;/&gt;
+</span></code></pre></div></p>
+<p>The <code>jcloudcredentials</code> bean can be left empty and the following system environment variables
+can be used to configure it (convenient in a container environment):</p>
+<ul>
+<li>JCLOUD_PROVIDER</li>
+<li>JCLOUD_CONTAINERNAME</li>
+<li>JCLOUD_BASEFOLDER</li>
+<li>JCLOUD_STORAGEACCOUNTNAME</li>
+<li>JCLOUD_STORAGEACCOUNTKEY</li>
+</ul>
 <h2 id="structure-of-the-data-directory">Structure of the data directory</h2>
 <p>The data directory contains:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>data_directory/
-</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a> |--config: Extra configuration (eg. could contain overrides)
-</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a> |   |--schemaplugin-uri-catalog.xml
-</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a> |   |--codelist: The thesauri in SKOS format
-</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a> |   |--index: Index configuration
-</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a> |   |--schemaPlugins: The directory used to store new metadata standards
-</span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a> |
-</span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a> |--data
-</span><span id="__span-5-9"><a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a> |   |--metadata_data: The data related to metadata records
-</span><span id="__span-5-10"><a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a> |   |--resources:
-</span><span id="__span-5-11"><a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a> |   |     |--htmlcache
-</span><span id="__span-5-12"><a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a> |   |     |--images
-</span><span id="__span-5-13"><a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a> |   |     |   |--harvesting
-</span><span id="__span-5-14"><a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a> |   |     |   |--logos
-</span><span id="__span-5-15"><a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a> |   |     |   |--statTmp
-</span><span id="__span-5-16"><a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a> |   |
-</span><span id="__span-5-17"><a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a> |   |--metadata_subversion: The subversion repository
-</span><span id="__span-5-18"><a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a> |   |--backup: Folder containing removed metadata
+<div class="language-text highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>data_directory/
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a> |--config: Extra configuration (eg. could contain overrides)
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a> |   |--schemaplugin-uri-catalog.xml
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a> |   |--codelist: The thesauri in SKOS format
+</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a> |   |--index: Index configuration
+</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a> |   |--schemaPlugins: The directory used to store new metadata standards
+</span><span id="__span-7-7"><a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a> |
+</span><span id="__span-7-8"><a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a> |--data
+</span><span id="__span-7-9"><a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a> |   |--metadata_data: The data related to metadata records
+</span><span id="__span-7-10"><a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a> |   |--resources:
+</span><span id="__span-7-11"><a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a> |   |     |--htmlcache
+</span><span id="__span-7-12"><a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a> |   |     |--images
+</span><span id="__span-7-13"><a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a> |   |     |   |--harvesting
+</span><span id="__span-7-14"><a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a> |   |     |   |--logos
+</span><span id="__span-7-15"><a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a> |   |     |   |--statTmp
+</span><span id="__span-7-16"><a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a> |   |
+</span><span id="__span-7-17"><a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a> |   |--metadata_subversion: The subversion repository
+</span><span id="__span-7-18"><a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a> |   |--backup: Folder containing removed metadata
 </span></code></pre></div>
 <h2 id="advanced-data-directory-configuration">Advanced data directory configuration</h2>
 <p>All sub-directories could be configured separately using Java system property. For example, to put the index config directory in a custom location use:</p>
@@ -1922,20 +1990,20 @@
 <ul>
 <li>Add the following Java properties to start-geonetwork.sh script:</li>
 </ul>
-<div class="language-shell highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>java<span class="w"> </span>-Xms1g<span class="w"> </span>-Xmx1g<span class="w"> </span>-Xss2M<span class="w"> </span>-XX:MaxPermSize<span class="o">=</span>128m<span class="w"> </span>-Dgeonetwork.dir<span class="o">=</span>/app/geonetwork_data_dir
+<div class="language-shell highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>java<span class="w"> </span>-Xms1g<span class="w"> </span>-Xmx1g<span class="w"> </span>-Xss2M<span class="w"> </span>-XX:MaxPermSize<span class="o">=</span>128m<span class="w"> </span>-Dgeonetwork.dir<span class="o">=</span>/app/geonetwork_data_dir
 </span></code></pre></div>
 <ul>
 <li>Add the following system properties to start-geonetwork.sh script:</li>
 </ul>
-<div class="language-shell highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">geonetwork_dir</span><span class="o">=</span>/app/geonetwork_data_dir
+<div class="language-shell highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">geonetwork_dir</span><span class="o">=</span>/app/geonetwork_data_dir
 </span></code></pre></div>
 <ul>
 <li>If no changes are made to thesaurus or schema, it could be relevant to use the version from the webapp. In such case, set:</li>
 </ul>
-<div class="language-shell highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>-Dgeonetwork.dir<span class="o">=</span>/data/catalogue
-</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>-Dgeonetwork.schema.dir<span class="o">=</span>/app/tomcat/webapps/geonetwork/WEB-INF/data/config/schema_plugins
-</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>-Dgeonetwork.indexConfig.dir<span class="o">=</span>/app/tomcat/webapps/geonetwork/WEB-INF/data/config/index
-</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>-Dgeonetwork.codeList.dir<span class="o">=</span>/app/tomcat/webapps/geonetwork/WEB-INF/data/config/codelist
+<div class="language-shell highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>-Dgeonetwork.dir<span class="o">=</span>/data/catalogue
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>-Dgeonetwork.schema.dir<span class="o">=</span>/app/tomcat/webapps/geonetwork/WEB-INF/data/config/schema_plugins
+</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>-Dgeonetwork.indexConfig.dir<span class="o">=</span>/app/tomcat/webapps/geonetwork/WEB-INF/data/config/index
+</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>-Dgeonetwork.codeList.dir<span class="o">=</span>/app/tomcat/webapps/geonetwork/WEB-INF/data/config/codelist
 </span></code></pre></div>
 <p>The list of properties that can be set are:</p>
 <ul>
