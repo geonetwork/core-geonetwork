@@ -6,11 +6,35 @@
     version="2.0">
 
     <xsl:template match="filters">
+      <xsl:variable name="operators"
+                    select="distinct-values(filter/condition[. != ''])"/>
+      <xsl:variable name="isUsingOneLogicalOperator"
+                    select="count($operators) = 1"/>
+
       <ogc:Filter>
-         <xsl:call-template name="processFilters">
-            <xsl:with-param name="filters" select="." />
-            <xsl:with-param name="position" select="count(./filter)" />
-        </xsl:call-template>
+        <xsl:choose>
+          <xsl:when test="$isUsingOneLogicalOperator">
+            <xsl:variable name="condition">
+              <xsl:call-template name="getCondition">
+                <xsl:with-param name="condition" select="$operators[1]" />
+              </xsl:call-template>
+            </xsl:variable>
+            <xsl:element name="{$condition}" namespace="http://www.opengis.net/ogc">
+              <xsl:for-each select="filter">
+                <xsl:call-template name="processFilter">
+                  <xsl:with-param name="filter" select="current()" />
+                </xsl:call-template>
+              </xsl:for-each>
+            </xsl:element>
+
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:call-template name="processFilters">
+              <xsl:with-param name="filters" select="." />
+              <xsl:with-param name="position" select="count(./filter)" />
+            </xsl:call-template>
+          </xsl:otherwise>
+        </xsl:choose>
       </ogc:Filter>
     </xsl:template>
 
