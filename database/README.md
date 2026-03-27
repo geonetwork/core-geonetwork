@@ -27,6 +27,17 @@ eg.
 * `-Dgeonetwork.users.admin.username=XYZ -Dgeonetwork.users.admin.passwordhash=1eB2....`
 
 
+To store the liquibase tables in a different schema, use JVM arg `-Dgeonetwork.db.manager.schema`or the env variable `GEONETWORK_DB_MANAGER_SCHEMA`:
+
+eg.
+* `-Dgeonetwork.db.manager.schema=liquibase`
+
+To use a different database user for liquibase, use JVM args `-Dgeonetwork.db.manager.username` / `-Dgeonetwork.db.manager.password`, or the env variables `GEONETWORK_DB_MANAGER_USERNAME` and `GEONETWORK_DB_MANAGER_USERNAME` / `GEONETWORK_DB_MANAGER_PASSWORD`:
+
+eg.
+* `-Dgeonetwork.db.manager.username=liquibaseuser`
+* `-Dgeonetwork.db.manager.password=liquibasepassword`
+
 ## Databases tested
 
 Currently, Liquibase is tested with the following databases:

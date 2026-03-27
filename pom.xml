@@ -1618,6 +1618,9 @@
         GEONETWORK_DB_NAME=gn
         GEONETWORK_DB_USERNAME=www-data
         GEONETWORK_DB_PASSWORD=www-data
+        GEONETWORK_DB_MANAGER_USERNAME=www-data
+        GEONETWORK_DB_MANAGER_PASSWORD=www-data
+        GEONETWORK_DB_MANAGER_SCHEMA=
         GEONETWORK_DB_CONNECTION_PROPERTIES=
     -->
 
@@ -1629,8 +1632,11 @@
     <db.name>#{systemEnvironment['GEONETWORK_DB_NAME']?:'~/gn'}</db.name>
     <db.username>#{systemEnvironment['GEONETWORK_DB_USERNAME']?:'www-data'}</db.username>
     <db.password>#{systemEnvironment['GEONETWORK_DB_PASSWORD']?:'www-data'}</db.password>
+    <!-- Database manager credentials for database operations related to Liquibase -->
+    <db.manager.username>#{systemEnvironment['GEONETWORK_DB_MANAGER_USERNAME']?:systemEnvironment['GEONETWORK_DB_USERNAME']?:'www-data'}</db.manager.username>
+    <db.manager.password>#{systemEnvironment['GEONETWORK_DB_MANAGER_PASSWORD']?:systemEnvironment['GEONETWORK_DB_PASSWORD']?:'www-data'}</db.manager.password>
+    <db.manager.schema>#{systemEnvironment['GEONETWORK_DB_MANAGER_SCHEMA']?:''}</db.manager.schema>
     <db.connectionProperties>#{systemEnvironment['GEONETWORK_DB_CONNECTION_PROPERTIES']}</db.connectionProperties>
-
     <db.pool.maxActive>30</db.pool.maxActive>
     <db.pool.maxIdle>10</db.pool.maxIdle>
     <db.pool.initialSize>10</db.pool.initialSize>

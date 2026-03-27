@@ -24,10 +24,16 @@
 
 <beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+       xmlns:context="http://www.springframework.org/schema/context"
        default-lazy-init="true"
        xmlns="http://www.springframework.org/schema/beans"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-		http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa-1.3.xsd">
+		http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa-1.3.xsd http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd">
+
+  <context:property-placeholder location="${app.properties},file://#{systemEnvironment['geonetwork_dir']}/config/app.properties"
+                                ignore-unresolvable="true"
+                                ignore-resource-not-found="true"
+                                file-encoding="UTF-8"/>
 
   <!-- Look up the JPA repositories -->
   <jpa:repositories base-package="org.fao.geonet.repository"
@@ -47,9 +53,10 @@
 
 
   <bean id="liquibase" class="liquibase.integration.spring.SpringLiquibase">
-    <property name="dataSource" ref="jdbcDataSource" />
+    <property name="dataSource" ref="jdbcDataSourceManager" />
     <property name="changeLog" value="classpath:db/changelog.xml" />
     <property name="shouldRun" value="true" />
+    <property name="liquibaseSchema" value="${db.manager.schema}"/>
   </bean>
 
 

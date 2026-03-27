@@ -24,6 +24,7 @@
 package org.fao.geonet;
 
 import java.util.UUID;
+
 import jeeves.config.springutil.ServerBeanPropertyUpdater;
 import jeeves.constants.Jeeves;
 import jeeves.interfaces.ApplicationHandler;
@@ -181,7 +182,7 @@ public class Geonetwork implements ApplicationHandler {
         }
 
         //--- initialize ThreadUtils with setting manager and rm props
-        final DataSource dataSource = context.getBean(DataSource.class);
+        final DataSource dataSource = (DataSource) this._applicationContext.getBean(Constants.DATASOURCE_BEAN_ID);
         try (Connection conn = dataSource.getConnection()) {
             ThreadUtils.init(conn.getMetaData().getURL(), settingMan);
         }

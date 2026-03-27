@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2023 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2026 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -29,10 +29,10 @@ import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.apache.commons.lang.StringUtils;
+import org.fao.geonet.Constants;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.search.EsSearchManager;
-import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.utils.Env;
@@ -224,9 +224,7 @@ public class SiteInformation {
     private void loadDatabaseInfo(ServiceContext context) throws SQLException {
         String dbURL = null;
 
-        Connection connection = null;
-        try {
-            connection = context.getBean(DataSource.class).getConnection();
+        try (Connection connection = context.getBean(Constants.DATASOURCE_BEAN_ID, DataSource.class).getConnection()) {
             dbURL = connection.getMetaData().getURL();
             databaseProperties.put("db.openattempt", "Database Opened Successfully");
             try {
@@ -259,10 +257,6 @@ public class SiteInformation {
         } catch (Exception e) {
             databaseProperties.put("db.openattempt",
                 "Failed to open database connection, Check config.xml db file configuration. Error" + " is: " + e.getMessage());
-        } finally {
-            if (connection != null) {
-                connection.close();
-            }
         }
         databaseProperties.put("db.url", dbURL);
     }
