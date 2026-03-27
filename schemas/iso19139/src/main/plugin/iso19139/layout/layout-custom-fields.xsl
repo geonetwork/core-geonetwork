@@ -34,7 +34,7 @@
                 xmlns:java-xsl-util="java:org.fao.geonet.util.XslUtil"
                 xmlns:saxon="http://saxon.sf.net/"
                 xmlns:xlink="http://www.w3.org/1999/xlink"
-                version="2.0"
+                version="2.0" xmlns:xst="http://www.w3.org/1999/XSL/Transform"
                 extension-element-prefixes="saxon"
                 exclude-result-prefixes="#all">
 
@@ -272,7 +272,7 @@
       <xsl:with-param name="isFirst" select="$isFirst"/>
     </xsl:call-template>
   </xsl:template>
- 
+
   <!---
     For temporal extent, we want a more complicated control.
     This will allow the <beginPosition   indeterminatePosition="now"></beginPosition>
@@ -283,10 +283,13 @@
     See the "template" variable, below.
 
     This is basically a stand-in for the  <field name="temporalRangeSection"> and uses the same template to do the controls.
+
+    NOTE: we are using [//local-name()='XYZ'] for the `gml:` namespace to make it work with both original gml and gml 3.2.
   -->
   <xsl:template mode="mode-iso19139"
-                match="gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:temporalElement[//gml:beginPosition]"
+                match="gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:temporalElement[gmd:EX_TemporalExtent/gmd:extent/*[local-name()='timePeriod']//*[local-name()='beginPosition']]"
                 priority="30000">
+
     <xsl:variable name="xpath" select="gn-fn-metadata:getXPath(.)"/>
     <xsl:variable name="isoType" select="if (../@gco:isoType) then ../@gco:isoType else ''"/>
 
@@ -309,7 +312,7 @@
         <!-- -Need a * for gml:TimePeriodTypeCHOICE_ELEMENT2 added by editor enumerated tree
               but this will make the XSLT formatter fails. Using // to access the element in both case. -->
         <key label="beginPosition"
-             xpath="gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod//gml:beginPosition"
+             xpath="/gmd:EX_TemporalExtent/gmd:extent//*[local-name()='beginPosition']"
              use="gn-date-picker"
              tooltip="gmd:extent|gmd:EX_TemporalExtent">
           <directiveAttributes
@@ -317,7 +320,7 @@
             data-indeterminate-position="eval#gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/*/gml:beginPosition/@indeterminatePosition"/>
         </key>
         <key label="endPosition"
-             xpath="gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod//gml:endPosition"
+             xpath="/gmd:EX_TemporalExtent/gmd:extent//*[local-name()='endPosition']"
              use="gn-date-picker"
              tooltip="gmd:extent|gmd:EX_TemporalExtent">
           <directiveAttributes
