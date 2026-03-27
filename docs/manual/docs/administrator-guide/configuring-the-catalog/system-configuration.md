@@ -232,6 +232,79 @@ Note: this option is only available for databases that have been tested. Those d
 
 *Only set privileges to user's groups*: If enabled then only the groups that the user belongs to will be displayed in the metadata privileges page (unless the user is an Administrator). At the moment this option cannot be disabled and is likely to be deprecated in the next version of GeoNetwork.
 
+## Metadata create
+
+### Generate UUID
+
+When enabled, GeoNetwork automatically assigns a **random UUID** to each new metadata record.
+
+- This ensures that every record has a unique and globally identifiable ID.
+- Disable this option if you want to assign metadata UUIDs manually.
+- When disabled, you must specify a **metadata UUID prefix** that will be used when generating the record's UUID.
+
+### Publish for group editors
+
+When enabled, newly created metadata records are **automatically published** and made editable by **editors in the group that owns the record** (the group in which the record was created).
+
+- Enables collaborative editing within the owning group without requiring manual sharing after creation.
+- You can **override this behavior** on the metadata creation page if a specific record should not be editable.
+
+### Copy attachments
+
+When enabled, **attachments** (e.g., documents, images, or data files) from the **source template or record** are automatically copied into the new record.
+
+- Useful when creating similar metadata records that share supporting files.
+- Disable this option if you prefer to start with an empty record.
+- You can **override this behavior** on the metadata creation page if a specific record’s attachments should not be copied.
+
+### Skip metadata creation page
+
+When enabled, if there is **only one available group** and **one available template**, the system automatically creates the metadata record using default options and skips the creation page.
+
+- Speeds up creation in environments with a single group or standardized template.
+- If multiple groups or templates exist, the creation page will still appear.
+
+### Preferred metadata group owner
+
+Specifies the **default group owner** that will be preselected on the metadata creation page.
+
+- Helps users who frequently create records under the same group avoid repetitive selection.
+- You can still choose a different group when creating a record if needed.
+
+### Preferred metadata template
+
+Specifies the **default template** that will be preselected on the metadata creation page.
+
+- Useful when most new records are based on the same template type.
+- You can still select a different template when creating a record if required.
+
+## Metadata configuration {#metadata_configuration}
+
+### Allowed file mime types to attach to a metadata record
+
+Specifies the **file types** that can be attached to a metadata record.
+
+- Enter a **pipe (|)** separated list of MIME types.
+- Supports **exact** and **wildcard** patterns (e.g. `image/*` for all images, `*/*` for all types).
+- If left **empty**, file uploads are **not allowed**.
+
+**Examples:**
+- `image/*|text/plain|application/xml|application/pdf` — allows images, text, XML, and PDF files.
+- `*/*` — allows all file types.
+
+## Metadata History
+
+Allows to view metadata history
+
+![](img/metadata_history.png)
+
+-   **Minimum user profile allowed to view metadata history** Minimum user profile allowed to delete metadata (`Registered User`, `Editor` or `Administrator`). The default value is `Editor`.
+    ![](img/metadata_history_config.png)
+
+-   **Registered User Configuration** The user who has granted view permission to the metadata record can view the history.
+-   **Editor Configuration** The user who has granted editing permission to the metadata record can view the history.
+-   **Administrator Configuration** The user who has granted system administrator permission can view the history.
+
 ## Metadata import {#editing_harvested_records}
 
 -   **Restrict import to schemas** List of all allowed schemas for metadata to be imported. If the metadata schema is not allowed, then the import is not done. Use an empty value to allow all schemas.
@@ -256,18 +329,11 @@ Allows to configure the user profile allowed to publish and un-publish metadata.
 
 ![](img/metadata-publication.png)
 
-## Metadata History
+## Metadata selection - zip export
 
-Allows to view metadata history
+Allows to configure the zip export of metadata records and their attachments.
 
-![](img/metadata_history.png)
-
--   **Minimum user profile allowed to view metadata history** Minimum user profile allowed to delete metadata (`Registered User`, `Editor` or `Administrator`). The default value is `Editor`.
-![](img/metadata_history_config.png)
-
--   **Registered User Configuration** The user who has granted view permission to the metadata record can view the history.
--   **Editor Configuration** The user who has granted editing permission to the metadata record can view the history.
--   **Administrator Configuration** The user who has granted system administrator permission can view the history.
+-   **Total size of attachments allowed in zip export (MB)** Maximum total size of attachments allowed in zip export (in MB). If the total size of attachments linked to the selected metadata is above this value, exporting as zip (with attachments) is not allowed. Leave empty for no limit.
 
 ## Harvesting
 

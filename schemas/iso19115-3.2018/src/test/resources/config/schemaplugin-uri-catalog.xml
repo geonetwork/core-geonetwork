@@ -1,0 +1,15 @@
+<catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog" prefer="public">
+    <!-- NOTE: this file is automatically updated by GeoNetwork -->
+    <!-- this catalog is used to map blank schema presentation xslts included
+           in metadata-utils.xsl and schema-xsl-edit-loader.xsl to the presentation
+           xslts of schemas that are plugged into GeoNetwork
+
+               we use this process to avoid having to make changes to GeoNetwork xslts
+               to include presentation xslts from schemas that are plugged in -->
+    <!-- plug in schemas - come next - managed by schema.add/update/delete -->
+    <rewriteURI uriStartString="blanks/metadata-schema01" rewritePrefix="gn-site/WEB-INF/data/config/schema_plugins/iso19139" />
+    <rewriteURI uriStartString="blanks/metadata-schema02" rewritePrefix="gn-site/WEB-INF/data/config/schema_plugins/dublin-core" />
+    <rewriteURI uriStartString="blanks/metadata-schema03" rewritePrefix="gn-site/WEB-INF/data/config/schema_plugins/iso19110" />
+    <rewriteURI uriStartString="blanks/metadata-schema04" rewritePrefix="gn-site/WEB-INF/data/config/schema_plugins/iso19115-3.2018" />
+
+</catalog>

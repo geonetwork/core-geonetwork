@@ -30,6 +30,13 @@ import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
 import org.fao.geonet.kernel.harvest.harvester.geonet.Group;
 import org.jdom.Element;
 
+/**
+ * The GeonetHarvester class is responsible for performing harvesting operations
+ * for GeoNetwork nodes <b>from 2.1 to 3.x</b>. It extends the AbstractHarvester class and provides custom
+ * implementation for managing GeoNetwork-specific harvesting processes and parameters.
+ * This includes handling parameters, storing configuration details, and interacting with
+ * the GeoNetwork API to facilitate metadata harvesting.
+ */
 public class GeonetHarvester extends AbstractHarvester<HarvestResult, GeonetParams> {
     public static final String TYPE = "geonetwork";
 

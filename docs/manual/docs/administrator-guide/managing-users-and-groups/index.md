@@ -80,122 +80,121 @@ Rights associated with the roles are illustrated in detail in the list below:
 
 ## Role and feature Matrix
 
-The tables below show a comprehensive overview of Roles and Features, it explains in detail what role can do what in GeoNetwork.
+The tables below show a comprehensive overview of Roles and Features. It explains in detail what role can do what in GeoNetwork.
 
-| Code  | Description |
-| ----- | ----- |
-| UI    | Feature visible in the UI, but not usable by the user profile |
-| EDIT  | The user can edit the metadata imported by the user |
-| DEL   | The user can delete the metadata imported by the user | 
+| Code | Description                                                   |
+|------|---------------------------------------------------------------|
+| UI   | Feature visible in the UI, but not usable by the user profile |
+| EDIT | The user can edit the metadata imported by the user           |
+| DEL  | The user can delete the metadata imported by the user         | 
 
 === "Search"
 
-    |                                             | Anonymous user          |     Registered User     | Editor| Reviewer|       User Admin        |     Admini- strator     |
-    |---------------------------------------------| :---: |:-----------------------:| :---: | :---: |:-----------------------:|:-----------------------:|
+    |                                             | Anonymous User          | Registered User         | Editor                  | Reviewer                | User Admin              | Admini- strator         |
+    |---------------------------------------------|-------------------------|-------------------------|-------------------------|-------------------------|-------------------------|-------------------------|
     | Metadata selection / Export (ZIP)           | :material-check-circle: | :material-check-circle: | :material-check-circle: | :material-check-circle: | :material-check-circle: | :material-check-circle: |
     | Metadata selection / Export (PDF)           | :material-check-circle: | :material-check-circle: | :material-check-circle: | :material-check-circle: | :material-check-circle: | :material-check-circle: |
     | Metadata selection / Export (CSV)           | :material-check-circle: | :material-check-circle: | :material-check-circle: | :material-check-circle: | :material-check-circle: | :material-check-circle: |
     | Metadata selection / Selection only         | :material-check-circle: | :material-check-circle: | :material-check-circle: | :material-check-circle: | :material-check-circle: | :material-check-circle: |
     | Metadata selection / Update privileges      |                         |                         | :material-check-circle: | :material-check-circle: | :material-check-circle: | :material-check-circle: |
-    | Metadata selection / Publish                |                         |                         | | :material-check-circle: | :material-check-circle: | :material-check-circle: |
-    | Metadata selection / Unpublish              |                         |                         | | :material-check-circle: | :material-check-circle: | :material-check-circle: |
-    | Metadata selection / Approve                |                         |                         | | :material-check-circle: | :material-check-circle: | :material-check-circle: |
-    | Metadata selection / Transfer Ownership     |                         |                         | | | :material-check-circle: | :material-check-circle: |
+    | Metadata selection / Publish                |                         |                         |                         | :material-check-circle: | :material-check-circle: | :material-check-circle: |
+    | Metadata selection / Unpublish              |                         |                         |                         | :material-check-circle: | :material-check-circle: | :material-check-circle: |
+    | Metadata selection / Approve                |                         |                         |                         | :material-check-circle: | :material-check-circle: | :material-check-circle: |
+    | Metadata selection / Transfer Ownership     |                         |                         |                         |                         | :material-check-circle: | :material-check-circle: |
     | Metadata selection / Validate               |                         |                         | :material-check-circle: | :material-check-circle: | :material-check-circle: | :material-check-circle: |
     | Metadata selection / Validate records links |                         |                         | :material-check-circle: | :material-check-circle: | :material-check-circle: | :material-check-circle: |
     | Metadata selection / Updates categories     |                         |                         | :material-check-circle: | :material-check-circle: | :material-check-circle: | :material-check-circle: |
     | Metadata selection / Delete                 |                         |                         | :material-check-circle: | :material-check-circle: | :material-check-circle: | :material-check-circle: |
-    | Metadata selection / Index records          |                         |                         | | | :material-check-circle: | :material-check-circle: |
+    | Metadata selection / Index records          |                         |                         | :material-check-circle: | :material-check-circle: | :material-check-circle: | :material-check-circle: |
     | Preferred Records                           | :material-check-circle: | :material-check-circle: | :material-check-circle: | :material-check-circle: | :material-check-circle: | :material-check-circle: |
     | Watch list                                  | :material-check-circle: | :material-check-circle: | :material-check-circle: | :material-check-circle: | :material-check-circle: | :material-check-circle: |
-    | "Sorted by relevancy,  modified,  title..." | :material-check-circle: | :material-check-circle: | :material-check-circle: | :material-check-circle: | :material-check-circle: | :material-check-circle: |
+    | Sorted by relevancy, modified, title...     | :material-check-circle: | :material-check-circle: | :material-check-circle: | :material-check-circle: | :material-check-circle: | :material-check-circle: |
 
 === "Metadata Page"
  
-    |                                             | Anonymous user          |     Registered User     | Editor| Reviewer|       User Admin        |     Admini- strator     |
-    |---------------------------------------------| :---: |:-----------------------:| :---: | :---: |:-----------------------:|:-----------------------:|
-    | Edit| | | :material-check-circle: | :material-check-circle: |          EDIT           | :material-check-circle: |
-    | Delete| | | :material-check-circle: | :material-check-circle: |           DEL           | :material-check-circle: |
-    | Cancel working copy| | | :material-check-circle: | :material-check-circle: |                         | :material-check-circle: |
-    | Manage Record / Privileges| | | :material-check-circle: | :material-check-circle: |                         | :material-check-circle: |
-    | Manage Record / Transfer Ownership| | | | |                         | :material-check-circle: |
-    | Manage Record / Unpublish| | | | :material-check-circle: |                         | :material-check-circle: |
-    | Manage Record / Publish| | | | :material-check-circle: |                         | :material-check-circle: |
-    | Manage Record / Work flow / submit for review| | | :material-check-circle: | :material-check-circle: |                         | :material-check-circle: |
-    | Manage Record / Work flow / directly approve metadata| | | | :material-check-circle: |                         | :material-check-circle: |
-    | Manage Record / Work flow / approve metadata | | | | :material-check-circle: |                         | :material-check-circle: |
-    | Manage Record / Work flow / reject approval submision| | | | :material-check-circle: |                         | :material-check-circle: |
-    | Manage Record / Work flow / cancel approval submission| | | :material-check-circle: | |                         | :material-check-circle: |
-    | Manage Record / DOI Creation request| | | :material-check-circle: | :material-check-circle: |           UI            | :material-check-circle: |
-    | Manage Record / Duplicate| | | :material-check-circle: | :material-check-circle: |           UI            | :material-check-circle: |
-    | Download record / Permalink| :material-check-circle: | :material-check-circle: | :material-check-circle: | :material-check-circle: | :material-check-circle: | :material-check-circle: |
-    | Download record / Export (ZIP)| :material-check-circle: | :material-check-circle: | :material-check-circle: | :material-check-circle: | :material-check-circle: | :material-check-circle: |
-    | Download record / Export (PDF)| :material-check-circle: | :material-check-circle: | :material-check-circle: | :material-check-circle: | :material-check-circle: | :material-check-circle: |
-    | Download record / Export (XML)| :material-check-circle: | :material-check-circle: | :material-check-circle: | :material-check-circle: | :material-check-circle: | :material-check-circle: |
-    | Download record / EXport (RDF)| :material-check-circle: | :material-check-circle: | :material-check-circle: | :material-check-circle: | :material-check-circle: | :material-check-circle: |
+    |                                                               | Anonymous user          |     Registered User     | Editor                  | Reviewer                |       User Admin        |     Admini- strator     |
+    |---------------------------------------------------------------|-------------------------|-------------------------|-------------------------|-------------------------|-------------------------|-------------------------|
+    | Edit                                                          |                         |                         | :material-check-circle: | :material-check-circle: | EDIT                    | :material-check-circle: |
+    | Delete                                                        |                         |                         | :material-check-circle: | :material-check-circle: | DEL                     | :material-check-circle: |
+    | Cancel working copy                                           |                         |                         | :material-check-circle: | :material-check-circle: |                         | :material-check-circle: |
+    | Manage Record / Privileges                                    |                         |                         | :material-check-circle: | :material-check-circle: |                         | :material-check-circle: |
+    | Manage Record / Transfer Ownership                            |                         |                         |                         |                         |                         | :material-check-circle: |
+    | Manage Record / Unpublish                                     |                         |                         |                         | :material-check-circle: |                         | :material-check-circle: |
+    | Manage Record / Publish                                       |                         |                         |                         | :material-check-circle: |                         | :material-check-circle: |
+    | Manage Record / Workflow / Submit for review                  |                         |                         | :material-check-circle: | :material-check-circle: |                         | :material-check-circle: |
+    | Manage Record / Workflow / Directly approve metadata          |                         |                         |                         | :material-check-circle: |                         | :material-check-circle: |
+    | Manage Record / Workflow / Approve metadata                   |                         |                         |                         | :material-check-circle: |                         | :material-check-circle: |
+    | Manage Record / Workflow / Reject approval submision          |                         |                         |                         | :material-check-circle: |                         | :material-check-circle: |
+    | Manage Record / Workflow / Cancel approval submission         |                         |                         | :material-check-circle: |                         |                         | :material-check-circle: |
+    | Manage Record / DOI Creation request                          |                         |                         | :material-check-circle: | :material-check-circle: | UI                      | :material-check-circle: |
+    | Manage Record / Duplicate                                     |                         |                         | :material-check-circle: | :material-check-circle: | UI                      | :material-check-circle: |
+    | Download record / Permalink                                   | :material-check-circle: | :material-check-circle: | :material-check-circle: | :material-check-circle: | :material-check-circle: | :material-check-circle: |
+    | Download record / Export (ZIP)                                | :material-check-circle: | :material-check-circle: | :material-check-circle: | :material-check-circle: | :material-check-circle: | :material-check-circle: |
+    | Download record / Export (PDF)                                | :material-check-circle: | :material-check-circle: | :material-check-circle: | :material-check-circle: | :material-check-circle: | :material-check-circle: |
+    | Download record / Export (XML)                                | :material-check-circle: | :material-check-circle: | :material-check-circle: | :material-check-circle: | :material-check-circle: | :material-check-circle: |
+    | Download record / Export (RDF)                                | :material-check-circle: | :material-check-circle: | :material-check-circle: | :material-check-circle: | :material-check-circle: | :material-check-circle: |
 
 === "Editor"
 
-    |                                             | Anonymous user          |     Registered User     | Editor| Reviewer|       User Admin        |     Admini- strator     |
-    |---------------------------------------------| :---: |:-----------------------:| :---: | :---: |:-----------------------:|:-----------------------:|
-    | Editor board| | | :material-check-circle: | :material-check-circle: | :material-check-circle: | :material-check-circle: |
-    | Add new record| | | :material-check-circle: | :material-check-circle: |           UI            | :material-check-circle: |
-    | Import new records| | | :material-check-circle: | :material-check-circle: | :material-check-circle: | :material-check-circle: |
-    | Manage directory| | | :material-check-circle: | :material-check-circle: |           UI            | :material-check-circle: |
-    | Batch editing| | | :material-check-circle: | :material-check-circle: |          EDIT           | :material-check-circle: |
-    | Access rights| | | | |                         | :material-check-circle: |
-    | Editor board / Export (ZIP)| | | :material-check-circle: | :material-check-circle: | :material-check-circle: | :material-check-circle: |
-    | Editor board / EXport (PDF)| | | :material-check-circle: | :material-check-circle: | :material-check-circle: | :material-check-circle: |
-    | Editor board / Export (CSV)| | | :material-check-circle: | :material-check-circle: | :material-check-circle: | :material-check-circle: |
-    | Editor board / Selection only| | | :material-check-circle: | :material-check-circle: | :material-check-circle: | :material-check-circle: |
-    | Editor board / Updates privileges| | | :material-check-circle: | :material-check-circle: | :material-check-circle: | :material-check-circle: |
-    | Editor board / Publish| | | | :material-check-circle: | :material-check-circle: | :material-check-circle: |
-    | Editor board / Unpublish| | | | :material-check-circle: | :material-check-circle: | :material-check-circle: |
-    | Editor board / Approve| | | | :material-check-circle: | :material-check-circle: | :material-check-circle: |
-    | Editor board / Transfer Ownership| | | | | :material-check-circle: | :material-check-circle: |
-    | Editor board / Validate| | | :material-check-circle: | :material-check-circle: | :material-check-circle: | :material-check-circle: |
-    | Editor board / Validate record links| | | :material-check-circle: | :material-check-circle: | :material-check-circle: | :material-check-circle: |
-    | Editor board / Updates categories| | | :material-check-circle: | :material-check-circle: | :material-check-circle: | :material-check-circle: |
-    | | | | :material-check-circle: | :material-check-circle: | :material-check-circle: | :material-check-circle: |
-    | Editor board / Delete| | | :material-check-circle: | :material-check-circle: | :material-check-circle: | :material-check-circle: |
-    | Editor board / Index records| | | | | :material-check-circle: | :material-check-circle: |
+    |                                       | Anonymous User          | Registered User         | Editor                  | Reviewer                | User Admin              | Admini- strator         |
+    |---------------------------------------|-------------------------|-------------------------|-------------------------|-------------------------|-------------------------|-------------------------|
+    | Editor board                          |                         |                         | :material-check-circle: | :material-check-circle: | :material-check-circle: | :material-check-circle: |
+    | Add new record                        |                         |                         | :material-check-circle: | :material-check-circle: | UI                      | :material-check-circle: |
+    | Import new records                    |                         |                         | :material-check-circle: | :material-check-circle: | :material-check-circle: | :material-check-circle: |
+    | Manage directory                      |                         |                         | :material-check-circle: | :material-check-circle: | UI                      | :material-check-circle: |
+    | Batch editing                         |                         |                         | :material-check-circle: | :material-check-circle: | EDIT                    | :material-check-circle: |
+    | Access rights                         |                         |                         |                         |                         |                         | :material-check-circle: |
+    | Editor board / Export (ZIP)           |                         |                         | :material-check-circle: | :material-check-circle: | :material-check-circle: | :material-check-circle: |
+    | Editor board / Export (PDF)           |                         |                         | :material-check-circle: | :material-check-circle: | :material-check-circle: | :material-check-circle: |
+    | Editor board / Export (CSV)           |                         |                         | :material-check-circle: | :material-check-circle: | :material-check-circle: | :material-check-circle: |
+    | Editor board / Selection only         |                         |                         | :material-check-circle: | :material-check-circle: | :material-check-circle: | :material-check-circle: |
+    | Editor board / Updates privileges     |                         |                         | :material-check-circle: | :material-check-circle: | :material-check-circle: | :material-check-circle: |
+    | Editor board / Publish                |                         |                         |                         | :material-check-circle: | :material-check-circle: | :material-check-circle: |
+    | Editor board / Unpublish              |                         |                         |                         | :material-check-circle: | :material-check-circle: | :material-check-circle: |
+    | Editor board / Approve                |                         |                         |                         | :material-check-circle: | :material-check-circle: | :material-check-circle: |
+    | Editor board / Transfer Ownership     |                         |                         |                         |                         | :material-check-circle: | :material-check-circle: |
+    | Editor board / Validate               |                         |                         | :material-check-circle: | :material-check-circle: | :material-check-circle: | :material-check-circle: |
+    | Editor board / Validate record links  |                         |                         | :material-check-circle: | :material-check-circle: | :material-check-circle: | :material-check-circle: |
+    | Editor board / Updates categories     |                         |                         | :material-check-circle: | :material-check-circle: | :material-check-circle: | :material-check-circle: |
+    | Editor board / Delete                 |                         |                         | :material-check-circle: | :material-check-circle: | :material-check-circle: | :material-check-circle: |
+    | Editor board / Index records          |                         |                         | :material-check-circle: | :material-check-circle: | :material-check-circle: | :material-check-circle: |
 
 === "Administration"
 
-    |                                             | Anonymous user          |     Registered User     | Editor| Reviewer|       User Admin        |     Admini- strator     |
-    |---------------------------------------------| :---: |:-----------------------:| :---: | :---: |:-----------------------:|:-----------------------:|
-    | Summary| | | | | | :material-check-circle: |
-    | Metadata and Templates| | | | | | :material-check-circle: |
-    | Metadata and Templates / Standards| | | | | | :material-check-circle: |
-    | Metadata and Templates / Formatter| | | | | | :material-check-circle: |
-    | Metadata and Templates / Validation| | | | | | :material-check-circle: |
-    | Metadata and Templates / Metadata Identifier templates| | | | | | :material-check-circle: |
-    | Users and groups / Manage groups| | | | | :material-check-circle: | :material-check-circle: |
-    | Users and groups / Manage users| | | | | :material-check-circle: | :material-check-circle: |
-    | Harvesting / Catalogo harvesters| | | | | :material-check-circle: | :material-check-circle: |
-    | Harvesting / Catalogo harvesters report| | | | | :material-check-circle: | :material-check-circle: |
-    | Harvesting / Feature harvesters| | | | | :material-check-circle: | :material-check-circle: |
-    | Statistics and status / Status| | | | | | :material-check-circle: |
-    | Statistics and status / Record links analysis| | | | | :material-check-circle: | :material-check-circle: |
-    | Statistics and status / Information| | | | | | :material-check-circle: |
-    | Statistics and status / Versioning| | | | | | :material-check-circle: |
-    | Statistics and status / Content statistics| | | | | :material-check-circle: | :material-check-circle: |
-    | Reports / Update matadata| | | | | :material-check-circle: | :material-check-circle: |
-    | Reports / Internal metadata| | | | | :material-check-circle: | :material-check-circle: |
-    | Reports / Metadata file uploads| | | | | :material-check-circle: | :material-check-circle: |
-    | Reports / Metadata file dowloads| | | | | :material-check-circle: | :material-check-circle: |
-    | Reports / Users access| | | | | :material-check-circle: | :material-check-circle: |
-    | Classification systems / Theaurus| | | | | | :material-check-circle: |
-    | Classification systems / Category| | | | | | :material-check-circle: |
-    | Settings / Settings| | | | | | :material-check-circle: |
-    | Settings / User interface| | | | | :material-check-circle: | :material-check-circle: |
-    | Settings / CSS and Style| | | | | | :material-check-circle: |
-    | Settings / Logo| | | | | | :material-check-circle: |
-    | Settings / Sources| | | | | :material-check-circle: | :material-check-circle: |
-    | Settings / CSW| | | | | | :material-check-circle: |
-    | Settings / CSW test| | | | | | :material-check-circle: |
-    | Settings / Map servers| | | | | | :material-check-circle: |
-    | Settings / Static pages| | | | | | :material-check-circle: |
-    | Tools / Catalogue admin tools| | | | | | :material-check-circle: |
-    | Tools / Batch process| | | | | | :material-check-circle: |
-    | Tools / Transfer ownership| | | | | | :material-check-circle: |
+    |                                                               | Anonymous User          | Registered User         | Editor                  | Reviewer                | User Admin              | Admini- strator         |
+    |---------------------------------------------------------------|-------------------------|-------------------------|-------------------------|-------------------------|-------------------------|-------------------------|
+    | Summary                                                       |                         |                         |                         |                         |                         | :material-check-circle: |
+    | Metadata and Templates                                        |                         |                         |                         |                         |                         | :material-check-circle: |
+    | Metadata and Templates / Standards                            |                         |                         |                         |                         |                         | :material-check-circle: |
+    | Metadata and Templates / Formatter                            |                         |                         |                         |                         |                         | :material-check-circle: |
+    | Metadata and Templates / Validation                           |                         |                         |                         |                         |                         | :material-check-circle: |
+    | Metadata and Templates / Metadata Identifier templates        |                         |                         |                         |                         |                         | :material-check-circle: |
+    | Users and groups / Manage groups                              |                         |                         |                         |                         | :material-check-circle: | :material-check-circle: |
+    | Users and groups / Manage users                               |                         |                         |                         |                         | :material-check-circle: | :material-check-circle: |
+    | Harvesting / Catalog harvesters                               |                         |                         |                         |                         | :material-check-circle: | :material-check-circle: |
+    | Harvesting / Catalog harvesters report                        |                         |                         |                         |                         | :material-check-circle: | :material-check-circle: |
+    | Harvesting / Feature harvesters                               |                         |                         |                         |                         | :material-check-circle: | :material-check-circle: |
+    | Statistics and status / Status                                |                         |                         |                         |                         |                         | :material-check-circle: |
+    | Statistics and status / Record links analysis                 |                         |                         |                         |                         | :material-check-circle: | :material-check-circle: |
+    | Statistics and status / Information                           |                         |                         |                         |                         |                         | :material-check-circle: |
+    | Statistics and status / Versioning                            |                         |                         |                         |                         |                         | :material-check-circle: |
+    | Statistics and status / Content statistics                    |                         |                         |                         |                         | :material-check-circle: | :material-check-circle: |
+    | Reports / Update metadata                                     |                         |                         |                         |                         | :material-check-circle: | :material-check-circle: |
+    | Reports / Internal metadata                                   |                         |                         |                         |                         | :material-check-circle: | :material-check-circle: |
+    | Reports / Metadata file uploads                               |                         |                         |                         |                         | :material-check-circle: | :material-check-circle: |
+    | Reports / Metadata file downloads                             |                         |                         |                         |                         | :material-check-circle: | :material-check-circle: |
+    | Reports / Users access                                        |                         |                         |                         |                         | :material-check-circle: | :material-check-circle: |
+    | Classification systems / Thesaurus                            |                         |                         |                         |                         |                         | :material-check-circle: |
+    | Classification systems / Category                             |                         |                         |                         |                         |                         | :material-check-circle: |
+    | Settings / Settings                                           |                         |                         |                         |                         |                         | :material-check-circle: |
+    | Settings / User interface                                     |                         |                         |                         |                         | :material-check-circle: | :material-check-circle: |
+    | Settings / CSS and Style                                      |                         |                         |                         |                         |                         | :material-check-circle: |
+    | Settings / Logo                                               |                         |                         |                         |                         |                         | :material-check-circle: |
+    | Settings / Sources                                            |                         |                         |                         |                         | :material-check-circle: | :material-check-circle: |
+    | Settings / CSW                                                |                         |                         |                         |                         |                         | :material-check-circle: |
+    | Settings / CSW test                                           |                         |                         |                         |                         |                         | :material-check-circle: |
+    | Settings / Map servers                                        |                         |                         |                         |                         |                         | :material-check-circle: |
+    | Settings / Static pages                                       |                         |                         |                         |                         |                         | :material-check-circle: |
+    | Tools / Catalogue admin tools                                 |                         |                         |                         |                         |                         | :material-check-circle: |
+    | Tools / Batch process                                         |                         |                         |                         |                         |                         | :material-check-circle: |
+    | Tools / Transfer ownership                                    |                         |                         |                         |                         |                         | :material-check-circle: |

@@ -1428,7 +1428,7 @@
     "sourceName": "Název",
     "sourceName-help": "Krátký název portálu. MUSÍ se skládat pouze z písmen, číslic, '-' a '_'. Po vytvoření použijte překlady k definování štítků, které budou zobrazeny na panelu nástrojů.",
     "sourceFilter": "Vyhledávat filtr",
-    "sourceFilter-help": "Další vyhledávací kritéria, která mají být přidána do vyhledávání v portálu. Toto je <a href='https://lucene.apache.org/core/2_9_4/queryparsersyntax.html'>výraz lucene</a>. např. +keyword:inspire",
+    "sourceFilter-help": "Další vyhledávací kritéria, která mají být přidána do vyhledávání v portálu. Toto je <a href='https://www.elastic.co/guide/en/elasticsearch/reference/8.18/query-dsl-query-string-query.html#query-string-syntax'>výraz Elasticsearch</a>. např. +keyword:inspire",
     "displayInHeaderSwitcher": "Zobrazit v přepínači portálu",
     "displayInHeaderSwitcher-help": "Pokud je tato volba povolena, portál se zobrazí v seznamu dostupných portálů ve výběru portálu v záhlaví webu.",
     "sourceLogo": "Logo",

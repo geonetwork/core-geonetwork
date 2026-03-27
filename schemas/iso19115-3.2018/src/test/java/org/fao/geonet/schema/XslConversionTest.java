@@ -30,6 +30,8 @@ import org.fao.geonet.schemas.XslProcessTest;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+
 import org.junit.Test;
 import org.xmlunit.builder.DiffBuilder;
 import org.xmlunit.builder.Input;
@@ -58,6 +60,70 @@ public class XslConversionTest extends XslProcessTest {
         String expectedXml = Xml.getString(inputElement);
 
         Element resultElement = Xml.transform(xmlFromJSON, xslFile);
+        String resultOfConversion = Xml.getString(resultElement);
+
+        Diff diff = DiffBuilder
+            .compare(Input.fromString(resultOfConversion))
+            .withTest(Input.fromString(expectedXml))
+            .withNodeMatcher(new DefaultNodeMatcher(ElementSelectors.byName))
+            .normalizeWhitespace()
+            .ignoreComments()
+            .checkForSimilar()
+            .build();
+        assertFalse(
+            String.format("Differences: %s", diff.toString()),
+            diff.hasDifferences());
+    }
+
+    @Test
+    public void testArrayConversion() throws Exception {
+        String jsonString = "[{\"Test\":\"value1\"},{\"Test\":\"value2\"}]";
+        Element xmlFromJSON = Xml.getXmlFromJSON(jsonString);
+
+        String expectedElement = "<root><array><Test>value1</Test></array><array><Test>value2</Test></array></root>";
+
+        Diff diff = DiffBuilder
+            .compare(Input.fromString(expectedElement))
+            .withTest(Input.fromString(Xml.getString(xmlFromJSON)))
+            .withNodeMatcher(new DefaultNodeMatcher(ElementSelectors.byName))
+            .normalizeWhitespace()
+            .ignoreComments()
+            .checkForSimilar()
+            .build();
+        assertFalse(diff.toString(), diff.hasDifferences());
+    }
+
+    /**
+     * Tests the conversion of a JSON object to an XML representation and validates
+     * the resulting XML against an expected XML representation.
+     */
+    @Test
+    public void testObjectConversion() throws Exception {
+        String jsonString = "{\"Test\":\"value\", \"nestedObject\": {\"nestedField\": 433}}";
+        String expectedElement = "<root><Test>value</Test><nestedObject><nestedField>433</nestedField></nestedObject></root>";
+        Element xmlFromJSON = Xml.getXmlFromJSON(jsonString);
+        Diff diff = DiffBuilder
+            .compare(Input.fromString(expectedElement))
+            .withTest(Input.fromString(Xml.getString(xmlFromJSON)))
+            .withNodeMatcher(new DefaultNodeMatcher(ElementSelectors.byName))
+            .normalizeWhitespace()
+            .ignoreComments()
+            .checkForSimilar()
+            .build();
+        assertFalse(diff.toString(), diff.hasDifferences());
+    }
+
+
+    @Test
+    public void testDataciteConversion() throws Exception {
+        xslFile = Paths.get(testClass.getClassLoader().getResource("convert/fromDatacite.xsl").toURI());
+        xmlFile = Paths.get(testClass.getClassLoader().getResource("metadata-datacite.xml").toURI());
+        Path expectedFile = Paths.get(testClass.getClassLoader().getResource("metadata-datacite-after-conversion.xml").toURI());
+
+        Element inputElement = Xml.loadFile(expectedFile);
+        String expectedXml = Xml.getString(inputElement);
+
+        Element resultElement = Xml.transform(Xml.loadFile(xmlFile), xslFile);
         String resultOfConversion = Xml.getString(resultElement);
 
         Diff diff = DiffBuilder

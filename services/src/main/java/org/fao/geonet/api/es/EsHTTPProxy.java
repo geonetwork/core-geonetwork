@@ -62,6 +62,7 @@ import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.SelectionManager;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
+import org.fao.geonet.kernel.schema.MetadataOperationFilterType;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.schema.MetadataSchemaOperationFilter;
 import org.fao.geonet.kernel.search.EsFilterBuilder;
@@ -85,6 +86,7 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.sql.SQLException;
 import java.util.*;
 import java.util.zip.DeflaterInputStream;
 import java.util.zip.DeflaterOutputStream;
@@ -868,7 +870,7 @@ public class EsHTTPProxy {
      * @param doc
      * @throws JsonProcessingException
      */
-    private void processMetadataSchemaFilters(ServiceContext context, MetadataSchema mds, ObjectNode doc) throws JsonProcessingException {
+    private void processMetadataSchemaFilters(ServiceContext context, MetadataSchema mds, ObjectNode doc) throws JsonProcessingException, SQLException {
         if (!doc.has("_source")) {
             return;
         }
@@ -876,12 +878,26 @@ public class EsHTTPProxy {
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode sourceNode = (ObjectNode) doc.get("_source");
 
-        MetadataSchemaOperationFilter authenticatedFilter = mds.getOperationFilter("authenticated");
+        MetadataSchemaOperationFilter authenticatedFilter = mds.getOperationFilter(MetadataOperationFilterType.authenticated.name());
 
         List<String> jsonpathFilters = new ArrayList<>();
 
         if (authenticatedFilter != null && !context.getUserSession().isAuthenticated()) {
             jsonpathFilters.add(authenticatedFilter.getJsonpath());
+        }
+        //do the same for groupOwner
+        MetadataSchemaOperationFilter groupOwnerFilter = mds.getOperationFilter(MetadataOperationFilterType.groupOwner.name());
+
+        if (groupOwnerFilter != null) {
+            if (context.getUserSession().getProfile() != Profile.Administrator) {
+                List<Integer> userGroups = AccessManager.getGroups(context.getUserSession(), Profile.Editor);
+                Integer groupOwner = getSourceInteger(doc, Geonet.IndexFieldNames.GROUP_OWNER);
+                boolean isGroupOwner = groupOwner != null && userGroups.contains(groupOwner);
+
+                if (!isGroupOwner) {
+                    jsonpathFilters.add(groupOwnerFilter.getJsonpath());
+                }
+            }
         }
 
         MetadataSchemaOperationFilter editFilter = mds.getOperationFilter(ReservedOperation.editing);

@@ -30,17 +30,22 @@ import jeeves.server.context.ServiceContext;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiUtils;
+import org.fao.geonet.api.exception.ResourceNotFoundException;
+import org.fao.geonet.api.tools.i18n.LanguageUtils;
 import org.fao.geonet.domain.*;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
+import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
 import org.fao.geonet.repository.UserGroupRepository;
 import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.repository.specification.MetadataSpecs;
 import org.fao.geonet.repository.specification.UserGroupSpecs;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -73,9 +78,24 @@ public class TransferApi {
     @Autowired
     OperationAllowedRepository operationAllowedRepository;
     @Autowired
+    GroupRepository groupRepository;
+    @Autowired
     IMetadataManager metadataManager;
     @Autowired
     DataManager dataManager;
+
+    /**
+     * Language utils used to detect the requested language.
+     */
+    @Autowired
+    LanguageUtils languageUtils;
+
+    /**
+     * Message source.
+     */
+    @Autowired
+    @Qualifier("apiMessages")
+    ResourceBundleMessageSource messages;
 
     @io.swagger.v3.oas.annotations.Operation(
         summary = "Get owners",
@@ -122,6 +142,8 @@ public class TransferApi {
     @PreAuthorize("isAuthenticated()")
     @ResponseBody
     public List<UserGroupsResponse> retrieveAllUserGroups(
+        @RequestParam(value = "groupTypes", required = false)
+            List<GroupType> groupTypes,
         @Parameter(hidden = true)
             HttpSession httpSession
     ) throws Exception {
@@ -149,6 +171,13 @@ public class TransferApi {
                 List<Integer> myGroups = userGroupRepository.findAll(UserGroupSpecs.hasUserId(session.getUserIdAsInt()))
                     .stream().map(ug -> ug.getGroup().getId()).collect(Collectors.toList());
                 userGroups = userGroupRepository.findAll(UserGroupSpecs.hasGroupIds(myGroups));
+            }
+
+            // Apply group type filtering if groupTypes parameter is provided
+            if (groupTypes != null){
+                userGroups = userGroups.stream()
+                    .filter(ug -> groupTypes.contains(ug.getGroup().getType()))
+                    .collect(Collectors.toList());
             }
 
             for (UserGroup ug : userGroups) {
@@ -181,6 +210,14 @@ public class TransferApi {
     ) throws Exception {
         ApplicationContext applicationContext = ApplicationContextHolder.get();
         ServiceContext context = ApiUtils.createServiceContext(request);
+        Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
+
+        int groupId = transfer.getTargetGroup();
+        // If the group is reserved, there is no need to check if it's a workspace as the group will not be changed.
+        // This is required for transferring ownership to an administrator
+        if (!ReservedGroup.isReserved(groupId)) {
+            checkGroupIsWorkspace(groupId, locale);
+        }
 
         //--- transfer privileges (if case)
 
@@ -252,6 +289,26 @@ public class TransferApi {
         }
         dataManager.indexMetadata(list);
         return new ResponseEntity(HttpStatus.CREATED);
+    }
+
+    /**
+     * Checks if the given group is of type Workspace.
+     *
+     * @param groupId the identifier of the group to check
+     * @param locale the locale to use for error messages
+     * @throws ResourceNotFoundException if the group is not found
+     * @throws IllegalArgumentException if the group is not of type Workspace
+     */
+    private void checkGroupIsWorkspace(Integer groupId, Locale locale) throws ResourceNotFoundException, IllegalArgumentException {
+        Group group = groupRepository.findById(groupId).orElse(null);
+        if (group == null) {
+            throw new ResourceNotFoundException(messages.getMessage("api.groups.group_not_found", new
+                Object[]{groupId}, locale));
+        }
+        if (group.getType() != GroupType.Workspace) {
+            throw new IllegalArgumentException(messages.getMessage("api.groups.group_not_workspace", new
+                Object[]{groupId}, locale));
+        }
     }
 
     private Set<String> retrievePrivileges(ServiceContext context, Integer userId, int groupId) throws SQLException {

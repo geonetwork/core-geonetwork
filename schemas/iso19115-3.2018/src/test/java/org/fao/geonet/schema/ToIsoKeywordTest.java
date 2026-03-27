@@ -60,8 +60,7 @@ public class ToIsoKeywordTest {
 
 		XMLOutputter xmlOutputter = new XMLOutputter(Format.getPrettyFormat().setLineSeparator("\n"));
 		String actual = xmlOutputter.outputString(new Document(cswRecord));
-		boolean generateExpectedFileNameOnlyIfInputDiffersFromExpected = GENERATE_EXPECTED_FILE && !expectedFileName.equals(inputFileName);
-		TestSupport.assertGeneratedDataByteMatchExpected(expectedFileName, actual, generateExpectedFileNameOnlyIfInputDiffersFromExpected);
+		TestSupport.assertGeneratedDataByteMatchExpected(expectedFileName, actual, GENERATE_EXPECTED_FILE);
 	}
 
 }

@@ -267,6 +267,7 @@ nav:
         - user-guide/associating-resources/linking-feature-catalog.md
         - user-guide/associating-resources/linking-others.md
         - user-guide/associating-resources/linking-remote-records.md
+        - user-guide/associating-resources/linking-panel-configuration.md
       - user-guide/associating-resources/doi.md
       - user-guide/associating-resources/cite.md
     - 'Tag information':
@@ -287,7 +288,6 @@ nav:
       - 'Updating a set of records':
         - user-guide/workflow/batchupdate/index.md
         - user-guide/workflow/batchediting.md
-        - user-guide/workflow/batchupdate-from-admin.md
         - user-guide/workflow/batchupdate-xsl.md
       - user-guide/workflow/geopublication.md
       - user-guide/workflow/life-cycle.md
@@ -311,6 +311,7 @@ nav:
       - user-guide/harvesting/harvesting-webdav.md
       - user-guide/harvesting/harvesting-wfs-features.md
       - user-guide/harvesting/harvesting-database.md
+      - user-guide/harvesting/harvesting-stac.md
     - user-guide/export/index.md
     - 'Administration':
       - administrator-guide/index.md
@@ -340,6 +341,11 @@ nav:
         - administrator-guide/managing-metadata-standards/configure-validation.md
         - administrator-guide/managing-metadata-standards/metadata-identifier.md
         - administrator-guide/managing-metadata-standards/standards.md
+      - 'Managing Anonymous Links':
+        - administrator-guide/managing-anonymous-links/index.md
+        - administrator-guide/managing-anonymous-links/create-link.md
+        - administrator-guide/managing-anonymous-links/manage-links.md
+        - administrator-guide/managing-anonymous-links/delete-link.md
 
   - 'Maintainer Guide':
       - maintainer-guide/index.md

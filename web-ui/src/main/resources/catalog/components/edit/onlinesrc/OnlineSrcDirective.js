@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2021 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2026 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -1676,13 +1676,6 @@
                */
               scope.$watchCollection("params.selectedLayers", function (n, o) {
                 if (
-                  scope.config &&
-                  scope.config.wmsResources.addLayerNamesMode != "resourcename"
-                ) {
-                  return;
-                }
-
-                if (
                   o !== n &&
                   scope.params.selectedLayers &&
                   scope.params.selectedLayers.length > 0
@@ -1697,20 +1690,103 @@
                   var names = [],
                     descs = [];
 
+                  var isResourceNameMode =
+                    scope.config.wmsResources.addLayerNamesMode == "resourcename";
+
+                  // Validate url-mode config values and warn if config contain wrong values
+                  if (!isResourceNameMode) {
+                    var resName = scope.config.wmsResources.resourceName;
+                    var resDesc = scope.config.wmsResources.resourceDescription;
+                    if (
+                      resName !== undefined &&
+                      resName != "layerName" &&
+                      resName != "layerTitle"
+                    ) {
+                      console.warn(
+                        "wmsResources.resourceName has invalid value '" +
+                          resName +
+                          "'. Allowed values: 'layerName', 'layerTitle'."
+                      );
+                    }
+                    if (
+                      resDesc !== undefined &&
+                      resDesc != "layerName" &&
+                      resDesc != "layerTitle"
+                    ) {
+                      console.warn(
+                        "wmsResources.resourceDescription has invalid value '" +
+                          resDesc +
+                          "'. Allowed values: 'layerName', 'layerTitle'."
+                      );
+                    }
+                  }
+
                   angular.forEach(scope.params.selectedLayers, function (layer) {
-                    names.push(layer.Name || layer.name);
-                    descs.push(layer.Title || layer.title);
+                    if (isResourceNameMode) {
+                      names.push(layer.Name || layer.name);
+                      descs.push(layer.Title || layer.title);
+                    } else {
+                      // In url mode, check which WMS field to use for the resource name
+                      // and the resource description
+                      if (scope.config.wmsResources.resourceName === "layerName") {
+                        names.push(layer.Name || layer.name);
+                      } else if (
+                        scope.config.wmsResources.resourceName === "layerTitle"
+                      ) {
+                        names.push(layer.Title || layer.title);
+                      }
+
+                      if (scope.config.wmsResources.resourceDescription === "layerName") {
+                        descs.push(layer.Name || layer.name);
+                      } else if (
+                        scope.config.wmsResources.resourceDescription === "layerTitle"
+                      ) {
+                        descs.push(layer.Title || layer.title);
+                      }
+                    }
                   });
 
-                  if (scope.isMdMultilingual) {
-                    var langCode = scope.mdLangs[scope.mdLang];
-                    scope.params.name[langCode] = names.join(",");
-                    scope.params.desc[langCode] = descs.join(",");
+                  if (isResourceNameMode) {
+                    if (scope.isMdMultilingual) {
+                      // resourcename mode: only the current UI language is updated,
+                      // as the user may manage translations independently
+                      var langCode = scope.mdLangs[scope.mdLang];
+                      scope.params.name[langCode] = names.join(",");
+                      scope.params.desc[langCode] = descs.join(",");
+                    } else {
+                      angular.extend(scope.params, {
+                        name: names.join(","),
+                        desc: descs.join(",")
+                      });
+                    }
                   } else {
-                    angular.extend(scope.params, {
-                      name: names.join(","),
-                      desc: descs.join(",")
-                    });
+                    if (scope.isMdMultilingual) {
+                      // url mode: all languages are updated because WMS layer info
+                      // (name/title) is language-neutral
+                      if (names.length > 0) {
+                        angular.forEach(scope.mdLangs, function (value) {
+                          scope.params.name[value] = names.join(",");
+                        });
+                      }
+
+                      if (descs.length > 0) {
+                        angular.forEach(scope.mdLangs, function (value) {
+                          scope.params.desc[value] = descs.join(",");
+                        });
+                      }
+                    } else {
+                      if (names.length > 0) {
+                        angular.extend(scope.params, {
+                          name: names.join(",")
+                        });
+                      }
+
+                      if (descs.length > 0) {
+                        angular.extend(scope.params, {
+                          desc: descs.join(",")
+                        });
+                      }
+                    }
                   }
                 }
               });
@@ -2242,20 +2318,6 @@
                 scope.ctrl = {};
                 scope.searchObj = gnOnlinesrc.getSearchConfig();
 
-                // Define configuration to restrict search
-                // to a subset of records when an initiative type
-                // and/or association type is selected.
-                // eg. crossReference-study restrict to DC records
-                // using _schema=dublin-core
-                scope.searchParamsPerType = {
-                  //'crossReference-study': {
-                  //  _schema: 'dublin-core'
-                  //},
-                  //'crossReference-*': {
-                  //  _isHarvested: 'n'
-                  //}
-                };
-
                 scope.modelOptions = angular.copy(gnGlobalSettings.modelOptions);
               },
               post: function postLink(scope, iElement, iAttrs) {
@@ -2283,6 +2345,13 @@
                       (config && config.fields && config.fields.initiativeType) || null,
                     sources: config && config.sources
                   };
+                  var metadataStore =
+                    scope.config &&
+                    scope.config.sources &&
+                    scope.config.sources.metadataStore;
+                  scope.baseSearchParams = (metadataStore && metadataStore.params) || {};
+                  scope.searchParamsPerType =
+                    (metadataStore && metadataStore.searchParamsPerType) || {};
 
                   $(scope.popupid).modal("show");
 
@@ -2290,11 +2359,15 @@
                   scope.selection = [];
                 });
 
-                // Clear the search params and input
                 scope.clearSearch = function () {
                   $("#siblingdd input").val("");
                   scope.searchObj.any = "";
-                  scope.$broadcast("resetSearch");
+                  scope.searchObj.params = angular.extend(
+                    {},
+                    scope.searchObj.defaultParams,
+                    scope.baseSearchParams || {}
+                  );
+                  scope.$broadcast("resetSearch", scope.searchObj.params);
                 };
 
                 // Append * for like search
@@ -2315,15 +2388,16 @@
                 // Based on initiative type and association type
                 // define custom search parameter and refresh search
                 var setSearchParamsPerType = function () {
+                  var searchParams = scope.searchParamsPerType || {};
                   var p =
-                    scope.searchParamsPerType[
+                    searchParams[
                       scope.config.associationType + "-" + scope.config.initiativeType
                     ];
-                  var pall =
-                    scope.searchParamsPerType[scope.config.associationType + "-*"];
+                  var pall = searchParams[scope.config.associationType + "-*"];
                   scope.searchObj.params = angular.extend(
                     {},
                     scope.searchObj.defaultParams,
+                    scope.baseSearchParams || {},
                     angular.isDefined(p) ? p : angular.isDefined(pall) ? pall : {}
                   );
                   scope.$broadcast("resetSearch", scope.searchObj.params);

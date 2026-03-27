@@ -464,7 +464,7 @@
 
 
         <xsl:for-each
-          select="mri:defaultLocale/lan:PT_Locale/lan:language/lan:LanguageCode/@codeListValue">
+          select="mri:defaultLocale/lan:PT_Locale/lan:language/lan:LanguageCode/@codeListValue|mri:otherLocale/lan:PT_Locale/lan:language/lan:LanguageCode/@codeListValue">
           <resourceLanguage>
             <xsl:value-of select="."/>
           </resourceLanguage>
@@ -737,7 +737,7 @@
         <xsl:for-each select="*:resourceMaintenance/*">
           <maintenance type="object">{
             "frequency": "<xsl:value-of select="*:maintenanceAndUpdateFrequency/*/@codeListValue"/>"
-            <xsl:for-each select="*:dateOfNextUpdate[*/text() != '']">
+            <xsl:for-each select="*:maintenanceDate/*/cit:date[*/text() != '']">
               <xsl:variable name="dateOfNextUpdateZulu"
                             select="date-util:convertToISOZuluDateTime(*/text())"/>
               <xsl:if test="$dateOfNextUpdateZulu != ''">

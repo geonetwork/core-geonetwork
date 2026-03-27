@@ -41,7 +41,10 @@ var gnHarvestergeonetwork40 = {
         "source": {
           "uuid": [],
           "name": []
-        }
+        },
+        "categories": "",
+        "schemes": "",
+        "groupOwners": ""
       }],
       "ifRecordExistAppendPrivileges": false,
       "privileges": [{
@@ -87,6 +90,9 @@ var gnHarvestergeonetwork40 = {
       + '      <title>' + ((h.searches[0] && h.searches[0].title) || '') + '</title>'
       + '      <abstract>' + ((h.searches[0] && h.searches[0]['abstract']) || '') + '</abstract>'
       + '      <keywords>' + ((h.searches[0] && h.searches[0].keywords) || '') + '</keywords>'
+      + '      <categories>' + ((h.searches[0] && h.searches[0].categories) || '') + '</categories>'
+      + '      <schemes>' + ((h.searches[0] && h.searches[0].schemes) || '') + '</schemes>'
+      + '      <groupOwners>' + ((h.searches[0] && h.searches[0].groupOwners) || '') + '</groupOwners>'
       + '      <source>'
       + '        <uuid>' + ((h.searches[0] && h.searches[0].source.uuid) || '') + '</uuid>'
       + '        <name/>'

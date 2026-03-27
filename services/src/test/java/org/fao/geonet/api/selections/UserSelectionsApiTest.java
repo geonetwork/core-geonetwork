@@ -158,8 +158,11 @@ public class UserSelectionsApiTest extends AbstractServiceIntegrationTest {
             .andExpect(status().is(201));
     }
 
+    // Testing deprecated API. It can be removed when deprecated api's are removed.
+    // New api testing is in method addDeleteSelection() below.
     @Test
-    public void addDeleteSelection() throws Exception {
+    @Deprecated
+    public void addDeleteSelectionDeprecated() throws Exception {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
 
         String name = "notification";
@@ -188,10 +191,10 @@ public class UserSelectionsApiTest extends AbstractServiceIntegrationTest {
 
         // Create
         MvcResult r = this.mockMvc.perform(put("/srv/api/userselections")
-            .content(json)
-            .contentType(API_JSON_EXPECTED_ENCODING)
-            .session(this.mockHttpSession)
-            .accept(MediaType.parseMediaType("application/json")))
+                .content(json)
+                .contentType(API_JSON_EXPECTED_ENCODING)
+                .session(this.mockHttpSession)
+                .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().is(201))
             .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING))
             .andReturn();
@@ -240,6 +243,103 @@ public class UserSelectionsApiTest extends AbstractServiceIntegrationTest {
             .andExpect(jsonPath("$[*]", hasItem(metadataUuid)));
 
         this.mockMvc.perform(delete("/srv/api/userselections/" + createdSelection.getId() + "/1?uuid=" + metadataUuid)
+            .session(this.mockHttpSession)
+            .accept(MediaType.parseMediaType("application/json")))
+            .andExpect(status().isNoContent());
+
+        verify(this.metadataIndexerSpy, times(2)).indexMetadata(eq(metadataId), any(Boolean.class), eq(IndexingMode.full));
+
+        // Delete
+        this.mockMvc.perform(delete("/srv/api/userselections/" + createdSelection.getId())
+                .accept(MediaType.parseMediaType("application/json")))
+            .andExpect(status().is(204));
+
+        // Check in DB
+        assertFalse(selectionRepository.existsById(createdSelection.getId()));
+    }
+
+    @Test
+    public void addDeleteSelection() throws Exception {
+        this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+
+        String name = "notification";
+
+        // Check not in db
+        Selection selection = selectionRepository.findOneByName(name);
+        assertNull(selection);
+
+        Selection newSelection = new Selection();
+        newSelection.setId(10);
+        newSelection.setName(name);
+        newSelection.setWatchable(true);
+        Map<String, String> t = new HashMap<>();
+        t.put("fre", "french");
+        newSelection.setLabelTranslations(t);
+
+        Gson gson = new GsonBuilder()
+            .setFieldNamingStrategy(new JsonFieldNamingStrategy())
+            .setExclusionStrategies(new FieldNameExclusionStrategy("_labelTranslations", "watchable"))
+            .create();
+        String json = gson.toJson(newSelection);
+
+        this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+
+        this.mockHttpSession = loginAsAdmin();
+
+        // Create
+        MvcResult r = this.mockMvc.perform(put("/srv/api/userselections")
+            .content(json)
+            .contentType(API_JSON_EXPECTED_ENCODING)
+            .session(this.mockHttpSession)
+            .accept(MediaType.parseMediaType("application/json")))
+            .andExpect(status().is(201))
+            .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING))
+            .andReturn();
+
+        // Check in DB
+        Selection createdSelection = selectionRepository.findOneByName(name);
+        assertNotNull(createdSelection);
+        assertEquals(name, createdSelection.getName());
+        assertEquals(false, createdSelection.isWatchable());
+
+        // Check in API
+        // Unknown selection set return 404
+        this.mockMvc.perform(put("/srv/api/userselections/11111/items?userIdentifier=11111")
+            .session(this.mockHttpSession)
+            .accept(MediaType.parseMediaType("application/json")))
+            .andExpect(status().isNotFound());
+
+        // Unknown user return 404
+        this.mockMvc.perform(put("/srv/api/userselections/" + createdSelection.getId() + "/items?userIdentifier=11111")
+            .session(this.mockHttpSession)
+            .accept(MediaType.parseMediaType("application/json")))
+            .andExpect(status().isNotFound());
+
+        // Unkown metadata return 404
+        this.mockMvc.perform(put("/srv/api/userselections/" + createdSelection.getId() + "/items?userIdentifier=1&uuid=ABCD")
+            .session(this.mockHttpSession)
+            .accept(MediaType.parseMediaType("application/json")))
+            .andExpect(status().isNotFound());
+
+
+        String metadataId = importMetadata(context);
+        String metadataUuid = _dataManager.getMetadataUuid(metadataId);
+        this.mockMvc.perform(put("/srv/api/userselections/" + createdSelection.getId() + "/items?userIdentifier=1&uuid=" + metadataUuid)
+            .session(this.mockHttpSession)
+            .accept(MediaType.parseMediaType("application/json")))
+            .andExpect(status().isCreated());
+
+        verify(this.metadataIndexerSpy, times(1)).indexMetadata(eq(metadataId), any(Boolean.class), eq(IndexingMode.full));
+
+        this.mockMvc.perform(get("/srv/api/userselections/" + createdSelection.getId() + "/items?userIdentifier=1")
+            .session(this.mockHttpSession)
+            .accept(MediaType.parseMediaType("application/json")))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING))
+            .andExpect(jsonPath("$", hasSize(1)))
+            .andExpect(jsonPath("$[*]", hasItem(metadataUuid)));
+
+        this.mockMvc.perform(delete("/srv/api/userselections/" + createdSelection.getId() + "/items?userIdentifier=1&uuid=" + metadataUuid)
             .session(this.mockHttpSession)
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().isNoContent());

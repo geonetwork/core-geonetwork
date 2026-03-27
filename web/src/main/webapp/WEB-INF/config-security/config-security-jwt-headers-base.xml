@@ -33,7 +33,10 @@
           http://www.springframework.org/schema/util
           http://www.springframework.org/schema/util/spring-util.xsd">
 
-  <bean id ="jwtHeadersSecurityConfig" class="org.fao.geonet.kernel.security.jwtheaders.JwtHeadersSecurityConfig"/>
+  <bean id="jwtHeadersSecurityConfig"
+        class="org.fao.geonet.kernel.security.jwtheaders.JwtHeadersSecurityConfig">
+    <property name="loginType" value="${jwtHeadersSecurityConfig.loginType}"/>
+  </bean>
 
   <bean id ="jwtheadersConfiguration" class="org.fao.geonet.kernel.security.jwtheaders.JwtHeadersConfiguration">
     <constructor-arg ref ="jwtHeadersSecurityConfig" />

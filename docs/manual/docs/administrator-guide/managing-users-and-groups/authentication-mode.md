@@ -758,6 +758,28 @@ Inside `WEB-INF/config-security/config-security-openidconnectbearer.xml`:
 
 The easiest way to test is to obtain a Bearer Token, and then use a browser plugin to add the ``Authorization: Bearer <token>`` header to all requests. When you visit the Geonetwork website, you should see yourself logged in with the appropriate permissions.
 
+#### Service account Configuration {#service_account_configuration}
+
+If using background jobs such as harvester and there is a requirement to connect to external services which are also authenticated by the same provider then service accounts may be required.
+
+To enable service accounts use `OPENIDCONNECT_SERVICE_ACCOUNT_ENABLED=true`. 
+
+!!! note
+
+    This will currently only work with `GEONETWORK_SECURITY_TYPE=openidconnectbearer`
+
+!!! note
+
+    The service account client must be configured in the IDP to allow the `client_credentials` grant type.
+
+By default the same client as used for user authentication will be used for service accounts. To configure a different client for service accounts then use the following environment variables:
+
+``` properties
+OPENIDCONNECT_SERVICE_ACCOUNT_CLIENTSECRET='...'
+OPENIDCONNECT_SERVICE_ACCOUNT_CLIENTID='...'
+```
+If special scope is required for the service account then the following environment variable can be used `OPENIDCONNECT_SERVICE_ACCOUNT_SCOPES`
+
 #### Other Providers
 
 This has been tested with Azure AD (groups in the MS Graph API) and KeyCloak (groups in the `userinfo`).
