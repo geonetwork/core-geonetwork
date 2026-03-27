@@ -1879,8 +1879,10 @@
 <p>This function allows storing the HTML content of static pages and displaying links to these pages in specific sections of the user interface. </p>
 <p>To add new static pages go to <strong>Admin Console</strong> &rarr;  <strong>Settings</strong> &rarr;  <strong>Static Pages</strong> and select the <strong>+ New Static Page</strong> option, providing the following information:</p>
 <ul>
-<li><strong>Language</strong>: User interface language in which the static page will be displayed.</li>
-<li><strong>Page identifier</strong>: A unique text identifier for the page.</li>
+<li><strong>Language</strong>: User interface language in which the static page will be displayed.<br />
+  (3 letters like 'eng', 'ita', 'fra' ...)</li>
+<li><strong>Page identifier</strong>: A unique text identifier for the page.<br />
+  This value should be encoded</li>
 <li><strong>Page label</strong>: Label to display on the link.</li>
 <li><strong>Page icon</strong>: (Optional) Icon to display next to the link label.</li>
 <li>
@@ -1896,7 +1898,7 @@
 <li>
 <p><strong>Link</strong>: Available for <strong>Web link</strong> / <strong>Email link</strong> formats.</p>
 <ul>
-<li>For <strong>Web link</strong> the link to a web page.</li>
+<li>For <strong>Web link</strong> the URL link to another web page.  The URL should be encoded.</li>
 <li>For <strong>Email link</strong>, the email address to which the email will be sent.</li>
 </ul>
 </li>

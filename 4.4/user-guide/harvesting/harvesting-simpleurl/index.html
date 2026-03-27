@@ -1688,10 +1688,21 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#sample-configuration-for-opendatasoft" class="md-nav__link">
+  <a href="#sample-configuration-for-opendatasoft-v1" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Sample configuration for opendatasoft
+        Sample configuration for opendatasoft v1
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sample-configuration-for-opendatasoft-v2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sample configuration for opendatasoft v2
       
     </span>
   </a>
@@ -2375,10 +2386,21 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#sample-configuration-for-opendatasoft" class="md-nav__link">
+  <a href="#sample-configuration-for-opendatasoft-v1" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Sample configuration for opendatasoft
+        Sample configuration for opendatasoft v1
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sample-configuration-for-opendatasoft-v2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sample configuration for opendatasoft v2
       
     </span>
   </a>
@@ -2476,7 +2498,7 @@
 </ul>
 </li>
 <li><em>Element to loop on</em>: Property/element containing a list of the record entries. (Indicated as an absolute path from the document root.) eg. <code>/datasets</code></li>
-<li><em>Element for the UUID of each record</em> : Property containing the record id. eg. <code>datasetid</code></li>
+<li><em>Element for the UUID of each record</em> : Property containing the record id. eg. <code>/datasetid</code></li>
 <li><em>Pagination parameters</em>: (optional)<ul>
 <li><em>Element for the number of records to collect</em>: Property indicating the total count of record entries. (Indicated as an absolute path from the document root.) eg. <code>/nhits</code></li>
 <li><em>From URL parameter</em>: Property indicating the first record item on the current "page" eg. <code>start</code></li>
@@ -2514,11 +2536,20 @@ To use the API Key feature:
 - The key will be sent in each HTTP request as a header: <code>Header-Name: &lt;api-key-value&gt;</code>.<br />
 If Basic Auth is also set, both forms of authentication will be sent.</p>
 <h2 id="sample-configurations">Sample configurations</h2>
-<h3 id="sample-configuration-for-opendatasoft">Sample configuration for opendatasoft</h3>
+<h3 id="sample-configuration-for-opendatasoft-v1">Sample configuration for opendatasoft v1</h3>
 <ul>
 <li><em>Element to loop on</em> - <code>/datasets</code></li>
 <li><em>Element for the number of records to collect</em> : <code>/nhits</code></li>
-<li><em>Element for the UUID of each record</em> : <code>datasetid</code></li>
+<li><em>Element for the UUID of each record</em> : <code>/datasetid</code></li>
+<li><em>From URL parameter</em> : <code>start</code></li>
+<li><em>Size URL parameter</em> : <code>rows</code></li>
+<li><em>XSL transformation to apply</em> : <code>OPENDATASOFT-to-ISO19115-3-2018</code></li>
+</ul>
+<h3 id="sample-configuration-for-opendatasoft-v2">Sample configuration for opendatasoft v2</h3>
+<ul>
+<li><em>Element to loop on</em> - <code>/datasets</code></li>
+<li><em>Element for the number of records to collect</em> : <code>/nhits</code></li>
+<li><em>Element for the UUID of each record</em> : <code>/dataset/datasetid</code></li>
 <li><em>From URL parameter</em> : <code>start</code></li>
 <li><em>Size URL parameter</em> : <code>rows</code></li>
 <li><em>XSL transformation to apply</em> : <code>OPENDATASOFT-to-ISO19115-3-2018</code></li>
@@ -2527,7 +2558,7 @@ If Basic Auth is also set, both forms of authentication will be sent.</p>
 <ul>
 <li><em>Element to loop on</em> - <code>/dataset</code></li>
 <li><em>Element for the number of records to collect</em> : <code>/result/count</code></li>
-<li><em>Element for the UUID of each record</em> : <code>landingPage</code></li>
+<li><em>Element for the UUID of each record</em> : <code>/landingPage</code></li>
 <li><em>From URL parameter</em> : <code>start</code></li>
 <li><em>Size URL parameter</em> : <code>rows</code></li>
 <li><em>XSL transformation to apply</em> : <code>ESRIDCAT-to-ISO19115-3-2018</code></li>
@@ -2536,7 +2567,7 @@ If Basic Auth is also set, both forms of authentication will be sent.</p>
 <ul>
 <li><em>Element to loop on</em> - <code>/result/0</code></li>
 <li><em>Element for the number of records to collect</em> : <code>/result/count</code></li>
-<li><em>Element for the UUID of each record</em> : <code>id</code></li>
+<li><em>Element for the UUID of each record</em> : <code>/id</code></li>
 <li><em>From URL parameter</em> : <code>start</code></li>
 <li><em>Size URL parameter</em> : <code>rows</code></li>
 <li><em>XSL transformation to apply</em> : <code>DKAN-to-ISO19115-3-2018</code></li>
