@@ -207,6 +207,14 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
         @RequestParam(
             value = "language",
             required = false) final String iso3lang,
+        @Parameter(
+            description = "Output parameter is optional. If not defined, the output format is computed based on the HTTP accept header.\n\n" +
+                "Some specific cases:\n" +
+                "* Use `xsl-view?output=pdf` to convert the HTML output to PDF\n" +
+                "* Use `dcat?output=turtle` to convert the RDF/XML output to turtle\n" +
+                "* Use `dcat?output=jsonld` to convert the RDF/XML output to JSON-LD",
+            required = false
+        )
         @RequestParam(
             value = "output",
             required = false)
