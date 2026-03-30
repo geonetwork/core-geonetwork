@@ -1513,7 +1513,7 @@
                 "code": "<xsl:value-of select="util:escapeForJson(*/*:code/*/text())"/>"
               </xsl:for-each>
               <xsl:for-each select="*:mountedOn/*/*:identifier">
-                ,"mountedOn": "<xsl:value-of select="*/*:code/*/text()"/>"
+                ,"mountedOn": "<xsl:value-of select="util:escapeForJson(*/*:code/*/text())"/>"
               </xsl:for-each>
               <xsl:if test="normalize-space(*:description) != ''">
                 ,"descriptionObject": <xsl:value-of select="gn-fn-index:add-multilingual-field(
