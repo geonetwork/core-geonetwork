@@ -47,8 +47,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.IllformedLocaleException;
 import java.util.Locale;
 
@@ -130,7 +128,7 @@ public class GeonetworkOAuth2LoginAuthenticationFilter extends OAuth2LoginAuthen
             if (requestCache != null) {
                 SavedRequest savedRequest = requestCache.getRequest(request, response);
                 if (savedRequest != null) {
-                    redirectURL = savedRequest.getRedirectUrl();
+                    redirectURL = normalizeRedirectUrl(savedRequest.getRedirectUrl(), request);
                     Log.debug(Geonet.SECURITY, "Retrieved original request from SavedRequest: " + redirectURL);
                 } else {
                     Log.debug(Geonet.SECURITY, "No SavedRequest found in RequestCache");
@@ -147,26 +145,16 @@ public class GeonetworkOAuth2LoginAuthenticationFilter extends OAuth2LoginAuthen
                     requestCache.removeRequest(request, response);
 
                     response.sendRedirect(redirectURL);
+                } else {
+                    response.sendRedirect(request.getContextPath());
                 }
             } else {
                 Log.debug(Geonet.SECURITY, "RequestCache is not available");
 
-                redirectURL = findQueryParameter(request, "redirectUrl");
+                redirectURL = normalizeRedirectUrl(findQueryParameter(request, "redirectUrl"), request);
                 if (redirectURL != null) {
                     Log.debug(Geonet.SECURITY, "Retrieved redirect URL from query parameter: " + redirectURL);
-
-                    try {
-                        URI redirectUri = new URI(redirectURL);
-                        if (!redirectUri.isAbsolute()) {
-                            response.sendRedirect(redirectUri.toString());
-                        } else {
-                            // If the redirect url ends up being null or absolute url then lets redirect back to the context home.
-                            Log.warning(Geonet.SECURITY, "Failed to perform login redirect to '" + redirectURL + "'. Redirected to context home");
-                            response.sendRedirect(request.getContextPath());
-                        }
-                    } catch (URISyntaxException e) {
-                        response.sendRedirect(request.getContextPath());
-                    }
+                    response.sendRedirect(redirectURL);
                 } else {
                     response.sendRedirect(request.getContextPath());
                 }
@@ -223,6 +211,31 @@ public class GeonetworkOAuth2LoginAuthenticationFilter extends OAuth2LoginAuthen
         } catch (Exception e) {
             return null;
         }
+    }
+
+    // Ensures redirect targets stay on this server and in the current webapp context.
+    static String normalizeRedirectUrl(String redirectUrl, HttpServletRequest request) {
+        if (request == null || StringUtils.isBlank(redirectUrl)) {
+            return null;
+        }
+
+        String redirect = redirectUrl.trim();
+        if (redirect.startsWith("//") || redirect.startsWith("\\\\")
+            || redirect.contains("://")
+            || redirect.indexOf('\r') >= 0 || redirect.indexOf('\n') >= 0
+            || !redirect.startsWith("/")) {
+            return null;
+        }
+
+        String contextPath = StringUtils.defaultString(request.getContextPath());
+        if (StringUtils.isNotBlank(contextPath)
+            && !"/".equals(contextPath)
+            && !redirect.equals(contextPath)
+            && !redirect.startsWith(contextPath + "/")) {
+            return null;
+        }
+
+        return redirect;
     }
 
 }
