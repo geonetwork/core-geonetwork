@@ -272,66 +272,38 @@
     </xsl:choose>
   </xsl:template>
 
-  <!-- Process all metadata / dataset dates and keep the most recent date -->
+  <!--
+  Process all dates having a corresponding dublin core element name corresponding to an ISO date type code
+  Keep only the most recent date for each type.
+  -->
   <xsl:template mode="iso19115-3-to-dcat"
-                match="mdb:dateInfo|cit:CI_Citation/cit:date[*/cit:date]">
+                match="mdb:dateInfo[*/cit:dateType/*/@codeListValue = $isoDateTypeToDcatCommonNames/text()]
+                             |cit:CI_Citation/cit:date[*/cit:dateType/*/@codeListValue = $isoDateTypeToDcatCommonNames/text()]"
+                priority="10">
 
-    <xsl:variable name="elementName" select="name()" />
+    <xsl:variable name="dateType" select="current()/*/cit:dateType/*/@codeListValue"/>
 
-    <!-- Process all dates when processing the first date -->
-    <xsl:if test="count(preceding-sibling::*[name() = $elementName]) = 0">
-      <xsl:variable name="issuedDateTypes" select="$isoDateTypeToDcatCommonNames[@key='dct:issued']" />
+    <xsl:variable name="dcatElementName"
+                         as="xs:string"
+                         select="$isoDateTypeToDcatCommonNames[text() = $dateType]/@key"/>
 
-      <!-- issued dates -->
-      <xsl:variable name="issuedDates">
-        <xsl:for-each select="../*[name() = $elementName]/*/cit:date">
-          <xsl:sort select="." order="descending" />
+    <xsl:variable name="allIsoDateTypeForDublinCoreType"
+                        as="xs:string*"
+                        select="$isoDateTypeToDcatCommonNames[@key = $dcatElementName]/text()"/>
 
-          <xsl:variable name="dateType"
-                        as="xs:string?"
-                        select="../cit:dateType/*/@codeListValue"/>
-          <xsl:variable name="dcatElementName"
-                        as="xs:string?"
-                        select="$issuedDateTypes[. = $dateType]/@key"/>
-          <xsl:if test="string($dcatElementName)">
-            <xsl:call-template name="rdf-date">
-              <xsl:with-param name="nodeName" select="$dcatElementName"/>
-            </xsl:call-template>
-          </xsl:if>
-        </xsl:for-each>
-      </xsl:variable>
+    <xsl:variable name="allDates" as="xs:string*"
+                         select="../*[name() = current()/name()][*/cit:dateType/*/@codeListValue = $allIsoDateTypeForDublinCoreType]/*/cit:date/*/text()"/>
 
-      <xsl:copy-of select="$issuedDates/*[1]"/>
-      <xsl:if test="count($issuedDates/*) = 0">
-        <xsl:message>WARNING: No issued date found for this resource.</xsl:message>
-      </xsl:if>
-
-      <!-- modified dates -->
-      <xsl:variable name="modifiedDateTypes" select="$isoDateTypeToDcatCommonNames[@key='dct:modified']" />
-
-      <xsl:variable name="modifiedDates">
-        <xsl:for-each select="../*[name() = $elementName]/*/cit:date">
-          <xsl:sort select="." order="descending" />
-          <xsl:variable name="dateType"
-                        as="xs:string?"
-                        select="../cit:dateType/*/@codeListValue"/>
-          <xsl:variable name="dcatElementName"
-                        as="xs:string?"
-                        select="$modifiedDateTypes[. = $dateType]/@key"/>
-          <xsl:if test="string($dcatElementName)">
-            <xsl:call-template name="rdf-date">
-              <xsl:with-param name="nodeName" select="$dcatElementName"/>
-            </xsl:call-template>
-          </xsl:if>
-        </xsl:for-each>
-      </xsl:variable>
-
-      <xsl:copy-of select="$modifiedDates/*[1]"/>
-      <xsl:if test="count($modifiedDates/*) = 0">
-        <xsl:message>WARNING: No modifiedDate date found for this resource.</xsl:message>
-      </xsl:if>
-    </xsl:if>
+    <xsl:for-each select="current()/*/cit:date/*[text() = max($allDates)]">
+      <xsl:call-template name="rdf-date">
+        <xsl:with-param name="nodeName" select="$dcatElementName"/>
+      </xsl:call-template>
+    </xsl:for-each>
   </xsl:template>
+
+  <!-- Ignore dates not handled by previous template (having a known dublin core type -->
+  <xsl:template mode="iso19115-3-to-dcat"
+                match="mdb:dateInfo|cit:CI_Citation/cit:date"/>
 
 
   <!--
