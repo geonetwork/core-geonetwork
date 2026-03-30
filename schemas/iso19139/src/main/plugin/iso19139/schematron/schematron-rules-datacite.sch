@@ -27,6 +27,7 @@
 
   <sch:title xmlns="http://www.w3.org/2001/XMLSchema">Datacite (DOI)</sch:title>
   <sch:ns prefix="gmd" uri="http://www.isotc211.org/2005/gmd"/>
+  <sch:ns prefix="gmx" uri="http://www.isotc211.org/2005/gmx"/>
   <sch:ns prefix="srv" uri="http://www.isotc211.org/2005/srv"/>
   <sch:ns prefix="gco" uri="http://www.isotc211.org/2005/gco"/>
   <sch:ns prefix="geonet" uri="http://www.fao.org/geonetwork"/>
@@ -68,7 +69,7 @@
 
 
       <sch:let name="publisher"
-               value="(gmd:distributionInfo//gmd:distributorContact)[1]/*/gmd:organisationName/gco:CharacterString"/>
+               value="(gmd:distributionInfo//gmd:distributorContact)[1]/*/gmd:organisationName/(gco:CharacterString|gmx:Anchor)"/>
 
       <sch:assert test="$publisher != ''">$loc/strings/datacite.publisher.missing</sch:assert>
       <sch:report test="$publisher != ''">

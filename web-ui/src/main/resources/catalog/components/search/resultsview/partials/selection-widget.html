@@ -38,19 +38,29 @@
       >
       <span class="caret"></span>
     </button>
-    <ul
-      class="dropdown-menu"
-      role="menu"
-      data-ng-if="!operationOnSelectionInProgress"
-      data-ng-init="translateValues = {selectedCount: searchResults.selectedCount}"
-    >
-      <li data-ng-show="!excludePattern.test('exportMEF')">
+    <ul class="dropdown-menu" role="menu" data-ng-if="!operationOnSelectionInProgress">
+      <li
+        data-ng-show="!excludePattern.test('exportMEF')"
+        data-ng-class="{'disabled': attachmentsExceedExportLimit}"
+        data-ng-attr-title="{{attachmentsExceedExportLimit ? ('attachmentsExportLimitExceededBatch' | translate) : ''}}"
+      >
         <a
           href=""
           data-ng-disabled="operationOnSelectionInProgress"
-          data-ng-click="mdService.metadataMEF(undefined, searchResults.selectionBucket)"
+          data-ng-click="mdService.metadataMEF(undefined, searchResults.selectionBucket, undefined, true)"
         >
           <i class="fa fa-fw fa-file-zip-o"></i>&nbsp;<span translate>exportMEF</span>
+        </a>
+      </li>
+      <li data-ng-show="!excludePattern.test('exportMEF-excludeAttachments')">
+        <a
+          href=""
+          data-ng-disabled="operationOnSelectionInProgress"
+          data-ng-click="mdService.metadataMEF(undefined, searchResults.selectionBucket, undefined, false)"
+        >
+          <i class="fa fa-fw fa-file-zip-o"></i>&nbsp;<span translate
+            >exportMEF-excludeAttachments</span
+          >
         </a>
       </li>
       <li data-ng-show="!excludePattern.test('exportPDF')">
@@ -162,7 +172,7 @@
         <a
           href=""
           data-ng-click="mdService.validateMd(undefined, searchResults.selectionBucket)"
-          data-gn-confirm-click="{{'validateSelectedRecordConfirm' | translate:translateValues}}"
+          data-gn-confirm-click="{{'validateSelectedRecordConfirm' | translate:({selectedCount: searchResults.selectedCount})}}"
         >
           <i class="fa fa-fw fa-check"></i>&nbsp;<span translate>validate</span>
         </a>
@@ -174,7 +184,7 @@
         <a
           href=""
           data-ng-click="mdService.validateMdLinks(searchResults.selectionBucket)"
-          data-gn-confirm-click="{{'validateLinksSelectedRecordConfirm' | translate:translateValues}}"
+          data-gn-confirm-click="{{'validateLinksSelectedRecordConfirm' | translate:({selectedCount: searchResults.selectedCount})}}"
         >
           <i class="fa fa-fw fa-link"></i>&nbsp;<span translate>validateLinks</span>
         </a>
@@ -186,7 +196,7 @@
         <a
           href=""
           data-ng-click="mdService.validateMdInspire(searchResults.selectionBucket)"
-          data-gn-confirm-click="{{'validateSelectedRecordINSPIREConfirm' | translate:translateValues}}"
+          data-gn-confirm-click="{{'validateSelectedRecordINSPIREConfirm' | translate:({selectedCount: searchResults.selectedCount})}}"
         >
           <i class="fa fa-fw fa-inspire"></i>&nbsp;<span translate>validateInspire</span>
         </a>
@@ -198,7 +208,7 @@
         <a
           href=""
           data-ng-click="mdService.validateMdInspire(searchResults.selectionBucket, validationNode)"
-          data-gn-confirm-click="{{'validateSelectedRecordINSPIREConfirm' | translate:translateValues}}"
+          data-gn-confirm-click="{{'validateSelectedRecordINSPIREConfirm' | translate:({selectedCount: searchResults.selectedCount})}}"
         >
           <i class="fa fa-fw fa-inspire"></i>&nbsp;<span translate
             >validateInspireUsingNode</span
@@ -243,8 +253,7 @@
       >
         <a
           href=""
-          data-ng-click="mdService.deleteMd(undefined, searchResults.selectionBucket)"
-          data-gn-confirm-click="{{'deleteSelectedRecordConfirm' | translate:translateValues}}"
+          data-ng-click="mdService.deleteBatch(searchResults.selectionBucket, selectedMetadataTypes, getCatScope())"
         >
           <i class="fa fa-fw fa-times"></i>&nbsp;<span translate>delete</span>
         </a>

@@ -39,8 +39,8 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLConnection;
 import java.net.URLStreamHandler;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -55,10 +55,10 @@ import static org.junit.Assert.assertTrue;
  */
 public abstract class AbstractStoreTest extends AbstractServiceIntegrationTest {
 
-    private static String resources =
+    protected static String resources =
         AbstractCoreIntegrationTest.getClassFile(MetadataResourceDatabaseMigrationTest.class).getParent();
     @Autowired
-    private IMetadataUtils metadataUtils;
+    protected IMetadataUtils metadataUtils;
     @Autowired
     private MetadataRepository _metadataRepo;
 
@@ -69,15 +69,19 @@ public abstract class AbstractStoreTest extends AbstractServiceIntegrationTest {
         final Path file = Paths.get(resources, filename);
 
         assertTrue("Mock file " + filename + " not found", Files.exists(file));
-        final URLConnection mockConnection = Mockito.mock(URLConnection.class);
+        final HttpURLConnection mockConnection = Mockito.mock(HttpURLConnection.class);
 
         Mockito.when(mockConnection.getInputStream()).thenReturn(
             Files.newInputStream(file)
         );
 
+        Mockito.when(mockConnection.getResponseCode()).thenReturn(HttpURLConnection.HTTP_OK);
+
+        Mockito.when(mockConnection.getContentLengthLong()).thenReturn(-1L);
+
         final URLStreamHandler handler = new URLStreamHandler() {
             @Override
-            protected URLConnection openConnection(final URL arg0) {
+            protected HttpURLConnection openConnection(final URL arg0) {
                 return mockConnection;
             }
         };
@@ -85,7 +89,7 @@ public abstract class AbstractStoreTest extends AbstractServiceIntegrationTest {
                        "http://foo.bar/" + filename + urlParameters, handler);
     }
 
-    private String importMetadata(ServiceContext context) throws Exception {
+    protected String importMetadata(ServiceContext context) throws Exception {
         final MEFLibIntegrationTest.ImportMetadata importMetadata =
             new MEFLibIntegrationTest.ImportMetadata(this, context).invoke();
 
@@ -138,11 +142,6 @@ public abstract class AbstractStoreTest extends AbstractServiceIntegrationTest {
         assertEquals("Resource URL is correct",
             "http://localhost:8080/srv/api/records/" + metadataUuid + "/attachments/" + filename,
             resource.getUrl());
-
-        try (final Store.ResourceHolder path = getStore().getResource(
-                context, metadataUuid, MetadataResourceVisibility.PUBLIC, filename, true)) {
-            assertTrue("File exists on the disk", Files.isRegularFile(path.getPath()));
-        }
 
         MetadataResource patchedResource = getStore().patchResourceStatus(context, metadataUuid, filename,
                                                                       MetadataResourceVisibility.PRIVATE, true);

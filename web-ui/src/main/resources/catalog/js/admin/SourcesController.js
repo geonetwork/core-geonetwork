@@ -39,7 +39,12 @@
       $scope.source = null;
       $scope.filteredSources = null;
       $scope.filter = {
-        types: { portal: true, subportal: true, externalportal: true, harvester: true }
+        types: {
+          portal: true,
+          subportal: true,
+          externalportal: true,
+          harvester: true
+        }
       };
 
       $scope.serviceRecordSearchObj = {
@@ -63,8 +68,13 @@
       $scope.selectSource = function (source) {
         source.uiConfig = source.uiConfig && source.uiConfig.toString();
         source.groupOwner = source.groupOwner || null;
+        if (!source.datahubConfiguration) {
+          source.datahubConfiguration = $scope.defaultConfig;
+        }
         $scope.source = source;
         $scope.isNew = false;
+        // Used to check if the logo has been updated
+        $scope.originalLogo = true;
 
         $scope.gnSourceForm.$setPristine();
       };
@@ -88,6 +98,21 @@
         true
       );
 
+      $scope.defaultConfig = "";
+
+      function loadDatahubStatus() {
+        $http
+          .get("../datahub/status")
+          .then(function (response) {
+            $scope.datahubAvailable = true;
+            $scope.defaultConfig = response.data.defaultConfig;
+            $scope.datahubVersion = response.data.datahubVersion;
+          })
+          .catch(function () {
+            $scope.datahubAvailable = false;
+          });
+      }
+
       function loadSources() {
         var url = "../api/sources";
         if ($scope.user.profile === "UserAdmin") {
@@ -96,9 +121,11 @@
         $http.get(url).then(function (response) {
           $scope.sources = response.data;
           if ($scope.source && $scope.source.uuid !== null) {
-            var selectedSource = _.find($scope.sources, { uuid: $scope.source.uuid });
+            var selectedSource = _.find($scope.sources, {
+              uuid: $scope.source.uuid
+            });
             if (selectedSource) {
-              $scope.source = selectedSource;
+              $scope.selectSource(selectedSource);
             }
           }
           filterSources();
@@ -133,9 +160,10 @@
           filter: "",
           serviceRecord: null,
           groupOwner: null,
-          listableInHeaderSelector: true
+          listableInHeaderSelector: true,
+          datahubEnabled: false,
+          datahubConfiguration: $scope.defaultConfig
         };
-        // TODO: init labels
       };
 
       $scope.updateSource = function () {
@@ -188,6 +216,18 @@
         );
       };
 
+      $scope.$watch("source.logo", function (newValue, oldValue) {
+        if (!!newValue && newValue !== oldValue) {
+          // If the source is selected, don't set the form as dirty when the logo is updated.
+          // Only when the user changes it.
+          if ($scope.originalLogo === true) {
+            $scope.originalLogo = false;
+          } else {
+            $scope.gnSourceForm.$setDirty();
+          }
+        }
+      });
+
       var uploadLogoDone = function (e, data) {
         $scope.source.logo = data.files[0].name;
         $scope.clear(data.files[0]);
@@ -230,8 +270,10 @@
           $scope.clear(item);
         });
       });
+      $scope.datahubAvailable = false;
 
       loadSources();
+      loadDatahubStatus();
       loadUiConfigurations();
     }
   ]);

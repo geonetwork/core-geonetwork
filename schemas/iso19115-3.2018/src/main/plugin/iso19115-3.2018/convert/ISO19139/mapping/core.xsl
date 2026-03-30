@@ -79,12 +79,26 @@
     <xsl:value-of select="."/>
   </xsl:template>
 
+  <!--
+  Feature Catalogue cardinality is changed from a gco:Multiplicity to a CharacterString
+  -->
+  <xsl:template match="gfcold:cardinality" priority="5" mode="from19139to19115-3.2018">
+    <gfc:cardinality>
+      <gco:CharacterString>
+        <xsl:value-of select="concat(*/gcoold:range/*/gcoold:lower/*/text(), '..', */gcoold:range/*/gcoold:upper/*/text())"/>
+      </gco:CharacterString>
+    </gfc:cardinality>
+  </xsl:template>
 
-  <xsl:template match="gmd:language|gmd:locale" priority="5" mode="from19139to19115-3.2018">
+  <xsl:variable name="mainLanguage" select="*/gmd:language/*/@codeListValue"/>
+
+  <xsl:template match="gmd:locale[*/gmd:languageCode/*/@codeListValue = $mainLanguage]" priority="5" mode="from19139to19115-3.2018"/>
+
+  <xsl:template match="gmd:language|gmd:locale|gmd:locale[*/gmd:languageCode/*/@codeListValue != $mainLanguage]" priority="5" mode="from19139to19115-3.2018">
     <xsl:variable name="nameSpacePrefix">
       <xsl:call-template name="getNamespacePrefix"/>
     </xsl:variable>
-    <xsl:variable name="elementName" select="if (local-name() = 'language') then 'defaultLocale' else 'otherLocale'"/>
+    <xsl:variable name="elementName" select="if (local-name() = 'language' and gmd:LanguageCode/@codeListValue = $mainLanguage) then 'defaultLocale' else 'otherLocale'"/>
     <xsl:element name="{concat($nameSpacePrefix, ':', $elementName)}">
       <!--<xsl:element name="{'mdb:defaultLocale'}">-->
       <xsl:apply-templates select="@*" mode="from19139to19115-3.2018"/>
@@ -592,8 +606,8 @@
           <xsl:variable name="uuidref"
                         select="gmd:MD_AggregateInformation/gmd:aggregateDataSetIdentifier/*/gmd:code/*/@uuidref"/>
           <mri:metadataReference>
-            <xsl:copy-of select="gmd:MD_AggregateInformation/gmd:aggregateDataSetIdentifier/*/gmd:code/gmx:Anchor/@xlink:href"/>
-            <xsl:copy-of select="if ($uuidref != '') then $uuidref else gmd:MD_AggregateInformation/gmd:aggregateDataSetIdentifier/*/gmd:code/*/text()"/>
+            <xsl:copy-of select="gmd:MD_AggregateInformation/gmd:aggregateDataSetIdentifier/*/gmd:code/gmx:Anchor/@xlink:*"/>
+            <xsl:attribute name="uuidref" select="if ($uuidref != '') then $uuidref else gmd:MD_AggregateInformation/gmd:aggregateDataSetIdentifier/*/gmd:code/*/text()"/>
           </mri:metadataReference>
         </xsl:if>
 
@@ -677,7 +691,7 @@
         <xsl:call-template name="writeCodelistElement">
           <xsl:with-param name="elementName" select="'cit:dateType'"/>
           <xsl:with-param name="codeListName" select="'cit:CI_DateTypeCode'"/>
-          <xsl:with-param name="codeListValue" select="'update'"/>
+          <xsl:with-param name="codeListValue" select="'nextUpdate'"/>
         </xsl:call-template>
       </cit:CI_Date>
     </mmi:maintenanceDate>

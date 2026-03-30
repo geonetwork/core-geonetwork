@@ -67,7 +67,7 @@
         <div class="gn-md-details">
           <div class="gn-md-abstract text-muted">
             <div class="ellipsis">
-              <p>{{md.resourceAbstract.split('\n')[0] | striptags}}</p>
+              <p>{{::abstractBriefMaker(md.resourceAbstract) | striptags}}</p>
             </div>
           </div>
         </div>

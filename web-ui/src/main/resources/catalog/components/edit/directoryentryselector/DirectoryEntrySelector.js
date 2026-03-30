@@ -128,6 +128,10 @@
             pre: function preLink(scope) {
               var directorySearchSettings = gnGlobalSettings.gnCfg.mods.directory || {};
 
+              var sortConfig = (
+                directorySearchSettings.sortBy || gnSearchSettings.sortBy
+              ).split("#");
+
               scope.searchObj = {
                 any: "",
                 internal: true,
@@ -138,8 +142,8 @@
                   from: 1,
                   to: 20,
                   root: "gmd:CI_ResponsibleParty",
-                  sortBy: directorySearchSettings.sortBy || gnSearchSettings.sortBy,
-                  sortOrder: "",
+                  sortBy: sortConfig[0] || "relevance",
+                  sortOrder: sortConfig[1] || "",
                   resultType: "subtemplates",
                   queryBase:
                     directorySearchSettings.queryBase || gnSearchSettings.queryBase
@@ -639,6 +643,10 @@
             pre: function preLink(scope) {
               var directorySearchSettings = gnGlobalSettings.gnCfg.mods.directory || {};
 
+              var sortConfig = (
+                directorySearchSettings.sortBy || gnSearchSettings.sortBy
+              ).split("#");
+
               scope.searchObj = {
                 internal: true,
                 configId: "directoryInEditor",
@@ -648,7 +656,8 @@
                   from: 1,
                   to: 10,
                   root: "gmd:CI_ResponsibleParty",
-                  sortBy: directorySearchSettings.sortBy || gnSearchSettings.sortBy,
+                  sortBy: sortConfig[0] || "relevance",
+                  sortOrder: sortConfig[1] || "",
                   queryBase:
                     directorySearchSettings.queryBase || gnSearchSettings.queryBase
                 }

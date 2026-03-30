@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2021 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2026 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -41,7 +41,9 @@
         restrict: "A",
         templateUrl:
           "../../catalog/components/edit/onlinesrc/" + "partials/fileUploader.html",
-        scope: {},
+        scope: {
+          editableThumbnail: "@"
+        },
         link: function (scope, element, attrs) {
           scope.relations = {};
           scope.uuid = undefined;
@@ -1675,13 +1677,6 @@
                */
               scope.$watchCollection("params.selectedLayers", function (n, o) {
                 if (
-                  scope.config &&
-                  scope.config.wmsResources.addLayerNamesMode != "resourcename"
-                ) {
-                  return;
-                }
-
-                if (
                   o !== n &&
                   scope.params.selectedLayers &&
                   scope.params.selectedLayers.length > 0
@@ -1696,20 +1691,103 @@
                   var names = [],
                     descs = [];
 
+                  var isResourceNameMode =
+                    scope.config.wmsResources.addLayerNamesMode == "resourcename";
+
+                  // Validate url-mode config values and warn if config contain wrong values
+                  if (!isResourceNameMode) {
+                    var resName = scope.config.wmsResources.resourceName;
+                    var resDesc = scope.config.wmsResources.resourceDescription;
+                    if (
+                      resName !== undefined &&
+                      resName != "layerName" &&
+                      resName != "layerTitle"
+                    ) {
+                      console.warn(
+                        "wmsResources.resourceName has invalid value '" +
+                          resName +
+                          "'. Allowed values: 'layerName', 'layerTitle'."
+                      );
+                    }
+                    if (
+                      resDesc !== undefined &&
+                      resDesc != "layerName" &&
+                      resDesc != "layerTitle"
+                    ) {
+                      console.warn(
+                        "wmsResources.resourceDescription has invalid value '" +
+                          resDesc +
+                          "'. Allowed values: 'layerName', 'layerTitle'."
+                      );
+                    }
+                  }
+
                   angular.forEach(scope.params.selectedLayers, function (layer) {
-                    names.push(layer.Name || layer.name);
-                    descs.push(layer.Title || layer.title);
+                    if (isResourceNameMode) {
+                      names.push(layer.Name || layer.name);
+                      descs.push(layer.Title || layer.title);
+                    } else {
+                      // In url mode, check which WMS field to use for the resource name
+                      // and the resource description
+                      if (scope.config.wmsResources.resourceName === "layerName") {
+                        names.push(layer.Name || layer.name);
+                      } else if (
+                        scope.config.wmsResources.resourceName === "layerTitle"
+                      ) {
+                        names.push(layer.Title || layer.title);
+                      }
+
+                      if (scope.config.wmsResources.resourceDescription === "layerName") {
+                        descs.push(layer.Name || layer.name);
+                      } else if (
+                        scope.config.wmsResources.resourceDescription === "layerTitle"
+                      ) {
+                        descs.push(layer.Title || layer.title);
+                      }
+                    }
                   });
 
-                  if (scope.isMdMultilingual) {
-                    var langCode = scope.mdLangs[scope.mdLang];
-                    scope.params.name[langCode] = names.join(",");
-                    scope.params.desc[langCode] = descs.join(",");
+                  if (isResourceNameMode) {
+                    if (scope.isMdMultilingual) {
+                      // resourcename mode: only the current UI language is updated,
+                      // as the user may manage translations independently
+                      var langCode = scope.mdLangs[scope.mdLang];
+                      scope.params.name[langCode] = names.join(",");
+                      scope.params.desc[langCode] = descs.join(",");
+                    } else {
+                      angular.extend(scope.params, {
+                        name: names.join(","),
+                        desc: descs.join(",")
+                      });
+                    }
                   } else {
-                    angular.extend(scope.params, {
-                      name: names.join(","),
-                      desc: descs.join(",")
-                    });
+                    if (scope.isMdMultilingual) {
+                      // url mode: all languages are updated because WMS layer info
+                      // (name/title) is language-neutral
+                      if (names.length > 0) {
+                        angular.forEach(scope.mdLangs, function (value) {
+                          scope.params.name[value] = names.join(",");
+                        });
+                      }
+
+                      if (descs.length > 0) {
+                        angular.forEach(scope.mdLangs, function (value) {
+                          scope.params.desc[value] = descs.join(",");
+                        });
+                      }
+                    } else {
+                      if (names.length > 0) {
+                        angular.extend(scope.params, {
+                          name: names.join(",")
+                        });
+                      }
+
+                      if (descs.length > 0) {
+                        angular.extend(scope.params, {
+                          desc: descs.join(",")
+                        });
+                      }
+                    }
                   }
                 }
               });
@@ -1858,12 +1936,7 @@
           compile: function compile(tElement, tAttrs, transclude) {
             return {
               pre: function preLink(scope) {
-                scope.searchObj = {
-                  internal: true,
-                  params: {
-                    isTemplate: "n"
-                  }
-                };
+                scope.searchObj = gnOnlinesrc.getSearchConfig();
                 scope.modelOptions = angular.copy(gnGlobalSettings.modelOptions);
               },
               post: function postLink(scope, iElement, iAttrs) {
@@ -2034,6 +2107,7 @@
                       scope.srcParams.remote = false;
                       if (links.length > 0) {
                         scope.onlineSrcLink = links[0].url;
+                        scope.srcParams.name = links[0].name || "";
                         scope.srcParams.protocol = links[0].protocol || "OGC:WMS";
                         scope.loadCurrentLink(scope.onlineSrcLink);
                         scope.srcParams.url = scope.onlineSrcLink;
@@ -2131,11 +2205,7 @@
           compile: function compile(tElement, tAttrs, transclude) {
             return {
               pre: function preLink(scope) {
-                scope.searchObj = {
-                  internal: true,
-                  any: "",
-                  params: {}
-                };
+                scope.searchObj = gnOnlinesrc.getSearchConfig();
                 scope.modelOptions = angular.copy(gnGlobalSettings.modelOptions);
                 scope.selectRecords = [];
               },
@@ -2197,6 +2267,10 @@
                   };
 
                   $(scope.popupid).modal("show");
+
+                  $("#linktomd-search input").val("");
+                  scope.searchObj.any = "";
+
                   var searchParams =
                     scope.config.sources && scope.config.sources.metadataStore
                       ? scope.config.sources.metadataStore.params || {}
@@ -2232,7 +2306,8 @@
     .directive("gnLinkToSibling", [
       "gnOnlinesrc",
       "gnGlobalSettings",
-      function (gnOnlinesrc, gnGlobalSettings) {
+      "gnOnlinesrcConfig",
+      function (gnOnlinesrc, gnGlobalSettings, gnOnlinesrcConfig) {
         return {
           restrict: "A",
           scope: {},
@@ -2242,34 +2317,7 @@
             return {
               pre: function preLink(scope) {
                 scope.ctrl = {};
-                scope.searchObj = {
-                  internal: true,
-                  any: "",
-                  defaultParams: {
-                    any: "",
-                    isTemplate: "n",
-                    from: 1,
-                    to: 50
-                  }
-                };
-                scope.searchObj.params = angular.extend(
-                  {},
-                  scope.searchObj.defaultParams
-                );
-
-                // Define configuration to restrict search
-                // to a subset of records when an initiative type
-                // and/or association type is selected.
-                // eg. crossReference-study restrict to DC records
-                // using _schema=dublin-core
-                scope.searchParamsPerType = {
-                  //'crossReference-study': {
-                  //  _schema: 'dublin-core'
-                  //},
-                  //'crossReference-*': {
-                  //  _isHarvested: 'n'
-                  //}
-                };
+                scope.searchObj = gnOnlinesrc.getSearchConfig();
 
                 scope.modelOptions = angular.copy(gnGlobalSettings.modelOptions);
               },
@@ -2298,17 +2346,29 @@
                       (config && config.fields && config.fields.initiativeType) || null,
                     sources: config && config.sources
                   };
+                  var metadataStore =
+                    scope.config &&
+                    scope.config.sources &&
+                    scope.config.sources.metadataStore;
+                  scope.baseSearchParams = (metadataStore && metadataStore.params) || {};
+                  scope.searchParamsPerType =
+                    (metadataStore && metadataStore.searchParamsPerType) || {};
 
                   $(scope.popupid).modal("show");
 
-                  scope.$broadcast("resetSearch");
+                  scope.clearSearch();
                   scope.selection = [];
                 });
 
-                // Clear the search params and input
                 scope.clearSearch = function () {
                   $("#siblingdd input").val("");
-                  scope.$broadcast("resetSearch");
+                  scope.searchObj.any = "";
+                  scope.searchObj.params = angular.extend(
+                    {},
+                    scope.searchObj.defaultParams,
+                    scope.baseSearchParams || {}
+                  );
+                  scope.$broadcast("resetSearch", scope.searchObj.params);
                 };
 
                 // Append * for like search
@@ -2329,15 +2389,16 @@
                 // Based on initiative type and association type
                 // define custom search parameter and refresh search
                 var setSearchParamsPerType = function () {
+                  var searchParams = scope.searchParamsPerType || {};
                   var p =
-                    scope.searchParamsPerType[
+                    searchParams[
                       scope.config.associationType + "-" + scope.config.initiativeType
                     ];
-                  var pall =
-                    scope.searchParamsPerType[scope.config.associationType + "-*"];
+                  var pall = searchParams[scope.config.associationType + "-*"];
                   scope.searchObj.params = angular.extend(
                     {},
                     scope.searchObj.defaultParams,
+                    scope.baseSearchParams || {},
                     angular.isDefined(p) ? p : angular.isDefined(pall) ? pall : {}
                   );
                   scope.$broadcast("resetSearch", scope.searchObj.params);
@@ -2389,6 +2450,15 @@
                       });
                     }
                   }
+                };
+
+                scope.isInSelection = function (uuid) {
+                  for (var i = 0; i < scope.selection.length; ++i) {
+                    if (scope.selection[i].md._id === uuid) {
+                      return true;
+                    }
+                  }
+                  return false;
                 };
 
                 /**
@@ -2453,7 +2523,8 @@
      */
     .directive("gnDoiSearchPanel", [
       "gnDoiSearchService",
-      function (gnDoiSearchService) {
+      "$q",
+      function (gnDoiSearchService, $q) {
         return {
           restrict: "A",
           replace: true,
@@ -2461,6 +2532,8 @@
             doiUrl: "=?",
             doiPrefix: "=?",
             doiQueryPattern: "=?",
+            doiCrossrefUrl: "=?",
+            doiCrossrefQueryPattern: "=?",
             mode: "@",
             addToSelectionCb: "&?",
             removeFromSelectionCb: "&?"
@@ -2470,6 +2543,7 @@
           link: function (scope, element, attrs) {
             // select (single value) / add mode (used in siblings dialog)
             scope.mode = scope.mode || "select";
+            scope.searchedValue = false;
             scope.updateSelection = angular.isFunction(scope.addToSelectionCb)
               ? function (md) {
                   if (scope.isSelected(md)) {
@@ -2492,48 +2566,145 @@
             scope.isSearching = false;
 
             scope.clearSearch = function () {
+              scope.searchedValue = false;
               scope.queryValue = "";
               scope.results = [];
             };
 
             scope.$on("resetSearch", scope.clearSearch);
 
-            scope.search = function () {
-              var searchQuery =
-                scope.queryValue !== ""
-                  ? scope.doiQueryPattern.replaceAll("{query}", scope.queryValue)
-                  : "";
+            var processResultsDatacite = function (resultsDatacite) {
+              var results = [];
+
+              angular.forEach(resultsDatacite, function (r) {
+                results.push({
+                  uuid: r.id,
+                  remoteUrl: r.attributes.url,
+                  resourceTitle:
+                    r.attributes.titles.length > 0 ? r.attributes.titles[0].title : r.url,
+                  title:
+                    r.attributes.titles.length > 0 ? r.attributes.titles[0].title : r.url,
+                  description:
+                    r.attributes.descriptions.length > 0
+                      ? r.attributes.descriptions[0].descriptions
+                      : "",
+                  source: "Datacite"
+                });
+              });
+
+              return results;
+            };
+
+            var processResultsCrossref = function (resultsCrossref) {
+              var results = [];
+
+              angular.forEach(resultsCrossref, function (r) {
+                results.push({
+                  uuid: r.DOI,
+                  remoteUrl: r.URL,
+                  resourceTitle: r.title && r.title.length > 0 ? r.title[0] : "",
+                  title: r.title && r.title.length > 0 ? r.title[0] : "",
+                  description: r.abstract && r.abstract.length > 0 ? r.abstract[0] : "",
+                  source: "Crossref"
+                });
+              });
+
+              return results;
+            };
+
+            var sortResults = function () {
+              scope.results.sort(function (a, b) {
+                if (a.resourceTitle < b.resourceTitle) {
+                  return -1;
+                }
+                if (a.resourceTitle > b.resourceTitle) {
+                  return 1;
+                }
+                return 0;
+              });
+            };
+            var dataciteQuery = function () {
+              return scope.queryValue && scope.queryValue !== ""
+                ? scope.doiQueryPattern.replaceAll(
+                    "{query}",
+                    encodeURIComponent(scope.queryValue)
+                  )
+                : "";
+            };
+
+            var crossrefQuery = function () {
+              if (!scope.queryValue) {
+                return "";
+              }
+
+              // https://api.crossref.org/swagger-ui/index.html#/Works/get_works
+              // Crossref query does not allow a search to be done on the title (or other search field)
+              // and DOI which is a filter eg. filter=doi:10.prefix/suffix.
+              // If the query value is a DOI, we will use the DOI filter.
+              var isDoi = scope.queryValue.match(/10\..+\/[^ ]+$/);
+              if (isDoi) {
+                return "filter=doi:" + scope.queryValue;
+              }
+
+              return scope.queryValue !== ""
+                ? scope.doiCrossrefQueryPattern
+                    .replaceAll("{query}", encodeURIComponent(scope.queryValue))
+                    .replaceAll("{prefix}", scope.doiPrefix)
+                : "";
+            };
+
+            var internalSearch = function (doDataciteSearch, doCrossrefSearch) {
               scope.isSearching = true;
-              gnDoiSearchService.search(scope.doiUrl, scope.doiPrefix, searchQuery).then(
+              var results = [];
+              var promises = [];
+              if (doDataciteSearch) {
+                promises.push(
+                  gnDoiSearchService.search(
+                    scope.doiUrl,
+                    scope.doiPrefix,
+                    dataciteQuery()
+                  )
+                );
+              }
+              if (doCrossrefSearch) {
+                promises.push(
+                  gnDoiSearchService.searchCrossref(
+                    scope.doiCrossrefUrl,
+                    scope.doiPrefix,
+                    crossrefQuery()
+                  )
+                );
+              }
+              $q.all(promises).then(
                 function (response) {
-                  scope.isSearching = false;
-                  var results = [];
-
-                  angular.forEach(response.data.data, function (r) {
-                    results.push({
-                      uuid: r.id,
-                      remoteUrl: r.attributes.url,
-                      resourceTitle:
-                        r.attributes.titles.length > 0
-                          ? r.attributes.titles[0].title
-                          : r.url,
-                      title:
-                        r.attributes.titles.length > 0
-                          ? r.attributes.titles[0].title
-                          : r.url,
-                      description:
-                        r.attributes.descriptions.length > 0
-                          ? r.attributes.descriptions[0].descriptions
-                          : ""
-                    });
-                  });
-
-                  scope.results = results;
+                  for (var i = 0; i < response.length; i++) {
+                    if (response[i].data.data) {
+                      results = results.concat(
+                        processResultsDatacite(response[i].data.data)
+                      );
+                    } else if (response[i].data.message.items) {
+                      results = results.concat(
+                        processResultsCrossref(response[i].data.message.items)
+                      );
+                    }
+                    scope.results = results;
+                    sortResults();
+                    scope.isSearching = false;
+                  }
                 },
                 function (response) {
                   scope.isSearching = false;
                 }
               );
+            };
+
+            scope.search = function () {
+              scope.searchedValue = true;
+
+              var doDataciteSearch = !!scope.doiUrl;
+              var doCrossrefSearch = !!scope.doiCrossrefUrl;
+
+              internalSearch(doDataciteSearch, doCrossrefSearch);
             };
           }
         };

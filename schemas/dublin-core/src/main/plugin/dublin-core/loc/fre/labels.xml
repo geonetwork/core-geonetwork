@@ -84,7 +84,7 @@
     <description>Genre du contenu.</description>
     <example/>
     <helper>
-      <option value="nonGeographicDataset">Jeu de données non géographiques</option>
+      <option value="nonGeographicDataset">Jeu de données non géographique</option>
       <option value="publication">Publication</option>
     </helper>
   </element>

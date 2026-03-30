@@ -65,7 +65,9 @@ git tag -a $mainVersion -m "Tag for $newversion release"
 # Build the new release
 mvn clean install -DskipTests -ntp -Pwar -Pwro4j-prebuild-cache
 
-(cd datastorages && mvn clean install -DskipTests -ntp -Drelease -DskipTests)
+## plugins
+(cd datastorages && mvn clean install -DskipTests -ntp -Drelease)
+mvn clean install -DskipTests -ntp -Drelease -pl plugins/datahub-integration
 
 # Download Jetty and create the installer
 (cd release && mvn clean install -Pjetty-download && ant)

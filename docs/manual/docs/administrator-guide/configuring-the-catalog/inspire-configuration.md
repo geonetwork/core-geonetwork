@@ -62,9 +62,7 @@ Once enabled, the editor will show the remote validation option in the menu:
 
 ![image](img/inspire-validation-menu.png)
 
-The standard validate option will use the internal validation system (ie. XSD, Schematron rules for ISO, INSPIRE, \... depending on the configuration). In the internal system the INSPIRE validation is based on INSPIRE Technical guidance version 1.3 and results will be different from ETF reports.
-
-The remote INSPIRE validation will open the validator in a popup. Choose one of the options depending on the level of validation and type of resource to validate. The list of options can be customized in [this configuration file](https://github.com/geonetwork/core-geonetwork/blob/master/services/src/main/resources/config-spring-geonetwork.xml#L61-L94). The configuration is made by selecting one or more test suite from the ETF options:
+The remote INSPIRE validation will open the validator in a popup. Choose one of the options depending on the level of validation and type of resource to validate. The list of options can be customized in [this configuration file](https://github.com/geonetwork/core-geonetwork/blob/main/web/src/main/webapp/WEB-INF/config-etf-validator.xml). The configuration is made by selecting one or more test suite from the ETF options:
 
 ![image](img/inspire-etf-test-configuration.png)
 
@@ -141,6 +139,22 @@ To define which test suites will be executed when using the editor dashboard's I
   <entry key="iso19115-3.2018::TG version 2.0 - Network services" value=".//srv:SV_ServiceIdentification"/>
 </util:map>
 ```
+
+ETF validator provides a service to check if a validation task has finished and can be configured with the following parameters:
+
+- `defaultTestSuite`: Default test suite to execute if none is specified.
+
+- `maxNumberOfEtfChecks`: Max. number of checks to do before throwing an Exception, to avoid waiting forever
+   if any issue with the ETF validator returning the task as pending while any error happened.
+
+- `intervalBetweenEtfChecks`: Interval to wait until do a new check, in milliseconds.
+
+- `processing`: Processing to apply to the metadata before the document is sent to the validation.
+  It does not apply to the CSW mode.
+  The XSL file must be in the schema folder corresponding to the metadata record.
+  eg. `present/csw/gmd-inspire-postprocessing.xsl` in the iso19139 schema folder.
+
+
 
 ## INSPIRE access point
 

@@ -119,6 +119,7 @@
          * @param {string} metadataUuid , the uuid of the metadata to create
          *                 (when metadata uuid is set to manual)
          * @param {boolean} hasCategoryOfSource copy categories from source
+         * @param {boolean} hasAttachmentsOfSource copy attachments from source
          * @return {HttpPromise} Future object
          */
         copy: function (
@@ -128,7 +129,8 @@
           isTemplate,
           isChild,
           metadataUuid,
-          hasCategoryOfSource
+          hasCategoryOfSource,
+          hasAttachmentsOfSource
         ) {
           // new md type determination
           var mdType;
@@ -157,7 +159,8 @@
             group: groupId,
             allowEditGroupMembers: withFullPrivileges ? "true" : "false",
             targetUuid: metadataUuid || "",
-            hasCategoryOfSource: hasCategoryOfSource ? "true" : "false"
+            hasCategoryOfSource: hasCategoryOfSource ? "true" : "false",
+            hasAttachmentsOfSource: hasAttachmentsOfSource ? "true" : "false"
           });
           return $http.put("../api/records/duplicate?" + url, {
             headers: {
@@ -203,6 +206,7 @@
          * @param {string} metadataUuid , the uuid of the metadata to create
          *                 (when metadata uuid is set to manual)
          * @param {boolean} hasCategoryOfSource copy categories from source
+         * @param {boolean} hasAttachmentsOfSource copy attachments from source
          * @return {HttpPromise} Future object
          */
         create: function (
@@ -213,7 +217,8 @@
           isChild,
           tab,
           metadataUuid,
-          hasCategoryOfSource
+          hasCategoryOfSource,
+          hasAttachmentsOfSource
         ) {
           return this.copy(
             id,
@@ -222,7 +227,8 @@
             isTemplate,
             isChild,
             metadataUuid,
-            hasCategoryOfSource
+            hasCategoryOfSource,
+            hasAttachmentsOfSource
           ).then(function (response) {
             var path = "/metadata/" + response.data;
             if (tab) {

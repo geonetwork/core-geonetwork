@@ -37,6 +37,7 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.InputStream;
+import java.net.URL;
 import java.util.Date;
 
 import static org.junit.Assert.*;
@@ -99,5 +100,22 @@ public class FilesystemStoreTest extends AbstractCoreIntegrationTest {
         // context, metadataUuid, visibility, path, approved)
         filesystemStore.getResourceDescription(context, "nonExistingUuid",
             MetadataResourceVisibility.PUBLIC, "existingResource.jpg", true);
+    }
+
+    @Test
+    public void testGetFilenameFromUrl() throws Exception {
+        FilesystemStore filesystemStore = new FilesystemStore();
+
+        String fileName = filesystemStore.getFilenameFromUrl(new URL("http://mydomain.com/filename.txt"));
+        assertEquals("filename.txt", fileName);
+
+        fileName = filesystemStore.getFilenameFromUrl(new URL("http://mydomain.com/filename%20with%20spaces.txt"));
+        assertEquals("filename with spaces.txt", fileName);
+
+        fileName = filesystemStore.getFilenameFromUrl(new URL("http://mydomain.com/filename.txt?param=value"));
+        assertEquals("filename.txt", fileName);
+
+        fileName = filesystemStore.getFilenameFromUrl(new URL("http://mydomain.com/filename%20with%20spaces.txt?param=value"));
+        assertEquals("filename with spaces.txt", fileName);
     }
 }

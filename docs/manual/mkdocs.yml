@@ -149,10 +149,12 @@ nav:
     - overview/authors.md
     - 'Changelog':
       - overview/change-log/index.md
-      - overview/change-log/version-4.4.6.md
-      - overview/change-log/version-4.2.11.md
+      - overview/change-log/version-4.4.9.md
+      - overview/change-log/version-4.2.14.md
       - 'Release History':
         - overview/change-log/history/index.md
+        - overview/change-log/version-4.4.8.md
+        - overview/change-log/version-4.4.7.md
         - overview/change-log/version-4.4.6.md
         - overview/change-log/version-4.4.5.md
         - overview/change-log/version-4.4.4.md
@@ -160,8 +162,9 @@ nav:
         - overview/change-log/version-4.4.2.md
         - overview/change-log/version-4.4.1.md
         - overview/change-log/version-4.4.0.md
-      - 'Release History':
-        - overview/change-log/history/index.md
+        - overview/change-log/version-4.2.14.md
+        - overview/change-log/version-4.2.13.md
+        - overview/change-log/version-4.2.12.md
         - overview/change-log/version-4.2.11.md
         - overview/change-log/version-4.2.10.md
         - overview/change-log/version-4.2.9.md
@@ -264,6 +267,7 @@ nav:
         - user-guide/associating-resources/linking-feature-catalog.md
         - user-guide/associating-resources/linking-others.md
         - user-guide/associating-resources/linking-remote-records.md
+        - user-guide/associating-resources/linking-panel-configuration.md
       - user-guide/associating-resources/doi.md
       - user-guide/associating-resources/cite.md
     - 'Tag information':
@@ -284,7 +288,6 @@ nav:
       - 'Updating a set of records':
         - user-guide/workflow/batchupdate/index.md
         - user-guide/workflow/batchediting.md
-        - user-guide/workflow/batchupdate-from-admin.md
         - user-guide/workflow/batchupdate-xsl.md
       - user-guide/workflow/geopublication.md
       - user-guide/workflow/life-cycle.md
@@ -295,16 +298,20 @@ nav:
       - user-guide/harvesting/index.md
       - user-guide/harvesting/harvesting-csw.md
       - user-guide/harvesting/harvesting-filesystem.md
+      - user-guide/harvesting/harvesting-geonetwork-4.md
       - user-guide/harvesting/harvesting-geonetwork.md
       - user-guide/harvesting/harvesting-geonetwork-2.md
       - user-guide/harvesting/harvesting-geoportal.md
       - user-guide/harvesting/harvesting-oaipmh.md
       - user-guide/harvesting/harvesting-ogcwxs.md
       - user-guide/harvesting/harvesting-sde.md
+      - user-guide/harvesting/harvesting-sftp.md
       - user-guide/harvesting/harvesting-simpleurl.md
       - user-guide/harvesting/harvesting-thredds.md
       - user-guide/harvesting/harvesting-webdav.md
       - user-guide/harvesting/harvesting-wfs-features.md
+      - user-guide/harvesting/harvesting-database.md
+      - user-guide/harvesting/harvesting-stac.md
     - user-guide/export/index.md
     - 'Administration':
       - administrator-guide/index.md
@@ -323,6 +330,7 @@ nav:
         - administrator-guide/managing-users-and-groups/creating-group.md
         - administrator-guide/managing-users-and-groups/creating-user.md
         - administrator-guide/managing-users-and-groups/user-self-registration.md
+        - administrator-guide/managing-users-and-groups/user-reset-password.md
       - 'Classification Systems':
         - administrator-guide/managing-classification-systems/index.md
         - administrator-guide/managing-classification-systems/managing-categories.md
@@ -333,6 +341,11 @@ nav:
         - administrator-guide/managing-metadata-standards/configure-validation.md
         - administrator-guide/managing-metadata-standards/metadata-identifier.md
         - administrator-guide/managing-metadata-standards/standards.md
+      - 'Managing Anonymous Links':
+        - administrator-guide/managing-anonymous-links/index.md
+        - administrator-guide/managing-anonymous-links/create-link.md
+        - administrator-guide/managing-anonymous-links/manage-links.md
+        - administrator-guide/managing-anonymous-links/delete-link.md
 
   - 'Maintainer Guide':
       - maintainer-guide/index.md
@@ -344,6 +357,7 @@ nav:
             - install-guide/installing-from-war-file.md
             - install-guide/installing-with-docker.md
             - install-guide/installing-from-source-code.md
+            - install-guide/plugins.md
           - 'Configuration':
             - install-guide/configuring-database.md
             - install-guide/customizing-data-directory.md

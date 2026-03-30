@@ -584,7 +584,7 @@ La liste des changements d'état sont accessibles ici :
       <insertFileMode js="true">Import de fichiers</insertFileMode>
       <insertMode>Mode d'insertion :</insertMode>
       <insertPasteMode>Copier/Coller</insertPasteMode>
-      <interactiveMap>Carte interactive</interactiveMap>
+      <map-interactive>Carte interactive</map-interactive>
       <interMapInfo>
         <h1>Information et cartes interactives</h1>
         <p>Vous pouvez trouver des cartes interactives en cherchant dans Geonetwork pour des jeux de données numérique avec une carte interactive, ou bien en vous connectant directement à un serveur cartographique existant</p>
@@ -20254,7 +20254,7 @@ Acteur qui a assuré la réalisation de la ressource,éventuellement en faisant 
             <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
             <entry>
               <code>nonGeographicDataset</code>
-              <label>Jeux de données non géographiques</label>
+              <label>Jeu de données non géographique</label>
               <description>Informations appliquées aux caractéristiques de jeux de données non géographiques</description>
             </entry>
             <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -20334,12 +20334,12 @@ Acteur qui a assuré la réalisation de la ressource,éventuellement en faisant 
               <description />
             </entry>
             <entry hideInEditMode="true">
-              <code>staticMap</code>
+              <code>map-static</code>
               <label>Carte statique</label>
               <description />
             </entry>
             <entry hideInEditMode="true">
-              <code>interactiveMap</code>
+              <code>map-interactive</code>
               <label>Carte interactive</label>
               <description />
             </entry>
@@ -20611,7 +20611,7 @@ Acteur qui a assuré la réalisation de la ressource,éventuellement en faisant 
             <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
             <entry>
               <code>nonGeographicDataset</code>
-              <label>Jeux de données non géographiques</label>
+              <label>Jeu de données non géographique</label>
               <description>Informations appliquées aux caractéristiques de jeux de données non géographiques</description>
             </entry>
             <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -25736,7 +25736,7 @@ http://www.sandre.eaufrance.fr/?urn=urn:sandre:ensembledonnees:BDCarthage:FXX:::
             <description>Genre du contenu.</description>
             <example />
             <helper>
-              <option value="nonGeographicDataset">Jeu de données non géographiques</option>
+              <option value="nonGeographicDataset">Jeu de données non géographique</option>
               <option value="publication">Publication</option>
             </helper>
           </element>
@@ -27370,7 +27370,7 @@ Acteur qui a assuré la réalisation de la ressource,éventuellement en faisant 
             <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
             <entry>
               <code>nonGeographicDataset</code>
-              <label>Jeux de données non géographiques</label>
+              <label>Jeu de données non géographique</label>
               <description>Informations appliquées aux caractéristiques de jeux de données non géographiques</description>
             </entry>
             <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -27450,12 +27450,12 @@ Acteur qui a assuré la réalisation de la ressource,éventuellement en faisant 
               <description />
             </entry>
             <entry hideInEditMode="true">
-              <code>staticMap</code>
+              <code>map-static</code>
               <label>Carte statique</label>
               <description />
             </entry>
             <entry hideInEditMode="true">
-              <code>interactiveMap</code>
+              <code>map-interactive</code>
               <label>Carte interactive</label>
               <description />
             </entry>
@@ -27718,7 +27718,7 @@ Acteur qui a assuré la réalisation de la ressource,éventuellement en faisant 
             <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
             <entry>
               <code>nonGeographicDataset</code>
-              <label>Jeux de données non géographiques</label>
+              <label>Jeu de données non géographique</label>
               <description>Informations appliquées aux caractéristiques de jeux de données non géographiques</description>
             </entry>
             <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->

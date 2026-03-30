@@ -27,7 +27,7 @@
   <parent>
     <artifactId>geonetwork</artifactId>
     <groupId>org.geonetwork-opensource</groupId>
-    <version>4.4.7-SNAPSHOT</version>
+    <version>4.4.10-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
@@ -35,6 +35,13 @@
   <name>GeoNetwork core</name>
 
   <dependencies>
+
+    <dependency>
+      <groupId>org.geoserver.community.jwt-headers</groupId>
+      <artifactId>jwt-headers-util</artifactId>
+      <version>2.27-SNAPSHOT</version>
+    </dependency>
+
     <dependency>
       <groupId>net.objecthunter</groupId>
       <artifactId>exp4j</artifactId>
@@ -305,6 +312,10 @@
       <artifactId>gt-geojson</artifactId>
     </dependency>
     <dependency>
+      <groupId>com.jayway.jsonpath</groupId>
+      <artifactId>json-path</artifactId>
+    </dependency>
+    <dependency>
       <groupId>org.locationtech.jts</groupId>
       <artifactId>jts-core</artifactId>
     </dependency>
@@ -378,7 +389,7 @@
     </dependency>
     <dependency>
       <groupId>org.mockito</groupId>
-      <artifactId>mockito-all</artifactId>
+      <artifactId>mockito-inline</artifactId>
       <scope>test</scope>
     </dependency>
 
@@ -566,6 +577,11 @@
       <scope>test</scope>
     </dependency>
     <dependency>
+      <groupId>org.springframework.data</groupId>
+      <artifactId>spring-data-envers</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
       <groupId>com.fasterxml.jackson.datatype</groupId>
       <artifactId>jackson-datatype-hibernate5</artifactId>
     </dependency>
@@ -663,25 +679,38 @@
             <artifactId>maven-failsafe-plugin</artifactId>
             <version>3.0.0-M4</version>
             <configuration>
-              <groups>org.fao.geonet.repository.AbstractSpringDataTest</groups>
-              <includes>
-                <include>**/*.java</include>
-              </includes>
               <runOrder>alphabetical</runOrder>
-              <forkCount>${system.numCores}</forkCount>
             </configuration>
             <executions>
               <execution>
                 <id>integration-test</id>
                 <goals>
                   <goal>integration-test</goal>
-                </goals>
-              </execution>
-              <execution>
-                <id>verify</id>
-                <goals>
                   <goal>verify</goal>
                 </goals>
+                <configuration>
+                  <forkCount>${system.numCores}</forkCount>
+                  <groups>org.fao.geonet.repository.AbstractSpringDataTest</groups>
+                  <includes>
+                    <includes>**/*.java</includes>
+                  </includes>
+                  <excludes>
+                    <exludes>**/ElasticsearchIndexingTest.java</exludes>
+                  </excludes>
+                </configuration>
+              </execution>
+              <execution>
+                <id>integration-test-seq</id>
+                <goals>
+                  <goal>integration-test</goal>
+                  <goal>verify</goal>
+                </goals>
+                  <configuration>
+                    <forkCount>1</forkCount>
+                    <includes>
+                      <include>**/ElasticsearchIndexingTest.java</include>
+                    </includes>
+                  </configuration>
               </execution>
             </executions>
           </plugin>

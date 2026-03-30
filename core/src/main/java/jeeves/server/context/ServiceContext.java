@@ -63,7 +63,7 @@ public class ServiceContext extends BasicContext {
     private String _language;
     private String _service;
     private String _ipAddress;
-    private int _maxUploadSize;
+    private long _maxUploadSize;
     private JeevesServlet _servlet;
     private boolean _startupError = false;
     private Map<String, String> _startupErrors;
@@ -156,11 +156,11 @@ public class ServiceContext extends BasicContext {
         return getBean(GeonetworkDataDirectory.class).getUploadDir();
     }
 
-    public int getMaxUploadSize() {
+    public long getMaxUploadSize() {
         return _maxUploadSize;
     }
 
-    public void setMaxUploadSize(final int size) {
+    public void setMaxUploadSize(final long size) {
         _maxUploadSize = size;
     }
 

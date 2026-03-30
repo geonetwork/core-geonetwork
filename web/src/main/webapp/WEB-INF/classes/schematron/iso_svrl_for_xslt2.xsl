@@ -140,7 +140,8 @@
   xmlns:schold="http://www.ascc.net/xml/schematron"
   xmlns:iso="http://purl.oclc.org/dsdl/schematron"
   xmlns:svrl="http://purl.oclc.org/dsdl/svrl"
-  version="1.0"
+  xmlns:geonet="http://www.fao.org/geonetwork"
+  version="2.0"
 
 >
 
@@ -210,7 +211,25 @@
     <axsl:param name="thesaurusDir"/>
     <axsl:param name="rule"/>
 
-    <axsl:variable name="loc" select="document(concat('../loc/', $lang, '/', $rule, '.xml'))"/>
+    <!-- Retrieve localisation entries (one file specific to the rule, the other file is shared by all schematron). Fallback language is English. -->
+    <axsl:variable name="loc">
+      <axsl:choose>
+        <axsl:when test="document(concat('../loc/', $lang, '/', $rule, '.xml'))">
+          <axsl:copy-of select="document(concat('../loc/', $lang, '/', $rule, '.xml'))"/>
+        </axsl:when>
+        <axsl:otherwise>
+          <axsl:copy-of select="document(concat('../loc/', 'eng', '/', $rule, '.xml'))"/>
+        </axsl:otherwise>
+      </axsl:choose>
+      <axsl:choose>
+        <axsl:when test="count(document(concat('../loc/', $lang, '/', 'schematron-shared.xml')))">
+          <axsl:copy-of select="document(concat('../loc/', $lang, '/', 'schematron-shared.xml'))"/>
+        </axsl:when>
+        <axsl:otherwise>
+          <axsl:copy-of select="document(concat('../loc/', 'eng', '/', 'schematron-shared.xml'))"/>
+        </axsl:otherwise>
+      </axsl:choose>
+    </axsl:variable>
   </xsl:template>
 
   <!-- Overrides skeleton.xsl -->
@@ -525,7 +544,7 @@
   <xsl:template name="svrl-text">
     <svrl:text>
       <xsl:choose>
-        <xsl:when test="starts-with(., '$loc')">
+        <xsl:when test="starts-with(., '$loc') or contains(., '$loc/strings/')">
           <xsl:element name="xsl:copy-of">
             <xsl:attribute name="select">
               <xsl:apply-templates mode="text"/>
@@ -570,7 +589,7 @@
       <xsl:if test=" string( $name )">
         <axsl:attribute name="name">
           <xsl:choose>
-            <xsl:when test="starts-with($name, '$loc')">
+            <xsl:when test="starts-with(., '$loc') or contains($name, '$loc/strings/')">
               <axsl:value-of>
                 <xsl:attribute name="select">
                   <xsl:value-of select="$name"/>

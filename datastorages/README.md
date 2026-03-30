@@ -10,3 +10,12 @@ For more information see:
 
 * org.fao.geonet.resource.Resources
 
+## Maven Profiles
+
+Maven profiles are used to enable the optional data storage modules:
+
+```
+mvn install -Pdatastorage-s3
+```
+
+These build profiles are also included in the `release` profile for distribution.

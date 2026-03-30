@@ -1,4 +1,4 @@
-@data{{uuid},
+@misc{{uuid},
       author = {},
       publisher = {},
       title = {CORINE Land Cover Change 2012-2018 (vector), Europe, 6-yearly - version 2020_20u1, May 2020},

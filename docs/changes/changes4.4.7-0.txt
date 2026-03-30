@@ -1,0 +1,139 @@
+================================================================================
+===
+=== GeoNetwork 4.4.7-SNAPSHOT: List of changes
+===
+================================================================================
+- Map viewer / show style selection menu on the right to avoid cropping it (#8724)
+- DOI / Update medra client to use selected DOI server. (#8715)
+- Fix username not set in link to profile (#8713)
+- Change geonetwork-ui to submodule
+- Use target directory for geonetwork-ui build
+- adjust datahub-integration plugin for -Drelease activiation
+- Do not build the Datahub plugin unless -Pdatahub-integration is specified
+- CSW and simple URL harvesters: translate metadata in metadata updates if translations are configured. (#8718)
+- Update the Elasticsearch client to use the server proxy if configured
+- Download latest translations from Transifex
+- Coordinated vulnerability disclosure (#8652)
+- Use request locale for jsonLocTranslator instead of resource bundle locale (#8710)
+- i18n / Transifex update.
+- datahub plugin configuration and style (#8695)
+- datahubs per sub-portal (#8644)
+- Record view / Status label (#8691)
+- Add byte data to metadata summary page for its children thumbnails (#8608)
+- Update translations for Portuguese in codelists for schema 19139 (#8521)
+- Fix harvesting errors not always being reported (#8647)
+- Static pages / sort groups alphabetically (#8671)
+- Conversion from ISO19139 to ISO19115-3.2018: Manage organisation name with Anchor (#8683)
+- Add sortLabel as override when applicable
+- Editor / Keyword dropdown / Sort keywords by label (#8666)
+- improved schematron localisation
+- Record view / contact focus on feature: allow to customise the contact field name to filter (#8578)
+- Metadata editor / add visual indication when dragging a file to upload (#8678)
+- Search result record abstract parsing improvement (#8633)
+- Map viewer / Use 8 decimals for the bounding box of map in a metadata. (#8675)
+- Set related children's thumbnail to default 4 (#8622)
+- Fix only record owners can access workflow status API (#8667)
+- Update Github Actions runner images (#8660)
+- Add Dutch translations of the iso19115-3.2018 metadata schema. (#8638)
+- Pasting text in the metadata editor uploads an image to the catalogue store (#8639)
+- Update Transifex Dutch translations / add Dutch messages.properties file (#8650)
+- Metadata indexing / parse resource maintenance date of next update to check that is valid. (#8651)
+- Restore metadata file store multiple files upload (#8648)
+- Add Polish translations from Transifex and update the translations for the other languages (#8612)
+- Metadata citation improvements (#8607)
+- Standard / 19115-3 / Update labels.xml (#8646)
+- Black formatting and fix missing /
+- Doc / Update Python example
+- Update to GeoTools 32.2 (#8613)
+- URL Decode filename for resources uploaded by url (#8628)
+- Sort categories list by translation in the categories and groups pages (#8632)
+- Add get /api/sources/{sourceIdentifier} to be able to get a source by id. (#8266)
+- Fix jcloud content length is inaccurate (#8619)
+- Improve performance of parsing simple dates (#8386)
+- Update getRecordStatusHistory and getRecordStatusHistoryByType to support getting working copy records history. (#8153)
+- remove commented out code with old token (#8616)
+- delete all if the excludes list is empty (#8609)
+- Audit user changes (#8137)
+- French translation for user registered message
+- Enforce upload size limit on putResourceFromUrl api (#8562)
+- Metadata indexing / parse process steps and measure dates to check that are valid. (#8598)
+- Update creating-group.md (#8592)
+- Record view / fix javascript error when a metadata has multiple lineage source descriptions (#8595)
+- Move StatusValue.Events to an enum class (#8583)
+- Fix set site settings in swagger_ui so it function correctly. (#8582)
+- Url decode the resourceId supplied to store.getResourceInternal to fix filenames containing spaces. (#8581)
+- GN5 / Security configuration
+- Return xml inside JSON status (#8579)
+- ISO19115-3.2008 - Add URL check schematron (#8575)
+- remove outgoing headers for the proxy
+- Facet / Add meta property to customize label. (#8536)
+- API / Extents / Add option to generate square image
+- Admin / Schematron / Fix icon in rules (#8569)
+- Editor / Add unit attribute as main field (#8245)
+- Feature catalogue / Add table of content of feature types (#8041)
+- Formatters / Properly detect URL ending in 1,2,3 or 5 (#8235)
+- Doc / DCAT page / Fix formatting (#8563)
+- support section variable in manual url (#8494)
+- Standard / ISO / Schematron for HVD
+- Formatter / DCAT / Fix test after rebase.
+- Update schemas/iso19115-3.2018/src/main/plugin/iso19115-3.2018/formatter/dcat/dcat-variables.xsl
+- Fix eu-applicable-legislation.rdf
+- Formatter / DCAT / Add  element in Resource (mandatory in HVD for services).
+- Formatter / DCAT / Fix test after rebase of https://github.com/geonetwork/core-geonetwork/pull/8507.
+- Documentation / DCAT / Improvement.
+- DCAT-AP-HVD / Update vocabulary for HVD category including now sub category. The vocabulary is used to create skos:Concept with proper URI in case ISO keyword is encoded using gco:CharacterString only.
+- GeoDCAT-AP / Extends DCAT-AP-HVD.
+- DCAT / GeoDCAT-AP / Update shacl rules to version 3.
+- Formatter / DCAT / Improvements
+- Attachments API / Set content-length and close input stream when retrieving a metadata resource (#8556)
+- Update README.md
+- Update CONTRIBUTING.md
+- JWT Headers security module (#7899)
+- Restyled `default` address block (#8289)
+- Formatter / DCAT / Service (#8526)
+- Editor / Add keywords even if thesaurus not available in record languages (#8268)
+- Editor / Improve support of schema having sibling elements for translation (#8540)
+- Standard / ISO19115-3 / Process / encode all keywords using anchor (#8531)
+- Editor / Add support for conditional default view
+- Attachments API use filename from Content-Disposition before url (#8470)
+- Restrict setting privileges on groups (#8511)
+- Update db search and replace to support working copies (#8514)
+- Formatters / DCAT-AP / Allow PO URI to be used for constraints.
+- ISO19110 / ISO19115-3.2008 / Fix indexing of multiple feature type aliases (#8545)
+- Fix wrong HTML self-closed elements. (#8542)
+- ISO19115.3-2008 / Fix typo in facsimile codelist value (#8539)
+- Update README.md
+- Update CONTRIBUTING.md to describe the CLA automation
+- fixed login url for missing records
+- Update index to use a key with translations defined for map resource types (#8529)
+- Use the copyBlob to copy the resource with updated metadata (#8530)
+- update PSC details in user guide
+- Use case insensitive username for login and reset password (#8523)
+- Batch selection is not in sync between search results and record view.
+- Change ESAPI logger to SLF4J using log4j2 (#8522)
+- Automatic formatting
+- Add better Jcloud versioning supports (#8512)
+- Remove usage of ECMASCRIPT6 const keyword. (#8518)
+- Component to allow checking duplicated metadata values for title, alternative title and resource identifier in the metadata editor and display a message to the user (#6984)
+- Directory entries / Fix parsing of sorting configuration (#8482)
+- Update file upload so that it has better error support. (#8427)
+- removing jena non-compliant attribute during harvesting
+- Metadata editor / Regions picker display empty entry form the metadata regions dao.
+- Sort groups alphabetically on the new account and report pages
+- Metadata publication notifications / allow to configure the mail format (#8497)
+- Admin / DOI server / Clarify labels for record group (#8496)
+- Lib / Spring / Minor version update (#8498)
+- Metadata editor / Fix display of multiple choice elements with custom label
+- Change icon for the layer tools in the layer manager panel on the map page (#8376)
+- Enhance static page with group user accessibility  (#7707)
+- GeoTools 32.0 update and JTS 1.20.0 update
+- Configuration to display an application banner - fix database migration script. (#8488)
+- Configuration to display an application banner (#8416)
+- getResourceInternal implementation for cmis and jcloud (#8466)
+- Add option to mock a dropdown for keywordPickers (#8401)
+- Documentation / Metadata workflow improvements (#8473)
+- option to force xsd schema check for required field (#8294)
+- Documentation / Update managing privileges page:
+- Metadata status changes notification mails improvements: (#8453)
+- XSL utility / Add function to retrieve thesaurus URI
+- Update version to 4.4.7-SNAPSHOT

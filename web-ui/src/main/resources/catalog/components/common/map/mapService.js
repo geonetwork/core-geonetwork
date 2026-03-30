@@ -178,6 +178,8 @@
       "$http",
       "gnEsriUtils",
       "gnMapServicesCache",
+      "$filter",
+      "gnExternalViewer",
       function (
         olDecorateLayer,
         gnOwsCapabilities,
@@ -199,7 +201,9 @@
         gnAlertService,
         $http,
         gnEsriUtils,
-        gnMapServicesCache
+        gnMapServicesCache,
+        $filter,
+        gnExternalViewer
       ) {
         /**
          * @description
@@ -1245,7 +1249,8 @@
                   if (dimension.name == "elevation") {
                     layer.set("elevation", {
                       units: dimension.units,
-                      values: dimension.values.split(",")
+                      values: dimension.values.split(","),
+                      default: dimension.default
                     });
 
                     if (dimension.default) {
@@ -1267,7 +1272,8 @@
 
                     layer.set("time", {
                       units: dimension.units,
-                      values: dimensionValues
+                      values: dimensionValues,
+                      default: dimension.default
                     });
 
                     if (dimension.default) {
@@ -2293,6 +2299,105 @@
             if (layer.get("cextent")) {
               map.getView().fit(layer.get("cextent"), map.getSize());
             }
+          },
+
+          /**
+           * @ngdoc
+           * @methodOf gn_map.service:gnMap
+           * @name gnMap#buildAddToMapConfig
+           *
+           * @description
+           * Builds a configuration object for adding a WMS/WMTS/ESRI service layer to the map,
+           * or hands off to an external viewer if one is enabled.
+           *
+           * @param link
+           * @param {Object=} md
+           * @returns {Object|undefined}
+           */
+          buildAddToMapConfig: function (link, md) {
+            var addToMapLayerNameUrlParam =
+              gnGlobalSettings.gnCfg.mods.search.addWMSLayersToMap.urlLayerParam;
+
+            var type = "wms";
+            if (link.protocol.indexOf("WMTS") > -1) {
+              type = "wmts";
+            } else if (
+              link.protocol === "ESRI:REST" ||
+              link.protocol.startsWith("ESRI REST")
+            ) {
+              type = "esrirest";
+            } else if (link.protocol === "OGC:3DTILES") {
+              type = "3dtiles";
+            } else if (link.protocol === "OGC:COG") {
+              type = "cog";
+            }
+
+            var config = {
+              uuid: md ? md.uuid : null,
+              type: type,
+              url: $filter("gnLocalized")(link.url) || link.url
+            };
+
+            var title = link.title;
+
+            var name;
+
+            if (addToMapLayerNameUrlParam !== "") {
+              var params = gnUrlUtils.parseKeyValue(config.url.split("?")[1]);
+              name = params[addToMapLayerNameUrlParam];
+
+              if (angular.isUndefined(name)) {
+                name = link.name;
+              }
+            } else {
+              name = link.name;
+            }
+
+            if (angular.isObject(link.title)) {
+              title = $filter("gnLocalized")(link.title);
+            }
+            if (angular.isObject(name)) {
+              name = $filter("gnLocalized")(name);
+            }
+
+            if (name && name !== "") {
+              config.name = name;
+              config.group = link.group;
+              // Related service return a property title for the name
+            } else if (title) {
+              config.name = title;
+            }
+
+            // if an external viewer is defined, use it here
+            if (gnExternalViewer.isEnabled()) {
+              gnExternalViewer.viewService(
+                {
+                  id: md ? md.id : null,
+                  uuid: config.uuid
+                },
+                {
+                  type: config.type,
+                  url: config.url,
+                  name: config.name,
+                  title: title
+                }
+              );
+              return;
+            }
+
+            // no support for COG or 3DTiles for now
+            if (config.type === "cog" || config.type === "3dtiles") {
+              gnAlertService.addAlert({
+                msg: $translate.instant("layerProtocolNotSupported", {
+                  type: link.protocol
+                }),
+                delay: 20,
+                type: "warning"
+              });
+              return;
+            }
+
+            return config;
           },
 
           /**

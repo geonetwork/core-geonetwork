@@ -91,6 +91,7 @@
         data-groups="groups"
         data-profile="Editor"
         data-exclude-special-groups="true"
+        data-only-include-workspaces="true"
       ></div>
     </div>
   </div>
@@ -151,7 +152,7 @@
           <button
             type="button"
             class="btn btn-primary"
-            data-gn-click-and-spin="createNewMetadata()"
+            data-gn-click-and-spin="createNewMetadata(publishForGroupEditors, copyAttachmentsOfSource)"
             data-ng-class="{'disabled': (!activeTpl || !ownerGroup || ((!generateUuid) && (!isMdIdentifierFilled())) )}"
           >
             <i class="fa fa-plus"></i>
@@ -166,15 +167,17 @@
             <span class="caret"></span>&nbsp;
           </button>
           <ul class="dropdown-menu pull-right" role="menu">
-            <li>
-              <a
-                title="{{'createMetadataForGroup-help' | translate}}"
-                data-gn-click-and-spin="createNewMetadata(true)"
-                href=""
-                data-translate=""
-              >
-                createMetadataForGroup</a
-              >
+            <li role="menuitem">
+              <label title="{{'createMetadataForGroup-help' | translate}}">
+                <input type="checkbox" data-ng-model="publishForGroupEditors" />
+                {{'createMetadataForGroup' | translate}}
+              </label>
+            </li>
+            <li role="menuitem">
+              <label title="{{'copyAttachmentsOfSource-help' | translate}}">
+                <input type="checkbox" data-ng-model="copyAttachmentsOfSource" />
+                {{'copyAttachmentsOfSource' | translate}}
+              </label>
             </li>
           </ul>
         </div>

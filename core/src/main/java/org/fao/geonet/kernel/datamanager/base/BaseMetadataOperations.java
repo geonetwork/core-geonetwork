@@ -117,6 +117,23 @@ public class BaseMetadataOperations implements IMetadataOperations, ApplicationE
     }
 
     /**
+     * Removes all operations stored for a metadata except for the operations of the groups in the exclude list.
+     * Used for preventing deletion of operations for reserved and restricted groups.
+     * If groupIdsToExclude is null or empty, all operations are deleted.
+     *
+     * @param metadataId        Metadata identifier
+     * @param groupIdsToExclude List of group ids to exclude from deletion
+     */
+    @Override
+    public void deleteMetadataOper(String metadataId, List<Integer> groupIdsToExclude) {
+        if (groupIdsToExclude == null || groupIdsToExclude.isEmpty()) {
+            opAllowedRepo.deleteAllByMetadataId(Integer.parseInt(metadataId));
+        } else {
+            opAllowedRepo.deleteAllByMetadataIdExceptGroupId(Integer.parseInt(metadataId), groupIdsToExclude);
+        }
+    }
+
+    /**
      * Adds a permission to a group. Metadata is not reindexed.
      */
     @Override

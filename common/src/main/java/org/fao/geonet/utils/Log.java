@@ -1,29 +1,31 @@
-//=============================================================================
-//===	Copyright (C) 2001-2005 Food and Agriculture Organization of the
-//===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
-//===	and United Nations Environment Programme (UNEP)
-//===
-//===	This program is free software; you can redistribute it and/or modify
-//===	it under the terms of the GNU General Public License as published by
-//===	the Free Software Foundation; either version 2 of the License, or (at
-//===	your option) any later version.
-//===
-//===	This program is distributed in the hope that it will be useful, but
-//===	WITHOUT ANY WARRANTY; without even the implied warranty of
-//===	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
-//===	General Public License for more details.
-//===
-//===	You should have received a copy of the GNU General Public License
-//===	along with this program; if not, write to the Free Software
-//===	Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
-//===
-//===	Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
-//===	Rome - Italy. email: geonetwork@osgeo.org
-//==============================================================================
+/*
+ * Copyright (C) 2001-2025 Food and Agriculture Organization of the
+ * United Nations (FAO-UN), United Nations World Food Programme (WFP)
+ * and United Nations Environment Programme (UNEP)
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or (at
+ * your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
+ *
+ * Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
+ * Rome - Italy. email: geonetwork@osgeo.org
+ */
+
 
 package org.fao.geonet.utils;
 
 
+import java.io.File;
 import org.apache.log4j.bridge.AppenderWrapper;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
@@ -35,8 +37,6 @@ import org.apache.logging.log4j.core.appender.RollingFileAppender;
 import org.apache.logging.log4j.core.config.Configuration;
 import org.apache.logging.log4j.core.config.LoggerConfig;
 
-import java.io.File;
-
 /**
  * Jeeves logging integration, defining functional logger categories by module
  * (rather that strictly based on java package structure).
@@ -44,7 +44,7 @@ import java.io.File;
 public final class Log {
 
     /**
-     * Jeeves base logging moodule.
+     * Jeeves base logging module.
      */
     public static final String JEEVES = "jeeves";
 
@@ -100,16 +100,18 @@ public final class Log {
      */
     public static final String TRANSFORMER_FACTORY = JEEVES
         + ".transformerFactory";
-
+    public static final String GEONETWORK_MODULE = "geonetwork";
+    /**
+     * System property key containing the log directory.
+     */
+    public static final String LOG_DIR_KEY = "log_dir";
     /**
      * This is the name of the RollingFileAppender in your log4j2.xml configuration file.
      * <p>
-     * LogConfig uses this name to lookup RollingFileAppender to check configuration in
+     * LogConfig uses this name to look up RollingFileAppender to check configuration in
      * case a custom log file location has been used.
      */
     private static final String FILE_APPENDER_NAME = "File";
-
-    public static final String GEONETWORK_MODULE = "geonetwork";
 
     /**
      * Default constructor. Builds a Log.
@@ -340,20 +342,25 @@ public final class Log {
                         }
                     }
                 }
-                if (System.getProperties().containsKey("log_dir")) {
-                    File logDir = new File(System.getProperty("log_dir"));
+
+                // Check if "log_dir" system property exists
+                if (System.getProperties().containsKey(LOG_DIR_KEY)) {
+                    File logDir = new File(System.getProperty(LOG_DIR_KEY));
+                    // Use geonetwork.log in specified directory
                     if (logDir.exists() && logDir.isDirectory()) {
-                        File logFile = new File(logDir, "logs/geonetwork.log");
+                        File logFile = new File(logDir, "geonetwork.log");
                         if (logFile.exists()) {
                             return logFile.getName();
                         }
                     }
                 } else {
+                    // Use the default log file path
                     File logFile = new File("logs/geonetwork.log");
                     if (logFile.exists()) {
                         return logFile.getName();
                     }
                 }
+                // Log file not found
                 return "";
             }
 
@@ -395,7 +402,7 @@ public final class Log {
     }
 
     public static File getLogfile() {
-        // Appender is supplied by LogUtils based on parsing log4j2.xml file indicated
+        // Appender is supplied by LogUtils based on parsing the log4j2.xml file indicated
         // by database settings
 
         // First, try the fileappender from the logger named "geonetwork"
@@ -431,15 +438,16 @@ public final class Log {
                 }
             }
         }
-        Log.warning(GEONETWORK_MODULE, "Error when getting logger file for the " + "appender named '" + FILE_APPENDER_NAME + "'. "
+        Log.warning(GEONETWORK_MODULE, "Error when getting logger file for the "
+            + "appender named '" + FILE_APPENDER_NAME + "'. "
             + "Check your log configuration file. "
             + "A FileAppender or RollingFileAppender is required to return last activity to the user interface."
             + "Appender file not found.");
 
-        if (System.getProperties().containsKey("log_dir")) {
-            File logDir = new File(System.getProperty("log_dir"));
+        if (System.getProperties().containsKey(LOG_DIR_KEY)) {
+            File logDir = new File(System.getProperty(LOG_DIR_KEY));
             if (logDir.exists() && logDir.isDirectory()) {
-                File logFile = new File(logDir, "logs/geonetwork.log");
+                File logFile = new File(logDir, "geonetwork.log");
                 if (logFile.exists()) {
                     return logFile;
                 }

@@ -24,8 +24,10 @@ package org.fao.geonet.doi.client;
 
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.client.methods.HttpDelete;
 import org.fao.geonet.ApplicationContextHolder;
+import static org.fao.geonet.doi.client.DoiManager.DOI_DEFAULT_URL;
 import org.fao.geonet.utils.GeonetHttpRequestFactory;
 import org.fao.geonet.utils.Log;
 import org.springframework.http.client.ClientHttpResponse;
@@ -45,7 +47,7 @@ public class DoiDataciteClient extends BaseDoiClient implements IDoiClient {
 
     public DoiDataciteClient(String apiUrl, String username, String password, String doiPublicUrl) {
         this.apiUrl = apiUrl.endsWith("/") ? apiUrl : apiUrl + "/";
-        this.doiPublicUrl = doiPublicUrl.endsWith("/") ? doiPublicUrl : doiPublicUrl + "/";
+        this.doiPublicUrl = StringUtils.isEmpty(doiPublicUrl) ? DOI_DEFAULT_URL : doiPublicUrl.endsWith("/") ? doiPublicUrl : doiPublicUrl + "/";
         this.username = username;
         this.password = password;
 

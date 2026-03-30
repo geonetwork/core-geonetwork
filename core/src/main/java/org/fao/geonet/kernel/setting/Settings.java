@@ -53,6 +53,7 @@ public class Settings {
     public static final String METADATA_URL_SITEMAPDOIFIRST = "metadata/url/sitemapDoiFirst";
     public static final String METADATA_URL_DYNAMICAPPLINKURL = "metadata/url/dynamicAppLinkUrl";
 
+    public static final String METADATA_EDIT_SUPPORTEDFILEMIMETYPES = "system/metadata/edit/supportedFileMimetypes";
     public static final String SYSTEM_INSPIRE_ENABLE = "system/inspire/enable";
     public static final String SYSTEM_INSPIRE_ATOM = "system/inspire/atom";
     public static final String SYSTEM_INSPIRE_ATOM_SCHEDULE = "system/inspire/atomSchedule";
@@ -120,6 +121,9 @@ public class Settings {
     public static final String SYSTEM_HARVESTING_MAIL_TEMPLATE_ERROR = "system/harvesting/mail/templateError";
     public static final String SYSTEM_HARVESTING_MAIL_TEMPLATE = "system/harvesting/mail/template";
     public static final String SYSTEM_METADATACREATE_GENERATE_UUID = "system/metadatacreate/generateUuid";
+    public static final String SYSTEM_METADATACREATE_PUBLISH_FOR_GROUP_EDITORS = "system/metadatacreate/publishForGroupEditors";
+    public static final String SYSTEM_METADATACREATE_COPY_ATTACHMENTS = "system/metadatacreate/copyAttachments";
+    public static final String SYSTEM_METADATACREATE_SKIP_METADATA_CREATION_PAGE = "system/metadatacreate/skipMetadataCreationPage";
     public static final String SYSTEM_THREADEDINDEXING_MAXTHREADS = "system/threadedindexing/maxthreads";
     public static final String SYSTEM_RESOURCE_PREFIX = "metadata/resourceIdentifierPrefix";
     public static final String SYSTEM_INSPIRE_REMOTE_VALIDATION_URL = "system/inspire/remotevalidation/url";
@@ -144,10 +148,14 @@ public class Settings {
     public static final String METADATA_HISTORY_ENABLED = "metadata/history/enabled";
     public static final String METADATA_HISTORY_ACCESS_LEVEL = "metadata/history/accesslevel";
     public static final String METADATA_PUBLISHED_DELETE_USERPROFILE = "metadata/delete/profilePublishedMetadata";
+    public static final String METADATA_DELETE_BACKUPOPTIONS = "metadata/delete/backupOptions";
     public static final String METADATA_PUBLISH_USERPROFILE = "metadata/publication/profilePublishMetadata";
     public static final String METADATA_UNPUBLISH_USERPROFILE = "metadata/publication/profileUnpublishMetadata";
     public static final String METADATA_BACKUPARCHIVE_ENABLE = "metadata/backuparchive/enable";
     public static final String METADATA_VCS = "metadata/vcs/enable";
+    public static final String METADATA_ZIPEXPORT_ATTACHMENTSSIZELIMIT = "metadata/zipExport/attachmentsSizeLimit";
+
+    public static final String SYSTEM_AUDITABLE_ENABLE = "system/auditable/enable";
     public static final String VIRTUAL_SETTINGS_SUFFIX_ISDEFINED = "IsDefined";
     public static final String NODE = "node/id";
     public static final String NODE_DEFAULT = "node/default";
@@ -163,6 +171,7 @@ public class Settings {
     public static final String SYSTEM_TRANSLATION_APIKEY = "system/translation/apiKey";
 
     public static final String MICROSERVICES_ENABLED = "microservices/enabled";
+
 
     public static class GNSetting {
         private String name;

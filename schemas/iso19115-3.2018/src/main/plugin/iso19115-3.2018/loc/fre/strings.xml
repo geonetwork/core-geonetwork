@@ -14,6 +14,8 @@
   <enum1>La valeur </enum1>
   <enum2> n'est pas valide pour le champ </enum2>
   <enum3>Les valeurs possibles sont : </enum3>
+  <selectFeaturetype>Choisir une table attributaire</selectFeaturetype>
+  <missingFeatureTypeName>Nouvelle table</missingFeatureTypeName>
 
   <understandResource>Comprendre la ressource</understandResource>
   <relatedResources>Service disponible et données associées</relatedResources>

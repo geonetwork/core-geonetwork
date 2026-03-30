@@ -79,6 +79,25 @@
     }
   ]);
 
+  module.directive("gnApplicationBanner", [
+    "gnConfig",
+    "gnConfigService",
+    function (gnConfig, gnConfigService) {
+      return {
+        restrict: "E",
+        replace: true,
+        scope: true,
+        templateUrl:
+          "../../catalog/views/default/directives/partials/applicationBanner.html",
+        link: function linkFn(scope) {
+          gnConfigService.load().then(function (c) {
+            scope.isBannerEnabled = gnConfig["system.banner.enable"];
+          });
+        }
+      };
+    }
+  ]);
+
   module.directive("gnLinksBtn", [
     "gnTplResultlistLinksbtn",
     "gnMetadataActions",
@@ -103,6 +122,7 @@
     "gnConfigService",
     "gnGlobalSettings",
     "gnLangs",
+    "gnMdFormatter",
     function (
       gnMetadataActions,
       $http,
@@ -110,7 +130,8 @@
       gnConfig,
       gnConfigService,
       gnGlobalSettings,
-      gnLangs
+      gnLangs,
+      gnMdFormatter
     ) {
       return {
         restrict: "A",
@@ -119,12 +140,14 @@
         link: function linkFn(scope, element, attrs) {
           scope.mdService = gnMetadataActions;
           scope.md = scope.$eval(attrs.gnMdActionsMenu);
-          scope.formatterList = gnGlobalSettings.gnCfg.mods.search.downloadFormatter;
+          scope.formatterList = [];
 
           scope.tasks = [];
           scope.hasVisibletasks = false;
 
           scope.doiServers = [];
+
+          scope.anonymousAccessExists = false;
 
           gnConfigService.load().then(function (c) {
             scope.isMdWorkflowEnable = gnConfig["metadata.workflow.enable"];
@@ -134,9 +157,74 @@
             scope.workFlowApps =
               gnGlobalSettings.gnCfg.mods.workflowHelper.workflowAssistApps;
             scope.iso2Lang = gnLangs.getIso2Lang(gnLangs.getCurrent());
+            scope.attachmentsSizeLimit = Number(
+              gnConfig["metadata.zipExport.attachmentsSizeLimit"]
+            );
+
+            var totalAttachmentsSize = 0;
+            if (scope.md && Array.isArray(scope.md.filestore)) {
+              totalAttachmentsSize = scope.md.filestore.reduce(function (
+                sum,
+                attachment
+              ) {
+                return sum + attachment.size;
+              },
+              0);
+            }
+
+            if (scope.attachmentsSizeLimit > 0 && isFinite(scope.attachmentsSizeLimit)) {
+              var attachmentsSizeLimitBytes = scope.attachmentsSizeLimit * 1024 * 1024;
+              scope.attachmentsExceedExportLimit =
+                totalAttachmentsSize > attachmentsSizeLimitBytes;
+            } else {
+              scope.attachmentsExceedExportLimit = false;
+            }
           });
 
           scope.status = undefined;
+
+          scope.statusEffects = {
+            editor: [
+              {
+                from: "draft",
+                to: "submitted"
+              },
+              {
+                from: "retired",
+                to: "draft"
+              },
+              {
+                from: "submitted",
+                to: "draft"
+              }
+            ],
+            reviewer: [
+              {
+                from: "draft",
+                to: "submitted"
+              },
+              {
+                from: "submitted",
+                to: "approved"
+              },
+              {
+                from: "submitted",
+                to: "draft"
+              },
+              {
+                from: "draft",
+                to: "approved"
+              },
+              {
+                from: "approved",
+                to: "retired"
+              },
+              {
+                from: "retired",
+                to: "draft"
+              }
+            ]
+          };
 
           scope.buildFormatter = function (url, uuid, isDraft) {
             if (url.indexOf("${uuid}") !== -1) {
@@ -161,49 +249,6 @@
                 response.data.forEach(function (s) {
                   scope.status[s.name] = s.id;
                 });
-
-                scope.statusEffects = {
-                  editor: [
-                    {
-                      from: "draft",
-                      to: "submitted"
-                    },
-                    {
-                      from: "retired",
-                      to: "draft"
-                    },
-                    {
-                      from: "submitted",
-                      to: "draft"
-                    }
-                  ],
-                  reviewer: [
-                    {
-                      from: "draft",
-                      to: "submitted"
-                    },
-                    {
-                      from: "submitted",
-                      to: "approved"
-                    },
-                    {
-                      from: "submitted",
-                      to: "draft"
-                    },
-                    {
-                      from: "draft",
-                      to: "approved"
-                    },
-                    {
-                      from: "approved",
-                      to: "retired"
-                    },
-                    {
-                      from: "retired",
-                      to: "draft"
-                    }
-                  ]
-                };
               });
           }
 
@@ -264,6 +309,119 @@
             );
           };
 
+          /**
+           * Display the anonymous access option.
+           *
+           * Checks:
+           * - The user is logged in.
+           * - The user is administrator or more.
+           * - The metadata record is not null.
+           * - The metadata is not published.
+           *
+           * @param {Object} md - The metadata record to check.
+           * @param {Object} user - The user for whom the check is being performed.
+           * @param {Object} pubOption - The publication option to check against.
+           * @returns {boolean} - True if the anonymous access option should be displayed, false otherwise.
+           */
+          scope.displayAnonymousAccessOption = function (md, user, pubOption) {
+            return (
+              user.id && user.isAdministratorOrMore() && md && !md.isPublished(pubOption)
+            );
+          };
+
+          /**
+           * Checks if the workflow option for the specified step should be displayed for the given user.
+           *
+           * Checks:
+           * - The user is logged in.
+           * - The metadata record is not null.
+           * - The user can edit the metadata record.
+           * - The metadata record has a group owner.
+           * - The user is an admin or is an editor or more for the group owner.
+           * - The metadata record has a status.
+           * - The step has a 'from' status.
+           * - The 'from' status of the step exists in the status object.
+           * - The 'from' status of the step matches the status of the metadata record.
+           * - Workflow is enabled in the configuration.
+           * - The metadata record has workflow enabled.
+           *
+           * @param {Object} step - The workflow step to check.
+           * @param {Object} user - The user for whom the check is being performed.
+           * @returns {boolean} - True if the workflow option should be displayed, false otherwise.
+           */
+          scope.displayWorkflowStepOption = function (step, user) {
+            return (
+              user.id &&
+              scope.md &&
+              user.canEditRecord(scope.md) &&
+              scope.md.groupOwner &&
+              (user.isAdmin() || user.isEditorOrMoreForGroup(scope.md.groupOwner)) &&
+              scope.md.mdStatus &&
+              scope.status &&
+              step.from &&
+              scope.status[step.from] &&
+              scope.md.mdStatus == scope.status[step.from] &&
+              scope.isMdWorkflowEnable &&
+              scope.md.isWorkflowEnabled()
+            );
+          };
+
+          /**
+           * Checks if any workflow option should be displayed for the given user.
+           *
+           * @param {Object} user - The user for whom the check is being performed.
+           * @returns {boolean} - True if any workflow option should be displayed, false otherwise.
+           */
+          scope.anyWorkflowOptionDisplayed = function (user) {
+            if (scope.displayEnableWorkflowOption(user)) {
+              return true;
+            }
+            var statusEffects = scope.getStatusEffects(user);
+            for (var i = 0; i < statusEffects.length; i++) {
+              if (scope.displayWorkflowStepOption(statusEffects[i], user)) {
+                return true;
+              }
+            }
+            return false;
+          };
+
+          /**
+           * Retrieves the workflow status effects for the given user based on their role.
+           *
+           * @param {Object} user - The user for whom the workflow status effects are being retrieved.
+           * @returns {Array} - An array of workflow status effects applicable to the user.
+           */
+          scope.getStatusEffects = function (user) {
+            var isReviewer =
+              user.isAdmin() || user.isReviewerForGroup(scope.md.groupOwner);
+            return scope.statusEffects[isReviewer ? "reviewer" : "editor"];
+          };
+
+          /**
+           * Can workflow be enabled for this metadata record and user?
+           *
+           * Checks:
+           *  - Workflow is enabled in the configuration.
+           *  - The metadata record is not null.
+           *  - The metadata record does not have workflow enabled.
+           *  - The user is logged in.
+           *  - The user is an admin or can edit the metadata record.
+           *  - The group owner has workflow enabled.
+           *
+           * @param user The user who wants to enable the workflow
+           * @returns {boolean} True if the workflow can be enabled, false otherwise
+           */
+          scope.displayEnableWorkflowOption = function (user) {
+            return (
+              scope.isMdWorkflowEnable &&
+              scope.md &&
+              !scope.md.isWorkflowEnabled() &&
+              user.id &&
+              (user.isAdmin() || user.canEditRecord(scope.md)) &&
+              gnMetadataActions.isGroupWithWorkflowEnabled(scope.ownerGroupName)
+            );
+          };
+
           loadTasks();
           loadWorkflowStatus();
 
@@ -276,7 +434,38 @@
                 .then(function (response) {
                   scope.doiServers = response.data;
                 });
+              $http
+                .get("../api/anonymousAccessLink/" + scope.md.uuid)
+                .then(function (response) {
+                  scope.anonymousAccessExists = response.data;
+                });
+              if (scope.md.groupOwner) {
+                // Load the group owner name when the metadata record changes
+                gnMetadataActions.getGroupName(scope.md.groupOwner).then(function (name) {
+                  scope.ownerGroupName = name;
+                });
+              }
+
+              gnMdFormatter
+                .getAvailableFormattersForRecord(scope.md)
+                .then(function (availableFormatters) {
+                  var formatterList =
+                    gnGlobalSettings.gnCfg.mods.search.downloadFormatter;
+
+                  scope.formatterList = gnMdFormatter.calculateValidFormattersForRecord(
+                    formatterList,
+                    availableFormatters
+                  );
+                });
             }
+          });
+
+          scope.$on("AnonymousAccessCreated", function () {
+            scope.anonymousAccessExists = true;
+          });
+
+          scope.$on("AnonymousAccessDeleted", function () {
+            scope.anonymousAccessExists = false;
           });
 
           scope.getScope = function () {

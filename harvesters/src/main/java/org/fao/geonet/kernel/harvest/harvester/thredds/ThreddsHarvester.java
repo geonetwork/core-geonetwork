@@ -72,7 +72,7 @@ public class ThreddsHarvester extends AbstractHarvester<HarvestResult, ThreddsPa
     //---------------------------------------------------------------------------
 
     public void doHarvest(Logger log) throws Exception {
-        Harvester h = new Harvester(cancelMonitor, log, context, params);
+        Harvester h = new Harvester(cancelMonitor, log, context, params, errors);
         result = h.harvest(log);
     }
 }

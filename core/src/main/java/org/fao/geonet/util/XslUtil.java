@@ -46,9 +46,9 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.fao.geonet.ApplicationContextHolder;
+import org.fao.geonet.Constants;
 import org.fao.geonet.SystemInfo;
 import org.fao.geonet.analytics.WebAnalyticsConfiguration;
-import org.fao.geonet.api.records.attachments.FilesystemStore;
 import org.fao.geonet.api.records.attachments.FilesystemStoreResourceContainer;
 import org.fao.geonet.api.records.attachments.Store;
 import org.fao.geonet.constants.Geonet;
@@ -113,6 +113,7 @@ import java.io.InputStream;
 import java.io.StringReader;
 import java.net.URL;
 import java.net.URLConnection;
+import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.util.*;
@@ -707,15 +708,29 @@ public final class XslUtil {
         return "";
     }
 
-    /**
-     * Try to preserve some HTML layout to text layout.
-     *
-     * Replace br tag by new line, li by new line with leading *.
-     */
-    public static String htmlElement2textReplacer(String html) {
-        return html
-            .replaceAll("<br */?>", System.getProperty("line.separator"))
-            .replaceAll("<li>(.*)</li>", System.getProperty("line.separator") + "* $1");
+    public static String htmlElement2textReplacer(String htmlRaw) {
+        String separator = "\n";
+        String htmlWithoutNewlines = htmlRaw.replaceAll("[\n\r]", "");
+        org.jsoup.nodes.Document doc = Jsoup.parse(htmlWithoutNewlines);
+
+        // Handle <li> tags: prepend a bullet (*) to each item
+        doc.select("li:not(:empty)").prepend(separator + "* ");
+
+        // Handle <p> tags: append an empty string (ensure it becomes block-level)
+        doc.select("p:not(:empty)").prepend(separator).append(separator);
+
+        // Handle <h1-h6> tags: prepend # to the header
+        doc.select("h1:not(:empty), h2:not(:empty), h3:not(:empty), h4:not(:empty), h5:not(:empty), h6:not(:empty)").prepend(separator + "# ").append(separator);
+
+        // Handle <a> tags: append the URL in parentheses after the link text
+        for (org.jsoup.nodes.Element element : doc.select("a")) {
+            String text = element.text();
+            String link = element.attr("href");
+            if (!text.equals(link)) {
+                element.text(text + " (" + link + ")");
+            }
+        }
+        return doc.wholeText().trim();
     }
     public static String html2text(String html) {
         return Jsoup.parse(html).wholeText();
@@ -1246,12 +1261,13 @@ public final class XslUtil {
                 Matcher m = Pattern.compile(settingManager.getNodeURL() + "api/records/(.*)/attachments/(.*)$").matcher(url);
                 BufferedImage image;
                 if (m.find()) {
-                    Store store = ApplicationContextHolder.get().getBean(FilesystemStore.class);
-                    try (Store.ResourceHolder file = store.getResourceInternal(
-                        m.group(1),
+                    Store store = ApplicationContextHolder.get().getBean("filesystemStore", Store.class);
+                    try (Store.ResourceHolder resourceHolder = store.getResourceInternal(
+                        URLDecoder.decode(m.group(1), Constants.ENCODING),
                         MetadataResourceVisibility.PUBLIC,
-                        m.group(2), true)) {
-                        image = ImageIO.read(file.getPath().toFile());
+                        URLDecoder.decode(m.group(2), Constants.ENCODING), true);
+                        InputStream is = resourceHolder.getResource().getInputStream()) {
+                        image = ImageIO.read(is);
                     }
                 } else {
                     URL imageUrl = new URL(url);
@@ -1440,7 +1456,7 @@ public final class XslUtil {
 
         return thesaurus == null ? "" : "geonetwork.thesaurus." + thesaurus.getKey();
     }
-    
+
     /**
      * Retrieve the thesaurus title using the thesaurus key.
      *
@@ -1453,6 +1469,15 @@ public final class XslUtil {
         Thesaurus thesaurus = thesaurusManager.getThesaurusByName(id);
         return thesaurus == null ? "" : thesaurus.getTitle();
     }
+
+
+    public static String getThesaurusUriByKey(String id) {
+        ApplicationContext applicationContext = ApplicationContextHolder.get();
+        ThesaurusManager thesaurusManager = applicationContext.getBean(ThesaurusManager.class);
+        Thesaurus thesaurus = thesaurusManager.getThesaurusByName(id);
+        return thesaurus == null ? "" : thesaurus.getDefaultNamespace();
+    }
+
 
 
     /**
@@ -1594,7 +1619,11 @@ public final class XslUtil {
     public static String escapeForJson(String value) {
         return StringEscapeUtils.escapeJson(value);
     }
-  
+
+    public static String escapeForEcmaScript(String value) {
+        return StringEscapeUtils.escapeEcmaScript(value);
+    }
+
     public static String getWebAnalyticsService() {
         ApplicationContext applicationContext = ApplicationContextHolder.get();
         WebAnalyticsConfiguration webAnalyticsConfiguration = applicationContext.getBean(WebAnalyticsConfiguration.class);

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2024 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2026 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -27,10 +27,8 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import javax.servlet.http.HttpServletRequest;
-import org.fao.geonet.api.API;
+import jeeves.server.context.ServiceContext;
 import org.fao.geonet.api.ApiParams;
-import static org.fao.geonet.api.ApiParams.API_PARAM_RECORD_UUID;
 import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.doiservers.model.AnonymousDoiServer;
 import org.fao.geonet.api.doiservers.model.DoiServerDto;
@@ -38,15 +36,18 @@ import org.fao.geonet.api.exception.NotAllowedException;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.DoiServer;
+import org.fao.geonet.domain.Profile;
+import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.repository.DoiServerRepository;
-import org.fao.geonet.utils.Log;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -63,15 +64,17 @@ public class DoiServersApi {
 
     public static final String MSG_DOISERVER_WITH_ID_NOT_FOUND = "DOI server with id '%s' not found.";
 
+    private final AccessManager accessManager;
 
     private final DoiServerRepository doiServerRepository;
 
     private final IMetadataUtils metadataUtils;
 
-    DoiServersApi(final DoiServerRepository doiServerRepository, final IMetadataUtils metadataUtils) {
+    DoiServersApi(final DoiServerRepository doiServerRepository, final IMetadataUtils metadataUtils,
+                  final AccessManager accessManager) {
         this.doiServerRepository = doiServerRepository;
         this.metadataUtils = metadataUtils;
-
+        this.accessManager = accessManager;
     }
 
     @io.swagger.v3.oas.annotations.Operation(
@@ -91,7 +94,7 @@ public class DoiServersApi {
     List<AnonymousDoiServer> getDoiServers() {
         List<DoiServer> doiServers = doiServerRepository.findAll();
         List<AnonymousDoiServer> list = new ArrayList<>(doiServers.size());
-        doiServers.stream().forEach(e -> list.add(new AnonymousDoiServer(DoiServerDto.from(e))));
+        doiServers.forEach(e -> list.add(new AnonymousDoiServer(DoiServerDto.from(e))));
         return list;
     }
 
@@ -99,7 +102,7 @@ public class DoiServersApi {
     @io.swagger.v3.oas.annotations.Operation(
         summary = "Get DOI servers that can be used with a metadata"
     )
-    @GetMapping(value = "metadata/{metadataUuid}",
+    @GetMapping(value = "/metadata/{metadataId}",
         produces = {
             MediaType.APPLICATION_JSON_VALUE
         })
@@ -108,30 +111,36 @@ public class DoiServersApi {
     @PreAuthorize("hasAuthority('Editor')")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "List of all DOI servers where a metadata can be published."),
-        @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_ADMIN)
+        @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_METADATA_DOI),
+        @ApiResponse(responseCode = "404", description = ApiParams.API_RESPONSE_RESOURCE_NOT_FOUND)
     })
     List<AnonymousDoiServer> getDoiServers(
-        @Parameter(
-            description = API_PARAM_RECORD_UUID,
+        @Parameter(description = "Metadata UUID",
             required = true)
-        @PathVariable
-        String metadataUuid,
-        HttpServletRequest request) throws ResourceNotFoundException {
+        @PathVariable Integer metadataId,
+        @Parameter(hidden = true)
+        HttpSession httpSession,
+        @Parameter(hidden = true)
+        HttpServletRequest request) throws Exception {
 
         List<DoiServer> doiServers = doiServerRepository.findAll();
         List<AnonymousDoiServer> list = new ArrayList<>(doiServers.size());
 
-        AbstractMetadata metadata;
-        try {
-            metadata = ApiUtils.canViewRecord(metadataUuid, true, request);
-        } catch (ResourceNotFoundException e) {
-            Log.debug(API.LOG_MODULE_NAME, e.getMessage(), e);
-            throw e;
-        } catch (Exception e) {
-            Log.debug(API.LOG_MODULE_NAME, e.getMessage(), e);
-            throw new NotAllowedException(ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW);
+        ServiceContext serviceContext = ApiUtils.createServiceContext(request);
+
+        AbstractMetadata metadata = metadataUtils.findOne(metadataId);
+        if (metadata == null) {
+            throw new ResourceNotFoundException(String.format("Metadata with id '%d' not found.", metadataId))
+                .withMessageKey("exception.resourceNotFound.metadata");
         }
+
         Integer groupOwner = metadata.getSourceInfo().getGroupOwner();
+        Profile userProfile = ApiUtils.getUserSession(httpSession).getProfile();
+
+        boolean accessNotAllowed = !isMetadataOwnerOrReviewer(serviceContext, metadataId, groupOwner, userProfile);
+        if (accessNotAllowed) {
+            throw new NotAllowedException(ApiParams.API_RESPONSE_NOT_ALLOWED_METADATA_DOI);
+        }
 
         // Find servers related to the metadata groups owner
         List<DoiServer> doiServersForMetadata = doiServers.stream().filter(
@@ -169,8 +178,7 @@ public class DoiServersApi {
     })
     public AnonymousDoiServer getDoiServer(
         @Parameter(description = API_PARAM_DOISERVER_IDENTIFIER,
-            required = true,
-            example = "")
+            required = true)
         @PathVariable String doiServerId
     ) throws ResourceNotFoundException {
         Optional<DoiServer> doiServerOpt = doiServerRepository.findOneById(Integer.parseInt(doiServerId));
@@ -238,8 +246,7 @@ public class DoiServersApi {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void updateDoiServer(
         @Parameter(description = API_PARAM_DOISERVER_IDENTIFIER,
-            required = true,
-            example = "")
+            required = true)
         @PathVariable Integer doiServerId,
         @Parameter(description = API_PARAM_DOISERVER_DETAILS,
             required = true)
@@ -320,8 +327,7 @@ public class DoiServersApi {
     public void updateDoiServerAuth(
         @Parameter(
             description = API_PARAM_DOISERVER_IDENTIFIER,
-            required = true,
-            example = "")
+            required = true)
         @PathVariable Integer doiServerId,
         @Parameter(
             description = "Password",
@@ -331,14 +337,19 @@ public class DoiServersApi {
     ) throws ResourceNotFoundException {
         Optional<DoiServer> existingMapserverOpt = doiServerRepository.findOneById(doiServerId);
         if (existingMapserverOpt.isPresent()) {
-            doiServerRepository.update(doiServerId, entity -> {
-                entity.setPassword(password);
-            });
+            doiServerRepository.update(doiServerId, entity -> entity.setPassword(password));
         } else {
             throw new ResourceNotFoundException(String.format(
                 MSG_DOISERVER_WITH_ID_NOT_FOUND,
                 doiServerId
             ));
         }
+    }
+
+    private boolean isMetadataOwnerOrReviewer(ServiceContext serviceContext, Integer metadataId,
+                                              Integer groupOwner, Profile userProfile) throws Exception {
+
+        return (userProfile == Profile.Administrator) || accessManager.isOwner(serviceContext, String.valueOf(metadataId))
+            || accessManager.isProfileOrMoreOnGroup(serviceContext, Profile.Reviewer, groupOwner);
     }
 }

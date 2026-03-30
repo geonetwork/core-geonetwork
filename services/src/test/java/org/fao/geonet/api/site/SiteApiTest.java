@@ -62,7 +62,7 @@ public class SiteApiTest extends AbstractServiceIntegrationTest {
 
 
     @Test
-    public void updateSettings() throws Exception {
+    public void updateSettingsFormUrlEncoded() throws Exception {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
 
         this.mockHttpSession = loginAsAdmin();
@@ -78,10 +78,42 @@ public class SiteApiTest extends AbstractServiceIntegrationTest {
 
         String newName = "DataHub";
         this.mockMvc.perform(post("/srv/api/site/settings")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
                 .param("system/site/name", newName)
+                .session(this.mockHttpSession))
+            .andExpect(status().is(204))
+            .andExpect(content().string("")); // No content should be returned.
+
+        this.mockMvc.perform(get("/srv/api/site/settings")
                 .session(this.mockHttpSession)
                 .accept(MediaType.parseMediaType("application/json")))
-            .andExpect(status().is(204));
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING))
+            .andExpect(jsonPath("$['system/site/name']", is(newName)));
+    }
+
+    @Test
+    public void updateSettingsJson() throws Exception {
+        this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+
+        this.mockHttpSession = loginAsAdmin();
+
+        encryptor.initialize();
+
+        this.mockMvc.perform(get("/srv/api/site/settings")
+                .session(this.mockHttpSession)
+                .accept(MediaType.parseMediaType("application/json")))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING))
+            .andExpect(jsonPath("$['system/site/name']", is("My GeoNetwork catalogue")));
+
+        String newName = "JsonDataHub";
+        this.mockMvc.perform(post("/srv/api/site/settings")
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content("{\"system/site/name\": \"" + newName + "\"}")
+                .session(this.mockHttpSession))
+            .andExpect(status().is(204))
+            .andExpect(content().string("")); // No content should be returned.
 
         this.mockMvc.perform(get("/srv/api/site/settings")
                 .session(this.mockHttpSession)

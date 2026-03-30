@@ -3,6 +3,7 @@ package org.fao.geonet.kernel.harvest.harvester.simpleurl;
 import org.fao.geonet.utils.Log;
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.*;
@@ -18,7 +19,7 @@ public class HarvesterTest {
 
         int numberOfResult = 21;
 
-        final Harvester harvester = new Harvester(null, Log.createLogger("TEST"), null, params);
+        final Harvester harvester = new Harvester(null, Log.createLogger("TEST"), null, params, new ArrayList<>());
         List<String> list = harvester.buildListOfUrl(params, numberOfResult);
         assertEquals(3, list.size());
         assertEquals("http://dados.gov.br/api/3/action/package_search?q=&rows=10&start=1", list.get(0));

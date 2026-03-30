@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2024 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2025 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -66,8 +66,6 @@ import org.jdom.xpath.XPath;
 import javax.transaction.Transactional;
 import javax.transaction.Transactional.TxType;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -215,7 +213,7 @@ public class Aligner extends BaseAligner<CswParams> {
                             addMetadata(ri, UUID.randomUUID().toString());
                             break;
                         case SKIP:
-                            log.debug("Skipping record with uuid " + ri.uuid);
+                            log.info("Skipping record with uuid " + ri.uuid);
                             result.uuidSkipped++;
                             break;
                         default:
@@ -309,8 +307,8 @@ public class Aligner extends BaseAligner<CswParams> {
         // If the xslfilter process changes the metadata uuid,
         // use that uuid (newMdUuid) for the new metadata to add to the catalogue.
         String newMdUuid = null;
-        if (!params.xslfilter.equals("")) {
-            md = processMetadata(context, md, processName, processParams);
+        if (!params.xslfilter.isEmpty()) {
+            md = applyXSLTProcessToMetadata(context, md, processName, processParams, log);
             schema = dataMan.autodetectSchema(md);
             // Get new uuid if modified by XSLT process
             newMdUuid = metadataUtils.extractUUID(schema, md);
@@ -463,14 +461,23 @@ public class Aligner extends BaseAligner<CswParams> {
 
         boolean updateSchema = false;
         if (!params.xslfilter.equals("")) {
-            md = processMetadata(context, md, processName, processParams);
+            md = applyXSLTProcessToMetadata(context, md, processName, processParams, log);
             String newSchema = dataMan.autodetectSchema(md);
             updateSchema = !newSchema.equals(schema);
             schema = newSchema;
+        } else {
+            if (!ri.schema.equals(schema)) {
+                log.warning("  - Detected schema '" + schema + "' is different from the one of the metadata in the catalog '" + ri.schema + "'. Using the detected one.");
+                updateSchema = true;
+            }
         }
 
         applyBatchEdits(ri.uuid, md, schema, params.getBatchEdits(), context, log);
 
+        // Translate metadata
+        if (params.isTranslateContent()) {
+            md = translateMetadataContent(context, md, schema);
+        }
 
         boolean validate = false;
         boolean ufo = false;
@@ -483,9 +490,11 @@ public class Aligner extends BaseAligner<CswParams> {
                 metadata.getHarvestInfo().setUuid(params.getUuid());
                 metadata.getSourceInfo().setSourceId(params.getUuid());
             }
+
             if (updateSchema) {
                 metadata.getDataInfo().setSchemaId(schema);
             }
+
             metadataManager.save(metadata);
         }
 
@@ -618,36 +627,6 @@ public class Aligner extends BaseAligner<CswParams> {
             }
         }
         return false;
-    }
-
-    /**
-     * Filter the metadata if process parameter is set and corresponding XSL transformation
-     * exists in xsl/conversion/import.
-     *
-     * @param context
-     * @param md
-     * @param processName
-     * @param processParams
-     * @return
-     */
-    private Element processMetadata(ServiceContext context,
-                                    Element md,
-                                    String processName,
-                                    Map<String, Object> processParams) {
-        Path filePath = context.getBean(GeonetworkDataDirectory.class).getXsltConversion(processName);
-        if (!Files.exists(filePath)) {
-            log.debug("     processing instruction  " + processName + ". Metadata not filtered.");
-        } else {
-            Element processedMetadata;
-            try {
-                processedMetadata = Xml.transform(md, filePath, processParams);
-                log.debug("     metadata filtered.");
-                md = processedMetadata;
-            } catch (Exception e) {
-                log.warning("     processing error " + processName + ": " + e.getMessage());
-            }
-        }
-        return md;
     }
 
     /**

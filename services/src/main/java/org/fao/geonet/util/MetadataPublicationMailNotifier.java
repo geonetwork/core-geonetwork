@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2023 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2024 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -34,6 +34,7 @@ import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.utils.Log;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
@@ -48,6 +49,9 @@ import static org.fao.geonet.util.LocalizedEmailParameter.ParameterType;
 
 @Component
 public class MetadataPublicationMailNotifier {
+    @Value("${metadata.publicationmail.format.html:true}")
+    private boolean sendHtmlMail;
+
     @Autowired
     SettingManager settingManager;
 
@@ -71,9 +75,10 @@ public class MetadataPublicationMailNotifier {
                 StatusValueNotificationLevel.valueOf(notificationSetting);
             if (notificationLevel != null) {
 
-                if (notificationLevel == StatusValueNotificationLevel.recordProfileReviewer) {
+                if (notificationLevel.name().startsWith("recordProfile")) {
                     Map<Integer, List<MetadataPublicationNotificationInfo>> metadataListToNotifyPublicationPerGroup =
                         metadataListToNotifyPublication.stream()
+                            .filter(metadata -> metadata.getGroupId() != null)
                             .collect(Collectors.groupingBy(MetadataPublicationNotificationInfo::getGroupId));
 
                     // Process the metadata published by group owner
@@ -136,7 +141,6 @@ public class MetadataPublicationMailNotifier {
         LocalizedEmailComponent emailMessageComponent = new LocalizedEmailComponent(MESSAGE, "metadata_published_text", KeyType.MESSAGE_KEY, POSITIONAL_FORMAT);
 
         for (Locale feedbackLocale : feedbackLocales) {
-
             emailSubjectComponent.addParameters(
                 feedbackLocale,
                 new LocalizedEmailParameter(ParameterType.RAW_VALUE, 1, settingManager.getSiteName())
@@ -175,15 +179,19 @@ public class MetadataPublicationMailNotifier {
             );
         }
 
-        LocalizedEmail localizedEmail = new LocalizedEmail(true);
+        LocalizedEmail localizedEmail = new LocalizedEmail(sendHtmlMail);
         localizedEmail.addComponents(emailSubjectComponent, emailMessageComponent);
 
         String subject = localizedEmail.getParsedSubject(feedbackLocales);
-        String htmlMessage = localizedEmail.getParsedMessage(feedbackLocales);
+        String message = localizedEmail.getParsedMessage(feedbackLocales);
 
         // Send mail to notify about metadata publication / un-publication
         try {
-            MailUtil.sendHtmlMail(toAddress, subject, htmlMessage, settingManager);
+            if (sendHtmlMail) {
+                MailUtil.sendHtmlMail(toAddress, subject, message, settingManager);
+            } else {
+                MailUtil.sendMail(toAddress, subject, message, settingManager);
+            }
         } catch (IllegalArgumentException ex) {
             Log.warning(API.LOG_MODULE_NAME, ex.getMessage(), ex);
         }

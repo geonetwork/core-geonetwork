@@ -26,14 +26,16 @@ package org.fao.geonet.index.es;
 import co.elastic.clients.elasticsearch.ElasticsearchAsyncClient;
 import co.elastic.clients.elasticsearch.ElasticsearchClient;
 import co.elastic.clients.elasticsearch._types.*;
+import co.elastic.clients.elasticsearch._types.aggregations.Aggregation;
 import co.elastic.clients.elasticsearch._types.query_dsl.Query;
 import co.elastic.clients.elasticsearch._types.query_dsl.QueryStringQuery;
 import co.elastic.clients.elasticsearch._types.query_dsl.WrapperQuery;
 import co.elastic.clients.elasticsearch.cluster.HealthResponse;
 import co.elastic.clients.elasticsearch.core.*;
-import co.elastic.clients.elasticsearch.core.search.Hit;
 import co.elastic.clients.elasticsearch.indices.AnalyzeRequest;
 import co.elastic.clients.elasticsearch.indices.AnalyzeResponse;
+import co.elastic.clients.elasticsearch.indices.IndicesStatsRequest;
+import co.elastic.clients.elasticsearch.indices.IndicesStatsResponse;
 import co.elastic.clients.elasticsearch.indices.analyze.AnalyzeToken;
 import co.elastic.clients.json.JsonData;
 import co.elastic.clients.json.JsonpMapper;
@@ -67,6 +69,7 @@ import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLContext;
 import java.io.IOException;
 import java.io.StringReader;
+import java.io.StringWriter;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.*;
@@ -82,7 +85,7 @@ public class EsRestClient implements InitializingBean {
 
     private ElasticsearchAsyncClient asyncClient;
 
-    @Value("${es.url}")
+
     private String serverUrl;
 
     @Value("${es.protocol}")
@@ -128,10 +131,18 @@ public class EsRestClient implements InitializingBean {
 
     @Override
     public void afterPropertiesSet() throws Exception {
+        if (StringUtils.isBlank(serverProtocol) || StringUtils.isBlank(serverHost) || StringUtils.isBlank(serverPort)) {
+            Log.error("geonetwork.index", String.format(
+                "Elasticsearch URL defined by serverProtocol='%s', serverHost='%s', serverPort='%s' is missing. "
+                    + "Check configuration.", this.serverProtocol,this.serverHost,this.serverPort));
+        }
+
+        //build server URL
+        serverUrl = serverProtocol + "://" + serverHost + ":" + serverPort;
         if (StringUtils.isNotEmpty(serverUrl)) {
             RestClientBuilder builder = RestClient.builder(new HttpHost(serverHost, Integer.parseInt(serverPort), serverProtocol));
 
-            if (serverUrl.startsWith("https://")) {
+            if (serverProtocol.startsWith("https")) {
                 SSLContext sslContext = new SSLContextBuilder().loadTrustMaterial(
                     null, new TrustStrategy() {
                         public boolean isTrusted(X509Certificate[] arg0, String arg1) throws CertificateException {
@@ -148,9 +159,9 @@ public class EsRestClient implements InitializingBean {
                     credentialsProvider.setCredentials(AuthScope.ANY,
                         new UsernamePasswordCredentials(username, password));
 
-                    builder.setHttpClientConfigCallback(httpClientBuilder -> httpClientBuilder.setSSLContext(sslContext).setDefaultCredentialsProvider(credentialsProvider));
+                    builder.setHttpClientConfigCallback(httpClientBuilder -> httpClientBuilder.useSystemProperties().setSSLContext(sslContext).setDefaultCredentialsProvider(credentialsProvider));
                 } else {
-                    builder.setHttpClientConfigCallback(httpClientBuilder -> httpClientBuilder.setSSLContext(sslContext));
+                    builder.setHttpClientConfigCallback(httpClientBuilder -> httpClientBuilder.useSystemProperties().setSSLContext(sslContext));
                 }
             } else {
                 if (StringUtils.isNotEmpty(username) && StringUtils.isNotEmpty(password)) {
@@ -158,7 +169,9 @@ public class EsRestClient implements InitializingBean {
                     credentialsProvider.setCredentials(AuthScope.ANY,
                         new UsernamePasswordCredentials(username, password));
 
-                    builder.setHttpClientConfigCallback(httpClientBuilder -> httpClientBuilder.setDefaultCredentialsProvider(credentialsProvider));
+                    builder.setHttpClientConfigCallback(httpClientBuilder -> httpClientBuilder.useSystemProperties().setDefaultCredentialsProvider(credentialsProvider));
+                } else {
+                    builder.setHttpClientConfigCallback(httpClientBuilder -> httpClientBuilder.useSystemProperties());
                 }
             }
 
@@ -358,6 +371,41 @@ public class EsRestClient implements InitializingBean {
         }
     }
 
+    /**
+     * Executes a search query to compute aggregations and returns the aggregation results.
+     * This method does not return any search hits as the query size is set to 0.
+     *
+     * @param index        The name of the index to search in.
+     * @param jsonQuery    The query to execute, as a JsonNode.
+     * @param aggregations A map of aggregations to compute.
+     * @return A SearchResponse containing the aggregation results.
+     * @throws IOException If an error occurs during the search.
+     */
+    public SearchResponse<Void> aggregate(String index, JsonNode jsonQuery, Map<String, Aggregation> aggregations) throws IOException {
+        StringWriter writer = new StringWriter();
+        new ObjectMapper().writeValue(writer, jsonQuery);
+        StringReader reader = new StringReader(writer.toString());
+
+        SearchRequest.Builder searchRequestBuilder = new SearchRequest.Builder()
+            .index(index)
+            .size(0)
+            .query(q -> q.withJson(reader));
+
+        if (aggregations != null) {
+            searchRequestBuilder.aggregations(aggregations);
+        }
+
+        SearchRequest searchRequest = searchRequestBuilder.build();
+
+        try {
+            return client.search(searchRequest, Void.class);
+        } catch (ElasticsearchException esException) {
+            Log.error("geonetwork.index", String.format(
+                "Error during querying index with aggregation. %s", esException.error().toString()));
+            throw esException;
+        }
+    }
+
 
     public String deleteByQuery(String index, String query) throws Exception {
         if (!activated) {
@@ -381,7 +429,7 @@ public class EsRestClient implements InitializingBean {
             deleteByQueryResponse.failures().forEach(f -> stringBuilder.append(f.toString()));
 
             throw new IOException(String.format(
-                "Error during removal. Errors are '%s'.", stringBuilder.toString()
+                "Error during removal. Errors are '%s'.", stringBuilder
             ));
         }
     }
@@ -509,5 +557,10 @@ public class EsRestClient implements InitializingBean {
         ElasticsearchVersionInfo version = client.info().version();
 
         return version.number();
+    }
+
+    public IndicesStatsResponse getIndexStats(String index) throws IOException {
+        IndicesStatsRequest statsRequest = IndicesStatsRequest.of(b -> b.index(index));
+        return client.indices().stats(statsRequest);
     }
 }

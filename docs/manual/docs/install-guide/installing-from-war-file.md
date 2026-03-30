@@ -23,7 +23,7 @@ For [Jetty](https://www.eclipse.org/jetty/) we the following versions: 9.4.x. Ne
     You can download the WAR file `geonetwork.war` from your browser or use command line like
 
     ``` shell
-    wget https://downloads.sourceforge.net/project/geonetwork/GeoNetwork_opensource/v3.10.2/geonetwork.war
+    wget https://downloads.sourceforge.net/project/geonetwork/GeoNetwork_opensource/v4.4.6/geonetwork.war
     ```
 
 2.  Copy the WAR to the Java web server

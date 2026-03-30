@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2024 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2025 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -139,7 +139,7 @@ public class Aligner extends BaseAligner<SimpleUrlParams> {
                             addMetadata(e, UUID.randomUUID().toString());
                             break;
                         case SKIP:
-                            log.debug("Skipping record with uuid " + e.getKey());
+                            log.info("Skipping record with uuid " + e.getKey());
                             result.uuidSkipped++;
                             break;
                         default:
@@ -276,6 +276,11 @@ public class Aligner extends BaseAligner<SimpleUrlParams> {
 
         applyBatchEdits(ri.getKey(), md, schema, params.getBatchEdits(), context, null);
 
+        // Translate metadata
+        if (params.isTranslateContent()) {
+            md = translateMetadataContent(context, md, schema);
+        }
+
         final AbstractMetadata metadata = metadataManager.updateMetadata(context, id, md, validate, ufo,
             language, dateModified, true, IndexingMode.none);
 
@@ -294,6 +299,8 @@ public class Aligner extends BaseAligner<SimpleUrlParams> {
 
         metadata.getCategories().clear();
         addCategories(metadata, params.getCategories(), localCateg, context, null, true);
+
+        metadataIndexer.indexMetadata(id, true, IndexingMode.full);
         result.updatedMetadata++;
         return true;
     }

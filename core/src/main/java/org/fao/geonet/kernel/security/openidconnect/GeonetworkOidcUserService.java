@@ -89,7 +89,7 @@ public class GeonetworkOidcUserService extends OidcUserService {
         String userNameAttributeName = userRequest.getClientRegistration()
             .getProviderDetails().getUserInfoEndpoint().getUserNameAttributeName();
 
-        if (!StringUtils.hasText(userNameAttributeName)) {
+        if (StringUtils.hasText(userNameAttributeName)) {
             user = new DefaultOidcUser(authorities, userRequest.getIdToken(), userInfo, userNameAttributeName);
         } else {
             user = new DefaultOidcUser(authorities, userRequest.getIdToken(), userInfo);

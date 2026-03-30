@@ -35,6 +35,7 @@
                 select="'[Y0001][M01][D01]'"/>
 
   <xsl:param name="now" select="format-date(current-date(), $df)"/>
+  <xsl:param name="doiServerId" select="''"/>
 
 
   <xsl:template name="eu-po-doi-message">
@@ -68,7 +69,7 @@
         <!-- <eu:NotificationResponse></eu:NotificationResponse>-->
       </eu:Header>
       <eu:DOIData>
-        <eu:DOI><xsl:value-of select="gn-doi:createDoi($metadataUuid)"/></eu:DOI>
+        <eu:DOI><xsl:value-of select="gn-doi:createDoi($doiServerId, $metadataUuid)"/></eu:DOI>
         <eu:DOIWebsiteLink>
           <xsl:value-of select="util:getPermalink($metadataUuid, util:getLanguage())"/>
         </eu:DOIWebsiteLink>

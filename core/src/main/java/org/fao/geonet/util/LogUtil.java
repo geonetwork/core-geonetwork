@@ -24,14 +24,22 @@
 package org.fao.geonet.util;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.ThreadContext;
+import org.apache.logging.log4j.core.appender.routing.RoutingAppender;
+import org.apache.logging.log4j.core.config.Configuration;
+import org.apache.logging.log4j.core.LoggerContext;
+import org.apache.logging.log4j.core.config.Node;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
+import org.fao.geonet.utils.Log;
 
+import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
+import java.nio.file.Path;
 
 public class LogUtil {
 
@@ -74,6 +82,46 @@ public class LogUtil {
         ThreadContext.put("logfile", logfile);
         ThreadContext.put("timeZone", timeZoneSetting);
 
-        return logfile;
+        try {
+            return getHarvesterLogfilePath();
+        } catch (Exception e) {
+            Log.error("Error retrieving harvester logfile path. Defaulting to base file name.", e);
+            return logfile;
+        }
+    }
+
+    /**
+     * Retrieves the path to the current harvester logfile based on Log4J configuration.
+     *
+     * @return the path to the harvester logfile
+     */
+    public static String getHarvesterLogfilePath() {
+        // Get the top-level log directory
+        Path logDir = Paths.get(Log.getLogfile().getParent());
+
+        // Access Log4J configuration
+        LoggerContext ctx = (LoggerContext) LogManager.getContext(false);
+        Configuration config = ctx.getConfiguration();
+
+        // Get the Routing appender
+        RoutingAppender routing = config.getAppender("Harvester");
+        if (routing == null) {
+            throw new IllegalStateException("Routing appender 'Harvester' not found");
+        }
+
+        // Find the first <File> node
+        Node fileNode = routing.getRoutes().getRoutes()[0]
+            .getNode()
+            .getChildren()
+            .stream()
+            .filter(n -> "File".equalsIgnoreCase(n.getName()))
+            .findFirst()
+            .orElseThrow(() -> new IllegalStateException("No <File> node found in Harvester routes"));
+
+        // Resolve the full path using the StrSubstitutor
+        Path fullPath = Paths.get(config.getStrSubstitutor().replace(fileNode.getAttributes().get("fileName")));
+
+        // Return the path relative to the log directory
+        return logDir.relativize(fullPath).toString();
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2026 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -67,7 +67,7 @@ public class ApiParams {
 
     public static final String API_RESPONSE_NOT_ALLOWED_ONLY_ADMIN = "Operation not allowed. Only Administrators can access it.";
     public static final String API_RESPONSE_NOT_ALLOWED_ONLY_USER_ADMIN = "Operation not allowed. Only UserAdmins can access it.";
-    public static final String API_RESPONSE_NOT_ALLOWED_ONLY_REVIEWER = "Operation not allowed. Only Reviewvers can access it.";
+    public static final String API_RESPONSE_NOT_ALLOWED_ONLY_REVIEWER = "Operation not allowed. Only Reviewers can access it.";
     public static final String API_RESPONSE_NOT_ALLOWED_ONLY_EDITOR = "Operation not allowed. Only Editors can access it.";
     public static final String API_RESPONSE_NOT_ALLOWED_CAN_EDIT = "Operation not allowed. User needs to be able to edit the resource.";
     public static final String API_RESPONSE_NOT_ALLOWED_CAN_VIEW = "Operation not allowed. User needs to be able to view the resource.";
@@ -76,4 +76,6 @@ public class ApiParams {
     public static final String API_PARAM_BUCKET_NAME = "Selection bucket name";
     public static final String API_PARAM_UPDATE_DATESTAMP = "If true updates the DateStamp (or equivalent in standards different to ISO 19139) " +
         "field in the metadata with the current timestamp";
+    public static final String API_RESPONSE_NOT_ALLOWED_METADATA_DOI = "Operation not allowed. Only administrators, the owner of the metadata, " +
+        "or a reviewer in the metadata group owner can access it.";
 }

@@ -401,13 +401,14 @@
           }
 
           scope.convertLinkToEdit = function (link) {
+            var convertedNameObject = convertLangProperties(link.nameObject);
             var convertedLink = {
               id: link.url,
               idx: link.idx,
               hash: link.hash,
               url: convertLangProperties(link.urlObject),
               type: getType(link.function),
-              title: convertLangProperties(link.nameObject),
+              title: convertedNameObject ? convertedNameObject : {},
               protocol: link.protocol,
               description: convertLangProperties(link.descriptionObject),
               function: link["function"],
@@ -891,7 +892,8 @@
   module.directive("gnRecordsFilters", [
     "$rootScope",
     "gnGlobalSettings",
-    function ($rootScope, gnGlobalSettings) {
+    "gnFacetMetaLabel",
+    function ($rootScope, gnGlobalSettings, gnFacetMetaLabel) {
       return {
         restrict: "A",
         templateUrl: function (elem, attrs) {
@@ -913,6 +915,7 @@
           scope.criteria = { p: {} };
           scope.relatedFacetConfig =
             gnGlobalSettings.gnCfg.mods.recordview.relatedFacetConfig;
+          scope.getFacetLabel = gnFacetMetaLabel.getFacetLabel;
 
           function removeEmptyFilters(filters, agg) {
             var cleanFilterPos = [];
@@ -1075,6 +1078,8 @@
             if (md.overview && md.overview.length > 0) {
               return md.overview[0].url;
               // Related records contain the first overview in the properties.overview property
+            } else if (md.properties && md.properties.overview_data) {
+              return md.properties.overview_data;
             } else if (md.properties && md.properties.overview) {
               return md.properties.overview;
             }

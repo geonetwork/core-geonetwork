@@ -187,6 +187,55 @@
     }
   ]);
 
+  module.service("gnFacetMetaLabel", [
+    "$translate",
+    "$filter",
+    function ($translate, $filter) {
+      var translateKey = function (key) {
+        try {
+          var facetKeyTranslatorFilter = $filter("facetKeyTranslator");
+          var t = facetKeyTranslatorFilter(key);
+          return t;
+        } catch (e) {
+          return key;
+        }
+      };
+
+      /**
+       * Retrieves the facet label.
+       *
+       * If the facet has a meta-property label defined with the current UI language, retrieves the translation
+       * from the facet configuration; otherwise it uses the provided translation key to retrieve the translation
+       * from the application translation files.
+       *
+       * {
+       *   "facetConfig": {
+       *     "resourceType": {
+       *       "terms": {
+       *         "field": "resourceType"
+       *       },
+       *       "meta": {
+       *         "labels": {
+       *           "eng": "Hierarchy level",
+       *           "spa": "Nivel jerárquico",
+       *           ...
+       *         },
+       *         ...
+       *
+       * @param facet facet configuration.
+       * @param key   translation key.
+       * @returns {*|null}
+       */
+      this.getFacetLabel = function (facet, key) {
+        if (!facet || !facet.meta || !facet.meta.labels) {
+          return translateKey(key);
+        }
+        var currentLang = $translate.use();
+        return facet.meta.labels[currentLang] || translateKey(key);
+      };
+    }
+  ]);
+
   module.filter("facetTooltip", [
     "$translate",
     "$filter",
@@ -266,7 +315,8 @@
   module.directive("esFacets", [
     "gnFacetSorter",
     "gnSearchSettings",
-    function (gnFacetSorter, gnSearchSettings) {
+    "gnFacetMetaLabel",
+    function (gnFacetSorter, gnSearchSettings, gnFacetMetaLabel) {
       return {
         restrict: "A",
         controllerAs: "ctrl",
@@ -291,6 +341,7 @@
           // Directive tab field property
           scope.isTabMode = scope.ctrl.tabField !== undefined;
           scope.facetSorter = gnFacetSorter.sortByTranslation;
+          scope.getFacetLabel = gnFacetMetaLabel.getFacetLabel;
         }
       };
     }

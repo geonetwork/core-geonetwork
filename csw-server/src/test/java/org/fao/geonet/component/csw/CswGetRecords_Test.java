@@ -29,15 +29,23 @@ import org.fao.geonet.Assert;
 import org.fao.geonet.csw.common.Csw;
 import org.fao.geonet.csw.common.exceptions.InvalidParameterValueEx;
 import org.fao.geonet.kernel.mef.MEFLibIntegrationTest;
+import org.fao.geonet.kernel.search.EsSearchManager;
+import org.fao.geonet.kernel.search.IndexingMode;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
+import org.jdom.Namespace;
+import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * Test CSW Search Service.
@@ -49,9 +57,15 @@ public class CswGetRecords_Test extends AbstractCoreIntegrationTest {
     @Autowired
     private GetRecords _getRecords;
 
-    // TODOES
+    @Autowired
+    private EsSearchManager esSearchManager;
+
+    @Before
+    public void resetIndex() throws Exception {
+        esSearchManager.init(true, Optional.empty());
+    }
+
     @Test
-    @Ignore
     public void test_IsEqualIsNotEqualTo() throws Exception {
         final ServiceContext serviceContext = createServiceContext();
         serviceContext.setLanguage(null);
@@ -166,9 +180,10 @@ public class CswGetRecords_Test extends AbstractCoreIntegrationTest {
                 .addContent(new Element("ElementSetName", Csw.NAMESPACE_CSW).setText("summary"))
             );
         try {
-            result = _getRecords.execute(request, serviceContext);
-        } catch (InvalidParameterValueEx ex) {
-            Assert.assertTrue(true);
+            _getRecords.execute(request, serviceContext);
+            Assert.fail("Expected exception not thrown");
+        } catch (RuntimeException ex) {
+            Assert.assertEquals(InvalidParameterValueEx.class, ex.getCause().getClass());
         }
 
 
@@ -202,6 +217,68 @@ public class CswGetRecords_Test extends AbstractCoreIntegrationTest {
             );
         result = _getRecords.execute(request, serviceContext);
         nextRecord = result.getChild("SearchResults", Csw.NAMESPACE_CSW).getAttributeValue("nextRecord");
+        Assert.assertEquals("0", nextRecord);
+    }
+
+    @Test
+    public void test_TypeNamesFilter() throws Exception {
+            final ServiceContext serviceContext = createServiceContext();
+            serviceContext.setLanguage(null);
+            loginAsAdmin(serviceContext);
+            injectMetadataInDb(getSampleISO19115MetadataXml(), serviceContext, true, IndexingMode.full);
+            Element request = new Element("GetRecords", Csw.NAMESPACE_CSW)
+                    .setAttribute("service", "CSW")
+                    .setAttribute("version", "2.0.2")
+                    .setAttribute("resultType", "results")
+                    .setAttribute("startPosition", "1")
+                    .setAttribute("maxRecords", "50")
+                    .setAttribute("outputSchema", "http://standards.iso.org/iso/19115/-3/mdb/2.0")
+                    .addContent(new Element("Query", Csw.NAMESPACE_CSW)
+                            .addContent(new Element("ElementName", Csw.NAMESPACE_CSW).setText("mdb:metadataIdentifier"))
+                            .setAttribute("typeNames", "mdb:MD_Metadata")
+                    );
+        Element result = null;
+
+        try {
+            result = _getRecords.execute(request, serviceContext);
+
+        } catch (RuntimeException ex) {
+            Assert.fail("Failed to use a relative path in 'elementname' using typeNames value a xpath root (relative path should imply use of typeNames as xpath root, /{typeNames}//{ElementName}): " + ex.getMessage());
+        }
+
+        List<?> mdIdsInResult = Xml.selectNodes(result, "*//mdb:metadataIdentifier", List.of(Namespace.getNamespace("mdb", "http://standards.iso.org/iso/19115/-3/mdb/2.0")));
+        assertEquals(1, mdIdsInResult.size());
+    }
+
+    @Test
+    public void test_cqlfilter_with_nbsp_in_gn_before4410 () throws Exception {
+        final ServiceContext serviceContext = createServiceContext();
+
+        // CQL may contain non-breaking space characters (U+00A0) which was causing GeoTools CQL parser to fail.
+        // "org.geotools.filter.text.cql2.CQLException: Lexical error at line 1, column 32.
+        // Encountered: "\u00a0" (160), after : "" Parsing : inspireTheme <> 'buildings' And inspireTheme <>...
+        String CQL = "inspireTheme <> 'buildings' And\u00a0inspireTheme <> 'administrative units' And\u00a0inspireTheme <> 'transport network' And\u00a0inspireTheme <> 'cadastral parcels' And\u00a0resourceType = 'dataset' And\u00a0documentStandard <> 'dublin-core'";
+
+        Element request = new Element("GetRecords", Csw.NAMESPACE_CSW)
+            .setAttribute("service", "CSW")
+            .setAttribute("version", "2.0.2")
+            .setAttribute("resultType", "results")
+            .setAttribute("startPosition", "3")
+            .setAttribute("maxRecords", "1")
+            .setAttribute("outputSchema", "csw:Record")
+            .addContent(new Element("Query", Csw.NAMESPACE_CSW)
+                .addContent(new Element("ElementSetName", Csw.NAMESPACE_CSW).setText("summary"))
+                .addContent(
+                    new Element("Constraint", Csw.NAMESPACE_CSW)
+                        .setAttribute("version", "1.1.0")
+                        .addContent(
+                            new Element("CqlText", Csw.NAMESPACE_CSW)
+                                .setText(CQL)
+                        )
+                ));
+        Element result = _getRecords.execute(request, serviceContext);
+        // No NoApplicableCode exception
+        String nextRecord = result.getChild("SearchResults", Csw.NAMESPACE_CSW).getAttributeValue("nextRecord");
         Assert.assertEquals("0", nextRecord);
     }
 }

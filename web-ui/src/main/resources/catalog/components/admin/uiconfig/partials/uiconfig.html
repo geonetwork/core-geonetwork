@@ -200,7 +200,7 @@
 
                 <div
                   class="row"
-                  data-ng-switch-when="autocompleteConfig|moreLikeThisConfig|facetConfig|relatedFacetConfig|filters|scoreConfig|queryBaseOptions|collectionTableConfig|distributionConfig|topCustomMenu|info|rssFeeds|wpsSource|workflowSearchRecordTypes"
+                  data-ng-switch-when="autocompleteConfig|moreLikeThisConfig|facetConfig|relatedFacetConfig|filters|scoreConfig|queryBaseOptions|collectionTableConfig|distributionConfig|topCustomMenu|info|rssFeeds|wpsSource|workflowSearchRecordTypes|recordviewCustomMenu"
                   data-ng-switch-when-separator="|"
                 >
                   <div class="col-lg-5 gn-nopadding-left">
@@ -407,9 +407,29 @@
 
                   <div class="col-lg-7 gn-nopadding-right">
                     <table class="table table-striped table-bordered">
+                      <tr>
+                        <td colspan="2">
+                          <label class="control-label">
+                            <input
+                              type="radio"
+                              data-ng-model="mCfg[key].recordLinkFormatter"
+                              data-ng-value=""
+                            />
+                            <span data-translate="">useDefaultForRecordLinks</span>
+                          </label>
+                        </td>
+                      </tr>
                       <tr data-ng-repeat="opt in mCfg[key].list track by $index">
                         <td>
                           <div class="input-group">
+                            <span class="input-group-addon" style="background: white">
+                              <input
+                                title="{{'useFormatterForRecordLinks'|translate}}"
+                                type="radio"
+                                data-ng-model="mCfg[key].recordLinkFormatter"
+                                data-ng-value="opt.label"
+                              />
+                            </span>
                             <span class="input-group-addon">Label </span>
                             <input
                               type="text"
@@ -800,7 +820,7 @@
                 <!-- boolean -->
                 <div
                   class="row"
-                  data-ng-switch-when="is3DModeAllowed|isVegaEnabled|isSaveMapInCatalogAllowed|isAccessible|isExportMapAsImageEnabled|useOSM|isUserRecordsOnly|isFilterTagsDisplayed|isFilterTagsDisplayedInSearch|autoFitOnLayer|showSocialBarInFooter|isSocialbarEnabled|isLogoInHeader|isHeaderFixed|fluidLayout|fluidHeaderLayout|fluidEditorLayout|showGNName|humanizeDates|sortKeywordsAlphabetically|showMosaic|showMaps|showApplicationInfoAndLinksInFooter|showBatchDropdown|moreLikeThisSameType|allowRemoteRecordLink|singleTileWMS|showSearch|hotkeys"
+                  data-ng-switch-when="is3DModeAllowed|isVegaEnabled|isSaveMapInCatalogAllowed|isAccessible|isExportMapAsImageEnabled|useOSM|isUserRecordsOnly|isFilterTagsDisplayed|isFilterTagsDisplayedInSearch|autoFitOnLayer|showSocialBarInFooter|isSocialbarEnabled|isDefaultContactViewEnabled|isLogoInHeader|isHeaderFixed|fluidLayout|fluidHeaderLayout|fluidEditorLayout|showGNName|humanizeDates|sortKeywordsAlphabetically|showMosaic|showMaps|showApplicationInfoAndLinksInFooter|showBatchDropdown|moreLikeThisSameType|allowRemoteRecordLink|singleTileWMS|showSearch|hotkeys"
                   data-ng-switch-when-separator="|"
                 >
                   <div class="col-lg-5 gn-nopadding-left">

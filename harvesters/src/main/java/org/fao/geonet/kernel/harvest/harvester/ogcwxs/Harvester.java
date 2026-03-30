@@ -61,6 +61,7 @@ import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.Namespace;
 import org.jdom.xpath.XPath;
+import org.springframework.core.io.PathResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.client.ClientHttpResponse;
 
@@ -916,7 +917,7 @@ class Harvester extends BaseAligner<OgcWxSParams> implements IHarvester<HarvestR
                 store.delResource(context, layer.uuid, filename.getFileName().toString());
             } catch (Exception e) {}
             MetadataResource resource = store.putResource(context, layer.uuid,
-                filename,
+                new PathResource(filename),
                 MetadataResourceVisibility.PUBLIC);
             Path xslProcessing = schemaMan
                 .getSchemaDir(schema).resolve("process")
@@ -1043,14 +1044,6 @@ class Harvester extends BaseAligner<OgcWxSParams> implements IHarvester<HarvestR
         } else {
             return url + "?";
         }
-    }
-
-    /* (non-Javadoc)
-     * @see org.fao.geonet.kernel.harvest.harvester.IHarvester#getErrors()
-     */
-    @Override
-    public List<HarvestError> getErrors() {
-        return new ArrayList<>();
     }
 
     private static class WxSLayerRegistry {

@@ -48,6 +48,7 @@ put docs/changes/changes${version}-0.txt
 put release/target/GeoNetwork*/geonetwork-bundle*.zip*
 put web/target/geonetwork.war*
 put datastorages/*/target/*.zip
+put plugins/*/target/*.zip
 bye
 EOT
 

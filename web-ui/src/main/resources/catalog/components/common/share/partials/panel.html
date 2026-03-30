@@ -116,6 +116,7 @@
           data-ng-repeat="g in privileges | filter:{reserved: false} | filter:pFilterFn | orderBy:sortGroups:sorter.reverse"
           data-ng-show="(onlyUserGroup == true && g.userGroup == true) ||
                        onlyUserGroup == false"
+          data-ng-class="g.restricted ? 'warning' : ''"
         >
           <td><strong>{{::('group-' + g.group) | translate}}</strong></td>
           <td data-ng-repeat="key in ::operations" class="text-center">
@@ -123,7 +124,7 @@
               type="checkbox"
               name="{{g.group + '-' + key}}"
               data-ng-click="selectPrivilege()"
-              data-ng-disabled="g.privileges[key].disabled"
+              data-ng-disabled="g.privileges[key].disabled || g.restricted"
               data-ng-model="g.operations[key]"
             />
             <i
@@ -140,6 +141,7 @@
               type="checkbox"
               data-ng-change="checkAll(g)"
               data-ng-model="g.isCheckedAll"
+              data-ng-disabled="g.restricted"
             />
           </td>
           <td class="text-center" data-ng-if="displayProfile">

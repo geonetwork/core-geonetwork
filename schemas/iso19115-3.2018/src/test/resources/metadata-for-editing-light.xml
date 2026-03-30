@@ -1733,7 +1733,7 @@ Acteur qui a assuré la réalisation de la ressource,éventuellement en faisant 
             <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
             <entry>
               <code>nonGeographicDataset</code>
-              <label>Jeux de données non géographiques</label>
+              <label>Jeu de données non géographique</label>
               <description>Informations appliquées aux caractéristiques de jeux de données non géographiques</description>
             </entry>
             <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -1813,12 +1813,12 @@ Acteur qui a assuré la réalisation de la ressource,éventuellement en faisant 
               <description />
             </entry>
             <entry hideInEditMode="true">
-              <code>staticMap</code>
+              <code>map-static</code>
               <label>Carte statique</label>
               <description />
             </entry>
             <entry hideInEditMode="true">
-              <code>interactiveMap</code>
+              <code>map-interactive</code>
               <label>Carte interactive</label>
               <description />
             </entry>
@@ -2090,7 +2090,7 @@ Acteur qui a assuré la réalisation de la ressource,éventuellement en faisant 
             <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
             <entry>
               <code>nonGeographicDataset</code>
-              <label>Jeux de données non géographiques</label>
+              <label>Jeu de données non géographique</label>
               <description>Informations appliquées aux caractéristiques de jeux de données non géographiques</description>
             </entry>
             <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -7215,7 +7215,7 @@ http://www.sandre.eaufrance.fr/?urn=urn:sandre:ensembledonnees:BDCarthage:FXX:::
             <description>Genre du contenu.</description>
             <example />
             <helper>
-              <option value="nonGeographicDataset">Jeu de données non géographiques</option>
+              <option value="nonGeographicDataset">Jeu de données non géographique</option>
               <option value="publication">Publication</option>
             </helper>
           </element>
@@ -8849,7 +8849,7 @@ Acteur qui a assuré la réalisation de la ressource,éventuellement en faisant 
             <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
             <entry>
               <code>nonGeographicDataset</code>
-              <label>Jeux de données non géographiques</label>
+              <label>Jeu de données non géographique</label>
               <description>Informations appliquées aux caractéristiques de jeux de données non géographiques</description>
             </entry>
             <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -8929,12 +8929,12 @@ Acteur qui a assuré la réalisation de la ressource,éventuellement en faisant 
               <description />
             </entry>
             <entry hideInEditMode="true">
-              <code>staticMap</code>
+              <code>map-static</code>
               <label>Carte statique</label>
               <description />
             </entry>
             <entry hideInEditMode="true">
-              <code>interactiveMap</code>
+              <code>map-interactive</code>
               <label>Carte interactive</label>
               <description />
             </entry>
@@ -9197,7 +9197,7 @@ Acteur qui a assuré la réalisation de la ressource,éventuellement en faisant 
             <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
             <entry>
               <code>nonGeographicDataset</code>
-              <label>Jeux de données non géographiques</label>
+              <label>Jeu de données non géographique</label>
               <description>Informations appliquées aux caractéristiques de jeux de données non géographiques</description>
             </entry>
             <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->

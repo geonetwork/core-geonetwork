@@ -53,9 +53,9 @@ public class AudienceAccessTokenValidator implements AccessTokenValidator {
     @Autowired
     OIDCConfiguration oidcConfiguration;
 
-    /**
-     * "aud" must be our client id
-     * OR "azp" must be our client id (or, if its a list, contain our client id)
+   /**
+     * "aud" must be our client id (or, if its a list, contain our client id)
+     * OR "azp" must be our client id
      * OR "appid" must be our client id.
      * <p>
      * Otherwise, its a token not for us...
@@ -68,26 +68,27 @@ public class AudienceAccessTokenValidator implements AccessTokenValidator {
      */
     @Override
     public void verifyToken(Map claimsJWT, Map userInfoClaims) throws Exception {
-        if ((claimsJWT.get(AUDIENCE_CLAIM_NAME) != null)
-            && claimsJWT.get(AUDIENCE_CLAIM_NAME).equals(oidcConfiguration.getClientId())) {
+        //azp from keycloak
+        if ((claimsJWT.get(KEYCLOAK_AUDIENCE_CLAIM_NAME) != null)
+            && claimsJWT.get(KEYCLOAK_AUDIENCE_CLAIM_NAME).equals(oidcConfiguration.getClientConfig().getClientId())) {
             return;
         }
 
         if ((claimsJWT.get(APPID_CLAIM_NAME) != null)
-            && claimsJWT.get(APPID_CLAIM_NAME).equals(oidcConfiguration.getClientId())) {
+            && claimsJWT.get(APPID_CLAIM_NAME).equals(oidcConfiguration.getClientConfig().getClientId())) {
             return; //azure specific
         }
 
-        //azp - keycloak
-        Object azp = claimsJWT.get(KEYCLOAK_AUDIENCE_CLAIM_NAME);
-        if (azp != null) {
-            if (azp instanceof String) {
-                if (((String) azp).equals(oidcConfiguration.getClientId()))
+        //aud
+        Object aud = claimsJWT.get(AUDIENCE_CLAIM_NAME);
+        if (aud != null) {
+            if (aud instanceof String) {
+                if (((String) aud).equals(oidcConfiguration.getClientConfig().getClientId()))
                     return;
-            } else if (azp instanceof List) {
-                List azps = (List) azp;
-                for (Object o : azps) {
-                    if ((o instanceof String) && (o.equals(oidcConfiguration.getClientId()))) {
+            } else if (aud instanceof List) {
+                List auds = (List) aud;
+                for (Object o : auds) {
+                    if ((o instanceof String) && (o.equals(oidcConfiguration.getClientConfig().getClientId()))) {
                         return;
                     }
                 }

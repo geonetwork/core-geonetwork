@@ -73,7 +73,7 @@ public interface IMetadataValidator {
      * @param metadata metadata
      * @param lang     Language from context
      */
-    Pair<Element, Boolean> doValidate(AbstractMetadata metadata, String lang);
+    Pair<Element, Boolean> doValidate(AbstractMetadata metadata, String lang) throws Exception;
 
     /**
      * Used by the validate embedded service. The validation report is stored in the session.

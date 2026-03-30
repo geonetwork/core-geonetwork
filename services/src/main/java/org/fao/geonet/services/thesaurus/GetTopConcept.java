@@ -70,10 +70,11 @@ public class GetTopConcept implements Service {
         searcher = new KeywordsSearcher(context, thesaurusMan);
 
         try {
-            searcher.searchTopConcepts(sThesaurusName, langForThesaurus);
+            searcher.searchTopConcepts(sThesaurusName, langForThesaurus, "eng");
 
             KeywordBean topConcept = new KeywordBean(the.getIsoLanguageMapper());
             topConcept.setThesaurusInfo(the);
+            topConcept.setValue("topConcepts", "eng");
             topConcept.setValue("topConcepts", langForThesaurus);
             topConcept.setUriCode(sThesaurusName);
             Element root = KeywordsSearcher.toRawElement(response, topConcept);

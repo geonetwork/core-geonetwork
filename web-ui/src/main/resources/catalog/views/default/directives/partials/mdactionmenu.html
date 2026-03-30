@@ -1,4 +1,4 @@
-<div data-ng-if="md">
+<div>
   <div class="btn-group md-actions" data-ng-if="user.isEditorOrMore()">
     <button
       type="button"
@@ -16,8 +16,7 @@
     <ul
       class="dropdown-menu"
       role="menu"
-      data-ng-init="isReviewer = user.isAdmin() || user.isReviewerForGroup(md.groupOwner);
-                    isRecordWorkflowEnabled = isMdWorkflowEnable && md.isWorkflowEnabled();"
+      data-ng-init="isReviewer = user.isAdmin() || user.isReviewerForGroup(md.groupOwner);"
     >
       <li role="menuitem" data-ng-if="showBatchDropdown">
         <label>
@@ -93,15 +92,35 @@
         </a>
       </li>
 
+      <!-- Anonymous access -->
+      <li role="menuitem" data-ng-if="displayAnonymousAccessOption(md, user, pubOption)">
+        <a
+          href=""
+          data-ng-if="!anonymousAccessExists"
+          data-ng-click="mdService.createAnonymousAccess(md, getCatScope())"
+        >
+          <span class="fa fa-fw fa-eye"></span>&nbsp;
+          <span data-translate="">createAnonymousAccess</span>
+        </a>
+        <a
+          href=""
+          data-ng-if="anonymousAccessExists"
+          data-ng-click="mdService.deleteAnonymousAccess(md, getCatScope())"
+        >
+          <span class="fa fa-fw fa-eye-slash"></span>&nbsp;
+          <span data-translate="">deleteAnonymousAccess</span>
+        </a>
+      </li>
+
       <!-- Workflow -->
-      <li role="menuitem" class="dropdown-header" data-ng-show="isMdWorkflowEnable">
+      <li
+        role="menuitem"
+        class="dropdown-header"
+        data-ng-show="anyWorkflowOptionDisplayed(user)"
+      >
         <span data-translate="">workflow</span>
       </li>
-      <li
-        data-ng-if="isMdWorkflowEnable
-                    && user.canEditRecord(md)
-                    && !md.isWorkflowEnabled()"
-      >
+      <li data-ng-if="displayEnableWorkflowOption(user)">
         <a
           role="menuitem"
           href=""
@@ -112,11 +131,8 @@
         </a>
       </li>
       <li
-        data-ng-repeat="step in statusEffects[isReviewer ? 'reviewer' : 'editor']"
-        data-ng-show="user.canEditRecord(md)
-                        && (user.isAdmin() || user[isReviewer ? 'isReviewerForGroup' : 'isEditorForGroup'](md.groupOwner))
-                        && md.mdStatus == status[step.from]
-                        && isRecordWorkflowEnabled"
+        data-ng-repeat="step in getStatusEffects(user)"
+        data-ng-show="displayWorkflowStepOption(step, user)"
       >
         <a
           href=""
@@ -189,11 +205,11 @@
           <span data-translate="">duplicate</span>
         </a>
       </li>
-      <li class="divider" data-ng-if="user.isAdministrator()" role="menuitem"></li>
+      <li class="divider" data-ng-if="user.canEditRecord(md)" role="menuitem"></li>
       <li role="menuitem">
         <a
           data-ng-click="mdService.indexMd(md)"
-          data-ng-if="user.isAdministrator()"
+          data-ng-if="user.canEditRecord(md)"
           href=""
         >
           <span class="fa fa-fw fa-cogs"></span>&nbsp;
@@ -222,7 +238,12 @@
           <span data-translate="">permalink</span>
         </a>
       </li>
-      <li role="menuitem" data-ng-repeat="f in formatterList">
+      <li
+        role="menuitem"
+        data-ng-repeat="f in formatterList"
+        data-ng-class="{'disabled': f.label === 'exportMEF' && attachmentsExceedExportLimit}"
+        data-ng-attr-title="{{f.label === 'exportMEF' && attachmentsExceedExportLimit ? ('attachmentsExportLimitExceededSingle' | translate) : ''}}"
+      >
         <a
           data-ng-if="!!f.url"
           data-ng-href="{{::buildFormatter(f.url, md.uuid, mdView.current.record.draft)}}"

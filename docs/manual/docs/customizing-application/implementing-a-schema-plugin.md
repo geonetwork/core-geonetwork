@@ -1224,7 +1224,7 @@ Procedure for adding schematron rules, working within the schematrons directory:
 
 1.  Place your schematron rules in 'rules'. Naming convention is 'schematron-rules-<suffix>.sch' eg. `schematron-rules-iso-mcp.sch`. Place localized strings for the rule assertions into 'rules/loc/<language_prefix>'.
 
-Schematron rules are compiled when the schema is loaded.
+Schematron rules are compiled when the schema is loaded on startup. Schema can also be reloaded using the API operation http://localhost:8080/geonetwork/srv/api/standards/reload to update schematron.
 
 At this stage, our new GeoNetwork plugin schema for MCP contains:
 

@@ -41,6 +41,8 @@ import javax.persistence.Convert;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
+import javax.persistence.Enumerated;
+import javax.persistence.EnumType;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -84,6 +86,8 @@ public class Group extends Localized implements Serializable {
     private MetadataCategory defaultCategory;
     private List<MetadataCategory> allowedCategories;
     private Boolean enableAllowedCategories;
+    private Profile minimumProfileForPrivileges;
+    private GroupType type = GroupType.Workspace;
 
     /**
      * Get the id of the group.
@@ -347,5 +351,56 @@ public class Group extends Localized implements Serializable {
     public Group setEnableAllowedCategories(Boolean enableAllowedCategories) {
         this.enableAllowedCategories = enableAllowedCategories;
         return this;
+    }
+
+    /**
+     * Get the minimum profile required to update privileges for this group.
+     *
+     * @return {@link Profile} the minimum profile required to update privileges for this group.
+     */
+    @Enumerated(EnumType.STRING)
+    public Profile getMinimumProfileForPrivileges() {
+        return minimumProfileForPrivileges;
+    }
+
+    /**
+     * Set the minimum profile required to update privileges for this group.
+     * @param minimumProfileForPrivileges the minimum {@link Profile} required to update privileges for this group.
+     * @return this group entity object.
+     */
+    public Group setMinimumProfileForPrivileges(Profile minimumProfileForPrivileges) {
+        this.minimumProfileForPrivileges = minimumProfileForPrivileges;
+        return this;
+    }
+
+    /**
+     * Get the type of the group.
+     *
+     * @return the type of the group.
+     */
+    @Enumerated(EnumType.STRING)
+    public GroupType getType() {
+        return type;
+    }
+
+    /**
+     * Set the type of the group.
+     *
+     * @param type the type of the group.
+     * @return this group entity object.
+     */
+    public Group setType(GroupType type) {
+        this.type = type;
+        return this;
+    }
+
+    /**
+     * Check if this group is a workspace group.
+     *
+     * @return true if this group is a workspace group.
+     */
+    @Transient
+    public Boolean isWorkspace() {
+        return GroupType.Workspace.equals(type);
     }
 }

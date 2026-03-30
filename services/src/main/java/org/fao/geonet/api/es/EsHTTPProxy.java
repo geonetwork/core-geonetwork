@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018-2024 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2025 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -62,6 +62,7 @@ import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.SelectionManager;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
+import org.fao.geonet.kernel.schema.MetadataOperationFilterType;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.schema.MetadataSchemaOperationFilter;
 import org.fao.geonet.kernel.search.EsFilterBuilder;
@@ -85,6 +86,7 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.sql.SQLException;
 import java.util.*;
 import java.util.zip.DeflaterInputStream;
 import java.util.zip.DeflaterOutputStream;
@@ -235,7 +237,7 @@ public class EsHTTPProxy {
                         for (JsonNode field : opFields) {
                             final int groupId = field.asInt();
                             if (operation == ReservedOperation.editing
-                                && canEdit == false
+                                && !canEdit
                                 && editingGroups.contains(groupId)) {
                                 canEdit = true;
                             }
@@ -301,7 +303,7 @@ public class EsHTTPProxy {
     @ResponseStatus(value = HttpStatus.OK)
     @ResponseBody
     public void search(
-        @RequestParam(defaultValue = SelectionManager.SELECTION_METADATA)
+        @RequestParam(defaultValue = SelectionManager.SELECTION_BUCKET)
         String bucket,
         @Parameter(description = "Type of related resource. If none, no associated resource returned.",
             required = false
@@ -387,7 +389,7 @@ public class EsHTTPProxy {
     @PreAuthorize("hasAuthority('Administrator')")
     @ResponseBody
     public void call(
-        @RequestParam(defaultValue = SelectionManager.SELECTION_METADATA)
+        @RequestParam(defaultValue = SelectionManager.SELECTION_BUCKET)
         String bucket,
         @Parameter(description = "'_search' for search service.")
         @PathVariable String endPoint,
@@ -451,7 +453,7 @@ public class EsHTTPProxy {
                         }
                     }
                 }
-                requestBody.append(node.toString()).append(System.lineSeparator());
+                requestBody.append(node).append(System.lineSeparator());
             }
             handleRequest(context, httpSession, request, response, url, endPoint,
                 requestBody.toString(), true, selectionBucket, relatedTypes);
@@ -693,11 +695,20 @@ public class EsHTTPProxy {
                 if (doc.has("_source")) {
                     ObjectNode sourceNode = (ObjectNode) doc.get("_source");
 
-                    String metadataSchema = doc.get("_source").get("documentStandard").asText();
-                    MetadataSchema mds = schemaManager.getSchema(metadataSchema);
+                    if (sourceNode.has(Geonet.IndexFieldNames.SCHEMA)) {
+                        String metadataSchema = sourceNode.get(Geonet.IndexFieldNames.SCHEMA).asText();
+                        try {
+                            MetadataSchema mds = schemaManager.getSchema(metadataSchema);
 
-                    // Apply metadata schema filters to remove non-allowed fields
-                    processMetadataSchemaFilters(context, mds, doc);
+                            // Apply metadata schema filters to remove non-allowed fields
+                            processMetadataSchemaFilters(context, mds, doc);
+                        } catch (IllegalArgumentException e) {
+                            LOGGER.error("Failed to load metadata schema for {}. Error is: {}",
+                                getSourceString(doc, Geonet.IndexFieldNames.UUID),
+                                e.getMessage()
+                            );
+                        }
+                    }
 
                     // Remove fields with privileges info
                     for (ReservedOperation o : ReservedOperation.values()) {
@@ -859,7 +870,7 @@ public class EsHTTPProxy {
      * @param doc
      * @throws JsonProcessingException
      */
-    private void processMetadataSchemaFilters(ServiceContext context, MetadataSchema mds, ObjectNode doc) throws JsonProcessingException {
+    private void processMetadataSchemaFilters(ServiceContext context, MetadataSchema mds, ObjectNode doc) throws JsonProcessingException, SQLException {
         if (!doc.has("_source")) {
             return;
         }
@@ -867,12 +878,26 @@ public class EsHTTPProxy {
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode sourceNode = (ObjectNode) doc.get("_source");
 
-        MetadataSchemaOperationFilter authenticatedFilter = mds.getOperationFilter("authenticated");
+        MetadataSchemaOperationFilter authenticatedFilter = mds.getOperationFilter(MetadataOperationFilterType.authenticated.name());
 
         List<String> jsonpathFilters = new ArrayList<>();
 
         if (authenticatedFilter != null && !context.getUserSession().isAuthenticated()) {
             jsonpathFilters.add(authenticatedFilter.getJsonpath());
+        }
+        //do the same for groupOwner
+        MetadataSchemaOperationFilter groupOwnerFilter = mds.getOperationFilter(MetadataOperationFilterType.groupOwner.name());
+
+        if (groupOwnerFilter != null) {
+            if (context.getUserSession().getProfile() != Profile.Administrator) {
+                List<Integer> userGroups = AccessManager.getGroups(context.getUserSession(), Profile.Editor);
+                Integer groupOwner = getSourceInteger(doc, Geonet.IndexFieldNames.GROUP_OWNER);
+                boolean isGroupOwner = groupOwner != null && userGroups.contains(groupOwner);
+
+                if (!isGroupOwner) {
+                    jsonpathFilters.add(groupOwnerFilter.getJsonpath());
+                }
+            }
         }
 
         MetadataSchemaOperationFilter editFilter = mds.getOperationFilter(ReservedOperation.editing);

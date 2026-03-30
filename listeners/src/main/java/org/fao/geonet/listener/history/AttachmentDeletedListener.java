@@ -31,7 +31,7 @@ import org.springframework.stereotype.Component;
 public class AttachmentDeletedListener extends GenericMetadataEventListener implements ApplicationListener<AttachmentDeletedEvent> {
 
     private String changeMessage = "";
-    private String eventType = StatusValue.Events.ATTACHMENTDELETED;
+    private final StatusValue.Events eventType = StatusValue.Events.ATTACHMENTDELETED;
 
     @Override
     public String getChangeMessage() {
@@ -40,7 +40,7 @@ public class AttachmentDeletedListener extends GenericMetadataEventListener impl
 
     @Override
     public String getEventType() {
-        return eventType;
+        return eventType.getCode();
     }
 
     @Override

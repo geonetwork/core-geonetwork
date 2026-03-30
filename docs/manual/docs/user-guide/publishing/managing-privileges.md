@@ -4,6 +4,10 @@ To manage privileges to your metadata record and any attached data, you will nee
 
 For example, you can specify that the metadata and related services are visible to all (Internet users) or just to internal users only (Intranet). Privileges are assigned on a per group basis. Depending on the user profile (Guest, Registered User, Editor, Admin etc.) access to these functions may differ on a per user basis.
 
+!!! Note
+  
+    [System Privilege Groups](../../administrator-guide/managing-users-and-groups/creating-group.md#3-system-privilege-group) are special groups which cannot have privileges set for specific metadata records.
+
 ## Assigning privileges
 
 To assign privileges, follow these steps:
@@ -16,11 +20,11 @@ Below is a brief description for each privilege to help you identify which ones 
 
 **Publish**: Users in the specified group/s are able to view the metadata eg. if it matches search criteria entered by such a user.
 
-**Download**: Users in the specified group/s are able to download the data.
-
 **Interactive Map**: Users in the specified group/s are able to get an interactive map. The interactive map has to be created separately using a Web Map Server such as GeoServer, which is distributed with GeoNetwork.
 
-**Featured**: When randomly selected by GeoNetwork, the metadata record can appear in the `Featured` section of the GeoNetwork home page.
+**Download**: Users in the specified group/s are able to download the data.
+
+**Editing**: Users in the specified group/s are able to edit the metadata, if they have the *editor* profile.
 
 **Notify**: Users in the specified group receive notification if data attached to the metadata record is downloaded.
 
@@ -57,12 +61,13 @@ Any user (logged in or not) can view the public metadata.
 
 An *administrator* can edit any metadata.
 
-A *reviewer* can edit a metadata if:
+A *reviewer* / *editor* can edit a metadata if:
 
--   The metadata owner is member of one of the groups assigned to the reviewer.
--   They are the metadata owner.
+* They are the metadata owner.
 
-A *User Administrator* or an *Editor* can only edit metadata they created.
+* The metadata has editing privilege in the group(s) where the user is a *reviewer* / *editor*.
+
+
 
 # Setting Privileges
 
@@ -84,6 +89,7 @@ You can set privileges on a selected set of records in the search results using 
 
 The following rules apply:
 
--   the groups are those that the user belongs to
+-   If the "[Only set privileges to user's groups](../../administrator-guide/configuring-the-catalog/system-configuration.md#metadata-privileges)" setting is set, only the groups the user is a member of will be shown in the list.
+-   [System Privilege Groups](../../administrator-guide/managing-users-and-groups/creating-group.md#3-system-privilege-group) are not shown
 -   the privileges specified will only be applied to records that the user has ownership or administration rights on - any other records will be skipped
 -   the current records privileges will be reset and replaced by the selected privilege
