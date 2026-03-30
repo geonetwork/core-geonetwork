@@ -143,21 +143,20 @@ public class GeonetworkOAuth2LoginAuthenticationFilter extends OAuth2LoginAuthen
                     // will reinstate the original headers and we don't
                     // want it.
                     requestCache.removeRequest(request, response);
-
-                    response.sendRedirect(redirectURL);
                 } else {
-                    response.sendRedirect(request.getContextPath());
+                    Log.debug(Geonet.SECURITY, "No valid SavedRequest redirect found. Redirecting to context path");
                 }
+
+                sendNormalizedRedirect(request, response, redirectURL);
             } else {
                 Log.debug(Geonet.SECURITY, "RequestCache is not available");
 
                 redirectURL = normalizeRedirectUrl(findQueryParameter(request, "redirectUrl"), request);
                 if (redirectURL != null) {
                     Log.debug(Geonet.SECURITY, "Retrieved redirect URL from query parameter: " + redirectURL);
-                    response.sendRedirect(redirectURL);
-                } else {
-                    response.sendRedirect(request.getContextPath());
                 }
+
+                sendNormalizedRedirect(request, response, redirectURL);
             }
 
             // Set users preferred locale if it exists. - cf. keycloak
@@ -236,6 +235,12 @@ public class GeonetworkOAuth2LoginAuthenticationFilter extends OAuth2LoginAuthen
         }
 
         return redirect;
+    }
+
+    private void sendNormalizedRedirect(HttpServletRequest request, HttpServletResponse response, String redirectUrl)
+        throws IOException {
+        String safeRedirect = normalizeRedirectUrl(redirectUrl, request);
+        response.sendRedirect(safeRedirect != null ? safeRedirect : request.getContextPath());
     }
 
 }
