@@ -47,6 +47,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.IllformedLocaleException;
 import java.util.Locale;
 
@@ -128,7 +130,7 @@ public class GeonetworkOAuth2LoginAuthenticationFilter extends OAuth2LoginAuthen
             if (requestCache != null) {
                 SavedRequest savedRequest = requestCache.getRequest(request, response);
                 if (savedRequest != null) {
-                    redirectURL = normalizeRedirectUrl(savedRequest.getRedirectUrl(), request);
+                    redirectURL = savedRequest.getRedirectUrl();
                     Log.debug(Geonet.SECURITY, "Retrieved original request from SavedRequest: " + redirectURL);
                 } else {
                     Log.debug(Geonet.SECURITY, "No SavedRequest found in RequestCache");
@@ -146,18 +148,16 @@ public class GeonetworkOAuth2LoginAuthenticationFilter extends OAuth2LoginAuthen
                 } else {
                     Log.debug(Geonet.SECURITY, "No valid SavedRequest redirect found. Redirecting to context path");
                 }
-
-                sendNormalizedRedirect(request, response, redirectURL);
             } else {
                 Log.debug(Geonet.SECURITY, "RequestCache is not available");
 
-                redirectURL = normalizeRedirectUrl(findQueryParameter(request, "redirectUrl"), request);
+                redirectURL = findQueryParameter(request, "redirectUrl");
                 if (redirectURL != null) {
                     Log.debug(Geonet.SECURITY, "Retrieved redirect URL from query parameter: " + redirectURL);
                 }
-
-                sendNormalizedRedirect(request, response, redirectURL);
             }
+
+            sendSafeRedirect(response, redirectURL);
 
             // Set users preferred locale if it exists. - cf. keycloak
             String localeString = oidcUser.getLocale();
@@ -212,35 +212,24 @@ public class GeonetworkOAuth2LoginAuthenticationFilter extends OAuth2LoginAuthen
         }
     }
 
-    // Ensures redirect targets stay on this server and in the current webapp context.
-    static String normalizeRedirectUrl(String redirectUrl, HttpServletRequest request) {
-        if (request == null || StringUtils.isBlank(redirectUrl)) {
-            return null;
-        }
-
-        String redirect = redirectUrl.trim();
-        if (redirect.startsWith("//") || redirect.startsWith("\\\\")
-            || redirect.contains("://")
-            || redirect.indexOf('\r') >= 0 || redirect.indexOf('\n') >= 0
-            || !redirect.startsWith("/")) {
-            return null;
-        }
-
-        String contextPath = StringUtils.defaultString(request.getContextPath());
-        if (StringUtils.isNotBlank(contextPath)
-            && !"/".equals(contextPath)
-            && !redirect.equals(contextPath)
-            && !redirect.startsWith(contextPath + "/")) {
-            return null;
-        }
-
-        return redirect;
-    }
-
-    private void sendNormalizedRedirect(HttpServletRequest request, HttpServletResponse response, String redirectUrl)
+    private void sendSafeRedirect(HttpServletResponse response, String redirectUrlString)
         throws IOException {
-        String safeRedirect = normalizeRedirectUrl(redirectUrl, request);
-        response.sendRedirect(safeRedirect != null ? safeRedirect : request.getContextPath());
+        try {
+            URI url = new URI(redirectUrlString);
+
+            if (!url.isAbsolute()) {
+                response.sendRedirect(url.toString());
+                return;
+            }
+
+            if ("example.org".equalsIgnoreCase(url.getHost())) {
+                response.sendRedirect(url.toString());
+            }
+        } catch (URISyntaxException e) {
+            // TODO: Implement
+        }
+
+
     }
 
 }
