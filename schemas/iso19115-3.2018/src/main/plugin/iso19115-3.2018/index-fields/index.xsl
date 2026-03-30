@@ -1553,7 +1553,7 @@
         <xsl:for-each select="$platforms">
           {
           <xsl:for-each select="*:identifier">
-            "code": "<xsl:value-of select="*/*:code/*/text()"/>"
+            "code": "<xsl:value-of select="util:escapeForJson(*/*:code/*/text())"/>"
           </xsl:for-each>
           <xsl:if test="normalize-space(*:description) != ''">
             ,"descriptionObject": <xsl:value-of select="gn-fn-index:add-multilingual-field(
