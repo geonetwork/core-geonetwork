@@ -7,7 +7,7 @@ This topic guides you through the process of adding new metadata records with as
 To add or edit metadata, the user:
 
 -   Must have an `editor` profile or higher.
--   Should be a member of a group you want to add information for.
+-   Should be a member of the [Workspace Group](../../administrator-guide/managing-users-and-groups/creating-group.md#1-workspace-group) you want to add information for.
 
 Contact your administrator if you don't have the correct profile.
 
@@ -15,13 +15,17 @@ Contact your administrator if you don't have the correct profile.
 
     ![](img/add-new-record.png)
 
-2.  From the metadata template list, select a template (see [Managing templates](managing-templates.md)), choose a group from the dropdown and click *Create*.
+!!! Note
+
+    If only one group is defined in the catalog, and only one template is available, the system settings can be configured to skip the following step and directly open the editor with the selected template and group.
+
+2.  From the metadata template list, select a template (see [Managing templates](managing-templates.md)), choose a group from the group dropdown, configure the creation options in the Create button’s dropdown, and then click Create.
 
     ![](img/creating-metadata.png)
 
 !!! Note
 
-    If only one group is defined in the catalog, the default group is selected.
+    If only one group is defined in the catalog, the default group is selected. If a group is not a [Workspace Group](../../administrator-guide/managing-users-and-groups/creating-group.md#1-workspace-group) it will not be shown as an option in the list.
 
 Next steps:
 

@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2011 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2025 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -65,11 +65,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 
@@ -148,15 +143,16 @@ public class BaseMetadataValidator implements org.fao.geonet.kernel.datamanager.
 
             if ((!failedAssert.isEmpty()) || (!failedSchematronVerification.isEmpty())) {
                 StringBuilder errorReport = new StringBuilder();
+                String errorReportSeparator = "";
 
                 Iterator reports = schemaTronReport.getDescendants(ReportFinder);
                 while (reports.hasNext()) {
                     Element report = (Element) reports.next();
                     Element schematronVerificationError = report.getChild("schematronVerificationError", Edit.NAMESPACE);
 
-
                     if (schematronVerificationError != null) {
-                        errorReport.append("schematronVerificationError: " + schematronVerificationError.getTextTrim());
+                        errorReport.append(errorReportSeparator).append("schematronVerificationError: " + schematronVerificationError.getTextTrim());
+                        errorReportSeparator = ", ";
                     } else {
                         Iterator errors = report.getDescendants(ErrorFinder);
                         while (errors.hasNext()) {
@@ -182,14 +178,15 @@ public class BaseMetadataValidator implements org.fao.geonet.kernel.datamanager.
                             }
 
                             if (msg.length() > 0) {
-                                errorReport.append(reportType).append(':').append(msg);
+                                errorReport.append(errorReportSeparator).append(reportType).append(':').append(msg);
+                                errorReportSeparator = ", ";
                             }
                         }
                     }
                 }
 
                 throw new SchematronValidationErrorEx(
-                    "Schematron errors detected for file " + fileName + " - " + errorReport + " for more details", schemaTronReport);
+                    "Schematron errors detected for file '" + fileName + "' - " + errorReport, schemaTronReport);
             }
         }
 
@@ -364,7 +361,7 @@ public class BaseMetadataValidator implements org.fao.geonet.kernel.datamanager.
      * @param lang     Language from context
      */
     @Override
-    public Pair<Element, Boolean> doValidate(AbstractMetadata metadata, String lang) {
+    public Pair<Element, Boolean> doValidate(AbstractMetadata metadata, String lang) throws Exception {
         String schema = metadata.getDataInfo().getSchemaId();
         int metadataId = metadata.getId();
         Element errorReport = new Element("report", Edit.NAMESPACE);
@@ -376,6 +373,9 @@ public class BaseMetadataValidator implements org.fao.geonet.kernel.datamanager.
         } catch (IOException | JDOMException e) {
             return Pair.read(errorReport, false);
         }
+
+        // Inflate the metadata so that it contains all the necessary information for validation.
+        md = metadataManager.inflateMetadata(md, schema, lang);
 
         List<MetadataValidation> validations = new ArrayList<>();
         boolean valid = true;
@@ -408,25 +408,36 @@ public class BaseMetadataValidator implements org.fao.geonet.kernel.datamanager.
 
             // Apply custom schematron rules
             Element schemaTronReport = applyCustomSchematronRules(schema, metadataId, md, lang, validations);
-            if (valid && schemaTronReport != null) {
+            if (schemaTronReport != null) {
                 List<Namespace> theNSs = new ArrayList<Namespace>();
                 theNSs.add(Namespace.getNamespace("geonet", "http://www.fao.org/geonetwork"));
                 theNSs.add(Namespace.getNamespace("svrl", "http://purl.oclc.org/dsdl/svrl"));
 
-                List<?> failedAssert = Xml.selectNodes(schemaTronReport,
-                    "geonet:report[@geonet:required = '" + SchematronRequirement.REQUIRED + "']/svrl:schematron-output/svrl:failed-assert",
+                // Get all the errors
+                List<?> errors = Xml.selectNodes(schemaTronReport,
+                    "geonet:report[@geonet:required = '" + SchematronRequirement.REQUIRED + "']/svrl:schematron-output/svrl:failed-assert" +
+                    " | geonet:report[@geonet:required = '" + SchematronRequirement.REQUIRED + "']/geonet:schematronVerificationError",
                     theNSs);
 
-                List<?> failedSchematronVerification = Xml.selectNodes(schemaTronReport,
-                    "geonet:report[@geonet:required = '" + SchematronRequirement.REQUIRED + "']/geonet:schematronVerificationError",
+                // Get all the warnings
+                List<?> warnings = Xml.selectNodes(schemaTronReport,
+                    "geonet:report[@geonet:required = '" + SchematronRequirement.REPORT_ONLY + "']/svrl:schematron-output/svrl:failed-assert" +
+                        " | geonet:report[@geonet:required = '" + SchematronRequirement.REPORT_ONLY + "']/geonet:schematronVerificationError",
                     theNSs);
 
-                if (failedAssert.size() >  0 || failedSchematronVerification.size() > 0) {
+                // If there are errors the report is not valid
+                if (!errors.isEmpty()) {
                     valid = false;
-                    errorReport.addContent(schemaTronReport);
                     if (LOGGER.isDebugEnabled()) {
                         LOGGER.debug("  - Schematron error: {}", Xml.getString(schemaTronReport));
                     }
+                } else if (!warnings.isEmpty()) {
+                    LOGGER.debug("  - Schematron warning: {}", Xml.getString(schemaTronReport));
+                }
+
+                // Add the schematron report content if there are errors or warnings
+                if (!errors.isEmpty() || !warnings.isEmpty()) {
+                    errorReport.addContent(schemaTronReport);
                 }
             }
         } catch (Exception e) {
@@ -453,13 +464,6 @@ public class BaseMetadataValidator implements org.fao.geonet.kernel.datamanager.
         int intMetadataId = Integer.parseInt(metadataId);
         String version = null;
         LOGGER.debug("Creating validation report for record #{} [schema: {}].", metadataId, schema);
-
-        Element sessionReport = (Element) session.getProperty(Geonet.Session.VALIDATION_REPORT + metadataId);
-        if (sessionReport != null && !forEditing) {
-            LOGGER.debug("  Validation report available in session.");
-            sessionReport.detach();
-            return Pair.read(sessionReport, version);
-        }
 
         List<MetadataValidation> validations = new ArrayList<>();
         Element errorReport = new Element("report", Edit.NAMESPACE);
@@ -514,8 +518,6 @@ public class BaseMetadataValidator implements org.fao.geonet.kernel.datamanager.
         }
 
         saveValidationStatus(intMetadataId, validations);
-
-        session.setProperty(Geonet.Session.VALIDATION_REPORT + metadataId, errorReport);
 
         return Pair.read(errorReport, version);
     }

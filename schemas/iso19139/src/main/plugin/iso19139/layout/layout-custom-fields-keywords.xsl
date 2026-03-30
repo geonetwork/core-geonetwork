@@ -219,7 +219,8 @@
                   if ($guiLangId and gmd:keyword//*[@locale = concat('#', $guiLangId)]) then
                     gmd:keyword//*[@locale = concat('#', $guiLangId)][. != '']/replace(text(), ',', ',,')
                   else gmd:keyword/*[1][. != '']/replace(text(), ',', ',,'), ',')"/>
-
+        <xsl:variable name="keywordIds"
+                      select="string-join(gmd:keyword/*:Anchor/@xlink:href, ',')"/>
 
         <!-- Define the list of transformation mode available. -->
         <xsl:variable name="listOfTransformation"
@@ -292,6 +293,7 @@
              data-thesaurus-title="{if (($isFlatMode and not($thesaurusConfig/@fieldset)) or $thesaurusConfig/@fieldset = 'false') then $thesaurusTitleForEditor else ''}"
              data-thesaurus-key="{$thesaurusKey}"
              data-keywords="{$keywords}"
+             data-keyword-ids="{$keywordIds}"
              data-transformations="{$transformations}"
              data-current-transformation="{$transformation}"
              data-max-tags="{$maxTags}"

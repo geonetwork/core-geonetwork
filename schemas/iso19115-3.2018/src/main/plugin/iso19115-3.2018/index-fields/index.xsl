@@ -464,7 +464,7 @@
 
 
         <xsl:for-each
-          select="mri:defaultLocale/lan:PT_Locale/lan:language/lan:LanguageCode/@codeListValue">
+          select="mri:defaultLocale/lan:PT_Locale/lan:language/lan:LanguageCode/@codeListValue|mri:otherLocale/lan:PT_Locale/lan:language/lan:LanguageCode/@codeListValue">
           <resourceLanguage>
             <xsl:value-of select="."/>
           </resourceLanguage>
@@ -737,7 +737,7 @@
         <xsl:for-each select="*:resourceMaintenance/*">
           <maintenance type="object">{
             "frequency": "<xsl:value-of select="*:maintenanceAndUpdateFrequency/*/@codeListValue"/>"
-            <xsl:for-each select="*:dateOfNextUpdate[*/text() != '']">
+            <xsl:for-each select="*:maintenanceDate/*/cit:date[*/text() != '']">
               <xsl:variable name="dateOfNextUpdateZulu"
                             select="date-util:convertToISOZuluDateTime(*/text())"/>
               <xsl:if test="$dateOfNextUpdateZulu != ''">
@@ -1185,13 +1185,13 @@
                       select="mrl:processStep/*[mrl:description/gco:CharacterString != '']"/>
         <xsl:for-each select="$processSteps">
           <xsl:variable name="stepDateTimeZulu"
-                        select="date-util:convertToISOZuluDateTime(normalize-space(mrl:stepDateTime))"/>
+                        select="date-util:convertToISOZuluDateTime(normalize-space(mrl:stepDateTime//gml:timePosition/text()))"/>
 
           <processSteps type="object">{
             "descriptionObject": <xsl:value-of select="gn-fn-index:add-multilingual-field(
                                 'description', mrl:description, $allLanguages, true())"/>
             <xsl:if test="$stepDateTimeZulu != ''">
-              ,"date": "<xsl:value-of select="mrl:stepDateTime//gml:timePosition/text()"/>"
+              ,"date": "<xsl:value-of select="$stepDateTimeZulu"/>"
             </xsl:if>
             ,"source": [
             <xsl:for-each select="mrl:source/*[mrl:description/gco:CharacterString != '']">

@@ -1601,7 +1601,7 @@
     </entry>
     <entry>
       <code>nonGeographicDataset</code>
-      <label>Jeux de données non géographiques</label>
+      <label>Jeu de données non géographique</label>
       <description>Les informations appliquées aux caractéristiques de jeux de
         données non géographiques
       </description>
@@ -1671,12 +1671,12 @@
     <entry>
       <code>initiative</code>
       <label>Initiative</label>
-      <description>Les informations s’appliquent à une initiativee</description>
+      <description>Les informations s’appliquent à une initiative</description>
     </entry>
     <entry>
       <code>sample</code>
-      <label>Echantillon</label>
-      <description>Les informations s’appliquent à un échantillone</description>
+      <label>Échantillon</label>
+      <description>Les informations s’appliquent à un échantillon</description>
     </entry>
     <entry>
       <code>document</code>

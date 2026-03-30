@@ -1,0 +1,32 @@
+# Full configuration reference can be found here: https://geonetwork.github.io/geonetwork-ui/main/docs/guide/configure.html#toml-file
+# All configurations parameters may not be available as it depends on datahub version embedded in the plugin.
+
+[global]
+proxy_path = ""
+
+# This optional parameter defines, in which language metadata should be queried in elasticsearch.
+# Use ISO 639-2/B (https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) format to indicate the language of the metadata.
+# Setting to "current" will use the current language of the User Interface.
+# If not indicated, a wildcard is used and no language preference is applied for the search.
+# metadata_language = "current"
+
+# This optional parameter defines the languages that will be provided in a dropdown for the user to translate the UI.
+# Available languages are listed here: (https://github.com/geonetwork/geonetwork-ui/blob/main/libs/util/i18n/src/lib/i18n.constants.ts).
+# More information about the translation can be found in the docs (https://geonetwork.github.io/geonetwork-ui/main/docs/reference/i18n.html)
+# languages = ['en', 'fr', 'de']
+
+# Enables displaying a "contact block" wherever relevant in applications
+# contact_email = "opendata@mycompany.com"
+
+[theme]
+primary_color = "#c82850"
+secondary_color = "#001638"
+main_color = "#555"
+background_color = "#fdfbff"
+
+# Use it to set custom location for the favicon; by default, the path `/favicon.ico` will be used
+# favicon = "assets/favicon.ico"
+
+[search]
+
+[map]

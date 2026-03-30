@@ -209,7 +209,6 @@ public final class Geonet {
         public static final String METADATA_POSITION = "metadata.position";
         public static final String SEARCH_KEYWORDS_RESULT = "search.keywords.result";
         public static final String SELECTED_RESULT = "selected.result";
-        public static final String VALIDATION_REPORT = "validation.report";
         public static final String FILE_DISCLAIMER = "file.disclaimer";
         public static final String BATCH_PROCESSING_REPORT = "BATCH_PROCESSING_REPORT";
 

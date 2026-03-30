@@ -24,10 +24,12 @@
 package org.fao.geonet.api.users.validation;
 
 import org.fao.geonet.ApplicationContextHolder;
+import org.fao.geonet.api.users.UsersApi;
 import org.fao.geonet.api.users.model.UserDto;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.repository.UserRepository;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
@@ -49,9 +51,17 @@ public class UserDtoValidator implements Validator {
     public void validate(Object target, Errors errors) {
         UserDto user = (UserDto) target;
 
+
+
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "username", "field.required", Params.USERNAME
             + " is a required parameter for "
             + Params.Operation.NEWUSER + " " + "operation");
+
+        if (StringUtils.hasLength(user.getUsername()) && user.getUsername().length() > UsersApi.MAX_USERNAME_LENGTH) {
+            errors.rejectValue("username", "field.length",
+                new Object[]{UsersApi.MAX_USERNAME_LENGTH},
+                "username size should be less or equals than " + UsersApi.MAX_USERNAME_LENGTH + " characters");
+        }
 
         UserRepository userRepository = ApplicationContextHolder.get().getBean(UserRepository.class);
 

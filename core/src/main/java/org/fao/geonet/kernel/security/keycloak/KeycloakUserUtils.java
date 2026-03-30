@@ -28,12 +28,10 @@ import javax.transaction.Transactional.TxType;
 
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.*;
+import org.fao.geonet.kernel.security.BaseUserUtils;
 import org.fao.geonet.kernel.security.GeonetworkAuthenticationProvider;
-import org.fao.geonet.repository.GroupRepository;
-import org.fao.geonet.repository.LanguageRepository;
 import org.fao.geonet.repository.UserGroupRepository;
 import org.fao.geonet.repository.UserRepository;
-import org.fao.geonet.repository.specification.UserGroupSpecs;
 import org.fao.geonet.utils.Log;
 import org.keycloak.adapters.AdapterDeploymentContext;
 import org.keycloak.representations.AccessToken;
@@ -50,16 +48,10 @@ import java.util.concurrent.TimeUnit;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 
-public class KeycloakUserUtils {
+public class KeycloakUserUtils extends BaseUserUtils {
 
     @Autowired
     private UserRepository userRepository;
-
-    @Autowired
-    private GroupRepository groupRepository;
-
-    @Autowired
-    private LanguageRepository langRepository;
 
     @Autowired
     private UserGroupRepository userGroupRepository;
@@ -251,26 +243,14 @@ public class KeycloakUserUtils {
      * @param user to apply the changes to.
      */
     private void updateGroups(Map<Profile, List<String>> profileGroups, User user) {
-        Set<UserGroup> userGroups =  new HashSet<>();
+        Set<UserGroup> userGroups = new HashSet<>();
 
         // Now we add the groups
         for (Profile p : profileGroups.keySet()) {
             List<String> groups = profileGroups.get(p);
             for (String rgGroup : groups) {
 
-                Group group = groupRepository.findByName(rgGroup);
-
-                if (group == null) {
-                    group = new Group();
-                    group.setName(rgGroup);
-
-                    // Populate languages for the group
-                    for (Language l : langRepository.findAll()) {
-                        group.getLabelTranslations().put(l.getId(), group.getName());
-                    }
-
-                    groupRepository.save(group);
-                }
+                Group group = getOrCreateGroup(rgGroup);
 
                 UserGroup usergroup = new UserGroup();
                 usergroup.setGroup(group);

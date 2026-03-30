@@ -12,6 +12,10 @@ After selecting a template and clicking on the green "Create" button at the righ
 
 ![image](img/editor.png)
 
+The green Create button provides a dropdown menu where you can configure whether to copy resources from the source template or record, and whether to allow editors in the record’s group to make edits.
+
+![img.png](img/createOptions.png)
+
 After saving and closing the editor, you metadata is already on your catalog. You can search for it on the home page or the editor dashboard.
 
 If you want your metadata to be publicly available, you should also modify the privileges so the "All" group, which represents the anonymous users, can see it. To do this, go back to the editor dashboard: <http://localhost:8080/geonetwork/srv/eng/catalog.edit#/board>

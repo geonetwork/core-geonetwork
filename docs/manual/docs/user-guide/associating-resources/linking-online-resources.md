@@ -59,6 +59,57 @@ To add a WMS layer:
 
 ![](img/addonlinesrcwms.png)
 
+### Configuring WMS layer name and description {#wms-layer-name-config}
+
+When one or more WMS layers are selected, GeoNetwork automatically populates the online
+resource **Name** and **Description** fields. The behaviour is controlled by the
+`wmsResources` object in the schema's associated-panel configuration file:
+
+`schemas/iso19139/src/main/plugin/iso19139/config/associated-panel/default.json`
+
+``` json
+"wmsResources": {
+  "addLayerNamesMode": "resourcename",
+  "resourceName": "layerName",
+  "resourceDescription": "layerTitle"
+}
+```
+
+#### `addLayerNamesMode`
+
+| Value | Behaviour |
+|-------|-----------|
+| `resourcename` | *(default)* The WMS layer **Name** (identifier) is stored in the online resource name field and the layer **Title** in the description field. `resourceName` and `resourceDescription` are ignored. |
+| `url` | The fields populated in the online resource are controlled individually by `resourceName` and `resourceDescription` (see below). |
+
+#### `resourceName` and `resourceDescription` (url mode only)
+
+Both properties accept the same values:
+
+| Value | WMS field used |
+|-------|----------------|
+| `layerName` | The layer **Name** (machine identifier, e.g. `cad_cadastre.cadsubdivisionsection`) |
+| `layerTitle` | The layer **Title** (human-readable label) |
+
+Example — store the human-readable title as both name and description:
+
+``` json
+"wmsResources": {
+  "addLayerNamesMode": "url",
+  "resourceName": "layerTitle",
+  "resourceDescription": "layerTitle"
+}
+```
+
+#### Multilingual records
+
+The two modes also differ in how multilingual records are handled:
+
+- **`resourcename` mode** — only the *current UI language* is updated. Other language
+  translations are left unchanged so the editor can manage them independently.
+- **`url` mode** — *all configured languages* are set to the same value, because WMS layer
+  names and titles are language-neutral identifiers.
+
 ## Linking a database table or a GIS file on the network {#linking-online-resources-georesource}
 
 To reference a GIS file or a database table, user can upload or link to a that resource (see [Linking a document](linking-online-resources.md#linking-online-resources-doc)). The type of protocol depends on the type of resource associated:

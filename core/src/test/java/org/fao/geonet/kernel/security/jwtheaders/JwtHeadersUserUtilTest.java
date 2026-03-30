@@ -50,15 +50,9 @@ import java.util.Random;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.*;
 
 /**
  * tests that JwtHeadersUserUtil works.
@@ -80,11 +74,9 @@ public class JwtHeadersUserUtilTest {
         jwtHeadersUserUtil = new JwtHeadersUserUtil();
         jwtHeadersUserUtil = spy(jwtHeadersUserUtil);
 
-        jwtHeadersUserUtil.userRepository = Mockito.mock(UserRepository.class);
-        jwtHeadersUserUtil.groupRepository = Mockito.mock(GroupRepository.class);
-        jwtHeadersUserUtil.userGroupRepository = Mockito.mock(UserGroupRepository.class);
-        jwtHeadersUserUtil.authProvider = Mockito.mock(GeonetworkAuthenticationProvider.class);
-        jwtHeadersUserUtil.languageRepository = Mockito.mock(LanguageRepository.class);
+        jwtHeadersUserUtil.userRepository = mock(UserRepository.class);
+        jwtHeadersUserUtil.userGroupRepository = mock(UserGroupRepository.class);
+        jwtHeadersUserUtil.authProvider = mock(GeonetworkAuthenticationProvider.class);
     }
 
 
@@ -120,9 +112,7 @@ public class JwtHeadersUserUtilTest {
         verify(trivialUser, never()).getProfileGroups();
 
         //db should not have been saved to
-        verify(jwtHeadersUserUtil.groupRepository, never()).save(any());
         verify(jwtHeadersUserUtil.userGroupRepository, never()).save(any());
-        verify(jwtHeadersUserUtil.languageRepository, never()).save(any());
 
         //user was saved
         verify(jwtHeadersUserUtil.userRepository).save(userDetails);
@@ -165,9 +155,7 @@ public class JwtHeadersUserUtilTest {
         verify(trivialUser, never()).getProfileGroups();
 
         //db should not have been saved to
-        verify(jwtHeadersUserUtil.groupRepository, never()).save(any());
         verify(jwtHeadersUserUtil.userGroupRepository, never()).save(any());
-        verify(jwtHeadersUserUtil.languageRepository, never()).save(any());
 
         //user wasn't saved (no modification)
         verify(jwtHeadersUserUtil.userRepository, never()).save(userDetails);
@@ -186,14 +174,19 @@ public class JwtHeadersUserUtilTest {
         doThrow(new UsernameNotFoundException(""))
             .when(jwtHeadersUserUtil.authProvider).loadUserByUsername(any());
 
-        //make sure that the group ID is set when saved.  GN uses the ID in Set<> operations, so we must SET it.
-        when(jwtHeadersUserUtil.groupRepository.save(any())).thenAnswer(new Answer<Group>() {
-            @Override
-            public Group answer(InvocationOnMock invocation) throws Throwable {
-                ((Group) invocation.getArguments()[0]).setId(new Random().nextInt());
-                return ((Group) invocation.getArguments()[0]);
-            }
-        });
+        Group group1 = new Group();
+        group1.setName("group1");
+        group1.setId(new Random().nextInt());
+
+        Group group2 = new Group();
+        group2.setName("group2");
+        group2.setId(new Random().nextInt());
+
+        doReturn(group1)
+            .when(jwtHeadersUserUtil).getOrCreateGroup(group1.getName());
+
+        doReturn(group2)
+            .when(jwtHeadersUserUtil).getOrCreateGroup(group2.getName());
 
         JwtHeadersConfiguration basicConfig = JwtHeadersIntegrationTest.getBasicConfig();
         basicConfig.setUpdateGroup(true);
@@ -221,22 +214,8 @@ public class JwtHeadersUserUtilTest {
         verify(jwtHeadersUserUtil.userRepository).save(userDetails); //user was saved
         Assert.assertEquals(Profile.Administrator, userDetails.getProfile());
 
-
         //update groups method was called
         verify(jwtHeadersUserUtil).updateGroups(profileGroups, userDetails);
-
-        //group1 and group2 saved to db
-        //attempted to find them in DB
-        verify(jwtHeadersUserUtil.groupRepository).findByName("group1");
-        verify(jwtHeadersUserUtil.groupRepository).findByName("group2");
-
-        //saved
-        ArgumentCaptor<Group> groupsCaptor = ArgumentCaptor.forClass(Group.class);
-        verify(jwtHeadersUserUtil.groupRepository, times(2)).save(groupsCaptor.capture());
-
-        Assert.assertEquals("group1", groupsCaptor.getAllValues().get(0).getName());
-        Assert.assertEquals("group2", groupsCaptor.getAllValues().get(1).getName());
-
 
         //user connected to group and role
         ArgumentCaptor<Set> setUserGroupCaptor = ArgumentCaptor.forClass(Set.class);
@@ -282,15 +261,19 @@ public class JwtHeadersUserUtilTest {
         doReturn(user)
             .when(jwtHeadersUserUtil.authProvider).loadUserByUsername("testcaseUser@example.com");
 
+        Group group1 = new Group();
+        group1.setName("group1");
+        group1.setId(new Random().nextInt());
 
-        //make sure that the group ID is set when saved.  GN uses the ID in Set<> operations, so we must SET it.
-        when(jwtHeadersUserUtil.groupRepository.save(any())).thenAnswer(new Answer<Group>() {
-            @Override
-            public Group answer(InvocationOnMock invocation) throws Throwable {
-                ((Group) invocation.getArguments()[0]).setId(new Random().nextInt());
-                return ((Group) invocation.getArguments()[0]);
-            }
-        });
+        Group group2 = new Group();
+        group2.setName("group2");
+        group2.setId(new Random().nextInt());
+
+        doReturn(group1)
+            .when(jwtHeadersUserUtil).getOrCreateGroup(group1.getName());
+
+        doReturn(group2)
+            .when(jwtHeadersUserUtil).getOrCreateGroup(group2.getName());
 
         JwtHeadersConfiguration basicConfig = JwtHeadersIntegrationTest.getBasicConfig();
         basicConfig.setUpdateGroup(true);
@@ -318,21 +301,10 @@ public class JwtHeadersUserUtilTest {
         verify(jwtHeadersUserUtil.userRepository).save(userDetails); //user was saved
         Assert.assertEquals(Profile.Administrator, userDetails.getProfile());
 
-
         //update groups method was called
         verify(jwtHeadersUserUtil).updateGroups(profileGroups, userDetails);
 
-        //group1 and group2 saved to db
-        //attempted to find them in DB
-        verify(jwtHeadersUserUtil.groupRepository).findByName("group1");
-        verify(jwtHeadersUserUtil.groupRepository).findByName("group2");
-
-        //saved
-        ArgumentCaptor<Group> groupsCaptor = ArgumentCaptor.forClass(Group.class);
-        verify(jwtHeadersUserUtil.groupRepository, times(2)).save(groupsCaptor.capture());
-
-        Assert.assertEquals("group1", groupsCaptor.getAllValues().get(0).getName());
-        Assert.assertEquals("group2", groupsCaptor.getAllValues().get(1).getName());
+        verify(jwtHeadersUserUtil, times(2)).getOrCreateGroup(any());
 
         //user connected to group and role
         ArgumentCaptor<Set> setUserGroupCaptor = ArgumentCaptor.forClass(Set.class);

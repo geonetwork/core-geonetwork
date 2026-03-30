@@ -34,10 +34,12 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.security.authentication.event.AbstractAuthenticationEvent;
 import org.springframework.security.authentication.event.AuthenticationSuccessEvent;
 import org.springframework.security.authentication.event.InteractiveAuthenticationSuccessEvent;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.core.oidc.StandardClaimNames;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.security.oauth2.core.user.OAuth2User;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.security.web.authentication.switchuser.AuthenticationSwitchUserEvent;
 
 /**
@@ -66,23 +68,25 @@ public class UpdateTimestampListener implements
             || e instanceof AuthenticationSwitchUserEvent) {
 
             try {
-                Object principal = e.getAuthentication().getPrincipal();
+                Authentication authentication = e.getAuthentication();
+                Object principal = authentication.getPrincipal();
                 String username;
                 if (principal instanceof UserDetails) {
                     username = ((UserDetails)principal).getUsername();
-                } else {
-                    if (principal instanceof KeycloakPrincipal && ((KeycloakPrincipal) e.getAuthentication().getPrincipal()).getKeycloakSecurityContext().getIdToken() != null) {
-                        username = ((KeycloakPrincipal) e.getAuthentication().getPrincipal()).getKeycloakSecurityContext().getIdToken().getPreferredUsername();
-                    }
-                    else if (principal instanceof OidcUser) {
-                        username =  ((OidcUser)principal).getPreferredUsername();
-                    }
-                    else if (principal instanceof OAuth2User) {
-                        username =  ((OAuth2User)principal).getAttribute(StandardClaimNames.PREFERRED_USERNAME);
-                    }
-                    else {
-                        username = principal.toString();
-                    }
+                } else if (principal instanceof KeycloakPrincipal && ((KeycloakPrincipal) e.getAuthentication().getPrincipal()).getKeycloakSecurityContext().getIdToken() != null) {
+                    username = ((KeycloakPrincipal) e.getAuthentication().getPrincipal()).getKeycloakSecurityContext().getIdToken().getPreferredUsername();
+                }
+                else if (principal instanceof OidcUser) {
+                    username =  ((OidcUser)principal).getPreferredUsername();
+                }
+                else if (principal instanceof OAuth2User) {
+                    username =  ((OAuth2User)principal).getAttribute(StandardClaimNames.PREFERRED_USERNAME);
+                }
+                else if (authentication instanceof JwtAuthenticationToken) {
+                    username = authentication.getName();
+                }
+                else {
+                    username = principal.toString();
                 }
 
                 User user = userRepo.findOneByUsername(username);

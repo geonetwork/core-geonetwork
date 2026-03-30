@@ -4,6 +4,10 @@ To manage privileges to your metadata record and any attached data, you will nee
 
 For example, you can specify that the metadata and related services are visible to all (Internet users) or just to internal users only (Intranet). Privileges are assigned on a per group basis. Depending on the user profile (Guest, Registered User, Editor, Admin etc.) access to these functions may differ on a per user basis.
 
+!!! Note
+  
+    [System Privilege Groups](../../administrator-guide/managing-users-and-groups/creating-group.md#3-system-privilege-group) are special groups which cannot have privileges set for specific metadata records.
+
 ## Assigning privileges
 
 To assign privileges, follow these steps:
@@ -85,6 +89,7 @@ You can set privileges on a selected set of records in the search results using 
 
 The following rules apply:
 
--   the groups are those that the user belongs to
+-   If the "[Only set privileges to user's groups](../../administrator-guide/configuring-the-catalog/system-configuration.md#metadata-privileges)" setting is set, only the groups the user is a member of will be shown in the list.
+-   [System Privilege Groups](../../administrator-guide/managing-users-and-groups/creating-group.md#3-system-privilege-group) are not shown
 -   the privileges specified will only be applied to records that the user has ownership or administration rights on - any other records will be skipped
 -   the current records privileges will be reset and replaced by the selected privilege

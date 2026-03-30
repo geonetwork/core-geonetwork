@@ -177,30 +177,49 @@
       <xsl:apply-templates select="mdb:metadataProfile"/>
       <xsl:apply-templates select="mdb:alternativeMetadataReference"/>
       <xsl:apply-templates select="mdb:otherLocale[*/lan:language/*/@codeListValue != $mainLanguage]"/>
-      <xsl:apply-templates select="mdb:metadataLinkage"/>
 
-      <xsl:variable name="pointOfTruthUrl" select="concat(/root/env/nodeURL, 'api/records/', $uuid)"/>
+      <!--
+      Metadata linkage point to the landing page of the record. See permalink configuration.
+       * metadataLinkage is always created if missing
+       * existing metadataLinkage with function completeMetadata is updated with the permalink, other metadataLinkage are not updated.
+       -->
+      <xsl:variable name="listOfMetadataLinkage"
+                          select="mdb:metadataLinkage"/>
+      <xsl:variable name="permalink"
+                    select="java:getPermalink($uuid, 'all')"/>
 
-      <!-- Create metadata linkage only if it does not exist already. -->
-      <xsl:if test="$createMetadataLinkage">
-        <!-- TODO: This should only be updated for not harvested records ? -->
-        <mdb:metadataLinkage>
-          <cit:CI_OnlineResource>
-            <cit:linkage>
-              <!-- TODO: define a URL pattern and use it here -->
-              <!-- TODO: URL could be multilingual ? -->
-              <gco:CharacterString><xsl:value-of select="$pointOfTruthUrl"/></gco:CharacterString>
-            </cit:linkage>
-            <!-- TODO: Could be relevant to add description of the
-            point of truth for the metadata linkage but this
-            needs to be language dependant. -->
-            <cit:function>
-              <cit:CI_OnLineFunctionCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_OnLineFunctionCode"
-                                         codeListValue="completeMetadata"/>
-            </cit:function>
-          </cit:CI_OnlineResource>
-        </mdb:metadataLinkage>
-      </xsl:if>
+      <xsl:choose>
+        <xsl:when test="not($listOfMetadataLinkage)">
+          <mdb:metadataLinkage>
+            <cit:CI_OnlineResource>
+              <cit:linkage>
+                <gco:CharacterString><xsl:value-of select="$permalink"/></gco:CharacterString>
+              </cit:linkage>
+              <cit:function>
+                <cit:CI_OnLineFunctionCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_OnLineFunctionCode"
+                                           codeListValue="completeMetadata"/>
+              </cit:function>
+            </cit:CI_OnlineResource>
+          </mdb:metadataLinkage>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:for-each select="$listOfMetadataLinkage">
+            <xsl:variable name="isPermalink"
+             select="*/cit:function/*/@codeListValue = 'completeMetadata'"/>
+
+            <xsl:copy>
+              <cit:CI_OnlineResource>
+                <cit:linkage>
+                  <gco:CharacterString><xsl:value-of select="if ($isPermalink) then $permalink else */cit:linkage/gco:CharacterString"/></gco:CharacterString>
+                </cit:linkage>
+                <xsl:apply-templates select="*/* except */cit:linkage"/>
+              </cit:CI_OnlineResource>
+            </xsl:copy>
+          </xsl:for-each>
+        </xsl:otherwise>
+      </xsl:choose>
+
+
 
       <xsl:apply-templates select="mdb:spatialRepresentationInfo"/>
       <xsl:apply-templates select="mdb:referenceSystemInfo"/>

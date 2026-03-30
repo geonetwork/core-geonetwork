@@ -168,6 +168,7 @@
                   name="username"
                   class="form-control"
                   data-ng-model="userSelected.username"
+                  data-ng-pattern="/^[a-zA-Z0-9]+([_\-:.@]{1}[a-zA-Z0-9]+)*$/"
                   data-ng-required="true"
                   required=""
                   data-ng-model-options="{debounce: 200}"
@@ -193,6 +194,13 @@
                   data-translate=""
                 >
                   duplicatedValueFoundUserName
+                </p>
+                <p
+                  class="help-block"
+                  ng-if="gnUserEdit.username.$error.pattern"
+                  data-translate=""
+                >
+                  patternUserName
                 </p>
               </div>
             </div>
@@ -545,26 +553,34 @@
               </label>
 
               <div data-ng-show="userSelected.profile != 'Administrator'">
+                <h3 data-translate="">SystemPrivileges</h3>
+
+                <div
+                  readonly-mode="!isUserGroupUpdateEnabled"
+                  data-gn-multiselect="groupsWithoutProfilesByType['SystemPrivilege']"
+                  data-choices="groupsWithoutProfiles"
+                ></div>
+
                 <h3 data-translate="">RegisteredUser</h3>
 
                 <div
                   readonly-mode="!isUserGroupUpdateEnabled"
                   data-gn-multiselect="groupsByProfile['RegisteredUser']"
-                  data-choices="groups"
+                  data-choices="groupsWithProfiles"
                 ></div>
 
                 <h3 data-translate="">Editor</h3>
                 <div
                   readonly-mode="!isUserGroupUpdateEnabled"
                   data-gn-multiselect="groupsByProfile['Editor']"
-                  data-choices="groups"
+                  data-choices="groupsWithProfiles"
                 ></div>
 
                 <h3 data-translate="">Reviewer</h3>
                 <div
                   readonly-mode="!isUserGroupUpdateEnabled"
                   data-gn-multiselect="groupsByProfile['Reviewer']"
-                  data-choices="groups"
+                  data-choices="groupsWithProfiles"
                 ></div>
 
                 <p class="help-block" data-translate="">
@@ -575,7 +591,7 @@
                 <div
                   readonly-mode="!isUserGroupUpdateEnabled"
                   data-gn-multiselect="groupsByProfile['UserAdmin']"
-                  data-choices="groups"
+                  data-choices="groupsWithProfiles"
                 ></div>
 
                 <p class="help-block" data-translate="">useCtrlClickToUnselect</p>

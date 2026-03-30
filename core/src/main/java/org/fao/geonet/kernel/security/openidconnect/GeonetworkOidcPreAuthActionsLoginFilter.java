@@ -110,7 +110,7 @@ public class GeonetworkOidcPreAuthActionsLoginFilter  implements Filter, Servlet
 
         String requestUri = servletRequest.getRequestURI();
         String contextPath = servletRequest.getContextPath();
-        String clientRegistrationId = GeonetworkClientRegistrationProvider.CLIENTREGISTRATION_NAME;
+        String clientRegistrationId = GeonetworkClientRegistrationProvider.CLIENT_REGISTRATION_NAME;
         // Grab the first (or default) registrationId from repository
         String registrationId = clientRegistrationRepository.findByRegistrationId(clientRegistrationId).getRegistrationId();
         String loginPath = contextPath + OAuth2AuthorizationRequestRedirectFilter.DEFAULT_AUTHORIZATION_REQUEST_BASE_URI + "/" + registrationId;

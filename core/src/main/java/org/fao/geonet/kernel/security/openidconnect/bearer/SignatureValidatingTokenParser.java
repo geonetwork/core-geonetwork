@@ -37,12 +37,11 @@ public class SignatureValidatingTokenParser implements AccessTokenParser {
     JwtDecoder jwtDecoder;
 
     public SignatureValidatingTokenParser(JwtDecoder jwtDecoder) {
-        jwtDecoder = jwtDecoder;
+        this.jwtDecoder = jwtDecoder;
     }
 
     @Override
-    public Map parseToken(String token) throws Exception {
-        Jwt jwt = this.jwtDecoder.decode(token);
-        return jwt.getClaims();
+    public Jwt parseToken(String token) throws Exception {
+        return this.jwtDecoder.decode(token);
     }
 }

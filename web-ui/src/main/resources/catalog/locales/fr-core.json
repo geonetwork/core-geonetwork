@@ -5,7 +5,7 @@
     "addToSelection": "Ajouter à ...",
     "removeFromSelection": "Supprimer de ...",
     "AnonymousUserlist": "Fiches préférées",
-    "MapLayerlist": "Liste d'ajout à la carte",
+    "MapLayerlist": "Liste de cartes",
     "basket": "Paniers",
     "emptyBasket": "Panier vide",
     "searchSelectedRecord": "Rechercher les fiches",
@@ -104,6 +104,7 @@
     "createAnAccount": "Créer un compte",
     "createDateYear": "Année de création",
     "createDateYears": "Années",
+    "dan": "Dansk",
     "dataset": "Jeu de données",
     "day": "Jour",
     "deleteRecordConfirm": "Voulez-vous vraiment supprimer la fiche '{{resourceTitle}}' ?",
@@ -589,5 +590,7 @@
     "quality": "Qualité",
     "download": "Téléchargement",
     "links": "Liens",
-    "saveToFile": "Enregistrer dans un fichier."
+    "saveToFile": "Enregistrer dans un fichier.",
+    "anonymousAccessCreatedError": "Une erreur s'est produite à la création de l'accès anonyme: {{errorDescription}}",
+    "anonymousAccessCreatedWarning": "Veuillez copier le lien. Vous n'aurez pas d'autre occasion!"
 }

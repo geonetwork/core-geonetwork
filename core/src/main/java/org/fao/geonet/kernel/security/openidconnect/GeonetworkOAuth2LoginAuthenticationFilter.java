@@ -84,7 +84,7 @@ public class GeonetworkOAuth2LoginAuthenticationFilter extends OAuth2LoginAuthen
                                             FilterChain chain,
                                             Authentication authResult)
         throws IOException, ServletException {
-
+        String username = "UNIDENTIFIED";
         if (authResult == null) {
             throw new IOException("authresult is null!"); // this shouldn't happen
         }
@@ -104,54 +104,66 @@ public class GeonetworkOAuth2LoginAuthenticationFilter extends OAuth2LoginAuthen
         //save user
         try {
             UserDetails userDetails = oAuth2SecurityProviderUtil.getUserDetails(authResult, true);
+            if(userDetails != null) {
+                username = userDetails.getUsername();
+                Log.info(Geonet.SECURITY, "User '" + username
+                    + "' authenticated via OIDC");
+            }
+
         } catch (Exception e) {
             throw new IOException("OIDC: couldnt save user details",e);
         }
 
-        SecurityContextHolder.getContext().setAuthentication(authResult);
+        try{
+            SecurityContextHolder.getContext().setAuthentication(authResult);
 
 
-        //cf GN keycloak
-        String redirectURL = findQueryParameter(request, "redirectUrl");
-        if (redirectURL != null) {
-            try {
-                URI redirectUri = new URI(redirectURL);
-                if (redirectUri != null && !redirectUri.isAbsolute()) {
-                    response.sendRedirect(redirectUri.toString());
-                } else {
-                    // If the redirect url ends up being null or absolute url then lets redirect back to the context home.
-                    Log.warning(Geonet.SECURITY, "Failed to perform login redirect to '" + redirectURL + "'. Redirected to context home");
+            //cf GN keycloak
+            String redirectURL = findQueryParameter(request, "redirectUrl");
+            if (redirectURL != null) {
+                try {
+                    URI redirectUri = new URI(redirectURL);
+                    if (redirectUri != null && !redirectUri.isAbsolute()) {
+                        response.sendRedirect(redirectUri.toString());
+                    } else {
+                        // If the redirect url ends up being null or absolute url then lets redirect back to the context home.
+                        Log.warning(Geonet.SECURITY, "Failed to perform login redirect to '" + redirectURL + "'. Redirected to context home");
+                        response.sendRedirect(request.getContextPath());
+                    }
+                } catch (URISyntaxException e) {
                     response.sendRedirect(request.getContextPath());
                 }
-            } catch (URISyntaxException e) {
+            } else {
                 response.sendRedirect(request.getContextPath());
             }
-        } else {
-            response.sendRedirect(request.getContextPath());
-        }
 
-        // Set users preferred locale if it exists. - cf. keycloak
-        String localeString = oidcUser.getLocale();
-        if (!StringUtils.isEmpty(localeString)) {
-            try {
+            // Set users preferred locale if it exists. - cf. keycloak
+            String localeString = oidcUser.getLocale();
+            if (!StringUtils.isEmpty(localeString)) {
                 try {
-                    //Try to parse the locale as a languageTag i.e. en-CA
-                    response.setLocale(new Locale.Builder().setLanguageTag(localeString).build());
-                } catch (IllformedLocaleException e) {
-                    // If there are any exceptions try a different approach as it may be in the format of en_CA or simply en
-                    response.setLocale(LocaleUtils.toLocale(localeString));
+                    try {
+                        //Try to parse the locale as a languageTag i.e. en-CA
+                        response.setLocale(new Locale.Builder().setLanguageTag(localeString).build());
+                    } catch (IllformedLocaleException e) {
+                        // If there are any exceptions try a different approach as it may be in the format of en_CA or simply en
+                        response.setLocale(LocaleUtils.toLocale(localeString));
+                    }
+                } catch (IllegalArgumentException e) {
+                    Log.warning(Geonet.SECURITY, "Unable to parse oidc locale " + oidcUser.getLocale() + ": " + e.getMessage());
                 }
-            } catch (IllegalArgumentException e) {
-                Log.warning(Geonet.SECURITY, "Unable to parse oidc locale " + oidcUser.getLocale() + ": " + e.getMessage());
             }
-        }
 
 
-        // Fire event so that updateTimestampListener can be trigger.
-        // It may have been triggered at the beginning of the authentication when the user information was not available for new users.
-        // Firing the event again as the user information now exists.
-        if (this.eventPublisher != null) {
-            eventPublisher.publishEvent(new InteractiveAuthenticationSuccessEvent(authResult, this.getClass()));
+            // Fire event so that updateTimestampListener can be trigger.
+            // It may have been triggered at the beginning of the authentication when the user information was not available for new users.
+            // Firing the event again as the user information now exists.
+            if (this.eventPublisher != null) {
+                eventPublisher.publishEvent(new InteractiveAuthenticationSuccessEvent(authResult, this.getClass()));
+            }
+
+        } catch (Exception ex) {
+            Log.warning(Geonet.SECURITY, "Error during OIDC login for user "
+                + username + ": " + ex.getMessage(), ex);
         }
 
 

@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2011 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2024 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -23,6 +23,9 @@
 
 package org.fao.geonet.kernel.datamanager.base;
 
+import co.elastic.clients.elasticsearch.core.search.TotalHits;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Optional;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
@@ -40,6 +43,7 @@ import org.fao.geonet.kernel.XmlSerializer;
 import org.fao.geonet.kernel.datamanager.*;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.schema.SavedQuery;
+import org.fao.geonet.kernel.search.EsFilterBuilder;
 import org.fao.geonet.kernel.search.EsSearchManager;
 import org.fao.geonet.kernel.search.IndexingMode;
 import org.fao.geonet.kernel.search.index.IndexingList;
@@ -49,6 +53,7 @@ import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.*;
 import org.fao.geonet.repository.reports.MetadataReportsQueries;
 import org.fao.geonet.repository.specification.OperationAllowedSpecs;
+import org.fao.geonet.util.XslUtil;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.fao.geonet.web.DefaultLanguage;
@@ -62,6 +67,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -114,6 +120,9 @@ public class BaseMetadataUtils implements IMetadataUtils {
     private Path stylePath;
 
     protected IMetadataManager metadataManager;
+
+    @Autowired
+    private NodeInfo nodeInfo;
 
     @Override
     public void setMetadataManager(IMetadataManager metadataManager) {
@@ -344,7 +353,26 @@ public class BaseMetadataUtils implements IMetadataUtils {
         String sitemapLinkUrl = settingManager.getValue(METADATA_URL_SITEMAPLINKURL);
         String defaultLink = settingManager.getNodeURL() + "api/records/" + uuid + "?language=all";
         String permalink = buildUrl(uuid, language, sitemapLinkUrl);
-        return StringUtils.isNotEmpty(permalink) ? permalink : defaultLink;
+
+        // If the permalink template has been modified use the configured permalink template
+        // otherwise use the defaultLink
+        UriComponentsBuilder uriComponentsBuilder;
+        if (StringUtils.isNotEmpty(permalink) && !defaultLink.equals(permalink)) {
+            uriComponentsBuilder = UriComponentsBuilder.fromUriString(permalink);
+        } else {
+            uriComponentsBuilder = UriComponentsBuilder.fromUriString(defaultLink);
+
+            // Get the formatter configured for *links* to records (recordLinkFormatter) from the UI configuration.
+            String recordLinkFormatter = XslUtil.getUiConfigurationJsonProperty(null, "mods.search.formatter.recordLinkFormatter");
+
+            // When building the record URL, the formatter is passed as the `recordViewFormatter` query parameter
+            // because the API expects that parameter name to decide which formatter to use when displaying the record.
+            if (StringUtils.isNotBlank(recordLinkFormatter)) {
+                uriComponentsBuilder.queryParam("recordViewFormatter", recordLinkFormatter);
+            }
+        }
+
+        return uriComponentsBuilder.build().toString();
     }
 
     @Override
@@ -1012,7 +1040,7 @@ public class BaseMetadataUtils implements IMetadataUtils {
     @Override
     public Map<Integer, MetadataSourceInfo> findAllSourceInfo(Specification<? extends AbstractMetadata> spec) {
         try {
-            return metadataRepository.findSourceInfo((Specification<Metadata>) spec);
+            return metadataRepository.findSourceInfo(spec);
         } catch (Throwable t) {
             // Maybe it is not a Specification<Metadata>
         }
@@ -1042,5 +1070,39 @@ public class BaseMetadataUtils implements IMetadataUtils {
     @Override
     public String selectOneWithRegexSearchAndReplace(String uuid, String search, String replace) {
         return metadataRepository.selectOneWithRegexSearchAndReplace(uuid, search, replace);
+    }
+
+    @Override
+    public boolean isMetadataAvailableInPortal(int id) {
+        // Check if the metadata is available in the portal
+        String elasticSearchQuery = "{ \"bool\": {\n" +
+            "            \"must\": [\n" +
+            "        {" +
+            "          \"term\": {" +
+            "            \"id\": {" +
+            "              \"value\": \"%s\"" +
+            "            }" +
+            "          }" +
+            "        } " +
+            "            ]%s}}";
+
+        String portalFilter = "          ,\"filter\":{\"query_string\":{\"query\":\"%s\"}}";
+
+        JsonNode esJsonQuery;
+
+        try {
+            String filterQueryString = EsFilterBuilder.buildPortalFilter(nodeInfo);
+            String jsonQueryFilter = StringUtils.isNotEmpty(filterQueryString) ? String.format(portalFilter, filterQueryString): "";
+            String jsonQuery = String.format(elasticSearchQuery, id, jsonQueryFilter);
+
+            ObjectMapper objectMapper = new ObjectMapper();
+            esJsonQuery = objectMapper.readTree(jsonQuery);
+
+            TotalHits total = searchManager.query(esJsonQuery, new HashSet<>(), 0, 0).hits().total();
+
+            return (java.util.Optional.ofNullable(total).map(TotalHits::value).orElse(0L) > 0);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }

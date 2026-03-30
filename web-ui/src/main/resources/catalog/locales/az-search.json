@@ -357,7 +357,7 @@
     "KMLfileURL": "KML faylının URL-i",
     "refineSearch": "Axtarışı dəqiqləşdirin",
     "backToList": "Siyahıya Qayıdın",
-    "privilegesBatchAlert": "<span class='text-danger'>Seçimdəki bütün redaktə edilə bilən qeydlər üçün imtiyazlar yenilənəcək. İmtiyaz forması boşdur və seçilmiş qeydləri cari imtiyazları əks etdirmir! İmtiyazlar sıfırlanır və yenisi ilə əvəz olunur.</span><br/><br/> <strong>Seçilmişləri birləşdirin</strong> üzərinə klikləməklə seçilmiş imtiyazlar əlavə olunacaq ( <strong>+</strong> ilə işarələnir) və ya silinəcək ( <strong>-</strong> ilə qeyd qutusu).<br/><br/> <strong>Seçilmişlərə görə dəyişdirin</strong> üzərinə klikləməklə, qeyd kateqoriyaları silinəcək və sonra seçilmiş imtiyazları əlavə edəcək ( <strong>+</strong> ilə işarələnəcək) və ya siləcək ( <strong>-</strong> ilə qeyd xanası).",
+    "privilegesBatchAlert": "<span class='text-danger'>Seçimdəki bütün redaktə edilə bilən qeydlər üçün imtiyazlar yenilənəcək. İmtiyaz forması boşdur və seçilmiş qeydləri cari imtiyazları əks etdirmir! İmtiyazlar sıfırlanır və yenisi ilə əvəz olunur.</span><br/><br/> <strong>Seçilmişləri birləşdirin</strong> üzərinə klikləməklə seçilmiş imtiyazlar əlavə olunacaq ( <strong>+</strong> ilə işarələnir) və ya silinəcək ( <strong>-</strong> ilə qeyd qutusu).<br/><br/> <strong>Yeniləyin</strong> üzərinə klikləməklə, qeyd kateqoriyaları silinəcək və sonra seçilmiş imtiyazları əlavə edəcək ( <strong>+</strong> ilə işarələnəcək) və ya siləcək ( <strong>-</strong> ilə qeyd xanası).",
     "permalink": "Daimi keçid",
     "permalinkTo": "{{title}} üçün daimi keçid",
     "shareOnTwitter": "Twitter-də paylaşın",

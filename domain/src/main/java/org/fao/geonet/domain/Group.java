@@ -87,6 +87,7 @@ public class Group extends Localized implements Serializable {
     private List<MetadataCategory> allowedCategories;
     private Boolean enableAllowedCategories;
     private Profile minimumProfileForPrivileges;
+    private GroupType type = GroupType.Workspace;
 
     /**
      * Get the id of the group.
@@ -370,5 +371,36 @@ public class Group extends Localized implements Serializable {
     public Group setMinimumProfileForPrivileges(Profile minimumProfileForPrivileges) {
         this.minimumProfileForPrivileges = minimumProfileForPrivileges;
         return this;
+    }
+
+    /**
+     * Get the type of the group.
+     *
+     * @return the type of the group.
+     */
+    @Enumerated(EnumType.STRING)
+    public GroupType getType() {
+        return type;
+    }
+
+    /**
+     * Set the type of the group.
+     *
+     * @param type the type of the group.
+     * @return this group entity object.
+     */
+    public Group setType(GroupType type) {
+        this.type = type;
+        return this;
+    }
+
+    /**
+     * Check if this group is a workspace group.
+     *
+     * @return true if this group is a workspace group.
+     */
+    @Transient
+    public Boolean isWorkspace() {
+        return GroupType.Workspace.equals(type);
     }
 }

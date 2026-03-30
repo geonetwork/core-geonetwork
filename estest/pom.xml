@@ -5,7 +5,7 @@
   <parent>
     <artifactId>geonetwork</artifactId>
     <groupId>org.geonetwork-opensource</groupId>
-    <version>4.4.9-SNAPSHOT</version>
+    <version>4.4.10-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
@@ -19,8 +19,8 @@
     </dependency>
     <dependency>
       <groupId>org.mockito</groupId>
-      <artifactId>mockito-all</artifactId>
-      <version>1.9.5</version>
+      <artifactId>mockito-core</artifactId>
+      <version>4.11.0</version>
       <scope>test</scope>
     </dependency>
 

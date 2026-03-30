@@ -1,132 +1,146 @@
-<table class="table gn-results-editor">
-  <tr data-ng-repeat="md in searchResults.records">
-    <td>
-      <input
-        data-gn-selection-md="md"
-        data-bucket="searchResults.selectionBucket"
-        data-results="searchResults"
-        type="checkbox"
-        data-ng-model="md.selected"
-        aria-label="{{'clickToSelect' | translate}}"
-      />
-    </td>
-    <td>
-      <gn-md-type-widget metadata="md"></gn-md-type-widget>
-      <gn-md-type-inspire-validation-widget
-        metadata="md"
-        data-ng-if="isInspireEnabled"
-      ></gn-md-type-inspire-validation-widget>
-    </td>
-    <td>
-      <div class="row">
-        <div class="col-lg-8 col-md-8">
-          <div class="clearfix">
-            <div class="pull-left">
-              <a
-                href=""
-                data-ng-show="md.isTemplate != 's'"
-                data-ng-href="catalog.search#/{{(md.draft == 'y') ? 'metadraf' : 'metadata'}}/{{md.uuid}}"
-                title="{{md.resourceAbstract}}"
-                class="gn-break"
-              >
-                <i
-                  data-ng-show="md.resourceTitle.trim()=='' || md.resourceTitle===undefined"
-                  >{{'missingTitle' | translate}}</i
+<div>
+  <div
+    gn-modal
+    class="gn-confirm-delete"
+    gn-popup-options="{title: 'confirmDialogTitle',
+                          confirmCallback: confirmRemoveMetadata,
+                          confirmActionWord: 'DELETE',
+                          confirmActionWordLabel: 'metadataDeleteConfirmActionWordLabel'}"
+    id="gn-confirm-remove-metadata"
+  >
+    <div>
+      <p data-ng-bind-html="getMetadataDeleteConfirmMessage()"></p>
+    </div>
+  </div>
+
+  <table class="table gn-results-editor">
+    <tr data-ng-repeat="md in searchResults.records">
+      <td>
+        <input
+          data-gn-selection-md="md"
+          data-bucket="searchResults.selectionBucket"
+          data-results="searchResults"
+          type="checkbox"
+          data-ng-model="md.selected"
+          aria-label="{{'clickToSelect' | translate}}"
+        />
+      </td>
+      <td>
+        <gn-md-type-widget metadata="md"></gn-md-type-widget>
+        <gn-md-type-inspire-validation-widget
+          metadata="md"
+          data-ng-if="isInspireEnabled"
+        ></gn-md-type-inspire-validation-widget>
+      </td>
+      <td>
+        <div class="row">
+          <div class="col-lg-8 col-md-8">
+            <div class="clearfix">
+              <div class="pull-left">
+                <a
+                  href=""
+                  data-ng-show="md.isTemplate != 's'"
+                  data-ng-href="catalog.search#/{{(md.draft == 'y') ? 'metadraf' : 'metadata'}}/{{md.uuid}}"
+                  title="{{md.resourceAbstract}}"
+                  class="gn-break"
                 >
-                {{md.resourceTitle}}
-              </a>
-              <span data-ng-show="md.isTemplate == 's'">{{md.resourceTitle}}</span>
-              <div class="gn-record-details text-muted">
-                <small><span data-translate="">owner</span>:</small>
-                <small>{{::md.recordOwner}}</small>
-                &centerdot;
-                <small data-translate="">updatedOn</small>
-                <small
-                  class="text-muted"
-                  data-gn-humanize-time="{{md.changeDate}}"
-                  data-from-now=""
-                ></small>
-
-                <span data-ng-if="displayWorkflowStatus(md)">
+                  <i
+                    data-ng-show="md.resourceTitle.trim()=='' || md.resourceTitle===undefined"
+                    >{{'missingTitle' | translate}}</i
+                  >
+                  {{md.resourceTitle}}
+                </a>
+                <span data-ng-show="md.isTemplate == 's'">{{md.resourceTitle}}</span>
+                <div class="gn-record-details text-muted">
+                  <small><span data-translate="">owner</span>:</small>
+                  <small>{{::md.recordOwner}}</small>
                   &centerdot;
+                  <small data-translate="">updatedOn</small>
                   <small
-                    class="text-muted gn-status"
-                    data-ng-class="{'text-success': md.mdStatus == 2, 'text-warning': md.mdStatus == 4}"
-                    data-ng-if="md.mdStatus < 50 && isMdWorkflowEnable"
-                  >
-                    <span data-ng-if="md.draft === 'e' || md.draft === 'n'"
-                      >{{::md.statusWorkflow | getStatusLabel}}</span
-                    >
-                    <span data-ng-if="md.draft === 'y'"
-                      >{{::'status-' + md.mdStatus | translate}}</span
-                    >
-                  </small>
+                    class="text-muted"
+                    data-gn-humanize-time="{{md.changeDate}}"
+                    data-from-now=""
+                  ></small>
 
-                  <small
-                    class="text-muted gn-status"
-                    data-ng-class="text-warning"
-                    data-ng-if="!md.mdStatus"
-                    data-ng-translate=""
-                    >{{'status-no-status' | translate}}</small
-                  >
-                </span>
+                  <span data-ng-if="displayWorkflowStatus(md)">
+                    &centerdot;
+                    <small
+                      class="text-muted gn-status"
+                      data-ng-class="{'text-success': md.mdStatus == 2, 'text-warning': md.mdStatus == 4}"
+                      data-ng-if="md.mdStatus < 50 && isMdWorkflowEnable"
+                    >
+                      <span data-ng-if="md.draft === 'e' || md.draft === 'n'"
+                        >{{::md.statusWorkflow | getStatusLabel}}</span
+                      >
+                      <span data-ng-if="md.draft === 'y'"
+                        >{{::'status-' + md.mdStatus | translate}}</span
+                      >
+                    </small>
+
+                    <small
+                      class="text-muted gn-status"
+                      data-ng-class="text-warning"
+                      data-ng-if="!md.mdStatus"
+                      data-ng-translate=""
+                      >{{'status-no-status' | translate}}</small
+                    >
+                  </span>
+                </div>
               </div>
             </div>
+            <gn-draft-validation-widget
+              data-ng-if="md.draft == 'e' || md.draft == 'y'"
+              data-metadata="md"
+            ></gn-draft-validation-widget>
           </div>
-          <gn-draft-validation-widget
-            data-ng-if="md.draft == 'e' || md.draft == 'y'"
-            data-metadata="md"
-          ></gn-draft-validation-widget>
-        </div>
-        <div class="col-lg-4 col-md-4 gn-nopadding-right">
-          <div class="btn-group">
-            <a
-              class="btn btn-default"
-              href=""
-              data-ng-if="user.canManagePrivileges(md) && user.isEditorOrMore() && md.draft != 'y'"
-              data-ng-click="mdService.openPrivilegesPanel(md, getCatScope())"
-              title="{{'privileges' | translate}}"
-            >
-              <i
-                class="fa text-muted"
-                data-ng-class="md.isPublished() ? 'fa-lock-open' : 'fa-lock'"
-              ></i>
-            </a>
-            <!-- TODO: subtemplate link for editing is different -->
-            <a
-              class="btn btn-default"
-              data-ng-show="user.canEditRecord(md) && md.isTemplate != 's'
-                             && (user.isReviewerOrMore() || md.mdStatus != 4 || !isMdWorkflowEnable)"
-              data-ng-href="#/metadata/{{mdService.getMetadataIdToEdit(md)}}?redirectUrl=catalog.edit"
-              title="{{'edit' | translate}}"
-            >
-              <i class="fa fa-pencil"></i>
-            </a>
-            <a
-              class="btn btn-default"
-              href=""
-              data-ng-show="(!md.isPublished() || (md.isPublished() && user.canDeletePublishedMetadata())) && user.canEditRecord(md) && md.isTemplate != 's'
-                             && (user.isReviewerOrMore() || md.mdStatus != 4 || !isMdWorkflowEnable)
-                             && md.draft != 'e'"
-              data-gn-click-and-spin="deleteRecord(md)"
-              data-ng-init="translateValues = {resourceTitle: (md.resourceTitle | json)}"
-              data-gn-confirm-click="{{'deleteRecordConfirm' | translate:translateValues}}"
-              title="{{'delete' | translate}}"
-            >
-              <i class="fa fa-times text-danger"></i>
-            </a>
-            <a
-              class="btn btn-default"
-              data-ng-class="user.canEditRecord(md) ? '' : 'btn-single'"
-              data-ng-show="md.isTemplate != 's'"
-              data-ng-href="#/create?from={{md.id}}"
-              title="{{'duplicate' | translate}}"
-            >
-              <i class="fa fa-copy text-muted"></i>
-            </a>
+          <div class="col-lg-4 col-md-4 gn-nopadding-right">
+            <div class="btn-group">
+              <a
+                class="btn btn-default"
+                href=""
+                data-ng-if="user.canManagePrivileges(md) && user.isEditorOrMore() && md.draft != 'y'"
+                data-ng-click="mdService.openPrivilegesPanel(md, getCatScope())"
+                title="{{'privileges' | translate}}"
+              >
+                <i
+                  class="fa text-muted"
+                  data-ng-class="md.isPublished() ? 'fa-lock-open' : 'fa-lock'"
+                ></i>
+              </a>
+              <!-- TODO: subtemplate link for editing is different -->
+              <a
+                class="btn btn-default"
+                data-ng-show="user.canEditRecord(md) && md.isTemplate != 's'
+                              && (user.isReviewerOrMore() || md.mdStatus != 4 || !isMdWorkflowEnable)"
+                data-ng-href="#/metadata/{{mdService.getMetadataIdToEdit(md)}}?redirectUrl=catalog.edit"
+                title="{{'edit' | translate}}"
+              >
+                <i class="fa fa-pencil"></i>
+              </a>
+              <a
+                class="btn btn-default"
+                href=""
+                data-ng-show="(!md.isPublished() || (md.isPublished() && user.canDeletePublishedMetadata())) && user.canEditRecord(md) && md.isTemplate != 's'
+                              && (user.isReviewerOrMore() || md.mdStatus != 4 || !isMdWorkflowEnable)
+                              && md.draft != 'e'"
+                data-ng-click="removeMetadata(md)"
+                title="{{'delete' | translate}}"
+              >
+                <i class="fa fa-times text-danger"></i>
+              </a>
+              <a
+                class="btn btn-default"
+                data-ng-class="user.canEditRecord(md) ? '' : 'btn-single'"
+                data-ng-show="md.isTemplate != 's'"
+                data-ng-href="#/create?from={{md.id}}"
+                title="{{'duplicate' | translate}}"
+              >
+                <i class="fa fa-copy text-muted"></i>
+              </a>
+            </div>
           </div>
         </div>
-      </div>
-    </td>
-  </tr>
-</table>
+      </td>
+    </tr>
+  </table>
+</div>
