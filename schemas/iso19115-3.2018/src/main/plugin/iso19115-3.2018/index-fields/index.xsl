@@ -1510,7 +1510,7 @@
         <xsl:for-each select="$instruments">
           {
               <xsl:for-each select="*:identifier">
-                "code": "<xsl:value-of select="*/*:code/*/text()"/>"
+                "code": "<xsl:value-of select="util:escapeForJson(*/*:code/*/text())"/>"
               </xsl:for-each>
               <xsl:for-each select="*:mountedOn/*/*:identifier">
                 ,"mountedOn": "<xsl:value-of select="*/*:code/*/text()"/>"
