@@ -24,84 +24,93 @@ package org.fao.geonet.kernel.security.openidconnect;
 
 import org.junit.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
-import org.springframework.mock.web.MockHttpServletResponse;
-import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
-import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
-
-import java.lang.reflect.Method;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.mock;
 
 public class GeonetworkOAuth2LoginAuthenticationFilterTest {
 
     @Test
-    public void sendSafeRedirectAcceptsRelativePath() throws Exception {
+    public void resolveSafeRedirectTargetAcceptsRelativePathInContext() {
         MockHttpServletRequest request = createRequest();
 
-        String result = redirectTo("/geonetwork/srv/eng/catalog.search#/map", request);
+        String result = GeonetworkOAuth2LoginAuthenticationFilter.resolveSafeRedirectTarget(
+            request,
+            "/geonetwork/srv/eng/catalog.search#/map"
+        );
 
         assertEquals("/geonetwork/srv/eng/catalog.search#/map", result);
     }
 
     @Test
-    public void sendSafeRedirectAcceptsSameOriginAbsoluteUrl() throws Exception {
+    public void resolveSafeRedirectTargetAcceptsSameOriginAbsoluteUrl() {
         MockHttpServletRequest request = createRequest();
 
-        String result = redirectTo(
-            "https://localhost:8443/geonetwork/srv/eng/catalog.search?foo=bar",
-            request
+        String result = GeonetworkOAuth2LoginAuthenticationFilter.resolveSafeRedirectTarget(
+            request,
+            "https://localhost:8443/geonetwork/srv/eng/catalog.search?foo=bar"
         );
 
         assertEquals("/geonetwork/srv/eng/catalog.search?foo=bar", result);
     }
 
     @Test
-    public void sendSafeRedirectRejectsExternalAbsoluteUrl() throws Exception {
+    public void resolveSafeRedirectTargetRejectsExternalAbsoluteUrl() {
         MockHttpServletRequest request = createRequest();
 
-        String result = redirectTo(
-            "https://evil.example/geonetwork/srv/eng/catalog.search",
-            request
+        String result = GeonetworkOAuth2LoginAuthenticationFilter.resolveSafeRedirectTarget(
+            request,
+            "https://evil.example/geonetwork/srv/eng/catalog.search"
         );
 
         assertEquals("/", result);
     }
 
     @Test
-    public void sendSafeRedirectRejectsProtocolRelativeUrl() throws Exception {
+    public void resolveSafeRedirectTargetRejectsProtocolRelativeUrl() {
         MockHttpServletRequest request = createRequest();
 
-        String result = redirectTo("//evil.example/path", request);
+        String result = GeonetworkOAuth2LoginAuthenticationFilter.resolveSafeRedirectTarget(
+            request,
+            "//evil.example/path"
+        );
 
         assertEquals("/", result);
     }
 
     @Test
-    public void sendSafeRedirectAcceptsPathOutsideContext() throws Exception {
+    public void resolveSafeRedirectTargetRejectsPathOutsideContext() {
         MockHttpServletRequest request = createRequest();
 
-        String result = redirectTo("/other/srv/eng/main.home", request);
+        String result = GeonetworkOAuth2LoginAuthenticationFilter.resolveSafeRedirectTarget(
+            request,
+            "/other/srv/eng/main.home"
+        );
 
-        assertEquals("/other/srv/eng/main.home", result);
+        assertEquals("/", result);
     }
 
-    private String redirectTo(String redirectUrlString, MockHttpServletRequest request) throws Exception {
-        GeonetworkOAuth2LoginAuthenticationFilter filter = new GeonetworkOAuth2LoginAuthenticationFilter(
-            mock(ClientRegistrationRepository.class),
-            mock(OAuth2AuthorizedClientService.class)
+    @Test
+    public void resolveSafeRedirectTargetRejectsSameHostButWrongScheme() {
+        MockHttpServletRequest request = createRequest();
+
+        String result = GeonetworkOAuth2LoginAuthenticationFilter.resolveSafeRedirectTarget(
+            request,
+            "http://localhost:8443/geonetwork/srv/eng/main.home"
         );
 
-        MockHttpServletResponse response = new MockHttpServletResponse();
-        Method method = GeonetworkOAuth2LoginAuthenticationFilter.class.getDeclaredMethod(
-            "sendSafeRedirect",
-            javax.servlet.http.HttpServletRequest.class,
-            javax.servlet.http.HttpServletResponse.class,
-            String.class
+        assertEquals("/", result);
+    }
+
+    @Test
+    public void resolveSafeRedirectTargetRejectsSameHostButWrongPort() {
+        MockHttpServletRequest request = createRequest();
+
+        String result = GeonetworkOAuth2LoginAuthenticationFilter.resolveSafeRedirectTarget(
+            request,
+            "https://localhost:443/geonetwork/srv/eng/main.home"
         );
-        method.setAccessible(true);
-        method.invoke(filter, request, response, redirectUrlString);
-        return response.getRedirectedUrl();
+
+        assertEquals("/", result);
     }
 
     private MockHttpServletRequest createRequest() {

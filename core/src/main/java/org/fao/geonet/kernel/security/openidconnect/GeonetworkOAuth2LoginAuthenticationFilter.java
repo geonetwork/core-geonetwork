@@ -161,9 +161,17 @@ public class GeonetworkOAuth2LoginAuthenticationFilter extends OAuth2LoginAuthen
                 }
             }
 
+            redirectURL = validateAndNormalizeRedirectUrl(
+                redirectURL,
+                request.getScheme(),
+                request.getServerName(),
+                request.getServerPort(),
+                request.getContextPath()
+            );
+
             if (redirectURL == null) {
-                Log.debug(Geonet.SECURITY, "No redirect URL found, defaulting to root context");
-                redirectURL = request.getContextPath();
+                Log.debug(Geonet.SECURITY, "No valid redirect URL found, defaulting to root context");
+                redirectURL = StringUtils.defaultIfBlank(request.getContextPath(), SAFE_REDIRECT_FALLBACK);
             }
 
             sendSafeRedirect(request, response, redirectURL);
@@ -221,30 +229,103 @@ public class GeonetworkOAuth2LoginAuthenticationFilter extends OAuth2LoginAuthen
         }
     }
 
+    private static final String SAFE_REDIRECT_FALLBACK = "/";
+
     private void sendSafeRedirect(HttpServletRequest request, HttpServletResponse response, String redirectUrlString)
         throws IOException {
-        try {
-            URI uri = new URI(redirectUrlString);
-            String target;
+        String target = resolveSafeRedirectTarget(request, redirectUrlString);
+        Log.info(Geonet.SECURITY, "Redirecting to " + target);
+        response.sendRedirect(target);
+    }
 
+    static String resolveSafeRedirectTarget(HttpServletRequest request, String redirectUrlString) {
+        String target = validateAndNormalizeRedirectUrl(
+            redirectUrlString,
+            request.getScheme(),
+            request.getServerName(),
+            request.getServerPort(),
+            request.getContextPath()
+        );
+
+        return StringUtils.defaultIfBlank(target, SAFE_REDIRECT_FALLBACK);
+    }
+
+    static String validateAndNormalizeRedirectUrl(String redirectUrlString,
+                                                  String expectedScheme,
+                                                  String expectedHost,
+                                                  int expectedPort,
+                                                  String expectedContextPath) {
+        if (StringUtils.isBlank(redirectUrlString)) {
+            return null;
+        }
+
+        try {
+            URI uri = new URI(redirectUrlString.trim());
             if (!uri.isAbsolute()) {
-                if (!redirectUrlString.startsWith("/") || redirectUrlString.startsWith("//")) {
-                    throw new URISyntaxException(redirectUrlString, "Invalid relative redirect");
-                }
-                target = redirectUrlString;
-            } else if (request.getServerName().equalsIgnoreCase(uri.getHost())) {
-                target = (uri.getRawPath() == null ? "/" : uri.getRawPath())
-                    + (uri.getRawQuery() != null ? "?" + uri.getRawQuery() : "")
-                    + (uri.getRawFragment() != null ? "#" + uri.getRawFragment() : "");
-            } else {
-                target = "/";
+                return normalizeRelativeRedirect(expectedContextPath, redirectUrlString.trim());
             }
 
-            Log.info(Geonet.SECURITY, "Redirecting to " + target);
-            response.sendRedirect(target);
+            if (!isSameApplicationOrigin(expectedScheme, expectedHost, expectedPort, uri)) {
+                return null;
+            }
+
+            String target = (uri.getRawPath() == null ? "/" : uri.getRawPath())
+                + (uri.getRawQuery() != null ? "?" + uri.getRawQuery() : "")
+                + (uri.getRawFragment() != null ? "#" + uri.getRawFragment() : "");
+
+            return normalizeRelativeRedirect(expectedContextPath, target);
         } catch (URISyntaxException e) {
-            response.sendRedirect("/");
+            return null;
         }
+    }
+
+    private static String normalizeRelativeRedirect(String contextPath, String target) {
+        if (StringUtils.isBlank(target)) {
+            return null;
+        }
+
+        if (!target.startsWith("/") || target.startsWith("//") || target.contains("\\")) {
+            return null;
+        }
+
+        if (StringUtils.isNotBlank(contextPath) && !"/".equals(contextPath)) {
+            if (!target.equals(contextPath) && !target.startsWith(contextPath + "/")) {
+                return null;
+            }
+        }
+
+        return target;
+    }
+
+    private static boolean isSameApplicationOrigin(String expectedScheme, String expectedHost, int expectedPort, URI uri) {
+        String uriScheme = uri.getScheme();
+        String uriHost = uri.getHost();
+
+        if (uri.getUserInfo() != null || uriScheme == null || uriHost == null) {
+            return false;
+        }
+
+        if (!"http".equalsIgnoreCase(uriScheme) && !"https".equalsIgnoreCase(uriScheme)) {
+            return false;
+        }
+
+        if (StringUtils.isBlank(expectedHost) || !expectedHost.equalsIgnoreCase(uriHost)) {
+            return false;
+        }
+
+        if (StringUtils.isBlank(expectedScheme) || !expectedScheme.equalsIgnoreCase(uriScheme)) {
+            return false;
+        }
+
+        return normalizePort(expectedScheme, expectedPort)
+            == normalizePort(uriScheme, uri.getPort());
+    }
+
+    private static int normalizePort(String scheme, int port) {
+        if (port != -1) {
+            return port;
+        }
+        return "https".equalsIgnoreCase(scheme) ? 443 : 80;
     }
 
 }
