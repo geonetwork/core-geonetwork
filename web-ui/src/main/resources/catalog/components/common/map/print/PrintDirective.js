@@ -438,13 +438,25 @@
             var stylesDict = {};
             var styleId = 0;
 
+            var defaultStyles = [
+              new ol.style.Style({
+                fill: new ol.style.Fill({ color: "rgba(255,255,255,0.4)" }),
+                stroke: new ol.style.Stroke({ color: "#3399CC", width: 1.25 }),
+                image: new ol.style.Circle({
+                  fill: new ol.style.Fill({ color: "rgba(255,255,255,0.4)" }),
+                  stroke: new ol.style.Stroke({ color: "#3399CC", width: 1.25 }),
+                  radius: 5
+                })
+              })
+            ];
+
             angular.forEach(features, function (feature) {
               var encStyle = {
                 id: styleId
               };
               var styles = layer.getStyleFunction()
                 ? layer.getStyleFunction()(feature)
-                : ol.feature.defaultStyleFunction(feature);
+                : defaultStyles;
 
               var geometry = feature.getGeometry();
 

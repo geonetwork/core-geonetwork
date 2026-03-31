@@ -41,6 +41,18 @@
       var UNITS_RATIO = 39.37;
       var METERS_PER_DEGREE = 111319.49079327358;
 
+      var defaultStyles = [
+        new ol.style.Style({
+          fill: new ol.style.Fill({ color: "rgba(255,255,255,0.4)" }),
+          stroke: new ol.style.Stroke({ color: "#3399CC", width: 1.25 }),
+          image: new ol.style.Circle({
+            fill: new ol.style.Fill({ color: "rgba(255,255,255,0.4)" }),
+            stroke: new ol.style.Stroke({ color: "#3399CC", width: 1.25 }),
+            radius: 5
+          })
+        })
+      ];
+
       /**
        * Get the map coordinates of the center of the given print rectangle.
        * @param {ol.map} map
@@ -180,7 +192,7 @@
               } else if (featureStyle) {
                 styles = [featureStyle];
               } else {
-                styles = ol.style.defaultStyleFunction(feature);
+                styles = defaultStyles;
               }
 
               var geometry = feature.getGeometry();
