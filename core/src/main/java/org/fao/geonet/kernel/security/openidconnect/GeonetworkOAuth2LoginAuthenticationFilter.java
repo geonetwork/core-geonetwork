@@ -131,33 +131,42 @@ public class GeonetworkOAuth2LoginAuthenticationFilter extends OAuth2LoginAuthen
                 SavedRequest savedRequest = requestCache.getRequest(request, response);
                 if (savedRequest != null) {
                     redirectURL = savedRequest.getRedirectUrl();
-                    Log.debug(Geonet.SECURITY, "Retrieved original request from SavedRequest: " + redirectURL);
+                    if (redirectURL != null) {
+                        Log.debug(Geonet.SECURITY, "Retrieved original request from SavedRequest: " + redirectURL);
+                    } else {
+                        Log.debug(Geonet.SECURITY, "SavedRequest does not contain a redirect URL");
+                    }
                 } else {
                     Log.debug(Geonet.SECURITY, "No SavedRequest found in RequestCache");
                 }
 
                 if (redirectURL != null) {
-                    Log.info(Geonet.SECURITY, "Redirecting to " + redirectURL);
-
                     // Removing original request, since we want to
                     // retain current headers.
                     // If request remains in cache, requestCacheFilter
                     // will reinstate the original headers and we don't
                     // want it.
                     requestCache.removeRequest(request, response);
-                } else {
-                    Log.debug(Geonet.SECURITY, "No valid SavedRequest redirect found. Redirecting to context path");
                 }
             } else {
                 Log.debug(Geonet.SECURITY, "RequestCache is not available");
+            }
 
+            if (redirectURL == null) {
                 redirectURL = findQueryParameter(request, "redirectUrl");
                 if (redirectURL != null) {
-                    Log.debug(Geonet.SECURITY, "Retrieved redirect URL from query parameter: " + redirectURL);
+                    Log.debug(Geonet.SECURITY, "Found redirect URL in query parameter: " + redirectURL);
+                } else {
+                    Log.debug(Geonet.SECURITY, "No redirect URL found in query parameters");
                 }
             }
 
-            sendSafeRedirect(response, redirectURL);
+            if (redirectURL == null) {
+                Log.debug(Geonet.SECURITY, "No redirect URL found, defaulting to root context");
+                redirectURL = request.getContextPath();
+            }
+
+            sendSafeRedirect(request, response, redirectURL);
 
             // Set users preferred locale if it exists. - cf. keycloak
             String localeString = oidcUser.getLocale();
@@ -212,24 +221,30 @@ public class GeonetworkOAuth2LoginAuthenticationFilter extends OAuth2LoginAuthen
         }
     }
 
-    private void sendSafeRedirect(HttpServletResponse response, String redirectUrlString)
+    private void sendSafeRedirect(HttpServletRequest request, HttpServletResponse response, String redirectUrlString)
         throws IOException {
         try {
-            URI url = new URI(redirectUrlString);
+            URI uri = new URI(redirectUrlString);
+            String target;
 
-            if (!url.isAbsolute()) {
-                response.sendRedirect(url.toString());
-                return;
+            if (!uri.isAbsolute()) {
+                if (!redirectUrlString.startsWith("/") || redirectUrlString.startsWith("//")) {
+                    throw new URISyntaxException(redirectUrlString, "Invalid relative redirect");
+                }
+                target = redirectUrlString;
+            } else if (request.getServerName().equalsIgnoreCase(uri.getHost())) {
+                target = (uri.getRawPath() == null ? "/" : uri.getRawPath())
+                    + (uri.getRawQuery() != null ? "?" + uri.getRawQuery() : "")
+                    + (uri.getRawFragment() != null ? "#" + uri.getRawFragment() : "");
+            } else {
+                target = "/";
             }
 
-            if ("example.org".equalsIgnoreCase(url.getHost())) {
-                response.sendRedirect(url.toString());
-            }
+            Log.info(Geonet.SECURITY, "Redirecting to " + target);
+            response.sendRedirect(target);
         } catch (URISyntaxException e) {
-            // TODO: Implement
+            response.sendRedirect("/");
         }
-
-
     }
 
 }
