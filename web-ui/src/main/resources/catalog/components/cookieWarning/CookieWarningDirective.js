@@ -35,7 +35,12 @@
         restrict: "AE",
         replace: true,
         scope: {},
-        templateUrl: "../../catalog/components/cookieWarning/partials/cookieWarning.html",
+        templateUrl: function (elem, attrs) {
+          return (
+            attrs.template ||
+            "../../catalog/components/cookieWarning/partials/cookieWarning.html"
+          );
+        },
         link: function (scope, element, attrs, ctrl) {
           scope.cookieWarningEnabledInSettings =
             gnGlobalSettings.gnCfg.mods.cookieWarning.enabled;
