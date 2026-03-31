@@ -941,10 +941,10 @@ public final class XslUtil {
     }
 
     /**
-     * Return 2 iso lang code from a 3 iso lang code. If any error occurs return "".
+     * Return 2 iso lang code (ISO 639-1 two-letter code) from a 3 iso lang code. If any error occurs return "".
      *
-     * @param iso3LangCode The 2 iso lang code
-     * @return The related 3 iso lang code
+     * @param iso3LangCode The 3 chars iso lang code
+     * @return The related 2 chars iso lang code
      */
     public static
     @Nonnull
