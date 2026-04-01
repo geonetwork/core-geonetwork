@@ -690,6 +690,10 @@
                 sortOrder: ""
               },
               {
+                sortBy: "resourceTitleObject.default.sort",
+                sortOrder: "desc"
+              },
+              {
                 sortBy: "rating",
                 sortOrder: "desc"
               },
@@ -1197,6 +1201,10 @@
               {
                 sortBy: "resourceTitleObject.default.sort",
                 sortOrder: ""
+              },
+              {
+                sortBy: "resourceTitleObject.default.sort",
+                sortOrder: "desc"
               },
               {
                 sortBy: "recordOwner",
