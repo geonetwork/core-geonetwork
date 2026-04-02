@@ -24,10 +24,92 @@ package org.fao.geonet.kernel.security.openidconnect;
 
 import org.junit.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
+import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
+import org.springframework.security.web.savedrequest.RequestCache;
+import org.springframework.security.web.savedrequest.SavedRequest;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 public class GeonetworkOAuth2LoginAuthenticationFilterTest {
+
+    @Test
+    public void resolvePostLoginTargetUsesValidSavedRequestRedirect() {
+        MockHttpServletRequest request = createRequest();
+        MockHttpServletResponse response = new MockHttpServletResponse();
+        GeonetworkOAuth2LoginAuthenticationFilter filter = createFilter();
+
+        RequestCache requestCache = mock(RequestCache.class);
+        SavedRequest savedRequest = mock(SavedRequest.class);
+        when(savedRequest.getRedirectUrl()).thenReturn("/geonetwork/srv/eng/main.home");
+        when(requestCache.getRequest(request, response)).thenReturn(savedRequest);
+        filter.requestCache = requestCache;
+
+        String target = filter.resolvePostLoginTarget(request, response);
+
+        assertEquals("/geonetwork/srv/eng/main.home", target);
+        verify(requestCache).removeRequest(request, response);
+    }
+
+    @Test
+    public void resolvePostLoginTargetFallsBackToValidQueryParam() {
+        MockHttpServletRequest request = createRequest();
+        request.setQueryString("redirectUrl=%2Fgeonetwork%2Fsrv%2Feng%2Fcatalog.search");
+        MockHttpServletResponse response = new MockHttpServletResponse();
+        GeonetworkOAuth2LoginAuthenticationFilter filter = createFilter();
+
+        RequestCache requestCache = mock(RequestCache.class);
+        when(requestCache.getRequest(request, response)).thenReturn(null);
+        filter.requestCache = requestCache;
+
+        String target = filter.resolvePostLoginTarget(request, response);
+
+        assertEquals("/geonetwork/srv/eng/catalog.search", target);
+        verify(requestCache, never()).removeRequest(request, response);
+    }
+
+    @Test
+    public void resolvePostLoginTargetUsesQueryParamWhenSavedRequestIsInvalid() {
+        MockHttpServletRequest request = createRequest();
+        request.setQueryString("redirectUrl=%2Fgeonetwork%2Fsrv%2Feng%2Fcatalog.search");
+        MockHttpServletResponse response = new MockHttpServletResponse();
+        GeonetworkOAuth2LoginAuthenticationFilter filter = createFilter();
+
+        RequestCache requestCache = mock(RequestCache.class);
+        SavedRequest savedRequest = mock(SavedRequest.class);
+        when(savedRequest.getRedirectUrl()).thenReturn("https://evil.example/phish");
+        when(requestCache.getRequest(request, response)).thenReturn(savedRequest);
+        filter.requestCache = requestCache;
+
+        String target = filter.resolvePostLoginTarget(request, response);
+
+        assertEquals("/geonetwork/srv/eng/catalog.search", target);
+        verify(requestCache).removeRequest(request, response);
+    }
+
+    @Test
+    public void resolvePostLoginTargetPrioritizesSavedRequestOverQueryParam() {
+        MockHttpServletRequest request = createRequest();
+        request.setQueryString("redirectUrl=%2Fgeonetwork%2Fsrv%2Feng%2Fcatalog.search");
+        MockHttpServletResponse response = new MockHttpServletResponse();
+        GeonetworkOAuth2LoginAuthenticationFilter filter = createFilter();
+
+        RequestCache requestCache = mock(RequestCache.class);
+        SavedRequest savedRequest = mock(SavedRequest.class);
+        when(savedRequest.getRedirectUrl()).thenReturn("/geonetwork/srv/eng/main.home");
+        when(requestCache.getRequest(request, response)).thenReturn(savedRequest);
+        filter.requestCache = requestCache;
+
+        String target = filter.resolvePostLoginTarget(request, response);
+
+        assertEquals("/geonetwork/srv/eng/main.home", target);
+        verify(requestCache).removeRequest(request, response);
+    }
 
     @Test
     public void resolveSafeRedirectTargetAcceptsRelativePathInContext() {
@@ -62,7 +144,7 @@ public class GeonetworkOAuth2LoginAuthenticationFilterTest {
             "https://evil.example/geonetwork/srv/eng/catalog.search"
         );
 
-        assertEquals("/", result);
+        assertEquals("/geonetwork", result);
     }
 
     @Test
@@ -74,7 +156,7 @@ public class GeonetworkOAuth2LoginAuthenticationFilterTest {
             "//evil.example/path"
         );
 
-        assertEquals("/", result);
+        assertEquals("/geonetwork", result);
     }
 
     @Test
@@ -86,7 +168,7 @@ public class GeonetworkOAuth2LoginAuthenticationFilterTest {
             "/other/srv/eng/main.home"
         );
 
-        assertEquals("/", result);
+        assertEquals("/geonetwork", result);
     }
 
     @Test
@@ -98,7 +180,7 @@ public class GeonetworkOAuth2LoginAuthenticationFilterTest {
             "http://localhost:8443/geonetwork/srv/eng/main.home"
         );
 
-        assertEquals("/", result);
+        assertEquals("/geonetwork", result);
     }
 
     @Test
@@ -110,7 +192,14 @@ public class GeonetworkOAuth2LoginAuthenticationFilterTest {
             "https://localhost:443/geonetwork/srv/eng/main.home"
         );
 
-        assertEquals("/", result);
+        assertEquals("/geonetwork", result);
+    }
+
+    private GeonetworkOAuth2LoginAuthenticationFilter createFilter() {
+        return new GeonetworkOAuth2LoginAuthenticationFilter(
+            mock(ClientRegistrationRepository.class),
+            mock(OAuth2AuthorizedClientService.class)
+        );
     }
 
     private MockHttpServletRequest createRequest() {
