@@ -232,6 +232,8 @@ Note: this option is only available for databases that have been tested. Those d
 
 *Only set privileges to user's groups*: If enabled then only the groups that the user belongs to will be displayed in the metadata privileges page (unless the user is an Administrator). At the moment this option cannot be disabled and is likely to be deprecated in the next version of GeoNetwork.
 
+*Users can always edit their own metadata*: If enabled (default), users with the Editor or Reviewer profile who own a metadata record can always edit it, regardless of whether they have been granted the editing privilege for that record through their group. When disabled, ownership alone does not grant editing rights — users can only edit metadata if they have explicit editing privileges in the groups where they hold the Editor role. Administrators can always edit any record regardless of this setting.
+
 ## Metadata create
 
 ### Generate UUID
