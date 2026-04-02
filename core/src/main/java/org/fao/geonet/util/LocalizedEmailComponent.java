@@ -288,7 +288,7 @@ public class LocalizedEmailComponent {
             } else {
                 // Replace the link placeholders with index field placeholder so that it isn't interpreted as a MessageFormat arg
                 if (replaceLinks) {
-                    parsedMessage = replaceLinks(parsedMessage);
+                    parsedMessage = replaceLinks(parsedMessage, locale);
                 }
                 parsedMessage = MessageFormat.format(parsedMessage, parsedLocaleEmailParameters);
             }
@@ -303,7 +303,7 @@ public class LocalizedEmailComponent {
 
         // Replace link placeholders
         if (replaceLinks) {
-            parsedMessage = replaceLinks(parsedMessage);
+            parsedMessage = replaceLinks(parsedMessage, locale);
         }
 
         // Replace index field placeholders
@@ -359,11 +359,8 @@ public class LocalizedEmailComponent {
         }
     }
 
-    private String replaceLinks(String message) {
+    private String replaceLinks(String message, Locale locale) {
         SettingManager settingManager = ApplicationContextHolder.get().getBean(SettingManager.class);
-
-        // Get the formatter configured for *links* to records (recordLinkFormatter) from the UI configuration.
-        String recordLinkFormatter = XslUtil.getUiConfigurationJsonProperty(null, "mods.search.formatter.recordLinkFormatter");
 
         // Build the link to replace the {{link}} placeholder
         // Add the uuid placeholder to the link in the specified format
@@ -371,11 +368,7 @@ public class LocalizedEmailComponent {
             .fromHttpUrl(settingManager.getNodeURL())
             .pathSegment("api", "records", replaceLinksWithHtmlFormat ? "{{index:uuid}}" : "'{{index:uuid}}'");
 
-        // When building the record URL, the formatter is passed as the `recordViewFormatter` query parameter
-        // because the API expects that parameter name to decide which formatter to use when displaying the record.
-        if (StringUtils.isNotBlank(recordLinkFormatter)) {
-            uriComponentsBuilder.queryParam("recordViewFormatter", recordLinkFormatter);
-        }
+        uriComponentsBuilder.queryParam("language", locale.getISO3Language());
 
         return message.replace("{{link}}", uriComponentsBuilder.build().toString());
     }
