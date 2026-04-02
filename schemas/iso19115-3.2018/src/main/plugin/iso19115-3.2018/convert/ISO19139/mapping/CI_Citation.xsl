@@ -58,8 +58,8 @@
     <xsl:template match="gmd:CI_Citation" mode="from19139to19115-3.2018">
         <xsl:element name="cit:CI_Citation">
             <xsl:apply-templates mode="from19139to19115-3.2018"/>
-            <!-- Special attention is required for CI_ResponsibleParties that are included in the 
-                CI_Citation only for a URL. These are currently identified as those 
+            <!-- Special attention is required for CI_ResponsibleParties that are included in the
+                CI_Citation only for a URL. These are currently identified as those
                 with no name elements (individualName, organisationName, or positionName)
             -->
             <xsl:for-each
@@ -89,6 +89,7 @@
                             <xsl:with-param name="elementName" select="'cit:dateType'"/>
                             <xsl:with-param name="codeListName" select="'cit:CI_DateTypeCode'"/>
                             <xsl:with-param name="codeListValue" select="gmd:CI_DateTypeCode/@codeListValue"/>
+                            <xsl:with-param name="codeListText" select="gmd:CI_DateTypeCode/text()"/>
                         </xsl:call-template>
                     </xsl:for-each>
                 </cit:CI_Date>
