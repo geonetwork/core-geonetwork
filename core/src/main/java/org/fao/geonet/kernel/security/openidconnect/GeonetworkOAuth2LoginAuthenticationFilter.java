@@ -55,11 +55,6 @@ import java.util.Locale;
 /**
  * This is a OAuth2LoginAuthenticationFilter successfulAuthentication method.
  * See below for details.
- *
- * Redirect handling rules:
- * - Redirect candidates from SavedRequest and query parameters are treated as untrusted.
- * - Untrusted candidates are validated and normalized to an application-local target path.
- * - Only the validated target is passed to HttpServletResponse#sendRedirect.
  */
 public class GeonetworkOAuth2LoginAuthenticationFilter extends OAuth2LoginAuthenticationFilter {
 
@@ -127,11 +122,44 @@ public class GeonetworkOAuth2LoginAuthenticationFilter extends OAuth2LoginAuthen
         try{
             SecurityContextHolder.getContext().setAuthentication(authResult);
 
-            // Resolve untrusted redirect inputs (SavedRequest first, then query param)
-            // into a validated local target.
-            String target = resolvePostLoginTarget(request, response);
-            Log.info(Geonet.SECURITY, "Redirecting to " + target);
-            response.sendRedirect(target);
+            // Use Spring Security's SavedRequest mechanism to get the original request URL
+            // The request should have been saved by GeonetworkOidcPreAuthActionsLoginFilter before
+            // redirecting the user to the OIDC provider login
+            String redirectURL = null;
+
+            if (requestCache != null) {
+                SavedRequest savedRequest = requestCache.getRequest(request, response);
+                if (savedRequest != null) {
+                    redirectURL = savedRequest.getRedirectUrl();
+                    Log.debug(Geonet.SECURITY, "Retrieved original request from SavedRequest: " + redirectURL);
+                } else {
+                    Log.debug(Geonet.SECURITY, "No SavedRequest found in RequestCache");
+                }
+
+                if (redirectURL != null) {
+                    Log.info(Geonet.SECURITY, "Redirecting to " + redirectURL);
+
+                    // Removing original request, since we want to
+                    // retain current headers.
+                    // If request remains in cache, requestCacheFilter
+                    // will reinstate the original headers and we don't
+                    // want it.
+                    requestCache.removeRequest(request, response);
+
+                    redirectIfSafeOrFallback(redirectURL, request, response);
+                }
+            } else {
+                Log.debug(Geonet.SECURITY, "RequestCache is not available");
+
+                redirectURL = findQueryParameter(request, "redirectUrl");
+                if (redirectURL != null) {
+                    Log.debug(Geonet.SECURITY, "Retrieved redirect URL from query parameter: " + redirectURL);
+
+                    redirectIfSafeOrFallback(redirectURL, request, response);
+                } else {
+                    response.sendRedirect(request.getContextPath());
+                }
+            }
 
             // Set users preferred locale if it exists. - cf. keycloak
             String localeString = oidcUser.getLocale();
@@ -165,8 +193,9 @@ public class GeonetworkOAuth2LoginAuthenticationFilter extends OAuth2LoginAuthen
 
     }
 
-    // Find redirectUrl query parameter value. Returns null when missing/invalid.
-    String findRedirectQueryParameter(HttpServletRequest request) {
+    // given a request and URL parameter name, find its value.
+    // returns null if not found.
+    String findQueryParameter(HttpServletRequest request, String parmName) {
         if (request.getQueryString() == null) {
             return null;
         }
@@ -175,195 +204,34 @@ public class GeonetworkOAuth2LoginAuthenticationFilter extends OAuth2LoginAuthen
             MultiValueMap<String, String> parameters =
                 UriComponentsBuilder.fromUriString(uri).build().getQueryParams();
 
-            if (!parameters.containsKey("redirectUrl")) {
+            if (!parameters.containsKey(parmName)) {
                 return null;
             }
-            return parameters.getFirst("redirectUrl");
+            String result = parameters.getFirst(parmName);
+            return result;
         } catch (Exception e) {
             return null;
         }
     }
 
-    private static final String SAFE_REDIRECT_FALLBACK = "/";
-
-    /**
-     * Resolve the post-login redirect target from untrusted redirect candidates.
-     *
-     * Source priority:
-     * 1) SavedRequest redirect URL
-     * 2) redirectUrl query parameter
-     *
-     * Both sources go through the same validation and normalization flow.
-     * Returns a safe local target path, defaulting to context path or "/".
-     */
-    String resolvePostLoginTarget(HttpServletRequest request, HttpServletResponse response) {
-        String redirectUrl = getSavedRequestRedirectUrl(request, response);
-        String target = validateAndNormalizeRedirectUrl(
-            redirectUrl,
-            request.getScheme(),
-            request.getServerName(),
-            request.getServerPort(),
-            request.getContextPath()
-        );
-
-        if (target == null) {
-            redirectUrl = findRedirectQueryParameter(request);
-            if (redirectUrl != null) {
-                Log.debug(Geonet.SECURITY, "Found untrusted redirect URL in query parameter");
-            } else {
-                Log.debug(Geonet.SECURITY, "No redirect URL found in query parameters");
-            }
-            target = validateAndNormalizeRedirectUrl(
-                redirectUrl,
-                request.getScheme(),
-                request.getServerName(),
-                request.getServerPort(),
-                request.getContextPath()
-            );
-        }
-
-        if (target == null) {
-            Log.debug(Geonet.SECURITY, "No valid redirect URL found, defaulting to context path");
-            target = StringUtils.defaultIfBlank(request.getContextPath(), SAFE_REDIRECT_FALLBACK);
-        }
-
-        return target;
-    }
-
-    /**
-     * Read redirect URL from Spring Security RequestCache.
-     *
-     * The returned value is still untrusted and must be validated before redirecting.
-     */
-    private String getSavedRequestRedirectUrl(HttpServletRequest request, HttpServletResponse response) {
-        if (requestCache == null) {
-            Log.debug(Geonet.SECURITY, "RequestCache is not available");
-            return null;
-        }
-
-        SavedRequest savedRequest = requestCache.getRequest(request, response);
-        if (savedRequest == null) {
-            Log.debug(Geonet.SECURITY, "No SavedRequest found in RequestCache");
-            return null;
-        }
-
-        // Removing original request, since we want to retain current headers.
-        // If request remains in cache, requestCacheFilter will reinstate the original headers.
-        requestCache.removeRequest(request, response);
-
-        String redirectUrl = savedRequest.getRedirectUrl();
-        if (redirectUrl != null) {
-            Log.debug(Geonet.SECURITY, "Retrieved untrusted redirect URL from SavedRequest");
-        } else {
-            Log.debug(Geonet.SECURITY, "SavedRequest does not contain a redirect URL");
-        }
-
-        return redirectUrl;
-    }
-
-    static String resolveSafeRedirectTarget(HttpServletRequest request, String redirectUrlString) {
-        String target = validateAndNormalizeRedirectUrl(
-            redirectUrlString,
-            request.getScheme(),
-            request.getServerName(),
-            request.getServerPort(),
-            request.getContextPath()
-        );
-        return StringUtils.defaultIfBlank(target,
-            StringUtils.defaultIfBlank(request.getContextPath(), SAFE_REDIRECT_FALLBACK));
-    }
-
-    /**
-     * Validate and normalize an untrusted redirect value.
-     *
-     * Accepted values:
-     * - Relative targets starting with '/'
-     * - Absolute same-origin http/https URLs that normalize to a local path
-     *
-     * Rejected values include blank values, protocol-relative URLs, backslash paths,
-     * non http/https schemes, and cross-origin absolute URLs.
-     *
-     * @return normalized application-local target path, or null if invalid.
-     */
-    static String validateAndNormalizeRedirectUrl(String redirectUrlString,
-                                                  String expectedScheme,
-                                                  String expectedHost,
-                                                  int expectedPort,
-                                                  String expectedContextPath) {
-        if (StringUtils.isBlank(redirectUrlString)) {
-            return null;
-        }
-
+    void redirectIfSafeOrFallback(String redirectUrl, HttpServletRequest request, HttpServletResponse response) throws IOException {
         try {
-            URI uri = new URI(redirectUrlString.trim());
-            if (!uri.isAbsolute()) {
-                return normalizeRelativeRedirect(expectedContextPath, redirectUrlString.trim());
+            URI url = new URI(redirectUrl);
+            if (isAllowedRedirectTarget(url, request)) {
+                response.sendRedirect(url.toString());
+                return;
             }
 
-            if (!isSameApplicationOrigin(expectedScheme, expectedHost, expectedPort, uri)) {
-                return null;
-            }
-
-            String target = (uri.getRawPath() == null ? "/" : uri.getRawPath())
-                + (uri.getRawQuery() != null ? "?" + uri.getRawQuery() : "")
-                + (uri.getRawFragment() != null ? "#" + uri.getRawFragment() : "");
-
-            return normalizeRelativeRedirect(expectedContextPath, target);
+            Log.warning(Geonet.SECURITY, "Rejected redirect URL with different host: '" + redirectUrl + "'.");
         } catch (URISyntaxException e) {
-            return null;
+            Log.warning(Geonet.SECURITY, "Invalid redirect URL '" + redirectUrl + "'.");
         }
+
+        response.sendRedirect(request.getContextPath());
     }
 
-    private static String normalizeRelativeRedirect(String contextPath, String target) {
-        if (StringUtils.isBlank(target)) {
-            return null;
-        }
-
-        // Reject malformed or protocol-relative paths and Windows-style separators.
-        if (!target.startsWith("/") || target.startsWith("//") || target.contains("\\")) {
-            return null;
-        }
-
-        // Keep redirects inside the application context path when one is configured.
-        if (StringUtils.isNotBlank(contextPath) && !"/".equals(contextPath)) {
-            if (!target.equals(contextPath) && !target.startsWith(contextPath + "/")) {
-                return null;
-            }
-        }
-
-        return target;
+    private boolean isAllowedRedirectTarget(URI redirectUri, HttpServletRequest request) {
+        String currentRequestHost = request.getServerName();
+        return !redirectUri.isAbsolute() || currentRequestHost.equalsIgnoreCase(redirectUri.getHost());
     }
-
-    private static boolean isSameApplicationOrigin(String expectedScheme, String expectedHost, int expectedPort, URI uri) {
-        String uriScheme = uri.getScheme();
-        String uriHost = uri.getHost();
-
-        if (uri.getUserInfo() != null || uriScheme == null || uriHost == null) {
-            return false;
-        }
-
-        if (!"http".equalsIgnoreCase(uriScheme) && !"https".equalsIgnoreCase(uriScheme)) {
-            return false;
-        }
-
-        if (StringUtils.isBlank(expectedHost) || !expectedHost.equalsIgnoreCase(uriHost)) {
-            return false;
-        }
-
-        if (StringUtils.isBlank(expectedScheme) || !expectedScheme.equalsIgnoreCase(uriScheme)) {
-            return false;
-        }
-
-        // Compare normalized ports so implicit defaults (80/443) match explicit values.
-        return normalizePort(expectedScheme, expectedPort)
-            == normalizePort(uriScheme, uri.getPort());
-    }
-
-    private static int normalizePort(String scheme, int port) {
-        if (port != -1) {
-            return port;
-        }
-        return "https".equalsIgnoreCase(scheme) ? 443 : 80;
-    }
-
 }
