@@ -42,3 +42,5 @@ Thank you for contributing to GeoNetwork!
 * New libraries: Do not commit jars, use maven `pom.xml` to declare dependencies where needed, and `src/pom.xml` dependency management to manage version numbers. Use build documentation to share what the library does in GeoNetwork, how it interacts or extends GeoNetwork, with references to official library tutorials or documentation.
 
 For more information see [How to contribute](https://github.com/geonetwork/core-geonetwork/wiki/How-to-contribute) (wiki).
+
+Please also carefully read our [AI/LLM use policy](https://github.com/geonetwork/core-geonetwork/blob/main/AI_POLICY.md).
