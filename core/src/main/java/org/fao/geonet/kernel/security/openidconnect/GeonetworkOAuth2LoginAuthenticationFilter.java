@@ -37,6 +37,8 @@ import org.springframework.security.oauth2.client.authentication.OAuth2Authentic
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.security.oauth2.client.web.OAuth2LoginAuthenticationFilter;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
+import org.springframework.security.web.savedrequest.RequestCache;
+import org.springframework.security.web.savedrequest.SavedRequest;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -58,6 +60,9 @@ public class GeonetworkOAuth2LoginAuthenticationFilter extends OAuth2LoginAuthen
 
     @Autowired
     OAuth2SecurityProviderUtil oAuth2SecurityProviderUtil;
+
+    @Autowired
+    RequestCache requestCache;
 
     public GeonetworkOAuth2LoginAuthenticationFilter(ClientRegistrationRepository clientRegistrationRepository, OAuth2AuthorizedClientService authorizedClientService) {
         super(clientRegistrationRepository, authorizedClientService);
@@ -117,24 +122,43 @@ public class GeonetworkOAuth2LoginAuthenticationFilter extends OAuth2LoginAuthen
         try{
             SecurityContextHolder.getContext().setAuthentication(authResult);
 
+            // Use Spring Security's SavedRequest mechanism to get the original request URL
+            // The request should have been saved by GeonetworkOidcPreAuthActionsLoginFilter before
+            // redirecting the user to the OIDC provider login
+            String redirectURL = null;
 
-            //cf GN keycloak
-            String redirectURL = findQueryParameter(request, "redirectUrl");
-            if (redirectURL != null) {
-                try {
-                    URI redirectUri = new URI(redirectURL);
-                    if (redirectUri != null && !redirectUri.isAbsolute()) {
-                        response.sendRedirect(redirectUri.toString());
-                    } else {
-                        // If the redirect url ends up being null or absolute url then lets redirect back to the context home.
-                        Log.warning(Geonet.SECURITY, "Failed to perform login redirect to '" + redirectURL + "'. Redirected to context home");
-                        response.sendRedirect(request.getContextPath());
-                    }
-                } catch (URISyntaxException e) {
-                    response.sendRedirect(request.getContextPath());
+            if (requestCache != null) {
+                SavedRequest savedRequest = requestCache.getRequest(request, response);
+                if (savedRequest != null) {
+                    redirectURL = savedRequest.getRedirectUrl();
+                    Log.debug(Geonet.SECURITY, "Retrieved original request from SavedRequest: " + redirectURL);
+                } else {
+                    Log.debug(Geonet.SECURITY, "No SavedRequest found in RequestCache");
+                }
+
+                if (redirectURL != null) {
+                    Log.info(Geonet.SECURITY, "Redirecting to " + redirectURL);
+
+                    // Removing original request, since we want to
+                    // retain current headers.
+                    // If request remains in cache, requestCacheFilter
+                    // will reinstate the original headers and we don't
+                    // want it.
+                    requestCache.removeRequest(request, response);
+
+                    redirectIfSafeOrFallback(redirectURL, request, response);
                 }
             } else {
-                response.sendRedirect(request.getContextPath());
+                Log.debug(Geonet.SECURITY, "RequestCache is not available");
+
+                redirectURL = findQueryParameter(request, "redirectUrl");
+                if (redirectURL != null) {
+                    Log.debug(Geonet.SECURITY, "Retrieved redirect URL from query parameter: " + redirectURL);
+
+                    redirectIfSafeOrFallback(redirectURL, request, response);
+                } else {
+                    response.sendRedirect(request.getContextPath());
+                }
             }
 
             // Set users preferred locale if it exists. - cf. keycloak
@@ -190,4 +214,24 @@ public class GeonetworkOAuth2LoginAuthenticationFilter extends OAuth2LoginAuthen
         }
     }
 
+    void redirectIfSafeOrFallback(String redirectUrl, HttpServletRequest request, HttpServletResponse response) throws IOException {
+        try {
+            URI url = new URI(redirectUrl);
+            if (isAllowedRedirectTarget(url, request)) {
+                response.sendRedirect(url.toString());
+                return;
+            }
+
+            Log.warning(Geonet.SECURITY, "Rejected redirect URL with different host: '" + redirectUrl + "'.");
+        } catch (URISyntaxException e) {
+            Log.warning(Geonet.SECURITY, "Invalid redirect URL '" + redirectUrl + "'.");
+        }
+
+        response.sendRedirect(request.getContextPath());
+    }
+
+    private boolean isAllowedRedirectTarget(URI redirectUri, HttpServletRequest request) {
+        String currentRequestHost = request.getServerName();
+        return !redirectUri.isAbsolute() || currentRequestHost.equalsIgnoreCase(redirectUri.getHost());
+    }
 }
