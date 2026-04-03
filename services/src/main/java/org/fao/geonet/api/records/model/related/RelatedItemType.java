@@ -19,21 +19,43 @@ public enum RelatedItemType {
      */
     parent,
     /**
-     * When 2 records share the same parents, they are siblings.
-     * Siblings are records having parentUuid index field set to the same parent UUID.
+     * When 2 records share the same parents.
      */
     brothersAndSisters,
     /**
      * Aggregation info in ISO19139, Associated resources in ISO19115-3,
-     * isPartOf in Dublin core
+     * isPartOf in Dublin core.
      */
     siblings,
     /**
      * Associated is reverse direction of siblings.
      * Record having agg_associated index field set to the record of interest.
-     * The relation does not contains details about association and initiative type.
+     * The relation does not contain details about association and initiative type.
      */
     associated,
+    /**
+     * Return all revisions for a record. Revision link is made using
+     * associated records in ISO19115-3 with revisionOf codelist value
+     * for association type.
+     * <pre>
+     *    <mri:associatedResource>
+     *      <mri:MD_AssociatedResource>
+     *         <mri:associationType>
+     *            <mri:DS_AssociationTypeCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#DS_AssociationTypeCode"
+     *                                        codeListValue="revisionOf"/>
+     *         </mri:associationType>
+     *         <mri:metadataReference uuidref="481df889-4f3d-4290-bd89-b7f3ad11a2f1"
+     *                                xlink:href="http://localhost:8080/geonetwork/srv/api/records/481df889-4f3d-4290-bd89-b7f3ad11a2f1"/>
+     *      </mri:MD_AssociatedResource>
+     *   </mri:associatedResource>
+     * </pre>
+     *
+     * In the index document, the field agg_associated_revisionOf
+     * is pointing to the previous version of a record.
+     */
+    versions,
+    next,
+    previous,
     /**
      * All services having recordOperateOn index field pointing to record of interest.
      */
