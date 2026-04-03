@@ -170,8 +170,6 @@ public class UserSpecsTest extends AbstractSpringDataTest {
         user3.setEnabled(false);
         _userRepo.save(user3);
 
-        final Specification<User> spec = hasEnabled(true);
-
         final List<User> enabled = _userRepo.findAll(hasEnabled(true));
         assertEquals(2, enabled.size());
 

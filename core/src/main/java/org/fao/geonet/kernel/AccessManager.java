@@ -83,6 +83,9 @@ public class AccessManager {
     UserRepository userRepository;
 
     public static Stream<AnonymousAccessLink> anonymousAccessLinkStreamFromSecurityContext() {
+        if (SecurityContextHolder.getContext().getAuthentication() == null) {
+             return Stream.empty();
+        }
         return SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream()
                 .filter(ViewMdGrantedAuthority.class::isInstance)
                 .map(ViewMdGrantedAuthority.class::cast)
