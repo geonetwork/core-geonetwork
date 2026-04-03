@@ -247,6 +247,8 @@
     "selectAll": "All",
     "selectNone": "None",
     "send": "Send",
+    "associated": "Associated resources",
+    "versions": "Versions",
     "startVersioning": "Start Versioning",
     "startVersioning-help": "Save version history (beta)",
     "setMetadataGroup": "Change metadata group",

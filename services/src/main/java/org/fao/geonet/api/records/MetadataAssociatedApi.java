@@ -91,8 +91,8 @@ public class MetadataAssociatedApi {
 
     @io.swagger.v3.oas.annotations.Operation(
         summary = "Get record associated resources",
-        description = "Retrieve related services, datasets, sources, ... " +
-            "to this records.<br/>" +
+        description = "Retrieve related resources for a record. " +
+            "There are 2 options to access related resources. One is using this operation, the other is to use the `_search` endpoint and using the `relatedType` parameter.\n\n" +
             "<a href='https://docs.geonetwork-opensource.org/latest/user-guide/associating-resources/'>More info</a>")
     @RequestMapping(value = "/{metadataUuid:.+}/associated",
         method = RequestMethod.GET,
@@ -111,7 +111,26 @@ public class MetadataAssociatedApi {
             required = true)
         @PathVariable
             String metadataUuid,
-        @Parameter(description = "Type of related resource. If none, all resources are returned.",
+        @Parameter(description = "Type of related resource. If none, all types are returned.\n\n" +
+            "Allowed values:\n" +
+            "- `parent`: parent records declared by schema associations.\n" +
+            "- `children`: records having parent relation pointing to this record.\n" +
+            "- `brothersAndSisters`: records sharing the same parent(s).\n" +
+            "- `siblings`: aggregated/associated resources linked by this record.\n" +
+            "- `associated`: reverse siblings relation (records referencing this record).\n" +
+            "- `versions`: full revision chain for this record (does not support remote records).\n" +
+            "- `next`: immediate next item in version ordering.\n" +
+            "- `previous`: immediate previous item in version ordering.\n" +
+            "- `services`: services publishing this dataset record.\n" +
+            "- `datasets`: datasets published (operated) by a service record.\n" +
+            "- `fcats`: feature catalog references.\n" +
+            "- `hasfeaturecats`: records referencing this record as feature catalog.\n" +
+            "- `sources`: this record is derived from those.\n" +
+            "- `hassources`: records derived from this record.\n\n" +
+            "Deprecated values:\n" +
+            "- `related`: legacy relation table links.\n" +
+            "- `onlines`: online links extracted from metadata. Use record links property instead.\n" +
+            "- `thumbnails`: thumbnails extracted from metadata. Use record overview property instead.",
             required = false
         )
         @RequestParam(defaultValue = "")

@@ -218,4 +218,108 @@ public class MetadataAssociatedApiTest extends AbstractServiceIntegrationTest {
             .andExpect(jsonPath("$.associated", hasSize(1)))
             .andExpect(jsonPath("$.associated[0]._source.uuid").value(SERIE_UUID));
     }
+
+    @Test
+    public void getAssociatedVersionsReturnsWholeChain() throws Exception {
+        MockMvc mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+        MockHttpSession mockHttpSession = loginAsAdmin();
+
+        final MEFLibIntegrationTest.ImportMetadata importMetadata =
+            new MEFLibIntegrationTest.ImportMetadata(this, context);
+        importMetadata.getMefFilesToLoad().add(
+            "/org/fao/geonet/api/records/samples/related-versions-test.zip");
+        importMetadata.invoke();
+
+        final String VERSION_OLDEST = "11111111-1111-4111-8111-111111111111";
+        final String VERSION_MIDDLE = "22222222-2222-4222-8222-222222222222";
+        final String VERSION_LATEST = "33333333-3333-4333-8333-333333333333";
+
+        mockMvc.perform(get("/srv/api/records/" + VERSION_LATEST + "/associated?type=versions")
+                .session(mockHttpSession)
+                .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING))
+            .andExpect(jsonPath("$.versions", hasSize(3)))
+            .andExpect(jsonPath("$.versions[0]._source.uuid").value(VERSION_LATEST))
+            .andExpect(jsonPath("$.versions[1]._source.uuid").value(VERSION_MIDDLE))
+            .andExpect(jsonPath("$.versions[2]._source.uuid").value(VERSION_OLDEST));
+
+        mockMvc.perform(get("/srv/api/records/" + VERSION_OLDEST + "/associated?type=versions")
+                .session(mockHttpSession)
+                .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING))
+            .andExpect(jsonPath("$.versions", hasSize(3)))
+            .andExpect(jsonPath("$.versions[0]._source.uuid").value(VERSION_LATEST))
+            .andExpect(jsonPath("$.versions[1]._source.uuid").value(VERSION_MIDDLE))
+            .andExpect(jsonPath("$.versions[2]._source.uuid").value(VERSION_OLDEST));
+    }
+
+    @Test
+    public void getAssociatedNextPreviousVersions() throws Exception {
+        MockMvc mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+        MockHttpSession mockHttpSession = loginAsAdmin();
+
+        final MEFLibIntegrationTest.ImportMetadata importMetadata =
+            new MEFLibIntegrationTest.ImportMetadata(this, context);
+        importMetadata.getMefFilesToLoad().add(
+            "/org/fao/geonet/api/records/samples/related-versions-test.zip");
+        importMetadata.invoke();
+
+        final String VERSION_OLDEST = "11111111-1111-4111-8111-111111111111";
+        final String VERSION_MIDDLE = "22222222-2222-4222-8222-222222222222";
+        final String VERSION_LATEST = "33333333-3333-4333-8333-333333333333";
+
+        // From VERSION_LATEST, next should be empty (no newer version)
+        mockMvc.perform(get("/srv/api/records/" + VERSION_LATEST + "/associated?type=next")
+                .session(mockHttpSession)
+                .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING))
+            .andExpect(jsonPath("$.next", hasSize(0)));
+
+        // From VERSION_MIDDLE, next should be VERSION_LATEST
+        mockMvc.perform(get("/srv/api/records/" + VERSION_MIDDLE + "/associated?type=next")
+                .session(mockHttpSession)
+                .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING))
+            .andExpect(jsonPath("$.next", hasSize(1)))
+            .andExpect(jsonPath("$.next[0]._source.uuid").value(VERSION_LATEST));
+
+        // From VERSION_OLDEST, next should be VERSION_MIDDLE
+        mockMvc.perform(get("/srv/api/records/" + VERSION_OLDEST + "/associated?type=next")
+                .session(mockHttpSession)
+                .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING))
+            .andExpect(jsonPath("$.next", hasSize(1)))
+            .andExpect(jsonPath("$.next[0]._source.uuid").value(VERSION_MIDDLE));
+
+        // From VERSION_LATEST, previous should be VERSION_MIDDLE
+        mockMvc.perform(get("/srv/api/records/" + VERSION_LATEST + "/associated?type=previous")
+                .session(mockHttpSession)
+                .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING))
+            .andExpect(jsonPath("$.previous", hasSize(1)))
+            .andExpect(jsonPath("$.previous[0]._source.uuid").value(VERSION_MIDDLE));
+
+        // From VERSION_MIDDLE, previous should be VERSION_OLDEST
+        mockMvc.perform(get("/srv/api/records/" + VERSION_MIDDLE + "/associated?type=previous")
+                .session(mockHttpSession)
+                .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING))
+            .andExpect(jsonPath("$.previous", hasSize(1)))
+            .andExpect(jsonPath("$.previous[0]._source.uuid").value(VERSION_OLDEST));
+
+        // From VERSION_OLDEST, previous should be empty (no newer version)
+        mockMvc.perform(get("/srv/api/records/" + VERSION_OLDEST + "/associated?type=previous")
+                .session(mockHttpSession)
+                .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING))
+            .andExpect(jsonPath("$.previous", hasSize(0)));
+    }
 }

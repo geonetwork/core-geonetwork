@@ -7,7 +7,9 @@ In some situations, a dataset is part of a temporal or spatial collections of re
     -   Corine Land Cover 2012
     -   \...
 
-Parent/child relations can be set on ISO19139 and Dublin Core records. In ISO19139, the link to a parent record is encoded in the child record using the following:
+Parent/child relations can be set on ISO and Dublin Core records. 
+
+In ISO19139, the link to a parent record is encoded in the child record using the following:
 
 ``` xml
 <gmd:parentIdentifier>
@@ -15,7 +17,8 @@ Parent/child relations can be set on ISO19139 and Dublin Core records. In ISO191
 </gmd:parentIdentifier>
 ```
 
-Parent/Child relation in ISO19139 may also be encoded using aggregates (see [Other types of resources (eg. sensor, publication)](linking-others.md)).
+Parent/Child relation in ISO may also be encoded using aggregates to clarify the type of the association (see [Other types of resources (eg. sensor, publication)](linking-others.md)). By default, ISO19115-3 is using the `associatedResource` element with association type set to `partOfSeamlessDatabase` for parent/child relation.
+
 
 When creating such relationship, users will be able to navigate between the records in the search and record view.
 
