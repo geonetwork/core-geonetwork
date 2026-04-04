@@ -364,9 +364,7 @@
                 }
 
                 if (layerInfo.attribution) {
-                  prop.attributions = [
-                    new ol.Attribution({ html: layerInfo.attribution })
-                  ];
+                  prop.attributions = [layerInfo.attribution];
                 }
 
                 defer.resolve(
