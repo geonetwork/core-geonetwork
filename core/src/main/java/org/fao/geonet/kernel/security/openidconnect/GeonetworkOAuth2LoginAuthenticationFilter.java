@@ -49,6 +49,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.text.Normalizer;
 import java.util.IllformedLocaleException;
 import java.util.Locale;
 
@@ -147,6 +148,8 @@ public class GeonetworkOAuth2LoginAuthenticationFilter extends OAuth2LoginAuthen
                     requestCache.removeRequest(request, response);
 
                     redirectIfSafeOrFallback(redirectURL, request, response);
+                } else {
+                    response.sendRedirect(request.getContextPath());
                 }
             } else {
                 Log.debug(Geonet.SECURITY, "RequestCache is not available");
@@ -215,23 +218,54 @@ public class GeonetworkOAuth2LoginAuthenticationFilter extends OAuth2LoginAuthen
     }
 
     void redirectIfSafeOrFallback(String redirectUrl, HttpServletRequest request, HttpServletResponse response) throws IOException {
-        try {
-            URI url = new URI(redirectUrl);
-            if (isAllowedRedirectTarget(url, request)) {
-                response.sendRedirect(url.toString());
-                return;
-            }
-
-            Log.warning(Geonet.SECURITY, "Rejected redirect URL with different host: '" + redirectUrl + "'.");
-        } catch (URISyntaxException e) {
-            Log.warning(Geonet.SECURITY, "Invalid redirect URL '" + redirectUrl + "'.");
+        String safeRedirectTarget = buildSafeRedirectTarget(redirectUrl, request);
+        if (safeRedirectTarget != null) {
+            response.sendRedirect(safeRedirectTarget);
+            return;
         }
+
+        Log.warning(Geonet.SECURITY, "Rejected unsafe redirect target after OIDC login.");
 
         response.sendRedirect(request.getContextPath());
     }
 
-    private boolean isAllowedRedirectTarget(URI redirectUri, HttpServletRequest request) {
-        String currentRequestHost = request.getServerName();
-        return !redirectUri.isAbsolute() || currentRequestHost.equalsIgnoreCase(redirectUri.getHost());
+    private String buildSafeRedirectTarget(String redirectUrl, HttpServletRequest request) {
+        if (StringUtils.isBlank(redirectUrl) || hasControlCharacters(redirectUrl)) {
+            return null;
+        }
+
+        try {
+            URI redirectUri = new URI(Normalizer.normalize(redirectUrl, Normalizer.Form.NFKC));
+
+            // Reject any redirect target that carries authority (absolute or scheme-relative URL).
+            if (redirectUri.isAbsolute() || redirectUri.getHost() != null || redirectUri.getRawAuthority() != null) {
+                return null;
+            }
+
+            String rawPath = StringUtils.defaultIfBlank(redirectUri.getRawPath(), "/");
+            if (!rawPath.startsWith("/") || rawPath.startsWith("//") || rawPath.contains("\\")) {
+                return null;
+            }
+
+            String contextPath = StringUtils.defaultString(request.getContextPath());
+            if (!contextPath.isEmpty() && !rawPath.equals(contextPath) && !rawPath.startsWith(contextPath + "/")) {
+                return null;
+            }
+
+            String query = redirectUri.getRawQuery();
+            URI safeUri = new URI(null, null, rawPath, query, null);
+            return safeUri.toASCIIString();
+        } catch (URISyntaxException | IllegalArgumentException e) {
+            return null;
+        }
+    }
+
+    private boolean hasControlCharacters(String value) {
+        for (int i = 0; i < value.length(); i++) {
+            if (Character.isISOControl(value.charAt(i))) {
+                return true;
+            }
+        }
+        return false;
     }
 }
