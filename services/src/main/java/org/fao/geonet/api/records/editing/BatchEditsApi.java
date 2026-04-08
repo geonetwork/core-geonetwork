@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2024 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2026 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -207,9 +207,7 @@ public class BatchEditsApi implements ApplicationContextAware {
         DataManager dataMan = appContext.getBean(DataManager.class);
         SchemaManager _schemaManager = context.getBean(SchemaManager.class);
         AccessManager accessMan = context.getBean(AccessManager.class);
-        // This value is used in replace mode to create the node if it doesn't exist.
-        // We don't want to create a node in replace mode, just replace the element if it exists, otherwise ignore it.
-        boolean createXpathNodeIfNotExists = false;
+
 
         SimpleMetadataProcessingReport report = new SimpleMetadataProcessingReport();
         report.setTotalRecords(setOfUuidsToEdit.size());
@@ -241,6 +239,10 @@ public class BatchEditsApi implements ApplicationContextAware {
 
                         AddElemValue propertyValue =
                             new AddElemValue(batchEditParameter.getValue());
+
+                        // This value is used in replace mode to create the node if it doesn't exist.
+                        // We don't want to create a node in replace mode, just replace the element if it exists, otherwise ignore it.
+                        boolean createXpathNodeIfNotExists = propertyValue.isAddMode();
 
                         boolean applyEdit = true;
                         if (StringUtils.isNotEmpty(batchEditParameter.getCondition())) {
