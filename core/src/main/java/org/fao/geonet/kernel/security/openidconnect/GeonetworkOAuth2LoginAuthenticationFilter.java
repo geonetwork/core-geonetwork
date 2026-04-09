@@ -37,6 +37,8 @@ import org.springframework.security.oauth2.client.authentication.OAuth2Authentic
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.security.oauth2.client.web.OAuth2LoginAuthenticationFilter;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
+import org.springframework.security.web.savedrequest.RequestCache;
+import org.springframework.security.web.savedrequest.SavedRequest;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -47,6 +49,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.text.Normalizer;
 import java.util.IllformedLocaleException;
 import java.util.Locale;
 
@@ -58,6 +61,9 @@ public class GeonetworkOAuth2LoginAuthenticationFilter extends OAuth2LoginAuthen
 
     @Autowired
     OAuth2SecurityProviderUtil oAuth2SecurityProviderUtil;
+
+    @Autowired
+    RequestCache requestCache;
 
     public GeonetworkOAuth2LoginAuthenticationFilter(ClientRegistrationRepository clientRegistrationRepository, OAuth2AuthorizedClientService authorizedClientService) {
         super(clientRegistrationRepository, authorizedClientService);
@@ -117,24 +123,45 @@ public class GeonetworkOAuth2LoginAuthenticationFilter extends OAuth2LoginAuthen
         try{
             SecurityContextHolder.getContext().setAuthentication(authResult);
 
+            // Use Spring Security's SavedRequest mechanism to get the original request URL
+            // The request should have been saved by GeonetworkOidcPreAuthActionsLoginFilter before
+            // redirecting the user to the OIDC provider login
+            String redirectURL = null;
 
-            //cf GN keycloak
-            String redirectURL = findQueryParameter(request, "redirectUrl");
-            if (redirectURL != null) {
-                try {
-                    URI redirectUri = new URI(redirectURL);
-                    if (redirectUri != null && !redirectUri.isAbsolute()) {
-                        response.sendRedirect(redirectUri.toString());
-                    } else {
-                        // If the redirect url ends up being null or absolute url then lets redirect back to the context home.
-                        Log.warning(Geonet.SECURITY, "Failed to perform login redirect to '" + redirectURL + "'. Redirected to context home");
-                        response.sendRedirect(request.getContextPath());
-                    }
-                } catch (URISyntaxException e) {
+            if (requestCache != null) {
+                SavedRequest savedRequest = requestCache.getRequest(request, response);
+                if (savedRequest != null) {
+                    redirectURL = savedRequest.getRedirectUrl();
+                    Log.debug(Geonet.SECURITY, "Retrieved original request from SavedRequest: " + redirectURL);
+                } else {
+                    Log.debug(Geonet.SECURITY, "No SavedRequest found in RequestCache");
+                }
+
+                if (redirectURL != null) {
+                    Log.info(Geonet.SECURITY, "Redirecting to " + redirectURL);
+
+                    // Removing original request, since we want to
+                    // retain current headers.
+                    // If request remains in cache, requestCacheFilter
+                    // will reinstate the original headers and we don't
+                    // want it.
+                    requestCache.removeRequest(request, response);
+
+                    redirectIfSafeOrFallback(redirectURL, request, response);
+                } else {
                     response.sendRedirect(request.getContextPath());
                 }
             } else {
-                response.sendRedirect(request.getContextPath());
+                Log.debug(Geonet.SECURITY, "RequestCache is not available");
+
+                redirectURL = findQueryParameter(request, "redirectUrl");
+                if (redirectURL != null) {
+                    Log.debug(Geonet.SECURITY, "Retrieved redirect URL from query parameter: " + redirectURL);
+
+                    redirectIfSafeOrFallback(redirectURL, request, response);
+                } else {
+                    response.sendRedirect(request.getContextPath());
+                }
             }
 
             // Set users preferred locale if it exists. - cf. keycloak
@@ -190,4 +217,96 @@ public class GeonetworkOAuth2LoginAuthenticationFilter extends OAuth2LoginAuthen
         }
     }
 
+    void redirectIfSafeOrFallback(String redirectUrl, HttpServletRequest request, HttpServletResponse response) throws IOException {
+        String safeRedirectTarget = buildSafeRedirectTarget(redirectUrl, request);
+        if (safeRedirectTarget != null) {
+            response.sendRedirect(safeRedirectTarget);
+            return;
+        }
+
+        Log.warning(Geonet.SECURITY, "Rejected unsafe redirect target after OIDC login.");
+
+        response.sendRedirect(request.getContextPath());
+    }
+
+    private String buildSafeRedirectTarget(String redirectUrl, HttpServletRequest request) {
+        if (StringUtils.isBlank(redirectUrl) || hasControlCharacters(redirectUrl)) {
+            return null;
+        }
+
+        try {
+            URI redirectUri = new URI(Normalizer.normalize(redirectUrl, Normalizer.Form.NFKC));
+            String rawPath;
+            String query;
+
+            if (redirectUri.isAbsolute()) {
+                if (!hasSameOrigin(redirectUri, request)) {
+                    return null;
+                }
+                rawPath = redirectUri.getRawPath();
+                query = redirectUri.getRawQuery();
+            } else {
+                // Reject scheme-relative or authority-bearing URLs.
+                if (redirectUri.getHost() != null || redirectUri.getRawAuthority() != null) {
+                    return null;
+                }
+                rawPath = redirectUri.getRawPath();
+                query = redirectUri.getRawQuery();
+            }
+
+            rawPath = StringUtils.defaultIfBlank(rawPath, "/");
+            if (!rawPath.startsWith("/") || rawPath.startsWith("//") || rawPath.contains("\\")) {
+                return null;
+            }
+
+            String contextPath = StringUtils.defaultString(request.getContextPath());
+            if (!contextPath.isEmpty() && !rawPath.equals(contextPath) && !rawPath.startsWith(contextPath + "/")) {
+                return null;
+            }
+
+            URI safeUri = new URI(null, null, rawPath, query, null);
+            return safeUri.toASCIIString();
+        } catch (URISyntaxException | IllegalArgumentException e) {
+            return null;
+        }
+    }
+
+    private boolean hasSameOrigin(URI redirectUri, HttpServletRequest request) {
+        String redirectScheme = StringUtils.lowerCase(redirectUri.getScheme());
+        String requestScheme = StringUtils.lowerCase(request.getScheme());
+
+        if (!StringUtils.equals(redirectScheme, requestScheme)) {
+            return false;
+        }
+
+        if (!StringUtils.equalsIgnoreCase(redirectUri.getHost(), request.getServerName())) {
+            return false;
+        }
+
+        int redirectPort = getEffectivePort(redirectUri.getScheme(), redirectUri.getPort());
+        int requestPort = getEffectivePort(request.getScheme(), request.getServerPort());
+        return redirectPort == requestPort;
+    }
+
+    private int getEffectivePort(String scheme, int port) {
+        if (port > 0) {
+            return port;
+        }
+        if ("https".equalsIgnoreCase(scheme)) {
+            return 443;
+        }
+        if ("http".equalsIgnoreCase(scheme)) {
+            return 80;
+        }
+        return -1;
+    }
+
+    private boolean hasControlCharacters(String value) {
+        for (int i = 0; i < value.length(); i++) {
+            if (Character.isISOControl(value.charAt(i))) {
+                return true;
+            }
+        }
+        return false;
+    }
 }
