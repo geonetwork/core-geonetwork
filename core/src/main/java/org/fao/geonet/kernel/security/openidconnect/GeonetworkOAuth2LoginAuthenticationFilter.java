@@ -236,13 +236,25 @@ public class GeonetworkOAuth2LoginAuthenticationFilter extends OAuth2LoginAuthen
 
         try {
             URI redirectUri = new URI(Normalizer.normalize(redirectUrl, Normalizer.Form.NFKC));
+            String rawPath;
+            String query;
 
-            // Reject any redirect target that carries authority (absolute or scheme-relative URL).
-            if (redirectUri.isAbsolute() || redirectUri.getHost() != null || redirectUri.getRawAuthority() != null) {
-                return null;
+            if (redirectUri.isAbsolute()) {
+                if (!hasSameOrigin(redirectUri, request)) {
+                    return null;
+                }
+                rawPath = redirectUri.getRawPath();
+                query = redirectUri.getRawQuery();
+            } else {
+                // Reject scheme-relative or authority-bearing URLs.
+                if (redirectUri.getHost() != null || redirectUri.getRawAuthority() != null) {
+                    return null;
+                }
+                rawPath = redirectUri.getRawPath();
+                query = redirectUri.getRawQuery();
             }
 
-            String rawPath = StringUtils.defaultIfBlank(redirectUri.getRawPath(), "/");
+            rawPath = StringUtils.defaultIfBlank(rawPath, "/");
             if (!rawPath.startsWith("/") || rawPath.startsWith("//") || rawPath.contains("\\")) {
                 return null;
             }
@@ -252,12 +264,41 @@ public class GeonetworkOAuth2LoginAuthenticationFilter extends OAuth2LoginAuthen
                 return null;
             }
 
-            String query = redirectUri.getRawQuery();
             URI safeUri = new URI(null, null, rawPath, query, null);
             return safeUri.toASCIIString();
         } catch (URISyntaxException | IllegalArgumentException e) {
             return null;
         }
+    }
+
+    private boolean hasSameOrigin(URI redirectUri, HttpServletRequest request) {
+        String redirectScheme = StringUtils.lowerCase(redirectUri.getScheme());
+        String requestScheme = StringUtils.lowerCase(request.getScheme());
+
+        if (!StringUtils.equals(redirectScheme, requestScheme)) {
+            return false;
+        }
+
+        if (!StringUtils.equalsIgnoreCase(redirectUri.getHost(), request.getServerName())) {
+            return false;
+        }
+
+        int redirectPort = getEffectivePort(redirectUri.getScheme(), redirectUri.getPort());
+        int requestPort = getEffectivePort(request.getScheme(), request.getServerPort());
+        return redirectPort == requestPort;
+    }
+
+    private int getEffectivePort(String scheme, int port) {
+        if (port > 0) {
+            return port;
+        }
+        if ("https".equalsIgnoreCase(scheme)) {
+            return 443;
+        }
+        if ("http".equalsIgnoreCase(scheme)) {
+            return 80;
+        }
+        return -1;
     }
 
     private boolean hasControlCharacters(String value) {
