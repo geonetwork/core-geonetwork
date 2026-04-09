@@ -1215,11 +1215,28 @@ public final class XslUtil {
         return si.getSiteUrl() + (!baseUrl.startsWith("/") ? "/" : "") + baseUrl;
     }
 
-    public static String getPermalink(String uuid, String language) {
+    /**
+     * Return the plain HTML record link for a metadata UUID.
+     * <p>
+     * Depending on configuration, this may resolve to a DOI URL or to a direct
+     * server-rendered HTML endpoint suitable for crawlers.
+     *
+     * @param uuid metadata UUID
+     * @param language UI language code when language-specific links are enabled
+     * @return plain HTML link for the record
+     */
+    public static String getPlainHtmlUrl(String uuid, String language) {
         BaseMetadataUtils metadataUtils = ApplicationContextHolder.get().getBean(BaseMetadataUtils.class);
-        return metadataUtils.getPermalink(uuid, language);
+        return metadataUtils.getPlainHtmlUrl(uuid, language);
     }
 
+    /**
+     * Return the default UI-oriented record URL.
+     *
+     * @param uuid metadata UUID
+     * @param language UI language code or {@code all}
+     * @return default record URL
+     */
     public static String getDefaultUrl(String uuid, String language) {
         BaseMetadataUtils metadataUtils = ApplicationContextHolder.get().getBean(BaseMetadataUtils.class);
         return metadataUtils.getDefaultUrl(uuid, language);
