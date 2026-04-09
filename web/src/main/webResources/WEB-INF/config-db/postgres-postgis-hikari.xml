@@ -25,27 +25,21 @@
 <beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        default-lazy-init="true"
        xmlns="http://www.springframework.org/schema/beans"
-       xsi:schemaLocation="
-        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
-  <import resource="classpath*:/config-spring-geonetwork.xml"/>
-  <import resource="../config-db/database_migration.xml"/>
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+  <!-- allow loading properties from the tomcat conf directory. If not found the default jdbc.properties will be used. Uncomment to use. -->
+  <!-- context:property-placeholder location="file:${catalina.home}/conf/jdbc.properties" ignore-resource-not-found="true" file-encoding="UTF-8" ignore-unresolvable="true" order="0"/-->
 
-  <!-- Default using the db.config.file if it exists
-       and if not then derive the db file based on the db.type.
+  <import resource="hikariJdbcDataSource.xml"/>
 
-       Use Java argument -Dgeonetwork.db.type=postgres to customize
-        the database type or change the resource URL to ../config-db/postgres.xml.
+  <bean id="jpaVendorAdapterDatabaseParam" class="java.lang.String">
+    <constructor-arg value="POSTGRESQL"/>
+  </bean>
 
-       Supported types:
-       * db2
-       * h2 (default)
-       * jndi
-       * mysql
-       * oracle
-       * postgres
-       * postgres-postgis
-       * postgres-postgis-hikari
-       * sqlserver
-    -->
-  <import resource="@db.config.file@"/>
+  <bean id="jdbcDriverClassName" class="java.lang.String">
+    <constructor-arg value="org.postgis.DriverWrapper"/>
+  </bean>
+
+  <bean id="jdbcURL" class="java.lang.String">
+    <constructor-arg value="jdbc:postgresql_postGIS://${jdbc.host}:${jdbc.port:5432}/${jdbc.database}?${jdbc.connectionProperties}"/>
+  </bean>
 </beans>

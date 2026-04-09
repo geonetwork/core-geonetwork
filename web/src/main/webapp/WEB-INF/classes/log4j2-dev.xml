@@ -46,7 +46,7 @@
     <Logger name="geonetwork.database" level="error"/>
     <Logger name="geonetwork.databasemigration" level="debug"/>
     <Logger name="geonetwork.datamanager" level="error"/>
-    <Logger name="geonetwork.domain" level="warning"/>
+    <Logger name="geonetwork.domain" level="warn"/>
     <Logger name="geonetwork.editor" level="debug"/>
     <Logger name="geonetwork.editorexpandelement" level="debug"/>
     <Logger name="geonetwork.editorfillelement" level="debug"/>
@@ -132,6 +132,11 @@
     </Logger>
 
     <Logger name="org.apache.camel" level="warn" additivity="false">
+      <AppenderRef ref="Console"/>
+      <AppenderRef ref="File"/>
+    </Logger>
+
+    <Logger name="com.zaxxer.hikari" level="warn" additivity="false">
       <AppenderRef ref="Console"/>
       <AppenderRef ref="File"/>
     </Logger>
