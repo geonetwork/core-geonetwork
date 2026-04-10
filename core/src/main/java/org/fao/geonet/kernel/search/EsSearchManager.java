@@ -133,6 +133,8 @@ public class EsSearchManager implements ISearchManager {
             .add("link")
             .add("format")
             .add("resourceType")
+            .add("resourceEdition")
+            .add("resourceDate")
             .add("cl_status.key")
             .add(Geonet.IndexFieldNames.OP_PREFIX + "*")
             .add(Geonet.IndexFieldNames.GROUP_OWNER)

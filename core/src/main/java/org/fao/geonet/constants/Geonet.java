@@ -662,6 +662,7 @@ public final class Geonet {
         public static final String IS_PUBLISHED_TO_ALL = "isPublishedToAll";
         public static final String IS_PUBLISHED_TO_INTRANET = "isPublishedToIntranet";
         public static final String IS_PUBLISHED_TO_GUEST = "isPublishedToGuest";
+        public static final String AGG_ASSOCIATED_REVISION_OF = "agg_associated_revisionOf";
         public static final String FEEDBACKCOUNT = "feedbackCount";
         public static final String DRAFT = "draft";
         public static final String DRAFT_ID = "draftId";

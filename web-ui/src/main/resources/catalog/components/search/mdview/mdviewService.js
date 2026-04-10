@@ -244,7 +244,7 @@
           types ||
           "parent|children|sources|hassources|" +
             "brothersAndSisters|services|datasets|" +
-            "siblings|associated|fcats|hasfeaturecats|related";
+            "siblings|associated|fcats|hasfeaturecats|related|versions";
         return "relatedType=" + types.split("|").join("&relatedType=");
       };
 
