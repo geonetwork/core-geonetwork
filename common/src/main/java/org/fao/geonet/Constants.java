@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2026 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -32,4 +32,6 @@ public interface Constants {
     String XML_CATALOG_FILES = "jeeves.xml.catalog.files";
     String XML_CATALOG_VERBOSITY = "jeeves.xml.catalog.verbosity";
     String XML_CATALOG_BLANKXSLFILE = "jeeves.xml.catalog.blankxslfile";
+    String DATASOURCE_BEAN_ID = "jdbcDataSource";
+    String DATASOURCE_MANAGER_BEAN_ID = "jdbcDataSourceManager";
 }

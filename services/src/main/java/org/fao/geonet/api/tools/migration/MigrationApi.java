@@ -29,6 +29,7 @@ import static org.fao.geonet.api.ApiParams.API_CLASS_TOOLS_TAG;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.fao.geonet.ApplicationContextHolder;
+import org.fao.geonet.Constants;
 import org.fao.geonet.ContextAwareTask;
 import org.fao.geonet.DatabaseMigrationTask;
 import org.fao.geonet.api.API;
@@ -66,7 +67,7 @@ public class MigrationApi {
             String stepName) throws Exception {
 
         ApplicationContext appContext = ApplicationContextHolder.get();
-        final DataSource dataSource = appContext.getBean(DataSource.class);
+        final DataSource dataSource = (DataSource) appContext.getBean(Constants.DATASOURCE_BEAN_ID);
         try (Connection connection = dataSource.getConnection()) {
             Class<?> clazz = Class.forName(stepName);
 

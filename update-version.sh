@@ -101,45 +101,28 @@ sed $sedopt "s/version=.*/version=${new_version_main}/g" release/build.propertie
 sed $sedopt "s/subVersion=.*/subVersion=${sub_version}/g" release/build.properties
 echo
 
-# Update SQL - needs improvements
-echo 'SQL script'
-echo '  * Set version in initial data'
-sqlscriptfolder=web/src/main/webapp/WEB-INF/classes/setup/sql
-sed $sedopt "s/'system\/platform\/version', '.*', 0/'system\/platform\/version', '${new_version_main}', 0/g" $sqlscriptfolder/data/data-db-default.sql
-sed $sedopt "s/'system\/platform\/subVersion', '.*', 0/'system\/platform\/subVersion', '${sub_version}', 0/g" $sqlscriptfolder/data/data-db-default.sql
+echo 'Database'
+echo '  * Adding a new changeset to database/src/main/resources/db/changesets'
 
+CHANGESETS_DIR="database/src/main/resources/db/changesets"
+LAST_FILE=$(ls -1 "$CHANGESETS_DIR" | sort | tail -n 1)
+# Extract number, e.g. 00026 from 00026-some-name.sql
+LAST_NUM=${LAST_FILE%%-*}
+# Increment using base 10 to avoid octal interpretation
+NEXT_NUM=$(printf "%05d" $((10#$LAST_NUM + 1)))
 
+NEW_CHANGESET_FILE="$CHANGESETS_DIR/$NEXT_NUM-update-version-to-$new_version.sql"
 
-echo "  * Set version in migration script v${new_version_main_nopoint}/migrate-default.sql"
+echo "    Creating $NEW_CHANGESET_FILE"
 
-sqlmigrationfile=$sqlscriptfolder/migrate/v${new_version_main_nopoint}/migrate-default.sql
+cat <<EOF > "$NEW_CHANGESET_FILE"
+--liquibase formatted sql
+--changeset geonetwork:update-version-to-$new_version context:prod,test
 
-if [ -f "$sqlmigrationfile" ]; then
-  echo "    * Updating version in existing migration script $sqlmigrationfile."
-  sed $sedopt "s/value='${version}' WHERE name='system\/platform\/version'/value='${new_version_main}' WHERE name='system\/platform\/version'/g" $sqlmigrationfile
-  sed $sedopt "s/value='.*' WHERE name='system\/platform\/subVersion'/value='${sub_version}' WHERE name='system\/platform\/subVersion'/g" $sqlmigrationfile
-else
-  echo "    * Creating migration script $sqlmigrationfile."
-  mkdir $sqlscriptfolder/migrate/v${new_version_main_nopoint}
-  cat <<EOF > $sqlmigrationfile
-UPDATE Settings SET value='${new_version_main}' WHERE name='system/platform/version';
-UPDATE Settings SET value='${sub_version}' WHERE name='system/platform/subVersion';
+UPDATE Settings SET value='$new_version_main' WHERE name='system/platform/version';
+UPDATE Settings SET value='$sub_version' WHERE name='system/platform/subVersion';
 EOF
-fi
-
-
-sqlmigrationconfig=web/src/main/webResources/WEB-INF/config-db/database_migration.xml
-if hash xmlstarlet 2>/dev/null; then
-  xmlstarlet ed -L \
-      -s "//*[@id='dataMigrationMap' and not(*[local-name() = 'entry' and @key ='${new_version_main}'])]" -t elem -n "newentry" \
-      -i //newentry -t attr -n "key" -v "${new_version_main}" \
-      -s //newentry -t elem -n "list" \
-      -s //newentry/list -t elem -n "value" -v "WEB-INF/classes/setup/sql/migrate/v${new_version_main_nopoint}/migrate-" \
-      -r //newentry -v entry \
-      $sqlmigrationconfig
-else
-    echo "  * WARNING: Can't update automatically $sqlmigrationconfig. Install xmlstarlet utility or update file manually."
-fi
+echo
 
 # Update version pom files
 mvn versions:set-property -Dproperty=gn.project.version -DnewVersion=${new_version}

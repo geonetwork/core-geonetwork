@@ -25,6 +25,7 @@ package org.fao.geonet.kernel;
 
 import static org.fao.geonet.constants.Geonet.Namespaces.GCO;
 import static org.fao.geonet.constants.Geonet.Namespaces.GMD;
+import org.fao.geonet.domain.MetadataCategory;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
@@ -53,6 +54,10 @@ public class DataManagerWorksWithoutTransactionIntegrationTest extends AbstractD
                 @Override
                 public void run() throws Exception {
                     ServiceContext serviceContext = createContextAndLogAsAdmin();
+
+                    MetadataCategory category = new MetadataCategory();
+                    category.setName("category");
+                    metadataCategoryRepository.save(category);
 
                     String metadataCategory = metadataCategoryRepository.findAll().get(0).getName();
                     Element sampleMetadataXml = getSampleMetadataXml();

@@ -116,7 +116,7 @@ public class SvnManager implements AfterCommitTransactionListener, BeforeRollbac
             ));
             return;
         }
-        DataSource _dataSource = ApplicationContextHolder.get().getBean(DataSource.class);
+        DataSource _dataSource = (DataSource) ApplicationContextHolder.get().getBean(Constants.DATASOURCE_BEAN_ID);
 
         this._enabled = true;
         String uuid = _settingManager.getValue(Settings.SYSTEM_SITE_SVNUUID);
