@@ -40,7 +40,7 @@
     <div class="gn-scroll-spy"
          data-gn-scroll-spy="gn-editor-{$metadataId}"
          data-watch=""
-         data-all-depth="{if ($isFlatMode) then 'true' else 'false'}"></div>
+         data-all-depth="true"></div>
 
     <div class="nav nav-tabs">
       <!-- Make a drop down choice to swith to one view to another -->
