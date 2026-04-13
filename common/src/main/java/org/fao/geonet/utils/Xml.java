@@ -110,6 +110,12 @@ public final class Xml {
         + "]";
     public static final String XML_VERSION_HEADER = "<\\?xml version=['\"]1.0['\"] encoding=['\"].*['\"]\\?>\\s*";
 
+    // see documentation, advanced-configuration.md.
+    // switching from tiny (1) to tinyc (2) saxon tree model
+    // (when saxon version does not support tinyc, asking for 2 will default to linked (0))
+    // default being tiny, but tinyc (or linked) is faster
+    public static final int SAXON_TREE_MODEL = Integer.parseInt(System.getProperty("SAXON_TREE_MODEL", "2"));
+
     public static SAXBuilder getSAXBuilder(boolean validate) {
         SAXBuilder builder = getSAXBuilderWithPathXMLResolver(validate, null);
         Resolver resolver = ResolverWrapper.getInstance();
@@ -461,6 +467,7 @@ public final class Xml {
             transFact.setAttribute(FeatureKeys.LINE_NUMBERING, true);
             transFact.setAttribute(FeatureKeys.PRE_EVALUATE_DOC_FUNCTION, true);
             transFact.setAttribute(FeatureKeys.RECOVERY_POLICY, Configuration.RECOVER_SILENTLY);
+            transFact.setAttribute(FeatureKeys.TREE_MODEL, SAXON_TREE_MODEL);
             // Add the following to get timing info on xslt transformations
             //transFact.setAttribute(FeatureKeys.TIMING,true);
         } catch (IllegalArgumentException e) {
@@ -510,6 +517,7 @@ public final class Xml {
                 transFact.setAttribute(FeatureKeys.LINE_NUMBERING, true);
                 transFact.setAttribute(FeatureKeys.PRE_EVALUATE_DOC_FUNCTION, false);
                 transFact.setAttribute(FeatureKeys.RECOVERY_POLICY, Configuration.RECOVER_SILENTLY);
+                transFact.setAttribute(FeatureKeys.TREE_MODEL, SAXON_TREE_MODEL);
 
                 // Add the following to get timing info on xslt transformations
                 //transFact.setAttribute(FeatureKeys.TIMING,true);
