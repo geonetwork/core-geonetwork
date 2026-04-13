@@ -114,7 +114,7 @@ public final class Xml {
     // switching from tiny (1) to tinyc (2) saxon tree model
     // (when saxon version does not support tinyc, asking for 2 will default to linked (0))
     // default being tiny, but tinyc (or linked) is faster
-    public static final int SAXON_TREE_MODEL = Integer.parseInt(System.getProperty("SAXON_TREE_MODEL", "2"));
+    public static final int SAXON_TREE_MODEL = Integer.parseInt(System.getProperty("saxon.treeModel", "2"));
 
     public static SAXBuilder getSAXBuilder(boolean validate) {
         SAXBuilder builder = getSAXBuilderWithPathXMLResolver(validate, null);

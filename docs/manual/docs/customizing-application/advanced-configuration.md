@@ -17,6 +17,6 @@ By default, Saxon uses the TinyTree model to represent XML documents in memory. 
 In the case of GN, it can be measured (running edit.xsl transformation), that linked or tinyc tree models are faster than tiny tree model.
 So Saxon is configured to use tinyc if available, and linked if tinyc not available.
 
-One can choose to use tiny tree model by setting SAXON_TREE_MODEL system property to 1 at startup.
+One can choose to use tiny tree model by setting "saxon.treeModel" system property to 1 at startup.
 
 
