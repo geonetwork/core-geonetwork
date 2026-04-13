@@ -18,7 +18,7 @@ By default, a [H2](https://www.h2database.com/html/main.html) database is config
 
 ## Configuring a database via config files
 
-The database dialect is configured in **`/WEB-INF/config-node/srv.xml`**. Uncomment the dialect to use.
+The database dialect is configured in **`/WEB-INF/config-node/srv.xml`**. Uncomment the dialect to use or use Java System property to configure it with `-Dgeonetwork.db.type=postgres` as described in https://github.com/geonetwork/core-geonetwork/blob/e8cee088ca714789788d9de0cb8f143d09a8e9ba/web/src/main/webResources/WEB-INF/config-node/srv.xml#L36.
 
 A jdbc driver is included for PostgreSQL, Oracle and H2. Other dialects require a jdbc driver to be installed. Download the jdbc library for the dialect and place it in `/WEB-INF/lib` or in the tomcat or GeoNetwork lib folder.
 
@@ -79,6 +79,18 @@ Within PostgreSQL it is possible to configure three geonetwork.db.type:
 - `postgres-postgis-hikari`: All the features of postgis with hikari "on top" to provide connection management more adapted to postgres.
 
 When choosing between postgres-postgis and postgres-postgis-hikari, postgres-postgis-hikari is recommended: it is based on hikari connection pool which provides better connection management when using 'connectionTestQuery' instead of defaultJdbcDataSource's 'validationQuery'.
+
+Alternative environment variables are also supported for non-container (WAR-file) environments:
+
+  ``` text
+    GEONETWORK_DB_USERNAME=example
+    GEONETWORK_DB_PASSWORD=xx
+    GEONETWORK_DB_NAME=example
+    GEONETWORK_DB_HOST=localhost
+    GEONETWORK_DB_PORT=5432
+  ```
+
+Based on compile-time default settings: https://github.com/geonetwork/core-geonetwork/blob/e8cee088ca714789788d9de0cb8f143d09a8e9ba/pom.xml#L1556-L1562 that are used to set these https://github.com/geonetwork/core-geonetwork/blob/e8cee088ca714789788d9de0cb8f143d09a8e9ba/web/src/main/webResources/WEB-INF/config-db/jdbc.properties#L24-L28
 
 ## Logging
 
