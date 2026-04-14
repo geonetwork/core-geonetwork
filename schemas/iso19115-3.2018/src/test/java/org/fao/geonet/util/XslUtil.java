@@ -32,7 +32,7 @@ public class XslUtil {
     public static Boolean IS_INSPIRE_ENABLED = false;
 
     public static String twoCharLangCode(String iso3code) {
-        return iso3code.substring(0, 2);
+        return twoCharLangCode(iso3code, iso3code.substring(0, 2));
     }
     public static String threeCharLangCode(String iso2code) {
         return "fre";

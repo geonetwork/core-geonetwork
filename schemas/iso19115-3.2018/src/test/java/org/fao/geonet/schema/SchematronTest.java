@@ -76,16 +76,29 @@ public class SchematronTest {
 
 	@Test
 	public void createFreValidationReport() throws Exception {
+		createValidationReport("fre",
+				"UpperRhineCastles-schematron-rules-iso-report.xml",
+				"UpperRhineCastles-validation-report.xml");
+	}
+
+	@Test
+	public void createGerValidationReport() throws Exception {
+		createValidationReport("ger",
+				"UpperRhineCastles-schematron-rules-iso-report-with-ia-based-german.xml",
+				"UpperRhineCastles-validation-report-with-ia-based-german.xml");
+	}
+	private void createValidationReport(String languageCode, String sourceFile, String controlFile) throws Exception {
 		Path xslFile = getResource("gn-site/xslt/services/metadata/validate.xsl");
 
 		org.jdom.Namespace geonetNs = org.jdom.Namespace.getNamespace("geonet", "http://www.fao.org/geonetwork");
-        Element root = new Element("root");
+		Element root = new Element("root");
 		Element language = new Element("language");
-		language.setText("fre");
-        Element rootReport = new Element("report", geonetNs);
-        Element schematronErrors = new Element("schematronerrors", geonetNs);
-        Element report = new Element("report", geonetNs);
-		Path xmlFile = getResourceInsideSchema("UpperRhineCastles-schematron-rules-iso-report.xml");
+		language.setText(languageCode);
+		Element rootReport = new Element("report", geonetNs);
+		Element schematronErrors = new Element("schematronerrors", geonetNs);
+		Element report = new Element("report", geonetNs);
+		Path xmlFile = getResourceInsideSchema(sourceFile);
+
 		Element source = Xml.loadFile(xmlFile);
 
 		root.addContent(rootReport);
@@ -98,7 +111,7 @@ public class SchematronTest {
 
 		XMLOutputter xmlOutputter = new XMLOutputter(Format.getPrettyFormat().setLineSeparator("\n"));
 		String actual = xmlOutputter.outputString(new Document(transformed));
-		TestSupport.assertGeneratedDataByteMatchExpected("UpperRhineCastles-validation-report.xml", actual, GENERATE_EXPECTED_FILE);
+		TestSupport.assertGeneratedDataByteMatchExpected(controlFile, actual, GENERATE_EXPECTED_FILE);
 	}
 
 	private void applySchematronAndCompare(String inputFileName, String expectedFileName) throws Exception {
