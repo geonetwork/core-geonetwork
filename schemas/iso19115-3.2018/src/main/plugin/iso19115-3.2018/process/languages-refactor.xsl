@@ -57,14 +57,14 @@
                 select="concat('#', $previousDefaultLanguageId)"
                 as="xs:string?"/>
 
-  <!-- eg. eng,spa,ger -->
+  <!-- eg. fre,eng,spa,ger -->
   <xsl:variable name="otherLanguageIds"
                 select="tokenize(
                           replace($others, $defaultLanguage, $previousDefaultLanguage),
                           ',')"
                 as="xs:string*"/>
 
-  <!-- eg. #FR,#EN,#SP,#GE -->
+  <!-- eg. #FR,#EN,#ES,#DE -->
   <xsl:variable name="otherLanguageIdsRef" as="node()*">
     <lang><xsl:value-of select="$defaultLanguageIdRef"/></lang>
     <xsl:for-each select="$otherLanguageIds[. != 'none']">
