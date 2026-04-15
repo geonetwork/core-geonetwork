@@ -10,16 +10,32 @@
   privilegesBatchAlert
 </p>
 
-<!--Search inpup-->
-<div class="col-md-4 input-group input-group-sm gn-searchgroup-input">
-  <span class="input-group-addon" translate>filter</span>
-  <input
-    type="text"
-    class="form-control input-sm"
-    ng-model="pFilter"
-    ng-model-options="{debounce: 300}"
-    placeholder="{{'filterGroup' | translate}}"
-  />
+<!--Search and legend-->
+<div class="row">
+  <div class="col-md-4 gn-nopadding-left">
+    <div class="input-group input-group-sm gn-searchgroup-input">
+      <span class="input-group-addon" translate>filter</span>
+      <input
+        type="text"
+        class="form-control input-sm"
+        ng-model="pFilter"
+        ng-model-options="{debounce: 300}"
+        placeholder="{{'filterGroup' | translate}}"
+      />
+    </div>
+  </div>
+  <div class="col-md-8 text-right text-muted">
+    <div class="legend">
+      <div class="legend-item">
+        <span class="legend-box bg-info-subtle"></span>
+        <span>{{'reservedGroup' | translate}}</span>
+      </div>
+      <div class="legend-item">
+        <span class="legend-box bg-warning-subtle"></span>
+        <span>{{'recordPrivilegeGroup' | translate}}</span>
+      </div>
+    </div>
+  </div>
 </div>
 
 <!-- TODO: simplify layout if only one group -->
