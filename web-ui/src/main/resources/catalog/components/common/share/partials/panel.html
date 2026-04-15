@@ -116,7 +116,7 @@
           data-ng-repeat="g in privileges | filter:{reserved: false} | filter:pFilterFn | orderBy:sortGroups:sorter.reverse"
           data-ng-show="(onlyUserGroup == true && g.userGroup == true) ||
                        onlyUserGroup == false"
-          data-ng-class="g.restricted ? 'warning' : ''"
+          data-ng-class="g.recordPrivilege ? 'warning' : ''"
         >
           <td><strong>{{::('group-' + g.group) | translate}}</strong></td>
           <td data-ng-repeat="key in ::operations" class="text-center">
