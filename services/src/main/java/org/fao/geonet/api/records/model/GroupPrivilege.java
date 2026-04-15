@@ -34,6 +34,7 @@ public class GroupPrivilege extends GroupOperations {
     private boolean userGroup;
     private boolean reserved;
     private boolean restricted;
+    private boolean recordPrivilege;
 
     public List<Profile> getUserProfiles() {
         return userProfiles;
@@ -62,4 +63,12 @@ public class GroupPrivilege extends GroupOperations {
     public boolean isRestricted() { return restricted; }
 
     public void setRestricted(boolean restricted) { this.restricted = restricted; }
+
+    public boolean isRecordPrivilege() {
+        return recordPrivilege;
+    }
+
+    public void setRecordPrivilege(boolean recordPrivilege) {
+        this.recordPrivilege = recordPrivilege;
+    }
 }

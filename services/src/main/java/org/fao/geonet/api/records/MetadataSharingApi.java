@@ -764,6 +764,7 @@ public class MetadataSharingApi implements ApplicationEventPublisherAware
                 GroupPrivilege groupPrivilege = new GroupPrivilege();
                 groupPrivilege.setGroup(g.getId());
                 groupPrivilege.setReserved(g.isReserved());
+                groupPrivilege.setRecordPrivilege(g.getType() == GroupType.RecordPrivilege);
                 // TODO: Restrict to user group only in response depending on settings?
                 groupPrivilege.setUserGroup(userGroups.contains(g.getId()));
 
@@ -908,6 +909,7 @@ public class MetadataSharingApi implements ApplicationEventPublisherAware
                     result.setGroup(x.getGroup());
                     result.setReserved(x.isReserved());
                     result.setRestricted(x.isRestricted());
+                    result.setRecordPrivilege(x.isRecordPrivilege());
                     result.setUserGroup(x.isUserGroup());
                     result.setUserProfile(x.getUserProfiles());
                     result.setOperations(new HashMap<>(x.getOperations()));
@@ -1065,6 +1067,7 @@ public class MetadataSharingApi implements ApplicationEventPublisherAware
             GroupPrivilege groupPrivilege = new GroupPrivilege();
             groupPrivilege.setGroup(g.getId());
             groupPrivilege.setReserved(g.isReserved());
+            groupPrivilege.setRecordPrivilege(g.getType() == GroupType.RecordPrivilege);
             // Restrict changing privileges for groups with a minimum profile for setting privileges set
             groupPrivilege.setRestricted(!canUserChangePrivilegesForGroup(context, g));
             groupPrivilege.setUserGroup(userGroups.contains(g.getId()));
