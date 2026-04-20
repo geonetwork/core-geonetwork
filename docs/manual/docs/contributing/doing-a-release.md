@@ -405,26 +405,6 @@ with the following utilities: ***sed***, ***xmlstarlet*** and ***sftp***.
     ``` shell
     # Set version number to SNAPSHOT
     ./update-version.sh $newversion $nextversion
-
-    nextversionnosnapshot=${nextversion//[-SNAPSHOT]/}
-    
-    # Add SQL migration step for the next version
-    mkdir web/src/main/webapp/WEB-INF/classes/setup/sql/migrate/v${nextversionnosnapshot//[.]/}
-    cat <<EOF > web/src/main/webapp/WEB-INF/classes/setup/sql/migrate/v${nextversionnosnapshot//[.]/}/migrate-default.sql
-    UPDATE Settings SET value='${nextversionnosnapshot}' WHERE name='system/platform/version';
-    UPDATE Settings SET value='SNAPSHOT' WHERE name='system/platform/subVersion';
-    EOF
-    vi web/src/main/webResources/WEB-INF/config-db/database_migration.xml
-    ```
-
-    In `WEB-INF/config-db/database_migration.xml` add an entry for the new version in the 2 steps:
-
-    ``` xml
-    <entry key="4.4.2">
-      <list>
-        <value>WEB-INF/classes/setup/sql/migrate/v442/migrate-</value>
-      </list>
-    </entry>
     ```
 
     ``` shell

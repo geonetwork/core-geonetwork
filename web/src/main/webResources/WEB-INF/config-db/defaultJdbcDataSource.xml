@@ -37,7 +37,7 @@
                             order="-1"/>
 
   <bean id="jdbcDataSource" class="org.apache.commons.dbcp2.BasicDataSource" destroy-method="close">
-    <property name="JmxName" value="jdbcDataSource"/>
+    <property name="jmxName" value="org.apache.commons.dbcp2:name=jdbcDataSource"/>
     <property name="driverClassName" ref="jdbcDriverClassName"/>
     <property name="url" ref="jdbcURL"/>
     <property name="username" value="${jdbc.username}"/>
@@ -61,4 +61,27 @@
     <property name="initialSize" value="${jdbc.basic.initialSize}"/>
   </bean>
 
+  <bean id="jdbcDataSourceManager" class="org.apache.commons.dbcp2.BasicDataSource" destroy-method="close">
+    <property name="driverClassName" ref="jdbcDriverClassName"/>
+    <property name="url" ref="jdbcURL"/>
+    <property name="username" value="${jdbc.manager.username}"/>
+    <property name="password" value="${jdbc.manager.password}"/>
+    <property name="removeAbandonedOnBorrow" value="${jdbc.basic.removeAbandoned}"/>
+    <property name="removeAbandonedOnMaintenance" value="${jdbc.basic.removeAbandoned}"/>
+    <property name="removeAbandonedTimeout" value="${jdbc.basic.removeAbandonedTimeout}"/>
+    <property name="maxTotal" value="${jdbc.basic.maxActive}"/>
+    <property name="maxIdle" value="${jdbc.basic.maxIdle}"/>
+    <property name="maxWaitMillis" value="${jdbc.basic.maxWait}"/>
+    <property name="testOnBorrow" value="${jdbc.basic.testOnBorrow}"/>
+    <property name="timeBetweenEvictionRunsMillis" value="${jdbc.basic.timeBetweenEvictionRunsMillis}"/>
+    <property name="minEvictableIdleTimeMillis" value="${jdbc.basic.minEvictableIdleTimeMillis}"/>
+    <property name="testWhileIdle" value="${jdbc.basic.testWhileIdle}"/>
+    <property name="numTestsPerEvictionRun" value="${jdbc.basic.numTestsPerEvictionRun}"/>
+    <property name="poolPreparedStatements" value="${jdbc.basic.poolPreparedStatements}"/>
+    <property name="maxOpenPreparedStatements" value="${jdbc.basic.maxOpenPreparedStatements}"/>
+    <property name="validationQuery" value="${jdbc.basic.validationQuery}"/>
+    <property name="defaultReadOnly" value="${jdbc.basic.defaultReadOnly}"/>
+    <property name="defaultAutoCommit" value="${jdbc.basic.defaultAutoCommit}"/>
+    <property name="initialSize" value="${jdbc.basic.initialSize}"/>
+  </bean>
 </beans>

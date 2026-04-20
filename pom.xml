@@ -250,6 +250,44 @@
           <artifactId>maven-enforcer-plugin</artifactId>
           <version>3.4.1</version>
         </plugin>
+        <plugin>
+          <groupId>com.github.alexcojocaru</groupId>
+          <artifactId>elasticsearch-maven-plugin</artifactId>
+          <version>${es.maven.plugin.version}</version>
+          <configuration>
+            <version>${es.version}</version>
+            <downloadUrl>https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-${es.version}-${es.platform}.${es.installer.extension}</downloadUrl>
+            <clusterName>test</clusterName>
+            <transportPort>9300</transportPort>
+            <httpPort>9200</httpPort>
+            <instanceSettings>
+              <properties>
+                <logger.level>WARN</logger.level>
+              </properties>
+            </instanceSettings>
+            <environmentVariables>
+              <ES_JAVA_OPTS>-Xmx2g</ES_JAVA_OPTS>
+              <!-- Uncomment to override Java home for Elasticsearch and use a local Java home. Java 17+ is required -->
+              <!-- <ES_JAVA_HOME>/etc/java/17.0.15-zulu</ES_JAVA_HOME> -->
+            </environmentVariables>
+          </configuration>
+          <executions>
+            <execution>
+              <id>start-elasticsearch</id>
+              <phase>pre-integration-test</phase>
+              <goals>
+                <goal>runforked</goal>
+              </goals>
+            </execution>
+            <execution>
+              <id>stop-elasticsearch</id>
+              <phase>post-integration-test</phase>
+              <goals>
+                <goal>stop</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
       </plugins>
     </pluginManagement>
 
@@ -1192,6 +1230,17 @@
         <version>${spring.jpa.version}</version>
       </dependency>
       <dependency>
+        <groupId>org.liquibase</groupId>
+        <artifactId>liquibase-core</artifactId>
+        <version>${liquibase.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>org.liquibase</groupId>
+            <artifactId>liquibase-commercial</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+      <dependency>
         <groupId>com.fasterxml.jackson.datatype</groupId>
         <artifactId>jackson-datatype-hibernate5</artifactId>
         <version>${jackson.version}</version>
@@ -1439,6 +1488,7 @@
     <module>common</module>
     <module>cachingxslt</module>
     <module>sde</module>
+    <module>database</module>
     <module>domain</module>
     <module>oaipmh</module>
     <module>events</module>
@@ -1584,6 +1634,9 @@
         GEONETWORK_DB_NAME=gn
         GEONETWORK_DB_USERNAME=www-data
         GEONETWORK_DB_PASSWORD=www-data
+        GEONETWORK_DB_MANAGER_USERNAME=www-data
+        GEONETWORK_DB_MANAGER_PASSWORD=www-data
+        GEONETWORK_DB_MANAGER_SCHEMA=
         GEONETWORK_DB_CONNECTION_PROPERTIES=
     -->
 
@@ -1595,8 +1648,11 @@
     <db.name>#{systemEnvironment['GEONETWORK_DB_NAME']?:'~/gn'}</db.name>
     <db.username>#{systemEnvironment['GEONETWORK_DB_USERNAME']?:'www-data'}</db.username>
     <db.password>#{systemEnvironment['GEONETWORK_DB_PASSWORD']?:'www-data'}</db.password>
+    <!-- Database manager credentials for database operations related to Liquibase -->
+    <db.manager.username>#{systemEnvironment['GEONETWORK_DB_MANAGER_USERNAME']?:systemEnvironment['GEONETWORK_DB_USERNAME']?:'www-data'}</db.manager.username>
+    <db.manager.password>#{systemEnvironment['GEONETWORK_DB_MANAGER_PASSWORD']?:systemEnvironment['GEONETWORK_DB_PASSWORD']?:'www-data'}</db.manager.password>
+    <db.manager.schema>#{systemEnvironment['GEONETWORK_DB_MANAGER_SCHEMA']?:''}</db.manager.schema>
     <db.connectionProperties>#{systemEnvironment['GEONETWORK_DB_CONNECTION_PROPERTIES']}</db.connectionProperties>
-
     <db.pool.maxActive>30</db.pool.maxActive>
     <db.pool.maxIdle>10</db.pool.maxIdle>
     <db.pool.initialSize>10</db.pool.initialSize>
@@ -1708,6 +1764,7 @@
     <springdoc.version>1.8.0</springdoc.version>
     <keycloak.version>18.0.2</keycloak.version>
     <hibernate.version>5.6.15.Final</hibernate.version>
+    <liquibase.version>4.29.2</liquibase.version>
 
     <metrics.version>2.2.0</metrics.version>
     <maven.build.timestamp.format>yyyy-MM-dd'T'HH'\:'mm'\:'ssZ</maven.build.timestamp.format>

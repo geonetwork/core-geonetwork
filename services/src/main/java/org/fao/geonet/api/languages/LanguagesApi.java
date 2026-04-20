@@ -29,6 +29,20 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.ApiParams;
@@ -40,20 +54,16 @@ import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.lib.DbLib;
 import org.fao.geonet.repository.LanguageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
-
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.*;
-import java.util.stream.Collectors;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
 
 @RequestMapping(value = {
     "/{portal}/api/languages"
@@ -143,20 +153,24 @@ public class LanguagesApi {
     ) throws IOException, ResourceNotFoundException {
 
         Optional<Language> lang = languageRepository.findById(langCode);
-        if (!lang.isPresent()) {
+        if (lang.isEmpty()) {
             String languageDataFile = "loc-" + langCode + "-default.sql";
-            Path templateFile = dataDirectory.getWebappDir().resolve("WEB-INF")
-                .resolve("classes").resolve("setup").resolve("sql").resolve("data")
-                .resolve(languageDataFile);
-            if (Files.exists(templateFile)) {
+
+            PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
+            // Search for file ending with -initial-data-language-{langCode}.sql eg. 00012-initial-data-language-geo.sql
+            // TODO: Q: How to deal with future language data?
+            org.springframework.core.io.Resource[] resources = resolver.getResources("classpath*:db/changesets/*-initial-data-language-" + langCode + ".sql");
+
+            if (resources.length > 0) {
+                org.springframework.core.io.Resource templateFile = resources[0];
                 List<String> data = new ArrayList<>();
-                try (BufferedReader br = new BufferedReader(new FileReader(templateFile.toFile()))) {
+                try (BufferedReader br = new BufferedReader(new InputStreamReader(templateFile.getInputStream(), StandardCharsets.UTF_8))) {
                     String line;
                     while ((line = br.readLine()) != null) {
                         data.add(line);
                     }
                 }
-                if (data.size() > 0) {
+                if (!data.isEmpty()) {
                     ServiceContext context = ApiUtils.createServiceContext(request);
                     DbLib.runSQL(context, data);
                     return;

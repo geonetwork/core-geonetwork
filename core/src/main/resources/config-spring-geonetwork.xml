@@ -227,6 +227,11 @@
   <bean id="exporter" class="org.springframework.jmx.export.MBeanExporter" lazy-init="false">
     <property name="namingStrategy" ref="namingStrategy"/>
     <property name="registrationPolicy" value="IGNORE_EXISTING"/>
+    <property name="excludedBeans">
+      <list>
+        <value>jdbcDataSourceManager</value>
+      </list>
+    </property>
   </bean>
 
   <bean id="namingStrategy"

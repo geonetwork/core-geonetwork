@@ -59,3 +59,4 @@ Spring Data allows four different ways to write queries. (For more in-depth expl
    - All Queries should be contained in the same module as the domain object that it is querying, unless the module is a plugin module.
    - **Examples: (See tests for example usage)**
      * [MetadataReportsQueries](src/main/java/org/fao/geonet/repository/reports/MetadataReportsQueries.java)
+

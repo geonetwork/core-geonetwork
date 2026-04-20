@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2021 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2026 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -34,6 +34,7 @@ import org.jasypt.encryption.pbe.StandardPBEStringEncryptor;
 import org.jasypt.exceptions.EncryptionInitializationException;
 import org.jasypt.hibernate5.encryptor.HibernatePBEEncryptorRegistry;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 
 import javax.sql.DataSource;
 import java.nio.file.Files;
@@ -65,6 +66,7 @@ public class EncryptorInitializer {
     StandardPBEStringEncryptor encryptor;
 
     @Autowired
+    @Qualifier(Constants.DATASOURCE_BEAN_ID)
     DataSource dataSource;
 
     private boolean firstInitialSetupFlag;
@@ -228,7 +230,6 @@ public class EncryptorInitializer {
             } catch (Exception ex) {
                 Log.error(LOG_MODULE, "Error getting the settings' passwords for encrypting them");
                 Log.error(LOG_MODULE, ex);
-                ex.printStackTrace();
             }
 
             for (String key : updates.keySet()) {
@@ -247,7 +248,6 @@ public class EncryptorInitializer {
             } catch (Exception ex) {
                 Log.error(LOG_MODULE, "Error getting the harvesters' passwords for encrypting them");
                 Log.error(LOG_MODULE, ex);
-                ex.printStackTrace();
             }
 
             for (String key : updates.keySet()) {
@@ -268,7 +268,6 @@ public class EncryptorInitializer {
             } catch (Exception ex) {
                 Log.error(LOG_MODULE, "Error getting the map servers' passwords for encrypting them");
                 Log.error(LOG_MODULE, ex);
-                ex.printStackTrace();
             }
 
             for (Integer key : updatesMapServers.keySet()) {

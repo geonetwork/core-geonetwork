@@ -25,6 +25,9 @@ package org.fao.geonet.kernel;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.Maps;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.AbstractCoreIntegrationTest;
 import org.fao.geonet.constants.Geonet;
@@ -47,15 +50,10 @@ import org.fao.geonet.repository.specification.MetadataSpecs;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.jdom.Namespace;
+import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
-
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-
-import static org.junit.Assert.assertEquals;
 import static org.springframework.data.jpa.domain.Specification.where;
 
 public class DataManagerIntegrationTest extends AbstractDataManagerIntegrationTest {
@@ -124,9 +122,10 @@ public class DataManagerIntegrationTest extends AbstractDataManagerIntegrationTe
         ServiceContext serviceContext = createContextAndLogAsAdmin();
         User principal = serviceContext.getUserSession().getPrincipal();
         Group group = groupRepository.findAll().get(0);
-        MetadataCategory category = metadataCategoryRepository.findAll().get(0);
         Source source = sourceRepository.save(new Source().setType(SourceType.portal).setName("GN").setUuid("sourceuuid"));
-
+        MetadataCategory category = new MetadataCategory();
+        category.setName("category");
+        metadataCategoryRepository.save(category);
         Element sampleMetadataXml = super.getSampleMetadataXml();
         AbstractMetadata metadata = new Metadata()
                 .setDataAndFixCR(sampleMetadataXml)

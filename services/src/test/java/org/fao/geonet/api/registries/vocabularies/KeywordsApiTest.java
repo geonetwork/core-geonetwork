@@ -37,6 +37,7 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.mock.web.MockMultipartHttpServletRequest;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
@@ -218,6 +219,12 @@ public class KeywordsApiTest extends AbstractServiceIntegrationTest {
         HttpSession session = loginAs(user);
         MockHttpSession mockHttpSession = loginAsAdmin();
 
+        MockMvc mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.delete("/srv/api/registries/vocabularies/external.theme.mobility-theme")
+                .accept("application/xml")
+                .session(mockHttpSession))
+            .andReturn();
+
         MockMultipartHttpServletRequest request = new MockMultipartHttpServletRequest(session.getServletContext());
         request.setRequestURI("/srv/api/registries/vocabularies");
         MockMultipartFile file = new MockMultipartFile(
@@ -234,8 +241,8 @@ public class KeywordsApiTest extends AbstractServiceIntegrationTest {
         assertEquals(200, response.getStatus());
 
 
-        MockMvc mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
-        MvcResult result = mockMvc.perform(get("/srv/api/registries/vocabularies/external.theme.mobility-theme")
+        mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+        result = mockMvc.perform(get("/srv/api/registries/vocabularies/external.theme.mobility-theme")
                 .accept("application/xml")
                 .session(mockHttpSession))
             .andExpect(status().isOk())

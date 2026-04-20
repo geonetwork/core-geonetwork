@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2026 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -26,6 +26,7 @@ package jeeves.server.resources;
 import jeeves.server.context.ServiceContext;
 
 import org.apache.commons.dbcp2.BasicDataSource;
+import org.fao.geonet.Constants;
 
 import javax.sql.DataSource;
 
@@ -45,7 +46,7 @@ public class Stats {
 
 
     public Stats(final ServiceContext context) {
-        DataSource source = context.getBean(DataSource.class);
+        DataSource source = context.getBean(Constants.DATASOURCE_BEAN_ID, DataSource.class);
         if (source instanceof BasicDataSource) {
             BasicDataSource basicDataSource = (BasicDataSource) source;
             numActive = basicDataSource.getNumActive();
@@ -54,6 +55,6 @@ public class Stats {
         } else {
             maxActive = numActive = numIdle = -1;
         }
-        resourceSpecificStats = new HashMap<String, String>();
+        resourceSpecificStats = new HashMap<>();
     }
 }

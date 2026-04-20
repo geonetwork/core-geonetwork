@@ -1,1 +1,0 @@
-ALTER TABLE Settings ALTER COLUMN value TYPE text;

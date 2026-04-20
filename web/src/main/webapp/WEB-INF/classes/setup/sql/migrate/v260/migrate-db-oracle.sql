@@ -1,1 +1,0 @@
-ALTER TABLE Settings MODIFY value long;

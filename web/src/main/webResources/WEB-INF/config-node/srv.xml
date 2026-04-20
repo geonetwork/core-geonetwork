@@ -28,7 +28,6 @@
        xsi:schemaLocation="
         http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
   <import resource="classpath*:/config-spring-geonetwork.xml"/>
-  <import resource="../config-db/database_migration.xml"/>
 
   <!-- Default using the db.config.file if it exists
        and if not then derive the db file based on the db.type.
