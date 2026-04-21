@@ -482,11 +482,6 @@
     "clickToSelect": "Cliquer pour sélectionner ou désélectionner",
     "filterDataDescription": "Choisir une couche sur la carte pour filtrer les objets géographiques. Les objets doivent être indexés au préalable par l'administrateur du catalogue.",
     "WPSDescription": "Saisir l'URL du service de traitement (WPS) à utiliser. Les derniers utilisés sont dans l'onglet suivant. ",
-    "noRecentProcessFound": "Aucun processus utilisé récemment.",
-    "localStorageNotSupported": "Stockage local du navigateur non pris en charge",
-    "wpsProcesslist": "Services de traitement",
-    "wpsProcessurl": "Par URL",
-    "wpsProcessrecent": "Services récents",
     "noLayersFound": "Aucune couche.",
     "featuredUserSearches": "Recherches épinglées",
     "userSearches": "Recherches utilisateurs",
@@ -552,12 +547,5 @@
     "addLayerPrefix": "Ajouter une couche",
     "addLayerPostfix": "à la carte",
     "submit": "Soumettre",
-    "additionalLinks": "Liens supplémentaires",
-    "indexingErrorMsg-invalidBounds": "Attention / Champ ressourceTemporalDateRange / Limites inférieure et supérieure vides ou dates non valides. Plage de dates non indexée.",
-    "indexingErrorMsg-invalidDateFormat": "Avertissement / La date {{dateType}} avec la valeur '{{date}}' n'était pas un format de date valide.",
-    "indexingErrorMsg-keywordNotFoundInThesaurus": "Avertissement / Mot-clé {{keyword}} introuvable dans {{thesaurus}}.",
-    "indexingErrorMsg-temporalDateRangeLowerGreaterThanUpper": "Avertissement / Champ ressourceTemporalDateRange / La limite inférieure de la plage {{lowerBound}} ne peut pas être supérieure à la limite supérieure {{upperBound}}. Plage de dates non indexée.",
-    "indexingErrorMsg-temporalRangeLowerGreaterThanUpper": "Avertissement / Champ ressourceTemporalDateRange / La limite inférieure de la plage {{lowerBound}} ne peut pas être supérieure à la limite supérieure {{upperBound}}.",
-    "indexingErrorMsg-schemaNotRegistered": "L'enregistrement {{record}} / Le schéma '{{schema}}' n'est pas supporté par catalogue. Installez-le ou supprimez ces enregistrements.",
-    "indexingErrorMsg-indexingStyleSheetError": "La feuille de style d'indexation contient des erreurs : {{message}}\nLes métadonnées sont marquées avec indexingError=1 dans l'index."
+    "additionalLinks": "Liens supplémentaires"
 }

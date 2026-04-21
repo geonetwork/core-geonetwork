@@ -482,11 +482,6 @@
     "clickToSelect": "Klepnutím vyberte nebo zrušte výběr",
     "filterDataDescription": "Vyberte vrstvu na mapě a začněte filtrovat přidružené funkce WFS (pokud existují). Funkce musí být nejprve indexovány správcem.",
     "WPSDescription": "Zadejte adresu URL koncového bodu služby WPS, chcete-li začít proces používat dynamickou formou. Nedávno používané procesy WPS jsou zobrazeny na druhé kartě.",
-    "noRecentProcessFound": "V poslední době nebyl použit žádný proces.",
-    "localStorageNotSupported": "Místní úložiště prohlížeče není podporováno",
-    "wpsProcesslist": "Zpracovatelské služby",
-    "wpsProcessurl": "Podle adresy URL",
-    "wpsProcessrecent": "Nedávné služby",
     "noLayersFound": "Nenalezeny žádné vrstvy",
     "featuredUserSearches": "Doporučená vyhledávání",
     "userSearches": "Uživatelská hledání",
@@ -552,12 +547,5 @@
     "addLayerPrefix": "Přidat vrstvu",
     "addLayerPostfix": "do mapy",
     "submit": "Odeslat",
-    "additionalLinks": "Additional Links",
-    "indexingErrorMsg-invalidBounds": "Upozornění / Pole resourceTemporalDateRange / Dolní a horní hranice prázdné nebo neplatné datum. Časové období není indexováno.",
-    "indexingErrorMsg-invalidDateFormat": "Upozornění / Datum {{dateType}} s hodnotou '{{date}}' nebyl platný formát data.",
-    "indexingErrorMsg-keywordNotFoundInThesaurus": "Upozornění / Klíčové slovo {{keyword}} nebylo v {{thesaurus}} nalezeno.",
-    "indexingErrorMsg-temporalDateRangeLowerGreaterThanUpper": "Upozornění / pole resourceTemporalDateRange / Dolní hranice rozsahu {{lowerBound}} nemůže být větší než horní hranice {{upperBound}}. Časové období není indexováno.",
-    "indexingErrorMsg-temporalRangeLowerGreaterThanUpper": "Upozornění / pole resourceTemporalDateRange / dolní hranice rozsahu {{lowerBound}} nemůže být větší než horní hranice {{upperBound}}.",
-    "indexingErrorMsg-schemaNotRegistered": "Záznam {{record}} / Schéma '{{schema}}' není registrován v tomto katalogu. Nainstalujte jej nebo tyto záznamy odstraňte. Záznam je indexovaný příznak chyby indexování.",
-    "indexingErrorMsg-indexingStyleSheetError": "Šablona stylů indexování obsahuje chyby: {{message}}\n Označení metadat jako _indexingError=1 v indexu."
+    "additionalLinks": "Další odkazy"
 }
