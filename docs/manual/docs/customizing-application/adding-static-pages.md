@@ -62,13 +62,13 @@ By default, the order of the items in the top bar is as follows:
  "gn-admin-menu"]
 ```
 
-Insert a page as a simple menu using the page identifier or as a submenu using an object:
+Insert a page as a simple menu using the page identifier or as a submenu using an object. In the submenu case, the object key defines the top-level label. That label can be a translation key, or literal text if the text is not defined in the translations.
 
 ``` json
 ["gn-site-name-menu",
  "gn-portal-switcher",
  "gn-search-menu",
- {"Quick search": [
+ {"quickSearch": [
    "searchForAfrica",
    "forReview"
  ]},
@@ -77,6 +77,8 @@ Insert a page as a simple menu using the page identifier or as a submenu using a
  "gn-admin-menu",
  "documentation"]
 ```
+
+For example, if a translation is defined for `quickSearch`, the submenu label is translated automatically for each language.
 
 ## Change the static pages order in the footer
 
