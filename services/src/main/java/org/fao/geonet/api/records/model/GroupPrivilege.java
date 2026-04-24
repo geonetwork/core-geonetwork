@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2026 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -27,7 +27,9 @@ import org.fao.geonet.domain.Profile;
 import java.util.List;
 
 /**
- * Created by francois on 16/06/16.
+ * The GroupPrivilege class represents a set of privileges associated with a group.
+ * It extends the functionality provided by the {@link GroupOperations} class, adding more
+ * specific fields and methods related to group privileges.
  */
 public class GroupPrivilege extends GroupOperations {
     private List<Profile> userProfiles;
@@ -60,9 +62,13 @@ public class GroupPrivilege extends GroupOperations {
         this.reserved = reserved;
     }
 
-    public boolean isRestricted() { return restricted; }
+    public boolean isRestricted() {
+        return restricted;
+    }
 
-    public void setRestricted(boolean restricted) { this.restricted = restricted; }
+    public void setRestricted(boolean restricted) {
+        this.restricted = restricted;
+    }
 
     public boolean isRecordPrivilege() {
         return recordPrivilege;
