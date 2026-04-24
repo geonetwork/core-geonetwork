@@ -5,8 +5,14 @@ To manage privileges to your metadata record and any attached data, you will nee
 For example, you can specify that the metadata and related services are visible to all (Internet users) or just to internal users only (Intranet). Privileges are assigned on a per group basis. Depending on the user profile (Guest, Registered User, Editor, Admin etc.) access to these functions may differ on a per user basis.
 
 !!! Note
-  
-    [System Privilege Groups](../../administrator-guide/managing-users-and-groups/creating-group.md#3-system-privilege-group) are special groups which cannot have privileges set for specific metadata records.
+
+    The privileges panel uses colour coding to identify different group types:
+
+    - **Blue rows** — [Reserved groups](../../administrator-guide/managing-users-and-groups/creating-group.md) (All, Intranet, Guest). Only Administrators and Reviewers can edit these privileges.
+    - **Yellow rows** — [Record Privilege Groups](../../administrator-guide/managing-users-and-groups/creating-group.md#2-record-privilege-group). These groups can be assigned privileges on specific records but cannot own metadata.
+    - **No highlight** — Standard [Workspace Groups](../../administrator-guide/managing-users-and-groups/creating-group.md#1-workspace-group).
+
+    [System Privilege Groups](../../administrator-guide/managing-users-and-groups/creating-group.md#3-system-privilege-group) are not shown in the panel, as privileges for specific metadata records cannot be assigned to them.
 
 ## Assigning privileges
 
