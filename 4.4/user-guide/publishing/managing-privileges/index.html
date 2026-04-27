@@ -2008,7 +2008,13 @@
 <p>For example, you can specify that the metadata and related services are visible to all (Internet users) or just to internal users only (Intranet). Privileges are assigned on a per group basis. Depending on the user profile (Guest, Registered User, Editor, Admin etc.) access to these functions may differ on a per user basis.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p><a href="../../../administrator-guide/managing-users-and-groups/creating-group/#3-system-privilege-group">System Privilege Groups</a> are special groups which cannot have privileges set for specific metadata records.</p>
+<p>The privileges panel uses colour coding to identify different group types:</p>
+<ul>
+<li><strong>Blue rows</strong> — <a href="../../../administrator-guide/managing-users-and-groups/creating-group/">Reserved groups</a> (All, Intranet, Guest). Only Administrators and Reviewers can edit these privileges.</li>
+<li><strong>Yellow rows</strong> — <a href="../../../administrator-guide/managing-users-and-groups/creating-group/#2-record-privilege-group">Record Privilege Groups</a>. These groups can be assigned privileges on specific records but cannot own metadata.</li>
+<li><strong>No highlight</strong> — Standard <a href="../../../administrator-guide/managing-users-and-groups/creating-group/#1-workspace-group">Workspace Groups</a>.</li>
+</ul>
+<p><a href="../../../administrator-guide/managing-users-and-groups/creating-group/#3-system-privilege-group">System Privilege Groups</a> are not shown in the panel, as privileges for specific metadata records cannot be assigned to them.</p>
 </div>
 <h2 id="assigning-privileges">Assigning privileges</h2>
 <p>To assign privileges, follow these steps:</p>
