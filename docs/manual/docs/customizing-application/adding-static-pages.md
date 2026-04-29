@@ -34,7 +34,11 @@ To add new static pages go to **Admin Console** -->  **Settings** -->  **Static 
     - **Visible only to the administrator**
     - **Visible to logged users**
     - **Visible to users belonging to groups**
+    - **Visible to users belonging to groups and to administrators**
     - **Visible to every one**
+
+  When using one of the group-based visibility options, select one or more values in the **Groups** field.
+  Administrators can still see all configured static pages in the administration screen so they can manage pages even when a page is not publicly visible.
 
   ![](img/add-static-page.png)
 
