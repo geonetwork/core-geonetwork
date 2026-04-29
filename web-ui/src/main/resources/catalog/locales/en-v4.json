@@ -429,6 +429,7 @@
   "staticPageStatus-GROUPS": "Visible to users belonging to the groups",
   "staticPageStatus-PUBLIC": "Visible to everyone",
   "pageLink": "Link",
+  "pageLink-help": "URL can contain the following variables between '{' and '}': <ul><li><strong>uuid</strong> for the current metadata uuid</li><li><strong>id</strong> for the current metadata id</li></ul>",
   "pageSection-help": "Currently, the default UI view only supports TOP and FOOTER values. Custom UI views can make use of additional values.",
   "application/vnd.geo+json": "GeoJSON",
   "application/json": "JSON",
