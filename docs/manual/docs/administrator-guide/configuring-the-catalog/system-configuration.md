@@ -124,6 +124,24 @@ Enabling the setting, displays in the application footer a link to a page that a
 
 It requires an email server configured.
 
+## Application banner
+
+In certain situations it can be useful to display a banner in the application to inform users, for example to announce a maintenance window or an outage.
+
+Enabling this setting displays a banner in the public pages of the application.
+
+-   **Enable** If set, the application banner is displayed with the message configured.
+
+![](img/application-banner-config.png)
+
+To configure the banner message, go to `Admin console` --> `Settings` --> `Languages and translations` and add a translation entry with the key **application-banner**.
+
+![](img/application-banner-config2.png)
+
+The banner is shown at the top of the public search page.
+
+![](img/application-banner2.png)
+
 ## Link in metadata records
 
 !!! warning "Deprecated"
