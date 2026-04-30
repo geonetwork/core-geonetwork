@@ -56,6 +56,8 @@
       not(*/mrd:onLine[not(*/cit:protocol/gco:CharacterString = $doiProtocol)]) and
       not(*/mrd:offLine) and
       not(*/mrd:unitsOfDistribution) and
+      not(*/mrd:transferFrequency) and
+      not(*/mrd:distributionFormat) and
       not(*/mrd:transferSize)]"/>
 
   <!-- Do a copy of every nodes and attributes -->
