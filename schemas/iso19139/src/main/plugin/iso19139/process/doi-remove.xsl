@@ -16,6 +16,9 @@
                               */gmd:linkage/gmd:URL = $doi]"
                 priority="2"/>
 
+  <!-- Remove transferOptions with empty MD_DigitalTransferOptions -->
+  <xsl:template match="gmd:transferOptions[not(*/*)]"/>
+
   <xsl:template match="gmd:identifier[*/gmd:code/gmx:Anchor/@xlink:href = $doi]"
                 priority="2"/>
 
