@@ -85,25 +85,54 @@
         <xsl:apply-templates select="*/@*"/>
         <xsl:apply-templates select="*/mrd:distributionFormat"/>
         <xsl:apply-templates select="*/mrd:distributor"/>
-        <xsl:apply-templates select="*/mrd:transferOptions"/>
-        <mrd:transferOptions>
-          <mrd:MD_DigitalTransferOptions>
-            <mrd:onLine>
-              <cit:CI_OnlineResource>
-                <cit:linkage>
-                  <gco:CharacterString><xsl:value-of select="concat($doiProxy, $doi)"/></gco:CharacterString>
-                </cit:linkage>
-                <cit:protocol>
-                  <gco:CharacterString><xsl:value-of select="$doiProtocol"/></gco:CharacterString>
-                </cit:protocol>
-                <cit:name>
-                  <gco:CharacterString><xsl:value-of select="$doiName"/></gco:CharacterString>
-                </cit:name>
-              </cit:CI_OnlineResource>
-            </mrd:onLine>
-          </mrd:MD_DigitalTransferOptions>
-        </mrd:transferOptions>
+        <xsl:choose>
+          <xsl:when test="*/mrd:transferOptions">
+            <xsl:apply-templates select="*/mrd:transferOptions[1]" mode="doi-add"/>
+            <xsl:apply-templates select="*/mrd:transferOptions[position() > 1]"/>
+          </xsl:when>
+          <xsl:otherwise>
+            <mrd:transferOptions>
+              <mrd:MD_DigitalTransferOptions>
+                <mrd:onLine>
+                  <cit:CI_OnlineResource>
+                    <cit:linkage>
+                      <gco:CharacterString><xsl:value-of select="concat($doiProxy, $doi)"/></gco:CharacterString>
+                    </cit:linkage>
+                    <cit:protocol>
+                      <gco:CharacterString><xsl:value-of select="$doiProtocol"/></gco:CharacterString>
+                    </cit:protocol>
+                    <cit:name>
+                      <gco:CharacterString><xsl:value-of select="$doiName"/></gco:CharacterString>
+                    </cit:name>
+                  </cit:CI_OnlineResource>
+                </mrd:onLine>
+              </mrd:MD_DigitalTransferOptions>
+            </mrd:transferOptions>
+          </xsl:otherwise>
+        </xsl:choose>
       </mrd:MD_Distribution>
+    </xsl:copy>
+  </xsl:template>
+
+  <xsl:template match="mrd:transferOptions" mode="doi-add">
+    <xsl:copy>
+      <xsl:apply-templates select="@*"/>
+      <mrd:MD_DigitalTransferOptions>
+        <xsl:apply-templates select="mrd:MD_DigitalTransferOptions/@*|mrd:MD_DigitalTransferOptions/node()"/>
+        <mrd:onLine>
+          <cit:CI_OnlineResource>
+            <cit:linkage>
+              <gco:CharacterString><xsl:value-of select="concat($doiProxy, $doi)"/></gco:CharacterString>
+            </cit:linkage>
+            <cit:protocol>
+              <gco:CharacterString><xsl:value-of select="$doiProtocol"/></gco:CharacterString>
+            </cit:protocol>
+            <cit:name>
+              <gco:CharacterString><xsl:value-of select="$doiName"/></gco:CharacterString>
+            </cit:name>
+          </cit:CI_OnlineResource>
+        </mrd:onLine>
+      </mrd:MD_DigitalTransferOptions>
     </xsl:copy>
   </xsl:template>
 

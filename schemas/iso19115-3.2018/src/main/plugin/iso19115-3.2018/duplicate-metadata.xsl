@@ -51,6 +51,9 @@
   <!-- Remove DOI links -->
   <xsl:template match="mrd:onLine[*/cit:protocol/gco:CharacterString = $doiProtocol]" />
 
+  <!-- Remove transferOptions with empty MD_DigitalTransferOptions -->
+  <xsl:template match="mrd:transferOptions[not(*/*)]"/>
+
   <!-- Do a copy of every nodes and attributes -->
   <xsl:template match="@*|node()">
     <xsl:copy>
