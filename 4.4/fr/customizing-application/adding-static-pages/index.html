@@ -1484,6 +1484,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#change-the-menu-order-in-the-record-view-toolbar" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Change the menu order in the record view toolbar
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#change-the-static-pages-order-in-the-footer" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1832,6 +1843,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#change-the-menu-order-in-the-record-view-toolbar" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Change the menu order in the record view toolbar
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#change-the-static-pages-order-in-the-footer" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1909,7 +1931,7 @@
 <p><strong>Page content</strong>: For formats other than <strong>Web link</strong> or <strong>Email link</strong>, allows editing the HTML / text content to display.</p>
 </li>
 <li>
-<p><strong>Page section</strong>: Section of the page to display the link. Currently implemented sections are <code>TOP</code> (top menu of the main page) and <code>FOOTER</code> (footer of the main page).</p>
+<p><strong>Page section</strong>: Section of the page to display the link. Currently implemented sections are <code>TOP</code> (top menu of the main page), <code>FOOTER</code> (footer of the main page), and <code>RECORD_VIEW_MENU</code> (toolbar shown on the record view page).</p>
 </li>
 <li>
 <p><strong>Status</strong>: Defines which users can see the link.</p>
@@ -1952,6 +1974,27 @@
 </span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w"> </span><span class="s2">&quot;documentation&quot;</span><span class="p">]</span>
 </span></code></pre></div>
 <p>For example, if a translation is defined for <code>quickSearch</code>, the submenu label is translated automatically for each language.</p>
+<h2 id="change-the-menu-order-in-the-record-view-toolbar">Change the menu order in the record view toolbar</h2>
+<p>On the record view page, static pages can also be inserted between the default record actions. This can be configured in <strong>Admin Console</strong> &rarr; <strong>Settings</strong> &rarr; <strong>User interface</strong>, in the <strong>Record View custom menu items</strong> section.</p>
+<p>To add a static page to this area, create it first with the <strong>Page section</strong> set to <code>RECORD_VIEW_MENU</code>.</p>
+<p>By default, the record view toolbar uses the following menu order:</p>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="p">[</span><span class="s2">&quot;gn-recordview-edit-menu&quot;</span><span class="p">,</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w"> </span><span class="s2">&quot;gn-recordview-delete-menu&quot;</span><span class="p">,</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w"> </span><span class="s2">&quot;gn-recordview-manage-menu&quot;</span><span class="p">,</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w"> </span><span class="s2">&quot;gn-recordview-download-menu&quot;</span><span class="p">,</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w"> </span><span class="s2">&quot;gn-recordview-display-menu&quot;</span><span class="p">]</span>
+</span></code></pre></div>
+<p>As with the top toolbar, insert a page as a simple menu using the page identifier or as a submenu using an object:</p>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="p">[</span><span class="s2">&quot;gn-recordview-edit-menu&quot;</span><span class="p">,</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w"> </span><span class="p">{</span><span class="nt">&quot;quickSearch&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">   </span><span class="s2">&quot;documentation&quot;</span><span class="p">,</span>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">   </span><span class="s2">&quot;forReview&quot;</span>
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w"> </span><span class="p">]},</span>
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w"> </span><span class="s2">&quot;gn-recordview-delete-menu&quot;</span><span class="p">,</span>
+</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w"> </span><span class="s2">&quot;gn-recordview-manage-menu&quot;</span><span class="p">,</span>
+</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w"> </span><span class="s2">&quot;gn-recordview-download-menu&quot;</span><span class="p">,</span>
+</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w"> </span><span class="s2">&quot;gn-recordview-display-menu&quot;</span><span class="p">]</span>
+</span></code></pre></div>
 <h2 id="change-the-static-pages-order-in-the-footer">Change the static pages order in the footer</h2>
 <p>The order of the footer pages can be configured in <strong>Admin Console</strong> &rarr;  <strong>Settings</strong> &rarr;  <strong>User interface</strong>, in the <strong>Footer custom menu items</strong> section.</p>
 
