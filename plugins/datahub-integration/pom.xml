@@ -98,57 +98,6 @@
           </execution>
         </executions>
       </plugin>
-      <plugin>
-        <groupId>com.github.eirslett</groupId>
-        <artifactId>frontend-maven-plugin</artifactId>
-        <version>1.15.0</version>
-        <executions>
-          <execution>
-            <!--   Installing node and npm   -->
-            <id>install-node-and-npm</id>
-            <phase>initialize</phase>
-            <goals>
-              <goal>install-node-and-npm</goal>
-            </goals>
-            <configuration>
-              <nodeVersion>v20.12.2</nodeVersion>
-              <npmVersion>10.7.0</npmVersion>
-            </configuration>
-          </execution>
-          <!--   Install geonetwork-ui dependencies   -->
-          <execution>
-            <id>npm-install</id>
-            <phase>initialize</phase>
-            <goals>
-              <goal>npm</goal>
-            </goals>
-            <configuration>
-              <arguments>ci --loglevel error --legacy-peer-deps</arguments>
-              <workingDirectory>geonetwork-ui</workingDirectory>
-              <installDirectory>${basedir}</installDirectory>
-            </configuration>
-          </execution>
-          <!--   Build datahub app   -->
-          <execution>
-            <id>npm-build</id>
-            <phase>generate-resources</phase>
-            <goals>
-              <goal>npm</goal>
-            </goals>
-            <configuration>
-              <environmentVariables>
-                <NX_DAEMON>false</NX_DAEMON>
-              </environmentVariables>
-              <arguments>
-                run nx -- build datahub --base-href=./
-              </arguments>
-              <workingDirectory>geonetwork-ui</workingDirectory>
-              <installDirectory>${basedir}</installDirectory>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-
       <!--   Copy of datahub files   -->
       <plugin>
         <artifactId>maven-resources-plugin</artifactId>
