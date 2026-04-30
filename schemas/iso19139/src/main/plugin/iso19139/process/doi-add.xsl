@@ -4,6 +4,7 @@
                   xmlns:gmd="http://www.isotc211.org/2005/gmd"
                   xmlns:gmx="http://www.isotc211.org/2005/gmx"
                   xmlns:xlink="http://www.w3.org/1999/xlink"
+                  xmlns:xs="http://www.w3.org/2001/XMLSchema"
                   xmlns:geonet="http://www.fao.org/geonetwork"
                   exclude-result-prefixes="#all">
 
@@ -93,19 +94,11 @@
           <xsl:otherwise>
             <gmd:transferOptions>
               <gmd:MD_DigitalTransferOptions>
-                <gmd:onLine>
-                  <gmd:CI_OnlineResource>
-                    <gmd:linkage>
-                      <gmd:URL><xsl:value-of select="concat($doiProxy, $doi)"/></gmd:URL>
-                    </gmd:linkage>
-                    <gmd:protocol>
-                      <gco:CharacterString><xsl:value-of select="$doiProtocol"/></gco:CharacterString>
-                    </gmd:protocol>
-                    <gmd:name>
-                      <gco:CharacterString><xsl:value-of select="$doiName"/></gco:CharacterString>
-                    </gmd:name>
-                  </gmd:CI_OnlineResource>
-                </gmd:onLine>
+                <xsl:call-template name="add-doi-resource">
+                  <xsl:with-param name="linkage" select="concat($doiProxy, $doi)" />
+                  <xsl:with-param name="protocol" select="$doiProtocol" />
+                  <xsl:with-param name="name" select="$doiName" />
+                </xsl:call-template>
               </gmd:MD_DigitalTransferOptions>
             </gmd:transferOptions>
           </xsl:otherwise>
@@ -119,21 +112,34 @@
       <xsl:apply-templates select="@*"/>
       <gmd:MD_DigitalTransferOptions>
         <xsl:apply-templates select="gmd:MD_DigitalTransferOptions/@*|gmd:MD_DigitalTransferOptions/node()"/>
-        <gmd:onLine>
-          <gmd:CI_OnlineResource>
-            <gmd:linkage>
-              <gmd:URL><xsl:value-of select="concat($doiProxy, $doi)"/></gmd:URL>
-            </gmd:linkage>
-            <gmd:protocol>
-              <gco:CharacterString><xsl:value-of select="$doiProtocol"/></gco:CharacterString>
-            </gmd:protocol>
-            <gmd:name>
-              <gco:CharacterString><xsl:value-of select="$doiName"/></gco:CharacterString>
-            </gmd:name>
-          </gmd:CI_OnlineResource>
-        </gmd:onLine>
+
+        <xsl:call-template name="add-doi-resource">
+          <xsl:with-param name="linkage" select="concat($doiProxy, $doi)" />
+          <xsl:with-param name="protocol" select="$doiProtocol" />
+          <xsl:with-param name="name" select="$doiName" />
+        </xsl:call-template>
       </gmd:MD_DigitalTransferOptions>
     </xsl:copy>
+  </xsl:template>
+
+  <xsl:template name="add-doi-resource">
+    <xsl:param name="linkage" as="xs:string" />
+    <xsl:param name="protocol" as="xs:string" />
+    <xsl:param name="name" as="xs:string" />
+
+    <gmd:onLine>
+      <gmd:CI_OnlineResource>
+        <gmd:linkage>
+          <gmd:URL><xsl:value-of select="$linkage"/></gmd:URL>
+        </gmd:linkage>
+        <gmd:protocol>
+          <gco:CharacterString><xsl:value-of select="$protocol"/></gco:CharacterString>
+        </gmd:protocol>
+        <gmd:name>
+          <gco:CharacterString><xsl:value-of select="$name"/></gco:CharacterString>
+        </gmd:name>
+      </gmd:CI_OnlineResource>
+    </gmd:onLine>
   </xsl:template>
 
 
