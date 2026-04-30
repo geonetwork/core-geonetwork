@@ -239,10 +239,6 @@ public class Setting extends GeonetEntity {
     }
 
     /**
-     * Set true if the setting is private.
-     *
-     * @param editable true if the setting is private.
-    /**
      * Set whether the setting is editable in the administration UI.
      *
      * @param editable true if the setting should be editable.
