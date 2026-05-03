@@ -552,6 +552,9 @@
                 });
                 country.name = country.label[lang] || country.label[defaultLang];
               });
+              data.sort(function (a, b) {
+                return (a.name || "").localeCompare(b.name || "");
+              });
               defer.resolve(data);
             });
 
