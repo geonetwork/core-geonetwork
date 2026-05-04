@@ -33,7 +33,8 @@
     "$window",
     "$translate",
     "$document",
-    function ($scope, $http, $window, $translate, $document) {
+    "gnGlobalSettings",
+    function ($scope, $http, $window, $translate, $document, gnGlobalSettings) {
       var waitclass = "ga-print-wait";
       var bodyEl = angular.element($document[0].body);
       bodyEl.removeClass(waitclass);
@@ -546,26 +547,56 @@
             });
             return enc;
           },
-          WMTS: function (layer, config) {
+          WMTS: function (layer, config, proj) {
             var enc = $scope.encoders.layers["Layer"].call(this, layer);
             var source = layer.getSource();
             var tileGrid = source.getTileGrid();
+            var matrixSet = source.getMatrixSet();
+            var matrixIds = new Array(tileGrid.getResolutions().length);
+            var layerUrl = layer.get("url");
+            for (var z = 0; z < tileGrid.getResolutions().length; ++z) {
+              var mSize =
+                ol.extent.getWidth(proj.getExtent()) /
+                tileGrid.getTileSize(z) /
+                tileGrid.getResolutions()[z];
+              matrixIds[z] = {
+                identifier: tileGrid.getMatrixIds()[z],
+                resolution: tileGrid.getResolutions()[z],
+                tileSize: [tileGrid.getTileSize(z), tileGrid.getTileSize(z)],
+                topLeftCorner: tileGrid.getOrigin(z),
+                matrixSize: [mSize, mSize]
+              };
+            }
+
+            // workaround for Mapfish v2.1.2 with REST and matrixIds
+            if (matrixIds.length > 0) {
+              if (/{style}/gi.test(decodeURI(layerUrl))) {
+                layerUrl = encodeURI(
+                  decodeURI(layerUrl).replace(/{style}/gi, source.getStyle())
+                );
+              }
+              if (/layer/gi.test(decodeURI(layerUrl))) {
+                layerUrl = encodeURI(
+                  decodeURI(layerUrl).replace(/{layer}/gi, source.getLayer())
+                );
+              }
+            }
+
+            layerUrl = gnGlobalSettings.getNonProxifiedUrl(layerUrl);
+
             angular.extend(enc, {
               type: "WMTS",
-              baseURL: location.protocol + "//wmts.geo.admin.ch", // FIXME
-              layer: config.serverLayerName,
-              maxExtent: layer.getExtent(),
-              tileOrigin: tileGrid.getOrigin(),
-              tileSize: [tileGrid.getTileSize(), tileGrid.getTileSize()],
-              resolutions: tileGrid.getResolutions(),
-              zoomOffset: tileGrid.getMinZoom(),
-              version: "1.0.0",
-              requestEncoding: "REST",
-              formatSuffix: config.format || "jpeg",
-              style: "default",
-              dimensions: ["TIME"],
-              params: { TIME: source.getDimensions().Time },
-              matrixSet: "21781" // FIXME
+              baseURL: layerUrl,
+              layer: source.getLayer(),
+              version: source.getVersion(),
+              requestEncoding: source.getRequestEncoding() || "KVP",
+              // Dimensions is not a mandatory parameter
+              // but it is required by Mapfish v2.1.2 if requestEncoding is REST
+              dimensions: [],
+              format: source.getFormat(),
+              style: source.getStyle(),
+              matrixSet: matrixSet,
+              matrixIds: matrixIds
             });
 
             return enc;
