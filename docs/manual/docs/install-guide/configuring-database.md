@@ -82,6 +82,7 @@ Alternative environment variables are also supported for non-container (WAR-file
     GEONETWORK_DB_NAME=example
     GEONETWORK_DB_HOST=localhost
     GEONETWORK_DB_PORT=5432
+    GEONETWORK_DB_TYPE=postgres
   ```
 
 Based on compile-time default settings: https://github.com/geonetwork/core-geonetwork/blob/e8cee088ca714789788d9de0cb8f143d09a8e9ba/pom.xml#L1556-L1562 that are used to set these https://github.com/geonetwork/core-geonetwork/blob/e8cee088ca714789788d9de0cb8f143d09a8e9ba/web/src/main/webResources/WEB-INF/config-db/jdbc.properties#L24-L28
