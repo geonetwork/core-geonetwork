@@ -68,10 +68,13 @@ Insert a page as a simple menu using the page identifier or as a submenu using a
 ["gn-site-name-menu",
  "gn-portal-switcher",
  "gn-search-menu",
- {"quickSearch": [
-   "searchForAfrica",
-   "forReview"
- ]},
+ {"quickSearch": {
+   "icon": "fa-search",
+   "items": [
+     "searchForAfrica",
+     "forReview"
+   ]
+ }},
  "gn-map-menu",
  "gn-contribute-menu",
  "gn-admin-menu",
@@ -100,10 +103,13 @@ As with the top toolbar, insert a page as a simple menu using the page identifie
 
 ``` json
 ["gn-recordview-edit-menu",
- {"quickSearch": [
-   "documentation",
-   "forReview"
- ]},
+ {"quickSearch": {
+   "icon": "fa-search",
+   "items": [
+     "documentation",
+     "forReview"
+   ]
+ }},
  "gn-recordview-delete-menu",
  "gn-recordview-manage-menu",
  "gn-recordview-download-menu",
