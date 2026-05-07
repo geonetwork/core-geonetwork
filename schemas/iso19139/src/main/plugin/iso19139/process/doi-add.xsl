@@ -40,7 +40,7 @@
                 select="count(//gmd:distributionInfo//gmd:onLine/*[matches(gmd:protocol/gco:CharacterString, $doiProtocolRegex)]/gmd:linkage/gmd:URL[. != '']) > 0"/>-->
 
 
-  <xsl:template match="gmd:identificationInfo[1]/*/gmd:citation/*[not($isDoiAlreadySet)]"
+  <xsl:template match="gmd:identificationInfo[1]/*/gmd:citation/*[not($isDoiAlreadySet) and string($doi)]"
                 priority="2">
     <xsl:copy>
       <xsl:copy-of select="@*"/>
@@ -78,7 +78,7 @@
   If a transferOptions already exists, add the DOI onLine to the first one.
   Otherwise, create a new transferOptions.
   -->
-  <xsl:template match="gmd:distributionInfo[not($isDoiAlreadySet) and position() = 1]"
+  <xsl:template match="gmd:distributionInfo[not($isDoiAlreadySet) and string($doi) and position() = 1]"
                 priority="2">
     <xsl:copy>
       <xsl:apply-templates select="@*"/>
@@ -111,13 +111,16 @@
     <xsl:copy>
       <xsl:apply-templates select="@*"/>
       <gmd:MD_DigitalTransferOptions>
-        <xsl:apply-templates select="gmd:MD_DigitalTransferOptions/@*|gmd:MD_DigitalTransferOptions/node()"/>
+        <xsl:apply-templates select="gmd:MD_DigitalTransferOptions/@*|gmd:MD_DigitalTransferOptions/(gmd:unitsOfDistribution|gmd:transferSize|gmd:onLine)"/>
 
         <xsl:call-template name="add-doi-resource">
           <xsl:with-param name="linkage" select="concat($doiProxy, $doi)" />
           <xsl:with-param name="protocol" select="$doiProtocol" />
           <xsl:with-param name="name" select="$doiName" />
         </xsl:call-template>
+
+        <xsl:apply-templates select="gmd:MD_DigitalTransferOptions/gmd:offLine"/>
+
       </gmd:MD_DigitalTransferOptions>
     </xsl:copy>
   </xsl:template>

@@ -37,7 +37,7 @@
 <!--                select="count(//mdb:distributionInfo//mrd:onLine/*[matches(cit:protocol/gco:CharacterString, $doiProtocolRegex)]/cit:linkage/gco:CharacterString[. != '']) > 0"/>-->
 
 
-  <xsl:template match="mdb:identificationInfo[1]/*/mri:citation/*[not($isDoiAlreadySet)]"
+  <xsl:template match="mdb:identificationInfo[1]/*/mri:citation/*[not($isDoiAlreadySet) and string($doi)]"
                 priority="2">
     <xsl:copy>
       <xsl:copy-of select="@*"/>
@@ -79,7 +79,7 @@
   </xsl:template>
 
 
-  <xsl:template match="mdb:distributionInfo[not($isDoiAlreadySet) and position() = 1]">
+  <xsl:template match="mdb:distributionInfo[not($isDoiAlreadySet) and string($doi) and position() = 1]">
     <xsl:copy>
       <xsl:apply-templates select="@*"/>
       <mrd:MD_Distribution>
@@ -111,13 +111,15 @@
     <xsl:copy>
       <xsl:apply-templates select="@*"/>
       <mrd:MD_DigitalTransferOptions>
-        <xsl:apply-templates select="mrd:MD_DigitalTransferOptions/@*|mrd:MD_DigitalTransferOptions/node()"/>
+        <xsl:apply-templates select="mrd:MD_DigitalTransferOptions/@*|mrd:MD_DigitalTransferOptions/(mrd:unitsOfDistribution|mrd:transferSize|mrd:onLine)"/>
 
         <xsl:call-template name="add-doi-resource">
           <xsl:with-param name="linkage" select="concat($doiProxy, $doi)" />
           <xsl:with-param name="protocol" select="$doiProtocol" />
           <xsl:with-param name="name" select="$doiName" />
         </xsl:call-template>
+
+        <xsl:apply-templates select="mrd:MD_DigitalTransferOptions/(mrd:offLine|mrd:transferFrequency|mrd:distributionFormat)"/>
       </mrd:MD_DigitalTransferOptions>
     </xsl:copy>
   </xsl:template>
