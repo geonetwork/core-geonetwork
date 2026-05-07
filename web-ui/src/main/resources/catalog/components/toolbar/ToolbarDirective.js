@@ -320,10 +320,24 @@
             return false;
           };
 
-          scope.getStatusEffects = function (user) {
-            var isReviewer =
-              user.isAdmin() || user.isReviewerForGroup(scope.md.groupOwner);
-            return scope.statusEffects[isReviewer ? "reviewer" : "editor"];
+          scope.getStatusEffects = function () {
+            return scope.statusEffects[scope.isReviewer() ? "reviewer" : "editor"];
+          };
+
+          scope.isReviewer = function () {
+            return (
+              scope.user.isAdmin() || scope.user.isReviewerForGroup(scope.md.groupOwner)
+            );
+          };
+
+          scope.getWorkflowStepLabelKey = function (step) {
+            return (
+              step.from +
+              "-to-" +
+              step.to +
+              "-" +
+              (scope.isReviewer() ? "reviewer" : "editor")
+            );
           };
 
           scope.displayEnableWorkflowOption = function (user) {
