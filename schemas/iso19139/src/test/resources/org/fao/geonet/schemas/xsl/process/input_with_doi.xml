@@ -367,7 +367,7 @@
                 <gco:CharacterString>WWW:DOWNLOAD-1.0-http--download</gco:CharacterString>
               </gmd:protocol>
               <gmd:name>
-                <gmx:MimeFileType xmlns:gmx="http://www.isotc211.org/2005/gmx"
+                <gmx:MimeFileType
                                   type="application/zip">basins.zip
                 </gmx:MimeFileType>
               </gmd:name>
