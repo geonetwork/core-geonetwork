@@ -52,13 +52,39 @@
               );
             }
           } else if (angular.isObject(menu)) {
-            var key = Object.keys(menu)[0],
-              submenu = {
-                label: key,
-                type: "submenu",
-                pages: []
-              };
-            buildMenu(submenu.pages, staticPages, menu[key]);
+            var key = Object.keys(menu)[0];
+            var value = menu[key];
+
+            var submenu = {
+              label: key,
+              icon: undefined,
+              type: "submenu",
+              pages: []
+            };
+
+            var menuItems;
+
+            // If the submenu is using the legacy array format
+            if (angular.isArray(value)) {
+              menuItems = value;
+              // If the submenu is using the new object format with an items array and optional icon
+            } else if (angular.isObject(value)) {
+              if (angular.isArray(value.items)) {
+                menuItems = value.items;
+              }
+              if (angular.isDefined(value.icon)) {
+                submenu.icon = value.icon;
+              }
+            } else {
+              console.warn(
+                "Invalid menu configuration for " +
+                  key +
+                  ". Expected an array of page identifiers or an object with an items array."
+              );
+              return;
+            }
+
+            buildMenu(submenu.pages, staticPages, menuItems);
             pagesMenu.push(submenu);
           }
         });

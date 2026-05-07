@@ -27,7 +27,7 @@ To add new static pages go to **Admin Console** -->  **Settings** -->  **Static 
 
 - **Page content**: For formats other than **Web link** or **Email link**, allows editing the HTML / text content to display.
 
-- **Page section**: Section of the page to display the link. Currently implemented sections are `TOP` (top menu of the main page) and `FOOTER` (footer of the main page).
+- **Page section**: Section of the page to display the link. Currently implemented sections are `TOP` (top menu of the main page), `FOOTER` (footer of the main page), and `RECORD_VIEW_MENU` (toolbar shown on the record view page).
 
 - **Status**: Defines which users can see the link.
 
@@ -68,10 +68,13 @@ Insert a page as a simple menu using the page identifier or as a submenu using a
 ["gn-site-name-menu",
  "gn-portal-switcher",
  "gn-search-menu",
- {"quickSearch": [
-   "searchForAfrica",
-   "forReview"
- ]},
+ {"quickSearch": {
+   "icon": "fa-search",
+   "items": [
+     "searchForAfrica",
+     "forReview"
+   ]
+ }},
  "gn-map-menu",
  "gn-contribute-menu",
  "gn-admin-menu",
@@ -79,6 +82,39 @@ Insert a page as a simple menu using the page identifier or as a submenu using a
 ```
 
 For example, if a translation is defined for `quickSearch`, the submenu label is translated automatically for each language.
+
+## Change the menu order in the record view toolbar
+
+On the record view page, static pages can also be inserted between the default record actions. This can be configured in **Admin Console** --> **Settings** --> **User interface**, in the **Record View custom menu items** section.
+
+To add a static page to this area, create it first with the **Page section** set to `RECORD_VIEW_MENU`.
+
+By default, the record view toolbar uses the following menu order:
+
+``` json
+["gn-recordview-edit-menu",
+ "gn-recordview-delete-menu",
+ "gn-recordview-manage-menu",
+ "gn-recordview-download-menu",
+ "gn-recordview-display-menu"]
+```
+
+As with the top toolbar, insert a page as a simple menu using the page identifier or as a submenu using an object:
+
+``` json
+["gn-recordview-edit-menu",
+ {"quickSearch": {
+   "icon": "fa-search",
+   "items": [
+     "documentation",
+     "forReview"
+   ]
+ }},
+ "gn-recordview-delete-menu",
+ "gn-recordview-manage-menu",
+ "gn-recordview-download-menu",
+ "gn-recordview-display-menu"]
+```
 
 ## Change the static pages order in the footer
 
