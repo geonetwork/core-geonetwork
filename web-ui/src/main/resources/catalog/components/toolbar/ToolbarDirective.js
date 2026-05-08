@@ -310,7 +310,7 @@
               return true;
             }
 
-            var statusEffects = scope.getStatusEffects(user);
+            var statusEffects = scope.getStatusEffects();
             for (var i = 0; i < statusEffects.length; i++) {
               if (scope.displayWorkflowStepOption(statusEffects[i], user)) {
                 return true;
@@ -326,7 +326,11 @@
 
           scope.isReviewer = function () {
             return (
-              scope.user.isAdmin() || scope.user.isReviewerForGroup(scope.md.groupOwner)
+              scope.user &&
+              (scope.user.isAdmin() ||
+                (scope.md &&
+                  scope.md.groupOwner &&
+                  scope.user.isReviewerForGroup(scope.md.groupOwner)))
             );
           };
 
