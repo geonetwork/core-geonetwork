@@ -83,6 +83,7 @@ import java.nio.file.attribute.FileTime;
 import java.sql.SQLException;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static org.springframework.data.jpa.domain.Specification.where;
 
@@ -619,10 +620,11 @@ public class GroupsApi {
                 ));
             }
 
-            List<Page> staticPages = pageRepository.findPageByStatus(Page.PageStatus.GROUPS);
             List<Page> staticPagesAssignedToGroup =
-                staticPages.stream().filter(p ->
-                    !p.getGroups().stream().filter(g -> g.getId() == groupIdentifier).collect(Collectors.toList()).isEmpty())
+                Stream.of(Page.PageStatus.GROUPS, Page.PageStatus.GROUPS_AND_ADMIN)
+                    .flatMap(status -> pageRepository.findPageByStatus(status).stream())
+                    .filter(p -> p.getGroups().stream()
+                        .anyMatch(g -> Objects.equals(g.getId(), groupIdentifier)))
                     .collect(Collectors.toList());
 
             if (!staticPagesAssignedToGroup.isEmpty()) {
