@@ -594,6 +594,7 @@ public class MetadataSharingApi implements ApplicationEventPublisherAware {
 
             if (sharing.isClear()) {
                 metadataOperations.deleteMetadataOper(String.valueOf(metadata.getId()), excludeFromDelete);
+                sharingChanges = true;
             }
 
             for (GroupOperations p : privileges) {
