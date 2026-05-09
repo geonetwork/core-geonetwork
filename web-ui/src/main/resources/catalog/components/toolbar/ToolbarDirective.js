@@ -310,7 +310,7 @@
               return true;
             }
 
-            var statusEffects = scope.getStatusEffects(user);
+            var statusEffects = scope.getStatusEffects();
             for (var i = 0; i < statusEffects.length; i++) {
               if (scope.displayWorkflowStepOption(statusEffects[i], user)) {
                 return true;
@@ -320,10 +320,28 @@
             return false;
           };
 
-          scope.getStatusEffects = function (user) {
-            var isReviewer =
-              user.isAdmin() || user.isReviewerForGroup(scope.md.groupOwner);
-            return scope.statusEffects[isReviewer ? "reviewer" : "editor"];
+          scope.getStatusEffects = function () {
+            return scope.statusEffects[scope.isReviewer() ? "reviewer" : "editor"];
+          };
+
+          scope.isReviewer = function () {
+            return (
+              scope.user &&
+              (scope.user.isAdmin() ||
+                (scope.md &&
+                  scope.md.groupOwner &&
+                  scope.user.isReviewerForGroup(scope.md.groupOwner)))
+            );
+          };
+
+          scope.getWorkflowStepLabelKey = function (step) {
+            return (
+              step.from +
+              "-to-" +
+              step.to +
+              "-" +
+              (scope.isReviewer() ? "reviewer" : "editor")
+            );
           };
 
           scope.displayEnableWorkflowOption = function (user) {
