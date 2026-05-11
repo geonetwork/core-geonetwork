@@ -286,8 +286,9 @@
 
     NOTE: we are using [//local-name()='XYZ'] for the `gml:` namespace to make it work with both original gml and gml 3.2.
   -->
+
   <xsl:template mode="mode-iso19139"
-                match="gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:temporalElement[gmd:EX_TemporalExtent/gmd:extent/*[local-name()='timePeriod']//*[local-name()='beginPosition']]"
+                match="gml:TimePeriod[.//gml:beginPosition]|gml320:TimePeriod[.//gml320:beginPosition]"
                 priority="30000">
 
     <xsl:variable name="xpath" select="gn-fn-metadata:getXPath(.)"/>
@@ -306,39 +307,51 @@
 
     <xsl:variable name="id" select="concat('_X', gn:element/@ref, '_replace')"/>
 
+    <xsl:variable name="element_ns_uri" select="namespace-uri()"/>
+    <xsl:variable name="gml_is_32" select="$element_ns_uri = 'http://www.opengis.net/gml/3.2'"/>
+
+    <xsl:variable name="prefix_to_use">gml</xsl:variable>
+
+    <xsl:variable name="prefix_to_use_select">
+      <xsl:choose>
+        <xsl:when test="$gml_is_32">gml</xsl:when>
+        <xsl:otherwise>gml320</xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+
     <xsl:variable name="template">
       <template  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:gn="http://www.fao.org/geonetwork" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gmx="http://www.isotc211.org/2005/gmx" xmlns:srv="http://www.isotc211.org/2005/srv" xmlns:gml="http://www.opengis.net/gml/3.2" xmlns:xlink="http://www.w3.org/1999/xlink">
       <values>
         <!-- -Need a * for gml:TimePeriodTypeCHOICE_ELEMENT2 added by editor enumerated tree
               but this will make the XSLT formatter fails. Using // to access the element in both case. -->
         <key label="beginPosition"
-             xpath="/gmd:EX_TemporalExtent/gmd:extent//*[local-name()='beginPosition']"
+             xpath=".//*[local-name()='beginPosition']"
              use="gn-date-picker"
              tooltip="gmd:extent|gmd:EX_TemporalExtent">
           <directiveAttributes
-            data-tag-name="gml:beginPosition"
-            data-indeterminate-position="eval#gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/*/gml:beginPosition/@indeterminatePosition"/>
+            data-assume-gml-ns="true"
+          >
+            <xsl:attribute name="data-indeterminate-position" select="concat('eval#.//',$prefix_to_use_select,':beginPosition/@indeterminatePosition')"/>
+            <xsl:attribute name="data-tag-name" select="concat($prefix_to_use,':beginPosition')"/>
+          </directiveAttributes>
         </key>
         <key label="endPosition"
-             xpath="/gmd:EX_TemporalExtent/gmd:extent//*[local-name()='endPosition']"
+             xpath=".//*[local-name()='endPosition']"
              use="gn-date-picker"
              tooltip="gmd:extent|gmd:EX_TemporalExtent">
           <directiveAttributes
-            data-tag-name="gml:endPosition"
-            data-indeterminate-position="eval#gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/*/gml:endPosition/@indeterminatePosition"/>
+            data-assume-gml-ns="true"
+          >
+            <xsl:attribute name="data-indeterminate-position" select="concat('eval#.//',$prefix_to_use_select,':endPosition/@indeterminatePosition')"/>
+            <xsl:attribute name="data-tag-name" select="concat($prefix_to_use,':endPosition')"/>
+          </directiveAttributes>
         </key>
       </values>
       <snippet>
-        <gmd:temporalElement>
-          <gmd:EX_TemporalExtent>
-            <gmd:extent>
-              <gml:TimePeriod gml:id="">
-                {{beginPosition}}
-                {{endPosition}}
-              </gml:TimePeriod>
-            </gmd:extent>
-          </gmd:EX_TemporalExtent>
-        </gmd:temporalElement>
+        <gml:TimePeriod gml:id="">
+          {{beginPosition}}
+          {{endPosition}}
+        </gml:TimePeriod>
       </snippet>
     </template>
     </xsl:variable>
@@ -377,7 +390,6 @@
     </xsl:variable>
 
     <xsl:call-template name="render-element-template-field">
-      <xsl:with-param name="name" select="$name"/>
       <xsl:with-param name="id" select="$id"/>
       <xsl:with-param name="isExisting" select="true()"/>
       <xsl:with-param name="template" select="$templateCombinedWithNode"/>
