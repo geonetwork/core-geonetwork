@@ -84,7 +84,7 @@
   xmlns:vcard  = "http://www.w3.org/2006/vcard/ns#"
   xmlns:wdrs   = "http://www.w3.org/2007/05/powder-s#"
   xmlns:xlink  = "http://www.w3.org/1999/xlink"
-    xmlns:xs     = "http://www.w3.org/2001/XMLSchema"
+  xmlns:xs     = "http://www.w3.org/2001/XMLSchema"
   xmlns:xsi    = "http://www.w3.org/2001/XMLSchema-instance"
   xmlns:xsl    = "http://www.w3.org/1999/XSL/Transform"
   exclude-result-prefixes="#all"
@@ -197,10 +197,8 @@
   This parameter specifies the prefix (can be empty) used in ISO 19139 language tags
 -->
 
-<!--  <xsl:param name="locale-prefix">locale-</xsl:param>-->
-  <!-- GeoNetwork does not set any prefix by default.
-  Another approach would be to get the language id ref from the metadata language elements.  -->
-  <xsl:param name="locale-prefix"></xsl:param>
+
+  <xsl:param name="locale-prefix">locale-</xsl:param>
 
 <!-- Parameter $locale-default-lang -->
 <!--
@@ -215,7 +213,6 @@
     This parameter specifies whether deprecated mappings must ("yes") or must not
     ("no") be included in the output.
   -->
-
   <!-- Uncomment to include deprecated mappings from the output -->
 
   <xsl:param name="include-deprecated">yes</xsl:param>
@@ -458,11 +455,9 @@
       <!-- Handle PT_FreeText with LocalisedCharacterStrings -->
       <xsl:when test="$element/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString">
         <xsl:choose>
-<!--          <xsl:when test="$element/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[@locale = $localeId]">
-            <xsl:value-of select="normalize-space($element/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[@locale = $localeId][1])"/>
-          </xsl:when>-->
-          <xsl:when test="$element/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[@locale='#locale-en']">
-            <xsl:value-of select="normalize-space($element/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[@locale='#locale-en'][1])"/>
+          <!-- Try to find English locale first -->
+          <xsl:when test="$element/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[@locale='#{$locale-prefix}{$locale-default-lang}']">
+            <xsl:value-of select="normalize-space($element/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[@locale='#${locale-prefix}{$locale-default-lang}'][1])"/>
           </xsl:when>
           <!-- Otherwise use the first available LocalisedCharacterString -->
           <xsl:otherwise>
@@ -487,7 +482,7 @@
   <xsl:template match="/">
     <rdf:RDF>
       <xsl:apply-templates mode="iso19139-to-dcatap"
-                                        select="gmd:MD_Metadata|//gmd:MD_Metadata"/>
+                           select="gmd:MD_Metadata|//gmd:MD_Metadata"/>
     </rdf:RDF>
   </xsl:template>
 
@@ -499,8 +494,8 @@
   -->
 
   <xsl:template mode="iso19139-to-dcatap"
-                        match="gmd:MD_Metadata|//gmd:MD_Metadata"
-                        priority="10">
+                match="gmd:MD_Metadata|//gmd:MD_Metadata"
+                priority="10">
 
     <!--
 
@@ -780,7 +775,9 @@
         </xsl:otherwise>
       </xsl:choose>
     </xsl:param>
-
+    <xsl:param name="ServiceCategory">
+      <xsl:value-of select="gmd:identificationInfo/*/gmd:descriptiveKeywords/gmd:MD_Keywords/gmd:keyword/gmx:Anchor[starts-with(@xlink:href, $SpatialDataServiceCategoryCodelistUri)]/@xlink:href"/>
+    </xsl:param>
     <xsl:param name="ServiceType">
       <xsl:value-of select="gmd:identificationInfo/*/srv:serviceType/gco:LocalName"/>
     </xsl:param>
@@ -1251,9 +1248,9 @@
       -->
       <xsl:copy-of select="$ResourceTitle"/>
       <!--
-            <dct:description xml:lang="{$MetadataLanguage}">
+      <dct:description xml:lang="{$MetadataLanguage}">
         <xsl:value-of select="$ResourceAbstract"/>
-            </dct:description>
+      </dct:description>
       -->
       <xsl:copy-of select="$ResourceAbstract"/>
       <xsl:copy-of select="$ResourcePurpose"/>
@@ -1271,7 +1268,6 @@
       <xsl:apply-templates mode="iso19139-to-dcatap" select="gmd:identificationInfo/*/gmd:descriptiveKeywords/gmd:MD_Keywords">
         <xsl:with-param name="MetadataLanguage" select="$MetadataLanguage"/>
         <xsl:with-param name="ResourceType" select="$ResourceType"/>
-        <xsl:with-param name="ServiceType" select="$ServiceType"/>
       </xsl:apply-templates>
       <!-- Identifier, 0..1 -->
       <!--
@@ -1298,9 +1294,9 @@
         <xsl:choose>
           <xsl:when test="$orrlang[1]">
             <xsl:for-each select="$orrlang">
-              <dct:language>
-                  <dct:LinguisticSystem rdf:about="{concat($oplang,translate(.,$lowercase,$uppercase))}"/>
-              </dct:language>
+            <dct:language>
+                <dct:LinguisticSystem rdf:about="{concat($oplang,translate(.,$lowercase,$uppercase))}"/>
+            </dct:language>
             </xsl:for-each>
           </xsl:when>
           <xsl:otherwise>
@@ -1325,6 +1321,9 @@
                   <xsl:with-param name="MetadataLanguage" select="$MetadataLanguage"/>
                 </xsl:apply-templates>
         -->
+        <xsl:if test="$ServiceCategory != ''">
+           <geodcatap:serviceCategory rdf:resource="{$ServiceCategory}"/>
+        </xsl:if>
         <geodcatap:serviceType rdf:resource="{$SpatialDataServiceTypeCodelistUri}/{$ServiceType}"/>
       </xsl:if>
       <!-- Spatial extent -->
@@ -1344,7 +1343,7 @@
                 <dct:provenance>
                   <dct:ProvenanceStatement>
                     <rdfs:label xml:lang="{$MetadataLanguage}">
-              <xsl:value-of select="$Lineage"/>
+                      <xsl:value-of select="$Lineage"/>
                     </rdfs:label>
                   </dct:ProvenanceStatement>
                 </dct:provenance>
@@ -1397,7 +1396,7 @@
         <xsl:variable name="DistributionFormat">
           <xsl:apply-templates mode="iso19139-to-dcatap" select="gmd:distributionFormat/gmd:MD_Format/gmd:name/*"/>
         </xsl:variable>
-        <!-- Resource locators (access / download URLs) -->
+<!-- Resource locators (access / download URLs) -->
         <xsl:for-each select="(gmd:transferOptions | gmd:distributor/gmd:MD_Distributor/gmd:distributorTransferOptions)/*/gmd:onLine/*">
 
           <xsl:variable name="DistributorFormat">
@@ -1427,7 +1426,7 @@
           <xsl:variable name="Title">
             <xsl:for-each select="gmd:name">
               <dct:title xml:lang="{$MetadataLanguage}">
-                <xsl:value-of select="normalize-space(*)"/>
+                <xsl:value-of select="normalize-space(gco:CharacterString)"/>
               </dct:title>
               <xsl:call-template name="LocalisedString">
                 <xsl:with-param name="term">dct:title</xsl:with-param>
@@ -3045,7 +3044,6 @@
   <xsl:template mode="iso19139-to-dcatap" name="Keyword" match="gmd:identificationInfo/*/gmd:descriptiveKeywords/gmd:MD_Keywords">
     <xsl:param name="MetadataLanguage"/>
     <xsl:param name="ResourceType"/>
-    <xsl:param name="ServiceType"/>
     <xsl:param name="OriginatingControlledVocabularyURI" select="normalize-space(gmd:thesaurusName/gmd:CI_Citation/gmd:title/gmx:Anchor/@xlink:href)"/>
     <xsl:param name="OriginatingControlledVocabulary">
       <!--
@@ -3217,7 +3215,9 @@
 
                 <!-- Regular dcat:theme -->
                 <xsl:otherwise>
-                  <dcat:theme rdf:resource="{gmx:Anchor/@xlink:href}"/>
+                    <xsl:if test="not(starts-with(gmx:Anchor/@xlink:href, $SpatialDataServiceCategoryCodelistUri))">
+                      <dcat:theme rdf:resource="{gmx:Anchor/@xlink:href}"/>
+                    </xsl:if>
                 </xsl:otherwise>
               </xsl:choose>
 
@@ -3226,8 +3226,10 @@
                 <!-- Mapping added for compliance with DCAT-AP 2 -->
                 <xsl:if test="$profile = $extended">
                   <!-- DEPRECATED: Mapping kept for backward compatibility with GeoDCAT-AP v1.* -->
-                  <xsl:if test="$include-deprecated = 'yes'">
-                    <dct:subject rdf:resource="{gmx:Anchor/@xlink:href}"/>
+                <xsl:if test="$include-deprecated = 'yes'">
+                  <xsl:if test="not(starts-with(gmx:Anchor/@xlink:href, $SpatialDataServiceCategoryCodelistUri))">
+                      <dct:subject rdf:resource="{gmx:Anchor/@xlink:href}"/>
+                    </xsl:if>
                   </xsl:if>
                 </xsl:if>
               </xsl:if>
@@ -3479,8 +3481,7 @@
   <!-- Encoding -->
 
   <xsl:template mode="iso19139-to-dcatap" name="Encoding"
-                match="gmd:distributionFormat/gmd:MD_Format/gmd:name/*
-                            |gmd:distributorFormat/gmd:MD_Format/gmd:name/*">
+                match="gmd:distributionFormat/gmd:MD_Format/gmd:name/*|gmd:distributorFormat/gmd:MD_Format/gmd:name/*">
     <xsl:param name="format-label">
       <xsl:value-of select="normalize-space(.)"/>
     </xsl:param>

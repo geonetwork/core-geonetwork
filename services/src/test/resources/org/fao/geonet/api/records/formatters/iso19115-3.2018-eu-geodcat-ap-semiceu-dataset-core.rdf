@@ -57,7 +57,45 @@
       <geodcatap:resourceType xmlns:geodcatap="http://data.europa.eu/930/"
                               rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/ResourceType/dataset"/>
       <dct:title xmlns:dct="http://purl.org/dc/terms/" xml:lang="fr">Plan de secteur en vigueur (version coordonnée vectorielle)</dct:title>
-      <dct:description xmlns:dct="http://purl.org/dc/terms/" xml:lang="fr">Le plan de secteur est un outil réglementaire d'aménagement du territoire et d'urbanisme régional wallon constitué de plusieurs couches de données spatiales. Le plan de secteur organise l'espace territorial wallon et en définit les différentes affectations afin d'assurer le développement des activités humaines de manière harmonieuse et d'éviter la consommation abusive d'espace. Il dispose d'une pleine valeur réglementaire et constitue ainsi la colonne vertébrale d’un développement territorial efficace, cohérent et concerté. Cet aspect est renforcé par la réforme engendrée par l'entrée en vigueur du Code du Développement Territorial (CoDT). La Région wallonne est couverte par 23 plans de secteur, adoptés entre 1977 et 1987. Le plan de secteur est divisé en zones destinées à l'urbanisation (zone d'habitat, de loisirs, d'activité économique, etc.) et en zones non destinées à l'urbanisation (zones agricoles, forestières, espaces verts, etc.). Plusieurs couches de données spatiales constituent le plan de secteur. Elles sont définies dans le CoDT. Outre la détermination des différentes zones d'affectation du territoire wallon, il contient : - les limites communales du PdS; - les révisions (infrastructures en révision, périmètres de révisions partielles du PdS, mesures d'aménagement, prescriptions supplémentaires); - les infrastructures (réseau routier, ferroviaire, voies navigables, lignes électriques haute tension, canalisations); - les périmètres de protection (périmètres de liaison écologique, d'intérêt paysager, d'intérêt culture, historique ou esthétique, les points de vue remarquable et leur périmètre, les réservations d'infrastructure principale, les extension de zone d'extraction); - la référence au Plan de Secteur d'origine; - les étiquettes des secteurs d'aménagement de 1978. Ces différentes couches de données sont présentées sous format vectoriel (point, ligne ou polygone). Si le plan de secteur a valeur réglementaire, il n’est pas figé pour autant. Les modalités de révision sont formalisées dans des procédures qui ont été simplifiées et rationalisées dans le CoDT. Cette version constitue la version la plus récente des couches de données et intègre les mises à jour faisant suite à la mise en œuvre du CoDT. A ce jour, la gestion du plan de secteur relève de la Direction de l’Aménagement régional (DAR) qui est en charge de l'outil "plan de secteur" : évolution au regard des objectifs régionaux, notamment du développement économique dans une perspective durable, information, sensibilisation, lien avec la planification stratégique régionale et avec les outils communaux. Les révisions sont instruites par la DAR, à l'exception de celles qui ont été attribuées à la cellule de développement territorial (CDT), également dénommée "ESPACE", dont la création a été décidée par le Gouvernement wallon le 19 septembre 2005.</dct:description>
+      <dct:description xmlns:dct="http://purl.org/dc/terms/" xml:lang="fr">Le plan de secteur est un outil réglementaire d'aménagement du territoire et d'urbanisme
+          régional wallon constitué de plusieurs couches de données spatiales.
+
+          Le plan de secteur organise l'espace territorial wallon et en définit les différentes affectations afin
+          d'assurer le développement des activités humaines de manière harmonieuse et d'éviter la consommation abusive
+          d'espace. Il dispose d'une pleine valeur réglementaire et constitue ainsi la colonne vertébrale d’un
+          développement territorial efficace, cohérent et concerté. Cet aspect est renforcé par la réforme engendrée par
+          l'entrée en vigueur du Code du Développement Territorial (CoDT).
+
+          La Région wallonne est couverte par 23 plans de secteur, adoptés entre 1977 et 1987.
+
+          Le plan de secteur est divisé en zones destinées à l'urbanisation (zone d'habitat, de loisirs, d'activité
+          économique, etc.) et en zones non destinées à l'urbanisation (zones agricoles, forestières, espaces verts,
+          etc.). Plusieurs couches de données spatiales constituent le plan de secteur. Elles sont définies dans le
+          CoDT. Outre la détermination des différentes zones d'affectation du territoire wallon, il contient :
+          - les limites communales du PdS;
+          - les révisions (infrastructures en révision, périmètres de révisions partielles du PdS, mesures
+          d'aménagement, prescriptions supplémentaires);
+          - les infrastructures (réseau routier, ferroviaire, voies navigables, lignes électriques haute tension,
+          canalisations);
+          - les périmètres de protection (périmètres de liaison écologique, d'intérêt paysager, d'intérêt culture,
+          historique ou esthétique, les points de vue remarquable et leur périmètre, les réservations d'infrastructure
+          principale, les extension de zone d'extraction);
+          - la référence au Plan de Secteur d'origine;
+          - les étiquettes des secteurs d'aménagement de 1978.
+
+          Ces différentes couches de données sont présentées sous format vectoriel (point, ligne ou polygone).
+
+          Si le plan de secteur a valeur réglementaire, il n’est pas figé pour autant. Les modalités de révision sont
+          formalisées dans des procédures qui ont été simplifiées et rationalisées dans le CoDT. Cette version constitue
+          la version la plus récente des couches de données et intègre les mises à jour faisant suite à la mise en œuvre
+          du CoDT.
+
+          A ce jour, la gestion du plan de secteur relève de la Direction de l’Aménagement régional (DAR) qui est en
+          charge de l'outil "plan de secteur" : évolution au regard des objectifs régionaux, notamment du développement
+          économique dans une perspective durable, information, sensibilisation, lien avec la planification stratégique
+          régionale et avec les outils communaux. Les révisions sont instruites par la DAR, à l'exception de celles qui
+          ont été attribuées à la cellule de développement territorial (CDT), également dénommée "ESPACE", dont la
+          création a été décidée par le Gouvernement wallon le 19 septembre 2005.</dct:description>
       <dct:accrualPeriodicity xmlns:dct="http://purl.org/dc/terms/">
          <dct:Frequency rdf:about="http://publications.europa.eu/resource/authority/frequency/MONTHLY"/>
       </dct:accrualPeriodicity>
@@ -385,7 +423,27 @@
                   rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2023-02-21</dct:issued>
       <dct:provenance xmlns:dct="http://purl.org/dc/terms/">
          <dct:ProvenanceStatement>
-            <dct:description xml:lang="fr">La version numérique vectorielle du plan de secteur se base sur la version papier originale digitalisée par l'Institut Wallon en juin 1994 (fond de plan au 1/10.000) qui a été complétée en mai 2001 par ce même institut. La donnée intègre la légende actuellement en vigueur et est mise à jour en continu par la DGO4 depuis 2001. L'intégration des nouveaux dossiers, la correction d'erreurs et la suppression des dossiers abrogés se font au fur et à mesure de la réception des informations. Les données publiées sont mises à jour mensuellement sur base des données de travail. Depuis leur adoption, les plans de secteur ont fait l’objet de nombreuses révisions. Le Gouvernement wallon a en effet estimé nécessaire de les adapter pour y inscrire de nouveaux projets: routes, lignes électriques à haute tension, tracé TGV, nouvelles zones d'activité économique, zones d’extraction, etc. La procédure de révision et la légende ont été modifiées à plusieurs reprises. Suite à l'entrée en vigueur du CoDT, des changements sont à noter : - Trois nouvelles zones destinées à l'urbanisation : Zone de dépendance d’extraction destinée à accueillir les dépôts et dépendances industrielles (transformation des matières) à l’activité d’extraction, la zone d'enjeu communal (ZEC) et la zone d'enjeu régional (ZER). Les ZEC et ZER sont toutes deux accompagnées d'une carte d'affectation des sols à valeur indicative - une nouvelle zone non destinée à l'urbanisation : zone d'extraction (ZE).</dct:description>
+            <dct:description xml:lang="fr">La version numérique vectorielle du plan de secteur se base sur la version papier originale
+          digitalisée par l'Institut Wallon en juin 1994 (fond de plan au 1/10.000) qui a été complétée en mai 2001 par
+          ce même institut. La donnée intègre la légende actuellement en vigueur et est mise à jour en continu par la
+          DGO4 depuis 2001.
+
+          L'intégration des nouveaux dossiers, la correction d'erreurs et la suppression des dossiers abrogés se font au
+          fur et à mesure de la réception des informations. Les données publiées sont mises à jour mensuellement sur
+          base des données de travail.
+
+          Depuis leur adoption, les plans de secteur ont fait l’objet de nombreuses révisions. Le Gouvernement wallon a
+          en effet estimé nécessaire de les adapter pour y inscrire de nouveaux projets: routes, lignes électriques à
+          haute tension, tracé TGV, nouvelles zones d'activité économique, zones d’extraction, etc.
+
+          La procédure de révision et la légende ont été modifiées à plusieurs reprises.
+
+          Suite à l'entrée en vigueur du CoDT, des changements sont à noter :
+          - Trois nouvelles zones destinées à l'urbanisation : Zone de dépendance d’extraction destinée à accueillir les
+          dépôts et dépendances industrielles (transformation des matières) à l’activité d’extraction, la zone d'enjeu
+          communal (ZEC) et la zone d'enjeu régional (ZER). Les ZEC et ZER sont toutes deux accompagnées d'une carte
+          d'affectation des sols à valeur indicative
+          - une nouvelle zone non destinée à l'urbanisation : zone d'extraction (ZE).</dct:description>
          </dct:ProvenanceStatement>
       </dct:provenance>
       <geodcatap:referenceSystem xmlns:geodcatap="http://data.europa.eu/930/">
@@ -802,27 +860,31 @@
          <foaf:Document xmlns:foaf="http://xmlns.com/foaf/0.1/"
                         rdf:about="http://geoapps.wallonie.be/webgisdgo4/#CTX=PDS">
             <dct:title xmlns:dct="http://purl.org/dc/terms/" xml:lang="fr">Application de consultation des données de la DGO4 - Plan de secteur</dct:title>
-            <dct:description xmlns:dct="http://purl.org/dc/terms/" xml:lang="fr">Application dédiée à la consultation des couches de données relatives au Plan de secteur. Cette application constitue un thème de l'application de consultation des données de la DGO4.</dct:description>
+            <dct:description xmlns:dct="http://purl.org/dc/terms/" xml:lang="fr">Application dédiée à la consultation des couches de données relatives au Plan de
+                  secteur. Cette application constitue un thème de l'application de consultation des données de la DGO4.</dct:description>
          </foaf:Document>
       </dcat:landingPage>
       <dcat:landingPage xmlns:dcat="http://www.w3.org/ns/dcat#">
          <foaf:Document xmlns:foaf="http://xmlns.com/foaf/0.1/"
                         rdf:about="https://geoportail.wallonie.be/walonmap/#ADU=https://geoservices.wallonie.be/arcgis/rest/services/AMENAGEMENT_TERRITOIRE/PDS/MapServer">
             <dct:title xmlns:dct="http://purl.org/dc/terms/" xml:lang="fr">Application WalOnMap - Toute la Wallonie à la carte</dct:title>
-            <dct:description xmlns:dct="http://purl.org/dc/terms/" xml:lang="fr">Application cartographique du Geoportail (WalOnMap) qui permet de découvrir les données géographiques de la Wallonie.</dct:description>
+            <dct:description xmlns:dct="http://purl.org/dc/terms/" xml:lang="fr">Application cartographique du Geoportail (WalOnMap) qui permet de découvrir les
+                  données géographiques de la Wallonie.</dct:description>
          </foaf:Document>
       </dcat:landingPage>
       <dcat:landingPage xmlns:dcat="http://www.w3.org/ns/dcat#">
          <foaf:Document xmlns:foaf="http://xmlns.com/foaf/0.1/"
                         rdf:about="https://geoservices.wallonie.be/arcgis/rest/services/AMENAGEMENT_TERRITOIRE/PDS/MapServer">
             <dct:title xmlns:dct="http://purl.org/dc/terms/" xml:lang="fr">Service de visualisation ESRI-REST</dct:title>
-            <dct:description xmlns:dct="http://purl.org/dc/terms/" xml:lang="fr">Ce service ESRI-REST permet de visualiser la série de couches de données "Plan de secteur"</dct:description>
+            <dct:description xmlns:dct="http://purl.org/dc/terms/" xml:lang="fr">Ce service ESRI-REST permet de visualiser la série de couches de données "Plan de
+                  secteur"</dct:description>
          </foaf:Document>
       </dcat:landingPage>
       <dcat:distribution xmlns:dcat="http://www.w3.org/ns/dcat#">
          <dcat:Distribution>
             <dct:title xmlns:dct="http://purl.org/dc/terms/" xml:lang="fr">Service de visualisation WMS</dct:title>
-            <dct:description xmlns:dct="http://purl.org/dc/terms/" xml:lang="fr">Ce service WMS permet de visualiser la série de couches de données "Plan de secteur"</dct:description>
+            <dct:description xmlns:dct="http://purl.org/dc/terms/" xml:lang="fr">Ce service WMS permet de visualiser la série de couches de données "Plan de
+                  secteur"</dct:description>
             <dcat:accessService rdf:parseType="Resource">
                <rdf:type rdf:resource="http://www.w3.org/ns/dcat#DataService"/>
                <dct:title xmlns:dct="http://purl.org/dc/terms/" xml:lang="fr">Service de visualisation WMS</dct:title>
@@ -884,7 +946,8 @@
       <foaf:page xmlns:foaf="http://xmlns.com/foaf/0.1/">
          <foaf:Document rdf:about="http://spw.wallonie.be/dgo4/site_thema/index.php?thema=modif_ps">
             <dct:title xmlns:dct="http://purl.org/dc/terms/" xml:lang="fr">Base de données du Plan de secteur</dct:title>
-            <dct:description xmlns:dct="http://purl.org/dc/terms/" xml:lang="fr">Site permettant la recherche de Plans de secteur et des modifications dans la base de données</dct:description>
+            <dct:description xmlns:dct="http://purl.org/dc/terms/" xml:lang="fr">Site permettant la recherche de Plans de secteur et des modifications dans la base
+                  de données</dct:description>
          </foaf:Document>
       </foaf:page>
       <foaf:page xmlns:foaf="http://xmlns.com/foaf/0.1/">
@@ -902,7 +965,8 @@
       <foaf:page xmlns:foaf="http://xmlns.com/foaf/0.1/">
          <foaf:Document rdf:about="http://geoservices.wallonie.be/geotraitement/spwdatadownload/get/7fe2f305-1302-4297-b67e-792f55acd834/PDS_SHAPE_31370.zip">
             <dct:title xmlns:dct="http://purl.org/dc/terms/" xml:lang="fr">Plan de Secteur au format SHP</dct:title>
-            <dct:description xmlns:dct="http://purl.org/dc/terms/" xml:lang="fr">Dossier compressé contenant le jeu de données du Plan de Secteur au format shapefile en coordonnées Lambert 72</dct:description>
+            <dct:description xmlns:dct="http://purl.org/dc/terms/" xml:lang="fr">Dossier compressé contenant le jeu de données du Plan de Secteur au format
+                  shapefile en coordonnées Lambert 72</dct:description>
          </foaf:Document>
       </foaf:page>
       <dct:creator xmlns:dct="http://purl.org/dc/terms/">
