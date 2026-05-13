@@ -31,6 +31,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.MappingIterator;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.collect.Sets;
 import com.jayway.jsonpath.DocumentContext;
@@ -432,14 +433,13 @@ public class EsHTTPProxy {
                 if (indexNode != null) {
                     ((ObjectNode) node).put("index", defaultIndex);
                 } else {
-                    final JsonNode queryNode = node.get("query");
-                    if (queryNode != null) {
-                        addFilterToQuery(context, objectMapper, node);
-                        if (selectionBucket != null) {
-                            // Multisearch are not supposed to work with a bucket.
-                            // Only one request is store in session
-                            session.setProperty(Geonet.Session.SEARCH_REQUEST + selectionBucket, node);
-                        }
+                    JsonNode queryNode = node.get("query");
+
+                    addFilterToQuery(context, objectMapper, node);
+                    if (selectionBucket != null) {
+                        // Multisearch are not supposed to work with a bucket.
+                        // Only one request is store in session
+                        session.setProperty(Geonet.Session.SEARCH_REQUEST + selectionBucket, node);
                     }
                     final JsonNode sourceNode = node.get("_source");
                     if (sourceNode != null) {
@@ -474,7 +474,6 @@ public class EsHTTPProxy {
         source.add(Geonet.IndexFieldNames.OWNER);
         source.add(Geonet.IndexFieldNames.ID);
     }
-
     private void addFilterToQuery(ServiceContext context,
                                   ObjectMapper objectMapper,
                                   JsonNode esQuery) throws Exception {
@@ -489,46 +488,82 @@ public class EsHTTPProxy {
 
         JsonNode queryNode = esQuery.get("query");
 
-//        if (queryNode == null) {
-//            // Add default filter if no query provided
-//            ObjectNode objectNodeQuery = objectMapper.createObjectNode();
-//            objectNodeQuery.set("filter", nodeFilter);
-//            ((ObjectNode) esQuery).set("query", objectNodeQuery);
-//        } else
-        if (queryNode.get("function_score") != null) {
-            // Add filter node to the bool element of the query if provided
-            ObjectNode objectNode = (ObjectNode) queryNode.get("function_score").get("query").get("bool");
-            insertFilter(objectNode, nodeFilter);
-        } else if (queryNode.get("bool") != null) {
-            // Add filter node to the bool element of the query if provided
-            ObjectNode objectNode = (ObjectNode) queryNode.get("bool");
-            insertFilter(objectNode, nodeFilter);
-        } else {
-            // If no bool node in the query, create the bool node and add the query and filter nodes to it
-            ObjectNode copy = esQuery.get("query").deepCopy();
-
-            ObjectNode objectNodeBool = objectMapper.createObjectNode();
-            objectNodeBool.set("must", copy);
-            objectNodeBool.set("filter", nodeFilter);
-
-            ((ObjectNode) queryNode).removeAll();
-            ((ObjectNode) queryNode).set("bool", objectNodeBool);
+        // Defensive: if no "query", create a bool { must: match_all, filter: nodeFilter }
+        if (queryNode == null || queryNode.isNull()) {
+            ObjectNode boolNode = objectMapper.createObjectNode();
+            // prefer must = match_all object (same shape as existing code)
+            ObjectNode matchAll = objectMapper.createObjectNode();
+            matchAll.putObject("match_all");
+            boolNode.set("must", matchAll);
+            boolNode.set("filter", nodeFilter);
+            ((ObjectNode) esQuery).set("query", objectMapper.createObjectNode().set("bool", boolNode));
+            return;
         }
+
+        // Try to find the boolean node where to insert the filter.
+        // Prefer function_score.query.bool if present because function_score
+        // needs the filter to be applied to the inner query used for scoring.
+        JsonNode functionScoreNode = queryNode.get("function_score");
+        if (functionScoreNode != null && functionScoreNode.isObject()) {
+            JsonNode innerQuery = functionScoreNode.get("query");
+            if (innerQuery == null || innerQuery.isNull()) {
+                // create function_score.query.bool with only the filter
+                ObjectNode boolNode = objectMapper.createObjectNode();
+                boolNode.set("filter", nodeFilter);
+                ((ObjectNode) functionScoreNode).set("query", objectMapper.createObjectNode().set("bool", boolNode));
+                return;
+            }
+
+            JsonNode innerBool = innerQuery.get("bool");
+            if (innerBool != null && innerBool.isObject()) {
+                insertFilter((ObjectNode) innerBool, nodeFilter);
+                return;
+            }
+
+            // innerQuery exists but isn't a bool -> wrap it into a bool { must: <old>, filter: <new> }
+            ObjectNode newBool = objectMapper.createObjectNode();
+            newBool.set("must", innerQuery.deepCopy());
+            newBool.set("filter", nodeFilter);
+            ((ObjectNode) functionScoreNode).set("query", objectMapper.createObjectNode().set("bool", newBool));
+            return;
+        }
+
+        // Top-level bool
+        JsonNode boolNode = queryNode.get("bool");
+        if (boolNode != null && boolNode.isObject()) {
+            insertFilter((ObjectNode) boolNode, nodeFilter);
+            return;
+        }
+
+        // Other query shapes: wrap existing query into a bool { must: <existing query>, filter: nodeFilter }
+        ObjectNode copy = queryNode.deepCopy();
+        ObjectNode objectNodeBool = objectMapper.createObjectNode();
+        objectNodeBool.set("must", copy);
+        objectNodeBool.set("filter", nodeFilter);
+
+        // Replace the existing "query" content with the new bool
+        ((ObjectNode) queryNode).removeAll();
+        ((ObjectNode) queryNode).set("bool", objectNodeBool);
     }
 
     private void insertFilter(ObjectNode objectNode, JsonNode nodeFilter) {
         JsonNode filter = objectNode.get("filter");
-        if (filter != null && filter.isArray()) {
+        if (filter == null || filter.isNull()) {
+            objectNode.set("filter", nodeFilter);
+        } else if (filter.isArray()) {
             ((ArrayNode) filter).add(nodeFilter);
         } else {
-            objectNode.set("filter", nodeFilter);
+            // existing filter is an object (or other non-array) -> convert to array preserving both
+            ArrayNode arr = JsonNodeFactory.instance.arrayNode();
+            arr.add(filter);
+            arr.add(nodeFilter);
+            objectNode.set("filter", arr);
         }
     }
-
     /**
      * Add search privilege criteria to a query.
      */
-    private String buildQueryFilter(ServiceContext context, String type, boolean isSearchingForDraft) throws Exception {
+    protected String buildQueryFilter(ServiceContext context, String type, boolean isSearchingForDraft) throws Exception {
         return String.format(filterTemplate,
             EsFilterBuilder.build(context, type, isSearchingForDraft, node));
 
