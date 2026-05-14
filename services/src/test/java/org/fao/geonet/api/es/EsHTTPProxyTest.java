@@ -1,284 +1,275 @@
-/*
- * Copyright (C) 2001-2025 Food and Agriculture Organization of the
- * United Nations (FAO-UN), United Nations World Food Programme (WFP)
- * and United Nations Environment Programme (UNEP)
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
- *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
- *
- * Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
- * Rome - Italy. email: geonetwork@osgeo.org
- */
-
 package org.fao.geonet.api.es;
 
-
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
-import org.fao.geonet.ApplicationContextHolder;
-import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.kernel.SchemaManager;
-import org.fao.geonet.kernel.schema.MetadataOperationFilterType;
-import org.fao.geonet.kernel.schema.MetadataSchema;
-import org.fao.geonet.kernel.schema.MetadataSchemaOperationFilter;
-import org.fao.geonet.repository.UserGroupRepository;
-import org.junit.Assert;
+import org.fao.geonet.api.ApiUtils;
+import org.fao.geonet.api.es.processors.query.EsQueryProcessor;
+import org.fao.geonet.api.es.processors.response.EsResponseProcessor;
+import org.fao.geonet.api.records.model.related.RelatedItemType;
+import org.fao.geonet.index.es.EsRestClient;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.data.jpa.domain.Specification;
+import org.mockito.MockedStatic;
+import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.test.util.ReflectionTestUtils;
 
-import java.lang.reflect.Method;
-import java.util.Arrays;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.WriteListener;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
+@RunWith(MockitoJUnitRunner.class)
 public class EsHTTPProxyTest {
 
-    @Mock
-    private SchemaManager schemaManager;
-
-    @Mock
-    private ConfigurableApplicationContext applicationContext;
-
-    @Mock
-    private UserGroupRepository userGroupRepository;
-
-    @InjectMocks
-    private EsHTTPProxy esHTTPProxy = new EsHTTPProxy();
-
-    @Before
-    public void setUp() {
-        MockitoAnnotations.initMocks(this);
-        ApplicationContextHolder.set(applicationContext);
-        when(applicationContext.getBean(UserGroupRepository.class)).thenReturn(userGroupRepository);
-    }
-
-    @Test
-    public void testProcessMetadataSchemaFiltersGroupOwner() throws Exception {
-        // 1. Setup
-        ServiceContext context = new ServiceContext("default", applicationContext, new HashMap<>(), null);
-        UserSession userSession = spy(new UserSession());
-        when(userSession.isAuthenticated()).thenReturn(true);
-        when(userSession.getUserIdAsInt()).thenReturn(42);
-
-        context.setUserSession(userSession);
-
-        ObjectMapper mapper = new ObjectMapper();
-        ObjectNode doc = mapper.createObjectNode();
-        ObjectNode source = mapper.createObjectNode();
-        source.put(Geonet.IndexFieldNames.GROUP_OWNER, 1);
-        source.put("someField", "someValue");
-        doc.set("_source", source);
-        doc.put("edit", false);
-        doc.put("download", false);
-        doc.put("dynamic", false);
-
-        // Mock MetadataSchema
-        MetadataSchema mds = mock(MetadataSchema.class);
-        MetadataSchemaOperationFilter groupOwnerFilter = new MetadataSchemaOperationFilter(null, "$.someField", null);
-        when(mds.getOperationFilter(MetadataOperationFilterType.groupOwner.name())).thenReturn(groupOwnerFilter);
-
-        // Mock AccessManager.getGroups via UserGroupRepository
-        // When user is in group 1
-        when(userGroupRepository.findGroupIds(any(Specification.class))).thenReturn(Arrays.asList(1));
-
-        // 2. Call private method using reflection
-        Method method = EsHTTPProxy.class.getDeclaredMethod("processMetadataSchemaFilters", ServiceContext.class, MetadataSchema.class, ObjectNode.class);
-        method.setAccessible(true);
-        method.invoke(esHTTPProxy, context, mds, doc);
-
-        // 3. Assertions for user in group
-        assertTrue("someField should exist when user is in groupOwner", doc.get("_source").has("someField"));
-
-        // --- Test case where user is NOT in group ---
-        // When user is NOT in group 1 (e.g. in group 2)
-        when(userGroupRepository.findGroupIds(any(Specification.class))).thenReturn(Arrays.asList(2));
-
-        // re-create doc
-        doc = mapper.createObjectNode();
-        source = mapper.createObjectNode();
-        source.put(Geonet.IndexFieldNames.GROUP_OWNER, 1);
-        source.put("someField", "someValue");
-        doc.set("_source", source);
-        doc.put("edit", false);
-        doc.put("download", false);
-        doc.put("dynamic", false);
-
-        method.invoke(esHTTPProxy, context, mds, doc);
-
-        assertFalse("someField should be filtered when user is not in groupOwner", doc.get("_source").has("someField"));
-    }
-
-    private static final String QUERY_FILTER = "{\"query_string\":{\"query\":\"(op0:(1)) AND (draft:n OR draft:e)\"}}";
-
     private static class TestableEsHTTPProxy extends EsHTTPProxy {
+        private final HttpURLConnection mockConnection;
+
+        public TestableEsHTTPProxy(HttpURLConnection mockConnection) {
+            this.mockConnection = mockConnection;
+        }
+
         @Override
-        protected String buildQueryFilter(ServiceContext context, String type, boolean isSearchingForDraft) {
-            return QUERY_FILTER;
+        protected HttpURLConnection openConnection(String sUrl) throws IOException {
+            return mockConnection;
         }
     }
 
-    private final ObjectMapper mapper = new ObjectMapper();
+    @Mock
+    private EsRestClient esRestClient;
 
-    private Method getAddFilterToQueryMethod() throws Exception {
-        Method m = EsHTTPProxy.class.getDeclaredMethod("addFilterToQuery", ServiceContext.class, com.fasterxml.jackson.databind.ObjectMapper.class, com.fasterxml.jackson.databind.JsonNode.class);
-        m.setAccessible(true);
-        return m;
-    }
+    @Mock
+    private EsResponseProcessor responseProcessor;
 
-    private JsonNode buildExpectedFilterNode() throws Exception {
-        return mapper.readTree(QUERY_FILTER);
-    }
+    @Mock
+    private EsQueryProcessor queryPreprocessor;
 
-    private void invokeAddFilter(EsHTTPProxy proxy, ObjectNode root) throws Exception {
-        getAddFilterToQueryMethod().invoke(proxy, null, mapper, root);
-    }
+    @Mock
+    private HttpServletRequest request;
 
-    private void assertAppendedFilter(ArrayNode filters, JsonNode expectedFilter) {
-        Assert.assertEquals("Expected original filter + injected access filter", 2, filters.size());
-        Assert.assertEquals("Injected filter should be appended as second filter", expectedFilter, filters.get(1));
-    }
+    @Mock
+    private HttpServletResponse response;
 
-    @Test
-    public void shouldCreateBoolQueryWithMatchAllAndAccessFilterWhenQueryIsMissing() throws Exception {
-        EsHTTPProxy proxy = new TestableEsHTTPProxy();
-        JsonNode expectedFilter = buildExpectedFilterNode();
+    @Mock
+    private HttpSession session;
 
-        ObjectNode root = mapper.createObjectNode();
+    @Mock
+    private ServiceContext serviceContext;
 
-        invokeAddFilter(proxy, root);
+    @Mock
+    private HttpURLConnection mockConnection;
 
-        JsonNode query = root.get("query");
-        Assert.assertNotNull("A query node should be created", query);
-        JsonNode bool = query.get("bool");
-        Assert.assertNotNull(bool);
-        Assert.assertTrue("The bool query should contain a must clause", bool.has("must"));
-        Assert.assertTrue("The bool query should contain a filter clause", bool.has("filter"));
+    private TestableEsHTTPProxy esHTTPProxy;
 
-        JsonNode must = bool.get("must");
-        Assert.assertTrue("Missing query should be replaced by match_all", must.has("match_all"));
-        Assert.assertEquals("Expected access filter was not injected", expectedFilter, bool.get("filter"));
-    }
+    private static final String DEFAULT_INDEX = "gn-records";
+    private static final String SERVER_URL = "http://localhost:9200";
 
-    @Test
-    public void shouldConvertSingleBoolFilterToArrayAndAppendAccessFilter() throws Exception {
-        EsHTTPProxy proxy = new TestableEsHTTPProxy();
-        JsonNode expectedFilter = buildExpectedFilterNode();
+    @Before
+    public void setUp() {
+        esHTTPProxy = new TestableEsHTTPProxy(mockConnection);
+        ReflectionTestUtils.setField(esHTTPProxy, "defaultIndex", DEFAULT_INDEX);
+        ReflectionTestUtils.setField(esHTTPProxy, "proxyHeadersAllowedList", new String[]{"content-type"});
+        ReflectionTestUtils.setField(esHTTPProxy, "client", esRestClient);
+        ReflectionTestUtils.setField(esHTTPProxy, "responseProcessor", responseProcessor);
+        ReflectionTestUtils.setField(esHTTPProxy, "queryPreprocessor", queryPreprocessor);
 
-        ObjectNode filterObj = mapper.createObjectNode();
-        filterObj.putObject("term").put("a", "b");
-
-        ObjectNode boolNode = mapper.createObjectNode();
-        boolNode.set("must", mapper.createObjectNode().putObject("match").put("field", "value"));
-        boolNode.set("filter", filterObj);
-
-        ObjectNode root = mapper.createObjectNode();
-        root.set("query", mapper.createObjectNode().set("bool", boolNode));
-
-        invokeAddFilter(proxy, root);
-
-        JsonNode resultingFilter = root.get("query").get("bool").get("filter");
-        Assert.assertTrue("Existing object filter should be converted to array", resultingFilter.isArray());
-        ArrayNode arr = (ArrayNode) resultingFilter;
-        Assert.assertEquals("Original filter should stay first", filterObj, arr.get(0));
-        assertAppendedFilter(arr, expectedFilter);
+        lenient().when(esRestClient.getServerUrl()).thenReturn(SERVER_URL);
     }
 
     @Test
-    public void shouldAppendAccessFilterToExistingBoolFilterArray() throws Exception {
-        EsHTTPProxy proxy = new TestableEsHTTPProxy();
-        JsonNode expectedFilter = buildExpectedFilterNode();
+    public void testSearchSuccessful() throws Exception {
+        String body = "{\"query\":{\"match_all\":{}}}";
+        String processedBody = "{\"query\":{\"match_all\":{}}, \"filter\":{}}";
 
-        ObjectNode existingFilter = mapper.createObjectNode();
-        existingFilter.putObject("term").put("c", "d");
+        try (MockedStatic<ApiUtils> apiUtils = mockStatic(ApiUtils.class)) {
+            apiUtils.when(() -> ApiUtils.createServiceContext(any())).thenReturn(serviceContext);
+            when(queryPreprocessor.process(eq(serviceContext), eq(body), anyString())).thenReturn(processedBody);
+            when(request.getMethod()).thenReturn("POST");
+            when(request.getHeaderNames()).thenReturn(Collections.enumeration(Collections.emptyList()));
 
-        ArrayNode filterArray = mapper.createArrayNode();
-        filterArray.add(existingFilter);
+            // Mock URL connection
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            when(mockConnection.getOutputStream()).thenReturn(outputStream);
+            when(mockConnection.getResponseCode()).thenReturn(200);
+            when(mockConnection.getContentType()).thenReturn("application/json");
+            when(mockConnection.getInputStream()).thenReturn(new ByteArrayInputStream("{}".getBytes()));
+            Map<String, List<String>> headers = new HashMap<>();
+            headers.put("Content-Type", Collections.singletonList("application/json"));
+            when(mockConnection.getHeaderFields()).thenReturn(headers);
 
-        ObjectNode boolNode = mapper.createObjectNode();
-        boolNode.set("filter", filterArray);
+            // Mock ServletOutputStream
+            final ByteArrayOutputStream responseOut = new ByteArrayOutputStream();
+            ServletOutputStream servletOutputStream = new ServletOutputStream() {
+                @Override
+                public boolean isReady() { return true; }
+                @Override
+                public void setWriteListener(WriteListener writeListener) {}
+                @Override
+                public void write(int b) throws IOException { responseOut.write(b); }
+            };
+            when(response.getOutputStream()).thenReturn(servletOutputStream);
 
-        ObjectNode root = mapper.createObjectNode();
-        root.set("query", mapper.createObjectNode().set("bool", boolNode));
+            esHTTPProxy.search("bucket", new RelatedItemType[0], session, request, response, body);
 
-        invokeAddFilter(proxy, root);
-
-        JsonNode resultingFilter = root.get("query").get("bool").get("filter");
-        Assert.assertTrue("Filter should remain an array", resultingFilter.isArray());
-        ArrayNode arr = (ArrayNode) resultingFilter;
-        Assert.assertEquals(existingFilter, arr.get(0));
-        assertAppendedFilter(arr, expectedFilter);
+            // Verify
+            verify(queryPreprocessor).process(eq(serviceContext), eq(body), eq("bucket"));
+            verify(mockConnection).connect();
+            verify(responseProcessor).processResponse(eq(serviceContext), eq(session), any(), any(), eq("_search"), eq("bucket"), eq(true), any());
+            assertEquals(processedBody, outputStream.toString("UTF-8"));
+        }
     }
 
     @Test
-    public void shouldWrapFunctionScoreInnerQueryIntoBoolAndInjectAccessFilter() throws Exception {
-        EsHTTPProxy proxy = new TestableEsHTTPProxy();
-        JsonNode expectedFilter = buildExpectedFilterNode();
+    public void testSearchError() throws Exception {
+        String body = "{\"query\":{\"match_all\":{}}}";
+        String processedBody = body;
 
-        ObjectNode innerQuery = mapper.createObjectNode();
-        innerQuery.putObject("match").put("title", "abc");
+        try (MockedStatic<ApiUtils> apiUtils = mockStatic(ApiUtils.class)) {
+            apiUtils.when(() -> ApiUtils.createServiceContext(any())).thenReturn(serviceContext);
+            when(queryPreprocessor.process(eq(serviceContext), eq(body), anyString())).thenReturn(processedBody);
+            when(request.getMethod()).thenReturn("POST");
+            when(request.getHeaderNames()).thenReturn(Collections.enumeration(Collections.emptyList()));
 
-        ObjectNode functionScore = mapper.createObjectNode();
-        functionScore.set("query", innerQuery);
-        functionScore.putArray("functions"); // keep valid shape
+            when(mockConnection.getResponseCode()).thenReturn(400);
+            when(mockConnection.getResponseMessage()).thenReturn("Bad Request");
+            when(mockConnection.getErrorStream()).thenReturn(new ByteArrayInputStream("error details".getBytes()));
+            when(mockConnection.getOutputStream()).thenReturn(new ByteArrayOutputStream());
 
-        ObjectNode root = mapper.createObjectNode();
-        root.set("query", mapper.createObjectNode().set("function_score", functionScore));
+            esHTTPProxy.search("bucket", new RelatedItemType[0], session, request, response, body);
 
-        invokeAddFilter(proxy, root);
-
-        JsonNode newFunctionQuery = root.get("query").get("function_score").get("query");
-        Assert.assertTrue("function_score.query should become a bool query", newFunctionQuery.has("bool"));
-        JsonNode bool = newFunctionQuery.get("bool");
-        Assert.assertTrue(bool.has("must"));
-        Assert.assertTrue(bool.has("filter"));
-        Assert.assertEquals(innerQuery, bool.get("must"));
-        Assert.assertEquals(expectedFilter, bool.get("filter"));
+            verify(response).sendError(eq(400), contains("Bad Request"));
+            verify(response).sendError(eq(400), contains("error details"));
+        }
     }
 
     @Test
-    public void shouldAppendAccessFilterWhenFunctionScoreInnerBoolAlreadyHasFilter() throws Exception {
-        EsHTTPProxy proxy = new TestableEsHTTPProxy();
-        JsonNode expectedFilter = buildExpectedFilterNode();
+    public void testMSearchSuccessful() throws Exception {
+        String body = "{}\n{\"query\":{\"match_all\":{}}}";
+        String processedBody = body;
 
-        ObjectNode innerBool = mapper.createObjectNode();
-        innerBool.set("must", mapper.createObjectNode().putObject("match").put("f", "v"));
-        innerBool.set("filter", mapper.createObjectNode().putObject("term").put("x", "y"));
+        try (MockedStatic<ApiUtils> apiUtils = mockStatic(ApiUtils.class)) {
+            apiUtils.when(() -> ApiUtils.createServiceContext(any())).thenReturn(serviceContext);
+            when(queryPreprocessor.process(eq(serviceContext), eq(body), anyString())).thenReturn(processedBody);
+            when(request.getMethod()).thenReturn("POST");
+            when(request.getHeaderNames()).thenReturn(Collections.enumeration(Collections.emptyList()));
 
-        ObjectNode functionScore = mapper.createObjectNode();
-        functionScore.set("query", mapper.createObjectNode().set("bool", innerBool));
+            // Mock URL connection
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            when(mockConnection.getOutputStream()).thenReturn(outputStream);
+            when(mockConnection.getResponseCode()).thenReturn(200);
+            when(mockConnection.getContentType()).thenReturn("application/x-ndjson");
+            when(mockConnection.getInputStream()).thenReturn(new ByteArrayInputStream("{}".getBytes()));
+            Map<String, List<String>> headers = new HashMap<>();
+            headers.put("Content-Type", Collections.singletonList("application/x-ndjson"));
+            when(mockConnection.getHeaderFields()).thenReturn(headers);
 
-        ObjectNode root = mapper.createObjectNode();
-        root.set("query", mapper.createObjectNode().set("function_score", functionScore));
+            // Mock ServletOutputStream
+            final ByteArrayOutputStream responseOut = new ByteArrayOutputStream();
+            ServletOutputStream servletOutputStream = new ServletOutputStream() {
+                @Override
+                public boolean isReady() { return true; }
+                @Override
+                public void setWriteListener(WriteListener writeListener) {}
+                @Override
+                public void write(int b) throws IOException { responseOut.write(b); }
+            };
+            when(response.getOutputStream()).thenReturn(servletOutputStream);
 
-        invokeAddFilter(proxy, root);
+            esHTTPProxy.msearch("bucket", new RelatedItemType[0], session, request, response, body);
 
-        JsonNode resultingFilter = root.get("query").get("function_score").get("query").get("bool").get("filter");
-        Assert.assertTrue("Inner bool filter should be converted to array", resultingFilter.isArray());
-        ArrayNode arr = (ArrayNode) resultingFilter;
-        assertAppendedFilter(arr, expectedFilter);
+            // Verify
+            verify(queryPreprocessor).process(eq(serviceContext), eq(body), eq("bucket"));
+            verify(mockConnection).connect();
+            // addPermissions should be false because contentType is not application/json
+            verify(responseProcessor).processResponse(eq(serviceContext), eq(session), any(), any(), eq("_msearch"), eq("bucket"), eq(false), any());
+        }
+    }
+
+    @Test
+    public void testCallAdmin() throws Exception {
+        String body = "{\"query\":{\"match_all\":{}}}";
+        String endPoint = "_count";
+
+        try (MockedStatic<ApiUtils> apiUtils = mockStatic(ApiUtils.class)) {
+            apiUtils.when(() -> ApiUtils.createServiceContext(any())).thenReturn(serviceContext);
+            when(request.getMethod()).thenReturn("POST");
+            when(request.getHeaderNames()).thenReturn(Collections.enumeration(Collections.emptyList()));
+
+            // Mock URL connection
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            when(mockConnection.getOutputStream()).thenReturn(outputStream);
+            when(mockConnection.getResponseCode()).thenReturn(200);
+            when(mockConnection.getContentType()).thenReturn("application/json");
+            when(mockConnection.getInputStream()).thenReturn(new ByteArrayInputStream("{}".getBytes()));
+            Map<String, List<String>> headers = new HashMap<>();
+            headers.put("Content-Type", Collections.singletonList("application/json"));
+            when(mockConnection.getHeaderFields()).thenReturn(headers);
+
+            // Mock ServletOutputStream
+            final ByteArrayOutputStream responseOut = new ByteArrayOutputStream();
+            ServletOutputStream servletOutputStream = new ServletOutputStream() {
+                @Override
+                public boolean isReady() { return true; }
+                @Override
+                public void setWriteListener(WriteListener writeListener) {}
+                @Override
+                public void write(int b) throws IOException { responseOut.write(b); }
+            };
+            when(response.getOutputStream()).thenReturn(servletOutputStream);
+
+            esHTTPProxy.call("bucket", endPoint, session, request, response, body);
+
+            // Verify
+            // queryPreprocessor.process should NOT be called for other endpoints
+            verify(queryPreprocessor, never()).process(any(), any(), any());
+            verify(mockConnection).connect();
+            verify(responseProcessor).processResponse(eq(serviceContext), eq(session), any(), any(), eq(endPoint), eq("bucket"), eq(true), isNull());
+            assertEquals(body, outputStream.toString("UTF-8"));
+        }
+    }
+
+    @Test
+    public void testHeaderCopyingAndAuth() throws Exception {
+        String body = "{}";
+        ReflectionTestUtils.setField(esHTTPProxy, "username", "user");
+        ReflectionTestUtils.setField(esHTTPProxy, "password", "pass");
+
+        try (MockedStatic<ApiUtils> apiUtils = mockStatic(ApiUtils.class)) {
+            apiUtils.when(() -> ApiUtils.createServiceContext(any())).thenReturn(serviceContext);
+            when(request.getMethod()).thenReturn("POST");
+            when(request.getHeaderNames()).thenReturn(Collections.enumeration(Collections.singletonList("Custom-Header")));
+            when(request.getHeader("Custom-Header")).thenReturn("Custom-Value");
+
+            lenient().when(mockConnection.getOutputStream()).thenReturn(new ByteArrayOutputStream());
+            lenient().when(mockConnection.getResponseCode()).thenReturn(200);
+            lenient().when(mockConnection.getContentType()).thenReturn("application/json");
+            lenient().when(mockConnection.getInputStream()).thenReturn(new ByteArrayInputStream("{}".getBytes()));
+
+            Map<String, List<String>> headers = new HashMap<>();
+            headers.put("content-type", Collections.singletonList("application/json"));
+            lenient().when(mockConnection.getHeaderFields()).thenReturn(headers);
+
+            lenient().when(response.getOutputStream()).thenReturn(mock(ServletOutputStream.class));
+
+            esHTTPProxy.search("bucket", new RelatedItemType[0], session, request, response, body);
+
+            // Verify request headers
+            verify(mockConnection).setRequestProperty("Custom-Header", "Custom-Value");
+            verify(mockConnection).setRequestProperty(eq("Authorization"), startsWith("Basic "));
+        }
     }
 }
