@@ -573,6 +573,21 @@ public final class XslUtil {
 	}
 
     /**
+     * Check if user profile create is enabled.
+     */
+    public static boolean isUserProfileCreateEnabled() {
+        SecurityProviderConfiguration securityProviderConfiguration = SecurityProviderConfiguration.get();
+
+        if (securityProviderConfiguration != null) {
+            // No user creation allowed if providing a link or autologin
+            return !securityProviderConfiguration.getLoginType().equals(SecurityProviderConfiguration.LoginType.AUTOLOGIN.toString().toLowerCase())
+                && !securityProviderConfiguration.getLoginType().equals(SecurityProviderConfiguration.LoginType.LINK.toString().toLowerCase());
+        }
+        // If we cannot find SecurityProviderConfiguration then default to true.
+        return true;
+    }
+
+    /**
      * Check if security provider require login link
      */
     public static boolean isShowLoginAsLink() {
