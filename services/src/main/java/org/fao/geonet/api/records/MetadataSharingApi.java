@@ -1256,6 +1256,38 @@ public class MetadataSharingApi implements ApplicationEventPublisherAware {
             serviceContext, String.valueOf(metadata.getId()))) {
             report.addNotEditableMetadataId(metadata.getId());
         } else {
+            UserSession callerSession = ApiUtils.getUserSession(session);
+            Profile callerProfile = callerSession.getProfile();
+
+            if (callerProfile == Profile.Editor || callerProfile == Profile.Reviewer) {
+                int callerUserId = callerSession.getUserIdAsInt();
+                Integer sourceUsr = metadata.getSourceInfo().getOwner();
+                Integer sourceGrp = metadata.getSourceInfo().getGroupOwner();
+
+                if (callerProfile == Profile.Editor) {
+                    if (!Objects.equals(sourceUsr, callerUserId)) {
+                        report.addNotEditableMetadataId(metadata.getId());
+                        return;
+                    }
+                } else {
+                    Set<Integer> reviewerGroups = accessMan.getReviewerGroups(callerSession);
+                    if (sourceGrp == null || !reviewerGroups.contains(sourceGrp)) {
+                        report.addNotEditableMetadataId(metadata.getId());
+                        return;
+                    }
+                }
+
+                if (!ReservedGroup.isReserved(groupIdentifier)) {
+                    List<Integer> myGroups = userGroupRepository.findGroupIds(
+                        UserGroupSpecs.hasUserId(callerUserId));
+                    if (!myGroups.contains(groupIdentifier)) {
+                        report.addMetadataInfos(metadata,
+                            "Transfer to group " + groupIdentifier + " is not allowed for your profile.");
+                        return;
+                    }
+                }
+            }
+
             // Retrieve the identifiers associated with the metadata uuid.
             // When the workflow is enabled, the metadata can have an approved and a working copy version.
             List<Integer> idList = metadataUtils.findAllIdsBy(MetadataSpecs.hasMetadataUuid(uuid));
