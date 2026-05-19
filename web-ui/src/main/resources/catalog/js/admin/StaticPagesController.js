@@ -291,6 +291,7 @@
               });
 
               loadStaticPages();
+              $("#gn-confirm-remove-static-page").modal("hide");
             },
             function (data) {
               $rootScope.$broadcast("StatusUpdated", {
