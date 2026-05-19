@@ -202,10 +202,10 @@ public class BaseMetadataManager implements IMetadataManager {
 
         LOGGER_DATA_MANAGER.debug("INDEX CONTENT:");
 
-        Sort sortByMetadataChangeDate = SortUtils.createSort(Sort.Direction.DESC, Metadata_.dataInfo, MetadataDataInfo_.changeDate);
+        Sort sortById = Sort.by(Sort.Direction.ASC, Metadata_.id.getName());
         int currentPage = 0;
         Page<Pair<Integer, ISODate>> results = metadataUtils.findAllIdsAndChangeDates(
-            PageRequest.of(currentPage, METADATA_BATCH_PAGE_SIZE, sortByMetadataChangeDate));
+            PageRequest.of(currentPage, METADATA_BATCH_PAGE_SIZE, sortById));
 
         // index all metadata in DBMS if needed
         while (results.getNumberOfElements() > 0) {
@@ -241,8 +241,8 @@ public class BaseMetadataManager implements IMetadataManager {
             }
 
             currentPage++;
-            results = metadataRepository.findIdsAndChangeDates(
-                PageRequest.of(currentPage, METADATA_BATCH_PAGE_SIZE, sortByMetadataChangeDate));
+            results = metadataUtils.findIdsAndChangeDates(
+                PageRequest.of(currentPage, METADATA_BATCH_PAGE_SIZE, sortById));
         }
 
         // if anything to index then schedule it to be done after servlet is
