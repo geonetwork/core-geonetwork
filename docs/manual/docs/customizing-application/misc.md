@@ -2,7 +2,7 @@
 
 ## Invalid CSRF Token
 
-GeoNetwork has a security filter that prevents CSRF attacks. See more info about this type of attack on <https://www.owasp.org/index.php/Cross-Site_Request_Forgery_(CSRF)> . All calls to POST, DELETE and PUT endpoints without the proper token will return an error.
+GeoNetwork has a security filter that prevents CSRF attacks. See more info about this type of attack on the [OWASP CSRF page](https://www.owasp.org/index.php/Cross-Site_Request_Forgery_(CSRF)). All calls to POST, DELETE and PUT endpoints without the proper token will return an error.
 
 ![](img/csrf2.png)
 
@@ -99,8 +99,8 @@ $curl -v -X POST "http://localhost:8080/geonetwork/srv/eng/info?type=me" -H "X-X
 
 If you are using the default embedded H2 database and you need to examine the tables, you can do so using a Graphical UI. Two that have been tested are:
 
--   dbeaver (<http://dbeaver.io>)
--   h2's own tool (<http://www.h2database.com/html/download.html>)
+-   [DBeaver](http://dbeaver.io)
+-   [H2's own tool](http://www.h2database.com/html/download.html)
 
 The following approach uses the h2 tool.
 
@@ -110,7 +110,7 @@ This is called `gn.h2.db`. The location is dependent on which web server you are
 
 ### Using the H2 tool
 
-Download the platform independent zip file from <http://www.h2database.com/html/download.html> and unblock/extract it. At a command prompt change to the following directory:
+Download the platform-independent zip file from the [H2 download page](http://www.h2database.com/html/download.html) and unblock/extract it. At a command prompt change to the following directory:
 
 `h2/bin`
 
@@ -141,6 +141,6 @@ When you have successfully connected you will see a prompt as below, where you c
 
 `sql>`
 
-A useful command reference can be found at <http://www.h2database.com/html/commands.html>
+A useful command reference can be found in the [H2 SQL command reference](http://www.h2database.com/html/commands.html).
 
 To leave the tool, type `quit` and press enter.
