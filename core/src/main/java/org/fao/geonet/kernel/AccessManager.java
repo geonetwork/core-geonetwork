@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2007 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2026 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -49,6 +49,7 @@ import java.util.stream.Stream;
 
 import static org.fao.geonet.kernel.setting.Settings.SYSTEM_INTRANET_IP_SEPARATOR;
 import static org.fao.geonet.kernel.setting.Settings.SYSTEM_METADATAPRIVS_PUBLICATIONBYGROUPOWNERONLY;
+import static org.fao.geonet.kernel.setting.Settings.SYSTEM_METADATAPRIVS_USER_ALWAYS_CAN_EDIT_OWNED_METADATA;
 import static org.fao.geonet.repository.specification.OperationAllowedSpecs.hasMetadataId;
 import static org.fao.geonet.repository.specification.OperationAllowedSpecs.hasOperation;
 import static org.springframework.data.jpa.domain.Specification.where;
@@ -126,7 +127,7 @@ public class AccessManager {
     }
 
     public Set<String> getOperationNames(ServiceContext context, String mdId, String ip, Collection<Operation> operations) throws Exception {
-        Set<String> names = new HashSet<String>();
+        Set<String> names = new HashSet<>();
 
         for (Operation op : getOperations(context, mdId, ip, operations)) {
             names.add(op.getName());
@@ -139,7 +140,7 @@ public class AccessManager {
      * Returns all operations permitted by the user on a particular metadata.
      */
     public Set<Operation> getAllOperations(ServiceContext context, String mdId, String ip) throws Exception {
-        HashSet<Operation> operations = new HashSet<Operation>();
+        HashSet<Operation> operations = new HashSet<>();
         Set<Integer> groups = getUserGroups(context.getUserSession(),
             ip, false);
         for (OperationAllowed opAllow : operationAllowedRepository.findByMetadataId(mdId)) {
@@ -158,7 +159,7 @@ public class AccessManager {
     public Set<Integer> getUserGroups(UserSession usrSess, String ip, boolean editingGroupsOnly) throws Exception {
         final ConfigurableApplicationContext applicationContext = ApplicationContextHolder.get();
 
-        Set<Integer> hs = new HashSet<Integer>();
+        Set<Integer> hs = new HashSet<>();
 
         // add All (1) network group
         hs.add(ReservedGroup.all.getId());
@@ -205,7 +206,7 @@ public class AccessManager {
     }
 
     public Set<Integer> getReviewerGroups(UserSession usrSess) throws Exception {
-        Set<Integer> hs = new HashSet<Integer>();
+        Set<Integer> hs = new HashSet<>();
 
         // get other groups
         if ((usrSess != null) && usrSess.isAuthenticated()) {
@@ -226,7 +227,7 @@ public class AccessManager {
      * @param userId the id of the user
      */
     public Set<Integer> getVisibleGroups(final int userId) throws Exception {
-        Set<Integer> hs = new HashSet<Integer>();
+        Set<Integer> hs = new HashSet<>();
 
         Optional<User> user = userRepository.findById(userId);
 
@@ -255,10 +256,22 @@ public class AccessManager {
      *     <li>the user has edit rights over the metadata</li>
      * </ul>
      *
+     * If the setting to allow edit always to the metadata the owner (independently of the edit privilege in
+     * the group owner of the metadata) is disabled, only the edit privileges are checked, except for Administrators.
+     *
      * @param id The metadata internal identifier
      */
     public boolean canEdit(final ServiceContext context, final String id) throws Exception {
-        return isOwner(context, id) || hasEditPermission(context, id);
+        UserSession us = context.getUserSession();
+        final Profile profile = us.getProfile();
+
+        if ((profile == Profile.Administrator) || settingManager.getValueAsBool(SYSTEM_METADATAPRIVS_USER_ALWAYS_CAN_EDIT_OWNED_METADATA, true)) {
+            return isOwner(context, id) || hasEditPermission(context, id);
+        } else {
+            // Ownership is not checked.. If the user is Editor and is the metadata owner,
+            // can only edit the metadata if has edit privileges for the metadata.
+            return hasEditPermission(context, id);
+        }
     }
 
     /**
@@ -441,9 +454,9 @@ public class AccessManager {
         return hasReviewPermission(context, info);
     }
 
-    private String GROUPOWNERONLY_STRATEGY =
+    private static final String GROUPOWNERONLY_STRATEGY =
         "api.metadata.share.strategy.groupOwnerOnly";
-    private String REVIEWERINGROUP_STRATEGY =
+    private static final String REVIEWERINGROUP_STRATEGY =
         "api.metadata.share.strategy.reviewerInGroup";
 
     public String getReviewerRule() {
@@ -509,9 +522,9 @@ public class AccessManager {
             return false;
         }
 
-        Specification spec = where(UserGroupSpecs.hasProfile(profile)).and(UserGroupSpecs.hasUserId(us.getUserIdAsInt()));
+        Specification<UserGroup> spec = where(UserGroupSpecs.hasProfile(profile)).and(UserGroupSpecs.hasUserId(us.getUserIdAsInt()));
 
-        List<Integer> opAlloweds = new ArrayList<Integer>();
+        List<Integer> opAlloweds = new ArrayList<>();
         for (OperationAllowed opAllowed : allOpAlloweds) {
             opAlloweds.add(opAllowed.getId().getGroupId());
         }
