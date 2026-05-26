@@ -28,4 +28,4 @@ Fixes:
 - [Backport 4.2.x] Skip BOM chars from XML documents (#9067)
 
 
-and more \... see [4.2.15 issues](https://github.com/geonetwork/core-geonetwork/issues?q=is%3Aissue+milestone%3A4.2.15+is%3Aclosed) and [pull requests](https://github.com/geonetwork/core-geonetwork/pulls?page=3&q=is%3Apr+milestone%3A4.2.15+is%3Aclosed) for full details.
+and more ... see [4.2.15 issues](https://github.com/geonetwork/core-geonetwork/issues?q=is%3Aissue+milestone%3A4.2.15+is%3Aclosed) and [pull requests](https://github.com/geonetwork/core-geonetwork/pulls?page=3&q=is%3Apr+milestone%3A4.2.15+is%3Aclosed) for full details.

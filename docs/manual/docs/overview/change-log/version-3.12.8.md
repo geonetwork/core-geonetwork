@@ -25,6 +25,6 @@
 > -   [BP] [Security / Update Site API](https://github.com/geonetwork/core-geonetwork/pull/6569)
 > -   [BP] [Remove httpOnly from session timeout cookies](https://github.com/geonetwork/core-geonetwork/pull/6570)
 
-and more \... see [3.12.8 issues](https://github.com/geonetwork/core-geonetwork/issues?q=is%3Aissue+milestone%3A3.12.8+is%3Aclosed) and [pull requests](https://github.com/geonetwork/core-geonetwork/pulls?q=milestone%3A3.12.8+is%3Aclosed+is%3Apr) for full details.
+and more ... see [3.12.8 issues](https://github.com/geonetwork/core-geonetwork/issues?q=is%3Aissue+milestone%3A3.12.8+is%3Aclosed) and [pull requests](https://github.com/geonetwork/core-geonetwork/pulls?q=milestone%3A3.12.8+is%3Aclosed+is%3Apr) for full details.
 
 **Full Changelog**: [here](https://github.com/geonetwork/core-geonetwork/compare/3.12.7...3.12.8)
