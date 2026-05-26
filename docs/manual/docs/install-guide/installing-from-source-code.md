@@ -8,7 +8,7 @@ GeoNetwork 4.4 is a Java 11 application that runs as a servlet, which means that
 
 Please note that the commercial distribution of [Oracle JDK](https://www.oracle.com/technetwork/java/javase/downloads) no longer provides Java 11 for testing purposes.
 
-Because GeoNetwork is developed with Java 11 (LTS), it  won't run at all with earlier releases.
+Because GeoNetwork is developed with Java 11 (LTS), it won't run at all with earlier releases.
 
 -  GeoNetwork should not be developed with newer versions of Java.
 -  It  won't run at all with earlier releases.
@@ -25,7 +25,7 @@ We recommend the following stable releases of Tomcat:
 -   Apache Tomcat 9.0
 -   Apache Tomcat 8.5
 
-GeoNetwork cannot use the newer versions of Apache Tomcat 10 which are based on the Jakarata Enterprise Edition web application standard.
+GeoNetwork cannot use the newer versions of Apache Tomcat 10, which are based on the Jakarta Enterprise Edition web application standard.
 
 ### Database
 
@@ -87,7 +87,7 @@ mvn clean install -DskipTests
 
 ### Submodules
 
-GeoNetwork use submodules, these were initialized by the `--recursive` option when cloning the repository.
+GeoNetwork uses submodules, which were initialized by the `--recursive` option when cloning the repository.
 
 If you missed using `--recursive` run the following:
 
