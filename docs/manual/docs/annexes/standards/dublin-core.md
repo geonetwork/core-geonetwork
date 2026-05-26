@@ -1,10 +1,8 @@
 # Dublin core (dublin-core) {#dublin-core}
 
-The Dublin Core Metadata Element Set is a vocabulary of fifteen properties for
+The Dublin Core Metadata Element Set is a vocabulary of fifteen properties for use in resource description. The name "Dublin" is due to its origin at a 1995 invitational workshop in Dublin, Ohio; "core" because its elements are broad and generic, usable for describing a wide range of resources.
 
-:   use in resource description. The name "Dublin" is due to its origin at a 1995 invitational workshop in Dublin, Ohio; "core" because its elements are broad and generic, usable for describing a wide range of resources.
-
-More details:<http://dublincore.org/documents/dces/>
+More details: [Dublin Core Metadata Element Set](http://dublincore.org/documents/dces/)
 
 ## Metadata editor
 
