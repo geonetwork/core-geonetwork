@@ -31,7 +31,7 @@ The full set of requests supported by GeoNetwork can be found in `CSW test`, in 
 
 See [Configuring CSW](../administrator-guide/configuring-the-catalog/csw-configuration.md) for more details of this function.
 
-When using the GetRecords operation for searching, 2 types of parameter can be use for searching:
+When using the GetRecords operation for searching, two types of parameter can be used:
 
 -   The list of queryable listed in the GetCapabilities document
 -   The fields in the index

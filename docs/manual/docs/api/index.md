@@ -4,7 +4,7 @@ The API guide describes entry points that can be used to interact with the catal
 
 -   [GeoNetwork API](the-geonetwork-api.md)
 
-    The GeoNetwork API allows to manage all the catalog (eg. users, groups, editing, formatter, processing).
+    The GeoNetwork API allows you to manage all catalog resources (e.g. users, groups, editing, formatter, processing).
 
 -   [Search Service](search.md)
 
@@ -12,7 +12,7 @@ The API guide describes entry points that can be used to interact with the catal
 
 -   [Catalog Service for the Web](csw.md)
 
-    The OGC Industry standard to search, retrieve record in XML format. Can be used to manage records with transaction operation.
+    The OGC industry standard to search and retrieve records in XML format. Can be used to manage records with the transaction operation.
 
 No longer supported:
 
