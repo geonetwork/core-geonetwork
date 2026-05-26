@@ -233,26 +233,20 @@ public class MetadataAssociatedApiTest extends AbstractServiceIntegrationTest {
         final String VERSION_OLDEST = "11111111-1111-4111-8111-111111111111";
         final String VERSION_MIDDLE = "22222222-2222-4222-8222-222222222222";
         final String VERSION_LATEST = "33333333-3333-4333-8333-333333333333";
+        
+        final String[] versions = {VERSION_LATEST, VERSION_MIDDLE, VERSION_OLDEST};
 
-        mockMvc.perform(get("/srv/api/records/" + VERSION_LATEST + "/associated?type=versions")
-                .session(mockHttpSession)
-                .accept(MediaType.APPLICATION_JSON))
-            .andExpect(status().isOk())
-            .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING))
-            .andExpect(jsonPath("$.versions", hasSize(3)))
-            .andExpect(jsonPath("$.versions[0]._source.uuid").value(VERSION_LATEST))
-            .andExpect(jsonPath("$.versions[1]._source.uuid").value(VERSION_MIDDLE))
-            .andExpect(jsonPath("$.versions[2]._source.uuid").value(VERSION_OLDEST));
-
-        mockMvc.perform(get("/srv/api/records/" + VERSION_OLDEST + "/associated?type=versions")
-                .session(mockHttpSession)
-                .accept(MediaType.APPLICATION_JSON))
-            .andExpect(status().isOk())
-            .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING))
-            .andExpect(jsonPath("$.versions", hasSize(3)))
-            .andExpect(jsonPath("$.versions[0]._source.uuid").value(VERSION_LATEST))
-            .andExpect(jsonPath("$.versions[1]._source.uuid").value(VERSION_MIDDLE))
-            .andExpect(jsonPath("$.versions[2]._source.uuid").value(VERSION_OLDEST));
+        for (String versionUuid : versions) {
+            mockMvc.perform(get("/srv/api/records/" + versionUuid + "/associated?type=versions")
+                    .session(mockHttpSession)
+                    .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING))
+                .andExpect(jsonPath("$.versions", hasSize(3)))
+                .andExpect(jsonPath("$.versions[0]._source.uuid").value(VERSION_LATEST))
+                .andExpect(jsonPath("$.versions[1]._source.uuid").value(VERSION_MIDDLE))
+                .andExpect(jsonPath("$.versions[2]._source.uuid").value(VERSION_OLDEST));
+        }
     }
 
     @Test

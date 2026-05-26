@@ -59,6 +59,8 @@ import org.fao.geonet.api.records.model.related.AssociatedRecord;
 import org.fao.geonet.api.records.model.related.RelatedItemOrigin;
 import org.fao.geonet.api.records.model.related.RelatedItemType;
 import org.fao.geonet.constants.Geonet;
+
+import static org.fao.geonet.api.records.MetadataVersionsUtils.*;
 import static org.fao.geonet.constants.Geonet.IndexFieldNames.AGG_ASSOCIATED_REVISION_OF;
 import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.ReservedOperation;
@@ -188,25 +190,25 @@ public class MetadataUtils {
         try {
             Map<RelatedItemType, List<AssociatedRecord>> associated = MetadataUtils.getAssociated(context, metadataEntity, RelatedItemType.values(), 0, 100);
             for (Map.Entry<RelatedItemType, List<AssociatedRecord>> entry : associated.entrySet()) {
-                for (AssociatedRecord record : entry.getValue()) {
+                for (AssociatedRecord associatedRecord : entry.getValue()) {
                     Element relation = new Element(entry.getKey().name());
-                    relation.setAttribute("uuid", record.getUuid() == null ? "" : record.getUuid());
-                    relation.setAttribute("origin", record.getOrigin());
-                    if (record.getProperties() != null) {
-                        if (record.getProperties().get("associationType") != null) {
-                            relation.setAttribute("associationType", record.getProperties().get("associationType"));
+                    relation.setAttribute("uuid", associatedRecord.getUuid());
+                    relation.setAttribute("origin", associatedRecord.getOrigin());
+                    if (associatedRecord.getProperties() != null) {
+                        if (associatedRecord.getProperties().get("associationType") != null) {
+                            relation.setAttribute("associationType", associatedRecord.getProperties().get("associationType"));
                         }
-                        if (record.getProperties().get("initiativeType") != null) {
-                            relation.setAttribute("initiativeType", record.getProperties().get("initiativeType"));
+                        if (associatedRecord.getProperties().get("initiativeType") != null) {
+                            relation.setAttribute("initiativeType", associatedRecord.getProperties().get("initiativeType"));
                         }
-                        if (record.getProperties().get("resourceTitle") != null) {
-                            relation.setAttribute("resourceTitle", record.getProperties().get("resourceTitle"));
+                        if (associatedRecord.getProperties().get("resourceTitle") != null) {
+                            relation.setAttribute("resourceTitle", associatedRecord.getProperties().get("resourceTitle"));
                         }
-                        if (record.getProperties().get("url") != null) {
-                            relation.setAttribute("url", record.getProperties().get("url"));
+                        if (associatedRecord.getProperties().get("url") != null) {
+                            relation.setAttribute("url", associatedRecord.getProperties().get("url"));
                         }
                     }
-                    relation.addContent(Xml.getXmlFromJSON(record.getRecord().toPrettyString()));
+                    relation.addContent(Xml.getXmlFromJSON(associatedRecord.getRecord().toPrettyString()));
                     relations.addContent(relation);
                 }
             }
@@ -464,229 +466,6 @@ public class MetadataUtils {
             associatedRecord.setOrigin(RelatedItemOrigin.remote.name());
             records.add(associatedRecord);
         }
-    }
-
-    /**
-     * For versions, order is based on the version graph.
-     */
-    private static List<AssociatedRecord> reorderIndexDocBasedOnOrderedRecords(List<AssociatedRecord> records, List<String> orderedRecords) {
-        if (orderedRecords == null || orderedRecords.isEmpty()) {
-            return records;
-        }
-
-        Map<String, AssociatedRecord> recordsByUuid = new LinkedHashMap<>();
-        for (AssociatedRecord record : records) {
-            recordsByUuid.put(record.getUuid(), record);
-        }
-
-        List<AssociatedRecord> reordered = new ArrayList<>();
-        for (String uuid : orderedRecords) {
-            AssociatedRecord record = recordsByUuid.remove(uuid);
-            if (record != null) {
-                reordered.add(record);
-            }
-            // else, remote records are not supported in version list.
-        }
-        reordered.addAll(recordsByUuid.values());
-        return reordered;
-    }
-
-    /**
-     * Retrieve all versions of a record.
-     * Remote records are not supported because they may not be XML document
-     * so we can't assume that we will be able to extract revisionOf records.
-     */
-    private static RelatedTypeDetails getAllVersions(EsSearchManager searchMan, String metadataUuid) throws Exception {
-        Set<String> allVersionUuids = new LinkedHashSet<>();
-        Map<String, Set<String>> previousVersionsByUuid = new LinkedHashMap<>();
-        Deque<String> uuidsToProcess = new ArrayDeque<>();
-
-        allVersionUuids.add(metadataUuid);
-        uuidsToProcess.add(metadataUuid);
-
-        while (!uuidsToProcess.isEmpty()) {
-            String currentUuid = uuidsToProcess.removeFirst();
-
-            Map<String, Object> document;
-            try {
-                document = searchMan.getDocument(currentUuid);
-            } catch (Exception e) {
-                // Referenced versions may point to records not indexed in this catalogue.
-                // And we need the document to extract relation to next item.
-                // This can happen on remote record link. This is not supported for now.
-                // previousVersionsByUuid.putIfAbsent(currentUuid, new LinkedHashSet<>());
-                allVersionUuids.remove(currentUuid);
-                continue;
-            }
-
-            Set<String> previousVersions = extractFieldValues(document.get(AGG_ASSOCIATED_REVISION_OF));
-            previousVersionsByUuid.computeIfAbsent(currentUuid, key -> new LinkedHashSet<>()).addAll(previousVersions);
-            for (String previousUuid : previousVersions) {
-                if (allVersionUuids.add(previousUuid)) {
-                    uuidsToProcess.add(previousUuid);
-                }
-            }
-
-            int from = 0;
-            final int pageSize = 100;
-            while (true) {
-                SearchResponse result = searchMan.query(
-                    String.format("+agg_associated_revisionOf:\"%s\" AND (draft:\"n\" OR draft:\"e\")", currentUuid),
-                    null,
-                    FIELDLIST_UUID,
-                    from,
-                    pageSize);
-                List<Hit> hits = (List<Hit>) result.hits().hits();
-                if (hits.isEmpty()) {
-                    break;
-                }
-
-                for (Hit hit : hits) {
-                    previousVersionsByUuid.computeIfAbsent(hit.id(), key -> new LinkedHashSet<>()).add(currentUuid);
-                    if (allVersionUuids.add(hit.id())) {
-                        uuidsToProcess.add(hit.id());
-                    }
-                }
-
-                if (hits.size() < pageSize) {
-                    break;
-                }
-                from += pageSize;
-            }
-        }
-
-        List<String> orderedRecords = orderVersionsNewestToOldest(allVersionUuids, previousVersionsByUuid);
-        return new RelatedTypeDetails(
-            String.format("(uuid:(%s)) AND (draft:\"n\" OR draft:\"e\")",
-                orderedRecords.stream().collect(Collectors.joining("\" OR \"", "\"", "\""))),
-            new LinkedHashSet<>(orderedRecords),
-            new HashMap<>(),
-            new HashSet<>(),
-            orderedRecords);
-    }
-
-    private static RelatedTypeDetails getNextOrPrevious(
-            RelatedTypeDetails versionDetails, String currentUuid, boolean isNext) {
-        List<String> orderedRecords = versionDetails.getOrderedRecords();
-
-        if (orderedRecords == null || orderedRecords.isEmpty()) {
-            return new RelatedTypeDetails("(uuid:(\"\")) AND (draft:\"n\" OR draft:\"e\")",
-                new HashSet<>(), new HashMap<>(), new HashSet<>(), new ArrayList<>());
-        }
-
-        // Find current record in the ordered list (newest to oldest)
-        int currentIndex = orderedRecords.indexOf(currentUuid);
-
-        // For next: we need the previous in the list (towards newer versions)
-        // For previous: we need the next in the list (towards older versions)
-        int targetIndex = isNext ? currentIndex - 1 : currentIndex + 1;
-
-        if (targetIndex < 0 || targetIndex >= orderedRecords.size()) {
-            // No next or previous version exists
-            return new RelatedTypeDetails("(uuid:(\"\")) AND (draft:\"n\" OR draft:\"e\")",
-                new HashSet<>(), new HashMap<>(), new HashSet<>(), new ArrayList<>());
-        }
-
-        String targetUuid = orderedRecords.get(targetIndex);
-        List<String> result = new ArrayList<>();
-        result.add(targetUuid);
-
-        return new RelatedTypeDetails(
-            String.format("(uuid:\"%s\") AND (draft:\"n\" OR draft:\"e\")", targetUuid),
-            new LinkedHashSet<>(result),
-            new HashMap<>(),
-            new HashSet<>(),
-            result);
-    }
-
-    private static Set<String> extractFieldValues(Object fieldValue) {
-        Set<String> values = new LinkedHashSet<>();
-        if (fieldValue == null) {
-            return values;
-        }
-
-        if (fieldValue instanceof Collection<?>) {
-            for (Object value : (Collection<?>) fieldValue) {
-                addFieldValue(values, value);
-            }
-        } else if (fieldValue.getClass().isArray()) {
-            int length = java.lang.reflect.Array.getLength(fieldValue);
-            for (int i = 0; i < length; i++) {
-                addFieldValue(values, java.lang.reflect.Array.get(fieldValue, i));
-            }
-        } else {
-            addFieldValue(values, fieldValue);
-        }
-
-        return values;
-    }
-
-    private static void addFieldValue(Set<String> values, Object value) {
-        if (value == null) {
-            return;
-        }
-
-        String uuid = String.valueOf(value).trim();
-        if (StringUtils.isNotEmpty(uuid)) {
-            values.add(uuid);
-        }
-    }
-
-    private static List<String> orderVersionsNewestToOldest(Set<String> versionUuids,
-                                                             Map<String, Set<String>> previousVersionsByUuid) {
-        Map<String, Integer> incomingEdges = new LinkedHashMap<>();
-        Map<String, Set<String>> edges = new LinkedHashMap<>();
-
-        for (String uuid : versionUuids) {
-            incomingEdges.put(uuid, 0);
-            edges.put(uuid, new LinkedHashSet<>());
-        }
-
-        for (Map.Entry<String, Set<String>> entry : previousVersionsByUuid.entrySet()) {
-            if (!versionUuids.contains(entry.getKey())) {
-                continue;
-            }
-
-            for (String previousUuid : entry.getValue()) {
-                if (!versionUuids.contains(previousUuid)) {
-                    continue;
-                }
-
-                if (edges.get(entry.getKey()).add(previousUuid)) {
-                    incomingEdges.put(previousUuid, incomingEdges.get(previousUuid) + 1);
-                }
-            }
-        }
-
-        Deque<String> queue = new ArrayDeque<>();
-        incomingEdges.entrySet().stream()
-            .filter(entry -> entry.getValue() == 0) // ie. no newer version
-            .map(Map.Entry::getKey)
-            .sorted()
-            .forEach(queue::addLast);
-
-        List<String> ordered = new ArrayList<>();
-        while (!queue.isEmpty()) {
-            String uuid = queue.removeFirst();
-            ordered.add(uuid);
-
-            for (String previousUuid : edges.getOrDefault(uuid, Collections.emptySet())) {
-                int newIndegree = incomingEdges.get(previousUuid) - 1;
-                incomingEdges.put(previousUuid, newIndegree);
-                if (newIndegree == 0) {
-                    queue.addLast(previousUuid);
-                }
-            }
-        }
-
-        if (ordered.size() != versionUuids.size()) {
-            versionUuids.stream()
-                .filter(uuid -> !ordered.contains(uuid))
-                .sorted()
-                .forEach(ordered::add);
-        }
-
-        return ordered;
     }
 
     private static void assignPortalOrigin(int start, int size, EsSearchManager searchMan, Map<RelatedItemType, List<AssociatedRecord>> associated, Set<String> allCatalogueUuids) throws Exception {

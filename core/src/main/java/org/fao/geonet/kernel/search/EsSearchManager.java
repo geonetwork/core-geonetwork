@@ -798,6 +798,40 @@ public class EsSearchManager implements ISearchManager {
         return client.getDocument(defaultIndex, uuid);
     }
 
+    public static Set<String> extractFieldValues(Object fieldValue) {
+        Set<String> values = new LinkedHashSet<>();
+        if (fieldValue == null) {
+            return values;
+        }
+
+        if (fieldValue instanceof Collection<?>) {
+            for (Object value : (Collection<?>) fieldValue) {
+                addFieldValue(values, value);
+            }
+        } else if (fieldValue.getClass().isArray()) {
+            int length = java.lang.reflect.Array.getLength(fieldValue);
+            for (int i = 0; i < length; i++) {
+                addFieldValue(values, java.lang.reflect.Array.get(fieldValue, i));
+            }
+        } else {
+            addFieldValue(values, fieldValue);
+        }
+
+        return values;
+    }
+
+    private static void addFieldValue(Set<String> values, Object value) {
+        if (value == null) {
+            return;
+        }
+
+        String trimmed = String.valueOf(value).trim();
+        if (StringUtils.isNotEmpty(trimmed)) {
+            values.add(trimmed);
+        }
+    }
+
+
     public SearchResponse query(String luceneQuery, String filterQuery, int startPosition, int maxRecords) throws Exception {
         return client.query(defaultIndex, luceneQuery, filterQuery, new HashSet<>(), new HashMap<>(), startPosition, maxRecords);
     }
