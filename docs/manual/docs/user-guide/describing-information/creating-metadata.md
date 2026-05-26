@@ -15,7 +15,7 @@ Contact your administrator if you don't have the correct profile.
 
     ![](img/add-new-record.png)
 
-!!! Note
+!!! note
 
     If only one group is defined in the catalog, and only one template is available, the system settings can be configured to skip the following step and directly open the editor with the selected template and group.
 
@@ -23,7 +23,7 @@ Contact your administrator if you don't have the correct profile.
 
     ![](img/creating-metadata.png)
 
-!!! Note
+!!! note
 
     If only one group is defined in the catalog, the default group is selected. If a group is not a [Workspace Group](../../administrator-guide/managing-users-and-groups/creating-group.md#1-workspace-group) it will not be shown as an option in the list.
 
