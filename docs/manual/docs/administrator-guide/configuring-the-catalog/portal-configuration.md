@@ -103,11 +103,11 @@ Records from a specific organization:
 <h4>Filter by Organization Name and Keywords</h4>
 
 Records from "My agency" with open data keywords:
-<br><code>OrgObject.*: "My agency" AND keyword:("OPEN DATA" OR "open data" OR "opendata")</code>
+<br><code>OrgObject\\.*: "My agency" AND keyword:("OPEN DATA" OR "open data" OR "opendata")</code>
 <br>
 
 Records from either "New York" or "GN":
-<br><code>OrgObject.*:"New York" OR OrgObject.*:"GN"</code>
+<br><code>OrgObject\\.*:"New York" OR OrgObject.*:"GN"</code>
 <br>
 
 <h4>Filter by Harvester</h4>
@@ -151,7 +151,7 @@ Records tagged with Thailand, Cambodia, or Laos:
 <br>
 
 Records with any tag containing "Geo":
-<br><code>+tag.*:"Geo"</code>
+<br><code>+tag\\.*:"Geo"</code>
 <br>
 
 <h4>Filter by Record Owner</h4>
