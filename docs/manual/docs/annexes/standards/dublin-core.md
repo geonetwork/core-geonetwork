@@ -78,7 +78,7 @@ Schema namespaces
 
 :   
 
--   <http://geonetwork-opensource.org/schemas/schema-ident>
+-   `http://geonetwork-opensource.org/schemas/schema-ident`
 -   <http://www.w3.org/2001/XMLSchema-instance>
 -   <http://www.w3.org/XML/1998/namespace>
 

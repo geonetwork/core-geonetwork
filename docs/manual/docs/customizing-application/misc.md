@@ -2,7 +2,7 @@
 
 ## Invalid CSRF Token
 
-GeoNetwork has a security filter that prevents CSRF attacks. See more info about this type of attack on the [OWASP CSRF page](https://www.owasp.org/index.php/Cross-Site_Request_Forgery_(CSRF)). All calls to POST, DELETE and PUT endpoints without the proper token will return an error.
+GeoNetwork has a security filter that prevents CSRF attacks. See more info about this type of attack on the [OWASP CSRF page](https://owasp.org/www-community/attacks/csrf). All calls to POST, DELETE and PUT endpoints without the proper token will return an error.
 
 ![](img/csrf2.png)
 
