@@ -245,7 +245,7 @@ class DatabaseHarvesterAligner extends BaseAligner<DatabaseHarvesterParams> impl
                     addMetadata(metadataElement, UUID.randomUUID().toString(), schema);
                     break;
                 case SKIP:
-                    log.debug(String.format("Skipping record with uuid %s", uuid));
+                    log.info(String.format("Skipping record with uuid %s", uuid));
                     result.uuidSkipped++;
                     break;
                 default:

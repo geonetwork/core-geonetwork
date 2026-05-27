@@ -25,8 +25,13 @@ package org.fao.geonet.api.groups;
 import com.google.common.collect.Lists;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import org.apache.commons.lang3.StringUtils;
 import org.fao.geonet.api.FieldNameExclusionStrategy;
 import org.fao.geonet.api.JsonFieldNamingStrategy;
@@ -34,6 +39,9 @@ import org.fao.geonet.domain.Group;
 import org.fao.geonet.domain.Profile;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.domain.UserGroup;
+import org.fao.geonet.domain.page.Page;
+import org.fao.geonet.domain.page.PageIdentity;
+import org.fao.geonet.repository.page.PageRepository;
 import org.fao.geonet.services.AbstractServiceIntegrationTest;
 import org.junit.Assert;
 import org.junit.Before;
@@ -68,6 +76,9 @@ public class GroupsApiTest extends AbstractServiceIntegrationTest {
     private MockMvc mockMvc;
 
     private MockHttpSession mockHttpSession;
+
+    @Autowired
+    private PageRepository pageRepository;
 
     @Before
     public void setUp() {
@@ -196,6 +207,22 @@ public class GroupsApiTest extends AbstractServiceIntegrationTest {
                 .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().is(404))
             .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING));
+    }
+
+    @Test
+    public void deleteGroupAssignedToGroupsStaticPageIsRejected() throws Exception {
+        this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+        this.mockHttpSession = loginAsAdmin();
+
+        assertDeleteGroupAssignedToStaticPageIsRejected(Page.PageStatus.GROUPS);
+    }
+
+    @Test
+    public void deleteGroupAssignedToGroupsAndAdminStaticPageIsRejected() throws Exception {
+        this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+        this.mockHttpSession = loginAsAdmin();
+
+        assertDeleteGroupAssignedToStaticPageIsRejected(Page.PageStatus.GROUPS_AND_ADMIN);
     }
 
     @Test
@@ -448,6 +475,34 @@ public class GroupsApiTest extends AbstractServiceIntegrationTest {
     /**
      * Create sample data for the tests.
      */
+    private void assertDeleteGroupAssignedToStaticPageIsRejected(Page.PageStatus statusToTest) throws Exception {
+        String pageId = "delete-group-" + statusToTest.name().toLowerCase() + "-" + UUID.randomUUID().toString().substring(0, 8);
+
+        Group groupToDelete = new Group();
+        groupToDelete.setName("page-group-" + UUID.randomUUID().toString().replace("-", "").substring(0, 12));
+        groupToDelete = _groupRepo.saveAndFlush(groupToDelete);
+
+        Page page = new Page(
+            new PageIdentity("eng", pageId),
+            "<p>Protected content</p>".getBytes(StandardCharsets.UTF_8),
+            "../api/pages/eng/" + pageId + "/content",
+            Page.PageFormat.HTML,
+            new ArrayList<>(),
+            statusToTest,
+            "Delete group " + statusToTest.name().toLowerCase(),
+            null,
+            new LinkedHashSet<>(Collections.singleton(groupToDelete)));
+        pageRepository.saveAndFlush(page);
+
+        this.mockMvc.perform(delete("/srv/api/groups/" + groupToDelete.getId())
+                .session(this.mockHttpSession)
+                .accept(MediaType.parseMediaType("application/json")))
+            .andExpect(status().is(403))
+            .andExpect(jsonPath("$.message", is(String.format(
+                "Group %s is associated with '%s' static page(s). Please remove the static page(s) associated with that group first.",
+                groupToDelete.getName(), page.getLabel()))));
+    }
+
     private void createTestData() {
         Group sampleGroup = _groupRepo.findByName("sample");
 

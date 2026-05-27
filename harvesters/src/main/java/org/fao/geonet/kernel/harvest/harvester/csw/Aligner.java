@@ -213,7 +213,7 @@ public class Aligner extends BaseAligner<CswParams> {
                             addMetadata(ri, UUID.randomUUID().toString());
                             break;
                         case SKIP:
-                            log.debug("Skipping record with uuid " + ri.uuid);
+                            log.info("Skipping record with uuid " + ri.uuid);
                             result.uuidSkipped++;
                             break;
                         default:

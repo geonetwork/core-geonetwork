@@ -159,6 +159,7 @@
     "exportCSV": "Eksport (CSV)",
     "exportPDF": "Eksport (PDF)",
     "exportMEF": "Eksport (ZIP)",
+    "exportMEF-excludeAttachments": "Export (ZIP) without attachments",
     "welcomeText": "Her finder du data, tjenester og kort og meget mere.",
     "searchOver": " Søg i <strong>{{records}}</strong>, datasæt, services og kort... ",
     "browseBy": "Gennemse efter",
@@ -559,5 +560,8 @@
     "indexingErrorMsg-temporalDateRangeLowerGreaterThanUpper": "Advarsel / Field resourceTemporalDateRange / Nedre områdegrænse {{lowerBound}} kan ikke være større end øvre grænse {{upperBound}}. Datointerval ikke indekseret.",
     "indexingErrorMsg-temporalRangeLowerGreaterThanUpper": "Advarsel / Field resourceTemporalDateRange / Nedre områdegrænse {{lowerBound}} kan ikke være større end øvre grænse {{upperBound}}.",
     "indexingErrorMsg-schemaNotRegistered": "instans {{ instans }} / Skema &#39;{{skema}}&#39; er ikke registreret i dette katalog. Installer den eller fjern poster . instans er indekseret indekseringsfejlflag.",
-    "indexingErrorMsg-indexingStyleSheetError": "Indeksering stylesheet indeholder fejl: {{message}}\n Markering af metadata som _indexingError=1 i indeks."
+    "indexingErrorMsg-indexingStyleSheetError": "Indeksering stylesheet indeholder fejl: {{message}}\n Markering af metadata som _indexingError=1 i indeks.",
+    "createAnonymousAccess": "Share unpublished record preview",
+    "deleteAnonymousAccess": "Revoke unpublished record preview",
+    "anonymousAccessTo": "Anonymous access to {{title}}"
 }

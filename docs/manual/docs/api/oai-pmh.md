@@ -186,6 +186,12 @@ http://localhost:8080/geonetwork/srv/api/oaipmh?verb=GetRecord&identifier=da1651
 
 [More information](https://www.openarchives.org/OAI/openarchivesprotocol.html#GetRecord).
 
+## Upgrading from GeoNetwork 3.0 Guidance
+
+OAI-PMH was unavailable between GeoNetwork 4.0 and 4.2 and was restored in a later 4.x release using the Elasticsearch engine.
+
+The endpoint URL has changed from `/geonetwork/srv/{lang}/oaipmh` to `/geonetwork/srv/api/oaipmh`.
+
 ## Reference
 
 Please see <https://www.openarchives.org/OAI/openarchivesprotocol.html> for further details.

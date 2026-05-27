@@ -317,7 +317,7 @@ class LocalFsHarvesterFileVisitor extends SimpleFileVisitor<Path> {
 
                         break;
                     case SKIP:
-                        harvester.getLogger().debug("Skipping record with uuid " + metadata.getUuid());
+                        harvester.getLogger().info("Skipping record with uuid " + metadata.getUuid());
                         result.uuidSkipped++;
                         result.unchangedMetadata++;
 

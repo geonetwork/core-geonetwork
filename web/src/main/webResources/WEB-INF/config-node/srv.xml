@@ -43,6 +43,8 @@
        * mysql
        * oracle
        * postgres
+       * postgres-postgis
+       * postgres-postgis-hikari
        * sqlserver
     -->
   <import resource="@db.config.file@"/>

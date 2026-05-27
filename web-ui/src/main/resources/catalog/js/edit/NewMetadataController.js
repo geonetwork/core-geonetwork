@@ -127,7 +127,7 @@
             resourceType: {
               terms: {
                 field: "resourceType",
-                exclude: ["map-static", "theme", "place"],
+                exclude: ["theme", "place"],
                 missing: "other"
               }
             }

@@ -36,6 +36,7 @@ import org.springframework.security.oauth2.client.OAuth2AuthorizeRequest;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClientManager;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.security.oauth2.core.oidc.OidcIdToken;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.security.oauth2.core.user.OAuth2User;
@@ -65,6 +66,13 @@ public class OAuth2SecurityProviderUtil implements SecurityProviderUtil {
    // setup for BEARER authentication
     public String getSSOAuthenticationHeaderValue() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication instanceof JwtAuthenticationToken) {
+            // Bearer token auth - stateless, return token directly without refresh
+            JwtAuthenticationToken jwtAuth = (JwtAuthenticationToken) authentication;
+            return "Bearer " + jwtAuth.getToken().getTokenValue();
+        }
+
         if (authentication instanceof OAuth2AuthenticationToken) {
             OAuth2AuthenticationToken oauth2Token = (OAuth2AuthenticationToken) authentication;
             // Refresh access token before getting new token, otherwise we could be using a token that is about to expire and that could cause issues.
@@ -103,11 +111,16 @@ public class OAuth2SecurityProviderUtil implements SecurityProviderUtil {
         } else if (auth != null && auth.getPrincipal() instanceof OAuth2User) {
             OAuth2User user = (OAuth2User) auth.getPrincipal();
             return oidcUser2GeonetworkUser.getUserDetails(user.getAttributes(), withDbUpdate);
-        } else {
-            // If unknown auth class then return null.
-            // This will occur when it is an anonymous user.
-            return null;
+        } else if (auth instanceof JwtAuthenticationToken) {
+            JwtAuthenticationToken jwtAuth = (JwtAuthenticationToken) auth;
+            if (jwtAuth.getToken() != null && jwtAuth.getToken().getClaims() != null) {
+                return oidcUser2GeonetworkUser.getUserDetails(jwtAuth.getToken().getClaims(), withDbUpdate);
+            }
         }
+
+        // If unknown auth class then return null.
+        // This will occur when it is an anonymous user.
+        return null;
     }
 
 

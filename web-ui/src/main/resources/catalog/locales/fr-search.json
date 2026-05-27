@@ -159,6 +159,7 @@
     "exportCSV": "Export (CSV)",
     "exportPDF": "Export (PDF)",
     "exportMEF": "Export (ZIP)",
+    "exportMEF-excludeAttachments": "Exporter (ZIP) sans pièces jointes",
     "welcomeText": "Vous trouverez ici des données, des services et des cartes et plus encore ...",
     "searchOver": "Rechercher parmi <strong>{{records}}</strong> jeux de données, services et cartes, ...",
     "browseBy": "Parcourir par",
@@ -560,7 +561,7 @@
     "indexingErrorMsg-temporalRangeLowerGreaterThanUpper": "Avertissement / Champ ressourceTemporalDateRange / La limite inférieure de la plage {{lowerBound}} ne peut pas être supérieure à la limite supérieure {{upperBound}}.",
     "indexingErrorMsg-schemaNotRegistered": "L'enregistrement {{record}} / Le schéma '{{schema}}' n'est pas supporté par catalogue. Installez-le ou supprimez ces enregistrements.",
     "indexingErrorMsg-indexingStyleSheetError": "La feuille de style d'indexation contient des erreurs : {{message}}\nLes métadonnées sont marquées avec indexingError=1 dans l'index.",
-    "createAnonymousAccess": "Partager une fiche non publiée",
-    "deleteAnonymousAccess": "Retirer le partage anonyme",
-    "anonymousAccessTo": "Accès anonyme à {{title}}"
+    "createAnonymousAccess": "Share unpublished record preview",
+    "deleteAnonymousAccess": "Revoke unpublished record preview",
+    "anonymousAccessTo": "Anonymous access to {{title}}"
 }

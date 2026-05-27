@@ -21,6 +21,7 @@ The following sources can be harvested:
 -   [WFS GetFeature Harvesting](harvesting-wfs-features.md)
 -   [SFTP Server Harvesting](harvesting-sftp.md)
 -   [Database Harvesting](harvesting-database.md)
+-   [Simple URL harvesting (STAC Collection)](harvesting-stac.md)
 
 ## Mechanism overview
 

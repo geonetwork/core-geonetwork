@@ -72,7 +72,13 @@ Setting configuration properties via environment variables is common in containe
         -e jdbc.port=5432 geonetwork:latest
     ```
 
-Within PostgreSQL it is possible to configure `postgres` or `postgis`. In the latter case GeoNetwork will use spatial capabilities of PostGIS to filter metadata. In the first case (and for other database dialects) a Shapefile is created for storage of metadata coverage.
+Within PostgreSQL it is possible to configure three geonetwork.db.type:
+
+- `postgres`: (and for other database dialects) a Shapefile is created for storage of metadata coverage.
+- `postgres-postgis`: GeoNetwork will use spatial capabilities of PostGIS to filter metadata.
+- `postgres-postgis-hikari`: All the features of postgis with hikari "on top" to provide connection management more adapted to postgres.
+
+When choosing between postgres-postgis and postgres-postgis-hikari, postgres-postgis-hikari is recommended: it is based on hikari connection pool which provides better connection management when using 'connectionTestQuery' instead of defaultJdbcDataSource's 'validationQuery'.
 
 ## Logging
 
@@ -99,3 +105,14 @@ To see more details about the database connection and queries, the log can be sw
 ## Summary
 
 There are various ways to configure a database in GeoNetwork. JNDI and environment are favourable, because when updating to a new version, or changing a database, you don't need to touch any application files.
+
+       Supported types:
+       * db2
+       * h2 (default)
+       * jndi
+       * mysql
+       * oracle
+       * postgres
+       * postgres-postgis
+       * postgres-postgis-hikari
+       * sqlserver

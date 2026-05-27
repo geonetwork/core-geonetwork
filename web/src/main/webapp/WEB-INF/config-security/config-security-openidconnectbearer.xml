@@ -144,7 +144,6 @@
       <bean class="org.fao.geonet.kernel.security.openidconnect.bearer.SimpleTokenParser">
       </bean>
     </constructor-arg>
-    <constructor-arg ref="openidconnectUserService"/>
     <constructor-arg ref="openidconnectBeareRolesProvider"/>
     <constructor-arg>
       <list>
