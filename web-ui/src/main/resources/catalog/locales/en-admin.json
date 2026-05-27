@@ -1481,7 +1481,7 @@
     "ui-cookieWarningMoreInfoLink": "Link to more info about cookies",
     "ui-cookieWarningMoreInfoLink-help": "If not empty this link will be shown in the Cookie Warning widget inviting the user to look for more information about cookies",
     "ui-cookieWarningRejectLink": "URL where the user will be redirected if Reject cookies is chosen",
-    "ui-cookieWarningRejectLink-help": "If not empty the user will be redirected to this URL on cookies rejection. If empty GeoNework will redirect teh user to the last visited URL (history.back())",
+    "ui-cookieWarningRejectLink-help": "If not empty, the user will be redirected to this URL on cookies rejection. If empty, GeoNetwork will redirect the user to the last visited URL (history.back())",
     "styleVariable-gnMenubarBackgroundHover": "Background color on hover",
     "styleVariable-gnMenubarColorActive": "Color when active",
     "metadata/pdfReport": "Metadata selection - pdf report",
