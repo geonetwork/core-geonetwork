@@ -467,4 +467,150 @@ public class MetadataSharingApiTest extends AbstractServiceIntegrationTest {
         metadataId = metadata.getId();
         metadataUuid = metadata.getUuid();
     }
+
+    /**
+     * Regression test for issue documented in docs/issue-useradmin-publication.md (Symptom 1).
+     *
+     * <p>A user whose global profile is {@code UserAdmin} AND who has a
+     * {@code UserGroup(profile=Reviewer)} entry for the metadata's group owner MUST be
+     * allowed to change reserved-group (publication) privileges. The global {@code UserAdmin}
+     * profile must not override per-group Reviewer rights.
+     */
+    @Test
+    public void shareMetadataForPublicationAsUserAdminWithReviewerInGroup() throws Exception {
+        MockMvc mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+
+        // Create a user with global UserAdmin profile but per-group Reviewer in the record's group.
+        User userAdminWithReviewer = UserRepositoryTest.newUser(_inc);
+        userAdminWithReviewer.setUsername("useradmin_reviewer");
+        userAdminWithReviewer.setProfile(Profile.UserAdmin);
+        _userRepo.save(userAdminWithReviewer);
+        Group sampleGroup = _groupRepo.findById(SAMPLE_GROUP_ID).get();
+        _userGroupRepo.save(new UserGroup()
+            .setGroup(sampleGroup)
+            .setProfile(Profile.Reviewer)
+            .setUser(userAdminWithReviewer));
+
+        MockHttpSession mockHttpSession = loginAs(userAdminWithReviewer);
+
+        checkMetadataHasNoPrivileges();
+
+        SharingParameter privilegesRequest = createPrivilegesRequest(true);
+
+        Gson gson = new Gson();
+        String json = gson.toJson(privilegesRequest);
+
+        mockMvc.perform(put("/srv/api/records/" + metadataUuid + "/sharing")
+                .session(mockHttpSession)
+                .content(json)
+                .contentType(API_JSON_EXPECTED_ENCODING)
+                .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isNoContent());
+
+        List<OperationAllowed> metadataOperations =
+            operationAllowedRepository.findAllById_MetadataId(metadataId);
+        boolean hasReservedGroupPrivileges = metadataOperations.stream()
+            .anyMatch(op -> ReservedGroup.isReserved(op.getId().getGroupId()));
+        assertTrue(
+            "UserAdmin who is also per-group Reviewer should be able to publish",
+            hasReservedGroupPrivileges);
+    }
+
+    /**
+     * Back-end side of issue documented in docs/issue-useradmin-publication.md (Symptom 2).
+     *
+     * <p>A user whose global profile is {@code UserAdmin} but who has NO
+     * {@code UserGroup(profile=Reviewer)} entry for the metadata's group owner MUST be
+     * blocked from changing reserved-group (publication) privileges with 403 Forbidden.
+     */
+    @Test
+    public void shareMetadataForPublicationAsUserAdminWithoutReviewerInGroup() throws Exception {
+        MockMvc mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+
+        // Create a user with global UserAdmin profile but only Editor membership in the record's group.
+        User userAdminEditorOnly = UserRepositoryTest.newUser(_inc);
+        userAdminEditorOnly.setUsername("useradmin_editor");
+        userAdminEditorOnly.setProfile(Profile.UserAdmin);
+        _userRepo.save(userAdminEditorOnly);
+        Group sampleGroup = _groupRepo.findById(SAMPLE_GROUP_ID).get();
+        _userGroupRepo.save(new UserGroup()
+            .setGroup(sampleGroup)
+            .setProfile(Profile.Editor)
+            .setUser(userAdminEditorOnly));
+
+        MockHttpSession mockHttpSession = loginAs(userAdminEditorOnly);
+
+        SharingParameter privilegesRequest = createPrivilegesRequest(true);
+
+        Gson gson = new Gson();
+        String json = gson.toJson(privilegesRequest);
+
+        mockMvc.perform(put("/srv/api/records/" + metadataUuid + "/sharing")
+                .session(mockHttpSession)
+                .content(json)
+                .contentType(API_JSON_EXPECTED_ENCODING)
+                .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isForbidden());
+    }
+
+    @Test
+    public void publishMetadataAsUserAdminWithUserAdminInGroup() throws Exception {
+        MockMvc mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+
+        User userAdminInGroup = createUserAdminWithGroupProfile("useradmin_group_admin", Profile.UserAdmin);
+        MockHttpSession mockHttpSession = loginAs(userAdminInGroup);
+
+        mockMvc.perform(put("/srv/api/records/" + metadataUuid + "/publish")
+                .session(mockHttpSession))
+            .andExpect(status().isForbidden());
+    }
+
+    @Test
+    public void unpublishMetadataAsUserAdminWithUserAdminInGroup() throws Exception {
+        MockMvc mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+
+        publishMetadata();
+
+        User userAdminInGroup = createUserAdminWithGroupProfile("useradmin_group_admin_unpublish", Profile.UserAdmin);
+        MockHttpSession mockHttpSession = loginAs(userAdminInGroup);
+
+        mockMvc.perform(put("/srv/api/records/" + metadataUuid + "/unpublish")
+                .session(mockHttpSession))
+            .andExpect(status().isForbidden());
+
+        List<OperationAllowed> metadataOperations =
+            operationAllowedRepository.findAllById_MetadataId(metadataId);
+        boolean hasReservedGroupPrivileges = metadataOperations.stream()
+            .anyMatch(op -> ReservedGroup.isReserved(op.getId().getGroupId()));
+        assertTrue("Reserved-group publication privileges should remain set when unpublish is denied", hasReservedGroupPrivileges);
+    }
+
+    @Test
+    public void unpublishMetadataAsUserAdminWithoutRequiredGroupProfile() throws Exception {
+        MockMvc mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+
+        publishMetadata();
+
+        User userAdminEditorOnly = createUserAdminWithGroupProfile("useradmin_editor_unpublish", Profile.Editor);
+        MockHttpSession mockHttpSession = loginAs(userAdminEditorOnly);
+
+        mockMvc.perform(put("/srv/api/records/" + metadataUuid + "/unpublish")
+                .session(mockHttpSession))
+            .andExpect(status().isForbidden());
+    }
+
+    private User createUserAdminWithGroupProfile(String username, Profile groupProfile) {
+        User user = UserRepositoryTest.newUser(_inc);
+        user.setUsername(username);
+        user.setProfile(Profile.UserAdmin);
+        _userRepo.save(user);
+
+        Group sampleGroup = _groupRepo.findById(SAMPLE_GROUP_ID).get();
+        _userGroupRepo.save(new UserGroup()
+            .setGroup(sampleGroup)
+            .setProfile(groupProfile)
+            .setUser(user));
+
+        return user;
+    }
 }

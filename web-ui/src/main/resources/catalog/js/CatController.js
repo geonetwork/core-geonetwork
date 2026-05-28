@@ -2005,23 +2005,29 @@
                   : "";
             return angular.isFunction(this[fnName]) ? this[fnName]() : false;
           },
-          canPublishMetadata: function () {
+          canPublishMetadata: function (groupId) {
             var profile =
                 gnConfig["metadata.publication.profilePublishMetadata"] || "Reviewer",
               fnName =
                 profile !== ""
-                  ? "is" + profile[0].toUpperCase() + profile.substring(1) + "OrMore"
+                  ? "is" + profile[0].toUpperCase() + profile.substring(1) + "ForGroup"
                   : "";
-            return angular.isFunction(this[fnName]) ? this[fnName]() : false;
+            if (groupId === undefined || groupId === null) {
+              return false;
+            }
+            return angular.isFunction(this[fnName]) ? this[fnName](groupId) : false;
           },
-          canUnpublishMetadata: function () {
+          canUnpublishMetadata: function (groupId) {
             var profile =
                 gnConfig["metadata.publication.profileUnpublishMetadata"] || "Reviewer",
               fnName =
                 profile !== ""
-                  ? "is" + profile[0].toUpperCase() + profile.substring(1) + "OrMore"
+                  ? "is" + profile[0].toUpperCase() + profile.substring(1) + "ForGroup"
                   : "";
-            return angular.isFunction(this[fnName]) ? this[fnName]() : false;
+            if (groupId === undefined || groupId === null) {
+              return false;
+            }
+            return angular.isFunction(this[fnName]) ? this[fnName](groupId) : false;
           },
           // The md provide the information about
           // if the current user can edit records or not

@@ -8,7 +8,7 @@ For example, you can specify that the metadata and related services are visible 
 
     The privileges panel uses colour coding to identify different group types:
 
-    - **Blue rows** — [Reserved groups](../../administrator-guide/managing-users-and-groups/creating-group.md) (All, Intranet, Guest). Only Administrators and Reviewers can edit these privileges.
+    - **Blue rows** — [Reserved groups](../../administrator-guide/managing-users-and-groups/creating-group.md) (All, Intranet, Guest). Editing these privileges requires the configured publication profile on the record owner group (default: Reviewer). Administrators are always allowed.
     - **Yellow rows** — [Record Privilege Groups](../../administrator-guide/managing-users-and-groups/creating-group.md#2-record-privilege-group). These groups can be assigned privileges on specific records but cannot own metadata.
     - **No highlight** — Standard [Workspace Groups](../../administrator-guide/managing-users-and-groups/creating-group.md#1-workspace-group).
 
@@ -82,10 +82,10 @@ A *reviewer* / *editor* can edit a metadata if:
 A button to access the Privileges page for a metadata record displays in the search results or when you are viewing the record for:
 
 -   All Administrators
--   All Reviewers that are member of one of the groups assigned to the metadata owner.
+-   Users who meet the configured publication profile in the metadata owner group (default: Reviewer).
 -   The Owner of the metadata
 
-Only Administrators and Reviewers can edit privileges for the All and Intranet groups.
+Only users meeting the configured publication profile in the metadata owner group can edit privileges for reserved groups (All, Intranet, Guest). By default this is Reviewer.
 
 ## Setting Privileges on a selected set of metadata records
 
