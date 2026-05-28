@@ -153,7 +153,9 @@
           <xsl:if test="name()  != 'geonet:child'">
             <xsl:for-each select="$metadata//svrl:failed-assert[@ref=$ref]">
               <error type="{ancestor::svrl:schematron-output/@title}" gravity="{ancestor::gn:report/@gn:required}">
-                <xsl:value-of select="preceding-sibling::svrl:active-pattern[1]/@name"/> :
+                <xsl:value-of select="(preceding-sibling::svrl:active-pattern[1]/attribute::*[name() = concat('name_', $lang2chars)][normalize-space() != ''],
+                                       preceding-sibling::svrl:active-pattern[1]/@name_en[normalize-space() != ''],
+                                       preceding-sibling::svrl:active-pattern[1]/@name)[1]"/> :
                 <xsl:copy-of select="svrl:text/*"/>
               </error>
             </xsl:for-each>
@@ -180,7 +182,9 @@
           <xsl:if test="name() = 'geonet:child'">
             <xsl:for-each select="$metadata//svrl:failed-assert[@ref=$uuid]">
               <error type="{ancestor::svrl:schematron-output/@title}" gravity="{ancestor::gn:report/@gn:required}">
-                <xsl:value-of select="preceding-sibling::svrl:active-pattern[1]/@name"/> :
+                <xsl:value-of select="(preceding-sibling::svrl:active-pattern[1]/attribute::*[name() = concat('name_', $lang2chars)][normalize-space() != ''],
+                                       preceding-sibling::svrl:active-pattern[1]/@name_en[normalize-space() != ''],
+                                       preceding-sibling::svrl:active-pattern[1]/@name)[1]"/> :
                 <xsl:copy-of select="svrl:text/*"/>
               </error>
             </xsl:for-each>
