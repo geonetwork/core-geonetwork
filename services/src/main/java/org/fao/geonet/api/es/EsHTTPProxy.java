@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2025 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2026 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -31,6 +31,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.MappingIterator;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.collect.Sets;
 import com.jayway.jsonpath.DocumentContext;
@@ -66,7 +67,6 @@ import org.fao.geonet.kernel.schema.MetadataOperationFilterType;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.schema.MetadataSchemaOperationFilter;
 import org.fao.geonet.kernel.search.EsFilterBuilder;
-import org.fao.geonet.repository.SourceRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -94,17 +94,17 @@ import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
 
+/**
+ * Proxy from GeoNetwork {@code /{portal}}/api} to Elasticsearch service.
+ *
+ * The portal and privileges are included the search provided by the user.
+ */
 @RequestMapping(value = {
     "/{portal}/api"
 })
 @Tag(name = "search",
     description = "Proxy for Elasticsearch catalog search operations")
 @Controller
-/**
- * Proxy from GeoNetwork {@code /{portal}}/api} to Elasticsearch service.
- *
- * The portal and privileges are included the search provided by the user.
- */
 public class EsHTTPProxy {
     public static final String[] _validContentTypes = {
         "application/json", "text/plain"
@@ -124,13 +124,7 @@ public class EsHTTPProxy {
     private static final String MULTISEARCH_ENDPOINT = "_msearch";
 
     @Autowired
-    AccessManager accessManager;
-
-    @Autowired
     NodeInfo node;
-
-    @Autowired
-    SourceRepository sourceRepository;
 
     @Value("${es.index.records:gn-records}")
     private String defaultIndex;
@@ -147,7 +141,7 @@ public class EsHTTPProxy {
     /**
      * Ignore list of headers handled by proxy implementation directly.
      */
-    private String[] proxyHeadersIgnoreList =  {"Content-Length"};
+    private final String[] proxyHeadersIgnoreList =  {"Content-Length"};
 
     @Autowired
     private EsRestClient client;
@@ -252,7 +246,7 @@ public class EsHTTPProxy {
         }
         doc.put(Edit.Info.Elem.EDIT, isOwner || canEdit);
         doc.put(Edit.Info.Elem.REVIEW,
-            id != null ? accessManager.hasReviewPermission(context, id) : false);
+            id != null && accessManager.hasReviewPermission(context, id));
         doc.put(Edit.Info.Elem.OWNER, isOwner);
         doc.put(Edit.Info.Elem.IS_PUBLISHED_TO_ALL, hasOperation(doc, ReservedGroup.all, ReservedOperation.view));
         addReservedOperation(doc, operations, ReservedOperation.view);
@@ -305,9 +299,7 @@ public class EsHTTPProxy {
     public void search(
         @RequestParam(defaultValue = SelectionManager.SELECTION_BUCKET)
         String bucket,
-        @Parameter(description = "Type of related resource. If none, no associated resource returned.",
-            required = false
-        )
+        @Parameter(description = "Type of related resource. If none, no associated resource returned.")
         @RequestParam(name = "relatedType", defaultValue = "")
         RelatedItemType[] relatedTypes,
         @Parameter(hidden = true)
@@ -347,9 +339,7 @@ public class EsHTTPProxy {
     public void msearch(
         @RequestParam(defaultValue = SelectionManager.SELECTION_METADATA)
         String bucket,
-        @Parameter(description = "Type of related resource. If none, no associated resource returned.",
-            required = false
-        )
+        @Parameter(description = "Type of related resource. If none, no associated resource returned.")
         @RequestParam(name = "relatedType", defaultValue = "")
         RelatedItemType[] relatedTypes,
         @Parameter(hidden = true)
@@ -361,8 +351,8 @@ public class EsHTTPProxy {
         @RequestBody
         @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "JSON request based on Elasticsearch API.",
             content = @Content(examples = {
-            @ExampleObject(value = "{\"query\":{\"match\":{\"_id\":\"catalogue_uuid\"}}}")
-        }))
+                @ExampleObject(value = "{\"query\":{\"match\":{\"_id\":\"catalogue_uuid\"}}}")
+            }))
         String body) throws Exception {
         ServiceContext context = ApiUtils.createServiceContext(request);
         call(context, httpSession, request, response, MULTISEARCH_ENDPOINT, body, bucket, relatedTypes);
@@ -411,35 +401,31 @@ public class EsHTTPProxy {
     }
 
     private void call(ServiceContext context, HttpSession httpSession, HttpServletRequest request,
-                     HttpServletResponse response,
-                     String endPoint, String body,
-                     String selectionBucket,
-                     RelatedItemType[] relatedTypes) throws Exception {
+                      HttpServletResponse response,
+                      String endPoint, String body,
+                      String selectionBucket,
+                      RelatedItemType[] relatedTypes) throws Exception {
         final String url = client.getServerUrl() + "/" + defaultIndex + "/" + endPoint + "?";
         // Make query on multiple indices
 //        final String url = client.getServerUrl() + "/" + defaultIndex + ",gn-features/" + endPoint + "?";
         if (SEARCH_ENDPOINT.equals(endPoint) || MULTISEARCH_ENDPOINT.equals(endPoint)) {
             UserSession session = context.getUserSession();
             ObjectMapper objectMapper = new ObjectMapper();
-            JsonNode nodeQuery = objectMapper.readTree(body);
 
             // multisearch support
             final MappingIterator<Object> mappingIterator = objectMapper.readerFor(JsonNode.class).readValues(body);
-            StringBuffer requestBody = new StringBuffer();
+            StringBuilder requestBody = new StringBuilder();
             while (mappingIterator.hasNextValue()) {
                 JsonNode node = (JsonNode) mappingIterator.nextValue();
                 final JsonNode indexNode = node.get("index");
                 if (indexNode != null) {
                     ((ObjectNode) node).put("index", defaultIndex);
                 } else {
-                    final JsonNode queryNode = node.get("query");
-                    if (queryNode != null) {
-                        addFilterToQuery(context, objectMapper, node);
-                        if (selectionBucket != null) {
-                            // Multisearch are not supposed to work with a bucket.
-                            // Only one request is store in session
-                            session.setProperty(Geonet.Session.SEARCH_REQUEST + selectionBucket, node);
-                        }
+                    addFilterToQuery(context, objectMapper, node);
+                    if (selectionBucket != null) {
+                        // Multisearch are not supposed to work with a bucket.
+                        // Only one request is store in session
+                        session.setProperty(Geonet.Session.SEARCH_REQUEST + selectionBucket, node);
                     }
                     final JsonNode sourceNode = node.get("_source");
                     if (sourceNode != null) {
@@ -489,53 +475,87 @@ public class EsHTTPProxy {
 
         JsonNode queryNode = esQuery.get("query");
 
-//        if (queryNode == null) {
-//            // Add default filter if no query provided
-//            ObjectNode objectNodeQuery = objectMapper.createObjectNode();
-//            objectNodeQuery.set("filter", nodeFilter);
-//            ((ObjectNode) esQuery).set("query", objectNodeQuery);
-//        } else
-        if (queryNode.get("function_score") != null) {
-            // Add filter node to the bool element of the query if provided
-            ObjectNode objectNode = (ObjectNode) queryNode.get("function_score").get("query").get("bool");
-            insertFilter(objectNode, nodeFilter);
-        } else if (queryNode.get("bool") != null) {
-            // Add filter node to the bool element of the query if provided
-            ObjectNode objectNode = (ObjectNode) queryNode.get("bool");
-            insertFilter(objectNode, nodeFilter);
-        } else {
-            // If no bool node in the query, create the bool node and add the query and filter nodes to it
-            ObjectNode copy = esQuery.get("query").deepCopy();
-
-            ObjectNode objectNodeBool = objectMapper.createObjectNode();
-            objectNodeBool.set("must", copy);
-            objectNodeBool.set("filter", nodeFilter);
-
-            ((ObjectNode) queryNode).removeAll();
-            ((ObjectNode) queryNode).set("bool", objectNodeBool);
+        // If no "query", create a bool { must: match_all, filter: nodeFilter }
+        if (queryNode == null || queryNode.isNull()
+            || (queryNode.isObject() && queryNode.isEmpty())) {
+            ObjectNode boolNode = objectMapper.createObjectNode();
+            // prefer must = match_all object (same shape as existing code)
+            ObjectNode matchAll = objectMapper.createObjectNode();
+            matchAll.putObject("match_all");
+            boolNode.set("must", matchAll);
+            boolNode.set("filter", nodeFilter);
+            ((ObjectNode) esQuery).set("query", objectMapper.createObjectNode().set("bool", boolNode));
+            return;
         }
+
+        // Try to find the boolean node where to insert the filter.
+        // Prefer function_score.query.bool if present because function_score
+        // needs the filter to be applied to the inner query used for scoring.
+        JsonNode functionScoreNode = queryNode.get("function_score");
+        if (functionScoreNode != null && functionScoreNode.isObject()) {
+            JsonNode innerQuery = functionScoreNode.get("query");
+            if (innerQuery == null || innerQuery.isNull()) {
+                // create function_score.query.bool with only the filter
+                ObjectNode boolNode = objectMapper.createObjectNode();
+                boolNode.set("filter", nodeFilter);
+                ((ObjectNode) functionScoreNode).set("query", objectMapper.createObjectNode().set("bool", boolNode));
+                return;
+            }
+
+            JsonNode innerBool = innerQuery.get("bool");
+            if (innerBool != null && innerBool.isObject()) {
+                insertFilter((ObjectNode) innerBool, nodeFilter);
+                return;
+            }
+
+            // innerQuery exists but isn't a bool -> wrap it into a bool { must: <old>, filter: <new> }
+            ObjectNode newBool = objectMapper.createObjectNode();
+            newBool.set("must", innerQuery.deepCopy());
+            newBool.set("filter", nodeFilter);
+            ((ObjectNode) functionScoreNode).set("query", objectMapper.createObjectNode().set("bool", newBool));
+            return;
+        }
+
+        // Top-level bool
+        JsonNode boolNode = queryNode.get("bool");
+        if (boolNode != null && boolNode.isObject()) {
+            insertFilter((ObjectNode) boolNode, nodeFilter);
+            return;
+        }
+
+        // Other query shapes: wrap existing query into a bool { must: <existing query>, filter: nodeFilter }
+        ObjectNode copy = queryNode.deepCopy();
+        ObjectNode objectNodeBool = objectMapper.createObjectNode();
+        objectNodeBool.set("must", copy);
+        objectNodeBool.set("filter", nodeFilter);
+
+        // Replace the existing "query" content with the new bool
+        ((ObjectNode) queryNode).removeAll();
+        ((ObjectNode) queryNode).set("bool", objectNodeBool);
     }
 
     private void insertFilter(ObjectNode objectNode, JsonNode nodeFilter) {
         JsonNode filter = objectNode.get("filter");
-        if (filter != null && filter.isArray()) {
+        if (filter == null || filter.isNull() || (filter.isObject() && filter.isEmpty())) {
+            objectNode.set("filter", nodeFilter);
+        } else if (filter.isArray()) {
             ((ArrayNode) filter).add(nodeFilter);
         } else {
-            objectNode.set("filter", nodeFilter);
+            // existing filter is an object (or other non-array) -> convert to array preserving both
+            ArrayNode arr = JsonNodeFactory.instance.arrayNode();
+            arr.add(filter);
+            arr.add(nodeFilter);
+            objectNode.set("filter", arr);
         }
     }
 
     /**
      * Add search privilege criteria to a query.
      */
-    private String buildQueryFilter(ServiceContext context, String type, boolean isSearchingForDraft) throws Exception {
+    protected String buildQueryFilter(ServiceContext context, String type, boolean isSearchingForDraft) throws Exception {
         return String.format(filterTemplate,
             EsFilterBuilder.build(context, type, isSearchingForDraft, node));
 
-    }
-
-    private String buildDocTypeFilter(String type) {
-        return "documentType:" + type;
     }
 
     private void handleRequest(ServiceContext context,
@@ -588,7 +608,7 @@ public class EsHTTPProxy {
                             "Error is: %s.\nRequest:\n%s.\nError:\n%s.",
                             connectionWithFinalHost.getResponseMessage(),
                             requestBody,
-                            IOUtils.toString(errorDetails)
+                            IOUtils.toString(errorDetails, StandardCharsets.UTF_8)
                         ));
                     return;
                 }
@@ -652,13 +672,13 @@ public class EsHTTPProxy {
                     IOUtils.closeQuietly(streamFromServer);
                 }
             } catch (Exception ex) {
-                ex.printStackTrace();
+                LOGGER.error("Error processing request", ex);
             } finally {
                 connectionWithFinalHost.disconnect();
             }
         } catch (IOException e) {
             // connection problem with the host
-            e.printStackTrace();
+            LOGGER.error("Error processing request", e);
 
             throw new Exception(
                 String.format("Failed to request Es at URL %s. " +
