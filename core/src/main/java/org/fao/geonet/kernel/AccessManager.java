@@ -573,7 +573,7 @@ public class AccessManager {
             .and(UserGroupSpecs.hasGroupId(groupId))
             .and(UserGroupSpecs.hasProfile(profile));
 
-        return !userGroupRepository.findAll(spec).isEmpty();
+        return userGroupRepository.count(spec)> 0;
     }
 
     public int getPrivilegeId(final String name) {
