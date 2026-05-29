@@ -233,7 +233,7 @@ public class MetadataAssociatedApiTest extends AbstractServiceIntegrationTest {
         final String VERSION_OLDEST = "11111111-1111-4111-8111-111111111111";
         final String VERSION_MIDDLE = "22222222-2222-4222-8222-222222222222";
         final String VERSION_LATEST = "33333333-3333-4333-8333-333333333333";
-        
+
         final String[] versions = {VERSION_LATEST, VERSION_MIDDLE, VERSION_OLDEST};
 
         for (String versionUuid : versions) {
@@ -315,5 +315,26 @@ public class MetadataAssociatedApiTest extends AbstractServiceIntegrationTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING))
             .andExpect(jsonPath("$.previous", hasSize(0)));
+    }
+
+    @Test
+    public void getAssociatedVersionsReturnsEmptyWhenNoOtherVersionExists() throws Exception {
+        MockMvc mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+        MockHttpSession mockHttpSession = loginAsAdmin();
+
+        final MEFLibIntegrationTest.ImportMetadata importMetadata =
+            new MEFLibIntegrationTest.ImportMetadata(this, context);
+        importMetadata.getMefFilesToLoad().add(
+            "/org/fao/geonet/api/records/samples/related-test.zip");
+        importMetadata.invoke();
+
+        final String SERIE_UUID = "87e54d56-323f-4201-88ac-7ac7f9d8ee25";
+
+        mockMvc.perform(get("/srv/api/records/" + SERIE_UUID + "/associated?type=versions")
+                .session(mockHttpSession)
+                .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING))
+            .andExpect(jsonPath("$.versions", hasSize(0)));
     }
 }

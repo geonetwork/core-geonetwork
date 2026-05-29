@@ -445,6 +445,14 @@ public class MetadataUtils {
 
             buildRemoteRecords(mapper, relatedTypeDetails, records);
             records = reorderIndexDocBasedOnOrderedRecords(records, relatedTypeDetails.getOrderedRecords());
+
+            // If the current record is the only version, empty list is returned.
+            if (entry.getKey() == RelatedItemType.versions
+                && records.size() == 1
+                && md.getUuid().equals(records.get(0).getUuid())) {
+                records = new ArrayList<>();
+            }
+
             associated.put(entry.getKey(), records);
         }
 

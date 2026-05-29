@@ -175,6 +175,8 @@ public class MetadataVersionsUtils {
         }
 
         List<String> orderedRecords = orderVersionsNewestToOldest(allVersionUuids, previousVersionsByUuid);
+
+
         return new MetadataUtils.RelatedTypeDetails(
             String.format("(uuid:(%s)) AND (draft:\"n\" OR draft:\"e\")",
                 orderedRecords.stream().collect(Collectors.joining("\" OR \"", "\"", "\""))),
