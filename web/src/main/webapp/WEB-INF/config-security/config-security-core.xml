@@ -166,7 +166,7 @@
     </property>
     <property name="authenticationSuccessHandler">
       <bean
-        class="org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler">
+        class="org.fao.geonet.kernel.security.GeonetworkSavedRequestAwareAuthenticationSuccessHandler">
         <property name="defaultTargetUrl" value="/"/>
         <property name="targetUrlParameter" value="redirectUrl"/>
         <property name="requestCache" ref="requestCache"/>
