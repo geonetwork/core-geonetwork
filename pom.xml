@@ -1720,7 +1720,7 @@
     <jackson.version>2.18.2</jackson.version>
     <flying-saucer>9.1.22</flying-saucer>
     <camel.version>2.25.1</camel.version>
-    <log4j2.version>2.17.2</log4j2.version>
+    <log4j2.version>2.24.3</log4j2.version>
     <slf4j.version>1.8.0-beta2</slf4j.version>
     <xbean.version>4.22</xbean.version>
     <jolokia.version>1.7.2</jolokia.version>
