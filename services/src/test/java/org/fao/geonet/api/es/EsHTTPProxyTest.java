@@ -198,6 +198,37 @@ public class EsHTTPProxyTest {
         assertTrue("filter must reference *:* permission", filterNode.toString().contains("*:*"));
     }
 
+    @Test
+    public void testAddFilterToQueryReplacesGlobalAggregation() throws Exception {
+        ObjectMapper mapper = new ObjectMapper();
+        ObjectNode body = (ObjectNode) mapper.readTree(
+            "{\"size\":0,\"aggs\":{\"leak\":{\"global\":{},\"aggs\":{\"titles\":{\"terms\":{\"field\":\"resourceTitle.keyword\"}}}}}}");
+
+        invokeAddFilterToQuery(body, mapper);
+
+        assertAclFilterPresent(body, "global agg: query must still be injected");
+
+        JsonNode leakAgg = body.path("aggs").path("leak");
+        assertFalse("global key must be removed", leakAgg.has("global"));
+        assertNotNull("filter key must replace global", leakAgg.get("filter"));
+        assertTrue("replacement filter must reference *:* permission",
+            leakAgg.get("filter").toString().contains("*:*"));
+        assertNotNull("nested sub-aggs must be preserved", leakAgg.get("aggs"));
+    }
+
+    @Test
+    public void testAddFilterToQueryReplacesGlobalAggregationUsingAggregationsKey() throws Exception {
+        ObjectMapper mapper = new ObjectMapper();
+        ObjectNode body = (ObjectNode) mapper.readTree(
+            "{\"size\":0,\"aggregations\":{\"g\":{\"global\":{}}}}");
+
+        invokeAddFilterToQuery(body, mapper);
+
+        JsonNode gAgg = body.path("aggregations").path("g");
+        assertFalse("global key must be removed (aggregations key variant)", gAgg.has("global"));
+        assertNotNull("filter key must replace global (aggregations key variant)", gAgg.get("filter"));
+    }
+
     private void invokeAddFilterToQuery(ObjectNode body, ObjectMapper mapper) throws Exception {
         ServiceContext context = new ServiceContext("default", applicationContext, new HashMap<>(), null);
         UserSession userSession = spy(new UserSession());
