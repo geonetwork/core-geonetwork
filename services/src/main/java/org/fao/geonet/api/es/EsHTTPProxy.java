@@ -475,7 +475,17 @@ public class EsHTTPProxy {
 
         JsonNode queryNode = esQuery.get("query");
 
-        // If no "query", create a bool { must: match_all, filter: nodeFilter }
+
+        // Replace any "global" aggregation with a "filter" aggregation scoped to
+        // the ACL filter.
+        // Must run after nodeFilter is built, before any branch exits early via return.
+        for (String aggsKey : new String[]{"aggs", "aggregations"}) {
+            JsonNode aggsNode = esQuery.get(aggsKey);
+            if (aggsNode != null && aggsNode.isObject()) {
+                replaceGlobalAggregations((ObjectNode) aggsNode, nodeFilter);
+            }
+        }
+        // Defensive: if no "query", create a bool { must: match_all, filter: nodeFilter }
         if (queryNode == null || queryNode.isNull()
             || (queryNode.isObject() && queryNode.isEmpty())) {
             ObjectNode boolNode = objectMapper.createObjectNode();
@@ -533,6 +543,30 @@ public class EsHTTPProxy {
         ((ObjectNode) queryNode).removeAll();
         ((ObjectNode) queryNode).set("bool", objectNodeBool);
     }
+
+    private void replaceGlobalAggregations(ObjectNode aggsNode, JsonNode aclFilter) {
+        aggsNode.fields().forEachRemaining(entry -> {
+            JsonNode aggDef = entry.getValue();
+            if (!aggDef.isObject()) {
+                return;
+            }
+            ObjectNode aggDefObj = (ObjectNode) aggDef;
+            if (aggDefObj.has("global")) {
+                // "global" ignores the query scope; swap it for a filter-scoped bucket.
+                aggDefObj.remove("global");
+                aggDefObj.set("filter", aclFilter);
+            }
+            // Recurse into nested sub-aggregations.
+            for (String subKey : new String[]{"aggs", "aggregations"}) {
+                JsonNode sub = aggDefObj.get(subKey);
+                if (sub != null && sub.isObject()) {
+                    replaceGlobalAggregations((ObjectNode) sub, aclFilter);
+                }
+            }
+        });
+    }
+
+
 
     private void insertFilter(ObjectNode objectNode, JsonNode nodeFilter) {
         JsonNode filter = objectNode.get("filter");
