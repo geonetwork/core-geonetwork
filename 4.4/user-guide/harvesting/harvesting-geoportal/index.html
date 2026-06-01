@@ -2344,13 +2344,13 @@
 <li>
 <p><strong>Configure connection to GeoPortal REST</strong></p>
 <ul>
-<li><em>URL</em>: The base URL of the GeoPortal server to be harvested. eg. <a href="http://yourhost.com/geoportal">http://yourhost.com/geoportal</a>. The harvester will add the additional path required to access the REST services on the GeoPortal server.</li>
+<li><em>URL</em>: The base URL of the GeoPortal server to be harvested. eg. <code>http://yourhost.com/geoportal</code>. The harvester will add the additional path required to access the REST services on the GeoPortal server.</li>
 <li><em>Remote authentication</em>: If checked, should be provided the credentials for basic HTTP authentication on the server.</li>
-<li><em>Search filter</em>: (Optional) You can query any field on the GeoPortal server using the Lucene query syntax described at <a href="http://webhelp.esri.com/geoportal_extension/9.3.1/index.htm#srch_lucene.htm">http://webhelp.esri.com/geoportal_extension/9.3.1/index.htm#srch_lucene.htm</a>.</li>
+<li><em>Search filter</em>: (Optional) You can query any field on the GeoPortal server using the <a href="http://webhelp.esri.com/geoportal_extension/9.3.1/index.htm#srch_lucene.htm">Lucene query syntax</a>.</li>
 </ul>
 </li>
 <li>
-<p><strong>Configure response processing for geoPREST</strong></p>
+<p><strong>Configure response processing for GeoPortal REST</strong></p>
 <ul>
 <li><em>Validate records before import</em>: Defines the criteria to reject metadata that is invalid according to XML structure (XSD) and validation rules (schematron).<ul>
 <li>Accept all metadata without validation.</li>
@@ -2365,8 +2365,8 @@
 <p><strong>Privileges</strong> - Assign privileges to harvested metadata.</p>
 </li>
 </ul>
-<div class="admonition notes">
-<p class="admonition-title">Notes</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
 <ul>
 <li>This harvester uses two REST services from the GeoPortal API:<ul>
 <li><code>rest/find/document</code> with searchText parameter to return an RSS listing of metadata records that meet the search criteria (maximum 100000)</li>

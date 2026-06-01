@@ -2352,7 +2352,7 @@
 <li>
 <p><strong>Configure connection to OGC Web Services</strong></p>
 <ul>
-<li><em>Service URL</em>: The service URL is the URL of the service to contact (without parameters like "REQUEST=GetCapabilities", "VERSION=", ...). It has to be a valid URL like <a href="http://your.preferred.ogcservice/type_wms">http://your.preferred.ogcservice/type_wms</a>.</li>
+<li><em>Service URL</em>: The service URL is the URL of the service to contact (without parameters like "REQUEST=GetCapabilities", "VERSION=", ...). It has to be a valid URL like <code>http://your.preferred.ogcservice/type_wms</code>.</li>
 <li><em>Service type</em> - The type of OGC service indicates if the harvester has to query for a specific kind of service. Supported type are WMS (1.0.0, 1.1.1, 1.3.0), WFS (1.0.0 and 1.1.0), WCS (1.0.0), WPS (0.4.0 and 1.0.0), CSW (2.0.2) and SOS (1.0.0).</li>
 <li><em>Remote authentication</em>: If checked, should be provided the credentials for basic HTTP authentication on the server.</li>
 </ul>
@@ -2365,7 +2365,7 @@
 <li>
 <p><em>Create record for each layer only using GetCapabilities information</em>: Checking this option means that the harvester will loop over datasets served by the service as described in the GetCapabilities document.</p>
 <ul>
-<li><em>Import record for each layer using MetadataURL attributes</em>: Checkthis option means that the harvester will generate metadata from an XML document referenced in the MetadataUrl attribute of the dataset in the GetCapabilities document. If the document referred to by this attribute is not valid (eg. unknown schema, bad XML format), the GetCapabilities document is used as per the previous option.</li>
+<li><em>Import record for each layer using MetadataURL attributes</em>: Check this option means that the harvester will generate metadata from an XML document referenced in the MetadataUrl attribute of the dataset in the GetCapabilities document. If the document referred to by this attribute is not valid (eg. unknown schema, bad XML format), the GetCapabilities document is used as per the previous option.</li>
 <li><em>Build dataset metadata records from a template</em></li>
 <li><em>Create thumbnail</em>: If checked, when harvesting from an OGC Web Map Service (WMS) that supports WGS84 projection, thumbnails for the layers metadata will be created during harvesting.</li>
 <li><em>Category for datasets</em>: Metadata for the harvested datasets is assigned to the category selected in this option (eg. "datasets").</li>
@@ -2389,8 +2389,8 @@
 <p><strong>Privileges</strong> - Assign privileges to harvested metadata.</p>
 </li>
 </ul>
-<div class="admonition notes">
-<p class="admonition-title">Notes</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
 <ul>
 <li>Every time the harvester runs, it will remove previously harvested records and create new records. GeoNetwork will generate the uuid for all metadata (both service and datasets). The exception to this rule is dataset metadata created using the MetadataUrl tag is in the GetCapabilities document, in that case, the uuid of the remote XML document is used instead</li>
 </ul>

@@ -1691,7 +1691,7 @@
 <p>Create an OGC harvester that is able to extract a metadata for service (iso19119) record from the WFS. Run the harvester and note down the identifier of the created service metadata.</p>
 <h2 id="return-to-geoserver">Return to GeoServer</h2>
 <p>For each layer add a metadata url to the layer configuration of type application/vnd.ogc.csw.GetRecordByIdResponse_xml.</p>
-<p>On the WFS-settings &rarr; INSPIRE workspace add the link to the service metadata. In contradiction to WMS does WFS not link from a featuretype (layer) to metadata, instead the links to dataset metadata have to be added as part of the extende INSPIRE capabilities.</p>
+<p>On the WFS-settings &rarr; INSPIRE workspace add the link to the service metadata. Unlike WMS, WFS does not link from a feature type (layer) to metadata; instead, the links to dataset metadata have to be added as part of the extended INSPIRE capabilities.</p>
 <h2 id="validate-the-implementation">Validate the implementation</h2>
 <p>If you are running the above setup online, you can use the <a href="https://inspire-geoportal.ec.europa.eu/validator2/">pilot JRC INSPIRE validator</a>. If the above setup is running locally, you can use <a href="https://github.com/Geonovum/etf-test-projects-inspire">Esdin Test Framework</a> to validate the INSPIRE setup.</p>
 <p><img alt="image" src="../img/image_6.png" /></p>

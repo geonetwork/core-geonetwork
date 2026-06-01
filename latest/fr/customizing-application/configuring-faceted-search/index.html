@@ -2207,7 +2207,7 @@
 <p><img alt="" src="../../../customizing-application/img/agg-search.png" /></p>
 </li>
 </ul>
-<p>All facet configurations are stored in the user interface configuration (see <a href="../../administrator-guide/configuring-the-catalog/user-interface-configuration/">User Interface Configuration</a>). The configuration are defined using JSON following Elasticsearch API (See <a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/search-aggregations-bucket.html">https://www.elastic.co/guide/en/elasticsearch/reference/current/search-aggregations-bucket.html</a>).</p>
+<p>All facet configurations are stored in the user interface configuration (see <a href="../../administrator-guide/configuring-the-catalog/user-interface-configuration/">User Interface Configuration</a>). The configurations are defined using JSON following the <a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/search-aggregations-bucket.html">Elasticsearch Aggregations API</a>.</p>
 <p>By default, the facet configurations are defined as (see <code>web-ui/src/main/resources/catalog/js/CatController.js</code>). The home page display on the left side <code>th_httpinspireeceuropaeutheme-theme_tree.key</code> and <code>cl_topic.key</code> and on the right side, the last facet defined <code>resourceType</code>.</p>
 <h2 id="term-aggregation-on-a-field">Term aggregation on a field</h2>
 <div class="language-js highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="s2">&quot;format&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
@@ -2366,7 +2366,7 @@
 <li>Use <code>"userHasRole": "isReviewerOrMore"</code> to display the aggregation depending on user roles</li>
 </ul>
 <h2 id="hierarchical-aggregation-based-on-separator-experimental">Hierarchical aggregation based on separator (Experimental)</h2>
-<p>A tree field which contains a URI eg. <a href="http://www.ifremer.fr/thesaurus/sextant/theme#52">http://www.ifremer.fr/thesaurus/sextant/theme#52</a> but with a translation which contains a hierarchy with a custom separator <code>/Regulation and Management/Technical and Management Zonations/Sensitive Zones</code></p>
+<p>A tree field which contains a URI, e.g. <code>http://www.ifremer.fr/thesaurus/sextant/theme#52</code>, but with a translation which contains a hierarchy with a custom separator <code>/Regulation and Management/Technical and Management Zonations/Sensitive Zones</code></p>
 <div class="language-js highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="s2">&quot;th_sextant-theme_tree.key&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
 </span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="w">  </span><span class="s2">&quot;terms&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
 </span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="w">    </span><span class="s2">&quot;field&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;th_sextant-theme_tree.key&quot;</span><span class="p">,</span>

@@ -1803,7 +1803,7 @@
 
 
 <h1 id="rdf-dcat">DCAT</h1>
-<p>The catalogue has the capability to convert ISO to DCAT format in various API endpoint. </p>
+<p>The catalogue has the capability to convert ISO to DCAT format in various API endpoints.</p>
 <h2 id="supported-dcat-profiles">Supported DCAT profiles</h2>
 <p>A base conversion is provided with complementary extensions for various profiles of DCAT:</p>
 <table>
@@ -1875,7 +1875,7 @@
 <h2 id="past-implementation">Past implementation</h2>
 <p><a href="https://trac.osgeo.org/geonetwork/wiki/proposals/DCATandRDFServices">The first implementation of DCAT output was done in 2012</a> and was targeting interaction with semantic service and semantic sitemap support. DCAT output was available using a service named <code>rdf.search</code>. This service was deprecated in version 4.0.0 in favor of producing DCAT output in the <a href="../csw/">Catalog Service for the Web (CSW)</a> or using the formatters API.</p>
 <h2 id="usage-in-the-formatters-api">Usage in the formatters API</h2>
-<p>Each DCAT formats are available using a formatter eg. http://localhost:8080/geonetwork/srv/api/records/be44fe5a-65ca-4b70-9d29-ac5bf1f0ebc5/formatters/eu-dcat-ap</p>
+<p>Each DCAT format is available using a formatter, e.g. <code>http://localhost:8080/geonetwork/srv/api/records/be44fe5a-65ca-4b70-9d29-ac5bf1f0ebc5/formatters/eu-dcat-ap</code></p>
 <p>To add the formatter in the record view download list, the user interface configuration can be updated:</p>
 <p><img alt="image" src="../../../api/img/dcat-in-download-menu.png" /></p>
 <p>User interface configuration: </p>
@@ -1919,11 +1919,14 @@
 </span><span id="__span-0-38"><a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a><span class="w">          </span><span class="nt">&quot;url&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/formatters/eu-dcat-ap-hvd&quot;</span>
 </span><span id="__span-0-39"><a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a><span class="w">        </span><span class="p">}</span>
 </span><span id="__span-0-40"><a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a><span class="w">      </span><span class="p">]</span>
+</span><span id="__span-0-41"><a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a><span class="w">    </span><span class="p">}</span>
+</span><span id="__span-0-42"><a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a><span class="w">  </span><span class="p">}</span>
+</span><span id="__span-0-43"><a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a><span class="p">}</span>
 </span></code></pre></div>
 <h2 id="usage-in-the-csw-service">Usage in the CSW service</h2>
 <p>All DCAT profiles are also accessible using CSW protocol.</p>
-<p>A <code>GetRecordById</code> operation can be used: http://localhost:8080/geonetwork/srv/eng/csw?SERVICE=CSW&amp;VERSION=2.0.2&amp;REQUEST=GetRecordById&amp;ID=da165110-88fd-11da-a88f-000d939bc5d8&amp;outputSchema=https://semiceu.github.io/DCAT-AP/releases/2.2.0-hvd/ and is equivalent to the API http://localhost:8080/geonetwork/srv/api/records/da165110-88fd-11da-a88f-000d939bc5d8/formatters/eu-dcat-ap-hvd?output=xml.</p>
-<p>A <code>GetRecords</code> operation can be used to retrieve a set of records: http://localhost:8080/geonetwork/srv/fre/csw?SERVICE=CSW&amp;VERSION=2.0.2&amp;REQUEST=GetRecords&amp;outputSchema=http://data.europa.eu/930/&amp;elementSetName=full&amp;resultType=results&amp;maxRecords=300</p>
+<p>A <code>GetRecordById</code> operation can be used: <code>http://localhost:8080/geonetwork/srv/eng/csw?SERVICE=CSW&amp;VERSION=2.0.2&amp;REQUEST=GetRecordById&amp;ID=da165110-88fd-11da-a88f-000d939bc5d8&amp;outputSchema=https://semiceu.github.io/DCAT-AP/releases/2.2.0-hvd/</code> and is equivalent to the API <code>http://localhost:8080/geonetwork/srv/api/records/da165110-88fd-11da-a88f-000d939bc5d8/formatters/eu-dcat-ap-hvd?output=xml</code>.</p>
+<p>A <code>GetRecords</code> operation can be used to retrieve a set of records: <code>http://localhost:8080/geonetwork/srv/fre/csw?SERVICE=CSW&amp;VERSION=2.0.2&amp;REQUEST=GetRecords&amp;outputSchema=http://data.europa.eu/930/&amp;elementSetName=full&amp;resultType=results&amp;maxRecords=300</code></p>
 <p>Use the <code>outputSchema</code> parameter to select the DCAT profile to use. The following values are supported:</p>
 <table>
 <thead>
@@ -1980,7 +1983,7 @@
 </tbody>
 </table>
 <p>When using GET request, it is recommended to encode URL characters in parameters (eg. <code>#</code> as <code>%23</code>) to avoid issues with the URL.</p>
-<p>Those values are listed in the <code>GetCapabilities</code> operation http://localhost:8080/geonetwork/srv/eng/csw?SERVICE=CSW&amp;VERSION=2.0.2&amp;REQUEST=GetCapabilities.</p>
+<p>These values are listed in the <code>GetCapabilities</code> operation: <code>http://localhost:8080/geonetwork/srv/eng/csw?SERVICE=CSW&amp;VERSION=2.0.2&amp;REQUEST=GetCapabilities</code>.</p>
 <div class="language-xml highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nt">&lt;ows:Parameter</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;outputSchema&quot;</span><span class="nt">&gt;</span>
 </span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span><span class="nt">&lt;ows:Value&gt;</span>http://www.opengis.net/cat/csw/2.0.2<span class="nt">&lt;/ows:Value&gt;</span>
 </span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span><span class="nt">&lt;ows:Value&gt;</span>http://standards.iso.org/iso/19115/-3/mdb/2.0<span class="nt">&lt;/ows:Value&gt;</span>
@@ -1999,9 +2002,9 @@
 <h2 id="dcat-validation">DCAT validation</h2>
 <p>The DCAT validation can be done using online validation tool:</p>
 <ul>
-<li>https://www.itb.ec.europa.eu/shacl/dcat-ap/upload</li>
+<li><a href="https://www.itb.ec.europa.eu/shacl/dcat-ap/upload">DCAT-AP validation tool</a></li>
 </ul>
-<p>Depending on the target DCAT profile to use, it may be required to build proper ISO template and metadata record containing all required fields. Usually profiles are adding constraints for usage of specific vocabularies and fields (eg. <a href="https://semiceu.github.io/DCAT-AP/releases/2.2.0-hvd/#controlled-vocabularies-to-be-used">for High Value datasets, specific vocabularies are defined for categories, license, applicable legislations, ...</a>).</p>
+<p>Depending on the target DCAT profile to use, it may be required to build proper ISO template and metadata record containing all required fields. Usually profiles are adding constraints for usage of specific vocabularies and fields (eg. <a href="https://semiceu.github.io/DCAT-AP/releases/2.2.0-hvd/#controlled-vocabularies-to-be-used">for High Value datasets, specific vocabularies are defined for categories, license, applicable legislation, ...</a>).</p>
 <h2 id="mapping-considerations">Mapping considerations</h2>
 <h3 id="items-under-discussion">Items under discussion</h3>
 <p>The mapping is done from ISO19115-3 to DCAT. The mapping may not cover all usages and may be adapted. This can be done in the <code>iso19115-3.2018</code> schema plugin in the <code>formatter/dcat*</code> XSLT files.</p>

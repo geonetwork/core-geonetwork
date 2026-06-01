@@ -1760,7 +1760,7 @@
 
 <h1 id="configuring-database">Configuring the database</h1>
 <h2 id="introduction">Introduction</h2>
-<p>GeoNetwork uses a database to persist aspects such as metadata records, privileges and configurations. The database default structure is created by the application on initial startup. Subsequent releases of GeoNetwork will update the database structure automatically. For this reason the database user initially needs create privileges on the database. A number of database dialects are supported; <strong><em>H2</em></strong>,<strong><em>PostgreSQL</em></strong>,<strong><em>PostGIS</em></strong>,<strong><em>Oracle</em></strong>,<strong><em>SQL Server</em></strong>. This section describes various options to configure the database connection.</p>
+<p>GeoNetwork uses a database to persist aspects such as metadata records, privileges and configurations. The database default structure is created by the application on initial startup. Subsequent releases of GeoNetwork will update the database structure automatically. For this reason the database user initially needs create privileges on the database. A number of database dialects are supported: <strong><em>H2</em></strong>, <strong><em>PostgreSQL</em></strong>, <strong><em>PostGIS</em></strong>, <strong><em>Oracle</em></strong>, <strong><em>SQL Server</em></strong>. This section describes various options to configure the database connection.</p>
 <h2 id="h2-database">H2 database</h2>
 <p>By default, a <a href="https://www.h2database.com/html/main.html">H2</a> database is configured and created when the application first starts. The H2 database named <code>gn.h2.db</code> is created:</p>
 <ul>
@@ -1777,7 +1777,7 @@
 <p>To update the connection details, update the <strong><code>WEB-INF/config-db/jdbc.properties</code></strong> file with relevant connection information.</p>
 <p>GeoNetwork assumes data is stored in the default schema for a user. If this is not the case, you need to activate a setting <code>hibernate.default_schema</code> in <strong><code>/WEB-INF/config-spring-geonetwork.xml</code></strong>. There are some scripts that run directly on the database at initialisation and can't use the <code>hibernate.default-schema</code> parameter. For these scripts you need to set the default-schema manually. In PostgreSQL this is possible by appending <code>?currentSchema=example</code> to the database connection.</p>
 <h2 id="configuring-a-database-via-jndi">Configuring a database via JNDI</h2>
-<p>The Java Naming and Directory Interface (JNDI) is a technology which allows to configure the database in tomcat and reference the JNDI connection by name.</p>
+<p>The Java Naming and Directory Interface (JNDI) is a technology that allows you to configure the database in Tomcat and reference the JNDI connection by name.</p>
 <ol>
 <li>
 <p>To activate JNDI, you need to activate the JNDI database type in <strong><code>/WEB-INF/config-node/srv.xml</code></strong>.</p>
@@ -1795,7 +1795,7 @@
 </li>
 </ol>
 <h2 id="configuring-a-database-via-environment">Configuring a database via environment</h2>
-<p>Setting configuration properties via environment variables is common in container environments such as Docker. 2 options exist:</p>
+<p>Setting configuration properties via environment variables is common in container environments such as Docker. Two options exist:</p>
 <ol>
 <li>
 <p>Add the parameters directly to the Java environment by substituting JAVA_OPTS.</p>
@@ -1847,17 +1847,18 @@
 </span></code></pre></div>
 <h2 id="summary">Summary</h2>
 <p>There are various ways to configure a database in GeoNetwork. JNDI and environment are favourable, because when updating to a new version, or changing a database, you don't need to touch any application files.</p>
-<div class="language-text highlight"><pre><span></span><code>   Supported types:
-   * db2
-   * h2 (default)
-   * jndi
-   * mysql
-   * oracle
-   * postgres
-   * postgres-postgis
-   * postgres-postgis-hikari
-   * sqlserver
-</code></pre></div>
+<p>Supported types:</p>
+<ul>
+<li>db2</li>
+<li>h2 (default)</li>
+<li>jndi</li>
+<li>mysql</li>
+<li>oracle</li>
+<li>postgres</li>
+<li>postgres-postgis</li>
+<li>postgres-postgis-hikari</li>
+<li>sqlserver</li>
+</ul>
 
 
 

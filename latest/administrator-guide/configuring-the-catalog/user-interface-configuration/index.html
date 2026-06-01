@@ -2981,7 +2981,7 @@
 <li><strong>Search application</strong>: Select this check box to determine whether the search application is visible in the top toolbar. If not set, no link is shown.</li>
 <li><strong>Application URL</strong>: Define the URL for the search application. In the majority of cases this can be left as the default.</li>
 <li><strong>Number of records per page</strong>: Define the options to determine the number of records shown per page of results, and the default.</li>
-<li><strong>Facet configuration</strong>: See <a href="../../../customizing-application/configuring-faceted-search/">Configuring faceted search</a>). The configuration are defined using JSON following Elasticsearch API (See <a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/search-aggregations-bucket.html">https://www.elastic.co/guide/en/elasticsearch/reference/current/search-aggregations-bucket.html</a>.</li>
+<li><strong>Facet configuration</strong>: See <a href="../../../customizing-application/configuring-faceted-search/">Configuring faceted search</a>. The configurations are defined using JSON following the <a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/search-aggregations-bucket.html">Elasticsearch Aggregations API</a>.</li>
 </ul>
 <p><img alt="" src="../img/ui-settings-searchpage.png" /></p>
 <ul>
@@ -3057,7 +3057,7 @@
 <li>
 <p><strong>Projections to display maps into</strong> This is where the different projections available to the map are defined. All projections will be shown in the <code>Projection Switcher</code> tool of the map.</p>
 <p><img alt="" src="../img/ui-settings-mapprojection2.png" /></p>
-<p>In order to enable a new projection it must be defined here using the <strong>proj4</strong> syntax, which can be found for many EPSG-listed projections at, for example, <a href="https://epsg.io">https://epsg.io</a>. Additionall, the default bounding box extent, maximum bounding box extent and allowed resolutions (if required) can be defined.</p>
+<p>In order to enable a new projection it must be defined here using the <strong>proj4</strong> syntax, which can be found for many EPSG-listed projections at, for example, <a href="https://epsg.io">epsg.io</a>. Additionally, the default bounding box extent, maximum bounding box extent and allowed resolutions (if required) can be defined.</p>
 <p>Ensure that the coordinates inserted are in the correct units for the projection and are local to the projection. A list of resolutions is only relevant if the main map layer has a XYZ source that does not follow the common tiling pattern.</p>
 <p>Check that this configuration is valid by opening the map.</p>
 <p><img alt="" src="../img/ui-settings-mapprojection3.png" /></p>

@@ -1696,7 +1696,7 @@
 </ul>
 <h3 id="identify-operation">Identify operation</h3>
 <p>This verb is used to retrieve information about a repository.</p>
-<p>http://localhost:8080/geonetwork/srv/api/oaipmh?verb=Identify</p>
+<p><code>http://localhost:8080/geonetwork/srv/api/oaipmh?verb=Identify</code></p>
 <div class="language-xml highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nt">&lt;OAI-PMH</span><span class="w"> </span><span class="na">xmlns=</span><span class="s">&quot;http://www.openarchives.org/OAI/2.0/&quot;</span><span class="w"> </span><span class="na">xmlns:xsi=</span><span class="s">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span>
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">         </span><span class="na">xsi:schemaLocation=</span><span class="s">&quot;http://www.openarchives.org/OAI/2.0/ http://www.openarchives.org/OAI/2.0/OAI-PMH.xsd&quot;</span><span class="nt">&gt;</span>
 </span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span><span class="nt">&lt;responseDate&gt;</span>2025-06-03T13:03:08.054227ZZ<span class="nt">&lt;/responseDate&gt;</span>
@@ -1716,7 +1716,7 @@
 <h3 id="listmetadataformats-operation">ListMetadataFormats operation</h3>
 <p>This verb is used to retrieve the metadata formats available from a repository.</p>
 <p>In the catalogue, this corresponds to the schema plugins that are installed.</p>
-<p>http://localhost:8080/geonetwork/srv/api/oaipmh?verb=ListMetadataFormats</p>
+<p><code>http://localhost:8080/geonetwork/srv/api/oaipmh?verb=ListMetadataFormats</code></p>
 <div class="language-xml highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="cp">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
 </span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nt">&lt;OAI-PMH</span><span class="w"> </span><span class="na">xmlns=</span><span class="s">&quot;http://www.openarchives.org/OAI/2.0/&quot;</span><span class="w"> </span><span class="na">xmlns:xsi=</span><span class="s">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span><span class="w"> </span><span class="na">xsi:schemaLocation=</span><span class="s">&quot;http://www.openarchives.org/OAI/2.0/ http://www.openarchives.org/OAI/2.0/OAI-PMH.xsd&quot;</span><span class="nt">&gt;</span>
 </span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span><span class="nt">&lt;responseDate&gt;</span>2025-06-04T06:12:54.543994ZZ<span class="nt">&lt;/responseDate&gt;</span>
@@ -1754,7 +1754,7 @@
 <h3 id="listsets-operation">ListSets operation</h3>
 <p>This verb is used to retrieve the set structure of a repository, useful for selective harvesting.</p>
 <p>In the catalogue, this corresponds to the categories.</p>
-<p>http://localhost:8080/geonetwork/srv/api/oaipmh?verb=ListSets</p>
+<p><code>http://localhost:8080/geonetwork/srv/api/oaipmh?verb=ListSets</code></p>
 <div class="language-xml highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="cp">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
 </span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nt">&lt;OAI-PMH</span><span class="w"> </span><span class="na">xmlns=</span><span class="s">&quot;http://www.openarchives.org/OAI/2.0/&quot;</span><span class="w"> </span><span class="na">xmlns:xsi=</span><span class="s">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span><span class="w"> </span><span class="na">xsi:schemaLocation=</span><span class="s">&quot;http://www.openarchives.org/OAI/2.0/ http://www.openarchives.org/OAI/2.0/OAI-PMH.xsd&quot;</span><span class="nt">&gt;</span>
 </span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span><span class="nt">&lt;responseDate&gt;</span>2025-06-04T06:13:43.916077ZZ<span class="nt">&lt;/responseDate&gt;</span>
@@ -1773,9 +1773,9 @@
 <p><a href="https://www.openarchives.org/OAI/openarchivesprotocol.html#ListSets">More information</a>.</p>
 <h3 id="listrecords-operation">ListRecords operation</h3>
 <p>This verb is used to harvest records from a repository.</p>
-<p>http://localhost:8080/geonetwork/srv/api/oaipmh?verb=ListRecords&amp;metadataPrefix=oai_dc
-http://localhost:8080/geonetwork/srv/api/oaipmh?verb=ListRecords&amp;metadataPrefix=iso19139
-http://localhost:8080/geonetwork/srv/api/oaipmh?verb=ListRecords&amp;metadataPrefix=datacite</p>
+<p><code>http://localhost:8080/geonetwork/srv/api/oaipmh?verb=ListRecords&amp;metadataPrefix=oai_dc</code>
+<code>http://localhost:8080/geonetwork/srv/api/oaipmh?verb=ListRecords&amp;metadataPrefix=iso19139</code>
+<code>http://localhost:8080/geonetwork/srv/api/oaipmh?verb=ListRecords&amp;metadataPrefix=datacite</code></p>
 <p><code>metadataPrefix</code> is the metadata format to be returned, it can be a schema plugin identifier such as <code>iso19139</code>, <code>iso19115-3.2018</code>, ...
 or a conversion defined in each schema plugin <code>formatter</code> folder (eg. <code>oai_dc</code>).</p>
 <p>If the conversion is not available, the response will skip the record and continue with the next one.</p>
@@ -1803,21 +1803,21 @@ or a conversion defined in each schema plugin <code>formatter</code> folder (eg.
 </span></code></pre></div>
 <p>The maximum number of records in the response is limited by the setting <code>system/oai/maxrecords</code>.</p>
 <p>To paginate over records use the <code>resumptionToken</code> parameter in the request. The response will include a <code>resumptionToken</code> element if there are more records to retrieve.</p>
-<p>http://localhost:8080/geonetwork/srv/api/oaipmh?verb=ListRecords&amp;metadataPrefix=oai_dc&amp;resumptionToken=/-/oai_dc/-//-//-/7ucugfvmh534od2bzcz267oay/-/1</p>
+<p><code>http://localhost:8080/geonetwork/srv/api/oaipmh?verb=ListRecords&amp;metadataPrefix=oai_dc&amp;resumptionToken=/-/oai_dc/-//-//-/7ucugfvmh534od2bzcz267oay/-/1</code></p>
 <p><a href="https://www.openarchives.org/OAI/openarchivesprotocol.html#ListRecords">More information</a>.</p>
 <h3 id="listidentifiers-operation">ListIdentifiers operation</h3>
 <p>This verb is an abbreviated form of ListRecords, retrieving only headers rather than records.</p>
-<p>http://localhost:8080/geonetwork/srv/api/oaipmh?verb=ListIdentifiers&amp;metadataPrefix=iso19139</p>
+<p><code>http://localhost:8080/geonetwork/srv/api/oaipmh?verb=ListIdentifiers&amp;metadataPrefix=iso19139</code></p>
 <p><a href="https://www.openarchives.org/OAI/openarchivesprotocol.html#ListIdentifiers">More information</a>.</p>
 <h3 id="getrecord-operation">GetRecord operation</h3>
 <p>This verb is used to retrieve an individual metadata record from a repository.</p>
-<p>http://localhost:8080/geonetwork/srv/api/oaipmh?verb=GetRecord&amp;identifier=da165110-88fd-11da-a88f-000d939bc5d8&amp;metadataPrefix=iso19139</p>
+<p><code>http://localhost:8080/geonetwork/srv/api/oaipmh?verb=GetRecord&amp;identifier=da165110-88fd-11da-a88f-000d939bc5d8&amp;metadataPrefix=iso19139</code></p>
 <p><a href="https://www.openarchives.org/OAI/openarchivesprotocol.html#GetRecord">More information</a>.</p>
 <h2 id="upgrading-from-geonetwork-30-guidance">Upgrading from GeoNetwork 3.0 Guidance</h2>
 <p>OAI-PMH was unavailable between GeoNetwork 4.0 and 4.2 and was restored in a later 4.x release using the Elasticsearch engine.</p>
 <p>The endpoint URL has changed from <code>/geonetwork/srv/{lang}/oaipmh</code> to <code>/geonetwork/srv/api/oaipmh</code>.</p>
 <h2 id="reference">Reference</h2>
-<p>Please see <a href="https://www.openarchives.org/OAI/openarchivesprotocol.html">https://www.openarchives.org/OAI/openarchivesprotocol.html</a> for further details.</p>
+<p>Please see the <a href="https://www.openarchives.org/OAI/openarchivesprotocol.html">OAI-PMH specification</a> for further details.</p>
 
 
 

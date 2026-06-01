@@ -2551,13 +2551,13 @@
 <p>Sub-portals can be used to create a space in the main catalogue only focusing on a subset of records.</p>
 <p>A sub-portal is defined by:</p>
 <p><img alt="" src="../../../../administrator-guide/configuring-the-catalog/img/portal-subportal.png" /></p>
-<p>When creating a sub-portal with an identifier <code>ìnspire</code> for example, a new entry point on your catalogue will be available: <a href="http://localhost:8080/geonetwork/inspire/">http://localhost:8080/geonetwork/inspire/</a>. Accessing the catalogue through it will only provide access to records matching the filter defined for this sub-portal. The <code>search filter</code> parameter value uses the Lucene query parser syntax (see <a href="http://lucene.apache.org/java/2_9_1/queryparsersyntax.html">http://lucene.apache.org/java/2_9_1/queryparsersyntax.html</a>) and is applied to all searches.</p>
+<p>When creating a sub-portal with an identifier <code>ìnspire</code> for example, a new entry point on your catalogue will be available: <code>http://localhost:8080/geonetwork/inspire/</code>. Accessing the catalogue through it will only provide access to records matching the filter defined for this sub-portal. The <code>search filter</code> parameter value uses the <a href="http://lucene.apache.org/java/2_9_1/queryparsersyntax.html">Lucene query parser syntax</a> and is applied to all searches.</p>
 <p>User privileges apply as in the main instance.</p>
 <p>The logo and name of the sub-portal will be displayed instead of the main instance information in case the option <code>Display in the portal switcher</code> is selected:</p>
 <p><img alt="" src="../../../../administrator-guide/configuring-the-catalog/img/portal-header.png" /></p>
-<p>A CSW service is also available for this sub-portal <a href="http://localhost:8080/geonetwork/inspire/eng/csw">http://localhost:8080/geonetwork/inspire/eng/csw</a> (and replacing the virtual CSW feature).</p>
+<p>A CSW service is also available for this sub-portal at <code>http://localhost:8080/geonetwork/inspire/eng/csw</code> (replacing the virtual CSW feature).</p>
 <p>A sub-portal can also use a specific user interface configuration.</p>
-<p>The list of sub-portal available is at <a href="http://localhost:8080/geonetwork/srv/api/sources">http://localhost:8080/geonetwork/srv/api/sources</a></p>
+<p>The list of available sub-portals is at <code>http://localhost:8080/geonetwork/srv/api/sources</code></p>
 <p><img alt="" src="../../../../administrator-guide/configuring-the-catalog/img/portal-list.png" /></p>
 <h3 id="configuring-a-datahub-interface-for-a-sub-portal">Configuring a Datahub interface for a sub-portal</h3>
 <p>If the <a href="../../../install-guide/plugins/#datahub-integration-gn-datahub-integration">Datahub Integration Plugin</a> is installed, a Datahub interface can be configured for a sub-portal. Two settings are available for this:</p>
@@ -2722,10 +2722,10 @@ All organizations starting with "GN":
 <ul>
 <li>Create a group for the partner eg. <code>oca</code> (see <a href="../../managing-users-and-groups/creating-group/">Creating group</a>).</li>
 <li>Create at least one user for the partner (see <a href="../../managing-users-and-groups/creating-user/">Creating user</a>). The user must be member of the group <code>oca</code>. If you want the user to be able to configure the sub-portal (eg. change the name, choose a logo), the user must have at least the <code>UserAdmin</code> profile for the group <code>oca</code>.</li>
-<li>Create a sub-portal. This can have the same name as the group, eg. <code>oca</code> but this is not essential. The filter can be created using the fact that a record published in the group <code>oca</code> should be in this sub-portal, using the syntax <code>+_groupPublished:oca</code>. Once created the sub-portal is accessible at <a href="http://localhost:8080/geonetwork/oca">http://localhost:8080/geonetwork/oca</a>.</li>
+<li>Create a sub-portal. This can have the same name as the group, eg. <code>oca</code> but this is not essential. The filter can be created using the fact that a record published in the group <code>oca</code> should be in this sub-portal, using the syntax <code>+_groupPublished:oca</code>. Once created the sub-portal is accessible at <code>http://localhost:8080/geonetwork/oca</code>.</li>
 <li>(Optional) Link the sub-portal to a user admin group to allow <code>UserAdmin</code> to configure their sub-portal.</li>
 </ul>
-<p>With this type configuration, ie. one partner = one group = one sub-portal and users are only member of one group, then when connecting to a partner sub-portal:</p>
+<p>With this type of configuration, i.e. one partner = one group = one sub-portal and users are only member of one group, then when connecting to a partner sub-portal:</p>
 <ul>
 <li>user will only see records published in that group in the entire application</li>
 <li>when creating new records, no group selection is provided because user is member of one group only</li>

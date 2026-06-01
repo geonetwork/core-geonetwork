@@ -1424,10 +1424,10 @@
 <div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">Application data directory</label><label for="__tabbed_1_2">External data directory</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
-<p>If you are using the application data direcotry, the encryption password is stored in the file <strong><code>/geonetwork/WEB-INF/data/config/encryptor.properties</code></strong>. </p>
+<p>If you are using the application data directory, the encryption password is stored in the file <strong><code>/geonetwork/WEB-INF/data/config/encryptor.properties</code></strong>.</p>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
-<p>This <strong><code>encryptor.propertie</code></strong> file <strong>must be copied</strong> to the new installation when upgrading the application; otherwise, it will not be possible to decrypt the existing passwords stored in the database.</p>
+<p>This <strong><code>encryptor.properties</code></strong> file <strong>must be copied</strong> to the new installation when upgrading the application; otherwise, it will not be possible to decrypt the existing passwords stored in the database.</p>
 </div>
 </div>
 <div class="tabbed-block">
@@ -1450,7 +1450,7 @@
 </ul>
 </li>
 <li>
-<p>When using application data directory be sure to backup  <strong><code>/geonetwork/WEB-INF/data/config/encryptor/encryptor.properties</code></strong> </p>
+<p>When using the application data directory, be sure to back up <strong><code>/geonetwork/WEB-INF/data/config/encryptor/encryptor.properties</code></strong></p>
 </li>
 </ol>
 </div>
@@ -1538,17 +1538,17 @@ into the correct <strong><code>webapps/geonetwork/</code></strong> location) in 
 </ul>
 <h2 id="upgrade-from-geonetwork-30-to-geonetwork-44">Upgrade from GeoNetwork 3.0 to GeoNetwork 4.4</h2>
 <p>Upgrading from GeoNetwork 3.0 to GeoNetwork 4.4 is a major upgrade.</p>
-<p>We do not recommend updating a production system. Instead treat this as a migration, setting up a new GeoNetwork 4.0 installation and transfer data and settings.</p>
+<p>We do not recommend upgrading a production system in place. Instead, treat this as a migration: set up a new GeoNetwork 4.0 installation and transfer data and settings.</p>
 <p>Before you start:</p>
 <ul>
 <li>
-<p>Backup your database</p>
+<p>Back up your database</p>
 </li>
 <li>
-<p>Backup your data directory</p>
+<p>Back up your data directory</p>
 </li>
 </ul>
-<p>GeoNetwork for Migration:</p>
+<p>Migration steps:</p>
 <ol>
 <li>
 <p>GeoNetwork 4.4 requires a Java 11 environment (JRE) to be installed on your system.</p>
@@ -1559,10 +1559,10 @@ into the correct <strong><code>webapps/geonetwork/</code></strong> location) in 
 <p>For installation instructions see <a href="../../install-guide/installing-index/">Installing search platform</a>.</p>
 </li>
 <li>
-<p>Perform a new install of GeoNetwork 4.0, according to <a href="../../install-guide/">installation approach</a> used.</p>
+<p>Perform a new install of GeoNetwork 4.0, according to the <a href="../../install-guide/">installation approach</a> used.</p>
 </li>
 <li>
-<p>Configure GeoNetwork use to your database and data directory.</p>
+<p>Configure GeoNetwork to use your database and data directory.</p>
 </li>
 <li>
 <p>Start services:</p>
@@ -1586,13 +1586,13 @@ into the correct <strong><code>webapps/geonetwork/</code></strong> location) in 
 <p>Guidance:</p>
 <ul>
 <li>
-<p>Be advised of the following changes in application functionality:</p>
+<p>Note the following changes in application functionality:</p>
 </li>
 <li>
-<p><a href="../../user-guide/quick-start/#upgrading-from-geonetwork-3-guidance">Permalink to search page from GeoNetwork 3.x will need to be updated to work with 4.x. </a></p>
+<p><a href="../../user-guide/quick-start/#upgrading-from-geonetwork-3-guidance">Permalinks to search pages from GeoNetwork 3.x will need to be updated to work with 4.x.</a></p>
 </li>
 <li>
-<p>Please be advised of the following changes to application services:</p>
+<p>Note the following changes to application services:</p>
 </li>
 <li><a href="../../api/q-search/#upgrading-from-geonetwork-30-guidance">Search / q service is replaced by Elasticsearch</a></li>
 <li><a href="../../api/csw/#upgrading-from-geonetwork-30-guidance">Virtual CSW end-points are replaced by sub-portals</a></li>
@@ -1601,7 +1601,7 @@ into the correct <strong><code>webapps/geonetwork/</code></strong> location) in 
 <li><a href="../../api/oai-pmh/#upgrading-from-geonetwork-30-guidance">Open Archives Initiative Protocol for Metadata Harvesting (OAI-PMH) is not migrated</a></li>
 <li><a href="../../api/the-geonetwork-api/#upgrading-from-geonetwork-3-guidance">GeoNetwork API support for Report Uploads not migrated</a></li>
 </ul>
-<p>The above links provided recommendations and mitigation measures where appropriate.</p>
+<p>The above links provide recommendations and mitigation measures where appropriate.</p>
 <ul>
 <li>
 <p>For information on new features and functionality:</p>

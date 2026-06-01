@@ -2204,9 +2204,9 @@
 </span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">    </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;from&quot;:0,&quot;size&quot;:0,&quot;query&quot;:{&quot;query_string&quot;:{&quot;query&quot;:&quot;+resourceIdentifier:1234&quot;}}}&#39;</span>
 </span></code></pre></div>
 <p>To customize how the field is indexed see <code>web/src/main/webResources/WEB-INF/data/config/index/records.json</code>.</p>
-<p>To return it in the search response, use the <code>_source</code> parameter of the query. See <a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/search-fields.html">https://www.elastic.co/guide/en/elasticsearch/reference/current/search-fields.html</a>.</p>
+<p>To return it in the search response, use the <code>_source</code> parameter of the query. See the <a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/search-fields.html">Elasticsearch search fields documentation</a>.</p>
 <h2 id="boosting-at-search-time">Boosting at search time</h2>
-<p>See <a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-query-string-query.html#_boosting">https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-query-string-query.html#_boosting</a>.</p>
+<p>See the <a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-query-string-query.html#_boosting">Elasticsearch query string boosting documentation</a>.</p>
 <p>By default, the search is defined as (see <code>web-ui/src/main/resources/catalog/js/CatController.js</code>):</p>
 <div class="language-js highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="s1">&#39;queryBase&#39;</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;any:(${any}) resourceTitleObject.default:(${any})^2&#39;</span><span class="p">,</span>
 </span></code></pre></div>
@@ -2246,7 +2246,7 @@
 </span></code></pre></div>
 <h2 id="language-analyzer">Language analyzer</h2>
 <p>By default a <code>standard</code> analyzer is used. If the catalog content is english, it may make sense to change the analyzer to <code>english</code>. To customize the analyzer see <code>web/src/main/webResources/WEB-INF/data/config/index/records.json</code></p>
-<p>To add a new language, check first if Elasticsearch provides a specific analyzer for that language (see https://www.elastic.co/guide/en/elasticsearch/reference/current/analysis-lang-analyzer.html). Then configure fields that are multilingual 
+<p>To add a new language, check first if Elasticsearch provides a specific analyzer for that language (see the <a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/analysis-lang-analyzer.html">Elasticsearch language analyzers documentation</a>). Then configure fields that are multilingual
 in <code>records.json</code> (eg. adding Danish):</p>
 <ul>
 <li>If the field is used for full text search, use the language analyzer:</li>

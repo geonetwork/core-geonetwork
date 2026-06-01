@@ -1697,7 +1697,7 @@
 </ol>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>./release-notes
 </span></code></pre></div>
-<p>After the script runs it will produces:</p>
+<p>After the script runs, it will produce:</p>
 <ul>
 <li>
 <p><code>docs/changes/changes4.4.4-0.txt</code></p>
@@ -1847,7 +1847,7 @@
 </span><span id="__span-20-6"><a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a>
 </span><span id="__span-20-7"><a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a>The changelog [provides an overview of new functionality and features](https://sourceforge.net/projects/geonetwork/files/GeoNetwork_opensource/v4.2.12/).
 </span><span id="__span-20-8"><a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a>
-</span><span id="__span-20-9"><a id="__codelineno-20-9" name="__codelineno-20-9" href="#__codelineno-20-9"></a>Thanks and congratulations to the all community members.
+</span><span id="__span-20-9"><a id="__codelineno-20-9" name="__codelineno-20-9" href="#__codelineno-20-9"></a>Thanks and congratulations to all community members.
 </span><span id="__span-20-10"><a id="__codelineno-20-10" name="__codelineno-20-10" href="#__codelineno-20-10"></a>
 </span><span id="__span-20-11"><a id="__codelineno-20-11" name="__codelineno-20-11" href="#__codelineno-20-11"></a>If you have any questions about this release please reply to this topic.
 </span></code></pre></div>
@@ -1858,7 +1858,7 @@
 with the following utilities: <strong><em>sed</em></strong>, <strong><em>xmlstarlet</em></strong> and <strong><em>sftp</em></strong>.</p>
 <ol>
 <li>
-<p>Prepare the release (examples prepairs version 4.4.1 as latest release):</p>
+<p>Prepare the release (this example prepares version 4.4.1 as the latest release):</p>
 <div class="language-shell highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="c1"># Setup properties</span>
 </span><span id="__span-21-2"><a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a><span class="nv">from</span><span class="o">=</span>origin
 </span><span id="__span-21-3"><a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a><span class="nv">frombranch</span><span class="o">=</span>origin/main
@@ -1948,7 +1948,7 @@ with the following utilities: <strong><em>sed</em></strong>, <strong><em>xmlstar
 </span><span id="__span-28-21"><a id="__codelineno-28-21" name="__codelineno-28-21" href="#__codelineno-28-21"></a>
 </span><span id="__span-28-22"><a id="__codelineno-28-22" name="__codelineno-28-22" href="#__codelineno-28-22"></a>cat<span class="w"> </span><span class="s">&lt;&lt;EOF &gt; docs/manual/docs/overview/change-log/version-$version.md</span>
 </span><span id="__span-28-23"><a id="__codelineno-28-23" name="__codelineno-28-23" href="#__codelineno-28-23"></a>
-</span><span id="__span-28-24"><a id="__codelineno-28-24" name="__codelineno-28-24" href="#__codelineno-28-24"></a><span class="s">and more \... see [$version issues](https://github.com/geonetwork/core-geonetwork/issues?q=is%3Aissue+milestone%3A$version+is%3Aclosed) and [pull requests](https://github.com/geonetwork/core-geonetwork/pulls?page=3&amp;q=is%3Apr+milestone%3A$version+is%3Aclosed) for full details.</span>
+</span><span id="__span-28-24"><a id="__codelineno-28-24" name="__codelineno-28-24" href="#__codelineno-28-24"></a><span class="s">and more... see [$version issues](https://github.com/geonetwork/core-geonetwork/issues?q=is%3Aissue+milestone%3A$version+is%3Aclosed) and [pull requests](https://github.com/geonetwork/core-geonetwork/pulls?page=3&amp;q=is%3Apr+milestone%3A$version+is%3Aclosed) for full details.</span>
 </span><span id="__span-28-25"><a id="__codelineno-28-25" name="__codelineno-28-25" href="#__codelineno-28-25"></a><span class="s">EOF</span>
 </span></code></pre></div>
 <p>Fill in the above markdown file, removing any unused headings.</p>
@@ -1967,7 +1967,7 @@ with the following utilities: <strong><em>sed</em></strong>, <strong><em>xmlstar
 </span><span id="__span-29-2"><a id="__codelineno-29-2" name="__codelineno-29-2" href="#__codelineno-29-2"></a>mkdocs serve
 </span></code></pre></div>
 Once running check the new page:
-<div class="language-text highlight"><pre><span></span><code><span id="__span-30-1"><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a>open http://localhost:8000/ocverview/change-log/$newversion
+<div class="language-text highlight"><pre><span></span><code><span id="__span-30-1"><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a>open http://localhost:8000/overview/change-log/$newversion
 </span></code></pre></div></p>
 </li>
 <li>
@@ -2073,23 +2073,23 @@ Once running check the new page:
 </span></code></pre></div>
 </li>
 <li>
-<p>Close the milestone on github <a href="https://github.com/geonetwork/core-geonetwork/milestones?state=closed">https://github.com/geonetwork/core-geonetwork/milestones?state=closed</a> with link to sourceforge download.</p>
-<p>Publish the release on github <a href="https://github.com/geonetwork/core-geonetwork/releases">https://github.com/geonetwork/core-geonetwork/releases</a> .</p>
-<p>Update the website links <a href="https://github.com/geonetwork/website">https://github.com/geonetwork/website</a> .</p>
+<p><a href="https://github.com/geonetwork/core-geonetwork/milestones?state=closed">Close the milestone on GitHub</a> with a link to the SourceForge download.</p>
+<p><a href="https://github.com/geonetwork/core-geonetwork/releases">Publish the release on GitHub</a>.</p>
+<p>Update the <a href="https://github.com/geonetwork/website">website repository</a>:</p>
 <ul>
-<li>Add the changes file for the release to <a href="https://github.com/geonetwork/doc/tree/develop/source/overview/change-log">https://github.com/geonetwork/doc/tree/develop/source/overview/change-log</a></li>
-<li>List the previous file in <a href="https://github.com/geonetwork/doc/blob/develop/source/overview/change-log/index.rst">https://github.com/geonetwork/doc/blob/develop/source/overview/change-log/index.rst</a></li>
-<li>Update the version: <a href="https://github.com/geonetwork/website/blob/master/docsrc/conf.py">https://github.com/geonetwork/website/blob/master/docsrc/conf.py</a></li>
-<li>Update the download link: <a href="https://github.com/geonetwork/website/blob/master/docsrc/downloads.rst">https://github.com/geonetwork/website/blob/master/docsrc/downloads.rst</a></li>
-<li>Add the section for the new release: <a href="https://github.com/geonetwork/website/blob/master/docsrc/news.rst">https://github.com/geonetwork/website/blob/master/docsrc/news.rst</a></li>
+<li>Add the changes file for the release to <a href="https://github.com/geonetwork/doc/tree/develop/source/overview/change-log">geonetwork/doc change-log</a></li>
+<li>List the previous file in <a href="https://github.com/geonetwork/doc/blob/develop/source/overview/change-log/index.rst">change-log/index.rst</a></li>
+<li>Update the version in <a href="https://github.com/geonetwork/website/blob/master/docsrc/conf.py">docsrc/conf.py</a></li>
+<li>Update the download link in <a href="https://github.com/geonetwork/website/blob/master/docsrc/downloads.rst">docsrc/downloads.rst</a></li>
+<li>Add the section for the new release in <a href="https://github.com/geonetwork/website/blob/master/docsrc/news.rst">docsrc/news.rst</a></li>
 </ul>
 <p>Send an email to the mailing lists.</p>
 </li>
 <li>
 <p>Merge in depending branches</p>
-<p>If a major version, then master version has to be updated to the next one (eg. if 3.8.0, then 3.7.x is 3.9.x).</p>
+<p>If a major version, then the main branch version has to be updated to the next one (e.g. if 3.8.0, then 3.7.x becomes 3.9.x).</p>
 <div class="language-shell highlight"><pre><span></span><code><span id="__span-41-1"><a id="__codelineno-41-1" name="__codelineno-41-1" href="#__codelineno-41-1"></a><span class="c1"># Create it if it does not exist yet</span>
-</span><span id="__span-41-2"><a id="__codelineno-41-2" name="__codelineno-41-2" href="#__codelineno-41-2"></a>git<span class="w"> </span>checkout<span class="w"> </span>master
+</span><span id="__span-41-2"><a id="__codelineno-41-2" name="__codelineno-41-2" href="#__codelineno-41-2"></a>git<span class="w"> </span>checkout<span class="w"> </span>main
 </span><span id="__span-41-3"><a id="__codelineno-41-3" name="__codelineno-41-3" href="#__codelineno-41-3"></a>./update-version.sh<span class="w"> </span><span class="nv">$currentversion</span><span class="w"> </span><span class="nv">$nextMajorVersion</span>
 </span></code></pre></div>
 <p>Update documentation to reflect series change of <code>latest</code>, <code>stable</code>, <code>maintenance</code> and <code>archive</code>:</p>
@@ -2103,7 +2103,7 @@ Once running check the new page:
 <p>Commit the new version</p>
 <div class="language-shell highlight"><pre><span></span><code><span id="__span-42-1"><a id="__codelineno-42-1" name="__codelineno-42-1" href="#__codelineno-42-1"></a>git<span class="w"> </span>add<span class="w"> </span>.
 </span><span id="__span-42-2"><a id="__codelineno-42-2" name="__codelineno-42-2" href="#__codelineno-42-2"></a>git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;Update version to </span><span class="nv">$nextMajorVersion</span><span class="s2">&quot;</span>
-</span><span id="__span-42-3"><a id="__codelineno-42-3" name="__codelineno-42-3" href="#__codelineno-42-3"></a>git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </span>master
+</span><span id="__span-42-3"><a id="__codelineno-42-3" name="__codelineno-42-3" href="#__codelineno-42-3"></a>git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </span>main
 </span></code></pre></div>
 </li>
 </ol>

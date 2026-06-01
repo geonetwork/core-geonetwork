@@ -2150,7 +2150,7 @@
 <li><code>DataCite prefix</code>: Usually looks like <code>10.xxxx</code>. You will be allowed to register DOI names only under the prefixes that have been assigned to you.</li>
 <li><code>Record groups</code>: (Optional) When creating a DOI, only DOI server(s) associated with the record group are proposed. If record group is not associated with any DOI servers, then DOI servers with no group are proposed.</li>
 </ul>
-<p>A record can be downloaded using the DataCite format from the API using: <a href="http://localhost:8080/geonetwork/srv/api/records/da165110-88fd-11da-a88f-000d939bc5d8/formatters/datacite?output=xml">http://localhost:8080/geonetwork/srv/api/records/da165110-88fd-11da-a88f-000d939bc5d8/formatters/datacite?output=xml</a></p>
+<p>A record can be downloaded using the DataCite format from the API using: <code>http://localhost:8080/geonetwork/srv/api/records/da165110-88fd-11da-a88f-000d939bc5d8/formatters/datacite?output=xml</code></p>
 <h2 id="creating-the-doi">Creating the DOI</h2>
 <p>Once configured, DOI can be created using the interface. DOI is created on demand. It means that a user must ask for creation of a DOI. It can be created by:</p>
 <ul>
@@ -2225,8 +2225,8 @@
 <li>ISO19139 <code>schemas/iso19139/src/main/plugin/iso19139/formatter/datacite/view.xsl</code></li>
 <li>ISO19115-3.2018 <code>schemas/iso19139/src/main/plugin/iso19139/formatter/datacite/view.xsl</code></li>
 </ul>
-<p>See <a href="http://schema.datacite.org/meta/kernel-4.1/doc/DataCite-MetadataKernel_v4.1.pdf">http://schema.datacite.org/meta/kernel-4.1/doc/DataCite-MetadataKernel_v4.1.pdf</a> for more details on the format.</p>
-<p>DataCite API return XSD validation error.</p>
+<p>See the <a href="http://schema.datacite.org/meta/kernel-4.1/doc/DataCite-MetadataKernel_v4.1.pdf">DataCite Metadata Kernel documentation</a> for more details on the format.</p>
+<p>DataCite API returns an XSD validation error.</p>
 <p><img alt="" src="../../../../user-guide/associating-resources/img/doi-request-check.png" /></p>
 <p>The catalogue also allow to apply DataCite validation in the editor:</p>
 <p><img alt="" src="../../../../user-guide/associating-resources/img/doi-validation.png" /></p>

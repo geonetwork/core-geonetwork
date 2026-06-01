@@ -1934,7 +1934,7 @@
 <h3 id="java-11">Java 11</h3>
 <p>GeoNetwork 4.4 is a Java 11 application that runs as a servlet, which means that a Java Development Kit (JDK) must be installed in order to build and run it. You can get a Java 11 JDK from your Linux distribution, <a href="https://openjdk.java.net/">OpenJDK</a> or <a href="https://adoptopenjdk.net">Adoptium Temurin JDK</a>.</p>
 <p>Please note that the commercial distribution of <a href="https://www.oracle.com/technetwork/java/javase/downloads">Oracle JDK</a> no longer provides Java 11 for testing purposes.</p>
-<p>Because GeoNetwork is developed with Java 11 (LTS), it  won't run at all with earlier releases.</p>
+<p>Because GeoNetwork is developed with Java 11 (LTS), it won't run at all with earlier releases.</p>
 <ul>
 <li>GeoNetwork should not be developed with newer versions of Java.</li>
 <li>It  won't run at all with earlier releases.</li>
@@ -1948,7 +1948,7 @@
 <li>Apache Tomcat 9.0</li>
 <li>Apache Tomcat 8.5</li>
 </ul>
-<p>GeoNetwork cannot use the newer versions of Apache Tomcat 10 which are based on the Jakarata Enterprise Edition web application standard.</p>
+<p>GeoNetwork cannot use the newer versions of Apache Tomcat 10, which are based on the Jakarta Enterprise Edition web application standard.</p>
 <h3 id="database">Database</h3>
 <p>Regarding storage, you need a Database Management System (DBMS) like Oracle, MySQL, Postgresql etc. GeoNetwork comes with an embedded DBMS (H2) which is used by default during installation. This DBMS can be used for small or desktop installations of no more than a few thousand metadata records with one or two users. If you have heavier demands then you should use a professional, stand alone DBMS.</p>
 <h3 id="environment">Environment</h3>
@@ -1965,7 +1965,7 @@
 <ul>
 <li><strong>Java 11</strong> - Developing with GeoNetwork requires Java Development Kit (JDK) 11.</li>
 <li><strong>Maven</strong> 3.1.0+ - GeoNetwork uses <a href="https://maven.apache.org/">Maven</a> to manage the build process and the dependencies. Once is installed, you should have the mvn command in your path (on Windows systems, you have to open a shell to check).</li>
-<li><strong>Git</strong> - GeoNetwork source code is stored and versioned in <a href="https://github.com/geonetwork/core-geonetwork">a Git repository on Github</a>. Depending on your operating system a variety of Git clients are available. Please check the Git website for some <a href="https://git-scm.com/downloads/guis">alternatives</a> and good <a href="https://git-scm.com/documentation">documentation</a>. More documentation can be found on the <a href="https://help.github.com/">Github website</a>.</li>
+<li><strong>Git</strong> - GeoNetwork source code is stored and versioned in <a href="https://github.com/geonetwork/core-geonetwork">a Git repository on Github</a>. Depending on your operating system a variety of Git clients are available. Please check the Git website for some <a href="https://git-scm.com/downloads/guis">alternatives</a> and good <a href="https://git-scm.com/doc">documentation</a>. More documentation can be found on the <a href="https://help.github.com/">Github website</a>.</li>
 <li><strong>Ant</strong> - GeoNetwork uses <a href="https://ant.apache.org/">Ant</a> to build the installer. Version 1.6.5 works but any other recent version should be OK. Once installed, you should have the Ant command in your path (on Windows systems, you have to open a shell to check).</li>
 <li><strong>mkdocs</strong> - To build the GeoNetwork documentation in a nice format, <a href="https://www.mkdocs.org">mkdocs</a> is used. Please note that if you don't have a Python interpreter on your system, Sphinx will not work, so you need to install <a href="https://www.python.org/downloads/">Python</a>.</li>
 </ul>
@@ -1991,7 +1991,7 @@
 </span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>mvn<span class="w"> </span>clean<span class="w"> </span>install<span class="w"> </span>-DskipTests
 </span></code></pre></div>
 <h3 id="submodules">Submodules</h3>
-<p>GeoNetwork use submodules, these were initialized by the <code>--recursive</code> option when cloning the repository.</p>
+<p>GeoNetwork uses submodules, which were initialized by the <code>--recursive</code> option when cloning the repository.</p>
 <p>If you missed using <code>--recursive</code> run the following:</p>
 <div class="language-shell highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nb">cd</span><span class="w"> </span>core-geonetwork
 </span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>git<span class="w"> </span>submodule<span class="w"> </span>init

@@ -1815,7 +1815,7 @@
 <li>uploaded document attached to metadata records</li>
 <li>thumbnails</li>
 </ul>
-<p>It is a good idea to define an external data directory when going to production in order to make future updates easier. The data directory allows to run the WAR in readonly mode if needed.</p>
+<p>It is a good idea to define an external data directory when going to production in order to make future updates easier. The data directory allows the WAR to run in read-only mode if needed.</p>
 <h2 id="creating-a-new-data-directory">Creating a new data directory</h2>
 <p>The data directory needs to be created before starting the catalogue. It must be readable and writable by the user starting the catalogue.</p>
 <p>If the data directory is an empty folder, the catalogue will initialize the directory default structure using <code>INSTALL_DIR/web/geonetwork/WEB-INF/data</code>.</p>
@@ -1824,7 +1824,7 @@
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="m">2015</span>-12-16<span class="w"> </span><span class="m">07</span>:59:17,108<span class="w"> </span>WARN<span class="w">  </span><span class="o">[</span>geonetwork.data.directory<span class="o">]</span><span class="w"> </span>-<span class="w">     </span>-<span class="w"> </span>Data<span class="w"> </span>directory<span class="w"> </span>provided<span class="w"> </span>could<span class="w"> </span>not<span class="w"> </span>be<span class="w"> </span>used.<span class="w"> </span>Using<span class="w"> </span>default<span class="w"> </span>location:<span class="w"> </span>/data/dev/gn/3.0.x/web/src/main/webapp/WEB-INF/data
 </span></code></pre></div>
 <p>If the data directory is not accessible for the user, the log displays:</p>
-<div class="language-shell highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="m">2015</span>-12-16<span class="w"> </span><span class="m">08</span>:09:17,723<span class="w"> </span>WARN<span class="w">  </span><span class="o">[</span>geonetwork.data.directory<span class="o">]</span><span class="w"> </span>-<span class="w">     </span>-<span class="w"> </span>Data<span class="w"> </span>directory<span class="w"> </span><span class="s1">&#39;/tmp/gndatadir&#39;</span><span class="w"> </span>is<span class="w"> </span>not<span class="w"> </span>writable.<span class="w"> </span>Set<span class="w"> </span>read/write<span class="w"> </span>privileges<span class="w"> </span>to<span class="w"> </span>user<span class="w"> </span>starting<span class="w"> </span>the<span class="w"> </span>catalogue<span class="w"> </span><span class="o">(</span>ie.<span class="w"> </span>francois<span class="o">)</span>.
+<div class="language-shell highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="m">2015</span>-12-16<span class="w"> </span><span class="m">08</span>:09:17,723<span class="w"> </span>WARN<span class="w">  </span><span class="o">[</span>geonetwork.data.directory<span class="o">]</span><span class="w"> </span>-<span class="w">     </span>-<span class="w"> </span>Data<span class="w"> </span>directory<span class="w"> </span><span class="s1">&#39;/tmp/gndatadir&#39;</span><span class="w"> </span>is<span class="w"> </span>not<span class="w"> </span>writable.<span class="w"> </span>Set<span class="w"> </span>read/write<span class="w"> </span>privileges<span class="w"> </span>to<span class="w"> </span>user<span class="w"> </span>starting<span class="w"> </span>the<span class="w"> </span>catalogue<span class="w"> </span><span class="o">(</span>i.e.<span class="w"> </span>francois<span class="o">)</span>.
 </span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="m">2015</span>-12-16<span class="w"> </span><span class="m">08</span>:09:17,723<span class="w"> </span>WARN<span class="w">  </span><span class="o">[</span>geonetwork.data.directory<span class="o">]</span><span class="w"> </span>-<span class="w">     </span>-<span class="w"> </span>Data<span class="w"> </span>directory<span class="w"> </span>provided<span class="w"> </span>could<span class="w"> </span>not<span class="w"> </span>be<span class="w"> </span>used.<span class="w"> </span>Using<span class="w"> </span>default<span class="w"> </span>location:<span class="w"> </span>/data/dev/gn/3.0.x/web/src/main/webapp/WEB-INF/data
 </span></code></pre></div>
 <h2 id="setting-the-data-directory">Setting the data directory</h2>
@@ -1846,17 +1846,17 @@
 <p>Resolution order is:</p>
 <ol>
 <li><webappname>.dir<ol>
-<li>Java environment variable (ie. -D<webappname>.dir=/a/data/dir)</li>
-<li>Servlet context parameter (ie. web.xml)</li>
-<li>Config.xml appHandler parameter (ie. config.xml)</li>
-<li>System environment variable (ie. <webappname>_dir=/a/data/dir). "." is not supported in env variables</li>
+<li>Java environment variable (i.e. -D<webappname>.dir=/a/data/dir)</li>
+<li>Servlet context parameter (i.e. web.xml)</li>
+<li>Config.xml appHandler parameter (i.e. config.xml)</li>
+<li>System environment variable (i.e. <webappname>_dir=/a/data/dir). "." is not supported in env variables</li>
 </ol>
 </li>
 <li>geonetwork.dir<ol>
-<li>Java environment variable (ie. -Dgeonetwork.dir=/a/data/dir)</li>
-<li>Servlet context parameter (ie. web.xml)</li>
-<li>Config.xml appHandler parameter (ie. config.xml)</li>
-<li>System environment variable (ie. geonetwork_dir=/a/data/dir). "." is not supported in env variables</li>
+<li>Java environment variable (i.e. -Dgeonetwork.dir=/a/data/dir)</li>
+<li>Servlet context parameter (i.e. web.xml)</li>
+<li>Config.xml appHandler parameter (i.e. config.xml)</li>
+<li>System environment variable (i.e. geonetwork_dir=/a/data/dir). "." is not supported in env variables</li>
 </ol>
 </li>
 </ol>

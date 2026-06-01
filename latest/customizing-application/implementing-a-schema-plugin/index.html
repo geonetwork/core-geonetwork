@@ -2673,7 +2673,7 @@
 <p>A metadata schema is usually an implementation of a metadata standard.</p>
 <p>A metadata profile is an adaptation of a metadata schema to suit the needs of a particular community. A metadata profile contains all the components of a metadata schema but may extend, restrict or redefine these components.</p>
 <h2 id="implementing-a-metadata-schema-or-profile">Implementing a metadata schema or profile</h2>
-<p>There are many ways in which a metadata schema or profile can be implemented. This section will describe the way in which metadata schemas are implemented on <a href="https://github.com/geonetwork/schema-plugins">https://github.com/geonetwork/schema-plugins</a> or <a href="https://github.com/metadata101">https://github.com/metadata101</a>.</p>
+<p>There are many ways in which a metadata schema or profile can be implemented. This section will describe the way in which metadata schemas are implemented on <a href="https://github.com/geonetwork/schema-plugins">geonetwork/schema-plugins</a> or <a href="https://github.com/metadata101">metadata101</a>.</p>
 <p>Each metadata schema is a Maven module implemented as a filesystem tree. The root of the tree is the name of the metadata schema in abbreviated form. The essential components of a metadata schema in the <code>src/main/plugin/&lt;schema_id&gt;</code> folder and are laid out as follows:</p>
 <ol>
 <li><strong>loc</strong> directory with subdirectories for each three letter language code that this information is localized into, with the content in XML files (labels.xml, codelists.xml). For example: <code>loc/eng/codelists.xml</code> describes the english codelists for metadata elements</li>
@@ -2695,13 +2695,13 @@
 <p>Schemas can also added to GeoNetwork dynamically if a zip archive of the schema directory is created and then uploaded to GeoNetwork in one of following ways using functions in the Administration menu:</p>
 <ol>
 <li>Server file path (specified using file chooser)</li>
-<li>HTTP URL (eg. <a href="http://somehost/somedirectory/iso19139.mcp.zip">http://somehost/somedirectory/iso19139.mcp.zip</a>)</li>
+<li>HTTP URL (e.g. <code>http://somehost/somedirectory/iso19139.mcp.zip</code>)</li>
 <li>As an online resource attached to an ISO19115/19139 metadata record</li>
 </ol>
 <p>Uploaded schemas are also stored in the <code>schema_plugins</code> sub directory of the GeoNetwork data directory.</p>
 <div class="admonition info">
 <p class="admonition-title">See Also</p>
-<p>A template module is available here <a href="https://github.com/geonetwork/schema-plugins/tree/develop/iso19139.xyz">https://github.com/geonetwork/schema-plugins/tree/develop/iso19139.xyz</a> and is a good example to start with.</p>
+<p>A template module is available at <a href="https://github.com/geonetwork/schema-plugins/tree/develop/iso19139.xyz">geonetwork/schema-plugins</a> and is a good example to start with.</p>
 </div>
 <h3 id="contents-of-a-geonetwork-schema">Contents of a GeoNetwork schema</h3>
 <p>When installed, a GeoNetwork schema is a directory.</p>
@@ -2737,7 +2737,7 @@
 </ul>
 <p>The following configuration files can be present:</p>
 <ul>
-<li><strong>oasis-catalog.xml</strong>: (<em>Optional</em>) An oasis catalog describing any mappings that should be used for this schema eg. mapping URLs to local copies such as schemaLocations eg. <a href="http://www.isotc211.org/2005/gmd/gmd.xsd">http://www.isotc211.org/2005/gmd/gmd.xsd</a> is mapped to <code>schema/gmd/gmd.xsd</code>. Path names used in the oasis catalog are relative to the location of this file which is the schema directory.</li>
+<li><strong>oasis-catalog.xml</strong>: (<em>Optional</em>) An oasis catalog describing any mappings that should be used for this schema, e.g. mapping URLs to local copies such as schemaLocations, e.g. <code>http://www.isotc211.org/2005/gmd/gmd.xsd</code> is mapped to <code>schema/gmd/gmd.xsd</code>. Path names used in the oasis catalog are relative to the location of this file which is the schema directory.</li>
 <li><strong>schema.xsd</strong>: (<em>Optional</em>) XML schema directory file that includes the XSDs used by this metadata schema. If the schema uses a DTD then this file should not be present. Metadata records from schemas that use DTDs cannot be edited in GeoNetwork.</li>
 <li><strong>schema-conversions.xml</strong>: (<em>Optional</em>) XML file that describes the converters that can be applied to records belonging to this schema. This information is used to show these conversions as options for the user to choose when a metadata record belonging to this schema is shown in the search results.</li>
 <li><strong>schema-ident.xml</strong>: (<em>Mandatory</em>) XML file that contains the schema name, identifier, version number and details on how to recognise metadata records that belong to this schema. This file has an XML schema definition in <code>INSTALL_DIR/web/geonetwork/xml/validation/schemaPlugins/schema-ident.xsd</code> which is used to validate it when the schema is loaded.</li>
@@ -2784,7 +2784,7 @@
 </ul>
 <h3 id="example-iso1911519139-marine-community-profile-mcp">Example - ISO19115/19139 Marine Community Profile (MCP)</h3>
 <p>The Marine Community Profile (MCP) is a profile of ISO19115/19139 developed for and with the Marine Community. The profile extends the ISO19115 metadata standard and is implemented using an extension of the XML implementation of ISO19115 described in ISO19139. Both the ISO19115 metadata standard and its XML implementation, ISO19139, are available through ISO distribution channels.</p>
-<p>The documentation for the Marine Community Profile can be found at <a href="http://www.aodc.gov.au/files/MarineCommunityProfilev1.4.pdf">http://www.aodc.gov.au/files/MarineCommunityProfilev1.4.pdf</a>. The implementation of the Marine Community Profile as XML schema definitions is based on the approach described at <a href="https://www.seegrid.csiro.au/wiki/AppSchemas/MetadataProfiles">https://www.seegrid.csiro.au/wiki/AppSchemas/MetadataProfiles</a>. The XML schema definitions (XSDs) are available at the URL <a href="http://bluenet3.antcrc.utas.edu.au/mcp-1.4">http://bluenet3.antcrc.utas.edu.au/mcp-1.4</a>.</p>
+<p>The documentation for the Marine Community Profile can be found in the <a href="http://www.aodc.gov.au/files/MarineCommunityProfilev1.4.pdf">Marine Community Profile document</a>. The implementation as XML schema definitions is based on the approach described at <a href="https://www.seegrid.csiro.au/wiki/AppSchemas/MetadataProfiles">AppSchemas/MetadataProfiles</a>. The XML schema definitions (XSDs) are available at <code>http://bluenet3.antcrc.utas.edu.au/mcp-1.4</code>.</p>
 <p>Looking at the XML schema definitions, the profile adds a few new elements to the base ISO19139 standard. So the basic idea in defining a plugin Marine Community Profile schema for GeoNetwork is to use as much of the basic ISO19139 schema definition supplied with GeoNetwork as possible.</p>
 <p>We'll now describe in basic steps how to create each of the components of a plugin schema for GeoNetwork that implements the MCP.</p>
 <h4 id="creating-the-schema-identxml-file">Creating the schema-ident.xml file</h4>
@@ -3030,7 +3030,7 @@
 <p>Each converter has the following attributes:</p>
 <ul>
 <li><strong>name</strong> - the name of the converter. This is the service name of the GeoNetwork (Jeeves) service and should be unique (prefixing the service name with <code>xml_&lt;schema_name&gt;</code> is a good way to make this name unique).</li>
-<li><strong>nsUri</strong> - the primary namespace of the schema produced by the converter. eg. xml_iso19139.mcpTorifcs transforms metadata records from iso19139.mcp to the RIFCS schema. Metadata records in the RIFCS metadata schema have primary namespace URI of <a href="http://ands.org.au/standards/rif-cs/registryObjects">http://ands.org.au/standards/rif-cs/registryObjects</a>.</li>
+<li><strong>nsUri</strong> - the primary namespace of the schema produced by the converter. e.g. xml_iso19139.mcpTorifcs transforms metadata records from iso19139.mcp to the RIFCS schema. Metadata records in the RIFCS metadata schema have primary namespace URI of <code>http://ands.org.au/standards/rif-cs/registryObjects</code>.</li>
 <li><strong>schemaLocation</strong> - the location (URL) of the XML schema definition (XSD) corresponding to the nsURI.</li>
 <li><strong>xslt</strong> - the name of the XSLT that actually carries out the transformation. This XSLT should be located in the convert subdirectory of the schema plugin.</li>
 </ul>
@@ -3040,8 +3040,8 @@
 <h4 id="schema_and_schema_xsd">Creating the schema directory and schema.xsd file</h4>
 <p>The schema and schema.xsd components are used by the GeoNetwork editor and validation functions.</p>
 <p>GeoNetwork's editor uses the XSDs to build a form that will not only order the elements in a metadata document correctly but also offer options to create any elements that are not in the metadata document. The idea behind this approach is twofold. Firstly, the editor can use the XML schema definition rules to help the user avoid creating a document that is structurally incorrect eg. missing mandatory elements or elements not ordered correctly. Secondly, the same editor code can be used on any XML metadata document with a defined XSD.</p>
-<p>If you are defining your own metadata schema then you can create an XML schema document using the XSD language. The elements of the language can be found online at <a href="http://www.w3schools.com/schema/">http://www.w3schools.com/schema/</a> or you can refer to a textbook such as Priscilla Walmsley's Definitive XML Schema (Prentice Hall, 2002). GeoNetwork's XML schema parsing code understands almost all of the XSD language with the exception of redefine, any and anyAttribute (although the last two can be handled under special circumstances).</p>
-<p>In the case of the Marine Commuity Profile, we are basically defining a number of extensions to the base standard ISO19115/19139. These extensions are defined using the XSD extension mechanism on the types defined in ISO19139. The following snippet shows how the Marine Community Profile extends the gmd:MD_Metadata element to add a new element called revisionDate:</p>
+<p>If you are defining your own metadata schema then you can create an XML schema document using the XSD language. The elements of the language can be found online at <a href="http://www.w3schools.com/schema/">w3schools.com/schema</a> or you can refer to a textbook such as Priscilla Walmsley's Definitive XML Schema (Prentice Hall, 2002). GeoNetwork's XML schema parsing code understands almost all of the XSD language with the exception of redefine, any and anyAttribute (although the last two can be handled under special circumstances).</p>
+<p>In the case of the Marine Community Profile, we are basically defining a number of extensions to the base standard ISO19115/19139. These extensions are defined using the XSD extension mechanism on the types defined in ISO19139. The following snippet shows how the Marine Community Profile extends the gmd:MD_Metadata element to add a new element called revisionDate:</p>
 <div class="language-xml highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="nt">&lt;xs:schema</span><span class="w"> </span><span class="na">targetNamespace=</span><span class="s">&quot;http://bluenet3.antcrc.utas.edu.au/mcp&quot;</span>
 </span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a><span class="w">           </span><span class="na">xmlns:mcp=</span><span class="s">&quot;http://bluenet3.antcrc.utas.edu.au/mcp&quot;</span><span class="nt">&gt;</span>
 </span><span id="__span-17-3"><a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>
@@ -3160,7 +3160,7 @@ schema-conversions.xml  schema-ident.xml  schema.xsd  schema
 </ul>
 <p>Note that because the MCP is a profile of ISO19115/19139 and we have followed the GeoNetwork naming convention for profiles, we need only include the labels and codelists that are specific to the MCP or that we want to override. Other labels and codelists will be retrieved from the base schema iso19139.</p>
 <h4 id="more-on-codelistsxml">More on codelists.xml</h4>
-<p>Typically codelists are generated from enumerated lists in the metadata schema XSDs such as the following from <a href="http://www.isotc211.org/2005/gmd/identification.xsd">http://www.isotc211.org/2005/gmd/identification.xsd</a> for gmd:MD_TopicCategoryCode in the iso19139 schema:</p>
+<p>Typically codelists are generated from enumerated lists in the metadata schema XSDs such as the following from <code>http://www.isotc211.org/2005/gmd/identification.xsd</code> for gmd:MD_TopicCategoryCode in the iso19139 schema:</p>
 <div class="language-xml highlight"><pre><span></span><code><span id="__span-23-1"><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a><span class="nt">&lt;xs:element</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;MD_TopicCategoryCode&quot;</span><span class="w"> </span><span class="na">type=</span><span class="s">&quot;gmd:MD_TopicCategoryCode_Type&quot;</span><span class="nt">/&gt;</span>
 </span><span id="__span-23-2"><a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>
 </span><span id="__span-23-3"><a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a><span class="nt">&lt;xs:simpleType</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;MD_TopicCategoryCode_Type&quot;</span><span class="nt">&gt;</span>
@@ -3218,7 +3218,7 @@ schema-conversions.xml  schema-ident.xml  schema.xsd  schema
 <p>The codelists.xml file maps the enumerated values from the XSD to a localized label and a description via the code element.</p>
 <p>A localized copy of codelists.xml is made available on an XPath to the presentation XSLTs eg. /root/gui/schemas/iso19139/codelist for the iso19139 schema.</p>
 <p>The XSLT metadata.xsl which contains templates used by all metadata schema presentation XSLTs, handles the creation of a select list/drop down menu in the editor and display of the code and description in the metadata viewer.</p>
-<p>The iso19139 schema has additional codelists that are managed external to the XSDs in catalog/vocabulary files such as <a href="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml">http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml</a> These have also been added to the codelists.xml file so that they can be localized, overridden in profiles and include an extended description to provide more useful information when viewing the metadata record.</p>
+<p>The iso19139 schema has additional codelists that are managed external to the XSDs in catalog/vocabulary files such as <code>http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml</code>. These have also been added to the codelists.xml file so that they can be localized, overridden in profiles and include an extended description to provide more useful information when viewing the metadata record.</p>
 <p>To use the ISO19139 codelist in a profile you can add a template to point to the codelist to use:</p>
 <div class="language-xml highlight"><pre><span></span><code><span id="__span-25-1"><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a><span class="nt">&lt;xsl:template</span><span class="w"> </span><span class="na">mode=</span><span class="s">&quot;mode-iso19139.xyz&quot;</span><span class="w"> </span><span class="na">match=</span><span class="s">&quot;*[*/@codeList]&quot;</span><span class="nt">&gt;</span>
 </span><span id="__span-25-2"><a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a><span class="w">  </span><span class="nt">&lt;xsl:param</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;schema&quot;</span><span class="w"> </span><span class="na">select=</span><span class="s">&quot;$schema&quot;</span><span class="w"> </span><span class="na">required=</span><span class="s">&quot;no&quot;</span><span class="nt">/&gt;</span>
@@ -3615,7 +3615,7 @@ schema
 <p><img alt="" src="../img/kb-index-pattern.png" /></p>
 <p>Select <code>gn-records</code> to retrieve the list of fields:</p>
 <p><img alt="" src="../img/kb-index-fields.png" /></p>
-<p>If Elasticsearch instance is accessible, user can get the details about a record using <a href="http://localhost:9200/gn-records/_doc/7c7923b1-c387-49ac-b6c7-391ca187b7fa">http://localhost:9200/gn-records/_doc/7c7923b1-c387-49ac-b6c7-391ca187b7fa</a> (<code>Kibana --&gt; dev tools</code> can also be used to get the document details):</p>
+<p>If the Elasticsearch instance is accessible, users can get the details about a record using <code>http://localhost:9200/gn-records/_doc/7c7923b1-c387-49ac-b6c7-391ca187b7fa</code> (Kibana <strong>Dev Tools</strong> can also be used to get the document details):</p>
 <p><img alt="" src="../img/es-get-doc.png" /></p>
 <p>For example, here is the mapping created between the metadata element mcp:revisionDate and the index field changeDate:</p>
 <div class="language-xml highlight"><pre><span></span><code><span id="__span-42-1"><a id="__codelineno-42-1" name="__codelineno-42-1" href="#__codelineno-42-1"></a><span class="nt">&lt;xsl:for-each</span><span class="w"> </span><span class="na">select=</span><span class="s">&quot;mcp:revisionDate/*&quot;</span><span class="nt">&gt;</span>

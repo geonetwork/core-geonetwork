@@ -1452,7 +1452,7 @@
 </ol>
 <p>In the paragraphs below, some terms should be intended as follows:</p>
 <ol>
-<li>the term actor is used to indicate any system (application, service etc...) that operates on metadata.</li>
+<li>the term actor is used to indicate any system (application, service etc.) that operates on metadata.</li>
 <li>the term reader will be used to indicate any actor that can import metadata from a MEF file.</li>
 <li>the term writer will be used to indicate any actor that can generate a MEF file.</li>
 </ol>
@@ -1471,7 +1471,7 @@
 <li><em>metadata.xml</em>: this file contains the metadata itself, in XML format. The text encoding of the metadata (eg. UTF-8) is specified in the XML declaration.</li>
 <li><em>info.xml</em>: this is a special XML file which contains information related to the metadata (metadata about the metadata). Examples of the information in the info.xml file are: creation date, modification date, privileges This information is needed by GeoNetwork.</li>
 <li><em>public</em>: this is a directory used to store the metadata thumbnails and other public files. There are no restrictions on the image format but it is strongly recommended to use the portable network graphics (PNG), JPEG or GIF format.</li>
-<li><em>private</em>: this is a directory used to store all data (maps, shape files etc...) uploaded with the metadata in the GeoNetwork editor. Files in this directory are <em>private</em> in the sense that authorisation is required to access them. There are no restrictions on the file types that can be stored into this directory.</li>
+<li><em>private</em>: this is a directory used to store all data (maps, shape files etc.) uploaded with the metadata in the GeoNetwork editor. Files in this directory are <em>private</em> in the sense that authorisation is required to access them. There are no restrictions on the file types that can be stored into this directory.</li>
 </ol>
 <p>Any other file or directory present in the MEF file should be ignored by readers that don't recognise them. This allows actors to add custom extensions to the MEF file.</p>
 <p>A MEF file can have empty public and private folders depending upon the export format, which can be:</p>
@@ -1482,12 +1482,12 @@
 </ul>
 <p>It is recommended to use the .mef extension when naming MEF files.</p>
 <h2 id="mef-v2-file-format">MEF v2 file format</h2>
-<p>MEF version 2 support the following:</p>
+<p>MEF version 2 supports the following:</p>
 <ul>
 <li>multi-metadata support: more than one metadata record and data can be stored in a single MEF file.</li>
 <li>multi-schema support: be able to store in a single MEF n formats (eg. for an ISO profile, also store a version of that record in the base ISO19115/ISO19139 schema).</li>
 </ul>
-<p>Current export services that create MEF files from a metadata record with related records (eg. paent, feature catalog etc), can include these related metadata records in the MEF.</p>
+<p>Current export services that create MEF files from a metadata record with related records (e.g. parent, feature catalog, etc.) can include these related metadata records in the MEF.</p>
 <p>MEF v2 format structure is the following:</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Root
 </span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>  |
@@ -1537,7 +1537,7 @@
 </ol>
 <p>Any other element or attribute should be ignored by readers that don't understand them. This allows actors to add custom attributes or subtrees to the XML.</p>
 <h3 id="info_xml">Date format</h3>
-<p>Unless differently specified, all dates in this file must be in the ISO/8601 format. The pattern must be <code>YYYY-MM-DDTHH:mm:SS</code> and the timezone should be the local one.</p>
+<p>Unless otherwise specified, all dates in this file must be in the ISO 8601 format. The pattern must be <code>YYYY-MM-DDTHH:mm:SS</code> and the timezone should be the local one.</p>
 <p>Example of info file:</p>
 <div class="language-xml highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nt">&lt;info</span><span class="w"> </span><span class="na">version=</span><span class="s">&quot;1.0&quot;</span><span class="nt">&gt;</span>
 </span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">    </span><span class="nt">&lt;general&gt;</span>

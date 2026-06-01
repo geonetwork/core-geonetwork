@@ -1955,7 +1955,7 @@
 
 <h1 id="analyzing_data">Analyze and visualize data</h1>
 <h2 id="data-accessible-using-download-services-wfs">Data accessible using download services (WFS)</h2>
-<p>All datasets described in metadata records and accessible through a download services (ie WFS) can be analyzed to improve search and data visualization. The catalog collect WFS features and index them.</p>
+<p>All datasets described in metadata records and accessible through a download service (i.e. WFS) can be analyzed to improve search and data visualization. The catalog collect WFS features and index them.</p>
 <p><img alt="" src="../img/mechanism.png" /></p>
 <p>Elasticsearch needs to be installed and configured (See <a href="../../../install-guide/installing-index/">Installing search platform</a>).</p>
 <p>Once collected, filtering is available in the map viewer for this layer. The filter interface provides faceting and export capabilities. The map viewer tries to connect to a WFS service by substituting WMS by WFS in the service URL. If a WFS service is responding with a feature type having the same name as the WMS, the filter panel provides the option to index the features. User needs to be identified to run the indexing task.</p>
@@ -1974,7 +1974,7 @@
 <p>Spatial filters can also be applied.</p>
 <p><img alt="" src="../img/filteringlayer.png" /></p>
 <h2 id="feature-type-customization">Feature type customization</h2>
-<p>By default, the filter panel is generated from Elasticsearch index. But you customise it for a specific WFS Feature Type.</p>
+<p>By default, the filter panel is generated from the Elasticsearch index. But you can customise it for a specific WFS Feature Type.</p>
 <p>The customisation is done by a JSON config inserted in the gmd:applicationProfile section of the online resource in the metadata.</p>
 <p>Here the options:</p>
 <div class="language-json highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="p">{</span>

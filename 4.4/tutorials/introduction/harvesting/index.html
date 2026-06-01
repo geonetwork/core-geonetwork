@@ -1903,10 +1903,10 @@
 
 
 <h1 id="tuto-introduction-harvesting">Harvesting</h1>
-<p>The quickest way to add relevant data to your catalog is by harvesting. This means, copying data from other catalos in your own catalog. There are many protocols that can be used for harvesting.</p>
+<p>The quickest way to add relevant data to your catalog is by harvesting. This means copying data from other catalogs into your own catalog. There are many protocols that can be used for harvesting.</p>
 <h2 id="geonetwork">GeoNetwork</h2>
-<p>GeoNetwork can harvest from other GeoNetwork catalogs. For this tutorial, we are going to use this catalog: <a href="http://ide.siia.gov.ar/geonetwork">http://ide.siia.gov.ar/geonetwork</a></p>
-<p>To add a new harvester, we have to enter the administration console: <a href="http://localhost:8080/geonetwork/srv/eng/admin.console#/harvest">http://localhost:8080/geonetwork/srv/eng/admin.console#/harvest</a></p>
+<p>GeoNetwork can harvest from other GeoNetwork catalogs. For this tutorial, we are going to use this catalog: <code>http://ide.siia.gov.ar/geonetwork</code></p>
+<p>To add a new harvester, we have to enter the administration console: <code>http://localhost:8080/geonetwork/srv/eng/admin.console#/harvest</code></p>
 <p><img alt="image" src="img/harvest1.png" /></p>
 <p>We select the <strong>GeoNetwork</strong> option on the <em>Harvest from</em> dropdown. This will open a harvester editor at the right. We enter a <em>Node name</em> and the <em>Catalog URL</em> and we can already save it.</p>
 <p>All harvesters can be run manually at will with the <em>Harvest</em> button. This means, it will run just once every time an authorized user runs it.</p>
@@ -1914,7 +1914,7 @@
 <p><img alt="image" src="img/harvester2.png" /></p>
 <h2 id="csw">CSW</h2>
 <p>GeoNetwork can also harvest from CSW catalogs. The process is quite similar, but instead of choosing the GeoNetwork type of harvester, we chose the <strong>OGC CSW 2.0.2</strong> harvester type.</p>
-<p>For this tutorial, we are going to use the following catalog: <a href="http://nationaalgeoregister.nl/geonetwork/srv/eng/csw">http://nationaalgeoregister.nl/geonetwork/srv/eng/csw</a></p>
+<p>For this tutorial, we are going to use the following catalog: <code>http://nationaalgeoregister.nl/geonetwork/srv/eng/csw</code></p>
 <p>While the harvester is running, there will be an animated circle. Once the harvester has finished, the number of records harvested will be shown.</p>
 <p><img alt="image" src="img/harvester1.png" /></p>
 <p>See more on <a href="../../../user-guide/harvesting/">Harvesting</a>.</p>

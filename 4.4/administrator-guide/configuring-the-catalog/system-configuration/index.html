@@ -3260,7 +3260,7 @@
 </ul>
 <h2 id="system-config-server">Catalog Server</h2>
 <ul>
-<li><strong>Host</strong> The node's name or IP number (without <a href="http://">http://</a>). For example, they are used during metadata editing to create resource links and when returning the server's capabilities during a CSW request.<ul>
+<li><strong>Host</strong> The node's name or IP number (without <code>http://</code>). For example, they are used during metadata editing to create resource links and when returning the server's capabilities during a CSW request.<ul>
 <li>If your node is publicly accessible from the Internet, you have to use the domain name.</li>
 <li>If your node is hidden inside your private network and you have a firewall or web server that redirects incoming requests to the node, you have to enter the public address of the firewall or web server. A typical configuration is to have an Apache web server on address A that is publicly accessible and redirects the requests to a Tomcat server on a private address B. In this case you have to enter A in the host parameter.</li>
 </ul>
@@ -3309,7 +3309,7 @@
 <p>Additional settings are available to respect user language preference:</p>
 <ul>
 <li>
-<p><strong>Language for system generated emails</strong> The ui language will be used when sending notification emails by default. To To override this behaviour and generate a multi-lingual notification email list the langauges to be used.</p>
+<p><strong>Language for system generated emails</strong> The UI language will be used when sending notification emails by default. To override this behaviour and generate a multi-lingual notification email, list the languages to be used.</p>
 </li>
 <li>
 <p><strong>Translation follows text</strong> Provide an introduction phrase indicating a multi-lingual notification follows.</p>
@@ -3373,7 +3373,7 @@ that can request an account. If not configured any email address is allowed.</p>
 <h2 id="metadata-update">Metadata update</h2>
 <p>For each metadata schema, the catalog has an XSL transformation (<code>update-fixed-info.xsl</code>) that it can apply to a metadata record belonging to that schema. The aim of this transformation is to allow fixed schema, site and catalog information to be applied to a metadata record every time the metadata record is saved in the editor. As an example, this transformation is used to build and store the URL of any files uploaded and stored with the metadata record in the editor.</p>
 <ul>
-<li><strong>Automatic Fixes</strong>: Enabled by default. It is recommended you do not use the metadata editor when auto-fixing is disabled. See <a href="http://trac.osgeo.org/geonetwork/ticket/368">http://trac.osgeo.org/geonetwork/ticket/368</a> for more details.</li>
+<li><strong>Automatic Fixes</strong>: Enabled by default. It is recommended you do not use the metadata editor when auto-fixing is disabled. See <a href="http://trac.osgeo.org/geonetwork/ticket/368">ticket #368</a> for more details.</li>
 </ul>
 <h2 id="search_stats_config">Search Statistics</h2>
 <p>Enables/disables search statistics capture. Search statistics are stored in the database and can be queried using the <code>Search Statistics</code> page.</p>
