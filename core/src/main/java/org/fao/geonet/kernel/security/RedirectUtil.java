@@ -57,7 +57,7 @@ public final class RedirectUtil {
      */
     public static void sendSafeRedirect(HttpServletRequest request, HttpServletResponse response, String redirectUrl)
         throws IOException {
-        if (isSafeRedirect(redirectUrl)) {
+        if (isRelativeRedirect(redirectUrl)) {
             response.sendRedirect(redirectUrl);
         } else {
             if (StringUtils.isNotEmpty(redirectUrl)) {
@@ -81,9 +81,9 @@ public final class RedirectUtil {
      * </ul>
      *
      * @param redirectUrl the candidate redirect location (may be {@code null}).
-     * @return {@code true} if the location is safe to redirect to.
+     * @return {@code true} if the location is a safe, server-local relative path.
      */
-    public static boolean isSafeRedirect(String redirectUrl) {
+    public static boolean isRelativeRedirect(String redirectUrl) {
         if (StringUtils.isEmpty(redirectUrl)) {
             return false;
         }
@@ -113,7 +113,7 @@ public final class RedirectUtil {
     }
 
     /**
-     * Like {@link #isSafeRedirect(String)} but, in addition to server-local
+     * Like {@link #isRelativeRedirect(String)} but, in addition to server-local
      * relative locations, also accepts absolute URLs that point back to the
      * current site (matching host, protocol and port).
      *
@@ -128,7 +128,7 @@ public final class RedirectUtil {
      * @return {@code true} if the location is safe to redirect to.
      */
     public static boolean isSafeRedirect(String redirectUrl, String siteHost, String siteProtocol, Integer sitePort) {
-        if (isSafeRedirect(redirectUrl)) {
+        if (isRelativeRedirect(redirectUrl)) {
             return true;
         }
 
