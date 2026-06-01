@@ -2,11 +2,11 @@
 
 ## Objectives
 
--   oversee groovy formatter mechnism
+-   oversee groovy formatter mechanism
 -   understand handlers, matchers concepts
 -   create a small formatter
 
-## Exercices
+## Exercises
 
 1.  Add a new formatter that display all text information of the metadata in basic layout.
 2.  Update previous formatter to display labels of the text fields.
@@ -25,7 +25,7 @@ Go to <https://github.com/fgravin/core-geonetwork/commits/foss4g>
 
 1.  Create a new formatter
 
-    -   create a new folder named 'foss4g" in /schemas/iso19139/src/main/plugin/iso19139/formatter
+    -   create a new folder named `foss4g` in `/schemas/iso19139/src/main/plugin/iso19139/formatter`
 
     -   create a new groovy file in this new folder
 
@@ -105,7 +105,7 @@ Go to <https://github.com/fgravin/core-geonetwork/commits/foss4g>
         }
         ```
 
-5.  Use `fmt-repeat-only-children` in template and `prent()` function.
+5.  Use `fmt-repeat-only-children` in template and `parent()` function.
 
     -   view.groovy
 

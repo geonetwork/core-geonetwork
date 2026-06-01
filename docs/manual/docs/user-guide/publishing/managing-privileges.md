@@ -4,7 +4,7 @@ To manage privileges to your metadata record and any attached data, you will nee
 
 For example, you can specify that the metadata and related services are visible to all (Internet users) or just to internal users only (Intranet). Privileges are assigned on a per group basis. Depending on the user profile (Guest, Registered User, Editor, Admin etc.) access to these functions may differ on a per user basis.
 
-!!! Note
+!!! note
 
     The privileges panel uses colour coding to identify different group types:
 

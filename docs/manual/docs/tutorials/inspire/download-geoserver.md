@@ -38,7 +38,7 @@ Create an OGC harvester that is able to extract a metadata for service (iso19119
 
 For each layer add a metadata url to the layer configuration of type application/vnd.ogc.csw.GetRecordByIdResponse_xml.
 
-On the WFS-settings --> INSPIRE workspace add the link to the service metadata. In contradiction to WMS does WFS not link from a featuretype (layer) to metadata, instead the links to dataset metadata have to be added as part of the extende INSPIRE capabilities.
+On the WFS-settings --> INSPIRE workspace add the link to the service metadata. Unlike WMS, WFS does not link from a feature type (layer) to metadata; instead, the links to dataset metadata have to be added as part of the extended INSPIRE capabilities.
 
 ## Validate the implementation
 

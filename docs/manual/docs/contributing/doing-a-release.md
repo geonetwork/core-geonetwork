@@ -60,7 +60,7 @@
    ./release-notes
    ```
    
-   After the script runs it will produces:
+   After the script runs, it will produce:
    
    * ``docs/changes/changes4.4.4-0.txt``
      
@@ -212,8 +212,8 @@
    
    The changelog [provides an overview of new functionality and features](https://sourceforge.net/projects/geonetwork/files/GeoNetwork_opensource/v4.2.12/).
    
-   Thanks and congratulations to the all community members.
-   
+   Thanks and congratulations to all community members.
+
    If you have any questions about this release please reply to this topic.
    ```
 
@@ -228,7 +228,7 @@ The following script can be used on Linux and Mac. For this a running build envi
 with the following utilities: ***sed***, ***xmlstarlet*** and ***sftp***.
 
 
-1.  Prepare the release (examples prepairs version 4.4.1 as latest release):
+1.  Prepare the release (this example prepares version 4.4.1 as the latest release):
 
     ``` shell
     # Setup properties
@@ -334,7 +334,7 @@ with the following utilities: ***sed***, ***xmlstarlet*** and ***sftp***.
 
     cat <<EOF > docs/manual/docs/overview/change-log/version-$version.md
     
-    and more \... see [$version issues](https://github.com/geonetwork/core-geonetwork/issues?q=is%3Aissue+milestone%3A$version+is%3Aclosed) and [pull requests](https://github.com/geonetwork/core-geonetwork/pulls?page=3&q=is%3Apr+milestone%3A$version+is%3Aclosed) for full details.
+    and more... see [$version issues](https://github.com/geonetwork/core-geonetwork/issues?q=is%3Aissue+milestone%3A$version+is%3Aclosed) and [pull requests](https://github.com/geonetwork/core-geonetwork/pulls?page=3&q=is%3Apr+milestone%3A$version+is%3Aclosed) for full details.
     EOF
     ```
     
@@ -355,7 +355,7 @@ with the following utilities: ***sed***, ***xmlstarlet*** and ***sftp***.
     ```
     Once running check the new page:
     ```
-    open http://localhost:8000/ocverview/change-log/$newversion
+    open http://localhost:8000/overview/change-log/$newversion
     ```
 
 5.  Commit & tag the new version
@@ -472,27 +472,27 @@ with the following utilities: ***sed***, ***xmlstarlet*** and ***sftp***.
     bye
     ```
 
-11.  Close the milestone on github <https://github.com/geonetwork/core-geonetwork/milestones?state=closed> with link to sourceforge download.
+11.  [Close the milestone on GitHub](https://github.com/geonetwork/core-geonetwork/milestones?state=closed) with a link to the SourceForge download.
 
-    Publish the release on github <https://github.com/geonetwork/core-geonetwork/releases> .
+    [Publish the release on GitHub](https://github.com/geonetwork/core-geonetwork/releases).
 
-    Update the website links <https://github.com/geonetwork/website> .
+    Update the [website repository](https://github.com/geonetwork/website):
 
-    -   Add the changes file for the release to <https://github.com/geonetwork/doc/tree/develop/source/overview/change-log>
-    -   List the previous file in <https://github.com/geonetwork/doc/blob/develop/source/overview/change-log/index.rst>
-    -   Update the version: <https://github.com/geonetwork/website/blob/master/docsrc/conf.py>
-    -   Update the download link: <https://github.com/geonetwork/website/blob/master/docsrc/downloads.rst>
-    -   Add the section for the new release: <https://github.com/geonetwork/website/blob/master/docsrc/news.rst>
+    -   Add the changes file for the release to [geonetwork/doc change-log](https://github.com/geonetwork/doc/tree/develop/source/overview/change-log)
+    -   List the previous file in [change-log/index.rst](https://github.com/geonetwork/doc/blob/develop/source/overview/change-log/index.rst)
+    -   Update the version in [docsrc/conf.py](https://github.com/geonetwork/website/blob/master/docsrc/conf.py)
+    -   Update the download link in [docsrc/downloads.rst](https://github.com/geonetwork/website/blob/master/docsrc/downloads.rst)
+    -   Add the section for the new release in [docsrc/news.rst](https://github.com/geonetwork/website/blob/master/docsrc/news.rst)
 
     Send an email to the mailing lists.
 
 10. Merge in depending branches
 
-    If a major version, then master version has to be updated to the next one (eg. if 3.8.0, then 3.7.x is 3.9.x).
+    If a major version, then the main branch version has to be updated to the next one (e.g. if 3.8.0, then 3.7.x becomes 3.9.x).
 
     ``` shell
     # Create it if it does not exist yet
-    git checkout master
+    git checkout main
     ./update-version.sh $currentversion $nextMajorVersion
     ```
     
@@ -509,5 +509,5 @@ with the following utilities: ***sed***, ***xmlstarlet*** and ***sftp***.
     ``` shell
     git add .
     git commit -m "Update version to $nextMajorVersion"
-    git push origin master
+    git push origin main
     ```
