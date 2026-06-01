@@ -224,15 +224,15 @@ with the following utilities: ***sed***, ***xmlstarlet*** and ***sftp***.
     -   If using Linux:
 
         ``` shell
-        cd web/target && md5sum geonetwork.war > geonetwork.war.md5 && cd ../..
-        cd release/target/GeoNetwork-$version && md5sum geonetwork-bundle-$newversion.zip >  geonetwork-bundle-$newversion.zip.md5 && cd ../../..
+        cd web/target && sha256sum geonetwork.war > geonetwork.war.sha256 && cd ../..
+        cd release/target/GeoNetwork-$version && sha256sum geonetwork-bundle-$newversion.zip >  geonetwork-bundle-$newversion.zip.sha256 && cd ../../..
         ```
 
     -   If using Mac OS X:
 
         ``` shell
-        md5 -r web/target/geonetwork.war > web/target/geonetwork.war.md5
-        md5 -r release/target/GeoNetwork-$version/geonetwork-bundle-$newversion.zip > release/target/GeoNetwork-$version/geonetwork-bundle-$newversion.zip.md5
+        shasum -a 256 web/target/geonetwork.war > web/target/geonetwork.war.sha256
+        shasum -a 256 release/target/GeoNetwork-$version/geonetwork-bundle-$newversion.zip > release/target/GeoNetwork-$version/geonetwork-bundle-$newversion.zip.sha256
         ```
 
     On sourceforge first:
