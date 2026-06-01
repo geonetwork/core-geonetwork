@@ -26,6 +26,7 @@ package org.fao.geonet.kernel.harvest.harvester.geonet.v4.client;
 import javax.annotation.Nullable;
 import com.fasterxml.jackson.core.Version;
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.google.common.base.Function;
@@ -99,6 +100,7 @@ public class GeoNetwork4ApiClient {
         String sourcesJson = retrieveUrl(addUrlSlash(serverUrl) + "api/sources", user, password);
 
         ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         List<Source> sourceList
             = objectMapper.readValue(sourcesJson, new TypeReference<List<Source>>() { });
 
@@ -122,6 +124,7 @@ public class GeoNetwork4ApiClient {
         String groupsJson = retrieveUrl(addUrlSlash(serverUrl) + "api/groups", user, password);
 
         ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         return objectMapper.readValue(groupsJson, new TypeReference<List<Group>>() { });
     }
 
