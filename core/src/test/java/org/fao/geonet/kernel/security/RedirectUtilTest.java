@@ -41,40 +41,40 @@ public class RedirectUtilTest {
 
     @Test
     public void serverLocalPathsAreSafe() {
-        assertTrue(RedirectUtil.isSafeRedirect("/geonetwork"));
-        assertTrue(RedirectUtil.isSafeRedirect("/geonetwork/srv/eng/catalog.search"));
-        assertTrue(RedirectUtil.isSafeRedirect("/geonetwork/srv/eng/catalog.search#/home"));
-        assertTrue(RedirectUtil.isSafeRedirect("/geonetwork/srv/eng/catalog.search?a=b&c=d"));
+        assertTrue(RedirectUtil.isRelativeRedirect("/geonetwork"));
+        assertTrue(RedirectUtil.isRelativeRedirect("/geonetwork/srv/eng/catalog.search"));
+        assertTrue(RedirectUtil.isRelativeRedirect("/geonetwork/srv/eng/catalog.search#/home"));
+        assertTrue(RedirectUtil.isRelativeRedirect("/geonetwork/srv/eng/catalog.search?a=b&c=d"));
     }
 
     @Test
     public void emptyOrNullIsNotSafe() {
-        assertFalse(RedirectUtil.isSafeRedirect(null));
-        assertFalse(RedirectUtil.isSafeRedirect(""));
+        assertFalse(RedirectUtil.isRelativeRedirect(null));
+        assertFalse(RedirectUtil.isRelativeRedirect(""));
     }
 
     @Test
     public void absoluteUrlsAreNotSafe() {
-        assertFalse(RedirectUtil.isSafeRedirect("http://evil.example.com"));
-        assertFalse(RedirectUtil.isSafeRedirect("https://evil.example.com/path"));
-        assertFalse(RedirectUtil.isSafeRedirect("javascript:alert(1)"));
+        assertFalse(RedirectUtil.isRelativeRedirect("http://evil.example.com"));
+        assertFalse(RedirectUtil.isRelativeRedirect("https://evil.example.com/path"));
+        assertFalse(RedirectUtil.isRelativeRedirect("javascript:alert(1)"));
     }
 
     @Test
     public void protocolRelativeUrlsAreNotSafe() {
         // No scheme, so URI.isAbsolute() returns false, but the browser still
         // resolves these to an external host.
-        assertFalse(RedirectUtil.isSafeRedirect("//evil.example.com"));
-        assertFalse(RedirectUtil.isSafeRedirect("//evil.example.com/path"));
-        assertFalse(RedirectUtil.isSafeRedirect("/\\evil.example.com"));
-        assertFalse(RedirectUtil.isSafeRedirect("\\\\evil.example.com"));
-        assertFalse(RedirectUtil.isSafeRedirect("\\/evil.example.com"));
+        assertFalse(RedirectUtil.isRelativeRedirect("//evil.example.com"));
+        assertFalse(RedirectUtil.isRelativeRedirect("//evil.example.com/path"));
+        assertFalse(RedirectUtil.isRelativeRedirect("/\\evil.example.com"));
+        assertFalse(RedirectUtil.isRelativeRedirect("\\\\evil.example.com"));
+        assertFalse(RedirectUtil.isRelativeRedirect("\\/evil.example.com"));
     }
 
     @Test
     public void pathsNotAnchoredToHostAreNotSafe() {
-        assertFalse(RedirectUtil.isSafeRedirect("evil.example.com"));
-        assertFalse(RedirectUtil.isSafeRedirect("catalog.search"));
+        assertFalse(RedirectUtil.isRelativeRedirect("evil.example.com"));
+        assertFalse(RedirectUtil.isRelativeRedirect("catalog.search"));
     }
 
     @Test
