@@ -33,6 +33,7 @@
     "applySuggestion": "Aplicar sugerencia",
     "assignToCatalog": "Asignar al catálogo actual",
     "assignToCategory": "Asignar a categoría",
+    "assignToCategory-help": "This value is not used when importing metadata in MEF (ZIP) format, as the value defined in the ZIP file is used instead.",
     "assignToGroup": "Asignar a grupo",
     "associationType": "Tipo de asociación",
     "chooseContactRole": "Elegir rol de contacto",

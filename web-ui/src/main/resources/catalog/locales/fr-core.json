@@ -373,6 +373,8 @@
     "createChild": "Créer un enfant",
     "privileges": "Privilèges",
     "whoCanAccess": "Qui à accès ?",
+    "reservedGroup": "Reserved Group",
+    "recordPrivilegeGroup": "Record Privilege Group",
     "actions": "Actions",
     "reset": "Réinitialiser",
     "stop": "Arrêter",
@@ -617,6 +619,6 @@
     "metadataDeletedWithNoErrors": "Fiches supprimées avec succès",
     "typeToConfirm": "Saisissez le mot de confirmation.",
     "metadataDeleteConfirmActionWordLabel": "Saisissez <strong>DELETE</strong> pour confirmer la suppression des fiches. L'action sera effectuée immédiatement.",
-    "anonymousAccessCreatedError": "Error occurred while creating anonymous access: {{errorDescription}}",
-    "anonymousAccessCreatedWarning": "Make sure to copy the anonymous access link. You won't be able to see it again!"
+    "anonymousAccessCreatedError": "Une erreur s'est produite lors de la création de l'accès anonyme : {{errorDescription}}",
+    "anonymousAccessCreatedWarning": "Veillez à copier le lien d'accès anonyme. Vous ne pourrez plus le consulter par la suite !"
 }

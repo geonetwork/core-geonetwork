@@ -373,6 +373,8 @@
     "createChild": "자식 생성",
     "privileges": "권한",
     "whoCanAccess": "접근권한을 가진",
+    "reservedGroup": "Reserved Group",
+    "recordPrivilegeGroup": "Record Privilege Group",
     "actions": "활동",
     "reset": "재설정",
     "stop": "정지",

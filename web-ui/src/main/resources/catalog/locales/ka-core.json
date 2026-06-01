@@ -373,6 +373,8 @@
     "createChild": "შექმენით ბავშვი",
     "privileges": "პრივილეგიები",
     "whoCanAccess": "ვისაც აქვს წვდომა",
+    "reservedGroup": "Reserved Group",
+    "recordPrivilegeGroup": "Record Privilege Group",
     "actions": "მოქმედებები",
     "reset": "გადატვირთვა",
     "stop": "გაჩერდი",

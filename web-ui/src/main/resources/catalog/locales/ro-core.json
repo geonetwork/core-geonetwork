@@ -373,6 +373,8 @@
     "createChild": "Creați un copil",
     "privileges": "Privilegii",
     "whoCanAccess": "Cine are acces",
+    "reservedGroup": "Reserved Group",
+    "recordPrivilegeGroup": "Record Privilege Group",
     "actions": "Acțiuni",
     "reset": "Resetați",
     "stop": "Stop",

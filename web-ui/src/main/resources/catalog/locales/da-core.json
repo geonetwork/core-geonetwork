@@ -373,6 +373,8 @@
     "createChild": "Opret et child",
     "privileges": "privilegier",
     "whoCanAccess": "Hvem har adgang",
+    "reservedGroup": "Reserveret gruppe",
+    "recordPrivilegeGroup": "Postens rettighedsgruppe",
     "actions": "Handlinger",
     "reset": "Nulstille",
     "stop": "Stop",
@@ -617,6 +619,6 @@
     "metadataDeletedWithNoErrors": "Metadata blev succesfuldt slettet",
     "typeToConfirm": "Indtast bekræftelsesordet.",
     "metadataDeleteConfirmActionWordLabel": "Write <strong>DELETE</strong> to confirm the metadata removal. The action will take action inmediately.",
-    "anonymousAccessCreatedError": "Error occurred while creating anonymous access: {{errorDescription}}",
-    "anonymousAccessCreatedWarning": "Make sure to copy the anonymous access link. You won't be able to see it again!"
+    "anonymousAccessCreatedError": "Fejl opstod under oprettelse af anonym adgang: {{errorDescription}}",
+    "anonymousAccessCreatedWarning": "Sørg for at kopiere linket til anonym adgang. Du vil ikke kunne se det igen!"
 }
