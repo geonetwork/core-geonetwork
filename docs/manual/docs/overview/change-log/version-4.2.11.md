@@ -15,4 +15,4 @@ Release highlights:
 - [Update home page "browse by" to display facet as label if there is only one](https://github.com/geonetwork/core-geonetwork/pull/8449)
 - [Use UI language for metadata selection export to CSV / PDF](https://github.com/geonetwork/core-geonetwork/pull/8274)
 - 
-and more \... see [4.2.11 issues](https://github.com/geonetwork/core-geonetwork/issues?q=is%3Aissue+milestone%3A4.2.11+is%3Aclosed) and [pull requests](https://github.com/geonetwork/core-geonetwork/pulls?q=is%3Apr+milestone%3A4.2.11+is%3Aclosed) for full details.
+and more ... see [4.2.11 issues](https://github.com/geonetwork/core-geonetwork/issues?q=is%3Aissue+milestone%3A4.2.11+is%3Aclosed) and [pull requests](https://github.com/geonetwork/core-geonetwork/pulls?q=is%3Apr+milestone%3A4.2.11+is%3Aclosed) for full details.

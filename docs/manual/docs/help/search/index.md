@@ -148,7 +148,7 @@ To further explore listed records:
     </div>
     *Search map*
 
-    The map can be controlled by by toggling beween two modes:
+    The map can be controlled by toggling between two modes:
 
     -   Pan: Click and drag the map location, using the mouse wheel to
         adjust zoom level.
@@ -157,7 +157,7 @@ To further explore listed records:
         records.
         
         The drop down controls if the extent is used to list
-        only records that are withing, or all records that intersect.
+        only records that are within, or all records that intersect.
         
         ![](img/search_map_bbox.png)
         *Search bounding box intersects*

@@ -12,7 +12,7 @@ For sibling, which allows to add multiple links in one call, the panel is modifi
 
 ![](img/link-remote-sibling.png)
 
-\... instead of a simple list
+... instead of a simple list
 
 Once added, the remote records are identified by a specific icon:
 

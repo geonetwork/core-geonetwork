@@ -21,7 +21,7 @@ To start the catalog:
 
     Tip: If you are using the command line, you can view the log messages directly in the console.
 
-2.  Open a web browser and go to the GeoNetwork homepage. If you installed it on your computer, use this link ``http://localhost:8080/geonetwork``.
+2.  Open a web browser and go to the GeoNetwork homepage. If you installed it on your computer, use this link `http://localhost:8080/geonetwork`.
 
 3.  The GeoNetwork catalog page is displayed.
 

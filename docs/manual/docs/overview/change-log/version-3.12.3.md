@@ -26,6 +26,6 @@
 > -   [BP] [Update libs reported by github security](https://github.com/geonetwork/core-geonetwork/pull/6120)`
 > -   [Update translations](https://github.com/geonetwork/core-geonetwork/pull/6111)
 
-and more \... see [3.12.3 issues](https://github.com/geonetwork/core-geonetwork/issues?q=is%3Aissue+milestone%3A3.12.3+is%3Aclosed) and [pull requests](https://github.com/geonetwork/core-geonetwork/pulls?q=milestone%3A3.12.3+is%3Aclosed+is%3Apr) for full details.
+and more ... see [3.12.3 issues](https://github.com/geonetwork/core-geonetwork/issues?q=is%3Aissue+milestone%3A3.12.3+is%3Aclosed) and [pull requests](https://github.com/geonetwork/core-geonetwork/pulls?q=milestone%3A3.12.3+is%3Aclosed+is%3Apr) for full details.
 
 **Full Changelog**: [here](https://github.com/geonetwork/core-geonetwork/compare/3.12.2...3.12.3)
