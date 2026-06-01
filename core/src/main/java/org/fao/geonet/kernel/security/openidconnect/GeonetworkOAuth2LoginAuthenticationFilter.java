@@ -25,6 +25,7 @@ package org.fao.geonet.kernel.security.openidconnect;
 import org.apache.commons.lang.LocaleUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.kernel.security.RedirectUtil;
 import org.fao.geonet.utils.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.event.InteractiveAuthenticationSuccessEvent;
@@ -45,8 +46,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.IllformedLocaleException;
 import java.util.Locale;
 
@@ -120,22 +119,7 @@ public class GeonetworkOAuth2LoginAuthenticationFilter extends OAuth2LoginAuthen
 
             //cf GN keycloak
             String redirectURL = findQueryParameter(request, "redirectUrl");
-            if (redirectURL != null) {
-                try {
-                    URI redirectUri = new URI(redirectURL);
-                    if (redirectUri != null && !redirectUri.isAbsolute()) {
-                        response.sendRedirect(redirectUri.toString());
-                    } else {
-                        // If the redirect url ends up being null or absolute url then lets redirect back to the context home.
-                        Log.warning(Geonet.SECURITY, "Failed to perform login redirect to '" + redirectURL + "'. Redirected to context home");
-                        response.sendRedirect(request.getContextPath());
-                    }
-                } catch (URISyntaxException e) {
-                    response.sendRedirect(request.getContextPath());
-                }
-            } else {
-                response.sendRedirect(request.getContextPath());
-            }
+            RedirectUtil.sendSafeRedirect(request, response, redirectURL);
 
             // Set users preferred locale if it exists. - cf. keycloak
             String localeString = oidcUser.getLocale();
