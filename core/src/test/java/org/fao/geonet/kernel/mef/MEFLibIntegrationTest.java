@@ -29,6 +29,7 @@ import org.fao.geonet.AbstractCoreIntegrationTest;
 import org.fao.geonet.ZipUtil;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.AbstractMetadata;
+import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.utils.IO;
@@ -90,6 +91,23 @@ public class MEFLibIntegrationTest extends AbstractCoreIntegrationTest {
             assertNotNull(metadata);
             assertEquals(admin.getId(), metadata.getSourceInfo().getOwner().intValue());
         }
+    }
+
+    @Test
+    public void testDoImportMefWithSubtemplate() throws Exception {
+        ServiceContext context = createServiceContext();
+        final Path resource = IO.toPath(MEFLibIntegrationTest.class.getResource("subtpl-format.mef").toURI());
+        final User admin = loginAsAdmin(context);
+
+        Element params = new Element("request");
+        final List<String> metadataIds = MEFLib.doImport(params, context, resource, getStyleSheets());
+
+        assertEquals(1, metadataIds.size());
+        String metadataId = metadataIds.get(0);
+        final AbstractMetadata metadata = _metadataRepo.findById(Integer.parseInt(metadataId)).get();
+        assertNotNull(metadata);
+        assertEquals(admin.getId(), metadata.getSourceInfo().getOwner().intValue());
+        assertEquals(MetadataType.SUB_TEMPLATE, metadata.getDataInfo().getType());
     }
 
     public static class ImportMetadata {

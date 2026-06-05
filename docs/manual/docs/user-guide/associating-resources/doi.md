@@ -23,7 +23,7 @@ Providing the following information:
 - `DataCite prefix`: Usually looks like `10.xxxx`. You will be allowed to register DOI names only under the prefixes that have been assigned to you.
 - `Record groups`: (Optional) When creating a DOI, only DOI server(s) associated with the record group are proposed. If record group is not associated with any DOI servers, then DOI servers with no group are proposed.
 
-A record can be downloaded using the DataCite format from the API using: <http://localhost:8080/geonetwork/srv/api/records/da165110-88fd-11da-a88f-000d939bc5d8/formatters/datacite?output=xml>
+A record can be downloaded using the DataCite format from the API using: `http://localhost:8080/geonetwork/srv/api/records/da165110-88fd-11da-a88f-000d939bc5d8/formatters/datacite?output=xml`
 
 ## Creating the DOI
 
@@ -76,9 +76,9 @@ The mapping can be customized in:
 -   ISO19139 `schemas/iso19139/src/main/plugin/iso19139/formatter/datacite/view.xsl`
 -   ISO19115-3.2018 `schemas/iso19139/src/main/plugin/iso19139/formatter/datacite/view.xsl`
 
-See <http://schema.datacite.org/meta/kernel-4.1/doc/DataCite-MetadataKernel_v4.1.pdf> for more details on the format.
+See the [DataCite Metadata Kernel documentation](http://schema.datacite.org/meta/kernel-4.1/doc/DataCite-MetadataKernel_v4.1.pdf) for more details on the format.
 
-DataCite API return XSD validation error.
+DataCite API returns an XSD validation error.
 
 ![](img/doi-request-check.png)
 

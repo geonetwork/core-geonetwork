@@ -18,7 +18,7 @@ The search results show the main information of each resource: title, abstract, 
 
 ![](img/a-result.png){width="600px"}
 
-You can use the facets in the left sidebar to further filter the search result. Facets provice a summary of common elements in the current search result.
+You can use the facets in the left sidebar to further filter the search result. Facets provide a summary of common elements in the current search result.
 
 To get more information, click the title of the record, this will bring you to the index-view, a view of the metadata that displays a subset of the metadata, directly from the search index.
 

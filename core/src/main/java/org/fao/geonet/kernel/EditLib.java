@@ -590,11 +590,19 @@ public class EditLib {
                                 value);
                         } else if (elem instanceof Element) {
                             Element element = (Element) elem;
+                            final String predicateAndSuffix = xpathProperty.substring(indexOfRequiredPortion);
 
-                            isUpdated = createAndAddFromXPath(element,
-                                metadataSchema,
-                                xpathProperty.substring(indexOfRequiredPortion),
-                                value);
+                            if (containsOnlyPredicates(predicateAndSuffix)) {
+                                isUpdated = createAndAddFromXPath(metadataRecord,
+                                    metadataSchema,
+                                    requiredXPath,
+                                    value);
+                            } else {
+                                isUpdated = createAndAddFromXPath(element,
+                                    metadataSchema,
+                                    predicateAndSuffix,
+                                    value);
+                            }
                         } else {
                             isUpdated = false;
                         }
@@ -1819,6 +1827,33 @@ public class EditLib {
         }
     }
 
+    private boolean containsOnlyPredicates(String xpath) {
+        if (xpath == null) {
+            return false;
+        }
+        String trimmed = xpath.trim();
+        if (trimmed.isEmpty() || trimmed.charAt(0) != '[') {
+            return false;
+        }
+        boolean seenPredicate = false;
+        int depth = 0;
+        for (int i = 0; i < trimmed.length(); i++) {
+            char c = trimmed.charAt(i);
+            if (c == '[') {
+                depth++;
+                seenPredicate = true;
+            } else if (c == ']') {
+                if (depth == 0) {
+                    return false;
+                }
+                depth--;
+            } else if (depth == 0 && !Character.isWhitespace(c)) {
+                return false;
+            }
+        }
+        return seenPredicate && depth == 0;
+    }
+
     /**
      * If the xpath starts with the metadata root element, it's removed. Used to apply the Xpath
      * filters as the root element should not be included.
@@ -1874,7 +1909,17 @@ public class EditLib {
         String DELETE = "gn_delete";
 
         /**
-         * Multiple target updates
+         * Multiple target updates.
+         *
+         * <p>
+         * When using this mode, a gn_delete operation is applied first,
+         * then gn_create is applied for each element.
+         * </p>
+         *
+         * <p>
+         * If a predicate is used, the predicate is applied to the gn_delete operation.
+         * Therefor the gn_create will only create the element targeting the xpath without the predicate.
+         * </p>
          */
         String REPLACE_ALL = "gn_replace_all";
     }

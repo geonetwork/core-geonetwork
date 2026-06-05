@@ -436,13 +436,12 @@ public class BaseMetadataManager implements IMetadataManager {
         boolean isMetadata = templateMetadata.getDataInfo().getType() == MetadataType.METADATA;
         MetadataType type = MetadataType.lookup(isTemplate);
         setMetadataTitle(schema, xml, context.getLanguage(), !isMetadata);
-        if (isMetadata) {
-            xml = updateFixedInfo(schema, Optional.<Integer>absent(), uuid, xml, parentUuid, UpdateDatestamp.NO, context);
-
-            xml = duplicateMetadata(schema, xml, context);
-        } else if (type == MetadataType.SUB_TEMPLATE
+        if (type == MetadataType.SUB_TEMPLATE
             || type == MetadataType.TEMPLATE_OF_SUB_TEMPLATE) {
             xml.setAttribute("uuid", uuid);
+        } else {
+            xml = duplicateMetadata(schema, xml, context);
+            xml = updateFixedInfo(schema, Optional.<Integer>absent(), uuid, xml, parentUuid, UpdateDatestamp.NO, context);
         }
 
         final Metadata newMetadata = new Metadata();

@@ -86,7 +86,7 @@ public class Page extends GeonetEntity implements Serializable {
     }
 
     public enum PageStatus {
-        PUBLIC, PUBLIC_ONLY, GROUPS, PRIVATE, HIDDEN;
+        PUBLIC, PUBLIC_ONLY, GROUPS, GROUPS_AND_ADMIN, PRIVATE, HIDDEN;
     }
 
     public enum PageFormat {

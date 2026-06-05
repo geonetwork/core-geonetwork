@@ -67,7 +67,7 @@ public class OIDCServiceAccountLoginTest {
 
         when(clientManager.authorize(any(OAuth2AuthorizeRequest.class))).thenReturn(authorizedClient);
         when(authorizedClient.getAccessToken()).thenReturn(new OAuth2AccessToken(OAuth2AccessToken.TokenType.BEARER, "tokenValue", null, null));
-        when(jwtProvider.authenticate(any(), any())).thenReturn(authentication);
+        when(jwtProvider.authenticate(any())).thenReturn(authentication);
         when(authentication.isAuthenticated()).thenReturn(true);
 
         boolean result = serviceAccountLogin.loginServiceAccount();

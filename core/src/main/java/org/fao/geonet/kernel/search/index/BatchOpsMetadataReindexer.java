@@ -87,7 +87,7 @@ public class BatchOpsMetadataReindexer extends MetadataIndexerProcessor implemen
         return !RUNNING_INDEXERS.isEmpty();
     }
 
-    private final Set<Integer> metadata;
+    private final Collection<Integer> metadata;
     private ExecutorService executor = null;
     private ObjectName probeName;
     private final int toProcessCount;
@@ -96,7 +96,7 @@ public class BatchOpsMetadataReindexer extends MetadataIndexerProcessor implemen
     private CompletableFuture<Void> allCompleted;
     private final MBeanExporter exporter;
 
-    public BatchOpsMetadataReindexer(DataManager dm, Set<Integer> metadata) {
+    public BatchOpsMetadataReindexer(DataManager dm, Collection<Integer> metadata) {
         super(dm);
         this.metadata = metadata;
         this.toProcessCount = metadata.size();

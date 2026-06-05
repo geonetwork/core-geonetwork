@@ -20,6 +20,6 @@ To switch from one mode to another layout, use the `all` link.
 -   When loading the editor, the selected language is the user interface language used if the language is defined in the current record.
 -   When viewing the record, if a translation exists in the user interface language, this translation is used; if not, the main metadata language is used.
 
-!!! Note
+!!! note
 
     This behaviour also applies to multilingual ISO19139 records requested in dublin core from the CSW services.

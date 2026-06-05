@@ -64,6 +64,8 @@ import org.fao.geonet.utils.Xml;
 import org.fao.geonet.web.DefaultLanguage;
 import org.jdom.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -139,6 +141,9 @@ public class CatalogApi {
     LanguageUtils languageUtils;
     @Autowired
     private XmlSerializer xmlSerializer;
+    @Autowired
+    @Qualifier("apiMessages")
+    private ResourceBundleMessageSource messages;
 
     @io.swagger.v3.oas.annotations.Operation(
         summary = "Get a set of metadata records as ZIP",
@@ -187,6 +192,13 @@ public class CatalogApi {
             defaultValue = "false")
         boolean withRelated,
         @Parameter(
+            description = "Whether to include file attachments in the exported MEF package."
+        )
+        @RequestParam(
+            required = false,
+            defaultValue = "true")
+        boolean includeAttachments,
+        @Parameter(
             description = "Resolve XLinks in the records.",
             required = false)
         @RequestParam(
@@ -216,6 +228,8 @@ public class CatalogApi {
         HttpServletRequest request)
         throws Exception {
 
+        Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
+
         // Get parameters
         Path file = null;
         Path stylePath = dataDirectory.getWebappDir().resolve(Geonet.Path.SCHEMAS);
@@ -234,6 +248,11 @@ public class CatalogApi {
         if (version == MEFLib.Version.V1) {
             throw new IllegalArgumentException("MEF version 1 only support one record. Use the /records/{uuid}/formatters/zip to retrieve that format");
         } else {
+
+            if (includeAttachments) {
+                MEFLib.checkAttachmentsUnderSizeLimit(uuidList, approved);
+            }
+
             Set<String> allowedUuid = new HashSet<>();
             for (String uuid : uuidList) {
                 try {
@@ -278,11 +297,13 @@ public class CatalogApi {
                 file = MEFLib.doMEF2Export(context, allowedUuid, format.toString(),
                     false, stylePath,
                     withXLinksResolved, withXLinkAttribute,
-                    false, addSchemaLocation, approved);
+                    false, addSchemaLocation, approved, includeAttachments);
 
                 DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HHmmss");
-                String fileName = String.format("%s-%s.zip",
+                String suffix = includeAttachments ? "" : "-" + messages.getMessage("api.metadata.export.filename.withoutAttachmentsSuffix", null, locale);
+                String fileName = String.format("%s%s-%s.zip",
                     settingManager.getSiteName().replace(" ", ""),
+                    suffix,
                     df.format(new Date()));
 
                 response.setHeader(HttpHeaders.CONTENT_DISPOSITION, String.format(
