@@ -30,6 +30,7 @@ import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.Source;
 import org.fao.geonet.domain.SourceType;
 import org.fao.geonet.kernel.SpringLocalServiceInvoker;
+import org.fao.geonet.kernel.search.submission.DirectIndexSubmitter;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.kernel.datamanager.IMetadataIndexer;
@@ -110,7 +111,7 @@ public class MetadataApiTest extends AbstractServiceIntegrationTest {
 
 
 
-        metadataIndexer.indexMetadata(String.valueOf(id), true, IndexingMode.full);
+        metadataIndexer.indexMetadata(String.valueOf(id), DirectIndexSubmitter.INSTANCE, IndexingMode.full);
 
         Source subportal = new Source();
         subportal.setName("external");

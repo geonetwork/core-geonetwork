@@ -460,7 +460,7 @@ public class MetadataSharingApiTest extends AbstractServiceIntegrationTest {
         _userRepo.save(reviewerUser);
         _userGroupRepo.save(new UserGroup().setGroup(sampleGroup).setProfile(Profile.Reviewer).setUser(reviewerUser));
 
-        Metadata metadata = (Metadata) injectMetadataInDb(getSampleMetadataXml(), context, true);
+        Metadata metadata = (Metadata) injectMetadataInDb(getSampleMetadataXml(), context);
         metadata.getSourceInfo().setOwner(editorUser.getId());
         metadata.getSourceInfo().setGroupOwner(SAMPLE_GROUP_ID);
         metadataRepository.save(metadata);

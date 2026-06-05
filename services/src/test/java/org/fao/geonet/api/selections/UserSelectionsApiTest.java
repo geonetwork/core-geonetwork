@@ -329,7 +329,7 @@ public class UserSelectionsApiTest extends AbstractServiceIntegrationTest {
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().isCreated());
 
-        verify(this.metadataIndexerSpy, times(1)).indexMetadata(eq(metadataId), any(Boolean.class), eq(IndexingMode.full));
+        verify(this.metadataIndexerSpy, times(1)).indexMetadata(eq(metadataId), any(IIndexSubmitter.class), eq(IndexingMode.full));
 
         this.mockMvc.perform(get("/srv/api/userselections/" + createdSelection.getId() + "/items?userIdentifier=1")
             .session(this.mockHttpSession)
@@ -344,7 +344,7 @@ public class UserSelectionsApiTest extends AbstractServiceIntegrationTest {
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().isNoContent());
 
-        verify(this.metadataIndexerSpy, times(2)).indexMetadata(eq(metadataId), any(Boolean.class), eq(IndexingMode.full));
+        verify(this.metadataIndexerSpy, times(2)).indexMetadata(eq(metadataId), any(IIndexSubmitter.class), eq(IndexingMode.full));
 
         // Delete
         this.mockMvc.perform(delete("/srv/api/userselections/" + createdSelection.getId())
