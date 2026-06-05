@@ -477,6 +477,12 @@
         var queryHook = query.function_score.query.bool;
         this.buildQueryClauses(queryHook, p, luceneQueryString, searchState);
 
+        if (gnGlobalSettings.gnCfg.mods.search.knn && p.any && p.any.length > 0) {
+          params.knn = gnGlobalSettings.gnCfg.mods.search.knn;
+          params.knn.query_vector = p.any;
+          params.min_score = 0.75;
+        }
+
         if (p.from) {
           params.from = p.from - 1;
         }
