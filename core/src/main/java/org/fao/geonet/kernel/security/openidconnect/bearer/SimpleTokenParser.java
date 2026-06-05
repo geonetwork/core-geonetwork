@@ -22,11 +22,12 @@
  */
 package org.fao.geonet.kernel.security.openidconnect.bearer;
 
-import com.nimbusds.jose.JOSEObject;
 import com.nimbusds.jwt.JWT;
 import com.nimbusds.jwt.JWTParser;
+import org.springframework.security.oauth2.jwt.Jwt;
 
-import java.util.Map;
+import java.util.Date;
+import java.util.Optional;
 
 /**
  * simple token parser that doesn't validate signature (or anything else)
@@ -34,8 +35,15 @@ import java.util.Map;
 public class SimpleTokenParser implements AccessTokenParser {
 
     @Override
-    public Map parseToken(String token) throws Exception {
-        JWT jj = JWTParser.parse(token);
-        return ((JOSEObject) jj).getPayload().toJSONObject();
+    public Jwt parseToken(String token) throws Exception {
+        JWT jwt = JWTParser.parse(token);
+        var claimsSet = jwt.getJWTClaimsSet();
+
+        return Jwt.withTokenValue(token)
+            .headers(h -> h.putAll(jwt.getHeader().toJSONObject()))
+            .claims(c -> c.putAll(claimsSet.getClaims()))
+            .issuedAt(Optional.ofNullable(claimsSet.getIssueTime()).map(Date::toInstant).orElse(null))
+            .expiresAt(Optional.ofNullable(claimsSet.getExpirationTime()).map(Date::toInstant).orElse(null))
+            .build();
     }
 }

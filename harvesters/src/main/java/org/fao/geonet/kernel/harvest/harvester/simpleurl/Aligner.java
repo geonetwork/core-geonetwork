@@ -139,7 +139,7 @@ public class Aligner extends BaseAligner<SimpleUrlParams> {
                             addMetadata(e, UUID.randomUUID().toString());
                             break;
                         case SKIP:
-                            log.debug("Skipping record with uuid " + e.getKey());
+                            log.info("Skipping record with uuid " + e.getKey());
                             result.uuidSkipped++;
                             break;
                         default:

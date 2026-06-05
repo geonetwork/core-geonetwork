@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rules>
+  <report xmlns:gml320="http://www.opengis.net/gml" xmlns:util="java:org.fao.geonet.util.XslUtil">
+    <id>xsd</id>
+    <displayPriority>0</displayPriority>
+    <error>0</error>
+    <success>?</success>
+    <total>?</total>
+    <requirement>REQUIRED</requirement>
+    <patterns />
+  </report>
+  <report xmlns:gml320="http://www.opengis.net/gml" xmlns:util="java:org.fao.geonet.util.XslUtil">
+    <id />
+    <displayPriority />
+    <label>Règles ISO</label>
+    <error>2</error>
+    <success>15</success>
+    <total>17</total>
+    <requirement />
+    <patterns>
+      <pattern>
+        <title>Une personne DOIT avoir un nom ou une fonction</title>
+        <rules />
+      </pattern>
+      <pattern>
+        <title>Une organisation DOIT avoir un nom ou un logo</title>
+        <rules />
+      </pattern>
+      <pattern>
+        <title>Une étendue DOIT avoir une description ou un
+      élément géographique, temporel ou vertical</title>
+        <rules />
+      </pattern>
+      <pattern>
+        <title>Une étendue verticale DOIT contenir un CRS ou un
+      identifiant de CRS</title>
+        <rules />
+      </pattern>
+      <pattern>
+        <title>La possibilité de divulgation
+      DOIT définir un destinataire ou une indication</title>
+        <rules />
+      </pattern>
+      <pattern>
+        <title>Une contrainte légale DOIT
+      définir un type de contrainte (d'accès, d'utilisation ou autre)
+      ou bien une limite d'utilisation ou une possibilité de divulgation</title>
+        <rules />
+      </pattern>
+      <pattern>
+        <title>Une contrainte légale indiquant
+      d'autres restrictions d'utilisation ou d'accès DOIT
+      préciser ces autres restrictions</title>
+        <rules />
+      </pattern>
+      <pattern>
+        <title>Élément racine du document</title>
+        <rules />
+      </pattern>
+      <pattern>
+        <title>Langue du document</title>
+        <rules />
+      </pattern>
+      <pattern>
+        <title>Description du domaine d'application</title>
+        <rules />
+      </pattern>
+      <pattern>
+        <title>Date de création du document</title>
+        <rules />
+      </pattern>
+      <pattern>
+        <title>Un élément d'extension qui n'est
+      ni une codelist, ni une énumération, ni un élément de codelist
+      DOIT préciser le nombre maximum d'occurences
+      ainsi que la valeur du domaine</title>
+        <rules />
+      </pattern>
+      <pattern>
+        <title>Un élément d'extension conditionnel
+      DOIT préciser les termes de la condition</title>
+        <rules />
+      </pattern>
+      <pattern>
+        <title>Un élément d'extension qui est
+      une codelist, une énumération, un élément de codelist
+      DOIT préciser un code et un nom de concept</title>
+        <rules />
+      </pattern>
+      <pattern>
+        <title>L'information sur la maintenance
+      DOIT définir une fréquence de mise à jour</title>
+        <rules />
+      </pattern>
+      <pattern>
+        <title>La dimension de l'échantillon DOIT préciser
+      une valeur maximum, une valeur minimum ou une moyenne</title>
+        <rules />
+      </pattern>
+      <pattern>
+        <title>Une bande DOIT préciser l'unité
+      lorsqu'une borne maximum ou minimum est définie</title>
+        <rules />
+      </pattern>
+      <pattern>
+        <title>Un média précisant une densité DOIT préciser
+      l'unité</title>
+        <rules />
+      </pattern>
+      <pattern>
+        <title>Emprise du jeu de données</title>
+        <rules />
+      </pattern>
+      <pattern>
+        <title>Thème principal d'un jeu de données ou d'une
+      série</title>
+        <rules />
+      </pattern>
+      <pattern>
+        <title>Nom ou référence à une ressource associée</title>
+        <rules />
+      </pattern>
+      <pattern>
+        <title>Langue de la ressource</title>
+        <rules />
+      </pattern>
+      <pattern>
+        <title>Taxonomie des services</title>
+        <rules />
+      </pattern>
+    </patterns>
+  </report>
+</rules>
+

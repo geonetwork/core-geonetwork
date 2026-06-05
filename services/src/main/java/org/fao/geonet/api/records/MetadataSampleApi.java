@@ -37,7 +37,6 @@ import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.processing.report.SimpleMetadataProcessingReport;
-import org.fao.geonet.api.tools.i18n.LanguageUtils;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.AbstractMetadata;
@@ -79,9 +78,6 @@ import static org.fao.geonet.api.ApiParams.*;
 @Controller("samplesAndTemplates")
 @ReadWriteController
 public class MetadataSampleApi {
-
-    @Autowired
-    LanguageUtils languageUtils;
 
     @Autowired
     DataManager dataManager;

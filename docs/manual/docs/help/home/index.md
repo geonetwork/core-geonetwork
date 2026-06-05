@@ -12,7 +12,7 @@ hide:
 
 # Home
 
-The Catalogue page is used to browse records, and has provides a quick search field.
+The Catalogue page is used to browse records and provides a quick search field.
 
 ## Search Catalogue
 
@@ -56,7 +56,7 @@ The Catalogue page is used to browse records, and has provides a quick search fi
     </div>
     *Search for part of a word*
 
-5. Search results are shown on the **Seach** tab, which allows filtering and exploring of records.
+5. Search results are shown on the **Search** tab, which allows filtering and exploring of records.
 
 ## Browse Catalogue
 

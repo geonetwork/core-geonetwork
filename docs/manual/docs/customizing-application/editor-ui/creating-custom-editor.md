@@ -176,7 +176,8 @@ Display help documentation onhover elements (default) or by clicking on an icon.
 
 -   **hideTimeInCalendar** (Optional) Fixed value: **true**
 
-Define if calendar control should allow users to set date only or datetime. If the attribute is not set, then date and datetime can be set. This is controlled at the view level, switching to another view may allow more control over the dates.
+By default, both date and time can be set in calendar fields if this attribute is omitted. However, if the attribute is `true`, only the date can be set and the time component will remain hidden.  
+This is controlled at the view level, so switching to another view may still allow setting the time.
 
 -   **displayIfRecord** (Optional)
 

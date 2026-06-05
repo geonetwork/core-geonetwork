@@ -195,7 +195,7 @@ public abstract class AbstractStore implements Store {
     @Override
     public final MetadataResource putResource(final ServiceContext context, final String metadataUuid, final MultipartFile file,
             final MetadataResourceVisibility visibility) throws Exception {
-        return putResource(context, metadataUuid, file.getOriginalFilename(), file.getInputStream(), null, visibility, true);
+        return putResource(context, metadataUuid, file, visibility, true);
     }
 
     @Override
@@ -205,7 +205,13 @@ public abstract class AbstractStore implements Store {
             throw new NotAllowedException(String.format(
                 "Uploaded resource '%s' contains forbidden character ; for metadata '%s'.", file.getOriginalFilename(), metadataUuid));
         }
-        return putResource(context, metadataUuid, file.getOriginalFilename(), file.getInputStream(), null, visibility, approved);
+        long fileSize = file.getSize();
+        if (fileSize > maxUploadSize) {
+            throw new InputStreamLimitExceededException(maxUploadSize, fileSize);
+        }
+        try (LimitedInputStream is = new LimitedInputStream(file.getInputStream(), maxUploadSize, fileSize)) {
+            return putResource(context, metadataUuid, file.getOriginalFilename(), is, null, visibility, approved);
+        }
     }
 
     @Override

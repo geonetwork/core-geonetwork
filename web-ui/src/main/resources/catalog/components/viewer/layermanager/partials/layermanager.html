@@ -11,11 +11,15 @@
 </ul>
 <ul class="list-group">
   <li class="list-group-item list-group-item-warning" data-ng-repeat="l in failedLayers">
-    <h4 class="list-group-item-heading">
-      <i class="fa fa-warning text-warning"></i>
-      &nbsp; {{l.name}}
-
-      <a class="pull-right gn-close-btn" ng-click="removeFailed(l)">
+    <h4 class="list-group-item-heading gn-break-anywhere flex-row">
+      <i class="fa fa-warning text-warning flex-self-center"></i>
+      <span class="flex-spacer"></span>
+      <span class="flex-self-center">{{l.name}}</span>
+      <span class="flex-spacer"></span>
+      <a
+        class="gn-close-btn flex-self-center gn-padding-vertical-sm"
+        ng-click="removeFailed(l)"
+      >
         <i class="fa fa-times"></i>
       </a>
     </h4>

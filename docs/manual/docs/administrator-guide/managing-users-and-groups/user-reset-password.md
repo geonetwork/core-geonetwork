@@ -7,7 +7,7 @@ This function allows users who have forgotten their password to request a new on
 
 ![](img/password-forgot.png)
 
-If a user takes this option they will receive an email inviting them to change their password as follows:
+If a user takes this option, they will receive an email inviting them to change their password as follows:
 
     You have requested to change your Greenhouse GeoNetwork Site password.
 

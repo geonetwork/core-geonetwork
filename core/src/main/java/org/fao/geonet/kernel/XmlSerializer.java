@@ -29,12 +29,10 @@ import java.util.List;
 
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.AbstractMetadata;
-import org.fao.geonet.domain.ISODate;
-import org.fao.geonet.domain.Pair;
-import org.fao.geonet.domain.ReservedOperation;
+import org.fao.geonet.domain.*;
 import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
+import org.fao.geonet.kernel.schema.MetadataOperationFilterType;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.schema.MetadataSchemaOperationFilter;
 import org.fao.geonet.kernel.setting.SettingManager;
@@ -179,12 +177,23 @@ public abstract class XmlSerializer {
                     }
                 }
 
-                MetadataSchemaOperationFilter authenticatedFilter = mds.getOperationFilter("authenticated");
+                MetadataSchemaOperationFilter authenticatedFilter = mds.getOperationFilter(MetadataOperationFilterType.authenticated.name());
                 if (authenticatedFilter != null) {
                     boolean isAuthenticated = context.getUserSession().isAuthenticated();
                     if (!isAuthenticated) {
                         removeFilteredElement(metadataXml, authenticatedFilter, namespaces);
                     }
+                }
+                MetadataSchemaOperationFilter groupOwnerFilter = mds.getOperationFilter(MetadataOperationFilterType.groupOwner.name());
+                if (groupOwnerFilter != null) {
+
+                    if (context.getUserSession().getProfile() != Profile.Administrator) {
+                        List<Integer> userGroups = AccessManager.getGroups(context.getUserSession(), Profile.Editor);
+                        boolean isGroupOwnerFilter = userGroups.contains(metadata.getSourceInfo().getGroupOwner());
+                        if (!isGroupOwnerFilter) {
+                            removeFilteredElement(metadataXml, groupOwnerFilter, namespaces);
+                        }
+                    }                    
                 }
 
                 MetadataSchemaOperationFilter downloadFilter = mds.getOperationFilter(ReservedOperation.download);

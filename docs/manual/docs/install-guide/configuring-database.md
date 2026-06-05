@@ -2,7 +2,7 @@
 
 ## Introduction
 
-GeoNetwork uses a database to persist aspects such as metadata records, privileges and configurations. The database default structure is created by the application on initial startup. Subsequent releases of GeoNetwork will update the database structure automatically. For this reason the database user initially needs create privileges on the database. A number of database dialects are supported; ***H2***,***PostgreSQL***,***PostGIS***,***Oracle***,***SQL Server***. This section describes various options to configure the database connection.
+GeoNetwork uses a database to persist aspects such as metadata records, privileges and configurations. The database default structure is created by the application on initial startup. Subsequent releases of GeoNetwork will update the database structure automatically. For this reason the database user initially needs create privileges on the database. A number of database dialects are supported: ***H2***, ***PostgreSQL***, ***PostGIS***, ***Oracle***, ***SQL Server***. This section describes various options to configure the database connection.
 
 ## H2 database
 
@@ -28,7 +28,7 @@ GeoNetwork assumes data is stored in the default schema for a user. If this is n
 
 ## Configuring a database via JNDI
 
-The Java Naming and Directory Interface (JNDI) is a technology which allows to configure the database in tomcat and reference the JNDI connection by name.
+The Java Naming and Directory Interface (JNDI) is a technology that allows you to configure the database in Tomcat and reference the JNDI connection by name.
 
 1.  To activate JNDI, you need to activate the JNDI database type in **`/WEB-INF/config-node/srv.xml`**.
 
@@ -46,7 +46,7 @@ The Java Naming and Directory Interface (JNDI) is a technology which allows to c
 
 ## Configuring a database via environment
 
-Setting configuration properties via environment variables is common in container environments such as Docker. 2 options exist:
+Setting configuration properties via environment variables is common in container environments such as Docker. Two options exist:
 
 1.  Add the parameters directly to the Java environment by substituting JAVA_OPTS.
 
@@ -72,7 +72,13 @@ Setting configuration properties via environment variables is common in containe
         -e jdbc.port=5432 geonetwork:latest
     ```
 
-Within PostgreSQL it is possible to configure `postgres` or `postgis`. In the latter case GeoNetwork will use spatial capabilities of PostGIS to filter metadata. In the first case (and for other database dialects) a Shapefile is created for storage of metadata coverage.
+Within PostgreSQL it is possible to configure three geonetwork.db.type:
+
+- `postgres`: (and for other database dialects) a Shapefile is created for storage of metadata coverage.
+- `postgres-postgis`: GeoNetwork will use spatial capabilities of PostGIS to filter metadata.
+- `postgres-postgis-hikari`: All the features of postgis with hikari "on top" to provide connection management more adapted to postgres.
+
+When choosing between postgres-postgis and postgres-postgis-hikari, postgres-postgis-hikari is recommended: it is based on hikari connection pool which provides better connection management when using 'connectionTestQuery' instead of defaultJdbcDataSource's 'validationQuery'.
 
 ## Logging
 
@@ -99,3 +105,15 @@ To see more details about the database connection and queries, the log can be sw
 ## Summary
 
 There are various ways to configure a database in GeoNetwork. JNDI and environment are favourable, because when updating to a new version, or changing a database, you don't need to touch any application files.
+
+Supported types:
+
+* db2
+* h2 (default)
+* jndi
+* mysql
+* oracle
+* postgres
+* postgres-postgis
+* postgres-postgis-hikari
+* sqlserver

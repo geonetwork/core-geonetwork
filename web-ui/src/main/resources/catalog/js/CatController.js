@@ -690,6 +690,10 @@
                 sortOrder: ""
               },
               {
+                sortBy: "resourceTitleObject.default.sort",
+                sortOrder: "desc"
+              },
+              {
                 sortBy: "rating",
                 sortOrder: "desc"
               },
@@ -765,6 +769,11 @@
               {
                 label: "exportMEF",
                 url: "/formatters/zip?withRelated=false",
+                class: "fa-file-zip-o"
+              },
+              {
+                label: "exportMEF-excludeAttachments",
+                url: "/formatters/zip?withRelated=false&includeAttachments=false",
                 class: "fa-file-zip-o"
               },
               {
@@ -1192,6 +1201,10 @@
               {
                 sortBy: "resourceTitleObject.default.sort",
                 sortOrder: ""
+              },
+              {
+                sortBy: "resourceTitleObject.default.sort",
+                sortOrder: "desc"
               },
               {
                 sortBy: "recordOwner",

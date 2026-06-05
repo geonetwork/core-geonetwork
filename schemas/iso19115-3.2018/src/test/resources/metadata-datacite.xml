@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<datacite:resource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns:datacite="http://datacite.org/schema/kernel-4"
+                   xsi:schemaLocation="http://datacite.org/schema/kernel-4 https://schema.datacite.org/meta/kernel-4.6/metadata.xsd">
+  <datacite:identifier identifierType="DOI">10.18144/0__df04f43c-e644-4c52-9345-f218e037bac2</datacite:identifier>
+  <datacite:resourceType resourceTypeGeneral="Dataset">dataset/Dataset</datacite:resourceType>
+  <datacite:titles>
+    <datacite:title xml:lang="fre">TEST-Eléments cartographiques du substratum anté-pliocène des marges continentales de la Corse</datacite:title>
+    <datacite:title xml:lang="eng">TEST-Geological map of the corsican continental margins at the 1:250,000 scale</datacite:title>
+    <datacite:title xml:lang="fre" titleType="AlternativeTitle">Autres appellations ou acronymes</datacite:title>
+  </datacite:titles>
+  <datacite:dates>
+    <datacite:date dateType="Created" dateInformation="creation">2010-12-01</datacite:date>
+    <datacite:date dateType="Issued" dateInformation="publication">2025-01-07</datacite:date>
+  </datacite:dates>
+  <datacite:version>1.0</datacite:version>
+  <datacite:alternateIdentifiers>
+    <datacite:alternateIdentifier alternateIdentifierType="doi.org">10.18144/0__df04f43c-e644-4c52-9345-f218e037bac2</datacite:alternateIdentifier>
+  </datacite:alternateIdentifiers>
+  <datacite:descriptions>
+    <datacite:description xml:lang="fre" descriptionType="Abstract">Eléments cartographiques du substratum anté-Pliocène des marges continentales de la Corse pour réaliser la carte au 1/250000 des marges continentales de la Corse. Il s’agit de polygones géologiques des formations d’âge anté-Plio-Quaternaire et de polylignes des structures majeures et incisions messiniennes. Cette cartographie, réalisée entre 2010 et 2012, est basée sur des interprétations des profils sismiques exitants le long des marges Corses et des rares prélèvements géologiques. Elle a été financée par le programme "plateau continental" du BRGM. Elle a bénéficié des résultats des travaux de recherche effectués dans le cadre des programmes GDR marges, Actions Marges et Plateau continental. Des publications scientifiques y sont associées.</datacite:description>
+    <datacite:description xml:lang="eng" descriptionType="Abstract">This map contains several shapefiles (projection system RGF93):- polygons of the pre-Plio-Quaternary geological formations (no Plio-Quaternary formation): Geologie_CorsicaMargin_RGF93_V2012;- polylines of the tectonic structures : Structures_CorsicaMargin_RGF93_V2012;- polygons of seismic facies of the Messinian formations (syn-Messinian salinity crisis ; BU from Thinon et al., 2012): Facies-sismique_BU_Est-corsica_V2012;- polylines of isochrons of the Messinian surface: Isochrons_Messinian_Surface_CorsicaMargin_RGF93_V2012;- polylines of Messinian incised paleo-valleys: Messinian_incised_valley_CorsicaMargin_RGF93_V2012;- somes divers features: Surcharge250K-MargeCorse_RGF93_V2012</datacite:description>
+    <datacite:description xml:lang="fre" descriptionType="Other">Extraits de la carte publiée : Thinon, I., Réhault, J. P., Guennoc, P., Lofi, J., &amp; Deverchere, J. (2011). East-Corsica basin. Seismic Atlas of the “Messinian Salinity Crisis” Markers in the Mediterranean and Black Seas. Commission for the Geological Map of the World and Memoires de la Société Géologique de France, 179, 43-45.Guennoc, P., Réhault, J. P., &amp; Thinon, I. (2011). West-Corsica: MSC basinal units. Seismic Atlas of the “Messinian Salinity Crisis” Markers in the Mediterranean and Black Seas. Commission for the Geological Map of the World and Memoires de la Société Géologique de France, 179,</datacite:description>
+    <datacite:description xml:lang="eng" descriptionType="Other">Extracts of map published : Thinon, I., Réhault, J. P., Guennoc, P., Lofi, J., &amp; Deverchere, J. (2011). East-Corsica basin. Seismic Atlas of the “Messinian Salinity Crisis” Markers in the Mediterranean and Black Seas. Commission for the Geological Map of the World and Memoires de la Société Géologique de France, 179, 43-45.Guennoc, P., Réhault, J. P., &amp; Thinon, I. (2011). West-Corsica: MSC basinal units. Seismic Atlas of the “Messinian Salinity Crisis” Markers in the Mediterranean and Black Seas. Commission for the Geological Map of the World and Memoires de la Société Géologique de France, 179,</datacite:description>
+    <datacite:description xml:lang="fre" descriptionType="Methods">Etude financée par le programme "plateau continental" du BRGM. Elle a bénéficié des résultats des travaux de recherche effectués dans le cadre des programmes GDR marges, Actions Marges et Plateau continental.</datacite:description>
+    <datacite:description xml:lang="eng" descriptionType="Methods">The 1:250,000 scale geological map of the Corsican continental margins was built with the funding of the BRGM's mapping programme, by the BRGM scientific team between 2010 and 2012 in collaboration with the several INSU-CNRS laboratories, in particular the Université de Bretagne Occidentale (UBO) and the Université de Corte (Corsica). It has benefited from research carried out as part of BRGM's "continental shelf" programme and the GDR-Marges and Actions Marges I and II programmes (TOTAL, IFREMER, BRGM, INSU). The mapping of marine domains is based mainly on the interpretation of geophysical data (seismic reflection profiles, bathymetry, backscatter, ..), and rocks and sediment sampled by dregdes, corers, wells, grabs, ….For this map, seismic data (the digital data were processed by the BRGM) and rock samples were acquired between 1980 and 2000, thanks to several oceanographic campaigns: 7B_1967, BACINO-CORSE, BASTIA_70, BOCCA2000 (10.17600/450050), BOCCA99 (10.17600/99450040), CORSTAGE00 (10.17600/450170), CORSTAGE01 (10.17600/1450180), CORSTAGE97 (10.17600/97450250), CORSTAGE98 (10.17600/98450130), CORSTAGE99 ( 10.17600/99450110), CYLICE (10.17600/97080120), DELTARHO2 (10.17600/82001611), DENISE, FLULIG, GEOCORSE2003 (10.17600/3450130), HR02D, LBAR, LIMA1 (10.17600/1430060), LIMA2 (10.17600/1430070), LISA (10.17600/95000020), MACOLIG (10.17600/96450030), MALIGU, MALIS (10.17600/95000010), MARCO (10.17600/95020040), MESIM (10.17600/91004111; 10.17600/91004112), ODYSSEE, SIBONI.</datacite:description>
+  </datacite:descriptions>
+  <datacite:creators>
+    <datacite:creator>
+      <datacite:creatorName nameType="Personal">THINON Isabelle
+
+      </datacite:creatorName>
+      <datacite:nameIdentifier nameIdentifierScheme="ORCID">https://orcid.org/0000-0001-8358-2699</datacite:nameIdentifier>
+      <datacite:nameIdentifier nameIdentifierScheme="SCOPUS Authors">6507108621</datacite:nameIdentifier>
+      <datacite:affiliation xml:lang="fre">BRGM</datacite:affiliation>
+    </datacite:creator>
+    <datacite:creator>
+      <datacite:creatorName nameType="Personal">GUENNOC Pol
+
+      </datacite:creatorName>
+      <datacite:nameIdentifier nameIdentifierScheme="ORCID">https://orcid.org/0000-0001-5540-0392</datacite:nameIdentifier>
+      <datacite:nameIdentifier nameIdentifierScheme="SCOPUS Authors">55921755100</datacite:nameIdentifier>
+      <datacite:affiliation xml:lang="fre">BRGM</datacite:affiliation>
+    </datacite:creator>
+    <datacite:creator>
+      <datacite:creatorName nameType="Personal">RÉHAULT Jean-pierre
+
+      </datacite:creatorName>
+      <datacite:nameIdentifier nameIdentifierScheme="SCOPUS Authors">7003684612</datacite:nameIdentifier>
+      <datacite:affiliation xml:lang="fre">Université de Bretagne Occidentale - UBO · Département des Sciences de la Terre</datacite:affiliation>
+    </datacite:creator>
+    <datacite:creator>
+      <datacite:creatorName nameType="Organizational">BRGM
+
+      </datacite:creatorName>
+      <datacite:nameIdentifier nameIdentifierScheme="ROR">https://ror.org/05hnb7x64</datacite:nameIdentifier>
+      <datacite:affiliation xml:lang="fre">BRGM</datacite:affiliation>
+    </datacite:creator>
+  </datacite:creators>
+  <datacite:contributors>
+    <datacite:contributor contributorType="ContactPerson">
+      <datacite:contributorName nameType="Personal">THINON Isabelle
+
+      </datacite:contributorName>
+      <datacite:nameIdentifier nameIdentifierScheme="ORCID">https://orcid.org/0000-0001-8358-2699</datacite:nameIdentifier>
+      <datacite:nameIdentifier nameIdentifierScheme="SCOPUS Authors">6507108621</datacite:nameIdentifier>
+      <datacite:affiliation xml:lang="fre">BRGM</datacite:affiliation>
+    </datacite:contributor>
+    <datacite:contributor contributorType="Sponsor">
+      <datacite:contributorName nameType="Organizational">BRGM
+
+      </datacite:contributorName>
+      <datacite:nameIdentifier nameIdentifierScheme="ROR">https://ror.org/05hnb7x64</datacite:nameIdentifier>
+      <datacite:affiliation xml:lang="fre">BRGM</datacite:affiliation>
+    </datacite:contributor>
+  </datacite:contributors>
+  <datacite:fundingReferences>
+    <datacite:fundingReference>
+      <datacite:funderName>BRGM
+
+      </datacite:funderName>
+      <datacite:funderIdentifier funderIdentifierType="ROR">https://ror.org/05hnb7x64</datacite:funderIdentifier>
+    </datacite:fundingReference>
+  </datacite:fundingReferences>
+  <datacite:geoLocations>
+    <datacite:geoLocation>
+      <datacite:geoLocationBox>
+        <datacite:westBoundLongitude>8.5347</datacite:westBoundLongitude>
+        <datacite:eastBoundLongitude>9.5601</datacite:eastBoundLongitude>
+        <datacite:southBoundLatitude>41.3336</datacite:southBoundLatitude>
+        <datacite:northBoundLatitude>43.0277</datacite:northBoundLatitude>
+      </datacite:geoLocationBox>
+    </datacite:geoLocation>
+    <datacite:geoLocation>
+      <datacite:geoLocationBox>
+        <datacite:westBoundLongitude>7.60</datacite:westBoundLongitude>
+        <datacite:eastBoundLongitude>10.80</datacite:eastBoundLongitude>
+        <datacite:southBoundLatitude>40.94</datacite:southBoundLatitude>
+        <datacite:northBoundLatitude>43.52</datacite:northBoundLatitude>
+      </datacite:geoLocationBox>
+    </datacite:geoLocation>
+  </datacite:geoLocations>
+  <datacite:subjects>
+    <datacite:subject xml:lang="fre" valueURI="https://data.geoscience.fr/ncl/structure/Category/11">géologie du socle et des orogènes</datacite:subject>
+    <datacite:subject xml:lang="eng" valueURI="https://data.geoscience.fr/ncl/structure/Category/11">bedrock and orogen geology</datacite:subject>
+    <datacite:subject xml:lang="fre" valueURI="https://data.geoscience.fr/ncl/structure/Category/2">géologie</datacite:subject>
+    <datacite:subject xml:lang="eng" valueURI="https://data.geoscience.fr/ncl/structure/Category/2">geology</datacite:subject>
+    <datacite:subject xml:lang="fre" valueURI="https://data.geoscience.fr/ncl/structure/Category/12">géologie des bassins sédimentaires</datacite:subject>
+    <datacite:subject xml:lang="eng" valueURI="https://data.geoscience.fr/ncl/structure/Category/12">geology of sedimentary basins</datacite:subject>
+    <datacite:subject xml:lang="fre" valueURI="https://data.geoscience.fr/ncl/structure/Category/10">géologie de la surface</datacite:subject>
+    <datacite:subject xml:lang="eng" valueURI="https://data.geoscience.fr/ncl/structure/Category/10">surface geology</datacite:subject>
+    <datacite:subject xml:lang="fre" valueURI="http://data.loterre.fr/ark:/67375/26L-SGP202VS-Z">carte géologique</datacite:subject>
+    <datacite:subject xml:lang="eng" valueURI="http://data.loterre.fr/ark:/67375/26L-SGP202VS-Z">geologic map</datacite:subject>
+    <datacite:subject xml:lang="fre" valueURI="http://data.loterre.fr/ark:/67375/26L-SR7F4VQX-7">géologie</datacite:subject>
+    <datacite:subject xml:lang="eng" valueURI="http://data.loterre.fr/ark:/67375/26L-SR7F4VQX-7">geology</datacite:subject>
+    <datacite:subject xml:lang="fre" valueURI="http://data.loterre.fr/ark:/67375/26L-HJHPPMP2-L">marge continentale</datacite:subject>
+    <datacite:subject xml:lang="eng" valueURI="http://data.loterre.fr/ark:/67375/26L-HJHPPMP2-L">continental margin</datacite:subject>
+    <datacite:subject xml:lang="fre" valueURI="http://data.loterre.fr/ark:/67375/26L-P7KDCJXL-T">océan</datacite:subject>
+    <datacite:subject xml:lang="eng" valueURI="http://data.loterre.fr/ark:/67375/26L-P7KDCJXL-T">ocean</datacite:subject>
+    <datacite:subject xml:lang="fre" valueURI="http://data.loterre.fr/ark:/67375/26L-WLC0XJFM-5">plateforme continentale</datacite:subject>
+    <datacite:subject xml:lang="eng" valueURI="http://data.loterre.fr/ark:/67375/26L-WLC0XJFM-5">continental shelf</datacite:subject>
+    <datacite:subject xml:lang="fre" valueURI="https://data.geoscience.fr/ncl/Keywords/04">espace maritime</datacite:subject>
+    <datacite:subject xml:lang="eng" valueURI="https://data.geoscience.fr/ncl/Keywords/04">Marine area</datacite:subject>
+    <datacite:subject xml:lang="fre" valueURI="http://data.loterre.fr/ark:/67375/26L-WD4P3QDF-2">carte de géologie marine</datacite:subject>
+    <datacite:subject xml:lang="eng" valueURI="http://data.loterre.fr/ark:/67375/26L-WD4P3QDF-2">marine geology map</datacite:subject>
+    <datacite:subject xml:lang="fre" valueURI="http://data.loterre.fr/ark:/67375/26L-VCCJCNZZ-5">Messinien</datacite:subject>
+    <datacite:subject xml:lang="eng" valueURI="http://data.loterre.fr/ark:/67375/26L-VCCJCNZZ-5">Messinian</datacite:subject>
+    <datacite:subject xml:lang="fre" valueURI="http://data.loterre.fr/ark:/67375/26L-BKSGW67S-G">Pliocène</datacite:subject>
+    <datacite:subject xml:lang="eng" valueURI="http://data.loterre.fr/ark:/67375/26L-BKSGW67S-G">Pliocene</datacite:subject>
+    <datacite:subject xml:lang="fre" valueURI="http://data.loterre.fr/ark:/67375/26L-HG2KRW45-D">bassin sédimentaire</datacite:subject>
+    <datacite:subject xml:lang="eng" valueURI="http://data.loterre.fr/ark:/67375/26L-HG2KRW45-D">sedimentary basin</datacite:subject>
+    <datacite:subject xml:lang="fre" valueURI="http://data.loterre.fr/ark:/67375/26L-BXPR96N6-B">volcanisme sous-marin</datacite:subject>
+    <datacite:subject xml:lang="eng" valueURI="http://data.loterre.fr/ark:/67375/26L-BXPR96N6-B">submarine volcanism</datacite:subject>
+    <datacite:subject xml:lang="fre">Données de projet</datacite:subject>
+    <datacite:subject xml:lang="eng">Project data</datacite:subject>
+    <datacite:subject xml:lang="fre">donnée</datacite:subject>
+  </datacite:subjects>
+  <datacite:rightsList>
+    <datacite:rights xml:lang="fre">Use limitation</datacite:rights>
+    <datacite:rights xml:lang="fre" rightsURI="https://spdx.org/licenses/etalab-2.0.html">etalab-2.0</datacite:rights>
+    <datacite:rights xml:lang="eng" rightsURI="https://spdx.org/licenses/etalab-2.0.html">etalab-2.0</datacite:rights>
+  </datacite:rightsList>
+  <datacite:language>fre</datacite:language>
+  <datacite:publisher publisherIdentifier="https://ror.org/05hnb7x64" publisherIdentifierScheme="ROR">BRGM</datacite:publisher>
+  <datacite:publicationYear>2025</datacite:publicationYear>
+  <datacite:formats>
+    <datacite:format>SHAPEFILE</datacite:format>
+    <datacite:format>PARQUET</datacite:format>
+  </datacite:formats>
+  <datacite:sizes>
+    <datacite:size>100 MB</datacite:size>
+  </datacite:sizes>
+</datacite:resource>

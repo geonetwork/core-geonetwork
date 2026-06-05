@@ -23,13 +23,21 @@
 package org.fao.geonet.util;
 
 import org.apache.commons.text.StringEscapeUtils;
-import org.owasp.esapi.reference.DefaultEncoder;
+import org.fao.geonet.api.records.attachments.Store;
+import org.fao.geonet.domain.MetadataResourceContainer;
 
+import org.fao.geonet.utils.Xml;
+import org.owasp.esapi.reference.DefaultEncoder;
+import org.w3c.dom.Node;
+
+import java.io.IOException;
 import java.util.List;
 
 public class XslUtil {
+    public static Boolean IS_INSPIRE_ENABLED = false;
+
     public static String twoCharLangCode(String iso3code) {
-        return iso3code.substring(0, 2);
+        return twoCharLangCode(iso3code, iso3code.substring(0, 2));
     }
     public static String threeCharLangCode(String iso2code) {
         return "fre";
@@ -39,6 +47,8 @@ public class XslUtil {
         switch (key) {
             case "system/metadata/validation/removeSchemaLocation":
                 return "false";
+            case "system/inspire/enable":
+                return IS_INSPIRE_ENABLED.toString();
             default:
                 return "true";
         }
@@ -139,4 +149,56 @@ public class XslUtil {
         return false;
     }
 
+    public static String gmlToGeoJson(String gml, Boolean applyPrecisionModel, Integer numberOfDecimals) {
+        return "";
+    }
+
+    public static Node getUrlContent(String surl) {
+        return null;
+    }
+
+    public static Node getRecord(String uuid) {
+        return null;
+    }
+
+    public static String getKeywordUri(String keyword, String thesaurusId, String langCode) {
+        return "";
+    }
+
+    public static String getThesaurusIdByTitle(String title) {
+        return "";
+    }
+
+    public static MetadataResourceContainer getResourceContainerDescription(String metadataUuid, Boolean approved) throws Exception {
+        return null;
+    }
+
+    public static Store.ResourceManagementExternalProperties getResourceManagementExternalProperties() {
+        return null;
+    }
+
+    public static String escapeForEcmaScript(String value) {
+        return StringEscapeUtils.escapeEcmaScript(value);
+    }
+
+    public static String iso639_2T_to_iso639_2B(String iso639_2T) {
+        return iso639_2T;
+    }
+
+    public static String xmlToJson(Object xml) {
+        try {
+            return Xml.getJSON(xml.toString());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return "";
+    }
+
+    public static String getLanguage() {
+        return getDefaultLangCode();
+    }
+
+    public static String getDefaultLangCode() {
+        return "eng";
+    }
 }

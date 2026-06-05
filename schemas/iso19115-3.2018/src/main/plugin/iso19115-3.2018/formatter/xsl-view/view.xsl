@@ -217,7 +217,7 @@
   </xsl:template>
 
   <xsl:template mode="getExtent" match="mdb:MD_Metadata">
-    <xsl:if test=".//mdb:identificationInfo/*/mri:extent">
+    <xsl:if test=".//mdb:identificationInfo/*/mri:extent/*/gex:geographicElement[gex:EX_BoundingPolygon or gex:EX_GeographicBoundingBox]">
       <section class="gn-md-side-extent">
         <h2>
           <i class="fa fa-fw fa-map-marker"></i>
@@ -999,31 +999,34 @@
   <xsl:template mode="render-field"
                 match="mrd:distributionFormat[1]"
                 priority="100">
-    <dl class="gn-format">
-      <dt>
-        <xsl:call-template name="render-field-label">
-          <xsl:with-param name="languages" select="$allLanguages"/>
-        </xsl:call-template>
-      </dt>
-      <dd>
-        <ul>
-          <xsl:for-each select="parent::node()/mrd:distributionFormat">
-            <li>
-              <xsl:apply-templates mode="render-value"
-                                   select="*/mrd:formatSpecificationCitation/*/
+    <xsl:if test="count(parent::node()/mrd:distributionFormat/*/mrd:formatSpecificationCitation/*/
+                                    cit:title/*[text() != '']) > 0">
+      <dl class="gn-format">
+        <dt>
+          <xsl:call-template name="render-field-label">
+            <xsl:with-param name="languages" select="$allLanguages"/>
+          </xsl:call-template>
+        </dt>
+        <dd>
+          <ul>
+            <xsl:for-each select="parent::node()/mrd:distributionFormat">
+              <li>
+                <xsl:apply-templates mode="render-value"
+                                     select="*/mrd:formatSpecificationCitation/*/
                                     cit:title"/>
-              <p>
-                <xsl:apply-templates mode="render-field"
-                                     select="*/(mrd:amendmentNumber|
+                <p>
+                  <xsl:apply-templates mode="render-field"
+                                       select="*/(mrd:amendmentNumber|
                               mrd:fileDecompressionTechnique|
                               mrd:medium|
                               mrd:formatDistributor)"/>
-              </p>
-            </li>
-          </xsl:for-each>
-        </ul>
-      </dd>
-    </dl>
+                </p>
+              </li>
+            </xsl:for-each>
+          </ul>
+        </dd>
+      </dl>
+    </xsl:if>
   </xsl:template>
 
 

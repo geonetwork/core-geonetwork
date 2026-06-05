@@ -708,15 +708,29 @@ public final class XslUtil {
         return "";
     }
 
-    /**
-     * Try to preserve some HTML layout to text layout.
-     *
-     * Replace br tag by new line, li by new line with leading *.
-     */
-    public static String htmlElement2textReplacer(String html) {
-        return html
-            .replaceAll("<br */?>", System.getProperty("line.separator"))
-            .replaceAll("<li>(.*)</li>", System.getProperty("line.separator") + "* $1");
+    public static String htmlElement2textReplacer(String htmlRaw) {
+        String separator = "\n";
+        String htmlWithoutNewlines = htmlRaw.replaceAll("[\n\r]", "");
+        org.jsoup.nodes.Document doc = Jsoup.parse(htmlWithoutNewlines);
+
+        // Handle <li> tags: prepend a bullet (*) to each item
+        doc.select("li:not(:empty)").prepend(separator + "* ");
+
+        // Handle <p> tags: append an empty string (ensure it becomes block-level)
+        doc.select("p:not(:empty)").prepend(separator).append(separator);
+
+        // Handle <h1-h6> tags: prepend # to the header
+        doc.select("h1:not(:empty), h2:not(:empty), h3:not(:empty), h4:not(:empty), h5:not(:empty), h6:not(:empty)").prepend(separator + "# ").append(separator);
+
+        // Handle <a> tags: append the URL in parentheses after the link text
+        for (org.jsoup.nodes.Element element : doc.select("a")) {
+            String text = element.text();
+            String link = element.attr("href");
+            if (!text.equals(link)) {
+                element.text(text + " (" + link + ")");
+            }
+        }
+        return doc.wholeText().trim();
     }
     public static String html2text(String html) {
         return Jsoup.parse(html).wholeText();
@@ -927,10 +941,10 @@ public final class XslUtil {
     }
 
     /**
-     * Return 2 iso lang code from a 3 iso lang code. If any error occurs return "".
+     * Return 2 iso lang code (ISO 639-1 two-letter code) from a 3 iso lang code. If any error occurs return "".
      *
-     * @param iso3LangCode The 2 iso lang code
-     * @return The related 3 iso lang code
+     * @param iso3LangCode The 3 chars iso lang code
+     * @return The related 2 chars iso lang code
      */
     public static
     @Nonnull

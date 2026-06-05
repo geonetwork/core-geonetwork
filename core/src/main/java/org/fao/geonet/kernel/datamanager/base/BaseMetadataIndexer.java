@@ -709,7 +709,7 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
 
             if (metadataResources != null && !metadataResources.isEmpty()) {
                 JsonNode jsonNode = indexObjectMapper.valueToTree(metadataResources);
-                indexMetadataFileStoreFields.put("fileStore", jsonNode);
+                indexMetadataFileStoreFields.put(IndexFields.FILESTORE, jsonNode);
             }
         } catch (Exception e) {
             Log.warning(Geonet.INDEX_ENGINE, String.format(

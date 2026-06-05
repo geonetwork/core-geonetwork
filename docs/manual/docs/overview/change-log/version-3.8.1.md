@@ -24,4 +24,4 @@
 > -   [Fix GeoNetwork 2.x harvester](https://github.com/geonetwork/core-geonetwork/pull/4047).
 > -   [Add portal home page](https://github.com/geonetwork/core-geonetwork/pull/4042).
 
-and more \... see [3.8.1 issues](https://github.com/geonetwork/core-geonetwork/issues?q=is%3Aissue+milestone%3A3.8.1+is%3Aclosed) and [pull requests](https://github.com/geonetwork/core-geonetwork/pulls?q=milestone%3A3.8.1+is%3Aclosed+is%3Apr) for full details.
+and more ... see [3.8.1 issues](https://github.com/geonetwork/core-geonetwork/issues?q=is%3Aissue+milestone%3A3.8.1+is%3Aclosed) and [pull requests](https://github.com/geonetwork/core-geonetwork/pulls?q=milestone%3A3.8.1+is%3Aclosed+is%3Apr) for full details.
