@@ -33,6 +33,7 @@
     "applySuggestion": "Suggestie toepassen",
     "assignToCatalog": "Toewijzen aan de huidige catalogus",
     "assignToCategory": "Aan categorie toekennen",
+    "assignToCategory-help": "This value is not used when importing metadata in MEF (ZIP) format, as the value defined in the ZIP file is used instead.",
     "assignToGroup": "Aan groep toekennen",
     "associationType": "Type link",
     "chooseContactRole": "Kies contactrol",

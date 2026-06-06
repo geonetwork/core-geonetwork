@@ -14,7 +14,7 @@ Elasticsearch Java client version: 8.19.13
 | Elasticsearch 8.19.13 | recommended   |
 | Elasticsearch 8.14.x  | minimum       |
 
-Older version may be supported but are untested.
+Older versions may be supported but are untested.
 
 
 ## Installation
@@ -42,7 +42,7 @@ Older version may be supported but are untested.
         
 === "Install using Maven"
 
-    1. Developers are encouraged to run Elasticseach using maven in order to test against the version of Elasticsearch intended for the next release.
+    1. Developers are encouraged to run Elasticsearch using Maven in order to test against the version of Elasticsearch intended for the next release.
     
         !!! note
             

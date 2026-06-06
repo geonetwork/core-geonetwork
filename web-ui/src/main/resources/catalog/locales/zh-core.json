@@ -373,6 +373,8 @@
     "createChild": "创建一个子节点",
     "privileges": "特权",
     "whoCanAccess": "谁有访问权限",
+    "reservedGroup": "Reserved Group",
+    "recordPrivilegeGroup": "Record Privilege Group",
     "actions": "操作",
     "reset": "重启",
     "stop": "停止",

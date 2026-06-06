@@ -373,6 +373,8 @@
     "createChild": "Vytvořiť potomka",
     "privileges": "Výhradné práva",
     "whoCanAccess": "Kto má prístup",
+    "reservedGroup": "Reserved Group",
+    "recordPrivilegeGroup": "Record Privilege Group",
     "actions": "Akcie",
     "reset": "Znovunastaviť",
     "stop": "Zastaviť",

@@ -10,4 +10,4 @@ To add a new user to the GeoNetwork system, please do the following:
 6.  Click *Save*.
 
 !!! note
-    Usernames are not case sensitive. The application does not allow to create different users with the same username in different cases.
+    Usernames are not case sensitive. The application does not allow creating users with the same username using different letter cases.

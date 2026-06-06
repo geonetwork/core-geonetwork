@@ -60,7 +60,7 @@ To add a new configuration, such as for a sub-portal (see [Portal configuration]
 -   **Search application**: Select this check box to determine whether the search application is visible in the top toolbar. If not set, no link is shown.
 -   **Application URL**: Define the URL for the search application. In the majority of cases this can be left as the default.
 -   **Number of records per page**: Define the options to determine the number of records shown per page of results, and the default.
--   **Facet configuration**: See [Configuring faceted search](../../customizing-application/configuring-faceted-search.md)). The configuration are defined using JSON following Elasticsearch API (See <https://www.elastic.co/guide/en/elasticsearch/reference/current/search-aggregations-bucket.html>.
+-   **Facet configuration**: See [Configuring faceted search](../../customizing-application/configuring-faceted-search.md). The configurations are defined using JSON following the [Elasticsearch Aggregations API](https://www.elastic.co/guide/en/elasticsearch/reference/current/search-aggregations-bucket.html).
 
 ![](img/ui-settings-searchpage.png)
 
@@ -146,7 +146,7 @@ You can configure each map with different layers and projections.
 
     ![](img/ui-settings-mapprojection2.png)
 
-    In order to enable a new projection it must be defined here using the **proj4** syntax, which can be found for many EPSG-listed projections at, for example, <https://epsg.io>. Additionall, the default bounding box extent, maximum bounding box extent and allowed resolutions (if required) can be defined.
+    In order to enable a new projection it must be defined here using the **proj4** syntax, which can be found for many EPSG-listed projections at, for example, [epsg.io](https://epsg.io). Additionally, the default bounding box extent, maximum bounding box extent and allowed resolutions (if required) can be defined.
 
     Ensure that the coordinates inserted are in the correct units for the projection and are local to the projection. A list of resolutions is only relevant if the main map layer has a XYZ source that does not follow the common tiling pattern.
 

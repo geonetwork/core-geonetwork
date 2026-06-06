@@ -320,7 +320,7 @@
           }
 
           return $http
-            .put("../api/userselections/" + selection.id, null, {
+            .put("../api/userselections/" + selection.id + "/items", null, {
               params: {
                 userIdentifier: this.userId,
                 uuid: uuid
@@ -339,7 +339,7 @@
         var ctrl = this;
         if (selection.id > -1) {
           return $http
-            .delete("../api/userselections/" + selection.id, {
+            .delete("../api/userselections/" + selection.id + "/items", {
               params: {
                 userIdentifier: this.userId,
                 uuid: uuid

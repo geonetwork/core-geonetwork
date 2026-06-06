@@ -23,6 +23,7 @@
     </div>
     <div class="modal-footer" ng-if="options.confirmCallback">
       <button
+        data-dismiss="modal"
         data-ng-disabled="disableConfirmButton()"
         class="btn btn-primary"
         data-ng-click="options.confirmCallback()"

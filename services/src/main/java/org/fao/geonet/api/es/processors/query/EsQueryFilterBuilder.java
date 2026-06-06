@@ -26,6 +26,7 @@ package org.fao.geonet.api.es.processors.query;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.NodeInfo;
@@ -73,8 +74,7 @@ public class EsQueryFilterBuilder {
         JsonNode queryNode = esQuery.get(QUERY);
 
         // Replace any "global" aggregation with a "filter" aggregation scoped to
-        // the ACL filter. The ES "global" bucket ignores the query context entirely
-        // and would otherwise expose aggregate statistics from restricted records.
+        // the ACL filter.
         // Must run after nodeFilter is built, before any branch exits early via return.
         for (String aggsKey : new String[]{AGGS, AGGREGATIONS}) {
             JsonNode aggsNode = esQuery.get(aggsKey);
@@ -200,15 +200,16 @@ public class EsQueryFilterBuilder {
 
     private void insertFilter(ObjectNode objectNode, JsonNode nodeFilter) {
         JsonNode filter = objectNode.get(FILTER);
-        if (filter == null || filter.isNull()) {
+        if (filter == null || filter.isNull() || (filter.isObject() && filter.isEmpty())) {
             objectNode.set(FILTER, nodeFilter);
         } else if (filter.isArray()) {
             ((ArrayNode) filter).add(nodeFilter);
         } else {
             // existing filter is an object (or other non-array) -> convert to array preserving both
-            ArrayNode arr = objectNode.putArray(FILTER);
+            ArrayNode arr = JsonNodeFactory.instance.arrayNode();
             arr.add(filter);
             arr.add(nodeFilter);
+            objectNode.set(FILTER, arr);
         }
     }
 }

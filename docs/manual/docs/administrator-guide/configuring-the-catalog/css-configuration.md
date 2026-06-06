@@ -1,6 +1,6 @@
 # Configuring CSS & Style {#css-configuration}
 
-To get to the CSS & Style configuration, you must be logged on as administrator. Open 'Settings' from the Administration page and select ``CCS & Style`` configuration.
+To get to the CSS & Style configuration, you must be logged on as administrator. Open 'Settings' from the Administration page and select ``CSS & Style`` configuration.
 
 ![](img/css-screen.png)
 
