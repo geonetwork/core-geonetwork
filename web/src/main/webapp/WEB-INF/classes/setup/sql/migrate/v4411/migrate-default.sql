@@ -8,4 +8,4 @@ WHERE configuration LIKE '%"gn-recordview-manage-menu"%'
   AND configuration NOT LIKE '%"gn-recordview-download-menu"%';
 
 UPDATE Settings SET value='4.4.11' WHERE name='system/platform/version';
-UPDATE Settings SET value='SNAPSHOT' WHERE name='system/platform/subVersion';
+UPDATE Settings SET value='0' WHERE name='system/platform/subVersion';

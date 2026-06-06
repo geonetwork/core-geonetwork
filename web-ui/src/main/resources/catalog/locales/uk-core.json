@@ -373,6 +373,8 @@
     "createChild": "Створіть дитину",
     "privileges": "Привілеї",
     "whoCanAccess": "Хто має доступ",
+    "reservedGroup": "Reserved Group",
+    "recordPrivilegeGroup": "Record Privilege Group",
     "actions": "Дії",
     "reset": "Скинути",
     "stop": "СТІЙ",
