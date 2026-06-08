@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2024 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2026 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -25,65 +25,17 @@ package org.fao.geonet.api.records;
 
 import co.elastic.clients.elasticsearch.core.SearchResponse;
 import co.elastic.clients.elasticsearch.core.search.Hit;
-import co.elastic.clients.json.JsonData;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.google.common.base.Joiner;
-import jeeves.server.context.ServiceContext;
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.text.StringEscapeUtils;
-import org.fao.geonet.ApplicationContextHolder;
-import org.fao.geonet.GeonetContext;
-import org.fao.geonet.NodeInfo;
-import org.fao.geonet.api.API;
-import org.fao.geonet.api.es.EsHTTPProxy;
 import org.fao.geonet.api.records.model.related.AssociatedRecord;
-import org.fao.geonet.api.records.model.related.RelatedItemOrigin;
-import org.fao.geonet.api.records.model.related.RelatedItemType;
-import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.AbstractMetadata;
-import org.fao.geonet.domain.ReservedOperation;
-import org.fao.geonet.domain.Source;
-import org.fao.geonet.kernel.DataManager;
-import org.fao.geonet.kernel.SchemaManager;
-import org.fao.geonet.kernel.datamanager.IMetadataValidator;
-import org.fao.geonet.kernel.datamanager.base.BaseMetadataUtils;
-import org.fao.geonet.kernel.schema.AssociatedResource;
-import org.fao.geonet.kernel.schema.AssociatedResourcesSchemaPlugin;
-import org.fao.geonet.kernel.schema.SchemaPlugin;
 import org.fao.geonet.kernel.search.EsSearchManager;
-import org.fao.geonet.kernel.setting.SettingInfo;
-import org.fao.geonet.kernel.setting.SettingManager;
-import org.fao.geonet.lib.Lib;
-import org.fao.geonet.repository.MetadataValidationRepository;
-import org.fao.geonet.repository.SourceRepository;
-import org.fao.geonet.repository.specification.MetadataValidationSpecs;
-import org.fao.geonet.services.relations.Get;
-import org.fao.geonet.utils.Log;
-import org.fao.geonet.utils.Xml;
-import org.jdom.Content;
-import org.jdom.Document;
-import org.jdom.Element;
-import org.jdom.JDOMException;
-import org.jdom.output.DOMOutputter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.context.ApplicationContext;
-import org.w3c.dom.Node;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.fao.geonet.constants.Geonet.IndexFieldNames.AGG_ASSOCIATED_REVISION_OF;
-import static org.fao.geonet.kernel.search.EsFilterBuilder.buildPermissionsFilter;
 import static org.fao.geonet.kernel.search.EsSearchManager.*;
 
 
 public class MetadataVersionsUtils {
-    private static final Logger LOGGER = LoggerFactory.getLogger(Geonet.SEARCH_ENGINE);
-
 
     /**
      * For versions, order is based on the version graph.
@@ -248,7 +200,7 @@ public class MetadataVersionsUtils {
 
         Deque<String> queue = new ArrayDeque<>();
         incomingEdges.entrySet().stream()
-            .filter(entry -> entry.getValue() == 0) // ie. no newer version
+            .filter(entry -> entry.getValue() == 0) // i.e. no newer version
             .map(Map.Entry::getKey)
             .sorted()
             .forEach(queue::addLast);
