@@ -31,17 +31,12 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.base.Joiner;
-import java.util.ArrayDeque;
+
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Deque;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -61,7 +56,7 @@ import org.fao.geonet.api.records.model.related.RelatedItemType;
 import org.fao.geonet.constants.Geonet;
 
 import static org.fao.geonet.api.records.MetadataVersionsUtils.*;
-import static org.fao.geonet.constants.Geonet.IndexFieldNames.AGG_ASSOCIATED_REVISION_OF;
+
 import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.domain.Source;
@@ -271,12 +266,12 @@ public class MetadataUtils {
                     versionsDetails = getAllVersions(searchMan, md.getUuid());
                 }
                 queries.put(type, versionsDetails);
-            } else if (type == RelatedItemType.next || type == RelatedItemType.previous) {
+            } else if (type == RelatedItemType.nextVersion || type == RelatedItemType.previousVersion) {
                 if (versionsDetails == null) {
                     versionsDetails = getAllVersions(searchMan, md.getUuid());
                 }
                 queries.put(type, getNextOrPrevious(
-                    versionsDetails, md.getUuid(), type == RelatedItemType.next));
+                    versionsDetails, md.getUuid(), type == RelatedItemType.nextVersion));
             } else if (type == RelatedItemType.associated
                 || type == RelatedItemType.hasfeaturecats
                 || type == RelatedItemType.services

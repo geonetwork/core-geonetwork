@@ -264,57 +264,57 @@ public class MetadataAssociatedApiTest extends AbstractServiceIntegrationTest {
         final String VERSION_MIDDLE = "22222222-2222-4222-8222-222222222222";
         final String VERSION_LATEST = "33333333-3333-4333-8333-333333333333";
 
-        // From VERSION_LATEST, next should be empty (no newer version)
-        mockMvc.perform(get("/srv/api/records/" + VERSION_LATEST + "/associated?type=next")
+        // From VERSION_LATEST, nextVersion should be empty (no newer version)
+        mockMvc.perform(get("/srv/api/records/" + VERSION_LATEST + "/associated?type=nextVersion")
                 .session(mockHttpSession)
                 .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING))
-            .andExpect(jsonPath("$.next", hasSize(0)));
+            .andExpect(jsonPath("$.nextVersion", hasSize(0)));
 
-        // From VERSION_MIDDLE, next should be VERSION_LATEST
-        mockMvc.perform(get("/srv/api/records/" + VERSION_MIDDLE + "/associated?type=next")
+        // From VERSION_MIDDLE, nextVersion should be VERSION_LATEST
+        mockMvc.perform(get("/srv/api/records/" + VERSION_MIDDLE + "/associated?type=nextVersion")
                 .session(mockHttpSession)
                 .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING))
-            .andExpect(jsonPath("$.next", hasSize(1)))
-            .andExpect(jsonPath("$.next[0]._source.uuid").value(VERSION_LATEST));
+            .andExpect(jsonPath("$.nextVersion", hasSize(1)))
+            .andExpect(jsonPath("$.nextVersion[0]._source.uuid").value(VERSION_LATEST));
 
-        // From VERSION_OLDEST, next should be VERSION_MIDDLE
-        mockMvc.perform(get("/srv/api/records/" + VERSION_OLDEST + "/associated?type=next")
+        // From VERSION_OLDEST, nextVersion should be VERSION_MIDDLE
+        mockMvc.perform(get("/srv/api/records/" + VERSION_OLDEST + "/associated?type=nextVersion")
                 .session(mockHttpSession)
                 .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING))
-            .andExpect(jsonPath("$.next", hasSize(1)))
-            .andExpect(jsonPath("$.next[0]._source.uuid").value(VERSION_MIDDLE));
+            .andExpect(jsonPath("$.nextVersion", hasSize(1)))
+            .andExpect(jsonPath("$.nextVersion[0]._source.uuid").value(VERSION_MIDDLE));
 
-        // From VERSION_LATEST, previous should be VERSION_MIDDLE
-        mockMvc.perform(get("/srv/api/records/" + VERSION_LATEST + "/associated?type=previous")
+        // From VERSION_LATEST, previousVersion should be VERSION_MIDDLE
+        mockMvc.perform(get("/srv/api/records/" + VERSION_LATEST + "/associated?type=previousVersion")
                 .session(mockHttpSession)
                 .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING))
-            .andExpect(jsonPath("$.previous", hasSize(1)))
-            .andExpect(jsonPath("$.previous[0]._source.uuid").value(VERSION_MIDDLE));
+            .andExpect(jsonPath("$.previousVersion", hasSize(1)))
+            .andExpect(jsonPath("$.previousVersion[0]._source.uuid").value(VERSION_MIDDLE));
 
-        // From VERSION_MIDDLE, previous should be VERSION_OLDEST
-        mockMvc.perform(get("/srv/api/records/" + VERSION_MIDDLE + "/associated?type=previous")
+        // From VERSION_MIDDLE, previousVersion should be VERSION_OLDEST
+        mockMvc.perform(get("/srv/api/records/" + VERSION_MIDDLE + "/associated?type=previousVersion")
                 .session(mockHttpSession)
                 .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING))
-            .andExpect(jsonPath("$.previous", hasSize(1)))
-            .andExpect(jsonPath("$.previous[0]._source.uuid").value(VERSION_OLDEST));
+            .andExpect(jsonPath("$.previousVersion", hasSize(1)))
+            .andExpect(jsonPath("$.previousVersion[0]._source.uuid").value(VERSION_OLDEST));
 
-        // From VERSION_OLDEST, previous should be empty (no newer version)
-        mockMvc.perform(get("/srv/api/records/" + VERSION_OLDEST + "/associated?type=previous")
+        // From VERSION_OLDEST, previousVersion should be empty (no newer version)
+        mockMvc.perform(get("/srv/api/records/" + VERSION_OLDEST + "/associated?type=previousVersion")
                 .session(mockHttpSession)
                 .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING))
-            .andExpect(jsonPath("$.previous", hasSize(0)));
+            .andExpect(jsonPath("$.previousVersion", hasSize(0)));
     }
 
     @Test

@@ -119,8 +119,8 @@ public class MetadataAssociatedApi {
             "- `siblings`: aggregated/associated resources linked by this record.\n" +
             "- `associated`: reverse siblings relation (records referencing this record).\n" +
             "- `versions`: full revision chain for this record (does not support remote records). If the current record is the only version, empty list is returned.\n" +
-            "- `next`: immediate next item in version ordering.\n" +
-            "- `previous`: immediate previous item in version ordering.\n" +
+            "- `nextVersion`: immediate next item in version ordering.\n" +
+            "- `previousVersion`: immediate previous item in version ordering.\n" +
             "- `services`: services publishing this dataset record.\n" +
             "- `datasets`: datasets published (operated) by a service record.\n" +
             "- `fcats`: feature catalog references.\n" +

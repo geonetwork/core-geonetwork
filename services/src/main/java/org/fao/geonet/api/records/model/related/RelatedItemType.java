@@ -54,8 +54,8 @@ public enum RelatedItemType {
      * is pointing to the previous version of a record.
      */
     versions,
-    next,
-    previous,
+    nextVersion,
+    previousVersion,
     /**
      * All services having recordOperateOn index field pointing to record of interest.
      */
