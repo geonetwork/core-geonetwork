@@ -1,26 +1,3 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!--
-  ~ Copyright (C) 2001-2016 Food and Agriculture Organization of the
-  ~ United Nations (FAO-UN), United Nations World Food Programme (WFP)
-  ~ and United Nations Environment Programme (UNEP)
-  ~
-  ~ This program is free software; you can redistribute it and/or modify
-  ~ it under the terms of the GNU General Public License as published by
-  ~ the Free Software Foundation; either version 2 of the License, or (at
-  ~ your option) any later version.
-  ~
-  ~ This program is distributed in the hope that it will be useful, but
-  ~ WITHOUT ANY WARRANTY; without even the implied warranty of
-  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
-  ~ General Public License for more details.
-  ~
-  ~ You should have received a copy of the GNU General Public License
-  ~ along with this program; if not, write to the Free Software
-  ~ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
-  ~
-  ~ Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
-  ~ Rome - Italy. email: geonetwork@osgeo.org
-  -->
 <xsl:stylesheet version="2.0"
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -33,7 +10,6 @@
                 xmlns:gss="http://www.isotc211.org/2005/gss"
                 xmlns:gts="http://www.isotc211.org/2005/gts"
                 xmlns:srv="http://www.isotc211.org/2005/srv"
-                xmlns:gml="http://www.opengis.net/gml"
                 xmlns:cat="http://standards.iso.org/iso/19115/-3/cat/1.0"
                 xmlns:cit="http://standards.iso.org/iso/19115/-3/cit/2.0"
                 xmlns:gcx="http://standards.iso.org/iso/19115/-3/gcx/1.0"
@@ -62,14 +38,32 @@
                 xmlns:mai="http://standards.iso.org/iso/19115/-3/mai/1.0"
                 xmlns:mdq="http://standards.iso.org/iso/19157/-2/mdq/1.0"
                 xmlns:gco2="http://standards.iso.org/iso/19115/-3/gco/1.0"
+                xmlns:gml="http://www.opengis.net/gml/3.2"
                 xmlns:xlink="http://www.w3.org/1999/xlink"
                 xmlns:xd="http://www.oxygenxml.com/ns/doc/xsl"
                 exclude-result-prefixes="#all">
+  <xd:doc scope="stylesheet">
+    <xd:desc>
+      <xd:p>
+        More work required on:
+        <xd:ul>
+          <xd:li>gmi:* not handled.</xd:li>
+          <xd:li>Filter all new elements (see last template).</xd:li>
+        </xd:ul>
+      </xd:p>
+    </xd:desc>
+  </xd:doc>
 
-  <xsl:output method="xml"
-              indent="yes"/>
-<xsl:variable name="mergeAllOnlineResourcesInDistribution" select="true()"/>
-<xsl:template name="add-namespaces">
+  <xsl:output method="xml" indent="yes"/>
+
+  <xsl:strip-space elements="*"/>
+
+  <!-- Define if all online resources in the ISO19115-3 document should
+  be combined in the ISO19139 distribution section. A new section is added
+  with those documents. eg. feature catalogue, quality reports, legends  -->
+  <xsl:variable name="mergeAllOnlineResourcesInDistribution" select="true()"/>
+
+  <xsl:template name="add-namespaces">
     <!-- new namespaces -->
     <xsl:namespace name="xsi" select="'http://www.w3.org/2001/XMLSchema-instance'"/>
     <!-- Namespaces that include concepts outside of metadata -->
@@ -656,9 +650,7 @@
       <xsl:for-each select=".//cit:CI_Responsibility[
         count(cit:party/cit:CI_Organisation/cit:individual/cit:CI_Individual/cit:name/gco2:CharacterString) +
         count(cit:party/cit:CI_Organisation/cit:individual/cit:CI_Individual/cit:positionName/gco2:CharacterString) +
-        count(cit:party/cit:CI_Organisation/cit:organisationName/gco2:CharacterString) +
-		count(cit:party/cit:CI_Organisation/cit:name/lan:PT_FreeText) +
-		count(cit:party/cit:CI_Organisation/cit:name/gcx:Anchor) = 0]">
+        count(cit:party/cit:CI_Organisation/cit:organisationName/gco2:CharacterString) = 0]">
         <xsl:call-template name="CI_ResponsiblePartyToOnlineResource"/>
       </xsl:for-each>
 
@@ -716,10 +708,8 @@
     <xsl:choose>
       <xsl:when test="count(cit:party/cit:CI_Organisation/cit:individual/cit:CI_Individual/cit:name/gco2:CharacterString) +
         count(cit:party/cit:CI_Organisation/cit:individual/cit:CI_Individual/cit:positionName/gco2:CharacterString) +
-		count(cit:party/cit:CI_Organisation/cit:name/gcx:Anchor) +	
         count(cit:party/cit:CI_Individual/cit:name/gco2:CharacterString) +
         count(cit:party/cit:CI_Individual/cit:positionName/gco2:CharacterString) +
-		count(cit:party/cit:CI_Organisation/cit:name/lan:PT_FreeText) +
         count(cit:party/cit:CI_Organisation/cit:name/gco2:CharacterString) > 0">
         <!--
           CI_ResponsibleParties that include name elements (individualName, organisationName, or positionName) are translated to CI_Responsibilities.
@@ -739,122 +729,18 @@
           </xsl:if>
 
           <xsl:choose>
-            <!--<xsl:when test="name() = 'cit:CI_Organisation' and cit:name != ''">
+            <xsl:when test="name() = 'cit:CI_Organisation' and cit:name != ''">
               <xsl:call-template name="writeCharacterStringElement">
                 <xsl:with-param name="elementName" select="'gmd:organisationName'"/>
                     <xsl:with-param name="nodeWithStringToWrite" select="cit:name"/>
               </xsl:call-template>
-            </xsl:when>-->
-			
-			<xsl:when test="name() = 'cit:CI_Organisation' and cit:name != ''">
-				<xsl:choose>
-					<!-- Case 1: Anchor with optional PT_FreeText -->
-					<xsl:when test="cit:name/gcx:Anchor and cit:name/lan:PT_FreeText">
-						<gmd:organisationName xsi:type="gmd:PT_FreeText_PropertyType">
-							<gmx:Anchor xlink:href="{cit:name/gcx:Anchor/@xlink:href}">
-								<xsl:value-of select="cit:name/gcx:Anchor"/>
-							</gmx:Anchor>
-							<gmd:PT_FreeText>
-								<xsl:for-each select="cit:name/lan:PT_FreeText/lan:textGroup">
-									<gmd:textGroup>
-										<gmd:LocalisedCharacterString locale="{lan:LocalisedCharacterString/@locale}">
-											<xsl:value-of select="lan:LocalisedCharacterString"/>
-										</gmd:LocalisedCharacterString>
-									</gmd:textGroup>
-								</xsl:for-each>
-							</gmd:PT_FreeText>
-						</gmd:organisationName>
-					</xsl:when>
-					<!-- Case 2: Anchor only (no PT_FreeText) -->
-					<xsl:when test="cit:name/gcx:Anchor">
-						<gmd:organisationName>
-							<gmx:Anchor xlink:href="{cit:name/gcx:Anchor/@xlink:href}">
-								<xsl:value-of select="cit:name/gcx:Anchor"/>
-							</gmx:Anchor>
-						</gmd:organisationName>
-					</xsl:when>
-					<!-- Case 3: CharacterString with PT_FreeText -->
-					<xsl:when test="cit:name/lan:PT_FreeText">
-						<gmd:organisationName xsi:type="gmd:PT_FreeText_PropertyType">
-							<gco:CharacterString>
-								<xsl:value-of select="cit:name/gco2:CharacterString"/>
-							</gco:CharacterString>
-							<gmd:PT_FreeText>
-								<xsl:for-each select="cit:name/lan:PT_FreeText/lan:textGroup">
-									<gmd:textGroup>
-										<gmd:LocalisedCharacterString locale="{lan:LocalisedCharacterString/@locale}">
-											<xsl:value-of select="lan:LocalisedCharacterString"/>
-										</gmd:LocalisedCharacterString>
-									</gmd:textGroup>
-								</xsl:for-each>
-							</gmd:PT_FreeText>
-						</gmd:organisationName>
-					</xsl:when>
-					<!-- Case 4: Plain CharacterString -->
-					<xsl:otherwise>
-						<gmd:organisationName>
-							<gco:CharacterString>
-								<xsl:value-of select="cit:name/gco2:CharacterString"/>
-							</gco:CharacterString>
-						</gmd:organisationName>
-					</xsl:otherwise>
-				</xsl:choose>
-			</xsl:when>
-						
-            <xsl:when test="name() = 'cit:CI_Individual' and ../../cit:name != ''">
-              <xsl:choose>
-                <!-- Case 1: Anchor + PT_FreeText -->
-                <xsl:when test="../../cit:name/gcx:Anchor and ../../cit:name/lan:PT_FreeText">
-                  <gmd:organisationName xsi:type="gmd:PT_FreeText_PropertyType">
-                    <gmx:Anchor xlink:href="{../../cit:name/gcx:Anchor/@xlink:href}">
-                      <xsl:value-of select="../../cit:name/gcx:Anchor"/>
-                    </gmx:Anchor>
-                    <gmd:PT_FreeText>
-                      <xsl:for-each select="../../cit:name/lan:PT_FreeText/lan:textGroup">
-                        <gmd:textGroup>
-                          <gmd:LocalisedCharacterString locale="{lan:LocalisedCharacterString/@locale}">
-                            <xsl:value-of select="lan:LocalisedCharacterString"/>
-                          </gmd:LocalisedCharacterString>
-                        </gmd:textGroup>
-                      </xsl:for-each>
-                    </gmd:PT_FreeText>
-                  </gmd:organisationName>
-                </xsl:when>
-                <!-- Case 2: Anchor only -->
-                <xsl:when test="../../cit:name/gcx:Anchor">
-                  <gmd:organisationName>
-                    <gmx:Anchor xlink:href="{../../cit:name/gcx:Anchor/@xlink:href}">
-                      <xsl:value-of select="../../cit:name/gcx:Anchor"/>
-                    </gmx:Anchor>
-                  </gmd:organisationName>
-                </xsl:when>
-                <!-- Case 3: CharacterString + PT_FreeText -->
-                <xsl:when test="../../cit:name/lan:PT_FreeText">
-                  <gmd:organisationName xsi:type="gmd:PT_FreeText_PropertyType">
-                    <gco:CharacterString>
-                      <xsl:value-of select="../../cit:name/gco2:CharacterString|../../cit:name/gco:CharacterString"/>
-                    </gco:CharacterString>
-                    <gmd:PT_FreeText>
-                      <xsl:for-each select="../../cit:name/lan:PT_FreeText/lan:textGroup">
-                        <gmd:textGroup>
-                          <gmd:LocalisedCharacterString locale="{lan:LocalisedCharacterString/@locale}">
-                            <xsl:value-of select="lan:LocalisedCharacterString"/>
-                          </gmd:LocalisedCharacterString>
-                        </gmd:textGroup>
-                      </xsl:for-each>
-                    </gmd:PT_FreeText>
-                  </gmd:organisationName>
-                </xsl:when>
-                <!-- Case 4: Plain CharacterString -->
-                <xsl:otherwise>
-                  <xsl:call-template name="writeCharacterStringElement">
-                    <xsl:with-param name="elementName" select="'gmd:organisationName'"/>
-                    <xsl:with-param name="nodeWithStringToWrite" select="../../cit:name"/>
-                  </xsl:call-template>
-                </xsl:otherwise>
-              </xsl:choose>
             </xsl:when>
-			
+            <xsl:when test="name() = 'cit:CI_Individual' and ../../cit:name != ''">
+              <xsl:call-template name="writeCharacterStringElement">
+                <xsl:with-param name="elementName" select="'gmd:organisationName'"/>
+                <xsl:with-param name="nodeWithStringToWrite" select="../../cit:name"/>
+              </xsl:call-template>
+            </xsl:when>
           </xsl:choose>
 
           <xsl:if test="cit:positionName != ''">
@@ -1038,12 +924,6 @@
     <xsl:copy-of select="."/>
   </xsl:template>
 
-  <xsl:template match="@xsi:type">
-    <xsl:attribute name="xsi:type">
-      <xsl:value-of select="replace(., 'lan:PT_FreeText_PropertyType', 'gmd:PT_FreeText_PropertyType')"/>
-    </xsl:attribute>
-  </xsl:template>
-
   <xsl:template name="writeCodelistElement">
     <xsl:param name="elementName"/>
     <xsl:param name="codeListName"/>
@@ -1075,17 +955,14 @@
     <xsl:param name="nodeWithStringToWrite"/>
 
     <xsl:variable name="isMultilingual"
-      select="count($nodeWithStringToWrite/gmd:PT_FreeText) > 0"/>
+      select="count($nodeWithStringToWrite/lan:PT_FreeText) > 0"/>
     <xsl:variable name="hasCharacterString"
       select="count($nodeWithStringToWrite/gco2:CharacterString) = 1"/>
 
     <xsl:choose>
       <xsl:when test="$nodeWithStringToWrite">
         <xsl:element name="{$elementName}">
-          <xsl:copy-of select="$nodeWithStringToWrite/@*[not(local-name()='type' and namespace-uri()='http://www.w3.org/2001/XMLSchema-instance')]"/>
-          <xsl:if test="$isMultilingual">
-            <xsl:attribute name="xsi:type" select="'gmd:PT_FreeText_PropertyType'"/>
-          </xsl:if>
+          <xsl:apply-templates select="$nodeWithStringToWrite/@*"/>
 
           <xsl:if test="$hasCharacterString">
             <gco:CharacterString>
@@ -1093,11 +970,15 @@
             </gco:CharacterString>
           </xsl:if>
           <xsl:if test="$isMultilingual">
-            <xsl:copy-of select="$nodeWithStringToWrite/gmd:PT_FreeText"/>
+            <xsl:apply-templates select="$nodeWithStringToWrite/lan:PT_FreeText"/>
           </xsl:if>
         </xsl:element>
       </xsl:when>
     </xsl:choose>
+  </xsl:template>
+
+  <xsl:template match="@xsi:type[. = 'lan:PT_FreeText_PropertyType']">
+    <xsl:attribute name="xsi:type" select="'gmd:PT_FreeText_PropertyType'"/>
   </xsl:template>
 
   <xsl:template name="writeDateTime">
