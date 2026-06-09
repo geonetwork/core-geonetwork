@@ -254,6 +254,21 @@ public class HarvesterTest {
     }
 
     @Test
+    public void requestRejectedErrorsAbortInsteadOfBeingSkipped() {
+        Harvester.SearchResultsFetcher rejectedServer = (start, length) -> {
+            throw new InvalidParameterValueEx("outputSchema", "gmd");
+        };
+        try {
+            Harvester.recoverRange(rejectedServer, 1, 20, new ArrayList<>(), new int[]{-1},
+                (pos, cause) -> fail("a request-rejected error must not be skipped"));
+            fail("expected the request-rejected error to propagate");
+        } catch (Exception e) {
+            assertTrue("expected the original InvalidParameterValueEx, got " + e,
+                e instanceof InvalidParameterValueEx);
+        }
+    }
+
+    @Test
     public void classifiesAnUnreturnableRecordAsRecoverable() {
         // A CSW server that can not present a single record in the requested
         // outputSchema surfaces a generic NoApplicableCode OWS exception (the

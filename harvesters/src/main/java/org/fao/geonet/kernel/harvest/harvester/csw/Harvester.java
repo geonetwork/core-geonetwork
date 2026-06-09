@@ -264,7 +264,6 @@ class Harvester implements IHarvester<HarvestResult> {
               //Returning whatever, we have to move on and finish!
               return;
             }
-            request.setStartPosition(start);
             // Retrieve the page. If the source can not return the whole page
             // because a single record can not be served in the requested
             // outputSchema (for instance an ISO 19110 feature catalogue
@@ -332,7 +331,10 @@ class Harvester implements IHarvester<HarvestResult> {
             }
 
             if (returnedCount != foundCnt) {
-                log.warning("Declared number of returned records (" + returnedCount + ") does not match actual record count (" + foundCnt + ")");
+                // During page recovery, returnedCount includes skipped positions
+                // so it will exceed foundCnt by the number of skipped records.
+                log.warning("Declared number of returned records (" + returnedCount + ") does not match actual record count (" + foundCnt + ")"
+                    + (returnedCount > foundCnt ? "; " + (returnedCount - foundCnt) + " position(s) may have been skipped during page recovery" : ""));
             }
 
             if (nextRecord == null) {
@@ -755,6 +757,13 @@ class Harvester implements IHarvester<HarvestResult> {
                         position, params.getName(), cause.getMessage()));
                     errors.add(new HarvestError(context, cause));
                 });
+
+            if (recovered.isEmpty() && consumed > 0) {
+                log.warning(String.format(
+                    "All %d position(s) in page [%d..%d] of '%s' were skipped during recovery. "
+                        + "If the harvest is consistently empty, verify the outputSchema and typeNames configuration.",
+                    consumed, start, start + consumed - 1, params.getName()));
+            }
 
             Element results = new Element("SearchResults", Csw.NAMESPACE_CSW);
             results.setAttribute(ATTRIB_SEARCHRESULT_MATCHED, Integer.toString(Math.max(matched[0], 0)));
