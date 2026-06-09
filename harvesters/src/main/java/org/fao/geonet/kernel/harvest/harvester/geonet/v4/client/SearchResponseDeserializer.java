@@ -93,9 +93,10 @@ public class SearchResponseDeserializer extends StdDeserializer<SearchResponse> 
         Set<SearchResponseHit> searchResponseHits = new HashSet<>();
         node.get(HITS).get(HITS).forEach(hitNode -> {
             String uuid = hitNode.get(ID).asText();
-            String schema = hitNode.get(SOURCE).get(DOCUMENT_STANDARD).asText();
-            String changeDate = hitNode.get(SOURCE).get(DATE_STAMP).asText();
-            String source = hitNode.get(SOURCE).get(SOURCE_CATALOGUE).asText();
+            String schema = hitNode.path(SOURCE).path(DOCUMENT_STANDARD).asText();
+            // null signals RecordInfo to set dateWasNull=true and always harvest the record
+            String changeDate = hitNode.path(SOURCE).path(DATE_STAMP).asText(null);
+            String source = hitNode.path(SOURCE).path(SOURCE_CATALOGUE).asText();
             SearchResponseHit searchResponseHit = new SearchResponseHit(uuid, schema, changeDate, source);
             searchResponseHits.add(searchResponseHit);
         });
