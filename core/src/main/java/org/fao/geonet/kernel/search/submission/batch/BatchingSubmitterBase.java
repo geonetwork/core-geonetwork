@@ -27,13 +27,16 @@ import java.lang.ref.Cleaner;
 import java.util.concurrent.CompletableFuture;
 
 public abstract class BatchingSubmitterBase<STATE extends StateBase> implements AutoCloseable {
+    private static final int DESIRED_BATCH_COUNT = 25;
+    private static final int MIN_BATCH_SIZE = 20;
+    private static final int MAX_BATCH_SIZE = 100;
     private static final Cleaner CLEANER = Cleaner.create();
     protected final STATE state;
     protected final int commitInterval;
     private final Cleaner.Cleanable cleanable;
 
     protected BatchingSubmitterBase(final STATE state) {
-        this.commitInterval = 200;
+        this.commitInterval = MAX_BATCH_SIZE;
         this.state = state;
         this.cleanable = CLEANER.register(this, state);
     }
@@ -45,12 +48,12 @@ public abstract class BatchingSubmitterBase<STATE extends StateBase> implements 
 
         // Compute an ideal commit interval based on estimated size of elements to index
         // Try to strike a balance between
-        // a) Not making enough bulk requests, thus having to wait a long time at the end for a large chunk => try to make at least 8 requests
-        int elementsPerBatchRequest = estimatedTotalSize / 8;
-        // b) Making too many requests, adding unnecessary overhead => set the minimum batch size to 20
-        elementsPerBatchRequest = Math.max(20, elementsPerBatchRequest);
-        // c) Growing the listOfDocumentsToIndex too large => set the maximum batch size to 200
-        elementsPerBatchRequest = Math.min(200, elementsPerBatchRequest);
+        // a) Not making enough bulk requests, thus having to wait a long time at the end for a large chunk
+        int elementsPerBatchRequest = estimatedTotalSize / DESIRED_BATCH_COUNT;
+        // b) Making too many requests, adding unnecessary overhead
+        elementsPerBatchRequest = Math.max(MIN_BATCH_SIZE, elementsPerBatchRequest);
+        // c) Growing the listOfDocumentsToIndex too large, causing long time between user updates and large memory consumption
+        elementsPerBatchRequest = Math.min(MAX_BATCH_SIZE, elementsPerBatchRequest);
         this.commitInterval = elementsPerBatchRequest;
         this.state = state;
         this.cleanable = CLEANER.register(this, state);
