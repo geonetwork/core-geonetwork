@@ -51,6 +51,8 @@ import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.search.EsFilterBuilder;
 import org.fao.geonet.kernel.search.EsSearchManager;
+import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Attribute;
@@ -459,6 +461,9 @@ public class SearchController {
         // TODO: Check to get summary or remove custom summary output
 
         try {
+            SettingManager sm = context.getBean(SettingManager.class);
+            boolean ignoreMetadataNotSupported = sm.getValueAsBool(Settings.SYSTEM_CSW_GETRECORDS_IGNORE_METADATA_NOT_SUPPORTED, true);
+
             SearchResponse result = searchManager.query(esJsonQuery, new HashSet<>(), startPos - 1, maxRecords, sort);
 
             List<Hit> hits = result.hits().hits();
@@ -496,7 +501,11 @@ public class SearchController {
                         counter++;
                     }
                 } catch (InvalidParameterValueEx e) {
-                    results.addContent(new Comment(e.getMessage()));
+                    if (ignoreMetadataNotSupported) {
+                        results.addContent(new Comment(e.getMessage()));
+                    } else {
+                        throw e;
+                    }
                 }
             }
 
