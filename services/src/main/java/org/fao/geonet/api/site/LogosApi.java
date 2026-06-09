@@ -37,7 +37,6 @@ import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.exception.ResourceAlreadyExistException;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.domain.Group;
-import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.resources.Resources;

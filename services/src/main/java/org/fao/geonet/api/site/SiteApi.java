@@ -815,9 +815,9 @@ public class SiteApi implements ApplicationEventPublisherAware {
     @io.swagger.v3.oas.annotations.Operation(
         summary = "Set catalog logo",
         description = "Logos are stored in the data directory " +
-            "resources/images/harvesting as PNG or GIF images. " +
+            "`resources/images/harvesting` images. " +
             "When a logo is assigned to the catalog, a new " +
-            "image is created in images/logos/<catalogUuid>.png.")
+            "image is created in `images/logos/<catalogUuid>.<fileExtension>`.")
     @RequestMapping(
         path = "/logo",
         produces = MediaType.APPLICATION_JSON_VALUE,
