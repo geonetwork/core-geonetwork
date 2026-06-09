@@ -37,12 +37,15 @@ import java.util.List;
 import org.fao.geonet.kernel.BatchEditParameter;
 import org.fao.geonet.csw.common.util.Xml;
 import org.fao.geonet.domain.AbstractMetadata;
+import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.mef.MEFLibIntegrationTest;
+import org.fao.geonet.repository.specification.MetadataSpecs;
 import org.fao.geonet.schema.iso19115_3_2018.ISO19115_3_2018Namespaces;
 import org.fao.geonet.services.AbstractServiceIntegrationTest;
 import org.jdom.Attribute;
 import org.jdom.Element;
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -59,6 +62,9 @@ import com.google.gson.JsonElement;
 
 import jeeves.server.context.ServiceContext;
 
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
 public class BatchEditsServiceTest extends AbstractServiceIntegrationTest {
 
     List<String> uuids = new ArrayList();
@@ -71,12 +77,22 @@ public class BatchEditsServiceTest extends AbstractServiceIntegrationTest {
     @Autowired
     private IMetadataUtils repository;
 
+    @Autowired
+    private IMetadataManager metadataManager;
+
     private MockMvc mockMvc;
 
     private MockHttpSession mockHttpSession;
 
+    @After
+    public void cleanup() {
+        metadataManager.deleteAll(MetadataSpecs.hasMetadataUuidIn(uuids));
+    }
     @Before
     public void loadSamples() throws Exception {
+        uuids.clear();
+        firstMetadataId = null;
+
         context = createServiceContext();
         loginAsAdmin(context);
 
@@ -123,6 +139,7 @@ public class BatchEditsServiceTest extends AbstractServiceIntegrationTest {
 
 
     @Test
+    @Transactional(propagation = Propagation.NOT_SUPPORTED)
     public void testUpdateRecord() throws Exception {
         final BatchEditParameter[] listOfupdates = new BatchEditParameter[]{
             new BatchEditParameter(
@@ -165,6 +182,7 @@ public class BatchEditsServiceTest extends AbstractServiceIntegrationTest {
 
 
     @Test
+    @Transactional(propagation = Propagation.NOT_SUPPORTED)
     public void testUpdateRecordElementInsertWithParentXpath() throws Exception {
         final String uuid = "db07463b-6769-401e-944b-f22e2e3bcc26";
         // XPath has no match and same type as fragment, element is created
@@ -198,6 +216,7 @@ public class BatchEditsServiceTest extends AbstractServiceIntegrationTest {
 
 
     @Test
+    @Transactional(propagation = Propagation.NOT_SUPPORTED)
     public void testUpdateRecordUpdateAttribute() throws Exception {
         final String uuid = "db07463b-6769-401e-944b-f22e2e3bcc26";
         BatchEditParameter[] listOfupdates = new BatchEditParameter[]{
@@ -291,6 +310,7 @@ public class BatchEditsServiceTest extends AbstractServiceIntegrationTest {
 
 
     @Test
+    @Transactional(propagation = Propagation.NOT_SUPPORTED)
     public void testUpdateRecordAddAttribute() throws Exception {
         final String uuid = "db07463b-6769-401e-944b-f22e2e3bcc26";
         BatchEditParameter[] listOfupdates = new BatchEditParameter[]{
@@ -324,6 +344,7 @@ public class BatchEditsServiceTest extends AbstractServiceIntegrationTest {
     }
 
     @Test
+    @Transactional(propagation = Propagation.NOT_SUPPORTED)
     public void testUpdateRecordAddAndDeleteAttributeWithNamespace() throws Exception {
         final String uuid = "db07463b-6769-401e-944b-f22e2e3bcc26";
         BatchEditParameter[] listOfupdates = new BatchEditParameter[]{
@@ -384,6 +405,7 @@ public class BatchEditsServiceTest extends AbstractServiceIntegrationTest {
 
 
     @Test
+    @Transactional(propagation = Propagation.NOT_SUPPORTED)
     public void testUpdateRecordElement() throws Exception {
         final String uuid = "db07463b-6769-401e-944b-f22e2e3bcc26";
         // XPath has no match and same type as fragment, element is created
