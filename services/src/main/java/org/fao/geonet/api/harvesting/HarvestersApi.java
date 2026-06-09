@@ -185,12 +185,13 @@ public class HarvestersApi {
     )
     @ResponseStatus(value = HttpStatus.FOUND)
     public void getHarvesterLogo(
+        @PathVariable
+        String portal,
         @Parameter(
             description = "The harvester UUID"
         )
         @PathVariable
         String harvesterUuid,
-        HttpServletRequest request,
         HttpServletResponse response
     ) throws Exception {
         Source source = sourceRepository.findOneByUuid(harvesterUuid);
@@ -200,7 +201,7 @@ public class HarvestersApi {
                 harvesterUuid));
         }
 
-        response.sendRedirect(request.getRequestURI().replace("/api/harvesters/", "/api/sources/"));
+        response.sendRedirect("/" + portal + "/api/sources/" + harvesterUuid + "/logo");
     }
 
 
